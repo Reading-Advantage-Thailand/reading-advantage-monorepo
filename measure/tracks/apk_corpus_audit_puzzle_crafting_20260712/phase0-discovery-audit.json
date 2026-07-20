@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "track": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 0: Freeze cohort and roles",
+  "role": "discovery-auditor",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "source_behavior_inspected": false,
+  "mechanics_claims_created": false,
+  "admissible_predecessors": {
+    "T1": {
+      "path": "measure/archive/measure_apk_evidence_integrity_gates_20260712/final-acceptance.json",
+      "status": "pass",
+      "consumability": "not stated by this final-acceptance record"
+    },
+    "T2_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+      "status": "accepted",
+      "consumable": true,
+      "revoked": false,
+      "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "denominator_counts": {"identities": 27, "source_records": 2007, "files": 923, "copies": 96, "surfaces": 418, "asset_candidates": 426, "history_and_discrepancies": 523, "identical_hash_groups": 225}
+    },
+    "T2_partition": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+      "status": "accepted",
+      "consumable": true,
+      "revoked": false
+    },
+    "T3": {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+      "status": "accepted-conditional",
+      "consumable": true,
+      "revoked": "not stated by this manifest"
+    }
+  },
+  "frozen_assignments": [
+    {"canonical_identity": "Enchanted Library", "batch": "A", "partition_cohort": "Puzzle and crafting"},
+    {"canonical_identity": "Rune Match", "batch": "A", "partition_cohort": "Puzzle and crafting"},
+    {"canonical_identity": "Alchemist's Synthesis", "batch": "A", "partition_cohort": "Puzzle and crafting"},
+    {"canonical_identity": "Potion Rush", "batch": "B", "partition_cohort": "Puzzle and crafting"},
+    {"canonical_identity": "Rune Forge Chamber", "batch": "B", "partition_cohort": "Puzzle and crafting"},
+    {"canonical_identity": "Astral Mage", "batch": "B", "partition_cohort": "Puzzle and crafting"}
+  ],
+  "reconciliation": {
+    "assigned_identity_count": 6,
+    "unique_assigned_identity_count": 6,
+    "batch_size_a": 3,
+    "batch_size_b": 3,
+    "max_games_per_batch": 3,
+    "each_assigned_identity_appears_once": true,
+    "denominator_record_basis": "The accepted T2 denominator manifest records 27 identities and 2007 source records; the accepted T2 partition manifest places these exact six canonical labels in Puzzle and crafting. Per-identity source-record identifiers were not inspected in this Phase 0 discovery audit.",
+    "astral_mage_boundary": {"classification": "unknown", "basis": "No current or historical product source, route, asset, or browser evidence was inspected; no inference from another game is permitted."}
+  },
+  "budget_usage": {"path_admissions": 0, "git_history_queries": 0, "denominator_reports": 1},
+  "budget_declaration_sha256": "695bd2b90bf0483c35c09c51007add5e467ad671cac4945392e4cc3fa02a5314",
+  "gate_disposition": "not-green: provider-role provenance and immutable phase-base commit verification are unavailable to this auditor; no source work is authorized by this artifact"
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "track": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 0: Freeze cohort and roles",
+  "role": "discovery-auditor",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "budgets": {
+    "batches": 2,
+    "games_per_batch": 3,
+    "path_admissions_per_batch": 36,
+    "git_history_queries_per_batch": 24,
+    "denominator_reports_per_batch": 1,
+    "source_or_denominator_queries_before_stop": 0
+  },
+  "stop_loss": {
+    "unsupported_factual_claims": 1,
+    "denominator_mismatches": 1,
+    "failed_fix_review_cycles": 2
+  },
+  "status": "declared-before-source-or-denominator-query"
+}

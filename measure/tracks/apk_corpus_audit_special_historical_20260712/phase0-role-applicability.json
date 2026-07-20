@@ -1,0 +1,434 @@
+{
+  "schema_version": "apk-phase0-role-applicability.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 0: Freeze cohort and roles",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "budget_declaration_sha256": "f87e33ef2a1a35ce2ac77eb0ea8f9797f6dc2e5c514159ad6d1fe011363bfe6b",
+  "allowed_input_manifest": {
+    "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-discovery-audit.json",
+    "sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa"
+  },
+  "root_policy": {
+    "may_coordinate": true,
+    "may_commit_independently_authored_outputs": true,
+    "may_author_assigned_role_outputs": false,
+    "may_substitute_for_missing_role": false
+  },
+  "session_policy": {
+    "fresh_session_per_assignment": true,
+    "same_game_roles_pairwise_incompatible": true,
+    "reviewer_may_repair_reviewed_bytes": false,
+    "review_isolation": "fork_turns=none provider attestation or retained raw export proving no inherited pre-prompt turns",
+    "missing_isolation_proof": "fail-closed"
+  },
+  "forbidden_role_categories": [
+    "discovery-auditor",
+    "current-source-specialist",
+    "historical-source-specialist",
+    "evidence-collector",
+    "requirements-mapper",
+    "browser-auditor",
+    "truth-test-author",
+    "adversarial-reviewer"
+  ],
+  "batch_assignments": [
+    {
+      "batch_id": "batch-a",
+      "ordinal": 1,
+      "identities": [
+        "Griffin Sky-Joust",
+        "Realm Carver",
+        "Devourer Slime"
+      ],
+      "discovery_task": {
+        "task_id": "batch-a-discovery",
+        "owner_role": "discovery-auditor-batch-a",
+        "reviewer_role": "adversarial-reviewer-batch-a",
+        "forbidden_roles": [
+          "current-source-specialist-batch-a-*",
+          "historical-source-specialist-batch-a-*",
+          "evidence-collector-batch-a-*",
+          "requirements-mapper-batch-a-*",
+          "browser-auditor-batch-a-*",
+          "truth-test-author-batch-a",
+          "adversarial-reviewer-batch-a",
+          "root"
+        ],
+        "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+        "expected_output_paths": [
+          "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/discovery-audit.json",
+          "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/discovery-auditor-batch-a.json"
+        ]
+      },
+      "truth_test_task": {
+        "task_id": "batch-a-truth-tests",
+        "owner_role": "truth-test-author-batch-a",
+        "reviewer_role": "adversarial-reviewer-batch-a",
+        "forbidden_roles": [
+          "discovery-auditor-batch-a",
+          "current-source-specialist-batch-a-*",
+          "historical-source-specialist-batch-a-*",
+          "evidence-collector-batch-a-*",
+          "requirements-mapper-batch-a-*",
+          "browser-auditor-batch-a-*",
+          "adversarial-reviewer-batch-a",
+          "root"
+        ],
+        "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+        "expected_output_paths": [
+          "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests.py",
+          "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-test-report.json",
+          "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/truth-test-author-batch-a.json"
+        ]
+      },
+      "review_task": {
+        "task_id": "batch-a-adversarial-review",
+        "owner_role": "adversarial-reviewer-batch-a",
+        "reviewer_role": "product-owner-acceptance-after-zero-blocking-findings",
+        "forbidden_roles": [
+          "discovery-auditor-batch-a",
+          "current-source-specialist-batch-a-*",
+          "historical-source-specialist-batch-a-*",
+          "evidence-collector-batch-a-*",
+          "requirements-mapper-batch-a-*",
+          "browser-auditor-batch-a-*",
+          "truth-test-author-batch-a",
+          "root"
+        ],
+        "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+        "expected_output_paths": [
+          "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/adversarial-review.json",
+          "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/adversarial-reviewer-batch-a.json"
+        ]
+      }
+    },
+    {
+      "batch_id": "batch-b",
+      "ordinal": 2,
+      "identities": [
+        "The Haunted Library",
+        "Babel Architect"
+      ],
+      "dispatch_prerequisite": "exact accepted Batch A manifest hash",
+      "discovery_task": {
+        "task_id": "batch-b-discovery",
+        "owner_role": "discovery-auditor-batch-b",
+        "reviewer_role": "adversarial-reviewer-batch-b",
+        "forbidden_roles": [
+          "current-source-specialist-batch-b-*",
+          "historical-source-specialist-batch-b-*",
+          "evidence-collector-batch-b-*",
+          "requirements-mapper-batch-b-*",
+          "browser-auditor-batch-b-*",
+          "truth-test-author-batch-b",
+          "adversarial-reviewer-batch-b",
+          "root"
+        ],
+        "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+        "expected_output_paths": [
+          "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/discovery-audit.json",
+          "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/discovery-auditor-batch-b.json"
+        ]
+      },
+      "truth_test_task": {
+        "task_id": "batch-b-truth-tests",
+        "owner_role": "truth-test-author-batch-b",
+        "reviewer_role": "adversarial-reviewer-batch-b",
+        "forbidden_roles": [
+          "discovery-auditor-batch-b",
+          "current-source-specialist-batch-b-*",
+          "historical-source-specialist-batch-b-*",
+          "evidence-collector-batch-b-*",
+          "requirements-mapper-batch-b-*",
+          "browser-auditor-batch-b-*",
+          "adversarial-reviewer-batch-b",
+          "root"
+        ],
+        "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+        "expected_output_paths": [
+          "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/truth-tests.py",
+          "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/truth-test-report.json",
+          "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/truth-test-author-batch-b.json"
+        ]
+      },
+      "review_task": {
+        "task_id": "batch-b-adversarial-review",
+        "owner_role": "adversarial-reviewer-batch-b",
+        "reviewer_role": "product-owner-acceptance-after-zero-blocking-findings",
+        "forbidden_roles": [
+          "discovery-auditor-batch-b",
+          "current-source-specialist-batch-b-*",
+          "historical-source-specialist-batch-b-*",
+          "evidence-collector-batch-b-*",
+          "requirements-mapper-batch-b-*",
+          "browser-auditor-batch-b-*",
+          "truth-test-author-batch-b",
+          "root"
+        ],
+        "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+        "expected_output_paths": [
+          "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/adversarial-review.json",
+          "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/adversarial-reviewer-batch-b.json"
+        ]
+      }
+    }
+  ],
+  "game_assignments": [
+    {
+      "batch_id": "batch-a",
+      "game": "Griffin Sky-Joust",
+      "slug": "griffin-sky-joust",
+      "tasks": [
+        {
+          "task_id": "griffin-sky-joust-current-source",
+          "owner_role": "current-source-specialist-batch-a-griffin-sky-joust",
+          "reviewer_role": "adversarial-reviewer-batch-a",
+          "forbidden_roles": ["discovery-auditor-batch-a", "historical-source-specialist-batch-a-griffin-sky-joust", "evidence-collector-batch-a-griffin-sky-joust", "requirements-mapper-batch-a-griffin-sky-joust", "browser-auditor-batch-a-griffin-sky-joust", "truth-test-author-batch-a", "adversarial-reviewer-batch-a", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/current-source-observations.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/current-source-specialist-griffin-sky-joust.json"]
+        },
+        {
+          "task_id": "griffin-sky-joust-historical-source",
+          "owner_role": "historical-source-specialist-batch-a-griffin-sky-joust",
+          "reviewer_role": "adversarial-reviewer-batch-a",
+          "forbidden_roles": ["discovery-auditor-batch-a", "current-source-specialist-batch-a-griffin-sky-joust", "evidence-collector-batch-a-griffin-sky-joust", "requirements-mapper-batch-a-griffin-sky-joust", "browser-auditor-batch-a-griffin-sky-joust", "truth-test-author-batch-a", "adversarial-reviewer-batch-a", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/historical-source-observations.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/historical-source-specialist-griffin-sky-joust.json"]
+        },
+        {
+          "task_id": "griffin-sky-joust-evidence-collection",
+          "owner_role": "evidence-collector-batch-a-griffin-sky-joust",
+          "reviewer_role": "adversarial-reviewer-batch-a",
+          "forbidden_roles": ["discovery-auditor-batch-a", "current-source-specialist-batch-a-griffin-sky-joust", "historical-source-specialist-batch-a-griffin-sky-joust", "requirements-mapper-batch-a-griffin-sky-joust", "browser-auditor-batch-a-griffin-sky-joust", "truth-test-author-batch-a", "adversarial-reviewer-batch-a", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/claim-ledger.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/evidence-collector-griffin-sky-joust.json"]
+        },
+        {
+          "task_id": "griffin-sky-joust-requirements-mapping",
+          "owner_role": "requirements-mapper-batch-a-griffin-sky-joust",
+          "reviewer_role": "adversarial-reviewer-batch-a",
+          "forbidden_roles": ["discovery-auditor-batch-a", "current-source-specialist-batch-a-griffin-sky-joust", "historical-source-specialist-batch-a-griffin-sky-joust", "evidence-collector-batch-a-griffin-sky-joust", "browser-auditor-batch-a-griffin-sky-joust", "truth-test-author-batch-a", "adversarial-reviewer-batch-a", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/requirements-map.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/requirements-mapper-griffin-sky-joust.json"]
+        },
+        {
+          "task_id": "griffin-sky-joust-browser-audit",
+          "owner_role": "browser-auditor-batch-a-griffin-sky-joust",
+          "reviewer_role": "adversarial-reviewer-batch-a",
+          "forbidden_roles": ["discovery-auditor-batch-a", "current-source-specialist-batch-a-griffin-sky-joust", "historical-source-specialist-batch-a-griffin-sky-joust", "evidence-collector-batch-a-griffin-sky-joust", "requirements-mapper-batch-a-griffin-sky-joust", "truth-test-author-batch-a", "adversarial-reviewer-batch-a", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/browser-audit.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-griffin-sky-joust.json"]
+        }
+      ]
+    },
+    {
+      "batch_id": "batch-a",
+      "game": "Realm Carver",
+      "slug": "realm-carver",
+      "tasks": [
+        {
+          "task_id": "realm-carver-current-source",
+          "owner_role": "current-source-specialist-batch-a-realm-carver",
+          "reviewer_role": "adversarial-reviewer-batch-a",
+          "forbidden_roles": ["discovery-auditor-batch-a", "historical-source-specialist-batch-a-realm-carver", "evidence-collector-batch-a-realm-carver", "requirements-mapper-batch-a-realm-carver", "browser-auditor-batch-a-realm-carver", "truth-test-author-batch-a", "adversarial-reviewer-batch-a", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/current-source-observations.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/current-source-specialist-realm-carver.json"]
+        },
+        {
+          "task_id": "realm-carver-historical-source",
+          "owner_role": "historical-source-specialist-batch-a-realm-carver",
+          "reviewer_role": "adversarial-reviewer-batch-a",
+          "forbidden_roles": ["discovery-auditor-batch-a", "current-source-specialist-batch-a-realm-carver", "evidence-collector-batch-a-realm-carver", "requirements-mapper-batch-a-realm-carver", "browser-auditor-batch-a-realm-carver", "truth-test-author-batch-a", "adversarial-reviewer-batch-a", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/historical-source-observations.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/historical-source-specialist-realm-carver.json"]
+        },
+        {
+          "task_id": "realm-carver-evidence-collection",
+          "owner_role": "evidence-collector-batch-a-realm-carver",
+          "reviewer_role": "adversarial-reviewer-batch-a",
+          "forbidden_roles": ["discovery-auditor-batch-a", "current-source-specialist-batch-a-realm-carver", "historical-source-specialist-batch-a-realm-carver", "requirements-mapper-batch-a-realm-carver", "browser-auditor-batch-a-realm-carver", "truth-test-author-batch-a", "adversarial-reviewer-batch-a", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/claim-ledger.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/evidence-collector-realm-carver.json"]
+        },
+        {
+          "task_id": "realm-carver-requirements-mapping",
+          "owner_role": "requirements-mapper-batch-a-realm-carver",
+          "reviewer_role": "adversarial-reviewer-batch-a",
+          "forbidden_roles": ["discovery-auditor-batch-a", "current-source-specialist-batch-a-realm-carver", "historical-source-specialist-batch-a-realm-carver", "evidence-collector-batch-a-realm-carver", "browser-auditor-batch-a-realm-carver", "truth-test-author-batch-a", "adversarial-reviewer-batch-a", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/requirements-map.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/requirements-mapper-realm-carver.json"]
+        },
+        {
+          "task_id": "realm-carver-browser-audit",
+          "owner_role": "browser-auditor-batch-a-realm-carver",
+          "reviewer_role": "adversarial-reviewer-batch-a",
+          "forbidden_roles": ["discovery-auditor-batch-a", "current-source-specialist-batch-a-realm-carver", "historical-source-specialist-batch-a-realm-carver", "evidence-collector-batch-a-realm-carver", "requirements-mapper-batch-a-realm-carver", "truth-test-author-batch-a", "adversarial-reviewer-batch-a", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/browser-audit.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-realm-carver.json"]
+        }
+      ]
+    },
+    {
+      "batch_id": "batch-a",
+      "game": "Devourer Slime",
+      "slug": "devourer-slime",
+      "tasks": [
+        {
+          "task_id": "devourer-slime-current-source",
+          "owner_role": "current-source-specialist-batch-a-devourer-slime",
+          "reviewer_role": "adversarial-reviewer-batch-a",
+          "forbidden_roles": ["discovery-auditor-batch-a", "historical-source-specialist-batch-a-devourer-slime", "evidence-collector-batch-a-devourer-slime", "requirements-mapper-batch-a-devourer-slime", "browser-auditor-batch-a-devourer-slime", "truth-test-author-batch-a", "adversarial-reviewer-batch-a", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/current-source-observations.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/current-source-specialist-devourer-slime.json"]
+        },
+        {
+          "task_id": "devourer-slime-historical-source",
+          "owner_role": "historical-source-specialist-batch-a-devourer-slime",
+          "reviewer_role": "adversarial-reviewer-batch-a",
+          "forbidden_roles": ["discovery-auditor-batch-a", "current-source-specialist-batch-a-devourer-slime", "evidence-collector-batch-a-devourer-slime", "requirements-mapper-batch-a-devourer-slime", "browser-auditor-batch-a-devourer-slime", "truth-test-author-batch-a", "adversarial-reviewer-batch-a", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/historical-source-observations.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/historical-source-specialist-devourer-slime.json"]
+        },
+        {
+          "task_id": "devourer-slime-evidence-collection",
+          "owner_role": "evidence-collector-batch-a-devourer-slime",
+          "reviewer_role": "adversarial-reviewer-batch-a",
+          "forbidden_roles": ["discovery-auditor-batch-a", "current-source-specialist-batch-a-devourer-slime", "historical-source-specialist-batch-a-devourer-slime", "requirements-mapper-batch-a-devourer-slime", "browser-auditor-batch-a-devourer-slime", "truth-test-author-batch-a", "adversarial-reviewer-batch-a", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/claim-ledger.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/evidence-collector-devourer-slime.json"]
+        },
+        {
+          "task_id": "devourer-slime-requirements-mapping",
+          "owner_role": "requirements-mapper-batch-a-devourer-slime",
+          "reviewer_role": "adversarial-reviewer-batch-a",
+          "forbidden_roles": ["discovery-auditor-batch-a", "current-source-specialist-batch-a-devourer-slime", "historical-source-specialist-batch-a-devourer-slime", "evidence-collector-batch-a-devourer-slime", "browser-auditor-batch-a-devourer-slime", "truth-test-author-batch-a", "adversarial-reviewer-batch-a", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/requirements-map.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/requirements-mapper-devourer-slime.json"]
+        },
+        {
+          "task_id": "devourer-slime-browser-audit",
+          "owner_role": "browser-auditor-batch-a-devourer-slime",
+          "reviewer_role": "adversarial-reviewer-batch-a",
+          "forbidden_roles": ["discovery-auditor-batch-a", "current-source-specialist-batch-a-devourer-slime", "historical-source-specialist-batch-a-devourer-slime", "evidence-collector-batch-a-devourer-slime", "requirements-mapper-batch-a-devourer-slime", "truth-test-author-batch-a", "adversarial-reviewer-batch-a", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/browser-audit.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-devourer-slime.json"]
+        }
+      ]
+    },
+    {
+      "batch_id": "batch-b",
+      "game": "The Haunted Library",
+      "slug": "the-haunted-library",
+      "tasks": [
+        {
+          "task_id": "the-haunted-library-current-source",
+          "owner_role": "current-source-specialist-batch-b-the-haunted-library",
+          "reviewer_role": "adversarial-reviewer-batch-b",
+          "forbidden_roles": ["discovery-auditor-batch-b", "historical-source-specialist-batch-b-the-haunted-library", "evidence-collector-batch-b-the-haunted-library", "requirements-mapper-batch-b-the-haunted-library", "browser-auditor-batch-b-the-haunted-library", "truth-test-author-batch-b", "adversarial-reviewer-batch-b", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/current-source-observations.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/current-source-specialist-the-haunted-library.json"]
+        },
+        {
+          "task_id": "the-haunted-library-historical-source",
+          "owner_role": "historical-source-specialist-batch-b-the-haunted-library",
+          "reviewer_role": "adversarial-reviewer-batch-b",
+          "forbidden_roles": ["discovery-auditor-batch-b", "current-source-specialist-batch-b-the-haunted-library", "evidence-collector-batch-b-the-haunted-library", "requirements-mapper-batch-b-the-haunted-library", "browser-auditor-batch-b-the-haunted-library", "truth-test-author-batch-b", "adversarial-reviewer-batch-b", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/historical-source-observations.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/historical-source-specialist-the-haunted-library.json"]
+        },
+        {
+          "task_id": "the-haunted-library-evidence-collection",
+          "owner_role": "evidence-collector-batch-b-the-haunted-library",
+          "reviewer_role": "adversarial-reviewer-batch-b",
+          "forbidden_roles": ["discovery-auditor-batch-b", "current-source-specialist-batch-b-the-haunted-library", "historical-source-specialist-batch-b-the-haunted-library", "requirements-mapper-batch-b-the-haunted-library", "browser-auditor-batch-b-the-haunted-library", "truth-test-author-batch-b", "adversarial-reviewer-batch-b", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/claim-ledger.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/evidence-collector-the-haunted-library.json"]
+        },
+        {
+          "task_id": "the-haunted-library-requirements-mapping",
+          "owner_role": "requirements-mapper-batch-b-the-haunted-library",
+          "reviewer_role": "adversarial-reviewer-batch-b",
+          "forbidden_roles": ["discovery-auditor-batch-b", "current-source-specialist-batch-b-the-haunted-library", "historical-source-specialist-batch-b-the-haunted-library", "evidence-collector-batch-b-the-haunted-library", "browser-auditor-batch-b-the-haunted-library", "truth-test-author-batch-b", "adversarial-reviewer-batch-b", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/requirements-map.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/requirements-mapper-the-haunted-library.json"]
+        },
+        {
+          "task_id": "the-haunted-library-browser-audit",
+          "owner_role": "browser-auditor-batch-b-the-haunted-library",
+          "reviewer_role": "adversarial-reviewer-batch-b",
+          "forbidden_roles": ["discovery-auditor-batch-b", "current-source-specialist-batch-b-the-haunted-library", "historical-source-specialist-batch-b-the-haunted-library", "evidence-collector-batch-b-the-haunted-library", "requirements-mapper-batch-b-the-haunted-library", "truth-test-author-batch-b", "adversarial-reviewer-batch-b", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/browser-audit.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-the-haunted-library.json"]
+        }
+      ]
+    },
+    {
+      "batch_id": "batch-b",
+      "game": "Babel Architect",
+      "slug": "babel-architect",
+      "tasks": [
+        {
+          "task_id": "babel-architect-current-source",
+          "owner_role": "current-source-specialist-batch-b-babel-architect",
+          "reviewer_role": "adversarial-reviewer-batch-b",
+          "forbidden_roles": ["discovery-auditor-batch-b", "historical-source-specialist-batch-b-babel-architect", "evidence-collector-batch-b-babel-architect", "requirements-mapper-batch-b-babel-architect", "browser-auditor-batch-b-babel-architect", "truth-test-author-batch-b", "adversarial-reviewer-batch-b", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/current-source-observations.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/current-source-specialist-babel-architect.json"]
+        },
+        {
+          "task_id": "babel-architect-historical-source",
+          "owner_role": "historical-source-specialist-batch-b-babel-architect",
+          "reviewer_role": "adversarial-reviewer-batch-b",
+          "forbidden_roles": ["discovery-auditor-batch-b", "current-source-specialist-batch-b-babel-architect", "evidence-collector-batch-b-babel-architect", "requirements-mapper-batch-b-babel-architect", "browser-auditor-batch-b-babel-architect", "truth-test-author-batch-b", "adversarial-reviewer-batch-b", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/historical-source-observations.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/historical-source-specialist-babel-architect.json"]
+        },
+        {
+          "task_id": "babel-architect-evidence-collection",
+          "owner_role": "evidence-collector-batch-b-babel-architect",
+          "reviewer_role": "adversarial-reviewer-batch-b",
+          "forbidden_roles": ["discovery-auditor-batch-b", "current-source-specialist-batch-b-babel-architect", "historical-source-specialist-batch-b-babel-architect", "requirements-mapper-batch-b-babel-architect", "browser-auditor-batch-b-babel-architect", "truth-test-author-batch-b", "adversarial-reviewer-batch-b", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/claim-ledger.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/evidence-collector-babel-architect.json"]
+        },
+        {
+          "task_id": "babel-architect-requirements-mapping",
+          "owner_role": "requirements-mapper-batch-b-babel-architect",
+          "reviewer_role": "adversarial-reviewer-batch-b",
+          "forbidden_roles": ["discovery-auditor-batch-b", "current-source-specialist-batch-b-babel-architect", "historical-source-specialist-batch-b-babel-architect", "evidence-collector-batch-b-babel-architect", "browser-auditor-batch-b-babel-architect", "truth-test-author-batch-b", "adversarial-reviewer-batch-b", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/requirements-map.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/requirements-mapper-babel-architect.json"]
+        },
+        {
+          "task_id": "babel-architect-browser-audit",
+          "owner_role": "browser-auditor-batch-b-babel-architect",
+          "reviewer_role": "adversarial-reviewer-batch-b",
+          "forbidden_roles": ["discovery-auditor-batch-b", "current-source-specialist-batch-b-babel-architect", "historical-source-specialist-batch-b-babel-architect", "evidence-collector-batch-b-babel-architect", "requirements-mapper-batch-b-babel-architect", "truth-test-author-batch-b", "adversarial-reviewer-batch-b", "root"],
+          "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+          "expected_output_paths": ["measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/browser-audit.json", "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-babel-architect.json"]
+        }
+      ]
+    }
+  ],
+  "browser_policy": {
+    "applicability": "conditional-mandatory after mechanically reviewed runnable disposition",
+    "preferred_adapter": "Kimi WebBridge",
+    "kimi_required_record": [
+      "attempted",
+      "health",
+      "result_or_exact_failure"
+    ],
+    "fallback": "A declared browser adapter may be used only after recording the failed Kimi attempt and only if it preserves compact and wide viewports, actual application input paths, state-transition evidence, logs, and artifact hashes.",
+    "synthetic_input_disclosure": "All automated clicks, keys, pointer actions, and touch emulation are synthetic and do not prove physical-device ergonomics, untested OS/browser combinations, assistive technology, real-user timing, production identity or persistence, or external-network behavior.",
+    "non_runnable_record": "Must include attempted command, environment, route candidate, revision, exact failure, logs, and independent review.",
+    "mock_boundary": "Mocked or directly mutated state cannot prove a real transition."
+  },
+  "dispatch_policy": {
+    "phase0_source_work_admitted": false,
+    "batch_a_first": true,
+    "batch_b_before_batch_a_acceptance": false,
+    "future_context_manifests": "Before each dispatch, the orchestrator must add exact prerequisite output hashes and capture a fresh role_base_sha; this applicability file alone is not a dispatch admission.",
+    "missing_receipt_or_context_hash": "fail-closed"
+  }
+}

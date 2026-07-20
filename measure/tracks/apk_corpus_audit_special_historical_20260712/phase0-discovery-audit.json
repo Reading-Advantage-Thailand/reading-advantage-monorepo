@@ -1,0 +1,261 @@
+{
+  "schema_version": "apk-phase0-discovery-audit.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 0: Freeze cohort and roles",
+  "role": "discovery-auditor-phase0",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "source_inspection_performed": false,
+  "mechanics_claims_authored": false,
+  "frozen_batches": [
+    {
+      "batch_id": "batch-a",
+      "ordinal": 1,
+      "identities": [
+        "Griffin Sky-Joust",
+        "Realm Carver",
+        "Devourer Slime"
+      ],
+      "identity_count": 3
+    },
+    {
+      "batch_id": "batch-b",
+      "ordinal": 2,
+      "identities": [
+        "The Haunted Library",
+        "Babel Architect"
+      ],
+      "identity_count": 2,
+      "opens_after": "batch-a accepted-manifest exact hash is available"
+    }
+  ],
+  "predecessor_bindings": {
+    "t1_accepted_gate": {
+      "path": "measure/evidence-integrity-accepted-gate.json",
+      "sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+      "gate_version": "phase4-v8-candidate",
+      "gate_commit": "5aea360f94f978ac78e590e0a64d33d176beaa1a",
+      "status": "accepted",
+      "consumable": true,
+      "revoked": false,
+      "hash_verified": true
+    },
+    "t2_accepted_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+      "status": "accepted",
+      "consumable": true,
+      "revoked": false,
+      "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "hash_verified": true
+    },
+    "t2_accepted_partition": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+      "status": "accepted",
+      "consumable": true,
+      "revoked": false,
+      "assignment_count": 29,
+      "cohort_assignment_count": 5,
+      "hash_verified": true
+    },
+    "t3_accepted_pilot": {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+      "status": "accepted-conditional",
+      "consumable": true,
+      "revoked": false,
+      "hash_verified": true,
+      "limitation": "The accepted pilot records conditional acceptance and unexecuted browser and candidate-asset work; this audit does not promote those observations into cohort evidence."
+    }
+  },
+  "denominator_dataset_bindings": {
+    "game_identity_ledger": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+      "sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407"
+    },
+    "source_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/source-denominator.json",
+      "sha256": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d"
+    },
+    "scene_state_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/scene-state-denominator.json",
+      "sha256": "6308836ca24f1cac5bf4ded5f7e72c5ba06c08f4a5c6648620818b720190bf8b"
+    },
+    "asset_file_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+      "sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438"
+    },
+    "historical_source_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json",
+      "sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f"
+    },
+    "denominator_discrepancies": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/denominator-discrepancies.json",
+      "sha256": "a531598c2d8a313f99c2a11539fee1de7fa9e96886a7fe8fafb90c5d94866747"
+    }
+  },
+  "record_selection_contract": {
+    "case_sensitive": true,
+    "identity_records": "canonical_identity_id equals the recorded canonical_identity_id",
+    "source_records": "record_id contains the recorded identity_token",
+    "graph_edges": "from_record_id or to_record_id contains the recorded identity_token",
+    "scene_state_records": "evidence.path contains the recorded identity_token",
+    "asset_candidates": "canonical_path contains the recorded identity_token",
+    "historical_records": "evidence.path contains the recorded identity_token",
+    "discrepancies": "the accepted discrepancy dataset contains no record whose serialized record contains the recorded identity_token",
+    "interpretation": "Dataset hash plus selector, token, and exact count freezes each denominator slice without asserting product behavior."
+  },
+  "identity_reconciliation": [
+    {
+      "batch_id": "batch-a",
+      "identity_label": "Griffin Sky-Joust",
+      "identity_token": "griffin-sky-joust",
+      "accepted_partition_matches": 1,
+      "canonical_identity_id": "catalog/griffin-sky-joust",
+      "denominator_record_counts": {
+        "identity_records": 1,
+        "source_records": 8,
+        "graph_edges": 0,
+        "scene_records": 0,
+        "state_records": 0,
+        "transition_write_candidates": 0,
+        "asset_candidates": 5,
+        "historical_records": 7,
+        "discrepancies": 0
+      },
+      "catalog_boundary": "T2 records catalog evidence and catalog-withdrawn-registration only; it establishes no implementation behavior.",
+      "current_boundary": "No T2 current-page-source identity record is assigned; current implementation is unknown pending the current-source specialist.",
+      "historical_boundary": "T2 supplies seven deleted-record locators; each remains a candidate until the historical-source specialist proves reachability and exact bytes.",
+      "cancelled_boundary": "No accepted T2 record classifies a cancelled design; cancellation is unknown.",
+      "unknown_boundary": "Route, current implementation, runnable disposition, mechanics, states, transitions, and asset usage remain unknown."
+    },
+    {
+      "batch_id": "batch-a",
+      "identity_label": "Realm Carver",
+      "identity_token": "realm-carver",
+      "accepted_partition_matches": 1,
+      "canonical_identity_id": "catalog/realm-carver",
+      "denominator_record_counts": {
+        "identity_records": 1,
+        "source_records": 8,
+        "graph_edges": 0,
+        "scene_records": 0,
+        "state_records": 0,
+        "transition_write_candidates": 0,
+        "asset_candidates": 4,
+        "historical_records": 7,
+        "discrepancies": 0
+      },
+      "catalog_boundary": "T2 records catalog evidence and catalog-withdrawn-registration only; it establishes no implementation behavior.",
+      "current_boundary": "No T2 current-page-source identity record is assigned; current implementation is unknown pending the current-source specialist.",
+      "historical_boundary": "T2 supplies seven deleted-record locators; each remains a candidate until the historical-source specialist proves reachability and exact bytes.",
+      "cancelled_boundary": "No accepted T2 record classifies a cancelled design; cancellation is unknown.",
+      "unknown_boundary": "Route, current implementation, runnable disposition, mechanics, states, transitions, and asset usage remain unknown."
+    },
+    {
+      "batch_id": "batch-a",
+      "identity_label": "Devourer Slime",
+      "identity_token": "devourer-slime",
+      "accepted_partition_matches": 1,
+      "canonical_identity_id": "sentence/devourer-slime",
+      "denominator_record_counts": {
+        "identity_records": 1,
+        "source_records": 39,
+        "graph_edges": 21,
+        "scene_records": 2,
+        "state_records": 3,
+        "transition_write_candidates": 3,
+        "asset_candidates": 4,
+        "historical_records": 1,
+        "discrepancies": 0
+      },
+      "catalog_boundary": "T2 records catalog identity evidence only; catalog wording cannot establish detailed behavior.",
+      "current_boundary": "T2 records a current-page-source locator at its older baseline; current behavior at the phase base remains unknown pending exact current-source review.",
+      "historical_boundary": "The sole matching T2 history record is classified current at the T2 baseline, not historical implementation evidence.",
+      "cancelled_boundary": "No accepted T2 record classifies a cancelled design; cancellation is unknown.",
+      "unknown_boundary": "All behavior, transition meaning, runnable disposition, and asset usage remain unknown until specialist evidence exists."
+    },
+    {
+      "batch_id": "batch-b",
+      "identity_label": "The Haunted Library",
+      "identity_token": "haunted-library",
+      "accepted_partition_matches": 1,
+      "canonical_identity_id": "sentence/haunted-library",
+      "denominator_record_counts": {
+        "identity_records": 1,
+        "source_records": 42,
+        "graph_edges": 25,
+        "scene_records": 2,
+        "state_records": 3,
+        "transition_write_candidates": 3,
+        "asset_candidates": 4,
+        "historical_records": 1,
+        "discrepancies": 0
+      },
+      "catalog_boundary": "T2 records catalog identity evidence only; catalog wording cannot establish detailed behavior.",
+      "current_boundary": "T2 records a current-page-source locator at its older baseline; current behavior at the phase base remains unknown pending exact current-source review.",
+      "historical_boundary": "The sole matching T2 history record is classified current at the T2 baseline, not historical implementation evidence.",
+      "cancelled_boundary": "No accepted T2 record classifies a cancelled design; cancellation is unknown.",
+      "unknown_boundary": "All behavior, state meaning, runnable disposition, and asset usage remain unknown until specialist evidence exists."
+    },
+    {
+      "batch_id": "batch-b",
+      "identity_label": "Babel Architect",
+      "identity_token": "babel-architect",
+      "accepted_partition_matches": 1,
+      "canonical_identity_id": null,
+      "denominator_record_counts": {
+        "identity_records": 0,
+        "source_records": 12,
+        "graph_edges": 0,
+        "scene_records": 0,
+        "state_records": 0,
+        "transition_write_candidates": 0,
+        "asset_candidates": 2,
+        "historical_records": 12,
+        "discrepancies": 0
+      },
+      "catalog_boundary": "The accepted partition assigns the label, but the T2 identity ledger has no matching canonical identity record; catalog status is unknown.",
+      "current_boundary": "No T2 current identity, route, scene, state, or graph record is assigned; current implementation is unknown.",
+      "historical_boundary": "T2 supplies twelve deleted-record locators at one revision; each remains a candidate until reachability and exact bytes are independently proven.",
+      "cancelled_boundary": "Paths containing archived or tracked design material do not prove cancellation; no accepted T2 record classifies cancelled design.",
+      "unknown_boundary": "Canonical identity linkage, current status, cancellation status, runnable disposition, behavior, and asset usage remain unknown."
+    }
+  ],
+  "cross_identity_reference_records": [
+    {
+      "record_id": "copy:apps/advantage-games/src/app/api/v1/games/labyrinth-goblin-king/sentences/route.ts",
+      "references": "file:apps/advantage-games/src/app/api/v1/games/devourer-slime/sentences/route.ts",
+      "ownership": "not assigned to this cohort because the record_id belongs to another accepted identity"
+    },
+    {
+      "record_id": "copy:apps/advantage-games/src/app/api/v1/games/labyrinth-goblin-king/complete/route.ts",
+      "references": "file:apps/advantage-games/src/app/api/v1/games/devourer-slime/complete/route.ts",
+      "ownership": "not assigned to this cohort because the record_id belongs to another accepted identity"
+    },
+    {
+      "record_id": "graph:apps/advantage-games/src/__tests__/adversarial/phase-5-adversarial.test.tsx:40:13",
+      "references": "file:apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
+      "ownership": "retained as an incoming graph edge for The Haunted Library but not as a product-behavior claim"
+    }
+  ],
+  "evidence_class_boundaries": {
+    "current_implementation": "Requires exact source at the frozen upper revision; T2 baseline locators are candidates only.",
+    "historical_implementation": "Requires exact bytes at a reachable ancestor plus chronology evidence; a deleted locator alone is insufficient.",
+    "active_specification": "Can establish a requirement at its cited revision only and never implementation.",
+    "catalog_prose": "Can establish exact wording and identity presence only and never mechanics, states, routes, assets, responsiveness, or implementation.",
+    "cancelled_design": "Requires cited design plus cancellation disposition and never establishes implementation or shipment.",
+    "unknown": "Preserves unresolved absence or conflict and cannot be replaced by analogy."
+  },
+  "stop_loss": {
+    "unsupported_factual_claims": 0,
+    "duplicate_partition_assignments": 0,
+    "unassigned_partition_identities": 0,
+    "denominator_identity_gaps": 1,
+    "gap_identity": "Babel Architect",
+    "disposition": "explicit-unknown-not-filled-by-inference",
+    "source_work_admitted_by_this_audit": false
+  },
+  "disposition": "phase0-cohort-and-denominator-slices-frozen; later source work remains subject to the complete B0 gate"
+}

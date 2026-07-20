@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "track": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 0: Freeze cohort and roles",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "batches": {
+    "A": ["Enchanted Library", "Rune Match", "Alchemist's Synthesis"],
+    "B": ["Potion Rush", "Rune Forge Chamber", "Astral Mage"]
+  },
+  "role_requirements": {
+    "fresh_context_only": true,
+    "inherited_narrative": false,
+    "parent_ancestry_ids": [],
+    "fork_turns": "none",
+    "distinct_agent_session_per_owned_output": true
+  },
+  "roles": [
+    {
+      "role": "discovery-auditor",
+      "owned_paths": ["phase0-discovery-audit.json"],
+      "reviewer_role": "adversarial-reviewer"
+    },
+    {
+      "role": "evidence-collector",
+      "owned_paths": ["batch-{a,b}/{game}/claim-evidence-ledger.json", "batch-{a,b}/{game}/source-asset-history-ledger.json"],
+      "reviewer_role": "adversarial-reviewer"
+    },
+    {
+      "role": "requirements-mapper",
+      "owned_paths": ["batch-{a,b}/{game}/requirements-mapping.json"],
+      "reviewer_role": "adversarial-reviewer"
+    },
+    {
+      "role": "browser-auditor",
+      "owned_paths": ["batch-{a,b}/{game}/browser-audit.json"],
+      "reviewer_role": "adversarial-reviewer"
+    },
+    {
+      "role": "truth-test-author",
+      "owned_paths": ["batch-{a,b}/truth-test-report.json"],
+      "reviewer_role": "adversarial-reviewer"
+    },
+    {
+      "role": "adversarial-reviewer",
+      "owned_paths": ["batch-{a,b}/independent-review.json"],
+      "reviewer_role": "product-owner"
+    }
+  ],
+  "incompatible_role_pairs": "all distinct role pairs for a single artifact",
+  "root_coordinator_forbidden_roles": ["discovery-auditor", "evidence-collector", "requirements-mapper", "browser-auditor", "truth-test-author", "adversarial-reviewer"],
+  "browser_policy": {
+    "preferred_mechanism": "Kimi WebBridge",
+    "synthetic_dom_events_do_not_establish": ["pointer", "touch", "keyboard", "typing", "drag", "radial", "gameplay-transition"],
+    "when_real_accepted_input_is_unavailable": "Record command, environment, route, failure, log, and revision; mark the interaction and every dependent responsive conclusion unknown.",
+    "screenshots_alone_pass": false
+  },
+  "astral_mage_policy": "No runnable, complete, absent, comparable, or mechanic disposition is presumed. Each current or historical boundary must be source-classified as supported, unknown, or not-observed; unknown blocks dependent Must-have conclusions.",
+  "budget_declaration_sha256": "695bd2b90bf0483c35c09c51007add5e467ad671cac4945392e4cc3fa02a5314"
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": "apk-traversal-phase0-budget.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 0: Freeze cohort and roles",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "source_work_started": false,
+  "ceilings": {
+    "batch_roles": {
+      "discovery_auditor_all_seven": {"source_bytes": 12000000, "source_files_objects": 240, "commands": 80, "elapsed_minutes": 90, "records_authored_reviewed": 7, "browser_interactions": 0, "captured_artifacts": 35},
+      "truth_test_author_all_seven": {"source_bytes": 6000000, "source_files_objects": 140, "commands": 60, "elapsed_minutes": 75, "records_authored_reviewed": 70, "browser_interactions": 0, "captured_artifacts": 25},
+      "adversarial_reviewer_all_seven": {"source_bytes": 10000000, "source_files_objects": 210, "commands": 100, "elapsed_minutes": 120, "records_authored_reviewed": 7, "browser_interactions": 0, "captured_artifacts": 70},
+      "phase0_coordinator": {"source_bytes": 2000000, "source_files_objects": 40, "commands": 40, "elapsed_minutes": 45, "records_authored_reviewed": 7, "browser_interactions": 0, "captured_artifacts": 20}
+    },
+    "per_game_roles": {
+      "evidence_collector_one_game": {"source_bytes": 8000000, "source_files_objects": 160, "commands": 70, "elapsed_minutes": 120, "records_authored_reviewed": 300, "browser_interactions": 0, "captured_artifacts": 80},
+      "requirements_mapper_one_game": {"source_bytes": 4000000, "source_files_objects": 100, "commands": 50, "elapsed_minutes": 75, "records_authored_reviewed": 250, "browser_interactions": 0, "captured_artifacts": 35},
+      "browser_auditor_one_game": {"source_bytes": 3000000, "source_files_objects": 80, "commands": 80, "elapsed_minutes": 90, "records_authored_reviewed": 80, "browser_interactions": 300, "captured_artifacts": 60}
+    }
+  },
+  "actuals": {"source_bytes": 0, "source_files_objects": 0, "commands": 0, "elapsed_minutes": 0, "records_authored_reviewed": 0, "browser_interactions": 0, "captured_artifacts": 0},
+  "stop_loss_initial": {"unsupported_factual_claims": 0, "denominator_mismatches": 0, "unresolved_critical": 0, "unresolved_high": 0, "unresolved_medium": 0, "stale_receipts": 0, "budget_breaches": 0, "failed_fix_review_cycles": 0},
+  "provider_data": {"kimi_webbridge_available": false, "spawn_attestation_available": false, "fork_turns_none_attestation_available": false},
+  "status": "frozen-before-source-work"
+}

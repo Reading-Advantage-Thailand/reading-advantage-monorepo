@@ -1,0 +1,37 @@
+{
+  "schema_version": "apk-phase0-budget-declaration.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 0: Freeze cohort and roles",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role": "discovery-auditor",
+  "units": {
+    "source_bytes_read": "bytes",
+    "source_objects_read": "objects",
+    "command_invocations": "invocations",
+    "elapsed_minutes": "minutes",
+    "records_authored": "records",
+    "elapsed_role_minutes": "minutes",
+    "captured_artifacts": "artifacts"
+  },
+  "per_batch_limits": {
+    "source_bytes_read": 16777216,
+    "source_objects_read": 160,
+    "command_invocations": 100,
+    "elapsed_minutes": 120,
+    "records_authored": 300
+  },
+  "batch_aggregate_limits": {
+    "source_bytes_read": 536870912,
+    "command_invocations": 2500,
+    "elapsed_role_minutes": 5000,
+    "captured_artifacts": 500
+  },
+  "batch_game_count_limits": {
+    "batch_a": 3,
+    "batch_b": 2
+  },
+  "invocation_count": 2,
+  "ceiling_policy": "inclusive",
+  "change_policy": "Prior product-owner approval is required; changing a ceiling invalidates affected candidate bytes."
+}

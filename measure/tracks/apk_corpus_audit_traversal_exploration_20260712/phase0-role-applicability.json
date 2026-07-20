@@ -1,0 +1,29 @@
+{
+  "schema_version": "apk-phase0-role-applicability.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 0: Freeze cohort and roles",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "budget_declaration_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+  "cohort": [
+    {"batch": "A", "identities": ["Dragon Rider", "Dungeon Liberator", "Spellweaver's Run"]},
+    {"batch": "B", "identities": ["Shadow Gate Dungeon", "Labyrinth of the Goblin King", "Griffin Rider's Escape"]},
+    {"batch": "Historical/missing", "identities": ["The Sorcerer's Ziggurat"]}
+  ],
+  "tasks": [
+    {"task_id": "freeze-cohort-denominator", "owner_role": "discovery-auditor", "reviewer_role": "adversarial-reviewer", "forbidden_roles": ["evidence-collector", "requirements-mapper", "browser-auditor", "truth-test-author"], "allowed_inputs": ["spec.md", "plan.md", "test-strategy-phase0.md", "apk-evidence-reconstruction-program.md", "apk-evidence-cohort-protocol.md", "accepted-denominator-manifest.json", "accepted-partition-manifest.json", "accepted-pilot-manifest.json", "phase4-v8-accepted-gate-manifest.json"], "expected_output_paths": ["phase0-discovery-audit.json"]},
+    {"task_id": "collect-game-evidence", "owner_role": "evidence-collector", "reviewer_role": "adversarial-reviewer", "forbidden_roles": ["discovery-auditor", "requirements-mapper", "browser-auditor", "truth-test-author"], "expected_output_paths": ["packages/<canonical-id>/claim-evidence-ledger.json"]},
+    {"task_id": "map-requirements", "owner_role": "requirements-mapper", "reviewer_role": "adversarial-reviewer", "forbidden_roles": ["discovery-auditor", "evidence-collector", "browser-auditor", "truth-test-author"], "expected_output_paths": ["packages/<canonical-id>/requirements-map.json"]},
+    {"task_id": "audit-browser", "owner_role": "browser-auditor", "reviewer_role": "adversarial-reviewer", "forbidden_roles": ["discovery-auditor", "evidence-collector", "requirements-mapper", "truth-test-author"], "expected_output_paths": ["packages/<canonical-id>/browser-audit.json"]},
+    {"task_id": "author-truth-tests", "owner_role": "truth-test-author", "reviewer_role": "adversarial-reviewer", "forbidden_roles": ["discovery-auditor", "evidence-collector", "requirements-mapper", "browser-auditor"], "expected_output_paths": ["truth-tests/phase0/"]},
+    {"task_id": "review-cohort", "owner_role": "adversarial-reviewer", "reviewer_role": "product-owner", "forbidden_roles": ["discovery-auditor", "evidence-collector", "requirements-mapper", "browser-auditor", "truth-test-author"], "expected_output_paths": ["phase0-independent-review.json"]}
+  ],
+  "unknown_boundaries": {
+    "current_implementation": "unknown; no product sources inspected in Phase 0",
+    "historical_source": "unknown; no history or product sources inspected in Phase 0",
+    "runnable_route": "unknown; no route startup or browser audit performed in Phase 0",
+    "mechanics_and_transitions": "unknown and prohibited from this audit",
+    "product_source_paths": "unknown; candidate paths await isolated collectors"
+  },
+  "kimi_webbridge_policy": {"preferred_mechanism": true, "used": false, "synthetic_input_is_not_trusted_native_input": true, "screenshots_do_not_prove_movement_or_transition": true, "trusted_native_input_or_browser-trusted_equivalent_required_for_runnable": true}
+}
