@@ -163,8 +163,8 @@
     "castle-defense-claim-ledger.json": "ddb98a7c61f73cf4b5dc71dafa21ce652aeccaea2fc36dcf4f604aabd0848df3",
     "castle-defense-evidence-method.md": "60d0aa3e30cfaa34d53c4c81fe703afa0469af59c2dddfa43c926b89bf622d62"
   },
-  "commit_sha": null,
-  "final_response_sha256": null,
+  "commit_sha": "040802b335c01830d3ba483d839a682812ac36ce",
+  "final_response_sha256": "bfca3dd447dd4bf3022482bb74a02365ac499ac272d2ef19c07d7c7dc6a74fe0",
   "acceptance": "not-claimed",
   "role_boundary_notes": [
     "No file under measure/archive/apk_source_denominator_inventory_20260712/ was modified.",

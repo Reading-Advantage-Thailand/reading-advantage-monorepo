@@ -53,7 +53,7 @@
     "preserved_work": "unrelated working-tree changes were not staged"
   },
   "budget_declaration_sha256": "e8ea519f45dec75994ef012056db7746554fa5d5b6e2859093e4409793e5586e",
-  "commit_sha": null,
+  "commit_sha": "040802b335c01830d3ba483d839a682812ac36ce",
   "findings": {
     "claims_authored": 139,
     "negative_fixtures": 3,
