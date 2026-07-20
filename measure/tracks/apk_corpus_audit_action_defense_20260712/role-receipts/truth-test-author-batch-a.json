@@ -1,0 +1,138 @@
+{
+  "acceptance": "not-claimed",
+  "actual_context_manifest_note": "SHA-256 of the canonical JSON mapping (sort_keys, compact separators) of 32 input files to their SHA-256 values: 3 claim ledgers, 3 evidence final reports, 3 evidence-collector role receipts, batch-a-blueprint.json, mapper-hypotheses-batch-a.md, mapper-final-report-batch-a.json, requirements-mapper receipt, stop-loss-resolutions-batch-a.md, test-strategy-batch-a.md, spec.md, plan.md, _orchestrator/LAST-BATCH-STATUS.md, pilot truth_tests.py, pilot truth-test-author receipt, evidence-integrity-accepted-gate.json, anti-patterns.md, both program documents, and 8 T2 archive artifacts (accepted manifests, identity ledger, source/scene-state/asset/historical denominators, phase3-reconciliation). Every hash was computed from working-tree bytes at receipt time. No prior-role completion narrative was used as a derivation source; every invariant derives from the committed inputs.",
+  "actual_context_manifest_sha256": "00fc46288e99a5ab03edb1f5d246c7c6f37e1069f621bb93fc0b6a7450f990c5",
+  "budget_declaration": {
+    "actual_usage": {
+      "bytes_read": 12136389,
+      "command_invocations": 45,
+      "source_files": 32,
+      "test_cases_authored": 41
+    },
+    "frozen_resource_ceiling": {
+      "bytes_read": 268435456,
+      "command_invocations": 120,
+      "source": "orchestrator prompt supplied no numeric ceilings for this role; role-local ceilings frozen before source work began, mirroring the Batch A requirements-mapper ceiling shape (bytes_read 256 MiB, 120 commands, 100 source files)",
+      "source_files": 100
+    },
+    "measurement_basis": {
+      "bytes_read": "byte sizes of the 32 hashed input files, measured via filesystem stat",
+      "command_invocations": "Bash tool invocations from session start through final verification (git read-only commands, sha256sum, python3 analysis/validation scripts, pytest dry-runs)",
+      "source_files": "32 distinct input files read for this role",
+      "test_cases_authored": "41 unittest cases in batch-a-truth-tests.py across 6 contract classes (strategy floor: 28)"
+    },
+    "role": "truth-test-author",
+    "schema_version": "apk-role-budget-declaration.v1",
+    "spawn_id": "truth-test-author:t4-batch-a:2026-07-20"
+  },
+  "commit_sha": "<pending-orchestrator-bind>",
+  "commit_sha_note": "The orchestrator binds this receipt to a commit after role completion; no commits were authored under this role. The role's two deliverables are working-tree files at receipt time.",
+  "end_event_id": "t4-batch-a-truth-test-author-end:2026-07-20T00:00:00Z",
+  "final_response_note": "SHA-256 of batch-a-truth-tests.py, the role's final response artifact (mirrors the pilot truth-test-author convention of hashing the deliverable module).",
+  "final_response_sha256": "2f62f316ceaa1a063c569282106230da0092f4b0ad6ab4c2223ef37969e07bad",
+  "findings": {
+    "claims_resolution": {
+      "castle-defense": {"non_fixture": 136, "resolved": 136, "unresolvable": 0},
+      "magic-defense": {"non_fixture": 105, "resolved": 103, "unresolvable": 2},
+      "total": {"non_fixture": 314, "resolved": 302, "unresolvable": 12},
+      "wizard-vs-zombie": {"non_fixture": 73, "resolved": 63, "unresolvable": 10}
+    },
+    "failing_tests": [
+      "BatchAClaimLedgerTruthContract::test_magic_defense_claim_citations_resolve_against_git_revisions (2 fabricated citation envelopes: MD-HIST-001, MD-HIST-002)",
+      "BatchAClaimLedgerTruthContract::test_wizard_vs_zombie_claim_citations_resolve_against_git_revisions (10 unresolvable citations: WVZ-COMP-004/005/006, WVZ-MECH-008/019, WVZ-TEST-007/008, WVZ-HIST-002/003/004)",
+      "BatchAStopLossContract::test_zero_unsupported_factual_claims (aggregate: the same 12 claims)"
+    ],
+    "failing_tests_are_intended_detection_surfaces": true,
+    "gates_covered": ["G-DN", "G-CL", "G-NF", "G-BP", "G-SL", "G-AS", "G-RR"],
+    "gates_currently_red": ["G-CL", "G-SL", "G-RR"],
+    "gates_not_yet_coverable": {
+      "G-PO": "product-owner-acceptance-batch-a.json does not exist yet; the gate binds a downstream orchestrator artifact"
+    },
+    "negative_fixtures_rederived": 12,
+    "stop_loss_observations": [
+      "SLO-TTA-BA-1 (BLOCKING, evidence fabrication): 12 of 326 ledger claims carry citation envelopes that do not resolve. Nine are fabricated (MD-HIST-001/002 use the SHA-256 of the empty byte string as blob_sha256 and share one identical range hash across two different ranges -- the real historical blob at 097545f1 is a05dc35f...; WVZ-COMP-004, WVZ-MECH-019, WVZ-TEST-007 match no contiguous window of the cited file or its host copies at any width/encoding; WVZ-TEST-008, WVZ-HIST-002/003/004 are literally sequential-hex placeholder strings). Three are anchor-drifted (WVZ-COMP-005 real window 484-504 vs cited 482-504; WVZ-COMP-006 real 33 vs cited 35; WVZ-MECH-008 real 172-182 vs cited 171-182). Per the program rule 'One unsupported or fabricated factual claim stops the batch', gates G-CL and G-SL are RED and Batch A acceptance is blocked until the magic-defense and wizard-vs-zombie evidence is remediated (re-collection or receipt-superseding correction). 10 of the 12 bad ids are cited as blueprint backing (MD-HIST-001/002; WVZ-COMP-004/005/006, WVZ-HIST-004, WVZ-MECH-008/019, WVZ-TEST-007/008), so the blueprint is evidentially contaminated in those entries even though its structural references resolve.",
+      "SLO-TTA-BA-2 (BLOCKING, receipt immutability breach, A15-class): the wizard-vs-zombie evidence-collector receipt was mutated in place by commit ca423fbb (an unrelated Company SSO track commit), rewriting its commit_sha and final-response fields after binding; its enumerated output hash for the wizard-vs-zombie final report matches neither the HEAD bytes nor the bytes at the authoritative bind commit 20af6417. This is the full IMP-WVZ-1 manifestation; G-RR stays red until a superseding receipt lands on a new commit. The original must not be edited again.",
+      "SLO-TTA-BA-3 (informational, line-anchor drift): several hash-honest magic-defense claims carry drifted prose line anchors (MD-MECH-002 cites controller line 48 while the XP formula lives at lines 45-46; MD-MECH-003 names useGameStore.ts line 9 while MAX_CASTLE_HP is exported at line 13; MD-MECH-008 cites GameEngine.tsx 337-340 while the lowercased translation equality lives at line 369; MD-TRANS-002's status assignment sits one line past the cited range). Hashes match the cited ranges; semantics re-derive from the pinned blobs. Recorded for the adversarial reviewer's sampling pass.",
+      "SLO-TTA-BA-4 (confirmed, confined): IMP-CD-1 (castle-defense receipt lacks the final-response hash field entirely) and IMP-MD-1 (magic-defense receipt carries the strategy-documented placeholder literal) are exactly the two documented A15-class receipt imperfections and no others exist in the receipt set; the suite confines this state so any new placeholder fails loudly. G-RR remediation (superseding receipts on new commits) remains outstanding."
+    ],
+    "subclasses_tested_per_class": {
+      "BatchAActionDefenseSpecificContract": 4,
+      "BatchABlueprintTruthContract": 8,
+      "BatchAClaimLedgerTruthContract": 12,
+      "BatchADenominatorTruthContract": 6,
+      "BatchANegativeFixtureContract": 6,
+      "BatchAStopLossContract": 5
+    },
+    "test_classes": [
+      "BatchADenominatorTruthContract",
+      "BatchAClaimLedgerTruthContract",
+      "BatchABlueprintTruthContract",
+      "BatchAActionDefenseSpecificContract",
+      "BatchANegativeFixtureContract",
+      "BatchAStopLossContract"
+    ],
+    "test_run": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests.py -> 3 failed, 38 passed, 360 subtests passed in 6.71s (exit 1)",
+    "tests_authored": 41,
+    "tests_passing": 38
+  },
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests.py": "2f62f316ceaa1a063c569282106230da0092f4b0ad6ab4c2223ef37969e07bad"
+  },
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests.py",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-a.json"
+  ],
+  "output_sha256": "2f62f316ceaa1a063c569282106230da0092f4b0ad6ab4c2223ef37969e07bad",
+  "output_sha256_basis": "SHA-256 of batch-a-truth-tests.py, the primary role artifact (mirrors the pilot convention of hashing the deliverable module as output_sha256). This receipt is excluded from output_hashes per the no-self-hash convention used by the requirements-mapper receipt.",
+  "parent_ancestry_ids": [],
+  "phase": "Phase 3: Truth tests (Batch A)",
+  "phase_base_sha": "9228c5c5",
+  "predecessor_binding": {
+    "mapper_outputs_commit": "fc643d04",
+    "phase_base_sha": "9228c5c5",
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "t1_evidence_integrity_gate": "phase4-v8-candidate (5aea360f)",
+    "t2_accepted_denominator_manifest_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "t2_accepted_partition_manifest_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "t3_accepted_pilot_manifest_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b"
+  },
+  "preserved_user_work": [
+    ".opencode/goals/state.json and .opencode/goals/state.json.ledger.jsonl (unrelated, modified before role start, not staged or touched)",
+    ".opencode/agent/ (unrelated, untracked before role start)",
+    "apps/sales-advantage/next-env.d.ts (unrelated, modified before role start)",
+    "measure/archive/apk_three_game_truth_pilot_20260712/metadata.json (unrelated, modified before role start)",
+    "measure/evidence_integrity_gates/__pycache__/ and measure/tests/**/__pycache__/ artifacts (generated/ignorable, untouched; suite runs under PYTHONDONTWRITEBYTECODE=1)",
+    "measure/archive/apk_source_denominator_inventory_20260712/__pycache__/ artifacts (generated/ignorable, untouched)",
+    "measure/tracks/agents_md_audit_science_advantage_20260603/ (unrelated untracked track directory, untouched)"
+  ],
+  "prompt_hash_note": "SHA-256 of the truth-test-author prompt text as received in the user turn (verbatim reconstruction hashed; no system/harness wrapper included). The reconstruction covers the full user-authored prompt from 'You are the truth-test-author subagent' through the final instruction paragraph.",
+  "prompt_sha256": "76c074e3e516021bed5c477cd82caff147a04cf22af9bacd2a9803db3e592533",
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "role": "truth-test-author",
+  "role_base_sha": "0b641aa3bf24d2d265534adafcf26206032e0be5",
+  "role_base_sha_note": "git rev-parse HEAD captured at role start (2026-07-20); HEAD was 0b641aa3 ('chore(measure): bind t4 batch-a mapper receipt'). No commits were authored by this role; the orchestrator binds the receipt commit after role completion.",
+  "role_isolation": {
+    "note": "Fresh isolated truth-test authoring for Batch A only. No predecessor artifact, plan.md, tracks.md, registry, or other role's output was modified. Tests derive exclusively from the enumerated committed inputs; no collector/mapper completion narrative was used as a derivation source. The module does not import from the pilot track.",
+    "roles_held": ["truth-test-author"],
+    "roles_not_held": [
+      "discovery-auditor",
+      "evidence-collector",
+      "requirements-mapper",
+      "browser-auditor",
+      "asset-auditor",
+      "adversarial-reviewer",
+      "orchestrator",
+      "product-owner"
+    ]
+  },
+  "schema_version": "apk-role-receipt.v1",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "spawn_id": "truth-test-author:t4-batch-a:2026-07-20",
+  "start_event_id": "t4-batch-a-truth-test-author-start:2026-07-20T00:00:00Z",
+  "status": "complete-self-attested",
+  "task_id": "truth-test-author:t4-batch-a",
+  "timing_note": "The harness does not expose provider session/message event IDs or timestamps; logical event IDs are role-scoped markers. Session activity is bounded by the role-base SHA capture at start and the orchestrator's receipt-bind commit after role completion.",
+  "track_id": "apk_corpus_audit_action_defense_20260712"
+}
