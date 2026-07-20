@@ -1,0 +1,124 @@
+{
+ "schema_version": "apk-role-receipt.v1",
+ "status": "complete-self-attested",
+ "track_id": "apk_corpus_audit_action_defense_20260712",
+ "phase": "Phase 1: Batch A evidence packages (cycle 2 remediation)",
+ "role": "evidence-collector",
+ "task_id": "evidence-collector:magic-defense:t4-batch-a:v2",
+ "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+ "phase_base_sha": "9228c5c5",
+ "role_base_sha": "141ded71a7b4849b5773afa80587218c91bff61d",
+ "spawn_id": "evidence-collector-magic-defense-v2:t4-batch-a:2026-07-20",
+ "parent_ancestry_ids": [],
+ "prompt_sha256": "f918d9209254a3ae01de1d9025b2ca76ea998e91b7e00cc7fc9b60f4745f1def",
+ "prompt_sha256_basis": "SHA-256 over a faithful transcription of the orchestrator dispatch prompt as received in this session's context (transcription stored at /tmp/opencode/orchestrator-prompt-magic-defense-v2.txt during the session). The orchestrator holds the canonical prompt bytes; any transcription drift surfaces as a hash mismatch and should be treated as a receipt defect, not concealed.",
+ "actual_context_manifest_sha256": "eb9d65dd4310a1dae0ad1d9e8274a498a9cacf6e11825157c34352b2a87d60a3",
+ "actual_context_manifest_basis": "SHA-256 of a JSON manifest (schema apk-context-manifest.v1) enumerating the 12 working-tree input files actually read (each with its sha256) plus the git objects read (blob 097545f1:magic-defense.json = a05dc35f...556d, commits 5464dc6b and 6998570b, role_base HEAD 141ded71, phase_base 9228c5c5, deletion-commit check 8b98aed0). Manifest copy retained at /tmp/opencode/md-v2-context-manifest.json during the session.",
+ "start_event_id": "md-collect-v2-start:2026-07-20T00:00:00Z",
+ "end_event_id": "md-collect-v2-end:2026-07-20T00:00:00Z",
+ "timing_note": "Harness did not capture a distinct session-start timestamp; start and end event timestamps both reflect receipt finalization time. Session activity is bounded by role_base_sha 141ded71 (HEAD at role start) and the audited HEAD at authoring completion.",
+ "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+ "inherited_narrative": false,
+ "fork_turns": "none",
+ "allowed_inputs": [
+  "measure/apk-evidence-reconstruction-program.md",
+  "measure/apk-evidence-cohort-protocol.md",
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md",
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-a.md",
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/_orchestrator/LAST-BATCH-STATUS.md",
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests.py",
+  "measure/archive/apk_three_game_truth_pilot_20260712/truth_tests.py",
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger.json",
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-evidence-method.md",
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-evidence-final-report.json",
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-magic-defense.json",
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/stop-loss-resolutions-batch-a.md",
+  "git object store (read-only: git show/log/rev-parse/cat-file/ls-tree, sha256sum, python3 hashlib)"
+ ],
+ "read_only_inputs_note": "No v1 artifact (ledger, method, final-report, receipt), no plan.md, no tracks.md, no blueprint, no hypotheses, no mapper report/receipt, no truth-tests, and no truth-test receipt was modified. Git object store was read via git show/log/rev-parse/cat-file only. Unrelated dirty working-tree paths present at role start were preserved untouched.",
+ "role_isolation": {
+  "roles_held": ["evidence-collector"],
+  "roles_not_held": ["discovery-auditor", "requirements-mapper", "truth-test-author", "adversarial-reviewer", "orchestrator"],
+  "note": "Fresh isolated v2 re-collection for magic-defense only. The v1 collector's claim texts and non-fabricated citations were treated as untrusted input until mechanically re-verified with the truth-test-author's resolve_claim_citation; the wizard-vs-zombie sibling ledger was not used as a factual citation source."
+ },
+ "output_paths": [
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger-v2.json",
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-evidence-method-v2.md",
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-evidence-final-report-v2.json",
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-magic-defense-v2.json"
+ ],
+ "output_hashes": {
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger-v2.json": "10d974bd3e620a4aaacde171a80e5f82945f58fdbd38db57b996805b62b71e45",
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-evidence-method-v2.md": "7a83f45c1bd2869103ac7fe6aad24652fd517714e967584d15c0e521c72cb6f5",
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-evidence-final-report-v2.json": "<computed-at-bind-by-orchestrator>"
+ },
+ "commit_sha": "<pending-orchestrator-bind>",
+ "final_response_sha256": "10d974bd3e620a4aaacde171a80e5f82945f58fdbd38db57b996805b62b71e45",
+ "final_response_sha256_basis": "SHA-256 of magic-defense-claim-ledger-v2.json, the primary role artifact, computed with python3 hashlib.sha256 over the committed-to-working-tree bytes at authoring time.",
+ "budget_declaration": {
+  "schema_version": "apk-role-budget-declaration.v1",
+  "role": "evidence-collector",
+  "frozen_resource_ceiling": "not-supplied-by-orchestrator-prompt (no numeric ceilings were declared before source work; flagged as visible unknown, matching v1/rpg-battle convention)",
+  "actual_usage": {
+   "claims_authored": 2,
+   "claims_preserved_from_v1": 108,
+   "claims_total_in_v2_ledger": 110,
+   "negative_fixtures": 5,
+   "files_read": 12,
+   "command_invocations": 14
+  },
+  "measurement_basis": {
+   "claims_authored": "2 corrected citation envelopes (MD-HIST-001, MD-HIST-002) computed from the real blob at 097545f1",
+   "claims_preserved_from_v1": "108 v1 entries carried verbatim into the v2 ledger after independent mechanical re-verification (103 non-fixture claims that resolve via resolve_claim_citation plus 5 negative fixtures); the 2 corrected history claims bring the v2 non-fixture total to 105",
+   "negative_fixtures": "MD-NEG-001 (must FAIL with REAL citation) + MD-NEG-002..005 (must REJECT), preserved unchanged from v1",
+   "files_read": "12 working-tree inputs enumerated in the actual-context manifest (program docs, spec, strategy, LAST-BATCH-STATUS, batch-a-truth-tests.py, pilot truth_tests.py, 4 v1 artifacts, stop-loss resolutions)",
+   "command_invocations": "git rev-parse/cat-file/show/log + sha256sum + python3 computation/verification scripts + Read/Grep/Bash tool calls"
+  }
+ },
+ "stop_loss_observations": {
+  "unsupported_factual_claims": 0,
+  "denominator_mismatches": 0,
+  "failed_fix_review_cycles": 0,
+  "unresolved_blocking_findings": {
+   "critical": 0,
+   "high": 0,
+   "medium": 0
+  },
+  "carried_forward": [
+   "SLO-MD-1 (controller denominator gap) — resolved ACCEPT-AS-CONDITIONAL by orchestrator in stop-loss-resolutions-batch-a.md; carried forward as conditional_open_items, unchanged by this role"
+  ],
+  "correction_narrative": "SLO-MD-2 (this role's label for the cycle-1 fabrication finding): MD-HIST-001/002 v1 envelopes fabricated; corrected in the v2 ledger with real-blob hashes (a05dc35f...556d; range fc872cf1...e9a6 for MD-HIST-002). Detection credit: truth-test-author-batch-a, receipt bound at 5464dc6b."
+ },
+ "findings": {
+  "claims_total": 110,
+  "negative_fixtures": 5,
+  "mode": "A (additive supersession)",
+  "supersession": [
+   {
+    "claim_id": "MD-HIST-001",
+    "old_blob_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "new_blob_sha256": "a05dc35f80130771bf0340794717f830793c9a9fa712f846514b08f45f4d556d",
+    "old_cited_range_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "new_cited_range_sha256": "a05dc35f80130771bf0340794717f830793c9a9fa712f846514b08f45f4d556d",
+    "old_line_range": "1..1",
+    "new_line_range": "1..14",
+    "resolver_verdict_v2": "whole-file (ok=True)"
+   },
+   {
+    "claim_id": "MD-HIST-002",
+    "old_blob_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "new_blob_sha256": "a05dc35f80130771bf0340794717f830793c9a9fa712f846514b08f45f4d556d",
+    "old_cited_range_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "new_cited_range_sha256": "fc872cf1fa3cc60af64ede85b53ff4a7407a11d0cc4ef20ed60ca9806ee7e9a6",
+    "old_line_range": "1..14",
+    "new_line_range": "2..13",
+    "resolver_verdict_v2": "range (ok=True)"
+   }
+  ],
+  "independent_reverification": 108,
+  "independent_reverification_basis": "All 108 non-corrected v1 entries re-verified in this fresh context by executing the truth-test-author's resolve_claim_citation (imported from batch-a-truth-tests.py, not re-implemented) against the live git object store: 103/103 non-fixture claims resolve, 5/5 fixtures retain dispositions. Pre-correction run over v1 showed exactly 2 failures (MD-HIST-001, MD-HIST-002), justifying Mode A over Mode B.",
+  "verification_evidence": "PYTHONDONTWRITEBYTECODE=1 python3 <heredoc importing batch-a-truth-tests.py resolve_claim_citation over magic-defense-claim-ledger-v2.json> -> 105/105 non-fixture ok, MD-HIST-001 -> (True, 'whole-file'), MD-HIST-002 -> (True, 'range'), exit=0",
+  "commit_shas_referenced_resolve": "9228c5c5, 141ded71, 097545f14a8029d0c3451e3514841f9c5bf3e1c2, 6998570b, 5464dc6b, 8b98aed0, d119bbad all verified via git cat-file -t / git rev-parse during this session"
+ },
+ "acceptance": "not-claimed"
+}

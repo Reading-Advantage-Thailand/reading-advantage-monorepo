@@ -1,0 +1,135 @@
+{
+ "schema_version": "apk-evidence-collector-report.v1",
+ "track_id": "apk_corpus_audit_action_defense_20260712",
+ "role": "evidence-collector",
+ "task_id": "evidence-collector:magic-defense:t4-batch-a:v2",
+ "collector_agent": "evidence-collector-magic-defense-v2:t4-batch-a:2026-07-20",
+ "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+ "generated_at": "2026-07-20T00:00:00Z",
+ "claims_total": 110,
+ "claims_by_category": {
+  "identity": 16,
+  "mechanic": 22,
+  "asset": 16,
+  "route": 8,
+  "test": 9,
+  "history": 9,
+  "scene-state": 14,
+  "transition": 6,
+  "responsive": 5,
+  "negative_fixture": 5
+ },
+ "mode": "A (additive supersession; 108 v1 entries preserved, 2 fabricated envelopes corrected)",
+ "negative_fixtures": [
+  {
+   "claim_id": "MD-NEG-001",
+   "covers": "mechanic (XP-multiplier injection, must FAIL with REAL citation; controller.ts:48-60 + page.tsx:61 contain no multiplier branch)",
+   "expected_disposition": "FAIL"
+  },
+  {
+   "claim_id": "MD-NEG-002",
+   "covers": "architecture (generic /games/_shared/defense-template.tsx, REJECT — directory-only claim, no such file exists in the repo)",
+   "expected_disposition": "REJECT"
+  },
+  {
+   "claim_id": "MD-NEG-003",
+   "covers": "responsive (regex matchMedia responsive template, REJECT — mechanical absence: matchMedia substring does not appear in any magic-defense/shared file)",
+   "expected_disposition": "REJECT"
+  },
+  {
+   "claim_id": "MD-NEG-004",
+   "covers": "asset (directory-only citation, REJECT — validation failure regardless of truth value)",
+   "expected_disposition": "REJECT"
+  },
+  {
+   "claim_id": "MD-NEG-005",
+   "covers": "mechanic (fabricated Redis sorted-set claim, REJECT — no Redis/zadd/sorted-set identifiers in magic-defense-controller.ts)",
+   "expected_disposition": "REJECT"
+  }
+ ],
+ "commit_sha_outputs": "<pending-orchestrator-bind>",
+ "output_hashes": {
+  "magic-defense-claim-ledger-v2.json": "10d974bd3e620a4aaacde171a80e5f82945f58fdbd38db57b996805b62b71e45",
+  "magic-defense-evidence-method-v2.md": "7a83f45c1bd2869103ac7fe6aad24652fd517714e967584d15c0e521c72cb6f5",
+  "magic-defense-evidence-final-report-v2.json": "<self-referential; orchestrator binds at receipt>",
+  "role-receipts/evidence-collector-magic-defense-v2.json": "<pending-orchestrator-bind>"
+ },
+ "final_response_sha256": "10d974bd3e620a4aaacde171a80e5f82945f58fdbd38db57b996805b62b71e45",
+ "supersession_log": [
+  {
+   "claim_id": "MD-HIST-001",
+   "detected_by": "truth-test-author-batch-a (receipt bound at 5464dc6b)",
+   "v1_envelope": {
+    "blob_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cited_range_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "line_range": "1..1",
+    "verdict": "fabricated (empty-string blob hash; single-newline range hash)"
+   },
+   "v2_envelope": {
+    "blob_sha256": "a05dc35f80130771bf0340794717f830793c9a9fa712f846514b08f45f4d556d",
+    "cited_range_sha256": "a05dc35f80130771bf0340794717f830793c9a9fa712f846514b08f45f4d556d",
+    "line_range": "1..14",
+    "resolver_class": "whole-file"
+   },
+   "supersedes_commit": "6998570b"
+  },
+  {
+   "claim_id": "MD-HIST-002",
+   "detected_by": "truth-test-author-batch-a (receipt bound at 5464dc6b)",
+   "v1_envelope": {
+    "blob_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cited_range_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "line_range": "1..14",
+    "verdict": "fabricated (empty-string blob hash; single-newline range hash)"
+   },
+   "v2_envelope": {
+    "blob_sha256": "a05dc35f80130771bf0340794717f830793c9a9fa712f846514b08f45f4d556d",
+    "cited_range_sha256": "fc872cf1fa3cc60af64ede85b53ff4a7407a11d0cc4ef20ed60ca9806ee7e9a6",
+    "line_range": "2..13",
+    "resolver_class": "range"
+   },
+   "supersedes_commit": "6998570b"
+  }
+ ],
+ "stop_loss_observations": [
+  {
+   "id": "SLO-MD-1",
+   "kind": "denominator-gap-candidate",
+   "status": "resolved-conditional (stop-loss-resolutions-batch-a.md: ACCEPT-AS-CONDITIONAL, controlled inclusion via mapper; carry forward as conditional_open_items)",
+   "detail": "apps/reading-advantage/server/controllers/magic-defense-controller.ts (sha256 f356ad6880307f274c85d851caaa185fb69c62d808f29e83084c9d2ab6f30eff, 314 lines) exists at baseline and is imported by three in-denominator API routes (complete/ranking/vocabulary) but has no accepted-denominator record. Carried forward unchanged from v1; resolution recorded by the orchestrator."
+  },
+  {
+   "id": "SLO-MD-2",
+   "kind": "fabricated-citation-correction",
+   "status": "corrected-by-this-role",
+   "detail": "v1 entries MD-HIST-001 and MD-HIST-002 carried fabricated citation envelopes (blob_sha256 = empty-string hash e3b0c442...b855; cited_range_sha256 = 01ba4719...546b, the hash of a single newline). Detected by the cycle-1 truth-test-author (receipt 5464dc6b) and escalated in _orchestrator/LAST-BATCH-STATUS.md. Corrected in magic-defense-claim-ledger-v2.json with envelopes computed from the real blob at 097545f1 (a05dc35f...556d): MD-HIST-001 whole-file 1..14, MD-HIST-002 entry-lines 2..13 (fc872cf1...e9a6). Claim texts were true; only envelopes were fabricated. All 108 other v1 citations independently re-verified against the live git object store with the truth-test-author's resolve_claim_citation and resolve cleanly (105/105 non-fixture claims OK, 5/5 fixtures retain dispositions)."
+  }
+ ],
+ "envelope": {
+  "predecessor_binding": {
+   "t1_evidence_integrity_gate": "phase4-v8-candidate (5aea360f)",
+   "t2_accepted_denominator_manifest_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+   "t2_accepted_partition_manifest_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+   "t3_accepted_pilot_manifest_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+   "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+   "phase_base_sha": "9228c5c5",
+   "role_base_sha": "141ded71a7b4849b5773afa80587218c91bff61d",
+   "v1_collector_outputs_commit": "6998570b",
+   "v1_truth_test_receipt_bind": "5464dc6b"
+  }
+ },
+ "visible_unknowns": [
+  "Carried forward unchanged from v1: advantage-games RankingDialog fetches /api/v1/games/magic-defense/ranking which exists only in reading-advantage (MD-ROUTE-008 / MD-ID-013). Browser audit needed.",
+  "Carried forward unchanged from v1: E2E spec asserts page.locator('canvas').first() visible (MD-TEST-009) while implementation is DOM/framer-motion; known debt in compliance audit (MD-HIST-006).",
+  "Carried forward unchanged from v1: StartScreen uses 'normal' difficulty id while RankingDialog uses 'medium' (same host, two different difficulty keys).",
+  "Carried forward unchanged from v1: Compliance audit (MD-HIST-006) reports 3 architecture FAILs (React-Konva, pure tick functions, rAF loop) explicitly documented as known debt.",
+  "The working-tree hash of the v1 final report (c9585e72...) differs from the hash recorded in the v1 receipt (d1944621...); the file was refreshed at the v1 receipt-bind commit d119bbad. v1 artifacts were not modified by this role.",
+  "prompt_sha256 in the v2 receipt is computed over a faithful transcription of the orchestrator dispatch prompt captured in this session's context; the orchestrator holds the canonical prompt bytes."
+ ],
+ "role_boundary_notes": [
+  "No v1 artifact (ledger, method, final report, receipt) was modified; supersession is additive per the claim-evidence contract.",
+  "No plan.md, tracks.md, blueprint, hypotheses, mapper report, mapper receipt, truth-tests, or truth-test receipt was modified.",
+  "plan.md task markers are left to the orchestrator per role isolation.",
+  "Unrelated dirty working-tree paths observed at role start (.opencode/, __pycache__/, apps/sales-advantage/next-env.d.ts, measure/archive metadata, agents_md_audit_science_advantage_20260603/) were classified as unrelated user work / generated output and left untouched."
+ ]
+}
