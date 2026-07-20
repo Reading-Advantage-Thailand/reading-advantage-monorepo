@@ -1,0 +1,26 @@
+{
+  "schema_version": "apk-evidence-collector-report.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "task_id": "collect-game-evidence:vocabulary/dragon-rider",
+  "role": "evidence-collector",
+  "collector_agent": "evidence-collector-dragon-rider:phase1:2026-07-20",
+  "source_revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "ledger_path": "packages/vocabulary/dragon-rider/claim-evidence-ledger.json",
+  "method_path": "packages/vocabulary/dragon-rider/evidence-method.md",
+  "claims_total": 16,
+  "claims_by_category": {"identity": 1, "identity-route": 1, "scene": 1, "state": 1, "mechanic": 2, "transition": 4, "layout": 1, "control": 1, "responsive": 1, "asset-usage": 1, "route-api": 1, "fixture-test": 1},
+  "current_state_claims": 16,
+  "historical_state_claims": 0,
+  "unknown_records": 4,
+  "fixture_records": 3,
+  "browser_interactions": 0,
+  "trusted_native_input": "unavailable/not attempted",
+  "stop_loss_observations": [
+    {"id": "SLO-DR-1", "kind": "browser-boundary", "detail": "No browser evidence was collected by this evidence-collector role; runnable disposition remains unknown."},
+    {"id": "SLO-DR-2", "kind": "historical-boundary", "detail": "No historical source claim was made; historical behavior remains unknown."}
+  ],
+  "output_hashes": {"claim-evidence-ledger.json": "10d541da93265eb6f179104c508472fdb86191d823fa9dee0e519a35b34f0071", "evidence-method.md": "866d614da5a27cc5c6809d4434beb02f03dbd8f15e26aac08a3e790fffb48498"},
+  "review": {"reviewer_agent": "unavailable", "disposition": "pending-independent-review", "blocking_findings": "unavailable"},
+  "role_boundary_notes": ["Only Dragon Rider was collected.", "No source, plan, registry, browser, mapper, truth-test, or review artifact was edited.", "No commit was created."]
+}

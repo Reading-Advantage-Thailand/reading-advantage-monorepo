@@ -1,0 +1,84 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "truthful-unattested-budget-blocked",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "evidence-collector",
+  "task_id": "collect-game-evidence:spellweavers-run",
+  "game": "spellweavers-run",
+  "canonical_identity": "catalog/spellweavers-run",
+  "agent_id": "unavailable",
+  "spawn_id": "unavailable",
+  "parent_id": "unavailable",
+  "ancestry": [],
+  "fork_turns_none": "unavailable",
+  "provider_attestation": "The API harness exposed no provider session, spawn, ancestry, or fork attestation. Freshness is user-directed but is not represented as tool-attested isolation proof.",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "aef2a5a0da9c4a687295af0fc841c5e8e09180f0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "budget_declaration_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+  "budget_declaration_sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+  "budget_binding_discrepancy": "The frozen declaration records role_base_sha 52e48970bc9c4b585c55b53072ebebe466a1c4f4, while this dispatch supplied role_base_sha aef2a5a0da9c4a687295af0fc841c5e8e09180f0. The discrepancy is preserved rather than rewritten.",
+  "prompt_sha256": "unavailable",
+  "prompt_hash_reason": "Canonical raw user-message bytes and provider envelope bytes are not exposed by the harness; a reconstructed prose hash was not substituted.",
+  "allowed_input_manifest_sha256": "unavailable",
+  "allowed_input_reason": "Phase 0 names a generic collector output but no Phase-1 Spellweaver-specific allowed-input manifest/hash exists at the supplied role base.",
+  "actual_context_manifest_sha256": "unavailable",
+  "prior_role_history": "unavailable",
+  "events": {
+    "start_event_id": "unavailable",
+    "end_event_id": "unavailable",
+    "started_at": "unavailable",
+    "ended_at": "unavailable"
+  },
+  "final_response_sha256": "unavailable",
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-method.md",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-final-report.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-spellweavers-run.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger.json": "2cd708cbecf94133b92ce5f06822ad420da28a1d4417fdb74284528e7a9fe24b",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-method.md": "07706a88f8d1de23ada15057184ee9789b85b8b0b4976b1e3428d6a23c3ef367",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-final-report.json": "52eb0a6c1b3431657635d73a0955787b7f03b2e52a210ba52b537d0d2ae49c98"
+  },
+  "budget": {
+    "ceiling": {
+      "source_bytes": 8000000,
+      "source_files_objects": 160,
+      "commands": 70,
+      "elapsed_minutes": 120,
+      "records_authored_reviewed": 300,
+      "browser_interactions": 0,
+      "captured_artifacts": 80
+    },
+    "actual": {
+      "source_bytes": 11558850,
+      "source_files_objects": 19,
+      "commands": 24,
+      "elapsed_minutes": null,
+      "records_authored_reviewed": 51,
+      "browser_interactions": 0,
+      "captured_artifacts": 4
+    },
+    "measurement_status": "source bytes exceed ceiling; elapsed minutes unavailable"
+  },
+  "findings": [
+    "Current gameplay implementation and runnable route are unavailable at the role base; only exact catalog/current, accepted-baseline, and reachable-historical facts are recorded.",
+    "The frozen source-byte ceiling was exceeded by 3558850 bytes when exact denominator reconciliation included the 8356704-byte phase3-reconciliation.json object.",
+    "Elapsed time and provider provenance are unavailable and were not fabricated.",
+    "The package must remain non-authoritative pending orchestrator disposition and independent review."
+  ],
+  "stop_loss": {
+    "unsupported_accepted_factual_claims": 0,
+    "denominator_mismatches": 0,
+    "budget_breaches": 1,
+    "unmeasured_roles": 1,
+    "stale_receipts": 0,
+    "disposition": "STOP"
+  },
+  "commit_sha": "uncommitted",
+  "acceptance": "not-claimed",
+  "reviewer_disposition": "pending-independent-review"
+}

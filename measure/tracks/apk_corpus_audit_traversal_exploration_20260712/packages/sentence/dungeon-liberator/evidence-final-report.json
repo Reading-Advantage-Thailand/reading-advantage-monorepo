@@ -1,0 +1,33 @@
+{
+  "schema_version": "apk-evidence-collector-final-report.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "game": "Dungeon Liberator",
+  "disposition": "source-evidence-collected-not-reviewed-not-accepted",
+  "source_revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "denominator_reconciliation": {
+    "accepted_partition_path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+    "accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "partition_citation": {"revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4", "line_start": 75, "line_end": 76, "cited_range_sha256": "8c5f5faa2685b438be8c71e68641300e4ee1c1a3284a084d3600829b7835d0bf", "blob_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0"},
+    "canonical_identity": "Dungeon Liberator",
+    "assigned_cohort": "Traversal and exploration",
+    "assignment_count_for_identity": 1,
+    "source-package-identity": "sentence/dungeon-liberator",
+    "reconciliation_result": "matched; this collector did not change the denominator"
+  },
+  "coverage": {"atomic_source_claims": 16, "cited_product_files": 4, "source_fact_categories": ["topology", "movement", "collision", "transition", "input", "camera", "responsive", "asset", "camera-indicator", "route"]},
+  "supported_summary": [
+    "The implementation defines a bounded 800-by-600 world, player-following clamped camera transform, ordered prisoner collection, monster hazards, and a portal victory gate.",
+    "The component declares keyboard movement, a virtual D-pad integration, breakpoint/fullscreen container styles, and four source-referenced gameplay asset paths."
+  ],
+  "unavailable_provenance": {
+    "browser": "Not performed by this role; no runnable disposition or trusted-native-input claim.",
+    "asset_forensics": "Not performed; binary contents, dimensions, availability, and load results are unknown.",
+    "history": "Not performed; no historical claims.",
+    "review": "No adversarial reviewer receipt or disposition is available.",
+    "provider_spawn_and_isolation": "No collaboration-provider spawn, ancestry, or fork_turns=none attestation is available in this session."
+  },
+  "stop_loss": {"unsupported_factual_claims": 0, "denominator_mismatches": 0, "unresolved_critical": 0, "unresolved_high": 0, "unresolved_medium": 0, "status": "no collector-observed threshold breach; downstream review remains required"},
+  "acceptance_status": "non-consumable collector output; it cannot satisfy mapper, browser, truth-test, review, candidate, or acceptance requirements",
+  "marker": "MEASURE_AGENT_RESULT"
+}

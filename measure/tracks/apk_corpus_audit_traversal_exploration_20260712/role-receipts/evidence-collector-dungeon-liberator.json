@@ -1,0 +1,46 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-unattested-source-collection",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "evidence-collector",
+  "task_id": "collect-game-evidence:Dungeon Liberator",
+  "game": "Dungeon Liberator",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "aef2a5a0da9c4a687295af0fc841c5e8e09180f0",
+  "base_reconciliation": "The supplied role base differs from the phase base. Exact factual citations use the supplied phase base; no substitution was made.",
+  "agent_id": "unavailable",
+  "spawn_id": "unavailable",
+  "parent_ancestry_ids": "unavailable",
+  "fork_turns_none": "unavailable",
+  "provider_attestation": "Unavailable: this session exposed no collaboration-provider spawn, ancestry, prompt-export, or fork attestation.",
+  "prompt_sha256": "unavailable",
+  "allowed_input_manifest_sha256": "unavailable",
+  "actual_context_manifest_sha256": "unavailable",
+  "prior_role_history": "unavailable",
+  "events": {"start_event_id": "unavailable", "end_event_id": "unavailable", "started_at": "unavailable", "ended_at": "unavailable"},
+  "final_response_sha256": "unavailable",
+  "budget_declaration_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+  "budget_declaration_sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+  "actual_usage": {"source_bytes": 48411, "source_files_objects": 4, "commands": "partially measured", "elapsed_minutes": "unavailable-no-timing-attestation", "records_authored_reviewed": 16, "browser_interactions": 0, "captured_artifacts": 3},
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/evidence-method.md",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/evidence-final-report.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-dungeon-liberator.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger.json": "39c8ffd989b1d1bbdf86b535a37c3a2b3b3cbf7ba235613b9f0dfe0c9a321865",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/evidence-method.md": "39dc1e563059bdbca86ab8c83aadac4e31440c56cab2fb2df0a9a8dc54517dc8",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/evidence-final-report.json": "5e5137dc86c868a7c6258a903ea8c9d7412c27adc283c37d4b13bbe679b602b3",
+    "self": "intentionally-not-self-hashed"
+  },
+  "layout_normalization": "Uncommitted pre-bind path correction only: outputs were moved from the track root to packages/sentence/dungeon-liberator. This is not a historical supersession; factual content and content hashes are unchanged.",
+  "findings": [
+    "Role-isolation provenance is unavailable, so this receipt must not be treated as tool-attested fresh-context or fork_turns=none proof.",
+    "Elapsed-time and command-count telemetry are unavailable; the frozen budget therefore cannot be attested complete by this receipt.",
+    "No browser, asset-forensics, historical, mapper, truth-test, or adversarial-review artifact was authored by this collector."
+  ],
+  "commit_sha": "uncommitted",
+  "marker": "MEASURE_AGENT_RESULT"
+}
