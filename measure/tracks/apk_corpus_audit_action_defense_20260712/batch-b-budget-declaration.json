@@ -1,0 +1,33 @@
+{
+  "schema": "measure.batch-budget-declaration.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "role": "discovery-auditor-batch-b",
+  "baseline_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "budget_unit_definitions": {
+    "bytes": "bytes read or written by this role's declared artifact and query operations",
+    "files": "files opened, created, or modified by this role",
+    "commands": "shell commands or tool invocations used for discovery, validation, or hashing",
+    "minutes": "wall-clock execution budget",
+    "records": "bounded manifest, candidate, unknown, or receipt records produced"
+  },
+  "ceilings": {
+    "bytes": 10485760,
+    "files": 80,
+    "commands": 40,
+    "minutes": 20,
+    "records": 240
+  },
+  "role_ceilings": {
+    "discovery-auditor-batch-b": {"bytes": 10485760, "files": 80, "commands": 40, "minutes": 20, "records": 240},
+    "evidence-collector-batch-b": {"bytes": 52428800, "files": 120, "commands": 80, "minutes": 45, "records": 300},
+    "requirements-mapper-batch-b": {"bytes": 15728640, "files": 80, "commands": 50, "minutes": 25, "records": 240},
+    "truth-test-author-batch-b": {"bytes": 20971520, "files": 100, "commands": 60, "minutes": 30, "records": 260},
+    "browser-auditor-batch-b": {"bytes": 31457280, "files": 100, "commands": 70, "minutes": 40, "records": 240},
+    "asset-auditor-batch-b": {"bytes": 31457280, "files": 100, "commands": 70, "minutes": 40, "records": 240},
+    "adversarial-reviewer-batch-b": {"bytes": 20971520, "files": 80, "commands": 50, "minutes": 25, "records": 240},
+    "product-owner-batch-b": {"bytes": 10485760, "files": 60, "commands": 35, "minutes": 20, "records": 180},
+    "implementation-engineer-batch-b": {"bytes": 52428800, "files": 160, "commands": 100, "minutes": 60, "records": 300}
+  },
+  "allocation_policy": "Each role may use no more than its role ceiling; the discovery auditor may not consume another role's allocation. Unused allocation is not evidence."
+}

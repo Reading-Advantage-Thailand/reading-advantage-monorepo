@@ -1,0 +1,69 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "role": "discovery-auditor-batch-b",
+  "phase": "Phase 2: Batch B evidence packages",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "status": "completed discovery-only output; not reviewed or accepted",
+  "output_paths_and_sha256": [
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-budget-declaration.json","sha256":"7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-role-applicability.json","sha256":"71db3e7eb9ac71177d7a555ceb6e43218c9bcbd5ca0afdaa2b5574ace9a38bb4"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-discovery-audit.json","sha256":"7c1012debd287339cb3fbb7018282b5b0cd5beb9b78f9bf5df6cb96f4e6dbc61"}
+  ],
+  "allowed_input_manifest_sha256": "e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "input_hashes": {
+    "t2_accepted_denominator_manifest":"d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "t2_accepted_partition_manifest":"6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "t3_accepted_pilot_manifest":"cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "t1_gate_manifest":"d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+    "identity_denominator":"a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+    "source_denominator":"0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d",
+    "scene_state_denominator":"6308836ca24f1cac5bf4ded5f7e72c5ba06c08f4a5c6648620818b720190bf8b",
+    "asset_denominator":"41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "historical_denominator":"6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
+    "strategy":"7b3b5f3e4c0f8ba1309c2d22b0a815771f5c26f647cc7cb883ea84f0a03d00dc",
+    "spec":"d453a779c5475f09f6d59514e7914219c005b453188f3605ca92efdad41b2420",
+    "plan":"bcb6c54bd68a99050c850ef4174ceaf7389dde4a1233afb9c8b8bd7f22256bab"
+  },
+  "prompt_sha256": null,
+  "prompt_sha256_limitation": "The literal API/user prompt bytes are not available as a repository file or orchestration export in this session; no prompt hash is claimed.",
+  "orchestration": {
+    "spawn_id": null,
+    "parent_ancestry_ids": null,
+    "start_event_id": null,
+    "end_event_id": null,
+    "start_timestamp": null,
+    "end_timestamp": null,
+    "final_response_sha256": null,
+    "commit_sha": null,
+    "limitations": "No collaboration-tool event export, spawn metadata, final-response byte capture, or commit was provided. These fields are unavailable and intentionally unclaimed."
+  },
+  "isolation": {
+    "fresh_context_only": true,
+    "inherited_narrative": false,
+    "fork_turns": null,
+    "raw_isolation_proof": null,
+    "limitation": "The role was executed from the supplied fresh-context prompt, but provider-level fork_turns/raw-export proof is unavailable; fork_turns is not asserted."
+  },
+  "prior_role_history": {
+    "available": false,
+    "value": null,
+    "limitation": "No orchestration history export was available; no prior role IDs or events are invented."
+  },
+  "budget": {
+    "declaration_sha256":"7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+    "actual":{"bytes":3173117,"files":14,"commands":9,"minutes":8,"records":20,"source_bytes_read":3173117,"source_files_read":14,"command_invocations":9,"elapsed_minutes":8,"records_authored":20,"browser_interactions":0,"asset_candidates_inspected":12},
+    "ceilings":{"bytes":10485760,"files":80,"commands":40,"minutes":20,"records":240,"source_bytes_read":10485760,"source_files_read":80,"command_invocations":40,"elapsed_minutes":20,"records_authored":240,"browser_interactions":0,"asset_candidates_inspected":60},
+    "result":"within all declared ceilings"
+  },
+  "findings": [
+    "Exact Batch B scope reconciled to three accepted T2 identities and partition assignments.",
+    "The stale _orchestrator dispatch allocation conflict was recorded and resolved to the Phase 2 strategy/plan scope.",
+    "Runnable status, gameplay semantics, and asset usage remain unknown and were not authored as claims.",
+    "DISC-001 is present only in the discovery audit's labeled carried_forward_disclosures field."
+  ],
+  "append_only": true,
+  "supersedes_receipt": null,
+  "receipt_mutation_limitation": "This receipt has no tool-attested append event or commit binding because orchestration metadata and commit creation were unavailable; any changed output requires an additive superseding receipt."
+}
