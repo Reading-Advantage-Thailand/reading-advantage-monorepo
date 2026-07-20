@@ -1,5 +1,29 @@
 # T4 Action and Defense Evidence Cohort — Last Batch Status
 
+## Current: Batch B — STOP-LOSS ACTIVE (product-owner direction required)
+
+### Immutable phase base
+- `ff01cee9cc973dee89fdc0ba22102dcea0c50542` — Batch B strategy commit.
+
+### Scope and progress
+- Authoritative scope: Village Guardian, Archer's Revenge, Storm the Castle Tower.
+- Discovery, separate collector packages, separate mapper packages, asset audit, truth-test v3, and two fresh adversarial reviews are committed through `dd59e5e6`.
+- B0-B3 are green: exact scope and predecessors, source envelopes, per-game mapper backing, negative fixtures, and 12/12 asset-candidate reconciliation.
+- Fresh review v2 independently re-derived 29 factual claims and all 12 negative fixtures with zero envelope mismatch. It confirmed the original artifacts remain immutable and that no browser bypass occurred.
+
+### Blocking findings
+- **Critical B-BLOCK-001:** 87 unavailable provenance fields across active role receipts. Truthful null/unavailable values are non-passing; hash equality does not establish prompt/session/event/final-response/isolation/commit provenance.
+- **High B-BLOCK-002:** Two independent browser paths failed (`agent-browser` absent, then CDP/browser-harness attachment failure). No game is marked non-runnable; all three remain `audit-blocked` with zero real-input observations.
+- **Medium B-TEST-002:** `batch-b-truth-tests-v3.py` does not select the active browser/review v2 artifacts and all relevant receipts for B4/B5 machine verification.
+
+### Stop-loss decision
+- Browser remediation cycles used: 2 of 2.
+- Candidate, product-owner acceptance, and accepted manifest are **not authorized**.
+- Do not dispatch another browser/provenance remediation without product-owner direction. Preserve all evidence and receipts append-only.
+- Primary review record: `batch-b-adversarial-review-v2.json` at output commit `dd59e5e6`.
+
+---
+
 ## Batch A — STOP-LOSS TRIGGERED (Cycle 1 / 2)
 
 ### Phase base SHA (immutable, captured after strategy commit)
