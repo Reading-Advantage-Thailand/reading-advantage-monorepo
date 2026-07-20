@@ -57,7 +57,7 @@
   "output_sha256": "c90a443e487006ec2fe66efcb712433ad9694308aa65087bc7893107608ae88b",
   "final_response_sha256": "c90a443e487006ec2fe66efcb712433ad9694308aa65087bc7893107608ae88b",
   "final_response_sha256_basis": "SHA-256 of adversarial-review-batch-a-v2.md, the primary role artifact.",
-  "commit_sha": "<pending-orchestrator-bind>",
+  "commit_sha": "fd4c289f608b2f20c40e377da32dcbce3e708f61",
   "budget_declaration": {
     "schema_version": "apk-role-budget-declaration.v1",
     "role": "adversarial-reviewer",
