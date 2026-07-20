@@ -1,0 +1,138 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-self-attested",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 3: Truth tests (Batch A cycle 2 re-run)",
+  "role": "truth-test-author",
+  "task_id": "truth-test-author:t4-batch-a:v2",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "phase_base_sha": "9228c5c5",
+  "role_base_sha": "fadc4f46bacf1c3951c72c850b55fc621e063def",
+  "spawn_id": "truth-test-author:t4-batch-a:v2:2026-07-20",
+  "parent_ancestry_ids": [],
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "prompt_sha256": "014ec3b05be184aa30dd5c741b02da116e16f8894b15f75e6eaf40a7be06e58f",
+  "prompt_sha256_basis": "SHA-256 of the canonical role binding string apk_corpus_audit_action_defense_20260712|truth-test-author|cycle-2-rerun|phase=9228c5c5|role=fadc4f46bacf1c3951c72c850b55fc621e063def|v2-ledgers.",
+  "actual_context_manifest_sha256": "8d558f14ff252eec963773ec7ff026012ec064c9354ac88a2b678233d8a91103",
+  "actual_context_manifest_note": "SHA-256 of the canonical JSON mapping (sort_keys, compact separators) of the 14 factual/template inputs enumerated in allowed_inputs to their working-tree SHA-256 values. Project framework files measure/index.md, measure/workflow.md, and measure/code_styleguides/python.md were read only for repository workflow/style compliance and were not factual derivation inputs.",
+  "allowed_inputs": [
+    "measure/apk-evidence-reconstruction-program.md",
+    "measure/apk-evidence-cohort-protocol.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-a.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/_orchestrator/LAST-BATCH-STATUS.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests.py",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-claim-ledger-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-evidence-final-report-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-evidence-final-report-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-magic-defense-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-wizard-vs-zombie-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-wizard-vs-zombie-supersede.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-a.json",
+    "measure/archive/apk_three_game_truth_pilot_20260712/truth_tests.py",
+    "git object store (read-only)"
+  ],
+  "prior_role_history": [],
+  "start_event_id": "t4-batch-a-truth-test-author-v2-start:2026-07-20T00:00:00Z",
+  "end_event_id": "t4-batch-a-truth-test-author-v2-end:2026-07-20T00:00:00Z",
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests-v2.py",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-a-v2.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests-v2.py": "69c598729ca31c9f0c49aa8fae44077aa6522b2fe5e0767be491ab9ad3d68cba"
+  },
+  "output_hashes_note": "The receipt excludes itself from output_hashes to avoid a self-referential digest; the orchestrator bind commit supplies its immutable byte identity.",
+  "output_sha256": "69c598729ca31c9f0c49aa8fae44077aa6522b2fe5e0767be491ab9ad3d68cba",
+  "final_response_sha256": "69c598729ca31c9f0c49aa8fae44077aa6522b2fe5e0767be491ab9ad3d68cba",
+  "final_response_sha256_basis": "SHA-256 of batch-a-truth-tests-v2.py, the primary role artifact, matching the v1 truth-test-author receipt convention.",
+  "commit_sha": "<pending-orchestrator-bind>",
+  "budget_declaration": {
+    "schema_version": "apk-role-budget-declaration.v1",
+    "role": "truth-test-author",
+    "frozen_resource_ceiling": "unmeasured",
+    "frozen_resource_ceiling_explanation": "The dispatch supplied no numeric resource ceiling; this is disclosed rather than replaced with invented limits.",
+    "actual_usage": {
+      "bytes_read_from_hashed_inputs": 444061,
+      "source_files_hashed": 14,
+      "test_cases_authored": 47,
+      "test_subtests_passed": 189
+    }
+  },
+  "predecessor_binding": {
+    "phase_base_sha": "9228c5c5",
+    "role_base_sha": "fadc4f46bacf1c3951c72c850b55fc621e063def",
+    "v1_truth_test_receipt_bind": "5464dc6b",
+    "magic_defense_v2_receipt_bind": "760100fd6d0a7d41c520c6dc60a716c9f7ec0878",
+    "wizard_vs_zombie_v2_outputs_commit": "81c641a607572853bde05f8e7d3bc90c76e3470b",
+    "wizard_vs_zombie_v2_receipt_bind": "fadc4f46bacf1c3951c72c850b55fc621e063def"
+  },
+  "findings": {
+    "tests_authored": 47,
+    "tests_passing": 47,
+    "tests_failing": 0,
+    "test_subtests_passing": 189,
+    "test_classes": [
+      "BatchADenominatorTruthContract",
+      "BatchAClaimLedgerTruthContract",
+      "BatchABlueprintTruthContract",
+      "BatchAActionDefenseSpecificContract",
+      "BatchANegativeFixtureContract",
+      "BatchAStopLossContract"
+    ],
+    "test_run": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests-v2.py -> 47 passed, 189 subtests passed in 2.50s (exit 0)",
+    "claims_resolution": {
+      "magic-defense": {
+        "claims_total": 110,
+        "non_fixture": 105,
+        "resolved": 105,
+        "unresolvable": 0
+      },
+      "wizard-vs-zombie": {
+        "claims_total": 77,
+        "non_fixture": 73,
+        "resolved": 73,
+        "unresolvable": 0
+      },
+      "total": {
+        "claims": 187,
+        "non_fixture": 178,
+        "resolved": 178,
+        "unresolvable": 0,
+        "negative_fixtures_preserved": 9
+      }
+    },
+    "cycle_1_bad_claims": {
+      "expected": 12,
+      "corrected_or_replaced": 12,
+      "unresolved": 0
+    },
+    "gate_status": {
+      "G-CL": "GREEN",
+      "G-SL": "GREEN",
+      "G-RR": "GREEN-IN-SCOPE (v2 collector/supersede receipt coherence)",
+      "G-AS": "GREEN-IN-SCOPE (26 v2 asset-claim citation anchors); the downstream three-record asset-auditor summary is not an allowed input to this role"
+    },
+    "wvz_mode_b_schema_note": "wizard-vs-zombie-claim-ledger-v2.json is intentionally a raw JSON list rather than an envelope with a schema_version field. The tests bind its v2 identity through the Mode B report task_id/mode and the v2 collector receipt output path/hash; no schema field is invented.",
+    "receipt_mutation_acknowledged": "The WVZ supersede receipt records ca423fbb8eecbcfeb6bd0a156232462289c4726f as anti-pattern A15 and marks the v1 receipt superseded/non-authoritative."
+  },
+  "role_isolation": {
+    "roles_held": [
+      "truth-test-author"
+    ],
+    "roles_not_held": [
+      "discovery-auditor",
+      "evidence-collector",
+      "requirements-mapper",
+      "browser-auditor",
+      "asset-auditor",
+      "adversarial-reviewer",
+      "orchestrator",
+      "product-owner"
+    ],
+    "note": "No predecessor input, v1 truth test, v2 ledger, report, collector receipt, plan, track registry, or git object was modified."
+  }
+}
