@@ -1,0 +1,76 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "status": "browser audit authored; gate-blocked by unavailable browser runner; no runnable or non-runnable result claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-BROWSER",
+  "role": "browser-auditor-batch-b",
+  "role_identity": "browser-auditor-batch-b",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "63cb93a6b7b470f760e14cf3dc43ae894b518d4a",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "allowed_input_manifest_sha256": "e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+  "prompt_sha256": null,
+  "prompt_metadata_note": "Canonical prompt bytes and a tool-attested prompt event were not available; no prompt hash is invented.",
+  "actual_context_manifest_sha256": null,
+  "actual_context_manifest_note": "No provider-exported canonical context manifest was available. Repository inputs and their hashes are enumerated below.",
+  "spawn_id": null,
+  "provider_session_id": null,
+  "parent_ancestry_ids": null,
+  "prior_role_history": [],
+  "fork_turns": null,
+  "raw_isolation_proof": null,
+  "isolation_metadata_note": "No provider spawn, ancestry, fork-turns attestation, or raw-session export was available. These unavailable fields leave provenance non-passing and are not replaced by assertions.",
+  "start_event_id": null,
+  "start_event_timestamp": null,
+  "end_event_id": null,
+  "end_event_timestamp": null,
+  "event_metadata_note": "Provider tool event IDs and timestamps were unavailable. The audit's environment probe timestamp is recorded in the output but is not represented as a provider event.",
+  "final_response_sha256": null,
+  "final_response_event_id": null,
+  "final_response_metadata_note": "Canonical final-response bytes and event metadata were unavailable; output-file hashes are not substituted for them.",
+  "commit_sha": null,
+  "commit_note": "No commit was created, as instructed. Null is a non-passing provenance value, not a placeholder attestation.",
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-b.md": "7b3b5f3e4c0f8ba1309c2d22b0a815771f5c26f647cc7cb883ea84f0a03d00dc",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-role-applicability.json": "71db3e7eb9ac71177d7a555ceb6e43218c9bcbd5ca0afdaa2b5574ace9a38bb4",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-discovery-audit-v2.json": "f0f27734d22b8ec376bbf8b1fe96574a75f2c293766bee2440c0484164dd1daa",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v2.py": "c7cc96ebcbdd31dad929e063e5ec055b73e0d728a97a7ad2c4ebfa82393753e8",
+    "measure/apk-evidence-reconstruction-program.md": "d2aa36e0ce63ba70b9eb36d4ef22e99d2cb612e32ff05001402465677cbac83d",
+    "apps/advantage-games/package.json": "8fc83e94fc9f00421bea2430d46143059b9488ce01cba9f77df475cd581c99b3",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-budget-declaration.json": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f"
+  },
+  "output_paths_and_sha256": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit.json",
+      "sha256": "00bed85a95a043c9f404af1151a289d6cf16d064741b8cb00079c2c55cec8032"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-b.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot truthfully embed its own final SHA-256 because inserting it changes its bytes; an external immutable commit binding remains required."
+    }
+  ],
+  "findings": [
+    "agent-browser was unavailable: its PATH lookup produced no path and agent-browser --help exited 127 with command-not-found stderr.",
+    "No application server was started and no route was visited because a browser-capable execution path was unavailable.",
+    "Village Guardian's discovery-supplied route remains unvisited. Archer's Revenge and Storm the Castle Tower remain catalog-withdrawn with no discovered current route; neither absence is treated as an application behavior or non-runnable conclusion.",
+    "No student or application data, screenshots, accessibility snapshots, browser console records, network records, or real-input events were captured."
+  ],
+  "validation": {
+    "json_command": "python3 -m json.tool measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit.json >/dev/null && python3 -m json.tool measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-b.json >/dev/null",
+    "json_result": "exit 0",
+    "diff_check_command": "git diff --check",
+    "diff_check_result": "exit 0",
+    "truth_selector_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v2.py -k 'BatchBBrowserContract' --maxfail=1",
+    "truth_selector_result": "1 failed, 1 passed, 40 deselected; exit 1. The expected B4 failure names all three audit-blocked records as unreviewed dispositions; no green result is claimed."
+  },
+  "resource_use": {
+    "ceilings": {"bytes": 31457280, "files": 100, "commands": 70, "minutes": 40, "records": 240},
+    "actual": {"bytes": 80369, "files": 9, "commands": 32, "minutes": 5, "records": 6, "source_bytes_read": 80369, "source_files_read": 7, "command_invocations": 32, "elapsed_minutes": 5, "records_authored": 6, "browser_interactions": 0, "captured_artifacts": 0, "asset_candidates_inspected": 0},
+    "measurement_note": "The source-byte total is the sum of seven hashed role inputs. File count includes seven inputs and two created outputs. Command count includes skill/read/hash/probe/validation/diff calls. Browser interactions and captured artifacts are zero because agent-browser was unavailable."
+  },
+  "role_boundary": "Only batch-b-browser-audit.json and this receipt were created. No source/game code, tests, evidence or mapper artifacts, plans, registries, strategy, or other outputs were altered.",
+  "receipt_limit": "Missing provider provenance and the unavailable browser runner are explicit gate failures; this receipt does not claim independent review, acceptance, runnable behavior, non-runnable behavior, or a green B4 result."
+}

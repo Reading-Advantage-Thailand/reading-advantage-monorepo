@@ -1,0 +1,29 @@
+{
+  "schema":"apk-role-receipt.v1",
+  "status":"asset audit complete; independent review pending; provider event and raw isolation metadata unavailable",
+  "track_id":"apk_corpus_audit_action_defense_20260712",
+  "phase":"Phase 2: Batch B evidence packages",
+  "task_id":"B2-ASSET",
+  "role":"asset-auditor-batch-b",
+  "phase_base_sha":"ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha":"63cb93a6b7b470f760e14cf3dc43ae894b518d4a",
+  "source_baseline_revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "allowed_input_manifest_sha256":"e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "budget_declaration_sha256":"7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+  "prompt_sha256":null,"prompt_hash_unavailable_reason":"Canonical raw prompt bytes and provider prompt event were unavailable; no hash was invented.",
+  "actual_context_manifest_sha256":null,"actual_context_manifest_unavailable_reason":"No retained provider context manifest was exposed; exact input file hashes are enumerated below.",
+  "spawn_id":null,"parent_ancestry_ids":null,"prior_role_history":[],"fork_turns":null,"raw_isolation_proof":null,
+  "isolation_metadata_note":"Provider spawn, ancestry, fork-turns attestation, and raw export were unavailable; nulls are intentional.",
+  "start_event_id":null,"start_event_timestamp":null,"end_event_id":null,"end_event_timestamp":null,"event_metadata_note":"Provider event IDs and timestamps were unavailable and not synthesized.",
+  "final_response_sha256":null,"final_response_hash_note":"Canonical final-response bytes are unavailable until after receipt emission and are not exposed by the API.","commit_sha":null,"commit_note":"User prohibited commits; outputs remain uncommitted.",
+  "input_hashes":{
+    "test-strategy-batch-b.md":"7b3b5f3e4c0f8ba1309c2d22b0a815771f5c26f647cc7cb883ea84f0a03d00dc","batch-b-role-applicability.json":"71db3e7eb9ac71177d7a555ceb6e43218c9bcbd5ca0afdaa2b5574ace9a38bb4","batch-b-discovery-audit-v2.json":"f0f27734d22b8ec376bbf8b1fe96574a75f2c293766bee2440c0484164dd1daa","asset-file-denominator.json":"41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438","village-guardian-evidence-final-report-batch-b.json":"825a7c00a2e03b45f55749d1b69ee7dfc511080edcad91c116d703c7a321c1d1","archers-revenge-evidence-final-report-batch-b.json":"109d13c73429265af57fa0a7887a541c347b6f9761d18f1dcbd2b3e66511aea3","storm-castle-tower-evidence-final-report-batch-b.json":"034579508f1f57cf46c3e8456524f8ce376fdbfd1a047a3a49bde4e0d877aaa1","village-guardian-mapper-final-report-batch-b.json":"7634554a3b79d297f1e137fa499c03a6e6f4d97e4ddadc98dc5a526629e1fdc8","archers-revenge-mapper-final-report-batch-b.json":"6dc1e7d84814404da7233ece8eda664f9ed91d7457b4a32709c83abb1943259e","storm-castle-tower-mapper-final-report-batch-b.json":"d4739be9956e377eb103d2d9c623870c5a6a6a2dd470d95a48c7e34edcd6650e","batch-b-truth-tests-v2.py":"c7cc96ebcbdd31dad929e063e5ec055b73e0d728a97a7ad2c4ebfa82393753e8","measure/apk-evidence-reconstruction-program.md":"d2aa36e0ce63ba70b9eb36d4ef22e99d2cb612e32ff05001402465677cbac83d","measure/apk-evidence-cohort-protocol.md":"1f97ed8fd026cb0b1b49ed5de602252c075228981d1ff26640748b56ff2a3507","batch-b-budget-declaration.json":"7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f"
+  },
+  "outputs":[{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-asset-usage-audit.json","sha256":"845b36d54ec1677982c7e7f537d1282fe4caec86677302555998a834b6f8a9a8"}],
+  "output_hash_note":"The audit hash is null because embedding a file's own SHA-256 is self-referential; external binding is required.",
+  "findings":{"assigned_candidates":12,"reconciled_exactly_once":true,"unassigned_count":0,"duplicate_count":0,"browser_corroboration":"unavailable","suitability_or_licensing_decisions":0,"production_decisions":0},
+  "resource_use":{"ceilings":{"bytes":31457280,"files":100,"commands":70,"minutes":40,"records":240},"actual":{"bytes":4500000,"files":30,"commands":20,"minutes":15,"records":12,"source_bytes_read":4500000,"source_files_read":30,"command_invocations":20,"elapsed_minutes":15,"records_authored":12,"browser_interactions":0,"asset_candidates_inspected":12},"ceiling_breaches":0,"measurement_note":"Conservative labeled accounting within the frozen asset-auditor allocation; exact provider timing telemetry was unavailable."},
+  "reviewer":{"role":"adversarial-reviewer-batch-b","status":"pending; no self-review performed"},
+  "acceptance":"not-claimed",
+  "carried_forward_disclosures":[{"id":"DISC-001","classification":"Batch A process-only disclosure","use":"Process metadata only; not used as asset evidence."}]
+}
