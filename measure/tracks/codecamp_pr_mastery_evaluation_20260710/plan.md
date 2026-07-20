@@ -21,8 +21,8 @@ _Graph context: `reviewExercise` is reached through the API and durable worker; 
   - [x] Persist provenance and remove reliance on provider-global defaults — provenance persisted as immutable advisory evidence; cannot approve a PR or mutate Mastery.
 - [~] Task: Verify and document Phase S1
   - [x] Run AI/package/webhook/deploy-config gates, live preflight when credentialed — credentialed preflight passed on 2026-07-15 against `~x-ai/grok-latest`.
-  - [ ] graph update/audit, docs, doctor — pending after SSO cutover.
-  - [ ] Task: Measure - User Manual Verification 'Phase S1: Route review models explicitly' (Protocol in workflow.md)
+  - [ ] graph update/audit, docs, doctor — pending after Codecamp company-SSO cutover; the required `roles/secretmanager.secretAccessor` grant is open (production-rollout-20260718.md:37-40).
+  - [ ] Task: Measure - User Manual Verification 'Phase S1: Route review models explicitly' (Protocol in workflow.md) — pending credentialed Codecamp verification and the same SSO cutover.
 
 ## Phase S2: Produce objective-level review evidence
 _Story ref: spec.md#story-s2_
@@ -38,8 +38,8 @@ _Story ref: spec.md#story-s2_
   - [x] Validate model output twice and render grounded GitHub/student feedback — output validated; GitHub Check Runs context bounded to allowed fields and explicitly unavailable when credentials missing.
 - [~] Task: Verify and document Phase S2
   - [x] Run domain/AI/webhook/security/fixture suites — 39+47+40+25+15+24 = 190 focused tests pass; webhooks build passed; lint clean.
-  - [ ] graph caller checks, affected builds, docs, doctor — pending after SSO cutover.
-  - [ ] Task: Measure - User Manual Verification 'Phase S2: Produce objective-level review evidence' (Protocol in workflow.md)
+  - [ ] graph caller checks, affected builds, docs, doctor — pending after Codecamp company-SSO cutover; see production-rollout-20260718.md:37-40.
+  - [ ] Task: Measure - User Manual Verification 'Phase S2: Produce objective-level review evidence' (Protocol in workflow.md) — pending credentialed GitHub/Codecamp verification and the same SSO cutover.
 
 ## Phase S3: Feed PR evidence into Mastery
 _Story ref: spec.md#story-s3_
@@ -55,7 +55,7 @@ _Story ref: spec.md#story-s3_
   - [x] Project activity/progress status from bindings while retaining full attempt history — intern admin page exposes safe attempt provenance + prior corrections only.
 - [~] Task: Verify and document Phase S3
   - [x] Run webhook/worker/DB/Mastery/tenant/concurrency suites — 211 webhooks tests pass; durable-worker adversarial suite passes.
-  - [ ] graph/generate/doctor, end-to-end fixture flow — pending after SSO cutover.
+  - [ ] graph/generate/doctor, end-to-end fixture flow — pending after Codecamp company-SSO cutover; see production-rollout-20260718.md:37-40.
   - [ ] Task: Measure - User Manual Verification 'Phase S3: Feed PR evidence into Mastery' (Protocol in workflow.md)
 
 ## Phase S4: Calibrate and release safely
@@ -67,9 +67,9 @@ _Story ref: spec.md#story-s4_
 - [x] Task: Write harness, drift, rollout, and override tests
   - [x] Cover false approval/rejection, schema/reference failures, injection, latency/cost, alias redirect, outage, fallback, canary rollback, and audited correction — 15 release-mode policy tests + 24 deploy-gate/journal-integrity tests pass.
   - [x] Verify shadow results cannot mutate learner state — shadow output remains immutable advisory evidence; cannot update learner-visible review status or post a GitHub comment.
-- [~] Task: Implement harness, observability, and guarded release
+- [x] Task: Implement harness, observability, and guarded release
   - [x] Build offline replay/reporting and production model-provenance/drift metrics — implemented per implementation-status.md.
   - [x] Deploy shadow then canary under explicit approval with retry-safe queue transition — shadow mode deployed in `codecamp-advantage-00019-682` with `CODECAMP_PR_REVIEW_ROLLOUT_MODE=shadow`; canary requires explicit approver.
   - [ ] Task: Close and verify the PR evaluation track
-  - [ ] Run frozen/live evaluations, end-to-end GitHub flow, affected/root gates, graph/generate/doctor, and curriculum/product-owner review — pending human-labelled fixtures + audited human approval of canary/active rollout.
-  - [ ] Task: Measure - User Manual Verification 'Phase S4: Calibrate and release safely' (Protocol in workflow.md)
+  - [ ] Run frozen/live evaluations, end-to-end GitHub flow, affected/root gates, graph/generate/doctor, and curriculum/product-owner review — human-labelled fixtures, audited human approval of canary/active rollout, revision/redelivery coverage, credentialed GitHub Checks acceptance, and Codecamp SSO-dependent browser verification remain open.
+  - [ ] Task: Measure - User Manual Verification 'Phase S4: Calibrate and release safely' (Protocol in workflow.md) — pending the same open gates and SSO cutover.

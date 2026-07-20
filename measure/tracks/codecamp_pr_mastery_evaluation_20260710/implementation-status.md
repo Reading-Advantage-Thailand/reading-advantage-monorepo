@@ -1,4 +1,8 @@
-# Implementation Status — 2026-07-15
+# Implementation Status — 2026-07-19
+
+The implementation state recorded on 2026-07-15 remains confirmed below. This
+update records closure status only; advisory/shadow evidence is not treated as
+human-labelled production evaluation or Mastery mutation.
 
 ## Implemented slice
 
@@ -100,3 +104,29 @@
 - Credentialed GitHub Checks acceptance remains before the prompt can claim
   production evidence coverage; no raw webhook payload is treated as test
   evidence.
+
+## Post-2026-07-15 status
+
+### Phase S3/S4 implementation tasks now complete
+
+- Phase S3 PR-to-practice contracts, transaction/revision/Mastery tests, and
+  evidence persistence/projections are shipped and remain `[x]` in the plan.
+- Phase S4 harness/release-policy contracts, rollout/drift tests, offline replay,
+  observability, and guarded shadow/canary controls are shipped; the plan now
+  marks the implementation task `[x]`.
+
+### Verification still open
+
+- S3 graph/generate/doctor gates and the end-to-end fixture flow remain open.
+- S4 human-labelled frozen fixtures, audited human approval of canary/active
+  rollout, revision/redelivery and end-to-end GitHub/browser acceptance,
+  credentialed GitHub Checks acceptance, affected/root gates, graph/generate/doctor,
+  and curriculum/product-owner review remain open. Runtime remains private shadow.
+
+### SSO cutover dependency
+
+Credentialed Codecamp browser verification and pending graph/update closure work
+remain dependent on the explicit `roles/secretmanager.secretAccessor` grant for
+`CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET` to
+`codecamp-cloud-run@codecamp-advantage.iam.gserviceaccount.com`, as recorded in
+`company_identity_sso_20260715/production-rollout-20260718.md:37-40`.

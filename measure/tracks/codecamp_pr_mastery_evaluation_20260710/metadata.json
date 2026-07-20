@@ -1,13 +1,13 @@
 {
   "track_id": "codecamp_pr_mastery_evaluation_20260710",
   "type": "feature",
-  "status": "new",
+  "status": "in-progress",
   "created_at": "2026-07-10T08:13:12Z",
-  "updated_at": "2026-07-10T08:13:12Z",
+  "updated_at": "2026-07-19T19:00:00Z",
   "description": "Move Codecamp PR review to explicit OpenRouter Grok Latest routing, produce structured graph-linked rubric evidence, preserve advisory semantics, and feed validated outcomes into Mastery KST+SRS.",
   "estimated_tasks": 16,
-  "actual_tasks": null,
-  "deviation_notes": "",
+  "actual_tasks": 39,
+  "deviation_notes": "Open verification gates: S1/S2 graph, docs, doctor, and manual verification; S3 graph/generate/doctor and end-to-end fixture flow; S4 human-labelled fixtures, audited canary/active approval, revision/redelivery and credentialed GitHub Checks acceptance, end-to-end browser flow, graph/generate/doctor, and curriculum/product-owner review. Codecamp company-SSO cutover is blocked on roles/secretmanager.secretAccessor for CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET (production-rollout-20260718.md:37-40).",
   "sprint": {
     "goal": "Turn Codecamp's durable GitHub PR review loop into auditable, graph-linked independent-practice evidence without allowing model drift, invalid output, or one approval to manufacture permanent mastery.",
     "stories": [
