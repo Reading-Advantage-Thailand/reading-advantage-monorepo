@@ -6,7 +6,7 @@
  "collector_agent": "evidence-collector-wizard-vs-zombie:t4:2026-07-20",
  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
  "generated_at": "2026-07-20T00:00:00Z",
- "commit_sha": "01e4615e03cac6e8bae64a6cd5479126b8d73af0",
+ "commit_sha": "2bcb883cd4274f5bffe5f76a5540eb0975d0eb61",
  "final_response_sha256": "8663c3e67378ae498d010907f96a1b4f4a4ce320d6ff730bd7e9ecb1bd24efa0",
  "claims_total": 77,
  "claims_by_category": {
