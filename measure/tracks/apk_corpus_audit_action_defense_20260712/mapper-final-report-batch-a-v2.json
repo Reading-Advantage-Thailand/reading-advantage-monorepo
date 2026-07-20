@@ -1,0 +1,303 @@
+{
+  "schema_version": "apk-mapper-final-report.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-a-cycle-2-md-wvz",
+  "phase": "Phase 2: Mapping (Batch A cycle 2 remediation)",
+  "role": "requirements-mapper",
+  "mode": "B (clean rewrite)",
+  "scope": {
+    "included_games": [
+      "magic-defense",
+      "wizard-vs-zombie"
+    ],
+    "excluded_games": [
+      "castle-defense"
+    ],
+    "reason": "Only the two remediated v2 ledgers are in Cycle 2 mapper scope."
+  },
+  "outputs": {
+    "blueprint": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-blueprint-v2.json",
+    "hypotheses": "measure/tracks/apk_corpus_audit_action_defense_20260712/mapper-hypotheses-batch-a-v2.md",
+    "receipt": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-batch-a-v2.json"
+  },
+  "supersedes": {
+    "blueprint": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-blueprint.json",
+      "sha256": "5d3b0c574897bfcd2c6b438d8b6efd6ffed6cc20414284cf53858955b1865657",
+      "disposition": "evidentially contaminated because it cited 10 fabricated claim IDs; shape reference only"
+    },
+    "mapper_hypotheses": "measure/tracks/apk_corpus_audit_action_defense_20260712/mapper-hypotheses-batch-a.md",
+    "mapper_final_report": "measure/tracks/apk_corpus_audit_action_defense_20260712/mapper-final-report-batch-a.json",
+    "mapper_receipt": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-batch-a.json"
+  },
+  "totals": {
+    "claims": 187,
+    "factual_claims": 178,
+    "negative_fixtures": 9,
+    "unresolved_factual_citations": 0,
+    "duplicate_claim_ids_across_ledgers": 0,
+    "v2_truth_tests": 47,
+    "v2_truth_tests_passing": 47,
+    "v2_truth_subtests_passing": 189,
+    "cycle1_bad_claims_detected": 12,
+    "cycle1_bad_claims_corrected_or_replaced": 12,
+    "cycle1_bad_claims_unresolved": 0,
+    "v1_blueprint_contaminated_references": 10
+  },
+  "by_game": {
+    "magic-defense": {
+      "claims": 110,
+      "factual_claims": 105,
+      "negative_fixtures": 5,
+      "resolved_factual_citations": 105,
+      "unresolved_factual_citations": 0,
+      "category_counts": {
+        "asset": 16,
+        "history": 9,
+        "identity": 16,
+        "mechanic": 22,
+        "negative_fixture": 5,
+        "responsive": 5,
+        "route": 8,
+        "scene-state": 14,
+        "test": 9,
+        "transition": 6
+      }
+    },
+    "wizard-vs-zombie": {
+      "claims": 77,
+      "factual_claims": 73,
+      "negative_fixtures": 4,
+      "resolved_factual_citations": 73,
+      "unresolved_factual_citations": 0,
+      "category_counts": {
+        "asset": 10,
+        "component": 6,
+        "history": 4,
+        "identity": 9,
+        "mechanic": 24,
+        "negative_fixture": 4,
+        "route": 7,
+        "state": 5,
+        "test": 8
+      }
+    }
+  },
+  "combined_category_counts": {
+    "asset": 26,
+    "component": 6,
+    "history": 13,
+    "identity": 25,
+    "mechanic": 46,
+    "negative_fixture": 9,
+    "responsive": 5,
+    "route": 15,
+    "scene-state": 14,
+    "state": 5,
+    "test": 17,
+    "transition": 6
+  },
+  "combined_evidence_class_counts": {
+    "absence": 1,
+    "asset": 23,
+    "asset-duplicate": 1,
+    "asset-unused": 2,
+    "current-source": 67,
+    "history": 13,
+    "identity-ledger": 3,
+    "mechanic": 24,
+    "negative-fixture": 9,
+    "route": 22,
+    "state": 5,
+    "test": 17
+  },
+  "gate_coverage_evidence": {
+    "G-DN": {
+      "gate_name": "Denominator hash pin",
+      "truth_test_artifact": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests-v2.py",
+      "tests": [
+        "BatchADenominatorTruthContract (7 tests)",
+        "BatchAStopLossContract.test_predecessor_truth_test_and_phase_bindings_are_preserved"
+      ],
+      "ledger_evidence": [
+        "magic-defense-claim-ledger-v2.json: 16 identity + 8 route records",
+        "wizard-vs-zombie-claim-ledger-v2.json: 9 identity + 7 route records"
+      ],
+      "receipt_evidence": [
+        "role-receipts/evidence-collector-magic-defense-v2.json",
+        "role-receipts/evidence-collector-wizard-vs-zombie-v2.json",
+        "role-receipts/truth-test-author-batch-a-v2.json"
+      ],
+      "cycle2_status": "partial",
+      "finding": "The v2 suite does not re-hash every T1/T2/T3 predecessor or assert the T2 archive revision required by the full strategy gate."
+    },
+    "G-CL": {
+      "gate_name": "Claim citation resolves",
+      "tests": [
+        "BatchAClaimLedgerTruthContract (6 tests)",
+        "BatchAStopLossContract correction and placeholder tests"
+      ],
+      "ledger_evidence": [
+        "magic-defense-claim-ledger-v2.json: 105/105 factual citations resolve",
+        "wizard-vs-zombie-claim-ledger-v2.json: 73/73 factual citations resolve"
+      ],
+      "receipt_evidence": [
+        "role-receipts/truth-test-author-batch-a-v2.json findings.claims_resolution"
+      ],
+      "cycle2_status": "green"
+    },
+    "G-NF": {
+      "gate_name": "Negative-fixture disposition re-derivable",
+      "tests": [
+        "BatchAActionDefenseSpecificContract (9 tests)"
+      ],
+      "ledger_evidence": [
+        "magic-defense-claim-ledger-v2.json: 5 negative_fixture records",
+        "wizard-vs-zombie-claim-ledger-v2.json: 4 negative_fixture records"
+      ],
+      "receipt_evidence": [
+        "magic-defense-evidence-final-report-v2.json",
+        "wizard-vs-zombie-evidence-final-report-v2.json"
+      ],
+      "cycle2_status": "green",
+      "scope_note": "Nine two-game fixtures only; Castle Defense is excluded."
+    },
+    "G-BP": {
+      "gate_name": "Blueprint backing resolves",
+      "tests": [
+        "BatchABlueprintTruthContract (9 source-boundary precondition tests)"
+      ],
+      "ledger_evidence": [
+        "both complete v2 ledgers summarized mechanically by game, category, and evidence class"
+      ],
+      "receipt_evidence": [
+        "role-receipts/truth-test-author-batch-a-v2.json"
+      ],
+      "cycle2_status": "open",
+      "finding": "No test in batch-a-truth-tests-v2.py loads or validates batch-a-blueprint-v2.json."
+    },
+    "G-SL": {
+      "gate_name": "Stop-loss counters",
+      "tests": [
+        "BatchANegativeFixtureContract (6 tests)",
+        "BatchAStopLossContract correction tests (3)",
+        "BatchAStopLossContract.test_stop_loss_counters_are_zero_after_v2_corrections"
+      ],
+      "ledger_evidence": [
+        "187 total = 178 factual + 9 fixtures",
+        "0 unresolved factual citations",
+        "12/12 cycle-1 defects corrected or replaced"
+      ],
+      "receipt_evidence": [
+        "both v2 collector receipts",
+        "role-receipts/truth-test-author-batch-a-v2.json"
+      ],
+      "cycle2_status": "green"
+    },
+    "G-AS": {
+      "gate_name": "Asset summary gate",
+      "tests": [
+        "BatchABlueprintTruthContract.test_asset_claim_anchor_surface_is_green",
+        "BatchABlueprintTruthContract.test_binary_claims_use_zero_zero_whole_file_anchors"
+      ],
+      "ledger_evidence": [
+        "magic-defense-claim-ledger-v2.json: 16 asset records",
+        "wizard-vs-zombie-claim-ledger-v2.json: 10 asset records"
+      ],
+      "receipt_evidence": [
+        "role-receipts/truth-test-author-batch-a-v2.json findings.gate_status.G-AS"
+      ],
+      "cycle2_status": "partial",
+      "finding": "Exact asset anchors are green, but the three per-game asset-auditor records required by full strategy G-AS are not available."
+    },
+    "G-RR": {
+      "gate_name": "Role-receipt integrity",
+      "tests": [
+        "BatchAStopLossContract receipt tests (5)"
+      ],
+      "ledger_evidence": [
+        "both ledger SHA-256 values are enumerated in their v2 collector receipts"
+      ],
+      "receipt_evidence": [
+        "role-receipts/evidence-collector-magic-defense-v2.json",
+        "role-receipts/evidence-collector-wizard-vs-zombie-v2.json",
+        "role-receipts/evidence-collector-wizard-vs-zombie-supersede.json",
+        "role-receipts/truth-test-author-batch-a-v2.json"
+      ],
+      "cycle2_status": "partial",
+      "finding": "Collector scope is tested. The mapper receipt is pending orchestrator binding and no adversarial-reviewer receipt is in the allowed inputs."
+    }
+  },
+  "test_strategy_compliance_check": {
+    "truth_test_file": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests-v2.py",
+    "truth_test_sha256": "69c598729ca31c9f0c49aa8fae44077aa6522b2fe5e0767be491ab9ad3d68cba",
+    "truth_test_result": "47 passed, 189 subtests passed",
+    "all_seven_gates_have_some_v2_test_surface": true,
+    "all_seven_gates_have_v2_ledger_or_receipt_backing": true,
+    "all_seven_gates_fully_satisfy_test_strategy_contract": false,
+    "by_gate": {
+      "G-DN": {
+        "has_test_surface": true,
+        "has_ledger_or_receipt_backing": true,
+        "full_strategy_contract_met": false,
+        "reason": "Full predecessor hash-pin assertions are absent."
+      },
+      "G-CL": {
+        "has_test_surface": true,
+        "has_ledger_or_receipt_backing": true,
+        "full_strategy_contract_met": true
+      },
+      "G-NF": {
+        "has_test_surface": true,
+        "has_ledger_or_receipt_backing": true,
+        "full_strategy_contract_met": true,
+        "scope": "two-game Cycle 2 rewrite"
+      },
+      "G-BP": {
+        "has_test_surface": true,
+        "has_ledger_or_receipt_backing": true,
+        "full_strategy_contract_met": false,
+        "reason": "Only source-boundary preconditions are tested; the new blueprint is not loaded."
+      },
+      "G-SL": {
+        "has_test_surface": true,
+        "has_ledger_or_receipt_backing": true,
+        "full_strategy_contract_met": true,
+        "scope": "two-game Cycle 2 rewrite"
+      },
+      "G-AS": {
+        "has_test_surface": true,
+        "has_ledger_or_receipt_backing": true,
+        "full_strategy_contract_met": false,
+        "reason": "Asset anchors are tested; required downstream auditor summaries are absent."
+      },
+      "G-RR": {
+        "has_test_surface": true,
+        "has_ledger_or_receipt_backing": true,
+        "full_strategy_contract_met": false,
+        "reason": "Collector receipts are tested; mapper bind and reviewer receipt remain pending."
+      }
+    }
+  },
+  "predecessor_binding": {
+    "phase_base_sha": "9228c5c5",
+    "role_base_sha": "ea87fca2338816939464e880cac344fcaba90490",
+    "magic_defense_v2_collector_receipt_bind": "760100fd",
+    "wizard_vs_zombie_v2_collector_receipt_bind": "81c641a6",
+    "truth_test_v2_output_commit": "c8e6e78e",
+    "truth_test_v2_receipt_bind": "ea87fca2"
+  },
+  "concerns": [
+    "G-DN full predecessor hash-pin coverage is absent from the v2 test module.",
+    "G-BP needs a post-mapper test that loads batch-a-blueprint-v2.json.",
+    "G-AS still needs the strategy-required asset-auditor summary records.",
+    "G-RR still needs mapper receipt binding and a future adversarial-reviewer receipt.",
+    "Resource ceilings are disclosed as missing or unmeasured in the v2 role chain and require explicit program-level disposition."
+  ],
+  "mapper_boundary": {
+    "novel_factual_claims_added": 0,
+    "v1_blueprint_used_as_factual_evidence": false,
+    "cross_game_ontology_decisions": 0,
+    "acceptance_claimed": false
+  }
+}

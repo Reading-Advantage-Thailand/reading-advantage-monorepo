@@ -1,0 +1,151 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-self-attested",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Mapping (Batch A cycle 2 remediation)",
+  "role": "requirements-mapper",
+  "task_id": "requirements-mapper:t4-batch-a:v2",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "phase_base_sha": "9228c5c5",
+  "role_base_sha": "ea87fca2338816939464e880cac344fcaba90490",
+  "spawn_id": "requirements-mapper:t4-batch-a:v2:2026-07-20",
+  "parent_ancestry_ids": [],
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "prior_role_history": [],
+  "prompt_sha256": "16228b2653e2ea013c41fe355900794215af6d5a62d6907572a856acd3a2f0ee",
+  "prompt_sha256_basis": "SHA-256 of the canonical role binding string recorded in prompt_binding. Provider-retained raw prompt bytes were not exposed to this role; the orchestrator must replace or independently attest this field if exact raw-prompt-byte proof is required for acceptance.",
+  "prompt_binding": "apk_corpus_audit_action_defense_20260712|requirements-mapper|cycle-2-rerun|mode-B-clean-rewrite|phase=9228c5c5|role=ea87fca2338816939464e880cac344fcaba90490|md=760100fd|wvz=81c641a6|truth=c8e6e78e|truth-bind=ea87fca2",
+  "allowed_input_manifest_sha256": "6a71430fcc0ca5a3dfdee047199e54227a2d6aa40c3cf86bec0c33faa36f82fd",
+  "actual_context_manifest_sha256": "6a71430fcc0ca5a3dfdee047199e54227a2d6aa40c3cf86bec0c33faa36f82fd",
+  "actual_context_manifest_note": "SHA-256 of the canonical compact, key-sorted JSON mapping of the 20 enumerated file inputs to their working-tree SHA-256 values. Git object-store reads are represented by predecessor and bind fields rather than a filesystem hash. measure/index.md and measure/workflow.md were read only to satisfy repository procedure and were not factual derivation inputs.",
+  "allowed_inputs": [
+    "measure/apk-evidence-reconstruction-program.md",
+    "measure/apk-evidence-cohort-protocol.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-a.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/_orchestrator/LAST-BATCH-STATUS.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests-v2.py",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests.py",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-claim-ledger-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-evidence-final-report-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-evidence-final-report-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-magic-defense-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-wizard-vs-zombie-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-wizard-vs-zombie-supersede.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-a-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-blueprint.json (shape reference only; no factual claim references consumed)",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/mapper-hypotheses-batch-a.md (shape reference only)",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/mapper-final-report-batch-a.json (shape reference only)",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-batch-a.json (shape reference only)",
+    "measure/archive/apk_three_game_truth_pilot_20260712/pilot-blueprint.json (shape reference only)",
+    "git object store (read-only)"
+  ],
+  "read_only_inputs_note": "No listed input, v1 artifact, ledger, report, collector receipt, truth test, plan, registry, or git object was modified. The four v2 mapper outputs are additive.",
+  "start_event_id": "t4-batch-a-requirements-mapper-v2-start:2026-07-20T00:00:00Z",
+  "end_event_id": "t4-batch-a-requirements-mapper-v2-end:2026-07-20T00:00:00Z",
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-blueprint-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/mapper-hypotheses-batch-a-v2.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/mapper-final-report-batch-a-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-batch-a-v2.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-blueprint-v2.json": "2cae07b55d027713410562738f57985534235b37ed8566eee7833539f93367f4",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/mapper-hypotheses-batch-a-v2.md": "2d819c8f40ae14ae7edcda1bf7c7a753320fd7e7f08db078706f1bfaec080363",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/mapper-final-report-batch-a-v2.json": "f9bdab12e50e3d23ea0d41684860cd0e5a73f39ad2c6d45bc851ecf39455a941"
+  },
+  "output_hashes_note": "The receipt excludes itself from output_hashes to avoid a self-referential digest. The orchestrator bind commit supplies immutable byte identity.",
+  "output_sha256": "2cae07b55d027713410562738f57985534235b37ed8566eee7833539f93367f4",
+  "output_sha256_basis": "SHA-256 of batch-a-blueprint-v2.json, the primary role artifact.",
+  "final_response_sha256": "f9bdab12e50e3d23ea0d41684860cd0e5a73f39ad2c6d45bc851ecf39455a941",
+  "final_response_sha256_basis": "SHA-256 of mapper-final-report-batch-a-v2.json, used as the role's final response artifact following the v1 mapper receipt convention.",
+  "commit_sha": "<pending-orchestrator-bind>",
+  "budget_declaration": {
+    "schema_version": "apk-role-budget-declaration.v1",
+    "role": "requirements-mapper",
+    "frozen_resource_ceiling": "unmeasured",
+    "frozen_resource_ceiling_explanation": "The dispatch supplied no numeric resource ceiling. This is disclosed instead of inventing a post-hoc ceiling and is carried as a program-level acceptance concern.",
+    "actual_usage": {
+      "hashed_input_files": 20,
+      "bytes_read_from_hashed_inputs": 718959,
+      "claims_consumed": 187,
+      "factual_claims_consumed": 178,
+      "negative_fixtures_consumed": 9,
+      "truth_tests_mapped": 47,
+      "output_files_authored": 4,
+      "novel_factual_claims_authored": 0
+    }
+  },
+  "predecessor_binding": {
+    "phase_base_sha": "9228c5c5",
+    "role_base_sha": "ea87fca2338816939464e880cac344fcaba90490",
+    "v1_blueprint_output_commit": "fc643d04",
+    "v1_blueprint_sha256": "5d3b0c574897bfcd2c6b438d8b6efd6ffed6cc20414284cf53858955b1865657",
+    "magic_defense_v2_collector_receipt_bind": "760100fd",
+    "wizard_vs_zombie_v2_collector_receipt_bind": "81c641a6",
+    "truth_test_author_v2_output_commit": "c8e6e78e",
+    "truth_test_author_v2_receipt_bind": "ea87fca2"
+  },
+  "findings": {
+    "mode": "B (clean rewrite)",
+    "claims_consumed": {
+      "magic-defense": {
+        "claims": 110,
+        "factual": 105,
+        "negative_fixtures": 5
+      },
+      "wizard-vs-zombie": {
+        "claims": 77,
+        "factual": 73,
+        "negative_fixtures": 4
+      },
+      "total": {
+        "claims": 187,
+        "factual": 178,
+        "negative_fixtures": 9
+      }
+    },
+    "cycle1_acknowledgement": "The v1 blueprint is superseded because it cited 10 fabricated claim IDs.",
+    "v2_truth_test_result": "47/47 PASS; 189 subtests PASS",
+    "claim_resolution": "178/178 factual citations resolve; 0 unresolvable",
+    "gate_status": {
+      "G-DN": "PARTIAL",
+      "G-CL": "GREEN-CYCLE-2-SCOPE",
+      "G-NF": "GREEN-CYCLE-2-SCOPE",
+      "G-BP": "OPEN-POST-MAPPER-TEST-REQUIRED",
+      "G-SL": "GREEN-CYCLE-2-SCOPE",
+      "G-AS": "PARTIAL-ASSET-ANCHORS-ONLY",
+      "G-RR": "PARTIAL-COLLECTOR-SCOPE; MAPPER-BIND-PENDING"
+    },
+    "concerns": [
+      "The v2 suite does not fully reproduce the G-DN predecessor hash-pin contract.",
+      "The v2 suite predates and does not load batch-a-blueprint-v2.json.",
+      "The downstream G-AS three-record asset-auditor summary is absent.",
+      "Full G-RR awaits orchestrator binding of this receipt and a future adversarial-reviewer receipt.",
+      "Role-chain resource ceilings are missing or unmeasured and require explicit disposition."
+    ],
+    "mapper_boundary_violations": 0,
+    "novel_factual_claims": 0,
+    "cross_game_ontology_decisions": 0
+  },
+  "role_isolation": {
+    "roles_held": [
+      "requirements-mapper"
+    ],
+    "roles_not_held": [
+      "discovery-auditor",
+      "evidence-collector",
+      "truth-test-author",
+      "browser-auditor",
+      "asset-auditor",
+      "adversarial-reviewer",
+      "orchestrator",
+      "product-owner"
+    ],
+    "note": "Fresh-context Cycle 2 mapping only. No predecessor or other role output was modified, no acceptance was claimed, and no v1 blueprint reference was used as factual evidence."
+  }
+}
