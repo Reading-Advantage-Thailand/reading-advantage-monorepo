@@ -1,0 +1,75 @@
+{
+  "schema_version": 2,
+  "role": "review-a",
+  "track": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "baseline_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "audited_head_sha": "d4e3fb5e28b2b3d75fce7d2013bc7444addb3293",
+  "applicability": "applicable",
+  "status": "fail",
+  "summary": "The exact three-game scope, current claim-envelope hashes, mapper ID references, 12-item asset denominator, and additive v1-v4 byte immutability check out, but Batch B is not acceptable. Authentic role provenance is absent; required game-specific evidence is incomplete; the truth suite does not semantically re-derive all claims or fixtures; browser v3 is an unapproved third stop-loss cycle and uses only synthetic DOM input; asset live corroboration and a fresh additive review are missing. Village Guardian's completion 400 is separately classified as a successor porting bug, not proof that the observed start/active/result UI did not run.",
+  "blocking_findings": [
+    "[critical][evidence_acceptance_blocker][COR-001] The active role-receipt chain cannot authorize acceptance. Evidence: the v4 selector covers eleven receipts, but BatchBReceiptContract reproducibly reports 86 absent prompt/context/session/event/final-response/commit/isolation values; browser-v3 and truth-v4 receipts explicitly retain nulls; strategy section 2.2 and A15 require tool-attested append-only receipts. Exact remediation role: orchestrator must re-dispatch discovery-auditor-batch-b, all three evidence-collector-<game>-batch-b roles, all three requirements-mapper-<game>-batch-b roles, truth-test-author-batch-b, browser-auditor-batch-b, asset-auditor-batch-b, and adversarial-reviewer-batch-b; each owner must emit an additive provider-attested receipt bound to its exact output commit, without retrofitting unavailable IDs.",
+    "[high][evidence_acceptance_blocker][COR-002] Village Guardian and Archer's Revenge are incomplete against the cohort protocol despite the B0-B3 green selector. Evidence: Archer's mapper records copy=0, assets=0, developer_effort=0, transitions=0 and explicitly lists developer-effort decomposition and transition reachability as blocking unknowns despite reachable historical source; Village's denominator lists villageGuardianConfig.ts and its pure-model test but none of twelve claims cites them, while baseline config/source lines define three opponent variants and speeds, chase strengths, three lives, max monsters, trail rescattering, and life loss that the package omits. Exact remediation role: evidence-collector-village-guardian-batch-b and evidence-collector-archers-revenge-batch-b must publish additive complete ledgers/reports, then requirements-mapper-village-guardian-batch-b and requirements-mapper-archers-revenge-batch-b must publish additive fully backed blueprints.",
+    "[high][evidence_acceptance_blocker][COR-003] The truth suite overstates B3 semantic and fixture coverage. Evidence: test_all_factual_claims_are_exercised_by_exact_or_bounded_checks only counts 62 records; mechanical_semantic_check checks extracted route/literal/number atoms and requires only 15 exercised claims; fixture tests directly re-derive only two semantic overstatements and two directory types, not every one of the twelve fixtures. This violates strategy sections 4.1-4.2. Exact remediation role: truth-test-author-batch-b must publish an additive test supersession that validates every atom of every claim, executes/hash-checks each bounded absence, re-derives all fixtures, and enforces per-game completeness; exposed defects return to the exact collector/mapper owner.",
+    "[high][evidence_acceptance_blocker][COR-004] Browser v3 is not admissible as real-input evidence and was dispatched as an unapproved third stop-loss cycle. Evidence: LAST-BATCH-STATUS records two of two cycles and requires product-owner direction; browser-v3 is based on the later stop-loss commit and no Batch B owner-direction artifact exists; browser-v3 records trusted_native_input_events=0, every event isTrusted=false, a hidden tab, and injected requestAnimationFrame schedulers, while v4 affirmatively accepts those synthetic events as input. Exact remediation role: product-owner-batch-b must first issue immutable stop-loss direction; if authorized, browser-auditor-batch-b must create fresh compact/wide foreground evidence with actual browser input primitives and no timing replacement for the acceptance claim, and truth-test-author-batch-b must reject synthetic-only proof.",
+    "[high][evidence_acceptance_blocker][COR-005] No independent review covers browser-v3/truth-v4/head d4e3fb5e, and v4 points future review checks at immutable v1 paths. Evidence: B5 fails active-browser-v3-hash-not-reviewed and audited-head-predates-active-browser-v3; review-v2 covers browser-v2/truth-v3; v4 hardcodes batch-b-adversarial-review.json and adversarial-reviewer-batch-b.json, which cannot be overwritten under A15. Exact remediation role: truth-test-author-batch-b must publish an additive selector for a new review-v3 and receipt; then adversarial-reviewer-batch-b must review the final descendant head and exact active bytes with zero unresolved evidence blockers.",
+    "[medium][evidence_acceptance_blocker][COR-006] Asset evidence is stale relative to runnable Village Guardian evidence. Evidence: the active asset audit says browser corroboration unavailable, interactions=0, and live_usage unavailable for all twelve records; browser-v3 later establishes a runnable route/network capture, but no asset supersession binds loaded/not-loaded evidence; v4 tests only unique paths/status labels. Exact remediation role: asset-auditor-batch-b must publish an additive audit bound to the authorized final browser capture with exact request/resource evidence or an explicit blocking unknown for each Village candidate, followed by truth-test-author-batch-b coverage.",
+    "[medium][evidence_acceptance_blocker][COR-007] Collector validation prose contradicts git diff --check (A5). Evidence: the audited range reports trailing whitespace in Archer method lines 3-4 and Village method lines 3-5, while Archer's final report records verification.git_diff_check as passed. Exact remediation role: evidence-collector-archers-revenge-batch-b and evidence-collector-village-guardian-batch-b must correct the claim through additive superseding artifacts; truth-test-author-batch-b must bind the exact command and exit code."
+  ],
+  "nonblocking_findings": [
+    "[medium][successor_porting_bug_not_evidence_acceptance_defect][PORT-001] Village Guardian's terminal UI runs, but both completion POSTs return 400 because the legacy page sends xpEarned, accuracy, correctAnswers, and totalAttempts while createCompleteRoute validates a contract requiring gameType, difficulty, score, duration, victory, idempotencyKey, and clientTimestamp and rejects xpEarned. This does not negate observed GET-200 start/active/result states; preserve it as a factual observation. Exact remediation role: implementation-engineer-batch-b must fix the successor completion adapter and add an integration test proving terminal submission returns 200."
+  ],
+  "evidence": [
+    "Scope independently reconciled to exactly Village Guardian, Archer's Revenge, and Storm the Castle Tower across spec, plan, strategy, discovery v2, claim packages, browser v3, and v4 tests.",
+    "The v4 full module result was reproduced: 43 passed, 3 subtests passed, 6 failed; failures are provenance, stale/unresolved review, and absent acceptance-chain gates.",
+    "The B0-B4 selector was reproduced as 38 passed, 11 deselected, 3 subtests passed; review found that semantic completeness, fixtures, real input, and asset-live requirements are not represented strongly enough for those passes to establish acceptance.",
+    "The B4 selector was reproduced as 8 passed, 41 deselected; those passes validate artifact fields but incorrectly admit synthetic input and source-only asset evidence.",
+    "All 62 declared positive/bounded claim envelopes pass the current exact-byte tests; no sampled hash mismatch was independently found.",
+    "Current v1/v2/v3 truth modules and browser v1/v2/v3 artifacts byte-match their original output commits; supersession has been additive through browser v3 and truth v4.",
+    "The twelve asset records are unique and their current source/hash anchors pass the active source-only asset checks.",
+    "tests/orchestrator_role_receipt_integrity.sh exits 0, but its output covers 0 legacy receipts and 1 OpenCode manifest; it does not cure the v4 suite's 86 active Batch B provenance defects."
+  ],
+  "commands": [
+    "git status --short && git rev-parse HEAD && git log --oneline -8 -> required HEAD d4e3fb5e28b2b3d75fce7d2013bc7444addb3293; unrelated dirty work was present and preserved",
+    "git diff --name-status ff01cee9cc973dee89fdc0ba22102dcea0c50542..d4e3fb5e28b2b3d75fce7d2013bc7444addb3293 -> 52 changed Batch B/registry/status files",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v4.py -> FAIL: 6 failed, 43 passed, 3 subtests passed",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v4.py -k 'BatchBFreezeContract or BatchBCollectorPackageContract or BatchBMapperPackageContract or BatchBClaimTruthContract or BatchBNegativeFixtureContract or BatchBBrowserContract or BatchBAssetContract' -> PASS: 38 passed, 11 deselected, 3 subtests passed",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v4.py -k BatchBReceiptContract -> FAIL: 1 failed, 3 passed, 45 deselected; 86 provenance defects",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v4.py -k 'BatchBBrowserContract or BatchBAssetContract' -> PASS: 8 passed, 41 deselected",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v4.py -k 'BatchBIndependentReviewContract or BatchBAcceptanceContract' -> FAIL: 5 failed, 2 passed, 42 deselected",
+    "bash tests/orchestrator_role_receipt_integrity.sh -> PASS with stated coverage of 0 legacy receipts and 1 OpenCode manifest",
+    "git diff --check ff01cee9cc973dee89fdc0ba22102dcea0c50542..d4e3fb5e28b2b3d75fce7d2013bc7444addb3293 -> FAIL: five trailing-whitespace findings in two collector method files",
+    "repo-graph inspect ./graph.db createCompleteRoute --json -> tooling failure: stale graph schema reports no such column documentation; source was then read directly"
+  ],
+  "changed_files": [
+    "measure/tracks.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/_orchestrator/LAST-BATCH-STATUS.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/*-claim-ledger-batch-b.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/*-evidence-*-batch-b.*",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/*-blueprint-batch-b.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/*-mapper-*-batch-b.*",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-{role-applicability,budget-declaration,discovery-audit,asset-usage-audit,browser-audit,adversarial-review}*.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests{,-v2,-v3,-v4}.py",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/*batch-b*.json"
+  ],
+  "test_strategy_violations": [
+    "COR-003: all-claim semantic and all-fixture re-derivation is not implemented",
+    "COR-004: real-input and two-cycle stop-loss requirements are not met",
+    "COR-005: fresh additive review selection is not implemented",
+    "COR-006: runnable-game asset live corroboration is not implemented",
+    "COR-007: recorded git-diff pass contradicts the command result"
+  ],
+  "live_contract_violations": [
+    "COR-004: Village Guardian evidence uses synthetic isTrusted=false DOM events and scheduler replacement, not the strategy's required real browser input",
+    "COR-006: active asset evidence is not bound to the runnable Village Guardian live capture"
+  ],
+  "prod_wiring_violations": [
+    "PORT-001 (successor porting bug): Village Guardian terminal completion POST is rejected with 400 by the shared completion contract"
+  ],
+  "route_parity_violations": [
+    "PORT-001 (successor porting bug): the Village Guardian page payload and createCompleteRoute/gameCompletionInputSchema are not contract-compatible"
+  ],
+  "retry_recommendation": "escalate_human",
+  "confidence": "high"
+}

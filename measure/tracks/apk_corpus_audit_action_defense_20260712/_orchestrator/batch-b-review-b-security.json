@@ -1,0 +1,143 @@
+{
+  "schema_version": 2,
+  "role": "measure-review-b-security",
+  "track": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "baseline_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "d4e3fb5e28b2b3d75fce7d2013bc7444addb3293",
+  "audited_head_sha": "d4e3fb5e28b2b3d75fce7d2013bc7444addb3293",
+  "applicability": "applicable",
+  "status": "fail",
+  "summary": "Batch B remains fail-closed. The additive v4 selector correctly keeps acceptance red and selects the additive Kimi WebBridge v3 audit for B4, but 86 required active-receipt provenance fields are unavailable, the only independent review predates and does not hash browser-v3, and no candidate, approval, or accepted manifest exists. The browser record discloses synthetic input, hidden-tab scheduler replacement, no student-data access, and session closure, but those operational assertions are not independently tool-attested and Village Guardian completion POSTs returned 400.",
+  "blocking_findings": [
+    {
+      "id": "BSEC-001",
+      "severity": "critical",
+      "title": "Active role receipts cannot authenticate isolation, provenance, or append-only authority",
+      "detail": "The active v4 receipt gate reports 86 unavailable required provenance values across the eleven selected receipts. The v4 truth receipt has null prompt, actual context, spawn/session, ancestry, fork_turns, raw isolation proof, start/end events, final response, and commit fields. The browser-v3 receipt likewise has null provider spawn/session, ancestry, fork_turns, start/end events, final response, and commit. Git commits show one repository author identity, which cannot establish distinct role sessions. Git additions preserve prior files, but file addition and local SHA-256 values do not substitute for provider-attested fresh-context, fork_turns=none, or append-only event provenance required by strategy sections 2.1-2.2 and A15.",
+      "evidence": [
+        "batch-b-truth-tests-v4.py full run: 6 failed, 43 passed, 3 subtests passed; BatchBReceiptContract enumerated 86 missing provenance items",
+        "role-receipts/truth-test-author-batch-b-v4.json:15-34",
+        "role-receipts/browser-auditor-batch-b-v3.json:13-26,99-105",
+        "test-strategy-batch-b.md:53-59"
+      ],
+      "required_remediation": "Obtain provider-exported, immutable event records for each active role; publish additive superseding receipts that bind exact prompt/context, distinct session and ancestry, fork_turns=none/raw isolation proof, start/end and final-response events, output bytes, and the committing revision. Rerun the receipt gate from the resulting immutable head.",
+      "remediation_owner": "orchestrator with the respective freshly isolated role providers"
+    },
+    {
+      "id": "BSEC-002",
+      "severity": "high",
+      "title": "Independent review is stale for the active browser evidence",
+      "detail": "batch-b-adversarial-review.json and its receipt are bound to role base 9455c2e, before browser-v3 was committed at 917fac54. The reviewer receipt has no input hash for batch-b-browser-audit-v3.json. The v4 fresh-review gate fails both active-browser-v3-hash-not-reviewed and audited-head-predates-active-browser-v3. Consequently the v3 browser disposition cannot be independently accepted, regardless of its local hash binding.",
+      "evidence": [
+        "batch-b-truth-tests-v4.py:299-324",
+        "role-receipts/adversarial-reviewer-batch-b.json:36-43",
+        "git history: 9455c2e precedes 917fac54 and d4e3fb5e",
+        "v4 focused run failure: EXPECTED_STAGE_RED[B5_STALE_REVIEW]"
+      ],
+      "required_remediation": "Dispatch a new provider-attested, fresh-context adversarial reviewer after all selected bytes are committed. Require it to hash browser-v3, review a descendant head containing those bytes, rederive the B4 dispositions and findings, and publish an additive review and receipt; do not edit the prior review.",
+      "remediation_owner": "orchestrator and a newly isolated adversarial-reviewer"
+    },
+    {
+      "id": "BSEC-003",
+      "severity": "high",
+      "title": "Acceptance lifecycle is absent and must not be replayed or inferred",
+      "detail": "candidate-cohort-manifest-batch-b.json, product-owner-acceptance-batch-b.json, and accepted-cohort-manifest-batch-b.json are absent. The v4 suite fails the required existence and exact-byte/chronology contracts. No owner identity, approval event/message ID, thread, approval-message hash, or later-than-review approval event exists to evaluate for replay. The existing blocked review correctly authorizes no candidate or acceptance.",
+      "evidence": [
+        "batch-b-truth-tests-v4.py full run: BatchBAcceptanceContract has three failing tests",
+        "test-strategy-batch-b.md:211-221",
+        "batch-b-adversarial-review.json:8,73-75"
+      ],
+      "required_remediation": "Only after authentic receipts, B4 evidence, and a fresh zero-blocker review are green, have the authorized product owner create a non-consumable exact-hash candidate, a resolved human approval event later than that review, and then a separate accepted manifest. Bind revocation/supersession state and reject reused approval identifiers or hashes.",
+      "remediation_owner": "authorized product owner, coordinated by the orchestrator"
+    },
+    {
+      "id": "BSEC-004",
+      "severity": "medium",
+      "title": "Village Guardian terminal completion is not route/API complete",
+      "detail": "The browser-v3 audit records GET 200 and observed start, active, and terminal UI states, but both terminal POSTs to /api/v1/games/village-guardian/complete returned 400. The response reports required gameType, difficulty, score, duration, victory, idempotencyKey, and clientTimestamp as absent and xpEarned as unrecognized. This does not invalidate the bounded route/UI observation, but it prevents treating the terminal flow as successful completion, persistence, or idempotent progress behavior.",
+      "evidence": [
+        "batch-b-browser-audit-v3.json:163-167",
+        "batch-b-browser-audit-v3.json:30-31",
+        "role-receipts/browser-auditor-batch-b-v3.json:72-75"
+      ],
+      "required_remediation": "Keep the route/UI and completion API claims separate. The owning application/API role must validate the completion payload contract and then obtain a fresh bounded browser/API observation with a valid idempotency key and timestamp before any end-to-end completion or persistence claim is made.",
+      "remediation_owner": "Village Guardian application/API owner"
+    }
+  ],
+  "nonblocking_findings": [
+    {
+      "id": "BSEC-NB-001",
+      "severity": "info",
+      "title": "Kimi WebBridge evidence states appropriate privacy and synthetic-input limitations, but these remain uncorroborated operational assertions",
+      "detail": "The audit limits use to Kimi WebBridge, reports one role-owned tab, no student-data records, no unrelated tabs, no published browser artifacts, and successful close_session for one tab. It also records isTrusted=false DOM events, a hidden tab, scheduler replacement limited to requestAnimationFrame, and no screenshots. These disclosures appropriately prevent claims of trusted native input, normal background-tab timing, screenshots, or student-data inspection; absent provider/session provenance means the assertions cannot establish an authenticated privacy or closure record.",
+      "evidence": [
+        "batch-b-browser-audit-v3.json:12-13,27-39,145-172,238-250",
+        "role-receipts/browser-auditor-batch-b-v3.json:27-37"
+      ],
+      "required_remediation": "Retain the stated limitations and bind WebBridge session creation, tab inventory, network capture stop, and session closure to provider-exported evidence in a fresh receipt. Do not publish identifiable browser artifacts without an explicit privacy basis.",
+      "remediation_owner": "browser-auditor and orchestrator"
+    },
+    {
+      "id": "BSEC-NB-002",
+      "severity": "info",
+      "title": "Revision and path confinement are structurally preserved for the two additive v4 outputs",
+      "detail": "Commit d4e3fb5e adds only batch-b-truth-tests-v4.py and role-receipts/truth-test-author-batch-b-v4.json; its parent 917fac54 adds only browser-v3 audit and receipt. The immutable baseline is an ancestor and no committed Batch B artifact is modified in place in this two-commit remediation sequence. This is structural Git evidence only and does not cure the provenance failure.",
+      "evidence": [
+        "git merge-base --is-ancestor ff01cee9cc973dee89fdc0ba22102dcea0c50542 d4e3fb5e28b2b3d75fce7d2013bc7444addb3293: pass",
+        "git show --name-status 917fac54 and d4e3fb5e",
+        "batch-b-truth-tests-v4.py:21-29,299-324"
+      ],
+      "required_remediation": "Preserve additive supersession and require the future review and lifecycle artifacts to bind their exact committed revision and input/output hashes.",
+      "remediation_owner": "orchestrator"
+    }
+  ],
+  "anti_pattern_assessment": {
+    "A1": "fail-closed: structured receipt and acceptance fields exist, but required provider provenance is unavailable.",
+    "A2": "bounded: browser record reports no student data, no published artifacts, and synthetic/mock limitations; authenticated privacy evidence is unavailable.",
+    "A3": "pass for v4 local test accounting: labeled result and receipt issue counts are exercised; not sufficient for acceptance while provenance remains red.",
+    "A4": "pass/fail-closed: three exact games and nonzero B4 records are selected; missing lifecycle artifacts cannot vacuously pass.",
+    "A5": "pass/fail-closed: the actual v4 command exits 1 with six named failures and neither review nor plan authorizes acceptance.",
+    "A6": "pass at audited head: no Batch B candidate or accepted manifest is present; no acceptance is asserted by the reviewed artifacts.",
+    "A7": "pass for the exercised truth contracts: no broad-filter bypass was observed in the v4 result; source semantics are outside this security-only review.",
+    "A8": "pass for the reviewed plan marker vocabulary: plan.md uses [~] and [b], not [ ].",
+    "A9": "pass for this active-track audit: reviewed inputs resolve under the active track; no archive transition is asserted.",
+    "A10": "pass/bounded: browser evidence is not promoted to source fact and the scheduler/mock boundary is disclosed.",
+    "A11": "pass: the completed prior review remains explicitly blocked rather than being represented as a cleared review.",
+    "A12": "not independently re-executed: v4's focused truth run passed its B4 selector, but this audit did not treat that as repository-wide guard validation.",
+    "A13": "not applicable: this phase has not archived the active track.",
+    "A14": "pass for this audit command: pytest ran directly with exit status preserved; no detector error was collapsed into a clean result.",
+    "A15": "fail: active receipts lack required provider provenance and self-hash/commit binding; future acceptance must remain blocked."
+  },
+  "evidence": [
+    "Audited immutable range ff01cee9..d4e3fb5e contains the Batch B artifact sequence; d4e3fb5e is HEAD and the supplied audited role base.",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v4.py: 6 failed, 43 passed, 3 subtests passed; failures are receipt provenance, stale review, unresolved review severities, and absent acceptance lifecycle.",
+    "The B4 selector reported 8 passed, 41 deselected in truth-test-author-batch-b-v4.json, but its green artifact checks do not authenticate the WebBridge session or make the completion POST succeed.",
+    "Pre-role snapshot and current worktree contain unrelated dirty/untracked files; this audit did not rely on them or modify them."
+  ],
+  "commands": [
+    "git rev-parse HEAD => d4e3fb5e28b2b3d75fce7d2013bc7444addb3293",
+    "git merge-base --is-ancestor ff01cee9cc973dee89fdc0ba22102dcea0c50542 d4e3fb5e28b2b3d75fce7d2013bc7444addb3293 => pass",
+    "git log/show/diff --name-status ff01cee9..d4e3fb5e => reviewed provenance and path history",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v4.py => fail: 6 failed, 43 passed, 3 subtests passed"
+  ],
+  "changed_files": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/_orchestrator/batch-b-review-b-security.json"
+  ],
+  "test_strategy_violations": [
+    "Required provider-authenticated fresh-context, fork_turns=none, event, final-response, and commit provenance is unavailable for active roles.",
+    "The active browser-v3 audit has not received a fresh independent review at a descendant exact-byte head.",
+    "The mandatory candidate-to-human-approval-to-accepted lifecycle has not been created and must not be inferred."
+  ],
+  "live_contract_violations": [
+    "Village Guardian completion POST returned HTTP 400, so terminal UI observation is not successful completion API behavior.",
+    "WebBridge input was synthetic (isTrusted=false) and the hidden-tab terminal transition used a disclosed requestAnimationFrame adapter; no trusted-input or native-timing claim is supported."
+  ],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [
+    "Village Guardian route GET was observed as 200, while terminal completion POST was observed as 400; persistence/completion parity is unproved.",
+    "Archer's Revenge and Storm the Castle Tower have bounded exact-route 404 observations at browser-v3's role revision; these are non-runnable dispositions, not historical or source-wide conclusions."
+  ],
+  "retry_recommendation": "block_pending_provider_attested_receipts_fresh_review_and_product_owner_direction",
+  "confidence": "high"
+}

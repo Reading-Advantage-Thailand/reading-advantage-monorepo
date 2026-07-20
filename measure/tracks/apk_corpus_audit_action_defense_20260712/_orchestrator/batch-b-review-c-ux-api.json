@@ -1,0 +1,126 @@
+{
+  "schema_version": 2,
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "review_role": "C",
+  "review_role_name": "UX/API/Contracts",
+  "baseline_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "audited_head": "d4e3fb5e28b2b3d75fce7d2013bc7444addb3293",
+  "pre_role_snapshot": "measure/tracks/apk_corpus_audit_action_defense_20260712/_orchestrator/batch-b-v4-review-pre-snapshot.json",
+  "status": "blocked",
+  "scope": [
+    "Village Guardian",
+    "Archer's Revenge",
+    "Storm the Castle Tower"
+  ],
+  "findings": [
+    {
+      "id": "C-B-001",
+      "severity": "high",
+      "area": "UX/browser-input contract",
+      "finding": "Village Guardian is labeled runnable, but the required interaction evidence is synthetic: every recorded click/key event has isTrusted=false, the tab was hidden, and a requestAnimationFrame scheduler was replaced to reach the terminal state. This is useful deterministic harness evidence, not real native input or ordinary foreground timing proof.",
+      "evidence": [
+        "batch-b-browser-audit-v3.json games.village-guardian.runnable_disposition",
+        "batch-b-browser-audit-v3.json games.village-guardian.compact.real_input_events",
+        "batch-b-browser-audit-v3.json games.village-guardian.wide.real_input_events",
+        "batch-b-browser-audit-v3.json games.village-guardian.scheduler_adapter_boundary",
+        "batch-b-browser-audit-v3.json input_limitations and counts.trusted_native_input_events=0",
+        "test-strategy-batch-b.md §5 and §6 B4 require real-input compact/wide proof"
+      ],
+      "remediation": "Rename the disposition to a bounded synthetic-harness observation or obtain foreground, trusted native pointer/keyboard evidence; do not count synthetic events as real input in acceptance-facing summaries.",
+      "owner": "browser-auditor-batch-b-v3; fresh adversarial reviewer for re-review"
+    },
+    {
+      "id": "C-B-002",
+      "severity": "medium",
+      "area": "UX accessibility/state evidence",
+      "finding": "Compact and wide start/instruction and terminal/result copy is recorded with accessibility snapshots, and compact overflow was checked. The active state is represented primarily by a Konva canvas, so the evidence establishes the canvas transition and result surface but not accessible gameplay semantics, readable in-canvas status, or equivalent assistive-technology access to active controls.",
+      "evidence": [
+        "batch-b-browser-audit-v3.json games.village-guardian.compact and .wide",
+        "batch-b-browser-audit-v3.json action_sequence 6, 11, 28, 32-39",
+        "batch-b-browser-audit-v3.json compact.layout_observation",
+        "batch-b-browser-audit-v3.json screenshot_note: no artifacts produced"
+      ],
+      "remediation": "Report start/result copy and canvas-state evidence separately; if accessibility is a product claim, capture the active-state accessibility tree and keyboard/focus semantics in a foreground run rather than treating canvas presence as accessible gameplay proof.",
+      "owner": "UX owner for vocabulary-games; browser auditor for evidence wording"
+    },
+    {
+      "id": "C-B-003",
+      "severity": "high",
+      "area": "API contract/live parity",
+      "finding": "Both Village Guardian completion submissions returned HTTP 400. The observed page-to-API contract is broken: the server requires gameType, difficulty, score, duration, victory, idempotencyKey, and clientTimestamp, while xpEarned is unrecognized. A terminal/result UI therefore does not demonstrate successful persistence, XP award, or production completion behavior.",
+      "evidence": [
+        "batch-b-browser-audit-v3.json action_sequence 30-31 and 48",
+        "batch-b-browser-audit-v3.json games.village-guardian.network_observations",
+        "role-receipts/browser-auditor-batch-b-v3.json findings.BROWSER-V3-001",
+        "batch-b-browser-audit-v3.json application_start.environment_warning"
+      ],
+      "remediation": "Reconcile the page payload and completion-route schema, add an explicit API contract test for the exact payload, and re-run a foreground browser flow asserting a successful response and user-visible persistence/XP outcome before claiming completion works.",
+      "owner": "vocabulary-games API/page owner"
+    },
+    {
+      "id": "C-B-004",
+      "severity": "medium",
+      "area": "route parity and claim boundary",
+      "finding": "The exact Archer's Revenge and Storm the Castle Tower locale-qualified routes returned completed HTTP 404 responses on the local role revision. This is strong bounded current-revision route evidence, but it is not proof of production availability, historical implementation absence, or parity with the catalog/source records.",
+      "evidence": [
+        "batch-b-browser-audit-v3.json games.archers-revenge exact_failure, route_observation, logs",
+        "batch-b-browser-audit-v3.json games.storm-castle-tower exact_failure, route_observation, logs",
+        "batch-b-browser-audit-v3.json games.*.reviewed_bounded_reason",
+        "batch-b-discovery-audit-v2.json assigned_identity_records and historical-source boundaries"
+      ],
+      "remediation": "Keep the exact local 404 result scoped to role revision and environment; label historical/catalog route records independently and do not infer production route parity without a deployed-origin check.",
+      "owner": "requirements mapper and browser auditor; release owner for production verification"
+    },
+    {
+      "id": "C-B-005",
+      "severity": "medium",
+      "area": "browser artifacts/copy/route evidence",
+      "finding": "No screenshot or other persisted browser artifact was produced; copy and route observations are therefore snapshot/network-log evidence only. The package correctly says screenshots are not used, but any downstream presentation must not imply visual or production copy parity from these records.",
+      "evidence": [
+        "batch-b-browser-audit-v3.json counts.captured_artifacts=0",
+        "batch-b-browser-audit-v3.json games.village-guardian.screenshots=[]",
+        "batch-b-browser-audit-v3.json screenshot_note",
+        "batch-b-browser-audit-v3.json action_sequence 8, 13"
+      ],
+      "remediation": "Preserve the artifact-free limitation in all summaries; if visual composition or copy parity is required, capture independently hashable compact/wide artifacts and compare them against the named route/build revision.",
+      "owner": "browser auditor; UX reviewer for downstream reporting"
+    },
+    {
+      "id": "C-B-006",
+      "severity": "medium",
+      "area": "A5 execution truthfulness",
+      "finding": "The additive v4 truth selector correctly selects browser-v3 bytes and reports the full module/B5 as red, but its passing B4 contract can be mistaken for a live UX/API pass. Under A5 and the frozen B4 rule, the 400 API, synthetic input, hidden-tab scheduler, and absent artifacts must remain explicit limitations; B4 artifact-test success is not production or native-input verification.",
+      "evidence": [
+        "batch-b-truth-tests-v4.py BatchBBrowserContract",
+        "role-receipts/truth-test-author-batch-b-v4.json test_results and findings",
+        "batch-b-browser-audit-v3.json b4_status and input_limitations",
+        "test-strategy-batch-b.md §7 and §11 A5"
+      ],
+      "remediation": "Keep B4 machine-test status, browser observation status, and production-readiness status as separate fields in all gate reports; require fresh review after any wording change.",
+      "owner": "truth-test author and adversarial reviewer"
+    }
+  ],
+  "controls": {
+    "A5": {
+      "status": "partial-fail",
+      "detail": "The selected v4 command truthfully remains red overall and B5 remains red, but the B4 pass is only an artifact-contract pass and must not be promoted to live/production UX or API success."
+    },
+    "A6": {
+      "status": "pass-at-audited-head",
+      "detail": "No candidate, product-owner acceptance, accepted manifest, or plan/registry completion claim was found; plan markers remain in progress and the orchestrator status remains stop-loss blocked. This does not waive the findings above."
+    }
+  },
+  "positive_observations": [
+    "Only Kimi WebBridge was used and the package discloses the hidden-tab, synthetic-event, scheduler, console-hook, and no-screenshot limits.",
+    "Village Guardian has independently recorded compact 390x844 and wide 1854x871 start, active, transition, and terminal/result observations.",
+    "Archer's Revenge and Storm the Castle Tower have exact direct-route completed 404 evidence rather than a missing-catalog inference.",
+    "No student data or unrelated browser tabs were accessed."
+  ],
+  "authorization": {
+    "candidate": false,
+    "product_owner_acceptance": false,
+    "accepted_manifest": false,
+    "reason": "UX/API findings remain unresolved; synthetic/hidden-tab evidence does not satisfy the frozen real-input requirement, Village Guardian completion returns 400, and the required independent review/provenance gates remain red."
+  }
+}
