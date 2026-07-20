@@ -1,0 +1,116 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-self-attested",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 1: Batch A evidence packages (cycle 2 receipt mutation record)",
+  "role": "evidence-collector-supersede",
+  "task_id": "evidence-collector-supersede:wizard-vs-zombie:t4-batch-a",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "phase_base_sha": "9228c5c5",
+  "role_base_sha": "760100fd6d0a7d41c520c6dc60a716c9f7ec0878",
+  "t2_accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+  "t2_accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+  "t3_accepted_pilot_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+  "truth_test_author_receipt_bind": "5464dc6b",
+  "spawn_id": "evidence-collector-wizard-vs-zombie-supersede:t4-batch-a:2026-07-20",
+  "parent_ancestry_ids": [],
+  "prompt_sha256": "ef343cd9d6cfa16caec52a6c032ebbc11707a5eca90ca99bd29407f346337c02",
+  "prompt_sha256_basis": "SHA-256 of prompt_binding.",
+  "prompt_binding": "apk_corpus_audit_action_defense_20260712|evidence-collector|wizard-vs-zombie|cycle-2-remediation|mode-B|phase=9228c5c5|role=760100fd6d0a7d41c520c6dc60a716c9f7ec0878|supersede-receipt",
+  "allowed_input_manifest_sha256": "a21ca30efd3c58a4b796e132d8abf480f6c8bb9a5d306a52d0c41e145c5f71da",
+  "actual_context_manifest_sha256": "a21ca30efd3c58a4b796e132d8abf480f6c8bb9a5d306a52d0c41e145c5f71da",
+  "prior_role_history": [],
+  "start_event_id": "wvz-supersede-start:2026-07-20T13:08:07+07:00",
+  "end_event_id": "wvz-supersede-end:2026-07-20T13:08:07+07:00",
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "allowed_inputs": [
+    "measure/apk-evidence-reconstruction-program.md",
+    "measure/apk-evidence-cohort-protocol.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-a.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/_orchestrator/LAST-BATCH-STATUS.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests.py",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-claim-ledger.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-wizard-vs-zombie.json",
+    "measure/archive/apk_three_game_truth_pilot_20260712/truth_tests.py",
+    "git object store (read-only)"
+  ],
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-wizard-vs-zombie-supersede.json"
+  ],
+  "output_hashes": {},
+  "output_hashes_note": "The only output is this receipt; it is excluded from its own hash map to avoid a self-referential digest. The orchestrator bind commit supplies immutable byte identity.",
+  "commit_sha": "<pending-orchestrator-bind>",
+  "final_response_sha256": "a21db38692fb3d29a0eeafd5a833ae76005ad9e4b8694332dd15637f8a4f0491",
+  "final_response_sha256_basis": "SHA-256 of the exact UTF-8 final response text, without a trailing newline; 864 bytes.",
+  "budget_declaration": {
+    "schema_version": "apk-role-budget-declaration.v1",
+    "role": "evidence-collector-supersede",
+    "frozen_resource_ceiling": "unmeasured",
+    "frozen_resource_ceiling_explanation": "The orchestrator dispatch supplied no numeric resource ceilings; this is disclosed rather than replaced with invented limits.",
+    "actual_usage": {
+      "git_commits_inspected": 4,
+      "receipt_diff_hunks_recorded": 1,
+      "mutated_fields": 2
+    }
+  },
+  "mutation_record": {
+    "policy_class": "anti-pattern A15",
+    "mutated_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-wizard-vs-zombie.json",
+    "mutation_commit": "ca423fbb8eecbcfeb6bd0a156232462289c4726f",
+    "mutation_commit_parent": "9cfc102b4a97f3106173e30457d25a46d27d473f",
+    "mutation_commit_subject": "docs(measure): record Codecamp SSO cutover postflight (track_id: company_identity_sso_20260715)",
+    "relationship_to_apk_track": "unrelated Company/Codecamp SSO postflight commit; it had no authority to rewrite an APK role receipt",
+    "before_revision": "ca423fbb^",
+    "after_revision": "ca423fbb",
+    "before_receipt_sha256": "c9111693a675e95a5b3b5de3cd00073447255b3910eeacf0266abd2838501bb5",
+    "after_receipt_sha256": "592baadf7e98f6ee16f4d89e1c94368496925c7ff8171351c0f447c524d5a7fd",
+    "before_receipt_bytes": 3613,
+    "after_receipt_bytes": 3613,
+    "diff_hunks": [
+      {
+        "header": "@@ -24,8 +24,8 @@",
+        "removed": [
+          "\"commit_sha\": \"2bcb883cd4274f5bffe5f76a5540eb0975d0eb61\"",
+          "\"final_response_sha256\": \"8663c3e67378ae498d010907f96a1b4f4a4ce320d6ff730bd7e9ecb1bd24efa0\""
+        ],
+        "added": [
+          "\"commit_sha\": \"20af641778c0d52c1b18dcbc33aac948c369b744\"",
+          "\"final_response_sha256\": \"c9111693a675e95a5b3b5de3cd00073447255b3910eeacf0266abd2838501bb5\""
+        ]
+      }
+    ],
+    "field_changes": {
+      "commit_sha": {
+        "before": "2bcb883cd4274f5bffe5f76a5540eb0975d0eb61",
+        "after": "20af641778c0d52c1b18dcbc33aac948c369b744"
+      },
+      "final_response_sha256": {
+        "before": "8663c3e67378ae498d010907f96a1b4f4a4ce320d6ff730bd7e9ecb1bd24efa0",
+        "after": "c9111693a675e95a5b3b5de3cd00073447255b3910eeacf0266abd2838501bb5"
+      }
+    },
+    "notable_hash_relationship": "The inserted final_response_sha256 c9111693... equals the SHA-256 of the complete pre-mutation receipt bytes; it is not proof of provider-retained final-response bytes.",
+    "policy_consequence": "A15: role receipts are append-only audit records. A later correction must create a new superseding receipt; in-place edits revoke authority of the mutated receipt and any acceptance bound to it.",
+    "v1_receipt_disposition": "superseded; non-authoritative"
+  },
+  "v1_output_provenance_snapshot": {
+    "authoring_commit": "91416b97cd2a69a49f2353ac3be4a387d88f4b97",
+    "note": "This is a byte snapshot, not acceptance of v1 factual correctness or of later bind mutations.",
+    "hashes_at_authoring_commit": {
+      "wizard-vs-zombie-claim-ledger.json": "1cb9eac5a84eca0556aca2648bdea62a63005733220bf2ef0d74f0a292f36dac",
+      "wizard-vs-zombie-evidence-method.md": "b58f1bea180e339e14e70a4eeb91215af013ce2fd567c8e14a986833b1057b70",
+      "wizard-vs-zombie-evidence-final-report.json": "1489085c2c9ee4b149fe4766adf23baa762c80efc5c16ca781006e472f95c6a8",
+      "role-receipts/evidence-collector-wizard-vs-zombie.json": "484a49fcbdb4ad0270eade99ec8cb514240afc04dfdcf47729508f1d7f71793c"
+    }
+  },
+  "findings": {
+    "critical": 1,
+    "finding_id": "A15-WVZ-RECEIPT-MUTATION-CA423FBB",
+    "disposition": "documented and superseded by append-only v2 receipts",
+    "unresolved": 0
+  },
+  "acceptance": "not-claimed"
+}

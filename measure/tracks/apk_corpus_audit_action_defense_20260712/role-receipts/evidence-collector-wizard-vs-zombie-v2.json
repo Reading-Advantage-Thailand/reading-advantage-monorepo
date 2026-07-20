@@ -1,0 +1,113 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-self-attested",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 1: Batch A evidence packages (cycle 2 remediation)",
+  "role": "evidence-collector",
+  "task_id": "evidence-collector:wizard-vs-zombie:t4-batch-a:v2",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "phase_base_sha": "9228c5c5",
+  "role_base_sha": "760100fd6d0a7d41c520c6dc60a716c9f7ec0878",
+  "t2_accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+  "t2_accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+  "t3_accepted_pilot_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+  "truth_test_author_receipt_bind": "5464dc6b",
+  "spawn_id": "evidence-collector-wizard-vs-zombie-v2:t4-batch-a:2026-07-20",
+  "parent_ancestry_ids": [],
+  "prompt_sha256": "0e98a1a2b1d02305e910760cc60367e93277cc97e3a732c0e783ae34c7159f56",
+  "prompt_sha256_basis": "SHA-256 of the canonical dispatch binding string recorded in prompt_binding, not a claim that provider-retained raw prompt bytes were available.",
+  "prompt_binding": "apk_corpus_audit_action_defense_20260712|evidence-collector|wizard-vs-zombie|cycle-2-remediation|mode-B|phase=9228c5c5|role=760100fd6d0a7d41c520c6dc60a716c9f7ec0878",
+  "allowed_input_manifest_sha256": "a21ca30efd3c58a4b796e132d8abf480f6c8bb9a5d306a52d0c41e145c5f71da",
+  "actual_context_manifest_sha256": "a21ca30efd3c58a4b796e132d8abf480f6c8bb9a5d306a52d0c41e145c5f71da",
+  "actual_context_manifest": {
+    "schema_version": "apk-context-manifest.v1",
+    "allowed_inputs": [
+      "measure/apk-evidence-reconstruction-program.md",
+      "measure/apk-evidence-cohort-protocol.md",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-a.md",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/_orchestrator/LAST-BATCH-STATUS.md",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests.py",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-claim-ledger.json",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-wizard-vs-zombie.json",
+      "measure/archive/apk_three_game_truth_pilot_20260712/truth_tests.py",
+      "git object store (read-only)"
+    ],
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "phase_base_sha": "9228c5c5",
+    "role_base_sha": "760100fd6d0a7d41c520c6dc60a716c9f7ec0878",
+    "factual_derivation_scope": "wizard-vs-zombie only"
+  },
+  "prior_role_history": [],
+  "start_event_id": "wvz-v2-collect-start:2026-07-20T13:08:07+07:00",
+  "end_event_id": "wvz-v2-collect-end:2026-07-20T13:08:07+07:00",
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "allowed_inputs": [
+    "measure/apk-evidence-reconstruction-program.md",
+    "measure/apk-evidence-cohort-protocol.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-a.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/_orchestrator/LAST-BATCH-STATUS.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests.py",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-claim-ledger.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-wizard-vs-zombie.json",
+    "measure/archive/apk_three_game_truth_pilot_20260712/truth_tests.py",
+    "git object store (read-only)"
+  ],
+  "read_only_inputs_note": "All v1 artifacts and the git object store were read-only. No v1 artifact, plan, blueprint, mapper output, truth test, or predecessor input was modified.",
+  "role_isolation": {
+    "roles_held": [
+      "evidence-collector"
+    ],
+    "roles_not_held": [
+      "discovery-auditor",
+      "requirements-mapper",
+      "truth-test-author",
+      "adversarial-reviewer",
+      "orchestrator"
+    ],
+    "game_scope": [
+      "wizard-vs-zombie"
+    ]
+  },
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-claim-ledger-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-evidence-method-v2.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-evidence-final-report-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-wizard-vs-zombie-v2.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-claim-ledger-v2.json": "28320b36f18645d476b6e353275d7cf3f07bc0f73bea719da1e50537e8e8b635",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-evidence-method-v2.md": "c97700e78d38b2f824284515b7f6850eb7b85614d2cedb6dec4bc2fcc255a4a8",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-evidence-final-report-v2.json": "13944b1b79da541448ee36ee7d99f26612b8ab7d4c36ccdfa4f8edd7ac78373e"
+  },
+  "commit_sha": "<pending-orchestrator-bind>",
+  "final_response_sha256": "a21db38692fb3d29a0eeafd5a833ae76005ad9e4b8694332dd15637f8a4f0491",
+  "final_response_sha256_basis": "SHA-256 of the exact UTF-8 final response text, without a trailing newline; 864 bytes.",
+  "budget_declaration": {
+    "schema_version": "apk-role-budget-declaration.v1",
+    "role": "evidence-collector",
+    "frozen_resource_ceiling": "unmeasured",
+    "frozen_resource_ceiling_explanation": "The orchestrator dispatch supplied no numeric resource ceilings; this is disclosed rather than replaced with invented limits.",
+    "actual_usage": {
+      "claims_cleanly_rewritten": 77,
+      "v1_defects_corrected": 10,
+      "negative_fixtures": 4,
+      "non_fixture_citations_verified": 73,
+      "all_citations_verified": 77
+    }
+  },
+  "findings": {
+    "mode": "B",
+    "claims_total": 77,
+    "non_fixture_claims": 73,
+    "negative_fixtures": 4,
+    "corrections_vs_v1": 10,
+    "resolve_claim_citation": "73/73 non-fixture OK; 4/4 fixture citations OK; 77/77 total citation envelopes OK",
+    "quarantined_track_claims": 0,
+    "unsupported_factual_claims": 0
+  },
+  "acceptance": "not-claimed"
+}

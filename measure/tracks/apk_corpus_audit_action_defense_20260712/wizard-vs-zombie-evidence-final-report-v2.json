@@ -1,0 +1,314 @@
+{
+  "schema_version": "apk-evidence-collector-report.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "role": "evidence-collector",
+  "task_id": "evidence-collector:wizard-vs-zombie:t4-batch-a:v2",
+  "collector_agent": "evidence-collector-wizard-vs-zombie-v2:t4-batch-a:2026-07-20",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "phase_base_sha": "9228c5c5",
+  "role_base_sha": "760100fd6d0a7d41c520c6dc60a716c9f7ec0878",
+  "generated_at": "2026-07-20T13:08:07+07:00",
+  "mode": "B",
+  "mode_description": "clean rewrite; no additive v1 claims or supersedes fields",
+  "claims_total": 77,
+  "non_fixture_claims": 73,
+  "negative_fixture_claims": 4,
+  "claims_by_category": {
+    "asset": 10,
+    "component": 6,
+    "history": 4,
+    "identity": 9,
+    "mechanic": 24,
+    "negative_fixture": 4,
+    "route": 7,
+    "state": 5,
+    "test": 8
+  },
+  "citation_verification": {
+    "resolver": "batch-a-truth-tests.py:resolve_claim_citation",
+    "all_claims_ok": 77,
+    "all_claims_total": 77,
+    "non_fixture_ok": 73,
+    "non_fixture_total": 73,
+    "fixture_citations_ok": 4,
+    "fixture_citations_total": 4,
+    "resolver_classes": {
+      "frozen-manifest": 6,
+      "range": 52,
+      "whole-file": 19
+    },
+    "failures": []
+  },
+  "negative_fixtures": [
+    {
+      "claim_id": "WVZ-NEG-001",
+      "expected_disposition": "REJECT",
+      "citation_resolves": true
+    },
+    {
+      "claim_id": "WVZ-NEG-002",
+      "expected_disposition": "REJECT",
+      "citation_resolves": true
+    },
+    {
+      "claim_id": "WVZ-NEG-003",
+      "expected_disposition": "REJECT",
+      "citation_resolves": true
+    },
+    {
+      "claim_id": "WVZ-NEG-004",
+      "expected_disposition": "REJECT",
+      "citation_resolves": true
+    }
+  ],
+  "corrections_vs_v1": 10,
+  "supersession_log": [
+    {
+      "claim_id": "WVZ-COMP-004",
+      "change_kind": "claim-and-citation-rewrite",
+      "v1": {
+        "claim_text": "The advantage-games host renders the shared GameStartScreen in WizardZombieGame.tsx at lines 431-468 inside the gamePhase === 'start' branch.",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 431,
+        "line_end": 468,
+        "cited_range_sha256": "7b60a627e94abce4ff0a7c26bef95904623f28b9c3da161e4ff4d658bc825551",
+        "blob_sha256": "71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4",
+        "resolver_verdict": "WVZ-COMP-004: cited_range_sha256 mismatch at 23bb5ad5:apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx"
+      },
+      "v2": {
+        "claim_text": "The advantage-games component enters its start branch when gamePhase is 'start' and renders GameStartScreen with instructions, controls, difficulty choices, and the start callback.",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 428,
+        "line_end": 468,
+        "cited_range_sha256": "bc84e4d2887e0bbe3b3ff7203de0a63ac75a4fa4a8aab55c46c43620bdd31376",
+        "blob_sha256": "71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4",
+        "resolver_verdict": "range"
+      }
+    },
+    {
+      "claim_id": "WVZ-COMP-005",
+      "change_kind": "claim-and-citation-rewrite",
+      "v1": {
+        "claim_text": "The advantage-games host renders the shared GameEndScreen at lines 482-504 inside the gamePhase === 'ended' branch with status='defeat' and gameId='wizard-vs-zombie'.",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 482,
+        "line_end": 504,
+        "cited_range_sha256": "540d5ede99b45197b3ab8f3c2c5f82d4fe26663d2ea978f4061e40487f95cdb4",
+        "blob_sha256": "71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4",
+        "resolver_verdict": "WVZ-COMP-005: cited_range_sha256 mismatch at 23bb5ad5:apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx"
+      },
+      "v2": {
+        "claim_text": "The advantage-games GameEndScreen is configured with status='defeat', score, calculated XP, accuracy, restart and exit callbacks, and gameId='wizard-vs-zombie'.",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 484,
+        "line_end": 504,
+        "cited_range_sha256": "540d5ede99b45197b3ab8f3c2c5f82d4fe26663d2ea978f4061e40487f95cdb4",
+        "blob_sha256": "71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4",
+        "resolver_verdict": "range"
+      }
+    },
+    {
+      "claim_id": "WVZ-COMP-006",
+      "change_kind": "claim-and-citation-rewrite",
+      "v1": {
+        "claim_text": "The advantage-games host imports calculateIndicators from '@/lib/games/wizardZombieIndicators' at line 35 and uses it at lines 399-402 to render off-screen orbs.",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 35,
+        "line_end": 35,
+        "cited_range_sha256": "5765f9b66aff63efab3af366b60c2e36b7d4f785e4614a9874a4f07eeb666f0a",
+        "blob_sha256": "71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4",
+        "resolver_verdict": "WVZ-COMP-006: cited_range_sha256 mismatch at 23bb5ad5:apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx"
+      },
+      "v2": {
+        "claim_text": "The advantage-games component imports calculateIndicators from '@/lib/games/wizardZombieIndicators' at baseline line 35.",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 35,
+        "line_end": 35,
+        "cited_range_sha256": "9caed5ffed6e2d65f82752248e95e7c9b880d86d0742d8f45803ae962ea26e8e",
+        "blob_sha256": "71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4",
+        "resolver_verdict": "range"
+      }
+    },
+    {
+      "claim_id": "WVZ-MECH-008",
+      "change_kind": "claim-and-citation-rewrite",
+      "v1": {
+        "claim_text": "WizardZombieGame.tsx loads the four runtime sprite assets (player, zombie, orb, floor) at lines 171-182 from '/games/vocabulary/wizard-vs-zombie/{player|zombie|orb}_3x3_pose_sheet.png' and 'tile-ruins.png'.",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 171,
+        "line_end": 182,
+        "cited_range_sha256": "05f029ee0defed93cd05c926953cb962e1760ce0f2ec35f9b0694bd951ab9ebb",
+        "blob_sha256": "71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4",
+        "resolver_verdict": "WVZ-MECH-008: cited_range_sha256 mismatch at 23bb5ad5:apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx"
+      },
+      "v2": {
+        "claim_text": "The runtime asset-loading block loads player, zombie, orb, and floor images from the vocabulary/wizard-vs-zombie public paths.",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 172,
+        "line_end": 182,
+        "cited_range_sha256": "05f029ee0defed93cd05c926953cb962e1760ce0f2ec35f9b0694bd951ab9ebb",
+        "blob_sha256": "71ff7b6d8b573fe2c3ee4cff37e2a85285e9f28acbaa105b4984b1272c91ceb4",
+        "resolver_verdict": "range"
+      }
+    },
+    {
+      "claim_id": "WVZ-MECH-019",
+      "change_kind": "claim-and-citation-rewrite",
+      "v1": {
+        "claim_text": "The advantage-games page fetches vocabulary from /api/v1/games/wizard-vs-zombie/vocabulary at page.tsx line 26 and falls back to a fixed 5-word Spanish set on empty/error response (lines 32-38, 43-49).",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+        "line_start": 22,
+        "line_end": 53,
+        "cited_range_sha256": "b10cca00fa35ebc331abec1acfc74fe37eddfaac48f9ccdcb528b87fe0402a5f",
+        "blob_sha256": "813c3330de1bb46686c23aa819839e43fe15a16266cac1cbe7330053125216f7",
+        "resolver_verdict": "WVZ-MECH-019: cited_range_sha256 mismatch at 23bb5ad5:apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx"
+      },
+      "v2": {
+        "claim_text": "The advantage-games page fetches /api/v1/games/wizard-vs-zombie/vocabulary and installs the same five-item Spanish fallback when the response is empty or the request throws.",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+        "line_start": 22,
+        "line_end": 53,
+        "cited_range_sha256": "425fc7c4b57c22a380398eb061301ac5496c98478d273f14a1c6696d975c594d",
+        "blob_sha256": "813c3330de1bb46686c23aa819839e43fe15a16266cac1cbe7330053125216f7",
+        "resolver_verdict": "range"
+      }
+    },
+    {
+      "claim_id": "WVZ-TEST-007",
+      "change_kind": "claim-and-citation-rewrite",
+      "v1": {
+        "claim_text": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.test.tsx (46 lines) mocks WizardZombieGame and asserts back-to-home link (RA-only behavior).",
+        "file_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.test.tsx",
+        "line_start": 40,
+        "line_end": 45,
+        "cited_range_sha256": "1eaf2b5ec3d56a8b0f8c4f1e7d3b5a2c8d0e2f4a6c8e0b2d4f6a8c0e2b4d6f8a",
+        "blob_sha256": "d5a27eae4e10d230e46a8cc537abfca4669ac4d93c08d9aef9e4969c91aef55c",
+        "resolver_verdict": "WVZ-TEST-007: cited_range_sha256 mismatch at 23bb5ad5:apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.test.tsx"
+      },
+      "v2": {
+        "claim_text": "The reading-advantage page test renders WizardZombiePage, locates the 'back to home' link, and expects its href to equal '/'.",
+        "file_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.test.tsx",
+        "line_start": 40,
+        "line_end": 45,
+        "cited_range_sha256": "1e76fd59742ef63df27580b4ba1d87179ddfebb43e159f7c28e48861c7fb41f9",
+        "blob_sha256": "d5a27eae4e10d230e46a8cc537abfca4669ac4d93c08d9aef9e4969c91aef55c",
+        "resolver_verdict": "range"
+      }
+    },
+    {
+      "claim_id": "WVZ-TEST-008",
+      "change_kind": "claim-and-citation-rewrite",
+      "v1": {
+        "claim_text": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.test.tsx (126 lines) asserts /Arcane Survival/ briefing copy and 'Start Survival' button — these do NOT match the actual RA component (which only renders briefing overlay without those strings).",
+        "file_path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.test.tsx",
+        "line_start": 91,
+        "line_end": 103,
+        "cited_range_sha256": "1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b",
+        "blob_sha256": "1400ebc7ae6e7bee61143791c3e69e5efd8b66195e0e2cecd730d2134fa43b5b",
+        "resolver_verdict": "WVZ-TEST-008: cited_range_sha256 mismatch at 23bb5ad5:apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.test.tsx"
+      },
+      "v2": {
+        "claim_text": "The reading-advantage component test expects initial 'Arcane Survival' text and a 'start survival' button after rendering WizardZombieGame with difficulty='normal'.",
+        "file_path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.test.tsx",
+        "line_start": 91,
+        "line_end": 103,
+        "cited_range_sha256": "ea0be1478bdb0d1935793046d3db3ff8548e3a1f149d09198a61ffe109f2502a",
+        "blob_sha256": "1400ebc7ae6e7bee61143791c3e69e5efd8b66195e0e2cecd730d2134fa43b5b",
+        "resolver_verdict": "range"
+      }
+    },
+    {
+      "claim_id": "WVZ-HIST-002",
+      "change_kind": "claim-and-citation-rewrite",
+      "v1": {
+        "claim_text": "apps/advantage-games/measure/tracks/wizard-vs-zombie-compliance-audit_20260426/report.md is the historical compliance-audit track (133 lines).",
+        "file_path": "apps/advantage-games/measure/tracks/wizard-vs-zombie-compliance-audit_20260426/report.md",
+        "line_start": 1,
+        "line_end": 133,
+        "cited_range_sha256": "c1d3e5f7a9b1c3d5e7f9a1b3c5d7e9f1a3b5c7d9e1f3a5b7c9d1e3f5a7b9c1d3",
+        "blob_sha256": "c1d3e5f7a9b1c3d5e7f9a1b3c5d7e9f1a3b5c7d9e1f3a5b7c9d1e3f5a7b9c1d3",
+        "resolver_verdict": "WVZ-HIST-002: blob_sha256 mismatch at 23bb5ad5:apps/advantage-games/measure/tracks/wizard-vs-zombie-compliance-audit_20260426/report.md"
+      },
+      "v2": {
+        "claim_text": "The baseline compliance-audit report identifies Wizard vs Zombie, commit 6fe989a, and summarizes 25/25 passing specifications, seven fixes, 89.05% final coverage, and clean lint status.",
+        "file_path": "apps/advantage-games/measure/tracks/wizard-vs-zombie-compliance-audit_20260426/report.md",
+        "line_start": 1,
+        "line_end": 16,
+        "cited_range_sha256": "8d750164430ada17d998c23119131f5af967adcccc003df8fd3b40ad9ab2e589",
+        "blob_sha256": "f679ace218d28c4bf2781ec43ec842b5fc5a1d2b71842b1c9056a25582f2375e",
+        "resolver_verdict": "range"
+      }
+    },
+    {
+      "claim_id": "WVZ-HIST-003",
+      "change_kind": "quarantined-source-replacement",
+      "v1": {
+        "claim_text": "measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/wizard-vs-zombie.md (43 lines) records canonical_id 'game:wizard-vs-zombie' and the deterministic Red-test contract.",
+        "file_path": "measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/wizard-vs-zombie.md",
+        "line_start": 1,
+        "line_end": 43,
+        "cited_range_sha256": "d3e5f7a9b1c3d5e7f9a1b3c5d7e9f1a3b5c7d9e1f3a5b7c9d1e3f5a7b9c1d3e5",
+        "blob_sha256": "d3e5f7a9b1c3d5e7f9a1b3c5d7e9f1a3b5c7d9e1f3a5b7c9d1e3f5a7b9c1d3e5",
+        "resolver_verdict": "WVZ-HIST-003: blob_sha256 mismatch at 23bb5ad5:measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/wizard-vs-zombie.md"
+      },
+      "v2": {
+        "claim_text": "The baseline compliance-audit report records the game-system outcomes for XP/scoring, three-tier difficulty, shared screens, camera, off-screen indicators, and delta-time performance.",
+        "file_path": "apps/advantage-games/measure/tracks/wizard-vs-zombie-compliance-audit_20260426/report.md",
+        "line_start": 52,
+        "line_end": 60,
+        "cited_range_sha256": "45b98b77364b6a5218d39b040260ecd8ec2e919d20e3760c5ee7c05111c90b82",
+        "blob_sha256": "f679ace218d28c4bf2781ec43ec842b5fc5a1d2b71842b1c9056a25582f2375e",
+        "resolver_verdict": "range"
+      }
+    },
+    {
+      "claim_id": "WVZ-HIST-004",
+      "change_kind": "claim-and-citation-rewrite",
+      "v1": {
+        "claim_text": "Reading-advantage host carries the older 4-tier Difficulty type with 'extreme' at lib/games/wizardZombie.ts line 33 and StartScreen DIFFICULTY_CONFIG (lines 66-87) — divergence from advantage-games which only has 3 tiers.",
+        "file_path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/StartScreen.tsx",
+        "line_start": 82,
+        "line_end": 87,
+        "cited_range_sha256": "1b3c5d7e9f1a3b5c7d9e1f3a5b7c9d1e3f5a7b9c1d3e5f7a9b1c3d5e7f9a1b3c",
+        "blob_sha256": "d43fefe225a98480a40b388fb51bd2334fcad1418cffd11d7e9f4e5bbd2526c9",
+        "resolver_verdict": "WVZ-HIST-004: cited_range_sha256 mismatch at 23bb5ad5:apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/StartScreen.tsx"
+      },
+      "v2": {
+        "claim_text": "The reading-advantage StartScreen difficulty configuration has easy, normal, hard, and extreme entries.",
+        "file_path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/StartScreen.tsx",
+        "line_start": 66,
+        "line_end": 87,
+        "cited_range_sha256": "e59434196900b47e89bbe5e56eb5085495eb1c7c86702c96d94b5b1849092bd2",
+        "blob_sha256": "d43fefe225a98480a40b388fb51bd2334fcad1418cffd11d7e9f4e5bbd2526c9",
+        "resolver_verdict": "range"
+      }
+    }
+  ],
+  "dropped_or_replaced_sources": [
+    {
+      "v1_claim_id": "WVZ-HIST-003",
+      "disposition": "replaced",
+      "prohibited_path": "measure/tracks/apk_cross_game_asset_ontology_20260712/mechanic-blueprints/wizard-vs-zombie.md",
+      "replacement_path": "apps/advantage-games/measure/tracks/wizard-vs-zombie-compliance-audit_20260426/report.md",
+      "reason": "The cross-game ontology track is quarantined negative evidence and cannot support a factual claim."
+    }
+  ],
+  "stop_loss_observations": [
+    {
+      "id": "SLO-WVZ-1",
+      "status": "resolved-exclusion carried forward",
+      "detail": "The www-reading-advantage MP3 and duplicate PNG denominator-gap candidate remains outside this citation-remediation role."
+    },
+    {
+      "id": "SLO-TTA-BA-1-WVZ",
+      "status": "remediated in v2",
+      "detail": "All ten cycle-1 WVZ citation defects were replaced; 73/73 factual claims now resolve."
+    }
+  ],
+  "output_hashes": {
+    "wizard-vs-zombie-claim-ledger-v2.json": "28320b36f18645d476b6e353275d7cf3f07bc0f73bea719da1e50537e8e8b635",
+    "wizard-vs-zombie-evidence-method-v2.md": "c97700e78d38b2f824284515b7f6850eb7b85614d2cedb6dec4bc2fcc255a4a8"
+  },
+  "self_hash_binding": "The v2 role receipt hashes this report after serialization; this report does not self-hash.",
+  "acceptance": "not-claimed"
+}
