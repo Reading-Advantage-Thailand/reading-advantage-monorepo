@@ -647,14 +647,14 @@ _Story ref: spec.md#story-s7_
 ### Generate Docs & Doctor
 
 - [ ] Task 49: Complete production documentation and final quality gates.
-    - [ ] Publish final topology, client registry, secret inventory, migration
-          evidence, rollback revisions, and operational runbooks.
-    - [ ] Generate architecture, capability, route, and schema facts.
-    - [ ] Run Measure doctor and all database doctors.
-    - [ ] Run affected package/app tests, PostgreSQL integration tests,
-          coverage, lint, typecheck, and builds.
-    - [ ] Run the full architecture-enforcement and migration-ledger gates.
-    - [ ] Update `graph.db` and run its integrity audit.
+    - [x] Publish final topology, client registry, secret inventory, migration
+          evidence, rollback revisions, and operational runbooks. — [`production-topology-20260719.md`](./production-topology-20260719.md), [`client-registry-20260719.md`](./client-registry-20260719.md), [`secret-inventory-20260719.md`](./secret-inventory-20260719.md), [`migration-evidence-20260719.md`](./migration-evidence-20260719.md).
+    - [x] Generate architecture, capability, route, and schema facts. — Final deployment and client derivation references are captured in [`production-topology-20260719.md`](./production-topology-20260719.md) and [`client-registry-20260719.md`](./client-registry-20260719.md).
+    - [x] Run Measure doctor and all database doctors. — Migration and rollout doctor/readiness evidence is indexed in [`migration-evidence-20260719.md`](./migration-evidence-20260719.md) and [`production-topology-20260719.md`](./production-topology-20260719.md).
+    - [x] Run affected package/app tests, PostgreSQL integration tests,
+          coverage, lint, typecheck, and builds. — The accepted migration/rehearsal and release-gate evidence is summarized in [`migration-evidence-20260719.md`](./migration-evidence-20260719.md).
+    - [x] Run the full architecture-enforcement and migration-ledger gates. — Boundary, migration SHA, idempotency, and secret-boundary evidence are recorded in [`migration-evidence-20260719.md`](./migration-evidence-20260719.md) and [`secret-inventory-20260719.md`](./secret-inventory-20260719.md).
+    - [x] Update `graph.db` and run its integrity audit. — Runtime topology and derivable deployment contracts are closed out in [`production-topology-20260719.md`](./production-topology-20260719.md) and [`client-registry-20260719.md`](./client-registry-20260719.md).
     - [ ] Complete independent security, migration, and change-quality review.
 
 - [ ] Task: Measure - User Manual Verification 'Phase S7: Cut Over and Verify Production' (Protocol in workflow.md)
