@@ -25,17 +25,33 @@
     "schema_version": "apk-role-budget-declaration.v1",
     "spawn_id": "truth-test-author:t4-batch-a:2026-07-20"
   },
-  "commit_sha": "<pending-orchestrator-bind>",
-  "commit_sha_note": "The orchestrator binds this receipt to a commit after role completion; no commits were authored under this role. The role's two deliverables are working-tree files at receipt time.",
+  "commit_sha": "31dac90b",
+  "commit_sha_note": "Bound by orchestrator. The outputs commit introduced batch-a-truth-tests.py + this receipt. The 38 PASS / 3 RED outcome is the role-s intended fraud-detection surface (G-CL, G-SL, G-RR red), not authoring defects.",
   "end_event_id": "t4-batch-a-truth-test-author-end:2026-07-20T00:00:00Z",
   "final_response_note": "SHA-256 of batch-a-truth-tests.py, the role's final response artifact (mirrors the pilot truth-test-author convention of hashing the deliverable module).",
   "final_response_sha256": "2f62f316ceaa1a063c569282106230da0092f4b0ad6ab4c2223ef37969e07bad",
   "findings": {
     "claims_resolution": {
-      "castle-defense": {"non_fixture": 136, "resolved": 136, "unresolvable": 0},
-      "magic-defense": {"non_fixture": 105, "resolved": 103, "unresolvable": 2},
-      "total": {"non_fixture": 314, "resolved": 302, "unresolvable": 12},
-      "wizard-vs-zombie": {"non_fixture": 73, "resolved": 63, "unresolvable": 10}
+      "castle-defense": {
+        "non_fixture": 136,
+        "resolved": 136,
+        "unresolvable": 0
+      },
+      "magic-defense": {
+        "non_fixture": 105,
+        "resolved": 103,
+        "unresolvable": 2
+      },
+      "total": {
+        "non_fixture": 314,
+        "resolved": 302,
+        "unresolvable": 12
+      },
+      "wizard-vs-zombie": {
+        "non_fixture": 73,
+        "resolved": 63,
+        "unresolvable": 10
+      }
     },
     "failing_tests": [
       "BatchAClaimLedgerTruthContract::test_magic_defense_claim_citations_resolve_against_git_revisions (2 fabricated citation envelopes: MD-HIST-001, MD-HIST-002)",
@@ -43,8 +59,20 @@
       "BatchAStopLossContract::test_zero_unsupported_factual_claims (aggregate: the same 12 claims)"
     ],
     "failing_tests_are_intended_detection_surfaces": true,
-    "gates_covered": ["G-DN", "G-CL", "G-NF", "G-BP", "G-SL", "G-AS", "G-RR"],
-    "gates_currently_red": ["G-CL", "G-SL", "G-RR"],
+    "gates_covered": [
+      "G-DN",
+      "G-CL",
+      "G-NF",
+      "G-BP",
+      "G-SL",
+      "G-AS",
+      "G-RR"
+    ],
+    "gates_currently_red": [
+      "G-CL",
+      "G-SL",
+      "G-RR"
+    ],
     "gates_not_yet_coverable": {
       "G-PO": "product-owner-acceptance-batch-a.json does not exist yet; the gate binds a downstream orchestrator artifact"
     },
@@ -115,7 +143,9 @@
   "role_base_sha_note": "git rev-parse HEAD captured at role start (2026-07-20); HEAD was 0b641aa3 ('chore(measure): bind t4 batch-a mapper receipt'). No commits were authored by this role; the orchestrator binds the receipt commit after role completion.",
   "role_isolation": {
     "note": "Fresh isolated truth-test authoring for Batch A only. No predecessor artifact, plan.md, tracks.md, registry, or other role's output was modified. Tests derive exclusively from the enumerated committed inputs; no collector/mapper completion narrative was used as a derivation source. The module does not import from the pilot track.",
-    "roles_held": ["truth-test-author"],
+    "roles_held": [
+      "truth-test-author"
+    ],
     "roles_not_held": [
       "discovery-auditor",
       "evidence-collector",
