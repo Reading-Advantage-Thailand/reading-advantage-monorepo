@@ -150,6 +150,12 @@ Do not start Phase 2 until the security gate is green.
 
 ## Phase 3: Deploy + end-to-end QA
 
+- [x] Note: Sales revision `sales-advantage-00005-yas` live evidence was gathered
+  by the Sales QA subagent and recorded in [`qa-browserevidence-20260719.md`](./qa-browserevidence-20260719.md)
+  (`90782806` evidence file). Browser journeys remain blocked by the SSO
+  `SESSION_INVALID` response; QA-credential provisioning is required before
+  authenticated journeys can complete.
+
 - [x] Task: Continue failed release `f5063222-76bd-4b73-a151-3f7994827e09` without replaying completed mutations
   - [x] Commit a manifest-bound, one-use Cloud Build continuation that deploys only the original immutable image digest.
   - [x] Reject drift in the original build, backup, artifact, rollback revision, traffic, IAM, domain, repair manifest, or source provenance before mutation.
