@@ -54,3 +54,7 @@ packages/db/scripts/*.d.ts.map
 # Measure automation run logs — ephemeral session transcripts / event streams /
 # gate output. Curated artifacts (*.feedback.md, *-result.json) are kept.
 measure/runs/
+
+# Python bytecode
+__pycache__/
+*.pyc
