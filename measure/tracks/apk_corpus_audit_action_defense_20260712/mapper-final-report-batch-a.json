@@ -1,0 +1,61 @@
+{
+  "schema_version": "apk-mapper-final-report.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Mapping (Batch A)",
+  "role": "requirements-mapper",
+  "spawn_id": "requirements-mapper:t4-batch-a:2026-07-20",
+  "cohort_batch": "Batch A",
+  "cohort_games": ["castle-defense", "magic-defense", "wizard-vs-zombie"],
+  "blueprint": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-blueprint.json",
+  "hypotheses_file": "measure/tracks/apk_corpus_audit_action_defense_20260712/mapper-hypotheses-batch-a.md",
+  "blueprint_naming_note": "The orchestrator dispatch for this role binds the blueprint path as batch-a-blueprint.json. The strategy document's earlier working name pilot-blueprint-batch-a.json refers to the same artifact; batch-a-blueprint.json is the authored path.",
+  "per_game_counts": {
+    "castle-defense": {"scenes": 5, "state_entries": 8, "transitions": 8, "mechanic_entries": 23, "test_modules": 5, "asset_usage_entries": 8},
+    "magic-defense": {"scenes": 5, "state_entries": 8, "transitions": 7, "mechanic_entries": 18, "test_modules": 9, "asset_usage_entries": 8},
+    "wizard-vs-zombie": {"scenes": 8, "state_entries": 5, "transitions": 6, "mechanic_entries": 21, "test_modules": 7, "asset_usage_entries": 13}
+  },
+  "count_conventions": {
+    "state_entries": "named state entries and union state families (members listed per family), mirroring pilot convention",
+    "mechanic_entries": "mechanics + control surfaces (learning goals and terminal-result mechanic recorded separately in artifact B)",
+    "asset_usage_entries": "scene entries in D_asset_usage_map plus non-scene surface entries in D_asset_usage_non_scene_surfaces"
+  },
+  "non_authoritative_hypotheses_authored": 7,
+  "claim_reference_validation": {
+    "structured_claim_ids_referenced": 282,
+    "unresolved_references": 0,
+    "hypothesis_ids_cited_as_fact": 0,
+    "cross_game_claim_prefix_leaks": 0,
+    "method": "mechanical walk of every claim_id/backing_claims/backing field in batch-a-blueprint.json against the three committed ledgers (326 ids); blueprint-internal transition ids (CD-T-*/MD-T-*/WVZ-T-*) are exempt stable record ids; per-game sections cite only their own claim prefix (CD/MD/WVZ)"
+  },
+  "mapper_boundary_violations": "none detected - zero asset_suitability, capability_conclusion, design_intent, gameplay_interpretation, standardization, bespoke, or cross-game similarity findings; novel factual claims added: 0; zero H1..H7 ids cited as fact in the blueprint",
+  "cohort_stop_loss_count": {
+    "castle-defense": 0,
+    "magic-defense": 0,
+    "wizard-vs-zombie": 0,
+    "note": "Collector-raised SLO-MD-1 and SLO-WVZ-1 are resolved by stop-loss-resolutions-batch-a.md as ACCEPT-AS-CONDITIONAL (controlled inclusion recorded as hypothesis H6, not a mapper finding) and ACCEPT-EXCLUSION (carried as visible unknowns). The mapper triggered no new stop-loss observations."
+  },
+  "forbidden_roles_asserted": [
+    "discovery-auditor",
+    "evidence-collector",
+    "requirements-mapper",
+    "truth-test-author",
+    "adversarial-reviewer"
+  ],
+  "forbidden_roles_note": "Per measure/apk-evidence-reconstruction-program.md and _orchestrator/HANDOFF.md, the orchestrator (root coordinator) is categorically forbidden from holding these roles for the same deliverable; this mapping output is authored exclusively by the requirements-mapper role.",
+  "fresh_context_isolation": true,
+  "predecessor_binding": {
+    "t1_evidence_integrity_gate": "phase4-v8-candidate (5aea360f)",
+    "t2_accepted_denominator_manifest_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "t2_accepted_partition_manifest_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "t3_accepted_pilot_manifest_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "phase_base_sha": "9228c5c5"
+  },
+  "role_receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-batch-a.json",
+  "carried_forward_unknowns": [
+    "CD: ranking-route denominator gap (CD-ROUTE-011 vs CD-ROUTE-012); legacy RA vocabulary asset provenance (CD-ASSET-014); no named compact/wide contract (CD-RESP-009); non-terminal completion callback test (CD-TEST-005); RA server controller outside accepted source inventory (collector visible unknown 5).",
+    "MD: RA-only ranking endpoint vs AG RankingDialog (MD-ROUTE-008); E2E canvas-locator mismatch (MD-TEST-009); 'normal' vs 'medium' difficulty key drift (MD-ST-011 vs MD-ST-013); 3 known-debt architecture FAILs (MD-HIST-006); deleted Thai->English fixture vs current English->Thai vocabulary (MD-HIST-001/002); SLO-MD-1 controlled inclusion (H6).",
+    "WVZ: www MP3/PNG exclusion carried as visible unknowns (WVZ-ASSET-010, WVZ-ASSET-009; SLO-WVZ-1 ACCEPT-EXCLUSION); RA test copy mismatch (WVZ-TEST-008); 3-tier vs 4-tier difficulty divergence (WVZ-STT-004 vs WVZ-STT-005); legacy byte-identical asset directory (WVZ-ASSET-007)."
+  ],
+  "stop_loss_observations": "none triggered by mapping. Carried forward from collectors (not mapper findings): SLO-MD-1 (resolved ACCEPT-AS-CONDITIONAL) and SLO-WVZ-1 (resolved ACCEPT-EXCLUSION) per stop-loss-resolutions-batch-a.md; per-game visible unknowns recorded in each game F_visible_unknowns section."
+}

@@ -1,0 +1,133 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-self-attested",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Mapping (Batch A)",
+  "role": "requirements-mapper",
+  "task_id": "requirements-mapper:t4-batch-a",
+  "cohort_batch": "Batch A",
+  "cohort_games": ["castle-defense", "magic-defense", "wizard-vs-zombie"],
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "phase_base_sha": "9228c5c5",
+  "role_base_sha": "9228c5c52cde86a036629fcedc7dd02697781af7",
+  "role_base_sha_note": "git rev-parse HEAD captured at role start (2026-07-20); HEAD was the phase-base commit 9228c5c5 ('chore(measure): t4 batch-a phase-base sha'). No commits were authored by this role; the orchestrator binds the receipt commit after role completion.",
+  "predecessor_binding": {
+    "t1_evidence_integrity_gate": "phase4-v8-candidate (5aea360f)",
+    "t2_accepted_denominator_manifest_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "t2_accepted_partition_manifest_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "t3_accepted_pilot_manifest_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "phase_base_sha": "9228c5c5"
+  },
+  "spawn_id": "requirements-mapper:t4-batch-a:2026-07-20",
+  "parent_ancestry_ids": [],
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "prompt_sha256": "ab88ccd57fba1fde4ec2e233810f875c55add71877cf1a736727b6818448baf1",
+  "prompt_hash_note": "SHA-256 of the requirements-mapper prompt text as received in the user turn (verbatim reconstruction hashed; no system/harness wrapper included). The reconstruction covers the full user-authored prompt from 'You are the requirements-mapper subagent' through the final instruction paragraph.",
+  "actual_context_manifest_sha256": "bf90fafe1d028a1de6bdd8c472a2971f99a026cfedf545790751701e3136f77a",
+  "actual_context_manifest_note": "SHA-256 of the canonical JSON mapping (sort_keys, compact separators) of 18 context files to their SHA-256 values: 3 claim ledgers, 3 evidence methods, 3 evidence final reports, 3 evidence-collector role receipts, stop-loss-resolutions-batch-a.md, test-strategy-batch-a.md, T2 accepted-denominator-manifest.json, T2 accepted-partition-manifest.json, T3 accepted-pilot-manifest.json, and the T1 evidence-integrity-accepted-gate.json. Every recorded hash was re-verified against working-tree bytes at receipt time (0 mismatches). Program documents and pilot precedents were also read but are not part of the hashed input manifest per the prompt's manifest scope.",
+  "start_event_id": "t4-batch-a-mapper-start:2026-07-20T00:00:00Z",
+  "end_event_id": "t4-batch-a-mapper-end:2026-07-20T00:00:00Z",
+  "timing_note": "The harness does not expose provider session/message event IDs or timestamps; logical event IDs are role-scoped markers. Session activity is bounded by the role-base SHA capture at start and the orchestrator's receipt-bind commit after role completion.",
+  "final_response_sha256": "76b4ffc2c0e0bc261e7c26dbf16e58fbfe6f76e8dbf361e0bb02a91e255ccc29",
+  "final_response_note": "SHA-256 of mapper-final-report-batch-a.json, the role's final response artifact (mirrors the pilot requirements-mapper receipt convention).",
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-blueprint.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/mapper-hypotheses-batch-a.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/mapper-final-report-batch-a.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-batch-a.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-blueprint.json": "5d3b0c574897bfcd2c6b438d8b6efd6ffed6cc20414284cf53858955b1865657",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/mapper-hypotheses-batch-a.md": "0465518addcd91cb631498eb76acca7ee28e134b1d46bdf32a41f1c851561740",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/mapper-final-report-batch-a.json": "76b4ffc2c0e0bc261e7c26dbf16e58fbfe6f76e8dbf361e0bb02a91e255ccc29"
+  },
+  "output_sha256": "5d3b0c574897bfcd2c6b438d8b6efd6ffed6cc20414284cf53858955b1865657",
+  "output_sha256_basis": "SHA-256 of batch-a-blueprint.json, the primary role artifact (mirrors the pilot convention of hashing the blueprint as output_sha256).",
+  "budget_declaration": {
+    "schema_version": "apk-role-budget-declaration.v1",
+    "role": "requirements-mapper",
+    "spawn_id": "requirements-mapper:t4-batch-a:2026-07-20",
+    "frozen_resource_ceiling": {
+      "bytes_read": 268435456,
+      "command_invocations": 120,
+      "source_files": 100,
+      "source": "orchestrator prompt supplied no numeric ceilings for this role; role-local ceilings frozen before source work began, mirroring the Batch A evidence-collector ceiling shape (bytes_read 256 MiB, 120 commands, 100 source files)"
+    },
+    "actual_usage": {
+      "bytes_read": 589816,
+      "command_invocations": 36,
+      "source_files": 25,
+      "blueprint_entries_authored": 234,
+      "claim_records_consumed": 326,
+      "claim_ids_referenced_in_outputs": 347,
+      "hypotheses_authored": 7,
+      "novel_claims_proposed": 0,
+      "capabilities_proposed": 0
+    },
+    "measurement_basis": {
+      "bytes_read": "byte sizes of the 25 input files read (3 ledgers, 3 methods, 3 final reports, 3 collector receipts, stop-loss resolutions, strategy, spec, plan, DISPATCH, HANDOFF, 3 program docs, 4 pilot precedents) measured via filesystem stat",
+      "command_invocations": "count of Bash tool invocations from session start through final verification (git read-only commands, sha256sum, python3 analysis/validation scripts)",
+      "source_files": "25 distinct input files read for this role",
+      "blueprint_entries_authored": "mechanical structural walk of batch-a-blueprint.json games section (scenes+states+transitions+mechanics+control_surfaces+learning_goals+terminal+C entries+D entries)",
+      "claim_records_consumed": "139 CD + 110 MD + 77 WVZ = 326 ledger claims read (includes 12 negative fixtures)",
+      "claim_ids_referenced_in_outputs": "282 unique claim ids cited in batch-a-blueprint.json + 65 unique claim ids cited in mapper-hypotheses-batch-a.md = 347 (verified by mechanical regex walk; 0 unresolved)"
+    }
+  },
+  "budget_declaration_sha256": "26d9f51c10103bd22ec428ec01a1243bacd422ee9f034ae467b701ed14abfd28",
+  "commit_sha": "<pending-orchestrator-bind>",
+  "commit_sha_note": "This role authored no commits. The orchestrator commits the four outputs and binds this receipt by writing the resulting commit SHA here (per the dispatch contract: 'will be set by the orchestrator after you finish; leave placeholder').",
+  "role_isolation": {
+    "roles_held": ["requirements-mapper"],
+    "roles_not_held": ["discovery-auditor", "evidence-collector", "truth-test-author", "browser-auditor", "asset-auditor", "adversarial-reviewer", "orchestrator", "product-owner"],
+    "note": "Fresh isolated mapping for Batch A only. No predecessor artifact, plan.md, tracks.md, registry, or other role's output was modified. Blueprint/hypothesis authoring consumed only the enumerated input files; the strategy file was read for contract terms but no truth-test, review, or acceptance artifact was authored."
+  },
+  "findings": {
+    "claims_consumed": {
+      "castle-defense": {"claims": 139, "negative_fixtures": 3},
+      "magic-defense": {"claims": 110, "negative_fixtures": 5},
+      "wizard-vs-zombie": {"claims": 77, "negative_fixtures": 4},
+      "total": {"claims": 326, "negative_fixtures": 12}
+    },
+    "blueprint_counts_authored": {
+      "castle-defense": {"scenes": 5, "state_entries": 8, "transitions": 8, "mechanic_entries": 23, "test_modules": 5, "asset_usage_entries": 8},
+      "magic-defense": {"scenes": 5, "state_entries": 8, "transitions": 7, "mechanic_entries": 18, "test_modules": 9, "asset_usage_entries": 8},
+      "wizard-vs-zombie": {"scenes": 8, "state_entries": 5, "transitions": 6, "mechanic_entries": 21, "test_modules": 7, "asset_usage_entries": 13},
+      "total_structured_entries": 234
+    },
+    "claim_ids_referenced": {
+      "batch-a-blueprint.json": 282,
+      "mapper-hypotheses-batch-a.md": 65,
+      "unresolved_references": 0,
+      "cross_game_prefix_leaks": 0,
+      "hypothesis_ids_cited_as_fact_in_blueprint": 0
+    },
+    "non_authoritative_hypotheses": 7,
+    "novel_claims_proposed": 0,
+    "capabilities_proposed": 0,
+    "mapper_boundary_violations": 0,
+    "cohort_stop_loss_count": {
+      "castle-defense": 0,
+      "magic-defense": 0,
+      "wizard-vs-zombie": 0
+    },
+    "carried_forward_unknowns": [
+      "CD: ranking-route denominator gap (CD-ROUTE-011 vs CD-ROUTE-012); legacy RA vocabulary asset provenance (CD-ASSET-014); no named compact/wide contract (CD-RESP-009); non-terminal completion callback test (CD-TEST-005); RA server controller outside accepted source inventory (collector visible unknown 5).",
+      "MD: RA-only ranking endpoint vs AG RankingDialog (MD-ROUTE-008); E2E canvas-locator mismatch (MD-TEST-009); 'normal' vs 'medium' difficulty key drift (MD-ST-011 vs MD-ST-013); 3 known-debt architecture FAILs (MD-HIST-006); deleted Thai->English fixture vs current English->Thai vocabulary (MD-HIST-001/002); SLO-MD-1 controlled inclusion recorded as hypothesis H6 per stop-loss-resolutions-batch-a.md.",
+      "WVZ: www MP3/PNG exclusion carried as visible unknowns (WVZ-ASSET-010, WVZ-ASSET-009; SLO-WVZ-1 ACCEPT-EXCLUSION); RA test copy mismatch (WVZ-TEST-008); 3-tier vs 4-tier difficulty divergence (WVZ-STT-004 vs WVZ-STT-005); legacy byte-identical asset directory (WVZ-ASSET-007)."
+    ]
+  },
+  "acceptance": "not-claimed",
+  "preserved_user_work": [
+    ".opencode/goals/state.json and .opencode/goals/state.json.ledger.jsonl (unrelated, modified before role start, not staged or touched)",
+    ".opencode/agent/ (unrelated, untracked before role start)",
+    "apps/sales-advantage/next-env.d.ts (unrelated, modified before role start)",
+    "measure/archive/apk_three_game_truth_pilot_20260712/metadata.json (unrelated, modified before role start)",
+    "measure/evidence_integrity_gates/__pycache__/ and measure/tests/__pycache__/ artifacts (generated/ignorable, untouched)",
+    "measure/archive/apk_source_denominator_inventory_20260712/__pycache__/ artifacts (generated/ignorable, untouched)",
+    "measure/tracks/agents_md_audit_science_advantage_20260603/ (unrelated untracked track directory, untouched)",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-evidence-final-report.json (pre-existing post-bind normalization committed in ca423fbb; read as input at HEAD, not modified)"
+  ]
+}

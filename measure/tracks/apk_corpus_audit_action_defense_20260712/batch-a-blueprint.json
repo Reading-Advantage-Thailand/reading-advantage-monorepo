@@ -1,0 +1,3607 @@
+{
+ "schema_version": "apk-pilot-blueprint.v1",
+ "track_id": "apk_corpus_audit_action_defense_20260712",
+ "phase": "Phase 2: Mapping (Batch A)",
+ "mapper_role": "requirements-mapper",
+ "spawn_id": "requirements-mapper:t4-batch-a:2026-07-20",
+ "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+ "phase_base_sha": "9228c5c5",
+ "inputs": {
+  "accepted_denominator_manifest_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+  "accepted_partition_manifest_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+  "accepted_pilot_manifest_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+  "evidence_integrity_gate": "phase4-v8-candidate (5aea360f)",
+  "claim_ledgers": [
+   "measure/tracks/apk_corpus_audit_action_defense_20260712/castle-defense-claim-ledger.json",
+   "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger.json",
+   "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-claim-ledger.json"
+  ],
+  "stop_loss_resolutions": "measure/tracks/apk_corpus_audit_action_defense_20260712/stop-loss-resolutions-batch-a.md"
+ },
+ "mapper_boundary_declaration": {
+  "novel_factual_claims_added": 0,
+  "asset_suitability_judgments": 0,
+  "capability_conclusions": 0,
+  "design_intent_judgments": 0,
+  "gameplay_interpretations": 0,
+  "standardization_claims": 0,
+  "bespoke_claims": 0,
+  "cross_game_similarity_findings": "none — see mapper-hypotheses-batch-a.md (NON-AUTHORITATIVE HYPOTHESIS, requires evidence-collector validation)",
+  "derivation_rule": "Every entry cites at least one ledger claim_id from the three Batch A claim ledgers. Negative entries (absent controls, absent audio, zero-asset scenes) cite the corresponding absence/negative claim_ids. Blueprint-internal transition ids (CD-T-*/MD-T-*/WVZ-T-*) are exempt stable record ids, mirroring pilot convention. No hypothesis id from mapper-hypotheses-batch-a.md is cited as fact anywhere in this blueprint.",
+  "visible_unknowns_carried_forward": [
+   "CD: canonical component configures /api/v1/games/castle-defense/ranking while the accepted advantage-games source denominator has no matching ranking route (CD-ROUTE-011, CD-ROUTE-012); reading-advantage has a protected ranking route (CD-ROUTE-006).",
+   "CD: three legacy reading-advantage vocabulary Castle Defense assets have accepted asset records but no canonical vocabulary implementation source record (CD-ASSET-014); runtime use and provenance unresolved.",
+   "CD: measured responsive scaling and compact/wide utility classes exist but no explicit matchMedia or named compact/wide profile contract exists (CD-RESP-009).",
+   "CD: canonical completion callback test is named but only asserts that the active stage renders; it does not force a terminal state (CD-TEST-005).",
+   "CD: accepted T2 source inventory excludes the server controller implementation imported by protected reading-advantage routes; the collector did not reinterpret that accepted scope (castle-defense-evidence-final-report.json visible_unknowns item 5).",
+   "MD: advantage-games RankingDialog fetches /api/v1/games/magic-defense/ranking which exists only in reading-advantage (MD-ROUTE-008, MD-ID-013).",
+   "MD: E2E spec asserts a canvas element visible (MD-TEST-009) while implementation is DOM/framer-motion; known debt in the compliance audit (MD-HIST-006).",
+   "MD: StartScreen uses 'normal' difficulty id while RankingDialog uses 'medium' (MD-ST-011, MD-ST-013); controller writes 'EASY'/'NORMAL'/'HARD'/'EXTREME' so the 'medium' tab may never match a persisted row.",
+   "MD: compliance audit records 3 architecture FAILs (React-Konva, pure tick functions, rAF loop) as known debt (MD-HIST-006).",
+   "MD: deleted historical vocab fixture (commit 8b98aed0) was Thai->English direction; current advantage-games vocabulary is English->Thai via SAMPLE_VOCABULARY (MD-HIST-001, MD-HIST-002).",
+   "MD: SLO-MD-1 magic-defense-controller denominator gap resolved ACCEPT-AS-CONDITIONAL by stop-loss-resolutions-batch-a.md; recorded as controlled inclusion in mapper-hypotheses-batch-a.md (requires evidence-collector validation; NOT a mapper finding).",
+   "WVZ: RA test references 'Arcane Survival' + 'Start Survival' but RA component renders 'Game Rules' and StartScreen uses t('wizardVsZombie.startGame') (WVZ-TEST-008).",
+   "WVZ: RA Difficulty type retains 4 tiers including 'extreme' (WVZ-STT-005, WVZ-HIST-004); AG has only 3 tiers (WVZ-STT-004).",
+   "WVZ: legacy path apps/advantage-games/public/games/wizard-vs-zombie/* is byte-identical to the current vocabulary/ path (WVZ-ASSET-007).",
+   "WVZ: SLO-WVZ-1 www asset denominator gap resolved ACCEPT-EXCLUSION by stop-loss-resolutions-batch-a.md; www PNG excluded by byte-identicality to the denominated advantage-games PNG (WVZ-ASSET-009), www MP3 excluded by cohort scope (WVZ-ASSET-010); both carried as visible unknowns, not as mapper findings."
+  ]
+ },
+ "games": {
+  "castle-defense": {
+   "canonical_identity_id": "sentence/castle-defense",
+   "catalog_identity_id": "castle-defense",
+   "evidence_posture": "current-source",
+   "evidence_basis_claims": [
+    "CD-ID-002",
+    "CD-ID-005",
+    "CD-SCENE-002",
+    "CD-HIST-008"
+   ],
+   "A_scene_state_blueprint": {
+    "scenes": [
+     {
+      "scene_id": "sentence/castle-defense/scene=CastleDefenseGame",
+      "kind": "denominator-scene (canonical gameplay component, both hosts)",
+      "backing": [
+       {
+        "claim_id": "CD-SCENE-002",
+        "file_path": "measure/archive/apk_source_denominator_inventory_20260712/scene-state-denominator.json",
+        "line_start": 260,
+        "line_end": 273
+       },
+       {
+        "claim_id": "CD-SCENE-004",
+        "file_path": "measure/archive/apk_source_denominator_inventory_20260712/scene-state-denominator.json",
+        "line_start": 708,
+        "line_end": 721
+       },
+       {
+        "claim_id": "CD-SCENE-001",
+        "file_path": "measure/archive/apk_source_denominator_inventory_20260712/scene-state-denominator.json",
+        "line_start": 3,
+        "line_end": 18
+       },
+       {
+        "claim_id": "CD-SCENE-003",
+        "file_path": "measure/archive/apk_source_denominator_inventory_20260712/scene-state-denominator.json",
+        "line_start": 580,
+        "line_end": 593
+       }
+      ],
+      "transitions_originating": [
+       "CD-T-02",
+       "CD-T-03"
+      ],
+      "transitions_terminating": [
+       "CD-T-05"
+      ],
+      "terminal_result_mapping": "The component gates the GameEndScreen results surface on game status 'gameover' or 'victory' (CD-SCENE-012); the loop computes accuracy, invokes onComplete with XP and difficulty, and exits fullscreen at that point (CD-TRANS-003)."
+     },
+     {
+      "scene_id": "sentence/castle-defense/scene=GameStartScreen (start)",
+      "kind": "pre-start surface rendered while hasStarted is false",
+      "backing": [
+       {
+        "claim_id": "CD-SCENE-008",
+        "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "line_start": 400,
+        "line_end": 413
+       },
+       {
+        "claim_id": "CD-SCENE-009",
+        "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "line_start": 86,
+        "line_end": 108
+       },
+       {
+        "claim_id": "CD-SCENE-010",
+        "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "line_start": 414,
+        "line_end": 447
+       }
+      ],
+      "transitions_originating": [
+       "CD-T-02"
+      ],
+      "transitions_terminating": [
+       "CD-T-05"
+      ],
+      "terminal_result_mapping": null
+     },
+     {
+      "scene_id": "sentence/castle-defense/scene=active-canvas (Konva Stage/Layer)",
+      "kind": "active gameplay canvas surface",
+      "backing": [
+       {
+        "claim_id": "CD-SCENE-011",
+        "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "line_start": 492,
+        "line_end": 508
+       },
+       {
+        "claim_id": "CD-RESP-004",
+        "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "line_start": 497,
+        "line_end": 508
+       }
+      ],
+      "transitions_originating": [
+       "CD-T-03",
+       "CD-T-06",
+       "CD-T-07",
+       "CD-T-08"
+      ],
+      "transitions_terminating": [
+       "CD-T-02"
+      ],
+      "terminal_result_mapping": null
+     },
+     {
+      "scene_id": "sentence/castle-defense/scene=GameEndScreen (results)",
+      "kind": "terminal results surface for both gameover and victory",
+      "backing": [
+       {
+        "claim_id": "CD-SCENE-012",
+        "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "line_start": 452,
+        "line_end": 488
+       },
+       {
+        "claim_id": "CD-SCENE-013",
+        "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "line_start": 467,
+        "line_end": 487
+       }
+      ],
+      "transitions_originating": [
+       "CD-T-04",
+       "CD-T-05"
+      ],
+      "transitions_terminating": [
+       "CD-T-03"
+      ],
+      "terminal_result_mapping": "This scene IS the results surface: it renders score, XP, accuracy, waves cleared, and enemies defeated for both gameover and victory states, and exposes onRestart to return to the menu (CD-SCENE-013)."
+     },
+     {
+      "scene_id": "sentence/castle-defense/scene=loading",
+      "kind": "asset-loading surface rendered before image assets are ready",
+      "backing": [
+       {
+        "claim_id": "CD-SCENE-007",
+        "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "line_start": 390,
+        "line_end": 397
+       }
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     }
+    ],
+    "states": [
+     {
+      "state_family": "GameStatus (canonical status union)",
+      "members": [
+       "playing",
+       "gameover",
+       "victory"
+      ],
+      "backing": [
+       {
+        "claim_id": "CD-SCENE-005",
+        "file_path": "apps/advantage-games/src/lib/games/castleDefense.ts",
+        "line_start": 140,
+        "line_end": 170
+       }
+      ],
+      "member_claims": [
+       "CD-SCENE-005"
+      ],
+      "transitions_originating": [
+       "CD-T-03",
+       "CD-T-08"
+      ],
+      "transitions_terminating": [
+       "CD-T-08"
+      ],
+      "terminal_result_mapping": "'gameover' and 'victory' are the terminal statuses: gameover when base HP <= 0 (CD-MECH-032), victory when the final configured wave completes (CD-MECH-031); both gate the GameEndScreen results scene (CD-SCENE-012)."
+     },
+     {
+      "state_family": "hasStarted (component pre-start flag)",
+      "members": [
+       "false (start surface)",
+       "true (active gameplay)"
+      ],
+      "backing": [
+       {
+        "claim_id": "CD-SCENE-008",
+        "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "line_start": 400,
+        "line_end": 413
+       }
+      ],
+      "member_claims": [
+       "CD-SCENE-008",
+       "CD-TRANS-002",
+       "CD-TRANS-005"
+      ],
+      "transitions_originating": [
+       "CD-T-02",
+       "CD-T-05"
+      ],
+      "transitions_terminating": [
+       "CD-T-02",
+       "CD-T-05"
+      ],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "asset-loading",
+      "members": [
+       "loading (images not ready)",
+       "ready"
+      ],
+      "backing": [
+       {
+        "claim_id": "CD-SCENE-007",
+        "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "line_start": 390,
+        "line_end": 397
+       }
+      ],
+      "member_claims": [
+       "CD-SCENE-007"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "page warningStatus (sentence fetch)",
+      "members": [
+       "cleared (sentences stored)",
+       "NO_SENTENCES",
+       "INSUFFICIENT_SENTENCES"
+      ],
+      "backing": [
+       {
+        "claim_id": "CD-TRANS-001",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+        "line_start": 44,
+        "line_end": 77
+       },
+       {
+        "claim_id": "CD-TRANS-009",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+        "line_start": 68,
+        "line_end": 73
+       }
+      ],
+      "member_claims": [
+       "CD-TRANS-001",
+       "CD-TRANS-009"
+      ],
+      "transitions_originating": [
+       "CD-T-01"
+      ],
+      "transitions_terminating": [
+       "CD-T-01"
+      ],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "difficulty (canonical)",
+      "members": [
+       "easy (base HP 150)",
+       "medium (base HP 100)",
+       "hard (base HP 80)"
+      ],
+      "backing": [
+       {
+        "claim_id": "CD-SCENE-010",
+        "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "line_start": 414,
+        "line_end": 447
+       },
+       {
+        "claim_id": "CD-MECH-010",
+        "file_path": "apps/advantage-games/src/lib/games/castleDefense.ts",
+        "line_start": 424,
+        "line_end": 427
+       }
+      ],
+      "member_claims": [
+       "CD-SCENE-010",
+       "CD-MECH-010"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "difficulty (reading-advantage host)",
+      "members": [
+       "easy",
+       "normal (default)",
+       "hard",
+       "extreme (base HP 50)"
+      ],
+      "backing": [
+       {
+        "claim_id": "CD-SCENE-015",
+        "file_path": "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "line_start": 115,
+        "line_end": 118
+       },
+       {
+        "claim_id": "CD-MECH-035",
+        "file_path": "apps/reading-advantage/lib/games/castleDefense.ts",
+        "line_start": 135,
+        "line_end": 423
+       }
+      ],
+      "member_claims": [
+       "CD-SCENE-015",
+       "CD-MECH-035"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "canonical state model inventory",
+      "members": [
+       "player",
+       "enemies",
+       "towers",
+       "tower slots",
+       "projectiles",
+       "words",
+       "base",
+       "path",
+       "wave",
+       "sentence",
+       "collection counters"
+      ],
+      "backing": [
+       {
+        "claim_id": "CD-SCENE-006",
+        "file_path": "apps/advantage-games/src/lib/games/castleDefense.ts",
+        "line_start": 140,
+        "line_end": 171
+       }
+      ],
+      "member_claims": [
+       "CD-SCENE-006",
+       "CD-MECH-037"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": "The state model has no lives field; base HP and maximum base HP are the terminal health discipline (CD-MECH-037)."
+     },
+     {
+      "state_family": "pause (absent)",
+      "members": [
+       "none — no pause or resume state, handler, or rendered control"
+      ],
+      "backing": [
+       {
+        "claim_id": "CD-SCENE-014",
+        "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "line_start": 1,
+        "line_end": 806
+       }
+      ],
+      "member_claims": [
+       "CD-SCENE-014"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     }
+    ],
+    "transitions": [
+     {
+      "transition_id": "CD-T-01",
+      "from_state": "page:loading",
+      "to_state": "page:warningStatus cleared | NO_SENTENCES | INSUFFICIENT_SENTENCES",
+      "backing": [
+       {
+        "claim_id": "CD-TRANS-001",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+        "line_start": 44,
+        "line_end": 77
+       },
+       {
+        "claim_id": "CD-TRANS-009",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+        "line_start": 68,
+        "line_end": 73
+       }
+      ],
+      "note": "A successful sentence fetch clears warningStatus and stores returned sentences; NO_SENTENCES is the loading-error fallback and INSUFFICIENT_SENTENCES selects its own warning state."
+     },
+     {
+      "transition_id": "CD-T-02",
+      "from_state": "scene=GameStartScreen (hasStarted false)",
+      "to_state": "scene=active-canvas (hasStarted true, status playing)",
+      "backing": [
+       {
+        "claim_id": "CD-TRANS-002",
+        "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "line_start": 263,
+        "line_end": 267
+       },
+       {
+        "claim_id": "CD-TRANS-010",
+        "file_path": "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "line_start": 255,
+        "line_end": 261
+       }
+      ],
+      "note": "Canonical start handler creates state with the selected difficulty, sets hasStarted true, and enters fullscreen; the reading-advantage host starts gameplay without calling enterFullscreen (host divergence CD-TRANS-010)."
+     },
+     {
+      "transition_id": "CD-T-03",
+      "from_state": "scene=active-canvas (status playing)",
+      "to_state": "scene=GameEndScreen (status gameover | victory)",
+      "backing": [
+       {
+        "claim_id": "CD-TRANS-003",
+        "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "line_start": 324,
+        "line_end": 342
+       }
+      ],
+      "note": "When game state reaches gameover or victory, the loop computes accuracy, invokes onComplete with XP and difficulty, and exits fullscreen."
+     },
+     {
+      "transition_id": "CD-T-04",
+      "from_state": "scene=GameEndScreen (results)",
+      "to_state": "page:completion POST",
+      "backing": [
+       {
+        "claim_id": "CD-TRANS-004",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+        "line_start": 79,
+        "line_end": 102
+       },
+       {
+        "claim_id": "CD-ROUTE-009",
+        "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+        "line_start": 79,
+        "line_end": 102
+       }
+      ],
+      "note": "The page completion callback stores the last result before posting xpEarned, difficulty, accuracy, correctAnswers, and totalAttempts to /api/v1/games/castle-defense/complete."
+     },
+     {
+      "transition_id": "CD-T-05",
+      "from_state": "scene=GameEndScreen (results)",
+      "to_state": "scene=GameStartScreen (hasStarted false)",
+      "backing": [
+       {
+        "claim_id": "CD-TRANS-005",
+        "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "line_start": 153,
+        "line_end": 156
+       }
+      ],
+      "note": "The back-to-menu handler clears hasStarted and gameState."
+     },
+     {
+      "transition_id": "CD-T-06",
+      "from_state": "sentence collection (invalid word)",
+      "to_state": "sentence collection reset (words respawned)",
+      "backing": [
+       {
+        "claim_id": "CD-TRANS-006",
+        "file_path": "apps/advantage-games/src/lib/games/castleDefense.ts",
+        "line_start": 1151,
+        "line_end": 1170
+       },
+       {
+        "claim_id": "CD-MECH-021",
+        "file_path": "apps/advantage-games/src/lib/games/castleDefense.ts",
+        "line_start": 792,
+        "line_end": 806
+       }
+      ],
+      "note": "An invalid word collection invokes resetSentenceProgress in the main tick before later tower and wave processing; inventory, collected indices, and sentenceCompleted are reset and the current sentence words respawn."
+     },
+     {
+      "transition_id": "CD-T-07",
+      "from_state": "sentence collection (all words collected)",
+      "to_state": "tower-ready (sentenceCompleted true)",
+      "backing": [
+       {
+        "claim_id": "CD-TRANS-007",
+        "file_path": "apps/advantage-games/src/lib/games/castleDefense.ts",
+        "line_start": 1244,
+        "line_end": 1249
+       }
+      ],
+      "note": "A completed sentence sets sentenceCompleted true and adds 50 points exactly once for that completion."
+     },
+     {
+      "transition_id": "CD-T-08",
+      "from_state": "wave N (quota cleared)",
+      "to_state": "wave N+1 | victory | gameover",
+      "backing": [
+       {
+        "claim_id": "CD-TRANS-008",
+        "file_path": "apps/advantage-games/src/lib/games/castleDefense.ts",
+        "line_start": 1261,
+        "line_end": 1270
+       },
+       {
+        "claim_id": "CD-MECH-030",
+        "file_path": "apps/advantage-games/src/lib/games/castleDefense.ts",
+        "line_start": 1261,
+        "line_end": 1344
+       },
+       {
+        "claim_id": "CD-MECH-031",
+        "file_path": "apps/advantage-games/src/lib/games/castleDefense.ts",
+        "line_start": 1346,
+        "line_end": 1367
+       },
+       {
+        "claim_id": "CD-MECH-032",
+        "file_path": "apps/advantage-games/src/lib/games/castleDefense.ts",
+        "line_start": 1370,
+        "line_end": 1402
+       }
+      ],
+      "note": "A completed wave displays 'Wave N Complete' for 2000 ms before the next-wave transition (next map loaded, towers/projectiles cleared, wave counters reset); completing the final configured wave sets status 'victory'; base HP <= 0 sets status 'gameover' at any point."
+     }
+    ]
+   },
+   "B_mechanic_learning_blueprint": {
+    "mechanics": [
+     {
+      "mechanic_id": "CD-M-world-and-tile-grid",
+      "description": "The game world is 800 by 600 pixels with 50-pixel tiles, a player radius of 20, and player speed 3.",
+      "backing_claims": [
+       "CD-MECH-001"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "CD-M-enemy-roster",
+      "description": "Soldiers have radius 12, HP 40, speed 0.8; tanks radius 18, HP 120, speed 0.7; bosses radius 25, HP 360, speed 0.6. The entity types define soldier, tank, and boss enemies and no separate environmental hazard entity type.",
+      "backing_claims": [
+       "CD-MECH-002",
+       "CD-MECH-040"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "CD-M-tower-and-projectile-spec",
+      "description": "Towers have range 150, fire every 1000 milliseconds, and deal damage 10; projectiles have radius 5 and speed 8.",
+      "backing_claims": [
+       "CD-MECH-003"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "CD-M-base-health-and-tick",
+      "description": "The base starts at HP 100 with radius 40; the tick is 50 milliseconds, spawn rate is 2000 milliseconds, and the active enemy cap is 15. The canonical state has no lives field and instead tracks base HP and maximum base HP (defense-zone health discipline).",
+      "backing_claims": [
+       "CD-MECH-004",
+       "CD-MECH-037"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "CD-M-wave-table",
+      "description": "Waves 1 through 6 contain respectively 10 soldiers; 8 soldiers and 4 tanks; 10 soldiers, 5 tanks, and 1 boss; 12 soldiers, 8 tanks, and 1 boss; 15 soldiers, 10 tanks, and 2 bosses; and 20 soldiers, 12 tanks, and 3 bosses. Wave-configured spawning emits soldiers before tanks and bosses; without an explicit wave configuration, boss spawning is available from wave 5 below random roll 0.1, tank spawning from wave 2 below random roll 0.3, and soldier is the default. The main tick spawns only until the current wave quota is reached and requires both the spawn interval and the maximum-enemy cap to pass.",
+      "backing_claims": [
+       "CD-MECH-005",
+       "CD-MECH-012",
+       "CD-MECH-013",
+       "CD-MECH-029"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "wave composition",
+        "values": "w1 10 soldiers / w2 8+4 tanks / w3 10+5+1 boss / w4 12+8+1 / w5 15+10+2 / w6 20+12+3",
+        "backing_claims": [
+         "CD-MECH-005"
+        ]
+       },
+       {
+        "name": "fallback spawn rolls",
+        "values": "boss from wave 5 at roll < 0.1 / tank from wave 2 at roll < 0.3",
+        "backing_claims": [
+         "CD-MECH-013"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "CD-M-path-and-maps",
+      "description": "The default enemy path is a U-shaped waypoint path from (75,75) through (75,525) and (725,525) to (725,75); the six map configurations provide wave-specific paths, tower slots, and base positions; road tile selection returns EW for horizontal segments, NS for vertical segments, and CORNER with a direction-derived rotation at corners.",
+      "backing_claims": [
+       "CD-MECH-006",
+       "CD-MECH-007",
+       "CD-MECH-008"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "CD-M-initial-state",
+      "description": "Initial state starts in playing status at wave 1 with no enemies, towers, or projectiles, a random sentence, an empty collection, and a randomized 12-by-16 grass map.",
+      "backing_claims": [
+       "CD-MECH-009"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "CD-M-difficulty-presets",
+      "description": "Canonical difficulty changes base HP to 150 for easy and 80 for hard while medium retains base HP 100. The reading-advantage logic accepts easy, normal, hard, and extreme difficulties and assigns extreme base HP 50 (host divergence).",
+      "backing_claims": [
+       "CD-MECH-010",
+       "CD-MECH-035"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "base HP by difficulty",
+        "values": "canonical easy 150 / medium 100 / hard 80; reading-advantage adds extreme 50",
+        "backing_claims": [
+         "CD-MECH-010",
+         "CD-MECH-035"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "CD-M-player-movement",
+      "description": "The player movement reducer normalizes diagonal input, scales by delta time, and clamps the player within the world bounds; the canonical game loop clamps frame delta to 50 milliseconds and advances the pure state tick with directional input and vocabulary. The reading-advantage game loop advances with useInterval at GAME_TICK_MS (host divergence).",
+      "backing_claims": [
+       "CD-MECH-011",
+       "CD-MECH-033",
+       "CD-MECH-034"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "CD-M-enemy-movement-and-collision",
+      "description": "Enemies move toward their current waypoint and advance the waypoint index when within five pixels of it; circle collision uses the sum of radii and inRange uses squared distance against squared range.",
+      "backing_claims": [
+       "CD-MECH-014",
+       "CD-MECH-015"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "CD-M-sentence-word-collection",
+      "description": "Sentence parsing trims input, splits on whitespace, strips non-alphanumeric edge punctuation, and removes empty words; sentence words spawn as Word records in the middle 50 percent of the board with sentence indices in order; a word collection is valid only when its index equals the number of already collected words and is not already collected; collecting a valid word marks it collected and adds its translation to player inventory; an invalid word sets invalidCollection without marking that word collected, and an invalid collection resets inventory, collected indices, and sentenceCompleted, and respawns the current sentence words.",
+      "backing_claims": [
+       "CD-MECH-016",
+       "CD-MECH-018",
+       "CD-MECH-019",
+       "CD-MECH-020",
+       "CD-MECH-021"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "CD-M-tower-construction",
+      "description": "A tower can be built only when sentenceCompleted is true, the player is within 50 pixels of an empty tower slot, and the slot has no existing tower; building a tower creates an active tower with range 150 and damage 10, clears inventory and sentence progress, and spawns a different next sentence when available. The legacy checkTowerActivation function additionally requires the player to carry the slot targetWord.",
+      "backing_claims": [
+       "CD-MECH-022",
+       "CD-MECH-023",
+       "CD-MECH-024"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "build proximity",
+        "values": "50 px of an empty tower slot",
+        "backing_claims": [
+         "CD-MECH-022"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "CD-M-tower-targeting-and-projectiles",
+      "description": "Active towers fire only after their cooldown and target the closest enemy within tower range; projectiles move toward their target, apply projectile damage on collision, are removed after a hit or dead target, and dead enemies are filtered out.",
+      "backing_claims": [
+       "CD-MECH-025",
+       "CD-MECH-026"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "CD-M-defense-zone-breach-damage",
+      "description": "Enemies reaching the end of the path are removed and damage the base by 30 for a boss, 15 for a tank, and 10 for a soldier.",
+      "backing_claims": [
+       "CD-MECH-027"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "breach damage by enemy type",
+        "values": "boss 30 / tank 15 / soldier 10",
+        "backing_claims": [
+         "CD-MECH-027"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "CD-M-main-tick-pipeline",
+      "description": "The main tick updates time and player movement, collects words, handles resets and tower construction, moves enemies, applies base damage, updates towers and projectiles, scores kills, and marks sentence completion.",
+      "backing_claims": [
+       "CD-MECH-028"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "CD-M-xp-formula",
+      "description": "Canonical XP uses correct and incorrect collection counts, with bonuses for perfect accuracy, at least half base HP, under 120000 milliseconds, and at least three completed waves, capped at 10. The reading-advantage XP helper returns zero for non-positive score and otherwise returns the score multiplied by 0.01 rounded up (host divergence; also the historical start/end-screens spec XP formula).",
+      "backing_claims": [
+       "CD-MECH-017",
+       "CD-MECH-036",
+       "CD-HIST-005"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "canonical XP bonuses and cap",
+        "values": "perfect accuracy / >= half base HP / under 120000 ms / >= 3 completed waves; cap 10",
+        "backing_claims": [
+         "CD-MECH-017"
+        ]
+       },
+       {
+        "name": "reading-advantage XP",
+        "values": "0 for non-positive score; otherwise ceil(score * 0.01)",
+        "backing_claims": [
+         "CD-MECH-036"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "CD-M-absent-systems",
+      "description": "The canonical component contains no typed-answer text input, answer validator, or answer submission control (CD-MECH-038); the canonical logic module contains no escort actor, escort objective, escort state field, or escort transition (CD-MECH-039); the canonical component has no pause or resume state, handler, or rendered pause control (CD-SCENE-014); the canonical component contains no audio asset path, audio element, or sound playback call (CD-ASSET-017). All four are full-file machine-checked absence claims.",
+      "backing_claims": [
+       "CD-MECH-038",
+       "CD-MECH-039",
+       "CD-SCENE-014",
+       "CD-ASSET-017"
+      ],
+      "tuning_knobs": []
+     }
+    ],
+    "control_surfaces": [
+     {
+      "control_id": "CD-C-start-screen-buttons",
+      "description": "The start scene exposes easy, medium, and hard difficulty buttons and a leaderboard button (CD-SCENE-010), plus three localized instructions and move, build, and collect control hints (CD-SCENE-009); the start handler creates state with the selected difficulty, sets hasStarted true, and enters fullscreen (CD-TRANS-002).",
+      "backing_claims": [
+       "CD-SCENE-009",
+       "CD-SCENE-010",
+       "CD-TRANS-002"
+      ]
+     },
+     {
+      "control_id": "CD-C-virtual-dpad",
+      "description": "The canonical virtual D-pad is positioned at bottom-right with pointer interaction enabled (CD-RESP-006); movement input feeds the reducer that normalizes diagonal input, scales by delta time, and clamps the player within world bounds (CD-MECH-011, CD-MECH-033).",
+      "backing_claims": [
+       "CD-RESP-006",
+       "CD-MECH-011",
+       "CD-MECH-033"
+      ]
+     },
+     {
+      "control_id": "CD-C-word-collection-by-contact",
+      "description": "Words are collected by physically moving the player onto word records: a valid collection marks the word collected and adds its translation to inventory (CD-MECH-020); the original track describes a tower-defense game in which the player physically collects vocabulary words to build towers and defend a base (CD-HIST-001).",
+      "backing_claims": [
+       "CD-MECH-020",
+       "CD-HIST-001"
+      ]
+     },
+     {
+      "control_id": "CD-C-tower-build-by-proximity",
+      "description": "Tower construction triggers when sentenceCompleted is true and the player is within 50 pixels of an empty tower slot (CD-MECH-022, CD-MECH-023); new towers create a green expanding build-effect circle that fades over 600 milliseconds (CD-ASSET-011).",
+      "backing_claims": [
+       "CD-MECH-022",
+       "CD-MECH-023",
+       "CD-ASSET-011"
+      ]
+     },
+     {
+      "control_id": "CD-C-results-restart",
+      "description": "The results scene reports score, XP, accuracy, waves cleared, and enemies defeated, and uses onRestart to return to the menu (CD-SCENE-013); the back-to-menu handler clears hasStarted and gameState (CD-TRANS-005).",
+      "backing_claims": [
+       "CD-SCENE-013",
+       "CD-TRANS-005"
+      ]
+     },
+     {
+      "control_id": "CD-C-no-typed-answer",
+      "description": "No typing, text-input, answer validator, or answer submission control exists anywhere in the canonical component; selection and construction are exclusively movement/proximity driven (full-file absence claim).",
+      "backing_claims": [
+       "CD-MECH-038"
+      ]
+     }
+    ],
+    "learning_goals": [
+     {
+      "goal_id": "CD-L-sentence-word-order-collection",
+      "description": "Sentence word-order collection: the canonical identity is sentence/castle-defense (CD-ID-002) and the advantage-games catalog registers the card with a sentence route href (CD-ID-005); sentence words spawn with sentence indices in order (CD-MECH-019) and a collection is valid only when its index equals the number of already collected words (CD-MECH-018); the original track describes physically collecting vocabulary words to build towers and defend a base (CD-HIST-001).",
+      "backing_claims": [
+       "CD-ID-002",
+       "CD-ID-005",
+       "CD-MECH-018",
+       "CD-MECH-019",
+       "CD-HIST-001"
+      ]
+     }
+    ],
+    "terminal_result_mechanic": {
+     "description": "When game state reaches gameover (base HP <= 0, CD-MECH-032) or victory (final configured wave complete, CD-MECH-031), the loop computes accuracy, invokes onComplete with XP and difficulty, and exits fullscreen (CD-TRANS-003). The GameEndScreen renders score, XP, accuracy, waves cleared, and enemies defeated for both outcomes (CD-SCENE-012, CD-SCENE-013). Canonical XP uses correct and incorrect collection counts with bonuses capped at 10 (CD-MECH-017). The page stores the last result and POSTs xpEarned, difficulty, accuracy, correctAnswers, and totalAttempts to /api/v1/games/castle-defense/complete (CD-TRANS-004, CD-ROUTE-009).",
+     "vocabulary_scoring_association": "Terminal scoring derives from sentence word-order collection: correct/incorrect collection counts feed the canonical XP formula (CD-MECH-017), sentence completion adds 50 points exactly once (CD-TRANS-007), and in-order validity is enforced by the index rule (CD-MECH-018).",
+     "backing_claims": [
+      "CD-TRANS-003",
+      "CD-TRANS-004",
+      "CD-SCENE-012",
+      "CD-SCENE-013",
+      "CD-MECH-017",
+      "CD-MECH-018",
+      "CD-MECH-031",
+      "CD-MECH-032",
+      "CD-ROUTE-009",
+      "CD-TRANS-007"
+     ]
+    }
+   },
+   "C_developer_effort_decomposition": {
+    "structural_columns_note": "Columns mirror the T2 phase-0 input freeze record structure (record_type, file_path, relevance_rule_id vocabulary from the frozen ordered rules, host root from the frozen source_scope roots) plus evidence claim pointers. No platform-shared-infrastructure entries are included (next role's scope).",
+    "pages_and_routes": [
+     {
+      "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Sentence page route; dynamically imports CastleDefenseGame with SSR disabled; fetches sentences with locale; completion callback posts to the complete API",
+      "backing_claims": [
+       "CD-ROUTE-001",
+       "CD-ROUTE-008",
+       "CD-ROUTE-009",
+       "CD-TRANS-001",
+       "CD-TRANS-004"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Host sentence page; dynamically imports the host CastleDefenseGame copy with SSR disabled",
+      "backing_claims": [
+       "CD-ROUTE-002"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/app/api/v1/games/castle-defense/complete/route.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Completion API route exporting POST from createCompleteRoute, force-static",
+      "backing_claims": [
+       "CD-ROUTE-003"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/app/api/v1/games/castle-defense/sentences/route.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Sentences API route exporting GET from createSentencesRoute(SAMPLE_SENTENCES), force-static",
+      "backing_claims": [
+       "CD-ROUTE-004"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/api/v1/games/castle-defense/complete/route.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Completion API route protecting and logging requests before dispatching CastleDefenseController.completeGame",
+      "backing_claims": [
+       "CD-ROUTE-005"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/api/v1/games/castle-defense/ranking/route.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Ranking API route protecting and logging requests before dispatching CastleDefenseController.getRanking; no matching advantage-games ranking route exists in the accepted source denominator (CD-ROUTE-012)",
+      "backing_claims": [
+       "CD-ROUTE-006",
+       "CD-ROUTE-012"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/api/v1/games/castle-defense/sentences/route.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Sentences API route protecting and logging requests before dispatching CastleDefenseController.getSentences",
+      "backing_claims": [
+       "CD-ROUTE-007"
+      ]
+     }
+    ],
+    "game_scene_state_components": [
+     {
+      "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Canonical gameplay component: loading/start/active/results scenes, React-Konva Stage/Layer, virtual D-pad, HUD, camera scaling, accessibility text sizing, RankingDialog configuration",
+      "backing_claims": [
+       "CD-SCENE-002",
+       "CD-SCENE-007",
+       "CD-SCENE-008",
+       "CD-SCENE-011",
+       "CD-SCENE-012",
+       "CD-ROUTE-011",
+       "CD-RESP-001",
+       "CD-RESP-002",
+       "CD-RESP-003",
+       "CD-RESP-007"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Host copy of the gameplay component with recorded divergences (four-tier difficulty incl. extreme, no fullscreen call in start handler, useInterval loop, no useAccessibilitySettings import)",
+      "backing_claims": [
+       "CD-SCENE-004",
+       "CD-SCENE-015",
+       "CD-TRANS-010",
+       "CD-MECH-034",
+       "CD-RESP-008"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/BackgroundLayer.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Background layer component loading grass and road tile images and rendering tiles with road rotation; reconciled as a non-blocking matched copy pair with the reading-advantage copy",
+      "backing_claims": [
+       "CD-ASSET-003",
+       "CD-ASSET-004",
+       "CD-ASSET-016"
+      ]
+     }
+    ],
+    "logic_projection_utility_modules": [
+     {
+      "file_path": "apps/advantage-games/src/lib/games/castleDefense.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Canonical logic module: world/tile constants, enemy roster, tower/projectile spec, wave table, map configs, initial state, movement, spawning, collision, sentence parsing/collection/reset, tower eligibility/construction, targeting, projectiles, breach damage, main tick, wave progression, victory/gameover, XP formula",
+      "backing_claims": [
+       "CD-MECH-001",
+       "CD-MECH-005",
+       "CD-MECH-009",
+       "CD-MECH-017",
+       "CD-MECH-028",
+       "CD-MECH-031",
+       "CD-MECH-032",
+       "CD-SCENE-005",
+       "CD-SCENE-006"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/lib/games/castleDefense.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Host logic copy accepting easy/normal/hard/extreme difficulties (extreme base HP 50) with a score-based XP helper",
+      "backing_claims": [
+       "CD-MECH-035",
+       "CD-MECH-036"
+      ]
+     }
+    ],
+    "test_modules": [
+     {
+      "file_path": "apps/advantage-games/src/lib/games/castleDefense.test.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "suite covering sentence parsing, six map configurations, tower-slot placement, wave configurations, sequential word validation, collection, reset, sentence completion, tower eligibility/construction, performance counters, XP bonuses and cap, movement, collision, spawn types, tick behavior, wave progression, final victory, and pre-final non-victory",
+      "backing_claims": [
+       "CD-TEST-007",
+       "CD-TEST-008",
+       "CD-TEST-009",
+       "CD-TEST-010",
+       "CD-TEST-011"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "suite covering start screen, start transition, fullscreen entry, difficulty buttons/selection/default, Konva layer, virtual D-pad, score and castle HP HUD, and a named completion callback test",
+      "backing_claims": [
+       "CD-TEST-002",
+       "CD-TEST-003",
+       "CD-TEST-004",
+       "CD-TEST-005"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/sentence/castle-defense/BackgroundLayer.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "suite rendering the layer, waiting for image-backed Konva images, and covering empty grass and empty path inputs",
+      "backing_claims": [
+       "CD-TEST-001"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.test.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "test_count_from_claims": "suite covering start screen, start transition, white word orbs, centered word text, Thai sentence HUD, progress and wave HUD, sentence-complete message, absent inventory HUD, and virtual D-pad",
+      "backing_claims": [
+       "CD-TEST-006"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/lib/games/castleDefense.test.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "test_count_from_claims": "suite covering the score-based XP helper including zero score and ceiling behavior",
+      "backing_claims": [
+       "CD-TEST-012"
+      ]
+     }
+    ],
+    "copy_sites_in_reading_primary_hosts": [
+     {
+      "host_root": "apps/reading-advantage",
+      "site": "components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+      "copy_relation": "divergent (four-tier difficulty incl. extreme; no enterFullscreen in start handler; useInterval loop at GAME_TICK_MS; no useAccessibilitySettings import; responsive classes retained)",
+      "backing_claims": [
+       "CD-SCENE-015",
+       "CD-TRANS-010",
+       "CD-MECH-034",
+       "CD-RESP-008"
+      ]
+     },
+     {
+      "host_root": "apps/reading-advantage",
+      "site": "lib/games/castleDefense.ts",
+      "copy_relation": "divergent (adds extreme difficulty with base HP 50; score-based XP helper instead of canonical state-based XP)",
+      "backing_claims": [
+       "CD-MECH-035",
+       "CD-MECH-036"
+      ]
+     },
+     {
+      "host_root": "apps/reading-advantage",
+      "site": "app/api/v1/games/castle-defense/{complete,ranking,sentences}/route.ts",
+      "copy_relation": "host-specific controller-backed routes with logRequest+protect middleware",
+      "backing_claims": [
+       "CD-ROUTE-005",
+       "CD-ROUTE-006",
+       "CD-ROUTE-007"
+      ]
+     },
+     {
+      "host_root": "apps/reading-advantage/public",
+      "site": "games/vocabulary/castle-defense/{background.png,castles_3x2_sheet.png,skeletons.png}",
+      "copy_relation": "legacy vocabulary asset-only records in the accepted asset denominator; no canonical vocabulary implementation source record (runtime use and provenance unresolved)",
+      "backing_claims": [
+       "CD-ASSET-014",
+       "CD-ID-010"
+      ]
+     },
+     {
+      "host_root": "apps/primary-advantage",
+      "site": "none recorded",
+      "copy_relation": "no Castle Defense copy-site claims exist in the ledger for primary-advantage (absence of evidence; no absence claim was authored by the collector)",
+      "backing_claims": []
+     }
+    ]
+   },
+   "D_asset_usage_map": [
+    {
+     "scene_id": "sentence/castle-defense/scene=CastleDefenseGame",
+     "asset_usage_count": 7,
+     "caller_count": 9,
+     "asset_refs": [
+      {
+       "asset_ref": "player_3x3_pose_sheet.png (sentence Castle Defense asset directory)",
+       "usage_category": "actors (player); sprite crop uses animation frames and switches row by movement direction with horizontal flip for leftward movement",
+       "backing_claims": [
+        "CD-ASSET-001",
+        "CD-ASSET-010"
+       ]
+      },
+      {
+       "asset_ref": "goblin_3x3_pose_sheet.png",
+       "usage_category": "actors (soldier enemy, render size 40)",
+       "backing_claims": [
+        "CD-ASSET-001",
+        "CD-ASSET-007"
+       ]
+      },
+      {
+       "asset_ref": "orc_3x3_pose_sheet.png",
+       "usage_category": "actors (tank enemy, render size 56)",
+       "backing_claims": [
+        "CD-ASSET-001",
+        "CD-ASSET-007"
+       ]
+      },
+      {
+       "asset_ref": "troll_3x3_pose_sheet.png",
+       "usage_category": "actors (boss enemy, render size 72)",
+       "backing_claims": [
+        "CD-ASSET-001",
+        "CD-ASSET-007"
+       ]
+      },
+      {
+       "asset_ref": "tower-base.png",
+       "usage_category": "defense structures (tower slots render with reduced opacity when occupied)",
+       "backing_claims": [
+        "CD-ASSET-001",
+        "CD-ASSET-005"
+       ]
+      },
+      {
+       "asset_ref": "tower-built.png",
+       "usage_category": "defense structures (built towers render with a range ring)",
+       "backing_claims": [
+        "CD-ASSET-001",
+        "CD-ASSET-005"
+       ]
+      },
+      {
+       "asset_ref": "player-castle.png",
+       "usage_category": "defense zone (base renders at the current base position)",
+       "backing_claims": [
+        "CD-ASSET-001",
+        "CD-ASSET-006"
+       ]
+      }
+     ],
+     "mirror_note": "The reading-advantage component loads the same seven sentence Castle Defense asset paths (CD-ASSET-002); the asset denominator records the current sentence Castle Defense assets under both hosts (CD-ASSET-015). Projectiles render as yellow circles from state — no projectile image path is loaded (CD-ASSET-008); uncollected words render as white circles with centered translation text (CD-ASSET-009); enemy health bars are drawn rectangles (CD-ASSET-012)."
+    },
+    {
+     "scene_id": "sentence/castle-defense/scene=active-canvas (Konva Stage/Layer)",
+     "asset_usage_count": 7,
+     "caller_count": 2,
+     "asset_refs": [
+      {
+       "asset_ref": "grass_A.png / grass_B.png / grass_C.png / grass_D.png",
+       "usage_category": "environment (grass tile variants rendered at tile size by BackgroundLayer)",
+       "backing_claims": [
+        "CD-ASSET-003",
+        "CD-ASSET-004"
+       ]
+      },
+      {
+       "asset_ref": "road_EW.png / road_NS.png / road_corner.png",
+       "usage_category": "environment (road tiles rendered with the rotation returned by getRoadTileInfo)",
+       "backing_claims": [
+        "CD-ASSET-003",
+        "CD-ASSET-004"
+       ]
+      }
+     ],
+     "mirror_note": "BackgroundLayer is the tile renderer inside the active canvas; phase 3 reconciles the two hosts' BackgroundLayer files as a non-blocking matched copy pair (CD-ASSET-016)."
+    },
+    {
+     "scene_id": "sentence/castle-defense/scene=GameStartScreen (start)",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "backing_claims": [
+      "CD-SCENE-008"
+     ],
+     "note": "No ledger claim ties an asset file reference to the start scene. Explicit zero-usage marker."
+    },
+    {
+     "scene_id": "sentence/castle-defense/scene=GameEndScreen (results)",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "backing_claims": [
+      "CD-SCENE-012"
+     ],
+     "note": "No ledger claim ties an asset file reference to the results scene. Explicit zero-usage marker."
+    },
+    {
+     "scene_id": "sentence/castle-defense/scene=loading",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "backing_claims": [
+      "CD-SCENE-007"
+     ],
+     "note": "No ledger claim ties an asset file reference to the loading scene. Explicit zero-usage marker."
+    }
+   ],
+   "D_asset_usage_non_scene_surfaces": [
+    {
+     "surface": "catalog card",
+     "asset_ref": "/games/cover/castle-defense-cover.png (advantage-games catalog cover binding)",
+     "backing_claims": [
+      "CD-ID-006",
+      "CD-ASSET-013"
+     ]
+    },
+    {
+     "surface": "legacy reading-advantage vocabulary assets",
+     "asset_ref": "apps/reading-advantage/public/games/vocabulary/castle-defense/{background.png,castles_3x2_sheet.png,skeletons.png}",
+     "backing_claims": [
+      "CD-ASSET-014"
+     ],
+     "note": "Accepted asset records exist but no canonical vocabulary implementation source record; runtime use and provenance unresolved."
+    },
+    {
+     "surface": "audio",
+     "asset_ref": "none — the canonical component contains no audio asset path, audio element, or sound playback call (full-file absence claim)",
+     "backing_claims": [
+      "CD-ASSET-017"
+     ]
+    }
+   ],
+   "F_visible_unknowns": [
+    "The canonical component configures /api/v1/games/castle-defense/ranking (CD-ROUTE-011), while the accepted advantage-games source denominator has no matching ranking route (CD-ROUTE-012); reading-advantage has a protected ranking route (CD-ROUTE-006).",
+    "The three legacy reading-advantage vocabulary assets have accepted asset records but no canonical vocabulary implementation source record (CD-ASSET-014); runtime use and provenance are unresolved.",
+    "Measured responsive scaling and compact/wide utility classes exist, but no explicit matchMedia or named compact/wide profile contract exists (CD-RESP-009).",
+    "The canonical completion callback test is named but only asserts that the active stage renders; it does not force a terminal state (CD-TEST-005).",
+    "The accepted T2 source inventory excludes the server controller implementation imported by protected reading-advantage routes; the collector did not reinterpret that accepted scope as a denominator amendment or cite the controller blob (castle-defense-evidence-final-report.json visible_unknowns item 5)."
+   ]
+  },
+  "magic-defense": {
+   "canonical_identity_id": "vocabulary/magic-defense",
+   "catalog_identity_id": "magic-defense",
+   "evidence_posture": "current-source",
+   "evidence_basis_claims": [
+    "MD-ID-001",
+    "MD-ID-005",
+    "MD-ID-015",
+    "MD-ST-014"
+   ],
+   "A_scene_state_blueprint": {
+    "scenes": [
+     {
+      "scene_id": "vocabulary/magic-defense/scene=GameContainer",
+      "kind": "status-driven screen switcher (idle->StartScreen, playing->GameEngine, game-over->ResultsScreen, RankingDialog overlay)",
+      "backing": [
+       {
+        "claim_id": "MD-ST-014",
+        "file_path": "apps/advantage-games/src/components/games/game/GameContainer.tsx",
+        "line_start": 1,
+        "line_end": 89
+       }
+      ],
+      "transitions_originating": [
+       "MD-T-01",
+       "MD-T-06"
+      ],
+      "transitions_terminating": [
+       "MD-T-02",
+       "MD-T-03"
+      ],
+      "terminal_result_mapping": "GameContainer renders the ResultsScreen scene when status is 'game-over' (MD-ST-014)."
+     },
+     {
+      "scene_id": "vocabulary/magic-defense/scene=StartScreen",
+      "kind": "pre-start surface with difficulty selector and vocabulary preview",
+      "backing": [
+       {
+        "claim_id": "MD-ST-011",
+        "file_path": "apps/advantage-games/src/components/games/game/StartScreen.tsx",
+        "line_start": 1,
+        "line_end": 100
+       },
+       {
+        "claim_id": "MD-ST-012",
+        "file_path": "apps/advantage-games/src/components/games/game/StartScreen.tsx",
+        "line_start": 178,
+        "line_end": 198
+       }
+      ],
+      "transitions_originating": [
+       "MD-T-01"
+      ],
+      "transitions_terminating": [
+       "MD-T-06"
+      ],
+      "terminal_result_mapping": null
+     },
+     {
+      "scene_id": "vocabulary/magic-defense/scene=GameEngine",
+      "kind": "active play stage (DOM/framer-motion; background image on stage container)",
+      "backing": [
+       {
+        "claim_id": "MD-ASSET-006",
+        "file_path": "apps/advantage-games/src/components/games/game/GameEngine.tsx",
+        "line_start": 441,
+        "line_end": 447
+       },
+       {
+        "claim_id": "MD-ST-002",
+        "file_path": "apps/advantage-games/src/components/games/game/GameEngine.tsx",
+        "line_start": 31,
+        "line_end": 31
+       }
+      ],
+      "transitions_originating": [
+       "MD-T-02",
+       "MD-T-03",
+       "MD-T-04",
+       "MD-T-05",
+       "MD-T-07"
+      ],
+      "transitions_terminating": [
+       "MD-T-01"
+      ],
+      "terminal_result_mapping": null
+     },
+     {
+      "scene_id": "vocabulary/magic-defense/scene=ResultsScreen",
+      "kind": "terminal results surface",
+      "backing": [
+       {
+        "claim_id": "MD-ST-010",
+        "file_path": "apps/advantage-games/src/components/games/game/ResultsScreen.tsx",
+        "line_start": 1,
+        "line_end": 50
+       }
+      ],
+      "transitions_originating": [
+       "MD-T-06"
+      ],
+      "transitions_terminating": [
+       "MD-T-02",
+       "MD-T-03"
+      ],
+      "terminal_result_mapping": "This scene IS the results surface: it shows score, accuracy, xp, and missedWords with Try Again and Leaderboard buttons (MD-ST-010)."
+     },
+     {
+      "scene_id": "vocabulary/magic-defense/scene=RankingDialog",
+      "kind": "ranking overlay with difficulty tabs",
+      "backing": [
+       {
+        "claim_id": "MD-ST-013",
+        "file_path": "apps/advantage-games/src/components/games/game/RankingDialog.tsx",
+        "line_start": 17,
+        "line_end": 21
+       },
+       {
+        "claim_id": "MD-ROUTE-008",
+        "file_path": "apps/advantage-games/src/components/games/game/RankingDialog.tsx",
+        "line_start": 50,
+        "line_end": 60
+       }
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     }
+    ],
+    "states": [
+     {
+      "state_family": "GameStatus (useGameStore)",
+      "members": [
+       "idle",
+       "playing",
+       "game-over"
+      ],
+      "backing": [
+       {
+        "claim_id": "MD-ST-001",
+        "file_path": "apps/advantage-games/src/store/useGameStore.ts",
+        "line_start": 19,
+        "line_end": 19
+       }
+      ],
+      "member_claims": [
+       "MD-ST-001"
+      ],
+      "transitions_originating": [
+       "MD-T-01",
+       "MD-T-02",
+       "MD-T-03",
+       "MD-T-06"
+      ],
+      "transitions_terminating": [
+       "MD-T-01",
+       "MD-T-02",
+       "MD-T-03",
+       "MD-T-06"
+      ],
+      "terminal_result_mapping": "'game-over' is the single terminal status; it is reached by castle destruction (MD-TRANS-002) or timer expiry (MD-TRANS-003) and gates the ResultsScreen (MD-ST-014)."
+     },
+     {
+      "state_family": "ActiveMissile",
+      "members": [
+       "falling",
+       "targeted",
+       "dying"
+      ],
+      "backing": [
+       {
+        "claim_id": "MD-ST-002",
+        "file_path": "apps/advantage-games/src/components/games/game/GameEngine.tsx",
+        "line_start": 31,
+        "line_end": 31
+       }
+      ],
+      "member_claims": [
+       "MD-ST-002",
+       "MD-ST-008",
+       "MD-ST-009"
+      ],
+      "transitions_originating": [
+       "MD-T-04",
+       "MD-T-05",
+       "MD-T-07"
+      ],
+      "transitions_terminating": [
+       "MD-T-04",
+       "MD-T-05"
+      ],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "ActiveExplosion",
+      "members": [
+       "id/x/y record rendered by the Explosion component until onComplete fires"
+      ],
+      "backing": [
+       {
+        "claim_id": "MD-ST-003",
+        "file_path": "apps/advantage-games/src/components/games/game/GameEngine.tsx",
+        "line_start": 33,
+        "line_end": 36
+       }
+      ],
+      "member_claims": [
+       "MD-ST-003"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "ActiveBolt",
+      "members": [
+       "id/startX/targetX/targetY/targetEnemyId record rendered as a MagicBolt"
+      ],
+      "backing": [
+       {
+        "claim_id": "MD-ST-004",
+        "file_path": "apps/advantage-games/src/components/games/game/GameEngine.tsx",
+        "line_start": 38,
+        "line_end": 43
+       }
+      ],
+      "member_claims": [
+       "MD-ST-004"
+      ],
+      "transitions_originating": [
+       "MD-T-05"
+      ],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "castle HP (defense-zone health discipline)",
+      "members": [
+       "left (MAX_CASTLE_HP 3)",
+       "center (MAX_CASTLE_HP 3)",
+       "right (MAX_CASTLE_HP 3)"
+      ],
+      "backing": [
+       {
+        "claim_id": "MD-MECH-003",
+        "file_path": "apps/advantage-games/src/store/useGameStore.ts",
+        "line_start": 9,
+        "line_end": 9
+       },
+       {
+        "claim_id": "MD-MECH-004",
+        "file_path": "apps/advantage-games/src/store/useGameStore.ts",
+        "line_start": 8,
+        "line_end": 8
+       },
+       {
+        "claim_id": "MD-MECH-005",
+        "file_path": "apps/advantage-games/src/store/useGameStore.ts",
+        "line_start": 10,
+        "line_end": 14
+       }
+      ],
+      "member_claims": [
+       "MD-MECH-003",
+       "MD-MECH-004",
+       "MD-MECH-005",
+       "MD-MECH-006",
+       "MD-MECH-020"
+      ],
+      "transitions_originating": [
+       "MD-T-02"
+      ],
+      "transitions_terminating": [
+       "MD-T-07"
+      ],
+      "terminal_result_mapping": "damageCastle reduces the targeted castle HP by 1 (clamped to 0) and sets status 'game-over' when all castles reach 0 (MD-MECH-006); the castle sprite row is selected by HP via getCastleRowForHp (MD-MECH-020)."
+     },
+     {
+      "state_family": "HUD surfaces",
+      "members": [
+       "score",
+       "accuracy",
+       "combo",
+       "mana",
+       "timeRemaining"
+      ],
+      "backing": [
+       {
+        "claim_id": "MD-ST-005",
+        "file_path": "apps/advantage-games/src/components/games/game/HUD.tsx",
+        "line_start": 8,
+        "line_end": 12
+       }
+      ],
+      "member_claims": [
+       "MD-ST-005",
+       "MD-ST-006",
+       "MD-ST-007"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "difficulty (start screen + config)",
+      "members": [
+       "easy",
+       "normal",
+       "hard",
+       "extreme"
+      ],
+      "backing": [
+       {
+        "claim_id": "MD-ST-011",
+        "file_path": "apps/advantage-games/src/components/games/game/StartScreen.tsx",
+        "line_start": 1,
+        "line_end": 100
+       },
+       {
+        "claim_id": "MD-MECH-014",
+        "file_path": "apps/advantage-games/src/lib/games/magicDefenseConfig.ts",
+        "line_start": 46,
+        "line_end": 72
+       }
+      ],
+      "member_claims": [
+       "MD-ST-011",
+       "MD-MECH-014",
+       "MD-MECH-015"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "RankingDialog difficulty tabs",
+      "members": [
+       "easy",
+       "medium (note: 'medium', not 'normal')",
+       "hard",
+       "extreme"
+      ],
+      "backing": [
+       {
+        "claim_id": "MD-ST-013",
+        "file_path": "apps/advantage-games/src/components/games/game/RankingDialog.tsx",
+        "line_start": 17,
+        "line_end": 21
+       }
+      ],
+      "member_claims": [
+       "MD-ST-013"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     }
+    ],
+    "transitions": [
+     {
+      "transition_id": "MD-T-01",
+      "from_state": "GameStatus:idle",
+      "to_state": "GameStatus:playing",
+      "backing": [
+       {
+        "claim_id": "MD-TRANS-001",
+        "file_path": "apps/advantage-games/src/components/games/game/GameContainer.tsx",
+        "line_start": 39,
+        "line_end": 42
+       }
+      ],
+      "note": "StartScreen handleStart() triggers resetGame() which transitions idle -> playing."
+     },
+     {
+      "transition_id": "MD-T-02",
+      "from_state": "GameStatus:playing",
+      "to_state": "GameStatus:game-over (castle destruction)",
+      "backing": [
+       {
+        "claim_id": "MD-TRANS-002",
+        "file_path": "apps/advantage-games/src/store/useGameStore.ts",
+        "line_start": 81,
+        "line_end": 92
+       }
+      ],
+      "note": "damageCastle transitions playing -> game-over when all three castles have HP 0."
+     },
+     {
+      "transition_id": "MD-T-03",
+      "from_state": "GameStatus:playing",
+      "to_state": "GameStatus:game-over (timer expiry)",
+      "backing": [
+       {
+        "claim_id": "MD-TRANS-003",
+        "file_path": "apps/advantage-games/src/components/games/game/GameEngine.tsx",
+        "line_start": 160,
+        "line_end": 167
+       }
+      ],
+      "note": "The 60 s timer counts down every 1 s while status is 'playing' and calls endGame() when it hits 0."
+     },
+     {
+      "transition_id": "MD-T-04",
+      "from_state": "ActiveMissile:falling",
+      "to_state": "ActiveMissile:targeted",
+      "backing": [
+       {
+        "claim_id": "MD-TRANS-004",
+        "file_path": "apps/advantage-games/src/components/games/game/GameEngine.tsx",
+        "line_start": 343,
+        "line_end": 352
+       }
+      ],
+      "note": "checkAnswer() transitions a falling missile to targeted on a correct typed match."
+     },
+     {
+      "transition_id": "MD-T-05",
+      "from_state": "ActiveMissile:targeted",
+      "to_state": "ActiveMissile:dying",
+      "backing": [
+       {
+        "claim_id": "MD-TRANS-005",
+        "file_path": "apps/advantage-games/src/components/games/game/GameEngine.tsx",
+        "line_start": 313,
+        "line_end": 325
+       }
+      ],
+      "note": "handleBoltComplete transitions targeted -> dying when the bolt reaches the enemy."
+     },
+     {
+      "transition_id": "MD-T-06",
+      "from_state": "GameStatus:game-over",
+      "to_state": "GameStatus:idle -> playing (restart)",
+      "backing": [
+       {
+        "claim_id": "MD-TRANS-006",
+        "file_path": "apps/advantage-games/src/store/useGameStore.ts",
+        "line_start": 46,
+        "line_end": 55
+       }
+      ],
+      "note": "resetGame clears score/castles and sets status back toward play; the ResultsScreen onRestart prop wires to resetGame."
+     },
+     {
+      "transition_id": "MD-T-07",
+      "from_state": "ActiveMissile:falling (reaches bottom)",
+      "to_state": "castle damage + escalation",
+      "backing": [
+       {
+        "claim_id": "MD-MECH-009",
+        "file_path": "apps/advantage-games/src/components/games/game/GameEngine.tsx",
+        "line_start": 300,
+        "line_end": 330
+       }
+      ],
+      "note": "handleReachBottom plays 'missile-hit', increases spawn rate by 200 ms (cap 3000 ms) and duration by 0.5 s (cap 15 s), resets combo, increments attempts, adds a missed word, and damages the nearest alive castle."
+     }
+    ]
+   },
+   "B_mechanic_learning_blueprint": {
+    "mechanics": [
+     {
+      "mechanic_id": "MD-M-castle-defense-zone",
+      "description": "Three castles (CastleId union 'left' | 'center' | 'right') each start at MAX_CASTLE_HP = 3; damageCastle reduces the targeted castle HP by 1 clamped to 0 and sets status 'game-over' when all castles reach 0; getCastleRowForHp selects sprite row 0 at full HP, row 1 at HP 2, otherwise row 2; getNearestAliveCastleId returns the closest alive castle by x position and falls back to 'center' when no castle is alive.",
+      "backing_claims": [
+       "MD-MECH-003",
+       "MD-MECH-004",
+       "MD-MECH-005",
+       "MD-MECH-006",
+       "MD-MECH-020",
+       "MD-MECH-021"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "MAX_CASTLE_HP",
+        "values": "3",
+        "backing_claims": [
+         "MD-MECH-003"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "MD-M-missile-spawn-and-fall",
+      "description": "spawnMissile picks a random vocabulary item and assigns targetCastleId via getNearestAliveCastleId; enemy motion animates top 30% -> 100% during the 'falling' state with onAnimationComplete invoking onReachBottom(id), and in 'dying' state animates rotate 180 and triggers onDeathComplete; WALK_ANIMATION_CLASS 'enemy-walk' and DEATH_ANIMATION_CLASS 'enemy-die' select CSS animations per missile state.",
+      "backing_claims": [
+       "MD-MECH-007",
+       "MD-ST-008",
+       "MD-ST-009"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "MD-M-typed-answer-check",
+      "description": "checkAnswer matches the input by lowercased translation equality against falling missiles; a correct answer increments combo, adds 10 mana, spawns a MagicBolt from a random alive castle, and increments score by 10; a wrong answer plays 'error', shows feedback 'incorrect' for 500 ms, resets combo, and increments totalAttempts.",
+      "backing_claims": [
+       "MD-MECH-008",
+       "MD-MECH-017",
+       "MD-MECH-018"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "MD-M-combo-scaling",
+      "description": "Each combo milestone of 3 ((combo+1) % 3 === 0) reduces spawnRate by 200 (cap minSpawnRate) and duration by 0.5 s (cap minDuration); SCALING_CONFIG caps the dynamic difficulty with spawnRateAdjustment 200, spawnRateLimit 3000, durationAdjustment 0.5, durationLimit 15.",
+      "backing_claims": [
+       "MD-MECH-013",
+       "MD-MECH-019"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "scaling caps",
+        "values": "spawnRateAdjustment 200 / spawnRateLimit 3000 / durationAdjustment 0.5 / durationLimit 15",
+        "backing_claims": [
+         "MD-MECH-013"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "MD-M-special-ability-thunder-storm",
+      "description": "activateSpecialAbility (Thunder Storm) destroys all falling missiles when mana >= 100, plays 'success', and creates one explosion per falling missile; the Spacebar keyboard event triggers it via a window keydown listener; the HUD displays a 'Ready (Space)' indicator only when mana >= 100 and on sm+ viewports.",
+      "backing_claims": [
+       "MD-MECH-010",
+       "MD-MECH-011",
+       "MD-ST-006"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "mana cost",
+        "values": "100 (manaCostSpecial)",
+        "backing_claims": [
+         "MD-MECH-016"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "MD-M-magic-bolt-projectile",
+      "description": "A correct answer spawns a MagicBolt from a random alive castle; handleBoltComplete transitions the targeted missile to dying when the bolt reaches the enemy; MagicBolt renders a cyan-400 4x4 px rounded dot with a cyan glow shadow.",
+      "backing_claims": [
+       "MD-MECH-017",
+       "MD-TRANS-005",
+       "MD-ASSET-016"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "MD-M-run-timer",
+      "description": "The timer counts down from 60 s every 1 s while status is 'playing' and calls endGame() when it hits 0; GAME_CONSTANTS defines timer 60, missileSpawnXRange 25, missileSpawnXOffset 37.5, manaCostSpecial 100; the HUD timer text switches to text-destructive animate-pulse when timeRemaining <= 10.",
+      "backing_claims": [
+       "MD-MECH-012",
+       "MD-MECH-016",
+       "MD-ST-007"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "timer",
+        "values": "60 s",
+        "backing_claims": [
+         "MD-MECH-016"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "MD-M-difficulty-settings",
+      "description": "DIFFICULTY_SETTINGS provides easy/normal/hard/extreme spawnRate and duration pairs; getInitialSettings(diff) returns DIFFICULTY_SETTINGS[diff] or DIFFICULTY_SETTINGS['normal'] for unknown diff values.",
+      "backing_claims": [
+       "MD-MECH-014",
+       "MD-MECH-015"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "difficulty tiers",
+        "values": "easy / normal / hard / extreme spawnRate+duration pairs",
+        "backing_claims": [
+         "MD-MECH-014"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "MD-M-breach-escalation",
+      "description": "handleReachBottom plays 'missile-hit', increases spawn rate by 200 ms (cap 3000 ms) and duration by 0.5 s (cap 15 s), resets combo, increments attempts, adds a missed word, and damages the nearest alive castle.",
+      "backing_claims": [
+       "MD-MECH-009"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "MD-M-xp-formula",
+      "description": "The advantage-games page handler computes XP as Math.floor(results.correctAnswers * results.accuracy); the reading-advantage MagicDefenseController.completeGame computes xpEarned as Math.floor(correctAnswers * accuracy). No difficulty multiplier branch exists in either.",
+      "backing_claims": [
+       "MD-MECH-001",
+       "MD-MECH-002"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "MD-M-endgame-reducer",
+      "description": "The endGame reducer simply sets status 'game-over'.",
+      "backing_claims": [
+       "MD-MECH-022"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "MD-M-single-mode-status-model",
+      "description": "Game status is the union 'idle' | 'playing' | 'game-over' — a single play mode with no wave system, no pause status, and no secondary terminal sub-mode in the status union.",
+      "backing_claims": [
+       "MD-ST-001",
+       "MD-MECH-022"
+      ],
+      "tuning_knobs": []
+     }
+    ],
+    "control_surfaces": [
+     {
+      "control_id": "MD-C-typed-answer-input",
+      "description": "InputController renders a mobile bottom-pinned input bar (mobile=true branch) with rounded-xl and bg-slate-950/90 backdrop-blur (MD-RESP-002), or an invisible desktop keyboard input (mobile=false branch) auto-focused via a window click listener (MD-RESP-003); typed input feeds checkAnswer's lowercased translation equality match (MD-MECH-008).",
+      "backing_claims": [
+       "MD-RESP-002",
+       "MD-RESP-003",
+       "MD-MECH-008"
+      ]
+     },
+     {
+      "control_id": "MD-C-spacebar-special",
+      "description": "The Spacebar keyboard event triggers activateSpecialAbility via a window keydown listener (MD-MECH-011); the HUD 'Ready (Space)' indicator appears only when mana >= 100 on sm+ viewports (MD-ST-006).",
+      "backing_claims": [
+       "MD-MECH-011",
+       "MD-ST-006"
+      ]
+     },
+     {
+      "control_id": "MD-C-start-screen-difficulty",
+      "description": "StartScreen renders a difficulty selector (easy/normal/hard/extreme with Shield/Swords/Flame/Skull icons) and a vocabulary preview of up to 50 items (MD-ST-011, MD-ST-012).",
+      "backing_claims": [
+       "MD-ST-011",
+       "MD-ST-012"
+      ]
+     },
+     {
+      "control_id": "MD-C-results-buttons",
+      "description": "ResultsScreen shows score/accuracy/xp/missedWords and Try Again + Leaderboard buttons (MD-ST-010); the onRestart prop wires to resetGame (MD-TRANS-006).",
+      "backing_claims": [
+       "MD-ST-010",
+       "MD-TRANS-006"
+      ]
+     },
+     {
+      "control_id": "MD-C-ranking-tabs",
+      "description": "RankingDialog has difficulty tabs 'easy' | 'medium' | 'hard' | 'extreme' and fetches '/api/v1/games/magic-defense/ranking' on open via fetchRankings() (MD-ST-013, MD-ROUTE-008).",
+      "backing_claims": [
+       "MD-ST-013",
+       "MD-ROUTE-008"
+      ]
+     },
+     {
+      "control_id": "MD-C-mobile-detection",
+      "description": "GameEngine detects mobile via navigator.maxTouchPoints > 0 or 'ontouchstart' in window and stores the boolean in state (MD-RESP-001).",
+      "backing_claims": [
+       "MD-RESP-001"
+      ]
+     }
+    ],
+    "learning_goals": [
+     {
+      "goal_id": "MD-L-vocabulary-translation-production",
+      "description": "Typed vocabulary translation production: the catalog card description reads 'Defend your castles from falling words by typing their translations.' (MD-ID-003); checkAnswer matches typed input by lowercased translation equality against falling missiles (MD-MECH-008); the StartScreen vocabulary preview surfaces up to 50 items before play (MD-ST-011, MD-ST-012).",
+      "backing_claims": [
+       "MD-ID-003",
+       "MD-MECH-008",
+       "MD-ST-011",
+       "MD-ST-012"
+      ]
+     }
+    ],
+    "terminal_result_mechanic": {
+     "description": "Game-over is reached when all three castles reach HP 0 (MD-TRANS-002) or when the 60 s timer reaches 0 (MD-TRANS-003); the endGame reducer sets status 'game-over' (MD-MECH-022) and GameContainer renders the ResultsScreen showing score, accuracy, xp, and missedWords with Try Again and Leaderboard buttons (MD-ST-010, MD-ST-014). XP is Math.floor(correctAnswers * accuracy) in both hosts (MD-MECH-001, MD-MECH-002); completion posts through the advantage-games factory route (MD-ROUTE-003) or the reading-advantage controller-backed route (MD-ROUTE-005).",
+     "vocabulary_scoring_association": "Terminal scoring derives from typed vocabulary answers: correctAnswers increments only on lowercased translation equality matches against falling missiles (MD-MECH-008, MD-MECH-017), totalAttempts increments on wrong answers and bottom breaches (MD-MECH-018, MD-MECH-009), and accuracy feeds the XP floor formula (MD-MECH-001, MD-MECH-002).",
+     "backing_claims": [
+      "MD-TRANS-002",
+      "MD-TRANS-003",
+      "MD-MECH-022",
+      "MD-ST-010",
+      "MD-ST-014",
+      "MD-MECH-001",
+      "MD-MECH-002",
+      "MD-MECH-008",
+      "MD-MECH-017",
+      "MD-ROUTE-003",
+      "MD-ROUTE-005"
+     ]
+    }
+   },
+   "C_developer_effort_decomposition": {
+    "structural_columns_note": "Columns mirror the T2 phase-0 input freeze record structure (record_type, file_path, relevance_rule_id vocabulary from the frozen ordered rules, host root from the frozen source_scope roots) plus evidence claim pointers. Catalog-route-vs-shared-implementation split: vocabulary/magic-defense is the catalog route only; the implementation lives in the shared game/ component folder, magicDefenseConfig.ts, and useGameStore.ts (MD-ID-015, MD-ID-016). No platform-shared-infrastructure entries are included (next role's scope). Controlled inclusion note: apps/reading-advantage/server/controllers/magic-defense-controller.ts is out-of-denominator for T2 acceptance per stop-loss-resolutions-batch-a.md (SLO-MD-1, ACCEPT-AS-CONDITIONAL) but in-scope for content citations (MD-MECH-002 cites controller line 48); it is not listed as a denominator effort entry.",
+    "pages_and_routes": [
+     {
+      "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Catalog page route (150 lines) exposing /student/games/vocabulary/magic-defense; page handler computes XP as floor(correctAnswers * accuracy)",
+      "backing_claims": [
+       "MD-ID-008",
+       "MD-ROUTE-001",
+       "MD-MECH-001"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Host page route (144 lines) exposing the same catalog route",
+      "backing_claims": [
+       "MD-ID-009",
+       "MD-ROUTE-002"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/app/api/v1/games/magic-defense/complete/route.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Completion API route exporting POST created by createCompleteRoute() with force-static dynamic (6 lines)",
+      "backing_claims": [
+       "MD-ID-010",
+       "MD-ROUTE-003"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/app/api/v1/games/magic-defense/vocabulary/route.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Vocabulary API route exporting GET created by createVocabularyRoute(SAMPLE_VOCABULARY) with force-static dynamic (7 lines)",
+      "backing_claims": [
+       "MD-ID-011",
+       "MD-ROUTE-004"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/api/v1/games/magic-defense/complete/route.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Completion API route wiring MagicDefenseController.completeGame behind logRequest and protect middleware (22 lines)",
+      "backing_claims": [
+       "MD-ID-012",
+       "MD-ROUTE-005"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/api/v1/games/magic-defense/ranking/route.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Ranking API route wiring MagicDefenseController.getRanking behind logRequest and protect middleware (23 lines)",
+      "backing_claims": [
+       "MD-ID-013",
+       "MD-ROUTE-006"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/api/v1/games/magic-defense/vocabulary/route.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Vocabulary API route wiring MagicDefenseController.getVocabulary behind logRequest and protect middleware (23 lines)",
+      "backing_claims": [
+       "MD-ID-014",
+       "MD-ROUTE-007"
+      ]
+     }
+    ],
+    "game_scene_state_components": [
+     {
+      "file_path": "apps/advantage-games/src/components/games/game/GameContainer.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Status-driven screen switcher wrapping a 560/600-tall card; overlays RankingDialog on demand",
+      "backing_claims": [
+       "MD-ST-014",
+       "MD-RESP-005"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/game/GameEngine.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Active play engine: missile spawn/fall, typed-answer check, combo scaling, special ability, timer, breach escalation, background binding, mobile detection",
+      "backing_claims": [
+       "MD-ST-002",
+       "MD-ST-003",
+       "MD-ST-004",
+       "MD-MECH-007",
+       "MD-MECH-009",
+       "MD-MECH-012",
+       "MD-ASSET-006",
+       "MD-RESP-001"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/game/Enemy.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Enemy component hard-coding the magic-defense sprite binding (81 lines); walk/death CSS animation classes; falling/dying motion",
+      "backing_claims": [
+       "MD-ID-016",
+       "MD-ASSET-001",
+       "MD-ASSET-002",
+       "MD-ST-008",
+       "MD-ST-009"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/game/StartScreen.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Start screen with difficulty selector and capped vocabulary preview",
+      "backing_claims": [
+       "MD-ST-011",
+       "MD-ST-012"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/game/ResultsScreen.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Results surface with score/accuracy/xp/missedWords and Try Again + Leaderboard buttons",
+      "backing_claims": [
+       "MD-ST-010"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/game/HUD.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "HUD rendering score/accuracy/combo/mana/timeRemaining with sm: responsive prefixes and low-timer pulse",
+      "backing_claims": [
+       "MD-ST-005",
+       "MD-ST-006",
+       "MD-ST-007",
+       "MD-RESP-004"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/game/InputController.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Typed-answer input with mobile bottom-pinned and desktop invisible-input branches",
+      "backing_claims": [
+       "MD-RESP-002",
+       "MD-RESP-003"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/game/MagicBolt.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Bolt renderer (cyan-400 4x4 rounded dot with cyan glow shadow)",
+      "backing_claims": [
+       "MD-ASSET-016"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/game/RankingDialog.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Ranking overlay with difficulty tabs fetching the ranking API on open",
+      "backing_claims": [
+       "MD-ST-013",
+       "MD-ROUTE-008"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/game/Explosion.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Explosion component rendering ActiveExplosion records until onComplete fires",
+      "backing_claims": [
+       "MD-ST-003"
+      ]
+     }
+    ],
+    "logic_projection_utility_modules": [
+     {
+      "file_path": "apps/advantage-games/src/lib/games/magicDefenseConfig.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Configuration entry point (76 lines): CASTLE_CONFIG sprite binding, GAME_CONSTANTS, SCALING_CONFIG, DIFFICULTY_SETTINGS, getInitialSettings",
+      "backing_claims": [
+       "MD-ID-015",
+       "MD-MECH-013",
+       "MD-MECH-014",
+       "MD-MECH-015",
+       "MD-MECH-016",
+       "MD-ASSET-003",
+       "MD-ASSET-004",
+       "MD-ASSET-005"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/store/useGameStore.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Zustand game store: GameStatus union, CastleId, DEFAULT_CASTLES, damageCastle, resetGame, endGame",
+      "backing_claims": [
+       "MD-ST-001",
+       "MD-MECH-003",
+       "MD-MECH-004",
+       "MD-MECH-005",
+       "MD-MECH-006",
+       "MD-MECH-022",
+       "MD-TRANS-002",
+       "MD-TRANS-006"
+      ]
+     }
+    ],
+    "test_modules": [
+     {
+      "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "132 lines, 5 tests",
+      "backing_claims": [
+       "MD-TEST-001"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.test.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "test_count_from_claims": "37 lines, 2 tests",
+      "backing_claims": [
+       "MD-TEST-002"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/game/GameContainer.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "105 lines covering Start/GameEngine/Results rendering and missed-words display",
+      "backing_claims": [
+       "MD-TEST-003"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/game/Enemy.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "25 lines verifying the enemy term render and magic-defense sprite backgroundImage binding",
+      "backing_claims": [
+       "MD-TEST-004"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/game/GameEngine.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "164 lines verifying background binding, idle-returns-null, render with various HP states, combo counter, and timer behavior",
+      "backing_claims": [
+       "MD-TEST-005"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/lib/games/magicDefenseConfig.test.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "92 lines covering CASTLE_CONFIG, GAME_CONSTANTS, SCALING_CONFIG, DIFFICULTY_SETTINGS, getInitialSettings",
+      "backing_claims": [
+       "MD-TEST-006"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/store/useGameStore.test.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "70 lines verifying initial state, setLastResult, and damageCastle game-over transition",
+      "backing_claims": [
+       "MD-TEST-007"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/game/{HUD,InputController,MagicBolt,Explosion,ResultsScreen}.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "HUD.test.tsx (19 lines), InputController.test.tsx (24 lines), MagicBolt.test.tsx (8 lines), Explosion.test.tsx (38 lines), ResultsScreen test suite (per MD-TEST-008)",
+      "backing_claims": [
+       "MD-TEST-008"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/tests/e2e/games/vocabulary/magic-defense.spec.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "27-line Playwright spec asserting a 'canvas' element is visible after Play (contradicts the DOM/framer-motion implementation; known debt MD-HIST-006)",
+      "backing_claims": [
+       "MD-TEST-009"
+      ]
+     }
+    ],
+    "copy_sites_in_reading_primary_hosts": [
+     {
+      "host_root": "apps/reading-advantage",
+      "site": "app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx + app/api/v1/games/magic-defense/{complete,ranking,vocabulary}/route.ts",
+      "copy_relation": "host-specific page plus controller-backed routes with logRequest+protect middleware",
+      "backing_claims": [
+       "MD-ID-009",
+       "MD-ID-012",
+       "MD-ID-013",
+       "MD-ID-014"
+      ]
+     },
+     {
+      "host_root": "apps/reading-advantage/public",
+      "site": "games/cover/magic-defense-cover.png + games/vocabulary/magic-defense/{background.png,castles_3x2_sheet.png,skeletons_3x3_pose_sheet.png}",
+      "copy_relation": "byte-identical copies of the advantage-games assets",
+      "backing_claims": [
+       "MD-ASSET-011",
+       "MD-ASSET-012",
+       "MD-ASSET-013",
+       "MD-ASSET-014"
+      ]
+     },
+     {
+      "host_root": "apps/primary-advantage",
+      "site": "none recorded",
+      "copy_relation": "no Magic Defense copy-site claims exist in the ledger for primary-advantage (absence of evidence; no absence claim was authored by the collector)",
+      "backing_claims": []
+     }
+    ]
+   },
+   "D_asset_usage_map": [
+    {
+     "scene_id": "vocabulary/magic-defense/scene=GameEngine",
+     "asset_usage_count": 3,
+     "caller_count": 4,
+     "asset_refs": [
+      {
+       "asset_ref": "/games/magic-defense/skeletons_3x3_pose_sheet.png (ENEMY_SPRITE; sheet 426 px, frame 142 px — a 3x3 grid)",
+       "usage_category": "actors (falling enemy missiles)",
+       "backing_claims": [
+        "MD-ASSET-001",
+        "MD-ASSET-002",
+        "MD-ASSET-010"
+       ]
+      },
+      {
+       "asset_ref": "/games/magic-defense/castles_3x2_sheet.png (CASTLE_CONFIG.sheet; columns 2, rows 3, spriteWidth 768, spriteHeight 341, scale 0.25)",
+       "usage_category": "defense structures (castle sprites; row selected by HP)",
+       "backing_claims": [
+        "MD-ASSET-003",
+        "MD-ASSET-004",
+        "MD-ASSET-009",
+        "MD-MECH-020"
+       ]
+      },
+      {
+       "asset_ref": "/games/magic-defense/background.png (GAME_CONSTANTS.backgroundImage; set inline on the stage container)",
+       "usage_category": "environment (stage background)",
+       "backing_claims": [
+        "MD-ASSET-005",
+        "MD-ASSET-006",
+        "MD-ASSET-008"
+       ]
+      }
+     ],
+     "mirror_note": "The MagicBolt projectile is a styled DOM dot (cyan-400 4x4 px with glow shadow), not an image asset (MD-ASSET-016). The reading-advantage host carries byte-identical copies of all three images (MD-ASSET-012, MD-ASSET-013, MD-ASSET-014)."
+    },
+    {
+     "scene_id": "vocabulary/magic-defense/scene=GameContainer",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "backing_claims": [
+      "MD-ST-014"
+     ],
+     "note": "No ledger claim ties an asset file reference to the GameContainer chrome scene. Explicit zero-usage marker."
+    },
+    {
+     "scene_id": "vocabulary/magic-defense/scene=StartScreen",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "backing_claims": [
+      "MD-ST-011"
+     ],
+     "note": "No ledger claim ties an asset file reference to the start scene (difficulty icons are lucide icon components; the vocabulary preview is text). Explicit zero-usage marker."
+    },
+    {
+     "scene_id": "vocabulary/magic-defense/scene=ResultsScreen",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "backing_claims": [
+      "MD-ST-010"
+     ],
+     "note": "No ledger claim ties an asset file reference to the results scene. Explicit zero-usage marker."
+    },
+    {
+     "scene_id": "vocabulary/magic-defense/scene=RankingDialog",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "backing_claims": [
+      "MD-ST-013"
+     ],
+     "note": "No ledger claim ties an asset file reference to the ranking overlay scene. Explicit zero-usage marker."
+    }
+   ],
+   "D_asset_usage_non_scene_surfaces": [
+    {
+     "surface": "catalog card",
+     "asset_ref": "/games/cover/magic-defense-cover.png (catalog cover binding; resolves to apps/advantage-games/public/games/cover/magic-defense-cover.png)",
+     "backing_claims": [
+      "MD-ID-004",
+      "MD-ASSET-007",
+      "MD-ASSET-011"
+     ]
+    },
+    {
+     "surface": "audio",
+     "asset_ref": "none — audio assets are absent from apps/advantage-games/public/games/magic-defense/ at baseline; only background.png, castles_3x2_sheet.png and skeletons_3x3_pose_sheet.png exist there",
+     "backing_claims": [
+      "MD-ASSET-015"
+     ]
+    },
+    {
+     "surface": "deleted historical vocab fixture",
+     "asset_ref": "apps/advantage-games/public/vocab/magic-defense.json (deleted in commit 8b98aed0; historical revision 097545f1 contained 12 Thai->English entries)",
+     "backing_claims": [
+      "MD-HIST-001",
+      "MD-HIST-002"
+     ]
+    }
+   ],
+   "F_visible_unknowns": [
+    "advantage-games RankingDialog fetches /api/v1/games/magic-defense/ranking which exists only in reading-advantage (MD-ROUTE-008, MD-ID-013).",
+    "E2E spec asserts page.locator('canvas').first() visible (MD-TEST-009) while the implementation is DOM/framer-motion; known debt in the compliance audit (MD-HIST-006).",
+    "StartScreen uses 'normal' difficulty id while RankingDialog uses 'medium' (MD-ST-011, MD-ST-013); the controller writes 'EASY'/'NORMAL'/'HARD'/'EXTREME' so the 'medium' tab may never match any persisted row.",
+    "Compliance audit (MD-HIST-006) reports 3 architecture FAILs (React-Konva, pure tick functions, rAF loop) explicitly documented as known debt.",
+    "Deleted historical vocab fixture (commit 8b98aed0) was Thai->English direction; current advantage-games vocabulary is English->Thai via SAMPLE_VOCABULARY (MD-HIST-001, MD-HIST-002).",
+    "SLO-MD-1: apps/reading-advantage/server/controllers/magic-defense-controller.ts exists at baseline and is imported by the three in-denominator API routes but has no accepted-denominator record; resolved ACCEPT-AS-CONDITIONAL by stop-loss-resolutions-batch-a.md and recorded as a controlled inclusion in mapper-hypotheses-batch-a.md."
+   ]
+  },
+  "wizard-vs-zombie": {
+   "canonical_identity_id": "vocabulary/wizard-vs-zombie",
+   "catalog_identity_id": "wizard-vs-zombie",
+   "evidence_posture": "current-source",
+   "evidence_basis_claims": [
+    "WVZ-ID-001",
+    "WVZ-ID-005",
+    "WVZ-ID-006",
+    "WVZ-COMP-001"
+   ],
+   "A_scene_state_blueprint": {
+    "scenes": [
+     {
+      "scene_id": "vocabulary/wizard-vs-zombie/scene=WizardZombieGame",
+      "kind": "denominator-scene (canonical gameplay component, both hosts)",
+      "backing": [
+       {
+        "claim_id": "WVZ-COMP-001",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 86,
+        "line_end": 86
+       },
+       {
+        "claim_id": "WVZ-COMP-002",
+        "file_path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 86,
+        "line_end": 86
+       }
+      ],
+      "transitions_originating": [
+       "WVZ-T-01",
+       "WVZ-T-02"
+      ],
+      "transitions_terminating": [
+       "WVZ-T-06"
+      ],
+      "terminal_result_mapping": "The component transitions to gamePhase 'ended' when the logic state status is 'gameover' (WVZ-MECH-011) and renders the GameEndScreen (AG) or gameover overlay (RA) terminal surfaces (WVZ-COMP-005, WVZ-MECH-024)."
+     },
+     {
+      "scene_id": "vocabulary/wizard-vs-zombie/scene=GameStartScreen (AG start)",
+      "kind": "shared start screen render branch (advantage-games host)",
+      "backing": [
+       {
+        "claim_id": "WVZ-COMP-004",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 431,
+        "line_end": 468
+       }
+      ],
+      "transitions_originating": [
+       "WVZ-T-01"
+      ],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "scene_id": "vocabulary/wizard-vs-zombie/scene=StartScreen (RA bespoke)",
+      "kind": "reading-advantage bespoke start screen (briefing/rankings/vocabulary tabs)",
+      "backing": [
+       {
+        "claim_id": "WVZ-COMP-003",
+        "file_path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/StartScreen.tsx",
+        "line_start": 59,
+        "line_end": 59
+       },
+       {
+        "claim_id": "WVZ-MECH-021",
+        "file_path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/StartScreen.tsx",
+        "line_start": 89,
+        "line_end": 113
+       },
+       {
+        "claim_id": "WVZ-MECH-022",
+        "file_path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/StartScreen.tsx",
+        "line_start": 238,
+        "line_end": 246
+       }
+      ],
+      "transitions_originating": [
+       "WVZ-T-01"
+      ],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "scene_id": "vocabulary/wizard-vs-zombie/scene=playing (Konva Stage)",
+      "kind": "active gameplay canvas surface with HUD and virtual controls",
+      "backing": [
+       {
+        "claim_id": "WVZ-MECH-014",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 596,
+        "line_end": 714
+       },
+       {
+        "claim_id": "WVZ-MECH-012",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 508,
+        "line_end": 540
+       },
+       {
+        "claim_id": "WVZ-MECH-013",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 572,
+        "line_end": 593
+       }
+      ],
+      "transitions_originating": [
+       "WVZ-T-02",
+       "WVZ-T-04",
+       "WVZ-T-05"
+      ],
+      "transitions_terminating": [
+       "WVZ-T-01"
+      ],
+      "terminal_result_mapping": null
+     },
+     {
+      "scene_id": "vocabulary/wizard-vs-zombie/scene=GameEndScreen (AG ended)",
+      "kind": "shared end screen render branch (advantage-games host)",
+      "backing": [
+       {
+        "claim_id": "WVZ-COMP-005",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 482,
+        "line_end": 504
+       }
+      ],
+      "transitions_originating": [
+       "WVZ-T-06"
+      ],
+      "transitions_terminating": [
+       "WVZ-T-03"
+      ],
+      "terminal_result_mapping": "This scene IS the advantage-games terminal surface: GameEndScreen rendered inside the gamePhase === 'ended' branch with status='defeat' and gameId='wizard-vs-zombie' (WVZ-COMP-005)."
+     },
+     {
+      "scene_id": "vocabulary/wizard-vs-zombie/scene=RA briefing overlay",
+      "kind": "reading-advantage inline briefing overlay (game rules + Grimoire preview) before hasStarted",
+      "backing": [
+       {
+        "claim_id": "WVZ-MECH-023",
+        "file_path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 354,
+        "line_end": 480
+       }
+      ],
+      "transitions_originating": [
+       "WVZ-T-01"
+      ],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "scene_id": "vocabulary/wizard-vs-zombie/scene=RA gameover overlay",
+      "kind": "reading-advantage terminal overlay",
+      "backing": [
+       {
+        "claim_id": "WVZ-MECH-024",
+        "file_path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 486,
+        "line_end": 583
+       }
+      ],
+      "transitions_originating": [
+       "WVZ-T-06"
+      ],
+      "transitions_terminating": [
+       "WVZ-T-03"
+      ],
+      "terminal_result_mapping": "This scene IS the reading-advantage terminal surface: it renders score/accuracy/XP-gained tiles plus PlayAgain and Exit-to-Menu buttons inside AnimatePresence (WVZ-MECH-024)."
+     },
+     {
+      "scene_id": "vocabulary/wizard-vs-zombie/scene=loading (Grimoire init)",
+      "kind": "loading surface (asserted by the advantage-games component test)",
+      "backing": [
+       {
+        "claim_id": "WVZ-TEST-004",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.test.tsx",
+        "line_start": 240,
+        "line_end": 242
+       }
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     }
+    ],
+    "states": [
+     {
+      "state_family": "gamePhase (component useState)",
+      "members": [
+       "start",
+       "playing",
+       "ended"
+      ],
+      "backing": [
+       {
+        "claim_id": "WVZ-STT-001",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 99,
+        "line_end": 99
+       }
+      ],
+      "member_claims": [
+       "WVZ-STT-001",
+       "WVZ-COMP-004",
+       "WVZ-COMP-005"
+      ],
+      "transitions_originating": [
+       "WVZ-T-01",
+       "WVZ-T-02"
+      ],
+      "transitions_terminating": [
+       "WVZ-T-01",
+       "WVZ-T-02"
+      ],
+      "terminal_result_mapping": "'ended' is the terminal component phase; it is entered when the logic status becomes 'gameover' (WVZ-MECH-011) and gates the GameEndScreen (AG) / gameover overlay (RA) surfaces."
+     },
+     {
+      "state_family": "WizardZombieState.status (logic)",
+      "members": [
+       "playing",
+       "gameover"
+      ],
+      "backing": [
+       {
+        "claim_id": "WVZ-STT-003",
+        "file_path": "apps/advantage-games/src/lib/games/wizardZombie.ts",
+        "line_start": 35,
+        "line_end": 48
+       }
+      ],
+      "member_claims": [
+       "WVZ-STT-003",
+       "WVZ-MECH-011"
+      ],
+      "transitions_originating": [
+       "WVZ-T-02"
+      ],
+      "transitions_terminating": [],
+      "terminal_result_mapping": "'gameover' is the terminal logic status; the component loop transitions gamePhase to 'ended' when nextState.status === 'gameover' (WVZ-MECH-011)."
+     },
+     {
+      "state_family": "Difficulty (advantage-games)",
+      "members": [
+       "easy",
+       "medium",
+       "hard"
+      ],
+      "backing": [
+       {
+        "claim_id": "WVZ-STT-004",
+        "file_path": "apps/advantage-games/src/lib/games/wizardZombie.ts",
+        "line_start": 33,
+        "line_end": 33
+       }
+      ],
+      "member_claims": [
+       "WVZ-STT-004",
+       "WVZ-STT-002"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "Difficulty (reading-advantage)",
+      "members": [
+       "easy",
+       "normal",
+       "hard",
+       "extreme"
+      ],
+      "backing": [
+       {
+        "claim_id": "WVZ-STT-005",
+        "file_path": "apps/reading-advantage/lib/games/wizardZombie.ts",
+        "line_start": 33,
+        "line_end": 33
+       }
+      ],
+      "member_claims": [
+       "WVZ-STT-005",
+       "WVZ-HIST-004"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     },
+     {
+      "state_family": "run numerics and charges",
+      "members": [
+       "hp (INITIAL_HP 100)",
+       "shockwave charges (MAX_SHOCKWAVE_CHARGES 3)",
+       "invulnerability (500 ms)",
+       "score"
+      ],
+      "backing": [
+       {
+        "claim_id": "WVZ-MECH-001",
+        "file_path": "apps/advantage-games/src/lib/games/wizardZombie.ts",
+        "line_start": 55,
+        "line_end": 64
+       },
+       {
+        "claim_id": "WVZ-MECH-012",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 508,
+        "line_end": 540
+       }
+      ],
+      "member_claims": [
+       "WVZ-MECH-001",
+       "WVZ-MECH-012"
+      ],
+      "transitions_originating": [],
+      "transitions_terminating": [],
+      "terminal_result_mapping": null
+     }
+    ],
+    "transitions": [
+     {
+      "transition_id": "WVZ-T-01",
+      "from_state": "gamePhase:start",
+      "to_state": "gamePhase:playing",
+      "backing": [
+       {
+        "claim_id": "WVZ-STT-001",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 99,
+        "line_end": 99
+       },
+       {
+        "claim_id": "WVZ-COMP-004",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 431,
+        "line_end": 468
+       },
+       {
+        "claim_id": "WVZ-MECH-020",
+        "file_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+        "line_start": 60,
+        "line_end": 63
+       }
+      ],
+      "note": "The start branch renders GameStartScreen (AG) while gamePhase is 'start'; the RA page captures the difficulty from StartScreen.handleStart and passes it to WizardZombieGame as a prop."
+     },
+     {
+      "transition_id": "WVZ-T-02",
+      "from_state": "gamePhase:playing (status playing)",
+      "to_state": "gamePhase:ended (status gameover)",
+      "backing": [
+       {
+        "claim_id": "WVZ-MECH-011",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 252,
+        "line_end": 396
+       },
+       {
+        "claim_id": "WVZ-STT-003",
+        "file_path": "apps/advantage-games/src/lib/games/wizardZombie.ts",
+        "line_start": 35,
+        "line_end": 48
+       }
+      ],
+      "note": "The rAF game loop transitions to gamePhase='ended' when nextState.status === 'gameover'."
+     },
+     {
+      "transition_id": "WVZ-T-03",
+      "from_state": "gamePhase:ended",
+      "to_state": "terminal surfaces (GameEndScreen AG / gameover overlay RA)",
+      "backing": [
+       {
+        "claim_id": "WVZ-COMP-005",
+        "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 482,
+        "line_end": 504
+       },
+       {
+        "claim_id": "WVZ-MECH-024",
+        "file_path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 486,
+        "line_end": 583
+       }
+      ],
+      "note": "The ended branch renders the shared GameEndScreen (AG, status='defeat') or the RA gameover overlay with score/accuracy/XP-gained tiles."
+     },
+     {
+      "transition_id": "WVZ-T-04",
+      "from_state": "orb contact (playing)",
+      "to_state": "score/HP/shockwave update (correct) | reshuffle + penalty (incorrect)",
+      "backing": [
+       {
+        "claim_id": "WVZ-MECH-005",
+        "file_path": "apps/advantage-games/src/lib/games/wizardZombie.ts",
+        "line_start": 191,
+        "line_end": 282
+       },
+       {
+        "claim_id": "WVZ-MECH-007",
+        "file_path": "apps/advantage-games/src/lib/games/wizardZombie.ts",
+        "line_start": 358,
+        "line_end": 437
+       }
+      ],
+      "note": "A correct orb grants +10 HP (capped), +1 shockwave charge (capped), +10 score and picks a new target; an incorrect orb reshuffles orbs and subtracts 5 score (clamped at 0)."
+     },
+     {
+      "transition_id": "WVZ-T-05",
+      "from_state": "spawn tick (playing)",
+      "to_state": "zombie enters from a gate",
+      "backing": [
+       {
+        "claim_id": "WVZ-MECH-006",
+        "file_path": "apps/advantage-games/src/lib/games/wizardZombie.ts",
+        "line_start": 284,
+        "line_end": 356
+       }
+      ],
+      "note": "updateZombies spawns one zombie per BASE_SPAWN_RATE_MS*modifiers.spawnRate tick (capped at 50 total) from one of four gates (N/S/W/E off-screen) with damage=10 and scaled speed."
+     },
+     {
+      "transition_id": "WVZ-T-06",
+      "from_state": "terminal surfaces (ended)",
+      "to_state": "restart / exit",
+      "backing": [
+       {
+        "claim_id": "WVZ-MECH-024",
+        "file_path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+        "line_start": 486,
+        "line_end": 583
+       }
+      ],
+      "note": "The RA gameover overlay renders PlayAgain + Exit-to-Menu buttons; no separate AG restart-handler claim exists in the ledger beyond the GameEndScreen render branch (WVZ-COMP-005)."
+     }
+    ]
+   },
+   "B_mechanic_learning_blueprint": {
+    "mechanics": [
+     {
+      "mechanic_id": "WVZ-M-world-and-entity-constants",
+      "description": "GAME_WIDTH=800, GAME_HEIGHT=600, PLAYER_RADIUS=20, ZOMBIE_RADIUS=15, ORB_RADIUS=25, INITIAL_HP=100, MAX_SHOCKWAVE_CHARGES=3, INVULNERABILITY_DURATION=500 ms.",
+      "backing_claims": [
+       "WVZ-MECH-001"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "WVZ-M-difficulty-modifiers",
+      "description": "DIFFICULTY_MODIFIERS declares speed and spawnRate coefficients per tier; the AG component registers adaptive difficulty params for gameId 'wizard-vs-zombie' with zombieSpeed (min 0.5, max 2.0, default 1.0, step 0.1) and spawnRate (min 0.4, max 1.5, default 1.0, step 0.1).",
+      "backing_claims": [
+       "WVZ-MECH-002",
+       "WVZ-MECH-009"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "zombieSpeed (adaptive)",
+        "values": "min 0.5 / max 2.0 / default 1.0 / step 0.1",
+        "backing_claims": [
+         "WVZ-MECH-009"
+        ]
+       },
+       {
+        "name": "spawnRate (adaptive)",
+        "values": "min 0.4 / max 1.5 / default 1.0 / step 0.1",
+        "backing_claims": [
+         "WVZ-MECH-009"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "WVZ-M-initial-state-and-vocab-guard",
+      "description": "createWizardZombieState throws 'Vocabulary cannot be empty' if vocabulary.length===0; otherwise it creates a player at world center with hp=100 and spawns four orbs (1 correct, 3 decoys).",
+      "backing_claims": [
+       "WVZ-MECH-003"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "WVZ-M-frame-integration-and-shockwave",
+      "description": "advanceWizardZombieTime integrates one frame: normalizes diagonal input, applies speed*dt, clamps to world bounds, then handles shockwave (250 radius, 300 push force).",
+      "backing_claims": [
+       "WVZ-MECH-004"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "shockwave",
+        "values": "radius 250 / push force 300",
+        "backing_claims": [
+         "WVZ-MECH-004"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "WVZ-M-orb-collision-resolution",
+      "description": "checkCollisions applies orb collisions: a correct orb grants +10 HP (capped at maxHp), +1 shockwave (capped at maxShockwaveCharges), +10 score and picks a new target; an incorrect orb reshuffles orbs and subtracts 5 score (clamped at 0).",
+      "backing_claims": [
+       "WVZ-MECH-005"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "correct orb reward",
+        "values": "+10 HP (capped) / +1 shockwave (capped) / +10 score",
+        "backing_claims": [
+         "WVZ-MECH-005"
+        ]
+       },
+       {
+        "name": "incorrect orb penalty",
+        "values": "-5 score (clamped at 0) + reshuffle",
+        "backing_claims": [
+         "WVZ-MECH-005"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "WVZ-M-orb-spawn-quadrants",
+      "description": "spawnOrbs creates exactly four orbs across the four NW/NE/SW/SE quadrants: one correct orb (isCorrect=true) plus three decoy orbs sampled from vocabulary entries whose term differs from the target.",
+      "backing_claims": [
+       "WVZ-MECH-007"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "WVZ-M-zombie-spawn-and-scaling",
+      "description": "updateZombies spawns one zombie per BASE_SPAWN_RATE_MS*modifiers.spawnRate tick (capped at 50 total) from one of four gates (N/S/W/E off-screen) with damage=10 and speed = (1.5 + difficultyMultiplier*0.1) * modifiers.speed.",
+      "backing_claims": [
+       "WVZ-MECH-006"
+      ],
+      "tuning_knobs": [
+       {
+        "name": "zombie cap",
+        "values": "50 total",
+        "backing_claims": [
+         "WVZ-MECH-006"
+        ]
+       },
+       {
+        "name": "zombie damage",
+        "values": "10",
+        "backing_claims": [
+         "WVZ-MECH-006"
+        ]
+       }
+      ]
+     },
+     {
+      "mechanic_id": "WVZ-M-runtime-asset-loading",
+      "description": "The component loads the four runtime sprite assets (player, zombie, orb, floor) from '/games/vocabulary/wizard-vs-zombie/{player|zombie|orb}_3x3_pose_sheet.png' and 'tile-ruins.png'.",
+      "backing_claims": [
+       "WVZ-MECH-008"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "WVZ-M-animation-loop",
+      "description": "The animation loop advances playerFrame/zombieFrame/orbFrame 0->1->2 every 150 ms while gamePhase === 'playing'.",
+      "backing_claims": [
+       "WVZ-MECH-010"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "WVZ-M-game-loop-and-juice",
+      "description": "The game loop runs in requestAnimationFrame with dt clamped at 50 ms, dispatches juice diffing (damage, score, penalty, adaptive response), updates screen-shake/damage-flash/shockwave-ring/floatingTexts, applies the camera transform, and transitions to gamePhase='ended' when nextState.status === 'gameover'.",
+      "backing_claims": [
+       "WVZ-MECH-011"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "WVZ-M-hud",
+      "description": "The HUD overlay renders HP, shockwave charges (max 3, ⚡ glyph), score, and the 'Find: <targetWord>' prompt.",
+      "backing_claims": [
+       "WVZ-MECH-012"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "WVZ-M-stage-rendering",
+      "description": "The Konva Stage renders the floor via Rect fillPatternRepeat='repeat', the player KonvaImage (64x64, offset 32), the shockwaveFX Rect when active, zombies (48x48, offset 24), and orbs with a KonvaImage + Text translation label.",
+      "backing_claims": [
+       "WVZ-MECH-014"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "WVZ-M-combat-feedback-fx",
+      "description": "The FX layer renders a red damage-flash overlay when damageFlash > 0 (opacity = damageFlash, z-40); floating texts are projected into screen space using dimensions/camera and fade out by life.",
+      "backing_claims": [
+       "WVZ-MECH-015",
+       "WVZ-MECH-016"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "WVZ-M-off-screen-orb-indicators",
+      "description": "wizardZombieIndicators computes off-screen orb indicators: for each orb outside the viewport AABB, a marker is placed at the viewport edge intersected by the orb direction (margin=40); the AG component imports calculateIndicators and uses it to render off-screen orbs.",
+      "backing_claims": [
+       "WVZ-MECH-018",
+       "WVZ-COMP-006"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "WVZ-M-completion-payload",
+      "description": "The advantage-games page submit payload sends score=results.xp, correctAnswers, totalAttempts, accuracy*100, difficulty to the completion API.",
+      "backing_claims": [
+       "WVZ-MECH-017"
+      ],
+      "tuning_knobs": []
+     },
+     {
+      "mechanic_id": "WVZ-M-vocabulary-fetch-and-fallback",
+      "description": "The advantage-games page fetches vocabulary from /api/v1/games/wizard-vs-zombie/vocabulary and falls back to a fixed 5-word Spanish set on empty/error response.",
+      "backing_claims": [
+       "WVZ-MECH-019"
+      ],
+      "tuning_knobs": []
+     }
+    ],
+    "control_surfaces": [
+     {
+      "control_id": "WVZ-C-virtual-dpad-and-cast",
+      "description": "The virtual controls block renders a circular CAST button (touchTarget-scaled) and a VirtualDPad (scale(touchTarget/128)) in the bottom-right (WVZ-MECH-013); the CAST action drives the shockwave (250 radius, 300 push force, WVZ-MECH-004).",
+      "backing_claims": [
+       "WVZ-MECH-013",
+       "WVZ-MECH-004"
+      ]
+     },
+     {
+      "control_id": "WVZ-C-start-screen-ag",
+      "description": "The advantage-games host renders the shared GameStartScreen inside the gamePhase === 'start' branch (WVZ-COMP-004); the selected difficulty is stored in the selectedDifficulty useState with initial value 'medium' (WVZ-STT-002).",
+      "backing_claims": [
+       "WVZ-COMP-004",
+       "WVZ-STT-002"
+      ]
+     },
+     {
+      "control_id": "WVZ-C-start-screen-ra",
+      "description": "The reading-advantage bespoke StartScreen (WVZ-COMP-003) fetches rankings from /api/v1/games/wizard-vs-zombie/ranking?difficulty=<tier> when the rankings tab is active (WVZ-MECH-021) and renders the zombie pose sheet as a CSS-frame sprite animation in the briefing tab (WVZ-MECH-022).",
+      "backing_claims": [
+       "WVZ-COMP-003",
+       "WVZ-MECH-021",
+       "WVZ-MECH-022"
+      ]
+     },
+     {
+      "control_id": "WVZ-C-results-buttons-ra",
+      "description": "The RA gameover overlay renders PlayAgain + Exit-to-Menu buttons inside AnimatePresence (WVZ-MECH-024).",
+      "backing_claims": [
+       "WVZ-MECH-024"
+      ]
+     },
+     {
+      "control_id": "WVZ-C-orb-contact-answer-model",
+      "description": "The answer input model is physical contact with quadrant-spawned orbs: one correct orb plus three decoys (WVZ-MECH-007); checkCollisions resolves correct vs incorrect contact (WVZ-MECH-005). No typed-answer claim exists in the ledger for this game.",
+      "backing_claims": [
+       "WVZ-MECH-007",
+       "WVZ-MECH-005"
+      ]
+     }
+    ],
+    "learning_goals": [
+     {
+      "goal_id": "WVZ-L-vocabulary-recognition",
+      "description": "Vocabulary term-to-translation recognition under pursuit pressure: the catalog card description reads 'Survive the horde by collecting vocabulary orbs.' (WVZ-ID-003); spawnOrbs places one correct orb and three decoys sampled from vocabulary entries whose term differs from the target (WVZ-MECH-007); the HUD renders the 'Find: <targetWord>' prompt (WVZ-MECH-012) and orbs carry a Text translation label (WVZ-MECH-014).",
+      "backing_claims": [
+       "WVZ-ID-003",
+       "WVZ-MECH-007",
+       "WVZ-MECH-012",
+       "WVZ-MECH-014"
+      ]
+     }
+    ],
+    "terminal_result_mechanic": {
+     "description": "The logic status union is 'playing' | 'gameover' (WVZ-STT-003); the rAF loop transitions gamePhase to 'ended' when nextState.status === 'gameover' (WVZ-MECH-011). The ended branch renders the shared GameEndScreen with status='defeat' and gameId='wizard-vs-zombie' (AG, WVZ-COMP-005) or the RA gameover overlay with score/accuracy/XP-gained tiles plus PlayAgain and Exit-to-Menu buttons (WVZ-MECH-024). The AG page submit payload sends score=results.xp, correctAnswers, totalAttempts, accuracy*100, difficulty to the completion API (WVZ-MECH-017) via the factory route (WVZ-ROUTE-003) or the RA controller-backed route (WVZ-ROUTE-005).",
+     "vocabulary_scoring_association": "Terminal scoring derives from orb-based vocabulary recognition: correct orb contact grants +10 score (WVZ-MECH-005) against the current target word (WVZ-MECH-007, WVZ-MECH-012); correctAnswers and totalAttempts are submitted with the completion payload (WVZ-MECH-017).",
+     "backing_claims": [
+      "WVZ-STT-003",
+      "WVZ-MECH-011",
+      "WVZ-COMP-005",
+      "WVZ-MECH-024",
+      "WVZ-MECH-017",
+      "WVZ-MECH-005",
+      "WVZ-ROUTE-003",
+      "WVZ-ROUTE-005"
+     ]
+    }
+   },
+   "C_developer_effort_decomposition": {
+    "structural_columns_note": "Columns mirror the T2 phase-0 input freeze record structure (record_type, file_path, relevance_rule_id vocabulary from the frozen ordered rules, host root from the frozen source_scope roots) plus evidence claim pointers. No platform-shared-infrastructure entries are included (next role's scope).",
+    "pages_and_routes": [
+     {
+      "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Catalog page route (122 lines); fetches vocabulary with 5-word Spanish fallback; submits completion payload",
+      "backing_claims": [
+       "WVZ-ROUTE-001",
+       "WVZ-MECH-017",
+       "WVZ-MECH-019"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Host page route (159 lines); captures difficulty from StartScreen.handleStart and passes it as a prop",
+      "backing_claims": [
+       "WVZ-ROUTE-002",
+       "WVZ-MECH-020"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/app/api/v1/games/wizard-vs-zombie/complete/route.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Completion API route exporting POST created by createCompleteRoute() with force-static dynamic (6 lines)",
+      "backing_claims": [
+       "WVZ-ROUTE-003"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/app/api/v1/games/wizard-vs-zombie/vocabulary/route.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Vocabulary API route exporting GET created by createVocabularyRoute(SAMPLE_VOCABULARY) with force-static dynamic (7 lines)",
+      "backing_claims": [
+       "WVZ-ROUTE-004"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/api/v1/games/wizard-vs-zombie/complete/route.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Completion API route wiring WizardZombieController.completeGame behind logRequest and protect middleware (22 lines)",
+      "backing_claims": [
+       "WVZ-ROUTE-005"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/api/v1/games/wizard-vs-zombie/vocabulary/route.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Vocabulary API route wiring WizardZombieController.getVocabulary behind logRequest and protect middleware (22 lines)",
+      "backing_claims": [
+       "WVZ-ROUTE-006"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/api/v1/games/wizard-vs-zombie/ranking/route.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Ranking API route wiring WizardZombieController.getRanking behind logRequest and protect middleware (22 lines); the route does NOT exist in the advantage-games host",
+      "backing_claims": [
+       "WVZ-ROUTE-007"
+      ]
+     }
+    ],
+    "game_scene_state_components": [
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Canonical 745-line React-Konva component: gamePhase state machine, asset loading, animation + rAF game loops, HUD, virtual controls, Konva Stage, FX layer, off-screen orb indicators",
+      "backing_claims": [
+       "WVZ-COMP-001",
+       "WVZ-STT-001",
+       "WVZ-MECH-008",
+       "WVZ-MECH-010",
+       "WVZ-MECH-011",
+       "WVZ-MECH-012",
+       "WVZ-MECH-013",
+       "WVZ-MECH-014",
+       "WVZ-COMP-006"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Host copy (817 lines) with bespoke inline briefing overlay and gameover overlay",
+      "backing_claims": [
+       "WVZ-COMP-002",
+       "WVZ-MECH-023",
+       "WVZ-MECH-024"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/StartScreen.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Bespoke RA start screen (briefing/rankings/vocabulary tabs; rankings fetch; zombie CSS-frame sprite in briefing tab)",
+      "backing_claims": [
+       "WVZ-COMP-003",
+       "WVZ-MECH-021",
+       "WVZ-MECH-022"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/_shared (GameStartScreen/GameEndScreen)",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Shared start/end screens rendered by the AG host branches",
+      "backing_claims": [
+       "WVZ-COMP-004",
+       "WVZ-COMP-005"
+      ]
+     }
+    ],
+    "logic_projection_utility_modules": [
+     {
+      "file_path": "apps/advantage-games/src/lib/games/wizardZombie.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Logic module: Difficulty (3-tier), WizardZombieState.status, constants, DIFFICULTY_MODIFIERS, createWizardZombieState, advanceWizardZombieTime, checkCollisions, updateZombies, spawnOrbs",
+      "backing_claims": [
+       "WVZ-STT-003",
+       "WVZ-STT-004",
+       "WVZ-MECH-001",
+       "WVZ-MECH-002",
+       "WVZ-MECH-003",
+       "WVZ-MECH-004",
+       "WVZ-MECH-005",
+       "WVZ-MECH-006",
+       "WVZ-MECH-007"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/lib/games/wizardZombieIndicators.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "effort_detail": "Off-screen orb indicator computation module",
+      "backing_claims": [
+       "WVZ-MECH-018"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/lib/games/wizardZombie.ts",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "effort_detail": "Host logic copy retaining the 4-tier Difficulty type including 'extreme'",
+      "backing_claims": [
+       "WVZ-STT-005",
+       "WVZ-HIST-004"
+      ]
+     }
+    ],
+    "test_modules": [
+     {
+      "file_path": "apps/advantage-games/src/lib/games/wizardZombie.test.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "31 lines covering createWizardZombieState initial state",
+      "backing_claims": [
+       "WVZ-TEST-001"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/lib/games/wizardZombieIndicators.test.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "45 lines covering indicator visibility for right/top/center orbs",
+      "backing_claims": [
+       "WVZ-TEST-002"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "248 lines; asserts loading-state copy 'Initializing Grimoire...'",
+      "backing_claims": [
+       "WVZ-TEST-003",
+       "WVZ-TEST-004"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.test.tsx",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "65 lines; mocks the WizardZombieGame component and asserts page title",
+      "backing_claims": [
+       "WVZ-TEST-005"
+      ]
+     },
+     {
+      "file_path": "apps/advantage-games/tests/e2e/games/vocabulary/wizard-vs-zombie.spec.ts",
+      "host_root": "apps/advantage-games",
+      "record_type": "file",
+      "relevance_rule_id": "advantage-games-src",
+      "test_count_from_claims": "30-line Playwright E2E spec with WIZARD_VS_ZOMBIE_SAMPLE_VOCABULARY and captureWizardVsZombieScreenshot",
+      "backing_claims": [
+       "WVZ-TEST-006"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.test.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "test_count_from_claims": "46 lines; mocks WizardZombieGame and asserts back-to-home link (RA-only behavior)",
+      "backing_claims": [
+       "WVZ-TEST-007"
+      ]
+     },
+     {
+      "file_path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.test.tsx",
+      "host_root": "apps/reading-advantage",
+      "record_type": "file",
+      "relevance_rule_id": "reading-primary-game-copies",
+      "test_count_from_claims": "126 lines; asserts /Arcane Survival/ briefing copy and 'Start Survival' button — these do NOT match the RA component's rendered 'Game Rules' copy (mismatch recorded as visible unknown)",
+      "backing_claims": [
+       "WVZ-TEST-008"
+      ]
+     }
+    ],
+    "copy_sites_in_reading_primary_hosts": [
+     {
+      "host_root": "apps/reading-advantage",
+      "site": "components/games/vocabulary/wizard-vs-zombie/{WizardZombieGame.tsx,StartScreen.tsx} + lib/games/wizardZombie.ts + app/api/v1/games/wizard-vs-zombie/{complete,vocabulary,ranking}/route.ts",
+      "copy_relation": "divergent host copy (bespoke StartScreen + briefing/gameover overlays; 4-tier Difficulty incl. 'extreme'; controller-backed routes incl. ranking route absent in AG)",
+      "backing_claims": [
+       "WVZ-COMP-002",
+       "WVZ-COMP-003",
+       "WVZ-STT-005",
+       "WVZ-ROUTE-005",
+       "WVZ-ROUTE-006",
+       "WVZ-ROUTE-007",
+       "WVZ-HIST-004"
+      ]
+     },
+     {
+      "host_root": "apps/reading-advantage/public",
+      "site": "games/vocabulary/wizard-vs-zombie/{orb,player,tile-ruins,zombie}_*",
+      "copy_relation": "asset copies enumerated at baseline (asset-file-denominator lines 7755-7812)",
+      "backing_claims": [
+       "WVZ-ASSET-008"
+      ]
+     },
+     {
+      "host_root": "apps/primary-advantage",
+      "site": "none recorded",
+      "copy_relation": "no wizard-vs-zombie copy-site claims exist in the ledger for primary-advantage (absence of evidence; no absence claim was authored by the collector)",
+      "backing_claims": []
+     }
+    ]
+   },
+   "D_asset_usage_map": [
+    {
+     "scene_id": "vocabulary/wizard-vs-zombie/scene=playing (Konva Stage)",
+     "asset_usage_count": 4,
+     "caller_count": 2,
+     "asset_refs": [
+      {
+       "asset_ref": "/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png",
+       "usage_category": "actors (player; KonvaImage 64x64, offset 32)",
+       "backing_claims": [
+        "WVZ-MECH-008",
+        "WVZ-MECH-014",
+        "WVZ-ASSET-002"
+       ]
+      },
+      {
+       "asset_ref": "/games/vocabulary/wizard-vs-zombie/zombie_3x3_pose_sheet.png",
+       "usage_category": "actors (zombies; 48x48, offset 24)",
+       "backing_claims": [
+        "WVZ-MECH-008",
+        "WVZ-MECH-014",
+        "WVZ-ASSET-004"
+       ]
+      },
+      {
+       "asset_ref": "/games/vocabulary/wizard-vs-zombie/orb_3x3_pose_sheet.png",
+       "usage_category": "targets (vocabulary orbs with Text translation labels)",
+       "backing_claims": [
+        "WVZ-MECH-008",
+        "WVZ-MECH-014",
+        "WVZ-ASSET-001"
+       ]
+      },
+      {
+       "asset_ref": "/games/vocabulary/wizard-vs-zombie/tile-ruins.png",
+       "usage_category": "environment (floor via Rect fillPatternRepeat='repeat')",
+       "backing_claims": [
+        "WVZ-MECH-008",
+        "WVZ-MECH-014",
+        "WVZ-ASSET-003"
+       ]
+      }
+     ],
+     "mirror_note": "Duplicate byte-identical copies exist under the legacy apps/advantage-games/public/games/wizard-vs-zombie/ path (WVZ-ASSET-007); RA host copies are enumerated in the asset-file-denominator (WVZ-ASSET-008)."
+    },
+    {
+     "scene_id": "vocabulary/wizard-vs-zombie/scene=StartScreen (RA bespoke)",
+     "asset_usage_count": 1,
+     "caller_count": 1,
+     "asset_refs": [
+      {
+       "asset_ref": "zombie_3x3_pose_sheet.png (via withBasePath, frameWidth/frameHeight=3)",
+       "usage_category": "actors (briefing-tab CSS-frame sprite animation)",
+       "backing_claims": [
+        "WVZ-MECH-022"
+       ]
+      }
+     ]
+    },
+    {
+     "scene_id": "vocabulary/wizard-vs-zombie/scene=WizardZombieGame",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "backing_claims": [
+      "WVZ-COMP-001"
+     ],
+     "note": "Component-level asset usage is attributed to the playing scene (runtime loads at WVZ-MECH-008). Explicit zero-usage marker at the component scene level."
+    },
+    {
+     "scene_id": "vocabulary/wizard-vs-zombie/scene=GameStartScreen (AG start)",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "backing_claims": [
+      "WVZ-COMP-004"
+     ],
+     "note": "No ledger claim ties an asset file reference to the AG shared start screen branch. Explicit zero-usage marker."
+    },
+    {
+     "scene_id": "vocabulary/wizard-vs-zombie/scene=GameEndScreen (AG ended)",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "backing_claims": [
+      "WVZ-COMP-005"
+     ],
+     "note": "No ledger claim ties an asset file reference to the AG end screen branch. Explicit zero-usage marker."
+    },
+    {
+     "scene_id": "vocabulary/wizard-vs-zombie/scene=RA briefing overlay",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "backing_claims": [
+      "WVZ-MECH-023"
+     ],
+     "note": "No ledger claim ties an asset file reference to the RA briefing overlay. Explicit zero-usage marker."
+    },
+    {
+     "scene_id": "vocabulary/wizard-vs-zombie/scene=RA gameover overlay",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "backing_claims": [
+      "WVZ-MECH-024"
+     ],
+     "note": "No ledger claim ties an asset file reference to the RA gameover overlay. Explicit zero-usage marker."
+    },
+    {
+     "scene_id": "vocabulary/wizard-vs-zombie/scene=loading (Grimoire init)",
+     "asset_usage_count": 0,
+     "caller_count": 0,
+     "asset_refs": [],
+     "backing_claims": [
+      "WVZ-TEST-004"
+     ],
+     "note": "No ledger claim ties an asset file reference to the loading scene. Explicit zero-usage marker."
+    }
+   ],
+   "D_asset_usage_non_scene_surfaces": [
+    {
+     "surface": "catalog card",
+     "asset_ref": "/games/cover/wizard-vs-zombie-cover.png (catalog cover binding; 1024x1024 PNG)",
+     "backing_claims": [
+      "WVZ-ID-004",
+      "WVZ-ASSET-005"
+     ]
+    },
+    {
+     "surface": "vocab data file",
+     "asset_ref": "apps/advantage-games/public/vocab/wizard-vs-zombie.json (12 Thai->English pairs)",
+     "backing_claims": [
+      "WVZ-ASSET-006"
+     ]
+    },
+    {
+     "surface": "legacy duplicate asset directory",
+     "asset_ref": "apps/advantage-games/public/games/wizard-vs-zombie/{orb,player,tile-ruins,zombie}_*.png (byte-identical to the vocabulary/ copies)",
+     "backing_claims": [
+      "WVZ-ASSET-007"
+     ]
+    },
+    {
+     "surface": "standalone unreferenced image",
+     "asset_ref": "apps/advantage-games/public/wizard-vs-zombie.png (1168x788 PNG; in the T2 asset-file-denominator at line 5837 but not referenced from any wizard-vs-zombie source file)",
+     "backing_claims": [
+      "WVZ-ASSET-009"
+     ]
+    },
+    {
+     "surface": "www excluded assets (SLO-WVZ-1 resolved ACCEPT-EXCLUSION)",
+     "asset_ref": "apps/www-reading-advantage/wizard-vs-zombie.mp3 (not in the T2 asset-file-denominator; unreferenced) + apps/www-reading-advantage/public/images/wizard-vs-zombie.png (byte-identical to the denominated advantage-games standalone PNG)",
+     "backing_claims": [
+      "WVZ-ASSET-010",
+      "WVZ-ASSET-009"
+     ],
+     "note": "Excluded from the gameplay cohort scope by stop-loss-resolutions-batch-a.md; carried as visible unknowns, not as mapper findings."
+    }
+   ],
+   "F_visible_unknowns": [
+    "apps/www-reading-advantage/wizard-vs-zombie.mp3 and apps/www-reading-advantage/public/images/wizard-vs-zombie.png are absent from the T2 asset-file-denominator (WVZ-ASSET-010, WVZ-ASSET-009); SLO-WVZ-1 resolved ACCEPT-EXCLUSION by stop-loss-resolutions-batch-a.md (PNG excluded by byte-identicality to the denominated AG PNG; MP3 excluded by cohort scope).",
+    "RA test references 'Arcane Survival' + 'Start Survival' but the RA component renders 'Game Rules' and StartScreen.tsx uses t('wizardVsZombie.startGame') (WVZ-TEST-008).",
+    "RA Difficulty type retains 4 tiers including 'extreme' (WVZ-STT-005, WVZ-HIST-004); AG has only 3 tiers (WVZ-STT-004).",
+    "apps/advantage-games/public/games/wizard-vs-zombie/* (legacy path) is byte-identical to public/games/vocabulary/wizard-vs-zombie/* (WVZ-ASSET-007).",
+    "AG completion route is a factory POST from createCompleteRoute() with force-static (WVZ-ROUTE-003); the RA completion route is next-connect + protect + WizardZombieController.completeGame (WVZ-ROUTE-005), and the RA ranking route does not exist in the AG host (WVZ-ROUTE-007)."
+   ]
+  }
+ }
+}
