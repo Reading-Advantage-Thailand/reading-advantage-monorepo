@@ -1,0 +1,174 @@
+{
+  "schema_version": "apk-evidence-collector-report.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 1: Batch A evidence packages",
+  "role": "evidence-collector",
+  "task_id": "evidence-collector:castle-defense:t4-batch-a",
+  "collector_agent": "evidence-collector-castle-defense:t4:2026-07-20",
+  "game": "castle-defense",
+  "canonical_identity": "sentence/castle-defense",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "t2_accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+  "t2_accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+  "t3_accepted_pilot_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+  "generated_at": "2026-07-20T00:00:00Z",
+  "claims_authored": 139,
+  "claims_total": 139,
+  "claims_by_category": {
+    "asset": 17,
+    "history": 11,
+    "identity": 10,
+    "mechanic": 40,
+    "negative-fixture": 3,
+    "responsive": 9,
+    "route": 12,
+    "scene-state": 15,
+    "test": 12,
+    "transition": 10
+  },
+  "negative_fixtures": [
+    {
+      "claim_id": "CD-NEG-001",
+      "covers": "unsupported XP multiplier injection",
+      "expected_disposition": "REJECT"
+    },
+    {
+      "claim_id": "CD-NEG-002",
+      "covers": "generic defense-template substitution",
+      "expected_disposition": "REJECT"
+    },
+    {
+      "claim_id": "CD-NEG-003",
+      "covers": "regex-keyword responsive template",
+      "expected_disposition": "REJECT"
+    }
+  ],
+  "confidence_counts": {
+    "high": 131,
+    "medium": 5,
+    "low": 3
+  },
+  "evidence_class_counts": {
+    "asset": 18,
+    "current-source": 80,
+    "history": 11,
+    "negative-fixture": 3,
+    "route": 15,
+    "test": 12
+  },
+  "hosts_with_copies": [
+    {
+      "host": "apps/advantage-games",
+      "disposition": "canonical-current",
+      "copy_paths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+        "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "apps/advantage-games/src/lib/games/castleDefense.ts"
+      ]
+    },
+    {
+      "host": "apps/reading-advantage",
+      "disposition": "current-host-copy-with-implementation-divergences",
+      "copy_paths": [
+        "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+        "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+        "apps/reading-advantage/lib/games/castleDefense.ts"
+      ]
+    },
+    {
+      "host": "apps/reading-advantage/public",
+      "disposition": "legacy-vocabulary-assets-only",
+      "copy_paths": [
+        "apps/reading-advantage/public/games/vocabulary/castle-defense/background.png",
+        "apps/reading-advantage/public/games/vocabulary/castle-defense/castles_3x2_sheet.png",
+        "apps/reading-advantage/public/games/vocabulary/castle-defense/skeletons.png"
+      ]
+    }
+  ],
+  "t2_record_reconciliation": {
+    "identity_records": 1,
+    "source_records": 83,
+    "source_record_types": {
+      "file": 40,
+      "graph": 36,
+      "copy": 4,
+      "identity": 1,
+      "route": 2
+    },
+    "scene_records": 4,
+    "asset_records": 57,
+    "historical_source_records": 2,
+    "phase3_selected_records": 264,
+    "phase3_selected_records_with_blocking": 0,
+    "phase3_selected_records_unmatched": 0
+  },
+  "visible_unknowns": [
+    "The canonical component configures /api/v1/games/castle-defense/ranking, while the accepted advantage-games source denominator has no matching ranking route; reading-advantage has a protected ranking route.",
+    "The three legacy reading-advantage vocabulary assets have accepted asset records but no canonical vocabulary implementation source record; runtime use and provenance are unresolved.",
+    "Measured responsive scaling and compact/wide utility classes exist, but no explicit matchMedia or named compact/wide profile contract exists.",
+    "The canonical completion callback test is named but only asserts that the active stage renders; it does not force a terminal state.",
+    "The accepted T2 source inventory excludes the server controller implementation imported by protected reading-advantage routes; this collector did not reinterpret that accepted scope as a denominator amendment or cite the controller blob."
+  ],
+  "stop_loss_observations": [
+    {
+      "id": "SLO-CD-1",
+      "kind": "unsupported-factual-claims",
+      "count": 0,
+      "disposition": "PASS-CONTINUE"
+    },
+    {
+      "id": "SLO-CD-2",
+      "kind": "denominator-mismatches",
+      "count": 0,
+      "disposition": "PASS-CONTINUE"
+    },
+    {
+      "id": "SLO-CD-3",
+      "kind": "unresolved-citation-ranges",
+      "count": 0,
+      "disposition": "PASS-CONTINUE"
+    },
+    {
+      "id": "SLO-CD-4",
+      "kind": "phase3-blocking-or-unmatched-records",
+      "count": 0,
+      "disposition": "PASS-CONTINUE"
+    }
+  ],
+  "budget_declaration": {
+    "schema_version": "apk-role-budget-declaration.v1",
+    "role": "evidence-collector",
+    "frozen_resource_ceiling": {
+      "bytes_read": 268435456,
+      "command_invocations": 120,
+      "source_files": 100
+    },
+    "actual_usage": {
+      "bytes_read": 11858850,
+      "command_invocations": 47,
+      "source_files": 51,
+      "files_read": 61
+    },
+    "measurement_basis": {
+      "bytes_read": "SHA-256 input-byte totals for 42 baseline Castle Defense source/history files plus 9 accepted T2/T3 artifact files",
+      "command_invocations": "Shell command invocations counted through final verification, including git show, Python validation, and commit plumbing",
+      "source_files": "42 baseline source/history files plus 9 accepted T2/T3 evidence files",
+      "files_read": "Frozen evidence files plus authoritative templates, protocol, dispatch, and predecessor manifests"
+    },
+    "budget_declaration_sha256": "e8ea519f45dec75994ef012056db7746554fa5d5b6e2859093e4409793e5586e"
+  },
+  "prompt_sha256": "04ca25b7547501cf85151b8377067d679280024824232fc958f239ee66f136ba",
+  "actual_context_manifest_sha256": "c5b64484f4cb0ee6ee68a2707d1b43757d4310e6bf11702fd563333ca452e98b",
+  "output_hashes": {
+    "castle-defense-claim-ledger.json": "ddb98a7c61f73cf4b5dc71dafa21ce652aeccaea2fc36dcf4f604aabd0848df3",
+    "castle-defense-evidence-method.md": "60d0aa3e30cfaa34d53c4c81fe703afa0469af59c2dddfa43c926b89bf622d62"
+  },
+  "commit_sha": null,
+  "final_response_sha256": null,
+  "acceptance": "not-claimed",
+  "role_boundary_notes": [
+    "No file under measure/archive/apk_source_denominator_inventory_20260712/ was modified.",
+    "No track registry, plan, or orchestrator file was modified.",
+    "The ledger's negative fixtures are explicit rejected propositions and are excluded from accepted factual-claim counts."
+  ]
+}

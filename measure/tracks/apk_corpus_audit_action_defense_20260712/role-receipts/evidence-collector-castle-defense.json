@@ -1,0 +1,92 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-self-attested",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 1: Batch A evidence packages",
+  "role": "evidence-collector",
+  "task_id": "evidence-collector:castle-defense:t4-batch-a",
+  "game": "castle-defense",
+  "canonical_identity": "sentence/castle-defense",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "spawn_id": "evidence-collector-castle-defense:t4:2026-07-20",
+  "parent_ancestry_ids": [],
+  "fork_turns": "none",
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "prompt_sha256": "04ca25b7547501cf85151b8377067d679280024824232fc958f239ee66f136ba",
+  "actual_context_manifest_sha256": "c5b64484f4cb0ee6ee68a2707d1b43757d4310e6bf11702fd563333ca452e98b",
+  "start_event_id": "castle-defense-t4-evidence-start:2026-07-20T00:00:00Z",
+  "end_event_id": "castle-defense-t4-evidence-end:2026-07-20T00:00:00Z",
+  "timing_note": "Harness does not expose provider session/message event IDs; logical event IDs are role-scoped markers. Session activity is bounded by the outputs commit and the receipt-bind commit.",
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/castle-defense-claim-ledger.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/castle-defense-evidence-method.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/castle-defense-evidence-final-report.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-castle-defense.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/castle-defense-claim-ledger.json": "ddb98a7c61f73cf4b5dc71dafa21ce652aeccaea2fc36dcf4f604aabd0848df3",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/castle-defense-evidence-method.md": "60d0aa3e30cfaa34d53c4c81fe703afa0469af59c2dddfa43c926b89bf622d62",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/castle-defense-evidence-final-report.json": "2666afae99dfcecfd1068f9a899931f6e47a2e83e287f672c6e1fb63e96cb156"
+  },
+  "output_sha256": "ddb98a7c61f73cf4b5dc71dafa21ce652aeccaea2fc36dcf4f604aabd0848df3",
+  "output_sha256_basis": "SHA-256 of the castle-defense-claim-ledger.json file, the primary role artifact.",
+  "budget_declaration": {
+    "schema_version": "apk-role-budget-declaration.v1",
+    "role": "evidence-collector",
+    "frozen_resource_ceiling": {
+      "bytes_read": 268435456,
+      "command_invocations": 120,
+      "source_files": 100
+    },
+    "actual_usage": {
+      "bytes_read": 11858850,
+      "command_invocations": 47,
+      "source_files": 51,
+      "files_read": 61
+    },
+    "measurement_basis": {
+      "bytes_read": "SHA-256 input-byte totals for 42 baseline Castle Defense source/history files plus 9 accepted T2/T3 artifact files",
+      "command_invocations": "Shell command invocations counted through final verification, including git show, Python validation, and commit plumbing",
+      "source_files": "42 baseline source/history files plus 9 accepted T2/T3 evidence files",
+      "files_read": "Frozen evidence files plus authoritative templates, protocol, dispatch, and predecessor manifests"
+    },
+    "preserved_work": "unrelated working-tree changes were not staged"
+  },
+  "budget_declaration_sha256": "e8ea519f45dec75994ef012056db7746554fa5d5b6e2859093e4409793e5586e",
+  "commit_sha": null,
+  "findings": {
+    "claims_authored": 139,
+    "negative_fixtures": 3,
+    "stop_loss_observations": [
+      {
+        "id": "SLO-CD-1",
+        "kind": "unsupported-factual-claims",
+        "count": 0
+      },
+      {
+        "id": "SLO-CD-2",
+        "kind": "denominator-mismatches",
+        "count": 0
+      },
+      {
+        "id": "SLO-CD-3",
+        "kind": "unresolved-citation-ranges",
+        "count": 0
+      },
+      {
+        "id": "SLO-CD-4",
+        "kind": "phase3-blocking-or-unmatched-records",
+        "count": 0
+      }
+    ],
+    "commit_title_deviation": "Initial commit subject used sentence case 't4 evidence collector for castle defense'; the commitlint subject-case hook rejects that casing, so the committed subject is lower-case: 'chore(measure): t4 evidence collector for castle defense (track_id: apk_corpus_audit_action_defense_20260712)'."
+  },
+  "acceptance": "not-claimed",
+  "preserved_user_work": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md (orchestrator predecessor-binding edits, left uncommitted)",
+    ".opencode/goals/state.json* (unrelated)",
+    "apps/sales-advantage/next-env.d.ts (unrelated)",
+    "measure/archive/apk_three_game_truth_pilot_20260712/metadata.json (unrelated)",
+    "various __pycache__ artifacts (generated/ignorable)"
+  ]
+}
