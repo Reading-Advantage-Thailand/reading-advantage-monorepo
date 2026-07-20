@@ -1,0 +1,74 @@
+{
+ "schema_version": "apk-evidence-collector-report.v1",
+ "track_id": "apk_corpus_audit_action_defense_20260712",
+ "role": "evidence-collector",
+ "task_id": "evidence-collector:magic-defense:t4-batch-a",
+ "collector_agent": "evidence-collector-magic-defense:t4:2026-07-20",
+ "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+ "generated_at": "2026-07-20T00:00:00Z",
+ "claims_total": 110,
+ "claims_by_category": {
+  "identity": 16,
+  "mechanic": 22,
+  "asset": 16,
+  "route": 8,
+  "test": 9,
+  "history": 9,
+  "scene-state": 14,
+  "transition": 6,
+  "responsive": 5,
+  "negative_fixture": 5
+ },
+ "negative_fixtures": [
+  {
+   "claim_id": "MD-NEG-001",
+   "covers": "mechanic (XP-multiplier injection, must FAIL with REAL citation; controller.ts:48-60 + page.tsx:61 contain no multiplier branch)",
+   "expected_disposition": "FAIL"
+  },
+  {
+   "claim_id": "MD-NEG-002",
+   "covers": "architecture (generic /games/_shared/defense-template.tsx, REJECT — directory-only claim, no such file exists in the repo)",
+   "expected_disposition": "REJECT"
+  },
+  {
+   "claim_id": "MD-NEG-003",
+   "covers": "responsive (regex matchMedia responsive template, REJECT — mechanical absence: matchMedia substring does not appear in any magic-defense/shared file)",
+   "expected_disposition": "REJECT"
+  },
+  {
+   "claim_id": "MD-NEG-004",
+   "covers": "asset (directory-only citation, REJECT — validation failure regardless of truth value)",
+   "expected_disposition": "REJECT"
+  },
+  {
+   "claim_id": "MD-NEG-005",
+   "covers": "mechanic (fabricated Redis sorted-set claim, REJECT — no Redis/zadd/sorted-set identifiers in magic-defense-controller.ts)",
+   "expected_disposition": "REJECT"
+  }
+ ],
+ "output_hashes": {
+  "magic-defense-claim-ledger.json": "PENDING-COMMIT-BIND",
+  "magic-defense-evidence-method.md": "187e916b38870ff03552fcbee8cef79b3563940cd037e1b05f862839bd8ec591"
+ },
+ "stop_loss_observations": [
+  {
+   "id": "SLO-MD-1",
+   "kind": "denominator-gap-candidate",
+   "detail": "apps/reading-advantage/server/controllers/magic-defense-controller.ts (sha256 f356ad6880307f274c85d851caaa185fb69c62d808f29e83084c9d2ab6f30eff, 314 lines) exists at baseline and is imported by three in-denominator API routes (complete/ranking/vocabulary) but has no accepted-denominator record. No ledger claim cites its content (only the importing route lines reference it). Discovery auditor / orchestrator must decide whether this is a denominator amendment or an accepted exclusion before mapping proceeds. Mirrors the dragon-flight-controller situation flagged in DF-SLO-1."
+  }
+ ],
+ "visible_unknowns": [
+  "advantage-games RankingDialog fetches /api/v1/games/magic-defense/ranking which exists only in reading-advantage (MD-ROUTE-008 / MD-ID-013). Browser audit needed.",
+  "E2E spec asserts page.locator('canvas').first() visible (MD-TEST-009) while implementation is DOM/framer-motion; known debt in compliance audit (MD-HIST-006).",
+  "StartScreen uses 'normal' difficulty id while RankingDialog uses 'medium' (same host, two different difficulty keys). Controller writes 'EASY'/'NORMAL'/'HARD'/'EXTREME' so 'medium' tab may never match any persisted row.",
+  "Compliance audit (MD-HIST-006) reports 3 architecture FAILs (React-Konva, pure tick functions, rAF loop) explicitly documented as known debt.",
+  "Deleted historical vocab fixture (commit 8b98aed0) was Thai->English direction; current advantage-games vocabulary is English->Thai via SAMPLE_VOCABULARY.",
+  "No numeric ceiling was declared by the orchestrator prompt before source work; 'unmeasured' would otherwise block checkpoint (matching rpg-battle receipt convention)."
+ ],
+ "role_boundary_notes": [
+  "No file under measure/archive/apk_source_denominator_inventory_20260712/ was modified.",
+  "No other role-receipts were read for content reuse or touched (the pilot evidence-collector receipt was read once for schema shape only).",
+  "plan.md task markers are left to the orchestrator per role isolation.",
+  "Catalog-route-vs-shared-implementation split explicitly noted: vocabulary/magic-defense is the catalog route only; implementation lives in shared game/ folder + magicDefenseConfig.ts + useGameStore.ts."
+ ]
+}
