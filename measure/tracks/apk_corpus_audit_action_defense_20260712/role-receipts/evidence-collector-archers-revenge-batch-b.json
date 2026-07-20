@@ -1,0 +1,39 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "role": "evidence-collector-archers-revenge-batch-b",
+  "task_id": "B2-COLLECT-ARCHERS",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "386084b4cff7358bf03a223de44be83954b069a1",
+  "allowed_input_manifest_sha256": "e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+  "prompt_sha256": null,
+  "actual_context_manifest_sha256": null,
+  "provider_spawn_id": null,
+  "parent_ancestry_ids": null,
+  "fork_turns": null,
+  "raw_isolation_export": null,
+  "start_event_id": null,
+  "end_event_id": null,
+  "start_timestamp": null,
+  "end_timestamp": null,
+  "final_response_sha256": null,
+  "unavailable_metadata_note": "The execution environment did not expose tool-attested prompt, ancestry, event, final-response, or raw-isolation metadata. Null records unavailable data; it is not an attestation and blocks acceptance until the orchestrator supplies corroborated evidence.",
+  "prior_role_history": [],
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b.json"
+  ],
+  "output_sha256": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b.json": "2a9f7fd06ff60f639ccb4c997561e82ba709a00af627d6c0bea9d03f3aaf16e4",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b.md": "0fdc1423feb2ca577f7f32f0ce33f21db7fb550a8d29b78a350016875efee087",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b.json": "109d13c73429265af57fa0a7887a541c347b6f9761d18f1dcbd2b3e66511aea3"
+  },
+  "self_hash": null,
+  "commit_sha": null,
+  "findings": [{"severity":"medium","id":"AR-B-RECEIPT-001","detail":"Required provider isolation and response provenance fields are unavailable in this environment; package must not enter acceptance without a tool-attested superseding receipt."}],
+  "resource_use": {"actual":{"source_bytes_read":2500000,"source_files_read":17,"command_invocations":16,"elapsed_minutes":30,"records_authored":55},"ceilings":{"source_bytes_read":52428800,"source_files_read":120,"command_invocations":80,"elapsed_minutes":45,"records_authored":300}},
+  "receipt_status": "non-authoritative pending provenance completion"
+}
