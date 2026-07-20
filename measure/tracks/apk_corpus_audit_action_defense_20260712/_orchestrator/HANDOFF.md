@@ -49,3 +49,21 @@ T4–T7 may run in parallel after T3 acceptance (already conditional). T8 starts
 - The orchestrator (root coordinator) holds `forbidden_roles: [discovery-auditor, evidence-collector, requirements-mapper, truth-test-author, adversarial-reviewer]` per `phase0-role-ownership-manifest.json`.
 - The orchestrator (under delegated product-owner authority) is the ONLY role that may write `product-owner-acceptance.json` and `accepted-*manifest.json`.
 - Each track must close by moving its directory to `measure/archive/` and flipping its `metadata.json.status` to `done`.
+
+## Batch-A Evidence Collector Resolution (2026-07-20)
+
+- Three evidence collectors dispatched in parallel via coder-minimax-m3 subagents (Kimi coders returned empty in the dispatch session).
+- Castle Defense (sentence/canonical): 139 claims, 3 neg fixtures, 0 SLO. Outputs `040802b3`, bind `9cfc102b`.
+- Magic Defense (vocabulary/shared-game-impl): 110 claims, 5 neg fixtures, SLO-MD-1 (magic-defense-controller denominator gap). Outputs `6998570b`, bind `d119bbad`.
+- Wizard vs Zombie (vocabulary): 77 claims, 4 neg fixtures, SLO-WVZ-1 (www asset denominator gap). Outputs `91416b97`, bind `20af6417`. NOTE: wvz subagent produced 4 bind commits (`2f551701`, `01e4615e`, `2bcb883c`, `20af6417`); final state on `20af6417` is correct, intermediate binds are noise.
+- Both SLOs resolved as conditional-item + exclusion by orchestrator (delegated product-owner authority). See `stop-loss-resolutions-batch-a.md`. T2 denominator hash `d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729` remains canonical.
+
+## Known minor process imperfections
+
+- Magic Defense role-receipt has `final_response_sha256: "PENDING-RECEIPT-BIND"` (placeholder not updated). Functional impact: none; documentation gap.
+- Castle Defense role-receipt lacks `final_response_sha256` field. Functional impact: none; documentation gap.
+- Wizard vs Zombie role-receipt and final-report `commit_sha` and `final_response_sha256` are consistent on the latest bind commit; intermediate binds should be ignored.
+
+## Next concrete action (next session)
+
+Dispatch one requirements-mapper subagent (coder-minimax-m3) for batch-A. The mapper consumes the three evidence-ledgers + the stop-loss resolutions file and produces `pilot-blueprint-batch-a.json` + `mapper-hypotheses-batch-a.md` + `mapper-final-report-batch-a.json` + `role-receipts/requirements-mapper-batch-a.json`. After the mapper lands, dispatch truth-test-author, browser-auditor (skip if no runnable routes), asset-auditor, and adversarial-reviewer, then product-owner-acceptance writes `candidate-cohort-manifest-batch-a.json` + `product-owner-acceptance-batch-a.json` + `accepted-cohort-manifest-batch-a.json`. Bind the accepted-cohort-manifest sha256 into the program-wide successor gate.
