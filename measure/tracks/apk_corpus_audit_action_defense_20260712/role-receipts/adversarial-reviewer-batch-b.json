@@ -1,0 +1,53 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-REVIEW",
+  "role": "adversarial-reviewer-batch-b",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "9455c2e777e8c8ea642612b94e83b7a5f375dec8",
+  "allowed_input_manifest_sha256": "e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+  "prompt_sha256": null,
+  "actual_context_manifest_sha256": null,
+  "provider_spawn_id": null,
+  "parent_ancestry_ids": null,
+  "fork_turns": null,
+  "raw_isolation_export_sha256": null,
+  "start_event_id": null,
+  "end_event_id": null,
+  "start_timestamp": null,
+  "end_timestamp": null,
+  "final_response_sha256": null,
+  "commit_sha": null,
+  "unavailable_provenance_note": "The execution API supplied no canonical raw prompt, actual-context manifest, provider spawn/session/ancestry, fork_turns attestation, raw isolation export, start/end events, final-response bytes, or commit. Nulls truthfully record unavailable proof and are non-passing provenance values; they do not attest independence.",
+  "prior_role_history": [],
+  "output_paths_and_sha256": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-adversarial-review.json",
+      "sha256": "773731937021132f7dab8c00388244bbd3f47360122405811e6eec4df58fb58c"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot contain its own final SHA-256 without changing those bytes; an external append-only commit/event envelope remains required."
+    }
+  ],
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-b.md": "7b3b5f3e4c0f8ba1309c2d22b0a815771f5c26f647cc7cb883ea84f0a03d00dc",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v2.py": "c7cc96ebcbdd31dad929e063e5ec055b73e0d728a97a7ad2c4ebfa82393753e8",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-discovery-audit-v2.json": "f0f27734d22b8ec376bbf8b1fe96574a75f2c293766bee2440c0484164dd1daa",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-asset-usage-audit.json": "845b36d54ec1677982c7e7f537d1282fe4caec86677302555998a834b6f8a9a8",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit.json": "00bed85a95a043c9f404af1151a289d6cf16d064741b8cb00079c2c55cec8032",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-budget-declaration.json": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f"
+  },
+  "resource_use": {
+    "ceilings": {"source_bytes_read": 20971520, "source_files_read": 80, "command_invocations": 50, "elapsed_minutes": 25, "records_authored": 240},
+    "actual": {"source_bytes_read": 500000, "source_files_read": 29, "command_invocations": 7, "elapsed_minutes": 23, "records_authored": 5},
+    "measurement_note": "Conservative labeled accounting for strategy, protocol, anti-pattern, active tests, three package sets, browser/asset audits, and receipts read during this review."
+  },
+  "findings": {"critical": 1, "high": 1, "medium": 1, "low": 1},
+  "status": "blocked; no candidate or acceptance output authored",
+  "append_only": true,
+  "supersedes": null
+}
