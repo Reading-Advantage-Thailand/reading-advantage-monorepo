@@ -1,0 +1,71 @@
+{
+ "schema_version": "apk-evidence-collector-report.v1",
+ "track_id": "apk_corpus_audit_action_defense_20260712",
+ "role": "evidence-collector",
+ "task_id": "evidence-collector:wizard-vs-zombie:t4-batch-a",
+ "collector_agent": "evidence-collector-wizard-vs-zombie:t4:2026-07-20",
+ "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+ "generated_at": "2026-07-20T00:00:00Z",
+ "commit_sha": null,
+ "final_response_sha256": null,
+ "claims_total": 77,
+ "claims_by_category": {
+  "asset": 10,
+  "component": 6,
+  "history": 4,
+  "identity": 9,
+  "mechanic": 24,
+  "negative_fixture": 4,
+  "route": 7,
+  "state": 5,
+  "test": 8
+ },
+ "negative_fixtures": [
+  {
+   "claim_id": "WVZ-NEG-001",
+   "covers": "mechanic (XP-multiplier injection)",
+   "expected_disposition": "REJECT"
+  },
+  {
+   "claim_id": "WVZ-NEG-002",
+   "covers": "mechanic (generic defense-template substitution)",
+   "expected_disposition": "REJECT"
+  },
+  {
+   "claim_id": "WVZ-NEG-003",
+   "covers": "mechanic (regex-keyword matchMedia responsive template)",
+   "expected_disposition": "REJECT"
+  },
+  {
+   "claim_id": "WVZ-NEG-004",
+   "covers": "identity (withdrawn-id membership)",
+   "expected_disposition": "REJECT"
+  }
+ ],
+ "output_hashes": {
+  "wizard-vs-zombie-claim-ledger.json": "1cb9eac5a84eca0556aca2648bdea62a63005733220bf2ef0d74f0a292f36dac",
+  "wizard-vs-zombie-evidence-method.md": "b58f1bea180e339e14e70a4eeb91215af013ce2fd567c8e14a986833b1057b70"
+ },
+ "stop_loss_observations": [
+  {
+   "id": "SLO-WVZ-1",
+   "kind": "denominator-gap-candidate",
+   "detail": "apps/www-reading-advantage/wizard-vs-zombie.mp3 (sha256 47dd1e48b91b3f07a9ef3ad760c299c85ffab8dae5521ca0695497396bc35e8c) and apps/www-reading-advantage/public/images/wizard-vs-zombie.png (sha256 794b0c7937f31e04fab5b16acdf61ad8fb09e468a4a60a63b223432147c7d802) exist at baseline but are absent from the T2 asset-file-denominator. The www PNG is byte-identical to apps/advantage-games/public/wizard-vs-zombie.png which IS recorded at asset-file-denominator line 5837. Both files are unreferenced from any wizard-vs-zombie source file. Decision required from orchestrator / asset auditor before mapping."
+  }
+ ],
+ "visible_unknowns": [
+  "apps/www-reading-advantage/wizard-vs-zombie.mp3 not in T2 asset-file-denominator (SLO-WVZ-1)",
+  "apps/www-reading-advantage/public/images/wizard-vs-zombie.png not in T2 asset-file-denominator (SLO-WVZ-1)",
+  "RA test references 'Arcane Survival' + 'Start Survival' but RA component renders 'Game Rules' + StartScreen.tsx uses t('wizardVsZombie.startGame') (WVZ-TEST-008)",
+  "RA Difficulty type retains 4 tiers including 'extreme' (lib line 33 + StartScreen DIFFICULTY_CONFIG lines 66-87); AG has only 3 tiers (audit fix #13 not adopted in RA)",
+  "apps/advantage-games/public/games/wizard-vs-zombie/* (legacy path) is byte-identical to public/games/vocabulary/wizard-vs-zombie/* (current path)",
+  "page back-href differs: AG='/student/games' (page.tsx line 81) vs RA='/' (page-ra.tsx line 93)",
+  "AG completion route is factory POST from createCompleteRoute() with force-static; RA completion route is next-connect + protect + WizardZombieController.completeGame",
+  "apps/primary-advantage contains no wizard-vs-zombie paths at baseline"
+ ],
+ "role_boundary_notes": [
+  "No file under measure/archive/apk_source_denominator_inventory_20260712/ was modified.",
+  "No other role-receipts were read for content reuse (only the T2 denominator manifests and the dragon-flight role-receipt for schema shape were inspected).",
+  "plan.md task markers are left to the orchestrator per role isolation."
+ ]
+}

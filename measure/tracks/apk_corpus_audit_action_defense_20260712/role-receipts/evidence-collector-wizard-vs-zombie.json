@@ -1,0 +1,45 @@
+{
+ "schema_version": "apk-role-receipt.v1",
+ "status": "complete-self-attested",
+ "track_id": "apk_corpus_audit_action_defense_20260712",
+ "phase": "Phase 1: Batch A evidence packages",
+ "role": "evidence-collector",
+ "task_id": "evidence-collector:wizard-vs-zombie:t4-batch-a",
+ "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+ "spawn_id": "evidence-collector-wizard-vs-zombie:t4:2026-07-20",
+ "parent_ancestry_ids": [],
+ "t2_accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+ "t2_accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+ "t3_accepted_pilot_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+ "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+ "output_paths": [
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-claim-ledger.json",
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-evidence-method.md",
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-evidence-final-report.json",
+  "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-wizard-vs-zombie.json"
+ ],
+ "budget_declaration": {
+  "claims_authored": 77,
+  "negative_fixtures": 4,
+  "files_read": 28,
+  "command_invocations": null,
+  "stop_loss_observations": 1
+ },
+ "findings": {
+  "claims_authored": 77,
+  "negative_fixtures": 4,
+  "stop_loss_observations": [
+   {
+    "id": "SLO-WVZ-1",
+    "kind": "denominator-gap-candidate",
+    "detail": "apps/www-reading-advantage/wizard-vs-zombie.mp3 (sha256 47dd1e48b91b3f07a9ef3ad760c299c85ffab8dae5521ca0695497396bc35e8c) and apps/www-reading-advantage/public/images/wizard-vs-zombie.png (sha256 794b0c7937f31e04fab5b16acdf61ad8fb09e468a4a60a63b223432147c7d802) exist at baseline but are absent from the T2 asset-file-denominator. The www PNG is byte-identical to apps/advantage-games/public/wizard-vs-zombie.png which IS in the denominator at line 5837. Both files are unreferenced from any wizard-vs-zombie source file."
+   }
+  ],
+  "commit_title_deviation": "Requested commit title used sentence case ('T4 evidence collector for wizard vs zombie'); repo commitlint subject-case hook rejects that casing, so the committed subject is lower-case: 'chore(measure): t4 evidence collector for wizard vs zombie (track_id: apk_corpus_audit_action_defense_20260712)'."
+ },
+ "role_boundary_notes": [
+  "No file under measure/archive/apk_source_denominator_inventory_20260712/ was modified.",
+  "No other role-receipts were read for content reuse (only the dragon-flight role-receipt for schema shape was inspected).",
+  "plan.md task markers are left to the orchestrator per role isolation."
+ ]
+}
