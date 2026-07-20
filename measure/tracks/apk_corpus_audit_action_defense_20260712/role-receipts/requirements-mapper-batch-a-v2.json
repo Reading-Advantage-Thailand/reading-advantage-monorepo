@@ -63,7 +63,7 @@
   "output_sha256_basis": "SHA-256 of batch-a-blueprint-v2.json, the primary role artifact.",
   "final_response_sha256": "f9bdab12e50e3d23ea0d41684860cd0e5a73f39ad2c6d45bc851ecf39455a941",
   "final_response_sha256_basis": "SHA-256 of mapper-final-report-batch-a-v2.json, used as the role's final response artifact following the v1 mapper receipt convention.",
-  "commit_sha": "<pending-orchestrator-bind>",
+  "commit_sha": "2b23abe3c841b87f7b73a83e80f6d6de47249f55",
   "budget_declaration": {
     "schema_version": "apk-role-budget-declaration.v1",
     "role": "requirements-mapper",
