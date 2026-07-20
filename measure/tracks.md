@@ -48,7 +48,7 @@ Two parallel programs are in flight; priority order when picking the next track:
   depends on enforcement plus the accepted Kernel Task 1 package scaffold; it
   may then run alongside the remaining kernel work. Capability-bound handlers
   depend on full kernel acceptance.
-- [~] **Track: Company Employee Identity and SSO** *Link: [./tracks/company_identity_sso_20260715/](./tracks/company_identity_sso_20260715/)*
+- [x] **Track: Company Employee Identity and SSO** *Link: [./tracks/company_identity_sso_20260715/](./tracks/company_identity_sso_20260715/)*
   Create a separate employee identity database and first-party Accounts app,
   provide shared SSO and app-scoped roles for Marketing, Sales Advantage, and
   Codecamp Advantage, and safely migrate existing Codecamp accounts. Coordinates
