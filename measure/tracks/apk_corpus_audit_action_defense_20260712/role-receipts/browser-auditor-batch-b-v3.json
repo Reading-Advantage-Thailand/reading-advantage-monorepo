@@ -1,0 +1,106 @@
+{
+  "schema": "apk-role-receipt.v3",
+  "status": "additive browser remediation authored; one runnable and two bounded non-runnable dispositions captured; independent review and truth-selector supersession remain pending",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-BROWSER",
+  "role": "browser-auditor-batch-b-v3",
+  "role_identity": "browser-auditor-batch-b-v3",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "25e48967d461a3d4a8a13e152350b0edecc5c3c7",
+  "allowed_input_manifest_sha256": "e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+  "prompt_sha256": null,
+  "prompt_metadata_note": "The exact provider-level prompt byte stream and prompt event were not exported to this role, so no prompt hash is invented.",
+  "actual_context_manifest_sha256": "b8a23f2a28119db2c2d65b3b6b7180921f9711b1fcfc027bebdc906cf9cb12ca",
+  "actual_context_manifest_method": "SHA-256 of the UTF-8 canonical JSON object formed by sorting the 19 input_hashes keys and serializing with separators comma/colon.",
+  "spawn_id": null,
+  "provider_session_id": null,
+  "parent_ancestry_ids": null,
+  "fork_turns": null,
+  "start_event_id": null,
+  "end_event_id": null,
+  "start_timestamp": null,
+  "end_timestamp": "2026-07-20T21:30:08+07:00",
+  "final_response_sha256": null,
+  "orchestration_provenance_note": "No provider-exported spawn, ancestry, isolation, event, exact-start-time, or final-response attestation was available. Nulls are deliberate and no unavailable orchestration provenance is fabricated.",
+  "browser_session": {
+    "tool": "Kimi WebBridge",
+    "daemon_url": "http://127.0.0.1:10086",
+    "session_id": "apk-batch-b-browser-v3",
+    "tab_id": 915223847,
+    "health": {"running":true,"extension_connected":true,"daemon_version":"v1.11.1","extension_version":"1.11.3"},
+    "first_navigation_new_tab": true,
+    "network_capture_started": true,
+    "network_capture_stopped": true,
+    "close_session_result": {"success":true,"closed":1},
+    "other_browser_tools_used": []
+  },
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-b.md": "7b3b5f3e4c0f8ba1309c2d22b0a815771f5c26f647cc7cb883ea84f0a03d00dc",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-discovery-audit-v2.json": "f0f27734d22b8ec376bbf8b1fe96574a75f2c293766bee2440c0484164dd1daa",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit.json": "00bed85a95a043c9f404af1151a289d6cf16d064741b8cb00079c2c55cec8032",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v2.json": "e21af1e125288654ff9f7462ee6401d00e7183d6d2bee40f7cd66f656d611c7f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-role-applicability.json": "71db3e7eb9ac71177d7a555ceb6e43218c9bcbd5ca0afdaa2b5574ace9a38bb4",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-budget-declaration.json": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v3.py": "ef16e043b243fc5f488388a8155b895d403d32161ee2aa532f5470cf9b237692",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-evidence-final-report-batch-b.json": "825a7c00a2e03b45f55749d1b69ee7dfc511080edcad91c116d703c7a321c1d1",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b.json": "109d13c73429265af57fa0a7887a541c347b6f9761d18f1dcbd2b3e66511aea3",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/storm-castle-tower-evidence-final-report-batch-b.json": "034579508f1f57cf46c3e8456524f8ce376fdbfd1a047a3a49bde4e0d877aaa1",
+    "apps/advantage-games/package.json": "8fc83e94fc9f00421bea2430d46143059b9488ce01cba9f77df475cd581c99b3",
+    "apps/advantage-games/next.config.ts": "d1f8c54f63aeaf023de7872b71e0e27cffb4046d79df9a9dce7dc34449d8a518",
+    "apps/advantage-games/src/app/[locale]/layout.tsx": "bb1fb26a0dc78482553750b66a22c0e3a082e5a441707d20cfb5ab903c274d88",
+    "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/village-guardian/page.tsx": "1d30def299d97d0531c1b24c9aa9374e995baa8f256fe86ac7956171e49de16e",
+    "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx": "bdef057d6019a89dacd01b3c264f7cacd9704f2bf3dbc705d92419364e34c102",
+    "apps/advantage-games/src/components/games/game/GameStartScreen.tsx": "a1d696858d4a69fabf359d9d413b07773385e9f8379be736a8d494f98c491cec",
+    "apps/advantage-games/src/components/games/game/GameEndScreen.tsx": "ff2f4b2afc709b78ae08775f73f178f81a66ecf3378dfc092ce78ed59d120d8f",
+    "apps/advantage-games/src/hooks/useSession.ts": "f0e5c364177c18f4b942ff1068782b6a71fab7826dd6e4b30b85646ea4d1e6d9",
+    "apps/advantage-games/src/app/api/v1/games/village-guardian/sentences/route.ts": "5f5fa24105efd6c391a788eb195914e2e52351fa210003f050674954917a954a"
+  },
+  "external_evidence_hashes": {
+    "/tmp/opencode/apk-batch-b-browser-v3-server.log": "1cb51b717d2d95461b0787f4af140ec037e9abb0c0685dee7e74f45a4b42856d"
+  },
+  "prior_role_history": [
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit.json","sha256":"00bed85a95a043c9f404af1151a289d6cf16d064741b8cb00079c2c55cec8032","use":"Read as the immutable first blocked audit; not modified."},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v2.json","sha256":"e21af1e125288654ff9f7462ee6401d00e7183d6d2bee40f7cd66f656d611c7f","use":"Read as the immutable second blocked audit; not modified."}
+  ],
+  "dispositions": {
+    "village-guardian": "runnable-with-disclosed-hidden-tab-scheduler-adapter-for-terminal-state",
+    "archers-revenge": "non-runnable-at-role-revision-after-direct-exact-route-404",
+    "storm-castle-tower": "non-runnable-at-role-revision-after-direct-exact-route-404"
+  },
+  "findings": [
+    {"id":"BROWSER-V3-001","severity":"medium","game":"village-guardian","finding":"Both terminal result submissions returned HTTP 400 because the page payload does not satisfy the completion-route contract.","blocking_browser_disposition":false},
+    {"id":"BROWSER-V3-002","severity":"disclosure","game":"village-guardian","finding":"The WebBridge tab was hidden, and deterministic requestAnimationFrame adapters were needed to reach the timer terminal state; native background-tab timing is not claimed.","blocking_browser_disposition":false},
+    {"id":"BROWSER-V3-003","severity":"high","game":"batch","finding":"The active v3 truth module still reads immutable batch-b-browser-audit.json, so it cannot machine-select this additive v3 remediation.","blocking_browser_disposition":true}
+  ],
+  "privacy": {
+    "student_data_accessed": false,
+    "student_data_records": 0,
+    "unrelated_browser_tabs_accessed": false,
+    "published_browser_artifacts": false,
+    "screenshots_created": 0
+  },
+  "resource_use": {
+    "ceilings": {"source_bytes_read":31457280,"source_files_or_objects_read":100,"command_invocations":70,"elapsed_minutes":40,"claims_or_records_authored":240},
+    "actual": {"source_bytes_read":140825,"source_files_or_objects_read":19,"command_invocations":64,"elapsed_minutes":19,"claims_or_records_authored":68,"browser_interactions":52,"captured_browser_artifacts":0,"asset_candidates_inspected":0},
+    "ceiling_breaches": 0
+  },
+  "output_paths_and_sha256": [
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v3.json","sha256":"521e08b7a1ef9309cdf31277d0f07b99700bb7721d97ee3e371321e70cd1e4ca"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-b-v3.json","sha256":null,"sha256_note":"The receipt cannot embed its own final SHA-256 without changing its own bytes; the final external hash is reported after validation."}
+  ],
+  "active_v3_selector": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v3.py -k 'BatchBBrowserContract' --maxfail=1",
+    "result": "1 failed, 1 passed, 41 deselected; exit 1",
+    "failure": "BatchBBrowserContract.test_browser_records_require_real_behavior_or_reviewed_failure reads immutable batch-b-browser-audit.json and reports village-guardian, archers-revenge, and storm-castle-tower as unreviewed-disposition.",
+    "interpretation": "Expected fail-closed selector drift: the test does not inspect the additive v3 artifact. No green B4 claim is made."
+  },
+  "commit_sha": null,
+  "commit_note": "No commit was created, as instructed.",
+  "final_validation": {
+    "command": "python3 -m json.tool <both v3 JSON files> >/dev/null && git diff --check && sha256sum <both v3 JSON files> && git status --short -- <both v3 JSON files>",
+    "result_note": "The command is run after this receipt is written; its actual result and receipt hash are reported in MEASURE_AGENT_RESULT rather than pre-attested here."
+  },
+  "role_boundary": "Only the two named additive v3 outputs were created. Existing audits, receipts, evidence, tests, source, plans, registries, and acceptance artifacts were not modified."
+}
