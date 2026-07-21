@@ -1,0 +1,43 @@
+{
+  "schema": "apk-requirements-map.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A remediation V2",
+  "task_id": "map-requirements:spellweavers-run:v2",
+  "role": "requirements-mapper-v2",
+  "game": "spellweavers-run",
+  "canonical_identity": "catalog/spellweavers-run",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "a59fef7942b73aee028d7c35f5ece83687c78246",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "status": "mapping-complete-independent-review-pending",
+  "source_fact_policy": "Every mapped statement is a disposition over cited claim IDs from the exact Spellweaver's Run V2 ledger. No uncited source fact, browser observation, or catalog analogy is added.",
+  "mapped_sections": [
+    {"section":"traversal-identity-and-route","disposition":"accepted traversal assignment; current catalog route withheld; no current gameplay or runnable conclusion","backing_claim_ids":["SW-ID-001","SW-ID-002","SW-CUR-001","SW-CUR-002","SW-CUR-003","SW-CUR-004","SW-CUR-005"]},
+    {"section":"historical-scenes-states-transitions","disposition":"historical-source-only; not current implementation","backing_claim_ids":["SW-STATE-001","SW-STATE-002","SW-STATE-007","SW-MOVE-001","SW-MOVE-002","SW-MOVE-003","SW-MOVE-004","SW-STATE-005","SW-COLL-001","SW-TRANS-002","SW-TRANS-003","SW-TRANS-004","SW-TRANS-005","SW-TRANS-007","SW-CART-009","SW-CART-013","SW-CART-014","SW-CART-016"]},
+    {"section":"learning","disposition":"no direct current learning requirement is established; historical word, sentence, answer, score, combo, mana, accuracy, XP, and completion fields remain historical evidence only","backing_claim_ids":["SW-STATE-002","SW-TRANS-002","SW-TRANS-003","SW-TRANS-005","SW-TRANS-007","SW-UI-001","SW-CART-016"]},
+    {"section":"effort","disposition":"historical implementation and test surface is mapped without estimating or standardizing current effort","backing_claim_ids":["SW-HIST-001","SW-HIST-002","SW-HIST-003","SW-HIST-004","SW-CUR-004","SW-CUR-005"]},
+    {"section":"world-traversal-and-camera","disposition":"historical fixed logical surfaces, lanes, orb projection, and collection zone; camera follow is not established","backing_claim_ids":["SW-WORLD-001","SW-WORLD-002","SW-WORLD-003","SW-WORLD-004","SW-CART-004","SW-CART-008","SW-NEG-001"]},
+    {"section":"responsive-and-input","disposition":"historical responsive measurement, uniform scaling, container rules, and input mappings; no browser-observed compact/wide behavior","backing_claim_ids":["SW-RESP-001","SW-RESP-002","SW-RESP-003","SW-RESP-004","SW-INPUT-001","SW-INPUT-002","SW-CART-003","SW-CART-004","SW-NEG-002"]},
+    {"section":"assets","disposition":"current cover binding only; gameplay image and audio remain candidate-only; historical procedural and semantic asset records do not prove current physical use","backing_claim_ids":["SW-ASSET-001","SW-ASSET-003","SW-ASSET-004","SW-CART-001","SW-CART-005","SW-NEG-003"]},
+    {"section":"conflicts","disposition":"ledger records report none-observed conflicts for cited claims; temporal separation is retained rather than reconciled into current behavior","backing_claim_ids":["SW-ID-001","SW-CUR-003","SW-STATE-001","SW-TRANS-004","SW-CART-001","SW-ASSET-003"]}
+  ],
+  "visible_unknowns": [
+    {"topic":"current-gameplay-and-runnable-route","disposition":"unknown; no browser claim is made and no current implementation is promoted","backing_claim_ids":["SW-CUR-001","SW-CUR-002","SW-CUR-003","SW-CUR-004","SW-CUR-005"]},
+    {"topic":"current-movement-camera-collision-and-transitions","disposition":"unknown; historical records do not establish current behavior","backing_claim_ids":["SW-MOVE-001","SW-MOVE-003","SW-COLL-001","SW-TRANS-002","SW-TRANS-004","SW-TRANS-005","SW-NEG-001"]},
+    {"topic":"current-responsive-and-input-behavior","disposition":"unknown; no trusted keyboard, pointer, touch, gesture, or viewport observation","backing_claim_ids":["SW-RESP-001","SW-RESP-002","SW-RESP-003","SW-RESP-004","SW-INPUT-001","SW-INPUT-002","SW-NEG-002"]},
+    {"topic":"runtime-use-of-gameplay-image-and-audio","disposition":"unknown; binary presence or filename does not establish loading or use","backing_claim_ids":["SW-ASSET-003","SW-ASSET-004","SW-NEG-003"]}
+  ],
+  "negative_fixtures":[{"claim_id":"SW-NEG-001","disposition":"REJECT"},{"claim_id":"SW-NEG-002","disposition":"REJECT"},{"claim_id":"SW-NEG-003","disposition":"REJECT"}],
+  "counts":{"mapped_sections":8,"visible_unknowns":4,"negative_fixtures":3,"referenced_claim_occurrences":91,"distinct_referenced_claim_ids":51,"collector_claims":51,"unresolved_claim_ids":0,"uncited_source_facts":0,"browser_claims":0},
+  "input_bindings":{
+    "claim_ledger":{"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json","sha256":"2cd708cbecf94133b92ce5f06822ad420da28a1d4417fdb74284528e7a9fe24b"},
+    "collector_report":{"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-final-report-v2-rebind.json","sha256":"c8c174e223501dc1ae4e636a4c45eb8fbc6552011e1b327be1e755df3569197f"},
+    "collector_method":{"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-method-v2.md","sha256":"1cd64613e86482a78830f522fbe6d83cf1a812d3c42fcbd97e06f9ade035e92a"},
+    "collector_receipt":{"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-spellweavers-run-v2-rebind.json","sha256":"4e639b4ce5116905f46472cd2444284b0e958f5e14e1df9ccf9a99ff95ac131d"},
+    "budget_exception":{"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-spellweavers-budget-exception.json","sha256":"a0a4f2e80fa888e3fee7a1ef7e3479af559e1930cbb3eb3a5ea3a2ab8b3bbcf4"}
+  },
+  "budget_exception_disclosure":"Original breach: 11558850 actual versus 8000000 ceiling; owner exception approved 12000000 only for Spellweaver collector source bytes; no further increase and no other gate waived.",
+  "integer_actuals_policy":{"collector_source_bytes":11558850,"collector_source_files_objects":19,"collector_commands":24,"collector_records_authored_reviewed":51,"collector_browser_interactions":0,"collector_captured_artifacts":4,"elapsed_minutes":null,"elapsed_policy":"Unavailable trusted timing remains null; no timing is fabricated."},
+  "provenance_policy":{"mode":"LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE","provider_telemetry_available":false,"unavailable":["provider session","spawn","ancestry","fork","event timestamps","raw prompt bytes","elapsed timing"],"commit_binding":"pending; user prohibited commit"},
+  "acceptance":"not-claimed"
+}

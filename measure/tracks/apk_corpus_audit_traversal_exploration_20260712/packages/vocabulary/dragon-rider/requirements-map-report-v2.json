@@ -1,0 +1,45 @@
+{
+  "schema_version": "apk-requirements-mapper-report.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "task_id": "map-requirements:vocabulary/dragon-rider:v2",
+  "role": "requirements-mapper",
+  "canonical_identity_id": "vocabulary/dragon-rider",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "a59fef7942b73aee028d7c35f5ece83687c78246",
+  "source_revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "status": "mapping-complete-independent-review-pending",
+  "source_fact_policy": "Every mapped record resolves to a cited claim ID or explicit unknown ID in the exact V2 Dragon Rider ledger; no source fact was added.",
+  "exact_bindings": {
+    "map_path": "packages/vocabulary/dragon-rider/requirements-map-v2.json",
+    "map_sha256": "1b6b52bd21ecefdff0edab3cbe27e6edc3e615ff274d1f10e1d65b9721ef96a6",
+    "ledger_path": "packages/vocabulary/dragon-rider/claim-evidence-ledger-v2.json",
+    "ledger_sha256": "fb778224e67609457ac8ac712bc85b3f5096483e0116f1162a2818bac6b48fe9",
+    "collector_rebind_receipt_path": "role-receipts/evidence-collector-dragon-rider-v2-rebind.json",
+    "collector_rebind_receipt_sha256": "55e6c58e190dc14a8bca4f9d6c832eaea2fb3093b68857e914a51ebb5e579960"
+  },
+  "mapped_sections": ["traversal", "scene", "state", "transition", "learning", "effort", "responsive", "assets", "conflict", "unknown"],
+  "counts": {
+    "mapped_records": 9,
+    "unknown_records": 4,
+    "distinct_claim_ids_referenced": 16,
+    "distinct_unknown_ids_referenced": 4,
+    "unresolved_claim_ids": 0,
+    "non_dragon_rider_claim_ids": 0,
+    "novel_source_facts": 0,
+    "browser_interactions": 0
+  },
+  "actual_usage": {
+    "input_files_read": 7,
+    "source_bytes_read": 42966,
+    "commands": 2,
+    "elapsed_minutes": 1,
+    "records_authored_reviewed": 13,
+    "output_files_authored": 3,
+    "browser_interactions": 0,
+    "captured_artifacts": 0
+  },
+  "provider_telemetry": {"prompt": "unavailable", "session": "unavailable", "spawn": "unavailable", "ancestry": "unavailable", "events": "unavailable", "timing": "unavailable", "final_response": "unavailable", "commit": "unavailable", "isolation": "unavailable", "disclosure": "No provider-side attestation is claimed."},
+  "provenance_policy": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE; exact artifact hashes and later committed Git binding are required; browser, source, denominator, fixture, asset, and lifecycle gates remain fail-closed.",
+  "acceptance": "not-claimed"
+}

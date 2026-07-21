@@ -1,0 +1,29 @@
+{
+  "schema":"apk-requirements-mapper-report.v2-rebind",
+  "track_id":"apk_corpus_audit_traversal_exploration_20260712",
+  "phase":"Phase 1: Batch A remediation V2",
+  "task_id":"map-requirements:spellweavers-run:v2",
+  "role":"requirements-mapper-v2",
+  "game":"spellweavers-run",
+  "canonical_identity":"catalog/spellweavers-run",
+  "phase_base_sha":"52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha":"a59fef7942b73aee028d7c35f5ece83687c78246",
+  "status":"mapping-complete-for-V2-ledger; independent-review and commit binding pending",
+  "source_fact_policy":"The exact V2 collector ledger is the sole factual input. This report records mapping coverage and boundaries only; it adds no source claim.",
+  "map_output":{"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/requirements-map-v2.json","sha256":"2d1ec95fd9b11230b9800ac50ab7aae7d37f71eae47ccb88e0751142485698ea"},
+  "v2_input_bindings":{
+    "claim_ledger":{"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json","sha256":"2cd708cbecf94133b92ce5f06822ad420da28a1d4417fdb74284528e7a9fe24b"},
+    "collector_report_rebind":{"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-final-report-v2-rebind.json","sha256":"c8c174e223501dc1ae4e636a4c45eb8fbc6552011e1b327be1e755df3569197f"},
+    "collector_method_rebind":{"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-method-v2.md","sha256":"1cd64613e86482a78830f522fbe6d83cf1a812d3c42fcbd97e06f9ade035e92a"},
+    "collector_receipt_rebind":{"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-spellweavers-run-v2-rebind.json","sha256":"4e639b4ce5116905f46472cd2444284b0e958f5e14e1df9ccf9a99ff95ac131d"},
+    "budget_exception":{"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-spellweavers-budget-exception.json","sha256":"a0a4f2e80fa888e3fee7a1ef7e3479af559e1930cbb3eb3a5ea3a2ab8b3bbcf4"}
+  },
+  "reference_accounting":{"collector_claim_count":51,"mapped_section_count":8,"claim_reference_occurrence_count":91,"unique_referenced_claim_count":51,"resolved_reference_count":51,"unresolved_reference_count":0,"unreferenced_collector_claim_count":0,"negative_fixture_reference_count":3,"foreign_claim_reference_count":0,"browser_claims_authored":0,"novel_factual_claims_authored":0},
+  "unknowns_preserved":["Current gameplay and runnable route remain unknown.","Current movement, camera, collision, transitions, responsive behavior, and input remain unknown.","Runtime use of gameplay image and audio remains unknown.","No browser observation or browser-derived claim is included.","Provider session, spawn, ancestry, fork, event timestamps, raw prompt bytes, and elapsed timing remain unavailable."],
+  "integer_actuals":{"collector_source_bytes":11558850,"collector_source_files_objects":19,"collector_commands":24,"collector_records_authored_reviewed":51,"collector_browser_interactions":0,"collector_captured_artifacts":4,"mapper_input_bytes":67816,"mapper_input_files":5,"mapper_commands":1,"mapper_records_authored":0,"elapsed_minutes":null,"elapsed_policy":"Trusted elapsed telemetry is unavailable and remains null; no timing is fabricated."},
+  "one_time_byte_exception":{"decision":"ONE_TIME_SOURCE_BYTE_CEILING_INCREASE","old_ceiling":8000000,"approved_ceiling":12000000,"measured_actual":11558850,"applies_to":"Spellweaver's Run evidence collector source_bytes only","disclosure":"Original breach: 11558850 actual versus 8000000 ceiling; owner exception approved 12000000 only for Spellweaver collector source bytes; no further increase and no other gate waived."},
+  "provenance_policy":{"mode":"LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE","provider_telemetry_available":false,"phase_base_sha":"52e48970bc9c4b585c55b53072ebebe466a1c4f4","role_base_sha":"a59fef7942b73aee028d7c35f5ece83687c78246","commit_binding":"pending; user prohibited commit"},
+  "validation":{"json_parse":"required and performed after additive write","v2_claim_ids":"all 51 active ledger claim IDs resolve in the map; fixtures are explicitly retained and rejected","hash_bindings":"exact V2 ledger, collector report rebind, method rebind, collector receipt rebind, and exception are bound above","browser_execution":"not performed by mapper","diff_check":"required and performed after additive write"},
+  "reviewer_disposition":"pending fresh independent review of exact V2-bound mapper bytes",
+  "acceptance":"not-claimed"
+}

@@ -1,0 +1,61 @@
+{
+  "schema_version": "apk-requirements-map.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "requirements-mapper",
+  "game": "Dungeon Liberator",
+  "package_identity": "sentence/dungeon-liberator",
+  "source_revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "evidence_ledger": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger-v2.json",
+  "evidence_ledger_sha256": "ff97238f94caa82a5359143c0a25d2a5ee8a2e479bb2fdd0bfea9aab05eef2bd",
+  "predecessor_map": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/requirements-map.json",
+  "mapping_boundary": "Only claim IDs present in the V2 ledger are mapped. Negative fixtures are mapped only as rejection controls; no source facts, browser observations, asset-forensics results, design requirements, or cross-game decisions are added.",
+  "records": {
+    "traversal_scene_state_transition": [
+      {"record_id":"DL-MAP-V2-TSST-001","claim_ids":["DL-TOPO-001","DL-TOPO-002"],"status":"evidence-backed"},
+      {"record_id":"DL-MAP-V2-TSST-002","claim_ids":["DL-MOVE-001","DL-MOVE-002","DL-COLL-001","DL-COLL-002"],"status":"evidence-backed"},
+      {"record_id":"DL-MAP-V2-TSST-003","claim_ids":["DL-TRANS-001","DL-TRANS-002"],"status":"evidence-backed"},
+      {"record_id":"DL-MAP-V2-TSST-004","claim_ids":["DL-INPUT-001","DL-INPUT-002","DL-INPUT-003","DL-CAMERA-001","DL-IND-001","DL-ROUTE-001"],"status":"source-reference-only"}
+    ],
+    "learning": [
+      {"record_id":"DL-MAP-V2-LEARN-001","claim_ids":["DL-COLL-001","DL-TRANS-001"],"status":"mapped-without-new-fact"}
+    ],
+    "effort": [
+      {"record_id":"DL-MAP-V2-EFFORT-001","claim_ids":["DL-MOVE-001","DL-MOVE-002","DL-COLL-001","DL-COLL-002"],"status":"mapped-without-new-fact"},
+      {"record_id":"DL-MAP-V2-EFFORT-002","claim_ids":["DL-INPUT-001","DL-INPUT-002","DL-INPUT-003"],"status":"execution-unobserved"}
+    ],
+    "responsive": [
+      {"record_id":"DL-MAP-V2-RESP-001","claim_ids":["DL-RESP-001","DL-CAMERA-001","DL-IND-001"],"status":"source-defined-not-browser-verified"}
+    ],
+    "assets": [
+      {"record_id":"DL-MAP-V2-ASSET-001","claim_ids":["DL-ASSET-001"],"status":"source-reference-only"}
+    ],
+    "conflict": [
+      {"record_id":"DL-MAP-V2-CONFLICT-001","claim_ids":["DL-TOPO-001","DL-TOPO-002","DL-TRANS-001","DL-TRANS-002"],"status":"no-ledger-conflict-recorded"}
+    ],
+    "unknown": [
+      {"record_id":"DL-MAP-V2-UNKNOWN-001","claim_ids":["DL-INPUT-001","DL-INPUT-002","DL-INPUT-003","DL-RESP-001","DL-ROUTE-001"],"status":"browser-and-runnable-behavior-unknown"},
+      {"record_id":"DL-MAP-V2-UNKNOWN-002","claim_ids":["DL-TOPO-001","DL-TOPO-002","DL-CAMERA-001"],"status":"unsupported-topology-and-geometry-details-unknown"},
+      {"record_id":"DL-MAP-V2-UNKNOWN-003","claim_ids":["DL-ASSET-001"],"status":"binary-asset-forensics-unknown"},
+      {"record_id":"DL-MAP-V2-UNKNOWN-004","claim_ids":["DL-TOPO-001","DL-TOPO-002","DL-MOVE-001","DL-MOVE-002","DL-COLL-001","DL-COLL-002","DL-TRANS-001","DL-TRANS-002","DL-INPUT-001","DL-CAMERA-001","DL-INPUT-002","DL-RESP-001","DL-INPUT-003","DL-ASSET-001","DL-IND-001","DL-ROUTE-001"],"status":"historical-behavior-unknown"}
+    ],
+    "negative_fixture": [
+      {"record_id":"DL-MAP-V2-FIX-001","claim_ids":["DL-NEG-001"],"status":"rejection-fixture-only"},
+      {"record_id":"DL-MAP-V2-FIX-002","claim_ids":["DL-NEG-002"],"status":"rejection-fixture-only"},
+      {"record_id":"DL-MAP-V2-FIX-003","claim_ids":["DL-NEG-003"],"status":"rejection-fixture-only"}
+    ]
+  },
+  "validation": {
+    "all_claim_ids_resolve_to_v2_ledger": true,
+    "factual_claim_ids_referenced": 16,
+    "negative_fixture_claim_ids_referenced": 3,
+    "all_factual_claims_retain_citations": true,
+    "negative_fixture_claims_are_explicitly_uncited": true,
+    "novel_source_facts": 0,
+    "browser_claims": 0,
+    "cross_game_decisions": 0,
+    "acceptance_claimed": false
+  },
+  "provenance_policy": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE; provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations are unavailable.",
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,75 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "status": "complete-self-attested-uncommitted",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "requirements-mapper",
+  "task_id": "map-requirements:vocabulary/dragon-rider:v2",
+  "canonical_identity_id": "vocabulary/dragon-rider",
+  "agent_id": "requirements-mapper-dragon-rider-v2:t5:2026-07-21",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "a59fef7942b73aee028d7c35f5ece83687c78246",
+  "source_revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "spawn_id": "unavailable",
+  "parent_ancestry_ids": [],
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "provider_attestation": "Unavailable: provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations were not exposed; no provider attestation is claimed.",
+  "prompt_sha256": "unavailable",
+  "allowed_input_manifest_sha256": "unavailable",
+  "actual_context_manifest_sha256": "unavailable",
+  "events": {"start_event_id": "unavailable", "end_event_id": "unavailable", "started_at": "2026-07-21T00:00:00Z", "ended_at": "2026-07-21T00:00:00Z"},
+  "allowed_inputs": [
+    "packages/vocabulary/dragon-rider/requirements-map.json",
+    "packages/vocabulary/dragon-rider/requirements-map-report.json",
+    "packages/vocabulary/dragon-rider/claim-evidence-ledger-v2.json",
+    "packages/vocabulary/dragon-rider/evidence-final-report-v2.json",
+    "role-receipts/evidence-collector-dragon-rider-v2-rebind.json",
+    "measure/product-owner-apk-provenance-direction-20260721.json",
+    "git object store (read-only)"
+  ],
+  "read_only_inputs_note": "The V1 map/report and exact V2 ledger, collector report, and rebind receipt were read only. The three V2 mapper outputs are additive.",
+  "input_hashes": {
+    "claim_ledger_v2": "fb778224e67609457ac8ac712bc85b3f5096483e0116f1162a2818bac6b48fe9",
+    "collector_report_v2": "364254b1226fc38eda49e1787f1cb5f74ee030c4b3b2ce610682dca2276ff9ff",
+    "collector_rebind_receipt": "55e6c58e190dc14a8bca4f9d6c832eaea2fb3093b68857e914a51ebb5e579960",
+    "provenance_direction": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+  },
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/requirements-map-v2.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/requirements-map-report-v2.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-dragon-rider-v2.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/requirements-map-v2.json": "1b6b52bd21ecefdff0edab3cbe27e6edc3e615ff274d1f10e1d65b9721ef96a6",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/requirements-map-report-v2.json": "239d03cd15c2f22fdd00bae45163f34237579c4d2285e55432c67e719a53b8b6"
+  },
+  "output_hashes_note": "The receipt excludes itself from output_hashes to avoid self-reference; an orchestrator commit must provide immutable binding.",
+  "commit_sha": "uncommitted",
+  "actual_usage": {
+    "input_files_read": 7,
+    "source_bytes_read": 42966,
+    "commands": 2,
+    "elapsed_minutes": 1,
+    "records_authored_reviewed": 13,
+    "output_files_authored": 3,
+    "browser_interactions": 0,
+    "captured_artifacts": 0
+  },
+  "findings": {
+    "mapped_records": 9,
+    "unknown_records": 4,
+    "distinct_claim_ids_referenced": 16,
+    "factual_claim_ids_referenced": 16,
+    "distinct_unknown_ids_referenced": 4,
+    "unresolved_claim_ids": 0,
+    "non_dragon_rider_claim_ids": 0,
+    "novel_source_facts": 0,
+    "browser_interactions": 0,
+    "independent_review": "pending"
+  },
+  "provenance_policy": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE; provider-side attestation is unavailable and not claimed; exact hashes, independent review, and committed Git binding remain required.",
+  "marker": "MEASURE_AGENT_RESULT"
+}

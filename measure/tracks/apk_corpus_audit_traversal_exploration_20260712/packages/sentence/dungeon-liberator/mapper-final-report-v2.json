@@ -1,0 +1,15 @@
+{
+  "schema_version": "apk-mapper-final-report.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "requirements-mapper",
+  "game": "Dungeon Liberator",
+  "requirements_map": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/requirements-map-v2.json",
+  "evidence_ledger": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger-v2.json",
+  "mapped_record_counts": {"traversal_scene_state_transition":4,"learning":1,"effort":2,"responsive":1,"assets":1,"conflict":1,"unknown":4,"negative_fixture":3},
+  "claim_reference_validation": {"ledger_claim_ids_referenced":19,"factual_claim_ids_referenced":16,"negative_fixture_claim_ids_referenced":3,"unresolved_claim_ids":0,"factual_claims_without_citation":0,"novel_source_facts":0,"browser_claims":0,"mapper_boundary_violations":0},
+  "provenance": {"policy":"LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE","provider_attestation":"unavailable","acceptance_claimed":false},
+  "budget": {"declaration":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json","ceiling_role":"requirements_mapper_one_game","status":"numeric ceiling declared; mapper actuals measured locally; provider timing and command telemetry unavailable","browser_interactions":0},
+  "disposition": "non-consumable mapper output; independent review and committed binding remain required",
+  "marker": "MEASURE_AGENT_RESULT"
+}
