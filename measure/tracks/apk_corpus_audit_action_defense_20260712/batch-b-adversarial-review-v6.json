@@ -1,0 +1,253 @@
+{
+  "schema": "apk-batch-adversarial-review.v6",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "role": "adversarial-reviewer-batch-b-v6",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "ec6ec8e4b76221a4b90d826a4a5c30b3900f5e04",
+  "audited_head_sha": "ec6ec8e4b76221a4b90d826a4a5c30b3900f5e04",
+  "status": "blocked; one High mapper-denominator lineage finding remains; no candidate, approval, accepted manifest, completion success, persistence, XP, idempotency, or API-correctness claim is authorized",
+  "scope": [
+    "village-guardian",
+    "archers-revenge",
+    "storm-castle-tower"
+  ],
+  "review_independence": {
+    "mode": "fresh independent adversarial re-derivation",
+    "inherited_completion_narrative_used_as_source_evidence": false,
+    "source_authority": "Reachable Git objects, accepted denominator artifacts, exact V11-selected artifact bytes, and independently executed checks only.",
+    "prior_reviews_use": "Prior reviews were read only as immutable process history and remediation direction; their factual conclusions were not reused as source proof.",
+    "provider_attestation": "Unavailable and not claimed under the exact owner provenance direction."
+  },
+  "active_input_binding": {
+    "truth_v11": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v11.py",
+      "sha256": "ec503b332a2d2ffea5f82d8541aa612456bb8a6c7810a06db495f4fbc067fed9"
+    },
+    "truth_v11_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v11.json",
+      "sha256": "f9e948146c271fe3be4f5a7cbb153c31517ce108553936a2502836abb7b00af9"
+    },
+    "v11_declared_inputs": 52,
+    "v11_declared_inputs_exact_at_audited_head": 52,
+    "v11_outputs_exact_at_audited_head": 2,
+    "binding_errors": []
+  },
+  "predecessor_rederivation": {
+    "t1_gate": {
+      "path": "measure/evidence-integrity-accepted-gate.json",
+      "sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+      "gate_version": "phase4-v8-candidate",
+      "gate_commit": "5aea360f94f978ac78e590e0a64d33d176beaa1a"
+    },
+    "t2_accepted_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729"
+    },
+    "t2_accepted_partition": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0"
+    },
+    "t3_accepted_pilot": {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b"
+    },
+    "batch_a_accepted_cohort": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-a.json",
+      "sha256": "b096d911b7d6bc9fb4d530e695cea10d3816a17158447a89303c2d069cf2a54c"
+    },
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "scope_exact": true
+  },
+  "truth_test_runs": {
+    "full_v11": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v11.py",
+      "result": "38 passed, 5 failed; exit 1; zero pytest ERROR outcomes",
+      "failed_test_ids": [
+        "BatchBIndependentReviewContract::test_review_has_zero_unresolved_blocking_findings_for_active_inputs",
+        "BatchBIndependentReviewContract::test_review_v4_binds_every_exact_active_additive_input",
+        "BatchBAcceptanceContract::test_accepted_manifest_exists",
+        "BatchBAcceptanceContract::test_candidate_manifest_exists",
+        "BatchBAcceptanceContract::test_product_owner_acceptance_exists"
+      ]
+    },
+    "independent_exact_population_check": {
+      "method": "A separate inline Python verifier read the V11 receipt, recomputed all 52 input hashes, compared every input with audited HEAD, resolved every positive citation directly with git show, recomputed line/whole-file hashes, and compared reconciliation sets directly with the five accepted T2 denominator ledgers.",
+      "result": "52/52 inputs exact and committed at audited HEAD; 129/129 positive envelopes exact; 6 bounded claims retained; 12/12 fixtures rejected; 74/74 Village/Archer accepted denominator records set-equal; zero script errors."
+    },
+    "interpretation": "The five V11 failures are the declared stale-review and missing-lifecycle reds. The other 38 passes do not cure the independently found stale Village mapper-to-denominator binding."
+  },
+  "source_rederivation": {
+    "method": "Resolved each declared revision/path with read-only Git, recomputed whole-blob and inclusive-range SHA-256 values, replayed bounded evidence, and inspected a fresh deterministic category/evidence/revision/shape-covering semantic sample selected from the V11 truth-test hash and normalized game id.",
+    "populations": {
+      "village-guardian": 73,
+      "archers-revenge": 20,
+      "storm-castle-tower": 42,
+      "total": 135
+    },
+    "positive_source_envelopes_rederived": 129,
+    "bounded_claims_rederived": 6,
+    "envelope_or_query_mismatches": 0,
+    "semantic_sample": {
+      "algorithm": "Seed each game from SHA-256(V11 truth-test bytes) plus normalized game id; rank claim IDs by SHA-256(seed + NUL + claim id), greedily cover every populated category, evidence class, baseline/historical/bounded revision class, and applicable binary/bounded/route/state/transition/responsive/asset/test/copy/mechanic/config shape, then fill to max(10, ceil(10% of population)).",
+      "village-guardian": {
+        "population": 73,
+        "selected_count": 18,
+        "selected_claim_ids": [
+          "VG3-MODEL-015", "VG3-API-004", "VG3-ASSET-001", "VG3-TEST-001", "VG3-ID-003", "VG3-MODEL-011", "VG3-COMP-009", "VG3-ROUTE-006", "VG3-COMP-006", "VG3-COMP-011", "VG3-ID-006", "VG3-MODEL-017", "VG3-INDEX-001", "VG3-CONFIG-006", "VG3-ID-004", "VG3-COMP-010", "VG3-COMP-007", "VG3-MODEL-002"
+        ],
+        "semantic_mismatches": 0
+      },
+      "archers-revenge": {
+        "population": 20,
+        "selected_count": 10,
+        "selected_claim_ids": [
+          "AR-B2-ASSET-001", "AR-B2-COPY-003", "AR-B2-TRANS-004", "AR-B2-EFFORT-001", "AR-B2-COPY-009", "AR-B2-COPY-004", "AR-B2-COPY-002", "AR-B2-TRANS-002", "AR-B2-COPY-007", "AR-B2-COPY-010"
+        ],
+        "semantic_mismatches": 0
+      },
+      "storm-castle-tower": {
+        "population": 42,
+        "selected_count": 15,
+        "selected_claim_ids": [
+          "SCT-ASSET-ABS-003", "SCT-SCENE-H006", "SCT-COPY-001", "SCT-TEST-H003", "SCT-ROUTE-H005", "SCT-RESP-H001", "SCT-MECH-H007", "SCT-ID-003", "SCT-HIST-001", "SCT-TRANS-H002", "SCT-ABS-001", "SCT-ASSET-002", "SCT-ASSET-H002", "SCT-ASSET-001", "SCT-ASSET-H001"
+        ],
+        "semantic_mismatches": 0
+      },
+      "total_selected": 43,
+      "uncovered_required_strata": []
+    }
+  },
+  "negative_fixture_rederivation": {
+    "fixtures_rederived": 12,
+    "accepted_or_skipped": 0,
+    "village-guardian": "All four refuted: unconditional six-villager, directory-as-primary-evidence, Redis/successful-completion, and CSS-keyword responsive claims exceed their exact sources.",
+    "archers-revenge": "All four refuted: historical copy is not current runnability, the cited directory is a tree, binary presence is not loading, and historical CSS is not compact/wide live proof.",
+    "storm-castle-tower": "All four refuted: incorrect selection is conditionally terminal, the directory is a tree, baseline route/PNG loading is absent in the bounded domains, and deleted responsive source cannot establish a current generic template."
+  },
+  "denominator_rederivation": {
+    "method": "Filtered accepted T2 identity, source, historical-source, scene/state/transition, and asset records by exact normalized game id and compared exact IDs/paths with V11-selected reconciliation records, including duplicate checks and recomputed category totals.",
+    "village-guardian": {
+      "accepted_identity_records": 1,
+      "accepted_source_records": 39,
+      "accepted_historical_records": 1,
+      "accepted_scene_records": 2,
+      "accepted_state_records": 3,
+      "accepted_transitions": 1,
+      "accepted_asset_candidates": 4,
+      "selected_reconciliation_total": 51,
+      "exact_set_mismatches": 0,
+      "mapping_lineage_result": "Collector reconciliation V5 is exact, but the selected mapper report V4 and its superseding receipt V5 still bind reconciliation V4, whose 15 graph IDs are malformed and not exact T2 record IDs."
+    },
+    "archers-revenge": {
+      "accepted_identity_records": 1,
+      "accepted_source_records": 8,
+      "accepted_historical_records": 9,
+      "accepted_asset_candidates": 5,
+      "selected_reconciliation_total": 23,
+      "exact_set_mismatches": 0,
+      "mapping_lineage_result": "Reconciliation V5 enumerates all records and mapper report V5 binds its exact SHA-256."
+    },
+    "storm-castle-tower": {
+      "result": "The unchanged exact records and bounded dispositions re-derived without a fresh omission."
+    }
+  },
+  "repair_artifact_audit": {
+    "archers_revenge": {
+      "reconciliation_v5": "exact and complete",
+      "collector_receipt_v5": "exact output binding and truthful local-provider disclosure",
+      "mapper_report_v5": "binds exact reconciliation V5",
+      "mapper_receipt_v6": "binds the immutable mapper report and adds explicit provider-unavailability metadata",
+      "prior_high_disposition": "resolved for Archer's Revenge"
+    },
+    "village_guardian": {
+      "reconciliation_v5": "exactly corrects all 15 malformed graph IDs and is complete",
+      "collector_receipt_v5": "binds reconciliation V5 exactly",
+      "mapper_report_v4": "still binds superseded reconciliation V4",
+      "mapper_receipt_v5": "still binds mapper report V4 and reconciliation V4, not reconciliation V5",
+      "prior_high_disposition": "collector half resolved; mapper lineage remains incomplete"
+    },
+    "truth_v11": "V11 pins all selected bytes but special-cases Village mapper validation to V4 while separately selecting collector reconciliation V5, allowing the stale mapper lineage to pass B2."
+  },
+  "owner_directions_and_limits": {
+    "provenance": {
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+      "application": "All 52 declared V11 inputs and both V11 outputs are exact committed audited-HEAD bytes. Provider-side prompt/session/spawn/event/final-response/isolation attestations remain unavailable and are not claimed."
+    },
+    "webbridge": {
+      "decision": "WEBBRIDGE_ACCEPTED_FOR_B4",
+      "application": "Village Guardian remains bounded runnable only with isTrusted=false synthetic input and hidden-tab scheduler adaptation; Archer and Storm remain bounded non-runnable at the role revision after exact-route 404s. No trusted-native-input, foreground-timing, production-parity, screenshot, persistence, or successful-completion conclusion is made."
+    },
+    "completion": {
+      "decision": "CONDITIONAL_EVIDENCE_ACCEPTANCE_WITH_SUCCESSOR_DEFECT_TRANSFER",
+      "finding": "Both observed Village Guardian completion POSTs returned HTTP 400.",
+      "disposition": "Disclosure-only. This review makes no successful completion, persistence, XP, idempotency, or API-correctness claim."
+    },
+    "asset": "All 12 accepted asset candidates remain exactly reconciled once. Physical loading where unobserved, suitability, licensing, and production decisions remain unknown."
+  },
+  "findings": [
+    {
+      "id": "T4B6-HIGH-001",
+      "severity": "high",
+      "area": "Village Guardian mapper-to-denominator lineage and V11 gate correctness",
+      "blocking": true,
+      "detail": "Village reconciliation V5 correctly replaces 15 malformed graph IDs, but the active Village mapper report is still V4 and binds reconciliation V4. The active mapper receipt V5 likewise binds report V4 and reconciliation V4, not the corrected V5 bytes. V11 hides this stale lineage by setting MAPPER_DENOMINATOR_RELATIVE for Village to V4 while selecting V5 only for the collector reconciliation, then reports the denominator-mapper gate green. This does not satisfy review-v5's required additive mapper supersession over every exact accepted denominator record and violates the exactly-once exact-denominator gate; one denominator mismatch stops the batch.",
+      "required_remediation": "Publish an additive Village mapper report and receipt that bind the exact reconciliation V5 SHA-256, select that report/receipt as active, remove the V4 special-case from the truth contract, rerun the full exact gates, and obtain another fresh independent review."
+    },
+    {
+      "id": "T4B6-LOW-001",
+      "severity": "low",
+      "area": "binary envelope interoperability",
+      "blocking": false,
+      "detail": "AR-B2-ASSET-001..003 still encode binary whole-file evidence with line-shaped start_line/end_line objects. V11's binary-aware parser treats equal blob/range hashes as whole-file and resolves them correctly, but a schema-generic line-range consumer can misread these records.",
+      "required_remediation": "In a future additive Archer ledger, encode the three binary records explicitly as whole-file or byte ranges without changing their verified whole-file hashes."
+    }
+  ],
+  "unresolved_findings": {
+    "critical": 0,
+    "high": 1,
+    "medium": 0,
+    "low": 1
+  },
+  "gate_status": {
+    "B0": "pass for exact scope, predecessor hashes, owner directions, committed V11 inputs, and local hash controls",
+    "B1": "pass for 135 selected factual records, exact source/query envelopes, and exact selected collector reconciliations",
+    "B2": "blocked because the active Village mapper report/receipt bind superseded reconciliation V4 rather than exact reconciliation V5",
+    "B3": "pass for 129 positive envelopes, 6 bounded claims, a fresh 43-claim stratified semantic sample, and 12/12 fixture refutations; this cannot cure B2",
+    "B4": "bounded pass only under the exact WebBridge and completion directions and every recorded limitation",
+    "B5": "blocked by one unresolved High finding and absent candidate/approval/accepted lifecycle artifacts"
+  },
+  "authorization": {
+    "authorization_rule": "A candidate may be authorized only with zero unresolved Critical, High, and Medium findings.",
+    "candidate_authorized": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "reason": "One High mapper-denominator lineage finding remains. Candidate lifecycle artifacts are also absent."
+  },
+  "success_claims": {
+    "batch_complete": false,
+    "successful_completion": false,
+    "persistence_confirmed": false,
+    "xp_awarded": false,
+    "idempotency_verified": false,
+    "api_correctness": false,
+    "product_acceptance": false
+  },
+  "carried_forward_disclosures": [
+    {
+      "id": "DISC-001",
+      "classification": "Batch A process-only disclosure",
+      "use": "Labeled process metadata only; never factual input."
+    },
+    {
+      "id": "DISC-B-COMPLETION-400",
+      "classification": "owner-directed mandatory successor disclosure",
+      "use": "Both Village Guardian completion POSTs returned HTTP 400. Disclosure-only; no success claim."
+    },
+    {
+      "id": "DISC-B-PROVIDER-PROVENANCE",
+      "classification": "owner-accepted local-verifiability disclosure",
+      "use": "Provider-side provenance was unavailable; only exact local Git/hash bindings are claimed."
+    }
+  ]
+}
