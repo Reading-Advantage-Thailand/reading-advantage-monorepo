@@ -1,0 +1,18 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-c-historical",
+  "role": "truth-test-author",
+  "role_id": "truth-test-author-batch-c-local",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "c6bcdc7020a3d0c1225bdafe83005dfde6868af4",
+  "roles_held": ["truth-test-author"],
+  "forbidden_roles_held": [],
+  "provider_provenance": {"available": false, "claimed": false, "unavailable_fields": ["prompt", "context manifest", "spawn", "session", "ancestry", "fork isolation", "events", "timing", "final response", "commit attestation"]},
+  "output_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-truth-tests.py",
+  "output_sha256": "ccf471f76c7003dda0512a7a55099f0e801a1de62a24ffe231cd47d99663f0af",
+  "budget": {"declaration_sha256":"81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896","ceiling":{"source_bytes":6000000,"source_files_objects":140,"commands":60,"elapsed_minutes":75,"records_authored_reviewed":70,"browser_interactions":0,"captured_artifacts":25},"actual":{"source_bytes":192706,"source_files_objects":23,"commands":15,"elapsed_minutes":25,"records_authored_reviewed":11,"browser_interactions":0,"captured_artifacts":1}},
+  "expected_stage": "All source, temporal, fixture, mapping, browser, receipt, and budget contracts green; review and candidate lifecycle tests red until additive artifacts exist.",
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

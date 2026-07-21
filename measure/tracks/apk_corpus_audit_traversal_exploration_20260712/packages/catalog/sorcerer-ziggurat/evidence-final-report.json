@@ -1,0 +1,16 @@
+{
+  "schema_version": "apk-evidence-final-report.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-c-historical",
+  "game": "The Sorcerer's Ziggurat",
+  "canonical_identity": "catalog/sorcerer-ziggurat",
+  "ledger_path": "packages/catalog/sorcerer-ziggurat/claim-evidence-ledger.json",
+  "counts": {"factual_claims": 27, "source_enveloped_claims": 27, "explicit_unknowns": 1, "negative_fixtures": 6, "current_implementation": 3, "historical_implementation": 21, "active_specification": 1, "active_design": 1, "catalog_prose": 1},
+  "current_disposition": "Catalog export is coming-soon with no href; persistence vocabulary and a standalone route-factory test include the ID; current gameplay implementation and behavior remain unknown outside the bounded candidate-directory search.",
+  "historical_disposition": "Reachable implementation and design bytes exist at the withdrawal parent and are historical-only.",
+  "browser_disposition": "browser-current-behavior-unknown-not-run",
+  "unsupported_inferences": 0,
+  "denominator_mismatches": 0,
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

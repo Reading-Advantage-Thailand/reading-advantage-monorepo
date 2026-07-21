@@ -1,0 +1,30 @@
+{
+  "schema_version": "apk-historical-source-observations.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-c-historical",
+  "game": "The Sorcerer's Ziggurat",
+  "source_revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+  "source_revision_reachable_from_baseline": true,
+  "chronology": {
+    "implementation_commit": "c378c3cc4d93b0bbfea5a245e427186bccf5c0fd",
+    "withdrawal_commit": "05bb6d2909268ea670b106240167f86c9814d67d",
+    "withdrawal_parent": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+    "withdrawal_subject": "chore(apk): withdraw invalid cartridge implementation",
+    "interpretation": "The cited implementation bytes are reachable historical bytes strictly before the accepted source baseline; they are not current behavior."
+  },
+  "objects": [
+    {"path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.ts", "lines": 41, "bytes": 1399, "blob_sha256": "ef4842a143682dbf9a90c0050d5ea280dd00d28730c08ae29505b3d5f6c905a9", "source_class": "historical_implementation"},
+    {"path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/systems.ts", "lines": 213, "bytes": 6500, "blob_sha256": "374d8d42c1fded5fd5508dc7755d463d82dbe71881ba7ea004ae9de0b962dd8f", "source_class": "historical_implementation"},
+    {"path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/scene.ts", "lines": 443, "bytes": 15245, "blob_sha256": "f570e348baeec5bfd0dcbe3cf99bed246a891a626d56e3d80ec5882d3983635a", "source_class": "historical_implementation"},
+    {"path": "packages/game-cartridges/src/families/isometric-step-graph/step-graph.ts", "lines": 163, "bytes": 5399, "blob_sha256": "ce9137f5dd39c5e7a4e57a28915012f5480c794b32b22105fa35d6c4e8780448", "source_class": "historical_implementation"},
+    {"path": "packages/game-cartridges/src/families/isometric-step-graph/projection.ts", "lines": 49, "bytes": 1571, "blob_sha256": "a137bcf6365fd8346fb643e055aabc16037fde4551e89dc49d636bbc4555bfae", "source_class": "historical_implementation"},
+    {"path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/blueprint.md", "lines": 32, "bytes": 1548, "blob_sha256": "b7905fa26874a5b6636dc4e9f5f85db1c4b37fd6ef066a92bd6ee491d7eb7be8", "source_class": "active_design"}
+  ],
+  "excluded_objects": [
+    {"path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.test.ts", "reason": "Test assertions are not runtime facts; the current active-specification claim is separately bounded."},
+    {"path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/systems.test.ts", "reason": "Test assertions are not runtime facts."},
+    {"path": "packages/game-cartridges/src/cartridges/sorcerer-ziggurat/index.ts", "reason": "The four-line re-export adds no requirement beyond the definition and systems envelopes."}
+  ],
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

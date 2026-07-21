@@ -1,0 +1,15 @@
+{
+  "schema_version": "apk-negative-fixtures.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "game": "The Sorcerer's Ziggurat",
+  "factual_claims_excluded": true,
+  "fixtures": [
+    {"fixture_id": "SZ-FIX-001", "kind": "catalog-to-implementation", "proposed_claim": "The catalog prose proves the current game uses an isometric cube pyramid.", "expected_disposition": "reject", "counts_as_claim": false, "reason": "Catalog prose is not implementation evidence."},
+    {"fixture_id": "SZ-FIX-002", "kind": "historical-to-current", "proposed_claim": "The reachable historical scene proves the same scene is currently shipped.", "expected_disposition": "reject", "counts_as_claim": false, "reason": "The cartridge was deleted before the source baseline."},
+    {"fixture_id": "SZ-FIX-003", "kind": "test-to-live-behavior", "proposed_claim": "A status-200 test proves successful production persistence.", "expected_disposition": "reject", "counts_as_claim": false, "reason": "The cited test is active specification for a standalone route factory."},
+    {"fixture_id": "SZ-FIX-004", "kind": "bounded-absence-to-global-absence", "proposed_claim": "An empty candidate-directory tree proves no implementation exists anywhere.", "expected_disposition": "reject", "counts_as_claim": false, "reason": "The command covers one exact path only."},
+    {"fixture_id": "SZ-FIX-005", "kind": "source-to-browser", "proposed_claim": "Historical keyboard handlers prove current physical keyboard behavior.", "expected_disposition": "reject", "counts_as_claim": false, "reason": "Source declarations are historical and no browser interaction occurred."},
+    {"fixture_id": "SZ-FIX-006", "kind": "design-to-fact", "proposed_claim": "The blueprint proves all documented consequences occurred at runtime.", "expected_disposition": "reject", "counts_as_claim": false, "reason": "The blueprint is active design at a historical revision, not runtime observation."}
+  ],
+  "marker": "MEASURE_AGENT_RESULT"
+}

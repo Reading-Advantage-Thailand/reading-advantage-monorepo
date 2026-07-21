@@ -1,0 +1,14 @@
+{
+  "schema_version": "apk-requirements-final-report.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-c-historical",
+  "game": "The Sorcerer's Ziggurat",
+  "ledger_path": "packages/catalog/sorcerer-ziggurat/claim-evidence-ledger.json",
+  "map_path": "packages/catalog/sorcerer-ziggurat/requirements-map.json",
+  "dimensions": ["identity-route-and-persistence","cartridge-and-host-boundary","world-state-topology","movement-collision-and-transition","camera-viewport-responsive","input-mode","assets-and-results","active-design","developer-effort-decomposition","current-gameplay-and-browser"],
+  "coverage": {"factual_claims":27,"mapped_factual_claims":27,"explicit_unknowns":1,"mapped_unknowns":1,"unmapped_claims":0,"novel_facts":0},
+  "must_have_blockers": ["Current gameplay implementation is not established.","Current route and browser behavior are unknown.","Compact/wide behavior and trusted input are unknown.","Current asset loading, completion, persistence, and production behavior are unknown."],
+  "cross_game_standardization_decisions": 0,
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

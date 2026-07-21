@@ -1,0 +1,19 @@
+{
+  "schema_version": "apk-browser-audit.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-c-historical",
+  "game": "The Sorcerer's Ziggurat",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "disposition": "browser-current-behavior-unknown-not-run",
+  "known_only": [
+    "The exact frozen catalog source exports this identity without href and as coming-soon through the withdrawn-ID mapping.",
+    "The exact frozen cartridge candidate directory returns no paths in the bounded git tree search."
+  ],
+  "browser_access": {"attempted": false, "reason": "No current gameplay route or implementation envelope was established from the bounded repository evidence; historical paths were not promoted into browser targets."},
+  "counts": {"route_attempts": 0, "application_responses": 0, "trusted_input_events": 0, "synthetic_input_events": 0, "transitions_observed": 0, "compact_profiles_observed": 0, "wide_profiles_observed": 0, "captured_artifacts": 0, "browser_interactions": 0},
+  "unknown_and_not_claimed": "Route reachability, movement, collision, camera, transitions, compact/wide behavior, keyboard/pointer/touch behavior, asset loading, completion, persistence, API correctness, and production behavior remain unknown.",
+  "screenshots_alone_pass": false,
+  "historical_promotion_prohibited": true,
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

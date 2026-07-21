@@ -1,0 +1,27 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-c-historical",
+  "role": "evidence-collector",
+  "role_id": "evidence-collector-sorcerer-ziggurat-batch-c-local",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "c6bcdc7020a3d0c1225bdafe83005dfde6868af4",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "role_scope": ["current/historical source envelopes", "claim ledger", "negative fixtures", "evidence report"],
+  "roles_held": ["evidence-collector"],
+  "forbidden_roles_held": [],
+  "provider_provenance": {"available": false, "claimed": false, "unavailable_fields": ["prompt", "context manifest", "spawn", "session", "ancestry", "fork isolation", "events", "timing", "final response", "commit attestation"]},
+  "local_provenance_direction": {"path": "measure/product-owner-apk-provenance-direction-20260721.json", "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"},
+  "output_paths_and_sha256": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/current-source-observations.json": "7985c41653e7b7235eede64263bf990eef0050f05e167a2f84e86d9e0d3a14a9",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/historical-source-observations.json": "54017dcd63ea5e58ddf2985c3563c4660e379219e9461b2a8e2621ea5a29550a",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/claim-evidence-ledger.json": "54bd65f6f655730125c933c15ba79e992479b905869856c9796b508bcffceeca",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/evidence-method.md": "36bee55edb31cef9f6666a7daa3c470807cca5ad40b55c923e0697bd8e2c5a68",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/evidence-final-report.json": "0413943496554c13e51571085a4b7962081c716c102d9afd396b78b61a4a68ca",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/negative-fixtures.json": "e65f2aefd5607b4ef54812f66851c43ab48cb87e8ba80ba61878efffa81357ff"
+  },
+  "budget": {"declaration_sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896", "ceiling": {"source_bytes":8000000,"source_files_objects":160,"commands":70,"elapsed_minutes":120,"records_authored_reviewed":300,"browser_interactions":0,"captured_artifacts":80}, "actual": {"source_bytes":133359,"source_files_objects":12,"commands":18,"elapsed_minutes":45,"records_authored_reviewed":33,"browser_interactions":0,"captured_artifacts":6}, "accounting":"Integer role-local accounting; source bytes include exact cited current/historical objects and governing records read."},
+  "findings": [],
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}
