@@ -1,0 +1,321 @@
+{
+  "schema_version": "apk-accepted-cohort-manifest.v2",
+  "manifest_kind": "accepted-cohort-manifest",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-b",
+  "input_generation": "V2",
+  "review_iteration": "V2",
+  "phase": "Phase 2: Batch B remediation V2",
+  "status": "accepted",
+  "acceptance_status": "accepted-with-disclosure",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "consumable": true,
+  "consumability": "conditional",
+  "revoked": false,
+  "acceptance_claimed": true,
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "c1e903380e2b1b6ec74133ee38ebdbd236444d80",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "candidate_manifest_sha256": "30ca8aaa951a20b5dbc2b744ea57b1310ed623f211a40d550769b15320583065",
+  "owner_acceptance_sha256": "510593ee261a0f5ced5be31e9ed215485ece7ac205c5377f9960286834f77a11",
+  "scope": {
+    "packages": [
+      "sentence/shadow-gate-dungeon",
+      "sentence/labyrinth-goblin-king",
+      "catalog/griffin-riders-escape"
+    ],
+    "factual_claims": {
+      "shadow-gate-dungeon": 18,
+      "labyrinth-goblin-king": 12,
+      "griffin-riders-escape": 14,
+      "total": 44
+    },
+    "temporal_classes": {
+      "current": 30,
+      "historical": 14
+    },
+    "negative_fixtures": {
+      "shadow-gate-dungeon": 3,
+      "labyrinth-goblin-king": 4,
+      "griffin-riders-escape": 3,
+      "total": 10
+    },
+    "accepted_use": "Bounded source-truth, denominator, semantic, claim, fixture, mapper, budget, local-provenance, and browser-unknown-disposition evidence for these three packages, subject to every disclosure, consumption condition, and revocation rule in this manifest.",
+    "excluded_use": [
+      "Successful route reachability or browser behavior for any package.",
+      "Movement, transition, compact or wide responsive behavior, trusted or synthetic input behavior, persistence, production behavior, or asset loading for any package.",
+      "Successful completion, persistence, XP award, idempotency, or API correctness.",
+      "Promotion of the fourteen historical Griffin Rider's Escape claims to current implementation or browser behavior.",
+      "Provider-attested isolation, prompt provenance, session provenance, event provenance, timing provenance, final-response provenance, or commit provenance.",
+      "Ontology, cross-game standardization, shared-system, implementation, full-cohort-completion, track-completion, or downstream product decisions."
+    ]
+  },
+  "acceptance_binding": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-acceptance-batch-b-v2.json",
+    "sha256": "510593ee261a0f5ced5be31e9ed215485ece7ac205c5377f9960286834f77a11",
+    "commit_sha": "c1e903380e2b1b6ec74133ee38ebdbd236444d80",
+    "acceptance_role": "project-owner",
+    "authority": "delegated project-owner authority",
+    "decision": "ACCEPT-WITH-DISCLOSURE",
+    "approval_event_id": "msg_t5_batch_b_owner_acceptance_20260721_000000",
+    "approval_event_timestamp": "2026-07-21T00:00:00Z",
+    "approval_message_sha256": "019994ad000a9b80dd9c4e8afba9a7f8db5d30fb6014f16c926f68892d8202c5",
+    "human_authorized": true,
+    "delegated_project_owner": true,
+    "resolved": true,
+    "replayed": false,
+    "revoked": false,
+    "superseded": false,
+    "accepted_manifest_authorized_at_acceptance_authorship": false,
+    "boundary_note": "The immutable acceptance records that it neither publishes nor itself authorizes an accepted manifest. This separately assigned accepted-manifest-author role records the exact accepted decision without mutating, replaying, or broadening that historical owner artifact."
+  },
+  "candidate_binding": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/candidate-cohort-manifest-batch-b-v2.json",
+    "sha256": "30ca8aaa951a20b5dbc2b744ea57b1310ed623f211a40d550769b15320583065",
+    "commit_sha": "a4892fbd38c98cac918fd1326dadd74669d4e2db",
+    "candidate_role_base_sha": "97716ad273a324c7d9a112ae701b37f7e9aa3be7",
+    "candidate_consumable": false,
+    "candidate_revoked": false,
+    "receipt_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/candidate-author-batch-b-v2.json",
+    "receipt_sha256": "32ac51c6d0e88ff6f857ff544465f5f8cc5c6e368c63824e731811e83af9ff3e"
+  },
+  "review_binding": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-b-independent-review-v2.json",
+    "sha256": "58fffd67512d26e1503f2d53f2b7359b31daae055835fa318a0376a5a0271bcd",
+    "receipt_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-batch-b-v2.json",
+    "receipt_sha256": "5ee4554491dd1b07973b70062b6d0cfe41e3615b8f7dacdc9e8eaa6e473bd69b",
+    "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+    "audited_head_sha": "38f80821f3a37eaa539f75cb377abab760e77cd6",
+    "publication_commit_sha": "97716ad273a324c7d9a112ae701b37f7e9aa3be7",
+    "input_generation": "V2",
+    "review_iteration": "V2",
+    "review_bound_inputs": 47,
+    "factual_claims_rederived": 44,
+    "source_blob_hash_matches": 44,
+    "source_range_hash_matches": 44,
+    "fixtures_rederived": 10,
+    "unresolved_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    }
+  },
+  "truth_binding": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-b-truth-tests-v2.py",
+    "sha256": "e5f4878d858a0cc745ae348a6e8cff448b2a1ed08cf8a120bc96187df8329941",
+    "receipt_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/truth-test-author-batch-b-v2.json",
+    "receipt_sha256": "58925bfa8c32df26c97021921cce1c9ba43cdc76ba5179a22ef470c78192cc31",
+    "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+    "publication_commit_sha": "38f80821f3a37eaa539f75cb377abab760e77cd6",
+    "selected_input_count": 45,
+    "test_inventory": 18,
+    "bounded_non_lifecycle_result": "15 passed, 3 deselected; exit 0",
+    "candidate_stage_result": "16 passed, 2 expected lifecycle failures; exit 1",
+    "review_count_disclosure": "The immutable V2 review reports 17 passed and 3 expected lifecycle failures even though the bound module contains 18 tests. Direct candidate-role enumeration and execution established 15 non-lifecycle plus 3 lifecycle tests. This manifest preserves the review bytes, uses the directly verified inventory, and does not relabel the stale review arithmetic as green."
+  },
+  "predecessor_bindings": {
+    "accepted_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729"
+    },
+    "accepted_partition": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0"
+    },
+    "accepted_pilot": {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b"
+    },
+    "accepted_batch_a": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-a-v6.json",
+      "sha256": "f5a215f44815c79025e86e97a3217d7a85c4a33db86f80db2909f30dd3a9caa3"
+    }
+  },
+  "governing_bindings": {
+    "cohort_protocol": {
+      "path": "measure/apk-evidence-cohort-protocol.md",
+      "sha256": "1f97ed8fd026cb0b1b49ed5de602252c075228981d1ff26640748b56ff2a3507"
+    },
+    "track_spec": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md",
+      "sha256": "42685326bf239a92f3543919e8ce204fb4414e8ac136180ad340720fbd852ac1"
+    },
+    "frozen_budget": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+      "sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896"
+    },
+    "local_provenance_direction": {
+      "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+    },
+    "timing_accounting_direction": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json",
+      "sha256": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+      "decision": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+      "scope": "Batch B elapsed-minute accounting only; no other evidence or lifecycle gate is waived."
+    }
+  },
+  "chronology": {
+    "ordering_basis": "Immutable Git ancestor order establishes publication chronology. The acceptance artifact's nominal approval timestamp is preserved but is not used as publication-order proof because it predates truth, review, and candidate publication.",
+    "lineage": [
+      {
+        "stage": "phase-base",
+        "commit_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+        "commit_timestamp": "2026-07-20T22:04:31+07:00"
+      },
+      {
+        "stage": "v2-truth-and-review-role-base",
+        "commit_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+        "commit_timestamp": "2026-07-21T23:40:00+07:00"
+      },
+      {
+        "stage": "v2-truth-publication-and-review-audited-head",
+        "commit_sha": "38f80821f3a37eaa539f75cb377abab760e77cd6",
+        "commit_timestamp": "2026-07-22T00:09:36+07:00"
+      },
+      {
+        "stage": "v2-review-publication-and-candidate-role-base",
+        "commit_sha": "97716ad273a324c7d9a112ae701b37f7e9aa3be7",
+        "commit_timestamp": "2026-07-22T00:22:55+07:00"
+      },
+      {
+        "stage": "v2-candidate-publication",
+        "commit_sha": "a4892fbd38c98cac918fd1326dadd74669d4e2db",
+        "commit_timestamp": "2026-07-22T00:33:18+07:00"
+      },
+      {
+        "stage": "owner-acceptance-publication-and-accepted-manifest-role-base",
+        "commit_sha": "c1e903380e2b1b6ec74133ee38ebdbd236444d80",
+        "commit_timestamp": "2026-07-22T00:42:22+07:00"
+      }
+    ],
+    "ancestor_chain_verified": true,
+    "review_precedes_candidate_publication": true,
+    "candidate_precedes_acceptance_publication": true,
+    "accepted_manifest_authored_after_role_base": true,
+    "accepted_manifest_committed": false,
+    "approval_timestamp_disclosure": "The bound acceptance records 2026-07-21T00:00:00Z, earlier than truth, review, and candidate publication. Acceptance publication is a descendant of those artifacts and binds their exact hashes. This manifest preserves the mismatch and does not represent the nominal timestamp as lifecycle-order proof."
+  },
+  "disclosures": [
+    {
+      "id": "T5B-PROVENANCE-LOCAL",
+      "scope": "all selected Batch B role receipts",
+      "rule": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable and are not claimed. Exact local SHA-256 bindings, committed Git ancestry, declared role scope, immutable source envelopes, and fresh independent re-derivation are the compensating controls."
+    },
+    {
+      "id": "T5B-BROWSER-SHADOW-GATE-DUNGEON",
+      "scope": "Shadow Gate Dungeon browser evidence",
+      "rule": "The disposition is bounded non-runnable/unknown. Movement, transition, compact/wide behavior, trusted input, responsive outcome, persistence, production result, and asset loading remain unknown; screenshots alone do not pass."
+    },
+    {
+      "id": "T5B-BROWSER-LABYRINTH-GOBLIN-KING",
+      "scope": "Labyrinth of the Goblin King browser evidence",
+      "rule": "The disposition is bounded non-runnable/unknown. Candidate routes and all live behavior remain unknown; screenshots alone do not pass."
+    },
+    {
+      "id": "T5B-BROWSER-GRIFFIN-RIDERS-ESCAPE",
+      "scope": "Griffin Rider's Escape browser evidence",
+      "rule": "The disposition is bounded non-runnable/unknown. Candidate routes and all live behavior remain unknown; screenshots alone do not pass."
+    },
+    {
+      "id": "T5B-GRIFFIN-HISTORICAL-ONLY",
+      "scope": "fourteen Griffin Rider's Escape claims",
+      "rule": "All fourteen claims are historical and strictly ancestral to the source baseline. They are not promoted to current implementation, current product behavior, or browser behavior."
+    },
+    {
+      "id": "T5B-TIMING-ACCOUNTING",
+      "scope": "bound Batch B producer and reviewer receipts",
+      "rule": "Harness timing was unavailable. Every selected elapsed_minutes=0 value is an owner-directed accounting fallback only, not elapsed-time, duration, performance, session, provider-timing, or wall-clock evidence."
+    },
+    {
+      "id": "T5B-REVIEW-COUNT-ARITHMETIC",
+      "scope": "immutable V2 review and review receipt",
+      "rule": "The review records stale aggregate pytest counts that exceed the bound module's 18-test inventory. Direct candidate-stage execution established 15 non-lifecycle plus 3 lifecycle tests. The review bytes remain immutable, the arithmetic is not relabeled as green, and no evidence or lifecycle disposition changes."
+    },
+    {
+      "id": "T5B-CANDIDATE-LIFECYCLE-STATE",
+      "scope": "immutable candidate and candidate-author receipt",
+      "rule": "The candidate artifacts correctly recorded owner acceptance and accepted manifest as absent at candidate authorship time. Both later lifecycle stages are additive descendant artifacts; the candidate remains historically non-consumable and is not mutated or relabeled."
+    },
+    {
+      "id": "T5B-REVIEW-LIFECYCLE-STATE",
+      "scope": "immutable V2 review and review receipt",
+      "rule": "The review authorized candidate publication only and correctly recorded later lifecycle artifacts as absent at review time. Candidate, owner acceptance, and this manifest were added in descendant stages; the historical review authorization is not broadened or relabeled as owner acceptance."
+    },
+    {
+      "id": "T5B-ACCEPTANCE-TIMESTAMP",
+      "scope": "acceptance chronology",
+      "rule": "The nominal approval event timestamp predates truth, review, and candidate publication. It is preserved as bound metadata and is not represented as publication-order proof; exact hash bindings and immutable descendant Git publication order are the chronology controls."
+    },
+    {
+      "id": "T5B-ACCEPTANCE-SEPARATE-LIFECYCLE",
+      "scope": "owner acceptance authorization boundary",
+      "rule": "The immutable owner artifact is not itself a consumable manifest and records accepted-manifest authorization as false at its authorship boundary. This separately assigned accepted-manifest-author artifact records the exact decision; it does not originate, replay, broaden, replace, or mutate owner acceptance."
+    },
+    {
+      "id": "T5B-AUTHOR-BUDGET-UNDECLARED",
+      "scope": "candidate-manifest and accepted-manifest author roles",
+      "rule": "The frozen budget declares no ceiling for either manifest-author role. No ceiling is invented or borrowed and no budget waiver or within-ceiling conclusion is claimed for those roles."
+    }
+  ],
+  "completion_and_behavior_claims": {
+    "completion": false,
+    "completion_success_claimed": false,
+    "persistence": false,
+    "persistence_claimed": false,
+    "xp_awarded": false,
+    "xp_awarded_claimed": false,
+    "idempotency": false,
+    "idempotency_claimed": false,
+    "api_correctness": false,
+    "api_correctness_claimed": false,
+    "browser_behavior_success": false,
+    "browser_behavior_success_claimed": false
+  },
+  "conditional_consumption": {
+    "status": "consumable-only-with-disclosures",
+    "requirements": [
+      "Every consumer must bind this exact accepted-manifest digest through the separate accepted-manifest-author receipt.",
+      "Every consumer must preserve all twelve disclosures, all excluded uses, and every false completion and behavior claim without narrowing or omission.",
+      "Every consumer must remain within the three-package bounded evidence scope, treat all browser behavior as unknown, and retain the fourteen Griffin claims as historical only.",
+      "The accepted evidence may not be used as an ontology, cross-game standardization, shared-system, implementation, full-cohort-completion, track-completion, or downstream product decision.",
+      "Consumption stops immediately when any automatic revocation trigger is observed."
+    ]
+  },
+  "revocation_rules": {
+    "automatic_triggers": [
+      "Any byte or SHA-256 change to the bound owner acceptance, candidate, candidate receipt, V2 review, V2 review receipt, V2 truth test, V2 truth receipt, governing input, predecessor, selected input, reviewed output, producer receipt, browser audit, or browser receipt.",
+      "Any phase-base, truth-role-base, truth-publication, review-role-base, review-audited-head, review-publication, candidate-role-base, candidate-publication, acceptance-publication, source-baseline, or accepted-manifest-role-base mismatch, or failure of the declared Git ancestor chain.",
+      "Revocation, replay, supersession, unresolved state, or authority invalidation of the exact owner acceptance; or revocation or supersession of any bound predecessor or owner direction.",
+      "Any later unsupported factual claim, citation-envelope mismatch, semantic-anchor mismatch, denominator mismatch, stale mapper or receipt binding, unexcepted budget breach, changed browser disposition, browser-behavior overclaim, historical-to-current promotion, or unresolved Critical, High, or Medium finding.",
+      "Any claim or implication of successful route reachability, movement, transition, responsive behavior, trusted input behavior, completion, persistence, XP award, idempotency, API correctness, production behavior, or asset loading from this accepted evidence.",
+      "Any omission, mutation, or misuse of a disclosure, including representation of elapsed_minutes=0 as measured time, stale review arithmetic as a green exact count, the nominal approval timestamp as publication-order proof, historical candidate or review lifecycle language as current state, or owner acceptance as the accepted manifest itself.",
+      "Any consumption outside the three-package bounded evidence scope or after a relevant implementation, route, source, evidence, direction, review, acceptance, or lifecycle change without additive supersession and fresh gates."
+    ],
+    "on_trigger": "Stop consumption immediately. Publish an additive revocation or supersession record naming the exact accepted-manifest SHA-256, mark that digest revoked in successor lifecycle state, regenerate every affected output and receipt, rerun equivalent evidence and lifecycle gates, obtain a fresh zero-blocker independent review and exact product-owner acceptance, then publish a new accepted manifest. Never mutate this manifest, its candidate, its acceptance, or their receipts in place.",
+    "revocation_record_required": true,
+    "revocation_event_sha256": null,
+    "supersedes_accepted_manifest_sha256": null,
+    "superseded_by_accepted_manifest_sha256": null
+  },
+  "lifecycle": {
+    "candidate_manifest_published": true,
+    "candidate_manifest_consumable": false,
+    "product_owner_acceptance_published": true,
+    "accepted_manifest_published": true,
+    "accepted_manifest_consumable": true,
+    "accepted_manifest_consumability": "conditional",
+    "accepted_manifest_author_receipt_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/accepted-manifest-author-batch-b-v2.json",
+    "accepted_manifest_author_receipt_sha256": null,
+    "accepted_manifest_author_receipt_hash_rule": "The separately authored receipt binds these exact manifest bytes; this manifest cannot embed the later receipt digest without a hash cycle.",
+    "lifecycle_status": "accepted with disclosure; conditionally consumable while every exact binding, disclosure, scope limit, false behavior claim, consumption requirement, and revocation condition remains satisfied"
+  },
+  "manifest_identity": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-b-v2.json",
+    "self_sha256": null,
+    "self_hash_rule": "The manifest cannot embed its own stable digest. The separate accepted-manifest-author receipt binds these exact bytes."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
