@@ -1,0 +1,18 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "status": "fresh T4 Archer collector V6 complete; additive source-completeness package; acceptance not claimed",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-COLLECT-ARCHERS-HIGH-003-V6",
+  "role": "evidence-collector-archers-revenge-batch-b-v6",
+  "role_base_sha": "9de8a51d236e1fd9b8a4413ecc9d65da1500b129",
+  "source_baseline_revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+  "supersedes": {"ledger":"archers-revenge-claim-ledger-batch-b-v3.json","reason":"Adds the missing reachable source-backed mechanics and surfaces without mutating predecessors."},
+  "outputs": {"ledger":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v6.json","method":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b-v6.md","report":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v6.json","receipt":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v6.json","self_sha256":null},
+  "output_hashes": {"ledger_sha256":null,"method_sha256":null,"report_sha256":null,"receipt_sha256":null,"note":"Hashes are intentionally unbound until an authorized exact-byte downstream binding; no commit was created."},
+  "coverage": {"added_claims":25,"inherited_claims":20,"added_fixtures":4,"browser_interactions":0,"mapper_work":false,"review_work":false},
+  "provider_provenance": {"unavailable":true,"attestation_claimed":false,"note":"Provider prompt, context, spawn, ancestry, isolation, event, timing, final-response, and commit attestations were unavailable; no null is presented as an attestation."},
+  "validation": {"json_shape":"locally authored; downstream json.tool and exact envelope re-derivation required","diff_check":"required","commit_sha":null},
+  "role_boundary":"Only the additive V6 ledger, method, report, and receipt were created. No mapper, browser, review, truth test, candidate, acceptance, manifest, plan, registry, or product code was modified."
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "status": "additive-browser-accounting-remediation; behavior-not-claimed",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "task_id": "audit-browser:Dragon Rider",
+  "role": "browser-auditor-batch-a-v2",
+  "game": "Dragon Rider",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "9de8a51d236e1fd9b8a4413ecc9d65da1500b129",
+  "supersedes": {"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/browser-auditor-dragon-rider.json","sha256":"5c96218f0f273ba6e6c525e4a5c785086395800a22a30231a9b13a7d81930a38"},
+  "budget_declaration_sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+  "actual_usage": {"source_bytes":0,"source_files_objects":0,"commands":7,"records_authored_reviewed":0,"browser_interactions":8,"captured_artifacts":0,"elapsed_minutes":0},
+  "timing_accounting": {"direction_sha256":"3b3fea0b22f5ac379a1bb3518b1095bc8f3a366eaa7eb2f677b69ac6ffddb2c0","measurement":"unavailable-in-harness","fallback":"0","note":"Zero is not elapsed-time evidence."},
+  "behavior_boundary": "No behavior is claimed; the bounded route/API refusal observations remain unknown with no trusted or synthetic input.",
+  "output_paths": ["measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/browser-audit-v2.json","measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/browser-auditor-dragon-rider-v2.json"],
+  "output_hashes": {"audit":"computed-after-write","self":"intentionally-not-self-hashed"},
+  "commit_sha": null,
+  "marker": "MEASURE_AGENT_RESULT"
+}

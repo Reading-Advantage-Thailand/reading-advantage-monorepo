@@ -1,0 +1,54 @@
+{
+  "schema_version": "apk-browser-audit.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "task_id": "audit-browser:Dungeon Liberator",
+  "role": "browser-auditor-batch-a-v2",
+  "game": "Dungeon Liberator",
+  "package_identity": "sentence/dungeon-liberator",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "9de8a51d236e1fd9b8a4413ecc9d65da1500b129",
+  "supersedes": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/browser-audit.json",
+    "sha256": "a8a3e6d81fa7d796f20db749802d618062cd0380ba1713042f3482e336773a5e"
+  },
+  "provenance_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+  },
+  "disposition": "browser-audit-blocked-browser-unavailable",
+  "behavior_boundary": "No browser behavior, route reachability, transition, input, responsive result, persistence, production result, or asset load is claimed. Candidate routes remain unknown because no browser session was available.",
+  "observations": {
+    "route_attempts": 0,
+    "application_responses": 0,
+    "trusted_input_events": 0,
+    "synthetic_input_events": 0,
+    "compact_view_observed": false,
+    "wide_view_observed": false,
+    "transitions_observed": 0,
+    "captured_artifacts": 0
+  },
+  "budget_accounting": {
+    "declaration_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+    "declaration_sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+    "actual": {
+      "source_bytes": 0,
+      "source_files_objects": 0,
+      "commands": 3,
+      "records_authored_reviewed": 0,
+      "browser_interactions": 0,
+      "captured_artifacts": 0,
+      "elapsed_minutes": 0
+    },
+    "timing_direction": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v2.json",
+      "sha256": "3b3fea0b22f5ac379a1bb3518b1095bc8f3a366eaa7eb2f677b69ac6ffddb2c0",
+      "timing_measurement": "unavailable-in-harness",
+      "timing_note": "elapsed_minutes=0 is the owner-directed fallback for unavailable timing, not elapsed-time evidence."
+    },
+    "accounting_scope": "Browser-session actions only; no repository source was read for this superseding browser record. All non-timing actuals are measured integer counts."
+  },
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

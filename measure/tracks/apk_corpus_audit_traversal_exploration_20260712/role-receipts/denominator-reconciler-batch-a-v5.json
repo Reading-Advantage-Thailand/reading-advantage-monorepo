@@ -1,0 +1,40 @@
+{
+  "schema": "apk-role-receipt.v3",
+  "status": "complete; denominator hash mismatch resolved; acceptance not claimed",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "task_id": "reconcile-denominator-batch-a:v5",
+  "role": "denominator-reconciler-batch-a-v5",
+  "role_base_sha": "9de8a51d236e1fd9b8a4413ecc9d65da1500b129",
+  "role_boundary": "Only the additive denominator reconciliation report and this receipt were created. No source claims, requirements maps, browser artifacts, existing artifacts, tests, plans, manifests, or commits were modified.",
+  "input_hashes": {
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-independent-review-v4.json": "bffa3fbb1539a779ba64845d1f116078e22100b213c1883d996f68af236bbc79"
+  },
+  "correction": {
+    "finding_id": "T5A-V4-H-001",
+    "old_value": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+    "new_value": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "mismatch_count_after_reconciliation": 0
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-denominator-reconciliation-v5.json",
+      "sha256": "2a26052f88f07a02bc2d903fc48daf3c0292e7707164ed3a1a473fe1e92d71cb"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/denominator-reconciler-batch-a-v5.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot embed its own final digest without changing its bytes; no commit is claimed."
+    }
+  ],
+  "tool_boundary": {
+    "source_claims": "not read or authored",
+    "requirements_maps": "not read or authored",
+    "browser": "not used",
+    "commit": "prohibited by user"
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

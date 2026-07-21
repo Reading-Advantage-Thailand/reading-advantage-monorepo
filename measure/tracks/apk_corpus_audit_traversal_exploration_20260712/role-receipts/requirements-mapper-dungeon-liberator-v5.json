@@ -1,0 +1,20 @@
+{
+  "schema":"apk-role-receipt.v5",
+  "status":"additive V5 mapper correction complete; acceptance not claimed",
+  "acceptance":"not-claimed",
+  "track_id":"apk_corpus_audit_traversal_exploration_20260712",
+  "phase":"Phase 1: Batch A remediation V5",
+  "task_id":"map-requirements:Dungeon Liberator:v5",
+  "role":"fresh-t5-dungeon-liberator-requirements-mapper-v5",
+  "game":"Dungeon Liberator",
+  "role_base_sha":"9de8a51d236e1fd9b8a4413ecc9d65da1500b129",
+  "input_hashes":{"claim_ledger_v3":"f8112af605465ffcf461669e5560037261943df98185bfeb8728a6496997e2a2","collector_report_v3":"87ac4103859da863367088e19c213fae9a02baeecf38e840f085b0a02bd32415","collector_receipt_v3":"62edc32b4b5d89be91db4d6750d2e5fcc6289f48d12c3492c52be66ca76fa9e4","review_v4":"bffa3fbb1539a779ba64845d1f116078e22100b213c1883d996f68af236bbc79","superseded_map_v3":"70881824a63dd51af5a73d268c1f6facdfdedd888fbdfbfe92783359904d94cb","superseded_report_v3":"5f5c6fbc2f859708f6ba906732d84792438160b78e7ac481c1097d9c156b8b19"},
+  "outputs":[{"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/requirements-map-v5.json","sha256":"bd3848442cf5356df6b53243bc5596a33d3d56fbc9d23531da0cc7b1a2698ee1"},{"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/requirements-final-report-v5.json","sha256":"de8f8a205e4bf13f9159c96361ef8415c541abe0a01bd6b2329bb0deb6b4b2c7"}],
+  "reference_accounting":{"active_v3_factual_claims":18,"mapped_claim_reference_occurrences":54,"mapped_claim_reference_distinct":21,"unresolved_claim_ids":0,"foreign_claim_ids":0,"negative_fixture_references":3,"novel_factual_claims":0,"unsupported_keyboard_wiring_atoms":0},
+  "unknowns_preserved":["Keyboard event binding and trusted native execution remain unknown.","Browser, runnable, viewport, asset-runtime, provider, and timing outcomes remain unknown.","Rooms, floors, gates, lane topology, camera dead zone, and physical obstacle geometry remain unsupported unknowns."],
+  "supersession":{"supersedes_map":"requirements-map-v3.json","supersedes_report":"requirements-final-report-v3.json","scope_limit":"Only the additive V5 map/report/receipt were created. Existing V3/V4 artifacts and unrelated working-tree changes were preserved."},
+  "provider_provenance":{"prompt_sha256":null,"actual_context_manifest_sha256":null,"provider_spawn_id":null,"provider_session_id":null,"parent_ancestry_ids":null,"fork_turns":null,"commit_sha":null,"unavailable_note":"Provider-side attestations are unavailable; nulls are truthful non-attestations. No browser or new source fact was used."},
+  "receipt_self_hash":"not embedded; an authorized later binder may hash this receipt without modifying it",
+  "reviewer_disposition":"pending fresh independent review of exact V5 mapper bytes",
+  "marker":"MEASURE_AGENT_RESULT"
+}

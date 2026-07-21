@@ -1,0 +1,61 @@
+{
+  "schema": "apk-batch-denominator-reconciliation.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "denominator-reconciler-batch-a-v5",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "9de8a51d236e1fd9b8a4413ecc9d65da1500b129",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "scope": {
+    "batch": "A",
+    "active_packages": [
+      "vocabulary/dragon-rider",
+      "sentence/dungeon-liberator",
+      "catalog/spellweavers-run"
+    ],
+    "excluded": ["source claims", "requirements maps", "browser evidence"]
+  },
+  "authority": {
+    "accepted_denominator_manifest_path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+    "accepted_denominator_manifest_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "accepted_partition_manifest_path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+    "accepted_partition_manifest_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "rule": "The accepted denominator manifest digest is distinct from the evidence-integrity gate-manifest digest."
+  },
+  "reconciliation": {
+    "reported_finding": "T5A-V4-H-001",
+    "reported_package": "vocabulary/dragon-rider",
+    "reported_path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+    "reported_embedded_value": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+    "reported_embedded_value_actual_target": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v8-accepted-gate-manifest.json",
+    "corrected_embedded_value": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "corrected_value_target": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+    "exact_binding_matches": true,
+    "denominator_mismatches": 0,
+    "disposition": "resolved-for-denominator-scope-only"
+  },
+  "package_bindings": [
+    {
+      "package": "vocabulary/dragon-rider",
+      "accepted_denominator_manifest_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+      "status": "corrected"
+    },
+    {
+      "package": "sentence/dungeon-liberator",
+      "accepted_denominator_manifest_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+      "status": "unchanged-and-reconciled"
+    },
+    {
+      "package": "catalog/spellweavers-run",
+      "accepted_denominator_manifest_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+      "status": "unchanged-and-reconciled"
+    }
+  ],
+  "boundaries": {
+    "claims_authored": 0,
+    "maps_authored": 0,
+    "browser_observations_authored": 0,
+    "acceptance": "not-claimed"
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

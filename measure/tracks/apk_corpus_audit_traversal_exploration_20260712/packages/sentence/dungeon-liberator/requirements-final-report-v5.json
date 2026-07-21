@@ -1,0 +1,16 @@
+{
+  "schema":"apk-mapper-final-report.v5",
+  "track_id":"apk_corpus_audit_traversal_exploration_20260712",
+  "phase":"Phase 1: Batch A remediation V5",
+  "role":"fresh-t5-dungeon-liberator-requirements-mapper-v5",
+  "game":"Dungeon Liberator",
+  "requirements_map":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/requirements-map-v5.json",
+  "evidence_ledger":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger-v3.json",
+  "scope":"Additive V5 mapper correction only: remove the unsupported keyboard-wiring atom, split source declarations from unknown runtime behavior, and bind exact V3 claim IDs.",
+  "mapped_record_counts":{"scene_state_transition":10,"mechanics_learning":5,"developer_effort":5,"unknown":4,"negative_fixture":3},
+  "claim_reference_validation":{"ledger_factual_claim_ids":18,"factual_claim_ids_referenced":18,"negative_fixture_claim_ids_referenced":3,"unresolved_claim_ids":0,"foreign_claim_ids":0,"factual_claims_without_citation":0,"novel_source_facts":0,"browser_claims":0,"effort_estimates":0,"unsupported_keyboard_wiring_atoms":0},
+  "review_finding_disposition":{"T5A-V4-H-004":"resolved in the mapper output only: DL-V5-ML-004A retains DL-INPUT-001/DL-INPUT-003 integration facts; DL-V5-ML-004B retains only the DL-INPUT-002 control-label declaration and explicitly preserves keyboard binding/execution as unknown."},
+  "provenance":{"role_base_sha":"9de8a51d236e1fd9b8a4413ecc9d65da1500b129","provider_attestation":"unavailable and not claimed","acceptance_claimed":false,"commit_sha":null},
+  "disposition":"non-consumable additive mapper output; fresh independent review, exact binding, lifecycle authorization, and committed binding remain required",
+  "marker":"MEASURE_AGENT_RESULT"
+}

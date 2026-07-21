@@ -1,0 +1,53 @@
+{
+  "schema": "apk-requirements-map.v5",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A remediation V5",
+  "task_id": "map-requirements:dungeon-liberator:v5",
+  "role": "fresh-t5-dungeon-liberator-requirements-mapper-v5",
+  "game": "Dungeon Liberator",
+  "canonical_identity": "sentence/dungeon-liberator",
+  "role_base_sha": "9de8a51d236e1fd9b8a4413ecc9d65da1500b129",
+  "source_fact_policy": "Every factual proposition is bound to one or more exact V3 ledger claim IDs. Unsupported mapping atoms are removed or split into a narrower cited proposition and an explicit unknown.",
+  "review_finding_addressed": {
+    "id": "T5A-V4-H-004",
+    "disposition": "DL-V3-ML-004 is split: source-declared directional-input integration and VirtualDPad wiring remain mapped; the start-screen Arrows/WASD label is retained only as a declaration, while keyboard event binding and execution remain unknown."
+  },
+  "scene_state_transition_model": [
+    {"id":"DL-V5-SST-001","statement":"The source-defined playing world has an 800-by-600 coordinate extent and initializes a player, sentence-word prisoners, an empty trail, an empty monster array, and a portal at the cited positions.","claim_ids":["DL-TOPO-001","DL-TOPO-002"]},
+    {"id":"DL-V5-SST-002","statement":"While playing, the advance function updates player movement, prisoners, trail, monsters, collisions, and victory checking in the cited order; player input is diagonal-normalized, speed- and dt-scaled, and clamped inside the rectangular world boundary.","claim_ids":["DL-MOVE-001","DL-MOVE-002"]},
+    {"id":"DL-V5-SST-003","statement":"Prisoner contact is radius-based: the next ordered word is appended to the trail, while an out-of-order contact makes the prisoner flee for 1500 ms and rescatteres and resets the collected trail.","claim_ids":["DL-COLL-001"]},
+    {"id":"DL-V5-SST-004","statement":"Monster-trail contact rescatteres the affected trail suffix and grants invulnerability; player-monster contact clears a nonempty trail or decrements lives and enters defeat at zero lives.","claim_ids":["DL-COLL-002"]},
+    {"id":"DL-V5-SST-005","statement":"The source-defined victory state requires portal contact and a trail whose length equals the sentence word count; the component then awards XP and correct-word totals, calls advanceToNextLevel, and installs the returned next state.","claim_ids":["DL-TRANS-001","DL-TRANS-003"]},
+    {"id":"DL-V5-SST-006","statement":"The next-level reset increments level, creates a new sentence and prisoner set, appends one monster, and resets trail, target index, and player position for playing.","claim_ids":["DL-TRANS-002"]},
+    {"id":"DL-V5-SST-007","statement":"The source-defined start branch renders the start screen; its callback resets the game, sets phase to playing, and enters fullscreen.","claim_ids":["DL-START-001"]},
+    {"id":"DL-V5-SST-008","statement":"The component obtains directional input and a virtual-input setter, maintains camera x/y/scale, follows and clamps the camera to the player, declares a virtual directional pad, and defines the cited responsive play-container classes.","claim_ids":["DL-INPUT-001","DL-INPUT-003","DL-CAMERA-001","DL-RESP-001"]},
+    {"id":"DL-V5-SST-009","statement":"The source references four gameplay asset paths and the page fetches locale-specific sentences before passing them to the game; these are source references only, not load, browser, or route-execution observations.","claim_ids":["DL-ASSET-001","DL-ROUTE-001"]},
+    {"id":"DL-V5-SST-010","statement":"The indicator calculation excludes collected or fleeing prisoners, projects remaining positions through camera scale and offset, and creates an edge-positioned indicator for positions outside the viewport.","claim_ids":["DL-IND-001"]}
+  ],
+  "mechanics_learning_model": [
+    {"id":"DL-V5-ML-001","statement":"The source-defined learning interaction presents sentence words as ordered prisoners: collecting the next word appends it to the trail, while wrong-order contact triggers flee, rescatter, and reset consequences.","claim_ids":["DL-COLL-001"]},
+    {"id":"DL-V5-ML-002","statement":"Completion is source-gated by collecting every sentence word before portal contact; the resulting victory path awards XP and correct-word totals and hands off to a reset next level.","claim_ids":["DL-TRANS-001","DL-TRANS-003","DL-TRANS-002"]},
+    {"id":"DL-V5-ML-003","statement":"Monster contact supplies the source-defined hazard loop: trail interaction rescatteres a suffix and grants invulnerability, while contact without a trail costs a life and can defeat.","claim_ids":["DL-COLL-002"]},
+    {"id":"DL-V5-ML-004A","statement":"The component obtains directional input and a virtual-input setter, and renders VirtualDPad with that setter; these are source-level integration and component-wiring propositions, not proof of native execution.","claim_ids":["DL-INPUT-001","DL-INPUT-003"]},
+    {"id":"DL-V5-ML-004B","statement":"The start-screen label declares Arrows / WASD as controls; keyboard event binding, trusted native execution, and browser learning behavior remain unknown.","claim_ids":["DL-INPUT-002"],"disposition":"source declaration plus preserved unknown; no keyboard-wiring proposition"
+    }
+  ],
+  "developer_effort_model": [
+    {"id":"DL-V5-DE-001","area":"world and state simulation","statement":"Implementation-surface decomposition includes bounded world/state initialization, player movement, prisoner/trail/monster updates, collision handling, and victory checking; this is not a person-hour estimate.","claim_ids":["DL-TOPO-001","DL-TOPO-002","DL-MOVE-001","DL-MOVE-002","DL-COLL-001","DL-COLL-002","DL-TRANS-001"]},
+    {"id":"DL-V5-DE-002","area":"level progression and component orchestration","statement":"Implementation-surface decomposition includes next-level state creation, component victory handoff, and start-screen reset/fullscreen orchestration; actual effort remains unknown.","claim_ids":["DL-TRANS-002","DL-TRANS-003","DL-START-001"]},
+    {"id":"DL-V5-DE-003","area":"input camera responsive and indicator presentation","statement":"Implementation-surface decomposition includes directional-input integration, camera transform and clamping, virtual directional control, responsive container rules, and off-screen prisoner indicators; no runtime effort estimate is inferred.","claim_ids":["DL-INPUT-001","DL-CAMERA-001","DL-INPUT-002","DL-RESP-001","DL-INPUT-003","DL-IND-001"]},
+    {"id":"DL-V5-DE-004","area":"route and asset reference boundary","statement":"Implementation-surface decomposition includes the page sentence-fetch path and four component asset references; binary availability, loading, and runnable route status are not effort evidence.","claim_ids":["DL-ASSET-001","DL-ROUTE-001"]},
+    {"id":"DL-V5-DE-005","area":"effort boundary","statement":"No developer-hours, complexity score, reuse decision, or current implementation estimate is claimed; the cited IDs only inventory source-defined surfaces.","claim_ids":["DL-TOPO-001","DL-TOPO-002","DL-MOVE-001","DL-MOVE-002","DL-COLL-001","DL-COLL-002","DL-TRANS-001","DL-TRANS-002","DL-TRANS-003","DL-START-001","DL-INPUT-001","DL-CAMERA-001","DL-INPUT-002","DL-RESP-001","DL-INPUT-003","DL-ASSET-001","DL-IND-001","DL-ROUTE-001"]}
+  ],
+  "unknowns_preserved": [
+    {"topic":"keyboard-and-browser-behavior","disposition":"unknown; the Arrows / WASD label and source-level input integrations do not establish hook implementation, native event binding, trusted input, browser learning behavior, viewport behavior, console, network, or runnable status","claim_ids":["DL-INPUT-001","DL-INPUT-002","DL-INPUT-003","DL-RESP-001","DL-ROUTE-001"]},
+    {"topic":"asset-runtime-outcome","disposition":"unknown; source paths do not establish binary availability, dimensions, loading, or visual suitability","claim_ids":["DL-ASSET-001"]},
+    {"topic":"unsupported-topology-and-geometry","disposition":"unknown; rooms, floors, gates, lane topology, camera dead zone, and physical obstacle geometry are not asserted","claim_ids":["DL-TOPO-001","DL-TOPO-002","DL-CAMERA-001"]},
+    {"topic":"provider-and-timing-provenance","disposition":"unavailable; provider attestations and trusted elapsed timing are not claimed","claim_ids":[]}
+  ],
+  "negative_fixtures":[{"claim_id":"DL-NEG-001","disposition":"REJECT"},{"claim_id":"DL-NEG-002","disposition":"REJECT"},{"claim_id":"DL-NEG-003","disposition":"REJECT"}],
+  "input_bindings":{"claim_ledger":"claim-evidence-ledger-v3.json","collector_report":"evidence-final-report-v3.json","collector_receipt":"role-receipts/evidence-collector-dungeon-liberator-v3.json","prior_map":"requirements-map-v3.json","prior_report":"requirements-final-report-v3.json","review":"batch-a-independent-review-v4.json"},
+  "counts":{"collector_factual_claims":18,"negative_fixtures":3,"mapped_proposition_count":23,"distinct_referenced_claim_ids":21,"unresolved_claim_ids":0,"foreign_claim_ids":0,"uncited_source_facts":0,"browser_claims":0,"effort_estimates":0,"unsupported_keyboard_wiring_atoms":0},
+  "acceptance":"not-claimed",
+  "marker":"MEASURE_AGENT_RESULT"
+}

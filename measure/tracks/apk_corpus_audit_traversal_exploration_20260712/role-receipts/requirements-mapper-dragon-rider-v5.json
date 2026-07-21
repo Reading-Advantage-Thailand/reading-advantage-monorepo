@@ -1,0 +1,31 @@
+{
+  "schema":"apk-role-receipt.v3",
+  "status":"V5 mapper package locally verified; independent review and lifecycle acceptance remain pending",
+  "acceptance":"not-claimed",
+  "track_id":"apk_corpus_audit_traversal_exploration_20260712",
+  "phase":"Phase 1: Batch A remediation V5",
+  "task_id":"map-requirements:vocabulary/dragon-rider:v5",
+  "role":"fresh-t5-dragon-rider-requirements-mapper-v5",
+  "game":"dragon-rider",
+  "phase_base_sha":"52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha":"9de8a51d236e1fd9b8a4413ecc9d65da1500b129",
+  "input_hashes":{
+    "claim_ledger":"826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236",
+    "collector_report":"786f4097a204047b2d7a24ed3f9caf2473775042f912140cbee4feaaaa7928b8",
+    "collector_method":"a13ead6576ff7cde948f68d996ed4fc8b6901ecf4d93394ff7410603c9458a6c",
+    "collector_rebind_report":"3912a12ee752b340f405c948e5120d3c714ad5b78c22a0a0fe5f2b0e2bd9bc66",
+    "collector_receipt":"a88d6a7eb72f5b5bbf41459cfa867bae3d7189b5ba4139bf808867c560733baf",
+    "prior_map":"1b6b52bd21ecefdff0edab3cbe27e6edc3e615ff274d1f10e1d65b9721ef96a6",
+    "review":"8eb21f34687e3afeb7a89ccd9ecd9aa5fbc16308f626731d47dbedbbde37216e"
+  },
+  "outputs":[
+    {"path":"packages/vocabulary/dragon-rider/requirements-map-v5.json","sha256":"7c06238ae6927488809089dc8e7f5779a7ebf0f98721a0d03e6b92bce845c0d9"},
+    {"path":"packages/vocabulary/dragon-rider/requirements-final-report-v5.json","sha256":"a11a4a0d39257887189564d6a9eef674b253b9dfe2964c42584bdf4241d4e1e1"}
+  ],
+  "reference_accounting":{"active_v3_claims":20,"mapped_claim_reference_distinct":20,"unresolved_claim_ids":0,"foreign_claim_ids":0,"negative_fixture_references":3,"novel_factual_claims":0,"browser_claims":0},
+  "provenance_direction":{"mode":"LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE","provider_attestations":"unavailable and not claimed","commit_sha":"uncommitted; user explicitly prohibited commit"},
+  "role_boundary":"Only the additive Dragon Rider V5 map, report, and receipt were created. Existing artifacts and unrelated working-tree changes were preserved; no browser or new source claim was added.",
+  "reviewer_disposition":"pending fresh independent review",
+  "measure_agent_result":{"status":"complete-additive-uncommitted","candidate":false,"acceptance":"not-claimed"},
+  "marker":"MEASURE_AGENT_RESULT"
+}

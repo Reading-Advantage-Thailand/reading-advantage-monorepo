@@ -1,0 +1,17 @@
+{
+  "schema": "apk-evidence-final-report.v6",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "game": "Archer's Revenge",
+  "normalized_game_id": "archers-revenge",
+  "collector_id": "evidence-collector-archers-revenge-batch-b-v6",
+  "role_base_sha": "9de8a51d236e1fd9b8a4413ecc9d65da1500b129",
+  "status": "additive source-completeness remediation; non-authoritative pending downstream exact validation and independent review",
+  "finding_addressed": "T4B7-HIGH-003",
+  "source_authority": {"claim_ledger":{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v6.json","sha256":null},"source_revision":"cd1936387d136ffb12e77a647f36cbce2d1fdd4e","rule":"Only exact Git source envelopes in the V6 ledger establish the added source facts."},
+  "method": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b-v6.md","sha256":null},
+  "completeness": {"new_factual_claims":25,"inherited_factual_claims":20,"aggregate_factual_claims":45,"new_negative_fixtures":4,"all_added_claims_atomic":true,"all_added_claims_exact_enveloped":true,"required_reachable_mechanics_and_surfaces_covered":true,"not_present_items_not_fabricated":true},
+  "boundary": {"current_runtime":"unknown","runnable":"unknown","browser":"not performed","responsive_live_behavior":"unknown","completion_success":"unknown","mapper":"not performed","review":"not performed","provider_provenance":"unavailable and not represented as attestation"},
+  "validation": {"json_documents_valid":true,"source_hash_rederivation":"required downstream","fixture_rejection":"required downstream","git_diff_check":"required","commit_sha":null,"acceptance":"not-claimed"},
+  "resource_use": {"source_bytes_read":120000,"source_files_read":4,"command_invocations":8,"elapsed_minutes":12,"records_authored":32}
+}
