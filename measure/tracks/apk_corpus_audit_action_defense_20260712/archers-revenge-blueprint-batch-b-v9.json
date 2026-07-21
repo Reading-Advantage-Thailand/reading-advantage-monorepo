@@ -1,0 +1,29 @@
+{
+  "schema": "apk-requirements-blueprint.v1",
+  "supersedes": "archers-revenge-blueprint-batch-b-v8.json",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "game": "Archer's Revenge",
+  "normalized_game_id": "archers-revenge",
+  "mapper_role": "requirements-mapper-archers-revenge-batch-b-v9",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "454c78336634a89aa9035099b343468948f2674e",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "source_claim_ledger": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v8.json","sha256":"1fedca7dffa8897a3bb0f5482a1c74c484bc3f16e5361ddd06dcc89ec8ec1ca3"},
+  "source_boundary": {"current":"unknown; no current-runtime proposition is authored","historical":"historical source claims remain historical and are not promoted","runnable":"unknown; no browser work was performed or changed"},
+  "mapped_sections": [
+    {"section":"configuration-and-difficulty","claim_ids":["AR-B2-V8-001","AR-B2-V8-002","AR-B2-V8-003","AR-B2-V8-004","AR-B2-V8-005","AR-B2-V8-006","AR-B2-V8-007"]},
+    {"section":"formation-and-defense-state","claim_ids":["AR-B2-V8-008","AR-B2-V8-009","AR-B2-V8-010","AR-B2-V8-011","AR-B2-V8-012","AR-B2-V8-013"]},
+    {"section":"projectiles-targeting-and-motion","claim_ids":["AR-B2-V8-014","AR-B2-V8-015","AR-B2-V8-016","AR-B2-V8-017","AR-B2-V8-018","AR-B2-V8-019","AR-B2-V8-020","AR-B2-V8-021","AR-B2-V8-023","AR-B2-V8-027"]},
+    {"section":"collision-combat-health-and-waves","claim_ids":["AR-B2-V8-022","AR-B2-V8-024","AR-B2-V8-025","AR-B2-V8-026","AR-B2-V8-028","AR-B2-V8-029"]},
+    {"section":"results-and-integration","claim_ids":["AR-B2-V8-030","AR-B2-V8-031","AR-B2-V8-034","AR-B2-V8-035","AR-B2-V8-036","AR-B2-V8-037","AR-B2-V8-038","AR-B2-V8-039","AR-B2-V8-040"]},
+    {"section":"responsive-and-input-surfaces","claim_ids":["AR-B2-V8-032","AR-B2-V8-033"]},
+    {"section":"baseline-assets-presence-only","claim_ids":["AR-B2-V8-ASSET-001","AR-B2-V8-ASSET-002","AR-B2-V8-ASSET-003"]}
+  ],
+  "referenced_claim_ids": ["AR-B2-V8-001","AR-B2-V8-002","AR-B2-V8-003","AR-B2-V8-004","AR-B2-V8-005","AR-B2-V8-006","AR-B2-V8-007","AR-B2-V8-008","AR-B2-V8-009","AR-B2-V8-010","AR-B2-V8-011","AR-B2-V8-012","AR-B2-V8-013","AR-B2-V8-014","AR-B2-V8-015","AR-B2-V8-016","AR-B2-V8-017","AR-B2-V8-018","AR-B2-V8-019","AR-B2-V8-020","AR-B2-V8-021","AR-B2-V8-022","AR-B2-V8-023","AR-B2-V8-024","AR-B2-V8-025","AR-B2-V8-026","AR-B2-V8-027","AR-B2-V8-028","AR-B2-V8-029","AR-B2-V8-030","AR-B2-V8-031","AR-B2-V8-032","AR-B2-V8-033","AR-B2-V8-034","AR-B2-V8-035","AR-B2-V8-036","AR-B2-V8-037","AR-B2-V8-038","AR-B2-V8-039","AR-B2-V8-040","AR-B2-V8-ASSET-001","AR-B2-V8-ASSET-002","AR-B2-V8-ASSET-003"],
+  "claim_reconciliation": {"ledger_factual_claim_count":43,"mapped_section_count":7,"claim_reference_occurrence_count":43,"unique_referenced_claim_count":43,"resolved_reference_count":43,"unresolved_claim_ids":[],"unreferenced_claim_ids":[],"foreign_claim_ids":[]},
+  "negative_fixtures_preserved": ["AR-B2-V8-FIX-001","AR-B2-V8-FIX-002","AR-B2-V8-FIX-003","AR-B2-V8-FIX-004"],
+  "unknowns_preserved": ["current route and implementation","runnable status and live behavior","live responsive behavior","asset usage","completion persistence/success","provider-side provenance"],
+  "boundary_checks": {"all_v8_claim_ids_bound":true,"historical_only_preserved":true,"browser_or_runtime_claim_authored":false,"asset_usage_claim_authored":false,"webbridge_as_source_authority":false,"provider_provenance_claimed":false,"completion_success_claimed":false},
+  "status": "non-authoritative pending exact V15 validation and fresh independent review"
+}

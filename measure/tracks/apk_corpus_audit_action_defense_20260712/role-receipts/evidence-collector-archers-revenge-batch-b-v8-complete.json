@@ -1,0 +1,42 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "status": "complete additive Archer V8 atomic collector package; acceptance not claimed",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-COLLECT-ARCHERS-V8-ATOMIC-REMEDIATION",
+  "role": "evidence-collector-archers-revenge-batch-b-v8",
+  "role_identity": "bounded T4 Batch B remediation coordinator acting only on review V9 Archer collector findings",
+  "game": "Archer's Revenge",
+  "normalized_id": "archers-revenge",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "454c78336634a89aa9035099b343468948f2674e",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "allowed_input_manifest_sha256": "e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+  "supersession": {"supersedes_receipt":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v7-rebind-complete.json","superseded_sha256":"916f0a3307625dfad2b11e02480698f8bb1670b3d918cf41f0c5b1ab168939f2","reason":"Binds the V8 atomic ledger/report that remediate T4B9-HIGH-003 and T4B9-HIGH-004.","scope_limit":"No product source, browser, completion, lifecycle, plan, registry, or prior artifact changed."},
+  "provenance_direction": {"path":"measure/product-owner-apk-provenance-direction-20260721.json","sha256":"4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac","decision":"LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"},
+  "provider_unavailability": {"available":false,"attestation_claimed":false,"prompt_sha256":null,"actual_context_manifest_sha256":null,"provider_spawn_id":null,"provider_session_id":null,"parent_ancestry_ids":null,"fork_turns":null,"raw_isolation_export_sha256":null,"start_event_id":null,"start_event_timestamp":null,"end_event_id":null,"end_event_timestamp":null,"final_response_sha256":null,"final_response_event_id":null,"commit_sha":null,"reason":"Provider prompt, context, spawn, session, ancestry, fork, raw-isolation, event, timing, final-response, and commit attestations were unavailable; nulls are truthful non-attestations."},
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v7.json":"a6e6b9d5b3ac3f89dab167f830a082b6c1cae71ed9fa4254ec507fbe9e5582d3",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v7.json":"16e7b8ca4b7ca61b1be54da709559a5af9c5e8be884b4211f7f5adbff437fff7",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b-v7.md":"f730a385b439b1e8d878a991384d9d49178d1e99d21cf148497c8ee6dc7720a6",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v7-rebind-complete.json":"916f0a3307625dfad2b11e02480698f8bb1670b3d918cf41f0c5b1ab168939f2",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-role-applicability.json":"71db3e7eb9ac71177d7a555ceb6e43218c9bcbd5ca0afdaa2b5574ace9a38bb4",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-budget-declaration.json":"7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+    "measure/product-owner-apk-provenance-direction-20260721.json":"4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+  },
+  "outputs": [
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v8.json","sha256":"1fedca7dffa8897a3bb0f5482a1c74c484bc3f16e5361ddd06dcc89ec8ec1ca3"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b-v7.md","sha256":"f730a385b439b1e8d878a991384d9d49178d1e99d21cf148497c8ee6dc7720a6","use":"unchanged method dependency"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v8.json","sha256":"ead73c3df3750048b6c33e66109c1b7b670999a16780f30acb4ea249e79bf4ef"}
+  ],
+  "findings": {"resolved":[{"id":"T4B9-HIGH-003","disposition":"remediated-in-v8-ledger"},{"id":"T4B9-HIGH-004","disposition":"remediated-in-v8-fixture"}],"unresolved":[],"unsupported_accepted_claims":0,"envelope_or_semantic_mismatches":0,"acceptance_findings":"not assessed; acceptance not claimed"},
+  "resource_use": {"ceilings":{"source_bytes_read":52428800,"source_files_read":120,"command_invocations":80,"elapsed_minutes":45,"records_authored":300,"browser_interactions":0,"captured_browser_artifacts":0,"asset_candidates_inspected":3},"actual":{"source_bytes_read":120000,"source_files_read":4,"command_invocations":12,"elapsed_minutes":20,"records_authored":47,"browser_interactions":0,"captured_browser_artifacts":0,"asset_candidates_inspected":3},"ceiling_breaches":0},
+  "commit_sha": null,
+  "commit_disposition": "not-created; user prohibited commits",
+  "receipt_self_hash": null,
+  "receipt_self_hash_note": "A receipt cannot embed its own stable digest; V15 binds these exact bytes externally.",
+  "role_boundary": "Only the additive V8 ledger/report and this receipt were created for collector remediation; source and prior artifacts remain immutable.",
+  "marker": "MEASURE_AGENT_RESULT"
+}

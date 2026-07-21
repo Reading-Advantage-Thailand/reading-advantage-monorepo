@@ -1,0 +1,27 @@
+{
+  "schema": "apk-requirements-mapper-report.v5",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "role": "requirements-mapper-archers-revenge-batch-b-v9",
+  "game": "Archer's Revenge",
+  "normalized_id": "archers-revenge",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "454c78336634a89aa9035099b343468948f2674e",
+  "supersession": {
+    "supersedes_report": "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-mapper-final-report-batch-b-v8.json",
+    "superseded_sha256": "f0eef8c29b125c8aa35b7ebdfd2f16881e9ee03d557f7e8d08800e6e94ccdc6b",
+    "reason": "Rebinds the mapper to the exact 43-record V8 atomic ledger and four V8 fixtures.",
+    "scope_limit": "No source fact, browser observation, completion result, or acceptance state is added or changed."
+  },
+  "source_facts": "Only the exact V8 claim ledger supplies factual claims; this report is a claim-reference map.",
+  "source_claim_ledger": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v8.json","sha256":"1fedca7dffa8897a3bb0f5482a1c74c484bc3f16e5361ddd06dcc89ec8ec1ca3"},
+  "collector_report": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v8.json","sha256":"ead73c3df3750048b6c33e66109c1b7b670999a16780f30acb4ea249e79bf4ef"},
+  "map": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-blueprint-batch-b-v9.json","sha256":"7b1591c5ed56538dcc8c94ddb51781fa72f9c9d5344aa812012cef54def5afc7"},
+  "reference_accounting": {"collector_factual_claim_count":43,"mapped_section_count":7,"claim_reference_occurrence_count":43,"unique_referenced_claim_count":43,"resolved_reference_count":43,"unresolved_reference_count":0,"unreferenced_collector_factual_claim_count":0,"negative_fixtures_preserved":4},
+  "mechanics_model": "Configuration, formation, state, targeting, motion, projectile, collision, combat, health, waves, and XP surfaces remain historical source-only atoms.",
+  "surfaces_model": "Responsive composition, pointer-handler, vocabulary-loading, completion-request, and baseline-asset surfaces remain historical or baseline-only atoms.",
+  "unknowns_preserved": ["current route and implementation","runnable status and live behavior","live responsive behavior","asset usage","completion persistence/success","provider-side provenance"],
+  "browser_boundary": "No browser work was performed; exact V3 browser dispositions and limitations remain unchanged.",
+  "completion_boundary": "No successful completion, persistence, XP, idempotency, or API-correctness claim is made.",
+  "acceptance": "not-claimed"
+}

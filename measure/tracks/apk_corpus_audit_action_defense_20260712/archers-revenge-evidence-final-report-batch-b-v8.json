@@ -1,0 +1,68 @@
+{
+  "schema": "apk-evidence-final-report.v8",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "game": "Archer's Revenge",
+  "normalized_game_id": "archers-revenge",
+  "collector_id": "evidence-collector-archers-revenge-batch-b-v8",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "454c78336634a89aa9035099b343468948f2674e",
+  "status": "additive V8 atomic remediation complete; non-authoritative pending fresh independent review",
+  "supersession": {
+    "supersedes_report": "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v7.json",
+    "superseded_sha256": "16e7b8ca4b7ca61b1be54da709559a5af9c5e8be884b4211f7f5adbff437fff7",
+    "review_findings_addressed": ["T4B9-HIGH-003", "T4B9-HIGH-004"],
+    "scope_limit": "No product source, browser evidence, completion result, lifecycle artifact, plan, or registry was changed."
+  },
+  "source_authority": {
+    "claim_ledger": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v8.json","sha256":"1fedca7dffa8897a3bb0f5482a1c74c484bc3f16e5361ddd06dcc89ec8ec1ca3"},
+    "text_revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+    "binary_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "rule": "Only exact envelopes and the exact object-type source check in the V8 ledger establish recorded facts and fixture refutations."
+  },
+  "completeness": {
+    "factual_claims": 43,
+    "negative_fixtures": 4,
+    "atomic_records": 43,
+    "semantic_assertions_rederived": 43,
+    "text_envelopes_rederived": 40,
+    "binary_whole_file_envelopes_rederived": 3,
+    "self_contained_source_checks_rederived": 1,
+    "envelope_or_semantic_mismatches": 0,
+    "unsupported_v7_fields_retained": 0,
+    "current_runtime_claims": 0
+  },
+  "atomic_remediation": {
+    "compound_v7_records_replaced": ["AR-B2-V7-001", "AR-B2-V7-002", "AR-B2-V7-013", "AR-B2-V7-019", "AR-B2-V7-022", "AR-B2-V7-026"],
+    "corrected_category": "AR-B2-V7-017 typed_answer was replaced by AR-B2-V8-024 collision.",
+    "removed_unsupported_sign": "AR-B2-V7-019 positive projectile-speed wording was replaced by source-bounded assignment records AR-B2-V8-026 and AR-B2-V8-027.",
+    "fixture_004": "AR-B2-V8-FIX-004 records a nonempty exact git cat-file object-type query, tree output, exit status 0, and SHA-256 f27e01fe7624cca3e69811a0bf9a4efd9dca9fd39f7a3a8f939cae0cfe8cdfb8."
+  },
+  "boundary": {
+    "current_runtime": "unknown",
+    "runnable": "unknown and unchanged",
+    "browser": "not performed or changed",
+    "responsive_live_behavior": "unknown",
+    "completion_success": "not claimed",
+    "persistence": "not claimed",
+    "xp_award": "not claimed",
+    "idempotency": "not claimed",
+    "api_correctness": "not claimed",
+    "asset_usage": "unknown",
+    "provider_provenance": "unavailable and not represented as attestation",
+    "acceptance": "not-claimed"
+  },
+  "validation": {
+    "json_valid": true,
+    "source_hash_rederivation": "43/43 exact",
+    "semantic_rederivation": "43/43 exact",
+    "fixture_004_query_rederivation": "exact",
+    "commit_sha": null,
+    "commit_disposition": "not-created; user prohibited commits"
+  },
+  "resource_use": {
+    "ceilings": {"source_bytes_read":52428800,"source_files_read":120,"command_invocations":80,"elapsed_minutes":45,"records_authored":300,"browser_interactions":0,"captured_browser_artifacts":0,"asset_candidates_inspected":3},
+    "actual": {"source_bytes_read":120000,"source_files_read":4,"command_invocations":12,"elapsed_minutes":20,"records_authored":47,"browser_interactions":0,"captured_browser_artifacts":0,"asset_candidates_inspected":3},
+    "ceiling_breaches": 0
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "apk-role-receipt-completion-report.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "role": "bounded-t4-batch-b-remediation-coordinator",
+  "role_base_sha": "454c78336634a89aa9035099b343468948f2674e",
+  "status": "review V9 receipt-contract remediation complete for the pre-V15 active role set; fresh review remains required",
+  "finding_addressed": "T4B9-HIGH-002",
+  "selection_rule": "V15 selects only receipts that review V9 classified locally bounded or additive completion receipts with exact bases, allowed-input and budget bindings, exact input/output hashes, findings, explicit provider-unavailability fields, labeled numeric same-unit accounting, and a top-level commit disposition.",
+  "selected_pre_v15_receipts": [
+    {"role_class":"discovery-auditor","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/discovery-auditor-batch-b-v2.json","sha256":"c6c94ea45b4564a5a4cbf17451d0069f3a67e27b63b0af20bbb2bb61df613dfb","contract_status":"locally bounded by review V9"},
+    {"role_class":"evidence-collector-village-guardian","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-village-guardian-batch-b-v3.json","sha256":"057961346dbdae04ce78c3587c13a33a2c87c258be2317b9fcd3963e58aca9b2","contract_status":"locally bounded by review V9; V5 receipt not selected"},
+    {"role_class":"evidence-collector-archers-revenge","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v8-complete.json","sha256":"4ab669f932a58fbcccceed5dfe5c22b9e648ed34961bfd239552f4694d642f1c","contract_status":"complete additive V8 receipt"},
+    {"role_class":"evidence-collector-storm-castle-tower","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-storm-castle-tower-batch-b.json","sha256":"1efd07acda32536ddc19d3472e3f9f010f10649f81aa4dcd173479af636d54d8","contract_status":"locally bounded by review V9"},
+    {"role_class":"requirements-mapper-village-guardian","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-village-guardian-batch-b-v9-complete.json","sha256":"15340e93c6de91c6d4267d93f4d7ebf371ccc064adeae0a7e2d412be89553f5c","contract_status":"complete additive receipt rebind"},
+    {"role_class":"requirements-mapper-archers-revenge","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-archers-revenge-batch-b-v9-complete.json","sha256":"4bcbc36682e11d4ea01ab791827219dffe6f78efc6ffa12d473b5f7c1065f229","contract_status":"complete additive V9 mapper receipt"},
+    {"role_class":"requirements-mapper-storm-castle-tower","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-storm-castle-tower-batch-b.json","sha256":"f24bf7f2b7854580b4f4003a464c274fabb0fe563fdf817a6bc30f7d21ddfdab","contract_status":"locally bounded by review V9"},
+    {"role_class":"browser-auditor","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-b-v4-complete.json","sha256":"fdd40f4aaaad994304c473f537464cba94240fd243da1ef3037e3229eec000f7","contract_status":"complete no-new-browser-work receipt rebind; exact V3 evidence retained"},
+    {"role_class":"asset-auditor","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-b-v3-complete.json","sha256":"fdd8a632b36a10044e46a741078ba9aaf9d7fa61a950f5729edd1cbed9aba765","contract_status":"complete no-new-asset-work receipt rebind; exact V2 evidence retained"},
+    {"role_class":"adversarial-reviewer","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v9.json","sha256":"4dcbffd4fff8a8d94aab188c0d0a6745d183d52af8c009c85a0578a89892af94","contract_status":"schema complete and exact; stale for post-remediation authorization because it reports four High findings"}
+  ],
+  "superseded_or_unselected_blocked_receipts": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-village-guardian-batch-b-v5.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v7-rebind-complete.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-village-guardian-batch-b-v3.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-village-guardian-batch-b-v8.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-archers-revenge-batch-b-v8-fresh.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-b-v3.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-b-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v14.json"
+  ],
+  "preserved_constraints": {
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "browser_audit": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v3.json","sha256":"521e08b7a1ef9309cdf31277d0f07b99700bb7721d97ee3e371321e70cd1e4ca","changed":false},
+    "asset_audit": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-asset-audit-v2.json","sha256":"c66b096726e441e6aab0c7a3ffd2cda81413befb00e1c8586cbe911a31329ebd","changed":false},
+    "completion_direction": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-completion-disposition.json","sha256":"973641c8f0b3f3281e9302d5b488f012be82f401bd6831b104674ce67f8c3960","success_claimed":false}
+  },
+  "provider_provenance": "unavailable and not claimed; exact local hashes only",
+  "commit_sha": null,
+  "commit_disposition": "not-created; user prohibited commits",
+  "authorization": {"candidate_authorized":false,"reason":"A fresh independent review of exact V15 inputs and outputs is still required; V9 is necessarily stale after additive remediation."},
+  "marker": "MEASURE_AGENT_RESULT"
+}
