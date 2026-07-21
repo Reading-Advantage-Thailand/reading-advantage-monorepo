@@ -1,0 +1,29 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "role": "green-lead-coordinator",
+  "acceptance": "not-claimed",
+  "owned_outputs": [
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-green-handoff.json",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/green-lead-batch-b-handoff.json"
+  ],
+  "forbidden_roles_not_performed": [
+    "discovery-auditor",
+    "evidence-collector",
+    "requirements-mapper",
+    "truth-test-author",
+    "browser-auditor",
+    "adversarial-reviewer",
+    "candidate-manifest-author",
+    "acceptance-author"
+  ],
+  "reviewer_isolation": "not applicable: coordinator did not author an evidence, mapping, browser, truth, review, candidate, or acceptance artifact",
+  "parent_ancestry_ids": [],
+  "provider_attestation": {
+    "available": false,
+    "unavailable_note": "Provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations are unavailable in this execution environment."
+  },
+  "disclosure": "This is a coordinator receipt only. It does not satisfy any required delegated-role receipt and does not authorize a candidate or acceptance artifact.",
+  "marker": "MEASURE_AGENT_RESULT"
+}
