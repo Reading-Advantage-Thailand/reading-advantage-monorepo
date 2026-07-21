@@ -1,0 +1,43 @@
+{
+  "schema_version": "apk-product-owner-direction.v1",
+  "issued_at": "2026-07-21",
+  "issued_by": "orchestrator (delegated project-owner authority)",
+  "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+  "scope": {
+    "tracks": [
+      "apk_corpus_audit_action_defense_20260712",
+      "apk_corpus_audit_traversal_exploration_20260712",
+      "apk_corpus_audit_puzzle_crafting_20260712",
+      "apk_corpus_audit_special_historical_20260712"
+    ],
+    "roles": [
+      "discovery-auditor",
+      "evidence-collector",
+      "requirements-mapper",
+      "truth-test-author",
+      "asset-auditor",
+      "browser-auditor",
+      "adversarial-reviewer",
+      "candidate-manifest-author",
+      "acceptance-author"
+    ]
+  },
+  "direction": "Provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations are unavailable in this execution environment. A receipt may therefore satisfy the APK audit provenance gate with locally verifiable Git commits, immutable artifact hashes, declared role scope, independent review, and explicit unavailable provider fields. Every accepted manifest must disclose that provider-side attestation was unavailable.",
+  "required_compensating_controls": [
+    "Each role receipt must state unavailable provider fields truthfully; fabricated values remain a Critical failure.",
+    "Every artifact must have a SHA-256 hash and committed Git binding.",
+    "A fresh independent review must bind the exact active artifacts and its own receipt.",
+    "Source, range, denominator, semantic, fixture, asset, browser, and lifecycle gates remain fail-closed.",
+    "No artifact may claim provider-attested isolation, prompt provenance, or session provenance.",
+    "Accepted manifests must carry a prominent local-verifiability disclosure."
+  ],
+  "non_waived": [
+    "unsupported factual claims",
+    "citation envelope mismatches",
+    "denominator mismatches",
+    "stale or mutated committed artifacts",
+    "unresolved Critical, High, or Medium independent-review findings",
+    "missing candidate, approval, or accepted lifecycle artifacts"
+  ],
+  "rationale": "The provider capability is uniformly unavailable across the permitted OpenAI coder subagents. Treating truthful unavailable metadata as an automatic permanent failure would prevent evidence reconstruction without improving source-truth guarantees."
+}

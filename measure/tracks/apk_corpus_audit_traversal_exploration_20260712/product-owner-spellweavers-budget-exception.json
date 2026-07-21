@@ -1,0 +1,20 @@
+{
+  "schema_version": "apk-product-owner-budget-exception.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "game": "spellweavers-run",
+  "issued_at": "2026-07-21",
+  "issued_by": "orchestrator (delegated project-owner authority)",
+  "decision": "ONE_TIME_SOURCE_BYTE_CEILING_INCREASE",
+  "supersedes": "phase0-budget-declaration.json per_game_roles.evidence_collector_one_game.source_bytes only for spellweavers-run",
+  "old_ceiling": 8000000,
+  "approved_ceiling": 12000000,
+  "measured_actual": 11558850,
+  "evidence_report": "packages/catalog/spellweavers-run/evidence-final-report.json",
+  "rationale": "The collector used 19 unique exact evidence objects across reachable historical revisions. The package is citation-complete and stayed within every other frozen limit; its source bytes exceeded the original ceiling by 3,558,850 bytes.",
+  "conditions": [
+    "No further collection budget increase is authorized for this game.",
+    "The original breach and this exception must remain disclosed in all successor evidence and acceptance artifacts.",
+    "The package remains subject to denominator, semantic, fixture, independent-review, and provenance gates.",
+    "This exception does not apply to other games or roles."
+  ]
+}

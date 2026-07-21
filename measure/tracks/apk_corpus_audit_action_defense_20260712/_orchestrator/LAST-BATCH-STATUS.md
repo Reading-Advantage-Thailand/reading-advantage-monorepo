@@ -1,11 +1,12 @@
 # T4 Action and Defense Evidence Cohort — Last Batch Status
 
-## Current: Batch B — STOP-LOSS ACTIVE (product-owner direction required)
+## Current: Batch B — REMEDIATION ACTIVE (product-owner direction issued)
 
 ### Product-owner direction (2026-07-21)
 - The orchestrator, acting under delegated product-owner authority, accepts Kimi WebBridge as the B4 browser mechanism.
 - `product-owner-direction-batch-b-webbridge.json` accepts the recorded B4 dispositions while preserving the synthetic-input and hidden-tab limitations.
 - This resolves the browser-tool stop-loss only. It does not waive receipt provenance, completeness, fresh review, acceptance ordering, or the Village Guardian completion API defect.
+- The fresh adversarial review v4 is bound at `a318f547`; B4 is bounded-green under this direction, while B5 remains blocked by receipt policy, package completeness, asset/UX evidence, and lifecycle artifacts.
 
 ### Immutable phase base
 - `ff01cee9cc973dee89fdc0ba22102dcea0c50542` — Batch B strategy commit.
