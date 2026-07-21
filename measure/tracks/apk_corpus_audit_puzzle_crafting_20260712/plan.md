@@ -17,10 +17,10 @@
 
 ## Phase 2: Batch B
 
-- [~] Task: Complete Potion Rush evidence package
-- [~] Task: Complete Rune Forge Chamber evidence package
-- [~] Task: Recover Astral Mage evidence and explicit unknowns without analogy
-- [~] Task: Run truth/browser/historical tests and full independent review; reconcile severity counts and remediate every Critical, High, and Medium finding
+- [x] Task: Complete Potion Rush evidence package — source-only ledger; browser and product outcomes remain unknown
+- [x] Task: Complete Rune Forge Chamber evidence package — source-only ledger; browser and product outcomes remain unknown
+- [x] Task: Recover Astral Mage evidence and explicit unknowns without analogy — registry/cover evidence only; implementation boundary remains unknown
+- [~] Task: Run truth/browser/historical tests and full independent review; reconcile severity counts and remediate every Critical, High, and Medium finding — truth contract passes; browser not conducted and independent review is blocked awaiting a distinct reviewer
 - [b] Task: Measure - User Manual Verification 'Phase 2' (Protocol in workflow.md) — deferred:product-owner
 
 ## Phase 3: Content and responsive reconciliation

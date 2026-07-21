@@ -1,0 +1,36 @@
+{
+  "schema_version": "apk-batch-discovery-audit.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "role": "discovery-auditor",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "acceptance": "not-claimed",
+  "source_only": true,
+  "games": [
+    {
+      "display_name": "Potion Rush",
+      "normalized_game_id": "sentence/potion-rush",
+      "identity_evidence": [{"path":"apps/advantage-games/tests/e2e/games/sentence/potion-rush.spec.ts","range":"L11-L28","sha256":"79cd65dd157053454bb74f636fd10114e80a77add7c16db7f479f262fc00ec41"}],
+      "denominator_paths": ["apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushGame.tsx","apps/advantage-games/tests/e2e/games/sentence/potion-rush.spec.ts","apps/advantage-games/public/games/sentence/potion-rush/"],
+      "boundary": "current-source-implementation-present",
+      "unknowns": ["No browser observation is made by this discovery artifact.","No asset-by-asset denominator count is asserted."]
+    },
+    {
+      "display_name": "Rune Forge Chamber",
+      "normalized_game_id": "sentence/rune-forge-chamber",
+      "identity_evidence": [{"path":"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx","range":"L188-L212","sha256":"3662cf08ed07434d60ba51b9fb360d8f7ac28c362f6964b0f31a9923bd7567b4"}],
+      "denominator_paths": ["apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx","apps/advantage-games/src/lib/games/runeForgeChamber.ts","apps/advantage-games/src/lib/games/runeForgeChamberConfig.ts","apps/advantage-games/tests/e2e/games/sentence/rune-forge-chamber.spec.ts"],
+      "boundary": "current-source-implementation-present",
+      "unknowns": ["No browser observation is made by this discovery artifact.","No asset-by-asset denominator count is asserted."]
+    },
+    {
+      "display_name": "Astral Mage",
+      "normalized_game_id": "unresolved-pending-independent-boundary-review",
+      "identity_evidence": [{"path":"apps/advantage-games/src/lib/gameCards.ts","range":"L196-L201","sha256":"a715465e79a6f571b34deb6059cd9953d780dd304bc45d004fd22c9653097b16"}],
+      "denominator_paths": ["apps/advantage-games/src/lib/gameCards.ts","apps/advantage-games/public/games/cover/cover-astral-mage.png"],
+      "boundary": "registry-entry-and-cover-only-observed",
+      "unknowns": ["Current versus historical status is unknown.","No sentence route, page, component, gameplay source, or game-specific asset directory was observed at the checked paths.","The registry description is not implementation evidence."]
+    }
+  ],
+  "not_claimed": ["runnable","complete","historical","responsive","mechanics beyond cited source","candidate eligibility","product-owner acceptance"]
+}

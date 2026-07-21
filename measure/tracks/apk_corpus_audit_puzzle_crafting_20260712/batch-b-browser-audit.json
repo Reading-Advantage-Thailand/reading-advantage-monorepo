@@ -1,0 +1,5 @@
+{
+  "schema_version":"apk-browser-audit.v1","track_id":"apk_corpus_audit_puzzle_crafting_20260712","batch_id":"batch-b","role":"browser-auditor","acceptance":"not-claimed","source_only":true,"conducted":false,
+  "games":[{"game":"Potion Rush","route":"/en/student/games/sentence/potion-rush","disposition":"NOT-CONDUCTED","unknowns":["reachability","loading","inputs","compact/wide layout","completion","persistence","XP","API","assets"]},{"game":"Rune Forge Chamber","route":"/en/student/games/sentence/rune-forge-chamber","disposition":"NOT-CONDUCTED","unknowns":["reachability","loading","inputs","compact/wide layout","completion","persistence","XP","API","assets"]},{"game":"Astral Mage","route":"unresolved","disposition":"NOT-CLASSIFIED","unknowns":["current/historical boundary","route reachability","implementation","all behavior"]}],
+  "evidence_count":0,"screenshots_alone_pass":false,"claims_authored":0,"maps_authored":0,"not_claimed":["runnable","non-runnable from this artifact alone","complete","responsive","browser success"]
+}
