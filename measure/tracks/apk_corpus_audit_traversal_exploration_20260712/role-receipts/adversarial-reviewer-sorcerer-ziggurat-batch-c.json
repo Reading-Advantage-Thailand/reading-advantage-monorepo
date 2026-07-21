@@ -1,0 +1,30 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-c-historical",
+  "role": "adversarial-reviewer",
+  "role_id": "fresh-opencode-change-quality-reviewer-batch-c-cycle-2",
+  "review_iteration": "remediation-cycle-2",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "abb4b79820760e3bb57165b6dee5075b6584fda0",
+  "reviewed_producer_commit": "84d280c9660b6aadfa91ce00e4190e815f9f7dd3",
+  "fresh_context": true,
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "roles_held": ["adversarial-reviewer"],
+  "forbidden_roles_held": [],
+  "prior_role_history": [],
+  "provider_provenance": {"available":false,"claimed":false,"unavailable_fields":["prompt hash","session ID","spawn ID","event IDs","provider timing","final-response hash","commit attestation"],"local_evidence":"A new opencode run was dispatched for review; its continuation requested only the final verdict after the initial review command timed out."},
+  "input_manifest": {"source":"batch-c-independent-review.json input_hashes","entry_count":28,"canonical_sha256":"436a1a2e98ffc9506290cd4f8ee97028a837dfeb77b771daf85f6a1be479997d"},
+  "output_paths_and_sha256": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-independent-review.json":"bfa49a839674cff2f3d21d9d292d273d36c4686190a7cdb869d751cbd342c9dc",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-stop-loss.json":"302ced7517235f790e8c54a0b3b2a899b510ee66e1315fc2f042f373c4989901"
+  },
+  "budget": {"declaration_sha256":"81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896","ceiling":{"source_bytes":10000000,"source_files_objects":210,"commands":100,"elapsed_minutes":120,"records_authored_reviewed":7,"browser_interactions":0,"captured_artifacts":70},"actual":{"source_bytes":null,"source_files_objects":null,"commands":null,"elapsed_minutes":null,"records_authored_reviewed":7,"browser_interactions":0,"captured_artifacts":2},"compliant":false,"reason":"The fresh reviewer identified non-reproducible Batch C accounting and no Batch C timing direction; no unsupported numeric actual is invented."},
+  "unresolved_findings": {"critical":0,"high":6,"medium":1,"low":0},
+  "candidate_authorized": false,
+  "product_owner_acceptance_authorized": false,
+  "accepted_manifest_authorized": false,
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

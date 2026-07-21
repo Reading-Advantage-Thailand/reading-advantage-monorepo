@@ -1,0 +1,19 @@
+{
+  "schema_version": "apk-stop-loss.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-c-historical",
+  "status": "blocked-pending-product-owner-direction",
+  "failed_fix_review_cycles": 2,
+  "unsupported_factual_claims": 1,
+  "denominator_mismatches": 0,
+  "denominator_reconciliation_complete": false,
+  "unresolved_findings": {"critical":0,"high":6,"medium":1},
+  "candidate_published": false,
+  "candidate_authorized": false,
+  "product_owner_acceptance_published": false,
+  "accepted_manifest_published": false,
+  "required_direction": ["Batch C timing/accounting disposition", "authorization for any third remediation cycle"],
+  "prohibited_next_actions": ["Publish candidate", "Publish product-owner acceptance", "Publish accepted manifest", "Continue remediation without product-owner direction"],
+  "review_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-independent-review.json",
+  "marker": "MEASURE_AGENT_RESULT"
+}
