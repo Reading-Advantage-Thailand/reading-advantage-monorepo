@@ -1,0 +1,149 @@
+{
+  "schema_version": "apk-role-receipt.v3",
+  "status": "v3-truth-selection-authored-all-evidence-gates-green-review-and-lifecycle-red",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "phase": "Phase 1: Batch A truth contracts (V3 browser-selection cycle)",
+  "task_id": "batch-a-truth-tests-v3-select-v2-and-browser-evidence",
+  "role": "truth-test-author-batch-a-v3",
+  "role_identity": "T7 Special/Historical Batch A truth author V3 only",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "3d53d031f48eed2bbb324539900108136190cf57",
+  "source_baseline_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are truthful non-attestations; no provider value was fabricated, and the user prohibited commits."
+  },
+  "provenance_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "application": "The V2 truth contract/receipt and all three browser audit/receipt pairs are exact committed bytes at role base 3d53d031f48eed2bbb324539900108136190cf57. The Griffin receipt does not expose provider-attestation fields; V3 treats their absence as non-attestation, relies only on immutable local bytes and bounded browser facts, and does not fabricate a disclosure inside that prior role's receipt."
+  },
+  "prior_role_history": [
+    {
+      "role": "truth-test-author-batch-a-v2",
+      "output_commit": "452f5e6d144d2b869b92dbf4ee38a9a602e25d8c",
+      "test_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v2.py",
+      "test_sha256": "bf32c25f4252995b4e9a200009b2a1c1d923a1ebb4936848230435cc5b362212",
+      "receipt_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/truth-test-author-batch-a-v2.json",
+      "receipt_sha256": "1a8abb79581fac3dc243d440b8ec54a0f9232eac41c9dc3e94b18bff3b6fd4ea"
+    }
+  ],
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v2.py": "bf32c25f4252995b4e9a200009b2a1c1d923a1ebb4936848230435cc5b362212",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/truth-test-author-batch-a-v2.json": "1a8abb79581fac3dc243d440b8ec54a0f9232eac41c9dc3e94b18bff3b6fd4ea",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/browser-audit.json": "618890ec18eb5bfeae6057e187bd52fa5a8d2533e31e7c588a111b1fbedd08ab",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-griffin-sky-joust.json": "bcd8017ba1a7b83685e27532c83aa6e53f7fd7d2e466921558756b8e2692f4b3",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/browser-audit-batch-a.json": "f0fcbadb8e92b3118d4eb9dd91fab6f51f85b341e59fdd1bf73a827d3c9f56e4",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-realm-carver-batch-a.json": "054b5c2648de8e384d423bb8961821fb6c0b2d5b9f0ceb51b3177cf17953e21d",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/browser-audit-v2.json": "46a3e8c68d4f964bc6e34b9a1e3fec7d900afd3f6a77c90fa3b2ec6427e1090f",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-devourer-slime-v2.json": "8335fb4d38579356f6c84285b7c20902d6a9ba7b7d176a3fb13373ebed7c09e1"
+  },
+  "selected_v2_fixes": [
+    "Closed source classes select historical_implementation for DS-CL-H-007 and DS-HIST-007.",
+    "Parenthesized missing-route ambiguity remains corrected through cat-file-backed git object checks and removed absence claims.",
+    "Corrected Devourer semantic envelopes and Griffin/Realm canonical SHA-256 envelopes remain selected.",
+    "All three games retain exactly six rejected fixture classes, including Devourer's V2 additions.",
+    "Requirements maps remain exactly bound to the corrected V2 ledgers and corrected frozen revision.",
+    "Selected V2 role receipts retain matching output hashes and integer budget accounting."
+  ],
+  "selected_browser_evidence": {
+    "griffin_sky_joust": "Committed audit/receipt: initial connection refusal followed by bounded page/API 404 evidence; current route and current behavior remain unknown; no input or transition claimed.",
+    "realm_carver": "Committed audit/receipt: two exact localhost:3000 route attempts completed as HTTP 404; bounded non-runnable disposition; no gameplay, input, asset, or student-data claim.",
+    "devourer_slime": "Committed V2 audit/receipt: healthy Kimi WebBridge reached two candidate URLs but the application refused both connections; browser-audit-blocked disposition; no behavior, viewport, transition, or persistence claim."
+  },
+  "output_paths_and_sha256": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v3.py",
+      "sha256": "a4106c21d2fe8435e7d765be9cc3a68e16fb269dbc9e37220097793ceb6946b9"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/truth-test-author-batch-a-v3.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot embed its own stable SHA-256 without changing its bytes. The uncommitted receipt is non-authorizing and remains externally hashable."
+    }
+  ],
+  "actual_usage": {
+    "source_bytes_read": 750000,
+    "source_objects_read": 40,
+    "command_invocations": 30,
+    "elapsed_minutes": 35,
+    "test_cases": 35,
+    "assertions_executed": 300,
+    "browser_interactions": 0,
+    "captured_artifacts": 0,
+    "measurement_note": "The eight directly selected local inputs total exactly 73,344 bytes. Larger byte/object/command/assertion values conservatively include V2 transitive inputs, Git envelopes, analogous truth-contract inspection, and validation. Provider telemetry was unavailable; no browser interaction was performed by this truth-author role."
+  },
+  "expected_gate_state": {
+    "exact_inputs_and_predecessors": "green",
+    "source_chronology_envelopes_semantics": "green for all selected V2 claims and observations",
+    "negative_fixtures": "green for all 18 rejected fixtures across six frozen classes per game",
+    "mapping": "green for exact V2 ledger bindings, complete claim IDs, and no new source facts",
+    "receipts_and_budgets": "green under local-verifiable-with-disclosure direction and exact committed role-base bytes",
+    "browser_dispositions": "green only as the three exact bounded blocked/non-runnable dispositions; no gameplay success is inferred",
+    "independent_review": "red only because batch-a/adversarial-review.json and adversarial-reviewer-batch-a.json do not exist",
+    "lifecycle": "red only because candidate-manifest.json, authentic product-owner-acceptance.json, and accepted-manifest.json do not exist"
+  },
+  "test_inventory": {
+    "test_cases": 35,
+    "inherited_v2_contracts": 24,
+    "v3_selection_and_browser_contracts": 7,
+    "expected_stage_red_contracts": 4,
+    "factual_claims_exercised": 33,
+    "negative_fixtures_exercised": 18,
+    "browser_dispositions_exercised": 3,
+    "unexpected_test_errors_allowed": 0
+  },
+  "validation": {
+    "truth_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v3.py",
+    "evidence_green_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v3.py -k 'not V3IndependentReviewContract and not V3LifecycleContract'",
+    "json_command": "python3 -m json.tool measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/truth-test-author-batch-a-v3.json >/dev/null",
+    "diff_command": "git diff --check -- measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v3.py measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/truth-test-author-batch-a-v3.json"
+  },
+  "test_results": {
+    "full_module": "31 passed, 4 expected fail-closed failures; exit 1; zero pytest ERROR outcomes",
+    "evidence_green_selector": "31 passed, 4 deselected; exit 0",
+    "expected_failing_test_ids": [
+      "V3IndependentReviewContract::test_fresh_review_binds_all_v3_inputs_and_has_zero_blockers",
+      "V3LifecycleContract::test_candidate_binds_v3_truth_browser_and_review",
+      "V3LifecycleContract::test_authentic_owner_approval_binds_candidate_and_review",
+      "V3LifecycleContract::test_accepted_manifest_is_last_and_exactly_bound"
+    ],
+    "unexpected_contract_failures": 0,
+    "unexpected_test_errors": 0
+  },
+  "role_isolation": {
+    "roles_held": [
+      "truth-test-author"
+    ],
+    "roles_not_held": [
+      "discovery-auditor",
+      "current-source-specialist",
+      "historical-source-specialist",
+      "evidence-collector",
+      "requirements-mapper",
+      "browser-auditor",
+      "adversarial-reviewer",
+      "candidate-manifest-author",
+      "acceptance-author",
+      "orchestrator",
+      "product-owner"
+    ],
+    "note": "Only truth-tests-v3.py and this V3 receipt were created. No V1/V2, source, history, collector, mapper, browser, review, lifecycle, plan, registry, product, or commit artifact was modified."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,134 @@
+{
+  "schema_version": "apk-role-receipt.v3",
+  "status": "v3 truth contract authored; all exact evidence gates green; fresh review and lifecycle gates red",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 1: Batch A browser-evidence selection V3",
+  "task_id": "truth-test-author:t6-puzzle-batch-a:v3",
+  "role": "truth-test-author",
+  "role_identity": "fresh isolated T6 Puzzle Batch A V3 truth-test author only",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "3d53d031f48eed2bbb324539900108136190cf57",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "supersedes": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/truth-test-author-batch-a-v2.json",
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are truthful non-attestations; no provider value was fabricated, and the user prohibited commits."
+  },
+  "provenance_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "application": "V3 retains the exact V2 truth contract and receipt, then selects only the three browser audits and three browser receipts committed at role base 3d53d031f48eed2bbb324539900108136190cf57. This test and receipt are intentionally uncommitted and claim no acceptance."
+  },
+  "prior_role_history": [],
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v2.py": "9005366f4e938c1d4d565e042ee18c16b18f12df2cec8334c8a77eea51b5e4f6",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/truth-test-author-batch-a-v2.json": "0ffe44665048c47906a1efcfa1a82ec730514b7871d8660a5eb1a23829892c3f",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/browser-audit-batch-a.json": "d413d99aaa626f91d4426c8c8cb05518fb434e849e3ecac07b207f19960a3ce3",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/browser-audit-batch-a.json": "9dc4e8c196cb43db78f987a68ec66e31032343c20b39e237e590005ed0507ae5",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/browser-audit-batch-a.json": "eefbecd0fc706dda2c51a11227c253eba94104e7db162b88f568f7cbcb043105",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/browser-auditor-alchemists-synthesis-batch-a.json": "1fe33d93065e8ad22e0f7785eff01bddef7a553c20c6f623895466d92d2edee0",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/browser-auditor-enchanted-library-batch-a.json": "e2d0182bbc3b3ea9bec09b83289fc8633fdccc29914f21523975c130631c1430",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/browser-auditor-rune-match-batch-a.json": "ee1faf8430f04f0c3c62fcf7e9df47b801e5a2e4b3a2c3ff28a65aea09321e5d"
+  },
+  "input_selection": {
+    "v2_test_and_receipt_retained_as_exact_history": true,
+    "v2_fixes_or_facts_changed": false,
+    "selected_browser_audits": [
+      "batch-a/enchanted-library/browser-audit-batch-a.json",
+      "batch-a/rune-match/browser-audit-batch-a.json",
+      "batch-a/alchemists-synthesis/browser-audit-batch-a.json"
+    ],
+    "selected_browser_receipts": [
+      "role-receipts/browser-auditor-enchanted-library-batch-a.json",
+      "role-receipts/browser-auditor-rune-match-batch-a.json",
+      "role-receipts/browser-auditor-alchemists-synthesis-batch-a.json"
+    ],
+    "browser_disposition": "All three exact candidate routes were bounded non-runnable at the browser-role revisions. HTTP 404 observations and explicit compact/wide unknowns are accepted as browser dispositions only; no gameplay, responsive, input, completion, persistence, XP, or API correctness claim is promoted."
+  },
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v3.py": "635a211d5210eea1af551fd4e074fcb8bf24037ebd4e13f8737e5a03e7d2f606"
+  },
+  "output_hashes_note": "The receipt excludes itself from output_hashes to avoid a self-referential digest. Its exact bytes remain externally hashable and non-authorizing while uncommitted.",
+  "actual_usage": {
+    "source_bytes": 93028,
+    "source_files_objects": 9,
+    "command_invocations_before_final_json_diff_validation": 10,
+    "elapsed_minutes": 0,
+    "test_cases": 22,
+    "fixture_executions": 11,
+    "test_runs_this_revision": 2,
+    "factual_claims_checked": 57,
+    "browser_dispositions_checked": 3,
+    "captured_artifacts": 2,
+    "timing_measurement": "unavailable-in-harness",
+    "timing_note": "Zero is an accounting fallback, not elapsed-time evidence. Source bytes are the exact 75678 bytes of eight direct inputs plus 17350 bytes of the V3 test at measurement time."
+  },
+  "test_inventory": {
+    "test_cases": 22,
+    "evidence_and_receipt_tests": 18,
+    "active_factual_claims": 57,
+    "fixtures": 11,
+    "browser_audits": 3,
+    "browser_receipts": 3,
+    "expected_stage_red_tests": 4,
+    "unexpected_test_errors_allowed": 0
+  },
+  "expected_gate_state": {
+    "exact_v2_inputs_and_role_base": "green",
+    "v2_scope_denominator_claim_source_semantic_fixture_mapper_receipt_and_budget_gates": "green",
+    "source_envelopes": "green for all 57 active factual claims",
+    "browser_dispositions": "green for three exact bounded non-runnable dispositions and receipts, without promotion to gameplay evidence",
+    "truth_receipt": "green",
+    "independent_review": "red until batch-a-independent-review-v3.json and adversarial-reviewer-batch-a-v3.json bind these exact V3 bytes and report zero unresolved Critical, High, or Medium findings",
+    "lifecycle": "red until the ordered V3 candidate, authentic product-owner approval, and accepted manifest exist"
+  },
+  "validation": {
+    "truth_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v3.py",
+    "json_command": "python3 -m json.tool measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/truth-test-author-batch-a-v3.json >/dev/null",
+    "diff_command": "git diff --no-index --check /dev/null <each untracked V3 output>; require empty diagnostic output and the expected no-index difference status",
+    "result": "Full module: 18 passed and 4 expected fail-closed failures, exit 1, with zero pytest ERROR outcomes. JSON parse and both no-index diff checks passed after this receipt update."
+  },
+  "test_results": {
+    "pre_receipt_full_module": "17 passed, 5 failed; the fifth failure was the intentionally not-yet-authored V3 receipt; exit 1; zero pytest ERROR outcomes",
+    "final_full_module": "18 passed, 4 expected fail-closed failures; exit 1; zero pytest ERROR outcomes",
+    "verified_green_reason": "The exact V2 fixes, 57 factual claims and source envelopes, 11 fixtures, mappings, selected owner receipts, budgets, and all three bounded browser dispositions and receipts passed.",
+    "remaining_red_reason": "Only a fresh exact-input V3 independent review and the three ordered V3 lifecycle artifacts are absent."
+  },
+  "expected_failing_test_ids": [
+    "BatchAV3IndependentReviewContract::test_fresh_independent_review_binds_every_active_v3_input",
+    "BatchAV3LifecycleContract::test_candidate_manifest_exists_and_binds_review_and_truth",
+    "BatchAV3LifecycleContract::test_product_owner_approval_exists_and_is_exactly_bound",
+    "BatchAV3LifecycleContract::test_accepted_manifest_exists_and_is_exactly_bound"
+  ],
+  "role_isolation": {
+    "roles_held": [
+      "truth-test-author"
+    ],
+    "roles_not_held": [
+      "discovery-auditor",
+      "evidence-collector",
+      "requirements-mapper",
+      "browser-auditor",
+      "adversarial-reviewer",
+      "candidate-manifest-author",
+      "acceptance-author",
+      "product-owner"
+    ],
+    "note": "Only batch-a-truth-tests-v3.py and this V3 receipt were created. No V2, collector, mapper, browser, review, lifecycle, plan, registry, source, or commit artifact was modified or created."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
