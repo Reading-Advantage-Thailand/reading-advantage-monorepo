@@ -1,0 +1,74 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "status": "fresh additive Village Guardian mapper remediation V6; corrected denominator reconciliation V5 bound; acceptance not claimed",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-MAP-EACH-GAME-V6",
+  "role": "requirements-mapper-village-guardian-batch-b-v6",
+  "role_identity": "fresh isolated T4 Village Guardian mapper remediation V6 only",
+  "game": "Village Guardian",
+  "normalized_id": "village-guardian",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "a8447bda00bba17d467bb4ab7000cb4604267ef3",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "supersession": {
+    "supersedes_receipt": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-village-guardian-batch-b-v5.json",
+    "scope_limit": "Rebinds the mapper output to the corrected denominator reconciliation V5 only; no factual claims, map facts, dispositions, WebBridge limits, completion disclosures, or source authority are changed."
+  },
+  "provenance_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e9006655777a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+  },
+  "provider_unavailability": {
+    "available": false,
+    "attestation_claimed": false,
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "final_response_event_id": null,
+    "commit_sha": null,
+    "reason": "Provider-side prompt, context, spawn, session, ancestry, fork, raw-isolation, event, timing, final-response, and commit attestations were unavailable in this execution environment. Nulls are intentional unavailable values, not attestations; no provider provenance is claimed. The user prohibited commits."
+  },
+  "input_hashes": {
+    "village_guardian_mapper_report_v5": "88239323b810800d30aaf9570b2f47152397fe99e8f0be92dc46cf45fa546085",
+    "village_guardian_denominator_reconciliation_v5": "c1084de81f6b12f105e5ed8b7150fa0fffe15d6aa0f595d96ea66f79136d2a40",
+    "village_guardian_claim_ledger_v3": "3be82cd7a9ddb144ae82ae220c36b439c6d14bbd58e1c988c897af6156b20484",
+    "village_guardian_blueprint_v3": "6a0e021d1b2ac2ddf33cd115f701993c9f110acc957964117137621ca99762e0",
+    "provenance_direction": "4d1ec24e9006655777a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-mapper-final-report-batch-b-v5.json",
+      "sha256": "88239323b810800d30aaf9570b2f47152397fe99e8f0be92dc46cf45fa546085"
+    }
+  ],
+  "reference_accounting": {
+    "collector_factual_claim_count": 73,
+    "mapped_section_count": 7,
+    "claim_reference_occurrence_count": 73,
+    "unique_referenced_claim_count": 73,
+    "resolved_reference_count": 73,
+    "unresolved_reference_count": 0,
+    "unreferenced_collector_factual_claim_count": 0
+  },
+  "denominator_count": 51,
+  "mapped_claim_count": 73,
+  "webbridge_source_authority": false,
+  "completion_success_claimed": false,
+  "receipt_self_hash": null,
+  "receipt_self_hash_note": "A receipt cannot embed its own final SHA-256 without changing its bytes; an external descendant binding may hash these exact receipt bytes.",
+  "commit_sha": null,
+  "role_boundary": "Only this additive Village Guardian mapper report and receipt were created; existing facts, limits, source artifacts, browser artifacts, completion direction, and unrelated working-tree changes were preserved.",
+  "reviewer_disposition": "pending fresh independent review of exact V6-bound mapper report and receipt bytes"
+}
