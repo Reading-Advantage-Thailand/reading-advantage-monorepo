@@ -1,7 +1,9 @@
 {
   "schema_version": "apk-browser-audit.v1",
   "game": "Babel Architect",
-  "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "frozen_source_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "probe_repository_head": "a6c82e2f194d36dc688b6ac3f4a5b2d51a8c6502",
+  "probe_head_source_equivalence": "The six implementation candidate paths were absent at both the frozen source revision and probe HEAD; the probe does not claim the rest of either repository tree is byte-identical",
   "environment": {"app":"vocabulary-games","command":"pnpm --filter vocabulary-games dev","framework":"Next.js 16.2.9 Turbopack","host":"localhost","port":3000},
   "kimi_webbridge": {"attempted":true,"running":true,"extension_connected":true,"daemon_version":"v1.11.1","extension_version":"1.11.3","used":true},
   "attempts": [

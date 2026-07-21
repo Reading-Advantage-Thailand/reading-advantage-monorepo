@@ -68,7 +68,7 @@
     "independent_role_separation_claimed": false,
     "resource_accounting_measured": false,
     "green_receipt_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/green-lead-batch-b.json",
-    "green_receipt_sha256": "ea0674e89f30ae898cc4c416cc7bac450de0d0b4c326cc17fe08b31af166b069",
+    "green_receipt_sha256": "ffd4a90a0ffb6439cbba2227039421f51230da53d2ecd15cc8e0aeecf194ce3d",
     "disclosure": "This Green session produced the bounded evidence-stage package and tests. It does not claim the distinct specialist authorship, frozen-unit accounting, browser independence, or fresh adversarial review required for an official candidate."
   },
   "input_hashes": {
@@ -81,14 +81,14 @@
     "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/claim-ledger-batch-b.json": "5e888c0e7577ca767be873847b8dab5b4339efd2dee0490e98fc82ee97053ef1",
     "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/negative-fixtures-batch-b.json": "b87cc3951a5968170af0f8bef33ae1b4744591e07a1878d831bd392b26847870",
     "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/requirements-map-batch-b.json": "85e1ec567224cf58ca6cff43d70b659671fa856bb56df3bf667066abc3eba1a6",
-    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/browser-audit-batch-b.json": "cd6de83db5e121f3503ffa1c9117d3dd2e935a6ca48000e0235a5b0e598d5d4d",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/browser-audit-batch-b.json": "b25b57f623a71fc64fddb0e734ba178e0bc2d0f65c854b442567c9bd49407948",
     "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/current-source-observations-batch-b.json": "7d8a5e08ff0706ba8c59906d00934523e8b01da074f473bf835a0b6db9618272",
     "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/historical-source-observations-batch-b.json": "224fc5a9f8122190522b3d9094fef72120e9ee99a772532292a54eb9d91a103f",
     "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/claim-ledger-batch-b.json": "179c0835f1a6815ffea28aeb2d547cd4c81aae52d0079ddddf94c7209d1469ee",
     "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/negative-fixtures-batch-b.json": "edf5a0cfeb06eb4169ef3db7259968b36ff96eabcbf8bddaca05f58636f33c6f",
     "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/requirements-map-batch-b.json": "64ec421a63b7bb28308752553e7a552bc8613de3f5b39dc3323b2a36ca5a3bc4",
-    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/browser-audit-batch-b.json": "88c009c9d650ad22bda7e96c5569d07afece0444d81d0cc938436f2832ecc8f2",
-    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/green-lead-batch-b.json": "ea0674e89f30ae898cc4c416cc7bac450de0d0b4c326cc17fe08b31af166b069"
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/browser-audit-batch-b.json": "3c2df990648eb92dfd0fe71d05eabc19c00e43c3803fdaa3e1d02b4b80bb6b06",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/green-lead-batch-b.json": "ffd4a90a0ffb6439cbba2227039421f51230da53d2ecd15cc8e0aeecf194ce3d"
   },
   "truth_gate": {
     "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/truth-tests.py",
