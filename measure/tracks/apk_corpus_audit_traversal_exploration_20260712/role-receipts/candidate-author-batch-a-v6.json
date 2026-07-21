@@ -1,0 +1,201 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "status": "Batch A V6 non-consumable candidate authored from exact V6 truth inputs and the committed zero-blocker V5 review; downstream owner acceptance remains absent",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "task_id": "candidate-manifest:batch-a:v6",
+  "role": "candidate-manifest-author-batch-a-v6",
+  "role_identity": "T5 Traversal Batch A candidate-manifest author only; no product-owner or accepted-manifest authority",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "32ee01108c7a8353f352971b1b88eefb5c9cde60",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "prior_role_history": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-independent-review-v5.json",
+      "sha256": "3aa96f19db25165e4d24eb82a357ed113962baf6c9d2a757b7c748e2b080515d",
+      "use": "Fresh zero-blocker V5 review over the V6 selected inputs; candidate authorization only. No owner-acceptance conclusion was imported."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-batch-a-v5.json",
+      "sha256": "8ceb4e573f1d87c90ee879640acb772e2dedc9c2f9ccefdf7020991a4dfe036a",
+      "use": "Exact review scope, hash bindings, resource accounting, review result, and role-boundary evidence."
+    }
+  ],
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are truthful non-attestations; no provider value was fabricated, no provider-attested isolation is claimed, and the user prohibited commits."
+  },
+  "directions_and_exceptions": {
+    "provenance": {
+      "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+    },
+    "timing": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v2.json",
+      "sha256": "3b3fea0b22f5ac379a1bb3518b1095bc8f3a366eaa7eb2f677b69ac6ffddb2c0",
+      "decision": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING"
+    },
+    "spellweaver_budget": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-spellweavers-budget-exception.json",
+      "sha256": "a0a4f2e80fa888e3fee7a1ef7e3479af559e1930cbb3eb3a5ea3a2ab8b3bbcf4",
+      "decision": "ONE_TIME_SOURCE_BYTE_CEILING_INCREASE"
+    }
+  },
+  "input_hashes": {
+    "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v2.json": "3b3fea0b22f5ac379a1bb3518b1095bc8f3a366eaa7eb2f677b69ac6ffddb2c0",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-spellweavers-budget-exception.json": "a0a4f2e80fa888e3fee7a1ef7e3479af559e1930cbb3eb3a5ea3a2ab8b3bbcf4",
+    "measure/apk-evidence-cohort-protocol.md": "1f97ed8fd026cb0b1b49ed5de602252c075228981d1ff26640748b56ff2a3507",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md": "42685326bf239a92f3543919e8ce204fb4414e8ac136180ad340720fbd852ac1",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-truth-tests-v6.py": "0fa94db21ba5689179b5e22dfd96960916001fc58c0ba56c2e851f130c891e5c",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/truth-test-author-batch-a-v6.json": "f966b527dc4d8a1649e2741c95aeaa7095f834b3a463b547d1418677089432a2",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-independent-review-v5.json": "3aa96f19db25165e4d24eb82a357ed113962baf6c9d2a757b7c748e2b080515d",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-batch-a-v5.json": "8ceb4e573f1d87c90ee879640acb772e2dedc9c2f9ccefdf7020991a4dfe036a",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/browser-audit-v2.json": "3eee618646a9c2db321fb436b4677faa73b0f5189e7d1003d54d2783076ffa29",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/browser-audit-v2.json": "1c7291e52b23f75062c29799496b9878d8622ffef707db4e046f9f75fbeca30d",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/browser-audit-v2.json": "04a1edf32e21884c26e06802337435399c234004274f83c2f31cee0edcf00039",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-spellweavers-run-v4.json": "65098dc53c1cdc7c18ea22431bb30ce4bae0c4d3a6dfb3aada58f6747a2c0cda",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-dragon-rider-v6.json": "d6a3527bf3c43c30c30a2c15be0fc32358cec4e4494b254e302d552330da0e76",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-dungeon-liberator-v6-rebind.json": "3fa7a6a0278d08f2c65bba4d8225de422e1f41f7649eaf4fc852f94365e8ff92"
+  },
+  "candidate_validation": {
+    "candidate_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/candidate-cohort-manifest-batch-a-v6.json",
+    "candidate_sha256": "0df0946f3f298b7ece3bea8b13af1bcfeaa9b288161f7ca040f56b1cb49b054d",
+    "candidate_bytes": 26271,
+    "candidate_json_valid": true,
+    "candidate_selected_input_hash_records": 49,
+    "candidate_selected_input_hash_mismatches": 0,
+    "scope_packages": 3,
+    "factual_claims": 86,
+    "negative_fixtures": 9,
+    "review_unresolved_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    }
+  },
+  "test_binding": {
+    "truth_test_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-truth-tests-v6.py",
+    "truth_test_sha256": "0fa94db21ba5689179b5e22dfd96960916001fc58c0ba56c2e851f130c891e5c",
+    "truth_receipt_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/truth-test-author-batch-a-v6.json",
+    "truth_receipt_sha256": "f966b527dc4d8a1649e2741c95aeaa7095f834b3a463b547d1418677089432a2",
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-truth-tests-v6.py -k 'not BatchAV6IndependentReviewContract and not BatchAV6LifecycleContract'",
+    "result": "17 passed, 4 deselected; exit 0",
+    "full_module_not_claimed_green": "The immutable V6 module expects v6-named review files while the authorized committed review is iteration V5 over V6 inputs. After candidate publication, running the unmodified full module would not validate that V5 review binding and would attempt absent v6 review aliases. This role did not mutate the test or create review aliases; the exact V5 review is bound directly and no owner or accepted lifecycle gate is claimed green."
+  },
+  "browser_unknowns_carried": [
+    "Dragon Rider is bounded browser-audit-blocked-route-unreachable; no movement, transition, responsive, input, persistence, production, or asset-load behavior is claimed.",
+    "Dungeon Liberator is bounded browser-audit-blocked-browser-unavailable; route reachability and all browser behavior remain unknown.",
+    "Spellweaver's Run is NON-RUNNABLE/UNKNOWN; historical and retained test sources are not current browser behavior.",
+    "No compact/wide, trusted-input, transition, completion, persistence, XP, idempotency, API-correctness, or production success is claimed for any Batch A package."
+  ],
+  "spellweaver_budget_and_timing_disclosure": {
+    "original_source_bytes_ceiling": 8000000,
+    "measured_source_bytes_actual": 11558850,
+    "original_ceiling_excess": 3558850,
+    "one_time_approved_source_bytes_ceiling": 12000000,
+    "remaining_approved_margin": 441150,
+    "exception_scope": "Spellweaver's Run evidence collector source_bytes only; no further increase and no other budget unit, role, game, truth, review, provenance, browser, or lifecycle gate is waived.",
+    "timing_measurement": "unavailable-in-harness",
+    "elapsed_minutes": 0,
+    "timing_note": "0 is the owner-directed accounting fallback, not elapsed-time evidence. No duration, performance, session timing, or provider timing is inferred."
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/candidate-cohort-manifest-batch-a-v6.json",
+      "sha256": "0df0946f3f298b7ece3bea8b13af1bcfeaa9b288161f7ca040f56b1cb49b054d"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/candidate-author-batch-a-v6.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot embed its own stable SHA-256 without changing its bytes. A later authentic owner approval or additive successor binding must hash these exact bytes without mutating this receipt."
+    }
+  ],
+  "resource_use": {
+    "budget_basis": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+      "sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+      "candidate_author_ceiling_declared": false,
+      "comparison_ceiling_role": "phase0_coordinator",
+      "comparison_only_note": "The frozen declaration has no candidate-manifest-author role. The most restrictive coordinator ceiling is shown only as a conservative measurement comparison; it grants no coordinator or product-owner authority and does not amend the frozen budget."
+    },
+    "comparison_ceilings": {
+      "source_bytes": 2000000,
+      "source_files_objects": 40,
+      "commands": 40,
+      "elapsed_minutes": 45,
+      "records_authored_reviewed": 7,
+      "browser_interactions": 0,
+      "captured_artifacts": 20
+    },
+    "actual": {
+      "source_bytes": 100990,
+      "source_files_objects": 16,
+      "commands": 7,
+      "elapsed_minutes": 0,
+      "records_authored_reviewed": 2,
+      "browser_interactions": 0,
+      "captured_artifacts": 2
+    },
+    "timing_measurement": "unavailable-in-harness",
+    "timing_note": "0 is the owner-directed accounting fallback, not elapsed-time evidence.",
+    "measurement_scope": "The exact 100990 bytes of the 16 direct candidate-author inputs listed in input_hashes. Commands count read-only Git/hash/JSON/test/diff validations used by this role. Candidate and receipt are the two authored records/artifacts; no browser was used.",
+    "comparison_ceiling_breaches": 0
+  },
+  "findings": {
+    "unresolved": [],
+    "unresolved_counts": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    }
+  },
+  "revocation": {
+    "candidate_revoked": false,
+    "superseded_candidate_sha256": null,
+    "revocation_event_sha256": null,
+    "rule": "Any bound-byte, hash, revision, predecessor, direction, exception, truth input, truth output, review, receipt, reviewed output, browser disposition, budget disclosure, or zero-blocker result change revokes this candidate. Remediation requires an additive revocation or supersession record, regenerated affected outputs and receipts, rerun truth gates, fresh review, and a new non-consumable candidate; neither this candidate nor this receipt may be edited in place."
+  },
+  "lifecycle": {
+    "candidate_manifest_published": true,
+    "candidate_consumable": false,
+    "product_owner_acceptance_published": false,
+    "accepted_manifest_published": false,
+    "approval_event_id": null,
+    "approval_message_sha256": null,
+    "lifecycle_status": "candidate-only; awaiting a later authentic product-owner approval bound to the exact candidate and review hashes"
+  },
+  "commit_sha": null,
+  "commit_disposition": "not-created; user prohibited commits",
+  "receipt_self_hash": null,
+  "receipt_self_hash_note": "A self-hash cannot be embedded without changing the receipt bytes.",
+  "role_boundary": "Created only candidate-cohort-manifest-batch-a-v6.json and this candidate-author receipt. No owner acceptance, accepted manifest, source, evidence package, mapper, browser audit, truth test, independent review, direction, exception, plan, registry, product document, or commit was created or modified.",
+  "measure_agent_result": {
+    "status": "candidate-only-nonconsumable",
+    "candidate": true,
+    "consumable": false,
+    "acceptance": "not-claimed",
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
