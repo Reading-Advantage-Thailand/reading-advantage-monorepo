@@ -1,0 +1,44 @@
+{
+  "schema": "apk-review-verification-decomposition.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "frozen_at_role_base_sha": "803ad6f15b2eacfebb2fdbd81a568b783e496746",
+  "status": "frozen-before-future-review; no unit has run and no usage is claimed",
+  "overflow_predecessor": {
+    "review_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-adversarial-review-v10.json",
+    "review_sha256": "de357cddb84f999aed0f28b085ce29bbd1b663dc30827c0112a6b8c19f010325",
+    "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v10.json",
+    "receipt_sha256": "02af6764a6f8384c989d311fb8460ac68b32186dee961d0b6218c04eb81adf97",
+    "actual_source_files_read": 106,
+    "actual_command_invocations": 210,
+    "disposition": "immutable non-authorizing overflow evidence; not relabeled or waived"
+  },
+  "budget_policy": {
+    "source": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-budget-declaration.json",
+    "sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+    "ceiling_change": false,
+    "product_owner_budget_approval_required": false,
+    "reason": "The original 80-file and 50-command ceilings remain unchanged for every isolated unit. Work is decomposed rather than assigning or pretending a larger budget."
+  },
+  "unit_ceilings": {"source_bytes_read":20971520,"source_files_read":80,"command_invocations":50,"elapsed_minutes":25,"claims_or_records_reviewed":240,"browser_interactions":0,"asset_candidates_inspected":12},
+  "units": [
+    {"unit_id":"RV16-INPUT-A","owner_role":"independent-input-verifier-a","scope":"First lexicographic chunk of at most 40 V16 runtime dependency paths; exact worktree hash and post-output Git binding only.","actual":null,"status":"not-run"},
+    {"unit_id":"RV16-INPUT-B","owner_role":"independent-input-verifier-b","scope":"Second lexicographic chunk of at most 40 V16 runtime dependency paths; exact worktree hash and post-output Git binding only.","actual":null,"status":"not-run"},
+    {"unit_id":"RV16-INPUT-C","owner_role":"independent-input-verifier-c","scope":"Remaining V16 runtime dependency paths, never more than 40; exact worktree hash and post-output Git binding only.","actual":null,"status":"not-run"},
+    {"unit_id":"RV16-RECEIPTS","owner_role":"independent-receipt-verifier","scope":"Uniform full local contract, predecessor/output bytes, findings, unavailable-provider fields, budgets, and commit disposition for every selected active receipt.","actual":null,"status":"not-run"},
+    {"unit_id":"RV16-VILLAGE","owner_role":"independent-village-verifier","scope":"Village Guardian exact claims, mapper references, fixtures, denominator, WebBridge limits, and HTTP 400 disclosure-only boundary.","actual":null,"status":"not-run"},
+    {"unit_id":"RV16-ARCHER","owner_role":"independent-archer-verifier","scope":"All 43 Archer V8 atomic claims, all four fixtures, and all 43 V9 mapper references.","actual":null,"status":"not-run"},
+    {"unit_id":"RV16-STORM","owner_role":"independent-storm-verifier","scope":"Storm exact claims, mapper references, fixtures, denominator, and reviewed non-runnable disposition.","actual":null,"status":"not-run"},
+    {"unit_id":"RV16-FINAL","owner_role":"adversarial-reviewer-batch-b-v11","scope":"Fresh synthesis over exact unit receipts plus independently rerun deterministic per-game samples, every changed claim, every fixture, all blocking findings, and lifecycle bindings. Only this unit may issue the final review conclusion.","actual":null,"status":"not-run"}
+  ],
+  "dispatch_rules": [
+    "Every unit gets fresh context and a distinct schema-complete receipt.",
+    "Input chunks are frozen from the exact V16 runtime map before any unit read and may not overlap or omit a path.",
+    "No unit may borrow another unit's allowance; every actual field must be measured in the same units and remain at or below the unchanged ceiling.",
+    "The final reviewer must reject a missing, stale, over-budget, overlapping, or non-independent unit and must independently rerun the strategy-required samples.",
+    "Unit verification does not authorize a candidate; zero Critical, High, and Medium final-review findings and all lifecycle gates remain mandatory."
+  ],
+  "resource_use": {"actual":null,"reason":"Future work has not run; zero or estimated usage would be fabricated."},
+  "candidate_authorized": false
+}

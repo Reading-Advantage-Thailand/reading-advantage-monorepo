@@ -1,0 +1,30 @@
+{
+  "schema": "apk-post-output-committed-binding.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "author_role_base_sha": "803ad6f15b2eacfebb2fdbd81a568b783e496746",
+  "binding_commit_sha": "803ad6f15b2eacfebb2fdbd81a568b783e496746",
+  "binding_rule": "Each listed path is compared with binding_commit_sha:path. The historical author role base remains metadata and is never used as the committed-byte comparison revision.",
+  "bound_outputs": [
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v8.json","sha256":"1fedca7dffa8897a3bb0f5482a1c74c484bc3f16e5361ddd06dcc89ec8ec1ca3"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v8.json","sha256":"ead73c3df3750048b6c33e66109c1b7b670999a16780f30acb4ea249e79bf4ef"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v8-complete.json","sha256":"4ab669f932a58fbcccceed5dfe5c22b9e648ed34961bfd239552f4694d642f1c"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-blueprint-batch-b-v9.json","sha256":"7b1591c5ed56538dcc8c94ddb51781fa72f9c9d5344aa812012cef54def5afc7"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-mapper-final-report-batch-b-v9.json","sha256":"cf2f6ad46472cbec7a68dc2ed0e2a18679879621f50a549c8d79fbe37023e6a0"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-archers-revenge-batch-b-v9-complete.json","sha256":"4bcbc36682e11d4ea01ab791827219dffe6f78efc6ffa12d473b5f7c1065f229"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-village-guardian-batch-b-v9-complete.json","sha256":"15340e93c6de91c6d4267d93f4d7ebf371ccc064adeae0a7e2d412be89553f5c"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-b-v4-complete.json","sha256":"fdd40f4aaaad994304c473f537464cba94240fd243da1ef3037e3229eec000f7"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-b-v3-complete.json","sha256":"fdd8a632b36a10044e46a741078ba9aaf9d7fa61a950f5729edd1cbed9aba765"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-role-receipt-completion-report-v10.json","sha256":"5a01a48cbe2ec83fb680bceb927b8d76346cdf5f568d1099ac6a9c7f4d3c30b4"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v15.py","sha256":"47eef0cf9e6e975a619c6e8fee02bb1a2244674404433b09aa51139612a53ab5"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v15.json","sha256":"da99399f881f18cdbf6436749435d6a78a53e973d72e717570b66ac89be8f430"}
+  ],
+  "pending_additive_outputs": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v16.py",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v16.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/*-batch-b-v16-complete.json"
+  ],
+  "pending_rule": "The additive V16 outputs are not claimed committed because the user prohibited commits. A later post-output binding must name their exact descendant commit before B0 can close.",
+  "candidate_authorized": false
+}

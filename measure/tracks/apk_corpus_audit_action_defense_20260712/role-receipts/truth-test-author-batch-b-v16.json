@@ -1,0 +1,80 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "status": "V16 remediation contracts authored for review V10's four High findings; fresh decomposed review and lifecycle remain fail-closed",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-TRUTH-V16-REVIEW-V10-REMEDIATION",
+  "role": "truth-test-author-batch-b-v16",
+  "role_identity": "bounded T4 Batch B remediation coordinator for exactly review V10's four High findings",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "803ad6f15b2eacfebb2fdbd81a568b783e496746",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "allowed_input_manifest_sha256": "e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+  "prior_role_history": [
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v15.json","sha256":"da99399f881f18cdbf6436749435d6a78a53e973d72e717570b66ac89be8f430","role_base_sha":"454c78336634a89aa9035099b343468948f2674e","use":"Immutable V15 predecessor only; its stale role-base commit predicate is not inherited."},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v10.json","sha256":"02af6764a6f8384c989d311fb8460ac68b32186dee961d0b6218c04eb81adf97","role_base_sha":"d92f575913c20c1b08ff9c51615a2a5257cbae2d","use":"Immutable four-finding review and truthful overflow evidence."}
+  ],
+  "directions": {
+    "provenance": {"path":"measure/product-owner-apk-provenance-direction-20260721.json","sha256":"4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac","decision":"LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"},
+    "webbridge": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-webbridge.json","sha256":"7dde397fdb1ceeac3e490d07791e90f69dd630b962d6b799da8426d4e9234498","decision":"WEBBRIDGE_ACCEPTED_FOR_B4"},
+    "completion": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-completion-disposition.json","sha256":"973641c8f0b3f3281e9302d5b488f012be82f401bd6831b104674ce67f8c3960","decision":"CONDITIONAL_EVIDENCE_ACCEPTANCE_WITH_SUCCESSOR_DEFECT_TRANSFER","application":"Disclosure-only. Both observed Village Guardian completion POSTs remain HTTP 400; no successful completion, persistence, XP, idempotency, or API-correctness claim is made."}
+  },
+  "provider_unavailability": {"available":false,"attestation_claimed":false,"prompt_sha256":null,"actual_context_manifest_sha256":null,"provider_spawn_id":null,"provider_session_id":null,"parent_ancestry_ids":null,"fork_turns":null,"raw_isolation_export_sha256":null,"start_event_id":null,"start_event_timestamp":null,"end_event_id":null,"end_event_timestamp":null,"final_response_sha256":null,"final_response_event_id":null,"commit_sha":null,"reason":"Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are truthful non-attestations; the user prohibited commits."},
+  "input_manifest": {
+    "inherited_v15": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v15.json","sha256":"da99399f881f18cdbf6436749435d6a78a53e973d72e717570b66ac89be8f430","declared_input_count":88,"use":"Its exact effective input map is inherited without mutation."},
+    "additions": {
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v15.py":"47eef0cf9e6e975a619c6e8fee02bb1a2244674404433b09aa51139612a53ab5",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v15.json":"da99399f881f18cdbf6436749435d6a78a53e973d72e717570b66ac89be8f430",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-adversarial-review-v10.json":"de357cddb84f999aed0f28b085ce29bbd1b663dc30827c0112a6b8c19f010325",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v10.json":"02af6764a6f8384c989d311fb8460ac68b32186dee961d0b6218c04eb81adf97",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-post-output-committed-binding-v16.json":"7ea050667add3b965b6e0c9d872a125fd941b01cfeab1d3cb1c8490aa855a8e1",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-review-verification-decomposition-v16.json":"3adb30a2f2c2a2691df2e3da9e55a2058c335f77aa84f87cd46571d184a22cd9",
+      "measure/archive/apk_source_denominator_inventory_20260712/asset-file-denominator.json":"41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+      "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json":"a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+      "measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json":"6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
+      "measure/archive/apk_source_denominator_inventory_20260712/scene-state-denominator.json":"6308836ca24f1cac5bf4ded5f7e72c5ba06c08f4a5c6648620818b720190bf8b",
+      "measure/archive/apk_source_denominator_inventory_20260712/source-denominator.json":"0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/discovery-auditor-batch-b-v16-complete.json":"81dd6e593bb182d6ec5f0904ad933d915d5e48e42e89b56a784c016ed5d4489b",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-village-guardian-batch-b-v16-complete.json":"00facb0ccfb6e792a9003eb50658e746937860541f416938b5172a6327fa4044",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v16-complete.json":"366f9092421df5fa704d460143494e547e46e66de142fdefe802c6b0478e6e77",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-storm-castle-tower-batch-b-v16-complete.json":"08fdb2733a8bd277409d3c644e9d6b109a99ca4955491d68f072c3cc6a65a672",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-village-guardian-batch-b-v16-complete.json":"aa113df8829ea4960c0ceef8e10dd4d4bfdff1a410642dd1e80fd180bf9c6e92",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-archers-revenge-batch-b-v16-complete.json":"2b4014565811f25ba698abef24de90b7dd75e758c836af226dcabe8731199e25",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-storm-castle-tower-batch-b-v16-complete.json":"cada4098a1aea9fb30c3da7f5aa5b1068ee33dfb9429078354a26f8cb85e49de",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-b-v16-complete.json":"3a87217383d35077eaad60efc7aa2aeb5b0882f9d971dad346ec22225dd6550f",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-b-v16-complete.json":"fecab1f7b97cc8a80c888ef62f5fd2bce80e975e7f8194ddc25503f31cde961c"
+    },
+    "effective_input_count": 108
+  },
+  "runtime_dependencies": {"declaration":"input_manifest","effective_input_count":108,"denominator_dependency_count":5,"scope":"Every inherited and additive runtime dependency is path-and-hash declared by input_manifest; this is not receipt-only."},
+  "input_hashes": {"effective_manifest":"input_manifest","effective_input_count":108},
+  "outputs": [
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v16.py","sha256":"9f84d9ed72952715fc20f1fc42d3478a12fbbc822ebccc2038ef7ce50aecfa5d"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v16.json","sha256":null,"sha256_note":"A receipt cannot embed its own stable digest; the fresh review must bind these exact bytes after an authorized descendant commit."}
+  ],
+  "findings": {
+    "resolved": [
+      {"id":"T4B10-HIGH-001","disposition":"five denominator ledgers are explicit additions to the full 108-path runtime input manifest"},
+      {"id":"T4B10-HIGH-002","disposition":"the exact twelve V15 remediation/output paths are compared with post-output committed binding 803ad6f1, never author role base 454c7833"},
+      {"id":"T4B10-HIGH-003","disposition":"all ten selected active receipts use and are tested against one complete local contract without inherited-receipt bypasses"},
+      {"id":"T4B10-HIGH-004","disposition":"V10's 106-file/210-command overflow remains immutable non-authorizing evidence; future verification is frozen into eight distinct unchanged-ceiling units with null actuals until executed"}
+    ],
+    "unresolved": []
+  },
+  "resource_use": {
+    "ceilings": {"source_bytes_read":20971520,"source_files_read":100,"command_invocations":60,"elapsed_minutes":30,"records_authored":260,"browser_interactions":0,"captured_browser_artifacts":0,"asset_candidates_inspected":0},
+    "actual": {"source_bytes_read":0,"source_files_read":0,"command_invocations":57,"elapsed_minutes":30,"records_authored":90,"browser_interactions":0,"captured_browser_artifacts":0,"asset_candidates_inspected":0},
+    "measurement_scope": "This coordination/truth-author role read no product source or Git source object; source counters are therefore zero. The command/tool count is the manually maintained role-session operation ledger through receipt creation, counting individual parallel tool operations. Elapsed time is rounded upward to the frozen role ceiling because provider timing telemetry is unavailable. Records count additive receipt, binding, decomposition-unit, manifest, and test-contract records; no future-review usage is included.",
+    "ceiling_breaches": 0
+  },
+  "review_decomposition": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-review-verification-decomposition-v16.json","sha256":"3adb30a2f2c2a2691df2e3da9e55a2058c335f77aa84f87cd46571d184a22cd9","ceiling_change":false,"future_actuals_claimed":false},
+  "post_output_binding": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-post-output-committed-binding-v16.json","sha256":"7ea050667add3b965b6e0c9d872a125fd941b01cfeab1d3cb1c8490aa855a8e1","binding_commit_sha":"803ad6f15b2eacfebb2fdbd81a568b783e496746","v16_outputs_committed":false},
+  "commit_sha": null,
+  "commit_disposition": "V15 remediation outputs are exact at post-output committed binding 803ad6f15b2eacfebb2fdbd81a568b783e496746; additive V16 outputs are uncommitted because the user prohibited commits",
+  "completion_constraints": {"successful_completion":false,"persistence_confirmed":false,"xp_awarded":false,"idempotency_verified":false,"api_correctness":false},
+  "expected_gate_state": {"review_v10_four_high_remediation":"green only when all four V16 remediation contracts pass","fresh_review":"red until all frozen verification units and fresh V11 review bind exact V16 inputs/outputs within unchanged ceilings","candidate_lifecycle":"red until ordered candidate, authentic product-owner acceptance, and accepted manifest artifacts exist"},
+  "role_boundary": "Only additive V16 truth, binding, decomposition, and schema-complete receipt reconciliation artifacts were created. No prior artifact, source, browser/asset audit, direction, plan, registry, candidate, acceptance, accepted manifest, or commit was altered or created.",
+  "marker": "MEASURE_AGENT_RESULT"
+}
