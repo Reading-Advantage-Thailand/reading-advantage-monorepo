@@ -1,0 +1,58 @@
+{
+  "schema": "apk-role-receipt.v6-rebind",
+  "status": "additive V6 receipt-only budget remediation complete; acceptance not claimed",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A remediation V6",
+  "task_id": "rebind-receipt:map-requirements:Dungeon Liberator:v6",
+  "role": "fresh-t5-dungeon-liberator-requirements-mapper-v6-rebind",
+  "game": "Dungeon Liberator",
+  "role_base_sha": "e519a3db88dc0b4f04f151b60c0c302097646f8c",
+  "supersession": {
+    "supersedes_receipt": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-dungeon-liberator-v5.json",
+    "superseded_receipt_sha256": "d46abeb595ffc5163a7a6af1f825c072bd9f2a8a927d138986d6e481e3a3ac89",
+    "scope_limit": "Receipt-only remediation: adds complete integer budget accounting and timing direction while preserving every V5 map, report, claim, unknown, disclosure, and disposition."
+  },
+  "input_hashes": {
+    "v5_map_sha256": "bd3848442cf5356df6b53243bc5596a33d3d56fbc9d23531da0cc7b1a2698ee1",
+    "v5_report_sha256": "de8f8a205e4bf13f9159c96361ef8415c541abe0a01bd6b2329bb0deb6b4b2c7",
+    "v5_receipt_sha256": "d46abeb595ffc5163a7a6af1f825c072bd9f2a8a927d138986d6e481e3a3ac89",
+    "timing_direction_sha256": "3b3fea0b22f5ac379a1bb3518b1095bc8f3a366eaa7eb2f677b69ac6ffddb2c0"
+  },
+  "map_bindings": {
+    "map_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/requirements-map-v5.json",
+    "map_sha256": "bd3848442cf5356df6b53243bc5596a33d3d56fbc9d23531da0cc7b1a2698ee1",
+    "report_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/requirements-final-report-v5.json",
+    "report_sha256": "de8f8a205e4bf13f9159c96361ef8415c541abe0a01bd6b2329bb0deb6b4b2c7"
+  },
+  "budget_actual": {
+    "source_bytes": 37465,
+    "source_files_objects": 7,
+    "commands": 1,
+    "elapsed_minutes": 0,
+    "records_authored_reviewed": 22,
+    "browser_interactions": 0,
+    "captured_artifacts": 2
+  },
+  "timing_direction": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v2.json",
+    "sha256": "3b3fea0b22f5ac379a1bb3518b1095bc8f3a366eaa7eb2f677b69ac6ffddb2c0",
+    "timing_measurement": "unavailable-in-harness",
+    "elapsed_minutes_interpretation": "0 is an accounting fallback, not elapsed-time evidence."
+  },
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations are unavailable; no provider attestation is claimed. No commit was created."
+  },
+  "receipt_self_hash": null,
+  "receipt_self_hash_note": "A receipt cannot embed its own final SHA-256 without changing its bytes; an external descendant binding may hash these exact receipt bytes.",
+  "role_boundary": "Only this additive Dungeon Liberator receipt/rebind was created; no V5 map/report bytes or factual content were modified.",
+  "reviewer_disposition": "pending fresh independent review of exact V6 receipt bytes",
+  "marker": "MEASURE_AGENT_RESULT"
+}

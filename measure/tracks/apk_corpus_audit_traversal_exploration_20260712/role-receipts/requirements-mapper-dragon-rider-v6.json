@@ -1,0 +1,66 @@
+{
+  "schema": "apk-role-receipt.v5",
+  "status": "additive V6 mapper receipt remediation; acceptance not claimed",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A remediation V5",
+  "task_id": "map-requirements:vocabulary/dragon-rider:v6-receipt-only",
+  "role": "fresh-t5-dragon-rider-requirements-mapper-v6-receipt-only",
+  "game": "dragon-rider",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "e519a3db88dc0b4f04f151b60c0c302097646f8c",
+  "supersession": {
+    "supersedes_receipt": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-dragon-rider-v5.json",
+    "scope_limit": "Receipt-only remediation: adds complete integer budget accounting and timing-direction fields while preserving all V5 map facts and exact V5 output bytes."
+  },
+  "input_hashes": {
+    "requirements_map_v5": "7c06238ae6927488809089dc8e7f5779a7ebf0f98721a0d03e6b92bce845c0d9",
+    "requirements_report_v5": "a11a4a0d39257887189564d6a9eef674b253b9dfe2964c42584bdf4241d4e1e1",
+    "requirements_mapper_receipt_v5": "a9c1edb50105457e601e8e305facf20763e4c5865e82cd0a225509268f3da7da",
+    "timing_direction": "3b3fea0b22f5ac379a1bb3518b1095bc8f3a366eaa7eb2f677b69ac6ffddb2c0"
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/requirements-map-v5.json",
+      "sha256": "7c06238ae6927488809089dc8e7f5779a7ebf0f98721a0d03e6b92bce845c0d9"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/requirements-final-report-v5.json",
+      "sha256": "a11a4a0d39257887189564d6a9eef674b253b9dfe2964c42584bdf4241d4e1e1"
+    }
+  ],
+  "budget_actual": {
+    "mapper_input_bytes": 38263,
+    "mapper_input_files": 7,
+    "mapper_commands": 1,
+    "mapper_records_authored": 3,
+    "elapsed_minutes": 0,
+    "collector_source_bytes": 77762,
+    "collector_source_files_objects": 10,
+    "collector_commands": 16,
+    "collector_records_authored_reviewed": 35,
+    "collector_browser_interactions": 0,
+    "collector_captured_artifacts": 4
+  },
+  "timing_direction": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v2.json",
+    "sha256": "3b3fea0b22f5ac379a1bb3518b1095bc8f3a366eaa7eb2f677b69ac6ffddb2c0",
+    "decision": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+    "timing_measurement": "unavailable-in-harness",
+    "elapsed_minutes": 0,
+    "elapsed_note": "0 is an accounting fallback, not elapsed-time evidence; non-timing integer ceilings remain non-waived."
+  },
+  "provenance_direction": {
+    "mode": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "provider_attestations": "unavailable and not claimed",
+    "commit_sha": "uncommitted; user explicitly prohibited commit"
+  },
+  "map_facts_changed": false,
+  "reviewer_disposition": "pending fresh independent review of exact V5-bound mapper bytes",
+  "measure_agent_result": {
+    "status": "complete-additive-uncommitted",
+    "candidate": false,
+    "acceptance": "not-claimed"
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

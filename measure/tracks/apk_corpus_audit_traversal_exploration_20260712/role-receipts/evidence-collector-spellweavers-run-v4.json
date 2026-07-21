@@ -1,0 +1,71 @@
+{
+  "schema_version": "apk-role-receipt.v4",
+  "status": "truthful-unattested-budget-disclosed-timing-fallback-rebind",
+  "supersedes": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-spellweavers-run-v2-rebind.json",
+  "rebind_reason": "Additive collector receipt remediation for unavailable harness timing; existing output bytes and hashes are preserved exactly and no claims are changed.",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A remediation V4",
+  "role": "evidence-collector",
+  "task_id": "collect-game-evidence:spellweavers-run:v4-rebind",
+  "game": "spellweavers-run",
+  "canonical_identity": "catalog/spellweavers-run",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "e519a3db88dc0b4f04f151b60c0c302097646f8c",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "provider_attestation": "Provider session, spawn, ancestry, fork, event timestamps, and elapsed timing were unavailable; isolation and timing are not claimed.",
+  "budget_exception_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-spellweavers-budget-exception.json",
+  "budget_exception_sha256": "a0a4f2e80fa888e3fee7a1ef7e3479af559e1930cbb3eb3a5ea3a2ab8b3bbcf4",
+  "original_source_bytes_actual": 11558850,
+  "original_source_bytes_ceiling": 8000000,
+  "approved_source_bytes_ceiling": 12000000,
+  "budget_exception_disclosure": "Original breach: 11558850 actual versus 8000000 ceiling; owner exception approved 12000000 only for Spellweaver collector source bytes; no further increase and no other gate waived.",
+  "events": {
+    "start_event_id": "unavailable",
+    "end_event_id": "unavailable",
+    "started_at": "unavailable",
+    "ended_at": "unavailable"
+  },
+  "actual_usage": {
+    "source_bytes": 11558850,
+    "source_files_objects": 19,
+    "commands": 24,
+    "elapsed_minutes": 0,
+    "records_authored_reviewed": 51,
+    "browser_interactions": 0,
+    "captured_artifacts": 4
+  },
+  "timing_direction": {
+    "measurement": "unavailable-in-harness",
+    "elapsed_minutes": 0,
+    "meaning": "Accounting fallback only; 0 is not elapsed-time evidence.",
+    "direction": "When trusted provider timing is unavailable, retain elapsed_minutes=0 for deterministic accounting only; do not infer duration, provider timing, session timing, or performance from it."
+  },
+  "measurement_basis": "Integer actuals are retained from the existing collector receipt. elapsed_minutes=0 is the explicit accounting fallback required when trusted timing telemetry is unavailable.",
+  "provenance_direction": {
+    "mode": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "provider_telemetry_available": false,
+    "timing_fallback": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+    "commit_binding": "pending-orchestrator-bind"
+  },
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-method-v2.md",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-final-report-v2-rebind.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json": "2cd708cbecf94133b92ce5f06822ad420da28a1d4417fdb74284528e7a9fe24b",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-method-v2.md": "1cd64613e86482a78830f522fbe6d83cf1a812d3c42fcbd97e06f9ade035e92a",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-final-report-v2-rebind.json": "c8c174e223501dc1ae4e636a4c45eb8fbc6552011e1b327be1e755df3569197f"
+  },
+  "output_hashes_note": "Receipt is excluded from output_hashes to avoid self-reference; every existing output hash is copied exactly.",
+  "claims_changed": false,
+  "findings": [
+    "This is additive receipt/rebind metadata only.",
+    "Existing output bytes, output paths, and output hashes are preserved exactly.",
+    "No factual claim, unknown boundary, acceptance status, or review disposition was changed.",
+    "Timing remains unavailable; elapsed_minutes=0 is accounting fallback only and is not timing evidence."
+  ],
+  "commit_sha": "uncommitted",
+  "acceptance": "not-claimed",
+  "reviewer_disposition": "pending-independent-review"
+}
