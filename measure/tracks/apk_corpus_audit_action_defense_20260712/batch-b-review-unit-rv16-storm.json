@@ -1,0 +1,17 @@
+{
+  "schema": "apk-review-unit-result.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "unit_id": "RV16-STORM",
+  "owner_role": "independent-storm-verifier",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "24d933ed60722a5d20335d82ef440c325a849d6c",
+  "audited_head_sha": "24d933ed60722a5d20335d82ef440c325a849d6c",
+  "scope": "Storm exact claims, mapper references, fixtures, denominator, and reviewed non-runnable disposition.",
+  "status": "complete",
+  "verification": {"claims_checked": 42, "unique_source_objects": 13, "bounded_queries_checked": 8, "fixtures_checked": 4, "mapper_distinct_references": 42, "denominator_records_checked": 25, "browser_non_runnable_checked": true, "defects": [], "exit_code": 0},
+  "findings": {"resolved": [], "unresolved": []},
+  "resource_use": {"ceilings": {"source_bytes_read": 20971520, "source_files_read": 80, "command_invocations": 50, "elapsed_minutes": 25, "claims_or_records_reviewed": 240, "browser_interactions": 0, "asset_candidates_inspected": 12}, "actual": {"source_bytes_read": 458322, "source_files_read": 20, "command_invocations": 12, "elapsed_minutes": 6, "claims_or_records_reviewed": 121, "browser_interactions": 0, "asset_candidates_inspected": 3}, "ceiling_breaches": 0},
+  "candidate_authorized": false,
+  "marker": "MEASURE_AGENT_RESULT"
+}

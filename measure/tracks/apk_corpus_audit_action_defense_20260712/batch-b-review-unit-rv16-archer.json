@@ -1,0 +1,17 @@
+{
+  "schema": "apk-review-unit-result.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "unit_id": "RV16-ARCHER",
+  "owner_role": "independent-archer-verifier",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "24d933ed60722a5d20335d82ef440c325a849d6c",
+  "audited_head_sha": "24d933ed60722a5d20335d82ef440c325a849d6c",
+  "scope": "All 43 Archer V8 atomic claims, all four fixtures, and all 43 V9 mapper references.",
+  "status": "complete",
+  "verification": {"claims_checked": 43, "unique_source_objects": 7, "fixtures_checked": 4, "mapper_references_checked": 43, "atomicity_required_fields": 21, "defects": [], "exit_code": 0},
+  "findings": {"resolved": [], "unresolved": []},
+  "resource_use": {"ceilings": {"source_bytes_read": 20971520, "source_files_read": 80, "command_invocations": 50, "elapsed_minutes": 25, "claims_or_records_reviewed": 240, "browser_interactions": 0, "asset_candidates_inspected": 12}, "actual": {"source_bytes_read": 62161, "source_files_read": 10, "command_invocations": 8, "elapsed_minutes": 6, "claims_or_records_reviewed": 90, "browser_interactions": 0, "asset_candidates_inspected": 3}, "ceiling_breaches": 0},
+  "candidate_authorized": false,
+  "marker": "MEASURE_AGENT_RESULT"
+}

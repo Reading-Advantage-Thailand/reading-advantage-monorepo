@@ -1,0 +1,71 @@
+{
+  "schema": "apk-review-unit-result.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "unit_id": "RV16-FINAL",
+  "owner_role": "adversarial-reviewer-batch-b-v11",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "24d933ed60722a5d20335d82ef440c325a849d6c",
+  "audited_head_sha": "24d933ed60722a5d20335d82ef440c325a849d6c",
+  "scope": "Fresh synthesis over exact unit receipts, deterministic stratified per-game samples, all fixtures, all V10 changed High findings, runtime map, disclosures, and lifecycle preconditions.",
+  "status": "complete; review conclusion is candidate-unauthorized because lifecycle preconditions are absent",
+  "verification": {
+    "population_total": 158,
+    "sample_claims_total": 54,
+    "sample_source_objects_total": 22,
+    "samples": {
+      "village-guardian": {
+        "population": 73,
+        "package_sha256": "3be82cd7a9ddb144ae82ae220c36b439c6d14bbd58e1c988c897af6156b20484",
+        "seed": "0bafcbd9a84132778262d520eca5da6dad5a4eb324a7ec76075f1cb7bbcff6e5",
+        "selected_claim_ids": ["VG3-API-002","VG3-ASSET-002","VG3-COMP-005","VG3-COMP-006","VG3-COMP-007","VG3-COMP-009","VG3-COMP-010","VG3-CONFIG-002","VG3-ID-001","VG3-ID-003","VG3-ID-004","VG3-ID-006","VG3-INDEX-001","VG3-MODEL-002","VG3-MODEL-011","VG3-MODEL-015","VG3-MODEL-017","VG3-ROUTE-003","VG3-TEST-013"],
+        "selected_count": 19,
+        "strata_count": 37,
+        "source_objects": 9
+      },
+      "archers-revenge": {
+        "population": 43,
+        "package_sha256": "1fedca7dffa8897a3bb0f5482a1c74c484bc3f16e5361ddd06dcc89ec8ec1ca3",
+        "seed": "972af6b431a831f15b9c626f3c3efc7047992c74498a112a95cd523e109aff95",
+        "selected_claim_ids": ["AR-B2-V8-001","AR-B2-V8-010","AR-B2-V8-011","AR-B2-V8-012","AR-B2-V8-018","AR-B2-V8-021","AR-B2-V8-022","AR-B2-V8-024","AR-B2-V8-025","AR-B2-V8-027","AR-B2-V8-028","AR-B2-V8-029","AR-B2-V8-030","AR-B2-V8-032","AR-B2-V8-033","AR-B2-V8-034","AR-B2-V8-039","AR-B2-V8-ASSET-003"],
+        "selected_count": 18,
+        "strata_count": 34,
+        "source_objects": 5
+      },
+      "storm-castle-tower": {
+        "population": 42,
+        "package_sha256": "9f9337ec9b86161337553a8b8ab92e57cc954d2a0deb42018dad0ed99394e9d9",
+        "seed": "84ed643c96a7d35dcdf676a35cdb14f96713c0300f6450e83ec1ca555812848b",
+        "selected_claim_ids": ["SCT-ABS-001","SCT-ASSET-001","SCT-ASSET-002","SCT-ASSET-ABS-001","SCT-ASSET-ABS-002","SCT-ASSET-H001","SCT-ASSET-H002","SCT-COPY-001","SCT-HIST-001","SCT-ID-001","SCT-MECH-H001","SCT-RESP-H003","SCT-ROUTE-H002","SCT-ROUTE-H004","SCT-SCENE-H003","SCT-TEST-H002","SCT-TRANS-H003"],
+        "selected_count": 17,
+        "strata_count": 32,
+        "source_objects": 8
+      }
+    },
+    "sampling_algorithm": "For each game, seed SHA-256(package_sha256 + normalized_game_id); rank claim IDs by SHA-256(seed + claim_id); select the lowest-ranked claim for every populated category, evidence class, revision class, and source-shape stratum, then fill to max(10, ceil(10% of population)). Exact cited bytes and semantic assertions were independently recomputed for selected claims.",
+    "fixtures_checked": 12,
+    "changed_high_findings_rebound": ["T4B10-HIGH-001","T4B10-HIGH-002","T4B10-HIGH-003","T4B10-HIGH-004"],
+    "runtime_map_count": 108,
+    "runtime_map_drift": [],
+    "completed_supporting_unit_receipts": 7,
+    "unit_count_including_final": 8,
+    "browser_completion_disclosures_checked": true,
+    "post_output_binding_checked": true,
+    "exit_code": 0
+  },
+  "lifecycle_preconditions": {
+    "candidate_cohort_manifest": false,
+    "product_owner_acceptance": false,
+    "accepted_cohort_manifest": false,
+    "lifecycle_ready": false,
+    "reason": "The V11 review role may not create candidate, product-owner acceptance, or accepted manifest artifacts; all three required Batch B lifecycle artifacts are absent."
+  },
+  "findings": {"resolved": ["T4B10-HIGH-001","T4B10-HIGH-002","T4B10-HIGH-003","T4B10-HIGH-004"], "unresolved": [], "unresolved_counts": {"critical": 0, "high": 0, "medium": 0, "low": 0}},
+  "candidate_authorized": false,
+  "marker": "MEASURE_AGENT_RESULT",
+  "resource_use": {
+    "ceilings": {"source_bytes_read": 20971520, "source_files_read": 80, "command_invocations": 50, "elapsed_minutes": 25, "claims_or_records_reviewed": 240, "browser_interactions": 0, "asset_candidates_inspected": 12},
+    "actual": {"source_bytes_read": 281731, "source_files_read": 26, "command_invocations": 18, "elapsed_minutes": 9, "claims_or_records_reviewed": 185, "browser_interactions": 0, "asset_candidates_inspected": 7},
+    "ceiling_breaches": 0
+  }
+}

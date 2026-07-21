@@ -1,0 +1,17 @@
+{
+  "schema": "apk-review-unit-result.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "unit_id": "RV16-INPUT-B",
+  "owner_role": "independent-input-verifier-b",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "24d933ed60722a5d20335d82ef440c325a849d6c",
+  "audited_head_sha": "24d933ed60722a5d20335d82ef440c325a849d6c",
+  "scope": "Sorted V16 runtime dependency paths 41-80; current worktree hashes plus post-output/denominator Git bindings.",
+  "status": "complete",
+  "verification": {"path_count": 40, "ordinal_range": [41, 80], "post_output_or_denominator_git_checked": 5, "worktree_hash_mismatches": [], "git_binding_mismatches": [], "exit_code": 0},
+  "findings": {"resolved": [], "unresolved": []},
+  "resource_use": {"ceilings": {"source_bytes_read": 20971520, "source_files_read": 80, "command_invocations": 50, "elapsed_minutes": 25, "claims_or_records_reviewed": 240, "browser_interactions": 0, "asset_candidates_inspected": 12}, "actual": {"source_bytes_read": 361091, "source_files_read": 40, "command_invocations": 4, "elapsed_minutes": 1, "claims_or_records_reviewed": 40, "browser_interactions": 0, "asset_candidates_inspected": 0}, "ceiling_breaches": 0},
+  "candidate_authorized": false,
+  "marker": "MEASURE_AGENT_RESULT"
+}
