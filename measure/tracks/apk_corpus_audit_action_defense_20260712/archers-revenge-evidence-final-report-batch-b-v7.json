@@ -1,0 +1,16 @@
+{
+  "schema":"apk-evidence-final-report.v7",
+  "track_id":"apk_corpus_audit_action_defense_20260712",
+  "phase":"Phase 2: Batch B evidence packages",
+  "game":"Archer's Revenge",
+  "normalized_game_id":"archers-revenge",
+  "collector_id":"evidence-collector-archers-revenge-batch-b-v7",
+  "role_base_sha":"ffeb96b4a71b1635cbd6b3cf3557984e36261557",
+  "status":"additive atomic-envelope and binary-envelope remediation; non-authoritative pending downstream validation and independent review",
+  "supersession":{"supersedes_report":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v6.json","reason":"V7 replaces V6 compound records with complete atomic records and explicit whole-file/byte binary envelopes.","scope_limit":"No mapping, browser, review, truth-test, candidate, acceptance, manifest, or product work."},
+  "source_authority":{"claim_ledger":{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v7.json","sha256":null},"method":{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b-v7.md","sha256":null},"text_revision":"cd1936387d136ffb12e77a647f36cbce2d1fdd4e","binary_revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","rule":"Only exact envelopes in the V7 ledger establish the recorded source facts."},
+  "completeness":{"factual_claims":29,"negative_fixtures":4,"atomic_records":true,"mandatory_factual_fields_present":true,"text_envelopes_explicit":true,"binary_envelopes_explicit":true,"binary_whole_file":true,"current_runtime_claims":0,"not_present_items_not_fabricated":true},
+  "boundary":{"current_runtime":"unknown","runnable":"unknown","browser":"not performed","mapping":"not performed","review":"not performed","responsive_live_behavior":"unknown","completion_success":"unknown","asset_usage":"unknown","provider_provenance":"unavailable and not represented as attestation","acceptance":"not-claimed"},
+  "validation":{"json_documents":"required downstream","source_hash_rederivation":"required downstream","binary_byte_envelope_rederivation":"required downstream","fixture_rejection":"required downstream","git_diff_check":"required","commit_sha":null},
+  "resource_use":{"source_bytes_read":120000,"source_files_read":4,"command_invocations":8,"elapsed_minutes":12,"records_authored":33}
+}

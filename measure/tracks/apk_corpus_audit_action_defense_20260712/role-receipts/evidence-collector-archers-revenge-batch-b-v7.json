@@ -1,0 +1,21 @@
+{
+  "schema":"apk-role-receipt.v2",
+  "status":"fresh T4 Archer collector V7 complete; additive atomic evidence package; acceptance not claimed",
+  "acceptance":"not-claimed",
+  "track_id":"apk_corpus_audit_action_defense_20260712",
+  "phase":"Phase 2: Batch B evidence packages",
+  "task_id":"B2-COLLECT-ARCHERS-ATOMIC-ENVELOPES-V7",
+  "role":"evidence-collector-archers-revenge-batch-b-v7",
+  "role_base_sha":"ffeb96b4a71b1635cbd6b3cf3557984e36261557",
+  "outputs":{"ledger":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v7.json","method":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b-v7.md","report":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v7.json","receipt":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v7.json","self_sha256":null},
+  "output_hashes":{"ledger_sha256":null,"method_sha256":null,"report_sha256":null,"receipt_sha256":null,"binding":"Hashes intentionally remain unbound until authorized exact-byte downstream binding; no commit was created."},
+  "receipt_contract":{"required_fields":["schema","status","acceptance","track_id","phase","task_id","role","role_base_sha","outputs","output_hashes","input_manifest","scope","coverage","validation","provider_provenance","boundary","resource_use","commit_sha"],"hash_rule":"Output hashes are SHA-256 of exact repository bytes and must be bound only after final bytes are stable.","input_rule":"Every source revision, path, and predecessor used for a factual record must be listed with its exact hash or declared Git object identity.","provider_rule":"Unavailable provider telemetry is disclosed as unavailable; nulls and local assertions are not attestations.","scope_rule":"A receipt cannot claim mapping, browser, review, truth testing, acceptance, or manifest work performed by another role."},
+  "input_manifest":{"historical_source_revision":"cd1936387d136ffb12e77a647f36cbce2d1fdd4e","baseline_binary_revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","predecessor_ledger":"archers-revenge-claim-ledger-batch-b-v6.json","predecessor_report":"archers-revenge-evidence-final-report-batch-b-v6.json"},
+  "scope":{"supersedes":"V6 compound source package","created":"V7 ledger, method, report, and receipt only","mapping":false,"browser":false,"review":false,"truth_tests":false,"candidate":false,"acceptance":false,"manifest":false,"product_code":false},
+  "coverage":{"atomic_factual_records":29,"negative_fixtures":4,"binary_whole_file_records":3,"mandatory_fields_per_factual_record":true,"current_runtime_claims":0},
+  "validation":{"json_shape":"locally authored; downstream json.tool required","text_envelopes":"downstream exact Git blob/range re-derivation required","binary_envelopes":"downstream exact whole-file/byte re-derivation required","unique_ids":"required","diff_check":"required","commit_sha":null},
+  "provider_provenance":{"unavailable":true,"attestation_claimed":false,"note":"Prompt, context, spawn, ancestry, isolation, event, timing, final-response, and commit attestations were unavailable; no null is presented as an attestation."},
+  "boundary":{"mapping":"not performed","browser":"not performed","review":"not performed","acceptance":"not claimed","current_runtime":"unknown","asset_usage":"unknown"},
+  "resource_use":{"source_bytes_read":120000,"source_files_read":4,"command_invocations":8,"elapsed_minutes":12,"records_authored":33},
+  "commit_sha":null
+}
