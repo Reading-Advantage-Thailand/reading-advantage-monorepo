@@ -1,0 +1,232 @@
+{
+  "schema_version": "apk-role-receipt.v3",
+  "status": "T6 Batch A V3 accepted manifest authored after exact committed delegated project-owner acceptance; accepted evidence is conditionally consumable with every disclosure preserved and every behavior-success claim false",
+  "acceptance": "bound-exact-owner-acceptance",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 1: Batch A V3 browser-evidence selection",
+  "task_id": "accepted-manifest:t6-puzzle-crafting-batch-a:v3",
+  "role": "accepted-manifest-author-batch-a-v3",
+  "role_identity": "T6 Puzzle/Crafting Batch A accepted-manifest author only; records but does not originate, replay, or broaden project-owner acceptance",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "a4892fbd38c98cac918fd1326dadd74669d4e2db",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "prior_role_history": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-independent-review-v3.json",
+      "sha256": "9a855ce54bceb7b6d3c911a024fe24c56c1b259a7888cad99d1115c756a03964",
+      "commit_sha": "38f80821f3a37eaa539f75cb377abab760e77cd6",
+      "use": "Exact zero-blocker V3 review over the V3 selected inputs; establishes candidate eligibility but does not originate owner acceptance."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/candidate-cohort-manifest-batch-a-v3.json",
+      "sha256": "3bd8274d302399d014349fa9fba80432c3ec73a187013b367187f66655d83909",
+      "commit_sha": "97716ad273a324c7d9a112ae701b37f7e9aa3be7",
+      "use": "Exact non-consumable candidate named by the bound owner acceptance."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/candidate-author-batch-a-v3.json",
+      "sha256": "7ec6715a6761e01ce61a6888f585f4603fc85378ecde65510efa210c32a0d836",
+      "commit_sha": "97716ad273a324c7d9a112ae701b37f7e9aa3be7",
+      "use": "Exact candidate authorship, validation, disclosure, scope, and revocation basis."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/product-owner-acceptance-batch-a-v3.json",
+      "sha256": "f174b12f7da409da892cfe2daacb92e94117a7602409c902d0aa9a177e864a42",
+      "commit_sha": "a4892fbd38c98cac918fd1326dadd74669d4e2db",
+      "use": "Exact delegated project-owner ACCEPT-WITH-DISCLOSURE decision; this role does not replay, broaden, or originate it."
+    }
+  ],
+  "provider_unavailability": {
+    "available": false,
+    "attestation_claimed": false,
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "final_response_event_id": null,
+    "commit_sha": null,
+    "reason": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable and are not claimed. Exact local hashes, committed Git lineage, bounded role scope, and independent review are the compensating controls authorized by the provenance direction."
+  },
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/candidate-cohort-manifest-batch-a-v3.json": "3bd8274d302399d014349fa9fba80432c3ec73a187013b367187f66655d83909",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/candidate-author-batch-a-v3.json": "7ec6715a6761e01ce61a6888f585f4603fc85378ecde65510efa210c32a0d836",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/product-owner-acceptance-batch-a-v3.json": "f174b12f7da409da892cfe2daacb92e94117a7602409c902d0aa9a177e864a42",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-independent-review-v3.json": "9a855ce54bceb7b6d3c911a024fe24c56c1b259a7888cad99d1115c756a03964",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/adversarial-reviewer-batch-a-v3.json": "4d04d3a3e9f966e4110168653fbc906db43401ac2565b365c9deccd1136708dd",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v3.py": "635a211d5210eea1af551fd4e074fcb8bf24037ebd4e13f8737e5a03e7d2f606",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/truth-test-author-batch-a-v3.json": "cbc0bbfdd4d35c880782c87046794688b8f5d45d1b97b4e724611142bb0aca5d",
+    "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/phase0-budget-declaration.json": "695bd2b90bf0483c35c09c51007add5e467ad671cac4945392e4cc3fa02a5314",
+    "measure/apk-evidence-cohort-protocol.md": "1f97ed8fd026cb0b1b49ed5de602252c075228981d1ff26640748b56ff2a3507",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/spec.md": "45485007599fdf581ae50d7e3862a1476235a6a4150130635133273314b4b1f1",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b"
+  },
+  "accepted_manifest_validation": {
+    "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/accepted-cohort-manifest-batch-a-v3.json",
+    "sha256": "8c332ff99bf9224f826f77cec256ff4d3f6cb94cea7181e3879226f82c875e83",
+    "json_valid": true,
+    "candidate_sha256_exact": true,
+    "candidate_receipt_sha256_exact": true,
+    "product_owner_approval_sha256_exact": true,
+    "review_sha256_exact": true,
+    "review_receipt_sha256_exact": true,
+    "truth_test_sha256_exact": true,
+    "truth_receipt_sha256_exact": true,
+    "predecessor_hashes_exact": true,
+    "governing_hashes_exact": true,
+    "scope_exact": true,
+    "disclosures_complete": true,
+    "completion_and_behavior_claims_all_false": true,
+    "conditional_consumption_only": true,
+    "revocation_rules_present": true,
+    "git_ancestor_chain_verified": true
+  },
+  "chronology_validation": {
+    "ordered_commits": [
+      "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+      "3d53d031f48eed2bbb324539900108136190cf57",
+      "65db764cbfcfd90899d51d159cc123b76d511607",
+      "38f80821f3a37eaa539f75cb377abab760e77cd6",
+      "97716ad273a324c7d9a112ae701b37f7e9aa3be7",
+      "a4892fbd38c98cac918fd1326dadd74669d4e2db"
+    ],
+    "every_prior_commit_is_ancestor_of_next": true,
+    "review_publication_precedes_candidate_publication": true,
+    "acceptance_publication_descends_from_candidate_publication": true,
+    "role_base_is_acceptance_publication_commit": true,
+    "approval_timestamp_used_as_ordering_proof": false,
+    "approval_timestamp_disclosure": "The exact acceptance's nominal 2026-07-21T00:00:00Z event timestamp predates review and candidate publication. This role preserves it but relies only on exact hash bindings and immutable descendant Git publication order."
+  },
+  "disclosure_validation": {
+    "disclosure_count": 9,
+    "local_provider_attestation_unavailable": true,
+    "enchanted_library_browser_unknown": true,
+    "rune_match_browser_unknown": true,
+    "alchemists_synthesis_browser_unknown": true,
+    "zero_timing_is_accounting_fallback_only": true,
+    "candidate_authored_time_publication_state_preserved": true,
+    "review_historical_lifecycle_state_preserved": true,
+    "nominal_approval_timestamp_not_used_for_ordering": true,
+    "separate_lifecycle_artifact_boundary_preserved": true,
+    "omitted_or_narrowed_disclosures": []
+  },
+  "lifecycle_validation": {
+    "truth_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v3.py",
+    "truth_result_after_accepted_manifest": "22 passed; exit 0",
+    "candidate_manifest_published": true,
+    "candidate_consumable": false,
+    "product_owner_acceptance_published": true,
+    "product_owner_acceptance_replayed": false,
+    "product_owner_acceptance_revoked": false,
+    "product_owner_acceptance_superseded": false,
+    "accepted_manifest_published": true,
+    "accepted_manifest_consumable": true,
+    "accepted_manifest_consumability": "conditional",
+    "accepted_lifecycle_result": "pass: exact candidate, candidate receipt, owner acceptance, V3 review, review receipt, V3 truth, truth receipt, predecessors, governing inputs, chronology, disclosures, conditional consumption, and revocation bindings validated"
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/accepted-cohort-manifest-batch-a-v3.json",
+      "sha256": "8c332ff99bf9224f826f77cec256ff4d3f6cb94cea7181e3879226f82c875e83"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/accepted-manifest-author-batch-a-v3.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot embed its own stable SHA-256. Downstream lifecycle records must hash these exact bytes without mutating this receipt."
+    }
+  ],
+  "resource_use": {
+    "budget_basis": {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/phase0-budget-declaration.json",
+      "sha256": "695bd2b90bf0483c35c09c51007add5e467ad671cac4945392e4cc3fa02a5314",
+      "accepted_manifest_author_ceiling_declared": false,
+      "within_declared_accepted_manifest_author_ceiling_claimed": false,
+      "note": "The frozen declaration has no accepted-manifest-author budget. This receipt reports measured input scope without inventing or borrowing a ceiling."
+    },
+    "actual": {
+      "source_bytes": 112280,
+      "source_files_objects": 14,
+      "terminal_command_invocations_before_receipt_publication": null,
+      "elapsed_minutes": 0,
+      "records_authored_reviewed": 2,
+      "browser_interactions": 0,
+      "captured_artifacts": 2
+    },
+    "command_count_measurement": "unavailable-in-harness; no command-count or within-ceiling claim is made",
+    "timing_measurement": "unavailable-in-harness",
+    "timing_note": "0 is an accounting fallback, not elapsed-time, duration, performance, provider-session, or wall-clock evidence.",
+    "measurement_scope": "The exact 112280 bytes of the 14 direct accepted-manifest-author inputs listed in input_hashes. The manifest and this receipt are the only authored records; no product source or browser was modified or used by this role."
+  },
+  "completion_and_behavior_constraints": {
+    "completion": false,
+    "completion_success_claimed": false,
+    "persistence": false,
+    "persistence_claimed": false,
+    "xp_awarded": false,
+    "xp_awarded_claimed": false,
+    "idempotency": false,
+    "idempotency_claimed": false,
+    "api_correctness": false,
+    "api_correctness_claimed": false,
+    "browser_behavior_success": false,
+    "browser_behavior_success_claimed": false
+  },
+  "findings": {
+    "resolved": [
+      {
+        "id": "T6A-ACCEPTED-MANIFEST-MISSING",
+        "disposition": "The accepted manifest now binds the exact committed candidate, candidate receipt, owner acceptance, V3 review, V3 truth, predecessors, governing inputs, scope, disclosures, false behavior claims, chronology, conditional consumption, and revocation rules."
+      }
+    ],
+    "unresolved": [],
+    "unresolved_counts": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    }
+  },
+  "revocation": {
+    "accepted_manifest_revoked": false,
+    "superseded_accepted_manifest_sha256": null,
+    "revocation_event_sha256": null,
+    "rule": "Any bound byte, digest, revision, authority, predecessor, governing input, truth input, review, receipt, output, browser disposition, disclosure, false behavior claim, conditional-consumption limit, chronology control, or zero-blocker result change revokes exact accepted-manifest digest 8c332ff99bf9224f826f77cec256ff4d3f6cb94cea7181e3879226f82c875e83. Consumption must stop and remediation must be additive; neither manifest nor receipt may be edited in place."
+  },
+  "lifecycle": {
+    "candidate_manifest_published": true,
+    "candidate_consumable": false,
+    "product_owner_acceptance_published": true,
+    "accepted_manifest_published": true,
+    "accepted_manifest_consumable": true,
+    "accepted_manifest_consumability": "conditional",
+    "lifecycle_status": "accepted with disclosure and conditionally consumable; no route, gameplay, responsive, trusted-input, completion, persistence, XP, idempotency, API-correctness, production, or asset-loading success is claimed"
+  },
+  "commit_sha": null,
+  "commit_disposition": "not-created; user prohibited commits",
+  "receipt_self_hash": null,
+  "receipt_self_hash_note": "A self-hash cannot be embedded without changing the receipt bytes.",
+  "role_boundary": "Created only accepted-cohort-manifest-batch-a-v3.json and this accepted-manifest-author receipt. No candidate, project-owner acceptance, source, evidence package, mapper, browser audit, truth test, independent review, governing direction, predecessor, plan, registry, existing receipt, or commit was created or modified.",
+  "measure_agent_result": {
+    "status": "accepted-with-disclosure-conditionally-consumable",
+    "candidate": false,
+    "consumable": true,
+    "consumability": "conditional",
+    "acceptance": "bound-exact-owner-acceptance",
+    "accepted_manifest_sha256": "8c332ff99bf9224f826f77cec256ff4d3f6cb94cea7181e3879226f82c875e83",
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

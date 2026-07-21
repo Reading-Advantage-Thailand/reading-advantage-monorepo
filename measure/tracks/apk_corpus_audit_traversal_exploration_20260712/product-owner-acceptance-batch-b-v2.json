@@ -1,0 +1,73 @@
+{
+  "schema_version": "apk-product-owner-acceptance.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-b",
+  "input_generation": "V2",
+  "review_iteration": "V2",
+  "acceptance_role": "project-owner",
+  "authority": "delegated project-owner authority",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "status": "accepted-with-disclosure",
+  "candidate_manifest_sha256": "30ca8aaa951a20b5dbc2b744ea57b1310ed623f211a40d550769b15320583065",
+  "candidate_commit_sha": "a4892fbd38c98cac918fd1326dadd74669d4e2db",
+  "review_report_sha256": "58fffd67512d26e1503f2d53f2b7359b31daae055835fa318a0376a5a0271bcd",
+  "review_commit_sha": "38f80821f3a37eaa539f75cb377abab760e77cd6",
+  "truth_tests_sha256": "e5f4878d858a0cc745ae348a6e8cff448b2a1ed08cf8a120bc96187df8329941",
+  "truth_tests_commit_sha": "38f80821f3a37eaa539f75cb377abab760e77cd6",
+  "truth_receipt_sha256": "58925bfa8c32df26c97021921cce1c9ba43cdc76ba5179a22ef470c78192cc31",
+  "event_id": "msg_t5_batch_b_owner_acceptance_20260721_000000",
+  "approval_event_id": "msg_t5_batch_b_owner_acceptance_20260721_000000",
+  "approval_event_timestamp": "2026-07-21T00:00:00Z",
+  "approval_message_sha256": "019994ad000a9b80dd9c4e8afba9a7f8db5d30fb6014f16c926f68892d8202c5",
+  "approval_state": {
+    "human_authorized": true,
+    "delegated_project_owner": true,
+    "resolved": true,
+    "replayed": false,
+    "revoked": false,
+    "superseded": false
+  },
+  "replay_state": "non-replay",
+  "revocation_state": "not-revoked",
+  "revoked": false,
+  "claims": {
+    "completion": false,
+    "persistence": false,
+    "xp": false,
+    "idempotency": false,
+    "api_correctness": false,
+    "browser_behavior_success": false
+  },
+  "completion_success_claimed": false,
+  "persistence_claimed": false,
+  "xp_awarded_claimed": false,
+  "idempotency_claimed": false,
+  "api_correctness_claimed": false,
+  "browser_behavior_success_claimed": false,
+  "timing_disclosure": {
+    "decision": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+    "direction_sha256": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+    "scope": "Batch B elapsed-minute accounting only",
+    "meaning": "Bound producer and reviewer elapsed_minutes=0 values are accounting fallbacks, not elapsed-time, duration, performance, session, or provider-timing evidence."
+  },
+  "browser_disclosure": {
+    "disposition": "bounded non-runnable-unknown",
+    "packages": [
+      "sentence/shadow-gate-dungeon",
+      "sentence/labyrinth-goblin-king",
+      "catalog/griffin-riders-escape"
+    ],
+    "meaning": "No browser runner was available; movement, transition, responsive behavior, trusted input, persistence, production behavior, and asset loading remain unknown and are not accepted."
+  },
+  "disclosures": [
+    "Acceptance is limited to the exact committed V2 candidate, independent review, and V2 truth-test evidence with the stated limitations; it does not authorize downstream consumption or an accepted manifest.",
+    "The V2 candidate remains non-consumable until a separately authored accepted manifest binds this exact acceptance artifact.",
+    "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations are unavailable and are not claimed.",
+    "The fourteen Griffin Rider's Escape claims are historical and are not promoted to current implementation or browser behavior."
+  ],
+  "non_consumable_candidate": true,
+  "accepted_manifest_published": false,
+  "accepted_manifest_authorized": false,
+  "signed_by": "delegated project-owner authority",
+  "signed_at": "2026-07-21T00:00:00Z"
+}
