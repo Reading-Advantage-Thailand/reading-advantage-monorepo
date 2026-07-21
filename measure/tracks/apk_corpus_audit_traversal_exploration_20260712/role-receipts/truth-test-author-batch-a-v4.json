@@ -1,0 +1,161 @@
+{
+  "schema_version": "apk-role-receipt.v4",
+  "status": "v4-truth-tests-authored-remediation-gates-green-review-and-lifecycle-pending",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A remediation V4",
+  "task_id": "author-truth-tests:batch-a:v4",
+  "role": "truth-test-author-batch-a-v4",
+  "role_identity": "fresh isolated T5 Batch A truth-test author V4 only",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "05248bed054678a41559b50a6d52cc2a0c610084",
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are truthful non-attestations; no provider value was fabricated, and the user prohibited commits."
+  },
+  "provenance_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "application": "All selected predecessor, V2 review, V3 collector/rebind/mapper, inherited browser, budget, timing-direction, and exception inputs are exact committed bytes at role base 05248bed054678a41559b50a6d52cc2a0c610084. This V4 test and receipt remain intentionally uncommitted because the user prohibited commits; they claim no acceptance."
+  },
+  "prior_role_history": [],
+  "input_hashes": {
+    "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v2.json": "3b3fea0b22f5ac379a1bb3518b1095bc8f3a366eaa7eb2f677b69ac6ffddb2c0",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-spellweavers-budget-exception.json": "a0a4f2e80fa888e3fee7a1ef7e3479af559e1930cbb3eb3a5ea3a2ab8b3bbcf4",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-independent-review-v2.json": "8eb21f34687e3afeb7a89ccd9ecd9aa5fbc16308f626731d47dbedbbde37216e",
+    "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v8-accepted-gate-manifest.json": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-discovery-audit.json": "6524d33b1af38d93b9cc0a3f1b31421979f7a4120f68d9065935946312e6c152",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v2.json": "fb778224e67609457ac8ac712bc85b3f5096483e0116f1162a2818bac6b48fe9",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json": "826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-method-v3.md": "a13ead6576ff7cde948f68d996ed4fc8b6901ecf4d93394ff7410603c9458a6c",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-final-report-v3.json": "786f4097a204047b2d7a24ed3f9caf2473775042f912140cbee4feaaaa7928b8",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-final-report-v3-rebind.json": "3912a12ee752b340f405c948e5120d3c714ad5b78c22a0a0fe5f2b0e2bd9bc66",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-dragon-rider-v3.json": "1cb2a43ae37baaeef1705e24f49bbcaa886e0671ac8621a4b59f0f1f1a16d072",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-dragon-rider-v3-rebind.json": "a88d6a7eb72f5b5bbf41459cfa867bae3d7189b5ba4139bf808867c560733baf",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/requirements-map-v3.json": "4de439509dd936c5e7be6da16e5265b18a0a0340a27b757f6023fa7748fd20af",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/requirements-final-report-v3.json": "38365ab3102eed865399caa3de34f7e52840985289cded8e8be61f9714682525",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-dragon-rider-v3.json": "50c9a7ba7bc420a6d78f2fc53a752101f1f147a3ba76e08e64b592c11c1a3a23",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger-v2.json": "ff97238f94caa82a5359143c0a25d2a5ee8a2e479bb2fdd0bfea9aab05eef2bd",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger-v3.json": "f8112af605465ffcf461669e5560037261943df98185bfeb8728a6496997e2a2",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/evidence-method-v3.md": "ee81e7a72fc06f8b1e4be073fcd7e05b3f8e8a716a1cbd4de9cfc991e12a6742",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/evidence-final-report-v3.json": "87ac4103859da863367088e19c213fae9a02baeecf38e840f085b0a02bd32415",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-dungeon-liberator-v3.json": "62edc32b4b5d89be91db4d6750d2e5fcc6289f48d12c3492c52be66ca76fa9e4",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/requirements-map-v3.json": "70881824a63dd51af5a73d268c1f6facdfdedd888fbdfbfe92783359904d94cb",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/requirements-final-report-v3.json": "5f5c6fbc2f859708f6ba906732d84792438160b78e7ac481c1097d9c156b8b19",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-dungeon-liberator-v3.json": "cc864e1e9fe93c423e566353d130d4eaab5cac0c6161d89473d45f596ff25a73",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json": "2cd708cbecf94133b92ce5f06822ad420da28a1d4417fdb74284528e7a9fe24b",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-method-v2.md": "1cd64613e86482a78830f522fbe6d83cf1a812d3c42fcbd97e06f9ade035e92a",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-final-report-v2-rebind.json": "c8c174e223501dc1ae4e636a4c45eb8fbc6552011e1b327be1e755df3569197f",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-spellweavers-run-v2-rebind.json": "4e639b4ce5116905f46472cd2444284b0e958f5e14e1df9ccf9a99ff95ac131d",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/requirements-map-v3.json": "7ac8e95ed5aa036a5e946400e5038a6cef184f2a4de224f1381b3b34eff6b4d9",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/requirements-final-report-v3.json": "8324fee54332f39d2c26693a1064fd4c4c633edee35824e519bc21d89cae5646",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-spellweavers-run-v3.json": "a40c41c4604c307ec98ab649793dab213eddf4b915abc800b3d115ea114d4fc1",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/browser-audit.json": "a8184107e8f197924992335caa54c4bf95de718ff6e5c7e5de225488599ea273",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/browser-audit.json": "a8a3e6d81fa7d796f20db749802d618062cd0380ba1713042f3482e336773a5e",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/browser-audit.json": "530a7fb302c7feec001f2faf8b88e4ec331595206e8d9773ab5c96c8d326ba06",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/browser-auditor-dragon-rider.json": "5c96218f0f273ba6e6c525e4a5c785086395800a22a30231a9b13a7d81930a38",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/browser-auditor-dungeon-liberator.json": "64bff92c099e38d52744abb28e1060076864aeaaca15f81f609c50d14e5db1c1",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/browser-auditor-spellweavers-run.json": "2725b9bc762ac64fc9701f1526d9f745470352f3ed8eaabb5cc8aebe4d154b26"
+  },
+  "selected_active_artifacts": {
+    "dragon_rider": "V2 retained-claim ledger; V3 ledger, method, report, exact additive report/receipt rebind, V3 complete requirements map/report/receipt, and inherited bounded browser disposition",
+    "dungeon_liberator": "V2 retained-claim ledger; additive V3 ledger, method, report, receipt, complete V3 requirements map/report/receipt, and inherited bounded browser disposition",
+    "spellweavers_run": "Exact V2 ledger/method/rebound collector report and receipt; complete V3 requirements map/report/receipt; narrow source-byte exception; inherited bounded non-runnable browser disposition",
+    "review_basis": "V2 independent review is selected only as the remediation finding basis. It cannot satisfy the fresh V4 review gate."
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-truth-tests-v4.py",
+      "sha256": "c10271ea463322e142687d169ec19409f25711354594376d8144fe2680cafe9b"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/truth-test-author-batch-a-v4.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot embed its own stable SHA-256 without changing its bytes. Current receipt bytes remain externally hashable and non-authorizing while uncommitted."
+    }
+  ],
+  "actual_usage": {
+    "source_bytes": 999455,
+    "source_files_objects": 64,
+    "commands": 18,
+    "elapsed_minutes": 0,
+    "records_authored_reviewed": 22,
+    "browser_interactions": 0,
+    "captured_artifacts": 2,
+    "timing_measurement": "unavailable-in-harness",
+    "timing_note": "0 is the owner-directed accounting fallback, not elapsed-time evidence. Source bytes are the exact 259422 bytes of 41 selected inputs, 697630 bytes across 22 unique cited Git objects, and 42403 bytes of the V4 test at measurement time."
+  },
+  "test_inventory": {
+    "test_cases": 22,
+    "active_factual_claims": 86,
+    "negative_fixtures": 9,
+    "complete_model_sections": 9,
+    "inherited_browser_dispositions": 3,
+    "expected_stage_red_tests": 4,
+    "unexpected_test_errors_allowed": 0
+  },
+  "expected_gate_state": {
+    "exact_inputs_predecessors": "green",
+    "source_envelopes": "green for all 86 active factual claims",
+    "semantic_repairs": "green for the five V2 semantic findings through separate exact active anchors",
+    "denominator_reconciliation": "green for Dragon Rider and Dungeon Liberator required identity/current-withdrawn/route/copy/test/asset/history categories",
+    "required_models": "green for complete claim-backed scene-state-transition, mechanics-learning, and developer-effort models for all three games",
+    "negative_fixtures": "green for all nine unique rejected no-positive-citation fixtures and exact map references",
+    "budgets_and_exception": "green for repaired collector/mapper integer actuals, narrow owner-directed zero timing accounting, and the Spellweaver source-byte-only exception",
+    "browser_dispositions": "green only as inherited exact blocked/non-runnable dispositions; no behavior success is inferred",
+    "independent_review": "red until batch-a-independent-review-v4.json and adversarial-reviewer-batch-a-v4.json exist and bind these exact V4 bytes with zero unresolved Critical/High/Medium findings",
+    "lifecycle": "red until the ordered V4 candidate, authentic owner approval, and accepted manifest exist"
+  },
+  "validation": {
+    "truth_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-truth-tests-v4.py",
+    "non_review_lifecycle_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-truth-tests-v4.py -k 'not BatchAV4IndependentReviewContract and not BatchAV4LifecycleContract'",
+    "json_command": "python3 -m json.tool measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/truth-test-author-batch-a-v4.json >/dev/null",
+    "diff_command": "git diff --check -- measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-truth-tests-v4.py measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/truth-test-author-batch-a-v4.json",
+    "result": "Full module: 18 passed and 4 expected fail-closed failures, exit 1, zero pytest ERROR outcomes. Non-review/lifecycle selector: 18 passed and 4 deselected, exit 0. JSON parse and diff check: exit 0."
+  },
+  "test_results": {
+    "full_module": "18 passed, 4 failed; exit 1; zero pytest ERROR outcomes",
+    "non_review_lifecycle_selector": "18 passed, 4 deselected; exit 0",
+    "expected_failing_test_ids": [
+      "BatchAV4IndependentReviewContract::test_fresh_independent_review_binds_every_active_v4_input",
+      "BatchAV4LifecycleContract::test_candidate_manifest_exists_and_binds_review_and_truth",
+      "BatchAV4LifecycleContract::test_product_owner_approval_exists_and_is_exactly_bound",
+      "BatchAV4LifecycleContract::test_accepted_manifest_exists_and_is_exactly_bound"
+    ],
+    "verified_red_reason": "Only the fresh exact-input V4 independent review and ordered V4 candidate, authentic owner approval, and accepted manifest are absent.",
+    "bounded_green": "Exact role-base artifacts, 86 active factual envelopes and semantic repairs, complete Dragon/Dungeon denominator reconciliation, all three complete mapper models, nine fixtures, repaired collector/mapper integer budgets, the timing direction, narrow Spellweaver exception, and inherited bounded browser dispositions passed."
+  },
+  "role_isolation": {
+    "roles_held": ["truth-test-author"],
+    "roles_not_held": [
+      "discovery-auditor",
+      "evidence-collector",
+      "requirements-mapper",
+      "browser-auditor",
+      "adversarial-reviewer",
+      "candidate-manifest-author",
+      "acceptance-author",
+      "product-owner"
+    ],
+    "note": "Only batch-a-truth-tests-v4.py and this V4 receipt were created. No V1/V2/V3 collector, rebind, mapper, browser, review, lifecycle, plan, registry, product, source, or commit artifact was modified or created."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
