@@ -1,0 +1,48 @@
+{
+  "schema_version": "apk-product-owner-acceptance.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-a",
+  "acceptance_role": "project-owner",
+  "authority": "delegated project-owner authority",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "status": "accepted-with-disclosure",
+  "candidate_manifest_sha256": "0df0946f3f298b7ece3bea8b13af1bcfeaa9b288161f7ca040f56b1cb49b054d",
+  "candidate_commit_sha": "971cc2fcdd417ee276d6ff4fd124b854f341df5d",
+  "review_report_sha256": "3aa96f19db25165e4d24eb82a357ed113962baf6c9d2a757b7c748e2b080515d",
+  "truth_tests_sha256": "0fa94db21ba5689179b5e22dfd96960916001fc58c0ba56c2e851f130c891e5c",
+  "approval_event_id": "msg_t5_batch_a_owner_acceptance_20260721_000000",
+  "approval_event_timestamp": "2026-07-21T00:00:00Z",
+  "approval_message_sha256": "019994ad000a9b80dd9c4e8afba9a7f8db5d30fb6014f16c926f68892d8202c5",
+  "approval_state": {
+    "human_authorized": true,
+    "delegated_project_owner": true,
+    "resolved": true,
+    "replayed": false,
+    "revoked": false,
+    "superseded": false
+  },
+  "replay_state": "non-replay",
+  "revocation_state": "not-revoked",
+  "claims": {
+    "completion": false,
+    "persistence": false,
+    "xp": false,
+    "idempotency": false,
+    "api_correctness": false,
+    "browser_behavior_success": false
+  },
+  "completion_success_claimed": false,
+  "persistence_claimed": false,
+  "xp_awarded_claimed": false,
+  "idempotency_claimed": false,
+  "api_correctness_claimed": false,
+  "browser_behavior_success_claimed": false,
+  "disclosures": [
+    "Acceptance is limited to the bounded Batch A evidence and its disclosed limitations; it does not establish successful browser behavior, route reachability, movement, transition, responsive behavior, input handling, persistence, XP award, idempotency, API correctness, production behavior, or asset loading for any package.",
+    "Browser behavior is explicitly unknown: Dragon Rider is route-unreachable, Dungeon Liberator had no available browser session, and Spellweaver's Run is non-runnable/unknown; no browser behavior success is claimed.",
+    "This acceptance does not authorize an accepted manifest or downstream consumption without the separately authored lifecycle artifact."
+  ],
+  "non_consumable_candidate": true,
+  "signed_by": "delegated project-owner authority",
+  "signed_at": "2026-07-21T00:00:00Z"
+}
