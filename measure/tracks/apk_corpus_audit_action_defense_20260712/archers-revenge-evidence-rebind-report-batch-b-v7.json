@@ -1,0 +1,36 @@
+{
+  "schema": "apk-evidence-rebind-report.v1",
+  "status": "exact V7 output binding; claims unchanged; acceptance not claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "game": "Archer's Revenge",
+  "collector_id": "evidence-collector-archers-revenge-batch-b-v7",
+  "role_base_sha": "852469391234f79253b41f2b51a7768be65ba499",
+  "reason": "Whitespace method changed; this additive rebind records the exact current V7 output bytes without changing claims.",
+  "bound_outputs": {
+    "ledger": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v7.json",
+      "sha256": "a6e6b9d5b3ac3f89dab167f830a082b6c1cae71ed9fa4254ec507fbe9e5582d3"
+    },
+    "method": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b-v7.md",
+      "sha256": "f730a385b439b1e8d878a991384d9d49178d1e99d21cf148497c8ee6dc7720a6"
+    },
+    "report": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v7.json",
+      "sha256": "16e7b8ca4b7ca61b1be54da709559a5af9c5e8be884b4211f7f5adbff437fff7"
+    },
+    "collector_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v7.json",
+      "sha256": "c1934811ce466ac8afbb1702b8afc9949df6997de1520edb5af89ce3d489d99a"
+    }
+  },
+  "revalidation": {
+    "claims_changed": false,
+    "claim_ledger_modified": false,
+    "method_scope_changed": false,
+    "report_scope_changed": false,
+    "acceptance": "not-claimed",
+    "commit_sha": null
+  }
+}

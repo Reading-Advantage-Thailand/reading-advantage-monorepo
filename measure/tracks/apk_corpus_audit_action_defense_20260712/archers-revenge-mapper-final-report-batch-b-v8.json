@@ -1,0 +1,22 @@
+{
+  "schema":"apk-requirements-mapper-report.v4",
+  "track_id":"apk_corpus_audit_action_defense_20260712",
+  "phase":"Phase 2: Batch B evidence packages",
+  "role":"requirements-mapper-archers-revenge-batch-b-v8",
+  "game":"Archer's Revenge",
+  "normalized_id":"archers-revenge",
+  "phase_base_sha":"ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha":"852469391234f79253b41f2b51a7768be65ba499",
+  "supersession":{"supersedes_report":"archers-revenge-mapper-final-report-batch-b-v7.json","scope_limit":"Binds every atomic V7 ledger claim exactly once; no source claim, browser observation, or acceptance status is changed."},
+  "source_facts":"Only the V7 claim ledger supplies factual claims; this report is a claim-reference map.",
+  "source_claim_ledger":{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v7.json","sha256":"a6e6b9d5b3ac3f89dab167f830a082b6c1cae71ed9fa4254ec507fbe9e5582d3"},
+  "map":{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-blueprint-batch-b-v8.json","sha256":"e8845a7cfa39c79e1ea4732234c88167cde591345d278d9ec982eb7069c840d5"},
+  "exact_input_bindings":{"v7_ledger_sha256":"a6e6b9d5b3ac3f89dab167f830a082b6c1cae71ed9fa4254ec507fbe9e5582d3","v7_mapper_receipt_sha256":"fe989ec5121fb12c372cfdefe0d80dedf27188679a61cf42933d615312280dca","collector_v8_rebind_receipt_sha256":"183e6f18c7b2f77928b1ddc6f6396052ffa12cd9047a363ff9595ead460e7f63","collector_v6_rebind_report_sha256":"9f8a946f5e31cb493f3cbee3b52566d40508ea33702b9b6a86698fecf275fbd1"},
+  "reference_accounting":{"collector_factual_claim_count":29,"mapped_section_count":7,"claim_reference_occurrence_count":29,"unique_referenced_claim_count":29,"resolved_reference_count":29,"unresolved_reference_count":0,"unreferenced_collector_factual_claim_count":0},
+  "mechanics_model":"Configuration, formation, state, targeting, motion, projectile, collision, combat, health, waves, and XP surfaces are mapped as historical source-only atoms.",
+  "surfaces_model":"Responsive composition, pointer-handler, vocabulary-loading, completion-request, and baseline-asset surfaces are mapped as historical source-only atoms.",
+  "denominator_rule":"Every atomic V7 factual claim ID is referenced exactly once in the V8 map; negative fixtures remain validation controls and are not factual claims.",
+  "unknowns_preserved":["current route and implementation","runnable status and live behavior","live responsive behavior","asset usage","completion persistence/success","provider-side provenance"],
+  "webbridge_authority":"No browser work was performed; WebBridge is not source authority or provider provenance.",
+  "acceptance":"not-claimed"
+}

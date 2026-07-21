@@ -1,0 +1,54 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "status": "complete additive T4 Archer collector V7 rebind; claims unchanged; acceptance not claimed",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-COLLECT-ARCHERS-T4-REBINDS-V7",
+  "role": "evidence-collector-archers-revenge-batch-b-v7-rebind-complete",
+  "role_identity": "T4 Archer's Revenge collector V7 rebind only",
+  "game": "Archer's Revenge",
+  "role_base_sha": "852469391234f79253b41f2b51a7768be65ba499",
+  "supersession": {
+    "supersedes_receipt": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v7.json",
+    "scope_limit": "Binds exact existing V7 collector outputs only. No claim, source envelope, fact, fixture, method, report, or map bytes changed."
+  },
+  "output_hashes": {
+    "ledger": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v7.json",
+      "sha256": "a6e6b9d5b3ac3f89dab167f830a082b6c1cae71ed9fa4254ec507fbe9e5582d3"
+    },
+    "method": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b-v7.md",
+      "sha256": "f730a385b439b1e8d878a991384d9d49178d1e99d21cf148497c8ee6dc7720a6"
+    },
+    "report": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v7.json",
+      "sha256": "16e7b8ca4b7ca61b1be54da709559a5af9c5e8be884b4211f7f5adbff437fff7"
+    },
+    "original_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v7.json",
+      "sha256": "c1934811ce466ac8afbb1702b8afc9949df6997de1520edb5af89ce3d489d99a"
+    },
+    "rebind_report": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-rebind-report-batch-b-v7.json",
+      "sha256": "55cc8fcd61f27a5a50cb4b8f5e7310a05ca2e2f400f96054f44db02dc3454053"
+    }
+  },
+  "revalidation": {
+    "claims_changed": false,
+    "claim_ledger_modified": false,
+    "method_scope_changed": false,
+    "report_scope_changed": false,
+    "acceptance": "not-claimed",
+    "commit_sha": null
+  },
+  "provider_provenance": {
+    "available": false,
+    "attestation_claimed": false,
+    "reason": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable. No provider provenance is claimed."
+  },
+  "receipt_self_hash": null,
+  "receipt_self_hash_note": "A receipt cannot embed its own final SHA-256 without changing its bytes; an external binding may hash these exact receipt bytes.",
+  "role_boundary": "Only this additive rebind report and complete receipt were created. Claims, V7 ledger, V7 method, V7 final report, mapper, browser, review, truth tests, candidate, acceptance, manifest, plan, registry, and product code were not modified."
+}
