@@ -1,0 +1,46 @@
+{
+  "schema_version": "apk-product-owner-acceptance.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-b",
+  "acceptance_role": "project-owner",
+  "authority": "delegated project-owner authority",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "status": "accepted-with-disclosure",
+  "candidate_manifest_sha256": "4dc4ebeb423dd0114800b58188f691e0c6ba2b368af032b939c7a260b7631824",
+  "candidate_commit_sha": "95f388863835638e17f418214e8eb7c4e74f875f",
+  "review_report_sha256": "1d82c2de29d59174f643486e2d8b503e6e29582d281bea5887527d826bbddd2e",
+  "review_receipt_sha256": "ba9cc7742f188329c0f27e640402e52fa08824515a248224e558615d871902ff",
+  "truth_tests_sha256": "9f84d9ed72952715fc20f1fc42d3478a12fbbc822ebccc2038ef7ce50aecfa5d",
+  "truth_test_receipt_sha256": "947c4a65049c856d8e806501c01bf3d352823ebc0a9a15210b651f1de67d1920",
+  "approval_event_id": "msg_t4_batch_b_owner_acceptance_20260721_000000",
+  "approval_event_timestamp": "2026-07-21T00:00:00Z",
+  "approval_message_sha256": "019994ad000a9b80dd9c4e8afba9a7f8db5d30fb6014f16c926f68892d8202c5",
+  "approval_state": {
+    "human_authorized": true,
+    "delegated_project_owner": true,
+    "resolved": true,
+    "replayed": false,
+    "revoked": false,
+    "superseded": false
+  },
+  "replay_state": "non-replay",
+  "revocation_state": "not-revoked",
+  "claims": {
+    "completion": false,
+    "persistence": false,
+    "xp": false,
+    "idempotency": false,
+    "api_correctness": false
+  },
+  "completion_success_claimed": false,
+  "persistence_claimed": false,
+  "xp_awarded_claimed": false,
+  "idempotency_claimed": false,
+  "api_correctness_claimed": false,
+  "disclosures": [
+    "Acceptance is limited to the bounded Batch B evidence and its disclosed limitations; it does not establish successful game completion, persistence, XP award, idempotency, or API correctness."
+  ],
+  "non_consumable_candidate": true,
+  "signed_by": "delegated project-owner authority",
+  "signed_at": "2026-07-21T00:00:00Z"
+}
