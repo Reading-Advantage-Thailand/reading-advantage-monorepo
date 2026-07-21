@@ -1,0 +1,241 @@
+{
+  "schema_version": "apk-accepted-cohort-manifest.v2",
+  "manifest_kind": "accepted-cohort-manifest",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-b",
+  "phase": "Phase 2: Batch B evidence packages",
+  "status": "accepted-with-disclosure-conditional-consumption",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "consumable": true,
+  "consumability": "conditional",
+  "revoked": false,
+  "acceptance_claimed": true,
+  "created_at": "2026-07-21T21:11:37+07:00",
+  "created_at_basis": "Local system time after the immutable accepted-manifest role base; not a provider-attested event time.",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "0a01bf03d4d4ae2a4018b945954b948811562a79",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "scope": {
+    "games": [
+      "village-guardian",
+      "archers-revenge",
+      "storm-castle-tower"
+    ],
+    "claims": {
+      "village-guardian": 73,
+      "archers-revenge": 43,
+      "storm-castle-tower": 42,
+      "total": 158
+    },
+    "fixtures": 12,
+    "accepted_use": "Bounded source-truth, semantic, denominator, provenance, asset, browser-disposition, claim, fixture, and mapper evidence under every disclosure and revocation rule in this manifest.",
+    "excluded_use": [
+      "Successful game completion, persistence, XP award, idempotency, or API-correctness evidence.",
+      "Trusted native input, foreground timing, or screenshot evidence for Village Guardian.",
+      "A claim that Archer's Revenge or Storm the Castle Tower remains non-runnable after the reviewed role revision.",
+      "Cross-game capability, ontology, shared-system, implementation, or synthesis decisions."
+    ]
+  },
+  "acceptance_binding": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-batch-b.json",
+    "sha256": "39d9feff9baf5d6a9ae28cb76e50bd489f368159c7b2d2a784ece111383eff6d",
+    "commit_sha": "0a01bf03d4d4ae2a4018b945954b948811562a79",
+    "acceptance_role": "project-owner",
+    "authority": "delegated project-owner authority",
+    "decision": "ACCEPT-WITH-DISCLOSURE",
+    "approval_event_id": "msg_t4_batch_b_owner_acceptance_20260721_000000",
+    "approval_event_timestamp": "2026-07-21T00:00:00Z",
+    "approval_message_sha256": "019994ad000a9b80dd9c4e8afba9a7f8db5d30fb6014f16c926f68892d8202c5",
+    "replayed": false,
+    "revoked": false,
+    "superseded": false
+  },
+  "candidate_binding": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-batch-b.json",
+    "sha256": "4dc4ebeb423dd0114800b58188f691e0c6ba2b368af032b939c7a260b7631824",
+    "commit_sha": "95f388863835638e17f418214e8eb7c4e74f875f",
+    "candidate_role_base_sha": "8fa2ac0b8cdfc288eea91bed52596f75cb1fca03",
+    "candidate_consumable": false,
+    "candidate_revoked": false,
+    "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/candidate-author-batch-b.json",
+    "receipt_sha256": "2b33a1908daf9c507b5b399d207f94d6a5b615b3607c18a4036e58de9bcaf407"
+  },
+  "review_binding": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-adversarial-review-v11.json",
+    "sha256": "1d82c2de29d59174f643486e2d8b503e6e29582d281bea5887527d826bbddd2e",
+    "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v11.json",
+    "receipt_sha256": "ba9cc7742f188329c0f27e640402e52fa08824515a248224e558615d871902ff",
+    "audited_head_sha": "24d933ed60722a5d20335d82ef440c325a849d6c",
+    "publication_commit_sha": "8fa2ac0b8cdfc288eea91bed52596f75cb1fca03",
+    "runtime_input_count": 125,
+    "verification_units": 8,
+    "unresolved_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    }
+  },
+  "truth_binding": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v16.py",
+    "sha256": "9f84d9ed72952715fc20f1fc42d3478a12fbbc822ebccc2038ef7ce50aecfa5d",
+    "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v16.json",
+    "receipt_sha256": "947c4a65049c856d8e806501c01bf3d352823ebc0a9a15210b651f1de67d1920",
+    "effective_runtime_input_count": 108,
+    "pre_candidate_non_lifecycle_result": {
+      "passed": 46,
+      "failed": 0,
+      "deselected_lifecycle_tests": 3,
+      "exit_code": 0
+    }
+  },
+  "direction_bindings": {
+    "provenance": {
+      "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+    },
+    "webbridge": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-webbridge.json",
+      "sha256": "7dde397fdb1ceeac3e490d07791e90f69dd630b962d6b799da8426d4e9234498",
+      "decision": "WEBBRIDGE_ACCEPTED_FOR_B4"
+    },
+    "completion": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-completion-disposition.json",
+      "sha256": "973641c8f0b3f3281e9302d5b488f012be82f401bd6831b104674ce67f8c3960",
+      "decision": "CONDITIONAL_EVIDENCE_ACCEPTANCE_WITH_SUCCESSOR_DEFECT_TRANSFER"
+    }
+  },
+  "browser_and_completion_binding": {
+    "browser_audit_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v3.json",
+    "browser_audit_sha256": "521e08b7a1ef9309cdf31277d0f07b99700bb7721d97ee3e371321e70cd1e4ca",
+    "village_guardian_completion_http_status": 400,
+    "village_guardian_input_trusted": false,
+    "village_guardian_foreground_timing_proven": false,
+    "screenshots_claimed": false,
+    "archers_revenge_role_revision_disposition": "exact-route HTTP 404 non-runnable",
+    "storm_castle_tower_role_revision_disposition": "exact-route HTTP 404 non-runnable"
+  },
+  "chronology": {
+    "ordering_basis": "Immutable Git ancestor order establishes publication chronology. The acceptance artifact's exact nominal approval timestamp is preserved but is not used as proof of publication order because it predates the candidate commit timestamp.",
+    "lineage": [
+      {
+        "stage": "phase-base",
+        "commit_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+        "commit_timestamp": "2026-07-20T14:50:14+07:00"
+      },
+      {
+        "stage": "review-audited-head",
+        "commit_sha": "24d933ed60722a5d20335d82ef440c325a849d6c",
+        "commit_timestamp": "2026-07-21T19:55:18+07:00"
+      },
+      {
+        "stage": "review-publication",
+        "commit_sha": "8fa2ac0b8cdfc288eea91bed52596f75cb1fca03",
+        "commit_timestamp": "2026-07-21T20:38:49+07:00"
+      },
+      {
+        "stage": "candidate-publication",
+        "commit_sha": "95f388863835638e17f418214e8eb7c4e74f875f",
+        "commit_timestamp": "2026-07-21T20:52:08+07:00"
+      },
+      {
+        "stage": "owner-acceptance-publication-and-accepted-manifest-role-base",
+        "commit_sha": "0a01bf03d4d4ae2a4018b945954b948811562a79",
+        "commit_timestamp": "2026-07-21T21:08:35+07:00"
+      }
+    ],
+    "ancestor_chain_verified": true,
+    "accepted_manifest_authored_after_role_base": true,
+    "accepted_manifest_committed": false,
+    "approval_timestamp_disclosure": "The bound acceptance records 2026-07-21T00:00:00Z, earlier than the candidate commit. Acceptance validity here rests on exact candidate/review/truth hashes in the acceptance artifact and its descendant Git commit, not on that nominal timestamp."
+  },
+  "disclosures": [
+    {
+      "id": "DISC-001",
+      "scope": "accepted Batch A process metadata only",
+      "rule": "May not support a Batch B factual premise, claim, fixture, source disposition, mapping, browser result, or asset usage."
+    },
+    {
+      "id": "BATCH-B-PROVENANCE-LOCAL",
+      "scope": "all Batch B role receipts",
+      "rule": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable and are not claimed; exact local hashes, Git bindings, role scope, and independent review are compensating controls."
+    },
+    {
+      "id": "BATCH-B-WEBBRIDGE-LIMITS",
+      "scope": "Village Guardian browser evidence",
+      "rule": "The accepted observation used DOM-level synthetic input with isTrusted=false and a hidden-tab replacement scheduler; it is not trusted native input or foreground-timing evidence. No screenshots are claimed."
+    },
+    {
+      "id": "BATCH-B-VILLAGE-HTTP-400",
+      "scope": "Village Guardian completion boundary",
+      "rule": "Both observed completion POSTs returned HTTP 400. This successor implementation defect is not evidence of successful completion, persistence, XP award, idempotency, or API correctness."
+    },
+    {
+      "id": "BATCH-B-NON-RUNNABLE-ROUTES",
+      "scope": "Archer's Revenge and Storm the Castle Tower",
+      "rule": "Both are accepted only as independently reviewed exact-route HTTP 404 non-runnable dispositions at the role revision."
+    },
+    {
+      "id": "BATCH-B-ACCEPTANCE-TIMESTAMP",
+      "scope": "acceptance chronology",
+      "rule": "The nominal approval event timestamp predates candidate publication. It is preserved as bound metadata and is not represented as chronology proof; immutable descendant Git order is the chronology control."
+    }
+  ],
+  "completion_claims": {
+    "successful_completion": false,
+    "completion_success_claimed": false,
+    "persistence_confirmed": false,
+    "persistence_claimed": false,
+    "xp_awarded": false,
+    "xp_awarded_claimed": false,
+    "idempotency_verified": false,
+    "idempotency_claimed": false,
+    "api_correctness": false,
+    "api_correctness_claimed": false
+  },
+  "conditional_consumption": {
+    "status": "consumable-only-with-disclosures",
+    "requirements": [
+      "Every consumer must bind this exact accepted-manifest digest through the separate accepted-manifest-author receipt.",
+      "Every consumer must preserve all disclosures and false completion claims without narrowing or omission.",
+      "Every consumer must remain within the accepted scope and treat the HTTP 400 as an unresolved successor implementation defect.",
+      "Any completion-capable successor must independently fix and integration-test the completion API before making any success claim.",
+      "Consumption stops immediately when any automatic revocation trigger is observed."
+    ]
+  },
+  "revocation_rules": {
+    "automatic_triggers": [
+      "Any byte or SHA-256 change to the bound acceptance, candidate, candidate receipt, V11 review, V11 review receipt, V16 truth test, V16 truth receipt, direction, browser audit, predecessor, control, runtime input, active receipt, review unit, or reviewed output.",
+      "Any phase-base, source-baseline, audited-head, publication-commit, candidate-commit, acceptance-commit, or role-base mismatch, or failure of the declared Git ancestor chain.",
+      "Revocation, replay, supersession, or authority invalidation of the exact product-owner acceptance; or revocation or supersession of any bound predecessor or direction.",
+      "Any later independent review reporting an unresolved Critical, High, or Medium finding, denominator mismatch, unsupported claim, stale receipt, budget breach, or changed runnable disposition.",
+      "Any claim or implication of successful completion, persistence, XP award, idempotency, API correctness, trusted native input, foreground timing, or screenshots from this accepted evidence.",
+      "Any omission, mutation, or misuse of a disclosure, including use of DISC-001 as Batch B factual evidence or representation of the nominal approval timestamp as publication-order proof.",
+      "Any consumption outside the three-game bounded evidence scope or after a relevant implementation, route, source, or evidence change without additive supersession and fresh gates."
+    ],
+    "on_trigger": "Stop consumption immediately. Publish an additive revocation or supersession record that names the exact accepted-manifest SHA-256, mark that digest revoked in successor lifecycle state, regenerate every affected output and receipt, rerun V16-equivalent gates, obtain a fresh zero-blocker independent review and exact product-owner acceptance, then publish a new accepted manifest. Never mutate this manifest, its candidate, its acceptance, or their receipts in place.",
+    "revocation_record_required": true,
+    "revocation_event_sha256": null,
+    "supersedes_accepted_manifest_sha256": null,
+    "superseded_by_accepted_manifest_sha256": null
+  },
+  "lifecycle": {
+    "candidate_manifest_published": true,
+    "candidate_manifest_consumable": false,
+    "product_owner_acceptance_published": true,
+    "accepted_manifest_published": true,
+    "accepted_manifest_consumable": true,
+    "accepted_manifest_consumability": "conditional",
+    "accepted_manifest_author_receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/accepted-manifest-author-batch-b.json",
+    "accepted_manifest_author_receipt_sha256": null,
+    "accepted_manifest_author_receipt_hash_rule": "The separately authored receipt binds these exact manifest bytes; this manifest cannot embed the later receipt digest without a hash cycle.",
+    "lifecycle_status": "accepted with disclosure; conditionally consumable while every binding, disclosure, scope limit, false completion claim, and revocation condition remains satisfied"
+  },
+  "manifest_identity": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-b.json",
+    "self_sha256": null,
+    "self_hash_rule": "The manifest cannot embed its own stable digest. The separate accepted-manifest-author receipt binds these exact bytes."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
