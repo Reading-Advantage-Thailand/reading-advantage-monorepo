@@ -1,0 +1,188 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "status": "additive delegated WebBridge direction contract authored; B4-green-provenance-and-B5-red",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-TRUTH-V5",
+  "role": "truth-test-author-batch-b",
+  "role_identity": "truth-test-author-batch-b",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "be00a04a5335cb89b012c479bb02f27a73bdb995",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "allowed_input_manifest_sha256": "e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+  "prompt_sha256": null,
+  "prompt_metadata_note": "Canonical provider prompt bytes and a tool-attested prompt event were not exposed. Null remains intentional non-passing provenance.",
+  "actual_context_manifest_sha256": null,
+  "actual_context_manifest_note": "No provider-exported canonical context manifest was available. Exact repository inputs are enumerated without substituting for orchestration proof.",
+  "spawn_id": null,
+  "provider_session_id": null,
+  "parent_ancestry_ids": null,
+  "fork_turns": null,
+  "raw_isolation_proof": null,
+  "isolation_metadata_note": "The bounded continuation retained the assigned role, but provider spawn, ancestry, fork-turns, and raw isolation proof were unavailable and are not invented.",
+  "start_event_id": null,
+  "start_event_timestamp": null,
+  "end_event_id": null,
+  "end_event_timestamp": null,
+  "event_metadata_note": "Tool/provider start and end events and timestamps were unavailable and were not synthesized.",
+  "final_response_sha256": null,
+  "final_response_event_id": null,
+  "final_response_metadata_note": "Canonical final-response bytes and event metadata are unavailable; output hashes are not substituted for them.",
+  "commit_sha": null,
+  "commit_note": "The user explicitly prohibited commits. Null remains a non-passing provenance value.",
+  "prior_role_history": [
+    {
+      "role": "truth-test-author-batch-b",
+      "output_commit": "d4e3fb5e28b2b3d75fce7d2013bc7444addb3293",
+      "test_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v4.py",
+      "test_sha256": "0cb34c3aa0807ec413635a08835584935ffe9c1bea11792a5bf0a26c4d0d500f",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v4.json",
+      "receipt_sha256": "505d96d5752398d2783f6072b8e280d08dbe31bd88f0ab80970fe47304381f6a"
+    }
+  ],
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v4.py": "0cb34c3aa0807ec413635a08835584935ffe9c1bea11792a5bf0a26c4d0d500f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v4.json": "505d96d5752398d2783f6072b8e280d08dbe31bd88f0ab80970fe47304381f6a",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-webbridge.json": "7dde397fdb1ceeac3e490d07791e90f69dd630b962d6b799da8426d4e9234498",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v3.json": "521e08b7a1ef9309cdf31277d0f07b99700bb7721d97ee3e371321e70cd1e4ca",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-b-v3.json": "3209377fb793faf304aeaf5c575777ca0f524f0334e9dfc384357a3d9b1adfa8",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-adversarial-review.json": "773731937021132f7dab8c00388244bbd3f47360122405811e6eec4df58fb58c",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b.json": "f78bf1d70ea97ba1a587612423439fe47c70ab7d503fee4c94319551c9c0532e",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-asset-usage-audit.json": "845b36d54ec1677982c7e7f537d1282fe4caec86677302555998a834b6f8a9a8",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-b.json": "f7022973a9d84499aafc9312988afcb193f0569bcbf8e38b31348d1df6ac81ce",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-budget-declaration.json": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f"
+  },
+  "output_paths_and_sha256": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v5.py",
+      "sha256": "5e54a0d126bf78b361963c402a2198bc53d343d5c2b41f8085c679a6b595bb76"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v5.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot contain its own final SHA-256 without changing its bytes; an external immutable commit/event binding remains required."
+    }
+  ],
+  "supersedes": {
+    "scope_id": "B4-DIRECTION-V5",
+    "test_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v4.py",
+    "test_sha256": "0cb34c3aa0807ec413635a08835584935ffe9c1bea11792a5bf0a26c4d0d500f",
+    "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v4.json",
+    "receipt_sha256": "505d96d5752398d2783f6072b8e280d08dbe31bd88f0ab80970fe47304381f6a",
+    "scope": "Bind the later delegated WebBridge direction, classify bounded B4 green, preserve all limitations and non-waived gates, and require review of exact v5 bytes at a descendant head."
+  },
+  "active_receipts": [
+    "discovery-auditor-batch-b-v2.json",
+    "evidence-collector-village-guardian-batch-b.json",
+    "evidence-collector-archers-revenge-batch-b.json",
+    "evidence-collector-storm-castle-tower-batch-b.json",
+    "requirements-mapper-village-guardian-batch-b.json",
+    "requirements-mapper-archers-revenge-batch-b.json",
+    "requirements-mapper-storm-castle-tower-batch-b.json",
+    "truth-test-author-batch-b-v5.json",
+    "browser-auditor-batch-b-v3.json",
+    "asset-auditor-batch-b.json",
+    "adversarial-reviewer-batch-b.json"
+  ],
+  "resource_use": {
+    "ceilings": {
+      "source_bytes_read": 20971520,
+      "source_files_read": 100,
+      "command_invocations": 60,
+      "elapsed_minutes": 30,
+      "records_authored": 260,
+      "browser_interactions": 0,
+      "asset_candidates_inspected": 0
+    },
+    "actual": {
+      "source_bytes_read": 1200000,
+      "source_files_read": 18,
+      "command_invocations": 12,
+      "elapsed_minutes": 30,
+      "records_authored": 51,
+      "browser_interactions": 0,
+      "asset_candidates_inspected": 0
+    },
+    "measurement_note": "Files and test records are labeled counts. Byte, command, and elapsed values are conservative within-ceiling accounting because exact provider telemetry is unavailable; they are not orchestration proof."
+  },
+  "test_inventory": {
+    "test_cases": 51,
+    "inherited_v4_contracts": 49,
+    "v5_direction_contracts": 2,
+    "factual_claims_exercised": 62,
+    "negative_fixtures_exercised": 12,
+    "browser_games_exercised": 3,
+    "unexpected_test_errors_allowed": 0
+  },
+  "commands": [
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v5.py",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v5.py -k 'BatchBBrowserContract or BatchBAssetContract'",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v5.py -k 'BatchBIndependentReviewContract or BatchBAcceptanceContract'",
+    "python3 -m json.tool measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v5.json >/dev/null",
+    "git diff --check"
+  ],
+  "test_results": {
+    "full_module": "6 failed, 45 passed, 3 subtests passed; exit 1; zero pytest ERROR outcomes",
+    "b4_selector": "10 passed, 41 deselected; exit 0",
+    "b5_selector": "5 failed, 2 passed, 44 deselected; exit 1 at expected stale-review, unresolved-review, provenance-prerequisite, and acceptance gates",
+    "unexpected_contract_failures": 0,
+    "unexpected_test_errors": 0,
+    "full_failing_test_ids": [
+      "BatchBReceiptContract::test_required_role_receipts_have_authentic_provenance",
+      "BatchBIndependentReviewContract::test_independent_review_is_fresh_for_active_browser_v3",
+      "BatchBIndependentReviewContract::test_review_samples_every_game_and_has_zero_blockers",
+      "BatchBAcceptanceContract::test_acceptance_hashes_and_chronology_bind_exact_bytes",
+      "BatchBAcceptanceContract::test_acceptance_stays_red_without_b4_and_authentic_receipts",
+      "BatchBAcceptanceContract::test_candidate_acceptance_and_accepted_manifests_exist"
+    ],
+    "b4_passing_test_ids": [
+      "BatchBBrowserContract::test_active_browser_v3_scope_tool_privacy_and_start_are_exact",
+      "BatchBBrowserContract::test_archer_and_storm_have_bounded_exact_route_404_evidence",
+      "BatchBBrowserContract::test_browser_audit_exists_and_covers_every_game",
+      "BatchBBrowserContract::test_browser_records_require_real_behavior_or_reviewed_failure",
+      "BatchBBrowserContract::test_collectors_and_mappers_remain_unknown_without_browser_audit",
+      "BatchBBrowserContract::test_direction_retains_limitations_and_prohibits_success_claims",
+      "BatchBBrowserContract::test_product_owner_direction_is_exact_later_and_classifies_b4_green",
+      "BatchBBrowserContract::test_village_guardian_has_bounded_compact_wide_state_and_input_proof",
+      "BatchBAssetContract::test_asset_audit_exists_and_reconciles_twelve_candidates",
+      "BatchBAssetContract::test_asset_usage_requires_exact_anchor_or_blocking_unknown"
+    ],
+    "b5_passing_test_ids": [
+      "BatchBIndependentReviewContract::test_archers_revenge_low_population_requires_all_eight_claims",
+      "BatchBIndependentReviewContract::test_independent_review_and_receipt_exist"
+    ],
+    "b5_failing_test_ids": [
+      "BatchBIndependentReviewContract::test_independent_review_is_fresh_for_active_browser_v3",
+      "BatchBIndependentReviewContract::test_review_samples_every_game_and_has_zero_blockers",
+      "BatchBAcceptanceContract::test_acceptance_hashes_and_chronology_bind_exact_bytes",
+      "BatchBAcceptanceContract::test_acceptance_stays_red_without_b4_and_authentic_receipts",
+      "BatchBAcceptanceContract::test_candidate_acceptance_and_accepted_manifests_exist"
+    ],
+    "stale_review_defects": [
+      "missing-or-stale-input:batch-b-browser-audit-v3.json",
+      "missing-or-stale-input:product-owner-direction-batch-b-webbridge.json",
+      "missing-or-stale-input:batch-b-truth-tests-v5.py",
+      "audited-head-predates-direction"
+    ],
+    "active_receipt_provenance_issues": 86,
+    "b4_direction_status": "GREEN only for exact WebBridge v3 evidence with recorded limitations"
+  },
+  "findings": [
+    "The delegated direction is hash-bound at be00a04a5335cb89b012c479bb02f27a73bdb995 and is a strict descendant of browser-v3 output commit 917fac540b8d97b2d2f48c182ee02b62269f4d61.",
+    "B4 is GREEN only for the exact WebBridge audit and accepted one-runnable/two-non-runnable dispositions with synthetic-input and hidden-tab scheduler limitations.",
+    "No trusted-native-input, foreground-timing, persistence, XP-award, or successful-completion claim is authorized.",
+    "Village Guardian completion HTTP 400 remains a non-waived successor porting defect.",
+    "Provenance, source/denominator completeness, fresh independent review, lifecycle ordering, and acceptance remain non-waived.",
+    "The prior review does not bind browser-v3, direction, or v5 bytes and predates the direction, so B5 remains RED."
+  ],
+  "carried_forward_disclosures": [
+    {
+      "id": "DISC-001",
+      "classification": "Batch A process-only disclosure",
+      "use": "Labeled process metadata only; never factual input."
+    }
+  ],
+  "role_boundary": "Only batch-b-truth-tests-v5.py and this additive receipt were created. V1-v4, source, evidence, browser audit, plans, registry, direction, review, and acceptance artifacts were not modified."
+}
