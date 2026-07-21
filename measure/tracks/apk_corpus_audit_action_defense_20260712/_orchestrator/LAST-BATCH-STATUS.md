@@ -2,6 +2,11 @@
 
 ## Current: Batch B — STOP-LOSS ACTIVE (product-owner direction required)
 
+### Product-owner direction (2026-07-21)
+- The orchestrator, acting under delegated product-owner authority, accepts Kimi WebBridge as the B4 browser mechanism.
+- `product-owner-direction-batch-b-webbridge.json` accepts the recorded B4 dispositions while preserving the synthetic-input and hidden-tab limitations.
+- This resolves the browser-tool stop-loss only. It does not waive receipt provenance, completeness, fresh review, acceptance ordering, or the Village Guardian completion API defect.
+
 ### Immutable phase base
 - `ff01cee9cc973dee89fdc0ba22102dcea0c50542` — Batch B strategy commit.
 

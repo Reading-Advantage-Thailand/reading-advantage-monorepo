@@ -1,0 +1,32 @@
+{
+  "schema_version": "apk-product-owner-direction.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-b",
+  "issued_by": "orchestrator (delegated product-owner authority)",
+  "issued_at": "2026-07-21",
+  "role_base_sha": "3244d570d1897f33a5191a0408f7f3adbb8ea9f1",
+  "decision": "WEBBRIDGE_ACCEPTED_FOR_B4",
+  "scope": "Batch B browser evidence only",
+  "direction": "Kimi WebBridge is the accepted browser mechanism for B4. Its DOM-level synthetic input and hidden-tab scheduler limitations are accepted when recorded explicitly and must not be represented as trusted native input, foreground timing, or a successful completion API flow.",
+  "accepted_evidence": {
+    "browser_audit_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v3.json",
+    "browser_audit_sha256": "521e08b7a1ef9309cdf31277d0f07b99700bb7721d97ee3e371321e70cd1e4ca",
+    "tool": "Kimi WebBridge",
+    "accepted_dispositions": {
+      "village-guardian": "runnable with disclosed synthetic-input and hidden-tab scheduler limitations",
+      "archers-revenge": "non-runnable at role revision after direct exact-route 404",
+      "storm-castle-tower": "non-runnable at role revision after direct exact-route 404"
+    }
+  },
+  "non_waived_gates": [
+    "claim citation and semantic correctness",
+    "denominator completeness",
+    "asset evidence",
+    "role provenance and receipt integrity",
+    "fresh independent review",
+    "candidate, acceptance, and revocation lifecycle",
+    "Village Guardian completion API contract correctness"
+  ],
+  "successor_note": "The observed Village Guardian completion HTTP 400 is a successor porting defect. It must be fixed and integration-tested in the implementation track before any claim of successful persistence or completion.",
+  "replaces": "The prior B4 browser-tool stop-loss only; it does not approve any candidate or accepted cohort manifest."
+}
