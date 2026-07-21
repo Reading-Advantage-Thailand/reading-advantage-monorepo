@@ -1,0 +1,58 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "status": "V4 Archer provenance-model correction locally verified; downstream acceptance remains unclaimed",
+  "acceptance": "not claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-COLLECT-ARCHERS-REMEDIATION-V4",
+  "role": "evidence-collector-archers-revenge-batch-b-v4",
+  "role_identity": "fresh isolated T4 Batch B Archer collector remediation V4 only",
+  "game": "Archer's Revenge",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "81aec37a752f9029d958d997019ae86240915e01",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "supersession": {
+    "supersedes_receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v3-rebind.json",
+    "supersedes_receipt_sha256": "c0b6276d19dde7cd60b855cfd60708783a367e77bc10a54dfe08bce11c325ab6",
+    "reason": "Corrects the V3 receipt's provenance wording while preserving all claims and exact source bytes.",
+    "scope_limit": "Receipt and final-report metadata only; no ledger, mapper, browser artifact, or test was modified."
+  },
+  "provenance_model": {
+    "source_authority": "Exact source envelopes in the V3 claim ledger establish source facts; the ledger's whole-blob, cited-range, and binary hashes are authoritative for those facts.",
+    "webbridge": "Kimi WebBridge direction and audit are bounded browser evidence only, never provider provenance or source authority.",
+    "provider_fields": "Unavailable provider-side prompt, context, spawn, ancestry, fork, raw-isolation, event, timing, final-response, and commit attestations remain explicitly unavailable; no null or local assertion is an attestation.",
+    "owner_direction": {
+      "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+    },
+    "webbridge_direction": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-webbridge.json",
+      "sha256": "7dde397fdb1ceeac3e490d07791e90f69dd630b962d6b799da8426d4e9234498"
+    },
+    "webbridge_audit": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v3.json",
+      "sha256": "521e08b7a1ef9309cdf31277d0f07b99700bb7721d97ee3e371321e70cd1e4ca"
+    }
+  },
+  "output_paths_and_sha256": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v3.json": "c2d6bf62d628fc441c476fb2839e2b41e7f0f8564020580e3d700b0c167fa9d1",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b-v3.md": "e16c6e8700d8f0a2999fba25d273d38f4d44c4e798c383751b6fb84a4a962c19",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v4.json": "5164b6391418638099499b3db75e154dc16b9e788bc96ec83da8559d222c782a",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v3-rebind.json": "c0b6276d19dde7cd60b855cfd60708783a367e77bc10a54dfe08bce11c325ab6"
+  },
+  "revalidation": {
+    "json_documents_valid": true,
+    "claims_unchanged": true,
+    "claim_count": 20,
+    "source_blob_and_range_hashes_valid": true,
+    "negative_fixture_count": 4,
+    "negative_fixtures_rejected_and_excluded": true,
+    "webbridge_not_source_authority": true,
+    "webbridge_not_provider_provenance": true,
+    "git_diff_check": "passed for additive V4 report and receipt",
+    "commit_sha": null,
+    "commit_status": "no commit created; user prohibited commit"
+  },
+  "self_hash": null,
+  "receipt_status": "non-authoritative additive V4 superseding receipt; exact current output hashes validated; no commit created"
+}
