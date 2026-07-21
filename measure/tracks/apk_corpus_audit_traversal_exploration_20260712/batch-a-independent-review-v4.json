@@ -1,0 +1,230 @@
+{
+  "schema_version": "apk-batch-independent-review.v3",
+  "review_iteration": "V3",
+  "input_generation": "V4",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "adversarial-reviewer-batch-a-v4",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "9918f149b15f454620f6f1812eb98eb7385ed5d3",
+  "audited_head_sha": "9918f149b15f454620f6f1812eb98eb7385ed5d3",
+  "status": "blocked; exact V4 file and source-envelope hashes pass, but denominator binding, mapper binding and semantics, and budget/browser accounting retain High findings",
+  "scope": [
+    "vocabulary/dragon-rider",
+    "sentence/dungeon-liberator",
+    "catalog/spellweavers-run"
+  ],
+  "active_input_validation": {
+    "truth_selected_inputs": 41,
+    "truth_selected_inputs_matching_working_bytes": 41,
+    "truth_selected_inputs_matching_audited_head_bytes": 41,
+    "truth_test_sha256": "c10271ea463322e142687d169ec19409f25711354594376d8144fe2680cafe9b",
+    "truth_receipt_sha256": "34608a2015d23ac5aeacbe4595f8cc0db1a560aff69901edfd6b44afcf6e2b07",
+    "review_bound_inputs": 43,
+    "drifted_or_missing_inputs": [],
+    "note": "All 41 ACTIVE_INPUT_HASHES entries in batch-a-truth-tests-v4.py and the V4 truth test/receipt match the exact committed bytes at audited HEAD 9918f149b15f454620f6f1812eb98eb7385ed5d3. Hash equality is not treated as semantic or budget acceptance."
+  },
+  "source_rederivation": {
+    "method": "Independently materialized the active V2-retained plus V3-added claim denominators, resolved every declared revision/path through git show, hashed every complete blob and inclusive cited range with original line endings, and separately re-derived the two Dragon Rider related route envelopes. Claim and map wording were then compared with the exact cited propositions.",
+    "unique_git_objects_read": 24,
+    "unique_git_object_bytes": 698844,
+    "factual_claims": {
+      "dragon-rider": 20,
+      "dungeon-liberator": 18,
+      "spellweavers-run": 48,
+      "total": 86
+    },
+    "blob_sha256_matches": 86,
+    "range_sha256_matches": 86,
+    "related_envelope_matches": 2,
+    "envelope_mismatches": 0,
+    "semantic_anchor_mismatch_records": [
+      "DL-V3-ML-004"
+    ],
+    "semantic_anchor_mismatch_count": 1
+  },
+  "fixture_rederivation": {
+    "method": "Re-enumerated the active fixtures directly from the three selected ledgers, required unique IDs, explicit rejection dispositions, and no positive citation envelope, then reconciled the exact fixture IDs in each V3 map.",
+    "dragon-rider": 3,
+    "dungeon-liberator": 3,
+    "spellweavers-run": 3,
+    "total": 9,
+    "expected_disposition_matches": 9,
+    "positive_citations_present": 0,
+    "map_reference_mismatches": []
+  },
+  "mapper_reconciliation": {
+    "all_active_factual_ids_referenced": true,
+    "all_fixture_ids_rejected": true,
+    "foreign_claim_ids": [],
+    "unresolved_claim_ids": [],
+    "required_model_section_counts_match_v4_contract": true,
+    "effort_estimates_authored": 0,
+    "exact_latest_collector_bindings_match": false,
+    "novel_or_unsupported_source_fact_records": [
+      "DL-V3-ML-004"
+    ],
+    "note": "Structural ID coverage is complete, but the Dragon Rider map/report/receipt bind the superseded V2 rebind rather than the selected V3 rebind, and DL-V3-ML-004 promotes a control label plus hook call into an exact keyboard-wiring proposition without a claim envelope over the hook implementation."
+  },
+  "denominator_reconciliation": {
+    "accepted_denominator_manifest_path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+    "accepted_denominator_manifest_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "dragon_embedded_manifest_sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+    "dragon_embedded_value_actual_target": "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v8-accepted-gate-manifest.json",
+    "exact_binding_matches": false,
+    "denominator_mismatches": 1,
+    "note": "Dragon Rider labels the gate-manifest digest as accepted_manifest_sha256. The referenced denominator manifest has different bytes and digest, so the package does not carry an exact denominator binding."
+  },
+  "budget_and_stop_loss_review": {
+    "frozen_budget_sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+    "timing_direction_sha256": "3b3fea0b22f5ac379a1bb3518b1095bc8f3a366eaa7eb2f677b69ac6ffddb2c0",
+    "spellweaver_exception_sha256": "a0a4f2e80fa888e3fee7a1ef7e3479af559e1930cbb3eb3a5ea3a2ab8b3bbcf4",
+    "spellweaver_exception_scope_preserved": true,
+    "selected_role_receipts_with_non_integer_actuals": {
+      "evidence-collector-spellweavers-run-v2-rebind.json": [
+        "elapsed_minutes=null"
+      ],
+      "browser-auditor-dragon-rider.json": [
+        "source_bytes=unavailable",
+        "source_files_objects=unavailable",
+        "elapsed_minutes=unavailable"
+      ],
+      "browser-auditor-dungeon-liberator.json": [
+        "source_bytes=unavailable",
+        "source_files_objects=unavailable",
+        "elapsed_minutes=unavailable-no-browser-session"
+      ],
+      "browser-auditor-spellweavers-run.json": [
+        "elapsed_minutes=null"
+      ]
+    },
+    "contradictory_or_unmeasured_actuals": [
+      "Dungeon collector reports zero source bytes, source objects, and commands while adding two source claims and denominator reconciliation.",
+      "Dragon requirements-final-report-v3.json reports mapper_input_bytes=0 while its selected mapper receipt reports 38263.",
+      "Dragon and Spellweaver mapper receipts report mapper_records_authored=3 although their V3 maps contain respectively 20 and 37 mapped model records before fixtures/unknowns."
+    ],
+    "owner_direction_applied_to_receipts": false,
+    "budget_breaches_or_unmeasured_roles": 1,
+    "stop_loss_status": "triggered",
+    "note": "The timing direction permits a receipt to record integer 0 with the required disclosure; it does not permit a truth test to substitute 0 for a selected receipt that still records null/string values. The source-byte exception applies only to the Spellweaver collector source_bytes ceiling."
+  },
+  "browser_disposition_review": {
+    "dragon-rider": "bounded browser-audit-blocked-route-unreachable; no movement, transition, compact/wide, trusted-input, persistence, or production behavior accepted",
+    "dungeon-liberator": "bounded browser-audit-blocked-browser-unavailable; candidate routes and all behavior remain unknown",
+    "spellweavers-run": "bounded NON-RUNNABLE/UNKNOWN; retained test routes and historical sources are not promoted to current behavior",
+    "behavior_overclaims_detected": 0,
+    "disposition_unknowns_preserved": true,
+    "budget_receipts_valid": false,
+    "blocking_finding_from_behavior_disposition": false,
+    "blocking_finding_from_browser_receipt_accounting": true
+  },
+  "provenance_and_exception_review": {
+    "global_direction": {
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "provider_attestation_unavailability_is_not_a_finding": true,
+      "non_waiver_preserved": true
+    },
+    "spellweavers_exception": {
+      "decision": "ONE_TIME_SOURCE_BYTE_CEILING_INCREASE",
+      "old_ceiling": 8000000,
+      "approved_ceiling": 12000000,
+      "measured_actual": 11558850,
+      "scope_accepted": "Spellweaver's Run evidence collector source_bytes only",
+      "other_budget_units_waived": false
+    }
+  },
+  "truth_test_runs": {
+    "bounded_non_review_lifecycle_selector": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-truth-tests-v4.py -k 'not BatchAV4IndependentReviewContract and not BatchAV4LifecycleContract'",
+      "result": "18 passed, 4 deselected; exit 0"
+    },
+    "full_before_review_outputs": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-truth-tests-v4.py",
+      "result": "18 passed, 4 failed; exit 1; zero pytest ERROR outcomes",
+      "expected_fail_closed_reasons": [
+        "fresh V4 independent review and receipt absent",
+        "candidate manifest absent",
+        "product-owner acceptance absent",
+        "accepted manifest absent"
+      ]
+    },
+    "independent_rederivation": "86/86 blob and range envelopes plus 2/2 related envelopes exact; 9/9 fixtures rejected; structural map coverage complete; denominator, exact mapper binding, mapper semantics, and budget/browser accounting defects found independently"
+  },
+  "findings": [
+    {
+      "id": "T5A-V4-H-001",
+      "severity": "high",
+      "area": "Dragon Rider denominator binding",
+      "blocking": true,
+      "detail": "claim-evidence-ledger-v3.json identifies accepted-denominator-manifest.json but records accepted_manifest_sha256=d9f5c477...; the exact referenced file hashes to d524171d.... d9f5c477... is instead the evidence-integrity accepted-gate manifest. This is an exact denominator mismatch and triggers the protocol stop-loss."
+    },
+    {
+      "id": "T5A-V4-H-002",
+      "severity": "high",
+      "area": "Dragon Rider exact mapper input binding",
+      "blocking": true,
+      "detail": "requirements-map-v3.json and requirements-final-report-v3.json name evidence-collector-dragon-rider-v2-rebind.json, and the mapper receipt binds its 55e6c58e... digest. The active V4 package selects evidence-collector-dragon-rider-v3-rebind.json at a88d6a7e.... Merely adding the V3 rebind to ACTIVE_INPUT_HASHES does not prove the mapper consumed it; the exact latest collector binding remains stale."
+    },
+    {
+      "id": "T5A-V4-H-003",
+      "severity": "high",
+      "area": "budget and browser stop-loss accounting",
+      "blocking": true,
+      "detail": "The selected Spellweaver collector receipt still records elapsed_minutes=null; Dragon and Dungeon browser receipts use string unavailable values for source bytes/objects/time; the Spellweaver browser receipt records elapsed_minutes=null. The owner timing direction permits integer 0 only when the receipt records it with disclosure. Additional zero/contradictory collector and mapper actuals are not measured in the frozen units. The V4 truth test hardcodes a Spellweaver collector 0 and does not validate browser actuals, so H009 is not remediated."
+    },
+    {
+      "id": "T5A-V4-H-004",
+      "severity": "high",
+      "area": "Dungeon Liberator mapper semantics",
+      "blocking": true,
+      "record_ids": [
+        "DL-V3-ML-004"
+      ],
+      "detail": "DL-V3-ML-004 says keyboard controls are source-wired for movement. Its cited claim IDs establish a useDirectionalInput call, a start-screen label 'Arrows / WASD', and VirtualDPad wiring; none cites the hook implementation that binds key events. The exact claim envelopes support declared/integrated directional controls, not the stronger keyboard-wiring atom."
+    },
+    {
+      "id": "T5A-V4-M-001",
+      "severity": "medium",
+      "area": "V4 truth-gate coverage",
+      "blocking": true,
+      "detail": "The V4 suite checks selected file hashes, hardcoded denominator list lengths, claim-ID set equality, token anchors, collector/mapper ceilings, and bounded browser dispositions. It does not validate embedded denominator digests, latest mapper input lineage, every mapper atom against its exact claim envelopes, or browser-receipt budget units, and it substitutes a hardcoded Spellweaver elapsed value. It therefore reports 18 pre-review gates green while four High defects remain."
+    }
+  ],
+  "unresolved_findings": {
+    "critical": 0,
+    "high": 4,
+    "medium": 1,
+    "low": 0
+  },
+  "gate_status": {
+    "exact_active_file_hashes": "green",
+    "source_envelopes": "green",
+    "negative_fixtures": "green",
+    "claim_semantics": "red",
+    "denominator_exact_binding": "red",
+    "mapper_id_coverage": "green",
+    "mapper_exact_input_binding": "red",
+    "required_model_structure": "green",
+    "browser_behavior_dispositions": "green-bounded-only",
+    "browser_receipt_accounting": "red",
+    "budget_and_stop_loss": "red",
+    "independent_review": "complete-blocked",
+    "lifecycle": "not-authorized"
+  },
+  "authorization": {
+    "candidate_authorized": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "reason": "Four High and one Medium findings remain. Candidate may be true only with zero unresolved Critical, High, and Medium findings."
+  },
+  "measure_agent_result": {
+    "status": "blocked",
+    "candidate": false,
+    "critical": 0,
+    "high": 4,
+    "medium": 1,
+    "low": 0
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

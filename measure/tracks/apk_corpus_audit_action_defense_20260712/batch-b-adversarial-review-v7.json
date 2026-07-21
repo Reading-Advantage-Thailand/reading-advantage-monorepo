@@ -1,0 +1,360 @@
+{
+  "schema": "apk-batch-adversarial-review.v7",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "role": "adversarial-reviewer-batch-b-v7",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "9918f149b15f454620f6f1812eb98eb7385ed5d3",
+  "audited_head_sha": "9918f149b15f454620f6f1812eb98eb7385ed5d3",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "status": "blocked; three High findings remain; candidate, approval, accepted manifest, completion success, persistence, XP, idempotency, and API-correctness claims are unauthorized",
+  "scope": [
+    "village-guardian",
+    "archers-revenge",
+    "storm-castle-tower"
+  ],
+  "review_independence": {
+    "mode": "fresh independent adversarial re-derivation of the exact V12 selection",
+    "inherited_completion_narrative_used_as_source_evidence": false,
+    "source_authority": "Reachable Git objects, accepted T2 denominator artifacts, exact V12-selected bytes, and independently executed checks only.",
+    "prior_reviews_use": "Prior reviews were retained only as immutable process history and remediation context; their factual conclusions were not substituted for V7 checks.",
+    "provider_attestation": "Unavailable and not claimed under the exact owner provenance direction."
+  },
+  "active_input_binding": {
+    "truth_v12": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v12.py",
+      "sha256": "e1ace5160ce313b5761d0c7b0f3a86484ff768a9711c137e08fe6b99cb1eb46f"
+    },
+    "truth_v12_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v12.json",
+      "sha256": "737a445ddb0b7729c1077efb14810c266e6294cb73c447d511b4c111f86a6644"
+    },
+    "v12_declared_inputs": 54,
+    "v12_declared_inputs_exact_at_audited_head": 54,
+    "v12_outputs_exact_at_audited_head": 2,
+    "declared_hash_or_git_binding_errors": [],
+    "dependency_coverage_errors": [
+      "batch-b-truth-tests-v6.py, inherited and executed by V12, loads archers-revenge-claim-ledger-batch-b.json to decide AR-B2-FIX-004, but that predecessor ledger is absent from the V12 receipt input_hashes map."
+    ]
+  },
+  "predecessor_rederivation": {
+    "t1_gate": {
+      "path": "measure/evidence-integrity-accepted-gate.json",
+      "sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+      "gate_version": "phase4-v8-candidate",
+      "gate_commit": "5aea360f94f978ac78e590e0a64d33d176beaa1a"
+    },
+    "t2_accepted_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729"
+    },
+    "t2_accepted_partition": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0"
+    },
+    "t3_accepted_pilot": {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b"
+    },
+    "batch_a_accepted_cohort": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-a.json",
+      "sha256": "b096d911b7d6bc9fb4d530e695cea10d3816a17158447a89303c2d069cf2a54c"
+    },
+    "scope_exact": true
+  },
+  "truth_test_runs": {
+    "full_v12": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v12.py",
+      "result": "38 passed, 5 failed; exit 1; zero pytest ERROR outcomes",
+      "failed_test_ids": [
+        "BatchBIndependentReviewContract::test_review_has_zero_unresolved_blocking_findings_for_active_inputs",
+        "BatchBIndependentReviewContract::test_review_v4_binds_every_exact_active_additive_input",
+        "BatchBAcceptanceContract::test_accepted_manifest_exists",
+        "BatchBAcceptanceContract::test_candidate_manifest_exists",
+        "BatchBAcceptanceContract::test_product_owner_acceptance_exists"
+      ]
+    },
+    "source_denominator_semantic_fixture_mapper": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v12.py -k 'BatchBFreezeContract or BatchBCollectorPackageContract or BatchBMapperPackageContract or BatchBClaimTruthContract or BatchBNegativeFixtureContract'",
+      "result": "20 passed, 23 deselected; exit 0"
+    },
+    "receipt_completion_browser_asset": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v12.py -k 'BatchBReceiptContract or BatchBCompletionContract or BatchBBrowserContract or BatchBAssetContract'",
+      "result": "17 passed, 26 deselected; exit 0"
+    },
+    "interpretation": "The five full-module failures are the expected stale-review and missing-lifecycle reds. The targeted passes establish the contracts they execute but do not detect the independently found malformed nested direction digest, the unpinned fixture dependency, or source-package requirement omissions."
+  },
+  "source_rederivation": {
+    "method": "Resolved every selected revision/path through read-only Git, recomputed whole-blob and inclusive-range SHA-256 values, replayed every bounded query, and inspected a deterministic package-hash-seeded sample covering every populated category, evidence class, revision class, and applicable text, binary, absence, route/API, state/transition, responsive, and asset shape.",
+    "populations": {
+      "village-guardian": 73,
+      "archers-revenge": 20,
+      "storm-castle-tower": 42,
+      "total": 135
+    },
+    "positive_source_envelopes_rederived": 129,
+    "bounded_claims_rederived": 6,
+    "envelope_or_query_mismatches": 0,
+    "semantic_sample": {
+      "algorithm": "For each game, package_sha256 is the exact selected claim-ledger hash; seed is SHA-256(package_sha256 concatenated directly with normalized game id); rank claims by SHA-256(seed + NUL + claim id), greedily cover every populated category, evidence class, baseline/historical/bounded revision class, and applicable evidence shape, then fill to max(10, ceil(10% of population)).",
+      "village-guardian": {
+        "package_sha256": "3be82cd7a9ddb144ae82ae220c36b439c6d14bbd58e1c988c897af6156b20484",
+        "seed": "0bafcbd9a84132778262d520eca5da6dad5a4eb324a7ec76075f1cb7bbcff6e5",
+        "population": 73,
+        "selected_count": 18,
+        "selected_claim_ids": [
+          "VG3-ASSET-001",
+          "VG3-ROUTE-006",
+          "VG3-MODEL-002",
+          "VG3-MODEL-016",
+          "VG3-MODEL-011",
+          "VG3-TEST-011",
+          "VG3-COMP-006",
+          "VG3-COMP-002",
+          "VG3-CONFIG-008",
+          "VG3-ID-006",
+          "VG3-API-003",
+          "VG3-INDEX-001",
+          "VG3-COMP-004",
+          "VG3-COMP-009",
+          "VG3-COMP-007",
+          "VG3-MODEL-017",
+          "VG3-ID-004",
+          "VG3-COMP-010"
+        ],
+        "sample_semantic_mismatches": 0
+      },
+      "archers-revenge": {
+        "package_sha256": "c2d6bf62d628fc441c476fb2839e2b41e7f0f8564020580e3d700b0c167fa9d1",
+        "seed": "dda2b87c144814696ce48866716afaa568938d341ccfda8aaec8ca2998310c63",
+        "population": 20,
+        "selected_count": 10,
+        "selected_claim_ids": [
+          "AR-B2-TRANS-003",
+          "AR-B2-EFFORT-002",
+          "AR-B2-COPY-008",
+          "AR-B2-ASSET-002",
+          "AR-B2-TRANS-004",
+          "AR-B2-COPY-004",
+          "AR-B2-COPY-003",
+          "AR-B2-COPY-001",
+          "AR-B2-COPY-010",
+          "AR-B2-COPY-007"
+        ],
+        "sample_semantic_mismatches": 0,
+        "package_completeness_result": "blocking: exact sampled claims are narrow and correct, but the active package intentionally excludes reachable historical identity, route, implementation, responsive, targeting/projectile/health/combat, and test facts required by the track."
+      },
+      "storm-castle-tower": {
+        "package_sha256": "9f9337ec9b86161337553a8b8ab92e57cc954d2a0deb42018dad0ed99394e9d9",
+        "seed": "84ed643c96a7d35dcdf676a35cdb14f96713c0300f6450e83ec1ca555812848b",
+        "population": 42,
+        "selected_count": 16,
+        "selected_claim_ids": [
+          "SCT-ASSET-002",
+          "SCT-ROUTE-H005",
+          "SCT-MECH-H005",
+          "SCT-TRANS-H003",
+          "SCT-HIST-002",
+          "SCT-COPY-001",
+          "SCT-ASSET-H002",
+          "SCT-SCENE-H006",
+          "SCT-ID-001",
+          "SCT-ASSET-H001",
+          "SCT-RESP-H003",
+          "SCT-ASSET-001",
+          "SCT-ASSET-ABS-001",
+          "SCT-ABS-001",
+          "SCT-TEST-H003",
+          "SCT-ASSET-ABS-003"
+        ],
+        "sample_semantic_mismatches": 0
+      },
+      "total_selected": 44,
+      "uncovered_required_strata": []
+    }
+  },
+  "negative_fixture_rederivation": {
+    "fixtures_rederived": 12,
+    "accepted_or_skipped": 0,
+    "village-guardian": {
+      "fixture_ids": ["VG3-NEG-001", "VG3-NEG-002", "VG3-NEG-003", "VG3-NEG-004"],
+      "result": "All four reject unconditional-six-villager, tree-as-primary-evidence, Redis/successful-completion, and CSS-keyword responsive promotion."
+    },
+    "archers-revenge": {
+      "fixture_ids": ["AR-B2-FIX-001", "AR-B2-FIX-002", "AR-B2-FIX-003", "AR-B2-FIX-004"],
+      "result": "All four reject historical-copy currentness/runnability, tree-as-primary-evidence, binary-presence asset loading, and historical-CSS compact/wide promotion.",
+      "binding_limit": "AR-B2-FIX-004 is semantically refuted, but its source_checked_claim_id is resolved from the predecessor ledger omitted from the V12 receipt's input map."
+    },
+    "storm-castle-tower": {
+      "fixture_ids": ["SCT-NEG-001", "SCT-NEG-002", "SCT-NEG-003", "SCT-NEG-004"],
+      "result": "All four reject immediate defeat, tree-as-runtime, fabricated current route/PNG loading, and a reusable current responsive template inferred from deleted historical source."
+    }
+  },
+  "denominator_rederivation": {
+    "method": "Filtered the five accepted T2 identity, source, historical-source, scene/state/transition, and asset ledgers by exact normalized game id, compared exact IDs and paths with each selected reconciliation, and rejected duplicates or unassigned records.",
+    "village-guardian": {
+      "identity": 1,
+      "source": 39,
+      "historical": 1,
+      "scene": 2,
+      "state": 3,
+      "transition": 1,
+      "asset": 4,
+      "total": 51,
+      "exact_set_mismatches": 0,
+      "mapper_lineage": "The selected reconciliation V5, mapper report V5, and mapper receipt V6 agree on the exact reconciliation path and digest."
+    },
+    "archers-revenge": {
+      "identity": 1,
+      "source": 8,
+      "historical": 9,
+      "scene": 0,
+      "state": 0,
+      "transition": 0,
+      "asset": 5,
+      "total": 23,
+      "exact_set_mismatches": 0
+    },
+    "storm-castle-tower": {
+      "identity": 1,
+      "source": 8,
+      "historical": 13,
+      "scene": 0,
+      "state": 0,
+      "transition": 0,
+      "asset": 3,
+      "total": 25,
+      "exact_set_mismatches": 0
+    },
+    "accepted_records_reconciled": 99,
+    "asset_candidates_reconciled": 12,
+    "duplicate_or_unassigned_records": 0
+  },
+  "receipt_rederivation": {
+    "active_receipts": 15,
+    "active_receipt_bytes_exact_to_v12_pins": 15,
+    "declared_output_binding_mismatches": 0,
+    "provider_unavailability_disclosures_retained": true,
+    "malformed_or_stale_direction_bindings": [
+      {
+        "receipt": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-village-guardian-batch-b-v6.json",
+        "fields": ["provenance_direction.sha256", "input_hashes.provenance_direction"],
+        "declared": "4d1ec24e9006655777a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+        "declared_length": 65,
+        "actual": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+        "actual_length": 64
+      }
+    ]
+  },
+  "owner_directions_and_limits": {
+    "provenance": {
+      "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+      "application": "Local exact hashes and committed Git bytes may compensate for unavailable provider attestations, but exact receipt and direction bindings remain mandatory."
+    },
+    "webbridge": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-webbridge.json",
+      "sha256": "7dde397fdb1ceeac3e490d07791e90f69dd630b962d6b799da8426d4e9234498",
+      "decision": "WEBBRIDGE_ACCEPTED_FOR_B4",
+      "application": "Village Guardian remains bounded runnable only with isTrusted=false synthetic input and hidden-tab scheduler adaptation; Archer and Storm remain bounded non-runnable at the role revision after exact-route 404s."
+    },
+    "completion": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-completion-disposition.json",
+      "sha256": "973641c8f0b3f3281e9302d5b488f012be82f401bd6831b104674ce67f8c3960",
+      "decision": "CONDITIONAL_EVIDENCE_ACCEPTANCE_WITH_SUCCESSOR_DEFECT_TRANSFER",
+      "finding": "Both observed Village Guardian completion POSTs returned HTTP 400.",
+      "application": "Disclosure-only. No successful completion, persistence, XP, idempotency, or API-correctness claim is made."
+    },
+    "non_waived_gates_preserved": [
+      "claim citation and semantic correctness",
+      "denominator completeness",
+      "asset evidence",
+      "role provenance and receipt integrity",
+      "fresh independent review",
+      "candidate, acceptance, and revocation lifecycle",
+      "Village Guardian completion API contract correctness"
+    ]
+  },
+  "findings": [
+    {
+      "id": "T4B7-HIGH-001",
+      "severity": "high",
+      "area": "active Village mapper receipt direction integrity",
+      "blocking": true,
+      "detail": "The active requirements-mapper-village-guardian-batch-b-v6 receipt declares the global provenance-direction digest as a 65-character value with one extra '7' in both provenance_direction.sha256 and input_hashes.provenance_direction. The actual committed direction digest is the 64-character 4d1ec24e...da9ac value. V12 pins the receipt's outer bytes but never validates these nested direction bindings, so its receipt selector is a false green for a non-waived receipt-integrity control.",
+      "required_remediation": "Publish an additive Village mapper receipt supersession with the exact 64-character direction SHA-256 in every binding, select it in a fresh truth contract/receipt, rerun all receipt and source gates, and obtain another fresh independent review."
+    },
+    {
+      "id": "T4B7-HIGH-002",
+      "severity": "high",
+      "area": "V12 fixture input completeness and reproducibility",
+      "blocking": true,
+      "detail": "V12 inherits BatchBNegativeFixtureContract.test_archer_fixture_refutations_rederive_from_source_boundaries from batch-b-truth-tests-v6.py. That test reads archers-revenge-claim-ledger-batch-b.json at runtime to resolve AR-B2-FIX-004's AR-B-HIST-RESPONSIVE-001 anchor, but the predecessor ledger is absent from V12 receipt input_hashes. The fixture outcome can therefore change behind an unchanged 54-entry V12 input manifest; exact V12 output hashes do not bind all factual inputs used by the executed fixture gate.",
+      "required_remediation": "Add the exact predecessor-ledger hash as a declared truth input or replace the fixture with a self-contained exact source envelope, then publish a fresh truth test and receipt, rerun all twelve fixture refutations, and obtain another fresh review."
+    },
+    {
+      "id": "T4B7-HIGH-003",
+      "severity": "high",
+      "area": "Archer's Revenge package completeness against track focus requirements",
+      "blocking": true,
+      "detail": "The active Archer V3 ledger contains only 20 copy, binary-presence, transition, and source-surface claims. Its own reconciliation says historical route/implementation claims remain in the V1 ledger, while the active V4 blueprint explicitly reports no identity claim, no route claim, no current scene proposition, unknown responsive behavior, and unknown asset usage. Reachable historical logic/config/component/test blobs contain additional game-specific targeting, shield/projectile, enemy-fire, health, combat, configuration, route, responsive, and test evidence required by spec.md lines 9-15. Marking those source-backed requirements unknown does not satisfy the required complete per-game package, even though the 20 selected claim envelopes are exact.",
+      "required_remediation": "Publish an additive Archer collector package that atomically covers every required reachable historical mechanic/configuration/route/test/responsive/asset-use fact or gives an exact bounded absence for each category, update the mapper and reports to reference the complete active population, rerun denominator/source/fixture gates, and obtain a fresh review."
+    },
+    {
+      "id": "T4B7-LOW-001",
+      "severity": "low",
+      "area": "Archer binary envelope interoperability",
+      "blocking": false,
+      "detail": "AR-B2-ASSET-001 through AR-B2-ASSET-003 encode whole-file binary evidence using line-shaped start_line/end_line objects. V12's binary-aware resolver accepts equal blob/range hashes, but a schema-generic line-range consumer can misread these records.",
+      "required_remediation": "In the next additive Archer ledger, encode these records explicitly as whole-file or byte ranges without changing their verified whole-file hashes."
+    }
+  ],
+  "unresolved_findings": {
+    "critical": 0,
+    "high": 3,
+    "medium": 0,
+    "low": 1
+  },
+  "gate_status": {
+    "B0": "blocked by the malformed exact direction binding in an active receipt",
+    "B1": "blocked by the incomplete active Archer source package despite 135/135 exact source/query envelopes",
+    "B2": "blocked because the active Archer mapper preserves source-backed required areas as unknown",
+    "B3": "12/12 fixtures are semantically refuted, but exact reproducibility is blocked by the unpinned Archer predecessor-ledger dependency",
+    "B4": "bounded pass only under the exact WebBridge and completion directions and every recorded limitation",
+    "B5": "blocked by three unresolved High findings and absent candidate/approval/accepted lifecycle artifacts"
+  },
+  "authorization": {
+    "authorization_rule": "Candidate authorization is true only when unresolved Critical, High, and Medium counts are all zero.",
+    "candidate_authorized": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "reason": "Three High findings remain. Candidate, product-owner acceptance, and accepted-manifest artifacts are also absent."
+  },
+  "success_claims": {
+    "batch_complete": false,
+    "successful_completion": false,
+    "persistence_confirmed": false,
+    "xp_awarded": false,
+    "idempotency_verified": false,
+    "api_correctness": false,
+    "product_acceptance": false
+  },
+  "carried_forward_disclosures": [
+    {
+      "id": "DISC-001",
+      "classification": "Batch A process-only disclosure",
+      "use": "Labeled process metadata only; never factual input."
+    },
+    {
+      "id": "DISC-B-COMPLETION-400",
+      "classification": "owner-directed mandatory successor disclosure",
+      "use": "Both Village Guardian completion POSTs returned HTTP 400. Disclosure-only; no success claim."
+    },
+    {
+      "id": "DISC-B-PROVIDER-PROVENANCE",
+      "classification": "owner-accepted local-verifiability disclosure",
+      "use": "Provider-side provenance was unavailable; only exact local Git/hash bindings are claimed."
+    }
+  ]
+}
