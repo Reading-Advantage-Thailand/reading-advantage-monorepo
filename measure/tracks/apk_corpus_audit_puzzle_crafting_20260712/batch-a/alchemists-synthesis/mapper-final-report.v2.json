@@ -1,0 +1,30 @@
+{
+  "schema_version": "apk-mapper-final-report.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 2: Mapping (Batch A)",
+  "role": "requirements-mapper",
+  "task_id": "requirements-mapper:alchemists-synthesis:batch-a:v2",
+  "game": "Alchemist's Synthesis",
+  "cohort_batch": "Batch A",
+  "map": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/requirements-map.v2.json",
+  "source_inputs": {
+    "claim_ledger": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/claim-evidence-ledger.v2.json",
+    "source_asset_history_ledger": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/source-asset-history-ledger.json",
+    "fixtures": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/fixtures.v2.json",
+    "collector_rebind_receipt": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-alchemists-synthesis-batch-a-rebind.v2.json"
+  },
+  "findings": {
+    "structured_claim_ids_referenced": 12,
+    "fixture_ids_referenced": 4,
+    "unresolved_references": 0,
+    "novel_factual_claims": 0,
+    "ontology_decisions": 0,
+    "browser_or_runtime_claims": 0,
+    "denominator_records_covered": 10,
+    "denominator_records_unresolved": 0,
+    "negative_fixtures_preserved": 4,
+    "mapper_boundary_violations": 0
+  },
+  "status": "complete V2 self-attested mapping; non-consumable pending independent review",
+  "provenance_note": "No provider/session/prompt/event/final-response telemetry was exposed; none is fabricated."
+}

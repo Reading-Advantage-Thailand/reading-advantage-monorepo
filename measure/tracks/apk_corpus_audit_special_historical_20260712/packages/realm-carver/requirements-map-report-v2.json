@@ -1,0 +1,72 @@
+{
+  "schema_version": "apk-requirements-mapper-report.v2",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "phase": "Phase 2: Mapping",
+  "task_id": "map-requirements:catalog/realm-carver:batch-a",
+  "role": "requirements-mapper",
+  "canonical_identity_id": "catalog/realm-carver",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "source_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "status": "mapping-complete-independent-review-pending",
+  "source_fact_policy": "Every mapped record resolves to a cited claim ID or explicit unknown ID in the Realm Carver ledger; no source fact was added.",
+  "exact_bindings": {
+    "map_path": "packages/realm-carver/requirements-map-v2.json",
+    "ledger_path": "packages/realm-carver/claim-ledger-v2.json",
+    "ledger_sha256": "259b821e88143665203830814292ad19a78397d9974f2dee6edd9e92051e8afc",
+    "collector_report_path": "packages/realm-carver/evidence-final-report-v2.json",
+    "collector_report_sha256": "8eac1831ec21d922e1ba7930868160cc576df7634d3e6d2c13350e48b2bc511a"
+  },
+  "mapped_sections": [
+    "component",
+    "route",
+    "test",
+    "state",
+    "mechanic",
+    "chronology_conflict",
+    "unknown"
+  ],
+  "counts": {
+    "mapped_records": 6,
+    "unknown_records": 4,
+    "distinct_claim_ids_referenced": 12,
+    "distinct_unknown_ids_referenced": 4,
+    "unresolved_claim_ids": 0,
+    "non_realm_carver_claim_ids": 0,
+    "novel_source_facts": 0,
+    "class_promotions": 0,
+    "browser_interactions": 0
+  },
+  "preserved_boundaries": [
+    "current versus historical class separation",
+    "chronology conflict between deleted-locator classification and empty revision-to-parent diffs",
+    "unknown current route, mechanics, states, transitions, assets, browser behavior, and ontology"
+  ],
+  "actual_usage": {
+    "input_files_read": 7,
+    "source_bytes_read": 0,
+    "commands": 1,
+    "elapsed_minutes": 1,
+    "records_authored_reviewed": 16,
+    "output_files_authored": 3,
+    "browser_interactions": 0,
+    "captured_artifacts": 0
+  },
+  "provider_telemetry": {
+    "prompt": "unavailable",
+    "session": "unavailable",
+    "spawn": "unavailable",
+    "ancestry": "unavailable",
+    "events": "unavailable",
+    "timing": "unavailable",
+    "final_response": "unavailable",
+    "commit": "unavailable",
+    "isolation": "unavailable",
+    "disclosure": "No provider-side attestation is claimed."
+  },
+  "provenance_policy": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE; exact artifact hashes and later committed Git binding are required; source, browser, denominator, fixture, asset, and lifecycle gates remain fail-closed.",
+  "acceptance": "not-claimed",
+  "v2_map_path": "packages/realm-carver/requirements-map-v2.json",
+  "v2_additive": true
+}

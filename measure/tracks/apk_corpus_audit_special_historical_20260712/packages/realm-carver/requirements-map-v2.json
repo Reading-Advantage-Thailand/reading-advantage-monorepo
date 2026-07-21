@@ -1,0 +1,155 @@
+{
+  "schema_version": "apk-requirements-map.v2",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "phase": "Phase 2: Mapping",
+  "task_id": "map-requirements:catalog/realm-carver:batch-a",
+  "role": "requirements-mapper",
+  "canonical_identity_id": "catalog/realm-carver",
+  "canonical_label": "Realm Carver",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "source_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "ledger_binding": {
+    "path": "packages/realm-carver/claim-ledger-v2.json",
+    "sha256": "259b821e88143665203830814292ad19a78397d9974f2dee6edd9e92051e8afc",
+    "claims_total": 12,
+    "unknowns_total": 4
+  },
+  "evidence_bindings": {
+    "discovery_audit": {
+      "path": "batch-a/discovery-audit.json",
+      "sha256": "585978d5592b321da7bcce72c4df929998da0d566b717447933c411f023b38dd"
+    },
+    "current_source_observations": {
+      "path": "packages/realm-carver/current-source-observations-v2.json",
+      "sha256": "fde92bded707d61acbc493835a6759634e2d0c55fd3a4489d141ce52fd89c120"
+    },
+    "historical_source_observations": {
+      "path": "packages/realm-carver/historical-source-observations-v2.json",
+      "sha256": "34f530bd89ba5541b73f8e0dd326c984fddbc45ef27d44404b48b79f434780b3"
+    },
+    "collector_report": {
+      "path": "packages/realm-carver/evidence-final-report-v2.json",
+      "sha256": "8eac1831ec21d922e1ba7930868160cc576df7634d3e6d2c13350e48b2bc511a"
+    }
+  },
+  "mapping_boundary": "This additive map reorganizes only the cited Realm Carver ledger records. Historical records remain historical implementation observations; current records remain explicit unknowns. No active requirement, product decision, current behavior, browser result, asset conclusion, or standardization decision is added.",
+  "records": {
+    "component": [
+      {
+        "id": "RC-MAP-COMP-001",
+        "disposition": "historical-source-observation-only",
+        "cited_claim_ids": [
+          "RC-HIST-001",
+          "RC-HIST-008"
+        ]
+      }
+    ],
+    "route": [
+      {
+        "id": "RC-MAP-ROUTE-001",
+        "disposition": "historical-source-observation-only",
+        "cited_claim_ids": [
+          "RC-HIST-002",
+          "RC-HIST-003",
+          "RC-HIST-004"
+        ]
+      }
+    ],
+    "test": [
+      {
+        "id": "RC-MAP-TEST-001",
+        "disposition": "historical-test-observation-not-runtime-proof",
+        "cited_claim_ids": [
+          "RC-HIST-005"
+        ]
+      }
+    ],
+    "state": [
+      {
+        "id": "RC-MAP-STATE-001",
+        "disposition": "historical-source-observation-only",
+        "cited_claim_ids": [
+          "RC-HIST-006"
+        ]
+      }
+    ],
+    "mechanic": [
+      {
+        "id": "RC-MAP-MECH-001",
+        "disposition": "historical-source-observation-not-active-requirement",
+        "cited_claim_ids": [
+          "RC-HIST-007"
+        ]
+      }
+    ],
+    "chronology_conflict": [
+      {
+        "id": "RC-MAP-CONFLICT-001",
+        "disposition": "preserved-unresolved",
+        "cited_claim_ids": [
+          "RC-HIST-001",
+          "RC-HIST-002",
+          "RC-HIST-003",
+          "RC-HIST-004",
+          "RC-HIST-005",
+          "RC-HIST-006",
+          "RC-HIST-007",
+          "RC-HIST-008"
+        ]
+      }
+    ]
+  },
+  "unknown_records": [
+    {
+      "id": "RC-MAP-UNK-001",
+      "disposition": "explicit-unknown",
+      "cited_unknown_ids": [
+        "RC-CUR-001"
+      ]
+    },
+    {
+      "id": "RC-MAP-UNK-002",
+      "disposition": "explicit-unknown",
+      "cited_unknown_ids": [
+        "RC-CUR-002"
+      ]
+    },
+    {
+      "id": "RC-MAP-UNK-003",
+      "disposition": "explicit-unknown",
+      "cited_unknown_ids": [
+        "RC-CUR-003"
+      ]
+    },
+    {
+      "id": "RC-MAP-UNK-004",
+      "disposition": "explicit-unknown",
+      "cited_unknown_ids": [
+        "RC-CUR-004"
+      ]
+    }
+  ],
+  "preserved_unknowns": [
+    "current implementation and route",
+    "runnable disposition and browser behavior",
+    "asset usage",
+    "whether historical tests passed",
+    "whether historical source shipped",
+    "final capability ontology"
+  ],
+  "claim_reference_accounting": {
+    "ledger_claims_total": 12,
+    "distinct_claim_ids_referenced": 12,
+    "distinct_unknown_ids_referenced": 4,
+    "unresolved_claim_ids": [],
+    "non_realm_carver_claim_ids": [],
+    "novel_source_facts": 0,
+    "class_promotions": 0
+  },
+  "provenance_policy": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE; provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestation is unavailable and not claimed.",
+  "acceptance": "not-claimed",
+  "v2_ledger_binding_path": "packages/realm-carver/claim-ledger-v2.json",
+  "v2_additive": true
+}

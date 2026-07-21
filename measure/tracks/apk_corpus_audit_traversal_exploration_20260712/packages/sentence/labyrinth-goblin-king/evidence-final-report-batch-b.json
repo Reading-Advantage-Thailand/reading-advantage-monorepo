@@ -1,0 +1,21 @@
+{
+  "schema_version":"apk-evidence-collector-final-report.v3",
+  "track_id":"apk_corpus_audit_traversal_exploration_20260712",
+  "phase":"Phase 2: Batch B",
+  "game":"Labyrinth of the Goblin King",
+  "canonical_identity_id":"sentence/labyrinth-goblin-king",
+  "disposition":"source-evidence-collected-batch-b-not-reviewed-not-accepted",
+  "source_revision":"52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "ledger_path":"packages/sentence/labyrinth-goblin-king/claim-evidence-ledger-batch-b.json",
+  "method_path":"packages/sentence/labyrinth-goblin-king/evidence-method-batch-b.md",
+  "factual_claims":12,
+  "fixture_records":4,
+  "denominator_records_reconciled":11,
+  "budget_actuals":{"source_bytes":46175,"source_files_objects":4,"commands":4,"elapsed_minutes":0,"timing_measurement":"unavailable-in-harness","timing_note":"0 is the owner-directed accounting fallback, not elapsed-time evidence.","records_authored_reviewed":16,"browser_interactions":0,"captured_artifacts":4},
+  "validation":{"json":"validated-local-command","envelopes":"11 exact source envelopes recorded; 2 source ranges are pending independent semantic re-derivation only","fixtures":"4 explicit REJECT records; no fixture is a factual claim","denominator":"accepted identity and named records reconciled exactly once; no authored-output denominator","budgets":"actuals are labeled integers and within the frozen one-game collector ceilings","diff":"collector package only; no product-source files, mapper, browser, truth, or review outputs"},
+  "unknowns_preserved":["browser/runnable/native-input/viewport/console/network behavior","binary asset availability and runtime load","historical behavior","persistence and API correctness","provider-side provenance and timing attestations"],
+  "stop_loss":{"unsupported_factual_claims":0,"citation_envelope_mismatches":0,"denominator_mismatches":0,"denominator_records_dropped":0,"denominator_records_duplicated":0,"unknowns_removed":0,"browser_claims":0,"budget_breaches":0,"status":"collector-only; later truth, browser, asset, mapping, review, candidate, acceptance, and commit gates remain required"},
+  "acceptance_status":"non-consumable collector package",
+  "commit_binding":{"status":"uncommitted","commit_sha":"uncommitted"},
+  "marker":"MEASURE_AGENT_RESULT"
+}

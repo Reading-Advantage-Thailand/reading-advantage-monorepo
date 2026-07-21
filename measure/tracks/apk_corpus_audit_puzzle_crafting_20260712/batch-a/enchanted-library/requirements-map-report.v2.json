@@ -1,0 +1,39 @@
+{
+  "schema_version": "apk-mapper-final-report.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 2: Mapping",
+  "role": "requirements-mapper",
+  "task_id": "map-requirements:enchanted-library:v2",
+  "game": "vocabulary/enchanted-library",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "2736d1de2f675155a70bdda706349310f4e3f322",
+  "package_inputs": {
+    "claim_evidence_ledger": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/claim-evidence-ledger.v2.json",
+    "source_asset_history_ledger": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/source-asset-history-ledger.v2.json",
+    "fixtures": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/fixtures.v2.json",
+    "collector_rebind_receipt": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-enchanted-library-batch-a-rebind.v2.json"
+  },
+  "requirements_map": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/requirements-mapping.v2.json",
+  "mapping_counts": {
+    "claims_consumed": 32,
+    "fixture_ids_referenced": 3,
+    "claim_ids_referenced": 32,
+    "unresolved_claim_ids": 0,
+    "novel_factual_claims": 0,
+    "browser_claims": 0,
+    "negative_fixtures_consumed": 3
+  },
+  "claim_resolution": {
+    "method": "Every map entry is backed by one or more exact claim IDs from the committed V2 Enchanted Library ledger and one or more fixture IDs from the committed V2 fixtures; no source text outside that package was used for factual derivation.",
+    "all_claim_ids_resolve": true,
+    "claim_ledger_unchanged_in_count": true,
+    "source_envelopes_consumed": "32/32 V2 re-validated with 64-char SHA-256",
+    "behavioral_or_browser_inference_added": false
+  },
+  "unknowns": [
+    "No browser, input, responsive, route-reachability, asset-usage, historical, or user-behavior evidence was collected.",
+    "Provider, session, event, prompt, final-response, and commit provenance are unavailable and are not fabricated."
+  ],
+  "disposition": "V2 requirements mapping only; not an acceptance, browser, asset, truth-test, or ontology decision"
+}

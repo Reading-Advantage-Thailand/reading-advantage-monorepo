@@ -1,0 +1,66 @@
+{
+  "schema": "apk-requirements-mapper-report.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 2: Mapping",
+  "batch_id": "batch-a",
+  "game": "Griffin Sky-Joust",
+  "normalized_id": "griffin-sky-joust",
+  "map_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/requirements-map.json",
+  "input_bindings": {
+    "claim_ledger": {
+      "path": "packages/griffin-sky-joust/claim-ledger-v2.json",
+      "sha256": "dbe69391387b5ae8bae2fe0e6d1a0e3b6a687ed9f372b3259cd00c9f92958905"
+    },
+    "collector_report": {
+      "path": "packages/griffin-sky-joust/evidence-final-report-v2.json",
+      "sha256": "3356420f98cb02f6fbcde39ce870b9a75cac5fff25e9c0ef9145655369830657"
+    },
+    "collector_receipt": {
+      "path": "role-receipts/evidence-collector-griffin-sky-joust-v2.json",
+      "sha256": "017a27cf0e0b34193a0e835514d16e930720d9b89a585f1890ef728ab22c3363"
+    },
+    "current_observations": {
+      "path": "packages/griffin-sky-joust/current-source-observations-v2.json",
+      "sha256": "645cbafafdd5652361137a7177e687a64e1c14f01a71204fded598be2b60f140"
+    },
+    "historical_observations": {
+      "path": "packages/griffin-sky-joust/historical-source-observations-v2.json",
+      "sha256": "392e3f348f299781722d9334e9b475b399e472997df67043969f781024340a10"
+    },
+    "negative_fixtures": {
+      "path": "packages/griffin-sky-joust/negative-fixtures-v2.json",
+      "sha256": "f99e89e7d131f043e04e4a86f960ce819b73c60aa2de074cfe09458d4b24a204"
+    },
+    "strategy_freeze": {
+      "path": "test-strategy-phase0.md",
+      "sha256": "2762937ccbb24ecc193c7301c9729efe0d1d1846fce827a88f8aee9e6c7566fd"
+    },
+    "discovery_freeze": {
+      "path": "phase0-discovery-audit.json",
+      "sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa"
+    },
+    "provenance_direction": {
+      "path": "../../product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+    }
+  },
+  "result": {
+    "status": "mapped-locally; independent review and lifecycle acceptance pending",
+    "factual_claims_resolved": 7,
+    "factual_claims_unresolved": 0,
+    "current_unknown_preserved": true,
+    "class_separation_preserved": true,
+    "negative_fixtures_excluded": true,
+    "browser_work_performed": false,
+    "novel_factual_claims": 0,
+    "final_ontology_decision": false
+  },
+  "blocking_disclosures": [
+    "Provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations are unavailable.",
+    "Current implementation, runnability, live behavior, current asset usage, and current transitions remain unknown.",
+    "Independent review and candidate/owner-acceptance lifecycle artifacts remain pending."
+  ],
+  "acceptance": "not-claimed",
+  "v2_map_path": "packages/griffin-sky-joust/requirements-map-v2.json",
+  "v2_additive": true
+}

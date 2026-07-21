@@ -1,0 +1,22 @@
+{
+  "schema_version":"apk-evidence-collector-final-report.v1",
+  "track_id":"apk_corpus_audit_traversal_exploration_20260712",
+  "phase":"Phase 1: Batch B",
+  "batch_id":"batch-b",
+  "game":"Shadow Gate Dungeon",
+  "normalized_game_id":"sentence/shadow-gate-dungeon",
+  "disposition":"source-evidence-collected-not-reviewed-not-accepted",
+  "source_revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "successor_ledger":"packages/sentence/shadow-gate-dungeon/claim-evidence-ledger.json",
+  "fixture_file":"packages/sentence/shadow-gate-dungeon/fixtures.json",
+  "claim_count":18,
+  "fixture_count":3,
+  "source_objects_inspected":6,
+  "source_bytes_inspected":42232,
+  "changes":["Created atomic source envelopes for component state, movement/input wiring, world/configuration, stealth/chase, collision, ordered crystal progression, gate/terminal transitions, responsive scale, result callback, page wiring, and sentences API declaration.","Reconciled the exact Shadow Gate Dungeon denominator identity without asserting route reachability or runtime behavior.","Added three negative fixtures and preserved browser, asset, persistence, API, and provider-provenance unknowns."],
+  "stop_loss":{"unsupported_factual_claims_added":0,"citation_envelope_mismatches":0,"denominator_records_dropped":0,"unknowns_removed":0,"browser_claims":0,"map_or_review_work":false,"budget_breaches":0,"status":"collector-only; independent review, truth gates, browser/asset work, candidate, acceptance, and commit binding remain required"},
+  "timing_status":"elapsed_minutes=0 is unavailable-in-harness accounting fallback only; no elapsed-time evidence is claimed",
+  "acceptance_status":"non-consumable collector output",
+  "commit_binding":{"status":"uncommitted","commit_sha":"uncommitted"},
+  "marker":"MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,121 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "status": "v2-truth-contract-authored-current-non-future-stages-green",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 1: Batch A",
+  "task_id": "truth-test-author:t6-puzzle-batch-a:v2",
+  "role": "truth-test-author",
+  "role_identity": "fresh isolated T6 Puzzle Batch A V2 truth-test author only",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "2736d1de2f675155a70bdda706349310f4e3f322",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "supersedes": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/truth-test-author-batch-a.json",
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are truthful non-attestations; the user prohibited commits."
+  },
+  "provenance_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+  },
+  "prior_role_history": [],
+  "input_hashes": {
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-discovery-audit.json": "72b076c1c742ecf4b2bbc27bcee259bd5c372233d21f2e6222fad778d174beb7",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v2.py": "9005366f4e938c1d4d565e042ee18c16b18f12df2cec8334c8a77eea51b5e4f6",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/claim-evidence-ledger.v2.json": "d3ea0d89a03f8f0acbc91ba40309c7a2c64bb507dfee51a380521ea0021bee4b",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/fixtures.v2.json": "93633588b43db0d235840583d2fb56a8e6dc80713028e7f89d050fe6f13c7ff8",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/mapper-final-report.v2.json": "aea461943883b77f17be05c78a89d1bd264e5aa662990c67866aacda1a724ae7",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/rebind-report.v2.md": "6bc2bf8ea40d73e08ad82762fcba930af4aef0592b4e5a7e46dfb73039c94191",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/requirements-map.v2.json": "0ca3edbd2112f3bc0ffdfd95aa5dba857bee153d9a782ffc50705884aa34cd71",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/source-asset-history-ledger.json": "b021373a684c27496a5c4913705960ef91de949fec7f936211c2e8b6a45a4453",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/claim-evidence-ledger.v2.json": "8adc5b881104bf0ce78d0eb3895b65cb0485a4e516e9918461acfad0f7adfb2e",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/fixtures.v2.json": "7911e06f4baaea302d62b277daa7f0199180fe6abf105b18e56f796574036429",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/rebind-report.v2.json": "1ce9a521dbebe0cd7fdaa8994f85ea46fc4a912a0a40b1b0f3782cc368c23d6c",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/requirements-map-report.v2.json": "fe04f30fbaeb1c7ab096884bd222b3c9a19ddf083b738ccc2fd35e3e50f47d84",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/requirements-mapping.v2.json": "b21fa6af08d12d5634ef1af3e3606185997338fbd0c8a5c3806a303d0be56896",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/source-asset-history-ledger.v2.json": "401bc8bcebd5da6b09bbc7896efc23edeadb68a68cf309c25b2cea8a98c55a8f",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-claim-ledger.v2.json": "ea825bb8a9ae5e9e6f7349e9dc3b3ec45e1c51f20d80a9bd48888dc812aa0502",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-fixtures.v2.json": "a544505af2ab7ad80b5afe1996249d16704e398063373d1397b1cf031a14179d",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-mapper-report.v2.json": "93d811bd9e5b4811c322f39f1918a790091a7db16704f0e88e70973fa8958d3a",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-rebind-report.v2.json": "595334a70e5066f4ba671b99dcdb611a972ab47da77d10da6dcf807383d6380e",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-requirements-map.v2.json": "70c740939d6d11daa0b9164fc77a906f26e30e8f70e0d6ea8559ef75483c3383",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/source-asset-history-ledger.v2.json": "31a90fe0ab09c390c49c4e4635a20889d3d30546634ef7d1efe77c895a15583c",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/phase0-budget-declaration.json": "695bd2b90bf0483c35c09c51007add5e467ad671cac4945392e4cc3fa02a5314",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/phase0-role-applicability.json": "d2dd0a2c07ed26c69fbb07a9879e2f41e0e54f466a7e8c3dcf9163192e2264c2",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-alchemists-synthesis-batch-a-rebind.v2.json": "4cc590f201afcee6c1ef57553d55e3265346fda15c81cacc97afd28978b58409",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-alchemists-synthesis-batch-a.v2.json": "11cfc2eee2b8ade8b668ca62971823e2d65f9ad2a6fea27e66cf2f73f4dd958d",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-enchanted-library-batch-a-rebind.v2.json": "edd40ce50649f7b275478614f52984c96f877673f8e53c3d68e52920e7c30423",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-enchanted-library-batch-a.v2.json": "28ab55a7af3ad741ed68989a88e77c65df5097f80dd9bb587e05f6f71d8c6c53",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-rune-match-batch-a-rebind.v2.json": "7eb8dafbcfd44e6f48b893bbcfac491a19966213725245e9c6e995a6bd20603f",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-rune-match-batch-a.v2.json": "23f8dba99fdf21ceba640db8b7b8c2ad175adc00692c17ba4929fbef463c2e21",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/requirements-mapper-alchemists-synthesis-batch-a.v2.json": "7648d5e96d39e516e6e713d18190ccd60f468f9194bd0099d88b8f45c4ba00af",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/requirements-mapper-enchanted-library.v2.json": "375e8d7d1e1b5e7cb33579d1488b6223b970fe7b0488e5d990c58db4c35517ea",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/requirements-mapper-rune-match-batch-a.v2.json": "dacee39050196b284424ac7f6b7377741c64049430f8c71f9d2c04c18dff2afc",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/test-strategy-phase0.md": "1a4fd7864a225fe7fd1c17c5e8aec0c30a402d89b8c8dfea5da543a44767154b"
+  },
+  "output_paths_and_sha256": {
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v2.py": "9005366f4e938c1d4d565e042ee18c16b18f12df2cec8334c8a77eea51b5e4f6",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/truth-test-author-batch-a-v2.json": "5ab7612ec2e90be30eb12408f80efb5fd6e99f14eb5c8156845771942dfc3638"
+  },
+  "actual_usage": {
+    "assertions_authored": 16,
+    "fixture_executions": 11,
+    "test_runs_this_revision": 1,
+    "factual_claims_checked": 57,
+    "captured_artifacts": 18
+  },
+  "validation": {
+    "truth_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v2.py",
+    "result": "11 passed, 5 failed, 0 ERROR outcomes; exit 1; non-future truth defects resolved by V2 owner artifacts and receipts",
+    "full_run_disposition": "Fail-closed as required. The V2 contract resolves all 8 V1 non-future truth failures through additive V2 owner artifacts and V2 collector/mapper receipts. Browser, review, candidate, approval, and accepted-manifest stages remain intentionally red until those separately owned artifacts exist."
+  },
+  "expected_gate_state": {
+    "exact_frozen_scope_and_inputs": "green for the exact three identities and 36 hash-selected committed V2 inputs",
+    "denominator_package_scope": "green for V2 source-asset-history ledgers for EL and RM and the V1 ledger for AS",
+    "claim_metadata": "green for 57 unique factual claim IDs and required metadata",
+    "source_envelopes": "green for 57/57 claims with 64-char SHA-256 blob and cited-range envelopes",
+    "semantics": "green for 57/57 cited ranges containing the required semantic anchors",
+    "fixtures": "green for 11 fixtures with backed dispositions and resolved claim IDs",
+    "mapper_backing": "green for all factual claim IDs and all fixture IDs referenced per game, and exact ledger and rebind-report hashes bound",
+    "receipt_and_budget": "green for V2 collector/mapper receipts binding exact V2 outputs and integer budget actuals within ceilings",
+    "truth_author_receipt": "green locally; exact input/test hashes and per-revision truth-test budget are bound, while provider and commit provenance remain truthfully unavailable and acceptance is not claimed",
+    "browser": "red until all three browser dispositions and receipts exist",
+    "independent_review": "red until a fresh exact-input review and receipt exist",
+    "lifecycle": "red until candidate, later authentic owner approval, and accepted manifest exist"
+  },
+  "role_isolation": {
+    "roles_held": [
+      "truth-test-author"
+    ],
+    "roles_not_held": [
+      "discovery-auditor",
+      "evidence-collector",
+      "requirements-mapper",
+      "browser-auditor",
+      "adversarial-reviewer",
+      "candidate-manifest-author",
+      "acceptance-author",
+      "product-owner"
+    ],
+    "note": "Only the V2 truth-test module and this receipt were created. No source, V1 collector, V1 rebind, V1 map, browser, review, lifecycle, plan, registry, or commit artifact was modified."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

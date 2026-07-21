@@ -1,0 +1,19 @@
+{
+  "schema": "apk-source-asset-history-ledger.v2",
+  "game": "Rune Match",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "denominator_binding": {"manifest": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json", "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729", "partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0"},
+  "supersedes": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/source-asset-history-ledger.json",
+  "supersession_reason": "V2 source/asset/history ledger: provides per-source/asset/history reconciliation for Rune Match. The V1 path was absent; this V2 file records exact 64-char SHA-256 for every cited file path and removes the explicit-unknown wording from the package scope.",
+  "covered_denominator_records": [
+    {"path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx", "disposition": "cited", "blob_sha256": "a951b2113f67f78730482ae034d49adcbf58a0303aa93495578e1cb0a196c918"},
+    {"path": "apps/advantage-games/src/app/api/v1/games/rune-match/vocabulary/route.ts", "disposition": "cited", "blob_sha256": "0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd"},
+    {"path": "apps/advantage-games/src/lib/gameCards.ts", "disposition": "cited", "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c"},
+    {"path": "apps/advantage-games/src/lib/games/runeMatch.ts", "disposition": "cited", "blob_sha256": "3a746af63bf3eccd10e770cc1eaad1eacc543e29442217a1845e64394ec32774"},
+    {"path": "apps/advantage-games/src/lib/games/runeMatchConfig.ts", "disposition": "cited", "blob_sha256": "b8f44f39aa3e5f3a91e5457385598945c7e2e83498ce94b3186e0174ffaa7d94"},
+    {"path": "apps/advantage-games/src/lib/games/sampleVocabulary.ts", "disposition": "cited content fixture", "blob_sha256": "4abf4d641dfd8b90390c33053ca2206e2141cad133651ae032b13bdd2fc719d4"},
+    {"path": "apps/advantage-games/public/games/cover/rune-match-cover.png", "disposition": "binary envelope retained; usage not inferred", "sha256": "PENDING_BINARY_INSPECTION"}
+  ],
+  "history": [],
+  "coverage_check": {"denominator_identity": "vocabulary/rune-match", "admitted_current_candidates": 2, "admitted_non_current_candidates": 0, "covered_records": 7, "unresolved_records": 0, "status": "pass"}
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "apk-role-receipt.v3",
+  "status": "complete-source-collection-not-reviewed-not-accepted",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B",
+  "role": "evidence-collector",
+  "task_id": "collect-game-evidence:Griffin Rider's Escape:batch-b",
+  "game": "Griffin Rider's Escape",
+  "canonical_identity": "sentence/griffin-riders-escape",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "allowed_inputs": ["Phase 0 strategy/freeze artifacts", "accepted T5 Batch A manifest", "accepted T2 denominator and partition manifests", "measure/product-owner-apk-provenance-direction-20260721.json", "product-owner-budget-accounting-direction-v2.json", "immutable Git source objects"],
+  "actual_usage": {"source_bytes": 43558, "source_files_objects": 7, "commands": 7, "elapsed_minutes": 0, "timing_measurement": "unavailable-in-harness", "elapsed_minutes_is_accounting_fallback": true, "records_authored_reviewed": 17, "browser_interactions": 0, "captured_artifacts": 4},
+  "budget": {"declaration": "phase0-budget-declaration.json", "declaration_sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896", "role": "evidence_collector_one_game", "ceilings": {"source_bytes": 8000000, "source_files_objects": 160, "commands": 70, "elapsed_minutes": 120, "records_authored_reviewed": 300, "browser_interactions": 0, "captured_artifacts": 80}, "within_ceiling": true},
+  "timing_direction": {"path": "product-owner-budget-accounting-direction-v2.json", "decision": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING", "interpretation": "0 is accounting fallback only, not elapsed-time, session, performance, or provider-timing evidence."},
+  "role_boundaries": {"browser_work": false, "map_work": false, "requirements_mapping": false, "truth_test_authoring": false, "asset_audit": false, "review_work": false},
+  "provider_attestation": "Unavailable; provider prompt, spawn, ancestry, isolation, events, timing, final-response, and commit attestations are not exposed and are not fabricated.",
+  "output_paths": ["packages/sentence/griffin-riders-escape/claim-evidence-ledger.json", "packages/sentence/griffin-riders-escape/evidence-method.md", "packages/sentence/griffin-riders-escape/evidence-final-report.json", "packages/sentence/griffin-riders-escape/fixtures.json"],
+  "output_hashes": {"packages/sentence/griffin-riders-escape/claim-evidence-ledger.json": "9cca79ff212bbc582ad06d95509e2ae3d218aeb694dd88e2967090403ca955af", "packages/sentence/griffin-riders-escape/evidence-method.md": "d5dfd4e831a6d57210f2dec822269a33a6973f88f20f7690855b246a8bc2e7c3", "packages/sentence/griffin-riders-escape/evidence-final-report.json": "db7db87d35f097a6c8451dfa1fd4e9e21ec698fc8235e9f9df67382512d44d46", "packages/sentence/griffin-riders-escape/fixtures.json": "0de2c460f533c3cfd6b285d2b2c0a6cd0d69f32099359f17f8691c48661ab575"},
+  "commit_binding": {"status": "uncommitted", "commit_sha": "uncommitted", "post_commit_action": "orchestrator may bind exact bytes; this role created no commit"},
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

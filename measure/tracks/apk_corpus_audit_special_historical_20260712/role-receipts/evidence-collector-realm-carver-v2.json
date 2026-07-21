@@ -1,0 +1,57 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "status": "complete-self-attested-uncommitted",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "game": "Realm Carver",
+  "phase": "Phase 1: Distinctive current/historical mechanics",
+  "role": "evidence-collector-batch-a-realm-carver",
+  "task_id": "realm-carver-evidence-collection",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "2736d1de2f675155a70bdda706349310f4e3f322",
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "provider_attestation": "Unavailable: provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations were not exposed.",
+  "spawn_id": "unavailable",
+  "parent_ancestry_ids": [],
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "prompt_sha256": "unavailable",
+  "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be18c4d8d0f4183ecfdee5eaa",
+  "actual_context_manifest_sha256": "unavailable",
+  "prior_role_history": [],
+  "final_response_sha256": "unavailable",
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/claim-ledger-v2.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/evidence-method-v2.md",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/negative-fixtures-v2.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/evidence-final-report-v2.json"
+  ],
+  "output_hashes": {
+    "claim-ledger-v2.json": "259b821e88143665203830814292ad19a78397d9974f2dee6edd9e92051e8afc",
+    "evidence-method-v2.md": "5c962c384ab774ca1fe4283b2dcb89e2076002373a89749514d5bc414123c96a",
+    "negative-fixtures-v2.json": "95dab852811e0f742e302c532310bc2de5c8338dcc4c5ce58287d36709a50700",
+    "evidence-final-report-v2.json": "8eac1831ec21d922e1ba7930868160cc576df7634d3e6d2c13350e48b2bc511a"
+  },
+  "budget_declaration": {
+    "source_bytes_read_ceiling": 33554432,
+    "source_objects_read_ceiling": 240,
+    "command_invocations_ceiling": 160,
+    "elapsed_minutes_ceiling": 300,
+    "claims_authored_ceiling": 500,
+    "negative_fixtures_ceiling": 10
+  },
+  "actual_usage": {
+    "source_bytes_read": 0,
+    "source_objects_read": 5,
+    "command_invocations": 1,
+    "elapsed_minutes": 20,
+    "claims_authored": 12,
+    "negative_fixtures": 6
+  },
+  "finding": "V2 collector binds the 12-claim ledger (eight historical envelopes with corrected range hashes), six rejection fixtures, and refreshed output hashes.",
+  "v2_additive": true,
+  "produced_at": "2026-07-21",
+  "commit_sha": "uncommitted",
+  "marker": "MEASURE_AGENT_RESULT"
+}

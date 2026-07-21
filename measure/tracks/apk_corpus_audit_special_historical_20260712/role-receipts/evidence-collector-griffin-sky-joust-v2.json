@@ -1,0 +1,57 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "status": "complete-self-attested-uncommitted",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "game": "Griffin Sky-Joust",
+  "phase": "Phase 1: Distinctive current/historical mechanics",
+  "role": "evidence-collector-batch-a-griffin-sky-joust",
+  "task_id": "griffin-sky-joust-evidence-collection",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "2736d1de2f675155a70bdda706349310f4e3f322",
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "provider_attestation": "Unavailable: provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations were not exposed.",
+  "spawn_id": "unavailable",
+  "parent_ancestry_ids": [],
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "prompt_sha256": "unavailable",
+  "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be18c4d8d0f4183ecfdee5eaa",
+  "actual_context_manifest_sha256": "unavailable",
+  "prior_role_history": [],
+  "final_response_sha256": "unavailable",
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/claim-ledger-v2.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/evidence-method-v2.md",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/negative-fixtures-v2.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/evidence-final-report-v2.json"
+  ],
+  "output_hashes": {
+    "claim-ledger-v2.json": "dbe69391387b5ae8bae2fe0e6d1a0e3b6a687ed9f372b3259cd00c9f92958905",
+    "evidence-method-v2.md": "e09d14cca7b36155c636d887c2f145410ee181e3073e531fa2856ceeb864a921",
+    "negative-fixtures-v2.json": "f99e89e7d131f043e04e4a86f960ce819b73c60aa2de074cfe09458d4b24a204",
+    "evidence-final-report-v2.json": "3356420f98cb02f6fbcde39ce870b9a75cac5fff25e9c0ef9145655369830657"
+  },
+  "budget_declaration": {
+    "source_bytes_read_ceiling": 33554432,
+    "source_objects_read_ceiling": 240,
+    "command_invocations_ceiling": 160,
+    "elapsed_minutes_ceiling": 300,
+    "claims_authored_ceiling": 500,
+    "negative_fixtures_ceiling": 10
+  },
+  "actual_usage": {
+    "source_bytes_read": 0,
+    "source_objects_read": 0,
+    "command_invocations": 2,
+    "elapsed_minutes": 5,
+    "claims_authored": 7,
+    "negative_fixtures": 6
+  },
+  "finding": "V2 collector binds the seven historical envelopes and the GSJ-HIST-005 corrected hash; six rejection fixtures cover the frozen class hierarchy.",
+  "v2_additive": true,
+  "produced_at": "2026-07-21",
+  "commit_sha": "uncommitted",
+  "marker": "MEASURE_AGENT_RESULT"
+}

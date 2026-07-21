@@ -1,0 +1,27 @@
+{
+  "schema_version": "apk-evidence-rebind-report.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "game": "vocabulary/rune-match",
+  "phase": "Phase 1: Batch A",
+  "reason": "V2 rebind: every claim envelope now carries a 64-char SHA-256 blob hash and a 64-char SHA-256 cited range hash that recomputes from the current bytes; the explicit-unknown denominator disposition was removed because the source/asset/history reconciliation is now provided by source-asset-history-ledger.v2.json.",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "d77044c35571dabde108098e5c9f9dd62722327d",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "claim_ledger_sha256": "ea825bb8a9ae5e9e6f7349e9dc3b3ec45e1c51f20d80a9bd48888dc812aa0502",
+  "claim_count": 13,
+  "claims_preserved": true,
+  "output_hashes": {
+    "rune-match-claim-ledger.v2.json": "ea825bb8a9ae5e9e6f7349e9dc3b3ec45e1c51f20d80a9bd48888dc812aa0502",
+    "rune-match-fixtures.v2.json": "a544505af2ab7ad80b5afe1996249d16704e398063373d1397b1cf031a14179d",
+    "source-asset-history-ledger.v2.json": "31a90fe0ab09c390c49c4e4635a20889d3d30546634ef7d1efe77c895a15583c",
+    "rebind-report.v2.json": "d51f48a68a0e920735085391a5571e3a8e6fe69c6951e3a9c61cd6e6bc108b1e"
+  },
+  "validation": {
+    "json_parse": "pass",
+    "claim_ledger_unchanged_in_count": "pass",
+    "source_envelopes": "13/13 V2 re-validated with 64-char SHA-256",
+    "fixture_envelopes": "2/2 ACCEPT_SOURCE_VALUE_ONLY fixtures re-validated",
+    "behavioral_or_browser_inference_added": false
+  },
+  "provenance_note": "This V2 additive rebind records bytes available in the current workspace. No provider, session, event, prompt, final-response, or commit provenance is fabricated."
+}

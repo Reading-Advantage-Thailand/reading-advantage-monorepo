@@ -1,0 +1,37 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "receipt_kind": "additive-output-rebind",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "evidence-collector",
+  "task_id": "evidence-collector:alchemists-synthesis:batch-a:v2-rebind",
+  "game": "vocabulary/alchemists-synthesis",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "2736d1de2f675155a70bdda706349310f4e3f322",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "supersedes_receipt": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-alchemists-synthesis-batch-a.json",
+  "reason": "V2 rebind: ledger, fixtures, and rebind-report carry 64-char SHA-256 envelopes that recompute from current bytes; AS-ROUTE-001 range was widened so the Play anchor is reachable.",
+  "preserves_claims": true,
+  "source_behavior_inspected": false,
+  "browser_evidence_created": false,
+  "provider_attestation": {
+    "available": false,
+    "reason": "No provider spawn, session, event, or final-response telemetry was exposed."
+  },
+  "rebind_report_path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/rebind-report.v2.md",
+  "rebind_report_sha256": "6bc2bf8ea40d73e08ad82762fcba930af4aef0592b4e5a7e46dfb73039c94191",
+  "claim_ledger_sha256": "d3ea0d89a03f8f0acbc91ba40309c7a2c64bb507dfee51a380521ea0021bee4b",
+  "current_output_hashes": {
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/claim-evidence-ledger.v2.json": "d3ea0d89a03f8f0acbc91ba40309c7a2c64bb507dfee51a380521ea0021bee4b",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/fixtures.v2.json": "93633588b43db0d235840583d2fb56a8e6dc80713028e7f89d050fe6f13c7ff8",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/rebind-report.v2.md": "6bc2bf8ea40d73e08ad82762fcba930af4aef0592b4e5a7e46dfb73039c94191"
+  },
+  "validation": {
+    "json_parsing": "pass",
+    "current_output_hashes": "pass",
+    "claims": "preserved",
+    "diff_check": "pass"
+  },
+  "status": "complete V2 additive rebind; pending independent review",
+  "commit_sha": "not-created"
+}

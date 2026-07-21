@@ -1,0 +1,180 @@
+{
+  "schema_version": "apk-requirements-map.v2",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "phase": "Phase 2: Mapping",
+  "task_id": "map-requirements:sentence/devourer-slime:batch-a",
+  "role": "requirements-mapper",
+  "canonical_identity_id": "sentence/devourer-slime",
+  "canonical_label": "Devourer Slime",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "source_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "ledger_binding": {
+    "path": "packages/devourer-slime/reconciled-claim-ledger-v2.json",
+    "claims_total": 18,
+    "unknowns_preserved": 6,
+    "sha256": "7ef676e12ae5d8ee1265814ee031146b94dced75915f3d2a95659a6b09226dba"
+  },
+  "evidence_bindings": {
+    "discovery_audit": {
+      "path": "batch-a/discovery-audit.json",
+      "sha256": "585978d5592b321da7bcce72c4df929998da0d566b717447933c411f023b38dd"
+    },
+    "current_source_observations": {
+      "path": "packages/devourer-slime/current-source-observations-v2.json",
+      "sha256": "6c2485b967f521e3c223a42ac01eae25c94c593a6c226b243df6bbb60f46ece3"
+    },
+    "historical_source_observations": {
+      "path": "packages/devourer-slime/historical-source-observations-v2.json",
+      "sha256": "119861ff3f790a5ecd71cc62c003b9bb1ba6859651af3af2fbf6272fad651441"
+    },
+    "collector_report": {
+      "path": "packages/devourer-slime/evidence-method-report-v2.md",
+      "sha256": "e01629bcded663ea2eafc2a5822769163517fef7db3b038df99f7f62448ac43b"
+    },
+    "negative_fixtures": {
+      "path": "packages/devourer-slime/negative-fixtures-v2.json",
+      "sha256": "44a20c431ab906b11abade4c97bfb1c47fb7003077a556d15f791862dbd8f4f1"
+    }
+  },
+  "mapping_boundary": "This additive map reorganizes only cited Devourer Slime ledger claim IDs and preserves the ledger's explicit unknowns. Current implementation, historical implementation, historical test intent, catalog wording, browser behavior, asset suitability, active requirements, and final ontology are not promoted or inferred.",
+  "records": {
+    "route": [
+      {
+        "id": "DS-MAP-ROUTE-001",
+        "disposition": "current-source-observation-only",
+        "cited_claim_ids": [
+          "DS-CL-C-001",
+          "DS-CL-C-002",
+          "DS-CL-C-003",
+          "DS-CL-C-004",
+          "DS-CL-C-005"
+        ]
+      },
+      {
+        "id": "DS-MAP-ROUTE-002",
+        "disposition": "historical-source-observation-only",
+        "cited_claim_ids": [
+          "DS-CL-H-001",
+          "DS-CL-H-002",
+          "DS-CL-H-003",
+          "DS-CL-H-006"
+        ]
+      }
+    ],
+    "mechanic": [
+      {
+        "id": "DS-MAP-MECH-001",
+        "disposition": "current-source-observation-only",
+        "cited_claim_ids": [
+          "DS-CL-C-006",
+          "DS-CL-C-007",
+          "DS-CL-C-008",
+          "DS-CL-C-009",
+          "DS-CL-C-010"
+        ]
+      },
+      {
+        "id": "DS-MAP-MECH-002",
+        "disposition": "historical-source-observation-only",
+        "cited_claim_ids": [
+          "DS-CL-H-004",
+          "DS-CL-H-005"
+        ]
+      }
+    ],
+    "test": [
+      {
+        "id": "DS-MAP-TEST-001",
+        "disposition": "current-test-intent-not-runtime-proof",
+        "cited_claim_ids": [
+          "DS-CL-C-011"
+        ]
+      },
+      {
+        "id": "DS-MAP-TEST-002",
+        "disposition": "historical-test-observation-not-runtime-proof",
+        "cited_claim_ids": [
+          "DS-CL-H-007"
+        ]
+      }
+    ],
+    "chronology_conflict": [
+      {
+        "id": "DS-MAP-CONFLICT-001",
+        "disposition": "preserved-current-history-separation",
+        "cited_claim_ids": [
+          "DS-CL-C-001",
+          "DS-CL-C-002",
+          "DS-CL-C-003",
+          "DS-CL-C-004",
+          "DS-CL-C-005",
+          "DS-CL-C-006",
+          "DS-CL-C-007",
+          "DS-CL-C-008",
+          "DS-CL-C-009",
+          "DS-CL-C-010",
+          "DS-CL-C-011",
+          "DS-CL-H-001",
+          "DS-CL-H-002",
+          "DS-CL-H-003",
+          "DS-CL-H-004",
+          "DS-CL-H-005",
+          "DS-CL-H-006",
+          "DS-CL-H-007"
+        ]
+      }
+    ]
+  },
+  "unknown_records": [
+    {
+      "id": "DS-MAP-UNK-001",
+      "disposition": "explicit-unknown",
+      "unknown": "live route/runtime behavior"
+    },
+    {
+      "id": "DS-MAP-UNK-002",
+      "disposition": "explicit-unknown",
+      "unknown": "browser behavior and runnable disposition"
+    },
+    {
+      "id": "DS-MAP-UNK-003",
+      "disposition": "explicit-unknown",
+      "unknown": "test execution result and persistence outcome"
+    },
+    {
+      "id": "DS-MAP-UNK-004",
+      "disposition": "explicit-unknown",
+      "unknown": "behavior outside cited envelopes"
+    },
+    {
+      "id": "DS-MAP-UNK-005",
+      "disposition": "explicit-unknown",
+      "unknown": "whether historical implementation remains intended or shippable"
+    }
+  ],
+  "preserved_unknowns": [
+    "live route/runtime behavior",
+    "browser behavior",
+    "test execution result",
+    "persistence outcome",
+    "behavior outside cited envelopes",
+    "whether historical implementation remains intended or shippable",
+    "asset usage",
+    "final capability ontology"
+  ],
+  "claim_reference_accounting": {
+    "ledger_claims_total": 18,
+    "distinct_claim_ids_referenced": 18,
+    "mapped_claim_reference_occurrences": 36,
+    "unresolved_claim_ids": [],
+    "non_devourer_slime_claim_ids": [],
+    "negative_fixture_references": 0,
+    "novel_source_facts": 0,
+    "class_promotions": 0
+  },
+  "provenance_policy": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE; provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestation is unavailable and not claimed.",
+  "acceptance": "not-claimed",
+  "v2_additive": true
+}

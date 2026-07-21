@@ -1,0 +1,62 @@
+{
+  "schema": "apk-negative-fixtures.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "game": "Griffin Sky-Joust",
+  "collector_id": "evidence-collector-griffin-sky-joust-batch-a",
+  "factual_claims_excluded": true,
+  "fixtures": [
+    {
+      "fixture_id": "GSJ-FIX-001",
+      "kind": "catalog-to-mechanic-promotion",
+      "proposed_claim": "The catalog description proves airborne word targets are the implemented mechanic.",
+      "expected_disposition": "reject",
+      "counts_as_claim": false,
+      "reason": "Catalog wording is not an implementation envelope."
+    },
+    {
+      "fixture_id": "GSJ-FIX-002",
+      "kind": "cancelled-design-to-implementation-promotion",
+      "proposed_claim": "A cancelled Griffin renderer design proves the current renderer.",
+      "expected_disposition": "reject",
+      "counts_as_claim": false,
+      "reason": "No cancelled-design evidence was admitted, and design evidence cannot establish implementation."
+    },
+    {
+      "fixture_id": "GSJ-FIX-003",
+      "kind": "specification-to-current-promotion",
+      "proposed_claim": "The focus requirement proves the current game has aerial combat and sentence-order targeting.",
+      "expected_disposition": "reject",
+      "counts_as_claim": false,
+      "reason": "Specification text is not current-source evidence."
+    },
+    {
+      "fixture_id": "GSJ-FIX-004",
+      "kind": "historical-to-current-promotion",
+      "source_checked_claim_id": "GSJ-HIST-006",
+      "proposed_claim": "The historical component proves Griffin Sky-Joust is currently runnable with mouse, touch, and keyboard input.",
+      "expected_disposition": "reject",
+      "counts_as_claim": false,
+      "reason": "Historical implementation does not establish currentness, runnability, or physical input behavior."
+    },
+    {
+      "fixture_id": "GSJ-FIX-005",
+      "kind": "missing-evidence-by-analogy",
+      "proposed_claim": "Because the historical component rendered a sky scene, the current implementation must retain the same states and mechanics.",
+      "expected_disposition": "reject",
+      "counts_as_claim": false,
+      "reason": "The current source envelope is absent; analogy cannot replace the explicit unknown."
+    },
+    {
+      "fixture_id": "GSJ-FIX-006",
+      "kind": "hash-valid-compound-overstatement",
+      "source_checked_claim_ids": [
+        "GSJ-HIST-002",
+        "GSJ-HIST-006"
+      ],
+      "proposed_claim": "The historical page and component prove the game is currently shipped, playable, and learning-correct.",
+      "expected_disposition": "reject",
+      "counts_as_claim": false,
+      "reason": "The source envelopes support separate historical propositions only, not current shipment, live playability, or learning correctness."
+    }
+  ]
+}

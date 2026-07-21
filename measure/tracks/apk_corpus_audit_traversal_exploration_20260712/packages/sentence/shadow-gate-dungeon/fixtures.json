@@ -1,0 +1,15 @@
+{
+  "schema_version": "apk-negative-fixtures.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch B",
+  "game": "Shadow Gate Dungeon",
+  "collector_id": "evidence-collector-shadow-gate-dungeon-t5-batch-b",
+  "factual_claims_excluded": true,
+  "fixtures": [
+    {"fixture_id":"SGD-NEG-001","class":"compound-overstatement","proposed_claim":"The cited source proves Shadow Gate Dungeon is currently shipped, playable, learning-correct, and persistence-correct.","source_checked_claim_ids":["SGD-STATE-001","SGD-ROUTE-002"],"expected_disposition":"REJECT","reason":"The envelopes support source-defined component and submission wiring only; they do not prove browser execution, learning correctness, persistence, or API correctness."},
+    {"fixture_id":"SGD-NEG-002","class":"source-to-browser-promotion","proposed_claim":"Keyboard listeners and the VirtualDPad prove trusted native keyboard and touch movement in a runnable browser session.","source_checked_claim_ids":["SGD-INPUT-001","SGD-INPUT-002"],"expected_disposition":"REJECT","reason":"Source listeners establish implementation wiring, not browser reachability, trusted input, or an observed movement transition."},
+    {"fixture_id":"SGD-NEG-003","class":"blueprint-to-implementation-promotion","proposed_claim":"The archived Shadow Gate Dungeon mechanic blueprint proves every listed stealth, crystal, gate, and terminal behavior in the current implementation.","expected_disposition":"REJECT","reason":"The blueprint is not an admitted current-source envelope; only exact source ranges in the ledger establish current implementation facts."}
+  ],
+  "execution_status":"not-executed-by-evidence-collector",
+  "review_status":"pending-independent-review"
+}

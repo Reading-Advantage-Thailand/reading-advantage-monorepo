@@ -1,0 +1,60 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "status": "complete-self-attested-with-provenance-unavailable",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "evidence-collector",
+  "task_id": "evidence-collector:rune-match:batch-a:v2",
+  "game": "vocabulary/rune-match",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "2736d1de2f675155a70bdda706349310f4e3f322",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "supersedes": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-rune-match-batch-a.json",
+  "parent_ancestry_ids": [],
+  "fresh_context_only": true,
+  "inherited_narrative": false,
+  "fork_turns": "none",
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "provider_attestation": {
+    "available": false,
+    "reason": "Provider/session/event/prompt/final-response/commit provenance is unavailable; unavailable fields are truthful non-attestations."
+  },
+  "unavailable_required_provenance": [
+    "spawn_id",
+    "prompt_sha256",
+    "actual_context_manifest_sha256",
+    "start_event_id",
+    "end_event_id",
+    "final_response_sha256",
+    "commit_sha"
+  ],
+  "provenance_note": "Provider/session/event/prompt/final-response/commit provenance was unavailable in this execution environment; null fields are intentional and must not be backfilled by inference.",
+  "owned_outputs": [
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-claim-ledger.v2.json",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/source-asset-history-ledger.v2.json",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-fixtures.v2.json",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-rebind-report.v2.json"
+  ],
+  "current_output_hashes": {
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-claim-ledger.v2.json": "ea825bb8a9ae5e9e6f7349e9dc3b3ec45e1c51f20d80a9bd48888dc812aa0502",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/source-asset-history-ledger.v2.json": "31a90fe0ab09c390c49c4e4635a20889d3d30546634ef7d1efe77c895a15583c",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-fixtures.v2.json": "a544505af2ab7ad80b5afe1996249d16704e398063373d1397b1cf031a14179d",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-rebind-report.v2.json": "595334a70e5066f4ba671b99dcdb611a972ab47da77d10da6dcf807383d6380e"
+  },
+  "accepted_input_hashes": {
+    "t2_accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "t2_accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "t3_accepted_pilot_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b"
+  },
+  "budget_declaration_sha256": "695bd2b90bf0483c35c09c51007add5e467ad671cac4945392e4cc3fa02a5314",
+  "budget_usage": {
+    "cited_ranges": 13,
+    "source_paths_read": 6,
+    "history_queries": 0,
+    "negative_fixtures": 4
+  },
+  "within_declared_ceiling": true,
+  "truthful_status": "evidence package complete as self-attested; not tool-attested and not eligible for acceptance until independent review",
+  "commit_sha": "not-created",
+  "rebind_report_sha256": "595334a70e5066f4ba671b99dcdb611a972ab47da77d10da6dcf807383d6380e"
+}

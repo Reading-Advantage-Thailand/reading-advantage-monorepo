@@ -1,0 +1,96 @@
+{
+  "schema_version": "apk-current-source-observations.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "game": "Realm Carver",
+  "identity_token": "realm-carver",
+  "canonical_identity_id": "catalog/realm-carver",
+  "role": "current-source-specialist-batch-a-realm-carver",
+  "phase": "Phase 1: Exact source review",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "allowed_input_manifest": {
+    "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-discovery-audit.json",
+    "sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa"
+  },
+  "frozen_source_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "source_scope": {
+    "revision_rule": "Only bytes reachable at the frozen source revision were inspected.",
+    "worktree_bytes_used": false,
+    "historical_revisions_used": false,
+    "collector_ledger_used": false,
+    "mapping_used": false,
+    "browser_used": false
+  },
+  "observations": [
+    {
+      "observation_id": "RC-CUR-001",
+      "source_class": "unknown",
+      "proposition": "No Realm Carver implementation source is present at the frozen source revision under the candidate component path.",
+      "exact_envelope": {
+        "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+        "path": "apps/advantage-games/src/components/games/sentence/realm-carver/RealmCarverGame.tsx",
+        "range": null,
+        "blob_sha256": null,
+        "range_sha256": null
+      },
+      "evidence_method": "exact frozen-revision path existence check",
+      "interpretation": null,
+      "confidence": "bounded"
+    },
+    {
+      "observation_id": "RC-CUR-003",
+      "source_class": "unknown",
+      "proposition": "No Realm Carver game-logic source is present at the frozen source revision under the candidate logic path.",
+      "exact_envelope": {
+        "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+        "path": "apps/advantage-games/src/lib/games/realmCarver.ts",
+        "range": null,
+        "blob_sha256": null,
+        "range_sha256": null
+      },
+      "evidence_method": "exact frozen-revision path existence check",
+      "interpretation": null,
+      "confidence": "bounded"
+    },
+    {
+      "observation_id": "RC-CUR-004",
+      "source_class": "unknown",
+      "proposition": "No Realm Carver cartridge source is present at the frozen source revision under the candidate cartridge path.",
+      "exact_envelope": {
+        "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+        "path": "packages/game-cartridges/src/cartridges/realm-carver/index.ts",
+        "range": null,
+        "blob_sha256": null,
+        "range_sha256": null
+      },
+      "evidence_method": "exact frozen-revision path existence check",
+      "interpretation": null,
+      "confidence": "bounded"
+    }
+  ],
+  "current_source_disposition": {
+    "status": "no-current-implementation-source-observed",
+    "source_class": "unknown",
+    "route": "unknown",
+    "runnable_disposition": "unknown",
+    "mechanics": "unknown",
+    "states": "unknown",
+    "transitions": "unknown",
+    "asset_usage": "unknown",
+    "reason": "The frozen-revision checks found no implementation bytes at the 3 retained candidate paths. The parens-grouped route observation (page.tsx) was removed because `git show <rev>:<parens-path>` returns rc=0 with empty bytes; the bounded absence check cannot disambiguate that from a present zero-length blob, so this specialist inspected only path prefixes that resolve cleanly."
+  },
+  "stop_loss": {
+    "unsupported_factual_claims": 0,
+    "inferred_behavior_claims": 0,
+    "denominator_changes": 0,
+    "budget_breaches": 0
+  },
+  "v2_corrections": {
+    "removed_observation_ids": [
+      "RC-CUR-002"
+    ],
+    "additive": true,
+    "produced_at": "2026-07-21"
+  }
+}

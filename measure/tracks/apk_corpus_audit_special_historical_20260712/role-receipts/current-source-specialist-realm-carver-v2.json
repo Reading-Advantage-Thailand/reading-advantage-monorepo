@@ -1,0 +1,50 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "status": "complete-self-attested-uncommitted",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "game": "Realm Carver",
+  "phase": "Phase 1: Batch A current source specialist",
+  "role": "current-source-specialist-batch-a-realm-carver",
+  "task_id": "realm-carver-current-source",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "2736d1de2f675155a70bdda706349310f4e3f322",
+  "frozen_source_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "comparison_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "provider_attestation": "Unavailable: provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations were not exposed. Provider value is not fabricated and not claimed.",
+  "spawn_id": "unavailable",
+  "parent_ancestry_ids": [],
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "prompt_sha256": "unavailable",
+  "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be18c4d8d0f4183ecfdee5eaa",
+  "actual_context_manifest_sha256": "unavailable",
+  "prior_role_history": [],
+  "final_response_sha256": "unavailable",
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/current-source-observations-v2.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/current-source-specialist-realm-carver-v2.json"
+  ],
+  "output_hashes_note": "Self-hash intentionally excluded; orchestrator commit must provide immutable binding.",
+  "budget_declaration": {
+    "source_bytes_read_ceiling": 33554432,
+    "source_objects_read_ceiling": 240,
+    "command_invocations_ceiling": 150,
+    "elapsed_minutes_ceiling": 240,
+    "observations_authored_ceiling": 300
+  },
+  "actual_usage": {
+    "source_bytes_read": 0,
+    "source_objects_read": 0,
+    "command_invocations": 4,
+    "elapsed_minutes": 5,
+    "observations_authored": 3
+  },
+  "source_class_summary": "Three of four candidate Realm Carver paths are absent at the frozen upper revision. V2 retained the three clean prefix observations (RealmCarverGame.tsx, realmCarver.ts, cartridge/index.ts) and removed the parens-grouped page.tsx observation because `git show <rev>:<parens-path>` returns rc=0 with empty bytes.",
+  "v2_additive": true,
+  "produced_at": "2026-07-21",
+  "commit_sha": "uncommitted",
+  "marker": "MEASURE_AGENT_RESULT"
+}

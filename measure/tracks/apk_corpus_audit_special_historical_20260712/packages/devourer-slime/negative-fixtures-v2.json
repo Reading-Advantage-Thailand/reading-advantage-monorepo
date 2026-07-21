@@ -1,0 +1,81 @@
+{
+  "schema_version": "apk-negative-evidence-fixtures.v2",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "game": "Devourer Slime",
+  "factual_claims_excluded": true,
+  "v2_corrections": {
+    "fixtures": "V2 re-classifies the V1 generic class-promotion/browser-injection/test-execution-injection kinds into the six frozen failure classes so the fixture denominator holds.",
+    "v1_ids_preserved": [
+      "DS-NEG-001",
+      "DS-NEG-002",
+      "DS-NEG-003"
+    ],
+    "v2_additions_unchanged": [
+      "DS-NEG-004",
+      "DS-NEG-005",
+      "DS-NEG-006"
+    ],
+    "additive": true,
+    "produced_at": "2026-07-21"
+  },
+  "fixtures": [
+    {
+      "fixture_id": "DS-NEG-001",
+      "kind": "catalog-to-mechanic-promotion",
+      "proposed_claim": "The Devourer Slime catalog prose proves the current game has a 390 by 844 stage with virtual directional input and sentence-order target consumption.",
+      "expected_disposition": "REJECT",
+      "reason": "Catalog wording is not a current implementation envelope; the catalog has been used only as identity-binding evidence and cannot establish detailed mechanics.",
+      "counts_as_claim": false
+    },
+    {
+      "fixture_id": "DS-NEG-002",
+      "kind": "cancelled-design-to-implementation-promotion",
+      "proposed_claim": "A cancelled early-stage Devourer Slime rendering design proves the current implementation uses the same stage, viewport, and pointer-down handlers.",
+      "expected_disposition": "REJECT",
+      "reason": "No cancelled-design input was admitted to this collector; design evidence cannot establish implementation, and the cancelled design did not reach the cited revisions.",
+      "counts_as_claim": false
+    },
+    {
+      "fixture_id": "DS-NEG-003",
+      "kind": "specification-to-current-promotion",
+      "proposed_claim": "The Devourer Slime focus requirement phrase proves the current game runs a 16.6 ms tick loop with useInterval and an offscreen orb indicator.",
+      "expected_disposition": "REJECT",
+      "reason": "Specification text is hypothesis, not current-source evidence; current implementation remains reachable only via cited bytes at the frozen upper revision.",
+      "counts_as_claim": false
+    },
+    {
+      "fixture_id": "DS-NEG-004",
+      "kind": "historical-to-current-promotion",
+      "source_observation_id": "DS-HIST-007",
+      "proposed_claim": "The historical test file's six declared test cases prove the current Devourer Slime ships with a virtual d-pad and a difficulty selector text.",
+      "expected_disposition": "REJECT",
+      "reason": "Historical test artifacts cannot establish current behavior; the historical revision is an ancestor of the frozen upper revision, not the upper revision itself.",
+      "counts_as_claim": false
+    },
+    {
+      "fixture_id": "DS-NEG-005",
+      "kind": "missing-evidence-by-analogy",
+      "proposed_claim": "Because sibling sentence games use the useDirectionalInput hook, the current Devourer Slime must also use a 390 by 844 stage and a virtual d-pad.",
+      "expected_disposition": "REJECT",
+      "reason": "The current implementation is reachable at the frozen upper revision; analogy with sibling games cannot replace exact cited bytes for the slug-specific routing and component.",
+      "counts_as_claim": false
+    },
+    {
+      "fixture_id": "DS-NEG-006",
+      "kind": "hash-valid-compound-overstatement",
+      "source_observation_id": "DS-HIST-007",
+      "proposed_claim": "The six historical test cases jointly prove the current shipped game is playable, learning-correct, persisted, and learning-validated.",
+      "expected_disposition": "REJECT",
+      "reason": "Hash-valid cited bytes prove only that the historical test artifact asserted those cases; they do not prove a passing runtime, learning correctness, or persistence outcome. Compound overstatement cannot promote six source atoms into a single shipping claim.",
+      "counts_as_claim": false
+    }
+  ],
+  "validation": {
+    "expected_rejections": 6,
+    "unsupported_factual_claims_authored": 0,
+    "six_classes_covered": [
+      "{\"analogy_substitution\": true, \"cancelled_design_promotion\": true, \"catalog_promotion\": true, \"historical_promotion\": true, \"semantic_overstatement\": true, \"specification_promotion\": true}"
+    ]
+  }
+}

@@ -1,0 +1,232 @@
+{
+  "schema_version": "apk-requirements-mapping.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 2: Mapping",
+  "role": "requirements-mapper",
+  "game": "Enchanted Library",
+  "package_identity": "vocabulary/enchanted-library",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "evidence_ledger": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/claim-evidence-ledger.v2.json",
+  "evidence_ledger_sha256": "8adc5b881104bf0ce78d0eb3895b65cb0485a4e516e9918461acfad0f7adfb2e",
+  "collector_rebind_report": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/rebind-report.v2.json",
+  "collector_rebind_report_sha256": "1ce9a521dbebe0cd7fdaa8994f85ea46fc4a912a0a40b1b0f3782cc368c23d6c",
+  "mapping_boundary": "Only claim IDs present in the committed V2 collector ledger and fixture IDs from the V2 fixtures.json are mapped. This map adds no factual citations, browser observations, asset-forensics results, or cross-game decisions.",
+  "browser_claims": 0,
+  "novel_factual_claims": 0,
+  "no browser": true,
+  "records": {
+    "identity_content": [
+      {
+        "record_id": "EL-MAP-ID-001",
+        "claim_ids": [
+          "EL-ID-001",
+          "EL-ID-002"
+        ],
+        "status": "source-reference-only"
+      },
+      {
+        "record_id": "EL-MAP-CONT-001",
+        "claim_ids": [
+          "EL-CONT-001"
+        ],
+        "status": "evidence-backed"
+      }
+    ],
+    "state_scene": [
+      {
+        "record_id": "EL-MAP-STATE-001",
+        "claim_ids": [
+          "EL-STATE-001",
+          "EL-DIFF-001",
+          "EL-CONFIG-001",
+          "EL-INIT-001",
+          "EL-INIT-002"
+        ],
+        "status": "evidence-backed"
+      },
+      {
+        "record_id": "EL-MAP-STATE-002",
+        "claim_ids": [
+          "EL-UI-001",
+          "EL-UI-002"
+        ],
+        "status": "source-reference-only"
+      }
+    ],
+    "scene_transition": [
+      {
+        "record_id": "EL-MAP-TRANS-001",
+        "claim_ids": [
+          "EL-BOOK-001",
+          "EL-BOOK-002",
+          "EL-SPIRIT-001",
+          "EL-SPIRIT-002"
+        ],
+        "status": "evidence-backed"
+      },
+      {
+        "record_id": "EL-MAP-TRANS-002",
+        "claim_ids": [
+          "EL-COLL-001",
+          "EL-COLL-002",
+          "EL-TARGET-001",
+          "EL-VICTORY-001",
+          "EL-SHIELD-001",
+          "EL-SPIRIT-COLL-001"
+        ],
+        "status": "evidence-backed"
+      },
+      {
+        "record_id": "EL-MAP-TRANS-003",
+        "claim_ids": [
+          "EL-LOOP-001",
+          "EL-LOOP-003"
+        ],
+        "status": "evidence-backed"
+      }
+    ],
+    "learning": [
+      {
+        "record_id": "EL-MAP-LEARN-001",
+        "claim_ids": [
+          "EL-CONT-001",
+          "EL-TARGET-001",
+          "EL-VICTORY-001",
+          "EL-XP-001"
+        ],
+        "status": "mapped-without-new-fact"
+      }
+    ],
+    "effort": [
+      {
+        "record_id": "EL-MAP-EFFORT-001",
+        "claim_ids": [
+          "EL-BOOK-002",
+          "EL-SPIRIT-001",
+          "EL-SPIRIT-002",
+          "EL-COLL-001",
+          "EL-COLL-002",
+          "EL-SPIRIT-COLL-001",
+          "EL-LOOP-001"
+        ],
+        "status": "mapped-without-new-fact"
+      },
+      {
+        "record_id": "EL-MAP-EFFORT-002",
+        "claim_ids": [
+          "EL-LOOP-002",
+          "EL-CONTROL-001"
+        ],
+        "status": "execution-unobserved"
+      }
+    ],
+    "controls_routes": [
+      {
+        "record_id": "EL-MAP-CONTROL-001",
+        "claim_ids": [
+          "EL-LOOP-002",
+          "EL-CONTROL-001"
+        ],
+        "status": "source-reference-only"
+      },
+      {
+        "record_id": "EL-MAP-ROUTE-001",
+        "claim_ids": [
+          "EL-ROUTE-001",
+          "EL-ROUTE-002"
+        ],
+        "status": "source-reference-only"
+      }
+    ],
+    "responsive": [
+      {
+        "record_id": "EL-MAP-RESP-001",
+        "claim_ids": [
+          "EL-RESP-001",
+          "EL-RESP-002",
+          "EL-RESP-003"
+        ],
+        "status": "source-defined-not-browser-verified"
+      }
+    ],
+    "assets": [
+      {
+        "record_id": "EL-MAP-ASSET-001",
+        "claim_ids": [
+          "EL-ASSET-001"
+        ],
+        "status": "source-reference-only"
+      }
+    ],
+    "tests": [
+      {
+        "record_id": "EL-MAP-TEST-001",
+        "claim_ids": [
+          "EL-TEST-001"
+        ],
+        "status": "test-expectation-only"
+      }
+    ],
+    "unknown": [
+      {
+        "record_id": "EL-MAP-UNKNOWN-001",
+        "claim_ids": [
+          "EL-RESP-001",
+          "EL-RESP-002",
+          "EL-RESP-003",
+          "EL-CONTROL-001",
+          "EL-ROUTE-001",
+          "EL-ROUTE-002"
+        ],
+        "status": "browser-and-runnable-behavior-unknown"
+      },
+      {
+        "record_id": "EL-MAP-UNKNOWN-002",
+        "claim_ids": [
+          "EL-ASSET-001"
+        ],
+        "status": "binary-asset-forensics-unknown"
+      }
+    ],
+    "negative_fixture": [
+      {
+        "record_id": "EL-MAP-FIX-001",
+        "fixture_id": "EL-NEG-001",
+        "claim_ids": [
+          "EL-NEG-001"
+        ],
+        "status": "rejection-fixture-only"
+      },
+      {
+        "record_id": "EL-MAP-FIX-002",
+        "fixture_id": "EL-NEG-002",
+        "claim_ids": [
+          "EL-NEG-002"
+        ],
+        "status": "rejection-fixture-only"
+      },
+      {
+        "record_id": "EL-MAP-FIX-003",
+        "fixture_id": "EL-NEG-003",
+        "claim_ids": [
+          "EL-NEG-003"
+        ],
+        "status": "rejection-fixture-only"
+      }
+    ]
+  },
+  "validation": {
+    "all_claim_ids_resolve_to_committed_ledger": true,
+    "factual_claim_ids_referenced": 32,
+    "negative_fixture_claim_ids_referenced": 3,
+    "all_factual_claims_retain_collector_citations": true,
+    "negative_fixture_claims_are_rejection_controls": true,
+    "novel_source_facts": 0,
+    "browser_claims": 0,
+    "cross_game_decisions": 0,
+    "acceptance_claimed": false
+  },
+  "provenance_policy": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE; provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations are unavailable.",
+  "marker": "MEASURE_AGENT_RESULT"
+}

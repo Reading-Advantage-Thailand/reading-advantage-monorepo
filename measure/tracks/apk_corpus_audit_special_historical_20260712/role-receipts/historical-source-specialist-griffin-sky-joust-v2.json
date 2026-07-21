@@ -1,0 +1,49 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "status": "complete-self-attested-uncommitted",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "game": "Griffin Sky-Joust",
+  "phase": "Phase 1: Distinctive current/historical mechanics",
+  "role": "historical-source-specialist-batch-a-griffin-sky-joust",
+  "task_id": "griffin-sky-joust-historical-source",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "2736d1de2f675155a70bdda706349310f4e3f322",
+  "frozen_upper_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "provider_attestation": "Unavailable: provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations were not exposed.",
+  "spawn_id": "unavailable",
+  "parent_ancestry_ids": [],
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "prompt_sha256": "unavailable",
+  "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be18c4d8d0f4183ecfdee5eaa",
+  "actual_context_manifest_sha256": "unavailable",
+  "prior_role_history": [],
+  "final_response_sha256": "unavailable",
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/historical-source-observations-v2.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/historical-source-specialist-griffin-sky-joust-v2.json"
+  ],
+  "output_hashes_note": "Self-hash intentionally excluded.",
+  "budget_declaration": {
+    "source_bytes_read_ceiling": 67108864,
+    "source_objects_read_ceiling": 600,
+    "command_invocations_ceiling": 300,
+    "elapsed_minutes_ceiling": 360,
+    "observations_authored_ceiling": 400
+  },
+  "actual_usage": {
+    "source_bytes_read": 29631,
+    "source_objects_read": 7,
+    "command_invocations": 7,
+    "elapsed_minutes": 25,
+    "observations_authored": 7
+  },
+  "observations_summary": "Seven historical observations cited whole-file at reachable deletion revisions. V2 preserves the V1 envelope content; V1 was already within the six-class hierarchy (source_class: historical_implementation) and within git show.",
+  "v2_additive": true,
+  "produced_at": "2026-07-21",
+  "commit_sha": "uncommitted",
+  "marker": "MEASURE_AGENT_RESULT"
+}

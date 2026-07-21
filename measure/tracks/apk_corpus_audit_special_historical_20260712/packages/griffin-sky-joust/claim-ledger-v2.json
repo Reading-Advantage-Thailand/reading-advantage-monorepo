@@ -1,0 +1,229 @@
+{
+  "schema": "apk-claim-ledger.v3",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 1: Distinctive current/historical mechanics",
+  "batch_id": "batch-a",
+  "game": "Griffin Sky-Joust",
+  "normalized_game_id": "griffin-sky-joust",
+  "collector_id": "evidence-collector-griffin-sky-joust-batch-a",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "cd2d0faec2d15f1a5d50bee0da102bde58ce1daa",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "chronology": {
+    "inclusive_upper_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+    "inclusive_reachable_root": "029261b617143c1773b724b86d54375cd47cb5d2",
+    "maximum_reachable_commit_metadata_records": 2744,
+    "allowed_revision_rule": "exactly commits emitted by git rev-list a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+    "comparison_revision_is_ancestor": true,
+    "root_revision_is_ancestor": true,
+    "events": [
+      {
+        "event_id": "GSJ-HIST-E001",
+        "event": "source_present_then_deleted",
+        "commit": "a30e8777952139460092c7d4649b8a72b5e8beda",
+        "parent_revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+        "author_timestamp": "2026-07-11T14:30:12+07:00",
+        "commit_timestamp": "2026-07-11T14:30:12+07:00",
+        "source_class": "historical_implementation",
+        "diffs_revalidated": true,
+        "diff_paths": 6
+      },
+      {
+        "event_id": "GSJ-HIST-E002",
+        "event": "cartridge_source_deleted",
+        "commit": "05bb6d2909268ea670b106240167f86c9814d67d",
+        "parent_revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+        "author_timestamp": "2026-07-11T19:51:59+07:00",
+        "commit_timestamp": "2026-07-11T19:51:59+07:00",
+        "source_class": "historical_implementation",
+        "diffs_revalidated": true,
+        "diff_paths": 1
+      }
+    ]
+  },
+  "newline_convention": "UTF-8 text ranges hash exact Git-blob bytes for inclusive LF-terminated lines.",
+  "claim_contract": {
+    "required_fields": [
+      "claim_id",
+      "game",
+      "category",
+      "source_class",
+      "source_revision",
+      "relative_path",
+      "inclusive_range",
+      "blob_sha256",
+      "cited_range_sha256",
+      "source_fact",
+      "interpretation",
+      "confidence",
+      "collector_id",
+      "conflict_state",
+      "temporal_disposition"
+    ],
+    "semantic_rule": "Each factual record is one atomic proposition limited to its exact cited source envelope; historical records do not establish current runtime behavior."
+  },
+  "claims": [
+    {
+      "claim_id": "GSJ-HIST-001",
+      "game": "Griffin Sky-Joust",
+      "category": "cartridge-registration",
+      "source_class": "historical_implementation",
+      "source_revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+      "relative_path": "packages/game-cartridges/src/cartridges/griffin-sky-joust/index.ts",
+      "inclusive_range": {
+        "start_line": 1,
+        "end_line": 4
+      },
+      "blob_sha256": "f595db27be949054697d3f788a3bddf8a55a4f96536f1b348b1de70fdf31b7c2",
+      "cited_range_sha256": "f595db27be949054697d3f788a3bddf8a55a4f96536f1b348b1de70fdf31b7c2",
+      "source_fact": "The historical cartridge module imported arenaWaveBlueprints and createArenaCartridge, then exported griffinSkyJoustCartridge created from arenaWaveBlueprints[2] with the title Griffin Sky-Joust and the description Strike airborne word targets in sentence order.",
+      "interpretation": "Historical cartridge registration only; it does not establish current registration, mechanics, or runnability.",
+      "confidence": "high",
+      "collector_id": "evidence-collector-griffin-sky-joust-batch-a",
+      "conflict_state": "current-source-absent-at-upper-revision",
+      "temporal_disposition": "historical"
+    },
+    {
+      "claim_id": "GSJ-HIST-002",
+      "game": "Griffin Sky-Joust",
+      "category": "route-integration",
+      "source_class": "historical_implementation",
+      "source_revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "relative_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-sky-joust/page.tsx",
+      "inclusive_range": {
+        "start_line": 1,
+        "end_line": 225
+      },
+      "blob_sha256": "5603344c1cc4320e9390b355241512c501d812f41c4fee2c413c6a40f9136ddf",
+      "cited_range_sha256": "5603344c1cc4320e9390b355241512c501d812f41c4fee2c413c6a40f9136ddf",
+      "source_fact": "The historical page was a client page that dynamically imported GriffinSkyJoustGame with SSR disabled, fetched sentences from the griffin-sky-joust sentences API using locale, posted completion results to the corresponding complete API, and rendered a Griffin Sky-Joust header and game component.",
+      "interpretation": "Historical page and integration wiring only; it does not establish a current route or live behavior.",
+      "confidence": "high",
+      "collector_id": "evidence-collector-griffin-sky-joust-batch-a",
+      "conflict_state": "current-source-absent-at-upper-revision",
+      "temporal_disposition": "historical"
+    },
+    {
+      "claim_id": "GSJ-HIST-003",
+      "game": "Griffin Sky-Joust",
+      "category": "completion-route",
+      "source_class": "historical_implementation",
+      "source_revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "relative_path": "apps/advantage-games/src/app/api/v1/games/griffin-sky-joust/complete/route.ts",
+      "inclusive_range": {
+        "start_line": 1,
+        "end_line": 6
+      },
+      "blob_sha256": "09196bb8daff23c617705a7ab2f76cfba80eae6e927d75a7bf5f8f74438b5d9b",
+      "cited_range_sha256": "09196bb8daff23c617705a7ab2f76cfba80eae6e927d75a7bf5f8f74438b5d9b",
+      "source_fact": "The historical completion route constructed POST from createCompleteRoute and exported it with dynamic set to force-static.",
+      "interpretation": "Historical route source only; it does not prove route reachability or current availability.",
+      "confidence": "high",
+      "collector_id": "evidence-collector-griffin-sky-joust-batch-a",
+      "conflict_state": "current-source-absent-at-upper-revision",
+      "temporal_disposition": "historical"
+    },
+    {
+      "claim_id": "GSJ-HIST-004",
+      "game": "Griffin Sky-Joust",
+      "category": "sentences-route",
+      "source_class": "historical_implementation",
+      "source_revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "relative_path": "apps/advantage-games/src/app/api/v1/games/griffin-sky-joust/sentences/route.ts",
+      "inclusive_range": {
+        "start_line": 1,
+        "end_line": 7
+      },
+      "blob_sha256": "5f5fa24105efd6c391a788eb195914e2e52351fa210003f050674954917a954a",
+      "cited_range_sha256": "5f5fa24105efd6c391a788eb195914e2e52351fa210003f050674954917a954a",
+      "source_fact": "The historical sentences route constructed GET from createSentencesRoute using SAMPLE_SENTENCES and exported it with dynamic set to force-static.",
+      "interpretation": "Historical route source only; it does not prove route reachability or current availability.",
+      "confidence": "high",
+      "collector_id": "evidence-collector-griffin-sky-joust-batch-a",
+      "conflict_state": "current-source-absent-at-upper-revision",
+      "temporal_disposition": "historical"
+    },
+    {
+      "claim_id": "GSJ-HIST-005",
+      "game": "Griffin Sky-Joust",
+      "category": "tests",
+      "source_class": "historical_implementation",
+      "source_revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "relative_path": "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/GriffinSkyJoustGame.test.tsx",
+      "inclusive_range": {
+        "start_line": 1,
+        "end_line": 135
+      },
+      "blob_sha256": "3ad83dce5cdf4a46b30861d36101b2068dd087017353a9b1952ffa79791261b1",
+      "cited_range_sha256": "3ad83dce5cdf4a46b30861d36101b2068dd087017353a9b1952ffa79791261b1",
+      "source_fact": "The historical test mocked react-konva and game hooks, supplied two vocabulary entries, and contained tests for the initial start screen, start transition, completion callback path, fullscreen calls, target and translation display, end screen, default medium difficulty, and hard difficulty selection.",
+      "interpretation": "Historical test assertions and mocks only; they do not prove live behavior or physical input support.",
+      "confidence": "high",
+      "collector_id": "evidence-collector-griffin-sky-joust-batch-a",
+      "conflict_state": "current-source-absent-at-upper-revision",
+      "temporal_disposition": "historical"
+    },
+    {
+      "claim_id": "GSJ-HIST-006",
+      "game": "Griffin Sky-Joust",
+      "category": "game-component",
+      "source_class": "historical_implementation",
+      "source_revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "relative_path": "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/GriffinSkyJoustGame.tsx",
+      "inclusive_range": {
+        "start_line": 1,
+        "end_line": 435
+      },
+      "blob_sha256": "aaa366305703d4092383ec7c8f376efbf3cd2c721d52c3e34e6ff4038e0337df",
+      "cited_range_sha256": "aaa366305703d4092383ec7c8f376efbf3cd2c721d52c3e34e6ff4038e0337df",
+      "source_fact": "The historical component defined start, playing, and ended phases; initialized state from vocabulary and selected difficulty; advanced state with requestAnimationFrame; entered and exited fullscreen; accepted mouse, touch, Space, ArrowUp, W, A, and D inputs; rendered a Konva sky scene with target-word enemies, player HP, score, and Griffin; and reported XP and accuracy on completion.",
+      "interpretation": "Historical component source inventory; it does not establish live transitions, physical-device ergonomics, or current implementation.",
+      "confidence": "high",
+      "collector_id": "evidence-collector-griffin-sky-joust-batch-a",
+      "conflict_state": "current-source-absent-at-upper-revision",
+      "temporal_disposition": "historical"
+    },
+    {
+      "claim_id": "GSJ-HIST-007",
+      "game": "Griffin Sky-Joust",
+      "category": "module-export",
+      "source_class": "historical_implementation",
+      "source_revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "relative_path": "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/index.ts",
+      "inclusive_range": {
+        "start_line": 1,
+        "end_line": 1
+      },
+      "blob_sha256": "847f988ec4d2e98ff55901582ff26dbfd2aeba649848ef0a0bf40cf2d2eca03e",
+      "cited_range_sha256": "847f988ec4d2e98ff55901582ff26dbfd2aeba649848ef0a0bf40cf2d2eca03e",
+      "source_fact": "The historical component index re-exported GriffinSkyJoustGame.",
+      "interpretation": "Historical module export only; it does not establish a current module export.",
+      "confidence": "high",
+      "collector_id": "evidence-collector-griffin-sky-joust-batch-a",
+      "conflict_state": "current-source-absent-at-upper-revision",
+      "temporal_disposition": "historical"
+    }
+  ],
+  "current_observation": {
+    "source_class": "unknown",
+    "claim_id": "GSJ-CUR-UNK-001",
+    "proposition": "The frozen current revision does not provide an implementation source envelope for Griffin Sky-Joust among the assigned candidate paths; current route, implementation, states, transitions, mechanics, assets, and runnable disposition remain unresolved.",
+    "citation": null,
+    "reason": "The current-source specialist found none of the assigned candidate paths at the frozen revision."
+  },
+  "unknowns": [
+    "Current source/path/revision outside the assigned candidate paths.",
+    "Current route, implementation, runnable disposition, live behavior, asset usage, and state reachability.",
+    "Historical source does not establish physical-device ergonomics, live behavior, or shipping intent."
+  ],
+  "negative_fixtures_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/negative-fixtures.json",
+  "acceptance": "not-claimed",
+  "schema_version": "apk-claim-ledger.v3-fixed",
+  "corrections_v2": {
+    "GSJ-HIST-005": "cited_range_sha256 corrected from 60-char typo to canonical 64-char SHA-256 of inclusive-line 1..135 bytes at cd1936387d136ffb12e77a647f36cbce2d1fdd4e (corrected=false ⇒ matches git show).",
+    "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+    "role_base_sha": "2736d1de2f675155a70bdda706349310f4e3f322",
+    "produced_at": "2026-07-21",
+    "additive": true
+  }
+}

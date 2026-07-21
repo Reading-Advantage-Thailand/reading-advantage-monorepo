@@ -1,0 +1,16 @@
+{
+  "schema_version": "apk-negative-fixtures.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B",
+  "game": "Griffin Rider's Escape",
+  "collector_id": "evidence-collector-griffin-riders-escape-t5-batch-b",
+  "factual_claims_excluded": true,
+  "fixtures": [
+    {"fixture_id": "GRF-NEG-001", "unsupported_proposition": "The title proves a moving griffin avatar, camera follow, and collision hazards in the current game.", "expected_disposition": "REJECT", "reason": "Title/catalog analogy is not evidence; source records are historical and browser behavior was not audited."},
+    {"fixture_id": "GRF-NEG-002", "unsupported_proposition": "The legacy 390 by 844 surface proves compact and wide responsive behavior.", "expected_disposition": "REJECT", "reason": "Static configuration and projection code do not establish browser-observed responsive profiles."},
+    {"fixture_id": "GRF-NEG-003", "unsupported_proposition": "Every griffin-riders-escape-named image or semantic slot is loaded during gameplay.", "expected_disposition": "REJECT", "reason": "Asset names, semantic declarations, and cover candidates do not prove runtime loading or binding."}
+  ],
+  "execution_status": "not-executed-by-evidence-collector",
+  "review_status": "pending-independent-review",
+  "marker": "MEASURE_AGENT_RESULT"
+}

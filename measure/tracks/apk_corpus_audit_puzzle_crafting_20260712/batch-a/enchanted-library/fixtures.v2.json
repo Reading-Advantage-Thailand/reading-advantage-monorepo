@@ -1,0 +1,11 @@
+{
+  "schema_version": "apk-negative-fixtures.v2",
+  "game": "vocabulary/enchanted-library",
+  "fixtures": [
+    {"fixture_id":"EL-NEG-001","class":"unsupported-claim","claim":"Every Enchanted Library vocabulary input always produces exactly four books.","citation":{"claim_id":"EL-BOOK-001","file_path":"apps/advantage-games/src/lib/games/enchantedLibrary.ts","line_start":161,"line_end":198},"expected_disposition":"FAIL","reason":"The cited implementation takes up to three decoys; it does not establish four books for fewer than four non-target entries."},
+    {"fixture_id":"EL-NEG-002","class":"directory-citation","claim":"The enchanted-library asset directory proves that every listed asset is loaded.","citation":{"file_path":"apps/advantage-games/public/games/vocabulary/enchanted-library/","line_start":null,"line_end":null},"expected_disposition":"REJECT","reason":"A directory citation has no exact source range or blob hash."},
+    {"fixture_id":"EL-NEG-003","class":"browser-inference","claim":"The VirtualDPad proves that touch movement is accepted in a runnable browser session.","citation":{"claim_id":"EL-CONTROL-001","file_path":"apps/advantage-games/src/components/games/vocabulary/enchanted-library/enchantedLibraryInput.ts","line_start":4,"line_end":12},"expected_disposition":"REJECT","reason":"The adapter source does not establish browser reachability or an accepted real input transition."}
+  ],
+  "execution_status":"not-executed-by-evidence-collector",
+  "review_status":"pending-independent-review"
+}

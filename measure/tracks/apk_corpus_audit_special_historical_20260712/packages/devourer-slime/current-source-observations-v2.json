@@ -1,0 +1,203 @@
+{
+  "schema_version": "apk-current-source-observations.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 1: Distinctive current/historical mechanics",
+  "batch_id": "batch-a",
+  "game": "Devourer Slime",
+  "identity_token": "devourer-slime",
+  "role": "current-source-specialist-batch-a-devourer-slime",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "cd2d0faec2d15f1a5d50bee0da102bde58ce1daa",
+  "source_baseline_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "allowed_input_manifest": {
+    "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-discovery-audit.json",
+    "sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa"
+  },
+  "scope": {
+    "source_class": "current_implementation",
+    "inspection_method": "git-show-bytes-at-frozen-upper-revision",
+    "excluded": [
+      "collector ledger",
+      "history",
+      "requirements mapping",
+      "browser audit",
+      "inferred behavior"
+    ]
+  },
+  "source_files": [
+    {
+      "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/devourer-slime/page.tsx",
+      "blob_sha256": "34ef5cd03faed720f3ff2ac02073681cf88d75d9db29f2876d9b1c4a394eda01",
+      "byte_length": 5737,
+      "line_count": 164
+    },
+    {
+      "path": "apps/advantage-games/src/app/api/v1/games/devourer-slime/complete/route.ts",
+      "blob_sha256": "887d73799ce2461c560073dc5216e86cf7e783949a7fed04daa74a0e743ce9fd",
+      "byte_length": 154,
+      "line_count": 7
+    },
+    {
+      "path": "apps/advantage-games/src/app/api/v1/games/devourer-slime/sentences/route.ts",
+      "blob_sha256": "70587c1af88b79bcceb951b7ddde40d765d60f013a1ec941900e4412f58bd089",
+      "byte_length": 234,
+      "line_count": 8
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.test.tsx",
+      "blob_sha256": "b7ca2aa35bbeeca85f77cb93c1551c119aaff23b30573fddfdc377edf9b346d3",
+      "byte_length": 3807,
+      "line_count": 101
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
+      "blob_sha256": "42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc",
+      "byte_length": 15584,
+      "line_count": 395
+    }
+  ],
+  "observations": [
+    {
+      "observation_id": "DS-CS-001",
+      "category": "page-export",
+      "source_fact": "The page module declares the default export function DevourerSlimePage.",
+      "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/devourer-slime/page.tsx",
+      "line_start": 30,
+      "line_end": 30,
+      "cited_range_sha256": "f34de6aa76b338054f17ae986660073b964d1bb31d1d1e1d2d02ca890aebec66",
+      "blob_sha256": "34ef5cd03faed720f3ff2ac02073681cf88d75d9db29f2876d9b1c4a394eda01",
+      "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+      "source_class": "current_implementation"
+    },
+    {
+      "observation_id": "DS-CS-002",
+      "category": "sentence-fetch",
+      "source_fact": "The page effect fetches /api/v1/games/devourer-slime/sentences?locale=${locale}.",
+      "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/devourer-slime/page.tsx",
+      "line_start": 38,
+      "line_end": 72,
+      "cited_range_sha256": "bf5da60fd8ec681f8ba812889cc55927be820a213a0840c95379614384086451",
+      "blob_sha256": "34ef5cd03faed720f3ff2ac02073681cf88d75d9db29f2876d9b1c4a394eda01",
+      "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+      "source_class": "current_implementation"
+    },
+    {
+      "observation_id": "DS-CS-003",
+      "category": "completion-submit",
+      "source_fact": "The page submits a POST request to /api/v1/games/devourer-slime/complete with xpEarned, accuracy, correctAnswers, and totalAttempts in the JSON body.",
+      "file_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/devourer-slime/page.tsx",
+      "line_start": 75,
+      "line_end": 94,
+      "cited_range_sha256": "cc1538b1524471c5a58cee9b9fbb31bbedf97eab494cc0b0b3e8da70637f7e5b",
+      "blob_sha256": "34ef5cd03faed720f3ff2ac02073681cf88d75d9db29f2876d9b1c4a394eda01",
+      "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+      "source_class": "current_implementation"
+    },
+    {
+      "observation_id": "DS-CS-004",
+      "category": "completion-route",
+      "source_fact": "The completion route exports dynamic = \"force-static\", creates POST with createCompleteRoute(), and exports POST.",
+      "file_path": "apps/advantage-games/src/app/api/v1/games/devourer-slime/complete/route.ts",
+      "line_start": 1,
+      "line_end": 7,
+      "cited_range_sha256": "887d73799ce2461c560073dc5216e86cf7e783949a7fed04daa74a0e743ce9fd",
+      "blob_sha256": "887d73799ce2461c560073dc5216e86cf7e783949a7fed04daa74a0e743ce9fd",
+      "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+      "source_class": "current_implementation"
+    },
+    {
+      "observation_id": "DS-CS-005",
+      "category": "sentences-route",
+      "source_fact": "The sentences route exports dynamic = \"force-static\", creates GET with createSentencesRoute(SAMPLE_SENTENCES), and exports GET.",
+      "file_path": "apps/advantage-games/src/app/api/v1/games/devourer-slime/sentences/route.ts",
+      "line_start": 1,
+      "line_end": 8,
+      "cited_range_sha256": "70587c1af88b79bcceb951b7ddde40d765d60f013a1ec941900e4412f58bd089",
+      "blob_sha256": "70587c1af88b79bcceb951b7ddde40d765d60f013a1ec941900e4412f58bd089",
+      "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+      "source_class": "current_implementation"
+    },
+    {
+      "observation_id": "DS-CS-006",
+      "category": "component-contract",
+      "source_fact": "The component sets VIEWPORT_WIDTH to 390, VIEWPORT_HEIGHT to 844, and defaults difficulty to 'medium' in DevourerSlimeGame props destructuring.",
+      "file_path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
+      "line_start": 24,
+      "line_end": 33,
+      "cited_range_sha256": "0c97ceea5cd33f924bef24d10bacee01b38b4b4d153e371f2d69482a4c9a8f3f",
+      "blob_sha256": "42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc",
+      "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+      "source_class": "current_implementation"
+    },
+    {
+      "observation_id": "DS-CS-007",
+      "category": "tick-loop",
+      "source_fact": "The component calls useInterval while gameState.phase is 'playing', moves with input when nonzero, calls tickSlime with 16.6, and calls endGame when the ticked phase is not 'playing'.",
+      "file_path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
+      "line_start": 91,
+      "line_end": 105,
+      "cited_range_sha256": "0bbf27a9865b59abf3d8725a7711989722a622b59b7b0bc3553b3c6993dd0bc2",
+      "blob_sha256": "42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc",
+      "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+      "source_class": "current_implementation"
+    },
+    {
+      "observation_id": "DS-CS-008",
+      "category": "offscreen-indicator",
+      "source_fact": "The component computes cameraX and cameraY from the slime position, finds an uneaten orb matching targetWordIndex, and adds an indicator when the orb is outside the viewport bounds.",
+      "file_path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
+      "line_start": 113,
+      "line_end": 130,
+      "cited_range_sha256": "7ff4da6d401e3b76f900224efde32d32a7ea44876d4f53e6b5e342f34703a0e5",
+      "blob_sha256": "42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc",
+      "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+      "source_class": "current_implementation"
+    },
+    {
+      "observation_id": "DS-CS-009",
+      "category": "stage-render",
+      "source_fact": "The playing render creates a Stage with width VIEWPORT_WIDTH and height VIEWPORT_HEIGHT, and renders the game Layer at negative cameraX and cameraY offsets.",
+      "file_path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
+      "line_start": 184,
+      "line_end": 247,
+      "cited_range_sha256": "e230391f32c90daf78c9140cbf2233617b31864984ec7862995c82fdb83dc609",
+      "blob_sha256": "42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc",
+      "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+      "source_class": "current_implementation"
+    },
+    {
+      "observation_id": "DS-CS-010",
+      "category": "virtual-input",
+      "source_fact": "The playing render defines four pointer-down handlers that set virtual input dy to -1, dx to -1, dy to 1, and dx to 1 respectively.",
+      "file_path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
+      "line_start": 359,
+      "line_end": 391,
+      "cited_range_sha256": "4b9c11448d4255391c61aced95d46ce784e6b4b400f6e0e1fd4699f6841c3cdf",
+      "blob_sha256": "42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc",
+      "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+      "source_class": "current_implementation"
+    },
+    {
+      "observation_id": "DS-CS-011",
+      "category": "test-surface",
+      "source_fact": "The co-located test declares six named tests: renders the start screen initially; transitions to playing phase when start is clicked; shows game HUD when playing; calls onComplete when game ends; shows difficulty selector on start screen; and renders virtual d-pad when playing.",
+      "file_path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.test.tsx",
+      "line_start": 53,
+      "line_end": 98,
+      "cited_range_sha256": "54357509fc8a065a5128b11cb3eadbd0a6357ef498c5fde8fe3a730c438fb854",
+      "blob_sha256": "b7ca2aa35bbeeca85f77cb93c1551c119aaff23b30573fddfdc377edf9b346d3",
+      "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+      "source_class": "current_implementation"
+    }
+  ],
+  "counts": {
+    "source_objects_read": 5,
+    "observations_authored": 11,
+    "unsupported_factual_claims": 0,
+    "history_records_authored": 0,
+    "browser_records_authored": 0,
+    "mapping_records_authored": 0,
+    "collector_claims_authored": 0
+  },
+  "disposition": "current-source-observations-only; not a claim ledger, history package, mapping, browser audit, or inferred behavior report"
+}

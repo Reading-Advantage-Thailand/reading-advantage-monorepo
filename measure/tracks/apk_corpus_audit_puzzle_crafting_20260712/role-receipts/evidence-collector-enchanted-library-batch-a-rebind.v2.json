@@ -1,0 +1,38 @@
+{
+  "schema_version": "apk-role-rebind-receipt.v2",
+  "receipt_kind": "additive-output-rebind",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "evidence-collector",
+  "task_id": "evidence-collector:enchanted-library:batch-a:v2-rebind",
+  "game": "vocabulary/enchanted-library",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "2736d1de2f675155a70bdda706349310f4e3f322",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "supersedes_receipt": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-enchanted-library-batch-a.json",
+  "reason": "V2 rebind: ledger, source-asset-history ledger, fixtures, and rebind-report all carry 64-char SHA-256 envelopes that recompute from current bytes; no claim was added, removed, or altered.",
+  "preserves_claims": true,
+  "source_behavior_inspected": false,
+  "browser_evidence_created": false,
+  "provider_attestation": {
+    "available": false,
+    "reason": "No provider spawn, session, event, or final-response telemetry was exposed."
+  },
+  "rebind_report_path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/rebind-report.v2.json",
+  "rebind_report_sha256": "1ce9a521dbebe0cd7fdaa8994f85ea46fc4a912a0a40b1b0f3782cc368c23d6c",
+  "claim_ledger_sha256": "8adc5b881104bf0ce78d0eb3895b65cb0485a4e516e9918461acfad0f7adfb2e",
+  "output_hashes_bound_by_report": {
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/claim-evidence-ledger.v2.json": "8adc5b881104bf0ce78d0eb3895b65cb0485a4e516e9918461acfad0f7adfb2e",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/source-asset-history-ledger.v2.json": "401bc8bcebd5da6b09bbc7896efc23edeadb68a68cf309c25b2cea8a98c55a8f",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/fixtures.v2.json": "7911e06f4baaea302d62b277daa7f0199180fe6abf105b18e56f796574036429",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/rebind-report.v2.json": "1ce9a521dbebe0cd7fdaa8994f85ea46fc4a912a0a40b1b0f3782cc368c23d6c"
+  },
+  "validation": {
+    "json_parsing": "pass",
+    "current_output_hashes": "pass",
+    "claims": "preserved",
+    "diff_check": "pass"
+  },
+  "status": "complete V2 additive rebind; pending independent review",
+  "commit_sha": "not-created"
+}

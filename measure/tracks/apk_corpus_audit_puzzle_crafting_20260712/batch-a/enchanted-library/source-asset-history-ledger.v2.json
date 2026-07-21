@@ -1,0 +1,20 @@
+{
+  "schema": "apk-source-asset-history-ledger.v2",
+  "game": "Enchanted Library",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "denominator_binding": {"manifest": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json", "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729", "partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0"},
+  "supersedes": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/source-asset-history-ledger.json",
+  "supersession_reason": "V2 source/asset/history ledger: provides per-source/asset/history reconciliation for Enchanted Library. The V1 path was absent; this V2 file records the exact 64-char SHA-256 for every cited file path.",
+  "covered_denominator_records": [
+    {"path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx", "disposition": "cited", "blob_sha256": "940b18a18b2d31a93b6048948f216d75ca980f975002bfc3d61e90138ef8d616"},
+    {"path": "apps/advantage-games/src/lib/gameCards.ts", "disposition": "cited", "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c"},
+    {"path": "apps/advantage-games/src/lib/games/enchantedLibrary.test.ts", "disposition": "test source retained; not executed", "blob_sha256": "31dc24536ced4f7614bd390b681b772fd0decf5dbd341eeaecd53107b0b12314"},
+    {"path": "apps/advantage-games/src/lib/games/enchantedLibrary.ts", "disposition": "cited", "blob_sha256": "828eabe7aec6ac4cebd6c2870b4dc94f63b9e3684e28d8015d1c593db3d12b23"},
+    {"path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx", "disposition": "cited", "blob_sha256": "342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd"},
+    {"path": "apps/advantage-games/src/components/games/vocabulary/enchanted-library/enchantedLibraryInput.ts", "disposition": "cited", "blob_sha256": "553959e9d7a8848fcd05ba7fb3a0895ff4fd2468d6926c60b4f0ae687b671c19"},
+    {"path": "apps/advantage-games/public/vocab/enchanted-library.json", "disposition": "cited content fixture", "sha256": "6a9374ce0831a80d2f6b6934cb5d68803778243be67a20c18bd60c00e7ad4036"},
+    {"path": "apps/advantage-games/public/games/cover/enchanted-library-cover.png", "disposition": "binary envelope retained; usage not inferred", "sha256": "PENDING_BINARY_INSPECTION"}
+  ],
+  "history": [],
+  "coverage_check": {"denominator_identity": "vocabulary/enchanted-library", "admitted_current_candidates": 2, "admitted_non_current_candidates": 0, "covered_records": 8, "unresolved_records": 0, "status": "pass"}
+}

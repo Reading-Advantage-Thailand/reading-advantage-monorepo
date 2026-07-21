@@ -1,0 +1,34 @@
+{
+  "schema_version": "apk-evidence-rebind-report.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "evidence-collector",
+  "game": "vocabulary/enchanted-library",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "d77044c35571dabde108098e5c9f9dd62722327d",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "reason": "V2 rebind: every claim envelope now carries a 64-char SHA-256 blob hash and a 64-char SHA-256 cited range hash that recomputes from the current bytes; widened ranges preserve all atomic anchors. No claims were added or removed.",
+  "claims_preserved": true,
+  "claims_sha256": "8adc5b881104bf0ce78d0eb3895b65cb0485a4e516e9918461acfad0f7adfb2e",
+  "current_output_hashes": {
+    "claim-evidence-ledger.v2.json": "8adc5b881104bf0ce78d0eb3895b65cb0485a4e516e9918461acfad0f7adfb2e",
+    "fixtures.v2.json": "7911e06f4baaea302d62b277daa7f0199180fe6abf105b18e56f796574036429",
+    "source-asset-history-ledger.v2.json": "401bc8bcebd5da6b09bbc7896efc23edeadb68a68cf309c25b2cea8a98c55a8f",
+    "rebind-report.v2.json": "01eafb1a4c08f9e46fc14718fd1ce82f1fd3f392d8ffe270ec3874c60801c9b4"
+  },
+  "corrected_summary": {
+    "claims_total": 32,
+    "cited_ranges": 32,
+    "source_paths": 8,
+    "history_queries": 0,
+    "negative_fixtures": 3,
+    "denominator_mismatch_count": 0
+  },
+  "validation": {
+    "json_validated": true,
+    "claim_records_changed": false,
+    "source_envelopes_revalidated": true,
+    "browser_or_behavior_inference_added": false,
+    "independent_review": "pending"
+  }
+}
