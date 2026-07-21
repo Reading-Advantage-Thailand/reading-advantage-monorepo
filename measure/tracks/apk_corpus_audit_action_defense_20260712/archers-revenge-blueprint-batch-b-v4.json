@@ -1,0 +1,62 @@
+{
+  "schema": "apk-requirements-blueprint.v1",
+  "supersedes": "archers-revenge-blueprint-batch-b-v3.json",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "game": "Archer's Revenge",
+  "normalized_game_id": "archers-revenge",
+  "mapper_role": "requirements-mapper-archers-revenge-batch-b-v4",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "637cd99e7f078b6d5e736bc2adbb106e119b87d4",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "historical_source_revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+  "source_claim_ledger": "archers-revenge-claim-ledger-batch-b-v3.json",
+  "source_boundary": {
+    "current": "unknown; no current implementation or current copy proposition is authored",
+    "historical": "historical-only claims remain historical and are not promoted",
+    "runnable": "unknown; the separately recorded exact role-revision 404 is bounded external context only and does not establish absence of the historical implementation"
+  },
+  "identity": {"status":"no identity claim in the V3 ledger","backing_claim_ids":[]},
+  "routes": {"status":"no route claim in the V3 ledger","current_route_status":"unknown; the exact role-revision 404 remains a bounded unknown, not a source mapping claim","backing_claim_ids":[]},
+  "copy": {
+    "propositions": [
+      {"claim_id":"AR-B2-COPY-001","proposition":"Historical start-screen title copy is present.","temporal_disposition":"historical-only"},
+      {"claim_id":"AR-B2-COPY-002","proposition":"Historical start-screen subtitle copy is present.","temporal_disposition":"historical-only"},
+      {"claim_id":"AR-B2-COPY-003","proposition":"Historical instruction copy describes finding the matching translation.","temporal_disposition":"historical-only"},
+      {"claim_id":"AR-B2-COPY-004","proposition":"Historical instruction copy describes tapping a column and a shield-down target.","temporal_disposition":"historical-only"},
+      {"claim_id":"AR-B2-COPY-005","proposition":"Historical instruction copy describes shielded enemies shooting back and damaging HP.","temporal_disposition":"historical-only"},
+      {"claim_id":"AR-B2-COPY-006","proposition":"Historical tip copy says the target changes every few seconds.","temporal_disposition":"historical-only"},
+      {"claim_id":"AR-B2-COPY-007","proposition":"Historical controls copy labels Shoot and Tap / Click.","temporal_disposition":"historical-only"},
+      {"claim_id":"AR-B2-COPY-008","proposition":"Historical start-button copy is Draw Your Bow.","temporal_disposition":"historical-only"},
+      {"claim_id":"AR-B2-COPY-009","proposition":"Historical end-screen title branches include Champion Archer! and Wall Breached!.","temporal_disposition":"historical-only; reachability unknown"},
+      {"claim_id":"AR-B2-COPY-010","proposition":"Historical end-screen subtitle branches include the recorded safe and overrun strings.","temporal_disposition":"historical-only; reachability unknown"}
+    ],
+    "backing_claim_ids":["AR-B2-COPY-001","AR-B2-COPY-002","AR-B2-COPY-003","AR-B2-COPY-004","AR-B2-COPY-005","AR-B2-COPY-006","AR-B2-COPY-007","AR-B2-COPY-008","AR-B2-COPY-009","AR-B2-COPY-010"]
+  },
+  "assets": {"status":"baseline binary presence only; scene/non-scene usage remains unknown","backing_claim_ids":["AR-B2-ASSET-001","AR-B2-ASSET-002","AR-B2-ASSET-003"]},
+  "scenes_states_transitions": {
+    "scene_status":"no current scene proposition is authored",
+    "historical_transitions":[
+      {"claim_id":"AR-B2-TRANS-001","proposition":"Historical tick logic contains the recorded defeat guard.","temporal_disposition":"historical-only; live reachability unknown"},
+      {"claim_id":"AR-B2-TRANS-002","proposition":"Historical projectile collision logic contains the recorded HP decrement and defeat assignment.","temporal_disposition":"historical-only; live reachability unknown"},
+      {"claim_id":"AR-B2-TRANS-003","proposition":"Historical collision logic contains the recorded next-wave guard and call.","temporal_disposition":"historical-only; live reachability unknown"},
+      {"claim_id":"AR-B2-TRANS-004","proposition":"Historical next-wave logic contains the recorded state-output inventory.","temporal_disposition":"historical-only; live reachability unknown"}
+    ],
+    "victory_transition_status":"unknown; the V3 bounded absence record does not promote a victory transition",
+    "backing_claim_ids":["AR-B2-TRANS-001","AR-B2-TRANS-002","AR-B2-TRANS-003","AR-B2-TRANS-004"]
+  },
+  "developer_effort":{"status":"source-surface inventory only; actual effort and complexity remain unknown","backing_claim_ids":["AR-B2-EFFORT-001","AR-B2-EFFORT-002","AR-B2-EFFORT-003"]},
+  "unknowns":[
+    {"topic":"current route and implementation","status":"unknown","backing_claim_ids":[]},
+    {"topic":"runnable status and live behavior","status":"unknown; exact role-revision 404 is bounded external context only, not a browser or source claim","backing_claim_ids":[]},
+    {"topic":"live responsive behavior","status":"unknown","backing_claim_ids":[]},
+    {"topic":"asset scene/non-scene usage","status":"unknown","backing_claim_ids":["AR-B2-ASSET-001","AR-B2-ASSET-002","AR-B2-ASSET-003"]},
+    {"topic":"historical victory reachability","status":"unknown","backing_claim_ids":[]},
+    {"topic":"actual developer effort","status":"unknown","backing_claim_ids":["AR-B2-EFFORT-001","AR-B2-EFFORT-002","AR-B2-EFFORT-003"]}
+  ],
+  "referenced_claim_ids":["AR-B2-COPY-001","AR-B2-COPY-002","AR-B2-COPY-003","AR-B2-COPY-004","AR-B2-COPY-005","AR-B2-COPY-006","AR-B2-COPY-007","AR-B2-COPY-008","AR-B2-COPY-009","AR-B2-COPY-010","AR-B2-ASSET-001","AR-B2-ASSET-002","AR-B2-ASSET-003","AR-B2-TRANS-001","AR-B2-TRANS-002","AR-B2-TRANS-003","AR-B2-TRANS-004","AR-B2-EFFORT-001","AR-B2-EFFORT-002","AR-B2-EFFORT-003"],
+  "referenced_claim_count": 20,
+  "boundary_checks":{"historical_only_preserved":true,"bounded_404_unknown_preserved":true,"browser_or_runtime_claim_authored":false,"webbridge_as_provider_provenance":false,"webbridge_as_source_authority":false,"asset_usage_claim_authored":false,"victory_reachability_claim_authored":false},
+  "carried_forward_disclosures":[{"id":"DISC-001","classification":"Batch A process-only disclosure","use":"process metadata only; not evidence or a mapping premise"}],
+  "status":"non-authoritative pending exact validation and fresh independent review"
+}

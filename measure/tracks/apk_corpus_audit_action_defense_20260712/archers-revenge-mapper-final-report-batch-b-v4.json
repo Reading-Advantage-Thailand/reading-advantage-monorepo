@@ -1,0 +1,27 @@
+{
+  "schema_version":"apk-requirements-mapper-report.v2",
+  "track_id":"apk_corpus_audit_action_defense_20260712",
+  "phase":"Phase 2: Batch B evidence packages",
+  "task_id":"B2-MAP-EACH-GAME-V4",
+  "role":"requirements-mapper-archers-revenge-batch-b-v4",
+  "game":"Archer's Revenge",
+  "normalized_id":"archers-revenge",
+  "phase_base_sha":"ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha":"637cd99e7f078b6d5e736bc2adbb106e119b87d4",
+  "source_baseline_revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "status":"mapping-complete-for-V3-ledger; truth-selector, fresh review, commit binding, and lifecycle acceptance pending",
+  "source_fact_policy":"The V3 collector ledger is the sole factual input. This report records mapping coverage and boundaries only; it adds no source claim.",
+  "map_output":{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-blueprint-batch-b-v4.json","sha256":"16de053d4e375ccb28f753b7102fcf4fde3fc23ac08c2395d317422e85599501"},
+  "v3_input_bindings":{
+    "claim_ledger":{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v3.json","sha256":"c2d6bf62d628fc441c476fb2839e2b41e7f0f8564020580e3d700b0c167fa9d1"},
+    "collector_report":{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v3.json","sha256":"c21897fb4c7d80fbb3141d8c37a87a31e9ac4881e1ef7bb021ebdd273dd2555c"},
+    "collector_method":{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b-v3.md","sha256":"e16c6e8700d8f0a2999fba25d273d38f4d44c4e798c383751b6fb84a4a962c19"},
+    "collector_receipt":{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v3-rebind.json","sha256":"c0b6276d19dde7cd60b855cfd60708783a367e77bc10a54dfe08bce11c325ab6"}
+  },
+  "reference_accounting":{"collector_factual_claim_count":20,"mapped_section_count":7,"claim_reference_occurrence_count":20,"unique_referenced_claim_count":20,"resolved_reference_count":20,"unresolved_reference_count":0,"unreferenced_collector_factual_claim_count":0,"negative_fixture_reference_count":0,"foreign_claim_reference_count":0,"hypotheses_used_as_factual_input":0},
+  "unknowns_preserved":["Current route and implementation remain unknown.","The exact role-revision 404 remains a bounded external unknown and is not promoted into a browser, runtime, source-authority, or provider-provenance claim.","Runnable status, live behavior, live responsive behavior, asset usage, actual effort, and historical victory reachability remain unknown.","Provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations are unavailable."],
+  "validation":{"json_parse":"passed for map and report","v3_claim_ids":"all 20 active V3 ledger claim IDs resolve exactly once in the map; fixtures excluded","hash_bindings":"exact V3 ledger, collector report, method, and rebind receipt bytes are bound above; no V2 input is selected","backing_id_validation":"passed: every backing_claim_id and referenced_claim_id resolves to exactly one active V3 ledger claim","browser_execution":"not performed by mapper","webbridge_authority":"not provider provenance and not source authority","diff_check":"passed after additive write","commit_binding":"pending; user prohibited commit"},
+  "reviewer_disposition":"pending fresh independent review of exact V4-bound mapper bytes",
+  "acceptance":"not-claimed",
+  "carried_forward_disclosures":[{"id":"DISC-001","classification":"Batch A process-only disclosure","use":"Process metadata only; not factual input or a backing claim."}]
+}
