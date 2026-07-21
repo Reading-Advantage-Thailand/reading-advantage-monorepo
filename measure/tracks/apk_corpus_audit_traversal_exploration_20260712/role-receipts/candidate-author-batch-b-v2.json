@@ -1,0 +1,188 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "status": "Batch B V2 non-consumable candidate authored from exact V2 truth inputs and the committed zero-blocker V2 review; downstream product-owner approval remains absent",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B remediation V2",
+  "batch_id": "batch-b",
+  "task_id": "candidate-manifest:batch-b:v2",
+  "role": "candidate-manifest-author-batch-b-v2",
+  "role_identity": "T5 Traversal Batch B candidate-manifest author only; no product-owner, approval-author, or accepted-manifest authority",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "97716ad273a324c7d9a112ae701b37f7e9aa3be7",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "prior_role_history": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-b-independent-review-v2.json",
+      "sha256": "58fffd67512d26e1503f2d53f2b7359b31daae055835fa318a0376a5a0271bcd",
+      "use": "Fresh zero-blocker V2 review over the V2 selected inputs; candidate authorization only. No product-owner approval or accepted-manifest conclusion was imported."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-batch-b-v2.json",
+      "sha256": "5ee4554491dd1b07973b70062b6d0cfe41e3615b8f7dacdc9e8eaa6e473bd69b",
+      "use": "Exact review scope, 47-input hash binding, resource accounting, review result, and role-boundary evidence."
+    }
+  ],
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are truthful non-attestations; no provider value was fabricated, no provider-attested isolation is claimed, and the user prohibited commits."
+  },
+  "directions": {
+    "provenance": {
+      "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+    },
+    "timing": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json",
+      "sha256": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+      "decision": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+      "application": "Bound producer and reviewer receipt elapsed_minutes fields only. This candidate-author receipt does not represent unavailable candidate-role timing as zero and claims no timing waiver."
+    }
+  },
+  "input_hashes": {
+    "measure/apk-evidence-cohort-protocol.md": "1f97ed8fd026cb0b1b49ed5de602252c075228981d1ff26640748b56ff2a3507",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md": "42685326bf239a92f3543919e8ce204fb4414e8ac136180ad340720fbd852ac1",
+    "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-b-truth-tests-v2.py": "e5f4878d858a0cc745ae348a6e8cff448b2a1ed08cf8a120bc96187df8329941",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/truth-test-author-batch-b-v2.json": "58925bfa8c32df26c97021921cce1c9ba43cdc76ba5179a22ef470c78192cc31",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-b-independent-review-v2.json": "58fffd67512d26e1503f2d53f2b7359b31daae055835fa318a0376a5a0271bcd",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-batch-b-v2.json": "5ee4554491dd1b07973b70062b6d0cfe41e3615b8f7dacdc9e8eaa6e473bd69b"
+  },
+  "candidate_validation": {
+    "candidate_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/candidate-cohort-manifest-batch-b-v2.json",
+    "candidate_sha256": "30ca8aaa951a20b5dbc2b744ea57b1310ed623f211a40d550769b15320583065",
+    "candidate_bytes": 27513,
+    "candidate_json_valid": true,
+    "candidate_selected_input_hash_records": 45,
+    "candidate_selected_inputs_equal_truth_receipt_manifest": true,
+    "candidate_selected_input_hash_mismatches": 0,
+    "candidate_selected_inputs_matching_role_base_bytes": 45,
+    "candidate_reviewed_output_hash_records": 30,
+    "candidate_reviewed_output_hash_mismatches": 0,
+    "unique_governing_truth_review_bindings_matching_role_base_bytes": 51,
+    "scope_packages": 3,
+    "factual_claims": 44,
+    "negative_fixtures": 10,
+    "review_bound_inputs": 47,
+    "review_unresolved_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    }
+  },
+  "candidate_stage_test": {
+    "full_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-b-truth-tests-v2.py",
+    "full_result": {
+      "passed": 16,
+      "failed": 2,
+      "exit_code": 1,
+      "candidate_gate_passed": true,
+      "expected_failures": [
+        "BatchBV2LifecycleContract::test_owner_approval_is_post_candidate_and_exactly_bound",
+        "BatchBV2LifecycleContract::test_accepted_manifest_is_separate_consumable_and_exactly_bound"
+      ]
+    },
+    "non_lifecycle_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-b-truth-tests-v2.py -k 'not BatchBV2LifecycleContract'",
+    "non_lifecycle_result": "15 passed, 3 deselected; exit 0",
+    "disposition": "Expected candidate-stage fail-closed result. Candidate existence and exact truth-test binding pass; product-owner approval and accepted-manifest gates remain red and were not authored by this role.",
+    "review_count_disclosure": "The bound review and review receipt report stale aggregate pytest counts that do not match the immutable module's 18-test inventory. Direct candidate-role execution enumerates 15 non-lifecycle plus 3 lifecycle tests. The discrepancy changes no gate disposition and is disclosed rather than silently relabeled."
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/candidate-cohort-manifest-batch-b-v2.json",
+      "sha256": "30ca8aaa951a20b5dbc2b744ea57b1310ed623f211a40d550769b15320583065"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/candidate-author-batch-b-v2.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot embed its own stable SHA-256. A later authentic product-owner approval or additive successor binding must hash these exact bytes without mutating this receipt."
+    }
+  ],
+  "disclosures_carried": [
+    "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations are unavailable and not claimed.",
+    "Shadow Gate Dungeon, Labyrinth of the Goblin King, and Griffin Rider's Escape each have bounded non-runnable/unknown browser dispositions only; no movement, transition, compact/wide, trusted-input, persistence, production, or asset-load behavior is accepted.",
+    "The fourteen Griffin Rider's Escape claims are historical and strictly ancestral to the source baseline; they are not promoted to current implementation or browser behavior.",
+    "Bound producer and reviewer elapsed_minutes=0 values are owner-directed accounting fallbacks, not elapsed-time, duration, performance, session, or provider-timing evidence.",
+    "The frozen budget declares no candidate-manifest-author ceiling; this role invents no ceiling and claims no budget waiver.",
+    "The V2 review's stale aggregate pytest counts are preserved as immutable review bytes and corrected by directly executed candidate-stage counts without changing any gate disposition."
+  ],
+  "resource_use": {
+    "budget_basis": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+      "sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+      "candidate_author_ceiling_declared": false,
+      "budget_conclusion_claimed": false
+    },
+    "locally_measured": {
+      "direct_input_bytes": 99267,
+      "direct_input_files": 9,
+      "authored_artifacts": 2,
+      "browser_interactions": 0
+    },
+    "unavailable": {
+      "command_invocations": null,
+      "elapsed_minutes": null
+    },
+    "measurement_scope": "Direct input bytes and files are the exact nine paths in input_hashes. Cross-tool command and timing totals are unavailable and are represented as null rather than fabricated zeroes."
+  },
+  "findings": {
+    "review_count_disclosure": {
+      "severity": "Low",
+      "blocking": false,
+      "disposition": "The immutable review's aggregate pytest count is arithmetically stale. Direct execution of the exact bound module establishes the candidate-stage result; no source-truth or lifecycle gate changes."
+    },
+    "unresolved_blocking": [],
+    "unresolved_blocking_counts": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0
+    }
+  },
+  "revocation": {
+    "candidate_revoked": false,
+    "superseded_candidate_sha256": null,
+    "revocation_event_sha256": null,
+    "rule": "Any bound-byte, hash, revision, predecessor, direction, truth input, reviewed output, producer receipt, browser disposition, budget disclosure, review, or zero-blocker result change revokes this candidate. Remediation requires an additive revocation or supersession record, regenerated affected outputs and receipts, rerun truth gates, fresh review, and a new non-consumable candidate; neither this candidate nor this receipt may be edited in place."
+  },
+  "lifecycle": {
+    "candidate_manifest_published": true,
+    "candidate_consumable": false,
+    "product_owner_acceptance_published": false,
+    "accepted_manifest_published": false,
+    "approval_event_id": null,
+    "approval_message_sha256": null,
+    "lifecycle_status": "candidate-only; awaiting a later authentic product-owner approval bound to the exact candidate and review hashes"
+  },
+  "commit_sha": null,
+  "commit_disposition": "not-created; user prohibited commits",
+  "receipt_self_hash": null,
+  "receipt_self_hash_note": "A self-hash cannot be embedded without changing the receipt bytes.",
+  "role_boundary": "Created only candidate-cohort-manifest-batch-b-v2.json and this candidate-author receipt. No product-owner approval, accepted manifest, source, evidence package, mapper, browser audit, truth test, independent review, direction, budget, plan, registry, product document, or commit was created or modified.",
+  "measure_agent_result": {
+    "status": "candidate-only-nonconsumable",
+    "candidate": true,
+    "consumable": false,
+    "acceptance": "not-claimed",
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 1
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
