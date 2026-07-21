@@ -1,0 +1,18 @@
+{
+  "schema_version": "apk-product-owner-direction.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-b",
+  "issued_at": "2026-07-21",
+  "issued_by": "orchestrator (delegated project-owner authority)",
+  "role_base_sha": "6c723258f8830f8932677f69b4aeadf76ebe4f29",
+  "decision": "CONDITIONAL_EVIDENCE_ACCEPTANCE_WITH_SUCCESSOR_DEFECT_TRANSFER",
+  "finding": "Village Guardian completion POST returned HTTP 400 in the accepted WebBridge observation.",
+  "disposition": "This implementation defect does not invalidate source-truth, non-runnable-route, asset, or bounded browser evidence. It is a mandatory carry-forward disclosure and successor implementation defect, not evidence of successful completion.",
+  "required_limits": [
+    "No candidate or accepted evidence manifest may claim successful completion, persistence, XP award, idempotency, or API correctness.",
+    "The accepted manifest must reference the exact browser audit, the HTTP 400, and this direction.",
+    "Any successor implementation that claims completion must fix and integration-test the API independently.",
+    "All source truth, semantic, denominator, provenance, fresh-review, and lifecycle gates remain required."
+  ],
+  "supersedes": "The prior completion finding's use as an automatic B5 blocker only; it remains a recorded successor defect."
+}
