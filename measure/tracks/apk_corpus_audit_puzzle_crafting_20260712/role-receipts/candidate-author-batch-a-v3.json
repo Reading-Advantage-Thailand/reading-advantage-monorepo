@@ -1,0 +1,181 @@
+{
+  "schema_version": "apk-role-receipt.v3",
+  "status": "T6 Batch A V3 non-consumable candidate authored from exact V3 truth inputs and the zero-blocker V3 review; product-owner acceptance and accepted manifest remain absent",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 1: Batch A V3 browser-evidence selection",
+  "task_id": "candidate-manifest:t6-puzzle-batch-a:v3",
+  "role": "candidate-manifest-author-batch-a-v3",
+  "role_identity": "T6 Puzzle/Crafting Batch A candidate-manifest author only; no product-owner, acceptance-author, or accepted-manifest authority",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "38f80821f3a37eaa539f75cb377abab760e77cd6",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "prior_role_history": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-independent-review-v3.json",
+      "sha256": "9a855ce54bceb7b6d3c911a024fe24c56c1b259a7888cad99d1115c756a03964",
+      "use": "Fresh zero-blocker V3 review over the exact V3 selected inputs; candidate authorization only. No product-owner acceptance conclusion was imported."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/adversarial-reviewer-batch-a-v3.json",
+      "sha256": "4d04d3a3e9f966e4110168653fbc906db43401ac2565b365c9deccd1136708dd",
+      "use": "Exact review input bindings, local provenance disclosure, resource accounting, zero-blocker result, and role-boundary evidence."
+    }
+  ],
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are truthful non-attestations; no provider value was fabricated, no provider-attested isolation is claimed, and the user prohibited commits."
+  },
+  "provenance_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "application": "The candidate binds exact committed local inputs and a fresh review at role base 38f80821f3a37eaa539f75cb377abab760e77cd6. The candidate and this receipt remain uncommitted and non-consumable because the user prohibited commits; they do not satisfy an accepted manifest's committed-binding requirement."
+  },
+  "input_hashes": {
+    "measure/apk-evidence-cohort-protocol.md": "1f97ed8fd026cb0b1b49ed5de602252c075228981d1ff26640748b56ff2a3507",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/spec.md": "45485007599fdf581ae50d7e3862a1476235a6a4150130635133273314b4b1f1",
+    "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/phase0-budget-declaration.json": "695bd2b90bf0483c35c09c51007add5e467ad671cac4945392e4cc3fa02a5314",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v2.py": "9005366f4e938c1d4d565e042ee18c16b18f12df2cec8334c8a77eea51b5e4f6",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v3.py": "635a211d5210eea1af551fd4e074fcb8bf24037ebd4e13f8737e5a03e7d2f606",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/browser-audit-batch-a.json": "d413d99aaa626f91d4426c8c8cb05518fb434e849e3ecac07b207f19960a3ce3",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/browser-audit-batch-a.json": "9dc4e8c196cb43db78f987a68ec66e31032343c20b39e237e590005ed0507ae5",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/browser-audit-batch-a.json": "eefbecd0fc706dda2c51a11227c253eba94104e7db162b88f568f7cbcb043105",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/browser-auditor-alchemists-synthesis-batch-a.json": "1fe33d93065e8ad22e0f7785eff01bddef7a553c20c6f623895466d92d2edee0",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/browser-auditor-enchanted-library-batch-a.json": "e2d0182bbc3b3ea9bec09b83289fc8633fdccc29914f21523975c130631c1430",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/browser-auditor-rune-match-batch-a.json": "ee1faf8430f04f0c3c62fcf7e9df47b801e5a2e4b3a2c3ff28a65aea09321e5d",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/truth-test-author-batch-a-v2.json": "0ffe44665048c47906a1efcfa1a82ec730514b7871d8660a5eb1a23829892c3f",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/truth-test-author-batch-a-v3.json": "cbc0bbfdd4d35c880782c87046794688b8f5d45d1b97b4e724611142bb0aca5d",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-independent-review-v3.json": "9a855ce54bceb7b6d3c911a024fe24c56c1b259a7888cad99d1115c756a03964",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/adversarial-reviewer-batch-a-v3.json": "4d04d3a3e9f966e4110168653fbc906db43401ac2565b365c9deccd1136708dd"
+  },
+  "candidate_validation": {
+    "candidate_path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/candidate-cohort-manifest-batch-a-v3.json",
+    "candidate_sha256": "3bd8274d302399d014349fa9fba80432c3ec73a187013b367187f66655d83909",
+    "candidate_bytes": 21420,
+    "candidate_json_valid": true,
+    "candidate_consumable": false,
+    "candidate_acceptance_claimed": false,
+    "candidate_role_base_sha": "38f80821f3a37eaa539f75cb377abab760e77cd6",
+    "candidate_selected_v3_input_hash_records": 10,
+    "candidate_selected_v3_input_hash_mismatches": 0,
+    "candidate_inherited_v2_active_input_hash_records": 36,
+    "candidate_inherited_v2_active_input_hash_mismatches": 0,
+    "scope_packages": 3,
+    "factual_claims": 57,
+    "fixtures": 11,
+    "browser_dispositions": 3,
+    "review_unresolved_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    }
+  },
+  "test_binding": {
+    "truth_test_path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v3.py",
+    "truth_test_sha256": "635a211d5210eea1af551fd4e074fcb8bf24037ebd4e13f8737e5a03e7d2f606",
+    "truth_receipt_path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/truth-test-author-batch-a-v3.json",
+    "truth_receipt_sha256": "cbc0bbfdd4d35c880782c87046794688b8f5d45d1b97b4e724611142bb0aca5d",
+    "review_path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-independent-review-v3.json",
+    "review_sha256": "9a855ce54bceb7b6d3c911a024fe24c56c1b259a7888cad99d1115c756a03964",
+    "review_receipt_path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/adversarial-reviewer-batch-a-v3.json",
+    "review_receipt_sha256": "4d04d3a3e9f966e4110168653fbc906db43401ac2565b365c9deccd1136708dd",
+    "pre_candidate_non_lifecycle_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v3.py -k 'not BatchAV3LifecycleContract'",
+    "pre_candidate_non_lifecycle_result": "19 passed, 3 deselected; exit 0",
+    "post_candidate_full_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v3.py",
+    "post_candidate_full_result": "20 passed, 2 expected fail-closed failures; exit 1; only product-owner approval and accepted-manifest gates remain red",
+    "full_module_not_claimed_green": "The two remaining failures are mandatory lifecycle stops. This role is not authorized to create product-owner acceptance or an accepted manifest and does not claim those gates green."
+  },
+  "browser_unknowns_carried": [
+    "Enchanted Library is bounded-unknown-non-runnable: its exact local candidate route returned HTTP 404; the screenshot helper failed; gameplay, transitions, compact/wide behavior, real input, content variation, completion, persistence, XP, API correctness, and product behavior remain unknown.",
+    "Rune Match is bounded-unknown-non-runnable-at-role-revision: its exact localhost candidate route returned HTTP 404; only the 404 surface at 1920x927 was observed; API candidates were not visited; gameplay and all dependent browser behavior remain unknown.",
+    "Alchemist's Synthesis is bounded-unknown-non-runnable-at-role-revision: its exact route returned HTTP 404 on two local ports belonging to another app; only the 404 surface at 1920x927 was observed; API candidates were not visited; gameplay and all dependent browser behavior remain unknown.",
+    "No screenshot, 404, synthetic-event capability, route probe, or error surface is promoted to gameplay, responsive, trusted-input, completion, persistence, XP, API-correctness, or production evidence."
+  ],
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/candidate-cohort-manifest-batch-a-v3.json",
+      "sha256": "3bd8274d302399d014349fa9fba80432c3ec73a187013b367187f66655d83909"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/candidate-author-batch-a-v3.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot embed its own stable SHA-256 without changing its bytes. Any later authentic owner approval or additive successor binding must hash these exact bytes without mutating this receipt."
+    }
+  ],
+  "resource_use": {
+    "budget_basis": {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/phase0-budget-declaration.json",
+      "sha256": "695bd2b90bf0483c35c09c51007add5e467ad671cac4945392e4cc3fa02a5314",
+      "candidate_author_ceiling_declared": false,
+      "within_declared_candidate_author_ceiling_claimed": false,
+      "note": "The frozen declaration specifies discovery-denominator units and no candidate-manifest-author budget. This receipt reports measured usage without inventing or borrowing a ceiling."
+    },
+    "actual": {
+      "source_bytes": 141430,
+      "source_files_objects": 16,
+      "terminal_command_invocations_before_receipt_publication": 10,
+      "elapsed_minutes": 0,
+      "records_authored_reviewed": 2,
+      "browser_interactions": 0,
+      "captured_artifacts": 2
+    },
+    "timing_measurement": "unavailable-in-harness",
+    "timing_note": "0 is an accounting fallback, not elapsed-time, duration, performance, or provider-session evidence.",
+    "measurement_scope": "The exact 141430 bytes of the 16 direct candidate-author inputs listed in input_hashes. The candidate and receipt are the two authored records and captured artifacts. No browser was used by this role."
+  },
+  "findings": {
+    "unresolved": [],
+    "unresolved_counts": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    }
+  },
+  "revocation": {
+    "candidate_revoked": false,
+    "superseded_candidate_sha256": null,
+    "revocation_event_sha256": null,
+    "rule": "Any bound-byte, hash, revision, predecessor, governing input, inherited V2 input, selected V3 input, truth output, review, receipt, browser disposition, budget disclosure, or zero-blocker result change revokes this candidate. Remediation requires an additive revocation or supersession record, regenerated affected outputs and receipts, rerun truth gates, fresh review, and a new non-consumable candidate; neither this candidate nor this receipt may be edited in place."
+  },
+  "lifecycle": {
+    "candidate_manifest_published": true,
+    "candidate_consumable": false,
+    "product_owner_acceptance_published": false,
+    "accepted_manifest_published": false,
+    "approval_event_id": null,
+    "approval_message_sha256": null,
+    "lifecycle_status": "candidate-only; awaiting a later authentic product-owner approval bound to the exact candidate and review hashes"
+  },
+  "commit_sha": null,
+  "commit_disposition": "not-created; user prohibited commits",
+  "receipt_self_hash": null,
+  "receipt_self_hash_note": "A self-hash cannot be embedded without changing the receipt bytes.",
+  "role_boundary": "Created only candidate-cohort-manifest-batch-a-v3.json and this candidate-author receipt. No product-owner acceptance, accepted manifest, source, evidence package, mapper, browser audit, truth test, independent review, direction, budget, plan, registry, product document, or commit was created or modified.",
+  "measure_agent_result": {
+    "status": "candidate-only-nonconsumable",
+    "candidate": true,
+    "consumable": false,
+    "acceptance": "not-claimed",
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

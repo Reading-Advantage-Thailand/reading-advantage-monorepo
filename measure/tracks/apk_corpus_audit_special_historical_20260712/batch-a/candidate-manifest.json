@@ -1,0 +1,400 @@
+{
+  "schema_version": "apk-candidate-cohort-manifest.v3",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "input_generation": "V3",
+  "review_iteration": "zero-blocker-v1",
+  "phase": "Phase 4: Cohort acceptance",
+  "status": "candidate-awaiting-product-owner-acceptance",
+  "consumable": false,
+  "revoked": false,
+  "acceptance_claimed": false,
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "candidate_role_base_sha": "38f80821f3a37eaa539f75cb377abab760e77cd6",
+  "review_audited_head_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "review_publication_commit_sha": "38f80821f3a37eaa539f75cb377abab760e77cd6",
+  "upper_source_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "denominator_comparison_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "scope": {
+    "packages": [
+      "catalog/griffin-sky-joust",
+      "catalog/realm-carver",
+      "sentence/devourer-slime"
+    ],
+    "claim_records": 37,
+    "source_enveloped_claims": 33,
+    "explicit_unknown_claims": 4,
+    "negative_fixtures": 18,
+    "scope_limit": "Evidence reconstruction for the three frozen Batch A identities only. This candidate makes no ontology, shipping, implementation, product-owner acceptance, accepted-manifest, Batch B opening, or downstream-consumability decision."
+  },
+  "predecessor_bindings": {
+    "evidence_integrity_gate": {
+      "path": "measure/evidence-integrity-accepted-gate.json",
+      "sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+      "status": "accepted",
+      "consumable": true,
+      "revoked": false
+    },
+    "accepted_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+      "status": "accepted",
+      "consumable": true,
+      "revoked": false
+    },
+    "accepted_partition": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+      "status": "accepted",
+      "consumable": true,
+      "revoked": false
+    },
+    "accepted_pilot": {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+      "status": "accepted-conditional",
+      "consumable": true,
+      "revoked": false
+    }
+  },
+  "direction_binding": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+  },
+  "input_hashes": {
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "measure/evidence-integrity-accepted-gate.json": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+    "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-discovery-audit.json": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/test-strategy-phase0.md": "2762937ccbb24ecc193c7301c9729efe0d1d1846fce827a88f8aee9e6c7566fd",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-role-applicability.json": "f04b6c72d8e2670a56ba1244bef2b3869b12e4095bdd71ae7d544ceb69437782",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-budget-declaration.json": "f87e33ef2a1a35ce2ac77eb0ea8f9797f6dc2e5c514159ad6d1fe011363bfe6b",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/discovery-audit.json": "585978d5592b321da7bcce72c4df929998da0d566b717447933c411f023b38dd",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/current-source-observations-v2.json": "645cbafafdd5652361137a7177e687a64e1c14f01a71204fded598be2b60f140",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/historical-source-observations-v2.json": "392e3f348f299781722d9334e9b475b399e472997df67043969f781024340a10",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/claim-ledger-v2.json": "dbe69391387b5ae8bae2fe0e6d1a0e3b6a687ed9f372b3259cd00c9f92958905",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/evidence-method-v2.md": "e09d14cca7b36155c636d887c2f145410ee181e3073e531fa2856ceeb864a921",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/evidence-final-report-v2.json": "3356420f98cb02f6fbcde39ce870b9a75cac5fff25e9c0ef9145655369830657",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/negative-fixtures-v2.json": "f99e89e7d131f043e04e4a86f960ce819b73c60aa2de074cfe09458d4b24a204",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/requirements-map-v2.json": "531f34179c882c22b811a021c168742e2f0d81a5703da259efbc1de5c6a4ac50",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/requirements-mapper-report-v2.json": "ee10e2d3a701235ec8c1f77810b11f145fa11ed398124a3439d787d33a9cec8b",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/current-source-observations-v2.json": "fde92bded707d61acbc493835a6759634e2d0c55fd3a4489d141ce52fd89c120",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/historical-source-observations-v2.json": "34f530bd89ba5541b73f8e0dd326c984fddbc45ef27d44404b48b79f434780b3",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/claim-ledger-v2.json": "259b821e88143665203830814292ad19a78397d9974f2dee6edd9e92051e8afc",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/evidence-method-v2.md": "5c962c384ab774ca1fe4283b2dcb89e2076002373a89749514d5bc414123c96a",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/evidence-final-report-v2.json": "8eac1831ec21d922e1ba7930868160cc576df7634d3e6d2c13350e48b2bc511a",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/negative-fixtures-v2.json": "95dab852811e0f742e302c532310bc2de5c8338dcc4c5ce58287d36709a50700",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/requirements-map-v2.json": "44ca9fa40b5ab95549e141a8491deac191941dfc406f8b415e90f036bdb31c91",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/requirements-map-report-v2.json": "72031f155a1b2ed105b0473480596f68d4984508329d653ab51aa107ba31d4be",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/current-source-observations-v2.json": "6c2485b967f521e3c223a42ac01eae25c94c593a6c226b243df6bbb60f46ece3",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/historical-source-observations-v2.json": "119861ff3f790a5ecd71cc62c003b9bb1ba6859651af3af2fbf6272fad651441",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/reconciled-claim-ledger-v2.json": "7ef676e12ae5d8ee1265814ee031146b94dced75915f3d2a95659a6b09226dba",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/evidence-method-report-v2.md": "e01629bcded663ea2eafc2a5822769163517fef7db3b038df99f7f62448ac43b",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/negative-fixtures-v2.json": "5a4fd9725d4cd6eab8f31a6517e23df66251f6ce671c0c7c8506d3417f2c14c3",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/requirements-map-v2.json": "15da4277229a09523f3ef9ac470fefd81685b19800e31b2daede32fccfbedc5c",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/requirements-map-report-v2.json": "e4df6868b317e6ccdc578c350e5fcaa8acec450344e7ad32bf6a6fa9246149ef",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/current-source-specialist-griffin-sky-joust-v2.json": "85fee2ac55efc1e112a82d1ba4d3dd7a1a652947b998f2319a80f56e4732b54a",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/current-source-specialist-realm-carver-v2.json": "90bd5d032ffc64e6356595361de32c919be316f11d80671c4ce8c1ee9fcea672",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/current-source-specialist-devourer-slime-v2.json": "e80c53d6fd17c55bc77d08590fce2b246c4fc704be4b50c50b0b1d1d99d6bc7b",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/historical-source-specialist-griffin-sky-joust-v2.json": "af3ef46e20765edfeb02b16b9157bcf194638763f57e6192301d34d3288396f7",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/historical-source-specialist-realm-carver-v2.json": "c87ad25742bc279008fe3a720b1218906e0ebaba9cd65454fe5960d350047688",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/historical-source-specialist-devourer-slime-v2.json": "d7f0387cbb43f04c11de7b6d2ce500690d800812826fb1547ac227684c666877",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/evidence-collector-griffin-sky-joust-v2.json": "017a27cf0e0b34193a0e835514d16e930720d9b89a585f1890ef728ab22c3363",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/evidence-collector-realm-carver-v2.json": "8dff13f48a9d54d14812c0b3996a01269ee205034c08709c783a8fe1cba0ff8f",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/evidence-collector-devourer-slime.json": "3f93a35c7538d1553267e8dd09e3c773db8065e5e8f22235aac363dfb86bd25c",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/requirements-mapper-griffin-sky-joust-v2.json": "0c846a0a78298578295e732471b51e8e5fcabc4cb254d6d4098d1c99b7c00076",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/requirements-mapper-realm-carver.json": "1a8822022977e85eb987e9a96b9b77bae9f2ab75dee7b4d3913e625c5a99ce60",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/requirements-mapper-devourer-slime.json": "301b55a286b513c271df6bcd788a2c441cc776f59577d6b4bf4cabd05fd631b8",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/discovery-auditor-batch-a.json": "26b9f58f57e1ce4af6cc4caa01db0d3049b8978338000bd2e7e0a1c8be9c4679",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/discovery-auditor-phase0.json": "d727622937fff733de8844689848524ec2ad51bb7fd5022fe3a52e953fe31e13",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/spec.md": "eb076a7cb983769cba15db9a8f94784283e36cc2c232a39b1652d099d11aebf9",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v2.py": "bf32c25f4252995b4e9a200009b2a1c1d923a1ebb4936848230435cc5b362212",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/truth-test-author-batch-a-v2.json": "1a8abb79581fac3dc243d440b8ec54a0f9232eac41c9dc3e94b18bff3b6fd4ea",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/browser-audit.json": "618890ec18eb5bfeae6057e187bd52fa5a8d2533e31e7c588a111b1fbedd08ab",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-griffin-sky-joust.json": "bcd8017ba1a7b83685e27532c83aa6e53f7fd7d2e466921558756b8e2692f4b3",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/browser-audit-batch-a.json": "f0fcbadb8e92b3118d4eb9dd91fab6f51f85b341e59fdd1bf73a827d3c9f56e4",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-realm-carver-batch-a.json": "054b5c2648de8e384d423bb8961821fb6c0b2d5b9f0ceb51b3177cf17953e21d",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/browser-audit-v2.json": "46a3e8c68d4f964bc6e34b9a1e3fec7d900afd3f6a77c90fa3b2ec6427e1090f",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-devourer-slime-v2.json": "8335fb4d38579356f6c84285b7c20902d6a9ba7b7d176a3fb13373ebed7c09e1",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v3.py": "a4106c21d2fe8435e7d765be9cc3a68e16fb269dbc9e37220097793ceb6946b9",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/truth-test-author-batch-a-v3.json": "a1a46010b91e68ec1253d8748b82b4003adf1a9a034b9dae47cf37d3d24f1e18",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/adversarial-review.json": "1a7c4f139944d3892a0a6bddb2986c97f64a97c5647ea5edd4050931c55ec976",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/adversarial-reviewer-batch-a.json": "08dc852cca6917fcd618161ed206fede54ca294891ddb5f614115019cd07bce8"
+  },
+  "source_class_bindings": {
+    "closed_vocabulary": [
+      "current_implementation",
+      "historical_implementation",
+      "active_specification",
+      "catalog_prose",
+      "cancelled_design",
+      "unknown"
+    ],
+    "griffin-sky-joust": {
+      "current_observation_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/current-source-observations-v2.json",
+      "current_disposition": "unknown; no current implementation envelope, route, states, transitions, mechanics, assets, or runnable disposition is established",
+      "ledger_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/claim-ledger-v2.json",
+      "ledger_sha256": "dbe69391387b5ae8bae2fe0e6d1a0e3b6a687ed9f372b3259cd00c9f92958905",
+      "claim_ids_by_source_class": {
+        "historical_implementation": [
+          "GSJ-HIST-001",
+          "GSJ-HIST-002",
+          "GSJ-HIST-003",
+          "GSJ-HIST-004",
+          "GSJ-HIST-005",
+          "GSJ-HIST-006",
+          "GSJ-HIST-007"
+        ]
+      },
+      "claim_counts": {
+        "current_implementation": 0,
+        "historical_implementation": 7,
+        "active_specification": 0,
+        "catalog_prose": 0,
+        "cancelled_design": 0,
+        "unknown": 0
+      }
+    },
+    "realm-carver": {
+      "current_observation_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/current-source-observations-v2.json",
+      "current_disposition": "unknown; no current implementation bytes were observed at the retained frozen-revision paths",
+      "ledger_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/claim-ledger-v2.json",
+      "ledger_sha256": "259b821e88143665203830814292ad19a78397d9974f2dee6edd9e92051e8afc",
+      "claim_ids_by_source_class": {
+        "unknown": [
+          "RC-CUR-001",
+          "RC-CUR-002",
+          "RC-CUR-003",
+          "RC-CUR-004"
+        ],
+        "historical_implementation": [
+          "RC-HIST-001",
+          "RC-HIST-002",
+          "RC-HIST-003",
+          "RC-HIST-004",
+          "RC-HIST-005",
+          "RC-HIST-006",
+          "RC-HIST-007",
+          "RC-HIST-008"
+        ]
+      },
+      "claim_counts": {
+        "current_implementation": 0,
+        "historical_implementation": 8,
+        "active_specification": 0,
+        "catalog_prose": 0,
+        "cancelled_design": 0,
+        "unknown": 4
+      }
+    },
+    "devourer-slime": {
+      "current_observation_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/current-source-observations-v2.json",
+      "historical_observation_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/historical-source-observations-v2.json",
+      "ledger_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/reconciled-claim-ledger-v2.json",
+      "ledger_sha256": "7ef676e12ae5d8ee1265814ee031146b94dced75915f3d2a95659a6b09226dba",
+      "claim_ids_by_source_class": {
+        "current_implementation": [
+          "DS-CL-C-001",
+          "DS-CL-C-002",
+          "DS-CL-C-003",
+          "DS-CL-C-004",
+          "DS-CL-C-005",
+          "DS-CL-C-006",
+          "DS-CL-C-007",
+          "DS-CL-C-008",
+          "DS-CL-C-009",
+          "DS-CL-C-010",
+          "DS-CL-C-011"
+        ],
+        "historical_implementation": [
+          "DS-CL-H-001",
+          "DS-CL-H-002",
+          "DS-CL-H-003",
+          "DS-CL-H-004",
+          "DS-CL-H-005",
+          "DS-CL-H-006",
+          "DS-CL-H-007"
+        ]
+      },
+      "claim_counts": {
+        "current_implementation": 11,
+        "historical_implementation": 7,
+        "active_specification": 0,
+        "catalog_prose": 0,
+        "cancelled_design": 0,
+        "unknown": 0
+      },
+      "chronology_boundary": "Current claims use only the frozen upper revision; historical claims use the reachable ancestor 1c44854682b18a2393efd265c2271f824e228a3d; no historical proposition is promoted to current behavior."
+    },
+    "batch_totals": {
+      "current_implementation": 11,
+      "historical_implementation": 22,
+      "active_specification": 0,
+      "catalog_prose": 0,
+      "cancelled_design": 0,
+      "unknown": 4
+    },
+    "interpretation_boundary": "Source-class counts describe exact V2 claim-ledger records. Catalog identity, active specification, cancelled design, historical source, and browser records are not interchangeable; absent behavior remains unknown and no analogy fills a gap."
+  },
+  "browser_disclosure_bindings": {
+    "griffin-sky-joust": {
+      "audit_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/browser-audit.json",
+      "audit_sha256": "618890ec18eb5bfeae6057e187bd52fa5a8d2533e31e7c588a111b1fbedd08ab",
+      "receipt_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-griffin-sky-joust.json",
+      "receipt_sha256": "bcd8017ba1a7b83685e27532c83aa6e53f7fd7d2e466921558756b8e2692f4b3",
+      "disposition": "non-runnable-current-source-unknown",
+      "known_only": "Four historical-source-derived candidate route attempts produced one exact connection refusal followed by three application 404 responses.",
+      "counts": {
+        "route_attempts": 4,
+        "application_responses": 3,
+        "trusted_input_events": 0,
+        "synthetic_input_events": 0,
+        "transitions_observed": 0,
+        "captured_artifacts": 0,
+        "browser_interactions": 7
+      },
+      "unknown_and_not_claimed": "Current route, current implementation, runtime behavior, transitions, input behavior, compact/wide behavior, persistence, production behavior, asset loading, and current runnable disposition remain unknown. Historical route candidates are not current behavior."
+    },
+    "realm-carver": {
+      "audit_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/browser-audit-batch-a.json",
+      "audit_sha256": "f0fcbadb8e92b3118d4eb9dd91fab6f51f85b341e59fdd1bf73a827d3c9f56e4",
+      "receipt_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-realm-carver-batch-a.json",
+      "receipt_sha256": "054b5c2648de8e384d423bb8961821fb6c0b2d5b9f0ceb51b3177cf17953e21d",
+      "disposition": "non-runnable",
+      "known_only": "Two exact localhost:3000 route GETs completed as HTTP 404 text/html responses.",
+      "counts": {
+        "route_attempts": 2,
+        "runnable_results": 0,
+        "non_runnable_results": 1,
+        "trusted_native_input_events": 0,
+        "captured_artifacts": 0,
+        "browser_interactions": 9,
+        "student_data_records": 0
+      },
+      "privacy": "No account, student-data, or unrelated-tab surface was accessed; no screenshots or browser artifacts were published.",
+      "unknown_and_not_claimed": "Current runnable route beyond the two exact attempts, gameplay mechanics, states, transitions, asset usage, compact/wide behavior, input behavior, persistence, and production behavior remain unknown."
+    },
+    "devourer-slime": {
+      "audit_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/browser-audit-v2.json",
+      "audit_sha256": "46a3e8c68d4f964bc6e34b9a1e3fec7d900afd3f6a77c90fa3b2ec6427e1090f",
+      "receipt_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-devourer-slime-v2.json",
+      "receipt_sha256": "8335fb4d38579356f6c84285b7c20902d6a9ba7b7d176a3fb13373ebed7c09e1",
+      "disposition": "browser-audit-blocked-application-unavailable",
+      "known_only": "Kimi WebBridge was available and used; two candidate localhost URLs were attempted and both refused the connection, producing zero application responses.",
+      "counts": {
+        "route_attempts": 2,
+        "application_responses": 0,
+        "trusted_input_events": 0,
+        "synthetic_input_events": 0,
+        "transitions_observed": 0,
+        "captured_artifacts": 0,
+        "browser_interactions": 7
+      },
+      "timing_disclosure": "elapsed_minutes=0 in the browser audit is an owner-directed fallback for unavailable timing, not elapsed-time evidence.",
+      "unknown_and_not_claimed": "Browser behavior, route reachability, start transition, movement, camera, collision, compact/wide behavior, input behavior, console/network behavior, persistence, production behavior, asset loading, and completion remain unknown."
+    },
+    "batch_boundary": "The three browser records prove only their exact blocked/non-runnable dispositions. They do not establish successful gameplay, trusted native input, transitions, responsive behavior, persistence, production behavior, asset loading, completion, XP, idempotency, or API correctness."
+  },
+  "truth_gate_binding": {
+    "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v3.py",
+    "sha256": "a4106c21d2fe8435e7d765be9cc3a68e16fb269dbc9e37220097793ceb6946b9",
+    "receipt_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/truth-test-author-batch-a-v3.json",
+    "receipt_sha256": "a1a46010b91e68ec1253d8748b82b4003adf1a9a034b9dae47cf37d3d24f1e18",
+    "pre_review_full_result": "31 passed, 4 expected fail-closed failures; zero pytest ERROR outcomes",
+    "evidence_only_result": "31 passed, 4 deselected; exit 0",
+    "candidate_stage_expected_result": "33 passed, 2 deselected when authentic owner-approval and accepted-manifest tests are excluded; those two lifecycle artifacts remain absent and unauthorized for this role"
+  },
+  "review_binding": {
+    "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/adversarial-review.json",
+    "sha256": "1a7c4f139944d3892a0a6bddb2986c97f64a97c5647ea5edd4050931c55ec976",
+    "receipt_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/adversarial-reviewer-batch-a.json",
+    "receipt_sha256": "08dc852cca6917fcd618161ed206fede54ca294891ddb5f614115019cd07bce8",
+    "games_reviewed": [
+      "griffin-sky-joust",
+      "realm-carver",
+      "devourer-slime"
+    ],
+    "claims_rederived": 37,
+    "semantic_tokens_exercised": 33,
+    "fixtures_rederived": 18,
+    "browser_dispositions_rederived": 3,
+    "unresolved_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "info": 0
+    },
+    "review_disposition": "conditional-pass: zero unresolved Critical, High, or Medium findings",
+    "candidate_authorized": true,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false
+  },
+  "provider_provenance_disclosure": {
+    "provider_side_attestation_available": false,
+    "provider_attestation_claimed": false,
+    "unavailable_fields": [
+      "prompt",
+      "context manifest",
+      "spawn",
+      "session",
+      "ancestry",
+      "fork isolation",
+      "events",
+      "timing",
+      "final response",
+      "commit attestation"
+    ],
+    "compensating_controls": "Exact local SHA-256 bindings, committed Git ancestry through role base 38f80821f3a37eaa539f75cb377abab760e77cd6, immutable source envelopes, declared role scope, and fresh independent re-derivation are used under the bound provenance direction. No provider-attested isolation or provenance is claimed."
+  },
+  "budget_and_stop_loss": {
+    "frozen_budget_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-budget-declaration.json",
+    "frozen_budget_sha256": "f87e33ef2a1a35ce2ac77eb0ea8f9797f6dc2e5c514159ad6d1fe011363bfe6b",
+    "reviewed_budget_ceiling_breaches": 0,
+    "unsupported_factual_claims": 0,
+    "denominator_mismatches": 0,
+    "duplicate_partition_assignments": 0,
+    "unassigned_batch_a_identities": 0,
+    "stale_committed_artifacts": 0,
+    "envelope_mismatches": 0,
+    "fixture_contamination": 0,
+    "fabricated_provider_attestations": 0,
+    "browser_facts_promoted_to_gameplay": 0,
+    "stop_loss_status": "not-triggered at the reviewed V3 stage"
+  },
+  "revocation_rules": {
+    "automatic_triggers": [
+      "Any byte or SHA-256 change to a bound predecessor, direction, strategy, phase declaration, package artifact, role receipt, browser audit, truth test, truth receipt, review, or review receipt.",
+      "Any phase-base, candidate-role-base, review-audited-head, review-publication-commit, upper-source-revision, or denominator-comparison-revision mismatch.",
+      "Any revocation or supersession of a bound accepted predecessor or owner direction.",
+      "Any later unsupported factual claim, source-class promotion, citation-envelope mismatch, denominator mismatch, stale receipt, budget breach, browser-behavior overclaim, or unresolved Critical, High, or Medium finding.",
+      "Any attempt to consume this candidate or represent it as accepted before authentic product-owner approval and a separately authored accepted manifest bind these exact candidate and review bytes."
+    ],
+    "on_trigger": "Publish an additive revocation or supersession record identifying this exact candidate digest; regenerate affected outputs and receipts; rerun equivalent truth gates; obtain a fresh zero-blocker review; and publish a new non-consumable candidate. Never mutate this candidate or its receipt in place.",
+    "supersedes_candidate_sha256": null,
+    "superseded_by_candidate_sha256": null,
+    "revocation_event_sha256": null
+  },
+  "candidate_identity": {
+    "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/candidate-manifest.json",
+    "self_sha256": null,
+    "self_hash_rule": "The candidate cannot embed its own stable digest. The separately authored candidate-author receipt binds these exact bytes; any later authentic owner approval must independently bind that digest without mutating this artifact."
+  },
+  "lifecycle": {
+    "candidate_published": true,
+    "candidate_consumable": false,
+    "candidate_author_receipt_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/candidate-author-batch-a.json",
+    "candidate_author_receipt_sha256": null,
+    "product_owner_acceptance_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/product-owner-acceptance.json",
+    "product_owner_acceptance_published": false,
+    "accepted_manifest_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/accepted-manifest.json",
+    "accepted_manifest_published": false,
+    "approval_event_id": null,
+    "approval_message_sha256": null,
+    "lifecycle_status": "candidate-only; non-consumable; product-owner acceptance and accepted manifest are absent and unauthorized for this role"
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

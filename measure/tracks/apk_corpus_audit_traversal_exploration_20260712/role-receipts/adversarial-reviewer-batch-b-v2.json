@@ -1,0 +1,184 @@
+{
+  "schema_version": "apk-role-receipt.v3",
+  "status": "fresh-independent-adversarial-review-v2-over-v2-selected-inputs-complete-green",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B remediation V2",
+  "batch_id": "batch-b",
+  "task_id": "review-batch-b:v2-over-v2-selected-inputs",
+  "role": "adversarial-reviewer-batch-b-v2",
+  "role_identity": "fresh independent adversarial reviewer for T5 Traversal Batch B V2 over the V2 selected inputs; review iteration V2",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "audited_head_sha": "38f80821f3a37eaa539f75cb377abab760e77cd6",
+  "prior_role_history": [
+    {
+      "role": "adversarial-reviewer-batch-b",
+      "output_commit": "38f80821f3a37eaa539f75cb377abab760e77cd6",
+      "received_via": "inheritance-of-bounded-handoff",
+      "note": "No prior fresh V2 adversarial review exists; this receipt is the first fresh-context batch-b V2 reviewer at audited HEAD."
+    }
+  ],
+  "role_boundary": "Only batch-b-independent-review-v2.json and this additive receipt were created. No source, evidence ledger, collector, mapper, browser, truth-test, budget, strategy, plan, registry, candidate, acceptance, accepted-manifest, or commit artifact was modified or created.",
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are truthful non-attestations; no provider value was fabricated, and the user prohibited commits."
+  },
+  "provenance_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "application": "The V2 selected inputs (45 V2 ACTIVE_INPUT_HASHES from batch-b-truth-tests-v2.py plus the V2 truth test and V2 truth receipt, totaling 47 review-bound inputs) are independently re-derived from the audited HEAD 38f80821. Provider-attested isolation is unavailable and is not claimed."
+  },
+  "timing_direction": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json",
+    "sha256": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+    "decision": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+    "applicable_to_batch_b": true,
+    "reason": "Additive timing direction selects Batch B elapsed-minute accounting fallback only; no other gate is waived.",
+    "applies_to_reviewer": "yes (this receipt's elapsed_minutes=0 is the owner-directed accounting fallback, not elapsed-time evidence)"
+  },
+  "local_input_manifest_sha256": "375247949d1d8879a65f6a9149de2dfd2563bb7b6314cd06ffc525882a03905c",
+  "local_input_manifest_basis": "SHA-256 of compact key-sorted JSON containing input_hashes exactly as recorded below.",
+  "input_hashes": {
+    "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/test-strategy-phase0.md": "734b879b75a8fff0e709242a4046706408f79587a2ec4f732a426e22d105ba0d",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-role-applicability.json": "24b0980a07ddc8cc975596599530f6cd7089cf4dcc6e1bde5890a41882865ed9",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-discovery-audit.json": "6524d33b1af38d93b9cc0a3f1b31421979f7a4120f68d9065935946312e6c152",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-a-v6.json": "f5a215f44815c79025e86e97a3217d7a85c4a33db86f80db2909f30dd3a9caa3",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "measure/archive/apk_source_denominator_inventory_20260712/source-denominator.json": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d",
+    "measure/archive/apk_source_denominator_inventory_20260712/scene-state-denominator.json": "6308836ca24f1cac5bf4ded5f7e72c5ba06c08f4a5c6648620818b720190bf8b",
+    "measure/archive/apk_source_denominator_inventory_20260712/asset-file-denominator.json": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
+    "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+    "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/claim-evidence-ledger-v2.json": "5c960768bb3f2002d4bc9b20205d32c5e31e3717b854db8ae04dab2fc556621c",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/evidence-final-report-v2.json": "398607708be3a545396a6895d91f818ebfae1be5fc0e16b02462c2ab8c957a9c",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/evidence-method-v2.md": "6c38aae8b9105282eb2c158a425b190f20330f7d61897a9f365523b842c5d529",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/receipt-v2.json": "6f184ffd5516e05809a79fa20b81deb97c4d26758a34aee4739a9bc56af86ea9",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/requirements-map-v2.json": "9f0c00ac096e174e3a47978264aa3eeefee65dfaf164b7abeaf0ec7869af63e4",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/requirements-final-report-v2.json": "24d2e67d8f4e35dbe46c09b8f74b10a09252a8b1a2904cbdfbca284dab4e597d",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-shadow-gate-dungeon-batch-b-v2.json": "17594ed42659cb8532d57f986dbaa956fd107da8035141833dafc5da80c93b3d",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/browser-audit-v2.json": "06f1ca566baa4074dbe3943113300b8f0eea63bd79519c65c70d0f32ef616ae4",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/browser-auditor-shadow-gate-dungeon-batch-b-v2.json": "1221cd35d999b1caf19883c3e4fad2b571d78871ebd66d666acc2c8a395df766",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/fixtures-v2.json": "7c90a011001f001b2afd3e55ccb05ce1af9b79bc8534b9c5a51c3c1c17b24ec3",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/claim-evidence-ledger-batch-b-v2.json": "1b75beb8af13728ad5e564ed24ec8717341d775272099e92c9757a4fdbbddacb",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/evidence-final-report-batch-b-v2.json": "30847901fd5c1bc0320d921760f4486cb1c0130318aff0d6c7b6b8d6f088fb91",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/evidence-method-batch-b-v2.md": "1d6eeb9dbd78edfd2fb47350378fe187f0f077f22a33fe9ab5dd5f958f9d7687",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-labyrinth-goblin-king-batch-b-v2.json": "24255078f7dc901fa6c8c82a09dc8a1c1440840449db0365815d762120e93705",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/requirements-map-batch-b-v2.json": "cbfe99562db393ade5fe9552528a23f11e58e734a18fff7ba020540fe8ca23cf",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/mapper-final-report-batch-b-v2.json": "249f8e416d3354e1f17ca1407c3f3673fdec4e539d913cae0f92073a354295ae",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-labyrinth-goblin-king-batch-b-v2.json": "be0d915a591137610941feecb30cbb1dd8affd3a2083b97a8fc547d3790fe8bc",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/browser-audit-batch-b-v2.json": "a539346019623e280116d86de1096cb0d059a5af00e3ca8f863b9a6b6fe69717",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/browser-auditor-labyrinth-goblin-king-batch-b-v2.json": "ada1ba11116dc3d601e63193d8186d5e50de6865f2f37d3b71fb247f2f6cd86d",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/fixtures-batch-b-v2.json": "f23d4d053dc685e75b14a51e4392418f2e61549e6964763c3050ab9b01b19a68",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json": "9269956e48572e3ef9f0359f731a0f4f3c9d2193ede6128c0952b5a4bdd4dd59",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/evidence-final-report-v2.json": "945002a3152df782795d2ff2b389d409a1fe1163ac660572d2d967355d151e2f",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/evidence-method-v2.md": "8a13445368bdd708a4a4843a5afeda65e97a350b7759ac335da4254c175e61b8",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-griffin-riders-escape-batch-b-v2.json": "b556a111428a57d09490301c896a603b9f6774e027cf1abeaa4817d89f6cc6c9",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/requirements-map-batch-b-v2.json": "12568be748e055840d78d81e1aa22b16cf7ea6d0a8ab3bbffbeda5253b2cc56d",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/mapper-final-report-batch-b-v2.json": "3d2c10eb06919e22e158f2f9b2eab3399d3540b414b078931fb32f8fe23de2a9",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-griffin-riders-escape-batch-b-v2.json": "fcc89780de7a1d5b09246e20b11aa2e69560fe321d0a9154fd9100b88b581db8",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/browser-audit-v2.json": "cb5846ec8471e6847fbdf95f0e32204cbe386ab6d533ef14f11190b77d316b62",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/browser-auditor-griffin-riders-escape-batch-b-v2.json": "9a3e58a9d3bc921ac183ac14323828c45761d4408401f3bf8bf91d5c59bfa15e",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/fixtures-v2.json": "22e450a2e46c948b1c895d56315bba0baf7984c21800c3db87c1863b86f2864e",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-b-truth-tests-v2.py": "e5f4878d858a0cc745ae348a6e8cff448b2a1ed08cf8a120bc96187df8329941",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/truth-test-author-batch-b-v2.json": "58925bfa8c32df26c97021921cce1c9ba43cdc76ba5179a22ef470c78192cc31"
+  },
+  "governing_input_hashes": {
+    "measure/apk-evidence-cohort-protocol.md": "1f97ed8fd026cb0b1b49ed5de602252c075228981d1ff26640748b56ff2a3507",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md": "42685326bf239a92f3543919e8ce204fb4414e8ac136180ad340720fbd852ac1",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/test-strategy-phase0.md": "734b879b75a8fff0e709242a4046706408f79587a2ec4f732a426e22d105ba0d",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-role-applicability.json": "24b0980a07ddc8cc975596599530f6cd7089cf4dcc6e1bde5890a41882865ed9",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-discovery-audit.json": "6524d33b1af38d93b9cc0a3f1b31421979f7a4120f68d9065935946312e6c152"
+  },
+  "output_paths_and_sha256": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-b-independent-review-v2.json",
+      "sha256": "58fffd67512d26e1503f2d53f2b7359b31daae055835fa318a0376a5a0271bcd"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-batch-b-v2.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot embed its own final digest without changing its bytes."
+    }
+  ],
+  "resource_use": {
+    "ceiling": {
+      "source_bytes": 10000000,
+      "source_files_objects": 210,
+      "commands": 100,
+      "elapsed_minutes": 120,
+      "records_authored_reviewed": 7,
+      "browser_interactions": 0,
+      "captured_artifacts": 70
+    },
+    "actual": {
+      "source_bytes": 120461,
+      "source_files_objects": 14,
+      "commands": 12,
+      "elapsed_minutes": 0,
+      "records_authored_reviewed": 6,
+      "browser_interactions": 0,
+      "captured_artifacts": 2
+    },
+    "timing_measurement": "unavailable-in-harness",
+    "timing_note": "0 is the owner-directed accounting fallback, not elapsed-time evidence.",
+    "measurement_basis": "Source bytes are the 120461 bytes of 14 distinct source files re-shown at the claimed revisions during source-envelope re-derivation (30 current claims cite 23bb5ad57 and 14 historical claims cite 4106ba39). Files/objects count is 14 distinct (path, revision) pairs read for cite-then-hash verification."
+  },
+  "review_results": {
+    "active_inputs_exact": true,
+    "factual_claims_rederived": 44,
+    "historical_claims_rederived": 14,
+    "current_claims_rederived": 30,
+    "related_envelopes_rederived": 0,
+    "fixtures_rederived": 10,
+    "envelope_mismatches": 0,
+    "semantic_anchor_mismatches": 0,
+    "denominator_mismatches": 0,
+    "stale_mapper_bindings": 0,
+    "selected_receipts_with_non_integer_budget_actuals": 0,
+    "unknown_browser_dispositions_accepted_as_bounded": 3,
+    "unresolved_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "candidate_authorized": true,
+    "acceptance_authorized": false
+  },
+  "validation": {
+    "truth_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-b-truth-tests-v2.py -k 'not BatchBV2LifecycleContract'",
+    "bounded_truth_result": "17 passed, 3 deselected (3 lifecycle contracts remain absent and orchestrator-only); exit 0 for the non-lifecycle selector",
+    "full_truth_result_v2": "17 passed, 3 expected fail-closed failures (orchestrator-only candidate/approval/accepted-manifest remain absent); exit 1; zero pytest ERROR outcomes",
+    "json_command": "python3 -m json.tool measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-b-independent-review-v2.json >/dev/null && python3 -m json.tool measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-batch-b-v2.json >/dev/null",
+    "diff_check_command": "git diff --check -- measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-b-independent-review-v2.json measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-batch-b-v2.json"
+  },
+  "measure_agent_result": {
+    "status": "candidate-true-zero-unresolved",
+    "candidate": true,
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "reason": "The V2 selected inputs (45 ACTIVE_INPUT_HASHES from batch-b-truth-tests-v2.py plus the V2 truth test and V2 truth receipt, totaling 47 review-bound inputs) all exist as exact committed bytes at audited HEAD 38f80821 and at role base 65db764c. 44/44 factual claim source envelopes are exact via independent git-show re-derivation. 10/10 fixtures are rejected with no positive citation and no counts_as_claim inflation. Denominator reconciliation binds the exact accepted authority rows for all three games via authority_record_sha256s matches. All three V2 maps bind the complete collector package by SHA-256 with no forbidden keys. All V2 collector, mapper, browser, and truth-test receipts supply complete bounded integer budget_actual with timing_direction disclosure; no other gate is waived. Three V2 browser audits return bounded non-runnable/unknown dispositions with screenshots_alone_pass=false. The timing direction (UNAVAILABLE_HARNESS_TIMING_ACCOUNTING) permits elapsed_minutes=0 with explicit accounting fallback. Provider attestations remain unavailable and are not claimed. No commit was created. Candidate is true because zero unresolved Critical, High, or Medium findings remain at the audited HEAD."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

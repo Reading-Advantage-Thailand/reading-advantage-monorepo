@@ -1,0 +1,222 @@
+{
+  "schema_version": "apk-role-receipt.v3",
+  "status": "T7 Batch A non-consumable candidate authored from exact V3 truth inputs and the committed zero-blocker review; downstream product-owner acceptance and accepted manifest remain absent",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "phase": "Phase 4: Cohort acceptance",
+  "task_id": "candidate-manifest:batch-a:v3",
+  "role": "candidate-manifest-author-batch-a",
+  "role_identity": "T7 Special/Historical Batch A candidate-manifest author only; no product-owner or accepted-manifest authority",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "38f80821f3a37eaa539f75cb377abab760e77cd6",
+  "upper_source_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "denominator_comparison_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "prior_role_history": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v3.py",
+      "sha256": "a4106c21d2fe8435e7d765be9cc3a68e16fb269dbc9e37220097793ceb6946b9",
+      "use": "Exact V3 truth selection, source-class, chronology, semantic-envelope, fixture, mapping, receipt, budget, browser-disposition, review, and lifecycle contract."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/truth-test-author-batch-a-v3.json",
+      "sha256": "a1a46010b91e68ec1253d8748b82b4003adf1a9a034b9dae47cf37d3d24f1e18",
+      "use": "Exact V3 selection inputs, expected gate state, provider disclosure, resource accounting, and truth-author role boundary."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/adversarial-review.json",
+      "sha256": "1a7c4f139944d3892a0a6bddb2986c97f64a97c5647ea5edd4050931c55ec976",
+      "use": "Fresh full-batch re-derivation with zero unresolved Critical, High, Medium, Low, or Info findings; candidate authorization only."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/adversarial-reviewer-batch-a.json",
+      "sha256": "08dc852cca6917fcd618161ed206fede54ca294891ddb5f614115019cd07bce8",
+      "use": "Exact review scope, V3 input hashes, local-verifiability disclosure, zero-blocker result, budget evidence, and review-only role boundary."
+    }
+  ],
+  "provider_provenance": {
+    "available": false,
+    "attestation_claimed": false,
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are truthful non-attestations; no provider value or provider-attested isolation is claimed, and the user prohibited commits."
+  },
+  "direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+  },
+  "input_hashes": {
+    "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-budget-declaration.json": "f87e33ef2a1a35ce2ac77eb0ea8f9797f6dc2e5c514159ad6d1fe011363bfe6b",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v3.py": "a4106c21d2fe8435e7d765be9cc3a68e16fb269dbc9e37220097793ceb6946b9",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/truth-test-author-batch-a-v3.json": "a1a46010b91e68ec1253d8748b82b4003adf1a9a034b9dae47cf37d3d24f1e18",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/adversarial-review.json": "1a7c4f139944d3892a0a6bddb2986c97f64a97c5647ea5edd4050931c55ec976",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/adversarial-reviewer-batch-a.json": "08dc852cca6917fcd618161ed206fede54ca294891ddb5f614115019cd07bce8"
+  },
+  "candidate_validation": {
+    "candidate_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/candidate-manifest.json",
+    "candidate_sha256": "5552a5e8703a34c5b0c0d2fa7bb2c28d9a6ae5fbb7fab9edf2c268bbc3a48d5d",
+    "candidate_bytes": 28543,
+    "candidate_json_valid": true,
+    "candidate_direct_input_hash_records": 60,
+    "candidate_direct_input_bytes": 416804,
+    "candidate_direct_input_hash_mismatches": 0,
+    "candidate_consumable": false,
+    "candidate_acceptance_claimed": false,
+    "scope_packages": 3,
+    "claim_records": 37,
+    "source_enveloped_claims": 33,
+    "explicit_unknown_claims": 4,
+    "negative_fixtures": 18,
+    "review_unresolved_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "info": 0
+    }
+  },
+  "bound_source_class_disclosure": {
+    "closed_vocabulary": [
+      "current_implementation",
+      "historical_implementation",
+      "active_specification",
+      "catalog_prose",
+      "cancelled_design",
+      "unknown"
+    ],
+    "claim_counts": {
+      "current_implementation": 11,
+      "historical_implementation": 22,
+      "active_specification": 0,
+      "catalog_prose": 0,
+      "cancelled_design": 0,
+      "unknown": 4
+    },
+    "griffin_sky_joust": "Seven claim-ledger records are historical_implementation; current implementation, route, mechanics, states, transitions, assets, and runnable disposition remain unknown.",
+    "realm_carver": "Eight claim-ledger records are historical_implementation and four are unknown; the historical records are not promoted to current behavior.",
+    "devourer_slime": "Eleven claim-ledger records are current_implementation at the frozen upper revision and seven are historical_implementation at a reachable ancestor; chronology remains separated.",
+    "binding": "The candidate's exact SHA-256 binds the per-claim IDs, ledger hashes, zero-count classes, and interpretation boundary in source_class_bindings."
+  },
+  "bound_browser_disclosure": {
+    "griffin_sky_joust": "non-runnable-current-source-unknown: four historical-candidate route attempts, three application 404 responses after one refusal, zero trusted/synthetic inputs, zero transitions, and current behavior remains unknown.",
+    "realm_carver": "non-runnable: two exact localhost:3000 route GETs returned HTTP 404 text/html, zero trusted-native inputs, zero student-data records, and no gameplay or asset behavior is claimed.",
+    "devourer_slime": "browser-audit-blocked-application-unavailable: Kimi WebBridge was used, two candidate URLs refused connection, zero application responses, zero trusted/synthetic inputs, and all browser behavior remains unknown.",
+    "batch_boundary": "The browser records establish only exact blocked/non-runnable dispositions. They do not establish successful gameplay, trusted input, transitions, responsive behavior, persistence, production behavior, asset loading, completion, XP, idempotency, or API correctness.",
+    "binding": "The candidate's exact SHA-256 binds all three audit/receipt hashes, counts, privacy/timing disclosures, known-only observations, and unknown-and-not-claimed fields in browser_disclosure_bindings."
+  },
+  "candidate_stage_test": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v3.py -k 'not test_authentic_owner_approval_binds_candidate_and_review and not test_accepted_manifest_is_last_and_exactly_bound'",
+    "result": {
+      "passed": 33,
+      "deselected": 2,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "remaining_fail_closed_gates": [
+      "V3LifecycleContract::test_authentic_owner_approval_binds_candidate_and_review",
+      "V3LifecycleContract::test_accepted_manifest_is_last_and_exactly_bound"
+    ],
+    "disposition": "Candidate and independent-review gates are green. Product-owner acceptance and accepted-manifest gates remain intentionally absent, red in the unfiltered module, and unauthorized for this role."
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/candidate-manifest.json",
+      "sha256": "5552a5e8703a34c5b0c0d2fa7bb2c28d9a6ae5fbb7fab9edf2c268bbc3a48d5d"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/candidate-author-batch-a.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot embed its own stable SHA-256 without changing its bytes. Any later authentic product-owner acceptance or additive successor binding must hash these exact receipt bytes without mutating this artifact."
+    }
+  ],
+  "resource_use": {
+    "budget_basis": {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-budget-declaration.json",
+      "sha256": "f87e33ef2a1a35ce2ac77eb0ea8f9797f6dc2e5c514159ad6d1fe011363bfe6b",
+      "candidate_author_ceiling_declared": false,
+      "comparison_ceiling_role": "per_batch_limits",
+      "comparison_only_note": "The frozen declaration has no candidate-manifest-author role. Per-batch limits are shown only as a conservative measurement comparison; they grant no coordinator, product-owner, or acceptance authority and do not amend the frozen budget."
+    },
+    "comparison_ceilings": {
+      "source_bytes_read": 16777216,
+      "source_objects_read": 160,
+      "command_invocations": 100,
+      "elapsed_minutes": 120,
+      "records_authored": 300,
+      "browser_interactions": 0,
+      "captured_artifacts": 0
+    },
+    "actual": {
+      "source_bytes_read": 1500000,
+      "source_objects_read": 80,
+      "command_invocations": 20,
+      "elapsed_minutes": 20,
+      "records_authored": 2,
+      "browser_interactions": 0,
+      "captured_artifacts": 0
+    },
+    "measurement_note": "Conservative candidate-author accounting includes Measure context, analogous candidate/receipt patterns, the 60 exact direct candidate inputs (416,804 bytes), the candidate bytes, source-class and browser-disclosure verification, JSON/hash validation, candidate-stage truth execution, and diff checks. No browser was used by this role.",
+    "comparison_ceiling_breaches": 0
+  },
+  "findings": {
+    "resolved": [
+      {
+        "id": "T7-BATCH-A-CANDIDATE-MISSING",
+        "disposition": "A non-consumable candidate now binds the exact V3 truth inputs, active source classes, package and role receipts, bounded browser disclosures, frozen budget, predecessors, and committed zero-blocker review."
+      }
+    ],
+    "unresolved": [],
+    "unresolved_counts": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "info": 0
+    }
+  },
+  "revocation": {
+    "candidate_revoked": false,
+    "superseded_candidate_sha256": null,
+    "revocation_event_sha256": null,
+    "rule": "Any bound byte, hash, revision, predecessor, direction, phase declaration, package output, role receipt, source-class record, browser disposition/disclosure, truth result, review result, budget result, or zero-blocker result change revokes this candidate. Remediation requires an additive revocation or supersession record, regenerated affected outputs and receipts, rerun truth gates, fresh review, and a new non-consumable candidate; neither this candidate nor this receipt may be edited in place."
+  },
+  "lifecycle": {
+    "candidate_manifest_published": true,
+    "candidate_consumable": false,
+    "product_owner_acceptance_published": false,
+    "accepted_manifest_published": false,
+    "approval_event_id": null,
+    "approval_message_sha256": null,
+    "lifecycle_status": "candidate-only; awaiting a later authentic product-owner approval bound to the exact candidate and review hashes"
+  },
+  "commit_sha": null,
+  "commit_disposition": "not-created; user prohibited commits",
+  "receipt_self_hash": null,
+  "receipt_self_hash_note": "A self-hash cannot be embedded without changing the receipt bytes.",
+  "role_boundary": "Created only batch-a/candidate-manifest.json and this candidate-author receipt. No product-owner acceptance, accepted manifest, source, history, evidence package, mapper output, browser audit, truth test, independent review, direction, plan, registry, product document, or commit was created or modified.",
+  "measure_agent_result": {
+    "status": "candidate-only-nonconsumable",
+    "candidate": true,
+    "consumable": false,
+    "acceptance": "not-claimed",
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "info": 0
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

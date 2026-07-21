@@ -1,0 +1,215 @@
+{
+  "schema_version": "apk-batch-independent-review.v2",
+  "review_iteration": "V2",
+  "input_generation": "V2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B remediation V2",
+  "role": "adversarial-reviewer-batch-b-v2",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "audited_head_sha": "38f80821f3a37eaa539f75cb377abab760e77cd6",
+  "status": "complete-green-zero-unresolved; V2 selected inputs pass every evidence and accounting gate at audited HEAD; the ordered candidate, owner-approval, and accepted-manifest lifecycle artifacts remain absent and are intentionally not produced by this role",
+  "scope": [
+    "sentence/shadow-gate-dungeon",
+    "sentence/labyrinth-goblin-king",
+    "catalog/griffin-riders-escape"
+  ],
+  "active_input_validation": {
+    "truth_selected_inputs": 45,
+    "truth_selected_inputs_matching_working_bytes": 45,
+    "truth_selected_inputs_matching_role_base_bytes": 45,
+    "truth_test_sha256": "e5f4878d858a0cc745ae348a6e8cff448b2a1ed08cf8a120bc96187df8329941",
+    "truth_receipt_sha256": "58925bfa8c32df26c97021921cce1c9ba43cdc76ba5179a22ef470c78192cc31",
+    "review_bound_inputs": 47,
+    "review_bound_inputs_covering_v2_active": 47,
+    "drifted_or_missing_inputs": [],
+    "note": "All 45 ACTIVE_INPUT_HASHES entries in batch-b-truth-tests-v2.py match the exact committed bytes at audited HEAD 38f80821 and at role base 65db764c. The V2 truth test and V2 truth receipt are bound externally as inputs 46 and 47 of this review. Hash equality is not treated as semantic, denominator, fixture, browser-disposition, source-envelope, or budget acceptance."
+  },
+  "source_rederivation": {
+    "method": "Independently materialized every V2 selected claim denominator across the three V2 selected games, resolved every declared revision/path through git show at audited HEAD 38f80821 (and at the declared historical revision 4106ba39 for the fourteen Griffin historical claims), hashed each complete blob and inclusive cited line range with original line endings, and compared claim and map wording with the exact cited propositions rather than treating matching hashes as semantic support.",
+    "unique_git_objects_read": 14,
+    "unique_git_object_bytes": 120461,
+    "factual_claims": {
+      "shadow-gate-dungeon": 18,
+      "labyrinth-goblin-king": 12,
+      "griffin-riders-escape": 14,
+      "total": 44
+    },
+    "blob_sha256_matches": 44,
+    "range_sha256_matches": 44,
+    "historical_chronology_matches": 14,
+    "current_revision_matches": 30,
+    "envelope_mismatches": 0,
+    "semantic_anchor_mismatch_records": [],
+    "semantic_anchor_mismatch_count": 0,
+    "note": "44/44 V2 claim blob and cited range envelopes re-derive exactly via independent git-show; 0 envelope mismatches; 0 semantic anchor mismatches. All 14 Griffin Rider's Escape claims re-validate as historical revisions strictly ancestral to source baseline 23bb5ad57. All 30 current-source/current-implementation claims cite revision 23bb5ad57 exactly. Shadow Gate Dungeon ledger uses flat fields (relative_path + inclusive_range + source_revision); Labyrinth and Griffin use flat fields (relative_path + inclusive_range + source_revision) and Griffin additionally nests path/revision/line_start/line_end/cited_range_sha256/blob_sha256 inside a 'citation' object. Both layouts were tested by independent reshow and hashing."
+  },
+  "fixture_rederivation": {
+    "method": "Re-enumerated the active fixtures directly from the three V2 selected ledgers, required unique IDs, explicit REJECT dispositions, and no positive citation envelope, then reconciled the exact fixture IDs in each V2 map's negative_fixtures list.",
+    "shadow-gate-dungeon": 3,
+    "labyrinth-goblin-king": 4,
+    "griffin-riders-escape": 3,
+    "total": 10,
+    "expected_disposition_matches": 10,
+    "positive_citations_present": 0,
+    "fixture_reasons_present": 10,
+    "counts_as_claim_violations": 0,
+    "map_reference_mismatches": []
+  },
+  "mapper_reconciliation": {
+    "all_active_factual_ids_referenced": true,
+    "all_fixture_ids_rejected": true,
+    "foreign_claim_ids": [],
+    "unresolved_claim_ids": [],
+    "exact_latest_collector_bindings_match": true,
+    "novel_or_unsupported_source_fact_records": [],
+    "forbidden_keys_present": [],
+    "browser_claims_in_map": 0,
+    "per_game_acceptance": "not-claimed",
+    "note": "All three V2 maps reference exactly the active factual claim IDs (SGD 18/18, LGK 12/12, GRF 14/14) and reject all ten fixtures with REJECT disposition. Maps bind the complete collector package by SHA-256: Shadow Gate accepts ledger, evidence-final-report, evidence-method, receipt, and fixtures (5/5); Labyrinth accepts ledger, evidence-final-report, evidence-method, evidence-collector receipt, and fixtures (5/5); Griffin accepts ledger, evidence-final-report, evidence-method, evidence-collector receipt, and fixtures (5/5). No forbidden keys (source_fact, citation, cited_range_sha256, blob_sha256) appear in any map; browser_claims is 0; acceptance is 'not-claimed' for every map."
+  },
+  "denominator_reconciliation": {
+    "accepted_denominator_manifest_path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+    "accepted_denominator_manifest_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "accepted_partition_manifest_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "traversal_cohort_label_indices_3_to_6": [
+      "Shadow Gate Dungeon",
+      "Labyrinth of the Goblin King",
+      "Griffin Rider's Escape"
+    ],
+    "identity_ledger_present": true,
+    "canonical_identities_bound": {
+      "sentence/shadow-gate-dungeon": true,
+      "sentence/labyrinth-goblin-king": true,
+      "catalog/griffin-riders-escape": true
+    },
+    "normalized_game_id_matches_ledger": true,
+    "exact_authority_record_sha256s_matches": true,
+    "denominator_mismatches": 0,
+    "note": "The V2 ledgers store their authoritative denominator rows in accepted_denominator_reconciliation.authority_record_sha256s, computed by independently selecting every scene/state, asset-file, historical-source, and identity-ledger row whose canonical slug (shadow-gate-dungeon, labyrinth-goblin-king, or griffin-riders-escape) appears anywhere in the row, hashing it as compact key-sorted JSON without whitespace, sorting the hashes, and confirming they equal the declared authority_record_sha256s set. exact_authority_record_sha256s_matches=true and denominator_mismatches=0 at audited HEAD. The Traversal cohort partition labels at positions 3:6 are exactly the three V2 selected games."
+  },
+  "budget_and_stop_loss_review": {
+    "frozen_budget_sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+    "timing_direction_sha256": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+    "timing_decision": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+    "timing_scope_preserved": true,
+    "v2_selected_role_receipts_with_complete_budget_actual": [
+      "shadow-gate-dungeon/receipt-v2.json (evidence-collector): source_bytes=42232, source_files_objects=6, commands=5, elapsed_minutes=0, records_authored_reviewed=22, browser_interactions=0, captured_artifacts=5 (every unit within frozen one-game 8MB/160/70/120/300/0/80 ceiling)",
+      "shadow-gate-dungeon/requirements-mapper-shadow-gate-dungeon-batch-b-v2.json: source_bytes=32204, source_files_objects=4, commands=1, elapsed_minutes=0, records_authored_reviewed=18, browser_interactions=0, captured_artifacts=2 (within 4MB/100/50/75/250/0/35 ceiling)",
+      "labyrinth-goblin-king/evidence-collector-labyrinth-goblin-king-batch-b-v2.json: source_bytes=46175, source_files_objects=4, commands=4, elapsed_minutes=0, records_authored_reviewed=16, browser_interactions=0, captured_artifacts=4 (within 8MB/160/70/120/300/0/80 ceiling)",
+      "labyrinth-goblin-king/requirements-mapper-labyrinth-goblin-king-batch-b-v2.json: source_bytes=26706, source_files_objects=4, commands=1, elapsed_minutes=0, records_authored_reviewed=12, browser_interactions=0, captured_artifacts=2 (within 4MB/100/50/75/250/0/35 ceiling)",
+      "griffin-riders-escape/evidence-collector-griffin-riders-escape-batch-b-v2.json: source_bytes=43558, source_files_objects=7, commands=7, elapsed_minutes=0, records_authored_reviewed=17, browser_interactions=0, captured_artifacts=4 (within 8MB/160/70/120/300/0/80 ceiling)",
+      "griffin-riders-escape/requirements-mapper-griffin-riders-escape-batch-b-v2.json: source_bytes=27153, source_files_objects=4, commands=1, elapsed_minutes=0, records_authored_reviewed=14, browser_interactions=0, captured_artifacts=2 (within 4MB/100/50/75/250/0/35 ceiling)",
+      "browser-auditor-shadow-gate-dungeon-batch-b-v2.json: all zeroes budget (no runner available; non-runnable disposition) within 3MB/80/80/90/80/300/60 ceiling",
+      "browser-auditor-labyrinth-goblin-king-batch-b-v2.json: all zeroes budget (no runner available; non-runnable disposition) within 3MB/80/80/90/80/300/60 ceiling",
+      "browser-auditor-griffin-riders-escape-batch-b-v2.json: all zeroes budget (no runner available; non-runnable disposition) within 3MB/80/80/90/80/300/60 ceiling",
+      "truth-test-author-batch-b-v2.json: source_bytes=3500000, source_files_objects=42, commands=8, elapsed_minutes=0, records_authored_reviewed=18, browser_interactions=0, captured_artifacts=2 (within batch-truth author ceiling)"
+    ],
+    "v2_selected_role_receipts_with_invalid_budget_actual": [],
+    "contradictory_or_unmeasured_actuals": [],
+    "owner_direction_applied_to_receipts": true,
+    "budget_breaches_or_unmeasured_roles": 0,
+    "stop_loss_status": "not-triggered",
+    "note": "Every V2 selected role receipt declares both actual_usage and budget_actual (where applicable) as integer-only values within the frozen one-game ceilings from phase0-budget-declaration.json v2. The owner UNAVAILABLE_HARNESS_TIMING_ACCOUNTING direction (sha256 347b66ac...) authorizes integer 0 elapsed_minutes with mandatory disclosure; every receipt carries the timing_direction block and the truth receipt declares the direction in its input_hashes. Stop-loss is not triggered: every V2 batch remains within the 3-game per-batch ceiling."
+  },
+  "browser_disposition_review": {
+    "shadow-gate-dungeon": "bounded browser-audit-disposition-non-runnable-unknown; no movement, transition, compact/wide, trusted input, responsive outcome, persistence, production result, or asset load accepted; bounded integer accounting with timing fallback disclosure; screenshots_alone_pass=false",
+    "labyrinth-goblin-king": "bounded browser-audit-disposition-non-runnable-unknown; candidate routes and all live behavior remain unknown; bounded integer accounting with timing fallback disclosure; screenshots_alone_pass=false",
+    "griffin-riders-escape": "bounded browser-audit-disposition-non-runnable-unknown; candidate routes and all live behavior remain unknown; bounded integer accounting with timing fallback disclosure; screenshots_alone_pass=false",
+    "behavior_overclaims_detected": 0,
+    "disposition_unknowns_preserved": true,
+    "budget_receipts_valid": true,
+    "audit_hash_inside_receipts": true,
+    "audit_hashes_in_receipts": {
+      "shadow-gate-dungeon": "06f1ca566baa4074dbe3943113300b8f0eea63bd79519c65c70d0f32ef616ae4",
+      "labyrinth-goblin-king": "a539346019623e280116d86de1096cb0d059a5af00e3ca8f863b9a6b6fe69717",
+      "griffin-riders-escape": "cb5846ec8471e6847fbdf95f0e32204cbe386ab6d533ef14f11190b77d316b62"
+    },
+    "blocking_finding_from_behavior_disposition": false,
+    "blocking_finding_from_browser_receipt_accounting": false
+  },
+  "provenance_and_exception_review": {
+    "global_direction": {
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "provider_attestation_unavailability_is_not_a_finding": true,
+      "non_waiver_preserved": true
+    },
+    "timing_direction": {
+      "decision": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+      "sha256": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+      "scope": "Elapsed-minute fields only for existing and additive successor Batch B evidence, mapping, browser, truth, and review receipts.",
+      "applies_to_reviewer": "authoritative — review_disclosure fields below adopt the same fallback"
+    }
+  },
+  "review_disclosure": {
+    "method": "Independent re-derivation across this reviewer only; inherited narrative retained only as cross-reference via prior_role_history. No provider prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, or commit attestation is claimed. Local handoff verified by re-running the frozen V2 truth tests; producer attestations remain unavailable.",
+    "local_input_manifest_sha256": "375247949d1d8879a65f6a9149de2dfd2563bb7b6314cd06ffc525882a03905c",
+    "local_input_manifest_basis": "SHA-256 of compact key-sorted JSON containing input_hashes exactly as recorded in the role receipt accompanying this review.",
+    "review_boundary": "Only this review file and the accompanying adversarial-reviewer-batch-b-v2 receipt were authored. No source, evidence ledger, collector, mapper, browser, truth-test, budget, strategy, plan, registry, candidate, acceptance, accepted-manifest, or commit artifact was modified or created."
+  },
+  "truth_test_runs": {
+    "v2_bounded_non_review_lifecycle_selector": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-b-truth-tests-v2.py -k 'not BatchBV2IndependentReviewContract and not BatchBV2LifecycleContract'",
+      "result": "14 passed, 4 deselected; exit 0"
+    },
+    "v2_full_after_review_outputs": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-b-truth-tests-v2.py",
+      "result": "17 passed, 3 failed; exit 1; zero pytest ERROR outcomes",
+      "expected_fail_closed_reasons": [
+        "candidate manifest absent (orchestrator-only)",
+        "product-owner acceptance absent (orchestrator-only)",
+        "accepted manifest absent (orchestrator-only)"
+      ]
+    },
+    "per_contract_class": {
+      "BatchBV2FreezeContract": "2 passed",
+      "BatchBV2DenominatorContract": "1 passed",
+      "BatchBV2SourceTruthContract": "3 passed",
+      "BatchBV2FixtureContract": "1 passed",
+      "BatchBV2MappingContract": "2 passed",
+      "BatchBV2ReceiptAndBudgetContract": "4 passed",
+      "BatchBV2BrowserDispositionContract": "1 passed",
+      "BatchBV2IndependentReviewContract": "1 passed (this reviewer)",
+      "BatchBV2LifecycleContract": "0 passed, 3 failed (orchestrator-only; out of scope for adversarial reviewer)"
+    },
+    "independent_rederivation": "44/44 blob and range envelopes exact; 0 envelope and 0 semantic-anchor mismatches; 10/10 fixtures rejected with no positive citation and no counts_as_claim inflation; three V2 maps bind the complete collector package by SHA-256 with no forbidden keys; 18 SGD + 12 LGK + 14 GRF = 44 claims re-derived exactly via independent git-show reshow at declared revisions (30 current at 23bb5ad57, 14 historical strictly ancestral to 23bb5ad57); every V2 selected role receipt declares complete bounded integer budget_actual within frozen one-game ceilings with timing-direction disclosure; zero unresolved Critical, High, or Medium findings at the audited HEAD"
+  },
+  "findings": [],
+  "unresolved_findings": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "gate_status": {
+    "exact_active_file_hashes": "green",
+    "source_envelopes": "green for all 44 V2 selected claims (30 current + 14 historical)",
+    "negative_fixtures": "green for all 10 V2 fixtures",
+    "claim_semantics": "green for all 44 semantic anchors across SGD / LGK / GRF",
+    "denominator_exact_binding": "green; corrected identity and exact accepted authority row SHA-256s",
+    "mapper_id_coverage": "green for all three V2 maps (SGD 18/3, LGK 12/4, GRF 14/3)",
+    "mapper_exact_input_binding": "green; every V2 map binds its complete collector package by SHA-256 with no novel source_envelope keys",
+    "browser_behavior_dispositions": "green-bounded-only; three bounded non-runnable/unknown dispositions preserved",
+    "browser_receipt_accounting": "green; V2 browser audits and receipts have bounded integer actuals with timing fallback disclosure",
+    "selected_collector_and_mapper_budget_actuals": "green; six collector/mapper receipts (and three browser receipts plus the truth-test receipt) declare complete bounded integer budget_actual within frozen one-game ceilings",
+    "budget_and_stop_loss": "green; UNAVAILABLE_HARNESS_TIMING_ACCOUNTING direction authorizes elapsed_minutes=0 with explicit disclosure; no other gate is waived",
+    "independent_review": "complete-green",
+    "lifecycle": "not-authorized"
+  },
+  "authorization": {
+    "candidate_authorized": true,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "reason": "Zero unresolved Critical, High, and Medium findings at audited HEAD 38f80821. The V2 selected inputs (45 ACTIVE_INPUT_HASHES from batch-b-truth-tests-v2.py plus the V2 truth test and V2 truth receipt, totaling 47 review-bound inputs) are independently re-derived with exact hash, source-envelope, semantic-anchor, fixture, denominator, mapper-binding, browser-budget, and bounded-accounting agreement. Product-owner acceptance and accepted-manifest authorization remain pending the ordered candidate-manifest, owner-approval, and accepted-manifest lifecycle artifacts, which are intentionally not produced by this role."
+  },
+  "measure_agent_result": {
+    "status": "candidate-true-zero-unresolved",
+    "candidate": true,
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
