@@ -1,0 +1,241 @@
+{
+  "schema": "apk-batch-adversarial-review.v9",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "role": "adversarial-reviewer-batch-b-v9",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "8089e29c1988faa127b2af19edae0ade70a80890",
+  "audited_head_sha": "8089e29c1988faa127b2af19edae0ade70a80890",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "status": "blocked; four High findings remain; candidate authorization is false",
+  "scope": [
+    "village-guardian",
+    "archers-revenge",
+    "storm-castle-tower"
+  ],
+  "review_independence": {
+    "mode": "fresh independent T4 Batch B V9 re-derivation at the exact audited HEAD",
+    "inherited_completion_narrative_used_as_source_evidence": false,
+    "prior_reviews_use": "Prior reviews were used only to identify immutable predecessor artifacts. Their conclusions were not substituted for V14 input, receipt, source, semantic, fixture, or authorization checks.",
+    "provider_attestation": "Unavailable and not claimed under the exact product-owner provenance direction."
+  },
+  "exact_v14_input_rederivation": {
+    "declared_input_count": 69,
+    "declared_inputs_hash_exact_at_audited_head": 69,
+    "declared_inputs_git_exact_at_audited_head": 69,
+    "v14_output_count": 2,
+    "v14_outputs_git_exact_at_audited_head": 2,
+    "v14_truth_sha256": "4de84b59c3ae5242502622aa0a3c422d5f909c301c357cb3ec954ab61cffb691",
+    "v14_receipt_sha256": "76eb4d3c4b1479dcaafca27c1afde66d93a5ab4ae296e91f2ae2a0a5d1f3684e",
+    "runtime_observation_method": "A Python audit hook recorded repository-local open events while the exact V14 evidence selector ran; the result was compared with truth-test-author-batch-b-v14.json input_hashes.",
+    "declared_map_exact_to_executed_runtime_dependencies": false,
+    "executed_runtime_dependency_count_excluding_v14_outputs": 74,
+    "undeclared_executed_runtime_dependencies": [
+      {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v5.json",
+        "sha256": "38924ccbea70ecb4d89c8b99969890116d86e7914e0e44c4b7e8cdf932b0fbad"
+      },
+      {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-village-guardian-batch-b-v4.json",
+        "sha256": "a986b37348b353e57d269595c7480ad8127d81c74852c8fcbeeb42d8570e8cf5"
+      },
+      {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-archers-revenge-batch-b-v5.json",
+        "sha256": "8a0e6664cfbdbc009f098e949577b8e1495828d02f3ea9b6ee7a6dbf8ab3bdc0"
+      },
+      {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-village-guardian-batch-b-v4.json",
+        "sha256": "bf67f87a990722426f7bec1291b1c0d1864f0b17ecce5d42321b01b051db425f"
+      },
+      {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-village-guardian-batch-b-v5.json",
+        "sha256": "67b8e8c8f6e8a813ea40d22dabd8ed7326585f01b5429038c5d50f856240ddf7"
+      }
+    ],
+    "declared_hash_or_git_binding_errors": []
+  },
+  "truth_test_runs": {
+    "full_v14": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v14.py",
+      "result": "41 passed, 5 failed; exit 1; zero pytest ERROR outcomes",
+      "failed_contracts": [
+        "selected stale review has zero unresolved blocking findings",
+        "fresh review binds every exact V14 input and both V14 outputs",
+        "candidate manifest exists",
+        "product-owner acceptance exists",
+        "accepted manifest exists"
+      ]
+    },
+    "evidence_selector": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v14.py -k 'not BatchBIndependentReviewContract and not BatchBAcceptanceContract'",
+      "result": "40 passed, 6 deselected; exit 0",
+      "interpretation": "The selector is a false green for completeness because inherited receipt tests open five undeclared receipts, latest receipt contracts are only partially asserted, Archer semantic checks use substring atoms rather than proposition atomicity, and one Archer fixture passes through an empty-reference all()."
+    },
+    "review_lifecycle_selector": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v14.py -k 'BatchBIndependentReviewContract or BatchBAcceptanceContract'",
+      "result": "1 passed, 5 failed, 40 deselected; exit 1"
+    }
+  },
+  "source_and_mapping_rederivation": {
+    "factual_claim_population": {
+      "village-guardian": 73,
+      "archers-revenge": 29,
+      "storm-castle-tower": 42,
+      "total": 144
+    },
+    "positive_source_envelopes_rederived": 138,
+    "bounded_claims_rederived": 6,
+    "envelope_or_query_hash_mismatches": 0,
+    "archer_v7_claims_inspected_for_every_factual_field_and_proposition": 29,
+    "archer_v8_mapped_claims_reconciled": 29,
+    "archer_v8_duplicate_foreign_or_unresolved_references": 0,
+    "semantic_review": {
+      "algorithm": "Village and Storm use the exact package-hash seed and deterministic category/evidence/revision/shape-covering sample algorithm required by test-strategy-batch-b.md. Archer uses the same frozen package but selects all 29 records as explicitly requested.",
+      "village-guardian": {
+        "package_sha256": "3be82cd7a9ddb144ae82ae220c36b439c6d14bbd58e1c988c897af6156b20484",
+        "seed": "0bafcbd9a84132778262d520eca5da6dad5a4eb324a7ec76075f1cb7bbcff6e5",
+        "population": 73,
+        "selected_count": 18,
+        "selected_claim_ids": ["VG3-ASSET-001", "VG3-ROUTE-006", "VG3-MODEL-002", "VG3-MODEL-016", "VG3-MODEL-011", "VG3-TEST-011", "VG3-COMP-006", "VG3-COMP-002", "VG3-CONFIG-008", "VG3-ID-006", "VG3-API-003", "VG3-INDEX-001", "VG3-COMP-004", "VG3-COMP-009", "VG3-COMP-007", "VG3-MODEL-017", "VG3-ID-004", "VG3-COMP-010"],
+        "semantic_mismatches": 0
+      },
+      "archers-revenge": {
+        "package_sha256": "a6e6b9d5b3ac3f89dab167f830a082b6c1cae71ed9fa4254ec507fbe9e5582d3",
+        "seed": "2721b74ac2ca0c27083caa073c6ffc3f5c01668c109cbb1c34729cf70817059f",
+        "population": 29,
+        "selected_count": 29,
+        "selected_claim_ids": ["AR-B2-V7-001", "AR-B2-V7-002", "AR-B2-V7-003", "AR-B2-V7-004", "AR-B2-V7-005", "AR-B2-V7-006", "AR-B2-V7-007", "AR-B2-V7-008", "AR-B2-V7-009", "AR-B2-V7-010", "AR-B2-V7-011", "AR-B2-V7-012", "AR-B2-V7-013", "AR-B2-V7-014", "AR-B2-V7-015", "AR-B2-V7-016", "AR-B2-V7-017", "AR-B2-V7-018", "AR-B2-V7-019", "AR-B2-V7-020", "AR-B2-V7-021", "AR-B2-V7-022", "AR-B2-V7-023", "AR-B2-V7-024", "AR-B2-V7-025", "AR-B2-V7-026", "AR-B2-V7-ASSET-001", "AR-B2-V7-ASSET-002", "AR-B2-V7-ASSET-003"],
+        "exact_envelope_mismatches": 0,
+        "semantic_or_atomicity_mismatches": 1,
+        "non_atomic_records": ["AR-B2-V7-001", "AR-B2-V7-002", "AR-B2-V7-013", "AR-B2-V7-019", "AR-B2-V7-022", "AR-B2-V7-026"],
+        "unsupported_factual_fields": ["AR-B2-V7-017.category=typed_answer", "AR-B2-V7-019.exact_source_fact=positive configured enemy projectile speed"]
+      },
+      "storm-castle-tower": {
+        "package_sha256": "9f9337ec9b86161337553a8b8ab92e57cc954d2a0deb42018dad0ed99394e9d9",
+        "seed": "84ed643c96a7d35dcdf676a35cdb14f96713c0300f6450e83ec1ca555812848b",
+        "population": 42,
+        "selected_count": 16,
+        "selected_claim_ids": ["SCT-ASSET-002", "SCT-ROUTE-H005", "SCT-MECH-H005", "SCT-TRANS-H003", "SCT-HIST-002", "SCT-COPY-001", "SCT-ASSET-H002", "SCT-SCENE-H006", "SCT-ID-001", "SCT-ASSET-H001", "SCT-RESP-H003", "SCT-ASSET-001", "SCT-ASSET-ABS-001", "SCT-ABS-001", "SCT-TEST-H003", "SCT-ASSET-ABS-003"],
+        "semantic_mismatches": 0
+      }
+    }
+  },
+  "negative_fixture_rederivation": {
+    "fixture_population": 12,
+    "fixtures_accepted_or_skipped": 0,
+    "village_fixture_ids": ["VG3-NEG-001", "VG3-NEG-002", "VG3-NEG-003", "VG3-NEG-004"],
+    "archer_fixture_ids": ["AR-B2-V7-FIX-001", "AR-B2-V7-FIX-002", "AR-B2-V7-FIX-003", "AR-B2-V7-FIX-004"],
+    "storm_fixture_ids": ["SCT-NEG-001", "SCT-NEG-002", "SCT-NEG-003", "SCT-NEG-004"],
+    "self_contained_fixture_defects": ["AR-B2-V7-FIX-004 has no source_checked_claim_id(s), revision/path/object-type query, captured command output, exit status, or output hash; V14 accepts it because all() over its empty reference list is true."]
+  },
+  "active_receipt_contract_audit": {
+    "active_receipts": 13,
+    "contract_basis": "test-strategy-batch-b.md section 2.2 and 2.3 plus the product-owner local-verifiability direction; unavailable provider attestations are waived only when explicitly truthful, while exact local input/output, base, findings, budget, and committed-binding controls remain required.",
+    "results": [
+      {"receipt":"discovery-auditor-batch-b-v2.json","result":"locally bounded","note":"Exact output, bases, allowed-input hash, numeric budget accounting, findings, and explicit unavailable orchestration fields are present."},
+      {"receipt":"evidence-collector-village-guardian-batch-b-v3.json","result":"locally bounded","note":"Exact inputs/outputs, bases, direction, findings, and numeric actual accounting are present."},
+      {"receipt":"evidence-collector-village-guardian-batch-b-v5.json","result":"blocking","note":"No allowed-input binding, budget declaration/accounting, explicit provider field set, findings, source baseline, or exact predecessor receipt binding."},
+      {"receipt":"evidence-collector-archers-revenge-batch-b-v7-rebind-complete.json","result":"blocking","note":"Despite its name, it omits phase base, source baseline, allowed-input and budget bindings/accounting, findings, explicit unavailable provider fields, and top-level commit disposition."},
+      {"receipt":"evidence-collector-storm-castle-tower-batch-b.json","result":"locally bounded","note":"Exact local bases, inputs/outputs, findings, provider-unavailable fields, and numeric budget accounting are present."},
+      {"receipt":"requirements-mapper-village-guardian-batch-b-v3.json","result":"blocking","note":"The active predecessor mapper receipt has no allowed-input-manifest binding."},
+      {"receipt":"requirements-mapper-village-guardian-batch-b-v8.json","result":"blocking","note":"budget.actual is null and explicitly unmeasured, which section 2.3 says blocks checkpoint; V14 checks only the declaration digest."},
+      {"receipt":"requirements-mapper-archers-revenge-batch-b-v8-fresh.json","result":"blocking","note":"No findings object and no numeric resource-use ceilings/actual accounting are present."},
+      {"receipt":"requirements-mapper-storm-castle-tower-batch-b.json","result":"locally bounded","note":"Exact local bases, inputs/outputs, findings, provider-unavailable fields, and numeric budget accounting are present."},
+      {"receipt":"browser-auditor-batch-b-v3.json","result":"blocking","note":"Its frozen ceilings omit browser interactions, captured artifacts, and asset candidates even though actual values are later recorded; the required same-unit ceiling comparison is impossible."},
+      {"receipt":"asset-auditor-batch-b-v2.json","result":"blocking","note":"allowed_input_manifest_sha256 is null despite the frozen Batch B manifest hash being available and non-waived."},
+      {"receipt":"adversarial-reviewer-batch-b-v6.json","result":"stale predecessor","note":"It is exact immutable history but cannot satisfy fresh V14 review or candidate authorization."},
+      {"receipt":"truth-test-author-batch-b-v14.json","result":"blocking","note":"No findings field and no numeric resource-use ceilings/actual accounting are present."}
+    ],
+    "all_active_receipt_contracts_satisfied": false
+  },
+  "denominator_asset_browser_and_completion": {
+    "accepted_denominator_records_reconciled_by_inherited_exact_contracts": 99,
+    "asset_records_reconciled": 12,
+    "browser_dispositions": 3,
+    "browser_scope": "Village remains bounded runnable only under the exact WebBridge limitations; Archer and Storm remain bounded non-runnable at the role revision. V9 makes no new live/browser claim.",
+    "completion_http_400_disclosure_only": true,
+    "successful_completion_claimed": false,
+    "persistence_claimed": false,
+    "xp_awarded_claimed": false,
+    "idempotency_claimed": false,
+    "api_correctness_claimed": false
+  },
+  "findings": [
+    {
+      "id": "T4B9-HIGH-001",
+      "severity": "high",
+      "area": "V14 exact runtime input-map completeness",
+      "blocking": true,
+      "detail": "The exact 69-entry declared map and both V14 outputs are hash- and Git-exact at audited HEAD, but the evidence selector also opens five inherited receipt artifacts absent from input_hashes. Those bytes can change inherited receipt outcomes without changing the V14 receipt map, so the declared map is not the exact executed input universe.",
+      "required_remediation": "Remove the superseded inherited reads or pin all five exact receipt bytes in a fresh truth input map and receipt; add a runtime dependency-completeness assertion, rerun the selector, and obtain fresh review."
+    },
+    {
+      "id": "T4B9-HIGH-002",
+      "severity": "high",
+      "area": "active role-receipt contract completeness",
+      "blocking": true,
+      "detail": "V14's 13-receipt selector verifies hashes and a few identity fields but does not enforce every non-waived receipt contract. Selected receipts still lack allowed-input bindings, complete local provider-unavailability fields, findings, or numeric same-unit budget accounting; Village V8 explicitly records budget.actual as null, and the selected Archer 'complete' rebind lacks phase/budget/input controls.",
+      "required_remediation": "Publish additive superseding receipts for every blocked active role with exact bases, input/output hashes, findings, explicit unavailable provider fields, and labeled numeric actuals not exceeding frozen same-unit ceilings; select and fully validate them in a fresh truth contract."
+    },
+    {
+      "id": "T4B9-HIGH-003",
+      "severity": "high",
+      "area": "Archer V7 all-claim semantic and atomic contract",
+      "blocking": true,
+      "detail": "All 29 Archer envelopes hash exactly, but the factual population is not wholly atomic or source-established. AR-B2-V7-001, -002, -013, -019, -022, and -026 each combine independently falsifiable atoms in one record/envelope. AR-B2-V7-017 labels a pointer/arrow collision as typed_answer without a typing anchor. AR-B2-V7-019 claims a positive configured projectile speed, while its cited lines only assign ARCHERS_REVENGE_CONFIG.enemy.projectileSpeed and do not establish sign. V14's substring table therefore returns green without validating every factual field or one-envelope-per-atom rule.",
+      "required_remediation": "Split every compound proposition into separately identified atomic records with exact envelopes, correct unsupported category metadata, add the configuration envelope needed for any sign claim or remove 'positive', regenerate the mapper, and drive semantic tests from every declared factual field rather than selected substrings."
+    },
+    {
+      "id": "T4B9-HIGH-004",
+      "severity": "high",
+      "area": "Archer self-contained negative fixture",
+      "blocking": true,
+      "detail": "AR-B2-V7-FIX-004 merely states that a Git tree is not a file/blob envelope. It contains no source_checked_claim_id(s), exact revision/path, object-type command, captured output/exit status, or output hash. V14 constructs an empty reference list and all(empty) passes, so the advertised self-contained replacement is a vacuous prose check rather than an independently re-derived fixture.",
+      "required_remediation": "Give FIX-004 a pinned exact Git tree/object-type query envelope and assert its command domain, output, exit status, and hash; make an empty source-check set fail."
+    }
+  ],
+  "unresolved_findings": {
+    "critical": 0,
+    "high": 4,
+    "medium": 0,
+    "low": 0
+  },
+  "gate_status": {
+    "B0": "blocked by incomplete active receipt contracts and five undeclared executed receipt dependencies",
+    "B1": "blocked by Archer unsupported factual fields and non-atomic records despite exact hashes",
+    "B2": "29/29 Archer claim IDs map exactly, but the map preserves the defective V7 factual population",
+    "B3": "blocked by Archer semantic/atomic defects and vacuous FIX-004 source checking",
+    "B4": "bounded pass only under exact browser, asset, WebBridge, and completion limitations; receipt controls remain blocked",
+    "B5": "blocked by four unresolved High findings and absent candidate, approval, and accepted-manifest artifacts"
+  },
+  "authorization": {
+    "authorization_rule": "Candidate authorization is true only when unresolved Critical, High, and Medium counts are all zero.",
+    "candidate_authorized": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "reason": "Four High findings remain. Candidate, product-owner acceptance, and accepted-manifest artifacts are absent."
+  },
+  "verification_checks": {
+    "plan_compliance": "partial; exact evidence exists, but the Phase 2 zero-blocker review criterion is not met",
+    "style_compliance": "pass for review JSON after validation",
+    "test_results": "expected staged red: 41 passed and 5 review/lifecycle failures; evidence-only selector 40 passed but is independently false-green for the four findings",
+    "browser_runtime_check": "skipped; V9 changes review artifacts only and makes no new browser claim",
+    "graph_caller_check": "skipped; review scope is Python/JSON evidence with no exported TypeScript signature change",
+    "security_review": "blocked on exact runtime-input and receipt/provenance integrity; no secret or PII exposure found",
+    "ux_api_review": "Village completion HTTP 400 remains disclosure-only; no successful completion or API-correctness claim authorized"
+  },
+  "success_claims": {
+    "batch_complete": false,
+    "successful_completion": false,
+    "persistence_confirmed": false,
+    "xp_awarded": false,
+    "idempotency_verified": false,
+    "api_correctness": false,
+    "product_acceptance": false
+  },
+  "carried_forward_disclosures": [
+    {"id":"DISC-001","classification":"Batch A process-only disclosure","use":"Process metadata only; never factual input."},
+    {"id":"DISC-B-COMPLETION-400","classification":"owner-directed mandatory successor disclosure","use":"Both observed Village Guardian completion POSTs returned HTTP 400; no success claim."},
+    {"id":"DISC-B-PROVIDER-PROVENANCE","classification":"owner-accepted local-verifiability disclosure","use":"Provider-side provenance was unavailable; only exact local Git and hash bindings are claimed."}
+  ]
+}
