@@ -1,0 +1,33 @@
+{
+  "schema_version":"apk-role-receipt.v1",
+  "status":"complete-local-uncommitted",
+  "track_id":"apk_corpus_audit_special_historical_20260712",
+  "batch_id":"batch-a",
+  "game":"Devourer Slime",
+  "role":"evidence-collector-t7-batch-a-devourer-slime",
+  "task_id":"devourer-slime-reconciled-evidence",
+  "phase_base_sha":"52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "source_baseline_revision":"a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "historical_revision":"1c44854682b18a2393efd265c2271f824e228a3d",
+  "allowed_input_manifest_sha256":"7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+  "parent_ancestry_ids":[],
+  "reviewer_isolation":"fresh-context-only requested; fork_turns=none provider attestation unavailable",
+  "provider_provenance":{"status":"unavailable","disclosure":"No provider-side spawn, prompt, ancestry, timing, or final-response attestation is claimed."},
+  "outputs": [
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/reconciled-claim-ledger.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/evidence-method-report.md",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/negative-fixtures.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/evidence-collector-receipt.json"
+  ],
+  "output_sha256": {
+    "reconciled-claim-ledger.json":"036733c165b95ea8bd1ffa2d85792d0aae3d8544c57299126aa7508f54b4a8bb",
+    "evidence-method-report.md":"e01629bcded663ea2eafc2a5822769163517fef7db3b038df99f7f62448ac43b",
+    "negative-fixtures.json":"7193ac9a2ad6288b540f618c1bc8f4e7331963b5d67cfa725fb8dad3fdf6d1f4"
+  },
+  "counts":{"claims":18,"current_claims":11,"historical_implementation_claims":6,"historical_test_intent_claims":1,"negative_fixtures":3,"unsupported_factual_claims":0,"browser_records":0,"mapping_records":0},
+  "budget":{"source_bytes_read":0,"source_objects_read":0,"command_invocations":0,"elapsed_minutes":0,"records_authored":18,"basis":"Reconciliation only; source inspection was performed by the committed independent specialist reports."},
+  "commit_sha":null,
+  "commit_binding":"No commit performed per user instruction.",
+  "output_sha256_pending_local_validation":false,
+  "disposition":"local reconciled evidence only; not accepted cohort evidence"
+}

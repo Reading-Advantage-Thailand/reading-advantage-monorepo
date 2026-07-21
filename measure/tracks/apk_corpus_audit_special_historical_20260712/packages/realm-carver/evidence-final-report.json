@@ -1,0 +1,22 @@
+{
+  "schema_version": "apk-evidence-collector-report.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 1: Distinctive current/historical mechanics",
+  "batch_id": "batch-a",
+  "game": "Realm Carver",
+  "role": "evidence-collector-batch-a-realm-carver",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "current_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "claims_total": 12,
+  "current_unknown_claims": 4,
+  "historical_claims": 8,
+  "negative_fixtures": 6,
+  "mapping_performed": false,
+  "browser_performed": false,
+  "asset_audit_performed": false,
+  "citation_verification": {"historical_envelopes_supplied_by_specialist": 8,"current_absence_envelopes": 4,"unresolved": []},
+  "chronology": {"historical_revision_groups": 2,"reachable_ancestor_claimed": true,"revision_to_parent_diff_conflict_preserved": true,"current_vs_historical_comparison_performed": false},
+  "unknowns_preserved": ["current implementation and route","runnable disposition and browser behavior","asset usage","whether historical tests passed","whether historical source shipped","final capability ontology"],
+  "stop_loss": {"unsupported_factual_claims": 0,"denominator_mismatches": 0,"class_promotions": 0,"budget_breaches": 0},
+  "acceptance": "not-claimed"
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": "apk-rebind-receipt.v1",
+  "status": "complete-self-attested",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "evidence-collector",
+  "task_id": "evidence-rebind:enchanted-library",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "d77044c35571dabde108098e5c9f9dd62722327d",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "parent_ancestry_ids": [],
+  "fresh_context_only": true,
+  "inherited_narrative": false,
+  "fork_turns": "none",
+  "provider_attestation": {
+    "available": false,
+    "reason": "No provider spawn identifier, raw session export, event identifiers, prompt hash, context manifest hash, final-response hash, or commit SHA was exposed."
+  },
+  "rebind_report": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/rebind-report.json",
+  "rebind_report_sha256": "f029c94f97924564bc9b5c56b689f7d02fd291d6f3f9ff7b0ed68b80af49df9d",
+  "bound_output_hashes": {
+    "claim-evidence-ledger.json": "2ade0d574fabced1888078edf92b6bc4cd68368443a1b4a0f444b2c63710a778",
+    "evidence-method.md": "50a26917fd13421dfa9d91912afbd6387f88709ad59cd1c387a4707e79a2d487",
+    "fixtures.json": "5b3a4bf7815a4dfda5a5817ae6d7e3fe13422520998f1a9bce9de8ade3bf9178",
+    "evidence-final-report.json": "811edfa2f147cacc5ffd851eb3bf2f88177c602723895817170803257ba1c3a4",
+    "receipt.json": "77069239ff76e851251cc11ea00564795762c1176c2c6d6cb35485ac4cf51e0e"
+  },
+  "claims_preserved": true,
+  "json_diff_validation": "passed",
+  "truthful_status": "rebind complete as self-attested; independent review and provider provenance remain unavailable"
+}

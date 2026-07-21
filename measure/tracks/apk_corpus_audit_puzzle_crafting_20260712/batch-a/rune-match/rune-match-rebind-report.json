@@ -1,0 +1,29 @@
+{
+  "schema_version": "apk-evidence-rebind-report.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "game": "vocabulary/rune-match",
+  "phase": "Phase 1: Batch A",
+  "reason": "Whitespace normalization changed the evidence-method bytes; claims are preserved and rebound to the exact current package bytes.",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "d77044c35571dabde108098e5c9f9dd62722327d",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "claim_ledger_sha256": "87e81e3d4328c26c75496baf4d68a0460fe48a402fd35f15430a3bd2897a746c",
+  "claim_count": 13,
+  "claims_preserved": true,
+  "output_hashes": {
+    "rune-match-claim-ledger.json": "87e81e3d4328c26c75496baf4d68a0460fe48a402fd35f15430a3bd2897a746c",
+    "rune-match-evidence-method.md": "ef6244896adde33315f22bac3279e4a26bf2f6d2453a766c4adf2b61814e8e86",
+    "rune-match-evidence-final-report.json": "ee75d82801b570e3dcbbb7927f393bb700d9b6a982253845ec193b8827eaf138",
+    "rune-match-fixtures.json": "99e5c480a2694b3f4a03fd42ec9ea18d4a920fa0febd20d6604b470714d7115e",
+    "../role-receipts/evidence-collector-rune-match-batch-a.json": "5ee9177633f616c0ca705e74892cc7862a3d2a40cc9de33e16b5e7744d03bcac"
+  },
+  "validation": {
+    "json_parse": "pass",
+    "git_diff_check": "pass",
+    "claim_ledger_unchanged": "pass",
+    "source_envelopes": "13/13 previously validated",
+    "fixture_envelopes": "2/2 previously validated",
+    "behavioral_or_browser_inference_added": false
+  },
+  "provenance_note": "This additive rebind records bytes available in the current workspace. No provider, session, event, prompt, final-response, or commit provenance is fabricated."
+}

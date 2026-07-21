@@ -1,0 +1,35 @@
+{
+  "schema_version": "apk-evidence-rebind-report.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "evidence-collector",
+  "game": "vocabulary/enchanted-library",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "d77044c35571dabde108098e5c9f9dd62722327d",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "reason": "Whitespace normalization changed evidence-method.md bytes; claims and source citations were preserved.",
+  "claims_preserved": true,
+  "claims_sha256": "2ade0d574fabced1888078edf92b6bc4cd68368443a1b4a0f444b2c63710a778",
+  "current_output_hashes": {
+    "claim-evidence-ledger.json": "2ade0d574fabced1888078edf92b6bc4cd68368443a1b4a0f444b2c63710a778",
+    "evidence-method.md": "50a26917fd13421dfa9d91912afbd6387f88709ad59cd1c387a4707e79a2d487",
+    "fixtures.json": "5b3a4bf7815a4dfda5a5817ae6d7e3fe13422520998f1a9bce9de8ade3bf9178",
+    "evidence-final-report.json": "811edfa2f147cacc5ffd851eb3bf2f88177c602723895817170803257ba1c3a4",
+    "receipt.json": "77069239ff76e851251cc11ea00564795762c1176c2c6d6cb35485ac4cf51e0e"
+  },
+  "corrected_summary": {
+    "claims_total": 32,
+    "cited_ranges": 32,
+    "source_paths": 8,
+    "history_queries": 0,
+    "negative_fixtures": 3,
+    "denominator_mismatch_count": 0
+  },
+  "validation": {
+    "json_validated": true,
+    "claim_records_changed": false,
+    "source_envelopes_revalidated": true,
+    "browser_or_behavior_inference_added": false,
+    "independent_review": "pending"
+  }
+}

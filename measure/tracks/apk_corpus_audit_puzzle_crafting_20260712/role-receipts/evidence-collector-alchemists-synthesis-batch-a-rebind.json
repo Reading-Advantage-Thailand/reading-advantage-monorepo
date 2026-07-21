@@ -1,0 +1,26 @@
+{
+  "schema_version":"apk-role-receipt.v1",
+  "receipt_kind":"additive-output-rebind",
+  "track":"apk_corpus_audit_puzzle_crafting_20260712",
+  "phase":"Phase 1: Batch A",
+  "role":"evidence-collector",
+  "game":"Alchemist's Synthesis",
+  "phase_base_sha":"52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha":"d77044c35571dabde108098e5c9f9dd62722327d",
+  "supersedes_receipt":"measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-alchemists-synthesis-batch-a.json",
+  "reason":"Whitespace normalization changed evidence-method.md bytes; all claims and factual output bytes remain preserved.",
+  "preserves_claims":true,
+  "source_behavior_inspected":false,
+  "browser_evidence_created":false,
+  "provider_attestation":{"available":false,"reason":"No provider spawn, session, event, or final-response telemetry was exposed."},
+  "current_output_hashes":{
+    "claim-evidence-ledger.json":"5ed0fa9894e6ec5aa389abe5d154ce658063022a37e1eddc3a76132cc37f2e9f",
+    "source-asset-history-ledger.json":"b021373a684c27496a5c4913705960ef91de949fec7f936211c2e8b6a45a4453",
+    "fixtures.json":"58f058348c2965d1dd703d3b8832b2fd298b47ba94649d532057217d70b61428",
+    "evidence-method.md":"39bee7bb0d122188c3856f78539a6f203aed8ac40c9ab49b796b10364d6f3194",
+    "rebind-report.md":"6738a26fa52898906745a0ec99e90cf026d4143511a63c2f40246b423eedc5bc"
+  },
+  "validation":{"json_parsing":"pass","current_output_hashes":"pass","claims":"preserved","diff_check":"pass"},
+  "status":"complete additive rebind; pending independent review",
+  "commit_sha":"not-created"
+}

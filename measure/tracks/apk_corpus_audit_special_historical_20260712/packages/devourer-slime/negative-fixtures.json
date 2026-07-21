@@ -1,0 +1,12 @@
+{
+  "schema_version": "apk-negative-evidence-fixtures.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "game": "Devourer Slime",
+  "fixtures": [
+    {"fixture_id":"DS-NEG-001","kind":"class-promotion","invalid_claim":{"claim":"The current Devourer Slime page dynamically imports the game with SSR disabled.","source_observation_id":"DS-HIST-001","source_class":"historical_implementation","revision":"1c44854682b18a2393efd265c2271f824e228a3d"},"expected_disposition":"REJECT","reason":"Historical evidence cannot establish current behavior."},
+    {"fixture_id":"DS-NEG-002","kind":"browser-injection","invalid_claim":{"claim":"Devourer Slime is runnable and its start-to-playing transition was observed in a browser.","source_observation_id":"DS-CS-011","source_class":"current_implementation"},"expected_disposition":"REJECT","reason":"Source and test-intent observations are not browser evidence; runnable disposition remains unknown."},
+    {"fixture_id":"DS-NEG-003","kind":"test-execution-injection","invalid_claim":{"claim":"The six Devourer Slime tests passed at the historical revision.","source_observation_id":"DS-HIST-007","source_class":"historical_test_artifact","revision":"1c44854682b18a2393efd265c2271f824e228a3d"},"expected_disposition":"REJECT","reason":"The observation records test intent only and explicitly makes execution unknown."}
+  ],
+  "validation": {"expected_rejections":3,"unsupported_factual_claims_authored":0}
+}

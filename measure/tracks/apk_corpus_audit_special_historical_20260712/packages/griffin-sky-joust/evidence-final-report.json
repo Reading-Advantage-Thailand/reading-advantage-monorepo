@@ -1,0 +1,19 @@
+{
+  "schema": "apk-evidence-final-report.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 1: Distinctive current/historical mechanics",
+  "game": "Griffin Sky-Joust",
+  "normalized_game_id": "griffin-sky-joust",
+  "collector_id": "evidence-collector-griffin-sky-joust-batch-a",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "cd2d0faec2d15f1a5d50bee0da102bde58ce1daa",
+  "status": "non-authoritative evidence package; downstream review and acceptance pending",
+  "claim_totals": {"factual_claims": 7, "negative_fixtures": 6, "current_runtime_claims": 0, "unknown_records": 1},
+  "source_fact_authority": {"rule":"Only exact envelopes in the claim ledger establish the seven historical source facts.","claim_ledger_path":"measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/claim-ledger.json","negative_fixtures_path":"measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/negative-fixtures.json"},
+  "class_reconciliation": {"current_implementation":"unknown; no assigned candidate path exists at the frozen upper revision","historical_implementation":"seven reachable exact source envelopes across two deletion events","active_specification":"not used as implementation evidence","catalog_prose":"not used as detailed mechanics evidence","cancelled_design":"unknown; no cancelled design was admitted","unknown":"preserved for current route, implementation, runtime, live behavior, assets, and transitions"},
+  "chronology": {"upper_revision":"a49ebcc4dc3b3792a96b5b114d729b0b542af0fe","comparison_revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","root_revision":"029261b617143c1773b724b86d54375cd47cb5d2","reachable_commit_metadata_records":2744,"deletion_events":2,"historical_source_envelopes":7,"diff_validation":"passed"},
+  "blocking_unknowns": ["Current route and implementation.","Runnable disposition and live behavior.","Current asset usage, state reachability, and transitions.","Provider-attested role isolation and final-response provenance.","Independent review disposition."],
+  "verification": {"json_documents_valid":true,"source_blob_and_range_hashes_valid":true,"historical_deletion_diffs_valid":true,"chronology_ancestor_checks_valid":true,"negative_fixtures_rejected_and_excluded":true,"mapping_performed":false,"browser_audit_performed":false,"acceptance":"not-claimed","git_diff_check":"required after artifact creation"},
+  "resource_use": {"budget_declaration_path":"measure/tracks/apk_corpus_audit_special_historical_20260712/test-strategy-phase0.md","ceilings":{"source_bytes_read":33554432,"source_objects_read":240,"command_invocations":160,"elapsed_minutes":300,"claims_authored":500,"negative_fixtures":10},"actual":{"source_bytes_read":0,"source_objects_read":0,"command_invocations":2,"elapsed_minutes":5,"claims_authored":7,"negative_fixtures":6}},
+  "acceptance": "not-claimed"
+}
