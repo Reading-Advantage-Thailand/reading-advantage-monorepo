@@ -1,0 +1,181 @@
+{
+  "schema_version": "apk-evidence-collector-report.v2-rebind",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A remediation V2",
+  "role": "evidence-collector",
+  "task_id": "collect-game-evidence:spellweavers-run",
+  "collector_agent": "evidence-collector-spellweavers-run:t5:2026-07-20",
+  "game": "spellweavers-run",
+  "canonical_identity": "catalog/spellweavers-run",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "6be9da09ef11579f3d3a5e0285b8fdc9f8e6a4c4",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "legacy_historical_revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9",
+  "withdrawn_cartridge_revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+  "generated_at": "unavailable",
+  "claims_total": 51,
+  "accepted_factual_claim_candidates": 48,
+  "negative_fixtures": 3,
+  "claims_by_category": {
+    "asset": 5,
+    "collision": 2,
+    "history": 4,
+    "identity": 4,
+    "input": 4,
+    "movement": 5,
+    "negative-fixture": 3,
+    "responsive": 5,
+    "route": 1,
+    "scene-state": 3,
+    "state": 1,
+    "test": 2,
+    "transition": 7,
+    "ui": 1,
+    "world": 4
+  },
+  "evidence_class_counts": {
+    "asset": 2,
+    "current-source": 4,
+    "history": 39,
+    "negative-fixture": 3,
+    "route": 1,
+    "test": 2
+  },
+  "confidence_counts": {
+    "high": 45,
+    "medium": 3,
+    "low": 3
+  },
+  "temporal_reconciliation": {
+    "role_base_current": "Catalog registration exists but is normalized to coming-soon with no href; no current gameplay implementation is claimed.",
+    "accepted_baseline": "The T2 baseline retains a limited E2E test and six asset candidates but no current Spellweaver scene/state denominator record.",
+    "legacy_historical": "Deleted React/Konva page, component, logic, config, routes, and tests are cited only at reachable revision 4106ba39547c8cac7645ce0f257a6bdd133712e9.",
+    "withdrawn_cartridge_historical": "Deleted cartridge files are cited only at reachable revision 1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f."
+  },
+  "denominator_reconciliation": {
+    "identity_records": 1,
+    "source_records": 9,
+    "source_record_types": {
+      "file": 9
+    },
+    "scene_records": 0,
+    "state_records": 0,
+    "asset_records": 6,
+    "historical_source_records": 17,
+    "phase3_selected_records": 66,
+    "phase3_selected_records_matched": 66,
+    "phase3_selected_records_blocking": 0,
+    "denominator_mismatches": 0
+  },
+  "asset_reconciliation": [
+    {
+      "path": "apps/advantage-games/public/games/cover/cover-spellweavers-run.png",
+      "disposition": "current-catalog-binding"
+    },
+    {
+      "path": "apps/advantage-games/public/games/spellweavers-run/spellweavers-run-gameplay.png",
+      "disposition": "candidate-only; screenshot-is-not-behavior-proof"
+    },
+    {
+      "path": "apps/advantage-games/public/sounds/spellweavers-run-action.mp3",
+      "disposition": "candidate-only; runtime-use-unavailable"
+    },
+    {
+      "path": "historical Konva primitives",
+      "disposition": "orb, lanes, collection zone, mana bar, score, and combo have exact historical shape/text rendering citations"
+    },
+    {
+      "path": "historical cartridge semantic slots",
+      "disposition": "reachable historical declarations only; no current physical binding inferred"
+    }
+  ],
+  "visible_unknowns": [
+    "Current gameplay implementation and runnable route are unavailable at the role base.",
+    "Current movement, camera, collision, stage transition, responsive profile, and input behavior are unavailable.",
+    "No trusted keyboard, pointer, touch, or gesture observation was made.",
+    "No compact/wide browser transition, console log, or network trace was collected.",
+    "Runtime use of spellweavers-run-gameplay.png and spellweavers-run-action.mp3 is unavailable.",
+    "Provider agent/session/spawn/ancestry/event timestamps and canonical raw-prompt bytes are unavailable."
+  ],
+  "negative_fixture_ids": [
+    "SW-NEG-001",
+    "SW-NEG-002",
+    "SW-NEG-003"
+  ],
+  "stop_loss": {
+    "unsupported_accepted_factual_claims": 0,
+    "denominator_mismatches": 0,
+    "unresolved_citation_ranges": 0,
+    "browser_claims_without_browser_evidence": 0,
+    "budget_breaches": 1,
+    "unmeasured_roles": 1,
+    "disposition": "STOP-NON-AUTHORITATIVE"
+  },
+  "budget": {
+    "ceiling": {
+      "source_bytes": 12000000,
+      "source_files_objects": 160,
+      "commands": 70,
+      "elapsed_minutes": 120,
+      "records_authored_reviewed": 300,
+      "browser_interactions": 0,
+      "captured_artifacts": 80
+    },
+    "original_ceiling": 8000000,
+    "original_actual": 11558850,
+    "owner_exception_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-spellweavers-budget-exception.json",
+    "owner_exception_sha256": "a0a4f2e80fa888e3fee7a1ef7e3479af559e1930cbb3eb3a5ea3a2ab8b3bbcf4",
+    "actual": {
+      "source_bytes": 11558850,
+      "source_files_objects": 19,
+      "commands": 24,
+      "elapsed_minutes": null,
+      "records_authored_reviewed": 51,
+      "browser_interactions": 0,
+      "captured_artifacts": 4
+    },
+    "measurement_basis": {
+      "source_bytes": "Exact original collector actual retained from the initial report and owner exception.",
+      "source_files_objects": "19 unique evidence objects as disclosed by the initial report.",
+      "commands": "24 top-level Bash invocations as disclosed by the initial report.",
+      "elapsed_minutes": "Unavailable: no trusted harness start/end timestamps.",
+      "records_authored_reviewed": "51 ledger records, including 48 factual candidates and 3 negative fixtures.",
+      "browser_interactions": "No browser run.",
+      "captured_artifacts": "4 as disclosed by the initial report."
+    },
+    "exception_disclosure": "Original actual 11558850 exceeded the original 8000000 ceiling by 3558850. The dated owner exception raises only this collector source-byte ceiling to 12000000 and waives no other gate."
+  },
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json": "2cd708cbecf94133b92ce5f06822ad420da28a1d4417fdb74284528e7a9fe24b",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-method-v2.md": "1cd64613e86482a78830f522fbe6d83cf1a812d3c42fcbd97e06f9ade035e92a",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-final-report-v2-rebind.json": "self-hash-not-embedded"
+  },
+  "commit_sha": "<pending-orchestrator-bind>",
+  "acceptance": "not-claimed",
+  "review_status": "not-run-by-this-role",
+  "package_status": "citation-preserved-budget-disclosed-pending-independent-review",
+  "provenance_direction": {
+    "mode": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+    "role_base_sha": "6be9da09ef11579f3d3a5e0285b8fdc9f8e6a4c4",
+    "provider_telemetry_available": false,
+    "unavailable": [
+      "provider session",
+      "spawn",
+      "ancestry",
+      "fork",
+      "event timestamps",
+      "raw prompt bytes",
+      "elapsed timing"
+    ],
+    "commit_binding": "pending-orchestrator-bind"
+  },
+  "output_paths": {
+    "claim_evidence_ledger": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+    "evidence_method": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-method-v2.md",
+    "evidence_final_report": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-final-report-v2-rebind.json"
+  },
+  "commit_sha_outputs": "<pending-orchestrator-bind>",
+  "supersedes": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-final-report-v2.json",
+  "rebind_reason": "The orchestrator removed trailing whitespace from evidence-method-v2.md; this report binds the exact current method bytes without changing claims."
+}

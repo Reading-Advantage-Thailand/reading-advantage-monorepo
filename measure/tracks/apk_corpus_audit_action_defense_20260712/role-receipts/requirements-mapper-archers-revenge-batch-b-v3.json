@@ -1,0 +1,27 @@
+{
+  "schema":"apk-role-receipt.v1",
+  "status":"additive Archer V3 mapper receipt; non-authoritative pending committed binding and fresh independent review",
+  "acceptance":"not-claimed",
+  "track_id":"apk_corpus_audit_action_defense_20260712",
+  "phase":"Phase 2: Batch B evidence packages",
+  "task_id":"B2-MAP-EACH-GAME-V3",
+  "role":"requirements-mapper-archers-revenge-batch-b-v3",
+  "role_identity":"fresh isolated Archer's Revenge mapper v3 only",
+  "phase_base_sha":"ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha":"6be9da09ef11579f3d3a5e0285b8fdc9f8e6a4c4",
+  "source_baseline_revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "allowed_input_manifest_sha256":"e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "budget_declaration_sha256":"7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+  "provenance_direction":{"path":"measure/product-owner-apk-provenance-direction-20260721.json","decision":"LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"},
+  "provider_provenance":{"prompt_sha256":null,"actual_context_manifest_sha256":null,"provider_spawn_id":null,"provider_session_id":null,"parent_ancestry_ids":null,"fork_turns":null,"raw_isolation_export_sha256":null,"start_event_id":null,"start_event_timestamp":null,"end_event_id":null,"end_event_timestamp":null,"final_response_sha256":null,"final_response_event_id":null,"commit_sha":null},
+  "unavailable_metadata_note":"Provider-side prompt, session, spawn, ancestry, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are intentional; no provider attestation is claimed. No commit was created.",
+  "prior_role_history":[],
+  "output_paths_and_sha256":[
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-blueprint-batch-b-v3.json","sha256":"7f6112d47ef4bbdd58cd93941bbcf935952e12880ae48f54097281cf94de3624"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-mapper-final-report-batch-b-v3.json","sha256":"594f3d368195cc4930eb2662f12b7729ccc83a40ea6bc5622f71c682db5c450e"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-archers-revenge-batch-b-v3.json","sha256":null,"sha256_note":"A receipt cannot embed its own final SHA-256 without changing its bytes; externally hash current bytes."}
+  ],
+  "findings":[{"severity":"medium","id":"AR-B3-MAPPER-PROVENANCE-001","detail":"Provider provenance fields are unavailable and disclosed; local artifact validation and committed binding remain required."}],
+  "resource_use":{"actual":{"source_bytes_read":0,"source_files_read":0,"command_invocations":0,"elapsed_minutes":0,"records_authored":20},"ceilings":{"source_bytes_read":15728640,"source_files_read":80,"command_invocations":50,"elapsed_minutes":25,"records_authored":240}},
+  "receipt_status":"non-authoritative pending local hash validation and committed binding"
+}

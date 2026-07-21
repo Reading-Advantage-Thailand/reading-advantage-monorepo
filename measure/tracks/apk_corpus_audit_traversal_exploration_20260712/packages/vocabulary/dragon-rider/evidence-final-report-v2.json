@@ -1,0 +1,59 @@
+{
+  "schema_version": "apk-evidence-collector-report.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "task_id": "collect-game-evidence:vocabulary/dragon-rider:v2",
+  "role": "evidence-collector",
+  "collector_agent": "evidence-collector-dragon-rider-v2:t5:2026-07-21",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "6be9da09ef11579f3d3a5e0285b8fdc9f8e6a4c4",
+  "source_revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "ledger_path": "packages/vocabulary/dragon-rider/claim-evidence-ledger-v2.json",
+  "method_path": "packages/vocabulary/dragon-rider/evidence-method-v2.md",
+  "claims_total": 16,
+  "non_fixture_claims": 16,
+  "fixture_records": 3,
+  "unknown_records": 4,
+  "historical_state_claims": 0,
+  "browser_interactions": 0,
+  "trusted_native_input": "unavailable/not attempted",
+  "claims_by_category": {
+    "identity": 1,
+    "identity-route": 1,
+    "scene": 1,
+    "state": 1,
+    "mechanic": 2,
+    "transition": 4,
+    "layout": 1,
+    "control": 1,
+    "responsive": 1,
+    "asset-usage": 1,
+    "route-api": 1,
+    "fixture-test": 1
+  },
+  "mode": "A",
+  "mode_description": "additive supersession; valid v1 factual claims and fixtures retained while required metadata is repaired",
+  "citation_verification": {
+    "resolver": "batch-a-truth-tests.py exact envelope rules",
+    "factual_claims_checked": 16,
+    "factual_claims_ok": 16,
+    "related_envelopes_checked": 2,
+    "related_envelopes_ok": 2,
+    "negative_fixtures_checked": 3,
+    "negative_fixtures_ok": 3,
+    "failures": []
+  },
+  "conflict_summary": {
+    "claims_with_conflict": "none-observed",
+    "resolution": "Every claim explicitly records no contradictory source record collected; no conflict was suppressed."
+  },
+  "browser_boundary": "No browser claim is made. Browser-runnable disposition, trusted native input, compact/wide observations, and actual responsive failure remain unknown.",
+  "supersedes": "packages/vocabulary/dragon-rider/claim-evidence-ledger.json",
+  "output_hashes": {
+    "packages/vocabulary/dragon-rider/claim-evidence-ledger-v2.json": "fb778224e67609457ac8ac712bc85b3f5096483e0116f1162a2818bac6b48fe9",
+    "packages/vocabulary/dragon-rider/evidence-method-v2.md": "82534ae84a45146c64a32539a3333c6fa08a6f4994d7886dd6e8f38f27400a08",
+    "self": "intentionally-not-self-hashed"
+  },
+  "commit_sha_outputs": "pending-orchestrator-bind",
+  "acceptance": "not-claimed"
+}

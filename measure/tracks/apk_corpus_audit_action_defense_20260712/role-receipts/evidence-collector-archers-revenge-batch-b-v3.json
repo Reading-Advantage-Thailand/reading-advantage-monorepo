@@ -1,0 +1,67 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "status": "V3 Archer's Revenge collector remediation locally verified; downstream acceptance remains unclaimed",
+  "acceptance": "not claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-COLLECT-ARCHERS-REMEDIATION-V3",
+  "role": "evidence-collector-archers-revenge-batch-b-v3",
+  "role_identity": "fresh isolated T4 Batch B Archer's Revenge collector remediation v3 only",
+  "game": "Archer's Revenge",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "6be9da09ef11579f3d3a5e0285b8fdc9f8e6a4c4",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "allowed_input_manifest_sha256": "e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+  "supersession": {
+    "supersedes_receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v2.json",
+    "supersedes_receipt_sha256": "d23ed799fcf3f98ff85f2c3443813165d2188d5cd3c168d0996e30561dfa9d20",
+    "v2_disposition": "retained immutable failure evidence; stale method output binding",
+    "v3_scope": "source-evidence collector package only; no mapper, browser, review, truth-selector, candidate, approval, or accepted-manifest supersession"
+  },
+  "provenance_direction": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-webbridge.json",
+    "scope": "local-verifiable provenance direction only; no browser audit was performed",
+    "provider_telemetry": "Unavailable: prompt, context, spawn, ancestry, fork, raw isolation, event, timestamp, and final-response telemetry were not exposed. Nulls are disclosures, not attestations."
+  },
+  "prompt_sha256": null,
+  "actual_context_manifest_sha256": null,
+  "provider_spawn_id": null,
+  "parent_ancestry_ids": null,
+  "fork_turns": null,
+  "raw_isolation_export": null,
+  "start_event_id": null,
+  "end_event_id": null,
+  "start_timestamp": null,
+  "end_timestamp": null,
+  "final_response_sha256": null,
+  "unavailable_metadata_note": "Provider/tool-attested prompt, context, spawn, ancestry, fork, raw-isolation, event, timestamp, and final-response telemetry was unavailable. Null is an explicit unavailable value, not an attestation; downstream acceptance remains subject to its own gates.",
+  "prior_role_history": ["measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v2.json"],
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v3.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b-v3.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v3.json"
+  ],
+  "output_sha256": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v3.json": "c2d6bf62d628fc441c476fb2839e2b41e7f0f8564020580e3d700b0c167fa9d1",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b-v3.md": "ecc3df6d0a97c507a795ca1e3555c3eb323afbdab64755ee191ae820b4835ae5",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v3.json": "c21897fb4c7d80fbb3141d8c37a87a31e9ac4881e1ef7bb021ebdd273dd2555c"
+  },
+  "source_envelope_verification": {
+    "factual_claims": 20,
+    "per_claim_collector_id_complete": true,
+    "positive_blob_and_range_hashes_rederived": true,
+    "binary_whole_file_envelopes_rederived": true,
+    "bounded_absence_records": 1,
+    "negative_fixtures": 4,
+    "negative_fixtures_rejected_and_excluded": true
+  },
+  "self_hash": null,
+  "commit_sha": null,
+  "findings": [
+    {"severity":"medium","id":"AR-B3-RECEIPT-001","detail":"Provider-attested isolation and response provenance remain unavailable; local-verifiable owner direction is bound and disclosed."},
+    {"severity":"low","id":"AR-B3-SCOPE-001","detail":"No mapper, browser audit, or review was performed; current behavior and asset usage remain unknown."}
+  ],
+  "resource_use": {"actual":{"source_bytes_read":4300000,"source_files_read":28,"command_invocations":22,"elapsed_minutes":38,"records_authored":92},"ceilings":{"source_bytes_read":52428800,"source_files_read":120,"command_invocations":80,"elapsed_minutes":45,"records_authored":300}},
+  "receipt_status": "non-authoritative additive V3 remediation; exact local output hashes and source envelopes verified; V2 stale method binding superseded; no commit created"
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version":"apk-evidence-collector-final-report.v2",
+  "track_id":"apk_corpus_audit_traversal_exploration_20260712",
+  "phase":"Phase 1: Batch A",
+  "game":"Dungeon Liberator",
+  "disposition":"source-evidence-collected-v2-not-reviewed-not-accepted",
+  "source_revision":"52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "successor_ledger":"packages/sentence/dungeon-liberator/claim-evidence-ledger-v2.json",
+  "repairs":{"required_claim_metadata":16,"rejected_negative_fixtures":3,"budget_actuals_integer":true,"citation_envelopes_revalidated":true},
+  "supported_summary":["The source-bound facts and four unknown classes from the initial ledger are preserved.","Each of the 16 factual claims now carries discovery, collector, conflict-resolution, reviewer, and reviewer-disposition metadata.","Three independent rejection fixtures explicitly prevent room-graph, browser-success, and asset-load overclaims."],
+  "unknowns_preserved":["browser and trusted-native input remain unknown","binary asset availability, dimensions, and load outcome remain unknown","historical behavior remains unknown","unsupported room/floor/obstacle topology remains unknown"],
+  "browser_claims":0,
+  "stop_loss":{"unsupported_factual_claims":0,"citation_envelope_mismatches":0,"denominator_mismatches":0,"negative_fixture_count":3,"budget_breaches":0,"status":"collector remediation only; independent review and committed binding remain required"},
+  "commit_binding":{"status":"ready-for-commit","commit_sha":"uncommitted","reason":"No commit was authorized; output hashes are exact and receipt records the post-commit binding requirement."},
+  "acceptance_status":"non-consumable collector successor; no browser, review, candidate, or acceptance claim",
+  "marker":"MEASURE_AGENT_RESULT"
+}

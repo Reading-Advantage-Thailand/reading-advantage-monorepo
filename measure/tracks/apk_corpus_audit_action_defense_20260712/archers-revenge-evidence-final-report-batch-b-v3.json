@@ -1,0 +1,51 @@
+{
+  "schema": "apk-evidence-final-report.v3",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "game": "Archer's Revenge",
+  "normalized_game_id": "archers-revenge",
+  "collector_id": "evidence-collector-archers-revenge-batch-b-v3",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "6be9da09ef11579f3d3a5e0285b8fdc9f8e6a4c4",
+  "status": "additive V3 collector remediation; non-authoritative pending truth selection and fresh independent review",
+  "supersession": {
+    "ledger": "archers-revenge-claim-ledger-batch-b-v3.json supersedes archers-revenge-claim-ledger-batch-b-v2.json",
+    "method": "archers-revenge-evidence-method-batch-b-v3.md supersedes archers-revenge-evidence-method-batch-b-v2.md",
+    "report": "This V3 report supersedes archers-revenge-evidence-final-report-batch-b-v2.json",
+    "receipt": "evidence-collector-archers-revenge-batch-b-v3.json supersedes the V2 collector receipt"
+  },
+  "claim_totals": {
+    "factual_claims": 20,
+    "negative_fixtures": 4,
+    "bounded_absence_records": 1,
+    "copy_claims": 10,
+    "asset_presence_claims": 3,
+    "transition_claims": 4,
+    "developer_effort_inventory_claims": 3,
+    "current_runtime_claims": 0
+  },
+  "completeness": {
+    "claim_metadata": "all 20 factual claims have collector_id and atomic source envelopes",
+    "fixtures": "all four fixture records remain rejected and do not count as factual claims",
+    "source_envelopes": "all positive ranges and binary whole-file hashes are retained from V2 and independently revalidated",
+    "current_runtime": "unknown; no current route, live behavior, or runnability claim"
+  },
+  "provenance_direction": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-webbridge.json",
+    "local_verifiable": true,
+    "provider_telemetry_available": false,
+    "unavailable": "prompt, ancestry, fork, raw isolation, event, final response, and provider attestation metadata"
+  },
+  "negative_fixture_ids": ["AR-B2-FIX-001", "AR-B2-FIX-002", "AR-B2-FIX-003", "AR-B2-FIX-004"],
+  "blocking_unknowns": ["current route and implementation", "runnable disposition and live behavior", "live responsive behavior", "asset scene/non-scene usage", "provider-attested role isolation and response provenance", "actual developer effort", "historical victory reachability", "independent reviewer disposition"],
+  "carried_forward_disclosures": [{"id":"DISC-001","classification":"Batch A process-only disclosure","use":"process metadata only; not a claim or source premise"}],
+  "resource_use": {"budget_declaration_sha256":"7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f","ceilings":{"source_bytes_read":52428800,"source_files_read":120,"command_invocations":80,"elapsed_minutes":45,"records_authored":300},"actual":{"source_bytes_read":4300000,"source_files_read":28,"command_invocations":22,"elapsed_minutes":38,"records_authored":92}},
+  "verification": {
+    "json_validation": "required for ledger, report, and receipt",
+    "source_envelopes": "required exact Git-object and range/blob hash re-derivation",
+    "fixture_policy": "required all four fixtures rejected and excluded",
+    "git_diff_check": "required for the four additive V3 outputs",
+    "review": "not performed by this collector role"
+  },
+  "review_disposition": "pending fresh independent review; no self-review, mapper, or browser work performed"
+}

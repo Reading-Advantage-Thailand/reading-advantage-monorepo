@@ -1,0 +1,41 @@
+{
+  "schema_version": "apk-evidence-collector-report.v2-rebind",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "evidence-collector",
+  "task_id": "collect-game-evidence:vocabulary/dragon-rider:v2:rebind",
+  "collector_agent": "evidence-collector-dragon-rider-v2:t5:2026-07-21",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "6be9da09ef11579f3d3a5e0285b8fdc9f8e6a4c4",
+  "source_revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "supersedes_report": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-final-report-v2.json",
+  "rebind_reason": "The orchestrator removed trailing whitespace from evidence-method-v2.md; this additive document binds the resulting current bytes without changing claims or fixtures.",
+  "claims_unchanged": true,
+  "claim_count": 16,
+  "fixture_count": 3,
+  "browser_interactions": 0,
+  "trusted_native_input": "unavailable/not attempted",
+  "disclosures": {
+    "provider_attestation": "unavailable and not claimed",
+    "browser_boundary": "No browser claim is made. Browser-runnable disposition, trusted native input, compact/wide observations, and actual responsive failure remain unknown.",
+    "acceptance": "not-claimed",
+    "commit_binding": "pending orchestrator commit; this role does not commit"
+  },
+  "budget_actuals": {
+    "source_bytes": 77762,
+    "source_files_objects": 10,
+    "commands": 16,
+    "elapsed_minutes": 1,
+    "records_authored_reviewed": 22,
+    "browser_interactions": 0,
+    "captured_artifacts": 3
+  },
+  "exact_output_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v2.json": "fb778224e67609457ac8ac712bc85b3f5096483e0116f1162a2818bac6b48fe9",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-method-v2.md": "4473e4362d4523a29211705177b2b3b4357e9761ef0630c555d8152ec56bf81f",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-final-report-v2.json": "364254b1226fc38eda49e1787f1cb5f74ee030c4b3b2ce610682dca2276ff9ff"
+  },
+  "self_hash": "intentionally-not-self-hashed",
+  "commit_sha_outputs": "pending-orchestrator-bind",
+  "acceptance": "not-claimed"
+}

@@ -1,0 +1,74 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "status": "truthful-unattested-budget-disclosed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A remediation V2",
+  "role": "evidence-collector",
+  "task_id": "collect-game-evidence:spellweavers-run:v2",
+  "game": "spellweavers-run",
+  "canonical_identity": "catalog/spellweavers-run",
+  "agent_id": "unavailable",
+  "spawn_id": "unavailable",
+  "parent_id": "unavailable",
+  "ancestry": [],
+  "fork_turns_none": "unavailable",
+  "provider_attestation": "The API harness exposed no provider session, spawn, ancestry, fork, or elapsed-time attestation; isolation is not claimed.",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "6be9da09ef11579f3d3a5e0285b8fdc9f8e6a4c4",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "budget_declaration_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+  "budget_declaration_sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+  "budget_exception_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-spellweavers-budget-exception.json",
+  "budget_exception_sha256": "a0a4f2e80fa888e3fee7a1ef7e3479af559e1930cbb3eb3a5ea3a2ab8b3bbcf4",
+  "original_source_bytes_actual": 11558850,
+  "original_source_bytes_ceiling": 8000000,
+  "approved_source_bytes_ceiling": 12000000,
+  "budget_exception_disclosure": "Original breach: 11558850 actual versus 8000000 ceiling; owner exception approved 12000000 only for Spellweaver collector source bytes; no further increase and no other gate waived.",
+  "prompt_sha256": "unavailable",
+  "allowed_input_manifest_sha256": "unavailable",
+  "actual_context_manifest_sha256": "unavailable",
+  "prior_role_history": "unavailable",
+  "events": {
+    "start_event_id": "unavailable",
+    "end_event_id": "unavailable",
+    "started_at": "unavailable",
+    "ended_at": "unavailable"
+  },
+  "final_response_sha256": "unavailable",
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-method-v2.md",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-final-report-v2.json"
+  ],
+  "actual_usage": {
+    "source_bytes": 11558850,
+    "source_files_objects": 19,
+    "commands": 24,
+    "elapsed_minutes": null,
+    "records_authored_reviewed": 51,
+    "browser_interactions": 0,
+    "captured_artifacts": 4
+  },
+  "measurement_basis": "Integer counts are retained from the initial collector report where measurable. Elapsed minutes remain unavailable because no trusted timing telemetry exists.",
+  "provenance_direction": {
+    "mode": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "provider_telemetry_available": false,
+    "commit_binding": "pending-orchestrator-bind",
+    "direction_sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+  },
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json": "2cd708cbecf94133b92ce5f06822ad420da28a1d4417fdb74284528e7a9fe24b",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-method-v2.md": "4d5da7c0d369619b33a5a4fe43b4af609f1fc799c034329acb92770e34a34cec",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-final-report-v2.json": "c0963b0ac9584285d7363ea7cb0133f0cdc834cac871efef0f7c4ad1a39608af"
+  },
+  "output_hashes_note": "Receipt is excluded from output_hashes to avoid self-reference; an orchestrator bind commit supplies immutable receipt identity.",
+  "findings": [
+    "V2 is additive and preserves all 51 original claim envelopes and unknowns.",
+    "No mapper, browser, reviewer, or truth-test artifact was authored.",
+    "Original 11558850 source-byte actual and owner exception are disclosed.",
+    "Elapsed timing and provider provenance remain unavailable and are not fabricated."
+  ],
+  "commit_sha": "<pending-orchestrator-bind>",
+  "acceptance": "not-claimed",
+  "reviewer_disposition": "pending-independent-review"
+}

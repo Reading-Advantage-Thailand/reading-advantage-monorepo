@@ -1,0 +1,71 @@
+{
+  "schema_version": "apk-role-receipt.v2-rebind",
+  "status": "complete-self-attested-uncommitted",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "evidence-collector",
+  "task_id": "collect-game-evidence:vocabulary/dragon-rider:v2:rebind",
+  "canonical_identity_id": "vocabulary/dragon-rider",
+  "agent_id": "evidence-collector-dragon-rider-v2:t5:2026-07-21",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "6be9da09ef11579f3d3a5e0285b8fdc9f8e6a4c4",
+  "spawn_id": "unavailable",
+  "parent_ancestry_ids": [],
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "provider_attestation": "Unavailable: provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations were not exposed; no provider attestation is claimed.",
+  "prompt_sha256": "unavailable",
+  "allowed_input_manifest_sha256": "unavailable",
+  "actual_context_manifest_sha256": "unavailable",
+  "prior_role_history": [],
+  "events": {
+    "start_event_id": "unavailable",
+    "end_event_id": "unavailable",
+    "started_at": "2026-07-21T00:00:00Z",
+    "ended_at": "2026-07-21T00:00:00Z"
+  },
+  "final_response_sha256": "unavailable",
+  "budget_declaration_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+  "budget_declaration_sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+  "allowed_inputs": [
+    "packages/vocabulary/dragon-rider/claim-evidence-ledger.json",
+    "packages/vocabulary/dragon-rider/evidence-final-report.json",
+    "packages/vocabulary/dragon-rider/evidence-method.md",
+    "role-receipts/evidence-collector-dragon-rider-phase1.json",
+    "batch-a-truth-tests.py",
+    "measure/product-owner-apk-provenance-direction-20260721.json",
+    "git object store (read-only)"
+  ],
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v2.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-method-v2.md",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-final-report-v2.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-final-report-v2-rebind.json"
+  ],
+  "actual_usage": {
+    "source_bytes": 77762,
+    "source_files_objects": 10,
+    "commands": 16,
+    "elapsed_minutes": 1,
+    "records_authored_reviewed": 22,
+    "browser_interactions": 0,
+    "captured_artifacts": 3
+  },
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v2.json": "fb778224e67609457ac8ac712bc85b3f5096483e0116f1162a2818bac6b48fe9",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-method-v2.md": "4473e4362d4523a29211705177b2b3b4357e9761ef0630c555d8152ec56bf81f",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-final-report-v2.json": "364254b1226fc38eda49e1787f1cb5f74ee030c4b3b2ce610682dca2276ff9ff",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-final-report-v2-rebind.json": "d32ad575564620d048d8f2bd67c8cc6edcc7c8b24624f07b8df8691bb4d91e04"
+  },
+  "commit_sha": "uncommitted",
+  "binding_note": "Rebind receipt binds the exact current ledger, method, original report, and additive report-rebind bytes. commit_sha remains uncommitted because this role is forbidden to create commits; orchestrator binding is required.",
+  "findings": [
+    "Required factual collector/conflict/reviewer metadata repaired on all 16 claims.",
+    "All retained exact envelopes and three rejected fixtures verified locally.",
+    "No browser or historical claim was added."
+  ],
+  "marker": "MEASURE_AGENT_RESULT",
+  "supersedes_receipt": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-dragon-rider-v2.json",
+  "rebind_reason": "Orchestrator removed trailing whitespace from evidence-method-v2.md; no claims or fixtures were changed."
+}
