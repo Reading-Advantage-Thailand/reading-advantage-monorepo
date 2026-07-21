@@ -1,0 +1,238 @@
+{
+  "schema_version": "apk-candidate-cohort-manifest.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-b",
+  "phase": "Phase 2: Batch B evidence packages",
+  "status": "candidate-awaiting-product-owner-acceptance",
+  "consumable": false,
+  "revoked": false,
+  "acceptance_claimed": false,
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "candidate_role_base_sha": "8fa2ac0b8cdfc288eea91bed52596f75cb1fca03",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "scope": {
+    "games": [
+      "village-guardian",
+      "archers-revenge",
+      "storm-castle-tower"
+    ],
+    "claims": {
+      "village-guardian": 73,
+      "archers-revenge": 43,
+      "storm-castle-tower": 42,
+      "total": 158
+    },
+    "fixtures": 12
+  },
+  "predecessor_bindings": {
+    "evidence_integrity_gate": {
+      "path": "measure/evidence-integrity-accepted-gate.json",
+      "sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+      "status": "accepted",
+      "revoked": false
+    },
+    "accepted_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729"
+    },
+    "accepted_partition": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0"
+    },
+    "accepted_pilot": {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b"
+    },
+    "accepted_batch_a": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-a.json",
+      "sha256": "b096d911b7d6bc9fb4d530e695cea10d3816a17158447a89303c2d069cf2a54c",
+      "carried_forward_disclosures": [
+        "DISC-001"
+      ]
+    }
+  },
+  "control_bindings": {
+    "allowed_input_manifest": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-role-applicability.json",
+      "sha256": "71db3e7eb9ac71177d7a555ceb6e43218c9bcbd5ca0afdaa2b5574ace9a38bb4",
+      "historical_role_binding_sha256": "e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717"
+    },
+    "budget_declaration": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-budget-declaration.json",
+      "sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f"
+    },
+    "post_output_binding": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-post-output-committed-binding-v16.json",
+      "sha256": "7ea050667add3b965b6e0c9d872a125fd941b01cfeab1d3cb1c8490aa855a8e1",
+      "binding_commit_sha": "803ad6f15b2eacfebb2fdbd81a568b783e496746"
+    },
+    "review_decomposition": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-review-verification-decomposition-v16.json",
+      "sha256": "3adb30a2f2c2a2691df2e3da9e55a2058c335f77aa84f87cd46571d184a22cd9"
+    }
+  },
+  "directions": {
+    "provenance": {
+      "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+    },
+    "webbridge": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-webbridge.json",
+      "sha256": "7dde397fdb1ceeac3e490d07791e90f69dd630b962d6b799da8426d4e9234498",
+      "decision": "WEBBRIDGE_ACCEPTED_FOR_B4"
+    },
+    "completion": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-completion-disposition.json",
+      "sha256": "973641c8f0b3f3281e9302d5b488f012be82f401bd6831b104674ce67f8c3960",
+      "decision": "CONDITIONAL_EVIDENCE_ACCEPTANCE_WITH_SUCCESSOR_DEFECT_TRANSFER"
+    }
+  },
+  "truth_gate": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v16.py",
+    "sha256": "9f84d9ed72952715fc20f1fc42d3478a12fbbc822ebccc2038ef7ce50aecfa5d",
+    "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v16.json",
+    "receipt_sha256": "947c4a65049c856d8e806501c01bf3d352823ebc0a9a15210b651f1de67d1920",
+    "effective_runtime_input_count": 108,
+    "exact_runtime_input_binding": "The receipt hash binds its inherited-plus-additive 108-path input_manifest; V16 re-hashes every path.",
+    "pre_candidate_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v16.py -k 'not BatchBAcceptanceContract'",
+    "pre_candidate_result": {
+      "passed": 46,
+      "failed": 0,
+      "deselected_lifecycle_tests": 3,
+      "exit_code": 0
+    }
+  },
+  "review_binding": {
+    "review_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-adversarial-review-v11.json",
+    "review_sha256": "1d82c2de29d59174f643486e2d8b503e6e29582d281bea5887527d826bbddd2e",
+    "review_receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v11.json",
+    "review_receipt_sha256": "ba9cc7742f188329c0f27e640402e52fa08824515a248224e558615d871902ff",
+    "review_role_base_sha": "24d933ed60722a5d20335d82ef440c325a849d6c",
+    "audited_head_sha": "24d933ed60722a5d20335d82ef440c325a849d6c",
+    "review_publication_commit_sha": "8fa2ac0b8cdfc288eea91bed52596f75cb1fca03",
+    "review_receipt_input_hash_count": 125,
+    "unresolved_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    }
+  },
+  "verification_units": [
+    {"unit_id":"RV16-INPUT-A","artifact_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-review-unit-rv16-input-a.json","artifact_sha256":"05725ab7374d9d7d73ab11a0ed4811db4b34886209715c3a818f641574217c45","receipt_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v11-rv16-input-a.json","receipt_sha256":"eb0e32d3e890eccd385d971d77ac21f742d8a1e145e9a464d03083bede3f022e"},
+    {"unit_id":"RV16-INPUT-B","artifact_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-review-unit-rv16-input-b.json","artifact_sha256":"339aecd4dd874b5798d477119a93d6634f6f34649e441cab263b09a19771f905","receipt_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v11-rv16-input-b.json","receipt_sha256":"e7affffe49fc2bcf6ad1c80bf49a03b18b9e617f68ce03410013dc305aac2b08"},
+    {"unit_id":"RV16-INPUT-C","artifact_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-review-unit-rv16-input-c.json","artifact_sha256":"9e415d1c143f07bb1c54d74f00b47e8a7f759ae76516cd8430dd7f59c2875a55","receipt_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v11-rv16-input-c.json","receipt_sha256":"fcdb16f2466f2b8a0b29442a91978b3ecc17e6ebab9c111b0e6424298fb8279d"},
+    {"unit_id":"RV16-RECEIPTS","artifact_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-review-unit-rv16-receipts.json","artifact_sha256":"734e4a3f5f50cb36a42ab9e00007b26d7996e2afb4e7324b40a9a3ab2778ddbd","receipt_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v11-rv16-receipts.json","receipt_sha256":"7586220d1900298909b0f459da5f5d169eaa6b89e922346239217177b996119c"},
+    {"unit_id":"RV16-VILLAGE","artifact_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-review-unit-rv16-village.json","artifact_sha256":"36dae371c8c1d50c56d7f789c1d367cf234909d550685cb281f170cb078426eb","receipt_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v11-rv16-village.json","receipt_sha256":"a1de755d250d657ab123c9148beb0815e3cdc4591b1b28cd7b81dd4b8479348a"},
+    {"unit_id":"RV16-ARCHER","artifact_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-review-unit-rv16-archer.json","artifact_sha256":"4813442c202b5e6eecddfd7fa2ab1f60a58c6bc20b5a059f2309e7e025b6b1e8","receipt_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v11-rv16-archer.json","receipt_sha256":"39b60d2dabd3e491ab4b31de5c3025535a613079f064070c51e8d61333a1eab4"},
+    {"unit_id":"RV16-STORM","artifact_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-review-unit-rv16-storm.json","artifact_sha256":"c1e9c0a3c7b5a83b777c44fa09a3a2303d077c01e47d4cd1c77a74e050a0ceca","receipt_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v11-rv16-storm.json","receipt_sha256":"37044742d20b27b883332470f11b5b005266bd80f4e5d894d55438191cc2677d"},
+    {"unit_id":"RV16-FINAL","artifact_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-review-unit-rv16-final.json","artifact_sha256":"a7c3eeba5510a1d1679c78aa85f7dde2cad6490f95cd9a8ec5e827759a542291","receipt_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v11.json","receipt_sha256":"ba9cc7742f188329c0f27e640402e52fa08824515a248224e558615d871902ff"}
+  ],
+  "active_role_receipts": {
+    "discovery-auditor-batch-b-v16-complete.json": "81dd6e593bb182d6ec5f0904ad933d915d5e48e42e89b56a784c016ed5d4489b",
+    "evidence-collector-village-guardian-batch-b-v16-complete.json": "00facb0ccfb6e792a9003eb50658e746937860541f416938b5172a6327fa4044",
+    "evidence-collector-archers-revenge-batch-b-v16-complete.json": "366f9092421df5fa704d460143494e547e46e66de142fdefe802c6b0478e6e77",
+    "evidence-collector-storm-castle-tower-batch-b-v16-complete.json": "08fdb2733a8bd277409d3c644e9d6b109a99ca4955491d68f072c3cc6a65a672",
+    "requirements-mapper-village-guardian-batch-b-v16-complete.json": "aa113df8829ea4960c0ceef8e10dd4d4bfdff1a410642dd1e80fd180bf9c6e92",
+    "requirements-mapper-archers-revenge-batch-b-v16-complete.json": "2b4014565811f25ba698abef24de90b7dd75e758c836af226dcabe8731199e25",
+    "requirements-mapper-storm-castle-tower-batch-b-v16-complete.json": "cada4098a1aea9fb30c3da7f5aa5b1068ee33dfb9429078354a26f8cb85e49de",
+    "browser-auditor-batch-b-v16-complete.json": "3a87217383d35077eaad60efc7aa2aeb5b0882f9d971dad346ec22225dd6550f",
+    "asset-auditor-batch-b-v16-complete.json": "fecab1f7b97cc8a80c888ef62f5fd2bce80e975e7f8194ddc25503f31cde961c",
+    "truth-test-author-batch-b-v16.json": "947c4a65049c856d8e806501c01bf3d352823ebc0a9a15210b651f1de67d1920"
+  },
+  "reviewed_outputs": {
+    "village-guardian": {
+      "ledger": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-claim-ledger-batch-b-v3.json","sha256":"3be82cd7a9ddb144ae82ae220c36b439c6d14bbd58e1c988c897af6156b20484"},
+      "method": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-evidence-method-batch-b-v3.md","sha256":"95c342a84cce0e6a6651e34cad11804ca8b930e2b9d1d533f3d464417d13200e"},
+      "report": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-evidence-final-report-batch-b-v3.json","sha256":"b6847970ab60374635b3925d82e9e1c8ac8a06761e8715decd6734f5018b372f"},
+      "blueprint": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-blueprint-batch-b-v3.json","sha256":"6a0e021d1b2ac2ddf33cd115f701993c9f110acc957964117137621ca99762e0"},
+      "mapper_report": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-mapper-final-report-batch-b-v5.json","sha256":"88239323b810800d30aaf9570b2f47152397fe99e8f0be92dc46cf45fa546085"}
+    },
+    "archers-revenge": {
+      "ledger": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v8.json","sha256":"1fedca7dffa8897a3bb0f5482a1c74c484bc3f16e5361ddd06dcc89ec8ec1ca3"},
+      "method": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b-v7.md","sha256":"f730a385b439b1e8d878a991384d9d49178d1e99d21cf148497c8ee6dc7720a6"},
+      "report": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v8.json","sha256":"ead73c3df3750048b6c33e66109c1b7b670999a16780f30acb4ea249e79bf4ef"},
+      "blueprint": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-blueprint-batch-b-v9.json","sha256":"7b1591c5ed56538dcc8c94ddb51781fa72f9c9d5344aa812012cef54def5afc7"},
+      "mapper_report": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-mapper-final-report-batch-b-v9.json","sha256":"cf2f6ad46472cbec7a68dc2ed0e2a18679879621f50a549c8d79fbe37023e6a0"}
+    },
+    "storm-castle-tower": {
+      "ledger": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/storm-castle-tower-claim-ledger-batch-b.json","sha256":"9f9337ec9b86161337553a8b8ab92e57cc954d2a0deb42018dad0ed99394e9d9"},
+      "method": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/storm-castle-tower-evidence-method-batch-b.md","sha256":"618f067ab845d365f98d0eb6416f56af8f75d00e1576389780d70324d617c8b9"},
+      "report": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/storm-castle-tower-evidence-final-report-batch-b.json","sha256":"034579508f1f57cf46c3e8456524f8ce376fdbfd1a047a3a49bde4e0d877aaa1"},
+      "blueprint": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/storm-castle-tower-blueprint-batch-b.json","sha256":"135fa6e4396cd6d9466b06c3cdad48a69cb1f7238dc4bacfb1ff2ca271c0c0d8"},
+      "mapper_report": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/storm-castle-tower-mapper-final-report-batch-b.json","sha256":"d4739be9956e377eb103d2d9c623870c5a6a6a2dd470d95a48c7e34edcd6650e"}
+    },
+    "discovery": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-discovery-audit-v2.json","sha256":"f0f27734d22b8ec376bbf8b1fe96574a75f2c293766bee2440c0484164dd1daa"},
+    "browser": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v3.json","sha256":"521e08b7a1ef9309cdf31277d0f07b99700bb7721d97ee3e371321e70cd1e4ca"},
+    "asset": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-asset-audit-v2.json","sha256":"c66b096726e441e6aab0c7a3ffd2cda81413befb00e1c8586cbe911a31329ebd"}
+  },
+  "disclosures": [
+    {
+      "id": "DISC-001",
+      "origin": "accepted Batch A process disclosure",
+      "scope": "process metadata only",
+      "rule": "May not support a Batch B claim, fixture, source disposition, mapping, browser result, asset usage, or factual premise."
+    },
+    {
+      "id": "BATCH-B-PROVENANCE-LOCAL",
+      "scope": "all Batch B role receipts",
+      "rule": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable and are not claimed; exact local hashes, Git bindings, role scope, and independent review are the compensating controls."
+    },
+    {
+      "id": "BATCH-B-WEBBRIDGE-LIMITS",
+      "scope": "Village Guardian browser evidence",
+      "rule": "The accepted observation used DOM-level synthetic input with isTrusted=false and a hidden-tab replacement scheduler; it is not trusted native input or foreground-timing evidence. No screenshots are claimed."
+    },
+    {
+      "id": "BATCH-B-VILLAGE-HTTP-400",
+      "scope": "Village Guardian completion boundary",
+      "rule": "Both observed completion POSTs returned HTTP 400. This remains a successor implementation defect and is not evidence of successful completion, persistence, XP award, idempotency, or API correctness."
+    },
+    {
+      "id": "BATCH-B-NON-RUNNABLE-ROUTES",
+      "scope": "Archer's Revenge and Storm the Castle Tower",
+      "rule": "Both are accepted only as independently reviewed exact-route HTTP 404 non-runnable dispositions at the role revision."
+    }
+  ],
+  "completion_constraints": {
+    "successful_completion": false,
+    "persistence_confirmed": false,
+    "xp_awarded": false,
+    "idempotency_verified": false,
+    "api_correctness": false
+  },
+  "revocation_rules": {
+    "automatic_triggers": [
+      "Any byte or SHA-256 change to a bound predecessor, direction, control, runtime input, reviewed output, truth test, active receipt, review unit, review, or review receipt.",
+      "Any phase-base, source-baseline, audited-head, binding-commit, or candidate-role-base mismatch.",
+      "Any later independent review reporting an unresolved Critical, High, or Medium finding, denominator mismatch, unsupported claim, stale receipt, budget breach, or changed runnable disposition.",
+      "Revocation or supersession of any accepted predecessor or product-owner direction.",
+      "Any attempt to consume this candidate before a later authorized human product-owner approval binds the exact candidate and review hashes."
+    ],
+    "on_trigger": "Mark this exact candidate hash revoked, publish an additive revocation/supersession record, regenerate affected outputs and receipts, rerun V16-equivalent gates, obtain a fresh zero-blocker review, and publish a new non-consumable candidate. Never mutate this candidate in place.",
+    "supersedes_candidate_sha256": null,
+    "superseded_by_candidate_sha256": null,
+    "revocation_event_sha256": null
+  },
+  "candidate_identity": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-batch-b.json",
+    "self_sha256": null,
+    "self_hash_rule": "The candidate cannot embed its own stable digest. The separately authored candidate-author receipt binds these exact bytes; any later product-owner acceptance must independently bind the same exact digest."
+  },
+  "lifecycle": {
+    "candidate_published": true,
+    "candidate_author_receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/candidate-author-batch-b.json",
+    "candidate_author_receipt_sha256": null,
+    "candidate_author_receipt_hash_rule": "The receipt is authored after this candidate to avoid a cyclic hash; a later acceptance or successor binding must bind its exact digest without mutating either artifact.",
+    "product_owner_acceptance_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-batch-b.json",
+    "product_owner_acceptance_published": false,
+    "accepted_manifest_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-b.json",
+    "accepted_manifest_published": false,
+    "approval_event_id": null,
+    "approval_message_sha256": null,
+    "approval_event_timestamp": null,
+    "lifecycle_status": "candidate-only; non-consumable; owner acceptance and accepted manifest are absent and unauthorized for this role"
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
