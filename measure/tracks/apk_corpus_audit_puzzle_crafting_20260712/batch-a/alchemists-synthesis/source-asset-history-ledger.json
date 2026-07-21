@@ -1,0 +1,20 @@
+{
+  "schema":"apk-source-asset-history-ledger.v1",
+  "game":"Alchemist's Synthesis",
+  "source_baseline_revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "denominator_binding":{"manifest":"measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json","sha256":"d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729","partition_sha256":"6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0"},
+  "covered_denominator_records":[
+    {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/alchemists-synthesis/page.tsx","disposition":"cited","blob_sha256":"b036d1ef56554ba0d98b8748219c933d2f64c718ad3bcc5460e681890e18ec82"},
+    {"path":"apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/complete/route.ts","disposition":"source envelope retained; only import fact cited","blob_sha256":"d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1"},
+    {"path":"apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/vocabulary/route.ts","disposition":"cited","blob_sha256":"0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd"},
+    {"path":"apps/advantage-games/src/components/games/vocabulary/alchemists-synthesis/AlchemistsSynthesisGame.test.tsx","disposition":"source envelope retained; test source not executed","blob_sha256":"b7a6572d5c55ced1bf89583989a51e74bdabb78edab5d43781aee31277633924"},
+    {"path":"apps/advantage-games/src/components/games/vocabulary/alchemists-synthesis/AlchemistsSynthesisGame.tsx","disposition":"cited","blob_sha256":"185f861c2b1ba8dce54757e716a0ca7a35fd09a9a0d2498a195d9af6427cb1d4"},
+    {"path":"apps/advantage-games/src/lib/gameCards.ts","disposition":"cited","blob_sha256":"4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c"},
+    {"path":"apps/advantage-games/src/lib/games/alchemistsSynthesis.test.ts","disposition":"source envelope retained; test source not executed","blob_sha256":"a1c03591a6730c60da0f49ffb619bad142f2f1fd024225b2ff670073f1f754b1"},
+    {"path":"apps/advantage-games/src/lib/games/alchemistsSynthesis.ts","disposition":"cited","blob_sha256":"630f4f8149fef8966955dbae28827215a8a30a0193a2a411b801133ad7c988ca"},
+    {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/alchemists-synthesis/page.test.tsx","disposition":"source envelope retained; test source not executed","blob_sha256":"b036a9766c217e50581ec1d825cc8d982408706cfd4b481186a9ab762022894e"},
+    {"path":"apps/advantage-games/public/games/cover/cover-alchemists-synthesis.png","disposition":"baseline binary presence only; usage not inferred","sha256":"0bc1f8bd8e366c1fc14b98c13408a8942151a3deef1de2d707a44a2857bd17fe"}
+  ],
+  "history":[],
+  "coverage_check":{"denominator_identity":"vocabulary/alchemists-synthesis","admitted_current_candidates":1,"admitted_non_current_candidates":0,"covered_records":10,"unresolved_records":0,"status":"pass"}
+}

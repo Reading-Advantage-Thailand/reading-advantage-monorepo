@@ -1,0 +1,36 @@
+{
+  "schema_version": "apk-evidence-fixtures.v1",
+  "game": "rune-match",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "fixtures": [
+    {
+      "fixture_id": "RM-FIX-001",
+      "kind": "short-source-pair",
+      "source_path": "apps/advantage-games/src/lib/games/sampleVocabulary.ts",
+      "source_range": {"line_start": 4, "line_end": 4, "sha256": "3a1ccf9d3e36f2a773cb601696a56c69990b628fb96ed8f81ff4d339e87dd376"},
+      "value": {"term": "สวัสดี", "translation": "Hello"},
+      "expected_disposition": "ACCEPT_SOURCE_VALUE_ONLY"
+    },
+    {
+      "fixture_id": "RM-FIX-002",
+      "kind": "long-source-pair",
+      "source_path": "apps/advantage-games/src/lib/games/sampleVocabulary.ts",
+      "source_range": {"line_start": 8, "line_end": 8, "sha256": "371c634d6ab07c0d1bf9e4c74199152ddb646e33640e68d27844ebfab09a0519"},
+      "value": {"term": "สบายดีไหม", "translation": "How are you"},
+      "expected_disposition": "ACCEPT_SOURCE_VALUE_ONLY"
+    },
+    {
+      "fixture_id": "RM-NEG-001",
+      "kind": "unsupported-behavior-injection",
+      "value": "Rune Match is keyboard-playable on mobile.",
+      "expected_disposition": "REJECT_NO_BROWSER_OR_INPUT_EVIDENCE"
+    },
+    {
+      "fixture_id": "RM-NEG-002",
+      "kind": "directory-only-citation",
+      "value": "apps/advantage-games/public/games/vocabulary/rune-match/",
+      "expected_disposition": "REJECT_DIRECTORY_IS_NOT_A_SOURCE_ENVELOPE"
+    }
+  ],
+  "fixture_note": "Both source-value fixtures have verified range envelopes. The negative fixtures intentionally have no source envelope because they are rejection tests."
+}

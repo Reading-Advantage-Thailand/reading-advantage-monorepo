@@ -1,0 +1,21 @@
+{
+  "schema_version":"apk-evidence-collector-report.v1",
+  "track_id":"apk_corpus_audit_puzzle_crafting_20260712",
+  "phase":"Phase 1: Batch A",
+  "role":"evidence-collector",
+  "task_id":"evidence-collector:enchanted-library",
+  "game":"vocabulary/enchanted-library",
+  "phase_base_sha":"52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha":"d77044c35571dabde108098e5c9f9dd62722327d",
+  "source_baseline_revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "claims_total":32,
+  "claims_by_category":{"asset":1,"content":1,"control":2,"identity":2,"mechanic":4,"responsive":3,"route":2,"scene":2,"state":6,"test":1,"transition":8},
+  "negative_fixtures":[{"fixture_id":"EL-NEG-001","expected_disposition":"FAIL"},{"fixture_id":"EL-NEG-002","expected_disposition":"REJECT"},{"fixture_id":"EL-NEG-003","expected_disposition":"REJECT"}],
+  "source_envelopes":{"baseline_source_paths":8,"all_blob_hashes_recorded":true,"all_cited_ranges_hashes_recorded":true,"directory_citations_in_claims":false},
+  "denominator_coverage":{"batch_size":3,"owned_identity_count":1,"owned_identity":"vocabulary/enchanted-library","admitted_page_candidates":2,"covered_page_candidates":2,"mismatch_count":0},
+  "budget_usage":{"cited_ranges":31,"cited_range_ceiling":72,"source_paths_read":8,"source_path_ceiling":120,"history_queries":0,"history_query_ceiling":24,"negative_fixtures":3,"negative_fixture_ceiling":12},
+  "browser_status":"not-collected; browser behavior and responsive conclusions remain unknown",
+  "stop_loss_observations":[],
+  "role_boundary_notes":["No source files, predecessor artifacts, plan markers, or other role outputs were modified.","No behavioral or browser inference was made.","Independent review remains required; this report is not an acceptance artifact."],
+  "status":"complete-self-attested; pending independent review"
+}

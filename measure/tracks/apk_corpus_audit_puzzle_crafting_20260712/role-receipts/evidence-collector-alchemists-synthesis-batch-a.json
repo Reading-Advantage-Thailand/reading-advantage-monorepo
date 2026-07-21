@@ -1,0 +1,29 @@
+{
+  "schema_version":"apk-role-receipt.v1",
+  "track":"apk_corpus_audit_puzzle_crafting_20260712",
+  "phase":"Phase 1: Batch A",
+  "role":"evidence-collector",
+  "task_id":"evidence-collector:alchemists-synthesis:batch-a",
+  "game":"Alchemist's Synthesis",
+  "phase_base_sha":"52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha":"d77044c35571dabde108098e5c9f9dd62722327d",
+  "source_baseline_revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "fresh_context_only":true,
+  "inherited_narrative":false,
+  "parent_ancestry_ids":[],
+  "fork_turns":"none",
+  "provider_attestation":{"available":false,"reason":"No provider spawn identifier, raw session export, event identifiers, or final-response hash was exposed by this execution environment."},
+  "unavailable_required_provenance":["spawn_id","prompt_sha256","actual_context_manifest_sha256","start_event_id","end_event_id","final_response_sha256"],
+  "accepted_input_hashes":{"t2_accepted_denominator_sha256":"d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729","t2_accepted_partition_sha256":"6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0","t3_accepted_pilot_sha256":"cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b"},
+  "owned_outputs":{
+    "claim_evidence_ledger":"measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/claim-evidence-ledger.json",
+    "source_asset_history_ledger":"measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/source-asset-history-ledger.json",
+    "fixtures":"measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/fixtures.json",
+    "evidence_method":"measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/evidence-method.md"
+  },
+  "output_hashes":{"claim-evidence-ledger.json":"5ed0fa9894e6ec5aa389abe5d154ce658063022a37e1eddc3a76132cc37f2e9f","source-asset-history-ledger.json":"b021373a684c27496a5c4913705960ef91de949fec7f936211c2e8b6a45a4453","fixtures.json":"58f058348c2965d1dd703d3b8832b2fd298b47ba94649d532057217d70b61428","evidence-method.md":"9f9de513d52929922981f3c289c217f0816daaf858a6171a9ad33b2c2e473c55"},
+  "budget_declaration_sha256":"695bd2b90bf0483c35c09c51007add5e467ad671cac4945392e4cc3fa02a5314",
+  "budget_usage":{"cited_ranges":12,"negative_fixtures":4,"source_path_reads":"not measured by environment","history_queries":0,"within_declared_ceiling":true},
+  "truthful_status":"complete collector package; non-consumable pending independent review; no browser or behavioral inference",
+  "commit_sha":"not-created"
+}

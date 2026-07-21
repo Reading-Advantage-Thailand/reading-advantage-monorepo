@@ -1,0 +1,80 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 1: Distinctive current/historical mechanics",
+  "batch_id": "batch-a",
+  "role": "historical-source-specialist-batch-a-realm-carver",
+  "task_id": "realm-carver-historical-source",
+  "game": "Realm Carver",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "commit_sha": null,
+  "authored_commit": false,
+  "spawn_id": null,
+  "parent_id": null,
+  "ancestry_ids": [],
+  "provider_provenance": {
+    "status": "unavailable",
+    "reason": "The execution API exposed no provider spawn, parent, ancestry, event, timestamp, raw-session export, or final-response-hash fields.",
+    "fabricated_placeholders_used": false
+  },
+  "prompt_sha256": null,
+  "prompt_hash_status": "unavailable without retained provider raw-message export",
+  "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+  "actual_context_manifest_sha256": null,
+  "actual_context_manifest_status": "unavailable because no provider context export was exposed",
+  "prior_role_history": [],
+  "final_response_sha256": null,
+  "final_response_hash_status": "unavailable before provider emission and not backfillable",
+  "budget_declaration": {
+    "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-budget-declaration.json",
+    "sha256": "f87e33ef2a1a35ce2ac77eb0ea8f9797f6dc2e5c514159ad6d1fe011363bfe6b",
+    "per_batch_limits": {
+      "source_bytes_read": 16777216,
+      "source_objects_read": 160,
+      "command_invocations": 100,
+      "elapsed_minutes": 120,
+      "records_authored": 300
+    },
+    "measurement_status": "not-provider-attested; local source envelope and artifact counts are recorded in the observations output"
+  },
+  "output_files": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/historical-source-observations.json",
+      "sha256": "21c520e98bf6a31eefba14a24779f996a38eb5a491c362ba033d19209a475cf3"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "info",
+      "finding_id": "realm-carver-historical-bytes-recovered",
+      "finding": "Seven frozen Realm Carver historical locators were checked at reachable ancestor revisions and eight exact source observations were recorded.",
+      "disposition": "historical observations only; independent review required"
+    },
+    {
+      "severity": "info",
+      "finding_id": "realm-carver-current-boundary-preserved",
+      "finding": "No current source, collector ledger, requirements mapping, browser artifact, or inferred behavior was inspected or authored.",
+      "disposition": "unknowns retained"
+    },
+    {
+      "severity": "medium",
+      "finding_id": "realm-carver-provider-receipt-data-unavailable",
+      "finding": "Provider provenance, context, isolation, and timing fields were unavailable in this execution environment.",
+      "disposition": "truthful unavailable fields; fail closed for provider-attested acceptance"
+    }
+  ],
+  "isolation_proof": {
+    "fork_turns": null,
+    "provider_attested": false,
+    "raw_export_path": null,
+    "status": "unavailable",
+    "gate_disposition": "fail-closed where provider-attested isolation is mandatory"
+  },
+  "receipt_admissibility": {
+    "content_hashes_verifiable": "after artifact hash recomputation",
+    "provider_provenance_complete": false,
+    "independent_review_isolation_proven": false,
+    "admissible_for_provider-attested-acceptance": false
+  }
+}

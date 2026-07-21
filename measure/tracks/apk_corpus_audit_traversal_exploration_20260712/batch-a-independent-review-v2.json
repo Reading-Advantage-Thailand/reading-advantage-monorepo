@@ -1,0 +1,219 @@
+{
+  "schema_version": "apk-batch-independent-review.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "adversarial-reviewer-batch-a-v2",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "cd2d0faec2d15f1a5d50bee0da102bde58ce1daa",
+  "audited_head_sha": "cd2d0faec2d15f1a5d50bee0da102bde58ce1daa",
+  "status": "blocked; exact source envelopes and fixtures pass, but unsupported atomic claims, incomplete packages, and non-integer budget actuals remain",
+  "scope": [
+    "vocabulary/dragon-rider",
+    "sentence/dungeon-liberator",
+    "catalog/spellweavers-run"
+  ],
+  "active_input_validation": {
+    "truth_selected_inputs": 38,
+    "truth_selected_inputs_matching_working_bytes": 38,
+    "truth_selected_inputs_matching_role_base_bytes": 38,
+    "truth_test_sha256": "fef1c401d04e4065333c2c9b7cbfcee00a9cee206f8a16cc80ff87e7734b998a",
+    "truth_receipt_sha256": "46a95295175f60a296d0d069d448cd448b608bfaef9a46789e7f3d0f02808211",
+    "drifted_or_missing_inputs": [],
+    "note": "All 38 ACTIVE_INPUT_HASHES entries in batch-a-truth-tests-v2.py match the reviewed working bytes and their required c83ed9b4 role-base bytes. The committed V2 truth test and truth receipt additionally match the hashes above at the reviewed HEAD."
+  },
+  "source_rederivation": {
+    "method": "Independently loaded each selected V2 ledger, resolved each declared revision/path through git show, hashed each unique complete blob, and hashed every inclusive cited line range with original line endings. Related Dragon Rider route envelopes were re-derived separately. Claim wording and interpretations were then checked against the exact cited ranges rather than treating a matching hash as semantic support.",
+    "unique_git_objects_read": 23,
+    "unique_git_object_bytes": 694196,
+    "factual_claims": {
+      "dragon-rider": 16,
+      "dungeon-liberator": 16,
+      "spellweavers-run": 48,
+      "total": 80
+    },
+    "blob_sha256_matches": 80,
+    "range_sha256_matches": 80,
+    "related_envelope_matches": 2,
+    "envelope_mismatches": 0,
+    "semantic_anchor_mismatch_claim_ids": [
+      "DR-STATE-001",
+      "DR-SCENE-002",
+      "DR-ASSET-001",
+      "DR-TEST-001",
+      "DL-TRANS-002"
+    ],
+    "semantic_anchor_mismatch_count": 5
+  },
+  "fixture_rederivation": {
+    "method": "Re-enumerated fixtures directly from all three selected ledgers, required an explicit reject disposition, required no positive citation envelope, and checked each proposition against the bounded positive evidence and preserved unknowns.",
+    "dragon-rider": 3,
+    "dungeon-liberator": 3,
+    "spellweavers-run": 3,
+    "total": 9,
+    "expected_disposition_matches": 9,
+    "positive_citations_present": 0,
+    "mismatches": []
+  },
+  "mapper_reconciliation": {
+    "same_game_claim_ids_resolve": true,
+    "foreign_claim_ids": [],
+    "unresolved_claim_ids": [],
+    "exact_latest_collector_bindings_match": true,
+    "novel_source_fact_keys_detected": 0,
+    "required_package_model_complete": false,
+    "note": "ID and hash bindings pass, but the maps are indexing summaries rather than the protocol-required complete scene/state/transition, mechanic/learning blueprint, and developer-effort decomposition."
+  },
+  "browser_disposition_review": {
+    "dragon-rider": "accepted only as browser-audit-blocked-route-unreachable at the recorded environment; no movement, transition, responsive, trusted-input, persistence, or production behavior accepted",
+    "dungeon-liberator": "accepted only as browser-audit-blocked-browser-unavailable; candidate routes and all behavior remain unknown",
+    "spellweavers-run": "accepted only as bounded NON-RUNNABLE/UNKNOWN; historical source and retained test routes are not promoted to current runtime behavior",
+    "blocking_finding_from_unknown_or_non_runnable_disposition": false,
+    "overclaims_detected": 0,
+    "note": "Unknown and non-runnable dispositions are not treated as failures where bounded and source-correct. The separate budget-accounting defect applies to receipt completeness, not to these browser outcomes."
+  },
+  "provenance_and_exception_review": {
+    "global_direction": {
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "applied": true,
+      "provider_attestation_unavailability_is_not_a_finding": true,
+      "non_waiver_preserved": true
+    },
+    "spellweavers_exception": {
+      "decision": "ONE_TIME_SOURCE_BYTE_CEILING_INCREASE",
+      "sha256": "a0a4f2e80fa888e3fee7a1ef7e3479af559e1930cbb3eb3a5ea3a2ab8b3bbcf4",
+      "old_ceiling": 8000000,
+      "approved_ceiling": 12000000,
+      "measured_actual": 11558850,
+      "scope_accepted": "Spellweaver's Run evidence collector source_bytes only",
+      "other_budget_units_waived": false
+    }
+  },
+  "truth_test_runs": {
+    "bounded_non_review_selector": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-truth-tests-v2.py -k 'not BatchAV2IndependentReviewContract and not BatchAV2LifecycleContract'",
+      "result": "27 passed, 4 deselected; exit 0"
+    },
+    "full_after_review": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-truth-tests-v2.py",
+      "result": "27 passed, 4 failed; exit 1; zero pytest ERROR outcomes",
+      "expected_fail_closed_reasons": [
+        "independent review reports unresolved High and Medium findings",
+        "candidate manifest is not authorized or present",
+        "product-owner acceptance is not authorized or present",
+        "accepted manifest is not authorized or present"
+      ]
+    },
+    "independent_rederivation": "80/80 blob and range envelopes plus 2/2 related envelopes exact; 9/9 fixtures rejected; five semantic anchor mismatches found"
+  },
+  "findings": [
+    {
+      "id": "T5A-H-001",
+      "severity": "high",
+      "area": "Dragon Rider claim semantics",
+      "blocking": true,
+      "claim_ids": ["DR-STATE-001"],
+      "detail": "The citation is dragonRider.ts lines 4-20 and supports only the core running/boss union. The claim also states that the component gamePhase union is start/playing/ended, which exists in DragonRiderGame.tsx lines 390-392 but is absent from the declared envelope."
+    },
+    {
+      "id": "T5A-H-002",
+      "severity": "high",
+      "area": "Dragon Rider claim semantics",
+      "blocking": true,
+      "claim_ids": ["DR-SCENE-002"],
+      "detail": "The cited DragonRiderGame.tsx lines 153-165 contain stage and animation constants only. They do not contain the asserted 28/72-percent gates, 50/78-percent player, 50/28-percent boss placements, or the no-world-bounds/no-camera conclusion; those positions occur in a different uncited range."
+    },
+    {
+      "id": "T5A-H-003",
+      "severity": "high",
+      "area": "Dragon Rider claim semantics",
+      "blocking": true,
+      "claim_ids": ["DR-ASSET-001"],
+      "detail": "The cited DragonRiderGame.tsx lines 124-150 declare asset URL constants. They do not establish the claim's separate proposition that those assets are loaded. A loading envelope is required for that atom or the wording must remain declaration-only."
+    },
+    {
+      "id": "T5A-H-004",
+      "severity": "high",
+      "area": "Dragon Rider claim semantics",
+      "blocking": true,
+      "claim_ids": ["DR-TEST-001"],
+      "detail": "The cited dragonRider.test.ts lines 19-91 support the core test summary only. The same claim also asserts component-test coverage of start/running status, keyboard selection, and boss-to-results behavior without citing DragonRiderGame.test.tsx."
+    },
+    {
+      "id": "T5A-H-005",
+      "severity": "high",
+      "area": "Dungeon Liberator claim semantics",
+      "blocking": true,
+      "claim_ids": ["DL-TRANS-002"],
+      "detail": "The declared envelope covers only advanceToNextLevel. Its interpretation additionally states that a victory handled by the component leads to that reset state, but the component invocation at DungeonLiberatorGame.tsx lines 210-218 is not in the claim's citation."
+    },
+    {
+      "id": "T5A-H-006",
+      "severity": "high",
+      "area": "Dragon Rider denominator completeness",
+      "blocking": true,
+      "detail": "The package labels history unknown even though the accepted T2 historical denominator already enumerates the deleted legacy page/test/API/component records and seven withdrawn dragon-rider cartridge files. It also does not reconcile the accepted cover, gameplay, duplicate asset-root, vocabulary, and physical asset candidates. This fails the required identity/route/implementation/copy/test/asset/history reconciliation."
+    },
+    {
+      "id": "T5A-H-007",
+      "severity": "high",
+      "area": "Dungeon Liberator denominator completeness",
+      "blocking": true,
+      "detail": "The package omits the accepted simultaneous current-page/catalog-withdrawn identity state, page and component tests, sentence/ranking/completion API records and copy, and the accepted cover plus duplicate legacy/current asset-root candidates. One route claim and one source-path asset claim do not reconcile those denominator items."
+    },
+    {
+      "id": "T5A-H-008",
+      "severity": "high",
+      "area": "required per-game package model",
+      "blocking": true,
+      "detail": "All three requirements maps resolve their chosen IDs, but none supplies the protocol-required complete scene/state/transition model, mechanic-and-learning blueprint, and developer-effort decomposition. Dragon Rider also omits boss/result transition atoms, and Dungeon Liberator omits start/end and result-flow atoms that are present in reachable source."
+    },
+    {
+      "id": "T5A-H-009",
+      "severity": "high",
+      "area": "budget and stop-loss accounting",
+      "blocking": true,
+      "detail": "The frozen strategy requires every actual budget unit to be an integer and says an unmeasured role is ineligible. Spellweaver collector and mapper elapsed_minutes are null; its active collector report itself records unmeasured_roles=1 and STOP-NON-AUTHORITATIVE. Dragon Rider and Dungeon Liberator browser receipts record unavailable source_bytes/source_files_objects/elapsed_minutes, and the Spellweaver browser receipt has null elapsed_minutes. The global provenance direction permits unavailable provider attestations, not missing local budget actuals, while the Spellweaver exception changes source_bytes only and expressly waives no other gate."
+    },
+    {
+      "id": "T5A-M-001",
+      "severity": "medium",
+      "area": "V2 truth-gate coverage",
+      "blocking": true,
+      "detail": "The V2 suite proves envelope hashes, metadata presence, ID resolution, selected bindings, and bounded browser dispositions, but it does not compare atomic claim meaning to the cited text, reconcile the accepted per-game denominator, require the mandated blueprint/effort outputs, or enforce all seven integer budget units for every selected role. It therefore reports these gates green while the nine High defects above remain mechanically invisible."
+    }
+  ],
+  "unresolved_findings": {
+    "critical": 0,
+    "high": 9,
+    "medium": 1,
+    "low": 0
+  },
+  "gate_status": {
+    "exact_active_inputs": "green",
+    "source_envelopes": "green",
+    "negative_fixtures": "green",
+    "claim_semantics": "red",
+    "denominator_and_package_completeness": "red",
+    "mapper_id_binding": "green",
+    "required_blueprint_and_effort_model": "red",
+    "browser_dispositions": "green-bounded-only",
+    "budget_and_stop_loss": "red",
+    "independent_review": "complete-blocked",
+    "lifecycle": "not-authorized"
+  },
+  "authorization": {
+    "candidate_authorized": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "reason": "Nine High and one Medium findings remain. Per the track contract, any unresolved Critical, High, or Medium finding makes candidate false."
+  },
+  "measure_agent_result": {
+    "status": "blocked",
+    "candidate": false,
+    "critical": 0,
+    "high": 9,
+    "medium": 1,
+    "low": 0
+  }
+}

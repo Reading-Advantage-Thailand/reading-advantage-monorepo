@@ -1,0 +1,205 @@
+{
+  "schema_version": "apk-historical-source-observations.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "game": "Realm Carver",
+  "identity_token": "realm-carver",
+  "role": "historical-source-specialist-batch-a-realm-carver",
+  "source_class": "historical_implementation",
+  "consumability": "non-consumable-until-independent-review-and-acceptance",
+  "discovery_boundary": {
+    "discovery_audit_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/discovery-audit.json",
+    "discovery_audit_sha256": "585978d5592b321da7bcce72c4df929998da0d566b717447933c411f023b38dd",
+    "allowed_historical_locator_count": 7,
+    "locators_used": 7,
+    "current_source_inspected": false,
+    "collector_ledger_inspected": false,
+    "requirements_mapping_inspected": false,
+    "browser_evidence_inspected": false,
+    "inferred_behavior_authored": false
+  },
+  "frozen_envelope": {
+    "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+    "historical_revision_bound": "reachable ancestors of phase_base_sha only",
+    "predecessor_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "predecessor_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+    "provenance_policy": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "provenance_policy_sha256": "not-recomputed-in-role-output",
+    "citation_policy": "exact path, revision, full-file line envelope, blob SHA-256, and cited-range SHA-256"
+  },
+  "chronology": [
+    {
+      "ordinal": 1,
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "authored_at": "2026-07-11T14:24:33+07:00",
+      "subject": "test: assert complete APK checker evidence (track_id: codecamp_knowledge_graph_apk_unit_20260710)",
+      "reachable_from_phase_base": true,
+      "historical_locator_group": "six application source/test/route files"
+    },
+    {
+      "ordinal": 2,
+      "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+      "authored_at": "2026-07-11T18:42:14+07:00",
+      "subject": "chore(measure): authorize scoped APK teardown",
+      "reachable_from_phase_base": true,
+      "historical_locator_group": "cartridge index"
+    },
+    {
+      "ordinal": 3,
+      "revision": "05bb6d2909268ea670b106240167f86c9814d67d",
+      "authored_at": "2026-07-11T19:51:59+07:00",
+      "subject": "chore(apk): withdraw invalid cartridge implementation",
+      "reachable_from_phase_base": true,
+      "historical_context_only": true,
+      "observation": "The later withdrawal commit is recorded for chronology only; no bytes from it are used as evidence."
+    }
+  ],
+  "observations": [
+    {
+      "observation_id": "realm-carver-hist-001",
+      "path": "packages/game-cartridges/src/cartridges/realm-carver/index.ts",
+      "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+      "line_start": 1,
+      "line_end": 4,
+      "blob_sha256": "011a67105d3877b39db1f9da3e9142474aee6f56192c7f623a0106468005527b",
+      "range_sha256": "011a67105d3877b39db1f9da3e9142474aee6f56192c7f623a0106468005527b",
+      "source_fact": "The four-line module is an index export for the Realm Carver cartridge.",
+      "interpretation": "This is a cartridge registration/export surface; it does not by itself establish runtime mechanics.",
+      "confidence": "exact-bytes",
+      "disposition": "historical-source-observation"
+    },
+    {
+      "observation_id": "realm-carver-hist-002",
+      "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/realm-carver/page.tsx",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "line_start": 1,
+      "line_end": 143,
+      "blob_sha256": "6f1155f96a46485c77db8e0bf88a767419b808a1172c083636e2b29f2b05a93b",
+      "range_sha256": "6f1155f96a46485c77db8e0bf88a767419b808a1172c083636e2b29f2b05a93b",
+      "source_fact": "The page dynamically imports RealmCarverGame, fetches /api/v1/games/realm-carver/sentences?locale={locale}, takes the first returned sentence, splits sentence.term on spaces into word items, and posts xp/accuracy to /api/v1/games/realm-carver/complete on completion.",
+      "interpretation": "The historical page wires sentence retrieval and completion reporting around the game component.",
+      "confidence": "exact-bytes",
+      "disposition": "historical-source-observation"
+    },
+    {
+      "observation_id": "realm-carver-hist-003",
+      "path": "apps/advantage-games/src/app/api/v1/games/realm-carver/complete/route.ts",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "line_start": 1,
+      "line_end": 6,
+      "blob_sha256": "09196bb8daff23c617705a7ab2f76cfba80eae6e927d75a7bf5f8f74438b5d9b",
+      "range_sha256": "09196bb8daff23c617705a7ab2f76cfba80eae6e927d75a7bf5f8f74438b5d9b",
+      "source_fact": "The completion route exports POST from createCompleteRoute().",
+      "interpretation": "The route delegates completion handling to the shared game API factory.",
+      "confidence": "exact-bytes",
+      "disposition": "historical-source-observation"
+    },
+    {
+      "observation_id": "realm-carver-hist-004",
+      "path": "apps/advantage-games/src/app/api/v1/games/realm-carver/sentences/route.ts",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "line_start": 1,
+      "line_end": 7,
+      "blob_sha256": "5f5fa24105efd6c391a788eb195914e2e52351fa210003f050674954917a954a",
+      "range_sha256": "5f5fa24105efd6c391a788eb195914e2e52351fa210003f050674954917a954a",
+      "source_fact": "The sentences route exports GET from createSentencesRoute(SAMPLE_SENTENCES).",
+      "interpretation": "The historical route supplies the shared sentence endpoint with SAMPLE_SENTENCES.",
+      "confidence": "exact-bytes",
+      "disposition": "historical-source-observation"
+    },
+    {
+      "observation_id": "realm-carver-hist-005",
+      "path": "apps/advantage-games/src/components/games/sentence/realm-carver/RealmCarverGame.test.tsx",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "line_start": 43,
+      "line_end": 121,
+      "blob_sha256": "35420dd191cb3ed75c2a23b1361b6138c22675e7a42d3b9b8c15d4537598859f",
+      "range_sha256": "35420dd191cb3ed75c2a23b1361b6138c22675e7a42d3b9b8c15d4537598859f",
+      "source_fact": "The test suite renders RealmCarverGame with The/cat vocabulary and covers title rendering, start-to-playing transition, HUD rendering, input/game progression, completion callback behavior, and restart rendering.",
+      "interpretation": "These are historical test assertions, not independent proof that the assertions matched shipped runtime behavior.",
+      "confidence": "exact-bytes",
+      "disposition": "historical-test-observation-not-runtime-proof"
+    },
+    {
+      "observation_id": "realm-carver-hist-006",
+      "path": "apps/advantage-games/src/components/games/sentence/realm-carver/RealmCarverGame.tsx",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "line_start": 28,
+      "line_end": 164,
+      "blob_sha256": "8923df0d870c733e9e70f8c76294afba67fc5c0af46943c9f4614c8604dfaa97",
+      "range_sha256": "8923df0d870c733e9e70f8c76294afba67fc5c0af46943c9f4614c8604dfaa97",
+      "source_fact": "The component has start/playing/ended phases, creates state from sentences, applies directional input through tickRealmCarver, changes to ended on victory or defeat, and reports xp and accuracy once after completion.",
+      "interpretation": "The historical component contains a stateful play loop and terminal reporting path.",
+      "confidence": "exact-bytes",
+      "disposition": "historical-source-observation"
+    },
+    {
+      "observation_id": "realm-carver-hist-007",
+      "path": "apps/advantage-games/src/components/games/sentence/realm-carver/RealmCarverGame.tsx",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "line_start": 173,
+      "line_end": 341,
+      "blob_sha256": "8923df0d870c733e9e70f8c76294afba67fc5c0af46943c9f4614c8604dfaa97",
+      "range_sha256": "8923df0d870c733e9e70f8c76294afba67fc5c0af46943c9f4614c8604dfaa97",
+      "source_fact": "The rendered historical UI names the game Realm Carver, instructs the player to enclose words to capture them in order and return to a claimed area to finish the circuit, and renders HUD values, target word, wild/claimed/trail cells, words, monsters, player, and victory/defeat results.",
+      "interpretation": "These strings and render branches are historical UI/source observations; they do not establish final product requirements.",
+      "confidence": "exact-bytes",
+      "disposition": "historical-source-observation"
+    },
+    {
+      "observation_id": "realm-carver-hist-008",
+      "path": "apps/advantage-games/src/components/games/sentence/realm-carver/index.ts",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "line_start": 1,
+      "line_end": 1,
+      "blob_sha256": "6a44da9de008c9fca6df942b0f7a232e6349cca2cf8f47dfaac58d3bce65d5bf",
+      "range_sha256": "6a44da9de008c9fca6df942b0f7a232e6349cca2cf8f47dfaac58d3bce65d5bf",
+      "source_fact": "The component index re-exports RealmCarverGame.",
+      "interpretation": "The historical component directory exposed the game component through its index.",
+      "confidence": "exact-bytes",
+      "disposition": "historical-source-observation"
+    }
+  ],
+  "diff_report": {
+    "comparison": "each cited historical path at its cited revision versus that revision's first parent",
+    "phase_base": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+    "phase_base_source_inspection": false,
+    "diff_status": "all seven cited paths unchanged at their cited revision-to-parent comparison",
+    "comparisons": [
+      {
+        "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+        "parent": "87de28de6f8610ab8d04002f5f21dc01b06f6ae4",
+        "paths_compared": 6,
+        "changed_paths": 0,
+        "diff_sha256": null
+      },
+      {
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+        "parent": "eddf99d703732cec0dd9a91999597be4668417c3",
+        "paths_compared": 1,
+        "changed_paths": 0,
+        "diff_sha256": null
+      }
+    ],
+    "historical_deletion_context": "The discovery audit labels the seven paths deleted-record locators, but the exact cited revision-to-parent diffs are empty for these paths. This role records reachable historical bytes and preserves that locator/diff conflict; it does not infer a deletion event.",
+    "changed_files_claimed": 0,
+    "unresolved": ["the discovery locator classification and empty cited revision-to-parent diffs conflict", "no current-versus-historical comparison was performed"]
+  },
+  "unknowns_preserved": [
+    "current source and route at the phase base",
+    "runnable disposition and browser behavior",
+    "asset usage",
+    "whether historical tests passed in their original environment",
+    "whether the cited historical source was shipped or merely present in the repository",
+    "final capability ontology and product decision"
+  ],
+  "stop_loss": {
+    "unsupported_factual_claims": 0,
+    "denominator_mismatches": 0,
+    "current_source_touched": false,
+    "collector_or_mapping_outputs_touched": false,
+    "browser_outputs_touched": false,
+    "inference_substituted_for_missing_evidence": false
+  }
+}

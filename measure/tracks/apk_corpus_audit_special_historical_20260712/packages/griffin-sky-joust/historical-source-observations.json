@@ -1,0 +1,181 @@
+{
+  "schema_version": "apk-historical-source-observations.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 1: Distinctive current/historical mechanics",
+  "batch_id": "batch-a",
+  "game": "Griffin Sky-Joust",
+  "identity_token": "griffin-sky-joust",
+  "role": "historical-source-specialist-batch-a-griffin-sky-joust",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "cd2d0faec2d15f1a5d50bee0da102bde58ce1daa",
+  "allowed_input_manifest": {
+    "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-discovery-audit.json",
+    "sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa"
+  },
+  "chronology_bounds": {
+    "inclusive_upper_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+    "accepted_comparison_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "inclusive_reachable_root": "029261b617143c1773b724b86d54375cd47cb5d2",
+    "maximum_reachable_commit_metadata_records": 2744,
+    "upper_revision_reachable_commit_count": 2744,
+    "comparison_is_ancestor": true,
+    "root_is_ancestor": true,
+    "allowed_revision_rule": "exactly commits emitted by git rev-list a49ebcc4dc3b3792a96b5b114d729b0b542af0fe"
+  },
+  "hash_convention": "cited_range_sha256 is SHA-256 of exact bytes of lines line_start..line_end inclusive with terminators preserved; these seven text files are cited whole-file.",
+  "historical_events": [
+    {
+      "event_id": "GSJ-HIST-E001",
+      "event": "source_present_then_deleted",
+      "commit": "a30e8777952139460092c7d4649b8a72b5e8beda",
+      "parent_revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "author_timestamp": "2026-07-11T14:30:12+07:00",
+      "commit_timestamp": "2026-07-11T14:30:12+07:00",
+      "subject": "feat(games): ship APK arena wave (track_id: apk_arena_target_action_wave_w4_20260711)",
+      "paths_deleted": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-sky-joust/page.tsx",
+        "apps/advantage-games/src/app/api/v1/games/griffin-sky-joust/complete/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/griffin-sky-joust/sentences/route.ts",
+        "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/GriffinSkyJoustGame.test.tsx",
+        "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/GriffinSkyJoustGame.tsx",
+        "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/index.ts"
+      ],
+      "diffs": [
+        {"path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-sky-joust/page.tsx", "diff_bytes": 8903, "diff_sha256": "ad1732e5b0cf35113f6e85dc2607636c5a1b67c12ddd35be3be6bdb7ca55261f"},
+        {"path": "apps/advantage-games/src/app/api/v1/games/griffin-sky-joust/complete/route.ts", "diff_bytes": 494, "diff_sha256": "9d66113a85b7a9e7d3e50109142dc323405a31b38ce7cbacd2501f5b1021d13a"},
+        {"path": "apps/advantage-games/src/app/api/v1/games/griffin-sky-joust/sentences/route.ts", "diff_bytes": 578, "diff_sha256": "5f37b2288aa97bca8643d425d9591c20cd1f83718a1a23684afd44b8b4b38866"},
+        {"path": "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/GriffinSkyJoustGame.test.tsx", "diff_bytes": 5917, "diff_sha256": "ae75cd031a61a2b4675a0447283bb29601c9b1a8180a4993ab2033c92800e39e"},
+        {"path": "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/GriffinSkyJoustGame.tsx", "diff_bytes": 16002, "diff_sha256": "4caa45844d3a7ac420af449d8e6b5ce7f80729fbc71c089ba05c3a258cdeb0dc"},
+        {"path": "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/index.ts", "diff_bytes": 372, "diff_sha256": "ada8947e0e467d418c4b713de2b6af13a20fa605691e56c12ebf1dd3123de344"}
+      ],
+      "source_class": "historical_implementation"
+    },
+    {
+      "event_id": "GSJ-HIST-E002",
+      "event": "cartridge_source_deleted",
+      "commit": "05bb6d2909268ea670b106240167f86c9814d67d",
+      "parent_revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+      "author_timestamp": "2026-07-11T19:51:59+07:00",
+      "commit_timestamp": "2026-07-11T19:51:59+07:00",
+      "subject": "chore(apk): withdraw invalid cartridge implementation",
+      "paths_deleted": ["packages/game-cartridges/src/cartridges/griffin-sky-joust/index.ts"],
+      "diffs": [{"path": "packages/game-cartridges/src/cartridges/griffin-sky-joust/index.ts", "diff_bytes": 662, "diff_sha256": "4b7135727a612c4986831b74b4e78b49d4f8e0f6bf3ad64bfad2df4fefbe9204"}],
+      "source_class": "historical_implementation"
+    }
+  ],
+  "observations": [
+    {
+      "observation_id": "GSJ-HIST-001",
+      "source_class": "historical_implementation",
+      "path": "packages/game-cartridges/src/cartridges/griffin-sky-joust/index.ts",
+      "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+      "line_start": 1,
+      "line_end": 4,
+      "byte_length": 356,
+      "blob_sha256": "f595db27be949054697d3f788a3bddf8a55a4f96536f1b348b1de70fdf31b7c2",
+      "cited_range_sha256": "f595db27be949054697d3f788a3bddf8a55a4f96536f1b348b1de70fdf31b7c2",
+      "ancestry_evidence": {"parent_of_deletion": "05bb6d2909268ea670b106240167f86c9814d67d", "reachable_from_upper": true},
+      "observation": "The historical cartridge module imported arenaWaveBlueprints and createArenaCartridge, then exported griffinSkyJoustCartridge created from arenaWaveBlueprints[2] with the title Griffin Sky-Joust and the description Strike airborne word targets in sentence order."
+    },
+    {
+      "observation_id": "GSJ-HIST-002",
+      "source_class": "historical_implementation",
+      "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-sky-joust/page.tsx",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "line_start": 1,
+      "line_end": 225,
+      "byte_length": 8281,
+      "blob_sha256": "5603344c1cc4320e9390b355241512c501d812f41c4fee2c413c6a40f9136ddf",
+      "cited_range_sha256": "5603344c1cc4320e9390b355241512c501d812f41c4fee2c413c6a40f9136ddf",
+      "ancestry_evidence": {"parent_of_deletion": "a30e8777952139460092c7d4649b8a72b5e8beda", "reachable_from_upper": true},
+      "observation": "The historical page was a client page that dynamically imported GriffinSkyJoustGame with SSR disabled, fetched sentences from the griffin-sky-joust sentences API using locale, posted completion results to the corresponding complete API, and rendered a Griffin Sky-Joust header and game component."
+    },
+    {
+      "observation_id": "GSJ-HIST-003",
+      "source_class": "historical_implementation",
+      "path": "apps/advantage-games/src/app/api/v1/games/griffin-sky-joust/complete/route.ts",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "line_start": 1,
+      "line_end": 6,
+      "byte_length": 153,
+      "blob_sha256": "09196bb8daff23c617705a7ab2f76cfba80eae6e927d75a7bf5f8f74438b5d9b",
+      "cited_range_sha256": "09196bb8daff23c617705a7ab2f76cfba80eae6e927d75a7bf5f8f74438b5d9b",
+      "ancestry_evidence": {"parent_of_deletion": "a30e8777952139460092c7d4649b8a72b5e8beda", "reachable_from_upper": true},
+      "observation": "The historical completion route constructed POST from createCompleteRoute and exported it with dynamic set to force-static."
+    },
+    {
+      "observation_id": "GSJ-HIST-004",
+      "source_class": "historical_implementation",
+      "path": "apps/advantage-games/src/app/api/v1/games/griffin-sky-joust/sentences/route.ts",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "line_start": 1,
+      "line_end": 7,
+      "byte_length": 233,
+      "blob_sha256": "5f5fa24105efd6c391a788eb195914e2e52351fa210003f050674954917a954a",
+      "cited_range_sha256": "5f5fa24105efd6c391a788eb195914e2e52351fa210003f050674954917a954a",
+      "ancestry_evidence": {"parent_of_deletion": "a30e8777952139460092c7d4649b8a72b5e8beda", "reachable_from_upper": true},
+      "observation": "The historical sentences route constructed GET from createSentencesRoute using SAMPLE_SENTENCES and exported it with dynamic set to force-static."
+    },
+    {
+      "observation_id": "GSJ-HIST-005",
+      "source_class": "historical_implementation",
+      "path": "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/GriffinSkyJoustGame.test.tsx",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "line_start": 1,
+      "line_end": 135,
+      "byte_length": 5385,
+      "blob_sha256": "3ad83dce5cdf4a46b30861d36101b2068dd087017353a9b1952ffa79791261b1",
+      "cited_range_sha256": "3ad83dce5cdf4a46b30861d36101b2068dd087017353a9b1952ffa79791261b1",
+      "ancestry_evidence": {"parent_of_deletion": "a30e8777952139460092c7d4649b8a72b5e8beda", "reachable_from_upper": true},
+      "observation": "The historical test mocked react-konva and game hooks, supplied two vocabulary entries, and contained tests for the initial start screen, start transition, completion callback path, fullscreen calls, target and translation display, end screen, default medium difficulty, and hard difficulty selection."
+    },
+    {
+      "observation_id": "GSJ-HIST-006",
+      "source_class": "historical_implementation",
+      "path": "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/GriffinSkyJoustGame.tsx",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "line_start": 1,
+      "line_end": 435,
+      "byte_length": 15185,
+      "blob_sha256": "aaa366305703d4092383ec7c8f376efbf3cd2c721d52c3e34e6ff4038e0337df",
+      "cited_range_sha256": "aaa366305703d4092383ec7c8f376efbf3cd2c721d52c3e34e6ff4038e0337df",
+      "ancestry_evidence": {"parent_of_deletion": "a30e8777952139460092c7d4649b8a72b5e8beda", "reachable_from_upper": true},
+      "observation": "The historical component defined start, playing, and ended phases; initialized state from vocabulary and selected difficulty; advanced state with requestAnimationFrame; entered and exited fullscreen; accepted mouse, touch, Space, ArrowUp, W, A, and D inputs; rendered a Konva sky scene with target-word enemies, player HP, score, and Griffin; and reported XP and accuracy on completion."
+    },
+    {
+      "observation_id": "GSJ-HIST-007",
+      "source_class": "historical_implementation",
+      "path": "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/index.ts",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "line_start": 1,
+      "line_end": 1,
+      "byte_length": 38,
+      "blob_sha256": "847f988ec4d2e98ff55901582ff26dbfd2aeba649848ef0a0bf40cf2d2eca03e",
+      "cited_range_sha256": "847f988ec4d2e98ff55901582ff26dbfd2aeba649848ef0a0bf40cf2d2eca03e",
+      "ancestry_evidence": {"parent_of_deletion": "a30e8777952139460092c7d4649b8a72b5e8beda", "reachable_from_upper": true},
+      "observation": "The historical component index re-exported GriffinSkyJoustGame."
+    }
+  ],
+  "upper_revision_status": {
+    "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+    "all_assigned_historical_paths_absent": true,
+    "interpretation": "This is deletion chronology only; no current-source observation is authored by this role.",
+    "source_class": "historical_implementation"
+  },
+  "unknowns_preserved": [
+    "No current implementation, route, runtime, browser, asset-use, collector claim, mapping, or inferred behavior is authored here.",
+    "No historical bytes outside the seven assigned deleted locators are promoted into this package.",
+    "The cited source files do not by themselves establish physical-device ergonomics, live behavior, or shipping intent."
+  ],
+  "budget": {
+    "source_bytes_read": 29631,
+    "source_objects_read": 7,
+    "command_invocations": 7,
+    "elapsed_minutes": 25,
+    "revision_metadata_examined": 6,
+    "observations_authored": 7,
+    "limits": {"source_bytes_read": 67108864, "source_objects_read": 600, "command_invocations": 300, "elapsed_minutes": 360, "revision_metadata_examined": 2744, "observations_authored": 400},
+    "accounting": "Source bytes are the seven exact historical blobs; source objects are those seven blobs; revision metadata is the six distinct path-history commits examined; command count is the seven shell invocations used for bounded verification; elapsed time is a conservative role-local integer estimate."
+  },
+  "disposition": "historical observations complete for seven assigned locators; non-consumable pending collector, truth, browser, review, candidate, and acceptance gates"
+}

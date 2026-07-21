@@ -1,0 +1,85 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 1: Exact source review",
+  "batch_id": "batch-a",
+  "game": "Realm Carver",
+  "role": "current-source-specialist-batch-a-realm-carver",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "commit_sha": null,
+  "authored_commit": false,
+  "spawn_id": null,
+  "parent_id": null,
+  "ancestry_ids": [],
+  "start_event_id": null,
+  "end_event_id": null,
+  "start_timestamp": null,
+  "end_timestamp": null,
+  "provider_provenance": {
+    "status": "unavailable",
+    "reason": "The execution API exposed no provider spawn, parent, ancestry, event, timestamp, raw-session export, or final-response-hash fields.",
+    "fabricated_placeholders_used": false
+  },
+  "prompt_sha256": null,
+  "prompt_hash_status": "unavailable without a retained provider raw-message export",
+  "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+  "actual_context_manifest_sha256": null,
+  "actual_context_manifest_status": "unavailable because no provider context export was exposed",
+  "prior_role_history": [],
+  "final_response_sha256": null,
+  "final_response_hash_status": "unavailable before provider emission and not backfillable without a retained provider export",
+  "budget_declaration": {
+    "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-budget-declaration.json",
+    "sha256": "f87e33ef2a1a35ce2ac77eb0ea8f9797f6dc2e5c514159ad6d1fe011363bfe6b"
+  },
+  "numeric_usage": {
+    "source_bytes_read": 0,
+    "source_objects_read": 0,
+    "command_invocations": 4,
+    "elapsed_minutes": 5,
+    "observations_authored": 4
+  },
+  "usage_measurement": {
+    "source_bytes_read": "No source file bytes were read; exact path existence checks returned missing entries.",
+    "source_objects_read": "No source objects were opened at the frozen revision.",
+    "command_invocations": "Four frozen-revision git checks used for candidate path existence and bounded tree search.",
+    "elapsed_minutes": "Role-local elapsed estimate because provider timestamps were unavailable.",
+    "observations_authored": "Four bounded unknown observations, one per candidate source path."
+  },
+  "budget_compliance": {
+    "source_bytes_read_within_limit": true,
+    "source_objects_read_within_limit": true,
+    "command_invocations_within_limit": true,
+    "elapsed_minutes_within_limit": true,
+    "observations_authored_within_limit": true,
+    "unmeasured_usage": false
+  },
+  "output_files": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/current-source-observations.json",
+      "sha256": "51568505654ababcd905fb36f56c2ec5424f8447cab7f1441ae636338078b76c"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "info",
+      "finding_id": "realm-carver-no-frozen-current-source",
+      "finding": "No implementation bytes were found at the four candidate Realm Carver source paths in the frozen source revision.",
+      "disposition": "current implementation remains unknown; no behavior was inferred"
+    }
+  ],
+  "isolation_proof": {
+    "fork_turns": null,
+    "provider_attested": false,
+    "raw_export_path": null,
+    "status": "unavailable",
+    "gate_disposition": "fail-closed where provider-attested isolation is mandatory"
+  },
+  "receipt_admissibility": {
+    "content_hashes_verifiable": true,
+    "provider_provenance_complete": false,
+    "independent_review_isolation_proven": false,
+    "admissible_for_provider-attested-acceptance": false
+  }
+}

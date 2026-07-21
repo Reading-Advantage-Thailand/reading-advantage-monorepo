@@ -1,0 +1,199 @@
+{
+  "schema_version": "apk-historical-source-observations.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Batch A: historical-source specialist",
+  "batch_id": "batch-a",
+  "game": "Devourer Slime",
+  "identity": "sentence/devourer-slime",
+  "role": "historical-source-specialist-batch-a-devourer-slime",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "cd2d0faec2d15f1a5d50bee0da102bde58ce1daa",
+  "frozen_upper_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "historical_revision": "1c44854682b18a2393efd265c2271f824e228a3d",
+  "historical_revision_reachability": {
+    "is_ancestor_of_frozen_upper": true,
+    "parent_revision": "d7980795097820ce58d1670838d0bc5627a93e24",
+    "commit_timestamp": 1777603491,
+    "commit_iso_timestamp": "2026-05-01T10:44:51+08:00",
+    "subject": "feat(monorepo): scaffold pnpm+turborepo monorepo and migrate advantage-games",
+    "allowed_revision_rule": "git rev-list a49ebcc4dc3b3792a96b5b114d729b0b542af0fe"
+  },
+  "source_scope": {
+    "source_class": "historical_implementation",
+    "current_source_inspected_by_this_role": false,
+    "browser_or_runtime_inspected": false,
+    "collector_ledger_inspected": false,
+    "mapping_inspected": false,
+    "inference_policy": "Only bytes and directly observable source structure at the reachable historical revision are reported. Historical observations do not establish current behavior, live behavior, intended behavior, or future shipping behavior."
+  },
+  "historical_observations": [
+    {
+      "observation_id": "DS-HIST-001",
+      "source_class": "historical_implementation",
+      "proposition": "The historical page dynamically imports the DevourerSlimeGame component with server-side rendering disabled and passes sentence data plus an onComplete callback.",
+      "envelope": {
+        "revision": "1c44854682b18a2393efd265c2271f824e228a3d",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/devourer-slime/page.tsx",
+        "start_line": 18,
+        "end_line": 35,
+        "blob_sha256": "34ef5cd03faed720f3ff2ac02073681cf88d75d9db29f2876d9b1c4a394eda01",
+        "cited_range_sha256": "b18ebee8cb84af292f47f452985bd16e3e6535f1fcf13d18783ddc69b7236d49",
+        "cited_range_bytes": 569,
+        "range_hash_basis": "inclusive lines joined with trailing newline"
+      }
+    },
+    {
+      "observation_id": "DS-HIST-002",
+      "source_class": "historical_implementation",
+      "proposition": "The historical page fetches the sentence endpoint with the locale query, handles NO_SENTENCES and INSUFFICIENT_SENTENCES warning values, and otherwise stores the returned sentences.",
+      "envelope": {
+        "revision": "1c44854682b18a2393efd265c2271f824e228a3d",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/devourer-slime/page.tsx",
+        "start_line": 38,
+        "end_line": 69,
+        "blob_sha256": "34ef5cd03faed720f3ff2ac02073681cf88d75d9db29f2876d9b1c4a394eda01",
+        "cited_range_sha256": "db3f2dc64ae01ab4ec76c76547519a116bab76eb20b91daee82dfc70173007bf",
+        "cited_range_bytes": 1069,
+        "range_hash_basis": "inclusive lines joined with trailing newline"
+      }
+    },
+    {
+      "observation_id": "DS-HIST-003",
+      "source_class": "historical_implementation",
+      "proposition": "The historical page computes completion XP and accuracy, updates the local last-result store, and posts completion fields to the completion endpoint.",
+      "envelope": {
+        "revision": "1c44854682b18a2393efd265c2271f824e228a3d",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/devourer-slime/page.tsx",
+        "start_line": 72,
+        "end_line": 100,
+        "blob_sha256": "34ef5cd03faed720f3ff2ac02073681cf88d75d9db29f2876d9b1c4a394eda01",
+        "cited_range_sha256": "cc992ea22e5c1028219b2035183c560e7cfc8157150b5ab806631cfaeb569818",
+        "cited_range_bytes": 870,
+        "range_hash_basis": "inclusive lines joined with trailing newline"
+      }
+    },
+    {
+      "observation_id": "DS-HIST-004",
+      "source_class": "historical_implementation",
+      "proposition": "The historical game component initializes start/playing/ended phase state, creates the initial slime state on start, and calls the imported movement and tick functions from a 16.6 millisecond interval while playing.",
+      "envelope": {
+        "revision": "1c44854682b18a2393efd265c2271f824e228a3d",
+        "path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
+        "start_line": 28,
+        "end_line": 126,
+        "blob_sha256": "42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc",
+        "cited_range_sha256": "0adac8a0679bfcb932e5883071b0db814c071f08de7f8ea4d94dfcbe643f7d1a",
+        "cited_range_bytes": 3296,
+        "range_hash_basis": "inclusive lines joined with trailing newline",
+        "subranges": [
+          {"start_line": 28, "end_line": 71, "sha256": "528c302b7b199d908151ab4b72af8a50f686956af369d9ba8ebfa53788267332"},
+          {"start_line": 75, "end_line": 126, "sha256": "3292770de6e590c0531e61e50a3b8afc8d9bc2e003df8028eb519a0796685466"}
+        ]
+      }
+    },
+    {
+      "observation_id": "DS-HIST-005",
+      "source_class": "historical_implementation",
+      "proposition": "The historical component contains a start-screen branch, an ended-screen branch, and a playing render branch; the playing branch renders a fixed 390 by 844 stage and a virtual directional control surface.",
+      "envelope": {
+        "revision": "1c44854682b18a2393efd265c2271f824e228a3d",
+        "path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
+        "start_line": 127,
+        "end_line": 395,
+        "blob_sha256": "42fa273465fd0f11c165c3fb60963f7c386b6c4cc126e9f3fbefde850bfedfdc",
+        "cited_range_sha256": "efcacb84388f9736f3bf5c6aea41b7d6f45362fe0e2bc57cbac2176de5cd0faf",
+        "cited_range_bytes": 9037,
+        "range_hash_basis": "inclusive lines joined with trailing newline",
+        "subranges": [
+          {"start_line": 127, "end_line": 160, "sha256": "770c99f86b84d9c1be329f19cdb8675719608c586440ffa2a68cc90c6d324dea"},
+          {"start_line": 162, "end_line": 187, "sha256": "18a94651fa678f805c63f6feccff869fe6658bef70fe38feb408724fbb7b1409"},
+          {"start_line": 213, "end_line": 395, "sha256": "5b81e95bd4be7a1913c5da63242efe89ed90ae75017754e88da55a1489889731"}
+        ]
+      }
+    },
+    {
+      "observation_id": "DS-HIST-006",
+      "source_class": "historical_implementation",
+      "proposition": "The historical sentence and completion route files are thin adapters: each declares force-static behavior and exports the corresponding GET or POST factory result.",
+      "envelopes": [
+        {
+          "revision": "1c44854682b18a2393efd265c2271f824e228a3d",
+          "path": "apps/advantage-games/src/app/api/v1/games/devourer-slime/sentences/route.ts",
+          "start_line": 1,
+          "end_line": 8,
+          "blob_sha256": "70587c1af88b79bcceb951b7ddde40d765d60f013a1ec941900e4412f58bd089",
+          "cited_range_sha256": "70587c1af88b79bcceb951b7ddde40d765d60f013a1ec941900e4412f58bd089",
+          "cited_range_bytes": 234,
+          "range_hash_basis": "inclusive lines joined with trailing newline"
+        },
+        {
+          "revision": "1c44854682b18a2393efd265c2271f824e228a3d",
+          "path": "apps/advantage-games/src/app/api/v1/games/devourer-slime/complete/route.ts",
+          "start_line": 1,
+          "end_line": 7,
+          "blob_sha256": "887d73799ce2461c560073dc5216e86cf7e783949a7fed04daa74a0e743ce9fd",
+          "cited_range_sha256": "887d73799ce2461c560073dc5216e86cf7e783949a7fed04daa74a0e743ce9fd",
+          "cited_range_bytes": 154,
+          "range_hash_basis": "inclusive lines joined with trailing newline"
+        }
+      ]
+    },
+    {
+      "observation_id": "DS-HIST-007",
+      "source_class": "historical_test_artifact",
+      "proposition": "The historical component test file contains six test cases, including assertions for the initial start screen, start transition, HUD, completion callback test setup, difficulty-selector text, and virtual d-pad test setup; this records test intent only and not test execution.",
+      "envelope": {
+        "revision": "1c44854682b18a2393efd265c2271f824e228a3d",
+        "path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.test.tsx",
+        "start_line": 1,
+        "end_line": 101,
+        "blob_sha256": "b7ca2aa35bbeeca85f77cb93c1551c119aaff23b30573fddfdc377edf9b346d3",
+        "cited_range_sha256": "b7ca2aa35bbeeca85f77cb93c1551c119aaff23b30573fddfdc377edf9b346d3",
+        "cited_range_bytes": 3807,
+        "range_hash_basis": "inclusive lines joined with trailing newline"
+      }
+    }
+  ],
+  "historical_change_envelope": {
+    "comparison": "parent_revision..historical_revision",
+    "path_scope": "the five Devourer Slime slug paths above",
+    "status_counts": {"added": 5, "modified": 0, "deleted": 0, "renamed": 0},
+    "lines_added": 675,
+    "lines_deleted": 0,
+    "exact_file_line_counts": {
+      "page.tsx": 164,
+      "complete/route.ts": 7,
+      "sentences/route.ts": 8,
+      "DevourerSlimeGame.test.tsx": 101,
+      "DevourerSlimeGame.tsx": 395
+    }
+  },
+  "bounded_unknowns": [
+    "This role did not inspect the frozen upper revision's source bytes and makes no current-source claim.",
+    "No live route, browser, runtime, persistence, network, or completion outcome was observed.",
+    "No claim is made about whether the historical test suite passed.",
+    "No claim is made about source or behavior outside the cited historical envelopes."
+  ],
+  "resource_use": {
+    "budget_declaration_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-budget-declaration.json",
+    "budget_declaration_sha256": "f87e33ef2a1a35ce2ac77eb0ea8f9797f6dc2e5c514159ad6d1fe011363bfe6b",
+    "ceilings": {
+      "source_bytes_read": 67108864,
+      "source_objects_read": 600,
+      "command_invocations": 300,
+      "elapsed_minutes": 360,
+      "revision_metadata_examined": 2744,
+      "observations_authored": 400
+    },
+    "actual": {
+      "source_bytes_read": 33697,
+      "source_objects_read": 6,
+      "command_invocations": 17,
+      "elapsed_minutes": 20,
+      "revision_metadata_examined": 2,
+      "observations_authored": 7
+    },
+    "measurement_note": "Source bytes are the exact bytes read from five assigned slug-path blobs plus the imported historical game-model blob at the same reachable revision. Revision metadata counts the historical revision and its parent. No worktree source bytes were read for observations."
+  },
+  "disposition": "historical-only; not a current implementation report; not a collector ledger; not a mapping; not browser evidence"
+}

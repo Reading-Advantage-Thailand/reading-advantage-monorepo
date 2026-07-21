@@ -1,0 +1,11 @@
+{
+  "schema":"apk-evidence-negative-fixtures.v1",
+  "game":"Alchemist's Synthesis",
+  "fixtures":[
+    {"fixture_id":"AS-FIX-001","kind":"directory-only-citation","proposed_claim":"The alchemists-synthesis directory proves implementation behavior.","expected_disposition":"reject","reason":"A directory citation is not a file/blob source envelope."},
+    {"fixture_id":"AS-FIX-002","kind":"unsupported-browser-claim","proposed_claim":"The source onClick/onTap handlers prove a real accepted pointer or touch transition.","source_claim_id":"AS-UI-002","expected_disposition":"reject","reason":"No browser or real-input evidence was collected."},
+    {"fixture_id":"AS-FIX-003","kind":"binary-usage-inference","proposed_claim":"cover-alchemists-synthesis.png is loaded during gameplay.","source_path":"apps/advantage-games/public/games/cover/cover-alchemists-synthesis.png","expected_disposition":"reject","reason":"The binary envelope proves presence only; usage requires a source call site or independent evidence."},
+    {"fixture_id":"AS-FIX-004","kind":"test-execution-inference","proposed_claim":"The co-located tests pass.","source_claim_id":"AS-TEST-001","expected_disposition":"reject","reason":"The ledger records test source only; no test command was executed by this collector."}
+  ],
+  "excluded_from_claim_total":true
+}

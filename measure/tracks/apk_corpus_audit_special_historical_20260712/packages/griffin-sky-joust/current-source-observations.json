@@ -1,0 +1,44 @@
+{
+  "schema_version": "apk-current-source-observations.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "game": "Griffin Sky-Joust",
+  "slug": "griffin-sky-joust",
+  "canonical_identity": "catalog/griffin-sky-joust",
+  "role": "current-source-specialist-batch-a-griffin-sky-joust",
+  "phase": "Phase 1: Batch A",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "current_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "source_class": "current_implementation",
+  "source_scope": {
+    "revision_rule": "Only the frozen current revision was inspected; worktree, history, browser, and generated reports were excluded.",
+    "candidate_paths_examined": [
+      "packages/game-cartridges/src/cartridges/griffin-sky-joust/index.ts",
+      "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-sky-joust/page.tsx",
+      "apps/advantage-games/src/app/api/v1/games/griffin-sky-joust/complete/route.ts",
+      "apps/advantage-games/src/app/api/v1/games/griffin-sky-joust/sentences/route.ts",
+      "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/GriffinSkyJoustGame.test.tsx",
+      "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/GriffinSkyJoustGame.tsx",
+      "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/index.ts"
+    ],
+    "candidate_path_result": "None of the listed candidate paths exists at the frozen current revision."
+  },
+  "observations": [],
+  "unknowns": [
+    {
+      "id": "GSJ-CUR-UNK-001",
+      "proposition": "The frozen current revision does not provide an implementation source envelope for Griffin Sky-Joust among the assigned candidate paths; current route, implementation, states, transitions, mechanics, assets, and runnable disposition remain unresolved.",
+      "source_class": "unknown",
+      "reason": "No candidate path was present in the frozen revision, so no source bytes or citation envelope can establish current behavior.",
+      "citation": null
+    }
+  ],
+  "observations_authored": 0,
+  "stop_loss": {
+    "unsupported_factual_claims": 0,
+    "inferred_behavior_claims": 0,
+    "citation_envelope_mismatches": 0,
+    "current_source_records": 0
+  },
+  "acceptance": "not-claimed"
+}

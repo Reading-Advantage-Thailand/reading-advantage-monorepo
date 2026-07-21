@@ -1,0 +1,148 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "status": "fresh-independent-adversarial-review-complete-blocked",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "task_id": "review-batch-a:v2",
+  "role": "adversarial-reviewer-batch-a-v2",
+  "role_identity": "fresh independent adversarial reviewer for T5 Traversal Batch A only",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "cd2d0faec2d15f1a5d50bee0da102bde58ce1daa",
+  "audited_head_sha": "cd2d0faec2d15f1a5d50bee0da102bde58ce1daa",
+  "prior_role_history": [],
+  "role_boundary": "Only batch-a-independent-review-v2.json and this additive receipt were created. No source, ledger, collector, mapper, rebind, browser audit, truth test, strategy, plan, registry, candidate, acceptance, accepted manifest, or commit was modified or created.",
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are truthful non-attestations, no provider value is fabricated, and the user prohibited commits."
+  },
+  "provenance_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "application": "Exact committed inputs, local SHA-256 bindings, bounded role scope, and fresh independent source re-derivation are supplied. Provider-attested isolation is unavailable and is not claimed."
+  },
+  "local_input_manifest_sha256": "877ce419503c3584138b374c3d0ec43d0182502c6da95d1161b2aea7c64cdc11",
+  "local_input_manifest_basis": "SHA-256 of compact key-sorted JSON containing input_hashes and governing_input_hashes exactly as recorded below.",
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-truth-tests.py": "75aec67d25b98dc21c56f3f68c978020ce1f504e3ad36c79930bbf38928f7df6",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/truth-test-author-batch-a.json": "967965717823c41cf993f3989b6ac4cfb2aca1c1c7edb902bc0cb4dca3aa65ff",
+    "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-spellweavers-budget-exception.json": "a0a4f2e80fa888e3fee7a1ef7e3479af559e1930cbb3eb3a5ea3a2ab8b3bbcf4",
+    "measure/acceptance/measure_apk_evidence_integrity_gates_20260712/phase4-v8-accepted-gate-manifest.json": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-discovery-audit.json": "6524d33b1af38d93b9cc0a3f1b31421979f7a4120f68d9065935946312e6c152",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v2.json": "fb778224e67609457ac8ac712bc85b3f5096483e0116f1162a2818bac6b48fe9",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-method-v2.md": "4473e4362d4523a29211705177b2b3b4357e9761ef0630c555d8152ec56bf81f",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-final-report-v2.json": "364254b1226fc38eda49e1787f1cb5f74ee030c4b3b2ce610682dca2276ff9ff",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-final-report-v2-rebind.json": "d32ad575564620d048d8f2bd67c8cc6edcc7c8b24624f07b8df8691bb4d91e04",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/requirements-map-v2.json": "1b6b52bd21ecefdff0edab3cbe27e6edc3e615ff274d1f10e1d65b9721ef96a6",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/requirements-map-report-v2.json": "239d03cd15c2f22fdd00bae45163f34237579c4d2285e55432c67e719a53b8b6",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-dragon-rider-v2-rebind.json": "55e6c58e190dc14a8bca4f9d6c832eaea2fb3093b68857e914a51ebb5e579960",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-dragon-rider-v2.json": "c77ff7709e5454c36687e5629c2523096bc4685b899e36e5ff6fac4cc0aaeba6",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger-v2.json": "ff97238f94caa82a5359143c0a25d2a5ee8a2e479bb2fdd0bfea9aab05eef2bd",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/evidence-method-v2.md": "b016c972605bc85b8b5b78b5f5c8fc245e17b0b28a03b7d67a38efb0f51cae5e",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/evidence-final-report-v2.json": "f845243d7dc3fe1a0c3cf173fb3669bf3e490d7bf44d7d379e843b2902bb113f",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/requirements-map-v2.json": "5fe082c52ef1c12d006bdb496d3faa6ae911c5173a9fd54a196d72f9a1bfba8e",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/mapper-final-report-v2.json": "5bf070752aeebf112421f4354661446e5b441bd82283e597dc98906a7f4ef839",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-dungeon-liberator-v2.json": "771078740a227234d3e4fb77072673b593874d4e40f35f0c777b8d7068d53e53",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-dungeon-liberator-v2.json": "d90c9d7d929e0a0daeadab47443a422e136af1d8bf02d33dfdae0a400142306b",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json": "2cd708cbecf94133b92ce5f06822ad420da28a1d4417fdb74284528e7a9fe24b",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-method-v2.md": "1cd64613e86482a78830f522fbe6d83cf1a812d3c42fcbd97e06f9ade035e92a",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-final-report-v2-rebind.json": "c8c174e223501dc1ae4e636a4c45eb8fbc6552011e1b327be1e755df3569197f",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/requirements-map-v2.json": "2d1ec95fd9b11230b9800ac50ab7aae7d37f71eae47ccb88e0751142485698ea",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/requirements-final-report-v2-rebind.json": "39d017fb719e00f32cfbe6f5e9380bd3eb475015a1cc6abdd9d4a536e0e82f2c",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-spellweavers-run-v2-rebind.json": "4e639b4ce5116905f46472cd2444284b0e958f5e14e1df9ccf9a99ff95ac131d",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-spellweavers-run-v2-rebind.json": "a5231be5461e3a667cc1c868959901fcb98a8dc552225121cae629ac69f1dc7c",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/browser-audit.json": "a8184107e8f197924992335caa54c4bf95de718ff6e5c7e5de225488599ea273",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/browser-audit.json": "a8a3e6d81fa7d796f20db749802d618062cd0380ba1713042f3482e336773a5e",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/browser-audit.json": "530a7fb302c7feec001f2faf8b88e4ec331595206e8d9773ab5c96c8d326ba06",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/browser-auditor-dragon-rider.json": "5c96218f0f273ba6e6c525e4a5c785086395800a22a30231a9b13a7d81930a38",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/browser-auditor-dungeon-liberator.json": "64bff92c099e38d52744abb28e1060076864aeaaca15f81f609c50d14e5db1c1",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/browser-auditor-spellweavers-run.json": "2725b9bc762ac64fc9701f1526d9f745470352f3ed8eaabb5cc8aebe4d154b26",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-truth-tests-v2.py": "fef1c401d04e4065333c2c9b7cbfcee00a9cee206f8a16cc80ff87e7734b998a",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/truth-test-author-batch-a-v2.json": "46a95295175f60a296d0d069d448cd448b608bfaef9a46789e7f3d0f02808211"
+  },
+  "governing_input_hashes": {
+    "measure/apk-evidence-cohort-protocol.md": "1f97ed8fd026cb0b1b49ed5de602252c075228981d1ff26640748b56ff2a3507",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md": "42685326bf239a92f3543919e8ce204fb4414e8ac136180ad340720fbd852ac1",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/test-strategy-phase0.md": "734b879b75a8fff0e709242a4046706408f79587a2ec4f732a426e22d105ba0d",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-role-applicability.json": "24b0980a07ddc8cc975596599530f6cd7089cf4dcc6e1bde5890a41882865ed9"
+  },
+  "output_paths_and_sha256": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-independent-review-v2.json",
+      "sha256": "8eb21f34687e3afeb7a89ccd9ecd9aa5fbc16308f626731d47dbedbbde37216e"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-batch-a-v2.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot embed its own final digest without changing its bytes. No commit or provider event binding is claimed."
+    }
+  ],
+  "resource_use": {
+    "ceiling": {
+      "source_bytes": 10000000,
+      "source_files_objects": 210,
+      "commands": 100,
+      "elapsed_minutes": 120,
+      "records_authored_reviewed": 7,
+      "browser_interactions": 0,
+      "captured_artifacts": 70
+    },
+    "actual": {
+      "source_bytes": 5073334,
+      "source_files_objects": 75,
+      "commands": 12,
+      "elapsed_minutes": 45,
+      "records_authored_reviewed": 3,
+      "browser_interactions": 0,
+      "captured_artifacts": 2
+    },
+    "measurement_basis": "Source bytes are a conservative full-file accounting of 52 repository inputs/denominator artifacts plus 694196 bytes across 23 unique Git objects. Files/objects count is 52 plus 23. Command and elapsed counts are local review accounting; no provider telemetry is substituted."
+  },
+  "review_results": {
+    "active_inputs_exact": true,
+    "factual_claims_rederived": 80,
+    "related_envelopes_rederived": 2,
+    "fixtures_rederived": 9,
+    "semantic_anchor_mismatches": 5,
+    "unknown_browser_dispositions_accepted_as_bounded": 3,
+    "unresolved_findings": {
+      "critical": 0,
+      "high": 9,
+      "medium": 1,
+      "low": 0
+    },
+    "candidate_authorized": false,
+    "acceptance_authorized": false
+  },
+  "validation": {
+    "truth_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-truth-tests-v2.py",
+    "bounded_truth_result": "27 passed, 4 deselected; exit 0 for the non-review/non-lifecycle selector",
+    "full_truth_result": "27 passed, 4 expected fail-closed failures; exit 1; unresolved High/Medium review findings and the three absent lifecycle artifacts are the only failures; zero pytest ERROR outcomes",
+    "json_command": "python3 -m json.tool measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-independent-review-v2.json >/dev/null && python3 -m json.tool measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-batch-a-v2.json >/dev/null",
+    "diff_check_command": "git diff --check -- measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-independent-review-v2.json measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-batch-a-v2.json"
+  },
+  "measure_agent_result": {
+    "status": "blocked",
+    "candidate": false,
+    "reason": "Nine High and one Medium findings remain; candidate is false on any Critical, High, or Medium finding."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

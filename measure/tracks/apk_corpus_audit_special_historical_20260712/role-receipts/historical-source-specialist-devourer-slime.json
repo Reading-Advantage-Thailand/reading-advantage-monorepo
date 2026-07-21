@@ -1,0 +1,86 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Batch A: historical-source specialist",
+  "batch_id": "batch-a",
+  "game": "Devourer Slime",
+  "role": "historical-source-specialist-batch-a-devourer-slime",
+  "task_id": "devourer-slime-historical-source",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "cd2d0faec2d15f1a5d50bee0da102bde58ce1daa",
+  "commit_sha": null,
+  "authored_commit": false,
+  "commit_binding_status": "unavailable because the user explicitly prohibited a commit",
+  "frozen_upper_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "historical_revision": "1c44854682b18a2393efd265c2271f824e228a3d",
+  "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+  "prior_role_history": [],
+  "provider_provenance": {
+    "status": "unavailable",
+    "reason": "No provider spawn, parent, ancestry, event, timestamp, raw-session export, prompt hash, context-manifest hash, or final-response hash was exposed.",
+    "fabricated_placeholders_used": false
+  },
+  "prompt_sha256": null,
+  "actual_context_manifest_sha256": null,
+  "final_response_sha256": null,
+  "isolation_proof": {
+    "fork_turns": null,
+    "inherited_narrative": null,
+    "provider_attested": false,
+    "raw_export_path": null,
+    "status": "unavailable",
+    "gate_disposition": "local receipt only; provider-attested isolation is not claimed"
+  },
+  "output_files": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/historical-source-observations.json",
+      "sha256": "16a0f8efa2ed63ccd6aba2109a88e6aaedf946d24d6b788e6ac780533cad2039"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "info",
+      "finding_id": "DS-HIST-REACHABLE-001",
+      "finding": "One reachable historical migration revision contains the five assigned Devourer Slime slug-path files; exact blob and cited-range envelopes are recorded in the observations report.",
+      "disposition": "historical-only"
+    },
+    {
+      "severity": "medium",
+      "finding_id": "DS-HIST-PROVENANCE-001",
+      "finding": "Provider-side provenance and committed output binding are unavailable under the no-commit instruction.",
+      "disposition": "truthfully disclosed; not provider-attested acceptance"
+    }
+  ],
+  "numeric_usage": {
+    "source_bytes_read": 33697,
+    "source_objects_read": 6,
+    "command_invocations": 17,
+    "elapsed_minutes": 20,
+    "observations_authored": 7,
+    "revision_metadata_examined": 2
+  },
+  "budget_declaration": {
+    "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-budget-declaration.json",
+    "sha256": "f87e33ef2a1a35ce2ac77eb0ea8f9797f6dc2e5c514159ad6d1fe011363bfe6b",
+    "ceilings": {
+      "source_bytes_read": 67108864,
+      "source_objects_read": 600,
+      "command_invocations": 300,
+      "elapsed_minutes": 360,
+      "revision_metadata_examined": 2744,
+      "observations_authored": 400
+    }
+  },
+  "scope_disclosures": [
+    "No current source, collector ledger, requirements mapping, browser audit, or inferred behavior was authored.",
+    "Historical test text is reported as test intent only; no execution result is claimed.",
+    "Output hashes are pending because this role was instructed not to commit; no provider or commit binding is represented as complete."
+  ],
+  "receipt_admissibility": {
+    "content_hashes_verifiable": true,
+    "provider_provenance_complete": false,
+    "committed_output_binding_complete": false,
+    "admissible_for_provider_attested_acceptance": false,
+    "local_verification_required": "Hashes are SHA-256 values of the two current uncommitted output files; a later committed or superseding receipt is required before lifecycle acceptance."
+  }
+}

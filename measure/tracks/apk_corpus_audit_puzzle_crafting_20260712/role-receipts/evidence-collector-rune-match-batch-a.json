@@ -1,0 +1,42 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-self-attested-with-provenance-unavailable",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "evidence-collector",
+  "task_id": "evidence-collector:rune-match:batch-a",
+  "game": "vocabulary/rune-match",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "d77044c35571dabde108098e5c9f9dd62722327d",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "parent_ancestry_ids": [],
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "prompt_sha256": null,
+  "actual_context_manifest_sha256": null,
+  "start_event_id": null,
+  "end_event_id": null,
+  "final_response_sha256": null,
+  "commit_sha": null,
+  "provenance_note": "Provider/session/event/prompt/final-response/commit provenance was unavailable in this execution environment; null fields are intentional and must not be backfilled by inference.",
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-claim-ledger.json",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-evidence-method.md",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-evidence-final-report.json",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-fixtures.json",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-rune-match-batch-a.json"
+  ],
+  "budget_declaration": {
+    "claims_authored": 13,
+    "path_admissions_consumed": 2,
+    "git_history_queries": 0,
+    "denominator_reports": 1,
+    "unsupported_factual_claims": 0,
+    "denominator_mismatches": 0
+  },
+  "budget_declaration_sha256": "UNAVAILABLE_PROVENANCE",
+  "findings": {
+    "negative_fixtures": 2,
+    "source_envelopes_validated": 13,
+    "unresolved_denominator_classes": ["source", "asset", "history"]
+  }
+}

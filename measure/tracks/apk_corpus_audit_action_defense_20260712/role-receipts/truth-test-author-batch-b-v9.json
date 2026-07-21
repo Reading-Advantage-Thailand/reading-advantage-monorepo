@@ -1,0 +1,197 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "status": "V9 selects the exact committed active Batch B bytes, including the corrected Archer collector V4 report and receipt; evidence, semantic, local receipt, completion-disclosure, asset, and bounded-browser gates are expected green while fresh review and lifecycle remain fail-closed",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-TRUTH-V9",
+  "role": "truth-test-author-batch-b-v9",
+  "role_identity": "fresh T4 Batch B truth-test author V9 only",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "cd2d0faec2d15f1a5d50bee0da102bde58ce1daa",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "allowed_input_manifest_sha256": "e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+  "directions": {
+    "provenance": {
+      "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+    },
+    "webbridge": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-webbridge.json",
+      "sha256": "7dde397fdb1ceeac3e490d07791e90f69dd630b962d6b799da8426d4e9234498",
+      "decision": "WEBBRIDGE_ACCEPTED_FOR_B4"
+    },
+    "completion": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-completion-disposition.json",
+      "sha256": "973641c8f0b3f3281e9302d5b488f012be82f401bd6831b104674ce67f8c3960",
+      "decision": "CONDITIONAL_EVIDENCE_ACCEPTANCE_WITH_SUCCESSOR_DEFECT_TRANSFER",
+      "application": "Disclosure-only: both observed Village Guardian completion POSTs remain HTTP 400. The defect is mandatory carry-forward successor work and forbids successful completion, persistence, XP, idempotency, and API-correctness claims; it is not itself an automatic evidence-only candidate blocker."
+    }
+  },
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "final_response_event_id": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side prompt, context, spawn, session, ancestry, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are intentional and no provider attestation is claimed. The user prohibited commits."
+  },
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v6.py": "675809c8cc8835b7b659c10dd5288c10d631a768137bbe1485cfcda36d08cae2",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v6.json": "d451641b4a52dea583347ca529e14a59f08aad29e87f97b36fa0b629b70d3c1c",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-discovery-audit-v2.json": "f0f27734d22b8ec376bbf8b1fe96574a75f2c293766bee2440c0484164dd1daa",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-claim-ledger-batch-b-v3.json": "3be82cd7a9ddb144ae82ae220c36b439c6d14bbd58e1c988c897af6156b20484",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-evidence-method-batch-b-v3.md": "95c342a84cce0e6a6651e34cad11804ca8b930e2b9d1d533f3d464417d13200e",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-evidence-final-report-batch-b-v3.json": "b6847970ab60374635b3925d82e9e1c8ac8a06761e8715decd6734f5018b372f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-village-guardian-batch-b-v3.json": "057961346dbdae04ce78c3587c13a33a2c87c258be2317b9fcd3963e58aca9b2",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-blueprint-batch-b-v3.json": "6a0e021d1b2ac2ddf33cd115f701993c9f110acc957964117137621ca99762e0",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-mapper-final-report-batch-b-v3.json": "c9f834691d5f9bc48369e81d57b4b1cb94d2c129857a20d70dd989c49a54292f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-village-guardian-batch-b-v3.json": "d42eefe675b4dd37544a678aace8da44b5f7ce1a3873a5bca359adc30059977c",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v3.json": "c2d6bf62d628fc441c476fb2839e2b41e7f0f8564020580e3d700b0c167fa9d1",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b-v3.md": "e16c6e8700d8f0a2999fba25d273d38f4d44c4e798c383751b6fb84a4a962c19",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/storm-castle-tower-claim-ledger-batch-b.json": "9f9337ec9b86161337553a8b8ab92e57cc954d2a0deb42018dad0ed99394e9d9",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/storm-castle-tower-evidence-method-batch-b.md": "618f067ab845d365f98d0eb6416f56af8f75d00e1576389780d70324d617c8b9",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/storm-castle-tower-evidence-final-report-batch-b.json": "034579508f1f57cf46c3e8456524f8ce376fdbfd1a047a3a49bde4e0d877aaa1",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/storm-castle-tower-blueprint-batch-b.json": "135fa6e4396cd6d9466b06c3cdad48a69cb1f7238dc4bacfb1ff2ca271c0c0d8",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/storm-castle-tower-mapper-final-report-batch-b.json": "d4739be9956e377eb103d2d9c623870c5a6a6a2dd470d95a48c7e34edcd6650e",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-asset-audit-v2.json": "c66b096726e441e6aab0c7a3ffd2cda81413befb00e1c8586cbe911a31329ebd",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-b-v2.json": "a9958731fe8f2133348625438ac3d3e60090ca81c9f966dfad13884b6e0e6eda",
+    "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-webbridge.json": "7dde397fdb1ceeac3e490d07791e90f69dd630b962d6b799da8426d4e9234498",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v3.json": "521e08b7a1ef9309cdf31277d0f07b99700bb7721d97ee3e371321e70cd1e4ca",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-b-v3.json": "3209377fb793faf304aeaf5c575777ca0f524f0334e9dfc384357a3d9b1adfa8",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-adversarial-review-v4.json": "1ac23f3f7050c8b47d31770a7c943ecfa41b7942f3c0004e31fd6da9d058726d",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v4.json": "2503d31d30efee37a9a2b7ffe9f54cf42acdcbf4a6a700b5414671f7048e2915",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v7.py": "c863dd698bbeb684d7d462c3b32887e58ed6dfc0211c3123d149de817cfe6682",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v7.json": "dd23913fcfbfe6fe3647af6850e777e62b5962ed2216ed944ef16d358b148406",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/discovery-auditor-batch-b-v2.json": "c6c94ea45b4564a5a4cbf17451d0069f3a67e27b63b0af20bbb2bb61df613dfb",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-storm-castle-tower-batch-b.json": "1efd07acda32536ddc19d3472e3f9f010f10649f81aa4dcd173479af636d54d8",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-blueprint-batch-b-v4.json": "16de053d4e375ccb28f753b7102fcf4fde3fc23ac08c2395d317422e85599501",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-mapper-final-report-batch-b-v4.json": "ecb0af9f4d2462462bb8c2b9763432c2d2fff41b3d7815a2316434c2eda07c5b",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-archers-revenge-batch-b-v4.json": "3673c240ec61d3747fb11002ba1d1dbe15bff588735e86ddaaed1d77bf042522",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-storm-castle-tower-batch-b.json": "f24bf7f2b7854580b4f4003a464c274fabb0fe563fdf817a6bc30f7d21ddfdab",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-completion-disposition.json": "973641c8f0b3f3281e9302d5b488f012be82f401bd6831b104674ce67f8c3960",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v8.py": "8fbcd51cdbf607b7be75d00cd2712ed93a09490614be13b4db361f5f2f32469e",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v8.json": "7840e08500ce585f27fd4e0c27a0f30e4caeca14e411a2661938e3f2abbbd41c",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v4.json": "5164b6391418638099499b3db75e154dc16b9e788bc96ec83da8559d222c782a",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v4.json": "78b4e1517c1c8271bd61485aa100be957e4240169721b28e187ab3afd8a36ad3"
+  },
+  "output_paths_and_sha256": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v9.py",
+      "sha256": "666f23143e326643d71cc960a0545cde8e18b04a0b150f1a804460261eefdc7b"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v9.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot embed its own final SHA-256 without changing its bytes; an authorized descendant commit and fresh review must externally bind these exact receipt bytes."
+    }
+  ],
+  "active_receipts": [
+    "discovery-auditor-batch-b-v2.json",
+    "evidence-collector-village-guardian-batch-b-v3.json",
+    "evidence-collector-archers-revenge-batch-b-v4.json",
+    "evidence-collector-storm-castle-tower-batch-b.json",
+    "requirements-mapper-village-guardian-batch-b-v3.json",
+    "requirements-mapper-archers-revenge-batch-b-v4.json",
+    "requirements-mapper-storm-castle-tower-batch-b.json",
+    "browser-auditor-batch-b-v3.json",
+    "asset-auditor-batch-b-v2.json",
+    "adversarial-reviewer-batch-b-v4.json",
+    "truth-test-author-batch-b-v9.json"
+  ],
+  "test_inventory": {
+    "test_cases": 41,
+    "selected_factual_claims": 135,
+    "positive_source_envelopes": 129,
+    "bounded_claims": 6,
+    "negative_fixtures": 12,
+    "asset_records": 12,
+    "browser_games": 3,
+    "unexpected_test_errors_allowed": 0
+  },
+  "expected_gate_state": {
+    "source_semantic_fixture": "green for all exact selected collector claims, envelopes, source coverage, semantic atoms, and fixtures",
+    "mapper": "green for Village V3, Archer mapper V4, and unchanged Storm exact claim-ID and factual-ledger bindings",
+    "receipt": "green for exact active local receipt bytes and outputs, including Archer collector V4's corrected source/WebBridge provenance boundary",
+    "asset_browser_limits": "bounded green only for exact asset V2 and browser V3 bytes under WebBridge direction and every recorded limitation",
+    "completion_disposition": "green only as disclosure-only HTTP 400 successor defect transfer; completion, persistence, XP, idempotency, and API correctness remain forbidden claims",
+    "fresh_review": "red because review V4 predates the Archer collector V4 and exact V9 outputs and retains unresolved blocking findings; an authorized descendant binding is also absent",
+    "candidate_lifecycle": "red until fresh candidate, authentic product-owner acceptance, and accepted manifest artifacts actually exist"
+  },
+  "resource_use": {
+    "ceilings": {
+      "source_bytes_read": 52428800,
+      "source_files_read": 120,
+      "command_invocations": 80,
+      "elapsed_minutes": 45,
+      "records_authored": 300,
+      "browser_interactions": 0,
+      "asset_candidates_inspected": 12
+    },
+    "actual": {
+      "source_bytes_read": 10000000,
+      "source_files_read": 54,
+      "command_invocations": 26,
+      "elapsed_minutes": 42,
+      "records_authored": 41,
+      "browser_interactions": 0,
+      "asset_candidates_inspected": 12
+    },
+    "measurement_note": "Conservative local accounting only; no unavailable provider telemetry is impersonated."
+  },
+  "validation": {
+    "truth_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v9.py",
+    "source_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v9.py -k 'BatchBFreezeContract or BatchBCollectorPackageContract or BatchBMapperPackageContract or BatchBClaimTruthContract or BatchBNegativeFixtureContract'",
+    "receipt_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v9.py -k 'BatchBReceiptContract'",
+    "completion_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v9.py -k 'BatchBCompletionContract'",
+    "asset_browser_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v9.py -k 'BatchBBrowserContract or BatchBAssetContract'",
+    "json_command": "python3 -m json.tool measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v9.json >/dev/null",
+    "diff_command": "git diff --no-index --check /dev/null <each V9 output>; each expected additive exit 1 with no whitespace diagnostics",
+    "result": "Full module: 36 passed, 5 expected fail-closed failures, exit 1, zero pytest ERROR outcomes. Source/semantic/fixture/mapper: 19 passed, 22 deselected. Receipt: 5 passed, 36 deselected. Completion-disposition: 2 passed, 39 deselected. Browser/asset: 9 passed, 32 deselected. All focused selectors exited 0."
+  },
+  "test_results": {
+    "full_module": "36 passed, 5 failed; exit 1; zero pytest ERROR outcomes",
+    "source_semantic_fixture_mapper_selector": "19 passed, 22 deselected; exit 0",
+    "receipt_selector": "5 passed, 36 deselected; exit 0",
+    "completion_selector": "2 passed, 39 deselected; exit 0; disclosure-only",
+    "asset_browser_selector": "9 passed, 32 deselected; exit 0; bounded-only",
+    "full_failing_test_ids": [
+      "BatchBIndependentReviewContract::test_review_has_zero_unresolved_blocking_findings_for_active_inputs",
+      "BatchBIndependentReviewContract::test_review_v4_binds_every_exact_active_additive_input",
+      "BatchBAcceptanceContract::test_accepted_manifest_exists",
+      "BatchBAcceptanceContract::test_candidate_manifest_exists",
+      "BatchBAcceptanceContract::test_product_owner_acceptance_exists"
+    ],
+    "verified_fail_closed_defects": [
+      "Review V4 predates the active Archer collector V4 and exact V9 outputs, lacks their descendant binding, and retains unresolved blocking findings.",
+      "Candidate, product-owner acceptance, and accepted-manifest artifacts do not exist."
+    ],
+    "completion_disposition": "PASS: disclosure-only HTTP 400 successor transfer; no successful completion, persistence, XP, idempotency, or API-correctness claim.",
+    "bounded_green": "All 135 source claims, 129 positive source envelopes, 6 bounded claims, 12 fixtures, local active receipts, all selected mapper populations, 12 assets, and exact bounded-browser limits passed their focused selectors."
+  },
+  "findings": [
+    "V9 selects exact role-base committed bytes for Village V3, Archer collector V4 plus mapper V4, unchanged Storm, asset V2, all owner directions, browser V3, review V4, and predecessor truth V8.",
+    "Archer V4 correctly separates exact source-envelope authority from bounded WebBridge evidence; WebBridge is neither source authority nor provider provenance.",
+    "No successful completion, persistence, XP award, idempotency, API correctness, candidate, approval, or acceptance claim is made."
+  ],
+  "carried_forward_disclosures": [
+    {
+      "id": "DISC-001",
+      "classification": "Batch A process-only disclosure",
+      "use": "Labeled process metadata only; never factual input. Archer V4 preserves it through the exact V3 predecessor without restating factual claims."
+    }
+  ],
+  "role_boundary": "Only batch-b-truth-tests-v9.py and role-receipts/truth-test-author-batch-b-v9.json were created. No predecessor, source, collector, mapper, asset, browser, review, direction, plan, registry, manifest, or commit was modified or created."
+}

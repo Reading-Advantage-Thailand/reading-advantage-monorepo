@@ -1,0 +1,74 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-local-uncommitted",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 1: Distinctive current/historical mechanics",
+  "role": "current-source-specialist-batch-a-devourer-slime",
+  "task_id": "devourer-slime-current-source",
+  "game": "Devourer Slime",
+  "source_baseline_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "cd2d0faec2d15f1a5d50bee0da102bde58ce1daa",
+  "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+  "spawn_id": null,
+  "parent_ancestry_ids": [],
+  "prompt_sha256": null,
+  "actual_context_manifest_sha256": null,
+  "prior_role_history": null,
+  "start_event_id": null,
+  "end_event_id": null,
+  "final_response_sha256": null,
+  "provider_attestation": "unavailable; no provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, or isolation attestation is claimed",
+  "reviewer_isolation": "fresh-context-only requested; fork_turns=none provider attestation unavailable",
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/current-source-observations.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/current-source-specialist-devourer-slime.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/current-source-observations.json": "6c2485b967f521e3c223a42ac01eae25c94c593a6c226b243df6bbb60f46ece3"
+  },
+  "budget_declaration": {
+    "source_bytes_read_ceiling": 33554432,
+    "source_objects_read_ceiling": 240,
+    "command_invocations_ceiling": 150,
+    "elapsed_minutes_ceiling": 240,
+    "observations_authored_ceiling": 300,
+    "units": {
+      "source_bytes_read": "bytes",
+      "source_objects_read": "objects",
+      "command_invocations": "invocations",
+      "elapsed_minutes": "minutes",
+      "observations_authored": "observations"
+    },
+    "ceiling_policy": "inclusive"
+  },
+  "budget_declaration_sha256": "7f06fa5d1c34aa7b06c6a2ed27809b3681c1bd60a61d480768b80986e9ef8151",
+  "usage": {
+    "source_bytes_read": 25516,
+    "source_objects_read": 5,
+    "command_invocations": 2,
+    "elapsed_minutes": 1,
+    "observations_authored": 11,
+    "history_records_authored": 0,
+    "browser_records_authored": 0,
+    "mapping_records_authored": 0,
+    "collector_claims_authored": 0
+  },
+  "findings": {
+    "unsupported_factual_claims": 0,
+    "denominator_mismatches": 0,
+    "scope_violations": 0,
+    "stop_loss_observations": []
+  },
+  "commit_sha": null,
+  "commit_binding": "No commit performed per task instruction; receipt and observations are uncommitted local artifacts.",
+  "provenance_disclosure": "Local source bytes and SHA-256 values are recorded. Provider-side provenance and committed Git binding are unavailable in this no-commit execution.",
+  "diff_scope": {
+    "source_files_modified": [],
+    "output_files_added": [
+      "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/current-source-observations.json",
+      "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/current-source-specialist-devourer-slime.json"
+    ],
+    "forbidden_outputs_added": []
+  }
+}
