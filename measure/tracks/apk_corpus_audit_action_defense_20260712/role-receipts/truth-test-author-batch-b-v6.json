@@ -1,0 +1,166 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "status": "v6 exact additive truth gates authored; source and B4 gates independently evaluated; completion, review freshness, and lifecycle remain fail-closed",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-TRUTH-V6",
+  "role": "truth-test-author-batch-b-v6",
+  "role_identity": "fresh Batch B truth-test author v6 only",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "ddc38cdf84a5ab3e046ef68561b71dfa65f7a76d",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "allowed_input_manifest_sha256": "e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+  "provenance_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "application": "Truthful unavailable provider fields are disclosures rather than automatic failures. Exact local artifact hashes, pinned receipt bytes, source envelopes, receipt-output bindings, review freshness, and lifecycle gates remain independently fail-closed."
+  },
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "final_response_event_id": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side prompt, context, spawn, session, ancestry, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are intentional and no provider attestation is claimed. The user prohibited commits."
+  },
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v5.py": "5e54a0d126bf78b361963c402a2198bc53d343d5c2b41f8085c679a6b595bb76",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-claim-ledger-batch-b-v3.json": "3be82cd7a9ddb144ae82ae220c36b439c6d14bbd58e1c988c897af6156b20484",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-evidence-method-batch-b-v3.md": "95c342a84cce0e6a6651e34cad11804ca8b930e2b9d1d533f3d464417d13200e",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-evidence-final-report-batch-b-v3.json": "b6847970ab60374635b3925d82e9e1c8ac8a06761e8715decd6734f5018b372f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-village-guardian-batch-b-v3.json": "057961346dbdae04ce78c3587c13a33a2c87c258be2317b9fcd3963e58aca9b2",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v2.json": "47413ceda62767d911ddb11f91d9a2f30c04c97179f7440e45e024b8da484d84",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b-v2.md": "77c30b16224755f56e98732a35b0dd9d2924dedc56704f6008051f8695f4b773",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v2.json": "302d5f851be7869aa569dfe9d966ad21147bc1ece532f99993071a5e089973fe",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v2.json": "d23ed799fcf3f98ff85f2c3443813165d2188d5cd3c168d0996e30561dfa9d20",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-asset-audit-v2.json": "c66b096726e441e6aab0c7a3ffd2cda81413befb00e1c8586cbe911a31329ebd",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-b-v2.json": "a9958731fe8f2133348625438ac3d3e60090ca81c9f966dfad13884b6e0e6eda",
+    "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-webbridge.json": "7dde397fdb1ceeac3e490d07791e90f69dd630b962d6b799da8426d4e9234498",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v3.json": "521e08b7a1ef9309cdf31277d0f07b99700bb7721d97ee3e371321e70cd1e4ca",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-adversarial-review-v4.json": "1ac23f3f7050c8b47d31770a7c943ecfa41b7942f3c0004e31fd6da9d058726d",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-b-v4.json": "2503d31d30efee37a9a2b7ffe9f54cf42acdcbf4a6a700b5414671f7048e2915"
+  },
+  "output_paths_and_sha256": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v6.py",
+      "sha256": "675809c8cc8835b7b659c10dd5288c10d631a768137bbe1485cfcda36d08cae2"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v6.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot embed its own final SHA-256 without changing its bytes; current receipt bytes are externally hashable and remain non-authorizing while uncommitted."
+    }
+  ],
+  "active_receipts": [
+    "discovery-auditor-batch-b-v2.json",
+    "evidence-collector-village-guardian-batch-b-v3.json",
+    "evidence-collector-archers-revenge-batch-b-v2.json",
+    "evidence-collector-storm-castle-tower-batch-b.json",
+    "requirements-mapper-village-guardian-batch-b.json",
+    "requirements-mapper-archers-revenge-batch-b.json",
+    "requirements-mapper-storm-castle-tower-batch-b.json",
+    "browser-auditor-batch-b-v3.json",
+    "asset-auditor-batch-b-v2.json",
+    "adversarial-reviewer-batch-b-v4.json",
+    "truth-test-author-batch-b-v6.json"
+  ],
+  "test_inventory": {
+    "test_cases": 39,
+    "selected_factual_claims": 135,
+    "positive_source_envelopes": 129,
+    "bounded_claims": 6,
+    "negative_fixtures": 12,
+    "asset_records": 12,
+    "browser_games": 3,
+    "unexpected_test_errors_allowed": 0
+  },
+  "expected_gate_state": {
+    "B4": "bounded-green only for exact browser-v3 and asset-v2 bytes under the existing WebBridge direction and all recorded limitations",
+    "completion_api": "red until the Village Guardian completion endpoint accepts the correct contract",
+    "fresh_review": "red because review-v4 predates the additive V3/V2 packages, global provenance direction, asset-v2, and V6",
+    "candidate_lifecycle": "red until candidate, authentic acceptance, and accepted manifest artifacts exist",
+    "receipt_integrity": "fail closed on every stale or mutated local hash even though truthful unavailable provider fields are not automatic failures"
+  },
+  "resource_use": {
+    "ceilings": {
+      "source_bytes_read": 52428800,
+      "source_files_read": 120,
+      "command_invocations": 80,
+      "elapsed_minutes": 45,
+      "records_authored": 300,
+      "browser_interactions": 0,
+      "asset_candidates_inspected": 12
+    },
+    "actual": {
+      "source_bytes_read": 8000000,
+      "source_files_read": 42,
+      "command_invocations": 20,
+      "elapsed_minutes": 40,
+      "records_authored": 39,
+      "browser_interactions": 0,
+      "asset_candidates_inspected": 12
+    },
+    "measurement_note": "Conservative local accounting only; no unavailable provider telemetry is impersonated."
+  },
+  "validation": {
+    "truth_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v6.py",
+    "b4_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v6.py -k 'BatchBBrowserContract or BatchBAssetContract'",
+    "json_command": "python3 -m json.tool measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v6.json >/dev/null",
+    "diff_command": "git diff --check -- measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v6.py measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-b-v6.json",
+    "result": "Full module: 30 passed, 9 expected fail-closed failures, exit 1, zero pytest ERROR outcomes. Exact source/semantic/fixture selector: 10 passed, 29 deselected, exit 0. B4 browser/asset selector: 9 passed, 30 deselected, exit 0. Receipt-policy selector: 2 passed, 1 stale-receipt failure, 36 deselected, exit 1."
+  },
+  "test_results": {
+    "full_module": "30 passed, 9 failed; exit 1; zero pytest ERROR outcomes",
+    "source_semantic_fixture_selector": "10 passed, 29 deselected; exit 0",
+    "b4_selector": "9 passed, 30 deselected; exit 0",
+    "receipt_policy_selector": "2 passed, 1 failed, 36 deselected; exit 1",
+    "full_failing_test_ids": [
+      "BatchBMapperPackageContract::test_mappers_bind_every_exact_active_claim_id",
+      "BatchBClaimTruthContract::test_every_claim_has_a_fact_interpretation_and_temporal_boundary",
+      "BatchBReceiptContract::test_receipt_output_hashes_bind_current_exact_bytes",
+      "BatchBCompletionContract::test_village_completion_api_succeeds_before_persistence_or_xp_claims",
+      "BatchBIndependentReviewContract::test_review_has_zero_unresolved_blocking_findings_for_active_inputs",
+      "BatchBIndependentReviewContract::test_review_v4_binds_every_exact_active_additive_input",
+      "BatchBAcceptanceContract::test_candidate_manifest_exists",
+      "BatchBAcceptanceContract::test_product_owner_acceptance_exists",
+      "BatchBAcceptanceContract::test_accepted_manifest_exists"
+    ],
+    "verified_fail_closed_defects": [
+      "Village and Archer mapper artifacts still bind superseded 12/8-claim populations rather than active 73/20-claim populations.",
+      "All twenty Archer V2 factual records omit the required per-record collector_id.",
+      "The Archer V2 collector receipt declares e9425d1c... for the method while current/committed bytes hash to 77c30b16....",
+      "Both observed Village completion requests returned HTTP 400.",
+      "Review V4 does not bind the additive Village V3, Archer V2, asset V2, global provenance direction, or V6 bytes and retains Critical/High/Medium blockers.",
+      "Candidate, product-owner acceptance, and accepted-manifest artifacts do not exist."
+    ],
+    "provider_unavailability_policy": "PASS: truthful unavailable provider fields did not automatically fail the local receipt policy test; pinned receipt bytes passed; stale output binding still failed.",
+    "b4_status": "PASS, bounded-green only under the exact existing WebBridge direction; completion remains a separate red gate."
+  },
+  "findings": [
+    "V6 selects the exact additive Village V3, Archer V2, asset-v2, global provenance direction, WebBridge direction/browser-v3, v5 predecessor, and review-v4 bytes.",
+    "Unavailable provider fields are disclosures under owner policy and do not themselves fail local receipt verification.",
+    "Receipt output hashes remain exact-byte gates; the known Archer V2 method hash is expected to fail if its receipt is stale.",
+    "B4 does not authorize trusted native input, foreground timing, screenshots, full console history, PNG loading, completion, persistence, XP, candidate, or acceptance claims."
+  ],
+  "carried_forward_disclosures": [
+    {
+      "id": "DISC-001",
+      "classification": "Batch A process-only disclosure",
+      "use": "Labeled process metadata only; never factual input."
+    }
+  ],
+  "role_boundary": "Only batch-b-truth-tests-v6.py and role-receipts/truth-test-author-batch-b-v6.json were created. No prior artifact, source, plan, registry, review, direction, manifest, or commit was modified or created."
+}
