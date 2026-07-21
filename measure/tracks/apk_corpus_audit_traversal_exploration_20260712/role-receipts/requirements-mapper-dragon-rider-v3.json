@@ -1,0 +1,21 @@
+{
+  "schema":"apk-role-receipt.v3",
+  "status":"V3 mapper package locally verified; independent review and lifecycle acceptance remain pending",
+  "acceptance":"not-claimed",
+  "track_id":"apk_corpus_audit_traversal_exploration_20260712",
+  "phase":"Phase 1: Batch A remediation V3",
+  "task_id":"map-requirements:vocabulary/dragon-rider:v3",
+  "role":"fresh-t5-dragon-rider-requirements-mapper-v4",
+  "game":"dragon-rider",
+  "phase_base_sha":"52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha":"134a94bc451f84e2a75ef18a8cbbe7382bd3395c",
+  "input_hashes":{"claim_ledger":"826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236","collector_report":"786f4097a204047b2d7a24ed3f9caf2473775042f912140cbee4feaaaa7928b8","collector_receipt":"1cb2a43ae37baaeef1705e24f49bbcaa886e0671ac8621a4b59f0f1f1a16d072","rebind":"55e6c58e190dc14a8bca4f9d6c832eaea2fb3093b68857e914a51ebb5e579960","prior_map":"1b6b52bd21ecefdff0edab3cbe27e6edc3e615ff274d1f10e1d65b9721ef96a6","review":"8eb21f34687e3afeb7a89ccd9ecd9aa5fbc16308f626731d47dbedbbde37216e","timing_direction":"3b3fea0b22f5ac379a1bb3518b1095bc8f3a366eaa7eb2f677b69ac6ffddb2c0"},
+  "outputs":[{"path":"packages/vocabulary/dragon-rider/requirements-map-v3.json","sha256":"4de439509dd936c5e7be6da16e5265b18a0a0340a27b757f6023fa7748fd20af"},{"path":"packages/vocabulary/dragon-rider/requirements-final-report-v3.json","sha256":"38365ab3102eed865399caa3de34f7e52840985289cded8e8be61f9714682525"}],
+  "reference_accounting":{"active_v3_claims":20,"mapped_claim_reference_distinct":20,"unresolved_claim_ids":0,"foreign_claim_ids":0,"negative_fixture_references":3,"novel_factual_claims":0},
+  "budget_actual":{"mapper_input_bytes":38263,"mapper_input_files":7,"mapper_commands":1,"mapper_records_authored":3,"elapsed_minutes":0,"timing_measurement":"unavailable-in-harness","elapsed_note":"0 is accounting fallback, not elapsed-time evidence.","collector_source_bytes":77762,"collector_source_files_objects":10,"collector_commands":16,"collector_records_authored_reviewed":35,"collector_browser_interactions":0,"collector_captured_artifacts":4},
+  "provenance_direction":{"mode":"LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE","timing_direction":"UNAVAILABLE_HARNESS_TIMING_ACCOUNTING","provider_attestations":"unavailable and not claimed","commit_sha":"uncommitted; user explicitly prohibited commit"},
+  "findings":["H008 is addressed additively by complete exact-ID-backed scene/state/transition, mechanics-learning, and developer-effort models.","H009 is addressed only for elapsed-time accounting under the owner direction; 0 is explicitly not timing evidence and other gates remain non-waived.","All three negative fixtures remain explicitly rejected.","No browser or new factual claim was added."],
+  "role_boundary":"Only the additive Dragon Rider V3 map, report, and receipt were created. Existing artifacts and unrelated working-tree changes were preserved.",
+  "reviewer_disposition":"pending fresh independent review",
+  "marker":"MEASURE_AGENT_RESULT"
+}

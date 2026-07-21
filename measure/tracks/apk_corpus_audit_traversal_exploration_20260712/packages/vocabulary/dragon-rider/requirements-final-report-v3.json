@@ -1,0 +1,21 @@
+{
+  "schema":"apk-requirements-mapper-report.v3",
+  "track_id":"apk_corpus_audit_traversal_exploration_20260712",
+  "phase":"Phase 1: Batch A remediation V3",
+  "task_id":"map-requirements:vocabulary/dragon-rider:v3",
+  "role":"fresh-t5-dragon-rider-requirements-mapper-v4",
+  "game":"dragon-rider",
+  "phase_base_sha":"52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha":"134a94bc451f84e2a75ef18a8cbbe7382bd3395c",
+  "status":"mapping-complete; non-authoritative pending fresh independent review",
+  "input_bindings":{"ledger":"claim-evidence-ledger-v3.json","collector":"evidence-final-report-v3.json","collector_receipt":"evidence-collector-dragon-rider-v3.json","rebind":"evidence-collector-dragon-rider-v2-rebind.json","map":"requirements-map-v3.json","review":"batch-a-independent-review-v2.json","timing_direction":"product-owner-budget-accounting-direction-v2.json"},
+  "review_remediation":{"T5A-H-008":"The V3 map supplies complete scene/state/transition, mechanic-learning, and developer-effort models with exact V3 claim-ID backing.","T5A-H-009":"The mapper receipt records elapsed_minutes as integer 0 with timing_measurement unavailable-in-harness and explicitly labels it an accounting fallback, not elapsed-time evidence; other budget gates remain non-waived."},
+  "reference_accounting":{"collector_claim_count":20,"collector_factual_claim_count":20,"negative_fixture_count":3,"distinct_referenced_claim_count":20,"unresolved_claim_count":0,"foreign_claim_count":0,"novel_factual_claim_count":0,"browser_claim_count":0},
+  "model_coverage":{"scene_state_transition":11,"mechanics_learning":4,"developer_effort":5,"negative_fixtures_rejected":3},
+  "unknowns_preserved":["Browser-runnable disposition, trusted native input, responsive failure, runtime asset-load success, collision/world bounds, and provider attestation remain unknown or unavailable.","No browser observation or browser-derived claim is included."],
+  "integer_actuals":{"mapper_input_bytes":0,"mapper_input_files":7,"mapper_commands":1,"mapper_records_authored":3,"collector_source_bytes":77762,"collector_source_files_objects":10,"collector_commands":16,"collector_records_authored_reviewed":35,"collector_browser_interactions":0,"collector_captured_artifacts":4,"elapsed_minutes":0},
+  "timing_accounting":{"timing_measurement":"unavailable-in-harness","elapsed_minutes":0,"meaning":"Accounting fallback only; 0 is not elapsed-time evidence."},
+  "provenance_policy":{"mode":"LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE","provider_telemetry_available":false,"commit_binding":"uncommitted; user prohibited commit"},
+  "validation":{"json_parse":"performed after additive write","claim_ids":"all 20 exact V3 ledger IDs resolve; all 3 negative fixtures remain rejected","diff":"additive-only output; existing artifacts not modified","acceptance":"not-claimed"},
+  "reviewer_disposition":"pending fresh independent review of exact V3-bound mapper bytes"
+}

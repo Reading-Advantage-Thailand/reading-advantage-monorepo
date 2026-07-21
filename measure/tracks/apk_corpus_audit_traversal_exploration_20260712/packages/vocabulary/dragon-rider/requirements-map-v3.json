@@ -1,0 +1,43 @@
+{
+  "schema": "apk-requirements-map.v3",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A remediation V3",
+  "task_id": "map-requirements:vocabulary/dragon-rider:v3",
+  "role": "fresh-t5-dragon-rider-requirements-mapper-v4",
+  "game": "dragon-rider",
+  "canonical_identity": "vocabulary/dragon-rider",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "134a94bc451f84e2a75ef18a8cbbe7382bd3395c",
+  "source_fact_policy": "Every factual proposition is a disposition over an exact V3 ledger claim ID. No browser observation, catalog analogy, or uncited source fact is added.",
+  "review_findings_addressed": ["T5A-H-008", "T5A-H-009"],
+  "scene_state_transition_model": [
+    {"id":"DR-V3-SST-001","statement":"The current catalog identity is dragon-rider / Dragon Rider with the recorded cover and playable status; the locale page module imports DragonRiderGame, loads vocabulary through the dragon-rider API, and posts completion results to the completion API.","claim_ids":["DR-ID-001","DR-ID-002","DR-SCENE-001"]},
+    {"id":"DR-V3-SST-002","statement":"The core reducer status is running or boss, while the component UI phase is start, playing, or ended; these are distinct state machines.","claim_ids":["DR-STATE-001A","DR-STATE-001B"]},
+    {"id":"DR-V3-SST-003","statement":"A new core run starts running with elapsedMs 0, attempts 0, correctAnswers 0, dragonCount 1, and a 150000 ms default duration.","claim_ids":["DR-MECH-001"]},
+    {"id":"DR-V3-SST-004","statement":"The logical stage defaults to 960x540; buildLayout computes gate centers, player and boss positions, with gate and sprite-scale clamping.","claim_ids":["DR-SCENE-002A","DR-SCENE-002B"]},
+    {"id":"DR-V3-SST-005","statement":"While playing/running, the component advances core time every 60 ms, moves one gate pair toward the bottom, and applies difficulty-dependent travel times of 9000, 7200, 5500, or 4000 ms.","claim_ids":["DR-TRANS-003"]},
+    {"id":"DR-V3-SST-006","statement":"A gate selection records a pending outcome, targets the selected gate center, locks the pair, and resolves when the player lerps near that target; resolution updates attempts, answers, and dragon count.","claim_ids":["DR-TRANS-004"]},
+    {"id":"DR-V3-SST-007","statement":"The core gate transition ignores non-running state, increments attempts, increments correctAnswers only for a correct side, changes dragonCount by plus or minus one floored at one, and creates the next round.","claim_ids":["DR-TRANS-001"]},
+    {"id":"DR-V3-SST-008","statement":"Core time clamps elapsed time to durationMs and changes running to boss when the duration is reached, while ignoring non-running states.","claim_ids":["DR-TRANS-002"]},
+    {"id":"DR-V3-SST-009","statement":"The scene declares and loads gates, boss, player, playerCamera, dragon army, three parallax layers, and loading background through the vocabulary/dragon-rider public asset paths.","claim_ids":["DR-ASSET-001A","DR-ASSET-001B"]},
+    {"id":"DR-V3-SST-010","statement":"The component exposes keyboard ArrowLeft/A and ArrowRight/D input and left/right pointer buttons using onPointerDown while playing.","claim_ids":["DR-CONTROL-001"]},
+    {"id":"DR-V3-SST-011","statement":"The component measures its container with ResizeObserver, window resize/orientationchange, and visualViewport resize/scroll, then stores rounded dimensions as stageSize.","claim_ids":["DR-RESP-001"]}
+  ],
+  "mechanics_learning_model": [
+    {"id":"DR-V3-ML-001","statement":"Each round presents a term, correct translation, decoy translation, and correct left/right side; empty vocabulary yields empty strings with left as the correct side, while non-empty vocabulary selects a distinct decoy when possible.","claim_ids":["DR-MECH-002"]},
+    {"id":"DR-V3-ML-002","statement":"Selecting a gate is the atomic learning interaction: the selected side determines correctness, and the core updates attempts, correct answers, dragon count, and the next round.","claim_ids":["DR-TRANS-001","DR-MECH-002"]},
+    {"id":"DR-V3-ML-003","statement":"The visible traversal to a gate precedes score mutation: selection creates a pending correct/incorrect outcome and only gate-target resolution updates counters and dragon count.","claim_ids":["DR-TRANS-004","DR-TRANS-003"]},
+    {"id":"DR-V3-ML-004","statement":"Keyboard and pointer controls expose the left/right choice surface, and the retained core and component test sources cover initialization, gate selection, timer-to-boss, boss power, result calculation, start/running rendering, keyboard selection, and boss-to-results status.","claim_ids":["DR-CONTROL-001","DR-TEST-001A","DR-TEST-001B"]}
+  ],
+  "developer_effort_model": [
+    {"id":"DR-V3-DE-001","area":"identity, route, and transport boundary","statement":"Account for catalog identity, locale-scoped scene integration, vocabulary loading, protected vocabulary/ranking/completion route surfaces, and result submission without claiming execution.","claim_ids":["DR-ID-001","DR-ID-002","DR-ROUTE-001"]},
+    {"id":"DR-V3-DE-002","area":"core state, round generation, and learning reducer","statement":"Account for running/boss and start/playing/ended states, default run state, round generation, gate selection, timed boss transition, and counter updates.","claim_ids":["DR-STATE-001A","DR-STATE-001B","DR-MECH-001","DR-MECH-002","DR-TRANS-001","DR-TRANS-002"]},
+    {"id":"DR-V3-DE-003","area":"flight scene, layout, movement, and responsive presentation","statement":"Account for the logical stage, gate/player/boss layout, timed gate movement, pending-to-resolved gate traversal, responsive measurement, and input bindings.","claim_ids":["DR-SCENE-001","DR-SCENE-002A","DR-SCENE-002B","DR-TRANS-003","DR-TRANS-004","DR-CONTROL-001","DR-RESP-001"]},
+    {"id":"DR-V3-DE-004","area":"asset declaration and loading","statement":"Account for the declared Dragon Rider asset paths and their source-level Promise.all loading orchestration without asserting successful runtime loading.","claim_ids":["DR-ASSET-001A","DR-ASSET-001B"]},
+    {"id":"DR-V3-DE-005","area":"test surface and effort boundary","statement":"Account for the retained core and component test-source surfaces; this is a source-structure decomposition only, not an estimate, reuse decision, standardization decision, or runtime claim.","claim_ids":["DR-TEST-001A","DR-TEST-001B"]}
+  ],
+  "negative_fixtures":[{"claim_id":"DR-FIX-NEG-001","disposition":"REJECT"},{"claim_id":"DR-FIX-NEG-002","disposition":"REJECT"},{"claim_id":"DR-FIX-NEG-003","disposition":"REJECT"}],
+  "input_bindings":{"ledger":"packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json","collector":"packages/vocabulary/dragon-rider/evidence-final-report-v3.json","collector_receipt":"role-receipts/evidence-collector-dragon-rider-v3.json","rebind":"role-receipts/evidence-collector-dragon-rider-v2-rebind.json","prior_map":"requirements-map-v2.json","review":"batch-a-independent-review-v2.json","timing_direction":"product-owner-budget-accounting-direction-v2.json"},
+  "counts":{"collector_claims":20,"collector_factual_claims":20,"negative_fixtures":3,"mapped_proposition_count":20,"distinct_referenced_claim_ids":20,"unresolved_claim_ids":0,"foreign_claim_ids":0,"uncited_source_facts":0,"browser_claims":0},
+  "acceptance":"not-claimed"
+}

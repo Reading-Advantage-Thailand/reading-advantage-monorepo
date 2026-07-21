@@ -1,0 +1,36 @@
+{
+  "schema_version": "apk-evidence-rebind-report.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "evidence-collector",
+  "game": "vocabulary/dragon-rider",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "134a94bc451f84e2a75ef18a8cbbe7382bd3395c",
+  "reason": "Whitespace normalization changed the V3 method bytes; claims, source envelopes, fixtures, and timing direction are preserved and rebound to the exact current V3 package bytes.",
+  "claims_preserved": true,
+  "timing_direction_preserved": true,
+  "timing_direction": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v2.json",
+    "elapsed_minutes": 0,
+    "interpretation": "Accounting fallback only, not elapsed-time evidence; all other measured integer actuals remain unchanged and no budget or stop-loss gate is waived."
+  },
+  "current_v3_output_hashes": {
+    "claim-evidence-ledger-v3.json": "826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236",
+    "evidence-method-v3.md": "a13ead6576ff7cde948f68d996ed4fc8b6901ecf4d93394ff7410603c9458a6c",
+    "evidence-final-report-v3.json": "786f4097a204047b2d7a24ed3f9caf2473775042f912140cbee4feaaaa7928b8"
+  },
+  "validation": {
+    "json_documents": "pending-local-command",
+    "claims_and_source_envelopes": "preserved by exact current V3 ledger binding",
+    "fixtures": "preserved by exact current V3 ledger binding",
+    "browser_or_behavior_inference_added": false,
+    "acceptance": "not-claimed",
+    "commit_binding": "uncommitted; this role does not commit"
+  },
+  "measure_agent_result": {
+    "status": "complete-additive-rebind-uncommitted",
+    "candidate": false,
+    "acceptance": "not-claimed"
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

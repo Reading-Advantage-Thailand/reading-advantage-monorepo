@@ -1,0 +1,22 @@
+{
+  "schema":"apk-role-receipt.v3",
+  "status":"V3 mapper package complete; independent review and lifecycle acceptance remain pending",
+  "acceptance":"not-claimed",
+  "track_id":"apk_corpus_audit_traversal_exploration_20260712",
+  "phase":"Phase 1: Batch A remediation V3",
+  "task_id":"map-requirements:Dungeon Liberator:v3",
+  "role":"fresh-t5-dungeon-liberator-requirements-mapper-v3",
+  "game":"Dungeon Liberator",
+  "phase_base_sha":"52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha":"134a94bc451f84e2a75ef18a8cbbe7382bd3395c",
+  "input_hashes":{"claim_ledger":"f8112af605465ffcf461669e5560037261943df98185bfeb8728a6496997e2a2","collector_report":"87ac4103859da863367088e19c213fae9a02baeecf38e840f085b0a02bd32415","collector_receipt":"62edc32b4b5d89be91db4d6750d2e5fcc6289f48d12c3492c52be66ca76fa9e4","prior_map":"5fe082c52ef1c12d006bdb496d3faa6ae911c5173a9fd54a196d72f9a1bfba8e","prior_report":"5bf070752aeebf112421f4354661446e5b441bd82283e597dc98906a7f4ef839","review":"8eb21f34687e3afeb7a89ccd9ecd9aa5fbc16308f626731d47dbedbbde37216e","timing_direction":"3b3fea0b22f5ac379a1bb3518b1095bc8f3a366eaa7eb2f677b69ac6ffddb2c0"},
+  "outputs":[{"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/requirements-map-v3.json","sha256":"70881824a63dd51af5a73d268c1f6facdfdedd888fbdfbfe92783359904d94cb"},{"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/requirements-final-report-v3.json","sha256":"5f5c6fbc2f859708f6ba906732d84792438160b78e7ac481c1097d9c156b8b19"}],
+  "reference_accounting":{"active_v3_factual_claims":18,"mapped_claim_reference_distinct":21,"unresolved_claim_ids":0,"foreign_claim_ids":0,"negative_fixture_references":3,"novel_factual_claims":0},
+  "budget_actual":{"mapper_input_bytes":32271,"mapper_input_files":7,"mapper_commands":1,"mapper_records_authored":22,"elapsed_minutes":0,"timing_measurement":"unavailable-in-harness","elapsed_note":"0 is accounting fallback, not elapsed-time evidence.","collector_source_bytes":0,"collector_source_files_objects":0,"collector_commands":0,"collector_records_authored_reviewed":2,"collector_browser_interactions":0,"collector_captured_artifacts":3},
+  "provenance_direction":{"mode":"LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE","timing_direction":"UNAVAILABLE_HARNESS_TIMING_ACCOUNTING","provider_attestations":"unavailable and not claimed","commit_sha":"uncommitted; user explicitly prohibited commit"},
+  "unknowns_preserved":["Browser execution and trusted native input remain unknown.","Asset binary availability and runtime loading remain unknown.","Unsupported topology and geometry remain unknown.","Provider session, spawn, ancestry, isolation, event, timing, and final-response attestations remain unavailable."],
+  "findings":["H008 is addressed by complete claim-backed scene/state/transition, mechanics-learning, and developer-effort models using V3 IDs only.","H009 is addressed only for elapsed-minute accounting under the owner direction; 0 is not timing evidence and all other gates remain non-waived.","All three negative fixtures remain explicitly rejected.","No browser claim, effort estimate, acceptance claim, or new source fact was added."],
+  "role_boundary":"Only the Dungeon Liberator V3 map, report, and receipt were created; existing artifacts and unrelated working-tree changes were preserved.",
+  "reviewer_disposition":"pending fresh independent review",
+  "marker":"MEASURE_AGENT_RESULT"
+}

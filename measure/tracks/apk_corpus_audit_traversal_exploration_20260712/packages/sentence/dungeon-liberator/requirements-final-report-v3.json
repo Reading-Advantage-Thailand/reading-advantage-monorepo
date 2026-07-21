@@ -1,0 +1,17 @@
+{
+  "schema":"apk-mapper-final-report.v3",
+  "track_id":"apk_corpus_audit_traversal_exploration_20260712",
+  "phase":"Phase 1: Batch A remediation V3",
+  "role":"fresh-t5-dungeon-liberator-requirements-mapper-v3",
+  "game":"Dungeon Liberator",
+  "requirements_map":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/requirements-map-v3.json",
+  "evidence_ledger":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger-v3.json",
+  "scope":"Only V3-cited scene/state/transition, mechanics-learning, and developer-effort source surfaces were mapped.",
+  "mapped_record_counts":{"scene_state_transition":10,"mechanics_learning":4,"developer_effort":5,"unknown":4,"negative_fixture":3},
+  "claim_reference_validation":{"ledger_factual_claim_ids":18,"factual_claim_ids_referenced":18,"negative_fixture_claim_ids_referenced":3,"unresolved_claim_ids":0,"foreign_claim_ids":0,"factual_claims_without_citation":0,"novel_source_facts":0,"browser_claims":0,"effort_estimates":0},
+  "review_finding_disposition":{"T5A-H-005":"addressed by DL-TRANS-003 binding the component victory handoff separately","T5A-H-007":"addressed by retaining V3 denominator reconciliation in the collector input and binding current source IDs only","T5A-H-008":"addressed by complete scene/state/transition, mechanics-learning, and effort models","T5A-H-009":"addressed only for mapper elapsed accounting under owner direction; no other gate is waived"},
+  "timing":{"direction":"UNAVAILABLE_HARNESS_TIMING_ACCOUNTING","elapsed_minutes":0,"timing_measurement":"unavailable-in-harness","elapsed_note":"0 is accounting fallback, not elapsed-time evidence."},
+  "provenance":{"policy":"LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE","provider_attestation":"unavailable and not claimed","acceptance_claimed":false},
+  "disposition":"non-consumable mapper output; fresh independent review, lifecycle authorization, and committed binding remain required",
+  "marker":"MEASURE_AGENT_RESULT"
+}
