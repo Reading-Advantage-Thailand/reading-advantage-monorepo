@@ -1,0 +1,119 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "status": "V3 collector package locally verified and package-level superseding V2; acceptance-chain gates remain pending",
+  "acceptance": "not claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-COLLECT-VILLAGE-V3",
+  "role": "evidence-collector-village-guardian-batch-b-v3",
+  "role_identity": "fresh isolated evidence-collector remediation v3 for Village Guardian only",
+  "game": "Village Guardian",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "877285f5a759eef5db9c4603f83ecdc75328a776",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "allowed_input_manifest_sha256": "e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+  "supersession": {
+    "supersedes_receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-village-guardian-batch-b-v2.json",
+    "supersedes_receipt_sha256": "144af6c4754f751b1563cf18e4e6d2b1dd1bce9a1deec34368804fa3a8d85fd6",
+    "v2_disposition": "retained immutable failure evidence",
+    "v3_scope": "source-evidence collector package only; no mapper, truth-selector, review, candidate, approval, or accepted-manifest supersession"
+  },
+  "provenance_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "compensating_controls_applied": [
+      "truthful unavailable provider fields",
+      "exact local artifact SHA-256 bindings",
+      "role and source Git bases",
+      "direct frozen Git-object resolution",
+      "standalone all-envelope and bounded-semantic verification"
+    ],
+    "remaining_control": "An authorized later commit must bind these exact output bytes, and a fresh independent review must bind the active package before acceptance."
+  },
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_proof": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "final_response_event_id": null,
+    "output_commit_sha": null,
+    "unavailable_note": "Provider-side prompt, context, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations are unavailable in this environment. Nulls are intentional; no provider attestation or placeholder is asserted. The user prohibited a commit, so output_commit_sha remains null and acceptance remains unavailable."
+  },
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-b.md": "7b3b5f3e4c0f8ba1309c2d22b0a815771f5c26f647cc7cb883ea84f0a03d00dc",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-budget-declaration.json": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-role-applicability.json": "71db3e7eb9ac71177d7a555ceb6e43218c9bcbd5ca0afdaa2b5574ace9a38bb4",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-discovery-audit-v2.json": "f0f27734d22b8ec376bbf8b1fe96574a75f2c293766bee2440c0484164dd1daa",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v5.py": "5e54a0d126bf78b361963c402a2198bc53d343d5c2b41f8085c679a6b595bb76",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-adversarial-review-v4.json": "1ac23f3f7050c8b47d31770a7c943ecfa41b7942f3c0004e31fd6da9d058726d",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-webbridge.json": "7dde397fdb1ceeac3e490d07791e90f69dd630b962d6b799da8426d4e9234498",
+    "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+  },
+  "outputs": [
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-claim-ledger-batch-b-v3.json","sha256":"3be82cd7a9ddb144ae82ae220c36b439c6d14bbd58e1c988c897af6156b20484"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-evidence-method-batch-b-v3.md","sha256":"95c342a84cce0e6a6651e34cad11804ca8b930e2b9d1d533f3d464417d13200e"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-evidence-final-report-batch-b-v3.json","sha256":"b6847970ab60374635b3925d82e9e1c8ac8a06761e8715decd6734f5018b372f"}
+  ],
+  "receipt_self_hash": "not embedded because a file cannot truthfully contain its own final SHA-256; an authorized later binder may hash this receipt without modifying it",
+  "standalone_verification": {
+    "ledger_sha256_verified": "3be82cd7a9ddb144ae82ae220c36b439c6d14bbd58e1c988c897af6156b20484",
+    "claims": 73,
+    "fixtures": 4,
+    "source_coverage_records": 12,
+    "source_byte_sum": 2332402,
+    "envelopes_checked": 89,
+    "semantic_checks": 220,
+    "mismatch_count": 0,
+    "mismatches": [],
+    "directory_fixture_object_type": "tree",
+    "result": "PASS"
+  },
+  "findings": [
+    "All final declared whole-blob and inclusive-range SHA-256 values independently match the frozen Git source objects.",
+    "All four fixtures validate and remain excluded from factual totals.",
+    "The complete accepted configuration source and both complete accepted test sources are whole-blob verified; all 53 named test blocks are represented without promotion to production behavior.",
+    "V3 facts are bounded to exact source constructs and preserve browser, completion, persistence, XP, accessibility, asset-usage, and chronology limits.",
+    "V5 does not select V3, and fresh mapper/reviewer/lifecycle work remains outside this collector role."
+  ],
+  "budget_actual": {
+    "bytes": 4500000,
+    "files": 46,
+    "commands": 70,
+    "minutes": 44,
+    "records": 105,
+    "source_bytes_read": 2332402,
+    "source_files_read": 12,
+    "command_invocations": 70,
+    "elapsed_minutes": 44,
+    "records_authored": 105,
+    "browser_interactions": 0,
+    "asset_candidates_inspected": 2,
+    "accounting_note": "Conservative local upper bounds; all are below the frozen collector ceilings. Provider telemetry remains unavailable."
+  },
+  "role_boundary": "Only the additive Village Guardian v3 ledger, method, report, and receipt were created. Existing artifacts and unrelated working-tree changes were preserved. No browser, mapper, truth-test, review, acceptance, product-source, plan, or registry output was authored or modified.",
+  "unknowns_preserved": [
+    "browser/live behavior not re-observed by this collector",
+    "trusted native input and ordinary foreground timing unestablished",
+    "successful completion response, authentication, persistence, idempotency, XP award, and deployed reachability unestablished; existing observation was HTTP 400",
+    "gameplay PNG runtime usage and suitability unknown",
+    "accessible gameplay semantics unknown",
+    "pre-baseline chronology unknown"
+  ],
+  "blockers": [
+    "Output commit binding pending because no commit was authorized.",
+    "Immutable truth-test v5 does not select V3.",
+    "Fresh mapper and fresh independent review of exact V3 bytes are pending.",
+    "Candidate, approval, and accepted-manifest lifecycle artifacts are absent."
+  ],
+  "carried_forward_disclosures": [{"id":"DISC-001","classification":"Batch A process-only disclosure","use":"Labeled process metadata only; not factual input."}]
+}

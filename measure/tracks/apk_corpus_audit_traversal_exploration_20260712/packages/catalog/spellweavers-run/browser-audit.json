@@ -1,0 +1,77 @@
+{
+  "schema": "apk-browser-audit.v1",
+  "status": "bounded-non-runnable-unknown",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "task_id": "audit-browser:spellweavers-run",
+  "role": "browser-auditor",
+  "game": "spellweavers-run",
+  "canonical_identity": "catalog/spellweavers-run",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "877285f5a759eef5db9c4603f83ecdc75328a776",
+  "revision_under_audit": "877285f5a759eef5db9c4603f83ecdc75328a776",
+  "browser_access": {
+    "preferred_tool": "Kimi WebBridge",
+    "available": false,
+    "used": false,
+    "reason": "The frozen Phase-0 provider declaration records kimi_webbridge_available=false. No browser session or alternate browser tool was used."
+  },
+  "route_attempts": [
+    {
+      "url_path": "/en/student/games/sentence/spellweavers-run",
+      "source": "apps/advantage-games/tests/e2e/fixtures/gameFixtures.ts:206 at revision 877285f5a759eef5db9c4603f83ecdc75328a776",
+      "attempt": "not-executed",
+      "result": "unknown; browser unavailable",
+      "logs": [],
+      "note": "This is the exact retained test-helper candidate route, not an observed live route."
+    },
+    {
+      "url_path": "/api/v1/games/spellweavers-run/sentences?locale=en",
+      "source": "apps/advantage-games/tests/e2e/games/sentence/spellweavers-run.spec.ts:30-44 at accepted baseline 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "attempt": "not-executed",
+      "result": "unknown; browser unavailable",
+      "logs": [],
+      "note": "The retained test mocks this request; the mock is not production route evidence."
+    },
+    {
+      "url_path": "/api/v1/games/spellweavers-run/complete",
+      "source": "apps/advantage-games/tests/e2e/helpers/gameHelpers.ts:838-846 at revision 877285f5a759eef5db9c4603f83ecdc75328a776",
+      "attempt": "not-executed",
+      "result": "unknown; browser unavailable",
+      "logs": [],
+      "note": "The retained helper mocks this request; no persistence or completion behavior is claimed."
+    }
+  ],
+  "observations": {
+    "navigation": "not-observed",
+    "start_transition": "not-observed",
+    "movement": "unknown",
+    "camera": "unknown",
+    "collision": "unknown",
+    "stage_transition": "unknown",
+    "compact_wide_transition": "not-observed",
+    "keyboard": "not-observed; native input not established",
+    "pointer_touch_gesture": "not-observed; native input not established",
+    "console": "not-collected",
+    "network": "not-collected",
+    "screenshots": "none captured",
+    "production_persistence": "not-tested and not claimed"
+  },
+  "revision_boundary": {
+    "current_role_revision": "877285f5a759eef5db9c4603f83ecdc75328a776",
+    "accepted_test_baseline": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "historical_legacy_revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9",
+    "historical_withdrawn_cartridge_revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+    "interpretation": "Historical source and retained test intent do not establish current browser behavior."
+  },
+  "limitations": [
+    "Current gameplay may be absent at the audited revision; no runnable conclusion was inferred.",
+    "No trusted native input or browser-trusted equivalent was available or established.",
+    "No screenshot, console trace, network trace, persistence result, or hidden behavior was observed.",
+    "The prior collector's budget breach and one-time source-byte exception remain disclosed and are not waived by this audit."
+  ],
+  "disposition": "NON-RUNNABLE/UNKNOWN — browser access unavailable; exact candidate routes recorded without observed behavior",
+  "acceptance": "not-claimed",
+  "review_status": "pending-independent-review",
+  "commit_sha": "uncommitted"
+}

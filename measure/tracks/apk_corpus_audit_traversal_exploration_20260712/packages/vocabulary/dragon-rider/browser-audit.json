@@ -1,0 +1,93 @@
+{
+  "schema_version": "apk-browser-audit.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "browser-auditor",
+  "game": "Dragon Rider",
+  "package_identity": "vocabulary/dragon-rider",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "877285f5a759eef5db9c4603f83ecdc75328a776",
+  "provenance_direction": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+  "disposition": "browser-audit-blocked-route-unreachable",
+  "browser_access": {
+    "kimi_webbridge_available": true,
+    "kimi_webbridge_used": true,
+    "health": "running=true, extension_connected=true; version v1.11.1 with v1.11.3 update available",
+    "limitation": "WebBridge synthetic events are not trusted native input; no synthetic input was used."
+  },
+  "attempted_commands": [
+    {"command": "~/.kimi-webbridge/bin/kimi-webbridge status", "result": "running=true; extension_connected=true", "status": "success"},
+    {"command": "git rev-parse HEAD", "result": "877285f5a759eef5db9c4603f83ecdc75328a776", "status": "success"},
+    {"command": "WebBridge list_tabs session=dragon-rider-t5-a", "result": "no existing tabs", "status": "success"},
+    {"command": "WebBridge navigate http://localhost:3000/en/student/games/vocabulary/dragon-rider newTab=true", "result": "navigation attempted; ERR_CONNECTION_REFUSED", "status": "success"},
+    {"command": "WebBridge snapshot page", "result": "Chrome error page: localhost refused to connect", "status": "success"},
+    {"command": "WebBridge network start; navigate http://localhost:3000/api/v1/games/dragon-rider/vocabulary?locale=en; network list/detail", "result": "request captured; response body was Chrome ERR_CONNECTION_REFUSED error HTML, not application JSON", "status": "success"}
+  ],
+  "candidate_routes": [
+    "/en/student/games/vocabulary/dragon-rider",
+    "/api/v1/games/dragon-rider/vocabulary?locale=en",
+    "/api/v1/games/dragon-rider/ranking",
+    "/api/v1/games/dragon-rider/complete"
+  ],
+  "route_status": "The page route and vocabulary API were attempted against localhost:3000; the server refused connection. Ranking and completion were not invoked.",
+  "revision": {
+    "audited_revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+    "working_tree_revision_observed": "877285f5a759eef5db9c4603f83ecdc75328a776",
+    "revision_note": "No browser-rendered application was reachable at the requested phase revision; current HEAD is recorded only for provenance."
+  },
+  "observations": {
+    "compact_view": {
+      "status": "unknown",
+      "observed": [],
+      "unknowns": ["No compact viewport rendered; responsive layout, canvas sizing, controls, HUD, and overflow were not observed."]
+    },
+    "wide_view": {
+      "status": "unknown",
+      "observed": [],
+      "unknowns": ["No wide viewport rendered; layout, canvas sizing, controls, HUD, and overflow were not observed."]
+    },
+    "transitions": {
+      "actual_transitions_independently_established": [],
+      "unknowns": ["Start, running, gate selection, movement, timer, boss, results, restart, completion, and exit transitions were not independently established in a browser."]
+    },
+    "input_trust": {
+      "trusted_native_input_established": false,
+      "synthetic_input_used": false,
+      "status": "not-established",
+      "unknowns": ["Keyboard, pointer, touch, and browser-trusted input behavior are unknown; no input was attempted because the route was unreachable."]
+    },
+    "logs_network": {
+      "console_logs": "No application console was available; only the browser error page was observed.",
+      "network_logs": "WebBridge captured the vocabulary GET attempt; its detail body was Chrome ERR_CONNECTION_REFUSED HTML. No application response was observed.",
+      "asset_loads": "unavailable; application did not render",
+      "completion_persistence": "unavailable; completion endpoint was not invoked",
+      "production_persistence": "not tested and not claimed"
+    }
+  },
+  "source_and_predecessor_boundary": {
+    "collector_report": "source-evidence-collected-not-reviewed-not-accepted",
+    "mapper_report": "non-consumable mapper output; independent review and committed binding remain required",
+    "source_claims_reused_as_browser_evidence": 0,
+    "native_input_or_production_persistence_claimed": false
+  },
+  "all_unknowns": [
+    "Whether the route is reachable when a server is running at localhost:3000.",
+    "Whether startup, authentication, or session requirements can be satisfied.",
+    "Rendered start screen, assets, canvas, HUD, and loading behavior.",
+    "Compact and wide responsive behavior.",
+    "Keyboard, pointer, touch, and trusted-input behavior.",
+    "Movement, gate selection, collision/interaction, timer, boss, defeat, results, restart, and completion transitions.",
+    "Application console errors, application network responses, asset loads, API status, and persistence behavior.",
+    "Historical behavior and production behavior."
+  ],
+  "budget": {
+    "declaration_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+    "ceiling_role": "browser_auditor_one_game",
+    "ceiling_browser_interactions": 300,
+    "actual_browser_interactions": 8,
+    "actual_elapsed_minutes": "unavailable",
+    "status": "bounded route and API reachability attempts; no budget breach claimed"
+  },
+  "acceptance_status": "non-consumable; independent review and committed binding remain required",
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,69 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "bounded-non-runnable-unknown; independent review pending",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "task_id": "audit-browser:spellweavers-run",
+  "role": "browser-auditor",
+  "game": "spellweavers-run",
+  "canonical_identity": "catalog/spellweavers-run",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "877285f5a759eef5db9c4603f83ecdc75328a776",
+  "allowed_input_manifest_sha256": null,
+  "allowed_input_note": "No Spellweaver browser-specific allowed-input manifest was present; named strategy, budget, applicability, evidence, mapping, exception, and role-base source inputs are listed instead.",
+  "budget_declaration_sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+  "prompt_sha256": null,
+  "prompt_note": "Provider prompt bytes were not exposed; no hash was invented.",
+  "spawn_id": null,
+  "provider_session_id": null,
+  "parent_ancestry_ids": null,
+  "fork_turns": null,
+  "start_event_id": null,
+  "end_event_id": null,
+  "timestamps": {"started_at": null, "ended_at": null},
+  "browser_session": {
+    "tool": "Kimi WebBridge",
+    "available": false,
+    "used": false,
+    "session_id": null,
+    "route_attempts_executed": 0,
+    "console_collected": false,
+    "network_collected": false,
+    "artifacts_captured": 0
+  },
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/test-strategy-phase0.md": "734b879b75a8fff0e709242a4046706408f79587a2ec4f732a426e22d105ba0d",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-role-applicability.json": "24b0980a07ddc8cc975596599530f6cd7089cf4dcc6e1bde5890a41882865ed9",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-spellweavers-budget-exception.json": "a0a4f2e80fa888e3fee7a1ef7e3479af559e1930cbb3eb3a5ea3a2ab8b3bbcf4",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/requirements-map.json": "b40c3052ac5c9726ad96038d55a57447f2b9279fb2e34d81c0a03d0fd8231ae4",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-final-report.json": "52eb0a6c1b3431657635d73a0955787b7f03b2e52a210ba52b537d0d2ae49c98",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/evidence-method.md": "07706a88f8d1de23ada15057184ee9789b85b8b0b4976b1e3428d6a23c3ef367",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-spellweavers-run.json": "4233dd8cf469c293ae6947a75335f863a568fe0fffbe8ca79e8fc16768e0e48e",
+    "apps/advantage-games/tests/e2e/games/sentence/spellweavers-run.spec.ts": "76c6c6252a74b4be612af7a20aefb371f71d06cc82a9bb8f47f83020ee32fa95",
+    "apps/advantage-games/tests/e2e/fixtures/gameFixtures.ts": "56de8961612146104173599d3bdb7569c542cd0f30779c6e19beb00d546e9a05",
+    "apps/advantage-games/src/lib/gameCards.ts": "2cc12f5e4c64d33d63ed84a97df35bfe137822726e1a1875b1fea31fdce4690e"
+  },
+  "external_evidence_hashes": {},
+  "disposition": "NON-RUNNABLE/UNKNOWN",
+  "findings": [
+    {"id":"SW-BROWSER-001","severity":"disclosure","finding":"No Kimi WebBridge session was available; exact candidate routes and non-executed status are recorded in browser-audit.json."},
+    {"id":"SW-BROWSER-002","severity":"unknown","finding":"Current gameplay, transitions, input, console, network, and persistence remain unobserved at the supplied role revision."},
+    {"id":"SW-BROWSER-003","severity":"disclosure","finding":"Collector source-byte breach remains in force; the one-time exception does not authorize additional browser or collection budget."}
+  ],
+  "resource_use": {
+    "ceiling": {"source_bytes":3000000,"source_files_objects":80,"commands":80,"elapsed_minutes":90,"records_authored_reviewed":80,"browser_interactions":300,"captured_artifacts":60},
+    "actual": {"source_bytes":0,"source_files_objects":0,"commands":0,"elapsed_minutes":null,"records_authored_reviewed":0,"browser_interactions":0,"captured_artifacts":0},
+    "measurement_status": "No browser session; elapsed time unavailable and not fabricated."
+  },
+  "output_paths_and_sha256": [
+    {"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/browser-audit.json","sha256":null,"sha256_note":"Receipt records the output path; final hashes are computed after writing."},
+    {"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/browser-auditor-spellweavers-run.json","sha256":null,"sha256_note":"A receipt cannot embed its own final SHA-256 without changing its bytes."}
+  ],
+  "prior_role_history": [
+    {"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-spellweavers-run.json","sha256":"4233dd8cf469c293ae6947a75335f863a568fe0fffbe8ca79e8fc16768e0e48e","use":"Read only as collector evidence and provenance disclosure; browser role did not author or modify it."}
+  ],
+  "commit_sha": null,
+  "commit_note": "No commit was created, as instructed.",
+  "role_boundary": "Only browser-audit.json and this browser role receipt were created; source, evidence, mapping, plan, registry, and acceptance artifacts were not modified."
+}

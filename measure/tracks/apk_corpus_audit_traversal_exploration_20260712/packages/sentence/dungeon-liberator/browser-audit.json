@@ -1,0 +1,100 @@
+{
+  "schema_version": "apk-browser-audit.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "browser-auditor",
+  "game": "Dungeon Liberator",
+  "package_identity": "sentence/dungeon-liberator",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "877285f5a759eef5db9c4603f83ecdc75328a776",
+  "provenance_direction": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+  "disposition": "browser-audit-blocked-browser-unavailable",
+  "browser_access": {
+    "kimi_webbridge_available": false,
+    "kimi_webbridge_used": false,
+    "reason": "No browser/WebBridge capability was available in this session; no alternate browser automation was used."
+  },
+  "attempted_commands": [
+    {
+      "command": "git rev-parse HEAD^{commit}",
+      "result": "877285f5a759eef5db9c4603f83ecdc75328a776",
+      "status": "success"
+    },
+    {
+      "command": "git status --short -- measure/tracks/apk_corpus_audit_traversal_exploration_20260712 apps/advantage-games",
+      "result": "no output",
+      "status": "success"
+    },
+    {
+      "command": "bounded repository search for Dungeon Liberator route, component, test, and QC references",
+      "result": "candidate route and local test references identified; no server or browser was started",
+      "status": "success"
+    }
+  ],
+  "candidate_routes": [
+    "/en/student/games/sentence/dungeon-liberator",
+    "/qc"
+  ],
+  "route_status": "not navigated; reachability, startup, authentication, and rendering are unknown",
+  "revision": {
+    "audited_revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+    "working_tree_revision_observed": "877285f5a759eef5db9c4603f83ecdc75328a776",
+    "revision_note": "The requested phase revision was not executed in a browser; the current commit was recorded only for audit provenance."
+  },
+  "observations": {
+    "compact_view": {
+      "status": "unknown",
+      "observed": [],
+      "unknowns": ["No compact viewport was opened; layout, canvas sizing, controls, and responsive behavior were not observed."]
+    },
+    "wide_view": {
+      "status": "unknown",
+      "observed": [],
+      "unknowns": ["No wide viewport was opened; layout, canvas sizing, controls, and responsive behavior were not observed."]
+    },
+    "transitions": {
+      "actual_transitions_independently_established": [],
+      "unknowns": ["Start, playing, movement, collection, portal, defeat, restart, completion, and exit transitions were not independently established in a browser."]
+    },
+    "input_trust": {
+      "trusted_native_input_established": false,
+      "synthetic_input_used": false,
+      "status": "not-established",
+      "unknowns": ["Keyboard, pointer, touch, virtual D-pad, gesture, and fullscreen input behavior are unknown.", "No WebBridge synthetic event was used, and no browser-trusted/native input path was available to verify."]
+    },
+    "logs_network": {
+      "console_logs": "unavailable",
+      "network_logs": "unavailable",
+      "asset_loads": "unavailable",
+      "completion_persistence": "unavailable",
+      "production_persistence": "not tested and not claimed"
+    }
+  },
+  "source_and_predecessor_boundary": {
+    "collector_report": "source-evidence-collected-not-reviewed-not-accepted",
+    "mapper_report": "non-consumable mapper output; independent review and committed binding remain required",
+    "source_claims_reused_as_browser_evidence": 0,
+    "native_input_or_production_persistence_claimed": false
+  },
+  "all_unknowns": [
+    "Whether either candidate route is reachable in the requested revision.",
+    "Whether a server can start in this environment.",
+    "Authentication/session requirements.",
+    "Rendered start screen, assets, canvas, and HUD.",
+    "Compact and wide responsive behavior.",
+    "Keyboard, pointer, touch, virtual D-pad, fullscreen, and trusted-input behavior.",
+    "Movement, collision, prisoner ordering, monster hazards, portal victory, defeat, restart, and completion transitions.",
+    "Console errors, network requests, asset load results, API responses, and persistence behavior.",
+    "Historical behavior and production behavior."
+  ],
+  "budget": {
+    "declaration_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+    "ceiling_role": "browser_auditor_one_game",
+    "ceiling_browser_interactions": 300,
+    "actual_browser_interactions": 0,
+    "actual_elapsed_minutes": "unavailable-no-browser-session",
+    "status": "browser work not runnable; no budget breach claimed"
+  },
+  "acceptance_status": "non-consumable; independent review and committed binding remain required",
+  "marker": "MEASURE_AGENT_RESULT"
+}

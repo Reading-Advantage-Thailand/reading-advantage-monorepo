@@ -1,0 +1,41 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-unattested-browser-audit-blocked",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "browser-auditor",
+  "task_id": "audit-browser:Dragon Rider",
+  "game": "Dragon Rider",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "877285f5a759eef5db9c4603f83ecdc75328a776",
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "provider_attestation": "Unavailable: no collaboration-provider spawn, ancestry, prompt, session-event, timing, or fork attestation was exposed.",
+  "agent_id": "unavailable",
+  "spawn_id": "unavailable",
+  "parent_ancestry_ids": "unavailable",
+  "fork_turns_none": "unavailable",
+  "prompt_sha256": "unavailable",
+  "allowed_input_manifest_sha256": "unavailable",
+  "actual_context_manifest_sha256": "unavailable",
+  "prior_role_history": "unavailable",
+  "events": {"start_event_id":"unavailable","end_event_id":"unavailable","started_at":"unavailable","ended_at":"unavailable"},
+  "final_response_sha256": "unavailable",
+  "budget_declaration_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+  "budget_declaration_sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+  "actual_usage": {"source_bytes": "unavailable", "source_files_objects": "unavailable", "commands": 7, "elapsed_minutes": "unavailable", "records_authored_reviewed": 0, "browser_interactions": 8, "captured_artifacts": 0},
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/browser-audit.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/browser-auditor-dragon-rider.json"
+  ],
+  "output_hashes": {"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/browser-audit.json": "a8184107e8f197924992335caa54c4bf95de718ff6e5c7e5de225488599ea273", "self": "intentionally-not-self-hashed"},
+  "findings": [
+    "Kimi WebBridge was healthy and used, but localhost:3000 refused the page and vocabulary API connections.",
+    "No native or browser-trusted input was established; no synthetic input was used.",
+    "No actual transition, compact/wide observation, application log, asset load, persistence, production behavior, or hidden behavior was claimed.",
+    "Provider-side provenance and timing telemetry are unavailable and disclosed per the product-owner provenance direction.",
+    "This receipt is locally prepared and uncommitted; independent review and committed binding remain required."
+  ],
+  "commit_sha": "uncommitted",
+  "marker": "MEASURE_AGENT_RESULT"
+}

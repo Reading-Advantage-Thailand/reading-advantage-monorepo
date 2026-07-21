@@ -1,0 +1,143 @@
+{
+  "schema_version": "apk-evidence-collector-report.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "role": "evidence-collector-village-guardian-batch-b-v3",
+  "game": "Village Guardian",
+  "normalized_id": "village-guardian",
+  "collector_id": "evidence-collector-village-guardian-batch-b-v3",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "877285f5a759eef5db9c4603f83ecdc75328a776",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "status": "V3 source-evidence remediation passes local exact-envelope, bounded-semantic, fixture, source-coverage, count, JSON, and diff verification; it supersedes V2 at package level only. Commit binding, truth-selector supersession, mapper regeneration, fresh independent review, and lifecycle acceptance remain pending and are not claimed.",
+  "supersession": {
+    "supersedes_report_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-evidence-final-report-batch-b-v2.json",
+    "supersedes_report_sha256": "9cf43904a8e31741cb44db3434c6e368fb5be17f0e09e5b144ea1218a508d2ff",
+    "supersedes_ledger_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-claim-ledger-batch-b-v2.json",
+    "supersedes_ledger_sha256": "0bb29a351c39e766b8434f8affc95a128acba30350a19cf5ab821595d5715b8f",
+    "v2_failure_preserved": "V2 reported 41 text range-envelope mismatches and remains immutable failure evidence.",
+    "v3_condition_result": "SATISFIED for the collector package: all 73 factual records, all 4 fixtures, and all 12 source-coverage records passed the standalone verifier with zero mismatches.",
+    "acceptance_limit": "Package-level supersession is not candidate/owner/accepted-manifest authorization."
+  },
+  "counts": {
+    "factual_claims": 73,
+    "negative_fixtures": 4,
+    "claims_plus_fixtures": 77,
+    "source_coverage_records": 12,
+    "declared_envelopes_verified": 89,
+    "semantic_assertions_verified": 220,
+    "required_configuration_sources": 1,
+    "required_test_sources": 2,
+    "named_test_blocks_covered": 53,
+    "unknowns": 6
+  },
+  "claims_by_category": {
+    "asset": 2,
+    "asset-reference": 1,
+    "completion-callback": 1,
+    "configuration": 15,
+    "copy": 2,
+    "identity": 3,
+    "implementation": 3,
+    "input": 1,
+    "integration": 1,
+    "mechanic": 5,
+    "responsive": 1,
+    "route": 12,
+    "scene-state": 3,
+    "scoring": 1,
+    "state-transition": 9,
+    "test": 13
+  },
+  "fixture_dispositions": {"FAIL": 1, "REJECT": 3, "accepted_or_skipped": 0},
+  "coverage": {
+    "configuration": {"path":"apps/advantage-games/src/lib/games/villageGuardianConfig.ts","whole_blob_verified":true,"representative_literals_and_maps_atomized":true},
+    "component_test": {"path":"apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.test.tsx","whole_blob_verified":true,"named_it_blocks":12,"coverage_claims":["VG3-TEST-001","VG3-TEST-002","VG3-TEST-003"]},
+    "model_and_config_test": {"path":"apps/advantage-games/src/lib/games/__tests__/villageGuardian.test.ts","whole_blob_verified":true,"describe_blocks":10,"named_it_blocks":41,"coverage_claims":["VG3-TEST-004","VG3-TEST-005","VG3-TEST-006","VG3-TEST-007","VG3-TEST-008","VG3-TEST-009","VG3-TEST-010","VG3-TEST-011","VG3-TEST-012","VG3-TEST-013"]},
+    "denominator": {"assigned_items":16,"covered_items":16,"unassigned_items":[],"duplicate_items":[],"metadata_candidates_not_promoted_to_facts":2},
+    "source_bytes": {"unique_blobs":12,"exact_byte_sum":2332402}
+  },
+  "semantic_boundary_result": {
+    "status": "passed locally",
+    "method": "Every claim is bounded to exact literals, expressions, calls, one branch/block, or test-source structure in its cited range. The verifier conjunctively checked required substrings/counts/signatures; collector interpretation separately excludes runtime promotion.",
+    "explicit_non_claims": [
+      "No catalog playable or CSS declaration is treated as live browser proof.",
+      "No test title or mocked stage is treated as production execution.",
+      "No route factory or result UI is treated as completion success, persistence, idempotency, or XP award.",
+      "No PNG presence or catalog reference is treated as live loading or suitability.",
+      "No canvas source is treated as accessible gameplay-semantics proof."
+    ]
+  },
+  "standalone_verification": {
+    "implementation": "Ephemeral Python verifier executed from repository root; no fifth track artifact was created.",
+    "source_resolution": "git show <source_revision>:<relative_path>",
+    "range_algorithm": "bytes.splitlines(keepends=True), concatenate inclusive indexes, add no synthetic LF",
+    "final_result": {"claims":73,"fixtures":4,"source_coverage":12,"source_byte_sum":2332402,"envelopes_checked":89,"semantic_checks":220,"mismatch_count":0,"mismatches":[]},
+    "draft_correction_disclosure": "A pre-final verifier run found four draft range digests and one draft test count inconsistent with fresh recomputation. Those draft values were replaced; the final run above is the only zero-mismatch claim."
+  },
+  "browser_and_completion_status": {
+    "collector_browser_run": "not performed",
+    "browser_behavior": "unknown to this collector; external B4 evidence remains bounded to synthetic isTrusted=false input and hidden-tab scheduler limitations",
+    "completion": "successful completion remains unestablished; external B4 observed HTTP 400",
+    "persistence_auth_idempotency_xp": "unknown/not established",
+    "accessible_gameplay_semantics": "unknown/not established"
+  },
+  "asset_status": "Two accepted PNG blobs are verified for presence. The catalog source references the cover path. Gameplay-capture runtime usage, live resource corroboration, and suitability remain unknown.",
+  "reviewer_disposition": "pending fresh independent adversarial review of exact V3 bytes",
+  "truth_selector_status": "Immutable batch-b-truth-tests-v5.py hard-wires prior Village filenames and does not select V3; no V5-green claim is made.",
+  "provenance": {
+    "direction_path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "direction_sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "direction_decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "provider_fields": "unavailable: prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations",
+    "local_verification": "reachable Git commit/object resolution, exact whole-blob/range hashes, semantic checks, source-coverage counts, fixture checks, JSON parse, and diff checks",
+    "commit_binding": "pending because the user explicitly prohibited a commit; acceptance remains unavailable until an authorized later commit and fresh binding"
+  },
+  "browser_direction_binding": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-webbridge.json",
+    "sha256": "7dde397fdb1ceeac3e490d07791e90f69dd630b962d6b799da8426d4e9234498",
+    "decision": "WEBBRIDGE_ACCEPTED_FOR_B4",
+    "scope": "Context only; no browser work by this role and no successful completion claim."
+  },
+  "input_bindings": {
+    "test_strategy_batch_b.md": "7b3b5f3e4c0f8ba1309c2d22b0a815771f5c26f647cc7cb883ea84f0a03d00dc",
+    "batch-b-budget-declaration.json": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+    "batch-b-role-applicability.json": "71db3e7eb9ac71177d7a555ceb6e43218c9bcbd5ca0afdaa2b5574ace9a38bb4",
+    "batch-b-discovery-audit-v2.json": "f0f27734d22b8ec376bbf8b1fe96574a75f2c293766bee2440c0484164dd1daa",
+    "batch-b-truth-tests-v5.py": "5e54a0d126bf78b361963c402a2198bc53d343d5c2b41f8085c679a6b595bb76",
+    "batch-b-adversarial-review-v4.json": "1ac23f3f7050c8b47d31770a7c943ecfa41b7942f3c0004e31fd6da9d058726d",
+    "product-owner-direction-batch-b-webbridge.json": "7dde397fdb1ceeac3e490d07791e90f69dd630b962d6b799da8426d4e9234498",
+    "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "accepted_denominator": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "accepted_partition": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "accepted_pilot": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b"
+  },
+  "output_bindings": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-claim-ledger-batch-b-v3.json": "3be82cd7a9ddb144ae82ae220c36b439c6d14bbd58e1c988c897af6156b20484",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-evidence-method-batch-b-v3.md": "95c342a84cce0e6a6651e34cad11804ca8b930e2b9d1d533f3d464417d13200e",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-evidence-final-report-batch-b-v3.json": "self-hash intentionally not embedded; bound by the V3 receipt"
+  },
+  "resource_use": {
+    "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+    "ceilings": {"bytes":52428800,"files":120,"commands":80,"minutes":45,"records":300},
+    "actual_conservative_local_upper_bounds": {"bytes":4500000,"files":46,"commands":70,"minutes":44,"records":105},
+    "exact_source_accounting": {"source_bytes_read":2332402,"source_files_read":12,"browser_interactions":0,"asset_candidates_inspected":2},
+    "within_budget": true,
+    "measurement_note": "Conservative local upper bounds include context/source reads, validation invocations, and the four authored records. They do not impersonate unavailable provider telemetry."
+  },
+  "validation": {
+    "json_parse": "passed for all three JSON outputs",
+    "diff_check": "passed with git diff --no-index --check for all four additive outputs after removing three Markdown hard-break spaces",
+    "standalone_source_verifier": "passed: 89 envelopes, 220 semantic checks, 0 mismatches",
+    "v5_truth_suite": "not rerun as V3 proof because v5 cannot select V3; this selector limitation is preserved"
+  },
+  "blockers": [
+    "No committed Git output binding because this task prohibits commit.",
+    "Immutable v5 selectors do not select V3 filenames.",
+    "No regenerated mapper references V3 claim IDs.",
+    "Fresh independent review of exact V3 bytes is pending.",
+    "Successful completion/persistence remains unestablished after observed HTTP 400.",
+    "Candidate, approval, and accepted-manifest lifecycle artifacts remain absent."
+  ],
+  "carried_forward_disclosures": [{"id":"DISC-001","classification":"Batch A process-only disclosure","use":"Labeled process metadata only; not factual input."}]
+}
