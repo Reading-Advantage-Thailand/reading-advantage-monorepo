@@ -1,0 +1,14 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-b",
+  "task_id": "batch-b-discovery",
+  "role": "discovery-auditor-batch-b",
+  "status": "complete",
+  "reviewer_isolation": {"mode": "fresh-local-process", "inherited_narrative": false, "fork_turns": "none", "provider_attestation_claimed": false},
+  "resource_accounting": {"measured": true, "source_bytes_read": 2902, "source_objects_read": 1, "command_invocations": 4, "elapsed_minutes": 1, "records_authored": 2},
+  "source_fabrication": {"claimed": false, "disclosure": "Provider telemetry is unavailable; counts are local measurements of the frozen discovery artifact and commands, not provider attestations."},
+  "output_hashes": {"measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/discovery-audit.json": "dbe0b84d85febd56149e476df1fb6a8daede62ef1d9e5ce1a18e9e7b9440199a"},
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

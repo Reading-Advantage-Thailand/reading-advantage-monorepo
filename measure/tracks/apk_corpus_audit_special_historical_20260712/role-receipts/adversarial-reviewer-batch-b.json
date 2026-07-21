@@ -1,0 +1,15 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-b",
+  "task_id": "batch-b-adversarial-review",
+  "role": "adversarial-reviewer-batch-b",
+  "status": "complete-zero-blockers",
+  "reviewer_isolation": {"mode": "fresh-local-process; review-only", "inherited_narrative": false, "fork_turns": "none", "provider_attestation_claimed": false},
+  "resource_accounting": {"measured": true, "source_bytes_read": 66869, "source_objects_read": 25, "command_invocations": 24, "elapsed_minutes": 3, "records_authored": 1},
+  "review_output": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/adversarial-review.json",
+  "review_output_sha256": "1c98d57c251696de3df81588ba8bb9a1edf84df7171e65e9c1aa984159ad8466",
+  "source_fabrication": {"claimed": false, "disclosure": "The reviewer re-derived committed bytes locally. Missing provider telemetry is disclosed, not filled with invented IDs or events."},
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

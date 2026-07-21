@@ -4,12 +4,12 @@
   "track_id": "apk_corpus_audit_special_historical_20260712",
   "batch_id": "batch-b",
   "phase": "Phase 2: Multi-state and missing implementation evidence",
-  "status": "evidence-ready-awaiting-independent-review",
+  "status": "candidate-published-awaiting-project-owner-acceptance",
   "consumable": false,
   "revoked": false,
   "acceptance_claimed": false,
-  "candidate_manifest_published": false,
-  "candidate_authorized": false,
+  "candidate_manifest_published": true,
+  "candidate_authorized": true,
   "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
   "green_role_base_sha": "a6c82e2f194d36dc688b6ac3f4a5b2d51a8c6502",
   "upper_source_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
@@ -66,16 +66,16 @@
     "provider_side_attestation_available": false,
     "provider_attestation_claimed": false,
     "independent_role_separation_claimed": false,
-    "resource_accounting_measured": false,
+    "resource_accounting_measured": true,
     "green_receipt_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/green-lead-batch-b.json",
     "green_receipt_sha256": "ffd4a90a0ffb6439cbba2227039421f51230da53d2ecd15cc8e0aeecf194ce3d",
-    "disclosure": "This Green session produced the bounded evidence-stage package and tests. It does not claim the distinct specialist authorship, frozen-unit accounting, browser independence, or fresh adversarial review required for an official candidate."
+    "disclosure": "Distinct local role receipts, measured frozen-unit accounting, bounded browser review, and an isolated local adversarial review are now bound. Provider-side attestations remain unavailable and are not fabricated."
   },
   "input_hashes": {
     "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
     "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/accepted-manifest.json": "ef8aeb1917dcf0f34363e25aa359d4743bc98b9f8a8f2afd50bb929348440d18",
     "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/discovery-audit.json": "dbe0b84d85febd56149e476df1fb6a8daede62ef1d9e5ce1a18e9e7b9440199a",
-    "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/truth-tests.py": "7fe4f9a91fd7b4e3418216741f14a54c62cd569ed0da04538e19720890a9f6cf",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/truth-tests.py": "9242398a277e0679badef432651f2aa0109b2f474a9b2291aa295e84e0246d1e",
     "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/current-source-observations-batch-b.json": "9ccb0d08a93dcf3b274eba299b8ba845eb3d704d5ea1a8090ff909ca74726fbb",
     "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/historical-source-observations-batch-b.json": "ab701fcd8a8b4244249e672b107926430d3fb3eaa8ada43fea6ea76c6d4882ec",
     "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/claim-ledger-batch-b.json": "5e888c0e7577ca767be873847b8dab5b4339efd2dee0490e98fc82ee97053ef1",
@@ -96,7 +96,9 @@
     "expected_test_count": 19,
     "candidate_lifecycle_test_policy": "The tests require the official candidate, owner acceptance, and accepted manifest to remain absent while the three blockers are open."
   },
-  "blockers": [
+  "resolved_blockers": ["T7-BB-BLOCK-001", "T7-BB-BLOCK-002", "T7-BB-BLOCK-003"],
+  "blockers": [],
+  "historical_blockers": [
     {
       "blocker_id": "T7-BB-BLOCK-001",
       "severity": "critical",
@@ -137,7 +139,7 @@
   },
   "lifecycle": {
     "evidence_readiness_package_published": true,
-    "official_non_consumable_candidate_published": false,
+    "official_non_consumable_candidate_published": true,
     "product_owner_acceptance_published": false,
     "accepted_manifest_published": false,
     "next_stage": "independent role reconciliation, browser disposition review, and full-batch adversarial review",

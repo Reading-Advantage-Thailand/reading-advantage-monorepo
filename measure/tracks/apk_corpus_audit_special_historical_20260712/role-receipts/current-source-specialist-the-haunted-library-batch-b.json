@@ -1,0 +1,14 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-b",
+  "task_id": "the-haunted-library-current-source",
+  "role": "current-source-specialist-batch-b-the-haunted-library",
+  "status": "complete",
+  "reviewer_isolation": {"mode": "fresh-local-process", "inherited_narrative": false, "fork_turns": "none", "provider_attestation_claimed": false},
+  "resource_accounting": {"measured": true, "source_bytes_read": 1404, "source_objects_read": 1, "command_invocations": 3, "elapsed_minutes": 1, "records_authored": 1},
+  "source_fabrication": {"claimed": false, "disclosure": "Ratifies only the committed upper-revision observation; no source bytes were invented."},
+  "output_hashes": {"measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/current-source-observations-batch-b.json": "9ccb0d08a93dcf3b274eba299b8ba845eb3d704d5ea1a8090ff909ca74726fbb"},
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

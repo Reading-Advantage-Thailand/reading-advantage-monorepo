@@ -1,0 +1,14 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-b",
+  "task_id": "babel-architect-current-source",
+  "role": "current-source-specialist-batch-b-babel-architect",
+  "status": "complete",
+  "reviewer_isolation": {"mode": "fresh-local-process", "inherited_narrative": false, "fork_turns": "none", "provider_attestation_claimed": false},
+  "resource_accounting": {"measured": true, "source_bytes_read": 1444, "source_objects_read": 1, "command_invocations": 3, "elapsed_minutes": 1, "records_authored": 1},
+  "source_fabrication": {"claimed": false, "disclosure": "The upper-revision absence remains unknown; no current implementation is fabricated."},
+  "output_hashes": {"measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/current-source-observations-batch-b.json": "7d8a5e08ff0706ba8c59906d00934523e8b01da074f473bf835a0b6db9618272"},
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

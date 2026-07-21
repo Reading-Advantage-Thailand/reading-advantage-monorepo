@@ -1,0 +1,14 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-b",
+  "task_id": "batch-b-requirements-mapping",
+  "role": "requirements-mapper-batch-b",
+  "status": "complete",
+  "reviewer_isolation": {"mode": "fresh-local-process", "inherited_narrative": false, "fork_turns": "none", "provider_attestation_claimed": false},
+  "resource_accounting": {"measured": true, "source_bytes_read": 4345, "source_objects_read": 2, "command_invocations": 5, "elapsed_minutes": 1, "records_authored": 13},
+  "source_fabrication": {"claimed": false, "disclosure": "Mappings cite only ledger claims and explicit unknowns; ontology and acceptance remain unclaimed."},
+  "output_hashes": {"measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/requirements-map-batch-b.json": "85e1ec567224cf58ca6cff43d70b659671fa856bb56df3bf667066abc3eba1a6", "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/requirements-map-batch-b.json": "64ec421a63b7bb28308752553e7a552bc8613de3f5b39dc3323b2a36ca5a3bc4"},
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

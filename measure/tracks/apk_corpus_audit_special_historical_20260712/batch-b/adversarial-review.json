@@ -1,0 +1,24 @@
+{
+  "schema_version": "apk-batch-independent-review.v3",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-b",
+  "phase": "Phase 4: Cohort acceptance",
+  "reviewer_role": "adversarial-reviewer-batch-b",
+  "reviewer_identity": "fresh independent local T7 Batch B adversarial reviewer",
+  "reviewer_isolation": {"mode": "fresh-local-process; review-only", "inherited_narrative": false, "fork_turns": "none", "provider_attestation_claimed": false, "disclosure": "Provider isolation telemetry is unavailable. Local process isolation and exact byte re-derivation are claimed; provider attestation is not."},
+  "review_scope": "Re-derive every Batch B claim, explicit unknown, negative fixture, requirements mapping, browser disposition, specialist receipt, budget counter, source-precedence decision, and truth-gate result. The review does not repair reviewed bytes and does not author owner acceptance or an accepted manifest.",
+  "inputs": {
+    "upper_source_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+    "comparison_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "accepted_batch_a_sha256": "ef8aeb1917dcf0f34363e25aa359d4743bc98b9f8a8f2afd50bb929348440d18",
+    "owner_direction_sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+  },
+  "rederivation": {"claims": 34, "unknowns": 7, "negative_fixtures": 12, "requirements_mappings": 13, "browser_dispositions": 2, "specialist_receipts": 10, "truth_tests_expected": 19, "truth_tests_observed": "19 passed", "hash_drift_findings": 0, "budget_ceiling_breaches": 0, "source_class_promotions": 0, "browser_facts_promoted_to_gameplay": 0, "fabricated_provider_attestations": 0},
+  "browser_disposition_rederivation": {"the_haunted_library": "framework 404; no game surface; preserved", "babel_architect": "redirect/404; no game surface; preserved", "successful_gameplay_claimed": false, "compact_view_observed": false, "wide_view_observed": false, "captured_artifacts": 0},
+  "unresolved_findings": {"critical": 0, "high": 0, "medium": 0, "low": 0, "info": 0},
+  "review_disposition": "pass: zero unresolved Critical, High, or Medium findings",
+  "candidate_authorized": true,
+  "product_owner_acceptance_authorized": false,
+  "accepted_manifest_authorized": false,
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-b",
+  "task_id": "batch-b-truth-tests",
+  "role": "truth-test-author-batch-b",
+  "status": "complete",
+  "reviewer_isolation": {"mode": "fresh-local-process", "inherited_narrative": false, "fork_turns": "none", "provider_attestation_claimed": false},
+  "resource_accounting": {"measured": true, "source_bytes_read": 18613, "source_objects_read": 1, "command_invocations": 2, "elapsed_minutes": 1, "records_authored": 19},
+  "source_fabrication": {"claimed": false, "disclosure": "Tests assert exact source bytes and fail closed on game-surface promotion."},
+  "output_hashes": {"measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/truth-tests.py": "7fe4f9a91fd7b4e3418216741f14a54c62cd569ed0da04538e19720890a9f6cf"},
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-b",
+  "task_id": "the-haunted-library-evidence-collection",
+  "role": "evidence-collector-batch-b-the-haunted-library",
+  "status": "complete",
+  "reviewer_isolation": {"mode": "fresh-local-process", "inherited_narrative": false, "fork_turns": "none", "provider_attestation_claimed": false},
+  "resource_accounting": {"measured": true, "source_bytes_read": 1839, "source_objects_read": 1, "command_invocations": 4, "elapsed_minutes": 1, "records_authored": 18},
+  "source_fabrication": {"claimed": false, "disclosure": "Ledger and fixture bytes were independently hashed; no unsupported claim was added."},
+  "output_hashes": {"measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/claim-ledger-batch-b.json": "5e888c0e7577ca767be873847b8dab5b4339efd2dee0490e98fc82ee97053ef1"},
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

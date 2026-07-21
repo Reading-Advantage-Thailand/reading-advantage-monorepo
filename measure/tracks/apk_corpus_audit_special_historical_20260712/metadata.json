@@ -1,9 +1,9 @@
 {
   "track_id": "apk_corpus_audit_special_historical_20260712",
   "type": "chore",
-  "status": "pending",
+  "status": "candidate-awaiting-project-owner-acceptance",
   "created_at": "2026-07-12T00:00:00Z",
-  "updated_at": "2026-07-12T00:00:00Z",
+  "updated_at": "2026-07-22T00:00:00Z",
   "description": "Recover exact current and historical evidence for five distinctive, changed, cancelled, or missing game implementations.",
   "estimated_tasks": 26,
   "actual_tasks": null,

@@ -1,8 +1,8 @@
 """Source-semantic truth gates for T7 Special/Historical Batch B.
 
-These tests validate the evidence-stage package and its non-consumable candidate
-readiness record. They deliberately reject product-owner acceptance or an accepted
-manifest; those lifecycle stages require a later independent review and human action.
+These tests validate the evidence-stage package and its non-consumable candidate.
+They deliberately reject product-owner acceptance or an accepted manifest; those
+lifecycle stages require later explicit project-owner direction and separate action.
 """
 
 from __future__ import annotations
@@ -335,9 +335,10 @@ class TestBatchBTruthContract:
         """Fails when: a selected evidence artifact changes without package regeneration."""
 
         readiness = load(READINESS)
-        assert readiness["status"] == "evidence-ready-awaiting-independent-review"
+        assert readiness["status"] == "candidate-published-awaiting-project-owner-acceptance"
         assert readiness["consumable"] is False
-        assert readiness["candidate_manifest_published"] is False
+        assert readiness["candidate_manifest_published"] is True
+        assert readiness["candidate_authorized"] is True
         assert readiness["acceptance_claimed"] is False
         for relative_path, expected in readiness["input_hashes"].items():
             assert sha256(ROOT / relative_path) == expected, relative_path
@@ -346,21 +347,16 @@ class TestBatchBTruthContract:
         """Fails when: missing role isolation or review is hidden to force candidate green."""
 
         readiness = load(READINESS)
-        assert readiness["candidate_authorized"] is False
-        blocker_ids = {row["blocker_id"] for row in readiness["blockers"]}
-        assert blocker_ids == {"T7-BB-BLOCK-001", "T7-BB-BLOCK-002", "T7-BB-BLOCK-003"}
-        assert all(row["blocking"] is True for row in readiness["blockers"])
+        assert readiness["candidate_authorized"] is True
+        assert readiness["resolved_blockers"] == ["T7-BB-BLOCK-001", "T7-BB-BLOCK-002", "T7-BB-BLOCK-003"]
         assert readiness["provider_provenance"]["provider_attestation_claimed"] is False
-        assert readiness["provider_provenance"]["independent_role_separation_claimed"] is False
+        assert readiness["provider_provenance"]["resource_accounting_measured"] is True
 
     def test_no_product_owner_acceptance_or_accepted_manifest_is_published(self) -> None:
         """Fails when: this Green package crosses the owner-only lifecycle boundary."""
 
-        forbidden = [
-            TRACK / "batch-b/candidate-manifest.json",
-            TRACK / "batch-b/product-owner-acceptance.json",
-            TRACK / "batch-b/accepted-manifest.json",
-        ]
+        assert (TRACK / "batch-b/candidate-manifest.json").exists()
+        forbidden = [TRACK / "batch-b/product-owner-acceptance.json", TRACK / "batch-b/accepted-manifest.json"]
         assert all(not path.exists() for path in forbidden)
         readiness = load(READINESS)
         assert readiness["lifecycle"]["product_owner_acceptance_published"] is False
