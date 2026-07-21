@@ -1,0 +1,20 @@
+{
+  "schema_version": "apk-product-owner-direction.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-a",
+  "issued_at": "2026-07-21",
+  "issued_by": "orchestrator (delegated project-owner authority)",
+  "decision": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+  "scope": "Elapsed-minute fields only for existing and successor Batch A evidence, mapping, browser, truth, and review receipts.",
+  "direction": "The harness supplies no trustworthy session start/end timestamps. Receipts may record elapsed_minutes as integer 0 only with `timing_measurement: unavailable-in-harness` and an explicit statement that 0 is accounting fallback, not elapsed-time evidence. Source bytes, objects, commands, records, interactions, and artifacts remain measured integers within their frozen ceilings.",
+  "non_waived": [
+    "source byte ceilings except the existing Spellweaver one-time exception",
+    "source object ceilings",
+    "command ceilings",
+    "record, interaction, and artifact ceilings",
+    "claim semantics",
+    "denominator completeness",
+    "fresh independent review",
+    "candidate and acceptance lifecycle"
+  ]
+}
