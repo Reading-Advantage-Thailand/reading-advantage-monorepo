@@ -1,0 +1,15 @@
+{
+  "schema_version": "apk-negative-fixtures.v1",
+  "game": "Babel Architect",
+  "fixtures": [
+    {"fixture_id":"BA-FIX-001","failure_class":"catalog_promotion","proposition":"A Babel catalog card proves current sentence-tower mechanics.","expected_disposition":"REJECT","reason":"Catalog prose cannot establish mechanics or current implementation."},
+    {"fixture_id":"BA-FIX-002","failure_class":"cancelled_design_promotion","proposition":"The cancelled Phaser exemplar plan proves a current playable implementation.","expected_disposition":"REJECT","reason":"The frozen metadata says implementation code was not retained."},
+    {"fixture_id":"BA-FIX-003","failure_class":"specification_promotion","proposition":"The T7 sentence-construction focus proves Babel is currently implemented.","expected_disposition":"REJECT","reason":"The focus phrase is a search assignment, not implementation evidence."},
+    {"fixture_id":"BA-FIX-004","failure_class":"historical_promotion","proposition":"The c76f6af3 rules and Phaser source prove current behavior at a49ebcc4.","expected_disposition":"REJECT","reason":"0ee91847 deleted the implementation after c76f6af3; historical bytes remain historical."},
+    {"fixture_id":"BA-FIX-005","failure_class":"analogy_substitution","proposition":"A replacement Babel game will preserve the historical tower mechanic because other sentence games preserve mechanics.","expected_disposition":"REJECT","reason":"Future implementation and shipping intent remain unknown."},
+    {"fixture_id":"BA-FIX-006","failure_class":"semantic_overstatement","proposition":"Historical completion source proves persistence, XP, idempotency, API correctness, and manually verified playability.","expected_disposition":"REJECT","reason":"The source shape proves none of those outcomes and manual verification was cancelled."}
+  ],
+  "counts_as_factual_claims": false,
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

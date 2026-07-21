@@ -1,0 +1,15 @@
+{
+  "schema_version": "apk-negative-fixtures.v1",
+  "game": "The Haunted Library",
+  "fixtures": [
+    {"fixture_id":"HL-FIX-001","failure_class":"catalog_promotion","proposition":"Catalog wording proves a multi-room haunted-library implementation.","expected_disposition":"REJECT","reason":"Catalog prose cannot establish rooms or mechanics."},
+    {"fixture_id":"HL-FIX-002","failure_class":"cancelled_design_promotion","proposition":"Any cancelled renderer design proves current Haunted Library behavior.","expected_disposition":"REJECT","reason":"Cancelled design is not implementation evidence."},
+    {"fixture_id":"HL-FIX-003","failure_class":"specification_promotion","proposition":"The T7 multi-floor focus phrase proves every floor and room is implemented.","expected_disposition":"REJECT","reason":"The specification is a search assignment; exact source establishes floors and leaves rooms unknown."},
+    {"fixture_id":"HL-FIX-004","failure_class":"historical_promotion","proposition":"The scaffold revision alone proves current behavior.","expected_disposition":"REJECT","reason":"Current claims require separate upper-revision envelopes."},
+    {"fixture_id":"HL-FIX-005","failure_class":"analogy_substitution","proposition":"Rooms may be inferred because another library game has rooms.","expected_disposition":"REJECT","reason":"Missing room evidence remains unknown and cannot be filled by analogy."},
+    {"fixture_id":"HL-FIX-006","failure_class":"semantic_overstatement","proposition":"A source route and completion callback prove successful gameplay, persistence, XP, and idempotency.","expected_disposition":"REJECT","reason":"The cited source and 404 browser probe establish none of those live outcomes."}
+  ],
+  "counts_as_factual_claims": false,
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

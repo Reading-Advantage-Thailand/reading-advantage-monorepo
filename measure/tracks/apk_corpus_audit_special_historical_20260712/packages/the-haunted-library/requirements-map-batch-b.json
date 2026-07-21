@@ -1,0 +1,16 @@
+{
+  "schema_version": "apk-requirements-map.v1",
+  "game": "The Haunted Library",
+  "acceptance": "not-claimed",
+  "mappings": [
+    {"mapping_id":"HL-MAP-001","category":"scene-state-transition","cited_claim_ids":["HL-CUR-004","HL-CUR-005","HL-CUR-007","HL-CUR-011","HL-CUR-013","HL-CUR-014"],"result":"One start screen, one multi-floor playing scene, and one ended screen; playing rules terminate in victory or defeat."},
+    {"mapping_id":"HL-MAP-002","category":"mechanic-learning","cited_claim_ids":["HL-CUR-006","HL-CUR-008","HL-CUR-009","HL-CUR-010","HL-CUR-011"],"result":"Traverse floors by movement and edge trampolines, then open the nearest door in sentence-word order while hazards pressure lives."},
+    {"mapping_id":"HL-MAP-003","category":"responsive","cited_claim_ids":["HL-CUR-014","HL-UNK-002","HL-UNK-003"],"result":"Fixed 390 by 844 Stage is source-backed; compact/wide runtime behavior remains unknown because the route probe failed."},
+    {"mapping_id":"HL-MAP-004","category":"asset-usage","cited_claim_ids":["HL-CUR-014"],"result":"The current playing scene uses Konva primitives for floors, trampolines, doors, hazards, player, and HUD. The accepted denominator cover and ambient files are not promoted to loaded scene assets without a source anchor."},
+    {"mapping_id":"HL-MAP-005","category":"history","cited_claim_ids":["HL-HIST-001","HL-HIST-002","HL-CUR-005","HL-CUR-011"],"result":"Historical and current envelopes are separately classed even where the bounded rules blob is byte-identical."},
+    {"mapping_id":"HL-MAP-006","category":"unknown","cited_claim_ids":["HL-UNK-001","HL-UNK-002","HL-UNK-003"],"result":"Distinct rooms, successful route/runtime behavior, and responsive acceptance remain explicit unknowns and block dependent conclusions."}
+  ],
+  "ontology_decisions": 0,
+  "novel_source_facts": 0,
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "apk-current-source-observations.v1",
+  "game": "Babel Architect",
+  "source_identity_id": "sentence/babel-architect",
+  "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "status": "no-current-implementation-established",
+  "candidate_paths_checked": [
+    "apps/advantage-games/src/lib/games/babelArchitect.ts",
+    "apps/advantage-games/src/components/games/sentence/babel-architect/BabelArchitectGame.tsx",
+    "apps/advantage-games/src/components/games/sentence/babel-architect/babelArchitectScene.ts",
+    "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/babel-architect/page.tsx",
+    "apps/advantage-games/src/app/api/v1/games/babel-architect/sentences/route.ts",
+    "apps/advantage-games/src/app/api/v1/games/babel-architect/complete/route.ts"
+  ],
+  "paths_present_at_revision": 0,
+  "current_behavior": "unknown",
+  "current_route": "unknown",
+  "runnable_disposition": "unknown pending bounded browser attempt; absence in the frozen tree prevents an implementation claim",
+  "precedence_rule": "The upper-revision absence and cancellation disposition control current-status conclusions. Historical implementation bytes remain historical and may not fill current unknowns.",
+  "claim_ledger_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/claim-ledger-batch-b.json",
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,26 @@
+{
+  "schema_version": "apk-current-source-observations.v1",
+  "game": "The Haunted Library",
+  "source_identity_id": "sentence/haunted-library",
+  "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "status": "current-source-observed",
+  "observed_paths": [
+    "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/haunted-library/page.tsx",
+    "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
+    "apps/advantage-games/src/lib/games/hauntedLibrary.ts",
+    "apps/advantage-games/src/app/api/v1/games/haunted-library/sentences/route.ts",
+    "apps/advantage-games/src/app/api/v1/games/haunted-library/complete/route.ts"
+  ],
+  "bounded_model": {
+    "lifecycle_states": ["start", "playing", "ended"],
+    "rules_phases": ["playing", "victory", "defeat"],
+    "difficulty_floor_counts": {"easy": 3, "medium": 4, "hard": 5},
+    "modeled_entities": ["player", "ghost", "bat", "door", "floor", "trampoline"],
+    "room_model": null,
+    "room_disposition": "unknown: no room entity or room transition was established in the five-path current-source bound",
+    "browser_disposition": "not established by source inspection"
+  },
+  "claim_ledger_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/claim-ledger-batch-b.json",
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

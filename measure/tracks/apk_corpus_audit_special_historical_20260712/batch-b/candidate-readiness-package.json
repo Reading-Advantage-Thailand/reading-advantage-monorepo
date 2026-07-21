@@ -1,0 +1,147 @@
+{
+  "schema_version": "apk-evidence-candidate-readiness.v1",
+  "manifest_kind": "candidate-readiness-package",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-b",
+  "phase": "Phase 2: Multi-state and missing implementation evidence",
+  "status": "evidence-ready-awaiting-independent-review",
+  "consumable": false,
+  "revoked": false,
+  "acceptance_claimed": false,
+  "candidate_manifest_published": false,
+  "candidate_authorized": false,
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "green_role_base_sha": "a6c82e2f194d36dc688b6ac3f4a5b2d51a8c6502",
+  "upper_source_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "scope": {
+    "games": ["The Haunted Library", "Babel Architect"],
+    "factual_claims": 34,
+    "current_implementation_claims": 16,
+    "historical_implementation_claims": 16,
+    "cancelled_design_claims": 2,
+    "explicit_unknowns": 7,
+    "negative_fixtures": 12,
+    "requirements_mappings": 13,
+    "browser_dispositions": 2,
+    "scope_limit": "Evidence-stage reconstruction only. This readiness package is not the lifecycle candidate manifest, is not consumable, and does not authorize acceptance, publication, ontology, implementation, or shipping."
+  },
+  "predecessor_bindings": {
+    "accepted_batch_a": {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/accepted-manifest.json",
+      "sha256": "ef8aeb1917dcf0f34363e25aa359d4743bc98b9f8a8f2afd50bb929348440d18",
+      "status": "accepted",
+      "consumable": true,
+      "revoked": false
+    },
+    "accepted_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729"
+    },
+    "accepted_partition": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0"
+    },
+    "accepted_pilot": {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b"
+    }
+  },
+  "owner_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "applied_boundary": "Unavailable provider fields are disclosed rather than fabricated. Unsupported claims, exact resource accounting, independent role separation, browser/source gates, zero-blocker review, and lifecycle ordering are not waived."
+  },
+  "source_precedence": {
+    "the_haunted_library": "Current behavior uses only upper-revision current_implementation envelopes. Byte-identical scaffold envelopes remain historical_implementation and do not substitute for current citations. Distinct rooms remain unknown.",
+    "babel_architect": "Reachable c76f6af3 implementation envelopes establish historical behavior only. The direct-child 0ee91847 retirement plus upper-revision cancelled metadata controls current disposition without erasing historical existence. Current implementation, route, runtime, manual UX, and future shipment remain unknown.",
+    "catalog_and_specification": "Catalog prose and T7 focus phrases are search assignments and never establish implementation mechanics."
+  },
+  "browser_disclosures": {
+    "the_haunted_library": "Kimi WebBridge and curl reached only a framework 404 for the source-backed localhost route; zero game responses, transitions, compact/wide observations, trusted input, or captured artifacts.",
+    "babel_architect": "Kimi WebBridge observed redirect failure and curl observed 404/308 behavior; the frozen upper tree has no current implementation candidate paths and no game surface was reached.",
+    "common": "No successful route, gameplay, input, responsive, completion, persistence, XP, idempotency, API, production, or asset-loading behavior is claimed."
+  },
+  "provider_provenance": {
+    "provider_side_attestation_available": false,
+    "provider_attestation_claimed": false,
+    "independent_role_separation_claimed": false,
+    "resource_accounting_measured": false,
+    "green_receipt_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/green-lead-batch-b.json",
+    "green_receipt_sha256": "ea0674e89f30ae898cc4c416cc7bac450de0d0b4c326cc17fe08b31af166b069",
+    "disclosure": "This Green session produced the bounded evidence-stage package and tests. It does not claim the distinct specialist authorship, frozen-unit accounting, browser independence, or fresh adversarial review required for an official candidate."
+  },
+  "input_hashes": {
+    "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/accepted-manifest.json": "ef8aeb1917dcf0f34363e25aa359d4743bc98b9f8a8f2afd50bb929348440d18",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/discovery-audit.json": "dbe0b84d85febd56149e476df1fb6a8daede62ef1d9e5ce1a18e9e7b9440199a",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/truth-tests.py": "7fe4f9a91fd7b4e3418216741f14a54c62cd569ed0da04538e19720890a9f6cf",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/current-source-observations-batch-b.json": "9ccb0d08a93dcf3b274eba299b8ba845eb3d704d5ea1a8090ff909ca74726fbb",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/historical-source-observations-batch-b.json": "ab701fcd8a8b4244249e672b107926430d3fb3eaa8ada43fea6ea76c6d4882ec",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/claim-ledger-batch-b.json": "5e888c0e7577ca767be873847b8dab5b4339efd2dee0490e98fc82ee97053ef1",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/negative-fixtures-batch-b.json": "b87cc3951a5968170af0f8bef33ae1b4744591e07a1878d831bd392b26847870",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/requirements-map-batch-b.json": "85e1ec567224cf58ca6cff43d70b659671fa856bb56df3bf667066abc3eba1a6",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/browser-audit-batch-b.json": "cd6de83db5e121f3503ffa1c9117d3dd2e935a6ca48000e0235a5b0e598d5d4d",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/current-source-observations-batch-b.json": "7d8a5e08ff0706ba8c59906d00934523e8b01da074f473bf835a0b6db9618272",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/historical-source-observations-batch-b.json": "224fc5a9f8122190522b3d9094fef72120e9ee99a772532292a54eb9d91a103f",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/claim-ledger-batch-b.json": "179c0835f1a6815ffea28aeb2d547cd4c81aae52d0079ddddf94c7209d1469ee",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/negative-fixtures-batch-b.json": "edf5a0cfeb06eb4169ef3db7259968b36ff96eabcbf8bddaca05f58636f33c6f",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/requirements-map-batch-b.json": "64ec421a63b7bb28308752553e7a552bc8613de3f5b39dc3323b2a36ca5a3bc4",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/browser-audit-batch-b.json": "88c009c9d650ad22bda7e96c5569d07afece0444d81d0cc938436f2832ecc8f2",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/green-lead-batch-b.json": "ea0674e89f30ae898cc4c416cc7bac450de0d0b4c326cc17fe08b31af166b069"
+  },
+  "truth_gate": {
+    "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/truth-tests.py",
+    "sha256": "7fe4f9a91fd7b4e3418216741f14a54c62cd569ed0da04538e19720890a9f6cf",
+    "expected_test_count": 19,
+    "candidate_lifecycle_test_policy": "The tests require the official candidate, owner acceptance, and accepted manifest to remain absent while the three blockers are open."
+  },
+  "blockers": [
+    {
+      "blocker_id": "T7-BB-BLOCK-001",
+      "severity": "critical",
+      "blocking": true,
+      "owner": "orchestrator-role-dispatch",
+      "detail": "Required distinct discovery/current/history/evidence/mapper/truth/browser role receipts and exact frozen-unit resource accounting are unavailable. The Green receipt explicitly declines to claim them.",
+      "legal_next_action": "Dispatch the required fresh roles against these exact evidence bytes, preserve additive receipts, and either re-author or independently ratify each owned artifact with measured budget usage."
+    },
+    {
+      "blocker_id": "T7-BB-BLOCK-002",
+      "severity": "high",
+      "blocking": true,
+      "owner": "browser-auditor-batch-b",
+      "detail": "The Haunted Library and Babel Architect localhost probes reached no game surface. No gameplay or compact/wide evidence exists, and the non-runnable/blocked dispositions have not been independently reviewed.",
+      "legal_next_action": "Fresh browser auditor and reviewer must accept the exact bounded failure records or produce additive successful compact/wide evidence without mutating these records."
+    },
+    {
+      "blocker_id": "T7-BB-BLOCK-003",
+      "severity": "high",
+      "blocking": true,
+      "owner": "adversarial-reviewer-batch-b",
+      "detail": "No fresh fork_turns=none full-batch review binds every claim, unknown, fixture, mapping, browser disposition, receipt, budget, and source-precedence decision.",
+      "legal_next_action": "After role and browser remediation, run an isolated full-batch review. Only zero unresolved Critical/High/Medium findings authorize a separate non-consumable candidate manifest."
+    }
+  ],
+  "success_claims": {
+    "route": false,
+    "gameplay": false,
+    "input": false,
+    "responsive": false,
+    "completion": false,
+    "persistence": false,
+    "xp": false,
+    "idempotency": false,
+    "api_correctness": false,
+    "production": false,
+    "shipping": false
+  },
+  "lifecycle": {
+    "evidence_readiness_package_published": true,
+    "official_non_consumable_candidate_published": false,
+    "product_owner_acceptance_published": false,
+    "accepted_manifest_published": false,
+    "next_stage": "independent role reconciliation, browser disposition review, and full-batch adversarial review",
+    "product_owner_action_requested": false
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

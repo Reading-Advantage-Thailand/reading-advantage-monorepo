@@ -18,6 +18,14 @@
 
 ## Phase 2: Multi-state and missing implementation evidence
 
+> **Green evidence stage (2026-07-22):** Source-enveloped packages, explicit
+> unknowns, negative fixtures, mappings, bounded browser failures, and a
+> non-consumable candidate-readiness package now exist for both Batch B games.
+> No lifecycle candidate is published. Candidate authorization remains blocked
+> by missing distinct-role receipts/resource accounting, independent browser
+> disposition review, and fresh full-batch adversarial review (T7-BB-BLOCK-001
+> through T7-BB-BLOCK-003).
+>
 - [~] Task: Complete The Haunted Library evidence package across every floor/room/state
 - [~] Task: Complete Babel Architect chronology and explicit unknown package
 - [~] Task: Prove catalog prose and cancelled renderer plans cannot satisfy implementation claims

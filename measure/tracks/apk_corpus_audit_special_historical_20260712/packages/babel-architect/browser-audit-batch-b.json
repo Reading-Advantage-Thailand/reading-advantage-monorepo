@@ -1,0 +1,26 @@
+{
+  "schema_version": "apk-browser-audit.v1",
+  "game": "Babel Architect",
+  "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "environment": {"app":"vocabulary-games","command":"pnpm --filter vocabulary-games dev","framework":"Next.js 16.2.9 Turbopack","host":"localhost","port":3000},
+  "kimi_webbridge": {"attempted":true,"running":true,"extension_connected":true,"daemon_version":"v1.11.1","extension_version":"1.11.3","used":true},
+  "attempts": [
+    {"url":"http://localhost:3000/en/student/games/sentence/babel-architect","method":"Kimi WebBridge navigate plus accessibility snapshot","observed_result":"ERR_TOO_MANY_REDIRECTS after trailing-slash normalization","application_game_surface_reached":false},
+    {"url":"http://localhost:3000/en/student/games/sentence/babel-architect","method":"curl HEAD without trailing slash","observed_status":404,"content_type":"text/html; charset=utf-8","application_game_surface_reached":false},
+    {"url":"http://localhost:3000/en/student/games/sentence/babel-architect/","method":"curl HEAD with trailing slash","observed_status":308,"location":"/en/student/games/sentence/babel-architect","application_game_surface_reached":false}
+  ],
+  "disposition": "non-runnable-in-bounded-current-environment-no-current-source",
+  "route_attempts": 3,
+  "application_game_responses": 0,
+  "trusted_native_input_events": 0,
+  "synthetic_input_events": 0,
+  "transitions_observed": 0,
+  "compact_view_observed": false,
+  "wide_view_observed": false,
+  "captured_artifacts": 0,
+  "success_claims": {"route":false,"gameplay":false,"input":false,"responsive":false,"completion":false,"persistence":false,"xp":false,"idempotency":false,"api_correctness":false},
+  "unknowns": ["Whether a future successor restores a Babel route.","All current gameplay, physical-input, compact/wide, persistence, completion, and production behavior."],
+  "privacy": "No account, student data, unrelated tab, screenshot, or published browser binary was accessed.",
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

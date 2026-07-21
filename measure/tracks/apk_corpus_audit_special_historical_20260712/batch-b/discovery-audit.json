@@ -1,0 +1,55 @@
+{
+  "schema_version": "apk-batch-discovery-audit.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-b",
+  "status": "source-denominator-reconciled",
+  "acceptance": "not-claimed",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "a6c82e2f194d36dc688b6ac3f4a5b2d51a8c6502",
+  "upper_source_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "accepted_batch_a_prerequisite": {
+    "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/accepted-manifest.json",
+    "sha256": "ef8aeb1917dcf0f34363e25aa359d4743bc98b9f8a8f2afd50bb929348440d18",
+    "status": "accepted",
+    "consumable": true,
+    "revoked": false,
+    "verified": true
+  },
+  "owner_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "waives_source_truth": false,
+    "waives_independent_review": false
+  },
+  "identities": [
+    {
+      "game": "The Haunted Library",
+      "source_identity_id": "sentence/haunted-library",
+      "accepted_partition_matches": 1,
+      "denominator_counts": {"source_records": 42, "graph_edges": 25, "scene_records": 2, "state_records": 3, "transition_write_candidates": 3, "asset_candidates": 4, "historical_records": 1},
+      "current_candidate_paths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/haunted-library/page.tsx",
+        "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
+        "apps/advantage-games/src/lib/games/hauntedLibrary.ts",
+        "apps/advantage-games/src/app/api/v1/games/haunted-library/sentences/route.ts",
+        "apps/advantage-games/src/app/api/v1/games/haunted-library/complete/route.ts"
+      ],
+      "disposition_before_evidence": "candidate-current-source-present; behavior and runnable status not established by discovery"
+    },
+    {
+      "game": "Babel Architect",
+      "source_identity_id": "sentence/babel-architect",
+      "accepted_partition_matches": 1,
+      "denominator_counts": {"source_records": 12, "graph_edges": 0, "scene_records": 0, "state_records": 0, "transition_write_candidates": 0, "asset_candidates": 2, "historical_records": 12},
+      "historical_candidate_revision": "c76f6af3f62c03979f5073a871e775afd952a070",
+      "retirement_revision": "0ee9184728c11188c40b27c23fa649a9b67952dc",
+      "disposition_before_evidence": "no current implementation candidate in the frozen upper tree; historical locators and cancellation records require class-separated review"
+    }
+  ],
+  "source_claims_authored": false,
+  "catalog_prose_used_as_implementation": false,
+  "denominator_mismatches": 0,
+  "unsupported_factual_claims": 0,
+  "marker": "MEASURE_AGENT_RESULT"
+}

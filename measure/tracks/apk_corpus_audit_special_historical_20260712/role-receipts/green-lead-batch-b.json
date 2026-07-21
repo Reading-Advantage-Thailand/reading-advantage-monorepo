@@ -1,0 +1,73 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 2: Multi-state and missing implementation evidence",
+  "batch_id": "batch-b",
+  "task_id": "t7-batch-b-green-evidence-stage",
+  "role": "measure-green-lead-batch-b",
+  "role_identity": "Green implementation lead for the bounded evidence-stage package and truth contract; not an independent discovery, specialist, browser, truth-test, adversarial-review, candidate-author, or product-owner role",
+  "status": "evidence-stage-complete-with-candidate-blockers",
+  "acceptance": "not-claimed",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "a6c82e2f194d36dc688b6ac3f4a5b2d51a8c6502",
+  "source_baseline_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "allowed_input_bindings": {
+    "accepted_batch_a_sha256": "ef8aeb1917dcf0f34363e25aa359d4743bc98b9f8a8f2afd50bb929348440d18",
+    "owner_direction_sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "phase0_discovery_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+    "phase0_budget_sha256": "f87e33ef2a1a35ce2ac77eb0ea8f9797f6dc2e5c514159ad6d1fe011363bfe6b"
+  },
+  "provider_unavailability": {
+    "available": false,
+    "attestation_claimed": false,
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "final_response_event_id": null,
+    "commit_sha": null,
+    "reason": "Provider-side provenance fields are unavailable under the bound owner direction. This receipt does not claim independent role separation or review isolation."
+  },
+  "resource_accounting": {
+    "measured": false,
+    "source_bytes_read": null,
+    "source_objects_read": null,
+    "command_invocations": null,
+    "elapsed_minutes": null,
+    "reason": "The role entered after source inspection began, so exact frozen-unit usage cannot be reconstructed without fabrication. This remains a candidate blocker."
+  },
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/discovery-audit.json": "dbe0b84d85febd56149e476df1fb6a8daede62ef1d9e5ce1a18e9e7b9440199a",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/truth-tests.py": "7fe4f9a91fd7b4e3418216741f14a54c62cd569ed0da04538e19720890a9f6cf",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/current-source-observations-batch-b.json": "9ccb0d08a93dcf3b274eba299b8ba845eb3d704d5ea1a8090ff909ca74726fbb",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/historical-source-observations-batch-b.json": "ab701fcd8a8b4244249e672b107926430d3fb3eaa8ada43fea6ea76c6d4882ec",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/claim-ledger-batch-b.json": "5e888c0e7577ca767be873847b8dab5b4339efd2dee0490e98fc82ee97053ef1",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/negative-fixtures-batch-b.json": "b87cc3951a5968170af0f8bef33ae1b4744591e07a1878d831bd392b26847870",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/requirements-map-batch-b.json": "85e1ec567224cf58ca6cff43d70b659671fa856bb56df3bf667066abc3eba1a6",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/browser-audit-batch-b.json": "cd6de83db5e121f3503ffa1c9117d3dd2e935a6ca48000e0235a5b0e598d5d4d",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/current-source-observations-batch-b.json": "7d8a5e08ff0706ba8c59906d00934523e8b01da074f473bf835a0b6db9618272",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/historical-source-observations-batch-b.json": "224fc5a9f8122190522b3d9094fef72120e9ee99a772532292a54eb9d91a103f",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/claim-ledger-batch-b.json": "179c0835f1a6815ffea28aeb2d547cd4c81aae52d0079ddddf94c7209d1469ee",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/negative-fixtures-batch-b.json": "edf5a0cfeb06eb4169ef3db7259968b36ff96eabcbf8bddaca05f58636f33c6f",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/requirements-map-batch-b.json": "64ec421a63b7bb28308752553e7a552bc8613de3f5b39dc3323b2a36ca5a3bc4",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/browser-audit-batch-b.json": "88c009c9d650ad22bda7e96c5569d07afece0444d81d0cc938436f2832ecc8f2"
+  },
+  "findings": [
+    {"id":"T7-BB-BLOCK-001","severity":"critical","blocking":true,"detail":"Required distinct specialist receipts and exact frozen-unit resource accounting are unavailable and are not claimed."},
+    {"id":"T7-BB-BLOCK-002","severity":"high","blocking":true,"detail":"Both browser probes failed to reach a game surface; the dispositions require fresh independent review and no gameplay/responsive success may be claimed."},
+    {"id":"T7-BB-BLOCK-003","severity":"high","blocking":true,"detail":"No fresh fork_turns=none full-batch adversarial review binds these bytes, so the official non-consumable candidate lifecycle stage is not authorized."}
+  ],
+  "completion_success_claimed": false,
+  "candidate_authorized": false,
+  "product_owner_acceptance_authorized": false,
+  "accepted_manifest_authorized": false,
+  "marker": "MEASURE_AGENT_RESULT"
+}

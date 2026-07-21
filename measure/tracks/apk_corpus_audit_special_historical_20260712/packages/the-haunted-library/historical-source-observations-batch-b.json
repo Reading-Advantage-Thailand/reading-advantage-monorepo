@@ -1,0 +1,17 @@
+{
+  "schema_version": "apk-historical-source-observations.v1",
+  "game": "The Haunted Library",
+  "upper_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "historical_revision": "1c44854682b18a2393efd265c2271f824e228a3d",
+  "reachable_from_upper": true,
+  "path": "apps/advantage-games/src/lib/games/hauntedLibrary.ts",
+  "historical_blob_sha256": "867a26a3562734106a2f7738d89bca257e306de1385aeddb247cf9bea2252f0d",
+  "current_blob_sha256": "867a26a3562734106a2f7738d89bca257e306de1385aeddb247cf9bea2252f0d",
+  "chronology_disposition": "The bounded rules-engine blob is byte-identical at the historical scaffold revision and frozen upper revision. Historical envelopes establish historical behavior only; separate upper-revision envelopes establish current source behavior.",
+  "unknowns": [
+    "Whether any uninspected historical branch contained a distinct room model.",
+    "Whether historical runtime behavior matched the rules source without separate retained browser evidence."
+  ],
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

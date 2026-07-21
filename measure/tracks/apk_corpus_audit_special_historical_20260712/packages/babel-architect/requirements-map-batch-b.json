@@ -1,0 +1,17 @@
+{
+  "schema_version": "apk-requirements-map.v1",
+  "game": "Babel Architect",
+  "acceptance": "not-claimed",
+  "mappings": [
+    {"mapping_id":"BA-MAP-001","category":"historical-scene-state-transition","cited_claim_ids":["BA-HIST-001","BA-HIST-003","BA-HIST-004","BA-HIST-005","BA-HIST-007","BA-HIST-010","BA-HIST-012"],"result":"Historically, start/playing/ended UI wrapped playing/victory/defeat rules; correct block order advanced sentences and all sentences produced victory, while errors, stability, or timeout produced defeat."},
+    {"mapping_id":"BA-MAP-002","category":"historical-mechanic-learning","cited_claim_ids":["BA-HIST-002","BA-HIST-004","BA-HIST-005","BA-HIST-007"],"result":"The historical loop constructed each sentence by selecting ordered word blocks under time, error, and stability pressure."},
+    {"mapping_id":"BA-MAP-003","category":"historical-renderer-input","cited_claim_ids":["BA-HIST-008","BA-HIST-009","BA-HIST-011","BA-HIST-013"],"result":"A historical Phaser renderer displayed active and stacked blocks while React-owned rules received pointer intents and keys 1-9."},
+    {"mapping_id":"BA-MAP-004","category":"chronology-precedence","cited_claim_ids":["BA-HIST-001","BA-HIST-014","BA-CANCEL-001","BA-CANCEL-002","BA-UNK-001"],"result":"Reachable historical implementation existed before a direct-child retirement commit; the upper revision retains cancelled metadata and no implementation paths, so historical mechanics are not current facts."},
+    {"mapping_id":"BA-MAP-005","category":"responsive","cited_claim_ids":["BA-HIST-009","BA-CANCEL-002","BA-UNK-002","BA-UNK-003"],"result":"Historical source targeted 390 by 844, but successful compact/wide and physical-device behavior remain unknown because no current surface was reached and manual verification was cancelled."},
+    {"mapping_id":"BA-MAP-006","category":"asset-usage","cited_claim_ids":["BA-HIST-008","BA-HIST-009","BA-UNK-001"],"result":"Historical rendering used Phaser primitives and a palette manifest. Accepted denominator cover/design files are not current loaded assets without current source anchors."},
+    {"mapping_id":"BA-MAP-007","category":"unknown","cited_claim_ids":["BA-UNK-001","BA-UNK-002","BA-UNK-003","BA-UNK-004"],"result":"Current implementation, runnable behavior, manual/physical UX, and future shipment remain explicit unknowns."}
+  ],
+  "ontology_decisions": 0,
+  "novel_source_facts": 0,
+  "marker": "MEASURE_AGENT_RESULT"
+}

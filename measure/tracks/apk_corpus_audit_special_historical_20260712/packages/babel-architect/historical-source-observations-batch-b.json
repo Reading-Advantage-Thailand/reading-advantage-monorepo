@@ -1,0 +1,21 @@
+{
+  "schema_version": "apk-historical-source-observations.v1",
+  "game": "Babel Architect",
+  "upper_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "historical_implementation_revision": "c76f6af3f62c03979f5073a871e775afd952a070",
+  "retirement_revision": "0ee9184728c11188c40b27c23fa649a9b67952dc",
+  "chronology": [
+    {"revision":"c76f6af3f62c03979f5073a871e775afd952a070","disposition":"historical implementation files exist in the tree"},
+    {"revision":"0ee9184728c11188c40b27c23fa649a9b67952dc","parent":"c76f6af3f62c03979f5073a871e775afd952a070","disposition":"cancelled renderer experiment files are deleted"},
+    {"revision":"a49ebcc4dc3b3792a96b5b114d729b0b542af0fe","disposition":"cancelled track metadata is retained and implementation candidate paths remain absent"}
+  ],
+  "all_revisions_reachable_from_upper": true,
+  "source_precedence": [
+    "Historical implementation envelopes establish only behavior that existed at c76f6af3.",
+    "The later retirement commit and frozen-upper cancelled metadata establish cancellation/design disposition and current absence, not that historical behavior never existed.",
+    "Neither historical bytes nor cancelled plans establish current implementation, current route, runnable behavior, shipment, or future intent."
+  ],
+  "explicit_unknowns": ["Current implementation and route.","Current/future shipment intent.","Physical-device and manual visual behavior, because the retained plan says manual verification was cancelled.","Whether any successor will reuse the historical mechanic."],
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}
