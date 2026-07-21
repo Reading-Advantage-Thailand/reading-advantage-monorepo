@@ -1,0 +1,71 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "status": "additive mapper receipt remediation; acceptance not claimed",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-MAP-EACH-GAME-V6",
+  "role": "requirements-mapper-archers-revenge-batch-b-v6",
+  "role_identity": "T4 Archer's Revenge mapper receipt remediation V6 only",
+  "game": "Archer's Revenge",
+  "normalized_id": "archers-revenge",
+  "supersession": {
+    "supersedes_receipt": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-archers-revenge-batch-b-v5.json",
+    "supersedes_report": "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-mapper-final-report-batch-b-v5.json",
+    "scope_limit": "Adds the exact phase and explicit provider-unavailability metadata only; no mapper facts, claims, dispositions, or map bytes are changed."
+  },
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "134a94bc451f84e2a75ef18a8cbbe7382bd3395c",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "allowed_input_manifest_sha256": "e47a9e95fec45b4f2c03834a09d9ca56f62d18e03d6f29af56b1d3642ec71717",
+  "budget_declaration_sha256": "7d649b94d28ddc4538b79ba68a7e0cd71597ec2968ca7ae09874cf817a8b0f2f",
+  "provenance_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+  },
+  "provider_unavailability": {
+    "available": false,
+    "attestation_claimed": false,
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "final_response_event_id": null,
+    "commit_sha": null,
+    "reason": "Provider-side prompt, context, spawn, session, ancestry, fork, raw-isolation, event, timing, final-response, and commit attestations were unavailable in this execution environment. Nulls are intentional unavailable values, not attestations; no provider provenance is claimed. The user prohibited commits."
+  },
+  "unavailable_metadata_note": "Provider-side prompt, context, spawn, session, ancestry, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are intentional; no provider attestation is claimed. No WebBridge evidence or direction is classified as provider provenance or source authority. No commit was created.",
+  "input_hashes": {
+    "archers_revenge_mapper_report_v5": "eb1ad21db4f9c36f8c43c2fab0651a6e746fa664e70b80ba18195410ad50bba0",
+    "archers_revenge_denominator_reconciliation_v5": "e2f87d77071668cfb94e7a322e8f367b1eaa3d08e9e83118acb3c89067fe7d9f",
+    "archers_revenge_blueprint_v3": "7f6112d47ef4bbdd58cd93941bbcf935952e12880ae48f54097281cf94de3624",
+    "archers_revenge_mapper_hypotheses": "8f57561b11d2cbc75c0836e5b0172fe71cf9d42c6b812f1d533acf661b34412e",
+    "requirements_mapper_receipt_v5": "8a0e6664cfbdbc009f098e949577b8e1495828d02f3ea9b6ee7a6dbf8ab3bdc0",
+    "provenance_direction": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-mapper-final-report-batch-b-v5.json",
+      "sha256": "eb1ad21db4f9c36f8c43c2fab0651a6e746fa664e70b80ba18195410ad50bba0"
+    }
+  ],
+  "denominator_count": 23,
+  "mapped_claim_count": 20,
+  "historical_count": 9,
+  "webbridge_source_authority": false,
+  "completion_success_claimed": false,
+  "commit_sha": null,
+  "receipt_self_hash": null,
+  "receipt_self_hash_note": "A receipt cannot embed its own final SHA-256 without changing its bytes; an external descendant binding may hash these exact receipt bytes.",
+  "map_facts_changed": false,
+  "role_boundary": "Only this additive superseding receipt was created; the Archer's Revenge mapper report and all map facts remain unchanged."
+}

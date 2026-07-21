@@ -1,0 +1,15 @@
+{
+  "schema":"apk-role-receipt.v1",
+  "status":"additive denominator graph-ID normalization remediation; acceptance not claimed",
+  "acceptance":"not claimed",
+  "track_id":"apk_corpus_audit_action_defense_20260712",
+  "phase":"Phase 2: Batch B evidence packages",
+  "task_id":"B2-COLLECT-DENOMINATOR-GRAPH-ID-REMEDIATION-V5",
+  "role":"evidence-collector-village-guardian-batch-b-v5",
+  "role_base_sha":"eb4757b76f74afa05841453c5f46d99718f1ad71",
+  "phase_base_sha":"ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "supersedes":{"report":"measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-denominator-reconciliation-batch-b-v4.json","reason":"Corrects exactly 15 malformed graph record IDs from apps.advantage-games to the accepted apps/advantage-games prefix; no facts or claims changed."},
+  "output_paths_and_sha256":{"measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-denominator-reconciliation-batch-b-v5.json":"c1084de81f6b12f105e5ed8b7150fa0fffe15d6aa0f595d96ea66f79136d2a40"},
+  "validation":{"json_documents_valid":true,"record_count":51,"corrected_graph_record_ids":15,"duplicate_record_ids":0,"webbridge_not_source_authority":true,"completion_http_400_disclosure_only":true,"provider_provenance":{"unavailable":true,"attestation_claimed":false},"commit_sha":null},
+  "role_boundary":"Only this additive denominator reconciliation and receipt were created; existing facts, claims, browser artifacts, completion direction, and unrelated working-tree changes were preserved."
+}

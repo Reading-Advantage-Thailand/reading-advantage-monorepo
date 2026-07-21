@@ -1,0 +1,71 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "status": "additive Village Guardian mapper receipt superseding V4 metadata only; acceptance not claimed",
+  "acceptance": "not claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-MAP-EACH-GAME-V5",
+  "role": "requirements-mapper-village-guardian-batch-b-v5",
+  "role_identity": "fresh isolated T4 Batch B Village Guardian mapper receipt remediation V5 only",
+  "game": "Village Guardian",
+  "normalized_id": "village-guardian",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "eb4757b76f74afa05841453c5f46d99718f1ad71",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "supersession": {
+    "supersedes_receipt": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-village-guardian-batch-b-v4.json",
+    "scope_limit": "Adds the exact Phase 2 field and explicit provider-unavailability disclosure required by V10; does not alter the V4 map report, denominator facts, factual claim mappings, or WebBridge/completion directions."
+  },
+  "provenance_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+  },
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "final_response_event_id": null,
+    "commit_sha": null
+  },
+  "unavailable_metadata_note": "Provider-side prompt, context, spawn, session, ancestry, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are intentional; no provider attestation is claimed. No WebBridge evidence or direction is classified as provider provenance or source authority. No commit was created.",
+  "input_hashes": {
+    "village_guardian_mapper_report_v4": "e03613d0da0d921bce332cfa93806be26b386295372a00473f8c22f0b12b6e19",
+    "village_guardian_denominator_reconciliation_v4": "118f3c37cb66e8a66494efea37a60caf26b240621f280c0cf6db9766278a5134",
+    "village_guardian_claim_ledger_v3": "3be82cd7a9ddb144ae82ae220c36b439c6d14bbd58e1c988c897af6156b20484",
+    "village_guardian_blueprint_v3": "6a0e021d1b2ac2ddf33cd115f701993c9f110acc957964117137621ca99762e0",
+    "superseded_receipt_v4": "bf67f87a990722426f7bec1291b1c0d1864f0b17ecce5d42321b01b051db425f"
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-mapper-final-report-batch-b-v4.json",
+      "sha256": "e03613d0da0d921bce332cfa93806be26b386295372a00473f8c22f0b12b6e19"
+    }
+  ],
+  "reference_accounting": {
+    "collector_factual_claim_count": 73,
+    "mapped_section_count": 7,
+    "claim_reference_occurrence_count": 73,
+    "unique_referenced_claim_count": 73,
+    "resolved_reference_count": 73,
+    "unresolved_reference_count": 0,
+    "unreferenced_collector_factual_claim_count": 0
+  },
+  "denominator_count": 51,
+  "mapped_claim_count": 73,
+  "webbridge_source_authority": false,
+  "completion_success_claimed": false,
+  "receipt_self_hash": "not embedded; an authorized later binder may hash this receipt without modifying it",
+  "commit_sha": "uncommitted; user explicitly prohibited commit",
+  "role_boundary": "Only this additive superseding Village Guardian mapper receipt was created. The V4 map report and all existing artifacts and unrelated working-tree changes were preserved.",
+  "reviewer_disposition": "pending fresh independent review of exact V5-bound mapper receipt bytes"
+}
