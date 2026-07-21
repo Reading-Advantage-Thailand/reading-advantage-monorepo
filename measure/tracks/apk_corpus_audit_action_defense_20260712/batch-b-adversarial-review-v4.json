@@ -1,0 +1,55 @@
+{
+  "schema": "apk-batch-adversarial-review.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "role": "adversarial-reviewer-batch-b-v4",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "52a8dda3a53de41a59a47a87d0475374f15c5329",
+  "audited_head_sha": "52a8dda3a53de41a59a47a87d0475374f15c5329",
+  "status": "blocked; exact delegated B4 direction accepted only within its stated limits; no candidate or acceptance authorized",
+  "scope": ["village-guardian", "archers-revenge", "storm-castle-tower"],
+  "active_artifacts": {
+    "discovery": {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-discovery-audit-v2.json", "sha256": "f0f27734d22b8ec376bbf8b1fe96574a75f2c293766bee2440c0484164dd1daa"},
+    "browser": {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v3.json", "sha256": "521e08b7a1ef9309cdf31277d0f07b99700bb7721d97ee3e371321e70cd1e4ca"},
+    "direction": {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-direction-batch-b-webbridge.json", "sha256": "7dde397fdb1ceeac3e490d07791e90f69dd630b962d6b799da8426d4e9234498"},
+    "truth": {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v5.py", "sha256": "5e54a0d126bf78b361963c402a2198bc53d343d5c2b41f8085c679a6b595bb76"}
+  },
+  "scope_reconciliation": {"exact_match": true, "foreign_or_missing_games": [], "discovery_scope": ["village-guardian", "archers-revenge", "storm-castle-tower"], "ledger_scope": ["village-guardian", "archers-revenge", "storm-castle-tower"], "browser_scope": ["village-guardian", "archers-revenge", "storm-castle-tower"]},
+  "truth_test_runs": {
+    "full_v5": {"command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v5.py", "result": "45 passed, 3 subtests passed, 6 failed; exit 1", "unexpected_test_errors": 0},
+    "b4_v5": {"command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v5.py -k 'BatchBBrowserContract or BatchBAssetContract'", "result": "10 passed, 41 deselected; exit 0"},
+    "b5_v5": {"command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v5.py -k 'BatchBIndependentReviewContract or BatchBAcceptanceContract'", "result": "2 passed, 44 deselected, 5 failed; exit 1"}
+  },
+  "stratified_rederivation": {
+    "method": "For each ledger, recomputed all source blob and range envelopes from declared reachable Git revisions (binary envelopes as whole files), then used SHA-256(package_sha256 concatenated directly with normalized game id) and SHA-256(seed + NUL + claim_id) ordering. Selections cover populated category, revision-class, and text/binary/bounded-query shapes; every negative fixture was separately rederived.",
+    "village-guardian": {"population": 12, "required": 10, "seed": "2d215948fc74df21468ef870cb6ba4c8a7f50bed0806f694425acb8756dbf2e4", "selected_claim_ids": ["VG-IMPL-003", "VG-ASSET-002", "VG-SCENE-001", "VG-TEST-001", "VG-ROUTE-001", "VG-ID-001", "VG-COPY-001", "VG-IMPL-004", "VG-ASSET-001", "VG-ROUTE-002"], "fixture_ids_rederived": ["VG-NEG-001", "VG-NEG-002", "VG-NEG-003", "VG-NEG-004"], "result": "Selected anchors establish only their bounded source facts. The binary assets establish presence, not loading. Fixtures refute unconditional-six-villager, directory-as-citation, Redis persistence, and generic-template/matchMedia assertions."},
+    "archers-revenge": {"population": 8, "required": 8, "seed": "c1b767773233b0b1d9363db7fa0d89553dbe0936bc1ede9e7f935b4f17405d2c", "selected_claim_ids": ["AR-B-HIST-STATE-001", "AR-B-IDENTITY-001", "AR-B-HIST-ROUTE-001", "AR-B-HIST-RESPONSIVE-001", "AR-B-HIST-TEST-001", "AR-B-HIST-MECHANIC-001", "AR-B-HIST-ROUTE-002", "AR-B-HIST-MECHANIC-002"], "fixture_ids_rederived": ["AR-B-FIX-001", "AR-B-FIX-002", "AR-B-FIX-003", "AR-B-FIX-004"], "result": "All eight claims were sampled. The state union does not prove victory reachability; the directory is a tree; bounded baseline paths are empty; and historical CSS is not compact/wide proof."},
+    "storm-castle-tower": {"population": 42, "required": 10, "selected_count": 11, "seed": "84ed643c96a7d35dcdf676a35cdb14f96713c0300f6450e83ec1ca555812848b", "selected_claim_ids": ["SCT-ASSET-002", "SCT-ROUTE-H005", "SCT-HIST-002", "SCT-MECH-H005", "SCT-TRANS-H003", "SCT-COPY-001", "SCT-SCENE-H006", "SCT-ID-001", "SCT-RESP-H003", "SCT-ABS-001", "SCT-TEST-H003"], "fixture_ids_rederived": ["SCT-NEG-001", "SCT-NEG-002", "SCT-NEG-003", "SCT-NEG-004"], "result": "Selected anchors establish historical or bounded-baseline facts only. Fixtures reject immediate-defeat, directory-as-runtime, fabricated current route/PNG loading, and generic current responsive-template conclusions."},
+    "envelope_mismatches": 0,
+    "fixtures_rederived": 12,
+    "fixtures_accepted_or_skipped": 0
+  },
+  "webbridge_direction_binding": {
+    "decision": "WEBBRIDGE_ACCEPTED_FOR_B4",
+    "b4_status": "GREEN only for the exact v3 browser bytes and the exact accepted dispositions under the direction",
+    "accepted_dispositions": {"village-guardian": "runnable with disclosed synthetic-input and hidden-tab scheduler limitations", "archers-revenge": "non-runnable at role revision after direct exact-route 404", "storm-castle-tower": "non-runnable at role revision after direct exact-route 404"},
+    "validated_limits": ["All recorded Village Guardian input events are isTrusted=false.", "The WebBridge tab was hidden and the terminal run used a disclosed requestAnimationFrame scheduler adapter.", "Both Village Guardian completion POSTs returned HTTP 400; no persistence, XP award, or successful completion is established.", "Archer's Revenge and Storm the Castle Tower 404s are scoped to the exact local role revision and do not erase historical behavior."],
+    "non_waived_gates_preserved": ["claim citation and semantic correctness", "denominator completeness", "asset evidence", "role provenance and receipt integrity", "fresh independent review", "candidate, acceptance, and revocation lifecycle", "Village Guardian completion API contract correctness"]
+  },
+  "prior_review_audit": {
+    "correctness": ["COR-001 remains open: unavailable role provenance.", "COR-002 remains open: Village Guardian/Archer package completeness is not established.", "COR-003 remains open: v5 retains incomplete all-atom/all-fixture semantic gate coverage.", "COR-004 is superseded only for B4 mechanism by the exact direction; native input/timing are still not accepted.", "COR-005 is remediated by this fresh review artifact, but the v5 selector still cannot select it without an authorized additive truth supersession.", "COR-006 remains open: no additive asset audit binds Village live resource evidence or per-asset blocking unknowns to v3.", "COR-007 remains open: the immutable range has the recorded collector trailing-whitespace diff-check failures."],
+    "security": ["BSEC-001 remains Critical.", "BSEC-002 is remediated by this fresh review artifact only; this review receipt still lacks provider attestation and v5 cannot select this additive review.", "BSEC-003 remains open: no candidate, human approval, or accepted manifest exists.", "BSEC-004 remains open as the non-waived Village completion HTTP 400."],
+    "ux_api": ["C-B-001 is direction-bounded B4 GREEN, not native-input or foreground-timing GREEN.", "C-B-002 remains Medium: canvas transition is not accessible gameplay-semantics proof.", "C-B-003 remains Medium: completion API returns 400.", "C-B-004 and C-B-005 remain scoped disclosures, not production-parity or visual-artifact proof.", "C-B-006 remains Medium: a B4 artifact pass must not be represented as UX/API production success."]
+  },
+  "findings": [
+    {"id": "B4-CRIT-001", "severity": "critical", "area": "receipt provenance", "blocking": true, "detail": "The v5 active receipt gate reports 86 unavailable prompt/context/session/event/final-response/commit/isolation fields across its eleven selected receipts. Truthful null fields and local hashes do not meet the provider-attested receipt contract."},
+    {"id": "B4-HIGH-001", "severity": "high", "area": "package completeness and claim semantics", "blocking": true, "detail": "Village Guardian omits accepted configuration/test source coverage and Archer's Revenge leaves required copy, asset, developer-effort, and transition evidence unresolved despite reachable historical source. The v5 inherited semantic/fixture tests do not independently validate every atom and all twelve fixture refutations."},
+    {"id": "B4-HIGH-002", "severity": "high", "area": "fresh-review selector", "blocking": true, "detail": "This fresh v4 review covers v3 browser, direction, and v5 bytes, but v5 still hard-wires the immutable v1 review/receipt and fails its fresh-review test. No accepted candidate may rely on an unselected additive review."},
+    {"id": "B4-MED-001", "severity": "medium", "area": "completion API", "blocking": true, "detail": "Village Guardian completion POSTs returned 400. Direction expressly leaves completion API correctness non-waived; terminal UI is not persistence, XP, idempotency, or completion success."},
+    {"id": "B4-MED-002", "severity": "medium", "area": "asset and UX evidence", "blocking": true, "detail": "The source-only asset audit predates the runnable WebBridge observation and has no v3-bound resource corroboration; active canvas evidence also does not prove accessible gameplay semantics. B4 artifact success cannot promote either limitation."},
+    {"id": "B4-MED-003", "severity": "medium", "area": "execution truthfulness", "blocking": true, "detail": "git diff --check over the immutable phase range still reports five Batch B trailing-whitespace findings while collector validation prose records passed diff checks."}
+  ],
+  "unresolved_findings": {"critical": 1, "high": 2, "medium": 3, "low": 0},
+  "gate_status": {"B0": "structure pass; provenance remains blocking", "B1": "envelope structure pass; completeness blocker remains", "B2": "same-game mapper references resolve; completeness blocker remains", "B3": "exact envelope checks pass; all-atom/all-fixture semantic coverage remains blocking", "B4": "GREEN only under exact WebBridge direction and stated limitations; no native input, normal timing, persistence, XP, or completion success", "B5": "blocked by provenance, remaining findings, stale selector, and absent lifecycle artifacts"},
+  "authorization": {"candidate_authorized": false, "product_owner_acceptance_authorized": false, "accepted_manifest_authorized": false, "reason": "Critical, High, and Medium findings remain; B5 is red; no lifecycle chain exists."}
+}
