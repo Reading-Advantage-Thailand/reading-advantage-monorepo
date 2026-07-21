@@ -1,6 +1,12 @@
 # T4 Action and Defense Evidence Cohort — Last Batch Status
 
-## Current: Batch B — REMEDIATION ACTIVE (product-owner direction issued)
+## Current: Batch B — STOP-LOSS REASSERTED (lifecycle authority defect)
+
+### Lifecycle stop-loss (2026-07-22)
+- `batch-b-lifecycle-stop-loss-v17.json` records **Critical T4B17-CRIT-001** without altering historical evidence: the published acceptance omits the frozen strategy's conversation/thread identifier and its nominal approval event predates candidate publication.
+- V11's zero-blocker source/evidence review and V16's 49 passing truth contracts do not waive the separate ordered, authentic product-owner approval gate.
+- Existing candidate, acceptance, and accepted-manifest files are historical, non-consumable while the stop-loss is active. No new candidate, owner acceptance, or accepted manifest is authorized by remediation work.
+- Required next action: authenticated human product-owner approval with the exact candidate/review bindings and required event/thread provenance; then an authorized additive supersession, current gates, and fresh review. Do not mutate prior artifacts or invent browser/provider/owner provenance.
 
 ### Product-owner direction (2026-07-21)
 - The orchestrator, acting under delegated product-owner authority, accepts Kimi WebBridge as the B4 browser mechanism.

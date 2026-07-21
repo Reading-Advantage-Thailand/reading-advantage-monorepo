@@ -1,0 +1,51 @@
+{
+  "schema_version": "apk-batch-stop-loss.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-b",
+  "status": "stop-loss-active; lifecycle consumption is prohibited",
+  "authority": "remediation lead only; this record does not assert product-owner authority, revoke an owner decision, or publish an acceptance artifact",
+  "finding": {
+    "id": "T4B17-CRIT-001",
+    "severity": "critical",
+    "title": "Published Batch B acceptance chain does not meet the frozen owner-approval contract",
+    "evidence": [
+      "The frozen Batch B strategy requires a tool-generated approval event/message ID, a conversation/thread ID, and an approval event later than review before acceptance publication (test-strategy-batch-b.md §9).",
+      "product-owner-acceptance-batch-b.json has no conversation or thread identifier and records 2026-07-21T00:00:00Z, before the bound candidate publication commit.",
+      "The local-provenance direction permits truthful unavailable provider fields for role receipts; it does not waive authentic, ordered product-owner approval."
+    ]
+  },
+  "affected_artifacts": {
+    "candidate": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-batch-b.json",
+      "sha256": "4dc4ebeb423dd0114800b58188f691e0c6ba2b368af032b939c7a260b7631824",
+      "publication_commit_sha": "95f388863835638e17f418214e8eb7c4e74f875f"
+    },
+    "acceptance": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-batch-b.json",
+      "sha256": "39d9feff9baf5d6a9ae28cb76e50bd489f368159c7b2d2a784ece111383eff6d",
+      "publication_commit_sha": "0a01bf03d4d4ae2a4018b945954b948811562a79"
+    },
+    "accepted_manifest": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-b.json",
+      "sha256": "aaba39f80639eb180440c928b65d29da7601f7bce9ab2ba993e5b8e865c10c62"
+    }
+  },
+  "gate_disposition": {
+    "candidate_creation_authorized": false,
+    "owner_acceptance_authorized": false,
+    "accepted_manifest_publication_authorized": false,
+    "consumption_authorized": false,
+    "reason": "The evidence packages, V16 truth gate, and V11 review do not cure missing authentic, ordered product-owner approval. Existing lifecycle artifacts are preserved as historical evidence and may not be consumed while this stop-loss is active."
+  },
+  "required_owner_action": [
+    "A human product owner must provide a later, authentic approval bound to the exact candidate and review hashes, including the approval event/message and conversation or thread identifier required by the frozen strategy.",
+    "After that approval, an authorized lifecycle role must publish an additive supersession chain and rerun the current integrity gates and a fresh independent review before any candidate or accepted manifest can be consumed.",
+    "Do not mutate the existing candidate, acceptance, or accepted manifest in place."
+  ],
+  "prohibited_actions": [
+    "Do not infer or fabricate browser, provider, conversation, approval, or human-authorization provenance.",
+    "Do not treat the acceptance timestamp disclaimer as a waiver of the frozen ordered-approval requirement.",
+    "Do not owner-accept or publish an accepted manifest under remediation authority."
+  ],
+  "marker": "MEASURE_AGENT_RESULT"
+}

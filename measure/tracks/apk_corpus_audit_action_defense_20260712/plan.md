@@ -21,6 +21,7 @@
 - [~] Task: Complete Archer's Revenge package
 - [~] Task: Complete Storm the Castle Tower package
 - [~] Task: Run truth tests and full independent batch review; reconcile severity counts and remediate every Critical, High, and Medium finding
+- [x] Remediation: Reassert lifecycle stop-loss for unauthenticated/unordered Batch B acceptance evidence; preserve historical artifacts and prohibit consumption pending authorized owner action
 - [b] Task: Measure - User Manual Verification 'Phase 2' (Protocol in workflow.md) — deferred:product-owner
 
 ## Phase 3: Batch C evidence packages
