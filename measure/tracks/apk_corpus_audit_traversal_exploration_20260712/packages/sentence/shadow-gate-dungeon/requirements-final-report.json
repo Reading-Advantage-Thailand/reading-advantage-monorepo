@@ -1,0 +1,20 @@
+{
+  "schema_version":"apk-requirements-mapper-final-report.v1",
+  "track_id":"apk_corpus_audit_traversal_exploration_20260712",
+  "phase":"Phase 1: Batch B",
+  "batch_id":"batch-b",
+  "game":"Shadow Gate Dungeon",
+  "normalized_game_id":"sentence/shadow-gate-dungeon",
+  "disposition":"requirements-mapped-from-active-ledger-claims-not-reviewed-not-accepted",
+  "map_path":"packages/sentence/shadow-gate-dungeon/requirements-map.json",
+  "ledger_path":"packages/sentence/shadow-gate-dungeon/claim-evidence-ledger.json",
+  "collector_report_path":"packages/sentence/shadow-gate-dungeon/evidence-final-report.json",
+  "mapped_claims":18,
+  "mapped_propositions":18,
+  "negative_fixtures":3,
+  "validation":{"active_claim_ids_only":true,"foreign_claim_ids":0,"uncited_source_facts":0,"browser_claims":0,"unknowns_removed":0,"json":"validated-by-local-structure"},
+  "stop_loss":{"unsupported_factual_claims":0,"citation_envelope_mismatches":0,"denominator_mismatches":0,"unknowns_removed":0,"browser_claims":0,"budget_breaches":0,"status":"mapper-only; independent review, truth, browser, asset, candidate, acceptance, and commit gates remain required"},
+  "acceptance_status":"non-consumable mapper output",
+  "commit_binding":{"status":"uncommitted","commit_sha":"uncommitted"},
+  "marker":"MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "apk-role-receipt.v2",
+  "status": "complete-self-attested-bounded-unknown",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 3: Responsive + browser truth (Batch A)",
+  "task_id": "browser-auditor:alchemists-synthesis:batch-a",
+  "role": "browser-auditor",
+  "role_identity": "T6 Batch A browser auditor; Alchemist's Synthesis only",
+  "game": "Alchemist's Synthesis",
+  "normalized_game_id": "vocabulary/alchemists-synthesis",
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "parent_ancestry_ids": [],
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "provider_attestation": {
+    "available": false,
+    "reason": "Provider-side spawn, prompt, context, event, final-response, and commit provenance is unavailable; no such fields are fabricated."
+  },
+  "webbridge_attestation": {
+    "available": true,
+    "health": "running=true; extension_connected=true; port=10086",
+    "version_note": "daemon v1.11.1; extension v1.11.3; upgrade available but not performed"
+  },
+  "owned_outputs": [
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/browser-audit-batch-a.json",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/browser-auditor-alchemists-synthesis-batch-a.json"
+  ],
+  "output_hashes": {
+    "browser-audit-batch-a.json": "d413d99aaa626f91d4426c8c8cb05518fb434e849e3ecac07b207f19960a3ce3"
+  },
+  "actual_usage": {
+    "browser_interactions": 3,
+    "captured_browser_artifacts": 0,
+    "source_claims_authored": 0,
+    "maps_authored": 0,
+    "games_audited": 1
+  },
+  "disposition": "Exact candidate route returned 404 on both observed local Next ports. Marked non-runnable at this role revision, with compact/wide and synthetic-input trust limits disclosed."
+  ,"commit_sha": null,
+  "commit_disposition": "not-created; user prohibited commits",
+  "receipt_self_hash": null,
+  "marker": "MEASURE_AGENT_RESULT"
+}

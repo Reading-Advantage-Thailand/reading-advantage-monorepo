@@ -1,0 +1,115 @@
+{
+  "schema": "apk-browser-audit.v3",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "phase": "Phase 1: Batch A browser audit",
+  "task_id": "BROWSER-REALM-CARVER",
+  "role": "browser-auditor-batch-a-realm-carver",
+  "role_identity": "browser-auditor-batch-a-realm-carver",
+  "audit_status": "complete-additive-browser-evidence",
+  "browser_boundary": "Only Kimi WebBridge at 127.0.0.1:10086 was used. No agent-browser, browser-harness, Playwright, or direct CDP operation was used.",
+  "environment": {
+    "captured_at": "2026-07-21",
+    "working_directory": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "application_package": "vocabulary-games",
+    "framework": "Next.js 16.2.9",
+    "host": "localhost",
+    "port": 3000,
+    "browser_session": "t7-realm-carver",
+    "browser_tab_id": 915223992,
+    "browser_visibility_observed": "unknown",
+    "auth_observation": "No account or student data surface was reached."
+  },
+  "webbridge_health": {
+    "command": "~/.kimi-webbridge/bin/kimi-webbridge status",
+    "running": true,
+    "extension_connected": true,
+    "daemon_port": 10086,
+    "daemon_version": "v1.11.1",
+    "extension_version": "1.11.3",
+    "session": "t7-realm-carver",
+    "first_local_navigation_new_tab": true,
+    "network_capture_started": true,
+    "network_capture_stopped": true,
+    "close_session_result": {"success":true,"closed":2}
+  },
+  "application_start": {
+    "package_metadata_command": "pnpm --filter vocabulary-games dev",
+    "attempted_command": "PORT=3107 pnpm --filter vocabulary-games dev",
+    "result": "blocked by another Next dev server already running on port 3000; the attempted 3107 process exited before serving",
+    "observed_server": "Existing localhost:3000 Next.js server responded to both exact route attempts.",
+    "source_or_configuration_changed": false
+  },
+  "action_sequence": [
+    {"sequence":1,"action":"navigate","target":"http://localhost:3000/en/student/games/sentence/realm-carver","newTab":true,"result":"success; tab 915223992"},
+    {"sequence":2,"action":"network.start","result":"capture started"},
+    {"sequence":3,"action":"snapshot","result":"404; This page could not be found"},
+    {"sequence":4,"action":"network.list","filter":"realm-carver","result":"exact sentence route GET 404 text/html"},
+    {"sequence":5,"action":"navigate","target":"http://localhost:3000/en/student/arcade/realm-carver","newTab":false,"result":"success"},
+    {"sequence":6,"action":"snapshot","result":"404; This page could not be found"},
+    {"sequence":7,"action":"network.list","filter":"realm-carver","result":"both exact route GETs 404 text/html"},
+    {"sequence":8,"action":"network.stop","result":"capture stopped"},
+    {"sequence":9,"action":"close_session","result":"success; 2 session-owned tabs closed; no unrelated tab was inspected"}
+  ],
+  "games": [
+    {
+      "game": "Realm Carver",
+      "normalized_id": "realm-carver",
+      "disposition": "non-runnable",
+      "runnable_disposition": "non-runnable-at-observed-server; exact route evidence only",
+      "route_attempts": [
+        {
+          "route": "http://localhost:3000/en/student/games/sentence/realm-carver",
+          "route_status": "GET 404 text/html",
+          "body_text": "404\nThis page could not be found.",
+          "visited_states": ["Next.js 404 result"]
+        },
+        {
+          "route": "http://localhost:3000/en/student/arcade/realm-carver",
+          "route_status": "GET 404 text/html",
+          "body_text": "404\nThis page could not be found.",
+          "visited_states": ["Next.js 404 result"]
+        }
+      ],
+      "transition_log": [
+        {"from":"direct route navigation","to":"404 result","cause":"completed HTTP 404 response"}
+      ],
+      "real_input_events": [],
+      "console_observations": ["No game runtime loaded; no gameplay console claim is made."],
+      "network_observations": [
+        "GET /en/student/games/sentence/realm-carver completed 404 text/html.",
+        "GET /en/student/arcade/realm-carver completed 404 text/html."
+      ],
+      "screenshots": [],
+      "data_note": "No student data or account surface was accessed.",
+      "reviewer_disposition": "Browser-auditor bounded non-runnable disposition only; no mechanics, state, transition, asset-usage, or source-class conclusion is made."
+    }
+  ],
+  "counts": {
+    "games_in_scope": 1,
+    "runnable_results": 0,
+    "non_runnable_results": 1,
+    "audit_blocked_results": 0,
+    "webbridge_interactions": 9,
+    "real_user_relevant_input_events": 0,
+    "trusted_native_input_events": 0,
+    "screenshot_attempts": 0,
+    "captured_artifacts": 0,
+    "student_data_records": 0,
+    "unrelated_browser_tabs_accessed": 0
+  },
+  "privacy": {
+    "student_data_accessed": false,
+    "student_data_records": 0,
+    "unrelated_browser_tabs_accessed": false,
+    "published_browser_artifacts": false,
+    "screenshots_created": 0
+  },
+  "unknowns": [
+    "Current runnable route remains unknown beyond the two exact attempted routes.",
+    "Gameplay mechanics, states, transitions, and asset usage remain unknown.",
+    "The 3107 start attempt did not produce a serving process; no claim is made about that port."
+  ],
+  "role_boundary": "Only this additive browser audit and its additive receipt are authorized outputs. No product/game source, test, evidence package, mapper output, plan, registry, existing audit, or existing receipt was modified. No commit was created.",
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,48 @@
+{
+  "schema": "apk-role-receipt.v3",
+  "status": "complete-additive-browser-evidence; bounded non-runnable disposition",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "phase": "Phase 1: Batch A browser audit",
+  "task_id": "BROWSER-REALM-CARVER",
+  "role": "browser-auditor-batch-a-realm-carver",
+  "role_identity": "browser-auditor-batch-a-realm-carver",
+  "browser_session": {
+    "tool": "Kimi WebBridge",
+    "daemon_url": "http://127.0.0.1:10086",
+    "session_id": "t7-realm-carver",
+    "tab_id": 915223992,
+    "health": {"running":true,"extension_connected":true,"daemon_version":"v1.11.1","extension_version":"1.11.3"},
+    "first_navigation_new_tab": true,
+    "network_capture_started": true,
+    "network_capture_stopped": true,
+    "close_session_result": {"success":true,"closed":2},
+    "other_browser_tools_used": []
+  },
+  "orchestration_provenance": {
+    "provider_attestation": "Unavailable: provider-side prompt, session, spawn, ancestry, event, timing, and final-response attestations were not exposed.",
+    "prompt_sha256": null,
+    "spawn_id": null,
+    "parent_ancestry_ids": [],
+    "fork_turns": "none",
+    "final_response_sha256": null
+  },
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/browser-audit-batch-a.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-realm-carver-batch-a.json"
+  ],
+  "disposition": "Realm Carver is non-runnable at the observed localhost:3000 server for both exact attempted routes; only completed 404 evidence is claimed.",
+  "scope_limit": "Browser audit and receipt only. No source, map, mechanics, state, transition, asset-usage, mapper, review, truth-test, acceptance, or manifest work was performed.",
+  "resource_use": {
+    "source_bytes_read": 0,
+    "source_objects_read": 0,
+    "command_invocations": 0,
+    "browser_interactions": 9,
+    "captured_browser_artifacts": 0,
+    "student_data_records": 0,
+    "ceiling_breaches": 0
+  },
+  "commit_sha": null,
+  "commit_note": "No commit was created, as instructed.",
+  "marker": "MEASURE_AGENT_RESULT"
+}

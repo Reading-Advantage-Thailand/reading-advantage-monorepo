@@ -1,0 +1,51 @@
+{
+  "schema": "apk-role-receipt.v2",
+  "status": "complete; non-runnable/current-source-unknown; exact browser failure evidence recorded",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 3: Batch A browser truth",
+  "task_id": "griffin-sky-joust-browser-audit",
+  "role": "browser-auditor-batch-a-griffin-sky-joust",
+  "game": "Griffin Sky-Joust",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "reviewer_isolation": "fresh-context-only",
+  "inherited_narrative": false,
+  "fork_turns": "none",
+  "parent_ancestry_ids": [],
+  "allowed_input_manifest": {
+    "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-discovery-audit.json",
+    "sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa"
+  },
+  "webbridge": {
+    "attempted": true,
+    "health": "running=true; extension_connected=true; extension_version=1.11.3",
+    "session": "t7-griffin-sky-joust",
+    "result_or_exact_failure": "Kimi reached localhost:3000 after an initial ERR_CONNECTION_REFUSED; subsequent page and API candidate snapshots were Next.js 404 pages. No current route or runnable implementation was established."
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/browser-audit.json",
+      "sha256": "618890ec18eb5bfeae6057e187bd52fa5a8d2533e31e7c588a111b1fbedd08ab"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-griffin-sky-joust.json",
+      "sha256": null,
+      "self_hash_note": "Intentionally not self-hashed."
+    }
+  ],
+  "behavior_boundary": "No current behavior, transition, input, responsive, persistence, production, or asset claim is made. No historical source fact was changed or promoted.",
+  "actual_usage": {
+    "source_bytes": 0,
+    "source_files_objects": 0,
+    "commands": 9,
+    "browser_interactions": 7,
+    "captured_artifacts": 0,
+    "records_authored_reviewed": 2,
+    "elapsed_minutes": null,
+    "elapsed_note": "Not measured."
+  },
+  "commit_sha": null,
+  "commit_disposition": "not-created; user prohibited commits",
+  "marker": "MEASURE_AGENT_RESULT"
+}

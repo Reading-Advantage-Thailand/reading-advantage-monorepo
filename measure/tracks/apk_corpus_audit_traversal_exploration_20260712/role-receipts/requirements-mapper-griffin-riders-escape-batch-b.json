@@ -1,0 +1,23 @@
+{
+  "schema":"apk-role-receipt.v5",
+  "status":"complete; acceptance not claimed",
+  "acceptance":"not-claimed",
+  "track_id":"apk_corpus_audit_traversal_exploration_20260712",
+  "phase":"Phase 2: Batch B",
+  "task_id":"map-requirements:griffin-riders-escape:batch-b",
+  "role":"requirements-mapper",
+  "role_identity":"fresh isolated T5 Batch B Griffin Rider's Escape mapper only",
+  "game":"Griffin Rider's Escape",
+  "canonical_identity":"sentence/griffin-riders-escape",
+  "phase_base_sha":"52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha":"52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "allowed_inputs":["collector package","Phase 0 test strategy/freeze artifact","accepted T5 Batch A manifest"],
+  "input_hashes":{"claim_ledger":"9cca79ff212bbc582ad06d95509e2ae3d218aeb694db88e2967090403ca955af","collector_report":"db7db87d35f097a6c8451dfa1fd4e9e21ec698fc8235e9f9df67382512d44d46","collector_fixtures":"0de2c460f533c3cfd6b285d2b2c0a6cd0d69f32099359f17f8691c48661ab575","strategy":"734b879b75a8fff0e709242a4046706408f79587a2ec4f732a426e22d105ba0d","accepted_t5_batch_a":"f5a215f44815c79025e86e97a3217d7a85c4a33db86f80db2909f30dd3a9caa3"},
+  "outputs":[{"path":"packages/sentence/griffin-riders-escape/requirements-map-batch-b.json","sha256":"a245cadaecdb33300b6ca265348765a5af7c4bf31166dd5e1aab0ae51476e4dc"},{"path":"packages/sentence/griffin-riders-escape/mapper-final-report-batch-b.json","sha256":"14db97c7b617acf0d1eb7f414a5f60259d02be07662f1a7233e90f4867bf1dc1"}],
+  "reference_accounting":{"active_collector_factual_claims":14,"mapped_claim_reference_occurrences":43,"mapped_claim_reference_distinct":14,"unresolved_claim_ids":0,"foreign_claim_ids":0,"negative_fixture_references":3,"novel_factual_claims":0,"browser_claims":0,"effort_estimates":0},
+  "unknowns_preserved":["Browser, route, trusted-input, responsive, asset-runtime, completion, persistence, API, provider, and timing outcomes remain unknown or unavailable."],
+  "provider_provenance":{"prompt_sha256":null,"actual_context_manifest_sha256":null,"provider_spawn_id":null,"provider_session_id":null,"parent_ancestry_ids":null,"fork_turns":null,"commit_sha":null,"unavailable_note":"Provider-side attestations are unavailable and are not fabricated. No browser or new source fact was used."},
+  "receipt_self_hash":"not embedded; an authorized later binder may hash this receipt without modifying it",
+  "reviewer_disposition":"pending fresh independent review of exact mapper bytes",
+  "marker":"MEASURE_AGENT_RESULT"
+}

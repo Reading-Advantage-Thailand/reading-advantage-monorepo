@@ -1,0 +1,123 @@
+{
+  "schema": "apk-browser-audit.v2",
+  "status": "bounded-unknown-non-runnable-at-role-revision",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 3: Responsive + browser truth (Batch A)",
+  "task_id": "browser-auditor:rune-match:batch-a",
+  "role": "browser-auditor",
+  "role_identity": "T6 Batch A browser auditor; Rune Match only",
+  "game": "Rune Match",
+  "normalized_game_id": "vocabulary/rune-match",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "input_boundary": {
+    "read_only_inputs": [
+      "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-requirements-map.v2.json",
+      "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-claim-ledger.v2.json",
+      "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/requirements-mapper-rune-match-batch-a.v2.json"
+    ],
+    "input_hashes": {
+      "rune-match-requirements-map.v2.json": "70c740939d6d11daa0b9164fc77a906f26e30e8f70e0d6ea8559ef75483c3383",
+      "rune-match-claim-ledger.v2.json": "ea825bb8a9ae5e9e6f7349e9dc3b3ec45e1c51f20d80a9bd48888dc812aa0502",
+      "requirements-mapper-rune-match-batch-a.v2.json": "dacee39050196b284424ac7f6b7377741c64049430f8c71f9d2c04c18dff2afc"
+    },
+    "boundary": "No claims ledger, requirements map, source interpretation, gameplay claim, or cross-game comparison was authored."
+  },
+  "application": {
+    "package": "vocabulary-games",
+    "package_path": "apps/advantage-games/package.json",
+    "documented_start_command": "pnpm --filter vocabulary-games dev",
+    "script": "next dev --turbopack",
+    "environment": {
+      "observed_listener": "localhost:3000",
+      "observed_server_pid": 196068,
+      "observed_server_log": "apps/advantage-games/.next/dev/logs/next-development.log",
+      "attempted_alternate_ports": [3106, 3107],
+      "alternate_start_result": "blocked by existing Next dev lock/server; no alternate listener established"
+    },
+    "start_attempted": true,
+    "start_log_evidence": "/tmp/t6-rune-match-next.log and /tmp/t6-rune-match-next-3107.log record Next.js 16.2.9, package cwd apps/advantage-games, existing server PID 196068, and exit status 1 for duplicate server lock."
+  },
+  "route": {
+    "candidate": "/en/student/games/vocabulary/rune-match",
+    "candidate_basis": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx",
+    "api_candidates_not_visited": [
+      "/api/v1/games/rune-match/vocabulary",
+      "/api/v1/games/rune-match/complete"
+    ],
+    "probe": {
+      "base_url": "http://localhost:3000",
+      "url": "http://localhost:3000/en/student/games/vocabulary/rune-match",
+      "http_status": 404,
+      "response_headers": {
+        "x-powered-by": "Next.js",
+        "content-type": "text/html; charset=utf-8"
+      },
+      "response_body_sha256": "f93a40dc103079159195da2a9b160b0606f8c13b325bcdeef003c48ecb35f60d"
+    },
+    "disposition": "non-runnable at role revision after exact candidate route returned HTTP 404; this is not a source or product absence claim."
+  },
+  "webbridge": {
+    "mechanism": "Kimi WebBridge",
+    "health": "running=true; extension_connected=true; port=10086; extension_version=1.11.3; daemon_version=v1.11.1",
+    "navigation_command": "POST /command action=navigate newTab=true session=t6-rune-match",
+    "navigation_result": "success; tabId=915223999",
+    "snapshot_command": "POST /command action=snapshot session=t6-rune-match",
+    "snapshot_result": {
+      "url": "http://localhost:3000/en/student/games/vocabulary/rune-match",
+      "title": "Create Next App",
+      "body_text": "404; This page could not be found."
+    }
+  },
+  "responsive": {
+    "compact": {
+      "reference": "390x844",
+      "disposition": "unknown; no compact game surface existed to measure"
+    },
+    "wide": {
+      "observed_viewport": "1920x927",
+      "disposition": "unknown; only the 404 error surface was observed"
+    },
+    "trust_limits": [
+      "No gameplay transition was observed.",
+      "No real pointer, touch, keyboard, typing, drag, or other accepted input was established.",
+      "Synthetic DOM-event capability does not establish trusted gameplay input.",
+      "No screenshot or capture artifact was created."
+    ]
+  },
+  "observations": {
+    "real_input_events": [],
+    "visited_states": ["HTTP 404 error surface only"],
+    "transition_log": [],
+    "console_observations": [],
+    "network_observations": ["Exact candidate route returned HTTP 404 on localhost:3000."],
+    "accessibility_evidence": ["404 heading; This page could not be found."],
+    "screenshots": [],
+    "student_data_records": 0
+  },
+  "resource_use": {
+    "ceilings": {
+      "launch_navigation_attempts": 18,
+      "state_transition_attempts": 12,
+      "captures": 8,
+      "thai_english_boundary_cases": 4
+    },
+    "actual": {
+      "browser_interactions": 3,
+      "launch_navigation_attempts": 1,
+      "state_transition_attempts": 0,
+      "captures": 0,
+      "thai_english_boundary_cases": 0
+    },
+    "ceiling_breaches": 0
+  },
+  "claims_authored": 0,
+  "maps_authored": 0,
+  "completion_success_claimed": false,
+  "persistence_claimed": false,
+  "xp_awarded_claimed": false,
+  "api_correctness_claimed": false,
+  "reviewer_disposition": "pending independent review",
+  "commit_disposition": "not-created; user prohibited commits",
+  "marker": "MEASURE_AGENT_RESULT"
+}

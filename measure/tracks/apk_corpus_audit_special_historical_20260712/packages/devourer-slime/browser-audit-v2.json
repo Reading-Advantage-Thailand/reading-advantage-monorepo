@@ -1,0 +1,70 @@
+{
+  "schema_version": "apk-browser-audit.v2",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "phase": "Phase 1: Distinctive current/historical mechanics",
+  "task_id": "audit-browser:Devourer Slime",
+  "role": "browser-auditor-batch-a-v2",
+  "game": "Devourer Slime",
+  "package_identity": "sentence/devourer-slime",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "unavailable",
+  "provenance_direction": {
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "provider_attestation": "Unavailable: provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations were not exposed."
+  },
+  "browser_access": {
+    "preferred_tool": "Kimi WebBridge",
+    "available": true,
+    "used": true,
+    "health": "running=true; extension_connected=true"
+  },
+  "disposition": "browser-audit-blocked-application-unavailable",
+  "behavior_boundary": "No browser behavior, route reachability, transition, input, responsive result, persistence, production result, or asset load is claimed. The candidate route was attempted but the local application refused the connection.",
+  "route_attempts": [
+    {
+      "url": "http://localhost:3000/en/student/games/sentence/devourer-slime",
+      "attempt": "executed",
+      "result": "ERR_CONNECTION_REFUSED",
+      "application_response": false
+    },
+    {
+      "url": "http://localhost:3001/en/student/games/sentence/devourer-slime",
+      "attempt": "executed",
+      "result": "ERR_CONNECTION_REFUSED",
+      "application_response": false
+    }
+  ],
+  "observations": {
+    "route_attempts": 2,
+    "application_responses": 0,
+    "trusted_input_events": 0,
+    "synthetic_input_events": 0,
+    "start_transition": "unknown",
+    "movement": "unknown",
+    "camera": "unknown",
+    "collision": "unknown",
+    "compact_view_observed": false,
+    "wide_view_observed": false,
+    "transitions_observed": 0,
+    "console": "not-collected",
+    "network": "not-collected",
+    "production_persistence": "not-tested and not claimed",
+    "captured_artifacts": 0
+  },
+  "budget_accounting": {
+    "actual": {
+      "source_bytes": 0,
+      "source_files_objects": 0,
+      "commands": 7,
+      "records_authored_reviewed": 0,
+      "browser_interactions": 7,
+      "captured_artifacts": 0,
+      "elapsed_minutes": 0
+    },
+    "timing_note": "elapsed_minutes=0 is the owner-directed fallback for unavailable timing, not elapsed-time evidence.",
+    "accounting_scope": "Browser-session actions only; no repository source was read for this browser record."
+  },
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

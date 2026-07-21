@@ -1,0 +1,53 @@
+{
+  "schema": "apk-requirements-map.v3",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch B",
+  "batch_id": "batch-b",
+  "task_id": "map-requirements:sentence/shadow-gate-dungeon:batch-b",
+  "role": "fresh-t5-shadow-gate-dungeon-requirements-mapper-batch-b",
+  "game": "Shadow Gate Dungeon",
+  "canonical_identity": "sentence/shadow-gate-dungeon",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "source_fact_policy": "Every factual proposition is a disposition over an exact active ledger claim ID. No browser observation, catalog analogy, or uncited source fact is added.",
+  "scene_state_transition_model": [
+    {"id":"SGD-SST-001","statement":"The component starts with null game state and results, start game phase, and a one-shot completion-report reference; reset creates state from vocabulary, difficulty, and creature and clears results/reporting state.","claim_ids":["SGD-STATE-001","SGD-STATE-002"]},
+    {"id":"SGD-SST-002","statement":"The configured play space is 390 by 700 with a 100 by 60 exit gate, player speed 200, player radius 12, and initial health 100.","claim_ids":["SGD-WORLD-001"]},
+    {"id":"SGD-SST-003","statement":"The component supports arrow/WASD keyboard listeners and a playing-state D-pad velocity adapter; the simulation clamps player coordinates to the configured bounds.","claim_ids":["SGD-INPUT-001","SGD-INPUT-002","SGD-MOVE-001"]},
+    {"id":"SGD-SST-004","statement":"The source defines creature patrol/chase configuration, a sight-radius chase branch, and circular patrol-position calculation when not chasing.","claim_ids":["SGD-STEALTH-001","SGD-STEALTH-002","SGD-STEALTH-003"]},
+    {"id":"SGD-SST-005","statement":"The state update contains a radius-based collision damage branch and a defeat transition when resulting health is at or below zero.","claim_ids":["SGD-COLL-001","SGD-TRANS-002"]},
+    {"id":"SGD-SST-006","statement":"Crystal overlap compares the current crystal word with the target word; correct words advance ordered progression and wrong words damage health and increment wrong answers without advancing.","claim_ids":["SGD-PROG-001"]},
+    {"id":"SGD-SST-007","statement":"After all target words are reached, the gate unlocks and proximity to its center produces the source-defined victory transition.","claim_ids":["SGD-TRANS-001"]},
+    {"id":"SGD-SST-008","statement":"Rendering derives scale from container dimensions against the configured game dimensions, with a zero-dimension fallback of one.","claim_ids":["SGD-RESP-001"]},
+    {"id":"SGD-SST-009","statement":"On victory or defeat, the component computes accuracy and XP, enters ended phase, and calls onComplete once through its report guard.","claim_ids":["SGD-RESULT-001"]},
+    {"id":"SGD-SST-010","statement":"The locale page fetches the Shadow Gate Dungeon sentences endpoint and its completion callback stores local result values and posts completion fields to the completion endpoint.","claim_ids":["SGD-ROUTE-001","SGD-ROUTE-002"]},
+    {"id":"SGD-SST-011","statement":"The sentences endpoint is declared as a force-static GET route configured with SAMPLE_SENTENCES.","claim_ids":["SGD-API-001"]}
+  ],
+  "mechanics_learning_model": [
+    {"id":"SGD-ML-001","statement":"Movement and stealth requirements are represented by configured speed/radius values, keyboard and D-pad adapters, bounds clamping, chase timing, and circular patrol calculation.","claim_ids":["SGD-WORLD-001","SGD-STEALTH-001","SGD-INPUT-001","SGD-INPUT-002","SGD-MOVE-001","SGD-STEALTH-002","SGD-STEALTH-003"]},
+    {"id":"SGD-ML-002","statement":"The learning interaction is ordered crystal overlap: the target word determines correctness, correct collection advances the target index, and wrong words preserve the target index while applying the cited wrong-answer effects.","claim_ids":["SGD-PROG-001"]},
+    {"id":"SGD-ML-003","statement":"The terminal state model contains source-defined victory after ordered progression and gate proximity, and defeat after collision damage reaches zero health.","claim_ids":["SGD-TRANS-001","SGD-COLL-001","SGD-TRANS-002"]},
+    {"id":"SGD-ML-004","statement":"The component result path computes accuracy and XP and reports once, while the page submits the cited completion fields; these are source wiring propositions only.","claim_ids":["SGD-RESULT-001","SGD-ROUTE-002"]}
+  ],
+  "developer_effort_model": [
+    {"id":"SGD-DE-001","area":"component state and input","statement":"Account for initialization/reset state, keyboard listeners, and D-pad velocity adaptation.","claim_ids":["SGD-STATE-001","SGD-STATE-002","SGD-INPUT-001","SGD-INPUT-002"]},
+    {"id":"SGD-DE-002","area":"world simulation and stealth","statement":"Account for configured world values, bounded movement, chase/patrol state updates, and collision damage handling.","claim_ids":["SGD-WORLD-001","SGD-STEALTH-001","SGD-MOVE-001","SGD-STEALTH-002","SGD-STEALTH-003","SGD-COLL-001"]},
+    {"id":"SGD-DE-003","area":"learning progression and terminal states","statement":"Account for ordered crystal progression, gate victory, defeat, and result callback behavior.","claim_ids":["SGD-PROG-001","SGD-TRANS-001","SGD-TRANS-002","SGD-RESULT-001"]},
+    {"id":"SGD-DE-004","area":"responsive and route/API wiring","statement":"Account for source-defined scale calculation, locale sentence loading, completion submission wiring, and the sentences route declaration without asserting execution or correctness.","claim_ids":["SGD-RESP-001","SGD-ROUTE-001","SGD-ROUTE-002","SGD-API-001"]}
+  ],
+  "negative_fixtures":[{"claim_id":"SGD-NEG-001","disposition":"REJECT"},{"claim_id":"SGD-NEG-002","disposition":"REJECT"},{"claim_id":"SGD-NEG-003","disposition":"REJECT"}],
+  "input_bindings": {
+    "ledger":"packages/sentence/shadow-gate-dungeon/claim-evidence-ledger.json",
+    "ledger_sha256":"260cc45b92f365f2110b226e01c0d3b74a7a5fed6e0d6400b9bb2dede78d7f4e",
+    "collector":"packages/sentence/shadow-gate-dungeon/evidence-final-report.json",
+    "collector_sha256":"f54e226720ebe1b3123dc89c6308fc13dafa5e792f6e5b07c17cb6a324a7ebd9",
+    "collector_method":"packages/sentence/shadow-gate-dungeon/evidence-method.md",
+    "collector_method_sha256":"28fae579afd38b3f2412e4988b368be84db61b405998072d7a8b0d2f1dbfdd1e",
+    "accepted_batch_a":"accepted-cohort-manifest-batch-a-v6.json",
+    "accepted_batch_a_use":"process predecessor only; not factual input"
+  },
+  "counts":{"collector_claims":18,"collector_factual_claims":18,"negative_fixtures":3,"mapped_proposition_count":18,"distinct_referenced_claim_ids":18,"unresolved_claim_ids":0,"foreign_claim_ids":0,"uncited_source_facts":0,"browser_claims":0},
+  "unknowns_preserved":["Browser execution, route reachability, trusted input, viewport outcomes, console, network, and completion behavior remain unknown.","Asset availability, dimensions, loading, visual suitability, persistence, XP authority, idempotency, and API correctness remain unverified.","Provider-side prompt, spawn, ancestry, isolation, event, timing, final-response, and commit attestations are unavailable."],
+  "acceptance":"not-claimed",
+  "marker":"MEASURE_AGENT_RESULT"
+}

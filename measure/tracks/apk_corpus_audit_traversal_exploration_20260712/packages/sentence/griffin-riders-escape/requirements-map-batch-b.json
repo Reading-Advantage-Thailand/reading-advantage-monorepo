@@ -1,0 +1,64 @@
+{
+  "schema": "apk-requirements-map.v5",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B",
+  "task_id": "map-requirements:griffin-riders-escape:batch-b",
+  "role": "requirements-mapper",
+  "game": "Griffin Rider's Escape",
+  "canonical_identity": "sentence/griffin-riders-escape",
+  "source_fact_policy": "Every mapped proposition is a restatement of one or more cited collector claim IDs. No browser observation, source fact outside the ledger, or acceptance claim is added.",
+  "input_bindings": {
+    "claim_ledger": {
+      "path": "packages/sentence/griffin-riders-escape/claim-evidence-ledger.json",
+      "sha256": "9cca79ff212bbc582ad06d95509e2ae3d218aeb694dd88e2967090403ca955af"
+    },
+    "collector_report": {
+      "path": "packages/sentence/griffin-riders-escape/evidence-final-report.json",
+      "sha256": "db7db87d35f097a6c8451dfa1fd4e9e21ec698fc8235e9f9df67382512d44d46"
+    },
+    "collector_fixtures": {
+      "path": "packages/sentence/griffin-riders-escape/fixtures.json",
+      "sha256": "0de2c460f533c3cfd6b285d2b2c0a6cd0d69f32099359f17f8691c48661ab575"
+    },
+    "strategy": {
+      "path": "test-strategy-phase0.md",
+      "sha256": "734b879b75a8fff0e709242a4046706408f79587a2ec4f732a426e22d105ba0d"
+    },
+    "accepted_t5_batch_a": {
+      "path": "accepted-cohort-manifest-batch-a-v6.json",
+      "sha256": "f5a215f44815c79025e86e97a3217d7a85c4a33db86f80db2909f30dd3a9caa3"
+    }
+  },
+  "scene_state_transition_model": [
+    {"id":"GRF-MAP-SST-001","statement":"The mapped source surface includes a configured logical world and playing-state fields for lives, score, combo, ordered words, target progress, objects, attempts, sentence completion, timing, spawning, and player lane.","claim_ids":["GRF-WORLD-001","GRF-STATE-001"]},
+    {"id":"GRF-MAP-SST-002","statement":"The source-defined start path rejects empty vocabulary, selects and splits a sentence, initializes three lives and zero progress, clears objects, and places the player in the center lane.","claim_ids":["GRF-START-001"]},
+    {"id":"GRF-MAP-SST-003","statement":"During the playing phase, lane switching is bounded to the left, center, and right lanes, and wave construction creates the cited obstacle or gate arrangements at the cited depth.","claim_ids":["GRF-MOVE-001","GRF-WAVE-001"]},
+    {"id":"GRF-MAP-SST-004","statement":"Each source-defined tick advances object depth and resolves the collision band only when an object's lane matches the player lane; incorrect outcomes reduce lives and reset combo, while correct gates advance score, answers, combo, collected words, and target progress, with the last word setting victory.","claim_ids":["GRF-COLL-001","GRF-TRANS-001"]},
+    {"id":"GRF-MAP-SST-005","statement":"The source contains a lane-and-depth projection and a Stage sizing path for the configured logical surface.","claim_ids":["GRF-RESP-001"]},
+    {"id":"GRF-MAP-SST-006","statement":"The source page constructs sentence-data and completion-request paths for the named game flow.","claim_ids":["GRF-ROUTE-001"]},
+    {"id":"GRF-MAP-SST-007","statement":"The withdrawn cartridge source declares a Phaser configuration, semantic asset slots, traversal bindings, and an update path that advances and completes its model when its cited conditions are met.","claim_ids":["GRF-CART-001","GRF-CART-002","GRF-CART-003","GRF-CART-004"]}
+  ],
+  "mechanics_learning_model": [
+    {"id":"GRF-MAP-ML-001","statement":"The mapped learning surface is ordered-word traversal: correct gates advance collected-word and target progress, while an incorrect gate applies the cited life and combo consequence.","claim_ids":["GRF-TRANS-001"]},
+    {"id":"GRF-MAP-ML-002","statement":"The source-defined traversal input path translates directional changes into bounded lane changes during playing; the withdrawn cartridge separately declares keyboard, touch-region, and swipe bindings.","claim_ids":["GRF-INPUT-001","GRF-CART-002"]}
+  ],
+  "developer_effort_model": [
+    {"id":"GRF-MAP-DE-001","area":"legacy traversal simulation","statement":"Implementation-surface inventory covers logical configuration, state initialization, lane movement, wave construction, object progression, collision handling, and correct or failed gate transitions; no effort estimate is inferred.","claim_ids":["GRF-WORLD-001","GRF-STATE-001","GRF-START-001","GRF-MOVE-001","GRF-WAVE-001","GRF-COLL-001","GRF-TRANS-001"]},
+    {"id":"GRF-MAP-DE-002","area":"presentation and route boundary","statement":"Implementation-surface inventory covers projection, Stage sizing, directional-input integration, page request construction, cartridge asset/configuration declarations, and cartridge update logic; no runtime or person-hour estimate is inferred.","claim_ids":["GRF-RESP-001","GRF-INPUT-001","GRF-ROUTE-001","GRF-CART-001","GRF-CART-003","GRF-CART-004"]},
+    {"id":"GRF-MAP-DE-003","area":"effort boundary","statement":"No developer-hours, complexity score, reuse decision, current route status, or implementation estimate is claimed; cited IDs only inventory source-defined surfaces.","claim_ids":["GRF-WORLD-001","GRF-STATE-001","GRF-START-001","GRF-MOVE-001","GRF-WAVE-001","GRF-COLL-001","GRF-TRANS-001","GRF-RESP-001","GRF-INPUT-001","GRF-ROUTE-001","GRF-CART-001","GRF-CART-002","GRF-CART-003","GRF-CART-004"]}
+  ],
+  "unknowns_preserved": [
+    {"topic":"browser-and-input-behavior","disposition":"unknown; source mappings do not establish route reachability, live movement, trusted native input, responsive profiles, or browser execution","claim_ids":["GRF-INPUT-001","GRF-CART-002","GRF-RESP-001","GRF-ROUTE-001"]},
+    {"topic":"asset-runtime-outcome","disposition":"unknown; semantic slots and configuration declarations do not establish asset existence, loading, dimensions, visual suitability, or runtime binding","claim_ids":["GRF-CART-001","GRF-CART-003"]},
+    {"topic":"completion-and-persistence","disposition":"unknown; source transition and request construction do not establish successful completion, persistence, XP, idempotency, or API correctness","claim_ids":["GRF-TRANS-001","GRF-CART-004","GRF-ROUTE-001"]},
+    {"topic":"provider-and-timing-provenance","disposition":"unavailable; no provider attestation or trusted elapsed timing is claimed","claim_ids":[]}
+  ],
+  "negative_fixtures":[
+    {"claim_id":"GRF-NEG-001","disposition":"REJECT"},
+    {"claim_id":"GRF-NEG-002","disposition":"REJECT"},
+    {"claim_id":"GRF-NEG-003","disposition":"REJECT"}
+  ],
+  "counts":{"collector_factual_claims":14,"negative_fixtures":3,"mapped_proposition_count":12,"distinct_referenced_claim_ids":14,"unresolved_claim_ids":0,"foreign_claim_ids":0,"uncited_source_facts":0,"browser_claims":0,"effort_estimates":0},
+  "acceptance":"not-claimed",
+  "marker":"MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "status": "additive-browser-accounting-remediation; behavior-not-claimed",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "phase": "Phase 1: Distinctive current/historical mechanics",
+  "task_id": "audit-browser:Devourer Slime",
+  "role": "browser-auditor-batch-a-v2",
+  "game": "Devourer Slime",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "unavailable",
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "provider_attestation": "Unavailable: provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations were not exposed.",
+  "spawn_id": "unavailable",
+  "parent_ancestry_ids": [],
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "prompt_sha256": "unavailable",
+  "actual_context_manifest_sha256": "unavailable",
+  "actual_usage": {
+    "source_bytes": 0,
+    "source_files_objects": 0,
+    "commands": 7,
+    "records_authored_reviewed": 0,
+    "browser_interactions": 7,
+    "captured_artifacts": 0,
+    "elapsed_minutes": 0
+  },
+  "timing_accounting": {
+    "measurement": "unavailable-in-harness",
+    "fallback": "0",
+    "note": "Zero is not elapsed-time evidence."
+  },
+  "behavior_boundary": "No behavior is claimed; Kimi WebBridge was healthy and used, but both candidate local ports returned ERR_CONNECTION_REFUSED.",
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/browser-audit-v2.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-devourer-slime-v2.json"
+  ],
+  "output_hashes": {
+    "audit": "46a3e8c68d4f964bc6e34b9a1e3fec7d900afd3f6a77c90fa3b2ec6427e1090f",
+    "self": "intentionally-not-self-hashed"
+  },
+  "commit_sha": null,
+  "marker": "MEASURE_AGENT_RESULT"
+}

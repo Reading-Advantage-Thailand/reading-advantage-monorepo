@@ -1,0 +1,85 @@
+{
+  "schema_version": "apk-browser-audit.v2",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 3: Batch A browser truth",
+  "task_id": "griffin-sky-joust-browser-audit",
+  "role": "browser-auditor-batch-a-griffin-sky-joust",
+  "game": "Griffin Sky-Joust",
+  "package_identity": "catalog/griffin-sky-joust",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "allowed_inputs": {
+    "discovery_audit": {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-discovery-audit.json",
+      "sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa"
+    },
+    "current_source_observations": {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/current-source-observations-v2.json",
+      "sha256": "645cbafafdd5652361137a7177e687a64e1c14f01a71204fded598be2b60f140"
+    },
+    "historical_source_observations": {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/historical-source-observations-v2.json",
+      "sha256": "392e3f348f299781722d9334e9b475b399e472997df67043969f781024340a10"
+    },
+    "requirements_map": {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/requirements-map-v2.json",
+      "sha256": "531f34179c882c22b811a021c168742e2f0d81a5703da259efbc1de5c6a4ac50"
+    }
+  },
+  "adapter": {
+    "name": "Kimi WebBridge",
+    "health": "running=true; extension_connected=true; extension_version=1.11.3",
+    "session": "t7-griffin-sky-joust",
+    "local_target": "http://localhost:3000",
+    "synthetic_input_disclosure": "No clicks, keys, pointer actions, touch emulation, or state mutation were used."
+  },
+  "disposition": "non-runnable-current-source-unknown",
+  "behavior_boundary": "No current route, implementation, runtime behavior, transition, input, responsive result, persistence, production result, or asset load is claimed. Historical source paths were used only as route candidates; historical evidence is not promoted to current evidence.",
+  "route_attempts": [
+    {
+      "candidate_source_class": "historical_implementation",
+      "historical_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-sky-joust/page.tsx",
+      "url": "http://localhost:3000/en/student/games/sentence/griffin-sky-joust",
+      "attempt": 1,
+      "result": "exact_failure",
+      "evidence": "Browser page displayed ERR_CONNECTION_REFUSED (localhost refused to connect)."
+    },
+    {
+      "candidate_source_class": "historical_implementation",
+      "historical_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-sky-joust/page.tsx",
+      "url": "http://localhost:3000/en/student/games/sentence/griffin-sky-joust",
+      "attempt": 2,
+      "result": "not_found",
+      "evidence": "Kimi snapshot displayed title Create Next App and headings 404 / This page could not be found."
+    },
+    {
+      "candidate_source_class": "historical_implementation",
+      "historical_path": "apps/advantage-games/src/app/api/v1/games/griffin-sky-joust/sentences/route.ts",
+      "url": "http://localhost:3000/api/v1/games/griffin-sky-joust/sentences",
+      "attempt": 1,
+      "result": "not_found",
+      "evidence": "Kimi snapshot displayed title Create Next App and headings 404 / This page could not be found."
+    },
+    {
+      "candidate_source_class": "historical_implementation",
+      "historical_path": "apps/advantage-games/src/app/api/v1/games/griffin-sky-joust/complete/route.ts",
+      "url": "http://localhost:3000/api/v1/games/griffin-sky-joust/complete",
+      "attempt": 1,
+      "result": "not_found",
+      "evidence": "Kimi snapshot displayed title Create Next App and headings 404 / This page could not be found."
+    }
+  ],
+  "observations": {
+    "route_attempts": 4,
+    "application_responses": 3,
+    "trusted_input_events": 0,
+    "synthetic_input_events": 0,
+    "compact_view_observed": false,
+    "wide_view_observed": false,
+    "transitions_observed": 0,
+    "captured_artifacts": 0,
+    "current_runnable_disposition": "unknown"
+  },
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

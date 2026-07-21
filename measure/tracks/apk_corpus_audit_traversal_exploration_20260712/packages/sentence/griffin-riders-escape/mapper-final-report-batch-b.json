@@ -1,0 +1,15 @@
+{
+  "schema_version":"apk-mapper-final-report.v2",
+  "track_id":"apk_corpus_audit_traversal_exploration_20260712",
+  "phase":"Phase 2: Batch B",
+  "role":"requirements-mapper",
+  "game":"Griffin Rider's Escape",
+  "requirements_map":"packages/sentence/griffin-riders-escape/requirements-map-batch-b.json",
+  "evidence_ledger":"packages/sentence/griffin-riders-escape/claim-evidence-ledger.json",
+  "mapped_record_counts":{"scene_state_transition":7,"learning":2,"effort":3,"unknown":4,"negative_fixture":3},
+  "claim_reference_validation":{"collector_factual_claims":14,"mapped_claim_reference_occurrences":43,"distinct_referenced_claim_ids":14,"unresolved_claim_ids":0,"foreign_claim_ids":0,"factual_claims_without_citation":0,"novel_source_facts":0,"browser_claims":0,"effort_estimates":0,"negative_fixture_references":3},
+  "provenance":{"policy":"LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE","provider_attestation":"unavailable","acceptance_claimed":false},
+  "boundary":"Map-only output. No browser work, source collection, asset audit, truth-test authoring, review, or acceptance work was performed.",
+  "disposition":"non-consumable mapper output; independent review and committed binding remain required",
+  "marker":"MEASURE_AGENT_RESULT"
+}

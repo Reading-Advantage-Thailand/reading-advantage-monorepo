@@ -1,0 +1,23 @@
+{
+  "schema":"apk-role-receipt.v6",
+  "status":"complete-mapping-not-reviewed-not-accepted",
+  "acceptance":"not-claimed",
+  "track_id":"apk_corpus_audit_traversal_exploration_20260712",
+  "phase":"Phase 1: Batch B",
+  "batch_id":"batch-b",
+  "task_id":"map-requirements:Shadow Gate Dungeon:batch-b",
+  "role":"requirements-mapper",
+  "game":"Shadow Gate Dungeon",
+  "normalized_game_id":"sentence/shadow-gate-dungeon",
+  "phase_base_sha":"52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha":"52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "input_bindings":{"ledger_path":"packages/sentence/shadow-gate-dungeon/claim-evidence-ledger.json","ledger_sha256":"260cc45b92f365f2110b226e01c0d3b74a7a5fed6e0d6400b9bb2dede78d7f4e","collector_report_path":"packages/sentence/shadow-gate-dungeon/evidence-final-report.json","collector_report_sha256":"f54e226720ebe1b3123dc89c6308fc13dafa5e792f6e5b07c17cb6a324a7ebd9","accepted_batch_a_use":"process predecessor only; not factual input"},
+  "budget_actual":{"source_bytes":0,"source_files_objects":0,"commands":1,"elapsed_minutes":0,"records_authored_reviewed":18,"browser_interactions":0,"captured_artifacts":3},
+  "budget_ceiling":{"source_bytes":4000000,"source_files_objects":100,"commands":50,"elapsed_minutes":75,"records_authored_reviewed":250,"browser_interactions":0,"captured_artifacts":35},
+  "timing_direction":{"timing_measurement":"unavailable-in-harness","elapsed_minutes_interpretation":"0 is an accounting fallback, not elapsed-time evidence."},
+  "provider_provenance":{"claimed":false,"unavailable_note":"Provider-side prompt, spawn, ancestry, isolation, event, timing, final-response, and commit attestations are unavailable; no provider attestation is claimed."},
+  "output_paths":["packages/sentence/shadow-gate-dungeon/requirements-map.json","packages/sentence/shadow-gate-dungeon/requirements-final-report.json","role-receipts/requirements-mapper-shadow-gate-dungeon-batch-b.json"],
+  "role_boundary":"Only the Shadow Gate Dungeon map, report, and receipt were created; no collector facts were changed, no browser/source facts were added, and no Batch A artifact was used as factual input.",
+  "reviewer_disposition":"pending independent review",
+  "marker":"MEASURE_AGENT_RESULT"
+}

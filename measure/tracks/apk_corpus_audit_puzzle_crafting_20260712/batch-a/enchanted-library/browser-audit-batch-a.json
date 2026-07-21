@@ -1,0 +1,55 @@
+{
+  "schema": "apk-browser-audit.v1",
+  "status": "bounded-unknown-non-runnable",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 3: Responsive + browser truth (Batch A)",
+  "role": "browser-auditor",
+  "role_identity": "T6 Batch A browser auditor; Enchanted Library only",
+  "game": "Enchanted Library",
+  "normalized_game_id": "vocabulary/enchanted-library",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "route": {
+    "attempted": "http://127.0.0.1:3000/en/student/games/vocabulary/enchanted-library",
+    "source_route_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx",
+    "result": "HTTP 404; browser title '404: This page could not be found.'",
+    "server_log_sha256": "3423652d65fab8d0e99b259370fb55137abc98691e3d085bbb087c5014e439e1",
+    "response_body_sha256": "290e317834f368e3a9efee3ee2e2a41f48f9691e6d2341db6ca5f97065b50789"
+  },
+  "environment": {
+    "launch_command": "env -i PATH=... HOME=... PNPM_HOME=... NODE_ENV=development NEXT_TELEMETRY_DISABLED=1 pnpm --filter vocabulary-games dev",
+    "working_directory": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "port": 3000,
+    "env_files_discovered": [],
+    "server_log": "/tmp/t6-enchanted-library-browser.log",
+    "server_log_evidence": "Next.js 16.2.9 ready; route request logged as GET /en/student/games/vocabulary/enchanted-library 404"
+  },
+  "webbridge": {
+    "available": true,
+    "health": "running=true; extension_connected=true; port=10086",
+    "daemon_version": "v1.11.1",
+    "extension_version": "1.11.3",
+    "upgrade_available": true,
+    "session": "t6-enchanted-library",
+    "interactions": [
+      {"action":"navigate","route":"/en/student/games/vocabulary/enchanted-library","result":"success navigation to local 404"},
+      {"action":"snapshot","result":"404 heading and 'This page could not be found.'"},
+      {"action":"evaluate","result":"innerWidth=1920; innerHeight=927; devicePixelRatio=1; readyState=complete"},
+      {"action":"screenshot_helper","result":"exit 4; no captured artifact"}
+    ]
+  },
+  "responsive_disposition": {
+    "wide": {"status":"unknown","reason":"Only the WebBridge default viewport was observed; the route was 404 and no gameplay composition rendered."},
+    "compact": {"status":"unknown","reason":"No compact viewport control was available through the bounded WebBridge run; no gameplay composition rendered."},
+    "trust_limits": [
+      "A 404 cannot establish gameplay, state transition, responsive layout, content variation, persistence, or completion behavior.",
+      "No synthetic click, keyboard, touch, drag, or gameplay transition was attempted against the 404 page.",
+      "No screenshots are treated as behavioral evidence; the screenshot helper failed with exit 4."
+    ]
+  },
+  "claims_authored": 0,
+  "maps_authored": 0,
+  "disposition": "Non-runnable at this local route/environment revision; all compact/wide behavior and interaction-dependent outcomes remain unknown.",
+  "commit_sha": null,
+  "marker": "MEASURE_AGENT_RESULT"
+}

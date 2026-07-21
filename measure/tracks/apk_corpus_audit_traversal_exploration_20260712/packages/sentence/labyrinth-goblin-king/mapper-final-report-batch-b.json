@@ -1,0 +1,17 @@
+{
+  "schema_version":"apk-mapper-final-report.v5",
+  "track_id":"apk_corpus_audit_traversal_exploration_20260712",
+  "phase":"Phase 2: Batch B",
+  "role":"requirements-mapper",
+  "game":"Labyrinth of the Goblin King",
+  "canonical_identity":"sentence/labyrinth-goblin-king",
+  "requirements_map":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/requirements-map-batch-b.json",
+  "evidence_ledger":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/claim-evidence-ledger-batch-b.json",
+  "scope":"Batch B mapper output only; every factual mapping atom is bound to a cited collector claim ID, and no browser or independent source fact is introduced.",
+  "mapped_record_counts":{"scene_state_transition":12,"mechanics_learning":4,"developer_effort":5,"unknown":4,"negative_fixture":4},
+  "claim_reference_validation":{"ledger_factual_claim_ids":12,"factual_claim_ids_referenced":12,"negative_fixture_claim_ids_referenced":4,"unresolved_claim_ids":0,"foreign_claim_ids":0,"factual_claims_without_citation":0,"novel_source_facts":0,"browser_claims":0,"effort_estimates":0},
+  "provenance":{"policy":"LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE","accepted_batch_a_input":"accepted-cohort-manifest-batch-a-v6.json","provider_attestation":"unavailable and not claimed","acceptance_claimed":false,"commit_sha":null},
+  "budget":{"ceiling_role":"requirements_mapper_one_game","status":"numeric ceiling declared; mapper actuals measured locally; provider timing unavailable","source_bytes":46175,"source_files_objects":4,"commands":1,"elapsed_minutes":0,"elapsed_minutes_interpretation":"accounting fallback only, not elapsed-time evidence","records_authored_reviewed":25,"browser_interactions":0,"captured_artifacts":2},
+  "disposition":"non-consumable mapper output; fresh independent review, exact binding, lifecycle authorization, and committed binding remain required",
+  "marker":"MEASURE_AGENT_RESULT"
+}
