@@ -1,0 +1,121 @@
+{
+  "schema": "apk-asset-usage-audit.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-ASSET-V2",
+  "role": "asset-auditor-batch-b-v2",
+  "phase_base_sha": "ff01cee9cc973dee89fdc0ba22102dcea0c50542",
+  "role_base_sha": "d77044c35571dabde108098e5c9f9dd62722327d",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "accepted_asset_denominator_sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+  "scope": ["village-guardian", "archers-revenge", "storm-castle-tower"],
+  "method": {
+    "source_rule": "Each record is reconciled to the accepted baseline path and whole-file Git SHA-256; usage is claimed only with an exact source call site or an explicit bounded absence.",
+    "bounded_source_domains": ["apps/advantage-games/src", "packages/game-cartridges/src"],
+    "absence_query": "git grep -n -F <basename> 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- apps/advantage-games/src packages/game-cartridges/src",
+    "empty_output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "interpretation_limit": "File presence, catalog configuration, sidecar names, screenshot fixtures, procedural canvas shapes, and historical semantic slots do not by themselves prove runtime loading or suitability."
+  },
+  "browser_binding": {
+    "status": "bounded-live-observation; no physical PNG load established",
+    "audit_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-browser-audit-v3.json",
+    "audit_sha256": "521e08b7a1ef9309cdf31277d0f07b99700bb7721d97ee3e371321e70cd1e4ca",
+    "tool": "Kimi WebBridge",
+    "village_guardian": {
+      "source_observation": "The exact route rendered start/instruction, active canvas, and terminal/result states at wide and compact viewports; this corroborates a live canvas surface only, not any denominator PNG.",
+      "sequence_refs": [6, 11, 28, 32, 36, 39],
+      "resource_observation": "The recorded network observations include the route GET, sentence JSON GET, and completion POST 400; no denominator PNG request or cover-image request is recorded.",
+      "network_sequence_refs": [30, 31, 48],
+      "disposition": "physical asset loading and scene usage unknown; no PNG load, cover load, completion, persistence, or XP claim"
+    },
+    "archers_revenge": "No game resource surface loaded: exact route returned 404; no asset usage conclusion beyond source reconciliation.",
+    "storm_castle_tower": "No game resource surface loaded: exact route returned 404; no asset usage conclusion beyond source reconciliation."
+  },
+  "records": [
+    {
+      "path": "apps/advantage-games/measure/archive/village-guardian-20260320/metadata.json",
+      "game": "Village Guardian", "ownership": "village-guardian", "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "9ad91352509cc743af8038c5784e7e24c38940a838e14b907f5bdb5edee98c39",
+      "usage_status": "non-runtime-sidecar",
+      "source_evidence": {"kind": "bounded-absence", "query_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "claim": "Metadata sidecar; no runtime asset call site in bounded source domains."},
+      "live_usage": "unavailable; browser v3 did not load or cite this sidecar"
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/village-guardian-compliance-audit_20260426/metadata.json",
+      "game": "Village Guardian", "ownership": "village-guardian", "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "a75f25333699e0f17ac269ff44409fda650633ae81dc9e7bd7e02b14cf197e2e",
+      "usage_status": "non-runtime-sidecar",
+      "source_evidence": {"kind": "bounded-absence", "query_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "claim": "Metadata sidecar; no runtime asset call site in bounded source domains."},
+      "live_usage": "unavailable; browser v3 did not load or cite this sidecar"
+    },
+    {
+      "path": "apps/advantage-games/public/games/cover/cover-village-guardian.png",
+      "game": "Village Guardian", "ownership": "village-guardian", "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "ecbc43d8e960f3a6b2108a98d892634c2bc3b90717e986394fb9f09a9b27896e",
+      "usage_status": "source-catalog-binding-only",
+      "source_evidence": {"path": "apps/advantage-games/src/lib/gameCards.ts", "range": "141..141", "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c", "range_sha256": "0205bd81cbfcad029bf697dbe630bcdcc11767809b89ea20be47528115077095", "claim": "Catalog card configures this cover URL."},
+      "live_usage": "not observed; Village route audit bypassed catalog card and recorded no cover request"
+    },
+    {
+      "path": "apps/advantage-games/public/games/village-guardian/village-guardian-gameplay.png",
+      "game": "Village Guardian", "ownership": "village-guardian", "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "b84dae941c027579ff7533190d9fe8237c33cabcb9d99b07ba5d96046be3f8cb",
+      "usage_status": "bounded-not-referenced",
+      "source_evidence": {"path": "apps/advantage-games/tests/e2e/fixtures/gameFixtures.ts", "range": "220..220", "blob_sha256": "56de8961612146104173599d3bdb7569c542cd0f30779c6e19beb00d546e9a05", "range_sha256": "29b6cc366ff14bf93360153e2e82e3473a336217c63638715519ec83d19c176e", "claim": "Fixture filename only; exact basename query found no runtime loader reference in bounded domains."},
+      "live_usage": "unknown; Village canvas was observed, but browser v3 records no request for this PNG"
+    },
+    {
+      "path": "apps/advantage-games/measure/archive/archers-revenge-20260318/metadata.json",
+      "game": "Archer's Revenge", "ownership": "archers-revenge", "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "2b669cad3951341f6c86235699dc04e7eab7246f45661ac52d347dd0a3c088fe", "usage_status": "non-runtime-sidecar",
+      "source_evidence": {"kind": "bounded-absence", "query_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "claim": "Metadata sidecar; no runtime asset call site."}, "live_usage": "unavailable; exact route returned 404"
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/archers-revenge-compliance-audit_20260426/metadata.json",
+      "game": "Archer's Revenge", "ownership": "archers-revenge", "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "b9673735740b30b0465b5a09869bce580d6ad5ab500ee5a8b688f78c381cdd1e", "usage_status": "non-runtime-sidecar",
+      "source_evidence": {"kind": "bounded-absence", "query_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "claim": "Metadata sidecar; no runtime asset call site."}, "live_usage": "unavailable; exact route returned 404"
+    },
+    {
+      "path": "apps/advantage-games/public/games/archers-revenge/archers-revenge-gameplay.png",
+      "game": "Archer's Revenge", "ownership": "archers-revenge", "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "83072ac397e99092257b38db4d448f4b14848e59be0e876c06002dc5a8bd2865", "usage_status": "bounded-not-referenced",
+      "source_evidence": {"path": "apps/advantage-games/tests/e2e/fixtures/gameFixtures.ts", "range": "9..10", "blob_sha256": "56de8961612146104173599d3bdb7569c542cd0f30779c6e19beb00d546e9a05", "range_sha256": "9c9883e79f5a98f751898552924206f7c9d10e3609507014e5a1d648ad8d0624", "claim": "Fixture filename only; no runtime loader reference in bounded domains."}, "live_usage": "unavailable; exact route returned 404"
+    },
+    {
+      "path": "apps/advantage-games/public/games/archers-revenge/archers-revenge-start-screen.png",
+      "game": "Archer's Revenge", "ownership": "archers-revenge", "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "41851bd0dd9d84daa41c1b53880be041558bcadc77ef3f0f787280c1dd4527b5", "usage_status": "bounded-not-referenced",
+      "source_evidence": {"kind": "bounded-absence", "query_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "claim": "No current source reference to this basename; presence does not prove use."}, "live_usage": "unavailable; exact route returned 404"
+    },
+    {
+      "path": "apps/advantage-games/public/games/cover/cover-archers-revenge.png",
+      "game": "Archer's Revenge", "ownership": "archers-revenge", "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "c339c349243113ecb47a867f021a94dfd03b82e8c8e7587010d4a4d4c393c73c", "usage_status": "source-catalog-binding-only",
+      "source_evidence": {"path": "apps/advantage-games/src/lib/gameCards.ts", "range": "157..157", "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c", "range_sha256": "faa0377e792f469478ced77b81143d28630c1caa40d18ac70956577ebca09ede", "claim": "Catalog card configures this cover URL; current catalog usage remains unknown."}, "live_usage": "unavailable; exact route returned 404"
+    },
+    {
+      "path": "apps/advantage-games/measure/archive/storm-castle-tower-20260320/metadata.json",
+      "game": "Storm the Castle Tower", "ownership": "storm-castle-tower", "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "765e2a7de091dae634f8ff13d47b553ae9ae7b5378bd3e61816e9fd2a6d3655f", "usage_status": "non-runtime-sidecar",
+      "source_evidence": {"kind": "bounded-absence", "query_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "claim": "Metadata sidecar; no runtime asset call site."}, "live_usage": "unavailable; exact route returned 404"
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/storm-castle-tower-compliance-audit_20260426/metadata.json",
+      "game": "Storm the Castle Tower", "ownership": "storm-castle-tower", "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "3a67113fe7cb71698af948d033047210a0131584f83f57389f7ca98efbb05f87", "usage_status": "non-runtime-sidecar",
+      "source_evidence": {"kind": "bounded-absence", "query_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "claim": "Metadata sidecar; no runtime asset call site."}, "live_usage": "unavailable; exact route returned 404"
+    },
+    {
+      "path": "apps/advantage-games/public/games/storm-castle-tower/storm-castle-tower-gameplay.png",
+      "game": "Storm the Castle Tower", "ownership": "storm-castle-tower", "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "cb5e5c99a49da484e0a7856cef335c5428e0894534f0f148d45e6dd81f47408b", "usage_status": "bounded-not-referenced",
+      "source_evidence": {"kind": "bounded-absence", "query_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "claim": "Exact basename query found no source reference in bounded domains; binary presence is separate."}, "live_usage": "unavailable; exact route returned 404"
+    }
+  ],
+  "reconciliation": {"assigned_candidates": 12, "reconciled_exactly_once": true, "unassigned_count": 0, "duplicate_count": 0, "source_runtime_asset_usages": 0, "catalog_binding_only": 2, "sidecar_or_bounded_unknown": 10, "suitability_decisions": 0, "licensing_decisions": 0, "production_decisions": 0},
+  "preserved_limits": ["Loading and UX semantics remain unknown unless directly observed.", "WebBridge DOM events were isTrusted=false; no trusted native input is claimed.", "The hidden-tab scheduler adapter is not foreground wall-clock proof.", "Village completion POST returned HTTP 400; no completion, persistence, or XP claim is made."],
+  "provider_telemetry": {"status": "unavailable", "disclosure": "Provider prompt, spawn, ancestry, session, event, timing, final-response, commit, and isolation attestations were unavailable under owner policy; no values were fabricated."},
+  "carried_forward_disclosures": [{"id": "DISC-001", "classification": "Batch A process-only disclosure", "use": "Process metadata only; not asset evidence."}],
+  "status": "denominator reconciled; exact source evidence bound; Village live resource observation bound without promoting canvas to PNG usage; unknowns preserved; no suitability or production decision"
+}

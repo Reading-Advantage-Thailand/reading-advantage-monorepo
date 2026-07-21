@@ -1,0 +1,20 @@
+{
+  "schema": "apk-requirements-mapper-report.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "task_id": "map-requirements:spellweavers-run",
+  "role": "requirements-mapper",
+  "game": "spellweavers-run",
+  "status": "mapping-complete-independent-review-pending",
+  "map_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/requirements-map.json",
+  "source_fact_policy": "The requirements map is ledger-ID-only. Historical facts remain historical, unknowns remain unknown, and no browser claim is made.",
+  "provider_telemetry": {"kimi_webbridge_available":false,"spawn_attestation_available":false,"fork_turns_none_attestation_available":false,"elapsed_minutes":"unavailable; not fabricated"},
+  "budget": {
+    "ceiling":{"source_bytes":4000000,"source_files_objects":100,"commands":50,"elapsed_minutes":75,"records_authored_reviewed":250,"browser_interactions":0,"captured_artifacts":35},
+    "actual":{"source_bytes":75934,"source_files_objects":8,"commands":1,"elapsed_minutes":null,"records_authored_reviewed":51,"browser_interactions":0,"captured_artifacts":0},
+    "status":"within mapper ceiling based on counted records/files; provider elapsed telemetry unavailable"
+  },
+  "one_time_byte_exception": {"decision":"ONE_TIME_SOURCE_BYTE_CEILING_INCREASE","old_ceiling":8000000,"approved_ceiling":12000000,"measured_collector_actual":11558850,"applies_to":"Spellweaver's Run evidence collector source_bytes only","disclosure":"The collector exceeded the original ceiling by 3558850 bytes; the product-owner exception authorizes no further collection increase and does not waive semantic, denominator, review, or provenance gates."},
+  "unknown_policy": ["Current gameplay and runnable route remain unknown.","Current movement, camera, collision, transitions, responsive behavior, and input remain unknown.","Runtime use of gameplay image and audio remains unknown.","No browser observation or browser-derived claim is included."],
+  "acceptance": "not-claimed"
+}

@@ -1,0 +1,179 @@
+{
+  "schema_version": "apk-batch-discovery-audit.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 0: Freeze cohort and roles",
+  "batch_id": "batch-a",
+  "role": "discovery-auditor-batch-a",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "d77044c35571dabde108098e5c9f9dd62722327d",
+  "allowed_input_manifest": {
+    "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-discovery-audit.json",
+    "sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa"
+  },
+  "immutable_predecessors": {
+    "t1_accepted_gate": {
+      "path": "measure/evidence-integrity-accepted-gate.json",
+      "sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+      "status": "accepted",
+      "consumable": true,
+      "revoked": false
+    },
+    "t2_accepted_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+      "status": "accepted",
+      "consumable": true,
+      "revoked": false,
+      "comparison_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+    },
+    "t2_accepted_partition": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+      "status": "accepted",
+      "consumable": true,
+      "revoked": false
+    },
+    "t3_accepted_pilot": {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+      "status": "accepted-conditional",
+      "consumable": true,
+      "revoked": false,
+      "limitation": "The pilot's unexecuted browser and candidate-asset work is not promoted into Batch A evidence."
+    }
+  },
+  "membership_reconciliation": [
+    {
+      "identity_label": "Griffin Sky-Joust",
+      "identity_token": "griffin-sky-joust",
+      "accepted_partition_matches": 1,
+      "canonical_identity_id": "catalog/griffin-sky-joust",
+      "accepted_denominator_counts": {
+        "identity_records": 1,
+        "source_records": 8,
+        "graph_edges": 0,
+        "scene_records": 0,
+        "state_records": 0,
+        "transition_write_candidates": 0,
+        "asset_candidates": 5,
+        "historical_records": 7,
+        "discrepancies": 0
+      },
+      "permissible_current_candidate": {
+        "status": "none-assigned-by-t2",
+        "reason": "The eight matching source records are denominator documentation locations at the T2 comparison revision; none is a T2 current-page-source identity record."
+      },
+      "permissible_history_candidates": {
+        "classification": "deleted-locator-candidates-only",
+        "revision_path_groups": [
+          {
+            "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+            "paths": ["packages/game-cartridges/src/cartridges/griffin-sky-joust/index.ts"]
+          },
+          {
+            "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+            "paths": [
+              "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-sky-joust/page.tsx",
+              "apps/advantage-games/src/app/api/v1/games/griffin-sky-joust/complete/route.ts",
+              "apps/advantage-games/src/app/api/v1/games/griffin-sky-joust/sentences/route.ts",
+              "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/GriffinSkyJoustGame.test.tsx",
+              "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/GriffinSkyJoustGame.tsx",
+              "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/index.ts"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "identity_label": "Realm Carver",
+      "identity_token": "realm-carver",
+      "accepted_partition_matches": 1,
+      "canonical_identity_id": "catalog/realm-carver",
+      "accepted_denominator_counts": {
+        "identity_records": 1,
+        "source_records": 8,
+        "graph_edges": 0,
+        "scene_records": 0,
+        "state_records": 0,
+        "transition_write_candidates": 0,
+        "asset_candidates": 4,
+        "historical_records": 7,
+        "discrepancies": 0
+      },
+      "permissible_current_candidate": {
+        "status": "none-assigned-by-t2",
+        "reason": "The eight matching source records are denominator documentation locations at the T2 comparison revision; none is a T2 current-page-source identity record."
+      },
+      "permissible_history_candidates": {
+        "classification": "deleted-locator-candidates-only",
+        "revision_path_groups": [
+          {
+            "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+            "paths": ["packages/game-cartridges/src/cartridges/realm-carver/index.ts"]
+          },
+          {
+            "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+            "paths": [
+              "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/realm-carver/page.tsx",
+              "apps/advantage-games/src/app/api/v1/games/realm-carver/complete/route.ts",
+              "apps/advantage-games/src/app/api/v1/games/realm-carver/sentences/route.ts",
+              "apps/advantage-games/src/components/games/sentence/realm-carver/RealmCarverGame.test.tsx",
+              "apps/advantage-games/src/components/games/sentence/realm-carver/RealmCarverGame.tsx",
+              "apps/advantage-games/src/components/games/sentence/realm-carver/index.ts"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "identity_label": "Devourer Slime",
+      "identity_token": "devourer-slime",
+      "accepted_partition_matches": 1,
+      "canonical_identity_id": "sentence/devourer-slime",
+      "accepted_denominator_counts": {
+        "identity_records": 1,
+        "source_records": 39,
+        "graph_edges": 21,
+        "scene_records": 2,
+        "state_records": 3,
+        "transition_write_candidates": 3,
+        "asset_candidates": 4,
+        "historical_records": 1,
+        "discrepancies": 0
+      },
+      "permissible_current_candidate": {
+        "status": "t2-baseline-locators-only",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "paths": [
+          "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/devourer-slime/page.tsx",
+          "apps/advantage-games/src/app/api/v1/games/devourer-slime/complete/route.ts",
+          "apps/advantage-games/src/app/api/v1/games/devourer-slime/sentences/route.ts",
+          "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.test.tsx",
+          "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx"
+        ]
+      },
+      "permissible_history_candidates": {
+        "classification": "current-at-t2-baseline-not-historical-implementation",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/devourer-slime/page.tsx"
+      }
+    }
+  ],
+  "provenance_direction": {
+    "current_source": "Only a current-source specialist may inspect exact bytes at the frozen upper revision; T2 baseline candidates do not establish current behavior at phase base.",
+    "historical_source": "Deleted locators require a historical-source specialist to prove reachable ancestry, exact blob and cited-range bytes, and chronology before any historical claim.",
+    "class_separation": "This audit establishes candidate ownership only. It establishes no implementation, route, runtime, asset-use, state, transition, browser, catalog, specification, or cancelled-design fact."
+  },
+  "unknowns": [
+    "Current source/path/revision at the phase base for all three identities.",
+    "Reachability and exact bytes for every Griffin Sky-Joust and Realm Carver deleted locator.",
+    "Any implementation behavior, route disposition, runnable disposition, mechanics, asset usage, scene/state interpretation, or transition meaning."
+  ],
+  "stop_loss": {
+    "unsupported_factual_claims": 0,
+    "duplicate_partition_assignments": 0,
+    "unassigned_batch_a_identities": 0,
+    "source_work_admitted_by_this_audit": false
+  },
+  "disposition": "batch-a-membership-and-candidate-provenance-only; non-consumable for implementation evidence"
+}

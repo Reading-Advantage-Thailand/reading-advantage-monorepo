@@ -1,0 +1,51 @@
+{
+  "schema_version": "apk-requirements-map.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "requirements-mapper",
+  "game": "Dungeon Liberator",
+  "package_identity": "sentence/dungeon-liberator",
+  "source_revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "evidence_ledger": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger.json",
+  "evidence_ledger_sha256": "39c8ffd989b1d1bbdf86b535a37c3a2b3b3cbf7ba235613b9f0dfe0c9a321865",
+  "mapping_boundary": "Only cited ledger claim IDs are mapped. No source facts, browser observations, asset-forensics results, design requirements, or cross-game decisions are added.",
+  "records": {
+    "traversal_scene_state_transition": [
+      {"record_id":"DL-MAP-TSST-001","claim_ids":["DL-TOPO-001","DL-TOPO-002"],"status":"evidence-backed"},
+      {"record_id":"DL-MAP-TSST-002","claim_ids":["DL-MOVE-001","DL-MOVE-002","DL-COLL-001","DL-COLL-002"],"status":"evidence-backed"},
+      {"record_id":"DL-MAP-TSST-003","claim_ids":["DL-TRANS-001","DL-TRANS-002"],"status":"evidence-backed"},
+      {"record_id":"DL-MAP-TSST-004","claim_ids":["DL-INPUT-001","DL-INPUT-002","DL-INPUT-003","DL-CAMERA-001","DL-IND-001","DL-ROUTE-001"],"status":"source-reference-only"}
+    ],
+    "learning": [
+      {"record_id":"DL-MAP-LEARN-001","claim_ids":["DL-COLL-001","DL-TRANS-001"],"status":"mapped-without-new-fact"}
+    ],
+    "effort": [
+      {"record_id":"DL-MAP-EFFORT-001","claim_ids":["DL-MOVE-001","DL-MOVE-002","DL-COLL-001","DL-COLL-002"],"status":"mapped-without-new-fact"},
+      {"record_id":"DL-MAP-EFFORT-002","claim_ids":["DL-INPUT-001","DL-INPUT-002","DL-INPUT-003"],"status":"execution-unobserved"}
+    ],
+    "responsive": [
+      {"record_id":"DL-MAP-RESP-001","claim_ids":["DL-RESP-001","DL-CAMERA-001","DL-IND-001"],"status":"source-defined-not-browser-verified"}
+    ],
+    "assets": [
+      {"record_id":"DL-MAP-ASSET-001","claim_ids":["DL-ASSET-001"],"status":"source-reference-only"}
+    ],
+    "conflict": [
+      {"record_id":"DL-MAP-CONFLICT-001","claim_ids":["DL-TOPO-001","DL-TOPO-002","DL-TRANS-001","DL-TRANS-002"],"status":"no-ledger-conflict-recorded"}
+    ],
+    "unknown": [
+      {"record_id":"DL-MAP-UNKNOWN-001","claim_ids":["DL-INPUT-001","DL-INPUT-002","DL-INPUT-003","DL-RESP-001","DL-ROUTE-001"],"status":"browser-and-runnable-behavior-unknown"},
+      {"record_id":"DL-MAP-UNKNOWN-002","claim_ids":["DL-TOPO-001","DL-TOPO-002","DL-CAMERA-001"],"status":"unsupported-topology-and-geometry-details-unknown"},
+      {"record_id":"DL-MAP-UNKNOWN-003","claim_ids":["DL-ASSET-001"],"status":"binary-asset-forensics-unknown"},
+      {"record_id":"DL-MAP-UNKNOWN-004","claim_ids":["DL-TOPO-001","DL-TOPO-002","DL-MOVE-001","DL-MOVE-002","DL-COLL-001","DL-COLL-002","DL-TRANS-001","DL-TRANS-002","DL-INPUT-001","DL-CAMERA-001","DL-INPUT-002","DL-RESP-001","DL-INPUT-003","DL-ASSET-001","DL-IND-001","DL-ROUTE-001"],"status":"historical-behavior-unknown"}
+    ]
+  },
+  "validation": {
+    "all_claim_ids_resolve_to_ledger": true,
+    "all_mapped_claims_retain_citations": true,
+    "novel_source_facts": 0,
+    "browser_claims": 0,
+    "cross_game_decisions": 0,
+    "acceptance_claimed": false
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

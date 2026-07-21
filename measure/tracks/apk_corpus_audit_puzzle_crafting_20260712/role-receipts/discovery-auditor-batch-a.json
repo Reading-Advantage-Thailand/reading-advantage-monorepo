@@ -1,0 +1,45 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "discovery-auditor",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "d77044c35571dabde108098e5c9f9dd62722327d",
+  "fresh_context_only": true,
+  "inherited_narrative": false,
+  "parent_ancestry_ids": [],
+  "fork_turns": "none",
+  "provider_attestation": {
+    "available": false,
+    "reason": "This execution environment exposed no provider spawn identifier, raw session export, start/end event identifiers, or final-response hash."
+  },
+  "unavailable_required_provenance": [
+    "spawn_id",
+    "prompt_sha256",
+    "actual_context_manifest_sha256",
+    "start_event_id",
+    "end_event_id",
+    "final_response_sha256",
+    "commit_sha"
+  ],
+  "owned_outputs": [
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-discovery-audit.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-discovery-audit.json": "72b076c1c742ecf4b2bbc27bcee259bd5c372233d21f2e6222fad778d174beb7"
+  },
+  "accepted_input_hashes": {
+    "t2_accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "t2_accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "t3_accepted_pilot_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b"
+  },
+  "budget_declaration_sha256": "695bd2b90bf0483c35c09c51007add5e467ad671cac4945392e4cc3fa02a5314",
+  "budget_usage": {
+    "path_admissions": 5,
+    "git_history_queries": 2,
+    "denominator_reports": 1
+  },
+  "source_behavior_inspected": false,
+  "mechanics_claims_created": false,
+  "truthful_status": "discovery-only; outputs are non-consumable and not eligible as tool-attested role evidence because required provider provenance is unavailable"
+}

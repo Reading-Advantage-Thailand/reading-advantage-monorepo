@@ -1,0 +1,96 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 0: Freeze cohort and roles",
+  "batch_id": "batch-a",
+  "role": "discovery-auditor-batch-a",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "d77044c35571dabde108098e5c9f9dd62722327d",
+  "commit_sha": null,
+  "authored_commit": false,
+  "spawn_id": null,
+  "parent_id": null,
+  "ancestry_ids": [],
+  "start_event_id": null,
+  "end_event_id": null,
+  "start_timestamp": null,
+  "end_timestamp": null,
+  "provider_provenance": {
+    "status": "unavailable",
+    "reason": "The execution API exposed no provider spawn, parent, ancestry, event, timestamp, raw-session export, or final-response-hash fields.",
+    "fabricated_placeholders_used": false
+  },
+  "prompt_sha256": null,
+  "prompt_hash_status": "unavailable without a retained provider raw-message export",
+  "allowed_input_manifest_sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa",
+  "actual_context_manifest_sha256": null,
+  "actual_context_manifest_status": "unavailable because no provider context export was exposed",
+  "prior_role_history": [],
+  "final_response_sha256": null,
+  "final_response_hash_status": "unavailable before provider emission and not backfillable without a retained provider export",
+  "budget_declaration": {
+    "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-budget-declaration.json",
+    "sha256": "f87e33ef2a1a35ce2ac77eb0ea8f9797f6dc2e5c514159ad6d1fe011363bfe6b"
+  },
+  "numeric_usage": {
+    "source_bytes_read": 6480522,
+    "source_objects_read": 20,
+    "command_invocations": 6,
+    "elapsed_minutes": 38,
+    "records_authored": 8
+  },
+  "usage_measurement": {
+    "source_bytes_read": "Measured sum of authorized predecessor, Phase 0, protocol, and denominator JSON/Markdown bytes parsed during the audit; repeated parses count separately.",
+    "source_objects_read": "Count of authorized content objects parsed, including repeated denominator dataset parses.",
+    "command_invocations": "Bash command invocations, including planned final structured validation; read, grep, patch, and directory tool calls are excluded.",
+    "elapsed_minutes": "Conservative role-local elapsed estimate because provider timestamps were unavailable.",
+    "records_authored": "Count of top-level audit reconciliation, candidate, provenance, unknown, and stop-loss records; nested scalar fields are excluded."
+  },
+  "budget_compliance": {
+    "source_bytes_read_within_limit": true,
+    "source_objects_read_within_limit": true,
+    "command_invocations_within_limit": true,
+    "elapsed_minutes_within_limit": true,
+    "records_authored_within_limit": true,
+    "unmeasured_usage": false
+  },
+  "output_files": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/discovery-audit.json",
+      "sha256": "585978d5592b321da7bcce72c4df929998da0d566b717447933c411f023b38dd"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "info",
+      "finding_id": "batch-a-membership-reconciled",
+      "finding": "Each assigned Batch A identity has exactly one accepted-partition match and the accepted denominator counts recorded in the audit.",
+      "disposition": "candidate ownership retained without implementation inference"
+    },
+    {
+      "severity": "info",
+      "finding_id": "batch-a-deleted-locators-not-promoted",
+      "finding": "Fourteen Griffin Sky-Joust and Realm Carver deleted historical locators remain candidates pending specialist reachability, byte, and chronology proof.",
+      "disposition": "unknown until historical-source review"
+    },
+    {
+      "severity": "medium",
+      "finding_id": "batch-a-provider-receipt-data-unavailable",
+      "finding": "Provider provenance, context, and final-response fields were not exposed.",
+      "disposition": "truthful unavailable fields; fail closed where provider-attested isolation is mandatory"
+    }
+  ],
+  "isolation_proof": {
+    "fork_turns": null,
+    "provider_attested": false,
+    "raw_export_path": null,
+    "status": "unavailable",
+    "gate_disposition": "fail-closed where provider-attested isolation is mandatory"
+  },
+  "receipt_admissibility": {
+    "content_hashes_verifiable": true,
+    "provider_provenance_complete": false,
+    "independent_review_isolation_proven": false,
+    "admissible_for_provider-attested-acceptance": false
+  }
+}

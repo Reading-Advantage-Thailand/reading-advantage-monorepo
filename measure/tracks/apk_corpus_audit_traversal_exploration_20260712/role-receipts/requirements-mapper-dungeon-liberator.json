@@ -1,0 +1,67 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-unattested-requirements-mapping",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "requirements-mapper",
+  "task_id": "map-requirements:Dungeon Liberator",
+  "game": "Dungeon Liberator",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "d77044c35571dabde108098e5c9f9dd62722327d",
+  "base_reconciliation": "The supplied phase and role bases are recorded as authoritative inputs; mapping is bound to the evidence ledger's cited source revision.",
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "agent_id": "unavailable",
+  "spawn_id": "unavailable",
+  "parent_ancestry_ids": "unavailable",
+  "fork_turns_none": "unavailable",
+  "provider_attestation": "Unavailable: no collaboration-provider spawn, ancestry, prompt, session-event, timing, or fork attestation was exposed.",
+  "prompt_sha256": "unavailable",
+  "allowed_input_manifest_sha256": "unavailable",
+  "actual_context_manifest_sha256": "unavailable",
+  "prior_role_history": "unavailable",
+  "events": {"start_event_id":"unavailable","end_event_id":"unavailable","started_at":"unavailable","ended_at":"unavailable"},
+  "final_response_sha256": "1886f54500ed5ba0ff2ea25e167c118f24b366e27d6f5131b2005360e77e3f8e",
+  "budget_declaration_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+  "budget_declaration_sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+  "allowed_inputs": [
+    "measure/index.md",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/plan.md",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-discovery-audit.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-role-applicability.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+    "measure/product-owner-apk-provenance-direction-20260721.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/evidence-final-report.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-dungeon-liberator.json"
+  ],
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/requirements-map.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/mapper-final-report.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-dungeon-liberator.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/requirements-map.json": "2c7c5fe76481e22f5f982467e47ca9c17a2f3a9e5377468a57d61c2cb631ef25",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/mapper-final-report.json": "1886f54500ed5ba0ff2ea25e167c118f24b366e27d6f5131b2005360e77e3f8e",
+    "self": "intentionally-not-self-hashed"
+  },
+  "actual_usage": {
+    "source_bytes": "measured-local-after-read; provider telemetry unavailable",
+    "source_files_objects": 3,
+    "commands": "measured-local validation commands; provider telemetry unavailable",
+    "elapsed_minutes": "unavailable-no-timing-attestation",
+    "records_authored_reviewed": 14,
+    "browser_interactions": 0,
+    "captured_artifacts": 2,
+    "novel_factual_claims_authored": 0
+  },
+  "findings": [
+    "All mapped references are ledger claim IDs; no source fact was added.",
+    "No browser, asset-forensics, historical, or runnable claim was made.",
+    "Provider-side provenance and timing telemetry are unavailable and disclosed.",
+    "Commit binding is unavailable until an orchestrator commit; this receipt is uncommitted by instruction."
+  ],
+  "commit_sha": "uncommitted",
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,135 @@
+{
+  "schema_version": "apk-batch-discovery-audit.v1",
+  "track": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "discovery-auditor",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "d77044c35571dabde108098e5c9f9dd62722327d",
+  "scope": {
+    "batch": "A",
+    "canonical_labels": [
+      "Enchanted Library",
+      "Rune Match",
+      "Alchemist's Synthesis"
+    ],
+    "canonical_identity_ids": [
+      "vocabulary/enchanted-library",
+      "vocabulary/rune-match",
+      "vocabulary/alchemists-synthesis"
+    ],
+    "source_behavior_inspected": false,
+    "behavioral_claims_created": false,
+    "ledgers_or_mappings_created": false,
+    "browser_evidence_created": false
+  },
+  "accepted_inputs": {
+    "t2_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+      "status": "accepted",
+      "consumable": true,
+      "revoked": false
+    },
+    "t2_partition": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+      "status": "accepted",
+      "consumable": true,
+      "revoked": false
+    },
+    "t3_conditional_pilot": {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+      "status": "accepted-conditional",
+      "consumable": true,
+      "revocation_field": "not stated"
+    },
+    "accepted_source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+  },
+  "reconciliation": {
+    "partition_membership": "exactly three accepted Puzzle and crafting labels assigned to Batch A",
+    "unique_identity_count": 3,
+    "batch_size": 3,
+    "maximum_batch_size": 3,
+    "denominator_mismatch_observed": false,
+    "permissible_candidates": [
+      {
+        "canonical_label": "Alchemist's Synthesis",
+        "canonical_identity_id": "vocabulary/alchemists-synthesis",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/alchemists-synthesis/page.tsx",
+        "route_candidate": "/student/games/vocabulary/alchemists-synthesis",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "blob_sha256": "b036d1ef56554ba0d98b8748219c933d2f64c718ad3bcc5460e681890e18ec82",
+        "admission_basis": "accepted denominator identity and route metadata"
+      },
+      {
+        "canonical_label": "Enchanted Library",
+        "canonical_identity_id": "vocabulary/enchanted-library",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx",
+        "route_candidate": "/student/games/vocabulary/enchanted-library",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "blob_sha256": "940b18a18b2d31a93b6048948f216d75ca980f975002bfc3d61e90138ef8d616",
+        "admission_basis": "accepted denominator identity and route metadata"
+      },
+      {
+        "canonical_label": "Enchanted Library",
+        "canonical_identity_id": "vocabulary/enchanted-library",
+        "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx",
+        "route_candidate": "/apps/reading-advantage/app/student/games/vocabulary/enchanted-library",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "blob_sha256": "a175f2335d6252f7289a625ab3c21a54de266f3f1e1adcd6e1cfed71edc769da",
+        "admission_basis": "accepted denominator identity and route metadata"
+      },
+      {
+        "canonical_label": "Rune Match",
+        "canonical_identity_id": "vocabulary/rune-match",
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx",
+        "route_candidate": "/student/games/vocabulary/rune-match",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "blob_sha256": "a951b2113f67f78730482ae034d49adcbf58a0303aa93495578e1cb0a196c918",
+        "admission_basis": "accepted denominator identity and route metadata"
+      },
+      {
+        "canonical_label": "Rune Match",
+        "canonical_identity_id": "vocabulary/rune-match",
+        "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx",
+        "route_candidate": "/apps/reading-advantage/app/student/games/vocabulary/rune-match",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "blob_sha256": "2f53e5999d8b6426c0e3209c8a761fec5c89ad1888a772982d5c144353690551",
+        "admission_basis": "accepted denominator identity and route metadata"
+      }
+    ],
+    "non_admitted_candidates": [
+      {
+        "scope": "vocabulary/alchemists-synthesis",
+        "source_family": "reading",
+        "status": "not-observed in accepted predecessor metadata"
+      },
+      {
+        "scope": "all Batch A identities",
+        "source_family": "primary",
+        "status": "not-observed in accepted predecessor metadata"
+      }
+    ]
+  },
+  "unknowns": [
+    "No source-body, implementation, route reachability, runnable, historical-behavior, asset, content, or browser conclusion is established by this discovery audit.",
+    "T3's accepted manifest does not state a revoked field; this audit preserves that field as unavailable rather than inferring it.",
+    "Provider/session/event/prompt/final-response/commit provenance is unavailable in this execution environment and cannot be fabricated.",
+    "The relationship, if any, among distinct admitted path candidates is not resolved here."
+  ],
+  "budget": {
+    "ceiling": {
+      "path_admissions": 36,
+      "git_history_queries": 24,
+      "denominator_reports": 1
+    },
+    "actual": {
+      "path_admissions": 5,
+      "git_history_queries": 2,
+      "denominator_reports": 1
+    },
+    "within_ceiling": true
+  },
+  "disposition": "discovery-only; non-consumable; pending independent evidence collection and review"
+}

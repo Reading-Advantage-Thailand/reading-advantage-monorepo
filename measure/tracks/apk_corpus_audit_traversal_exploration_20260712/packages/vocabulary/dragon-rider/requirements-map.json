@@ -1,0 +1,56 @@
+{
+  "schema_version": "apk-requirements-map.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "task_id": "map-requirements:vocabulary/dragon-rider",
+  "role": "requirements-mapper",
+  "canonical_identity_id": "vocabulary/dragon-rider",
+  "canonical_label": "Dragon Rider",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "d77044c35571dabde108098e5c9f9dd62722327d",
+  "source_revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "mapping_boundary": "This package reorganizes only cited Dragon Rider ledger records. It adds no source facts, makes no browser claim, and makes no cross-game or standardization decision.",
+  "records": {
+    "traversal": [
+      {"id": "DR-MAP-TRAV-001", "disposition": "source-backed", "cited_ledger_ids": ["DR-SCENE-002", "DR-TRANS-003", "DR-TRANS-004"]}
+    ],
+    "scene": [
+      {"id": "DR-MAP-SCENE-001", "disposition": "source-backed", "cited_ledger_ids": ["DR-SCENE-001", "DR-SCENE-002", "DR-ASSET-001"]}
+    ],
+    "state": [
+      {"id": "DR-MAP-STATE-001", "disposition": "source-backed", "cited_ledger_ids": ["DR-STATE-001", "DR-MECH-001", "DR-TRANS-002"]}
+    ],
+    "transition": [
+      {"id": "DR-MAP-TRANS-001", "disposition": "source-backed", "cited_ledger_ids": ["DR-TRANS-001", "DR-TRANS-002", "DR-TRANS-003", "DR-TRANS-004"]}
+    ],
+    "learning": [
+      {"id": "DR-MAP-LEARN-001", "disposition": "source-backed-learning-interaction", "cited_ledger_ids": ["DR-MECH-002", "DR-TRANS-001", "DR-TRANS-004", "DR-CONTROL-001", "DR-TEST-001"]}
+    ],
+    "effort": [
+      {"id": "DR-MAP-EFFORT-001", "disposition": "source-structure-only-no-estimate-or-standardization", "cited_ledger_ids": ["DR-ID-002", "DR-SCENE-001", "DR-STATE-001", "DR-MECH-001", "DR-MECH-002", "DR-TRANS-001", "DR-TRANS-002", "DR-TRANS-003", "DR-TRANS-004", "DR-CONTROL-001", "DR-RESP-001", "DR-ASSET-001", "DR-ROUTE-001", "DR-TEST-001"]}
+    ],
+    "responsive": [
+      {"id": "DR-MAP-RESP-001", "disposition": "source-hook-only-browser-unknown", "cited_ledger_ids": ["DR-RESP-001", "DR-SCENE-002"]}
+    ],
+    "assets": [
+      {"id": "DR-MAP-ASSET-001", "disposition": "source-declared-usage-only", "cited_ledger_ids": ["DR-ID-001", "DR-ASSET-001"]}
+    ],
+    "conflict": [
+      {"id": "DR-MAP-CONFLICT-001", "disposition": "no-ledger-conflict-recorded", "cited_ledger_ids": ["DR-ID-001", "DR-ID-002", "DR-SCENE-001", "DR-STATE-001", "DR-MECH-001", "DR-MECH-002", "DR-TRANS-001", "DR-TRANS-002", "DR-TRANS-003", "DR-TRANS-004", "DR-SCENE-002", "DR-CONTROL-001", "DR-RESP-001", "DR-ASSET-001", "DR-ROUTE-001", "DR-TEST-001"]}
+    ]
+  },
+  "unknown_records": [
+    {"id": "DR-MAP-UNK-001", "disposition": "explicit-unknown", "cited_ledger_ids": ["DR-UNK-001"]},
+    {"id": "DR-MAP-UNK-002", "disposition": "explicit-unknown", "cited_ledger_ids": ["DR-UNK-002"]},
+    {"id": "DR-MAP-UNK-003", "disposition": "explicit-unknown", "cited_ledger_ids": ["DR-UNK-003"]},
+    {"id": "DR-MAP-UNK-004", "disposition": "explicit-unknown", "cited_ledger_ids": ["DR-UNK-004"]}
+  ],
+  "claim_reference_accounting": {
+    "ledger_claims_total": 16,
+    "distinct_claim_ids_referenced": 16,
+    "unresolved_claim_ids": [],
+    "non_dragon_rider_claim_ids": [],
+    "novel_source_facts": 0
+  },
+  "acceptance": "not-claimed"
+}

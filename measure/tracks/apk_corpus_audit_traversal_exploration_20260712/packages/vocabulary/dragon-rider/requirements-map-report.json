@@ -1,0 +1,29 @@
+{
+  "schema_version": "apk-requirements-mapper-report.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "task_id": "map-requirements:vocabulary/dragon-rider",
+  "role": "requirements-mapper",
+  "canonical_identity_id": "vocabulary/dragon-rider",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "d77044c35571dabde108098e5c9f9dd62722327d",
+  "source_revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "status": "mapping-complete-independent-review-pending",
+  "source_fact_policy": "Every mapping record resolves to a cited claim or unknown ID in the Dragon Rider evidence ledger; no source fact was added.",
+  "mapped_sections": ["traversal", "scene", "state", "transition", "learning", "effort", "responsive", "assets", "conflict", "unknown"],
+  "counts": {"mapped_records": 9, "unknown_records": 4, "distinct_claim_ids_referenced": 16, "distinct_unknown_ids_referenced": 4, "unresolved_claim_ids": 0, "non_dragon_rider_claim_ids": 0, "novel_source_facts": 0, "browser_interactions": 0},
+  "input_hashes": {
+    "claim_ledger": "10d541da93265eb6f179104c508472fdb86191d823fa9dee0e519a35b34f0071",
+    "collector_report": "66dc64f46c63dbb53eaef2b4f6fc7f58c0e2dbac6c9df3489f41c5694fed31db",
+    "collector_method": "866d614da5a27cc5c6809d4434beb02f03dbd8f15e26aac08a3e790fffb48498",
+    "collector_receipt": "aa24ada6ca983217ce6fd6c24dc18e70f61d93599f5c1c09042a2e1d95a9e81e",
+    "phase0_budget": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+    "phase0_discovery": "6524d33b1af38d93b9cc0a3f1b31421979f7a4120f68d9065935946312e6c152",
+    "phase0_applicability": "24b0980a07ddc8cc975596599530f6cd708df4dcc6e1bde5890a41882865ed9",
+    "plan": "53a0473779b83c49081b42b9a998f692e5948dc6ca695d11e9d99b3b7667f902",
+    "provenance_direction": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+  },
+  "budget": {"ceiling": {"source_bytes": 4000000, "source_files_objects": 100, "commands": 50, "elapsed_minutes": 75, "records_authored_reviewed": 250, "browser_interactions": 0, "captured_artifacts": 35}, "actual": {"source_bytes": 43002, "source_files_objects": 9, "commands": 6, "elapsed_minutes": 15, "records_authored_reviewed": 13, "browser_interactions": 0, "captured_artifacts": 0}, "ceiling_breaches": 0},
+  "provider_telemetry": {"prompt": "unavailable", "session": "unavailable", "spawn": "unavailable", "ancestry": "unavailable", "events": "unavailable", "timing": "unavailable", "final_response": "unavailable", "commit": "unavailable", "isolation": "unavailable", "disclosure": "Provider-side telemetry was unavailable; no provider attestation or browser claim is made."},
+  "acceptance": "not-claimed"
+}
