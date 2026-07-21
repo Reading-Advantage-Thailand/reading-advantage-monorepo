@@ -1,0 +1,28 @@
+{
+  "schema_version": "apk-product-owner-direction.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-b",
+  "issued_at": "2026-07-21",
+  "issued_by": "orchestrator (delegated project-owner authority)",
+  "acceptance": "not-claimed",
+  "decision": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+  "scope": "Elapsed-minute fields only for existing and additive successor Batch B evidence, mapping, browser, truth, and review receipts.",
+  "direction": "The harness supplies no trustworthy session start/end timestamps. Receipts may record elapsed_minutes as integer 0 only with timing_measurement: unavailable-in-harness and an explicit statement that 0 is accounting fallback, not elapsed-time evidence. Source bytes, objects, commands, records, interactions, artifacts, claim semantics, denominator completeness, review, and lifecycle gates remain independently measured and non-waived.",
+  "non_waived": [
+    "source byte ceilings",
+    "source object ceilings",
+    "command ceilings",
+    "record, interaction, and artifact ceilings",
+    "claim semantics",
+    "denominator completeness",
+    "fresh independent review",
+    "candidate and acceptance lifecycle"
+  ],
+  "supersedes": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v2.json",
+    "sha256": "3b3fea0b22f5ac379a1bb3518b1095bc8f3a366eaa7eb2f677b69ac6ffddb2c0",
+    "scope": "Batch A only; not selected for Batch B"
+  },
+  "selection_boundary": "This additive direction selects Batch B timing scope only. It authorizes no browser success, review result, candidate, owner approval, accepted manifest, or product claim.",
+  "marker": "MEASURE_AGENT_RESULT"
+}

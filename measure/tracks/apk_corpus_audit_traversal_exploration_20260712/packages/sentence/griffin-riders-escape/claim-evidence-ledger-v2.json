@@ -1,0 +1,401 @@
+{
+  "schema_version": "apk-claim-evidence-ledger.v3",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B remediation V2",
+  "game": "Griffin Rider's Escape",
+  "canonical_identity": "catalog/griffin-riders-escape",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "collector_scope": "One-game source collection only. No browser, map, requirements mapping, asset audit, truth-test authoring, or review work.",
+  "input_bindings": {
+    "accepted_t5_batch_a_manifest": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-a-v6.json",
+      "sha256": "f5a215f44815c79025e86e97a3217d7a85c4a33db86f80db2909f30dd3a9caa3"
+    },
+    "phase0_discovery_audit": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-discovery-audit.json",
+      "sha256": "6524d33b1af38d93b9cc0a3f1b31421979f7a4120f68d9065935946312e6c152"
+    },
+    "phase0_budget": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+      "sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896"
+    },
+    "provenance_direction": {
+      "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+    },
+    "timing_direction": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v2.json",
+      "sha256": "3b3fea0b22f5ac379a1bb3518b1095bc8f3a366eaa7eb2f677b69ac6ffddb2c0"
+    }
+  },
+  "claims": [
+    {
+      "claim_id": "GRF-WORLD-001",
+      "category": "world",
+      "scene_or_state_id": "active/perspective-world",
+      "source_fact": "The legacy configuration defines a 390 by 844 surface, horizonY 200, playerY 700, three lane x offsets, base speed 0.005, and a 2000 ms normal spawn interval.",
+      "interpretation": "This is source-defined logical geometry and tuning, not browser-observed responsive behavior.",
+      "citation": {
+        "path": "apps/advantage-games/src/lib/games/griffinRidersEscapeConfig.ts",
+        "line_start": 1,
+        "line_end": 22,
+        "cited_range_sha256": "2d45eb9dda8e0a7d07633d3192f8530de53b9d248f455f21d8dc8b63e2c1f0e5",
+        "blob_sha256": "8e303b68785637cb018bd3a8923cf3c5c924426140442eb5bb0ffadadaad2554",
+        "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+      },
+      "confidence": "high",
+      "evidence_class": "history",
+      "discovery_method": "git-show-range",
+      "collector_agent": "evidence-collector-griffin-riders-escape-t5-batch-b-v2",
+      "conflict_state": "none-observed",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "GRF-STATE-001",
+      "category": "scene-state",
+      "scene_or_state_id": "playing",
+      "source_fact": "The legacy state contains playing, victory, and defeat status; lives, score, combo, ordered words, target index, objects, attempts, sentence completion, game time, spawn timer, and player lane.",
+      "interpretation": "These are implementation state fields; they do not establish a successful run.",
+      "citation": {
+        "path": "apps/advantage-games/src/lib/games/griffinRidersEscape.ts",
+        "line_start": 4,
+        "line_end": 35,
+        "cited_range_sha256": "29c94fe0bd4fa0df531c7594b71aa52c5d3c1f193cd403321cd0b01748496621",
+        "blob_sha256": "6ecd98c6d344611151b93d051170ec27200e2a6053bed7573c1d45df75c77f76",
+        "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+      },
+      "confidence": "high",
+      "evidence_class": "history",
+      "discovery_method": "git-show-range",
+      "collector_agent": "evidence-collector-griffin-riders-escape-t5-batch-b-v2",
+      "conflict_state": "none-observed",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "GRF-START-001",
+      "category": "start-state",
+      "scene_or_state_id": "playing/start",
+      "source_fact": "State creation rejects empty vocabulary, selects a sentence through the RNG, splits its term into words, initializes three lives, zero progress, an empty object list, and the center lane.",
+      "interpretation": "This is a source-defined initialization path only.",
+      "citation": {
+        "path": "apps/advantage-games/src/lib/games/griffinRidersEscape.ts",
+        "line_start": 46,
+        "line_end": 79,
+        "cited_range_sha256": "09acacdbdf0ebaf88aa9a375b2b22b7f62b26a23162e4a7a1da232ed38c976c1",
+        "blob_sha256": "6ecd98c6d344611151b93d051170ec27200e2a6053bed7573c1d45df75c77f76",
+        "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+      },
+      "confidence": "high",
+      "evidence_class": "history",
+      "discovery_method": "git-show-range",
+      "collector_agent": "evidence-collector-griffin-riders-escape-t5-batch-b-v2",
+      "conflict_state": "none-observed",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "GRF-MOVE-001",
+      "category": "movement",
+      "scene_or_state_id": "input/lane-switch",
+      "source_fact": "Legacy switchLane moves the player one bounded step among left, center, and right while the status is playing.",
+      "interpretation": "This is a pure lane-state transition, not evidence of trusted keyboard, touch, or browser input.",
+      "citation": {
+        "path": "apps/advantage-games/src/lib/games/griffinRidersEscape.ts",
+        "line_start": 240,
+        "line_end": 257,
+        "cited_range_sha256": "d51d569d6ef225949e055351da7c2fdea4d3f7926e22571354edd5857ef523d7",
+        "blob_sha256": "6ecd98c6d344611151b93d051170ec27200e2a6053bed7573c1d45df75c77f76",
+        "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+      },
+      "confidence": "high",
+      "evidence_class": "history",
+      "discovery_method": "git-show-range",
+      "collector_agent": "evidence-collector-griffin-riders-escape-t5-batch-b-v2",
+      "conflict_state": "none-observed",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "GRF-WAVE-001",
+      "category": "transition",
+      "scene_or_state_id": "playing/wave-spawn",
+      "source_fact": "Legacy spawnWave creates either one or two obstacles in unique lanes or one correct gate plus decoy gates in the other lanes, all at z 100.",
+      "interpretation": "The source describes wave construction; it does not prove that a wave rendered or spawned in a browser session.",
+      "citation": {
+        "path": "apps/advantage-games/src/lib/games/griffinRidersEscape.ts",
+        "line_start": 81,
+        "line_end": 149,
+        "cited_range_sha256": "5b7d07f67d26ee047ac0524508f9fb3813dbc9e76c5554a2e7aacd59d31667ac",
+        "blob_sha256": "6ecd98c6d344611151b93d051170ec27200e2a6053bed7573c1d45df75c77f76",
+        "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+      },
+      "confidence": "high",
+      "evidence_class": "history",
+      "discovery_method": "git-show-range",
+      "collector_agent": "evidence-collector-griffin-riders-escape-t5-batch-b-v2",
+      "conflict_state": "none-observed",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "GRF-COLL-001",
+      "category": "collision",
+      "scene_or_state_id": "playing/collision-plane",
+      "source_fact": "Each legacy tick decreases object z, checks the -5 through 5 collision band, and resolves an object only when its lane matches the player lane.",
+      "interpretation": "This is deterministic source logic; no physical collision or live input outcome is claimed.",
+      "citation": {
+        "path": "apps/advantage-games/src/lib/games/griffinRidersEscape.ts",
+        "line_start": 152,
+        "line_end": 180,
+        "cited_range_sha256": "16dc6bc106dbd94e5d2b4d63980adfb861323ad64eb9d66511a60c3bcb6f489b",
+        "blob_sha256": "6ecd98c6d344611151b93d051170ec27200e2a6053bed7573c1d45df75c77f76",
+        "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+      },
+      "confidence": "high",
+      "evidence_class": "history",
+      "discovery_method": "git-show-range",
+      "collector_agent": "evidence-collector-griffin-riders-escape-t5-batch-b-v2",
+      "conflict_state": "none-observed",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "GRF-TRANS-001",
+      "category": "transition",
+      "scene_or_state_id": "playing/correct-or-failed-gate",
+      "source_fact": "A legacy obstacle or incorrect gate decrements lives and resets combo; a correct gate increments score, correct answers, combo, collected words, and target index, and the last word sets victory.",
+      "interpretation": "This is implementation transition logic, not a completion or persistence observation.",
+      "citation": {
+        "path": "apps/advantage-games/src/lib/games/griffinRidersEscape.ts",
+        "line_start": 181,
+        "line_end": 218,
+        "cited_range_sha256": "a00b673fffb0bd37f71bc1f528d6f24b537b68c78728a617ec8525b54bf7bc45",
+        "blob_sha256": "6ecd98c6d344611151b93d051170ec27200e2a6053bed7573c1d45df75c77f76",
+        "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+      },
+      "confidence": "high",
+      "evidence_class": "history",
+      "discovery_method": "git-show-range",
+      "collector_agent": "evidence-collector-griffin-riders-escape-t5-batch-b-v2",
+      "conflict_state": "none-observed",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "GRF-RESP-001",
+      "category": "responsive",
+      "scene_or_state_id": "active/projection",
+      "source_fact": "The legacy component projects lane and z coordinates into x, y, and scale using the 390 by 844 logical surface and horizon configuration, then fits the Stage to measured dimensions.",
+      "interpretation": "Static projection and sizing code are not browser-observed compact or wide behavior.",
+      "citation": {
+        "path": "apps/advantage-games/src/components/games/sentence/griffin-riders-escape/GriffinRidersEscapeGame.tsx",
+        "line_start": 189,
+        "line_end": 225,
+        "cited_range_sha256": "4dfa2abea89f85a142fa0dbf1b69ce831ae0e56b991022f06516ad4adf636d46",
+        "blob_sha256": "578567f534c7930b67a093ca88179eae62a3e8bf02781b3ab90248b5a642bf7e",
+        "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+      },
+      "confidence": "high",
+      "evidence_class": "history",
+      "discovery_method": "git-show-range",
+      "collector_agent": "evidence-collector-griffin-riders-escape-t5-batch-b-v2",
+      "conflict_state": "none-observed",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "GRF-INPUT-001",
+      "category": "input",
+      "scene_or_state_id": "playing/input",
+      "source_fact": "The legacy component maps nonzero directional input changes to switchLane left or right while the phase is playing.",
+      "interpretation": "The code path exists; no trusted native input event was executed or observed by this collector.",
+      "citation": {
+        "path": "apps/advantage-games/src/components/games/sentence/griffin-riders-escape/GriffinRidersEscapeGame.tsx",
+        "line_start": 137,
+        "line_end": 146,
+        "cited_range_sha256": "4e5b510336677ddc0def579222d43e6514139601acd73dd2ace1583e5103eb1b",
+        "blob_sha256": "578567f534c7930b67a093ca88179eae62a3e8bf02781b3ab90248b5a642bf7e",
+        "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+      },
+      "confidence": "high",
+      "evidence_class": "history",
+      "discovery_method": "git-show-range",
+      "collector_agent": "evidence-collector-griffin-riders-escape-t5-batch-b-v2",
+      "conflict_state": "none-observed",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "GRF-ROUTE-001",
+      "category": "route",
+      "scene_or_state_id": "page/load",
+      "source_fact": "The legacy page fetches sentence data from the griffin-riders-escape sentences endpoint and posts accuracy, XP, and the session user ID to the complete endpoint.",
+      "interpretation": "Route construction is source evidence only; it does not establish reachability, API success, persistence, or correctness.",
+      "citation": {
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-riders-escape/page.tsx",
+        "line_start": 21,
+        "line_end": 51,
+        "cited_range_sha256": "09bcdd58c8376a8b89a1b767601d42b22e3fa529a70dcd57b6a7b515bdc280e4",
+        "blob_sha256": "628bc2e3084ed24846c61fd2cf3c776f4b5206ce7582da2a9614d0f171ac34d3",
+        "revision": "4106ba39547c8cac7645ce0f257a6bdd133712e9"
+      },
+      "confidence": "high",
+      "evidence_class": "history",
+      "discovery_method": "git-show-range",
+      "collector_agent": "evidence-collector-griffin-riders-escape-t5-batch-b-v2",
+      "conflict_state": "none-observed",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "GRF-CART-001",
+      "category": "asset",
+      "scene_or_state_id": "cartridge/asset-contract",
+      "source_fact": "The withdrawn cartridge declares semantic slots for background, player, correct and incorrect targets, feedback, UI, lane marker, gate, obstacle, and wind effect.",
+      "interpretation": "These are semantic asset requirements, not proof that physical assets exist, load, or are visually suitable.",
+      "citation": {
+        "path": "packages/game-cartridges/src/cartridges/griffin-riders-escape/scene.ts",
+        "line_start": 23,
+        "line_end": 36,
+        "cited_range_sha256": "8e33f406ab77df093d926286c4026ac2cc077d9407ca98354956c4f0283ff65d",
+        "blob_sha256": "e870af139e0d6295a17664c18ff4eca78271f539760da6e24c873456a3602633",
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      },
+      "confidence": "high",
+      "evidence_class": "history",
+      "discovery_method": "git-show-range",
+      "collector_agent": "evidence-collector-griffin-riders-escape-t5-batch-b-v2",
+      "conflict_state": "none-observed",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "GRF-CART-002",
+      "category": "input",
+      "scene_or_state_id": "cartridge/input-bindings",
+      "source_fact": "The withdrawn cartridge binds ArrowLeft or A and ArrowRight or D, lower-half left and right regions, and 55-pixel swipe threshold to traversal actions.",
+      "interpretation": "These are declared adapter bindings; no input execution is claimed.",
+      "citation": {
+        "path": "packages/game-cartridges/src/cartridges/griffin-riders-escape/scene.ts",
+        "line_start": 54,
+        "line_end": 60,
+        "cited_range_sha256": "bb4166b637bb7e263f69caa1415adc64f56718f5d23328c91a0be0c3f33dca3e",
+        "blob_sha256": "e870af139e0d6295a17664c18ff4eca78271f539760da6e24c873456a3602633",
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      },
+      "confidence": "high",
+      "evidence_class": "history",
+      "discovery_method": "git-show-range",
+      "collector_agent": "evidence-collector-griffin-riders-escape-t5-batch-b-v2",
+      "conflict_state": "none-observed",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "GRF-CART-003",
+      "category": "world",
+      "scene_or_state_id": "cartridge/config",
+      "source_fact": "The withdrawn cartridge creates a Phaser configuration with width 960 and height 540 and preloads the declared semantic asset slots.",
+      "interpretation": "This is a historical cartridge configuration envelope, not current route or browser evidence.",
+      "citation": {
+        "path": "packages/game-cartridges/src/cartridges/griffin-riders-escape/scene.ts",
+        "line_start": 87,
+        "line_end": 104,
+        "cited_range_sha256": "e3b2901b54ed9d712f1e01c55aec22a04fb19b7b89fee370ae28d2b035ceea74",
+        "blob_sha256": "e870af139e0d6295a17664c18ff4eca78271f539760da6e24c873456a3602633",
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      },
+      "confidence": "high",
+      "evidence_class": "history",
+      "discovery_method": "git-show-range",
+      "collector_agent": "evidence-collector-griffin-riders-escape-t5-batch-b-v2",
+      "conflict_state": "none-observed",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "GRF-CART-004",
+      "category": "transition",
+      "scene_or_state_id": "cartridge/update",
+      "source_fact": "The withdrawn cartridge update advances the model using delta and edition speed tuning, resolves normalized traversal actions after surface readiness, renders, and delivers completion once the model is complete.",
+      "interpretation": "This is historical runtime source logic; it does not claim that the cartridge was launched or completed in a browser.",
+      "citation": {
+        "path": "packages/game-cartridges/src/cartridges/griffin-riders-escape/scene.ts",
+        "line_start": 190,
+        "line_end": 226,
+        "cited_range_sha256": "6eb5d92a02e60eed6fe3de4513e2a6dbd8aa8c67cd1f70d8b5d7372653d2d2f8",
+        "blob_sha256": "e870af139e0d6295a17664c18ff4eca78271f539760da6e24c873456a3602633",
+        "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+      },
+      "confidence": "high",
+      "evidence_class": "history",
+      "discovery_method": "git-show-range",
+      "collector_agent": "evidence-collector-griffin-riders-escape-t5-batch-b-v2",
+      "conflict_state": "none-observed",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    }
+  ],
+  "accepted_denominator_reconciliation": {
+    "accepted_denominator": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+    "accepted_partition": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+    "identity": "catalog/griffin-riders-escape",
+    "named_source_classes": [
+      "legacy current-page/component/logic/config records",
+      "withdrawn cartridge blueprint/definition/scene/systems records",
+      "retained E2E test and cover candidates"
+    ],
+    "reconciliation_status": "Named without merging current and historical source classes; no browser or binary runtime outcome inferred.",
+    "canonical_identity_id": "catalog/griffin-riders-escape",
+    "authority_record_sha256s": {
+      "source-denominator.json": [
+        "220bb29b487bf31a5fcb24d0af75ac48534272b9620b11b20d5cb2245bbc0842",
+        "51e761813d7e3e2e2ee6258c9c74e527063eef468197884e6b13beece3e55110",
+        "9107f415793ae82fec638001eeb8a651d365b67c95e50c0f247c5b8b3f0f832b",
+        "af9e84c75e78ac2acb36fd9bf05cf5ea0814b8e5979948b96f1ab5545b5601a7",
+        "b5d7289d09d1db751f34f1703ca46d79f8fffcbc0be6521aaadd8bc961418085",
+        "b72373fbe559abbc1a378d97a32d62c325fc91e44f11187317897d377ac56725",
+        "b9fead0a3312b1defbbb8b8a0bc9d7ef037545b2858018ac6ae6fa47c5a1a919",
+        "ef31d0dd1b27e742173f8aec51f004bd44c95a2c5f826ba866c52d16dfd0f971"
+      ],
+      "scene-state-denominator.json": [],
+      "asset-file-denominator.json": [
+        "2630a7984e2e9ebbc7b68045ab6df40408239cd26eae55b0e6c03a2689ee49f4",
+        "3fa6798ead3d208a2597233937a21c22cfbb550828f0fb28d19e46453e2c2410",
+        "41c6f60aeeec5632e3f5dbc154b2304eea7edabc97536115242a00920050da1e",
+        "509a98bd5acd40eac1cd84b8e84a72c601717ad27177ba739f5ab00ace0ca5be",
+        "8b4cdc1606216b9fbd5e52ae8755154da9ef51f5c57d84c7236ac487d388cb99",
+        "923181d89ef120b86e54cfc6a5fe408716007c93f1c6ff7e3138f0bcc7e38af0",
+        "a1d4c617cb98e207d9a36f780f0352f3d8b55924f0d05056665acf82e2aa0662"
+      ],
+      "historical-source-denominator.json": [
+        "047ff6b6cb53383e7692fc8f5f07933d1a977c8a13c78ffac5d18fee511823c0",
+        "182f7b3d5e90ed32a816213a5d9517491b228becfca2c629c4c7a8658dfc8b74",
+        "1b290a7496668e815c29175ca1ada3dcb8b2e7e41352be3f019a3f26872317f9",
+        "2e4a2a7381bc1227d3d249aee8120dd085fca69a873e83041d36c0d8996a6312",
+        "71187f16bf31bb106f1b0cbe17d89d2483d80c5f5ff00621ba193a6bc7b1a8be",
+        "757dac70662822e6051c0e4e0cb3109bad7d0db57911367edd4a4ef7c6702e9b",
+        "81e8fb2f2fa244db6510692b73de3c147f6a39d95b9b53c3e691ff37c71e35b0",
+        "8f40eb3f065d25fd95134f96f05385b406e475d187d0aca1f5ad8745f2777afe",
+        "bb9e5cc47be7c1a4cea7e983f8cab48b7130eacc9cfb93e9f7f868394807790c",
+        "cbf04b5adc1baade85a0d461c8871bf6f053daa705ec91ee6b5f156c41b046d9",
+        "d563baea7b82f0468f569d893dd896202726a6617d3e2e11f8f8810b296a29a9",
+        "edf8f6e8e29dc4eab9af7c806d7681b8ddc0f40912c9e111fb78341b9195bf05"
+      ],
+      "game-identity-ledger.json": [
+        "76d16fbdd702fd38ebc7b20558bcd9bfec636fa270c6f117d64757152b6818a0"
+      ]
+    }
+  },
+  "unknowns_preserved": [
+    "Current route reachability, browser execution, trusted native input, compact/wide behavior, console, network, and production behavior remain unknown.",
+    "Asset existence, dimensions, loading, visual suitability, and runtime binding remain unknown.",
+    "Completion submission, persistence, XP award, idempotency, and API correctness remain unknown.",
+    "Historical source describes implementation only; no historical browser behavior is claimed.",
+    "Provider prompt, spawn, ancestry, isolation, event, timing, final-response, and commit attestations are unavailable."
+  ],
+  "marker": "MEASURE_AGENT_RESULT",
+  "canonical_identity_id": "catalog/griffin-riders-escape",
+  "collector_id": "evidence-collector-griffin-riders-escape-t5-batch-b-v2",
+  "acceptance": "not-claimed",
+  "supersession": {
+    "supersedes_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger.json",
+    "supersedes_sha256": "9cca79ff212bbc582ad06d95509e2ae3d218aeb694dd88e2967090403ca955af",
+    "scope": "Corrected source envelopes, frozen baseline selection, identity, and exact accepted-denominator row bindings.",
+    "original_remains_immutable": true
+  },
+  "commit_binding": {
+    "status": "uncommitted-additive-output",
+    "commit_sha": null
+  }
+}

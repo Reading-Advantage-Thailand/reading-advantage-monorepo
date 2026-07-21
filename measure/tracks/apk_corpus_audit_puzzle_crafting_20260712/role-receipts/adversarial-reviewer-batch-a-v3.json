@@ -1,0 +1,138 @@
+{
+  "schema_version": "apk-role-receipt.v3",
+  "status": "fresh-independent-adversarial-review-v3-over-v3-selected-inputs-complete-green",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 1: Batch A V3 browser-evidence selection",
+  "task_id": "review-batch-a:v3-over-v3-selected-inputs",
+  "role": "adversarial-reviewer-batch-a-v3",
+  "role_identity": "fresh independent adversarial reviewer for T6 Puzzle Batch A V3 over the V3 selected inputs; review iteration V3; only review and receipt were authored",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "3d53d031f48eed2bbb324539900108136190cf57",
+  "audited_head_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "prior_role_history": [],
+  "role_boundary": "Only batch-a-independent-review-v3.json and this additive receipt were created. No source, evidence ledger, collector, mapper, browser, truth-test, budget, strategy, plan, registry, candidate, acceptance, accepted manifest, or commit artifact was modified or created. The V2 truth test and V2 truth receipt are read-only inputs that were not modified.",
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are truthful non-attestations; no provider value was fabricated, and the user prohibited commits. Reviewer isolation was implemented at the artifact level via reviewer_isolation=fork_turns=none, parent_ancestry_ids=[], and acceptance=not-claimed; provider-side isolation is unavailable and is not claimed."
+  },
+  "provenance_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "application": "The V3 selected inputs (eight V3 DIRECT_INPUT_HASHES entries plus the V3 truth test and V3 truth receipt) are independently re-derived from the audited HEAD 65db764c and the source baseline 23bb5ad5. Provider-attested isolation is unavailable and is not claimed; reviewer isolation is documented at the artifact level."
+  },
+  "local_input_manifest_sha256": "21070fd320dec35ca169cf6356d9c00e1391146ecf82f21eacc0d332ad7923a5",
+  "local_input_manifest_basis": "SHA-256 of compact key-sorted JSON containing input_hashes exactly as recorded below.",
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v2.py": "9005366f4e938c1d4d565e042ee18c16b18f12df2cec8334c8a77eea51b5e4f6",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v3.py": "635a211d5210eea1af551fd4e074fcb8bf24037ebd4e13f8737e5a03e7d2f606",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/browser-audit-batch-a.json": "d413d99aaa626f91d4426c8c8cb05518fb434e849e3ecac07b207f19960a3ce3",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/browser-audit-batch-a.json": "9dc4e8c196cb43db78f987a68ec66e31032343c20b39e237e590005ed0507ae5",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/browser-audit-batch-a.json": "eefbecd0fc706dda2c51a11227c253eba94104e7db162b88f568f7cbcb043105",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/browser-auditor-alchemists-synthesis-batch-a.json": "1fe33d93065e8ad22e0f7785eff01bddef7a553c20c6f623895466d92d2edee0",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/browser-auditor-enchanted-library-batch-a.json": "e2d0182bbc3b3ea9bec09b83289fc8633fdccc29914f21523975c130631c1430",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/browser-auditor-rune-match-batch-a.json": "ee1faf8430f04f0c3c62fcf7e9df47b801e5a2e4b3a2c3ff28a65aea09321e5d",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/truth-test-author-batch-a-v2.json": "0ffe44665048c47906a1efcfa1a82ec730514b7871d8660a5eb1a23829892c3f",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/truth-test-author-batch-a-v3.json": "cbc0bbfdd4d35c880782c87046794688b8f5d45d1b97b4e724611142bb0aca5d"
+  },
+  "governing_input_hashes": {
+    "measure/apk-evidence-cohort-protocol.md": null,
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/spec.md": null,
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/test-strategy-phase0.md": "1a4fd7864a225fe7fd1c17c5e8aec0c30a402d89b8c8dfea5da543a44767154b",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/phase0-role-applicability.json": "d2dd0a2c07ed26c69fbb07a9879e2f41e0e54f466a7e8c3dcf9163192e2264c2",
+    "note": "Governing inputs that are read-only at the reviewed role base. Null entries correspond to files whose content was not re-hashed by this reviewer because the V3 contract does not bind them; the test-strategy and phase0-role-applicability hashes are re-computed from the current working tree to demonstrate consistency with the audited HEAD."
+  },
+  "output_paths_and_sha256": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-independent-review-v3.json",
+      "sha256": "9a855ce54bceb7b6d3c911a024fe24c56c1b259a7888cad99d1115c756a03964"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/adversarial-reviewer-batch-a-v3.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot embed its own final digest without changing its bytes."
+    }
+  ],
+  "resource_use": {
+    "ceiling": {
+      "source_bytes": 1000000,
+      "source_files_objects": 30,
+      "commands": 20,
+      "elapsed_minutes": 60,
+      "records_authored_reviewed": 2,
+      "browser_interactions": 0,
+      "captured_artifacts": 2
+    },
+    "actual": {
+      "source_bytes": 232250,
+      "source_files_objects": 19,
+      "commands": 7,
+      "elapsed_minutes": 0,
+      "records_authored_reviewed": 2,
+      "browser_interactions": 0,
+      "captured_artifacts": 2
+    },
+    "timing_measurement": "unavailable-in-harness",
+    "timing_note": "0 is the owner-directed accounting fallback, not elapsed-time evidence.",
+    "measurement_basis": "Source bytes are the exact 93028 bytes of eight V3 DIRECT_INPUT_HASHES plus 17350 bytes of the V3 truth test plus the V3 truth receipt and this receipt and the V3 review at measurement time. Files/objects are the eight V3 DIRECT_INPUT_HASHES plus the V3 truth test, V3 truth receipt, this receipt, and the V3 review. Commands are seven: the two pytest invocations recorded below, one independent claim-envelope re-derivation, one fixture re-derivation, one mapper-hash binding scan, one json.tool validation, and one no-index diff check."
+  },
+  "review_results": {
+    "active_inputs_exact": true,
+    "factual_claims_rederived": 57,
+    "blob_sha256_matches": 57,
+    "range_sha256_matches": 57,
+    "fixtures_rederived": 11,
+    "fixtures_expected_disposition_matches": 11,
+    "envelope_mismatches": 0,
+    "semantic_anchor_mismatches": 0,
+    "denominator_mismatches": 0,
+    "stale_mapper_bindings": 0,
+    "browser_audits_bounded_non_runnable": 3,
+    "browser_receipts_provider_unavailable_disclosed": 3,
+    "screenshots_promoted_to_evidence": 0,
+    "unknown_browser_dispositions_accepted_as_bounded": 3,
+    "unresolved_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "candidate_authorized": true,
+    "acceptance_authorized": false
+  },
+  "validation": {
+    "v3_bounded_truth_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v3.py -k 'not BatchAV3IndependentReviewContract and not BatchAV3LifecycleContract'",
+    "v3_bounded_truth_result": "18 passed, 4 deselected; exit 0",
+    "v3_full_truth_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v3.py",
+    "v3_full_truth_result_after_review": "19 passed, 3 expected fail-closed failures; exit 1; zero pytest ERROR outcomes; the only remaining red gates are V3 candidate, V3 owner-approval, and V3 accepted manifest, which are intentionally not produced by this role",
+    "v2_bounded_truth_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v2.py -k 'not BatchAIndependentReviewContract and not BatchALifecycleContract and not BatchABrowserDispositionContract'",
+    "v2_bounded_truth_result": "11 passed, 3 deselected; exit 0",
+    "v2_full_truth_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v2.py",
+    "v2_full_truth_result": "11 passed, 5 expected fail-closed failures; exit 1; zero pytest ERROR outcomes",
+    "json_command": "python3 -m json.tool measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-independent-review-v3.json >/dev/null && python3 -m json.tool measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/adversarial-reviewer-batch-a-v3.json >/dev/null",
+    "diff_check_command": "git diff --check -- measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-independent-review-v3.json measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/adversarial-reviewer-batch-a-v3.json"
+  },
+  "measure_agent_result": {
+    "status": "candidate-true-zero-unresolved",
+    "candidate": true,
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "reason": "The V3 selected inputs (eight V3 DIRECT_INPUT_HASHES entries plus the V3 truth test and V3 truth receipt) all exist as exact committed bytes at audited HEAD 65db764c. 57/57 factual claim blob and range envelopes are exact via independent git-show re-derivation at the source baseline 23bb5ad5. 11/11 fixtures execute with backed dispositions (2 RM source-value pairs recompute exactly, 9 negative controls carry explicit REJECT or FAIL dispositions). All three V2 maps bind the exact ledger and rebind-report SHA-256 with browser_claims=0, novel_factual_claims=0, and no_browser=true. All three V3 browser audits are bounded-unknown-non-runnable at the V3 role revision (HTTP 404 on the exact candidate routes), do not promote screenshots or 404s to gameplay evidence, and disclose compact/wide and interaction-dependent behavior as unknown. All three V3 browser receipts declare provider_attestation.available=false and reviewer_isolation=fork_turns=none with empty parent_ancestry_ids; their owned outputs are bound and SHA-256 values match the working tree. The V2 truth receipt binds the exact V2 test and receipt bytes plus the 36 V2 active inputs; the V3 truth receipt binds the eight V3 DIRECT_INPUT_HASHES plus the V3 truth-test and V3 truth-receipt bytes. The V3 review gates are green and the V3 lifecycle (candidate, owner-approval, accepted-manifest) is intentionally not produced by this role. No commit was created. Candidate is true because zero unresolved Critical, High, or Medium findings remain at the audited HEAD."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

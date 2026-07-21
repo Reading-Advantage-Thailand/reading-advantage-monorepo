@@ -1,0 +1,44 @@
+{
+  "schema_version": "apk-negative-fixtures.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B remediation V2",
+  "game": "Griffin Rider's Escape",
+  "collector_id": "evidence-collector-griffin-riders-escape-t5-batch-b-v2",
+  "factual_claims_excluded": true,
+  "fixtures": [
+    {
+      "fixture_id": "GRF-NEG-001",
+      "unsupported_proposition": "The title proves a moving griffin avatar, camera follow, and collision hazards in the current game.",
+      "expected_disposition": "REJECT",
+      "reason": "Title/catalog analogy is not evidence; source records are historical and browser behavior was not audited."
+    },
+    {
+      "fixture_id": "GRF-NEG-002",
+      "unsupported_proposition": "The legacy 390 by 844 surface proves compact and wide responsive behavior.",
+      "expected_disposition": "REJECT",
+      "reason": "Static configuration and projection code do not establish browser-observed responsive profiles."
+    },
+    {
+      "fixture_id": "GRF-NEG-003",
+      "unsupported_proposition": "Every griffin-riders-escape-named image or semantic slot is loaded during gameplay.",
+      "expected_disposition": "REJECT",
+      "reason": "Asset names, semantic declarations, and cover candidates do not prove runtime loading or binding."
+    }
+  ],
+  "execution_status": "not-executed-by-evidence-collector",
+  "review_status": "pending-independent-review",
+  "marker": "MEASURE_AGENT_RESULT",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "acceptance": "not-claimed",
+  "supersession": {
+    "supersedes_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/fixtures.json",
+    "supersedes_sha256": "0de2c460f533c3cfd6b285d2b2c0a6cd0d69f32099359f17f8691c48661ab575",
+    "scope": "Fixture controls retained while binding the corrected collector lineage.",
+    "original_remains_immutable": true
+  },
+  "commit_binding": {
+    "status": "uncommitted-additive-output",
+    "commit_sha": null
+  }
+}

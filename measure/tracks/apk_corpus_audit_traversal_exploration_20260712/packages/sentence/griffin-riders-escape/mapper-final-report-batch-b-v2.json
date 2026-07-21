@@ -1,0 +1,87 @@
+{
+  "schema_version": "apk-mapper-final-report.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B remediation V2",
+  "role": "requirements-mapper",
+  "game": "Griffin Rider's Escape",
+  "requirements_map": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/requirements-map-batch-b-v2.json",
+  "evidence_ledger": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
+  "mapped_record_counts": {
+    "scene_state_transition": 7,
+    "learning": 2,
+    "effort": 3,
+    "unknown": 4,
+    "negative_fixture": 3
+  },
+  "claim_reference_validation": {
+    "collector_factual_claims": 14,
+    "mapped_claim_reference_occurrences": 43,
+    "distinct_referenced_claim_ids": 14,
+    "unresolved_claim_ids": 0,
+    "foreign_claim_ids": 0,
+    "factual_claims_without_citation": 0,
+    "novel_source_facts": 0,
+    "browser_claims": 0,
+    "effort_estimates": 0,
+    "negative_fixture_references": 3
+  },
+  "provenance": {
+    "policy": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "provider_attestation": "unavailable and not claimed",
+    "acceptance_claimed": false
+  },
+  "boundary": "Map-only output. No browser work, source collection, asset audit, truth-test authoring, review, or acceptance work was performed.",
+  "disposition": "non-consumable mapper output; independent review and committed binding remain required",
+  "marker": "MEASURE_AGENT_RESULT",
+  "canonical_identity": "catalog/griffin-riders-escape",
+  "input_bindings": {
+    "collector_ledger": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
+      "sha256": "9269956e48572e3ef9f0359f731a0f4f3c9d2193ede6128c0952b5a4bdd4dd59"
+    },
+    "collector_report": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/evidence-final-report-v2.json",
+      "sha256": "945002a3152df782795d2ff2b389d409a1fe1163ac660572d2d967355d151e2f"
+    },
+    "collector_method": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/evidence-method-v2.md",
+      "sha256": "8a13445368bdd708a4a4843a5afeda65e97a350b7759ac335da4254c175e61b8"
+    },
+    "collector_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-griffin-riders-escape-batch-b-v2.json",
+      "sha256": "b556a111428a57d09490301c896a603b9f6774e027cf1abeaa4817d89f6cc6c9"
+    },
+    "accepted_batch_a": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-a-v6.json",
+      "sha256": "f5a215f44815c79025e86e97a3217d7a85c4a33db86f80db2909f30dd3a9caa3",
+      "use": "process predecessor only; not factual input"
+    },
+    "timing_direction": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json",
+      "sha256": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971"
+    },
+    "collector_fixtures": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/fixtures-v2.json",
+      "sha256": "22e450a2e46c948b1c895d56315bba0baf7984c21800c3db87c1863b86f2864e"
+    }
+  },
+  "timing": {
+    "direction": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+    "elapsed_minutes": 0,
+    "timing_measurement": "unavailable-in-harness",
+    "elapsed_note": "0 is accounting fallback, not elapsed-time evidence."
+  },
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "acceptance": "not-claimed",
+  "supersession": {
+    "supersedes_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/mapper-final-report-batch-b.json",
+    "supersedes_sha256": "14db97c7b617acf0d1eb7f414a5f60259d02be07662f1a7233e90f4867bf1dc1",
+    "scope": "Corrected mapper report lineage and output bindings.",
+    "original_remains_immutable": true
+  },
+  "commit_binding": {
+    "status": "uncommitted-additive-output",
+    "commit_sha": null
+  }
+}

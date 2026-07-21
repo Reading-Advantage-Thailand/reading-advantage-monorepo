@@ -1,0 +1,292 @@
+{
+  "schema": "apk-requirements-map.v5",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B remediation V2",
+  "task_id": "map-requirements:labyrinth-goblin-king:batch-b",
+  "role": "requirements-mapper",
+  "game": "Labyrinth of the Goblin King",
+  "canonical_identity": "sentence/labyrinth-goblin-king",
+  "source_fact_policy": "Every mapping proposition is bound to one or more claim IDs from the Batch B collector ledger. No uncited source proposition, browser observation, runtime outcome, or effort estimate is added.",
+  "scene_state_transition_model": [
+    {
+      "id": "LGK-B-SST-001",
+      "statement": "The collector ledger defines start, playing, victory, and defeat as the four status values, while the victory value has no claimed source transition.",
+      "claim_ids": [
+        "LGK-STATE-001"
+      ]
+    },
+    {
+      "id": "LGK-B-SST-002",
+      "statement": "The source-defined maze uses an 11-column by 15-row configuration, boundary and even/even interior walls, and openings at the left entrance and right exit coordinates.",
+      "claim_ids": [
+        "LGK-MAZE-001"
+      ]
+    },
+    {
+      "id": "LGK-B-SST-003",
+      "statement": "State initialization rejects an empty sentence list, applies normal difficulty and scout goblin defaults, starts in start status, and places the player at the cited position and direction.",
+      "claim_ids": [
+        "LGK-INIT-001"
+      ]
+    },
+    {
+      "id": "LGK-B-SST-004",
+      "statement": "The configured play surface and movement-related constants include 390 by 700 dimensions, 32-pixel tiles, 28-pixel actor sizes, player speed 3, 6000 ms heroic aura duration, and chase range 100.",
+      "claim_ids": [
+        "LGK-CONFIG-001"
+      ]
+    },
+    {
+      "id": "LGK-B-SST-005",
+      "statement": "The movement function derives direction from dx and dy, attempts a snapped turn near a tile boundary, and otherwise continues the prior direction when movement is possible.",
+      "claim_ids": [
+        "LGK-MOVE-001"
+      ]
+    },
+    {
+      "id": "LGK-B-SST-006",
+      "statement": "Collision checks test all four corners of the adjusted player or goblin rectangle against maze walls, treating out-of-maze coordinates as walls.",
+      "claim_ids": [
+        "LGK-COLL-001"
+      ]
+    },
+    {
+      "id": "LGK-B-SST-007",
+      "statement": "Correct orb collection is order-gated: matching the target index increments correct answers, appends the word, and advances the target index.",
+      "claim_ids": [
+        "LGK-ORB-001"
+      ]
+    },
+    {
+      "id": "LGK-B-SST-008",
+      "statement": "Collecting the final word orb in order enables the heroic aura, marks goblins fleeing, advances the sentence modulo the sentence list, respawns orbs, clears collected words, and resets the target index.",
+      "claim_ids": [
+        "LGK-TRANS-001"
+      ]
+    },
+    {
+      "id": "LGK-B-SST-009",
+      "statement": "Wrong orb collection increments wrong answers, removes one life, sets invulnerability duration, and attempts to reposition the orb at an available floor position.",
+      "claim_ids": [
+        "LGK-TRANS-002"
+      ]
+    },
+    {
+      "id": "LGK-B-SST-010",
+      "statement": "Goblin behavior includes fleeing away from the player, chasing for non-scout types within chase range, patrol with a non-reverse preference otherwise, and collision life/eaten branches controlled by heroic aura.",
+      "claim_ids": [
+        "LGK-GOBLIN-001"
+      ]
+    },
+    {
+      "id": "LGK-B-SST-011",
+      "statement": "The page source references locale-aware sentence retrieval and a completion submission route for this game; route reachability, persistence, and API correctness remain unverified.",
+      "claim_ids": [
+        "LGK-ROUTE-001"
+      ],
+      "disposition": "source reference only; no route-execution proposition"
+    },
+    {
+      "id": "LGK-B-SST-012",
+      "statement": "The component source computes scale from the minimum of container width divided by game width and container height divided by game height; live compact and wide behavior remains unknown.",
+      "claim_ids": [
+        "LGK-RESP-001"
+      ],
+      "disposition": "source scaling logic only; no browser proposition"
+    }
+  ],
+  "mechanics_learning_model": [
+    {
+      "id": "LGK-B-ML-001",
+      "statement": "The learning interaction is order-gated: a newly collected orb is correct only when its order index equals the target index, with the cited correct-collection updates.",
+      "claim_ids": [
+        "LGK-ORB-001"
+      ]
+    },
+    {
+      "id": "LGK-B-ML-002",
+      "statement": "Completing the final source-defined orb transition resets the sentence-orb learning state and enables the heroic-aura branch for the next sentence.",
+      "claim_ids": [
+        "LGK-TRANS-001"
+      ]
+    },
+    {
+      "id": "LGK-B-ML-003",
+      "statement": "Wrong-order collection supplies the cited penalty path of wrong-answer accounting, life loss, invulnerability, and attempted orb repositioning.",
+      "claim_ids": [
+        "LGK-TRANS-002"
+      ]
+    },
+    {
+      "id": "LGK-B-ML-004",
+      "statement": "Goblin contact supplies a source-defined hazard branch in which heroic aura can mark a goblin eaten; otherwise collision costs a life.",
+      "claim_ids": [
+        "LGK-GOBLIN-001"
+      ]
+    }
+  ],
+  "developer_effort_model": [
+    {
+      "id": "LGK-B-DE-001",
+      "area": "maze and initialization",
+      "statement": "Implementation-surface decomposition includes maze construction, state validation, defaults, status initialization, and player placement; no effort estimate is claimed.",
+      "claim_ids": [
+        "LGK-MAZE-001",
+        "LGK-INIT-001"
+      ]
+    },
+    {
+      "id": "LGK-B-DE-002",
+      "area": "movement and collision",
+      "statement": "Implementation-surface decomposition includes directional movement, snapped turns, continuation checks, actor corner collision checks, and out-of-maze wall handling; no effort estimate is claimed.",
+      "claim_ids": [
+        "LGK-MOVE-001",
+        "LGK-COLL-001"
+      ]
+    },
+    {
+      "id": "LGK-B-DE-003",
+      "area": "learning and transitions",
+      "statement": "Implementation-surface decomposition includes ordered orb handling, final-orb reset behavior, and wrong-orb penalty behavior; no effort estimate is claimed.",
+      "claim_ids": [
+        "LGK-ORB-001",
+        "LGK-TRANS-001",
+        "LGK-TRANS-002"
+      ]
+    },
+    {
+      "id": "LGK-B-DE-004",
+      "area": "hazard and presentation boundaries",
+      "statement": "Implementation-surface decomposition includes goblin behavior, configured arena constants, route references, and source scaling logic; runtime loading and behavior are not effort evidence.",
+      "claim_ids": [
+        "LGK-GOBLIN-001",
+        "LGK-CONFIG-001",
+        "LGK-ROUTE-001",
+        "LGK-RESP-001"
+      ]
+    },
+    {
+      "id": "LGK-B-DE-005",
+      "area": "effort boundary",
+      "statement": "No developer-hours, complexity score, reuse decision, or implementation estimate is claimed; cited IDs only inventory source-defined surfaces.",
+      "claim_ids": [
+        "LGK-STATE-001",
+        "LGK-MAZE-001",
+        "LGK-INIT-001",
+        "LGK-CONFIG-001",
+        "LGK-MOVE-001",
+        "LGK-COLL-001",
+        "LGK-ORB-001",
+        "LGK-TRANS-001",
+        "LGK-TRANS-002",
+        "LGK-GOBLIN-001",
+        "LGK-ROUTE-001",
+        "LGK-RESP-001"
+      ]
+    }
+  ],
+  "unknowns_preserved": [
+    {
+      "topic": "browser and runtime behavior",
+      "disposition": "unknown; the mapped source propositions do not establish route reachability, trusted input, live movement, transitions, completion, persistence, console, network, or runnable status",
+      "claim_ids": [
+        "LGK-STATE-001",
+        "LGK-MOVE-001",
+        "LGK-TRANS-001",
+        "LGK-TRANS-002",
+        "LGK-GOBLIN-001",
+        "LGK-ROUTE-001",
+        "LGK-RESP-001"
+      ]
+    },
+    {
+      "topic": "responsive outcome",
+      "disposition": "unknown; source scaling logic does not establish compact or wide live composition",
+      "claim_ids": [
+        "LGK-CONFIG-001",
+        "LGK-RESP-001"
+      ]
+    },
+    {
+      "topic": "asset and API outcome",
+      "disposition": "unknown; the mapped route and source propositions do not establish asset availability/loading, server execution, persistence, or API correctness",
+      "claim_ids": [
+        "LGK-ROUTE-001"
+      ]
+    },
+    {
+      "topic": "provider and timing provenance",
+      "disposition": "unavailable; provider attestations and trusted elapsed timing are not claimed",
+      "claim_ids": []
+    }
+  ],
+  "negative_fixtures": [
+    {
+      "claim_id": "LGK-NEG-001",
+      "disposition": "REJECT"
+    },
+    {
+      "claim_id": "LGK-NEG-002",
+      "disposition": "REJECT"
+    },
+    {
+      "claim_id": "LGK-NEG-003",
+      "disposition": "REJECT"
+    },
+    {
+      "claim_id": "LGK-NEG-004",
+      "disposition": "REJECT"
+    }
+  ],
+  "input_bindings": {
+    "collector_ledger": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/claim-evidence-ledger-batch-b-v2.json",
+      "sha256": "1b75beb8af13728ad5e564ed24ec8717341d775272099e92c9757a4fdbbddacb"
+    },
+    "collector_report": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/evidence-final-report-batch-b-v2.json",
+      "sha256": "30847901fd5c1bc0320d921760f4486cb1c0130318aff0d6c7b6b8d6f088fb91"
+    },
+    "collector_method": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/evidence-method-batch-b-v2.md",
+      "sha256": "1d6eeb9dbd78edfd2fb47350378fe187f0f077f22a33fe9ab5dd5f958f9d7687"
+    },
+    "collector_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-labyrinth-goblin-king-batch-b-v2.json",
+      "sha256": "24255078f7dc901fa6c8c82a09dc8a1c1440840449db0365815d762120e93705"
+    },
+    "accepted_batch_a": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-a-v6.json",
+      "sha256": "f5a215f44815c79025e86e97a3217d7a85c4a33db86f80db2909f30dd3a9caa3",
+      "use": "process predecessor only; not factual input"
+    },
+    "timing_direction": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json",
+      "sha256": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971"
+    },
+    "collector_fixtures": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/fixtures-batch-b-v2.json",
+      "sha256": "f23d4d053dc685e75b14a51e4392418f2e61549e6964763c3050ab9b01b19a68"
+    }
+  },
+  "counts": {
+    "collector_factual_claims": 12,
+    "negative_fixtures": 4,
+    "mapped_proposition_count": 21,
+    "distinct_referenced_claim_ids": 12,
+    "unresolved_claim_ids": 0,
+    "foreign_claim_ids": 0,
+    "uncited_source_facts": 0,
+    "browser_claims": 0,
+    "effort_estimates": 0
+  },
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT",
+  "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "supersession": {
+    "supersedes_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/requirements-map-batch-b.json",
+    "supersedes_sha256": "fcd401ed149187f7b7885c779a678a1a4bac5e11f4152097974234070634e1a9",
+    "scope": "Exact mapper rebind to the corrected V2 collector package; no new source facts.",
+    "original_remains_immutable": true
+  }
+}

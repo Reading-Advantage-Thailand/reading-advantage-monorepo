@@ -1,0 +1,141 @@
+{
+  "schema_version": "apk-role-receipt.v3",
+  "status": "fresh independent T7 Special/Historical Batch A adversarial review complete; zero unresolved Critical/High/Medium; candidate unauthorized because lifecycle artifacts are absent (per user instruction, only review+receipt authored)",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "phase": "Phase 4: Cohort acceptance",
+  "task_id": "batch-a-adversarial-review",
+  "role": "adversarial-reviewer-batch-a",
+  "role_identity": "fresh independent T7 Special/Historical Batch A adversarial reviewer",
+  "audited_head_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "3d53d031f48eed2bbb324539900108136190cf57",
+  "source_baseline_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+  "reviewer_isolation": {
+    "mode": "fresh independent re-derivation; review-only role with no prior authorship of any selected input",
+    "inherited_narrative": false,
+    "fork_turns": "none",
+    "fork_turns_note": "Provider-side isolation telemetry was unavailable in this execution environment; the value 'none' is consistent with the program rule that the reviewer must not inherit pre-prompt turns. No provider attestation is claimed."
+  },
+  "parent_ancestry_ids": [],
+  "allowed_input_manifest": {
+    "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-discovery-audit.json",
+    "sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa"
+  },
+  "budget_declaration_sha256": "f87e33ef2a1a35ce2ac77eb0ea8f9797f6dc2e5c514159ad6d1fe011363bfe6b",
+  "directions": {
+    "provenance": {
+      "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+      "application": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable; this receipt discloses that fact truthfully and adds no provider value."
+    }
+  },
+  "provider_unavailability": {
+    "available": false,
+    "attestation_claimed": false,
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "commit_sha": null,
+    "reason": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable. Nulls are truthful non-attestations; the user prohibited commits in this session, and no provider value was fabricated."
+  },
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v2.py": "bf32c25f4252995b4e9a200009b2a1c1d923a1ebb4936848230435cc5b362212",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/truth-test-author-batch-a-v2.json": "1a8abb79581fac3dc243d440b8ec54a0f9232eac41c9dc3e94b18bff3b6fd4ea",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/browser-audit.json": "618890ec18eb5bfeae6057e187bd52fa5a8d2533e31e7c588a111b1fbedd08ab",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-griffin-sky-joust.json": "bcd8017ba1a7b83685e27532c83aa6e53f7fd7d2e466921558756b8e2692f4b3",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/browser-audit-batch-a.json": "f0fcbadb8e92b3118d4eb9dd91fab6f51f85b341e59fdd1bf73a827d3c9f56e4",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-realm-carver-batch-a.json": "054b5c2648de8e384d423bb8961821fb6c0b2d5b9f0ceb51b3177cf17953e21d",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/browser-audit-v2.json": "46a3e8c68d4f964bc6e34b9a1e3fec7d900afd3f6a77c90fa3b2ec6427e1090f",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-devourer-slime-v2.json": "8335fb4d38579356f6c84285b7c20902d6a9ba7b7d176a3fb13373ebed7c09e1",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v3.py": "a4106c21d2fe8435e7d765be9cc3a68e16fb269dbc9e37220097793ceb6946b9",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/truth-test-author-batch-a-v3.json": "a1a46010b91e68ec1253d8748b82b4003adf1a9a034b9dae47cf37d3d24f1e18"
+  },
+  "v3_selection_facts": {
+    "phase_base_sha_ancestor_of_role_base_sha": true,
+    "all_eight_active_role_base_inputs_match_working_tree": true,
+    "drift_findings": 0,
+    "v3_test_module_sha256": "a4106c21d2fe8435e7d765be9cc3a68e16fb269dbc9e37220097793ceb6946b9",
+    "v3_receipt_self_sha256": "a1a46010b91e68ec1253d8748b82b4003adf1a9a034b9dae47cf37d3d24f1e18"
+  },
+  "rerivation_inventory": {
+    "claims_total": 37,
+    "semantic_tokens_exercised": 33,
+    "fixtures_total": 18,
+    "fixture_classes": 6,
+    "claim_ids_mapped": 37,
+    "browser_audits_bound": 3,
+    "browser_interactions_total": 23,
+    "captured_artifacts_total": 0,
+    "stop_loss_counters_set_to_zero": 11
+  },
+  "verification": {
+    "review_module_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v3.py",
+    "evidence_green_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v3.py",
+    "json_command": "python3 -m json.tool measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/adversarial-reviewer-batch-a.json >/dev/null",
+    "diff_command": "git diff --check -- measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/adversarial-review.json measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/adversarial-reviewer-batch-a.json"
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/adversarial-review.json",
+      "sha256": "1a7c4f139944d3892a0a6bddb2986c97f64a97c5647ea5edd4050931c55ec976"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/adversarial-reviewer-batch-a.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot embed its own stable SHA-256 without changing those bytes. The uncommitted receipt is non-authorizing and remains externally hashable."
+    }
+  ],
+  "unresolved_findings": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "info": 0
+  },
+  "lifecycle_preconditions": {
+    "candidate_cohort_manifest_exists": false,
+    "product_owner_acceptance_exists": false,
+    "accepted_cohort_manifest_exists": false,
+    "candidate_authorized": false,
+    "acceptance_authorized": false,
+    "lifecycle_ready": false
+  },
+  "role_boundary": "Only `batch-a/adversarial-review.json` and this receipt were created. No source, history, collector, mapper, browser, discovery, truth-test, plan, registry, lifecycle, product-owner, or commit artifact was modified or created. No commit was created; the user prohibited commits in this session.",
+  "resource_use": {
+    "ceilings": {
+      "source_bytes_read": 20971520,
+      "source_files_read": 80,
+      "command_invocations": 50,
+      "elapsed_minutes": 25,
+      "records_authored": 240,
+      "browser_interactions": 0,
+      "captured_browser_artifacts": 0
+    },
+    "actual": {
+      "source_bytes_read": 294912,
+      "source_files_read": 18,
+      "command_invocations": 12,
+      "elapsed_minutes": 8,
+      "records_authored": 2,
+      "browser_interactions": 0,
+      "captured_browser_artifacts": 0
+    },
+    "ceiling_breaches": 0,
+    "measurement_note": "Conservative labeled accounting for the V2 truth module, V3 truth module, three ledgers, three claim spot-checks, three negative fixtures, three maps, three map reports, three browser audits, and three browser receipts read during this review."
+  },
+  "commit_sha": null,
+  "commit_disposition": "not-created; user prohibited commits",
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,97 @@
+{
+  "schema_version": "apk-role-receipt.v3",
+  "status": "additive V2 collector supersession; not reviewed or accepted",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B remediation V2",
+  "batch_id": "batch-b",
+  "role": "evidence-collector",
+  "task_id": "collect-game-evidence:catalog/griffin-riders-escape:batch-b-v2",
+  "game": "Griffin Rider's Escape",
+  "canonical_identity": "catalog/griffin-riders-escape",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "supersession": {
+    "supersedes_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-griffin-riders-escape-batch-b.json",
+    "supersedes_sha256": "fb27a6b3586b2312de47b9c2e2a4923d0a76bcee9a602778c54c07d74db3b772",
+    "scope": "Corrected owner receipt binding for the additive V2 collector package.",
+    "original_remains_immutable": true
+  },
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/test-strategy-phase0.md": "734b879b75a8fff0e709242a4046706408f79587a2ec4f732a426e22d105ba0d",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+    "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+  },
+  "actual_usage": {
+    "source_bytes": 43558,
+    "source_files_objects": 7,
+    "commands": 7,
+    "elapsed_minutes": 0,
+    "records_authored_reviewed": 17,
+    "browser_interactions": 0,
+    "captured_artifacts": 4
+  },
+  "budget_ceiling": {
+    "source_bytes": 8000000,
+    "source_files_objects": 160,
+    "commands": 70,
+    "elapsed_minutes": 120,
+    "records_authored_reviewed": 300,
+    "browser_interactions": 0,
+    "captured_artifacts": 80
+  },
+  "timing_direction": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json",
+    "sha256": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+    "decision": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+    "timing_measurement": "unavailable-in-harness",
+    "interpretation": "0 is accounting fallback, not elapsed-time evidence."
+  },
+  "provenance_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+  },
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/evidence-method-v2.md",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/evidence-final-report-v2.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/fixtures-v2.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json": "9269956e48572e3ef9f0359f731a0f4f3c9d2193ede6128c0952b5a4bdd4dd59",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/evidence-method-v2.md": "8a13445368bdd708a4a4843a5afeda65e97a350b7759ac335da4254c175e61b8",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/evidence-final-report-v2.json": "945002a3152df782795d2ff2b389d409a1fe1163ac660572d2d967355d151e2f",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/fixtures-v2.json": "22e450a2e46c948b1c895d56315bba0baf7984c21800c3db87c1863b86f2864e"
+  },
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side attestations are unavailable and are not claimed; no commit was created."
+  },
+  "role_boundary": {
+    "browser_work": false,
+    "mapping_work": false,
+    "truth_test_work": false,
+    "review_work": false,
+    "lifecycle_work": false
+  },
+  "commit_binding": {
+    "status": "uncommitted-additive-output",
+    "commit_sha": null
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,53 @@
+{
+  "schema_version": "apk-evidence-collector-final-report.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B remediation V2",
+  "batch_id": "batch-b",
+  "game": "Shadow Gate Dungeon",
+  "normalized_game_id": "sentence/shadow-gate-dungeon",
+  "disposition": "source-evidence-collected-not-reviewed-not-accepted",
+  "source_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "successor_ledger": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/claim-evidence-ledger-v2.json",
+  "fixture_file": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/fixtures-v2.json",
+  "claim_count": 18,
+  "fixture_count": 3,
+  "source_objects_inspected": 6,
+  "source_bytes_inspected": 42232,
+  "changes": [
+    "Created atomic source envelopes for component state, movement/input wiring, world/configuration, stealth/chase, collision, ordered crystal progression, gate/terminal transitions, responsive scale, result callback, page wiring, and sentences API declaration.",
+    "Reconciled the exact Shadow Gate Dungeon denominator identity without asserting route reachability or runtime behavior.",
+    "Added three negative fixtures and preserved browser, asset, persistence, API, and provider-provenance unknowns."
+  ],
+  "stop_loss": {
+    "unsupported_factual_claims_added": 0,
+    "citation_envelope_mismatches": 0,
+    "denominator_records_dropped": 0,
+    "unknowns_removed": 0,
+    "browser_claims": 0,
+    "map_or_review_work": false,
+    "budget_breaches": 0,
+    "status": "collector-only; independent review, truth gates, browser/asset work, candidate, acceptance, and commit binding remain required"
+  },
+  "timing_status": "elapsed_minutes=0 is unavailable-in-harness accounting fallback only; no elapsed-time evidence is claimed",
+  "acceptance_status": "non-consumable collector output",
+  "commit_binding": {
+    "status": "uncommitted-additive-output",
+    "commit_sha": null
+  },
+  "marker": "MEASURE_AGENT_RESULT",
+  "timing_direction": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json",
+    "sha256": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+    "decision": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+    "elapsed_minutes_note": "0 is accounting fallback, not elapsed-time evidence."
+  },
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "acceptance": "not-claimed",
+  "supersession": {
+    "supersedes_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/evidence-final-report.json",
+    "supersedes_sha256": "f54e226720ebe1b3123dc89c6308fc13dafa5e792f6e5b07c17cb6a324a7ebd9",
+    "scope": "Corrected report lineage for the additive collector package.",
+    "original_remains_immutable": true
+  }
+}

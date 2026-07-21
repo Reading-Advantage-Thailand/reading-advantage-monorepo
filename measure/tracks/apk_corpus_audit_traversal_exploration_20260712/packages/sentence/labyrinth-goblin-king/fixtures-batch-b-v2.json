@@ -1,0 +1,47 @@
+{
+  "schema_version": "apk-negative-fixtures.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B remediation V2",
+  "game": "Labyrinth of the Goblin King",
+  "collector_id": "evidence-collector-labyrinth-goblin-king-t5-batch-b-v2",
+  "fixtures": [
+    {
+      "fixture_id": "LGK-NEG-001",
+      "assertion": "The source proves the maze can be completed by a learner in a browser.",
+      "expected_disposition": "REJECT",
+      "reason": "Source envelopes establish logic only; no live interaction or completion observation exists."
+    },
+    {
+      "fixture_id": "LGK-NEG-002",
+      "assertion": "The route citation proves POST persistence and API correctness.",
+      "expected_disposition": "REJECT",
+      "reason": "A client fetch call is not server execution, persistence, or correctness evidence."
+    },
+    {
+      "fixture_id": "LGK-NEG-003",
+      "assertion": "The 390x700 constants prove compact and wide responsive behavior.",
+      "expected_disposition": "REJECT",
+      "reason": "Configuration and CSS/source scaling do not replace live compact/wide browser evidence."
+    },
+    {
+      "fixture_id": "LGK-NEG-004",
+      "assertion": "The title or goblin asset names prove a Goblin King boss encounter and asset usage.",
+      "expected_disposition": "REJECT",
+      "reason": "Title, catalog, or file presence cannot establish a mechanic or concrete runtime asset use."
+    }
+  ],
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "acceptance": "not-claimed",
+  "supersession": {
+    "supersedes_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/fixtures-batch-b.json",
+    "supersedes_sha256": "fb6b5779cc5726602ec3a753bcab4ba6c6bb509baab2516a6ffa3b05d02aa0f7",
+    "scope": "Fixture controls retained while binding the corrected collector lineage.",
+    "original_remains_immutable": true
+  },
+  "commit_binding": {
+    "status": "uncommitted-additive-output",
+    "commit_sha": null
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,97 @@
+{
+  "schema_version": "apk-role-receipt.v3",
+  "status": "additive V2 collector supersession; not reviewed or accepted",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B remediation V2",
+  "batch_id": "batch-b",
+  "role": "evidence-collector",
+  "task_id": "collect-game-evidence:sentence/shadow-gate-dungeon:batch-b-v2",
+  "game": "Shadow Gate Dungeon",
+  "normalized_game_id": "sentence/shadow-gate-dungeon",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "supersession": {
+    "supersedes_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/receipt.json",
+    "supersedes_sha256": "9ac367b34be85d73ee9ba5e78d88781b8857ed5d0e001f12fc70b7424d46c1e0",
+    "scope": "Corrected owner receipt binding for the additive V2 collector package.",
+    "original_remains_immutable": true
+  },
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/test-strategy-phase0.md": "734b879b75a8fff0e709242a4046706408f79587a2ec4f732a426e22d105ba0d",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+    "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+  },
+  "actual_usage": {
+    "source_bytes": 42232,
+    "source_files_objects": 6,
+    "commands": 5,
+    "elapsed_minutes": 0,
+    "records_authored_reviewed": 22,
+    "browser_interactions": 0,
+    "captured_artifacts": 5
+  },
+  "budget_ceiling": {
+    "source_bytes": 8000000,
+    "source_files_objects": 160,
+    "commands": 70,
+    "elapsed_minutes": 120,
+    "records_authored_reviewed": 300,
+    "browser_interactions": 0,
+    "captured_artifacts": 80
+  },
+  "timing_direction": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json",
+    "sha256": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+    "decision": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+    "timing_measurement": "unavailable-in-harness",
+    "interpretation": "0 is accounting fallback, not elapsed-time evidence."
+  },
+  "provenance_direction": {
+    "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+    "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+    "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+  },
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/claim-evidence-ledger-v2.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/evidence-method-v2.md",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/evidence-final-report-v2.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/fixtures-v2.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/claim-evidence-ledger-v2.json": "5c960768bb3f2002d4bc9b20205d32c5e31e3717b854db8ae04dab2fc556621c",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/evidence-method-v2.md": "6c38aae8b9105282eb2c158a425b190f20330f7d61897a9f365523b842c5d529",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/evidence-final-report-v2.json": "398607708be3a545396a6895d91f818ebfae1be5fc0e16b02462c2ab8c957a9c",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/fixtures-v2.json": "7c90a011001f001b2afd3e55ccb05ce1af9b79bc8534b9c5a51c3c1c17b24ec3"
+  },
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side attestations are unavailable and are not claimed; no commit was created."
+  },
+  "role_boundary": {
+    "browser_work": false,
+    "mapping_work": false,
+    "truth_test_work": false,
+    "review_work": false,
+    "lifecycle_work": false
+  },
+  "commit_binding": {
+    "status": "uncommitted-additive-output",
+    "commit_sha": null
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

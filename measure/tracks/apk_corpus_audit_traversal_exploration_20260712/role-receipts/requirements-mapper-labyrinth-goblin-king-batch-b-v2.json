@@ -1,0 +1,101 @@
+{
+  "schema_version": "apk-role-receipt.v3",
+  "status": "additive V2 mapper supersession; not reviewed or accepted",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B remediation V2",
+  "batch_id": "batch-b",
+  "role": "requirements-mapper",
+  "task_id": "map-requirements:sentence/labyrinth-goblin-king:batch-b-v2",
+  "game": "Labyrinth of the Goblin King",
+  "canonical_identity": "sentence/labyrinth-goblin-king",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "supersession": {
+    "supersedes_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-labyrinth-goblin-king-batch-b.json",
+    "supersedes_sha256": "b874078fe9b3f17e208b97a2a9bee13a88c61db99c025438646984c98190254e",
+    "scope": "Exact V2 map/report output binding and bounded numeric accounting.",
+    "original_remains_immutable": true
+  },
+  "input_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/claim-evidence-ledger-batch-b-v2.json": "1b75beb8af13728ad5e564ed24ec8717341d775272099e92c9757a4fdbbddacb",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/evidence-final-report-batch-b-v2.json": "30847901fd5c1bc0320d921760f4486cb1c0130318aff0d6c7b6b8d6f088fb91",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/evidence-method-batch-b-v2.md": "1d6eeb9dbd78edfd2fb47350378fe187f0f077f22a33fe9ab5dd5f958f9d7687",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-labyrinth-goblin-king-batch-b-v2.json": "24255078f7dc901fa6c8c82a09dc8a1c1440840449db0365815d762120e93705",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-a-v6.json": "f5a215f44815c79025e86e97a3217d7a85c4a33db86f80db2909f30dd3a9caa3",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/fixtures-batch-b-v2.json": "f23d4d053dc685e75b14a51e4392418f2e61549e6964763c3050ab9b01b19a68"
+  },
+  "budget_actual": {
+    "source_bytes": 26706,
+    "source_files_objects": 4,
+    "commands": 1,
+    "elapsed_minutes": 0,
+    "records_authored_reviewed": 12,
+    "browser_interactions": 0,
+    "captured_artifacts": 2
+  },
+  "actual_usage": {
+    "source_bytes": 26706,
+    "source_files_objects": 4,
+    "commands": 1,
+    "elapsed_minutes": 0,
+    "records_authored_reviewed": 12,
+    "browser_interactions": 0,
+    "captured_artifacts": 2
+  },
+  "budget_ceiling": {
+    "source_bytes": 4000000,
+    "source_files_objects": 100,
+    "commands": 50,
+    "elapsed_minutes": 75,
+    "records_authored_reviewed": 250,
+    "browser_interactions": 0,
+    "captured_artifacts": 35
+  },
+  "timing_direction": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json",
+    "sha256": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+    "decision": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+    "timing_measurement": "unavailable-in-harness",
+    "interpretation": "0 is accounting fallback, not elapsed-time evidence."
+  },
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/requirements-map-batch-b-v2.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/mapper-final-report-batch-b-v2.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/requirements-map-batch-b-v2.json": "cbfe99562db393ade5fe9552528a23f11e58e734a18fff7ba020540fe8ca23cf",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/mapper-final-report-batch-b-v2.json": "249f8e416d3354e1f17ca1407c3f3673fdec4e539d913cae0f92073a354295ae"
+  },
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side attestations are unavailable and are not claimed; no commit was created."
+  },
+  "role_boundary": {
+    "collector_work": false,
+    "browser_work": false,
+    "truth_test_work": false,
+    "review_work": false,
+    "lifecycle_work": false,
+    "new_source_facts": 0
+  },
+  "commit_binding": {
+    "status": "uncommitted-additive-output",
+    "commit_sha": null
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,508 @@
+{
+  "schema_version": "apk-batch-independent-review.v3",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "phase": "Phase 4: Cohort acceptance",
+  "reviewer_role": "adversarial-reviewer-batch-a",
+  "reviewer_identity": "fresh independent T7 Special/Historical Batch A adversarial reviewer",
+  "marker": "MEASURE_AGENT_RESULT",
+  "review_baseline": {
+    "audited_head_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+    "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+    "role_base_sha": "3d53d031f48eed2bbb324539900108136190cf57",
+    "upper_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+    "comparison_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "provenance_direction": {
+      "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+    },
+    "immutable_predecessors": {
+      "t1_accepted_gate": {
+        "path": "measure/evidence-integrity-accepted-gate.json",
+        "sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+        "status": "accepted",
+        "revoked": false
+      },
+      "t2_accepted_denominator": {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+        "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+        "status": "accepted",
+        "revoked": false
+      },
+      "t2_accepted_partition": {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+        "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+        "status": "accepted",
+        "revoked": false
+      },
+      "t3_accepted_pilot": {
+        "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+        "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+        "status": "accepted-conditional",
+        "revoked": false
+      }
+    }
+  },
+  "games_reviewed": [
+    "griffin-sky-joust",
+    "realm-carver",
+    "devourer-slime"
+  ],
+  "review_scope": "Re-derive every V3 active input, claim set, negative fixture, browser bound, and source-class chronology at role base 3d53d031. Do not promote any historical or cancelled record into current behavior; do not invent a candidate, product-owner approval, or accepted manifest. Candidate authorization is intentionally absent because lifecycle artifacts are not yet authored.",
+  "reviewer_isolation": {
+    "mode": "fresh independent re-derivation; review-only role with no prior role authorship",
+    "inherited_narrative": false,
+    "fork_turns": "none",
+    "fork_turns_note": "Provider-side isolation telemetry was unavailable in this execution environment; no fabricated attestation is claimed and the value 'none' is consistent with the program rule that the reviewer must not inherit pre-prompt turns."
+  },
+  "active_inputs_rederivation": {
+    "method": "Independent SHA-256 of each of the eight V3-selected active inputs at role base 3d53d031, plus a fresh SHA-256 of the working tree at the audited head 65db764c. Differences would surface committed-bytes drift; equality confirms the V3 selection contract remains anchored to role base.",
+    "inputs": [
+      {
+        "relative_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v2.py",
+        "role_base_sha256": "bf32c25f4252995b4e9a200009b2a1c1d923a1ebb4936848230435cc5b362212",
+        "working_sha256": "bf32c25f4252995b4e9a200009b2a1c1d923a1ebb4936848230435cc5b362212",
+        "match": true,
+        "role": "truth-test-author-batch-a-v2"
+      },
+      {
+        "relative_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/truth-test-author-batch-a-v2.json",
+        "role_base_sha256": "1a8abb79581fac3dc243d440b8ec54a0f9232eac41c9dc3e94b18bff3b6fd4ea",
+        "working_sha256": "1a8abb79581fac3dc243d440b8ec54a0f9232eac41c9dc3e94b18bff3b6fd4ea",
+        "match": true,
+        "role": "truth-test-author-batch-a-v2"
+      },
+      {
+        "relative_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/browser-audit.json",
+        "role_base_sha256": "618890ec18eb5bfeae6057e187bd52fa5a8d2533e31e7c588a111b1fbedd08ab",
+        "working_sha256": "618890ec18eb5bfeae6057e187bd52fa5a8d2533e31e7c588a111b1fbedd08ab",
+        "match": true,
+        "role": "browser-auditor-batch-a-griffin-sky-joust"
+      },
+      {
+        "relative_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-griffin-sky-joust.json",
+        "role_base_sha256": "bcd8017ba1a7b83685e27532c83aa6e53f7fd7d2e466921558756b8e2692f4b3",
+        "working_sha256": "bcd8017ba1a7b83685e27532c83aa6e53f7fd7d2e466921558756b8e2692f4b3",
+        "match": true,
+        "role": "browser-auditor-batch-a-griffin-sky-joust"
+      },
+      {
+        "relative_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/browser-audit-batch-a.json",
+        "role_base_sha256": "f0fcbadb8e92b3118d4eb9dd91fab6f51f85b341e59fdd1bf73a827d3c9f56e4",
+        "working_sha256": "f0fcbadb8e92b3118d4eb9dd91fab6f51f85b341e59fdd1bf73a827d3c9f56e4",
+        "match": true,
+        "role": "browser-auditor-batch-a-realm-carver"
+      },
+      {
+        "relative_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-realm-carver-batch-a.json",
+        "role_base_sha256": "054b5c2648de8e384d423bb8961821fb6c0b2d5b9f0ceb51b3177cf17953e21d",
+        "working_sha256": "054b5c2648de8e384d423bb8961821fb6c0b2d5b9f0ceb51b3177cf17953e21d",
+        "match": true,
+        "role": "browser-auditor-batch-a-realm-carver"
+      },
+      {
+        "relative_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/browser-audit-v2.json",
+        "role_base_sha256": "46a3e8c68d4f964bc6e34b9a1e3fec7d900afd3f6a77c90fa3b2ec6427e1090f",
+        "working_sha256": "46a3e8c68d4f964bc6e34b9a1e3fec7d900afd3f6a77c90fa3b2ec6427e1090f",
+        "match": true,
+        "role": "browser-auditor-batch-a-v2"
+      },
+      {
+        "relative_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/browser-auditor-devourer-slime-v2.json",
+        "role_base_sha256": "8335fb4d38579356f6c84285b7c20902d6a9ba7b7d176a3fb13373ebed7c09e1",
+        "working_sha256": "8335fb4d38579356f6c84285b7c20902d6a9ba7b7d176a3fb13373ebed7c09e1",
+        "match": true,
+        "role": "browser-auditor-batch-a-v2"
+      }
+    ],
+    "working_tree_to_role_base_match": true,
+    "drift_findings": 0
+  },
+  "v3_test_module_rederivation": {
+    "relative_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v3.py",
+    "working_sha256": "a4106c21d2fe8435e7d765be9cc3a68e16fb269dbc9e37220097793ceb6946b9",
+    "v3_receipt_sha256": "a1a46010b91e68ec1253d8748b82b4003adf1a9a034b9dae47cf37d3d24f1e18",
+    "expected_outcome_at_role_base": "31 PASS / 4 expected fail-closed (independent-review + lifecycle contract) at role base 3d53d031",
+    "observed_outcome_at_role_base": "31 PASS / 4 expected fail-closed (independent-review + lifecycle contract)",
+    "unexpected_failures": 0,
+    "selective_outcome_excluding_red_lifecycle": "31 PASS / 0 fail at role base 3d53d031"
+  },
+  "claim_ledger_rederivation": {
+    "method": "Independent parse of each V2 claim ledger. For each record the reviewer re-hashed the cited blob and the inclusive cited-range bytes via git show against the ledger's claimed revision and confirmed the value equals the ledger's `blob_sha256` and `cited_range_sha256`. The reviewer also verified that no envelope changed class, that each path is reachable at the claimed revision, and that the closed set of source-class labels is preserved. The reviewer additionally re-derived the precise row count per ledger and matched that against the mapper reports.",
+    "totals_by_game": {
+      "griffin-sky-joust": {
+        "ledger_path": "packages/griffin-sky-joust/claim-ledger-v2.json",
+        "claims_total": 7,
+        "classes": {"historical_implementation": 7},
+        "claim_ids": ["GSJ-HIST-001", "GSJ-HIST-002", "GSJ-HIST-003", "GSJ-HIST-004", "GSJ-HIST-005", "GSJ-HIST-006", "GSJ-HIST-007"],
+        "envelope_hash_drift": 0,
+        "class_promotion": 0
+      },
+      "realm-carver": {
+        "ledger_path": "packages/realm-carver/claim-ledger-v2.json",
+        "claims_total": 12,
+        "classes": {"unknown": 4, "historical_implementation": 8},
+        "claim_ids": ["RC-CUR-001", "RC-CUR-002", "RC-CUR-003", "RC-CUR-004", "RC-HIST-001", "RC-HIST-002", "RC-HIST-003", "RC-HIST-004", "RC-HIST-005", "RC-HIST-006", "RC-HIST-007", "RC-HIST-008"],
+        "envelope_hash_drift": 0,
+        "class_promotion": 0
+      },
+      "devourer-slime": {
+        "ledger_path": "packages/devourer-slime/reconciled-claim-ledger-v2.json",
+        "claims_total": 18,
+        "classes": {"current_implementation": 11, "historical_implementation": 7},
+        "claim_ids": ["DS-CL-C-001", "DS-CL-C-002", "DS-CL-C-003", "DS-CL-C-004", "DS-CL-C-005", "DS-CL-C-006", "DS-CL-C-007", "DS-CL-C-008", "DS-CL-C-009", "DS-CL-C-010", "DS-CL-C-011", "DS-CL-H-001", "DS-CL-H-002", "DS-CL-H-003", "DS-CL-H-004", "DS-CL-H-005", "DS-CL-H-006", "DS-CL-H-007"],
+        "envelope_hash_drift": 0,
+        "class_promotion": 0
+      }
+    },
+    "totals": {
+      "claims_all": 37,
+      "unknown_preserved": 4,
+      "historical_implementation": 22,
+      "current_implementation": 11,
+      "semantic_probes_in_SEMANTIC_TOKENS": 33,
+      "row_count_match_with_mapper_reports": true
+    },
+    "spot_checks_performed": [
+      {
+        "claim_id": "GSJ-HIST-005",
+        "path": "apps/advantage-games/src/components/games/sentence/griffin-sky-joust/GriffinSkyJoustGame.test.tsx",
+        "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+        "blob_sha_match": true,
+        "cited_range_sha_match": true,
+        "class_reclassified": "V2 fix from 60-char typo to canonical 64-char SHA-256 is present at role base."
+      },
+      {
+        "claim_id": "RC-HIST-005",
+        "path": "apps/advantage-games/src/components/games/sentence/realm-carver/RealmCarverGame.test.tsx",
+        "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+        "blob_sha_match": true,
+        "cited_range_sha_match": true,
+        "note": "V2 fix corrects range_sha256 to canonical inclusive-line bytes."
+      },
+      {
+        "claim_id": "RC-HIST-006",
+        "path": "apps/advantage-games/src/components/games/sentence/realm-carver/RealmCarverGame.tsx",
+        "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+        "blob_sha_match": true,
+        "cited_range_sha_match": true,
+        "note": "V2 correction retains canonical range_sha256 bytes."
+      },
+      {
+        "claim_id": "RC-HIST-007",
+        "path": "apps/advantage-games/src/components/games/sentence/realm-carver/RealmCarverGame.tsx",
+        "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+        "blob_sha_match": true,
+        "cited_range_sha_match": true,
+        "note": "V2 correction retains canonical range_sha256 bytes."
+      },
+      {
+        "claim_id": "DS-CL-H-001",
+        "path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
+        "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+        "blob_sha_match": true,
+        "cited_range_sha_match": true,
+        "note": "V2 fix widens the cited range to 18..159 so DevourerSlimeGame, ssr:false, and onComplete all appear."
+      },
+      {
+        "claim_id": "DS-CL-H-006",
+        "path": "apps/advantage-games/src/app/api/v1/games/devourer-slime/complete/route.ts",
+        "revision": "1c44854682b18a2393efd265c2271f824e228a3d",
+        "blob_sha_match": true,
+        "cited_range_sha_match": true,
+        "note": "V2 fix corrects the apps.advantage-games path typo to apps/advantage-games and binds the second envelope to the historical revision."
+      },
+      {
+        "claim_id": "DS-CL-H-007",
+        "path": "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.test.tsx",
+        "revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe",
+        "blob_sha_match": true,
+        "cited_range_sha_match": true,
+        "class_reclassified": "V2 fix reclassifies this record from historical_test_artifact to historical_implementation; the closed six-class set is preserved."
+      }
+    ],
+    "semantic_token_coverage": {
+      "SEMANTIC_TOKENS": [
+        "GSJ-HIST-001", "GSJ-HIST-002", "GSJ-HIST-003", "GSJ-HIST-004",
+        "GSJ-HIST-005", "GSJ-HIST-006", "GSJ-HIST-007",
+        "RC-HIST-001", "RC-HIST-002", "RC-HIST-003", "RC-HIST-004",
+        "RC-HIST-005", "RC-HIST-006", "RC-HIST-007", "RC-HIST-008",
+        "DS-CL-C-001", "DS-CL-C-002", "DS-CL-C-003", "DS-CL-C-004",
+        "DS-CL-C-005", "DS-CL-C-006", "DS-CL-C-007", "DS-CL-C-008",
+        "DS-CL-C-009", "DS-CL-C-010", "DS-CL-C-011",
+        "DS-CL-H-001", "DS-CL-H-002", "DS-CL-H-003", "DS-CL-H-004",
+        "DS-CL-H-005", "DS-CL-H-006", "DS-CL-H-007"
+      ],
+      "count": 33,
+      "every_token_present_in_cited_range": true,
+      "missing_token_findings": 0
+    }
+  },
+  "source_class_and_chronology_rederivation": {
+    "closed_classes_six": [
+      "current_implementation",
+      "historical_implementation",
+      "active_specification",
+      "catalog_prose",
+      "cancelled_design",
+      "unknown"
+    ],
+    "core_fixture_classes_six": [
+      "catalog_promotion",
+      "cancelled_design_promotion",
+      "specification_promotion",
+      "historical_promotion",
+      "analogy_substitution",
+      "semantic_overstatement"
+    ],
+    "chronology_chain": {
+      "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4 (T2 comparison era)",
+      "role_base_sha": "3d53d031f48eed2bbb324539900108136190cf57 (V3 selection anchor)",
+      "upper_revision": "a49ebcc4dc3b3792a96b5b114d729b0b542af0fe (frozen current evidence)",
+      "comparison_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 (T2 denominator comparison)",
+      "root_revision": "029261b617143c1773b724b86d54375cd47cb5d2 (deepest reachable)",
+      "audited_head_sha": "65db764cbfcfd90899d51d159cc123b76d511607"
+    },
+    "ancestry_checks": [
+      "ROOT_REVISION is an ancestor of UPPER_REVISION.",
+      "COMPARISON_REVISION is an ancestor of UPPER_REVISION.",
+      "PHASE_BASE_SHA is an ancestor of ROLE_BASE_SHA.",
+      "Every historical_implementation record is reachable from UPPER_REVISION (no current path promoted).",
+      "Every current_implementation record uses UPPER_REVISION exactly (no other current revision claimed)."
+    ],
+    "gsj_chronology": "All seven records resolve to deleted ancestor revisions (1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f and cd1936387d136ffb12e77a647f36cbce2d1fdd4e). No current path exists; absence is honest and the parenthesised-path git quirk is handled by the V2 _git_show cat-file pre-check.",
+    "rc_chronology": "Four current records (RC-CUR-001..004) are explicit unknowns with no reachable page source; eight historical records (RC-HIST-001..008) resolve to 1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f and cd1936387d136ffb12e77a647f36cbce2d1fdd4e; all eight historical records are reachable ancestors and none is promoted to current.",
+    "ds_chronology": "Eleven current records use UPPER_REVISION a49ebcc4dc3b3792a96b5b114d729b0b542af0fe; seven historical records use 1c44854682b18a2393efd265c2271f824e228a3d; the reconciled ledger preserves `No historical proposition is promoted` policy verbatim.",
+    "class_promotion_findings": 0
+  },
+  "negative_fixture_rederivation": {
+    "method": "Independent parse of each V2 negative fixture document. Confirm six fixture rows per game exactly, six distinct closed fixture classes, REJECT disposition on every row, unique fixture identifiers, no fixture excluded as a factual claim, and no fixture id referenced inside a non-fixture claim block.",
+    "totals_by_game": {
+      "griffin-sky-joust": {
+        "path": "packages/griffin-sky-joust/negative-fixtures-v2.json",
+        "fixtures_total": 6,
+        "classes_present": [
+          "catalog_promotion",
+          "cancelled_design_promotion",
+          "specification_promotion",
+          "historical_promotion",
+          "analogy_substitution",
+          "semantic_overstatement"
+        ],
+        "all_reject": true,
+        "counts_as_claim": false,
+        "unique_ids": true,
+        "fixture_ids": ["GSJ-FIX-001", "GSJ-FIX-002", "GSJ-FIX-003", "GSJ-FIX-004", "GSJ-FIX-005", "GSJ-FIX-006"]
+      },
+      "realm-carver": {
+        "path": "packages/realm-carver/negative-fixtures-v2.json",
+        "fixtures_total": 6,
+        "classes_present": [
+          "catalog_promotion",
+          "cancelled_design_promotion",
+          "specification_promotion",
+          "historical_promotion",
+          "analogy_substitution",
+          "semantic_overstatement"
+        ],
+        "all_reject": true,
+        "counts_as_claim": false,
+        "unique_ids": true,
+        "fixture_ids": ["RC-NEG-001", "RC-NEG-002", "RC-NEG-003", "RC-NEG-004", "RC-NEG-005", "RC-NEG-006"]
+      },
+      "devourer-slime": {
+        "path": "packages/devourer-slime/negative-fixtures-v2.json",
+        "fixtures_total": 6,
+        "classes_present": [
+          "catalog_promotion",
+          "cancelled_design_promotion",
+          "specification_promotion",
+          "historical_promotion",
+          "analogy_substitution",
+          "semantic_overstatement"
+        ],
+        "all_reject": true,
+        "counts_as_claim": false,
+        "unique_ids": true,
+        "fixture_ids": ["DS-NEG-001", "DS-NEG-002", "DS-NEG-003", "DS-NEG-004", "DS-NEG-005", "DS-NEG-006"]
+      }
+    },
+    "totals": {
+      "fixtures_total": 18,
+      "classes_count": 6,
+      "all_reject": true,
+      "all_unique_ids": true,
+      "no_facts_added": true
+    },
+    "fixture_id_contamination_findings": 0
+  },
+  "mapping_rederivation": {
+    "method": "Independent parse of each requirements-map-v2.json and the corresponding map-report-v2.json. Confirm ledger_binding sha256 equals the on-disk ledger sha256, evidence_bindings reference the V2 corrected current/historical/evidence observation files, every ledger claim_id (or explicit unknown) appears in cited_claim_ids/cited_unknown_ids, no fixture id is referenced from inside a map, no novel-fact key appears, and acceptance stays 'not-claimed'.",
+    "totals_by_game": {
+      "griffin-sky-joust": {
+        "path": "packages/griffin-sky-joust/requirements-map-v2.json",
+        "report_path": "packages/griffin-sky-joust/requirements-mapper-report-v2.json",
+        "ledger_binding_match": true,
+        "evidence_bindings_match": true,
+        "claim_ids_mapped": 7,
+        "explicit_unknown_mapped": true,
+        "novel_fact_key_findings": 0,
+        "fixture_reference_findings": 0,
+        "acceptance": "not-claimed",
+        "factual_claims_resolved": 7
+      },
+      "realm-carver": {
+        "path": "packages/realm-carver/requirements-map-v2.json",
+        "report_path": "packages/realm-carver/requirements-map-report-v2.json",
+        "ledger_binding_match": true,
+        "evidence_bindings_match": true,
+        "claim_ids_mapped": 12,
+        "explicit_unknown_mapped": true,
+        "novel_fact_key_findings": 0,
+        "fixture_reference_findings": 0,
+        "acceptance": "not-claimed",
+        "factual_claims_resolved": 12
+      },
+      "devourer-slime": {
+        "path": "packages/devourer-slime/requirements-map-v2.json",
+        "report_path": "packages/devourer-slime/requirements-map-report-v2.json",
+        "ledger_binding_match": true,
+        "evidence_bindings_match": true,
+        "claim_ids_mapped": 18,
+        "explicit_unknown_mapped": true,
+        "novel_fact_key_findings": 0,
+        "fixture_reference_findings": 0,
+        "acceptance": "not-claimed",
+        "factual_claims_resolved": 18
+      }
+    },
+    "totals": {
+      "claim_ids_mapped": 37,
+      "novel_fact_key_findings": 0,
+      "fixture_reference_findings": 0,
+      "acceptance_field": "not-claimed"
+    },
+    "mapper_receipt_revision_check": "All three requirements-mapper receipts use source_baseline_revision in {(UPPER_REVISION, COMPARISON_REVISION)}; V2 fix to the Devourer frozen revision typo is present at role base."
+  },
+  "browser_bounds_rederivation": {
+    "method": "Independent re-derivation of every V3 BrowserDispositionContract assertion. Confirm marker='MEASURE_AGENT_RESULT' and acceptance='not-claimed' on each selected browser audit and receipt; recompute accounting and confirm it lies inside the frozen budget ceiling of 240 browser_interactions and zero captured_artifacts; confirm fork_turns='none' and absence of 'provider_attested: true' in each receipt; confirm every audit output is enumerated inside the receipt's output_paths.",
+    "griffin-sky-joust": {
+      "audit_path": "packages/griffin-sky-joust/browser-audit.json",
+      "receipt_path": "role-receipts/browser-auditor-griffin-sky-joust.json",
+      "disposition": "non-runnable-current-source-unknown",
+      "route_attempts": 4,
+      "all_candidate_source_class_historical_implementation": true,
+      "trusted_input_events": 0,
+      "synthetic_input_events": 0,
+      "transitions_observed": 0,
+      "current_runnable_disposition": "unknown",
+      "compact_view_observed": false,
+      "wide_view_observed": false,
+      "browser_interactions_actual": 7,
+      "captured_artifacts_actual": 0,
+      "commit_sha_in_receipt": null,
+      "elapsed_minutes_in_receipt": null,
+      "factual_claim_overreach_findings": 0
+    },
+    "realm-carver": {
+      "audit_path": "packages/realm-carver/browser-audit-batch-a.json",
+      "receipt_path": "role-receipts/browser-auditor-realm-carver-batch-a.json",
+      "disposition": "non-runnable",
+      "route_attempts": 2,
+      "both_routes_404_text_html": true,
+      "real_input_events": [],
+      "runnable_results": 0,
+      "non_runnable_results": 1,
+      "student_data_accessed": false,
+      "browser_interactions_actual": 9,
+      "captured_artifacts_actual": 0,
+      "factual_claim_overreach_findings": 0
+    },
+    "devourer-slime": {
+      "audit_path": "packages/devourer-slime/browser-audit-v2.json",
+      "receipt_path": "role-receipts/browser-auditor-devourer-slime-v2.json",
+      "disposition": "browser-audit-blocked-application-unavailable",
+      "browser_available_and_used": true,
+      "application_responses": 0,
+      "trusted_input_events": 0,
+      "synthetic_input_events": 0,
+      "start_transition": "unknown",
+      "compact_view_observed": false,
+      "wide_view_observed": false,
+      "transitions_observed": 0,
+      "browser_interactions_actual": 7,
+      "captured_artifacts_actual": 0,
+      "factual_claim_overreach_findings": 0
+    },
+    "totals": {
+      "browser_interactions_within_ceiling": true,
+      "captured_artifacts_within_ceiling": true,
+      "all_marker_meASURE_AGENT_RESULT": true,
+      "all_acceptance_not_claimed": true,
+      "no_fabricated_provider_attestation": true,
+      "no_inferred_gameplay_evidence": true
+    }
+  },
+  "receipt_and_budget_rederivation": {
+    "method": "Independent parse of every V2 phase0 role receipt for current-source-specialist, historical-source-specialist, evidence-collector, and requirements-mapper across the three games. Confirm track_id matches, every receipt text contains the literal 'unavailable' provider disclosure, and no receipt text contains 'provider_attested\": true'. Confirm declared output_hashes match the on-disk SHA-256 of every cited artifact, and confirm integer actuals stay inside the frozen role ceilings (current 32MiB/240/160/240/300, history 64MiB/600/300/360/400, collector 32MiB/240/160/300/500, mapper 16MiB/160/120/240/500).",
+    "current_source_receipts_checked": 6,
+    "historical_source_receipts_checked": 6,
+    "evidence_collector_receipts_checked": 3,
+    "requirements_mapper_receipts_checked": 3,
+    "all_track_id_match": true,
+    "all_unavailable_disclosure_present": true,
+    "any_fabricated_provider_attestation": false,
+    "output_hash_drift_findings": 0,
+    "budget_ceiling_breaches": 0,
+    "freezing_units_checked": [
+      "source_bytes_read",
+      "source_objects_read",
+      "command_invocations",
+      "elapsed_minutes",
+      "records_authored"
+    ]
+  },
+  "stop_loss_rederivation": {
+    "method": "Independent cross-check of every stop-loss counter declared in the V3 receipt's expected_gate_state section. Each counter is re-measured at role base against the same evidence.",
+    "unsupported_factual_claims": 0,
+    "denominator_mismatches": 0,
+    "duplicate_partition_assignments": 0,
+    "unassigned_batch_a_identities": 0,
+    "stale_committed_artifacts": 0,
+    "envelope_mismatches": 0,
+    "fixture_contamination": 0,
+    "novel_acceptance_added": 0,
+    "fabricated_provider_attestations": 0,
+    "candidate_unauthorized_reason_present": true,
+    "candidate_authorization_pending_lifecycle": true,
+    "browser_facts_promoted_to_gameplay": 0
+  },
+  "unresolved_findings": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "info": 0
+  },
+  "non_blocking_observations": [
+    "All four lifecycle artifacts (candidate manifest, product-owner approval, accepted manifest, and the reviewer's own file pair before this review) are intentionally absent. The V3 LifecycleContract tests remain red as documented in the V3 receipt expected_gate_state; this reviewer re-creates only the review pair so that the independent-review contract goes green while the lifecycle gate stays at the documented expected red until a separate product-owner step.",
+    "Provider-side attestations (prompt_sha256, spawn/session/ancestry, fork_turns, event ids, final_response_sha256, commit_sha) are truthfully unavailable across every receipt. The 2026-07-21 product-owner provenance direction authorizes local-verifiable receipts with disclosure; no receipt fabricates provider values and no receipt bumps acceptance to anything other than 'not-claimed'.",
+    "The V2 fix `truth-tests-v2.py` carries forward both (a) the six closed source classes, (b) the parenthesised-path git quirk disambiguation, and (c) the corrected DS semantic envelopes. The V3 selection contract and the V3 selection receipt both record exactly that selection; this reviewer found no drift.",
+    "The Griffin browser receipt does not itself expose provider-attestation fields; the V3 receipt therefore treats the absence as a truthful non-attestation rather than fabricating a provider value.",
+    "The Realm Carver browser audit was reclassed to schema_version apk-browser-audit.v3 and persists only the two completed 404 route attempts. The V3 disposition test asserts non-runnable with runnable_results=0 and non_runnable_results=1; both hold.",
+    "The Devourer Slime browser audit timestamps elapsed_minutes=0 as an owner-directed fallback for unavailable timing and not as elapsed-time evidence; the V2 receipt_and_budget contract tolerates zero precisely because the test uses the ordering lookup against frozen unit aliases."
+  ],
+  "lifecycle_preconditions": {
+    "candidate_cohort_manifest_exists": false,
+    "product_owner_acceptance_exists": false,
+    "accepted_cohort_manifest_exists": false,
+    "candidate_authorized": false,
+    "acceptance_authorized": false,
+    "lifecycle_ready": false,
+    "note": "Candidate, owner-approval, and accepted-manifest files are intentionally not authored by this reviewer. Authorization requires a separate non-consumable candidate hash binding this review, an authentic product-owner approval, and a separate accepted manifest with a local-verifiability disclosure. Per the user's instruction, only the review and its receipt are created in this session."
+  },
+  "review_disposition": "conditional-pass: zero unresolved Critical, High, or Medium findings",
+  "candidate_true_zero_chm": true,
+  "next_role_guidance": "If a non-consumable cohort candidate is desired, the orchestrator may publish measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/candidate-manifest.json binding this review's SHA-256, the V3 truth-tests-v3.py bytes, the V3 receipt bytes, and all eight V3 selected inputs. Product-owner approval and accepted cohort manifest remain a separate step that must not be authored by this role."
+}

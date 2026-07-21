@@ -1,0 +1,98 @@
+{
+  "schema_version": "apk-mapper-final-report.v5",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B remediation V2",
+  "role": "requirements-mapper",
+  "game": "Labyrinth of the Goblin King",
+  "canonical_identity": "sentence/labyrinth-goblin-king",
+  "requirements_map": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/requirements-map-batch-b-v2.json",
+  "evidence_ledger": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/claim-evidence-ledger-batch-b-v2.json",
+  "scope": "Batch B mapper output only; every factual mapping atom is bound to a cited collector claim ID, and no browser or independent source fact is introduced.",
+  "mapped_record_counts": {
+    "scene_state_transition": 12,
+    "mechanics_learning": 4,
+    "developer_effort": 5,
+    "unknown": 4,
+    "negative_fixture": 4
+  },
+  "claim_reference_validation": {
+    "ledger_factual_claim_ids": 12,
+    "factual_claim_ids_referenced": 12,
+    "negative_fixture_claim_ids_referenced": 4,
+    "unresolved_claim_ids": 0,
+    "foreign_claim_ids": 0,
+    "factual_claims_without_citation": 0,
+    "novel_source_facts": 0,
+    "browser_claims": 0,
+    "effort_estimates": 0
+  },
+  "provenance": {
+    "policy": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "provider_attestation": "unavailable and not claimed",
+    "acceptance_claimed": false
+  },
+  "budget": {
+    "ceiling_role": "requirements_mapper_one_game",
+    "status": "numeric ceiling declared; mapper actuals measured locally; provider timing unavailable",
+    "source_bytes": 46175,
+    "source_files_objects": 4,
+    "commands": 1,
+    "elapsed_minutes": 0,
+    "elapsed_minutes_interpretation": "accounting fallback only, not elapsed-time evidence",
+    "records_authored_reviewed": 25,
+    "browser_interactions": 0,
+    "captured_artifacts": 2
+  },
+  "disposition": "non-consumable mapper output; fresh independent review, exact binding, lifecycle authorization, and committed binding remain required",
+  "marker": "MEASURE_AGENT_RESULT",
+  "input_bindings": {
+    "collector_ledger": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/claim-evidence-ledger-batch-b-v2.json",
+      "sha256": "1b75beb8af13728ad5e564ed24ec8717341d775272099e92c9757a4fdbbddacb"
+    },
+    "collector_report": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/evidence-final-report-batch-b-v2.json",
+      "sha256": "30847901fd5c1bc0320d921760f4486cb1c0130318aff0d6c7b6b8d6f088fb91"
+    },
+    "collector_method": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/evidence-method-batch-b-v2.md",
+      "sha256": "1d6eeb9dbd78edfd2fb47350378fe187f0f077f22a33fe9ab5dd5f958f9d7687"
+    },
+    "collector_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-labyrinth-goblin-king-batch-b-v2.json",
+      "sha256": "24255078f7dc901fa6c8c82a09dc8a1c1440840449db0365815d762120e93705"
+    },
+    "accepted_batch_a": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-a-v6.json",
+      "sha256": "f5a215f44815c79025e86e97a3217d7a85c4a33db86f80db2909f30dd3a9caa3",
+      "use": "process predecessor only; not factual input"
+    },
+    "timing_direction": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json",
+      "sha256": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971"
+    },
+    "collector_fixtures": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/fixtures-batch-b-v2.json",
+      "sha256": "f23d4d053dc685e75b14a51e4392418f2e61549e6964763c3050ab9b01b19a68"
+    }
+  },
+  "timing": {
+    "direction": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+    "elapsed_minutes": 0,
+    "timing_measurement": "unavailable-in-harness",
+    "elapsed_note": "0 is accounting fallback, not elapsed-time evidence."
+  },
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "acceptance": "not-claimed",
+  "supersession": {
+    "supersedes_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/mapper-final-report-batch-b.json",
+    "supersedes_sha256": "6e27f37f27375c1c659927a396dd5e5c072165683bde5d1b6cf87ed13bc9e038",
+    "scope": "Corrected mapper report lineage and output bindings.",
+    "original_remains_immutable": true
+  },
+  "commit_binding": {
+    "status": "uncommitted-additive-output",
+    "commit_sha": null
+  }
+}

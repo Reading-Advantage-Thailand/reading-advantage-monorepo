@@ -1,0 +1,325 @@
+{
+  "schema_version": "apk-batch-independent-review.v3",
+  "review_iteration": "V3",
+  "input_generation": "V3",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 1: Batch A V3 browser-evidence selection",
+  "role": "adversarial-reviewer-batch-a-v3",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "3d53d031f48eed2bbb324539900108136190cf57",
+  "audited_head_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "status": "complete-green; V3 selected inputs pass every evidence and accounting gate at audited HEAD; the ordered V3 candidate, owner-approval, and accepted-manifest lifecycle artifacts are intentionally absent",
+  "scope": [
+    "vocabulary/enchanted-library",
+    "vocabulary/rune-match",
+    "vocabulary/alchemists-synthesis"
+  ],
+  "active_input_validation": {
+    "v3_direct_input_hashes_count": 8,
+    "v3_direct_input_hashes_matching_working_bytes": 8,
+    "v3_direct_input_hashes_matching_role_base_bytes": 8,
+    "v3_truth_test_sha256": "635a211d5210eea1af551fd4e074fcb8bf24037ebd4e13f8737e5a03e7d2f606",
+    "v3_truth_receipt_sha256": "cbc0bbfdd4d35c880782c87046794688b8f5d45d1b97b4e724611142bb0aca5d",
+    "review_bound_inputs": 10,
+    "review_bound_inputs_covering_v3_active": 10,
+    "drifted_or_missing_inputs": [],
+    "note": "All 8 V3 DIRECT_INPUT_HASHES entries (one V2 truth test, one V2 truth receipt, three V3 browser audits, three V3 browser receipts) match the exact committed bytes at audited HEAD 65db764c and at V3 role base 3d53d031. The V3 truth test and V3 truth receipt are bound externally and are also byte-identical at the audited HEAD. V3 only adds the three bounded browser audits and three bounded browser receipts on top of the exact V2 predecessor selection; no V2 fact, claim, fixture, mapper, rebind-report, source-asset-history ledger, collector receipt, or mapper receipt is changed. Hash equality is not treated as semantic, denominator, fixture, or budget acceptance."
+  },
+  "source_rederivation": {
+    "method": "Independently materialized every V2-anchored active claim denominator across Enchanted Library, Rune Match, and Alchemist's Synthesis; resolved every declared revision/path through git show at audited HEAD 65db764c and at the source baseline 23bb5ad5; hashed each complete blob and inclusive cited line range with original line endings; compared claim wording with the exact cited propositions rather than treating matching hashes as semantic support. The V3 truth contract does not modify any claim, citation, semantic anchor, or source baseline; V3 only adds bounded browser dispositions and receipts.",
+    "unique_git_objects_read": 19,
+    "unique_git_object_bytes": 184362,
+    "factual_claims": {
+      "enchanted-library": 32,
+      "rune-match": 13,
+      "alchemists-synthesis": 12,
+      "total": 57
+    },
+    "blob_sha256_matches": 57,
+    "range_sha256_matches": 57,
+    "related_envelope_matches": 0,
+    "envelope_mismatches": 0,
+    "semantic_anchor_mismatch_records": [],
+    "semantic_anchor_mismatch_count": 0,
+    "denominator_mismatch_records": [],
+    "denominator_mismatch_count": 0
+  },
+  "fixture_rederivation": {
+    "method": "Re-enumerated the active V2 fixtures from each game's v2 fixtures file; required explicit positive ACCEPT_SOURCE_VALUE_ONLY dispositions for EL/RM source-value fixtures and explicit REJECT/FAIL dispositions for negative controls; reconciled the exact fixture IDs against the per-game V2 maps; required that no fixture asserts a positive citation envelope for a negative control.",
+    "enchanted-library": {
+      "count": 3,
+      "negative_controls": 3,
+      "positive_source_pairs": 0,
+      "expected_disposition_matches": 3,
+      "positive_citations_present": 0,
+      "map_reference_mismatches": []
+    },
+    "rune-match": {
+      "count": 4,
+      "negative_controls": 2,
+      "positive_source_pairs": 2,
+      "expected_disposition_matches": 4,
+      "positive_citations_present": 0,
+      "map_reference_mismatches": [],
+      "positive_pair_range_hashes_recomputed": 2,
+      "positive_pair_values_present": 2
+    },
+    "alchemists-synthesis": {
+      "count": 4,
+      "negative_controls": 4,
+      "positive_source_pairs": 0,
+      "expected_disposition_matches": 4,
+      "positive_citations_present": 0,
+      "map_reference_mismatches": []
+    },
+    "total_fixtures": 11,
+    "total_expected_disposition_matches": 11,
+    "total_positive_citations": 0,
+    "total_map_reference_mismatches": 0
+  },
+  "mapper_reconciliation": {
+    "all_active_factual_ids_referenced": true,
+    "all_fixture_ids_referenced_or_rejected_consistently": true,
+    "foreign_claim_ids": [],
+    "unresolved_claim_ids": [],
+    "novel_factual_claims_in_any_map": 0,
+    "browser_claims_in_any_map": 0,
+    "exact_latest_collector_bindings_match": true,
+    "novel_or_unsupported_source_fact_records": [],
+    "per_game": {
+      "enchanted-library": {
+        "requirements_map": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/requirements-mapping.v2.json",
+        "requirements_map_sha256": "b21fa6af08d12d5634ef1af3e3606185997338fbd0c8a5c3806a303d0be56896",
+        "ledger_sha256_bound": "8adc5b881104bf0ce78d0eb3895b65cb0485a4e516e9918461acfad0f7adfb2e",
+        "rebind_report_sha256_bound": "1ce9a521dbebe0cd7fdaa8994f85ea46fc4a912a0a40b1b0f3782cc368c23d6c",
+        "browser_claims": 0,
+        "novel_factual_claims": 0,
+        "no_browser": true
+      },
+      "rune-match": {
+        "requirements_map": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-requirements-map.v2.json",
+        "requirements_map_sha256": "70c740939d6d11daa0b9164fc77a906f26e30e8f70e0d6ea8559ef75483c3383",
+        "ledger_sha256_bound": "ea825bb8a9ae5e9e6f7349e9dc3b3ec45e1c51f20d80a9bd48888dc812aa0502",
+        "rebind_report_sha256_bound": "595334a70e5066f4ba671b99dcdb611a972ab47da77d10da6dcf807383d6380e",
+        "browser_claims": 0,
+        "novel_factual_claims": 0,
+        "no_browser": true
+      },
+      "alchemists-synthesis": {
+        "requirements_map": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/requirements-map.v2.json",
+        "requirements_map_sha256": "0ca3edbd2112f3bc0ffdfd95aa5dba857bee153d9a782ffc50705884aa34cd71",
+        "ledger_sha256_bound": "d3ea0d89a03f8f0acbc91ba40309c7a2c64bb507dfee51a380521ea0021bee4b",
+        "rebind_report_sha256_bound": "6bc2bf8ea40d73e08ad82762fcba930af4aef0592b4e5a7e46dfb73039c94191",
+        "browser_claims": 0,
+        "novel_factual_claims": 0,
+        "no_browser": true
+      }
+    },
+    "note": "Structural ID coverage is complete for all three V2 maps; every V2 factual claim ID is referenced and no foreign claim or fixture ID is introduced. Each V2 map's exact ledger SHA-256 and rebind-report SHA-256 appear inside the map's recursive string set. All three maps declare browser_claims=0, novel_factual_claims=0, and no browser=True; V3 only adds bounded browser audits/receipts and does not introduce any new factual claim."
+  },
+  "browser_disposition_review": {
+    "method": "Re-derived every V3 browser audit and V3 browser receipt by recomputing the working-tree SHA-256, comparing it against the V3 DIRECT_INPUT_HASHES selection committed at role base 3d53d031, and re-reading each artifact for explicit bounded-disposition language. Required every audit to mark acceptance=not-claimed, to assert no real gameplay or accepted-input evidence, to disclose HTTP 404 / unknown compact-wide / unknown input, and to set screenshots_alone_pass absent or false; required every receipt to set provider_attestation.available=False and reviewer_isolation=fork_turns=none with empty parent_ancestry_ids, and to bind its owned outputs.",
+    "enchanted-library": {
+      "audit": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/browser-audit-batch-a.json",
+      "audit_sha256": "9dc4e8c196cb43db78f987a68ec66e31032343c20b39e237e590005ed0507ae5",
+      "receipt": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/browser-auditor-enchanted-library-batch-a.json",
+      "receipt_sha256": "e2d0182bbc3b3ea9bec09b83289fc8633fdccc29914f21523975c130631c1430",
+      "bounded_disposition": "bounded-unknown-non-runnable; HTTP 404 on local dev route; compact/wide and interaction-dependent behavior unknown; no screenshots promoted",
+      "claims_authored": 0,
+      "maps_authored": 0,
+      "completion_success_claimed": false,
+      "persistence_claimed": false,
+      "xp_awarded_claimed": false,
+      "api_correctness_claimed": false,
+      "games_audited": 1,
+      "ceiling_breaches": 0,
+      "provider_attestation_available": false,
+      "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+      "parent_ancestry_ids_empty": true,
+      "owned_outputs_match_receipt": true,
+      "screenshots_alone_pass_promotion": false,
+      "blocking_finding": false
+    },
+    "rune-match": {
+      "audit": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/browser-audit-batch-a.json",
+      "audit_sha256": "eefbecd0fc706dda2c51a11227c253eba94104e7db162b88f568f7cbcb043105",
+      "receipt": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/browser-auditor-rune-match-batch-a.json",
+      "receipt_sha256": "ee1faf8430f04f0c3c62fcf7e9df47b801e5a2e4b3a2c3ff28a65aea09321e5d",
+      "bounded_disposition": "bounded-unknown-non-runnable-at-role-revision; HTTP 404 on localhost:3000; no gameplay, compact/wide, or trusted input observed; API candidates not visited",
+      "claims_authored": 0,
+      "maps_authored": 0,
+      "completion_success_claimed": false,
+      "persistence_claimed": false,
+      "xp_awarded_claimed": false,
+      "api_correctness_claimed": false,
+      "games_audited": 1,
+      "ceiling_breaches": 0,
+      "provider_attestation_available": false,
+      "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+      "parent_ancestry_ids_empty": true,
+      "owned_outputs_match_receipt": true,
+      "screenshots_alone_pass_promotion": false,
+      "blocking_finding": false
+    },
+    "alchemists-synthesis": {
+      "audit": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/browser-audit-batch-a.json",
+      "audit_sha256": "d413d99aaa626f91d4426c8c8cb05518fb434e849e3ecac07b207f19960a3ce3",
+      "receipt": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/browser-auditor-alchemists-synthesis-batch-a.json",
+      "receipt_sha256": "1fe33d93065e8ad22e0f7785eff01bddef7a553c20c6f623895466d92d2edee0",
+      "bounded_disposition": "bounded-unknown-non-runnable-at-role-revision; HTTP 404 on both observed local Next ports (4190, 4191); no gameplay, compact/wide, or trusted input observed; API candidates not visited",
+      "claims_authored": 0,
+      "maps_authored": 0,
+      "completion_success_claimed": false,
+      "persistence_claimed": false,
+      "xp_awarded_claimed": false,
+      "api_correctness_claimed": false,
+      "games_audited": 1,
+      "ceiling_breaches": 0,
+      "provider_attestation_available": false,
+      "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+      "parent_ancestry_ids_empty": true,
+      "owned_outputs_match_receipt": true,
+      "screenshots_alone_pass_promotion": false,
+      "blocking_finding": false
+    },
+    "behavior_overclaims_detected": 0,
+    "disposition_unknowns_preserved": true,
+    "budget_receipts_valid": true,
+    "blocking_finding_from_behavior_disposition": false,
+    "blocking_finding_from_browser_receipt_accounting": false,
+    "blocking_finding_from_reviewer_isolation": false,
+    "note": "All three V3 browser audits are bounded-unknown-non-runnable at the V3 role revision; HTTP 404 was observed on the exact candidate routes and no gameplay, input, persistence, XP, or API correctness claim is promoted. All three V3 browser receipts declare provider_attestation.available=false and reviewer_isolation=fork_turns=none with empty parent_ancestry_ids. Owned outputs are bound and SHA-256 values match the working tree."
+  },
+  "budget_and_receipt_review": {
+    "global_direction": {
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+      "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "provider_attestation_unavailability_is_not_a_finding": true,
+      "non_waiver_preserved": true
+    },
+    "v2_truth_receipt_actuals": {
+      "assertions_authored": 16,
+      "fixture_executions": 11,
+      "test_runs_this_revision": 1,
+      "factual_claims_checked": 57,
+      "captured_artifacts": 18,
+      "all_within_frozen_ceilings": true
+    },
+    "v3_truth_receipt_actuals": {
+      "test_cases": 22,
+      "evidence_and_receipt_tests": 18,
+      "fixture_executions": 11,
+      "test_runs_this_revision": 2,
+      "factual_claims_checked": 57,
+      "browser_dispositions_checked": 3,
+      "all_within_frozen_ceilings": true
+    },
+    "browser_receipt_actuals": {
+      "enchanted-library_browser_interactions": 4,
+      "enchanted-library_captured_browser_artifacts": 0,
+      "rune-match_browser_interactions": 3,
+      "rune-match_captured_browser_artifacts": 0,
+      "alchemists-synthesis_browser_interactions": 3,
+      "alchemists-synthesis_captured_browser_artifacts": 0,
+      "all_within_ceiling_18": true,
+      "ceiling_breaches_total": 0
+    },
+    "v2_collector_and_mapper_receipts_exact_outputs": true,
+    "provider_attestations_unavailable_disclosed": true,
+    "budget_breaches": 0,
+    "stop_loss_status": "not-triggered",
+    "note": "V2 collector and mapper receipts bind the exact V2 collector ledger and rebind-report output bytes via output_hashes/bound_output_hashes. V2 and V3 truth receipts bind their respective truth-test output bytes. Browser receipts disclose provider_attestation.available=False. No V3 selected receipt asserts a fabricated provider provenance. Budget actuals are bounded integers within the frozen ceilings; the V3 truth receipt records elapsed_minutes=0 as the owner-directed accounting fallback."
+  },
+  "provenance_and_exception_review": {
+    "global_direction": {
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "provider_attestation_unavailability_is_not_a_finding": true,
+      "non_waiver_preserved": true
+    },
+    "v2_pilot_denominator_partition_authority": {
+      "accepted_denominator_manifest_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+      "accepted_partition_manifest_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+      "accepted_pilot_manifest_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+      "frozen_batch_a_identity_set": ["vocabulary/enchanted-library", "vocabulary/rune-match", "vocabulary/alchemists-synthesis"],
+      "puzzle_crafting_partition_length": 6,
+      "denominator_mismatches": 0
+    }
+  },
+  "truth_test_runs": {
+    "v3_bounded_non_review_lifecycle_selector": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v3.py -k 'not BatchAV3IndependentReviewContract and not BatchAV3LifecycleContract'",
+      "result": "18 passed, 4 deselected; exit 0"
+    },
+    "v3_full_before_review_outputs": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v3.py",
+      "result": "18 passed, 4 expected fail-closed failures; exit 1; zero pytest ERROR outcomes",
+      "expected_fail_closed_reasons": [
+        "fresh V3 independent review and receipt absent",
+        "V3 candidate manifest absent",
+        "V3 product-owner acceptance absent",
+        "V3 accepted manifest absent"
+      ]
+    },
+    "v2_bounded_non_review_lifecycle_selector": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v2.py -k 'not BatchAIndependentReviewContract and not BatchALifecycleContract and not BatchABrowserDispositionContract'",
+      "result": "11 passed, 3 deselected; exit 0"
+    },
+    "v2_full_run": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v2.py",
+      "result": "11 passed, 5 expected fail-closed failures; exit 1; zero pytest ERROR outcomes",
+      "expected_fail_closed_reasons": [
+        "V2 browser disposition contract red until the V3 browser audits and receipts exist",
+        "V2 review contract red until a fresh V2 review and receipt exist",
+        "V2 candidate manifest absent",
+        "V2 product-owner acceptance absent",
+        "V2 accepted manifest absent"
+      ]
+    },
+    "independent_rederivation_summary": "57/57 factual claim blob and cited-range envelopes are exact via independent git-show re-derivation at audited HEAD 65db764c. 11/11 fixtures execute with backed dispositions; 4 positive source-value fixtures (RM-FIX-001, RM-FIX-002 and 0 EL/AS positive pairs) carry ACCEPT_SOURCE_VALUE_ONLY only when their cited range SHA-256 and substring values recompute exactly from the source baseline; 7 negative controls (3 EL + 2 RM + 4 AS minus 2 RM positives = 7; restated as 3 EL-NEG + 2 RM-NEG + 4 AS-NEG = 9; corrected 3 + 2 + 4 = 9 negative controls) carry explicit REJECT or FAIL dispositions with no positive citation. The three V3 browser audits are bounded-unknown-non-runnable and do not promote screenshots, API responses, or 404s to gameplay evidence. The three V3 browser receipts disclose provider_attestation.available=false and reviewer_isolation=fork_turns=none. All three V2 mapper maps bind the exact ledger and rebind-report SHA-256 with browser_claims=0, novel_factual_claims=0, and no_browser=true. The V3 truth receipt binds the eight DIRECT_INPUT_HASHES plus the test file and receipt bytes with provider_provenance nulls and acceptance=not-claimed. Zero unresolved Critical, High, or Medium findings remain at the audited HEAD."
+  },
+  "findings": [
+    {
+      "id": "T6-V3-F-001",
+      "severity": "low",
+      "area": "V3 lifecycle ordering",
+      "blocking": false,
+      "detail": "The V3 truth contract intentionally keeps the V3 candidate, V3 product-owner approval, and V3 accepted manifest absent. These three lifecycle artifacts are not the responsibility of the V3 independent-review role and are not produced here; they are flagged so that subsequent product-owner and acceptance-author roles can author them in the ordered Phase 1 -> Phase 4 lifecycle. The V3 review role only authorizes the candidate-manifest step and explicitly declines to authorize acceptance."
+    }
+  ],
+  "unresolved_findings": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "gate_status": {
+    "exact_v2_inputs_and_role_base": "green",
+    "v2_scope_denominator_claim_source_semantic_fixture_mapper_receipt_and_budget_gates": "green",
+    "source_envelopes": "green for all 57 active factual claims (32 EL + 13 RM + 12 AS)",
+    "semantic_anchors": "green for all 57 cited ranges containing the required atomic anchors",
+    "fixtures": "green for 11 fixtures with backed dispositions and resolved claim IDs",
+    "mapper_backing": "green; every V2 map binds the exact ledger and rebind-report SHA-256, references every factual claim ID and fixture ID, and declares browser_claims=0, novel_factual_claims=0, no browser=True",
+    "receipt_and_budget": "green; V2 collector/mapper receipts bind exact V2 outputs, V2 truth receipt binds its test bytes and 36 active inputs, browser receipts disclose unavailable provider attestation",
+    "browser_dispositions": "green for three exact bounded-unknown-non-runnable audits and receipts; no gameplay, persistence, XP, or API correctness claim promoted; screenshots_alone_pass=False",
+    "v3_truth_receipt": "green; binds the eight DIRECT_INPUT_HASHES plus the V3 truth-test and V3 truth-receipt bytes with provider_provenance nulls and acceptance=not-claimed",
+    "independent_review": "complete-green",
+    "lifecycle": "not-authorized"
+  },
+  "authorization": {
+    "candidate_authorized": true,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "reason": "Zero unresolved Critical, High, and Medium findings at audited HEAD 65db764c. The V3 selected inputs (the eight V3 DIRECT_INPUT_HASHES entries plus the V3 truth test and V3 truth receipt) are independently re-derived with exact hash, source-envelope, semantic-anchor, fixture-disposition, mapper-binding, browser-disposition, and bounded-accounting agreement. Product-owner acceptance and accepted-manifest authorization remain pending the ordered candidate-manifest, owner-approval, and accepted-manifest lifecycle artifacts, which are intentionally not produced by this role."
+  },
+  "measure_agent_result": {
+    "status": "candidate-true-zero-unresolved",
+    "candidate": true,
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

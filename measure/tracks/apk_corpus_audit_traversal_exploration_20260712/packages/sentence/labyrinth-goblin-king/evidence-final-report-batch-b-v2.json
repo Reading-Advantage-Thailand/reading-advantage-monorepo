@@ -1,0 +1,72 @@
+{
+  "schema_version": "apk-evidence-collector-final-report.v3",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B remediation V2",
+  "game": "Labyrinth of the Goblin King",
+  "canonical_identity_id": "sentence/labyrinth-goblin-king",
+  "disposition": "source-evidence-collected-batch-b-not-reviewed-not-accepted",
+  "source_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "ledger_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/claim-evidence-ledger-batch-b-v2.json",
+  "method_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/evidence-method-batch-b-v2.md",
+  "factual_claims": 12,
+  "fixture_records": 4,
+  "denominator_records_reconciled": 11,
+  "budget_actuals": {
+    "source_bytes": 46175,
+    "source_files_objects": 4,
+    "commands": 4,
+    "elapsed_minutes": 0,
+    "timing_measurement": "unavailable-in-harness",
+    "timing_note": "0 is the owner-directed accounting fallback, not elapsed-time evidence.",
+    "records_authored_reviewed": 16,
+    "browser_interactions": 0,
+    "captured_artifacts": 4
+  },
+  "validation": {
+    "json": "validated-local-command",
+    "envelopes": "11 exact source envelopes recorded; 2 source ranges are pending independent semantic re-derivation only",
+    "fixtures": "4 explicit REJECT records; no fixture is a factual claim",
+    "denominator": "accepted identity and named records reconciled exactly once; no authored-output denominator",
+    "budgets": "actuals are labeled integers and within the frozen one-game collector ceilings",
+    "diff": "collector package only; no product-source files, mapper, browser, truth, or review outputs"
+  },
+  "unknowns_preserved": [
+    "browser/runnable/native-input/viewport/console/network behavior",
+    "binary asset availability and runtime load",
+    "historical behavior",
+    "persistence and API correctness",
+    "provider-side provenance and timing attestations"
+  ],
+  "stop_loss": {
+    "unsupported_factual_claims": 0,
+    "citation_envelope_mismatches": 0,
+    "denominator_mismatches": 0,
+    "denominator_records_dropped": 0,
+    "denominator_records_duplicated": 0,
+    "unknowns_removed": 0,
+    "browser_claims": 0,
+    "budget_breaches": 0,
+    "status": "collector-only; later truth, browser, asset, mapping, review, candidate, acceptance, and commit gates remain required"
+  },
+  "acceptance_status": "non-consumable collector package",
+  "commit_binding": {
+    "status": "uncommitted-additive-output",
+    "commit_sha": null
+  },
+  "marker": "MEASURE_AGENT_RESULT",
+  "timing_direction": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json",
+    "sha256": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+    "decision": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+    "elapsed_minutes_note": "0 is accounting fallback, not elapsed-time evidence."
+  },
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "acceptance": "not-claimed",
+  "supersession": {
+    "supersedes_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/evidence-final-report-batch-b.json",
+    "supersedes_sha256": "fb19e521a3ede7bbaf63da6c326f3871823c522cc7b57bcd06a9d8468b5f06b8",
+    "scope": "Corrected report lineage for the additive collector package.",
+    "original_remains_immutable": true
+  }
+}

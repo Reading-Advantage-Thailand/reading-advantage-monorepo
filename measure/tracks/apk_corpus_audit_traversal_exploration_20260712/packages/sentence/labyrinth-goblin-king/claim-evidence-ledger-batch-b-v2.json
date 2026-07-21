@@ -1,0 +1,390 @@
+{
+  "schema_version": "apk-claim-evidence-ledger.v3",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B remediation V2",
+  "canonical_identity_id": "sentence/labyrinth-goblin-king",
+  "canonical_label": "Labyrinth of the Goblin King",
+  "cohort": "Traversal and exploration",
+  "source_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "collector_agent": "evidence-collector-labyrinth-goblin-king-batch-b-v2",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "claim_atoms": [
+    {
+      "claim_id": "LGK-STATE-001",
+      "category": "state",
+      "source_fact": "GameStatus is the four-value union start, playing, victory, defeat.",
+      "interpretation": "These are source-defined core status values; no live execution is claimed.",
+      "citation": {
+        "path": "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts",
+        "line_start": 1,
+        "line_end": 70,
+        "cited_range_sha256": "8addcf700ba4e77e986039769c60b3f0741bbc49f142cee0dd039e893b0937fd",
+        "blob_sha256": "750be3a0703afabb45872a195e443550905654bf1d4400443f6f186e16a0ac9c",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "confidence": "high",
+      "evidence_class": "current-source",
+      "discovery_method": "accepted-denominator-path-followed",
+      "conflict_state": "none",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "LGK-MAZE-001",
+      "category": "layout",
+      "source_fact": "Maze creation uses an 11-column by 15-row configuration, walls on the outer boundary and even/even interior coordinates, and opens the left entrance at row 1 and right exit at row rows-2.",
+      "interpretation": "This is deterministic maze construction logic; it does not prove a rendered or navigable live maze.",
+      "citation": {
+        "path": "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts",
+        "line_start": 84,
+        "line_end": 101,
+        "cited_range_sha256": "ee7cf17feff5d3e951a5770046d9fc652897d3a2523f178a3b538d23f8765cf4",
+        "blob_sha256": "750be3a0703afabb45872a195e443550905654bf1d4400443f6f186e16a0ac9c",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "confidence": "high",
+      "evidence_class": "current-source",
+      "discovery_method": "accepted-denominator-path-followed",
+      "conflict_state": "none",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "LGK-INIT-001",
+      "category": "start-state",
+      "source_fact": "State creation rejects an empty sentence list, defaults difficulty to normal and goblin type to scout, initializes status to start, and places the player at tileSize/2, tileSize*1.5 moving right.",
+      "interpretation": "Initialization behavior only; it does not prove the start control was activated.",
+      "citation": {
+        "path": "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts",
+        "line_start": 170,
+        "line_end": 248,
+        "cited_range_sha256": "7ab2e5fc3a2e5c4e6da4442ea3428b1f4c75bfca36b18f1670d344ca3359d28b",
+        "blob_sha256": "750be3a0703afabb45872a195e443550905654bf1d4400443f6f186e16a0ac9c",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "confidence": "high",
+      "evidence_class": "current-source",
+      "discovery_method": "accepted-denominator-path-followed",
+      "conflict_state": "none",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "LGK-CONFIG-001",
+      "category": "configuration",
+      "source_fact": "The configured gameplay arena is 390 by 700 pixels with 32-pixel tiles, 28-pixel player and goblin sizes, player speed 3, heroic aura duration 6000 ms, and chase range 100.",
+      "interpretation": "These are configuration literals and not measurements of a running viewport.",
+      "citation": {
+        "path": "apps/advantage-games/src/lib/games/labyrinthGoblinKingConfig.ts",
+        "line_start": 14,
+        "line_end": 60,
+        "cited_range_sha256": "196b1f87f5b863e8a28919e4f89e9d77c35d59f8c0fce13c88c11d865565b6bf",
+        "blob_sha256": "d8bcf46cf1ab198506a4c1ab674016d5d7e5a6553f4f0e5c817a882831aca9a9",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "confidence": "high",
+      "evidence_class": "current-source",
+      "discovery_method": "accepted-denominator-path-followed",
+      "conflict_state": "none",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "LGK-MOVE-001",
+      "category": "movement",
+      "source_fact": "The tick function derives desired direction from dx/dy, attempts a snapped turn when within 0.45 tileSize, and otherwise continues the prior direction when movement remains possible.",
+      "interpretation": "This source envelope describes directional movement logic, not successful keyboard, pointer, touch, or browser movement.",
+      "citation": {
+        "path": "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts",
+        "line_start": 425,
+        "line_end": 500,
+        "cited_range_sha256": "eaf002a6bcd39bb38ae2a88edf51f4eff169a52da1d6d537d8fb940e7dc67b2e",
+        "blob_sha256": "750be3a0703afabb45872a195e443550905654bf1d4400443f6f186e16a0ac9c",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "confidence": "high",
+      "evidence_class": "current-source",
+      "discovery_method": "accepted-denominator-path-followed",
+      "conflict_state": "none",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "LGK-COLL-001",
+      "category": "collision",
+      "source_fact": "canMove tests all four corners of a size-adjusted player or goblin rectangle through isWall, and out-of-maze coordinates are walls.",
+      "interpretation": "The implementation defines collision rejection against maze walls; no runtime collision result is claimed.",
+      "citation": {
+        "path": "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts",
+        "line_start": 282,
+        "line_end": 288,
+        "cited_range_sha256": "a22a03358e8a0d086fb54226456d22b8211741784bca758f7a068ad6d57083be",
+        "blob_sha256": "750be3a0703afabb45872a195e443550905654bf1d4400443f6f186e16a0ac9c",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "confidence": "medium",
+      "evidence_class": "current-source",
+      "discovery_method": "accepted-denominator-path-followed",
+      "conflict_state": "none",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "LGK-ORB-001",
+      "category": "learning-mechanic",
+      "source_fact": "A newly collected orb is correct only when its orderIndex equals targetIndex; correct collection increments correctAnswers, appends the word, and increments targetIndex.",
+      "interpretation": "The source defines ordered word collection; it does not prove a learner completed it.",
+      "citation": {
+        "path": "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts",
+        "line_start": 502,
+        "line_end": 519,
+        "cited_range_sha256": "1ce48eda9aa0afa6f9f7f78cccc81f2057e8766dc69d2d96f68e1916323c81fa",
+        "blob_sha256": "750be3a0703afabb45872a195e443550905654bf1d4400443f6f186e16a0ac9c",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "confidence": "high",
+      "evidence_class": "current-source",
+      "discovery_method": "accepted-denominator-path-followed",
+      "conflict_state": "none",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "LGK-TRANS-001",
+      "category": "transition",
+      "source_fact": "When the final word orb in a sentence is collected in order, the source enables heroic aura, marks goblins fleeing, advances to the next sentence modulo allSentences, respawns word orbs, clears collectedWords, and resets targetIndex.",
+      "interpretation": "This is a source-defined playing-to-playing transition; browser transition and completion are unknown.",
+      "citation": {
+        "path": "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts",
+        "line_start": 521,
+        "line_end": 539,
+        "cited_range_sha256": "710981d785b4fb1e7ada635213cd01fb588ec67418c8f225b13689961a153750",
+        "blob_sha256": "750be3a0703afabb45872a195e443550905654bf1d4400443f6f186e16a0ac9c",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "confidence": "high",
+      "evidence_class": "current-source",
+      "discovery_method": "accepted-denominator-path-followed",
+      "conflict_state": "none",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "LGK-TRANS-002",
+      "category": "transition",
+      "source_fact": "A wrong orb increments wrongAnswers, removes one life, sets invulnerabilityDuration, and attempts to reposition the orb at an available floor position.",
+      "interpretation": "The wrong-order penalty is source-defined; no live defeat or recovery is claimed.",
+      "citation": {
+        "path": "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts",
+        "line_start": 541,
+        "line_end": 559,
+        "cited_range_sha256": "c14ea947dbb1a01d9ceb5aec2800c6c836dc62dd04c61a4e7fbb866aad84997e",
+        "blob_sha256": "750be3a0703afabb45872a195e443550905654bf1d4400443f6f186e16a0ac9c",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "confidence": "high",
+      "evidence_class": "current-source",
+      "discovery_method": "accepted-denominator-path-followed",
+      "conflict_state": "none",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "LGK-GOBLIN-001",
+      "category": "hazard",
+      "source_fact": "Goblin movement selects fleeing directions away from the player, chases for non-scout types within chaseRange, otherwise patrols with a non-reverse preference, and collision costs a life unless heroic aura marks the goblin eaten.",
+      "interpretation": "This is source-defined hazard and aura logic; it does not prove encounters or goblin defeat in a browser.",
+      "citation": {
+        "path": "apps/advantage-games/src/lib/games/labyrinthGoblinKing.ts",
+        "line_start": 345,
+        "line_end": 596,
+        "cited_range_sha256": "60b84a15531299118f5e364363e2ff49c1b64b347e8cb332de917cbca1554313",
+        "blob_sha256": "750be3a0703afabb45872a195e443550905654bf1d4400443f6f186e16a0ac9c",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "confidence": "high",
+      "evidence_class": "current-source",
+      "discovery_method": "accepted-denominator-path-followed",
+      "conflict_state": "none",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "LGK-ROUTE-001",
+      "category": "route-api",
+      "source_fact": "The page fetches sentence data from /api/v1/games/labyrinth-goblin-king/sentences with locale and posts completion data to /api/v1/games/labyrinth-goblin-king/complete.",
+      "interpretation": "These are exact client route references; they do not establish server reachability, persistence, or API correctness.",
+      "citation": {
+        "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/labyrinth-goblin-king/page.tsx",
+        "line_start": 47,
+        "line_end": 104,
+        "cited_range_sha256": "3b5a560f58f32f125c9f7a3cf8bf68498acaa8fc0aff7cbd9b33567abeb3d77a",
+        "blob_sha256": "900abccf446802b2c2038f4ce1ffd976703d67a0730f171225e2f631e2864afa",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "confidence": "high",
+      "evidence_class": "current-source",
+      "discovery_method": "accepted-denominator-path-followed",
+      "conflict_state": "none",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "LGK-RESP-001",
+      "category": "responsive-source",
+      "source_fact": "The component computes scale as the minimum of container width/GAME_WIDTH and height/GAME_HEIGHT.",
+      "interpretation": "Responsive source logic is present; compact/wide live composition remains unverified without browser evidence.",
+      "citation": {
+        "path": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx",
+        "line_start": 150,
+        "line_end": 153,
+        "cited_range_sha256": "4b19f9bd98ae072ce6c02718c603a0c0e3c560ff87de9b72d4386161aa0941eb",
+        "blob_sha256": "23a76bf75fb4c2f4c4e4f68d6554150337c7dd4ad149b5e0f4cd50dd32752b71",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+      },
+      "confidence": "high",
+      "evidence_class": "current-source",
+      "discovery_method": "accepted-denominator-path-followed",
+      "conflict_state": "none",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    }
+  ],
+  "negative_fixtures": [
+    {
+      "fixture_id": "LGK-NEG-001",
+      "assertion": "The source proves the maze can be completed by a learner in a browser.",
+      "expected_disposition": "REJECT",
+      "reason": "Source envelopes establish logic only; no live interaction or completion observation exists."
+    },
+    {
+      "fixture_id": "LGK-NEG-002",
+      "assertion": "The route citation proves POST persistence and API correctness.",
+      "expected_disposition": "REJECT",
+      "reason": "A client fetch call is not server execution, persistence, or correctness evidence."
+    },
+    {
+      "fixture_id": "LGK-NEG-003",
+      "assertion": "The 390x700 constants prove compact and wide responsive behavior.",
+      "expected_disposition": "REJECT",
+      "reason": "Configuration and CSS/source scaling do not replace live compact/wide browser evidence."
+    },
+    {
+      "fixture_id": "LGK-NEG-004",
+      "assertion": "The title or goblin asset names prove a Goblin King boss encounter and asset usage.",
+      "expected_disposition": "REJECT",
+      "reason": "Title, catalog, or file presence cannot establish a mechanic or concrete runtime asset use."
+    }
+  ],
+  "unknowns_preserved": [
+    "browser reachability and runnable disposition",
+    "trusted native keyboard/pointer/touch behavior",
+    "compact/wide live transitions, console, and network",
+    "persistence, XP submission, and API correctness",
+    "binary asset availability, load outcome, dimensions, and suitability",
+    "historical behavior and catalog/disposition interpretation",
+    "provider-side prompt, spawn, ancestry, isolation, event, timing, and final-response attestations"
+  ],
+  "accepted_denominator_reconciliation": {
+    "manifest": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+    "partition_manifest": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+    "identity": "sentence/labyrinth-goblin-king",
+    "records_reconciled": [
+      "current page route",
+      "current component implementation",
+      "current game state/config implementation",
+      "sentence and completion API routes",
+      "component and game unit tests",
+      "E2E test record",
+      "cover asset candidate",
+      "sentence game asset-root candidates",
+      "historical archive and compliance records",
+      "duplicate/discrepancy records"
+    ],
+    "records_dropped": 0,
+    "records_duplicated": 0,
+    "records_authored_as_denominator": 0,
+    "status": "named without merging; runtime outcomes remain unknown",
+    "authority_record_sha256s": {
+      "source-denominator.json": [
+        "02b5680f4167d40f3c07f964bb56373d697b6dae22c22bda4e57e5811294109a",
+        "07ec52541495c473b5f3ab48c2db647559b943dff7d8912d6b041a4cc6c5c0fc",
+        "08e26d7bc436f575de6ef1d781721ad9c7051b1f8e4543b7fb35829294c0c305",
+        "0f82273d64f1b4e165deeedcb575d5cc7c191c676b1cb98c7c0ca3440fb5d4d5",
+        "17ea080fbf6f9a49218dda313a18ec02c24fbe53f852e474bcd9d060d534df73",
+        "25cad8dc0257d6915ed6f9b5421d29754a08aa033346d9c3f8c7d8df3c199646",
+        "26667b7f648a049d13d34c94dd18bc19a6050f7519b7f671254265d7bcbf4954",
+        "26aa5b5dd163201874fbcf4d4985e825749d11eecfe9e18a9d631567bef9a91f",
+        "2dc420ad59c79f6f0c82c8b72bb32d7df7c2b0fc033b7a7837fcc61132f1cbda",
+        "385afb2a6ba42e9f1ffdf4be80d1b0628c0967ae7ca567da1bb29ce2e88b76b3",
+        "3b67f9cdaa0867b3d356338665d3abdcc2a823d49b6dfbae56fea3541383045d",
+        "418fff4d13780cc28536243e7dcb34b7a7a26bca84e0307f45ce9afa8c6c894e",
+        "4d102bb3b348c607c46241028fbed3fda8c26bc0b92c9d6fd9249a9f065886b3",
+        "506463204a41d2c292d6a1d53d8d1a087dc0887b8ee0d41a4c556712d757cf68",
+        "638527093bed82aca75ec9db1c0bef5c837a9217ed8a10a99b8bf806ce934e9d",
+        "7b11b37e6e268fd701706bedb43ef1c3a65ea59820ccad220133e5028764efce",
+        "7b3e4028fafb15779bc1cd18940218a5ee8778ae79c5565b97d4d4cdb689d11a",
+        "7d9279127827f66a1e064d037b45c27d6dc19acce74defb85f97ad81d2bb7d0f",
+        "7de2b143e2ccfe1f81f2a2be54ed445d5782c731502c326c9c0c848b2b62f8c8",
+        "878535c6e124b5d671e8a1858307c6b67b00b55a3bfc0337800f44f7a40f49a6",
+        "88e21f0b47d5d9c36b5daa3774b4c1990e90d15d0b376ad5ed13da7b49d73f88",
+        "8c4c16c6394c42b18be4935787035ef74007013c573fb90ec9df4bd1c5eb71cd",
+        "8cb303e13132dddc59ff8d739b0efa631c1b20c380aa6c7e5cc6ca4a97ea630d",
+        "9263e9697cf74263c56656544b101a97e6b5dac04a2840c2d25611c0c8e71d29",
+        "9d646e58a4e0745f6e57bd3564a56cffa011d9a5523f18ec7f546f8604cdfa98",
+        "a07d203fd29d62d2a02fe5260535276b9bb62daaf1266d2c7cffcf4569859830",
+        "a911d80433f0af6cd9861efb45172a8f80ededb1e8e3c1152cfc3689b13f85b5",
+        "ac3f428523b9ccdf39e680430203ad7765642eabb0a24f6a07600faa685af4d6",
+        "acd45f7760be287f0f6a6a637e889a72ecad2f430b179a53a72b9a2fa7dc97e3",
+        "bea09e072915ff405e93360584afb7b4406ba9a71871a940b2f557ec933edea9",
+        "c5514e926fddabee61f63e94417dfe82afd2c65871e8205859e200fb8ca457fc",
+        "c74d17f99a6d5fa8ef8426fc35b51fa9a329d07995bed83bafdc1ab9a81689d4",
+        "ce17496dfb19b5d9aab8fd63d453784e0c1102e422de1a8e6d0327d95a344e75",
+        "e03f77ea937c3d07c3444e5a283ddb3af691b7a3c8d320280d1e5221df93b5cb",
+        "e4135a2c656de28409b55d6a60c873255bcdb9c67a345d4b0e0ae01418a3c212",
+        "eb6b4d36c2e95d01ee7f7572a384a8974455df8bfc41c91f2315faddaf41d3fd",
+        "ee327f99f97a654e4162776d8e623487f1bf26da9f9000742348212074a71003",
+        "f4c4726b7eabcfa8dd1dd13b117394a236920b790e7923ee2aae8cc92be42112"
+      ],
+      "scene-state-denominator.json": [
+        "32e9a6c7206e575a8c044b45470c41a99273085466302d47a492f0e591e25788",
+        "39bdd5e37979f8bff17b89ee9a89fc49e043d6e21164d41cb45c4ace25ad2dfa",
+        "5805720981b895b7cb972b66565de317575989d777b575641c3b7c505613fc0c",
+        "5b45095793d981b8aa107dd502252b49893cc2859819d2bdadbfb530292225f4",
+        "7c41871280ed92f5570a65c9c7db0e60ec6cc187110ab0faeab1dc19235cb6e1",
+        "a4d1941133cc9e4fa132d1e7f41bb3fc390a86182f1c306e3b11b141375773c6"
+      ],
+      "asset-file-denominator.json": [
+        "60ae34c20b39b775e08935e7701aece865bdf41230dd75021d1bf972fbbb200e",
+        "a2c990f305979e10881b87f9b3c380e0ff2f14e56c646da36a8faf72833b7e1e"
+      ],
+      "historical-source-denominator.json": [
+        "12a6551a1d7ee9767f8ae515ce24c31a807706d13d431a445d6d67e2b15e66a2"
+      ],
+      "game-identity-ledger.json": [
+        "a94896d3a764c5960738ebd5ced04b93b19dbced4b959500f4a1bf5cee944d6c"
+      ]
+    },
+    "accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0"
+  },
+  "required_package_shape": {
+    "scene_state_model": [
+      "start",
+      "playing",
+      "playing-after-correct-final-orb",
+      "playing-after-wrong-orb",
+      "defeat",
+      "victory status is defined but no source transition to it is claimed"
+    ],
+    "transition_atoms": [
+      "start to playing",
+      "ordered orb collection",
+      "final-orb heroic-aura next-sentence reset",
+      "wrong-orb penalty",
+      "goblin collision life/eaten branches"
+    ],
+    "developer_effort": "UNKNOWN_PENDING_MEASUREMENT"
+  },
+  "marker": "MEASURE_AGENT_RESULT",
+  "acceptance": "not-claimed",
+  "supersession": {
+    "supersedes_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/claim-evidence-ledger-batch-b.json",
+    "supersedes_sha256": "68f42182473587871ff240ca699abe62b95b4d29d761b7552c2e964f9504a039",
+    "scope": "Corrected source envelopes, frozen baseline selection, identity, and exact accepted-denominator row bindings.",
+    "original_remains_immutable": true
+  },
+  "commit_binding": {
+    "status": "uncommitted-additive-output",
+    "commit_sha": null
+  }
+}

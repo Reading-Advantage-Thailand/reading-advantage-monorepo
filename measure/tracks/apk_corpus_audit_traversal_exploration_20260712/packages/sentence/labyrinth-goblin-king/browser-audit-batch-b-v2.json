@@ -1,0 +1,57 @@
+{
+  "schema_version": "apk-browser-audit.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B remediation V2",
+  "task_id": "audit-browser:Labyrinth of the Goblin King:batch-b-v2",
+  "role": "browser-auditor",
+  "game": "Labyrinth of the Goblin King",
+  "canonical_identity": "sentence/labyrinth-goblin-king",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "route": "/student/games/sentence/labyrinth-goblin-king",
+  "disposition": "bounded-non-runnable-unknown",
+  "runnable_status": "non-runnable",
+  "behavior_boundary": "No browser behavior, movement, transition, trusted input, responsive outcome, persistence, production result, or asset load is claimed. A screenshot alone never passes this disposition.",
+  "attempted_evidence": {
+    "runner_available": false,
+    "attempted": false,
+    "commands": [],
+    "route_attempts": 0,
+    "environment": "No browser runner or provider-attested browser session was available to this bounded remediation role.",
+    "limitation": "A non-runnable/unknown disposition is retained pending a separate browser auditor and independent review; no failure status is fabricated."
+  },
+  "observations": {
+    "compact_view_observed": false,
+    "wide_view_observed": false,
+    "trusted_native_input_events": 0,
+    "synthetic_input_events": 0,
+    "transitions_observed": 0,
+    "screenshots_captured": 0,
+    "console_observations": 0,
+    "network_observations": 0
+  },
+  "screenshots_alone_pass": false,
+  "review_status": "pending-independent-review",
+  "timing_direction": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json",
+    "sha256": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+    "timing_measurement": "unavailable-in-harness",
+    "timing_note": "elapsed_minutes=0 is accounting fallback, not elapsed-time evidence."
+  },
+  "budget_accounting": {
+    "declaration_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+    "declaration_sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+    "actual": {
+      "source_bytes": 0,
+      "source_files_objects": 0,
+      "commands": 0,
+      "elapsed_minutes": 0,
+      "records_authored_reviewed": 0,
+      "browser_interactions": 0,
+      "captured_artifacts": 0
+    }
+  },
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

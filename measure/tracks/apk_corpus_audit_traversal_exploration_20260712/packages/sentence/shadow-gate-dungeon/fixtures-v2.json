@@ -1,0 +1,55 @@
+{
+  "schema_version": "apk-negative-fixtures.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 2: Batch B remediation V2",
+  "game": "Shadow Gate Dungeon",
+  "collector_id": "evidence-collector-shadow-gate-dungeon-t5-batch-b-v2",
+  "factual_claims_excluded": true,
+  "fixtures": [
+    {
+      "fixture_id": "SGD-NEG-001",
+      "class": "compound-overstatement",
+      "proposed_claim": "The cited source proves Shadow Gate Dungeon is currently shipped, playable, learning-correct, and persistence-correct.",
+      "source_checked_claim_ids": [
+        "SGD-STATE-001",
+        "SGD-ROUTE-002"
+      ],
+      "expected_disposition": "REJECT",
+      "reason": "The envelopes support source-defined component and submission wiring only; they do not prove browser execution, learning correctness, persistence, or API correctness."
+    },
+    {
+      "fixture_id": "SGD-NEG-002",
+      "class": "source-to-browser-promotion",
+      "proposed_claim": "Keyboard listeners and the VirtualDPad prove trusted native keyboard and touch movement in a runnable browser session.",
+      "source_checked_claim_ids": [
+        "SGD-INPUT-001",
+        "SGD-INPUT-002"
+      ],
+      "expected_disposition": "REJECT",
+      "reason": "Source listeners establish implementation wiring, not browser reachability, trusted input, or an observed movement transition."
+    },
+    {
+      "fixture_id": "SGD-NEG-003",
+      "class": "blueprint-to-implementation-promotion",
+      "proposed_claim": "The archived Shadow Gate Dungeon mechanic blueprint proves every listed stealth, crystal, gate, and terminal behavior in the current implementation.",
+      "expected_disposition": "REJECT",
+      "reason": "The blueprint is not an admitted current-source envelope; only exact source ranges in the ledger establish current implementation facts."
+    }
+  ],
+  "execution_status": "not-executed-by-evidence-collector",
+  "review_status": "pending-independent-review",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+  "acceptance": "not-claimed",
+  "supersession": {
+    "supersedes_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/fixtures.json",
+    "supersedes_sha256": "f27fb42f9ae10a6e034658beca6247d6d3c30e8b7e4496195033c9766ba44845",
+    "scope": "Fixture controls retained while binding the corrected collector lineage.",
+    "original_remains_immutable": true
+  },
+  "commit_binding": {
+    "status": "uncommitted-additive-output",
+    "commit_sha": null
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
