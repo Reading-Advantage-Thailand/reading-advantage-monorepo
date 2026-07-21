@@ -1,0 +1,44 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "status": "complete locally validated; independent review, committed binding, and lifecycle acceptance pending",
+  "acceptance": "not claimed",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 2: Mapping",
+  "task_id": "griffin-sky-joust-requirements-mapping",
+  "role": "requirements-mapper-batch-a-griffin-sky-joust",
+  "game": "Griffin Sky-Joust",
+  "normalized_id": "griffin-sky-joust",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "cd2d0faec2d15f1a5d50bee0da102bde58ce1daa",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "parent_ancestry_ids": [],
+  "provider_provenance": {"status": "unavailable", "reason": "Provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations were not exposed."},
+  "provenance_direction": {"path": "measure/product-owner-apk-provenance-direction-20260721.json", "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac", "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"},
+  "input_paths": [
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/claim-ledger.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/evidence-final-report.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/negative-fixtures.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/current-source-observations.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/historical-source-observations.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/evidence-collector-griffin-sky-joust.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/test-strategy-phase0.md",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-discovery-audit.json"
+  ],
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/requirements-map.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/requirements-mapper-report.json",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/requirements-mapper-griffin-sky-joust.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/requirements-map.json": "500f675b2f27b6cab25fcaf021021a99ed0e72a782012ef19e6286113b709910",
+    "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/requirements-mapper-report.json": "0eadae99b828612916ac45a696e87575c33eca8f332985f9f0eb793b2709dbb1",
+    "self": "intentionally-not-self-hashed"
+  },
+  "numeric_usage": {"source_bytes_read": 0, "source_objects_read": 0, "command_invocations": 1, "elapsed_minutes": 10, "mapped_records": 8, "hypotheses": 0},
+  "budget": {"source_bytes_read": 16777216, "source_objects_read": 160, "command_invocations": 120, "elapsed_minutes": 240, "mapped_records": 500, "hypotheses": 50},
+  "findings": {"active_factual_claims_consumed": 7, "mapped_claim_reference_occurrences": 18, "distinct_mapped_claim_ids": 8, "unresolved_claim_ids": 0, "negative_fixture_references": 0, "novel_factual_claims": 0, "ontology_decisions": 0, "unknowns_preserved": true, "browser_performed": false},
+  "role_boundary": "Only the Griffin Sky-Joust requirements map, mapper report, and this receipt were created; no existing artifact, plan, registry, source, browser, truth-test, review, or acceptance artifact was modified.",
+  "commit_sha": "uncommitted; user explicitly prohibited commit",
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,142 @@
+{
+  "schema_version": "apk-claim-evidence-ledger.v3",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "canonical_identity_id": "vocabulary/dragon-rider",
+  "canonical_label": "Dragon Rider",
+  "cohort": "Traversal and exploration",
+  "source_revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "collector_agent": "evidence-collector-dragon-rider-v3:t5:2026-07-21",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "134a94bc451f84e2a75ef18a8cbbe7382bd3395c",
+  "supersedes": "packages/vocabulary/dragon-rider/claim-evidence-ledger-v2.json",
+  "retained_claim_ids": [
+    "DR-ID-001", "DR-ID-002", "DR-SCENE-001", "DR-MECH-001", "DR-MECH-002",
+    "DR-TRANS-001", "DR-TRANS-002", "DR-TRANS-003", "DR-TRANS-004",
+    "DR-CONTROL-001", "DR-RESP-001", "DR-ROUTE-001"
+  ],
+  "retained_claims_source": "The retained IDs above are unchanged and remain bound by the exact envelopes in claim-evidence-ledger-v2.json; this V3 ledger only supersedes the four overbroad atoms and adds denominator reconciliation.",
+  "claim_atoms": [
+    {
+      "claim_id": "DR-STATE-001A",
+      "category": "state",
+      "source_fact": "The core state status union is running | boss.",
+      "interpretation": "Core reducer status only; no component phase is included.",
+      "file_path": "apps/reading-advantage/lib/games/dragonRider.ts",
+      "line_start": 4,
+      "line_end": 20,
+      "cited_range_sha256": "27b8b6e13126f41e1898b5c9d8216543bbe5dfc394d3bdfbd340e376d3b6b146",
+      "blob_sha256": "433dceda75615b9cf8954225748bdb39ccb897a644a6d672b95df517d60bfae7",
+      "revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+      "evidence_class": "current-source"
+    },
+    {
+      "claim_id": "DR-STATE-001B",
+      "category": "state",
+      "source_fact": "The component gamePhase state is start | playing | ended and initializes to start.",
+      "interpretation": "Component UI phase only; it is distinct from core reducer status.",
+      "file_path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
+      "line_start": 390,
+      "line_end": 392,
+      "cited_range_sha256": "64180bf78d4924662a5ad9069a6112b1b95156d0da722c8cc488d0deb97912d0",
+      "blob_sha256": "62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78",
+      "revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+      "evidence_class": "current-source"
+    },
+    {
+      "claim_id": "DR-SCENE-002A",
+      "category": "layout",
+      "source_fact": "The default logical stage is 960x540 and animation/layout scale constants are declared in the component.",
+      "interpretation": "Constants only; placements are not inferred from this envelope.",
+      "file_path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
+      "line_start": 153,
+      "line_end": 165,
+      "cited_range_sha256": "dd7bbe850bebded72d20bcb55f79f8628c3ca077120cfde8b922ceaf7af05ceb",
+      "blob_sha256": "62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78",
+      "revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+      "evidence_class": "current-source"
+    },
+    {
+      "claim_id": "DR-SCENE-002B",
+      "category": "layout",
+      "source_fact": "buildLayout computes gate centers from 0.28 and 0.72 of stage width, playerX at half width, playerY at 0.78 height, and bossX/bossY at half width/0.28 height, with clamping for gates and sprite scales.",
+      "interpretation": "Exact layout-function behavior only; no camera, collision, or browser observation is claimed.",
+      "file_path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
+      "line_start": 246,
+      "line_end": 328,
+      "cited_range_sha256": "36ff63330b7f10d056ee3bb30da0b8308c9a881e176faef7b5038adaf2fc550c",
+      "blob_sha256": "62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78",
+      "revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+      "evidence_class": "current-source"
+    },
+    {
+      "claim_id": "DR-ASSET-001A",
+      "category": "asset-declaration",
+      "source_fact": "The ASSETS object declares nine Dragon Rider public asset paths: gates, boss, player, playerCamera, army, three parallax layers, and loadingBackground.",
+      "interpretation": "Declaration only; loading is a separate atom.",
+      "file_path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
+      "line_start": 124,
+      "line_end": 150,
+      "cited_range_sha256": "3349a1f4b148ccb2e8b910a2d00cffaad3db169f7cc5ef389e9cc3f0aa73a470",
+      "blob_sha256": "62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78",
+      "revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+      "evidence_class": "current-source"
+    },
+    {
+      "claim_id": "DR-ASSET-001B",
+      "category": "asset-loading",
+      "source_fact": "buildAssets calls loadImage for each of the nine declared assets through Promise.all and returns the loaded image objects.",
+      "interpretation": "Source-level loading orchestration only; successful runtime loads are not claimed.",
+      "file_path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
+      "line_start": 207,
+      "line_end": 240,
+      "cited_range_sha256": "47c03ce48ef1586b27c1a4cda9aa3c687f03d3124b857093129ccf5849c59ee3",
+      "blob_sha256": "62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78",
+      "revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+      "evidence_class": "current-source"
+    },
+    {
+      "claim_id": "DR-TEST-001A",
+      "category": "fixture-test",
+      "source_fact": "The core test file covers initialization, gate selection, floor-at-one dragon count, timer-to-boss, boss power, and result calculation.",
+      "interpretation": "Test-source coverage only; no test execution is claimed.",
+      "file_path": "apps/reading-advantage/lib/games/dragonRider.test.ts",
+      "line_start": 19,
+      "line_end": 91,
+      "cited_range_sha256": "cf9562b049f91634dde61944623f90944c122fe240046348590e021a04a8e833",
+      "blob_sha256": "8fe8fb62c1f662a99ac17a3905c3c8e43cc451095c16259a1270d24e99df36e0",
+      "revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+      "evidence_class": "test-source"
+    },
+    {
+      "claim_id": "DR-TEST-001B",
+      "category": "fixture-test",
+      "source_fact": "The component test file contains source tests for start/running render, correct keyboard gate selection, and boss-to-results transition.",
+      "interpretation": "Component test-source coverage only; no test execution or browser behavior is claimed.",
+      "file_path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.test.tsx",
+      "line_start": 79,
+      "line_end": 180,
+      "cited_range_sha256": "c5079d832cb82a68d661380a79c951f0d22dac47f0eb2b5dd18d1112d7b936c7",
+      "blob_sha256": "a588f4494a3403aacb1ae2a84f97f52de546fdec1631cbddc3e423c87b35b4fc",
+      "revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+      "evidence_class": "test-source"
+    }
+  ],
+  "denominator_reconciliation": {
+    "accepted_manifest_path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+    "accepted_manifest_sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+    "accepted_partition_path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+    "identity": {"status": "covered", "records": ["identity:vocabulary/dragon-rider", "program-disposition:program-identity:12"]},
+    "current_routes_and_tests": {"status": "covered", "records": ["apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.tsx", "apps/reading-advantage/app/api/v1/games/dragon-rider/vocabulary/route.ts", "apps/reading-advantage/app/api/v1/games/dragon-rider/ranking/route.ts", "apps/reading-advantage/app/api/v1/games/dragon-rider/complete/route.ts", "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx", "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.test.tsx", "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.test.tsx"]},
+    "copy_and_data": {"status": "covered", "records": ["apps/advantage-games/public/vocab/dragon-rider.json"], "note": "The accepted inventory also records the shared identical-hash group with deleted dragon-flight.json; this is not projected into current behavior."},
+    "asset_candidates": {"status": "covered-with-duplicate-roots-preserved", "records": ["apps/advantage-games/public/games/cover/cover-dragon-rider.png", "apps/advantage-games/public/games/dragon-rider/", "apps/advantage-games/public/games/vocabulary/dragon-rider/", "apps/reading-advantage/public/games/cover/dragon-rider-cover.png", "apps/reading-advantage/public/games/vocabulary/dragon-rider/", "apps/advantage-games/public/games/dragon-rider/dragon-rider-gameplay.png", "apps/advantage-games/measure/archive/dragon-rider-reskin-20260131/metadata.json", "apps/advantage-games/measure/tracks/dragon-rider-compliance-audit_20260426/metadata.json"]},
+    "history": {"status": "covered-as-historical-source-records", "records": ["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.test.tsx", "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.tsx", "apps/advantage-games/src/app/api/v1/games/dragon-rider/complete/route.ts", "apps/advantage-games/src/app/api/v1/games/dragon-rider/vocabulary/route.ts", "apps/advantage-games/src/components/games/vocabulary/dragon-rider/DragonRiderGame.test.tsx", "apps/advantage-games/src/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx", "packages/game-cartridges/src/cartridges/dragon-rider/blueprint.md", "packages/game-cartridges/src/cartridges/dragon-rider/definition.test.ts", "packages/game-cartridges/src/cartridges/dragon-rider/definition.ts", "packages/game-cartridges/src/cartridges/dragon-rider/index.ts", "packages/game-cartridges/src/cartridges/dragon-rider/scene.ts", "packages/game-cartridges/src/cartridges/dragon-rider/systems.test.ts", "packages/game-cartridges/src/cartridges/dragon-rider/systems.ts"], "note": "Historical records remain historical; no current-runtime claim is made."}
+  },
+  "fixtures": [
+    {"fixture_id": "DR-FIX-NEG-001", "input": "Dragon Rider has camera-follow collision bounds", "expected_disposition": "REJECT", "reason": "No exact positive envelope; layout atom explicitly excludes this inference."},
+    {"fixture_id": "DR-FIX-NEG-002", "input": "Catalog description establishes traversal behavior", "expected_disposition": "REJECT", "reason": "Catalog prose is not implementation evidence."},
+    {"fixture_id": "DR-FIX-NEG-003", "input": "A directory citation proves an asset or behavior", "expected_disposition": "REJECT", "reason": "Every positive atom uses an exact file and inclusive line envelope."}
+  ],
+  "explicit_unknowns": ["browser-runnable-disposition", "trusted-native-input", "actual-responsive-failure", "provider-attestation", "runtime-asset-load-success", "collision-and-world-bounds"],
+  "acceptance": "not-claimed"
+}

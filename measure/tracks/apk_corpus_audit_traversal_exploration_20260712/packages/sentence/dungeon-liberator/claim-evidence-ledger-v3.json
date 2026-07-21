@@ -1,0 +1,109 @@
+{
+  "schema_version": "apk-claim-evidence-ledger.v3",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "game": "Dungeon Liberator",
+  "source_revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "134a94bc451f84e2a75ef18a8cbbe7382bd3395c",
+  "supersedes_for_collection_only": "packages/sentence/dungeon-liberator/claim-evidence-ledger-v2.json",
+  "additive_rule": "The V2 ledger remains authoritative for its 16 factual records, 3 rejection fixtures, and 4 unknown classes; V3 adds only narrowly enveloped source atoms and denominator reconciliation.",
+  "retained_claim_ids": [
+    "DL-TOPO-001", "DL-TOPO-002", "DL-MOVE-001", "DL-MOVE-002", "DL-COLL-001", "DL-COLL-002",
+    "DL-TRANS-001", "DL-TRANS-002", "DL-INPUT-001", "DL-CAMERA-001", "DL-INPUT-002", "DL-RESP-001",
+    "DL-INPUT-003", "DL-ASSET-001", "DL-IND-001", "DL-ROUTE-001"
+  ],
+  "added_claims": [
+    {
+      "claim_id": "DL-TRANS-003",
+      "category": "transition",
+      "scene_or_state_id": "playing-to-playing-after-victory",
+      "source_fact": "In the component animation loop, a next state with phase victory is awarded XP and correct-word totals, passed to advanceToNextLevel, and then installed as the next game state and ref used by the loop.",
+      "interpretation": "The component envelope connects victory detection to the next-level reset. It does not claim browser execution, a results screen, or completion submission for victory.",
+      "citation": {
+        "path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx",
+        "line_start": 210,
+        "line_end": 218,
+        "cited_range_sha256": "849db50f20d16f5c74c44923b7de1dba05caf303aa0cfcb31517d737f9b470d5",
+        "blob_sha256": "bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047",
+        "revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4"
+      },
+      "confidence": "high",
+      "evidence_class": "current-source",
+      "collector_agent": "evidence-collector-dungeon-liberator-v3",
+      "conflict_state": "none",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "claim_id": "DL-START-001",
+      "category": "start-state",
+      "scene_or_state_id": "start",
+      "source_fact": "The component start branch renders the Dungeon Liberator start screen and its onStart callback resets the game, sets the component phase to playing, and enters fullscreen.",
+      "interpretation": "This is a source-defined start transition envelope only; it does not prove a user activated the control.",
+      "citation": {
+        "path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx",
+        "line_start": 266,
+        "line_end": 291,
+        "cited_range_sha256": "ce2a8c361b953fdff7868f32a2c4b1ec31d4e8673b006b64f44e3714e157ef43",
+        "blob_sha256": "bf33b1798fdcce01fbb39d1595b94eda48ff46235c42e0c0790207f7c71fc047",
+        "revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4"
+      },
+      "confidence": "high",
+      "evidence_class": "current-source",
+      "collector_agent": "evidence-collector-dungeon-liberator-v3",
+      "conflict_state": "none",
+      "reviewer_disposition": "PENDING_INDEPENDENT_REVIEW"
+    }
+  ],
+  "fixture_records_retained": ["DL-NEG-001", "DL-NEG-002", "DL-NEG-003"],
+  "unknowns_preserved": [
+    "Browser execution, trusted native keyboard/pointer/touch behavior, compact/wide behavior, console, network, and runnable disposition remain unknown.",
+    "Binary asset availability, dimensions, load outcome, and visual suitability remain unknown.",
+    "Historical behavior remains unknown; retained historical denominator records are not behavior claims.",
+    "Rooms, floors, gates, lane topology, camera dead zone, and physical obstacle geometry remain unsupported unknowns.",
+    "Provider prompt, spawn, ancestry, isolation, event, timing, and final-response attestations remain unavailable."
+  ],
+  "accepted_denominator_reconciliation": {
+    "manifest": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+    "partition_manifest": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+    "identity": [
+      "sentence/dungeon-liberator",
+      "reading:sentence/dungeon-liberator current page record",
+      "primary:sentence/dungeon-liberator searched with no matched page suffix",
+      "simultaneous source classes: current-page-source and catalog-withdrawn-registration"
+    ],
+    "current_and_withdrawn_state": {
+      "current": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx",
+      "catalog_registration": "apps/advantage-games/src/lib/gameCards.ts",
+      "withdrawn_catalog_interpretation": "The accepted catalog/deletion manifest marks the legacy route family deferred to advantage_games_arcade_w1; this is a disposition record, not proof that the current page is absent."
+    },
+    "implementation_and_copy": [
+      "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx",
+      "apps/advantage-games/src/components/games/sentence/dungeon-liberator/ (recursive)",
+      "apps/advantage-games/src/lib/games/dungeonLiberator.ts",
+      "apps/advantage-games/src/lib/games/dungeonLiberatorIndicators.ts",
+      "apps/advantage-games/src/app/api/v1/games/dungeon-liberator/sentences/route.ts",
+      "apps/advantage-games/src/app/api/v1/games/dungeon-liberator/ranking/route.ts",
+      "apps/advantage-games/src/app/api/v1/games/dungeon-liberator/complete/route.ts"
+    ],
+    "tests": [
+      "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.test.tsx",
+      "apps/advantage-games/src/lib/games/dungeonLiberator.test.ts",
+      "apps/advantage-games/tests/e2e/games/sentence/dungeon-liberator.spec.ts"
+    ],
+    "assets": [
+      "apps/advantage-games/public/games/cover/dungeon-liberator.png (retained cover)",
+      "apps/advantage-games/public/games/sentence/dungeon-liberator/{background.png,player-sheet.png,prisoner-sheet.png,slime-sheet.png} (current runtime asset-root candidates)",
+      "apps/advantage-games/public/games/dungeon-liberator/{background.png,player-sheet.png,prisoner-sheet.png,slime-sheet.png} (duplicate legacy/current-root candidates)",
+      "apps/advantage-games/public/vocab/dungeon-liberator.json (accepted delete disposition; source says route uses SAMPLE_SENTENCES instead)",
+      "apps/advantage-games/measure/notes/dungeon-liberator-assets.md (retained historical evidence note)"
+    ],
+    "reconciliation_status": "All accepted identity, current/withdrawn, implementation, copy/API, test, and asset records are named without collapsing distinct paths; binary and runtime outcomes remain unknown."
+  },
+  "required_package_shape": {
+    "scene_state_model": ["start", "playing", "victory", "defeat", "next-level playing reset"],
+    "transition_atoms": ["start reset", "word-complete victory gate", "victory component handoff", "defeat result callback path"],
+    "mechanic_learning_blueprint": "Ordered sentence-word prisoner collection, wrong-order flee/reset, monster/trail hazard, and portal completion; source-grounded mechanics only.",
+    "developer_effort": "UNKNOWN_PENDING_MEASUREMENT; no estimate is substituted for evidence."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

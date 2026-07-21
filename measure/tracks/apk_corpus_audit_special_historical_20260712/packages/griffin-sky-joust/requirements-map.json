@@ -1,0 +1,93 @@
+{
+  "schema": "apk-requirements-map.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 2: Mapping",
+  "batch_id": "batch-a",
+  "game": "Griffin Sky-Joust",
+  "normalized_id": "griffin-sky-joust",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "cd2d0faec2d15f1a5d50bee0da102bde58ce1daa",
+  "mapping_rule": "Only active collector claim IDs and the explicit current unknown are mapped; negative fixtures are excluded and no source fact or final ontology is added.",
+  "mapped_records": [
+    {
+      "record_id": "GSJ-MAP-001",
+      "dimension": "scene-state-transition",
+      "source_class": "historical_implementation",
+      "claim_ids": ["GSJ-HIST-006"],
+      "requirement": "Historical scene/state/transition evidence is available for the component's declared phases and animation-driven progression.",
+      "temporal_disposition": "historical",
+      "interpretation_boundary": "Maps historical source inventory only; it does not establish current transitions or runtime reachability."
+    },
+    {
+      "record_id": "GSJ-MAP-002",
+      "dimension": "mechanic-learning",
+      "source_class": "historical_implementation",
+      "claim_ids": ["GSJ-HIST-001", "GSJ-HIST-006"],
+      "requirement": "Historical evidence covers cartridge description text and component-level target, player, scoring, and completion-reporting surfaces.",
+      "temporal_disposition": "historical",
+      "interpretation_boundary": "Does not promote catalog wording or historical implementation into current mechanics or learning correctness."
+    },
+    {
+      "record_id": "GSJ-MAP-003",
+      "dimension": "developer-effort-integration",
+      "source_class": "historical_implementation",
+      "claim_ids": ["GSJ-HIST-002", "GSJ-HIST-003", "GSJ-HIST-004", "GSJ-HIST-007"],
+      "requirement": "Historical integration evidence covers the page, sentence and completion route modules, and component export.",
+      "temporal_disposition": "historical",
+      "interpretation_boundary": "Maps deleted integration surfaces only; current route availability and deployment are unknown."
+    },
+    {
+      "record_id": "GSJ-MAP-004",
+      "dimension": "responsive-input-evidence",
+      "source_class": "historical_implementation",
+      "claim_ids": ["GSJ-HIST-005", "GSJ-HIST-006"],
+      "requirement": "Historical test and component source contain declared input and fullscreen evidence surfaces for later verification.",
+      "temporal_disposition": "historical",
+      "interpretation_boundary": "This is not browser evidence and does not establish physical-device ergonomics, live behavior, or current support."
+    },
+    {
+      "record_id": "GSJ-MAP-005",
+      "dimension": "asset-usage",
+      "source_class": "unknown",
+      "claim_ids": ["GSJ-CUR-UNK-001"],
+      "requirement": "Current asset usage and suitability remain unresolved.",
+      "temporal_disposition": "unknown",
+      "interpretation_boundary": "No asset claim is inferred from historical component or catalog evidence."
+    },
+    {
+      "record_id": "GSJ-MAP-006",
+      "dimension": "chronology-conflict",
+      "source_class": "historical_implementation",
+      "claim_ids": ["GSJ-HIST-001", "GSJ-HIST-002", "GSJ-HIST-003", "GSJ-HIST-004", "GSJ-HIST-005", "GSJ-HIST-006", "GSJ-HIST-007"],
+      "requirement": "Preserve the historical source envelopes and their deletion chronology as separate from current absence.",
+      "temporal_disposition": "historical-with-current-conflict",
+      "interpretation_boundary": "Current-source absence does not erase historical evidence; historical evidence does not establish current behavior."
+    }
+  ],
+  "unknown_records": [
+    {
+      "record_id": "GSJ-MAP-UNK-001",
+      "dimension": "current-implementation-and-runnability",
+      "source_class": "unknown",
+      "claim_ids": ["GSJ-CUR-UNK-001"],
+      "requirement": "Current route, implementation, states, transitions, mechanics, assets, and runnable disposition remain unresolved.",
+      "temporal_disposition": "unknown",
+      "interpretation_boundary": "No historical, specification, catalog, or analogy substitution is permitted."
+    }
+  ],
+  "excluded_inputs": {
+    "negative_fixture_ids": ["GSJ-FIX-001", "GSJ-FIX-002", "GSJ-FIX-003", "GSJ-FIX-004", "GSJ-FIX-005", "GSJ-FIX-006"],
+    "reason": "Fixtures are rejection tests, not factual mapping inputs."
+  },
+  "counts": {
+    "active_factual_claims_consumed": 7,
+    "mapped_claim_reference_occurrences": 18,
+    "distinct_mapped_claim_ids": 8,
+    "unknown_records": 2,
+    "negative_fixture_references": 0,
+    "novel_factual_claims": 0,
+    "ontology_decisions": 0
+  },
+  "acceptance": "not-claimed"
+}

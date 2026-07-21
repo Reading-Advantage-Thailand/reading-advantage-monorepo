@@ -1,0 +1,36 @@
+{
+  "schema_version": "apk-evidence-collector-final-report.v3",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "game": "Dungeon Liberator",
+  "disposition": "source-evidence-collected-v3-not-reviewed-not-accepted",
+  "source_revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "134a94bc451f84e2a75ef18a8cbbe7382bd3395c",
+  "successor_ledger": "packages/sentence/dungeon-liberator/claim-evidence-ledger-v3.json",
+  "changes": [
+    "Split DL-TRANS-002's state-machine reset fact from the component's victory handoff; added exact component envelope DL-TRANS-003 for lines 210-218.",
+    "Added separately enveloped source start callback DL-START-001.",
+    "Reconciled accepted identity/current-withdrawn, implementation/copy/API, tests, cover, duplicate asset roots, deleted vocabulary, and retained notes without treating dispositions as behavior.",
+    "Preserved every V2 unknown and rejection fixture; no browser, map, review, or asset-forensics claim was added."
+  ],
+  "denominator_status": "reconciled-records-named-no-runtime-or-historical-outcome-claimed",
+  "timing_status": "elapsed_minutes=0 is unavailable-in-harness accounting fallback only; no elapsed-time evidence is claimed",
+  "unknowns_preserved": [
+    "browser/runnable/native-input/viewport/console/network behavior",
+    "binary asset availability, dimensions, load outcome, and visual suitability",
+    "historical behavior",
+    "unsupported room/floor/obstacle topology",
+    "provider-side provenance and timing attestations"
+  ],
+  "stop_loss": {
+    "unsupported_factual_claims_added": 0,
+    "citation_envelope_mismatches": 0,
+    "denominator_records_dropped": 0,
+    "unknowns_removed": 0,
+    "browser_claims": 0,
+    "status": "collector-only; independent review, truth-gate update, candidate, owner approval, acceptance, and commit binding remain required"
+  },
+  "acceptance_status": "non-consumable collector successor",
+  "commit_binding": {"status": "uncommitted", "commit_sha": "uncommitted"},
+  "marker": "MEASURE_AGENT_RESULT"
+}

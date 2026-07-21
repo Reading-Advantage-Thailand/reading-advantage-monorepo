@@ -1,0 +1,67 @@
+{
+  "schema_version": "apk-role-receipt.v3",
+  "status": "complete-source-collection-additive-not-reviewed-not-accepted",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "evidence-collector",
+  "task_id": "collect-game-evidence:Dungeon Liberator:v3-transition-denominator-remediation",
+  "game": "Dungeon Liberator",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "134a94bc451f84e2a75ef18a8cbbe7382bd3395c",
+  "supersedes_for_collection_only": "role-receipts/evidence-collector-dungeon-liberator-v2.json",
+  "allowed_inputs": [
+    "packages/sentence/dungeon-liberator/claim-evidence-ledger-v2.json",
+    "packages/sentence/dungeon-liberator/evidence-final-report-v2.json",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+    "measure/archive/apk_catalog_cutover_w0_20260710/legacy-deletion-manifest.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v2.json",
+    "git object store (read-only)"
+  ],
+  "actual_usage": {
+    "source_bytes": 0,
+    "source_files_objects": 0,
+    "commands": 0,
+    "elapsed_minutes": 0,
+    "timing_measurement": "unavailable-in-harness",
+    "elapsed_minutes_is_accounting_fallback": true,
+    "records_authored_reviewed": 2,
+    "browser_interactions": 0,
+    "captured_artifacts": 3
+  },
+  "timing_direction": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v2.json",
+    "decision": "UNAVAILABLE_HARNESS_TIMING_ACCOUNTING",
+    "other_measured_local_receipts": {
+      "dungeon_collector_v2": 1,
+      "dungeon_mapper_v2": 1,
+      "dragon_collector_v2": 1,
+      "dragon_mapper_v2": 1,
+      "truth_test_author_v2": 35,
+      "spellweaver_collector_v2": null
+    },
+    "interpretation": "Comparator values are recorded, not used to estimate this role's elapsed time. Null remains unavailable."
+  },
+  "repair_accounting": {
+    "factual_claims_added": 2,
+    "transition_envelope_split": true,
+    "denominator_records_reconciled": true,
+    "unknowns_removed": 0,
+    "browser_claims_added": 0,
+    "map_or_review_work": false
+  },
+  "output_hashes": {
+    "packages/sentence/dungeon-liberator/claim-evidence-ledger-v3.json": "f8112af605465ffcf461669e5560037261943df98185bfeb8728a6496997e2a2",
+    "packages/sentence/dungeon-liberator/evidence-method-v3.md": "ee81e7a72fc06f8b1e4be073fcd7e05b3f8e8a716a1cbd4de9cfc991e12a6742",
+    "packages/sentence/dungeon-liberator/evidence-final-report-v3.json": "87ac4103859da863367088e19c213fae9a02baeecf38e840f085b0a02bd32415"
+  },
+  "output_paths": [
+    "packages/sentence/dungeon-liberator/claim-evidence-ledger-v3.json",
+    "packages/sentence/dungeon-liberator/evidence-method-v3.md",
+    "packages/sentence/dungeon-liberator/evidence-final-report-v3.json"
+  ],
+  "provider_attestation": "Unavailable; provider prompt, spawn, ancestry, isolation, events, timing, and final-response attestations are not exposed.",
+  "commit_binding": {"status": "uncommitted", "commit_sha": "uncommitted", "post_commit_action": "orchestrator may bind exact bytes; this role created no commit"},
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

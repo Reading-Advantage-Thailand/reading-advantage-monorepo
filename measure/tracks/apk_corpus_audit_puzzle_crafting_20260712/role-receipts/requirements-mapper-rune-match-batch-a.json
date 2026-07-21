@@ -1,0 +1,45 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-self-attested-with-provenance-unavailable",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 2: Mapping (Batch A)",
+  "role": "requirements-mapper",
+  "task_id": "requirements-mapper:rune-match:batch-a",
+  "game": "vocabulary/rune-match",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "d77044c35571dabde108098e5c9f9dd62722327d",
+  "parent_ancestry_ids": [],
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "prior_role_history": [],
+  "accepted_inputs": {
+    "t2_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "t2_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "t3_conditional_pilot_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "collector_rebind_report_sha256": "8684e16f45fdcd4a56c7368c39e67b00dc147897bcaed4b7d308e4156a40d733",
+    "claim_ledger_sha256": "87e81e3d4328c26c75496baf4d68a0460fe48a402fd35f15430a3bd2897a746c"
+  },
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-requirements-map.json",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-mapper-report.json",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/requirements-mapper-rune-match-batch-a.json"
+  ],
+  "actual_usage": {
+    "claims_consumed": 13,
+    "factual_claims_consumed": 13,
+    "negative_fixtures_consumed": 2,
+    "novel_factual_claims_authored": 0,
+    "browser_claims_authored": 0,
+    "ontology_decisions_authored": 0
+  },
+  "provenance_note": "Provider, session, event, prompt, final-response, and commit provenance remain unavailable; no unavailable value is fabricated.",
+  "prompt_sha256": null,
+  "actual_context_manifest_sha256": null,
+  "start_event_id": null,
+  "end_event_id": null,
+  "final_response_sha256": null,
+  "commit_sha": null
+}

@@ -1,0 +1,22 @@
+{
+  "schema":"apk-role-receipt.v3",
+  "status":"V3 mapper package locally verified; independent review and lifecycle acceptance remain pending",
+  "acceptance":"not-claimed",
+  "track_id":"apk_corpus_audit_traversal_exploration_20260712",
+  "phase":"Phase 1: Batch A remediation V3",
+  "task_id":"map-requirements:spellweavers-run:v3",
+  "role":"fresh-t5-spellweaver-requirements-mapper-v3",
+  "game":"spellweavers-run",
+  "phase_base_sha":"52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha":"134a94bc451f84e2a75ef18a8cbbe7382bd3395c",
+  "input_hashes":{"claim_ledger":"2cd708cbecf94133b92ce5f06822ad420da28a1d4417fdb74284528e7a9fe24b","collector_report":"c8c174e223501dc1ae4e636a4c45eb8fbc6552011e1b327be1e755df3569197f","prior_map":"2d1ec95fd9b11230b9800ac50ab7aae7d37f71eae47ccb88e0751142485698ea","prior_report":"39d017fb719e00f32cfbe6f5e9380bd3eb475015a1cc6abdd9d4a536e0e82f2c","review":"batch-a-independent-review-v2.json","timing_direction":"product-owner-budget-accounting-direction-v2.json","exception":"a0a4f2e80fa888e3fee7a1ef7e3479af559e1930cbb3eb3a5ea3a2ab8b3bbcf4"},
+  "outputs":[{"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/requirements-map-v3.json","sha256":"7ac8e95ed5aa036a5e946400e5038a6cef184f2a4de224f1381b3b34eff6b4d9"},{"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/requirements-final-report-v3.json","sha256":"8324fee54332f39d2c26693a1064fd4c4c633edee35824e519bc21d89cae5646"}],
+  "reference_accounting":{"active_v2_claims":51,"mapped_claim_reference_distinct":51,"unresolved_claim_ids":0,"foreign_claim_ids":0,"negative_fixture_references":3,"novel_factual_claims":0},
+  "budget_actual":{"mapper_input_bytes":67816,"mapper_input_files":5,"mapper_commands":1,"mapper_records_authored":3,"elapsed_minutes":0,"timing_measurement":"unavailable-in-harness","elapsed_note":"0 is accounting fallback, not elapsed-time evidence.","collector_source_bytes":11558850,"collector_source_files_objects":19,"collector_commands":24,"collector_records_authored_reviewed":51,"collector_browser_interactions":0,"collector_captured_artifacts":4},
+  "budget_exception_disclosure":"Original 11558850 actual versus 8000000 ceiling; owner exception approved 12000000 only for Spellweaver collector source bytes. No further increase and no other gate waived.",
+  "provenance_direction":{"mode":"LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE","timing_direction":"UNAVAILABLE_HARNESS_TIMING_ACCOUNTING","provider_attestations":"unavailable and not claimed","commit_sha":"uncommitted; user explicitly prohibited commit"},
+  "unknowns_preserved":["Current gameplay and runnable route.","Current movement, camera, collision, transitions, responsive behavior, input, and learning behavior.","Runtime use of gameplay image and audio.","Browser observation and browser-derived claims.","Provider session, spawn, ancestry, fork, event timestamps, raw prompt bytes, and trusted elapsed timing."],
+  "findings":["H008 is addressed additively by complete claim-backed models for scene/state/transition, mechanics-learning, and developer effort.","H009 is addressed only for elapsed-time accounting under the owner direction; 0 is explicitly not timing evidence and all other gates remain non-waived.","All three negative fixtures remain explicitly rejected.","Historical-only, current-unknown, candidate-only, exception, and no-acceptance boundaries are preserved."],
+  "role_boundary":"Only the additive Spellweaver V3 map, report, and receipt were created. Existing artifacts and unrelated working-tree changes were preserved.",
+  "reviewer_disposition":"pending fresh independent review"
+}

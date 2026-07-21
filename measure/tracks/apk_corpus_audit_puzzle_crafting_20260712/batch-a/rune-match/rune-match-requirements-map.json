@@ -1,0 +1,54 @@
+{
+  "schema_version": "apk-requirements-map.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 2: Mapping (Batch A)",
+  "role": "requirements-mapper",
+  "game": "vocabulary/rune-match",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "predecessor_binding": {
+    "t2_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "t2_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "t3_conditional_pilot_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "collector_rebind_report_sha256": "8684e16f45fdcd4a56c7368c39e67b00dc147897bcaed4b7d308e4156a40d733"
+  },
+  "model": {
+    "identity": [
+      {"model_id": "RM-IDENTITY", "backing_claim_ids": ["RM-ID-001"]}
+    ],
+    "routes_and_surfaces": [
+      {"model_id": "RM-ROUTE-IMPORT", "backing_claim_ids": ["RM-ROUTE-001"]},
+      {"model_id": "RM-ROUTE-VOCABULARY-LOAD", "backing_claim_ids": ["RM-ROUTE-002"]},
+      {"model_id": "RM-ROUTE-COMPLETION", "backing_claim_ids": ["RM-ROUTE-003"]},
+      {"model_id": "RM-SURFACE-CONTAINER", "backing_claim_ids": ["RM-ROUTE-004"]},
+      {"model_id": "RM-ROUTE-VOCABULARY-API", "backing_claim_ids": ["RM-ROUTE-005"]}
+    ],
+    "state_and_configuration": [
+      {"model_id": "RM-CONFIGURATION", "backing_claim_ids": ["RM-CONFIG-001"]},
+      {"model_id": "RM-STATE-SURFACE", "backing_claim_ids": ["RM-MECH-001"]},
+      {"model_id": "RM-STATE-CREATION", "backing_claim_ids": ["RM-MECH-005"]}
+    ],
+    "matching_and_progression": [
+      {"model_id": "RM-GRID-INITIALIZATION", "backing_claim_ids": ["RM-MECH-002"]},
+      {"model_id": "RM-MATCHING", "backing_claim_ids": ["RM-MECH-003"]},
+      {"model_id": "RM-CASCADE-PROCESSING", "backing_claim_ids": ["RM-MECH-004"]}
+    ],
+    "content": [
+      {"model_id": "RM-SAMPLE-VOCABULARY", "backing_claim_ids": ["RM-CONTENT-001"]}
+    ]
+  },
+  "backing_claim_ids": [
+    "RM-ID-001", "RM-ROUTE-001", "RM-ROUTE-002", "RM-ROUTE-003", "RM-ROUTE-004", "RM-ROUTE-005",
+    "RM-CONFIG-001", "RM-MECH-001", "RM-MECH-002", "RM-MECH-003", "RM-MECH-004", "RM-MECH-005", "RM-CONTENT-001"
+  ],
+  "unknowns": [
+    "No browser, input, responsive, route-reachability, asset-usage, historical, or user-behavior evidence was collected.",
+    "The discovery audit did not provide per-identity source/asset/history denominator records.",
+    "Provider, session, event, prompt, final-response, and commit provenance are unavailable and are not fabricated."
+  ],
+  "boundary": {
+    "novel_factual_claims": 0,
+    "cross_game_ontology_decisions": 0,
+    "hypotheses_authored": 0,
+    "acceptance_claimed": false
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": "apk-requirements-map.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 2: Mapping (Batch A)",
+  "role": "requirements-mapper",
+  "game": "Alchemist's Synthesis",
+  "normalized_game_id": "vocabulary/alchemists-synthesis",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "mapping_boundary": "Source-backed organization only. No browser, runtime, responsive, localization, test-execution, ontology, or cross-game claim is made.",
+  "predecessor_binding": {
+    "t1_evidence_integrity_gate": "phase4-v8-candidate (5aea360f)",
+    "t2_accepted_denominator_manifest_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "t2_accepted_partition_manifest_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "t3_accepted_pilot_manifest_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b"
+  },
+  "model": {
+    "identity": [
+      {"id":"identity.catalog","statement":"The catalog entry id is alchemists-synthesis and its title is Alchemist's Synthesis.","backing_claim_ids":["AS-ID-001"]},
+      {"id":"identity.metadata","statement":"The catalog description concerns matching and merging vocabulary; the catalog supplies the cover path, student href, and playable status.","backing_claim_ids":["AS-ID-002"]}
+    ],
+    "state": [
+      {"id":"state.initialization","statement":"State creation selects maxRounds as 5 for easy, 7 for normal, or 10 for hard, and initializes idle status, zero score and answer counters, round 1, and the selected difficulty.","backing_claim_ids":["AS-STATE-001"]}
+    ],
+    "mechanics": [
+      {"id":"mechanic.option-generation","statement":"For a non-null current word, option generation filters differing terms, takes the first three, and shuffles the current item with those wrong options; a null current word yields no options.","backing_claim_ids":["AS-MECH-001"]}
+    ],
+    "transitions": [
+      {"id":"transition.timer","statement":"Time advancement leaves non-playing state unchanged and changes a playing state to gameover when accumulated time reaches 60000 milliseconds.","backing_claim_ids":["AS-TRANS-001"]},
+      {"id":"transition.answer","statement":"Answer handling compares terms, increments correct answers only on a match, increments attempts, adds 10 score for a match, advances the round, and ends after maxRounds with victory at least half correct or gameover otherwise.","backing_claim_ids":["AS-TRANS-002"]}
+    ],
+    "results": [
+      {"id":"result.calculation","statement":"Results calculate accuracy from correctAnswers and totalAttempts and XP as floor(correctAnswers multiplied by accuracy), and return score, counts, gameTime, and difficulty.","backing_claim_ids":["AS-RESULT-001"]}
+    ],
+    "controls_and_completion_wiring": [
+      {"id":"control.initialization","statement":"The component initializes game state with difficulty normal.","backing_claim_ids":["AS-UI-001"]},
+      {"id":"control.completion-wiring","statement":"Selecting an option calls handleAnswer and calls onComplete when the new status is victory or gameover.","backing_claim_ids":["AS-UI-002"]}
+    ],
+    "data_and_routes": [
+      {"id":"route.vocabulary-loading","statement":"The page fetches vocabulary from the alchemists-synthesis vocabulary API and uses a nonempty returned array, otherwise assigning a five-item fallback list.","backing_claim_ids":["AS-ROUTE-001"]},
+      {"id":"route.completion-submit","statement":"Completion handling POSTs to the alchemists-synthesis complete API with XP as score, answer counts, percentage accuracy, and difficulty.","backing_claim_ids":["AS-ROUTE-002"]},
+      {"id":"route.vocabulary-factory","statement":"The vocabulary route creates GET by passing SAMPLE_VOCABULARY to createVocabularyRoute.","backing_claim_ids":["AS-API-001"]}
+    ]
+  },
+  "evidence_boundaries": {
+    "unresolved_browser_or_runtime_claims": true,
+    "rejected_fixtures": [
+      {"fixture_id":"AS-FIX-001","expected_disposition":"reject","backing_claim_ids":[]},
+      {"fixture_id":"AS-FIX-002","expected_disposition":"reject","backing_claim_ids":["AS-UI-002"]},
+      {"fixture_id":"AS-FIX-003","expected_disposition":"reject","backing_claim_ids":[]},
+      {"fixture_id":"AS-FIX-004","expected_disposition":"reject","backing_claim_ids":[]}
+    ],
+    "not_claimed": ["browser transition", "real pointer/touch transition", "binary gameplay usage", "test execution or passing tests"]
+  },
+  "coverage": {
+    "denominator_identity": "vocabulary/alchemists-synthesis",
+    "admitted_current_candidates": 1,
+    "admitted_non_current_candidates": 0,
+    "covered_records": 10,
+    "unresolved_records": 0,
+    "status": "pass"
+  },
+  "claim_contract": {"atomic": true,"claim_ids_referenced": 12,"unresolved_references": 0,"novel_factual_claims": 0},
+  "reviewer_disposition": "pending independent review"
+}

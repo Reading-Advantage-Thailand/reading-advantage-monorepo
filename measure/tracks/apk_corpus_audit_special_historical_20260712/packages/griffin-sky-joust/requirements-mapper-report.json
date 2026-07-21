@@ -1,0 +1,37 @@
+{
+  "schema": "apk-requirements-mapper-report.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 2: Mapping",
+  "batch_id": "batch-a",
+  "game": "Griffin Sky-Joust",
+  "normalized_id": "griffin-sky-joust",
+  "map_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/requirements-map.json",
+  "input_bindings": {
+    "claim_ledger": {"path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/claim-ledger.json", "sha256": "9525e1b06c907a23823e7134eb21e50d40de2f9421ad1072d0f309b7b243003d"},
+    "collector_report": {"path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/evidence-final-report.json", "sha256": "8a4fe352cbfcf4b105f26cbf32f3ca43024759ae2489d7bd899f937b3a9f6406"},
+    "collector_receipt": {"path": "measure/tracks/apk_corpus_audit_special_historical_20260712/role-receipts/evidence-collector-griffin-sky-joust.json", "sha256": "a9bb12c547277c930fe1552ac017885751ec3469e1311c384e0d95bd31511366"},
+    "current_observations": {"path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/current-source-observations.json", "sha256": "59f2070266d575991f87e584b9e9ba0649af39a6a21bed38802ac131c3206171"},
+    "historical_observations": {"path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/historical-source-observations.json", "sha256": "6e1fd3400b47ef01125e460483e3968cbf1a9d619ea8d56033ac7607c6faa049"},
+    "negative_fixtures": {"path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/negative-fixtures.json", "sha256": "34f1de857275243b5d4908ec9c66fd4c73baaedb82eb8db87c3b1940f9341d46"},
+    "strategy_freeze": {"path": "measure/tracks/apk_corpus_audit_special_historical_20260712/test-strategy-phase0.md", "sha256": "2762937ccbb24ecc193c7301c9729efe0d1d1846fce827a88f8aee9e6c7566fd"},
+    "discovery_freeze": {"path": "measure/tracks/apk_corpus_audit_special_historical_20260712/phase0-discovery-audit.json", "sha256": "7d34cdca31f6b7224a52f52070c3b7a64c6f7b0be12c4d8d0f4183ecfdee5eaa"},
+    "provenance_direction": {"path": "measure/product-owner-apk-provenance-direction-20260721.json", "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"}
+  },
+  "result": {
+    "status": "mapped-locally; independent review and lifecycle acceptance pending",
+    "factual_claims_resolved": 7,
+    "factual_claims_unresolved": 0,
+    "current_unknown_preserved": true,
+    "class_separation_preserved": true,
+    "negative_fixtures_excluded": true,
+    "browser_work_performed": false,
+    "novel_factual_claims": 0,
+    "final_ontology_decision": false
+  },
+  "blocking_disclosures": [
+    "Provider-side prompt, session, spawn, ancestry, event, timing, final-response, commit, and isolation attestations are unavailable.",
+    "Current implementation, runnability, live behavior, current asset usage, and current transitions remain unknown.",
+    "Independent review and candidate/owner-acceptance lifecycle artifacts remain pending."
+  ],
+  "acceptance": "not-claimed"
+}

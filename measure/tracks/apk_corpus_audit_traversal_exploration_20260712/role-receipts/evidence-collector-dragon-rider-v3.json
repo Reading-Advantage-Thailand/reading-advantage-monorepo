@@ -1,0 +1,33 @@
+{
+  "schema_version": "apk-role-receipt.v3",
+  "status": "complete-self-attested-uncommitted",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "evidence-collector",
+  "task_id": "collect-game-evidence:vocabulary/dragon-rider:v3",
+  "canonical_identity_id": "vocabulary/dragon-rider",
+  "agent_id": "evidence-collector-dragon-rider-v3:t5:2026-07-21",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "134a94bc451f84e2a75ef18a8cbbe7382bd3395c",
+  "reviewer_isolation": "fresh-context-only; no mapper/browser/reviewer work performed",
+  "provider_attestation": "Unavailable and not claimed.",
+  "budget_direction_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v2.json",
+  "actual_usage": {"source_bytes": 77762, "source_files_objects": 10, "commands": 16, "elapsed_minutes": 0, "timing_measurement": "unavailable-in-harness", "records_authored_reviewed": 35, "browser_interactions": 0, "captured_artifacts": 4},
+  "timing_disclosure": "elapsed_minutes=0 is an accounting fallback only; source, object, command, record, interaction, and artifact actuals remain measured integers.",
+  "outputs": [
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-method-v3.md",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-final-report-v3.json",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-dragon-rider-v3.json"
+  ],
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json": "826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-method-v3.md": "63cabc932db82b2df581e8635327caf08d88b4566ea34a31ed4544851299934b",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/evidence-final-report-v3.json": "786f4097a204047b2d7a24ed3f9caf2473775042f912140cbee4feaaaa7928b8",
+    "self": "intentionally-not-self-hashed"
+  },
+  "findings_addressed": ["H001", "H002", "H003", "H004", "H006", "H009"],
+  "scope_disclosure": "Only source evidence and denominator reconciliation were collected. No mapping, browser, or review was performed; acceptance remains unclaimed.",
+  "commit_sha": "uncommitted",
+  "marker": "MEASURE_AGENT_RESULT"
+}

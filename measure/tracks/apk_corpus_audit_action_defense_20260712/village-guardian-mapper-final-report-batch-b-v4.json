@@ -1,0 +1,14 @@
+{
+  "schema":"apk-requirements-mapper-report.v3",
+  "track_id":"apk_corpus_audit_action_defense_20260712","phase":"Phase 2: Batch B evidence packages",
+  "role":"requirements-mapper-village-guardian-batch-b-v4","game":"Village Guardian","normalized_id":"village-guardian",
+  "phase_base_sha":"ff01cee9cc973dee89fdc0ba22102dcea0c50542","role_base_sha":"134a94bc451f84e2a75ef18a8cbbe7382bd3395c",
+  "supersession":{"supersedes_report":"measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-mapper-final-report-batch-b-v3.json","scope_limit":"Adds exact accepted-denominator reconciliation binding; does not alter factual claim mappings or WebBridge/completion directions."},
+  "source_facts":"Only the existing Village Guardian V3 claim ledger supplies factual claims; the reconciliation is denominator metadata.",
+  "denominator_reconciliation":{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/village-guardian-denominator-reconciliation-batch-b-v4.json","sha256":"118f3c37cb66e8a66494efea37a60caf26b240621f280c0cf6db9766278a5134"},
+  "reference_accounting":{"collector_factual_claim_count":73,"mapped_section_count":7,"claim_reference_occurrence_count":73,"unique_referenced_claim_count":73,"resolved_reference_count":73,"unresolved_reference_count":0,"unreferenced_collector_factual_claim_count":0},
+  "denominator_rule":"The bound reconciliation enumerates 51 accepted identity/source/history/scene/state/transition/asset records exactly once; no aggregate self-declared count substitutes for record disposition.",
+  "unknowns_preserved":["browser/live behavior","trusted native input and foreground timing","HTTP-400 completion success/persistence/XP/idempotency","asset usage and suitability","provider-side provenance"],
+  "webbridge_authority":"bounded browser evidence only; never provider provenance or source authority",
+  "acceptance":"not-claimed"
+}

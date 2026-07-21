@@ -1,0 +1,60 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "status": "complete-unattested-requirements-mapping",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 2: Mapping",
+  "role": "requirements-mapper",
+  "task_id": "map-requirements:enchanted-library",
+  "game": "Enchanted Library",
+  "package_identity": "vocabulary/enchanted-library",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "source_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "reviewer_isolation": "fresh-context-only, inherited_narrative=false, fork_turns=none",
+  "provider_attestation": {
+    "available": false,
+    "agent_id": "unavailable",
+    "spawn_id": "unavailable",
+    "parent_ancestry_ids": "unavailable",
+    "prompt_sha256": "unavailable",
+    "context_manifest_sha256": "unavailable",
+    "events": "unavailable",
+    "final_response_sha256": "unavailable"
+  },
+  "provenance_direction_path": "measure/product-owner-apk-provenance-direction-20260721.json",
+  "provenance_direction_sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+  "allowed_inputs": [
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/test-strategy-phase0.md",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/phase0-role-applicability.json",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/claim-evidence-ledger.json",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/evidence-final-report.json",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/rebind-report.json",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/rebind-receipt.json",
+    "measure/product-owner-apk-provenance-direction-20260721.json"
+  ],
+  "output_paths": [
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/requirements-mapping.json",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/requirements-map-report.json",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/requirements-mapper-enchanted-library.json"
+  ],
+  "output_hashes": {
+    "requirements-mapping.json": "d75420b4c8631be54fae60ec522647e157390e38a6d9536c49617bc9da10006e",
+    "requirements-map-report.json": "ed0e19ed74f0be3612d4b2c0afe8e434f1a5fb68605ddd7405f9bff4e21d500b",
+    "self": "intentionally-not-self-hashed"
+  },
+  "actual_usage": {
+    "factual_claims_consumed": 32,
+    "negative_fixtures_consumed": 3,
+    "novel_factual_claims_authored": 0,
+    "browser_interactions": 0,
+    "mapping_records_authored": 20
+  },
+  "findings": [
+    "All 32 factual references and 3 rejection fixtures resolve to exact collector claim IDs.",
+    "No browser, runnable, historical, binary-asset, or cross-game claim was added.",
+    "Acceptance is not claimed; independent review remains required.",
+    "Provider-side provenance is unavailable and disclosed; commit binding is unavailable because this task is uncommitted by instruction."
+  ],
+  "commit_sha": "uncommitted",
+  "marker": "MEASURE_AGENT_RESULT"
+}

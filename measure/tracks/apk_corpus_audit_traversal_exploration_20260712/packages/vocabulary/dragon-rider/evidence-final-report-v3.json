@@ -1,0 +1,48 @@
+{
+  "schema_version": "apk-evidence-collector-report.v3",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 1: Batch A",
+  "role": "evidence-collector",
+  "task_id": "collect-game-evidence:vocabulary/dragon-rider:v3",
+  "collector_agent": "evidence-collector-dragon-rider-v3:t5:2026-07-21",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "134a94bc451f84e2a75ef18a8cbbe7382bd3395c",
+  "source_revision": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "ledger_path": "packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+  "method_path": "packages/vocabulary/dragon-rider/evidence-method-v3.md",
+  "supersedes": "packages/vocabulary/dragon-rider/evidence-final-report-v2-rebind.json",
+  "claims_retained_by_exact_v2_reference": 12,
+  "claim_atoms_split_or_narrowed": 8,
+  "fixture_records": 3,
+  "history_records_reconciled": 13,
+  "asset_candidate_groups_reconciled": 8,
+  "browser_interactions": 0,
+  "trusted_native_input": "unavailable/not attempted",
+  "budget_actuals": {
+    "source_bytes": 77762,
+    "source_files_objects": 10,
+    "commands": 16,
+    "elapsed_minutes": 0,
+    "timing_measurement": "unavailable-in-harness",
+    "timing_note": "0 is the owner-directed accounting fallback, not elapsed-time evidence.",
+    "records_authored_reviewed": 35,
+    "browser_interactions": 0,
+    "captured_artifacts": 4
+  },
+  "validation": {
+    "json": "pending-local-command",
+    "envelopes": "all eight V3 atom envelopes re-derived against phase base",
+    "fixtures": "3 explicit REJECT records, no positive citations",
+    "diff": "additive-only V3 files; predecessors untouched",
+    "denominator": "accepted manifest and partition referenced; history/assets retained without merging"
+  },
+  "disclosures": {
+    "provider_attestation": "unavailable and not claimed",
+    "browser_boundary": "No browser claim is made.",
+    "acceptance": "not-claimed",
+    "commit_binding": "pending orchestrator commit; this role does not commit"
+  },
+  "output_hashes": {"self": "intentionally-not-self-hashed", "ledger": "826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236", "method": "63cabc932db82b2df581e8635327caf08d88b4566ea34a31ed4544851299934b"},
+  "measure_agent_result": {"status": "complete-self-attested-uncommitted", "candidate": false, "acceptance": "not-claimed"},
+  "marker": "MEASURE_AGENT_RESULT"
+}

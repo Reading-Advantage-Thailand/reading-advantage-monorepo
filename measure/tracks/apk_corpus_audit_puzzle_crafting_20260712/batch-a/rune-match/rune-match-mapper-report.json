@@ -1,0 +1,37 @@
+{
+  "schema_version": "apk-mapper-final-report.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "phase": "Phase 2: Mapping (Batch A)",
+  "role": "requirements-mapper",
+  "task_id": "requirements-mapper:rune-match:batch-a",
+  "game": "vocabulary/rune-match",
+  "requirements_map": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-requirements-map.json",
+  "collector_package": {
+    "claim_ledger": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-claim-ledger.json",
+    "claim_ledger_sha256": "87e81e3d4328c26c75496baf4d68a0460fe48a402fd35f15430a3bd2897a746c",
+    "evidence_report": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-evidence-final-report.json",
+    "evidence_report_sha256": "ee75d82801b570e3dcbbb7927f393bb700d9b6a982253845ec193b8827eaf138",
+    "rebind_report_sha256": "8684e16f45fdcd4a56c7368c39e67b00dc147897bcaed4b7d308e4156a40d733"
+  },
+  "mapping_counts": {
+    "claims_consumed": 13,
+    "claim_ids_referenced": 13,
+    "unresolved_claim_ids": 0,
+    "novel_factual_claims": 0,
+    "unknowns_carried_forward": 3,
+    "negative_fixtures_consumed": 2
+  },
+  "claim_resolution": {
+    "method": "Every map entry is backed by one or more exact claim IDs from the committed Rune Match ledger; no source text outside that package was used for factual derivation.",
+    "all_claim_ids_resolve": true,
+    "claim_ledger_unchanged": true,
+    "source_envelopes_consumed": "13/13 previously validated",
+    "behavioral_or_browser_inference_added": false
+  },
+  "unknowns": [
+    "No browser, input, responsive, route-reachability, asset-usage, historical, or user-behavior evidence was collected.",
+    "The discovery audit did not provide per-identity source/asset/history denominator records.",
+    "Provider, session, event, prompt, final-response, and commit provenance are unavailable and are not fabricated."
+  ],
+  "disposition": "requirements mapping only; not an acceptance, browser, asset, truth-test, or ontology decision"
+}
