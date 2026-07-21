@@ -1,0 +1,30 @@
+{
+  "schema": "apk-evidence-rebind-report.v1",
+  "status": "exact V6 output binding; claims unchanged; acceptance not claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "game": "Archer's Revenge",
+  "collector_id": "evidence-collector-archers-revenge-batch-b-v6",
+  "reason": "Whitespace normalization changed method bytes; this additive rebind records the exact current V6 output bytes without changing claims.",
+  "bound_outputs": {
+    "ledger": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v6.json",
+      "sha256": "9a97349ccf699ad73045997f2a89b63f7d751ca043d6a5032de04137d89352af"
+    },
+    "method": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b-v6.md",
+      "sha256": "a639889543c15b119c2baf0aba1487ce3a485922edc4b06d573b17a71f628345"
+    },
+    "report": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v6.json",
+      "sha256": "1c1ce16725572016da5bd4b3f70517e8424490637f3a964a1585e7ea144f04cd"
+    }
+  },
+  "revalidation": {
+    "claims_changed": false,
+    "claim_ledger_modified": false,
+    "method_scope_changed": false,
+    "report_scope_changed": false,
+    "acceptance": "not-claimed",
+    "commit_sha": null
+  }
+}

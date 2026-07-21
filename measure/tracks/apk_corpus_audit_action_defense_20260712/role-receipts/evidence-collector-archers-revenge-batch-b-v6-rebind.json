@@ -1,0 +1,25 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "status": "V6 output binding revalidated after method-byte whitespace normalization",
+  "acceptance": "not claimed",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 2: Batch B evidence packages",
+  "task_id": "B2-COLLECT-ARCHERS-HIGH-003-V6-REBIND",
+  "role": "evidence-collector-archers-revenge-batch-b-v6-rebind",
+  "role_identity": "additive exact-byte rebind only",
+  "game": "Archer's Revenge",
+  "supersedes_receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v6.json",
+  "rebind_report": "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-rebind-report-batch-b-v6.json",
+  "output_paths_and_sha256": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v6.json": "9a97349ccf699ad73045997f2a89b63f7d751ca043d6a5032de04137d89352af",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-method-batch-b-v6.md": "a639889543c15b119c2baf0aba1487ce3a485922edc4b06d573b17a71f628345",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/archers-revenge-evidence-final-report-batch-b-v6.json": "1c1ce16725572016da5bd4b3f70517e8424490637f3a964a1585e7ea144f04cd"
+  },
+  "revalidation": {
+    "claims_changed": false,
+    "ledger_method_report_bound": true,
+    "acceptance": "not-claimed",
+    "commit_sha": null
+  },
+  "role_boundary": "Only this additive rebind report and receipt were created. No claims, ledger, method, report, mapper, browser, review, truth test, candidate, acceptance, manifest, plan, registry, or product code was modified."
+}
