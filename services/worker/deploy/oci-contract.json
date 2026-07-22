@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "service": "@reading-advantage/worker",
+  "image": {
+    "architectures": ["amd64", "arm64"],
+    "operatingSystem": "linux",
+    "runsAsNonRoot": true
+  },
+  "process": {
+    "command": ["node", "dist/main.js"],
+    "shutdownSignals": ["SIGTERM", "SIGINT"]
+  },
+  "http": {
+    "defaultHost": "0.0.0.0",
+    "defaultPort": 8080,
+    "hostEnv": "HOST",
+    "livenessPath": "/livez",
+    "portEnv": "PORT",
+    "readinessPath": "/readyz"
+  },
+  "targets": [
+    {
+      "healthCheckPath": "/livez",
+      "name": "cloud-run",
+      "portMode": "environment"
+    },
+    {
+      "healthCheckPath": "/livez",
+      "name": "ecs-fargate",
+      "portMode": "task-definition"
+    }
+  ]
+}

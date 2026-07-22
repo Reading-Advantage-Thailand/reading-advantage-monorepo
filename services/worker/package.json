@@ -1,0 +1,55 @@
+{
+  "name": "@reading-advantage/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20.12.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./health": {
+      "types": "./dist/health.d.ts",
+      "import": "./dist/health.js"
+    },
+    "./oci-contract": {
+      "types": "./dist/oci-contract.d.ts",
+      "import": "./dist/oci-contract.js"
+    },
+    "./startup-config": {
+      "types": "./dist/startup-config.d.ts",
+      "import": "./dist/startup-config.js"
+    }
+  },
+  "files": [
+    "dist",
+    "deploy/oci-contract.json",
+    "Dockerfile",
+    "Dockerfile.dockerignore"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "check-types": "tsc --noEmit",
+    "dev": "tsx watch src/main.ts",
+    "lint": "eslint src scripts",
+    "start": "node dist/main.js",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "validate:oci": "tsx scripts/validate-oci.ts"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@reading-advantage/config": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "track_id": "durable_job_worker_platform_20260713",
+  "task": "Task 1",
+  "role": "producer-remediation",
+  "agent_task": "/root/worker_task1_remediation",
+  "completed_at": "2026-07-22T09:05:43Z",
+  "decision": "READY_FOR_INDEPENDENT_REVIEW",
+  "accepted": false,
+  "task_status": "in_progress",
+  "task_2_unlocked": false,
+  "commit_created": false,
+  "addressed_findings": [
+    "WKR-T1-H1",
+    "WKR-T1-L1"
+  ],
+  "report": {
+    "path": "measure/tracks/durable_job_worker_platform_20260713/task-1-remediation-20260722.md",
+    "sha256": "902372103104696f2822d97006e5eaa6d07ab1a08b8a44b04df24ccc8f6327e4"
+  },
+  "changed_contracts": {
+    "dockerignore_sha256": "5e62a6e58f8bed46bc0fbb2259e1fa606b71c8e26adff8db47c6a4bf2520895a",
+    "validator_sha256": "d9e8ca33da767064ad39dd0faaeec417ddb85eefe411a3cfe78048aa19237299",
+    "tests_sha256": "4a9a3feea60197deaf769448370c9fd2b15184e20cbce22faccdc8b2e08380d9",
+    "coverage_config_sha256": "d19dbd3dff62d5337df161a5955c58bda823b8fd1d0658a1b23bf499c89ff7cd"
+  },
+  "verification": {
+    "red": "13 expected focused failures before implementation",
+    "green": "18/18 focused OCI-contract tests",
+    "canonical_coverage": "3 files, 31/31 tests; 98.94% statements, 90.90% branches, 100% functions, 100% lines",
+    "builder_context": "fresh build target excluded both environment sentinels and existing Turbo/coverage artifacts",
+    "image": "sha256:4f6ab4084cbe33ecbb7dae72a980910d7d193fdf7753836d364116c664f211b7",
+    "runtime": "liveness/readiness 200; SIGTERM exit 0 with draining/stopped logs; invalid PORT exit 1",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "build": "PASS",
+    "oci_targets": "PASS: cloud-run, ecs-fargate",
+    "task_2_plus_leakage": "NONE"
+  },
+  "remaining_gate": "A fresh independent reviewer must return PASS before Task 1 can be completed or Task 2 unlocked."
+}

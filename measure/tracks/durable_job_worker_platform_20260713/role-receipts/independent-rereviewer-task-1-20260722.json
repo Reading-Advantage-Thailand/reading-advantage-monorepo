@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "track_id": "durable_job_worker_platform_20260713",
+  "task": "Task 1",
+  "role": "independent-rereviewer",
+  "agent_task": "/root/worker_task1_independent_review",
+  "reviewed_at": "2026-07-22T09:28:20Z",
+  "decision": "PASS",
+  "accepted_by_orchestrator": false,
+  "task_status": "in_progress",
+  "task_2_unlocked": false,
+  "production_code_modified": false,
+  "commit_created": false,
+  "closed_findings": [
+    "WKR-T1-H1",
+    "WKR-T1-L1"
+  ],
+  "new_findings": [],
+  "report": {
+    "path": "measure/tracks/durable_job_worker_platform_20260713/task-1-independent-rereview-20260722.md",
+    "sha256": "e58cf3232d7b9972769d2768efa5b91be6cb9ada8dfcf5ea6476b88904bcf099"
+  },
+  "verification": {
+    "path": "measure/tracks/durable_job_worker_platform_20260713/verification.md",
+    "sha256": "9449dcb73c45b21d15b422ea84e646e701d21851dde11207eaf73dfd9ddfdaba"
+  },
+  "accepted_contract_hashes": {
+    "dockerignore_sha256": "5e62a6e58f8bed46bc0fbb2259e1fa606b71c8e26adff8db47c6a4bf2520895a",
+    "validator_sha256": "d9e8ca33da767064ad39dd0faaeec417ddb85eefe411a3cfe78048aa19237299",
+    "tests_sha256": "4a9a3feea60197deaf769448370c9fd2b15184e20cbce22faccdc8b2e08380d9",
+    "coverage_config_sha256": "d19dbd3dff62d5337df161a5955c58bda823b8fd1d0658a1b23bf499c89ff7cd"
+  },
+  "independent_evidence": {
+    "build_context": "Exact-ignore scratch export contained 45 paths and zero sentinel, node_modules, dist, .turbo, coverage, or .env matches.",
+    "canonical_coverage": "31/31 tests; 98.94% statements, 90.90% branches, 100% functions, 100% lines; all configured modules enumerated.",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "build": "PASS",
+    "oci_targets": "PASS: cloud-run, ecs-fargate",
+    "frozen_offline_lockfile": "PASS: 40 workspace projects",
+    "image": "sha256:4f6ab4084cbe33ecbb7dae72a980910d7d193fdf7753836d364116c664f211b7",
+    "runtime": "liveness/readiness 200; SIGTERM exit 0 with ordered logs; invalid PORT exit 1",
+    "task_2_plus_leakage": "NONE",
+    "cleanup": "PASS: no disposable sentinels, files, containers, or images remain"
+  },
+  "review_notes": [
+    "A separate uncached real build target was stopped after context copy and dependency installation while committing a slow layer; the completed producer image and the dependency-free exact-ignore scratch export provide the relied-upon evidence.",
+    "Browser checks are not applicable because no frontend files changed.",
+    "Graph caller checks are skipped because graph.db is stale and the touched exports are additive."
+  ],
+  "remaining_gate": "Parent orchestrator must review this PASS, own the commit, decide Task 1 completion, and separately decide whether Task 2 may be unlocked."
+}

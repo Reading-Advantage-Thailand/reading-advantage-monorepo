@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "track_id": "durable_job_worker_platform_20260713",
+  "task": "Task 1",
+  "role": "independent-reviewer",
+  "agent_task": "/root/worker_task1_independent_review",
+  "reviewed_at": "2026-07-22T08:30:22Z",
+  "decision": "FAIL",
+  "production_code_modified": false,
+  "commit_created": false,
+  "findings": [
+    {
+      "id": "WKR-T1-H1",
+      "severity": "High",
+      "summary": "Worker Docker ignore rules re-include ignored artifacts and potential package-local environment files, while the validator rejects safe nested exclusions."
+    },
+    {
+      "id": "WKR-T1-L1",
+      "severity": "Low",
+      "summary": "The canonical combined coverage report enumerates health.ts only even though isolated coverage proves the omitted modules are fully covered."
+    }
+  ],
+  "report": {
+    "path": "measure/tracks/durable_job_worker_platform_20260713/task-1-independent-review-20260722.md",
+    "sha256": "be40024a82f8692426b1034f874665a8b5e65767b93c2ba0d6c7635520781cef"
+  },
+  "verification": {
+    "path": "measure/tracks/durable_job_worker_platform_20260713/verification.md",
+    "sha256": "3ed54fcd055a639cb4bd14ac351be1723938cfa95fbebf60bb0bd17fe829be06"
+  },
+  "passing_evidence": {
+    "tests": "18/18",
+    "isolated_module_coverage": "100% statements, branches, functions, and lines for startup-config.ts and oci-contract.ts; health.ts exceeds 80%",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "build": "PASS",
+    "oci_targets": [
+      "cloud-run",
+      "ecs-fargate"
+    ],
+    "frozen_offline_lockfile": "PASS",
+    "container_runtime": "live/readiness 200, invalid env exit 1, SIGTERM exit 0",
+    "task_2_plus_leakage": "NONE"
+  },
+  "blocking_evidence": {
+    "proof": "A scratch image COPY of services/worker/.turbo/turbo-lint.log succeeded under the checked-in Dockerfile.dockerignore.",
+    "required_action": "Exclude nested node_modules, dist, .turbo, coverage, .env, and .env.* paths; enforce them in validator/tests; rebuild and re-review."
+  },
+  "aggregate_architecture_check": {
+    "status": "FAIL_UNRELATED",
+    "exit_code": 1,
+    "unrelated_additions": 67,
+    "services_worker_findings": 0
+  }
+}
