@@ -1,0 +1,78 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "task_id": "C3-MAP-GRYPHON",
+  "role": "requirements-mapper-gryphon-patrol-batch-c",
+  "status": "completed-bounded-provenance-successor",
+  "verification_result": "pass",
+  "acceptance": "not-claimed",
+  "supersession": {
+    "committed_revision": "447f66038a8966eed90da9f2e9c539410ccecfd0",
+    "supersedes_proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-gryphon-patrol-batch-c-v4.json",
+    "supersedes_proof_sha256": "dfa0170492e70d8892a43ed10c2c44a67996ba3a90f20206125ecb761173e55b",
+    "supersedes_receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c-v4.json",
+    "supersedes_receipt_sha256": "8146abce50003faeb5cc248e32ebd749b66acd57777414730083ad5cf645be4c",
+    "supersession_scope": "Actual parent-task provenance only. The committed v4 mapping outputs, proof commands, results, and bounded non-authoritative disposition remain immutable and are inherited without rerunning mapping."
+  },
+  "provider_provenance": {
+    "available": true,
+    "availability_scope": "Native collaboration task identity, actual direct parent task, and fork mode only.",
+    "provider_identifier": "/root/t4_gryphon_mapper_terra",
+    "provider_kind": "native-collaboration-identity",
+    "canonical_task": "/root/t4_gryphon_mapper_terra",
+    "fork_turns": "none",
+    "parent_task": "/root",
+    "raw_provider_prompt": null,
+    "encrypted_prompt": null,
+    "provider_event_log": null,
+    "provider_session_id": null,
+    "unavailable_note": "Native collaboration identity is available and attested. Raw provider prompt, encrypted prompt, provider event, and provider session fields are not exposed and remain null rather than reconstructed."
+  },
+  "committed_v4_mapper_outputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-hypotheses-batch-c-v4.md": "be2725c9c0c672c723af6d04e2517f1490257b88180cf15c2c4b3f57f65fd0e4",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-final-report-batch-c-v4.json": "6b35ec24ff5ae27d48cce8ef8a7ec2e11e310f25c24480ed2f6806054d4aa912"
+  },
+  "committed_v4_provenance": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-gryphon-patrol-batch-c-v4.json": "dfa0170492e70d8892a43ed10c2c44a67996ba3a90f20206125ecb761173e55b",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c-v4.json": "8146abce50003faeb5cc248e32ebd749b66acd57777414730083ad5cf645be4c"
+  },
+  "retained_proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-gryphon-patrol-batch-c-v5.json",
+    "sha256": "52667713e8022db9f5b6e4dc190b274a341e64bd0b5b5502796a54f8d9f40738"
+  },
+  "verification": {
+    "result": "pass",
+    "source_commit": "447f66038a8966eed90da9f2e9c539410ccecfd0",
+    "committed_input_hash_checks": {"checks": 4, "matches": 4, "mismatches": 0},
+    "working_tree_byte_checks": {"checks": 4, "matches": 4, "mismatches": 0},
+    "mapping_rerun_performed": false,
+    "prior_command_results_source": "Retained verbatim from the committed v4 proof and explicitly labeled not rerun."
+  },
+  "inherited_mapping_result": {
+    "denominator_counts": {"source_records": 14, "asset_candidates": 5, "historical_records": 10},
+    "git_blob_hashes": {"checks": 29, "matches": 29, "mismatches": 0},
+    "claim_coverage": {"available": 15, "mapped": 15, "unmapped": 0, "atomic_propositions": 40},
+    "new_source_facts": 0
+  },
+  "outputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-hypotheses-batch-c-v4.md": "be2725c9c0c672c723af6d04e2517f1490257b88180cf15c2c4b3f57f65fd0e4",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-final-report-batch-c-v4.json": "6b35ec24ff5ae27d48cce8ef8a7ec2e11e310f25c24480ed2f6806054d4aa912",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-gryphon-patrol-batch-c-v5.json": "52667713e8022db9f5b6e4dc190b274a341e64bd0b5b5502796a54f8d9f40738",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c-v5.json": null
+  },
+  "scope_attestation": {
+    "roles_held": ["requirements-mapper-gryphon-patrol-batch-c"],
+    "provenance_successor_only": true,
+    "v4_artifacts_edited": false,
+    "forbidden_work_not_performed": ["mapping rerun", "source claim collection", "source fact creation", "browser audit", "asset audit or suitability", "truth-test modification", "review", "receipt selection", "candidate publication", "acceptance", "implementation", "plan or registry editing", "staging", "committing"],
+    "no_behavior_success_claimed": true,
+    "no_candidate_or_acceptance_authority_claimed": true
+  },
+  "lifecycle": {"mapper_role_complete": true, "candidate_authorized": false, "acceptance_authorized": false, "fresh_remaining_roles_and_independent_review_required": true},
+  "commit_sha": null,
+  "commit_disposition": "No commit was created because this delegated provenance remediation prohibits staging and committing.",
+  "self_sha256": null,
+  "marker": "MEASURE_AGENT_RESULT"
+}

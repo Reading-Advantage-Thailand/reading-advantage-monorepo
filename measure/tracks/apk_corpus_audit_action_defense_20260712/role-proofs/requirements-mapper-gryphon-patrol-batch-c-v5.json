@@ -1,0 +1,87 @@
+{
+  "schema": "measure.provider-fresh-context-proof.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "task_id": "C3-MAP-GRYPHON",
+  "role": "requirements-mapper-gryphon-patrol-batch-c",
+  "status": "completed-bounded-provenance-successor",
+  "verification_result": "pass",
+  "provider_identifier": "/root/t4_gryphon_mapper_terra",
+  "canonical_task": "/root/t4_gryphon_mapper_terra",
+  "fork_turns": "none",
+  "parent_task": "/root",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/t4_gryphon_mapper_terra",
+    "provider_kind": "native-collaboration-identity",
+    "canonical_task": "/root/t4_gryphon_mapper_terra",
+    "fork_turns": "none",
+    "parent_task": "/root",
+    "raw_provider_prompt": null,
+    "encrypted_prompt": null,
+    "provider_event_log": null,
+    "provider_session_id": null,
+    "unavailable_metadata_note": "Raw provider prompt, encrypted prompt, provider event, and provider session fields are unavailable and intentionally null; native collaboration identity is the available provenance."
+  },
+  "repository": {
+    "canonical_path": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "role_base_head": "d0ee1f3587f2f6b26e9d5094f50fa352e2201b85",
+    "v4_source_commit": "447f66038a8966eed90da9f2e9c539410ccecfd0",
+    "worktree_created_or_used": false,
+    "commit_created": false,
+    "unrelated_dirty_files_preserved": true
+  },
+  "timestamps": {
+    "successor_validation_at_utc": "2026-07-22T10:09:17Z",
+    "successor_validation_at_local": "2026-07-22T17:09:17+07:00",
+    "source": "system date"
+  },
+  "supersession": {
+    "scope": "Provider-parent provenance only. The v4 mapping, hypotheses, commands, result, and acceptance boundaries are preserved byte-for-byte from commit 447f66038a8966eed90da9f2e9c539410ccecfd0 and were not rerun.",
+    "legacy_v4_provenance_disposition": "The committed v4 proof and receipt remain immutable historical evidence. Their parent_task /root/scanner_index_review followed the legacy contract but does not identify this collaboration task's actual parent. This v5 successor records the actual parent /root without rewriting v4.",
+    "mapping_rerun_performed": false,
+    "behavior_claims_expanded": false,
+    "candidate_authority_added": false,
+    "acceptance_authority_added": false
+  },
+  "exact_committed_v4_inputs": [
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-hypotheses-batch-c-v4.md", "revision": "447f66038a8966eed90da9f2e9c539410ccecfd0", "sha256": "be2725c9c0c672c723af6d04e2517f1490257b88180cf15c2c4b3f57f65fd0e4", "working_tree_matches_commit": true},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-final-report-batch-c-v4.json", "revision": "447f66038a8966eed90da9f2e9c539410ccecfd0", "sha256": "6b35ec24ff5ae27d48cce8ef8a7ec2e11e310f25c24480ed2f6806054d4aa912", "working_tree_matches_commit": true},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-gryphon-patrol-batch-c-v4.json", "revision": "447f66038a8966eed90da9f2e9c539410ccecfd0", "sha256": "dfa0170492e70d8892a43ed10c2c44a67996ba3a90f20206125ecb761173e55b", "working_tree_matches_commit": true},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c-v4.json", "revision": "447f66038a8966eed90da9f2e9c539410ccecfd0", "sha256": "8146abce50003faeb5cc248e32ebd749b66acd57777414730083ad5cf645be4c", "working_tree_matches_commit": true}
+  ],
+  "commands": [
+    {"evidence_origin": "retained-verbatim-result-from-committed-v4-proof; not rerun by successor", "purpose": "read routing, workflow, T4 contract, corrected denominator, analogous mapper evidence, and active truth contract", "argv": ["sed", "-n", "1,360p <governed inputs>"], "exit_code": 0, "stdout": "Required routing and artifact inputs were read; no worktree, plan, metadata, registry, staging, or commit action occurred.", "stdout_bounded": true},
+    {"evidence_origin": "retained-verbatim-result-from-committed-v4-proof; not rerun by successor", "purpose": "initial focused immutable-selection check", "argv": ["python3", "-"], "exit_code": 1, "stdout": "KeyError: file_path in the first inspection helper before selection filtering; no artifact was written by this failed read-only check.", "stdout_bounded": true},
+    {"evidence_origin": "retained-verbatim-result-from-committed-v4-proof; not rerun by successor", "purpose": "rederive corrected Gryphon denominator, ledger arrays, immutable Git blob hashes, semantic counts, input hashes, and diff whitespace status", "argv": ["python3", "-"], "exit_code": 0, "stdout": "denominator=14/5/10; immutable_git_blob_checks=29/29; semantic_claims=15; atomic_propositions=40; collector, semantic, and denominator SHA-256 values match the retained bindings; git diff --check exit 0; role base ed1f3df33a7416498a18f609385424c99c6661a3; UTC 2026-07-22T09:53:44Z; local 2026-07-22T16:53:44+07:00.", "stdout_bounded": true},
+    {"evidence_origin": "retained-verbatim-result-from-committed-v4-proof; not rerun by successor", "purpose": "run the focused corrected-denominator gate", "argv": ["python3", "-m", "pytest", "-q", "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py", "-k", "BatchCCorrectedDenominatorContract"], "exit_code": 0, "stdout": "3 passed, 2 deselected in 1.04s", "stdout_bounded": true},
+    {"evidence_origin": "retained-verbatim-result-from-committed-v4-proof; not rerun by successor", "purpose": "serialize mapper hypotheses and final report then bind their exact bytes", "argv": ["apply_patch"], "exit_code": 0, "stdout": "hypotheses SHA-256 be2725c9c0c672c723af6d04e2517f1490257b88180cf15c2c4b3f57f65fd0e4; final report SHA-256 6b35ec24ff5ae27d48cce8ef8a7ec2e11e310f25c24480ed2f6806054d4aa912", "stdout_bounded": true},
+    {"evidence_origin": "executed-by-v5-provenance-successor", "purpose": "resolve the immutable v4 source commit and hash its four mapper artifacts, then compare each to the working-tree bytes", "argv": ["python3", "-"], "exit_code": 0, "stdout": "revision 447f66038a8966eed90da9f2e9c539410ccecfd0; hypotheses be2725c9c0c672c723af6d04e2517f1490257b88180cf15c2c4b3f57f65fd0e4; final report 6b35ec24ff5ae27d48cce8ef8a7ec2e11e310f25c24480ed2f6806054d4aa912; v4 proof dfa0170492e70d8892a43ed10c2c44a67996ba3a90f20206125ecb761173e55b; v4 receipt 8146abce50003faeb5cc248e32ebd749b66acd57777414730083ad5cf645be4c; all four working-tree bytes match the commit.", "stdout_bounded": true},
+    {"evidence_origin": "executed-by-v5-provenance-successor", "purpose": "verify no v4 mapper artifact differs from its committed source", "argv": ["git", "diff", "--exit-code", "447f6603", "--", "<four v4 mapper artifact paths>"], "exit_code": 0, "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "stdout_bounded": true}
+  ],
+  "inherited_mapping_result": {
+    "source": "exact committed v4 final report and proof; not rerun",
+    "denominator_counts": {"source_records": 14, "asset_candidates": 5, "historical_records": 10},
+    "git_blob_hashes": {"checks": 29, "matches": 29, "mismatches": 0},
+    "semantic_claims": {"available": 15, "mapped": 15, "unmapped": 0, "atomic_propositions": 40},
+    "new_source_facts": 0
+  },
+  "scope_check": {
+    "provenance_successor_only": true,
+    "v4_artifacts_edited": false,
+    "mapping_rerun_performed": false,
+    "worktree_created_or_used": false,
+    "commit_created": false,
+    "forbidden_work_not_performed": ["source collection", "mapping rerun", "source fact creation", "browser audit", "asset audit or suitability", "truth-test authorship", "review", "receipt selection", "candidate ownership", "acceptance", "implementation", "plan or registry edit", "staging", "commit", "ontology", "cross-game synthesis"]
+  },
+  "lifecycle": {"mapper_role_complete": true, "candidate_authorized": false, "acceptance_authorized": false, "fresh_remaining_roles_and_independent_review_required": true},
+  "outputs": [
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-gryphon-patrol-batch-c-v5.json", "sha256": null, "digest_reason": "Bound by the additive v5 receipt after proof bytes are finalized."},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c-v5.json", "sha256": null, "digest_reason": "Receipt is intentionally not self-hashed."}
+  ],
+  "commit_sha": null,
+  "commit_disposition": "No commit was created because this delegated task prohibits commits.",
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}
