@@ -1,0 +1,35 @@
+{
+  "schema": "apk-role-receipt.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 3: Batch C evidence packages",
+  "task_id": "C3-COLLECT-PALADIN-SEMANTIC-REMEDIATION",
+  "role": "evidence-collector-paladins-twin-soul-batch-c-v2",
+  "status": "collector-only additive semantic supersession; acceptance not claimed",
+  "role_base_sha": "eb355274ef4dacdd807266d932c807f266660c77",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "exact_inputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-c.md": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-budget-declaration.json": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-collector-preflight-correction-v1.json": "008dd81041b9cff1b148538067e5d3f85637e0e2d561229ca06c25762989ff46",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-claim-ledger-batch-c.json": "90c451c895bffa0bf41c7f3c916578df7d700f0f56e05d16ae7cab58e6a60304",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-paladins-twin-soul-batch-c.json": "e9a841207ee54a4f8f4fc21bf71f90ba7f7d73c8676dffd29401dc620d9b299f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-paladins-twin-soul-batch-c.json": "07ae106c197ba7b6bbf31ce2d8244c4d1ff1ad84f1ce3c842e46818dfa744194",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests.py": "22f47415d2cd11a78dc797fe47231254f4f76f3630bfcbbeb7143b947d10f461"
+  },
+  "original_ledger_binding": {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-claim-ledger-batch-c.json", "sha256": "90c451c895bffa0bf41c7f3c916578df7d700f0f56e05d16ae7cab58e6a60304", "original_claim_ids": 21, "original_artifacts_mutated": false},
+  "preflight_correction_binding": {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-collector-preflight-correction-v1.json", "actual_collector_role_base_sha": "419cbad0fe73999d0977573b734934bb0c52c622", "original_artifacts_remain_immutable": true},
+  "truth_test_failure_binding": {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests.py", "failure": "PTS-C-IDENTITY-001 cited-range digest mismatch and missing atomic-proposition contracts", "remediation_scope": "all 21 original Paladin claim IDs"},
+  "outputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-semantic-supersession-batch-c-v2.json": "9c9227e3b560cf15c35b977b9e23bba4b0fa9a346e0a6fae1308e0a298718613",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-paladins-twin-soul-batch-c-v2.json": null
+  },
+  "self_hash_rule": "The receipt output digest is null because hashing this receipt would change its self-referential byte stream.",
+  "provider_provenance": {"available": false, "provider_identifier": null, "fork_turns": null, "raw_isolation_export_sha256": null, "reason": "No provider raw-export or spawn provenance is exposed in this execution environment; no provider identifier or isolation attestation is claimed."},
+  "resource_ceiling": {"source_bytes_read": 52428800, "source_files_or_objects_read": 120, "command_invocations": 80, "elapsed_minutes": 45, "records_authored_or_reviewed": 300, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+  "resource_actual": {"source_bytes_read": 86000, "source_files_or_objects_read": 12, "command_invocations": 6, "elapsed_minutes": 24, "records_authored_or_reviewed": 44, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+  "budget_result": "within frozen collector role ceiling",
+  "scope_check": {"authorized_outputs_only": true, "forbidden_work_not_performed": ["mapping", "browser observation", "asset suitability or audit", "review", "candidate", "acceptance", "plan or registry edit", "implementation"]},
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}
