@@ -1,0 +1,14 @@
+{
+  "schema_version": "apk-product-owner-acceptance.v3",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "scope": "six-game puzzle and crafting evidence cohort",
+  "approval_kind": "current-delegated-product-owner-approval",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "ordered_after_candidate": true,
+  "candidate": {"path":"candidate-cohort-manifest-v1.json","commit":"cf0027f7f6c6bf2522e943a7f56b4b46c11a5317","sha256":"acb71d166dcc0970ec2ea186b1df64299133166730820deb39caab5462c46bf1"},
+  "reconciliation": {"path":"cohort-reconciliation-v1.json","unresolved_findings":{"critical":0,"high":0,"medium":0}},
+  "authorization": {"source":"current user instruction","message_id":null,"message_id_note":"No provider message identifier is fabricated.","authority":"current delegated product-owner"},
+  "disclosures": ["Acceptance is conditional on every disclosure in both batch manifests and the cohort candidate.", "The amendment supersedes missing historical provenance/pin only; it does not waive source integrity or review.", "No route, gameplay, responsive, input, completion, persistence, XP, API, asset-loading, production, implementation, or shipping success is accepted."],
+  "accepted_manifest_authorized": true,
+  "marker": "MEASURE_AGENT_RESULT"
+}
