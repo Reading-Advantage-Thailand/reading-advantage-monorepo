@@ -1,0 +1,181 @@
+{
+  "schema_version": "apk-role-receipt.v3",
+  "status": "fresh-independent-adversarial-review-v2-complete-green-zero-unresolved",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 3: Historical/missing batch remediation V2",
+  "batch_id": "batch-c-historical",
+  "task_id": "review-sorcerer-ziggurat-batch-c:v2-over-16be1f15-inputs-published-at-7f3b89fa",
+  "role": "adversarial-reviewer",
+  "role_id": "adversarial-reviewer-sorcerer-ziggurat-batch-c-v2",
+  "role_identity": "Independent Batch C V2 evidence and lifecycle reviewer only; no producer, browser, candidate-author, product-owner, or accepted-manifest role held.",
+  "phase_base_sha": "52e48970bc9c4b585c55b53072ebebe466a1c4f4",
+  "role_base_sha": "7f3b89fa24f003f8cc40b3a4d9ce26df18f7b107",
+  "audited_producer_sha": "16be1f15fdcb1deeb7bd1e0a6971db545e57a0cf",
+  "audited_input_publication_sha": "7f3b89fa24f003f8cc40b3a4d9ce26df18f7b107",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "historical_revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+  "prior_role_history": [
+    {
+      "role": "adversarial-reviewer-sorcerer-ziggurat-batch-c",
+      "review_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-independent-review.json",
+      "review_sha256": "bfa49a839674cff2f3d21d9d292d273d36c4686190a7cdb869d751cbd342c9dc",
+      "receipt_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-sorcerer-ziggurat-batch-c.json",
+      "receipt_sha256": "a12b3180177418f0272eeb8d3fcaa5ea3d9399e7a469fdfba589f844fe1040da",
+      "publication_commit": "5a4c2cf6b1988c1f663825a28022c4cff7f75bb6",
+      "disposition": "Immutable failed remediation-cycle-2 review retained as prior history; its six High and one Medium findings are not relabelled. The owner-authorized V2 producer artifacts remediate them additively and this receipt records a new independent re-review."
+    }
+  ],
+  "provider_provenance": {
+    "available": false,
+    "claimed": false,
+    "collaboration_tool_spawn_id": null,
+    "provider_agent_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "prompt_sha256": null,
+    "allowed_input_manifest_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "final_response_event_id": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider-side prompt, context, spawn, session, ancestry, fork-turns, isolation, event, timing, final-response, and commit attestations are unavailable and are not claimed. Local SHA-256 records, raw Git-object re-derivation, immutable ancestry, and the exact committed input publication are the authorized compensating controls."
+  },
+  "local_context_binding": {
+    "hash_rule": "sha256(UTF-8 compact sorted JSON of committed_input_manifest plus selected_input_hashes plus governing_input_hashes, ensure_ascii=false)",
+    "allowed_input_manifest_sha256": "c3a75aacb623e2e026e4f3084bc8d5fa285d0a99fe57176920f6c94536c0a50d",
+    "actual_context_manifest_sha256": "c3a75aacb623e2e026e4f3084bc8d5fa285d0a99fe57176920f6c94536c0a50d",
+    "allowed_equals_actual": true,
+    "committed_input_manifest": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-committed-input-manifest-v2.json",
+      "sha256": "4eda4b141380bf5485c0c85338a5d8c779bbee9b227d49f53f46399eedac4e4e",
+      "publication_commit": "7f3b89fa24f003f8cc40b3a4d9ce26df18f7b107",
+      "producer_commit": "16be1f15fdcb1deeb7bd1e0a6971db545e57a0cf"
+    },
+    "selected_input_hashes": {
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-future-review-binding-v2.json": "20cbf8c2275448248901df2a4880a0ed53d3491167e5d8911e74e5bcb2d06616",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-producer-context-manifests-v2.json": "632a61c08e46452397c0035b9643f6d6dbc89c7ede88084832026536edcb5a79",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-truth-tests-v2.py": "58ca4ada5054197f66fc9419da2a79d43b1331dfff6bc18f500827d099fa7cbf",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/asset-evidence-v2.json": "2e0bb23c52a1a2c8d8ab1e2d55c83d6b423ee61115a59665c209195b837137a3",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/browser-audit-v2.json": "bbe1bcda9482d0b8125c6fb3a5ea963c244f45f073f23a62d40c5f4886dd3cf5",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/claim-evidence-ledger-v2.json": "b99ba08b3db22ffd352ac6ea9fa0ad99d2c30595b7e90e7b389611e7a18e2c4a",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/denominator-reconciliation-v2.json": "b8fc63730e02a61baddc62f089d84f3c378752dd175d226449aa4a76fa9f5e90",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/requirements-map-v2.json": "0f69481157d7e2354242063ccd9dacbe8c44706212bf45200a87e2c4f80fc903",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-direction-batch-c-remediation.json": "94420ba7642d9b3cdb7f34228be2e07737cc6187e05329567487c10bbe5f7f24",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/browser-auditor-sorcerer-ziggurat-batch-c-v2.json": "bb196eebee362480f86d4a941aaf21c4cd11a25b05b9a6f28a5db34944826fb1",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-sorcerer-ziggurat-batch-c-v2.json": "21ee2beebb472e71fcd16ef9b7c62eacca5a5b84a3d88fdce711e20fd6c7941b",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-sorcerer-ziggurat-batch-c-v2.json": "454370d9eb5687dece723d543780e404ed30c53c19f8ad5dc1e3579e4976d3d9",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/truth-test-author-batch-c-v2.json": "8bbbde2d082ed65f27c66dffbfe6dc0c8dafc8c28f130634e97c359a041c4877"
+    },
+    "governing_input_hashes": {
+      "measure/apk-evidence-cohort-protocol.md": "1f97ed8fd026cb0b1b49ed5de602252c075228981d1ff26640748b56ff2a3507",
+      "measure/apk-evidence-reconstruction-program.md": "d2aa36e0ce63ba70b9eb36d4ef22e99d2cb612e32ff05001402465677cbac83d",
+      "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+      "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+      "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/plan.md": "53a0473779b83c49081b42b9a998f692e5948dc6ca695d11e9d99b3b7667f902",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md": "42685326bf239a92f3543919e8ce204fb4414e8ac136180ad340720fbd852ac1",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-discovery-audit.json": "6524d33b1af38d93b9cc0a3f1b31421979f7a4120f68d9065935946312e6c152",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-role-applicability.json": "24b0980a07ddc8cc975596599530f6cd7089cf4dcc6e1bde5890a41882865ed9",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-a-v6.json": "f5a215f44815c79025e86e97a3217d7a85c4a33db86f80db2909f30dd3a9caa3",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-b-v2.json": "41243b620fb02c413bd7ed2887d59905a02036299ce763b11f70499d63ea99af",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/accepted-manifest-author-batch-a-v6.json": "4188e08574460c55c353fd93e9c5754d33c17622e2fba3e28e07e719e07274fe",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/accepted-manifest-author-batch-b-v2.json": "20580fa3eb9e11914e9afa2f950fa108e63edcc75d12ff84f951c86f4718620f",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-independent-review.json": "bfa49a839674cff2f3d21d9d292d273d36c4686190a7cdb869d751cbd342c9dc",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-sorcerer-ziggurat-batch-c.json": "a12b3180177418f0272eeb8d3fcaa5ea3d9399e7a469fdfba589f844fe1040da"
+    }
+  },
+  "review_output": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-independent-review-v2.json",
+    "sha256": "4a9e0a1310111aa03b0711a50b1082b31ee73fe9cc67b417c478b1e6c74cf4cb",
+    "json_valid": true,
+    "diff_check_clean": true
+  },
+  "validation": {
+    "required_truth_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-truth-tests-v2.py -k 'not FailClosedCandidateOrderingContract'",
+    "required_truth_result": "11 passed, 1 deselected in 2.59s; exit 0",
+    "only_excluded_contract": "FailClosedCandidateOrderingContract",
+    "claims_rederived": 27,
+    "claim_blob_hash_matches": 27,
+    "claim_range_hash_matches": 27,
+    "claim_semantic_anchor_sets_matching": 27,
+    "sz_hist_015_atomic": true,
+    "denominator_rows_rederived": 15,
+    "asset_candidates_rederived": 2,
+    "producer_selected_input_hashes_exact": 13,
+    "producer_output_hashes_exact": true,
+    "accepted_predecessor_author_receipts_exact": true,
+    "browser_run": false,
+    "browser_behavior_claimed": false,
+    "candidate_published": false,
+    "owner_acceptance_published": false,
+    "accepted_manifest_published": false
+  },
+  "resource_use": {
+    "budget_basis": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+      "sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+      "role_ceiling": "adversarial_reviewer_all_seven"
+    },
+    "ceiling": {"source_bytes":10000000,"source_files_objects":210,"commands":100,"elapsed_minutes":120,"records_authored_reviewed":7,"browser_interactions":0,"captured_artifacts":70},
+    "actual": {"source_bytes":1314213,"source_files_objects":45,"commands":30,"elapsed_minutes":0,"records_authored_reviewed":2,"browser_interactions":0,"captured_artifacts":2},
+    "source_measurement_basis": "Exact union defined in the review report: 31 unique repository paths (226501 bytes) from the committed input manifest, 13 selected inputs, and 17 governing inputs, plus 14 unique revision/path Git objects (1087712 bytes). Repository paths are deduplicated by path; Git objects are deduplicated by (revision,path); the two classes remain distinct. Total 45 objects and 1314213 bytes.",
+    "command_measurement_basis": "The review report contains the complete ordered 30-row shell-command ledger through the final focused accounting/hash validation and bounded producer-selector decision run. actual.commands equals that array length. Corrected-artifact publication validation is reported separately in the final response to avoid recursive mutation of the report hash and receipt binding.",
+    "command_enumeration_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-independent-review-v2.json#reviewer_resource_use.command_enumeration",
+    "command_enumeration_expected_count": 30,
+    "timing_direction": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-direction-batch-c-remediation.json",
+      "sha256": "94420ba7642d9b3cdb7f34228be2e07737cc6187e05329567487c10bbe5f7f24",
+      "scope_includes_review": true
+    },
+    "timing_measurement": "unavailable-in-harness",
+    "timing_note": "elapsed_minutes=0 is the product-owner-authorized Batch C reviewer accounting fallback only; it is not elapsed-time, duration, performance, session, event, provider-timing, or wall-clock evidence.",
+    "within_ceiling": true
+  },
+  "resolved_findings": [
+    {"id":"BC-V2-REVIEW-M-001","severity":"Medium","title":"Reviewer resource accounting omitted repository inputs and lacked an exact command ledger","resolution":"Recomputed 31 unique repository files plus 14 unique raw Git objects as 45 objects/1314213 bytes and added the ordered 30-row command ledger with result and exit status; no evidence or lifecycle disposition changed."}
+  ],
+  "findings": [],
+  "unresolved_findings": {"critical":0,"high":0,"medium":0,"low":0},
+  "authorization": {
+    "candidate_authorized": true,
+    "candidate_published": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "reason": "Zero unresolved Critical, High, or Medium findings remain after independent raw-object, semantic-anchor, denominator-row, asset-boundary, governance, context, prior-history, output-hash, timing, accounting, decomposition, accepted-author-receipt, no-browser, and lifecycle-order re-derivation."
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-independent-review-v2.json",
+      "sha256": "4a9e0a1310111aa03b0711a50b1082b31ee73fe9cc67b417c478b1e6c74cf4cb"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-sorcerer-ziggurat-batch-c-v2.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot embed its own stable digest without changing its bytes; downstream candidate authors must hash these exact bytes."
+    }
+  ],
+  "commit_sha": null,
+  "commit_disposition": "not-created by the reviewer role; the coordinating root owns publication commits",
+  "role_boundary": "Created only batch-c-independent-review-v2.json and this reviewer receipt. No producer source, evidence package, truth test, owner direction, predecessor, failed original, browser artifact, candidate, product-owner acceptance, accepted manifest, plan, metadata, registry, or commit was created or modified.",
+  "measure_agent_result": {
+    "status": "candidate-true-zero-unresolved",
+    "candidate": true,
+    "candidate_published": false,
+    "acceptance": "not-claimed",
+    "accepted_manifest": false,
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
