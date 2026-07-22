@@ -1,0 +1,139 @@
+{
+  "schema_version": "apk-full-cohort-independent-review.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "date": "2026-07-22",
+  "role": "adversarial-reviewer-full-cohort",
+  "status": "complete-green-zero-unresolved-critical-high-medium",
+  "governing_commit": "f7980c787c5023b58eca2a40620aaaf089b26f7d",
+  "governing_direction": {
+    "path": "native-subagent-protocol-direction-20260722.json",
+    "sha256": "2a7e4368e8e8f017e7271fbced79b99395b58fc24997b036fa0105f4fa60525b",
+    "standard_applied": "native fork_turns=none orchestration evidence plus truthful unavailable provider fields; no provider-attestation or raw-export claim"
+  },
+  "scope": {
+    "assigned_games": [
+      "Enchanted Library",
+      "Rune Match",
+      "Alchemist's Synthesis",
+      "Potion Rush",
+      "Rune Forge Chamber",
+      "Astral Mage"
+    ],
+    "assigned_games_count": 6,
+    "reviewed_input_set": "exactly native-subagent-protocol-direction-20260722.json.required_next_fresh_review_inputs"
+  },
+  "input_hashes": {
+    "governing_contract": {
+      "spec.md": "45485007599fdf581ae50d7e3862a1476235a6a4150130635133273314b4b1f1",
+      "test-strategy-phase0.md": "1a4fd7864a225fe7fd1c17c5e8aec0c30a402d89b8c8dfea5da543a44767154b",
+      "../../apk-evidence-cohort-protocol.md": "1f97ed8fd026cb0b1b49ed5de602252c075228981d1ff26640748b56ff2a3507",
+      "phase0-role-applicability.json": "d2dd0a2c07ed26c69fbb07a9879e2f41e0e54f466a7e8c3dcf9163192e2264c2",
+      "native-subagent-protocol-direction-20260722.json": "2a7e4368e8e8f017e7271fbced79b99395b58fc24997b036fa0105f4fa60525b",
+      "full-cohort-independent-review-v1-remediation-20260722.json": "ac62047abcec7411f49b8f33ec022699c2f257fea5d5da0401afc2676ead0670"
+    },
+    "current_factual_inputs": {
+      "accepted-cohort-manifest-batch-a-v3.json": "8c332ff99bf9224f826f77cec256ff4d3f6cb94cea7181e3879226f82c875e83",
+      "accepted-cohort-manifest-batch-b-v3.json": "5b11e1c44f0b109b740b91a36c694774a48d6c364d8715e95719b9e0574dc271",
+      "cohort-reconciliation-v1.json": "3ffc96b78c14fcb98c016972c704949df7e0cd56d4ec80f3e6146df9a89979fb",
+      "batch-a-independent-review-v3.json": "9a855ce54bceb7b6d3c911a024fe24c56c1b259a7888cad99d1115c756a03964",
+      "batch-b-independent-review-v3.json": "a88634ca187cf972440dac88ce0370980132c23d5e0a13660d35ba045527f34d",
+      "batch-a-truth-tests-v3.py": "635a211d5210eea1af551fd4e074fcb8bf24037ebd4e13f8737e5a03e7d2f606",
+      "batch-b-truth-tests-v2.py": "01bf38dff073064d481ae713efe8918167f10dff82fdea339775331af72fcc41",
+      "role-receipts/adversarial-reviewer-batch-a-v3.json": "4d04d3a3e9f966e4110168653fbc906db43401ac2565b365c9deccd1136708dd",
+      "batch-b-v3-role-session-ratification.json": "2b3b2d44cf81d22a93d82e6344e7dc1365f613dac85a6f8cbfbbfbac114615f0"
+    },
+    "historical_non_authoritative_context": {
+      "full-cohort-independent-review-v1.json": "37906020b3412460f9f8ff961a98c769b5fbd6b381fd9735016da419a60a3c41",
+      "role-receipts/adversarial-reviewer-full-cohort-v1.json": "089db4bd01441d3d9b71c4f16e5447038a5c1ad72065b3fc2f31a29d564c2268",
+      "candidate-cohort-manifest-v1.json": "acb71d166dcc0970ec2ea186b1df64299133166730820deb39caab5462c46bf1",
+      "product-owner-acceptance-cohort-v1.json": "9c416d9f3b99beaedf7a0cecafe41844e410ca2b2c7e8f725f4e9c8e45a179aa",
+      "accepted-cohort-manifest-v1.json": "a2b5a76d5be9981fbb1fd3573440baa834e7aaac7a604f4bd46c5eb5dfe2f874"
+    }
+  },
+  "verification": {
+    "active_truth_gates": [
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v3.py",
+        "result": "22 passed; exit 0"
+      },
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-truth-tests-v2.py",
+        "result": "17 passed; exit 0"
+      },
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/t6-native-subagent-protocol-direction-contract.py",
+        "result": "15 assertions passed: predecessor review preserved; F002 amended; F001 remains blocking; exit 0"
+      }
+    ],
+    "reconciliation": {
+      "assigned_games": 6,
+      "covered_games": 6,
+      "duplicates": 0,
+      "omissions": 0,
+      "factual_claims": 125,
+      "negative_fixtures": 29,
+      "browser_dispositions": 6,
+      "result": "pass"
+    },
+    "factual_envelopes": {
+      "batch_a": "22 active V3 source-truth assertions passed; the selected review reports 57/57 blob and range envelopes and 11/11 fixture dispositions exact",
+      "batch_b": "17 active V2 source-semantic assertions passed; the selected review reports 68 factual claims, 18 negative fixtures, and 12 explicit unknowns",
+      "result": "pass for the active selected generations"
+    },
+    "hashes": {
+      "all_20_required_inputs_recomputed": true,
+      "predecessor_v1_review_sha256_matches_direction": true,
+      "result": "pass"
+    },
+    "browser_unknowns": {
+      "batch_a": "Three V3 audits retain HTTP-404/non-runnable observations and no gameplay, state-transition, responsive, input, content-variation, completion, persistence, XP, API, production, or asset-loading success claim.",
+      "batch_b": "No browser run is claimed; all dependent behavior remains unknown, including Astral Mage current implementation boundaries except where explicitly historical/source-classified.",
+      "result": "pass as bounded unknowns; no screenshot or synthetic-input promotion found"
+    },
+    "role_separation": {
+      "replacement_standard": "pass",
+      "native_execution": "Dedicated native full-cohort adversarial-reviewer dispatch with fork_turns=none, bounded owned review and receipt outputs, and no candidate, acceptance, accepted-manifest, source, plan, registry, metadata, staging, or commit action.",
+      "provider_fields": "unavailable-in-this-harness and retained as null in the separate native receipt; no encrypted prompt, provider context, spawn/session, ancestry, raw-export, event, timing, final-response, or provider commit value is inferred or fabricated.",
+      "batch_inputs": "Batch A has an independent reviewer receipt; Batch B ratifies distinct local output ownership. Under the governing replacement standard, no obsolete provider-attestation/raw-export condition is required."
+    },
+    "ordering": {
+      "governing_commit_is_head_ancestor": true,
+      "historical_v1_reconciliation_before_candidate_before_acceptance_before_accepted": true,
+      "historical_v1_lineage_is_non_authoritative_for_successor": true,
+      "fresh_review_precedes_successor_candidate": true,
+      "successor_candidate_or_acceptance_or_accepted_manifest_exists_at_review": false,
+      "result": "pass: this v2 review is the required fresh review event and cannot itself be candidate, acceptance, or accepted-manifest authorization beyond the separate-candidate step"
+    },
+    "predecessor_preservation": {
+      "path": "full-cohort-independent-review-v1.json",
+      "sha256": "37906020b3412460f9f8ff961a98c769b5fbd6b381fd9735016da419a60a3c41",
+      "status": "failed-blocking-findings",
+      "result": "preserved unchanged; F002 is resolved only by the explicit forward-looking protocol amendment and F001 is resolved only by this fresh review"
+    }
+  },
+  "findings": [],
+  "unresolved_findings": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "authorization": {
+    "separate_successor_candidate_author": true,
+    "successor_candidate_authorized": true,
+    "successor_product_owner_acceptance_authorized": false,
+    "successor_accepted_manifest_authorized": false,
+    "boundary": "A separately owned successor candidate author may now create only a non-consumable successor candidate that binds this exact review and the separately owned native receipt. Product-owner acceptance and a separate accepted manifest remain prohibited until after that candidate."
+  },
+  "native_receipt": {
+    "path": "role-receipts/adversarial-reviewer-full-cohort-v2.json",
+    "sha256": null,
+    "sha256_note": "The separately owned receipt binds this review's exact digest. It cannot embed its own final digest without a hash cycle."
+  },
+  "disclosures": [
+    "This review does not author, approve, or mutate a successor candidate, product-owner acceptance, or accepted manifest.",
+    "Provider-side fields remain unavailable in this harness and are not represented as proof of provider ancestry, session, prompt, timing, raw export, or event data.",
+    "The review establishes only the defined evidence/lifecycle gate; browser-dependent product behavior remains unknown as disclosed by the accepted batch inputs."
+  ],
+  "marker": "MEASURE_AGENT_RESULT"
+}
