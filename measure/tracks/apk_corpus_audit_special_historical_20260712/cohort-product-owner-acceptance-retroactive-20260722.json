@@ -1,0 +1,48 @@
+{
+  "schema_version": "apk-product-owner-acceptance.v2",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "full-cohort",
+  "decision": "approve-with-disclosure",
+  "decision_type": "current-retroactive-cohort-ratification",
+  "effective_date": "2026-07-22",
+  "status": "accepted",
+  "authority": "current project-owner authorization delegated to the orchestrator",
+  "authority_instruction_sha256": "64073f4e7efd0d91335cf833e7d4a4d9bbbd9202280bc6d8156ec111bb72a766",
+  "authority_record": {
+    "original_message_id": null,
+    "original_message_id_claimed": false,
+    "original_message_timestamp": null,
+    "boundary": "This is a current approval after source gates passed. Retroactive scope is limited to authenticating the named historical Git commits; no original historical message is asserted."
+  },
+  "original_message_id": null,
+  "original_message_id_claimed": false,
+  "candidate_manifest_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/cohort-candidate-manifest-20260722.json",
+  "candidate_manifest_sha256": "a658843fb3278b4ac24c2eb1fdcbdfc716d2c309bbdd925bad493d0cd1f6cb4c",
+  "reconciliation_sha256": "714dbc9e234fceef6c08826f2158063dd8a44e5423995a3fc4fcdf43c27de1c5",
+  "provenance_audit_sha256": "18fb794db7dc94498f0995bec5d5c0d3b318efa7dd3aff4dfc427a0c75295db1",
+  "source_gate": {
+    "result": "54 passed before candidate and acceptance publication",
+    "unresolved_findings": {"critical": 0, "high": 0, "medium": 0}
+  },
+  "claims": {
+    "original_historical_approval_message_existed": false,
+    "source_evidence_cohort_accepted": true,
+    "ontology_decided": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false,
+    "gameplay_success": false,
+    "responsive_success": false,
+    "completion": false,
+    "persistence": false,
+    "xp": false,
+    "idempotency": false,
+    "api_correctness": false
+  },
+  "disclosures": [
+    "Every historical, unknown, browser, provider-provenance, scope, and conditional-consumption disclosure in both accepted batch manifests and the reconciliation remains mandatory.",
+    "No unavailable original message identifier is reused or invented.",
+    "Acceptance is evidence-only and does not decide ontology, implementation, or shipment."
+  ],
+  "revoked": false,
+  "marker": "MEASURE_AGENT_RESULT"
+}

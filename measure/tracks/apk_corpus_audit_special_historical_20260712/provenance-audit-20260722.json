@@ -1,0 +1,76 @@
+{
+  "schema_version": "apk-additive-provenance-audit.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "audit_date": "2026-07-22",
+  "status": "defect-confirmed-and-additive-remediation-authorized",
+  "authority_record": {
+    "source": "current user instruction in this conversation",
+    "instruction_text": "User explicitly authorizes retroactive historical commit authentication. For T7 Batch A acceptance chronology + Batch B candidate 497b2568: create additive provenance audit linking Git commit chronology and current delegated owner authority. Correct defect by explicit superseding retroactive approval labeled properly. Complete T7 cohort reconciliation/candidate/accepted only if source gates pass. No invented original message IDs. Commit and report.",
+    "instruction_sha256": "64073f4e7efd0d91335cf833e7d4a4d9bbbd9202280bc6d8156ec111bb72a766",
+    "authority": "current project-owner authorization delegated to the orchestrator",
+    "delegation_evidence": {
+      "handoff_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/_orchestrator/HANDOFF.md",
+      "handoff_rule": "The orchestrator under delegated product-owner authority is the only role permitted to author owner acceptance and accepted manifests.",
+      "direction_path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "direction_sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+    },
+    "original_message_id": null,
+    "original_message_id_claimed": false,
+    "original_message_timestamp": null,
+    "boundary": "This record authenticates the current authorization only. It does not assert that an original historical approval message or identifier existed."
+  },
+  "batch_a_git_chronology": [
+    {
+      "stage": "candidate-publication",
+      "commit_sha": "97716ad273a324c7d9a112ae701b37f7e9aa3be7",
+      "parent_sha": "38f80821f3a37eaa539f75cb377abab760e77cd6",
+      "commit_timestamp": "2026-07-22T00:22:55+07:00",
+      "artifact_sha256": "5552a5e8703a34c5b0c0d2fa7bb2c28d9a6ae5fbb7fab9edf2c268bbc3a48d5d"
+    },
+    {
+      "stage": "original-acceptance-publication",
+      "commit_sha": "a4892fbd38c98cac918fd1326dadd74669d4e2db",
+      "parent_sha": "97716ad273a324c7d9a112ae701b37f7e9aa3be7",
+      "commit_timestamp": "2026-07-22T00:33:18+07:00",
+      "artifact_sha256": "f8b128fb39ced04afca1e79d9cd8940fef8c38bbdb19f7b15d3981a896879e23"
+    },
+    {
+      "stage": "original-accepted-manifest-publication",
+      "commit_sha": "c1e903380e2b1b6ec74133ee38ebdbd236444d80",
+      "parent_sha": "a4892fbd38c98cac918fd1326dadd74669d4e2db",
+      "commit_timestamp": "2026-07-22T00:42:22+07:00",
+      "artifact_sha256": "ef8aeb1917dcf0f34363e25aa359d4743bc98b9f8a8f2afd50bb929348440d18"
+    }
+  ],
+  "batch_b_candidate": {
+    "commit_sha": "497b2568c4ecd895751f12fa707597a1fa6c535f",
+    "parent_sha": "91e6331b22e88532d16f24df4068e481dae77a7b",
+    "commit_timestamp": "2026-07-22T06:57:55+07:00",
+    "candidate_sha256": "52736be0db2830f4f91856169536d15f638083244ac3ff364f4fce132cfc342a",
+    "source_gate_defect": "The candidate records truth_tests_sha256=7fe4f9a9..., but the exact truth-tests.py bytes at 497b2568 hash to 9242398a.... The immutable candidate must be additively superseded before acceptance."
+  },
+  "defect": {
+    "original_approval_message_authenticated": false,
+    "details": [
+      "The original Batch A acceptance contains nominal approval identifiers and a nominal 2026-07-21 timestamp for which no authentic source message is available.",
+      "That nominal timestamp predates candidate publication and cannot establish acceptance ordering.",
+      "Git proves candidate, acceptance-file, and accepted-manifest publication order, but Git authorship alone does not prove a contemporaneous human approval message.",
+      "The current owner instruction expressly permits a new retroactive ratification; it does not convert the unavailable original message into authenticated history."
+    ],
+    "correction_mode": "additive-current-retroactive-ratification",
+    "immutability_rule": "Do not edit or erase the original candidate, acceptance, or accepted manifest. Publish explicit superseding artifacts that identify the old digests and bind current authority."
+  },
+  "source_gate": {
+    "command": "python3 -m pytest measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v3.py measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/truth-tests.py -q",
+    "result": "54 passed",
+    "executed_date": "2026-07-22",
+    "batch_a_truth_tests_sha256": "a4106c21d2fe8435e7d765be9cc3a68e16fb269dbc9e37220097793ceb6946b9",
+    "batch_b_truth_tests_sha256": "9242398a277e0679badef432651f2aa0109b2f474a9b2291aa295e84e0246d1e"
+  },
+  "disclosures": [
+    "No original message ID, original message timestamp, provider session, or provider event is invented or claimed.",
+    "The superseding decisions are current decisions with retroactive effect over exact immutable commits; they are not backdated historical approvals.",
+    "Historical implementation evidence remains historical, explicit unknowns remain unknown, and blocked browser probes do not establish gameplay or responsive success."
+  ],
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": "apk-accepted-cohort-manifest.v3",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-b",
+  "status": "accepted-with-disclosure",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "consumable": true,
+  "consumability": "conditional",
+  "revoked": false,
+  "candidate_manifest_sha256": "a71f160b4c296fad6a2b72f888f4108e22cd4e8e93d2291ca54ad8b4fb1a1ec3",
+  "owner_acceptance_sha256": "a30c4230c59ed62b270206c010298e8eaad3fd3ab8a6c0198b20b4e6ffbabbe0",
+  "accepted_batch_a_sha256": "c7ecfd64d11109b484f0399490c38e4e4dbdc83e0236646560c06ae4f7698220",
+  "provenance_audit_sha256": "18fb794db7dc94498f0995bec5d5c0d3b318efa7dd3aff4dfc427a0c75295db1",
+  "historical_candidate_binding": {
+    "commit_sha": "497b2568c4ecd895751f12fa707597a1fa6c535f",
+    "sha256": "52736be0db2830f4f91856169536d15f638083244ac3ff364f4fce132cfc342a",
+    "disposition": "immutable predecessor superseded for stale truth and Batch A bindings"
+  },
+  "scope": {
+    "games": ["The Haunted Library", "Babel Architect"],
+    "source_enveloped_factual_claims": 34,
+    "explicit_unknowns": 7,
+    "negative_fixtures": 12,
+    "requirements_mappings": 13,
+    "browser_dispositions": 2
+  },
+  "source_gate": {
+    "truth_tests_sha256": "9242398a277e0679badef432651f2aa0109b2f474a9b2291aa295e84e0246d1e",
+    "review_sha256": "1c98d57c251696de3df81588ba8bb9a1edf84df7171e65e9c1aa984159ad8466",
+    "result": "54 passed across Batch A and Batch B",
+    "unresolved_findings": {"critical": 0, "high": 0, "medium": 0}
+  },
+  "required_disclosures": [
+    "The Haunted Library and Babel Architect browser records reached no game surface and establish no gameplay or responsive success.",
+    "Babel Architect implementation evidence is historical; current implementation, route, runtime, manual UX, and future shipment remain unknown.",
+    "Cancelled design is not implementation fact; catalog and specification prose are not detailed mechanics evidence.",
+    "Provider-side provenance remains unavailable; local Git and SHA-256 controls are disclosed compensating controls.",
+    "The owner decision is a current retroactive commit ratification and does not claim an original historical approval message.",
+    "No completion, persistence, XP, idempotency, API correctness, production, ontology, implementation, or shipping decision is accepted."
+  ],
+  "publication_binding": {
+    "commit_sha": null,
+    "rule": "The publication commit is the first Git commit containing these exact bytes."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

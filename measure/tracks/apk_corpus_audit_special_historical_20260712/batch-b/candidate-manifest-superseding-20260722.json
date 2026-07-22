@@ -1,0 +1,50 @@
+{
+  "schema_version": "apk-candidate-cohort-manifest.v4",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-b",
+  "status": "candidate-approved-by-current-retroactive-ratification",
+  "consumable": false,
+  "acceptance_claimed": false,
+  "revoked": false,
+  "supersedes": {
+    "candidate_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/candidate-manifest.json",
+    "candidate_commit_sha": "497b2568c4ecd895751f12fa707597a1fa6c535f",
+    "candidate_sha256": "52736be0db2830f4f91856169536d15f638083244ac3ff364f4fce132cfc342a",
+    "reason": "The immutable 497b candidate binds a stale truth-test digest and the superseded Batch A accepted manifest. This additive candidate corrects bindings only; it does not alter evidence facts or browser dispositions."
+  },
+  "provenance_audit_sha256": "18fb794db7dc94498f0995bec5d5c0d3b318efa7dd3aff4dfc427a0c75295db1",
+  "corrected_bindings": {
+    "truth_tests_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/truth-tests.py",
+    "truth_tests_sha256": "9242398a277e0679badef432651f2aa0109b2f474a9b2291aa295e84e0246d1e",
+    "review_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/adversarial-review.json",
+    "review_sha256": "1c98d57c251696de3df81588ba8bb9a1edf84df7171e65e9c1aa984159ad8466",
+    "review_receipt_sha256": "74e63a922969f6df42ea4ad5ef3a0e5acef8d856ddb02bb6cab8069e3cafec4e",
+    "accepted_batch_a_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/accepted-manifest-superseding-20260722.json",
+    "accepted_batch_a_sha256": "c7ecfd64d11109b484f0399490c38e4e4dbdc83e0236646560c06ae4f7698220"
+  },
+  "scope": {
+    "games": ["The Haunted Library", "Babel Architect"],
+    "source_enveloped_factual_claims": 34,
+    "explicit_unknowns": 7,
+    "negative_fixtures": 12,
+    "requirements_mappings": 13,
+    "browser_dispositions": 2
+  },
+  "source_gate": {
+    "command": "python3 -m pytest measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v3.py measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/truth-tests.py -q",
+    "result": "54 passed",
+    "executed_date": "2026-07-22",
+    "unresolved_review_findings": {"critical": 0, "high": 0, "medium": 0}
+  },
+  "boundaries": [
+    "The Haunted Library current implementation claims are limited to exact upper-revision envelopes; distinct rooms remain unknown.",
+    "Babel Architect implementation evidence is historical, its current implementation and route remain unknown, and cancelled design evidence is not implementation fact.",
+    "Both browser records reached no game surface and establish no gameplay, input, responsive, completion, persistence, XP, idempotency, API, production, or shipping success.",
+    "The correction does not claim an original approval message or mutate the 497b candidate."
+  ],
+  "publication_binding": {
+    "commit_sha": null,
+    "rule": "The publication commit is the first Git commit containing these exact bytes."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

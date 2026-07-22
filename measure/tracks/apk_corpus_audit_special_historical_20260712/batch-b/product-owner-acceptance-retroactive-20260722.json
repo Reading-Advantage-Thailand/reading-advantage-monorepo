@@ -1,0 +1,46 @@
+{
+  "schema_version": "apk-product-owner-acceptance.v2",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-b",
+  "decision": "approve-with-disclosure",
+  "decision_type": "current-retroactive-commit-ratification",
+  "effective_date": "2026-07-22",
+  "status": "accepted",
+  "authority": "current project-owner authorization delegated to the orchestrator",
+  "authority_instruction_sha256": "64073f4e7efd0d91335cf833e7d4a4d9bbbd9202280bc6d8156ec111bb72a766",
+  "original_message_id": null,
+  "original_message_id_claimed": false,
+  "original_message_timestamp": null,
+  "retroactive_boundary": "This current decision ratifies the exact immutable Batch B candidate publication at 497b2568 through its additive corrected candidate. It is not a claim that a historical approval message existed.",
+  "historical_candidate_commit_sha": "497b2568c4ecd895751f12fa707597a1fa6c535f",
+  "historical_candidate_sha256": "52736be0db2830f4f91856169536d15f638083244ac3ff364f4fce132cfc342a",
+  "candidate_manifest_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/candidate-manifest-superseding-20260722.json",
+  "candidate_manifest_sha256": "a71f160b4c296fad6a2b72f888f4108e22cd4e8e93d2291ca54ad8b4fb1a1ec3",
+  "provenance_audit_sha256": "18fb794db7dc94498f0995bec5d5c0d3b318efa7dd3aff4dfc427a0c75295db1",
+  "source_gate": {
+    "result": "54 passed",
+    "batch_b_truth_tests_sha256": "9242398a277e0679badef432651f2aa0109b2f474a9b2291aa295e84e0246d1e",
+    "batch_b_review_sha256": "1c98d57c251696de3df81588ba8bb9a1edf84df7171e65e9c1aa984159ad8466",
+    "unresolved_findings": {"critical": 0, "high": 0, "medium": 0}
+  },
+  "claims": {
+    "historical_approval_message_existed": false,
+    "gameplay_success": false,
+    "responsive_success": false,
+    "completion": false,
+    "persistence": false,
+    "xp": false,
+    "idempotency": false,
+    "api_correctness": false,
+    "production": false,
+    "shipping": false
+  },
+  "disclosures": [
+    "The Haunted Library and Babel Architect browser probes reached no game surface.",
+    "Babel Architect implementation claims remain historical and cancelled-design records remain design evidence only.",
+    "Seven explicit unknowns remain blocking for dependent current-product conclusions.",
+    "Provider-side provenance is unavailable and no provider event or original owner message ID is claimed."
+  ],
+  "revoked": false,
+  "marker": "MEASURE_AGENT_RESULT"
+}

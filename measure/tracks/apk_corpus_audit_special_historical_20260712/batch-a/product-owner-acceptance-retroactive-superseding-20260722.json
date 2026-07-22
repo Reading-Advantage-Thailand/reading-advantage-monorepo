@@ -1,0 +1,44 @@
+{
+  "schema_version": "apk-product-owner-acceptance.v2",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "decision": "approve-with-disclosure",
+  "decision_type": "current-retroactive-ratification",
+  "effective_date": "2026-07-22",
+  "status": "superseding-acceptance",
+  "authority": "current project-owner authorization delegated to the orchestrator",
+  "authority_instruction_sha256": "64073f4e7efd0d91335cf833e7d4a4d9bbbd9202280bc6d8156ec111bb72a766",
+  "provenance_audit_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/provenance-audit-20260722.json",
+  "provenance_audit_sha256": "18fb794db7dc94498f0995bec5d5c0d3b318efa7dd3aff4dfc427a0c75295db1",
+  "original_message_id": null,
+  "original_message_id_claimed": false,
+  "original_message_timestamp": null,
+  "retroactive_boundary": "This is a current, explicitly labeled retroactive ratification of the exact historical Git artifacts. It does not authenticate or reuse the unavailable nominal original message identifier or timestamp.",
+  "supersedes_acceptance_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/product-owner-acceptance.json",
+  "supersedes_acceptance_sha256": "f8b128fb39ced04afca1e79d9cd8940fef8c38bbdb19f7b15d3981a896879e23",
+  "supersession_reason": "The superseded acceptance's nominal event identifier is unauthenticated and its nominal timestamp predates candidate publication. Current authority ratifies the exact Git-ordered candidate now without rewriting historical files.",
+  "ratified_artifacts": {
+    "candidate_commit_sha": "97716ad273a324c7d9a112ae701b37f7e9aa3be7",
+    "candidate_manifest_sha256": "5552a5e8703a34c5b0c0d2fa7bb2c28d9a6ae5fbb7fab9edf2c268bbc3a48d5d",
+    "review_report_sha256": "1a7c4f139944d3892a0a6bddb2986c97f64a97c5647ea5edd4050931c55ec976",
+    "truth_tests_sha256": "a4106c21d2fe8435e7d765be9cc3a68e16fb269dbc9e37220097793ceb6946b9"
+  },
+  "claims": {
+    "historical_approval_message_existed": false,
+    "current_gameplay_success": false,
+    "browser_success": false,
+    "responsive_success": false,
+    "completion": false,
+    "persistence": false,
+    "xp": false,
+    "idempotency": false,
+    "api_correctness": false
+  },
+  "disclosures": [
+    "All Batch A source-class, chronology, browser, local-provenance, scope, conditional-consumption, and revocation disclosures remain mandatory.",
+    "Griffin Sky-Joust and Realm Carver current behavior remain unknown; blocked or 404 browser records establish no successful gameplay.",
+    "The prior acceptance remains immutable historical evidence but is superseded as owner authority."
+  ],
+  "revoked": false,
+  "marker": "MEASURE_AGENT_RESULT"
+}

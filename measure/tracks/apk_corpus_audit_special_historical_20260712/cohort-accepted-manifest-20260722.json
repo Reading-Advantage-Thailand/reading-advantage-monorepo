@@ -1,0 +1,55 @@
+{
+  "schema_version": "apk-full-cohort-accepted-manifest.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "status": "accepted-with-disclosure",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "consumable": true,
+  "consumability": "conditional-evidence-only",
+  "revoked": false,
+  "candidate_manifest_sha256": "a658843fb3278b4ac24c2eb1fdcbdfc716d2c309bbdd925bad493d0cd1f6cb4c",
+  "owner_acceptance_sha256": "b796f06a1be5a1d3cfb9aa4248f23cc3ac7883e35e30259dfe7ad7c90e3ba243",
+  "reconciliation_sha256": "714dbc9e234fceef6c08826f2158063dd8a44e5423995a3fc4fcdf43c27de1c5",
+  "provenance_audit_sha256": "18fb794db7dc94498f0995bec5d5c0d3b318efa7dd3aff4dfc427a0c75295db1",
+  "accepted_batch_a_sha256": "c7ecfd64d11109b484f0399490c38e4e4dbdc83e0236646560c06ae4f7698220",
+  "accepted_batch_b_sha256": "15803cc486bf1e7da593f51681f38a6ed9a3d94e0d7da9cf2805e2d6a39c31e3",
+  "scope": {
+    "games": ["Griffin Sky-Joust", "Realm Carver", "Devourer Slime", "The Haunted Library", "Babel Architect"],
+    "source_enveloped_factual_claims": 67,
+    "explicit_unknowns": 11,
+    "negative_fixtures": 30,
+    "browser_dispositions": 5,
+    "accepted_use": "Exact bounded T7 source-truth, chronology, source-class, negative-fixture, mapping, local-provenance, and blocked/non-runnable browser-disposition evidence only."
+  },
+  "source_gate": {
+    "result": "54 passed before lifecycle completion",
+    "batch_a_truth_tests_sha256": "a4106c21d2fe8435e7d765be9cc3a68e16fb269dbc9e37220097793ceb6946b9",
+    "batch_b_truth_tests_sha256": "9242398a277e0679badef432651f2aa0109b2f474a9b2291aa295e84e0246d1e",
+    "unresolved_findings": {"critical": 0, "high": 0, "medium": 0}
+  },
+  "chronology_and_authority": {
+    "batch_a_candidate_commit_sha": "97716ad273a324c7d9a112ae701b37f7e9aa3be7",
+    "batch_b_historical_candidate_commit_sha": "497b2568c4ecd895751f12fa707597a1fa6c535f",
+    "authority_mode": "current explicitly labeled retroactive ratification",
+    "original_message_id": null,
+    "original_message_id_claimed": false,
+    "boundary": "Git proves immutable publication chronology. Current owner authority ratifies exact commits now; it does not prove or invent original historical approval messages."
+  },
+  "conditional_consumption": [
+    "Preserve all eleven explicit unknowns and all current-versus-historical source-class boundaries.",
+    "Do not use historical implementation, cancelled design, catalog prose, specification prose, analogy, or browser failure records to establish missing current behavior.",
+    "Do not claim successful route reachability, gameplay, trusted input, compact/wide responsive behavior, completion, persistence, XP, idempotency, API correctness, production behavior, or asset loading from the five browser dispositions.",
+    "Disclose that provider-side provenance was unavailable and that the acceptance uses local Git and SHA-256 compensating controls.",
+    "Disclose that owner approval is a current retroactive ratification and that no original message identifier is authenticated.",
+    "Do not treat this evidence acceptance as an ontology, shared-system, implementation, or shipping decision."
+  ],
+  "revocation_rules": [
+    "Any byte change or digest mismatch in the bound audit, approvals, candidates, reconciliation, batch manifests, truth tests, reviews, predecessors, or source evidence revokes consumption.",
+    "Any source-class promotion, hidden unknown, browser-success overclaim, invented provenance, unresolved Critical/High/Medium finding, or use outside the five-game T7 scope revokes consumption.",
+    "Remediation must be additive and must bind the exact superseded digest; historical lifecycle files must not be rewritten."
+  ],
+  "publication_binding": {
+    "commit_sha": null,
+    "rule": "The publication commit is the first Git commit containing these exact bytes; a post-commit Git note may record the resulting commit SHA without mutating this manifest."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

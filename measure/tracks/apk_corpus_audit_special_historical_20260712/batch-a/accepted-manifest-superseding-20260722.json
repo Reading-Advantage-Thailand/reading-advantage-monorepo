@@ -1,0 +1,49 @@
+{
+  "schema_version": "apk-accepted-cohort-manifest.v3",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "batch_id": "batch-a",
+  "status": "accepted-with-disclosure",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "consumable": true,
+  "consumability": "conditional",
+  "revoked": false,
+  "supersedes_accepted_manifest_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/accepted-manifest.json",
+  "supersedes_accepted_manifest_sha256": "ef8aeb1917dcf0f34363e25aa359d4743bc98b9f8a8f2afd50bb929348440d18",
+  "supersession_reason": "Replaces the unauthenticated nominal approval provenance with a current, explicitly labeled retroactive ratification while preserving the immutable source evidence and disclosures.",
+  "candidate_manifest_sha256": "5552a5e8703a34c5b0c0d2fa7bb2c28d9a6ae5fbb7fab9edf2c268bbc3a48d5d",
+  "owner_acceptance_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/product-owner-acceptance-retroactive-superseding-20260722.json",
+  "owner_acceptance_sha256": "78b5bf1a89468d41709e8f54846786c2522ea6bc1b01463ce1aeb3d1b5ff1d3c",
+  "provenance_audit_sha256": "18fb794db7dc94498f0995bec5d5c0d3b318efa7dd3aff4dfc427a0c75295db1",
+  "git_chronology": {
+    "candidate_commit_sha": "97716ad273a324c7d9a112ae701b37f7e9aa3be7",
+    "original_acceptance_commit_sha": "a4892fbd38c98cac918fd1326dadd74669d4e2db",
+    "original_accepted_manifest_commit_sha": "c1e903380e2b1b6ec74133ee38ebdbd236444d80",
+    "ancestor_chain_verified": true,
+    "current_ratification_publication": "first Git commit containing this additive manifest"
+  },
+  "scope": {
+    "games": ["Griffin Sky-Joust", "Realm Carver", "Devourer Slime"],
+    "source_enveloped_factual_claims": 33,
+    "explicit_unknowns": 4,
+    "negative_fixtures": 18,
+    "browser_dispositions": 3
+  },
+  "source_gate": {
+    "truth_tests_sha256": "a4106c21d2fe8435e7d765be9cc3a68e16fb269dbc9e37220097793ceb6946b9",
+    "review_sha256": "1a7c4f139944d3892a0a6bddb2986c97f64a97c5647ea5edd4050931c55ec976",
+    "unresolved_findings": {"critical": 0, "high": 0, "medium": 0}
+  },
+  "required_disclosures": [
+    "Historical implementation evidence remains historical and may not establish current behavior.",
+    "Explicit unknowns remain unknown.",
+    "The browser evidence proves only blocked, refused, or 404 dispositions; it proves no gameplay or responsive success.",
+    "Provider-side provenance remains unavailable; locally verifiable Git and SHA-256 bindings are the accepted compensating controls.",
+    "Owner authority is the current retroactive ratification, not the superseded nominal historical message fields.",
+    "No completion, persistence, XP, idempotency, API correctness, ontology, implementation, or shipping claim is accepted."
+  ],
+  "publication_binding": {
+    "commit_sha": null,
+    "rule": "The publication commit is the first Git commit containing these exact bytes; the manifest does not predict or self-embed that commit SHA."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

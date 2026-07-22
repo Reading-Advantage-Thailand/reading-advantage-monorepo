@@ -1,0 +1,69 @@
+{
+  "schema_version": "apk-full-cohort-reconciliation.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "phase": "Phase 4: Cohort acceptance",
+  "status": "reconciled-source-gates-green",
+  "review_mode": "fresh deterministic cross-batch source-gate reconciliation",
+  "provider_attestation_claimed": false,
+  "scope": {
+    "games": [
+      "Griffin Sky-Joust",
+      "Realm Carver",
+      "Devourer Slime",
+      "The Haunted Library",
+      "Babel Architect"
+    ],
+    "denominator_coverage": "five assigned T7 identities covered exactly once across Batch A and Batch B",
+    "ontology_or_implementation_decision": false
+  },
+  "batch_bindings": {
+    "batch_a_accepted_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/accepted-manifest-superseding-20260722.json",
+    "batch_a_accepted_sha256": "c7ecfd64d11109b484f0399490c38e4e4dbdc83e0236646560c06ae4f7698220",
+    "batch_b_accepted_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/accepted-manifest-20260722.json",
+    "batch_b_accepted_sha256": "15803cc486bf1e7da593f51681f38a6ed9a3d94e0d7da9cf2805e2d6a39c31e3"
+  },
+  "source_class_reconciliation": {
+    "current_implementation": 27,
+    "historical_implementation": 38,
+    "cancelled_design": 2,
+    "active_specification": 0,
+    "catalog_prose": 0,
+    "unknown": 11,
+    "interpretation": "The 67 source-enveloped factual claims comprise 27 current, 38 historical, and 2 cancelled-design claims. Eleven explicit unknowns are separate blocking propositions. No source class substitutes for another."
+  },
+  "totals": {
+    "source_enveloped_factual_claims": 67,
+    "explicit_unknowns": 11,
+    "negative_fixtures": 30,
+    "browser_dispositions": 5
+  },
+  "source_gate": {
+    "command": "python3 -m pytest measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/truth-tests-v3.py measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/truth-tests.py -q",
+    "result": "54 passed",
+    "executed_date": "2026-07-22",
+    "batch_a_truth_tests_sha256": "a4106c21d2fe8435e7d765be9cc3a68e16fb269dbc9e37220097793ceb6946b9",
+    "batch_b_truth_tests_sha256": "9242398a277e0679badef432651f2aa0109b2f474a9b2291aa295e84e0246d1e",
+    "batch_a_review_sha256": "1a7c4f139944d3892a0a6bddb2986c97f64a97c5647ea5edd4050931c55ec976",
+    "batch_b_review_sha256": "1c98d57c251696de3df81588ba8bb9a1edf84df7171e65e9c1aa984159ad8466"
+  },
+  "unresolved_findings": {"critical": 0, "high": 0, "medium": 0},
+  "reconciliation_results": {
+    "historical_claims_reachable_and_hash_bound": true,
+    "current_and_historical_classes_separated": true,
+    "cancelled_design_not_promoted": true,
+    "catalog_prose_not_promoted": true,
+    "unknowns_preserved": true,
+    "browser_failures_not_promoted_to_success": true,
+    "batch_a_provenance_defect_additively_superseded": true,
+    "batch_b_497b_candidate_additively_superseded": true,
+    "source_gate_passed_before_lifecycle_completion": true
+  },
+  "required_disclosures": [
+    "Griffin Sky-Joust, Realm Carver, and Babel Architect lack accepted current gameplay conclusions; their historical evidence remains historical.",
+    "The five browser dispositions are bounded blocked, refused, 404, or redirect/404 records and establish no successful gameplay or responsive evidence.",
+    "Eleven explicit unknowns continue to block dependent current-product conclusions.",
+    "Current retroactive owner ratification corrects provenance chronology but adds no source, browser, product, or provider fact.",
+    "No ontology, shared-system, implementation, shipping, completion, persistence, XP, idempotency, API, or production decision is made."
+  ],
+  "marker": "MEASURE_AGENT_RESULT"
+}

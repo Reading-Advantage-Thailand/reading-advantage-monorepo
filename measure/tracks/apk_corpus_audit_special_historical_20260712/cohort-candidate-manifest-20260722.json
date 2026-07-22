@@ -1,0 +1,36 @@
+{
+  "schema_version": "apk-full-cohort-candidate-manifest.v1",
+  "track_id": "apk_corpus_audit_special_historical_20260712",
+  "status": "candidate-approved-by-current-owner-direction",
+  "consumable": false,
+  "acceptance_claimed": false,
+  "revoked": false,
+  "reconciliation_path": "measure/tracks/apk_corpus_audit_special_historical_20260712/cohort-reconciliation-20260722.json",
+  "reconciliation_sha256": "714dbc9e234fceef6c08826f2158063dd8a44e5423995a3fc4fcdf43c27de1c5",
+  "accepted_batch_a_sha256": "c7ecfd64d11109b484f0399490c38e4e4dbdc83e0236646560c06ae4f7698220",
+  "accepted_batch_b_sha256": "15803cc486bf1e7da593f51681f38a6ed9a3d94e0d7da9cf2805e2d6a39c31e3",
+  "provenance_audit_sha256": "18fb794db7dc94498f0995bec5d5c0d3b318efa7dd3aff4dfc427a0c75295db1",
+  "predecessor_bindings": {
+    "evidence_integrity_gate_sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+    "accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "accepted_pilot_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b"
+  },
+  "scope": {
+    "games": ["Griffin Sky-Joust", "Realm Carver", "Devourer Slime", "The Haunted Library", "Babel Architect"],
+    "source_enveloped_factual_claims": 67,
+    "explicit_unknowns": 11,
+    "negative_fixtures": 30,
+    "browser_dispositions": 5
+  },
+  "source_gate": {
+    "result": "54 passed",
+    "unresolved_findings": {"critical": 0, "high": 0, "medium": 0}
+  },
+  "candidate_boundary": "This candidate is an evidence-cohort lifecycle artifact only. It makes no ontology, implementation, shipping, gameplay-success, responsive-success, completion, persistence, XP, idempotency, API, or production decision.",
+  "publication_binding": {
+    "commit_sha": null,
+    "rule": "The candidate publication commit is the first Git commit containing these exact bytes."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
