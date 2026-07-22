@@ -200,8 +200,8 @@ class BatchCFreshContextReceiptContract(unittest.TestCase):
 
     def test_selected_receipts_have_verifiable_fresh_context_proofs(self) -> None:
         """Checks authoritative selection, truthful per-entry provenance, proof bytes, and rederivation evidence."""
-        selection_path = TRACK_DIR / "batch-c-role-receipt-selection-v5.json"
-        self.assertTrue(selection_path.is_file(), "EXPECTED_RED[MED-001]: v5 receipt selection absent")
+        selection_path = TRACK_DIR / "batch-c-role-receipt-selection-v6.json"
+        self.assertTrue(selection_path.is_file(), "EXPECTED_RED[MED-001]: v6 receipt selection absent")
         selection = load(selection_path)
         entries = selection["selected_receipts"]
         self.assertEqual({entry["task_id"] for entry in entries}, set(EXPECTED_ROLES))
@@ -239,6 +239,71 @@ class BatchCFreshContextReceiptContract(unittest.TestCase):
                 self.assertIsInstance(command["exit_code"], int)
                 self.assertTrue(command.get("stdout") is not None or command.get("stdout_sha256"))
             self.assertEqual(proof["verification_result"], "pass")
+
+        entries_by_task = {entry["task_id"]: entry for entry in entries}
+        asset_collision = load(TRACK_DIR / "batch-c-asset-auditor-v4-collision.json")
+        asset_entry = entries_by_task["C3-ASSET"]
+        asset_collision_paths = {
+            item["path"]
+            for provider_set in asset_collision["provider_sets"]
+            for item in provider_set["files"]
+        }
+        asset_collision_providers = {
+            provider_set["provider_identifier"] for provider_set in asset_collision["provider_sets"]
+        }
+        self.assertEqual(
+            asset_entry["proof_path"],
+            "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5.json",
+        )
+        self.assertEqual(
+            asset_entry["receipt_path"],
+            "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5.json",
+        )
+        self.assertEqual(asset_entry["provider_identifier"], "/root/t4_asset_v5_reaudit_terra")
+        self.assertNotIn(asset_entry["provider_identifier"], asset_collision_providers)
+        self.assertNotIn(asset_entry["proof_path"], asset_collision_paths)
+        self.assertNotIn(asset_entry["receipt_path"], asset_collision_paths)
+
+        mapper_collision = load(TRACK_DIR / "batch-c-gryphon-mapper-v5-collision.json")
+        mapper_ownership = load(
+            TRACK_DIR / "batch-c-gryphon-mapper-v6-root-arbiter-20260722-1718-8f2c-ownership.json"
+        )
+        mapper_entry = entries_by_task["C3-MAP-GRYPHON"]
+        self.assertFalse(mapper_collision["arbitration"]["v5_selection_authorized"])
+        self.assertEqual(mapper_entry["provider_identifier"], mapper_ownership["provider_identifier"])
+        self.assertEqual(mapper_entry["parent_task"], mapper_ownership["parent_task"])
+        self.assertEqual(mapper_entry["proof_path"], mapper_ownership["reserved_paths"][-2])
+        self.assertEqual(mapper_entry["receipt_path"], mapper_ownership["reserved_paths"][-1])
+        mapper_proof = load(ROOT / mapper_entry["proof_path"])
+        mapper_receipt = load(ROOT / mapper_entry["receipt_path"])
+        self.assertEqual(
+            {item["path"] for item in mapper_proof["outputs"]},
+            set(mapper_ownership["reserved_paths"]),
+        )
+        self.assertEqual(
+            {item["path"] for item in mapper_receipt["outputs"]},
+            set(mapper_ownership["reserved_paths"]),
+        )
+        for item in mapper_receipt["outputs"]:
+            if item["sha256"] is not None:
+                self.assertEqual(file_sha(ROOT / item["path"]), item["sha256"])
+
+        browser_entry = entries_by_task["C3-BROWSER"]
+        browser_proof = load(ROOT / browser_entry["proof_path"])
+        browser_receipt = load(ROOT / browser_entry["receipt_path"])
+        browser_audit_path = (
+            "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v4.json"
+        )
+        browser_audit_sha = "3472966cb0c31bfac60a48542f90d7ac76dc3e133a8439028151c64c09cffda3"
+        browser_publication_revision = "e54d8211eabdfec2ae021f728968459812a244ac"
+        self.assertEqual(browser_proof["supersession"]["committed_revision"], browser_publication_revision)
+        self.assertEqual(browser_receipt["supersession"]["committed_revision"], browser_publication_revision)
+        proof_browser_audit = next(
+            item for item in browser_proof["committed_evidence"] if item["path"] == browser_audit_path
+        )
+        self.assertEqual(proof_browser_audit["revision"], browser_publication_revision)
+        self.assertEqual(proof_browser_audit["sha256"], browser_audit_sha)
+        self.assertEqual(browser_receipt["committed_evidence"][browser_audit_path], browser_audit_sha)
 
 
 class BatchCImmutableBrowserContract(unittest.TestCase):

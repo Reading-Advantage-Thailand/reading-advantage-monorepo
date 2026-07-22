@@ -1,0 +1,53 @@
+{
+  "schema": "apk-role-receipt.v6",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "task_id": "C3-TRUTH",
+  "role": "truth-test-author-batch-c",
+  "status": "completed-full-v6-gate",
+  "acceptance": "not-claimed",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/t4_truth_selection_terra",
+    "provider_kind": "native-collaboration-identity",
+    "canonical_task": "/root/t4_truth_selection_terra",
+    "fork_turns": "none",
+    "parent_task": "/root",
+    "raw_provider_event": null,
+    "provider_session_id": null,
+    "unavailable_metadata_note": "Raw provider event and session identifiers are unavailable and intentionally null; native collaboration identity is the available provenance."
+  },
+  "retained_proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/truth-test-author-batch-c-v6.json",
+    "sha256": "21b8a39a769b327cf1fc326f2aecf6021afd7e2d01a7f05be87d418091e10c74"
+  },
+  "verification": {
+    "result": "pass",
+    "full_gate_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py",
+    "exit_code": 0,
+    "stdout": ".....                                                                    [100%]\n5 passed in 1.47s"
+  },
+  "scope_attestation": {
+    "roles_held": [
+      "truth-test-author-batch-c"
+    ],
+    "forbidden_work_not_performed": [
+      "source collection",
+      "requirements mapping",
+      "browser audit",
+      "asset audit",
+      "adversarial review",
+      "candidate publication",
+      "acceptance",
+      "plan or registry editing",
+      "staging",
+      "committing"
+    ],
+    "candidate_or_acceptance_claimed": false
+  },
+  "commit_sha": null,
+  "commit_disposition": "No commit was created because this delegated task prohibits staging and committing.",
+  "self_sha256": null,
+  "marker": "MEASURE_AGENT_RESULT"
+}

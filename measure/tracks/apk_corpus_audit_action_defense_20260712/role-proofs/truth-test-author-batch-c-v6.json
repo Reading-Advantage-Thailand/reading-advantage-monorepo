@@ -1,0 +1,107 @@
+{
+  "schema": "measure.provider-fresh-context-proof.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "task_id": "C3-TRUTH",
+  "role": "truth-test-author-batch-c",
+  "status": "completed-full-v6-gate",
+  "verification_result": "pass",
+  "provider_identifier": "/root/t4_truth_selection_terra",
+  "canonical_task": "/root/t4_truth_selection_terra",
+  "fork_turns": "none",
+  "parent_task": "/root",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/t4_truth_selection_terra",
+    "provider_kind": "native-collaboration-identity",
+    "canonical_task": "/root/t4_truth_selection_terra",
+    "fork_turns": "none",
+    "parent_task": "/root",
+    "raw_provider_event": null,
+    "provider_session_id": null,
+    "unavailable_metadata_note": "Raw provider event and session identifiers are unavailable and intentionally null; native collaboration identity is the available provenance."
+  },
+  "scope": {
+    "authorized_work": "Publish the additive v6 selection and extend the active gate for asset-v4 collision, mapper-v5 collision/v6 ownership, and immutable browser-v5 bindings.",
+    "forbidden_work_not_performed": [
+      "source collection",
+      "requirements mapping",
+      "browser audit",
+      "asset audit",
+      "adversarial review",
+      "candidate publication",
+      "acceptance",
+      "plan or registry editing",
+      "staging",
+      "committing"
+    ]
+  },
+  "commands": [
+    {
+      "purpose": "derive committed successor hashes and provenance",
+      "argv": [
+        "sha256sum",
+        "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5.json",
+        "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5.json",
+        "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-gryphon-patrol-batch-c-v6-root-arbiter-20260722-1718-8f2c.json",
+        "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c-v6-root-arbiter-20260722-1718-8f2c.json"
+      ],
+      "exit_code": 0,
+      "stdout": "asset proof b26fc969d855e49ba312f8bafec0a7e128cfc7d8e1985bbc8f5be4fb6d150b15; asset receipt a5c37a2f4051108b0e6e3798e39fd745cf4cf3cfab5f56af79f32cfa8533329c; mapper proof 72946dc228d712ca4974fad94e9a728f1d2d9487481eb21dd28431ac01bf576e; mapper receipt b6067217c7429927424886a860498d01cfb1e9b3c34c736fa3f73f8328fce8b7"
+    },
+    {
+      "purpose": "validate exact collision, ownership, successor, and browser binding fields",
+      "argv": [
+        "jq",
+        "-c",
+        "<bounded Batch C v6 selection inputs>"
+      ],
+      "exit_code": 0,
+      "stdout": "Asset v4 collision has two forbidden provider sets; Asset v5 provider is /root/t4_asset_v5_reaudit_terra. Mapper v5 is unauthorized; mapper v6 ownership reserves five exact paths. Browser v5 proof and receipt bind audit SHA 3472966c... at e54d8211."
+    },
+    {
+      "purpose": "run the complete active Batch C v6 truth gate before promoting this proof to pass",
+      "argv": [
+        "python3",
+        "-m",
+        "pytest",
+        "-q",
+        "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py"
+      ],
+      "exit_code": 0,
+      "stdout": ".....                                                                    [100%]\n5 passed in 1.47s"
+    }
+  ],
+  "selection_contract": {
+    "selection_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v6.json",
+    "predecessor_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v5.json",
+    "required_roles": 8
+  },
+  "lifecycle": {
+    "candidate_authorized": false,
+    "acceptance_authorized": false
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/truth-test-author-batch-c-v6.json",
+      "sha256": null,
+      "digest_reason": "Bound by the additive v6 receipt after proof finalization."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-c-v6.json",
+      "sha256": null,
+      "digest_reason": "Receipt is intentionally not self-hashed."
+    }
+  ],
+  "commit_sha": null,
+  "commit_disposition": "No commit was created because this delegated task prohibits staging and committing.",
+  "marker": "MEASURE_AGENT_RESULT",
+  "verification": {
+    "result": "pass",
+    "full_gate_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py",
+    "exit_code": 0,
+    "stdout": ".....                                                                    [100%]\n5 passed in 1.47s",
+    "promotion_rule": "verification_result was changed from pending-full-gate to pass only after this full gate completed green."
+  }
+}
