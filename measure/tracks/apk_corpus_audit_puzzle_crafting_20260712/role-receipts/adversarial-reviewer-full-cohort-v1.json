@@ -1,0 +1,98 @@
+{
+  "schema_version": "apk-native-agent-review-receipt.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "status": "complete-failed-blocking-findings",
+  "role": "adversarial-reviewer-full-cohort",
+  "acceptance": "not-claimed",
+  "role_boundary": "Authored only full-cohort-independent-review-v1.json and this additive native-agent receipt. Did not author or alter any candidate, product-owner approval, accepted manifest, reconciliation, batch evidence, source, test, plan, registry, metadata, or application artifact. No commit, staging, or product-owner action was performed.",
+  "review_output": {
+    "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/full-cohort-independent-review-v1.json",
+    "sha256": "37906020b3412460f9f8ff961a98c769b5fbd6b381fd9735016da419a60a3c41",
+    "conclusion": "failed-blocking-findings",
+    "unresolved_findings": {
+      "critical": 1,
+      "high": 1,
+      "medium": 0,
+      "low": 0
+    },
+    "successor_candidate_authorized": false
+  },
+  "reviewed_inputs": {
+    "spec.md": "45485007599fdf581ae50d7e3862a1476235a6a4150130635133273314b4b1f1",
+    "plan.md": "cb09b91b3adf8a45a5fc34326b04e39b1f73b78ddcf362af0c2d0f2b46f3d4a2",
+    "test-strategy-phase0.md": "1a4fd7864a225fe7fd1c17c5e8aec0c30a402d89b8c8dfea5da543a44767154b",
+    "accepted-cohort-manifest-batch-a-v3.json": "8c332ff99bf9224f826f77cec256ff4d3f6cb94cea7181e3879226f82c875e83",
+    "accepted-cohort-manifest-batch-b-v3.json": "5b11e1c44f0b109b740b91a36c694774a48d6c364d8715e95719b9e0574dc271",
+    "cohort-reconciliation-v1.json": "3ffc96b78c14fcb98c016972c704949df7e0cd56d4ec80f3e6146df9a89979fb",
+    "candidate-cohort-manifest-v1.json": "acb71d166dcc0970ec2ea186b1df64299133166730820deb39caab5462c46bf1",
+    "product-owner-acceptance-cohort-v1.json": "9c416d9f3b99beaedf7a0cecafe41844e410ca2b2c7e8f725f4e9c8e45a179aa",
+    "accepted-cohort-manifest-v1.json": "a2b5a76d5be9981fbb1fd3573440baa834e7aaac7a604f4bd46c5eb5dfe2f874",
+    "batch-a-independent-review-v3.json": "9a855ce54bceb7b6d3c911a024fe24c56c1b259a7888cad99d1115c756a03964",
+    "batch-b-independent-review-v3.json": "a88634ca187cf972440dac88ce0370980132c23d5e0a13660d35ba045527f34d",
+    "batch-a-truth-tests-v3.py": "635a211d5210eea1af551fd4e074fcb8bf24037ebd4e13f8737e5a03e7d2f606",
+    "batch-b-truth-tests-v2.py": "01bf38dff073064d481ae713efe8918167f10dff82fdea339775331af72fcc41",
+    "role-receipts/adversarial-reviewer-batch-a-v3.json": "4d04d3a3e9f966e4110168653fbc906db43401ac2565b365c9deccd1136708dd",
+    "batch-b-v3-role-session-ratification.json": "2b3b2d44cf81d22a93d82e6344e7dc1365f613dac85a6f8cbfbbfbac114615f0"
+  },
+  "provider_provenance": {
+    "prompt_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "end_event_id": null,
+    "final_response_sha256": null,
+    "commit_sha": null,
+    "unavailable_note": "The harness exposes no provider-side encrypted prompt, actual-context manifest, spawn/session, ancestry, fork, raw-isolation export, event, timing, final-response, or commit attestation. Every null is a truthful unavailable value, not a negative provider claim and not fabricated provenance. This receipt does not assert provider-attested reviewer isolation."
+  },
+  "native_execution_proof": {
+    "working_directory": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "allowed_write_scope": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712 only",
+    "commands_and_results": [
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v3.py",
+        "result": "22 passed; exit 0"
+      },
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-truth-tests-v2.py",
+        "result": "17 passed; exit 0"
+      },
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests.py",
+        "result": "3 passed, 13 failed; exit 1; superseded generation failures retained in review disclosure"
+      },
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v2.py",
+        "result": "11 passed, 5 failed; exit 1; superseded generation failures retained in review disclosure"
+      },
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-truth-tests.py",
+        "result": "4 passed; exit 0"
+      },
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-green-handoff-tests.py",
+        "result": "5 passed; exit 0"
+      },
+      {
+        "command": "sha256sum and read-only Git ancestry checks over lifecycle artifacts",
+        "result": "declared inspected path/SHA-256 bindings matched; batch and cohort Git artifact order was verified, with the cohort review stage absent"
+      }
+    ],
+    "git_mutation": "none",
+    "staging_mutation": "none"
+  },
+  "findings_summary": {
+    "critical": [
+      "Cohort candidate/approval/accepted-manifest lineage was published without a preceding full-cohort adversarial review or exact review/receipt hash binding."
+    ],
+    "high": [
+      "Required provider attestation or retained raw review export is unavailable for Batch A and Batch B review isolation; Batch B also lacks a separately retained adversarial-reviewer receipt."
+    ],
+    "medium": [],
+    "low": []
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

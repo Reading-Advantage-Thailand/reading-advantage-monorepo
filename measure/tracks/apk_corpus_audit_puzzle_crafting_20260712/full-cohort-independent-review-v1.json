@@ -1,0 +1,151 @@
+{
+  "schema_version": "apk-full-cohort-independent-review.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "role": "adversarial-reviewer-full-cohort",
+  "status": "failed-blocking-findings",
+  "review_mode": "fresh local artifact, Git, hash, and truth-gate re-derivation; no product-owner authority claimed",
+  "scope": {
+    "assigned_games": [
+      "Enchanted Library",
+      "Rune Match",
+      "Alchemist's Synthesis",
+      "Potion Rush",
+      "Rune Forge Chamber",
+      "Astral Mage"
+    ],
+    "batch_a": [
+      "Enchanted Library",
+      "Rune Match",
+      "Alchemist's Synthesis"
+    ],
+    "batch_b": [
+      "Potion Rush",
+      "Rune Forge Chamber",
+      "Astral Mage"
+    ]
+  },
+  "input_hashes": {
+    "spec.md": "45485007599fdf581ae50d7e3862a1476235a6a4150130635133273314b4b1f1",
+    "plan.md": "cb09b91b3adf8a45a5fc34326b04e39b1f73b78ddcf362af0c2d0f2b46f3d4a2",
+    "test-strategy-phase0.md": "1a4fd7864a225fe7fd1c17c5e8aec0c30a402d89b8c8dfea5da543a44767154b",
+    "accepted-cohort-manifest-batch-a-v3.json": "8c332ff99bf9224f826f77cec256ff4d3f6cb94cea7181e3879226f82c875e83",
+    "accepted-cohort-manifest-batch-b-v3.json": "5b11e1c44f0b109b740b91a36c694774a48d6c364d8715e95719b9e0574dc271",
+    "cohort-reconciliation-v1.json": "3ffc96b78c14fcb98c016972c704949df7e0cd56d4ec80f3e6146df9a89979fb",
+    "candidate-cohort-manifest-v1.json": "acb71d166dcc0970ec2ea186b1df64299133166730820deb39caab5462c46bf1",
+    "product-owner-acceptance-cohort-v1.json": "9c416d9f3b99beaedf7a0cecafe41844e410ca2b2c7e8f725f4e9c8e45a179aa",
+    "accepted-cohort-manifest-v1.json": "a2b5a76d5be9981fbb1fd3573440baa834e7aaac7a604f4bd46c5eb5dfe2f874",
+    "batch-a-independent-review-v3.json": "9a855ce54bceb7b6d3c911a024fe24c56c1b259a7888cad99d1115c756a03964",
+    "batch-b-independent-review-v3.json": "a88634ca187cf972440dac88ce0370980132c23d5e0a13660d35ba045527f34d",
+    "batch-a-truth-tests-v3.py": "635a211d5210eea1af551fd4e074fcb8bf24037ebd4e13f8737e5a03e7d2f606",
+    "batch-b-truth-tests-v2.py": "01bf38dff073064d481ae713efe8918167f10dff82fdea339775331af72fcc41",
+    "role-receipts/adversarial-reviewer-batch-a-v3.json": "4d04d3a3e9f966e4110168653fbc906db43401ac2565b365c9deccd1136708dd",
+    "batch-b-v3-role-session-ratification.json": "2b3b2d44cf81d22a93d82e6344e7dc1365f613dac85a6f8cbfbbfbac114615f0"
+  },
+  "verification": {
+    "coverage": {
+      "assigned_games": 6,
+      "covered_games": 6,
+      "duplicates": 0,
+      "omissions": 0,
+      "batch_a_factual_claims": 57,
+      "batch_b_factual_claims": 68,
+      "total_factual_claims": 125,
+      "result": "pass"
+    },
+    "factual_envelopes": {
+      "batch_a_v3_truth": "22 passed; exit 0",
+      "batch_b_v2_truth": "17 passed; exit 0",
+      "result": "pass for the active selected generations; these gates independently recompute cited Git blobs/ranges and enforce source/map/fixture boundaries"
+    },
+    "browser_disclosures": {
+      "result": "pass as bounded unknowns only",
+      "detail": "Batch A V3 records non-runnable 404 dispositions without promoting screenshots or synthetic interaction to gameplay proof. Batch B V2 preserves no-browser-run and all dependent behavior as unknown. No browser-success conclusion was found."
+    },
+    "declared_hashes": {
+      "result": "pass for every inspected declared path-plus-SHA-256 binding",
+      "detail": "All checked Batch A, Batch B, candidate, approval, review, reconciliation, and cohort path/hash pairs matched their current exact bytes."
+    },
+    "git_ordering": {
+      "batch_b_review_candidate_approval_accepted": "pass: review f3240797 is an ancestor of candidate 662bd459, approval 1bdfd06 is after candidate, and accepted manifest 58737492 is after approval",
+      "cohort_reconciliation_candidate_approval_accepted": "partial: reconciliation 45224fd precedes candidate cf0027f7; approval a6aa36c is after candidate; accepted manifest 94ed288 is after approval",
+      "defect": "The cohort sequence has no preceding full-cohort review artifact, and none of candidate-cohort-manifest-v1.json, product-owner-acceptance-cohort-v1.json, or accepted-cohort-manifest-v1.json binds such a review or its receipt."
+    },
+    "truth_test_runs": [
+      {
+        "path": "batch-a-truth-tests.py",
+        "result": "3 passed, 13 failed; exit 1",
+        "classification": "superseded historical generation; failures target artifacts intentionally absent from that generation"
+      },
+      {
+        "path": "batch-a-truth-tests-v2.py",
+        "result": "11 passed, 5 failed; exit 1",
+        "classification": "superseded historical generation; failures target V2 lifecycle/browser artifacts replaced by V3"
+      },
+      {
+        "path": "batch-a-truth-tests-v3.py",
+        "result": "22 passed; exit 0",
+        "classification": "active Batch A selected generation"
+      },
+      {
+        "path": "batch-b-truth-tests.py",
+        "result": "4 passed; exit 0",
+        "classification": "legacy Batch B handoff gate"
+      },
+      {
+        "path": "batch-b-truth-tests-v2.py",
+        "result": "17 passed; exit 0",
+        "classification": "active Batch B source-semantic gate"
+      },
+      {
+        "path": "batch-b-green-handoff-tests.py",
+        "result": "5 passed; exit 0",
+        "classification": "legacy Batch B non-candidate handoff gate"
+      }
+    ]
+  },
+  "findings": [
+    {
+      "id": "T6-COHORT-F001",
+      "severity": "critical",
+      "area": "cohort candidate, review, and acceptance lifecycle",
+      "blocking": true,
+      "evidence": [
+        "test-strategy-phase0.md requires the isolated adversarial review before a candidate, requires the candidate to bind review and receipt hashes, and allows acceptance only after that review event.",
+        "No full-cohort review artifact existed before this review.",
+        "candidate-cohort-manifest-v1.json binds only cohort-reconciliation-v1.json; product-owner-acceptance-cohort-v1.json binds only the candidate and reconciliation; accepted-cohort-manifest-v1.json binds only candidate, approval, and reconciliation.",
+        "Git order alone shows candidate before approval and approval before acceptance, but cannot replace the absent cohort-review event or its exact hash binding."
+      ],
+      "impact": "The currently published cohort candidate, product-owner acceptance, and accepted cohort manifest fail closed. Their consumable/accepted status cannot be relied on as a valid T6 cohort lifecycle outcome.",
+      "remediation": "Additively revoke or supersede the current cohort candidate/approval/accepted-manifest lineage. After every blocking finding is resolved, run a separately owned full-cohort review and retain its receipt; then author a successor non-consumable candidate binding exact hashes for the reconciliation, both accepted batch manifests, active truth tests/results, full-cohort review, review receipt, and relevant role receipts. Obtain a new product-owner event bound to that exact successor candidate and review, then publish a separate successor accepted manifest. Do not mutate or relabel the current accepted manifest as if it had passed this sequence."
+    },
+    {
+      "id": "T6-COHORT-F002",
+      "severity": "high",
+      "area": "required fresh-context reviewer isolation and role separation",
+      "blocking": true,
+      "evidence": [
+        "The frozen strategy requires fresh-context-only, inherited_narrative=false, parent_ancestry_ids=[], and fork_turns=none for every role; for reviewer isolation it additionally requires a provider attestation or retained raw export beginning with the review prompt.",
+        "role-receipts/adversarial-reviewer-batch-a-v3.json truthfully sets provider-side prompt/context/spawn/session/ancestry/fork/raw-isolation fields to null and says no provider attestation is claimed.",
+        "batch-b-independent-review-v3.json states provider attestation is unavailable, and batch-b-v3-role-session-ratification.json is expressly only a local auditable-role control rather than provider-attested session proof; that ratification does not include a separate adversarial-reviewer receipt.",
+        "The current-owner historical amendment expressly preserves independent-review requirements, so its provenance/pin exception does not waive this gate."
+      ],
+      "impact": "The evidence packages may have green local source gates, but the required independent-review separation is unproven for both batches. A disclosure of missing proof is not the provider-attestation or raw-export evidence required by the frozen contract.",
+      "remediation": "Before any successor candidate, obtain retained raw review exports beginning with each review prompt or provider attestations sufficient to verify the required fresh-context and ancestry/fork fields. Retain a separately owned Batch B adversarial-reviewer receipt binding its review and source inputs. If those records cannot be obtained, leave the cohort blocked and request an explicit product-owner change to the governing protocol; do not fabricate encrypted prompt/provider values or treat local receipt separation as equivalent evidence."
+    }
+  ],
+  "unresolved_findings": {
+    "critical": 1,
+    "high": 1,
+    "medium": 0,
+    "low": 0
+  },
+  "successor_candidate_authorized": false,
+  "acceptance_authorized": false,
+  "accepted_manifest_authorized": false,
+  "disclosures": [
+    "This review does not claim product-owner authority, approve a candidate, approve acceptance, or publish a successor accepted manifest.",
+    "Provider-side prompt, session, ancestry, fork, and raw-isolation fields were unavailable in this harness and are reported as unavailable rather than inferred.",
+    "Green source-truth gates establish only their stated evidence envelopes and bounded browser unknowns; they do not cure lifecycle or role-isolation failures."
+  ],
+  "marker": "MEASURE_AGENT_RESULT"
+}
