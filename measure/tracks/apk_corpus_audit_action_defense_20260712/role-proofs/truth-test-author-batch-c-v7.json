@@ -1,0 +1,122 @@
+{
+  "schema": "measure.provider-fresh-context-proof.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "task_id": "C3-TRUTH-V7-SELECTOR",
+  "role": "truth-test-author-batch-c",
+  "status": "completed-focused-v7-gate",
+  "verification_result": "pass",
+  "provider_identifier": "/root/t4_batch_c_selector_v7",
+  "canonical_task": "/root/t4_batch_c_selector_v7",
+  "fork_turns": "none",
+  "parent_task": "/root",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/t4_batch_c_selector_v7",
+    "provider_kind": "native-collaboration-identity",
+    "canonical_task": "/root/t4_batch_c_selector_v7",
+    "fork_turns": "none",
+    "parent_task": "/root",
+    "raw_provider_event": null,
+    "provider_session_id": null,
+    "unavailable_metadata_note": "Raw provider event and session identifiers are unavailable and intentionally null; native collaboration identity is the available provenance."
+  },
+  "scope": {
+    "authorized_work": "Publish only the v7 receipt selector and focused truth gate that replaces Browser v5 with root-arbiter Browser v6 and Asset v5 with the root-arbiter Asset v5 set plus its independent validation successor.",
+    "preserved_current_v6_bindings": [
+      "C3-DISCOVERY",
+      "C3-COLLECT-PALADIN",
+      "C3-COLLECT-GRYPHON",
+      "C3-MAP-PALADIN",
+      "C3-MAP-GRYPHON",
+      "C3-TRUTH"
+    ],
+    "forbidden_work_not_performed": [
+      "source collection",
+      "requirements mapping",
+      "browser audit",
+      "asset audit",
+      "adversarial review",
+      "candidate publication",
+      "acceptance",
+      "plan or registry editing",
+      "staging",
+      "committing"
+    ]
+  },
+  "input_bindings": {
+    "predecessor_selection": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v6.json",
+      "sha256": "19d03e183bd39595a004430b0da7800ff63c04052472707c878528b8888ce93b"
+    },
+    "browser_v5_deviation": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v5-skill-deviation.json",
+      "sha256": "68e6528edec1c05e85d694fde5de6d436ef4209e0317653bbcecf3b340cd2a46",
+      "disposition": "excluded"
+    },
+    "browser_v6_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v6-root-arbiter-20260722-1758-kimi-b91e.json",
+      "sha256": "913ee0b1431e0d852dec196cf523d9bec0ed004fa3796e24798ecf9f4532e283"
+    },
+    "asset_root_arbiter_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json",
+      "sha256": "e38993458ba19f299d2cd16eb699f79b9cd82f1d6dcde420d9fbc8c2577d37ab",
+      "pending_fields_preserved": true
+    },
+    "asset_validation_successor": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5-validation-v1.json",
+      "sha256": "341224264b6315ef29c75865ac4a4d7af090262e888e0d0098e223207b6a7bd8"
+    }
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v7.json",
+      "sha256": "d4c3eb1093970cbe4470bd4da833fced7465b443f85c7d900c79979163a95a17"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v7.py",
+      "sha256": "943452bd371556e76be3453547c6d2338581132e5bdf421b48fcefabe4cc6699"
+    }
+  ],
+  "commands": [
+    {
+      "purpose": "independently confirm exact Browser helper disclosure and Asset collision field shapes before corrected gate",
+      "argv": [
+        "jq",
+        "-e",
+        "<exact Browser helper fields and Asset v4 arbitration field>"
+      ],
+      "exit_code": 0,
+      "stdout": "exact Browser helper policy/disclosure and Asset v4_selection_authorized=false confirmed"
+    },
+    {
+      "purpose": "run the one authorized corrected focused Batch C v7 gate",
+      "argv": [
+        "PYTHONDONTWRITEBYTECODE=1",
+        "python3",
+        "-m",
+        "pytest",
+        "-q",
+        "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v7.py"
+      ],
+      "exit_code": 0,
+      "stdout": ".....                                                                    [100%]\\n5 passed in 0.37s"
+    }
+  ],
+  "verification": {
+    "result": "pass",
+    "focused_gate_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v7.py",
+    "exit_code": 0,
+    "stdout": "5 passed in 0.37s",
+    "stop_loss": "The initial gate exposed two newly-authored assertion defects. One bounded assertion remediation was independently field-checked, then the single corrected rerun passed; no third cycle is authorized."
+  },
+  "lifecycle": {
+    "candidate_authorized": false,
+    "acceptance_authorized": false,
+    "consumption_authorized": false
+  },
+  "commit_sha": null,
+  "commit_disposition": "No commit was created because this delegated task prohibits staging and committing.",
+  "marker": "MEASURE_AGENT_RESULT"
+}

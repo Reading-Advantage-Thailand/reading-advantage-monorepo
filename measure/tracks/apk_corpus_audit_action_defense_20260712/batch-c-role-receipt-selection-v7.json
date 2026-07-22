@@ -1,0 +1,148 @@
+{
+  "schema": "apk-role-receipt-selection.v7",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "status": "complete-eight-current-role-bindings-v7",
+  "selection_contract": {
+    "adds_to": "batch-c-role-receipt-selection-v6.json",
+    "reason": "Replace only the non-consumable Browser v5 and the prior Asset v5 selection with committed root-arbiter successors; preserve the other six current v6 bindings and the corrected denominator without expansion.",
+    "corrected_denominator": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json",
+      "sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f"
+    },
+    "denominator_scope": "reused-without-expansion",
+    "browser_v5_disposition": "excluded as non-consumable by batch-c-browser-v5-skill-deviation.json",
+    "asset_root_arbiter_disposition": "selected with independent validation successor companion; original receipt pending fields remain unchanged",
+    "collision_policy": "fail closed on both Asset v4 provider sets and invalid Gryphon mapper v5 selection"
+  },
+  "selected_receipts": [
+    {
+      "task_id": "C3-DISCOVERY",
+      "role": "discovery-auditor-batch-c",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/discovery-auditor-batch-c-v5.json",
+      "receipt_sha256": "517554dad12c1ebb2ad7084c104f9ea664f4a517ade57e8a0434f1e8c94d4c5c",
+      "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/discovery-auditor-batch-c-v5.json",
+      "proof_sha256": "ce9b71d4d218ba42e5dde08c9f67e83e543dddd4dcd2343e2e7674ffc446cb26",
+      "provider_identifier": "/root/t4_discovery_reverify_terra",
+      "parent_task": "/root"
+    },
+    {
+      "task_id": "C3-COLLECT-PALADIN",
+      "role": "evidence-collector-paladins-twin-soul-batch-c",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-paladins-twin-soul-batch-c-v4.json",
+      "receipt_sha256": "f275bb85bcf83acc8c4566af25f1ada7c9b8102a9325139238dc19e2fd67f117",
+      "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/evidence-collector-paladins-twin-soul-batch-c-v4.json",
+      "proof_sha256": "e780f0e155f35bcfa7ca44ef3ec4c6c4b0057a31743adaad68428b7b97f429d0",
+      "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_paladin_collector_v4",
+      "parent_task": "/root/apk_batch_c_fresh_roles"
+    },
+    {
+      "task_id": "C3-COLLECT-GRYPHON",
+      "role": "evidence-collector-gryphon-patrol-batch-c",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-gryphon-patrol-batch-c-v4.json",
+      "receipt_sha256": "cf28e5d2c6de663e2638ab024cd5ea78df0f7a91da12d5952b6d589813d5d27c",
+      "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/evidence-collector-gryphon-patrol-batch-c-v4.json",
+      "proof_sha256": "d797b87a0b59bd2aeeaf54fc63fa3d8d30659d33695493a6c25ee37964382e2e",
+      "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_collector_v4",
+      "parent_task": "/root/apk_batch_c_fresh_roles"
+    },
+    {
+      "task_id": "C3-MAP-PALADIN",
+      "role": "requirements-mapper-paladins-twin-soul-batch-c",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-paladins-twin-soul-batch-c-v4.json",
+      "receipt_sha256": "1595731d13dd94321aef98616890e8b3c46d6536506160588de1565a273602a4",
+      "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-paladins-twin-soul-batch-c-v4.json",
+      "proof_sha256": "7a3691665c7d141ade2188f03804dbbb5dade4f3b4a2f7e2d2d5131b246742dd",
+      "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_paladin_mapper_v4",
+      "parent_task": "/root/apk_batch_c_fresh_roles"
+    },
+    {
+      "task_id": "C3-MAP-GRYPHON",
+      "role": "requirements-mapper-gryphon-patrol-batch-c",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c-v6-root-arbiter-20260722-1718-8f2c.json",
+      "receipt_sha256": "b6067217c7429927424886a860498d01cfb1e9b3c34c736fa3f73f8328fce8b7",
+      "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-gryphon-patrol-batch-c-v6-root-arbiter-20260722-1718-8f2c.json",
+      "proof_sha256": "72946dc228d712ca4974fad94e9a728f1d2d9487481eb21dd28431ac01bf576e",
+      "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v6_arbiter_8f2c",
+      "parent_task": "/root/apk_batch_c_fresh_roles"
+    },
+    {
+      "task_id": "C3-TRUTH",
+      "role": "truth-test-author-batch-c",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-c-v6.json",
+      "receipt_sha256": "baeb988eda18cdc2582919589a284418f8be53fef77a7a0e9e164a28e048b7c4",
+      "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/truth-test-author-batch-c-v6.json",
+      "proof_sha256": "21b8a39a769b327cf1fc326f2aecf6021afd7e2d01a7f05be87d418091e10c74",
+      "provider_identifier": "/root/t4_truth_selection_terra",
+      "parent_task": "/root"
+    },
+    {
+      "task_id": "C3-BROWSER",
+      "role": "browser-auditor-batch-c",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v6-root-arbiter-20260722-1758-kimi-b91e.json",
+      "receipt_sha256": "913ee0b1431e0d852dec196cf523d9bec0ed004fa3796e24798ecf9f4532e283",
+      "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/browser-auditor-batch-c-v6-root-arbiter-20260722-1758-kimi-b91e.json",
+      "proof_sha256": "a75f2b5c0bb5d6236c67185aafe42f628bd01e57f63efa904b7986fb3a755cae",
+      "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_browser_auditor_v6_kimi_b91e",
+      "parent_task": "/root/apk_batch_c_fresh_roles",
+      "ownership": {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-ownership.json",
+        "sha256": "abf14709ac62f3d7fdff1f75fcd3064753f0ec52e0169c2068fd52aa88b172e9"
+      },
+      "audit": {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v6-root-arbiter-20260722-1758-kimi-b91e.json",
+        "sha256": "6e9a39503d315f59b001e0952fe317441115cf5c82f8efb3fe5473690b97b4e6"
+      }
+    },
+    {
+      "task_id": "C3-ASSET",
+      "role": "asset-auditor-batch-c",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json",
+      "receipt_sha256": "e38993458ba19f299d2cd16eb699f79b9cd82f1d6dcde420d9fbc8c2577d37ab",
+      "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json",
+      "proof_sha256": "fac6f71f01dd247ccdd2abf0dbf628c0a1a3ba8bfb329cd00d7503c271760e14",
+      "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_asset_auditor_v5_arbiter_a51d",
+      "parent_task": "/root/apk_batch_c_fresh_roles",
+      "ownership": {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-auditor-v5-root-arbiter-20260722-1726-a51d-ownership.json",
+        "sha256": "4c798bc474822bf4253e2e2d306511db1a140e561214810fd328fd10ae356b0b"
+      },
+      "original_pending_validation_fields": {
+        "three_file_chain": "pending final self-check after receipt write",
+        "json_syntax": "pending final self-check after receipt write",
+        "predecessor_immutability": "pending final self-check after receipt write",
+        "no_backup_files": "pending final self-check after receipt write",
+        "diff_scope": "pending final self-check after receipt write"
+      },
+      "independent_validation_successor": {
+        "record": {
+          "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-v5-independent-validation-v1.json",
+          "sha256": "ee322ac2d9f7f8d87cc4d94db16d83484a01dae0ae07e60b1c644ef9bd09ec5c"
+        },
+        "proof": {
+          "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5-validation-v1.json",
+          "sha256": "acd29d1142316835d95a60d65f3d4ee3cccff8ae6f5ae17235e9b5c581572aa4"
+        },
+        "receipt": {
+          "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5-validation-v1.json",
+          "sha256": "341224264b6315ef29c75865ac4a4d7af090262e888e0d0098e223207b6a7bd8"
+        }
+      }
+    }
+  ],
+  "lifecycle": {
+    "candidate_authorized": false,
+    "acceptance_authorized": false,
+    "consumption_authorized": false
+  },
+  "marker": "MEASURE_AGENT_RESULT",
+  "required_exclusions": {
+    "browser_v5_skill_deviation": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v5-skill-deviation.json",
+      "sha256": "68e6528edec1c05e85d694fde5de6d436ef4209e0317653bbcecf3b340cd2a46",
+      "disposition": "non-consumable and unselected"
+    }
+  },
+  "browser_helper_compatibility_disclosure": "Daemon v1.11.1 post-processes image bytes into /tmp/kimi-webbridge-screenshots while the mandated helper expects inline .data.data. The helper therefore exited 4 after successful post-processing (one wide first attempt timed out with exit 28). Exact helper-originated PNG bytes were copied unchanged from the daemon post-process path to the already-requested reserved path; source and destination hashes matched.",
+  "browser_helper_capture_policy": "Every capture request was made only by the mandated screenshot helper with the isolated session and exact reserved -o path. The role made no direct screenshot API call."
+}

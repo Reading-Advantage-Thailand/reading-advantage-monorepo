@@ -1,0 +1,55 @@
+{
+  "schema": "apk-role-receipt.v7",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "task_id": "C3-TRUTH-V7-SELECTOR",
+  "role": "truth-test-author-batch-c",
+  "status": "completed-focused-v7-gate",
+  "acceptance": "not-claimed",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/t4_batch_c_selector_v7",
+    "provider_kind": "native-collaboration-identity",
+    "canonical_task": "/root/t4_batch_c_selector_v7",
+    "fork_turns": "none",
+    "parent_task": "/root",
+    "raw_provider_event": null,
+    "provider_session_id": null,
+    "unavailable_metadata_note": "Raw provider event and session identifiers are unavailable and intentionally null; native collaboration identity is the available provenance."
+  },
+  "retained_proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/truth-test-author-batch-c-v7.json",
+    "sha256": "66140bae9dc7b5fc65f046430859eabf5388e2c9a8650d259cb75603ba81d363"
+  },
+  "verification": {
+    "result": "pass",
+    "focused_gate_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v7.py",
+    "exit_code": 0,
+    "stdout": "5 passed in 0.37s"
+  },
+  "scope_attestation": {
+    "roles_held": [
+      "truth-test-author-batch-c"
+    ],
+    "browser_v5_selected": false,
+    "asset_original_pending_fields_rewritten": false,
+    "candidate_or_acceptance_claimed": false,
+    "forbidden_work_not_performed": [
+      "source collection",
+      "requirements mapping",
+      "browser audit",
+      "asset audit",
+      "adversarial review",
+      "candidate publication",
+      "acceptance",
+      "plan or registry editing",
+      "staging",
+      "committing"
+    ]
+  },
+  "commit_sha": null,
+  "commit_disposition": "No commit was created because this delegated task prohibits staging and committing.",
+  "self_sha256": null,
+  "marker": "MEASURE_AGENT_RESULT"
+}
