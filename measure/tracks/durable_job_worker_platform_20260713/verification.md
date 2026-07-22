@@ -37,7 +37,7 @@ Task 1 may be accepted only after remediation and a fresh independent PASS.
 - Boundary: no Task 2+ leakage. Browser checks are not applicable and graph
   callers are skipped because `graph.db` is stale.
 - Ownership: the reviewer did not mark Task 1 complete, unlock Task 2, commit,
-  or modify production code. Parent-orchestrator acceptance remains required.
+  or modify production code. Parent-orchestrator acceptance subsequently completed Task 1.
 
 ## Task 2 — Current `review_jobs` inventory and executable baseline
 
@@ -101,3 +101,33 @@ Task 1 may be accepted only after remediation and a fresh independent PASS.
 - Coverage: isolated Task 4 modules reached 100% statements, branches, functions, and lines.
 - Graph: direct `repo-graph scan . ./graph.db` completed with 85,917 nodes and 113,712 edges in 261,138 ms; fresh worker-port inspect and dead-summary search resolved the new files.
 - Boundary: no schema, migration, PostgreSQL adapter, worker loop, review-job cutover, or new live-locking evidence is claimed.
+
+## Task 5 — Durable schema and reversible `review_jobs` adoption design
+
+### Decision — 2026-07-22
+
+- Decision: **PASS for Task 5 and Phase 1.** Task 6, Task 7, and Task 10 are
+  active; Task 8 awaits the Task 7 PG16 harness, and Task 9 awaits Tasks 6–7.
+- Design: `task-5-schema-adoption-design-20260722.md`; initial review:
+  `task-5-independent-review-20260722.md`; fresh PASS:
+  `task-5-independent-rereview-20260722.md`.
+- Initial independent review: **FAIL** with six High findings. Remediation
+  closed: (1) max-attempt expiry through same-ordinal redelivery; (2) complete
+  per-state database truth checks and legacy dead-zero normalization; (3) a
+  full last-commit-wins coalesced enqueue snapshot and promotion/race rules;
+  (4) database role/trigger/privilege/generation adoption fencing; (5) total
+  read-only legacy preflight, five-state mapping, and safe quarantine; and (6)
+  PostgreSQL-enforced append-only replay/control audit plus negative tests.
+- Fresh independent re-review: **PASS with no open Critical/High finding.** It
+  verified every `T5-H1`–`T5-H6` ledger row and added no runtime claim.
+- Immutable evidence: remediation/design commit `2c4be6e4`, design SHA-256
+  `70bba4e87e236b4d407971dc5f1dca2521551f9d2cf42d6fc52b682a60ee8bf7`;
+  PASS commit `fb8c0d99`, rereview SHA-256
+  `1e3275c3a00c5637ea77f977d3a81f1c8bb743689bc78d5341d6ab5fa69d3a50`.
+- Ownership: the exact PostgreSQL adapter root is
+  `packages/backend/src/jobs/adapters/postgres/`.
+- Boundary: Task 5 is design-only. No schema, migration, PostgreSQL role or
+  trigger, adapter, worker loop, live-locking proof, cutover, or browser/runtime
+  behavior is claimed.
+- Documentation cleanup: stale Task 1/Task 2 pending-commit and pending-parent
+  markers were replaced with their accepted parent-orchestrator state.
