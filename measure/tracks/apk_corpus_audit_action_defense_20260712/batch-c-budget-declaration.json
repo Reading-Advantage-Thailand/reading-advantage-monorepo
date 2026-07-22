@@ -1,0 +1,37 @@
+{
+  "schema": "measure.batch-budget-declaration.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 3: Batch C evidence packages",
+  "batch_id": "batch-c",
+  "strategy_role_base_sha": "1448eb4f168d7c6420e3e25347080283f3b840b5",
+  "phase_base_sha": null,
+  "phase_base_sha_capture": "Must equal git rev-parse HEAD^{commit} immediately after the commit publishing test-strategy-batch-c.md, batch-c-budget-declaration.json, and batch-c-role-applicability.json; capture precedes dispatch and source reads.",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "scope": ["Paladin's Twin-Soul", "Gryphon Patrol"],
+  "unit_definitions": {
+    "source_bytes_read": "Bytes read from source or Git objects.",
+    "source_files_or_objects_read": "Distinct source files or Git objects read.",
+    "command_invocations": "Shell commands or tool invocations for source, validation, hashing, browser, or review work.",
+    "elapsed_minutes": "Wall-clock minutes consumed by the role.",
+    "records_authored_or_reviewed": "Labeled factual, fixture, reconciliation, test, review, or lifecycle records authored or reviewed.",
+    "browser_interactions": "Real browser input interactions attempted or observed.",
+    "browser_artifacts_captured": "Browser logs, traces, screenshots, or recordings captured.",
+    "asset_candidates_inspected": "Assigned asset candidates inspected."
+  },
+  "role_ceilings": {
+    "discovery-auditor-batch-c": {"source_bytes_read": 10485760, "source_files_or_objects_read": 80, "command_invocations": 40, "elapsed_minutes": 20, "records_authored_or_reviewed": 240, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "evidence-collector-paladins-twin-soul-batch-c": {"source_bytes_read": 52428800, "source_files_or_objects_read": 120, "command_invocations": 80, "elapsed_minutes": 45, "records_authored_or_reviewed": 300, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "evidence-collector-gryphon-patrol-batch-c": {"source_bytes_read": 52428800, "source_files_or_objects_read": 120, "command_invocations": 80, "elapsed_minutes": 45, "records_authored_or_reviewed": 300, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "requirements-mapper-paladins-twin-soul-batch-c": {"source_bytes_read": 15728640, "source_files_or_objects_read": 80, "command_invocations": 50, "elapsed_minutes": 25, "records_authored_or_reviewed": 240, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "requirements-mapper-gryphon-patrol-batch-c": {"source_bytes_read": 15728640, "source_files_or_objects_read": 80, "command_invocations": 50, "elapsed_minutes": 25, "records_authored_or_reviewed": 240, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "truth-test-author-batch-c": {"source_bytes_read": 20971520, "source_files_or_objects_read": 100, "command_invocations": 60, "elapsed_minutes": 30, "records_authored_or_reviewed": 260, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "browser-auditor-batch-c": {"source_bytes_read": 31457280, "source_files_or_objects_read": 100, "command_invocations": 70, "elapsed_minutes": 40, "records_authored_or_reviewed": 240, "browser_interactions": 120, "browser_artifacts_captured": 80, "asset_candidates_inspected": 0},
+    "asset-auditor-batch-c": {"source_bytes_read": 31457280, "source_files_or_objects_read": 100, "command_invocations": 70, "elapsed_minutes": 40, "records_authored_or_reviewed": 240, "browser_interactions": 40, "browser_artifacts_captured": 40, "asset_candidates_inspected": 240},
+    "adversarial-reviewer-batch-c": {"source_bytes_read": 20971520, "source_files_or_objects_read": 80, "command_invocations": 50, "elapsed_minutes": 25, "records_authored_or_reviewed": 240, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "candidate-owner-batch-c": {"source_bytes_read": 10485760, "source_files_or_objects_read": 60, "command_invocations": 35, "elapsed_minutes": 20, "records_authored_or_reviewed": 180, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "delegated-product-owner-batch-c": {"source_bytes_read": 10485760, "source_files_or_objects_read": 60, "command_invocations": 35, "elapsed_minutes": 20, "records_authored_or_reviewed": 180, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0}
+  },
+  "batch_ceilings": {"source_bytes_read": 293601280, "source_files_or_objects_read": 980, "command_invocations": 590, "elapsed_minutes": 335, "records_authored_or_reviewed": 2660, "browser_interactions": 160, "browser_artifacts_captured": 120, "asset_candidates_inspected": 240},
+  "freeze_policy": "All ceilings are labeled integers frozen before source reads. Every receipt records the declaration SHA-256 and labeled integer actuals in these exact units. Actual usage must not exceed its role ceiling; unmeasured, missing, changed without prior owner approval, or borrowed allocation blocks the affected output and revokes downstream candidate bindings.",
+  "marker": "MEASURE_AGENT_RESULT"
+}
