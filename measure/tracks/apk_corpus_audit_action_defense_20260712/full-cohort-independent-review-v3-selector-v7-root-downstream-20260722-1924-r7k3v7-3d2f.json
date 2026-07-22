@@ -1,0 +1,134 @@
+{
+  "schema_version": "apk-full-cohort-downstream-selector-review.v3",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-DOWNSTREAM-SELECTOR-V7-R7K3V7-3D2F",
+  "role": "adversarial-reviewer-full-cohort-downstream-selector-lineage",
+  "status": "pass-selector-high-remediated-lifecycle-still-fail-closed",
+  "reviewed_at_utc": "2026-07-22T12:24:24Z",
+  "immutable_review_base": {
+    "commit": "2fef3b7e5237282bd05e658a628f27a1bef2d8ce",
+    "parent": "dc34feec8277988183c79da29e53bdba077a729d",
+    "subject": "chore(measure): checkpoint APK Batch C selector lineage",
+    "changed_paths": 9,
+    "git_show_hash_mismatches": 0
+  },
+  "reviewer_provenance": {
+    "provider_identifier": "/root/apk_batch_c_fresh_roles/full_cohort_reviewer_v2_browser_v6_r7k3",
+    "parent_task": "/root",
+    "fork_turns": "none",
+    "review_instance_nonce": "root-downstream-20260722-1924-r7k3v7-3d2f",
+    "append_only_instance": true,
+    "provider_identity_reused_from_prior_r7k3_review": true,
+    "independent_from_selector_truth_provider": true,
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "git_dir": ".git",
+    "git_common_dir": ".git",
+    "auxiliary_worktree_created_or_used": false,
+    "staged_or_committed": false
+  },
+  "ownership_gate": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v3-selector-v7-root-downstream-20260722-1924-r7k3v7-3d2f-ownership.json",
+    "sha256": "a4bf2b33e27d2c12152b7c64fd331b958b2940865bb636431297078ea65beddd",
+    "ownership_and_all_three_reserved_paths_absent_prewrite": true
+  },
+  "commit_blob_audit": {
+    "expected_count": 9,
+    "observed_count": 9,
+    "blobs": [
+      {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v7-root-arbiter-20260722-1912-r7k3-19a7.json","sha256":"a58977ac3ea5891bd3d46f62577b6ed2a0a971e967833b450bdbbae8d0f5d342"},
+      {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-selector-v7-root-arbiter-20260722-1912-r7k3-19a7-ownership.json","sha256":"ef4cdb49044f3de6b67f66f5dd1a83768142a3a17846fc4679291cda95bac987"},
+      {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v7-root-arbiter-20260722-1912-r7k3-19a7.py","sha256":"1153068290e9af74a617ea90ed094a2cb59f5a9a6d9d3f5e1392039a595afb78"},
+      {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3-ownership.json","sha256":"916300ef26cf9825911b1943dd7a18c12e19db7bfe3cf982da0ac422906d9db4"},
+      {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json","sha256":"4aa356729f3f9b3d8f9b03d31f7fe4ec31ce1f56175fb0dc101cd7cf7a09e4e5"},
+      {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json","sha256":"1e5f7b291ad4c61ae8cfa3cca5f56ae92c06b84717d19255c857576fd2dcbdb5"},
+      {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/truth-test-author-batch-c-v7-root-arbiter-20260722-1912-r7k3-19a7.json","sha256":"e33df8239de9ee48ab959da09ad1ce0614c1fd765f3d0dde5cabcb4034116fce"},
+      {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json","sha256":"1aad347224a8e8caa237ea5ad383f39030bc45ef0ed213398b81a6f1995ee2a9"},
+      {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-c-v7-root-arbiter-20260722-1912-r7k3-19a7.json","sha256":"c1472f794264718d7bc9ee0a891d2fad5852a18ca8df9db4bdad099756c467e5"}
+    ]
+  },
+  "prior_high_re_evaluation": {
+    "finding_id": "T4C-BROWSER-V6-SELECTOR-001",
+    "original_severity": "High",
+    "original_review_sha256": "4aa356729f3f9b3d8f9b03d31f7fe4ec31ce1f56175fb0dc101cd7cf7a09e4e5",
+    "original_problem": "Active selector bound non-consumable Browser v5 instead of helper-compliant Browser v6.",
+    "selector_successor_sha256": "a58977ac3ea5891bd3d46f62577b6ed2a0a971e967833b450bdbbae8d0f5d342",
+    "disposition": "resolved-at-selector-lineage-layer",
+    "resolution_evidence": [
+      "C3-BROWSER selects Browser v6 receipt 913ee0b1 and proof a75f2b5c with the exact Browser v6 provider and parent.",
+      "Browser v6 ownership abf14709 and audit 6e9a3950 are explicitly selected and rehashed from immutable Git bytes.",
+      "All eight Browser v6 receipt outputs rehash exactly, including server, console, network, interactions, compact and wide screenshots, and role proof.",
+      "Browser v5 deviation 68e6528e remains preserved as non-consumable and no Browser v5 proof or receipt is selected.",
+      "The focused v7 gate binds the exact prior High review chain and rejects lifecycle authorization."
+    ]
+  },
+  "selector_review": {
+    "selector_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v7-root-arbiter-20260722-1912-r7k3-19a7.json",
+    "selector_sha256": "a58977ac3ea5891bd3d46f62577b6ed2a0a971e967833b450bdbbae8d0f5d342",
+    "predecessor_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v7.json",
+    "predecessor_sha256": "d4c3eb1093970cbe4470bd4da833fced7465b443f85c7d900c79979163a95a17",
+    "selected_roles": 8,
+    "unique_task_ids": 8,
+    "unique_provider_identifiers": 8,
+    "duplicate_provider_identifiers": [],
+    "reviewer_provider_selected": false,
+    "receipt_hash_matches": 8,
+    "proof_hash_matches": 8,
+    "provider_claim_matches": 16,
+    "parent_claim_matches": 16,
+    "non_truth_bindings_equal_to_canonical_v7": 7,
+    "nonce_truth_provider": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v5",
+    "nonce_truth_provider_collision_with_selected_roles": false,
+    "preserved_gryphon_mapper_collision_provider": "/root/t4_gryphon_mapper_terra",
+    "preserved_collision_outputs_selected": false,
+    "cycle_binding_disclosed": "Selector hashes truth proof and receipt; proof/receipt intentionally leave selector SHA null to avoid a self-referential hash cycle."
+  },
+  "browser_v6_binding_review": {
+    "browser_evidence_commit_is_ancestor": true,
+    "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_browser_auditor_v6_kimi_b91e",
+    "parent_task": "/root/apk_batch_c_fresh_roles",
+    "ownership_sha256": "abf14709ac62f3d7fdff1f75fcd3064753f0ec52e0169c2068fd52aa88b172e9",
+    "audit_sha256": "6e9a39503d315f59b001e0952fe317441115cf5c82f8efb3fe5473690b97b4e6",
+    "proof_sha256": "a75f2b5c0bb5d6236c67185aafe42f628bd01e57f63efa904b7986fb3a755cae",
+    "receipt_sha256": "913ee0b1431e0d852dec196cf523d9bec0ed004fa3796e24798ecf9f4532e283",
+    "bound_output_hash_matches": 8,
+    "browser_checks_rerun": false,
+    "reason_not_rerun": "This review is selector lineage only; committed Kimi WebBridge evidence was rehashed rather than reproduced.",
+    "preserved_disposition": "Both Batch C games remain non-runnable at the bound Browser v6 source head; no gameplay, completion, persistence, XP, API, asset-loading, or console-clean claim is promoted."
+  },
+  "gate_execution": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v7-root-arbiter-20260722-1912-r7k3-19a7.py",
+    "run_count": 1,
+    "exit_code": 0,
+    "result": "6 passed in 0.37s",
+    "browser_or_server_gate_run": false
+  },
+  "findings": [],
+  "unresolved_counts": {"critical":0,"high":0,"medium":0,"low":0,"total":0},
+  "verdict": {
+    "selector_lineage": "PASS",
+    "prior_high": "RESOLVED_AT_SELECTOR_LINEAGE_LAYER",
+    "candidate_readiness": "NOT_AUTHORIZED",
+    "reason": "The exact selector defect is resolved and independently verified, but the immutable successor itself requires later additive review/reconciliation lifecycle steps and keeps all authority false."
+  },
+  "lifecycle": {
+    "candidate_authorized": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "consumption_authorized": false,
+    "canonical_reconciliation_modified": false,
+    "candidate_acceptance_or_manifest_created": false
+  },
+  "scope_attestation": {
+    "review_only": true,
+    "no_browser_rerun": true,
+    "no_selector_or_truth_gate_edit": true,
+    "no_registry_plan_metadata_status_or_reconciliation_edit": true,
+    "no_existing_evidence_edit": true,
+    "only_nonce_ownership_review_proof_receipt_written": true,
+    "no_staging": true,
+    "no_commit": true
+  },
+  "blockers": [],
+  "marker": "MEASURE_AGENT_RESULT"
+}

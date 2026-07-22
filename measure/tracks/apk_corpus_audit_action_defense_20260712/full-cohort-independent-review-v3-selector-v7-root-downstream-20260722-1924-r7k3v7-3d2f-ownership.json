@@ -1,0 +1,38 @@
+{
+  "schema": "apk-role-path-ownership.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "role": "adversarial-reviewer-full-cohort-downstream-selector-lineage",
+  "claimed_at": "2026-07-22T12:24:24Z",
+  "nonce": "root-downstream-20260722-1924-r7k3v7-3d2f",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/full_cohort_reviewer_v2_browser_v6_r7k3",
+  "parent_task": "/root",
+  "fork_turns": "none",
+  "immutable_review_base": "2fef3b7e5237282bd05e658a628f27a1bef2d8ce",
+  "review_scope": "Fresh downstream review of the committed v7 selector/truth-gate successor against exact committed Browser v6 evidence and prior High T4C-BROWSER-V6-SELECTOR-001; no browser rerun.",
+  "reserved_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v3-selector-v7-root-downstream-20260722-1924-r7k3v7-3d2f.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v3-selector-v7-root-downstream-20260722-1924-r7k3v7-3d2f.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v3-selector-v7-root-downstream-20260722-1924-r7k3v7-3d2f.json"
+  ],
+  "preclaim_state": {
+    "ownership_and_all_reserved_paths_absent": true,
+    "rule": "Stop without overwrite if any nonce path exists before ownership publication."
+  },
+  "forbidden_writes": [
+    "canonical selection",
+    "registry",
+    "plan",
+    "metadata",
+    "status",
+    "reconciliation",
+    "existing evidence",
+    "candidate",
+    "acceptance",
+    "accepted manifest"
+  ],
+  "candidate_authorized": false,
+  "acceptance_authorized": false,
+  "consumption_authorized": false,
+  "marker": "MEASURE_AGENT_RESULT"
+}

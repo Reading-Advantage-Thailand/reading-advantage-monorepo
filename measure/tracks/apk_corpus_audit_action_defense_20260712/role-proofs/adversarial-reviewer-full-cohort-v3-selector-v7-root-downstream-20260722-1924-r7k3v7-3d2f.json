@@ -1,0 +1,66 @@
+{
+  "schema": "measure-role-proof.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-DOWNSTREAM-SELECTOR-V7-R7K3V7-3D2F",
+  "role": "adversarial-reviewer-full-cohort-downstream-selector-lineage",
+  "status": "complete-pass-fail-closed",
+  "completed_at_utc": "2026-07-22T12:24:24Z",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/full_cohort_reviewer_v2_browser_v6_r7k3",
+  "parent_task": "/root",
+  "fork_turns": "none",
+  "review_instance_nonce": "root-downstream-20260722-1924-r7k3v7-3d2f",
+  "ownership": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v3-selector-v7-root-downstream-20260722-1924-r7k3v7-3d2f-ownership.json",
+    "sha256": "a4bf2b33e27d2c12152b7c64fd331b958b2940865bb636431297078ea65beddd",
+    "all_nonce_paths_absent_prewrite": true
+  },
+  "immutable_review_base": "2fef3b7e5237282bd05e658a628f27a1bef2d8ce",
+  "commands": [
+    {"id":"D01","command":"git show -s --format=<metadata> 2fef3b7e; git diff-tree --no-commit-id --name-status -r 2fef3b7e","exit_code":0,"result":"Exact commit 2fef3b7e5237282bd05e658a628f27a1bef2d8ce; 9 added paths."},
+    {"id":"D02","command":"git rev-parse --git-dir --git-common-dir; git worktree list --porcelain","exit_code":0,"result":"Both Git dirs are .git; only canonical checkout listed."},
+    {"id":"D03","command":"git show 2fef3b7e:<each changed path> | sha256sum","exit_code":0,"result":"9/9 immutable commit blob hashes recorded; mismatches=0."},
+    {"id":"D04","command":"PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v7-root-arbiter-20260722-1912-r7k3-19a7.py","exit_code":0,"result":"6 passed in 0.37s; executed exactly once."},
+    {"id":"D05","command":"For each selector entry, git show 2fef3b7e:<receipt/proof> | sha256sum and jq provider/parent","exit_code":0,"result":"8/8 receipt hashes, 8/8 proof hashes, 16/16 provider claims, and 16/16 parent claims matched."},
+    {"id":"D06","command":"jq selected provider identifiers | sort/uniq; compare reviewer provider","exit_code":0,"result":"provider_count=8; unique_provider_count=8; no duplicates; reviewer provider distinct."},
+    {"id":"D07","command":"diff canonical-v7 versus r7k3-v7 selected_receipts excluding C3-TRUTH","exit_code":0,"result":"No diff; 7/7 non-truth bindings preserved."},
+    {"id":"D08","command":"git show 2fef3b7e:<Browser v6 receipt outputs> | sha256sum","exit_code":0,"result":"8/8 Browser v6 bound outputs matched, plus ownership, audit, proof, and receipt bindings."},
+    {"id":"D09","command":"git show 2fef3b7e:<Browser v5 deviation> | sha256sum; inspect selected Browser paths","exit_code":0,"result":"Deviation hash 68e6528e matched; Browser v5 proof/receipt absent from selection."},
+    {"id":"D10","command":"git merge-base --is-ancestor ae0920c93f30bf1d2d90058373c552dfccdfd8a1 2fef3b7e5237282bd05e658a628f27a1bef2d8ce","exit_code":0,"result":"Browser v6 evidence commit is an ancestor of selector-lineage commit."},
+    {"id":"D11","command":"jq -e . full-cohort-independent-review-v3-selector-v7-root-downstream-20260722-1924-r7k3v7-3d2f.json; sha256sum <review>","exit_code":0,"result":"Valid JSON; review SHA-256 6d7b03d02bfd4cb1d710bd1e236cd00fd4471f7a20331285591a0f325997e872."}
+  ],
+  "output_bindings": {
+    "review": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v3-selector-v7-root-downstream-20260722-1924-r7k3v7-3d2f.json",
+      "sha256": "6d7b03d02bfd4cb1d710bd1e236cd00fd4471f7a20331285591a0f325997e872"
+    },
+    "proof": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v3-selector-v7-root-downstream-20260722-1924-r7k3v7-3d2f.json",
+      "sha256": null,
+      "digest_binding": "bound by receipt"
+    },
+    "receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v3-selector-v7-root-downstream-20260722-1924-r7k3v7-3d2f.json",
+      "sha256": null,
+      "digest_reason": "receipt cannot self-hash"
+    }
+  },
+  "result": {
+    "verdict": "PASS_SELECTOR_LINEAGE",
+    "prior_high": "RESOLVED_AT_SELECTOR_LINEAGE_LAYER",
+    "findings": [],
+    "candidate_authorized": false,
+    "acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "consumption_authorized": false
+  },
+  "scope_attestation": {
+    "browser_checks_rerun": false,
+    "canonical_or_existing_evidence_modified": false,
+    "only_four_nonce_paths_written": true,
+    "no_staging": true,
+    "no_commit": true
+  },
+  "verification_result": "pass-fail-closed",
+  "marker": "MEASURE_AGENT_RESULT"
+}
