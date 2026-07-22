@@ -1,0 +1,86 @@
+{
+  "schema": "measure.role-proof.v4",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-ACCEPTED-MANIFEST-V1",
+  "role": "accepted-manifest-publisher-full-cohort",
+  "status": "complete-accepted-with-disclosure",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/t4_accepted_manifest",
+    "parent_task": "/root",
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "auxiliary_git_worktree_created_or_used": false,
+    "commit_created": false,
+    "raw_encrypted_prompt": null,
+    "unavailable_note": "Encrypted prompt and provider-event exports are unavailable; local Git ordering and SHA-256 validation are not provider attestation."
+  },
+  "ordered_lifecycle_inputs": {
+    "candidate": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v1.json",
+      "sha256": "4334aaadb6c19d15ad03bbfdc588f9e26ac65322c7ef615516f57a9ffaa31b97",
+      "publication_commit_sha": "98ce66623f6b3ba0117ec7d5e475dd40e3ddb6c0",
+      "candidate_only_non_consumable": true
+    },
+    "owner_acceptance": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-t4-v1.json",
+      "sha256": "fff5544a8f28a45c3985bddd0b48706baabbc6a6a010113ac66ce3156c79d5d1",
+      "publication_commit_sha": "e3e6b421944eb57e407f737e4deb89e5846ada0d",
+      "ordered_after_candidate": true,
+      "accepted_manifest_publication_authorized": true
+    },
+    "full_cohort_review": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2.json",
+      "sha256": "89cf0ff23a7afe897ee4b1a6dfa6d77630d08be698a78f6da711d74c80bea774",
+      "publication_commit_sha": "cb665c902ec96f1192440e0bc9111c98744d94df",
+      "unresolved_critical_high_medium": 0
+    },
+    "cohort_reconciliation": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v3.json",
+      "sha256": "866d3926d3145450dbc19e1ff8ec58f3d649e259aa99996c6c3af9f6b34aecab",
+      "publication_commit_sha": "dc34feec8277988183c79da29e53bdba077a729d",
+      "roster": "8 exactly once; A3/B3/C2"
+    }
+  },
+  "roster_validation": {
+    "entries": 8,
+    "batch_distribution": "A3/B3/C2",
+    "duplicates": 0,
+    "omissions": 0,
+    "exactly_once": true
+  },
+  "output": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v1.json",
+    "sha256": "594a4a89756fb3a60e4fa1111b9df0e4eb0355f7e5b3774ca4291ecf029ccf3e",
+    "status": "accepted-with-disclosure",
+    "consumability": "conditional-only-under-every-recorded-condition-and-disclosure"
+  },
+  "preserved_limits": [
+    "Batch A retains its Castle Defense omission, DISC-001, and 178-of-187 claim-resolution limitation.",
+    "Batch B retains synthetic isTrusted=false input, hidden-tab scheduling, HTTP 400 completion responses, exact-route HTTP 404 results, historical-source limits, asset-use unknowns, and unavailable provider-session provenance.",
+    "Batch C excludes Browser v5. Browser v6 records helper exits 4 and 28, including wide-attempt timeout 28, helper-originated daemon recovery with byte-identical PNG copies, and exact-route HTTP 404/non-runnable results; it does not claim successful helper writes or direct screenshot API use.",
+    "The selected Asset v5 role retains five pending self-check fields and requires its separate independent validation companion; collision-invalid Asset V4 and Gryphon Mapper V5 outputs remain excluded.",
+    "Encrypted-prompt and provider-event evidence are unavailable and are not fabricated.",
+    "No gameplay, responsive, completion, persistence, XP, idempotency, API, asset-loading, asset-suitability, licensing, production-use, implementation, or shipping success is claimed.",
+    "Browser v5, full-cohort review v1, and reconciliation v2 remain non-consumable historical failure or stop-loss evidence."
+  ],
+  "authority_boundary": {
+    "accepted_manifest_published": true,
+    "conditional_consumability_only": true,
+    "t8_authorized": false,
+    "implementation_authorized": false,
+    "product_or_shipping_claim_authorized": false,
+    "next_required_event": "An independent active admission gate and T4 documentation closeout."
+  },
+  "scope_attestation": {
+    "exactly_three_publication_artifacts_written": true,
+    "no_gate_created": true,
+    "no_tests_run": true,
+    "no_docs_registry_history_or_product_files_modified": true,
+    "no_staging": true,
+    "no_commit": true
+  },
+  "self_sha256": null,
+  "self_hash_note": "A proof cannot embed its own stable SHA-256; the companion receipt binds these bytes."
+}

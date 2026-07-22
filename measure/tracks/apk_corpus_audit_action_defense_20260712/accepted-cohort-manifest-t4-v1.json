@@ -1,0 +1,104 @@
+{
+  "schema_version": "apk-accepted-cohort-manifest.t4.v1",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "cohort_id": "t4-full-eight-game-cohort",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-ACCEPTED-MANIFEST-V1",
+  "manifest_kind": "accepted-cohort-manifest",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "status": "accepted-with-disclosure",
+  "publication_role_base_sha": "e3e6b421944eb57e407f737e4deb89e5846ada0d",
+  "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+  "single_master_checkout_only": true,
+  "auxiliary_git_worktree_created_or_used": false,
+  "candidate": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v1.json",
+    "sha256": "4334aaadb6c19d15ad03bbfdc588f9e26ac65322c7ef615516f57a9ffaa31b97",
+    "publication_commit_sha": "98ce66623f6b3ba0117ec7d5e475dd40e3ddb6c0",
+    "status": "candidate-only-non-consumable",
+    "ordered_before_owner_acceptance": true
+  },
+  "owner_acceptance": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-t4-v1.json",
+    "sha256": "fff5544a8f28a45c3985bddd0b48706baabbc6a6a010113ac66ce3156c79d5d1",
+    "publication_commit_sha": "e3e6b421944eb57e407f737e4deb89e5846ada0d",
+    "decision": "ACCEPT-WITH-DISCLOSURE",
+    "ordered_after_candidate": true,
+    "accepted_manifest_publication_authorized": true
+  },
+  "full_cohort_review": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2.json",
+    "sha256": "89cf0ff23a7afe897ee4b1a6dfa6d77630d08be698a78f6da711d74c80bea774",
+    "publication_commit_sha": "cb665c902ec96f1192440e0bc9111c98744d94df",
+    "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v2.json",
+    "proof_sha256": "cd32f636906e43ac35f87e59f0366d288f8645e1b2fde2372395f12bac4e7e23",
+    "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v2.json",
+    "receipt_sha256": "b51dc8ba5a56acd0bdb6c8d0128fd1905ed328db96fdeb2655fa369227d07790",
+    "unresolved_critical_high_medium": 0,
+    "candidate_publication_authorized_only": true
+  },
+  "cohort_reconciliation": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v3.json",
+    "sha256": "866d3926d3145450dbc19e1ff8ec58f3d649e259aa99996c6c3af9f6b34aecab",
+    "publication_commit_sha": "dc34feec8277988183c79da29e53bdba077a729d",
+    "gate_result": "6 tests passed independently once against committed inputs",
+    "status": "structurally-reconciled-only-not-a-cohort-acceptance"
+  },
+  "full_cohort_roster": {
+    "expected_games": 8,
+    "observed_games": 8,
+    "duplicates": 0,
+    "omissions": 0,
+    "exactly_once": true,
+    "batch_counts": {
+      "batch_a": 3,
+      "batch_b": 3,
+      "batch_c": 2
+    },
+    "entries": [
+      ["Castle Defense", "castle-defense", "batch-a"],
+      ["Magic Defense", "magic-defense", "batch-a"],
+      ["Wizard vs Zombie", "wizard-vs-zombie", "batch-a"],
+      ["Village Guardian", "village-guardian", "batch-b"],
+      ["Archer's Revenge", "archers-revenge", "batch-b"],
+      ["Storm the Castle Tower", "storm-castle-tower", "batch-b"],
+      ["Paladin's Twin-Soul", "paladins-twin-soul", "batch-c"],
+      ["Gryphon Patrol", "gryphon-patrol", "batch-c"]
+    ]
+  },
+  "conditions": [
+    "This manifest is consumable only conditionally and only together with every candidate, owner-acceptance, Batch A, Batch B, and Batch C disclosure recorded in its bound artifacts.",
+    "Batch A retains the Castle Defense manifest omission, DISC-001, and its 178-of-187 resolved-claim limitation; no unrecorded success is inferred.",
+    "Batch B retains synthetic isTrusted=false DOM input, hidden-tab scheduling, HTTP 400 completion responses, exact-route HTTP 404 results, historical-source limits, asset-use unknowns, and unavailable provider-session provenance.",
+    "Batch C Browser v5 is excluded as non-consumable. Browser v6 made five required screenshot.sh attempts with helper exits including 4 and 28; the wide attempt timed out, and the selected PNG bytes are unchanged daemon post-process recoveries. This does not claim a successful helper write, direct screenshot API use, or runnable routes: both exact routes were HTTP 404 and non-runnable.",
+    "The selected Asset v5 receipt retains five pending self-check fields and is usable only with its separately bound independent validation companion; that companion does not impersonate or replace the selected Asset role. Collision-invalid Asset V4 and Gryphon Mapper V5 sets remain excluded.",
+    "Encrypted-prompt and provider-event evidence are unavailable in this harness and are not fabricated; Git ordering and hashes record artifact chronology only.",
+    "Browser v5, full-cohort review v1, and reconciliation v2 remain non-consumable historical failure or stop-loss evidence.",
+    "No runtime asset loading, suitability, licensing, production use, ontology, cross-game standardization, implementation, shipping, gameplay, responsive behavior, completion, persistence, XP, idempotency, or API correctness is established or authorized."
+  ],
+  "forbidden_success_claims": {
+    "gameplay": false,
+    "responsive": false,
+    "completion": false,
+    "persistence": false,
+    "xp": false,
+    "idempotency": false,
+    "api": false,
+    "asset_loading": false,
+    "asset_suitability": false,
+    "licensing": false,
+    "production_use": false,
+    "implementation": false,
+    "shipping": false
+  },
+  "consumable": true,
+  "consumability": "conditional-only-under-every-recorded-condition-and-disclosure",
+  "cohort_consumption_authorized": "conditional-only-under-this-manifest-and-all-bound-disclosures",
+  "t8_authorized": false,
+  "product_or_shipping_claim_authorized": false,
+  "revocation_rule": "Any bound-byte drift, red active admission gate, newly unresolved Critical/High/Medium finding, roster drift, exclusion breach, or promotion beyond the recorded disclosures revokes conditional consumability.",
+  "next_required_event": "An independent active admission gate followed by T4 documentation closeout. This manifest does not authorize T8, implementation, product deployment, or shipping.",
+  "self_sha256": null,
+  "self_hash_note": "A manifest cannot embed its own stable SHA-256; the companion proof and receipt bind these bytes."
+}
