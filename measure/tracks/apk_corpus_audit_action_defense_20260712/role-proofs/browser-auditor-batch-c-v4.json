@@ -1,0 +1,17 @@
+{
+  "schema_version": "apk-role-proof.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "role": "browser-auditor-batch-c",
+  "session": "apk-t4-batch-c-browser",
+  "group_title": "APK T4 Batch C browser audit",
+  "provider_identifier": null,
+  "encrypted_prompt_event": null,
+  "provider_event_unavailable_reason": "The local harness exposes no encrypted prompt or provider-event export. Values are deliberately null rather than reconstructed.",
+  "commands": [
+    {"argv": ["pnpm", "--dir", "apps/advantage-games", "build"], "exit_code": 0, "stdout": "Build completed; BUILD_ID retained in audit artifact."},
+    {"argv": ["pnpm", "--dir", "apps/advantage-games", "start", "--hostname", "127.0.0.1", "--port", "4117"], "exit_code": 0, "stdout": "Started and later stopped only the managed audit server."},
+    {"argv": ["curl", "-sS", "-X", "POST", "http://127.0.0.1:10086/command"], "exit_code": 0, "stdout": "WebBridge navigate/snapshot/evaluate/screenshot/network commands succeeded in the named session."},
+    {"argv": ["PYTHONDONTWRITEBYTECODE=1", "python3", "-m", "pytest", "-q", "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py", "-k", "BatchCImmutableBrowserContract"], "exit_code": 0, "stdout": "1 passed, 4 deselected"}
+  ],
+  "verification_result": "green: 1 passed, 4 deselected; exit 0"
+}

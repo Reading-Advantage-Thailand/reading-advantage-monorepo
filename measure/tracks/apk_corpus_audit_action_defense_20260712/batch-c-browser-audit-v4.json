@@ -1,0 +1,66 @@
+{
+  "schema_version": "apk-browser-audit.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 3: Batch C evidence packages",
+  "batch_id": "batch-c",
+  "role": "browser-auditor-batch-c",
+  "status": "bounded-non-runnable-disposition",
+  "acceptance": "not-claimed",
+  "immutable_runtime": {
+    "revision": "cdb152452a6e404507bb0fd11faa2abfb7f7aa07",
+    "source_scope": ["apps/advantage-games", "packages"],
+    "worktree_status": "clean",
+    "worktree_status_scope": "The audited app-source scope only. `git diff --quiet cdb15245 -- apps/advantage-games packages` exited 0 immediately before artifact creation.",
+    "repository_worktree_status": "dirty outside the audited app-source scope; unrelated Measure and worker changes were not served or modified by this role.",
+    "app_source_tree_sha256": "7236aa79e264f338f798ab358466b7888a87dce089fde91f0e94c8d2d6ee45e5",
+    "app_source_tree_command": "git ls-tree -r cdb15245 -- apps/advantage-games packages | sha256sum",
+    "build_id": "hHtmVVHC9ybJWaTUG6hg7",
+    "build_output": "apps/advantage-games/.next",
+    "server_origin": "http://127.0.0.1:4117",
+    "server_lifecycle": "This role built and started the local server twice in managed sessions, then stopped only those sessions. The user's existing port-3117 server was never used as acceptance evidence, restarted, or stopped."
+  },
+  "browser": {
+    "mechanism": "Kimi WebBridge local daemon via curl to 127.0.0.1:10086 only",
+    "session": "apk-t4-batch-c-browser",
+    "group_title": "APK T4 Batch C browser audit",
+    "tab_policy": "First navigation used newTab:true. No active tab was borrowed, no unrelated tabs were enumerated, and this role did not close the session.",
+    "provider_identifier": null,
+    "encrypted_prompt_event": null,
+    "unavailable_note": "The WebBridge harness did not expose encrypted prompt/provider-event values. They are null, not fabricated."
+  },
+  "exact_commands": {
+    "build_command": "pnpm --dir apps/advantage-games build",
+    "start_command": "pnpm --dir apps/advantage-games start --hostname 127.0.0.1 --port 4117 2>&1 | tee -a measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v4-server.log",
+    "health_check_command": "curl -sS -D /tmp/batch-c-v4-health-headers.txt -o /tmp/batch-c-v4-health.html -w 'status=%{http_code} url=%{url_effective}\\n' http://127.0.0.1:4117/",
+    "navigation_command": "curl -sS -X POST http://127.0.0.1:10086/command -H 'Content-Type: application/json' -d '{\"action\":\"navigate\",\"args\":{\"url\":\"http://127.0.0.1:4117/\",\"newTab\":true,\"group_title\":\"APK T4 Batch C browser audit\"},\"session\":\"apk-t4-batch-c-browser\"}'",
+    "source_binding_command": "git diff --quiet cdb15245 -- apps/advantage-games packages && git ls-tree -r cdb15245 -- apps/advantage-games packages | sha256sum"
+  },
+  "server_log": {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v4-server.log", "sha256": "9be0aa98cbcde61f27efc111d1f73f6fdd6eda13cbe46bc4255d4bf9bcb013af"},
+  "browser_console_log": {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v4-console.json", "sha256": "861c628a989e7c43c3bd5d876f56e66e3c951ab9e28ff01a536c133a24b46212"},
+  "browser_network_log": {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v4-network.json", "sha256": "ad6bc593c9fda520596f5ac5d29459428999661e5fc45b5c581660bb6cb32806"},
+  "screenshots": [
+    {"viewport": "compact", "width": 390, "height": 844, "route": "/", "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v4-compact.png", "sha256": "f1095b659ad4f98aba0195d180ebdc048cd3038d0b45114883f0c2e851fe30b1", "size_bytes": 20375},
+    {"viewport": "wide", "width": 1440, "height": 900, "route": "/", "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v4-wide.png", "sha256": "7c1d4390e99dfb417e41f401c7122a14c7f9a5913b1d49fc39685305ab18b5ed", "size_bytes": 317436}
+  ],
+  "observations": [
+    {"viewport": "compact", "route": "/", "status": 200, "title": "Create Next App", "visible_catalog_items": ["Paladin's Twin-Soul", "Gryphon Patrol"], "visible_controls": ["Paladin's Twin-Soul: Coming Soon", "Gryphon Patrol: Coming Soon"], "game_state": "catalog only"},
+    {"viewport": "compact", "game": "Paladin's Twin-Soul", "route": "/en/student/games/vocabulary/paladins-twin-soul", "status": 404, "title": "Create Next App", "visible_body": "404 This page could not be found.", "game_state": "none"},
+    {"viewport": "compact", "game": "Gryphon Patrol", "route": "/en/student/games/sentence/gryphon-patrol", "status": 404, "title": "Create Next App", "visible_body": "404 This page could not be found.", "game_state": "none"},
+    {"viewport": "wide", "route": "/", "status": 200, "title": "Create Next App", "visible_catalog_items": ["Paladin's Twin-Soul", "Gryphon Patrol"], "visible_controls": ["Paladin's Twin-Soul: Coming Soon", "Gryphon Patrol: Coming Soon"], "game_state": "catalog only"},
+    {"viewport": "wide", "game": "Paladin's Twin-Soul", "route": "/en/student/games/vocabulary/paladins-twin-soul", "status": 404, "title": "Create Next App", "visible_body": "404 This page could not be found.", "game_state": "none"},
+    {"viewport": "wide", "game": "Gryphon Patrol", "route": "/en/student/games/sentence/gryphon-patrol", "status": 404, "title": "Create Next App", "visible_body": "404 This page could not be found.", "game_state": "none"}
+  ],
+  "bounded_non_runnable_disposition": {
+    "runnable": false,
+    "exact_result": "At compact and wide viewports, the audited catalog displayed both requested games as Coming Soon and their checked configured routes rendered 404 with 'This page could not be found.'",
+    "not_claimed": ["gameplay success", "real-input gameplay", "start/instruction/active/transition/result state", "responsive success", "global route absence", "historical source behavior", "console clean"],
+    "limit": "A checked-route 404 is a runtime-specific, bounded browser observation only."
+  },
+  "outputs": {
+    "audit": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v4.json",
+    "receipt": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v4.json",
+    "proof": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/browser-auditor-batch-c-v4.json"
+  },
+  "self_sha256": null,
+  "marker": "MEASURE_AGENT_RESULT"
+}

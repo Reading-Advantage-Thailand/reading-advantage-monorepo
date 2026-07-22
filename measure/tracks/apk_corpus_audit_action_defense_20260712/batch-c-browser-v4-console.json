@@ -1,0 +1,9 @@
+{
+  "schema_version": "apk-browser-console-log.v1",
+  "capture_mechanism": "Kimi WebBridge 1.11.1 via /command; console enumeration is not exposed by this daemon command surface",
+  "session": "apk-t4-batch-c-browser",
+  "tab_scope": "only the new tab opened by this audit",
+  "events": null,
+  "unavailable_reason": "No WebBridge console-log action or retrievable CDP event buffer was available. Console events are therefore not inferred from network, DOM, or server output.",
+  "claim_limit": "No console-clean claim is made."
+}

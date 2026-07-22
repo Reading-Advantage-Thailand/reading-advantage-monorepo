@@ -1,0 +1,14 @@
+{
+  "schema_version": "apk-browser-network-log.v1",
+  "capture_mechanism": "Kimi WebBridge network start/list/stop in session apk-t4-batch-c-browser",
+  "retained_filter": "Only main-document observations for the audit origin and the two checked Batch C routes are retained; the daemon reported count 100 and may have included unrelated browser traffic, which is not used as evidence.",
+  "observations": [
+    {"viewport": "compact", "url": "http://127.0.0.1:4117/", "method": "GET", "status": 200, "mime_type": "text/html", "completed": true},
+    {"viewport": "compact", "url": "http://127.0.0.1:4117/en/student/games/vocabulary/paladins-twin-soul", "method": "GET", "status": 404, "mime_type": "text/html", "completed": true},
+    {"viewport": "compact", "url": "http://127.0.0.1:4117/en/student/games/sentence/gryphon-patrol", "method": "GET", "status": 404, "mime_type": "text/html", "completed": true},
+    {"viewport": "wide", "url": "http://127.0.0.1:4117/", "method": "GET", "status": 200, "mime_type": "text/html", "completed": true},
+    {"viewport": "wide", "url": "http://127.0.0.1:4117/en/student/games/vocabulary/paladins-twin-soul", "method": "GET", "status": 404, "mime_type": "text/html", "completed": true},
+    {"viewport": "wide", "url": "http://127.0.0.1:4117/en/student/games/sentence/gryphon-patrol", "method": "GET", "status": 404, "mime_type": "text/html", "completed": true}
+  ],
+  "claim_limit": "The 404 observations are limited to these checked routes and this audited runtime; they do not establish global route absence or historical behavior."
+}
