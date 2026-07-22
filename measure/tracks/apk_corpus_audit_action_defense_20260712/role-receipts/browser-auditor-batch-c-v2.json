@@ -1,0 +1,78 @@
+{
+  "schema_version": "apk-role-receipt.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 3: Batch C evidence packages",
+  "batch_id": "batch-c",
+  "role": "browser-auditor-batch-c-v2",
+  "role_identity": "fresh-context browser audit only",
+  "status": "audit-blocked-before-real-browser-navigation",
+  "acceptance": "not-claimed",
+  "requested_role_base_sha": "a063f3bec3c7f8d62ccb9116994322b87191d5ae",
+  "observed_head_sha": "a063f3bec9995ecd4a637ec463f4558333d9644d",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "provider_provenance": {
+    "available": false,
+    "claimed": false,
+    "provider_identifier": null,
+    "spawn_id": null,
+    "session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "unavailable_note": "This local OpenCode context exposes no tool-attested provider spawn, session, ancestry, fork_turns, or raw isolation-export field. No provenance is fabricated."
+  },
+  "browser_tool_provenance": {
+    "requested": ["browser-harness", "agent-browser"],
+    "browser_harness": "Installed, but CDP attachment was blocked before a page session because Chrome requested a user Allow action at chrome://inspect.",
+    "agent_browser": "Unavailable: /bin/bash: line 1: agent-browser: command not found",
+    "real_browser_navigation_performed": false
+  },
+  "exact_inputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v2.json": "f53d4bff0d60f12535c14061b4ca79b422f1c927913261478f7e4dff07886110",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-budget-declaration.json": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit.json": "3eecdd9d44dc3aa18dd53a481f980a8edd3425b38c73cc93bebc4c0a835a8298",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c.json": "bc2229a883375a20d4e1f249a056904824d3b12bcf78627bebc423f9df173ccc"
+  },
+  "outputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v2.json": "f53d4bff0d60f12535c14061b4ca79b422f1c927913261478f7e4dff07886110",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v2.json": null
+  },
+  "resource_budget": {
+    "declaration_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-budget-declaration.json",
+    "declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "role_ceiling": {
+      "source_bytes_read": 31457280,
+      "source_files_or_objects_read": 100,
+      "command_invocations": 70,
+      "elapsed_minutes": 40,
+      "records_authored_or_reviewed": 240,
+      "browser_interactions": 120,
+      "browser_artifacts_captured": 80,
+      "asset_candidates_inspected": 0
+    },
+    "actual": {
+      "source_bytes_read": 155670,
+      "source_files_or_objects_read": 13,
+      "command_invocations": 10,
+      "elapsed_minutes": 12,
+      "records_authored_or_reviewed": 2,
+      "browser_interactions": 0,
+      "browser_artifacts_captured": 0,
+      "asset_candidates_inspected": 0
+    },
+    "measurement_note": "Source input bytes are the 13 read, hash-bound governance/audit artifacts totaling 155670 bytes. Command count includes browser attachment attempts, environment checks, revision/hash checks, and validation. Zero browser interactions and artifacts reflect the fact that no CDP page session was attached."
+  },
+  "scope_attestation": {
+    "roles_held": ["browser-auditor-batch-c-v2"],
+    "forbidden_work_not_performed": ["source evidence collection", "mapping", "truth-test authoring or modification", "asset audit", "adversarial review", "candidate publication", "product-owner acceptance", "accepted-manifest publication", "application source editing", "committing"],
+    "no_vacuous_success": true,
+    "browser_success_claimed": false,
+    "responsive_success_claimed": false,
+    "game_runtime_non_runnable_claimed": false,
+    "blocker": "Chrome DevTools authorization is pending at chrome://inspect, preventing any real-browser page attachment despite the Next server listening at 127.0.0.1:3117."
+  },
+  "commit_sha": null,
+  "commit_disposition": "not-created by this role",
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,117 @@
+{
+  "schema_version": "apk-browser-audit.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 3: Batch C evidence packages",
+  "batch_id": "batch-c",
+  "role": "browser-auditor-batch-c-v2",
+  "status": "audit-blocked-before-real-browser-navigation",
+  "acceptance": "not-claimed",
+  "supersession": {
+    "supersedes_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit.json",
+    "supersedes_sha256": "3eecdd9d44dc3aa18dd53a481f980a8edd3425b38c73cc93bebc4c0a835a8298",
+    "scope": "browser-disposition purposes only",
+    "v1_preservation": "The v1 blocked artifact and its receipt remain unmodified historical evidence."
+  },
+  "role_base": {
+    "requested_role_base_sha": "a063f3bec3c7f8d62ccb9116994322b87191d5ae",
+    "observed_head_sha": "a063f3bec9995ecd4a637ec463f4558333d9644d",
+    "requested_role_base_resolution": "git show could not resolve the supplied SHA: fatal: bad object a063f3bec3c7f8d62ccb9116994322b87191d5ae"
+  },
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "scope": {
+    "games": [
+      "Paladin's Twin-Soul",
+      "Gryphon Patrol"
+    ],
+    "forbidden_work_not_performed": [
+      "source claim collection",
+      "requirements mapping",
+      "truth-test authoring or modification",
+      "asset suitability audit",
+      "review",
+      "candidate or acceptance publication",
+      "application source editing",
+      "committing"
+    ]
+  },
+  "runtime_environment": {
+    "server_origin": "http://127.0.0.1:3117",
+    "server_provenance": "Pre-existing server specified by the dispatch; this role did not start, stop, or modify it.",
+    "listening_check": "LISTEN 0 511 127.0.0.1:3117 0.0.0.0:* users:((\"next-server (v1\",pid=568060,fd=22))",
+    "real_browser_attempts": [
+      {
+        "command": "browser-harness -c \"print(page_info())\"",
+        "result": "blocked-before-CDP-session",
+        "exact_log": "browser-harness: click Allow on chrome://inspect (and tick the checkbox if shown)\nRuntimeError: fatal: Chrome's remote-debugging page is open, but DevTools is not live yet on 127.0.0.1:9222 — if Chrome opened a profile picker, choose your normal profile first, then tick the checkbox and click Allow if shown"
+      },
+      {
+        "command": "agent-browser --session batch-c-v2 open \"http://127.0.0.1:3117/\" --headed",
+        "result": "unavailable",
+        "exact_log": "/bin/bash: line 1: agent-browser: command not found"
+      }
+    ],
+    "browser_harness_stdin_attempt": {
+      "command": "browser-harness <<'PY' ... PY",
+      "result": "not-executed-by-cli",
+      "exact_log": "Usage: browser-harness -c \"print(page_info())\""
+    }
+  },
+  "candidate_navigation_matrix": {
+    "viewports": [
+      {"name": "compact", "width": 390, "height": 844},
+      {"name": "wide", "width": 1440, "height": 900}
+    ],
+    "routes": [
+      {"route": "/", "game": null, "compact": "unattempted-browser-harness-blocked", "wide": "unattempted-browser-harness-blocked"},
+      {"route": "/en/student/arcade/paladins-twin-soul", "game": "Paladin's Twin-Soul", "compact": "unattempted-browser-harness-blocked", "wide": "unattempted-browser-harness-blocked"},
+      {"route": "/en/student/arcade/gryphon-patrol", "game": "Gryphon Patrol", "compact": "unattempted-browser-harness-blocked", "wide": "unattempted-browser-harness-blocked"},
+      {"route": "/en/student/games/vocabulary/paladins-twin-soul", "game": "Paladin's Twin-Soul", "compact": "unattempted-browser-harness-blocked", "wide": "unattempted-browser-harness-blocked"},
+      {"route": "/en/student/games/sentence/gryphon-patrol", "game": "Gryphon Patrol", "compact": "unattempted-browser-harness-blocked", "wide": "unattempted-browser-harness-blocked"}
+    ],
+    "final_url": null,
+    "visible_disposition": "unobserved; no real browser page session attached",
+    "title_or_dom_evidence": "unobserved; no real browser page session attached",
+    "console_errors": "unobserved; no real browser page session attached",
+    "failed_network_requests_or_statuses": "unobserved; no real browser page session attached",
+    "screenshots": [],
+    "input_and_state_observation": {
+      "real_keyboard_pointer_touch_interaction_available": "unobserved",
+      "start_or_instruction_state": "unobserved",
+      "active_state": "unobserved",
+      "transition_state": "unobserved",
+      "terminal_or_result_state": "unobserved"
+    }
+  },
+  "bounded_non_runnable_disposition": {
+    "status": "audit-environment-blocked; game-runtime non-runnability not established",
+    "attempted_command_and_environment": "The pre-existing Next server was listening at 127.0.0.1:3117. browser-harness could not attach because Chrome DevTools was awaiting a user Allow action, and agent-browser was absent.",
+    "routes": ["/", "/en/student/arcade/paladins-twin-soul", "/en/student/arcade/gryphon-patrol", "/en/student/games/vocabulary/paladins-twin-soul", "/en/student/games/sentence/gryphon-patrol"],
+    "revision": "a063f3bec9995ecd4a637ec463f4558333d9644d",
+    "exact_observed_result": "No route navigation began in a real browser; final URLs, visible disposition, DOM/title evidence, console output, network statuses, screenshots, and interaction/state observations are therefore unobserved.",
+    "logs": "Recorded verbatim under runtime_environment.real_browser_attempts.",
+    "no_browser_success": true,
+    "no_responsive_success": true,
+    "limit": "This is not a global route-absence, HTTP-status, or game non-runnability claim. It supersedes v1 only as the current browser-disposition artifact."
+  },
+  "exact_inputs": {
+    "AGENTS.md": "3fe709a84f8bea029e5f0256ee6d5bea2e6942ecba09729fb5584fe8b0fd7650",
+    "measure/index.md": "0b5450ebe2299cd4ce99fd8468d4cd78a8899316b8fbf8998e047c0dead83a20",
+    "measure/workflow.md": "b73f30d7884182771cda3905b86d8a36c1d8340879d50d1871a20030b53dd517",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md": "5e5f2681a85550c329fbed2a1e107a96be5e75dca66de26d4c2ce7c6db44b031",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-c.md": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-applicability.json": "a239908b9564ce48acd5b54be5d1d80d81afcd316778bea0f4dad2be89d08fa0",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-discovery-audit.json": "c7427d6dbd9449e4293470ed13115e98d863bd0cb4b3290cc0b8e60db844d687",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit.json": "3eecdd9d44dc3aa18dd53a481f980a8edd3425b38c73cc93bebc4c0a835a8298",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c.json": "bc2229a883375a20d4e1f249a056904824d3b12bcf78627bebc423f9df173ccc",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v2.py": "3fc6bda6cb8acd4b9331faa53cf4b19493aaef249dca80ac855b87f8e52cbb56",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-semantic-supersession-batch-c-v2.json": "9c9227e3b560cf15c35b977b9e23bba4b0fa9a346e0a6fae1308e0a298718613",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-semantic-supersession-batch-c-v2.json": "2f0c23b6aa5a03b814107dbd8325bc1af5d7ce21fa15d6fbfdca87b77345efd4",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-budget-declaration.json": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211"
+  },
+  "outputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v2.json": null,
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v2.json": null
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
