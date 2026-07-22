@@ -1,0 +1,80 @@
+{
+  "schema_version": "apk-supersession-gate-result.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-b",
+  "policy_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-retroactive-provenance-supersession-v18.json",
+  "audited_head_sha": "970dad3d1f1e09770b162c7a8acfbb02386f1016",
+  "worktree_state": "clean isolated Git worktree",
+  "run_at": "2026-07-22T09:07:40+07:00",
+  "run_at_basis": "local system time; not a provider event timestamp",
+  "status": "blocked",
+  "commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v16.py",
+      "exit_code": 0,
+      "result": "49 passed"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-lifecycle-stop-loss-v17.py",
+      "exit_code": 0,
+      "result": "2 passed"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-retroactive-provenance-supersession-v18.py",
+      "exit_code": 0,
+      "result": "4 passed"
+    },
+    {
+      "command": "bash tests/orchestrator_role_receipt_integrity.sh",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    {
+      "command": "bash tests/orchestrator_marker_vocabulary.sh",
+      "exit_code": 1,
+      "result": "fail: committed deprecated [ ] markers in company_identity_sso_20260715 and durable_job_worker_platform_20260713"
+    },
+    {
+      "command": "bash tests/orchestrator_review_execution_truthfulness.sh",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    {
+      "command": "bash tests/orchestrator_detector_syntax.sh",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    {
+      "command": "bash tests/orchestrator_catalog.sh",
+      "exit_code": 0,
+      "result": "pass"
+    }
+  ],
+  "blocking_findings": [
+    {
+      "id": "T4B18-GATE-001",
+      "severity": "high",
+      "scope": "required B5 closeout command",
+      "summary": "The required global marker-vocabulary guard is red at the immutable audited HEAD.",
+      "ownership": "unrelated active tracks; no T4 file repair is authorized to rewrite those plans",
+      "disposition": "fail closed"
+    }
+  ],
+  "t4_specific_results": {
+    "truth_contracts_green": true,
+    "historical_stop_loss_green": true,
+    "supersession_policy_contract_green": true,
+    "receipt_integrity_green": true,
+    "remaining_orchestrator_guards_green": true
+  },
+  "lifecycle_disposition": {
+    "fresh_independent_review_dispatched": false,
+    "candidate_published": false,
+    "delegated_owner_acceptance_published": false,
+    "accepted_manifest_published": false,
+    "consumption_authorized": false,
+    "reason": "The owner-authorized supersession policy requires every current gate to pass before fresh review or publication. The marker-vocabulary gate failed, so V17 remains controlling."
+  },
+  "remediation_limit": "Do not alter unrelated active-track plans inside T4. Their owners must replace deprecated [ ] markers with truthful [~], [x], or [b] deferred:<owner> states, after which the full immutable-HEAD gate chain may be rerun.",
+  "marker": "MEASURE_AGENT_RESULT"
+}
