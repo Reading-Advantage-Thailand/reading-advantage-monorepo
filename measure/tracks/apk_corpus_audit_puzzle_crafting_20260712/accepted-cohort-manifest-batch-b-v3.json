@@ -1,0 +1,15 @@
+{
+  "schema_version": "apk-accepted-cohort-manifest.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "candidate": {"path":"candidate-cohort-manifest-batch-b-v3.json","commit":"662bd459df53ec152c3fc250796e969851ef8753","sha256":"ad0a031ac4d2c16453bcc535eb6bbcaf1a001352ed1137b396bfc56dd8fae755"},
+  "approval": {"path":"product-owner-acceptance-batch-b-v3.json","commit":"1bdfd06aa4773ecdce51e24b8c2414ab30a7fd6c","sha256":"36b4f78227063af78aa05f19662c6ee77940bcaf257f9b45533270febdc6dda9","ordered_after_candidate":true},
+  "review": {"path":"batch-b-independent-review-v3.json","sha256":"a88634ca187cf972440dac88ce0370980132c23d5e0a13660d35ba045527f34d","unresolved_findings":{"critical":0,"high":0,"medium":0,"low":0}},
+  "scope": {"games":["Potion Rush","Rune Forge Chamber","Astral Mage"],"factual_claims":68,"explicit_unknowns":12,"negative_fixtures":18},
+  "consumable": true,
+  "consumability": "conditional",
+  "conditions": ["Consume only with the candidate, owner acceptance, V3 review, V3 local role ratification, V2 ledgers/maps/fixtures, and all their disclosures.", "Do not promote no-browser evidence or historical Astral Mage evidence to current product behavior.", "A source, bound-artifact, review, or authority change stops consumption pending additive supersession and fresh review."],
+  "claims": {"browser_behavior_success":false,"completion":false,"persistence":false,"xp":false,"api_correctness":false,"implementation_authorized":false,"shipping_authorized":false},
+  "marker": "MEASURE_AGENT_RESULT"
+}
