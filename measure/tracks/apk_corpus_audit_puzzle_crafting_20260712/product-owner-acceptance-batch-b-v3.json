@@ -1,0 +1,15 @@
+{
+  "schema_version": "apk-product-owner-acceptance.v3",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "approval_kind": "current-delegated-product-owner-approval",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "ordered_after_candidate": true,
+  "candidate": {"path":"candidate-cohort-manifest-batch-b-v3.json","commit":"662bd459df53ec152c3fc250796e969851ef8753","sha256":"ad0a031ac4d2c16453bcc535eb6bbcaf1a001352ed1137b396bfc56dd8fae755"},
+  "review": {"path":"batch-b-independent-review-v3.json","commit":"f3240797e4c7e2e213feb6b5974f08649daa6742","sha256":"a88634ca187cf972440dac88ce0370980132c23d5e0a13660d35ba045527f34d"},
+  "authorization": {"source":"current user instruction","message_id":null,"message_id_note":"No original or synthetic provider message identifier is recorded.","authority":"current delegated product-owner"},
+  "scope": "bounded source-truth evidence for Potion Rush, Rune Forge Chamber, and Astral Mage only",
+  "disclosures": ["Acceptance preserves every candidate, review, ledger, unknown, and historical-classification disclosure.", "No browser-dependent success is accepted or implied.", "Local receipts do not become provider-attested session provenance.", "This acceptance does not authorize implementation, shipping, ontology, or a cohort manifest without a separately published lifecycle artifact."],
+  "accepted_manifest_authorized": true,
+  "marker": "MEASURE_AGENT_RESULT"
+}
