@@ -1,0 +1,70 @@
+{
+  "schema_version": "apk-successor-product-owner-acceptance.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "date": "2026-07-22",
+  "scope": "six-game puzzle and crafting evidence cohort successor lifecycle",
+  "approval_kind": "root-delegated-product-owner-acceptance",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "status": "accepted-for-conditional-evidence-consumption-only",
+  "ordered_after_candidate": true,
+  "immutable_bindings": {
+    "candidate": {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/successor-candidate-cohort-manifest-v2.json",
+      "sha256": "d48f518dd3cb19ea54dfe39dc63942592750493b915e82153923c5fa9eb78fb7",
+      "commit_sha": "b3c95ab3256b41a82c797eefce62232683a356a9"
+    },
+    "fresh_full_cohort_review": {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/full-cohort-independent-review-v2.json",
+      "sha256": "43e5ad76695cc67e57ab082468ce4400f973a388005dfb45b1810608d8115505",
+      "commit_sha": "752fecfd1f8f9da0bd3c9a377126bb322a81e37c"
+    },
+    "fresh_full_cohort_review_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/adversarial-reviewer-full-cohort-v2.json",
+      "sha256": "5d97a63c64a401dc71aefecdb6c440330bc555917e142fd889c63d263bc9a319",
+      "commit_sha": "752fecfd1f8f9da0bd3c9a377126bb322a81e37c"
+    }
+  },
+  "review_disposition": {
+    "unresolved_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "condition": "The exact bound review and receipt remain authoritative only for the bounded evidence/lifecycle decision described in their disclosures."
+  },
+  "authorization": {
+    "source": "explicit root project-owner/orchestrator directive under the user's delegated authority",
+    "provider_message_id": null,
+    "provider_event_id": null,
+    "provider_prompt_sha256": null,
+    "provider_timestamp": null,
+    "unavailable_note": "The harness does not expose provider message, event, encrypted-prompt, or provider-timestamp fields. Null is a truthful unavailable value and is not reconstructed provenance."
+  },
+  "accepted_manifest_authorized": true,
+  "conditional_consumability_only": true,
+  "claims": {
+    "cross_game_standardization": false,
+    "ontology_authorized": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false,
+    "browser_behavior_success": false,
+    "gameplay_success": false,
+    "responsive_success": false,
+    "trusted_input_success": false,
+    "completion_success": false,
+    "persistence_success": false,
+    "xp_success": false,
+    "api_correctness": false,
+    "production_success": false,
+    "asset_loading_success": false
+  },
+  "disclosures": [
+    "Acceptance is limited to conditional consumption of the evidence cohort when the separately published successor accepted manifest and every bound input remain exact and available.",
+    "Browser-dependent product behavior remains unknown. This acceptance does not establish gameplay, state-transition, responsive, trusted-input, completion, persistence, XP, API, production, or asset-loading success.",
+    "Provider message, event, encrypted-prompt, and timestamp fields are unavailable in this harness and remain null; no provider ancestry, session, prompt, timing, raw export, or event claim is made.",
+    "The V1 review, receipt, candidate, product-owner acceptance, and accepted manifest remain preserved historical non-authoritative lineage. This acceptance does not relabel, mutate, or consume them.",
+    "Any changed digest, missing artifact, revocation, supersession, or nonzero unresolved Critical, High, or Medium finding immediately stops conditional consumption."
+  ],
+  "marker": "MEASURE_AGENT_RESULT"
+}
