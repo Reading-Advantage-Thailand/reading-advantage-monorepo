@@ -1,0 +1,43 @@
+{
+  "schema": "apk-role-receipt.v7",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "task_id": "C3-REVIEW-V7",
+  "role": "adversarial-reviewer-batch-c",
+  "provider_identifier": "/root/t4_batch_c_review_v7",
+  "parent_task": "/root",
+  "fork_turns": "all",
+  "evidence_base_commit": "8693ba3ec9ba139ee59b4255c958ebb3fc4be0a1",
+  "output": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-adversarial-review-v7.json",
+    "sha256": null,
+    "digest_reason": "This receipt is authored with the review artifact; a later authorized descendant may bind finalized bytes without modifying this receipt."
+  },
+  "retained_proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-batch-c-v7.json",
+    "sha256": null,
+    "digest_reason": "The proof and receipt are co-authored; a later authorized descendant may bind finalized bytes without modifying this receipt."
+  },
+  "findings": {
+    "unresolved_counts": {"critical": 0, "high": 0, "medium": 0, "low": 0},
+    "unresolved_ids": [],
+    "candidate_authorized": true,
+    "candidate_authorization_reason": "Zero unresolved Critical, High, or Medium findings in the stable bounded v7 delta."
+  },
+  "lifecycle": {
+    "candidate_authorized": true,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "cohort_consumption_authorized": false
+  },
+  "scope_attestation": {
+    "review_only": true,
+    "no_gameplay_success_claimed": true,
+    "no_responsive_success_claimed": true,
+    "no_asset_suitability_claimed": true,
+    "no_completion_or_persistence_success_claimed": true,
+    "no_staging_or_commit": true
+  },
+  "status": "complete-no-material-findings"
+}

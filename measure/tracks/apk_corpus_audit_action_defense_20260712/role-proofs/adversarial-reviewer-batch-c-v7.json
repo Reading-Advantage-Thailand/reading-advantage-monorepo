@@ -1,0 +1,53 @@
+{
+  "schema": "measure.provider-fresh-context-proof.v1",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "task_id": "C3-REVIEW-V7",
+  "role": "adversarial-reviewer-batch-c",
+  "provider_identifier": "/root/t4_batch_c_review_v7",
+  "parent_task": "/root",
+  "fork_turns": "all",
+  "provider_provenance": {
+    "available": true,
+    "provider_kind": "native-collaboration-identity",
+    "canonical_task": "/root/t4_batch_c_review_v7",
+    "parent_task": "/root",
+    "fork_turns": "all",
+    "provider_session_id": null,
+    "raw_provider_event": null,
+    "unavailable_metadata_note": "Raw encrypted prompt, provider event, and session identifiers are unavailable and intentionally null; native collaboration identity is the available provenance."
+  },
+  "evidence_base_commit": "8693ba3ec9ba139ee59b4255c958ebb3fc4be0a1",
+  "commands": [
+    {
+      "argv": ["sha256sum", "<bounded v7 selector, gate, Browser, Asset, validation, collision, and v6 lineage inputs>"],
+      "exit_code": 0,
+      "purpose": "Recompute every exact hash bound by the review.",
+      "result": "all recomputed digests matched the review input bindings"
+    },
+    {
+      "argv": ["git", "diff", "--name-only", "8693ba3e", "--", "<bounded review inputs>"],
+      "exit_code": 0,
+      "purpose": "Verify the review inputs did not drift after the stable selector checkpoint.",
+      "result": "no relevant path changed"
+    },
+    {
+      "argv": ["jq", "-S", ".", "<selector, receipts, proofs, audits, deviation, collisions, predecessor review>"],
+      "exit_code": 0,
+      "purpose": "Independently inspect lifecycle, helper-disclosure, non-runnable, collision, and validation constraints.",
+      "result": "all inspected JSON artifacts parsed and agreed with their hash-bound contracts"
+    }
+  ],
+  "verification": {
+    "focused_gate_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v7.py",
+    "focused_gate_recorded_result": "5 passed in 0.37s",
+    "gate_rerun": false,
+    "gate_rerun_reason": "The assignment prohibits rerunning the v7 gate absent factual inconsistency; hash recomputation and artifact inspection found none."
+  },
+  "scope": {
+    "authorized_work": "Fresh independent adversarial review of the bounded Batch C v7 selector delta and its immediate downstream truth.",
+    "forbidden_work_not_performed": ["evidence collection", "implementation", "test execution", "candidate publication", "acceptance", "documentation or registry editing", "staging", "committing"]
+  },
+  "status": "complete-no-material-findings"
+}

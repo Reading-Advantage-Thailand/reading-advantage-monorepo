@@ -1,0 +1,77 @@
+{
+  "schema_version": "apk-batch-independent-review.v7",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "role": "adversarial-reviewer-batch-c",
+  "role_identity": "/root/t4_batch_c_review_v7",
+  "reviewed_at": "2026-07-22T12:00:00Z",
+  "evidence_base": {
+    "commit": "8693ba3ec9ba139ee59b4255c958ebb3fc4be0a1",
+    "short_commit": "8693ba3e",
+    "reviewed_bytes": "The bounded v7 selector, focused-gate evidence, fresh Browser v6 and Asset root-arbiter successors, collision records, and v6 review lineage were read from the canonical shared master checkout. Relevant paths were byte-identical to commit 8693ba3e at review time."
+  },
+  "findings": [],
+  "unresolved_findings": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "findings_first_summary": "No unresolved Critical, High, Medium, or Low findings in the bounded v7 delta.",
+  "exact_inputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v7.json": "d4c3eb1093970cbe4470bd4da833fced7465b443f85c7d900c79979163a95a17",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v7.py": "943452bd371556e76be3453547c6d2338581132e5bdf421b48fcefabe4cc6699",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/truth-test-author-batch-c-v7.json": "66140bae9dc7b5fc65f046430859eabf5388e2c9a8650d259cb75603ba81d363",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-c-v7.json": "d21a51f8e5898798801d09a5802db1e9ff2b41da75bb46ea445b3513fb9b421c",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v6-root-arbiter-20260722-1758-kimi-b91e.json": "6e9a39503d315f59b001e0952fe317441115cf5c82f8efb3fe5473690b97b4e6",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/browser-auditor-batch-c-v6-root-arbiter-20260722-1758-kimi-b91e.json": "a75f2b5c0bb5d6236c67185aafe42f628bd01e57f63efa904b7986fb3a755cae",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v6-root-arbiter-20260722-1758-kimi-b91e.json": "913ee0b1431e0d852dec196cf523d9bec0ed004fa3796e24798ecf9f4532e283",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v5-skill-deviation.json": "68e6528edec1c05e85d694fde5de6d436ef4209e0317653bbcecf3b340cd2a46",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit-v5-root-arbiter-20260722-1726-a51d.json": "10b372b3eff78ce869062577c42ccdf7eccf10e56177315acca91b892e97195c",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json": "fac6f71f01dd247ccdd2abf0dbf628c0a1a3ba8bfb329cd00d7503c271760e14",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json": "e38993458ba19f299d2cd16eb699f79b9cd82f1d6dcde420d9fbc8c2577d37ab",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-v5-independent-validation-v1.json": "ee322ac2d9f7f8d87cc4d94db16d83484a01dae0ae07e60b1c644ef9bd09ec5c",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5-validation-v1.json": "acd29d1142316835d95a60d65f3d4ee3cccff8ae6f5ae17235e9b5c581572aa4",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5-validation-v1.json": "341224264b6315ef29c75865ac4a4d7af090262e888e0d0098e223207b6a7bd8",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-auditor-v4-collision.json": "166c1c2284076ab0eaac5ec2f267cd2cc92378b4f908c6573767678626813b74",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-gryphon-mapper-v5-collision.json": "f9317af43955d3fce32cc09f40a2cf7a8a4b795d16befb319eddadecc03d4d67",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-independent-review-v6.json": "d7786fd330599c0860cccc51fb0bda0e960040eed8f1b965c457fc57c290c54c"
+  },
+  "review_checks": {
+    "selector_and_recorded_gate": "PASS: selector v7 preserves exactly eight role bindings, selects Browser v6 and Asset root-arbiter plus its independent validation companion, and the retained command reports 5 passed in 0.37s. The v7 gate was not rerun because the recorded inputs and result were internally coherent.",
+    "browser_v6": "PASS: the selected Browser v6 proof and receipt attest helper-only capture requests and no direct screenshot API command. Its required disclosure truthfully states that the helper exited 4 after daemon post-processing and that exact helper-originated bytes were copied unchanged; the only current product conclusion is catalog Coming Soon/no link plus exact compact/wide route 404. No gameplay, responsive success, asset-loading, or suitability success is claimed.",
+    "browser_v5": "PASS: the V5 skill-deviation record is hash-bound, marks V5 non-consumable, and selector v7 explicitly excludes it.",
+    "asset_root_arbiter": "PASS: selector v7 preserves the root-arbiter receipt's five pending self-check fields unchanged and binds a separate independent-validation record, proof, and receipt whose five recomputed checks pass. The validation successor neither replaces nor impersonates the selected Asset role.",
+    "collisions": "PASS: both Asset V4 provider sets remain unselectable and are absent from the selected provider/path set; Gryphon Mapper V5 remains invalid and unselected. The prior V6 green review is retained solely as predecessor lineage, not as substitute Browser or Asset evidence.",
+    "lifecycle": "PASS: selector v7 sets candidate, acceptance, and consumption authorization false. This reviewer grants only bounded candidate authorization because there are zero unresolved Critical, High, or Medium findings; product-owner acceptance remains false."
+  },
+  "lifecycle": {
+    "fresh_review_gate": "green",
+    "candidate_authorized": true,
+    "candidate_authorization_reason": "Zero unresolved Critical, High, or Medium findings in the stable bounded v7 delta.",
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "cohort_consumption_authorized": false
+  },
+  "scope_attestation": {
+    "review_only": true,
+    "no_gameplay_success_claimed": true,
+    "no_responsive_success_claimed": true,
+    "no_asset_suitability_claimed": true,
+    "no_completion_or_persistence_success_claimed": true,
+    "forbidden_work_not_performed": [
+      "factual evidence collection or repair",
+      "requirements mapping or repair",
+      "asset or browser evidence authoring",
+      "truth-test modification or execution",
+      "candidate publication",
+      "product-owner acceptance",
+      "accepted-manifest publication",
+      "plan, registry, source, or test editing",
+      "staging",
+      "committing"
+    ]
+  }
+}
