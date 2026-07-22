@@ -1,0 +1,119 @@
+{
+  "schema": "apk-discovery-audit.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "role": "discovery-auditor-batch-c",
+  "status": "discovery-only; denominator and Git-tree reconciliation; no factual claims, mappings, truth tests, browser observations, asset suitability decisions, candidates, acceptance, plans, or registry changes authored",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "role_base_sha": "e5ed3818dd8e7c4811ade484ea5033b50a2b1823",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "accepted_inputs": {
+    "accepted_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729"
+    },
+    "accepted_partition": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0"
+    },
+    "accepted_pilot": {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b"
+    },
+    "batch_a_accepted": "b096d911b7d6bc9fb4d530e695cea10d3816a17158447a89303c2d069cf2a54c",
+    "batch_b_superseding_accepted": "3026323c6a6aed61f3fbcb03bacf200a1a610cb2da852606b6e9fe61f90f63d7",
+    "owner_policy_amendment": "dda6a16c3b18a3bfb448228718d85e467e697653e506daf25fedf8c628694a28"
+  },
+  "denominator_reconciliation": {
+    "partition": "Action and defense",
+    "input_record_hashes": {
+      "identity_ledger": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+      "source_denominator": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d",
+      "scene_state_denominator": "6308836ca24f1cac5bf4ded5f7e72c5ba06c08f4a5c6648620818b720190bf8b",
+      "asset_denominator": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+      "historical_denominator": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f"
+    },
+    "identity": [
+      {"game": "Paladin's Twin-Soul", "identity_id": "catalog/paladins-twin-soul", "path": "apps/advantage-games/src/lib/gameCards.ts", "baseline_range": "182:182", "source_class": "catalog-withdrawn-registration"},
+      {"game": "Gryphon Patrol", "identity_id": "catalog/gryphon-patrol", "path": "apps/advantage-games/src/lib/gameCards.ts", "baseline_range": "226:226", "source_class": "catalog-withdrawn-registration"}
+    ],
+    "source_records": [
+      "file:apps/advantage-games/measure/archive/paladins-twin-soul-20260321/metadata.json",
+      "file:apps/advantage-games/measure/archive/paladins-twin-soul-20260321/plan.md",
+      "file:apps/advantage-games/measure/archive/paladins-twin-soul-20260321/spec.md",
+      "file:apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/index.md",
+      "file:apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/metadata.json",
+      "file:apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/plan.md",
+      "file:apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/report.md",
+      "file:apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/spec.md",
+      "file:apps/advantage-games/measure/archive/gryphon-patrol-20260321/metadata.json",
+      "file:apps/advantage-games/measure/archive/gryphon-patrol-20260321/plan.md",
+      "file:apps/advantage-games/measure/archive/gryphon-patrol-20260321/spec.md",
+      "file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/index.md",
+      "file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/metadata.json",
+      "file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/plan.md",
+      "file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/report.md",
+      "file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/spec.md"
+    ],
+    "scene_state": {"scene_records": [], "state_records": [], "transition_records": []},
+    "asset_candidates": [
+      "apps/advantage-games/measure/archive/paladins-twin-soul-20260321/metadata.json",
+      "apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/metadata.json",
+      "apps/advantage-games/public/games/cover/cover-paladins-twin-soul.png",
+      "apps/advantage-games/public/games/vocabulary/paladins-twin-soul/cover.png",
+      "apps/advantage-games/measure/archive/gryphon-patrol-20260321/metadata.json",
+      "apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/metadata.json",
+      "apps/advantage-games/public/games/cover/cover-gryphon-patrol.png"
+    ],
+    "historical_records": [
+      "packages/game-cartridges/src/cartridges/paladins-twin-soul/index.ts@1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+      "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/paladins-twin-soul/page.tsx@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/app/api/v1/games/paladins-twin-soul/complete/route.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/app/api/v1/games/paladins-twin-soul/vocabulary/route.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/components/games/vocabulary/paladins-twin-soul/PaladinsTwinSoulGame.test.tsx@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/components/games/vocabulary/paladins-twin-soul/PaladinsTwinSoulGame.tsx@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/components/games/vocabulary/paladins-twin-soul/index.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "packages/game-cartridges/src/cartridges/gryphon-patrol/index.ts@1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+      "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/gryphon-patrol/page.tsx@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/app/api/v1/games/gryphon-patrol/complete/route.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/app/api/v1/games/gryphon-patrol/ranking/route.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/app/api/v1/games/gryphon-patrol/sentences/route.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/components/games/sentence/gryphon-patrol/GryphonPatrolGame.test.tsx@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/components/games/sentence/gryphon-patrol/GryphonPatrolGame.tsx@cd1936387d136ffb12e77a647f36cbce2d1fdd4e"
+    ],
+    "counts": {"identity": 2, "source_records": 16, "scene_records": 0, "state_records": 0, "transition_records": 0, "asset_candidates": 7, "historical_records": 14},
+    "mechanical_reconciliation": {"duplicate_record_locators": [], "omitted_record_locators": [], "result": "all listed class locators are unique; listed count equals the mechanically selected record count for each class"}
+  },
+  "bounded_runtime_disposition": {
+    "runtime_path_prefixes_checked": [
+      "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/paladins-twin-soul",
+      "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/gryphon-patrol",
+      "apps/advantage-games/src/components/games/vocabulary/paladins-twin-soul",
+      "apps/advantage-games/src/components/games/sentence/gryphon-patrol",
+      "apps/advantage-games/src/app/api/v1/games/paladins-twin-soul",
+      "apps/advantage-games/src/app/api/v1/games/gryphon-patrol",
+      "packages/game-cartridges/src/cartridges/paladins-twin-soul",
+      "packages/game-cartridges/src/cartridges/gryphon-patrol"
+    ],
+    "baseline_candidate_paths": ["apps/advantage-games/src/lib/gameCards.ts:182", "apps/advantage-games/src/lib/gameCards.ts:226"],
+    "head_candidate_paths": ["apps/advantage-games/src/lib/gameCards.ts:182", "apps/advantage-games/src/lib/gameCards.ts:226"],
+    "historical_candidate_revisions": ["1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f", "cd1936387d136ffb12e77a647f36cbce2d1fdd4e"],
+    "bounded_candidate_disposition": "non-runnable-preflight-candidate: the checked runtime-path prefixes enumerate no paths at either baseline or role-base tree; this is not a browser observation and does not establish runtime behavior",
+    "browser_work": "none; deferred exclusively to browser-auditor-batch-c"
+  },
+  "commands": [
+    {"purpose": "baseline and role-base bounded tree enumeration", "result": "0 paths at each revision", "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    {"purpose": "bounded historical path log", "result": "4 commits", "output_sha256": "bb70d5fea1a7b253b806eb2963b4b965247943dfd6a99ff69acf99aa615fc667"},
+    {"purpose": "bounded deletion-history walk", "result": "2 deletion commits and 6 named paths", "output_sha256": "160993ea628266e0ed55cfd563082ae2a36c820d20287d0bd2543b507894481d"}
+  ],
+  "downstream_role_scope": {
+    "collectors": "may inspect only the enumerated source and historical candidates and must establish their own source envelopes",
+    "mappers": "may create non-authoritative mappings only after collector outputs",
+    "truth_author": "owns truth tests and negative fixtures",
+    "browser_auditor": "owns runnable/non-runnable review and all browser observations",
+    "asset_auditor": "owns asset-usage reconciliation; enumeration here is not inspection or suitability",
+    "reviewer_candidate_owner_owner": "own review, candidate, and acceptance respectively; none is authored here"
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

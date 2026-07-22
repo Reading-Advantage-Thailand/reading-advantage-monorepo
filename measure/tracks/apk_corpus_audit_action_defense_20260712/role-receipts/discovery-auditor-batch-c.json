@@ -1,0 +1,54 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "task_id": "C3-DISCOVERY",
+  "role": "discovery-auditor-batch-c",
+  "status": "completed discovery-only denominator and bounded Git-tree reconciliation; acceptance not claimed",
+  "acceptance": "not-claimed",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "role_base_sha": "e5ed3818dd8e7c4811ade484ea5033b50a2b1823",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "bindings": {
+    "strategy_sha256": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9",
+    "budget_declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "role_applicability_sha256": "a239908b9564ce48acd5b54be5d1d80d81afcd316778bea0f4dad2be89d08fa0",
+    "phase_base_binding_sha256": "b83428a8cb84465b00609833b0be0ad2bb0388eff4ebc2de23fa112bc4715a9c",
+    "accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "accepted_pilot_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "owner_policy_amendment_sha256": "dda6a16c3b18a3bfb448228718d85e467e697653e506daf25fedf8c628694a28"
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-discovery-audit.json",
+      "sha256": "c7427d6dbd9449e4293470ed13115e98d863bd0cb4b3290cc0b8e60db844d687"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/discovery-auditor-batch-c.json",
+      "sha256": null,
+      "digest_reason": "A receipt cannot self-hash without changing the bytes being attested; its own output digest is intentionally null."
+    }
+  ],
+  "provider_provenance": {
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "reason": "No provider identifiers or raw isolation export were available; none are fabricated or claimed."
+  },
+  "owner_policy_boundary": "Current owner policy uses audited immutable Git chronology only for unavailable preflight provenance. It does not substitute source evidence, claim envelopes, truth tests, browser observations, asset observations, review, candidate, or acceptance work.",
+  "resource_use": {
+    "budget_declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "ceilings": {"source_bytes_read": 10485760, "source_files_or_objects_read": 80, "command_invocations": 40, "elapsed_minutes": 20, "records_authored_or_reviewed": 240, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "actual": {"source_bytes_read": 3204584, "source_files_or_objects_read": 25, "command_invocations": 11, "elapsed_minutes": 18, "records_authored_or_reviewed": 40, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "measurement_note": "source_bytes_read is the summed byte size of the 25 direct Measure, protocol, strategy, predecessor, and accepted-denominator input files hashed during this role; command_invocations counts shell commands used for revision/tree/history/hash reconciliation; asset candidates were enumerated only and not inspected.",
+    "ceiling_breaches": 0
+  },
+  "commit_sha": null,
+  "commit_disposition": "No commit was created because the user prohibited commits.",
+  "scope": "No factual claims, mappings, truth tests, browser observations, asset suitability, ontology, candidate, acceptance, plan, or registry were authored.",
+  "marker": "MEASURE_AGENT_RESULT"
+}
