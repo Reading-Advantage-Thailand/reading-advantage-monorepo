@@ -1,0 +1,110 @@
+{
+  "schema": "apk-requirements-blueprint.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 3: Batch C evidence packages",
+  "game": "Paladin's Twin-Soul",
+  "normalized_game_id": "paladins-twin-soul",
+  "role": "requirements-mapper-paladins-twin-soul-batch-c",
+  "status": "non-authoritative historical requirements mapping; not an implementation, acceptance, browser, asset, truth, or review result",
+  "bindings": {
+    "role_base_sha": "c3d37cf5212b5f7f65fd95a07a4d50cd1d796557",
+    "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "collector_preflight_correction": "batch-c-collector-preflight-correction-v1.json"
+  },
+  "evidence_boundary": [
+    {"statement":"The catalog identity is frozen baseline identity, while all mapped scene, logic, route, API, and test behavior is historical.","claim_ids":["PTS-C-IDENTITY-001","PTS-C-HISTORY-001","PTS-C-ROUTE-001","PTS-C-API-001","PTS-C-API-002","PTS-C-TEST-001","PTS-C-TEST-002"]},
+    {"statement":"No current route, implementation, runnable behavior, or global absence conclusion is made by this blueprint.","claim_ids":["PTS-C-IDENTITY-001","PTS-C-ROUTE-001"]},
+    {"statement":"Browser observations, compact/wide outcomes, live asset use, asset suitability, licensing, API success, persistence, and authorization remain outside this mapping.","claim_ids":["PTS-C-RESPONSIVE-001","PTS-C-ASSET-001","PTS-C-ASSET-002","PTS-C-API-001","PTS-C-API-002"]}
+  ],
+  "identity": {
+    "historical_requirement": "Preserve the catalog identity id, title, realm/twin-soul description, cover reference, and playable catalog status only as baseline catalog data.",
+    "claim_ids": ["PTS-C-IDENTITY-001"]
+  },
+  "historical_scenes_states_and_transitions": {
+    "scenes": [
+      {"name":"start","historical_requirement":"Provide the historical title, Gargoyle Defense framing, defense/rescue/matching instructions, auto-fire control text, and Begin Defense action.","claim_ids":["PTS-C-SCENE-COPY-001"]},
+      {"name":"playing","historical_requirement":"Represent a playing phase backed by player, enemies, bullets, target index, score, wave, elapsed time, answer counters, and victory/defeat state.","claim_ids":["PTS-C-STATE-001","PTS-C-SCENE-COPY-001"]},
+      {"name":"ended","historical_requirement":"Branch historical result copy between successful defense and realm overrun, with restart and exit actions.","claim_ids":["PTS-C-SCENE-COPY-001"]}
+    ],
+    "transitions": [
+      {"historical_requirement":"Starting creates historical game state and changes the phase to playing.","claim_ids":["PTS-C-SCENE-TRANSITION-001"]},
+      {"historical_requirement":"A historical animation-frame loop ticks with delta capped at 50ms.","claim_ids":["PTS-C-SCENE-TRANSITION-001"]},
+      {"historical_requirement":"Historical victory or defeat changes the phase to ended and invokes completion once with calculated XP and accuracy.","claim_ids":["PTS-C-SCENE-TRANSITION-001","PTS-C-RESULT-001"]},
+      {"historical_requirement":"Restart returns to start and exit assigns the student-games path.","claim_ids":["PTS-C-SCENE-TRANSITION-001"]}
+    ],
+    "initialization": {"historical_requirement":"Initialize a four-by-six enemy formation with two first-row bosses and playing state.","claim_ids":["PTS-C-STATE-001"]}
+  },
+  "movement_waves_and_vocabulary_loop": {
+    "movement": [
+      {"historical_requirement":"Move and horizontally clamp the player from horizontal input.","claim_ids":["PTS-C-COMBAT-001"]},
+      {"historical_requirement":"Move non-diving enemies horizontally and reverse them at bounds.","claim_ids":["PTS-C-COMBAT-001"]},
+      {"historical_requirement":"Use the historical configuration for game dimensions, player HP, auto-fire cadence, movement values, enemy formation, enemy speed/points, and colors; no current tuning is inferred.","claim_ids":["PTS-C-CONFIG-001"]}
+    ],
+    "waves": [
+      {"historical_requirement":"When no enemies remain during play, increment wave, target index, correct answers, and total attempts.","claim_ids":["PTS-C-TRANSITION-001"]},
+      {"historical_requirement":"Set victory at the vocabulary-length target boundary; otherwise create a fresh formation.","claim_ids":["PTS-C-TRANSITION-001"]}
+    ],
+    "target_capture_rescue_twin_shot": [
+      {"historical_requirement":"On a qualifying capture condition, mark the player captured, mark the captor, restore its position, assign it the indexed vocabulary word, and assign sampled non-target words to other enemies.","claim_ids":["PTS-C-CAPTURE-001"]},
+      {"historical_requirement":"On a qualifying player-bullet hit, remove the enemy and bullet, add enemy points, and rescue a captured player by setting twin-soul state and clearing captured state when the hit enemy holds the player.","claim_ids":["PTS-C-COMBAT-002"]},
+      {"historical_requirement":"The mapping does not infer a user-selected target mechanic, deterministic sampled labels, or observed live presentation.","claim_ids":["PTS-C-COMBAT-002","PTS-C-CAPTURE-001"]}
+    ]
+  },
+  "projectile_collision_health_terminal_and_xp": {
+    "projectiles": [
+      {"historical_requirement":"Auto-fire player bullets after the configured interval, move player bullets upward and enemy bullets downward, and remove bullets outside extended vertical bounds.","claim_ids":["PTS-C-COMBAT-001"]}
+    ],
+    "collision_and_health": [
+      {"historical_requirement":"Apply the historical proximity rule for player-bullet enemy hits and rescue behavior.","claim_ids":["PTS-C-COMBAT-002"]},
+      {"historical_requirement":"Enemy bullets and qualifying diving-enemy proximity decrement HP and may set defeat at zero-or-less HP.","claim_ids":["PTS-C-HEALTH-TERMINAL-001"]}
+    ],
+    "terminal_and_xp": [
+      {"historical_requirement":"Treat victory and defeat as historical terminal guards rather than observed reachable outcomes.","claim_ids":["PTS-C-TRANSITION-001","PTS-C-HEALTH-TERMINAL-001","PTS-C-SCENE-TRANSITION-001"]},
+      {"historical_requirement":"Calculate zero XP with no attempts; otherwise combine correct-word base XP with conditional perfect-accuracy, at-least-half-health, and under-30-second bonuses capped at ten.","claim_ids":["PTS-C-RESULT-001"]}
+    ]
+  },
+  "historical_render_and_responsive_composition": {
+    "active_surface": {"historical_requirement":"Render a scaled Konva stage with target translation, bullets, enemy labels and capture indicators, player/twin-soul marker, wave/score/HP HUD, and VirtualDPad dx-to-velocity wiring.","claim_ids":["PTS-C-RENDER-001"]},
+    "composition": {"historical_requirement":"Use container dimensions and the smaller width-to-game-width or height-to-game-height scale, with historical h-[75vh], md:aspect-video, and md:h-auto container composition.","claim_ids":["PTS-C-RESPONSIVE-001"]},
+    "unknown_boundary": {"historical_requirement":"Do not claim compact or wide browser behavior from the historical composition source.","claim_ids":["PTS-C-RESPONSIVE-001"]}
+  },
+  "historical_route_apis_and_tests": {
+    "route": {"historical_requirement":"Dynamically import the game without SSR after a session user exists, fetch vocabulary, render loading/error/page-chrome branches, and post XP and accuracy from completion.","claim_ids":["PTS-C-ROUTE-001"]},
+    "apis": [
+      {"historical_requirement":"Expose GET through createVocabularyRoute(SAMPLE_VOCABULARY) with force-static.","claim_ids":["PTS-C-API-001"]},
+      {"historical_requirement":"Expose POST through createCompleteRoute with force-static.","claim_ids":["PTS-C-API-002"]}
+    ],
+    "tests": [
+      {"historical_requirement":"The logic-test scope covers initialization, movement bounds, controlled auto-fire, projectile movement/removal, enemy hit/score, diving damage, capture/rescue/vocabulary assignment, wave advance, and XP branches.","claim_ids":["PTS-C-TEST-001"]},
+      {"historical_requirement":"The component-test scope uses mocks and covers initial title/button rendering, click transition to mocked stage, and a post-start rect count; it is not browser evidence.","claim_ids":["PTS-C-TEST-002"]}
+    ]
+  },
+  "assets_and_unknowns": {
+    "asset_inventory": [
+      {"historical_requirement":"Treat the named catalog cover PNG as baseline binary identity only.","claim_ids":["PTS-C-ASSET-001"]},
+      {"historical_requirement":"Treat the named vocabulary cover PNG as baseline binary identity only.","claim_ids":["PTS-C-ASSET-002"]}
+    ],
+    "unknowns": [
+      {"statement":"Current implementation and route runnability are not mapped.","claim_ids":["PTS-C-IDENTITY-001","PTS-C-ROUTE-001"]},
+      {"statement":"Real browser input, compact/wide rendering, console/network behavior, and terminal reachability are not mapped.","claim_ids":["PTS-C-COMBAT-001","PTS-C-RESPONSIVE-001","PTS-C-SCENE-TRANSITION-001"]},
+      {"statement":"Asset visual content, use, suitability, license, and live surface correlation are not mapped.","claim_ids":["PTS-C-ASSET-001","PTS-C-ASSET-002"]},
+      {"statement":"API authentication, response, persistence, authorization, and completion success are not mapped.","claim_ids":["PTS-C-API-001","PTS-C-API-002"]}
+    ]
+  },
+  "developer_effort_decomposition": [
+    {"workstream":"Historical simulation model","scope":"State initialization, movement, projectile lifecycle, collision, capture/rescue, health, waves, terminal guards, and XP calculation.","claim_ids":["PTS-C-STATE-001","PTS-C-CONFIG-001","PTS-C-COMBAT-001","PTS-C-COMBAT-002","PTS-C-HEALTH-TERMINAL-001","PTS-C-CAPTURE-001","PTS-C-TRANSITION-001","PTS-C-RESULT-001"]},
+    {"workstream":"Historical presentation and controls","scope":"Start, playing, and ended branches; Konva surface; HUD; target/capture indicators; and VirtualDPad wiring.","claim_ids":["PTS-C-SCENE-COPY-001","PTS-C-SCENE-TRANSITION-001","PTS-C-RENDER-001"]},
+    {"workstream":"Historical responsive composition","scope":"Container measurement and scale composition, with browser outcome validation explicitly deferred.","claim_ids":["PTS-C-RESPONSIVE-001"]},
+    {"workstream":"Historical integration","scope":"Locale page loading/error flow, vocabulary fetch, completion post, and API-route wiring.","claim_ids":["PTS-C-ROUTE-001","PTS-C-API-001","PTS-C-API-002"]},
+    {"workstream":"Historical test reconstruction","scope":"Logic and mocked component test scopes; real browser validation is a separate role.","claim_ids":["PTS-C-TEST-001","PTS-C-TEST-002"]},
+    {"workstream":"Evidence-gated unknown resolution","scope":"Current runtime, browser behavior, asset use/suitability, and API outcomes require their assigned evidence roles before any implementation conclusion.","claim_ids":["PTS-C-IDENTITY-001","PTS-C-RESPONSIVE-001","PTS-C-ASSET-001","PTS-C-ASSET-002","PTS-C-API-001","PTS-C-API-002"]}
+  ],
+  "claim_coverage": {
+    "mapped_claim_ids": ["PTS-C-IDENTITY-001","PTS-C-HISTORY-001","PTS-C-STATE-001","PTS-C-CONFIG-001","PTS-C-COMBAT-001","PTS-C-COMBAT-002","PTS-C-HEALTH-TERMINAL-001","PTS-C-CAPTURE-001","PTS-C-TRANSITION-001","PTS-C-RESULT-001","PTS-C-SCENE-COPY-001","PTS-C-SCENE-TRANSITION-001","PTS-C-RESPONSIVE-001","PTS-C-RENDER-001","PTS-C-ROUTE-001","PTS-C-API-001","PTS-C-API-002","PTS-C-TEST-001","PTS-C-TEST-002","PTS-C-ASSET-001","PTS-C-ASSET-002"],
+    "non_mapping_evidence": [
+      {"evidence_kind":"collector negative fixtures","reason":"Negative fixtures are explicit rejection targets and are not factual claim coverage."}
+    ]
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

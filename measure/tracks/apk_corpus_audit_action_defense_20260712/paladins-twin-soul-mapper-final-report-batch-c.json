@@ -1,0 +1,42 @@
+{
+  "schema": "apk-mapper-final-report.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 3: Batch C evidence packages",
+  "game": "Paladin's Twin-Soul",
+  "role": "requirements-mapper-paladins-twin-soul-batch-c",
+  "status": "complete non-authoritative mapper package; acceptance not claimed",
+  "bindings": {
+    "role_base_sha": "c3d37cf5212b5f7f65fd95a07a4d50cd1d796557",
+    "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "collector_role_base_correction": "batch-c-collector-preflight-correction-v1.json"
+  },
+  "inputs": {
+    "claim_ledger": "paladins-twin-soul-claim-ledger-batch-c.json",
+    "collector_method": "paladins-twin-soul-evidence-method-batch-c.md",
+    "collector_report": "paladins-twin-soul-evidence-final-report-batch-c.json",
+    "collector_receipt": "role-receipts/evidence-collector-paladins-twin-soul-batch-c.json",
+    "discovery": "batch-c-discovery-audit.json",
+    "applicability": "batch-c-role-applicability.json",
+    "budget": "batch-c-budget-declaration.json",
+    "strategy": "test-strategy-batch-c.md"
+  },
+  "result": {
+    "blueprint": "paladins-twin-soul-blueprint-batch-c.json",
+    "hypotheses": "paladins-twin-soul-mapper-hypotheses-batch-c.md",
+    "factual_claims_available": 21,
+    "factual_claims_mapped": 21,
+    "unmapped_factual_claim_ids": [],
+    "negative_fixture_ids_not_promoted": ["PTS-C-FIX-001", "PTS-C-FIX-002", "PTS-C-FIX-003", "PTS-C-FIX-004"]
+  },
+  "boundary_result": [
+    {"statement":"Baseline catalog identity is mapped only as baseline identity; historical sources are not promoted to current behavior.","claim_ids":["PTS-C-IDENTITY-001","PTS-C-HISTORY-001","PTS-C-ROUTE-001"]},
+    {"statement":"Current runtime, browser, responsive outcomes, live asset use/suitability, and API outcomes remain unknown to this mapper.","claim_ids":["PTS-C-RESPONSIVE-001","PTS-C-ASSET-001","PTS-C-ASSET-002","PTS-C-API-001","PTS-C-API-002"]}
+  ],
+  "scope_check": {
+    "paladin_claim_ledger_only": true,
+    "forbidden_work_not_performed": ["source discovery", "new source inspection", "browser", "asset suitability", "truth test", "review", "candidate", "acceptance", "plan or registry edit", "ontology", "cross-game work", "implementation"]
+  },
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}
