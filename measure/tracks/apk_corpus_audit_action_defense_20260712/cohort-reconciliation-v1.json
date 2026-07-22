@@ -1,0 +1,239 @@
+{
+  "schema_version": "apk-cohort-reconciliation.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "task": "T4 full-cohort reconciliation",
+  "audited_head": "085dd8df75609b6585fdc6913530c21347a88b62",
+  "status": "structurally-reconciled-only-not-a-cohort-acceptance",
+  "reconciliation": {
+    "assigned_games_expected": 8,
+    "assigned_games_observed": 8,
+    "duplicates": 0,
+    "omissions": 0,
+    "entries": [
+      {
+        "game": "Castle Defense",
+        "canonical_id": "castle-defense",
+        "batch": "batch-a",
+        "exactly_once": true
+      },
+      {
+        "game": "Magic Defense",
+        "canonical_id": "magic-defense",
+        "batch": "batch-a",
+        "exactly_once": true
+      },
+      {
+        "game": "Wizard vs Zombie",
+        "canonical_id": "wizard-vs-zombie",
+        "batch": "batch-a",
+        "exactly_once": true
+      },
+      {
+        "game": "Village Guardian",
+        "canonical_id": "village-guardian",
+        "batch": "batch-b",
+        "exactly_once": true
+      },
+      {
+        "game": "Archer's Revenge",
+        "canonical_id": "archers-revenge",
+        "batch": "batch-b",
+        "exactly_once": true
+      },
+      {
+        "game": "Storm the Castle Tower",
+        "canonical_id": "storm-castle-tower",
+        "batch": "batch-b",
+        "exactly_once": true
+      },
+      {
+        "game": "Paladin's Twin-Soul",
+        "canonical_id": "paladins-twin-soul",
+        "batch": "batch-c",
+        "exactly_once": true
+      },
+      {
+        "game": "Gryphon Patrol",
+        "canonical_id": "gryphon-patrol",
+        "batch": "batch-c",
+        "exactly_once": true
+      }
+    ]
+  },
+  "batch_a": {
+    "scope": [
+      "Castle Defense",
+      "Magic Defense",
+      "Wizard vs Zombie"
+    ],
+    "accepted_manifest": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-a.json",
+      "sha256": "b096d911b7d6bc9fb4d530e695cea10d3816a17158447a89303c2d069cf2a54c",
+      "publication_commit_sha": "62ff2a4dbc7aa9b64f878c0ac38c4f9ad3fc91df",
+      "decision": "ACCEPT-WITH-DISCLOSURE",
+      "manifest_games": [
+        "magic-defense",
+        "wizard-vs-zombie"
+      ],
+      "claims_total": 187,
+      "claims_resolved": 178,
+      "open_disclosures": [
+        "DISC-001"
+      ]
+    },
+    "owner_acceptance": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-batch-a.json",
+      "sha256": "2582c940ffccf46b6c20a27149cc2565faeecf80c814056f52fd76f768136df1",
+      "publication_commit_sha": "62ff2a4dbc7aa9b64f878c0ac38c4f9ad3fc91df"
+    },
+    "per_game_evidence_base": [
+      {
+        "game": "castle-defense",
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/castle-defense-evidence-final-report.json",
+        "sha256": "a269d1f91da6cdd4042c24285a5638fc10747545457f542bb7e53f034333c0b0",
+        "publication_commit_sha": "040802b335c01830d3ba483d839a682812ac36ce"
+      },
+      {
+        "game": "magic-defense",
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-evidence-final-report-v2.json",
+        "sha256": "c8bb46549ba69567be62eb8eb8a4d3391a43a6143b452dc8a259d325b258ee29",
+        "publication_commit_sha": "17859c16c854fd54cf7595be5c482adb1dd227ad"
+      },
+      {
+        "game": "wizard-vs-zombie",
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-evidence-final-report-v2.json",
+        "sha256": "13944b1b79da541448ee36ee7d99f26612b8ab7d4c36ccdfa4f8edd7ac78373e",
+        "publication_commit_sha": "81c641a607572853bde05f8e7d3bc90c76e3470b"
+      }
+    ],
+    "reconciliation_disposition": "Castle Defense is assigned and bound through its evidence base, but is not listed in the accepted-manifest games. The accepted manifest also retains DISC-001 and 178/187 resolved claims. This reconciliation preserves those limits and does not promote Batch A to cohort acceptance."
+  },
+  "batch_b": {
+    "scope": [
+      "Village Guardian",
+      "Archer's Revenge",
+      "Storm the Castle Tower"
+    ],
+    "candidate": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-batch-b-v20.json",
+      "sha256": "2357e8c078aa78f4f007f676599203326ddb5b53db2c14166c4eded149e9b926",
+      "publication_commit_sha": "94b672406c59dbd95ca645419dabe1515707295d"
+    },
+    "owner_acceptance": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-batch-b-v20.json",
+      "sha256": "4b680fda18e8dc34dd062a59dc9b4b8f351ecda721b87e49f53e8240f392e9bb",
+      "publication_commit_sha": "bb5c3df3a7142a2349ab287549643f3d119f96be",
+      "ordered_after_candidate": true
+    },
+    "accepted_manifest": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-b-v20.json",
+      "sha256": "3026323c6a6aed61f3fbcb03bacf200a1a610cb2da852606b6e9fe61f90f63d7",
+      "publication_commit_sha": "0a0b43809a51a56db555ccbdfb09ff2cdda85d47",
+      "decision": "ACCEPT-WITH-DISCLOSURE",
+      "consumability": "conditional"
+    },
+    "fresh_review": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-independent-review-v20.json",
+      "sha256": "803aa6d6204b5aba4d10bee12bb359486c16f33f803a55b2984b35fec3db1812",
+      "audited_head_sha": "10e002eb288f80dfade4c798cf6421c56f34a164",
+      "unresolved_critical_high_medium": 0,
+      "publication_commit_sha": "753672b0e49d6e11ad755c2d09c249bfa9bbfd48"
+    },
+    "required_disclosures": [
+      "Village Guardian browser input was synthetic DOM input with isTrusted=false and used a hidden-tab scheduler adapter; trusted native input and foreground timing are not claimed.",
+      "Village Guardian completion requests returned HTTP 400; completion success, persistence, XP, idempotency, and API correctness are not claimed.",
+      "Archer's Revenge and Storm the Castle Tower returned HTTP 404 at their exact reviewed routes; historical source is not promoted to current runtime behavior.",
+      "Asset presence and catalog binding do not establish runtime loading, suitability, licensing, or production use.",
+      "Provider session provenance remains unavailable and is not fabricated; owner-authorized Git substitution applies only to lifecycle and preflight provenance.",
+      "DISC-001 remains a Batch A process-only carry-forward disclosure and is never Batch B factual evidence."
+    ]
+  },
+  "batch_c": {
+    "scope": [
+      "Paladin's Twin-Soul",
+      "Gryphon Patrol"
+    ],
+    "evidence_base": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-phase-base-binding.json",
+      "sha256": "b83428a8cb84465b00609833b0be0ad2bb0388eff4ebc2de23fa112bc4715a9c",
+      "publication_commit_sha": "e5ed3818dd8e7c4811ade484ea5033b50a2b1823",
+      "reviewed_commit_sha": "e0f169f0e31cf951cbfce36f02e2f4d5eb8065dd"
+    },
+    "corrected_denominator": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json",
+      "sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f",
+      "publication_commit_sha": "97d5af991eeebe570ac0af57b16628dd623d5515",
+      "counts": {
+        "source_records": 22,
+        "asset_candidates": 9,
+        "historical_records": 21
+      }
+    },
+    "v6_selector": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v6.json",
+      "sha256": "19d03e183bd39595a004430b0da7800ff63c04052472707c878528b8888ce93b",
+      "publication_commit_sha": "e0f169f0e31cf951cbfce36f02e2f4d5eb8065dd",
+      "selected_roles": 8
+    },
+    "green_review": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-independent-review-v6.json",
+      "sha256": "d7786fd330599c0860cccc51fb0bda0e960040eed8f1b965c457fc57c290c54c",
+      "publication_commit_sha": "085dd8df75609b6585fdc6913530c21347a88b62",
+      "gate_result": "green: 5 passed",
+      "unresolved_critical_high_medium": 0
+    },
+    "green_review_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-c-v6.json",
+      "sha256": "bfb71ed621b21dfa9b3970082e2db67d73b1ea9cd15fd99877bccc2cf9222555",
+      "publication_commit_sha": "085dd8df75609b6585fdc6913530c21347a88b62"
+    },
+    "bounded_meaning": "The v6 review authorizes a bounded reviewer step only. It does not publish a candidate, product-owner acceptance, accepted manifest, or cohort consumption authorization."
+  },
+  "active_gates": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests-v2.py",
+      "sha256": "69c598729ca31c9f0c49aa8fae44077aa6522b2fe5e0767be491ab9ad3d68cba",
+      "publication_commit_sha": "c8e6e78ef570f208eba10e31f2e3faa629fb2e7d"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-lifecycle-v20.py",
+      "sha256": "57af72a39f6bab796281b89d6d3b40272f86c4f670c434e5bf3c1c6bce24392d",
+      "publication_commit_sha": "1448eb4f168d7c6420e3e25347080283f3b840b5"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-lifecycle-stop-loss-v17.py",
+      "sha256": "8ec47b6d6d754328fc66aba4625bda2bfd08b499f73bb10dcad0b17717078827",
+      "publication_commit_sha": "ddf6c56e27cd201513e92f6aa4ea7293e6ae8a08"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py",
+      "sha256": "f8a3cffa9291ed04b2f78f875a41d86ffbb844ae1935d6bc418fd99c90d31a4f",
+      "publication_commit_sha": "97d5af991eeebe570ac0af57b16628dd623d5515"
+    }
+  ],
+  "authorizations": {
+    "candidate_manifest_publication_authorized": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_publication_authorized": false,
+    "cohort_consumption_authorized": false,
+    "fresh_full_cohort_reviewer": {
+      "authorized": true,
+      "only_permitted_next_role": true,
+      "required_mode": "fresh-context-only, fork_turns=none, tool-attested, full eight-game reconciliation",
+      "condition": "t4-cohort-reconciliation-gate.py must pass against the exact bindings above before dispatch."
+    }
+  },
+  "forbidden_success_claims": {
+    "ontology": false,
+    "implementation": false,
+    "shipping": false,
+    "gameplay": false,
+    "responsive": false,
+    "completion": false,
+    "persistence": false,
+    "xp": false,
+    "api": false,
+    "asset_suitability": false
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
