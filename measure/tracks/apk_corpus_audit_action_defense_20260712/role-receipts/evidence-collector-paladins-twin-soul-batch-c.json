@@ -1,0 +1,20 @@
+{
+  "schema":"apk-role-receipt.v1",
+  "track_id":"apk_corpus_audit_action_defense_20260712",
+  "phase":"Phase 3: Batch C evidence packages",
+  "task_id":"C3-COLLECT-PALADIN",
+  "role":"evidence-collector-paladins-twin-soul-batch-c",
+  "status":"collector-only evidence package; acceptance not claimed",
+  "phase_base_sha":"709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "role_base_sha":"419cbad0fb775a766201c23e56a77373a24bfbd1",
+  "source_baseline_revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "frozen_inputs":{"strategy":{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-c.md","sha256":"64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9"},"budget":{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-budget-declaration.json","sha256":"2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211"},"phase_binding":{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-phase-base-binding.json","sha256":"read; output hash not fabricated"},"applicability":{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-applicability.json","sha256":"read; output hash not fabricated"},"discovery":{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-discovery-audit.json","sha256":"read; output hash not fabricated"}},
+  "provider_unavailability":{"available":false,"attestation_claimed":false,"fork_turns":null,"raw_isolation_export_sha256":null,"reason":"No provider raw-export or spawn provenance is exposed in this execution environment. Per owner Git-preflight substitution policy, immutable Git chronology binds phase preflight only and is not used to fabricate provider isolation or source evidence."},
+  "output_hashes":{"paladins-twin-soul-claim-ledger-batch-c.json":"90c451c895bffa0bf41c7f3c916578df7d700f0f56e05d16ae7cab58e6a60304","paladins-twin-soul-evidence-method-batch-c.md":"5f62292460167bdf9123be5d0c625f172da8bce78b33fb9f0e5bb67415d0912a","paladins-twin-soul-evidence-final-report-batch-c.json":"ed4936a4ece786c7df9386f17755e16697f5d702d85edc883278127853c4db8e","role-receipts/evidence-collector-paladins-twin-soul-batch-c.json":null,"hashing_status":"three non-self output hashes were calculated after write; self is necessarily null"},
+  "resource_ceiling":{"source_bytes_read":52428800,"source_files_or_objects_read":120,"command_invocations":80,"elapsed_minutes":45,"records_authored_or_reviewed":300,"browser_interactions":0,"browser_artifacts_captured":0,"asset_candidates_inspected":0},
+  "resource_actual":{"source_bytes_read":2230000,"source_files_or_objects_read":27,"command_invocations":12,"elapsed_minutes":32,"records_authored_or_reviewed":48,"browser_interactions":0,"browser_artifacts_captured":0,"asset_candidates_inspected":0},
+  "budget_result":"within frozen role ceiling",
+  "scope_check":{"authorized_outputs_only":true,"forbidden_work_not_performed":["mapper","browser observation","asset suitability or audit","truth test","review","candidate","acceptance","plan or registry edit","ontology","implementation"]},
+  "acceptance":"not-claimed",
+  "marker":"MEASURE_AGENT_RESULT"
+}

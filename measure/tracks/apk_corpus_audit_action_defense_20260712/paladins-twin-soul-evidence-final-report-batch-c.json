@@ -1,0 +1,16 @@
+{
+  "schema": "apk-evidence-final-report.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 3: Batch C evidence packages",
+  "game": "Paladin's Twin-Soul",
+  "role": "evidence-collector-paladins-twin-soul-batch-c",
+  "bindings": {"role_base_sha":"419cbad0fb775a766201c23e56a77373a24bfbd1","phase_base_sha":"709b0c69608312aa5d784fcc9c1b74870ce697e0","source_baseline_revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","strategy_sha256":"64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9","budget_sha256":"2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211","discovery_sha256":"unbound-local-read; receipt records current file hash"},
+  "ledger_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-claim-ledger-batch-c.json",
+  "summary":{"factual_claim_count":21,"negative_fixture_count":4,"identity":"baseline catalog source-backed","routes_apis":"historical only","implementation_copy_tests":"historical only","assets":"baseline binary identity only","browser_or_asset_audit":"not performed"},
+  "source_scope":{"baseline_identity_and_assets":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","historical_ui_logic_api_tests":"cd1936387d136ffb12e77a647f36cbce2d1fdd4e","historical_cartridge":"1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"},
+  "denominator_result":"All accepted Paladin identity, eight source-record, seven historical-record, two asset-candidate, and zero scene/state items reconcile exactly once in the ledger. No alias gap is present.",
+  "bounded_absence_result":"The exact five-path baseline tree query exited 0 with empty stdout SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855. This is a bounded tree result, not browser or global absence evidence.",
+  "unknowns":["current route/implementation behavior","browser and responsive observations","asset usage/suitability/licensing","API success/persistence/authorization","independent truth-test and review disposition"],
+  "lifecycle":"collector package only; non-consumable; acceptance not claimed",
+  "marker":"MEASURE_AGENT_RESULT"
+}
