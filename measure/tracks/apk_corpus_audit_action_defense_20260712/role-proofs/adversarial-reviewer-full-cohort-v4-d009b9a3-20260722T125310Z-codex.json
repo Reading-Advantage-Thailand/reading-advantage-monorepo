@@ -1,0 +1,109 @@
+{
+  "schema": "measure-role-proof.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-REVIEW-V4-D009B9A3-CODEX",
+  "role": "adversarial-reviewer-full-cohort-v4",
+  "status": "complete-pass-candidate-v2-only-fail-closed",
+  "completed_at_utc": "2026-07-22T12:53:10Z",
+  "provider_identifier": "/root/apk_full_cohort_review_v4",
+  "parent_task": "/root",
+  "fork_turns": "none",
+  "review_instance_nonce": "v4-d009b9a3-20260722T125310Z-codex",
+  "ownership": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v4-d009b9a3-20260722T125310Z-codex-ownership.json",
+    "sha256": "7b18437282ac20a4588df4ffca07bf9557ace9b360d63034e53bc4014287cc13",
+    "all_four_nonce_paths_absent_prewrite": true
+  },
+  "immutable_review_base": "d009b9a3b99e5aca3a512be09f10c5a9e34c437a",
+  "commands": [
+    {
+      "id": "V4-01",
+      "command": "git rev-parse HEAD d009b9a3^{commit}",
+      "exit_code": 0,
+      "result": "HEAD and requested commit both equal d009b9a3b99e5aca3a512be09f10c5a9e34c437a."
+    },
+    {
+      "id": "V4-02",
+      "command": "git show -s --format=<commit metadata> d009b9a3; git diff-tree --no-commit-id --name-status -r d009b9a3",
+      "exit_code": 0,
+      "result": "Parent 63115d6951371448c9eddfce598387706dc22af6; exactly reconciliation v4 and gate v4 were added."
+    },
+    {
+      "id": "V4-03",
+      "command": "Read immutable Measure index/workflow/spec/plan/protocol and exact reconciliation/gate from git show d009b9a3:<path>",
+      "exit_code": 0,
+      "result": "The review applied the fixed A3/B3/C2 eight-game contract, retained disclosures, zero unresolved Critical/High/Medium acceptance rule, Kimi-only browser boundary, and fail-closed lifecycle."
+    },
+    {
+      "id": "V4-04",
+      "command": "Review all 29 reconciliation bindings and execute their exact hash/first-publication assertions through the active v4 gate",
+      "exit_code": 0,
+      "result": "29/29 path and SHA-256 matches; 29/29 exact first-publication commit matches; A=3, B=4, C=22."
+    },
+    {
+      "id": "V4-05",
+      "command": "Inspect Batch C selector, selected proofs/receipts, Browser v6/v5 records, prior High review, downstream review, and asset validation successor",
+      "exit_code": 0,
+      "result": "8 roles, 8 unique providers, no provider duplicates; Browser v6 selected and Browser v5 excluded; T4C-BROWSER-V6-SELECTOR-001 resolved; nine asset candidates and five validation successor checks pass with bounded non-claims retained."
+    },
+    {
+      "id": "V4-06",
+      "command": "sha256sum and git log --diff-filter=A for candidate-cohort-manifest-t4-v1.json, product-owner-acceptance-t4-v1.json, and accepted-cohort-manifest-t4-v1.json",
+      "exit_code": 0,
+      "result": "Exact hashes 4334aaad, fff5544a, 594a4a89 and first publications 98ce6662, e3e6b421, 63115d69 establish a pre-v4 chain bound to reconciliation v3 and old review v2; classified historical/non-consumable."
+    },
+    {
+      "id": "V4-07",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/t4-cohort-reconciliation-gate-v4.py",
+      "exit_code": 0,
+      "result": "7 passed in 9.02s; active v4 gate executed exactly once; no browser or server check run."
+    },
+    {
+      "id": "V4-08",
+      "command": "jq -e . full-cohort-independent-review-v4-d009b9a3-20260722T125310Z-codex.json; sha256sum <review>",
+      "exit_code": 0,
+      "result": "Valid JSON; review SHA-256 95f9d5b91ea2caea1477c07605ee664e4c94cdf7f301a9490954ee9f978f2f43."
+    }
+  ],
+  "output_bindings": {
+    "review": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v4-d009b9a3-20260722T125310Z-codex.json",
+      "sha256": "95f9d5b91ea2caea1477c07605ee664e4c94cdf7f301a9490954ee9f978f2f43"
+    },
+    "proof": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v4-d009b9a3-20260722T125310Z-codex.json",
+      "sha256": null,
+      "digest_binding": "bound by receipt after proof finalization"
+    },
+    "receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v4-d009b9a3-20260722T125310Z-codex.json",
+      "sha256": null,
+      "digest_reason": "receipt cannot self-hash without changing its own bytes"
+    }
+  },
+  "result": {
+    "verdict": "PASS_V4_FULL_COHORT",
+    "prior_high": "RESOLVED_AT_SELECTOR_LINEAGE_LAYER",
+    "stale_v1_chain": "HISTORICAL_NON_CONSUMABLE",
+    "findings": [],
+    "unresolved_critical": 0,
+    "unresolved_high": 0,
+    "unresolved_medium": 0,
+    "unresolved_low": 0,
+    "new_v2_candidate_publication_authorized": true,
+    "candidate_created": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "consumption_authorized": false
+  },
+  "scope_attestation": {
+    "browser_checks_rerun": false,
+    "canonical_or_existing_evidence_modified": false,
+    "only_four_nonce_paths_written": true,
+    "no_staging": true,
+    "no_commit": true
+  },
+  "verification_result": "pass-v4-candidate-v2-only-fail-closed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

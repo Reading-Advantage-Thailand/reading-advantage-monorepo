@@ -1,0 +1,93 @@
+{
+  "schema": "measure.role-receipt.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-REVIEW-V4-D009B9A3-CODEX",
+  "role": "adversarial-reviewer-full-cohort-v4",
+  "status": "complete-pass-candidate-v2-only-fail-closed",
+  "completed_at_utc": "2026-07-22T12:53:10Z",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/apk_full_cohort_review_v4",
+    "parent_task": "/root",
+    "fork_turns": "none",
+    "review_instance_nonce": "v4-d009b9a3-20260722T125310Z-codex",
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "auxiliary_worktree_created_or_used": false,
+    "commit_created": false
+  },
+  "immutable_review_base": "d009b9a3b99e5aca3a512be09f10c5a9e34c437a",
+  "ownership_binding": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v4-d009b9a3-20260722T125310Z-codex-ownership.json",
+    "sha256": "7b18437282ac20a4588df4ffca07bf9557ace9b360d63034e53bc4014287cc13",
+    "prewrite_absence_gate": "pass"
+  },
+  "retained_review": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v4-d009b9a3-20260722T125310Z-codex.json",
+    "sha256": "95f9d5b91ea2caea1477c07605ee664e4c94cdf7f301a9490954ee9f978f2f43"
+  },
+  "retained_proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v4-d009b9a3-20260722T125310Z-codex.json",
+    "sha256": "4ecb7ed18e8a0cb86b8028b0805540eaa2a9ab559a46a9ec7399288ef679b715",
+    "verification_result": "pass-v4-candidate-v2-only-fail-closed"
+  },
+  "review_results": {
+    "verdict": "PASS_V4_FULL_COHORT",
+    "immutable_commit": "d009b9a3b99e5aca3a512be09f10c5a9e34c437a",
+    "games_reviewed": 8,
+    "bound_inputs": 29,
+    "bound_input_hash_mismatches": 0,
+    "bound_input_first_publication_mismatches": 0,
+    "selected_roles": 8,
+    "unique_providers": 8,
+    "provider_duplicates": [],
+    "browser_v6_selected": true,
+    "browser_v5_selected": false,
+    "browser_checks_rerun": false,
+    "prior_high_finding": "T4C-BROWSER-V6-SELECTOR-001",
+    "prior_high_disposition": "RESOLVED_AT_SELECTOR_LINEAGE_LAYER",
+    "asset_validation": "PASS_BOUNDED_INDEPENDENT_VALIDATION",
+    "stale_v1_chain": "HISTORICAL_NON_CONSUMABLE_CANNOT_AUTHORIZE_V4",
+    "gate": "7 passed in 9.02s; exit 0; run exactly once",
+    "findings": [],
+    "unresolved_counts": {"critical": 0, "high": 0, "medium": 0, "low": 0, "total": 0}
+  },
+  "authorization": {
+    "new_v2_candidate_publication_authorized": true,
+    "new_v2_candidate_must_be_non_consumable": true,
+    "candidate_manifest_created": false,
+    "candidate_consumption_authorized": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "consumption_authorized": false
+  },
+  "scope_attestation": {
+    "review_only": true,
+    "reconciliation_gate_docs_registry_plan_metadata_status_lifecycle_or_source_modified": false,
+    "existing_browser_or_other_evidence_modified": false,
+    "only_four_nonce_paths_written": true,
+    "no_staging": true,
+    "no_commit": true
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v4-d009b9a3-20260722T125310Z-codex-ownership.json",
+      "sha256": "7b18437282ac20a4588df4ffca07bf9557ace9b360d63034e53bc4014287cc13"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v4-d009b9a3-20260722T125310Z-codex.json",
+      "sha256": "95f9d5b91ea2caea1477c07605ee664e4c94cdf7f301a9490954ee9f978f2f43"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v4-d009b9a3-20260722T125310Z-codex.json",
+      "sha256": "4ecb7ed18e8a0cb86b8028b0805540eaa2a9ab559a46a9ec7399288ef679b715"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v4-d009b9a3-20260722T125310Z-codex.json",
+      "sha256": null,
+      "digest_reason": "receipt cannot self-hash without changing its own bytes"
+    }
+  ],
+  "blockers": [],
+  "marker": "MEASURE_AGENT_RESULT"
+}

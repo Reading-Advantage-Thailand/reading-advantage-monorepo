@@ -1,0 +1,40 @@
+{
+  "schema": "apk-role-path-ownership.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "role": "adversarial-reviewer-full-cohort-v4",
+  "claimed_at": "2026-07-22T12:53:10Z",
+  "nonce": "v4-d009b9a3-20260722T125310Z-codex",
+  "provider_identifier": "/root/apk_full_cohort_review_v4",
+  "parent_task": "/root",
+  "fork_turns": "none",
+  "immutable_review_base": "d009b9a3b99e5aca3a512be09f10c5a9e34c437a",
+  "review_scope": "Fresh full eight-game review of cohort reconciliation v4, its exact fail-closed gate, all A/B/C bindings, Browser v6 selector lineage, asset validation, and stale v1 lifecycle evidence; no browser rerun.",
+  "reserved_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v4-d009b9a3-20260722T125310Z-codex-ownership.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v4-d009b9a3-20260722T125310Z-codex.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v4-d009b9a3-20260722T125310Z-codex.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v4-d009b9a3-20260722T125310Z-codex.json"
+  ],
+  "preclaim_state": {
+    "ownership_and_all_reserved_paths_absent": true,
+    "rule": "Stop without overwrite if any nonce path exists before ownership publication."
+  },
+  "forbidden_writes": [
+    "reconciliation",
+    "gate",
+    "canonical documentation",
+    "registry",
+    "plan",
+    "metadata",
+    "status",
+    "lifecycle artifacts",
+    "existing evidence",
+    "source"
+  ],
+  "candidate_authorized": false,
+  "product_owner_acceptance_authorized": false,
+  "accepted_manifest_authorized": false,
+  "consumption_authorized": false,
+  "marker": "MEASURE_AGENT_RESULT"
+}
