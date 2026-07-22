@@ -1,0 +1,739 @@
+{
+  "all_worktree_dirt_observed_not_gate_input": [
+    "M .opencode/goals/state.json",
+    " M .opencode/goals/state.json.ledger.jsonl",
+    " M measure/anti-patterns.md",
+    " M measure/tracks.md",
+    " M measure/tracks/apk_corpus_audit_action_defense_20260712/_orchestrator/LAST-BATCH-STATUS.md",
+    " M measure/tracks/apk_corpus_audit_action_defense_20260712/metadata.json",
+    " M measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md",
+    "?? measure/tracks/apk_corpus_audit_action_defense_20260712/t4-accepted-cohort-admission-gate-v3.py"
+  ],
+  "bound_raw_evidence": {
+    "accepted_manifest": {
+      "current_sha256": "594a4a89756fb3a60e4fa1111b9df0e4eb0355f7e5b3774ca4291ecf029ccf3e",
+      "first_add": "63115d6951371448c9eddfce598387706dc22af6",
+      "first_add_observed": "63115d6951371448c9eddfce598387706dc22af6",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v1.json",
+      "sha256": "594a4a89756fb3a60e4fa1111b9df0e4eb0355f7e5b3774ca4291ecf029ccf3e"
+    },
+    "asset_validation_companion": {
+      "current_sha256": "ee322ac2d9f7f8d87cc4d94db16d83484a01dae0ae07e60b1c644ef9bd09ec5c",
+      "first_add": "746f852e19076698b2afb4d193a464f992c0af13",
+      "first_add_observed": "746f852e19076698b2afb4d193a464f992c0af13",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-v5-independent-validation-v1.json",
+      "sha256": "ee322ac2d9f7f8d87cc4d94db16d83484a01dae0ae07e60b1c644ef9bd09ec5c"
+    },
+    "batch_c_review_v7": {
+      "current_sha256": "24213a190009dc1a623f8b3a79d240133c1b3f0bf792023cc35cb163bdb5b2e2",
+      "first_add": "c65c4bac697a06d9c3cb84864923184821c7e098",
+      "first_add_observed": "c65c4bac697a06d9c3cb84864923184821c7e098",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-adversarial-review-v7.json",
+      "sha256": "24213a190009dc1a623f8b3a79d240133c1b3f0bf792023cc35cb163bdb5b2e2"
+    },
+    "batch_c_selector_v7": {
+      "current_sha256": "d4c3eb1093970cbe4470bd4da833fced7465b443f85c7d900c79979163a95a17",
+      "first_add": "8693ba3ec9ba139ee59b4255c958ebb3fc4be0a1",
+      "first_add_observed": "8693ba3ec9ba139ee59b4255c958ebb3fc4be0a1",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v7.json",
+      "sha256": "d4c3eb1093970cbe4470bd4da833fced7465b443f85c7d900c79979163a95a17"
+    },
+    "browser_v6": {
+      "current_sha256": "6e9a39503d315f59b001e0952fe317441115cf5c82f8efb3fe5473690b97b4e6",
+      "first_add": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1",
+      "first_add_observed": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v6-root-arbiter-20260722-1758-kimi-b91e.json",
+      "sha256": "6e9a39503d315f59b001e0952fe317441115cf5c82f8efb3fe5473690b97b4e6"
+    },
+    "candidate": {
+      "current_sha256": "4334aaadb6c19d15ad03bbfdc588f9e26ac65322c7ef615516f57a9ffaa31b97",
+      "first_add": "98ce66623f6b3ba0117ec7d5e475dd40e3ddb6c0",
+      "first_add_observed": "98ce66623f6b3ba0117ec7d5e475dd40e3ddb6c0",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v1.json",
+      "sha256": "4334aaadb6c19d15ad03bbfdc588f9e26ac65322c7ef615516f57a9ffaa31b97"
+    },
+    "full_cohort_review_v3": {
+      "current_sha256": "6d7b03d02bfd4cb1d710bd1e236cd00fd4471f7a20331285591a0f325997e872",
+      "first_add": "519e84f4ae26c6c910755b9f28a27e01a807b4f8",
+      "first_add_observed": "519e84f4ae26c6c910755b9f28a27e01a807b4f8",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v3-selector-v7-root-downstream-20260722-1924-r7k3v7-3d2f.json",
+      "sha256": "6d7b03d02bfd4cb1d710bd1e236cd00fd4471f7a20331285591a0f325997e872"
+    },
+    "owner_acceptance": {
+      "current_sha256": "fff5544a8f28a45c3985bddd0b48706baabbc6a6a010113ac66ce3156c79d5d1",
+      "first_add": "e3e6b421944eb57e407f737e4deb89e5846ada0d",
+      "first_add_observed": "e3e6b421944eb57e407f737e4deb89e5846ada0d",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-t4-v1.json",
+      "sha256": "fff5544a8f28a45c3985bddd0b48706baabbc6a6a010113ac66ce3156c79d5d1"
+    },
+    "reconciliation_v3": {
+      "current_sha256": "866d3926d3145450dbc19e1ff8ec58f3d649e259aa99996c6c3af9f6b34aecab",
+      "first_add": "dc34feec8277988183c79da29e53bdba077a729d",
+      "first_add_observed": "dc34feec8277988183c79da29e53bdba077a729d",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v3.json",
+      "sha256": "866d3926d3145450dbc19e1ff8ec58f3d649e259aa99996c6c3af9f6b34aecab"
+    }
+  },
+  "branch": "master",
+  "checks": [
+    {
+      "expected": "master",
+      "name": "canonical_master_branch",
+      "observed": "master",
+      "passed": true
+    },
+    {
+      "expected": [
+        "/home/daniel-bo/Desktop/reading-advantage-monorepo"
+      ],
+      "name": "exactly_one_physical_worktree",
+      "observed": [
+        "/home/daniel-bo/Desktop/reading-advantage-monorepo"
+      ],
+      "passed": true
+    },
+    {
+      "expected": "4334aaadb6c19d15ad03bbfdc588f9e26ac65322c7ef615516f57a9ffaa31b97",
+      "name": "candidate_raw_sha256",
+      "observed": "4334aaadb6c19d15ad03bbfdc588f9e26ac65322c7ef615516f57a9ffaa31b97",
+      "passed": true
+    },
+    {
+      "expected": "98ce66623f6b3ba0117ec7d5e475dd40e3ddb6c0",
+      "name": "candidate_first_add",
+      "observed": "98ce66623f6b3ba0117ec7d5e475dd40e3ddb6c0",
+      "passed": true
+    },
+    {
+      "expected": true,
+      "name": "candidate_raw_bytes_equal_first_add",
+      "observed": false,
+      "passed": false
+    },
+    {
+      "expected": true,
+      "name": "candidate_first_add_ancestry",
+      "observed": true,
+      "passed": true
+    },
+    {
+      "expected": "fff5544a8f28a45c3985bddd0b48706baabbc6a6a010113ac66ce3156c79d5d1",
+      "name": "owner_acceptance_raw_sha256",
+      "observed": "fff5544a8f28a45c3985bddd0b48706baabbc6a6a010113ac66ce3156c79d5d1",
+      "passed": true
+    },
+    {
+      "expected": "e3e6b421944eb57e407f737e4deb89e5846ada0d",
+      "name": "owner_acceptance_first_add",
+      "observed": "e3e6b421944eb57e407f737e4deb89e5846ada0d",
+      "passed": true
+    },
+    {
+      "expected": true,
+      "name": "owner_acceptance_raw_bytes_equal_first_add",
+      "observed": false,
+      "passed": false
+    },
+    {
+      "expected": true,
+      "name": "owner_acceptance_first_add_ancestry",
+      "observed": true,
+      "passed": true
+    },
+    {
+      "expected": "594a4a89756fb3a60e4fa1111b9df0e4eb0355f7e5b3774ca4291ecf029ccf3e",
+      "name": "accepted_manifest_raw_sha256",
+      "observed": "594a4a89756fb3a60e4fa1111b9df0e4eb0355f7e5b3774ca4291ecf029ccf3e",
+      "passed": true
+    },
+    {
+      "expected": "63115d6951371448c9eddfce598387706dc22af6",
+      "name": "accepted_manifest_first_add",
+      "observed": "63115d6951371448c9eddfce598387706dc22af6",
+      "passed": true
+    },
+    {
+      "expected": true,
+      "name": "accepted_manifest_raw_bytes_equal_first_add",
+      "observed": false,
+      "passed": false
+    },
+    {
+      "expected": true,
+      "name": "accepted_manifest_first_add_ancestry",
+      "observed": true,
+      "passed": true
+    },
+    {
+      "expected": "866d3926d3145450dbc19e1ff8ec58f3d649e259aa99996c6c3af9f6b34aecab",
+      "name": "reconciliation_v3_raw_sha256",
+      "observed": "866d3926d3145450dbc19e1ff8ec58f3d649e259aa99996c6c3af9f6b34aecab",
+      "passed": true
+    },
+    {
+      "expected": "dc34feec8277988183c79da29e53bdba077a729d",
+      "name": "reconciliation_v3_first_add",
+      "observed": "dc34feec8277988183c79da29e53bdba077a729d",
+      "passed": true
+    },
+    {
+      "expected": true,
+      "name": "reconciliation_v3_raw_bytes_equal_first_add",
+      "observed": false,
+      "passed": false
+    },
+    {
+      "expected": true,
+      "name": "reconciliation_v3_first_add_ancestry",
+      "observed": true,
+      "passed": true
+    },
+    {
+      "expected": "d4c3eb1093970cbe4470bd4da833fced7465b443f85c7d900c79979163a95a17",
+      "name": "batch_c_selector_v7_raw_sha256",
+      "observed": "d4c3eb1093970cbe4470bd4da833fced7465b443f85c7d900c79979163a95a17",
+      "passed": true
+    },
+    {
+      "expected": "8693ba3ec9ba139ee59b4255c958ebb3fc4be0a1",
+      "name": "batch_c_selector_v7_first_add",
+      "observed": "8693ba3ec9ba139ee59b4255c958ebb3fc4be0a1",
+      "passed": true
+    },
+    {
+      "expected": true,
+      "name": "batch_c_selector_v7_raw_bytes_equal_first_add",
+      "observed": false,
+      "passed": false
+    },
+    {
+      "expected": true,
+      "name": "batch_c_selector_v7_first_add_ancestry",
+      "observed": true,
+      "passed": true
+    },
+    {
+      "expected": "24213a190009dc1a623f8b3a79d240133c1b3f0bf792023cc35cb163bdb5b2e2",
+      "name": "batch_c_review_v7_raw_sha256",
+      "observed": "24213a190009dc1a623f8b3a79d240133c1b3f0bf792023cc35cb163bdb5b2e2",
+      "passed": true
+    },
+    {
+      "expected": "c65c4bac697a06d9c3cb84864923184821c7e098",
+      "name": "batch_c_review_v7_first_add",
+      "observed": "c65c4bac697a06d9c3cb84864923184821c7e098",
+      "passed": true
+    },
+    {
+      "expected": true,
+      "name": "batch_c_review_v7_raw_bytes_equal_first_add",
+      "observed": false,
+      "passed": false
+    },
+    {
+      "expected": true,
+      "name": "batch_c_review_v7_first_add_ancestry",
+      "observed": true,
+      "passed": true
+    },
+    {
+      "expected": "6d7b03d02bfd4cb1d710bd1e236cd00fd4471f7a20331285591a0f325997e872",
+      "name": "full_cohort_review_v3_raw_sha256",
+      "observed": "6d7b03d02bfd4cb1d710bd1e236cd00fd4471f7a20331285591a0f325997e872",
+      "passed": true
+    },
+    {
+      "expected": "519e84f4ae26c6c910755b9f28a27e01a807b4f8",
+      "name": "full_cohort_review_v3_first_add",
+      "observed": "519e84f4ae26c6c910755b9f28a27e01a807b4f8",
+      "passed": true
+    },
+    {
+      "expected": true,
+      "name": "full_cohort_review_v3_raw_bytes_equal_first_add",
+      "observed": false,
+      "passed": false
+    },
+    {
+      "expected": true,
+      "name": "full_cohort_review_v3_first_add_ancestry",
+      "observed": true,
+      "passed": true
+    },
+    {
+      "expected": "6e9a39503d315f59b001e0952fe317441115cf5c82f8efb3fe5473690b97b4e6",
+      "name": "browser_v6_raw_sha256",
+      "observed": "6e9a39503d315f59b001e0952fe317441115cf5c82f8efb3fe5473690b97b4e6",
+      "passed": true
+    },
+    {
+      "expected": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1",
+      "name": "browser_v6_first_add",
+      "observed": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1",
+      "passed": true
+    },
+    {
+      "expected": true,
+      "name": "browser_v6_raw_bytes_equal_first_add",
+      "observed": false,
+      "passed": false
+    },
+    {
+      "expected": true,
+      "name": "browser_v6_first_add_ancestry",
+      "observed": true,
+      "passed": true
+    },
+    {
+      "expected": "ee322ac2d9f7f8d87cc4d94db16d83484a01dae0ae07e60b1c644ef9bd09ec5c",
+      "name": "asset_validation_companion_raw_sha256",
+      "observed": "ee322ac2d9f7f8d87cc4d94db16d83484a01dae0ae07e60b1c644ef9bd09ec5c",
+      "passed": true
+    },
+    {
+      "expected": "746f852e19076698b2afb4d193a464f992c0af13",
+      "name": "asset_validation_companion_first_add",
+      "observed": "746f852e19076698b2afb4d193a464f992c0af13",
+      "passed": true
+    },
+    {
+      "expected": true,
+      "name": "asset_validation_companion_raw_bytes_equal_first_add",
+      "observed": false,
+      "passed": false
+    },
+    {
+      "expected": true,
+      "name": "asset_validation_companion_first_add_ancestry",
+      "observed": true,
+      "passed": true
+    },
+    {
+      "expected": {
+        "candidate_only": true,
+        "consumable": false
+      },
+      "name": "candidate_non_consumable",
+      "observed": {
+        "candidate_only": true,
+        "consumable": false
+      },
+      "passed": true
+    },
+    {
+      "expected": false,
+      "name": "candidate_false_authorities",
+      "observed": {
+        "accepted_manifest_publication_authorized": false,
+        "authority_not_exercised": true,
+        "candidate_consumable": false,
+        "candidate_manifest_publication_authorized": true,
+        "candidate_only": true,
+        "cohort_consumption_authorized": false,
+        "product_owner_acceptance_authorized": false
+      },
+      "passed": true
+    },
+    {
+      "expected": {
+        "decision": "ACCEPT-WITH-DISCLOSURE",
+        "manifest_publication": true,
+        "pre_manifest_consumption": false
+      },
+      "name": "acceptance_order_and_authority",
+      "observed": {
+        "decision": "ACCEPT-WITH-DISCLOSURE",
+        "manifest_publication": true,
+        "pre_manifest_consumption": false
+      },
+      "passed": true
+    },
+    {
+      "expected": {
+        "consumability": "conditional-only-under-every-recorded-condition-and-disclosure",
+        "consumable": true,
+        "status": "accepted-with-disclosure"
+      },
+      "name": "manifest_conditional_consumability",
+      "observed": {
+        "consumability": "conditional-only-under-every-recorded-condition-and-disclosure",
+        "consumable": true,
+        "status": "accepted-with-disclosure"
+      },
+      "passed": true
+    },
+    {
+      "expected": {
+        "all_forbidden_success_claims": false,
+        "product_or_shipping": false,
+        "t8": false
+      },
+      "name": "manifest_t8_product_shipping_false",
+      "observed": {
+        "forbidden_success_claims": {
+          "api": false,
+          "asset_loading": false,
+          "asset_suitability": false,
+          "completion": false,
+          "gameplay": false,
+          "idempotency": false,
+          "implementation": false,
+          "licensing": false,
+          "persistence": false,
+          "production_use": false,
+          "responsive": false,
+          "shipping": false,
+          "xp": false
+        },
+        "product_or_shipping": false,
+        "t8": false
+      },
+      "passed": true
+    },
+    {
+      "expected": {
+        "duplicates": 0,
+        "exactly_once": true,
+        "expected": 8,
+        "observed": 8,
+        "omissions": 0,
+        "status": "structurally-reconciled-only-not-a-cohort-acceptance"
+      },
+      "name": "v3_reconciliation_roster_exactly_eight",
+      "observed": {
+        "roster": {
+          "assigned_games_expected": 8,
+          "assigned_games_observed": 8,
+          "duplicates": 0,
+          "entries": [
+            {
+              "batch": "batch-a",
+              "canonical_id": "castle-defense",
+              "exactly_once": true,
+              "game": "Castle Defense"
+            },
+            {
+              "batch": "batch-a",
+              "canonical_id": "magic-defense",
+              "exactly_once": true,
+              "game": "Magic Defense"
+            },
+            {
+              "batch": "batch-a",
+              "canonical_id": "wizard-vs-zombie",
+              "exactly_once": true,
+              "game": "Wizard vs Zombie"
+            },
+            {
+              "batch": "batch-b",
+              "canonical_id": "village-guardian",
+              "exactly_once": true,
+              "game": "Village Guardian"
+            },
+            {
+              "batch": "batch-b",
+              "canonical_id": "archers-revenge",
+              "exactly_once": true,
+              "game": "Archer's Revenge"
+            },
+            {
+              "batch": "batch-b",
+              "canonical_id": "storm-castle-tower",
+              "exactly_once": true,
+              "game": "Storm the Castle Tower"
+            },
+            {
+              "batch": "batch-c",
+              "canonical_id": "paladins-twin-soul",
+              "exactly_once": true,
+              "game": "Paladin's Twin-Soul"
+            },
+            {
+              "batch": "batch-c",
+              "canonical_id": "gryphon-patrol",
+              "exactly_once": true,
+              "game": "Gryphon Patrol"
+            }
+          ],
+          "omissions": 0
+        },
+        "status": "structurally-reconciled-only-not-a-cohort-acceptance"
+      },
+      "passed": true
+    },
+    {
+      "expected": false,
+      "name": "v3_reconciliation_authorities_false",
+      "observed": {
+        "accepted_manifest_publication_authorized": false,
+        "candidate_manifest_publication_authorized": false,
+        "cohort_consumption_authorized": false,
+        "fresh_full_cohort_reviewer": {
+          "authorized": true,
+          "condition": "t4-cohort-reconciliation-gate-v3.py must pass against the exact bindings above before dispatch.",
+          "only_permitted_next_role": true,
+          "required_mode": "fresh-context-only, fork_turns=none, tool-attested, full eight-game reconciliation"
+        },
+        "product_owner_acceptance_authorized": false
+      },
+      "passed": true
+    },
+    {
+      "expected": {
+        "roles": 8,
+        "status": "complete-eight-current-role-bindings-v7",
+        "unique_providers": 8,
+        "unique_task_ids": 8
+      },
+      "name": "batch_c_v7_eight_current_roles",
+      "observed": {
+        "roles": 8,
+        "status": "complete-eight-current-role-bindings-v7"
+      },
+      "passed": true
+    },
+    {
+      "expected": false,
+      "name": "batch_c_v7_lifecycle_false",
+      "observed": {
+        "acceptance_authorized": false,
+        "candidate_authorized": false,
+        "consumption_authorized": false
+      },
+      "passed": true
+    },
+    {
+      "expected": {
+        "critical": 0,
+        "fresh_review_gate": "green",
+        "high": 0,
+        "medium": 0
+      },
+      "name": "batch_c_v7_review_zero_chm",
+      "observed": {
+        "counts": {
+          "critical": 0,
+          "high": 0,
+          "low": 0,
+          "medium": 0
+        },
+        "fresh_review_gate": "green"
+      },
+      "passed": true
+    },
+    {
+      "expected": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "selector_lineage": "PASS"
+      },
+      "name": "full_cohort_v3_review_zero_chm",
+      "observed": {
+        "counts": {
+          "critical": 0,
+          "high": 0,
+          "low": 0,
+          "medium": 0,
+          "total": 0
+        },
+        "verdict": {
+          "candidate_readiness": "NOT_AUTHORIZED",
+          "prior_high": "RESOLVED_AT_SELECTOR_LINEAGE_LAYER",
+          "reason": "The exact selector defect is resolved and independently verified, but the immutable successor itself requires later additive review/reconciliation lifecycle steps and keeps all authority false.",
+          "selector_lineage": "PASS"
+        }
+      },
+      "passed": true
+    },
+    {
+      "expected": {
+        "helper_exit_codes": [
+          4,
+          28
+        ],
+        "kimi": {
+          "extension_connected": true,
+          "running": true
+        },
+        "lifecycle": false,
+        "route_statuses": [
+          404,
+          404
+        ]
+      },
+      "name": "kimi_helper_recovery_and_404",
+      "observed": {
+        "kimi": {
+          "console": "Unavailable: this extension exposes no console-buffer tool; no console-clean claim is made.",
+          "daemon_version": "v1.11.1",
+          "extension_connected": true,
+          "extension_version": "1.11.3",
+          "first_browser_action": "navigate catalog with newTab=true",
+          "first_tab_id": 915224879,
+          "network_capture": {
+            "list_count": 83,
+            "start": "success",
+            "stop": "success"
+          },
+          "running": true,
+          "session_close": {
+            "closed": 1,
+            "post_close_tabs": []
+          },
+          "status_checked_before_browser_action": true,
+          "status_exit": 0
+        },
+        "lifecycle": {
+          "acceptance_authorized": false,
+          "browser_evidence_complete_for_current_non_runnable_state": true,
+          "candidate_authorized": false,
+          "consumption_authorized": false,
+          "fresh_independent_review_required": true,
+          "gryphon-patrol": "NON_RUNNABLE: catalog-only Coming Soon card with no link; exact arcade route returns 404.",
+          "paladins-twin-soul": "NON_RUNNABLE: catalog-only Coming Soon card with no link; exact arcade route returns 404."
+        },
+        "route_statuses": [
+          404,
+          404
+        ]
+      },
+      "passed": false
+    },
+    {
+      "expected": {
+        "five_checks": "pass",
+        "role_replaced": false,
+        "status": "complete-bounded-independent-validation"
+      },
+      "name": "asset_validation_companion",
+      "observed": {
+        "checks": {
+          "chain_hashes": {
+            "method": "sha256sum recomputed every original file; audit and proof digests match the original receipt bindings, and ownership digest matches the ownership bindings in the original audit and receipt.",
+            "observed": {
+              "audit": "10b372b3eff78ce869062577c42ccdf7eccf10e56177315acca91b892e97195c",
+              "ownership": "4c798bc474822bf4253e2e2d306511db1a140e561214810fd328fd10ae356b0b",
+              "proof": "fac6f71f01dd247ccdd2abf0dbf628c0a1a3ba8bfb329cd00d7503c271760e14",
+              "receipt": "e38993458ba19f299d2cd16eb699f79b9cd82f1d6dcde420d9fbc8c2577d37ab"
+            },
+            "result": "pass"
+          },
+          "exact_diff_scope": {
+            "method": "git diff --name-status ae0920c9 -- <the four original-set paths> emitted no rows before successor write; the three named successor paths were also absent before write.",
+            "original_set_changed_since_checkpoint": false,
+            "result": "pass",
+            "successor_paths_absent_prewrite": true
+          },
+          "json_syntax": {
+            "method": "jq -e . parsed all four original JSON files successfully.",
+            "result": "pass"
+          },
+          "no_backups": {
+            "method": "find found no .bak, .orig, or editor-backup suffix for any of the three successor output basenames before write.",
+            "result": "pass"
+          },
+          "predecessor_immutability": {
+            "collision_record": {
+              "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-auditor-v4-collision.json",
+              "sha256": "166c1c2284076ab0eaac5ec2f267cd2cc92378b4f908c6573767678626813b74"
+            },
+            "method": "Recomputed each v4 provider-set digest listed in batch-c-asset-auditor-v4-collision.json and compared it to the collision record.",
+            "result": "pass",
+            "verified_files": [
+              {
+                "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit-v4-fresh.json",
+                "sha256": "4c6ae789cd4936b375aa2ff2c9268fff54586d3241a94ecab04f13dbc46592b4"
+              },
+              {
+                "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-audit-v4.json",
+                "sha256": "072132dbc86963581e5a7c826e42b3598ffc8a5ea5f80834c9fcc50d90526de3"
+              },
+              {
+                "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v4.json",
+                "sha256": "299fb74edbccb0d39c9fd8f04abf6c16b94b8e05e677413b55b41694a7117853"
+              },
+              {
+                "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v4.json",
+                "sha256": "96bd88571dc57ad2d1bea256524a335d6e7f291e573098442496d4f4b3bd1327"
+              }
+            ]
+          }
+        },
+        "role_replaced": false,
+        "status": "complete-bounded-independent-validation"
+      },
+      "passed": true
+    },
+    {
+      "expected": [
+        "dc34feec8277988183c79da29e53bdba077a729d",
+        "98ce66623f6b3ba0117ec7d5e475dd40e3ddb6c0",
+        "e3e6b421944eb57e407f737e4deb89e5846ada0d",
+        "63115d6951371448c9eddfce598387706dc22af6"
+      ],
+      "name": "v3_candidate_acceptance_manifest_ancestry",
+      "observed": [
+        "dc34feec8277988183c79da29e53bdba077a729d",
+        "98ce66623f6b3ba0117ec7d5e475dd40e3ddb6c0",
+        "e3e6b421944eb57e407f737e4deb89e5846ada0d",
+        "63115d6951371448c9eddfce598387706dc22af6"
+      ],
+      "passed": true
+    },
+    {
+      "expected": {
+        "sha256": "967642a6a0fd7eca6a6e2a6e2fbb75ae22bf53e083bff4e0bf8d760fc6ecccf0",
+        "status": "red-stop-loss-no-second-cycle"
+      },
+      "name": "excluded_stop_loss_v1",
+      "observed": {
+        "sha256": "967642a6a0fd7eca6a6e2a6e2fbb75ae22bf53e083bff4e0bf8d760fc6ecccf0",
+        "status": "red-stop-loss-no-second-cycle"
+      },
+      "passed": true
+    },
+    {
+      "expected": {
+        "sha256": "d6485691681a666614bc817f18a7704923bc97263fe0f8ca28f78a136ba276b0",
+        "status": "red-stop-loss-no-second-cycle"
+      },
+      "name": "excluded_stop_loss_v2",
+      "observed": {
+        "sha256": "d6485691681a666614bc817f18a7704923bc97263fe0f8ca28f78a136ba276b0",
+        "status": "red-stop-loss-no-second-cycle"
+      },
+      "passed": true
+    }
+  ],
+  "excluded_stop_loss_history": {
+    "v1": {
+      "disposition": "excluded-stop-loss-history-only",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-accepted-cohort-admission-result-v1.json",
+      "sha256": "967642a6a0fd7eca6a6e2a6e2fbb75ae22bf53e083bff4e0bf8d760fc6ecccf0",
+      "status": "red-stop-loss-no-second-cycle"
+    },
+    "v2": {
+      "disposition": "excluded-stop-loss-history-only",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-accepted-cohort-admission-result-v2.json",
+      "sha256": "d6485691681a666614bc817f18a7704923bc97263fe0f8ca28f78a136ba276b0",
+      "status": "red-stop-loss-no-second-cycle"
+    }
+  },
+  "head": "86348fb2f31b236c7b48c0d6bc77a974b7643c9a",
+  "outcome": "fail",
+  "schema_version": 3,
+  "scope": "Only raw committed lifecycle/evidence bytes and objective JSON invariants are gate inputs. Human diagnosis prose, plan.md, metadata.json, LAST-BATCH-STATUS.md, and unselected concurrent ownership placeholders are excluded.",
+  "scoped_dirt_observed_not_gate_input": [
+    " M measure/tracks/apk_corpus_audit_action_defense_20260712/_orchestrator/LAST-BATCH-STATUS.md",
+    " M measure/tracks/apk_corpus_audit_action_defense_20260712/metadata.json",
+    " M measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md",
+    "?? measure/tracks/apk_corpus_audit_action_defense_20260712/t4-accepted-cohort-admission-gate-v3.py"
+  ],
+  "status": "red-objective-committed-lifecycle-invariants",
+  "task_id": "T4-ACCEPTED-COHORT-ADMISSION-V3",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "worktrees": [
+    "/home/daniel-bo/Desktop/reading-advantage-monorepo"
+  ]
+}

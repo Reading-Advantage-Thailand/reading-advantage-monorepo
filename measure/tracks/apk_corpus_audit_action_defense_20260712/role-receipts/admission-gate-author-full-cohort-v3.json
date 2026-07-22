@@ -1,0 +1,12 @@
+{
+  "authority": "objective admission check only; no candidate, acceptance, manifest, T8, product, or shipping authority is created",
+  "outcome": "fail",
+  "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/admission-gate-author-full-cohort-v3.json",
+  "proof_sha256": "bccf54a922e91136184d7ea0d661ec6af357ae8193c85c0841b268e2d1794b4d",
+  "result_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-accepted-cohort-admission-result-v3.json",
+  "result_sha256": "5c9e30534172ee57136b98cf1ecbb9dd7073c9ea141f9431605e8e40e2769adf",
+  "role": "admission-gate-author-full-cohort",
+  "schema_version": 1,
+  "status": "complete",
+  "task_id": "T4-ACCEPTED-COHORT-ADMISSION-V3"
+}

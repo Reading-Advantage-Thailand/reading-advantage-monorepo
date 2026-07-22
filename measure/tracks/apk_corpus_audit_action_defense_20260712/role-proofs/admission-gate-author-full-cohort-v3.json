@@ -1,0 +1,14 @@
+{
+  "gate_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-accepted-cohort-admission-gate-v3.py",
+  "gate_sha256": "2b3f5e5e4848ce218318703896fd320e92e0ab501229d35619267c60de6636ec",
+  "outcome": "fail",
+  "result_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-accepted-cohort-admission-result-v3.json",
+  "result_sha256": "5c9e30534172ee57136b98cf1ecbb9dd7073c9ea141f9431605e8e40e2769adf",
+  "role": "admission-gate-author-full-cohort",
+  "schema_version": 1,
+  "task_id": "T4-ACCEPTED-COHORT-ADMISSION-V3",
+  "worktree_policy": {
+    "auxiliary_worktree_used": false,
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo"
+  }
+}
