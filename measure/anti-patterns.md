@@ -419,6 +419,44 @@ not rewrite placeholders into retrospective claims.
 
 ---
 
+## A16 — NO WORKTREES: one shared master tree only
+
+**Class:** orchestration state divergence / destructive integration risk
+**Caught:** 2026-07-22 APK T3–T7 orchestration regression
+
+**Detection:**
+```bash
+count=$(git worktree list --porcelain | rg -c '^worktree ')
+test "$count" -eq 1 || {
+  echo "FAIL: expected exactly one shared master worktree; found $count"
+  git worktree list
+  exit 1
+}
+test "$(git branch --show-current)" = "master" || {
+  echo "FAIL: Measure orchestration must run from the shared master checkout"
+  exit 1
+}
+```
+
+**Symptoms:** Agents create or retain auxiliary worktrees, then read different
+`measure/tracks.md`, plan, acceptance, and worktree states as if each were current.
+Completed successor work appears missing, stale predecessor checkpoints are treated as
+active, changes are stranded outside the shared checkout, and cleanup risks deleting
+unintegrated work.
+
+**Fix:** This repository has exactly one physical Git worktree:
+`/home/daniel-bo/Desktop/reading-advantage-monorepo` on `master`. All root and subagent
+work occurs in that shared tree. Never run `git worktree add`, adopt an existing
+auxiliary worktree, or retain one for review, isolation, replay, deployment, or
+remediation. Before every Measure status, implementation, review, or closeout action,
+verify the one-worktree invariant and read the live master registry. Parallel agents
+coordinate through explicit file ownership in the same tree.
+
+**Guard:** Required preflight for every Measure orchestrator run; a dedicated static
+guard should fail when `git worktree list` contains more than the master checkout.
+
+---
+
 ## How projects extend this catalog
 
 When a new class of failure is caught (in this project, in another project, or by the
