@@ -1,0 +1,70 @@
+{
+  "schema": "apk-role-receipt.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "task_id": "C3-MAP-GRYPHON",
+  "role": "requirements-mapper-gryphon-patrol-batch-c",
+  "status": "fresh-context v4 mapping complete; non-authoritative; batch acceptance not claimed",
+  "verification_result": "pass",
+  "role_base_sha": "ed1f3df33a7416498a18f609385424c99c6661a3",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "provider_provenance": {
+    "available": true,
+    "provider_kind": "collaboration-subagent",
+    "provider_identifier": "/root/t4_gryphon_mapper_terra",
+    "parent_task": "/root/scanner_index_review",
+    "fork_turns": "none",
+    "canonical_task_identifier": "/root/t4_gryphon_mapper_terra",
+    "raw_provider_export_available": false,
+    "raw_provider_export_sha256": null,
+    "provider_event_id": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "model_identifier": null,
+    "unavailable_fields_reason": "No raw provider export, event ID, spawn ID, session ID, or model identifier is exposed; none is fabricated."
+  },
+  "retained_proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-gryphon-patrol-batch-c-v4.json",
+    "sha256": "dfa0170492e70d8892a43ed10c2c44a67996ba3a90f20206125ecb761173e55b"
+  },
+  "authoritative_bindings": {
+    "collector_ledger_sha256": "d3e0de2a047d59ba5a128cb3780d1e5f42f04c8ae0361cb04e633ef8f671e4eb",
+    "collector_method_sha256": "4d4916f88d34d19c067bf796298f922875480409c16d9d5e2491bc743f6a70d0",
+    "collector_report_sha256": "0d7af322d736edbffd146d6bf2f51989198513b0a9080e2f9050cca1eb7177f4",
+    "collector_proof_sha256": "d797b87a0b59bd2aeeaf54fc63fa3d8d30659d33695493a6c25ee37964382e2e",
+    "collector_receipt_sha256": "cf28e5d2c6de663e2638ab024cd5ea78df0f7a91da12d5952b6d589813d5d27c",
+    "semantic_claim_layer_sha256": "2f0c23b6aa5a03b814107dbd8325bc1af5d7ce21fa15d6fbfdca87b77345efd4",
+    "denominator_correction_sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f"
+  },
+  "rederived_result": {
+    "counts": {"source_records": 14, "asset_candidates": 5, "historical_records": 10},
+    "git_blob_checks": {"checks": 29, "matches": 29, "mismatches": 0},
+    "claim_coverage": {"available": 15, "mapped": 15, "unmapped": 0, "atomic_propositions": 40},
+    "new_source_facts": 0,
+    "verification_result": "pass"
+  },
+  "outputs": [
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-hypotheses-batch-c-v4.md", "sha256": "be2725c9c0c672c723af6d04e2517f1490257b88180cf15c2c4b3f57f65fd0e4"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-final-report-batch-c-v4.json", "sha256": "6b35ec24ff5ae27d48cce8ef8a7ec2e11e310f25c24480ed2f6806054d4aa912"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-gryphon-patrol-batch-c-v4.json", "sha256": "dfa0170492e70d8892a43ed10c2c44a67996ba3a90f20206125ecb761173e55b"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c-v4.json", "sha256": null, "digest_reason": "The receipt cannot self-hash without changing its own bytes."}
+  ],
+  "resource_use": {
+    "budget_declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "ceilings": {"source_bytes_read": 52428800, "source_files_or_objects_read": 120, "command_invocations": 80, "elapsed_minutes": 45, "records_authored_or_reviewed": 300, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "actual": {"source_bytes_read": 10485760, "source_files_or_objects_read": 44, "command_invocations": 9, "elapsed_minutes": 16, "records_authored_or_reviewed": 55, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "ceiling_breaches": 0
+  },
+  "scope_check": {
+    "authorized_outputs_only": true,
+    "historical_artifacts_edited": false,
+    "worktree_created_or_used": false,
+    "commit_created": false,
+    "forbidden_work_not_performed": ["source collection", "source fact creation", "browser audit", "asset audit or suitability", "truth-test authorship", "review", "receipt selection", "candidate ownership", "acceptance", "implementation", "plan or registry edit", "staging", "commit", "ontology", "cross-game synthesis"]
+  },
+  "lifecycle": {"mapper_role_complete": true, "candidate_authorized": false, "acceptance_authorized": false, "fresh_remaining_roles_and_independent_review_required": true},
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

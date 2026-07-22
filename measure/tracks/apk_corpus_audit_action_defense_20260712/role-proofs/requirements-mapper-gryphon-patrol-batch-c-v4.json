@@ -1,0 +1,83 @@
+{
+  "schema": "measure.provider-fresh-context-proof.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "task_id": "C3-MAP-GRYPHON",
+  "role": "requirements-mapper-gryphon-patrol-batch-c",
+  "status": "completed-bounded-non-authoritative-mapper-rerun",
+  "verification_result": "pass",
+  "canonical_task": {
+    "identifier": "/root/t4_gryphon_mapper_terra",
+    "literal_text": "You are the independent fresh-context requirements mapper for T4 Batch C Gryphon Patrol in /home/daniel-bo/Desktop/reading-advantage-monorepo. Work ONLY in measure/tracks/apk_corpus_audit_action_defense_20260712. One shared master checkout; NEVER create/use a worktree. Read measure/index.md, measure/workflow.md, the T4 spec/plan, batch-c-denominator-correction-v4.json, existing Gryphon v4 collector artifacts, the analogous Paladin v4 mapper artifacts/proof/receipt, and batch-c-truth-tests-v4.py. Produce the missing fresh Gryphon mapper v4 hypothesis/final-report plus role-proofs/requirements-mapper-gryphon-patrol-batch-c-v4.json and role-receipts/requirements-mapper-gryphon-patrol-batch-c-v4.json. Fresh-context provenance must be truthful: canonical task /root/t4_gryphon_mapper_terra, parent_task /root/scanner_index_review as required by the existing T4 contract, fork_turns none, unique provider_identifier. Retain concrete commands, integer exit codes, stdout or hashes, and verification_result exactly 'pass' if green. Bind exact current hashes; no candidate/acceptance authority, no behavior overclaim. Do not edit plan/metadata/registry, stage, or commit. Run focused JSON/hash/diff checks and report exact paths/results."
+  },
+  "provider_identifier": "/root/t4_gryphon_mapper_terra",
+  "parent_task": "/root/scanner_index_review",
+  "fork_turns": "none",
+  "provider_provenance": {
+    "available": true,
+    "provider_kind": "collaboration-subagent",
+    "provider_identifier": "/root/t4_gryphon_mapper_terra",
+    "parent_task": "/root/scanner_index_review",
+    "fork_turns": "none",
+    "raw_provider_export_available": false,
+    "raw_provider_export_sha256": null,
+    "provider_event_id": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "model_identifier": null,
+    "unavailable_fields_reason": "No raw provider export, event ID, spawn ID, session ID, or model identifier is exposed; none is fabricated."
+  },
+  "repository": {
+    "canonical_path": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "role_base_head": "ed1f3df33a7416498a18f609385424c99c6661a3",
+    "worktree_created_or_used": false,
+    "commit_created": false,
+    "unrelated_dirty_files_preserved": true
+  },
+  "timestamps": {
+    "validation_started_at_utc": "2026-07-22T09:53:12Z",
+    "validation_started_at_local": "2026-07-22T16:53:12+07:00",
+    "source": "system date"
+  },
+  "authoritative_exact_inputs": [
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-claim-ledger-batch-c-v4.json", "sha256": "d3e0de2a047d59ba5a128cb3780d1e5f42f04c8ae0361cb04e633ef8f671e4eb"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-method-batch-c-v4.md", "sha256": "4d4916f88d34d19c067bf796298f922875480409c16d9d5e2491bc743f6a70d0"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-final-report-batch-c-v4.json", "sha256": "0d7af322d736edbffd146d6bf2f51989198513b0a9080e2f9050cca1eb7177f4"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/evidence-collector-gryphon-patrol-batch-c-v4.json", "sha256": "d797b87a0b59bd2aeeaf54fc63fa3d8d30659d33695493a6c25ee37964382e2e"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-gryphon-patrol-batch-c-v4.json", "sha256": "cf28e5d2c6de663e2638ab024cd5ea78df0f7a91da12d5952b6d589813d5d27c"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-semantic-supersession-batch-c-v2.json", "sha256": "2f0c23b6aa5a03b814107dbd8325bc1af5d7ce21fa15d6fbfdca87b77345efd4"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json", "sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f"},
+    {"path": "measure/archive/apk_source_denominator_inventory_20260712/source-denominator.json", "sha256": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d"},
+    {"path": "measure/archive/apk_source_denominator_inventory_20260712/asset-file-denominator.json", "sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438"},
+    {"path": "measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json", "sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f"}
+  ],
+  "commands": [
+    {"purpose": "read routing, workflow, T4 contract, corrected denominator, analogous mapper evidence, and active truth contract", "argv": ["sed", "-n", "1,360p <governed inputs>"], "exit_code": 0, "stdout": "Required routing and artifact inputs were read; no worktree, plan, metadata, registry, staging, or commit action occurred.", "stdout_bounded": true},
+    {"purpose": "initial focused immutable-selection check", "argv": ["python3", "-"], "exit_code": 1, "stdout": "KeyError: file_path in the first inspection helper before selection filtering; no artifact was written by this failed read-only check.", "stdout_bounded": true},
+    {"purpose": "rederive corrected Gryphon denominator, ledger arrays, immutable Git blob hashes, semantic counts, input hashes, and diff whitespace status", "argv": ["python3", "-"], "exit_code": 0, "stdout": "denominator=14/5/10; immutable_git_blob_checks=29/29; semantic_claims=15; atomic_propositions=40; collector, semantic, and denominator SHA-256 values match the retained bindings; git diff --check exit 0; role base ed1f3df33a7416498a18f609385424c99c6661a3; UTC 2026-07-22T09:53:44Z; local 2026-07-22T16:53:44+07:00.", "stdout_bounded": true},
+    {"purpose": "run the focused corrected-denominator gate", "argv": ["python3", "-m", "pytest", "-q", "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py", "-k", "BatchCCorrectedDenominatorContract"], "exit_code": 0, "stdout": "3 passed, 2 deselected in 1.04s", "stdout_bounded": true},
+    {"purpose": "serialize mapper hypotheses and final report then bind their exact bytes", "argv": ["apply_patch"], "exit_code": 0, "stdout": "hypotheses SHA-256 be2725c9c0c672c723af6d04e2517f1490257b88180cf15c2c4b3f57f65fd0e4; final report SHA-256 6b35ec24ff5ae27d48cce8ef8a7ec2e11e310f25c24480ed2f6806054d4aa912", "stdout_bounded": true}
+  ],
+  "rederived_result": {
+    "counts": {"source_records": 14, "asset_candidates": 5, "historical_records": 10},
+    "git_blob_hashes": {"checks": 29, "matches": 29, "mismatches": 0},
+    "semantic_claims": {"available": 15, "mapped": 15, "unmapped": 0, "atomic_propositions": 40},
+    "new_source_facts": 0,
+    "verification_result": "pass"
+  },
+  "resource_use": {
+    "budget_declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "ceilings": {"source_bytes_read": 52428800, "source_files_or_objects_read": 120, "command_invocations": 80, "elapsed_minutes": 45, "records_authored_or_reviewed": 300, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "actual": {"source_bytes_read": 10485760, "source_files_or_objects_read": 44, "command_invocations": 9, "elapsed_minutes": 16, "records_authored_or_reviewed": 55, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "measurement_note": "Source bytes are a conservative charged upper bound over bounded local routing, collector, semantic-layer, denominator, and immutable Git-blob reads. Asset candidates were identity validated only.",
+    "ceiling_breaches": 0
+  },
+  "outputs": [
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-hypotheses-batch-c-v4.md", "sha256": "be2725c9c0c672c723af6d04e2517f1490257b88180cf15c2c4b3f57f65fd0e4"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-final-report-batch-c-v4.json", "sha256": "6b35ec24ff5ae27d48cce8ef8a7ec2e11e310f25c24480ed2f6806054d4aa912"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-gryphon-patrol-batch-c-v4.json", "sha256": null, "digest_reason": "The receipt binds finalized proof bytes."},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c-v4.json", "sha256": null, "digest_reason": "The receipt cannot self-hash without changing its byte stream."}
+  ],
+  "scope_boundary": "Mapping-only. No source collection, source fact creation, browser audit, asset audit or suitability assessment, truth-test authorship, review, receipt selection, candidate ownership, acceptance, implementation, plan/metadata/registry edit, staging, commit, ontology, or cross-game synthesis.",
+  "marker": "MEASURE_AGENT_RESULT"
+}

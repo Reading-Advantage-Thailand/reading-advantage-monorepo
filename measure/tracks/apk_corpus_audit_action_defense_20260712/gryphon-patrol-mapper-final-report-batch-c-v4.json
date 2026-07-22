@@ -1,0 +1,49 @@
+{
+  "schema": "apk-mapper-final-report.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "game": "Gryphon Patrol",
+  "role": "requirements-mapper-gryphon-patrol-batch-c",
+  "fresh_context_provenance": {
+    "canonical_task": "/root/t4_gryphon_mapper_terra",
+    "provider_identifier": "/root/t4_gryphon_mapper_terra",
+    "parent_task": "/root/scanner_index_review",
+    "fork_turns": "none"
+  },
+  "role_base_sha": "ed1f3df33a7416498a18f609385424c99c6661a3",
+  "status": "v4 mapper package authored append-only; non-authoritative; acceptance not claimed",
+  "authoritative_inputs": {
+    "collector_ledger_sha256": "d3e0de2a047d59ba5a128cb3780d1e5f42f04c8ae0361cb04e633ef8f671e4eb",
+    "collector_method_sha256": "4d4916f88d34d19c067bf796298f922875480409c16d9d5e2491bc743f6a70d0",
+    "collector_report_sha256": "0d7af322d736edbffd146d6bf2f51989198513b0a9080e2f9050cca1eb7177f4",
+    "collector_proof_sha256": "d797b87a0b59bd2aeeaf54fc63fa3d8d30659d33695493a6c25ee37964382e2e",
+    "collector_receipt_sha256": "cf28e5d2c6de663e2638ab024cd5ea78df0f7a91da12d5952b6d589813d5d27c",
+    "semantic_claim_layer_sha256": "2f0c23b6aa5a03b814107dbd8325bc1af5d7ce21fa15d6fbfdca87b77345efd4",
+    "denominator_correction_sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f"
+  },
+  "result": {
+    "denominator_counts": {"source_records": 14, "asset_candidates": 5, "historical_records": 10},
+    "inventory_hashes_match": true,
+    "git_blob_hashes": {"checks": 29, "matches": 29, "mismatches": 0},
+    "prior_omissions": {"archive_source_records": "6/6", "metadata_asset_candidates": "2/2", "src_lib_historical_records": "3/3"},
+    "factual_claims_available": 15,
+    "atomic_propositions_available": 40,
+    "unique_envelopes": {"checks": 11, "matches": 11, "mismatches": 0},
+    "factual_claims_mapped": 15,
+    "new_source_facts": 0,
+    "unmapped_factual_claim_ids": []
+  },
+  "mapping_boundary": "The mapping is limited to the exact preserved semantic claims and explicit hypotheses. It is not a current-behavior, browser, asset-suitability, runtime-use, candidate, or acceptance determination.",
+  "scope_check": {
+    "collector_claims_only": true,
+    "preserved_mapper_artifacts_edited": false,
+    "worktree_created_or_used": false,
+    "commit_created": false,
+    "forbidden_work_not_performed": ["source collection", "source fact creation", "browser audit", "asset audit or suitability", "truth-test authorship", "review", "receipt selection", "candidate ownership", "acceptance", "implementation", "plan or registry edit", "ontology", "cross-game synthesis"]
+  },
+  "lifecycle": {"mapper_role_complete": true, "candidate_authorized": false, "acceptance_authorized": false, "fresh_remaining_roles_and_independent_review_required": true},
+  "verification_result": "pass",
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}
