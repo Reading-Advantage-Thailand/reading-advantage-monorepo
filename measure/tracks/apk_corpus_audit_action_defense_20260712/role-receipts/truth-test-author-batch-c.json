@@ -1,0 +1,67 @@
+{
+  "schema": "measure.role-receipt.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "role": "truth-test-author-batch-c",
+  "role_base_sha": "9f9bee80d28eb8b384f9f30fe0ae9f53db47fda2",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "provider_provenance": {
+    "available": false,
+    "provider_identifier": null,
+    "raw_export_identifier": null,
+    "fork_turns": null,
+    "reason": "No provider-attested identifier or raw fresh-context export is available in this role context. No substitute provenance is claimed."
+  },
+  "exact_inputs": {
+    "measure/apk-evidence-cohort-protocol.md": "1f97ed8fd026cb0b1b49ed5de602252c075228981d1ff26640748b56ff2a3507",
+    "measure/index.md": "0b5450ebe2299cd4ce99fd8468d4cd78a8899316b8fbf8998e047c0dead83a20",
+    "measure/workflow.md": "b73f30d7884182771cda3905b86d8a36c1d8340879d50d1871a20030b53dd517",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-c.md": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-budget-declaration.json": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-applicability.json": "a239908b9564ce48acd5b54be5d1d80d81afcd316778bea0f4dad2be89d08fa0",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-phase-base-binding.json": "b83428a8cb84465b00609833b0be0ad2bb0388eff4ebc2de23fa112bc4715a9c",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-discovery-audit.json": "c7427d6dbd9449e4293470ed13115e98d863bd0cb4b3290cc0b8e60db844d687",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-collector-preflight-correction-v1.json": "008dd81041b9cff1b148538067e5d3f85637e0e2d561229ca06c25762989ff46",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-claim-ledger-batch-c.json": "90c451c895bffa0bf41c7f3c916578df7d700f0f56e05d16ae7cab58e6a60304",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-evidence-method-batch-c.md": "5f62292460167bdf9123be5d0c625f172da8bce78b33fb9f0e5bb67415d0912a",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-evidence-final-report-batch-c.json": "ed4936a4ece786c7df9386f17755e16697f5d702d85edc883278127853c4db8e",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-blueprint-batch-c.json": "3561dd35a940106ea66cf5506f66c4476eea16440dee3def2e4eb78142e28740",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-mapper-hypotheses-batch-c.md": "f7279d93fe1c0ac5685fbeab646ce5142c0e513052de849e382392c0a4205759",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-mapper-final-report-batch-c.json": "feb05f8f5a5818c2311cdb5896ac1da6e0c4e1c1313d15016fb60596f1c2bc8e",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-claim-ledger-batch-c.json": "fac24981441b0b86b9e1388046b947daaaef2443093917c8648e9392799a1155",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-method-batch-c.md": "8889ec8afe2f0a8c60582bcefedd784b5680e1b863e5a69a6ac6c6de1bcc967f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-final-report-batch-c.json": "5999d8f9d4f7b8f7cc0fc17c2dd5f6511be64436d74e421f9c0df2b5a24bc639",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-blueprint-batch-c.json": "1bb8d8f1dafa26fd660182bce030a88c16790cfba737028752459214a1a39089",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-hypotheses-batch-c.md": "ec721b12f9d6ef46597a3db703b7f9a0c7bc2efecb71c3fd4314991285ba8436",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-final-report-batch-c.json": "1890eca75e416da2cdba9ba2248490cdb9430892069e87fe37c6aaff0013b654",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-paladins-twin-soul-batch-c.json": "e9a841207ee54a4f8f4fc21bf71f90ba7f7d73c8676dffd29401dc620d9b299f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-gryphon-patrol-batch-c.json": "190b56be6013a5ac0aa5a09541e467506533834a325ced6fa742196bcb11938d",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-paladins-twin-soul-batch-c.json": "07ae106c197ba7b6bbf31ce2d8244c4d1ff1ad84f1ce3c842e46818dfa744194",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c.json": "cc05f6b0a795d72cb1dcac8120f75418649111ab5d6202c0805b71a2136db74b"
+  },
+  "outputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests.py": "22f47415d2cd11a78dc797fe47231254f4f76f3630bfcbbeb7143b947d10f461",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-c.json": null
+  },
+  "resource_actual": {
+    "source_bytes_read": 2800000,
+    "source_files_or_objects_read": 28,
+    "command_invocations": 4,
+    "elapsed_minutes": 25,
+    "records_authored_or_reviewed": 76,
+    "browser_interactions": 0,
+    "browser_artifacts_captured": 0,
+    "asset_candidates_inspected": 0
+  },
+  "test_execution": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests.py",
+    "stdout_sha256": "8fb5a8bb0d64ab0e96160f9b9f86cd1734184308ab8ade46c7765a2ed9527ade",
+    "passed": 11,
+    "failed": 6,
+    "result": "Executed. One cited-range digest mismatch (PTS-C-IDENTITY-001), 36 missing atomic-proposition contracts, and the absent C4/C5 artifacts remain fail-closed."
+  },
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}
