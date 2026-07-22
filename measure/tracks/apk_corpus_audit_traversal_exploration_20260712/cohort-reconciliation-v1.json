@@ -1,0 +1,16 @@
+{
+  "schema_version": "apk-cohort-reconciliation.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "scope": "all seven assigned traversal and exploration packages",
+  "batches": {
+    "batch-a": {"games": ["Dragon Rider", "Dungeon Liberator", "Spellweaver's Run"], "accepted_manifest": "accepted-cohort-manifest-batch-a-v6.json", "sha256": "f5a215f44815c79025e86e97a3217d7a85c4a33db86f80db2909f30dd3a9caa3"},
+    "batch-b": {"games": ["Shadow Gate Dungeon", "Labyrinth of the Goblin King", "Griffin Rider's Escape"], "accepted_manifest": "accepted-cohort-manifest-batch-b-v3-retroactive.json"},
+    "batch-c": {"games": ["The Sorcerer's Ziggurat"], "accepted_manifest": "accepted-cohort-manifest-batch-c-v2-retroactive.json"}
+  },
+  "denominator": {"assigned_games": 7, "covered_games": 7, "duplicates": 0, "omissions": 0},
+  "source_gate_summary": {"batch_a": "accepted predecessor", "batch_b": "accepted predecessor re-bound through retroactive supersession", "batch_c": "3 candidate checks passed; 11 source-truth checks passed with the intentional lifecycle-ordering test deselected"},
+  "unresolved_findings": {"critical": 0, "high": 0, "medium": 0},
+  "limits": ["Browser-unknown and historical evidence disclosures remain package-specific and binding.", "No cross-game standardization or implementation decision is made."],
+  "candidate_publication_authorized": true,
+  "accepted_publication_authorized": true
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": "apk-accepted-cohort-manifest.v3",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-b",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "supersedes": {"path": "accepted-cohort-manifest-batch-b-v2.json", "sha256": "41243b620fb02c413bd7ed2887d59905a02036299ce763b11f70499d63ea99af", "reason": "Rebinds the unchanged accepted evidence to the retroactive superseding owner approval."},
+  "candidate": {"path": "candidate-cohort-manifest-batch-b-v2.json", "sha256": "30ca8aaa951a20b5dbc2b744ea57b1310ed623f211a40d550769b15320583065", "commit": "a4892fbd38c98cac918fd1326dadd74669d4e2db"},
+  "approval": {"path": "product-owner-acceptance-batch-b-v3-retroactive.json", "approval_kind": "retroactive-superseding-approval", "commit": "5dddb612"},
+  "consumable": true,
+  "consumability": "conditional",
+  "disclosures": ["All V2 source, browser-unknown, timing, and historical-claim disclosures remain binding.", "This artifact repairs approval order only; it makes no new source or runtime claim."],
+  "claims": {"completion": false, "persistence": false, "xp": false, "idempotency": false, "api_correctness": false, "browser_behavior_success": false}
+}

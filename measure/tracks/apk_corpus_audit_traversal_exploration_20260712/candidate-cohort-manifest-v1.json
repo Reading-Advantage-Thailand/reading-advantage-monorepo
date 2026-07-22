@@ -1,0 +1,11 @@
+{
+  "schema_version": "apk-candidate-cohort-manifest.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "status": "candidate-awaiting-publication-of-authorized-accepted-manifest",
+  "candidate_only": true,
+  "consumable": false,
+  "reconciliation": {"path": "cohort-reconciliation-v1.json", "assigned_games": 7, "covered_games": 7, "unresolved_findings": {"critical": 0, "high": 0, "medium": 0}},
+  "authorization_basis": {"path": "retroactive-provenance-audit-v1.json", "source": "current user instruction", "message_id": null},
+  "disclosures": ["This candidate preserves all batch-level historical, browser-unknown, timing, and source-evidence limits.", "It is not itself an accepted manifest."],
+  "accepted_manifest_path": "accepted-cohort-manifest-v1.json"
+}
