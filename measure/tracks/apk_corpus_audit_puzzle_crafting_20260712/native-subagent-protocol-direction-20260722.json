@@ -1,0 +1,113 @@
+{
+  "schema_version": "apk-native-subagent-protocol-direction.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "date": "2026-07-22",
+  "status": "active-governing-direction-for-successor-review",
+  "authority": {
+    "source": "explicit human direction to use native subagents exclusively and record harness limitations truthfully",
+    "message_id": null,
+    "message_id_note": "No provider message identifier is available or fabricated.",
+    "decision_owner": "root orchestrator acting under current human direction"
+  },
+  "scope": {
+    "resolves_finding": "T6-COHORT-F002",
+    "applies_to": "the evidence standard for native-subagent fresh-context and reviewer-isolation evidence in this T6 successor lifecycle",
+    "does_not_amend": [
+      "T6-COHORT-F001",
+      "factual claim, denominator, hash, browser, or truth-gate requirements",
+      "the required review-before-candidate-before-acceptance ordering",
+      "the immutable status or bytes of full-cohort-independent-review-v1.json",
+      "the requirement for a distinct full-cohort reviewer and a separately owned successor review receipt"
+    ]
+  },
+  "immutable_predecessor": {
+    "review_path": "full-cohort-independent-review-v1.json",
+    "review_sha256": "37906020b3412460f9f8ff961a98c769b5fbd6b381fd9735016da419a60a3c41",
+    "status": "failed-blocking-findings",
+    "preservation": "The review and its two findings remain unchanged historical evidence. This direction neither edits, relabels, nor retrospectively passes the review."
+  },
+  "replacement_evidence_standard": {
+    "required_native_execution": {
+      "dedicated_native_subagent": true,
+      "fork_turns": "none",
+      "inherited_narrative": false,
+      "distinct_role_and_owned_output": true,
+      "orchestrator_must_record": [
+        "native subagent role and bounded output scope",
+        "fork_turns=none invocation setting",
+        "review output and separately owned native receipt paths plus hashes",
+        "commands actually run and their observed results"
+      ]
+    },
+    "sufficiency": "For this harness, the native orchestration record together with the retained review and native receipt is sufficient evidence of the required fresh-context and role separation. It replaces the obsolete provider-attestation-or-raw-export condition for T6 F002 only.",
+    "not_equivalent_to": [
+      "provider attestation",
+      "retained raw provider export",
+      "proof of an encrypted prompt's contents",
+      "a claim about unexposed provider session, ancestry, fork, event, or response identifiers"
+    ]
+  },
+  "provider_limitations": {
+    "availability": "unavailable-in-this-harness",
+    "unavailable_fields": [
+      "encrypted prompt contents and hash",
+      "actual provider context manifest hash",
+      "provider spawn and session identifiers",
+      "provider ancestry and fork attestation",
+      "raw isolation export",
+      "provider event, timing, and final-response identifiers"
+    ],
+    "single_disclosure": "These fields are unavailable from the harness. They must remain null or explicitly unavailable in native receipts; they must never be inferred, reconstructed, or fabricated. This is the sole provider-limitations disclosure for the successor lifecycle."
+  },
+  "finding_disposition": {
+    "T6-COHORT-F002": {
+      "status": "resolved-by-explicit-protocol-amendment",
+      "reason": "The only unresolved requirement in F002 was provider-attested/raw-export proof that this native harness cannot expose. This direction adopts the available native fork_turns=none orchestration evidence and truthful unavailable provider fields as the sufficient forward-looking standard.",
+      "predecessor_artifacts": "No Batch A or Batch B review artifact is mutated or backfilled. The successor full-cohort reviewer will create its own native receipt under the replacement standard."
+    },
+    "T6-COHORT-F001": {
+      "status": "unresolved-blocking",
+      "reason": "A fresh full-cohort review must precede every successor candidate, acceptance, and accepted manifest."
+    }
+  },
+  "required_next_fresh_review_inputs": {
+    "governing_contract": [
+      "spec.md",
+      "test-strategy-phase0.md",
+      "../../apk-evidence-cohort-protocol.md",
+      "phase0-role-applicability.json",
+      "native-subagent-protocol-direction-20260722.json",
+      "full-cohort-independent-review-v1-remediation-20260722.json"
+    ],
+    "current_factual_inputs": [
+      "accepted-cohort-manifest-batch-a-v3.json",
+      "accepted-cohort-manifest-batch-b-v3.json",
+      "cohort-reconciliation-v1.json",
+      "batch-a-independent-review-v3.json",
+      "batch-b-independent-review-v3.json",
+      "batch-a-truth-tests-v3.py",
+      "batch-b-truth-tests-v2.py",
+      "role-receipts/adversarial-reviewer-batch-a-v3.json",
+      "batch-b-v3-role-session-ratification.json"
+    ],
+    "historical_non_authoritative_context": [
+      "full-cohort-independent-review-v1.json",
+      "role-receipts/adversarial-reviewer-full-cohort-v1.json",
+      "candidate-cohort-manifest-v1.json",
+      "product-owner-acceptance-cohort-v1.json",
+      "accepted-cohort-manifest-v1.json"
+    ],
+    "excluded_until_review_passes": [
+      "any successor candidate cohort manifest",
+      "any successor product-owner acceptance",
+      "any successor accepted cohort manifest"
+    ]
+  },
+  "authorization_boundary": {
+    "successor_candidate_authorized": false,
+    "successor_acceptance_authorized": false,
+    "successor_accepted_manifest_authorized": false,
+    "next_action": "A new dedicated native full-cohort adversarial reviewer must independently re-derive the listed inputs and publish a successor review and receipt under this direction."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

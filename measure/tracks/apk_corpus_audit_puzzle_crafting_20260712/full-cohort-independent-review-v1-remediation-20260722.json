@@ -1,0 +1,46 @@
+{
+  "schema_version": "apk-full-cohort-review-remediation.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "date": "2026-07-22",
+  "reviewed_artifact": {
+    "path": "full-cohort-independent-review-v1.json",
+    "sha256": "37906020b3412460f9f8ff961a98c769b5fbd6b381fd9735016da419a60a3c41",
+    "status_preserved": "failed-blocking-findings",
+    "preservation": "This remediation record is additive. It does not edit, remove, downgrade, or mark either original finding as passed."
+  },
+  "finding_dispositions": [
+    {
+      "id": "T6-COHORT-F001",
+      "severity": "critical",
+      "status": "unresolved-blocking",
+      "remediation_remaining": "Commission a new full-cohort adversarial review before authoring any successor candidate. If it reports no unresolved Critical, High, or Medium findings, a separate owner may then author a non-consumable successor candidate bound to that review and its receipt, followed by a new product-owner acceptance and a separate accepted manifest.",
+      "candidate_or_acceptance_created_by_this_record": false
+    },
+    {
+      "id": "T6-COHORT-F002",
+      "severity": "high",
+      "status": "resolved-by-explicit-protocol-amendment",
+      "governing_direction": "native-subagent-protocol-direction-20260722.json",
+      "resolution_boundary": "The direction accepts native fork_turns=none orchestration evidence plus truthful unavailable provider fields as the sufficient forward-looking isolation standard. It does not fabricate provider evidence, alter prior batch receipts, or resolve F001."
+    }
+  ],
+  "current_track_gate": {
+    "status": "blocked-on-T6-COHORT-F001-only",
+    "successor_candidate_authorized": false,
+    "successor_acceptance_authorized": false,
+    "successor_accepted_manifest_authorized": false,
+    "completion_claimed": false
+  },
+  "fresh_review_contract": {
+    "required_role": "adversarial-reviewer-full-cohort",
+    "execution": "dedicated native subagent with fork_turns=none, a bounded owned output, and a separately owned native receipt",
+    "input_set": "Exactly the governing, factual, historical, and excluded sets named in native-subagent-protocol-direction-20260722.json.required_next_fresh_review_inputs.",
+    "required_result_before_successor_lifecycle": "A fresh review with zero unresolved Critical, High, or Medium findings. The review must state the current exact hashes of all consumed inputs and retain its native receipt."
+  },
+  "focused_contract": {
+    "red_pre_amendment": "full-cohort-independent-review-v1.json retains F002 as a High blocking finding under the former provider-attestation/raw-export requirement.",
+    "green_post_amendment": "t6-native-subagent-protocol-direction-contract.py proves that F002 is resolved only through the explicit replacement standard while F001 remains blocking and no successor lifecycle artifact is authorized."
+  },
+  "owner_boundary": "This record does not author a successor review, candidate, approval, accepted manifest, registry update, plan update, metadata update, source change, test-result claim, staging change, or commit.",
+  "marker": "MEASURE_AGENT_RESULT"
+}
