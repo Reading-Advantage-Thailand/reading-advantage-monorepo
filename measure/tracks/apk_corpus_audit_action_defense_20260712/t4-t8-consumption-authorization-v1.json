@@ -1,0 +1,105 @@
+{
+  "schema_version": "apk-t4-t8-consumption-authorization.v1",
+  "artifact_kind": "additive-product-owner-consumption-authorization",
+  "date": "2026-07-22",
+  "decision_context": {
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "branch": "master",
+    "head_before_publication": "290d5a20bef1b4ff5f6bbd1e23b91360565b043d",
+    "decision_authority": "final project and product owner",
+    "recorder_boundary": "This artifact records the owner's decision only; the recorder does not originate, expand, or reinterpret it."
+  },
+  "decision": {
+    "status": "AUTHORIZED",
+    "authorized_activity": "T8 per-candidate asset forensics only",
+    "authorized_track_id": "apk_existing_asset_candidate_audit_20260712",
+    "authorization_mode": "additive",
+    "consumption_rule": "T8 may consume the exact accepted T2-T7 evidence bound below solely to produce one forensic record per independently discovered asset candidate.",
+    "effective_condition": "All exact prerequisite artifacts remain byte-identical at their bound SHA-256 digests and all bound disclosures remain preserved."
+  },
+  "accepted_prerequisite_bindings": {
+    "t2_source_denominator_inventory": {
+      "track_id": "apk_source_denominator_inventory_20260712",
+      "accepted_denominator_manifest": {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+        "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+        "first_exact_bytes_commit_sha": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d"
+      },
+      "accepted_partition_manifest": {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+        "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+        "first_exact_bytes_commit_sha": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d"
+      }
+    },
+    "t3_three_game_truth_pilot": {
+      "track_id": "apk_three_game_truth_pilot_20260712",
+      "accepted_manifest": {
+        "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+        "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+        "first_exact_bytes_commit_sha": "efae354081b1f0db2a989a4f10b948cf8286f867"
+      }
+    },
+    "t4_action_and_defense": {
+      "track_id": "apk_corpus_audit_action_defense_20260712",
+      "accepted_manifest": {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+        "sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80",
+        "first_exact_bytes_commit_sha": "8b3a83d3d0347921f67e3a81131a312b9d916c71"
+      },
+      "owner_disposition": {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-admission-owner-disposition-v4.json",
+        "sha256": "40a73444f5f3924cf57bebe67e452dd941fa93262430030bbb43cf1355c29318",
+        "first_exact_bytes_commit_sha": "43928b9a3ad5079cde46310bf6d346a57b4db068"
+      },
+      "disclosure_rule": "Every disclosure, limitation, unknown, forbidden success claim, and revocation condition in both bound T4 artifacts remains binding without narrowing or omission."
+    },
+    "t5_traversal_and_exploration": {
+      "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+      "accepted_manifest": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/t5-accepted-cohort-manifest-v1.json",
+        "sha256": "4052c243ca66977256a4b60116439884f3f3151fba463ef860e624ed8d050f5d",
+        "first_exact_bytes_commit_sha": "2e93950745fa1acedfb4c42d2a328ad3edce042a"
+      }
+    },
+    "t6_puzzle_and_crafting": {
+      "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+      "accepted_manifest": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/successor-accepted-cohort-manifest-v2.json",
+        "sha256": "9666b564ba969ef7d0559fb53d8d74c684a746b10264784a9728e52b6284888b",
+        "first_exact_bytes_commit_sha": "43b726203d8356c9687014887f0ac2aaf4e0a455"
+      }
+    },
+    "t7_special_and_historical": {
+      "track_id": "apk_corpus_audit_special_historical_20260712",
+      "accepted_manifest": {
+        "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/cohort-accepted-manifest-20260722.json",
+        "sha256": "4186dfd20fcef683a1a33664a1ffa9d4350280fbee31fe56d553fa0f5a87b2b0",
+        "first_exact_bytes_commit_sha": "9a927b537bec8989677baf6fc8ad71f5a5c674d7"
+      }
+    }
+  },
+  "historical_supersession": {
+    "prior_t8_authorized_false_state": "Preserved as immutable historical evidence and remains correct for the scope of each artifact that recorded it.",
+    "narrow_supersession": "This later additive owner decision supersedes that prior state only for T8 per-candidate asset-forensics evidence consumption.",
+    "no_rewrite": true,
+    "no_retroactive_authority": true
+  },
+  "authorization_boundaries": {
+    "ontology_authorized": false,
+    "implementation_authorized": false,
+    "asset_production_authorized": false,
+    "asset_use_authorized": false,
+    "product_authorized": false,
+    "shipping_authorized": false,
+    "evidence_reconstruction_authorized": false,
+    "gate_rerun_authorized": false,
+    "browser_rerun_authorized": false,
+    "success_claims_authorized": false
+  },
+  "revocation": {
+    "on_bound_hash_drift": "Authorization stops until an additive successor decision binds newly accepted exact evidence.",
+    "on_disclosure_omission_or_scope_expansion": "Authorization is void for the affected use.",
+    "remediation_rule": "Do not mutate historical evidence; publish an additive successor artifact after renewed owner review."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
