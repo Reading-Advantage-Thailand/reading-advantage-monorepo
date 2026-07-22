@@ -1,0 +1,45 @@
+{
+  "schema_version": "apk-asset-candidate-evidence.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-c-historical",
+  "game": "The Sorcerer's Ziggurat",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "denominator_reconciliation_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/denominator-reconciliation-v2.json",
+  "candidates": [
+    {
+      "candidate_id": "SZ-ASSET-COVER-001",
+      "candidate_class": "current-catalog-referenced-cover-candidate",
+      "canonical_path": "apps/advantage-games/public/games/cover/cover-sorcerers-ziggurat.png",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "2aa6d76b5d8718fcd4ac4804e0200eecfedccb708f27ca993ea85919e867e421",
+      "byte_size": 1023182,
+      "accepted_denominator_row_sha256": "88ab5d151f09b57a710e76a006028d42ac343cfbbd19cb1206752b33a5d6069d",
+      "catalog_citation": {"path":"apps/advantage-games/src/lib/gameCards.ts","revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","start_line":211,"end_line":215,"cited_range_sha256":"d4569f888e5f30ef73e85c8e04170b28eccdc03e2ad1d30348b9dbaf70ae1f66"},
+      "discovery_method": "accepted-denominator exact-path selection plus exact current catalog range and git-show blob hash",
+      "disposition": "accepted-current-asset-candidate-only",
+      "load_outcome_claimed": false,
+      "visual_suitability_claimed": false,
+      "browser_behavior_claimed": false,
+      "dimensions_claimed": false
+    },
+    {
+      "candidate_id": "SZ-ASSET-PROCESS-METADATA-001",
+      "candidate_class": "current-process-metadata-candidate",
+      "canonical_path": "apps/advantage-games/measure/tracks/sorcerer-ziggurat-compliance-audit_20260426/metadata.json",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "b25e681e415b2d1bbc784ccfb059dd4f29971d95a04d5945607ef5508943ab48",
+      "byte_size": 438,
+      "accepted_denominator_row_sha256": "e57fafe7ce6f1c8fd69275b8d2e645cc54e0fe7d78af8c528e6452843d497937",
+      "discovery_method": "accepted-denominator slug-matched process-sidecar selection plus git-show blob hash",
+      "disposition": "accepted-process-metadata-candidate-only-excluded-from-game-facts",
+      "gameplay_claimed": false,
+      "load_outcome_claimed": false,
+      "visual_suitability_claimed": false,
+      "browser_behavior_claimed": false
+    }
+  ],
+  "boundary": "These records establish only exact accepted candidate identity, bytes, and provenance. They do not establish decoding, loading, rendering, visual quality, visual suitability, dimensions not present in the authority row, route behavior, gameplay behavior, compact/wide behavior, or any browser observation.",
+  "browser_run": false,
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": "apk-product-owner-direction.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-c-historical",
+  "issued_at": "2026-07-22",
+  "issued_by": "project owner in the current conversation",
+  "decision": "AUTHORIZE_THIRD_REMEDIATION_CYCLE_AND_CANDIDATE_ONLY_IF_GREEN",
+  "delegation": {
+    "source_commits": [
+      "5a4c2cf6b1988c1f663825a28022c4cff7f75bb6",
+      "84d280c9660b6aadfa91ce00e4190e815f9f7dd3"
+    ],
+    "authorized_work": [
+      "claim citation remediation",
+      "accepted-denominator reconciliation",
+      "asset disposition recording",
+      "claim and role lifecycle-field remediation",
+      "timing and developer-effort accounting remediation",
+      "truth-gate remediation",
+      "fresh independent review",
+      "non-consumable candidate publication only after genuinely green review"
+    ],
+    "prohibited_work": [
+      "fabricating source evidence",
+      "fabricating browser evidence",
+      "publishing product-owner acceptance",
+      "publishing an accepted manifest"
+    ]
+  },
+  "timing_accounting_direction": {
+    "scope": "Batch C additive remediation, review, and candidate-role elapsed-minute fields only",
+    "direction": "The harness supplies no trustworthy session start/end timestamps. Additive Batch C receipts may record elapsed_minutes as integer 0 only with timing_measurement set to unavailable-in-harness and an explicit statement that 0 is an accounting fallback, not elapsed-time evidence.",
+    "non_waived": [
+      "source byte ceilings",
+      "source object ceilings",
+      "command ceilings",
+      "record, interaction, and artifact ceilings",
+      "claim semantics and citation support",
+      "accepted-denominator completeness",
+      "asset boundaries",
+      "fresh independent review",
+      "candidate and acceptance lifecycle ordering"
+    ]
+  },
+  "message_evidence": {
+    "exact_message": "Project owner delegation is explicit in current conversation: remediate T5 Batch C listed blockers from commits 5a4c2cf6 and 84d280c. You may add owner-direction artifact recording this delegation, but must not fabricate source/browser evidence. Perform legal fixes for claim citation, denominator reconciliation, assets, lifecycle fields, timing/developer accounting, truth gates, then independent review. If genuinely passing, produce candidate only (no accepted manifest). Commit work and report exact gates.",
+    "sha256": "ee9e74c29ec4334f4547c08296b28a0d493faf4ab012f7516e399da6d7fd70df",
+    "provider_event_id": null,
+    "conversation_thread_id": null,
+    "provider_timestamp": null,
+    "unavailable_fields_are_not_claimed": true
+  },
+  "selection_boundary": "This direction lifts only the two-cycle remediation blockade and supplies the bounded Batch C elapsed-minute fallback. It does not establish any source fact, browser behavior, review result, candidate result, owner acceptance, accepted manifest, or product claim.",
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

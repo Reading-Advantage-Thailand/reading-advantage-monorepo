@@ -1,0 +1,55 @@
+{
+  "schema_version": "apk-accepted-denominator-reconciliation.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-c-historical",
+  "game": "The Sorcerer's Ziggurat",
+  "canonical_identity": "catalog/sorcerer-ziggurat",
+  "accepted_authority": {
+    "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+    "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "status": "accepted",
+    "consumable": true,
+    "revoked": false
+  },
+  "compact_row_hash_rule": "sha256(UTF-8 JSON with sort_keys=true, separators=(',', ':'), ensure_ascii=false)",
+  "selection_rules": {
+    "source-denominator.json": "Select every records row whose compact sorted JSON contains sorcerer-ziggurat.",
+    "asset-file-denominator.json": "Select exactly the catalog-referenced cover path apps/advantage-games/public/games/cover/cover-sorcerers-ziggurat.png and the slug-matched process metadata path apps/advantage-games/measure/tracks/sorcerer-ziggurat-compliance-audit_20260426/metadata.json.",
+    "historical-source-denominator.json": "Select every records row under packages/game-cartridges/src/cartridges/sorcerer-ziggurat/.",
+    "game-identity-ledger.json": "Select exactly canonical_identity_id catalog/sorcerer-ziggurat."
+  },
+  "authority_files": {
+    "source-denominator.json": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d",
+    "asset-file-denominator.json": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "historical-source-denominator.json": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
+    "game-identity-ledger.json": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407"
+  },
+  "rows": {
+    "source-denominator.json": [
+      {"row_sha256":"388a6931de06fbc444cb6c293bcb0b065608d5f85b0363ea895e20de7f83165b","record_key":"file:apps/advantage-games/measure/tracks/sorcerer-ziggurat-compliance-audit_20260426/metadata.json","denominator_disposition":"include","evidence_disposition":"exclude-from-game-facts","reason":"Accepted process/compliance source record; it is not product implementation or runtime evidence."},
+      {"row_sha256":"570751091f3b0f9637c97cb93cc7b89dc5ee261cf9703b3f0fb60293d1ac1130","record_key":"file:apps/advantage-games/measure/tracks/sorcerer-ziggurat-compliance-audit_20260426/index.md","denominator_disposition":"include","evidence_disposition":"exclude-from-game-facts","reason":"Accepted process index record; it is not product implementation or runtime evidence."},
+      {"row_sha256":"de08775cf4279cc337786f83f3a54f67b79dd55c823186a343cd7ea8eedd7bf4","record_key":"file:apps/advantage-games/measure/tracks/sorcerer-ziggurat-compliance-audit_20260426/report.md","denominator_disposition":"include","evidence_disposition":"exclude-from-game-facts","reason":"Accepted prior process report; authored conclusions are not primary game evidence."},
+      {"row_sha256":"e07c5c9b9ec756f8df28b580acb7fde7d426e1663bfdd89ac461a96063d83bbe","record_key":"file:apps/advantage-games/measure/tracks/sorcerer-ziggurat-compliance-audit_20260426/plan.md","denominator_disposition":"include","evidence_disposition":"exclude-from-game-facts","reason":"Accepted process plan; planned work is not implementation or behavior evidence."},
+      {"row_sha256":"f8773fcdc6c67d8f0003aac67d75039af2a25fe56c67154dd45cefe61d2761c6","record_key":"file:apps/advantage-games/measure/tracks/sorcerer-ziggurat-compliance-audit_20260426/spec.md","denominator_disposition":"include","evidence_disposition":"exclude-from-game-facts","reason":"Accepted process specification; requirements are not implementation or behavior evidence."}
+    ],
+    "asset-file-denominator.json": [
+      {"row_sha256":"88ab5d151f09b57a710e76a006028d42ac343cfbbd19cb1206752b33a5d6069d","record_key":"apps/advantage-games/public/games/cover/cover-sorcerers-ziggurat.png","denominator_disposition":"include","evidence_disposition":"include-as-current-asset-candidate-only","reason":"The current catalog exact range references this accepted binary candidate; load outcome, visual suitability, dimensions, and browser behavior are not claimed."},
+      {"row_sha256":"e57fafe7ce6f1c8fd69275b8d2e645cc54e0fe7d78af8c528e6452843d497937","record_key":"apps/advantage-games/measure/tracks/sorcerer-ziggurat-compliance-audit_20260426/metadata.json","denominator_disposition":"include","evidence_disposition":"include-as-process-metadata-candidate-only","reason":"Accepted JSON sidecar candidate; it is excluded from gameplay, visual, loading, and browser claims."}
+    ],
+    "historical-source-denominator.json": [
+      {"row_sha256":"28e88dca2ec0828e55df00c90dde46f2dc936ff692ed9448d1da6e25a8a46f30","record_key":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.ts","denominator_disposition":"include","evidence_disposition":"include-as-historical-implementation","reason":"Exact reachable deleted implementation object; never current or browser evidence."},
+      {"row_sha256":"5ca0e4201ecb39fe044b59c298592fa3fd96ebc3e7eb993cc7ad2f992c48b872","record_key":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/systems.test.ts","denominator_disposition":"include","evidence_disposition":"exclude-from-implementation-facts-and-effort-surface","reason":"Historical test assertions are retained in the denominator but excluded from runtime facts and implementation-surface decomposition."},
+      {"row_sha256":"6ec723024da31cce8fe8b3754e2fa67346d0958b325c215831adedffcdc889be","record_key":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/systems.ts","denominator_disposition":"include","evidence_disposition":"include-as-historical-implementation","reason":"Exact reachable deleted state/transition object; never current or browser evidence."},
+      {"row_sha256":"88e20b93cd72b1480b4dd4921890074b7ef46fae1d27c7aba0caa1522063e65c","record_key":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/scene.ts","denominator_disposition":"include","evidence_disposition":"include-as-historical-implementation","reason":"Exact reachable deleted scene object; never current or browser evidence."},
+      {"row_sha256":"a21f8c454817387c3d37601fcf7524bf48849882ae5743b934f62b6d818af581","record_key":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/blueprint.md","denominator_disposition":"include","evidence_disposition":"include-as-active-design-at-historical-revision","reason":"Design provenance only; excluded from implementation and runtime proof."},
+      {"row_sha256":"bc90d4fdc82fca816c05a5e7733d13ab0562c213fa64d39fe7dc3c5e36918caf","record_key":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/index.ts","denominator_disposition":"include","evidence_disposition":"exclude-as-re-export-only","reason":"The historical four-line re-export is reconciled but adds no implementation requirement beyond its target modules."},
+      {"row_sha256":"e16c8ad37dfaab702fdd437f8c916a76178a7232215d8eaffbb870cb91fe31f5","record_key":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.test.ts","denominator_disposition":"include","evidence_disposition":"exclude-from-implementation-facts-and-effort-surface","reason":"Historical test assertions are retained in the denominator but excluded from runtime facts and implementation-surface decomposition."}
+    ],
+    "game-identity-ledger.json": [
+      {"row_sha256":"083abbced5fe7c99a8890cf8ca8278d656cfb3bda1feeb43f60015ebc05e67fc","record_key":"catalog/sorcerer-ziggurat","denominator_disposition":"include","evidence_disposition":"include-as-current-identity-authority","reason":"Exact accepted canonical identity and withdrawn-registration evidence; routes remain empty and behavior is not inferred."}
+    ]
+  },
+  "counts": {"source-denominator.json": 5, "asset-file-denominator.json": 2, "historical-source-denominator.json": 7, "game-identity-ledger.json": 1, "total": 15, "denominator_mismatches": 0},
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

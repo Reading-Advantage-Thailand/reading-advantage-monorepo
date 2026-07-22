@@ -1,0 +1,94 @@
+{
+  "schema_version": "apk-local-context-manifests.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-c-historical",
+  "hash_rule": "sha256(UTF-8 JSON of the selected role object with sort_keys=true, separators=(',', ':'), ensure_ascii=false)",
+  "manifests": {
+    "evidence-collector": {
+      "repository_files": {
+        "measure/apk-evidence-cohort-protocol.md": "1f97ed8fd026cb0b1b49ed5de602252c075228981d1ff26640748b56ff2a3507",
+        "measure/apk-evidence-reconstruction-program.md": "d2aa36e0ce63ba70b9eb36d4ef22e99d2cb612e32ff05001402465677cbac83d",
+        "measure/product-owner-apk-provenance-direction-20260721.json": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+        "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+        "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+        "measure/archive/apk_source_denominator_inventory_20260712/source-denominator.json": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d",
+        "measure/archive/apk_source_denominator_inventory_20260712/asset-file-denominator.json": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+        "measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
+        "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+        "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/plan.md": "53a0473779b83c49081b42b9a998f692e5948dc6ca695d11e9d99b3b7667f902",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md": "42685326bf239a92f3543919e8ce204fb4414e8ac136180ad340720fbd852ac1",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/test-strategy-phase0.md": "734b879b75a8fff0e709242a4046706408f79587a2ec4f732a426e22d105ba0d",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-discovery-audit.json": "6524d33b1af38d93b9cc0a3f1b31421979f7a4120f68d9065935946312e6c152",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-role-applicability.json": "24b0980a07ddc8cc975596599530f6cd7089cf4dcc6e1bde5890a41882865ed9",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-budget-accounting-direction-v3.json": "347b66aca7504c7337959aec8c7f7f1c1564b3dfb1cba9e091f23e4d25648971",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-direction-batch-c-remediation.json": "94420ba7642d9b3cdb7f34228be2e07737cc6187e05329567487c10bbe5f7f24",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-a-v6.json": "f5a215f44815c79025e86e97a3217d7a85c4a33db86f80db2909f30dd3a9caa3",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-b-v2.json": "41243b620fb02c413bd7ed2887d59905a02036299ce763b11f70499d63ea99af",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/accepted-manifest-author-batch-a-v6.json": "4188e08574460c55c353fd93e9c5754d33c17622e2fba3e28e07e719e07274fe",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/accepted-manifest-author-batch-b-v2.json": "20580fa3eb9e11914e9afa2f950fa108e63edcc75d12ff84f951c86f4718620f",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-independent-review.json": "bfa49a839674cff2f3d21d9d292d273d36c4686190a7cdb869d751cbd342c9dc",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-sorcerer-ziggurat-batch-c.json": "a12b3180177418f0272eeb8d3fcaa5ea3d9399e7a469fdfba589f844fe1040da",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-committed-input-manifest.json": "86d9576eab24385bfd51f08ebb5eb5bb5698b24f951d24f920d0aa1313f9a01f",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/claim-evidence-ledger.json": "54bd65f6f655730125c933c15ba79e992479b905869856c9796b508bcffceeca",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/current-source-observations.json": "7985c41653e7b7235eede64263bf990eef0050f05e167a2f84e86d9e0d3a14a9",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/historical-source-observations.json": "54017dcd63ea5e58ddf2985c3563c4660e379219e9461b2a8e2621ea5a29550a",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-sorcerer-ziggurat-batch-c.json": "f00552bb00697725d5864d48475f3d51c5fbedb3a3288050f1d89e1466f22e5c"
+      },
+      "git_objects": [
+        {"revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","path":"apps/advantage-games/src/lib/gameCards.ts","sha256":"4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c","bytes":8468},
+        {"revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","path":"packages/domain/src/games/schema.ts","sha256":"0a91f501a52894e4899f5a1119603c7349db01f3f61e1a2653e64fa1aafcdfaf","bytes":4399},
+        {"revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","path":"apps/advantage-games/src/lib/games/api/completeRoute.adversarial.test.ts","sha256":"e804b109001865dbd60417e5dd1b9f24a44866f7f9f651b9644c171ced1a6060","bytes":13100},
+        {"revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","path":"apps/advantage-games/public/games/cover/cover-sorcerers-ziggurat.png","sha256":"2aa6d76b5d8718fcd4ac4804e0200eecfedccb708f27ca993ea85919e867e421","bytes":1023182},
+        {"revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","path":"apps/advantage-games/measure/tracks/sorcerer-ziggurat-compliance-audit_20260426/metadata.json","sha256":"b25e681e415b2d1bbc784ccfb059dd4f29971d95a04d5945607ef5508943ab48","bytes":438},
+        {"revision":"1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f","path":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/blueprint.md","sha256":"b7905fa26874a5b6636dc4e9f5f85db1c4b37fd6ef066a92bd6ee491d7eb7be8","bytes":1548},
+        {"revision":"1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f","path":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.test.ts","sha256":"c20367bfbb4729984ff846ee529a2da10396b9726485fee99501e1975a170c8a","bytes":2921},
+        {"revision":"1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f","path":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.ts","sha256":"ef4842a143682dbf9a90c0050d5ea280dd00d28730c08ae29505b3d5f6c905a9","bytes":1399},
+        {"revision":"1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f","path":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/index.ts","sha256":"581845c5a7b54e9d83971a68e0934707182def980e6cd91394b9a9abe96d7e8b","bytes":206},
+        {"revision":"1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f","path":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/scene.ts","sha256":"f570e348baeec5bfd0dcbe3cf99bed246a891a626d56e3d80ec5882d3983635a","bytes":15245},
+        {"revision":"1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f","path":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/systems.test.ts","sha256":"5b05d7b33514b952f8931b97156663b01594b2836a94896efee1bf0b62380fa9","bytes":3336},
+        {"revision":"1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f","path":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/systems.ts","sha256":"374d8d42c1fded5fd5508dc7755d463d82dbe71881ba7ea004ae9de0b962dd8f","bytes":6500},
+        {"revision":"1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f","path":"packages/game-cartridges/src/families/isometric-step-graph/step-graph.ts","sha256":"ce9137f5dd39c5e7a4e57a28915012f5480c794b32b22105fa35d6c4e8780448","bytes":5399},
+        {"revision":"1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f","path":"packages/game-cartridges/src/families/isometric-step-graph/projection.ts","sha256":"a137bcf6365fd8346fb643e055aabc16037fde4551e89dc49d636bbc4555bfae","bytes":1571}
+      ]
+    },
+    "requirements-mapper": {
+      "repository_files": {
+        "measure/apk-evidence-cohort-protocol.md":"1f97ed8fd026cb0b1b49ed5de602252c075228981d1ff26640748b56ff2a3507",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/plan.md":"53a0473779b83c49081b42b9a998f692e5948dc6ca695d11e9d99b3b7667f902",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/spec.md":"42685326bf239a92f3543919e8ce204fb4414e8ac136180ad340720fbd852ac1",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json":"81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-direction-batch-c-remediation.json":"94420ba7642d9b3cdb7f34228be2e07737cc6187e05329567487c10bbe5f7f24",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/claim-evidence-ledger.json":"54bd65f6f655730125c933c15ba79e992479b905869856c9796b508bcffceeca",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/requirements-map.json":"489ed4ff6860d093808e374ea874a0927f20d481a4f492517f75064994d38cb5",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-sorcerer-ziggurat-batch-c.json":"be7eb59c601fd976c7f4f93efd3a583c1c5d11c91746cb1d4093e5bcce6089a7",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/claim-evidence-ledger-v2.json":"b99ba08b3db22ffd352ac6ea9fa0ad99d2c30595b7e90e7b389611e7a18e2c4a",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/denominator-reconciliation-v2.json":"b8fc63730e02a61baddc62f089d84f3c378752dd175d226449aa4a76fa9f5e90",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/asset-evidence-v2.json":"2e0bb23c52a1a2c8d8ab1e2d55c83d6b423ee61115a59665c209195b837137a3"
+      },
+      "git_objects": []
+    },
+    "browser-auditor": {
+      "repository_files": {
+        "measure/apk-evidence-cohort-protocol.md":"1f97ed8fd026cb0b1b49ed5de602252c075228981d1ff26640748b56ff2a3507",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/test-strategy-phase0.md":"734b879b75a8fff0e709242a4046706408f79587a2ec4f732a426e22d105ba0d",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json":"81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-direction-batch-c-remediation.json":"94420ba7642d9b3cdb7f34228be2e07737cc6187e05329567487c10bbe5f7f24",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/browser-audit.json":"46ad7affaaa63cc0c6b6c83a5ae93a5bbf3c6803d131b5b4ea71ce238b14a0d8",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/browser-auditor-sorcerer-ziggurat-batch-c.json":"d6ff1a74deba058556859bb9dc9011e4fdaae2571a68deaa3cd37b08e3ef78ee",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/claim-evidence-ledger-v2.json":"b99ba08b3db22ffd352ac6ea9fa0ad99d2c30595b7e90e7b389611e7a18e2c4a",
+        "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/asset-evidence-v2.json":"2e0bb23c52a1a2c8d8ab1e2d55c83d6b423ee61115a59665c209195b837137a3"
+      },
+      "git_objects": []
+    }
+  },
+  "manifest_sha256s": {
+    "evidence-collector": "f7df710ff24b878bf9c84e3374bd1939d1d0eda9968742eafef6a8838a9fc3c5",
+    "requirements-mapper": "0a07e075c7461d231ffabac427650f363fd19ba2cdb15ab5108818f3a33cc231",
+    "browser-auditor": "b548b8606958a7715b77d4a177cbd145b7b24bac68da7efb960dbb5dabc63f70"
+  },
+  "provider_context_claimed": false,
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

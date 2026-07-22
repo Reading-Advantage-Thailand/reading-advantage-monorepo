@@ -1,0 +1,31 @@
+{
+  "schema_version": "apk-requirements-map-supersession.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-c-historical",
+  "game": "The Sorcerer's Ziggurat",
+  "status": "producer-remediation-pending-future-independent-review",
+  "supersedes": {"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/requirements-map.json","sha256":"489ed4ff6860d093808e374ea874a0927f20d481a4f492517f75064994d38cb5","preserved_unchanged":true},
+  "claim_ledger_v2_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/claim-evidence-ledger-v2.json",
+  "developer_effort_decomposition": [
+    {"surface_id":"SZ-EFFORT-CURRENT-CATALOG","temporal_class":"current","path":"apps/advantage-games/src/lib/gameCards.ts","disposition":"include-current-catalog-surface","claim_ids":["SZ-CUR-001","SZ-CUR-002","SZ-CUR-003"],"work_boundary":"Catalog identity, cover reference, withdrawn membership, and exported coming-soon/no-href mapping only."},
+    {"surface_id":"SZ-EFFORT-CURRENT-SCHEMA","temporal_class":"current","path":"packages/domain/src/games/schema.ts","disposition":"include-current-schema-surface","claim_ids":["SZ-CUR-004"],"work_boundary":"Game-type vocabulary admission only; persistence success is unknown."},
+    {"surface_id":"SZ-EFFORT-CURRENT-TEST","temporal_class":"current-active-specification","path":"apps/advantage-games/src/lib/games/api/completeRoute.adversarial.test.ts","disposition":"include-current-test-surface-separate-from-implementation","claim_ids":["SZ-CUR-005"],"work_boundary":"Completion-route factory expectation only; no mounted route, live request, or persistence success."},
+    {"surface_id":"SZ-EFFORT-HISTORICAL-DEFINITION","temporal_class":"historical","path":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.ts","disposition":"include-historical-registration-and-host-wiring-surface","claim_ids":["SZ-HIST-001","SZ-HIST-002"],"work_boundary":"Deleted cartridge manifest and host-context wiring."},
+    {"surface_id":"SZ-EFFORT-HISTORICAL-STATE","temporal_class":"historical","path":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/systems.ts","disposition":"include-historical-state-and-transition-surface","claim_ids":["SZ-HIST-003","SZ-HIST-004","SZ-HIST-005","SZ-HIST-006","SZ-HIST-007"],"work_boundary":"Deleted validation, state model, legal/wrong/correct/tier/session transition logic."},
+    {"surface_id":"SZ-EFFORT-HISTORICAL-SCENE","temporal_class":"historical","path":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/scene.ts","disposition":"include-historical-scene-surface","claim_ids":["SZ-HIST-008","SZ-HIST-009","SZ-HIST-010","SZ-HIST-011","SZ-HIST-012","SZ-HIST-013","SZ-HIST-014","SZ-HIST-020","SZ-HIST-021"],"work_boundary":"Deleted semantic-slot declarations, completion guard, world/HUD/camera/rendering, input, feedback, tween, and effect source."},
+    {"surface_id":"SZ-EFFORT-HISTORICAL-GRAPH","temporal_class":"historical","path":"packages/game-cartridges/src/families/isometric-step-graph/step-graph.ts","disposition":"include-historical-shared-graph-surface","claim_ids":["SZ-HIST-015","SZ-HIST-016","SZ-HIST-017","SZ-HIST-018"],"work_boundary":"Deleted consumer's shared node contract, distractor generation, seeded topology, and logical adjacency."},
+    {"surface_id":"SZ-EFFORT-HISTORICAL-PROJECTION","temporal_class":"historical","path":"packages/game-cartridges/src/families/isometric-step-graph/projection.ts","disposition":"include-historical-shared-projection-surface","claim_ids":["SZ-HIST-019"],"work_boundary":"Deleted consumer's shared isometric projection and depth formula."},
+    {"surface_id":"SZ-EFFORT-HISTORICAL-DESIGN","temporal_class":"active-design-at-historical-revision","path":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/blueprint.md","disposition":"include-design-surface-exclude-from-implementation-facts","claim_ids":["SZ-DESIGN-001"],"work_boundary":"Design provenance only."},
+    {"surface_id":"SZ-EFFORT-EXCLUDED-DEFINITION-TEST","temporal_class":"historical","path":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/definition.test.ts","disposition":"exclude-historical-test-from-implementation-effort","claim_ids":[],"work_boundary":"Accepted denominator row is reconciled, but test assertions are not runtime facts and are not counted as implementation surface."},
+    {"surface_id":"SZ-EFFORT-EXCLUDED-SYSTEMS-TEST","temporal_class":"historical","path":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/systems.test.ts","disposition":"exclude-historical-test-from-implementation-effort","claim_ids":[],"work_boundary":"Accepted denominator row is reconciled, but test assertions are not runtime facts and are not counted as implementation surface."},
+    {"surface_id":"SZ-EFFORT-EXCLUDED-REEXPORT","temporal_class":"historical","path":"packages/game-cartridges/src/cartridges/sorcerer-ziggurat/index.ts","disposition":"exclude-re-export-only-from-implementation-effort","claim_ids":[],"work_boundary":"Accepted denominator row is reconciled; the four-line re-export adds no independent implementation requirement."}
+  ],
+  "decomposition_counts": {"current_catalog_schema_test_surfaces":3,"included_historical_implementation_surfaces":5,"historical_design_surfaces":1,"excluded_historical_tests":2,"excluded_historical_reexports":1,"total_rows":12},
+  "estimates_claimed": false,
+  "priority_claimed": false,
+  "reuse_claimed": false,
+  "duration_claimed": false,
+  "browser_claims": 0,
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

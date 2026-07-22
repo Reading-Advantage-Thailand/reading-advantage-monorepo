@@ -1,0 +1,16 @@
+{
+  "schema_version": "apk-browser-audit-supersession.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-c-historical",
+  "game": "The Sorcerer's Ziggurat",
+  "supersedes": {"path":"measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/browser-audit.json","sha256":"46ad7affaaa63cc0c6b6c83a5ae93a5bbf3c6803d131b5b4ea71ce238b14a0d8","preserved_unchanged":true},
+  "disposition": "browser-current-behavior-unknown-not-run",
+  "browser_access": {"attempted":false,"browser_run":false,"reason":"The remediation request prohibits browser execution and no current gameplay target is admitted. Historical source and current asset candidates were not promoted into a browser target."},
+  "asset_candidate_boundary": {"cover_candidate_recorded":true,"process_metadata_candidate_recorded":true,"load_outcome_claimed":false,"visual_suitability_claimed":false,"browser_behavior_claimed":false},
+  "counts": {"route_attempts":0,"application_responses":0,"trusted_input_events":0,"synthetic_input_events":0,"transitions_observed":0,"compact_profiles_observed":0,"wide_profiles_observed":0,"captured_artifacts":0,"browser_interactions":0},
+  "unknown_and_not_claimed": "Route reachability, movement, collision, camera, transitions, compact/wide behavior, keyboard/pointer/touch behavior, asset loading, visual suitability, completion, persistence, API correctness, and production behavior remain unknown.",
+  "screenshots_alone_pass": false,
+  "historical_promotion_prohibited": true,
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}
