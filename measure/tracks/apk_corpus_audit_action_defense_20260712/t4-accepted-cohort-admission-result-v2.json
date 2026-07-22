@@ -1,0 +1,110 @@
+{
+  "schema": "apk-t4-accepted-cohort-admission-result.v2",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "gate": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-accepted-cohort-admission-gate-v2.py",
+  "status": "red-stop-loss-no-second-cycle",
+  "run_count": 1,
+  "historical_or_batch_gates_rerun": false,
+  "v1_diagnosis": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-accepted-cohort-admission-v1-diagnosis.json",
+    "bound_if_present": true
+  },
+  "inputs": {
+    "candidate": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v1.json",
+      "sha256": "4334aaadb6c19d15ad03bbfdc588f9e26ac65322c7ef615516f57a9ffaa31b97",
+      "first_add_commit": "98ce66623f6b3ba0117ec7d5e475dd40e3ddb6c0"
+    },
+    "owner_acceptance": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-t4-v1.json",
+      "sha256": "fff5544a8f28a45c3985bddd0b48706baabbc6a6a010113ac66ce3156c79d5d1",
+      "first_add_commit": "e3e6b421944eb57e407f737e4deb89e5846ada0d"
+    },
+    "accepted_manifest": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v1.json",
+      "sha256": "594a4a89756fb3a60e4fa1111b9df0e4eb0355f7e5b3774ca4291ecf029ccf3e",
+      "first_add_commit": "63115d6951371448c9eddfce598387706dc22af6"
+    },
+    "full_review_v2": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2.json",
+      "sha256": "89cf0ff23a7afe897ee4b1a6dfa6d77630d08be698a78f6da711d74c80bea774"
+    },
+    "reconciliation_v3": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v3.json",
+      "sha256": "866d3926d3145450dbc19e1ff8ec58f3d649e259aa99996c6c3af9f6b34aecab"
+    },
+    "batch_c_v7_selector": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v7.json",
+      "sha256": "d4c3eb1093970cbe4470bd4da833fced7465b443f85c7d900c79979163a95a17"
+    }
+  },
+  "checks": [
+    {
+      "name": "canonical-master-and-single-worktree",
+      "status": "pass"
+    },
+    {
+      "name": "candidate-acceptance-manifest-immutable-lifecycle-raw-bytes",
+      "status": "pass"
+    },
+    {
+      "name": "candidate-acceptance-manifest-exact-byte-bindings",
+      "status": "pass"
+    },
+    {
+      "name": "exact-eight-game-roster",
+      "status": "pass"
+    },
+    {
+      "name": "full-review-v2-reconciliation-v3-batch-c-v7",
+      "status": "pass"
+    },
+    {
+      "name": "accepted-with-disclosure-conditional-consumability",
+      "status": "pass"
+    },
+    {
+      "name": "forbidden-success-claims-and-no-t8-product-shipping",
+      "status": "pass"
+    },
+    {
+      "name": "kimi-helper-4-28-recovery-and-nonrunnable-404",
+      "status": "pass"
+    },
+    {
+      "name": "asset-validation-companion",
+      "status": "pass"
+    },
+    {
+      "name": "failed-v1-v2-and-browser-v5-exclusions",
+      "status": "pass"
+    },
+    {
+      "name": "v1-stop-loss-diagnosis",
+      "status": "fail",
+      "detail": "v1 diagnosis does not bind both root defects"
+    },
+    {
+      "name": "pending-closeout-context",
+      "status": "pass",
+      "paths": [
+        "measure/tracks/apk_corpus_audit_action_defense_20260712/_orchestrator/LAST-BATCH-STATUS.md",
+        "measure/tracks/apk_corpus_audit_action_defense_20260712/metadata.json",
+        "measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md"
+      ]
+    },
+    {
+      "name": "scoped-t4-lifecycle-status",
+      "status": "pass"
+    }
+  ],
+  "admission": {
+    "accepted_with_disclosure_conditionally_consumable": false,
+    "t8_authorized": false,
+    "product_authorized": false,
+    "shipping_authorized": false,
+    "implementation_authorized": false,
+    "scope": "T4 evidence admission only; no product, implementation, T8, or shipping authorization"
+  }
+}

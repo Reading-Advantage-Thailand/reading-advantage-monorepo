@@ -1,0 +1,70 @@
+{
+  "schema": "measure.role-proof.v4",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-ACCEPTED-COHORT-ADMISSION-GATE-V2",
+  "role": "admission-gate-author-full-cohort",
+  "status": "complete-red-stop-loss-no-second-cycle",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/t4_admission_gate_v2",
+    "parent_task": "/root",
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "auxiliary_git_worktree_created_or_used": false,
+    "commit_created": false,
+    "raw_encrypted_prompt": null,
+    "unavailable_note": "Encrypted prompt and provider-event exports are unavailable and are not fabricated."
+  },
+  "execution": {
+    "preflight_completed": true,
+    "gate_run_count": 1,
+    "historical_or_batch_gates_rerun": false,
+    "stop_loss_honored": true,
+    "gate": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-accepted-cohort-admission-gate-v2.py",
+      "sha256": "11e6c1d15b31dc3d0b67a0af896b71efb24e57fb002a9d8dc61af846ca4b795f"
+    },
+    "result": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-accepted-cohort-admission-result-v2.json",
+      "sha256": "d6485691681a666614bc817f18a7704923bc97263fe0f8ca28f78a136ba276b0",
+      "status": "red-stop-loss-no-second-cycle",
+      "passed_checks": 12,
+      "total_checks": 13
+    }
+  },
+  "sole_failure": {
+    "check": "v1-stop-loss-diagnosis",
+    "detail": "The v2 gate looked for the overly literal phrase 'pending T4 closeout'; the diagnosis instead truthfully records the same defect as 'pending closeout'.",
+    "classification": "gate-assertion-defect; no evidence, lifecycle, or product finding",
+    "remediation_authorized_here": false
+  },
+  "passed_stable_invariants": [
+    "canonical master and exactly one worktree",
+    "candidate, acceptance, and manifest first-add ancestry and raw-byte equality",
+    "bound SHA-256 values",
+    "eight-game exact roster",
+    "zero unresolved Critical/High/Medium findings",
+    "conditional accepted-with-disclosure consumability only",
+    "forbidden claims and T8/product/shipping exclusions",
+    "Kimi helper recovery exits 4 and 28 with non-runnable 404 disposition",
+    "asset validation companion",
+    "historical Browser v5, full-review v1, and reconciliation v2 exclusions",
+    "only declared pending closeout files plus untrusted concurrent ownership placeholder"
+  ],
+  "authority_boundary": {
+    "admission_authorized": false,
+    "t8_authorized": false,
+    "implementation_authorized": false,
+    "product_or_shipping_authorized": false,
+    "scope": "This is red stop-loss evidence only."
+  },
+  "scope_attestation": {
+    "exactly_four_requested_v2_artifacts_authored": true,
+    "no_docs_registry_history_or_product_files_modified": true,
+    "no_staging": true,
+    "no_commit": true
+  },
+  "self_sha256": null,
+  "self_hash_note": "A proof cannot embed its own stable SHA-256; the companion receipt binds these bytes."
+}

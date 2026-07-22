@@ -1,0 +1,59 @@
+{
+  "schema": "measure.role-receipt.v4",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-ACCEPTED-COHORT-ADMISSION-GATE-V2",
+  "role": "admission-gate-author-full-cohort",
+  "status": "complete-red-stop-loss-no-second-cycle",
+  "acceptance": "not-claimed",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/t4_admission_gate_v2",
+    "parent_task": "/root",
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "auxiliary_git_worktree_created_or_used": false,
+    "commit_created": false,
+    "raw_encrypted_prompt": null,
+    "unavailable_note": "Encrypted prompt and provider-event exports are unavailable and are not fabricated."
+  },
+  "gate": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-accepted-cohort-admission-gate-v2.py",
+    "sha256": "11e6c1d15b31dc3d0b67a0af896b71efb24e57fb002a9d8dc61af846ca4b795f"
+  },
+  "result": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-accepted-cohort-admission-result-v2.json",
+    "sha256": "d6485691681a666614bc817f18a7704923bc97263fe0f8ca28f78a136ba276b0",
+    "status": "red-stop-loss-no-second-cycle",
+    "run_count": 1,
+    "historical_or_batch_gates_rerun": false,
+    "passed_checks": 12,
+    "failed_checks": ["v1-stop-loss-diagnosis"]
+  },
+  "proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/admission-gate-author-full-cohort-v2.json",
+    "sha256": "7f28b8254e9a56d0eeb38c0f8878225daeea3321c21fc73d02a024952d28d3bf"
+  },
+  "failure_disposition": {
+    "kind": "assertion-text-overconstraint",
+    "no_second_cycle": true,
+    "v1_preserved_non_consumable": true,
+    "fresh_admission_not_authorized": true,
+    "next_action_requires_new_independent_direction": true
+  },
+  "authority_boundary": {
+    "admission_authorized": false,
+    "t8_authorized": false,
+    "implementation_authorized": false,
+    "product_or_shipping_claim_authorized": false,
+    "scope": "No authority is created by this red stop-loss receipt."
+  },
+  "scope_attestation": {
+    "exactly_four_requested_v2_artifacts_authored": true,
+    "no_docs_registry_history_or_product_files_modified": true,
+    "no_staging": true,
+    "no_commit": true
+  },
+  "self_sha256": null,
+  "self_hash_note": "A receipt cannot embed its own stable SHA-256."
+}

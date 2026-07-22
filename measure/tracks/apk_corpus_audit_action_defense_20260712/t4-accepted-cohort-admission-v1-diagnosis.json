@@ -1,0 +1,63 @@
+{
+  "schema": "apk-t4-accepted-cohort-admission-v1-diagnosis.v1",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "subject": "T4 accepted-cohort admission v1 stop-loss diagnosis",
+  "v1_artifacts": {
+    "gate": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-accepted-cohort-admission-gate-v1.py",
+      "sha256": "e44661995987df886e05a9443b50ed2a70caf30db83a567507edede08c56f7ba"
+    },
+    "result": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-accepted-cohort-admission-result-v1.json",
+      "sha256": "967642a6a0fd7eca6a6e2a6e2fbb75ae22bf53e083bff4e0bf8d760fc6ecccf0",
+      "status": "red-stop-loss-no-second-cycle",
+      "run_count": 1
+    }
+  },
+  "non_consumable": {
+    "v1_gate": true,
+    "v1_result": true,
+    "admission_authority": false,
+    "t8_authorized": false,
+    "product_or_shipping_authorized": false,
+    "rerun_performed": false
+  },
+  "independent_root_evidence": {
+    "candidate": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v1.json",
+      "first_add_commit": "98ce66623f6b3ba0117ec7d5e475dd40e3ddb6c0",
+      "current_sha256": "4334aaadb6c19d15ad03bbfdc588f9e26ac65322c7ef615516f57a9ffaa31b97",
+      "git_show_sha256": "4334aaadb6c19d15ad03bbfdc588f9e26ac65322c7ef615516f57a9ffaa31b97",
+      "byte_drift_exists": false
+    },
+    "expected_pending_closeout_inputs": [
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/metadata.json",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/_orchestrator/LAST-BATCH-STATUS.md"
+    ]
+  },
+  "false_failures": [
+    {
+      "v1_check": "candidate-acceptance-manifest-immutable-lifecycle",
+      "reported_failure": "candidate-cohort-manifest-t4-v1.json bytes drifted from first-add commit",
+      "diagnosis": "False. The v1 helper git(...) applies text .strip(), which removes the Git blob trailing newline before comparison to Path.read_text(...), while SHA-256 of raw current and git-show bytes is identical.",
+      "required_v2_change": "Use a byte-safe Git blob read such as subprocess.check_output without text=True or .strip(), then compare raw bytes."
+    },
+    {
+      "v1_check": "scoped-t4-path-status",
+      "reported_failure": "expected pending plan.md and metadata.json closeout changes were classified as admission instability",
+      "diagnosis": "False. The assigned admission task explicitly did not require a globally or scoped-clean tree; plan.md, metadata.json, and LAST-BATCH-STATUS.md are expected pending T4 closeout inputs. The v1 suffix filter also tested for a space before metadata.json/plan.md, but Git status paths contain a slash.",
+      "required_v2_change": "Report documentation dirt separately, without treating it as an admission failure; do not make clean working-tree state an admission invariant."
+    }
+  ],
+  "required_successor": {
+    "kind": "materially-different-v2-admission-gate",
+    "requirements": [
+      "Preserve v1 as non-consumable historical stop-loss evidence and do not rerun or edit it.",
+      "Bind first-add lifecycle artifacts using byte-safe Git object comparisons.",
+      "Record T4 documentation dirt truthfully as pending closeout context rather than a failure condition.",
+      "Revalidate admission only against stable evidence inputs and retain no T8, product, implementation, or shipping authority beyond the gate result."
+    ]
+  }
+}
