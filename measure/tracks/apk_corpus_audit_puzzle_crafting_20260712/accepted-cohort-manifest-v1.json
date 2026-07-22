@@ -1,0 +1,15 @@
+{
+  "schema_version": "apk-accepted-cohort-manifest.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "manifest_kind": "accepted-cohort-manifest",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "candidate": {"path":"candidate-cohort-manifest-v1.json","commit":"cf0027f7f6c6bf2522e943a7f56b4b46c11a5317","sha256":"acb71d166dcc0970ec2ea186b1df64299133166730820deb39caab5462c46bf1"},
+  "approval": {"path":"product-owner-acceptance-cohort-v1.json","commit":"a6aa36c6f6a0c911ca8b43ddc501d50dd699f299","sha256":"9c416d9f3b99beaedf7a0cecafe41844e410ca2b2c7e8f725f4e9c8e45a179aa","ordered_after_candidate":true},
+  "reconciliation": {"path":"cohort-reconciliation-v1.json","assigned_games":6,"covered_games":6,"duplicates":0,"omissions":0},
+  "accepted_batches": {"batch-a":{"manifest":"accepted-cohort-manifest-batch-a-v3.json","historical_lifecycle_supersession":"batch-a-historical-lifecycle-supersession-v4.json"},"batch-b":{"manifest":"accepted-cohort-manifest-batch-b-v3.json"}},
+  "consumable": true,
+  "consumability": "conditional",
+  "conditions": ["Consume only with every referenced batch manifest, review, receipt, and disclosure.", "The current-owner amendment governs missing historical provenance/pin only; source integrity and independent review remain binding.", "Browser-dependent and historical claims retain their exact unknown or historical boundaries.", "Revocation or supersession of any bound input immediately stops consumption."],
+  "claims": {"cross_game_standardization":false,"implementation_authorized":false,"shipping_authorized":false,"browser_behavior_success":false,"completion_success":false,"persistence_success":false,"xp_success":false,"api_correctness":false},
+  "marker": "MEASURE_AGENT_RESULT"
+}
