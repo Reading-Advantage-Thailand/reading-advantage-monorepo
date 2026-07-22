@@ -1,12 +1,18 @@
 {
   "track_id": "apk_corpus_audit_traversal_exploration_20260712",
   "type": "chore",
-  "status": "pending",
+  "status": "accepted-with-disclosure",
   "created_at": "2026-07-12T00:00:00Z",
-  "updated_at": "2026-07-12T00:00:00Z",
+  "updated_at": "2026-07-22T00:00:00Z",
   "description": "Recover exact traversal, exploration, camera, world, state-transition, responsive, and concrete asset evidence for seven games.",
   "estimated_tasks": 26,
-  "actual_tasks": null,
-  "deviation_notes": null,
+  "actual_tasks": 19,
+  "task_state_counts": {
+    "completed": 19,
+    "blocked": 5,
+    "in_progress": 0,
+    "total": 24
+  },
+  "deviation_notes": "The immutable legacy accepted-cohort manifest recorded an incorrect approval publication commit, and four stale lifecycle assertions were retained as historical red-stage/pre-publication evidence. Additive candidate 8a28856e and successor acceptance/manifest 2e939507 correct formal-closeout consumption without rewriting history. Batch-level historical and browser-unknown disclosures remain binding; no browser, gameplay, completion, persistence, XP, idempotency, API, production, asset-loading, or native-provider provenance claim is added.",
   "depends_on": ["apk_three_game_truth_pilot_20260712"]
 }
