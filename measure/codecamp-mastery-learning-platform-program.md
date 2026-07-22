@@ -1,6 +1,9 @@
 # Codecamp Mastery Learning Platform Program
 
-> **Status:** Approved for planning; implementation not started
+> **Status:** Implementation underway — the shared engine import, Codecamp
+> knowledge graph/APK unit, and interactive tutorial runtime are complete;
+> intervention-tutor and PR-mastery implementation has landed, with final
+> graph/doctor, live-flow, browser, and product-owner acceptance still open.
 > **Created:** 2026-07-10
 > **First production proof:** Codecamp Advantage
 > **Normative engine specification:** `~/Desktop/mastery-advantage/SPECIFICATION.md` (`kst-srs.v3.2`)
