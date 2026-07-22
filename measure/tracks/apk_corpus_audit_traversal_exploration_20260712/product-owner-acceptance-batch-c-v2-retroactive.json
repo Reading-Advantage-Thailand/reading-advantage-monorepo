@@ -1,0 +1,17 @@
+{
+  "schema_version": "apk-product-owner-acceptance.v3",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-c-historical",
+  "approval_kind": "retroactive-approval",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "ordered_after_candidate": true,
+  "candidate_path": "candidate-cohort-manifest-batch-c-v2.json",
+  "candidate_commit_sha": "bd39b8e0cffb813f045a3853eb4499f46e96d3ff",
+  "candidate_manifest_sha256": "b0e857e24f593d811d52970f1cc53f7f0f61ce0516a93de7268bbcd717ef46ec",
+  "review_path": "batch-c-independent-review-v2.json",
+  "review_commit_sha": "2496b0c38ed2c6445655dd46b33d065da1982185",
+  "review_report_sha256": "4a9e0a1310111aa03b0711a50b1082b31ee73fe9cc67b417c478b1e6c74cf4cb",
+  "authorization": {"source": "current user instruction", "message_id": null, "message_id_note": "No original message ID was supplied; none is fabricated.", "authority": "delegated project-owner", "retroactive": true},
+  "disclosures": ["The 27 claims remain bounded historical/source evidence; no browser run occurred and browser behavior remains unknown.", "This approval follows the published candidate and does not backdate or alter it."],
+  "claims": {"completion": false, "persistence": false, "xp": false, "idempotency": false, "api_correctness": false, "browser_behavior_success": false}
+}

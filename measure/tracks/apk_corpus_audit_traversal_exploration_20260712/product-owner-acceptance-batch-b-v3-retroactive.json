@@ -1,0 +1,17 @@
+{
+  "schema_version": "apk-product-owner-acceptance.v3",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-b",
+  "approval_kind": "retroactive-superseding-approval",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "ordered_after_candidate": true,
+  "candidate_path": "candidate-cohort-manifest-batch-b-v2.json",
+  "candidate_commit_sha": "a4892fbd38c98cac918fd1326dadd74669d4e2db",
+  "candidate_manifest_sha256": "30ca8aaa951a20b5dbc2b744ea57b1310ed623f211a40d550769b15320583065",
+  "review_commit_sha": "38f80821f3a37eaa539f75cb377abab760e77cd6",
+  "review_report_sha256": "58fffd67512d26e1503f2d53f2b7359b31daae055835fa318a0376a5a0271bcd",
+  "supersedes": {"path": "product-owner-acceptance-batch-b-v2.json", "sha256": "510593ee261a0f5ced5be31e9ed215485ece7ac205c5377f9960286834f77a11", "reason": "The nominal historical approval event predates candidate publication."},
+  "authorization": {"source": "current user instruction", "message_id": null, "message_id_note": "No original message ID was supplied; none is fabricated.", "authority": "delegated project-owner", "retroactive": true},
+  "disclosures": ["This supersedes only the lifecycle authority defect; historical source, browser, and timing disclosures remain in force.", "The original approval is preserved and non-authoritative for new lifecycle binding."],
+  "claims": {"completion": false, "persistence": false, "xp": false, "idempotency": false, "api_correctness": false, "browser_behavior_success": false}
+}

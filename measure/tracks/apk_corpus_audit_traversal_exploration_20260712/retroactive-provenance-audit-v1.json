@@ -1,0 +1,34 @@
+{
+  "schema_version": "apk-retroactive-provenance-audit.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "additive": true,
+  "purpose": "Links immutable Git chronology to the current delegated project-owner authorization without changing historical artifacts.",
+  "authorization": {
+    "source": "current user instruction",
+    "message_id": null,
+    "message_id_note": "No original or provider message identifier was supplied; none is fabricated.",
+    "authority": "delegated project-owner",
+    "authorization": "Retroactively authenticate the historical T5 batches and approve the current Batch C candidate at bd39b8e0+ for the bounded lifecycle publications in this audit."
+  },
+  "immutable_chronology": {
+    "batch_a": {"candidate_commit": "971cc2fcdd417ee276d6ff4fd124b854f341df5d", "candidate_unix_seconds": 1784645863, "historical_approval_commit": "6f8c2b341b4fe961ebda626d22c7f45b41ad6f89", "historical_approval_unix_seconds": 1784645995, "ordering": "candidate-before-approval"},
+    "batch_b": {"candidate_commit": "a4892fbd38c98cac918fd1326dadd74669d4e2db", "candidate_unix_seconds": 1784655198, "historical_approval_commit": "a4892fbd38c98cac918fd1326dadd74669d4e2db", "historical_approval_event_timestamp": "2026-07-21T00:00:00Z", "ordering": "defective: nominal event predates candidate publication and both artifacts share one commit"},
+    "batch_c": {"candidate_commit": "bd39b8e0cffb813f045a3853eb4499f46e96d3ff", "candidate_unix_seconds": 1784683086, "ordering": "candidate published before this current authorization"}
+  },
+  "batch_b_ordered_approval_defect": {
+    "status": "corrected-by-supersession",
+    "historical_artifact": "product-owner-acceptance-batch-b-v2.json",
+    "historical_artifact_sha256": "510593ee261a0f5ced5be31e9ed215485ece7ac205c5377f9960286834f77a11",
+    "correction": "product-owner-acceptance-batch-b-v3-retroactive.json is the only approval artifact authorized for subsequent lifecycle binding; the original remains immutable historical evidence."
+  },
+  "source_gate_evidence": {
+    "batch_c_candidate_contract": "3 passed",
+    "batch_c_source_truth_contract": "11 passed, 1 lifecycle-ordering test deselected",
+    "conclusion": "The source gates are green for the bounded Batch C candidate; lifecycle publication is authorized by this current approval, not inferred from the prior direction."
+  },
+  "limits": [
+    "Does not claim provider-side prompt, session, event, or message provenance.",
+    "Does not rewrite, relabel, or backdate historical candidate, approval, review, or accepted-manifest bytes.",
+    "Does not promote historical or browser-unknown claims to current behavior."
+  ]
+}
