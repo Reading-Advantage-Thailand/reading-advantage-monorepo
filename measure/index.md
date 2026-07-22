@@ -19,6 +19,7 @@
 - [Tracks Directory](./tracks/)
 
 ## Plans
+- [Small-Company Operations Program](./small-company-operations-program.md)
 - [APK Asset System Program](./apk-asset-system-program.md)
 - [Codecamp Mastery Learning Platform Program](./codecamp-mastery-learning-platform-program.md)
 - [Mastery Advantage Integration Plan](./mastery-advantage-integration-plan.md)

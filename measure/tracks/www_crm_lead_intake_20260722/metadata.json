@@ -1,0 +1,22 @@
+{
+  "track_id": "www_crm_lead_intake_20260722",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-07-22T00:00:00Z",
+  "updated_at": "2026-07-22T00:00:00Z",
+  "description": "Route www-reading-advantage Contact Us and approved commercial CTA submissions into the minimal CRM with validation, attribution, anti-spam controls, notifications, and reliable UX.",
+  "depends_on": ["customer_licensing_crm_20260722", "durable_job_worker_platform_20260713"],
+  "estimated_tasks": 15,
+  "actual_tasks": null,
+  "deviation_notes": "Successor owner for Wave 5 T1 lead capture. Other Wave 5 SEO, i18n, accessibility, comparison/pricing, legal, marketing, and Science work remains in Wave 5.",
+  "sprint": {
+    "goal": "Turn every approved website commercial inquiry into a durable, attributable CRM lead with reliable user feedback and operator notification.",
+    "stories": [
+      { "id": "S1", "title": "Capture qualified inquiries", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S2", "title": "Unify commercial CTAs", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S3", "title": "Verify delivery and operations", "size": "S", "priority": "Must", "status": "pending" }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}

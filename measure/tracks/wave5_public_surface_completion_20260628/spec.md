@@ -24,7 +24,9 @@ Ownership of record: `measure/audit-reports/monorepo-review-roadmap_20260626/med
 
 Phase 0 is a blocking decision gate. Do not implement affected Wave 5 surfaces until these answers are recorded in the track plan or a linked decision artifact:
 
-1. Which lead-capture backend/adapter receives waitlist + contact submissions (T1)?
+1. **Resolved 2026-07-22:** the company-operations lead capability defined by
+   `customer_licensing_crm_20260722` receives waitlist + contact submissions;
+   implementation and acceptance are owned by `www_crm_lead_intake_20260722`.
 2. Which efficacy/comparison/pricing figures are approved and evidence-backed (T12 overlaps Wave 3 claims gate)?
 3. Final legal language to replace "ZERO RISK" copy (T17)?
 
@@ -35,7 +37,9 @@ Phase 0 is a blocking decision gate. Do not implement affected Wave 5 surfaces u
 
 ## Scope
 
-1. Make waitlist + contact forms submit to a real backend/adapter with validation and analytics; remove or implement empty layout components.
+1. Lead capture is delegated to `www_crm_lead_intake_20260722`; this wave still
+   removes or implements empty layout components and reconciles T1 evidence at
+   closeout without duplicating the successor implementation.
 2. Add SEO metadata (titles, OG image, hreflang, canonical, locale-aware) and fix client-render SEO; restore missing static assets.
 3. i18n completeness: externalize hardcoded strings, add zh fallback, fix Thai typos; add typed locale accessors replacing `as never` casts.
 4. Accessibility remediation (graph ARIA, UI component a11y); add Services to primary navigation; centralize contact details/support email.

@@ -4,23 +4,52 @@ This file tracks all major tracks for the project.
 
 ---
 
-## Current Focus (updated 2026-06-05)
+## Current Focus (updated 2026-07-22)
 
-Two parallel programs are in flight; priority order when picking the next track:
+Multiple programs are in flight. Outside the independently staffed APK evidence
+program, priority order when picking the next track is:
 
-1. **science-advantage audit remediation.** The 4 Critical tracks are done (domain
-   migration, tenancy, argon2id, audit log). CI alignment track is **complete**
-   — `ignoreBuildErrors: true` removed, CI gate wired. Resume #6–#10 (storage,
-   zod, domain-decomp, observability, rate-limiter), then #12 housekeeping.
-2. **Next audits.** Schedule `reading-advantage` and `primary-advantage` AGENTS.md
-   audits (see §Pending Audits below). reading-advantage's domain-bypass (209 route.ts
-   files) and primary-advantage's still-active Prisma are larger than anything the
-   science pilot covered.
-3. **codecamp-advantage productization** (deployment, prod-QA, exercise-repos) proceeds
-   independently; lower priority than securing the shared packages above.
+1. **Small-company operations.** Simplify `COMPANY_ADMIN`, establish the bounded
+   customer/licensing CRM, connect www lead intake, and prove Reading-first
+   licensing. Track 1 and Track 2 may begin in parallel after the repository
+   graph is rebuilt successfully.
+2. **Backend platform.** Finish the capability kernel and begin the durable job
+   worker foundation; customer/licensing capabilities consume the accepted
+   kernel rather than creating a parallel framework.
+3. **Monorepo remediation.** Resume Wave 4, then Wave 5/6. The dedicated CRM
+   intake track now owns Wave 5 T1 lead capture; unrelated Wave 5 work remains.
+4. **Codecamp productization and closeout** proceeds independently, including
+   SSO observation/legacy-auth retirement and remaining mastery/media acceptance.
 
 - [x] **Track: OpenCode Agent Roster Refresh** *Link: [./archive/opencode_agent_roster_20260712/](./archive/opencode_agent_roster_20260712/)*
   Refresh global coding and Measure agents for the GPT-5.6 Luna/Terra/Sol family, remove unavailable Moonshot routing, and prioritize active subscription-backed providers. **Completed 2026-07-20** — implementation 3/3 with validation evidence; product-owner manual verification (OpenCode restart model enumeration) remains as owner follow-up.
+
+---
+
+## Small-Company Operations Program (created 2026-07-22)
+
+> Bounded program for the [small-company owner, CRM, licensing, demo/trial,
+> provisioning, and future commercial-attribution model](./small-company-operations-program.md).
+> One Company Admin UI serves the team, but employee identity and commercial
+> operations retain separate backend/database boundaries. This program rejects
+> enterprise IAM, a general CRM, accounting, and commission execution in the MVP.
+
+- [~] **Track: Small-Company Admin Privilege Simplification** *Link: [./tracks/small_company_admin_privileges_20260722/](./tracks/small_company_admin_privileges_20260722/)*
+  Make `COMPANY_ADMIN` the intentional owner/operator role with exact inherited
+  administrator access to Marketing, Sales, Codecamp, and future internal apps,
+  while ordinary employees retain explicit app roles.
+- [ ] **Track: Customer, Licensing, and Minimal CRM Control Plane** *Link: [./tracks/customer_licensing_crm_20260722/](./tracks/customer_licensing_crm_20260722/)*
+  Add leads, customers, contacts, school sites, sales ownership, shared demos,
+  school trials, subscriptions, provisioning ports, and future revenue/commission
+  attribution seams behind Company Admin.
+- [ ] **Track: www CRM Lead Intake** *Link: [./tracks/www_crm_lead_intake_20260722/](./tracks/www_crm_lead_intake_20260722/)*
+  Replace Contact Us `mailto:` and no-op commercial CTAs with validated,
+  attributable, spam-resistant CRM intake and operator notification. Depends on
+  the accepted lead contract from the customer/licensing track and owns Wave 5 T1.
+- [ ] **Track: Reading License Control-Plane Migration** *Link: [./tracks/reading_license_control_plane_migration_20260722/](./tracks/reading_license_control_plane_migration_20260722/)*
+  Prove production truth, import expired history without reactivation, and make
+  Company Admin the sole writer for new/renewed Reading demos, school trials,
+  and subscriptions while Reading retains local runtime enforcement.
 
 ---
 
@@ -42,17 +71,20 @@ Two parallel programs are in flight; priority order when picking the next track:
   Build capability descriptors, the policy executor, deterministic catalog and
   generated route bindings, then prove one bounded small/new-app slice. **Depends
   on Backend Architecture Enforcement.**
-- [ ] **Track: Durable Job Worker Platform** *Link: [./tracks/durable_job_worker_platform_20260713/](./tracks/durable_job_worker_platform_20260713/)*
+- [~] **Track: Durable Job Worker Platform** *Link: [./tracks/durable_job_worker_platform_20260713/](./tracks/durable_job_worker_platform_20260713/)*
   Generalize the proven Postgres `review_jobs` behavior into a durable job port
   and `services/worker`. Contract/test work under `packages/backend/src/jobs`
   depends on enforcement plus the accepted Kernel Task 1 package scaffold; it
   may then run alongside the remaining kernel work. Capability-bound handlers
   depend on full kernel acceptance.
-- [x] **Track: Company Employee Identity and SSO** *Link: [./tracks/company_identity_sso_20260715/](./tracks/company_identity_sso_20260715/)*
+- [~] **Track: Company Employee Identity and SSO** *Link: [./tracks/company_identity_sso_20260715/](./tracks/company_identity_sso_20260715/)*
   Create a separate employee identity database and first-party Accounts app,
   provide shared SSO and app-scoped roles for Marketing, Sales Advantage, and
   Codecamp Advantage, and safely migrate existing Codecamp accounts. Coordinates
-  with the architecture-enforcement and capability-kernel tracks.
+  with the architecture-enforcement and capability-kernel tracks. The successor
+  `small_company_admin_privileges_20260722` deliberately supersedes the
+  identity-only `COMPANY_ADMIN` product-access policy for this small company.
+  *Status: ARCHIVE-PENDING — remaining graph, documentation, legacy-auth retirement, final-review, and Kimi WebBridge acceptance tasks are tracked in the plan.*
 
 ---
 

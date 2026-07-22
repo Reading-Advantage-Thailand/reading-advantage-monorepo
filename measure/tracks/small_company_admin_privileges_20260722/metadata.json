@@ -1,0 +1,21 @@
+{
+  "track_id": "small_company_admin_privileges_20260722",
+  "type": "feature",
+  "status": "in_progress",
+  "created_at": "2026-07-22T00:00:00Z",
+  "updated_at": "2026-07-22T00:00:00Z",
+  "description": "Simplify internal authorization for a small company by making COMPANY_ADMIN the owner/operator role with automatic administrator access to internal applications.",
+  "estimated_tasks": 19,
+  "actual_tasks": null,
+  "deviation_notes": "Successor policy to the identity-only COMPANY_ADMIN behavior in company_identity_sso_20260715. It preserves ordinary app roles and the company-identity database boundary while deliberately removing owner role-assignment toil.",
+  "sprint": {
+    "goal": "Let the company owner administer every internal application through one intentional COMPANY_ADMIN assignment without maintaining duplicate per-app roles.",
+    "stories": [
+      { "id": "S1", "title": "Grant owner application access", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S2", "title": "Simplify owner administration", "size": "S", "priority": "Must", "status": "pending" },
+      { "id": "S3", "title": "Verify and release access", "size": "M", "priority": "Must", "status": "pending" }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}

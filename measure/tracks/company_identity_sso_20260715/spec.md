@@ -1,5 +1,11 @@
 # Company Employee Identity and SSO
 
+> **Successor policy note (2026-07-22):** The small-company operating decision
+> in `small_company_admin_privileges_20260722` supersedes this track's rule that
+> `COMPANY_ADMIN` receives no implicit internal-product access. The successor
+> derives one reviewed administrator role per internal application while
+> preserving this track's identity, session, audit, and database boundaries.
+
 ## Overview
 
 Deliver one employee account and app-scoped role system for Marketing, Sales
@@ -34,12 +40,14 @@ identity redesign.
   - Sales roles: `SALES_REP`, `SALES_ADMIN`
   - Codecamp roles preserve existing effective access under the Codecamp
     application namespace.
-- `COMPANY_ADMIN` manages identity and role assignments but receives no
-  automatic access to application data.
+- **Historical policy, superseded 2026-07-22:** `COMPANY_ADMIN` managed identity
+  and role assignments but received no automatic application access. The
+  successor derives one exact reviewed admin role per internal application.
 - Application administrators manage product functionality but cannot manage
   global identities, credentials, or company administrators.
-- The bootstrap owner may hold company and application administrator roles as
-  independent assignments.
+- **Historical policy, superseded for the bootstrap owner:** separate app-role
+  assignments remain valid for ordinary employees, while `COMPANY_ADMIN`
+  receives successor-defined inherited owner access.
 - Represent the internal company with a stable organization identifier and
   membership boundary, while deferring multi-company behavior and interfaces.
 
@@ -117,8 +125,9 @@ Advantage without maintaining separate credentials
   all participating applications and audited without recording secrets.
 - Given an employee, When a company administrator assigns or removes an
   application role, Then the assignment affects only that application.
-- Given a company administrator without a Sales, Marketing, or Codecamp role,
-  When they open that product, Then they receive no implicit product access.
+- **Historical AC, superseded 2026-07-22:** company administrators without app
+  roles were denied product access. Successor owner-role mapping now governs
+  `COMPANY_ADMIN`; ordinary employees without app roles remain denied.
 - Given a Sales, Marketing, or Codecamp administrator without
   `COMPANY_ADMIN`, When they attempt to manage identities, credentials, global
   sessions, or company administrators, Then access is denied.
@@ -148,9 +157,9 @@ Advantage without maintaining separate credentials
   Marketing workspace.
 - Given a Marketing `ADMIN`, When authorization is evaluated, Then the employee
   retains shared campaign/project access and alone may manage Marketing settings.
-- Given a company administrator without a Marketing role, When they open
-  Marketing, Then company-administrator status alone grants no Marketing
-  access.
+- **Historical AC, superseded 2026-07-22:** company administrators without a
+  Marketing role were denied. The successor derives Marketing `ADMIN` for
+  `COMPANY_ADMIN`; ordinary employees still require explicit Marketing roles.
 - Given the SSO integration, When Marketing is deployed, Then its product data
   and deployment remain independent from the identity database and other
   applications.
@@ -183,8 +192,9 @@ administration with Sales management
   organizational boundary, When the company integration is complete, Then
   employee Sales access uses the company organization context and does not
   require a school membership.
-- Given a company administrator without a Sales role, When they open Sales,
-  Then they receive no implicit Sales data access.
+- **Historical AC, superseded 2026-07-22:** company administrators without a
+  Sales role were denied. The successor derives `SALES_ADMIN` for
+  `COMPANY_ADMIN`; ordinary employees still require explicit Sales roles.
 
 **Estimate:** M
 **Priority:** Must
@@ -336,7 +346,9 @@ employees or damaging product data
   assigned company application without re-entering credentials.
 - Removing one application role blocks only that application.
 - Suspending the company account blocks all participating applications.
-- `COMPANY_ADMIN` grants account-management authority but no implicit product
+- **Superseded 2026-07-22:** `COMPANY_ADMIN` retains account-management
+  authority and receives exact successor-defined internal-app administrator
+  roles; it does not bypass named product permissions or grant public-app user
   access.
 - `SALES_ADMIN` retains Sales-management authority but no company
   identity-management authority.

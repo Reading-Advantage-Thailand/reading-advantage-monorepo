@@ -1,0 +1,22 @@
+{
+  "track_id": "customer_licensing_crm_20260722",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-07-22T00:00:00Z",
+  "updated_at": "2026-07-22T00:00:00Z",
+  "description": "Build a minimal company-operations CRM and licensing control plane for leads, customers, demos, school trials, subscriptions, provisioning, and future sales attribution.",
+  "estimated_tasks": 24,
+  "actual_tasks": null,
+  "deviation_notes": "One Company Admin UI, but a separate company-operations data boundary from employee identity. Revenue and commission behavior is deferred while stable ownership and conversion history are captured now.",
+  "sprint": {
+    "goal": "Operate the complete lead-to-customer-to-product-access lifecycle from one small-company admin surface while preserving clean identity, product, and future revenue boundaries.",
+    "stories": [
+      { "id": "S1", "title": "Manage customers and leads", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S2", "title": "Track demos and trials", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S3", "title": "Manage subscriptions and provisioning", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S4", "title": "Preserve commercial attribution", "size": "M", "priority": "Should", "status": "pending" }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}

@@ -6,16 +6,21 @@
 
 ## Phase 0: Product Decision Gate and Baseline
 
-- [~] Task: Record PO answers: lead-capture backend/adapter, approved comparison/pricing figures, final legal copy. **Blocking gate:** do not implement T1, T12, or T17 surfaces until this task is complete.
+> **2026-07-22 decision:** Lead capture is the company-operations lead
+> capability. `www_crm_lead_intake_20260722` owns Contact Us and commercial CTA
+> implementation. Pricing/comparison and legal-copy decisions remain blocking
+> for their respective Wave 5 surfaces.
+
+- [~] Task: Record remaining PO answers: approved comparison/pricing figures and final legal copy. Lead-capture backend/adapter is resolved by the successor tracks. **Blocking gate:** do not implement T12 or T17 surfaces until this task is complete.
 - [~] Task: Reconcile T12 pricing/comparison against the Wave 3 claims matrix; note any conflicts.
 - [~] Task: If any PO answer is unavailable, mark the dependent implementation tasks blocked and split unblockable SEO/assets/i18n/a11y/test-hygiene work into a smaller executable subtrack.
 - [~] Task: Record baseline www/marketing/science pass/fail for the required verification commands.
 
 ## Phase 1: Conversion — Lead Capture and Dead Components
 
-- [~] Task: Write Red tests proving waitlist + contact forms post to the chosen backend/adapter and validate input.
+- [b] Task: Write Red tests proving waitlist + contact forms post to the chosen backend/adapter and validate input. — superseded:www_crm_lead_intake_20260722 (deferred:www_crm_lead_intake_20260722-acceptance)
   - Evidence refs: www T1 (LRF-008/009).
-- [~] Task: Implement form submission + validation + analytics.
+- [b] Task: Implement form submission + validation + analytics. — superseded:www_crm_lead_intake_20260722 (deferred:www_crm_lead_intake_20260722-acceptance)
 - [~] Task: Remove or implement empty/dead layout components flagged by import-usage audit.
   - Evidence refs: www T2 (LRF-010).
 - [~] Task: Run www targeted tests.

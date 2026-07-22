@@ -1,0 +1,23 @@
+{
+  "track_id": "reading_license_control_plane_migration_20260722",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-07-22T00:00:00Z",
+  "updated_at": "2026-07-22T00:00:00Z",
+  "description": "Make Reading Advantage the first company-operations licensing consumer by importing expired history and centrally provisioning demos, school trials, and new or renewed subscriptions into Reading's local license model.",
+  "depends_on": ["customer_licensing_crm_20260722", "small_company_admin_privileges_20260722"],
+  "estimated_tasks": 20,
+  "actual_tasks": null,
+  "deviation_notes": "Reading remains locally authoritative at runtime during the pilot. Existing expired licenses are historical imports only and are never automatically reactivated.",
+  "sprint": {
+    "goal": "Prove a safe Reading-first licensing workflow from CRM customer or trial through central subscription management to product-local school and license enforcement.",
+    "stories": [
+      { "id": "S1", "title": "Establish Reading migration truth", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S2", "title": "Import expired license history", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S3", "title": "Provision Reading access", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S4", "title": "Cut over license administration", "size": "M", "priority": "Must", "status": "pending" }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}
