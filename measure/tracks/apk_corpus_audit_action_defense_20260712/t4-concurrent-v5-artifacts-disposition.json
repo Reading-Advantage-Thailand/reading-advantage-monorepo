@@ -1,0 +1,37 @@
+{
+  "schema": "apk-t4-concurrent-artifacts-disposition.v1",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "status": "historical-unexecuted-non-authority",
+  "artifacts": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-manifest-publisher-full-cohort-v2-1d56853d-ownership.json",
+      "sha256": "05a10a40b850250a6454c5812174099586f2721fd3f527a9a3f0ec2c17b2b2c3",
+      "disposition": "ownership-only; the fixed accepted manifest bytes were already published by the committed v2 publisher package"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-admission-check-v5.py",
+      "sha256": "dc7eb8b327b75e96eee7b22d7ebedb398d7fac0692d10fdfcb1dff9c952c7a19",
+      "disposition": "script authored but never executed; no v5 result exists"
+    }
+  ],
+  "absent_outputs": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-admission-result-v5.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/accepted-manifest-publisher-full-cohort-v2-1d56853d.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/accepted-manifest-publisher-full-cohort-v2-1d56853d.json"
+  ],
+  "stop_loss": {
+    "unchanged_completion_checks": 2,
+    "v5_execution_authorized": false,
+    "companion_reconstruction_authorized": false,
+    "reason": "The concurrent path did not progress. The current v4 lifecycle was already accepted, published, and admitted by owner disposition; another gate or receipt reconstruction would repeat the failed bookkeeping loop."
+  },
+  "active_authority_unchanged": {
+    "candidate_v2_commit": "d70959ce2cdfed2e655f5ffcccef67f9bc6ea353",
+    "owner_acceptance_v2_commit": "1d56853dcb287463fb12906a8c534e7973cfb8cc",
+    "accepted_manifest_v2_commit": "8b3a83d3d0347921f67e3a81131a312b9d916c71",
+    "owner_admission_disposition_commit": "43928b9a"
+  },
+  "t8_authorized": false,
+  "product_or_shipping_authorized": false
+}

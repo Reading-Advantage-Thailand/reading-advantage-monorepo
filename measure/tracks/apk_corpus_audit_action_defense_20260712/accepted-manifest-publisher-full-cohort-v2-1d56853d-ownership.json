@@ -1,0 +1,50 @@
+{
+  "schema": "apk-role-path-ownership.v1",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-ACCEPTED-MANIFEST-V2",
+  "role": "accepted-manifest-publisher-full-cohort-v2",
+  "claimed_at_utc": "2026-07-22T13:18:06Z",
+  "provider_identifier": "/root/apk_accepted_manifest_v2",
+  "parent_task": "/root",
+  "immutable_publication_base": "1d56853dcb287463fb12906a8c534e7973cfb8cc",
+  "publisher_scope": "Publish the accepted-manifest v2 successor ordered after the exact product-owner acceptance commit, bind the immutable v2 candidate and v4 lineage, preserve every disclosure, and keep T8, product, implementation, and shipping authority false.",
+  "reserved_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-manifest-publisher-full-cohort-v2-1d56853d-ownership.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/accepted-manifest-publisher-full-cohort-v2-1d56853d.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/accepted-manifest-publisher-full-cohort-v2-1d56853d.json"
+  ],
+  "preclaim_state": {
+    "manifest_path_preexisted_this_delegated_turn": true,
+    "manifest_preclaim_sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80",
+    "three_companion_paths_absent": true,
+    "manifest_bytes_preserved_without_overwrite": true,
+    "note": "The fixed untracked manifest already existed when this delegated role began. This role validated and adopted those exact in-scope bytes and does not fabricate a prewrite-absence claim."
+  },
+  "ordered_inputs": {
+    "candidate_publication_commit": "d70959ce2cdfed2e655f5ffcccef67f9bc6ea353",
+    "candidate_sha256": "436d15249549fb0762edcb5c63d1fdcc4f4d51c80852200f929050ca0a0840f5",
+    "owner_acceptance_publication_commit": "1d56853dcb287463fb12906a8c534e7973cfb8cc",
+    "owner_acceptance_sha256": "56bc530ddff17e8ff20741517d6c29b17ba250cbb35ec3a772a3cd71a23ed318",
+    "ordered_after_candidate": true
+  },
+  "forbidden_writes": [
+    "canonical documentation",
+    "registry",
+    "plan",
+    "metadata",
+    "status",
+    "reconciliation",
+    "review",
+    "existing lifecycle artifacts",
+    "admission gates",
+    "source"
+  ],
+  "browser_rerun_authorized": false,
+  "accepted_manifest_publication_authorized": true,
+  "conditional_cohort_consumability_authorized": true,
+  "t8_authorized": false,
+  "product_or_shipping_authorized": false
+}
