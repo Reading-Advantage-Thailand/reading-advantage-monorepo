@@ -1,0 +1,107 @@
+{
+  "schema": "apk-requirements-mapper-final-report.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "task_id": "C3-MAP-GRYPHON",
+  "game": "Gryphon Patrol",
+  "role": "requirements-mapper-gryphon-patrol-batch-c",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v6_arbiter_8f2c",
+  "parent_task": "/root/apk_batch_c_fresh_roles",
+  "fork_turns": "none",
+  "role_base_sha": "97d5af991eeebe570ac0af57b16628dd623d5515",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "status": "complete-non-authoritative-mapper-only-awaiting-truth-browser-asset-review-and-lifecycle-stages",
+  "ownership": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-gryphon-mapper-v6-root-arbiter-20260722-1718-8f2c-ownership.json",
+    "sha256": "7d64a03fd7519d43888ce7fba575044000af7800de2a66f1101f13e19d2c9965",
+    "reserved_paths": "5/5 absent before authoring"
+  },
+  "inputs": {
+    "collector_ledger_sha256": "d3e0de2a047d59ba5a128cb3780d1e5f42f04c8ae0361cb04e633ef8f671e4eb",
+    "collector_method_sha256": "4d4916f88d34d19c067bf796298f922875480409c16d9d5e2491bc743f6a70d0",
+    "collector_report_sha256": "0d7af322d736edbffd146d6bf2f51989198513b0a9080e2f9050cca1eb7177f4",
+    "collector_proof_sha256": "d797b87a0b59bd2aeeaf54fc63fa3d8d30659d33695493a6c25ee37964382e2e",
+    "collector_receipt_sha256": "cf28e5d2c6de663e2638ab024cd5ea78df0f7a91da12d5952b6d589813d5d27c",
+    "semantic_claim_layer_sha256": "2f0c23b6aa5a03b814107dbd8325bc1af5d7ce21fa15d6fbfdca87b77345efd4",
+    "denominator_correction_sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f",
+    "review_remediation_snapshot_sha256": "4f091c10999c26234836010dab96110a2a9fe9ac3eac82628e43c7e68040333d",
+    "truth_contract_v4_snapshot_sha256": "e30cc7048b8c727677bf2fca35be3b510baedce1130fa92420508617bf3c7b61",
+    "legacy_blueprint_sha256": "1bb8d8f1dafa26fd660182bce030a88c16790cfba737028752459214a1a39089",
+    "legacy_hypotheses_sha256": "ec721b12f9d6ef46597a3db703b7f9a0c7bc2efecb71c3fd4314991285ba8436",
+    "legacy_report_sha256": "1890eca75e416da2cdba9ba2248490cdb9430892069e87fe37c6aaff0013b654"
+  },
+  "outputs": {
+    "blueprint": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-blueprint-batch-c-v6-root-arbiter-20260722-1718-8f2c.json",
+      "sha256": "5ba46ba0f60fbddb8f28b44d4109e63309318a3e00030807e21ecb54a9422135"
+    },
+    "hypotheses": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-hypotheses-batch-c-v6-root-arbiter-20260722-1718-8f2c.md",
+      "sha256": "02e9eb260dcc592f96beb288a8ba3fd8e19a711aa1e4fdec43c4ea727096a044"
+    }
+  },
+  "denominator_verification": {
+    "counts": {
+      "source_records": 14,
+      "asset_candidates": 5,
+      "historical_records": 10
+    },
+    "blob_matches": {
+      "source_records": "14/14",
+      "asset_candidate_identity_only": "5/5",
+      "historical_records": "10/10"
+    },
+    "prior_omissions": {
+      "source_records": "6/6",
+      "asset_candidates": "2/2",
+      "historical_records": "3/3"
+    },
+    "result": "pass"
+  },
+  "claim_coverage": {
+    "preserved_claims": 15,
+    "preserved_atomic_propositions": 40,
+    "unique_semantic_envelopes_checked": 11,
+    "unique_semantic_envelopes_matched": 11,
+    "mapped_or_explicitly_disposed_claims": 15,
+    "uncovered_claim_ids": [],
+    "negative_fixtures_promoted": 0,
+    "new_factual_claims": 0,
+    "result": "pass"
+  },
+  "mutable_routing_disclosure": {
+    "captured_at_utc": "2026-07-22T10:25:23Z",
+    "measure_tracks_sha256": "cad99a06c187c033f13c6b16c5ca909dd4451606085073f07348f68f3d31fdc4",
+    "track_plan_sha256": "bb7df134c2a4c7f86a3a9a1162240deeda2b08aebbf69d64797ca889f9644d50",
+    "disposition": "measure/tracks.md and the active plan were already dirty and may change concurrently. Their hashes are point-in-time routing snapshots only and are not used as factual source evidence."
+  },
+  "collision_and_predecessor_integrity": {
+    "v4_collision_sha256": "1fb91bdb2dac9227352bb7b7ddf6519bf9552f31f4c11127aef8434a2ee1367a",
+    "v5_collision_sha256": "f9317af43955d3fce32cc09f40a2cf7a8a4b795d16befb319eddadecc03d4d67",
+    "v4_v5_selected": false,
+    "v4_v5_edited_or_deleted": false,
+    "legacy_mapper_edited_or_deleted": false,
+    "collector_v4_edited_or_deleted": false
+  },
+  "explicit_non_claims": [
+    "new source or gameplay fact",
+    "browser observation or runnability",
+    "asset suitability, licensing, visual content, rendering, or runtime use",
+    "truth-test authorship or gate selection",
+    "independent review",
+    "receipt selection",
+    "candidate publication",
+    "acceptance or accepted-manifest authorization",
+    "implementation, ontology, or cross-game decision"
+  ],
+  "lifecycle": {
+    "mapper_role_complete": true,
+    "candidate_authorized": false,
+    "acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "fresh_downstream_roles_and_review_remain_required": true
+  },
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

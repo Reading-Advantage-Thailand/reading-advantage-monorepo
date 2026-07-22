@@ -1,0 +1,186 @@
+{
+  "schema": "apk-role-proof.v5",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "task_id": "C3-ASSET",
+  "role": "asset-auditor-batch-c",
+  "status": "fresh v5 asset-auditor proof complete; identity and file-class checks pass while use and suitability remain unresolved",
+  "verification_result": "pass",
+  "provider_provenance": {
+    "provider_identifier": "/root/t4_asset_v5_reaudit_terra",
+    "actual_parent_task": "/root",
+    "fork_turns": "none",
+    "fresh_context": true,
+    "raw_provider_export_available": false,
+    "unavailable_fields_reason": "No raw provider export, event, spawn, session, or model identifier is exposed to this role; none is fabricated."
+  },
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "audit_binding": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-audit-v5.json",
+    "sha256": "001e0da33fd7cc43d8bdd5b04ca3209341117b449feb6aa391019cd498d8c1ce",
+    "bytes": 15566
+  },
+  "governing_bindings": {
+    "collision_record_sha256": "166c1c2284076ab0eaac5ec2f267cd2cc92378b4f908c6573767678626813b74",
+    "denominator_correction_sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f",
+    "asset_denominator_sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "role_applicability_sha256": "a239908b9564ce48acd5b54be5d1d80d81afcd316778bea0f4dad2be89d08fa0",
+    "budget_declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "test_strategy_sha256": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9"
+  },
+  "supersession": {
+    "selection_disposition": "This proof belongs to the fresh v5 provider set that supersedes both collision-invalid v4 provider sets for future receipt selection only.",
+    "preserves_without_mutation": [
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit-v4-fresh.json",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-audit-v4.json",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v4.json",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v4.json"
+    ],
+    "candidate_authorized": false,
+    "acceptance_authorized": false
+  },
+  "rederived_result": {
+    "candidate_paths_sha256": "da95c711e00531ebb329f047f9ed3407af6eaea957c1091644f1bda65ed0d1fe",
+    "counts": {
+      "asset_candidates": 9,
+      "unique_candidate_paths": 9,
+      "gryphon_patrol": 5,
+      "paladins_twin_soul": 4
+    },
+    "candidate_blob_checks": {
+      "checks": 9,
+      "matches": 9
+    },
+    "file_class_observations": {
+      "json_text": 6,
+      "jpeg_at_png_path": 1,
+      "png": 1,
+      "ascii_text_at_png_path": 1
+    },
+    "static_catalog_evidence": {
+      "cover_url_string_matches": 2,
+      "candidate_repo_relative_path_matches_in_bounded_search": 0,
+      "interpretation_limit": "Static source text is retained as an anchor only; it does not establish runtime loading or use."
+    },
+    "usage_or_suitability": "not established"
+  },
+  "checks": {
+    "frozen_source_revision_resolves": true,
+    "denominator_hash_matches_correction": true,
+    "normalized_inventory_is_nine_unique_paths": true,
+    "all_nine_frozen_blob_hashes_match": true,
+    "all_nine_file_classes_recorded_without_visual_assessment": true,
+    "bounded_static_search_recorded_without_runtime_inference": true,
+    "candidate_and_acceptance_false": true,
+    "scope_preserved": true,
+    "all_checks_pass": true
+  },
+  "claims": {
+    "asset_suitability_claimed": false,
+    "licensing_claimed": false,
+    "visual_quality_claimed": false,
+    "runtime_usage_claimed": false,
+    "browser_asset_loading_claimed": false,
+    "candidate_authorized": false,
+    "acceptance_authorized": false,
+    "accepted_manifest_authorized": false
+  },
+  "resource_use": {
+    "budget_declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "ceilings": {
+      "source_bytes_read": 31457280,
+      "source_files_or_objects_read": 100,
+      "command_invocations": 70,
+      "elapsed_minutes": 40,
+      "records_authored_or_reviewed": 240,
+      "browser_interactions": 40,
+      "browser_artifacts_captured": 40,
+      "asset_candidates_inspected": 240
+    },
+    "actual": {
+      "source_bytes_read": 3034000,
+      "source_files_or_objects_read": 32,
+      "command_invocations": 14,
+      "elapsed_minutes": 31,
+      "records_authored_or_reviewed": 9,
+      "browser_interactions": 0,
+      "browser_artifacts_captured": 0,
+      "asset_candidates_inspected": 9
+    },
+    "ceiling_breaches": 0
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-audit-v5.json",
+      "sha256": "001e0da33fd7cc43d8bdd5b04ca3209341117b449feb6aa391019cd498d8c1ce"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5.json",
+      "sha256": "computed after this proof is finalized"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5.json",
+      "sha256": null,
+      "digest_reason": "a receipt cannot self-hash without changing its own bytes"
+    }
+  ],
+  "scope_check": {
+    "only_requested_new_outputs_authored": true,
+    "historical_artifacts_edited": false,
+    "worktree_created_or_used": false,
+    "staged": false,
+    "commit_created": false
+  },
+  "marker": "MEASURE_AGENT_RESULT",
+  "provider_identifier": "/root/t4_asset_v5_reaudit_terra",
+  "parent_task": "/root",
+  "fork_turns": "none",
+  "commands": [
+    {
+      "purpose": "verify immutable source baseline",
+      "argv": [
+        "git",
+        "rev-parse",
+        "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286^{commit}"
+      ],
+      "exit_code": 0,
+      "stdout": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+    },
+    {
+      "purpose": "derive normalized corrected asset-path digest",
+      "argv": [
+        "jq",
+        "-S",
+        "-c",
+        "corrected Batch C asset path selection",
+        "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json"
+      ],
+      "exit_code": 0,
+      "stdout": "da95c711e00531ebb329f047f9ed3407af6eaea957c1091644f1bda65ed0d1fe  -"
+    },
+    {
+      "purpose": "rehash and classify every frozen asset blob",
+      "argv": [
+        "file",
+        "--brief",
+        "--mime-type",
+        "<nine corrected Batch C asset candidates>"
+      ],
+      "exit_code": 0,
+      "stdout": "9 SHA-256 matches; 6 JSON, 1 JPEG-at-png, 1 PNG, 1 ASCII-at-png"
+    },
+    {
+      "purpose": "validate v5 JSON and bindings",
+      "argv": [
+        "jq",
+        "empty",
+        "batch-c-asset-audit-v5.json",
+        "role-proofs/asset-auditor-batch-c-v5.json",
+        "role-receipts/asset-auditor-batch-c-v5.json"
+      ],
+      "exit_code": 0,
+      "stdout": "pass"
+    }
+  ]
+}

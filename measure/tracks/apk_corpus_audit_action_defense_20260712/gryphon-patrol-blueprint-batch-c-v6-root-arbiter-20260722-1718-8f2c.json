@@ -1,0 +1,257 @@
+{
+  "schema": "apk-requirements-blueprint.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "game": "Gryphon Patrol",
+  "normalized_id": "gryphon-patrol",
+  "role": "requirements-mapper-gryphon-patrol-batch-c",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v6_arbiter_8f2c",
+  "parent_task": "/root/apk_batch_c_fresh_roles",
+  "fork_turns": "none",
+  "authority": "Non-authoritative requirements mapping only. This artifact creates no source fact, browser or asset observation, truth contract, review, receipt selection, candidate, acceptance, implementation, ontology, or cross-game decision.",
+  "role_base_sha": "97d5af991eeebe570ac0af57b16628dd623d5515",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "ownership": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-gryphon-mapper-v6-root-arbiter-20260722-1718-8f2c-ownership.json",
+    "sha256": "7d64a03fd7519d43888ce7fba575044000af7800de2a66f1101f13e19d2c9965",
+    "all_five_reserved_paths_absent_at_preflight": true
+  },
+  "evidence_bindings": {
+    "collector_ledger": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-claim-ledger-batch-c-v4.json",
+      "sha256": "d3e0de2a047d59ba5a128cb3780d1e5f42f04c8ae0361cb04e633ef8f671e4eb"
+    },
+    "collector_method": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-method-batch-c-v4.md",
+      "sha256": "4d4916f88d34d19c067bf796298f922875480409c16d9d5e2491bc743f6a70d0"
+    },
+    "collector_report": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-final-report-batch-c-v4.json",
+      "sha256": "0d7af322d736edbffd146d6bf2f51989198513b0a9080e2f9050cca1eb7177f4"
+    },
+    "collector_proof": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/evidence-collector-gryphon-patrol-batch-c-v4.json",
+      "sha256": "d797b87a0b59bd2aeeaf54fc63fa3d8d30659d33695493a6c25ee37964382e2e"
+    },
+    "collector_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-gryphon-patrol-batch-c-v4.json",
+      "sha256": "cf28e5d2c6de663e2638ab024cd5ea78df0f7a91da12d5952b6d589813d5d27c"
+    },
+    "semantic_claim_layer": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-semantic-supersession-batch-c-v2.json",
+      "sha256": "2f0c23b6aa5a03b814107dbd8325bc1af5d7ce21fa15d6fbfdca87b77345efd4",
+      "claim_count": 15,
+      "atomic_proposition_count": 40,
+      "unique_envelopes": 11
+    },
+    "denominator_correction": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json",
+      "sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f"
+    }
+  },
+  "corrected_denominator_mapping": {
+    "counts": {
+      "source_records": 14,
+      "asset_candidates": 5,
+      "historical_records": 10
+    },
+    "inventory_sha256": {
+      "source_records": "51dc928d643f3c66308ed67fea57baef15384254a37f319e2223a7bef8c51c9f",
+      "asset_candidates": "1ec212dad65ce85e80bc70f528a0edcedae46aadd26422f865df1433af37f26c",
+      "historical_records": "9df126e08fddd6f3d35dc859415b9fb986de5238cf8c07a017cccd9547f58b02"
+    },
+    "prior_omissions": {
+      "source_records": {
+        "count": 6,
+        "collector_pointer": "/prior_omission_reconciliation/source_records",
+        "correction_pointer": "/per_game_reconciliation/gryphon-patrol/newly_enumerated/source_records"
+      },
+      "asset_candidates": {
+        "count": 2,
+        "collector_pointer": "/prior_omission_reconciliation/asset_candidates",
+        "correction_pointer": "/per_game_reconciliation/gryphon-patrol/newly_enumerated/asset_candidates"
+      },
+      "historical_records": {
+        "count": 3,
+        "collector_pointer": "/prior_omission_reconciliation/historical_records",
+        "correction_pointer": "/per_game_reconciliation/gryphon-patrol/newly_enumerated/historical_records"
+      }
+    },
+    "disposition": "All 14/5/10 records and the 6/2/3 prior omissions are bound as denominator identity/reconciliation evidence only. They do not create additional gameplay, browser, runtime-use, suitability, or mapping facts."
+  },
+  "claim_mapping_rule": "Each entry below binds exactly one preserved claim in the semantic claim layer. Mapping text is explicitly a mapper classification or hypothesis and is not a new factual proposition. Empty claim bindings appear only in the explicit_unknowns array.",
+  "claim_map": [
+    {
+      "claim_id": "C01-identity",
+      "semantic_pointer": "/claims/0",
+      "classification": "mapper-hypothesis",
+      "mapping": "Treat the preserved catalog identity claim as a historical identity input only."
+    },
+    {
+      "claim_id": "C02-route-and-composition",
+      "semantic_pointer": "/claims/1",
+      "classification": "mapper-hypothesis",
+      "mapping": "Treat the preserved client-page composition and endpoint calls as historical transport and composition inputs, subject to later truth, authorization, and current-runtime validation."
+    },
+    {
+      "claim_id": "C03-implementation-and-scenes",
+      "semantic_pointer": "/claims/2",
+      "classification": "mapper-hypothesis",
+      "mapping": "Use the preserved start, active-stage, and terminal-screen claim as a historical state-and-surface requirements input."
+    },
+    {
+      "claim_id": "C04-copy",
+      "semantic_pointer": "/claims/3",
+      "classification": "non-mapping-evidence",
+      "mapping": "Retain the preserved literal copy as historical evidence without promoting it to current UI proof or a required structural decision."
+    },
+    {
+      "claim_id": "C05-test",
+      "semantic_pointer": "/claims/4",
+      "classification": "mapper-boundary",
+      "mapping": "Use the preserved historical test claim only as validation-design context; it is not runtime proof."
+    },
+    {
+      "claim_id": "C06-state-and-transitions",
+      "semantic_pointer": "/claims/5",
+      "classification": "mapper-hypothesis",
+      "mapping": "Treat the preserved status declaration, initializer, and terminal conditions as a historical state-transition requirements input."
+    },
+    {
+      "claim_id": "C07-patrol-escort-aerial-movement",
+      "semantic_pointer": "/claims/6",
+      "classification": "mapper-hypothesis",
+      "mapping": "Treat the preserved input, wrapping, clamping, friction, and enemy-movement claim as a historical movement input; do not infer an escort mechanic."
+    },
+    {
+      "claim_id": "C08-targets-projectiles-and-health",
+      "semantic_pointer": "/claims/7",
+      "classification": "mapper-hypothesis",
+      "mapping": "Treat the preserved target, projectile collision, orb activation, HP, and invulnerability claim as a historical combat-and-progression input."
+    },
+    {
+      "claim_id": "C09-responsive-composition",
+      "semantic_pointer": "/claims/8",
+      "classification": "mapper-boundary",
+      "mapping": "Treat the preserved container-sizing and stage-scaling claim as source-derived responsive input only, never as compact or wide browser verification."
+    },
+    {
+      "claim_id": "C10-config",
+      "semantic_pointer": "/claims/9",
+      "classification": "mapper-hypothesis",
+      "mapping": "Treat the preserved configuration claim as a historical parameter input without asserting current implementation use."
+    },
+    {
+      "claim_id": "C11-apis",
+      "semantic_pointer": "/claims/10",
+      "classification": "mapper-hypothesis",
+      "mapping": "Treat the preserved sentences-route claim as a historical data-contract input, subject to later contract and current-runtime validation."
+    },
+    {
+      "claim_id": "C12-api-complete",
+      "semantic_pointer": "/claims/11",
+      "classification": "mapper-hypothesis",
+      "mapping": "Treat the preserved completion-route claim as a historical transport input, not a current route or persistence claim."
+    },
+    {
+      "claim_id": "C13-api-ranking",
+      "semantic_pointer": "/claims/12",
+      "classification": "mapper-hypothesis",
+      "mapping": "Treat the preserved ranking-route claim as a historical transport input, not a current route or ranking-availability claim."
+    },
+    {
+      "claim_id": "C14-cartridge-history",
+      "semantic_pointer": "/claims/13",
+      "classification": "mapper-boundary",
+      "mapping": "Keep the preserved cartridge claim as a distinct historical representation and do not silently merge it with the deleted component representation."
+    },
+    {
+      "claim_id": "C15-asset-binary",
+      "semantic_pointer": "/claims/14",
+      "classification": "asset-identity-boundary",
+      "mapping": "Bind only the preserved whole-binary identity and signature claim; suitability, licensing, visual content, rendering, and runtime use remain unasserted."
+    }
+  ],
+  "explicit_unknowns": [
+    {
+      "topic": "current implementation, route availability, and runtime behavior",
+      "status": "unknown-not-asserted",
+      "basis": "The mapped collector layer is historical; no current-runtime conclusion is inferred."
+    },
+    {
+      "topic": "browser interaction, compact and wide usability, console, network, and screenshots",
+      "status": "unknown-owned-by-browser-auditor",
+      "basis": "No browser evidence is authored or consumed as mapping fact."
+    },
+    {
+      "topic": "asset suitability, licensing, visual content, rendering, and runtime use",
+      "status": "unknown-owned-by-asset-auditor",
+      "basis": "Asset-candidate identity and the preserved whole-binary claim do not establish these properties."
+    },
+    {
+      "topic": "camera-follow behavior and relationship between cartridge minimap prose and the deleted component",
+      "status": "unknown-not-asserted",
+      "basis": "No affirmative collector claim is promoted for this relationship."
+    },
+    {
+      "topic": "pause control and rendered pause composition",
+      "status": "unknown-not-asserted",
+      "basis": "The preserved claim establishes a paused status literal but no pause interaction or surface conclusion is inferred."
+    },
+    {
+      "topic": "XP display, award, and persistence",
+      "status": "unknown-not-asserted",
+      "basis": "No affirmative collector claim is mapped for XP behavior."
+    },
+    {
+      "topic": "escort mechanic",
+      "status": "unknown-not-asserted",
+      "basis": "No escort conclusion is inferred from the historical movement claim."
+    }
+  ],
+  "developer_effort_hypotheses": [
+    {
+      "workstream": "historical states and surfaces",
+      "claim_ids": ["C03-implementation-and-scenes", "C04-copy", "C06-state-and-transitions"],
+      "hypothesis": "A future requirements decision could evaluate the mapped historical states, terminal surfaces, and copy while keeping current-runtime status unknown."
+    },
+    {
+      "workstream": "movement and world presentation",
+      "claim_ids": ["C07-patrol-escort-aerial-movement", "C10-config", "C14-cartridge-history"],
+      "hypothesis": "A future requirements decision could evaluate the mapped movement/configuration inputs and separately resolve camera or minimap unknowns."
+    },
+    {
+      "workstream": "combat and sentence progression",
+      "claim_ids": ["C06-state-and-transitions", "C08-targets-projectiles-and-health"],
+      "hypothesis": "A future requirements decision could evaluate the mapped target, collision, orb, health, and terminal inputs."
+    },
+    {
+      "workstream": "responsive and runtime validation",
+      "claim_ids": ["C05-test", "C09-responsive-composition", "C15-asset-binary"],
+      "hypothesis": "Later truth, browser, and asset roles must resolve their own evidence domains before any implementation decision."
+    },
+    {
+      "workstream": "transport and data",
+      "claim_ids": ["C02-route-and-composition", "C11-apis", "C12-api-complete", "C13-api-ranking"],
+      "hypothesis": "A future requirements decision could evaluate the mapped historical transport inputs after contract, authorization, and current-runtime review."
+    }
+  ],
+  "coverage": {
+    "collector_claim_ids": ["C01-identity", "C02-route-and-composition", "C03-implementation-and-scenes", "C04-copy", "C05-test", "C06-state-and-transitions", "C07-patrol-escort-aerial-movement", "C08-targets-projectiles-and-health", "C09-responsive-composition", "C10-config", "C11-apis", "C12-api-complete", "C13-api-ranking", "C14-cartridge-history", "C15-asset-binary"],
+    "mapped_or_explicitly_disposed_claim_count": 15,
+    "uncovered_claim_ids": [],
+    "negative_fixtures_promoted": 0,
+    "new_factual_claims": 0,
+    "all_collector_claims_intentionally_covered": true
+  },
+  "collision_disposition": {
+    "v4_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-gryphon-mapper-v4-collision.json",
+    "v4_sha256": "1fb91bdb2dac9227352bb7b7ddf6519bf9552f31f4c11127aef8434a2ee1367a",
+    "v5_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-gryphon-mapper-v5-collision.json",
+    "v5_sha256": "f9317af43955d3fce32cc09f40a2cf7a8a4b795d16befb319eddadecc03d4d67",
+    "status": "read-only invalid frozen evidence; not edited, deleted, selected, or copied"
+  },
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}
