@@ -1,0 +1,75 @@
+{
+  "schema_version": "apk-candidate-cohort-manifest.v3",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-b",
+  "status": "candidate",
+  "consumable": false,
+  "revoked": false,
+  "candidate_role_base_sha": "753672b0e49d6e11ad755c2d09c249bfa9bbfd48",
+  "scope": [
+    "Village Guardian",
+    "Archer's Revenge",
+    "Storm the Castle Tower"
+  ],
+  "authority": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/owner-policy-amendment-v19.json",
+    "sha256": "dda6a16c3b18a3bfb448228718d85e467e697653e506daf25fedf8c628694a28",
+    "git_chronology_substitution_scope": "lifecycle and preflight provenance only"
+  },
+  "predecessor": {
+    "batch_a_accepted_manifest_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-a.json",
+    "batch_a_accepted_manifest_sha256": "b096d911b7d6bc9fb4d530e695cea10d3816a17158447a89303c2d069cf2a54c",
+    "carried_forward_disclosure": "DISC-001 remains process-only and is not factual evidence for Batch B."
+  },
+  "historical_lifecycle": {
+    "stop_loss_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-lifecycle-stop-loss-v17.json",
+    "stop_loss_sha256": "3ada8021313823d4272319f56dcb72d607f658afff8cd4cf30164dd00f7120ac",
+    "v18_policy_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-retroactive-provenance-supersession-v18.json",
+    "v18_policy_sha256": "663047fd21f2dbafdedf384f8e0a2fc8215e9c8dde14bbb98221ac4ef9fbea9c",
+    "prior_candidate_sha256": "4dc4ebeb423dd0114800b58188f691e0c6ba2b368af032b939c7a260b7631824",
+    "prior_accepted_manifest_sha256": "aaba39f80639eb180440c928b65d29da7601f7bce9ab2ba993e5b8e865c10c62",
+    "prior_chain_consumable": false,
+    "prior_chain_superseded": true
+  },
+  "source_and_truth_gate": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v16.py",
+    "sha256": "9f84d9ed72952715fc20f1fc42d3478a12fbbc822ebccc2038ef7ce50aecfa5d",
+    "result": "49 passed",
+    "source_claims": 158,
+    "positive_envelopes_rehashed_by_fresh_review": 152,
+    "bounded_query_claims": 6,
+    "negative_fixtures": 12,
+    "denominator_records": 99,
+    "asset_candidates": 12
+  },
+  "fresh_independent_review": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-independent-review-v20.json",
+    "sha256": "803aa6d6204b5aba4d10bee12bb359486c16f33f803a55b2984b35fec3db1812",
+    "audited_head_sha": "10e002eb288f80dfade4c798cf6421c56f34a164",
+    "status": "pass",
+    "unresolved_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "total": 0
+    },
+    "candidate_authorized": true
+  },
+  "disclosures": [
+    "Village Guardian browser input was synthetic DOM input with isTrusted=false and used a hidden-tab scheduler adapter; trusted native input and foreground timing are not claimed.",
+    "Village Guardian completion requests returned HTTP 400; completion success, persistence, XP, idempotency, and API correctness are not claimed.",
+    "Archer's Revenge and Storm the Castle Tower returned HTTP 404 at their exact reviewed routes; historical source is not promoted to current runtime behavior.",
+    "Asset presence and catalog binding do not establish runtime loading, suitability, licensing, or production use.",
+    "Provider session provenance remains unavailable and is not fabricated; owner-authorized Git substitution applies only to lifecycle and preflight provenance."
+  ],
+  "claims": {
+    "cross_game_standardization": false,
+    "ontology_decision": false,
+    "implementation_authorized": false,
+    "browser_success": false,
+    "completion_success": false
+  },
+  "next_required_event": "A delegated owner acceptance must be published in a later commit and bind this exact candidate after its publication commit exists.",
+  "marker": "MEASURE_AGENT_RESULT"
+}
