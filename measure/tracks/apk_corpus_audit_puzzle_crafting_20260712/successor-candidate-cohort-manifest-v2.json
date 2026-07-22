@@ -1,0 +1,148 @@
+{
+  "schema_version": "apk-successor-candidate-cohort-manifest.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "date": "2026-07-22",
+  "status": "candidate-awaiting-product-owner-acceptance",
+  "candidate_only": true,
+  "consumable": false,
+  "acceptance_claimed": false,
+  "accepted_manifest_claimed": false,
+  "scope": {
+    "assigned_games": 6,
+    "covered_games": 6,
+    "duplicates": 0,
+    "omissions": 0,
+    "games": [
+      "Enchanted Library",
+      "Rune Match",
+      "Alchemist's Synthesis",
+      "Potion Rush",
+      "Rune Forge Chamber",
+      "Astral Mage"
+    ]
+  },
+  "immutable_bindings": {
+    "governing_direction": {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/native-subagent-protocol-direction-20260722.json",
+      "sha256": "2a7e4368e8e8f017e7271fbced79b99395b58fc24997b036fa0105f4fa60525b",
+      "commit_sha": "f7980c787c5023b58eca2a40620aaaf089b26f7d",
+      "purpose": "Current successor-review isolation and lifecycle direction."
+    },
+    "governing_remediation": {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/full-cohort-independent-review-v1-remediation-20260722.json",
+      "sha256": "ac62047abcec7411f49b8f33ec022699c2f257fea5d5da0401afc2676ead0670",
+      "commit_sha": "f7980c787c5023b58eca2a40620aaaf089b26f7d",
+      "purpose": "Additive remediation that preserves the original blocking review as historical evidence."
+    },
+    "accepted_batch_a": {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/accepted-cohort-manifest-batch-a-v3.json",
+      "sha256": "8c332ff99bf9224f826f77cec256ff4d3f6cb94cea7181e3879226f82c875e83",
+      "commit_sha": "c1e903380e2b1b6ec74133ee38ebdbd236444d80",
+      "purpose": "Conditionally consumable Batch A source-truth evidence with its retained disclosures."
+    },
+    "accepted_batch_b": {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/accepted-cohort-manifest-batch-b-v3.json",
+      "sha256": "5b11e1c44f0b109b740b91a36c694774a48d6c364d8715e95719b9e0574dc271",
+      "commit_sha": "587374926b55870a3e257f612a120ce1e944c2ed",
+      "purpose": "Conditionally consumable Batch B source-semantic evidence with its retained disclosures."
+    },
+    "cohort_reconciliation": {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/cohort-reconciliation-v1.json",
+      "sha256": "3ffc96b78c14fcb98c016972c704949df7e0cd56d4ec80f3e6146df9a89979fb",
+      "commit_sha": "45224fdc71841e09861f1cf56125af6fcfbd0ec7",
+      "purpose": "Six-game denominator, coverage, duplicate, omission, and limitation reconciliation."
+    },
+    "active_batch_a_gate": {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v3.py",
+      "sha256": "635a211d5210eea1af551fd4e074fcb8bf24037ebd4e13f8737e5a03e7d2f606",
+      "commit_sha": "65db764cbfcfd90899d51d159cc123b76d511607",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a-truth-tests-v3.py",
+      "verified_result": "22 passed; exit 0"
+    },
+    "active_batch_b_gate": {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-truth-tests-v2.py",
+      "sha256": "01bf38dff073064d481ae713efe8918167f10dff82fdea339775331af72fcc41",
+      "commit_sha": "1597ed888f520f9d828a241c5606c958f0574eec",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-truth-tests-v2.py",
+      "verified_result": "17 passed; exit 0"
+    },
+    "fresh_full_cohort_review": {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/full-cohort-independent-review-v2.json",
+      "sha256": "43e5ad76695cc67e57ab082468ce4400f973a388005dfb45b1810608d8115505",
+      "commit_sha": "752fecfd1f8f9da0bd3c9a377126bb322a81e37c",
+      "purpose": "Dedicated green full-cohort review with zero unresolved Critical, High, or Medium findings."
+    },
+    "fresh_full_cohort_review_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/adversarial-reviewer-full-cohort-v2.json",
+      "sha256": "5d97a63c64a401dc71aefecdb6c440330bc555917e142fd889c63d263bc9a319",
+      "commit_sha": "752fecfd1f8f9da0bd3c9a377126bb322a81e37c",
+      "purpose": "Separately owned native reviewer receipt that binds the review digest and role boundary."
+    }
+  },
+  "review_result": {
+    "review_commit": "752fecfd1f8f9da0bd3c9a377126bb322a81e37c",
+    "unresolved_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "precondition_met": "The fresh review precedes this candidate and is limited to the evidence/lifecycle gate defined by the governing direction."
+  },
+  "author_boundary": {
+    "role": "successor-candidate-author",
+    "owned_output_scope": [
+      "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/successor-candidate-cohort-manifest-v2.json",
+      "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/t6-successor-candidate-gate.py"
+    ],
+    "did_not_author": [
+      "full-cohort-independent-review-v2.json",
+      "role-receipts/adversarial-reviewer-full-cohort-v2.json",
+      "any product-owner acceptance",
+      "any accepted cohort manifest",
+      "source, plan, metadata, registry, staging, or commit state"
+    ],
+    "separation_basis": "The bound full-cohort reviewer receipt records the distinct adversarial-reviewer-full-cohort role, fork_turns=none, separately owned output scope, and no candidate output ownership."
+  },
+  "historical_non_authoritative_lineage": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/full-cohort-independent-review-v1.json",
+      "sha256": "37906020b3412460f9f8ff961a98c769b5fbd6b381fd9735016da419a60a3c41",
+      "status": "failed-blocking-findings",
+      "non_authoritative": true
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/adversarial-reviewer-full-cohort-v1.json",
+      "sha256": "089db4bd01441d3d9b71c4f16e5447038a5c1ad72065b3fc2f31a29d564c2268",
+      "status": "historical-review-receipt",
+      "non_authoritative": true
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/candidate-cohort-manifest-v1.json",
+      "sha256": "acb71d166dcc0970ec2ea186b1df64299133166730820deb39caab5462c46bf1",
+      "status": "historical-candidate",
+      "non_authoritative": true
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/product-owner-acceptance-cohort-v1.json",
+      "sha256": "9c416d9f3b99beaedf7a0cecafe41844e410ca2b2c7e8f725f4e9c8e45a179aa",
+      "status": "historical-approval",
+      "non_authoritative": true
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/accepted-cohort-manifest-v1.json",
+      "sha256": "a2b5a76d5be9981fbb1fd3573440baa834e7aaac7a604f4bd46c5eb5dfe2f874",
+      "status": "historical-accepted-manifest",
+      "non_authoritative": true
+    }
+  ],
+  "disclosures": [
+    "This candidate is non-consumable and is not a product-owner acceptance or accepted cohort manifest.",
+    "Browser-dependent product behavior remains unknown: the bound batch evidence permits no gameplay, state-transition, responsive, trusted-input, completion, persistence, XP, API, production, or asset-loading success claim.",
+    "Provider-side fields remain unavailable in this harness and are not proof of provider ancestry, session, prompt, timing, raw export, or event data.",
+    "The prior review, receipt, candidate, approval, and accepted-manifest lineage is preserved unchanged as historical non-authoritative context; this candidate does not mutate, relabel, or consume it.",
+    "This candidate establishes only the bounded evidence/lifecycle state. It does not authorize ontology, implementation, shipping, or product completion."
+  ],
+  "next_required_action": "A separately authorized product owner may decide whether to publish a distinct acceptance bound to this candidate's final digest. A separate accepted-manifest author remains required after any valid acceptance.",
+  "marker": "MEASURE_AGENT_RESULT"
+}
