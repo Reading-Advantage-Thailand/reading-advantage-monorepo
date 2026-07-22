@@ -1,0 +1,20 @@
+{
+  "schema_version": "apk-candidate-cohort-manifest.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "status": "candidate-awaiting-current-owner-acceptance",
+  "candidate_only": true,
+  "consumable": false,
+  "review": {
+    "path": "batch-b-independent-review-v3.json",
+    "commit": "f3240797e4c7e2e213feb6b5974f08649daa6742",
+    "sha256": "a88634ca187cf972440dac88ce0370980132c23d5e0a13660d35ba045527f34d",
+    "unresolved_findings": {"critical":0,"high":0,"medium":0,"low":0}
+  },
+  "role_receipts": {"path":"batch-b-v3-role-session-ratification.json","sha256":"2b3b2d44cf81d22a93d82e6344e7dc1365f613dac85a6f8cbfbbfbac114615f0"},
+  "source_gate": {"path":"batch-b-v2-gate-report.json","truth_test":"batch-b-truth-tests-v2.py","result":"17 passed"},
+  "authorization_basis": {"source":"current user instruction","authority":"current delegated product-owner","scope":"historical provenance/pin supersession only; source integrity and review remain mandatory"},
+  "disclosures": ["This candidate is not an accepted manifest.", "No browser run or browser-success claim exists.", "Local role receipts are not provider-attested session provenance.", "All 12 explicit unknowns and historical classifications remain binding."],
+  "next_required_order": ["current owner acceptance bound to this exact candidate", "separate accepted Batch B manifest", "cohort reconciliation, candidate, acceptance, and accepted cohort manifest"],
+  "marker": "MEASURE_AGENT_RESULT"
+}
