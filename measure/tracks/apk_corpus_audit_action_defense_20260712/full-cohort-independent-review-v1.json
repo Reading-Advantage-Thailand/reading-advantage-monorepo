@@ -1,0 +1,281 @@
+{
+  "schema_version": "apk-full-cohort-independent-review.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task": "T4 full-cohort independent adversarial review",
+  "review_role": "adversarial-reviewer-full-cohort",
+  "role_identity": "/root/t4_full_cohort_reviewer_terra",
+  "parent_task": "/root",
+  "fork_turns": "none",
+  "status": "superseded-post-base-blocked",
+  "acceptance": "not-claimed",
+  "audited_commit": {
+    "sha": "1ecf85e49f016c1eeba6931fe8b833069cde1a35",
+    "subject": "chore(measure): reconcile T4 full cohort",
+    "commit_date": "2026-07-22 18:09:46 +0700",
+    "reviewed_from_shared_checkout": true,
+    "second_source_tree_created": false,
+    "gate_inputs_byte_identical_to_audited_commit": true,
+    "excluded_dirty_paths_not_read_by_current_gates": [
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/_orchestrator/LAST-BATCH-STATUS.md",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/metadata.json",
+      "measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md"
+    ]
+  },
+  "reviewer_provenance": {
+    "available": true,
+    "availability_scope": "The direct collaboration task identity, direct parent task, and fork mode are available.",
+    "provider_identifier": "/root/t4_full_cohort_reviewer_terra",
+    "parent_task": "/root",
+    "fork_turns": "none",
+    "provider_attestation_available": false,
+    "raw_encrypted_prompt": null,
+    "raw_provider_event": null,
+    "raw_provider_event_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "provider_event_log": null,
+    "provider_final_response": null,
+    "unavailable_note": "Raw encrypted prompt, provider-event, spawn, session, and final-response exports are unavailable and intentionally null. Local Git and SHA-256 verification is not provider attestation."
+  },
+  "full_cohort_roster": {
+    "expected_games": 8,
+    "observed_games": 8,
+    "batch_sizes": {
+      "batch_a": 3,
+      "batch_b": 3,
+      "batch_c": 2
+    },
+    "entries": [
+      {
+        "game": "Castle Defense",
+        "canonical_id": "castle-defense",
+        "batch": "batch-a"
+      },
+      {
+        "game": "Magic Defense",
+        "canonical_id": "magic-defense",
+        "batch": "batch-a"
+      },
+      {
+        "game": "Wizard vs Zombie",
+        "canonical_id": "wizard-vs-zombie",
+        "batch": "batch-a"
+      },
+      {
+        "game": "Village Guardian",
+        "canonical_id": "village-guardian",
+        "batch": "batch-b"
+      },
+      {
+        "game": "Archer's Revenge",
+        "canonical_id": "archers-revenge",
+        "batch": "batch-b"
+      },
+      {
+        "game": "Storm the Castle Tower",
+        "canonical_id": "storm-castle-tower",
+        "batch": "batch-b"
+      },
+      {
+        "game": "Paladin's Twin-Soul",
+        "canonical_id": "paladins-twin-soul",
+        "batch": "batch-c"
+      },
+      {
+        "game": "Gryphon Patrol",
+        "canonical_id": "gryphon-patrol",
+        "batch": "batch-c"
+      }
+    ],
+    "duplicate_canonical_ids": 0,
+    "omissions": 0,
+    "exactly_once": true
+  },
+  "binding_and_lifecycle_verification": {
+    "reconciliation_artifact": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v1.json",
+      "sha256": "94fc4789b532fd4d0e23608d1b7031aede73e379091d411a4277a8f2c7c2e360",
+      "status": "structurally-reconciled-only-not-a-cohort-acceptance"
+    },
+    "bound_artifacts_checked": 18,
+    "bound_artifact_hash_mismatches": 0,
+    "publication_commit_mismatches": 0,
+    "batch_a": {
+      "scope": [
+        "castle-defense",
+        "magic-defense",
+        "wizard-vs-zombie"
+      ],
+      "accepted_manifest": {
+        "decision": "ACCEPT-WITH-DISCLOSURE",
+        "manifest_games": [
+          "magic-defense",
+          "wizard-vs-zombie"
+        ],
+        "claims_total": 187,
+        "claims_resolved": 178,
+        "open_disclosures": [
+          "DISC-001"
+        ],
+        "sha256": "b096d911b7d6bc9fb4d530e695cea10d3816a17158447a89303c2d069cf2a54c"
+      },
+      "castle_defense_disposition": "Castle Defense remains assigned through its separately bound evidence base and is not listed in the Batch A accepted-manifest games. This is preserved as a limit, not elevated to cohort acceptance."
+    },
+    "batch_b": {
+      "scope": [
+        "village-guardian",
+        "archers-revenge",
+        "storm-castle-tower"
+      ],
+      "fresh_review": {
+        "version": "V20",
+        "sha256": "803aa6d6204b5aba4d10bee12bb359486c16f33f803a55b2984b35fec3db1812",
+        "unresolved_critical_high_medium": 0,
+        "candidate_must_be_non_consumable": true
+      },
+      "publication_order": {
+        "candidate_commit": "94b672406c59dbd95ca645419dabe1515707295d",
+        "acceptance_commit": "bb5c3df3a7142a2349ab287549643f3d119f96be",
+        "accepted_manifest_commit": "0a0b43809a51a56db555ccbdfb09ff2cdda85d47",
+        "candidate_before_acceptance": true,
+        "acceptance_before_accepted_manifest": true
+      }
+    },
+    "batch_c": {
+      "scope": [
+        "paladins-twin-soul",
+        "gryphon-patrol"
+      ],
+      "v6_selector_sha256": "19d03e183bd39595a004430b0da7800ff63c04052472707c878528b8888ce93b",
+      "selected_roles": 8,
+      "unique_task_ids": 8,
+      "unique_provider_identifiers": 8,
+      "collision_handling": "The active selector excludes the preserved Asset v4 collision set, preserves it as historical evidence, and selects the fresh Asset v5 successor; Gryphon Mapper v5 remains unselectable and the reserved v6 successor is selected.",
+      "green_review": {
+        "sha256": "d7786fd330599c0860cccc51fb0bda0e960040eed8f1b965c457fc57c290c54c",
+        "gate_result": "green: 5 passed",
+        "unresolved_critical_high_medium": 0,
+        "authorization_limit": "bounded reviewer step only; no candidate, owner acceptance, accepted manifest, or cohort consumption authority"
+      }
+    }
+  },
+  "current_gate_execution": {
+    "historical_or_prepublication_gates_rerun": false,
+    "current_gates_run_once_each": true,
+    "runs": [
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests-v2.py",
+        "exit_code": 0,
+        "result": "47 passed, 189 subtests passed in 2.60s"
+      },
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-lifecycle-v20.py",
+        "exit_code": 0,
+        "result": "4 passed in 0.36s"
+      },
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-lifecycle-stop-loss-v17.py",
+        "exit_code": 0,
+        "result": "Ran 2 tests in 0.032s; OK"
+      },
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py",
+        "exit_code": 0,
+        "result": "5 passed in 1.18s"
+      },
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_action_defense_20260712/t4-cohort-reconciliation-gate.py",
+        "exit_code": 0,
+        "result": "Ran 4 tests in 6.196s; OK"
+      }
+    ],
+    "independent_commands": [
+      {
+        "command": "git diff --name-status 1ecf85e4 -- measure/tracks/apk_corpus_audit_action_defense_20260712 measure/archive/apk_source_denominator_inventory_20260712",
+        "exit_code": 0,
+        "result": "Only LAST-BATCH-STATUS.md, metadata.json, and plan.md differed; they are not read by the five current gates. All declared gate and binding inputs were SHA-256 MATCH against 1ecf85e4."
+      },
+      {
+        "command": "jq -r '(batch bindings and active gates) | .[] | [.path,.sha256,.publication_commit_sha] | @tsv' cohort-reconciliation-v1.json | while read binding; do sha256sum and git cat-file checks; done",
+        "exit_code": 0,
+        "result": "18 of 18 bound artifacts matched their declared SHA-256 values and publication commits; mismatches=0."
+      },
+      {
+        "command": "git merge-base --is-ancestor 94b672406c59dbd95ca645419dabe1515707295d bb5c3df3a7142a2349ab287549643f3d119f96be; git merge-base --is-ancestor bb5c3df3a7142a2349ab287549643f3d119f96be 0a0b43809a51a56db555ccbdfb09ff2cdda85d47; git merge-base --is-ancestor e0f169f0e31cf951cbfce36f02e2f4d5eb8065dd 085dd8df75609b6585fdc6913530c21347a88b62",
+        "exit_code": 0,
+        "result": "Batch B candidate-to-acceptance-to-accepted-manifest and Batch C selector-to-green-review ancestry are ordered."
+      }
+    ]
+  },
+  "preserved_disclosures": {
+    "batch_a_disc_001": "Batch A remains ACCEPT-WITH-DISCLOSURE with DISC-001 open; it is process-only and does not become factual evidence for another batch.",
+    "provider_provenance": "Provider prompt/session/spawn/ancestry/event/final-response/isolation telemetry is unavailable and not fabricated. Local Git and SHA-256 verification is not provider attestation.",
+    "browser_synthetic_input": "Village Guardian browser input was synthetic DOM input with isTrusted=false; trusted native or OS input is not established.",
+    "hidden_tab_scheduler": "The disclosed hidden-tab scheduler adapter establishes only a deterministic source-defined terminal transition, not foreground wall-clock timing.",
+    "completion_http_400": "Two Village Guardian completion POSTs returned HTTP 400. No successful completion, persistence, XP award, idempotency, or API-correctness conclusion is permitted.",
+    "non_runnable_http_404": "Archer's Revenge and Storm the Castle Tower returned HTTP 404 at their exact reviewed routes. They remain non-runnable there; historical source is not current runtime behavior.",
+    "asset_limits": "Asset presence, sidecars, screenshots, procedural rendering, semantic slots, and catalog bindings do not establish physical runtime loading, suitability, licensing, or production use.",
+    "asset_unknowns": "Ten Batch B asset candidates remain sidecar-or-bounded-unknown; no suitability or runtime-use conclusion is inferred.",
+    "historical_lifecycle": "Earlier Batch B candidate, nominal acceptance, and accepted-manifest artifacts remain preserved historical lifecycle evidence; they are not a cohort-consumption authorization.",
+    "batch_c_collision_history": "Asset v4 and Gryphon Mapper v5 collision records stay preserved and unselectable rather than rewritten or treated as authorization."
+  },
+  "forbidden_success_claims": {
+    "ontology": false,
+    "implementation": false,
+    "shipping": false,
+    "gameplay": false,
+    "responsive": false,
+    "completion": false,
+    "persistence": false,
+    "xp": false,
+    "api": false,
+    "asset_suitability": false
+  },
+  "findings": {
+    "unresolved": [
+      "T4C-BROWSER-V5-KIMI-001"
+    ],
+    "unresolved_counts": {
+      "critical": 0,
+      "high": 1,
+      "medium": 0,
+      "low": 0,
+      "total": 1
+    },
+    "contract_violations": 0,
+    "hash_mismatches": 0,
+    "roster_duplicates": 0,
+    "roster_omissions": 0
+  },
+  "authorization": {
+    "cohort_candidate_authorized": false,
+    "candidate_must_be_non_consumable": true,
+    "authorization_reason": "The five green gates clear only audited commit 1ecf85e4. Post-base High T4C-BROWSER-V5-KIMI-001 makes Browser v5 non-consumable and requires a fresh helper-based browser run plus a new full-cohort review.",
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "cohort_consumption_authorized": false,
+    "authority_not_exercised": true
+  },
+  "scope_attestation": {
+    "reviewed_all_eight_games": true,
+    "no_candidate_manifest_created_or_modified": true,
+    "no_product_owner_acceptance_created_or_modified": true,
+    "no_accepted_manifest_created_or_modified": true,
+    "no_source_or_evidence_package_modified": true,
+    "no_plan_or_registry_modified": true,
+    "no_staging": true,
+    "no_commit": true
+  },
+  "self_sha256": null,
+  "self_hash_note": "A report cannot stably embed its own SHA-256. A later authorized descendant may bind these exact bytes without altering this report.",
+  "marker": "MEASURE_AGENT_RESULT",
+  "post_base_blocker": {
+    "id": "T4C-BROWSER-V5-KIMI-001",
+    "severity": "High",
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v5-skill-deviation.json",
+    "sha256": "68e6528edec1c05e85d694fde5de6d436ef4209e0317653bbcecf3b340cd2a46",
+    "outside_audited_commit": true,
+    "disposition": "The Batch C Browser v5 receipt and any review selecting it cannot authorize a candidate; a fresh canonical-checkout run using /home/daniel-bo/.agents/skills/kimi-webbridge/scripts/screenshot.sh for Browser v6 or later, then a new full-cohort review, is required."
+  }
+}

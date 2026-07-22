@@ -1,0 +1,45 @@
+{
+  "schema": "apk-browser-skill-deviation.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "recorded_at": "2026-07-22T11:03:45Z",
+  "status": "material-procedure-deviation-v5-non-consumable",
+  "acceptance": "not-claimed",
+  "preserved_evidence": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v4.json",
+      "sha256": "3472966cb0c31bfac60a48542f90d7ac76dc3e133a8439028151c64c09cffda3",
+      "disposition": "The committed Kimi observations and bytes remain historical evidence; this record does not assert they were fabricated."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/browser-auditor-batch-c-v5.json",
+      "sha256": "5340d99ae66225260faeb49751983f52345b7b1efa7134520385f9dba62d84c8"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v5.json",
+      "sha256": "7641d682c4a522dda8be9fd0b417b04d6146552e2dcac93bc01960b8c6196406"
+    }
+  ],
+  "finding": {
+    "severity": "High",
+    "id": "T4C-BROWSER-V5-KIMI-001",
+    "description": "The browser role used direct Kimi `screenshot` command calls with path arguments. The user-mandated kimi-webbridge skill says never call the screenshot API directly and requires its screenshot helper script.",
+    "impact": "The v5 browser receipt and any review selecting it cannot authorize candidate consumption even though the retained Kimi screenshot bytes are real and hash-bound.",
+    "required_remediation": "Run a fresh canonical-checkout Kimi browser role that uses `/home/daniel-bo/.agents/skills/kimi-webbridge/scripts/screenshot.sh` for compact and wide captures, retains revision/source bindings, exact navigation and interaction commands, console/network/server logs, and fresh provider provenance."
+  },
+  "lifecycle": {
+    "v5_browser_selection_authorized": false,
+    "v6_review_candidate_authorization_consumable": false,
+    "fresh_browser_role_required": true,
+    "fresh_review_required_after_browser": true,
+    "candidate_authorized": false,
+    "acceptance_authorized": false,
+    "consumption_authorized": false
+  },
+  "preservation": {
+    "v4_audit_modified": false,
+    "v5_proof_modified": false,
+    "v5_receipt_modified": false
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

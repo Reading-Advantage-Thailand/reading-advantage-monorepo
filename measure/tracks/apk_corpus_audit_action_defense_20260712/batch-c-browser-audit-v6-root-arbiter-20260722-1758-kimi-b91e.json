@@ -1,0 +1,236 @@
+{
+  "schema": "apk-browser-audit.v6",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "role": "browser-auditor-batch-c",
+  "status": "complete-non-runnable-disposition-awaiting-fresh-review",
+  "recorded_at": "2026-07-22T11:30:14Z",
+  "provider_provenance": {
+    "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_browser_auditor_v6_kimi_b91e",
+    "parent_task": "/root/apk_batch_c_fresh_roles",
+    "fork_turns": "none",
+    "session": "apk-t4-batch-c-v6-b91e",
+    "ownership_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-ownership.json",
+    "ownership_sha256": "abf14709ac62f3d7fdff1f75fcd3064753f0ec52e0169c2068fd52aa88b172e9",
+    "prewrite_check": "PASS: all nine reserved paths were absent before the first reserved-path write"
+  },
+  "procedure_bindings": {
+    "AGENTS.md": "3fe709a84f8bea029e5f0256ee6d5bea2e6942ecba09729fb5584fe8b0fd7650",
+    "/home/daniel-bo/.agents/skills/measure/SKILL.md": "9cbb6ec425aa05306dda2f7ae16a0bcdc17e6246b5efd9fcf4a347f7f8e1e67c",
+    "/home/daniel-bo/.agents/skills/kimi-webbridge/SKILL.md": "095becfe35f79a825301fa4d7200038b521f2eade01f67d137e0bd81fb59b165",
+    "/home/daniel-bo/.agents/skills/kimi-webbridge/scripts/screenshot.sh": "6b0f259c75edba32a2f235a5594c39e9928271d14603db3949ba70dee8004de0",
+    "measure/index.md": "90e6b5d882b2aabea2e0a29dbf157231a75ddd88a2d5065803ccbf66b46ef119",
+    "measure/workflow.md": "b73f30d7884182771cda3905b86d8a36c1d8340879d50d1871a20030b53dd517",
+    "measure/tracks.md": "cad99a06c187c033f13c6b16c5ca909dd4451606085073f07348f68f3d31fdc4",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-c.md": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v6.json": "19d03e183bd39595a004430b0da7800ff63c04052472707c878528b8888ce93b",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-independent-review-v6.json": "d7786fd330599c0860cccc51fb0bda0e960040eed8f1b965c457fc57c290c54c",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v5-skill-deviation.json": "68e6528edec1c05e85d694fde5de6d436ef4209e0317653bbcecf3b340cd2a46",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-kimi-webbridge-corroboration-20260722.json": "6eb3b8ae7b505f18e3bb25eb3de6a31a7d30930cdb162202e1ab0f3cbee2d413",
+    "invalid_predecessor_disposition": "The v5 browser evidence and earlier coordinator corroboration were read only as invalid historical predecessors; no current observation was inherited from them."
+  },
+  "source_binding": {
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "worktree_used": false,
+    "branch": "master",
+    "head": "085dd8df75609b6585fdc6913530c21347a88b62",
+    "app_tree": {
+      "path": "apps/advantage-games",
+      "git_tree": "a10dba6fe641adb4dfadbd6781bcffe86023ce6b",
+      "tracked_diff_at_bind": [],
+      "untracked_files_at_bind": []
+    },
+    "relevant_package_tree": {
+      "path": "packages/advantage-play-kit",
+      "git_tree": "75fa7bb794d7c8fad37b5565c0f4c6d7ccda926f",
+      "tracked_diff_at_bind": [],
+      "untracked_files_at_bind": []
+    },
+    "configuration_hashes": {
+      "pnpm-lock.yaml": "3d0c6f9a1f5c81fc6e5b0868c54d90a5cd79b2a8e2133d6faf5daa572ec10344",
+      "package.json": "8990ef8772249b7e7a61ec6cfe32b258e1465881aef85ec49134de31c36a2b60",
+      "apps/advantage-games/package.json": "8fc83e94fc9f00421bea2430d46143059b9488ce01cba9f77df475cd581c99b3",
+      "packages/advantage-play-kit/package.json": "da612ecbbca77f6b204adc96b4fa02bbf9347fe4fd9838848dbc38fa99a603ab",
+      "apps/advantage-games/next.config.ts": "d1f8c54f63aeaf023de7872b71e0e27cffb4046d79df9a9dce7dc34449d8a518"
+    },
+    "unrelated_dirt_at_bind": [
+      "M .opencode/goals/state.json",
+      "M .opencode/goals/state.json.ledger.jsonl",
+      "M measure/anti-patterns.md",
+      "M measure/tracks.md",
+      "M measure/tracks/apk_corpus_audit_action_defense_20260712/_orchestrator/LAST-BATCH-STATUS.md",
+      "M measure/tracks/apk_corpus_audit_action_defense_20260712/metadata.json",
+      "M measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md",
+      "untracked sibling-agent Measure evidence and packages/backend/src/jobs"
+    ]
+  },
+  "production_runtime": {
+    "build_command": "pnpm --filter vocabulary-games build",
+    "build_exit": 0,
+    "next_version": "16.2.9",
+    "compile_result": "Compiled successfully in 87s",
+    "typescript_result": "Finished TypeScript in 64s",
+    "static_pages": "95/95 generated",
+    "build_warning": "Turbopack NFT tracing warning: apps/advantage-games/next.config.ts import trace indicates whole-project tracing through completion-dependencies.ts.",
+    "build_id": "QOCSiMddGhw_eVRpucZia",
+    "build_id_sha256": "52b0731201c568c0bf1858e1f99b2a65275bcff661737192508513435f452589",
+    "route_manifest_observation": "The production build route table emitted neither Paladin's Twin-Soul nor Gryphon Patrol routes.",
+    "first_start_attempt": {
+      "command": "pnpm --filter vocabulary-games start -- -H 127.0.0.1 -p 43191",
+      "exit": 1,
+      "result": "Safe pre-listen failure: Next interpreted -H as a project directory because of the extra --."
+    },
+    "managed_start_command": "pnpm --filter vocabulary-games exec next start -H 127.0.0.1 -p 43191",
+    "host": "127.0.0.1",
+    "port": 43191,
+    "pid": 1274819,
+    "ready": "Ready in 698ms",
+    "health": {
+      "status": 200,
+      "content_length": 133401,
+      "etag": "\"eru2x1tht62uxl\"",
+      "catalog_body_sha256": "4fa8bdac1b73b975a6cea1a36e6d103488a90bbd87e35aa3aec4cbb764189e49"
+    },
+    "cleanup": {
+      "managed_session_exit": 130,
+      "pid_present_after_stop": false,
+      "port_listener_after_stop": false,
+      "post_stop_curl_exit": 7
+    },
+    "server_log": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-server.log",
+      "sha256": "3b6ddfacb0a6b8bfa565119b2c5cb8d5c8fdbd7ed1459b98a977c17c1db32c5a",
+      "bytes": 7774,
+      "lines": 167
+    }
+  },
+  "kimi": {
+    "status_checked_before_browser_action": true,
+    "status_exit": 0,
+    "running": true,
+    "extension_connected": true,
+    "daemon_version": "v1.11.1",
+    "extension_version": "1.11.3",
+    "first_browser_action": "navigate catalog with newTab=true",
+    "first_tab_id": 915224879,
+    "network_capture": {
+      "start": "success",
+      "list_count": 83,
+      "stop": "success"
+    },
+    "console": "Unavailable: this extension exposes no console-buffer tool; no console-clean claim is made.",
+    "session_close": {
+      "closed": 1,
+      "post_close_tabs": []
+    }
+  },
+  "viewport_observations": {
+    "compact": {
+      "cdp_command": "Emulation.setDeviceMetricsOverride",
+      "cdp_response": {},
+      "requested": {"width": 390, "height": 844, "deviceScaleFactor": 1, "mobile": true},
+      "observed": {"innerWidth": 390, "innerHeight": 844, "visualViewportWidth": 390, "visualViewportHeight": 844, "devicePixelRatio": 1},
+      "catalog": {"scrollWidth": 390, "scrollHeight": 22251, "horizontalOverflow": false},
+      "paladin_route": {"scrollWidth": 390, "scrollHeight": 844, "horizontalOverflow": false},
+      "gryphon_route": {"scrollWidth": 390, "scrollHeight": 844, "horizontalOverflow": false}
+    },
+    "wide": {
+      "cdp_command": "Emulation.setDeviceMetricsOverride",
+      "cdp_response": {},
+      "requested": {"width": 1440, "height": 900, "deviceScaleFactor": 1, "mobile": false},
+      "observed": {"innerWidth": 1440, "innerHeight": 900, "visualViewportWidth": 1440, "visualViewportHeight": 900, "devicePixelRatio": 1},
+      "catalog": {"scrollWidth": 1440, "scrollHeight": 7880, "horizontalOverflow": false},
+      "gryphon_route": {"scrollWidth": 1440, "scrollHeight": 900, "horizontalOverflow": false}
+    }
+  },
+  "catalog_observations": [
+    {
+      "game_id": "paladins-twin-soul",
+      "visible_title": "Paladin's Twin-Soul",
+      "visible_description": "Defend the realm and rescue your twin soul! Match the magic to double your power!",
+      "control": "button",
+      "control_text": "Coming Soon",
+      "has_link": false,
+      "observed_at": ["390x844", "1440x900"]
+    },
+    {
+      "game_id": "gryphon-patrol",
+      "visible_title": "Gryphon Patrol",
+      "visible_description": "Hunt the sentences across the sky!",
+      "control": "button",
+      "control_text": "Coming Soon",
+      "has_link": false,
+      "observed_at": ["390x844", "1440x900"]
+    }
+  ],
+  "route_observations": [
+    {
+      "game_id": "paladins-twin-soul",
+      "url": "http://127.0.0.1:43191/en/student/arcade/paladins-twin-soul",
+      "viewport": "390x844",
+      "snapshot_title": "Create Next App",
+      "snapshot_text": "404 | This page could not be found.",
+      "network_status": 404,
+      "network_mime_type": "text/html",
+      "disposition": "non-runnable-at-bound-head"
+    },
+    {
+      "game_id": "gryphon-patrol",
+      "url": "http://127.0.0.1:43191/en/student/arcade/gryphon-patrol",
+      "viewports": ["390x844", "1440x900"],
+      "snapshot_title": "Create Next App",
+      "snapshot_text": "404 | This page could not be found.",
+      "network_status": 404,
+      "network_mime_type": "text/html",
+      "disposition": "non-runnable-at-bound-head"
+    }
+  ],
+  "screenshots": {
+    "capture_policy": "Every capture request was made only by the mandated screenshot helper with the isolated session and exact reserved -o path. The role made no direct screenshot API call.",
+    "daemon_helper_compatibility_disclosure": "Daemon v1.11.1 post-processes image bytes into /tmp/kimi-webbridge-screenshots while the mandated helper expects inline .data.data. The helper therefore exited 4 after successful post-processing (one wide first attempt timed out with exit 28). Exact helper-originated PNG bytes were copied unchanged from the daemon post-process path to the already-requested reserved path; source and destination hashes matched.",
+    "compact": {
+      "surface": "Paladin exact arcade route 404",
+      "reserved_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-compact.png",
+      "daemon_postprocess_path": "/tmp/kimi-webbridge-screenshots/screenshot_20260722_182125.291.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 6929,
+      "sha256": "fdc81567f73c037216af06c3cdd903ad533454e4cc53446fc2024c68de309213"
+    },
+    "wide": {
+      "surface": "Gryphon exact arcade route 404",
+      "reserved_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-wide.png",
+      "daemon_postprocess_path": "/tmp/kimi-webbridge-screenshots/screenshot_20260722_182709.784.png",
+      "width": 1440,
+      "height": 900,
+      "bytes": 10093,
+      "sha256": "81ee1ebfdae663c3bb69eaa9d69b41c1e88bc02f23890f6196003ad9d252f056"
+    }
+  },
+  "disposition": {
+    "paladins-twin-soul": "NON_RUNNABLE: catalog-only Coming Soon card with no link; exact arcade route returns 404.",
+    "gryphon-patrol": "NON_RUNNABLE: catalog-only Coming Soon card with no link; exact arcade route returns 404.",
+    "browser_evidence_complete_for_current_non_runnable_state": true,
+    "fresh_independent_review_required": true,
+    "candidate_authorized": false,
+    "acceptance_authorized": false,
+    "consumption_authorized": false
+  },
+  "non_claims": [
+    "No game start, instruction, active, transition, terminal, completion, persistence, XP, API-success, production, or asset-loading success is claimed.",
+    "No console-clean claim is made because Kimi exposes no console buffer.",
+    "A checked 404 is bounded to the exact URL, production build, and bound HEAD; it is not a global or historical route-absence claim.",
+    "No ontology, capability synthesis, implementation, asset suitability, licensing, candidate, acceptance, or shipping decision is made."
+  ],
+  "resource_report": {
+    "audit_server_port": 43191,
+    "audit_server_pid": 1274819,
+    "network_records": 83,
+    "screenshot_bytes_total": 17022,
+    "server_log_bytes": 7774,
+    "additional_user_server_started_or_stopped": false,
+    "commit_created": false
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

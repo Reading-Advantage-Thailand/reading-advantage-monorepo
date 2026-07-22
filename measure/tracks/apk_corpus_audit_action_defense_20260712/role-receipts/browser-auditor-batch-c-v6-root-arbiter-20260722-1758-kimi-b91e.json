@@ -1,0 +1,52 @@
+{
+  "schema": "measure-role-receipt.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "role": "browser-auditor-batch-c",
+  "task_id": "C3-BROWSER-V6-KIMI-B91E",
+  "status": "complete-awaiting-independent-review",
+  "completed_at": "2026-07-22T11:30:14Z",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_browser_auditor_v6_kimi_b91e",
+  "parent_task": "/root/apk_batch_c_fresh_roles",
+  "fork_turns": "none",
+  "canonical_head": "085dd8df75609b6585fdc6913530c21347a88b62",
+  "ownership_sha256": "abf14709ac62f3d7fdff1f75fcd3064753f0ec52e0169c2068fd52aa88b172e9",
+  "role_prompt_sha256": "c024663f499deed7e2a0993d63d13fb31a447fe2c826165192c963648303579b",
+  "proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/browser-auditor-batch-c-v6-root-arbiter-20260722-1758-kimi-b91e.json",
+    "sha256": "a75f2b5c0bb5d6236c67185aafe42f628bd01e57f63efa904b7986fb3a755cae"
+  },
+  "outputs": [
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v6-root-arbiter-20260722-1758-kimi-b91e.json", "sha256": "6e9a39503d315f59b001e0952fe317441115cf5c82f8efb3fe5473690b97b4e6"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-server.log", "sha256": "3b6ddfacb0a6b8bfa565119b2c5cb8d5c8fdbd7ed1459b98a977c17c1db32c5a"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-console.json", "sha256": "9fb34cf1fb48ec2d35704812503c4ded050373d30fb8c422149d9e757febcf4f"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-network.json", "sha256": "03f4756026fe4bc8b6c9a5e25d268705a94dc97aa044127cfbe6110c2d381151"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-interactions.json", "sha256": "c6e52fe7040019ab0dc368664624dcb256765147b60f350560f23007b59906ff"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-compact.png", "sha256": "fdc81567f73c037216af06c3cdd903ad533454e4cc53446fc2024c68de309213"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-wide.png", "sha256": "81ee1ebfdae663c3bb69eaa9d69b41c1e88bc02f23890f6196003ad9d252f056"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/browser-auditor-batch-c-v6-root-arbiter-20260722-1758-kimi-b91e.json", "sha256": "a75f2b5c0bb5d6236c67185aafe42f628bd01e57f63efa904b7986fb3a755cae"}
+  ],
+  "result": {
+    "paladins-twin-soul": "non-runnable at bound HEAD: catalog Coming Soon/no link and exact arcade route 404",
+    "gryphon-patrol": "non-runnable at bound HEAD: catalog Coming Soon/no link and exact arcade route 404",
+    "compact_viewport": "390x844",
+    "wide_viewport": "1440x900",
+    "network_count": 83,
+    "console_buffer": "unavailable; console-clean not claimed",
+    "session_closed": true,
+    "server_stopped": true,
+    "port_closed": true,
+    "candidate_authorized": false,
+    "acceptance_authorized": false,
+    "blockers": []
+  },
+  "scope_attestation": {
+    "browser_audit_only": true,
+    "helper_only_capture_requests": true,
+    "direct_screenshot_api_command_by_role": false,
+    "no_collect_map_asset_truth_review_selection_candidate_acceptance": true,
+    "no_worktree": true,
+    "no_commit": true
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,151 @@
+{
+  "schema_version": "apk-role-receipt.v6",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-REVIEW-V1",
+  "role": "adversarial-reviewer-full-cohort",
+  "role_identity": "/root/t4_full_cohort_reviewer_terra",
+  "parent_task": "/root",
+  "fork_turns": "none",
+  "status": "superseded-post-base-blocked",
+  "acceptance": "not-claimed",
+  "audited_commit": "1ecf85e49f016c1eeba6931fe8b833069cde1a35",
+  "reviewer_provenance": {
+    "available": true,
+    "availability_scope": "The direct collaboration task identity, direct parent task, and fork mode are available.",
+    "provider_identifier": "/root/t4_full_cohort_reviewer_terra",
+    "parent_task": "/root",
+    "fork_turns": "none",
+    "provider_attestation_available": false,
+    "raw_encrypted_prompt": null,
+    "raw_provider_event": null,
+    "raw_provider_event_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "provider_event_log": null,
+    "provider_final_response": null,
+    "unavailable_note": "Raw encrypted prompt, provider-event, spawn, session, and final-response exports are unavailable and intentionally null. No unavailable provenance was reconstructed."
+  },
+  "commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests-v2.py",
+      "exit_code": 0,
+      "result": "47 passed, 189 subtests passed in 2.60s"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-lifecycle-v20.py",
+      "exit_code": 0,
+      "result": "4 passed in 0.36s"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-lifecycle-stop-loss-v17.py",
+      "exit_code": 0,
+      "result": "Ran 2 tests in 0.032s; OK"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py",
+      "exit_code": 0,
+      "result": "5 passed in 1.18s"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_action_defense_20260712/t4-cohort-reconciliation-gate.py",
+      "exit_code": 0,
+      "result": "Ran 4 tests in 6.196s; OK"
+    }
+  ],
+  "review_results": {
+    "games_reviewed": 8,
+    "batch_roster": {
+      "batch_a": 3,
+      "batch_b": 3,
+      "batch_c": 2
+    },
+    "duplicate_games": 0,
+    "omitted_games": 0,
+    "bound_artifacts_rehashed": 18,
+    "hash_mismatches": 0,
+    "publication_order_verified": true,
+    "active_gates_green": 5,
+    "historical_or_prepublication_gates_rerun": false,
+    "required_disclosures_preserved": true
+  },
+  "findings": {
+    "unresolved_ids": [
+      "T4C-BROWSER-V5-KIMI-001"
+    ],
+    "unresolved_counts": {
+      "critical": 0,
+      "high": 1,
+      "medium": 0,
+      "low": 0,
+      "total": 1
+    },
+    "candidate_authorized": false,
+    "candidate_authorization_reason": "The five green gates clear only audited commit 1ecf85e4; the post-base Kimi procedure blocker requires fresh browser evidence and a new review."
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v1.json",
+      "sha256": "ca9ba6b399859d3f263c122dc00a725d1b1961566d73c1ae4ed75cdb8468be96"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v1.json",
+      "sha256": null,
+      "sha256_note": "A receipt cannot embed its own stable SHA-256. A later authorized descendant may bind these exact bytes without altering this receipt."
+    }
+  ],
+  "scope_attestation": {
+    "roles_held": [
+      "adversarial-reviewer-full-cohort"
+    ],
+    "forbidden_work_not_performed": [
+      "factual evidence collection or repair",
+      "requirements mapping or repair",
+      "asset or browser evidence authoring",
+      "truth-test modification",
+      "candidate publication",
+      "product-owner acceptance",
+      "accepted-manifest publication",
+      "cohort consumption authorization",
+      "plan, registry, source, evidence-package, or candidate editing",
+      "staging",
+      "committing"
+    ],
+    "candidate_authorized": false,
+    "candidate_must_be_non_consumable": true,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "cohort_consumption_authorized": false,
+    "no_ontology_success_claimed": true,
+    "no_implementation_success_claimed": true,
+    "no_shipping_success_claimed": true,
+    "no_gameplay_success_claimed": true,
+    "no_responsive_success_claimed": true,
+    "no_completion_or_persistence_success_claimed": true,
+    "no_xp_or_api_success_claimed": true,
+    "no_asset_suitability_success_claimed": true
+  },
+  "disclosure_attestation": {
+    "synthetic_browser_input_preserved": true,
+    "http_400_completion_limit_preserved": true,
+    "http_404_non_runnable_limit_preserved": true,
+    "historical_source_limit_preserved": true,
+    "asset_and_bounded_unknown_limit_preserved": true,
+    "provider_provenance_unavailability_preserved": true,
+    "batch_a_disc_001_preserved": true,
+    "batch_c_collision_history_preserved": true
+  },
+  "commit_sha": null,
+  "commit_disposition": "not-created; this review assignment prohibited staging and committing",
+  "self_sha256": null,
+  "self_hash_note": "A later authorized descendant may bind these exact receipt bytes without mutating this receipt.",
+  "marker": "MEASURE_AGENT_RESULT",
+  "post_base_blocker": {
+    "id": "T4C-BROWSER-V5-KIMI-001",
+    "severity": "High",
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v5-skill-deviation.json",
+    "sha256": "68e6528edec1c05e85d694fde5de6d436ef4209e0317653bbcecf3b340cd2a46",
+    "outside_audited_commit": true,
+    "disposition": "The Batch C Browser v5 receipt and any review selecting it cannot authorize a candidate; a fresh canonical-checkout run using /home/daniel-bo/.agents/skills/kimi-webbridge/scripts/screenshot.sh for Browser v6 or later, then a new full-cohort review, is required."
+  }
+}

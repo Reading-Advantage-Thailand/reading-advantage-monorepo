@@ -1,0 +1,43 @@
+{
+  "schema": "apk-role-path-ownership.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "role": "browser-auditor-batch-c",
+  "claimed_at": "2026-07-22T11:03:45Z",
+  "nonce": "root-arbiter-20260722-1758-kimi-b91e",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_browser_auditor_v6_kimi_b91e",
+  "parent_task": "/root/apk_batch_c_fresh_roles",
+  "fork_turns": "none",
+  "arbitrator": "/root",
+  "kimi_skill_path": "/home/daniel-bo/.agents/skills/kimi-webbridge/SKILL.md",
+  "screenshot_helper_path": "/home/daniel-bo/.agents/skills/kimi-webbridge/scripts/screenshot.sh",
+  "reserved_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v6-root-arbiter-20260722-1758-kimi-b91e.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-server.log",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-console.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-network.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-interactions.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-compact.png",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-wide.png",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/browser-auditor-batch-c-v6-root-arbiter-20260722-1758-kimi-b91e.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v6-root-arbiter-20260722-1758-kimi-b91e.json"
+  ],
+  "preclaim_state": {
+    "all_reserved_paths_absent": true,
+    "rule": "If any reserved path exists before the designated role writes it, stop without overwrite and freeze the interference."
+  },
+  "required_browser_procedure": {
+    "canonical_checkout_only": true,
+    "worktree_forbidden": true,
+    "kimi_status_first": true,
+    "new_tab_first_navigation": true,
+    "named_isolated_session": true,
+    "screenshot_helper_required": true,
+    "direct_screenshot_api_forbidden": true,
+    "close_session_required": true
+  },
+  "invalid_predecessor": "batch-c-browser-v5-skill-deviation.json",
+  "candidate_authorized": false,
+  "acceptance_authorized": false,
+  "marker": "MEASURE_AGENT_RESULT"
+}

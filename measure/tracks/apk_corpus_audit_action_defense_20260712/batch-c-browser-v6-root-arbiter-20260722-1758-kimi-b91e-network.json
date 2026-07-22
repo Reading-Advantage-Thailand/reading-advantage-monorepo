@@ -1,0 +1,84 @@
+{
+  "schema": "apk-browser-network-evidence.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "session": "apk-t4-batch-c-v6-b91e",
+  "origin_filter": "127.0.0.1:43191",
+  "recorded_at": "2026-07-22T11:30:14Z",
+  "commands": [
+    {
+      "cmd": "start",
+      "data_binary": "{\"action\":\"network\",\"args\":{\"cmd\":\"start\"},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "response": {"ok": true, "data": {"success": true, "message": "network capture started"}}
+    },
+    {
+      "cmd": "list",
+      "data_binary": "{\"action\":\"network\",\"args\":{\"cmd\":\"list\",\"filter\":\"127.0.0.1:43191\"},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "response_capture": "bounded parsed capture",
+      "count": 83,
+      "all_returned_records_completed": true
+    },
+    {
+      "cmd": "stop",
+      "data_binary": "{\"action\":\"network\",\"args\":{\"cmd\":\"stop\"},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "response": {"ok": true, "data": {"success": true, "message": "network capture stopped"}}
+    }
+  ],
+  "primary_navigation_records": [
+    {
+      "requestId": "20F1F7D5ED5B60B5E0EE79A2E24E46BB",
+      "url": "http://127.0.0.1:43191/",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/html",
+      "completed": true,
+      "phase": "compact-catalog"
+    },
+    {
+      "requestId": "7EC65F66B232E0D48741B40B9A3AF669",
+      "url": "http://127.0.0.1:43191/en/student/arcade/paladins-twin-soul",
+      "method": "GET",
+      "status": 404,
+      "mimeType": "text/html",
+      "completed": true,
+      "phase": "compact-paladin"
+    },
+    {
+      "requestId": "67BDD6E225223B4B68BD8681395E4D4F",
+      "url": "http://127.0.0.1:43191/en/student/arcade/gryphon-patrol",
+      "method": "GET",
+      "status": 404,
+      "mimeType": "text/html",
+      "completed": true,
+      "phase": "compact-gryphon"
+    },
+    {
+      "requestId": "EA4E05FE13B18D174C119F1663032604",
+      "url": "http://127.0.0.1:43191/",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/html",
+      "completed": true,
+      "phase": "wide-catalog"
+    },
+    {
+      "requestId": "005912B7F4C8095A20B3E2E44C6BD47A",
+      "url": "http://127.0.0.1:43191/en/student/arcade/gryphon-patrol",
+      "method": "GET",
+      "status": 404,
+      "mimeType": "text/html",
+      "completed": true,
+      "phase": "wide-gryphon"
+    }
+  ],
+  "bounded_omission": {
+    "omitted_count": 78,
+    "scope": "fonts, CSS, JavaScript, catalog cover images, repeated route resources and framework prefetches",
+    "reason": "The exact list command returned 83 records. This artifact retains all top-level audited navigation records and the total/count/completion facts without inflating evidence with repeated immutable chunks."
+  },
+  "interpretation": "Catalog documents returned 200. Both exact Batch C arcade routes returned 404. No gameplay/API-success inference is made.",
+  "marker": "MEASURE_AGENT_RESULT"
+}

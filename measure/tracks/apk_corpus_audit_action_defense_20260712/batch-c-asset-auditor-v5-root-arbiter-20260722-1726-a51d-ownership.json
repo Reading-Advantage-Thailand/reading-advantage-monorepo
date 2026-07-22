@@ -1,0 +1,26 @@
+{
+  "schema": "apk-role-path-ownership.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "role": "asset-auditor-batch-c",
+  "claimed_at": "2026-07-22T10:39:36Z",
+  "nonce": "root-arbiter-20260722-1726-a51d",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_asset_auditor_v5_arbiter_a51d",
+  "parent_task": "/root/apk_batch_c_fresh_roles",
+  "fork_turns": "none",
+  "arbitrator": "/root",
+  "reserved_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit-v5-root-arbiter-20260722-1726-a51d.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json"
+  ],
+  "preclaim_state": {
+    "all_reserved_paths_absent": true,
+    "rule": "If any reserved path exists before the designated role writes it, stop without overwrite and freeze the interference."
+  },
+  "invalid_predecessor": "batch-c-asset-auditor-v4-collision.json",
+  "selection_rule": "Only a complete internally coherent successor set on all three reserved paths may be considered. Both v4 provider sets remain preserved and unselectable.",
+  "candidate_authorized": false,
+  "acceptance_authorized": false,
+  "marker": "MEASURE_AGENT_RESULT"
+}

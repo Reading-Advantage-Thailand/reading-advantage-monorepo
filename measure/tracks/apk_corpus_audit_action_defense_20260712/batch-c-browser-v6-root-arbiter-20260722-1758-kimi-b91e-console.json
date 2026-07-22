@@ -1,0 +1,33 @@
+{
+  "schema": "apk-browser-console-evidence.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "session": "apk-t4-batch-c-v6-b91e",
+  "recorded_at": "2026-07-22T11:30:14Z",
+  "status": "console-buffer-unavailable",
+  "command": {
+    "argv": [
+      "curl",
+      "-sS",
+      "-X",
+      "POST",
+      "http://127.0.0.1:10086/command",
+      "-H",
+      "Content-Type: application/json",
+      "--data-binary",
+      "{\"action\":\"console\",\"args\":{\"cmd\":\"list\"},\"session\":\"apk-t4-batch-c-v6-b91e\"}"
+    ],
+    "exit": 0,
+    "response": {
+      "ok": false,
+      "error": {
+        "code": "extension_error",
+        "message": "Unknown tool: console. Available: navigate, find_tab, evaluate, network, snapshot, click, fill, mouse_click, cdp, key_type, send_keys, screenshot, save_as_pdf, upload, close_tab, list_tabs, close_session\nPlease update the Kimi WebBridge extension: https://kimi.com/features/webbridge"
+      }
+    }
+  },
+  "interpretation": "The installed Kimi WebBridge exposes no console event/buffer tool. Page snapshots include an accessibility alert node but do not provide console messages.",
+  "console_clean_claimed": false,
+  "console_error_count_claimed": null,
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,76 @@
+{
+  "schema": "measure-role-proof.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "role": "browser-auditor-batch-c",
+  "task_id": "C3-BROWSER-V6-KIMI-B91E",
+  "status": "complete-awaiting-independent-review",
+  "completed_at": "2026-07-22T11:30:14Z",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_browser_auditor_v6_kimi_b91e",
+  "parent_task": "/root/apk_batch_c_fresh_roles",
+  "fork_turns": "none",
+  "role_prompt": "You are the sole fresh Batch C Kimi browser auditor in canonical /home/daniel-bo/Desktop/reading-advantage-monorepo. NEVER create/use a Git worktree. Do not commit. Provider /root/apk_batch_c_fresh_roles/batch_c_browser_auditor_v6_kimi_b91e, parent /root/apk_batch_c_fresh_roles, fork none. First read/hash `measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-ownership.json`, expected SHA abf14709ac62f3d7fdff1f75fcd3064753f0ec52e0169c2068fd52aa88b172e9; confirm all 9 reserved paths absent prewrite or STOP. Read AGENTS, Measure skill/routing/workflow, and COMPLETELY read `/home/daniel-bo/.agents/skills/kimi-webbridge/SKILL.md` before browser action. Read Batch C strategy, denominator correction, selection v6, review v6, `batch-c-browser-v5-skill-deviation.json`, prior committed Kimi audit only as invalid predecessor. Use ONLY canonical checkout. Bind current immutable HEAD and exact clean app/relevant-package source scope; disclose unrelated dirt. Run Kimi status FIRST. Use a unique Kimi session `apk-t4-batch-c-v6-b91e`, first navigate with newTab true. Build/start a managed production server on a unique free localhost port, retain exact build/start/health/source-binding commands and server log, never touch user servers. Exercise compact 390x844 and wide 1440x900 via the Kimi daemon's CDP viewport command if supported; record exact response. Use snapshot/evaluate/navigation/network through Kimi for catalog and both exact Paladin/Gryphon routes, with honest non-runnable disposition if Coming Soon/404. Retain interaction/navigation records, network start/list/stop, and a truthful console-unavailable artifact if Kimi exposes no console buffer; never claim console-clean without data. CRITICAL: capture BOTH screenshots ONLY with `/home/daniel-bo/.agents/skills/kimi-webbridge/scripts/screenshot.sh -s apk-t4-batch-c-v6-b91e -o <exact reserved screenshot path>`; DO NOT call screenshot API directly. Hash screenshots/logs. Close Kimi session at end and stop only your server. Write ONLY the 9 reserved paths: audit, server log, console JSON, network JSON, interactions JSON, compact PNG, wide PNG, proof, receipt. Preserve v4/v5 evidence and deviation unchanged. Retain exact prompt/SHA, marker, provider/parent/fork, every Kimi/helper/build/server command argv/exit/bounded stdout, source/build IDs, timestamps/resources, proof/receipt hashes. Validate all files, helper command presence, no direct screenshot command in proof/interactions, Kimi close, server stopped/port closed, no backups, diff. No collect/map/asset/truth/review/selection/candidate/acceptance. Finish boundedly; return exact hashes/results/blockers/MEASURE_AGENT_RESULT.",
+  "role_prompt_sha256": "c024663f499deed7e2a0993d63d13fb31a447fe2c826165192c963648303579b",
+  "ownership": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-ownership.json",
+    "sha256": "abf14709ac62f3d7fdff1f75fcd3064753f0ec52e0169c2068fd52aa88b172e9",
+    "all_reserved_paths_absent_prewrite": true
+  },
+  "source_binding": {
+    "canonical_head": "085dd8df75609b6585fdc6913530c21347a88b62",
+    "branch": "master",
+    "app_tree": "a10dba6fe641adb4dfadbd6781bcffe86023ce6b",
+    "relevant_package_tree": "75fa7bb794d7c8fad37b5565c0f4c6d7ccda926f",
+    "app_and_package_scope_clean": true,
+    "worktree_used": false,
+    "commit_created": false
+  },
+  "exact_operational_commands": [
+    {"argv": ["/home/daniel-bo/.kimi-webbridge/bin/kimi-webbridge", "status"], "exit": 0, "stdout_bounded": {"running": true, "extension_connected": true, "version": "v1.11.1", "extension_version": "1.11.3"}},
+    {"argv": ["git", "rev-parse", "HEAD"], "exit": 0, "stdout": "085dd8df75609b6585fdc6913530c21347a88b62"},
+    {"argv": ["git", "diff", "--name-only", "HEAD", "--", "apps/advantage-games", "packages/advantage-play-kit"], "exit": 0, "stdout": ""},
+    {"argv": ["git", "ls-files", "--others", "--exclude-standard", "--", "apps/advantage-games", "packages/advantage-play-kit"], "exit": 0, "stdout": ""},
+    {"argv": ["git", "rev-parse", "HEAD:apps/advantage-games", "HEAD:packages/advantage-play-kit"], "exit": 0, "stdout": "a10dba6fe641adb4dfadbd6781bcffe86023ce6b\n75fa7bb794d7c8fad37b5565c0f4c6d7ccda926f"},
+    {"argv": ["/bin/bash", "-lc", "set -o pipefail; pnpm --filter vocabulary-games build 2>&1 | tee measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-server.log"], "exit": 0, "stdout_bounded": "Compiled successfully in 87s; TypeScript 64s; generated 95/95; one NFT trace warning retained."},
+    {"argv": ["/bin/bash", "-lc", "set -o pipefail; pnpm --filter vocabulary-games start -- -H 127.0.0.1 -p 43191 2>&1 | tee -a measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-server.log"], "exit": 1, "stdout_bounded": "Invalid project directory .../apps/advantage-games/-H"},
+    {"argv": ["/bin/bash", "-lc", "set -o pipefail; pnpm --filter vocabulary-games exec next start -H 127.0.0.1 -p 43191 2>&1 | tee -a measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-server.log"], "managed_exit": 130, "stdout_bounded": "Next.js 16.2.9; http://127.0.0.1:43191; Ready in 698ms."},
+    {"argv": ["curl", "-sS", "-D", "-", "-o", "/dev/null", "http://127.0.0.1:43191/"], "exit": 0, "stdout_bounded": "HTTP/1.1 200 OK; Content-Length: 133401; ETag: \"eru2x1tht62uxl\""},
+    {"argv": ["ss", "-ltnp", "sport = :43191"], "exit": 0, "stdout_bounded": "LISTEN 127.0.0.1:43191 users: next-server pid=1274819"},
+    {"operation": "managed write_stdin Ctrl-C to server session 49078", "exit": 130},
+    {"argv": ["ss", "-ltnp", "sport = :43191"], "exit": 0, "stdout_bounded": "header only; no listener"},
+    {"argv": ["ps", "-p", "1274819", "-o", "pid=,stat=,cmd="], "exit": 1, "stdout": ""},
+    {"argv": ["curl", "-sS", "--max-time", "2", "http://127.0.0.1:43191/"], "exit": 7, "stdout_bounded": "Failed to connect to 127.0.0.1 port 43191"}
+  ],
+  "browser_command_record": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-interactions.json",
+  "output_bindings": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v6-root-arbiter-20260722-1758-kimi-b91e.json": "6e9a39503d315f59b001e0952fe317441115cf5c82f8efb3fe5473690b97b4e6",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-server.log": "3b6ddfacb0a6b8bfa565119b2c5cb8d5c8fdbd7ed1459b98a977c17c1db32c5a",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-console.json": "9fb34cf1fb48ec2d35704812503c4ded050373d30fb8c422149d9e757febcf4f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-network.json": "03f4756026fe4bc8b6c9a5e25d268705a94dc97aa044127cfbe6110c2d381151",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-interactions.json": "c6e52fe7040019ab0dc368664624dcb256765147b60f350560f23007b59906ff",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-compact.png": "fdc81567f73c037216af06c3cdd903ad533454e4cc53446fc2024c68de309213",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-wide.png": "81ee1ebfdae663c3bb69eaa9d69b41c1e88bc02f23890f6196003ad9d252f056"
+  },
+  "attestations": {
+    "kimi_status_first": true,
+    "first_navigation_new_tab": true,
+    "helper_only_capture_requests": true,
+    "direct_screenshot_api_command_by_role": false,
+    "network_start_list_stop_retained": true,
+    "console_clean_claimed": false,
+    "session_closed": true,
+    "session_remaining_tabs": 0,
+    "server_stopped": true,
+    "port_closed": true,
+    "v4_v5_evidence_modified": false,
+    "collect_map_asset_truth_review_selection_candidate_acceptance_performed": false
+  },
+  "result": {
+    "paladins-twin-soul": "non-runnable: Coming Soon/no link plus exact route 404",
+    "gryphon-patrol": "non-runnable: Coming Soon/no link plus exact route 404",
+    "candidate_authorized": false,
+    "acceptance_authorized": false,
+    "blockers": []
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

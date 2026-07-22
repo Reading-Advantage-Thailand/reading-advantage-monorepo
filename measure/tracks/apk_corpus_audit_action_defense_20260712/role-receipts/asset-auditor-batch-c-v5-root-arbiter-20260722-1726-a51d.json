@@ -1,0 +1,107 @@
+{
+  "schema": "measure.role-receipt.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "task_id": "C3-ASSET",
+  "role": "asset-auditor-batch-c",
+  "status": "complete-bounded",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_asset_auditor_v5_arbiter_a51d",
+    "parent_task": "/root/apk_batch_c_fresh_roles",
+    "fork_turns": "none",
+    "arbitrator": "/root",
+    "fresh_context": true,
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "auxiliary_git_worktree_created_or_used": false,
+    "commit_created": false
+  },
+  "prompt_binding": {
+    "sha256": "0a9e7c8b073de162bfa6a80c58330890d1742d44d99ef39d9d609e9db393b599",
+    "exact_prompt_retained_in": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json",
+    "hash_method": "SHA-256 of exact UTF-8 prompt text with no trailing newline"
+  },
+  "ownership_binding": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-auditor-v5-root-arbiter-20260722-1726-a51d-ownership.json",
+    "sha256": "4c798bc474822bf4253e2e2d306511db1a140e561214810fd328fd10ae356b0b",
+    "prewrite_absence_gate": "pass"
+  },
+  "retained_proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json",
+    "sha256": "fac6f71f01dd247ccdd2abf0dbf628c0a1a3ba8bfb329cd00d7503c271760e14",
+    "verification_result": "pass"
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit-v5-root-arbiter-20260722-1726-a51d.json",
+      "sha256": "10b372b3eff78ce869062577c42ccdf7eccf10e56177315acca91b892e97195c",
+      "result": "9/9 unique frozen candidates; 9/9 hashes and byte counts; class counts 6/1/1/1; 2/2 verified image blobs visually inspected"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json",
+      "sha256": "fac6f71f01dd247ccdd2abf0dbf628c0a1a3ba8bfb329cd00d7503c271760e14",
+      "result": "provider, prompt, commands, results, timestamps, resources, and boundaries retained"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json",
+      "sha256": null,
+      "digest_reason": "receipt cannot self-hash without changing its own bytes"
+    }
+  ],
+  "reconciliation": {
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "candidate_count": 9,
+    "unique_candidate_path_count": 9,
+    "per_game_counts": {"gryphon-patrol":5,"paladins-twin-soul":4},
+    "frozen_hash_matches": 9,
+    "frozen_byte_count_matches": 9,
+    "classes": {"json_object":6,"png_image_blob":1,"jpeg_jfif_at_png_path":1,"git_symlink_payload_at_png_path":1},
+    "verified_image_surfaces_inspected": 2,
+    "candidate_paths_sha256": "da95c711e00531ebb329f047f9ed3407af6eaea957c1091644f1bda65ed0d1fe"
+  },
+  "predecessor_disposition": {
+    "collision_record": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-auditor-v4-collision.json",
+    "collision_record_sha256": "166c1c2284076ab0eaac5ec2f267cd2cc92378b4f908c6573767678626813b74",
+    "both_v4_provider_sets_selected": false,
+    "both_v4_provider_sets_copied": false,
+    "both_v4_provider_sets_modified": false,
+    "disposition": "invalid and unselectable; preserved unchanged"
+  },
+  "resource_use": {
+    "budget_declaration": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-budget-declaration.json",
+      "sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211"
+    },
+    "ceilings": {"source_bytes_read":31457280,"source_files_or_objects_read":100,"command_invocations":70,"elapsed_minutes":40,"records_authored_or_reviewed":240,"browser_interactions":40,"browser_artifacts_captured":40,"asset_candidates_inspected":240},
+    "actual": {"source_bytes_read":15000000,"source_files_or_objects_read":52,"command_invocations":29,"elapsed_minutes":14,"records_authored_or_reviewed":9,"browser_interactions":0,"browser_artifacts_captured":0,"asset_candidates_inspected":9},
+    "ceiling_breaches": 0
+  },
+  "timestamps": {
+    "started_utc": "2026-07-22T10:39:36Z",
+    "completed_utc": "2026-07-22T10:54:00Z",
+    "completed_local": "2026-07-22T17:54:00+07:00"
+  },
+  "boundaries": {
+    "collector_authored": false,
+    "mapper_authored": false,
+    "truth_authored": false,
+    "browser_audit_authored": false,
+    "review_authored": false,
+    "receipt_selection_authored": false,
+    "candidate_authored_or_authorized": false,
+    "acceptance_authored_or_authorized": false,
+    "runtime_use_claimed": false,
+    "suitability_claimed": false,
+    "live_corroboration_claimed": false,
+    "non_reserved_repo_paths_written": false
+  },
+  "validation": {
+    "three_file_chain": "pending final self-check after receipt write",
+    "json_syntax": "pending final self-check after receipt write",
+    "predecessor_immutability": "pending final self-check after receipt write",
+    "no_backup_files": "pending final self-check after receipt write",
+    "diff_scope": "pending final self-check after receipt write"
+  },
+  "blockers": [],
+  "marker": "MEASURE_AGENT_RESULT"
+}

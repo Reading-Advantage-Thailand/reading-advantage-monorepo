@@ -1,0 +1,304 @@
+{
+  "schema": "apk-browser-interactions.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "session": "apk-t4-batch-c-v6-b91e",
+  "recorded_at": "2026-07-22T11:30:14Z",
+  "command_encoding": {
+    "kimi_shell_argv_template": [
+      "curl",
+      "-sS",
+      "-X",
+      "POST",
+      "http://127.0.0.1:10086/command",
+      "-H",
+      "Content-Type: application/json",
+      "--data-binary",
+      "<data_binary from the record>"
+    ],
+    "statement": "Each Kimi record's exact shell argv is the template with its data_binary substituted for the final element. All Kimi commands exited 0 at the shell layer; extension-level failures are retained separately.",
+    "stdout_policy": "Small responses are retained verbatim as parsed JSON. Large accessibility/network responses are retained as exact bounded facts plus their returned count/title/URL."
+  },
+  "sequence": [
+    {
+      "seq": 1,
+      "kind": "kimi",
+      "action": "navigate",
+      "data_binary": "{\"action\":\"navigate\",\"args\":{\"url\":\"http://127.0.0.1:43191/\",\"newTab\":true,\"group_title\":\"APK T4 Batch C v6 b91e\"},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "success": true, "url": "http://127.0.0.1:43191/", "tabId": 915224879}
+    },
+    {
+      "seq": 2,
+      "kind": "kimi",
+      "action": "viewport",
+      "data_binary": "{\"action\":\"viewport\",\"args\":{\"width\":390,\"height\":844,\"deviceScaleFactor\":1,\"mobile\":true},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": false, "code": "extension_error", "message": "Unknown tool: viewport; registered cdp tool used next."}
+    },
+    {
+      "seq": 3,
+      "kind": "kimi",
+      "action": "network-start",
+      "data_binary": "{\"action\":\"network\",\"args\":{\"cmd\":\"start\"},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "success": true, "message": "network capture started"}
+    },
+    {
+      "seq": 4,
+      "kind": "kimi",
+      "action": "cdp-compact",
+      "data_binary": "{\"action\":\"cdp\",\"args\":{\"method\":\"Emulation.setDeviceMetricsOverride\",\"params\":{\"width\":390,\"height\":844,\"deviceScaleFactor\":1,\"mobile\":true,\"screenWidth\":390,\"screenHeight\":844}},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "data": {}}
+    },
+    {
+      "seq": 5,
+      "kind": "kimi",
+      "action": "navigate-compact-catalog",
+      "data_binary": "{\"action\":\"navigate\",\"args\":{\"url\":\"http://127.0.0.1:43191/\",\"newTab\":false},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "success": true, "url": "http://127.0.0.1:43191/", "tabId": 915224879}
+    },
+    {
+      "seq": 6,
+      "kind": "kimi",
+      "action": "snapshot-compact-catalog",
+      "data_binary": "{\"action\":\"snapshot\",\"args\":{},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "url": "http://127.0.0.1:43191/", "title": "Create Next App", "heading": "Vocab Arcade", "paladin_ref": "@e21", "gryphon_ref": "@e27", "both_controls": "Coming Soon"}
+    },
+    {
+      "seq": 7,
+      "kind": "kimi",
+      "action": "evaluate-compact-catalog",
+      "data_binary": "{\"action\":\"evaluate\",\"args\":{\"code\":\"compact catalog metric/card IIFE\"},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"innerWidth": 390, "innerHeight": 844, "devicePixelRatio": 1, "scrollWidth": 390, "scrollHeight": 22251, "horizontalOverflow": false, "paladin": {"found": true, "hasLink": false, "button": "Coming Soon"}, "gryphon": {"found": true, "hasLink": false, "button": "Coming Soon"}}
+    },
+    {
+      "seq": 8,
+      "kind": "helper",
+      "purpose": "compact-catalog-attempt-1",
+      "argv": ["/home/daniel-bo/.agents/skills/kimi-webbridge/scripts/screenshot.sh", "-s", "apk-t4-batch-c-v6-b91e", "-o", "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-compact.png"],
+      "exit": 4,
+      "wall_time_seconds": 3.149105042,
+      "stdout_stderr": "",
+      "stdout_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reserved_output_present_after": false
+    },
+    {
+      "seq": 9,
+      "kind": "helper",
+      "purpose": "compact-catalog-identical-retry",
+      "argv": ["/home/daniel-bo/.agents/skills/kimi-webbridge/scripts/screenshot.sh", "-s", "apk-t4-batch-c-v6-b91e", "-o", "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-compact.png"],
+      "exit": 4,
+      "wall_time_seconds": 14.113656065,
+      "stdout_stderr": "",
+      "stdout_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reserved_output_present_after": false,
+      "daemon_postprocess_output": "/tmp/kimi-webbridge-screenshots/screenshot_20260722_181919.660.png"
+    },
+    {
+      "seq": 10,
+      "kind": "kimi",
+      "action": "navigate-compact-paladin",
+      "data_binary": "{\"action\":\"navigate\",\"args\":{\"url\":\"http://127.0.0.1:43191/en/student/arcade/paladins-twin-soul\",\"newTab\":false},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "success": true, "url": "http://127.0.0.1:43191/en/student/arcade/paladins-twin-soul", "tabId": 915224879, "frameId": "F69737C19C0585C39F26FC812AB298E8"}
+    },
+    {
+      "seq": 11,
+      "kind": "kimi",
+      "action": "snapshot-compact-paladin",
+      "data_binary": "{\"action\":\"snapshot\",\"args\":{},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "title": "Create Next App", "headings": ["404", "This page could not be found."]}
+    },
+    {
+      "seq": 12,
+      "kind": "kimi",
+      "action": "evaluate-compact-paladin",
+      "data_binary": "{\"action\":\"evaluate\",\"args\":{\"code\":\"compact Paladin metric/body/performance IIFE\"},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"innerWidth": 390, "innerHeight": 844, "bodyText": "404\nThis page could not be found.", "scrollWidth": 390, "scrollHeight": 844, "horizontalOverflow": false, "navigationTransferSize": 2563}
+    },
+    {
+      "seq": 13,
+      "kind": "helper",
+      "purpose": "compact-paladin-404",
+      "argv": ["/home/daniel-bo/.agents/skills/kimi-webbridge/scripts/screenshot.sh", "-s", "apk-t4-batch-c-v6-b91e", "-o", "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-compact.png"],
+      "exit": 4,
+      "wall_time_seconds": 0.367247003,
+      "stdout_stderr": "",
+      "stdout_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "daemon_postprocess_output": "/tmp/kimi-webbridge-screenshots/screenshot_20260722_182125.291.png",
+      "daemon_output_dimensions": "390x844",
+      "daemon_output_sha256": "fdc81567f73c037216af06c3cdd903ad533454e4cc53446fc2024c68de309213",
+      "recovery": "Copied unchanged helper-originated daemon output to the helper's requested reserved path; source/destination hashes matched."
+    },
+    {
+      "seq": 14,
+      "kind": "kimi",
+      "action": "navigate-compact-gryphon",
+      "data_binary": "{\"action\":\"navigate\",\"args\":{\"url\":\"http://127.0.0.1:43191/en/student/arcade/gryphon-patrol\",\"newTab\":false},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "success": true, "url": "http://127.0.0.1:43191/en/student/arcade/gryphon-patrol", "tabId": 915224879}
+    },
+    {
+      "seq": 15,
+      "kind": "kimi",
+      "action": "snapshot-compact-gryphon",
+      "data_binary": "{\"action\":\"snapshot\",\"args\":{},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "title": "Create Next App", "headings": ["404", "This page could not be found."]}
+    },
+    {
+      "seq": 16,
+      "kind": "kimi",
+      "action": "evaluate-compact-gryphon",
+      "data_binary": "{\"action\":\"evaluate\",\"args\":{\"code\":\"compact Gryphon metric/body/performance IIFE\"},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"innerWidth": 390, "innerHeight": 844, "bodyText": "404\nThis page could not be found.", "scrollWidth": 390, "scrollHeight": 844, "horizontalOverflow": false, "navigationTransferSize": 2563}
+    },
+    {
+      "seq": 17,
+      "kind": "kimi",
+      "action": "cdp-wide",
+      "data_binary": "{\"action\":\"cdp\",\"args\":{\"method\":\"Emulation.setDeviceMetricsOverride\",\"params\":{\"width\":1440,\"height\":900,\"deviceScaleFactor\":1,\"mobile\":false,\"screenWidth\":1440,\"screenHeight\":900}},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "data": {}}
+    },
+    {
+      "seq": 18,
+      "kind": "kimi",
+      "action": "navigate-wide-catalog",
+      "data_binary": "{\"action\":\"navigate\",\"args\":{\"url\":\"http://127.0.0.1:43191/\",\"newTab\":false},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "success": true, "url": "http://127.0.0.1:43191/", "tabId": 915224879}
+    },
+    {
+      "seq": 19,
+      "kind": "kimi",
+      "action": "snapshot-wide-catalog",
+      "data_binary": "{\"action\":\"snapshot\",\"args\":{},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "url": "http://127.0.0.1:43191/", "title": "Create Next App", "heading": "Vocab Arcade", "paladin_ref": "@e21", "gryphon_ref": "@e27", "both_controls": "Coming Soon"}
+    },
+    {
+      "seq": 20,
+      "kind": "kimi",
+      "action": "evaluate-wide-catalog",
+      "data_binary": "{\"action\":\"evaluate\",\"args\":{\"code\":\"wide catalog metric/card IIFE\"},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"innerWidth": 1440, "innerHeight": 900, "devicePixelRatio": 1, "scrollWidth": 1440, "scrollHeight": 7880, "horizontalOverflow": false, "paladin": {"found": true, "hasLink": false, "button": "Coming Soon"}, "gryphon": {"found": true, "hasLink": false, "button": "Coming Soon"}}
+    },
+    {
+      "seq": 21,
+      "kind": "kimi",
+      "action": "navigate-wide-gryphon",
+      "data_binary": "{\"action\":\"navigate\",\"args\":{\"url\":\"http://127.0.0.1:43191/en/student/arcade/gryphon-patrol\",\"newTab\":false},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "success": true, "url": "http://127.0.0.1:43191/en/student/arcade/gryphon-patrol", "tabId": 915224879}
+    },
+    {
+      "seq": 22,
+      "kind": "kimi",
+      "action": "snapshot-wide-gryphon",
+      "data_binary": "{\"action\":\"snapshot\",\"args\":{},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "title": "Create Next App", "headings": ["404", "This page could not be found."]}
+    },
+    {
+      "seq": 23,
+      "kind": "kimi",
+      "action": "evaluate-wide-gryphon",
+      "data_binary": "{\"action\":\"evaluate\",\"args\":{\"code\":\"wide Gryphon metric/body/performance IIFE\"},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"innerWidth": 1440, "innerHeight": 900, "bodyText": "404\nThis page could not be found.", "scrollWidth": 1440, "scrollHeight": 900, "horizontalOverflow": false, "navigationTransferSize": 2563}
+    },
+    {
+      "seq": 24,
+      "kind": "helper",
+      "purpose": "wide-gryphon-404-attempt-1",
+      "argv": ["/home/daniel-bo/.agents/skills/kimi-webbridge/scripts/screenshot.sh", "-s", "apk-t4-batch-c-v6-b91e", "-o", "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-wide.png"],
+      "exit": 28,
+      "wall_time_seconds": 29.971243782,
+      "stdout_stderr": "",
+      "stdout_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reserved_output_present_after": false
+    },
+    {
+      "seq": 25,
+      "kind": "helper",
+      "purpose": "wide-gryphon-404-identical-retry",
+      "argv": ["/home/daniel-bo/.agents/skills/kimi-webbridge/scripts/screenshot.sh", "-s", "apk-t4-batch-c-v6-b91e", "-o", "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-wide.png"],
+      "exit": 4,
+      "wall_time_seconds": 11.085013554,
+      "stdout_stderr": "",
+      "stdout_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "daemon_postprocess_output": "/tmp/kimi-webbridge-screenshots/screenshot_20260722_182709.784.png",
+      "daemon_output_dimensions": "1440x900",
+      "daemon_output_sha256": "81ee1ebfdae663c3bb69eaa9d69b41c1e88bc02f23890f6196003ad9d252f056",
+      "recovery": "Copied unchanged helper-originated daemon output to the helper's requested reserved path; source/destination hashes matched."
+    },
+    {
+      "seq": 26,
+      "kind": "kimi",
+      "action": "network-list",
+      "data_binary": "{\"action\":\"network\",\"args\":{\"cmd\":\"list\",\"filter\":\"127.0.0.1:43191\"},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "count": 83, "catalogStatuses": [200, 200], "paladinStatuses": [404], "gryphonStatuses": [404, 404]}
+    },
+    {
+      "seq": 27,
+      "kind": "kimi",
+      "action": "network-stop",
+      "data_binary": "{\"action\":\"network\",\"args\":{\"cmd\":\"stop\"},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "success": true, "message": "network capture stopped"}
+    },
+    {
+      "seq": 28,
+      "kind": "kimi",
+      "action": "console-unavailable-probe",
+      "data_binary": "{\"action\":\"console\",\"args\":{\"cmd\":\"list\"},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": false, "code": "extension_error", "message": "Unknown tool: console"}
+    },
+    {
+      "seq": 29,
+      "kind": "kimi",
+      "action": "list-tabs-before-close",
+      "data_binary": "{\"action\":\"list_tabs\",\"args\":{},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "tabs": [{"tabId": 915224879, "url": "http://127.0.0.1:43191/en/student/arcade/gryphon-patrol", "title": "Create Next App", "active": false, "groupTitle": "APK T4 Batch C v6 b91e"}]}
+    },
+    {
+      "seq": 30,
+      "kind": "kimi",
+      "action": "close-session",
+      "data_binary": "{\"action\":\"close_session\",\"args\":{},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "success": true, "closed": 1}
+    },
+    {
+      "seq": 31,
+      "kind": "kimi",
+      "action": "list-tabs-after-close",
+      "data_binary": "{\"action\":\"list_tabs\",\"args\":{},\"session\":\"apk-t4-batch-c-v6-b91e\"}",
+      "exit": 0,
+      "stdout_bounded": {"ok": true, "success": true, "tabs": []}
+    }
+  ],
+  "interaction_summary": {
+    "catalog_cards_clicked": false,
+    "reason": "Both exact cards exposed non-link Coming Soon buttons. Direct route navigation was used for bounded disposition instead of pretending a disabled catalog control starts a game.",
+    "keyboard_pointer_touch_gameplay_input": false,
+    "reason_gameplay_input_absent": "No game state was reachable; exact routes returned 404.",
+    "session_closed": true,
+    "remaining_tabs": 0,
+    "direct_screenshot_api_command_by_role": false
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
