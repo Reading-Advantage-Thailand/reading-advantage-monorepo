@@ -1,0 +1,56 @@
+{
+  "schema": "apk-t4-admission-owner-disposition.v4",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "decision": "ADMIT-WITH-DISCLOSURE-NO-RERUN",
+  "owner": "/root",
+  "input_gate": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-admission-check-v4.py",
+    "sha256": "25ded096bc18bc005260adf7eba92a2020879d93694a02a6c3a58878e102c13d",
+    "run_count": 1,
+    "rerun_authorized": false
+  },
+  "input_result": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-admission-result-v4.json",
+    "sha256": "80be4c11ea8d047719379f03caf2848e53cfe8fbc7f0e3c24ca5700a3fff643d",
+    "passed": 34,
+    "checks": 35,
+    "failed_check": "manifest-accepted-conditional"
+  },
+  "failed_assertion_disposition": {
+    "classification": "gate-assertion-literal-defect-not-lifecycle-or-evidence-drift",
+    "expected_literal": "conditional",
+    "actual_structured_value": "conditional-only-under-every-recorded-condition-and-disclosure",
+    "actual_value_is_stricter": true,
+    "manifest_status": "accepted-with-disclosure",
+    "manifest_consumable": true,
+    "reason": "The failed equality rejected a stricter conditional-consumability value. All hash, raw Git blob, first-add, ancestry, roster, review, selector-lineage, Kimi, Asset-companion, forbidden-claim, branch, and single-worktree checks passed."
+  },
+  "active_lifecycle": {
+    "candidate_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v2-81bfe78e-20260722T130706Z-codex.json",
+    "candidate_sha256": "436d15249549fb0762edcb5c63d1fdcc4f4d51c80852200f929050ca0a0840f5",
+    "candidate_publication_commit": "d70959ce2cdfed2e655f5ffcccef67f9bc6ea353",
+    "acceptance_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-t4-v2.json",
+    "acceptance_sha256": "56bc530ddff17e8ff20741517d6c29b17ba250cbb35ec3a772a3cd71a23ed318",
+    "acceptance_publication_commit": "1d56853dcb287463fb12906a8c534e7973cfb8cc",
+    "accepted_manifest_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+    "accepted_manifest_sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80",
+    "accepted_manifest_publication_commit": "8b3a83d3d0347921f67e3a81131a312b9d916c71",
+    "reconciliation_v4_sha256": "6f202f838a97dd93fc049d6301cb0230b715f869b4c994e62dbf178c27658c8c",
+    "full_review_v4_sha256": "95f9d5b91ea2caea1477c07605ee664e4c94cdf7f301a9490954ee9f978f2f43",
+    "unresolved_critical_high_medium": 0
+  },
+  "admission": {
+    "t4_accepted_with_disclosure": true,
+    "conditionally_consumable": true,
+    "t8_authorized": false,
+    "product_authorized": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false
+  },
+  "stop_loss": {
+    "another_admission_gate_cycle_forbidden": true,
+    "historical_admission_v1_v2_v3_v4_results_retained": true,
+    "next_action": "Documentation and registry closeout only; no evidence or lifecycle reconstruction."
+  }
+}

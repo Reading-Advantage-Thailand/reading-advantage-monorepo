@@ -1,0 +1,222 @@
+{
+  "schema": "apk-t4-minimal-hash-admission.v4",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "status": "red-no-authority",
+  "run_count": 1,
+  "historical_or_batch_gates_rerun": false,
+  "check_count": 35,
+  "passed_count": 34,
+  "checks": [
+    {
+      "name": "master-branch",
+      "status": "pass",
+      "detail": "master"
+    },
+    {
+      "name": "single-canonical-worktree",
+      "status": "pass",
+      "detail": "[\"/home/daniel-bo/Desktop/reading-advantage-monorepo\"]"
+    },
+    {
+      "name": "candidate-current-sha",
+      "status": "pass",
+      "detail": "436d15249549fb0762edcb5c63d1fdcc4f4d51c80852200f929050ca0a0840f5"
+    },
+    {
+      "name": "candidate-git-blob-sha",
+      "status": "pass",
+      "detail": "436d15249549fb0762edcb5c63d1fdcc4f4d51c80852200f929050ca0a0840f5"
+    },
+    {
+      "name": "candidate-first-add",
+      "status": "pass",
+      "detail": "d70959ce2cdfed2e655f5ffcccef67f9bc6ea353"
+    },
+    {
+      "name": "owner_acceptance-current-sha",
+      "status": "pass",
+      "detail": "56bc530ddff17e8ff20741517d6c29b17ba250cbb35ec3a772a3cd71a23ed318"
+    },
+    {
+      "name": "owner_acceptance-git-blob-sha",
+      "status": "pass",
+      "detail": "56bc530ddff17e8ff20741517d6c29b17ba250cbb35ec3a772a3cd71a23ed318"
+    },
+    {
+      "name": "owner_acceptance-first-add",
+      "status": "pass",
+      "detail": "1d56853dcb287463fb12906a8c534e7973cfb8cc"
+    },
+    {
+      "name": "accepted_manifest-current-sha",
+      "status": "pass",
+      "detail": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80"
+    },
+    {
+      "name": "accepted_manifest-git-blob-sha",
+      "status": "pass",
+      "detail": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80"
+    },
+    {
+      "name": "accepted_manifest-first-add",
+      "status": "pass",
+      "detail": "8b3a83d3d0347921f67e3a81131a312b9d916c71"
+    },
+    {
+      "name": "reconciliation-current-sha",
+      "status": "pass",
+      "detail": "6f202f838a97dd93fc049d6301cb0230b715f869b4c994e62dbf178c27658c8c"
+    },
+    {
+      "name": "reconciliation-git-blob-sha",
+      "status": "pass",
+      "detail": "6f202f838a97dd93fc049d6301cb0230b715f869b4c994e62dbf178c27658c8c"
+    },
+    {
+      "name": "reconciliation-first-add",
+      "status": "pass",
+      "detail": "d009b9a3b99e5aca3a512be09f10c5a9e34c437a"
+    },
+    {
+      "name": "full_review-current-sha",
+      "status": "pass",
+      "detail": "95f9d5b91ea2caea1477c07605ee664e4c94cdf7f301a9490954ee9f978f2f43"
+    },
+    {
+      "name": "full_review-git-blob-sha",
+      "status": "pass",
+      "detail": "95f9d5b91ea2caea1477c07605ee664e4c94cdf7f301a9490954ee9f978f2f43"
+    },
+    {
+      "name": "full_review-first-add",
+      "status": "pass",
+      "detail": "81bfe78eb8ccef81d95636fcf7e0c745841d84fc"
+    },
+    {
+      "name": "candidate-before-acceptance",
+      "status": "pass",
+      "detail": "returncode=0"
+    },
+    {
+      "name": "acceptance-before-manifest",
+      "status": "pass",
+      "detail": "returncode=0"
+    },
+    {
+      "name": "candidate-non-consumable",
+      "status": "pass",
+      "detail": "authored-uncommitted-candidate-only-non-consumable"
+    },
+    {
+      "name": "owner-accepted-v2",
+      "status": "pass",
+      "detail": "ACCEPT-WITH-DISCLOSURE"
+    },
+    {
+      "name": "manifest-accepted-conditional",
+      "status": "fail",
+      "detail": "accepted-with-disclosure"
+    },
+    {
+      "name": "roster-eight-exact",
+      "status": "pass",
+      "detail": "{\"batch_a\": 3, \"batch_b\": 3, \"batch_c\": 2}"
+    },
+    {
+      "name": "roster-batches-3-3-2",
+      "status": "pass",
+      "detail": "{\"batch_a\": 3, \"batch_b\": 3, \"batch_c\": 2}"
+    },
+    {
+      "name": "review-zero-findings",
+      "status": "pass",
+      "detail": "pass-v4-new-v2-candidate-only-authorized-lifecycle-fail-closed"
+    },
+    {
+      "name": "review-candidate-v2-authorized",
+      "status": "pass",
+      "detail": "pass-v4-new-v2-candidate-only-authorized-lifecycle-fail-closed"
+    },
+    {
+      "name": "kimi-helper-attempts",
+      "status": "pass",
+      "detail": "5"
+    },
+    {
+      "name": "kimi-helper-exits",
+      "status": "pass",
+      "detail": "[4, 28]"
+    },
+    {
+      "name": "kimi-no-direct-api",
+      "status": "pass",
+      "detail": "False"
+    },
+    {
+      "name": "kimi-recovery-exact",
+      "status": "pass",
+      "detail": "helper-triggered daemon post-process paths"
+    },
+    {
+      "name": "kimi-closed-nonrunnable-404",
+      "status": "pass",
+      "detail": "404"
+    },
+    {
+      "name": "asset-validation-companion",
+      "status": "pass",
+      "detail": "complete-bounded-independent-validation"
+    },
+    {
+      "name": "forbidden-success-claims",
+      "status": "pass",
+      "detail": "{\"api\": false, \"asset_loading\": false, \"asset_suitability\": false, \"completion\": false, \"cross_game_standardization\": false, \"gameplay\": false, \"idempotency\": false, \"implementation\": false, \"licensing\": false, \"ontology\": false, \"persistence\": false, \"production_use\": false, \"responsive\": false, \"shipping\": false, \"xp\": false}"
+    },
+    {
+      "name": "no-t8-product-shipping",
+      "status": "pass",
+      "detail": "false/false"
+    },
+    {
+      "name": "v1-lifecycle-superseded",
+      "status": "pass",
+      "detail": "historical-non-consumable-superseded-for-current-v4-lifecycle"
+    }
+  ],
+  "bindings": {
+    "candidate": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v2-81bfe78e-20260722T130706Z-codex.json",
+      "sha256": "436d15249549fb0762edcb5c63d1fdcc4f4d51c80852200f929050ca0a0840f5",
+      "first_add_commit": "d70959ce2cdfed2e655f5ffcccef67f9bc6ea353"
+    },
+    "owner_acceptance": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-t4-v2.json",
+      "sha256": "56bc530ddff17e8ff20741517d6c29b17ba250cbb35ec3a772a3cd71a23ed318",
+      "first_add_commit": "1d56853dcb287463fb12906a8c534e7973cfb8cc"
+    },
+    "accepted_manifest": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+      "sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80",
+      "first_add_commit": "8b3a83d3d0347921f67e3a81131a312b9d916c71"
+    },
+    "reconciliation": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v4.json",
+      "sha256": "6f202f838a97dd93fc049d6301cb0230b715f869b4c994e62dbf178c27658c8c",
+      "first_add_commit": "d009b9a3b99e5aca3a512be09f10c5a9e34c437a"
+    },
+    "full_review": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v4-d009b9a3-20260722T125310Z-codex.json",
+      "sha256": "95f9d5b91ea2caea1477c07605ee664e4c94cdf7f301a9490954ee9f978f2f43",
+      "first_add_commit": "81bfe78eb8ccef81d95636fcf7e0c745841d84fc"
+    }
+  },
+  "admission": {
+    "t4_accepted_with_disclosure": false,
+    "conditionally_consumable": false,
+    "t8_authorized": false,
+    "product_authorized": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false
+  }
+}
