@@ -1,0 +1,191 @@
+{
+  "schema_version": "apk-batch-independent-review.v5",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "role": "adversarial-reviewer-batch-c",
+  "role_identity": "/root/t4_fresh_reviewer_terra",
+  "reviewed_at": "2026-07-22T10:27:36Z",
+  "evidence_base": {
+    "commit": "97d5af991eeebe570ac0af57b16628dd623d5515",
+    "short_commit": "97d5af99",
+    "reviewed_bytes": "Git-tree bytes at the evidence-base commit only. The working tree's dirty orchestration and registry documents were excluded from review inputs."
+  },
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "status": "fail",
+  "acceptance": "not-claimed",
+  "historical_failed_review": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-adversarial-review.json",
+    "sha256": "56c81bda853387b55800d4d2f190102c0e95fb65cf978b253887e842ad795204",
+    "disposition": "Preserved as non-authoritative lineage only; its two High and one Medium findings were independently compared, not imported as this review's conclusion."
+  },
+  "exact_inputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py": "e30cc7048b8c727677bf2fca35be3b510baedce1130fa92420508617bf3c7b61",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v5.json": "97dffc6ebcd5cb8bae09fec095f2d541356c3a21cd805d85cd62dc9be7e4cb79",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-auditor-v4-collision.json": "166c1c2284076ab0eaac5ec2f267cd2cc92378b4f908c6573767678626813b74",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-gryphon-mapper-v5-collision.json": "f9317af43955d3fce32cc09f40a2cf7a8a4b795d16befb319eddadecc03d4d67",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-gryphon-mapper-v6-root-arbiter-20260722-1718-8f2c-ownership.json": "7d64a03fd7519d43888ce7fba575044000af7800de2a66f1101f13e19d2c9965",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v4.json": "3472966cb0c31bfac60a48542f90d7ac76dc3e133a8439028151c64c09cffda3",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v4.json": "5816158a28b5b3196834db45dfa0af70effeb6df986b2ad5c6521835dfd626ce",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/browser-auditor-batch-c-v4.json": "dabd1efcd415c21d6a350ea9c4c42f0bf7900d5fabe2b87a0541caaffa725197",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v5.json": "7641d682c4a522dda8be9fd0b417b04d6146552e2dcac93bc01960b8c6196406",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/browser-auditor-batch-c-v5.json": "5340d99ae66225260faeb49751983f52345b7b1efa7134520385f9dba62d84c8",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v4.json": "96bd88571dc57ad2d1bea256524a335d6e7f291e573098442496d4f4b3bd1327",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v4.json": "299fb74edbccb0d39c9fd8f04abf6c16b94b8e05e677413b55b41694a7117853",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c-v5.json": "032de5f4aeeb654056b1c39e0e136328dd21225b863dbee81f295e036445a9e0",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-gryphon-patrol-batch-c-v5.json": "52667713e8022db9f5b6e4dc190b274a341e64bd0b5b5502796a54f8d9f40738"
+  },
+  "commands": [
+    {
+      "command": "git rev-parse HEAD",
+      "result": "97d5af991eeebe570ac0af57b16628dd623d5515; matches the required evidence base."
+    },
+    {
+      "command": "git diff --name-only 97d5af991eeebe570ac0af57b16628dd623d5515 -- measure/tracks/apk_corpus_audit_action_defense_20260712",
+      "result": "Only _orchestrator/LAST-BATCH-STATUS.md, metadata.json, and plan.md were dirty; none was used as a review input."
+    },
+    {
+      "command": "python3 measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py",
+      "result": "PASS: 5 tests ran in 1.008s; OK."
+    },
+    {
+      "command": "Recompute every selected receipt/proof SHA-256 from git show 97d5af99:<path> and compare its role, provider_identifier, parent_task, fork_turns, retained proof, and verification result to batch-c-role-receipt-selection-v5.json.",
+      "result": "PASS: all 8 selected receipt hashes and 8 proof hashes matched; all 8 provider identifiers and all 8 provider_identifier/parent_task pairs were unique; every selected proof reported fork_turns=none and verification_result=pass."
+    },
+    {
+      "command": "Inspect the corrected factual/mapper, asset, collision/ownership, immutable browser, and Kimi corroboration records from git show 97d5af99:<path>.",
+      "result": "Denominator and immutable browser byte checks are green, and their stated factual, mapper, asset, and browser limitations are preserved. Three material selector-binding defects below remain."
+    }
+  ],
+  "rederived_selection": {
+    "selected_role_count": 8,
+    "unique_native_provider_identifiers": 8,
+    "unique_provider_parent_pairs": 8,
+    "entries": [
+      {
+        "task_id": "C3-DISCOVERY",
+        "provider_identifier": "/root/t4_discovery_reverify_terra",
+        "parent_task": "/root",
+        "fork_turns": "none",
+        "hashes_match": true
+      },
+      {
+        "task_id": "C3-COLLECT-PALADIN",
+        "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_paladin_collector_v4",
+        "parent_task": "/root/apk_batch_c_fresh_roles",
+        "fork_turns": "none",
+        "hashes_match": true
+      },
+      {
+        "task_id": "C3-COLLECT-GRYPHON",
+        "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_collector_v4",
+        "parent_task": "/root/apk_batch_c_fresh_roles",
+        "fork_turns": "none",
+        "hashes_match": true
+      },
+      {
+        "task_id": "C3-MAP-PALADIN",
+        "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_paladin_mapper_v4",
+        "parent_task": "/root/apk_batch_c_fresh_roles",
+        "fork_turns": "none",
+        "hashes_match": true
+      },
+      {
+        "task_id": "C3-MAP-GRYPHON",
+        "provider_identifier": "/root/t4_gryphon_mapper_terra",
+        "parent_task": "/root",
+        "fork_turns": "none",
+        "hashes_match": true
+      },
+      {
+        "task_id": "C3-TRUTH",
+        "provider_identifier": "/root/t4_truth_selection_terra",
+        "parent_task": "/root",
+        "fork_turns": "none",
+        "hashes_match": true
+      },
+      {
+        "task_id": "C3-BROWSER",
+        "provider_identifier": "/root/t4_browser_auditor_terra",
+        "parent_task": "/root",
+        "fork_turns": "none",
+        "hashes_match": true
+      },
+      {
+        "task_id": "C3-ASSET",
+        "provider_identifier": "/root/t4_asset_auditor_terra",
+        "parent_task": "/root",
+        "fork_turns": "none",
+        "hashes_match": true
+      }
+    ]
+  },
+  "evidence_limits_confirmed": {
+    "factual_and_mapper": "The corrected denominator is 22 source, 9 asset, and 21 historical records. Paladin preserves 21 claims and Gryphon preserves 15 claims; both v4 collector and mapper artifacts state zero new factual claims, no browser or asset-suitability claim, no candidate authority, and explicit current-runtime/browser/API/asset unknowns.",
+    "asset": "The corrected asset enumeration covers nine unique candidates, including two newly enumerated Gryphon archive metadata files. It explicitly claims no suitability, runtime use, visual inspection, licensing, or fresh asset-role completion.",
+    "browser": "The immutable browser audit binds revision cdb152452a6e404507bb0fd11faa2abfb7f7aa07, retained server/console/network logs, and compact/wide screenshot hashes. Its only observation is a bounded non-runnable catalog/404 disposition; it claims no gameplay, responsive success, global route absence, historical behavior, or console cleanliness. Kimi corroboration remains additive wide-only 404/catalog evidence with no screenshot and no role or runtime-binding authority."
+  },
+  "prior_findings_comparison": {
+    "T4C-REV-HIGH-001": "Partially addressed mechanically: the v5 selector has eight hash-valid fresh-context receipts/proofs. It remains materially unresolved because the selector chooses asset and Gryphon-mapper outputs that their preserved collision records explicitly prohibit selecting.",
+    "T4C-REV-HIGH-002": "Resolved: the selected browser v5 proof and receipt explicitly bind the immutable audit v4 and all seven companion artifacts at e54d8211, including audit SHA 3472966c; no rerun is required for the truthful provenance successor.",
+    "T4C-REV-MED-001": "Remains unresolved only for collision eligibility: the active gate does not read the collision arbitration records or reject the currently disallowed Asset v4 and Gryphon Mapper v5 selections. Browser output binding is present and valid."
+  },
+  "findings": [
+    {
+      "id": "T4C-REV5-HIGH-001",
+      "severity": "High",
+      "status": "unresolved",
+      "title": "The v5 selector chooses two role outputs that their own collision arbitration records mark unselectable.",
+      "evidence": [
+        "C3-ASSET selects role-receipts/asset-auditor-batch-c-v4.json and role-proofs/asset-auditor-batch-c-v4.json. batch-c-asset-auditor-v4-collision.json says both competing v4 provider sets are preserved, neither may be selected, v4_selection_authorized is false, and a genuinely fresh v5 successor is required.",
+        "C3-MAP-GRYPHON selects role-receipts/requirements-mapper-gryphon-patrol-batch-c-v5.json and its proof. batch-c-gryphon-mapper-v5-collision.json declares that v5 invalid, freezes it, and says v5_selection_authorized is false. The root-arbiter ownership record permits consideration only for a complete coherent v6 successor on five reserved paths; those successor outputs are not selected by v5."
+      ],
+      "impact": "The role-selection prerequisite is self-contradictory for two of eight active roles. Hash-valid receipts cannot override the preserved owner arbitration, so fresh role isolation and downstream candidate eligibility are not established.",
+      "required_remediation": "Do not consume either selected collision-invalid set. Complete the collision records' designated fresh successor process and publish a selector that explicitly binds only authorized, internally coherent outputs."
+    },
+    {
+      "id": "T4C-REV5-MED-001",
+      "severity": "Medium",
+      "status": "unresolved",
+      "title": "The full v4 truth gate omits collision-arbitration eligibility checks.",
+      "evidence": "BatchCFreshContextReceiptContract verifies the v5 selector receipt/proof hashes and native provenance, but it does not read the preserved asset or Gryphon-mapper collision records or assert that the selected C3-ASSET and C3-MAP-GRYPHON outputs are eligible for selection.",
+      "impact": "The 5/5 result is accurate for its narrower assertions but cannot establish role eligibility while the selector contradicts explicit collision arbitration.",
+      "required_remediation": "Select the genuinely fresh Asset v5 and reserved coherent Gryphon Mapper v6 successors, extend the active gate with fail-closed collision eligibility assertions, and rerun only the affected gate."
+    }
+  ],
+  "unresolved_findings": {
+    "critical": 0,
+    "high": 1,
+    "medium": 1,
+    "low": 0
+  },
+  "lifecycle": {
+    "truth_gate": "green: 5 passed",
+    "fresh_review_gate": "red",
+    "candidate_authorized": false,
+    "candidate_authorization_reason": "Zero unresolved Critical, High, and Medium findings and all active gates green are required. This corrected review has one unresolved High and one unresolved Medium collision-eligibility finding.",
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "cohort_consumption_authorized": false
+  },
+  "scope_attestation": {
+    "review_only": true,
+    "forbidden_work_not_performed": [
+      "factual evidence collection or repair",
+      "requirements mapping or repair",
+      "asset or browser evidence authoring",
+      "truth-test modification",
+      "candidate publication",
+      "product-owner acceptance",
+      "accepted-manifest publication",
+      "plan, registry, or source editing",
+      "staging or committing"
+    ],
+    "no_gameplay_success_claimed": true,
+    "no_responsive_success_claimed": true,
+    "no_completion_or_persistence_success_claimed": true,
+    "no_asset_suitability_claimed": true
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

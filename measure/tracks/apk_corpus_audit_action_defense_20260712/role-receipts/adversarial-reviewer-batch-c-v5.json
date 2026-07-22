@@ -1,0 +1,93 @@
+{
+  "schema": "apk-role-receipt.v5",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 3: Batch C evidence packages",
+  "batch_id": "batch-c",
+  "task_id": "C3-REVIEW-V5",
+  "role": "adversarial-reviewer-batch-c",
+  "role_identity": "/root/t4_fresh_reviewer_terra",
+  "status": "complete-with-material-findings",
+  "acceptance": "not-claimed",
+  "evidence_base_commit": "97d5af991eeebe570ac0af57b16628dd623d5515",
+  "reviewer_provenance": {
+    "available": true,
+    "availability_scope": "Native collaboration task identity, actual direct parent task, and fork mode only.",
+    "provider_identifier": "/root/t4_fresh_reviewer_terra",
+    "parent_task": "/root",
+    "fork_turns": "none",
+    "raw_encrypted_prompt": null,
+    "raw_provider_event": null,
+    "raw_provider_event_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "provider_event_log": null,
+    "unavailable_note": "Raw encrypted prompt, provider-event, spawn, and session exports are unavailable and intentionally null; no unavailable provenance was reconstructed."
+  },
+  "commands": [
+    {
+      "command": "git rev-parse HEAD",
+      "result": "97d5af991eeebe570ac0af57b16628dd623d5515"
+    },
+    {
+      "command": "python3 measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py",
+      "result": "PASS: 5 tests ran in 1.008s; OK."
+    },
+    {
+      "command": "Recompute selected receipt/proof hashes, identities, and direct parents from git show 97d5af99:<path>.",
+      "result": "PASS: 8/8 hashes matched; 8 unique provider identifiers; 8 unique provider/parent pairs."
+    },
+    {
+      "command": "Compare v5 selection to the asset and Gryphon-mapper collision records and compare selected browser v5 provenance to the browser-audit v4 output binding.",
+      "result": "FAIL: the selected Asset v4 and Gryphon Mapper v5 outputs are explicitly unselectable under preserved collision arbitration; browser v5 is correctly byte-bound to the immutable Kimi audit."
+    }
+  ],
+  "output": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-independent-review-v5.json",
+    "sha256": "100da9878cb7d65064330f88b7fd4cee11afe8f69141d74082cf9b9ced2e8b6a"
+  },
+  "findings": {
+    "unresolved_ids": [
+      "T4C-REV5-HIGH-001",
+      "T4C-REV5-MED-001"
+    ],
+    "unresolved_counts": {
+      "critical": 0,
+      "high": 1,
+      "medium": 1,
+      "low": 0
+    },
+    "candidate_authorized": false
+  },
+  "browser_check": {
+    "result": "PASS: selected browser v5 explicitly binds the immutable audit v4 and all seven companion artifacts at e54d8211, including audit SHA 3472966c. The bounded catalog-plus-404 disposition remains valid; no gameplay, responsive, completion, or global-route claim is made."
+  },
+  "scope_attestation": {
+    "roles_held": [
+      "adversarial-reviewer-batch-c"
+    ],
+    "forbidden_work_not_performed": [
+      "factual evidence collection or repair",
+      "requirements mapping or repair",
+      "asset or browser evidence authoring",
+      "truth-test modification",
+      "candidate publication",
+      "product-owner acceptance",
+      "accepted-manifest publication",
+      "plan, registry, or source editing",
+      "staging",
+      "committing"
+    ],
+    "candidate_authorized": false,
+    "no_gameplay_success_claimed": true,
+    "no_responsive_success_claimed": true,
+    "no_completion_or_persistence_success_claimed": true,
+    "no_asset_suitability_claimed": true
+  },
+  "reviewer_proof_created": false,
+  "reviewer_proof_reason": "No extra proof is required to state the available native identity and direct-parent facts. Raw provider evidence is unavailable and is disclosed as null rather than fabricated.",
+  "commit_sha": null,
+  "commit_disposition": "not-created; review assignment prohibited staging and committing",
+  "self_sha256": null,
+  "self_hash_note": "A receipt cannot stably embed its own SHA-256. A later authorized descendant may bind these exact bytes without altering this receipt.",
+  "marker": "MEASURE_AGENT_RESULT"
+}
