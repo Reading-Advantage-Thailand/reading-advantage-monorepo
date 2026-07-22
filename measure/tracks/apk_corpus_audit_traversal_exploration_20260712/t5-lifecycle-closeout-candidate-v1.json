@@ -1,0 +1,70 @@
+{
+  "schema_version": "apk-t5-lifecycle-closeout-candidate.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "additive": true,
+  "status": "candidate-awaiting-fresh-product-owner-acceptance",
+  "consumable": false,
+  "purpose": "Supersede stale lifecycle test selection and correct the cohort approval publication fact without changing immutable historical evidence.",
+  "scope": "T5 formal closeout only; no product source, package evidence, predecessor, other track, or Git-history mutation.",
+  "immutable_history": {
+    "legacy_cohort_accepted_manifest": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-v1.json",
+      "sha256": "06bf02aba21b826bb6a615a0a283ad8a9f5b6097b6d7682ecd2c6d7561ec020c",
+      "disposition": "preserved; its approval commit binding is corrected only by this successor candidate"
+    },
+    "legacy_cohort_approval": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-acceptance-cohort-v1.json",
+      "sha256": "c24acb974750cbb4a757bedca89b022b3d5be2902a3b5aff1a2e341f2cc92425",
+      "disposition": "preserved; no provider message, prompt, event, or session provenance is claimed"
+    }
+  },
+  "historical_test_supersessions": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-a-truth-tests-v6.py",
+      "sha256": "0fa94db21ba5689179b5e22dfd96960916001fc58c0ba56c2e851f130c891e5c",
+      "stale_assertions": [
+        "requires a V6-named independent-review artifact although the accepted chain binds the committed V5 review over V6 inputs",
+        "requires the old V6 candidate and approval schema instead of the exact ACCEPT-WITH-DISCLOSURE Batch A acceptance"
+      ],
+      "active_replacement": "accepted-cohort-manifest-batch-a-v6.json and role-receipts/accepted-manifest-author-batch-a-v6.json",
+      "disposition": "superseded-for-closeout; retained as immutable historical red-stage evidence"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-truth-tests-v2.py",
+      "sha256": "58ca4ada5054197f66fc9419da2a79d43b1331dfff6bc18f500827d099fa7cbf",
+      "stale_assertions": ["requires that no V2 review, candidate, approval, or accepted manifest exists"],
+      "active_replacement": "accepted-cohort-manifest-batch-c-v2-retroactive.json",
+      "disposition": "superseded-for-closeout; retained as immutable pre-publication fail-closed evidence"
+    }
+  ],
+  "accepted_batch_bindings": {
+    "batch_a": {"path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-a-v6.json", "sha256": "f5a215f44815c79025e86e97a3217d7a85c4a33db86f80db2909f30dd3a9caa3"},
+    "batch_b": {"path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-b-v3-retroactive.json", "sha256": "49bdb4e4278246df1f3810de24f682870fe7d65171d075d50479435f74312b01"},
+    "batch_c": {"path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-c-v2-retroactive.json", "sha256": "f9cef57c46ec6e63f61d7ac0df4e8fd0737252f711c21186f86b846e4c56f0ff"}
+  },
+  "cohort_publication_binding_correction": {
+    "legacy_recorded_approval_commit": "970dad3d1f1e09770b162c7a8acfbb02386f1016",
+    "actual_approval_publication_commit": "a4f4a8325f12f667cd8ad5beab4738563ddeea1a",
+    "candidate_publication_commit": "b3d41f7b10df534f86070b24657f8acabf61a71c",
+    "proof": "The exact approval path is absent at 970dad3d and is present byte-for-byte at a4f4a832; b3d41f7b is an ancestor of a4f4a832.",
+    "effect": "The legacy accepted cohort manifest remains immutable historical evidence but is not a valid formal-closeout binding. A successor acceptance must bind this candidate after its publication."
+  },
+  "current_gate": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/t5-closeout-gates-v1.py",
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/t5-closeout-gates-v1.py",
+    "expected_result": "6 passed; exit 0",
+    "scope": "current closeout facts only; historical red-stage modules are not relabeled as green"
+  },
+  "authority_required": {
+    "required": true,
+    "one_step": "A project owner must publish one fresh acceptance artifact that hashes this committed candidate exactly and authorizes one successor accepted-cohort manifest.",
+    "not_authorized_here": ["product-owner acceptance", "accepted-cohort manifest publication", "provider-side prompt, event, session, or encrypted-context provenance"]
+  },
+  "disclosures": [
+    "This candidate does not revoke, rewrite, backdate, or relabel any immutable historical artifact.",
+    "Batch-level historical and browser-unknown disclosures remain binding.",
+    "No completion, persistence, XP, idempotency, API correctness, browser behavior, production behavior, or asset-loading success is claimed.",
+    "Native-harness encrypted prompts and provider-side events are unavailable and are not recreated as receipts."
+  ],
+  "revocation": {"candidate_only": true, "on_any_bound_input_drift": "Discard this candidate, regenerate it additively, rerun the current closeout gate, and obtain fresh explicit acceptance."}
+}
