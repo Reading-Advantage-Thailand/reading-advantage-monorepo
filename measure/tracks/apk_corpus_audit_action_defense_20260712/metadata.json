@@ -1,12 +1,48 @@
 {
   "track_id": "apk_corpus_audit_action_defense_20260712",
   "type": "chore",
-  "status": "pending",
+  "status": "accepted-with-disclosure",
   "created_at": "2026-07-12T00:00:00Z",
-  "updated_at": "2026-07-12T00:00:00Z",
+  "updated_at": "2026-07-22T13:42:00Z",
   "description": "Recover exact evidence packages for eight action, defense, escort, projectile, and arena games in bounded independently reviewed batches.",
-  "estimated_tasks": 27,
-  "actual_tasks": null,
-  "deviation_notes": null,
-  "depends_on": ["apk_three_game_truth_pilot_20260712"]
+  "estimated_tasks": 25,
+  "actual_tasks": 20,
+  "deviation_notes": "T4 is accepted with disclosure only. The v4 lineage preserves the corrected eight-game reconciliation, zero-Critical/High/Medium review, ordered candidate, owner acceptance, accepted manifest, and owner admission disposition. The v1 lifecycle and raw admission-gate outputs v1-v4 remain immutable historical/non-authority artifacts. Batch A limitations, Batch B synthetic-input/API/404 limitations, Batch C Kimi helper-attempt/404 limitations, and Asset companion limitations remain binding; no gameplay, responsive, asset-loading, suitability, licensing, production, implementation, shipping, completion, persistence, XP, idempotency, or API success is claimed.",
+  "depends_on": [
+    "apk_three_game_truth_pilot_20260712"
+  ],
+  "task_counts": {
+    "total": 25,
+    "completed": 20,
+    "deferred_manual_verification": 5,
+    "in_progress": 0,
+    "pending": 0
+  },
+  "authority": {
+    "cohort_reconciliation_v4": {
+      "commit": "d009b9a3b99e5aca3a512be09f10c5a9e34c437a",
+      "sha256": "6f202f838a97dd93fc049d6301cb0230b715f869b4c994e62dbf178c27658c8c"
+    },
+    "full_cohort_review_v4": {
+      "commit": "81bfe78eb8ccef81d95636fcf7e0c745841d84fc",
+      "sha256": "95f9d5b91ea2caea1477c07605ee664e4c94cdf7f301a9490954ee9f978f2f43",
+      "unresolved_critical_high_medium": 0
+    },
+    "candidate_v2": {
+      "commit": "d70959ce2cdfed2e655f5ffcccef67f9bc6ea353",
+      "sha256": "436d15249549fb0762edcb5c63d1fdcc4f4d51c80852200f929050ca0a0840f5"
+    },
+    "product_owner_acceptance_v2": {
+      "commit": "1d56853dcb287463fb12906a8c534e7973cfb8cc",
+      "sha256": "56bc530ddff17e8ff20741517d6c29b17ba250cbb35ec3a772a3cd71a23ed318"
+    },
+    "accepted_manifest_v2": {
+      "commit": "8b3a83d3d0347921f67e3a81131a312b9d916c71",
+      "sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80"
+    },
+    "admission_owner_disposition_v4": {
+      "commit": "43928b9a",
+      "decision": "accepted-with-disclosure"
+    }
+  }
 }

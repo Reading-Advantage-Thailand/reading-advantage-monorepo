@@ -1,6 +1,35 @@
 # T4 Action and Defense Evidence Cohort — Last Batch Status
 
-## Current: Batch B — STOP-LOSS REASSERTED (lifecycle authority defect)
+## Current: T4 — ACCEPTED WITH DISCLOSURE (v4 lineage)
+
+T4 is closed as **accepted-with-disclosure** by the owner disposition at `43928b9a`. This is a bounded evidence-cohort admission, not a gameplay, responsive, asset, implementation, product, or shipping acceptance.
+
+### Current authority and one-time gates
+
+- `cohort-reconciliation-v4.json` was published at `d009b9a3` (`6f202f83…58c8`); its independently run gate recorded **7 passed** and the eight-game roster is exactly once.
+- The fresh full-cohort review v4 was published at `81bfe78e` (`95f9d5b9…2f43`) with **0 unresolved Critical, High, or Medium findings**. It authorizes only the later v2 candidate lifecycle.
+- Candidate v2 was published at `d70959ce` (`436d1524…40f5`), followed by delegated product-owner acceptance v2 at `1d56853d` (`56bc530d…d318`) and accepted manifest v2 at `8b3a83d3` (`82485025…ac80`).
+- The raw admission-gate results v1-v4 and the v1 lifecycle remain immutable historical/non-authority records. The owner disposition at `43928b9a` is the operative decision: the v4 raw gate’s one rejected strict equality concerned conditional consumability, while all bound hash, Git, roster, review, selector-lineage, Kimi, asset-companion, forbidden-claim, branch, and single-master checks passed.
+- No historical or batch suite was rerun for closeout. T8 is not authorized by this T4 admission.
+
+### Binding disclosures
+
+- **Batch A:** retain the Castle Defense manifest omission, DISC-001, and 178/187 resolved-claim limitation.
+- **Batch B:** Village Guardian used synthetic untrusted DOM input and a hidden-tab scheduler adapter; completion returned HTTP 400. Archer’s Revenge and Storm the Castle Tower reviewed routes returned 404. None of trusted input, foreground timing, completion, persistence, XP, idempotency, API correctness, current runtime behavior, or asset runtime use is claimed.
+- **Batch C:** Browser v6 root-arbiter Kimi WebBridge is selected. It made five required `screenshot.sh` attempts with helper exits 4 and 28, including a wide timeout; selected PNGs are byte-identical helper-triggered daemon post-process recoveries. No successful helper file write or direct screenshot API action is claimed. The reviewed routes returned 404 and are non-runnable; no gameplay or responsive success is claimed. Browser v5 and collided Asset v4/Gryphon Mapper v5 sets are historical, unselected, and non-consumable.
+- **Assets:** the selected Asset v5 receipt retains five pending self-check fields; the separate independent validation companion recomputed those fields as passing but does not impersonate the role. Asset presence does not claim runtime loading, suitability, licensing, production use, or shipping.
+- Across the cohort, no gameplay, responsive, completion, persistence, XP, idempotency, API, asset-loading, suitability, licensing, production-use, implementation, product, or shipping success is accepted.
+
+### Closeout state
+
+- Plan count: **20 completed / 5 deferred product-owner manual-verification tasks / 0 in progress / 25 total**.
+- The only remaining items are the five intentionally deferred manual-verification tasks. They do not reopen T4 or authorize T8.
+
+---
+
+## Historical snapshot: Batch B — STOP-LOSS REASSERTED (lifecycle authority defect)
+
+The material below preserves the prior Batch B handoff state. It is not the current dispatch target; the operative T4 decision is the accepted-with-disclosure v4 closeout above.
 
 ### Lifecycle stop-loss (2026-07-22)
 - `batch-b-lifecycle-stop-loss-v17.json` records **Critical T4B17-CRIT-001** without altering historical evidence: the published acceptance omits the frozen strategy's conversation/thread identifier and its nominal approval event predates candidate publication.
