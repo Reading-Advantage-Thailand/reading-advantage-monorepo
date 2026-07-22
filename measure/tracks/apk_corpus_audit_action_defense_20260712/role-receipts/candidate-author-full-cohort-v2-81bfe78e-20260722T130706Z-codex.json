@@ -1,0 +1,111 @@
+{
+  "schema": "measure.role-receipt.v4",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-CANDIDATE-V2-81BFE78E-CODEX",
+  "role": "candidate-author-full-cohort-v2",
+  "status": "complete-candidate-only-non-consumable",
+  "acceptance": "not-claimed",
+  "completed_at_utc": "2026-07-22T13:07:06Z",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/apk_candidate_v2_author",
+    "parent_task": "/root",
+    "candidate_instance_nonce": "v2-81bfe78e-20260722T130706Z-codex",
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "auxiliary_git_worktree_created_or_used": false,
+    "commit_created": false,
+    "raw_encrypted_prompt": null,
+    "unavailable_note": "Encrypted provider event exports are unavailable and are not fabricated."
+  },
+  "immutable_candidate_base": "81bfe78eb8ccef81d95636fcf7e0c745841d84fc",
+  "ownership_binding": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-author-full-cohort-v2-81bfe78e-20260722T130706Z-codex-ownership.json",
+    "sha256": "111aac6e55d859ca2e9c703da321231d4d57ff185a3cf4206c6e2254f2661ee1",
+    "prewrite_absence_gate": "pass"
+  },
+  "candidate": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v2-81bfe78e-20260722T130706Z-codex.json",
+    "sha256": "436d15249549fb0762edcb5c63d1fdcc4f4d51c80852200f929050ca0a0840f5",
+    "status": "authored-uncommitted-candidate-only-non-consumable",
+    "candidate_only": true,
+    "consumable": false
+  },
+  "proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/candidate-author-full-cohort-v2-81bfe78e-20260722T130706Z-codex.json",
+    "sha256": "7993540721f02b2ea388ee2de8e8e8188079485c2e7d1d7951e1a84cc2d6d520"
+  },
+  "bound_v4_lineage": {
+    "reconciliation_v4_sha256": "6f202f838a97dd93fc049d6301cb0230b715f869b4c994e62dbf178c27658c8c",
+    "gate_v4_sha256": "234cc42ba99cebdd3a1114758af3ca274f551fe56c52b770af61fcf12680e851",
+    "reconciliation_and_gate_first_publication_commit": "d009b9a3b99e5aca3a512be09f10c5a9e34c437a",
+    "review_ownership_sha256": "7b18437282ac20a4588df4ffca07bf9557ace9b360d63034e53bc4014287cc13",
+    "review_sha256": "95f9d5b91ea2caea1477c07605ee664e4c94cdf7f301a9490954ee9f978f2f43",
+    "review_proof_sha256": "4ecb7ed18e8a0cb86b8028b0805540eaa2a9ab559a46a9ec7399288ef679b715",
+    "review_receipt_sha256": "7c58d549c0b89072f0d440a07f6373abf7cb9e6141348faa48a49b7f9b0def04",
+    "review_bundle_first_publication_commit": "81bfe78eb8ccef81d95636fcf7e0c745841d84fc",
+    "review_verdict": "PASS_V4_FULL_COHORT",
+    "unresolved_critical_high_medium": 0,
+    "unexpected_external_admission_artifacts_bound": false
+  },
+  "cohort_result": {
+    "games": 8,
+    "batch_distribution": "A3/B3/C2",
+    "duplicates": 0,
+    "omissions": 0,
+    "all_batch_a_b_c_disclosures_retained": true,
+    "browser_v6_root_arbiter_kimi_webbridge_selected": true,
+    "browser_v5_excluded": true,
+    "browser_checks_rerun": false,
+    "prior_high": "T4C-BROWSER-V6-SELECTOR-001",
+    "prior_high_disposition": "RESOLVED_AT_SELECTOR_LINEAGE_LAYER",
+    "stale_v1_candidate_product_owner_accepted_chain": "HISTORICAL_NON_CONSUMABLE_SUPERSEDED_FOR_CURRENT_V4_LIFECYCLE"
+  },
+  "authorization": {
+    "candidate_v2_authored": true,
+    "candidate_v2_published": false,
+    "candidate_only": true,
+    "candidate_consumable": false,
+    "product_owner_acceptance_exists_for_v2": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_exists_for_v2": false,
+    "accepted_manifest_publication_authorized": false,
+    "cohort_consumption_authorized": false,
+    "authority_not_exercised": true
+  },
+  "next_required_event": "A later, separately authorized product-owner decision may occur only after a commit first publishes these exact candidate bytes; it must bind that publication commit and the exact v4 lineage before any accepted manifest or consumption can be considered.",
+  "scope_attestation": {
+    "candidate_only": true,
+    "only_four_new_nonce_paths_written": true,
+    "no_existing_file_modified": true,
+    "no_reconciliation_review_docs_registry_plan_metadata_status_lifecycle_or_source_edit": true,
+    "no_product_owner_acceptance_created_or_modified": true,
+    "no_accepted_manifest_created_or_modified": true,
+    "no_browser_or_server_rerun": true,
+    "no_backups_created": true,
+    "no_staging": true,
+    "no_commit": true
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-author-full-cohort-v2-81bfe78e-20260722T130706Z-codex-ownership.json",
+      "sha256": "111aac6e55d859ca2e9c703da321231d4d57ff185a3cf4206c6e2254f2661ee1"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v2-81bfe78e-20260722T130706Z-codex.json",
+      "sha256": "436d15249549fb0762edcb5c63d1fdcc4f4d51c80852200f929050ca0a0840f5"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/candidate-author-full-cohort-v2-81bfe78e-20260722T130706Z-codex.json",
+      "sha256": "7993540721f02b2ea388ee2de8e8e8188079485c2e7d1d7951e1a84cc2d6d520"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/candidate-author-full-cohort-v2-81bfe78e-20260722T130706Z-codex.json",
+      "sha256": null,
+      "digest_reason": "A receipt cannot embed its own stable SHA-256."
+    }
+  ],
+  "self_sha256": null,
+  "self_hash_note": "A receipt cannot embed its own stable SHA-256."
+}

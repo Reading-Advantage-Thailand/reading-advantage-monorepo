@@ -1,0 +1,121 @@
+{
+  "schema": "measure-role-proof.v2",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-CANDIDATE-V2-81BFE78E-CODEX",
+  "role": "candidate-author-full-cohort-v2",
+  "status": "complete-candidate-only-non-consumable",
+  "completed_at_utc": "2026-07-22T13:07:06Z",
+  "provider_identifier": "/root/apk_candidate_v2_author",
+  "parent_task": "/root",
+  "candidate_instance_nonce": "v2-81bfe78e-20260722T130706Z-codex",
+  "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+  "auxiliary_git_worktree_created_or_used": false,
+  "immutable_candidate_base": "81bfe78eb8ccef81d95636fcf7e0c745841d84fc",
+  "ownership": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-author-full-cohort-v2-81bfe78e-20260722T130706Z-codex-ownership.json",
+    "sha256": "111aac6e55d859ca2e9c703da321231d4d57ff185a3cf4206c6e2254f2661ee1",
+    "all_four_nonce_paths_absent_prewrite": true
+  },
+  "output": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v2-81bfe78e-20260722T130706Z-codex.json",
+    "sha256": "436d15249549fb0762edcb5c63d1fdcc4f4d51c80852200f929050ca0a0840f5",
+    "status": "authored-uncommitted-candidate-only-non-consumable",
+    "consumable": false
+  },
+  "immutable_v4_lineage": {
+    "reconciliation": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v4.json",
+      "sha256": "6f202f838a97dd93fc049d6301cb0230b715f869b4c994e62dbf178c27658c8c",
+      "first_publication_commit": "d009b9a3b99e5aca3a512be09f10c5a9e34c437a"
+    },
+    "gate": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-cohort-reconciliation-gate-v4.py",
+      "sha256": "234cc42ba99cebdd3a1114758af3ca274f551fe56c52b770af61fcf12680e851",
+      "first_publication_commit": "d009b9a3b99e5aca3a512be09f10c5a9e34c437a"
+    },
+    "review_ownership": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v4-d009b9a3-20260722T125310Z-codex-ownership.json",
+      "sha256": "7b18437282ac20a4588df4ffca07bf9557ace9b360d63034e53bc4014287cc13",
+      "first_publication_commit": "81bfe78eb8ccef81d95636fcf7e0c745841d84fc"
+    },
+    "review": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v4-d009b9a3-20260722T125310Z-codex.json",
+      "sha256": "95f9d5b91ea2caea1477c07605ee664e4c94cdf7f301a9490954ee9f978f2f43",
+      "first_publication_commit": "81bfe78eb8ccef81d95636fcf7e0c745841d84fc"
+    },
+    "review_role_proof": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v4-d009b9a3-20260722T125310Z-codex.json",
+      "sha256": "4ecb7ed18e8a0cb86b8028b0805540eaa2a9ab559a46a9ec7399288ef679b715",
+      "first_publication_commit": "81bfe78eb8ccef81d95636fcf7e0c745841d84fc"
+    },
+    "review_role_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v4-d009b9a3-20260722T125310Z-codex.json",
+      "sha256": "7c58d549c0b89072f0d440a07f6373abf7cb9e6141348faa48a49b7f9b0def04",
+      "first_publication_commit": "81bfe78eb8ccef81d95636fcf7e0c745841d84fc"
+    }
+  },
+  "verification_commands": [
+    {
+      "id": "CAND-V2-01",
+      "command": "test ! -e <each of the four nonce paths>",
+      "exit_code": 0,
+      "result": "Ownership and all four reserved nonce paths were absent before the ownership claim."
+    },
+    {
+      "id": "CAND-V2-02",
+      "command": "sha256sum <reconciliation-v4> <gate-v4> <review-v4 ownership/review/proof/receipt>",
+      "exit_code": 0,
+      "result": "All six immutable v4 lineage hashes match the candidate bindings exactly."
+    },
+    {
+      "id": "CAND-V2-03",
+      "command": "git log --diff-filter=A --format=%H -- <each immutable v4 lineage path>",
+      "exit_code": 0,
+      "result": "Reconciliation v4 and gate v4 first appeared at d009b9a3; review ownership, review, proof, and receipt first appeared at 81bfe78e."
+    },
+    {
+      "id": "CAND-V2-04",
+      "command": "sha256sum <candidate-author ownership> <candidate manifest>",
+      "exit_code": 0,
+      "result": "Ownership SHA-256 111aac6e...2661ee1 and candidate SHA-256 436d1524...a0840f5 bind the exact authored bytes."
+    }
+  ],
+  "result": {
+    "roster": "8 exactly once; A3/B3/C2",
+    "retained_batch_disclosures": ["A", "B", "C"],
+    "browser_v6_kimi_webbridge_selected": true,
+    "browser_v5_excluded": true,
+    "browser_checks_rerun": false,
+    "prior_high": "T4C-BROWSER-V6-SELECTOR-001 resolved at selector lineage layer",
+    "stale_v1_candidate_product_owner_accepted_chain": "historical-non-consumable-superseded-for-current-v4-lifecycle",
+    "unexpected_external_admission_artifacts_bound": false,
+    "unresolved_critical_high_medium": 0,
+    "candidate_v2_status": "candidate-only-non-consumable"
+  },
+  "authorization": {
+    "candidate_v2_authored": true,
+    "candidate_v2_published": false,
+    "candidate_v2_consumable": false,
+    "product_owner_acceptance_published": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_published": false,
+    "accepted_manifest_authorized": false,
+    "consumption_authorized": false,
+    "authority_not_exercised": true
+  },
+  "scope_attestation": {
+    "only_four_new_nonce_paths": true,
+    "no_existing_file_modified": true,
+    "no_reconciliation_review_docs_registry_plan_metadata_status_lifecycle_or_source_edit": true,
+    "no_product_owner_acceptance_created_or_modified": true,
+    "no_accepted_manifest_created_or_modified": true,
+    "no_browser_rerun": true,
+    "no_backups_created": true,
+    "no_staging": true,
+    "no_commit": true
+  },
+  "self_sha256": null,
+  "self_hash_note": "The companion receipt binds this proof after proof finalization."
+}

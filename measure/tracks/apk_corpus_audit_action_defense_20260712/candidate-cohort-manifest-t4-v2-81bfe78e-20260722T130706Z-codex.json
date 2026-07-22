@@ -1,0 +1,187 @@
+{
+  "schema_version": "apk-candidate-cohort-manifest.t4.v2",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-CANDIDATE-V2-81BFE78E-CODEX",
+  "manifest_kind": "candidate-cohort-manifest",
+  "candidate_instance_nonce": "v2-81bfe78e-20260722T130706Z-codex",
+  "status": "authored-uncommitted-candidate-only-non-consumable",
+  "publication_state": "not-published-until-a-later-commit-first-adds-these-exact-bytes",
+  "candidate_only": true,
+  "consumable": false,
+  "acceptance": "not-claimed",
+  "supersedes_for_current_v4_lifecycle": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v1.json",
+  "canonical_checkout": {
+    "path": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "branch": "master",
+    "single_canonical_checkout_only": true,
+    "auxiliary_git_worktree_created_or_used": false
+  },
+  "ownership": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-author-full-cohort-v2-81bfe78e-20260722T130706Z-codex-ownership.json",
+    "sha256": null,
+    "digest_binding": "Bound by the companion proof and receipt after ownership finalization.",
+    "all_four_nonce_paths_absent_prewrite": true
+  },
+  "immutable_reconciliation_v4_chain": {
+    "reconciliation": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v4.json",
+      "sha256": "6f202f838a97dd93fc049d6301cb0230b715f869b4c994e62dbf178c27658c8c",
+      "first_publication_commit": "d009b9a3b99e5aca3a512be09f10c5a9e34c437a",
+      "status": "structurally-reconciled-selector-lineage-reviewed-not-candidate-acceptance"
+    },
+    "gate": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-cohort-reconciliation-gate-v4.py",
+      "sha256": "234cc42ba99cebdd3a1114758af3ca274f551fe56c52b770af61fcf12680e851",
+      "first_publication_commit": "d009b9a3b99e5aca3a512be09f10c5a9e34c437a",
+      "reviewer_execution": "7 passed in 9.02s; exit 0; run exactly once",
+      "candidate_author_rerun": false
+    }
+  },
+  "immutable_full_cohort_review_v4_chain": {
+    "first_publication_commit": "81bfe78eb8ccef81d95636fcf7e0c745841d84fc",
+    "ownership": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v4-d009b9a3-20260722T125310Z-codex-ownership.json",
+      "sha256": "7b18437282ac20a4588df4ffca07bf9557ace9b360d63034e53bc4014287cc13"
+    },
+    "review": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v4-d009b9a3-20260722T125310Z-codex.json",
+      "sha256": "95f9d5b91ea2caea1477c07605ee664e4c94cdf7f301a9490954ee9f978f2f43",
+      "verdict": "PASS_V4_FULL_COHORT",
+      "unresolved_counts": {"critical": 0, "high": 0, "medium": 0, "low": 0, "total": 0}
+    },
+    "role_proof": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v4-d009b9a3-20260722T125310Z-codex.json",
+      "sha256": "4ecb7ed18e8a0cb86b8028b0805540eaa2a9ab559a46a9ec7399288ef679b715"
+    },
+    "role_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v4-d009b9a3-20260722T125310Z-codex.json",
+      "sha256": "7c58d549c0b89072f0d440a07f6373abf7cb9e6141348faa48a49b7f9b0def04"
+    }
+  },
+  "full_cohort_roster": {
+    "expected_games": 8,
+    "observed_games": 8,
+    "duplicates": 0,
+    "omissions": 0,
+    "exactly_once": true,
+    "batch_counts": {"batch_a": 3, "batch_b": 3, "batch_c": 2},
+    "entries": [
+      ["Castle Defense", "castle-defense", "batch-a"],
+      ["Magic Defense", "magic-defense", "batch-a"],
+      ["Wizard vs Zombie", "wizard-vs-zombie", "batch-a"],
+      ["Village Guardian", "village-guardian", "batch-b"],
+      ["Archer's Revenge", "archers-revenge", "batch-b"],
+      ["Storm the Castle Tower", "storm-castle-tower", "batch-b"],
+      ["Paladin's Twin-Soul", "paladins-twin-soul", "batch-c"],
+      ["Gryphon Patrol", "gryphon-patrol", "batch-c"]
+    ]
+  },
+  "retained_disclosures": {
+    "batch_a": [
+      "The Castle Defense manifest omission remains retained.",
+      "DISC-001 remains retained.",
+      "Only 178 of 187 claims are resolved.",
+      "Batch A acceptance is not promoted to full-cohort acceptance or consumption."
+    ],
+    "batch_b": [
+      "Village Guardian browser input was synthetic DOM input with isTrusted=false and used a hidden-tab scheduler adapter; trusted native input and foreground timing are not claimed.",
+      "Village Guardian completion requests returned HTTP 400; completion success, persistence, XP, idempotency, and API correctness are not claimed.",
+      "Archer's Revenge and Storm the Castle Tower exact reviewed routes returned HTTP 404; historical source is not promoted to current runtime behavior.",
+      "Asset presence and catalog binding do not establish runtime loading, suitability, licensing, or production use.",
+      "Provider session provenance remains unavailable and is not fabricated."
+    ],
+    "batch_c": [
+      "The selected browser lineage is Browser v6 root-arbiter Kimi WebBridge; Browser v5 is historical, non-consumable, unselected, and excluded because it violated the required screenshot-helper procedure.",
+      "Browser v6 used only /home/daniel-bo/.agents/skills/kimi-webbridge/scripts/screenshot.sh for five capture attempts; helper exits 4 and 28, including the wide timeout, remain retained.",
+      "Browser v6 PNG bytes recovered from helper-triggered daemon post-processing were copied unchanged and have identical source/destination hashes; the direct screenshot API was not used.",
+      "The exact Batch C routes returned HTTP 404 and were non-runnable; the browser session was closed and no browser or server check was rerun for this candidate.",
+      "Asset V4 provider sets and Gryphon Mapper V5 remain collision-invalid and unselectable.",
+      "The selected Asset root-arbiter receipt retains the pending three_file_chain, json_syntax, predecessor_immutability, no_backup_files, and diff_scope self-check fields; its separate independent five-check validation companion does not replace or impersonate that role.",
+      "The nine selected asset candidates passed bounded frozen hash and byte-count validation; runtime loading, suitability, licensing, production use, and shipping are not claimed."
+    ]
+  },
+  "selector_and_review_dispositions": {
+    "batch_c_selected_roles": 8,
+    "batch_c_unique_task_ids": 8,
+    "batch_c_unique_provider_identifiers": 8,
+    "duplicate_provider_identifiers": [],
+    "browser_v6_selected": true,
+    "browser_v5_selected": false,
+    "browser_v5_disposition": "historical-non-consumable-unselected-excluded",
+    "prior_high": {
+      "finding_id": "T4C-BROWSER-V6-SELECTOR-001",
+      "original_severity": "High",
+      "disposition": "resolved-at-selector-lineage-layer",
+      "unresolved": false
+    },
+    "new_review_findings": [],
+    "unresolved_critical_high_medium": 0
+  },
+  "stale_v1_lifecycle_chain": {
+    "classification": "historical-non-consumable-superseded-for-current-v4-lifecycle-cannot-authorize-v4",
+    "candidate": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v1.json",
+      "sha256": "4334aaadb6c19d15ad03bbfdc588f9e26ac65322c7ef615516f57a9ffaa31b97",
+      "first_publication_commit": "98ce66623f6b3ba0117ec7d5e475dd40e3ddb6c0"
+    },
+    "product_owner_acceptance": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-t4-v1.json",
+      "sha256": "fff5544a8f28a45c3985bddd0b48706baabbc6a6a010113ac66ce3156c79d5d1",
+      "first_publication_commit": "e3e6b421944eb57e407f737e4deb89e5846ada0d"
+    },
+    "accepted_manifest": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v1.json",
+      "sha256": "594a4a89756fb3a60e4fa1111b9df0e4eb0355f7e5b3774ca4291ecf029ccf3e",
+      "first_publication_commit": "63115d6951371448c9eddfce598387706dc22af6"
+    },
+    "reason": "The v1 chain binds reconciliation v3 and full-cohort review v2. It is retained as immutable history but is superseded for current lifecycle authority and cannot accept, publish, or authorize consumption of reconciliation v4 or this v2 candidate."
+  },
+  "forbidden_success_claims": {
+    "gameplay": false,
+    "responsive": false,
+    "trusted_input": false,
+    "completion": false,
+    "persistence": false,
+    "xp": false,
+    "idempotency": false,
+    "api": false,
+    "asset_loading": false,
+    "asset_suitability": false,
+    "licensing": false,
+    "production_use": false,
+    "implementation": false,
+    "shipping": false
+  },
+  "authorization": {
+    "candidate_v2_authorship_authorized": true,
+    "candidate_v2_published": false,
+    "candidate_only": true,
+    "candidate_consumable": false,
+    "product_owner_acceptance_exists_for_v2": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_exists_for_v2": false,
+    "accepted_manifest_publication_authorized": false,
+    "cohort_consumption_authorized": false,
+    "authority_not_exercised": true
+  },
+  "next_required_event": "After these exact candidate bytes are first published in a commit, a later, separately authorized product-owner decision must bind that publication commit and the exact reconciliation v4 and review v4 chains. No acceptance, accepted manifest, or consumption may occur before that later event.",
+  "revocation_rule": "Any changed bound byte, hash, first-publication commit, roster entry, retained disclosure, selector disposition, or review finding revokes this candidate and requires a new append-only replacement after focused remediation and fresh review.",
+  "scope_attestation": {
+    "candidate_only": true,
+    "all_eight_games_bound": true,
+    "browser_or_server_checks_rerun": false,
+    "reconciliation_or_gate_modified": false,
+    "review_bundle_modified": false,
+    "existing_lifecycle_or_evidence_modified": false,
+    "canonical_docs_registry_plan_metadata_or_status_modified": false,
+    "source_modified": false,
+    "product_owner_acceptance_created_or_modified": false,
+    "accepted_manifest_created_or_modified": false,
+    "staged": false,
+    "committed": false
+  },
+  "self_sha256": null,
+  "self_hash_note": "A candidate cannot embed its own stable SHA-256; the companion proof and receipt bind these exact bytes."
+}
