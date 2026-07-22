@@ -1,0 +1,39 @@
+{
+  "schema_version": "apk-committed-input-manifest.v2",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "batch_id": "batch-c-historical",
+  "input_generation": "V2",
+  "producer_publication_commit_sha": "16be1f15fdcb1deeb7bd1e0a6971db545e57a0cf",
+  "supersedes": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-committed-input-manifest.json",
+    "sha256": "86d9576eab24385bfd51f08ebb5eb5bb5698b24f951d24f920d0aa1313f9a01f",
+    "preserved_unchanged": true
+  },
+  "selected_input_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-future-review-binding-v2.json": "20cbf8c2275448248901df2a4880a0ed53d3491167e5d8911e74e5bcb2d06616",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-producer-context-manifests-v2.json": "632a61c08e46452397c0035b9643f6d6dbc89c7ede88084832026536edcb5a79",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-truth-tests-v2.py": "58ca4ada5054197f66fc9419da2a79d43b1331dfff6bc18f500827d099fa7cbf",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/asset-evidence-v2.json": "2e0bb23c52a1a2c8d8ab1e2d55c83d6b423ee61115a59665c209195b837137a3",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/browser-audit-v2.json": "bbe1bcda9482d0b8125c6fb3a5ea963c244f45f073f23a62d40c5f4886dd3cf5",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/claim-evidence-ledger-v2.json": "b99ba08b3db22ffd352ac6ea9fa0ad99d2c30595b7e90e7b389611e7a18e2c4a",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/denominator-reconciliation-v2.json": "b8fc63730e02a61baddc62f089d84f3c378752dd175d226449aa4a76fa9f5e90",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/requirements-map-v2.json": "0f69481157d7e2354242063ccd9dacbe8c44706212bf45200a87e2c4f80fc903",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-direction-batch-c-remediation.json": "94420ba7642d9b3cdb7f34228be2e07737cc6187e05329567487c10bbe5f7f24",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/browser-auditor-sorcerer-ziggurat-batch-c-v2.json": "bb196eebee362480f86d4a941aaf21c4cd11a25b05b9a6f28a5db34944826fb1",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-sorcerer-ziggurat-batch-c-v2.json": "21ee2beebb472e71fcd16ef9b7c62eacca5a5b84a3d88fdce711e20fd6c7941b",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-sorcerer-ziggurat-batch-c-v2.json": "454370d9eb5687dece723d543780e404ed30c53c19f8ad5dc1e3579e4976d3d9",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/truth-test-author-batch-c-v2.json": "8bbbde2d082ed65f27c66dffbfe6dc0c8dafc8c28f130634e97c359a041c4877"
+  },
+  "receipt_hashes": {
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/browser-auditor-sorcerer-ziggurat-batch-c-v2.json": "bb196eebee362480f86d4a941aaf21c4cd11a25b05b9a6f28a5db34944826fb1",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/evidence-collector-sorcerer-ziggurat-batch-c-v2.json": "21ee2beebb472e71fcd16ef9b7c62eacca5a5b84a3d88fdce711e20fd6c7941b",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/requirements-mapper-sorcerer-ziggurat-batch-c-v2.json": "454370d9eb5687dece723d543780e404ed30c53c19f8ad5dc1e3579e4976d3d9",
+    "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/truth-test-author-batch-c-v2.json": "8bbbde2d082ed65f27c66dffbfe6dc0c8dafc8c28f130634e97c359a041c4877"
+  },
+  "review_state": "not-reviewed-after-v2-publication",
+  "candidate_state": "not-authorized",
+  "product_owner_acceptance_state": "not-published",
+  "accepted_manifest_state": "not-published-and-prohibited-by-owner-direction",
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}
