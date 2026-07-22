@@ -1,0 +1,280 @@
+{
+  "schema_version": "apk-batch-independent-review.v19",
+  "review_iteration": "V19",
+  "input_generation": "V16 evidence plus V17-V19 lifecycle policy",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-b",
+  "phase": "Phase 2: Batch B evidence packages",
+  "role": "fresh-independent-adversarial-reviewer-batch-b-v19",
+  "requested_role_base_sha": "6956114e4b7e57f173bbfb60783da4f53c03e806",
+  "requested_audited_head_sha": "6956114e4b7e57f173bbfb60783da4f53c03e806",
+  "actual_role_base_sha": "6956114ec8a45fae3a0adf0f043bb1ebf7040ca1",
+  "audited_head_sha": "6956114ec8a45fae3a0adf0f043bb1ebf7040ca1",
+  "audited_head_exact": false,
+  "requested_git_object_available": false,
+  "status": "blocked-fail; the mandated immutable audited HEAD and role base do not exist in this repository and do not equal actual HEAD",
+  "candidate_authorized": false,
+  "scope": [
+    "village-guardian",
+    "archers-revenge",
+    "storm-castle-tower"
+  ],
+  "review_independence": {
+    "mode": "fresh local source re-derivation; no inherited completion narrative used as source evidence",
+    "prior_v11_use": "Historical remediation and sampling index only. V11 conclusions were not substituted for V19 source, truth, browser, asset, or receipt checks.",
+    "provider_attestation_available": false,
+    "provider_attestation_claimed": false,
+    "git_chronology_substitution_scope": "Lifecycle and unavailable preflight provenance only, as allowed by owner-policy-amendment-v19.json.",
+    "git_chronology_used_as_source_or_runtime_evidence": false,
+    "review_boundary": "Only this review result was authored. No candidate, acceptance, accepted manifest, plan, registry, source, package, receipt, or prior review was created or modified."
+  },
+  "head_verification": {
+    "expected": "6956114e4b7e57f173bbfb60783da4f53c03e806",
+    "observed": "6956114ec8a45fae3a0adf0f043bb1ebf7040ca1",
+    "expected_object_query": "git cat-file -t 6956114e4b7e57f173bbfb60783da4f53c03e806",
+    "expected_object_query_result": "exit 128; fatal: git cat-file: could not get object info",
+    "observed_head_query": "git rev-parse HEAD",
+    "observed_head_query_result": "exit 0; 6956114ec8a45fae3a0adf0f043bb1ebf7040ca1",
+    "initial_worktree_state": "clean",
+    "chronology": "970dad3d1f1e09770b162c7a8acfbb02386f1016 is an ancestor of 0c0ce71b70d82934e7363ac0f432770f796d6bea, which is an ancestor of actual HEAD; actual HEAD adds owner-policy-amendment-v19.json and owner-policy-amendment-v19.py."
+  },
+  "source_rederivation": {
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "method": "Independently loaded the three active ledgers, resolved each positive revision:path with git show, recomputed whole-blob and exact inclusive-range or whole-binary SHA-256 values, and evaluated declared Village required/forbidden substrings and Archer contains/signature assertions. The V16 contracts separately exercised every accepted source-semantic and bounded-query rule.",
+    "factual_claims": {
+      "village_guardian": 73,
+      "archers_revenge": 43,
+      "storm_castle_tower": 42,
+      "total": 158
+    },
+    "positive_envelopes_independently_rehashed": 152,
+    "positive_envelope_mismatches": 0,
+    "bounded_query_claims": 6,
+    "storm_bounded_query_records_checked_by_v16": 8,
+    "declared_semantic_tokens_independently_checked": 240,
+    "declared_semantic_token_mismatches": 0,
+    "representative_v11_stratified_claims_rehashed_inside_full_v19_rehash": 54,
+    "changed_archer_v8_claims_rehashed": 43,
+    "changed_archer_v8_text_envelopes": 40,
+    "changed_archer_v8_binary_envelopes": 3,
+    "unsupported_claims_found": 0,
+    "stop_loss_triggered_by_source_claim": false,
+    "head_limit": "These successful observations apply only to actual HEAD 6956114ec8a45fae3a0adf0f043bb1ebf7040ca1 and cannot be transferred to the unavailable requested SHA."
+  },
+  "negative_fixture_rederivation": {
+    "total": 12,
+    "accepted_or_skipped": 0,
+    "disposition_mismatches": 0,
+    "village_guardian": {
+      "count": 4,
+      "ids": ["VG3-NEG-001", "VG3-NEG-002", "VG3-NEG-003", "VG3-NEG-004"],
+      "result": "One FAIL and three REJECT dispositions remain source-bounded; no fixture counts as a factual claim."
+    },
+    "archers_revenge": {
+      "count": 4,
+      "ids": ["AR-B2-V8-FIX-001", "AR-B2-V8-FIX-002", "AR-B2-V8-FIX-003", "AR-B2-V8-FIX-004"],
+      "result": "All four reject; FIX-004 independently retains exact tree output rather than a blob envelope."
+    },
+    "storm_castle_tower": {
+      "count": 4,
+      "ids": ["SCT-NEG-001", "SCT-NEG-002", "SCT-NEG-003", "SCT-NEG-004"],
+      "result": "All four reject against exact claims or bounded queries; historical responsive source is not promoted to current runtime behavior."
+    }
+  },
+  "denominator_reconciliation": {
+    "accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "village_guardian_records": 51,
+    "archers_revenge_records": 23,
+    "storm_castle_tower_records": 25,
+    "assigned_records_total": 99,
+    "asset_denominator_records": 12,
+    "unassigned_records": 0,
+    "duplicate_assignments": 0,
+    "denominator_mismatches": 0,
+    "runtime_dependency_paths": 108,
+    "runtime_dependency_hash_mismatches": 0
+  },
+  "mapper_reconciliation": {
+    "village_claim_references": 73,
+    "archer_claim_references": 43,
+    "storm_claim_references": 42,
+    "missing_claim_references": 0,
+    "foreign_claim_references": 0,
+    "fixture_promotions": 0,
+    "novel_mapper_facts": 0
+  },
+  "browser_and_asset_limits": {
+    "browser_games_reviewed": 3,
+    "runnable_games": 1,
+    "non_runnable_games": 2,
+    "village_viewports": 2,
+    "webbridge_interactions": 52,
+    "user_relevant_dom_input_events": 8,
+    "trusted_native_input_events": 0,
+    "captured_screenshots": 0,
+    "village_scheduler_limit": "The tab was hidden and terminal proof used a disclosed requestAnimationFrame scheduler adapter; foreground wall-clock timing is not established.",
+    "archer_observation": "Exact route returned HTTP 404; no gameplay state or current runtime claim.",
+    "storm_observation": "Exact route returned HTTP 404; no gameplay state or current runtime claim.",
+    "village_completion_posts": 2,
+    "village_completion_http_status": 400,
+    "completion_success_claimed": false,
+    "persistence_claimed": false,
+    "xp_awarded_claimed": false,
+    "idempotency_claimed": false,
+    "api_correctness_claimed": false,
+    "asset_candidates": 12,
+    "source_runtime_asset_usages": 0,
+    "catalog_bindings_only": 2,
+    "sidecar_or_bounded_unknown": 10,
+    "asset_suitability_or_production_decisions": 0
+  },
+  "receipt_integrity": {
+    "v16_active_receipts": 10,
+    "v16_pinned_predecessor_receipts": 9,
+    "receipt_output_records": 22,
+    "selected_output_hash_mismatches": 0,
+    "budget_ceiling_breaches": 0,
+    "provider_unavailability_preserved": true,
+    "completion_constraints_all_false": true,
+    "repository_guard_result": "PASS: role evidence output hashes match HEAD (0 legacy receipt(s), 1 OpenCode manifest(s))",
+    "repository_guard_limit": "The repository guard's one-manifest scope is supplemented by the V16 uniform active-receipt contract, which passed."
+  },
+  "disclosure_preservation": {
+    "disc_001": "Batch A process-only disclosure; never used as Batch B factual evidence.",
+    "provider_provenance": "Unavailable and not fabricated; local Git/hash verification does not become provider attestation.",
+    "browser_input": "DOM-level events were synthetic and isTrusted=false; trusted native input is not claimed.",
+    "hidden_tab_scheduler": "Deterministic terminal transition does not prove foreground timing.",
+    "completion_http_400": "No completion, persistence, XP, idempotency, or API-success conclusion.",
+    "assets": "Presence and catalog binding do not prove runtime loading, suitability, licensing, or production use.",
+    "historical_lifecycle": "The prior candidate, nominal acceptance, and accepted manifest remain revoked, superseded, and non-consumable under V17/V18; Git chronology authenticates only permitted lifecycle facts."
+  },
+  "validation_commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v16.py",
+      "exit_code": 0,
+      "result": "49 passed in 12.38s"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-lifecycle-stop-loss-v17.py",
+      "exit_code": 0,
+      "result": "Ran 2 tests; OK"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-retroactive-provenance-supersession-v18.py",
+      "exit_code": 0,
+      "result": "Ran 4 tests; OK"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/owner-policy-amendment-v19.py",
+      "exit_code": 0,
+      "result": "4 passed in 0.93s"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v16.py -k BatchBNegativeFixtureContract",
+      "exit_code": 0,
+      "result": "4 passed, 45 deselected in 2.15s"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v16.py -k 'BatchBCollectorPackageContract or BatchBClaimTruthContract or BatchBMapperPackageContract'",
+      "exit_code": 0,
+      "result": "15 passed, 34 deselected in 7.64s"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v16.py -k 'BatchBBrowserContract or BatchBAssetContract or BatchBCompletionContract'",
+      "exit_code": 0,
+      "result": "11 passed, 38 deselected in 2.48s"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v16.py -k 'BatchBReceiptContract or BatchBIndependentReviewContract'",
+      "exit_code": 0,
+      "result": "12 passed, 37 deselected in 1.66s"
+    },
+    {
+      "command": "bash tests/orchestrator_role_receipt_integrity.sh",
+      "exit_code": 0,
+      "result": "PASS: role evidence output hashes match HEAD (0 legacy receipt(s), 1 OpenCode manifest(s))"
+    },
+    {
+      "command": "bash tests/orchestrator_marker_vocabulary.sh --track apk_corpus_audit_action_defense_20260712",
+      "exit_code": 0,
+      "result": "PASS: all active track plans use only [~]/[x]/[b] task markers (1 plans checked)"
+    },
+    {
+      "command": "bash tests/orchestrator_review_execution_truthfulness.sh",
+      "exit_code": 0,
+      "result": "PASS: executed review tracks are not fully blocked by deferred:review-execution"
+    },
+    {
+      "command": "bash tests/orchestrator_detector_syntax.sh",
+      "exit_code": 0,
+      "result": "PASS: orchestrator detector recipes use executable ripgrep option syntax"
+    },
+    {
+      "command": "bash tests/orchestrator_catalog.sh",
+      "exit_code": 0,
+      "result": "PASS: A12/A13 guard declarations and archive directories verified (6 guards); PASS: catalog exists with A1-A15"
+    },
+    {
+      "command": "inline read-only Python git-show rederiver over village-guardian-claim-ledger-batch-b-v3.json, archers-revenge-claim-ledger-batch-b-v8.json, and storm-castle-tower-claim-ledger-batch-b.json",
+      "exit_code": 0,
+      "result": "152 positive envelopes and 240 declared semantic tokens checked; 6 bounded-query claims separated; errors=[]"
+    }
+  ],
+  "non_authoritative_diagnostic": {
+    "command": "first inline envelope-rederiver draft",
+    "exit_code": 1,
+    "result": "ValueError on Village inclusive_range='whole-file'; parser was corrected to treat that declared range as the complete blob, then the authoritative rerun above passed with errors=[].",
+    "effect": "No evidence or source bytes changed; no failed result was hidden or converted into a pass."
+  },
+  "findings": [
+    {
+      "id": "T4B19-CRIT-001",
+      "severity": "critical",
+      "confidence": "high",
+      "title": "Mandated immutable review revision is unavailable and differs from repository HEAD",
+      "blocking": true,
+      "evidence": [
+        "The review instruction requires exact role base and audited HEAD 6956114e4b7e57f173bbfb60783da4f53c03e806.",
+        "git cat-file -t for that full SHA exits 128 because the object is unavailable.",
+        "git rev-parse HEAD returns 6956114ec8a45fae3a0adf0f043bb1ebf7040ca1."
+      ],
+      "impact": "No result can honestly claim to review the mandated immutable bytes. The explicit pass precondition is violated, so candidate publication and downstream delegated acceptance are unauthorized even though source/evidence contracts pass at the different actual HEAD.",
+      "recommended_fix": "Provide a repository/worktree containing and checked out at exact commit 6956114e4b7e57f173bbfb60783da4f53c03e806, or issue a corrected formal immutable-HEAD instruction naming 6956114ec8a45fae3a0adf0f043bb1ebf7040ca1. Then rerun the complete V16-V19, guard, direct source/fixture/denominator, receipt, browser/asset-limit, and fresh-review sequence."
+    }
+  ],
+  "unresolved_findings": {
+    "critical": 1,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "contract_violations": {
+    "count": 1,
+    "ids": ["T4B19-CRIT-001"],
+    "exact_audited_head_violation": true,
+    "source_or_evidence_contract_violations_at_actual_head": 0
+  },
+  "authorization": {
+    "candidate_authorized": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "consumption_authorized": false,
+    "reason": "One unresolved Critical finding and one exact-audited-HEAD contract violation remain. Passing checks at actual HEAD cannot authorize a candidate for the unavailable requested HEAD."
+  },
+  "residual_risk": [
+    "The requested immutable object cannot be inspected locally, so its source, evidence, and lifecycle bytes are wholly unverified.",
+    "Actual-HEAD browser evidence remains bounded by synthetic untrusted input, a hidden-tab scheduler adapter, no screenshots, and two HTTP 400 completion responses.",
+    "Archer's Revenge and Storm the Castle Tower remain non-runnable at their reviewed exact routes; historical source does not establish current behavior.",
+    "No physical denominator PNG runtime loading is established for any game."
+  ],
+  "measure_agent_result": {
+    "status": "candidate-false-critical-unresolved-head-mismatch",
+    "candidate": false,
+    "critical": 1,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
