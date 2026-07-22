@@ -1,0 +1,15 @@
+{
+  "schema_version": "apk-product-owner-acceptance.v3",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "scope": "all-seven-game cohort",
+  "approval_kind": "current-delegated-project-owner-approval",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "ordered_after_candidate": true,
+  "candidate_path": "candidate-cohort-manifest-v1.json",
+  "candidate_commit_sha": "b3d41f7b",
+  "reconciliation_path": "cohort-reconciliation-v1.json",
+  "source_gates": {"batch_a": "accepted", "batch_b": "accepted through retroactive supersession", "batch_c": "green source gates and zero unresolved Critical/High/Medium review findings"},
+  "authorization": {"source": "current user instruction", "message_id": null, "message_id_note": "No original or provider message identifier was supplied; none is fabricated.", "authority": "delegated project-owner"},
+  "disclosures": ["Acceptance is conditional on every package-level disclosure in the three accepted batch manifests.", "No browser-unknown or historical claim is promoted to current behavior.", "No cross-game standardization or implementation decision is authorized."],
+  "accepted_manifest_authorized": true
+}

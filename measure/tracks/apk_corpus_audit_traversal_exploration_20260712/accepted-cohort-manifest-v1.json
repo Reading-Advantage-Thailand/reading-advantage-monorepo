@@ -1,0 +1,18 @@
+{
+  "schema_version": "apk-accepted-cohort-manifest.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "manifest_kind": "accepted-cohort-manifest",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "candidate": {"path": "candidate-cohort-manifest-v1.json", "commit": "b3d41f7b"},
+  "approval": {"path": "product-owner-acceptance-cohort-v1.json", "commit": "970dad3d", "ordered_after_candidate": true},
+  "reconciliation": {"path": "cohort-reconciliation-v1.json", "assigned_games": 7, "covered_games": 7, "duplicates": 0, "omissions": 0},
+  "accepted_batches": {
+    "batch_a": "accepted-cohort-manifest-batch-a-v6.json",
+    "batch_b": "accepted-cohort-manifest-batch-b-v3-retroactive.json",
+    "batch_c": "accepted-cohort-manifest-batch-c-v2-retroactive.json"
+  },
+  "consumable": true,
+  "consumability": "conditional",
+  "conditions": ["Consume only with every referenced batch manifest and its disclosures.", "Historical claims remain historical; browser-unknown behavior remains unknown.", "Revocation or supersession of any bound candidate, approval, review, or batch manifest immediately stops consumption."],
+  "claims": {"cross_game_standardization": false, "implementation_authorized": false, "browser_behavior_success": false}
+}
