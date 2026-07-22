@@ -1,0 +1,35 @@
+{
+  "schema_version": "apk-historical-lifecycle-supersession.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-a",
+  "status": "current-owner-ratified-with-disclosure",
+  "authority": {
+    "kind": "current delegated product-owner authority",
+    "source": "current user instruction",
+    "message_id": null,
+    "message_id_note": "No historical or synthetic provider message identifier is asserted."
+  },
+  "superseded_defect_only": [
+    "missing historical provenance identifier",
+    "missing accepted-gate pin before the historical work"
+  ],
+  "does_not_supersede": [
+    "source-integrity requirements",
+    "independent review requirements",
+    "any browser or product-behavior unknown",
+    "any implementation or shipping decision"
+  ],
+  "historical_artifacts": {
+    "candidate_commit": "97716ad273a324c7d9a112ae701b37f7e9aa3be7",
+    "review_sha256": "9a855ce54bceb7b6d3c911a024fe24c56c1b259a7888cad99d1115c756a03964",
+    "accepted_manifest_sha256": "8c332ff99bf9224f826f77cec256ff4d3f6cb94cea7181e3879226f82c875e83"
+  },
+  "chronology": {
+    "git_history_is_authoritative": true,
+    "candidate_precedes_historical_acceptance_publication": true,
+    "nominal_historical_approval_timestamp_is_not_used_as_order_proof": true
+  },
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "consumable_only_with_batch_a_manifest_and_its_disclosures": true,
+  "marker": "MEASURE_AGENT_RESULT"
+}

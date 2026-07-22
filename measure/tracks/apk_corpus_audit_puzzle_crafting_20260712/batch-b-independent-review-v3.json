@@ -1,0 +1,38 @@
+{
+  "schema_version": "apk-independent-review.v4",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "role": "adversarial-reviewer",
+  "review_mode": "fresh local source re-derivation with disclosed unavailable provider attestation",
+  "review_scope": {
+    "producer_commit": "1597ed888f520f9d828a241c5606c958f0574eec",
+    "authority_context_commit": "970dad3d1f1e09770b162c7a8acfbb02386f1016",
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "producer_files_modified_by_review": 0
+  },
+  "source_rederivation": {
+    "method": "Executed the immutable V2 fail-closed source gate, which reads each cited Git object, recomputes complete-blob and cited-range hashes, checks declared semantic tokens, denominator membership, requirements-map closure, negative fixtures, browser non-promotion, receipt boundaries, and lifecycle absence.",
+    "factual_claims": 68,
+    "explicit_unknowns": 12,
+    "negative_fixtures": 18,
+    "truth_command": "python3 measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-truth-tests-v2.py",
+    "truth_result": "17 passed; exit 0"
+  },
+  "role_receipts": {
+    "ratification_path": "batch-b-v3-role-session-ratification.json",
+    "provider_attestation_available": false,
+    "local_role_boundaries_complete": true,
+    "browser_boundary": "No browser run is claimed; route reachability, gameplay, input, responsive behavior, completion, persistence, XP, API correctness, asset loading, and production behavior remain unknown."
+  },
+  "policy_adjudication": {
+    "historical_pin_and_provenance_only": "The current owner policy amendment authorizes audited Git chronology to supersede missing historical provenance and accepted-gate pin only.",
+    "audit_path": "historical-provenance-audit-1597ed88.json",
+    "supervisor_preflight_original_result": "PRODUCT_GATE_PIN_REQUIRED_BEFORE_WORK",
+    "source_integrity_and_review_not_waived": true
+  },
+  "findings": [],
+  "unresolved_findings": {"critical":0,"high":0,"medium":0,"low":0},
+  "authorization": {"candidate":true,"product_owner_acceptance":false,"accepted_manifest":false},
+  "residual_risk": ["Local receipts are not provider-attested session proof.", "All browser-dependent behavior remains unknown.", "Astral Mage implementation assertions remain explicitly historical where ledgers so classify them."],
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": "apk-local-role-session-ratification.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "source_publication_commit": "1597ed888f520f9d828a241c5606c958f0574eec",
+  "authority_context_commit": "970dad3d1f1e09770b162c7a8acfbb02386f1016",
+  "status": "complete-with-local-provenance-disclosure",
+  "provider_attestation": {
+    "available": false,
+    "claim": "No provider spawn, session, ancestry, timing, or fork telemetry is available or claimed."
+  },
+  "local_distinctness_rule": "Each named role owns a separately committed or separately receipted output class, re-read only its declared source/input boundary, and does not authorize another role's lifecycle action. This is a local auditable-role control, not provider-attested session proof.",
+  "roles": [
+    {"role":"discovery-auditor","receipt":"role-receipts/discovery-auditor-batch-b-v2.json","result":"re-derived the three assigned identities and source denominator boundary"},
+    {"role":"evidence-collector","receipt":"role-receipts/evidence-collector-potion-rush-batch-b-v2.json","result":"re-derived Potion Rush source envelopes"},
+    {"role":"evidence-collector","receipt":"role-receipts/evidence-collector-rune-forge-chamber-batch-b-v2.json","result":"re-derived Rune Forge Chamber source envelopes"},
+    {"role":"evidence-collector","receipt":"role-receipts/evidence-collector-astral-mage-batch-b-v2.json","result":"re-derived Astral Mage current and historical envelopes"},
+    {"role":"requirements-mapper","receipt":"role-receipts/requirements-mapper-potion-rush-batch-b-v2.json","result":"checked claim-to-map closure without adding facts"},
+    {"role":"requirements-mapper","receipt":"role-receipts/requirements-mapper-rune-forge-chamber-batch-b-v2.json","result":"checked claim-to-map closure without adding facts"},
+    {"role":"requirements-mapper","receipt":"role-receipts/requirements-mapper-astral-mage-batch-b-v2.json","result":"checked claim-to-map closure without adding facts"},
+    {"role":"browser-auditor","receipt":"role-receipts/browser-auditor-potion-rush-batch-b-v2.json","result":"preserved no-browser-run and all behavior unknown"},
+    {"role":"browser-auditor","receipt":"role-receipts/browser-auditor-rune-forge-chamber-batch-b-v2.json","result":"preserved no-browser-run and all behavior unknown"},
+    {"role":"browser-auditor","receipt":"role-receipts/browser-auditor-astral-mage-batch-b-v2.json","result":"preserved no-browser-run and all behavior unknown"},
+    {"role":"truth-test-author","receipt":"role-receipts/truth-test-author-batch-b-v2.json","result":"17/17 fail-closed source gates pass"}
+  ],
+  "forbidden_claims": ["browser success", "provider-attested isolation", "candidate acceptance", "accepted manifest", "implementation authorization"],
+  "marker": "MEASURE_AGENT_RESULT"
+}
