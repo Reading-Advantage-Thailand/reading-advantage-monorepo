@@ -1,0 +1,175 @@
+{
+  "schema_version": "apk-cohort-reconciliation.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "task": "T4 full-cohort reconciliation v4",
+  "supersedes": "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v3.json",
+  "audited_head": "519e84f4ae26c6c910755b9f28a27e01a807b4f8",
+  "status": "structurally-reconciled-selector-lineage-reviewed-not-candidate-acceptance",
+  "reconciliation": {
+    "assigned_games_expected": 8,
+    "assigned_games_observed": 8,
+    "duplicates": 0,
+    "omissions": 0,
+    "entries": [
+      {"game": "Castle Defense", "canonical_id": "castle-defense", "batch": "batch-a", "exactly_once": true},
+      {"game": "Magic Defense", "canonical_id": "magic-defense", "batch": "batch-a", "exactly_once": true},
+      {"game": "Wizard vs Zombie", "canonical_id": "wizard-vs-zombie", "batch": "batch-a", "exactly_once": true},
+      {"game": "Village Guardian", "canonical_id": "village-guardian", "batch": "batch-b", "exactly_once": true},
+      {"game": "Archer's Revenge", "canonical_id": "archers-revenge", "batch": "batch-b", "exactly_once": true},
+      {"game": "Storm the Castle Tower", "canonical_id": "storm-castle-tower", "batch": "batch-b", "exactly_once": true},
+      {"game": "Paladin's Twin-Soul", "canonical_id": "paladins-twin-soul", "batch": "batch-c", "exactly_once": true},
+      {"game": "Gryphon Patrol", "canonical_id": "gryphon-patrol", "batch": "batch-c", "exactly_once": true}
+    ]
+  },
+  "batch_a": {
+    "scope": ["Castle Defense", "Magic Defense", "Wizard vs Zombie"],
+    "bindings": [
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-a.json", "sha256": "b096d911b7d6bc9fb4d530e695cea10d3816a17158447a89303c2d069cf2a54c", "publication_commit_sha": "62ff2a4dbc7aa9b64f878c0ac38c4f9ad3fc91df"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-batch-a.json", "sha256": "2582c940ffccf46b6c20a27149cc2565faeecf80c814056f52fd76f768136df1", "publication_commit_sha": "62ff2a4dbc7aa9b64f878c0ac38c4f9ad3fc91df"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests-v2.py", "sha256": "69c598729ca31c9f0c49aa8fae44077aa6522b2fe5e0767be491ab9ad3d68cba", "publication_commit_sha": "c8e6e78ef570f208eba10e31f2e3faa629fb2e7d"}
+    ],
+    "disclosures": {
+      "castle_defense_manifest_omission_retained": true,
+      "disc_001_retained": true,
+      "resolved_claims_178_of_187_retained": true,
+      "cohort_acceptance_not_promoted": true
+    }
+  },
+  "batch_b": {
+    "scope": ["Village Guardian", "Archer's Revenge", "Storm the Castle Tower"],
+    "bindings": [
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-b-v20.json", "sha256": "3026323c6a6aed61f3fbcb03bacf200a1a610cb2da852606b6e9fe61f90f63d7", "publication_commit_sha": "0a0b43809a51a56db555ccbdfb09ff2cdda85d47"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-batch-b-v20.json", "sha256": "4b680fda18e8dc34dd062a59dc9b4b8f351ecda721b87e49f53e8240f392e9bb", "publication_commit_sha": "bb5c3df3a7142a2349ab287549643f3d119f96be"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-independent-review-v20.json", "sha256": "803aa6d6204b5aba4d10bee12bb359486c16f33f803a55b2984b35fec3db1812", "publication_commit_sha": "753672b0e49d6e11ad755c2d09c249bfa9bbfd48"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-lifecycle-v20.py", "sha256": "57af72a39f6bab796281b89d6d3b40272f86c4f670c434e5bf3c1c6bce24392d", "publication_commit_sha": "1448eb4f168d7c6420e3e25347080283f3b840b5"}
+    ],
+    "disclosures": {
+      "village_guardian_input_synthetic": true,
+      "village_guardian_input_is_trusted": false,
+      "village_guardian_hidden_tab_scheduler": true,
+      "village_guardian_completion_http_status": 400,
+      "village_guardian_completion_success_claimed": false,
+      "archer_exact_route_http_status": 404,
+      "storm_exact_route_http_status": 404,
+      "historical_source_promoted_to_current_runtime": false,
+      "asset_presence_establishes_runtime_loading": false,
+      "asset_presence_establishes_suitability": false,
+      "asset_presence_establishes_licensing": false,
+      "provider_session_provenance_fabricated": false
+    }
+  },
+  "batch_c": {
+    "scope": ["Paladin's Twin-Soul", "Gryphon Patrol"],
+    "bindings": [
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-selector-v7-root-arbiter-20260722-1912-r7k3-19a7-ownership.json", "sha256": "ef4cdb49044f3de6b67f66f5dd1a83768142a3a17846fc4679291cda95bac987", "publication_commit_sha": "2fef3b7e5237282bd05e658a628f27a1bef2d8ce"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v7-root-arbiter-20260722-1912-r7k3-19a7.json", "sha256": "a58977ac3ea5891bd3d46f62577b6ed2a0a971e967833b450bdbbae8d0f5d342", "publication_commit_sha": "2fef3b7e5237282bd05e658a628f27a1bef2d8ce"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v7-root-arbiter-20260722-1912-r7k3-19a7.py", "sha256": "1153068290e9af74a617ea90ed094a2cb59f5a9a6d9d3f5e1392039a595afb78", "publication_commit_sha": "2fef3b7e5237282bd05e658a628f27a1bef2d8ce"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/truth-test-author-batch-c-v7-root-arbiter-20260722-1912-r7k3-19a7.json", "sha256": "e33df8239de9ee48ab959da09ad1ce0614c1fd765f3d0dde5cabcb4034116fce", "publication_commit_sha": "2fef3b7e5237282bd05e658a628f27a1bef2d8ce"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-c-v7-root-arbiter-20260722-1912-r7k3-19a7.json", "sha256": "c1472f794264718d7bc9ee0a891d2fad5852a18ca8df9db4bdad099756c467e5", "publication_commit_sha": "2fef3b7e5237282bd05e658a628f27a1bef2d8ce"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3-ownership.json", "sha256": "916300ef26cf9825911b1943dd7a18c12e19db7bfe3cf982da0ac422906d9db4", "publication_commit_sha": "2fef3b7e5237282bd05e658a628f27a1bef2d8ce"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json", "sha256": "4aa356729f3f9b3d8f9b03d31f7fe4ec31ce1f56175fb0dc101cd7cf7a09e4e5", "publication_commit_sha": "2fef3b7e5237282bd05e658a628f27a1bef2d8ce"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json", "sha256": "1e5f7b291ad4c61ae8cfa3cca5f56ae92c06b84717d19255c857576fd2dcbdb5", "publication_commit_sha": "2fef3b7e5237282bd05e658a628f27a1bef2d8ce"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json", "sha256": "1aad347224a8e8caa237ea5ad383f39030bc45ef0ed213398b81a6f1995ee2a9", "publication_commit_sha": "2fef3b7e5237282bd05e658a628f27a1bef2d8ce"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v3-selector-v7-root-downstream-20260722-1924-r7k3v7-3d2f-ownership.json", "sha256": "a4bf2b33e27d2c12152b7c64fd331b958b2940865bb636431297078ea65beddd", "publication_commit_sha": "519e84f4ae26c6c910755b9f28a27e01a807b4f8"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v3-selector-v7-root-downstream-20260722-1924-r7k3v7-3d2f.json", "sha256": "6d7b03d02bfd4cb1d710bd1e236cd00fd4471f7a20331285591a0f325997e872", "publication_commit_sha": "519e84f4ae26c6c910755b9f28a27e01a807b4f8"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v3-selector-v7-root-downstream-20260722-1924-r7k3v7-3d2f.json", "sha256": "22dea01f3533688ba054d7f94139dde772da75b0dbafd4a721bf3f1735d9e716", "publication_commit_sha": "519e84f4ae26c6c910755b9f28a27e01a807b4f8"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v3-selector-v7-root-downstream-20260722-1924-r7k3v7-3d2f.json", "sha256": "9f443dcf35bded3f2f91f64ac55af64ee4a30722fe1fff6958f75add63c40f8f", "publication_commit_sha": "519e84f4ae26c6c910755b9f28a27e01a807b4f8"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-ownership.json", "sha256": "abf14709ac62f3d7fdff1f75fcd3064753f0ec52e0169c2068fd52aa88b172e9", "publication_commit_sha": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v6-root-arbiter-20260722-1758-kimi-b91e.json", "sha256": "6e9a39503d315f59b001e0952fe317441115cf5c82f8efb3fe5473690b97b4e6", "publication_commit_sha": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/browser-auditor-batch-c-v6-root-arbiter-20260722-1758-kimi-b91e.json", "sha256": "a75f2b5c0bb5d6236c67185aafe42f628bd01e57f63efa904b7986fb3a755cae", "publication_commit_sha": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v6-root-arbiter-20260722-1758-kimi-b91e.json", "sha256": "913ee0b1431e0d852dec196cf523d9bec0ed004fa3796e24798ecf9f4532e283", "publication_commit_sha": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v5-skill-deviation.json", "sha256": "68e6528edec1c05e85d694fde5de6d436ef4209e0317653bbcecf3b340cd2a46", "publication_commit_sha": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit-v5-root-arbiter-20260722-1726-a51d.json", "sha256": "10b372b3eff78ce869062577c42ccdf7eccf10e56177315acca91b892e97195c", "publication_commit_sha": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json", "sha256": "fac6f71f01dd247ccdd2abf0dbf628c0a1a3ba8bfb329cd00d7503c271760e14", "publication_commit_sha": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json", "sha256": "e38993458ba19f299d2cd16eb699f79b9cd82f1d6dcde420d9fbc8c2577d37ab", "publication_commit_sha": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-v5-independent-validation-v1.json", "sha256": "ee322ac2d9f7f8d87cc4d94db16d83484a01dae0ae07e60b1c644ef9bd09ec5c", "publication_commit_sha": "746f852e19076698b2afb4d193a464f992c0af13"}
+    ],
+    "selector_lineage": {
+      "selector_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v7-root-arbiter-20260722-1912-r7k3-19a7.json",
+      "selector_sha256": "a58977ac3ea5891bd3d46f62577b6ed2a0a971e967833b450bdbbae8d0f5d342",
+      "selector_publication_commit": "2fef3b7e5237282bd05e658a628f27a1bef2d8ce",
+      "selected_roles": 8,
+      "unique_providers": 8,
+      "browser_v6_selected": true,
+      "browser_v5_selected": false,
+      "browser_v5_disposition": "non-consumable and unselected"
+    },
+    "review_resolution": {
+      "finding_id": "T4C-BROWSER-V6-SELECTOR-001",
+      "original_severity": "High",
+      "original_review_sha256": "4aa356729f3f9b3d8f9b03d31f7fe4ec31ce1f56175fb0dc101cd7cf7a09e4e5",
+      "selector_successor_sha256": "a58977ac3ea5891bd3d46f62577b6ed2a0a971e967833b450bdbbae8d0f5d342",
+      "downstream_review_sha256": "6d7b03d02bfd4cb1d710bd1e236cd00fd4471f7a20331285591a0f325997e872",
+      "downstream_review_publication_commit": "519e84f4ae26c6c910755b9f28a27e01a807b4f8",
+      "downstream_verdict": "PASS_SELECTOR_LINEAGE",
+      "disposition": "resolved-at-selector-lineage-layer",
+      "new_findings": [],
+      "unresolved_critical": 0,
+      "unresolved_high": 0,
+      "unresolved_medium": 0,
+      "unresolved_low": 0,
+      "browser_checks_rerun": false
+    },
+    "browser_disclosure": {
+      "required_helper": "/home/daniel-bo/.agents/skills/kimi-webbridge/scripts/screenshot.sh",
+      "helper_capture_attempts": 5,
+      "helper_exit_codes_include": [4, 28],
+      "wide_timeout_exit_code": 28,
+      "direct_screenshot_api_used": false,
+      "png_copy_source": "helper-triggered daemon post-process paths",
+      "pngs_copied_unchanged": true,
+      "source_destination_hashes_identical": true,
+      "session_closed": true,
+      "exact_routes_non_runnable": true,
+      "exact_routes_http_status": 404
+    },
+    "asset_validation_companion": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-v5-independent-validation-v1.json",
+      "status": "complete-bounded-independent-validation",
+      "original_pending_fields_preserved": ["three_file_chain", "json_syntax", "predecessor_immutability", "no_backup_files", "diff_scope"]
+    },
+    "disclosures": {
+      "browser_v5_consumable": false,
+      "gameplay_claimed": false,
+      "responsive_success_claimed": false,
+      "completion_claimed": false,
+      "persistence_claimed": false,
+      "xp_claimed": false,
+      "api_success_claimed": false,
+      "asset_loading_claimed": false,
+      "asset_suitability_claimed": false,
+      "licensing_claimed": false,
+      "production_claimed": false,
+      "implementation_claimed": false,
+      "shipping_claimed": false
+    }
+  },
+  "authorizations": {
+    "candidate_manifest_publication_authorized": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_publication_authorized": false,
+    "cohort_consumption_authorized": false,
+    "fresh_downstream_selector_reviewer": {
+      "completed": true,
+      "authorized_for_another_pass": false,
+      "review_publication_commit": "519e84f4ae26c6c910755b9f28a27e01a807b4f8",
+      "result": "PASS_SELECTOR_LINEAGE",
+      "candidate_or_acceptance_authority_granted": false
+    }
+  },
+  "forbidden_success_claims": {
+    "ontology": false,
+    "implementation": false,
+    "shipping": false,
+    "gameplay": false,
+    "responsive": false,
+    "completion": false,
+    "persistence": false,
+    "xp": false,
+    "api": false,
+    "asset_loading": false,
+    "asset_suitability": false,
+    "licensing": false
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
