@@ -10,10 +10,12 @@
 
 ## Phase 0: Restore the program graph baseline
 
-- [~] Task: Verify the canonical `repo-graph` binary and document the stale-schema failure from the existing `graph.db`.
-- [~] Task: Rebuild `graph.db` from the current monorepo source without consuming partial or timed-out output.
-- [~] Task: Prove current Accounts, backend-kernel, company-identity, license, and www symbols are queryable with `repo-graph stats`, `search`, `inspect`, and `callers`.
-- [~] Task: Publish the accepted graph baseline SHA, tool version, commands, counts, and known parser exclusions for both Track 1 and Track 2.
+- [x] Task: Verify the canonical `repo-graph` binary and document the stale-schema failure from the existing `graph.db`.
+- [x] Task: Rebuild `graph.db` from the current monorepo source without consuming partial or timed-out output.
+- [x] Task: Prove current Accounts, backend-kernel, company-identity, license, and www symbols are queryable with `repo-graph stats`, `search`, `inspect`, and `callers`.
+- [~] Task: Publish the graph baseline producer evidence with SHA, tool version, commands, counts, and known parser exclusions for both Track 1 and Track 2, then obtain independent Phase 0 acceptance.
+  - Producer evidence: [phase0-graph-baseline-producer-evidence-20260722.md](./phase0-graph-baseline-producer-evidence-20260722.md)
+  - Independent review is pending. Phase S1 and Track 2 remain blocked.
 
 ## Phase S1: Grant owner application access
 _Story ref: spec.md#story-s1_
