@@ -1,12 +1,18 @@
 {
   "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
   "type": "chore",
-  "status": "pending",
+  "status": "accepted-with-disclosure",
   "created_at": "2026-07-12T00:00:00Z",
-  "updated_at": "2026-07-12T00:00:00Z",
+  "updated_at": "2026-07-22T00:00:00Z",
   "description": "Recover exact puzzle, matching, crafting, sequencing, content, responsive, and asset evidence for six games.",
-  "estimated_tasks": 25,
-  "actual_tasks": null,
-  "deviation_notes": null,
+  "estimated_tasks": 24,
+  "actual_tasks": 19,
+  "task_state_counts": {
+    "completed": 19,
+    "blocked": 5,
+    "in_progress": 0,
+    "total": 24
+  },
+  "deviation_notes": "Accepted with disclosure through fresh review 752fecfd, successor candidate b3c95ab3, ordered owner acceptance ed1f3df3, and accepted successor manifest 43b72620. The active successor acceptance and consumption gate passes with zero unresolved Critical, High, or Medium findings. V1 remains historical, non-authoritative, and non-consumable; five product-owner manual-verification tasks remain explicitly deferred. No browser, gameplay, responsive, trusted-input, completion, persistence, XP, API, production, asset-loading, implementation, shipping, or ontology success is claimed.",
   "depends_on": ["apk_three_game_truth_pilot_20260712"]
 }
