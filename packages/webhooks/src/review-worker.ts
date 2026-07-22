@@ -266,7 +266,7 @@ export type EnqueueReviewJobResult = ReviewJob;
  *      `review_jobs_pr_key_unique` enforces uniqueness even under races.
  *
  * @param input - The enqueue payload (DB + review ID + action + PR URL + raw payload).
- * @returns `{ job, enqueued }` — `enqueued: false` means a duplicate delivery
+ * @returns The job result; `enqueued: false` means a duplicate delivery
  *   collapsed onto an existing job row.
  */
 export async function enqueueReviewJob(
@@ -854,8 +854,7 @@ export interface SettleJobPayload {
 /**
  * Computes the settle payload for a job that just finished (success or
  * failure). Pure function — given `(job, err, config)` it returns the
- * mutation payload. The worker applies the payload with
- * `db.update(reviewJobs).set(payload).where(eq(reviewJobs.id, jobId))`.
+ * mutation payload. The worker applies the payload through `applySettle`.
  *
  * Success (`err === null`):
  *   - status = `succeeded`, lastError = null
@@ -942,10 +941,11 @@ export function settleJob(
  * Applies a `settleJob` payload to the database. Separated from
  * `settleJob` so the latter stays a pure function for testing.
  *
- * The update is a compare-and-swap on `status = 'claimed'`: if the job
- * was already settled by another worker (or reclaimed and is being
- * processed elsewhere), the update is a no-op and we do not overwrite a
- * terminal state.
+ * The update is a compare-and-swap on ID plus `status = 'claimed'`. This
+ * prevents overwriting a terminal or pending row, but it does not identify
+ * the claim owner. After visibility reclaim and re-claim, a stale worker can
+ * still settle the newer worker's `claimed` row. The durable-job platform
+ * intentionally strengthens this baseline with lease-token ownership.
  *
  * @param dbArg - DB connection (or privileged singleton if omitted).
  * @param jobId - The job id to settle.

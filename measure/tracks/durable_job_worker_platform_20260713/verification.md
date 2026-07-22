@@ -38,3 +38,27 @@ Task 1 may be accepted only after remediation and a fresh independent PASS.
   callers are skipped because `graph.db` is stale.
 - Ownership: the reviewer did not mark Task 1 complete, unlock Task 2, commit,
   or modify production code. Parent-orchestrator acceptance remains required.
+
+## Task 2 — Current `review_jobs` inventory and executable baseline
+
+### Decision — 2026-07-22
+
+- Decision: **PASS for Task 2 only.** Phase 1 remains open on Tasks 3–5.
+- Inventory: `task-2-current-review-jobs-inventory-20260722.md`.
+- Characterization tests:
+  - `packages/webhooks/src/__tests__/durable-task2-settle-limit-characterization.test.ts`
+  - `packages/domain/src/__tests__/durable-task2-replay-limit-characterization.test.ts`
+- Current settle limitation: predicate parameters are exactly
+  `[jobId, "claimed"]`; there is no worker/lease token, so stale settlement
+  remains possible after visibility reclaim and re-claim.
+- Current replay limitation: all five states
+  `pending|claimed|succeeded|failed|dead` reset to `pending` through an ID-only
+  predicate; authorization is enforced but active-claim rejection and a replay
+  audit event do not exist.
+- Current evidence: webhooks 34 passed / 2 live-DB skipped; DB 11 passed;
+  domain 15 passed; API 38 passed; focused ESLint and webhooks typecheck passed.
+- `DIRECT_DATABASE_URL` was unset, so no new real-Postgres claim/reclaim result
+  is claimed. Historical 2026-07-04 acceptance documented the same intended
+  skip gate.
+- Boundary: no schema, migration, generic port, queue, handler, audit write, or
+  worker-platform runtime behavior was implemented by Task 2.
