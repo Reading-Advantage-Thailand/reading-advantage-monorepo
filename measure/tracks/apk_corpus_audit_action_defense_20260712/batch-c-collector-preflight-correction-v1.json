@@ -1,0 +1,52 @@
+{
+  "schema_version": "apk-preflight-provenance-correction.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "status": "owner-authenticated additive preflight correction; source evidence remains independently test-required",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "actual_collector_role_base_sha": "419cbad0fe73999d0977573b734934bb0c52c622",
+  "incorrect_prompt_role_base_sha": "419cbad0fb775a766201c23e56a77373a24bfbd1",
+  "defect": "Both fresh collector prompts contained an incorrect expanded SHA after the correct 419cbad0 short prefix. Each isolated worktree was actually checked out at immutable commit 419cbad0fe73999d0977573b734934bb0c52c622.",
+  "authority": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/owner-policy-amendment-v19.json",
+    "sha256": "dda6a16c3b18a3bfb448228718d85e467e697653e506daf25fedf8c628694a28",
+    "rule": "Audited immutable Git chronology may substitute unavailable or defective preflight provenance only. It never authenticates source facts, evidence envelopes, truth tests, browser/asset observations, or review conclusions."
+  },
+  "git_chronology": {
+    "discovery_publication_commit": "419cbad0fe73999d0977573b734934bb0c52c622",
+    "paladin_package_publication_commit": "8e8ea7ebff7afcd2abc9e9f33df47ac8ded1f5a5",
+    "gryphon_package_publication_commit": "f69805e8f93003270208ec7f0a246544c18cda99",
+    "ordered": true
+  },
+  "corrected_packages": [
+    {
+      "game": "Paladin's Twin-Soul",
+      "historical_role_base_fields_are_inaccurate": true,
+      "ledger_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-claim-ledger-batch-c.json",
+      "ledger_sha256": "90c451c895bffa0bf41c7f3c916578df7d700f0f56e05d16ae7cab58e6a60304",
+      "report_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-evidence-final-report-batch-c.json",
+      "report_sha256": "ed4936a4ece786c7df9386f17755e16697f5d702d85edc883278127853c4db8e",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-paladins-twin-soul-batch-c.json",
+      "receipt_sha256": "e9a841207ee54a4f8f4fc21bf71f90ba7f7d73c8676dffd29401dc620d9b299f"
+    },
+    {
+      "game": "Gryphon Patrol",
+      "historical_role_base_fields_are_inaccurate": true,
+      "ledger_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-claim-ledger-batch-c.json",
+      "ledger_sha256": "fac24981441b0b86b9e1388046b947daaaef2443093917c8648e9392799a1155",
+      "report_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-final-report-batch-c.json",
+      "report_sha256": "5999d8f9d4f7b8f7cc0fc17c2dd5f6511be64436d74e421f9c0df2b5a24bc639",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-gryphon-patrol-batch-c.json",
+      "receipt_sha256": "190b56be6013a5ac0aa5a09541e467506533834a325ced6fa742196bcb11938d"
+    }
+  ],
+  "consumability": {
+    "preflight_role_base_corrected": true,
+    "source_claims_accepted": false,
+    "source_claims_require_truth_tests": true,
+    "mapper_authorized_after_correction": true,
+    "candidate_authorized": false
+  },
+  "preservation_rule": "The original collector artifacts remain immutable and their inaccurate requested role-base fields remain visible. Consumers must apply this additive correction and still re-derive every source/evidence proposition.",
+  "marker": "MEASURE_AGENT_RESULT"
+}
