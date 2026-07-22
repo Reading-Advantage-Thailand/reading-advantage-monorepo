@@ -1,0 +1,183 @@
+{
+  "schema": "apk-role-receipt-selection.v7.root-arbiter.r7k3",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "status": "selector-high-remediated-awaiting-fresh-downstream-review",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v5",
+  "parent_task": "/root/apk_batch_c_fresh_roles",
+  "fork_turns": "none",
+  "selection_contract": {
+    "adds_to": "batch-c-role-receipt-selection-v7.json",
+    "predecessor_sha256": "d4c3eb1093970cbe4470bd4da833fced7465b443f85c7d900c79979163a95a17",
+    "reason": "Remediate only r7k3 High finding T4C-BROWSER-V6-SELECTOR-001 by making the helper-compliant Browser v6 chain and this nonce-scoped truth role explicit; preserve every other canonical v7 role binding.",
+    "corrected_denominator": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json",
+      "sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f"
+    },
+    "denominator_scope": "reused-without-expansion",
+    "collision_policy": "fail closed on both Asset v4 provider sets and invalid Gryphon mapper v5 selection"
+  },
+  "finding_remediation": {
+    "finding_id": "T4C-BROWSER-V6-SELECTOR-001",
+    "severity": "High",
+    "review_sha256": "4aa356729f3f9b3d8f9b03d31f7fe4ec31ce1f56175fb0dc101cd7cf7a09e4e5",
+    "selector_remediation_published": true,
+    "focused_truth_gate_published": true,
+    "downstream_review_completed": false,
+    "disposition": "The selector defect is remediated additively, but fresh Batch C review/reconciliation and full-cohort review remain required before any lifecycle authorization."
+  },
+  "review_bindings": {
+    "selector_ownership": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-selector-v7-root-arbiter-20260722-1912-r7k3-19a7-ownership.json",
+      "sha256": "ef4cdb49044f3de6b67f66f5dd1a83768142a3a17846fc4679291cda95bac987"
+    },
+    "review_ownership": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3-ownership.json",
+      "sha256": "916300ef26cf9825911b1943dd7a18c12e19db7bfe3cf982da0ac422906d9db4"
+    },
+    "review": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json",
+      "sha256": "4aa356729f3f9b3d8f9b03d31f7fe4ec31ce1f56175fb0dc101cd7cf7a09e4e5"
+    },
+    "review_proof": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json",
+      "sha256": "1e5f7b291ad4c61ae8cfa3cca5f56ae92c06b84717d19255c857576fd2dcbdb5"
+    },
+    "review_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json",
+      "sha256": "1aad347224a8e8caa237ea5ad383f39030bc45ef0ed213398b81a6f1995ee2a9"
+    }
+  },
+  "selected_receipts": [
+    {
+      "task_id": "C3-DISCOVERY",
+      "role": "discovery-auditor-batch-c",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/discovery-auditor-batch-c-v5.json",
+      "receipt_sha256": "517554dad12c1ebb2ad7084c104f9ea664f4a517ade57e8a0434f1e8c94d4c5c",
+      "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/discovery-auditor-batch-c-v5.json",
+      "proof_sha256": "ce9b71d4d218ba42e5dde08c9f67e83e543dddd4dcd2343e2e7674ffc446cb26",
+      "provider_identifier": "/root/t4_discovery_reverify_terra",
+      "parent_task": "/root"
+    },
+    {
+      "task_id": "C3-COLLECT-PALADIN",
+      "role": "evidence-collector-paladins-twin-soul-batch-c",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-paladins-twin-soul-batch-c-v4.json",
+      "receipt_sha256": "f275bb85bcf83acc8c4566af25f1ada7c9b8102a9325139238dc19e2fd67f117",
+      "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/evidence-collector-paladins-twin-soul-batch-c-v4.json",
+      "proof_sha256": "e780f0e155f35bcfa7ca44ef3ec4c6c4b0057a31743adaad68428b7b97f429d0",
+      "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_paladin_collector_v4",
+      "parent_task": "/root/apk_batch_c_fresh_roles"
+    },
+    {
+      "task_id": "C3-COLLECT-GRYPHON",
+      "role": "evidence-collector-gryphon-patrol-batch-c",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-gryphon-patrol-batch-c-v4.json",
+      "receipt_sha256": "cf28e5d2c6de663e2638ab024cd5ea78df0f7a91da12d5952b6d589813d5d27c",
+      "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/evidence-collector-gryphon-patrol-batch-c-v4.json",
+      "proof_sha256": "d797b87a0b59bd2aeeaf54fc63fa3d8d30659d33695493a6c25ee37964382e2e",
+      "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_collector_v4",
+      "parent_task": "/root/apk_batch_c_fresh_roles"
+    },
+    {
+      "task_id": "C3-MAP-PALADIN",
+      "role": "requirements-mapper-paladins-twin-soul-batch-c",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-paladins-twin-soul-batch-c-v4.json",
+      "receipt_sha256": "1595731d13dd94321aef98616890e8b3c46d6536506160588de1565a273602a4",
+      "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-paladins-twin-soul-batch-c-v4.json",
+      "proof_sha256": "7a3691665c7d141ade2188f03804dbbb5dade4f3b4a2f7e2d2d5131b246742dd",
+      "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_paladin_mapper_v4",
+      "parent_task": "/root/apk_batch_c_fresh_roles"
+    },
+    {
+      "task_id": "C3-MAP-GRYPHON",
+      "role": "requirements-mapper-gryphon-patrol-batch-c",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c-v6-root-arbiter-20260722-1718-8f2c.json",
+      "receipt_sha256": "b6067217c7429927424886a860498d01cfb1e9b3c34c736fa3f73f8328fce8b7",
+      "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-gryphon-patrol-batch-c-v6-root-arbiter-20260722-1718-8f2c.json",
+      "proof_sha256": "72946dc228d712ca4974fad94e9a728f1d2d9487481eb21dd28431ac01bf576e",
+      "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v6_arbiter_8f2c",
+      "parent_task": "/root/apk_batch_c_fresh_roles"
+    },
+    {
+      "task_id": "C3-TRUTH",
+      "role": "truth-test-author-batch-c",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-c-v7-root-arbiter-20260722-1912-r7k3-19a7.json",
+      "receipt_sha256": "c1472f794264718d7bc9ee0a891d2fad5852a18ca8df9db4bdad099756c467e5",
+      "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/truth-test-author-batch-c-v7-root-arbiter-20260722-1912-r7k3-19a7.json",
+      "proof_sha256": "e33df8239de9ee48ab959da09ad1ce0614c1fd765f3d0dde5cabcb4034116fce",
+      "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v5",
+      "parent_task": "/root/apk_batch_c_fresh_roles"
+    },
+    {
+      "task_id": "C3-BROWSER",
+      "role": "browser-auditor-batch-c",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v6-root-arbiter-20260722-1758-kimi-b91e.json",
+      "receipt_sha256": "913ee0b1431e0d852dec196cf523d9bec0ed004fa3796e24798ecf9f4532e283",
+      "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/browser-auditor-batch-c-v6-root-arbiter-20260722-1758-kimi-b91e.json",
+      "proof_sha256": "a75f2b5c0bb5d6236c67185aafe42f628bd01e57f63efa904b7986fb3a755cae",
+      "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_browser_auditor_v6_kimi_b91e",
+      "parent_task": "/root/apk_batch_c_fresh_roles",
+      "ownership": {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-ownership.json",
+        "sha256": "abf14709ac62f3d7fdff1f75fcd3064753f0ec52e0169c2068fd52aa88b172e9"
+      },
+      "audit": {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v6-root-arbiter-20260722-1758-kimi-b91e.json",
+        "sha256": "6e9a39503d315f59b001e0952fe317441115cf5c82f8efb3fe5473690b97b4e6"
+      }
+    },
+    {
+      "task_id": "C3-ASSET",
+      "role": "asset-auditor-batch-c",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json",
+      "receipt_sha256": "e38993458ba19f299d2cd16eb699f79b9cd82f1d6dcde420d9fbc8c2577d37ab",
+      "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json",
+      "proof_sha256": "fac6f71f01dd247ccdd2abf0dbf628c0a1a3ba8bfb329cd00d7503c271760e14",
+      "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_asset_auditor_v5_arbiter_a51d",
+      "parent_task": "/root/apk_batch_c_fresh_roles",
+      "ownership": {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-auditor-v5-root-arbiter-20260722-1726-a51d-ownership.json",
+        "sha256": "4c798bc474822bf4253e2e2d306511db1a140e561214810fd328fd10ae356b0b"
+      },
+      "original_pending_validation_fields": {
+        "three_file_chain": "pending final self-check after receipt write",
+        "json_syntax": "pending final self-check after receipt write",
+        "predecessor_immutability": "pending final self-check after receipt write",
+        "no_backup_files": "pending final self-check after receipt write",
+        "diff_scope": "pending final self-check after receipt write"
+      },
+      "independent_validation_successor": {
+        "record": {
+          "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-v5-independent-validation-v1.json",
+          "sha256": "ee322ac2d9f7f8d87cc4d94db16d83484a01dae0ae07e60b1c644ef9bd09ec5c"
+        },
+        "proof": {
+          "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5-validation-v1.json",
+          "sha256": "acd29d1142316835d95a60d65f3d4ee3cccff8ae6f5ae17235e9b5c581572aa4"
+        },
+        "receipt": {
+          "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5-validation-v1.json",
+          "sha256": "341224264b6315ef29c75865ac4a4d7af090262e888e0d0098e223207b6a7bd8"
+        }
+      }
+    }
+  ],
+  "required_exclusions": {
+    "browser_v5_skill_deviation": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v5-skill-deviation.json",
+      "sha256": "68e6528edec1c05e85d694fde5de6d436ef4209e0317653bbcecf3b340cd2a46",
+      "disposition": "non-consumable and unselected"
+    }
+  },
+  "truth_gate": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v7-root-arbiter-20260722-1912-r7k3-19a7.py",
+    "sha256": "1153068290e9af74a617ea90ed094a2cb59f5a9a6d9d3f5e1392039a595afb78"
+  },
+  "lifecycle": {
+    "candidate_authorized": false,
+    "acceptance_authorized": false,
+    "consumption_authorized": false
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

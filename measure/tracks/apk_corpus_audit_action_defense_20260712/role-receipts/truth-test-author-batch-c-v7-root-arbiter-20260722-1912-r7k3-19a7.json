@@ -1,0 +1,75 @@
+{
+  "schema": "apk-role-receipt.v7.root-arbiter.r7k3",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "task_id": "C3-TRUTH-V7-R7K3-19A7",
+  "role": "truth-test-author-batch-c",
+  "status": "completed-focused-r7k3-selector-successor",
+  "acceptance": "not-claimed",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v5",
+    "provider_kind": "native-collaboration-identity",
+    "canonical_task": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v5",
+    "fork_turns": "none",
+    "parent_task": "/root/apk_batch_c_fresh_roles",
+    "raw_provider_event": null,
+    "provider_session_id": null,
+    "unavailable_metadata_note": "Raw provider event and session identifiers are unavailable and intentionally null; native collaboration identity is the available provenance."
+  },
+  "finding_binding": {
+    "finding_id": "T4C-BROWSER-V6-SELECTOR-001",
+    "review_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json",
+    "review_sha256": "4aa356729f3f9b3d8f9b03d31f7fe4ec31ce1f56175fb0dc101cd7cf7a09e4e5"
+  },
+  "retained_proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/truth-test-author-batch-c-v7-root-arbiter-20260722-1912-r7k3-19a7.json",
+    "sha256": "e33df8239de9ee48ab959da09ad1ce0614c1fd765f3d0dde5cabcb4034116fce"
+  },
+  "truth_test": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v7-root-arbiter-20260722-1912-r7k3-19a7.py",
+    "sha256": "1153068290e9af74a617ea90ed094a2cb59f5a9a6d9d3f5e1392039a595afb78"
+  },
+  "selector": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v7-root-arbiter-20260722-1912-r7k3-19a7.json",
+    "sha256": null,
+    "cycle_binding": "selector-hashes-this-receipt-and-retained-proof"
+  },
+  "verification": {
+    "result": "pass",
+    "focused_gate_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v7-root-arbiter-20260722-1912-r7k3-19a7.py",
+    "exit_code": 0,
+    "stdout": "6 passed"
+  },
+  "scope_attestation": {
+    "roles_held": [
+      "truth-test-author-batch-c"
+    ],
+    "browser_v6_selected": true,
+    "browser_v5_selected": false,
+    "canonical_v7_modified": false,
+    "candidate_or_acceptance_claimed": false,
+    "forbidden_work_not_performed": [
+      "source collection",
+      "requirements mapping",
+      "browser audit",
+      "asset audit",
+      "adversarial review",
+      "candidate publication",
+      "acceptance",
+      "plan or registry editing",
+      "staging",
+      "committing"
+    ]
+  },
+  "lifecycle": {
+    "candidate_authorized": false,
+    "acceptance_authorized": false,
+    "consumption_authorized": false
+  },
+  "commit_sha": null,
+  "commit_disposition": "No commit was created because this delegated task prohibits staging and committing.",
+  "self_sha256": null,
+  "marker": "MEASURE_AGENT_RESULT"
+}

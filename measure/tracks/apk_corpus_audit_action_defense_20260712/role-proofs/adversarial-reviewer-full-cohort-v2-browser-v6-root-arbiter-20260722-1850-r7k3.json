@@ -1,0 +1,75 @@
+{
+  "schema": "measure-role-proof.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-REVIEW-V2-BROWSER-V6-R7K3",
+  "role": "adversarial-reviewer-full-cohort",
+  "status": "complete-blocked-high",
+  "completed_at_utc": "2026-07-22T11:56:23Z",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/full_cohort_reviewer_v2_browser_v6_r7k3",
+  "parent_task": "/root/apk_batch_c_fresh_roles",
+  "fork_turns": "none",
+  "provider_attestation_available": false,
+  "provider_attestation_note": "The collaboration-assigned provider identifier, direct parent, and fork mode are retained. Raw encrypted provider event, spawn ID, session ID, and provider final-response export are unavailable and were not reconstructed.",
+  "ownership": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3-ownership.json",
+    "sha256": "916300ef26cf9825911b1943dd7a18c12e19db7bfe3cf982da0ac422906d9db4",
+    "all_reserved_paths_absent_prewrite": true,
+    "immutable_review_base": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"
+  },
+  "instructions_loaded": {
+    "AGENTS.md": "complete",
+    "/home/daniel-bo/.agents/skills/measure/SKILL.md": "complete",
+    "/home/daniel-bo/.agents/skills/measure/references/review.md": "complete",
+    "measure/index.md": "complete",
+    "measure/workflow.md": "complete",
+    "/home/daniel-bo/.agents/skills/kimi-webbridge/SKILL.md": "complete",
+    "/home/daniel-bo/.agents/skills/kimi-webbridge/scripts/screenshot.sh": "complete"
+  },
+  "commands": [
+    {"id":"P01","argv":["sha256sum","measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3-ownership.json"],"exit_code":0,"stdout":"916300ef26cf9825911b1943dd7a18c12e19db7bfe3cf982da0ac422906d9db4","result":"ownership matched"},
+    {"id":"P02","argv":["test","!","-e","<each exact reserved path>"],"exit_code":0,"stdout":"ABSENT for all three exact reserved paths","result":"prewrite gate passed"},
+    {"id":"P03","argv":["git","diff-tree","--no-commit-id","--name-status","-r","ae0920c93f30bf1d2d90058373c552dfccdfd8a1"],"exit_code":0,"stdout":"17 added paths: 4 asset nonce, 11 Browser v6/deviation, 2 blocked review v1","result":"immutable blob inventory exact"},
+    {"id":"P04","argv":["git","show","ae0920c93f30bf1d2d90058373c552dfccdfd8a1:<each of 17 paths>","|","sha256sum"],"exit_code":0,"stdout":"17/17 git-show hashes matched working copies and recorded manifest","result":"immutable byte audit passed"},
+    {"id":"P05","argv":["git","show","23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:<each of 9 asset candidates>","|","sha256sum"],"exit_code":0,"stdout":"9/9 hashes, sizes, modes, and blob OIDs matched asset nonce audit","result":"asset nonce rederivation passed"},
+    {"id":"P06","argv":["git","rev-parse","--git-dir","--git-common-dir"],"exit_code":0,"stdout":".git\n.git","result":"canonical primary checkout"},
+    {"id":"P07","argv":["git","worktree","list","--porcelain"],"exit_code":0,"stdout":"only /home/daniel-bo/Desktop/reading-advantage-monorepo listed","result":"no auxiliary worktree observed or used"},
+    {"id":"P08","argv":["git","merge-base","--is-ancestor","085dd8df75609b6585fdc6913530c21347a88b62","ae0920c93f30bf1d2d90058373c552dfccdfd8a1"],"exit_code":0,"stdout":"","result":"Browser source head precedes evidence base"},
+    {"id":"P09","argv":["git","rev-parse","085dd8df:apps/advantage-games","085dd8df:packages/advantage-play-kit","ae0920c:apps/advantage-games","ae0920c:packages/advantage-play-kit"],"exit_code":0,"stdout":"a10dba6fe641adb4dfadbd6781bcffe86023ce6b\n75fa7bb794d7c8fad37b5565c0f4c6d7ccda926f\na10dba6fe641adb4dfadbd6781bcffe86023ce6b\n75fa7bb794d7c8fad37b5565c0f4c6d7ccda926f","result":"served source trees unchanged through review base"},
+    {"id":"P10","argv":["sha256sum","apps/advantage-games/.next/BUILD_ID"],"exit_code":0,"stdout":"52b0731201c568c0bf1858e1f99b2a65275bcff661737192508513435f452589","result":"build ID QOCSiMddGhw_eVRpucZia matched Browser v6 record"},
+    {"id":"P11","argv":["visual-inspect","Browser v6 compact and wide hash-matched PNGs"],"exit_code":0,"stdout":"390x844 and 1440x900 both visibly show 404 This page could not be found","result":"visual evidence matches bounded route disposition"},
+    {"id":"P12","argv":["PYTHONDONTWRITEBYTECODE=1","python3","-m","pytest","-q","measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests-v2.py"],"exit_code":0,"stdout":"47 passed, 189 subtests passed in 2.94s","result":"current gate run once"},
+    {"id":"P13","argv":["PYTHONDONTWRITEBYTECODE=1","python3","-m","pytest","-q","measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-lifecycle-v20.py"],"exit_code":0,"stdout":"4 passed in 0.43s","result":"current gate run once"},
+    {"id":"P14","argv":["PYTHONDONTWRITEBYTECODE=1","python3","measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-lifecycle-stop-loss-v17.py"],"exit_code":0,"stdout":"Ran 2 tests in 0.031s; OK","result":"current gate run once"},
+    {"id":"P15","argv":["PYTHONDONTWRITEBYTECODE=1","python3","measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py"],"exit_code":0,"stdout":"Ran 5 tests in 1.989s; OK","result":"current gate run once; inspected source proves Browser v4/v5 binding"},
+    {"id":"P16","argv":["PYTHONDONTWRITEBYTECODE=1","python3","measure/tracks/apk_corpus_audit_action_defense_20260712/t4-cohort-reconciliation-gate.py"],"exit_code":0,"stdout":"Ran 4 tests in 8.791s; OK","result":"current gate run once; does not bind Browser v6"},
+    {"id":"P17","argv":["rg","-n","browser-auditor-batch-c-v5|batch-c-browser-audit-v4","batch-c-role-receipt-selection-v6.json","batch-c-truth-tests-v4.py","batch-c-independent-review-v6.json"],"exit_code":0,"stdout":"selector lines 80-85 select v5; truth gate lines 291-314 loads v5/v4; prior review v6 exact inputs bind v5/v4","result":"High lifecycle finding established"},
+    {"id":"P18","argv":["jq","-e",".","full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json"],"exit_code":0,"stdout":"valid JSON","result":"review syntax passed"},
+    {"id":"P19","argv":["sha256sum","full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json"],"exit_code":0,"stdout":"4aa356729f3f9b3d8f9b03d31f7fe4ec31ce1f56175fb0dc101cd7cf7a09e4e5","result":"review bytes bound"}
+  ],
+  "outputs": [
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json","sha256":"4aa356729f3f9b3d8f9b03d31f7fe4ec31ce1f56175fb0dc101cd7cf7a09e4e5","status":"blocked-high"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json","sha256":null,"digest_binding":"bound by final receipt"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json","sha256":null,"digest_reason":"receipt cannot self-hash"}
+  ],
+  "review_result": {
+    "finding_ids": ["T4C-BROWSER-V6-SELECTOR-001"],
+    "unresolved_counts": {"critical":0,"high":1,"medium":0,"low":0,"total":1},
+    "blocked_review_v1_superseded": false,
+    "candidate_authorized": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "cohort_consumption_authorized": false
+  },
+  "scope_attestation": {
+    "roles_held": ["adversarial-reviewer-full-cohort"],
+    "review_only": true,
+    "no_repair": true,
+    "only_three_reserved_paths_written": true,
+    "no_staging": true,
+    "no_commit": true
+  },
+  "blockers": ["T4C-BROWSER-V6-SELECTOR-001"],
+  "verification_result": "blocked-high",
+  "marker": "MEASURE_AGENT_RESULT"
+}

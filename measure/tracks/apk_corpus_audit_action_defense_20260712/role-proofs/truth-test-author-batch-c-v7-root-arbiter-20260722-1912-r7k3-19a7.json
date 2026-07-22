@@ -1,0 +1,102 @@
+{
+  "schema": "measure.provider-fresh-context-proof.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "task_id": "C3-TRUTH-V7-R7K3-19A7",
+  "role": "truth-test-author-batch-c",
+  "status": "completed-focused-r7k3-selector-successor",
+  "verification_result": "pass",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v5",
+  "canonical_task": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v5",
+  "fork_turns": "none",
+  "parent_task": "/root/apk_batch_c_fresh_roles",
+  "created_at_utc": "2026-07-22T12:14:29Z",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v5",
+    "provider_kind": "native-collaboration-identity",
+    "canonical_task": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v5",
+    "fork_turns": "none",
+    "parent_task": "/root/apk_batch_c_fresh_roles",
+    "raw_provider_event": null,
+    "provider_session_id": null,
+    "unavailable_metadata_note": "Raw provider event and session identifiers are unavailable and intentionally null; native collaboration identity is the available provenance."
+  },
+  "scope": {
+    "authorized_work": "Publish only the four nonce-scoped v7 selector/truth successor paths reserved by the corrected root-arbiter ownership record.",
+    "finding_remediated": "T4C-BROWSER-V6-SELECTOR-001",
+    "forbidden_work_not_performed": [
+      "canonical v7 modification",
+      "browser evidence modification",
+      "source collection",
+      "requirements mapping",
+      "browser audit",
+      "asset audit",
+      "adversarial review",
+      "candidate publication",
+      "acceptance",
+      "plan or registry editing",
+      "staging",
+      "committing"
+    ]
+  },
+  "input_bindings": {
+    "finding_id": "T4C-BROWSER-V6-SELECTOR-001",
+    "selector_ownership": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-selector-v7-root-arbiter-20260722-1912-r7k3-19a7-ownership.json",
+      "sha256": "ef4cdb49044f3de6b67f66f5dd1a83768142a3a17846fc4679291cda95bac987"
+    },
+    "review_ownership": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3-ownership.json",
+      "sha256": "916300ef26cf9825911b1943dd7a18c12e19db7bfe3cf982da0ac422906d9db4"
+    },
+    "review": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json",
+      "sha256": "4aa356729f3f9b3d8f9b03d31f7fe4ec31ce1f56175fb0dc101cd7cf7a09e4e5"
+    },
+    "review_proof": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json",
+      "sha256": "1e5f7b291ad4c61ae8cfa3cca5f56ae92c06b84717d19255c857576fd2dcbdb5"
+    },
+    "review_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json",
+      "sha256": "1aad347224a8e8caa237ea5ad383f39030bc45ef0ed213398b81a6f1995ee2a9"
+    },
+    "canonical_v7_selector": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v7.json",
+      "sha256": "d4c3eb1093970cbe4470bd4da833fced7465b443f85c7d900c79979163a95a17",
+      "disposition": "preserved immutable; lacks r7k3 binding"
+    }
+  },
+  "outputs": {
+    "truth_test": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v7-root-arbiter-20260722-1912-r7k3-19a7.py",
+      "sha256": "1153068290e9af74a617ea90ed094a2cb59f5a9a6d9d3f5e1392039a595afb78"
+    },
+    "selector": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v7-root-arbiter-20260722-1912-r7k3-19a7.json",
+      "sha256": null,
+      "cycle_binding": "selector-hashes-proof-and-receipt"
+    },
+    "receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-c-v7-root-arbiter-20260722-1912-r7k3-19a7.json",
+      "sha256": null,
+      "cycle_binding": "selector-hashes-proof-and-receipt"
+    }
+  },
+  "verification": {
+    "result": "pass",
+    "focused_gate_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v7-root-arbiter-20260722-1912-r7k3-19a7.py",
+    "exit_code": 0,
+    "stdout": "6 passed"
+  },
+  "lifecycle": {
+    "candidate_authorized": false,
+    "acceptance_authorized": false,
+    "consumption_authorized": false
+  },
+  "commit_sha": null,
+  "commit_disposition": "No commit was created because this delegated task prohibits staging and committing.",
+  "marker": "MEASURE_AGENT_RESULT"
+}

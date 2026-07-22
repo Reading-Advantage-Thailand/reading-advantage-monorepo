@@ -1,0 +1,34 @@
+{
+  "schema": "measure.root-arbiter-ownership.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "task_id": "C3-TRUTH-V7-R7K3-19A7",
+  "role": "truth-test-author-batch-c",
+  "status": "reserved",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v5",
+  "parent_task": "/root/apk_batch_c_fresh_roles",
+  "reason": "The canonical v7 paths appeared before this role began and do not bind to the r7k3 review. Preserve them append-only and reserve a nonce-scoped v7 successor without overlapping writes.",
+  "required_review_binding": {
+    "ownership_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3-ownership.json",
+    "ownership_sha256": "916300ef26cf9825911b1943dd7a18c12e19db7bfe3cf982da0ac422906d9db4",
+    "review_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json",
+    "review_sha256": "4aa356729f3f9b3d8f9b03d31f7fe4ec31ce1f56175fb0dc101cd7cf7a09e4e5",
+    "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json",
+    "proof_sha256": "1e5f7b291ad4c61ae8cfa3cca5f56ae92c06b84717d19255c857576fd2dcbdb5",
+    "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json",
+    "receipt_sha256": "1aad347224a8e8caa237ea5ad383f39030bc45ef0ed213398b81a6f1995ee2a9",
+    "finding_id": "T4C-BROWSER-V6-SELECTOR-001"
+  },
+  "reserved_outputs": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v7-root-arbiter-20260722-1912-r7k3-19a7.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v7-root-arbiter-20260722-1912-r7k3-19a7.py",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/truth-test-author-batch-c-v7-root-arbiter-20260722-1912-r7k3-19a7.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-c-v7-root-arbiter-20260722-1912-r7k3-19a7.json"
+  ],
+  "lifecycle": {
+    "candidate_authorized": false,
+    "acceptance_authorized": false,
+    "consumption_authorized": false
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

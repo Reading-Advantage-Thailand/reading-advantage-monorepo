@@ -1,0 +1,84 @@
+{
+  "schema": "measure.role-receipt.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-REVIEW-V2-BROWSER-V6-R7K3",
+  "role": "adversarial-reviewer-full-cohort",
+  "status": "complete-blocked-high",
+  "completed_at_utc": "2026-07-22T11:56:23Z",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/apk_batch_c_fresh_roles/full_cohort_reviewer_v2_browser_v6_r7k3",
+    "parent_task": "/root/apk_batch_c_fresh_roles",
+    "fork_turns": "none",
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "auxiliary_git_worktree_created_or_used": false,
+    "commit_created": false
+  },
+  "ownership_binding": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3-ownership.json",
+    "sha256": "916300ef26cf9825911b1943dd7a18c12e19db7bfe3cf982da0ac422906d9db4",
+    "prewrite_absence_gate": "pass",
+    "immutable_review_base": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"
+  },
+  "retained_review": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json",
+    "sha256": "4aa356729f3f9b3d8f9b03d31f7fe4ec31ce1f56175fb0dc101cd7cf7a09e4e5"
+  },
+  "retained_proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json",
+    "sha256": "1e5f7b291ad4c61ae8cfa3cca5f56ae92c06b84717d19255c857576fd2dcbdb5",
+    "verification_result": "blocked-high"
+  },
+  "review_results": {
+    "commit_blobs_rehashed_from_git_show": 17,
+    "commit_blob_hash_mismatches": 0,
+    "browser_v6_blobs_reviewed": 11,
+    "asset_nonce_blobs_reviewed": 4,
+    "blocked_review_v1_blobs_reviewed": 2,
+    "asset_candidates_rederived": 9,
+    "asset_candidate_mismatches": 0,
+    "helper_only_browser_capture_requests": true,
+    "direct_screenshot_api_payload_by_role_found": false,
+    "compact_dimensions": "390x844",
+    "wide_dimensions": "1440x900",
+    "catalog_cards": "Coming Soon with no links",
+    "exact_batch_c_routes": "HTTP 404; non-runnable at bound source head",
+    "network_start_list_stop": "pass; 83 records",
+    "console_buffer": "unavailable; console-clean not claimed",
+    "session_closed": true,
+    "server_pid_and_port_closed": true,
+    "v4_v5_predecessor_hashes_preserved": true,
+    "current_gates_green": 5,
+    "current_gate_coverage_limit": "Batch C gate still reads Browser v4 audit and selected Browser v5 proof/receipt; it does not select or bind Browser v6."
+  },
+  "findings": {
+    "unresolved_ids": ["T4C-BROWSER-V6-SELECTOR-001"],
+    "unresolved_counts": {"critical":0,"high":1,"medium":0,"low":0,"total":1},
+    "material_lifecycle_decision": "High: active batch-c-role-receipt-selection-v6.json still selects the explicitly non-consumable Browser v5 receipt/proof. Helper-compliant Browser v6 evidence is additive but not lifecycle-selected.",
+    "blocked_review_v1_superseded": false
+  },
+  "authorization": {
+    "cohort_candidate_authorized": false,
+    "candidate_must_be_non_consumable": true,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "cohort_consumption_authorized": false
+  },
+  "scope_attestation": {
+    "review_only": true,
+    "no_repair": true,
+    "no_candidate_acceptance_or_accepted_manifest": true,
+    "no_plan_registry_or_other_docs_edit": true,
+    "only_three_reserved_paths_written": true,
+    "no_staging": true,
+    "no_commit": true
+  },
+  "outputs": [
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json","sha256":"4aa356729f3f9b3d8f9b03d31f7fe4ec31ce1f56175fb0dc101cd7cf7a09e4e5"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json","sha256":"1e5f7b291ad4c61ae8cfa3cca5f56ae92c06b84717d19255c857576fd2dcbdb5"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json","sha256":null,"digest_reason":"receipt cannot self-hash without changing its own bytes"}
+  ],
+  "blockers": ["T4C-BROWSER-V6-SELECTOR-001"],
+  "marker": "MEASURE_AGENT_RESULT"
+}

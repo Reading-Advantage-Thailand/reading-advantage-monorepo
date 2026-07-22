@@ -1,0 +1,32 @@
+{
+  "schema": "apk-role-path-ownership.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "role": "adversarial-reviewer-full-cohort",
+  "claimed_at": "2026-07-22T11:47:41Z",
+  "nonce": "root-arbiter-20260722-1850-r7k3",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/full_cohort_reviewer_v2_browser_v6_r7k3",
+  "parent_task": "/root/apk_batch_c_fresh_roles",
+  "fork_turns": "none",
+  "immutable_review_base": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1",
+  "reserved_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v2-browser-v6-root-arbiter-20260722-1850-r7k3.json"
+  ],
+  "preclaim_state": {
+    "all_reserved_paths_absent": true,
+    "rule": "Stop without overwrite if any reserved path exists before the designated reviewer writes it."
+  },
+  "review_requirements": [
+    "Verify every Kimi v6 evidence blob from the immutable review base.",
+    "Explicitly assess screenshot-helper compliance and absence of direct screenshot calls.",
+    "Recheck source/build/session/server/network/console/screenshot bindings and bounded non-runnable conclusions.",
+    "Assess whether the active selector still pointing to Browser v5 is a material lifecycle blocker.",
+    "Supersede the historical blocked full-cohort review only if all post-base requirements are actually resolved.",
+    "Authorize no product-owner acceptance or cohort consumption."
+  ],
+  "candidate_authorized": false,
+  "acceptance_authorized": false,
+  "marker": "MEASURE_AGENT_RESULT"
+}

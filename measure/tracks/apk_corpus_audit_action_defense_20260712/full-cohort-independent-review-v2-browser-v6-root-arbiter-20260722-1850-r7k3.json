@@ -1,0 +1,167 @@
+{
+  "schema_version": "apk-full-cohort-independent-review.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-REVIEW-V2-BROWSER-V6-R7K3",
+  "role": "adversarial-reviewer-full-cohort",
+  "status": "blocked-high-active-selector-still-binds-browser-v5",
+  "reviewed_at_utc": "2026-07-22T11:56:23Z",
+  "immutable_review_base": {
+    "commit": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1",
+    "subject": "chore: checkpoint T4 Batch C Kimi v6 evidence",
+    "parent": "1ecf85e49f016c1eeba6931fe8b833069cde1a35",
+    "review_method": "All 17 added blobs were read and SHA-256 rederived from git show ae0920c93f30bf1d2d90058373c552dfccdfd8a1:<path> byte streams. Canonical working copies matched all 17 rederived hashes."
+  },
+  "reviewer_provenance": {
+    "provider_identifier": "/root/apk_batch_c_fresh_roles/full_cohort_reviewer_v2_browser_v6_r7k3",
+    "parent_task": "/root/apk_batch_c_fresh_roles",
+    "fork_turns": "none",
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "git_dir": ".git",
+    "git_common_dir": ".git",
+    "canonical_primary_checkout_observed": true,
+    "auxiliary_worktree_created_or_used": false,
+    "staged_or_committed": false
+  },
+  "ownership_gate": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2-browser-v6-root-arbiter-20260722-1850-r7k3-ownership.json",
+    "expected_sha256": "916300ef26cf9825911b1943dd7a18c12e19db7bfe3cf982da0ac422906d9db4",
+    "observed_sha256": "916300ef26cf9825911b1943dd7a18c12e19db7bfe3cf982da0ac422906d9db4",
+    "all_three_reserved_paths_absent_prewrite": true
+  },
+  "commit_blob_audit": {
+    "expected_count": 17,
+    "observed_count": 17,
+    "git_show_hash_matches": 17,
+    "working_copy_hash_matches": 17,
+    "blobs": [
+      {"category":"asset-nonce","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-auditor-v5-root-arbiter-20260722-1726-a51d-ownership.json","sha256":"4c798bc474822bf4253e2e2d306511db1a140e561214810fd328fd10ae356b0b"},
+      {"category":"asset-nonce","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit-v5-root-arbiter-20260722-1726-a51d.json","sha256":"10b372b3eff78ce869062577c42ccdf7eccf10e56177315acca91b892e97195c"},
+      {"category":"browser-v6","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v6-root-arbiter-20260722-1758-kimi-b91e.json","sha256":"6e9a39503d315f59b001e0952fe317441115cf5c82f8efb3fe5473690b97b4e6"},
+      {"category":"browser-v5-deviation","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v5-skill-deviation.json","sha256":"68e6528edec1c05e85d694fde5de6d436ef4209e0317653bbcecf3b340cd2a46"},
+      {"category":"browser-v6","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-compact.png","sha256":"fdc81567f73c037216af06c3cdd903ad533454e4cc53446fc2024c68de309213"},
+      {"category":"browser-v6","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-console.json","sha256":"9fb34cf1fb48ec2d35704812503c4ded050373d30fb8c422149d9e757febcf4f"},
+      {"category":"browser-v6","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-interactions.json","sha256":"c6e52fe7040019ab0dc368664624dcb256765147b60f350560f23007b59906ff"},
+      {"category":"browser-v6","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-network.json","sha256":"03f4756026fe4bc8b6c9a5e25d268705a94dc97aa044127cfbe6110c2d381151"},
+      {"category":"browser-v6","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-ownership.json","sha256":"abf14709ac62f3d7fdff1f75fcd3064753f0ec52e0169c2068fd52aa88b172e9"},
+      {"category":"browser-v6","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-server.log","sha256":"3b6ddfacb0a6b8bfa565119b2c5cb8d5c8fdbd7ed1459b98a977c17c1db32c5a"},
+      {"category":"browser-v6","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-wide.png","sha256":"81ee1ebfdae663c3bb69eaa9d69b41c1e88bc02f23890f6196003ad9d252f056"},
+      {"category":"blocked-review-v1","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v1.json","sha256":"ca9ba6b399859d3f263c122dc00a725d1b1961566d73c1ae4ed75cdb8468be96"},
+      {"category":"asset-nonce","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json","sha256":"fac6f71f01dd247ccdd2abf0dbf628c0a1a3ba8bfb329cd00d7503c271760e14"},
+      {"category":"browser-v6","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/browser-auditor-batch-c-v6-root-arbiter-20260722-1758-kimi-b91e.json","sha256":"a75f2b5c0bb5d6236c67185aafe42f628bd01e57f63efa904b7986fb3a755cae"},
+      {"category":"blocked-review-v1","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v1.json","sha256":"17ea5d216999b1bd17ae13d3c06151c96af5978ac5c272652c5ad16b3e0a9a49"},
+      {"category":"asset-nonce","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json","sha256":"e38993458ba19f299d2cd16eb699f79b9cd82f1d6dcde420d9fbc8c2577d37ab"},
+      {"category":"browser-v6","path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v6-root-arbiter-20260722-1758-kimi-b91e.json","sha256":"913ee0b1431e0d852dec196cf523d9bec0ed004fa3796e24798ecf9f4532e283"}
+    ]
+  },
+  "asset_nonce_review": {
+    "four_blob_chain_hash_consistent": true,
+    "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_asset_auditor_v5_arbiter_a51d",
+    "parent_task": "/root/apk_batch_c_fresh_roles",
+    "fork_turns": "none",
+    "frozen_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "independently_rederived_candidates": 9,
+    "hash_size_mode_matches": 9,
+    "classes_confirmed": {"json":6,"png":1,"jpeg_jfif_at_png_path":1,"git_symlink_payload_at_png_path":1},
+    "runtime_use_or_suitability_promoted": false,
+    "v4_collision_hashes_preserved": true
+  },
+  "browser_v6_review": {
+    "eleven_blob_chain_hash_consistent": true,
+    "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_browser_auditor_v6_kimi_b91e",
+    "parent_task": "/root/apk_batch_c_fresh_roles",
+    "fork_turns": "none",
+    "source_head": "085dd8df75609b6585fdc6913530c21347a88b62",
+    "source_head_is_ancestor_of_review_base": true,
+    "app_tree": "a10dba6fe641adb4dfadbd6781bcffe86023ce6b",
+    "relevant_package_tree": "75fa7bb794d7c8fad37b5565c0f4c6d7ccda926f",
+    "trees_equal_at_source_head_and_review_base": true,
+    "configuration_hashes_rederived": true,
+    "build_id": "QOCSiMddGhw_eVRpucZia",
+    "build_id_sha256": "52b0731201c568c0bf1858e1f99b2a65275bcff661737192508513435f452589",
+    "build_route_table_omits_both_batch_c_routes": true,
+    "kimi_status_first": true,
+    "first_navigation_new_tab_true": true,
+    "isolated_session": "apk-t4-batch-c-v6-b91e",
+    "helper_capture_requests": 5,
+    "direct_screenshot_api_payload_by_role_found": false,
+    "helper_daemon_disclosure": "The mandated helper made every capture request. Daemon v1.11.1 postprocessed successful screenshot bytes to /tmp while the helper expected inline data, causing helper exits 4; one first wide attempt timed out with exit 28. The role copied unchanged helper-originated daemon output to the already-requested reserved paths and retained matching source/destination hashes.",
+    "compact": {"dimensions":"390x844","sha256":"fdc81567f73c037216af06c3cdd903ad533454e4cc53446fc2024c68de309213","visual":"404 This page could not be found","horizontal_overflow":false},
+    "wide": {"dimensions":"1440x900","sha256":"81ee1ebfdae663c3bb69eaa9d69b41c1e88bc02f23890f6196003ad9d252f056","visual":"404 This page could not be found","horizontal_overflow":false},
+    "catalog": {"status":200,"paladin":"Coming Soon; no link","gryphon":"Coming Soon; no link","compact_horizontal_overflow":false,"wide_horizontal_overflow":false},
+    "routes": {"paladins_twin_soul":404,"gryphon_patrol":404,"disposition":"non-runnable-at-bound-head"},
+    "network": {"start":true,"list_count":83,"stop":true},
+    "console": {"buffer_available":false,"console_clean_claimed":false,"claim_truthful":true},
+    "session": {"close_session_closed":1,"remaining_tabs":0},
+    "server_cleanup": {"managed_exit":130,"pid_absent":true,"port_listener_absent":true,"post_stop_curl_exit":7},
+    "v4_v5_predecessor_hashes_preserved": true,
+    "bounded_nonclaims_preserved": true
+  },
+  "lineage_review": {
+    "active_selector_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v6.json",
+    "active_selector_sha256": "19d03e183bd39595a004430b0da7800ff63c04052472707c878528b8888ce93b",
+    "selected_browser_receipt": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v5.json",
+    "selected_browser_proof": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/browser-auditor-batch-c-v5.json",
+    "selected_browser_audit_via_gate": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v4.json",
+    "browser_v6_selected": false,
+    "prior_batch_c_review_v6_sha256": "d7786fd330599c0860cccc51fb0bda0e960040eed8f1b965c457fc57c290c54c",
+    "prior_batch_c_review_v6_only_reviewed_browser_v5": true,
+    "cohort_reconciliation_sha256": "94fc4789b532fd4d0e23608d1b7031aede73e379091d411a4277a8f2c7c2e360",
+    "blocked_full_cohort_review_v1_preserved": true,
+    "blocked_full_cohort_review_v1_superseded": false
+  },
+  "current_gate_execution": {
+    "run_once_each": true,
+    "bytecode_writes_disabled": true,
+    "runs": [
+      {"command":"PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-a-truth-tests-v2.py","exit_code":0,"result":"47 passed, 189 subtests passed in 2.94s"},
+      {"command":"PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-lifecycle-v20.py","exit_code":0,"result":"4 passed in 0.43s"},
+      {"command":"PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-lifecycle-stop-loss-v17.py","exit_code":0,"result":"2 tests; OK in 0.031s"},
+      {"command":"PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py","exit_code":0,"result":"5 tests; OK in 1.989s; gate explicitly binds Browser v4 audit and selected Browser v5 proof/receipt"},
+      {"command":"PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_action_defense_20260712/t4-cohort-reconciliation-gate.py","exit_code":0,"result":"4 tests; OK in 8.791s; reconciliation remains bound to the pre-v6 selector/review lineage"}
+    ],
+    "interpretation": "Mechanical green does not cure the active-selector lifecycle defect because the green Browser contract does not read or select Browser v6."
+  },
+  "findings": [
+    {
+      "id": "T4C-BROWSER-V6-SELECTOR-001",
+      "severity": "High",
+      "title": "Active Batch C selector still selects non-consumable Browser v5 rather than helper-compliant Browser v6",
+      "paths": [
+        "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v6.json",
+        "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py",
+        "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-independent-review-v6.json",
+        "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v1.json"
+      ],
+      "evidence": "Selector lines 80-85 bind browser-auditor-batch-c-v5. The active truth gate lines 291-314 loads that selected v5 proof/receipt and batch-c-browser-audit-v4.json. Prior review v6 exact inputs likewise bind Browser v5/v4. Browser v5 is explicitly High/non-consumable in batch-c-browser-v5-skill-deviation.json.",
+      "impact": "The new Browser v6 evidence is valid additive evidence but is outside the active selected-role set and outside the green Batch C review/reconciliation lineage. Selection, receipt, review, and publication order requirements are not satisfied, so the v1 blocker is not genuinely resolved.",
+      "required_remediation": "Publish an additive selector successor that selects the exact Browser v6 receipt/proof/provider/parent, update a fail-closed truth gate to bind all Browser v6 outputs and reject the deviating v5 selection, run it once, then obtain a fresh Batch C review/reconciliation successor and a fresh full-cohort review in order. Preserve v4/v5 and this blocked review unchanged."
+    }
+  ],
+  "unresolved_counts": {"critical":0,"high":1,"medium":0,"low":0,"total":1},
+  "supersession": {
+    "full_cohort_review_v1_superseded": false,
+    "reason": "Its High Browser v5 procedure blocker has helper-compliant Browser v6 evidence, but the active selector and downstream review/reconciliation lineage still consume Browser v5."
+  },
+  "authorization": {
+    "cohort_candidate_authorized": false,
+    "candidate_must_be_non_consumable": true,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "cohort_consumption_authorized": false,
+    "candidate_or_acceptance_artifact_created": false
+  },
+  "scope_attestation": {
+    "review_only": true,
+    "all_eight_games_reconciled_through_existing_roster": true,
+    "no_repair": true,
+    "no_candidate_manifest": true,
+    "no_acceptance_or_accepted_manifest": true,
+    "no_plan_registry_or_docs_edit": true,
+    "no_staging": true,
+    "no_commit": true,
+    "forbidden_success_claims_preserved": true
+  },
+  "blockers": ["T4C-BROWSER-V6-SELECTOR-001"],
+  "marker": "MEASURE_AGENT_RESULT"
+}
