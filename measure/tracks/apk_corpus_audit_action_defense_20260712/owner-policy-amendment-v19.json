@@ -1,0 +1,55 @@
+{
+  "schema_version": "apk-owner-policy-amendment.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "status": "current formal owner policy amendment",
+  "authority_record": {
+    "source": "current in-band owner instruction",
+    "exact_instruction": "Current user has explicitly delegated final owner authority plus authority to retroactively authenticate historical commits. Treat this as a current formal owner policy amendment: audited immutable Git chronology may substitute unavailable historical message/thread IDs and preflight provenance only, never source/evidence/review tests. T4: use commits 970dad3d/0c0ce71b. Scope global marker guard to track (do not modify unrelated tracks). Complete legal fresh Batch B review/candidate/acceptance and remaining Batch C/cohort if requirements demand. Commit all valid artifacts, report exact tests.",
+    "instruction_sha256": "fedd762bdf0357f43fe8701aadfc10d9dbcb7204eb666327bb86842b185fe082",
+    "original_message_id": null,
+    "original_thread_id": null,
+    "owner_authority_delegated": true,
+    "final_acceptance_authority_delegated": true
+  },
+  "required_t4_chronology": {
+    "policy_commit": "970dad3d1f1e09770b162c7a8acfbb02386f1016",
+    "blocked_gate_commit": "0c0ce71b70d82934e7363ac0f432770f796d6bea",
+    "ordered": true,
+    "interpretation": "Commit 970dad3d contains the additive V18 policy and commit 0c0ce71b records the fail-closed marker-gate result. Both remain immutable inputs to this amendment."
+  },
+  "retroactive_authentication_policy": {
+    "permitted_substitutions": [
+      "Audited immutable Git ancestor and publication chronology may substitute an unavailable historical message identifier.",
+      "Audited immutable Git ancestor and publication chronology may substitute an unavailable historical thread identifier.",
+      "Audited immutable Git chronology and exact committed bytes may substitute unavailable preflight provenance."
+    ],
+    "never_substitutable": [
+      "source evidence",
+      "claim envelopes",
+      "truth and source-evidence tests",
+      "fresh independent review",
+      "browser observations",
+      "asset observations"
+    ],
+    "scope": "T4 lifecycle and preflight provenance only",
+    "historical_artifacts_mutable": false
+  },
+  "marker_guard_policy": {
+    "command": "bash tests/orchestrator_marker_vocabulary.sh --track apk_corpus_audit_action_defense_20260712",
+    "scope": "T4 active plan only",
+    "unrelated_track_modification_authorized": false,
+    "global_default_behavior_preserved": true
+  },
+  "required_order": [
+    "Publish and test this amendment.",
+    "Run the current Batch B source/evidence contracts and T4-scoped orchestrator guards at one committed head.",
+    "Obtain a fresh independent Batch B review bound to that head.",
+    "Publish a new non-consumable Batch B candidate after the review.",
+    "Publish delegated owner acceptance after the candidate commit.",
+    "Publish a superseding accepted Batch B manifest after the acceptance commit.",
+    "Only then begin Batch C and complete its source evidence, truth tests, fresh review, candidate, acceptance, and accepted manifest.",
+    "Finally reconcile and independently review all eight packages before cohort candidate, acceptance, and accepted-manifest publication."
+  ],
+  "fail_closed": "Any missing source envelope, red source/evidence test, unresolved Critical/High/Medium review finding, hash drift, or lifecycle-order violation blocks publication or consumption.",
+  "marker": "MEASURE_AGENT_RESULT"
+}
