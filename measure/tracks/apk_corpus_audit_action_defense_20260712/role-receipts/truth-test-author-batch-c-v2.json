@@ -1,0 +1,61 @@
+{
+  "schema": "apk-role-receipt.v3",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "role": "truth-test-author-batch-c-v2",
+  "role_base_sha": "1d7926e9907f1c5c803ecc856ad61121c1a914b7",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "prior_role_history": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-c.json",
+    "sha256": "50a3b2f5e131851421bca6e9624a15a9781a475868db0f69aaf0504f24be042f",
+    "disposition": "Immutable v1 truth tests and receipt are preserved; v2 selects additive semantic supersessions only."
+  },
+  "provider_provenance": {
+    "available": false,
+    "provider_identifier": null,
+    "raw_export_identifier": null,
+    "fork_turns": null,
+    "reason": "No provider-attested identifier or raw fresh-context export is available. No substitute provenance is claimed."
+  },
+  "exact_inputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-c.md": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-budget-declaration.json": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-applicability.json": "a239908b9564ce48acd5b54be5d1d80d81afcd316778bea0f4dad2be89d08fa0",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-phase-base-binding.json": "b83428a8cb84465b00609833b0be0ad2bb0388eff4ebc2de23fa112bc4715a9c",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-discovery-audit.json": "c7427d6dbd9449e4293470ed13115e98d863bd0cb4b3290cc0b8e60db844d687",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-collector-preflight-correction-v1.json": "008dd81041b9cff1b148538067e5d3f85637e0e2d561229ca06c25762989ff46",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-claim-ledger-batch-c.json": "90c451c895bffa0bf41c7f3c916578df7d700f0f56e05d16ae7cab58e6a60304",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-evidence-final-report-batch-c.json": "ed4936a4ece786c7df9386f17755e16697f5d702d85edc883278127853c4db8e",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-blueprint-batch-c.json": "3561dd35a940106ea66cf5506f66c4476eea16440dee3def2e4eb78142e28740",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-mapper-hypotheses-batch-c.md": "f7279d93fe1c0ac5685fbeab646ce5142c0e513052de849e382392c0a4205759",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-mapper-final-report-batch-c.json": "feb05f8f5a5818c2311cdb5896ac1da6e0c4e1c1313d15016fb60596f1c2bc8e",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-claim-ledger-batch-c.json": "fac24981441b0b86b9e1388046b947daaaef2443093917c8648e9392799a1155",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-final-report-batch-c.json": "5999d8f9d4f7b8f7cc0fc17c2dd5f6511be64436d74e421f9c0df2b5a24bc639",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-blueprint-batch-c.json": "1bb8d8f1dafa26fd660182bce030a88c16790cfba737028752459214a1a39089",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-hypotheses-batch-c.md": "ec721b12f9d6ef46597a3db703b7f9a0c7bc2efecb71c3fd4314991285ba8436",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-final-report-batch-c.json": "1890eca75e416da2cdba9ba2248490cdb9430892069e87fe37c6aaff0013b654",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-semantic-supersession-batch-c-v2.json": "9c9227e3b560cf15c35b977b9e23bba4b0fa9a346e0a6fae1308e0a298718613",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-semantic-supersession-batch-c-v2.json": "2f0c23b6aa5a03b814107dbd8325bc1af5d7ce21fa15d6fbfdca87b77345efd4",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-paladins-twin-soul-batch-c-v2.json": "0e42c94058096af90afd3a5a667ac1ef8e0f068dfd4417ba2d392a6050d5fc5e",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-gryphon-patrol-batch-c-v2.json": "bea45f223db946986dc12bad144db5b6701443e5bd6afed8743ee7de394afb9f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-paladins-twin-soul-batch-c.json": "07ae106c197ba7b6bbf31ce2d8244c4d1ff1ad84f1ce3c842e46818dfa744194",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c.json": "cc05f6b0a795d72cb1dcac8120f75418649111ab5d6202c0805b71a2136db74b"
+  },
+  "outputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v2.py": "3fc6bda6cb8acd4b9331faa53cf4b19493aaef249dca80ac855b87f8e52cbb56",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-c-v2.json": null
+  },
+  "resource_ceiling": {"source_bytes_read": 20971520, "source_files_or_objects_read": 100, "command_invocations": 60, "elapsed_minutes": 30, "records_authored_or_reviewed": 260, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+  "resource_actual": {"source_bytes_read": 1048576, "source_files_or_objects_read": 27, "command_invocations": 8, "elapsed_minutes": 27, "records_authored_or_reviewed": 104, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+  "test_execution": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v2.py",
+    "stdout_sha256": "a30f1aae331b86bb34c0b8a65a7f5ef88659c764408072ee2769e6afb00338c2",
+    "passed": 12,
+    "failed": 4,
+    "result": "Expected source, evidence, mapper, and receipt contracts pass. Browser, asset, independent-review, and acceptance contracts remain intentionally red because their future artifacts are absent."
+  },
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}
