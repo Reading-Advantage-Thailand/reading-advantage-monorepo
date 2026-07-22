@@ -1,0 +1,108 @@
+{
+  "schema_version": "apk-role-receipt.v3",
+  "status": "batch-c-v2-candidate-authored-awaiting-product-owner-acceptance",
+  "acceptance": "not-claimed",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "phase": "Phase 3: Historical/missing batch remediation V2",
+  "batch_id": "batch-c-historical",
+  "task_id": "candidate-manifest:batch-c-historical:v2-over-16be1f15-7f3b89fa-2496b0c3",
+  "role": "candidate-author",
+  "role_id": "candidate-author-batch-c-v2",
+  "role_identity": "Batch C candidate-author only; no producer, reviewer, browser, product-owner acceptance, or accepted-manifest authority.",
+  "producer_publication_commit_sha": "16be1f15fdcb1deeb7bd1e0a6971db545e57a0cf",
+  "input_publication_commit_sha": "7f3b89fa24f003f8cc40b3a4d9ce26df18f7b107",
+  "review_publication_commit_sha": "2496b0c38ed2c6445655dd46b33d065da1982185",
+  "review_binding": {
+    "review_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-independent-review-v2.json",
+    "review_sha256": "4a9e0a1310111aa03b0711a50b1082b31ee73fe9cc67b417c478b1e6c74cf4cb",
+    "review_receipt_path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-sorcerer-ziggurat-batch-c-v2.json",
+    "review_receipt_sha256": "590a31d1cbc88467291f3db8014a5578ab44cd2ba4506ac62e973abcc047704f",
+    "candidate_authorized": true,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "unresolved_findings": {"critical": 0, "high": 0, "medium": 0, "low": 0}
+  },
+  "prior_role_history": [],
+  "local_context_binding": {
+    "input_hashes": {
+      "measure/apk-evidence-cohort-protocol.md": "1f97ed8fd026cb0b1b49ed5de602252c075228981d1ff26640748b56ff2a3507",
+      "measure/apk-evidence-reconstruction-program.md": "d2aa36e0ce63ba70b9eb36d4ef22e99d2cb612e32ff05001402465677cbac83d",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-direction-batch-c-remediation.json": "94420ba7642d9b3cdb7f34228be2e07737cc6187e05329567487c10bbe5f7f24",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-committed-input-manifest-v2.json": "4eda4b141380bf5485c0c85338a5d8c779bbee9b227d49f53f46399eedac4e4e",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-independent-review-v2.json": "4a9e0a1310111aa03b0711a50b1082b31ee73fe9cc67b417c478b1e6c74cf4cb",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-sorcerer-ziggurat-batch-c-v2.json": "590a31d1cbc88467291f3db8014a5578ab44cd2ba4506ac62e973abcc047704f"
+    },
+    "allowed_input_manifest_sha256": "9d0af7c5fd726acce7c8ef9fd24053c46adb65489fcc97995720e0ef5c0c5a74",
+    "actual_context_manifest_sha256": "9d0af7c5fd726acce7c8ef9fd24053c46adb65489fcc97995720e0ef5c0c5a74",
+    "allowed_equals_actual": true,
+    "hash_rule": "sha256 of compact key-sorted input_hashes JSON with ensure_ascii=false"
+  },
+  "evidence_boundary": {"source_claims_authored": false, "browser_evidence_authored": false, "browser_evidence_claimed": false},
+  "provider_provenance": {
+    "available": false,
+    "claimed": false,
+    "prompt_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "allowed_input_manifest_sha256": null,
+    "actual_context_manifest_sha256": null,
+    "raw_isolation_export_sha256": null,
+    "start_event_id": null,
+    "start_event_timestamp": null,
+    "end_event_id": null,
+    "end_event_timestamp": null,
+    "final_response_sha256": null,
+    "final_response_event_id": null,
+    "commit_sha": null,
+    "unavailable_note": "Provider provenance remains unavailable and unclaimed unless directly verifiable; no provider-side value is fabricated."
+  },
+  "resource_use": {
+    "budget_basis": "phase0-budget-declaration.json declares no candidate-manifest-author ceiling; no ceiling is invented, borrowed, waived, or assessed.",
+    "budget_conclusion_claimed": false,
+    "actual_local_inputs_reproducible": [
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/product-owner-direction-batch-c-remediation.json",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-committed-input-manifest-v2.json",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-independent-review-v2.json",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/adversarial-reviewer-sorcerer-ziggurat-batch-c-v2.json",
+      "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-candidate-tests-v2.py"
+    ],
+    "actual_local_commands_reproducible": [
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-candidate-tests-v2.py",
+      "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-truth-tests-v2.py -k 'not FailClosedCandidateOrderingContract'"
+    ],
+    "elapsed_minutes": 0,
+    "timing_measurement": "unavailable-in-harness",
+    "timing_note": "Zero is only the Batch C owner-authorized elapsed-minute accounting fallback; it is not elapsed-time, duration, performance, session, provider-timing, or wall-clock evidence."
+  },
+  "candidate_output": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/candidate-cohort-manifest-batch-c-v2.json",
+    "sha256": "b0e857e24f593d811d52970f1cc53f7f0f61ce0516a93de7268bbcd717ef46ec"
+  },
+  "focused_test_output": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-candidate-tests-v2.py",
+    "sha256": "dad137dcb6aa0d6e6bb3cb89573604c8145b9d38a2caedc7a25563764d1a1f39"
+  },
+  "outputs": [
+    {"path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/candidate-cohort-manifest-batch-c-v2.json", "sha256": "b0e857e24f593d811d52970f1cc53f7f0f61ce0516a93de7268bbcd717ef46ec"},
+    {"path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/batch-c-candidate-tests-v2.py", "sha256": "dad137dcb6aa0d6e6bb3cb89573604c8145b9d38a2caedc7a25563764d1a1f39"},
+    {"path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/role-receipts/candidate-author-batch-c-v2.json", "sha256": null, "sha256_note": "A receipt cannot embed a stable self-digest without changing its bytes."}
+  ],
+  "lifecycle": {
+    "candidate_published": true,
+    "candidate_consumable": false,
+    "product_owner_acceptance_published": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_published": false,
+    "accepted_manifest_authorized": false,
+    "lifecycle_status": "candidate-only; non-consumable; product-owner acceptance and accepted manifest remain absent and unauthorized"
+  },
+  "revocation_rule": "Any bound-byte, hash, commit, count, authorization, source/browser-boundary, disclosure, or lifecycle change revokes this candidate. Remediation is additive only: publish revocation or supersession, regenerate bindings, rerun focused validation and producer selector, obtain fresh independent review, and publish a new non-consumable candidate. Never mutate this candidate or this receipt in place.",
+  "role_boundary": "Created only candidate-cohort-manifest-batch-c-v2.json, batch-c-candidate-tests-v2.py, and this receipt. No producer, review, source/browser evidence, owner direction, plan, registry, product-owner acceptance, accepted manifest, or commit was created or modified.",
+  "commit_sha": null,
+  "commit_disposition": "not-created by the candidate-author role; the coordinating root owns publication commits",
+  "marker": "MEASURE_AGENT_RESULT"
+}
