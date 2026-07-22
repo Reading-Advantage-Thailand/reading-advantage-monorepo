@@ -1,0 +1,82 @@
+{
+  "schema": "apk-role-receipt.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "task_id": "C3-COLLECT-GRYPHON",
+  "role": "evidence-collector-gryphon-patrol-batch-c",
+  "status": "fresh-context collector v4 completed against corrected Gryphon denominator; batch acceptance not claimed",
+  "role_base_sha": "5f50b72b1ac42c23b567e371ea37285f746810cf",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "supersession": {
+    "supersedes_receipts": [
+      {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-gryphon-patrol-batch-c.json","sha256":"190b56be6013a5ac0aa5a09541e467506533834a325ced6fa742196bcb11938d"},
+      {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-gryphon-patrol-batch-c-v2.json","sha256":"bea45f223db946986dc12bad144db5b6701443e5bd6afed8743ee7de394afb9f"}
+    ],
+    "scope": "Fresh-context provider provenance plus corrected 14/5/10 denominator reconciliation and exact-revision source-byte revalidation only. Historical bytes remain unchanged."
+  },
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_collector_v4",
+    "provider_kind": "collaboration-subagent",
+    "parent_task": "/root/apk_batch_c_fresh_roles",
+    "fork_turns": "none",
+    "canonical_task_sha256": "ce4de68557cca2dec1c2b46bed589679d68735fc6b2cedf0386a94724325dc3d",
+    "raw_provider_export_available": false,
+    "raw_provider_export_sha256": null,
+    "provider_event_id": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "model_identifier": null,
+    "unavailable_fields_reason": "No raw provider export, event ID, spawn ID, session ID, or model identifier is exposed; none is fabricated."
+  },
+  "retained_proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/evidence-collector-gryphon-patrol-batch-c-v4.json",
+    "sha256": "d797b87a0b59bd2aeeaf54fc63fa3d8d30659d33695493a6c25ee37964382e2e"
+  },
+  "bindings": {
+    "strategy_sha256": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9",
+    "phase_base_binding_sha256": "b83428a8cb84465b00609833b0be0ad2bb0388eff4ebc2de23fa112bc4715a9c",
+    "budget_declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "role_applicability_sha256": "a239908b9564ce48acd5b54be5d1d80d81afcd316778bea0f4dad2be89d08fa0",
+    "denominator_correction_sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f",
+    "review_remediation_sha256": "b943e54de01f5c223fbd979f64ed07544e7fd95d95d2b1a8cd7e582e6d8ce935",
+    "source_denominator_sha256": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d",
+    "asset_denominator_sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "historical_denominator_sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
+    "preserved_semantic_claim_layer_sha256": "2f0c23b6aa5a03b814107dbd8325bc1af5d7ce21fa15d6fbfdca87b77345efd4"
+  },
+  "rederived_result": {
+    "counts": {"source_records":14,"asset_candidates":5,"historical_records":10},
+    "source_blob_checks": {"checks":14,"matches":14},
+    "asset_candidate_identity_checks": {"checks":5,"matches":5},
+    "historical_blob_checks": {"checks":10,"matches":10},
+    "preserved_semantic_envelope_checks": {"checks":11,"matches":11},
+    "prior_omission_checks": {"source":"6/6","asset_candidates":"2/2","historical":"3/3"},
+    "new_factual_claims": 0,
+    "verification_result": "pass"
+  },
+  "outputs": [
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-claim-ledger-batch-c-v4.json","sha256":"d3e0de2a047d59ba5a128cb3780d1e5f42f04c8ae0361cb04e633ef8f671e4eb"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-method-batch-c-v4.md","sha256":"4d4916f88d34d19c067bf796298f922875480409c16d9d5e2491bc743f6a70d0"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-final-report-batch-c-v4.json","sha256":"0d7af322d736edbffd146d6bf2f51989198513b0a9080e2f9050cca1eb7177f4"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/evidence-collector-gryphon-patrol-batch-c-v4.json","sha256":"d797b87a0b59bd2aeeaf54fc63fa3d8d30659d33695493a6c25ee37964382e2e"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-gryphon-patrol-batch-c-v4.json","sha256":null,"digest_reason":"The receipt cannot self-hash without changing its own bytes."}
+  ],
+  "resource_use": {
+    "budget_declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "ceilings": {"source_bytes_read":52428800,"source_files_or_objects_read":120,"command_invocations":80,"elapsed_minutes":45,"records_authored_or_reviewed":300,"browser_interactions":0,"browser_artifacts_captured":0,"asset_candidates_inspected":0},
+    "actual": {"source_bytes_read":3872203,"source_files_or_objects_read":48,"command_invocations":42,"elapsed_minutes":13,"records_authored_or_reviewed":78,"browser_interactions":0,"browser_artifacts_captured":0,"asset_candidates_inspected":0},
+    "ceiling_breaches": 0
+  },
+  "scope_check": {
+    "authorized_outputs_only": true,
+    "historical_artifacts_edited": false,
+    "worktree_created_or_used": false,
+    "commit_created": false,
+    "forbidden_claims_not_made": ["mapping","browser","asset suitability or runtime use","truth-test authorship","review","receipt selection","candidate","acceptance"]
+  },
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

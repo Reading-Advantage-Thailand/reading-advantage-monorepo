@@ -1,0 +1,31 @@
+{
+  "schema": "apk-role-path-ownership.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "role": "requirements-mapper-gryphon-patrol-batch-c",
+  "claimed_at": "2026-07-22T10:19:12Z",
+  "nonce": "root-arbiter-20260722-1718-8f2c",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v6_arbiter_8f2c",
+  "parent_task": "/root/apk_batch_c_fresh_roles",
+  "fork_turns": "none",
+  "arbitrator": "/root",
+  "reserved_paths": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-blueprint-batch-c-v6-root-arbiter-20260722-1718-8f2c.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-hypotheses-batch-c-v6-root-arbiter-20260722-1718-8f2c.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-final-report-batch-c-v6-root-arbiter-20260722-1718-8f2c.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-gryphon-patrol-batch-c-v6-root-arbiter-20260722-1718-8f2c.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c-v6-root-arbiter-20260722-1718-8f2c.json"
+  ],
+  "preclaim_state": {
+    "all_reserved_paths_absent": true,
+    "rule": "If any reserved path exists before the designated role writes it, stop without overwrite and freeze the interference."
+  },
+  "forbidden_predecessors": [
+    "batch-c-gryphon-mapper-v4-collision.json",
+    "batch-c-gryphon-mapper-v5-collision.json"
+  ],
+  "selection_rule": "Only a complete internally coherent successor set on all five reserved paths may be considered for this role. The invalid v4 and v5 bytes remain preserved and unselectable.",
+  "candidate_authorized": false,
+  "acceptance_authorized": false,
+  "marker": "MEASURE_AGENT_RESULT"
+}

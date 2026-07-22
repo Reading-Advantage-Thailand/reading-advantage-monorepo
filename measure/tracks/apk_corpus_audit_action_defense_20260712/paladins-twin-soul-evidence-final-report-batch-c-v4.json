@@ -1,0 +1,62 @@
+{
+  "schema": "apk-evidence-final-report.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "game": "Paladin's Twin-Soul",
+  "role": "evidence-collector-paladins-twin-soul-batch-c",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_paladin_collector_v4",
+  "role_base_sha": "5f50b72b1ac42c23b567e371ea37285f746810cf",
+  "status": "collector-v4-complete-awaiting-other-specialists-and-review",
+  "outputs": {
+    "ledger": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-claim-ledger-batch-c-v4.json","sha256":"809e51d319294a3cd4c7e6727a442382b831f4b18b40a900c0a900ebddfa7d8d"},
+    "method": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-evidence-method-batch-c-v4.md","sha256":"bb63566f85846566b339c4e87f8bde9603a393628b984bcb0d6fec0b2145ddae"}
+  },
+  "rederived_denominator": {
+    "selection_rule_result": "exact match",
+    "counts": {"source_records":8,"asset_candidates":4,"historical_records":11},
+    "inventory_sha256": {
+      "source_records":"f6765b2f126b96eb62acb3377b9c3a2c75af97f68f64c901ea81990488ecddd5",
+      "asset_candidates":"1b20c5b56465df79524cbdb8c2c5c54b60d7cefe20eb240ca3e075c3882d38a6",
+      "historical_records":"33880e7e08320c7ae9b547c5afc8ab91fb1e301c0ab48b85c5e8d97e5b727b8e"
+    },
+    "blob_checks": {
+      "source":{"checks":8,"matches":8,"mismatches":0},
+      "asset_candidate_identity_only":{"checks":4,"matches":4,"mismatches":0},
+      "historical":{"checks":11,"matches":11,"mismatches":0},
+      "preserved_identity":{"blob_matches":1,"range_matches":1}
+    }
+  },
+  "claim_disposition": {
+    "preserved_atomic_claims": 21,
+    "preserved_claim_layer":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-semantic-supersession-batch-c-v2.json",
+    "preserved_claim_layer_sha256":"9c9227e3b560cf15c35b977b9e23bba4b0fa9a346e0a6fae1308e0a298718613",
+    "new_factual_claims": 0,
+    "result":"The v4 ledger supersedes only denominator reconciliation and revalidates the source bytes supporting preserved claims."
+  },
+  "historical_artifact_integrity": {
+    "historical_files_edited": 0,
+    "append_only_outputs": true,
+    "commit_created": false,
+    "worktree_created_or_used": false
+  },
+  "explicit_non_claims": [
+    "browser observation or runnability",
+    "asset suitability, licensing, visual content, role, or runtime use",
+    "mapping or developer-effort decomposition",
+    "truth-test authorship or gate selection",
+    "review or acceptance disposition",
+    "receipt selection",
+    "candidate publication or acceptance"
+  ],
+  "lifecycle": {
+    "collector_role_complete": true,
+    "batch_candidate_authorized": false,
+    "acceptance_authorized": false,
+    "fresh_specialists_and_independent_review_remain_required": true
+  },
+  "completed_at_utc":"2026-07-22T08:58:57Z",
+  "completed_at_local":"2026-07-22T15:58:57+07:00",
+  "acceptance":"not-claimed",
+  "marker":"MEASURE_AGENT_RESULT"
+}

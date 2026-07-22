@@ -1,0 +1,200 @@
+{
+  "schema": "measure.provider-fresh-context-proof.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "task_id": "C3-DISCOVERY-REVERIFY-V4",
+  "role": "discovery-auditor-batch-c",
+  "status": "completed-with-denominator-mismatch",
+  "verification_result": "fail",
+  "provider_identifier": "/root/scanner_index_review/batch_c_discovery_fresh_v4",
+  "fork_turns": "none",
+  "parent_task": "/root/scanner_index_review",
+  "provider_provenance": {
+    "provider_identifier": "/root/scanner_index_review/batch_c_discovery_fresh_v4",
+    "provider_kind": "collaboration-subagent",
+    "fork_turns": "none",
+    "parent_task": "/root/scanner_index_review",
+    "fresh_context_assertion": "The provider task supplied the bounded Batch C v4 discovery prompt directly and identified this canonical task and parent; no prior discovery-auditor narrative was supplied as evidence.",
+    "provider_spawn_id": null,
+    "provider_session_id": null
+  },
+  "scope": {
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "games": [
+      {"name": "Paladin's Twin-Soul", "identity_id": "catalog/paladins-twin-soul", "normalized_token": "paladinstwinsoul"},
+      {"name": "Gryphon Patrol", "identity_id": "catalog/gryphon-patrol", "normalized_token": "gryphonpatrol"}
+    ],
+    "selection_rule": "Select the two exact canonical identity IDs. For path-keyed denominator records, lowercase paths, remove every non-alphanumeric character, and retain records containing paladinstwinsoul or gryphonpatrol. This treats hyphen, underscore, and camelCase spellings consistently.",
+    "authoring_boundary": "Discovery and denominator verification only. No existing evidence, bookkeeping, services, pnpm, .opencode, candidate, acceptance, or accepted-manifest artifact was edited; no claim, mapping, truth test, browser observation, asset suitability decision, candidate, acceptance, plan, or registry entry was authored."
+  },
+  "exact_inputs": [
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-c.md", "sha256": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9", "bytes": 11244},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-phase-base-binding.json", "sha256": "b83428a8cb84465b00609833b0be0ad2bb0388eff4ebc2de23fa112bc4715a9c", "bytes": 1519},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-budget-declaration.json", "sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211", "bytes": 5332},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-applicability.json", "sha256": "a239908b9564ce48acd5b54be5d1d80d81afcd316778bea0f4dad2be89d08fa0", "bytes": 10610},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-discovery-audit.json", "sha256": "c7427d6dbd9449e4293470ed13115e98d863bd0cb4b3290cc0b8e60db844d687", "bytes": 9901},
+    {"path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json", "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729", "bytes": 1237},
+    {"path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json", "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0", "bytes": 4435},
+    {"path": "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json", "sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407", "bytes": 72307},
+    {"path": "measure/archive/apk_source_denominator_inventory_20260712/source-denominator.json", "sha256": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d", "bytes": 2259874},
+    {"path": "measure/archive/apk_source_denominator_inventory_20260712/scene-state-denominator.json", "sha256": "6308836ca24f1cac5bf4ded5f7e72c5ba06c08f4a5c6648620818b720190bf8b", "bytes": 335688},
+    {"path": "measure/archive/apk_source_denominator_inventory_20260712/asset-file-denominator.json", "sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438", "bytes": 324944},
+    {"path": "measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json", "sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f", "bytes": 121113}
+  ],
+  "commands": [
+    {
+      "purpose": "confirm immutable revision",
+      "argv": ["git", "rev-parse", "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286^{commit}"],
+      "command": "git rev-parse '23bb5ad578c01fb29f9e8bb76a7d934d24a4b286^{commit}'",
+      "exit_code": 0,
+      "stdout": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+    },
+    {
+      "purpose": "hash and size exact inputs",
+      "argv": ["bash", "-lc", "sha256sum <the 12 exact_inputs paths in listed order> && stat -c '%s %n' <the same 12 paths>"],
+      "command": "sha256sum <the 12 exact_inputs paths in listed order> && stat -c '%s %n' <the same 12 paths>",
+      "exit_code": 0,
+      "stdout": "The 12 SHA-256 and byte-size pairs are retained verbatim as exact_inputs entries.",
+      "result": "All exact_inputs hashes and byte sizes equal the retained values above."
+    },
+    {
+      "purpose": "mechanically select denominator records",
+      "argv": ["jq", "<normalized exact-identity/path selection over the five denominator ledgers>"],
+      "command": "jq over identity_records, records, scene_records, state_records, transitions, candidate_files, and historical records; exact IDs are catalog/paladins-twin-soul and catalog/gryphon-patrol; each path is normalized with lowercase plus removal of non-alphanumeric characters and matched against paladinstwinsoul|gryphonpatrol",
+      "exit_code": 0,
+      "stdout": "{\"identity\":2,\"source_records\":22,\"scene_records\":0,\"state_records\":0,\"transition_records\":0,\"asset_candidates\":9,\"historical_records\":21}",
+      "result": {"identity": 2, "source_records": 22, "scene_records": 0, "state_records": 0, "transition_records": 0, "asset_candidates": 9, "historical_records": 21}
+    },
+    {
+      "purpose": "verify every retained current blob",
+      "argv": ["git", "show", "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:<record path>"],
+      "command_template": "git show '23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:<record path>' | sha256sum",
+      "exit_code": 0,
+      "stdout": "33 of 33 checks matched: 2 identity range/blob checks, 22 source-record blob checks, and 9 asset-candidate blob checks.",
+      "result": "33 of 33 checks matched: 2 identity range/blob checks, 22 source-record blob checks, and 9 asset-candidate blob checks."
+    },
+    {
+      "purpose": "verify every retained historical blob",
+      "argv": ["git", "show", "<record evidence revision>:<record evidence path>"],
+      "command_template": "git show '<record evidence revision>:<record evidence path>' | sha256sum",
+      "exit_code": 0,
+      "stdout": "21 of 21 historical checks matched the denominator ledger SHA-256.",
+      "result": "21 of 21 historical checks matched the denominator ledger SHA-256."
+    },
+    {
+      "purpose": "bounded frozen-tree runtime-prefix search",
+      "argv": ["git", "ls-tree", "-r", "--name-only", "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"],
+      "command": "git ls-tree -r --name-only 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286, filtered by the eight runtime_path_prefixes_checked in batch-c-discovery-audit.json",
+      "exit_code": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": {"match_count": 0, "matches": [], "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+    }
+  ],
+  "rederived_denominator": {
+    "partition_assignments": [
+      {"canonical_identity_label": "Gryphon Patrol", "cohort": "Action and defense"},
+      {"canonical_identity_label": "Paladin's Twin-Soul", "cohort": "Action and defense"}
+    ],
+    "counts": {"identity": 2, "source_records": 22, "scene_records": 0, "state_records": 0, "transition_records": 0, "asset_candidates": 9, "historical_records": 21},
+    "source_records": [
+      "file:apps/advantage-games/measure/archive/gryphon-patrol-20260321/metadata.json",
+      "file:apps/advantage-games/measure/archive/gryphon-patrol-20260321/plan.md",
+      "file:apps/advantage-games/measure/archive/gryphon-patrol-20260321/spec.md",
+      "file:apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/metadata.json",
+      "file:apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/plan.md",
+      "file:apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/spec.md",
+      "file:apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/metadata.json",
+      "file:apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/plan.md",
+      "file:apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/spec.md",
+      "file:apps/advantage-games/measure/archive/paladins-twin-soul-20260321/metadata.json",
+      "file:apps/advantage-games/measure/archive/paladins-twin-soul-20260321/plan.md",
+      "file:apps/advantage-games/measure/archive/paladins-twin-soul-20260321/spec.md",
+      "file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/index.md",
+      "file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/metadata.json",
+      "file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/plan.md",
+      "file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/report.md",
+      "file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/spec.md",
+      "file:apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/index.md",
+      "file:apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/metadata.json",
+      "file:apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/plan.md",
+      "file:apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/report.md",
+      "file:apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/spec.md"
+    ],
+    "asset_candidates": [
+      "apps/advantage-games/measure/archive/gryphon-patrol-20260321/metadata.json",
+      "apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/metadata.json",
+      "apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/metadata.json",
+      "apps/advantage-games/measure/archive/paladins-twin-soul-20260321/metadata.json",
+      "apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/metadata.json",
+      "apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/metadata.json",
+      "apps/advantage-games/public/games/cover/cover-gryphon-patrol.png",
+      "apps/advantage-games/public/games/cover/cover-paladins-twin-soul.png",
+      "apps/advantage-games/public/games/vocabulary/paladins-twin-soul/cover.png"
+    ],
+    "historical_records": [
+      "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/gryphon-patrol/page.tsx@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/paladins-twin-soul/page.tsx@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/app/api/v1/games/gryphon-patrol/complete/route.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/app/api/v1/games/gryphon-patrol/ranking/route.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/app/api/v1/games/gryphon-patrol/sentences/route.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/app/api/v1/games/paladins-twin-soul/complete/route.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/app/api/v1/games/paladins-twin-soul/vocabulary/route.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/components/games/sentence/gryphon-patrol/GryphonPatrolGame.test.tsx@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/components/games/sentence/gryphon-patrol/GryphonPatrolGame.tsx@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/components/games/vocabulary/paladins-twin-soul/PaladinsTwinSoulGame.test.tsx@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/components/games/vocabulary/paladins-twin-soul/PaladinsTwinSoulGame.tsx@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/components/games/vocabulary/paladins-twin-soul/index.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/lib/games/gryphonPatrol.test.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/lib/games/gryphonPatrol.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/lib/games/gryphonPatrolConfig.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/lib/games/paladinsTwinSoul.test.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/lib/games/paladinsTwinSoul.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/lib/games/paladinsTwinSoulConfig.test.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/lib/games/paladinsTwinSoulConfig.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "packages/game-cartridges/src/cartridges/gryphon-patrol/index.ts@1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+      "packages/game-cartridges/src/cartridges/paladins-twin-soul/index.ts@1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f"
+    ],
+    "blob_verification": {"current_checks": 33, "current_matches": 33, "historical_checks": 21, "historical_matches": 21, "distinct_git_objects_read": 47, "distinct_git_object_bytes": 3169611}
+  },
+  "comparison_to_existing_discovery": {
+    "existing_counts": {"identity": 2, "source_records": 16, "scene_records": 0, "state_records": 0, "transition_records": 0, "asset_candidates": 7, "historical_records": 14},
+    "result": "mismatch",
+    "missing_source_records": [
+      "file:apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/metadata.json",
+      "file:apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/plan.md",
+      "file:apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/spec.md",
+      "file:apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/metadata.json",
+      "file:apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/plan.md",
+      "file:apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/spec.md"
+    ],
+    "missing_asset_candidates": [
+      "apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/metadata.json",
+      "apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/metadata.json"
+    ],
+    "missing_historical_records": [
+      "apps/advantage-games/src/lib/games/gryphonPatrol.test.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/lib/games/gryphonPatrol.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/lib/games/gryphonPatrolConfig.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/lib/games/paladinsTwinSoul.test.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/lib/games/paladinsTwinSoul.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/lib/games/paladinsTwinSoulConfig.test.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "apps/advantage-games/src/lib/games/paladinsTwinSoulConfig.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e"
+    ],
+    "extra_existing_records": [],
+    "disposition": "The existing Batch C discovery audit's all-listed-class-locators reconciliation is not verified. The original audit and receipt remain untouched; this v4 proof reports the mismatch for coordinator disposition."
+  },
+  "resource_use": {
+    "budget_declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "ceilings": {"source_bytes_read": 10485760, "source_files_or_objects_read": 80, "command_invocations": 40, "elapsed_minutes": 20, "records_authored_or_reviewed": 240, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "actual": {"source_bytes_read": 6327815, "source_files_or_objects_read": 59, "command_invocations": 39, "elapsed_minutes": 17, "records_authored_or_reviewed": 69, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "measurement_note": "source_bytes_read is 3158204 bytes across the 12 exact local inputs plus 3169611 bytes across 47 distinct Git blobs. Source files or objects is 12 plus 47. Command invocations includes instruction/input reads, extraction and hash checks, transient sandbox failures, and validation commands; authoring-only patch operations are excluded from the shell/tool command unit. Asset bytes were hash-verified but no asset was visually or semantically inspected.",
+    "ceiling_breaches": 0
+  },
+  "outputs": [
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/discovery-auditor-batch-c-v4.json", "sha256": null, "digest_reason": "Bound by the superseding receipt after these proof bytes are finalized."},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/discovery-auditor-batch-c-v4.json", "sha256": null, "digest_reason": "The receipt is authored after proof hashing and cannot self-hash without changing its own bytes."}
+  ],
+  "commit_sha": null,
+  "commit_disposition": "No commit was created because the delegated task prohibited commits.",
+  "marker": "MEASURE_AGENT_RESULT"
+}

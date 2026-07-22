@@ -1,0 +1,74 @@
+{
+  "schema": "apk-role-output-collision.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "role": "requirements-mapper-gryphon-patrol-batch-c",
+  "recorded_at": "2026-07-22T10:00:50Z",
+  "status": "invalid-mixed-provider-output-preserved",
+  "acceptance": "not-claimed",
+  "collision": {
+    "detected_by": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v4",
+    "detection": "The first provider's final validation found that four canonical v4 paths had changed to bytes naming a second provider while the blueprint still named the first provider. The first provider's receipt therefore could not validate the mixed set.",
+    "files": [
+      {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-blueprint-batch-c-v4.json",
+        "sha256": "ec43956bfe61c7df07ce74e05aae1681e8397effaefce15584f7744df9b30616",
+        "bytes": 8761,
+        "mtime_ns": 1784713880034271033,
+        "mtime_utc": "2026-07-22T09:51:20.034271+00:00",
+        "embedded_provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v4",
+        "embedded_parent_task": "/root/apk_batch_c_fresh_roles"
+      },
+      {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-hypotheses-batch-c-v4.md",
+        "sha256": "be2725c9c0c672c723af6d04e2517f1490257b88180cf15c2c4b3f57f65fd0e4",
+        "bytes": 3521,
+        "mtime_ns": 1784714131105078200,
+        "mtime_utc": "2026-07-22T09:55:31.105078+00:00",
+        "embedded_provider_identifier": "/root/t4_gryphon_mapper_terra",
+        "embedded_parent_task": "/root/scanner_index_review"
+      },
+      {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-final-report-batch-c-v4.json",
+        "sha256": "6b35ec24ff5ae27d48cce8ef8a7ec2e11e310f25c24480ed2f6806054d4aa912",
+        "bytes": 2956,
+        "mtime_ns": 1784714131116078323,
+        "mtime_utc": "2026-07-22T09:55:31.116078+00:00",
+        "embedded_provider_identifier": "/root/t4_gryphon_mapper_terra",
+        "embedded_parent_task": "/root/scanner_index_review"
+      },
+      {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-gryphon-patrol-batch-c-v4.json",
+        "sha256": "dfa0170492e70d8892a43ed10c2c44a67996ba3a90f20206125ecb761173e55b",
+        "bytes": 9173,
+        "mtime_ns": 1784714200938862748,
+        "mtime_utc": "2026-07-22T09:56:40.938863+00:00",
+        "embedded_provider_identifier": "/root/t4_gryphon_mapper_terra",
+        "embedded_parent_task": "/root/scanner_index_review"
+      },
+      {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c-v4.json",
+        "sha256": "8146abce50003faeb5cc248e32ebd749b66acd57777414730083ad5cf645be4c",
+        "bytes": 4848,
+        "mtime_ns": 1784714244666354656,
+        "mtime_utc": "2026-07-22T09:57:24.666355+00:00",
+        "embedded_provider_identifier": "/root/t4_gryphon_mapper_terra",
+        "embedded_parent_task": "/root/scanner_index_review"
+      }
+    ]
+  },
+  "arbitration": {
+    "owner": "/root",
+    "decision": "Freeze the mixed Gryphon mapper v4 artifacts as invalid collision evidence. Do not overwrite, delete, or select either provider's partial set.",
+    "successor": "Run a genuinely fresh mapper under fork_turns none using entirely new batch-c-v5 blueprint, hypotheses, report, proof, and receipt paths, then select only that internally coherent v5 role output if it passes.",
+    "v4_selection_authorized": false,
+    "candidate_authorized": false,
+    "acceptance_authorized": false
+  },
+  "preservation": {
+    "v4_bytes_modified_by_this_record": false,
+    "v4_bytes_deleted_by_this_record": false,
+    "v4_role_receipt_selected": false
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,78 @@
+{
+  "schema_version": "apk-browser-corroboration.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 3: Batch C evidence packages",
+  "batch_id": "batch-c",
+  "recorded_by": "coordinator-browser-check",
+  "checked_at": "2026-07-22T06:58:26Z",
+  "repository_head_before_record": "5f50b72b1ac42c23b567e371ea37285f746810cf",
+  "tool": {
+    "name": "Kimi WebBridge",
+    "daemon_version": "1.11.1",
+    "extension_version": "1.11.3",
+    "session": "apk-t4c-acceptance-20260722",
+    "session_isolation": "A dedicated tab group was used; unrelated tabs and sessions were not modified.",
+    "server_provenance": "The pre-existing server at http://127.0.0.1:3117 was inspected without starting, stopping, or restarting it.",
+    "session_closed_at": "2026-07-22T07:09:09Z",
+    "session_close_result": {"success": true, "closed_tabs": 1}
+  },
+  "viewport": {
+    "width": 1920,
+    "height": 927,
+    "device_pixel_ratio": 1
+  },
+  "observations": [
+    {
+      "url": "http://127.0.0.1:3117/",
+      "document_title": "Create Next App",
+      "visible_facts": [
+        "The catalog rendered as Vocab Arcade.",
+        "Paladin's Twin-Soul was listed as Coming Soon.",
+        "Gryphon Patrol was listed as Coming Soon."
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:3117/en/student/arcade/paladins-twin-soul",
+      "navigation_response_status": 404,
+      "document_title": "Create Next App",
+      "visible_body_text": "404\nThis page could not be found."
+    },
+    {
+      "url": "http://127.0.0.1:3117/en/student/arcade/gryphon-patrol",
+      "navigation_response_status": 404,
+      "document_title": "Create Next App",
+      "visible_body_text": "404\nThis page could not be found."
+    },
+    {
+      "url": "http://127.0.0.1:3117/en/student/games/vocabulary/paladins-twin-soul",
+      "navigation_response_status": 404,
+      "document_title": "Create Next App",
+      "visible_body_text": "404\nThis page could not be found."
+    },
+    {
+      "url": "http://127.0.0.1:3117/en/student/games/sentence/gryphon-patrol",
+      "navigation_response_status": 404,
+      "document_title": "Create Next App",
+      "visible_body_text": "404\nThis page could not be found."
+    }
+  ],
+  "screenshot": {
+    "retained": false,
+    "reason": "The required Kimi WebBridge screenshot helper returned no output and did not create the requested file; no screenshot evidence is claimed."
+  },
+  "comparison_to_batch_c_browser_audit_v3": {
+    "corroborates": "The catalog-only, Coming Soon, and four checked-route 404 wide-viewport disposition.",
+    "observed_drift": "The current 404 document title is Create Next App; the v3 audit recorded 404: This page could not be found.",
+    "does_not_supersede": true
+  },
+  "scope_limits": [
+    "This record is additive coordinator corroboration, not a browser-auditor role receipt.",
+    "Only one wide viewport was inspected; compact responsiveness was not rechecked.",
+    "No game start, instruction, active, transition, or terminal state was reachable.",
+    "A checked-route 404 does not establish global route absence or historical behavior.",
+    "This record does not satisfy fresh adversarial review, candidate-owner, product-owner acceptance, or accepted-manifest requirements.",
+    "This record does not resolve the archived T3 pilot's missing browser-auditor or asset-auditor receipts."
+  ],
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

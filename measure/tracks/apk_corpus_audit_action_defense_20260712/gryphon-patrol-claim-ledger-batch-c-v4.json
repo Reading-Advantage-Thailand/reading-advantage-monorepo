@@ -1,0 +1,339 @@
+{
+  "schema": "apk-claim-ledger-denominator-supersession.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "game": "Gryphon Patrol",
+  "normalized_game_id": "gryphon-patrol",
+  "role": "evidence-collector-gryphon-patrol-batch-c",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_collector_v4",
+  "role_base_sha": "5f50b72b1ac42c23b567e371ea37285f746810cf",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "status": "corrected-denominator-rederived-collector-only",
+  "supersedes": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-claim-ledger-batch-c.json",
+      "sha256": "fac24981441b0b86b9e1388046b947daaaef2443093917c8648e9392799a1155",
+      "scope": "The original 8/3/7 denominator reconciliation is superseded; its bytes remain unchanged."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-final-report-batch-c.json",
+      "sha256": "5999d8f9d4f7b8f7cc0fc17c2dd5f6511be64436d74e421f9c0df2b5a24bc639",
+      "scope": "The original denominator report and alias-gap treatment are superseded; its bytes remain unchanged."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-semantic-supersession-batch-c-v2.json",
+      "sha256": "2f0c23b6aa5a03b814107dbd8325bc1af5d7ce21fa15d6fbfdca87b77345efd4",
+      "scope": "The 15 preserved claims and 40 atomic propositions remain the authoritative semantic layer; this v4 ledger does not expand them."
+    }
+  ],
+  "correction_binding": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json",
+    "sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f"
+  },
+  "selection_rule": "For each path-keyed frozen-ledger record, lowercase the path, remove every non-alphanumeric character, retain gryphonpatrol, and sort by the exact path.",
+  "counts": {
+    "source_records": 14,
+    "asset_candidates": 5,
+    "historical_records": 10
+  },
+  "inventory_sha256": {
+    "serialization": "SHA-256 of compact UTF-8 JSON for the exact sorted locator array, with no trailing newline",
+    "source_records": "51dc928d643f3c66308ed67fea57baef15384254a37f319e2223a7bef8c51c9f",
+    "asset_candidates": "1ec212dad65ce85e80bc70f528a0edcedae46aadd26422f865df1433af37f26c",
+    "historical_records": "9df126e08fddd6f3d35dc859415b9fb986de5238cf8c07a017cccd9547f58b02"
+  },
+  "source_records": [
+    {
+      "locator": "file:apps/advantage-games/measure/archive/gryphon-patrol-20260321/metadata.json",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "path": "apps/advantage-games/measure/archive/gryphon-patrol-20260321/metadata.json",
+      "expected_sha256": "b682c99454ddd44ae9e8171888f44767fbb02f2e6e47f0c4581aa212559ca908",
+      "actual_sha256": "b682c99454ddd44ae9e8171888f44767fbb02f2e6e47f0c4581aa212559ca908",
+      "verification": "match",
+      "disposition": "denominator source record only; no new factual claim"
+    },
+    {
+      "locator": "file:apps/advantage-games/measure/archive/gryphon-patrol-20260321/plan.md",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "path": "apps/advantage-games/measure/archive/gryphon-patrol-20260321/plan.md",
+      "expected_sha256": "ce7407a9fe35621793225be5da55364d1be8ab18449299158a83eaf80a439883",
+      "actual_sha256": "ce7407a9fe35621793225be5da55364d1be8ab18449299158a83eaf80a439883",
+      "verification": "match",
+      "disposition": "denominator source record only; no new factual claim"
+    },
+    {
+      "locator": "file:apps/advantage-games/measure/archive/gryphon-patrol-20260321/spec.md",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "path": "apps/advantage-games/measure/archive/gryphon-patrol-20260321/spec.md",
+      "expected_sha256": "a13d75f6e592a88a7b0191ecc6b090ba22684a0889a16dd7d9ea287ba340f132",
+      "actual_sha256": "a13d75f6e592a88a7b0191ecc6b090ba22684a0889a16dd7d9ea287ba340f132",
+      "verification": "match",
+      "disposition": "denominator source record only; no new factual claim"
+    },
+    {
+      "locator": "file:apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/metadata.json",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "path": "apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/metadata.json",
+      "expected_sha256": "5d70cc9930188a6355eaad342c9fec5d41d998eb0c4383264a435312c65725c2",
+      "actual_sha256": "5d70cc9930188a6355eaad342c9fec5d41d998eb0c4383264a435312c65725c2",
+      "verification": "match",
+      "correction_status": "previously omitted source and asset-candidate record",
+      "disposition": "denominator source record only; no new factual claim"
+    },
+    {
+      "locator": "file:apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/plan.md",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "path": "apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/plan.md",
+      "expected_sha256": "267132325a03d3df22cc3d8d01ba8ae37e9423a40413b5fa5e0839e66d164a0e",
+      "actual_sha256": "267132325a03d3df22cc3d8d01ba8ae37e9423a40413b5fa5e0839e66d164a0e",
+      "verification": "match",
+      "correction_status": "previously omitted source record",
+      "disposition": "denominator source record only; no new factual claim"
+    },
+    {
+      "locator": "file:apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/spec.md",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "path": "apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/spec.md",
+      "expected_sha256": "e4ebaa68ea2968089ca7368ebe1a96b9417a2003a7bed3dd11ec1b4283764632",
+      "actual_sha256": "e4ebaa68ea2968089ca7368ebe1a96b9417a2003a7bed3dd11ec1b4283764632",
+      "verification": "match",
+      "correction_status": "previously omitted source record",
+      "disposition": "denominator source record only; no new factual claim"
+    },
+    {
+      "locator": "file:apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/metadata.json",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "path": "apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/metadata.json",
+      "expected_sha256": "5bd6030ef6798d18c8df1a2646dd20b839fde5132ff290d63c8489031dd5c3aa",
+      "actual_sha256": "5bd6030ef6798d18c8df1a2646dd20b839fde5132ff290d63c8489031dd5c3aa",
+      "verification": "match",
+      "correction_status": "previously omitted source and asset-candidate record",
+      "disposition": "denominator source record only; no new factual claim"
+    },
+    {
+      "locator": "file:apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/plan.md",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "path": "apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/plan.md",
+      "expected_sha256": "3a0c4ced70812e4ccdad1d3b855fdb7936b85354100d8948e7c14ffd45cfebc6",
+      "actual_sha256": "3a0c4ced70812e4ccdad1d3b855fdb7936b85354100d8948e7c14ffd45cfebc6",
+      "verification": "match",
+      "correction_status": "previously omitted source record",
+      "disposition": "denominator source record only; no new factual claim"
+    },
+    {
+      "locator": "file:apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/spec.md",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "path": "apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/spec.md",
+      "expected_sha256": "297f56c456b16020f8fa4b22a1fe6cd44911481ba68393f9eb7d489aa443f5c4",
+      "actual_sha256": "297f56c456b16020f8fa4b22a1fe6cd44911481ba68393f9eb7d489aa443f5c4",
+      "verification": "match",
+      "correction_status": "previously omitted source record",
+      "disposition": "denominator source record only; no new factual claim"
+    },
+    {
+      "locator": "file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/index.md",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "path": "apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/index.md",
+      "expected_sha256": "fa4a545121b313955ce3cce8eeb4c1f5265d672e8947c8191559ca307fa7d60c",
+      "actual_sha256": "fa4a545121b313955ce3cce8eeb4c1f5265d672e8947c8191559ca307fa7d60c",
+      "verification": "match",
+      "disposition": "denominator source record only; no new factual claim"
+    },
+    {
+      "locator": "file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/metadata.json",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "path": "apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/metadata.json",
+      "expected_sha256": "2ed50adfd2625e02c0bdf0ecea836ba01c22fb7e1281e5c5bf6e1cb149f6644c",
+      "actual_sha256": "2ed50adfd2625e02c0bdf0ecea836ba01c22fb7e1281e5c5bf6e1cb149f6644c",
+      "verification": "match",
+      "disposition": "denominator source record only; no new factual claim"
+    },
+    {
+      "locator": "file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/plan.md",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "path": "apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/plan.md",
+      "expected_sha256": "9ace387608c4a7e0e7f30afdacbb02ed62f00d9ee61e2e45184874241815236c",
+      "actual_sha256": "9ace387608c4a7e0e7f30afdacbb02ed62f00d9ee61e2e45184874241815236c",
+      "verification": "match",
+      "disposition": "denominator source record only; no new factual claim"
+    },
+    {
+      "locator": "file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/report.md",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "path": "apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/report.md",
+      "expected_sha256": "78fa494f0624a1abaae457f8d9fd437d47d60ada876bc5c20c8efcab754ecda4",
+      "actual_sha256": "78fa494f0624a1abaae457f8d9fd437d47d60ada876bc5c20c8efcab754ecda4",
+      "verification": "match",
+      "disposition": "denominator source record only; no new factual claim"
+    },
+    {
+      "locator": "file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/spec.md",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "path": "apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/spec.md",
+      "expected_sha256": "4bf73c7778becd062bce2d9e7e1096b9891ea00c2e71a7cee5b51b910fd04af3",
+      "actual_sha256": "4bf73c7778becd062bce2d9e7e1096b9891ea00c2e71a7cee5b51b910fd04af3",
+      "verification": "match",
+      "disposition": "denominator source record only; no new factual claim"
+    }
+  ],
+  "asset_candidates": [
+    {
+      "path": "apps/advantage-games/measure/archive/gryphon-patrol-20260321/metadata.json",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "expected_sha256": "b682c99454ddd44ae9e8171888f44767fbb02f2e6e47f0c4581aa212559ca908",
+      "actual_sha256": "b682c99454ddd44ae9e8171888f44767fbb02f2e6e47f0c4581aa212559ca908",
+      "verification": "match",
+      "disposition": "candidate identity only; no suitability, role, runtime-use, or visual-inspection claim"
+    },
+    {
+      "path": "apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/metadata.json",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "expected_sha256": "5d70cc9930188a6355eaad342c9fec5d41d998eb0c4383264a435312c65725c2",
+      "actual_sha256": "5d70cc9930188a6355eaad342c9fec5d41d998eb0c4383264a435312c65725c2",
+      "verification": "match",
+      "correction_status": "previously omitted asset-candidate record",
+      "disposition": "candidate identity only; no suitability, role, runtime-use, or visual-inspection claim"
+    },
+    {
+      "path": "apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/metadata.json",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "expected_sha256": "5bd6030ef6798d18c8df1a2646dd20b839fde5132ff290d63c8489031dd5c3aa",
+      "actual_sha256": "5bd6030ef6798d18c8df1a2646dd20b839fde5132ff290d63c8489031dd5c3aa",
+      "verification": "match",
+      "correction_status": "previously omitted asset-candidate record",
+      "disposition": "candidate identity only; no suitability, role, runtime-use, or visual-inspection claim"
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/metadata.json",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "expected_sha256": "2ed50adfd2625e02c0bdf0ecea836ba01c22fb7e1281e5c5bf6e1cb149f6644c",
+      "actual_sha256": "2ed50adfd2625e02c0bdf0ecea836ba01c22fb7e1281e5c5bf6e1cb149f6644c",
+      "verification": "match",
+      "disposition": "candidate identity only; no suitability, role, runtime-use, or visual-inspection claim"
+    },
+    {
+      "path": "apps/advantage-games/public/games/cover/cover-gryphon-patrol.png",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "expected_sha256": "abc46e828c209b27597d4e3f9d6cf76b0f5b7bf1490e88e045e37f383b74b27b",
+      "actual_sha256": "abc46e828c209b27597d4e3f9d6cf76b0f5b7bf1490e88e045e37f383b74b27b",
+      "verification": "match",
+      "disposition": "candidate identity only; no suitability, role, runtime-use, or visual-inspection claim"
+    }
+  ],
+  "historical_records": [
+    {
+      "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/gryphon-patrol/page.tsx",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "expected_sha256": "2ba834655ffb72df650da4446e527110f1986fe297769a50d36095304283c588",
+      "actual_sha256": "2ba834655ffb72df650da4446e527110f1986fe297769a50d36095304283c588",
+      "verification": "match"
+    },
+    {
+      "path": "apps/advantage-games/src/app/api/v1/games/gryphon-patrol/complete/route.ts",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "expected_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+      "actual_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+      "verification": "match"
+    },
+    {
+      "path": "apps/advantage-games/src/app/api/v1/games/gryphon-patrol/ranking/route.ts",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "expected_sha256": "b8f47fe0d7c4fb0d40217b1a42e193cadf0f419880424a5c3a04b80c74050180",
+      "actual_sha256": "b8f47fe0d7c4fb0d40217b1a42e193cadf0f419880424a5c3a04b80c74050180",
+      "verification": "match"
+    },
+    {
+      "path": "apps/advantage-games/src/app/api/v1/games/gryphon-patrol/sentences/route.ts",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "expected_sha256": "6377b02745a07368e04dbd6dd817080430e609d5918315945eb54edbb5d58c6c",
+      "actual_sha256": "6377b02745a07368e04dbd6dd817080430e609d5918315945eb54edbb5d58c6c",
+      "verification": "match"
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/gryphon-patrol/GryphonPatrolGame.test.tsx",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "expected_sha256": "12f725ca794c9e06395fa066bdb1e7a3a5421882b52207fcb3fbe02e39749d68",
+      "actual_sha256": "12f725ca794c9e06395fa066bdb1e7a3a5421882b52207fcb3fbe02e39749d68",
+      "verification": "match"
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/gryphon-patrol/GryphonPatrolGame.tsx",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "expected_sha256": "b414511b2a4f9dfc48b6930714c100445492f1beeb95400eccc65bb1cdadfed5",
+      "actual_sha256": "b414511b2a4f9dfc48b6930714c100445492f1beeb95400eccc65bb1cdadfed5",
+      "verification": "match"
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/gryphonPatrol.test.ts",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "expected_sha256": "305d08888ed46070623bd2071a47d30d2d03d5180602ee3ac3583d5b48e8b76f",
+      "actual_sha256": "305d08888ed46070623bd2071a47d30d2d03d5180602ee3ac3583d5b48e8b76f",
+      "verification": "match",
+      "correction_status": "previously omitted historical record"
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/gryphonPatrol.ts",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "expected_sha256": "9cbe34c97bac585ab1f7ea481951a707d9ff73c86aae18345558463f651ed95d",
+      "actual_sha256": "9cbe34c97bac585ab1f7ea481951a707d9ff73c86aae18345558463f651ed95d",
+      "verification": "match",
+      "correction_status": "previously omitted historical record"
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/gryphonPatrolConfig.ts",
+      "revision": "cd1936387d136ffb12e77a647f36cbce2d1fdd4e",
+      "expected_sha256": "c3e18c1e83814c8c63f9de48a1e7f3d25185fe97bcdf85c513b96a7e754f4db5",
+      "actual_sha256": "c3e18c1e83814c8c63f9de48a1e7f3d25185fe97bcdf85c513b96a7e754f4db5",
+      "verification": "match",
+      "correction_status": "previously omitted historical record"
+    },
+    {
+      "path": "packages/game-cartridges/src/cartridges/gryphon-patrol/index.ts",
+      "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+      "expected_sha256": "5501d6358a56d96cd86eb559324224ee21f808bb274513d7dfa43d9c33dac363",
+      "actual_sha256": "5501d6358a56d96cd86eb559324224ee21f808bb274513d7dfa43d9c33dac363",
+      "verification": "match"
+    }
+  ],
+  "prior_omission_reconciliation": {
+    "source_records": {
+      "expected": 6,
+      "rederived": 6,
+      "result": "exact match"
+    },
+    "asset_candidates": {
+      "expected": 2,
+      "rederived": 2,
+      "result": "exact match"
+    },
+    "historical_records": {
+      "expected": 3,
+      "rederived": 3,
+      "result": "exact match"
+    }
+  },
+  "preserved_claim_revalidation": {
+    "claim_count": 15,
+    "atomic_proposition_count": 40,
+    "new_factual_claim_count": 0,
+    "unique_blob_and_range_envelopes_checked": 11,
+    "unique_blob_and_range_envelopes_matched": 11,
+    "identity_blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+    "result": "All unique Git blob and whole-file or whole-binary range envelopes referenced by the preserved semantic claim layer match. Semantic statements are retained from the exact v2 bytes and are not expanded here."
+  },
+  "claims": {
+    "browser": false,
+    "asset_suitability": false,
+    "asset_runtime_use": false,
+    "mapping": false,
+    "truth_test_authorship": false,
+    "review": false,
+    "receipt_selection": false,
+    "candidate": false,
+    "acceptance": false
+  },
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

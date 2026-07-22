@@ -1,0 +1,81 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "task_id": "C3-DISCOVERY-REVERIFY-V4",
+  "role": "discovery-auditor-batch-c",
+  "status": "completed fresh-context re-verification with a material denominator mismatch; denominator-clean status is not claimed",
+  "acceptance": "not-claimed",
+  "supersession": {
+    "supersedes_receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/discovery-auditor-batch-c.json",
+    "supersession_scope": "provider provenance and discovery denominator re-verification result only",
+    "existing_artifact_disposition": "The original receipt and batch-c-discovery-audit.json were not edited. This receipt reports a fail-closed mismatch for coordinator disposition."
+  },
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "bindings": {
+    "strategy_sha256": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9",
+    "phase_base_binding_sha256": "b83428a8cb84465b00609833b0be0ad2bb0388eff4ebc2de23fa112bc4715a9c",
+    "budget_declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "role_applicability_sha256": "a239908b9564ce48acd5b54be5d1d80d81afcd316778bea0f4dad2be89d08fa0",
+    "existing_discovery_audit_sha256": "c7427d6dbd9449e4293470ed13115e98d863bd0cb4b3290cc0b8e60db844d687",
+    "accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "identity_ledger_sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+    "source_denominator_sha256": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d",
+    "scene_state_denominator_sha256": "6308836ca24f1cac5bf4ded5f7e72c5ba06c08f4a5c6648620818b720190bf8b",
+    "asset_denominator_sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "historical_denominator_sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f"
+  },
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/scanner_index_review/batch_c_discovery_fresh_v4",
+    "provider_kind": "collaboration-subagent",
+    "fork_turns": "none",
+    "parent_task": "/root/scanner_index_review",
+    "retained_provider_proof": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/discovery-auditor-batch-c-v4.json",
+      "sha256": "274b604e132372166a86328adeb6dafe3b4865709fe356feef2045275f00b131"
+    }
+  },
+  "retained_proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/discovery-auditor-batch-c-v4.json",
+    "sha256": "274b604e132372166a86328adeb6dafe3b4865709fe356feef2045275f00b131"
+  },
+  "rederived_result": {
+    "counts": {"identity": 2, "source_records": 22, "scene_records": 0, "state_records": 0, "transition_records": 0, "asset_candidates": 9, "historical_records": 21},
+    "blob_checks": {"current_checks": 33, "current_matches": 33, "historical_checks": 21, "historical_matches": 21},
+    "runtime_prefix_match_count": 0,
+    "comparison_to_existing": {
+      "result": "mismatch",
+      "missing_source_records": 6,
+      "missing_asset_candidates": 2,
+      "missing_historical_records": 7,
+      "extra_existing_records": 0
+    },
+    "disposition": "Fail closed: batch-c-discovery-audit.json does not enumerate the full normalized denominator for the two accepted Batch C identities. The retained proof contains every locator and the exact missing sets."
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/discovery-auditor-batch-c-v4.json",
+      "sha256": "274b604e132372166a86328adeb6dafe3b4865709fe356feef2045275f00b131"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/discovery-auditor-batch-c-v4.json",
+      "sha256": null,
+      "digest_reason": "A receipt cannot self-hash without changing the bytes being attested; its own output digest is intentionally null."
+    }
+  ],
+  "resource_use": {
+    "budget_declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "ceilings": {"source_bytes_read": 10485760, "source_files_or_objects_read": 80, "command_invocations": 40, "elapsed_minutes": 20, "records_authored_or_reviewed": 240, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "actual": {"source_bytes_read": 6327815, "source_files_or_objects_read": 59, "command_invocations": 39, "elapsed_minutes": 17, "records_authored_or_reviewed": 69, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "measurement_note": "The exact accounting method and command-result evidence are retained in the bound provider proof. Output-authoring patch operations are not source, validation, hashing, browser, or review invocations.",
+    "ceiling_breaches": 0
+  },
+  "commit_sha": null,
+  "commit_disposition": "No commit was created because the delegated task prohibited commits.",
+  "scope": "Discovery denominator re-verification only; no factual claim package, mapping, truth test, browser observation, asset suitability decision, ontology, candidate, acceptance, plan, registry, pnpm, .opencode, or services artifact was authored or modified.",
+  "marker": "MEASURE_AGENT_RESULT"
+}

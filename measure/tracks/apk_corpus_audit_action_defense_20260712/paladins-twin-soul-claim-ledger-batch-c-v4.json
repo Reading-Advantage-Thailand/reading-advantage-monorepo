@@ -1,0 +1,91 @@
+{
+  "schema": "apk-claim-ledger-denominator-supersession.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "game": "Paladin's Twin-Soul",
+  "normalized_game_id": "paladins-twin-soul",
+  "role": "evidence-collector-paladins-twin-soul-batch-c",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_paladin_collector_v4",
+  "role_base_sha": "5f50b72b1ac42c23b567e371ea37285f746810cf",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "status": "corrected-denominator-rederived-collector-only",
+  "supersedes": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-claim-ledger-batch-c.json",
+      "sha256": "90c451c895bffa0bf41c7f3c916578df7d700f0f56e05d16ae7cab58e6a60304",
+      "scope": "The original 8/2/7 denominator reconciliation is superseded; its bytes remain unchanged."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-semantic-supersession-batch-c-v2.json",
+      "sha256": "9c9227e3b560cf15c35b977b9e23bba4b0fa9a346e0a6fae1308e0a298718613",
+      "scope": "The 21 preserved atomic factual claims and the corrected identity range remain the authoritative semantic layer; this v4 ledger does not expand them."
+    }
+  ],
+  "correction_binding": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json",
+    "sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f"
+  },
+  "selection_rule": "For each path-keyed frozen-ledger record, lowercase the path, remove every non-alphanumeric character, retain paladinstwinsoul, and sort by the exact path.",
+  "counts": {
+    "source_records": 8,
+    "asset_candidates": 4,
+    "historical_records": 11
+  },
+  "inventory_sha256": {
+    "serialization": "SHA-256 of compact UTF-8 JSON for the exact sorted locator array, with no trailing newline",
+    "source_records": "f6765b2f126b96eb62acb3377b9c3a2c75af97f68f64c901ea81990488ecddd5",
+    "asset_candidates": "1b20c5b56465df79524cbdb8c2c5c54b60d7cefe20eb240ca3e075c3882d38a6",
+    "historical_records": "33880e7e08320c7ae9b547c5afc8ab91fb1e301c0ab48b85c5e8d97e5b727b8e"
+  },
+  "source_records": [
+    {"locator":"file:apps/advantage-games/measure/archive/paladins-twin-soul-20260321/metadata.json","revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","path":"apps/advantage-games/measure/archive/paladins-twin-soul-20260321/metadata.json","expected_sha256":"9f8c13f96fe90c9d47d9b5fe5c65b0628a4bbcf0ad4a2299140ebbab4d624c49","actual_sha256":"9f8c13f96fe90c9d47d9b5fe5c65b0628a4bbcf0ad4a2299140ebbab4d624c49","verification":"match","disposition":"denominator source record only; no new factual claim"},
+    {"locator":"file:apps/advantage-games/measure/archive/paladins-twin-soul-20260321/plan.md","revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","path":"apps/advantage-games/measure/archive/paladins-twin-soul-20260321/plan.md","expected_sha256":"e12b2f629819f38efed587e93ff60a92a0d89178229a3e1b80d5a53782d434dd","actual_sha256":"e12b2f629819f38efed587e93ff60a92a0d89178229a3e1b80d5a53782d434dd","verification":"match","disposition":"denominator source record only; no new factual claim"},
+    {"locator":"file:apps/advantage-games/measure/archive/paladins-twin-soul-20260321/spec.md","revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","path":"apps/advantage-games/measure/archive/paladins-twin-soul-20260321/spec.md","expected_sha256":"ef6aee063708e6a6b9a5dc3b8ce2e898cfaa1cf931e4729c2a52aa365ca29482","actual_sha256":"ef6aee063708e6a6b9a5dc3b8ce2e898cfaa1cf931e4729c2a52aa365ca29482","verification":"match","disposition":"denominator source record only; no new factual claim"},
+    {"locator":"file:apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/index.md","revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","path":"apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/index.md","expected_sha256":"71f5e0b343f18dbff365c02a2a7bb4f097e6ebb89b8ab763d463d6de2df86a24","actual_sha256":"71f5e0b343f18dbff365c02a2a7bb4f097e6ebb89b8ab763d463d6de2df86a24","verification":"match","disposition":"denominator source record only; no new factual claim"},
+    {"locator":"file:apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/metadata.json","revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","path":"apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/metadata.json","expected_sha256":"2383a3b212ed48f803df643d6525e7b2fad76bb5772507e3550da9fda40fc19e","actual_sha256":"2383a3b212ed48f803df643d6525e7b2fad76bb5772507e3550da9fda40fc19e","verification":"match","disposition":"denominator source record only; no new factual claim"},
+    {"locator":"file:apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/plan.md","revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","path":"apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/plan.md","expected_sha256":"ad3f524aba11b6cfdb8e98b3626d321f052addcfe9534cf8381c708a466b857c","actual_sha256":"ad3f524aba11b6cfdb8e98b3626d321f052addcfe9534cf8381c708a466b857c","verification":"match","disposition":"denominator source record only; no new factual claim"},
+    {"locator":"file:apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/report.md","revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","path":"apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/report.md","expected_sha256":"88a123b8df20647f163def7f512c8213f580491efe696041e3453fba3d3f0a6d","actual_sha256":"88a123b8df20647f163def7f512c8213f580491efe696041e3453fba3d3f0a6d","verification":"match","disposition":"denominator source record only; no new factual claim"},
+    {"locator":"file:apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/spec.md","revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","path":"apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/spec.md","expected_sha256":"c1f541477f704a3fad0674c6e3ecbf4c40101bfed8ba81b97956b2fc096f5e17","actual_sha256":"c1f541477f704a3fad0674c6e3ecbf4c40101bfed8ba81b97956b2fc096f5e17","verification":"match","disposition":"denominator source record only; no new factual claim"}
+  ],
+  "asset_candidates": [
+    {"path":"apps/advantage-games/measure/archive/paladins-twin-soul-20260321/metadata.json","revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","expected_sha256":"9f8c13f96fe90c9d47d9b5fe5c65b0628a4bbcf0ad4a2299140ebbab4d624c49","actual_sha256":"9f8c13f96fe90c9d47d9b5fe5c65b0628a4bbcf0ad4a2299140ebbab4d624c49","verification":"match","disposition":"candidate identity only; no suitability, role, runtime-use, or visual-inspection claim"},
+    {"path":"apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/metadata.json","revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","expected_sha256":"2383a3b212ed48f803df643d6525e7b2fad76bb5772507e3550da9fda40fc19e","actual_sha256":"2383a3b212ed48f803df643d6525e7b2fad76bb5772507e3550da9fda40fc19e","verification":"match","disposition":"candidate identity only; no suitability, role, runtime-use, or visual-inspection claim"},
+    {"path":"apps/advantage-games/public/games/cover/cover-paladins-twin-soul.png","revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","expected_sha256":"6124a087e9270ff30afe3df8a5b739adcc326fd05aeec93613e00d94a4ad8896","actual_sha256":"6124a087e9270ff30afe3df8a5b739adcc326fd05aeec93613e00d94a4ad8896","verification":"match","disposition":"candidate identity only; no suitability, role, runtime-use, or visual-inspection claim"},
+    {"path":"apps/advantage-games/public/games/vocabulary/paladins-twin-soul/cover.png","revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","expected_sha256":"25baa769bbe00900e81d22b0150ca99127c7a6ae373357be704e983da5cd4079","actual_sha256":"25baa769bbe00900e81d22b0150ca99127c7a6ae373357be704e983da5cd4079","verification":"match","disposition":"candidate identity only; no suitability, role, runtime-use, or visual-inspection claim"}
+  ],
+  "historical_records": [
+    {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/paladins-twin-soul/page.tsx","revision":"cd1936387d136ffb12e77a647f36cbce2d1fdd4e","expected_sha256":"0ca5ec97b38504b27f72217a4885369ad09ab7792cc078637b7c3ff80be6678b","actual_sha256":"0ca5ec97b38504b27f72217a4885369ad09ab7792cc078637b7c3ff80be6678b","verification":"match"},
+    {"path":"apps/advantage-games/src/app/api/v1/games/paladins-twin-soul/complete/route.ts","revision":"cd1936387d136ffb12e77a647f36cbce2d1fdd4e","expected_sha256":"887d73799ce2461c560073dc5216e86cf7e783949a7fed04daa74a0e743ce9fd","actual_sha256":"887d73799ce2461c560073dc5216e86cf7e783949a7fed04daa74a0e743ce9fd","verification":"match"},
+    {"path":"apps/advantage-games/src/app/api/v1/games/paladins-twin-soul/vocabulary/route.ts","revision":"cd1936387d136ffb12e77a647f36cbce2d1fdd4e","expected_sha256":"6d7cd4d34a0868fd819278d0838359d9d262b10119c440572460c3f10c244b87","actual_sha256":"6d7cd4d34a0868fd819278d0838359d9d262b10119c440572460c3f10c244b87","verification":"match"},
+    {"path":"apps/advantage-games/src/components/games/vocabulary/paladins-twin-soul/PaladinsTwinSoulGame.test.tsx","revision":"cd1936387d136ffb12e77a647f36cbce2d1fdd4e","expected_sha256":"e4606052bc821da334515cccc956b6d40e5704d17e66024fae3b4140cb569abb","actual_sha256":"e4606052bc821da334515cccc956b6d40e5704d17e66024fae3b4140cb569abb","verification":"match"},
+    {"path":"apps/advantage-games/src/components/games/vocabulary/paladins-twin-soul/PaladinsTwinSoulGame.tsx","revision":"cd1936387d136ffb12e77a647f36cbce2d1fdd4e","expected_sha256":"9aa02364de3b7b198b41b92232ddd7aac45d78c829683a733e37eb2d60d3e8ee","actual_sha256":"9aa02364de3b7b198b41b92232ddd7aac45d78c829683a733e37eb2d60d3e8ee","verification":"match"},
+    {"path":"apps/advantage-games/src/components/games/vocabulary/paladins-twin-soul/index.ts","revision":"cd1936387d136ffb12e77a647f36cbce2d1fdd4e","expected_sha256":"4bfa5e20bd481e534c16c2ced7e9b7596404dc9173390d67f8388e2c96776da6","actual_sha256":"4bfa5e20bd481e534c16c2ced7e9b7596404dc9173390d67f8388e2c96776da6","verification":"match"},
+    {"path":"apps/advantage-games/src/lib/games/paladinsTwinSoul.test.ts","revision":"cd1936387d136ffb12e77a647f36cbce2d1fdd4e","expected_sha256":"156bf593e02bfe687dfa4a9a52255229635305fb90efbbf1522a9207c8727249","actual_sha256":"156bf593e02bfe687dfa4a9a52255229635305fb90efbbf1522a9207c8727249","verification":"match"},
+    {"path":"apps/advantage-games/src/lib/games/paladinsTwinSoul.ts","revision":"cd1936387d136ffb12e77a647f36cbce2d1fdd4e","expected_sha256":"1f10a16802238f57712755f85530aeebc373c01a59a4cf1a550770b31c800db2","actual_sha256":"1f10a16802238f57712755f85530aeebc373c01a59a4cf1a550770b31c800db2","verification":"match"},
+    {"path":"apps/advantage-games/src/lib/games/paladinsTwinSoulConfig.test.ts","revision":"cd1936387d136ffb12e77a647f36cbce2d1fdd4e","expected_sha256":"3eb185f257acdcc31fc329a38cd1d93b30dd7a2669c810af39a418980de8703e","actual_sha256":"3eb185f257acdcc31fc329a38cd1d93b30dd7a2669c810af39a418980de8703e","verification":"match"},
+    {"path":"apps/advantage-games/src/lib/games/paladinsTwinSoulConfig.ts","revision":"cd1936387d136ffb12e77a647f36cbce2d1fdd4e","expected_sha256":"5f408cf0f891461d4a4b1311743c2d858c34a7666b431cbc4ff498570fe0aea1","actual_sha256":"5f408cf0f891461d4a4b1311743c2d858c34a7666b431cbc4ff498570fe0aea1","verification":"match"},
+    {"path":"packages/game-cartridges/src/cartridges/paladins-twin-soul/index.ts","revision":"1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f","expected_sha256":"b7729a0b8774d572915fab187c2311b63f511b33417fa13d814aa23fb28846c8","actual_sha256":"b7729a0b8774d572915fab187c2311b63f511b33417fa13d814aa23fb28846c8","verification":"match"}
+  ],
+  "preserved_claim_revalidation": {
+    "claim_count": 21,
+    "new_factual_claim_count": 0,
+    "identity_blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+    "identity_range_181_187_sha256": "ff46e4f7c8c67a7dc6af7d37fd4721fb80c139020393178b913e9807cecc58dc",
+    "result": "All Git blobs referenced by the preserved semantic claim layer match the selected historical, asset-candidate, or identity hashes rederived in this role. Semantic statements are retained from the exact v2 bytes and are not expanded here."
+  },
+  "claims": {
+    "browser": false,
+    "asset_suitability": false,
+    "asset_runtime_use": false,
+    "mapping": false,
+    "truth_test_authorship": false,
+    "review": false,
+    "receipt_selection": false,
+    "candidate": false,
+    "acceptance": false
+  },
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

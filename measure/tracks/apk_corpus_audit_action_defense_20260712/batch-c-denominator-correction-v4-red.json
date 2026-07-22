@@ -1,0 +1,24 @@
+{
+  "schema": "measure.truth-test-red.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "scope": "denominator correction only",
+  "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py -k BatchCCorrectedDenominatorContract",
+  "exit_code": 1,
+  "collected": 5,
+  "selected": 3,
+  "deselected": 2,
+  "passed": 0,
+  "failed": 3,
+  "failures": [
+    "EXPECTED_RED[DENOM-001]: denominator correction absent",
+    "EXPECTED_RED[DENOM-001]: denominator correction absent",
+    "EXPECTED_RED[DENOM-002]: corrected asset audit absent"
+  ],
+  "result": "red captured after denominator contracts were written and before the superseding correction or corrected asset audit existed",
+  "browser_evidence_created": false,
+  "role_selection_created": false,
+  "candidate_authorized": false,
+  "acceptance_authorized": false,
+  "marker": "MEASURE_AGENT_RESULT"
+}

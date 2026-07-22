@@ -1,0 +1,64 @@
+{
+  "schema": "apk-requirements-blueprint.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "game": "Gryphon Patrol",
+  "normalized_game_id": "gryphon-patrol",
+  "role": "requirements-mapper-gryphon-patrol-batch-c",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_mapper_v4",
+  "role_base_sha": "752fecfd1f8f9da0bd3c9a377126bb322a81e37c",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "status": "append-only non-authoritative v4 mapping; zero source facts created; candidate and acceptance unauthorized",
+  "authoritative_bindings": {
+    "collector_ledger": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-claim-ledger-batch-c-v4.json","sha256":"d3e0de2a047d59ba5a128cb3780d1e5f42f04c8ae0361cb04e633ef8f671e4eb"},
+    "collector_method": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-method-batch-c-v4.md","sha256":"4d4916f88d34d19c067bf796298f922875480409c16d9d5e2491bc743f6a70d0"},
+    "collector_report": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-final-report-batch-c-v4.json","sha256":"0d7af322d736edbffd146d6bf2f51989198513b0a9080e2f9050cca1eb7177f4"},
+    "collector_proof": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/evidence-collector-gryphon-patrol-batch-c-v4.json","sha256":"d797b87a0b59bd2aeeaf54fc63fa3d8d30659d33695493a6c25ee37964382e2e"},
+    "collector_receipt": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-gryphon-patrol-batch-c-v4.json","sha256":"cf28e5d2c6de663e2638ab024cd5ea78df0f7a91da12d5952b6d589813d5d27c"},
+    "preserved_semantic_claim_layer": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-semantic-supersession-batch-c-v2.json","sha256":"2f0c23b6aa5a03b814107dbd8325bc1af5d7ce21fa15d6fbfdca87b77345efd4"},
+    "denominator_correction": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json","sha256":"6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f"}
+  },
+  "preserved_mapper_bindings": {
+    "blueprint": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-blueprint-batch-c.json","sha256":"1bb8d8f1dafa26fd660182bce030a88c16790cfba737028752459214a1a39089"},
+    "hypotheses": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-hypotheses-batch-c.md","sha256":"ec721b12f9d6ef46597a3db703b7f9a0c7bc2efecb71c3fd4314991285ba8436"},
+    "report": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-final-report-batch-c.json","sha256":"1890eca75e416da2cdba9ba2248490cdb9430892069e87fe37c6aaff0013b654"},
+    "receipt": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c.json","sha256":"cc05f6b0a795d72cb1dcac8120f75418649111ab5d6202c0805b71a2136db74b"},
+    "disposition": "Preserved byte-for-byte as historical mapping. This v4 layer supersedes only the stale denominator dependency and retains only statements bound to the exact semantic claim layer."
+  },
+  "denominator_verification": {
+    "counts": {"source_records":14,"asset_candidates":5,"historical_records":10},
+    "inventory_sha256": {"source_records":"51dc928d643f3c66308ed67fea57baef15384254a37f319e2223a7bef8c51c9f","asset_candidates":"1ec212dad65ce85e80bc70f528a0edcedae46aadd26422f865df1433af37f26c","historical_records":"9df126e08fddd6f3d35dc859415b9fb986de5238cf8c07a017cccd9547f58b02"},
+    "git_blob_checks": {"checks":29,"matches":29,"mismatches":0},
+    "prior_omissions": {"archive_source_records":"6/6","metadata_asset_candidates":"2/2","src_lib_historical_records":"3/3"},
+    "mapping_effect": "The corrected denominator and omission reconciliation add no factual claim. The 15 preserved semantic claims remain the complete mapping source."
+  },
+  "mapped_requirements": [
+    {"area":"identity and evidence boundary","statement":"Retain the frozen catalog identifier and named cover-path segment only as baseline identity; the route, component, logic, API, test, and cartridge records remain historical.","claim_ids":["C01-identity","C02-route-and-composition","C03-implementation-and-scenes","C05-test","C14-cartridge-history"]},
+    {"area":"historical scene model","statement":"A historical reconstruction may model start, playing, paused-declaration, won, and lost states plus the retained start and terminal copy, while pause entry and presentation remain unknown.","claim_ids":["C03-implementation-and-scenes","C04-copy","C06-state-and-transitions"]},
+    {"area":"historical movement and configuration","statement":"The historical movement workstream covers input velocity, horizontal wrapping, vertical clamping, friction, enemy movement and vertical bounce, and the retained configuration dimensions and fields.","claim_ids":["C07-patrol-escort-aerial-movement","C10-config"]},
+    {"area":"historical combat and progression","statement":"The historical combat workstream covers first-word target marking, projectile-enemy collision handling, active orb creation, player-enemy HP loss and invulnerability, and source-declared win or loss guards.","claim_ids":["C06-state-and-transitions","C08-targets-projectiles-and-health"]},
+    {"area":"historical responsive composition","statement":"The historical responsive workstream covers container measurement and source-declared scaling of the 390 by 844 stage; compact and wide outcomes remain unknown without browser evidence.","claim_ids":["C09-responsive-composition","C10-config"]},
+    {"area":"historical route and APIs","statement":"The historical integration workstream covers the client page composition and the sentence GET, completion POST, and ranking GET route wiring recorded by the collector.","claim_ids":["C02-route-and-composition","C11-apis","C12-api-complete","C13-api-ranking"]},
+    {"area":"historical tests and alternate representation","statement":"The historical mocked Jest cases and the separate cartridge minimap representation are reconstruction inputs only, not execution, browser, or equivalence proof.","claim_ids":["C05-test","C14-cartridge-history"]},
+    {"area":"asset identity boundary","statement":"The named cover object remains a whole-binary baseline identity only; no visual content, licensing, suitability, role, rendering, or runtime-use conclusion is mapped.","claim_ids":["C15-asset-binary"]}
+  ],
+  "explicit_unknowns": [
+    {"status":"mapper-unknown","statement":"Current implementation, route availability, runnability, and live terminal reachability are not established by this historical mapping.","claim_ids":["C02-route-and-composition","C03-implementation-and-scenes","C06-state-and-transitions"]},
+    {"status":"mapper-unknown","statement":"Pause entry, pause controls, pause composition, camera-follow behavior, and the relationship between the historical component and separate minimap cartridge remain unestablished.","claim_ids":["C06-state-and-transitions","C07-patrol-escort-aerial-movement","C14-cartridge-history"]},
+    {"status":"browser-auditor-owned-unknown","statement":"Real-browser input, compact and wide behavior, console or network behavior, and observed state transitions are unknown to this mapping.","claim_ids":["C03-implementation-and-scenes","C05-test","C09-responsive-composition"]},
+    {"status":"asset-auditor-owned-unknown","statement":"Asset visual content, licensing, suitability, role, rendering, and live surface correlation are unknown to this mapping.","claim_ids":["C15-asset-binary"]}
+  ],
+  "claim_coverage": {
+    "available": 15,
+    "atomic_propositions_available": 40,
+    "unique_envelopes_verified": 11,
+    "mapped": 15,
+    "mapped_claim_ids": ["C01-identity","C02-route-and-composition","C03-implementation-and-scenes","C04-copy","C05-test","C06-state-and-transitions","C07-patrol-escort-aerial-movement","C08-targets-projectiles-and-health","C09-responsive-composition","C10-config","C11-apis","C12-api-complete","C13-api-ranking","C14-cartridge-history","C15-asset-binary"],
+    "unmapped_claim_ids": []
+  },
+  "scope_boundary": {"new_source_facts":0,"source_collection":false,"browser_audit":false,"asset_audit":false,"truth_test_authorship":false,"review":false,"receipt_selection":false,"candidate_ownership":false,"acceptance":false,"implementation":false,"plan_or_registry_edit":false,"ontology":false,"cross_game_synthesis":false},
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

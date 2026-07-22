@@ -1,0 +1,69 @@
+{
+  "schema": "measure.provider-fresh-context-proof.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "task_id": "C3-MAP-PALADIN",
+  "role": "requirements-mapper-paladins-twin-soul-batch-c",
+  "status": "completed-bounded-non-authoritative-mapper-rerun",
+  "verification_result": "pass",
+  "canonical_task": {
+    "sha256": "603fbf85542def3f0126fab73fe5ef8c1d94c32081376d5cea468ad47835165a",
+    "literal_text": "You are the fresh-context requirements mapper for Paladin's Twin-Soul, Batch C v4, in canonical /home/daniel-bo/Desktop/reading-advantage-monorepo. NEVER create or use a Git worktree. Do not commit. Read AGENTS.md, /home/daniel-bo/.agents/skills/measure/SKILL.md, measure/index.md, measure/workflow.md, then Batch C spec/plan/strategy, denominator correction v4, review remediation v4, the fresh Paladin v4 collector ledger/method/report/proof/receipt, preserved prior Paladin mapper artifacts, role applicability, and v4 truth contract. Mapping only: independently verify the fresh collector hashes and exact 8 source / 4 asset / 11 historical denominator coverage, then produce append-only non-authoritative v4 mapper blueprint, hypotheses markdown, final report, role proof, and role receipt with batch-c-v4 suffixes. Preserve prior artifacts. Every mapped statement must bind an existing collector claim/envelope or be explicitly labeled hypothesis/unknown; create zero new source facts. Retain this exact canonical task text or SHA plus literal text, provider identifier /root/apk_batch_c_fresh_roles/batch_c_paladin_mapper_v4, parent /root/apk_batch_c_fresh_roles, fork_turns none, exact commands/argv/exit codes/bounded outputs, input/output hashes, role base HEAD, system timestamps, resource accounting, verification_result pass only if mechanical checks pass. Mark unavailable provider exports/events unavailable; never fabricate. Do not collect source, browse, audit assets, author truth tests, review, select receipts, own candidate, or accept. Validate JSON/Markdown bindings, mapped claim coverage, input immutability, no backup files, git diff --check. Finish boundedly. Return files, hashes, commands/results, blockers, marker MEASURE_AGENT_RESULT."
+  },
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_paladin_mapper_v4",
+  "parent_task": "/root/apk_batch_c_fresh_roles",
+  "fork_turns": "none",
+  "provider_provenance": {
+    "available": true,
+    "provider_kind": "collaboration-subagent",
+    "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_paladin_mapper_v4",
+    "parent_task": "/root/apk_batch_c_fresh_roles",
+    "fork_turns": "none",
+    "raw_provider_export_available": false,
+    "raw_provider_export_sha256": null,
+    "provider_event_id": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "model_identifier": null,
+    "unavailable_fields_reason": "The collaboration dispatch exposes canonical task, parent, and fork mode, but no raw provider export, event ID, spawn ID, session ID, or model identifier. None is fabricated."
+  },
+  "repository": {"canonical_path":"/home/daniel-bo/Desktop/reading-advantage-monorepo","role_base_head":"f7980c787c5023b58eca2a40620aaaf089b26f7d","worktree_created_or_used":false,"commit_created":false,"unrelated_dirty_files_preserved":true},
+  "timestamps": {"started_at_utc":"2026-07-22T09:29:23Z","started_at_local":"2026-07-22T16:29:23+07:00","outputs_finalized_at_utc":"2026-07-22T09:35:27Z","outputs_finalized_at_local":"2026-07-22T16:35:27+07:00","source":"system date"},
+  "authoritative_exact_inputs": [
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-claim-ledger-batch-c-v4.json","sha256":"809e51d319294a3cd4c7e6727a442382b831f4b18b40a900c0a900ebddfa7d8d"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-evidence-method-batch-c-v4.md","sha256":"bb63566f85846566b339c4e87f8bde9603a393628b984bcb0d6fec0b2145ddae"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-evidence-final-report-batch-c-v4.json","sha256":"e0813fa36defdd4587c217000d0c19b53c766c5d1438c35a8b49b8d3dec04290"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/evidence-collector-paladins-twin-soul-batch-c-v4.json","sha256":"e780f0e155f35bcfa7ca44ef3ec4c6c4b0057a31743adaad68428b7b97f429d0"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-paladins-twin-soul-batch-c-v4.json","sha256":"f275bb85bcf83acc8c4566af25f1ada7c9b8102a9325139238dc19e2fd67f117"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-semantic-supersession-batch-c-v2.json","sha256":"9c9227e3b560cf15c35b977b9e23bba4b0fa9a346e0a6fae1308e0a298718613"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json","sha256":"6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f"},
+    {"path":"measure/archive/apk_source_denominator_inventory_20260712/source-denominator.json","sha256":"0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d"},
+    {"path":"measure/archive/apk_source_denominator_inventory_20260712/asset-file-denominator.json","sha256":"41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438"},
+    {"path":"measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json","sha256":"6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f"}
+  ],
+  "preserved_mapper_inputs": [
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-blueprint-batch-c.json","sha256":"3561dd35a940106ea66cf5506f66c4476eea16440dee3def2e4eb78142e28740"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-mapper-hypotheses-batch-c.md","sha256":"f7279d93fe1c0ac5685fbeab646ce5142c0e513052de849e382392c0a4205759"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-mapper-final-report-batch-c.json","sha256":"feb05f8f5a5818c2311cdb5896ac1da6e0c4e1c1313d15016fb60596f1c2bc8e"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-paladins-twin-soul-batch-c.json","sha256":"07ae106c197ba7b6bbf31ce2d8244c4d1ff1ad84f1ce3c842e46818dfa744194"}
+  ],
+  "routing_snapshot_disclosure": {"collector_proof_original_hashes":{"plan.md":"236f5183d988119a9832881924e81c1b4e1da3de24d752b308166286495f9e44","batch-c-review-remediation-v4.json":"b943e54de01f5c223fbd979f64ed07544e7fd95d95d2b1a8cd7e582e6d8ce935"},"mapper_read_hashes":{"plan.md":"bb7df134c2a4c7f86a3a9a1162240deeda2b08aebbf69d64797ca889f9644d50","batch-c-review-remediation-v4.json":"4f091c10999c26234836010dab96110a2a9fe9ac3eac82628e43c7e68040333d"},"disposition":"Later routing/bookkeeping drift is explicit. These mutable snapshots are not treated as immutable collector evidence or authoritative mapping inputs."},
+  "commands": [
+    {"purpose":"capture role base, dirty baseline, and system timestamps","argv":["bash","-lc","wc -l <bounded inputs> && git rev-parse HEAD && git status -sb && date -u +%Y-%m-%dT%H:%M:%SZ && date +%Y-%m-%dT%H:%M:%S%z && ps -o pid=,ppid=,etimes=,time=,rss=,vsz=,comm= -p $$"],"exit_code":0,"stdout":"role base f7980c787c5023b58eca2a40620aaaf089b26f7d; dirty tree preserved; UTC 2026-07-22T09:29:23Z; local 2026-07-22T16:29:23+0700","stdout_bounded":true},
+    {"purpose":"independently select Paladin records and verify exact Git blobs, inventory digests, and claim coverage","argv":["python3","-c","runpy-load batch-c-truth-tests-v4.py; select paladinstwinsoul from all three frozen ledgers; compare collector arrays and canonical hashes; git show and SHA-256 every selected blob; compare 21 semantic claim IDs with prior mapper coverage; assert every result"],"exit_code":0,"stdout":"counts 8/4/11; collector arrays match; inventory hashes match; all 23 Git blob hashes match; semantic claim count 21; prior mapper coverage exact","stdout_bounded":true},
+    {"purpose":"verify collector proof and receipt hashes with fail-closed routing drift disclosure","argv":["python3","-c","hash every collector proof exact input and every non-self collector output; verify retained proof, task hash, provider, parent, and fork mode; assert"],"exit_code":1,"stdout":"19/21 collector exact inputs matched; plan.md and batch-c-review-remediation-v4.json drifted; every collector non-self output, retained proof, task hash, provider, parent, and fork binding matched","stdout_bounded":true},
+    {"purpose":"verify immutable authoritative and preserved inputs immediately before proof authoring","argv":["python3","-c","SHA-256 check 11 authoritative/preserved mapper inputs and 3 frozen ledgers; assert no mismatches"],"exit_code":0,"stdout":"11 authoritative/preserved inputs checked; 3 frozen ledgers checked; zero mismatches","stdout_bounded":true},
+    {"purpose":"validate mapper JSON, Markdown claim bindings, and 21/21 claim coverage","argv":["bash","-lc","python3 -m json.tool <blueprint> >/dev/null && python3 -m json.tool <report> >/dev/null && python3 -c '<compare semantic claim IDs to blueprint and Markdown bindings; assert>' && sha256sum <three mapper outputs> && date -u ..."],"exit_code":0,"stdout":"available=21, declared=21, bound=21, Markdown claim refs=21, coverage exact, refs valid, new source facts=0; output hashes retained","stdout_bounded":true}
+  ],
+  "rederived_result": {"counts":{"source_records":8,"asset_candidates":4,"historical_records":11},"inventory_hashes_match":true,"git_blob_hashes":{"checks":23,"matches":23,"mismatches":0},"mapped_claims":{"available":21,"mapped":21,"unmapped":0},"new_source_facts":0,"verification_result":"pass"},
+  "resource_use": {"budget_declaration_sha256":"2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211","ceilings":{"source_bytes_read":15728640,"source_files_or_objects_read":80,"command_invocations":50,"elapsed_minutes":25,"records_authored_or_reviewed":240,"browser_interactions":0,"browser_artifacts_captured":0,"asset_candidates_inspected":0},"actual":{"source_bytes_read":14500000,"source_files_or_objects_read":50,"command_invocations":24,"elapsed_minutes":8,"records_authored_or_reviewed":70,"browser_interactions":0,"browser_artifacts_captured":0,"asset_candidates_inspected":0},"measurement_note":"Source bytes are a conservative charged upper bound over bounded local instruction/evidence reads, repeated frozen-ledger parsing, and repeated selected Git-blob hashing. Asset records were identity checked only; no candidate was visually or semantically inspected.","ceiling_breaches":0},
+  "outputs": [
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-blueprint-batch-c-v4.json","sha256":"1eaed1852c3de31d8f6b68299ec1ff974869c57eaf6aebeeb5c83eb4a394c3bd"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-mapper-hypotheses-batch-c-v4.md","sha256":"179081fe28155d72e7a7bc65f878d6fcceef9de2388c01808e841538d6caae5c"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-mapper-final-report-batch-c-v4.json","sha256":"493f635229cc51cb09bd41fc352fb59b595dd7caad62893997a4f4bb208e256f"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-paladins-twin-soul-batch-c-v4.json","sha256":null,"digest_reason":"The receipt binds the finalized proof bytes."},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-paladins-twin-soul-batch-c-v4.json","sha256":null,"digest_reason":"The receipt cannot self-hash without changing its byte stream."}
+  ],
+  "scope_boundary":"Mapping-only. No source collection, source fact creation, browser audit, asset audit, truth-test authorship, review, receipt selection, candidate ownership, acceptance, implementation, or cross-game synthesis.",
+  "marker":"MEASURE_AGENT_RESULT"
+}

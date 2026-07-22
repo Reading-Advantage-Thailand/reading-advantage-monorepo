@@ -1,0 +1,17 @@
+{
+  "schema": "measure.truth-test-red.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py",
+  "exit_code": 1,
+  "collected": 2,
+  "passed": 0,
+  "failed": 2,
+  "failures": [
+    "EXPECTED_RED[MED-001]: v4 receipt selection absent",
+    "EXPECTED_RED[HIGH-002]: immutable browser audit absent"
+  ],
+  "result": "red captured before any v4 selection or immutable browser artifact existed",
+  "candidate_authorized": false,
+  "marker": "MEASURE_AGENT_RESULT"
+}

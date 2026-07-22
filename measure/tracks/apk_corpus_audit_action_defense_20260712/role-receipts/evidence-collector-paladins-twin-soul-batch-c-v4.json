@@ -1,0 +1,82 @@
+{
+  "schema": "apk-role-receipt.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "task_id": "C3-COLLECT-PALADIN",
+  "role": "evidence-collector-paladins-twin-soul-batch-c",
+  "status": "fresh-context collector v4 completed against corrected Paladin denominator; batch acceptance not claimed",
+  "role_base_sha": "5f50b72b1ac42c23b567e371ea37285f746810cf",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "supersession": {
+    "supersedes_receipts": [
+      {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-paladins-twin-soul-batch-c.json","sha256":"e9a841207ee54a4f8f4fc21bf71f90ba7f7d73c8676dffd29401dc620d9b299f"},
+      {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-paladins-twin-soul-batch-c-v2.json","sha256":"0e42c94058096af90afd3a5a667ac1ef8e0f068dfd4417ba2d392a6050d5fc5e"}
+    ],
+    "scope":"Fresh-context provider provenance plus corrected 8/4/11 denominator reconciliation and exact-revision source-byte revalidation only. Historical bytes remain unchanged."
+  },
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_paladin_collector_v4",
+    "provider_kind": "collaboration-subagent",
+    "parent_task": "/root/apk_batch_c_fresh_roles",
+    "fork_turns": "none",
+    "canonical_task_sha256": "434246eff1da880d1389f8dcbf8977b205e66e02deead50ba5bd579c16c57b01",
+    "raw_provider_export_available": false,
+    "raw_provider_export_sha256": null,
+    "provider_event_id": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "model_identifier": null,
+    "unavailable_fields_reason":"No raw provider export, event ID, spawn ID, session ID, or model identifier is exposed to this role; none is fabricated."
+  },
+  "retained_proof": {
+    "path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/evidence-collector-paladins-twin-soul-batch-c-v4.json",
+    "sha256":"e780f0e155f35bcfa7ca44ef3ec4c6c4b0057a31743adaad68428b7b97f429d0"
+  },
+  "bindings": {
+    "strategy_sha256":"64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9",
+    "phase_base_binding_sha256":"b83428a8cb84465b00609833b0be0ad2bb0388eff4ebc2de23fa112bc4715a9c",
+    "budget_declaration_sha256":"2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "role_applicability_sha256":"a239908b9564ce48acd5b54be5d1d80d81afcd316778bea0f4dad2be89d08fa0",
+    "denominator_correction_sha256":"6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f",
+    "review_remediation_sha256":"b943e54de01f5c223fbd979f64ed07544e7fd95d95d2b1a8cd7e582e6d8ce935",
+    "source_denominator_sha256":"0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d",
+    "asset_denominator_sha256":"41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "historical_denominator_sha256":"6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
+    "preserved_semantic_claim_layer_sha256":"9c9227e3b560cf15c35b977b9e23bba4b0fa9a346e0a6fae1308e0a298718613"
+  },
+  "rederived_result": {
+    "counts":{"source_records":8,"asset_candidates":4,"historical_records":11},
+    "source_blob_checks":{"checks":8,"matches":8},
+    "asset_candidate_identity_checks":{"checks":4,"matches":4},
+    "historical_blob_checks":{"checks":11,"matches":11},
+    "preserved_identity_checks":{"blob":"match","corrected_range_181_187":"match"},
+    "new_factual_claims":0,
+    "verification_result":"pass"
+  },
+  "outputs": [
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-claim-ledger-batch-c-v4.json","sha256":"809e51d319294a3cd4c7e6727a442382b831f4b18b40a900c0a900ebddfa7d8d"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-evidence-method-batch-c-v4.md","sha256":"bb63566f85846566b339c4e87f8bde9603a393628b984bcb0d6fec0b2145ddae"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-evidence-final-report-batch-c-v4.json","sha256":"e0813fa36defdd4587c217000d0c19b53c766c5d1438c35a8b49b8d3dec04290"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/evidence-collector-paladins-twin-soul-batch-c-v4.json","sha256":"e780f0e155f35bcfa7ca44ef3ec4c6c4b0057a31743adaad68428b7b97f429d0"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-paladins-twin-soul-batch-c-v4.json","sha256":null,"digest_reason":"The receipt cannot self-hash without changing its own bytes."}
+  ],
+  "resource_use": {
+    "budget_declaration_sha256":"2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "ceilings":{"source_bytes_read":52428800,"source_files_or_objects_read":120,"command_invocations":80,"elapsed_minutes":45,"records_authored_or_reviewed":300,"browser_interactions":0,"browser_artifacts_captured":0,"asset_candidates_inspected":0},
+    "actual":{"source_bytes_read":5041124,"source_files_or_objects_read":42,"command_invocations":36,"elapsed_minutes":14,"records_authored_or_reviewed":65,"browser_interactions":0,"browser_artifacts_captured":0,"asset_candidates_inspected":0},
+    "measurement_note":"The retained proof supplies the exact accounting method and bounded command results. Asset candidate bytes were identity checked, not visually or semantically inspected.",
+    "ceiling_breaches":0
+  },
+  "scope_check": {
+    "authorized_outputs_only":true,
+    "historical_artifacts_edited":false,
+    "worktree_created_or_used":false,
+    "commit_created":false,
+    "forbidden_claims_not_made":["browser","asset suitability or runtime use","mapping","truth-test authorship","review","receipt selection","candidate","acceptance"]
+  },
+  "acceptance":"not-claimed",
+  "marker":"MEASURE_AGENT_RESULT"
+}

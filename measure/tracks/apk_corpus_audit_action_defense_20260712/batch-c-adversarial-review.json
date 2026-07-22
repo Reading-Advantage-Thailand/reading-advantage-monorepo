@@ -1,0 +1,109 @@
+{
+  "schema_version": "apk-batch-independent-review.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "role": "adversarial-reviewer-batch-c",
+  "reviewed_at": "2026-07-22T07:30:58Z",
+  "audited_head_sha": "5f50b72b1ac42c23b567e371ea37285f746810cf",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "status": "fail",
+  "acceptance": "not-claimed",
+  "candidate_authorized": false,
+  "summary": "C0-C3 source, mapping, claim, negative-fixture, and byte-identity contracts re-derived, and the retained v3 screenshots match their recorded hashes. Batch C nevertheless fails independent review because the selected specialist receipts do not prove the strategy-required fresh-context isolation and the v3 non-runnable browser disposition does not bind its pre-provisioned dev server to a deployed revision or retain the required attempted command and server logs. The focused 14-pass selector does not test these obligations. Candidate publication is not authorized.",
+  "exact_inputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-c.md": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-phase-base-binding.json": "b83428a8cb84465b00609833b0be0ad2bb0388eff4ebc2de23fa112bc4715a9c",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-discovery-audit.json": "c7427d6dbd9449e4293470ed13115e98d863bd0cb4b3290cc0b8e60db844d687",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-applicability.json": "a239908b9564ce48acd5b54be5d1d80d81afcd316778bea0f4dad2be89d08fa0",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-budget-declaration.json": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-semantic-supersession-batch-c-v2.json": "9c9227e3b560cf15c35b977b9e23bba4b0fa9a346e0a6fae1308e0a298718613",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-semantic-supersession-batch-c-v2.json": "2f0c23b6aa5a03b814107dbd8325bc1af5d7ce21fa15d6fbfdca87b77345efd4",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v3.json": "da3b663472aa0858ff9fae9d150b5e89f91ac9b750440b3137d04dbfd7940297",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v3.json": "d560221c1101f03cc108a3659eb83d36fd8f9769f311db9c32f12bb5b989245f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit.json": "8c27859b4b5551d4d7de316503f5425f256046520acdcfe897fa0fd1f61442f3",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c.json": "7802f3a45727226f42d65247e3a042a052e1567cad41b4ff7981053983750c97",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v3.py": "5769f9e01bf8d80c5ddb1ace8d64a4623e5303e1854bea409ddfde9c00644185",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-c-v3.json": "9900d281635eb76971b3f052503965352a47d6dc8e034957eeb6d1b7fc3e046d",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-kimi-webbridge-corroboration-20260722.json": "6eb3b8ae7b505f18e3bb25eb3de6a31a7d30930cdb162202e1ab0f3cbee2d413"
+  },
+  "verified_results": {
+    "source_phase_and_browser_role_revisions_are_reachable_commits": true,
+    "focused_c0_c4_gate": "14 passed, 2 deselected",
+    "pre_review_full_gate": "14 passed, 2 failed",
+    "c0_c3_git_object_and_semantic_rederivation": "pass",
+    "asset_candidate_count": 7,
+    "asset_identity_mismatches": 0,
+    "retained_browser_screenshot_count": 2,
+    "retained_browser_screenshot_hash_mismatches": 0,
+    "browser_role_base_to_current_app_source_diff_count": 0,
+    "kimi_wide_corroboration_scope": "Additive current catalog and four-route 404 observation only; no compact, gameplay, responsive, role-isolation, or runtime-revision proof."
+  },
+  "findings": [
+    {
+      "id": "T4C-REV-HIGH-001",
+      "severity": "High",
+      "status": "unresolved",
+      "title": "Selected specialist receipts do not prove required fresh-context isolation",
+      "evidence": "test-strategy-batch-c.md requires every specialist receipt to have fresh-context evidence with fork_turns=none and says a declaration is insufficient without retained raw-export or provider proof. The selected discovery, two collector, two mapper, truth-author, browser-auditor, and asset-auditor receipts all omit that proof: provider identifiers/raw exports/fork metadata are missing, null, or explicitly unavailable. The Paladin mapper receipt has no provider-provenance field at all.",
+      "impact": "Role separation for the selected C0-C4 outputs cannot be independently established. The strategy's stop-loss rule therefore prevents candidate ownership even when source hashes and focused tests are green.",
+      "required_remediation": "Publish provider-attested fresh-context evidence for each selected specialist output, including fork_turns=none for the reviewer-required roles, or re-run the affected roles under a mechanism that retains verifiable provider/raw isolation evidence. Do not use Git chronology as a substitute for source, browser, asset, truth, or fresh-review evidence."
+    },
+    {
+      "id": "T4C-REV-HIGH-002",
+      "severity": "High",
+      "status": "unresolved",
+      "title": "The non-runnable browser disposition is not bound to a deployed revision and lacks the required command/server logs",
+      "evidence": "batch-c-browser-audit-v3.json identifies a pre-provisioned Next dev server and records role_base_sha 6fbf6944... as the disposition revision, but it does not prove that the live server was serving that revision. The server launch command was not retained in the artifact, no immutable build or deployment identity is recorded, and server logs are absent. Read-only process inspection found a mutable `next dev` process rooted in apps/advantage-games. The later Kimi corroboration also used the pre-existing server without a runtime-revision binding and explicitly cannot replace the browser receipt.",
+      "impact": "The browser result cannot meet the strategy's explicit non-runnable requirement for attempted command, environment, route, revision, exact failure, and logs. A mutable dev server observation cannot be safely joined to the frozen source package by a workspace role-base field alone.",
+      "required_remediation": "Repeat the browser audit against an immutable or mechanically revision-bound build/server. Retain the exact launch and navigation commands, runtime/build revision identity, relevant server plus browser console/network logs, compact and wide observations, screenshot bytes/hashes, and a fresh provider-attested browser-role receipt."
+    },
+    {
+      "id": "T4C-REV-MED-001",
+      "severity": "Medium",
+      "status": "unresolved",
+      "title": "The focused C4 truth gate does not enforce the browser obligations it claims",
+      "evidence": "BatchCBrowserContract describes provenance and complete bounded disposition, but it does not assert provider isolation, attempted command, server/build revision binding, server logs, or retained screenshot existence/hash. BatchCReceiptContract also accepts or expects unavailable provider provenance for several selected roles. The focused selector can therefore report 14 passes while T4C-REV-HIGH-001 and T4C-REV-HIGH-002 remain true.",
+      "impact": "The mechanical green C0-C4 result overstates coverage and is insufficient evidence for a passing independent review.",
+      "required_remediation": "Extend the active truth suite to fail on missing specialist isolation proof and on incomplete non-runnable browser command/revision/log/screenshot bindings; re-run focused and full gates after corrected evidence is committed."
+    }
+  ],
+  "unresolved_findings": {
+    "critical": 0,
+    "high": 2,
+    "medium": 1,
+    "low": 0
+  },
+  "lifecycle": {
+    "fresh_review_gate": "red",
+    "candidate_publication": "unauthorized",
+    "product_owner_acceptance": "unauthorized",
+    "accepted_manifest": "unauthorized",
+    "cohort_consumption": "unauthorized"
+  },
+  "commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v3.py -k 'not BatchCIndependentReviewContract and not BatchCAcceptanceContract'",
+      "result": "14 passed, 2 deselected"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v3.py",
+      "result": "14 passed, 2 failed before this review artifact existed; expected C5 review and lifecycle reds"
+    },
+    {
+      "command": "sha256sum /tmp/batch-c-browser-v3-compact-home.png /tmp/batch-c-browser-v3-wide-historical-gryphon.png",
+      "result": "Both retained screenshot hashes match batch-c-browser-audit-v3.json"
+    },
+    {
+      "command": "git diff --name-status 6fbf6944c1c18347de8f45fe52c6802d98fa7f28..HEAD -- apps/advantage-games; git status --short -- apps/advantage-games",
+      "result": "No app-source differences or app worktree changes; this does not identify the mutable dev server's served revision"
+    },
+    {
+      "command": "ps -ef; readlink /proc/567998/cwd",
+      "result": "Port 3117 process was a mutable next dev server rooted at apps/advantage-games"
+    }
+  ],
+  "review_boundary": "This role recorded review findings and bounded acceptance bookkeeping only. It did not change product source, evidence packages, truth tests, browser or asset artifacts, candidate/acceptance artifacts, services/worker, package manifests, lockfiles, goals state, or Git history.",
+  "marker": "MEASURE_AGENT_RESULT"
+}

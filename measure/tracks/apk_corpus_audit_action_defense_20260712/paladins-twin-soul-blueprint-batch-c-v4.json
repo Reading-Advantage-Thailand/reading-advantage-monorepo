@@ -1,0 +1,62 @@
+{
+  "schema": "apk-requirements-blueprint.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "game": "Paladin's Twin-Soul",
+  "normalized_game_id": "paladins-twin-soul",
+  "role": "requirements-mapper-paladins-twin-soul-batch-c",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_paladin_mapper_v4",
+  "role_base_sha": "f7980c787c5023b58eca2a40620aaaf089b26f7d",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "status": "append-only non-authoritative v4 mapping; no source facts created; candidate and acceptance unauthorized",
+  "authoritative_bindings": {
+    "collector_ledger": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-claim-ledger-batch-c-v4.json","sha256":"809e51d319294a3cd4c7e6727a442382b831f4b18b40a900c0a900ebddfa7d8d"},
+    "collector_method": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-evidence-method-batch-c-v4.md","sha256":"bb63566f85846566b339c4e87f8bde9603a393628b984bcb0d6fec0b2145ddae"},
+    "collector_report": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-evidence-final-report-batch-c-v4.json","sha256":"e0813fa36defdd4587c217000d0c19b53c766c5d1438c35a8b49b8d3dec04290"},
+    "collector_proof": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/evidence-collector-paladins-twin-soul-batch-c-v4.json","sha256":"e780f0e155f35bcfa7ca44ef3ec4c6c4b0057a31743adaad68428b7b97f429d0"},
+    "collector_receipt": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-paladins-twin-soul-batch-c-v4.json","sha256":"f275bb85bcf83acc8c4566af25f1ada7c9b8102a9325139238dc19e2fd67f117"},
+    "preserved_semantic_claim_layer": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-semantic-supersession-batch-c-v2.json","sha256":"9c9227e3b560cf15c35b977b9e23bba4b0fa9a346e0a6fae1308e0a298718613"},
+    "denominator_correction": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json","sha256":"6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f"}
+  },
+  "preserved_mapper_bindings": {
+    "blueprint": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-blueprint-batch-c.json","sha256":"3561dd35a940106ea66cf5506f66c4476eea16440dee3def2e4eb78142e28740"},
+    "hypotheses": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-mapper-hypotheses-batch-c.md","sha256":"f7279d93fe1c0ac5685fbeab646ce5142c0e513052de849e382392c0a4205759"},
+    "report": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-mapper-final-report-batch-c.json","sha256":"feb05f8f5a5818c2311cdb5896ac1da6e0c4e1c1313d15016fb60596f1c2bc8e"},
+    "receipt": {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-paladins-twin-soul-batch-c.json","sha256":"07ae106c197ba7b6bbf31ce2d8244c4d1ff1ad84f1ce3c842e46818dfa744194"},
+    "disposition": "Preserved byte-for-byte as historical mapping. The v4 mapping restates only claim-bound content and supersedes its stale denominator dependency."
+  },
+  "denominator_verification": {
+    "counts": {"source_records":8,"asset_candidates":4,"historical_records":11},
+    "inventory_sha256": {"source_records":"f6765b2f126b96eb62acb3377b9c3a2c75af97f68f64c901ea81990488ecddd5","asset_candidates":"1b20c5b56465df79524cbdb8c2c5c54b60d7cefe20eb240ca3e075c3882d38a6","historical_records":"33880e7e08320c7ae9b547c5afc8ab91fb1e301c0ab48b85c5e8d97e5b727b8e"},
+    "git_blob_checks": {"checks":23,"matches":23,"mismatches":0},
+    "mapping_effect": "The corrected denominator adds no factual claim. The 21 preserved semantic claims remain the complete mapping source."
+  },
+  "mapped_requirements": [
+    {"area":"identity and evidence boundary","statement":"Preserve the catalog identity only as baseline identity; treat mapped route, component, logic, API, and test behavior as historical rather than current.","claim_ids":["PTS-C-IDENTITY-001","PTS-C-HISTORY-001","PTS-C-ROUTE-001","PTS-C-API-001","PTS-C-API-002","PTS-C-TEST-001","PTS-C-TEST-002"]},
+    {"area":"historical scene model","statement":"A historical reconstruction may model start, playing, and ended branches with start, animation-loop, terminal, restart, and exit transitions.","claim_ids":["PTS-C-SCENE-COPY-001","PTS-C-SCENE-TRANSITION-001","PTS-C-STATE-001","PTS-C-RESULT-001"]},
+    {"area":"historical simulation","statement":"The historical simulation workstream covers configuration, formation/state initialization, movement, auto-fire, projectile cleanup, collisions, capture and rescue, health, waves, terminal guards, and XP calculation.","claim_ids":["PTS-C-CONFIG-001","PTS-C-STATE-001","PTS-C-COMBAT-001","PTS-C-COMBAT-002","PTS-C-CAPTURE-001","PTS-C-HEALTH-TERMINAL-001","PTS-C-TRANSITION-001","PTS-C-RESULT-001"]},
+    {"area":"historical presentation and controls","statement":"The historical presentation workstream covers the Konva playing surface, HUD and capture or twin-soul markers, and VirtualDPad velocity wiring.","claim_ids":["PTS-C-RENDER-001","PTS-C-SCENE-COPY-001","PTS-C-SCENE-TRANSITION-001"]},
+    {"area":"historical responsive composition","statement":"The historical responsive workstream covers container measurement, scale computation, and retained responsive classes; compact and wide outcomes remain unknown without browser evidence.","claim_ids":["PTS-C-RESPONSIVE-001"]},
+    {"area":"historical integration","statement":"The historical integration workstream covers the locale page's vocabulary and completion requests plus the vocabulary GET and completion POST route wiring.","claim_ids":["PTS-C-ROUTE-001","PTS-C-API-001","PTS-C-API-002"]},
+    {"area":"historical tests","statement":"The historical test reconstruction workstream is limited to the logic-test and mocked component-test scopes recorded by the collector; it is not execution or browser evidence.","claim_ids":["PTS-C-TEST-001","PTS-C-TEST-002"]},
+    {"area":"asset identity boundary","statement":"The two named cover objects remain baseline binary identities only; no visual content, licensing, suitability, role, or runtime-use conclusion is mapped.","claim_ids":["PTS-C-ASSET-001","PTS-C-ASSET-002"]}
+  ],
+  "explicit_unknowns": [
+    {"statement":"Current implementation, route availability, and runnability are unknown to this mapping.","claim_ids":["PTS-C-IDENTITY-001","PTS-C-HISTORY-001","PTS-C-ROUTE-001"]},
+    {"statement":"Real-browser input, compact and wide behavior, console or network behavior, and terminal reachability are unknown to this mapping.","claim_ids":["PTS-C-COMBAT-001","PTS-C-RESPONSIVE-001","PTS-C-SCENE-TRANSITION-001","PTS-C-RENDER-001"]},
+    {"statement":"API authentication, HTTP success, persistence, authorization, and completion success are unknown to this mapping.","claim_ids":["PTS-C-ROUTE-001","PTS-C-API-001","PTS-C-API-002"]},
+    {"statement":"Asset visual content, licensing, suitability, role, and live surface correlation are unknown to this mapping.","claim_ids":["PTS-C-ASSET-001","PTS-C-ASSET-002"]}
+  ],
+  "claim_coverage": {
+    "available": 21,
+    "mapped": 21,
+    "mapped_claim_ids": ["PTS-C-IDENTITY-001","PTS-C-HISTORY-001","PTS-C-STATE-001","PTS-C-CONFIG-001","PTS-C-COMBAT-001","PTS-C-COMBAT-002","PTS-C-HEALTH-TERMINAL-001","PTS-C-CAPTURE-001","PTS-C-TRANSITION-001","PTS-C-RESULT-001","PTS-C-SCENE-COPY-001","PTS-C-SCENE-TRANSITION-001","PTS-C-RESPONSIVE-001","PTS-C-RENDER-001","PTS-C-ROUTE-001","PTS-C-API-001","PTS-C-API-002","PTS-C-TEST-001","PTS-C-TEST-002","PTS-C-ASSET-001","PTS-C-ASSET-002"],
+    "unmapped_claim_ids": [],
+    "negative_fixture_ids_not_promoted": ["PTS-C-FIX-001","PTS-C-FIX-002","PTS-C-FIX-003","PTS-C-FIX-004"]
+  },
+  "scope_boundary": {"new_source_facts":0,"source_collection":false,"browser_audit":false,"asset_audit":false,"truth_test_authorship":false,"review":false,"receipt_selection":false,"candidate_ownership":false,"acceptance":false,"implementation":false,"cross_game_synthesis":false},
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

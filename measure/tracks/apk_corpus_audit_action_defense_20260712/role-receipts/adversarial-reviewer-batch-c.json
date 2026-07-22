@@ -1,0 +1,99 @@
+{
+  "schema_version": "apk-role-receipt.v5",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 3: Batch C evidence packages",
+  "batch_id": "batch-c",
+  "role": "adversarial-reviewer-batch-c",
+  "role_identity": "independent role-isolated adversarial review only",
+  "status": "complete-with-material-findings",
+  "acceptance": "not-claimed",
+  "audited_head_sha": "5f50b72b1ac42c23b567e371ea37285f746810cf",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/t3_closure_audit",
+    "parent_identifier": "/root",
+    "dispatch_mode": "platform-delivered independent child task",
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "limitation": "The platform exposed the canonical child-task and parent identities but did not expose raw fork-turn metadata or a raw isolation export to this role. No fork_turns value or raw-export hash is fabricated. This receipt therefore records the review execution honestly but does not itself cure the selected specialist-receipt defect."
+  },
+  "exact_inputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-c.md": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v3.json": "da3b663472aa0858ff9fae9d150b5e89f91ac9b750440b3137d04dbfd7940297",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v3.json": "d560221c1101f03cc108a3659eb83d36fd8f9769f311db9c32f12bb5b989245f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit.json": "8c27859b4b5551d4d7de316503f5425f256046520acdcfe897fa0fd1f61442f3",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c.json": "7802f3a45727226f42d65247e3a042a052e1567cad41b4ff7981053983750c97",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v3.py": "5769f9e01bf8d80c5ddb1ace8d64a4623e5303e1854bea409ddfde9c00644185",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-c-v3.json": "9900d281635eb76971b3f052503965352a47d6dc8e034957eeb6d1b7fc3e046d",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-kimi-webbridge-corroboration-20260722.json": "6eb3b8ae7b505f18e3bb25eb3de6a31a7d30930cdb162202e1ab0f3cbee2d413",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-adversarial-review.json": "56c81bda853387b55800d4d2f190102c0e95fb65cf978b253887e842ad795204"
+  },
+  "outputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-adversarial-review.json": "56c81bda853387b55800d4d2f190102c0e95fb65cf978b253887e842ad795204",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-c.json": null
+  },
+  "findings": {
+    "unresolved_ids": [
+      "T4C-REV-HIGH-001",
+      "T4C-REV-HIGH-002",
+      "T4C-REV-MED-001"
+    ],
+    "unresolved_counts": {
+      "critical": 0,
+      "high": 2,
+      "medium": 1,
+      "low": 0
+    },
+    "candidate_authorized": false
+  },
+  "resource_budget": {
+    "declaration_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-budget-declaration.json",
+    "declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "role_ceiling": {
+      "source_bytes_read": 20971520,
+      "source_files_or_objects_read": 80,
+      "command_invocations": 50,
+      "elapsed_minutes": 25,
+      "records_authored_or_reviewed": 240,
+      "browser_interactions": 0,
+      "browser_artifacts_captured": 0,
+      "asset_candidates_inspected": 0
+    },
+    "actual": {
+      "source_bytes_read": 5000000,
+      "source_files_or_objects_read": 72,
+      "command_invocations": 41,
+      "elapsed_minutes": 25,
+      "records_authored_or_reviewed": 230,
+      "browser_interactions": 0,
+      "browser_artifacts_captured": 0,
+      "asset_candidates_inspected": 0
+    },
+    "measurement_note": "Conservative bounded counts for this review context only; they include routing/strategy/source-evidence artifacts, selected receipts, current truth contracts, retained screenshot identity checks, process provenance inspection, and the review records authored. No browser interaction or asset-auditor work was performed by this reviewer."
+  },
+  "scope_attestation": {
+    "roles_held": [
+      "adversarial-reviewer-batch-c"
+    ],
+    "forbidden_work_not_performed": [
+      "source claim collection or repair",
+      "requirements mapping or repair",
+      "truth-test authoring or modification",
+      "browser or asset evidence authoring",
+      "candidate publication",
+      "product-owner acceptance",
+      "accepted-manifest publication",
+      "application or service source editing",
+      "committing"
+    ],
+    "candidate_authorized": false,
+    "unresolved_material_findings": true
+  },
+  "commit_sha": null,
+  "commit_disposition": "not-created; parent task prohibited commits",
+  "self_sha256": null,
+  "self_hash_note": "A JSON receipt cannot embed its own stable SHA-256. A later authorized descendant may bind these exact bytes without mutating this receipt.",
+  "marker": "MEASURE_AGENT_RESULT"
+}

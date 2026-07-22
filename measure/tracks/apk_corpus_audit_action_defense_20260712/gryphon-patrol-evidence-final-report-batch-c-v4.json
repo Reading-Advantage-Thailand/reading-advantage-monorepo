@@ -1,0 +1,94 @@
+{
+  "schema": "apk-evidence-final-report.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "game": "Gryphon Patrol",
+  "role": "evidence-collector-gryphon-patrol-batch-c",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_collector_v4",
+  "role_base_sha": "5f50b72b1ac42c23b567e371ea37285f746810cf",
+  "status": "collector-v4-complete-awaiting-other-specialists-and-review",
+  "outputs": {
+    "ledger": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-claim-ledger-batch-c-v4.json",
+      "sha256": "d3e0de2a047d59ba5a128cb3780d1e5f42f04c8ae0361cb04e633ef8f671e4eb"
+    },
+    "method": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-method-batch-c-v4.md",
+      "sha256": "4d4916f88d34d19c067bf796298f922875480409c16d9d5e2491bc743f6a70d0"
+    }
+  },
+  "rederived_denominator": {
+    "selection_rule_result": "exact match",
+    "counts": {
+      "source_records": 14,
+      "asset_candidates": 5,
+      "historical_records": 10
+    },
+    "inventory_sha256": {
+      "source_records": "51dc928d643f3c66308ed67fea57baef15384254a37f319e2223a7bef8c51c9f",
+      "asset_candidates": "1ec212dad65ce85e80bc70f528a0edcedae46aadd26422f865df1433af37f26c",
+      "historical_records": "9df126e08fddd6f3d35dc859415b9fb986de5238cf8c07a017cccd9547f58b02"
+    },
+    "blob_checks": {
+      "source": {
+        "checks": 14,
+        "matches": 14,
+        "mismatches": 0
+      },
+      "asset_candidate_identity_only": {
+        "checks": 5,
+        "matches": 5,
+        "mismatches": 0
+      },
+      "historical": {
+        "checks": 10,
+        "matches": 10,
+        "mismatches": 0
+      },
+      "preserved_semantic_envelopes": {
+        "checks": 11,
+        "matches": 11,
+        "mismatches": 0
+      }
+    },
+    "prior_omissions": {
+      "archive_source_records": "6/6 reconciled",
+      "metadata_asset_candidates": "2/2 reconciled",
+      "src_lib_historical_records": "3/3 reconciled"
+    }
+  },
+  "claim_disposition": {
+    "preserved_claims": 15,
+    "preserved_atomic_propositions": 40,
+    "preserved_claim_layer": "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-semantic-supersession-batch-c-v2.json",
+    "preserved_claim_layer_sha256": "2f0c23b6aa5a03b814107dbd8325bc1af5d7ce21fa15d6fbfdca87b77345efd4",
+    "new_factual_claims": 0,
+    "result": "The v4 ledger supersedes only denominator reconciliation and revalidates the exact source bytes supporting preserved claims."
+  },
+  "historical_artifact_integrity": {
+    "historical_files_edited": 0,
+    "append_only_outputs": true,
+    "commit_created": false,
+    "worktree_created_or_used": false
+  },
+  "explicit_non_claims": [
+    "browser observation or runnability",
+    "asset suitability, licensing, visual content, role, or runtime use",
+    "mapping or developer-effort decomposition",
+    "truth-test authorship or gate selection",
+    "review or acceptance disposition",
+    "receipt selection",
+    "candidate publication or acceptance"
+  ],
+  "lifecycle": {
+    "collector_role_complete": true,
+    "batch_candidate_authorized": false,
+    "acceptance_authorized": false,
+    "fresh_specialists_and_independent_review_remain_required": true
+  },
+  "completed_at_utc": "2026-07-22T09:17:09Z",
+  "completed_at_local": "2026-07-22T16:17:09+07:00",
+  "acceptance": "not-claimed",
+  "marker": "MEASURE_AGENT_RESULT"
+}

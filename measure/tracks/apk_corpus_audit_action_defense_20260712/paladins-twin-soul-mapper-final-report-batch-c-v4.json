@@ -1,0 +1,44 @@
+{
+  "schema": "apk-mapper-final-report.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "game": "Paladin's Twin-Soul",
+  "role": "requirements-mapper-paladins-twin-soul-batch-c",
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_paladin_mapper_v4",
+  "role_base_sha": "f7980c787c5023b58eca2a40620aaaf089b26f7d",
+  "status": "v4 mapper package authored append-only; non-authoritative; acceptance not claimed",
+  "authoritative_inputs": {
+    "collector_ledger_sha256":"809e51d319294a3cd4c7e6727a442382b831f4b18b40a900c0a900ebddfa7d8d",
+    "collector_method_sha256":"bb63566f85846566b339c4e87f8bde9603a393628b984bcb0d6fec0b2145ddae",
+    "collector_report_sha256":"e0813fa36defdd4587c217000d0c19b53c766c5d1438c35a8b49b8d3dec04290",
+    "collector_proof_sha256":"e780f0e155f35bcfa7ca44ef3ec4c6c4b0057a31743adaad68428b7b97f429d0",
+    "collector_receipt_sha256":"f275bb85bcf83acc8c4566af25f1ada7c9b8102a9325139238dc19e2fd67f117",
+    "semantic_claim_layer_sha256":"9c9227e3b560cf15c35b977b9e23bba4b0fa9a346e0a6fae1308e0a298718613",
+    "denominator_correction_sha256":"6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f"
+  },
+  "result": {
+    "denominator_counts":{"source_records":8,"asset_candidates":4,"historical_records":11},
+    "git_blob_hashes":{"checks":23,"matches":23,"mismatches":0},
+    "factual_claims_available":21,
+    "factual_claims_mapped":21,
+    "new_source_facts":0,
+    "unmapped_factual_claim_ids":[],
+    "negative_fixture_ids_not_promoted":["PTS-C-FIX-001","PTS-C-FIX-002","PTS-C-FIX-003","PTS-C-FIX-004"]
+  },
+  "routing_snapshot_disclosure": {
+    "collector_proof_exact_input_drift":["measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md","measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-review-remediation-v4.json"],
+    "disposition":"These are mutable routing and bookkeeping snapshots. Their later byte drift is disclosed and they are not treated as immutable collector evidence or authoritative mapping inputs. The collector outputs, proof, receipt, frozen denominator ledgers, and immutable Git objects were independently verified."
+  },
+  "scope_check": {
+    "collector_claims_only":true,
+    "preserved_mapper_artifacts_edited":false,
+    "worktree_created_or_used":false,
+    "commit_created":false,
+    "forbidden_work_not_performed":["source collection","source fact creation","browser audit","asset audit or suitability","truth-test authorship","review","receipt selection","candidate ownership","acceptance","implementation","plan or registry edit","ontology","cross-game synthesis"]
+  },
+  "lifecycle":{"mapper_role_complete":true,"candidate_authorized":false,"acceptance_authorized":false,"fresh_remaining_roles_and_independent_review_required":true},
+  "verification_result":"pass",
+  "acceptance":"not-claimed",
+  "marker":"MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,70 @@
+{
+  "schema": "apk-role-output-collision.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "role": "asset-auditor-batch-c",
+  "recorded_at": "2026-07-22T10:14:20Z",
+  "status": "invalid-competing-v4-provider-sets-preserved",
+  "acceptance": "not-claimed",
+  "provider_sets": [
+    {
+      "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_asset_auditor_v4",
+      "parent_task": "/root/apk_batch_c_fresh_roles",
+      "fork_turns": "none",
+      "completeness": "audit-only; proof and receipt were not published because their canonical v4 paths were already occupied",
+      "files": [
+        {
+          "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit-v4-fresh.json",
+          "sha256": "4c6ae789cd4936b375aa2ff2c9268fff54586d3241a94ecab04f13dbc46592b4",
+          "bytes": 19123,
+          "mtime_ns": 1784714991029988241,
+          "mtime_utc": "2026-07-22T10:09:51.029988+00:00"
+        }
+      ]
+    },
+    {
+      "provider_identifier": "/root/t4_asset_auditor_terra",
+      "parent_task": "/root",
+      "fork_turns": "none",
+      "completeness": "internally bound audit, proof, and receipt; preserved but not selected after arbitration",
+      "files": [
+        {
+          "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-audit-v4.json",
+          "sha256": "072132dbc86963581e5a7c826e42b3598ffc8a5ea5f80834c9fcc50d90526de3",
+          "bytes": 12591,
+          "mtime_ns": 1784714162728433306,
+          "mtime_utc": "2026-07-22T09:56:02.728433+00:00"
+        },
+        {
+          "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v4.json",
+          "sha256": "299fb74edbccb0d39c9fd8f04abf6c16b94b8e05e677413b55b41694a7117853",
+          "bytes": 9897,
+          "mtime_ns": 1784714749477941291,
+          "mtime_utc": "2026-07-22T10:05:49.477941+00:00"
+        },
+        {
+          "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v4.json",
+          "sha256": "96bd88571dc57ad2d1bea256524a335d6e7f291e573098442496d4f4b3bd1327",
+          "bytes": 5474,
+          "mtime_ns": 1784714764270331029,
+          "mtime_utc": "2026-07-22T10:06:04.270331+00:00"
+        }
+      ]
+    }
+  ],
+  "collision_reason": "Two fresh asset roles published different v4 audit paths concurrently. The designated canonical role could not publish its proof and receipt without overwriting the other provider's existing v4 paths, so it stopped fail-closed.",
+  "arbitration": {
+    "owner": "/root",
+    "decision": "Preserve both v4 asset outputs as append-only collision evidence. Do not overwrite, delete, or select either provider set.",
+    "successor": "Run a genuinely fresh asset auditor with entirely new batch-c-v5 audit, proof, and receipt paths under fork_turns none in the canonical checkout.",
+    "v4_selection_authorized": false,
+    "candidate_authorized": false,
+    "acceptance_authorized": false
+  },
+  "preservation": {
+    "recorded_files_modified_by_this_record": false,
+    "recorded_files_deleted_by_this_record": false,
+    "v4_role_receipt_selected": false
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

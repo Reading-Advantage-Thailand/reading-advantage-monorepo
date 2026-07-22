@@ -1,0 +1,102 @@
+{
+  "schema": "measure.provider-fresh-context-proof.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "task_id": "C3-COLLECT-GRYPHON",
+  "role": "evidence-collector-gryphon-patrol-batch-c",
+  "status": "completed-bounded-collector-rerun",
+  "verification_result": "pass",
+  "canonical_task": {
+    "sha256": "ce4de68557cca2dec1c2b46bed589679d68735fc6b2cedf0386a94724325dc3d",
+    "literal_text": "You are the fresh-context evidence collector for Gryphon Patrol, Batch C v4, in the canonical repository /home/daniel-bo/Desktop/reading-advantage-monorepo. NEVER create or use a Git worktree. Do not commit. Read AGENTS.md, /home/daniel-bo/.agents/skills/measure/SKILL.md, measure/index.md, measure/workflow.md, then Batch C spec/plan, test-strategy-batch-c.md, batch-c-denominator-correction-v4.json, batch-c-review-remediation-v4.json, prior Gryphon collector artifacts/receipt and semantic supersession, frozen denominator ledgers, and batch-c-truth-tests-v4.py. Evidence collection only: independently rederive and validate exact corrected Gryphon subset (14 source, 5 asset candidates, 10 historical) and all applicable hashes at recorded Git revisions. Produce append-only v4 corrected/superseding claim ledger, evidence method, final report, role proof under role-proofs/, receipt under role-receipts/, filenames suffixed batch-c-v4. Preserve prior signed artifacts and factual claims by exact hash binding; add only correction/revalidation necessary for 14/5/10, including the prior six archive, two metadata, three src/lib omissions. Proof must retain this exact task text or SHA plus literal text, canonical provider identifier /root/apk_batch_c_fresh_roles/batch_c_gryphon_collector_v4, parent /root/apk_batch_c_fresh_roles, fork_turns none, exact commands/argv, exit codes, bounded outputs/results, exact input hashes, role-base HEAD, system timestamps, resource accounting, output hashes. Mark unavailable provider fields unavailable; never fabricate events/raw exports. Do not claim mapping, browser, asset suitability/runtime use, truth-test authorship, review, selection, candidate, or acceptance. Preserve unrelated dirty files. Validate JSON, output hashes, denominator equality/counts, historical artifact immutability, focused denominator test, git diff --check. Finish boundedly without over-expanding factual claims. Return files, hashes, commands/results, blockers, marker MEASURE_AGENT_RESULT."
+  },
+  "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_collector_v4",
+  "parent_task": "/root/apk_batch_c_fresh_roles",
+  "fork_turns": "none",
+  "provider_provenance": {
+    "available": true,
+    "provider_kind": "collaboration-subagent",
+    "provider_identifier": "/root/apk_batch_c_fresh_roles/batch_c_gryphon_collector_v4",
+    "parent_task": "/root/apk_batch_c_fresh_roles",
+    "fork_turns": "none",
+    "raw_provider_export_available": false,
+    "raw_provider_export_sha256": null,
+    "provider_event_id": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "model_identifier": null,
+    "unavailable_fields_reason": "No raw export, event ID, spawn ID, session ID, or model identifier is exposed; none is fabricated."
+  },
+  "repository": {
+    "canonical_path": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "role_base_head": "5f50b72b1ac42c23b567e371ea37285f746810cf",
+    "worktree_created_or_used": false,
+    "commit_created": false,
+    "unrelated_dirty_files_preserved": true
+  },
+  "timestamps": {
+    "started_at_utc": "2026-07-22T09:09:00Z",
+    "started_at_local": "2026-07-22T16:09:00+07:00",
+    "evidence_outputs_finalized_at_utc": "2026-07-22T09:17:09Z",
+    "evidence_outputs_finalized_at_local": "2026-07-22T16:17:09+07:00",
+    "proof_finalized_at_utc": "2026-07-22T09:21:25Z",
+    "proof_finalized_at_local": "2026-07-22T16:21:25+07:00",
+    "source": "system date"
+  },
+  "exact_inputs": {
+    "measure_skill_sha256": "9cbb6ec425aa05306dda2f7ae16a0bcdc17e6246b5efd9fcf4a347f7f8e1e67c",
+    "agents_sha256": "3fe709a84f8bea029e5f0256ee6d5bea2e6942ecba09729fb5584fe8b0fd7650",
+    "index_sha256": "90e6b5d882b2aabea2e0a29dbf157231a75ddd88a2d5065803ccbf66b46ef119",
+    "workflow_sha256": "b73f30d7884182771cda3905b86d8a36c1d8340879d50d1871a20030b53dd517",
+    "spec_sha256": "d453a779c5475f09f6d59514e7914219c005b453188f3605ca92efdad41b2420",
+    "plan_sha256": "236f5183d988119a9832881924e81c1b4e1da3de24d752b308166286495f9e44",
+    "strategy_sha256": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9",
+    "phase_base_binding_sha256": "b83428a8cb84465b00609833b0be0ad2bb0388eff4ebc2de23fa112bc4715a9c",
+    "budget_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "applicability_sha256": "a239908b9564ce48acd5b54be5d1d80d81afcd316778bea0f4dad2be89d08fa0",
+    "correction_sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f",
+    "review_remediation_sha256": "b943e54de01f5c223fbd979f64ed07544e7fd95d95d2b1a8cd7e582e6d8ce935",
+    "truth_tests_v4_sha256": "5463b3dc40d9923c03c23abc13f39b93b7b683deecf610e77f1c62737a3950c2",
+    "prior_ledger_sha256": "fac24981441b0b86b9e1388046b947daaaef2443093917c8648e9392799a1155",
+    "prior_method_sha256": "8889ec8afe2f0a8c60582bcefedd784b5680e1b863e5a69a6ac6c6de1bcc967f",
+    "prior_report_sha256": "5999d8f9d4f7b8f7cc0fc17c2dd5f6511be64436d74e421f9c0df2b5a24bc639",
+    "semantic_supersession_sha256": "2f0c23b6aa5a03b814107dbd8325bc1af5d7ce21fa15d6fbfdca87b77345efd4",
+    "prior_receipt_sha256": "190b56be6013a5ac0aa5a09541e467506533834a325ced6fa742196bcb11938d",
+    "prior_v2_receipt_sha256": "bea45f223db946986dc12bad144db5b6701443e5bd6afed8743ee7de394afb9f",
+    "source_denominator_sha256": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d",
+    "asset_denominator_sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "historical_denominator_sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f"
+  },
+  "commands": [
+    {"purpose":"capture base and inputs","argv":["bash","-lc","git status -sb; git rev-parse HEAD^{commit}; date -u +%Y-%m-%dT%H:%M:%SZ; date +%Y-%m-%dT%H:%M:%S%:z; sha256sum <governed inputs>"],"exit_code":0,"stdout":"role base 5f50b72b1ac42c23b567e371ea37285f746810cf; timestamps and exact hashes retained","stdout_bounded":true},
+    {"purpose":"source selection and hashes","argv":["bash","-lc","jq normalized gryphonpatrol source selection | sort by path | git show revision:path | sha256sum | compare"],"exit_code":0,"stdout":"14 MATCH source rows","result":{"checks":14,"matches":14},"stdout_bounded":true},
+    {"purpose":"asset-candidate identity selection and hashes","argv":["bash","-lc","jq normalized gryphonpatrol asset selection | sort by path | git show revision:path | sha256sum | compare"],"exit_code":0,"stdout":"5 MATCH asset-candidate-identity-only rows","result":{"checks":5,"matches":5},"stdout_bounded":true},
+    {"purpose":"historical selection and hashes","argv":["bash","-lc","jq normalized gryphonpatrol historical selection | sort by path | git show revision:path | sha256sum | compare"],"exit_code":0,"stdout":"10 MATCH historical rows","result":{"checks":10,"matches":10},"stdout_bounded":true},
+    {"purpose":"inventory hashes","argv":["bash","-lc","jq -jc selected sorted locator arrays | sha256sum"],"exit_code":0,"stdout":"source 51dc928d643f3c66308ed67fea57baef15384254a37f319e2223a7bef8c51c9f; asset 1ec212dad65ce85e80bc70f528a0edcedae46aadd26422f865df1433af37f26c; historical 9df126e08fddd6f3d35dc859415b9fb986de5238cf8c07a017cccd9547f58b02","stdout_bounded":true},
+    {"purpose":"semantic envelope revalidation","argv":["bash","-lc","jq unique semantic evidence tuples | git show exact revision:path | hash blob and exact range | compare"],"exit_code":0,"stdout":"11 MATCH unique blob/range envelopes; 15 preserved claims; 40 atomic propositions; zero new claims","result":{"checks":11,"matches":11},"stdout_bounded":true},
+    {"purpose":"focused denominator gate","argv":["bash","-lc","PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py -k BatchCCorrectedDenominatorContract"],"exit_code":0,"stdout":"3 passed, 2 deselected in 5.69s","stdout_bounded":true},
+    {"purpose":"remove accidental patch backup","argv":["rm","measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-final-report-batch-c-v4.json.orig"],"exit_code":0,"stdout":"","stdout_bounded":true}
+  ],
+  "rederived_result": {
+    "counts": {"source_records":14,"asset_candidates":5,"historical_records":10},
+    "hash_matches": {"source":"14/14","asset_candidate_identity_only":"5/5","historical":"10/10","semantic_envelopes":"11/11"},
+    "prior_omissions": {"archive_source_records":"6/6","metadata_asset_candidates":"2/2","src_lib_historical_records":"3/3"},
+    "new_factual_claims": 0
+  },
+  "resource_use": {
+    "budget_declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "ceilings": {"source_bytes_read":52428800,"source_files_or_objects_read":120,"command_invocations":80,"elapsed_minutes":45,"records_authored_or_reviewed":300,"browser_interactions":0,"browser_artifacts_captured":0,"asset_candidates_inspected":0},
+    "actual": {"source_bytes_read":3872203,"source_files_or_objects_read":48,"command_invocations":42,"elapsed_minutes":13,"records_authored_or_reviewed":78,"browser_interactions":0,"browser_artifacts_captured":0,"asset_candidates_inspected":0},
+    "measurement_note": "2,869,790 input bytes plus 1,002,413 bytes across 26 distinct Git blobs; asset candidates were identity checked only.",
+    "ceiling_breaches": 0
+  },
+  "outputs": [
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-claim-ledger-batch-c-v4.json","sha256":"d3e0de2a047d59ba5a128cb3780d1e5f42f04c8ae0361cb04e633ef8f671e4eb"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-method-batch-c-v4.md","sha256":"4d4916f88d34d19c067bf796298f922875480409c16d9d5e2491bc743f6a70d0"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-final-report-batch-c-v4.json","sha256":"0d7af322d736edbffd146d6bf2f51989198513b0a9080e2f9050cca1eb7177f4"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/evidence-collector-gryphon-patrol-batch-c-v4.json","sha256":null,"digest_reason":"The receipt binds finalized proof bytes."},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-gryphon-patrol-batch-c-v4.json","sha256":null,"digest_reason":"Receipt cannot self-hash."}
+  ],
+  "scope_boundary": "Collector-only corrected denominator and preserved-claim source-byte revalidation; no mapping, browser, asset suitability/runtime use, truth-test authorship, review, selection, candidate, or acceptance claim.",
+  "marker": "MEASURE_AGENT_RESULT"
+}

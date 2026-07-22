@@ -1,0 +1,30 @@
+{
+  "schema":"apk-role-receipt.v4",
+  "track_id":"apk_corpus_audit_action_defense_20260712",
+  "batch_id":"batch-c",
+  "phase":"Phase 3: Batch C evidence packages",
+  "task_id":"C3-MAP-PALADIN",
+  "role":"requirements-mapper-paladins-twin-soul-batch-c",
+  "status":"fresh-context v4 mapping complete; non-authoritative; batch acceptance not claimed",
+  "verification_result":"pass",
+  "role_base_sha":"f7980c787c5023b58eca2a40620aaaf089b26f7d",
+  "phase_base_sha":"709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision":"23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "provider_provenance":{"available":true,"provider_kind":"collaboration-subagent","provider_identifier":"/root/apk_batch_c_fresh_roles/batch_c_paladin_mapper_v4","parent_task":"/root/apk_batch_c_fresh_roles","fork_turns":"none","canonical_task_sha256":"603fbf85542def3f0126fab73fe5ef8c1d94c32081376d5cea468ad47835165a","raw_provider_export_available":false,"raw_provider_export_sha256":null,"provider_event_id":null,"provider_spawn_id":null,"provider_session_id":null,"model_identifier":null,"unavailable_fields_reason":"No raw provider export, event ID, spawn ID, session ID, or model identifier is exposed; none is fabricated."},
+  "retained_proof":{"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-paladins-twin-soul-batch-c-v4.json","sha256":"7a3691665c7d141ade2188f03804dbbb5dade4f3b4a2f7e2d2d5131b246742dd"},
+  "authoritative_bindings":{"collector_ledger_sha256":"809e51d319294a3cd4c7e6727a442382b831f4b18b40a900c0a900ebddfa7d8d","collector_method_sha256":"bb63566f85846566b339c4e87f8bde9603a393628b984bcb0d6fec0b2145ddae","collector_report_sha256":"e0813fa36defdd4587c217000d0c19b53c766c5d1438c35a8b49b8d3dec04290","collector_proof_sha256":"e780f0e155f35bcfa7ca44ef3ec4c6c4b0057a31743adaad68428b7b97f429d0","collector_receipt_sha256":"f275bb85bcf83acc8c4566af25f1ada7c9b8102a9325139238dc19e2fd67f117","semantic_claim_layer_sha256":"9c9227e3b560cf15c35b977b9e23bba4b0fa9a346e0a6fae1308e0a298718613","denominator_correction_sha256":"6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f"},
+  "rederived_result":{"counts":{"source_records":8,"asset_candidates":4,"historical_records":11},"inventory_hashes_match":true,"git_blob_checks":{"checks":23,"matches":23,"mismatches":0},"claim_coverage":{"available":21,"mapped":21,"unmapped":0},"new_source_facts":0},
+  "routing_snapshot_disclosure":{"drifted_collector_snapshot_inputs":["measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md","measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-review-remediation-v4.json"],"disposition":"Disclosed later bookkeeping drift; these mutable snapshots are not treated as immutable evidence or authoritative mapper inputs."},
+  "outputs":[
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-blueprint-batch-c-v4.json","sha256":"1eaed1852c3de31d8f6b68299ec1ff974869c57eaf6aebeeb5c83eb4a394c3bd"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-mapper-hypotheses-batch-c-v4.md","sha256":"179081fe28155d72e7a7bc65f878d6fcceef9de2388c01808e841538d6caae5c"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-mapper-final-report-batch-c-v4.json","sha256":"493f635229cc51cb09bd41fc352fb59b595dd7caad62893997a4f4bb208e256f"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-paladins-twin-soul-batch-c-v4.json","sha256":"7a3691665c7d141ade2188f03804dbbb5dade4f3b4a2f7e2d2d5131b246742dd"},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-paladins-twin-soul-batch-c-v4.json","sha256":null,"digest_reason":"The receipt cannot self-hash without changing its own bytes."}
+  ],
+  "resource_use":{"budget_declaration_sha256":"2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211","ceilings":{"source_bytes_read":15728640,"source_files_or_objects_read":80,"command_invocations":50,"elapsed_minutes":25,"records_authored_or_reviewed":240,"browser_interactions":0,"browser_artifacts_captured":0,"asset_candidates_inspected":0},"actual":{"source_bytes_read":14500000,"source_files_or_objects_read":50,"command_invocations":24,"elapsed_minutes":8,"records_authored_or_reviewed":70,"browser_interactions":0,"browser_artifacts_captured":0,"asset_candidates_inspected":0},"ceiling_breaches":0},
+  "scope_check":{"authorized_outputs_only":true,"historical_artifacts_edited":false,"worktree_created_or_used":false,"commit_created":false,"forbidden_work_not_performed":["source collection","source fact creation","browser audit","asset audit","truth-test authorship","review","receipt selection","candidate ownership","acceptance","implementation","cross-game synthesis"]},
+  "lifecycle":{"mapper_role_complete":true,"candidate_authorized":false,"acceptance_authorized":false,"fresh_remaining_roles_and_independent_review_required":true},
+  "acceptance":"not-claimed",
+  "marker":"MEASURE_AGENT_RESULT"
+}

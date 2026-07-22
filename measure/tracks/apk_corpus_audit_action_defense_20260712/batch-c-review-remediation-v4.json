@@ -1,0 +1,65 @@
+{
+  "schema": "measure.review-remediation-status.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "prior_review": "batch-c-adversarial-review.json",
+  "status": "denominator-corrected-other-review-findings-remain",
+  "findings": {
+    "T4C-REV-HIGH-001": {
+      "status": "denominator-corrected-specialist-reruns-pending",
+      "completed": [
+        "fresh discovery role dispatched with fork_turns none",
+        "provider canonical task and parent retained",
+        "concrete commands and exact source rederivation retained"
+      ],
+      "blocking_result": "Fresh discovery rederivation found the selected discovery package materially incomplete: existing counts 16 source, 7 asset, and 14 historical versus frozen-ledger counts 22, 9, and 21. The denominator mismatch is now corrected by a superseding append-only layer; the original signed artifacts remain preserved.",
+      "proof_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/discovery-auditor-batch-c-v4.json",
+      "receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/discovery-auditor-batch-c-v4.json",
+      "correction": {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json",
+        "sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f",
+        "corrected_counts": {"source_records": 22, "asset_candidates": 9, "historical_records": 21},
+        "focused_gate": "3 passed, 2 deselected; all 52 selected Git blobs re-hashed against the frozen ledgers"
+      },
+      "corrected_asset_audit": {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit-v4.json",
+        "sha256": "58ac953a1e480ac1e7fe6e0f06c7c5c8eeb17141500670e39e51b376450c4203",
+        "disposition": "Enumeration-only correction; no fresh asset-role, suitability, runtime-use, or visual-inspection claim."
+      },
+      "remaining": "Fresh discovery and the Paladin collector rerun already exist. Dispatch six remaining independent roles against the corrected denominator: Gryphon collector, Paladin mapper, Gryphon mapper, truth-test author, browser auditor, and asset auditor. The truth-test author must publish the eight-role selection after all six receipts/proofs exist; then obtain fresh independent review."
+    },
+    "T4C-REV-HIGH-002": {
+      "status": "attempted-not-complete",
+      "immutable_runtime_revision": "5f50b72b1ac42c23b567e371ea37285f746810cf",
+      "isolated_worktree": "/tmp/apk-batch-c-v4-5f50b72b",
+      "worktree_source_status": "clean",
+      "production_build_result": "failed after compilation on a pre-existing Haunted Library PageProps type error; production success is not claimed",
+      "served_command": "script -q -c '/home/daniel-bo/Desktop/reading-advantage-monorepo/node_modules/.bin/next dev --webpack -H 127.0.0.1 -p 3217' /home/daniel-bo/Desktop/reading-advantage-monorepo/measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v4-server.log",
+      "health_check_command": "curl --fail --silent --show-error --output /dev/null --write-out '%{http_code}\\n' http://127.0.0.1:3217/",
+      "health_check_result": 200,
+      "server_log_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v4-server.log",
+      "server_log_sha256": "aa4e8951411c9e0eaec33479c0f257f4c25e1e428f229d39bf24ee392324cba0",
+      "kimi_health": {"running": true, "extension_connected": true, "daemon_version": "v1.11.1", "extension_version": "1.11.3"},
+      "remaining": "No complete retained compact/wide screenshot, console, network, audit, or role receipt set was produced; browser remediation remains red."
+    },
+    "T4C-REV-MED-001": {
+      "status": "red-strengthened-not-green",
+      "test_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py",
+      "red_record_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4-red.json",
+      "red_result": "2 failed: selected receipt selection absent; immutable browser audit absent",
+      "green_claimed": false,
+      "denominator_contract": {
+        "test_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py",
+        "sha256": "5463b3dc40d9923c03c23abc13f39b93b7b683deecf610e77f1c62737a3950c2",
+        "red_record_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4-red.json",
+        "red_record_sha256": "ddeb30a5dcff3d149cfc14e161decf4330ad4dff280ad439bc7f28fb31990c17",
+        "green_result": "3 passed, 2 deselected"
+      },
+      "remaining": "The full gate must remain red while specialist selection and immutable browser evidence remain absent. The denominator-only contract is green and does not waive those reds."
+    }
+  },
+  "candidate_authorized": false,
+  "acceptance_authorized": false,
+  "fresh_review_required_after_remediation": true,
+  "marker": "MEASURE_AGENT_RESULT"
+}

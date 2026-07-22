@@ -1,0 +1,42 @@
+{
+  "schema": "apk-role-output-collision.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "role": "requirements-mapper-gryphon-patrol-batch-c",
+  "recorded_at": "2026-07-22T10:19:12Z",
+  "status": "invalid-preexisting-v5-references-invalid-v4",
+  "acceptance": "not-claimed",
+  "files": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/requirements-mapper-gryphon-patrol-batch-c-v5.json",
+      "sha256": "52667713e8022db9f5b6e4dc190b274a341e64bd0b5b5502796a54f8d9f40738",
+      "bytes": 8798,
+      "mtime_ns": 1784715031288710252,
+      "mtime_utc": "2026-07-22T10:10:31.288710+00:00",
+      "provider_identifier": "/root/t4_gryphon_mapper_terra",
+      "parent_task": "/root"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c-v5.json",
+      "sha256": "032de5f4aeeb654056b1c39e0e136328dd21225b863dbee81f295e036445a9e0",
+      "bytes": 5447,
+      "mtime_ns": 1784715089274131881,
+      "mtime_utc": "2026-07-22T10:11:29.274132+00:00",
+      "provider_identifier": "/root/t4_gryphon_mapper_terra",
+      "parent_task": "/root"
+    }
+  ],
+  "invalidity": "The v5 receipt references the already-invalid mixed-provider v4 hypotheses and report instead of an entirely new internally coherent v5 blueprint, hypotheses, report, proof, and receipt set.",
+  "arbitration": {
+    "owner": "/root",
+    "decision": "Freeze v5 as invalid and do not select it.",
+    "v5_selection_authorized": false,
+    "candidate_authorized": false,
+    "acceptance_authorized": false
+  },
+  "preservation": {
+    "recorded_files_modified_by_this_record": false,
+    "recorded_files_deleted_by_this_record": false
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,82 @@
+{
+  "schema": "apk-batch-c-asset-usage-audit.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "status": "denominator-enumeration-corrected; fresh asset-auditor suitability and usage review not claimed",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "supersedes": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit.json",
+    "sha256": "8c27859b4b5551d4d7de316503f5425f256046520acdcfe897fa0fd1f61442f3",
+    "scope": "seven-item denominator enumeration only; original seven candidate observations remain preserved as historical evidence"
+  },
+  "inputs": {
+    "denominator_correction": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json",
+      "sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f"
+    },
+    "asset_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+      "sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438"
+    }
+  },
+  "reconciliation": {
+    "accepted_candidate_count": 9,
+    "unique_candidate_path_count": 9,
+    "duplicate_candidate_paths": [],
+    "candidate_paths_sha256": "da95c711e00531ebb329f047f9ed3407af6eaea957c1091644f1bda65ed0d1fe",
+    "candidate_paths": [
+      "apps/advantage-games/measure/archive/gryphon-patrol-20260321/metadata.json",
+      "apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/metadata.json",
+      "apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/metadata.json",
+      "apps/advantage-games/measure/archive/paladins-twin-soul-20260321/metadata.json",
+      "apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/metadata.json",
+      "apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/metadata.json",
+      "apps/advantage-games/public/games/cover/cover-gryphon-patrol.png",
+      "apps/advantage-games/public/games/cover/cover-paladins-twin-soul.png",
+      "apps/advantage-games/public/games/vocabulary/paladins-twin-soul/cover.png"
+    ],
+    "result": "Every normalized Batch C asset candidate in the frozen ledger is enumerated once."
+  },
+  "prior_omissions": [
+    "apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/metadata.json",
+    "apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/metadata.json"
+  ],
+  "newly_enumerated_candidates": [
+    {
+      "candidate_id": "gryphon-dependency-fix-metadata",
+      "game": "Gryphon Patrol",
+      "path": "apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/metadata.json",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "5d70cc9930188a6355eaad342c9fec5d41d998eb0c4383264a435312c65725c2",
+      "byte_size": 361,
+      "actual_class": "JSON object: Measure archived dependency-fix track metadata",
+      "source_usage": "Archive metadata candidate only; application/runtime use was not established or inferred.",
+      "suitability": "not-assessed"
+    },
+    {
+      "candidate_id": "gryphon-rng-injectable-metadata",
+      "game": "Gryphon Patrol",
+      "path": "apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/metadata.json",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "5bd6030ef6798d18c8df1a2646dd20b839fde5132ff290d63c8489031dd5c3aa",
+      "byte_size": 358,
+      "actual_class": "JSON object: Measure archived RNG-injection track metadata",
+      "source_usage": "Archive metadata candidate only; application/runtime use was not established or inferred.",
+      "suitability": "not-assessed"
+    }
+  ],
+  "claims": {
+    "asset_suitability_claimed": false,
+    "runtime_usage_claimed": false,
+    "visual_inspection_claimed": false,
+    "licensing_claimed": false,
+    "fresh_asset_role_completion_claimed": false
+  },
+  "lifecycle": {
+    "fresh_asset_auditor_required": true,
+    "fresh_review_required": true,
+    "candidate_authorized": false,
+    "acceptance_authorized": false
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
