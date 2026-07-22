@@ -1,0 +1,133 @@
+{
+  "schema_version": "apk-retroactive-provenance-supersession.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-b",
+  "status": "owner-authorized additive supersession policy; historical lifecycle remains non-consumable",
+  "audit_baseline": {
+    "stop_loss_commit_sha": "ddf6c56e27cd201513e92f6aa4ea7293e6ae8a08",
+    "audited_pre_policy_head_sha": "365182979cbb9b08a551e70ffae1dbf11e750a04",
+    "t4_path_changes_between_stop_loss_and_pre_policy_head": 0,
+    "scope": "Git commits and exact repository artifacts only"
+  },
+  "historical_chronology": [
+    {
+      "stage": "fresh-review-publication",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-adversarial-review-v11.json",
+      "sha256": "1d82c2de29d59174f643486e2d8b503e6e29582d281bea5887527d826bbddd2e",
+      "commit_sha": "8fa2ac0b8cdfc288eea91bed52596f75cb1fca03",
+      "commit_timestamp": "2026-07-21T20:38:49+07:00"
+    },
+    {
+      "stage": "candidate-publication",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-batch-b.json",
+      "sha256": "4dc4ebeb423dd0114800b58188f691e0c6ba2b368af032b939c7a260b7631824",
+      "commit_sha": "95f388863835638e17f418214e8eb7c4e74f875f",
+      "commit_timestamp": "2026-07-21T20:52:08+07:00"
+    },
+    {
+      "stage": "nominal-owner-acceptance-publication",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-batch-b.json",
+      "sha256": "39d9feff9baf5d6a9ae28cb76e50bd489f368159c7b2d2a784ece111383eff6d",
+      "commit_sha": "0a01bf03d4d4ae2a4018b945954b948811562a79",
+      "commit_timestamp": "2026-07-21T21:08:35+07:00"
+    },
+    {
+      "stage": "nominal-accepted-manifest-publication",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-b.json",
+      "sha256": "aaba39f80639eb180440c928b65d29da7601f7bce9ab2ba993e5b8e865c10c62",
+      "commit_sha": "34880a26edbd1c599d5d52786c4f2dcb76896662",
+      "commit_timestamp": "2026-07-21T21:17:34+07:00"
+    },
+    {
+      "stage": "lifecycle-stop-loss-publication",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-lifecycle-stop-loss-v17.json",
+      "sha256": "3ada8021313823d4272319f56dcb72d607f658afff8cd4cf30164dd00f7120ac",
+      "commit_sha": "ddf6c56e27cd201513e92f6aa4ea7293e6ae8a08",
+      "commit_timestamp": "2026-07-22T06:11:18+07:00"
+    }
+  ],
+  "historical_content_findings": {
+    "git_publication_chronology": "verified",
+    "git_publication_order": "review, candidate, acceptance artifact, accepted manifest, stop-loss",
+    "approval_chronology": "invalid",
+    "approval_chronology_reason": "The acceptance artifact's nominal 2026-07-21T00:00:00Z approval timestamp predates both review and candidate publication even though its Git publication commit follows them.",
+    "approval_event_identity": "unverifiable local label; not accepted as a provider event identifier",
+    "approval_message_binding": "unverifiable because no retained exact original approval message or provider export resolves the recorded digest",
+    "conversation_or_thread_binding": "absent",
+    "accepted_manifest_consumability_claim": "invalidated by T4B17-CRIT-001 and never revived by this audit"
+  },
+  "retroactive_authentication": {
+    "authenticated": [
+      "Exact artifact bytes at their named Git publication commits",
+      "Commit author and committer metadata as recorded by Git",
+      "Commit timestamps as recorded by Git",
+      "Ancestor and direct publication order",
+      "The content defects and omissions visible in the committed artifacts"
+    ],
+    "not_authenticated": [
+      "The human identity behind the historical acceptance artifact",
+      "Any historical provider conversation, thread, session, or message identifier",
+      "The historical local approval_event_id as a provider-generated event",
+      "The historical nominal approval timestamp as evidence that approval followed candidate publication",
+      "Any original conversation text not retained in Git"
+    ],
+    "rule": "Retroactive authentication is limited to Git-verifiable facts. Missing provider or conversation provenance stays missing and may not be reconstructed from labels, hashes, or commit order."
+  },
+  "provenance_limits": {
+    "historical_approval_conversation_id": null,
+    "historical_approval_thread_id": null,
+    "historical_provider_event_id": null,
+    "historical_provider_identity_authenticated": false,
+    "nominal_historical_approval_timestamp_is_chronology_proof": false,
+    "historical_git_publication_order_authenticated": true
+  },
+  "historical_disposition": {
+    "review_sha256": "1d82c2de29d59174f643486e2d8b503e6e29582d281bea5887527d826bbddd2e",
+    "candidate_sha256": "4dc4ebeb423dd0114800b58188f691e0c6ba2b368af032b939c7a260b7631824",
+    "acceptance_sha256": "39d9feff9baf5d6a9ae28cb76e50bd489f368159c7b2d2a784ece111383eff6d",
+    "accepted_manifest_sha256": "aaba39f80639eb180440c928b65d29da7601f7bce9ab2ba993e5b8e865c10c62",
+    "stop_loss_sha256": "3ada8021313823d4272319f56dcb72d607f658afff8cd4cf30164dd00f7120ac",
+    "consumable": false,
+    "revoked": true,
+    "superseded": true,
+    "preservation_rule": "All historical files remain immutable negative and chronology evidence."
+  },
+  "superseding_owner_delegation": {
+    "source": "current in-band project-owner instruction",
+    "exact_message": "User explicitly authorizes orchestrator to audit historical commits and retroactively authenticate. For T4 from ddf6c56e/current HEAD: create auditable additive retroactive provenance audit/supersession policy artifact. Reconcile candidate/review chronology based on Git commit timestamps/content, record delegation and limits honestly, then execute required current gates/fresh independent review/acceptance publication only if valid under superseding owner authority. No fabricated original conversation IDs. Commit work and report.",
+    "message_sha256": "d6b30ac772684fdca289bf8eb100cadd5dbb0a05ace7f74f2847c2ec94d53a5f",
+    "provider_conversation_id": null,
+    "provider_event_id": null,
+    "identity_limit": "No external provider identity export is available in this execution context; authority is the explicit current owner instruction supplied to the orchestrator.",
+    "decision_scope": "prospective-additive-supersession",
+    "delegated_actions": [
+      "Audit and authenticate Git-verifiable historical facts",
+      "Publish this additive supersession policy",
+      "Run current gates at an immutable clean HEAD",
+      "Commission a fresh independent audit against that HEAD",
+      "Publish a new non-consumable candidate only after gates and review pass",
+      "Exercise delegated acceptance authority only after the new candidate exists and remains exact",
+      "Publish a new accepted manifest only after the delegated acceptance decision"
+    ],
+    "not_delegated": [
+      "Fabricating or backfilling any original conversation, thread, provider event, or provider identity",
+      "Mutating historical artifacts",
+      "Treating the current instruction as if it were the historical 2026-07-21 approval event",
+      "Waiving current gates, fresh independent review, disclosures, scope limits, or revocation rules"
+    ]
+  },
+  "additive_supersession_policy": {
+    "required_order": [
+      "Commit this policy and its contract",
+      "Run V16 truth contracts, V17 stop-loss contracts, the V18 policy contract, and required orchestrator guards at one immutable clean HEAD",
+      "Obtain a fresh independent review authored outside the root orchestrator context and bound to that HEAD",
+      "Publish a new non-consumable candidate binding the policy, gate results, and fresh review",
+      "Publish a new delegated-owner acceptance decision binding that exact candidate and review",
+      "Publish a new accepted manifest binding the exact delegated decision"
+    ],
+    "fresh_review_independence": "A new isolated review session must report its real session identifier if exposed; missing provider fields must remain null. The root orchestrator may coordinate and publish but may not author the independent review conclusion.",
+    "acceptance_event_policy": "The superseding acceptance event is the later Git publication commit made by the delegated orchestrator after candidate publication. It binds the current owner instruction hash. It is not represented as a provider conversation event.",
+    "fail_closed": "Any current gate failure, review blocker, hash drift, ordering violation, or authority mismatch leaves T4 Batch B non-consumable under V17."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

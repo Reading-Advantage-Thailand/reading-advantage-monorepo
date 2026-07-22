@@ -23,6 +23,11 @@
     "detail": "The track metadata did not pin the accepted evidence-integrity gate before historical T6 work began. The accepted supervisor therefore rejects preflight with PRODUCT_GATE_PIN_REQUIRED_BEFORE_WORK.",
     "legal_boundary": "Do not add a retroactive first_work_commit or claim that a new descendant commit was the historical first work commit. Any remediation needs an owner-approved additive successor-track or gate migration that preserves the missing original pin as a disclosure."
   },
+  "historical_provenance_audit": {
+    "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/historical-provenance-audit-1597ed88.json",
+    "result": "current authorization authenticates the Git-history linkage only; it does not legitimately supersede PRODUCT_GATE_PIN_REQUIRED_BEFORE_WORK",
+    "candidate_or_acceptance_authorized": false
+  },
   "supersedes_blocker_accounting_only": {
     "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-v2-gate-report.json",
     "producer_readiness_path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-v2-producer-readiness.json",

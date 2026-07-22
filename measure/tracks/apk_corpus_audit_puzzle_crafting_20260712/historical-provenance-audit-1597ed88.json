@@ -1,0 +1,91 @@
+{
+  "schema_version": "apk-historical-provenance-audit.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "audit_subject_commit": "1597ed888f520f9d828a241c5606c958f0574eec",
+  "audit_status": "authenticated-history-insufficient-for-lifecycle",
+  "current_authorization": {
+    "authority": "current delegated owner authority",
+    "authorization": "The current user explicitly authorized retroactive authentication of the specified historical commits for this audit.",
+    "authorization_event_id": null,
+    "authorization_event_id_status": "not supplied; no original or synthetic message identifier is recorded",
+    "scope": "Authenticates the Git-history linkage and permits this additive audit only. It is not a replay of a historical candidate approval or product-owner acceptance."
+  },
+  "accepted_gate": {
+    "version": "phase4-v8-candidate",
+    "commit": "5aea360f94f978ac78e590e0a64d33d176beaa1a",
+    "manifest_path": "measure/evidence-integrity-accepted-gate.json",
+    "is_ancestor_of_batch_a_candidate_parent": true,
+    "is_ancestor_of_batch_b_v2_parent": true
+  },
+  "shared_track_metadata_history": {
+    "metadata_path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/metadata.json",
+    "blob_sha1_at_batch_a_candidate_parent": "a12839d6599cde6856b1f78325b6c53c62b0d44a",
+    "blob_sha1_at_batch_a_candidate": "a12839d6599cde6856b1f78325b6c53c62b0d44a",
+    "blob_sha1_at_batch_b_v2_parent": "a12839d6599cde6856b1f78325b6c53c62b0d44a",
+    "blob_sha1_at_batch_b_v2": "a12839d6599cde6856b1f78325b6c53c62b0d44a",
+    "evidence_integrity_gate_present": false,
+    "first_work_commit_present": false
+  },
+  "batch_a": {
+    "candidate_commit": "97716ad273a324c7d9a112ae701b37f7e9aa3be7",
+    "candidate_blob_sha1": "f64df05b1f87a72c3b61bd21b37d3f7283ada40f",
+    "historical_acceptance_commit": "a4892fbd38c98cac918fd1326dadd74669d4e2db",
+    "historical_acceptance_blob_sha1": "b987d56eff3cbe0adff82ddf8d736f85945909e0",
+    "historical_accepted_manifest_commit": "c1e903380e2b1b6ec74133ee38ebdbd236444d80",
+    "historical_accepted_manifest_blob_sha1": "0cdd7a82c642241d706ca7f0114ebfcf10ec9432",
+    "commit_identity_link": {
+      "author_and_committer": "Daniel Bo <bodangren@gmail.com>",
+      "candidate_timestamp": "2026-07-22T00:22:55+07:00",
+      "acceptance_timestamp": "2026-07-22T00:33:18+07:00",
+      "accepted_manifest_timestamp": "2026-07-22T00:42:22+07:00"
+    },
+    "original_approval_event_id": null,
+    "original_approval_event_id_status": "unavailable and not reconstructed; an identifier asserted by the historical acceptance file is not relied on or repeated by this audit",
+    "current_disposition": "historical candidate, acceptance, and accepted manifest are non-consumable under the current supervisor gate",
+    "blocking_reasons": [
+      "No accepted-gate pin and no first_work_commit existed before the candidate work.",
+      "Current authorization authenticates commit history, not an original ordered product-owner acceptance event."
+    ]
+  },
+  "batch_b_v2": {
+    "producer_publication_commit": "1597ed888f520f9d828a241c5606c958f0574eec",
+    "producer_readiness_blob_sha1": "7fdbb93f8873eb0042cb2ab9f75890c808ceffe2",
+    "commit_identity_link": {
+      "author_and_committer": "Daniel Bo <bodangren@gmail.com>",
+      "timestamp": "2026-07-22T08:51:46+07:00",
+      "parent": "bd39b8e0cffb813f045a3853eb4499f46e96d3ff"
+    },
+    "preflight": {
+      "result": "blocked",
+      "blocker": "PRODUCT_GATE_PIN_REQUIRED_BEFORE_WORK",
+      "legal_result": "not superseded"
+    },
+    "remaining_role_and_review_blockers": [
+      "T6-BB-V2-BLOCK-001: no distinct-role sessions evidenced",
+      "T6-BB-V2-BLOCK-002: no real browser audit conducted",
+      "T6-BB-V2-BLOCK-003: no separately commissioned adversarial review",
+      "T6-BB-V2-BLOCK-004: accepted-gate pin was absent before work"
+    ],
+    "candidate_authorized": false,
+    "candidate_published": false,
+    "accepted_manifest_published": false
+  },
+  "retroactive_pin_determination": {
+    "can_legitimately_supersede_preflight_blocker": false,
+    "reason": "The supervisor requires the exact accepted-gate pin in the parent of first_work_commit. Adding a pin now cannot make it present in either historical parent, and naming a descendant commit as first work would be a false historical assertion.",
+    "formalization": "The preflight blocker remains active. This audit is additive and does not mutate historical artifacts, rewrite Git history, or create a retroactive first_work_commit.",
+    "only_legal_path_forward": "Open an owner-approved successor track or an explicitly approved gate migration that preserves this missing-pin disclosure, treats the historical bytes only as inputs, pins the gate before successor work, and completes fresh distinct-role, browser, adversarial-review, candidate, approval, and accepted-manifest gates."
+  },
+  "lifecycle_outcome": {
+    "candidate_or_acceptance_created_by_this_audit": false,
+    "candidate_or_acceptance_validated_by_this_audit": false,
+    "success_claims": false
+  },
+  "verification_commands": [
+    "git show --no-patch --format=fuller 1597ed88",
+    "git rev-parse 1597ed88^:measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/metadata.json",
+    "git merge-base --is-ancestor 5aea360f94f978ac78e590e0a64d33d176beaa1a 1597ed88^",
+    "python3 -m measure.evidence_integrity_gates.cli supervisor-completion --repo . --track apk_corpus_audit_puzzle_crafting_20260712 --stage preflight"
+  ],
+  "marker": "MEASURE_AGENT_RESULT"
+}
