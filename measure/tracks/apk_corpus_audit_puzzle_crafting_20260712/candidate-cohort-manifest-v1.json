@@ -1,0 +1,12 @@
+{
+  "schema_version": "apk-candidate-cohort-manifest.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "status": "candidate-awaiting-current-owner-acceptance",
+  "candidate_only": true,
+  "consumable": false,
+  "reconciliation": {"path":"cohort-reconciliation-v1.json","commit":"45224fdc71841e09861f1cf56125af6fcfbd0ec7","sha256":"3ffc96b78c14fcb98c016972c704949df7e0cd56d4ec80f3e6146df9a89979fb","assigned_games":6,"covered_games":6,"unresolved_findings":{"critical":0,"high":0,"medium":0}},
+  "accepted_batches": {"batch-a":"accepted-cohort-manifest-batch-a-v3.json with batch-a-historical-lifecycle-supersession-v4.json","batch-b":"accepted-cohort-manifest-batch-b-v3.json"},
+  "authorization_basis": {"source":"current user instruction","authority":"current delegated product-owner","message_id":null},
+  "disclosures": ["This candidate is not an accepted cohort manifest.", "It preserves every batch-level disclosure and conditional-consumption rule.", "No browser or product-behavior unknown is promoted.", "It does not authorize ontology, implementation, or shipping."],
+  "marker": "MEASURE_AGENT_RESULT"
+}
