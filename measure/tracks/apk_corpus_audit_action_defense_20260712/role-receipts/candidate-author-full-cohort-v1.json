@@ -1,0 +1,74 @@
+{
+  "schema": "measure.role-receipt.v4",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-CANDIDATE-V1",
+  "role": "candidate-author-full-cohort",
+  "status": "complete-candidate-only-non-consumable",
+  "acceptance": "not-claimed",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/t4_candidate_author",
+    "parent_task": "/root",
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "auxiliary_git_worktree_created_or_used": false,
+    "commit_created": false,
+    "raw_encrypted_prompt": null,
+    "unavailable_note": "Encrypted prompt and provider event exports are unavailable and not fabricated."
+  },
+  "immutable_bases": {
+    "full_cohort_review_v2_commit": "cb665c902ec96f1192440e0bc9111c98744d94df",
+    "reconciliation_v3_commit": "dc34feec8277988183c79da29e53bdba077a729d"
+  },
+  "candidate": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v1.json",
+    "sha256": "4334aaadb6c19d15ad03bbfdc588f9e26ac65322c7ef615516f57a9ffaa31b97",
+    "status": "candidate-only-non-consumable"
+  },
+  "proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/candidate-author-full-cohort-v1.json",
+    "sha256": "7487c4e3c2d65126773d7a6ed79ff5ff9d56e467b4814dace8245549ccebd46b"
+  },
+  "bound_review": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2.json",
+    "sha256": "89cf0ff23a7afe897ee4b1a6dfa6d77630d08be698a78f6da711d74c80bea774",
+    "proof_sha256": "cd32f636906e43ac35f87e59f0366d288f8645e1b2fde2372395f12bac4e7e23",
+    "receipt_sha256": "b51dc8ba5a56acd0bdb6c8d0128fd1905ed328db96fdeb2655fa369227d07790",
+    "unresolved_critical_high_medium": 0
+  },
+  "bound_reconciliation": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v3.json",
+    "sha256": "866d3926d3145450dbc19e1ff8ec58f3d649e259aa99996c6c3af9f6b34aecab",
+    "roster": "8 exactly once; A3/B3/C2"
+  },
+  "authorization": {
+    "candidate_manifest_published": false,
+    "candidate_only": true,
+    "candidate_consumable": false,
+    "product_owner_acceptance_published": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_publication_authorized": false,
+    "cohort_consumption_authorized": false,
+    "authority_not_exercised": true
+  },
+  "next_required_event": "Root product-owner acceptance after this exact candidate is committed; it must bind the candidate, review, proof, receipt, reconciliation, and all preserved disclosures before any accepted-manifest publication.",
+  "preserved_limits": [
+    "Batch A Castle Defense omission, DISC-001, and 178-of-187 limitation remain retained.",
+    "Batch B synthetic isTrusted=false input, hidden-tab scheduler, HTTP 400 completion, exact-route HTTP 404, asset, and unavailable-provenance limits remain retained.",
+    "Browser v5 remains non-consumable and unselected; Browser v6 helper exits 4 and 28 and helper-originated daemon recovery remain disclosures; exact routes are HTTP 404/non-runnable.",
+    "Asset root-arbiter pending fields remain preserved with a separate independent validation companion; collision-invalid Asset V4 and Gryphon Mapper V5 remain unselectable.",
+    "No gameplay, responsive, completion, persistence, XP, API, asset-loading, asset-suitability, licensing, implementation, or shipping success is claimed."
+  ],
+  "scope_attestation": {
+    "candidate_only": true,
+    "no_tests_run": true,
+    "no_product_owner_acceptance_created_or_modified": true,
+    "no_accepted_manifest_created_or_modified": true,
+    "no_docs_or_registry_modified": true,
+    "no_staging": true,
+    "no_commit": true
+  },
+  "self_sha256": null,
+  "self_hash_note": "A receipt cannot embed its own stable SHA-256."
+}

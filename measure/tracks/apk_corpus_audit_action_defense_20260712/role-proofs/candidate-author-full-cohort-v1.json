@@ -1,0 +1,92 @@
+{
+  "schema": "measure.role-proof.v4",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-CANDIDATE-V1",
+  "role": "candidate-author-full-cohort",
+  "status": "complete-candidate-only-non-consumable",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/t4_candidate_author",
+    "parent_task": "/root",
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "auxiliary_git_worktree_created_or_used": false,
+    "commit_created": false,
+    "raw_encrypted_prompt": null,
+    "unavailable_note": "Encrypted prompt and provider event exports are unavailable; local Git and SHA-256 checks are not provider attestation."
+  },
+  "immutable_inputs": {
+    "full_cohort_review_v2_base_commit": "cb665c902ec96f1192440e0bc9111c98744d94df",
+    "reconciliation_v3_base_commit": "dc34feec8277988183c79da29e53bdba077a729d",
+    "review": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2.json",
+      "sha256": "89cf0ff23a7afe897ee4b1a6dfa6d77630d08be698a78f6da711d74c80bea774"
+    },
+    "review_proof": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v2.json",
+      "sha256": "cd32f636906e43ac35f87e59f0366d288f8645e1b2fde2372395f12bac4e7e23"
+    },
+    "review_receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v2.json",
+      "sha256": "b51dc8ba5a56acd0bdb6c8d0128fd1905ed328db96fdeb2655fa369227d07790"
+    },
+    "reconciliation": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v3.json",
+      "sha256": "866d3926d3145450dbc19e1ff8ec58f3d649e259aa99996c6c3af9f6b34aecab"
+    },
+    "batch_a_accepted": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-a.json",
+      "sha256": "b096d911b7d6bc9fb4d530e695cea10d3816a17158447a89303c2d069cf2a54c"
+    },
+    "batch_b_accepted_v20": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-b-v20.json",
+      "sha256": "3026323c6a6aed61f3fbcb03bacf200a1a610cb2da852606b6e9fe61f90f63d7"
+    },
+    "batch_c_selector_v7": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v7.json",
+      "sha256": "d4c3eb1093970cbe4470bd4da833fced7465b443f85c7d900c79979163a95a17",
+      "selected_roles": 8
+    },
+    "batch_c_review_v7": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-adversarial-review-v7.json",
+      "sha256": "24213a190009dc1a623f8b3a79d240133c1b3f0bf792023cc35cb163bdb5b2e2",
+      "unresolved_critical_high_medium": 0
+    }
+  },
+  "roster_validation": {
+    "entries": 8,
+    "batch_distribution": "A3/B3/C2",
+    "duplicates": 0,
+    "omissions": 0,
+    "exactly_once": true
+  },
+  "output": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v1.json",
+    "sha256": "4334aaadb6c19d15ad03bbfdc588f9e26ac65322c7ef615516f57a9ffaa31b97"
+  },
+  "authorization": {
+    "candidate_manifest_publication_authorized": true,
+    "candidate_only": true,
+    "candidate_consumable": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_publication_authorized": false,
+    "cohort_consumption_authorized": false,
+    "authority_not_exercised": true
+  },
+  "preserved_limits": [
+    "All Batch A, Batch B, and Batch C disclosures in the candidate are carried verbatim in bounded meaning.",
+    "Browser v6 helper exits 4 and 28, daemon-recovery byte-copy semantics, and exact 404/non-runnable routes remain disclosures, not product success.",
+    "The Asset validation companion remains separate from the selected root-arbiter Asset role.",
+    "No gameplay, responsive, completion, persistence, XP, API, asset-loading, asset-suitability, licensing, implementation, or shipping success is claimed."
+  ],
+  "scope_attestation": {
+    "candidate_only": true,
+    "no_tests_run": true,
+    "no_product_owner_acceptance_created_or_modified": true,
+    "no_accepted_manifest_created_or_modified": true,
+    "no_docs_or_registry_modified": true,
+    "no_staging": true,
+    "no_commit": true
+  }
+}
