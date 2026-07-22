@@ -1,0 +1,52 @@
+{
+  "schema_version": "apk-product-owner-acceptance.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "cohort_id": "t4-full-eight-game-cohort",
+  "decision_type": "root-product-owner-acceptance",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "acceptance_role_base_sha": "98ce66623f6b3ba0117ec7d5e475dd40e3ddb6c0",
+  "ordered_after_candidate": true,
+  "candidate": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v1.json",
+    "sha256": "4334aaadb6c19d15ad03bbfdc588f9e26ac65322c7ef615516f57a9ffaa31b97",
+    "publication_commit_sha": "98ce66623f6b3ba0117ec7d5e475dd40e3ddb6c0",
+    "consumable": false
+  },
+  "fresh_independent_review": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2.json",
+    "sha256": "89cf0ff23a7afe897ee4b1a6dfa6d77630d08be698a78f6da711d74c80bea774",
+    "publication_commit_sha": "cb665c902ec96f1192440e0bc9111c98744d94df",
+    "status": "complete-zero-chm-findings-candidate-only",
+    "unresolved_critical_high_medium": 0
+  },
+  "active_reconciliation": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v3.json",
+    "sha256": "866d3926d3145450dbc19e1ff8ec58f3d649e259aa99996c6c3af9f6b34aecab",
+    "publication_commit_sha": "dc34feec8277988183c79da29e53bdba077a729d",
+    "gate_result": "6 tests passed independently once against committed inputs"
+  },
+  "owner_authority": {
+    "owner": "/root",
+    "role": "orchestrator-and-project-owner",
+    "source": "Current user direction assigns project ownership and orchestration authority to root.",
+    "message_id": null,
+    "thread_id": null,
+    "encrypted_prompt_evidence_available": false,
+    "limitation": "The harness does not expose encrypted prompt/message identifiers; immutable Git ordering and the truthful current-role record establish lifecycle chronology without reconstructing an obsolete OpenCode receipt chain."
+  },
+  "accepted_disclosures": [
+    "Batch A retains its accepted limitations, including incomplete claim resolution; no unrecorded success is inferred.",
+    "Village Guardian used synthetic untrusted DOM input and a hidden-tab scheduler adapter; no trusted-native-input or foreground-timing claim is accepted.",
+    "Village Guardian completion requests returned HTTP 400; no completion, persistence, XP, idempotency, or API-correctness claim is accepted.",
+    "Archer's Revenge and Storm the Castle Tower returned HTTP 404 at the reviewed exact routes; their historical source remains historical.",
+    "Paladin's Twin-Soul and Gryphon Patrol are Coming Soon/unlinked in the catalog and returned HTTP 404 at the reviewed exact routes; no gameplay or responsive success is accepted.",
+    "Kimi Browser v6 made five screenshot.sh attempts with exits including 4 and 28; one wide attempt timed out, and the selected PNGs are byte-identical copies from helper-triggered daemon post-process paths. No successful helper file write or direct screenshot API action is claimed.",
+    "The selected Asset v5 receipt retains five pending self-check fields and is accepted only with the committed independent validation successor that recomputed those checks as passing.",
+    "No runtime asset loading, suitability, licensing, production use, ontology, cross-game standardization, implementation, shipping, gameplay, responsive, completion, persistence, XP, or API-correctness conclusion is accepted.",
+    "Browser v5, full-cohort review v1, and reconciliation v2 remain non-consumable historical failure or stop-loss evidence."
+  ],
+  "accepted_manifest_publication_authorized": true,
+  "consumption_authorized_before_accepted_manifest": false,
+  "revocation_rule": "Any bound-byte drift, red active gate, newly unresolved Critical/High/Medium finding, roster drift, or promotion beyond the accepted disclosures revokes this decision and blocks consumption.",
+  "marker": "MEASURE_AGENT_RESULT"
+}
