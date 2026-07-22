@@ -14,8 +14,8 @@
 
 - [x] Task: Verify truth-gate and denominator hashes (T2 accepted manifests are the gate; both pinned above). Evidence: `measure/archive/apk_source_denominator_inventory_20260712/accepted-{denominator,partition}-manifest.json` at HEAD `da51b4e0`.
 - [x] Task: Confirm three pilot cases and reject expansion beyond them. Evidence: partition manifest `T3:pilot` cohort contains exactly the three identities listed above.
-- [x] Task: Spawn distinct collectors (one per game), mapper, truth-test author, browser auditor, asset auditor, and adversarial reviewer; record isolated prompts. Evidence: five role receipts under `role-receipts/` — three evidence-collector (one per game), one requirements-mapper, one truth-test-author, one adversarial-reviewer — all with `fresh-context-only` / `inherited_narrative=false` / `fork_turns=none`.
-- [x] Task: Set time/token/resource ceilings and stop-loss state. Evidence: every role receipt's `budget_declaration_sha256` declares numeric usage; stop-loss counters at 0 in the pilot review.
+- [b] Task: Complete the required isolated role set by adding browser-auditor and asset-auditor evidence; six existing receipt files cover three evidence collectors, the requirements mapper, truth-test author, and adversarial reviewer. (deferred:apk_three_game_truth_pilot_20260712-browser-asset-reconciliation)
+- [x] Task: Set time/token/resource ceilings and stop-loss state. Evidence: All six existing receipts declare numeric resource ceilings and usage; five include a literal `budget_declaration_sha256`, while the Abyssal Well receipt records the canonical hash basis only; stop-loss counters are 0 in the pilot review.
 - [b] Task: Measure - User Manual Verification 'Phase 0' (Protocol in workflow.md) — deferred:product-owner
 
 ## Phase 1: Exact evidence collection
@@ -45,7 +45,7 @@
 
 ## Phase 4: Candidate-level asset truth
 
-- [~] Task: Produce one record per denominator path; identical hashes may share content inspection only — partial: method and stub written, full per-path records deferred (codified in pilot-independent-review.json non-blocking observation)
+- [b] Task: Produce one record per denominator path; identical hashes may share content inspection only — partial method and stub exist, but full per-path records remain required. (deferred:apk_three_game_truth_pilot_20260712-asset-auditor)
 - [b] Task: Record format, dimensions/duration, provenance/license, callers, visible/audible content, states, theme/responsive suitability, and disposition — deferred:asset-auditor
 - [b] Task: Independently review every reusable/adaptable decision and every invalid file — deferred:asset-auditor
 - [b] Task: Measure - User Manual Verification 'Phase 4' (Protocol in workflow.md) — deferred:product-owner

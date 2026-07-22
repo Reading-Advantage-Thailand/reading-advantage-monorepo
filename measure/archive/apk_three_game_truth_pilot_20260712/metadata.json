@@ -1,12 +1,55 @@
 {
+  "actual_tasks": 31,
+  "completion_evidence": {
+    "accepted_pilot_manifest_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "blocking_findings": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0
+    },
+    "candidate_pilot_manifest_sha256": "cd1a2fe12f6b723451a395f286e4a00fe56ae09ead337eddda0d9a71986a9168",
+    "claim_count_by_game": {
+      "abyssal-well": 51,
+      "dragon-flight": 225,
+      "rpg-battle": 215
+    },
+    "claim_count_total": 491,
+    "correlation_id": "t2-t11-pipeline",
+    "decision": "approve-conditional",
+    "role_receipt_file_count": 6,
+    "required_role_receipts_complete": false,
+    "missing_required_role_receipts": [
+      "browser-auditor",
+      "asset-auditor"
+    ],
+    "acceptance_chain_disclosure": "The immutable product-owner acceptance and accepted manifest are conditional and do not supply the missing required browser-auditor or asset-auditor receipts.",
+    "negative_fixtures": 8,
+    "next_allowed_actions": "T4-T7 cohort evidence tracks may begin per program spec",
+    "phase_3_browser_audit": "deferred (gated by environment)",
+    "phase_4_asset_audit": "partial (method written, per-path records deferred)",
+    "product_owner_acceptance_sha256": "3a59c50e9269aed4bf2c49fe9ff3fa9943684580553cdbc6c37eaa34b780a004",
+    "review_disposition": "conditional",
+    "track_head_sha": "2163831ff9e01f501ba54b7ef50bee862e4f8635",
+    "truth_test_result": "41/41 PASS"
+  },
+  "task_state_counts": {
+    "blocked": 14,
+    "completed": 17,
+    "in_progress": 0,
+    "total": 31
+  },
+  "canonical_measure_done": false,
+  "closeout_disposition": "conditional-archive-with-structured-successor-blocks",
+  "created_at": "2026-07-12T00:00:00Z",
+  "depends_on": [
+    "measure_apk_evidence_integrity_gates_20260712",
+    "apk_source_denominator_inventory_20260712"
+  ],
+  "description": "Prove the source-evidence, scene/state, responsive-browser, and candidate-asset audit method on three materially different games before scaling.",
+  "deviation_notes": "Accepted conditionally with 17 completed and 14 structurally blocked top-level tasks; required browser truth, per-path asset truth, and two role receipts remain explicitly successor-owned.",
+  "estimated_tasks": 29,
+  "status": "accepted-conditional",
   "track_id": "apk_three_game_truth_pilot_20260712",
   "type": "chore",
-  "status": "pending",
-  "created_at": "2026-07-12T00:00:00Z",
-  "updated_at": "2026-07-12T00:00:00Z",
-  "description": "Prove the source-evidence, scene/state, responsive-browser, and candidate-asset audit method on three materially different games before scaling.",
-  "estimated_tasks": 29,
-  "actual_tasks": null,
-  "deviation_notes": null,
-  "depends_on": ["measure_apk_evidence_integrity_gates_20260712", "apk_source_denominator_inventory_20260712"]
+  "updated_at": "2026-07-22T00:00:00Z"
 }
