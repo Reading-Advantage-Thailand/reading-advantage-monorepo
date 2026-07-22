@@ -1,0 +1,84 @@
+{
+  "schema": "apk-role-receipt.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "task_id": "C3-BROWSER",
+  "role": "browser-auditor-batch-c",
+  "status": "completed-bounded-non-runnable-disposition",
+  "acceptance": "not-claimed",
+  "supersession": {
+    "committed_revision": "e54d8211eabdfec2ae021f728968459812a244ac",
+    "supersedes_receipt_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v4.json",
+    "supersedes_receipt_sha256": "5816158a28b5b3196834db45dfa0af70effeb6df986b2ad5c6521835dfd626ce",
+    "supersession_scope": "Native collaboration provenance and proof schema only. The committed Kimi audit, screenshots, logs, and bounded browser disposition are preserved unchanged."
+  },
+  "provider_provenance": {
+    "available": true,
+    "availability_scope": "Native collaboration task identity, direct parent task, and fork mode only.",
+    "provider_identifier": "/root/t4_browser_auditor_terra",
+    "provider_kind": "collaboration-subagent",
+    "fork_turns": "none",
+    "parent_task": "/root",
+    "raw_provider_event": null,
+    "raw_provider_event_sha256": null,
+    "encrypted_prompt_event": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "unavailable_note": "The native collaboration identity is available and attested. Raw provider events, encrypted prompt events, spawn IDs, and session exports are not exposed and remain null rather than reconstructed."
+  },
+  "runtime_binding": {
+    "served_revision": "cdb152452a6e404507bb0fd11faa2abfb7f7aa07",
+    "app_source_tree_sha256": "7236aa79e264f338f798ab358466b7888a87dce089fde91f0e94c8d2d6ee45e5",
+    "build_id": "hHtmVVHC9ybJWaTUG6hg7",
+    "server_origin": "http://127.0.0.1:4117",
+    "audit_publication_revision": "e54d8211eabdfec2ae021f728968459812a244ac"
+  },
+  "browser_provenance": {
+    "mechanism": "Kimi WebBridge local daemon via curl only",
+    "session": "apk-t4-batch-c-browser",
+    "group_title": "APK T4 Batch C browser audit",
+    "new_tab_only": true,
+    "borrowed_active_tab": false,
+    "enumerated_unrelated_tabs": false,
+    "session_closed": false,
+    "browser_or_tests_rerun_for_v5": false
+  },
+  "committed_evidence": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v4.json": "3472966cb0c31bfac60a48542f90d7ac76dc3e133a8439028151c64c09cffda3",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v4-server.log": "9be0aa98cbcde61f27efc111d1f73f6fdd6eda13cbe46bc4255d4bf9bcb013af",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v4-console.json": "861c628a989e7c43c3bd5d876f56e66e3c951ab9e28ff01a536c133a24b46212",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v4-network.json": "ad6bc593c9fda520596f5ac5d29459428999661e5fc45b5c581660bb6cb32806",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v4-compact.png": "f1095b659ad4f98aba0195d180ebdc048cd3038d0b45114883f0c2e851fe30b1",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v4-wide.png": "7c1d4390e99dfb417e41f401c7122a14c7f9a5913b1d49fc39685305ab18b5ed",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/browser-auditor-batch-c-v4.json": "dabd1efcd415c21d6a350ea9c4c42f0bf7900d5fabe2b87a0541caaffa725197",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v4.json": "5816158a28b5b3196834db45dfa0af70effeb6df986b2ad5c6521835dfd626ce"
+  },
+  "retained_proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/browser-auditor-batch-c-v5.json",
+    "sha256": "5340d99ae66225260faeb49751983f52345b7b1efa7134520385f9dba62d84c8",
+    "bytes": 11777
+  },
+  "verification": {
+    "result": "pass",
+    "focused_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py -k BatchCImmutableBrowserContract",
+    "focused_exit_code": 0,
+    "focused_stdout": "1 passed, 4 deselected in 0.46s",
+    "verification_source": "Retained result from the original Kimi audit run; not rerun during v5 schema/provenance remediation."
+  },
+  "outputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/browser-auditor-batch-c-v5.json": "5340d99ae66225260faeb49751983f52345b7b1efa7134520385f9dba62d84c8",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v5.json": null
+  },
+  "scope_attestation": {
+    "roles_held": ["browser-auditor-batch-c"],
+    "forbidden_work_not_performed": ["browser or Kimi rerun", "browser-test rerun", "source claim collection", "requirements mapping", "truth-test modification", "asset audit", "adversarial review", "candidate publication", "acceptance", "plan or registry editing", "application-source editing", "staging", "committing"],
+    "no_gameplay_success_claimed": true,
+    "no_responsive_success_claimed": true,
+    "bounded_disposition": "The committed audit remains a bounded non-runnable result: the catalog was visible, and both checked routes returned 404 at compact and wide viewports."
+  },
+  "commit_sha": null,
+  "commit_disposition": "No commit was created because the delegated remediation prohibits staging and committing.",
+  "self_sha256": null,
+  "marker": "MEASURE_AGENT_RESULT"
+}

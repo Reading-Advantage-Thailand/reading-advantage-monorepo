@@ -1,0 +1,78 @@
+{
+  "schema": "apk-role-receipt.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "task_id": "C3-ASSET",
+  "role": "asset-auditor-batch-c",
+  "status": "fresh-context asset auditor completed exact nine-candidate identity/class audit; use and suitability are unresolved and batch acceptance is not claimed",
+  "acceptance": "not-claimed",
+  "role_base_sha": "43b726203d8356c9687014887f0ac2aaf4e0a455",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "supersession": {
+    "supersedes_receipt": {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c.json", "sha256": "7802f3a45727226f42d65247e3a042a052e1567cad41b4ff7981053983750c97"},
+    "supersession_scope": "Fresh-context provider provenance and corrected nine-candidate identity/class reconciliation only. The historical receipt and seven-candidate asset-usage artifact remain unchanged.",
+    "does_not_supersede": ["historical factual claims", "candidate or acceptance authority", "asset use or suitability decisions"]
+  },
+  "provider_provenance": {
+    "available": true,
+    "canonical_task": "/root/t4_asset_auditor_terra",
+    "provider_identifier": "/root/t4_asset_auditor_terra",
+    "provider_kind": "collaboration-subagent",
+    "parent_task": "/root",
+    "fork_turns": "none",
+    "raw_provider_export_available": false,
+    "raw_provider_export_sha256": null,
+    "provider_event_id": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "model_identifier": null,
+    "unavailable_fields_reason": "No raw provider export, event, spawn, session, or model identifier is exposed to this role; none is fabricated."
+  },
+  "retained_proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v4.json",
+    "sha256": "299fb74edbccb0d39c9fd8f04abf6c16b94b8e05e677413b55b41694a7117853"
+  },
+  "bindings": {
+    "strategy_sha256": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9",
+    "phase_base_binding_sha256": "b83428a8cb84465b00609833b0be0ad2bb0388eff4ebc2de23fa112bc4715a9c",
+    "budget_declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "role_applicability_sha256": "a239908b9564ce48acd5b54be5d1d80d81afcd316778bea0f4dad2be89d08fa0",
+    "denominator_correction_sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f",
+    "prior_enumeration_audit_sha256": "58ac953a1e480ac1e7fe6e0f06c7c5c8eeb17141500670e39e51b376450c4203",
+    "asset_denominator_sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "browser_disposition_sha256": "3472966cb0c31bfac60a48542f90d7ac76dc3e133a8439028151c64c09cffda3",
+    "truth_tests_v4_sha256": "5463b3dc40d9923c03c23abc13f39b93b7b683deecf610e77f1c62737a3950c2"
+  },
+  "rederived_result": {
+    "counts": {"asset_candidates": 9, "unique_candidate_paths": 9, "gryphon_patrol": 5, "paladins_twin_soul": 4},
+    "candidate_paths_sha256": "da95c711e00531ebb329f047f9ed3407af6eaea957c1091644f1bda65ed0d1fe",
+    "candidate_blob_checks": {"checks": 9, "matches": 9},
+    "file_class_observations": {"json_text": 6, "jpeg_at_png_path": 1, "png": 1, "ascii_text_at_png_path": 1},
+    "source_usage_or_runtime_use": "not established",
+    "asset_suitability": "not assessed",
+    "verification_result": "pass"
+  },
+  "outputs": [
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-audit-v4.json", "sha256": "072132dbc86963581e5a7c826e42b3598ffc8a5ea5f80834c9fcc50d90526de3"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v4.json", "sha256": "299fb74edbccb0d39c9fd8f04abf6c16b94b8e05e677413b55b41694a7117853"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v4.json", "sha256": null, "digest_reason": "The receipt cannot self-hash without changing its bytes."}
+  ],
+  "resource_use": {
+    "budget_declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "ceilings": {"source_bytes_read": 31457280, "source_files_or_objects_read": 100, "command_invocations": 70, "elapsed_minutes": 40, "records_authored_or_reviewed": 240, "browser_interactions": 40, "browser_artifacts_captured": 40, "asset_candidates_inspected": 240},
+    "actual": {"source_bytes_read": 4000000, "source_files_or_objects_read": 40, "command_invocations": 14, "elapsed_minutes": 36, "records_authored_or_reviewed": 9, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 9},
+    "measurement_note": "Counts include routing/track/ledger reads, exact frozen Git-object identity reads, file-magic classification, and JSON/hash/test validation. Candidate inspection is byte identity and file class only; no visual or live use observation occurred.",
+    "ceiling_breaches": 0
+  },
+  "scope_check": {
+    "authorized_outputs_only": true,
+    "historical_artifacts_edited": false,
+    "worktree_created_or_used": false,
+    "staged": false,
+    "commit_created": false,
+    "forbidden_claims_not_made": ["asset suitability", "licensing", "runtime usage", "source usage", "browser asset loading", "candidate", "acceptance", "accepted manifest"]
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

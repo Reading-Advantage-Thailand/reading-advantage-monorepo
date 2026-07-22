@@ -1,0 +1,124 @@
+{
+  "schema": "measure.provider-fresh-context-proof.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "task_id": "C3-ASSET",
+  "role": "asset-auditor-batch-c",
+  "status": "completed fresh-context nine-candidate identity and file-class audit; usage and suitability conclusions are explicitly unresolved",
+  "verification_result": "pass",
+  "canonical_task": "/root/t4_asset_auditor_terra",
+  "provider_identifier": "/root/t4_asset_auditor_terra",
+  "fork_turns": "none",
+  "parent_task": "/root",
+  "provider_provenance": {
+    "provider_identifier": "/root/t4_asset_auditor_terra",
+    "provider_kind": "collaboration-subagent",
+    "fork_turns": "none",
+    "parent_task": "/root",
+    "fresh_context_assertion": "The delegated task supplied only the bounded Batch C asset-auditor assignment and required fresh-context provenance. The audit independently re-derived the corrected frozen-ledger asset inventory; it did not rely on a prior asset-auditor conclusion as evidence.",
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "unavailable_fields_reason": "Raw provider export, event, spawn, session, and model identifiers are not exposed to this role and are not fabricated."
+  },
+  "scope": {
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "selection_rule": "Lowercase frozen-ledger canonical_path, remove non-alphanumeric characters, retain paladinstwinsoul or gryphonpatrol, and sort by exact path.",
+    "authorized_work": "Re-derive the corrected nine-candidate inventory; verify frozen blob identity; classify bytes without visual inspection; retain explicit unknown usage/state/surface/variant fields.",
+    "forbidden_work_not_performed": [
+      "asset suitability decision",
+      "licensing decision",
+      "runtime or source-use assertion",
+      "live browser asset-load assertion",
+      "collector, mapper, truth-test, browser-audit, or review work",
+      "candidate, acceptance, accepted-manifest, plan, metadata, or registry authorship",
+      "worktree creation or use",
+      "staging or committing"
+    ]
+  },
+  "exact_inputs": [
+    {"path": "measure/index.md", "sha256": "90e6b5d882b2aabea2e0a29dbf157231a75ddd88a2d5065803ccbf66b46ef119", "bytes": 1009},
+    {"path": "measure/workflow.md", "sha256": "b73f30d7884182771cda3905b86d8a36c1d8340879d50d1871a20030b53dd517", "bytes": 16401},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/spec.md", "sha256": "d453a779c5475f09f6d59514e7914219c005b453188f3605ca92efdad41b2420", "bytes": 1497},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/plan.md", "sha256": "bb7df134c2a4c7f86a3a9a1162240deeda2b08aebbf69d64797ca889f9644d50", "bytes": 3899},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-c.md", "sha256": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9", "bytes": 11244},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json", "sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f", "bytes": 14888},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit-v4.json", "sha256": "58ac953a1e480ac1e7fe6e0f06c7c5c8eeb17141500670e39e51b376450c4203", "bytes": 4207},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v4.json", "sha256": "3472966cb0c31bfac60a48542f90d7ac76dc3e133a8439028151c64c09cffda3", "bytes": 6497},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py", "sha256": "5463b3dc40d9923c03c23abc13f39b93b7b683deecf610e77f1c62737a3950c2", "bytes": 15310},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-applicability.json", "sha256": "a239908b9564ce48acd5b54be5d1d80d81afcd316778bea0f4dad2be89d08fa0", "bytes": 10610},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-budget-declaration.json", "sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211", "bytes": 5332},
+    {"path": "measure/archive/apk_source_denominator_inventory_20260712/asset-file-denominator.json", "sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438", "bytes": 324944},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-audit-v4.json", "sha256": "072132dbc86963581e5a7c826e42b3598ffc8a5ea5f80834c9fcc50d90526de3", "bytes": 12591}
+  ],
+  "commands": [
+    {
+      "purpose": "verify immutable source revision",
+      "argv": ["git", "rev-parse", "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286^{commit}"],
+      "command": "git rev-parse '23bb5ad578c01fb29f9e8bb76a7d934d24a4b286^{commit}'",
+      "exit_code": 0,
+      "stdout": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+    },
+    {
+      "purpose": "hash every exact local audit input and record byte sizes",
+      "argv": ["sha256sum", "<the 12 routing/track/ledger inputs listed above>"],
+      "command": "sha256sum <listed input paths> && stat -c '%s %n' <listed input paths>",
+      "exit_code": 0,
+      "stdout": "Every pre-output exact_inputs SHA-256 and byte-size pair equals the retained values; denominator correction constraints evaluated to true."
+    },
+    {
+      "purpose": "rederive all selected frozen asset blobs",
+      "argv": ["bash", "-lc", "jq normalized candidate selection | sort | while read revision path expected; do git show revision:path | sha256sum; compare expected; done"],
+      "command": "jq -r normalized candidate selection over asset-file-denominator.json | sort | while read revision path expected; do actual=$(git show \"$revision:$path\" | sha256sum | cut -d' ' -f1); compare actual to expected; done",
+      "exit_code": 0,
+      "stdout": "9 MATCH rows; each exact path, expected SHA-256, and rederived SHA-256 is retained in batch-c-asset-audit-v4.json.",
+      "result": {"candidate_blob_checks": 9, "candidate_blob_matches": 9}
+    },
+    {
+      "purpose": "derive deterministic nine-path inventory digest",
+      "argv": ["jq", "normalized selected candidate canonical_path array", "sha256sum"],
+      "command": "jq -jc '[selected candidate canonical_path] | sort' asset-file-denominator.json | sha256sum",
+      "exit_code": 0,
+      "stdout": "da95c711e00531ebb329f047f9ed3407af6eaea957c1091644f1bda65ed0d1fe  -"
+    },
+    {
+      "purpose": "classify exact candidate bytes without a visual inspection",
+      "argv": ["git", "show", "<baseline:path>", "file", "-b"],
+      "command": "For each selected path: git show 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:<path> | file -b -",
+      "exit_code": 0,
+      "stdout": "Six JSON text objects; cover-gryphon-patrol.png is JPEG 1024x1024 at a .png path; cover-paladins-twin-soul.png is PNG 1024x1024; vocabulary/paladins-twin-soul/cover.png is ASCII text at a .png path.",
+      "result": "File magic/class only; no visual, suitability, or use conclusion."
+    },
+    {
+      "purpose": "validate authored audit constraints and the focused corrected-denominator truth contract",
+      "argv": ["python3", "-m", "json.tool", "batch-c-asset-audit-v4.json", "pytest"],
+      "command": "python3 -m json.tool batch-c-asset-audit-v4.json >/dev/null && jq -e nine unique paths plus false claim/lifecycle fields batch-c-asset-audit-v4.json && PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q batch-c-truth-tests-v4.py -k BatchCCorrectedDenominatorContract",
+      "exit_code": 0,
+      "stdout": "JSON valid; constraint jq result true; 3 passed, 2 deselected in 1.71s."
+    }
+  ],
+  "rederived_result": {
+    "candidate_count": 9,
+    "unique_candidate_path_count": 9,
+    "candidate_paths_sha256": "da95c711e00531ebb329f047f9ed3407af6eaea957c1091644f1bda65ed0d1fe",
+    "per_game_counts": {"gryphon-patrol": 5, "paladins-twin-soul": 4},
+    "candidate_blob_checks": {"checks": 9, "matches": 9},
+    "file_class_observations": {"json_text": 6, "jpeg_at_png_path": 1, "png": 1, "ascii_text_at_png_path": 1},
+    "usage_or_suitability_findings": "not established by this bounded audit",
+    "verification_result": "pass"
+  },
+  "resource_use": {
+    "budget_declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "ceilings": {"source_bytes_read": 31457280, "source_files_or_objects_read": 100, "command_invocations": 70, "elapsed_minutes": 40, "records_authored_or_reviewed": 240, "browser_interactions": 40, "browser_artifacts_captured": 40, "asset_candidates_inspected": 240},
+    "actual": {"source_bytes_read": 4000000, "source_files_or_objects_read": 40, "command_invocations": 12, "elapsed_minutes": 33, "records_authored_or_reviewed": 9, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 9},
+    "measurement_note": "The conservative source-byte total covers retained routing/track/ledger inputs and exact frozen object reads. Candidate inspection means byte-identity and file-magic classification only; no visual inspection or runtime observation occurred.",
+    "ceiling_breaches": 0
+  },
+  "outputs": [
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-audit-v4.json", "sha256": "072132dbc86963581e5a7c826e42b3598ffc8a5ea5f80834c9fcc50d90526de3"},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v4.json", "sha256": null, "digest_reason": "Bound by the receipt after this proof is finalized."},
+    {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v4.json", "sha256": null, "digest_reason": "A receipt cannot self-hash without changing its own bytes."}
+  ],
+  "commit_sha": null,
+  "commit_disposition": "No commit was created because the delegated task prohibited staging and committing.",
+  "marker": "MEASURE_AGENT_RESULT"
+}

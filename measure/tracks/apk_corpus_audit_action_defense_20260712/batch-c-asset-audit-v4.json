@@ -1,0 +1,193 @@
+{
+  "schema": "apk-batch-c-fresh-asset-audit.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "task_id": "C3-ASSET",
+  "role": "asset-auditor-batch-c",
+  "status": "fresh-context nine-candidate identity and file-class audit complete; source usage and suitability remain unknown",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "selection_rule": "From asset-file-denominator.json, lowercase each canonical_path, remove non-alphanumeric characters, retain paths containing paladinstwinsoul or gryphonpatrol, then sort by exact canonical_path.",
+  "inputs": {
+    "denominator_correction": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json",
+      "sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f"
+    },
+    "prior_enumeration_only_audit": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit-v4.json",
+      "sha256": "58ac953a1e480ac1e7fe6e0f06c7c5c8eeb17141500670e39e51b376450c4203",
+      "disposition": "Retained as the denominator-enumeration correction. This fresh audit does not treat its no-fresh-role status as fresh asset-use evidence."
+    },
+    "asset_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+      "sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438"
+    },
+    "browser_disposition": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v4.json",
+      "sha256": "3472966cb0c31bfac60a48542f90d7ac76dc3e133a8439028151c64c09cffda3",
+      "disposition": "The retained browser artifact is a bounded non-runnable disposition. It is not used to claim an asset load, route use, scene, state, or visual observation."
+    }
+  },
+  "rederived_inventory": {
+    "candidate_count": 9,
+    "unique_candidate_path_count": 9,
+    "candidate_paths_sha256": "da95c711e00531ebb329f047f9ed3407af6eaea957c1091644f1bda65ed0d1fe",
+    "per_game_counts": {
+      "gryphon-patrol": 5,
+      "paladins-twin-soul": 4
+    },
+    "prior_omission_paths": [
+      "apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/metadata.json",
+      "apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/metadata.json"
+    ],
+    "records": [
+      {
+        "game": "Gryphon Patrol",
+        "path": "apps/advantage-games/measure/archive/gryphon-patrol-20260321/metadata.json",
+        "source_anchor": "asset-file-denominator.json candidate_files canonical_path at source_baseline_revision",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "ledger_sha256": "b682c99454ddd44ae9e8171888f44767fbb02f2e6e47f0c4581aa212559ca908",
+        "rederived_blob_sha256": "b682c99454ddd44ae9e8171888f44767fbb02f2e6e47f0c4581aa212559ca908",
+        "byte_size": 272,
+        "file_class": "JSON text data; archived Measure track metadata",
+        "named_state_or_surface": "unknown; no state or surface was established by the bounded identity/class audit",
+        "variant_or_conflict": "unknown; no visual or semantic variant assessment performed",
+        "runtime_or_source_usage": "not established; a path/name or byte identity does not prove use",
+        "live_corroboration": "not attempted; no runnable game surface was established by this audit"
+      },
+      {
+        "game": "Gryphon Patrol",
+        "path": "apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/metadata.json",
+        "source_anchor": "asset-file-denominator.json candidate_files canonical_path at source_baseline_revision; corrected prior omission",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "ledger_sha256": "5d70cc9930188a6355eaad342c9fec5d41d998eb0c4383264a435312c65725c2",
+        "rederived_blob_sha256": "5d70cc9930188a6355eaad342c9fec5d41d998eb0c4383264a435312c65725c2",
+        "byte_size": 361,
+        "file_class": "JSON text data; archived Measure dependency-fix track metadata",
+        "named_state_or_surface": "unknown; no state or surface was established by the bounded identity/class audit",
+        "variant_or_conflict": "unknown; no visual or semantic variant assessment performed",
+        "runtime_or_source_usage": "not established; archive metadata candidate only",
+        "live_corroboration": "not attempted; no runnable game surface was established by this audit"
+      },
+      {
+        "game": "Gryphon Patrol",
+        "path": "apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/metadata.json",
+        "source_anchor": "asset-file-denominator.json candidate_files canonical_path at source_baseline_revision; corrected prior omission",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "ledger_sha256": "5bd6030ef6798d18c8df1a2646dd20b839fde5132ff290d63c8489031dd5c3aa",
+        "rederived_blob_sha256": "5bd6030ef6798d18c8df1a2646dd20b839fde5132ff290d63c8489031dd5c3aa",
+        "byte_size": 358,
+        "file_class": "JSON text data; archived Measure RNG-injection track metadata",
+        "named_state_or_surface": "unknown; no state or surface was established by the bounded identity/class audit",
+        "variant_or_conflict": "unknown; no visual or semantic variant assessment performed",
+        "runtime_or_source_usage": "not established; archive metadata candidate only",
+        "live_corroboration": "not attempted; no runnable game surface was established by this audit"
+      },
+      {
+        "game": "Paladin's Twin-Soul",
+        "path": "apps/advantage-games/measure/archive/paladins-twin-soul-20260321/metadata.json",
+        "source_anchor": "asset-file-denominator.json candidate_files canonical_path at source_baseline_revision",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "ledger_sha256": "9f8c13f96fe90c9d47d9b5fe5c65b0628a4bbcf0ad4a2299140ebbab4d624c49",
+        "rederived_blob_sha256": "9f8c13f96fe90c9d47d9b5fe5c65b0628a4bbcf0ad4a2299140ebbab4d624c49",
+        "byte_size": 267,
+        "file_class": "JSON text data; archived Measure track metadata",
+        "named_state_or_surface": "unknown; no state or surface was established by the bounded identity/class audit",
+        "variant_or_conflict": "unknown; no visual or semantic variant assessment performed",
+        "runtime_or_source_usage": "not established; archive metadata candidate only",
+        "live_corroboration": "not attempted; no runnable game surface was established by this audit"
+      },
+      {
+        "game": "Gryphon Patrol",
+        "path": "apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/metadata.json",
+        "source_anchor": "asset-file-denominator.json candidate_files canonical_path at source_baseline_revision",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "ledger_sha256": "2ed50adfd2625e02c0bdf0ecea836ba01c22fb7e1281e5c5bf6e1cb149f6644c",
+        "rederived_blob_sha256": "2ed50adfd2625e02c0bdf0ecea836ba01c22fb7e1281e5c5bf6e1cb149f6644c",
+        "byte_size": 346,
+        "file_class": "JSON text data; Measure compliance-audit track metadata",
+        "named_state_or_surface": "unknown; no state or surface was established by the bounded identity/class audit",
+        "variant_or_conflict": "unknown; no visual or semantic variant assessment performed",
+        "runtime_or_source_usage": "not established; track metadata candidate only",
+        "live_corroboration": "not attempted; no runnable game surface was established by this audit"
+      },
+      {
+        "game": "Paladin's Twin-Soul",
+        "path": "apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/metadata.json",
+        "source_anchor": "asset-file-denominator.json candidate_files canonical_path at source_baseline_revision",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "ledger_sha256": "2383a3b212ed48f803df643d6525e7b2fad76bb5772507e3550da9fda40fc19e",
+        "rederived_blob_sha256": "2383a3b212ed48f803df643d6525e7b2fad76bb5772507e3550da9fda40fc19e",
+        "byte_size": 358,
+        "file_class": "JSON text data; Measure compliance-audit track metadata",
+        "named_state_or_surface": "unknown; no state or surface was established by the bounded identity/class audit",
+        "variant_or_conflict": "unknown; no visual or semantic variant assessment performed",
+        "runtime_or_source_usage": "not established; track metadata candidate only",
+        "live_corroboration": "not attempted; no runnable game surface was established by this audit"
+      },
+      {
+        "game": "Gryphon Patrol",
+        "path": "apps/advantage-games/public/games/cover/cover-gryphon-patrol.png",
+        "source_anchor": "asset-file-denominator.json candidate_files canonical_path at source_baseline_revision",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "ledger_sha256": "abc46e828c209b27597d4e3f9d6cf76b0f5b7bf1490e88e045e37f383b74b27b",
+        "rederived_blob_sha256": "abc46e828c209b27597d4e3f9d6cf76b0f5b7bf1490e88e045e37f383b74b27b",
+        "byte_size": 919082,
+        "file_class": "JPEG image data, JFIF, 1024x1024, stored at a .png path",
+        "named_state_or_surface": "unknown; filename and path do not prove a rendered surface",
+        "variant_or_conflict": "file-extension/content-type mismatch observed; visual variant not assessed",
+        "runtime_or_source_usage": "not established; no source or live load assertion made",
+        "live_corroboration": "not attempted; no runnable game surface was established by this audit"
+      },
+      {
+        "game": "Paladin's Twin-Soul",
+        "path": "apps/advantage-games/public/games/cover/cover-paladins-twin-soul.png",
+        "source_anchor": "asset-file-denominator.json candidate_files canonical_path at source_baseline_revision",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "ledger_sha256": "6124a087e9270ff30afe3df8a5b739adcc326fd05aeec93613e00d94a4ad8896",
+        "rederived_blob_sha256": "6124a087e9270ff30afe3df8a5b739adcc326fd05aeec93613e00d94a4ad8896",
+        "byte_size": 2108333,
+        "file_class": "PNG image data, 1024x1024 RGB",
+        "named_state_or_surface": "unknown; filename and path do not prove a rendered surface",
+        "variant_or_conflict": "visual variant not assessed",
+        "runtime_or_source_usage": "not established; no source or live load assertion made",
+        "live_corroboration": "not attempted; no runnable game surface was established by this audit"
+      },
+      {
+        "game": "Paladin's Twin-Soul",
+        "path": "apps/advantage-games/public/games/vocabulary/paladins-twin-soul/cover.png",
+        "source_anchor": "asset-file-denominator.json candidate_files canonical_path at source_baseline_revision",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "ledger_sha256": "25baa769bbe00900e81d22b0150ca99127c7a6ae373357be704e983da5cd4079",
+        "rederived_blob_sha256": "25baa769bbe00900e81d22b0150ca99127c7a6ae373357be704e983da5cd4079",
+        "byte_size": 87,
+        "file_class": "ASCII text with no line terminator, stored at a .png path",
+        "named_state_or_surface": "unknown; filename and path do not prove a rendered surface",
+        "variant_or_conflict": "file-extension/content-type mismatch observed; visual variant not assessed",
+        "runtime_or_source_usage": "not established; no source or live load assertion made",
+        "live_corroboration": "not attempted; no runnable game surface was established by this audit"
+      }
+    ]
+  },
+  "hash_verification": {
+    "candidate_blob_checks": 9,
+    "candidate_blob_matches": 9,
+    "deterministic_inventory_hash_matches_correction": true,
+    "method": "For every selected candidate, hash bytes emitted by git show <source_baseline_revision>:<path> and compare to the frozen ledger SHA-256. File class is from file -b over those exact bytes."
+  },
+  "claims": {
+    "asset_suitability_claimed": false,
+    "runtime_usage_claimed": false,
+    "source_usage_claimed": false,
+    "visual_inspection_claimed": false,
+    "licensing_claimed": false,
+    "browser_asset_loading_claimed": false,
+    "candidate_or_acceptance_authority_claimed": false
+  },
+  "lifecycle": {
+    "fresh_adversarial_review_required": true,
+    "candidate_authorized": false,
+    "acceptance_authorized": false,
+    "accepted_manifest_authorized": false
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
