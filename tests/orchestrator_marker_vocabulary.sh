@@ -17,6 +17,18 @@ track_dir_resolve() {
 
 status=0
 
+track_id=""
+if [ "${1:-}" = "--track" ]; then
+  track_id="${2:-}"
+  if [ -z "$track_id" ] || [ "$#" -ne 2 ]; then
+    printf 'Usage: %s [--track <track-id>]\n' "$0" >&2
+    exit 2
+  fi
+elif [ "$#" -ne 0 ]; then
+  printf 'Usage: %s [--track <track-id>]\n' "$0" >&2
+  exit 2
+fi
+
 # A8 guard: NO plan.md under measure/tracks/ (active) may use the deprecated
 # `[ ]` (space) marker. The supervisor regex `^- \[([~xb])\]` intentionally
 # ignores `[ ]`, so a stale `[ ]` task is invisible to the supervisor (silently
@@ -25,12 +37,17 @@ status=0
 # This guard must cover EVERY active track, not just review tracks, or product
 # tracks regress silently. Archived plans (measure/archive/) are frozen
 # historical snapshots and are intentionally excluded.
-shopt -s nullglob
-plans=( measure/tracks/*/plan.md )
-shopt -u nullglob
+if [ -n "$track_id" ]; then
+  track_dir="$(track_dir_resolve "$track_id")"
+  plans=( "$track_dir/plan.md" )
+else
+  shopt -s nullglob
+  plans=( measure/tracks/*/plan.md )
+  shopt -u nullglob
+fi
 
-if [ "${#plans[@]}" -eq 0 ]; then
-  printf 'FAIL: no plan.md files found under measure/tracks\n' >&2
+if [ "${#plans[@]}" -eq 0 ] || [ ! -f "${plans[0]}" ]; then
+  printf 'FAIL: no plan.md found for requested scope\n' >&2
   exit 1
 fi
 
