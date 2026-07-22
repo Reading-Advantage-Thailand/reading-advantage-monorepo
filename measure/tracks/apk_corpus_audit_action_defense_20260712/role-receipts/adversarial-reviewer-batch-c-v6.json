@@ -1,0 +1,93 @@
+{
+  "schema": "apk-role-receipt.v6",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 3: Batch C evidence packages",
+  "batch_id": "batch-c",
+  "task_id": "C3-REVIEW-V6",
+  "role": "adversarial-reviewer-batch-c",
+  "role_identity": "/root/t4_successor_reviewer_terra",
+  "status": "complete-no-material-findings",
+  "acceptance": "not-claimed",
+  "evidence_base_commit": "e0f169f0e31cf951cbfce36f02e2f4d5eb8065dd",
+  "reviewer_provenance": {
+    "available": true,
+    "availability_scope": "Native collaboration task identity, actual direct parent task, and fork mode only.",
+    "provider_identifier": "/root/t4_successor_reviewer_terra",
+    "parent_task": "/root",
+    "fork_turns": "none",
+    "raw_encrypted_prompt": null,
+    "raw_provider_event": null,
+    "raw_provider_event_sha256": null,
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "provider_event_log": null,
+    "unavailable_note": "Raw encrypted prompt, provider-event, spawn, and session exports are unavailable and intentionally null; no unavailable provenance was reconstructed."
+  },
+  "review_commit_ancestry": {
+    "historical_red_review": "d88762263972aeba3473c07b2fb47aa80ac211a7",
+    "collision_remediation": "38b4f05effb8ac64623187ebe98b917ce19488f6",
+    "selector_and_truth": "e0f169f0e31cf951cbfce36f02e2f4d5eb8065dd",
+    "verified": true
+  },
+  "commands": [
+    {
+      "command": "git diff --quiet e0f169f0 -- <all full-gate inputs>",
+      "result": "PASS: shared-checkout gate inputs matched e0f169f0 before execution."
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v4.py",
+      "result": "PASS: 5 tests ran in 0.898s; OK. Single full-gate execution."
+    },
+    {
+      "command": "Verify historical review/remediation/selector ancestry, SHA-256 input bindings, Asset v5 eligibility, Gryphon v6 reserved-path coherence, collision exclusions, and browser v5 immutable binding from e0f169f0 blobs.",
+      "result": "PASS: the bounded re-review found no unresolved Critical, High, or Medium issue."
+    }
+  ],
+  "output": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-independent-review-v6.json",
+    "sha256": null,
+    "digest_reason": "A reviewer receipt cannot bind the newly authored review artifact from the immutable e0f169f0 input tree. A later authorized descendant may bind its finalized bytes without altering this receipt."
+  },
+  "findings": {
+    "unresolved_ids": [],
+    "unresolved_counts": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "candidate_authorized": true,
+    "candidate_authorization_reason": "Zero unresolved Critical, High, and Medium findings plus a green full gate meet the bounded reviewer authorization rule."
+  },
+  "scope_attestation": {
+    "roles_held": [
+      "adversarial-reviewer-batch-c"
+    ],
+    "forbidden_work_not_performed": [
+      "factual evidence collection or repair",
+      "requirements mapping or repair",
+      "asset or browser evidence authoring",
+      "truth-test modification",
+      "candidate publication",
+      "product-owner acceptance",
+      "accepted-manifest publication",
+      "plan, registry, source, or test editing",
+      "staging",
+      "committing"
+    ],
+    "candidate_authorized": true,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_authorized": false,
+    "no_gameplay_success_claimed": true,
+    "no_responsive_success_claimed": true,
+    "no_completion_or_persistence_success_claimed": true,
+    "no_asset_suitability_claimed": true
+  },
+  "reviewer_proof_created": false,
+  "reviewer_proof_reason": "No extra proof is required to state the available native identity and direct-parent facts. Raw provider evidence is unavailable and disclosed as null rather than fabricated.",
+  "commit_sha": null,
+  "commit_disposition": "not-created; review assignment prohibited staging and committing",
+  "self_sha256": null,
+  "self_hash_note": "A receipt cannot stably embed its own SHA-256. A later authorized descendant may bind these exact bytes without altering this receipt.",
+  "marker": "MEASURE_AGENT_RESULT"
+}
