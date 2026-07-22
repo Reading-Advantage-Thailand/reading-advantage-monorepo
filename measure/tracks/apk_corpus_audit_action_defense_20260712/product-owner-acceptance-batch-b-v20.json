@@ -1,0 +1,44 @@
+{
+  "schema_version": "apk-product-owner-acceptance.v4",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-b",
+  "decision_type": "current-delegated-owner-acceptance",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "acceptance_role_base_sha": "94b672406c59dbd95ca645419dabe1515707295d",
+  "ordered_after_candidate": true,
+  "candidate": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-batch-b-v20.json",
+    "sha256": "2357e8c078aa78f4f007f676599203326ddb5b53db2c14166c4eded149e9b926",
+    "publication_commit_sha": "94b672406c59dbd95ca645419dabe1515707295d",
+    "consumable": false
+  },
+  "fresh_independent_review": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-independent-review-v20.json",
+    "sha256": "803aa6d6204b5aba4d10bee12bb359486c16f33f803a55b2984b35fec3db1812",
+    "audited_head_sha": "10e002eb288f80dfade4c798cf6421c56f34a164",
+    "status": "pass",
+    "unresolved_critical_high_medium": 0
+  },
+  "authority_record": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/owner-policy-amendment-v19.json",
+    "sha256": "dda6a16c3b18a3bfb448228718d85e467e697653e506daf25fedf8c628694a28",
+    "current_owner_authority": true,
+    "final_acceptance_authority_delegated": true,
+    "original_message_id": null,
+    "original_thread_id": null,
+    "original_identifier_claimed": false,
+    "chronology_substitution": "Immutable Git publication chronology substitutes unavailable message/thread identifiers for lifecycle ordering only."
+  },
+  "accepted_disclosures": [
+    "DISC-001 remains a Batch A process-only carry-forward disclosure and is never Batch B factual evidence.",
+    "Village Guardian used synthetic untrusted DOM input and a hidden-tab scheduler adapter; no trusted-native-input or foreground-timing claim is accepted.",
+    "Village Guardian completion requests returned HTTP 400; no completion, persistence, XP, idempotency, or API-correctness claim is accepted.",
+    "Archer's Revenge and Storm the Castle Tower were HTTP 404 at the reviewed exact routes; their historical source remains historical.",
+    "No runtime asset loading, suitability, licensing, or production-use conclusion is accepted.",
+    "No ontology, cross-game standardization, implementation, or shipping decision is accepted."
+  ],
+  "accepted_manifest_publication_authorized": true,
+  "consumption_authorized_before_accepted_manifest": false,
+  "revocation_rule": "Any bound-byte drift, red source/evidence gate, newly unresolved Critical/High/Medium finding, or disclosure promotion revokes this decision and blocks consumption.",
+  "marker": "MEASURE_AGENT_RESULT"
+}
