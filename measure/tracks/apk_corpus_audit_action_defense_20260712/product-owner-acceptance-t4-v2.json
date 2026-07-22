@@ -1,0 +1,62 @@
+{
+  "schema_version": "apk-product-owner-acceptance.t4.v2",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "cohort_id": "t4-full-eight-game-cohort-v4-lineage",
+  "decision_type": "root-product-owner-acceptance",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "acceptance_role_base_sha": "d70959ce2cdfed2e655f5ffcccef67f9bc6ea353",
+  "ordered_after_candidate": true,
+  "candidate": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v2-81bfe78e-20260722T130706Z-codex.json",
+    "sha256": "436d15249549fb0762edcb5c63d1fdcc4f4d51c80852200f929050ca0a0840f5",
+    "publication_commit_sha": "d70959ce2cdfed2e655f5ffcccef67f9bc6ea353",
+    "candidate_only": true,
+    "consumable": false
+  },
+  "active_reconciliation": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v4.json",
+    "sha256": "6f202f838a97dd93fc049d6301cb0230b715f869b4c994e62dbf178c27658c8c",
+    "publication_commit_sha": "d009b9a3b99e5aca3a512be09f10c5a9e34c437a",
+    "gate_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-cohort-reconciliation-gate-v4.py",
+    "gate_sha256": "234cc42ba99cebdd3a1114758af3ca274f551fe56c52b770af61fcf12680e851",
+    "reviewer_gate_result": "7 passed in 9.02s; run once"
+  },
+  "fresh_independent_review": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v4-d009b9a3-20260722T125310Z-codex.json",
+    "sha256": "95f9d5b91ea2caea1477c07605ee664e4c94cdf7f301a9490954ee9f978f2f43",
+    "publication_commit_sha": "81bfe78eb8ccef81d95636fcf7e0c745841d84fc",
+    "status": "pass-v4-new-v2-candidate-only-authorized-lifecycle-fail-closed",
+    "unresolved_critical_high_medium": 0
+  },
+  "owner_authority": {
+    "owner": "/root",
+    "role": "orchestrator-and-project-owner",
+    "source": "Current user direction assigns project ownership and orchestration authority to root.",
+    "message_id": null,
+    "thread_id": null,
+    "encrypted_prompt_evidence_available": false,
+    "limitation": "The harness does not expose encrypted prompt/message identifiers; immutable Git ordering and truthful current-role records establish lifecycle chronology without reconstructing an obsolete OpenCode receipt chain."
+  },
+  "supersession": {
+    "prior_candidate_acceptance_manifest_v1": "historical-non-consumable-superseded-for-current-v4-lifecycle",
+    "reason": "The v1 lifecycle binds reconciliation v3 and review v2. Reconciliation v4 and the fresh review v4 resolved and bound the selector-lineage layer, so current authority requires this later v2 lifecycle.",
+    "prior_admission_v1_v2_v3": "historical-red-stop-loss-no-authority"
+  },
+  "accepted_disclosures": [
+    "Batch A retains its accepted limitations, including the Castle Defense manifest omission, DISC-001, and 178 of 187 resolved claims.",
+    "Village Guardian used synthetic untrusted DOM input and a hidden-tab scheduler adapter; its completion requests returned HTTP 400. Trusted input, foreground timing, completion, persistence, XP, idempotency, and API correctness are not accepted.",
+    "Archer's Revenge and Storm the Castle Tower returned HTTP 404 at the reviewed routes; historical source is not current runtime behavior.",
+    "Paladin's Twin-Soul and Gryphon Patrol are Coming Soon/unlinked and returned HTTP 404 at the reviewed routes; gameplay and responsive success are not accepted.",
+    "Kimi Browser v6 made five screenshot.sh attempts with exits 4 and 28, including one wide timeout; selected PNGs are byte-identical helper-triggered daemon post-process recoveries. No successful helper file write or direct screenshot API action is claimed.",
+    "The selected Asset v5 receipt retains five pending self-check fields and is accepted only with the committed independent validation companion that recomputed them as passing.",
+    "Browser v5, collided Asset v4 and Gryphon Mapper v5 sets, full-review v1, reconciliation v2, the v1 lifecycle, and admission gates v1-v3 remain historical and non-consumable.",
+    "No asset loading, suitability, licensing, production use, ontology, cross-game standardization, implementation, shipping, gameplay, responsive, completion, persistence, XP, idempotency, or API correctness is accepted."
+  ],
+  "accepted_manifest_publication_authorized": true,
+  "consumption_authorized_before_accepted_manifest": false,
+  "t8_authorized": false,
+  "product_or_shipping_authorized": false,
+  "revocation_rule": "Any drift in bound bytes, first-publication commits, roster, selector lineage, disclosures, or unresolved Critical/High/Medium findings revokes this decision and blocks consumption.",
+  "next_required_event": "Publish a later accepted manifest v2 bound to this exact owner-acceptance commit, then run one minimal hash-based admission check and close T4 documentation."
+}
