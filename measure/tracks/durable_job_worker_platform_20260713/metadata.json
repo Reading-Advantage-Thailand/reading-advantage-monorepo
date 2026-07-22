@@ -3,9 +3,9 @@
   "type": "feature",
   "status": "in_progress",
   "created_at": "2026-07-13T00:00:00Z",
-  "updated_at": "2026-07-22T09:58:01Z",
+  "updated_at": "2026-07-22T11:05:00Z",
   "description": "Generalize the proven Postgres review_jobs reliability model into a portable durable-job port and services/worker runtime while preserving Codecamp review behavior; bind handlers to capabilities only after the kernel is accepted.",
   "estimated_tasks": 20,
-  "actual_tasks": 2,
-  "deviation_notes": "Task 1 was reopened by independent review on 2026-07-22 for build-context and coverage-evidence findings. Producer remediation and fresh independent re-review closed WKR-T1-H1 and WKR-T1-L1 with engine-level context proof, truthful combined coverage, quality gates, and exact-image runtime evidence. Parent-orchestrator acceptance completed Task 1. Task 2 then established a current executable review_jobs baseline: status-only settle CAS cannot distinguish a stale worker after reclaim/re-claim; admin replay resets every state by ID only and has no platform audit event. Historical acceptance evidence was reconciled against the current 15-minute visibility default and wired webhooks bootstrap. Tasks 3-5 and all Phase 2+ behavior remain pending/deferred."
+  "actual_tasks": 3,
+  "deviation_notes": "Task 1 was reopened by independent review on 2026-07-22 for build-context and coverage-evidence findings. Producer remediation and fresh independent re-review closed WKR-T1-H1 and WKR-T1-L1 with engine-level context proof, truthful combined coverage, quality gates, and exact-image runtime evidence. Parent-orchestrator acceptance completed Task 1. Task 2 established the current executable review_jobs baseline. Task 3 then fixed the compatibility boundary and accepted deliberate strengthenings: lease-token ownership, active-lease-safe enqueue/replay, replay audit, retryable webhook failure on enqueue loss, adapter-only DB access, and reversible generic-table adoption. No new live-Postgres claim or Task 4+ implementation is attributed to the design-only matrix; Tasks 4-5 remain pending."
 }

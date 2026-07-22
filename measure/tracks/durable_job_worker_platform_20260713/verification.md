@@ -62,3 +62,26 @@ Task 1 may be accepted only after remediation and a fresh independent PASS.
   skip gate.
 - Boundary: no schema, migration, generic port, queue, handler, audit write, or
   worker-platform runtime behavior was implemented by Task 2.
+
+## Task 3 — Compatibility and strengthening matrix
+
+### Decision — 2026-07-22
+
+- Decision: **PASS for Task 3 only.** Phase 1 remains open on Tasks 4–5.
+- Matrix: `task-3-compatibility-matrix-20260722.md`.
+- Graph-first evidence: the accepted installed graph returned fresh exact-ID
+  profiles for `applySettle`, `requeueReviewJob`, and
+  `enqueueReviewJob`; Task 2 executable characterization remains the current
+  behavioral baseline.
+- Preserve: normalized PR identity, durable identity reuse, bounded due claim,
+  visibility reclaim, retry/dead-letter outcomes, admin authorization,
+  REFERENTIAL/global Codecamp tenancy, low-latency success after durable
+  enqueue, and reversible old-path availability.
+- Strengthen deliberately: active leases cannot be revoked by enqueue/replay;
+  heartbeat/settle/fail require the current lease token; enqueue persistence
+  failure returns retryable non-2xx; replay emits one safe immutable audit
+  event; worker DB access moves behind the approved backend adapter.
+- Evidence honesty: Task 3 makes no new live-Postgres claim because Task 2 had
+  no explicit isolated `DIRECT_DATABASE_URL`. Task 7 owns fresh two-connection
+  PG16 proof with fail-closed URL handling.
+- Boundary: documentation/design only; no Task 4+ code or schema changes.
