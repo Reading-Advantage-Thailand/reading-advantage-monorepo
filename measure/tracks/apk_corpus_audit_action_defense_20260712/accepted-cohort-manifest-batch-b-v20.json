@@ -1,0 +1,57 @@
+{
+  "schema_version": "apk-accepted-cohort-manifest.v3",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-b",
+  "manifest_kind": "accepted-cohort-manifest",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "status": "accepted-with-disclosure",
+  "publication_role_base_sha": "bb5c3df3a7142a2349ab287549643f3d119f96be",
+  "candidate": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-batch-b-v20.json",
+    "sha256": "2357e8c078aa78f4f007f676599203326ddb5b53db2c14166c4eded149e9b926",
+    "publication_commit_sha": "94b672406c59dbd95ca645419dabe1515707295d"
+  },
+  "owner_acceptance": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-batch-b-v20.json",
+    "sha256": "4b680fda18e8dc34dd062a59dc9b4b8f351ecda721b87e49f53e8240f392e9bb",
+    "publication_commit_sha": "bb5c3df3a7142a2349ab287549643f3d119f96be",
+    "ordered_after_candidate": true
+  },
+  "fresh_independent_review": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-independent-review-v20.json",
+    "sha256": "803aa6d6204b5aba4d10bee12bb359486c16f33f803a55b2984b35fec3db1812",
+    "unresolved_critical_high_medium": 0
+  },
+  "owner_policy": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/owner-policy-amendment-v19.json",
+    "sha256": "dda6a16c3b18a3bfb448228718d85e467e697653e506daf25fedf8c628694a28"
+  },
+  "supersedes": {
+    "historical_accepted_manifest_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-b.json",
+    "historical_accepted_manifest_sha256": "aaba39f80639eb180440c928b65d29da7601f7bce9ab2ba993e5b8e865c10c62",
+    "historical_chain_consumable": false,
+    "historical_files_mutated": false
+  },
+  "scope": {
+    "games": [
+      "Village Guardian",
+      "Archer's Revenge",
+      "Storm the Castle Tower"
+    ],
+    "source_claims": 158,
+    "negative_fixtures": 12,
+    "assigned_denominator_records": 99,
+    "asset_candidates": 12
+  },
+  "conditions": [
+    "Consume with every candidate and acceptance disclosure.",
+    "Synthetic DOM input, hidden-tab scheduling, HTTP 400 completion responses, HTTP 404 non-runnable routes, historical-only source, and asset-use unknowns retain their exact bounded meanings.",
+    "Git chronology authenticates lifecycle and preflight provenance only and never substitutes source/evidence/review tests.",
+    "No ontology, cross-game standardization, implementation, asset suitability, licensing, production, or shipping decision follows from this manifest."
+  ],
+  "consumable": true,
+  "consumability": "conditional",
+  "revoked": false,
+  "next_phase_authorized": "Batch C evidence collection and acceptance may begin under the inherited cohort protocol.",
+  "marker": "MEASURE_AGENT_RESULT"
+}
