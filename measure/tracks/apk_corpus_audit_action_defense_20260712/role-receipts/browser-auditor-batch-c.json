@@ -1,0 +1,80 @@
+{
+  "schema_version": "apk-role-receipt.v3",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 3: Batch C evidence packages",
+  "batch_id": "batch-c",
+  "role": "browser-auditor-batch-c",
+  "role_identity": "browser audit only",
+  "status": "audit-blocked-environment",
+  "acceptance": "not-claimed",
+  "role_base_sha": "0ddea15b293a55900f69c6ab6c4a8649a7c9b00e",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "provider_provenance": {
+    "available": false,
+    "claimed": false,
+    "provider_identifier": null,
+    "spawn_id": null,
+    "session_id": null,
+    "parent_ancestry_ids": null,
+    "fork_turns": null,
+    "raw_isolation_export_sha256": null,
+    "unavailable_note": "No provider spawn, session, ancestry, isolation export, or event provenance is available in this local harness; none is claimed."
+  },
+  "browser_mechanism": {
+    "requested": "agent-browser CLI",
+    "available": false,
+    "provenance": "Direct invocation returned `/bin/bash: line 1: agent-browser: command not found`.",
+    "browser_run": false,
+    "browser_behavior_claimed": false
+  },
+  "exact_inputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-c.md": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-discovery-audit.json": "c7427d6dbd9449e4293470ed13115e98d863bd0cb4b3290cc0b8e60db844d687",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v2.py": "3fc6bda6cb8acd4b9331faa53cf4b19493aaef249dca80ac855b87f8e52cbb56",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-budget-declaration.json": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-phase-base-binding.json": "b83428a8cb84465b00609833b0be0ad2bb0388eff4ebc2de23fa112bc4715a9c",
+    "apps/advantage-games/src/lib/gameCards.ts": "2cc12f5e4c64d33d63ed84a97df35bfe137822726e1a1875b1fea31fdce4690e",
+    "apps/advantage-games/package.json": "8fc83e94fc9f00421bea2430d46143059b9488ce01cba9f77df475cd581c99b3",
+    "packages/game-cartridges/package.json": "61eace40b79b1711930fe4af552376cf8a13f46d7d21383bbe1f1fb9ee6c3e17",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit.json": "3eecdd9d44dc3aa18dd53a481f980a8edd3425b38c73cc93bebc4c0a835a8298"
+  },
+  "outputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit.json": "3eecdd9d44dc3aa18dd53a481f980a8edd3425b38c73cc93bebc4c0a835a8298",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c.json": null
+  },
+  "resource_budget": {
+    "declaration_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-budget-declaration.json",
+    "declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "ceiling": {
+      "source_bytes_read": 31457280,
+      "source_files_or_objects_read": 100,
+      "command_invocations": 70,
+      "elapsed_minutes": 40,
+      "records_authored_or_reviewed": 240,
+      "browser_interactions": 120,
+      "browser_artifacts_captured": 80,
+      "asset_candidates_inspected": 0
+    },
+    "actual": {
+      "source_bytes_read": 63894,
+      "source_files_or_objects_read": 8,
+      "command_invocations": 8,
+      "elapsed_minutes": 5,
+      "records_authored_or_reviewed": 2,
+      "browser_interactions": 0,
+      "browser_artifacts_captured": 0,
+      "asset_candidates_inspected": 0
+    },
+    "measurement_note": "Source bytes and objects are the eight exact source inputs enumerated above (totaled before output creation). Command invocations count the role's eight shell/tool invocations. The elapsed value is a whole-minute accounting entry, not browser timing evidence."
+  },
+  "scope_attestation": {
+    "roles_held": ["browser-auditor-batch-c"],
+    "forbidden_work_not_performed": ["source evidence collection", "mapping", "truth-test authoring", "asset audit", "adversarial review", "candidate publication", "product-owner acceptance", "accepted-manifest publication", "source or test editing", "committing"],
+    "non_runnable_disposition_claimed": false,
+    "audit_blocked_reason": "The application never reached a listening state because both startup attempts were held in the package-manager supply-chain lockfile check and terminated by the harness; the requested agent-browser CLI is absent."
+  },
+  "commit_sha": null,
+  "commit_disposition": "not-created by this role",
+  "marker": "MEASURE_AGENT_RESULT"
+}
