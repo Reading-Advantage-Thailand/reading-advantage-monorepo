@@ -1,0 +1,107 @@
+{
+  "schema": "measure.role-proof.v4",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-REVIEW-V2",
+  "role": "adversarial-reviewer-full-cohort",
+  "status": "complete-zero-chm-findings-candidate-only",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/t4_full_cohort_review_v2",
+    "parent_task": "/root",
+    "fork_turns": "none",
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "auxiliary_git_worktree_created_or_used": false,
+    "commit_created": false,
+    "raw_encrypted_prompt": null,
+    "unavailable_note": "Encrypted prompt and provider event exports are unavailable; local Git and SHA-256 checks are not provider attestation."
+  },
+  "immutable_review_base": {
+    "commit": "dc34feec8277988183c79da29e53bdba077a729d",
+    "single_master_checkout_observed": true
+  },
+  "inputs": {
+    "reconciliation": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v3.json",
+      "sha256": "866d3926d3145450dbc19e1ff8ec58f3d649e259aa99996c6c3af9f6b34aecab"
+    },
+    "gate": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-cohort-reconciliation-gate-v3.py",
+      "sha256": "efb98803534555db942fce3ea92b1937e5c764ec36e790ae753a04f6a5201e50",
+      "result": "Ran 6 tests in 12.173s; OK",
+      "runs": 1
+    },
+    "blocked_v1_review": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v1.json",
+      "sha256": "ca9ba6b399859d3f263c122dc00a725d1b1961566d73c1ae4ed75cdb8468be96"
+    },
+    "v2_stop_loss": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v2-stop-loss.json",
+      "sha256": "abc33664c92d115bc33de59ad3c2389fba2cb77e755dc4b1124b521363d85c55"
+    },
+    "batch_c_selector": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v7.json",
+      "sha256": "d4c3eb1093970cbe4470bd4da833fced7465b443f85c7d900c79979163a95a17"
+    },
+    "batch_c_review": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-adversarial-review-v7.json",
+      "sha256": "24213a190009dc1a623f8b3a79d240133c1b3f0bf792023cc35cb163bdb5b2e2"
+    }
+  },
+  "browser_v6_verification": {
+    "helper": "/home/daniel-bo/.agents/skills/kimi-webbridge/scripts/screenshot.sh",
+    "helper_calls": 5,
+    "exits": [
+      4,
+      28
+    ],
+    "wide_timeout": 28,
+    "direct_screenshot_api_used": false,
+    "byte_identical_daemon_recovery": true,
+    "session_closed": true,
+    "server_stopped": true,
+    "port_closed": true,
+    "exact_routes_http_status": 404,
+    "success_claims": false
+  },
+  "asset_validation_companion": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-v5-independent-validation-v1.json",
+    "sha256": "ee322ac2d9f7f8d87cc4d94db16d83484a01dae0ae07e60b1c644ef9bd09ec5c",
+    "independent_checks_passed": 5
+  },
+  "outputs": {
+    "review": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2.json",
+      "sha256": "89cf0ff23a7afe897ee4b1a6dfa6d77630d08be698a78f6da711d74c80bea774"
+    },
+    "receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v2.json",
+      "sha256": null,
+      "digest_reason": "receipt self-hash omitted"
+    }
+  },
+  "findings": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "total": 0
+  },
+  "authorization": {
+    "candidate_manifest_publication_authorized": true,
+    "candidate_must_be_non_consumable": true,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_publication_authorized": false,
+    "cohort_consumption_authorized": false
+  },
+  "scope_attestation": {
+    "reviewed_all_eight_games": true,
+    "review_only": true,
+    "no_historical_suite_rerun": true,
+    "no_repair": true,
+    "no_docs_or_registry_modified": true,
+    "no_staging": true,
+    "no_commit": true
+  }
+}

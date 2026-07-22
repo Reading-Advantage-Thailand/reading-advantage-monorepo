@@ -1,0 +1,93 @@
+{
+  "schema": "measure.role-receipt.v4",
+  "marker": "MEASURE_AGENT_RESULT",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "phase": "Phase 4: Cohort reconciliation",
+  "task_id": "T4-FULL-COHORT-REVIEW-V2",
+  "role": "adversarial-reviewer-full-cohort",
+  "status": "complete-zero-chm-findings-candidate-only",
+  "completed_at_utc": "2026-07-22T12:22:16Z",
+  "provider_provenance": {
+    "available": true,
+    "provider_identifier": "/root/t4_full_cohort_review_v2",
+    "parent_task": "/root",
+    "fork_turns": "none",
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "auxiliary_git_worktree_created_or_used": false,
+    "commit_created": false,
+    "raw_encrypted_prompt": null,
+    "unavailable_note": "Encrypted prompt and provider event exports are unavailable and not fabricated."
+  },
+  "immutable_review_base": {
+    "commit": "dc34feec8277988183c79da29e53bdba077a729d",
+    "single_master_checkout_observed": true
+  },
+  "retained_review": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2.json",
+    "sha256": "89cf0ff23a7afe897ee4b1a6dfa6d77630d08be698a78f6da711d74c80bea774"
+  },
+  "retained_proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v2.json",
+    "sha256": "cd32f636906e43ac35f87e59f0366d288f8645e1b2fde2372395f12bac4e7e23"
+  },
+  "review_results": {
+    "active_gate": "6 tests passed once in 12.173s",
+    "roster": "8 expected, 8 observed, no duplicates or omissions",
+    "reconciliation_bindings": "18 byte and immutable-publication bindings passed",
+    "batch_c_v7_unresolved_chm": 0,
+    "browser_v6": "helper-only semantics retained; 5 attempts; exits 4 and 28; one wide timeout; no direct screenshot API; daemon recovery byte-identical; session and server closed; exact routes 404 and non-runnable",
+    "asset_validation": "five independent companion checks passed",
+    "historical_suites_rerun": false
+  },
+  "findings": {
+    "unresolved_ids": [],
+    "unresolved_counts": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "total": 0
+    }
+  },
+  "authorization": {
+    "candidate_manifest_publication_authorized": true,
+    "candidate_must_be_non_consumable": true,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_publication_authorized": false,
+    "cohort_consumption_authorized": false,
+    "authority_not_exercised": true
+  },
+  "preserved_limits": [
+    "Batch A disclosure and Castle Defense manifest limit retained.",
+    "Batch B synthetic-input, scheduler, 400 completion, 404 route, and asset-limit disclosures retained.",
+    "Browser v5 remains non-consumable and unselected; historical collisions remain preserved and unselectable.",
+    "No gameplay, responsive, completion, persistence, XP, API, asset-loading, asset-suitability, licensing, implementation, or shipping success claim is made."
+  ],
+  "scope_attestation": {
+    "reviewed_all_eight_games": true,
+    "review_only": true,
+    "no_repair": true,
+    "no_historical_suite_rerun": true,
+    "no_candidate_manifest_created_or_modified": true,
+    "no_product_owner_acceptance_created_or_modified": true,
+    "no_accepted_manifest_created_or_modified": true,
+    "no_docs_or_registry_modified": true,
+    "no_staging": true,
+    "no_commit": true
+  },
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v2.json",
+      "sha256": "89cf0ff23a7afe897ee4b1a6dfa6d77630d08be698a78f6da711d74c80bea774"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/adversarial-reviewer-full-cohort-v2.json",
+      "sha256": "cd32f636906e43ac35f87e59f0366d288f8645e1b2fde2372395f12bac4e7e23"
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-full-cohort-v2.json",
+      "sha256": null,
+      "digest_reason": "receipt cannot self-hash without changing bytes"
+    }
+  ]
+}
