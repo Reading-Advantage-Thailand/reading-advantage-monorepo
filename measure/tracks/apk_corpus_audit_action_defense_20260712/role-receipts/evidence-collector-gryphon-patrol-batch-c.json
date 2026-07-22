@@ -1,0 +1,53 @@
+{
+  "schema": "measure.role-receipt.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "role": "evidence-collector-gryphon-patrol-batch-c",
+  "fork_turns": "none",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "requested_role_base_sha": "419cbad0fb775a766201c23e56a77373a24bfbd1",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "bindings": {
+    "strategy_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-c.md",
+    "strategy_sha256": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9",
+    "budget_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-budget-declaration.json",
+    "budget_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "discovery_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-discovery-audit.json",
+    "discovery_sha256": "c7427d6dbd9449e4293470ed13115e98d863bd0cb4b3290cc0b8e60db844d687",
+    "phase_binding_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-phase-base-binding.json",
+    "phase_binding_sha256": "b83428a8cb84465b00609833b0be0ad2bb0388eff4ebc2de23fa112bc4715a9c"
+  },
+  "provider_provenance": {
+    "status": "unavailable",
+    "requested_role_base_check": {
+      "command_argv": ["git","cat-file","-e","419cbad0fb775a766201c23e56a77373a24bfbd1^{commit}"],
+      "exit_status": 128,
+      "stdout": "",
+      "stderr_sha256": "0fedd984107251fd8650671490e5e576328c9ccdbc673533792daa685dbf7f00"
+    },
+    "owner_git_preflight_substitution_required": true,
+    "substitution_boundary": "An owner-approved immutable Git chronology may address only unavailable role/preflight provenance. It cannot substitute any source fact, claim envelope, truth test, browser observation, asset observation, or review."
+  },
+  "resource_budget": {
+    "declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "ceiling": {"source_bytes_read":52428800,"source_files_or_objects_read":120,"command_invocations":80,"elapsed_minutes":45,"records_authored_or_reviewed":300,"browser_interactions":0,"browser_artifacts_captured":0,"asset_candidates_inspected":0},
+    "actual": {"source_bytes_read":989147,"source_files_or_objects_read":19,"command_invocations":20,"elapsed_minutes":31,"records_authored_or_reviewed":38,"browser_interactions":0,"browser_artifacts_captured":0,"asset_candidates_inspected":0},
+    "within_frozen_ceiling": true,
+    "measurement_note": "Source bytes include only historical Git object bytes and the cover binary read for identity. No asset suitability inspection was performed."
+  },
+  "outputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-claim-ledger-batch-c.json": "fac24981441b0b86b9e1388046b947daaaef2443093917c8648e9392799a1155",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-method-batch-c.md": "8889ec8afe2f0a8c60582bcefedd784b5680e1b863e5a69a6ac6c6de1bcc967f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-final-report-batch-c.json": "5999d8f9d4f7b8f7cc0fc17c2dd5f6511be64436d74e421f9c0df2b5a24bc639",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-gryphon-patrol-batch-c.json": null
+  },
+  "changed_file_scope": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-claim-ledger-batch-c.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-method-batch-c.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-final-report-batch-c.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-gryphon-patrol-batch-c.json"
+  ],
+  "status": "blocked-non-consumable",
+  "marker": "MEASURE_AGENT_RESULT"
+}

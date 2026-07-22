@@ -1,0 +1,28 @@
+{
+  "schema": "apk-evidence-final-report.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "game": "Gryphon Patrol",
+  "role": "evidence-collector-gryphon-patrol-batch-c",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "requested_role_base_sha": "419cbad0fb775a766201c23e56a77373a24bfbd1",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "disposition": "non-consumable-blocked: requested collector role base is unavailable; owner Git-preflight substitution is required and cannot substitute source evidence",
+  "accepted_denominator_reconciliation": {
+    "rule": "Each accepted Gryphon item appears exactly once below. Scene/state/transition accepted counts are zero, so none are invented.",
+    "identity": ["catalog/gryphon-patrol"],
+    "source_records": ["file:apps/advantage-games/measure/archive/gryphon-patrol-20260321/metadata.json","file:apps/advantage-games/measure/archive/gryphon-patrol-20260321/plan.md","file:apps/advantage-games/measure/archive/gryphon-patrol-20260321/spec.md","file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/index.md","file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/metadata.json","file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/plan.md","file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/report.md","file:apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/spec.md"],
+    "asset_candidates": ["apps/advantage-games/measure/archive/gryphon-patrol-20260321/metadata.json","apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/metadata.json","apps/advantage-games/public/games/cover/cover-gryphon-patrol.png"],
+    "historical_records": ["packages/game-cartridges/src/cartridges/gryphon-patrol/index.ts@1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f","apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/gryphon-patrol/page.tsx@cd1936387d136ffb12e77a647f36cbce2d1fdd4e","apps/advantage-games/src/app/api/v1/games/gryphon-patrol/complete/route.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e","apps/advantage-games/src/app/api/v1/games/gryphon-patrol/ranking/route.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e","apps/advantage-games/src/app/api/v1/games/gryphon-patrol/sentences/route.ts@cd1936387d136ffb12e77a647f36cbce2d1fdd4e","apps/advantage-games/src/components/games/sentence/gryphon-patrol/GryphonPatrolGame.test.tsx@cd1936387d136ffb12e77a647f36cbce2d1fdd4e","apps/advantage-games/src/components/games/sentence/gryphon-patrol/GryphonPatrolGame.tsx@cd1936387d136ffb12e77a647f36cbce2d1fdd4e"],
+    "scene_records": [],
+    "state_records": [],
+    "transition_records": [],
+    "counts": {"identity":1,"source_records":8,"asset_candidates":3,"historical_records":7,"scene_records":0,"state_records":0,"transition_records":0,"total":19},
+    "denominator_alias_gaps": ["Historical component directly imports apps/advantage-games/src/lib/games/gryphonPatrol.ts, which directly imports apps/advantage-games/src/lib/games/gryphonPatrolConfig.ts. Neither path is named among the discovery audit's seven Gryphon historical_records. Both are ledgered as C06-C10 evidence but not added to the accepted denominator count."]
+  },
+  "unknowns_and_conflicts": ["No browser observation, asset suitability decision, or truth-test result is produced by this role.","The collected logic does not establish an escort mechanic.","The accepted historical cartridge and the deleted component are distinct historical representations.","Historical compliance prose contains assertions that require independent source/test verification and is not used as implementation proof."],
+  "bounded_absence": {"command_argv":["git","grep","-n","-E","gryphon-patrol|gryphonPatrol|gryphonPatrolConfig","23bb5ad578c01fb29f9e8bb76a7d934d24a4b286","--","apps/advantage-games/src","packages/game-cartridges/src"],"exit_status":0,"stdout_sha256":"4fcf1fb1a96f1fe9ef68dfeb714d1f6c53b1e9e5e33ed8747cacc7e138ad2a45","stdout_line_count":6,"scope":"Only these two baseline tree path domains; no global absence conclusion."},
+  "ledger_claim_count":15,
+  "negative_fixture_count_not_claims":4,
+  "marker":"MEASURE_AGENT_RESULT"
+}
