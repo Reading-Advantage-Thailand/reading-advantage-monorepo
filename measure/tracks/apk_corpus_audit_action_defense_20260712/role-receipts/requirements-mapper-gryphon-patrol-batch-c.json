@@ -1,0 +1,50 @@
+{
+  "schema": "measure.role-receipt.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "role": "requirements-mapper-gryphon-patrol-batch-c",
+  "fork_turns": "none",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "role_base_sha": "c3d37cf5212b5f7f65fd95a07a4d50cd1d796557",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "provider_provenance": {
+    "status": "unavailable",
+    "provider_identifier": null,
+    "raw_export_identifier": null,
+    "reason": "No provider-attested identifier or retained raw export is available in this role context."
+  },
+  "inputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-c.md": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-applicability.json": "a239908b9564ce48acd5b54be5d1d80d81afcd316778bea0f4dad2be89d08fa0",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-budget-declaration.json": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-phase-base-binding.json": "b83428a8cb84465b00609833b0be0ad2bb0388eff4ebc2de23fa112bc4715a9c",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-discovery-audit.json": "c7427d6dbd9449e4293470ed13115e98d863bd0cb4b3290cc0b8e60db844d687",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-collector-preflight-correction-v1.json": "008dd81041b9cff1b148538067e5d3f85637e0e2d561229ca06c25762989ff46",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-claim-ledger-batch-c.json": "fac24981441b0b86b9e1388046b947daaaef2443093917c8648e9392799a1155",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-method-batch-c.md": "8889ec8afe2f0a8c60582bcefedd784b5680e1b863e5a69a6ac6c6de1bcc967f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-final-report-batch-c.json": "5999d8f9d4f7b8f7cc0fc17c2dd5f6511be64436d74e421f9c0df2b5a24bc639",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-gryphon-patrol-batch-c.json": "190b56be6013a5ac0aa5a09541e467506533834a325ced6fa742196bcb11938d"
+  },
+  "resource_budget": {
+    "declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "ceiling": {"source_bytes_read": 15728640, "source_files_or_objects_read": 80, "command_invocations": 50, "elapsed_minutes": 25, "records_authored_or_reviewed": 240, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "actual": {"source_bytes_read": 0, "source_files_or_objects_read": 0, "command_invocations": 16, "elapsed_minutes": 10, "records_authored_or_reviewed": 28, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "within_frozen_ceiling": true,
+    "measurement_note": "No source or Git object was inspected. Actual command invocations count the 14 document/glob reads used to consume named mapper inputs and the two JSON/hash validation commands."
+  },
+  "outputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-blueprint-batch-c.json": "1bb8d8f1dafa26fd660182bce030a88c16790cfba737028752459214a1a39089",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-hypotheses-batch-c.md": "ec721b12f9d6ef46597a3db703b7f9a0c7bc2efecb71c3fd4314991285ba8436",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-final-report-batch-c.json": "1890eca75e416da2cdba9ba2248490cdb9430892069e87fe37c6aaff0013b654",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c.json": null
+  },
+  "changed_file_scope": [
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-blueprint-batch-c.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-hypotheses-batch-c.md",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-final-report-batch-c.json",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c.json"
+  ],
+  "status": "complete-non-authoritative",
+  "marker": "MEASURE_AGENT_RESULT"
+}

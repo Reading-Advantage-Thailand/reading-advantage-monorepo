@@ -1,0 +1,39 @@
+{
+  "schema": "apk-requirements-mapper-final-report.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "game": "Gryphon Patrol",
+  "role": "requirements-mapper-gryphon-patrol-batch-c",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "role_base_sha": "c3d37cf5212b5f7f65fd95a07a4d50cd1d796557",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "status": "complete-non-authoritative; mapper package only, pending later truth, browser, asset, review, candidate, and acceptance stages",
+  "input_disposition": {
+    "collector_preflight": "owner-corrected for mapper consumption",
+    "collector_claims": "unreviewed and later truth-test-required",
+    "negative_fixtures": "not mapped and not promoted"
+  },
+  "output_summary": {
+    "blueprint_sections": ["identity", "historical_states", "historical_gameplay", "responsive_composition", "historical_route_and_apis", "historical_tests", "assets", "developer_effort_decomposition"],
+    "historical_claims_mapped": 15,
+    "non_mapping_evidence_claims": 1,
+    "negative_fixtures_promoted": 0,
+    "current_runtime_claims_authored": 0,
+    "browser_claims_authored": 0,
+    "asset_suitability_claims_authored": 0
+  },
+  "claim_coverage": {
+    "mapped_or_non_mapping_claim_ids": ["C01-identity", "C02-route-and-composition", "C03-implementation-and-scenes", "C04-copy", "C05-test", "C06-state-and-transitions", "C07-patrol-escort-aerial-movement", "C08-targets-projectiles-and-health", "C09-responsive-composition", "C10-config", "C11-apis", "C12-api-complete", "C13-api-ranking", "C14-cartridge-history", "C15-asset-binary"],
+    "uncovered_collector_claim_ids": [],
+    "non_mapping_evidence": [{"claim_id": "C04-copy", "reason": "Historical UI copy is retained but not required for the structural blueprint."}],
+    "all_collector_claim_ids_intentionally_covered": true
+  },
+  "boundaries": [
+    "Historical source records do not establish current implementation or runtime availability.",
+    "Source responsive logic is not browser verification.",
+    "Cover-binary presence is not asset suitability, licensing, rendering, or usage proof.",
+    "The historical cartridge is a distinct representation and is not automatically merged with the deleted component.",
+    "No evidence establishes escort, camera-follow, pause-control, or XP behavior."
+  ],
+  "marker": "MEASURE_AGENT_RESULT"
+}

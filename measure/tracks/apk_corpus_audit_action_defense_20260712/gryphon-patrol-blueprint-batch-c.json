@@ -1,0 +1,150 @@
+{
+  "schema": "apk-requirements-blueprint.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "game": "Gryphon Patrol",
+  "normalized_id": "gryphon-patrol",
+  "role": "requirements-mapper-gryphon-patrol-batch-c",
+  "authority": "non-authoritative historical requirements map; not an implementation, browser, asset, truth-test, review, candidate, acceptance, plan, registry, ontology, or cross-game decision",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "role_base_sha": "c3d37cf5212b5f7f65fd95a07a4d50cd1d796557",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "evidence_disposition": "The owner correction authorizes mapper consumption of the collector package's preflight provenance only. All source claims remain unreviewed and require later truth testing.",
+  "claim_binding_rule": "Every factual proposition in this blueprint is historical-source-derived and lists exact Gryphon ledger claim IDs. Empty claim ID arrays are reserved only for explicitly labeled mapper unknowns or proposed effort, neither of which is a factual assertion about the game.",
+  "identity": {
+    "historical_identity": {
+      "statement": "The frozen catalog contains the gryphon-patrol identifier and a cover path containing cover-gryphon-patrol.png; the collector interprets this as the historical Gryphon Patrol identity.",
+      "claim_ids": ["C01-identity"]
+    },
+    "current_boundary": {
+      "statement": "The collector's bounded baseline search covers only apps/advantage-games/src and packages/game-cartridges/src and is not a global absence or runtime conclusion.",
+      "claim_ids": [],
+      "status": "mapper-boundary"
+    }
+  },
+  "historical_states": {
+    "start": {
+      "statement": "The historical initializer sets status start, and the component renders a start screen when status is start.",
+      "claim_ids": ["C03-implementation-and-scenes", "C06-state-and-transitions"]
+    },
+    "active": {
+      "statement": "The historical component renders a React-Konva stage for playing, won, and lost statuses.",
+      "claim_ids": ["C03-implementation-and-scenes"]
+    },
+    "pause": {
+      "statement": "The historical GameState declaration includes paused among its statuses; the collector does not establish a pause control, entry transition, or rendered pause composition.",
+      "claim_ids": ["C06-state-and-transitions"]
+    },
+    "terminal": {
+      "statement": "The historical tick sets lost when HP is nonpositive and won when collected word count equals sentence length; the component renders victory or defeat end screens for won or lost.",
+      "claim_ids": ["C03-implementation-and-scenes", "C06-state-and-transitions"]
+    }
+  },
+  "historical_gameplay": {
+    "movement_and_camera": {
+      "statement": "Historical input changes player velocity; tick wraps player x by mapWidth, clamps player y by gameHeight, applies friction, moves enemies, and bounces enemy y velocity at vertical bounds.",
+      "claim_ids": ["C07-patrol-escort-aerial-movement", "C10-config"]
+    },
+    "minimap": {
+      "statement": "A separate historical cartridge representation uses a minimap sentence-arena description; it may not describe the deleted component exactly.",
+      "claim_ids": ["C14-cartridge-history"]
+    },
+    "camera_boundary": {
+      "statement": "The collector ledger does not establish a camera-follow rule or a relationship between the historical cartridge minimap description and the deleted component.",
+      "claim_ids": [],
+      "status": "mapper-unknown"
+    },
+    "target_word_selection": {
+      "statement": "Historical enemy spawn marks the first sentence word as target.",
+      "claim_ids": ["C08-targets-projectiles-and-health"]
+    },
+    "projectiles_and_collisions": {
+      "statement": "Historical projectile collisions call hitGryphonPatrolEnemy, and player-enemy collisions decrement HP with one-second invulnerability.",
+      "claim_ids": ["C08-targets-projectiles-and-health"]
+    },
+    "orbs_and_order": {
+      "statement": "Historical correct target hits create active word orbs, and the win condition is collected word count equaling sentence length.",
+      "claim_ids": ["C06-state-and-transitions", "C08-targets-projectiles-and-health"]
+    },
+    "health_and_terminal": {
+      "statement": "Historical player-enemy collisions reduce HP, and a nonpositive HP value produces the lost state.",
+      "claim_ids": ["C06-state-and-transitions", "C08-targets-projectiles-and-health"]
+    },
+    "xp_boundary": {
+      "statement": "No collected claim establishes XP display, XP awarding, or XP persistence.",
+      "claim_ids": [],
+      "status": "mapper-unknown"
+    }
+  },
+  "responsive_composition": {
+    "historical_source_behavior": {
+      "statement": "The historical component reads container client dimensions on resize and scales a 390 by 844 stage by the smaller width or height ratio; the historical page uses sm and md Tailwind variants.",
+      "claim_ids": ["C09-responsive-composition", "C10-config"]
+    },
+    "browser_boundary": {
+      "statement": "This source-derived responsive mapping is not compact or wide browser verification.",
+      "claim_ids": ["C09-responsive-composition"],
+      "status": "browser-evidence-owned-by-other-role"
+    }
+  },
+  "historical_route_and_apis": {
+    "composition": {
+      "statement": "The historical client page dynamically imports GryphonPatrolGame, requests gryphon-patrol sentences, posts completion, fetches rankings, and renders game and rankings tabs.",
+      "claim_ids": ["C02-route-and-composition"]
+    },
+    "sentences": {
+      "statement": "The historical sentences route exports GET from createSentencesRoute with eleven literal sentence and translation records.",
+      "claim_ids": ["C11-apis"]
+    },
+    "completion": {
+      "statement": "The historical completion route exports POST from createCompleteRoute.",
+      "claim_ids": ["C12-api-complete"]
+    },
+    "ranking": {
+      "statement": "The historical ranking route exports GET from createRankingRoute.",
+      "claim_ids": ["C13-api-ranking"]
+    }
+  },
+  "historical_tests": {
+    "statement": "The historical Jest test names coverage for initial start rendering, start transition, fullscreen entry, requestAnimationFrame, terminal screens, and one rAF callback under mocked Konva and shared hooks; it is not runtime proof.",
+    "claim_ids": ["C05-test"]
+  },
+  "assets": {
+    "binary_presence": {
+      "statement": "The frozen baseline contains the cited 919082-byte cover PNG object.",
+      "claim_ids": ["C15-asset-binary"]
+    },
+    "asset_boundary": {
+      "statement": "Suitability, rendering, licensing, and in-game usage remain outside this mapper's evidence and are owned by the asset auditor.",
+      "claim_ids": ["C15-asset-binary"],
+      "status": "asset-audit-owned-by-other-role"
+    }
+  },
+  "non_mapping_evidence": [
+    {
+      "claim_id": "C04-copy",
+      "reason": "Historical UI copy is retained in the ledger but is not needed for the requested structural blueprint."
+    }
+  ],
+  "explicit_unknowns": [
+    "Current implementation, route availability, and runtime behavior are not established by this historical map.",
+    "Browser interaction, compact/wide viewport usability, console/network behavior, and screenshots are browser-auditor-owned unknowns.",
+    "Asset suitability, rendering, licensing, and usage reconciliation are asset-auditor-owned unknowns.",
+    "A camera rule, pause interaction/composition, XP behavior, and an escort mechanic are not established by collected claims."
+  ],
+  "developer_effort_decomposition": [
+    {"workstream": "Historical state and visual composition", "proposed_scope": "Model start, playing, paused, won, and lost states plus source-derived visual surfaces.", "claim_ids": ["C03-implementation-and-scenes", "C04-copy", "C06-state-and-transitions"]},
+    {"workstream": "Movement and world presentation", "proposed_scope": "Implement source-derived velocity, horizontal wrapping, vertical bounds, friction, enemy movement, and separately validate any camera/minimap behavior.", "claim_ids": ["C07-patrol-escort-aerial-movement", "C10-config", "C14-cartridge-history"]},
+    {"workstream": "Combat and sentence progression", "proposed_scope": "Implement source-derived target selection, projectile/enemy and player/enemy collisions, orb activation, collection order condition, HP loss, and terminal conditions.", "claim_ids": ["C06-state-and-transitions", "C08-targets-projectiles-and-health"]},
+    {"workstream": "Responsive composition", "proposed_scope": "Recreate source-derived stage sizing and page layout variants, then obtain browser evidence rather than treating source scaling as usability proof.", "claim_ids": ["C09-responsive-composition", "C10-config"]},
+    {"workstream": "Transport and data", "proposed_scope": "Recreate or replace the historical sentence, completion, and ranking contracts only after contract and authorization review.", "claim_ids": ["C02-route-and-composition", "C11-apis", "C12-api-complete", "C13-api-ranking"]},
+    {"workstream": "Validation and unresolved work", "proposed_scope": "Derive truth tests from source claims, separately audit browser and asset evidence, and resolve camera, pause, XP, and current-runtime unknowns before implementation decisions.", "claim_ids": ["C05-test", "C09-responsive-composition", "C15-asset-binary"]}
+  ],
+  "coverage": {
+    "mapped_claim_ids": ["C01-identity", "C02-route-and-composition", "C03-implementation-and-scenes", "C04-copy", "C05-test", "C06-state-and-transitions", "C07-patrol-escort-aerial-movement", "C08-targets-projectiles-and-health", "C09-responsive-composition", "C10-config", "C11-apis", "C12-api-complete", "C13-api-ranking", "C14-cartridge-history", "C15-asset-binary"],
+    "non_mapping_claim_ids": ["C04-copy"],
+    "collector_claim_count": 15,
+    "all_collector_claims_intentionally_covered": true
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}
