@@ -16,8 +16,13 @@ describe("@reading-advantage/backend package scaffold", () => {
 
     expect(manifest.name).toBe("@reading-advantage/backend");
     expect(manifest.type).toBe("module");
-    expect(Object.keys(manifest.exports ?? {}).sort()).toEqual([".", "./kernel"]);
+    expect(Object.keys(manifest.exports ?? {}).sort()).toEqual([
+      ".",
+      "./jobs",
+      "./kernel",
+    ]);
     expect(manifest.exports).toHaveProperty(".");
+    expect(manifest.exports).toHaveProperty("./jobs");
     expect(manifest.exports).toHaveProperty("./kernel");
     expect(manifest.scripts).toMatchObject({
       build: "tsc",

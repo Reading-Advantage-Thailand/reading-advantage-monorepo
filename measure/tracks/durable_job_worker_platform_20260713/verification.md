@@ -85,3 +85,19 @@ Task 1 may be accepted only after remediation and a fresh independent PASS.
   no explicit isolated `DIRECT_DATABASE_URL`. Task 7 owns fresh two-connection
   PG16 proof with fail-closed URL handling.
 - Boundary: documentation/design only; no Task 4+ code or schema changes.
+
+## Task 4 — Durable job contracts and least-privilege ports
+
+### Decision — 2026-07-22
+
+- Decision: **PASS for Task 4 only.** Phase 1 remains open on Task 5.
+- Report: `task-4-contracts-and-ports-20260722.md`.
+- Red: the runtime contract suite failed before collection because the jobs boundary did not exist; compile-time port shape evidence remained handler-free.
+- Contracts: handler-owned Zod payload/result schemas, state-safe envelopes, bounded attempts, trusted tenant scope, lease-token lifecycle outcomes, active-lease-safe enqueue/replay, and fixed replay authorization evidence.
+- Security: persisted failures use `code` plus `safeSummary`; raw `message` and dead-letter payload fields are rejected.
+- Dead-letter visibility: bounded tenant-scoped cursor pages expose invariant-checked summaries only, through a separate administration port unavailable to worker composition.
+- Independent review: missing dead-list/auth/tenant contracts plus temporary artifacts, attempt inconsistency, and a parse defect were reproduced, remediated, and closed by a fresh PASS with no blocking findings.
+- Green: focused 9 files/26 tests; full backend 234 passed/7 skipped; production/test TypeScript, ESLint, build, architecture, and scoped diff checks passed.
+- Coverage: isolated Task 4 modules reached 100% statements, branches, functions, and lines.
+- Graph: direct `repo-graph scan . ./graph.db` completed with 85,917 nodes and 113,712 edges in 261,138 ms; fresh worker-port inspect and dead-summary search resolved the new files.
+- Boundary: no schema, migration, PostgreSQL adapter, worker loop, review-job cutover, or new live-locking evidence is claimed.
