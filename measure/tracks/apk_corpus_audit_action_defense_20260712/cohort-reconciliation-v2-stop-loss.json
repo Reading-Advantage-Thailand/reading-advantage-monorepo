@@ -1,0 +1,55 @@
+{
+  "schema_version": "apk-cohort-reconciliation-stop-loss.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "subject": "T4 cohort reconciliation v2 abandoned path",
+  "status": "stopped-non-consumable",
+  "v2_bindings": {
+    "reconciliation": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v2.json",
+      "sha256": "b7e926a8ae4fd337625b2108230aeda57352f877146d8367c7411895a52fafcc"
+    },
+    "gate": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-cohort-reconciliation-gate-v2.py",
+      "sha256": "ad00a85f9d668c382d23c63264289064bf41c99e760a523ff3d9fc177028433d"
+    }
+  },
+  "execution_history": [
+    {
+      "cycle": 1,
+      "result": "pass",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure/tracks/apk_corpus_audit_action_defense_20260712/t4-cohort-reconciliation-gate-v2.py",
+      "tests": "4/4",
+      "elapsed_seconds": 10.933
+    },
+    {
+      "cycle": 2,
+      "bounded_change": "Corrected only the Browser V6 helper disclosure and its assertion to retain all five helper attempts, exits 4 and 28, the one wide-attempt timeout, and hash-identical copying of helper-triggered daemon post-process PNG bytes.",
+      "result": "fail",
+      "tests": "3/4",
+      "elapsed_seconds": 10.740,
+      "failure": {
+        "test": "test_disclosures_and_authority_remain_fail_closed",
+        "exact_brittle_literal": "AssertionError: 'exit 4' not found",
+        "cause": "The disclosure truthfully states 'helper exits 4', while the revised assertion required the narrower literal 'exit 4'."
+      }
+    }
+  ],
+  "stop_loss": {
+    "triggered": true,
+    "rule": "Two cycles on the same gate require abandoning the path; no third edit or gate run is permitted.",
+    "third_run_performed": false,
+    "v2_consumable": false
+  },
+  "authority": {
+    "candidate_manifest_publication_authorized": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_publication_authorized": false,
+    "cohort_consumption_authorized": false
+  },
+  "successor": {
+    "path": "v3 materially different successor reconciliation path",
+    "v3_hashes_bound": false,
+    "reason": "No v3 hash is bound by this stop-loss record; this record only preserves the abandoned v2 state."
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

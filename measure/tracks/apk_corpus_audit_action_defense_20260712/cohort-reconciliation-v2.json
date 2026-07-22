@@ -1,0 +1,95 @@
+{
+  "schema_version": "apk-cohort-reconciliation.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "task": "T4 full-cohort reconciliation v2",
+  "supersedes": "measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v1.json",
+  "audited_head": "c65c4bac697a06d9c3cb84864923184821c7e098",
+  "status": "structurally-reconciled-only-not-a-cohort-acceptance",
+  "reconciliation": {
+    "assigned_games_expected": 8,
+    "assigned_games_observed": 8,
+    "duplicates": 0,
+    "omissions": 0,
+    "entries": [
+      {"game": "Castle Defense", "canonical_id": "castle-defense", "batch": "batch-a", "exactly_once": true},
+      {"game": "Magic Defense", "canonical_id": "magic-defense", "batch": "batch-a", "exactly_once": true},
+      {"game": "Wizard vs Zombie", "canonical_id": "wizard-vs-zombie", "batch": "batch-a", "exactly_once": true},
+      {"game": "Village Guardian", "canonical_id": "village-guardian", "batch": "batch-b", "exactly_once": true},
+      {"game": "Archer's Revenge", "canonical_id": "archers-revenge", "batch": "batch-b", "exactly_once": true},
+      {"game": "Storm the Castle Tower", "canonical_id": "storm-castle-tower", "batch": "batch-b", "exactly_once": true},
+      {"game": "Paladin's Twin-Soul", "canonical_id": "paladins-twin-soul", "batch": "batch-c", "exactly_once": true},
+      {"game": "Gryphon Patrol", "canonical_id": "gryphon-patrol", "batch": "batch-c", "exactly_once": true}
+    ]
+  },
+  "batch_a": {
+    "scope": ["Castle Defense", "Magic Defense", "Wizard vs Zombie"],
+    "bindings": [
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-a.json", "sha256": "b096d911b7d6bc9fb4d530e695cea10d3816a17158447a89303c2d069cf2a54c", "publication_commit_sha": "62ff2a4dbc7aa9b64f878c0ac38c4f9ad3fc91df"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-batch-a.json", "sha256": "2582c940ffccf46b6c20a27149cc2565faeecf80c814056f52fd76f768136df1", "publication_commit_sha": "62ff2a4dbc7aa9b64f878c0ac38c4f9ad3fc91df"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/castle-defense-evidence-final-report.json", "sha256": "a269d1f91da6cdd4042c24285a5638fc10747545457f542bb7e53f034333c0b0", "publication_commit_sha": "040802b335c01830d3ba483d839a682812ac36ce"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-evidence-final-report-v2.json", "sha256": "c8bb46549ba69567be62eb8eb8a4d3391a43a6143b452dc8a259d325b258ee29", "publication_commit_sha": "17859c16c854fd54cf7595be5c482adb1dd227ad"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-evidence-final-report-v2.json", "sha256": "13944b1b79da541448ee36ee7d99f26612b8ab7d4c36ccdfa4f8edd7ac78373e", "publication_commit_sha": "81c641a607572853bde05f8e7d3bc90c76e3470b"}
+    ],
+    "disclosure": "Castle Defense remains assigned through its evidence base but is not listed in the Batch A accepted-manifest games; DISC-001 and 178/187 resolved claims remain disclosed and this reconciliation does not promote Batch A to cohort acceptance."
+  },
+  "batch_b": {
+    "scope": ["Village Guardian", "Archer's Revenge", "Storm the Castle Tower"],
+    "bindings": [
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-batch-b-v20.json", "sha256": "2357e8c078aa78f4f007f676599203326ddb5b53db2c14166c4eded149e9b926", "publication_commit_sha": "94b672406c59dbd95ca645419dabe1515707295d"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-batch-b-v20.json", "sha256": "4b680fda18e8dc34dd062a59dc9b4b8f351ecda721b87e49f53e8240f392e9bb", "publication_commit_sha": "bb5c3df3a7142a2349ab287549643f3d119f96be"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-b-v20.json", "sha256": "3026323c6a6aed61f3fbcb03bacf200a1a610cb2da852606b6e9fe61f90f63d7", "publication_commit_sha": "0a0b43809a51a56db555ccbdfb09ff2cdda85d47"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-independent-review-v20.json", "sha256": "803aa6d6204b5aba4d10bee12bb359486c16f33f803a55b2984b35fec3db1812", "publication_commit_sha": "753672b0e49d6e11ad755c2d09c249bfa9bbfd48"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-lifecycle-v20.py", "sha256": "57af72a39f6bab796281b89d6d3b40272f86c4f670c434e5bf3c1c6bce24392d", "publication_commit_sha": "1448eb4f168d7c6420e3e25347080283f3b840b5"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-lifecycle-stop-loss-v17.py", "sha256": "8ec47b6d6d754328fc66aba4625bda2bfd08b499f73bb10dcad0b17717078827", "publication_commit_sha": "ddf6c56e27cd201513e92f6aa4ea7293e6ae8a08"}
+    ],
+    "required_disclosures": [
+      "Village Guardian browser input was synthetic DOM input with isTrusted=false and used a hidden-tab scheduler adapter; trusted native input and foreground timing are not claimed.",
+      "Village Guardian completion requests returned HTTP 400; completion success, persistence, XP, idempotency, and API correctness are not claimed.",
+      "Archer's Revenge and Storm the Castle Tower returned HTTP 404 at their exact reviewed routes; historical source is not promoted to current runtime behavior.",
+      "Asset presence and catalog binding do not establish runtime loading, suitability, licensing, or production use.",
+      "Provider session provenance remains unavailable and is not fabricated; owner-authorized Git substitution applies only to lifecycle and preflight provenance."
+    ]
+  },
+  "batch_c": {
+    "scope": ["Paladin's Twin-Soul", "Gryphon Patrol"],
+    "bindings": [
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-phase-base-binding.json", "sha256": "b83428a8cb84465b00609833b0be0ad2bb0388eff4ebc2de23fa112bc4715a9c", "publication_commit_sha": "e5ed3818dd8e7c4811ade484ea5033b50a2b1823"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-denominator-correction-v4.json", "sha256": "6ac35b26a3dd96210ac4d0823dd1f8255b74fddfebf19951332e2292a19d577f", "publication_commit_sha": "97d5af991eeebe570ac0af57b16628dd623d5515"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v7.json", "sha256": "d4c3eb1093970cbe4470bd4da833fced7465b443f85c7d900c79979163a95a17", "publication_commit_sha": "8693ba3ec9ba139ee59b4255c958ebb3fc4be0a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests-v7.py", "sha256": "943452bd371556e76be3453547c6d2338581132e5bdf421b48fcefabe4cc6699", "publication_commit_sha": "8693ba3ec9ba139ee59b4255c958ebb3fc4be0a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/truth-test-author-batch-c-v7.json", "sha256": "66140bae9dc7b5fc65f046430859eabf5388e2c9a8650d259cb75603ba81d363", "publication_commit_sha": "8693ba3ec9ba139ee59b4255c958ebb3fc4be0a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/truth-test-author-batch-c-v7.json", "sha256": "d21a51f8e5898798801d09a5802db1e9ff2b41da75bb46ea445b3513fb9b421c", "publication_commit_sha": "8693ba3ec9ba139ee59b4255c958ebb3fc4be0a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-adversarial-review-v7.json", "sha256": "24213a190009dc1a623f8b3a79d240133c1b3f0bf792023cc35cb163bdb5b2e2", "publication_commit_sha": "c65c4bac697a06d9c3cb84864923184821c7e098"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/adversarial-reviewer-batch-c-v7.json", "sha256": "f44f58d5d5e57737bbd299a9c17cba95364e163371500d3daeb27bf366eea87b", "publication_commit_sha": "c65c4bac697a06d9c3cb84864923184821c7e098"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v6-root-arbiter-20260722-1758-kimi-b91e-ownership.json", "sha256": "abf14709ac62f3d7fdff1f75fcd3064753f0ec52e0169c2068fd52aa88b172e9", "publication_commit_sha": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-audit-v6-root-arbiter-20260722-1758-kimi-b91e.json", "sha256": "6e9a39503d315f59b001e0952fe317441115cf5c82f8efb3fe5473690b97b4e6", "publication_commit_sha": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/browser-auditor-batch-c-v6-root-arbiter-20260722-1758-kimi-b91e.json", "sha256": "a75f2b5c0bb5d6236c67185aafe42f628bd01e57f63efa904b7986fb3a755cae", "publication_commit_sha": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/browser-auditor-batch-c-v6-root-arbiter-20260722-1758-kimi-b91e.json", "sha256": "913ee0b1431e0d852dec196cf523d9bec0ed004fa3796e24798ecf9f4532e283", "publication_commit_sha": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-browser-v5-skill-deviation.json", "sha256": "68e6528edec1c05e85d694fde5de6d436ef4209e0317653bbcecf3b340cd2a46", "publication_commit_sha": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-auditor-v5-root-arbiter-20260722-1726-a51d-ownership.json", "sha256": "4c798bc474822bf4253e2e2d306511db1a140e561214810fd328fd10ae356b0b", "publication_commit_sha": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit-v5-root-arbiter-20260722-1726-a51d.json", "sha256": "10b372b3eff78ce869062577c42ccdf7eccf10e56177315acca91b892e97195c", "publication_commit_sha": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json", "sha256": "fac6f71f01dd247ccdd2abf0dbf628c0a1a3ba8bfb329cd00d7503c271760e14", "publication_commit_sha": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json", "sha256": "e38993458ba19f299d2cd16eb699f79b9cd82f1d6dcde420d9fbc8c2577d37ab", "publication_commit_sha": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-v5-independent-validation-v1.json", "sha256": "ee322ac2d9f7f8d87cc4d94db16d83484a01dae0ae07e60b1c644ef9bd09ec5c", "publication_commit_sha": "746f852e19076698b2afb4d193a464f992c0af13"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5-validation-v1.json", "sha256": "acd29d1142316835d95a60d65f3d4ee3cccff8ae6f5ae17235e9b5c581572aa4", "publication_commit_sha": "746f852e19076698b2afb4d193a464f992c0af13"},
+      {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5-validation-v1.json", "sha256": "341224264b6315ef29c75865ac4a4d7af090262e888e0d0098e223207b6a7bd8", "publication_commit_sha": "746f852e19076698b2afb4d193a464f992c0af13"}
+    ],
+    "review_result": {"unresolved_critical": 0, "unresolved_high": 0, "unresolved_medium": 0, "gate_result": "green: 5 passed"},
+    "required_disclosures": [
+      "Kimi Browser v6 used only the mandated screenshot helper. Across five helper capture attempts, daemon v1.11.1 compatibility processing produced helper exits 4 after successful post-processing and one wide-attempt timeout exit 28; exact helper-triggered daemon post-process PNG bytes were copied unchanged to the reserved paths and source/destination hashes matched.",
+      "Paladin's Twin-Soul and Gryphon Patrol are catalog-only Coming Soon cards without links and their exact reviewed compact or wide arcade routes returned HTTP 404; they are non-runnable at the bound head.",
+      "No gameplay, responsive success, completion, persistence, XP, API success, asset loading, asset suitability, licensing, production, implementation, or shipping success is claimed.",
+      "Browser V5 is non-consumable and excluded because it bypassed the mandated screenshot-helper contract; Browser V6 is the selected replacement.",
+      "The selected Asset root-arbiter receipt retains its five pending self-check fields unchanged and requires its separate independent-validation successor; asset evidence remains limited to presence and catalog binding."
+    ]
+  },
+  "authorizations": {
+    "candidate_manifest_publication_authorized": false,
+    "product_owner_acceptance_authorized": false,
+    "accepted_manifest_publication_authorized": false,
+    "cohort_consumption_authorized": false,
+    "fresh_full_cohort_reviewer": {"authorized": true, "only_permitted_next_role": true, "required_mode": "fresh-context-only, fork_turns=none, tool-attested, full eight-game reconciliation", "condition": "t4-cohort-reconciliation-gate-v2.py must pass against the exact bindings above before dispatch."}
+  },
+  "forbidden_success_claims": {"ontology": false, "implementation": false, "shipping": false, "gameplay": false, "responsive": false, "completion": false, "persistence": false, "xp": false, "api": false, "asset_loading": false, "asset_suitability": false, "licensing": false},
+  "marker": "MEASURE_AGENT_RESULT"
+}
