@@ -1,0 +1,41 @@
+{
+  "schema_version": "apk-t5-product-owner-acceptance.v1",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "additive": true,
+  "approval_kind": "current-delegated-project-owner-acceptance",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "status": "accepted-successor-authority",
+  "ordered_after_candidate": true,
+  "candidate_binding": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/t5-lifecycle-closeout-candidate-v1.json",
+    "sha256": "5f7df0f865a476414e0fdbf14e67b0af3b1ab3d8bb86e17c0e7901998b32e46c",
+    "commit_sha": "8a28856e9b6f1c5123ff09b1d77e862a6b2df71e",
+    "commit_subject": "chore(measure): publish T5 lifecycle closeout candidate"
+  },
+  "authorization": {
+    "source": "explicit current human direction",
+    "authority": "root project owner acting as designated orchestrator",
+    "delegated_artifact_author": "native acceptance-artifact author",
+    "scope": "Authorize one separate additive successor accepted-cohort manifest for the exact committed candidate only."
+  },
+  "native_provider_evidence": {
+    "message_id": null,
+    "message_id_status": "unavailable",
+    "event_id": null,
+    "event_id_status": "unavailable",
+    "prompt": null,
+    "prompt_status": "unavailable",
+    "timestamp": null,
+    "timestamp_status": "unavailable",
+    "disclosure": "Native provider message, event, prompt, and timestamp fields are unavailable; no IDs, timestamps, or substitute provider receipts are fabricated."
+  },
+  "disclosures": [
+    "This acceptance binds every disclosure, excluded use, revocation rule, and browser-unknown limitation in the exact T5 candidate.",
+    "This acceptance neither rewrites legacy artifacts nor promotes source, browser, completion, persistence, XP, idempotency, API, production, or asset-loading claims."
+  ],
+  "successor_manifest_authorized": true,
+  "revocation": {
+    "on_candidate_hash_or_commit_drift": "This acceptance is void; publish a new additive candidate and obtain fresh project-owner acceptance.",
+    "on_any_bound_input_drift": "The successor manifest is non-consumable until regenerated and reverified."
+  }
+}

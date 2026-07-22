@@ -1,0 +1,68 @@
+{
+  "schema_version": "apk-t5-accepted-cohort-manifest.v1",
+  "manifest_kind": "successor-accepted-cohort-manifest",
+  "track_id": "apk_corpus_audit_traversal_exploration_20260712",
+  "additive": true,
+  "supersedes": {
+    "path": "accepted-cohort-manifest-v1.json",
+    "disposition": "Preserved immutable historical evidence; this successor corrects formal-closeout consumption without mutating it."
+  },
+  "status": "accepted",
+  "decision": "ACCEPT-WITH-DISCLOSURE",
+  "consumable": true,
+  "consumability": "conditional",
+  "candidate_binding": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/t5-lifecycle-closeout-candidate-v1.json",
+    "sha256": "5f7df0f865a476414e0fdbf14e67b0af3b1ab3d8bb86e17c0e7901998b32e46c",
+    "commit_sha": "8a28856e9b6f1c5123ff09b1d77e862a6b2df71e"
+  },
+  "acceptance_binding": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/t5-product-owner-acceptance-v1.json",
+    "sha256": "761d3fe586ad27539ac5a24cd75db80a2765645e9e782200ea1e2a5d460e2175",
+    "decision": "ACCEPT-WITH-DISCLOSURE",
+    "authority": "current delegated project-owner acceptance"
+  },
+  "accepted_batch_bindings": {
+    "batch_a": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-a-v6.json",
+      "sha256": "f5a215f44815c79025e86e97a3217d7a85c4a33db86f80db2909f30dd3a9caa3"
+    },
+    "batch_b": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-b-v3-retroactive.json",
+      "sha256": "49bdb4e4278246df1f3810de24f682870fe7d65171d075d50479435f74312b01"
+    },
+    "batch_c": {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-c-v2-retroactive.json",
+      "sha256": "f9cef57c46ec6e63f61d7ac0df4e8fd0737252f711c21186f86b846e4c56f0ff"
+    }
+  },
+  "current_gate_binding": {
+    "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/t5-closeout-gates-v1.py",
+    "sha256": "ca161d5007af8d01401818c5659811f9b74fdbfc52ab4e21e885656fcdd74ad1",
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q measure/tracks/apk_corpus_audit_traversal_exploration_20260712/t5-closeout-gates-v1.py",
+    "result": "6 passed; exit 0"
+  },
+  "acceptance_separation": {
+    "candidate_is_non_consumable": true,
+    "acceptance_is_a_separate_authority_artifact": true,
+    "accepted_manifest_is_a_separate_consumption_artifact": true,
+    "publication_order_basis": "The candidate is bound to its committed Git object. This additive acceptance and successor manifest have no fabricated publication commit or timestamp; their Git publication order is established only when a later commit records them."
+  },
+  "disclosures": [
+    "All disclosures in the exact candidate, all three accepted batch manifests, and the exact acceptance artifact remain binding on every consumer.",
+    "This formal-closeout manifest does not claim browser behavior, completion, persistence, XP, idempotency, API correctness, production behavior, or asset-loading success.",
+    "The candidate's immutable-history and historical-test supersession disclosures remain intact; no legacy artifact is rewritten, backdated, or relabelled green."
+  ],
+  "conditional_consumption": {
+    "requirements": [
+      "Bind the exact hashes of this manifest, the candidate, the acceptance, the three batch manifests, and the current closeout gate.",
+      "Preserve every bound disclosure and revocation rule without narrowing or omission.",
+      "Treat any bound-file hash drift, revoked batch, or failed current or successor gate as non-consumable."
+    ]
+  },
+  "revoked": false,
+  "revocation": {
+    "on_hash_drift_or_gate_failure": "non-consumable; regenerate additively and obtain fresh acceptance",
+    "legacy_artifacts": "never rewritten by this successor manifest"
+  }
+}
