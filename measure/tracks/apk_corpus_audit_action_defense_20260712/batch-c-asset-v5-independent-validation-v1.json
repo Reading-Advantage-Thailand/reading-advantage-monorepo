@@ -1,0 +1,97 @@
+{
+  "schema": "apk-batch-c-asset-validation-successor.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "task_id": "C3-ASSET-VALIDATION",
+  "role": "asset-auditor-batch-c-validation-successor",
+  "status": "complete-bounded-independent-validation",
+  "checkpoint": {
+    "commit": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1",
+    "abbrev": "ae0920c9",
+    "subject": "chore: checkpoint T4 Batch C Kimi v6 evidence"
+  },
+  "provider_provenance": {
+    "provider_identifier": "/root/t4_asset_v5_validator",
+    "parent_task": "/root",
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "auxiliary_git_worktree_created_or_used": false,
+    "commit_created": false,
+    "fresh_context": false,
+    "remediation_scope": "independent validation successor only"
+  },
+  "original_set": {
+    "ownership": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-auditor-v5-root-arbiter-20260722-1726-a51d-ownership.json",
+      "sha256": "4c798bc474822bf4253e2e2d306511db1a140e561214810fd328fd10ae356b0b"
+    },
+    "audit": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit-v5-root-arbiter-20260722-1726-a51d.json",
+      "sha256": "10b372b3eff78ce869062577c42ccdf7eccf10e56177315acca91b892e97195c"
+    },
+    "proof": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json",
+      "sha256": "fac6f71f01dd247ccdd2abf0dbf628c0a1a3ba8bfb329cd00d7503c271760e14"
+    },
+    "receipt": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v5-root-arbiter-20260722-1726-a51d.json",
+      "sha256": "e38993458ba19f299d2cd16eb699f79b9cd82f1d6dcde420d9fbc8c2577d37ab",
+      "preserved_pending_validation_fields": [
+        "three_file_chain",
+        "json_syntax",
+        "predecessor_immutability",
+        "no_backup_files",
+        "diff_scope"
+      ]
+    }
+  },
+  "independent_checks": {
+    "chain_hashes": {
+      "result": "pass",
+      "method": "sha256sum recomputed every original file; audit and proof digests match the original receipt bindings, and ownership digest matches the ownership bindings in the original audit and receipt.",
+      "observed": {
+        "ownership": "4c798bc474822bf4253e2e2d306511db1a140e561214810fd328fd10ae356b0b",
+        "audit": "10b372b3eff78ce869062577c42ccdf7eccf10e56177315acca91b892e97195c",
+        "proof": "fac6f71f01dd247ccdd2abf0dbf628c0a1a3ba8bfb329cd00d7503c271760e14",
+        "receipt": "e38993458ba19f299d2cd16eb699f79b9cd82f1d6dcde420d9fbc8c2577d37ab"
+      }
+    },
+    "json_syntax": {
+      "result": "pass",
+      "method": "jq -e . parsed all four original JSON files successfully."
+    },
+    "predecessor_immutability": {
+      "result": "pass",
+      "method": "Recomputed each v4 provider-set digest listed in batch-c-asset-auditor-v4-collision.json and compared it to the collision record.",
+      "collision_record": {
+        "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-auditor-v4-collision.json",
+        "sha256": "166c1c2284076ab0eaac5ec2f267cd2cc92378b4f908c6573767678626813b74"
+      },
+      "verified_files": [
+        {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit-v4-fresh.json", "sha256": "4c6ae789cd4936b375aa2ff2c9268fff54586d3241a94ecab04f13dbc46592b4"},
+        {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-audit-v4.json", "sha256": "072132dbc86963581e5a7c826e42b3598ffc8a5ea5f80834c9fcc50d90526de3"},
+        {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v4.json", "sha256": "299fb74edbccb0d39c9fd8f04abf6c16b94b8e05e677413b55b41694a7117853"},
+        {"path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-c-v4.json", "sha256": "96bd88571dc57ad2d1bea256524a335d6e7f291e573098442496d4f4b3bd1327"}
+      ]
+    },
+    "no_backups": {
+      "result": "pass",
+      "method": "find found no .bak, .orig, or editor-backup suffix for any of the three successor output basenames before write."
+    },
+    "exact_diff_scope": {
+      "result": "pass",
+      "method": "git diff --name-status ae0920c9 -- <the four original-set paths> emitted no rows before successor write; the three named successor paths were also absent before write.",
+      "original_set_changed_since_checkpoint": false,
+      "successor_paths_absent_prewrite": true
+    }
+  },
+  "boundaries": {
+    "original_files_edited": false,
+    "only_three_successor_files_authored": true,
+    "candidate_authorized": false,
+    "acceptance_authorized": false,
+    "selected_asset_role_replaced_or_impersonated": false,
+    "expensive_suite_run": false
+  },
+  "blockers": [],
+  "marker": "MEASURE_AGENT_RESULT"
+}

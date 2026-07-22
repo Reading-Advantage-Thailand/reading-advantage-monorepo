@@ -1,0 +1,46 @@
+{
+  "schema": "measure.role-validation-receipt.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "task_id": "C3-ASSET-VALIDATION",
+  "role": "asset-auditor-batch-c-validation-successor",
+  "status": "complete-bounded",
+  "provider_provenance": {
+    "provider_identifier": "/root/t4_asset_v5_validator",
+    "parent_task": "/root",
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "auxiliary_git_worktree_created_or_used": false,
+    "commit_created": false
+  },
+  "checkpoint_commit": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1",
+  "prompt_binding": {
+    "sha256": "01348ba2dc3ebfa64dad19124c8cd2ccfd437fcd299fe2907be44a3407a81c04",
+    "exact_prompt_retained_in": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5-validation-v1.json"
+  },
+  "validation_record": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-v5-independent-validation-v1.json",
+    "sha256": "ee322ac2d9f7f8d87cc4d94db16d83484a01dae0ae07e60b1c644ef9bd09ec5c"
+  },
+  "retained_proof": {
+    "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/role-proofs/asset-auditor-batch-c-v5-validation-v1.json",
+    "sha256": "acd29d1142316835d95a60d65f3d4ee3cccff8ae6f5ae17235e9b5c581572aa4"
+  },
+  "original_set_hashes": {
+    "ownership": "4c798bc474822bf4253e2e2d306511db1a140e561214810fd328fd10ae356b0b",
+    "audit": "10b372b3eff78ce869062577c42ccdf7eccf10e56177315acca91b892e97195c",
+    "proof": "fac6f71f01dd247ccdd2abf0dbf628c0a1a3ba8bfb329cd00d7503c271760e14",
+    "receipt": "e38993458ba19f299d2cd16eb699f79b9cd82f1d6dcde420d9fbc8c2577d37ab"
+  },
+  "independently_recomputed_checks": {
+    "chain_hashes": "pass",
+    "json_syntax": "pass",
+    "predecessor_immutability": "pass",
+    "no_backup_files": "pass",
+    "exact_diff_scope": "pass"
+  },
+  "original_receipt_disposition": "The original root-arbiter receipt remains unchanged and truthfully retains its five pending self-check fields. This successor accompanies it; it neither replaces nor impersonates the selected Asset role.",
+  "candidate_authorized": false,
+  "acceptance_authorized": false,
+  "blockers": [],
+  "marker": "MEASURE_AGENT_RESULT"
+}

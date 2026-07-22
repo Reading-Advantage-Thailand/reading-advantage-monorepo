@@ -1,0 +1,35 @@
+{
+  "schema": "apk-role-validation-proof.v1",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "task_id": "C3-ASSET-VALIDATION",
+  "role": "asset-auditor-batch-c-validation-successor",
+  "provider_identifier": "/root/t4_asset_v5_validator",
+  "parent_task": "/root",
+  "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+  "auxiliary_git_worktree_created_or_used": false,
+  "commit_created": false,
+  "prompt": "Proceed with one bounded successor remediation in the shared canonical master tree only; NO WORKTREES. Author exactly three new files, no original edits: 1) measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-v5-independent-validation-v1.json, 2) role-proofs/asset-auditor-batch-c-v5-validation-v1.json, 3) role-receipts/asset-auditor-batch-c-v5-validation-v1.json. Bind checkpoint commit ae0920c9 and exact original ownership/audit/proof/receipt hashes. Record the five previously pending checks as independently recomputed pass/fail: chain hashes, JSON syntax, predecessor immutability, no backups, exact diff scope. Preserve the original receipt's pending fields truthfully; do not rewrite them. Make this a validation successor that can accompany, not replace or impersonate, the selected Asset role. Include exact provider/parent/prompt/hash/commands and candidate/acceptance false. Run only focused validation. Do not stage or commit. Report hashes and blockers.",
+  "prompt_sha256": "01348ba2dc3ebfa64dad19124c8cd2ccfd437fcd299fe2907be44a3407a81c04",
+  "prompt_hash_method": "SHA-256 of the exact UTF-8 prompt string with no trailing newline",
+  "checkpoint_commit": "ae0920c93f30bf1d2d90058373c552dfccdfd8a1",
+  "commands": [
+    {"id": "V01", "argv": ["git", "show", "-s", "--format=%H%n%ct%n%s", "ae0920c9"], "exit_code": 0, "result": "checkpoint resolved to ae0920c93f30bf1d2d90058373c552dfccdfd8a1"},
+    {"id": "V02", "argv": ["test", "!", "-e", "<each of three successor paths>"], "exit_code": 0, "result": "all three successor paths absent before write"},
+    {"id": "V03", "argv": ["sha256sum", "<original ownership audit proof receipt>"], "exit_code": 0, "result": "four recomputed hashes match the bindings recorded in the successor validation"},
+    {"id": "V04", "argv": ["jq", "-e", ".", "<original ownership audit proof receipt>"], "exit_code": 0, "result": "all four original JSON files parsed"},
+    {"id": "V05", "argv": ["sha256sum", "<four collision-recorded v4 provider files>"], "exit_code": 0, "result": "all four predecessor digests match batch-c-asset-auditor-v4-collision.json"},
+    {"id": "V06", "argv": ["find", "<track>", "-type", "f", "<backup suffix predicates for successor basenames>"], "exit_code": 0, "result": "no backup files found"},
+    {"id": "V07", "argv": ["git", "diff", "--name-status", "ae0920c9", "--", "<four original-set paths>"], "exit_code": 0, "stdout": "", "result": "no original-set path changed since checkpoint"}
+  ],
+  "original_set_hashes": {
+    "ownership": "4c798bc474822bf4253e2e2d306511db1a140e561214810fd328fd10ae356b0b",
+    "audit": "10b372b3eff78ce869062577c42ccdf7eccf10e56177315acca91b892e97195c",
+    "proof": "fac6f71f01dd247ccdd2abf0dbf628c0a1a3ba8bfb329cd00d7503c271760e14",
+    "receipt": "e38993458ba19f299d2cd16eb699f79b9cd82f1d6dcde420d9fbc8c2577d37ab"
+  },
+  "result": "pass",
+  "candidate_authorized": false,
+  "acceptance_authorized": false,
+  "marker": "MEASURE_AGENT_RESULT"
+}
