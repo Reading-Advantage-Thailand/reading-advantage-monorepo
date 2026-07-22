@@ -1,0 +1,45 @@
+{
+  "schema": "measure.role-receipt.v2",
+  "track_id": "apk_corpus_audit_action_defense_20260712",
+  "batch_id": "batch-c",
+  "phase": "Phase 3: Batch C evidence packages",
+  "role": "evidence-collector-gryphon-patrol-batch-c-v2",
+  "fork_turns": "none",
+  "role_base_sha": "eb355274ef4dacdd807266d932c807f266660c77",
+  "phase_base_sha": "709b0c69608312aa5d784fcc9c1b74870ce697e0",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "provider_provenance": {
+    "available": false,
+    "provider_identifier": null,
+    "raw_export_identifier": null,
+    "reason": "No provider-attested identifier or retained provider raw export is available in this fresh remediation context."
+  },
+  "exact_inputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/test-strategy-batch-c.md": "64999ddb82b232a2075e4eb25517200483c7c98b57e23883fa7b8da0d27a6ab9",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-budget-declaration.json": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-phase-base-binding.json": "b83428a8cb84465b00609833b0be0ad2bb0388eff4ebc2de23fa112bc4715a9c",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-collector-preflight-correction-v1.json": "008dd81041b9cff1b148538067e5d3f85637e0e2d561229ca06c25762989ff46",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-claim-ledger-batch-c.json": "fac24981441b0b86b9e1388046b947daaaef2443093917c8648e9392799a1155",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-method-batch-c.md": "8889ec8afe2f0a8c60582bcefedd784b5680e1b863e5a69a6ac6c6de1bcc967f",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-evidence-final-report-batch-c.json": "5999d8f9d4f7b8f7cc0fc17c2dd5f6511be64436d74e421f9c0df2b5a24bc639",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-gryphon-patrol-batch-c.json": "190b56be6013a5ac0aa5a09541e467506533834a325ced6fa742196bcb11938d",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-blueprint-batch-c.json": "1bb8d8f1dafa26fd660182bce030a88c16790cfba737028752459214a1a39089",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-hypotheses-batch-c.md": "ec721b12f9d6ef46597a3db703b7f9a0c7bc2efecb71c3fd4314991285ba8436",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-mapper-final-report-batch-c.json": "1890eca75e416da2cdba9ba2248490cdb9430892069e87fe37c6aaff0013b654",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/requirements-mapper-gryphon-patrol-batch-c.json": "cc05f6b0a795d72cb1dcac8120f75418649111ab5d6202c0805b71a2136db74b",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-truth-tests.py": "22f47415d2cd11a78dc797fe47231254f4f76f3630bfcbbeb7143b947d10f461"
+  },
+  "resource_budget": {
+    "declaration_sha256": "2821aed278b155fbe3386d22e78d22f222b44e4b597ac0fc536854df56650211",
+    "ceiling": {"source_bytes_read": 52428800, "source_files_or_objects_read": 120, "command_invocations": 80, "elapsed_minutes": 45, "records_authored_or_reviewed": 300, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "actual": {"source_bytes_read": 989147, "source_files_or_objects_read": 19, "command_invocations": 16, "elapsed_minutes": 24, "records_authored_or_reviewed": 55, "browser_interactions": 0, "browser_artifacts_captured": 0, "asset_candidates_inspected": 0},
+    "within_frozen_ceiling": true,
+    "measurement_note": "Git source-object recomputation covered the fifteen original claim envelopes; no browser interaction, browser artifact, asset-suitability inspection, mapping, review, candidate, acceptance, plan, registry, or implementation work was performed."
+  },
+  "outputs": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/gryphon-patrol-semantic-supersession-batch-c-v2.json": "2f0c23b6aa5a03b814107dbd8325bc1af5d7ce21fa15d6fbfdca87b77345efd4",
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-gryphon-patrol-batch-c-v2.json": null
+  },
+  "status": "complete-additive-semantic-supersession; original collector artifacts remain immutable; no later-stage disposition is asserted",
+  "marker": "MEASURE_AGENT_RESULT"
+}
