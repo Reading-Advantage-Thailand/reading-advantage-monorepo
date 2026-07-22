@@ -1,0 +1,51 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "task_id": "batch-b-denominator-reconciliation-v2",
+  "role": "discovery-auditor-batch-b-v2",
+  "status": "complete-local-producer; distinct-session gate unsatisfied",
+  "role_base_sha": "bd39b8e0cffb813f045a3853eb4499f46e96d3ff",
+  "publication_commit_sha": null,
+  "publication_disclosure": "Authored before the producer commit; a later independent reviewer must bind the immutable publication commit without mutating this receipt.",
+  "provider_provenance": {
+    "available": false,
+    "claimed": false,
+    "prompt": "unavailable-not-claimed",
+    "session": "unavailable-not-claimed",
+    "spawn": "unavailable-not-claimed",
+    "ancestry": "unavailable-not-claimed",
+    "fork": "unavailable-not-claimed",
+    "timing": "unavailable-not-claimed",
+    "final_response": "unavailable-not-claimed",
+    "commit": "unavailable-not-claimed"
+  },
+  "local_execution": {
+    "producer_context": "same current producer context for all V2 producer roles",
+    "fresh_context_only": false,
+    "inherited_narrative": true,
+    "parent_ancestry_ids": [],
+    "fork_turns": "not-applicable-no-fork-created",
+    "distinct_agent_session": false,
+    "role_separation_satisfied": false
+  },
+  "resource_accounting": {
+    "measured": true,
+    "path_admissions": 3,
+    "denominator_records_reconciled": 145,
+    "git_history_queries": 3,
+    "denominator_reports": 1,
+    "elapsed_minutes": null,
+    "elapsed_disclosure": "timer unavailable; not represented as zero"
+  },
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-discovery-audit-v2.json": "ee42562afbad90f455359c57ff6a3adaff0ee6c8d588ac8de2d49f6fd8cf399f",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/source-asset-history-ledger-v2.json": "ea75ae1bb395fd19c7fabed2ff91e709cdc919bab4e2c154fa8a3e08e291ebe2",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/rune-forge-chamber/source-asset-history-ledger-v2.json": "898154087d75e0216714055ce6d55f470f296789495591c2bfecdedf9646e248",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/source-asset-history-ledger-v2.json": "c134eecef68f8e083f1eec803c9acfe9faefea5622cdfcc3fc5bbf75608466d0"
+  },
+  "acceptance": "not-claimed",
+  "candidate_authorized": false,
+  "independent_review_authorized": true,
+  "marker": "MEASURE_AGENT_RESULT"
+}

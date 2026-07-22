@@ -1,0 +1,50 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "task_id": "astral-mage-evidence-v2",
+  "role": "evidence-collector-astral-mage-batch-b-v2",
+  "status": "complete-local-producer; distinct-session gate unsatisfied",
+  "role_base_sha": "bd39b8e0cffb813f045a3853eb4499f46e96d3ff",
+  "publication_commit_sha": null,
+  "publication_disclosure": "Authored before the producer commit; a later independent reviewer must bind the immutable publication commit without mutating this receipt.",
+  "provider_provenance": {
+    "available": false,
+    "claimed": false,
+    "prompt": "unavailable-not-claimed",
+    "session": "unavailable-not-claimed",
+    "spawn": "unavailable-not-claimed",
+    "ancestry": "unavailable-not-claimed",
+    "fork": "unavailable-not-claimed",
+    "timing": "unavailable-not-claimed",
+    "final_response": "unavailable-not-claimed",
+    "commit": "unavailable-not-claimed"
+  },
+  "local_execution": {
+    "producer_context": "same current producer context for all V2 producer roles",
+    "fresh_context_only": false,
+    "inherited_narrative": true,
+    "parent_ancestry_ids": [],
+    "fork_turns": "not-applicable-no-fork-created",
+    "distinct_agent_session": false,
+    "role_separation_satisfied": false
+  },
+  "resource_accounting": {
+    "measured": true,
+    "cited_ranges": 16,
+    "source_objects_read": 5,
+    "source_bytes_read": 41527,
+    "negative_fixtures": 6,
+    "elapsed_minutes": null,
+    "elapsed_disclosure": "timer unavailable; not represented as zero"
+  },
+  "output_hashes": {
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger-v2.json": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/source-asset-history-ledger-v2.json": "c134eecef68f8e083f1eec803c9acfe9faefea5622cdfcc3fc5bbf75608466d0",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/negative-fixtures-v2.json": "09ae2cfd3e3b064c73cbe2e2fa62a38ba21cc4d0a640ec3e36641809091341dd"
+  },
+  "acceptance": "not-claimed",
+  "candidate_authorized": false,
+  "independent_review_authorized": true,
+  "marker": "MEASURE_AGENT_RESULT"
+}

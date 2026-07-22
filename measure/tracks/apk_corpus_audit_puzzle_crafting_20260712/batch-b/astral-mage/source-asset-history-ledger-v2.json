@@ -1,0 +1,181 @@
+{
+  "schema_version": "apk-source-asset-history-ledger.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "game": "Astral Mage",
+  "normalized_game_id": "catalog/astral-mage",
+  "predecessor_bindings": {
+    "accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "accepted_pilot_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "accepted_batch_a_v3_sha256": "8c332ff99bf9224f826f77cec256ff4d3f6cb94cea7181e3879226f82c875e83",
+    "local_provenance_direction_sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+  },
+  "denominator_records": [
+    {
+      "path": "apps/advantage-games/measure/tracks/astral-mage-compliance-audit_20260426/index.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "392097351798efc045bb6d55f953f08423f858e34f16924394271b0c710bb227",
+      "bytes": 149
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/astral-mage-compliance-audit_20260426/metadata.json",
+      "denominator_sources": [
+        "asset-file-denominator.json",
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "57cfe25d29a52dbbc35b0b236eb0a54cca9c5a108b518b22db076d1775261d0e",
+      "bytes": 474
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/astral-mage-compliance-audit_20260426/plan.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "f02b1f14d23cbd988f96a2d4560104fecb61153e3737e2da738fc4efc848ba65",
+      "bytes": 4142
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/astral-mage-compliance-audit_20260426/report.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "f99539dd5fd3d2ef1a65688c8e7a9502cfbaf2d9a34778ff65cca7c39c18c872",
+      "bytes": 5114
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/astral-mage-compliance-audit_20260426/spec.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "985073e7a720f067a114a732cf4633ce66128c3276cfabfe32766321c5cf373b",
+      "bytes": 3581
+    },
+    {
+      "path": "apps/advantage-games/public/games/cover/cover-astral-mage.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "79175a0b15043ab30d13316f88d46f8c4ab0994e905ee251c67969b8826ce249",
+      "bytes": 1091403
+    },
+    {
+      "path": "apps/advantage-games/src/lib/gameCards.ts",
+      "denominator_sources": [
+        "game-identity-ledger.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+      "bytes": 8468
+    },
+    {
+      "path": "packages/game-cartridges/src/cartridges/astral-mage/blueprint.md",
+      "denominator_sources": [
+        "historical-source-denominator.json"
+      ],
+      "disposition": "historical-deleted-before-baseline",
+      "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+      "blob_sha256": "885a63968666748e41fd8188e76abd36a3414a0c8dda9edb9ccd601c736246aa",
+      "bytes": 1539
+    },
+    {
+      "path": "packages/game-cartridges/src/cartridges/astral-mage/definition.test.ts",
+      "denominator_sources": [
+        "historical-source-denominator.json"
+      ],
+      "disposition": "historical-deleted-before-baseline",
+      "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+      "blob_sha256": "68d7ebc779e5092d9d6073e22abfa43ded65fcbe474b1a70faaec42effb099da",
+      "bytes": 3126
+    },
+    {
+      "path": "packages/game-cartridges/src/cartridges/astral-mage/definition.ts",
+      "denominator_sources": [
+        "historical-source-denominator.json"
+      ],
+      "disposition": "historical-deleted-before-baseline",
+      "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+      "blob_sha256": "e5242078cc070554949d40853fcb0768eb429fe39691bddbcf87372312725c54",
+      "bytes": 1272
+    },
+    {
+      "path": "packages/game-cartridges/src/cartridges/astral-mage/index.ts",
+      "denominator_sources": [
+        "historical-source-denominator.json"
+      ],
+      "disposition": "historical-deleted-before-baseline",
+      "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+      "blob_sha256": "e651e33a800e6322c758a7dabf8af28b726878ae077783d351c7359ea9d4c819",
+      "bytes": 111
+    },
+    {
+      "path": "packages/game-cartridges/src/cartridges/astral-mage/scene.ts",
+      "denominator_sources": [
+        "historical-source-denominator.json"
+      ],
+      "disposition": "historical-deleted-before-baseline",
+      "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+      "blob_sha256": "243a7005991ca40a04c08a247c526370a5533066a3df22c9e3f254051d632f8d",
+      "bytes": 22058
+    },
+    {
+      "path": "packages/game-cartridges/src/families/target-action/state.ts",
+      "denominator_sources": [
+        "historical-implementation-dependency"
+      ],
+      "disposition": "historical-deleted-before-baseline",
+      "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+      "blob_sha256": "b93b879fff337ce89a6740523a733043cac1dac1c71682e88491f5a3e0a2df5f",
+      "bytes": 6603
+    },
+    {
+      "path": "packages/game-cartridges/src/internal/random.ts",
+      "denominator_sources": [
+        "historical-implementation-dependency"
+      ],
+      "disposition": "historical-deleted-before-baseline",
+      "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+      "blob_sha256": "0ff669485bebb60981ced6dd1a8c572a6909975d3b9aea21dc1791494f41d2be",
+      "bytes": 1170
+    },
+    {
+      "path": "packages/game-cartridges/src/internal/results.ts",
+      "denominator_sources": [
+        "historical-implementation-dependency"
+      ],
+      "disposition": "historical-deleted-before-baseline",
+      "revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+      "blob_sha256": "cca21b098749adcd0de53c63ee5d0cd05e1a695b650a753362defe5c21ca57d0",
+      "bytes": 749
+    }
+  ],
+  "coverage": {
+    "records": 15,
+    "unresolved_records": 0,
+    "status": "pass"
+  },
+  "history": {
+    "baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "historical_implementation_revision": "1a21fb951e27bb4df8a5e8f7b1685cea9e6efb9f",
+    "withdrawal_revision": "05bb6d2909268ea670b106240167f86c9814d67d",
+    "historical_implementation_present": true,
+    "current_implementation_disposition": "catalog-withdrawn; no current cartridge paths"
+  },
+  "asset_boundary": "Every identity-matching accepted asset path is hashed. Only paths named by asset-usage claims are source-referenced scene usages; existence is never promoted to loading or suitability.",
+  "acceptance": "not-claimed"
+}

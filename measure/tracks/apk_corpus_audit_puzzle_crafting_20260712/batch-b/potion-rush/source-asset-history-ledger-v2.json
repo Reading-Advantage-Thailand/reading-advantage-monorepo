@@ -1,0 +1,1121 @@
+{
+  "schema_version": "apk-source-asset-history-ledger.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "game": "Potion Rush",
+  "normalized_game_id": "sentence/potion-rush",
+  "predecessor_bindings": {
+    "accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "accepted_pilot_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "accepted_batch_a_v3_sha256": "8c332ff99bf9224f826f77cec256ff4d3f6cb94cea7181e3879226f82c875e83",
+    "local_provenance_direction_sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+  },
+  "denominator_records": [
+    {
+      "path": "apps/advantage-games/measure/archive/potion-rush-20260107/asset-spec.md",
+      "denominator_sources": [
+        "asset-file-denominator.json",
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "ee57d12ed5a9ad679a6eec74a6954d93bbf9b114b923b70db16097ed276a1732",
+      "bytes": 2263
+    },
+    {
+      "path": "apps/advantage-games/measure/archive/potion-rush-20260107/metadata.json",
+      "denominator_sources": [
+        "asset-file-denominator.json",
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "f66d082492332561d0b77ec4c2d444ab071c77b688475343bbf2356bf3d5971a",
+      "bytes": 199
+    },
+    {
+      "path": "apps/advantage-games/measure/archive/potion-rush-20260107/plan.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "d59f32eea7099587d9d32485923bef1e0cfccb82c1768fb4523c08e501e223ad",
+      "bytes": 3763
+    },
+    {
+      "path": "apps/advantage-games/measure/archive/potion-rush-20260107/spec.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "de1d18628310b8cfb6b80a894a485e0facade3dc8f10ac89f8f1319cb66dc971",
+      "bytes": 3985
+    },
+    {
+      "path": "apps/advantage-games/measure/archive/potion-rush-refinements-20260129/index.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "4b6221686f21260b401fe6072fc2502bf45012575ffb1ae1cfce0c485d330eef",
+      "bytes": 144
+    },
+    {
+      "path": "apps/advantage-games/measure/archive/potion-rush-refinements-20260129/metadata.json",
+      "denominator_sources": [
+        "asset-file-denominator.json",
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "0d647b06eb5d566d8ebaf3b22804de556d369667b14225b9e9c15a71a6b9eed3",
+      "bytes": 369
+    },
+    {
+      "path": "apps/advantage-games/measure/archive/potion-rush-refinements-20260129/plan.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "e0cfbf62b177ebbbf3a4292a7f9050e05ed28d61f866e53224e2eaf0c39a7130",
+      "bytes": 5685
+    },
+    {
+      "path": "apps/advantage-games/measure/archive/potion-rush-refinements-20260129/spec.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "57d9f0a2f1d8f52394c5049dcb557e3b659fc9e5e0a7eae9e164eb6258177d14",
+      "bytes": 3555
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/potion-rush-compliance-audit_20260426/index.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "24b81938ffd47c8010fffe58ad11acaaf4844c9710f61ca2d66565d5f2e16ba5",
+      "bytes": 149
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/potion-rush-compliance-audit_20260426/metadata.json",
+      "denominator_sources": [
+        "asset-file-denominator.json",
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "37ae142f40f4e5dbe6c5f5667981b45b62c79f7d04ffea2320629975dae6af46",
+      "bytes": 337
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/potion-rush-compliance-audit_20260426/plan.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "a4f325ce9581586dc7bd3a0c2f35f92d8874ddb006e2afbc2f6050177041b5f1",
+      "bytes": 5739
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/potion-rush-compliance-audit_20260426/report.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "33fd72d5a09b68ce8acf544e45736811d316887b4d9426a67495c08c34030d3c",
+      "bytes": 6089
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/potion-rush-compliance-audit_20260426/spec.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "027121748d098389bf5642635a90d741891f9818158109c41de295713be10e82",
+      "bytes": 3581
+    },
+    {
+      "path": "apps/advantage-games/public/games/cover/potion-rush-cover.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "7dfe3b4552e49c882f17d04f3c46e9e19a8020f2bb25c248e9bf1a212f2c395a",
+      "bytes": 1955444
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/cauldron-blue.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "1455fc6650cf7670f48098d3e6687ba08f86ebe9f29c065255801d346d811396",
+      "bytes": 49593
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/cauldron-green.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "a288237c01d305e95b74bea50b0cda15744916b86310b9b903d3171abcc82a47",
+      "bytes": 56374
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/cauldron-yellow.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "9f5fc0ae82caccd1e103607fe70c2af0062e6f196288ca143b97cd3d8f93827d",
+      "bytes": 53011
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/character-sheet-2-adjusted.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "6a857867de0d60bd334021f1d95f649df342c02470ba104d9121759e08847f0b",
+      "bytes": 680640
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/character-sheet-2.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "61440da17e12a64b6455cd53fb3a2795a3947851514f91ed9d7ee423457751a6",
+      "bytes": 1232183
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/character-sheet-adjusted.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "fd6ad1367e4bd340a74c320732408781674741b300738e58f9a7ad710eea335a",
+      "bytes": 773218
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/character-sheet.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "18bccdb381fdf4e7054559b795278d710367726213e08232f089fa8359ea71c6",
+      "bytes": 1317094
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/herb.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "964a0a027d0ed0ec393529bcf98a57c3236a0b76634bda3e389525444386a043",
+      "bytes": 26949
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/item-sheet.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "62a9de029ed1ddf7d3b68f69bd39d0242de82672bd9e3026eaf11d536d0c2cd7",
+      "bytes": 906988
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/mineral.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "df77815896bf2859b65a314c7bcaf2009d802f3f9487371bf9b12e993af43989",
+      "bytes": 20375
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/mushroom.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "0a9fd00325736bcd48d66ab587170fc193b538fc7c2321d63beafc267695144d",
+      "bytes": 32082
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/potion-rush-gameplay.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "62a4d3e0d4e7e388f9b7091d2fd86010ca88e0e5aa79f1a5df1aa637797a918b",
+      "bytes": 296291
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/potion.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "6408e81e2b705d8ab4646b8bac2111fbeba6fcfc62151bfb2acc63d15aedd87d",
+      "bytes": 24333
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/shop-bg.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "b562cfcc6985080c7390a22b454bc59390b2abd9da46034d2f29df989ea22a9b",
+      "bytes": 1242545
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/shop-counter.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "2b18000ff3ef619644e2df78a96fd3148c56b614d5521b532ab895744763e7d5",
+      "bytes": 163894
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/shop-floor.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "18088c63af52eb254264210c8db124e44afc1445b113c1cc0a044915de2de61e",
+      "bytes": 284896
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/shop-wall.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "df4cd96233d15a12cf535d868c4339f481af6f5dd2ab8e7b660ab02ae7f14bac",
+      "bytes": 749416
+    },
+    {
+      "path": "apps/advantage-games/public/games/potion-rush/ui-sheet.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "23eacc93a937c645242084d17dedc72ef10e04330633306e504d02f725235b56",
+      "bytes": 746701
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/potion-rush/cauldron-blue.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "1455fc6650cf7670f48098d3e6687ba08f86ebe9f29c065255801d346d811396",
+      "bytes": 49593
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/potion-rush/cauldron-green.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "a288237c01d305e95b74bea50b0cda15744916b86310b9b903d3171abcc82a47",
+      "bytes": 56374
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/potion-rush/cauldron-yellow.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "9f5fc0ae82caccd1e103607fe70c2af0062e6f196288ca143b97cd3d8f93827d",
+      "bytes": 53011
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/potion-rush/character-sheet-2-adjusted.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "6a857867de0d60bd334021f1d95f649df342c02470ba104d9121759e08847f0b",
+      "bytes": 680640
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/potion-rush/character-sheet-2.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "61440da17e12a64b6455cd53fb3a2795a3947851514f91ed9d7ee423457751a6",
+      "bytes": 1232183
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/potion-rush/character-sheet-adjusted.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "fd6ad1367e4bd340a74c320732408781674741b300738e58f9a7ad710eea335a",
+      "bytes": 773218
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/potion-rush/character-sheet.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "18bccdb381fdf4e7054559b795278d710367726213e08232f089fa8359ea71c6",
+      "bytes": 1317094
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/potion-rush/herb.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "964a0a027d0ed0ec393529bcf98a57c3236a0b76634bda3e389525444386a043",
+      "bytes": 26949
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/potion-rush/item-sheet.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "62a9de029ed1ddf7d3b68f69bd39d0242de82672bd9e3026eaf11d536d0c2cd7",
+      "bytes": 906988
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/potion-rush/mineral.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "df77815896bf2859b65a314c7bcaf2009d802f3f9487371bf9b12e993af43989",
+      "bytes": 20375
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/potion-rush/mushroom.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "0a9fd00325736bcd48d66ab587170fc193b538fc7c2321d63beafc267695144d",
+      "bytes": 32082
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/potion-rush/potion.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "6408e81e2b705d8ab4646b8bac2111fbeba6fcfc62151bfb2acc63d15aedd87d",
+      "bytes": 24333
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/potion-rush/shop-bg.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "b562cfcc6985080c7390a22b454bc59390b2abd9da46034d2f29df989ea22a9b",
+      "bytes": 1242545
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/potion-rush/shop-counter.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "2b18000ff3ef619644e2df78a96fd3148c56b614d5521b532ab895744763e7d5",
+      "bytes": 163894
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/potion-rush/shop-floor.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "18088c63af52eb254264210c8db124e44afc1445b113c1cc0a044915de2de61e",
+      "bytes": 284896
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/potion-rush/shop-wall.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "df4cd96233d15a12cf535d868c4339f481af6f5dd2ab8e7b660ab02ae7f14bac",
+      "bytes": 749416
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/potion-rush/ui-sheet.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "23eacc93a937c645242084d17dedc72ef10e04330633306e504d02f725235b56",
+      "bytes": 746701
+    },
+    {
+      "path": "apps/advantage-games/public/sounds/potion-rush-action.mp3",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "1a07211b2bc9ded37440346ca747832d996e749571bb57a85487f90ca9579d3b",
+      "bytes": 6471983
+    },
+    {
+      "path": "apps/advantage-games/public/vocab/potion-rush.json",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "cb2dd69646a9eae037c3496764bf24b383660cf4b8f4c31ba30bf76f7f4b9e24",
+      "bytes": 1063
+    },
+    {
+      "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/potion-rush/page.test.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "b0850e41b1e35919e0e6aeedc66a39f5e0d5d701b2ede0ff03da93ff52eb50ce",
+      "bytes": 3452
+    },
+    {
+      "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/potion-rush/page.tsx",
+      "denominator_sources": [
+        "historical-source-denominator.json",
+        "scene-state-denominator.json",
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "f23a839f56a1d749c5bfe264442b7a08aeda52e8bfa282044d7bc1ce3702be3d",
+      "bytes": 13947
+    },
+    {
+      "path": "apps/advantage-games/src/app/api/v1/games/potion-rush/complete/route.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "d2e863865e41f0281609989c5334551172f3e8f76ecf44790759f5de10f6ffc1",
+      "bytes": 153
+    },
+    {
+      "path": "apps/advantage-games/src/app/api/v1/games/potion-rush/ranking/route.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "b8f47fe0d7c4fb0d40217b1a42e193cadf0f419880424a5c3a04b80c74050180",
+      "bytes": 149
+    },
+    {
+      "path": "apps/advantage-games/src/app/api/v1/games/potion-rush/sentences/route.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "9caff8ade74cb66f1554bf76bdc1388f0f1de02abaf30cc456ebcf4efc353f80",
+      "bytes": 233
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/potion-rush/CauldronStation.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "1211a72c6dbaf24162fa74d235424df8856b750f050b3ca0d1de6342fe4e4a27",
+      "bytes": 4819
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/potion-rush/ConveyorBelt.test.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "ade5c57ea8e4a1fedea2ebb17043ee2ff2f9b4c772220b737d1dc9d32fe9fdda",
+      "bytes": 2021
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/potion-rush/ConveyorBelt.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "a6c1a7476bf0283a73cec7446c3191bb7103fa15351faa6553ddbf69295b3261",
+      "bytes": 6783
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/potion-rush/CustomerQueue.test.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "2b8d5ec26a946de3363fdeb4cb5a9db90dca44a9d2de5b3ecb6923defa7c7ed5",
+      "bytes": 2183
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/potion-rush/CustomerQueue.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "8d02dca59a6f45c9a36c4aa5389434db31295e126300d90206a6e82c2d343a72",
+      "bytes": 4261
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushEffectsLayer.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "93730d736c0b30a011c4c871b1f24f05dcbb4cd0c53313b502faf20f09528fed",
+      "bytes": 3932
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushGame.test.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "47a3c0cd8394b949db43fcabd87adca12547077c9613c08ee99dd9147007d629",
+      "bytes": 6546
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushGame.tsx",
+      "denominator_sources": [
+        "scene-state-denominator.json",
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "dcb1c616067d6c982ee27d3e3f54849ccf500898dcb677f8e6a2e72e4d78fbac",
+      "bytes": 11130
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushSoundController.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "e9394388922541230caa56491fdc5e32f01e714b6dde7d4c89fed16533fb8c3d",
+      "bytes": 1962
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/potion-rush/TrashPortal.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "2517dc093ff9e8849085cc18c2a0124266b7f99264e0b60b7791083255718e76",
+      "bytes": 1234
+    },
+    {
+      "path": "apps/advantage-games/src/lib/__tests__/potionRushEffects.test.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "ac51d65c7c5c3028e318cdddb42e90b3e60335cccd42a14354960689899a1115",
+      "bytes": 573
+    },
+    {
+      "path": "apps/advantage-games/src/lib/gameCards.ts",
+      "denominator_sources": [
+        "game-identity-ledger.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+      "bytes": 8468
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/potionRushEffects.test.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "ed28e87d9b917ea892ac1b94d581a95face3358f3eca2f21c396aada3f70b423",
+      "bytes": 579
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/potionRushEffects.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "71d573ead0a0e113b0ff6097bdd3dff6a39dfd716f9374c1cbff267e5d8fbbec",
+      "bytes": 487
+    },
+    {
+      "path": "apps/advantage-games/src/store/__tests__/usePotionRushStore.test.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "533359418f71d3c92f61f6f7cbb0a79d4535a73244e6c4fe1a55a28eeb8abb9a",
+      "bytes": 7283
+    },
+    {
+      "path": "apps/advantage-games/src/store/usePotionRushStore.calculateXP.test.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "5b72ae4fcf40e8afb2ee4f8b9e2e2659a0dddfeca904433c478da5440b6c0421",
+      "bytes": 2711
+    },
+    {
+      "path": "apps/advantage-games/src/store/usePotionRushStore.test.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "eb614953b81cffa898fbc1474aabbe19d74564229344912a0febb3d370476bac",
+      "bytes": 8749
+    },
+    {
+      "path": "apps/advantage-games/src/store/usePotionRushStore.ts",
+      "denominator_sources": [
+        "scene-state-denominator.json",
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02",
+      "bytes": 22182
+    },
+    {
+      "path": "apps/advantage-games/src/store/usePotionRushStoreEndless.test.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "e832fe430517dbd14febc72b1be718be3bf7264958e703dd56bb2a8e7f59f513",
+      "bytes": 1168
+    },
+    {
+      "path": "apps/advantage-games/src/store/usePotionRushStoreScaling.test.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "a9048baad755e2ece34593ff85795262f583e7a070970116557fbe25bd2a00cd",
+      "bytes": 3500
+    },
+    {
+      "path": "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/potion-rush/page.tsx",
+      "denominator_sources": [
+        "historical-source-denominator.json",
+        "scene-state-denominator.json",
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "e2ef1550bea67c51bf8a500071966d577164922e050d612b3813d12aaf1ae6f6",
+      "bytes": 14240
+    },
+    {
+      "path": "apps/reading-advantage/app/api/v1/games/potion-rush/complete/route.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "fa1fa0b0d05bd678c06129281130b885540c9fb6b500b04a3a8e9b732a60fcf1",
+      "bytes": 622
+    },
+    {
+      "path": "apps/reading-advantage/app/api/v1/games/potion-rush/ranking/route.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "293987db2081d6a3e06c65fe538e60fe10f172b3e17d55bd5a68533213162c87",
+      "bytes": 614
+    },
+    {
+      "path": "apps/reading-advantage/app/api/v1/games/potion-rush/sentences/route.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "8751ba45db2d5946dd8c0c89bdf7b6b64f96800a95857b924c0d3adaddccfa25",
+      "bytes": 620
+    },
+    {
+      "path": "apps/reading-advantage/components/games/sentence/potion-rush/CauldronStation.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "5e5a2a3d74b45b05cc00892bcb2450b91663210c3795e587eeb11345b9019ea9",
+      "bytes": 5863
+    },
+    {
+      "path": "apps/reading-advantage/components/games/sentence/potion-rush/ConveyorBelt.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "867254abf4acdc5102527474229444993bf5d00cc804e62afd528df1e2c052aa",
+      "bytes": 7080
+    },
+    {
+      "path": "apps/reading-advantage/components/games/sentence/potion-rush/CustomerQueue.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "b622b27a8e27a3e175a9ccb5d18fa0eece101345baf0fb7461c51fbee211bf86",
+      "bytes": 4719
+    },
+    {
+      "path": "apps/reading-advantage/components/games/sentence/potion-rush/PotionRushEffectsLayer.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "93730d736c0b30a011c4c871b1f24f05dcbb4cd0c53313b502faf20f09528fed",
+      "bytes": 3932
+    },
+    {
+      "path": "apps/reading-advantage/components/games/sentence/potion-rush/PotionRushGame.test.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "5366e0a8c6c2e4dbe2eb93ee33c79dcfa465410fcf73545ef334ef9ff52e7341",
+      "bytes": 2481
+    },
+    {
+      "path": "apps/reading-advantage/components/games/sentence/potion-rush/PotionRushGame.tsx",
+      "denominator_sources": [
+        "scene-state-denominator.json",
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "d58e18fff9fe2146378cada5e72fd9419bf10cbefd03636153c068e3402310bf",
+      "bytes": 11452
+    },
+    {
+      "path": "apps/reading-advantage/components/games/sentence/potion-rush/PotionRushSoundController.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "22d9ce195a75f830834fce62aff577c2424da68301d85051d6bc02b7f4fabed9",
+      "bytes": 2139
+    },
+    {
+      "path": "apps/reading-advantage/components/games/sentence/potion-rush/TrashPortal.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "5f0697095a5c50e773f6b68f8029919c3fc501e5b8e819b4f2e2a26df8929764",
+      "bytes": 1317
+    },
+    {
+      "path": "apps/reading-advantage/lib/games/potionRushEffects.test.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "ed28e87d9b917ea892ac1b94d581a95face3358f3eca2f21c396aada3f70b423",
+      "bytes": 579
+    },
+    {
+      "path": "apps/reading-advantage/lib/games/potionRushEffects.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "71d573ead0a0e113b0ff6097bdd3dff6a39dfd716f9374c1cbff267e5d8fbbec",
+      "bytes": 487
+    },
+    {
+      "path": "apps/reading-advantage/public/games/cover/potion-rush-cover.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "7dfe3b4552e49c882f17d04f3c46e9e19a8020f2bb25c248e9bf1a212f2c395a",
+      "bytes": 1955444
+    },
+    {
+      "path": "apps/reading-advantage/public/games/sentence/potion-rush/cauldron-blue.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "1455fc6650cf7670f48098d3e6687ba08f86ebe9f29c065255801d346d811396",
+      "bytes": 49593
+    },
+    {
+      "path": "apps/reading-advantage/public/games/sentence/potion-rush/cauldron-green.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "a288237c01d305e95b74bea50b0cda15744916b86310b9b903d3171abcc82a47",
+      "bytes": 56374
+    },
+    {
+      "path": "apps/reading-advantage/public/games/sentence/potion-rush/cauldron-yellow.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "9f5fc0ae82caccd1e103607fe70c2af0062e6f196288ca143b97cd3d8f93827d",
+      "bytes": 53011
+    },
+    {
+      "path": "apps/reading-advantage/public/games/sentence/potion-rush/character-sheet-2-adjusted.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "6a857867de0d60bd334021f1d95f649df342c02470ba104d9121759e08847f0b",
+      "bytes": 680640
+    },
+    {
+      "path": "apps/reading-advantage/public/games/sentence/potion-rush/character-sheet-2.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "61440da17e12a64b6455cd53fb3a2795a3947851514f91ed9d7ee423457751a6",
+      "bytes": 1232183
+    },
+    {
+      "path": "apps/reading-advantage/public/games/sentence/potion-rush/character-sheet-adjusted.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "fd6ad1367e4bd340a74c320732408781674741b300738e58f9a7ad710eea335a",
+      "bytes": 773218
+    },
+    {
+      "path": "apps/reading-advantage/public/games/sentence/potion-rush/character-sheet.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "18bccdb381fdf4e7054559b795278d710367726213e08232f089fa8359ea71c6",
+      "bytes": 1317094
+    },
+    {
+      "path": "apps/reading-advantage/public/games/sentence/potion-rush/herb.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "964a0a027d0ed0ec393529bcf98a57c3236a0b76634bda3e389525444386a043",
+      "bytes": 26949
+    },
+    {
+      "path": "apps/reading-advantage/public/games/sentence/potion-rush/item-sheet.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "62a9de029ed1ddf7d3b68f69bd39d0242de82672bd9e3026eaf11d536d0c2cd7",
+      "bytes": 906988
+    },
+    {
+      "path": "apps/reading-advantage/public/games/sentence/potion-rush/mineral.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "df77815896bf2859b65a314c7bcaf2009d802f3f9487371bf9b12e993af43989",
+      "bytes": 20375
+    },
+    {
+      "path": "apps/reading-advantage/public/games/sentence/potion-rush/mushroom.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "0a9fd00325736bcd48d66ab587170fc193b538fc7c2321d63beafc267695144d",
+      "bytes": 32082
+    },
+    {
+      "path": "apps/reading-advantage/public/games/sentence/potion-rush/potion.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "6408e81e2b705d8ab4646b8bac2111fbeba6fcfc62151bfb2acc63d15aedd87d",
+      "bytes": 24333
+    },
+    {
+      "path": "apps/reading-advantage/public/games/sentence/potion-rush/shop-bg.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "b562cfcc6985080c7390a22b454bc59390b2abd9da46034d2f29df989ea22a9b",
+      "bytes": 1242545
+    },
+    {
+      "path": "apps/reading-advantage/public/games/sentence/potion-rush/shop-counter.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "2b18000ff3ef619644e2df78a96fd3148c56b614d5521b532ab895744763e7d5",
+      "bytes": 163894
+    },
+    {
+      "path": "apps/reading-advantage/public/games/sentence/potion-rush/shop-floor.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "18088c63af52eb254264210c8db124e44afc1445b113c1cc0a044915de2de61e",
+      "bytes": 284896
+    },
+    {
+      "path": "apps/reading-advantage/public/games/sentence/potion-rush/shop-wall.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "df4cd96233d15a12cf535d868c4339f481af6f5dd2ab8e7b660ab02ae7f14bac",
+      "bytes": 749416
+    },
+    {
+      "path": "apps/reading-advantage/public/games/sentence/potion-rush/ui-sheet.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "23eacc93a937c645242084d17dedc72ef10e04330633306e504d02f725235b56",
+      "bytes": 746701
+    }
+  ],
+  "coverage": {
+    "records": 108,
+    "unresolved_records": 0,
+    "status": "pass"
+  },
+  "history": {
+    "baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "historical_implementation_revision": null,
+    "withdrawal_revision": null,
+    "historical_implementation_present": false,
+    "current_implementation_disposition": "current source present at baseline"
+  },
+  "asset_boundary": "Every identity-matching accepted asset path is hashed. Only paths named by asset-usage claims are source-referenced scene usages; existence is never promoted to loading or suitability.",
+  "acceptance": "not-claimed"
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": "apk-browser-audit.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "game": "Rune Forge Chamber",
+  "normalized_game_id": "sentence/rune-forge-chamber",
+  "role": "browser-auditor",
+  "conducted": false,
+  "attempts": [],
+  "evidence_count": 0,
+  "captures": [],
+  "real_input_events": [],
+  "compact_view_observed": false,
+  "wide_view_observed": false,
+  "transitions_observed": 0,
+  "success_claims": {
+    "route": false,
+    "gameplay": false,
+    "input": false,
+    "responsive": false,
+    "completion": false,
+    "persistence": false,
+    "xp": false,
+    "idempotency": false,
+    "api_correctness": false,
+    "asset_loading": false
+  },
+  "disposition": "not-conducted; all browser and dependent product behavior remains unknown",
+  "source_disposition_only": "current source route candidate exists",
+  "acceptance": "not-claimed"
+}

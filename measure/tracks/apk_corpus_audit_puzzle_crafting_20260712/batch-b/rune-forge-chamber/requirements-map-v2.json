@@ -1,0 +1,159 @@
+{
+  "schema_version": "apk-requirements-map.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "game": "Rune Forge Chamber",
+  "normalized_game_id": "sentence/rune-forge-chamber",
+  "claim_ledger_path": "batch-b/rune-forge-chamber/claim-evidence-ledger-v2.json",
+  "claim_ledger_sha256": "bf4590a79dd712348cc8fb8f7ceb9ad5139fa934506ae712806f1bcd8fc71b60",
+  "mappings": [
+    {
+      "mapping_id": "RUNE-FORGE-CHAMBER-MAP-001",
+      "requirement": "identity-route-history",
+      "cited_claim_ids": [
+        "RFC-CUR-001",
+        "RFC-CUR-002"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "RUNE-FORGE-CHAMBER-MAP-002",
+      "requirement": "scene-state-transition-model",
+      "cited_claim_ids": [
+        "RFC-CUR-006",
+        "RFC-CUR-007",
+        "RFC-CUR-008",
+        "RFC-CUR-009",
+        "RFC-CUR-010",
+        "RFC-CUR-011",
+        "RFC-CUR-015",
+        "RFC-CUR-020"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "RUNE-FORGE-CHAMBER-MAP-003",
+      "requirement": "mechanic-learning-blueprint",
+      "cited_claim_ids": [
+        "RFC-CUR-011",
+        "RFC-CUR-019"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "RUNE-FORGE-CHAMBER-MAP-004",
+      "requirement": "copy-content-feedback",
+      "cited_claim_ids": [
+        "RFC-CUR-003",
+        "RFC-CUR-005",
+        "RFC-CUR-017",
+        "RFC-CUR-021"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "RUNE-FORGE-CHAMBER-MAP-005",
+      "requirement": "responsive-browser-boundary",
+      "cited_claim_ids": [
+        "RFC-CUR-012",
+        "RFC-CUR-018",
+        "RFC-CUR-019"
+      ],
+      "cited_unknown_ids": [
+        "RFC-UNK-001",
+        "RFC-UNK-002",
+        "RFC-UNK-003",
+        "RFC-UNK-004",
+        "RFC-UNK-005"
+      ],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "RUNE-FORGE-CHAMBER-MAP-006",
+      "requirement": "asset-usages-and-variants",
+      "cited_claim_ids": [],
+      "cited_unknown_ids": [],
+      "result": "unknown-no-source-claim"
+    },
+    {
+      "mapping_id": "RUNE-FORGE-CHAMBER-MAP-007",
+      "requirement": "completion-scoring-api",
+      "cited_claim_ids": [
+        "RFC-CUR-004",
+        "RFC-CUR-013",
+        "RFC-CUR-016",
+        "RFC-CUR-023",
+        "RFC-CUR-024"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "RUNE-FORGE-CHAMBER-MAP-008",
+      "requirement": "test-source",
+      "cited_claim_ids": [
+        "RFC-CUR-022"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "RUNE-FORGE-CHAMBER-MAP-REMAINDER",
+      "requirement": "remaining exact source records",
+      "cited_claim_ids": [
+        "RFC-CUR-014"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    }
+  ],
+  "developer_effort_decomposition": {
+    "estimate": "not-estimated-no-observed-effort-basis",
+    "workstreams": [
+      {
+        "name": "state-and-learning-rules",
+        "backing_claim_ids": [
+          "RFC-CUR-006",
+          "RFC-CUR-009",
+          "RFC-CUR-010",
+          "RFC-CUR-011"
+        ]
+      },
+      {
+        "name": "scene-input-responsive",
+        "backing_claim_ids": [
+          "RFC-CUR-012",
+          "RFC-CUR-018",
+          "RFC-CUR-019",
+          "RFC-CUR-020"
+        ]
+      },
+      {
+        "name": "content-api-assets",
+        "backing_claim_ids": [
+          "RFC-CUR-002",
+          "RFC-CUR-003",
+          "RFC-CUR-004",
+          "RFC-CUR-005",
+          "RFC-CUR-023",
+          "RFC-CUR-024"
+        ]
+      }
+    ]
+  },
+  "unknown_ids": [
+    "RFC-UNK-001",
+    "RFC-UNK-002",
+    "RFC-UNK-003",
+    "RFC-UNK-004",
+    "RFC-UNK-005"
+  ],
+  "novel_factual_claims": 0,
+  "ontology_decisions": 0,
+  "browser_claims": 0,
+  "acceptance": "not-claimed"
+}

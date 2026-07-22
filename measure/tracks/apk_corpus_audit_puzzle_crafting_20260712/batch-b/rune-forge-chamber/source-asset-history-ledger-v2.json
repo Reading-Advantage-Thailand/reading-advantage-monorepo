@@ -1,0 +1,257 @@
+{
+  "schema_version": "apk-source-asset-history-ledger.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "game": "Rune Forge Chamber",
+  "normalized_game_id": "sentence/rune-forge-chamber",
+  "predecessor_bindings": {
+    "accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "accepted_pilot_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "accepted_batch_a_v3_sha256": "8c332ff99bf9224f826f77cec256ff4d3f6cb94cea7181e3879226f82c875e83",
+    "local_provenance_direction_sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+  },
+  "denominator_records": [
+    {
+      "path": "apps/advantage-games/measure/archive/rune-forge-chamber-20260320/metadata.json",
+      "denominator_sources": [
+        "asset-file-denominator.json",
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "fb00f3bc073bf2bbd2349ed0fd1e43e99ca44ff65d958233254e6d305fef7618",
+      "bytes": 351
+    },
+    {
+      "path": "apps/advantage-games/measure/archive/rune-forge-chamber-20260320/plan.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "61ef6c35562d084b84574584ba45bbe0b95d8f1cbbb35031d8a10e011cd84e3f",
+      "bytes": 5089
+    },
+    {
+      "path": "apps/advantage-games/measure/archive/rune-forge-chamber-20260320/spec.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "fd904ff09bd8c77e93c6866ccb21063f5dbd1dc6bc8137061e52cddc26194cea",
+      "bytes": 6034
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/rune-forge-chamber-compliance-audit_20260426/index.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "e98646bab27e29f048c612cf16bc9802ecea999c42ef9fa78cd247d33b514f41",
+      "bytes": 156
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/rune-forge-chamber-compliance-audit_20260426/metadata.json",
+      "denominator_sources": [
+        "asset-file-denominator.json",
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "5d8fce2b7cc3243e64bcab10b5142016b71be08b74570e14abf77064cd585be9",
+      "bytes": 351
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/rune-forge-chamber-compliance-audit_20260426/plan.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "4ae6180c19b563a989af7c98fde463dc1dd5d5b44f335863721a45945c073ff2",
+      "bytes": 3080
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/rune-forge-chamber-compliance-audit_20260426/report.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "63a84481e5c0ba841a763e602b9f5d8ed1337f7706815239291aa15acbd628b8",
+      "bytes": 4886
+    },
+    {
+      "path": "apps/advantage-games/measure/tracks/rune-forge-chamber-compliance-audit_20260426/spec.md",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "74ae93111268e98c3b9417501c9bba976051f4a99d3e7be5651b86b4f352c47e",
+      "bytes": 3670
+    },
+    {
+      "path": "apps/advantage-games/public/games/cover/cover-rune-forge-chamber.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "dd2077d6f9f23f48dd9ca147e643005b8d4c130a775ff227be9209959681b265",
+      "bytes": 2114798
+    },
+    {
+      "path": "apps/advantage-games/public/games/rune-forge-chamber/rune-forge-chamber-gameplay.png",
+      "denominator_sources": [
+        "asset-file-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "04f3c6fad82edbb3b699d3564953785085007662cece98ca5298748c33b1d219",
+      "bytes": 35406
+    },
+    {
+      "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/rune-forge-chamber/page.test.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "cfb3e2267402505ff66308e4995e9ee719e193dcaee1f7b7b2dc2950f1331934",
+      "bytes": 3130
+    },
+    {
+      "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/rune-forge-chamber/page.tsx",
+      "denominator_sources": [
+        "historical-source-denominator.json",
+        "scene-state-denominator.json",
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "efc5c35bb043100473599f3a6c70d7e47a1cf21f0be832a950f15032b6742a57",
+      "bytes": 8458
+    },
+    {
+      "path": "apps/advantage-games/src/app/api/v1/games/rune-forge-chamber/complete/route.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "09196bb8daff23c617705a7ab2f76cfba80eae6e927d75a7bf5f8f74438b5d9b",
+      "bytes": 153
+    },
+    {
+      "path": "apps/advantage-games/src/app/api/v1/games/rune-forge-chamber/sentences/route.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "5f5fa24105efd6c391a788eb195914e2e52351fa210003f050674954917a954a",
+      "bytes": 233
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.test.tsx",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "d554eafef103cdceb6416c6b94f0e414f1cfa810a9d9e9ce8e45d520c378b8ef",
+      "bytes": 6763
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx",
+      "denominator_sources": [
+        "scene-state-denominator.json",
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f",
+      "bytes": 16848
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/index.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "2f557456398f75afcea9bcd7a8471aa89b5cf85dc36d3446b2f06b787c77e86d",
+      "bytes": 62
+    },
+    {
+      "path": "apps/advantage-games/src/lib/gameCards.ts",
+      "denominator_sources": [
+        "game-identity-ledger.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+      "bytes": 8468
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/runeForgeChamber.test.ts",
+      "denominator_sources": [
+        "scene-state-denominator.json",
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "c797decccb5531a117e09e48f55da64b7dec5a3cbcfe6cdaeb5d740fa0601f40",
+      "bytes": 11317
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/runeForgeChamber.ts",
+      "denominator_sources": [
+        "scene-state-denominator.json",
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "13e9bbf18008248ab11d778d1f6407ce3e4591d8486a2097201fda6b9be994ff",
+      "bytes": 7607
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/runeForgeChamberConfig.test.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "bc5c3a462f3877230d59dda3a4548ae5b03c50c31d6252e36cc1449ea4854a21",
+      "bytes": 3800
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/runeForgeChamberConfig.ts",
+      "denominator_sources": [
+        "source-denominator.json"
+      ],
+      "disposition": "current-at-baseline",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "blob_sha256": "bce9f868987e17e0ba61f3d5a67ffb5cbba10fadb6955d50df98ef937e44a60b",
+      "bytes": 1599
+    }
+  ],
+  "coverage": {
+    "records": 22,
+    "unresolved_records": 0,
+    "status": "pass"
+  },
+  "history": {
+    "baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "historical_implementation_revision": null,
+    "withdrawal_revision": null,
+    "historical_implementation_present": false,
+    "current_implementation_disposition": "current source present at baseline"
+  },
+  "asset_boundary": "Every identity-matching accepted asset path is hashed. Only paths named by asset-usage claims are source-referenced scene usages; existence is never promoted to loading or suitability.",
+  "acceptance": "not-claimed"
+}

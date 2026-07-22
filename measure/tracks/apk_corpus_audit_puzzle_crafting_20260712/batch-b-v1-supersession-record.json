@@ -1,0 +1,27 @@
+{
+  "schema_version": "apk-additive-supersession.v1",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "superseded_commit": "91e6331b22e88532d16f24df4068e481dae77a7b",
+  "superseded_artifacts": {
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-discovery-audit.json": "633e6b077f90550e95b3db1d39f43671411c9e6c3988620db37688af01ba91a6",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-requirements-map.json": "10513df221d9a7d61075b8446194e69d18dd950f26f502586096e9acaded7344",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-browser-audit.json": "2a277f90e1eab0232a461865f284985eb509769357e35fd7dc856183d96fb7bb",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-truth-tests.py": "388f41cd1b59df3a6d885fc65b02779f5a23446904ebadf76e3084ccb38ca4b5",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/batch-b-specialist-receipts.json": "a938575475677bc14bf9c3844483398c2411c2889fefb089cac6b51db4e47324",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger.json": "35f117d2c596238787c9b29dd97e3725527f4030f1f3ca5314e44eb8fc4045cd",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/rune-forge-chamber/claim-evidence-ledger.json": "66273023eca35bcdb42b1a9d37d56701b3fc9d772c924b29ef8274e79ff17c0f",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger.json": "6b4e6eb49d56635f74994ea5d01d8509876e20fa2b3158ff8bbe1d45777242f4"
+  },
+  "disposition": "non-consumable-invalid-producer-generation",
+  "reasons": [
+    "invalid citation envelopes",
+    "malformed or overbroad claims",
+    "shape-only false-green tests",
+    "aggregated role receipts",
+    "incomplete per-game packages",
+    "premature completed plan markers"
+  ],
+  "replacement_generation": "batch-b-v2-producer-readiness.json",
+  "candidate_or_acceptance_inherited": false
+}

@@ -1,0 +1,108 @@
+{
+  "schema_version": "apk-evidence-producer-readiness.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "status": "producer-remediation-complete-blocked-before-candidate",
+  "consumable": false,
+  "candidate_authorized": false,
+  "candidate_published": false,
+  "product_owner_acceptance_published": false,
+  "accepted_manifest_published": false,
+  "role_base_sha": "bd39b8e0cffb813f045a3853eb4499f46e96d3ff",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "scope": {
+    "games": [
+      "Potion Rush",
+      "Rune Forge Chamber",
+      "Astral Mage"
+    ],
+    "factual_claims": 68,
+    "explicit_unknowns": 12,
+    "negative_fixtures": 18,
+    "browser_evidence_records": 0
+  },
+  "predecessor_bindings": {
+    "accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "accepted_pilot_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "accepted_batch_a_v3_sha256": "8c332ff99bf9224f826f77cec256ff4d3f6cb94cea7181e3879226f82c875e83",
+    "local_provenance_direction_sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+  },
+  "active_artifact_hashes": {
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-discovery-audit-v2.json": "ee42562afbad90f455359c57ff6a3adaff0ee6c8d588ac8de2d49f6fd8cf399f",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/source-asset-history-ledger-v2.json": "ea75ae1bb395fd19c7fabed2ff91e709cdc919bab4e2c154fa8a3e08e291ebe2",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/negative-fixtures-v2.json": "253526b8b63106b4c62eb13cb5524b239adb978ee077a866a8942947cc3be287",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/requirements-map-v2.json": "828d7a764377e3b46d43a29686101f9383f8bf0ed63b50de08cb4c094e8271df",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/browser-audit-v2.json": "beade003be6a0ad9ad21c432c5a4633a40fa5534e0b2306391581688461c4e2e",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/rune-forge-chamber/claim-evidence-ledger-v2.json": "bf4590a79dd712348cc8fb8f7ceb9ad5139fa934506ae712806f1bcd8fc71b60",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/rune-forge-chamber/source-asset-history-ledger-v2.json": "898154087d75e0216714055ce6d55f470f296789495591c2bfecdedf9646e248",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/rune-forge-chamber/negative-fixtures-v2.json": "48c11e797b24e621b3c6be71f6161e5dd68b6e05c3f9bc322abfb067f79a4073",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/rune-forge-chamber/requirements-map-v2.json": "2caa7b772202cf65f90fc4aeaf75aeb1afb68bd4a34f53bad82becf6c317869e",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/rune-forge-chamber/browser-audit-v2.json": "cc11ae125ece87bdf6120884ba4ec6c7e47a6ad10c7a9d662cfca697551b6de7",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger-v2.json": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/source-asset-history-ledger-v2.json": "c134eecef68f8e083f1eec803c9acfe9faefea5622cdfcc3fc5bbf75608466d0",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/negative-fixtures-v2.json": "09ae2cfd3e3b064c73cbe2e2fa62a38ba21cc4d0a640ec3e36641809091341dd",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/requirements-map-v2.json": "6ad7bea271194b17d25d562db998a6e641309b6fa35aa735e7264a6fb1776949",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/browser-audit-v2.json": "cec74539745a9fa9f98c9d51bb92ee8361e58542dd9feabb1dbe6b2af08c6fb0",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/discovery-auditor-batch-b-v2.json": "5eb6c2ab37394eee0d57e314cd7463b82a43b8f25713612d4bba180f239a47be",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-potion-rush-batch-b-v2.json": "14084dda94ef137585a4fdaa2af659cd364dc76c794a2cae33a1d1ab6a2c0015",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/requirements-mapper-potion-rush-batch-b-v2.json": "21e1e9b6e18659d37c55c5e11b076a9a86c6d5788e041acd1da40223b99fd7a3",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/browser-auditor-potion-rush-batch-b-v2.json": "abf2d3b57a3c8a659e7884781cb359bceb56e141fe8f962f92834b4f99dcdee9",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-rune-forge-chamber-batch-b-v2.json": "8d3ccdcdbed561d02d4b4b6f83977727ac1148b4547f41c3e1c9c774fd25a9e9",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/requirements-mapper-rune-forge-chamber-batch-b-v2.json": "48e7f429fb8a7f2143ab0573a789a8e97c59cbfbb25ac37812252657147aef76",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/browser-auditor-rune-forge-chamber-batch-b-v2.json": "fd36d89406f12ba6ba8523ffb12f2d1d0f5bfaba9b7eebb5c8dfb895b0cc91a0",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-astral-mage-batch-b-v2.json": "607a870bee06654c1ef60835d5d8a49df61e98bb0c2fffc275f2d90f33d68ff1",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/requirements-mapper-astral-mage-batch-b-v2.json": "027e1a7aa06884aad4b4aca1948da0de5026d2a7f72abe00741e88da7ef9958d",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/browser-auditor-astral-mage-batch-b-v2.json": "e55c5fc0805e8d84371f35389010e7fca85c013c333ad8630020c0b534d9c52a",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/truth-test-author-batch-b-v2.json": "3e1c5a63dec215e8ac46f6e8d6652b5d73959e5bc7bbcf1a78bf7b9a1f6e9a35",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-truth-tests-v2.py": "01bf38dff073064d481ae713efe8918167f10dff82fdea339775331af72fcc41",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-v1-supersession-record.json": "839a75894aec29049a79511eac3c6850f5ca89ff3e4406d906f618c8d5b48d00"
+  },
+  "resolved_review_blocker_classes": [
+    "citation-envelope-shape-and-hashes",
+    "atomic-claim-shape",
+    "false-green-source-gate-design",
+    "per-game-package-completeness",
+    "aggregated-receipt-format"
+  ],
+  "blockers": [
+    {
+      "blocker_id": "T6-BB-V2-BLOCK-001",
+      "severity": "critical",
+      "detail": "All producer outputs and separate role receipts were authored in the same producer context. Distinct discovery, collector, mapper, browser, and truth-test agent sessions are not evidenced and are not fabricated.",
+      "legal_next_action": "Commission fresh distinct roles to independently ratify or supersede each exact owned output with committed local receipts under the owner provenance direction."
+    },
+    {
+      "blocker_id": "T6-BB-V2-BLOCK-002",
+      "severity": "high",
+      "detail": "No browser audit was conducted. Potion Rush and Rune Forge Chamber have current source route candidates but no real route, gameplay, trusted input, compact/wide, Thai/English, completion, persistence, XP, API, or asset-loading evidence.",
+      "legal_next_action": "Run a distinct browser auditor against a verifiably matching app revision and preserve real accepted input or bounded failure evidence without upgrading source declarations to browser facts."
+    },
+    {
+      "blocker_id": "T6-BB-V2-BLOCK-003",
+      "severity": "high",
+      "detail": "No separately commissioned adversarial review binds the committed V2 producer bytes and gate output.",
+      "legal_next_action": "After publication and role/browser remediation, commission a fresh review over the exact commit and hashes; candidate publication requires zero unresolved Critical, High, or Medium findings."
+    }
+  ],
+  "success_claims": {
+    "route": false,
+    "gameplay": false,
+    "input": false,
+    "responsive": false,
+    "completion": false,
+    "persistence": false,
+    "xp": false,
+    "idempotency": false,
+    "api_correctness": false,
+    "asset_loading": false,
+    "production": false,
+    "shipping": false
+  },
+  "lifecycle": {
+    "next_stage": "separate role/browser remediation and independent review commission",
+    "candidate_only_after_zero_blocker_review": true
+  },
+  "marker": "MEASURE_AGENT_RESULT"
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": "apk-producer-gate-report.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "role": "producer-gate-runner",
+  "executed_at_utc": "2026-07-22T01:49:29Z",
+  "command": "python3 measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b-truth-tests-v2.py",
+  "exit_code": 0,
+  "observed_result": "17 tests passed",
+  "stderr": "empty",
+  "bindings": {
+    "builder_sha256": "05a0df6910a735ce315a1658124b19f24bb62030afc1bd29bbbdfc56d97593f5",
+    "truth_test_sha256": "01bf38dff073064d481ae713efe8918167f10dff82fdea339775331af72fcc41",
+    "producer_readiness_sha256": "f197bbf1dbc3893a49bae27a985ac09317203ab321c66f65acbe135a9aa31734",
+    "v1_supersession_sha256": "839a75894aec29049a79511eac3c6850f5ca89ff3e4406d906f618c8d5b48d00"
+  },
+  "gate_scope": [
+    "exact citation envelopes",
+    "independent semantic-token re-derivation",
+    "accepted denominator coverage",
+    "Astral Mage history and current withdrawal",
+    "duplicate-token and RNG unknowns",
+    "requirements-map closure",
+    "executed negative fixtures",
+    "browser fail-closure",
+    "separate receipt files with non-independence disclosure",
+    "budget ceilings",
+    "artifact hash bindings",
+    "candidate lifecycle absence",
+    "plan truthfulness"
+  ],
+  "candidate_authorized": false,
+  "independent_review_completed": false,
+  "remaining_blocker_ids": [
+    "T6-BB-V2-BLOCK-001",
+    "T6-BB-V2-BLOCK-002",
+    "T6-BB-V2-BLOCK-003"
+  ],
+  "marker": "MEASURE_AGENT_RESULT"
+}

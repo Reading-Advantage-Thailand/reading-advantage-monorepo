@@ -1,0 +1,168 @@
+{
+  "schema_version": "apk-requirements-map.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "game": "Potion Rush",
+  "normalized_game_id": "sentence/potion-rush",
+  "claim_ledger_path": "batch-b/potion-rush/claim-evidence-ledger-v2.json",
+  "claim_ledger_sha256": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+  "mappings": [
+    {
+      "mapping_id": "POTION-RUSH-MAP-001",
+      "requirement": "identity-route-history",
+      "cited_claim_ids": [
+        "PR-CUR-001",
+        "PR-CUR-002"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "POTION-RUSH-MAP-002",
+      "requirement": "scene-state-transition-model",
+      "cited_claim_ids": [
+        "PR-CUR-005",
+        "PR-CUR-006",
+        "PR-CUR-007",
+        "PR-CUR-008",
+        "PR-CUR-009",
+        "PR-CUR-010",
+        "PR-CUR-011",
+        "PR-CUR-012",
+        "PR-CUR-013",
+        "PR-CUR-016",
+        "PR-CUR-018",
+        "PR-CUR-024"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "POTION-RUSH-MAP-003",
+      "requirement": "mechanic-learning-blueprint",
+      "cited_claim_ids": [
+        "PR-CUR-008",
+        "PR-CUR-009",
+        "PR-CUR-011",
+        "PR-CUR-017",
+        "PR-CUR-018"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "POTION-RUSH-MAP-004",
+      "requirement": "copy-content-feedback",
+      "cited_claim_ids": [
+        "PR-CUR-003",
+        "PR-CUR-019"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "POTION-RUSH-MAP-005",
+      "requirement": "responsive-browser-boundary",
+      "cited_claim_ids": [
+        "PR-CUR-015",
+        "PR-CUR-017",
+        "PR-CUR-024"
+      ],
+      "cited_unknown_ids": [
+        "PR-UNK-001",
+        "PR-UNK-002",
+        "PR-UNK-003",
+        "PR-UNK-004"
+      ],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "POTION-RUSH-MAP-006",
+      "requirement": "asset-usages-and-variants",
+      "cited_claim_ids": [
+        "PR-CUR-020",
+        "PR-CUR-021",
+        "PR-CUR-022",
+        "PR-CUR-023"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "POTION-RUSH-MAP-007",
+      "requirement": "completion-scoring-api",
+      "cited_claim_ids": [
+        "PR-CUR-004",
+        "PR-CUR-013",
+        "PR-CUR-014",
+        "PR-CUR-026",
+        "PR-CUR-027",
+        "PR-CUR-028"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "POTION-RUSH-MAP-008",
+      "requirement": "test-source",
+      "cited_claim_ids": [
+        "PR-CUR-025"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    }
+  ],
+  "developer_effort_decomposition": {
+    "estimate": "not-estimated-no-observed-effort-basis",
+    "workstreams": [
+      {
+        "name": "state-and-learning-rules",
+        "backing_claim_ids": [
+          "PR-CUR-005",
+          "PR-CUR-006",
+          "PR-CUR-009",
+          "PR-CUR-010",
+          "PR-CUR-011",
+          "PR-CUR-012",
+          "PR-CUR-013"
+        ]
+      },
+      {
+        "name": "scene-input-responsive",
+        "backing_claim_ids": [
+          "PR-CUR-015",
+          "PR-CUR-016",
+          "PR-CUR-017",
+          "PR-CUR-018",
+          "PR-CUR-024"
+        ]
+      },
+      {
+        "name": "content-api-assets",
+        "backing_claim_ids": [
+          "PR-CUR-002",
+          "PR-CUR-003",
+          "PR-CUR-004",
+          "PR-CUR-019",
+          "PR-CUR-020",
+          "PR-CUR-021",
+          "PR-CUR-022",
+          "PR-CUR-023",
+          "PR-CUR-026",
+          "PR-CUR-027",
+          "PR-CUR-028"
+        ]
+      }
+    ]
+  },
+  "unknown_ids": [
+    "PR-UNK-001",
+    "PR-UNK-002",
+    "PR-UNK-003",
+    "PR-UNK-004"
+  ],
+  "novel_factual_claims": 0,
+  "ontology_decisions": 0,
+  "browser_claims": 0,
+  "acceptance": "not-claimed"
+}

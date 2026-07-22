@@ -1,0 +1,139 @@
+{
+  "schema_version": "apk-requirements-map.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "game": "Astral Mage",
+  "normalized_game_id": "catalog/astral-mage",
+  "claim_ledger_path": "batch-b/astral-mage/claim-evidence-ledger-v2.json",
+  "claim_ledger_sha256": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+  "mappings": [
+    {
+      "mapping_id": "ASTRAL-MAGE-MAP-001",
+      "requirement": "identity-route-history",
+      "cited_claim_ids": [
+        "AM-CUR-001",
+        "AM-CUR-003",
+        "AM-CUR-002",
+        "AM-HIST-001"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "ASTRAL-MAGE-MAP-002",
+      "requirement": "scene-state-transition-model",
+      "cited_claim_ids": [
+        "AM-HIST-004",
+        "AM-HIST-005",
+        "AM-HIST-007"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "ASTRAL-MAGE-MAP-003",
+      "requirement": "mechanic-learning-blueprint",
+      "cited_claim_ids": [
+        "AM-HIST-005",
+        "AM-HIST-009",
+        "AM-HIST-011",
+        "AM-HIST-010",
+        "AM-HIST-012"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "ASTRAL-MAGE-MAP-004",
+      "requirement": "copy-content-feedback",
+      "cited_claim_ids": [
+        "AM-HIST-008"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "ASTRAL-MAGE-MAP-005",
+      "requirement": "responsive-browser-boundary",
+      "cited_claim_ids": [],
+      "cited_unknown_ids": [
+        "AM-UNK-001",
+        "AM-UNK-002",
+        "AM-UNK-003"
+      ],
+      "result": "unknown-no-source-claim"
+    },
+    {
+      "mapping_id": "ASTRAL-MAGE-MAP-006",
+      "requirement": "asset-usages-and-variants",
+      "cited_claim_ids": [
+        "AM-HIST-002"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "ASTRAL-MAGE-MAP-007",
+      "requirement": "completion-scoring-api",
+      "cited_claim_ids": [
+        "AM-HIST-006"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "ASTRAL-MAGE-MAP-008",
+      "requirement": "test-source",
+      "cited_claim_ids": [
+        "AM-HIST-013"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    },
+    {
+      "mapping_id": "ASTRAL-MAGE-MAP-REMAINDER",
+      "requirement": "remaining exact source records",
+      "cited_claim_ids": [
+        "AM-HIST-003"
+      ],
+      "cited_unknown_ids": [],
+      "result": "source-bounded"
+    }
+  ],
+  "developer_effort_decomposition": {
+    "estimate": "not-estimated-no-observed-effort-basis",
+    "workstreams": [
+      {
+        "name": "state-and-learning-rules",
+        "backing_claim_ids": [
+          "AM-HIST-004",
+          "AM-HIST-005"
+        ]
+      },
+      {
+        "name": "scene-input-responsive",
+        "backing_claim_ids": [
+          "AM-HIST-007",
+          "AM-HIST-009",
+          "AM-HIST-011"
+        ]
+      },
+      {
+        "name": "content-api-assets",
+        "backing_claim_ids": [
+          "AM-HIST-002",
+          "AM-HIST-008"
+        ]
+      }
+    ]
+  },
+  "unknown_ids": [
+    "AM-UNK-001",
+    "AM-UNK-002",
+    "AM-UNK-003"
+  ],
+  "novel_factual_claims": 0,
+  "ontology_decisions": 0,
+  "browser_claims": 0,
+  "acceptance": "not-claimed"
+}

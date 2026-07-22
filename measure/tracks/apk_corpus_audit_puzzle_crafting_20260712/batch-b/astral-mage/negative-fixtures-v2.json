@@ -1,0 +1,43 @@
+{
+  "schema_version": "apk-negative-fixtures.v2",
+  "game": "Astral Mage",
+  "counts_as_factual_claims": false,
+  "fixtures": [
+    {
+      "fixture_id": "astral-mage-NEG-001",
+      "failure_class": "cited_range_hash_mismatch",
+      "mutation": "replace one claim cited_range_sha256 with 64 zeroes",
+      "expected_disposition": "REJECT"
+    },
+    {
+      "fixture_id": "astral-mage-NEG-002",
+      "failure_class": "directory_citation",
+      "mutation": "cite batch-b/astral-mage/ as a factual source",
+      "expected_disposition": "REJECT"
+    },
+    {
+      "fixture_id": "astral-mage-NEG-003",
+      "failure_class": "browser_promotion",
+      "mutation": "claim runnable and responsive while conducted=false",
+      "expected_disposition": "REJECT"
+    },
+    {
+      "fixture_id": "astral-mage-NEG-004",
+      "failure_class": "analogy_substitution",
+      "mutation": "replace this package evidence with another game family description",
+      "expected_disposition": "REJECT"
+    },
+    {
+      "fixture_id": "astral-mage-NEG-005",
+      "failure_class": "malformed_claim",
+      "mutation": "remove extracted_source_fact from one claim",
+      "expected_disposition": "REJECT"
+    },
+    {
+      "fixture_id": "astral-mage-NEG-006",
+      "failure_class": "denominator_omission",
+      "mutation": "remove one mechanically selected denominator record",
+      "expected_disposition": "REJECT"
+    }
+  ]
+}

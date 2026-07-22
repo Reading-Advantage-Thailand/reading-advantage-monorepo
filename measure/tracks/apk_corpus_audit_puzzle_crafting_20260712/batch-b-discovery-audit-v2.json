@@ -1,0 +1,46 @@
+{
+  "schema_version": "apk-batch-discovery-audit.v2",
+  "track_id": "apk_corpus_audit_puzzle_crafting_20260712",
+  "batch_id": "batch-b",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "scope": [
+    "Potion Rush",
+    "Rune Forge Chamber",
+    "Astral Mage"
+  ],
+  "games": [
+    {
+      "game": "Potion Rush",
+      "normalized_game_id": "sentence/potion-rush",
+      "claim_count": 28,
+      "denominator_record_count": 108,
+      "denominator_unresolved": 0,
+      "current_boundary": "current implementation source present"
+    },
+    {
+      "game": "Rune Forge Chamber",
+      "normalized_game_id": "sentence/rune-forge-chamber",
+      "claim_count": 24,
+      "denominator_record_count": 22,
+      "denominator_unresolved": 0,
+      "current_boundary": "current implementation source present"
+    },
+    {
+      "game": "Astral Mage",
+      "normalized_game_id": "catalog/astral-mage",
+      "claim_count": 16,
+      "denominator_record_count": 15,
+      "denominator_unresolved": 0,
+      "current_boundary": "catalog-withdrawn; historical implementation deleted"
+    }
+  ],
+  "predecessor_bindings": {
+    "accepted_denominator_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+    "accepted_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "accepted_pilot_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+    "accepted_batch_a_v3_sha256": "8c332ff99bf9224f826f77cec256ff4d3f6cb94cea7181e3879226f82c875e83",
+    "local_provenance_direction_sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac"
+  },
+  "denominator_mismatches": 0,
+  "acceptance": "not-claimed"
+}
