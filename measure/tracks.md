@@ -157,22 +157,38 @@ program, priority order when picking the next track is:
    Recover exact current and historical evidence for five distinctive, changed, cancelled, or missing games. **Accepted with disclosure (2026-07-22):** Batch A's unauthenticated nominal approval chronology was additively superseded by a current explicitly labeled retroactive ratification; Batch B candidate `497b2568` was additively superseded to correct its stale truth digest. The five-game reconciliation has 67 source-enveloped factual claims, 11 explicit unknowns, 30 negative fixtures, five bounded no-success browser dispositions, and 61/61 source/lifecycle gates green. Accepted manifest SHA-256: `4186dfd2…87b2b0`. No original message ID, gameplay success, responsive success, ontology, implementation, or shipping decision is claimed.
 
 - [~] **Track: APK Per-Candidate Asset Forensics** *Link: [./tracks/apk_existing_asset_candidate_audit_20260712/](./tracks/apk_existing_asset_candidate_audit_20260712/)*
-  Publish one forensic record per independently discovered asset path; contact-sheet summaries cannot satisfy completion. *Status: PRECONDITION-READY (orchestrator handoff documents in place under `_orchestrator/`); begins only after T4–T7 accepted (suitability requires their concrete scene usages).*
+  Publish one forensic record per independently discovered legacy asset path;
+  contact-sheet summaries cannot satisfy completion. The frozen denominator does
+  not expand to the 43,068-file ElvGames standard pack. Remaining work records
+  current function, semantic replacement requirements, and retirement evidence.
 
-- [~] **Track: APK Evidence-Backed Ontology Synthesis** *Link: [./tracks/apk_evidence_backed_ontology_synthesis_20260712/](./tracks/apk_evidence_backed_ontology_synthesis_20260712/)*
-  Derive mechanics, capabilities, responsive contracts, semantic assets, gaps, and cohorts from accepted evidence only, without adding factual claims. *Status: PRECONDITION-READY (orchestrator handoff documents in place under `_orchestrator/`); requires accepted hashes from T2–T8.*
+- [ ] **Track: APK Evidence-Backed Ontology Synthesis** *Link: [./tracks/apk_evidence_backed_ontology_synthesis_20260712/](./tracks/apk_evidence_backed_ontology_synthesis_20260712/)*
+  BLOCKED on accepted T8 hashes and an accepted standard-pack release. Derive mechanics, capabilities, responsive
+  contracts, semantic roles/states, and a non-consumable canonical-adoption matrix
+  mapping each role to a standard-pack candidate key or explicit blocker.
 
-- [~] **Track: APK Independent Acceptance and Handoff** *Link: [./tracks/apk_independent_acceptance_handoff_20260712/](./tracks/apk_independent_acceptance_handoff_20260712/)*
-  Revalidate the full corpus from raw sources and exclusively publish successor hashes after independent review and product-owner approval. *Status: PRECONDITION-READY (orchestrator handoff documents in place under `_orchestrator/`); T10 alone publishes successor hashes that unlock T11.*
+- [ ] **Track: APK Independent Acceptance and Handoff** *Link: [./tracks/apk_independent_acceptance_handoff_20260712/](./tracks/apk_independent_acceptance_handoff_20260712/)*
+  BLOCKED on T9. Revalidate the full corpus and adopted asset mappings; bind the
+  canonical root policy, catalog, receipts, and pack release; then exclusively
+  publish post-approval successor hashes.
 
-- [~] **Track: APK Shared Developer Kit and Authoring Workflow** *Link: [./tracks/apk_shared_developer_kit_20260712/](./tracks/apk_shared_developer_kit_20260712/)*
-  *Status: PRECONDITION-READY (orchestrator handoff documents in place under `_orchestrator/`); BLOCKED until T10 publishes valid successor hashes. Then implement accepted shared capabilities and authoring workflow.*
+- [ ] **Track: APK Shared Developer Kit and Authoring Workflow** *Link: [./tracks/apk_shared_developer_kit_20260712/](./tracks/apk_shared_developer_kit_20260712/)*
+  BLOCKED until T10 publishes valid successor hashes and the standard asset track
+  publishes an accepted versioned pack release. Then implement shared capabilities,
+  the canonical resolver/materializer, authoring scaffold, enforcement, and QC.
 
-- [~] **Track: APK Standard Asset Library Contract and Production** *Link: [./tracks/apk_dual_theme_asset_production_20260712/](./tracks/apk_dual_theme_asset_production_20260712/)*
-  In progress: replace the speculative two-theme/generation plan with the purchased, licensed ElvGames pixel-art library; establish semantic filesystem contracts, attribution, validation, and curated standard-asset ingestion. Cartridge adoption remains separately gated by the shared-kit and acceptance work.
+- [x] **Track: APK Standard Asset Library Contract and Production** *Link: [./tracks/apk_dual_theme_asset_production_20260712/](./tracks/apk_dual_theme_asset_production_20260712/)*
+  Accepted release `2026.07.23`: 43,075 receipt-bound assets, catalog digest
+  `ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087`,
+  exact parity, selected-union materialization, compact/wide QC, package guards,
+  credit enforcement, and fail-closed accepted-release resolution. Cartridge
+  adoption remains separately gated by T9/T10 and shared-kit acceptance.
 
 - [ ] **Track: APK Cartridge Rebuild, Integration, and Cutover** *Link: [./tracks/apk_cartridge_semantic_rewrite_20260712/](./tracks/apk_cartridge_semantic_rewrite_20260712/)*
-  BLOCKED until independent acceptance, accepted kit capabilities, and required both-theme batches exist.
+  BLOCKED until independent acceptance, accepted kit capabilities, and a pinned canonical
+  standard-pack catalog/credit receipt plus selected-deployment contract exist. It will
+  migrate legacy app-local asset URLs and copies by cohort, use the same cartridge and
+  semantic binding manifests in Reading/Primary, and delete copies only after both-host proof.
 
 - [x] **Track: APK Dual-Theme Production Asset Packs — SUPERSEDED, DO NOT IMPLEMENT** *Link: [./archive/apk_dual_theme_asset_packs_20260711/](./archive/apk_dual_theme_asset_packs_20260711/)*
   Superseded 2026-07-12 because it froze a speculative physical inventory before completing cross-game requirements analysis. Retained as failure evidence; no completion claim is made.

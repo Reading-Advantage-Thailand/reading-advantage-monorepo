@@ -37,7 +37,7 @@ The complete import makes derived build-time indexing necessary, so Phase 4 owns
 that implementation while the filesystem remains authoritative. Import completion
 does not authorize game integration or a private production-art tree.
 
-## Phase 4: Generate and verify the canonical-pack release [checkpoint: pending]
+## Phase 4: Generate and verify the canonical-pack release [checkpoint: 1abf855]
 
 - [x] Task: Define the deterministic catalog/index and release schema rooted at
   `packages/advantage-play-kit/assets/standard/`, including pack version, catalog
@@ -55,7 +55,7 @@ does not authorize game integration or a private production-art tree.
   trees, unpinned releases, source-root escapes, and materialized files outside
   the selected union
 
-## Phase 5: Accept the standard-pack release [checkpoint: pending]
+## Phase 5: Accept the standard-pack release [checkpoint: 1abf855]
 
 - [x] Task: Verify the release catalog, source receipt, filesystem, materialized
   union, resolver metadata, and attribution records reconcile exactly

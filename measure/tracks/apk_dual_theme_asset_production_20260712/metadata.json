@@ -1,12 +1,12 @@
 {
   "track_id": "apk_dual_theme_asset_production_20260712",
   "type": "feature",
-  "status": "in_progress",
+  "status": "completed",
   "created_at": "2026-07-12T00:00:00Z",
   "updated_at": "2026-07-23T00:00:00Z",
   "description": "Organize the purchased, licensed ElvGames collection under packages/advantage-play-kit/assets/standard as APK's canonical standard pack, with filesystem-derived semantic keys, deterministic generated catalog and release digests, typed resolution, selected-union materialization, attribution, validation, and curated ingestion batches.",
   "estimated_tasks": 21,
-  "actual_tasks": null,
+  "actual_tasks": 21,
   "depends_on": [],
-  "deviation_notes": "Rebased by product decision on 2026-07-23: the purchased ElvGames library supersedes the speculative Chibi Quest/Riven Lands generated-art plan. The canonical standard-pack release may proceed now; cartridge adoption remains separately gated and must consume the accepted versioned release."
+  "deviation_notes": "Rebased by product decision on 2026-07-23: the purchased ElvGames library supersedes the speculative Chibi Quest/Riven Lands generated-art plan. Release 2026.07.23 was accepted after exact 43,075-asset parity, selected-union materialization, compact/wide browser QC, full package gates, and independent adversarial review. Cartridge adoption remains separately gated and must use the fail-closed accepted-release resolver."
 }
