@@ -1,0 +1,148 @@
+{
+  "schema_version": "apk-asset-forensics.phase0-denominator-discovery-report.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "role": "phase0-discovery-auditor",
+  "status": "pass",
+  "scope": "Mechanical denominator discovery only. Git tree/blob metadata and the three changed/new candidate blobs were inspected; asset meaning, provenance, callers, suitability, dispositions, requirements, and review conclusions were not inspected or produced.",
+  "authorized_inputs": [
+    {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+      "sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b"
+    },
+    {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/candidate-denominator-delta-v1.json",
+      "sha256": "c354a57e162876d035f7df284149f683596d11145fe8e9d6c827beda4ccc15df"
+    },
+    {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-denominator-delta-review-v3.json",
+      "sha256": "8c6e6fe17d0ae28628753ab11d4e21cabe8d407682af4d9106509b519ed4e5d1"
+    },
+    {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/accepted-denominator-delta-v1.json",
+      "sha256": "71592625cbe09671937b7406afa38f3f59232c0345de455467121dc038863db2"
+    },
+    {
+      "path": "measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+      "git_commit": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+      "sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438"
+    }
+  ],
+  "git_object_reproduction": {
+    "base_source_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "base_source_tree": "fd9774c518f716f40f543a16f5e4e318abc0bdf0",
+    "delta_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "delta_tree": "cb3f9655871144bce10c7f60b93037e48a969af9",
+    "base_publication_revision": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+    "base_publication_tree": "0232f149fa053530618b582bb6bd520ad327f3f9",
+    "base_manifest_record_count": 426,
+    "base_manifest_hash_group_count": 225,
+    "base_records_all_bind_source_revision": true,
+    "base_root_path_counts": {
+      "apps/advantage-games/public": 248,
+      "apps/reading-advantage/public/games": 105,
+      "apps/primary-advantage/public/games": 0,
+      "apps/advantage-games/measure": 72,
+      "packages/codecamp-knowledge/fixtures/apk-guided": 1
+    },
+    "delta_operations": {
+      "relevant_additions": 2,
+      "relevant_replacements": 1,
+      "relevant_deletions": 0
+    },
+    "changed_candidate_blobs": [
+      {
+        "change": "addition",
+        "canonical_path": "apps/advantage-games/public/vibe-coding-bg.jpg",
+        "git_blob_oid": "f8e2ccf5dc895393a2f76d92ae824723ac5615a8",
+        "byte_size": 901920,
+        "sha256": "ed69029981933a197fc9234a05784d84d3203e8739bbd7fa74541f9c1f1c05e8"
+      },
+      {
+        "change": "addition",
+        "canonical_path": "apps/advantage-games/public/vibe-coding-poster.jpg",
+        "git_blob_oid": "769d5c820831c625276f6965ab9b4be0ac7b2a73",
+        "byte_size": 231453,
+        "sha256": "147c3b039b965ee7079c49c89966a385fc6cf01b568c97e2fec2fe104b4c25d0"
+      },
+      {
+        "change": "replacement",
+        "canonical_path": "packages/codecamp-knowledge/fixtures/apk-guided/activity-tutorial.json",
+        "git_blob_oid": "f75c14e1d3da12e714ec1ccc9000ed7993ae5de6",
+        "byte_size": 3083,
+        "sha256": "72a31ae85afa63a25c629184a5b3c70091fa4e49af303d5faf83f160c38a0ef1"
+      }
+    ],
+    "effective_denominator": {
+      "candidate_paths": 428,
+      "identical_hash_groups": 227,
+      "root_count": 5,
+      "root_path_counts": {
+        "apps/advantage-games/public": 250,
+        "apps/reading-advantage/public/games": 105,
+        "apps/primary-advantage/public/games": 0,
+        "apps/advantage-games/measure": 72,
+        "packages/codecamp-knowledge/fixtures/apk-guided": 1
+      }
+    }
+  },
+  "batch_reproduction": {
+    "batch_count": 12,
+    "path_ceiling": 40,
+    "hash_group_ceiling": 24,
+    "boundary_interpretation": "For each non-final boundary, select the nearest target boundary among those that keep the current batch and every remaining batch ceiling-feasible; ties choose the earlier boundary. This required lookahead makes AF-11 end at 18 groups and 40 paths so AF-12 remains within its 24-group ceiling.",
+    "membership_exactly_matches_freeze": true,
+    "batches": [
+      {"batch_id":"AF-01","group_count":18,"path_count":36,"first_group":"sha256:00a88649680edba33079e5a6e4fb604ca85945229c762dfa1c0fb1da978c60fb","last_group":"sha256:147c3b039b965ee7079c49c89966a385fc6cf01b568c97e2fec2fe104b4c25d0"},
+      {"batch_id":"AF-02","group_count":18,"path_count":35,"first_group":"sha256:14bba75201cb9cf1495c890ef6b869ceed44d4db8f80d7babddf979331dd95e7","last_group":"sha256:2383a3b212ed48f803df643d6525e7b2fad76bb5772507e3550da9fda40fc19e"},
+      {"batch_id":"AF-03","group_count":21,"path_count":35,"first_group":"sha256:23eacc93a937c645242084d17dedc72ef10e04330633306e504d02f725235b56","last_group":"sha256:3a67113fe7cb71698af948d033047210a0131584f83f57389f7ca98efbb05f87"},
+      {"batch_id":"AF-04","group_count":17,"path_count":35,"first_group":"sha256:3bec9ea0ab16ff60618d4aa69b617f0b74427e8c08a6d12382e2391333ae3c36","last_group":"sha256:5720ead0f45f083c2c8eefe0a1b888b1416c7fc768426007ebf5657786600f81"},
+      {"batch_id":"AF-05","group_count":18,"path_count":39,"first_group":"sha256:576ec5070a1fd3c1238c31ca9cbe26a0acee1ec8e4a6383852196dc09604e0f6","last_group":"sha256:6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc"},
+      {"batch_id":"AF-06","group_count":21,"path_count":35,"first_group":"sha256:6ed15b6010af6453e0a2844340c0a2a4b61a99028d92aae5a4d5e60a7db9022f","last_group":"sha256:8554c1486cd5735a2adba9dc26157dc1e23165d35e37c5efb691dcb5af9008fd"},
+      {"batch_id":"AF-07","group_count":17,"path_count":35,"first_group":"sha256:86439c52414fbdd7129b72c44aeec6c63134b17cbb0ec5af6395b05f2f083e88","last_group":"sha256:9f5fc0ae82caccd1e103607fe70c2af0062e6f196288ca143b97cd3d8f93827d"},
+      {"batch_id":"AF-08","group_count":19,"path_count":35,"first_group":"sha256:9f8c13f96fe90c9d47d9b5fe5c65b0628a4bbcf0ad4a2299140ebbab4d624c49","last_group":"sha256:ac0581c08b6bb79ff54020a68a9ff66cb290cadfe931f28a2a311a21c21e79ae"},
+      {"batch_id":"AF-09","group_count":17,"path_count":35,"first_group":"sha256:acc33d140f9c6228d448034dc1ab9698b6e0b846f7d3947f27e2f92f4d8c04b4","last_group":"sha256:bb1c38361ba56ccb553a6ddc6d9e21b75a9ec97b724917b186e740c9c7f0d94f"},
+      {"batch_id":"AF-10","group_count":19,"path_count":34,"first_group":"sha256:bd02d8146701783c7fe9542dd8afc2d8f919cbdb30c653a9e6e9b620577243db","last_group":"sha256:cb5e5c99a49da484e0a7856cef335c5428e0894534f0f148d45e6dd81f47408b"},
+      {"batch_id":"AF-11","group_count":18,"path_count":40,"first_group":"sha256:cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900","last_group":"sha256:e1f6299482e1e3055d75816cb9a36e211fb52d1c01acf62aadb5c81da660fbd5"},
+      {"batch_id":"AF-12","group_count":24,"path_count":34,"first_group":"sha256:e2c3e9f281a502fe12c41cbc06ae6a41b71b8c3a16648b34ebd6eafb9e3fdbe9","last_group":"sha256:fd6ad1367e4bd340a74c320732408781674741b300738e58f9a7ad710eea335a"}
+    ],
+    "reconciliation": {
+      "batch_path_sum": 428,
+      "batch_hash_group_sum": 227,
+      "omissions": 0,
+      "duplicates": 0,
+      "max_batch_paths": 40,
+      "max_batch_hash_groups": 24
+    }
+  },
+  "checkout_attestation": {
+    "physical_worktree_count": 1,
+    "canonical_checkout": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "canonical_branch": "master",
+    "canonical_head": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "sister_repository_input_used": false
+  },
+  "resource_usage": {
+    "measurement_scope": "Completed scoped shell invocations and bytes explicitly read from authorized manifest or Git blob payloads; tree and diff metadata are excluded from byte payload accounting.",
+    "command_invocations": 8,
+    "candidate_blob_content_reads": 3,
+    "candidate_blob_bytes_read": 1136456,
+    "metadata_and_manifest_bytes_read": 2399187,
+    "bytes_read": 3535643,
+    "command_invocation_ceiling": 30,
+    "bytes_read_ceiling": 33554432,
+    "within_ceiling": true
+  },
+  "findings": [
+    {
+      "severity": "info",
+      "id": "batch-boundary-lookahead",
+      "status": "pass",
+      "detail": "The frozen batch partition reproduces exactly when remaining-batch ceiling feasibility is treated as a constraint during nearest-boundary selection."
+    }
+  ],
+  "availability": {
+    "encrypted_raw_prompt": "unavailable per manifest; not fabricated",
+    "hidden_ids": "unavailable per manifest; not fabricated"
+  },
+  "final_status": "pass"
+}

@@ -1,0 +1,101 @@
+{
+  "schema_version": "apk-asset-forensics.phase0-adversarial-review.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "review_role": "adversarial-reviewer",
+  "reviewed_at": "2026-07-23",
+  "review_scope": "Successor review of Phase 0 governance remediation only. No asset image, audio, font, data, caller, provenance, or other candidate content was opened or inspected.",
+  "input_bindings": {
+    "prior_adversarial_review": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-adversarial-review-v1.json",
+      "sha256": "2459f80f168e696711601370069eef8c2e9b89df73a8fc2cbe8d49b56ba49642"
+    },
+    "phase0_input_freeze": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+      "sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b"
+    },
+    "discovery_report": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-denominator-discovery-report-v2.json",
+      "sha256": "b71333db3768e8646bb9673755e7092480e943fed4e8542857162f9ed824bb40"
+    },
+    "discovery_receipt": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase0/discovery-auditor.json",
+      "sha256": "0fb987dda000d40884b3615488f69106440dac8cf7ed90d06455121985a5cf6b"
+    },
+    "candidate_delta": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/candidate-denominator-delta-v1.json",
+      "sha256": "c354a57e162876d035f7df284149f683596d11145fe8e9d6c827beda4ccc15df"
+    },
+    "delta_review": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-denominator-delta-review-v3.json",
+      "sha256": "8c6e6fe17d0ae28628753ab11d4e21cabe8d407682af4d9106509b519ed4e5d1"
+    },
+    "accepted_delta": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/accepted-denominator-delta-v1.json",
+      "sha256": "71592625cbe09671937b7406afa38f3f59232c0345de455467121dc038863db2"
+    }
+  },
+  "remediation_checks": [
+    {
+      "id": "P0-H1",
+      "status": "pass",
+      "name": "Qualifying isolated discovery proof and semantic contract enforcement",
+      "observed": "The fresh discovery-auditor report is pass/pass and reconciles the immutable 426-path/225-group T2 base plus exactly 2 additions, 1 replacement, and 0 deletions to the 428-path/227-group effective denominator. It reproduces the five frozen roots with counts 250/105/0/72/1, all twelve AF-01..AF-12 batches, atomic-group membership, 428/227 totals, zero omissions/duplicates, and the immutable maxima of 40 paths and 24 groups. Its measured 8 commands and 3,535,643 bytes are within the 30-command and 33,554,432-byte ceilings. Its checkout attestation and current Git worktree metadata both show exactly one canonical worktree; it attests no sister-repository input. The native receipt is pass, names the isolated /root/t8_phase0_discovery_receipt task with fork_turns=none, binds the freeze and delta inputs, and binds the report to its actual b71333... digest. phase0-contract-test.py asserts these report/receipt semantics and report digest binding rather than file presence alone."
+    },
+    {
+      "id": "P0-M1",
+      "status": "pass",
+      "name": "Later phases remain unopened",
+      "observed": "Every producer task in Phases 1 through 5 is marked [ ]; none is [~]. The only [~] task markers are Phase 0 governance tasks. The focused contract's forbidden later-output paths are absent."
+    },
+    {
+      "id": "P0-M2",
+      "status": "pass",
+      "name": "Current dispatch and denominator terminology",
+      "observed": "DISPATCH.md accurately records that the truth contract and denominator-delta reviews exist, the qualifying 428/227 discovery report and final review were the remaining strategy gates, and no content-bearing work has been dispatched. It distinguishes the immutable 426/225 T2 base from the effective T8 denominator. The corrected test strategy now makes the same distinction and binds the effective 428/227 set to accepted delta 715926...."
+    },
+    {
+      "id": "P0-G1",
+      "status": "pass",
+      "name": "Historical, theme, and scope boundaries",
+      "observed": "The focused fixture contract reached only the pending-successor-review Red, so corrected T2/T3 historical Git-object bindings, all frozen input digests, owner-authorization ancestry, the accepted candidate/review/delta chain, five roots, twelve exact batches, ceilings, stop losses, canonical cute_chibi_v1 and original heroic_stylized_v1 boundaries, and the external-producer exclusion all passed first. No later-phase artifact or candidate content was reviewed."
+    },
+    {
+      "id": "P0-G2",
+      "status": "pass",
+      "name": "Focused contract Red precondition",
+      "observed": "Before this review existed, python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-contract-test.py --fixtures exited 1 with exactly: RED: pending independent Phase 0 evidence: phase0-adversarial-review-v2.json. No other Red cause was emitted."
+    }
+  ],
+  "limitations": [
+    {
+      "id": "P0-L1",
+      "severity": "low",
+      "status": "documented-nonblocking",
+      "detail": "The native harness does not expose encrypted raw prompts, hidden ancestry/event identifiers, or a self-referential receipt digest. The receipt explicitly records those fields as unavailable and does not fabricate them. This review therefore verifies the available native task, model, fork mode, declared inputs, role boundary, output digest, and measured-resource fields; it makes no stronger unsupported ancestry claim."
+    }
+  ],
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": []
+  },
+  "resource_accounting": {
+    "asset_content_bytes_read": 0,
+    "asset_paths_inspected": 0,
+    "asset_hash_groups_inspected": 0,
+    "governance_artifact_bytes_directly_accounted": 88024,
+    "review_shell_invocations": 9,
+    "sandbox_preflight_failures": 1,
+    "content_review_performed": false,
+    "within_applicable_review_ceiling": true
+  },
+  "decision": {
+    "status": "pass",
+    "rule": "Pass requires zero Critical, High, and Medium findings.",
+    "critical_count": 0,
+    "high_count": 0,
+    "medium_count": 0,
+    "next_action": "Root may rerun the unchanged focused fixture contract. This review does not accept T8, close Phase 0, authorize later content work, or publish a candidate manifest."
+  }
+}

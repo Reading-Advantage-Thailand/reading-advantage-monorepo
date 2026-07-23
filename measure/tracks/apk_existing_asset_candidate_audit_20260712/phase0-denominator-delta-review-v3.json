@@ -1,0 +1,49 @@
+{
+  "schema_version": "apk-asset-forensics.denominator-delta-review.v3",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "review_scope": "bounded semantic-binding review of denominator publication revision, source baseline revision, and unchanged delta mechanics; no asset content inspection performed",
+  "lineage": {
+    "supersedes_review": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-denominator-delta-review-v2.json",
+    "superseded_review_status": "pass",
+    "superseded_review_role": "pre-freeze locator-only review",
+    "clarification_reviewed": "publication_revision identifies the committed location of the immutable denominator and predicate bytes; source_baseline_revision identifies the source tree represented by every frozen base record."
+  },
+  "candidate": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/candidate-denominator-delta-v1.json",
+    "sha256": "c354a57e162876d035f7df284149f683596d11145fe8e9d6c827beda4ccc15df"
+  },
+  "status": "pass",
+  "decision": "eligible-for-root-product-owner-acceptance",
+  "findings": {"critical": [], "high": [], "medium": [], "low": []},
+  "semantic_bindings": {
+    "publication_revision": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "base_manifest": {
+      "path": "measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+      "sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+      "record_count": 426,
+      "all_record_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+    },
+    "predicate": {
+      "path": "measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py",
+      "sha256": "a4d0edb9a2e5731cbf4a813cd7250cfc1f057c5227e507c8e79e97554dc71244",
+      "publication_revision": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d"
+    },
+    "replacement_prior_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+  },
+  "checks": [
+    {"name": "candidate digest", "status": "pass", "observed": "c354a57e162876d035f7df284149f683596d11145fe8e9d6c827beda4ccc15df"},
+    {"name": "exact base manifest and predicate bytes at publication revision", "status": "pass", "observed": "Both Git-show bytes at ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d hash to their candidate-pinned digests."},
+    {"name": "frozen denominator source-tree binding", "status": "pass", "observed": "The published manifest declares source_baseline_revision 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 and all 426 candidate records carry that exact revision."},
+    {"name": "delta mechanics unchanged", "status": "pass", "observed": {"delta_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235", "additions": 2, "replacements": 1, "deletions": 0, "effective_paths": 428, "effective_groups": 227, "batch_count": 12, "batch_path_sum": 428, "batch_group_sum": 227, "max_batch_paths": 40, "max_batch_groups": 24, "delta_bytes_read": 1136456, "bytes_read_ceiling": 33554432}},
+    {"name": "delta committed blob identity unchanged", "status": "pass", "observed": "All three candidate blob OIDs, sizes, and SHA-256 values at 65fc00d872ce5aa63820662ee0a1f14952e63235 match the candidate."}
+  ],
+  "tool_attestation": {
+    "tools": ["git show", "git rev-parse", "python3 read-only JSON/checksum verifier"],
+    "content_review_performed": false,
+    "publication_revision_verified": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+    "source_baseline_revision_verified": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "delta_revision_verified": "65fc00d872ce5aa63820662ee0a1f14952e63235"
+  },
+  "acceptance_rule": "Pass requires zero critical, high, and medium findings. This review meets that condition; root product-owner acceptance remains separately required."
+}

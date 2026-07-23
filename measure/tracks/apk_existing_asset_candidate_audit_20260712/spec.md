@@ -17,7 +17,10 @@ This track depends on accepted truth gates, denominator, pilot, and all four cor
 - Text, checkerboard, placeholder, corruption, and baked-UI risks.
 - State/direction/animation coverage.
 - Compact/wide suitability.
-- Chibi Quest and Riven Lands suitability.
+- `cute_chibi_v1` and original `heroic_stylized_v1` suitability. The latter may
+  use only broad heroic-fantasy readability principles; franchise-derived
+  characters, symbols, costumes, names, and distinctive combinations are not
+  admissible.
 - `reuse`, `adapt`, `reference`, `reject`, `replace`, or `unknown` disposition with rationale.
 - Collector and reviewer receipts.
 
@@ -38,10 +41,16 @@ This track depends on accepted truth gates, denominator, pilot, and all four cor
 - Theme and responsive suitability link to accepted concrete scene usages.
 - Full candidate totals, dispositions, unknowns, and duplicate groups reconcile mechanically.
 - Zero unresolved Critical, High, or Medium findings.
-- Product owner accepts the per-candidate report and manifest.
+- The root orchestrator, acting as project and product owner, accepts the exact
+  per-candidate report and manifest only after automated contracts, applicable
+  Kimi WebBridge browser evidence, independent LLM review, and direct visual
+  inspection all pass.
 
 ## Out of scope
 
 - Generating or editing production assets.
 - Defining final physical contracts.
 - Semantic ontology synthesis.
+- Unfinished outputs from `../fantasy-asset-forge/` or
+  `../pixel-art-generator/`; those projects are downstream external producers
+  and may enter later tracks only through accepted digest-pinned manifests.

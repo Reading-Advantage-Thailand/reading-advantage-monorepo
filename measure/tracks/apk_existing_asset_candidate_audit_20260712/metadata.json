@@ -1,12 +1,12 @@
 {
   "track_id": "apk_existing_asset_candidate_audit_20260712",
   "type": "chore",
-  "status": "pending",
+  "status": "in_progress",
   "created_at": "2026-07-12T00:00:00Z",
-  "updated_at": "2026-07-12T00:00:00Z",
+  "updated_at": "2026-07-23T00:00:00+07:00",
   "description": "Produce an exact per-path forensic audit of every discovered APK asset candidate, including provenance, callers, inspection, responsive/theme suitability, and disposition.",
   "estimated_tasks": 30,
   "actual_tasks": null,
   "deviation_notes": null,
-  "depends_on": ["apk_three_game_truth_pilot_20260712", "apk_corpus_audit_action_defense_20260712", "apk_corpus_audit_traversal_exploration_20260712", "apk_corpus_audit_puzzle_crafting_20260712", "apk_corpus_audit_special_historical_20260712"]
+  "depends_on": ["measure_apk_evidence_integrity_gates_20260712", "apk_source_denominator_inventory_20260712", "apk_three_game_truth_pilot_20260712", "apk_corpus_audit_action_defense_20260712", "apk_corpus_audit_traversal_exploration_20260712", "apk_corpus_audit_puzzle_crafting_20260712", "apk_corpus_audit_special_historical_20260712"]
 }

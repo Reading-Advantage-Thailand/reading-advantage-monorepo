@@ -1,0 +1,56 @@
+{
+  "schema_version": "apk-asset-forensics.phase0-role-ownership.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "status": "frozen-not-dispatched",
+  "allowed_input_manifest": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+    "sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b"
+  },
+  "root_coordinator": {
+    "permitted_actions": ["coordinate", "verify hashes and counts", "apply independently authored and reviewed patches", "act as project and product owner for evidence-backed acceptance after independent review", "publish lifecycle artifacts after their gates", "commit", "report"],
+    "forbidden_roles": ["discovery-auditor", "evidence-collector", "mechanical-metadata-inspector", "caller-analyst", "provenance-auditor", "visual-audio-inspector", "requirements-mapper", "truth-test-author", "adversarial-reviewer"],
+    "forbidden_actions": ["inspect or classify asset content", "author candidate facts", "author suitability or disposition", "self-review"]
+  },
+  "phase0_strategy_author": {
+    "owner_role": "measure-strategy",
+    "owned_outputs": ["test-strategy.md", "phase0-input-freeze-v1.json", "phase0-role-ownership-manifest-v1.json", "role-applicability-matrix-v1.json", "_orchestrator/DISPATCH.md"],
+    "forbidden_later_roles": ["discovery-auditor", "evidence-collector", "mechanical-metadata-inspector", "caller-analyst", "provenance-auditor", "visual-audio-inspector", "requirements-mapper", "truth-test-author", "adversarial-reviewer"],
+    "content_inspection_performed": false
+  },
+  "required_roles": ["discovery-auditor", "evidence-collector", "requirements-mapper", "truth-test-author", "adversarial-reviewer"],
+  "supplemental_roles": ["mechanical-metadata-inspector", "caller-analyst", "provenance-auditor", "visual-audio-inspector"],
+  "incompatibility_policy": {
+    "required_roles_pairwise_incompatible_for_same_artifact_or_batch": true,
+    "supplemental_producer_roles_pairwise_incompatible_for_same_batch": true,
+    "adversarial_reviewer_incompatible_with_every_producer": true,
+    "truth_test_author_incompatible_with_every_factual_or_interpretive_producer": true,
+    "requirements_mapper_incompatible_with_all_collectors_and_inspectors": true,
+    "same_agent_may_not_review_own_or_ancestral_output": true
+  },
+  "tasks": [
+    {"task_id": "phase0-denominator-drift-check", "owner_role": "discovery-auditor", "forbidden_roles": ["evidence-collector", "requirements-mapper", "truth-test-author", "adversarial-reviewer"], "reviewer_role": "adversarial-reviewer", "expected_outputs": ["phase0-denominator-discovery-report-v2.json", "role-receipts/phase0/discovery-auditor.json"], "historical_failed_output": "phase0-denominator-drift-report-v1.json"},
+    {"task_id": "phase0-truth-contract", "owner_role": "truth-test-author", "forbidden_roles": ["measure-strategy", "discovery-auditor", "evidence-collector", "mechanical-metadata-inspector", "caller-analyst", "provenance-auditor", "visual-audio-inspector", "requirements-mapper", "adversarial-reviewer"], "reviewer_role": "adversarial-reviewer", "expected_outputs": ["phase0-contract-test.py", "phase0-red-test-report-v1.json", "negative-fixtures/phase0/"]},
+    {"task_id": "phase1-candidate-record-base", "owner_role": "evidence-collector", "forbidden_roles": ["discovery-auditor", "requirements-mapper", "truth-test-author", "adversarial-reviewer"], "reviewer_role": "adversarial-reviewer", "expected_outputs": ["batches/<batch-id>/candidate-records-base.json"]},
+    {"task_id": "phase1-mechanical-metadata", "owner_role": "mechanical-metadata-inspector", "forbidden_roles": ["evidence-collector", "caller-analyst", "provenance-auditor", "visual-audio-inspector", "requirements-mapper", "truth-test-author", "adversarial-reviewer"], "reviewer_role": "adversarial-reviewer", "expected_outputs": ["batches/<batch-id>/mechanical-metadata.json"]},
+    {"task_id": "phase1-caller-analysis", "owner_role": "caller-analyst", "forbidden_roles": ["evidence-collector", "mechanical-metadata-inspector", "provenance-auditor", "visual-audio-inspector", "requirements-mapper", "truth-test-author", "adversarial-reviewer"], "reviewer_role": "adversarial-reviewer", "expected_outputs": ["batches/<batch-id>/caller-inventory.json"]},
+    {"task_id": "phase2-provenance", "owner_role": "provenance-auditor", "forbidden_roles": ["evidence-collector", "mechanical-metadata-inspector", "caller-analyst", "visual-audio-inspector", "requirements-mapper", "truth-test-author", "adversarial-reviewer"], "reviewer_role": "adversarial-reviewer", "expected_outputs": ["batches/<batch-id>/provenance-audit.json"]},
+    {"task_id": "phase3-visible-audible-inspection", "owner_role": "visual-audio-inspector", "forbidden_roles": ["evidence-collector", "mechanical-metadata-inspector", "caller-analyst", "provenance-auditor", "requirements-mapper", "truth-test-author", "adversarial-reviewer"], "reviewer_role": "adversarial-reviewer", "expected_outputs": ["batches/<batch-id>/inspection-records.json"]},
+    {"task_id": "phase4-suitability-and-disposition", "owner_role": "requirements-mapper", "forbidden_roles": ["discovery-auditor", "evidence-collector", "mechanical-metadata-inspector", "caller-analyst", "provenance-auditor", "visual-audio-inspector", "truth-test-author", "adversarial-reviewer"], "reviewer_role": "adversarial-reviewer", "expected_outputs": ["batches/<batch-id>/suitability-disposition.json"]},
+    {"task_id": "phase1-through-5-contract-tests", "owner_role": "truth-test-author", "forbidden_roles": ["discovery-auditor", "evidence-collector", "mechanical-metadata-inspector", "caller-analyst", "provenance-auditor", "visual-audio-inspector", "requirements-mapper", "adversarial-reviewer"], "reviewer_role": "adversarial-reviewer", "expected_outputs": ["forensics-contract-tests.py", "forensics-contract-test-report.json"]},
+    {"task_id": "phase5-independent-review", "owner_role": "adversarial-reviewer", "forbidden_roles": ["discovery-auditor", "evidence-collector", "mechanical-metadata-inspector", "caller-analyst", "provenance-auditor", "visual-audio-inspector", "requirements-mapper", "truth-test-author"], "reviewer_role": "product-owner", "expected_outputs": ["independent-review.json"]}
+  ],
+  "receipt_contract": {
+    "path_pattern": "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/<batch-id>/<role>.json",
+    "schema_version": "apk-role-receipt.v1",
+    "required_provenance": ["native_task_name", "declared_model", "fork_turns", "allowed_input_manifest_sha256", "allowed_input_paths", "role_boundary", "output_file_hashes", "findings", "resource_usage", "final_status"],
+    "isolation": "Native Codex subagent with fork_turns=none and a role-bounded task. The harness does not expose encrypted raw prompts, hidden message/event IDs, or final-response hashes to repository code, so those unavailable fields are stated once here and are never fabricated or recreated through OpenCode.",
+    "unavailable_native_harness_fields": ["encrypted_raw_prompt", "hidden_parent_ancestry_ids", "hidden_event_ids", "hidden_final_response_sha256"],
+    "missing_or_partial_receipt_disposition": "fail-closed"
+  },
+  "root_product_owner": {
+    "authority": "The user explicitly designated the root orchestrator as project owner and final acceptance authority on 2026-07-23.",
+    "expected_output": "product-owner-acceptance.json",
+    "boundary": "Root may accept exact candidate and review hashes only after required automated, Kimi WebBridge, independent LLM, and direct visual evidence passes; root may then publish the accepted manifest."
+  },
+  "execution_note": "This manifest is a role plan, not a role receipt. Phase 0 truth-contract and independent-review attempts are represented by their own artifacts; the qualifying discovery-auditor receipt remains separately required. No metadata extraction, caller analysis, provenance review, asset-content inspection, suitability mapping, or later-phase work is represented as dispatched or complete."
+}

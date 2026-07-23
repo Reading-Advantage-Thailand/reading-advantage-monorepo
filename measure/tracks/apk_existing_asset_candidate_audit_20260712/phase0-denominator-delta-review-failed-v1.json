@@ -1,0 +1,58 @@
+{
+  "schema_version": "apk-asset-forensics.denominator-delta-review.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "review_scope": "bounded mechanical delta verification only; no image, audio, or other asset-content inspection performed",
+  "candidate": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/candidate-denominator-delta-v1.json",
+    "expected_sha256": "0aa31e3780b94d8c8380de2764438be812d0a4ab6563f71c9e3f781371acb4f9",
+    "observed_sha256": "0aa31e3780b94d8c8380de2764438be812d0a4ab6563f71c9e3f781371acb4f9"
+  },
+  "status": "fail",
+  "decision": "do-not-accept",
+  "findings": {
+    "critical": [],
+    "high": [
+      {
+        "id": "T8-DELTA-H-001",
+        "title": "Cited frozen baseline inputs are absent from the declared baseline revision",
+        "evidence": [
+          "git cat-file -e 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/archive/apk_source_denominator_inventory_20260712/asset-file-denominator.json exited 128",
+          "git cat-file -e 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286:measure/archive/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py exited 128",
+          "The current worktree asset-file-denominator.json hashes to the candidate's stated base digest, but that does not establish the claimed historical binding."
+        ],
+        "impact": "The effective denominator can be mechanically reconstructed from the current digest-matching file, but the declared frozen predicate and base candidate set cannot be independently replayed from the stated committed revision. The no-scope-expansion assertion is therefore not acceptance-ready.",
+        "required_remediation": "Bind both baseline artifacts to a commit/path that actually contains their exact bytes, or replace the candidate's historical base/predicate references with accepted immutable records before re-review."
+      }
+    ],
+    "medium": [],
+    "low": []
+  },
+  "checks": [
+    {"name": "candidate digest", "status": "pass", "observed": "0aa31e3780b94d8c8380de2764438be812d0a4ab6563f71c9e3f781371acb4f9"},
+    {"name": "change cardinality", "status": "pass", "observed": {"additions": 2, "replacements": 1, "deletions": 0}},
+    {"name": "committed delta blob verification at 65fc00d872ce5aa63820662ee0a1f14952e63235", "status": "pass", "observed": [
+      {"path": "apps/advantage-games/public/vibe-coding-bg.jpg", "git_blob_oid": "f8e2ccf5dc895393a2f76d92ae824723ac5615a8", "byte_size": 901920, "sha256": "ed69029981933a197fc9234a05784d84d3203e8739bbd7fa74541f9c1f1c05e8"},
+      {"path": "apps/advantage-games/public/vibe-coding-poster.jpg", "git_blob_oid": "769d5c820831c625276f6965ab9b4be0ac7b2a73", "byte_size": 231453, "sha256": "147c3b039b965ee7079c49c89966a385fc6cf01b568c97e2fec2fe104b4c25d0"},
+      {"path": "packages/codecamp-knowledge/fixtures/apk-guided/activity-tutorial.json", "git_blob_oid": "f75c14e1d3da12e714ec1ccc9000ed7993ae5de6", "byte_size": 3083, "sha256": "72a31ae85afa63a25c629184a5b3c70091fa4e49af303d5faf83f160c38a0ef1"}
+    ]},
+    {"name": "effective denominator reconstruction against digest-matching current base", "status": "pass-with-nonhistorical-input", "observed": {"candidate_paths": 428, "identical_hash_groups": 227, "path_duplicates": 0, "new_groups_unique": 3}},
+    {"name": "batch partition", "status": "pass", "observed": {"batch_count": 12, "path_sum": 428, "group_sum": 227, "max_paths": 40, "max_groups": 24, "omissions": 0, "duplicates": 0}},
+    {"name": "resource accounting", "status": "pass", "observed": {"delta_bytes_read": 1136456, "recomputed_changed_blob_bytes": 1136456, "ceiling": 33554432, "within_ceiling": true}},
+    {"name": "frozen-root and stated-rule membership", "status": "pass-with-nonhistorical-predicate", "observed": {"all_changed_paths_in_five_frozen_roots": true, "rule_ids": ["public-game-media-audio-data", "codecamp-activity-tutorial"]}},
+    {"name": "historical base and predicate availability at 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286", "status": "fail", "observed": {"base_manifest": "absent", "predicate_source": "absent"}}
+  ],
+  "resource_accounting": {
+    "command_invocations": 5,
+    "command_invocation_ceiling": 30,
+    "asset_content_inspections": 0,
+    "bytes_hashed_from_committed_delta_blobs": 1136456,
+    "bytes_read_ceiling": 33554432
+  },
+  "tool_attestation": {
+    "tools": ["sha256sum", "git rev-parse", "git show", "git cat-file", "python3 read-only JSON/checksum verifier"],
+    "working_tree_write_scope": ["measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-denominator-delta-review-v1.json"],
+    "content_review_performed": false,
+    "revision_verified": "65fc00d872ce5aa63820662ee0a1f14952e63235"
+  },
+  "acceptance_rule": "Pass requires zero critical, high, and medium findings. This review has one high finding and is non-consumable."
+}

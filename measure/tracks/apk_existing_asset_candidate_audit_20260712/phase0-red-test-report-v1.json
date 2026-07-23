@@ -1,0 +1,17 @@
+{
+  "schema_version": "apk-asset-forensics.phase0-red-test-report.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "author_role": "truth-test-author",
+  "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-contract-test.py --fixtures",
+  "result": "expected-red",
+  "exit_code": 1,
+  "observed_output": "RED: pending independent Phase 0 evidence: phase0-adversarial-review-v2.json",
+  "executed_at": "2026-07-23T06:12:00+07:00",
+  "stabilized_rerun_at": "2026-07-22T23:41:15Z",
+  "input_freeze_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+  "accepted_delta_sha256": "71592625cbe09671937b7406afa38f3f59232c0345de455467121dc038863db2",
+  "expected_red_only": [
+    "phase0-adversarial-review-v2.json"
+  ],
+  "scope": "The contract reads governance JSON and Git metadata only; it does not open asset content."
+}

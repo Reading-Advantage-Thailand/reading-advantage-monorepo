@@ -1,0 +1,108 @@
+{
+  "schema_version": "apk-asset-forensics.phase0-adversarial-review.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "review_role": "adversarial-reviewer",
+  "review_scope": "Phase 0 governance and strategy only. No asset image, audio, font, data, or caller content was inspected.",
+  "reviewed_at": "2026-07-23",
+  "input_bindings": {
+    "phase0_input_freeze": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+      "sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b"
+    },
+    "candidate_delta": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/candidate-denominator-delta-v1.json",
+      "sha256": "c354a57e162876d035f7df284149f683596d11145fe8e9d6c827beda4ccc15df"
+    },
+    "delta_review": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-denominator-delta-review-v3.json",
+      "sha256": "8c6e6fe17d0ae28628753ab11d4e21cabe8d407682af4d9106509b519ed4e5d1"
+    },
+    "accepted_delta": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/accepted-denominator-delta-v1.json",
+      "sha256": "71592625cbe09671937b7406afa38f3f59232c0345de455467121dc038863db2"
+    }
+  },
+  "checks": [
+    {
+      "name": "Corrected T2/T3 historical bindings",
+      "status": "pass",
+      "observed": "All four Git-object bytes at the pinned T2/T3 commits hash to the freeze digests."
+    },
+    {
+      "name": "Effective denominator and batching",
+      "status": "pass",
+      "observed": "The freeze and accepted delta bind 428 paths, 227 groups, five roots, and exactly twelve atomic batches totaling 428 paths and 227 groups; ceilings are 40 paths and 24 groups."
+    },
+    {
+      "name": "Baseline and publication distinction",
+      "status": "pass-with-documentation-finding",
+      "observed": "The freeze and accepted delta correctly distinguish immutable 426/225 source baseline 23bb5ad from publication revision ba95e6f and effective delta revision 65fc00d. Test strategy wording is ambiguous and is recorded below."
+    },
+    {
+      "name": "Theme, external-producer, stop-loss, and no-worktree boundaries",
+      "status": "pass",
+      "observed": "Canonical cute_chibi_v1 and original heroic_stylized_v1 rules, sister-project exclusion, immutable stop losses, and single-checkout/no-worktree policy are present."
+    },
+    {
+      "name": "Role incompatibilities",
+      "status": "fail",
+      "observed": "The root coordinator is forbidden from discovery and candidate-fact authorship, but no qualifying independent discovery-auditor evidence establishes the accepted effective denominator."
+    },
+    {
+      "name": "Focused Red and later-phase outputs",
+      "status": "fail",
+      "observed": "The focused contract correctly Red-ran only for this missing review artifact and no later-phase output artifact exists, but the contract would Green on mere file presence despite the unresolved discovery-proof failure; plan and dispatch state also imply later/undispatched work inconsistently."
+    }
+  ],
+  "findings": {
+    "critical": [],
+    "high": [
+      {
+        "id": "P0-H1",
+        "title": "Accepted 428/227 delta lacks qualifying independent discovery-auditor proof",
+        "evidence": "phase0-denominator-drift-report-v1.json remains status=blocked, records 426 paths/225 groups, exceeds its 33,554,432-byte ceiling, and says STOP. The accepted delta binds a candidate and an independent review, but no discovery-auditor receipt/report proves the accepted 428/227 effective denominator within budget. phase0-contract-test.py checks only that the blocked drift-report file exists.",
+        "impact": "Phase 0 could be marked Green while the prerequisite independent discovery gate is failed, violating the role-separation and fail-closed admission rules.",
+        "required_remediation": "Create one fresh, isolated discovery-auditor report and qualifying receipt for the already accepted bounded delta only: verify the exact 428/227 effective denominator, five roots, 12 batches, delta hash chain, and measured usage within the frozen ceiling. Do not rescan or expand scope. Harden phase0-contract-test.py to require that report/receipt pass semantics, exact bindings, and within-ceiling accounting rather than mere file presence; then rerun the focused contract once."
+      }
+    ],
+    "medium": [
+      {
+        "id": "P0-M1",
+        "title": "Plan reports later phases as in progress before Phase 0 admission",
+        "evidence": "plan.md marks Phase 1 through Phase 5 producer tasks [~] although no later-phase outputs exist and Phase 0 is not admitted.",
+        "impact": "The registry misreports progress and weakens the stop-before-content boundary.",
+        "required_remediation": "Change later-phase tasks to blocked/pending state until the Phase 0 checkpoint is accepted; do not create later outputs."
+      },
+      {
+        "id": "P0-M2",
+        "title": "Dispatch and test-strategy state is stale or ambiguous",
+        "evidence": "DISPATCH.md says no truth-test authoring or adversarial review has been dispatched even though the truth contract/red report and this review exist. test-strategy.md calls the 428-path effective set the exact T2 asset denominator even though T2 is the immutable 426-path base plus accepted T8 delta.",
+        "impact": "Operators can act on contradictory state or lose the required source-baseline versus effective-denominator distinction.",
+        "required_remediation": "Update DISPATCH.md to state the actual Phase 0 evidence state without claiming admission, and clarify test-strategy.md that T2 remains 426/225 while T8 consumes the accepted 428/227 effective denominator."
+      }
+    ],
+    "low": []
+  },
+  "resource_accounting": {
+    "asset_content_bytes_read": 0,
+    "asset_paths_inspected": 0,
+    "asset_hash_groups_inspected": 0,
+    "governance_artifact_bytes_directly_measured": 87738,
+    "historical_binding_bytes_directly_measured": 333033,
+    "directly_measured_total_bytes": 420771,
+    "review_shell_invocations": 6,
+    "review_shell_invocations_successful": 5,
+    "sandbox_preflight_failures": 1,
+    "content_review_performed": false,
+    "within_adversarial_reviewer_bytes_ceiling": true,
+    "within_adversarial_reviewer_command_ceiling": true
+  },
+  "decision": {
+    "status": "fail",
+    "rule": "Pass requires zero Critical, High, and Medium findings.",
+    "critical_count": 0,
+    "high_count": 1,
+    "medium_count": 2,
+    "next_action": "Perform the single bounded governance remediation specified by P0-H1, P0-M1, and P0-M2; then obtain a fresh independent adversarial review. No asset-content or later-phase work is authorized."
+  }
+}

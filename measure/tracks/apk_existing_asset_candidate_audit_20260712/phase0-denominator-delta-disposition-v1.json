@@ -1,0 +1,94 @@
+{
+  "schema_version": "apk-asset-forensics.phase0-denominator-delta-disposition.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "status": "blocked-pending-additive-t2-denominator-delta",
+  "decision": "STOP: T8 remains blocked. A bounded additive T2 denominator delta is required before any T8 content-bearing work or batch advancement.",
+  "purpose": "Metadata-only stop-loss remediation for the failed over-budget full-path drift report; it neither changes nor replaces the frozen 426-path T2 denominator.",
+  "comparison": {
+    "accepted_t2_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "roots": [
+      "apps/advantage-games/public",
+      "apps/reading-advantage/public/games",
+      "apps/primary-advantage/public/games",
+      "apps/advantage-games/measure",
+      "packages/codecamp-knowledge/fixtures/apk-guided"
+    ],
+    "frozen_asset_relevance_rule": "Exclude quarantine and config paths; admit media/audio/data suffixes under the three public-game roots, named APK-slug asset-spec.md or metadata.json sidecars under apps/advantage-games/measure, and exactly packages/codecamp-knowledge/fixtures/apk-guided/activity-tutorial.json.",
+    "method": "Enumerated only committed Git trees, compared path and blob OIDs, and verified object type and size with git cat-file --batch-check. No full 426-path blob read, visual inspection, metadata extraction, caller classification, or denominator expansion occurred."
+  },
+  "baseline": {
+    "candidate_paths": 426,
+    "identical_hash_groups": 225
+  },
+  "bounded_delta": {
+    "candidate_relevant_additions": [
+      {
+        "path": "apps/advantage-games/public/vibe-coding-bg.jpg",
+        "relevance_rule_id": "public-game-media-audio-data",
+        "caller_blob_oid": "f8e2ccf5dc895393a2f76d92ae824723ac5615a8",
+        "caller_blob_size": 901920,
+        "caller_blob_sha256": "ed69029981933a197fc9234a05784d84d3203e8739bbd7fa74541f9c1f1c05e8"
+      },
+      {
+        "path": "apps/advantage-games/public/vibe-coding-poster.jpg",
+        "relevance_rule_id": "public-game-media-audio-data",
+        "caller_blob_oid": "769d5c820831c625276f6965ab9b4be0ac7b2a73",
+        "caller_blob_size": 231453,
+        "caller_blob_sha256": "147c3b039b965ee7079c49c89966a385fc6cf01b568c97e2fec2fe104b4c25d0"
+      }
+    ],
+    "candidate_relevant_deletions": [],
+    "changed_accepted_paths": [
+      {
+        "path": "packages/codecamp-knowledge/fixtures/apk-guided/activity-tutorial.json",
+        "relevance_rule_id": "codecamp-activity-tutorial",
+        "baseline_blob_oid": "fc58c3b7d879d337dce7793b7993dfdf050d54b3",
+        "baseline_blob_size": 2960,
+        "baseline_sha256": "b4e17309cb3e4a63ca60127b5af2285a1ed82b0c7fa570b0a7f36b67d8b59d4d",
+        "caller_blob_oid": "f75c14e1d3da12e714ec1ccc9000ed7993ae5de6",
+        "caller_blob_size": 3083,
+        "caller_blob_sha256": "72a31ae85afa63a25c629184a5b3c70091fa4e49af303d5faf83f160c38a0ef1",
+        "baseline_hash_group_member_count": 1
+      }
+    ],
+    "projected_current_candidate_paths": 428,
+    "projected_current_identical_hash_groups": 227,
+    "group_count_reason": "The replaced activity-tutorial baseline hash had one accepted member; its measured caller hash and both new JPEG hashes are absent from the accepted T2 hash list."
+  },
+  "measured_resource_usage": {
+    "role": "discovery-auditor",
+    "phase": "phase0-bounded-delta",
+    "command_invocations": 9,
+    "command_invocation_ceiling": 30,
+    "metadata_batch_check_object_count": 228,
+    "metadata_batch_check_response_bytes": 11874,
+    "candidate_blob_oids_read_and_hashed": 3,
+    "candidate_blob_bytes_read": 1136456,
+    "bytes_read_ceiling": 33554432,
+    "bytes_read_within_ceiling": true,
+    "commands": [
+      "git ls-tree -r -z -l 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286 -- <five frozen roots>",
+      "git ls-tree -r -z -l 65fc00d872ce5aa63820662ee0a1f14952e63235 -- <five frozen roots>",
+      "git cat-file --batch-check=%(objectname) %(objecttype) %(objectsize)",
+      "git cat-file --batch",
+      "git show 65fc00d872ce5aa63820662ee0a1f14952e63235:measure/archive/apk_source_denominator_inventory_20260712/asset-file-denominator.json | jq"
+    ]
+  },
+  "preserved_failed_evidence": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-denominator-drift-report-v1.json",
+    "status": "blocked",
+    "recorded_blob_bytes_read": 394076848,
+    "immutable_ceiling": 33554432,
+    "recorded_excess_bytes": 360522416,
+    "disposition": "Preserved as the original failed/over-budget evidence; this report is a separate bounded remediation and does not erase that stop-loss event."
+  },
+  "required_next_action": "A product-owner-authorized, additive T2 delta artifact must bind the two additions and the current replacement blob while retaining the original accepted T2 manifest unchanged. It must define the successor 428-path/227-group denominator and revised batches before T8 may resume.",
+  "scope_assertions": {
+    "denominator_expanded_by_this_report": false,
+    "asset_content_classified": false,
+    "visual_or_audio_content_inspected": false,
+    "candidate_dispositions_authored": false,
+    "t8_content_bearing_work_authorized": false
+  }
+}

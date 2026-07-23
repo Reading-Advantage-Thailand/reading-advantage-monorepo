@@ -1,0 +1,83 @@
+{
+  "schema_version": "apk-asset-forensics.role-receipt.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "native_task_name": "/root/t8_phase0_discovery_receipt",
+  "role": "phase0-discovery-auditor",
+  "declared_model": "gpt-5.6-terra",
+  "fork_turns": "none",
+  "allowed_input_manifest_path_list": [
+    {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+      "sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b"
+    },
+    {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/candidate-denominator-delta-v1.json",
+      "sha256": "c354a57e162876d035f7df284149f683596d11145fe8e9d6c827beda4ccc15df"
+    },
+    {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-denominator-delta-review-v3.json",
+      "sha256": "8c6e6fe17d0ae28628753ab11d4e21cabe8d407682af4d9106509b519ed4e5d1"
+    },
+    {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/accepted-denominator-delta-v1.json",
+      "sha256": "71592625cbe09671937b7406afa38f3f59232c0345de455467121dc038863db2"
+    },
+    {
+      "git_commit": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+      "path": "measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+      "sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438"
+    }
+  ],
+  "role_boundary": {
+    "allowed": [
+      "Git tree/blob metadata verification",
+      "base and delta count reconciliation",
+      "hashing only the changed/new candidate blobs",
+      "frozen root and batch reconstruction",
+      "checkout-count verification"
+    ],
+    "forbidden_and_not_performed": [
+      "asset image, audio, or data meaning inspection",
+      "provenance or license assessment",
+      "caller analysis",
+      "requirements mapping",
+      "suitability or disposition decisions",
+      "truth testing",
+      "sister-repository discovery or input"
+    ]
+  },
+  "findings": {
+    "base": {"candidate_paths": 426, "identical_hash_groups": 225, "source_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"},
+    "delta": {"revision": "65fc00d872ce5aa63820662ee0a1f14952e63235", "additions": 2, "replacements": 1, "deletions": 0},
+    "effective": {"candidate_paths": 428, "identical_hash_groups": 227, "frozen_roots": 5, "batch_count": 12, "batch_path_sum": 428, "batch_hash_group_sum": 227, "max_batch_paths": 40, "max_batch_hash_groups": 24},
+    "batch_lookahead_interpretation": "Nearest-boundary selection must retain a ceiling-feasible partition for all remaining batches; this reproduces the frozen AF-11 and AF-12 boundary exactly.",
+    "delta_candidate_blob_bytes": 1136456,
+    "single_physical_worktree": true,
+    "sister_repository_input_used": false
+  },
+  "exact_integer_resource_usage": {
+    "command_invocations": 8,
+    "candidate_blob_content_reads": 3,
+    "candidate_blob_bytes_read": 1136456,
+    "metadata_and_manifest_bytes_read": 2399187,
+    "bytes_read": 3535643,
+    "command_invocation_ceiling": 30,
+    "bytes_read_ceiling": 33554432,
+    "within_ceiling": true
+  },
+  "outputs": {
+    "report": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-denominator-discovery-report-v2.json",
+      "sha256": "b71333db3768e8646bb9673755e7092480e943fed4e8542857162f9ed824bb40"
+    },
+    "receipt": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase0/discovery-auditor.json",
+      "sha256": "unavailable because this receipt is self-referential; not fabricated"
+    }
+  },
+  "availability": {
+    "encrypted_raw_prompt": "unavailable per manifest; not fabricated",
+    "hidden_ids": "unavailable per manifest; not fabricated"
+  },
+  "final_status": "pass"
+}

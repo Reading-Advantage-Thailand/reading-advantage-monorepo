@@ -1,0 +1,218 @@
+{
+  "schema_version": "apk-asset-forensics.phase0-input-freeze.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "status": "frozen-strategy-only",
+  "frozen_at": "2026-07-22",
+  "canonical_checkout": {
+    "path": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "branch": "master",
+    "authorization_commit": "84abd0e2",
+    "single_checkout_only": true,
+    "auxiliary_worktrees_allowed": false
+  },
+  "accepted_inputs": [
+    {
+      "track": "T1",
+      "path": "measure/evidence-integrity-accepted-gate.json",
+      "sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+      "required_status": "accepted",
+      "required_consumable": true,
+      "required_revoked": false,
+      "gate_version": "phase4-v8-candidate",
+      "gate_commit": "5aea360f94f978ac78e590e0a64d33d176beaa1a"
+    },
+    {
+      "track": "T2-denominator",
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+      "first_exact_bytes_commit_sha": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+      "first_exact_bytes_path": "measure/tracks/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json"
+    },
+    {
+      "track": "T2-partition",
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+      "first_exact_bytes_commit_sha": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+      "first_exact_bytes_path": "measure/tracks/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json"
+    },
+    {
+      "track": "T2-asset-denominator",
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+      "sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+      "first_exact_bytes_commit_sha": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+      "first_exact_bytes_path": "measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+      "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+    },
+    {
+      "track": "T8-denominator-delta",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/accepted-denominator-delta-v1.json",
+      "sha256": "71592625cbe09671937b7406afa38f3f59232c0345de455467121dc038863db2",
+      "status": "accepted",
+      "consumable": true,
+      "base_publication_revision": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+      "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "delta_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235"
+    },
+    {
+      "track": "T3",
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+      "first_exact_bytes_commit_sha": "efae354081b1f0db2a989a4f10b948cf8286f867",
+      "first_exact_bytes_path": "measure/tracks/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json"
+    },
+    {
+      "track": "T4",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+      "sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80",
+      "first_exact_bytes_commit_sha": "8b3a83d3d0347921f67e3a81131a312b9d916c71"
+    },
+    {
+      "track": "T4-owner-disposition",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-admission-owner-disposition-v4.json",
+      "sha256": "40a73444f5f3924cf57bebe67e452dd941fa93262430030bbb43cf1355c29318",
+      "first_exact_bytes_commit_sha": "43928b9a3ad5079cde46310bf6d346a57b4db068"
+    },
+    {
+      "track": "T5",
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/t5-accepted-cohort-manifest-v1.json",
+      "sha256": "4052c243ca66977256a4b60116439884f3f3151fba463ef860e624ed8d050f5d",
+      "first_exact_bytes_commit_sha": "2e93950745fa1acedfb4c42d2a328ad3edce042a"
+    },
+    {
+      "track": "T6",
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/successor-accepted-cohort-manifest-v2.json",
+      "sha256": "9666b564ba969ef7d0559fb53d8d74c684a746b10264784a9728e52b6284888b",
+      "first_exact_bytes_commit_sha": "43b726203d8356c9687014887f0ac2aaf4e0a455"
+    },
+    {
+      "track": "T7",
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/cohort-accepted-manifest-20260722.json",
+      "sha256": "4186dfd20fcef683a1a33664a1ffa9d4350280fbee31fe56d553fa0f5a87b2b0",
+      "first_exact_bytes_commit_sha": "9a927b537bec8989677baf6fc8ad71f5a5c674d7"
+    },
+    {
+      "track": "T4-T8-owner-authorization",
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-t8-consumption-authorization-v1.json",
+      "sha256": "451c749a84c2ab32d3250f7afb0fc5852a04e02b126527900f48393e2f483bef",
+      "publication_commit_sha": "84abd0e2",
+      "decision": "AUTHORIZED",
+      "authorized_activity": "T8 per-candidate asset forensics only"
+    }
+  ],
+  "denominator": {
+    "candidate_paths": 428,
+    "identical_hash_groups": 227,
+    "group_size_min_paths": 1,
+    "group_size_max_paths": 9,
+    "roots": [
+      {"path": "apps/advantage-games/public", "candidate_paths": 250},
+      {"path": "apps/reading-advantage/public/games", "candidate_paths": 105},
+      {"path": "apps/primary-advantage/public/games", "candidate_paths": 0},
+      {"path": "apps/advantage-games/measure", "candidate_paths": 72},
+      {"path": "packages/codecamp-knowledge/fixtures/apk-guided", "candidate_paths": 1}
+    ],
+    "root_count": 5,
+    "root_path_sum": 428,
+    "record_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "base_record_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "base_manifest_publication_revision": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+    "accepted_delta_sha256": "71592625cbe09671937b7406afa38f3f59232c0345de455467121dc038863db2",
+    "caller_scan_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "caller_scan_policy": "Resolve callers and current uses from committed source at this exact revision with git object reads. Record unresolved-dynamic references explicitly; never scan the dirty working tree or infer unused status from zero static matches.",
+    "denominator_change_allowed": false,
+    "effective_denominator_rule": "The immutable 426-path T2 base plus the accepted two-addition/one-replacement T8 delta is the sole 428-path denominator for this track.",
+    "sister_repositories": {
+      "status": "unbound-out-of-denominator",
+      "rule": "No path outside the canonical checkout and the five repository-relative roots is admitted. Desktop sister repositories, including fantasy-asset-forge and pixel-art-generator, are neither searched nor consumed by T8."
+    }
+  },
+  "historical_binding_corrections": {
+    "corrects_artifact": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-t8-consumption-authorization-v1.json",
+    "corrects_publication_commit": "84abd0e24338b05db3942da66cf27b2dbc0a2653",
+    "scope": "Historical locator fields only; authorization decision, accepted bytes, disclosures, and scope remain unchanged.",
+    "bindings": [
+      {
+        "artifact": "T2 accepted denominator manifest",
+        "first_exact_bytes_commit_sha": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+        "first_exact_bytes_path": "measure/tracks/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json"
+      },
+      {
+        "artifact": "T2 accepted partition manifest",
+        "first_exact_bytes_commit_sha": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+        "first_exact_bytes_path": "measure/tracks/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json"
+      },
+      {
+        "artifact": "T3 accepted pilot manifest",
+        "first_exact_bytes_commit_sha": "efae354081b1f0db2a989a4f10b948cf8286f867",
+        "first_exact_bytes_path": "measure/tracks/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json"
+      }
+    ]
+  },
+  "theme_profiles": {
+    "primary": {
+      "canonical_id": "cute_chibi_v1",
+      "legacy_program_label": "Chibi Quest"
+    },
+    "secondary": {
+      "canonical_id": "heroic_stylized_v1",
+      "legacy_program_label": "Riven Lands",
+      "originality_rule": "Original and project-owned; franchise names, characters, symbols, costumes, and distinctive combinations are prohibited. Broad heroic-fantasy readability principles are references, not source material."
+    },
+    "external_producers": ["../fantasy-asset-forge/", "../pixel-art-generator/"],
+    "t8_boundary": "External producer outputs remain outside the T8 denominator and may enter later tracks only through accepted digest-pinned manifests."
+  },
+  "batch_strategy": {
+    "batch_count": 12,
+    "unit": "identical-hash-group",
+    "group_atomic": true,
+    "path_records_remain_individual": true,
+    "ordering": "Lexicographically sort the exact identical_hash_group strings from the accepted T2 asset denominator.",
+    "boundary_algorithm": "For each batch except the last, choose the contiguous boundary whose path total is nearest remaining_paths divided by remaining_batches; ties choose the earlier boundary. The last batch receives the remainder.",
+    "candidate_path_ceiling_per_batch": 40,
+    "hash_group_ceiling_per_batch": 24,
+    "scene_usage_join_rule": "Phase 4 may split one candidate batch into review slices of at most three games without changing candidate or hash-group membership.",
+    "batches": [
+      {"batch_id": "AF-01", "group_count": 18, "path_count": 36, "first_group": "sha256:00a88649680edba33079e5a6e4fb604ca85945229c762dfa1c0fb1da978c60fb", "last_group": "sha256:147c3b039b965ee7079c49c89966a385fc6cf01b568c97e2fec2fe104b4c25d0"},
+      {"batch_id": "AF-02", "group_count": 18, "path_count": 35, "first_group": "sha256:14bba75201cb9cf1495c890ef6b869ceed44d4db8f80d7babddf979331dd95e7", "last_group": "sha256:2383a3b212ed48f803df643d6525e7b2fad76bb5772507e3550da9fda40fc19e"},
+      {"batch_id": "AF-03", "group_count": 21, "path_count": 35, "first_group": "sha256:23eacc93a937c645242084d17dedc72ef10e04330633306e504d02f725235b56", "last_group": "sha256:3a67113fe7cb71698af948d033047210a0131584f83f57389f7ca98efbb05f87"},
+      {"batch_id": "AF-04", "group_count": 17, "path_count": 35, "first_group": "sha256:3bec9ea0ab16ff60618d4aa69b617f0b74427e8c08a6d12382e2391333ae3c36", "last_group": "sha256:5720ead0f45f083c2c8eefe0a1b888b1416c7fc768426007ebf5657786600f81"},
+      {"batch_id": "AF-05", "group_count": 18, "path_count": 39, "first_group": "sha256:576ec5070a1fd3c1238c31ca9cbe26a0acee1ec8e4a6383852196dc09604e0f6", "last_group": "sha256:6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc"},
+      {"batch_id": "AF-06", "group_count": 21, "path_count": 35, "first_group": "sha256:6ed15b6010af6453e0a2844340c0a2a4b61a99028d92aae5a4d5e60a7db9022f", "last_group": "sha256:8554c1486cd5735a2adba9dc26157dc1e23165d35e37c5efb691dcb5af9008fd"},
+      {"batch_id": "AF-07", "group_count": 17, "path_count": 35, "first_group": "sha256:86439c52414fbdd7129b72c44aeec6c63134b17cbb0ec5af6395b05f2f083e88", "last_group": "sha256:9f5fc0ae82caccd1e103607fe70c2af0062e6f196288ca143b97cd3d8f93827d"},
+      {"batch_id": "AF-08", "group_count": 19, "path_count": 35, "first_group": "sha256:9f8c13f96fe90c9d47d9b5fe5c65b0628a4bbcf0ad4a2299140ebbab4d624c49", "last_group": "sha256:ac0581c08b6bb79ff54020a68a9ff66cb290cadfe931f28a2a311a21c21e79ae"},
+      {"batch_id": "AF-09", "group_count": 17, "path_count": 35, "first_group": "sha256:acc33d140f9c6228d448034dc1ab9698b6e0b846f7d3947f27e2f92f4d8c04b4", "last_group": "sha256:bb1c38361ba56ccb553a6ddc6d9e21b75a9ec97b724917b186e740c9c7f0d94f"},
+      {"batch_id": "AF-10", "group_count": 19, "path_count": 34, "first_group": "sha256:bd02d8146701783c7fe9542dd8afc2d8f919cbdb30c653a9e6e9b620577243db", "last_group": "sha256:cb5e5c99a49da484e0a7856cef335c5428e0894534f0f148d45e6dd81f47408b"},
+      {"batch_id": "AF-11", "group_count": 18, "path_count": 40, "first_group": "sha256:cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900", "last_group": "sha256:e1f6299482e1e3055d75816cb9a36e211fb52d1c01acf62aadb5c81da660fbd5"},
+      {"batch_id": "AF-12", "group_count": 24, "path_count": 34, "first_group": "sha256:e2c3e9f281a502fe12c41cbc06ae6a41b71b8c3a16648b34ebd6eafb9e3fdbe9", "last_group": "sha256:fd6ad1367e4bd340a74c320732408781674741b300738e58f9a7ad710eea335a"}
+    ],
+    "reconciliation": {"batch_path_sum": 428, "batch_group_sum": 227, "duplicates_allowed_across_batches": 0, "omissions_allowed": 0}
+  },
+  "resource_ceilings": {
+    "scope": "per batch unless phase0 is stated",
+    "discovery-auditor": {"phase0_candidate_paths": 428, "phase0_hash_groups": 227, "command_invocations": 30, "bytes_read": 33554432},
+    "evidence-collector": {"candidate_paths": 40, "hash_groups": 24, "command_invocations": 80, "bytes_read": 536870912},
+    "mechanical-metadata-inspector": {"candidate_paths": 40, "command_invocations": 80, "bytes_read": 268435456},
+    "caller-analyst": {"candidate_paths": 40, "source_files": 600, "caller_records": 800, "command_invocations": 120, "bytes_read": 268435456},
+    "provenance-auditor": {"candidate_paths": 40, "evidence_records": 200, "command_invocations": 120, "bytes_read": 268435456},
+    "visual-audio-inspector": {"candidate_paths": 40, "hash_groups": 24, "inspection_actions": 48, "decoded_bytes": 1073741824},
+    "requirements-mapper": {"candidate_paths": 40, "scene_usage_records": 240, "games_per_join_slice": 3, "command_invocations": 80, "bytes_read": 268435456},
+    "truth-test-author": {"test_cases": 160, "command_invocations": 80, "bytes_read": 134217728},
+    "adversarial-reviewer": {"candidate_paths": 40, "hash_groups": 24, "review_records": 280, "command_invocations": 120, "bytes_read": 536870912}
+  },
+  "stop_loss": {
+    "unsupported_or_fabricated_factual_claims_before_stop": 1,
+    "denominator_mismatches_before_stop": 1,
+    "bound_hash_drifts_before_authorization_stop": 1,
+    "failed_fix_review_cycles_before_block": 2,
+    "max_games_per_scene_usage_join_slice": 3,
+    "unresolved_blocking_severities": ["critical", "high", "medium"],
+    "unmeasured_resource_usage_blocks_checkpoint": true,
+    "ceiling_change_requires_prior_product_owner_approval": true,
+    "batch_advancement_requires_zero_stop_loss_events": true
+  },
+  "scope_boundaries": {
+    "phase0_allows": ["hash verification", "historical path-binding correction", "count reconciliation", "root freeze", "batch planning", "role planning", "budget and stop-loss planning", "Measure status correction"],
+    "phase0_forbids": ["asset file opening", "visual or audio inspection", "content classification", "mechanical metadata extraction", "caller classification", "provenance or license conclusions", "responsive or theme suitability", "disposition", "ontology synthesis", "asset production", "implementation", "browser reruns", "gate reruns", "success claims"],
+    "owner_authorization_boundaries_preserved": true
+  }
+}

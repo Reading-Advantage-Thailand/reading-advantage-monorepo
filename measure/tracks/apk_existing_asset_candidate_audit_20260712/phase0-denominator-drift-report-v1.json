@@ -1,0 +1,96 @@
+{
+  "schema_version": "apk-asset-forensics.phase0-denominator-drift-report.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "status": "blocked",
+  "decision": "STOP: no denominator repair, root expansion, batch advancement, or content-bearing T8 work is authorized.",
+  "comparison": {
+    "accepted_t2_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "caller_scan_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "method": "Read only immutable Git objects: one git cat-file --batch request for the 426 accepted paths, plus committed-tree enumeration. No working-tree asset read or content inspection occurred.",
+    "accepted_candidate_paths": 426,
+    "accepted_identical_hash_groups": 225,
+    "denominator_expanded": false
+  },
+  "freeze_binding": {
+    "input_freeze_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+    "input_freeze_sha256": "919bdc9d6c240931f1458be1b287a15e6c436ddf0a4e120e0883b47239383d39",
+    "frozen_root_count": 5,
+    "frozen_batch_count": 12,
+    "frozen_batch_path_sum": 426,
+    "frozen_batch_group_sum": 225,
+    "candidate_path_ceiling_per_batch": 40,
+    "hash_group_ceiling_per_batch": 24,
+    "worktree_verification": {
+      "worktree_count": 1,
+      "canonical_path": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+      "head": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+      "branch": "master"
+    }
+  },
+  "resource_usage": {
+    "role": "discovery-auditor",
+    "phase": "phase0",
+    "command_invocations": 2,
+    "command_invocation_ceiling": 30,
+    "bytes_read": 394076848,
+    "bytes_read_ceiling": 33554432,
+    "integers_measured": true,
+    "within_ceiling": false,
+    "blocking_reason": "Committed-object hash verification read 394076848 bytes, exceeding the immutable Phase 0 discovery-auditor ceiling by 360522416 bytes."
+  },
+  "drift_summary": {
+    "missing_path_count": 0,
+    "hash_change_count": 1,
+    "committed_root_addition_count": 346,
+    "blocking_stop_loss_events": 2
+  },
+  "roots": [
+    {
+      "path": "apps/advantage-games/public",
+      "accepted_path_count": 248,
+      "committed_tree_path_count": 257,
+      "committed_tree_path_set_sha256": "c499afc8d17786854d245782d1daaf8aa275d95b5157a20de80a4af833715256",
+      "missing_paths": [],
+      "hash_changes": [],
+      "additions": {"count": 9, "disposition": "recorded-outside-frozen-denominator; not admitted", "paths": ["apps/advantage-games/public/Vibe-Coding Arena — Official Rules.pdf", "apps/advantage-games/public/games/dragon-flight/ASSETS.md", "apps/advantage-games/public/games/sentence/griffin-sky-joust/.gitkeep", "apps/advantage-games/public/games/sentence/realm-carver/.gitkeep", "apps/advantage-games/public/games/vocabulary/dragon-flight/ASSETS.md", "apps/advantage-games/public/vibe-coding-bg.jpg", "apps/advantage-games/public/vibe-coding-poster.html", "apps/advantage-games/public/vibe-coding-poster.jpg", "apps/advantage-games/public/vibe-coding-rules.html"]}
+    },
+    {
+      "path": "apps/reading-advantage/public/games",
+      "accepted_path_count": 105,
+      "committed_tree_path_count": 105,
+      "committed_tree_path_set_sha256": "111ffc1548631959809b0a92d84e32412bcabc4be99e453244f1fbf83a06c5c4",
+      "missing_paths": [], "hash_changes": [], "additions": {"count": 0, "disposition": "none", "paths": []}
+    },
+    {
+      "path": "apps/primary-advantage/public/games",
+      "accepted_path_count": 0,
+      "committed_tree_path_count": 0,
+      "committed_tree_path_set_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "missing_paths": [], "hash_changes": [], "additions": {"count": 0, "disposition": "none", "paths": []}
+    },
+    {
+      "path": "apps/advantage-games/measure",
+      "accepted_path_count": 72,
+      "committed_tree_path_count": 406,
+      "committed_tree_path_set_sha256": "810c9a845dfeefa13697b083fc4c3548740a1e71be8edb7005236900e60a1bd5",
+      "missing_paths": [], "hash_changes": [],
+      "additions": {"count": 334, "disposition": "recorded-as-committed-root-set-delta; not admitted; exact full root path set is bound by committed_tree_path_set_sha256", "paths": []}
+    },
+    {
+      "path": "packages/codecamp-knowledge/fixtures/apk-guided",
+      "accepted_path_count": 1,
+      "committed_tree_path_count": 4,
+      "committed_tree_path_set_sha256": "f1323c12cb0bd67de7b7d3a254a5a729ee1735fa3a9e455ea88c08acb285d207",
+      "missing_paths": [],
+      "hash_changes": [{"canonical_path": "packages/codecamp-knowledge/fixtures/apk-guided/activity-tutorial.json", "accepted_sha256": "b4e17309cb3e4a63ca60127b5af2285a1ed82b0c7fa570b0a7f36b67d8b59d4d", "observed_sha256": "72a31ae85afa63a25c629184a5b3c70091fa4e49af303d5faf83f160c38a0ef1", "observed_git_blob_oid": "f75c14e1d3da12e714ec1ccc9000ed7993ae5de6"}],
+      "additions": {"count": 3, "disposition": "recorded-outside-frozen-denominator; not admitted", "paths": ["packages/codecamp-knowledge/fixtures/apk-guided/README.md", "packages/codecamp-knowledge/fixtures/apk-guided/src/cartridge.ts", "packages/codecamp-knowledge/fixtures/apk-guided/src/game-state.ts"]}
+    }
+  ],
+  "conclusion": {
+    "accepted_path_coverage_at_caller_scan": 426,
+    "accepted_path_coverage_preserved": true,
+    "accepted_hash_coverage_preserved": false,
+    "repair_attempted": false,
+    "next_authorized_action": "Obtain an additive product-owner decision before any further T8 action."
+  }
+}

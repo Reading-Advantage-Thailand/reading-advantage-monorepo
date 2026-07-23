@@ -1,0 +1,100 @@
+{
+  "schema_version": "apk-asset-forensics.denominator-delta-candidate.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "status": "candidate-non-consumable",
+  "purpose": "Bounded additive T2 denominator remediation for committed candidate drift discovered before T8 content work.",
+  "base": {
+    "path": "measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+    "sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "publication_revision": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "candidate_paths": 426,
+    "identical_hash_groups": 225
+  },
+  "delta_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+  "predicate": {
+    "path": "measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py",
+    "sha256": "a4d0edb9a2e5731cbf4a813cd7250cfc1f057c5227e507c8e79e97554dc71244",
+    "publication_revision": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+    "function": "asset_relevance_rule",
+    "method": "Compare committed path and Git-blob OID sets first; read and SHA-256 only candidate-relevant additions or changed paths."
+  },
+  "failed_predecessor_attempt": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-denominator-drift-report-v1.json",
+    "disposition": "preserved-non-authoritative-over-budget",
+    "reason": "The first drift attempt read 394076848 bytes and compared unfiltered root additions, exceeding the immutable 33554432-byte ceiling."
+  },
+  "resource_usage": {
+    "command_invocations": 6,
+    "command_invocation_ceiling": 30,
+    "delta_bytes_read": 1136456,
+    "bytes_read_ceiling": 33554432,
+    "within_ceiling": true
+  },
+  "changes": {
+    "additions": [
+      {
+        "canonical_path": "apps/advantage-games/public/vibe-coding-bg.jpg",
+        "relevance_rule_id": "public-game-media-audio-data",
+        "revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+        "sha256": "ed69029981933a197fc9234a05784d84d3203e8739bbd7fa74541f9c1f1c05e8",
+        "identical_hash_group": "sha256:ed69029981933a197fc9234a05784d84d3203e8739bbd7fa74541f9c1f1c05e8",
+        "git_blob_oid": "f8e2ccf5dc895393a2f76d92ae824723ac5615a8",
+        "file_kind": "asset",
+        "format_metadata": {"byte_size": 901920, "format": "jpg", "mime_type": "image/jpeg"}
+      },
+      {
+        "canonical_path": "apps/advantage-games/public/vibe-coding-poster.jpg",
+        "relevance_rule_id": "public-game-media-audio-data",
+        "revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+        "sha256": "147c3b039b965ee7079c49c89966a385fc6cf01b568c97e2fec2fe104b4c25d0",
+        "identical_hash_group": "sha256:147c3b039b965ee7079c49c89966a385fc6cf01b568c97e2fec2fe104b4c25d0",
+        "git_blob_oid": "769d5c820831c625276f6965ab9b4be0ac7b2a73",
+        "file_kind": "asset",
+        "format_metadata": {"byte_size": 231453, "format": "jpg", "mime_type": "image/jpeg"}
+      }
+    ],
+    "replacements": [
+      {
+        "canonical_path": "packages/codecamp-knowledge/fixtures/apk-guided/activity-tutorial.json",
+        "relevance_rule_id": "codecamp-activity-tutorial",
+        "prior_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "prior_sha256": "b4e17309cb3e4a63ca60127b5af2285a1ed82b0c7fa570b0a7f36b67d8b59d4d",
+        "revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+        "sha256": "72a31ae85afa63a25c629184a5b3c70091fa4e49af303d5faf83f160c38a0ef1",
+        "identical_hash_group": "sha256:72a31ae85afa63a25c629184a5b3c70091fa4e49af303d5faf83f160c38a0ef1",
+        "git_blob_oid": "f75c14e1d3da12e714ec1ccc9000ed7993ae5de6",
+        "file_kind": "data",
+        "format_metadata": {"byte_size": 3083, "format": "json", "mime_type": "application/json"}
+      }
+    ],
+    "deletions": []
+  },
+  "effective_denominator": {
+    "candidate_paths": 428,
+    "identical_hash_groups": 227,
+    "root_count": 5,
+    "batch_count": 12,
+    "batches": [
+      {"batch_id":"AF-01","group_count":18,"path_count":36,"first_group":"sha256:00a88649680edba33079e5a6e4fb604ca85945229c762dfa1c0fb1da978c60fb","last_group":"sha256:147c3b039b965ee7079c49c89966a385fc6cf01b568c97e2fec2fe104b4c25d0"},
+      {"batch_id":"AF-02","group_count":18,"path_count":35,"first_group":"sha256:14bba75201cb9cf1495c890ef6b869ceed44d4db8f80d7babddf979331dd95e7","last_group":"sha256:2383a3b212ed48f803df643d6525e7b2fad76bb5772507e3550da9fda40fc19e"},
+      {"batch_id":"AF-03","group_count":21,"path_count":35,"first_group":"sha256:23eacc93a937c645242084d17dedc72ef10e04330633306e504d02f725235b56","last_group":"sha256:3a67113fe7cb71698af948d033047210a0131584f83f57389f7ca98efbb05f87"},
+      {"batch_id":"AF-04","group_count":17,"path_count":35,"first_group":"sha256:3bec9ea0ab16ff60618d4aa69b617f0b74427e8c08a6d12382e2391333ae3c36","last_group":"sha256:5720ead0f45f083c2c8eefe0a1b888b1416c7fc768426007ebf5657786600f81"},
+      {"batch_id":"AF-05","group_count":18,"path_count":39,"first_group":"sha256:576ec5070a1fd3c1238c31ca9cbe26a0acee1ec8e4a6383852196dc09604e0f6","last_group":"sha256:6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc"},
+      {"batch_id":"AF-06","group_count":21,"path_count":35,"first_group":"sha256:6ed15b6010af6453e0a2844340c0a2a4b61a99028d92aae5a4d5e60a7db9022f","last_group":"sha256:8554c1486cd5735a2adba9dc26157dc1e23165d35e37c5efb691dcb5af9008fd"},
+      {"batch_id":"AF-07","group_count":17,"path_count":35,"first_group":"sha256:86439c52414fbdd7129b72c44aeec6c63134b17cbb0ec5af6395b05f2f083e88","last_group":"sha256:9f5fc0ae82caccd1e103607fe70c2af0062e6f196288ca143b97cd3d8f93827d"},
+      {"batch_id":"AF-08","group_count":19,"path_count":35,"first_group":"sha256:9f8c13f96fe90c9d47d9b5fe5c65b0628a4bbcf0ad4a2299140ebbab4d624c49","last_group":"sha256:ac0581c08b6bb79ff54020a68a9ff66cb290cadfe931f28a2a311a21c21e79ae"},
+      {"batch_id":"AF-09","group_count":17,"path_count":35,"first_group":"sha256:acc33d140f9c6228d448034dc1ab9698b6e0b846f7d3947f27e2f92f4d8c04b4","last_group":"sha256:bb1c38361ba56ccb553a6ddc6d9e21b75a9ec97b724917b186e740c9c7f0d94f"},
+      {"batch_id":"AF-10","group_count":19,"path_count":34,"first_group":"sha256:bd02d8146701783c7fe9542dd8afc2d8f919cbdb30c653a9e6e9b620577243db","last_group":"sha256:cb5e5c99a49da484e0a7856cef335c5428e0894534f0f148d45e6dd81f47408b"},
+      {"batch_id":"AF-11","group_count":18,"path_count":40,"first_group":"sha256:cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900","last_group":"sha256:e1f6299482e1e3055d75816cb9a36e211fb52d1c01acf62aadb5c81da660fbd5"},
+      {"batch_id":"AF-12","group_count":24,"path_count":34,"first_group":"sha256:e2c3e9f281a502fe12c41cbc06ae6a41b71b8c3a16648b34ebd6eafb9e3fdbe9","last_group":"sha256:fd6ad1367e4bd340a74c320732408781674741b300738e58f9a7ad710eea335a"}
+    ],
+    "reconciliation": {"batch_path_sum":428,"batch_group_sum":227,"max_batch_paths":40,"max_batch_groups":24,"omissions":0,"duplicates":0}
+  },
+  "acceptance": {
+    "review_required": true,
+    "root_product_owner_decision_required": true,
+    "accepted": false,
+    "consumable": false
+  }
+}

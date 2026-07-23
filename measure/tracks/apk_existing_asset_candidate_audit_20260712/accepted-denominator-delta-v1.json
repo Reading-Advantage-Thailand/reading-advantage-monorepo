@@ -1,0 +1,52 @@
+{
+  "schema_version": "apk-asset-forensics.accepted-denominator-delta.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "status": "accepted",
+  "decision": "ACCEPTED",
+  "consumable": true,
+  "accepted_by": "root-orchestrator-product-owner",
+  "accepted_at": "2026-07-23",
+  "scope": "Bounded additive denominator admission only; no asset-content, suitability, provenance, caller, or disposition claim is accepted by this record.",
+  "candidate": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/candidate-denominator-delta-v1.json",
+    "sha256": "c354a57e162876d035f7df284149f683596d11145fe8e9d6c827beda4ccc15df"
+  },
+  "independent_review": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-denominator-delta-review-v3.json",
+    "sha256": "8c6e6fe17d0ae28628753ab11d4e21cabe8d407682af4d9106509b519ed4e5d1",
+    "status": "pass",
+    "critical_findings": 0,
+    "high_findings": 0,
+    "medium_findings": 0
+  },
+  "superseded_failed_review": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-denominator-delta-review-failed-v1.json",
+  "superseded_pre_freeze_review": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-denominator-delta-review-v2.json",
+  "base": {
+    "publication_revision": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+    "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "candidate_paths": 426,
+    "identical_hash_groups": 225
+  },
+  "delta_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+  "changes": {
+    "additions": 2,
+    "replacements": 1,
+    "deletions": 0,
+    "bytes_read": 1136456,
+    "bytes_read_ceiling": 33554432
+  },
+  "effective_denominator": {
+    "candidate_paths": 428,
+    "identical_hash_groups": 227,
+    "root_count": 5,
+    "batch_count": 12,
+    "batch_path_sum": 428,
+    "batch_group_sum": 227,
+    "max_batch_paths": 40,
+    "max_batch_groups": 24,
+    "omissions": 0,
+    "duplicates": 0
+  },
+  "owner_rationale": "The delta is narrow, reproducible from committed objects, below the frozen resource ceiling, and independently reviewed with zero unresolved Critical, High, or Medium findings. Admitting it prevents T8 from auditing a stale denominator while preserving the immutable T2 base and the first failed review as history.",
+  "authorizes": "T8 Phase 0 may freeze the 428-path, 227-group effective denominator and proceed to candidate-level forensics after its separate Phase 0 contract passes."
+}

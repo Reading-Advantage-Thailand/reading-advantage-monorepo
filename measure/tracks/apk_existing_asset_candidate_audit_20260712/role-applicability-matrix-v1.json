@@ -1,0 +1,23 @@
+{
+  "schema_version": "apk-asset-forensics.role-applicability-matrix.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "status": "frozen-not-dispatched",
+  "allowed_input_manifest_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+  "legend": {"required": "must be independently staffed", "supplemental": "adds specialized evidence and does not replace a mandatory role", "conditional": "runs only when the stated trigger occurs", "not_applicable": "must not perform this task"},
+  "rows": [
+    {"task": "Phase 0 strategy and authority freeze", "measure-strategy": "required", "discovery-auditor": "required: independently verify accepted denominator has not drifted before first batch", "evidence-collector": "not_applicable", "requirements-mapper": "not_applicable", "truth-test-author": "required: author the isolated Phase 0 Red contract and negative fixtures", "adversarial-reviewer": "required: review the freeze, drift report, and truth contract before content dispatch", "content_inspection": false},
+    {"task": "Phase 1 mechanical metadata", "discovery-auditor": "conditional: denominator mismatch only", "evidence-collector": "required", "mechanical-metadata-inspector": "supplemental", "caller-analyst": "supplemental", "requirements-mapper": "not_applicable", "truth-test-author": "required", "adversarial-reviewer": "required"},
+    {"task": "Phase 2 provenance and license evidence", "discovery-auditor": "conditional: newly alleged denominator path only, which stops the track", "evidence-collector": "required", "provenance-auditor": "supplemental", "requirements-mapper": "not_applicable", "truth-test-author": "required", "adversarial-reviewer": "required"},
+    {"task": "Phase 3 visible and audible inspection", "discovery-auditor": "not_applicable", "evidence-collector": "required", "visual-audio-inspector": "supplemental", "requirements-mapper": "not_applicable", "truth-test-author": "required", "adversarial-reviewer": "required"},
+    {"task": "Phase 4 scene-usage join, suitability, and disposition", "discovery-auditor": "not_applicable", "evidence-collector": "required: supplies reviewed facts only", "requirements-mapper": "required", "truth-test-author": "required", "adversarial-reviewer": "required", "max_games_per_join_slice": 3},
+    {"task": "Phase 5 reconciliation and candidate publication", "discovery-auditor": "required: revalidate exact denominator set", "evidence-collector": "required: reconcile 428 path records", "requirements-mapper": "required: reconcile all dispositions", "truth-test-author": "required", "adversarial-reviewer": "required", "root-coordinator": "candidate renderer only after zero blocking findings"},
+    {"task": "Product-owner acceptance and accepted-manifest publication", "root-orchestrator-product-owner": "required: exact candidate and review hash decision based on automated, Kimi WebBridge, independent LLM, and direct visual evidence", "root-coordinator": "accepted-manifest renderer only after evidence-backed owner acceptance", "all_producer_roles": "not_applicable"}
+  ],
+  "global_rules": [
+    "Every one of the 12 batches receives separate receipts for each applicable role.",
+    "Specialists supplement and never replace discovery-auditor, evidence-collector, requirements-mapper, truth-test-author, or adversarial-reviewer obligations.",
+    "An agent with any producer role in a batch cannot be its truth-test author or adversarial reviewer.",
+    "The Phase 0 strategy author cannot hold a later factual, interpretive, truth-test, or review role.",
+    "No role may expand the denominator, roots, owner authorization, or success-claim boundary."
+  ]
+}
