@@ -2,7 +2,7 @@
   "allowed_input_manifest_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
   "allowed_input_paths": [
     "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
-    "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d:measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+    "git:ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d:measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
     "measure/tracks/apk_existing_asset_candidate_audit_20260712/accepted-denominator-delta-v1.json",
     "measure/tracks/apk_existing_asset_candidate_audit_20260712/candidate-denominator-delta-v1.json",
     "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-denominator-discovery-report-v2.json"

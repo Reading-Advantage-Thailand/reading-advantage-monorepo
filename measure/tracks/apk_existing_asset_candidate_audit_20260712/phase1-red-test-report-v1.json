@@ -5,13 +5,12 @@
   "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-contract-test.py --fixtures",
   "result": "expected-red",
   "exit_code": 1,
-  "observed_output": "RED: pending Phase 1 producer outputs: base-record files 12/12; mechanical-metadata files 0/12; aggregate producer receipts 1/2",
-  "executed_at": "2026-07-23T07:22:36+07:00",
+  "observed_output": "RED: AF-01 metadata record keys differ; missing=['detected_format', 'detected_mime_type'] extra=[]",
+  "executed_at": "2026-07-23T07:50:19+07:00",
   "input_freeze_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
   "accepted_delta_sha256": "71592625cbe09671937b7406afa38f3f59232c0345de455467121dc038863db2",
   "expected_red_only": [
-    "mechanical-metadata files 0/12",
-    "aggregate producer receipts 1/2"
+    "AF-01 metadata records omit detected_format and detected_mime_type"
   ],
   "scope": "The contract reads governance JSON and Git tree metadata only; it does not inspect working-tree candidate bytes or author factual records."
 }

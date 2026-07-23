@@ -1,0 +1,14 @@
+{
+  "schema_version": "apk-asset-forensics.phase1-attempt-disposition.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "role": "mechanical-metadata-inspector",
+  "native_task_name": "/root/t8_phase1_mechanical_metadata",
+  "status": "invalidated-before-output",
+  "blocking_event": "The role read the committed T2 denominator object, which was outside its closed factual-input allowlist.",
+  "facts_used_from_disallowed_input": false,
+  "producer_outputs_written": 0,
+  "outputs_accepted": false,
+  "scope_breach_count": 1,
+  "disposition": "Attempt terminated. No receipt or metadata output from this context may be consumed.",
+  "next_action": "Dispatch one fresh fork_turns=none mechanical inspector using only the 12 committed base-record files and their pinned Git blobs as factual inputs."
+}

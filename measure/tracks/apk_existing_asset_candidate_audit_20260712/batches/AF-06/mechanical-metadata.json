@@ -1,0 +1,932 @@
+{
+  "schema_version": "apk-asset-forensics.phase1-mechanical-metadata.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-06",
+  "input_binding": {
+    "phase0_input_freeze_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+    "base_denominator_sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "base_manifest_publication_revision": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+    "base_record_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "accepted_delta_sha256": "71592625cbe09671937b7406afa38f3f59232c0345de455467121dc038863db2",
+    "delta_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "effective_candidate_paths": 428,
+    "effective_identical_hash_groups": 227
+  },
+  "producer": {
+    "role": "mechanical-metadata-inspector",
+    "receipt_path": "role-receipts/phase1/mechanical-metadata-inspector.json"
+  },
+  "records": [
+    {
+      "canonical_path": "apps/advantage-games/public/sounds/ghost_woo.mp3",
+      "sha256": "6ed15b6010af6453e0a2844340c0a2a4b61a99028d92aae5a4d5e60a7db9022f",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "f16dac2607cd92bf6b054b8e8944b64c2ff8eca6",
+      "file_kind": "audio",
+      "byte_size": 211968,
+      "format": "mp3",
+      "mime_type": "audio/mpeg",
+      "detected_format": "mp3",
+      "detected_mime_type": "audio/mpeg",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "duration_ms": 6624,
+        "channels": 2,
+        "sample_rate_hz": 48000,
+        "codec": "mp3"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sounds/ghost_woo.mp3",
+      "sha256": "6ed15b6010af6453e0a2844340c0a2a4b61a99028d92aae5a4d5e60a7db9022f",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "f16dac2607cd92bf6b054b8e8944b64c2ff8eca6",
+      "file_kind": "audio",
+      "byte_size": 211968,
+      "format": "mp3",
+      "mime_type": "audio/mpeg",
+      "detected_format": "mp3",
+      "detected_mime_type": "audio/mpeg",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "duration_ms": 6624,
+        "channels": 2,
+        "sample_rate_hz": 48000,
+        "codec": "mp3"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/shadow-gate-dungeon/shadow-gate-dungeon-gameplay.png",
+      "sha256": "6f88bc0601f58afc7327fc1306af515ea8c3101fd6390f93bbbbf121e4d055f4",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "9d9f7a3f26b80f5be2fc2c3e2a018ad8971aff90",
+      "file_kind": "asset",
+      "byte_size": 38933,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 390,
+        "height": 857,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/dungeon-liberator-sentences-bug/metadata.json",
+      "sha256": "71525c6f63a5ee08f477d1f490823280c4d04ff4dd7905b4030f82973e026cd8",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "c57535b28a8ab79abafbd1d8dd271290480dec7e",
+      "file_kind": "data",
+      "byte_size": 473,
+      "format": "json",
+      "mime_type": "application/json",
+      "detected_format": "json",
+      "detected_mime_type": "application/json",
+      "flags": {
+        "parse_status": "passed",
+        "decode_status": "not_applicable",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "encoding": "utf-8",
+        "parse_format": "json",
+        "top_level_type": "object"
+      }
+    },
+    {
+      "canonical_path": "packages/codecamp-knowledge/fixtures/apk-guided/activity-tutorial.json",
+      "sha256": "72a31ae85afa63a25c629184a5b3c70091fa4e49af303d5faf83f160c38a0ef1",
+      "revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+      "source_blob_oid": "f75c14e1d3da12e714ec1ccc9000ed7993ae5de6",
+      "file_kind": "data",
+      "byte_size": 3083,
+      "format": "json",
+      "mime_type": "application/json",
+      "detected_format": "json",
+      "detected_mime_type": "application/json",
+      "flags": {
+        "parse_status": "passed",
+        "decode_status": "not_applicable",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "encoding": "utf-8",
+        "parse_format": "json",
+        "top_level_type": "object"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/magic-defense/castles_3x2_sheet.png",
+      "sha256": "73f630e4c376542fe1fabf559cc6c07ac9b9cbdfec13f2b7517dcb99f16e03f4",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "723ed748446f2c665da9df5db3a9db80ea568f71",
+      "file_kind": "asset",
+      "byte_size": 2879236,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1536,
+        "height": 1024,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/castle-defense/castles_3x2_sheet.png",
+      "sha256": "73f630e4c376542fe1fabf559cc6c07ac9b9cbdfec13f2b7517dcb99f16e03f4",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "723ed748446f2c665da9df5db3a9db80ea568f71",
+      "file_kind": "asset",
+      "byte_size": 2879236,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1536,
+        "height": 1024,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/magic-defense/castles_3x2_sheet.png",
+      "sha256": "73f630e4c376542fe1fabf559cc6c07ac9b9cbdfec13f2b7517dcb99f16e03f4",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "723ed748446f2c665da9df5db3a9db80ea568f71",
+      "file_kind": "asset",
+      "byte_size": 2879236,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1536,
+        "height": 1024,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/dragon-rider/dragon-rider-gameplay.png",
+      "sha256": "74e9aa9af287c5b4e6760d734e02518fa95691d19c772833a4d3b34072c4eac3",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "0301457ef94dfe0fe3e1410fd28e0cce795ae5a2",
+      "file_kind": "asset",
+      "byte_size": 500192,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 390,
+        "height": 844,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/castle-defense/player-castle.png",
+      "sha256": "7501ab2b382c3aa8d8a33bf8b0fbfbfbe1b020cf333c5cecef6380300ab4b3ac",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "d60ae4ea4fdb7b2c4e61d36f3998cf0ed649310f",
+      "file_kind": "asset",
+      "byte_size": 1334134,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 797,
+        "height": 797,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/castle-defense/player-castle.png",
+      "sha256": "7501ab2b382c3aa8d8a33bf8b0fbfbfbe1b020cf333c5cecef6380300ab4b3ac",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "d60ae4ea4fdb7b2c4e61d36f3998cf0ed649310f",
+      "file_kind": "asset",
+      "byte_size": 1334134,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 797,
+        "height": 797,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/castle-defense/player-castle.png",
+      "sha256": "7501ab2b382c3aa8d8a33bf8b0fbfbfbe1b020cf333c5cecef6380300ab4b3ac",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "d60ae4ea4fdb7b2c4e61d36f3998cf0ed649310f",
+      "file_kind": "asset",
+      "byte_size": 1334134,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 797,
+        "height": 797,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/cover/rpg-battle-cover.png",
+      "sha256": "7643eace1c942a1f6f41e3c14b347058076e86ea8469d00d32dc96faf03fd9c8",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "168b90738219e9e26eab497feb53b1a1974b0e20",
+      "file_kind": "asset",
+      "byte_size": 1701246,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1024,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/cover/rpg-battle-cover.png",
+      "sha256": "7643eace1c942a1f6f41e3c14b347058076e86ea8469d00d32dc96faf03fd9c8",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "168b90738219e9e26eab497feb53b1a1974b0e20",
+      "file_kind": "asset",
+      "byte_size": 1701246,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1024,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/storm-castle-tower-20260320/metadata.json",
+      "sha256": "765e2a7de091dae634f8ff13d47b553ae9ae7b5378bd3e61816e9fd2a6d3655f",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "9b858d69b409ece19671ff506c8ec6f595f32906",
+      "file_kind": "data",
+      "byte_size": 264,
+      "format": "json",
+      "mime_type": "application/json",
+      "detected_format": "json",
+      "detected_mime_type": "application/json",
+      "flags": {
+        "parse_status": "passed",
+        "decode_status": "not_applicable",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "encoding": "utf-8",
+        "parse_format": "json",
+        "top_level_type": "object"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/cover/cover-astral-mage.png",
+      "sha256": "79175a0b15043ab30d13316f88d46f8c4ab0994e905ee251c67969b8826ce249",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "fb0bc8d9c5add6fa268ca34ab0c5c9de799bea79",
+      "file_kind": "asset",
+      "byte_size": 1091403,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "jpg",
+      "detected_mime_type": "image/jpeg",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": true,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1024,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/wizard-vs-zombie.png",
+      "sha256": "794b0c7937f31e04fab5b16acdf61ad8fb09e468a4a60a63b223432147c7d802",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "d3d7a6bd3680bdf8b046fdd25ff738f98792084d",
+      "file_kind": "asset",
+      "byte_size": 1481414,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1168,
+        "height": 788,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/cover/magic-defense-cover.png",
+      "sha256": "7a0dd85c5f915f7f38e3f0b10e9e05f6c24a4a286ce6e62d511d6fcb57e460e6",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "d9771ad01b72b406c9a843f3caa4df09c60fdc4d",
+      "file_kind": "asset",
+      "byte_size": 1623906,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1024,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/cover/magic-defense-cover.png",
+      "sha256": "7a0dd85c5f915f7f38e3f0b10e9e05f6c24a4a286ce6e62d511d6fcb57e460e6",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "d9771ad01b72b406c9a843f3caa4df09c60fdc4d",
+      "file_kind": "asset",
+      "byte_size": 1623906,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1024,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/rpg-battle/enemy_spectre_pose_sheet_3x3.png",
+      "sha256": "7b7f0deb93e5a31d3adb26e50c438c174bc42ea6eeb48e2dd720775d6e09ed60",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "9b49e2146db58e2f3f3ea784ba88d6cf51498310",
+      "file_kind": "asset",
+      "byte_size": 1988312,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1024,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/rpg-battle/enemy_spectre_pose_sheet_3x3.png",
+      "sha256": "7b7f0deb93e5a31d3adb26e50c438c174bc42ea6eeb48e2dd720775d6e09ed60",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "9b49e2146db58e2f3f3ea784ba88d6cf51498310",
+      "file_kind": "asset",
+      "byte_size": 1988312,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1024,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/rpg-battle/enemy_spectre_pose_sheet_3x3.png",
+      "sha256": "7b7f0deb93e5a31d3adb26e50c438c174bc42ea6eeb48e2dd720775d6e09ed60",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "9b49e2146db58e2f3f3ea784ba88d6cf51498310",
+      "file_kind": "asset",
+      "byte_size": 1988312,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1024,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/cover/cover-labyrinth-of-the-goblin-king.png",
+      "sha256": "7bcb5f013171da3a728f8bbe653dd2d94354b7d5766469f2a9cf68727b518f46",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "8850287bd84d8f7eaf8d3d71bc0702bc59a9500c",
+      "file_kind": "asset",
+      "byte_size": 2041397,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1024,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/rpg-battle/enemy_slime_pose_sheet_3x3.png",
+      "sha256": "7bfb951cb036d714bcc4281c483f760e2bef6be7c8f3de0effd4a2da5ea12ba0",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "c8aad20d2733e70c22a7db405a91e105d5e63d99",
+      "file_kind": "asset",
+      "byte_size": 204588,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 500,
+        "height": 500,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/rpg-battle/enemy_slime_pose_sheet_3x3.png",
+      "sha256": "7bfb951cb036d714bcc4281c483f760e2bef6be7c8f3de0effd4a2da5ea12ba0",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "c8aad20d2733e70c22a7db405a91e105d5e63d99",
+      "file_kind": "asset",
+      "byte_size": 204588,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 500,
+        "height": 500,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/rpg-battle/enemy_slime_pose_sheet_3x3.png",
+      "sha256": "7bfb951cb036d714bcc4281c483f760e2bef6be7c8f3de0effd4a2da5ea12ba0",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "c8aad20d2733e70c22a7db405a91e105d5e63d99",
+      "file_kind": "asset",
+      "byte_size": 204588,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 500,
+        "height": 500,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/cover/potion-rush-cover.png",
+      "sha256": "7dfe3b4552e49c882f17d04f3c46e9e19a8020f2bb25c248e9bf1a212f2c395a",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "29fe6e8edd2238d17a7ef34bf0507b67167b4936",
+      "file_kind": "asset",
+      "byte_size": 1955444,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1024,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/cover/potion-rush-cover.png",
+      "sha256": "7dfe3b4552e49c882f17d04f3c46e9e19a8020f2bb25c248e9bf1a212f2c395a",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "29fe6e8edd2238d17a7ef34bf0507b67167b4936",
+      "file_kind": "asset",
+      "byte_size": 1955444,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1024,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/griffin-sky-joust-compliance-audit_20260426/metadata.json",
+      "sha256": "81a06cc7e295a8fb0370ab9dd4618e59101eb619623340c420d1be333383cfe5",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "2ea5a60b3271c69a3aa684d588107d650c76a996",
+      "file_kind": "data",
+      "byte_size": 349,
+      "format": "json",
+      "mime_type": "application/json",
+      "detected_format": "json",
+      "detected_mime_type": "application/json",
+      "flags": {
+        "parse_status": "passed",
+        "decode_status": "not_applicable",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "encoding": "utf-8",
+        "parse_format": "json",
+        "top_level_type": "object"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/haunted_library_flaky_fix_20260416/metadata.json",
+      "sha256": "821a9765e9b613afaefd0ae0341f14d2f5089578765cd2ea8ee7660fe9c49e3f",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "10dab975300478d6833edb04cbb7246ed571c57e",
+      "file_kind": "data",
+      "byte_size": 461,
+      "format": "json",
+      "mime_type": "application/json",
+      "detected_format": "json",
+      "detected_mime_type": "application/json",
+      "flags": {
+        "parse_status": "passed",
+        "decode_status": "not_applicable",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "encoding": "utf-8",
+        "parse_format": "json",
+        "top_level_type": "object"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/archers-revenge/archers-revenge-gameplay.png",
+      "sha256": "83072ac397e99092257b38db4d448f4b14848e59be0e876c06002dc5a8bd2865",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "ee99ec4d070b784ea38167edd896b496409667eb",
+      "file_kind": "asset",
+      "byte_size": 43864,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 427,
+        "height": 844,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/shadow-gate-dungeon-20260320/metadata.json",
+      "sha256": "83e52d0cd0e24a372ef1de6cfc12e2a0190679e87937a604a0255059d3f400e2",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "cf0b182366ed6faba624dad213c6c49814872d22",
+      "file_kind": "data",
+      "byte_size": 339,
+      "format": "json",
+      "mime_type": "application/json",
+      "detected_format": "json",
+      "detected_mime_type": "application/json",
+      "flags": {
+        "parse_status": "passed",
+        "decode_status": "not_applicable",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "encoding": "utf-8",
+        "parse_format": "json",
+        "top_level_type": "object"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/dragon-flight/dragon-army-3x3-sheet-facing-up.png",
+      "sha256": "8554c1486cd5735a2adba9dc26157dc1e23165d35e37c5efb691dcb5af9008fd",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "847e5987e086382bebaf043dafe61813340e3010",
+      "file_kind": "asset",
+      "byte_size": 220560,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 509,
+        "height": 490,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-flight/dragon-army-3x3-sheet-facing-up.png",
+      "sha256": "8554c1486cd5735a2adba9dc26157dc1e23165d35e37c5efb691dcb5af9008fd",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "847e5987e086382bebaf043dafe61813340e3010",
+      "file_kind": "asset",
+      "byte_size": 220560,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 509,
+        "height": 490,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/dragon-army-3x3-sheet-facing-up.png",
+      "sha256": "8554c1486cd5735a2adba9dc26157dc1e23165d35e37c5efb691dcb5af9008fd",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "847e5987e086382bebaf043dafe61813340e3010",
+      "file_kind": "asset",
+      "byte_size": 220560,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 509,
+        "height": 490,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    }
+  ],
+  "resource_usage": {
+    "candidate_paths": 35,
+    "hash_groups": 21,
+    "command_invocations": 4,
+    "bytes_read": 36511062,
+    "within_ceiling": true
+  }
+}

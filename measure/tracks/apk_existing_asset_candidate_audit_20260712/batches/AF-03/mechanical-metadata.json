@@ -1,0 +1,930 @@
+{
+  "schema_version": "apk-asset-forensics.phase1-mechanical-metadata.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-03",
+  "input_binding": {
+    "phase0_input_freeze_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+    "base_denominator_sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "base_manifest_publication_revision": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+    "base_record_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "accepted_delta_sha256": "71592625cbe09671937b7406afa38f3f59232c0345de455467121dc038863db2",
+    "delta_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "effective_candidate_paths": 428,
+    "effective_identical_hash_groups": 227
+  },
+  "producer": {
+    "role": "mechanical-metadata-inspector",
+    "receipt_path": "role-receipts/phase1/mechanical-metadata-inspector.json"
+  },
+  "records": [
+    {
+      "canonical_path": "apps/advantage-games/public/games/potion-rush/ui-sheet.png",
+      "sha256": "23eacc93a937c645242084d17dedc72ef10e04330633306e504d02f725235b56",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "dae8ce161922c83a1583abcaa7f44805d812962d",
+      "file_kind": "asset",
+      "byte_size": 746701,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1024,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/ui-sheet.png",
+      "sha256": "23eacc93a937c645242084d17dedc72ef10e04330633306e504d02f725235b56",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "dae8ce161922c83a1583abcaa7f44805d812962d",
+      "file_kind": "asset",
+      "byte_size": 746701,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1024,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/ui-sheet.png",
+      "sha256": "23eacc93a937c645242084d17dedc72ef10e04330633306e504d02f725235b56",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "dae8ce161922c83a1583abcaa7f44805d812962d",
+      "file_kind": "asset",
+      "byte_size": 746701,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1024,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/cover/cover-griffin-sky-joust.png",
+      "sha256": "243d46ad04fdc49a8413afc624c3259dba5d41cc8fc3478ddd80eeabe8ad1d44",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "678528e64492f62c2f4d020fa6dcf34c4ea06984",
+      "file_kind": "asset",
+      "byte_size": 2086330,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1024,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/castle_defense_sprites_20260118/metadata.json",
+      "sha256": "25813faa405a155337b94a52f44d0207cbea1bba3a128daf60c6b217427b2a71",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "5d7d515f8f3b8b9306cc10cbe4d273b82c27899f",
+      "file_kind": "data",
+      "byte_size": 287,
+      "format": "json",
+      "mime_type": "application/json",
+      "detected_format": "json",
+      "detected_mime_type": "application/json",
+      "flags": {
+        "parse_status": "passed",
+        "decode_status": "not_applicable",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "encoding": "utf-8",
+        "parse_format": "json",
+        "top_level_type": "object"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/paladins-twin-soul/cover.png",
+      "sha256": "25baa769bbe00900e81d22b0150ca99127c7a6ae373357be704e983da5cd4079",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "883b6cb55f300c29a34f7ddb159a538386da4b00",
+      "file_kind": "asset",
+      "byte_size": 87,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": null,
+      "detected_mime_type": null,
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "failed",
+        "readability_status": "unreadable",
+        "empty": false,
+        "mislabeled": true,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": null,
+        "height": null,
+        "has_alpha": null,
+        "color_model": null
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/rpg-battle/background_ruined_road.png",
+      "sha256": "26dc9b34c4333791d84043d9f5a04a19d431f37981ae12b2201c60d08a7ee9f8",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "8a42cfd90c8cbc7e01631b1ada72ea4d234d1394",
+      "file_kind": "asset",
+      "byte_size": 3225345,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1536,
+        "height": 1024,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/rpg-battle/background_ruined_road.png",
+      "sha256": "26dc9b34c4333791d84043d9f5a04a19d431f37981ae12b2201c60d08a7ee9f8",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "8a42cfd90c8cbc7e01631b1ada72ea4d234d1394",
+      "file_kind": "asset",
+      "byte_size": 3225345,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1536,
+        "height": 1024,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/rpg-battle/background_ruined_road.png",
+      "sha256": "26dc9b34c4333791d84043d9f5a04a19d431f37981ae12b2201c60d08a7ee9f8",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "8a42cfd90c8cbc7e01631b1ada72ea4d234d1394",
+      "file_kind": "asset",
+      "byte_size": 3225345,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1536,
+        "height": 1024,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/labyrinth-goblin-king-20260320/metadata.json",
+      "sha256": "27be4196879a0957857a69d65f250d2ab44a1169bc382e7bb8d260fde135b073",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "0ce1ef6f2f4bfeea1a3a206c0ce6865b8a18bfd2",
+      "file_kind": "data",
+      "byte_size": 318,
+      "format": "json",
+      "mime_type": "application/json",
+      "detected_format": "json",
+      "detected_mime_type": "application/json",
+      "flags": {
+        "parse_status": "passed",
+        "decode_status": "not_applicable",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "encoding": "utf-8",
+        "parse_format": "json",
+        "top_level_type": "object"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/rpg-battle/background_magic_arena.png",
+      "sha256": "28e578e85065e5f52d438f1a0803a331d19df7ffa202b070b9f26f725e243a17",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "5775a45da20f10a26e4e282f7a2c9d619582bbcf",
+      "file_kind": "asset",
+      "byte_size": 2514658,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1536,
+        "height": 1024,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/rpg-battle/background_magic_arena.png",
+      "sha256": "28e578e85065e5f52d438f1a0803a331d19df7ffa202b070b9f26f725e243a17",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "5775a45da20f10a26e4e282f7a2c9d619582bbcf",
+      "file_kind": "asset",
+      "byte_size": 2514658,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1536,
+        "height": 1024,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/rpg-battle/background_magic_arena.png",
+      "sha256": "28e578e85065e5f52d438f1a0803a331d19df7ffa202b070b9f26f725e243a17",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "5775a45da20f10a26e4e282f7a2c9d619582bbcf",
+      "file_kind": "asset",
+      "byte_size": 2514658,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1536,
+        "height": 1024,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/cover/cover-sorcerers-ziggurat.png",
+      "sha256": "2aa6d76b5d8718fcd4ac4804e0200eecfedccb708f27ca993ea85919e867e421",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "cddaa947152d166287c15dd04372e6412234e753",
+      "file_kind": "asset",
+      "byte_size": 1023182,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "jpg",
+      "detected_mime_type": "image/jpeg",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": true,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1024,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/potion-rush/shop-counter.png",
+      "sha256": "2b18000ff3ef619644e2df78a96fd3148c56b614d5521b532ab895744763e7d5",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "b4fe79fcd6a1c4f0dca39aa07898dc233d9826c6",
+      "file_kind": "asset",
+      "byte_size": 163894,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1280,
+        "height": 160,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/shop-counter.png",
+      "sha256": "2b18000ff3ef619644e2df78a96fd3148c56b614d5521b532ab895744763e7d5",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "b4fe79fcd6a1c4f0dca39aa07898dc233d9826c6",
+      "file_kind": "asset",
+      "byte_size": 163894,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1280,
+        "height": 160,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/shop-counter.png",
+      "sha256": "2b18000ff3ef619644e2df78a96fd3148c56b614d5521b532ab895744763e7d5",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "b4fe79fcd6a1c4f0dca39aa07898dc233d9826c6",
+      "file_kind": "asset",
+      "byte_size": 163894,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1280,
+        "height": 160,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/archers-revenge-20260318/metadata.json",
+      "sha256": "2b669cad3951341f6c86235699dc04e7eab7246f45661ac52d347dd0a3c088fe",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "d1e9d9ee0109af5f44ab51a14b0eab36b8ac9bd2",
+      "file_kind": "data",
+      "byte_size": 422,
+      "format": "json",
+      "mime_type": "application/json",
+      "detected_format": "json",
+      "detected_mime_type": "application/json",
+      "flags": {
+        "parse_status": "passed",
+        "decode_status": "not_applicable",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "encoding": "utf-8",
+        "parse_format": "json",
+        "top_level_type": "object"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/file.svg",
+      "sha256": "2b67812c325c199a02536cdbeea0c593a72f707d323b72ee3e08dbab06753bd4",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "004145cddf3f9db91b57b9cb596683c8eb420862",
+      "file_kind": "asset",
+      "byte_size": 391,
+      "format": "svg",
+      "mime_type": "image/svg+xml",
+      "detected_format": "svg",
+      "detected_mime_type": "image/svg+xml",
+      "flags": {
+        "parse_status": "passed",
+        "decode_status": "not_applicable",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 16,
+        "height": 16,
+        "has_alpha": null,
+        "color_model": "vector"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/dungeon-liberator-20260321/metadata.json",
+      "sha256": "2d2ec714685a29945494fdeb54c99b46112a3d45e73af574e864ebdcf8524427",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "99fe7ce3ac19c5f1c5aeff8655a1db3ac6dd22e7",
+      "file_kind": "data",
+      "byte_size": 270,
+      "format": "json",
+      "mime_type": "application/json",
+      "detected_format": "json",
+      "detected_mime_type": "application/json",
+      "flags": {
+        "parse_status": "passed",
+        "decode_status": "not_applicable",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "encoding": "utf-8",
+        "parse_format": "json",
+        "top_level_type": "object"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/sounds/bubbling.mp3",
+      "sha256": "2da344189f4831c130645d8396df434a9b35007d2cef98244632bb35e8a83cb3",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "44494e931de3dee8d1b814f0ab9bab851f64c9f7",
+      "file_kind": "audio",
+      "byte_size": 208896,
+      "format": "mp3",
+      "mime_type": "audio/mpeg",
+      "detected_format": "mp3",
+      "detected_mime_type": "audio/mpeg",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "duration_ms": 6528,
+        "channels": 2,
+        "sample_rate_hz": 48000,
+        "codec": "mp3"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sounds/bubbling.mp3",
+      "sha256": "2da344189f4831c130645d8396df434a9b35007d2cef98244632bb35e8a83cb3",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "44494e931de3dee8d1b814f0ab9bab851f64c9f7",
+      "file_kind": "audio",
+      "byte_size": 208896,
+      "format": "mp3",
+      "mime_type": "audio/mpeg",
+      "detected_format": "mp3",
+      "detected_mime_type": "audio/mpeg",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "duration_ms": 6528,
+        "channels": 2,
+        "sample_rate_hz": 48000,
+        "codec": "mp3"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/the-haunted-library-20260328/metadata.json",
+      "sha256": "2eb9d92c6e1dd9ec86ebcf36c5138479c6ffdeb9166af85dff97c734425dd330",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "0310cd661461121fc7e44f18cba39eff0c349fe0",
+      "file_kind": "data",
+      "byte_size": 344,
+      "format": "json",
+      "mime_type": "application/json",
+      "detected_format": "json",
+      "detected_mime_type": "application/json",
+      "flags": {
+        "parse_status": "passed",
+        "decode_status": "not_applicable",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "encoding": "utf-8",
+        "parse_format": "json",
+        "top_level_type": "object"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/metadata.json",
+      "sha256": "2ed50adfd2625e02c0bdf0ecea836ba01c22fb7e1281e5c5bf6e1cb149f6644c",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "0e881bc5f474def5ce2de7ba25126436f9023031",
+      "file_kind": "data",
+      "byte_size": 346,
+      "format": "json",
+      "mime_type": "application/json",
+      "detected_format": "json",
+      "detected_mime_type": "application/json",
+      "flags": {
+        "parse_status": "passed",
+        "decode_status": "not_applicable",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "encoding": "utf-8",
+        "parse_format": "json",
+        "top_level_type": "object"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/dungeon-liberator/player-sheet.png",
+      "sha256": "304e8b13051796a1a8985160b496c673f81350388e1eb5392506328549134240",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "4553a6a37eb9392e71fd6a7158d4a870fa46a4e9",
+      "file_kind": "asset",
+      "byte_size": 726302,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 933,
+        "height": 890,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/dungeon-liberator/player-sheet.png",
+      "sha256": "304e8b13051796a1a8985160b496c673f81350388e1eb5392506328549134240",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "4553a6a37eb9392e71fd6a7158d4a870fa46a4e9",
+      "file_kind": "asset",
+      "byte_size": 726302,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 933,
+        "height": 890,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/rune-match/monsters/dragon_3x4_pose_sheet.png",
+      "sha256": "32564109aecf1f7b9d3fda4d0fe5bb6a16da71c6b682896bae89ee4e82446acf",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "111322bb309cbb10743faea7550ee20f61ff48c6",
+      "file_kind": "asset",
+      "byte_size": 3106243,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1422,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/rune-match/monsters/dragon_3x4_pose_sheet.png",
+      "sha256": "32564109aecf1f7b9d3fda4d0fe5bb6a16da71c6b682896bae89ee4e82446acf",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "111322bb309cbb10743faea7550ee20f61ff48c6",
+      "file_kind": "asset",
+      "byte_size": 3106243,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1422,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/rune-match/monsters/dragon_3x4_pose_sheet.png",
+      "sha256": "32564109aecf1f7b9d3fda4d0fe5bb6a16da71c6b682896bae89ee4e82446acf",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "111322bb309cbb10743faea7550ee20f61ff48c6",
+      "file_kind": "asset",
+      "byte_size": 3106243,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1024,
+        "height": 1422,
+        "has_alpha": false,
+        "color_model": "RGB"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/gameplay.png",
+      "sha256": "32cc5a3461bc5d12c730f05ad7bfac720f08f804f453b2bb06fdafd842c4e8c0",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "7d12fd1040fcd27d89c9b978f2b06c1f3f82220c",
+      "file_kind": "asset",
+      "byte_size": 1092006,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 1083,
+        "height": 756,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/castle-defense/troll_3x3_pose_sheet.png",
+      "sha256": "3673c3f00084308b5a294e8c9866105386f0845729ac2eac3a01b71cc27e2561",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "bff6cbe824f211904b43a630ad7ca4ccbd5cda07",
+      "file_kind": "asset",
+      "byte_size": 227689,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 594,
+        "height": 420,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/castle-defense/troll_3x3_pose_sheet.png",
+      "sha256": "3673c3f00084308b5a294e8c9866105386f0845729ac2eac3a01b71cc27e2561",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "bff6cbe824f211904b43a630ad7ca4ccbd5cda07",
+      "file_kind": "asset",
+      "byte_size": 227689,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 594,
+        "height": 420,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/castle-defense/troll_3x3_pose_sheet.png",
+      "sha256": "3673c3f00084308b5a294e8c9866105386f0845729ac2eac3a01b71cc27e2561",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "bff6cbe824f211904b43a630ad7ca4ccbd5cda07",
+      "file_kind": "asset",
+      "byte_size": 227689,
+      "format": "png",
+      "mime_type": "image/png",
+      "detected_format": "png",
+      "detected_mime_type": "image/png",
+      "flags": {
+        "parse_status": "not_applicable",
+        "decode_status": "passed",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "possible"
+      },
+      "type_specific": {
+        "width": 594,
+        "height": 420,
+        "has_alpha": true,
+        "color_model": "RGBA"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/potion-rush-compliance-audit_20260426/metadata.json",
+      "sha256": "37ae142f40f4e5dbe6c5f5667981b45b62c79f7d04ffea2320629975dae6af46",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "be82a17ce5ebdcef417d5b174935c215b116226b",
+      "file_kind": "data",
+      "byte_size": 337,
+      "format": "json",
+      "mime_type": "application/json",
+      "detected_format": "json",
+      "detected_mime_type": "application/json",
+      "flags": {
+        "parse_status": "passed",
+        "decode_status": "not_applicable",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "encoding": "utf-8",
+        "parse_format": "json",
+        "top_level_type": "object"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/storm-castle-tower-compliance-audit_20260426/metadata.json",
+      "sha256": "3a67113fe7cb71698af948d033047210a0131584f83f57389f7ca98efbb05f87",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "c68988334ca9373d126ec36efdcaad89972ad833",
+      "file_kind": "data",
+      "byte_size": 355,
+      "format": "json",
+      "mime_type": "application/json",
+      "detected_format": "json",
+      "detected_mime_type": "application/json",
+      "flags": {
+        "parse_status": "passed",
+        "decode_status": "not_applicable",
+        "readability_status": "readable",
+        "empty": false,
+        "mislabeled": false,
+        "text_risk": "not_applicable"
+      },
+      "type_specific": {
+        "encoding": "utf-8",
+        "parse_format": "json",
+        "top_level_type": "object"
+      }
+    }
+  ],
+  "resource_usage": {
+    "candidate_paths": 35,
+    "hash_groups": 21,
+    "command_invocations": 4,
+    "bytes_read": 36465739,
+    "within_ceiling": true
+  }
+}

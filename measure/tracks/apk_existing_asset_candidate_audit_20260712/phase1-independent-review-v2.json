@@ -1,0 +1,142 @@
+{
+  "schema_version": "apk-asset-forensics.phase1-independent-review.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "review_role": "independent-adversarial-reviewer",
+  "reviewed_at": "2026-07-23",
+  "status": "pass",
+  "review_scope": "Successor review of Phase 1 mechanical metadata only. Candidate Git blobs were checked only for byte binding, container/signature, parser, decode, readability, size, and type-specific technical metadata. No visual or audible meaning, caller, provenance, suitability, disposition, or later-phase matter was assessed.",
+  "predecessor": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-independent-review-v1.json",
+    "status": "fail",
+    "remediated_findings": [
+      "P1-IR-M1",
+      "P1-IR-M2",
+      "P1-IR-M3"
+    ]
+  },
+  "authority": {
+    "authorization_commit": "79ab26dc",
+    "phase1_red_checkpoint": "1d555f77"
+  },
+  "checks": [
+    {
+      "id": "P1-IR2-C1",
+      "status": "pass",
+      "detail": "CI=true python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-contract-test.py exited 0. The full focused contract and exactly eleven negative fixtures passed."
+    },
+    {
+      "id": "P1-IR2-C2",
+      "status": "pass",
+      "detail": "All 428 metadata paths were independently read from their pinned revision:path Git blobs. Every record's source_blob_oid, SHA-256, byte_size, revision link, canonical format/MIME, detected format/MIME, flags, and type_specific object exactly matched independent Pillow, ffprobe, XML, JSON, or strict UTF-8 results."
+    },
+    {
+      "id": "P1-IR2-C3",
+      "status": "pass",
+      "detail": "The independent count is exactly 316 PNG, 2 JPG, 5 SVG, 23 MP3, 1 WebM, and 81 data records (75 JSON and 6 UTF-8 Markdown). All five SVG records now have positive dimensions: globe.svg 16x16, file.svg 394x80, vercel.svg 16x16, next.svg 16x16, and window.svg 1155x1000."
+    },
+    {
+      "id": "P1-IR2-C4",
+      "status": "pass",
+      "detail": "The independently rederived failure sets exactly match the metadata and reconciliation: 8 decode-failed paths, 2 empty paths, and 15 mislabeled paths. No other record was marked unreadable, decode-failed, empty, or mislabeled by the independent checks."
+    },
+    {
+      "id": "P1-IR2-C5",
+      "status": "pass",
+      "detail": "All 12 frozen batches exactly cover 428 paths in 227 unsplit hash groups. Their first/last group boundaries, path and group counts, and the five root counts 250/105/0/72/1 agree with phase0-input-freeze-v1.json."
+    },
+    {
+      "id": "P1-IR2-C6",
+      "status": "pass",
+      "detail": "Both aggregate producer receipts bind their 12 exact output hashes, declare gpt-5.6-terra, retain fork_turns none and inherited_narrative false, and have exact ordered role-specific input allowlists. All 24 output hashes also match their reconciliation records; canonical JSON reserialization reproduces every output byte-for-byte."
+    },
+    {
+      "id": "P1-IR2-C7",
+      "status": "pass",
+      "detail": "Per-batch producer accounting recomputes exactly within ceilings. Evidence collection totals 2 commands and 2,517,536 bytes; mechanical inspection totals 48 commands and 429,114,035 bytes, below its 960-command and 3,221,225,472-byte aggregate limits. The invalidated preliminary mechanical attempt remains explicitly non-consumable with zero accepted outputs."
+    }
+  ],
+  "informational_observations": [
+    {
+      "id": "P1-IR2-I1",
+      "severity": "info",
+      "title": "Detected-format mismatches are now explicit and reconcile exactly",
+      "categories": [
+        {
+          "category": "jpeg_signature_under_png",
+          "paths": [
+            "apps/advantage-games/public/games/cover/cover-alchemists-synthesis.png",
+            "apps/advantage-games/public/games/cover/cover-sorcerers-ziggurat.png",
+            "apps/advantage-games/public/games/cover/cover-astral-mage.png",
+            "apps/advantage-games/public/games/cover/cover-haunted-library.png",
+            "apps/advantage-games/public/games/cover/cover-gryphon-patrol.png",
+            "apps/advantage-games/public/games/cover/cover-devourer-slime.png",
+            "apps/advantage-games/public/games/cover/cover-dragon-rider.png"
+          ]
+        },
+        {
+          "category": "non_image_pointer_text_under_png",
+          "paths": [
+            "apps/advantage-games/public/games/enchanted-library/tile-library.png",
+            "apps/advantage-games/public/games/vocabulary/enchanted-library/tile-library.png",
+            "apps/reading-advantage/public/games/vocabulary/enchanted-library/tile-library.png",
+            "apps/advantage-games/public/games/vocabulary/paladins-twin-soul/cover.png",
+            "apps/advantage-games/public/games/cover/griffin-sky-joust-cover.png",
+            "apps/advantage-games/public/games/cover/abyssal-well-cover.png"
+          ]
+        },
+        {
+          "category": "zero_byte_unknown_under_png",
+          "paths": [
+            "apps/advantage-games/public/games/sentence/griffin-riders-escape/gate.png",
+            "apps/advantage-games/public/games/sentence/griffin-riders-escape/obstacle.png"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "P1-IR2-I2",
+      "severity": "info",
+      "title": "The eight recorded decode failures and two recorded empty files were independently confirmed",
+      "decode_failed_paths": [
+        "apps/advantage-games/public/games/enchanted-library/tile-library.png",
+        "apps/advantage-games/public/games/vocabulary/enchanted-library/tile-library.png",
+        "apps/reading-advantage/public/games/vocabulary/enchanted-library/tile-library.png",
+        "apps/advantage-games/public/games/vocabulary/paladins-twin-soul/cover.png",
+        "apps/advantage-games/public/games/cover/griffin-sky-joust-cover.png",
+        "apps/advantage-games/public/games/cover/abyssal-well-cover.png",
+        "apps/advantage-games/public/games/sentence/griffin-riders-escape/gate.png",
+        "apps/advantage-games/public/games/sentence/griffin-riders-escape/obstacle.png"
+      ],
+      "empty_paths": [
+        "apps/advantage-games/public/games/sentence/griffin-riders-escape/gate.png",
+        "apps/advantage-games/public/games/sentence/griffin-riders-escape/obstacle.png"
+      ]
+    }
+  ],
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": []
+  },
+  "resource_accounting": {
+    "candidate_paths_independently_verified": 428,
+    "candidate_hash_groups_independently_verified": 227,
+    "candidate_blob_bytes_read_successful_verifier_pass": 395210221,
+    "candidate_blob_bytes_buffered_in_prior_failed_verifier_setup": 395210221,
+    "asset_semantic_inspection_performed": false,
+    "review_shell_invocations": 6,
+    "focused_contract_invocations": 1,
+    "producer_per_batch_ceiling_pass": true,
+    "producer_aggregate_ceiling_pass": true,
+    "within_applicable_review_ceiling": true
+  },
+  "decision": {
+    "status": "pass",
+    "rule": "Pass requires zero Critical, High, and Medium findings.",
+    "critical_count": 0,
+    "high_count": 0,
+    "medium_count": 0,
+    "next_action": "Phase 1 mechanical evidence is independently reviewed. This receipt does not close T8, accept a candidate manifest, or authorize any semantic, caller, provenance, suitability, disposition, or later-phase conclusion."
+  }
+}

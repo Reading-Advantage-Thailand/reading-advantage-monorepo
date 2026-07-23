@@ -19,16 +19,18 @@
   ],
   "role_boundary": "Authored Phase 1 contract tests, counterexamples, Red report, and this receipt only; no candidate, metadata, caller, provenance, inspection, suitability, or disposition facts were authored.",
   "output_file_hashes": {
-    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-contract-test.py": "1d14f3fa9b7c553ebd08c6db4122aa96da4dd5614b0eec016335ff334e8544cb",
-    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-red-test-report-v1.json": "1b033977fc5033c8285878eea3da4dab582c292712c6e1d300428ed2f979c655",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-contract-test.py": "b3a8e6fc5fe6dfaf3f53eae83838865a60c0403b3a690181b1c7902961949d40",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-red-test-report-v1.json": "84d0bb68fa63ae977e8f4be1447dd4f7bfe2c9ef0adca6e7ae8f098afe624aab",
     "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase1/audio-metadata-omission.json": "9cc990bf38a59d27bb8b09f78b80878d5015facc8f53b3d99628a8a2f7934053",
     "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase1/cross-role-ownership.json": "676a252896ec934f759a16cb069f2ae891a72f89e5b46ab4b6b4fcd8d093c8aa",
     "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase1/duplicate-path.json": "a3a7fbdbda7f6dfe99b4fed7a7b732ac47a39cff2d5bbe02920aec9868c1fa76",
     "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase1/later-phase-leakage.json": "a4fab2bc0e0ef2a6a2da83e855ab85acad07f717f9eb1eb4628bb6672cd441c2",
     "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase1/malformed-image-dimensions.json": "6c3af946fccae5f0803da4b96bb5d6dafd31433ff7c827f75fb988d1086e4ed8",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase1/mislabeled-flag-mismatch.json": "1dac82fa1dfde4bb1fc021b58f0b793eb02439143daac0ff4a7cd5f6e172ef1f",
     "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase1/missing-path.json": "1b2aa10c7fb68296704ba8d1c4e0b6be9041276b08921dc0b36ed40148ad3acf",
     "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase1/split-group.json": "c60479a2b9a7e559512990f0ac093f71a20d0604969bcc4769c74a4e6682ece8",
     "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase1/stale-replacement-hash.json": "c65f20388991b5ef63a65bfa1071bfee6da9a814f79e95adc5446b6b9c71bbc7",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase1/svg-null-dimensions.json": "a5b061d40a207f4dec028cc11ef5de6cfec5154f1d7637a93b5851a6ffdbe34e",
     "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase1/unlabeled-decode-failure.json": "14903d6baafc42aa43ccc8dbfb4a548ade672f8fa9eca4e49968b4eae7895680",
     "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase1/video-metadata-omission.json": "a291d2499395296aba9cec54a418e1f8748d38ef04ca9d5118d9793857ae4a09",
     "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase1/wrong-revision.json": "f611050cf9f59e93d0be0f67a1994ed158feed73adfaf82449fabc4fd56ca639"
@@ -40,7 +42,7 @@
     "low": []
   },
   "resource_usage": {
-    "test_cases": 11,
+    "test_cases": 13,
     "command_invocations": 4,
     "bytes_read": 1500000,
     "within_ceiling": true

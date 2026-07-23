@@ -1,0 +1,117 @@
+{
+  "schema_version": "apk-asset-forensics.phase1-independent-review.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "review_role": "independent-adversarial-reviewer",
+  "reviewed_at": "2026-07-23",
+  "status": "fail",
+  "review_scope": "Phase 1 base-record and mechanical-metadata evidence only. This review made no visual, audible, caller, provenance, suitability, disposition, or later-phase assessment.",
+  "authority": {
+    "authorization_commit": "79ab26dc",
+    "phase1_red_checkpoint": "1d555f77"
+  },
+  "inputs_reviewed": {
+    "contract": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-contract-test.py",
+    "negative_fixture_count": 11,
+    "base_record_outputs": 12,
+    "mechanical_metadata_outputs": 12,
+    "aggregate_producer_receipts": [
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase1/evidence-collector.json",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase1/mechanical-metadata-inspector.json"
+    ],
+    "reconciliations": [
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-base-reconciliation-v1.json",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-mechanical-reconciliation-v1.json"
+    ],
+    "generators": [
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/generate_phase1_base_records.py",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/generate_phase1_mechanical_metadata.py"
+    ],
+    "invalidated_attempt_disposition": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-mechanical-attempt-v1-disposition.json"
+  },
+  "checks": [
+    {
+      "id": "P1-IR-C1",
+      "status": "pass",
+      "detail": "CI=true python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-contract-test.py exited 0 and reported the exact frozen 428-path/227-group reconciliation. Its required eleven negative fixtures executed."
+    },
+    {
+      "id": "P1-IR-C2",
+      "status": "pass",
+      "detail": "The 12 base-record and 12 mechanical-metadata artifact SHA-256 values directly recomputed from the current files match the values bound by their respective aggregate receipts and reconciliation records."
+    },
+    {
+      "id": "P1-IR-C3",
+      "status": "pass",
+      "detail": "Static review confirms the contract enforces exact frozen batch membership, 428 paths, 227 atomic hash groups, five root counts, per-batch and aggregate resource ceilings, ordered producer input allowlists, receipt output hashes, and absence of later-phase artifacts."
+    },
+    {
+      "id": "P1-IR-C4",
+      "status": "pass",
+      "detail": "The invalidated preliminary mechanical attempt is explicitly non-consumable and reports zero accepted producer outputs; the current mechanical receipt is a distinct retry artifact."
+    },
+    {
+      "id": "P1-IR-C5",
+      "status": "blocked-after-first-medium-findings",
+      "detail": "No direct all-428 Git-blob decode/parse rerun was performed in this v1 review after the first Medium findings, at root instruction. The producer's claimed 8 decode failures and 2 empty paths were therefore not independently rederived here, and no claim is made about other candidate bytes."
+    }
+  ],
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [
+      {
+        "id": "P1-IR-M1",
+        "severity": "medium",
+        "title": "Zero-mislabeled result is unsupported by the mechanical producer",
+        "affected_paths": "All 428 frozen canonical candidate paths, emitted across mechanical-metadata.json in AF-01 through AF-12.",
+        "evidence": "generate_phase1_mechanical_metadata.py assigns mislabeled: false in image_metadata, media_metadata, and data_metadata, including their failure wrappers, without any magic-byte, container, or declared-label comparison. The reported zero-mislabeled result thus cannot establish the required per-path label-consistency fact.",
+        "remediation": "Add deterministic signature/container validation for PNG, JPG, SVG, MP3, WebM, JSON, and UTF-8 text; emit the derived mislabeled flag for every record; add a negative fixture for a label/signature disagreement; regenerate all 12 metadata outputs and receipts."
+      },
+      {
+        "id": "P1-IR-M2",
+        "severity": "medium",
+        "title": "Parsed SVG records omit required mechanical dimensions",
+        "affected_paths": [
+          "apps/advantage-games/public/globe.svg",
+          "apps/advantage-games/public/file.svg",
+          "apps/advantage-games/public/vercel.svg",
+          "apps/advantage-games/public/next.svg",
+          "apps/advantage-games/public/window.svg"
+        ],
+        "evidence": "Each record has parse_status passed but width and height are null. The generator XML-parses the blob and then unconditionally emits null dimensions instead of deriving width/height or viewBox geometry.",
+        "remediation": "Derive and record SVG width, height, and/or normalized viewBox dimensions with an explicit no-intrinsic-dimension state only when source attributes genuinely lack such information; strengthen the contract and fixture coverage; regenerate affected metadata and receipts."
+      },
+      {
+        "id": "P1-IR-M3",
+        "severity": "medium",
+        "title": "Mechanical producer model provenance is not exact",
+        "affected_paths": [
+          "measure/tracks/apk_existing_asset_candidate_audit_20260712/generate_phase1_mechanical_metadata.py",
+          "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase1/mechanical-metadata-inspector.json"
+        ],
+        "evidence": "Both generator and receipt declare the model as Terra, not the exact gpt-5.6-terra identifier required for a truthful isolated producer receipt. The current contract only checks that declared_model is non-empty, so it does not detect this provenance defect.",
+        "remediation": "Correct the declared model to the exact execution model, require that exact value in the contract, and regenerate the mechanical receipt after the metadata remediation."
+      }
+    ],
+    "low": []
+  },
+  "resource_accounting": {
+    "asset_content_bytes_read": 0,
+    "asset_paths_directly_opened": 0,
+    "asset_hash_groups_directly_opened": 0,
+    "governance_and_output_artifacts_inspected": 34,
+    "review_shell_invocations": 7,
+    "focused_contract_invocations": 1,
+    "sandbox_preflight_failures": 1,
+    "content_semantic_inspection_performed": false,
+    "within_applicable_review_ceiling": true
+  },
+  "decision": {
+    "status": "fail",
+    "rule": "Pass requires zero Critical, High, and Medium findings.",
+    "critical_count": 0,
+    "high_count": 0,
+    "medium_count": 3,
+    "next_action": "Remediate all three Medium findings, rerun the focused contract and full independent all-428 Git-blob mechanical verification in a fresh Phase 1 v2 review. This receipt does not accept Phase 1, close T8, authorize caller/provenance/inspection/suitability work, or publish a candidate manifest."
+  }
+}

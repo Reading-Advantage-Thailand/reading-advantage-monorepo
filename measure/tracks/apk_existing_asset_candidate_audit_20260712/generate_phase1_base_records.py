@@ -16,7 +16,7 @@ TRACK_ID = "apk_existing_asset_candidate_audit_20260712"
 BASE_PUBLICATION_REVISION = "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d"
 BASE_RECORD_REVISION = "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
 DELTA_REVISION = "65fc00d872ce5aa63820662ee0a1f14952e63235"
-BASE_GIT_LOCATOR = f"{BASE_PUBLICATION_REVISION}:measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json"
+BASE_GIT_LOCATOR = f"git:{BASE_PUBLICATION_REVISION}:measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json"
 EXPECTED_HASHES = {
     "phase0_input_freeze": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
     "t2_asset_denominator": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",

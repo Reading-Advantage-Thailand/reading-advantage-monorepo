@@ -38,7 +38,7 @@ ROOT_COUNTS = {
 BASE_KEYS = {"schema_version", "track_id", "batch_id", "input_binding", "producer", "records", "resource_usage"}
 BASE_RECORD_KEYS = {"canonical_path", "sha256", "identical_hash_group", "revision", "source_blob_oid", "file_kind", "relevance_rule_id"}
 METADATA_KEYS = {"schema_version", "track_id", "batch_id", "input_binding", "producer", "records", "resource_usage"}
-METADATA_RECORD_KEYS = {"canonical_path", "sha256", "revision", "source_blob_oid", "file_kind", "byte_size", "format", "mime_type", "flags", "type_specific"}
+METADATA_RECORD_KEYS = {"canonical_path", "sha256", "revision", "source_blob_oid", "file_kind", "byte_size", "format", "mime_type", "detected_format", "detected_mime_type", "flags", "type_specific"}
 FLAGS_KEYS = {"parse_status", "decode_status", "readability_status", "empty", "mislabeled", "text_risk"}
 RECEIPT_KEYS = {"schema_version", "track_id", "batch_id", "role", "native_task_name", "declared_model", "fork_turns", "inherited_narrative", "allowed_input_manifest_sha256", "allowed_input_paths", "role_boundary", "output_file_hashes", "findings", "resource_usage", "final_status"}
 
@@ -418,7 +418,7 @@ def assert_type_specific(record: dict, label: str) -> None:
         fail(f"{label} type_specific must be an object")
     if mime.startswith("image/"):
         require_exact_keys(fields, {"width", "height", "has_alpha", "color_model"}, f"{label} image metadata")
-        if flags["decode_status"] == "passed" and (not isinstance(fields["width"], int) or fields["width"] <= 0 or not isinstance(fields["height"], int) or fields["height"] <= 0):
+        if flags["readability_status"] == "readable" and (not isinstance(fields["width"], int) or fields["width"] <= 0 or not isinstance(fields["height"], int) or fields["height"] <= 0):
             fail(f"{label} image dimensions are malformed")
         if fields["has_alpha"] is not None and not isinstance(fields["has_alpha"], bool):
             fail(f"{label} image alpha value is malformed")
@@ -478,6 +478,12 @@ def assert_metadata_artifact(path: Path, batch_id: str, expected_paths: set[str]
             fail(f"{batch_id} metadata record duplicates a path")
         seen.add(item["canonical_path"])
         assert_flags(item["flags"], item["file_kind"], f"{batch_id} {item['canonical_path']}")
+        for key in ("detected_format", "detected_mime_type"):
+            if item[key] is not None and (not isinstance(item[key], str) or not item[key]):
+                fail(f"{batch_id} {item['canonical_path']} {key} must be a nonempty string or null")
+        expected_mislabeled = item["detected_format"] != item["format"] or item["detected_mime_type"] != item["mime_type"]
+        if item["flags"]["mislabeled"] is not expected_mislabeled:
+            fail(f"{batch_id} {item['canonical_path']} mislabeled flag contradicts detected format")
         assert_type_specific(item, f"{batch_id} {item['canonical_path']}")
     if seen != expected_paths:
         fail(f"{batch_id} metadata paths do not exactly match frozen batch membership")
@@ -509,7 +515,7 @@ def allowed_inputs_for_role(role: str, outputs: dict[str, Path]) -> list[str]:
         return [
             freeze,
             delta,
-            *(str(output.relative_to(REPO)) for output in outputs.values()),
+            *(str(output.with_name("candidate-records-base.json").relative_to(REPO)) for output in outputs.values()),
             f"git-tree:{BASE_RECORD_REVISION}",
             f"git-tree:{DELTA_REVISION}",
         ]
@@ -529,8 +535,8 @@ def assert_aggregate_receipt(path: Path, role: str, outputs: dict[str, Path]) ->
     """
     receipt = load_json(path)
     require_exact_keys(receipt, RECEIPT_KEYS, f"phase1 {role} receipt")
-    identity = (receipt["schema_version"], receipt["track_id"], receipt["batch_id"], receipt["role"], receipt["fork_turns"], receipt["inherited_narrative"], receipt["allowed_input_manifest_sha256"], receipt["final_status"])
-    if identity != ("apk-role-receipt.v1", "apk_existing_asset_candidate_audit_20260712", "phase1", role, "none", False, EXPECTED_FREEZE_SHA256, "pass"):
+    identity = (receipt["schema_version"], receipt["track_id"], receipt["batch_id"], receipt["role"], receipt["declared_model"], receipt["fork_turns"], receipt["inherited_narrative"], receipt["allowed_input_manifest_sha256"], receipt["final_status"])
+    if identity != ("apk-role-receipt.v1", "apk_existing_asset_candidate_audit_20260712", "phase1", role, "gpt-5.6-terra", "none", False, EXPECTED_FREEZE_SHA256, "pass"):
         fail(f"phase1 {role} receipt identity or isolation differs")
     if not isinstance(receipt["native_task_name"], str) or not receipt["native_task_name"] or not isinstance(receipt["declared_model"], str) or not receipt["declared_model"] or not isinstance(receipt["role_boundary"], str) or not receipt["role_boundary"]:
         fail(f"phase1 {role} receipt lacks native role provenance")
@@ -600,6 +606,11 @@ def assert_fixture_rejected(fixture: dict) -> None:
         observed = "audio-metadata-omission" if any(not fixture[key] for key in ("duration_ms", "channels", "sample_rate_hz", "codec")) else "accepted"
     elif kind == "video-metadata-omission":
         observed = "video-metadata-omission" if any(not fixture[key] for key in ("width", "height", "duration_ms", "codec")) else "accepted"
+    elif kind == "mislabeled-flag-mismatch":
+        expected = fixture["detected_format"] != fixture["format"] or fixture["detected_mime_type"] != fixture["mime_type"]
+        observed = "mislabeled-flag-mismatch" if fixture["mislabeled"] is not expected else "accepted"
+    elif kind == "svg-null-dimensions":
+        observed = "svg-null-dimensions" if fixture["readability_status"] == "readable" and (not isinstance(fixture["width"], int) or fixture["width"] <= 0 or not isinstance(fixture["height"], int) or fixture["height"] <= 0) else "accepted"
     elif kind == "cross-role-ownership":
         observed = "cross-role-ownership" if fixture["artifact_role"] != fixture["receipt_role"] else "accepted"
     elif kind == "later-phase-leakage":
@@ -617,8 +628,8 @@ def assert_negative_fixtures() -> None:
         Nothing.
     """
     fixtures = sorted((TRACK / "negative-fixtures" / "phase1").glob("*.json"))
-    if len(fixtures) != 11:
-        fail("Phase 1 negative fixture count must be exactly 11")
+    if len(fixtures) != 13:
+        fail("Phase 1 negative fixture count must be exactly 13")
     for path in fixtures:
         assert_fixture_rejected(load_json(path))
 

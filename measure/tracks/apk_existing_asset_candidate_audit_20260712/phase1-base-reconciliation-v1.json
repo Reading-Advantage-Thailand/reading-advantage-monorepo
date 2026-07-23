@@ -127,7 +127,7 @@
   },
   "generator": {
     "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/generate_phase1_base_records.py",
-    "sha256": "ff13f7c51b3d408535da809f84fc29106b3efd3a104e2823e421acf8bf5e8d68"
+    "sha256": "f8d540d93174963d5f74ccba4b320d00981adc7ae117fcb86cc91ac51eefc733"
   },
   "input_bindings": [
     {
@@ -137,7 +137,7 @@
     },
     {
       "name": "t2_asset_denominator",
-      "path": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d:measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+      "path": "git:ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d:measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
       "sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438"
     },
     {
