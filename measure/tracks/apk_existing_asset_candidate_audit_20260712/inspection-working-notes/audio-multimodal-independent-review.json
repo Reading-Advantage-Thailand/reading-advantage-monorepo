@@ -1,0 +1,670 @@
+{
+  "schema_version": "apk-asset-forensics.phase3-audio-independent-review.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "evidence_boundary": "Independent direct-audio review only; no disposition, suitability decision, or Phase 3 acceptance.",
+  "provider": {
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "model": "google/gemini-3-flash-preview",
+    "audio_capable_multimodal": true
+  },
+  "records": [
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:0173afee01656c45d538b4361af57799b3ce21a6f5600cdb99738dd8ae38324f",
+      "inspection_source": {
+        "byte_size": 24241,
+        "canonical_path": "apps/advantage-games/public/sounds/angry-grunt.mp3",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "0173afee01656c45d538b4361af57799b3ce21a6f5600cdb99738dd8ae38324f",
+        "source_blob_oid": "7dfdaace4e1cd85b61b3fdc8bca00c81da0ee362"
+      },
+      "evidence_kind": "direct_audio_multimodal",
+      "model": "google/gemini-3-flash-preview",
+      "provider_response_id": "gen-1784821881-X2YPzNbQ2OCaaXJ0ZzFG",
+      "observation": {
+        "audible_content": "A single, short, low-pitched vocal grunt or huff from a male voice.",
+        "content_class": "vocalization",
+        "speech_or_language": "non-verbal male vocalization",
+        "temporal_coverage": "00:00-00:00",
+        "placeholder_risk_observation": "none",
+        "corruption_or_clipping": "none"
+      },
+      "usage": {
+        "prompt_tokens": 336,
+        "completion_tokens": 78,
+        "total_tokens": 414,
+        "cost": 0.0004115,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 19,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0004115,
+          "upstream_inference_prompt_cost": 0.0001775,
+          "upstream_inference_completions_cost": 0.000234
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "limitation": "Single model pass over exact frozen audio bytes; no runtime mixing, loudness normalization, loop-boundary, or gameplay suitability claim."
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:1a07211b2bc9ded37440346ca747832d996e749571bb57a85487f90ca9579d3b",
+      "inspection_source": {
+        "byte_size": 6471983,
+        "canonical_path": "apps/advantage-games/public/sounds/potion-rush-action.mp3",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "1a07211b2bc9ded37440346ca747832d996e749571bb57a85487f90ca9579d3b",
+        "source_blob_oid": "3e5e827fbf787b90b22ae445553131082abc54c4"
+      },
+      "evidence_kind": "direct_audio_multimodal",
+      "model": "google/gemini-3-flash-preview",
+      "provider_response_id": "gen-1784821884-Yc5abhbNpYZUBprhnmxX",
+      "observation": {
+        "audible_content": "A repetitive, upbeat, and synthesized musical loop with a consistent tempo and melody.",
+        "content_class": "music",
+        "speech_or_language": "none",
+        "temporal_coverage": "00:00-03:15",
+        "placeholder_risk_observation": "none",
+        "corruption_or_clipping": "none"
+      },
+      "usage": {
+        "prompt_tokens": 5371,
+        "completion_tokens": 70,
+        "total_tokens": 5441,
+        "cost": 0.0054225,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 5054,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0054225,
+          "upstream_inference_prompt_cost": 0.0052125,
+          "upstream_inference_completions_cost": 0.00021
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "limitation": "Single model pass over exact frozen audio bytes; no runtime mixing, loudness normalization, loop-boundary, or gameplay suitability claim."
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:2da344189f4831c130645d8396df434a9b35007d2cef98244632bb35e8a83cb3",
+      "inspection_source": {
+        "byte_size": 208896,
+        "canonical_path": "apps/advantage-games/public/sounds/bubbling.mp3",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "2da344189f4831c130645d8396df434a9b35007d2cef98244632bb35e8a83cb3",
+        "source_blob_oid": "44494e931de3dee8d1b814f0ab9bab851f64c9f7"
+      },
+      "evidence_kind": "direct_audio_multimodal",
+      "model": "google/gemini-3-flash-preview",
+      "provider_response_id": "gen-1784821890-x8Guyp6VzlAvMTdUX49b",
+      "observation": {
+        "audible_content": "A low-frequency, synthesized whoosh sound that rises in pitch and intensity, followed by a brief, resonant metallic chime or ping.",
+        "content_class": "sound_effect",
+        "speech_or_language": "none",
+        "temporal_coverage": "00:00-00:04",
+        "placeholder_risk_observation": "none",
+        "corruption_or_clipping": "none"
+      },
+      "usage": {
+        "prompt_tokens": 481,
+        "completion_tokens": 83,
+        "total_tokens": 564,
+        "cost": 0.0005715,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 164,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0005715,
+          "upstream_inference_prompt_cost": 0.0003225,
+          "upstream_inference_completions_cost": 0.000249
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "limitation": "Single model pass over exact frozen audio bytes; no runtime mixing, loudness normalization, loop-boundary, or gameplay suitability claim."
+    },
+    {
+      "batch_id": "AF-06",
+      "identical_hash_group": "sha256:6ed15b6010af6453e0a2844340c0a2a4b61a99028d92aae5a4d5e60a7db9022f",
+      "inspection_source": {
+        "byte_size": 211968,
+        "canonical_path": "apps/advantage-games/public/sounds/ghost_woo.mp3",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "6ed15b6010af6453e0a2844340c0a2a4b61a99028d92aae5a4d5e60a7db9022f",
+        "source_blob_oid": "f16dac2607cd92bf6b054b8e8944b64c2ff8eca6"
+      },
+      "evidence_kind": "direct_audio_multimodal",
+      "model": "google/gemini-3-flash-preview",
+      "provider_response_id": "gen-1784821893-ieasNHVpMZXLl1ZKNbp1",
+      "observation": {
+        "audible_content": "A person performing a series of ghostly, melodic vocalizations with a rising and falling pitch.",
+        "content_class": "vocalization",
+        "speech_or_language": "none",
+        "temporal_coverage": "00:00-00:04",
+        "placeholder_risk_observation": "none",
+        "corruption_or_clipping": "none"
+      },
+      "usage": {
+        "prompt_tokens": 483,
+        "completion_tokens": 73,
+        "total_tokens": 556,
+        "cost": 0.0005435,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 166,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0005435,
+          "upstream_inference_prompt_cost": 0.0003245,
+          "upstream_inference_completions_cost": 0.000219
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "limitation": "Single model pass over exact frozen audio bytes; no runtime mixing, loudness normalization, loop-boundary, or gameplay suitability claim."
+    },
+    {
+      "batch_id": "AF-07",
+      "identical_hash_group": "sha256:86439c52414fbdd7129b72c44aeec6c63134b17cbb0ec5af6395b05f2f083e88",
+      "inspection_source": {
+        "byte_size": 6489537,
+        "canonical_path": "apps/advantage-games/public/sounds/haunted-library-ambient.mp3",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "86439c52414fbdd7129b72c44aeec6c63134b17cbb0ec5af6395b05f2f083e88",
+        "source_blob_oid": "762ec7c5f9d2f2be4997378d0a0a374e601aeaf1"
+      },
+      "evidence_kind": "direct_audio_multimodal",
+      "model": "google/gemini-3-flash-preview",
+      "provider_response_id": "gen-1784821897-9WP3yZYDE6MTRuvPyqEq",
+      "observation": {
+        "audible_content": "A rhythmic, upbeat electronic music track with a prominent bassline and synthesized melodies.",
+        "content_class": "music",
+        "speech_or_language": "none",
+        "temporal_coverage": "00:00-01:59",
+        "placeholder_risk_observation": "none",
+        "corruption_or_clipping": "none"
+      },
+      "usage": {
+        "prompt_tokens": 5385,
+        "completion_tokens": 70,
+        "total_tokens": 5455,
+        "cost": 0.0054365,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 5068,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0054365,
+          "upstream_inference_prompt_cost": 0.0052265,
+          "upstream_inference_completions_cost": 0.00021
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "limitation": "Single model pass over exact frozen audio bytes; no runtime mixing, loudness normalization, loop-boundary, or gameplay suitability claim."
+    },
+    {
+      "batch_id": "AF-08",
+      "identical_hash_group": "sha256:a29f23bd14bd6e088077e5f9f0c7ddeb1589932af7e28a62d2fc596c959ba18c",
+      "inspection_source": {
+        "byte_size": 65280,
+        "canonical_path": "apps/advantage-games/public/sounds/acid_spell_cast_bubble_poison_03-286746.mp3",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "a29f23bd14bd6e088077e5f9f0c7ddeb1589932af7e28a62d2fc596c959ba18c",
+        "source_blob_oid": "7d65a25186e1b866b5a3e4cf2ddc7c120ee69cfe"
+      },
+      "evidence_kind": "direct_audio_multimodal",
+      "model": "google/gemini-3-flash-preview",
+      "provider_response_id": "gen-1784821907-CXJt0SaPB9uZMflcX51G",
+      "observation": {
+        "audible_content": "A single, sharp metallic clink or mechanical snap sound.",
+        "content_class": "sound_effect",
+        "speech_or_language": "none",
+        "temporal_coverage": "00:00-00:00",
+        "placeholder_risk_observation": "none",
+        "corruption_or_clipping": "none"
+      },
+      "usage": {
+        "prompt_tokens": 368,
+        "completion_tokens": 68,
+        "total_tokens": 436,
+        "cost": 0.0004135,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 51,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0004135,
+          "upstream_inference_prompt_cost": 0.0002095,
+          "upstream_inference_completions_cost": 0.000204
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "limitation": "Single model pass over exact frozen audio bytes; no runtime mixing, loudness normalization, loop-boundary, or gameplay suitability claim."
+    },
+    {
+      "batch_id": "AF-08",
+      "identical_hash_group": "sha256:a52c3be27272c5254d9d0e2941fad0ec15e0cb09b80eb445bfa538de56b2c361",
+      "inspection_source": {
+        "byte_size": 91115,
+        "canonical_path": "apps/advantage-games/public/sounds/success.mp3",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "a52c3be27272c5254d9d0e2941fad0ec15e0cb09b80eb445bfa538de56b2c361",
+        "source_blob_oid": "0b6cb426b409063b7340c7b02c5fef2bf1d446db"
+      },
+      "evidence_kind": "direct_audio_multimodal",
+      "model": "google/gemini-3-flash-preview",
+      "provider_response_id": "gen-1784821910-JLaZscVuoCQWhVyc3xnR",
+      "observation": {
+        "audible_content": "A short, bright, four-note ascending electronic chime sequence.",
+        "content_class": "sound_effect",
+        "speech_or_language": "none",
+        "temporal_coverage": "00:00-00:01",
+        "placeholder_risk_observation": "none",
+        "corruption_or_clipping": "none"
+      },
+      "usage": {
+        "prompt_tokens": 389,
+        "completion_tokens": 69,
+        "total_tokens": 458,
+        "cost": 0.0004375,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 72,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0004375,
+          "upstream_inference_prompt_cost": 0.0002305,
+          "upstream_inference_completions_cost": 0.000207
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "limitation": "Single model pass over exact frozen audio bytes; no runtime mixing, loudness normalization, loop-boundary, or gameplay suitability claim."
+    },
+    {
+      "batch_id": "AF-09",
+      "identical_hash_group": "sha256:aee5ebd8cb91f84287f9f89e63446465a2111835d84f04cdd22320917963c571",
+      "inspection_source": {
+        "byte_size": 6188606,
+        "canonical_path": "apps/advantage-games/public/sounds/dragon-flight-adventure.mp3",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "aee5ebd8cb91f84287f9f89e63446465a2111835d84f04cdd22320917963c571",
+        "source_blob_oid": "ccf3d2f1c20f9fd223eb100fad173df923b81e59"
+      },
+      "evidence_kind": "direct_audio_multimodal",
+      "model": "google/gemini-3-flash-preview",
+      "provider_response_id": "gen-1784821914-8JieFA2r40y99ArF2y54",
+      "observation": {
+        "audible_content": "A dramatic orchestral music track with a prominent string section and rhythmic percussion.",
+        "content_class": "music",
+        "speech_or_language": "none",
+        "temporal_coverage": "00:00-02:45",
+        "placeholder_risk_observation": "none",
+        "corruption_or_clipping": "none"
+      },
+      "usage": {
+        "prompt_tokens": 5150,
+        "completion_tokens": 78,
+        "total_tokens": 5228,
+        "cost": 0.0052255,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 4833,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0052255,
+          "upstream_inference_prompt_cost": 0.0049915,
+          "upstream_inference_completions_cost": 0.000234
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "limitation": "Single model pass over exact frozen audio bytes; no runtime mixing, loudness normalization, loop-boundary, or gameplay suitability claim."
+    },
+    {
+      "batch_id": "AF-09",
+      "identical_hash_group": "sha256:af2a0e19895bada613c5bfb1e9f0008673bca2c4c83a29001552feff8ac9a1f8",
+      "inspection_source": {
+        "byte_size": 35108,
+        "canonical_path": "apps/advantage-games/public/sounds/clinking.mp3",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "af2a0e19895bada613c5bfb1e9f0008673bca2c4c83a29001552feff8ac9a1f8",
+        "source_blob_oid": "e0b2b945025f521457494d002a1c6b7a9bbf2842"
+      },
+      "evidence_kind": "direct_audio_multimodal",
+      "model": "google/gemini-3-flash-preview",
+      "provider_response_id": "gen-1784821918-jeRyqlbWQDpRJpOA0Dcc",
+      "observation": {
+        "audible_content": "A short, high-pitched digital chime or notification sound.",
+        "content_class": "sound_effect",
+        "speech_or_language": "none",
+        "temporal_coverage": "00:00-00:01",
+        "placeholder_risk_observation": "none",
+        "corruption_or_clipping": "none"
+      },
+      "usage": {
+        "prompt_tokens": 345,
+        "completion_tokens": 68,
+        "total_tokens": 413,
+        "cost": 0.0003905,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 28,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0003905,
+          "upstream_inference_prompt_cost": 0.0001865,
+          "upstream_inference_completions_cost": 0.000204
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "limitation": "Single model pass over exact frozen audio bytes; no runtime mixing, loudness normalization, loop-boundary, or gameplay suitability claim."
+    },
+    {
+      "batch_id": "AF-10",
+      "identical_hash_group": "sha256:c2ac41c1b294d5b682c83f1f6a7cf26a39f71e3951bfe2416d76cfd8671665b9",
+      "inspection_source": {
+        "byte_size": 257280,
+        "canonical_path": "apps/advantage-games/public/sounds/healing-magic-6-378666.mp3",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "c2ac41c1b294d5b682c83f1f6a7cf26a39f71e3951bfe2416d76cfd8671665b9",
+        "source_blob_oid": "a4da2c5056ab0f4159081821ea5f94019b13dd8f"
+      },
+      "evidence_kind": "direct_audio_multimodal",
+      "model": "google/gemini-3-flash-preview",
+      "provider_response_id": "gen-1784821921-3S7FT5TA6dgKKJGx9HqG",
+      "observation": {
+        "audible_content": "A short, ascending melodic chime sequence consisting of four distinct notes with a bright, digital timbre.",
+        "content_class": "sound_effect",
+        "speech_or_language": "none",
+        "temporal_coverage": "00:00-00:01",
+        "placeholder_risk_observation": "none",
+        "corruption_or_clipping": "none"
+      },
+      "usage": {
+        "prompt_tokens": 518,
+        "completion_tokens": 75,
+        "total_tokens": 593,
+        "cost": 0.0005845,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 201,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0005845,
+          "upstream_inference_prompt_cost": 0.0003595,
+          "upstream_inference_completions_cost": 0.000225
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "limitation": "Single model pass over exact frozen audio bytes; no runtime mixing, loudness normalization, loop-boundary, or gameplay suitability claim."
+    },
+    {
+      "batch_id": "AF-11",
+      "identical_hash_group": "sha256:d9c3c6b425e40eeb5c167d47832aa979833ff1cb632d58b040043d8479cf238c",
+      "inspection_source": {
+        "byte_size": 5832505,
+        "canonical_path": "apps/advantage-games/public/sounds/spellweavers-run-action.mp3",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "d9c3c6b425e40eeb5c167d47832aa979833ff1cb632d58b040043d8479cf238c",
+        "source_blob_oid": "cea3e907318feaf0ac693fbe690e36dad407830b"
+      },
+      "evidence_kind": "direct_audio_multimodal",
+      "model": "google/gemini-3-flash-preview",
+      "provider_response_id": "gen-1784821924-iwjLLF0rjq2dVFwnZsUp",
+      "observation": {
+        "audible_content": "A high-energy electronic music track featuring a prominent synthesizer melody, a driving drum beat, and occasional vocal samples. The track has a fast tempo and a repetitive, danceable structure.",
+        "content_class": "music",
+        "speech_or_language": "English",
+        "temporal_coverage": "00:00-03:15",
+        "placeholder_risk_observation": "none",
+        "corruption_or_clipping": "none"
+      },
+      "usage": {
+        "prompt_tokens": 4872,
+        "completion_tokens": 91,
+        "total_tokens": 4963,
+        "cost": 0.0049865,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 4555,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0049865,
+          "upstream_inference_prompt_cost": 0.0047135,
+          "upstream_inference_completions_cost": 0.000273
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "limitation": "Single model pass over exact frozen audio bytes; no runtime mixing, loudness normalization, loop-boundary, or gameplay suitability claim."
+    },
+    {
+      "batch_id": "AF-11",
+      "identical_hash_group": "sha256:dfee4d38e6d58ee0a784a99dc2141c1817fae5358a36cd9c66323739a1d6f9cc",
+      "inspection_source": {
+        "byte_size": 20062,
+        "canonical_path": "apps/advantage-games/public/sounds/error.mp3",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "dfee4d38e6d58ee0a784a99dc2141c1817fae5358a36cd9c66323739a1d6f9cc",
+        "source_blob_oid": "4eb2bbd3abffd8301d3dc16824b8ba8fbdee7bf8"
+      },
+      "evidence_kind": "direct_audio_multimodal",
+      "model": "google/gemini-3-flash-preview",
+      "provider_response_id": "gen-1784821931-0Gr9iOzlugH21LeE2RC4",
+      "observation": {
+        "audible_content": "A single, high-pitched, synthetic electronic beep or notification chime.",
+        "content_class": "sound_effect",
+        "speech_or_language": "none",
+        "temporal_coverage": "00:00-00:00",
+        "placeholder_risk_observation": "none",
+        "corruption_or_clipping": "none"
+      },
+      "usage": {
+        "prompt_tokens": 333,
+        "completion_tokens": 70,
+        "total_tokens": 403,
+        "cost": 0.0003845,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 16,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0003845,
+          "upstream_inference_prompt_cost": 0.0001745,
+          "upstream_inference_completions_cost": 0.00021
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "limitation": "Single model pass over exact frozen audio bytes; no runtime mixing, loudness normalization, loop-boundary, or gameplay suitability claim."
+    },
+    {
+      "batch_id": "AF-12",
+      "identical_hash_group": "sha256:e48fd83fde67fa41bb86a49197df20f2a68038fe73a077ebad310e6c6ea266de",
+      "inspection_source": {
+        "byte_size": 6120897,
+        "canonical_path": "apps/advantage-games/public/sounds/griffin-sky-joust-battle.mp3",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "e48fd83fde67fa41bb86a49197df20f2a68038fe73a077ebad310e6c6ea266de",
+        "source_blob_oid": "006aba259c8942636cb424ff6070a649bda216c9"
+      },
+      "evidence_kind": "direct_audio_multimodal",
+      "model": "google/gemini-3-flash-preview",
+      "provider_response_id": "gen-1784821936-TJTYPWWgy0rEwdYwBGaL",
+      "observation": {
+        "audible_content": "A fast-paced, upbeat orchestral track with a prominent string section and brass accents, featuring a repetitive, driving melody.",
+        "content_class": "music",
+        "speech_or_language": "none",
+        "temporal_coverage": "00:00-01:30",
+        "placeholder_risk_observation": "none",
+        "corruption_or_clipping": "none"
+      },
+      "usage": {
+        "prompt_tokens": 5097,
+        "completion_tokens": 88,
+        "total_tokens": 5185,
+        "cost": 0.0052025,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 4780,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0052025,
+          "upstream_inference_prompt_cost": 0.0049385,
+          "upstream_inference_completions_cost": 0.000264
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "limitation": "Single model pass over exact frozen audio bytes; no runtime mixing, loudness normalization, loop-boundary, or gameplay suitability claim."
+    },
+    {
+      "batch_id": "AF-12",
+      "identical_hash_group": "sha256:fa8ac6d3d7b33c926dd1043432298612f8a7f27f8ec0edb92e1d282bcc663269",
+      "inspection_source": {
+        "byte_size": 35108,
+        "canonical_path": "apps/advantage-games/public/sounds/cash-register.mp3",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "fa8ac6d3d7b33c926dd1043432298612f8a7f27f8ec0edb92e1d282bcc663269",
+        "source_blob_oid": "d3dcd2c4f7a7f0c0e78e50debf20265786fac6aa"
+      },
+      "evidence_kind": "direct_audio_multimodal",
+      "model": "google/gemini-3-flash-preview",
+      "provider_response_id": "gen-1784821941-qLrbtfIsXGpvNBngv9p3",
+      "observation": {
+        "audible_content": "A single, sharp, metallic clinking sound followed by a brief resonance.",
+        "content_class": "sound_effect",
+        "speech_or_language": "none",
+        "temporal_coverage": "00:00-00:01",
+        "placeholder_risk_observation": "none",
+        "corruption_or_clipping": "none"
+      },
+      "usage": {
+        "prompt_tokens": 345,
+        "completion_tokens": 71,
+        "total_tokens": 416,
+        "cost": 0.0003995,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 28,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0003995,
+          "upstream_inference_prompt_cost": 0.0001865,
+          "upstream_inference_completions_cost": 0.000213
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "limitation": "Single model pass over exact frozen audio bytes; no runtime mixing, loudness normalization, loop-boundary, or gameplay suitability claim."
+    }
+  ]
+}

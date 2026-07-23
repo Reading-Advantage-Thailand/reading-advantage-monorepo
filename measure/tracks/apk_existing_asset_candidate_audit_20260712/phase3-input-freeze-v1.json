@@ -1,0 +1,62 @@
+{
+  "schema_version": "apk-asset-forensics.phase3-input-freeze.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase3",
+  "admission_status": "red-admission-only",
+  "phase0_input_freeze": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+    "sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b"
+  },
+  "phase1_acceptance": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-root-acceptance.json",
+    "sha256": "2b30be13c8c0f6b7d1d404489c6058b48b6839f58d5ae2ce84b67f9d6a1a6d61"
+  },
+  "phase2_acceptance": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase2-root-acceptance.json",
+    "sha256": "461c1d4f26afa512d1e6266384005b019ab0428a3cc508046675feb9aef35ed1",
+    "contract_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/forensics-contract-tests.py",
+    "contract_sha256": "f9830d6e56244453bcd20bceaa858339148d22823ceadc9438f47830ceb50882"
+  },
+  "effective_denominator_binding": {
+    "base_record_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "delta_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "candidate_paths": 428,
+    "identical_hash_groups": 227,
+    "batches": 12
+  },
+  "ownership": {
+    "source_role": "evidence-collector",
+    "inspector_role": "visual-audio-inspector",
+    "truth_test_role": "truth-test-author",
+    "reviewer_role": "adversarial-reviewer",
+    "producer_output": "batches/<batch-id>/inspection-records.json",
+    "source_manifest_output": "batches/<batch-id>/inspection-source-manifest.json",
+    "receipt_pattern": "role-receipts/<batch-id>/visual-audio-inspector.json"
+  },
+  "inspection_policy": {
+    "pinned_bytes_only": true,
+    "forbid_dirty_worktree_bytes": true,
+    "identical_hash_group_sharing": "Content observations may be shared only by exact frozen hash group; every member path must remain explicit.",
+    "forbid_filename_inference": true,
+    "forbid_contact_sheet_as_primary_evidence": true,
+    "forbid_suitability_or_disposition": true,
+    "audio_requires": "audio-capable multimodal inspection receipt; browser playback, waveform, and metadata are insufficient for audible-content claims.",
+    "browser_policy": "Kimi WebBridge may establish browser decode/playback and visual captures only; it cannot establish audible semantics."
+  },
+  "expected_media_groups": {
+    "visual_or_video": 131,
+    "audio": 14,
+    "text_or_data": 77,
+    "unreadable_or_pointer": 5
+  },
+  "resource_ceilings_per_batch": {
+    "inspection_actions": 48,
+    "decoded_bytes": 1073741824
+  },
+  "red_admission_expectation": {
+    "inspection_source_manifests": "0/12",
+    "inspection_records": "0/12",
+    "inspector_receipts": "0/12",
+    "sole_expected_red_reason": "pending Phase 3 inspection outputs"
+  }
+}

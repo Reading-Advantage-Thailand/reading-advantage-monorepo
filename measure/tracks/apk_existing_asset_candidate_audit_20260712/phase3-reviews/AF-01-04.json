@@ -1,0 +1,131 @@
+{
+  "schema_version": "apk-asset-forensics.phase3-independent-record-review.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "reviewer_task_name": "/root/phase3_record_audit_a",
+  "fork_turns": "none",
+  "batches": [
+    {
+      "batch_id": "AF-01",
+      "inspection_records_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+      "inspection_records_sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+      "identical_hash_groups": 18,
+      "member_paths": 36
+    },
+    {
+      "batch_id": "AF-02",
+      "inspection_records_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/inspection-records.json",
+      "inspection_records_sha256": "a0251f246bed6f1dbb560265f52918c492c162c95d01e4d3f768c2c62ee580c3",
+      "identical_hash_groups": 18,
+      "member_paths": 35
+    },
+    {
+      "batch_id": "AF-03",
+      "inspection_records_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-03/inspection-records.json",
+      "inspection_records_sha256": "0ed0bbf1d150e29c17269c939af1193582d3c88b80de3d24221699bd6ad38893",
+      "identical_hash_groups": 21,
+      "member_paths": 35
+    },
+    {
+      "batch_id": "AF-04",
+      "inspection_records_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/inspection-records.json",
+      "inspection_records_sha256": "c02a7291599446dbe4dac2ad9f31ff16c11c004ea67e557e7c347508b6c02979",
+      "identical_hash_groups": 17,
+      "member_paths": 35
+    }
+  ],
+  "totals": {
+    "batches": 4,
+    "identical_hash_groups": 74,
+    "member_paths": 141
+  },
+  "prior_findings": [
+    {
+      "prior_severity": "high",
+      "finding_id": "AF-03-2da344-audible-content-conflict",
+      "status": "resolved",
+      "affected_groups": [
+        "sha256:2da344189f4831c130645d8396df434a9b35007d2cef98244632bb35e8a83cb3"
+      ],
+      "resolution": "A targeted third direct audio-capable Gemini 2.5 Pro pass corroborates the primary bubbling and gurgling description, and the root reconciliation explicitly resolves the independent metallic-chime disagreement.",
+      "evidence": {
+        "targeted_follow_up_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/inspection-working-notes/audio-targeted-follow-up-2da344189f4831c130645d8396df434a9b35007d2cef98244632bb35e8a83cb3.json",
+        "targeted_follow_up_sha256": "62fd5bf128a72223672d4cebfe96faa64cd8d04e1f6beef0c1954153cc84aa13",
+        "targeted_follow_up_model": "google/gemini-2.5-pro",
+        "targeted_follow_up_response_id": "gen-1784822672-amjBvdEd3TrSo7E3tOiL",
+        "reconciliation_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/inspection-working-notes/audio-review-reconciliation.json",
+        "reconciliation_sha256": "d7fdbfd7c86096e3e9f8b0085ce5b8a76005d185cef30b4338d2babe70ba5394",
+        "reconciliation_decision": "resolved_bubbling_and_gurgling_content",
+        "binding_verified": {
+          "batch_id": "AF-03",
+          "source_blob_oid": "44494e931de3dee8d1b814f0ab9bab851f64c9f7",
+          "source_sha256": "2da344189f4831c130645d8396df434a9b35007d2cef98244632bb35e8a83cb3",
+          "primary_response_id": "gen-1784821396-NSWuwp0Lh5eiEATTT2op",
+          "independent_response_id": "gen-1784821890-x8Guyp6VzlAvMTdUX49b",
+          "targeted_follow_up_response_id": "gen-1784822672-amjBvdEd3TrSo7E3tOiL"
+        }
+      }
+    },
+    {
+      "prior_severity": "medium",
+      "finding_id": "AF-01-03-audio-state-direction-overstatement",
+      "status": "resolved",
+      "affected_groups": [
+        "sha256:0173afee01656c45d538b4361af57799b3ce21a6f5600cdb99738dd8ae38324f",
+        "sha256:1a07211b2bc9ded37440346ca747832d996e749571bb57a85487f90ca9579d3b",
+        "sha256:2da344189f4831c130645d8396df434a9b35007d2cef98244632bb35e8a83cb3"
+      ],
+      "resolution": "Every affected official record and working classification now records state_or_direction_coverage as not_applicable."
+    },
+    {
+      "prior_severity": "medium",
+      "finding_id": "AF-01-03-audio-pass-count-contradiction",
+      "status": "resolved",
+      "affected_groups": [
+        "sha256:0173afee01656c45d538b4361af57799b3ce21a6f5600cdb99738dd8ae38324f",
+        "sha256:1a07211b2bc9ded37440346ca747832d996e749571bb57a85487f90ca9579d3b",
+        "sha256:2da344189f4831c130645d8396df434a9b35007d2cef98244632bb35e8a83cb3"
+      ],
+      "resolution": "The official limitations now state two, two, and three direct audio-capable model passes respectively, matching their evidence locators and observer response identifiers."
+    }
+  ],
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": []
+  },
+  "scope_boundary": {
+    "personal_audio_listening_performed": false,
+    "audio_review_method": "Compared the primary Gemini artifact, independent Gemini artifact, targeted follow-up artifact, reconciliation, and regenerated official records; no claim of personal audible inspection is made.",
+    "disposition_or_suitability_reviewed": false,
+    "disposition_or_suitability_claim": "No reuse, adaptation, replacement, rejection, gameplay suitability, or final disposition conclusion is made.",
+    "review_scope": "Independent record-level review of AF-01 through AF-04 exact frozen bindings, observations, classifications, remediation evidence, and forbidden later-phase claim leakage."
+  },
+  "validators_run": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase3_working_notes_validator.py",
+      "exit_code": 0,
+      "result": "VERIFIED_WORKING_NOTES: 227/227 groups; visual_or_video 131/131; text_or_data 77/77; unreadable_or_pointer 5/5; audio 14/14."
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure/tracks/apk_existing_asset_candidate_audit_20260712/generate_phase3_inspection_records_test.py measure/tracks/apk_existing_asset_candidate_audit_20260712/phase3_working_notes_validator_test.py",
+      "exit_code": 0,
+      "result": "Two tests ran and passed."
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase3-contract-test.py",
+      "exit_code": 1,
+      "result": "Expected RED admission state: inspection source manifests 12/12 and inspection records 12/12 validate; independent inspector receipts remain 0/12."
+    },
+    {
+      "command": "Independent deterministic render comparison for AF-01, AF-02, AF-03, and AF-04",
+      "exit_code": 0,
+      "result": "All four current official inspection-record objects exactly equal generate_phase3_inspection_records.py render_records() output."
+    }
+  ],
+  "remaining_workflow_blocker": {
+    "present": true,
+    "reason": "Phase 3 remains mechanically RED because independent inspector receipts are 0/12; no Critical, High, or Medium AF-01 through AF-04 record-review finding remains."
+  },
+  "final_status": "pass"
+}

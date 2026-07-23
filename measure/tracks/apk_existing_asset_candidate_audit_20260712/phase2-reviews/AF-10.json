@@ -1,0 +1,84 @@
+{
+  "schema_version": "apk-asset-forensics.phase2-adversarial-review.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase2",
+  "batch_id": "AF-10",
+  "review_role": "adversarial-reviewer",
+  "reviewed_at": "2026-07-23",
+  "authority_commit": "8e272ad9fa92ba524ee9f340754deeaa951a1a44",
+  "freeze_hashes": {
+    "phase0_input_freeze_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+    "phase0_role_ownership_manifest_sha256": "bdffe7d8248b08ebe3b1226082970cd09ba180ddf469c5096db3bebe2f811e36",
+    "phase2_input_freeze_sha256": "385248641ba8d7dcaeedd3920f4d11f67071987be06d336f3a624f5a31f724c0",
+    "phase1_root_acceptance_sha256": "2b30be13c8c0f6b7d1d404489c6058b48b6839f58d5ae2ce84b67f9d6a1a6d61"
+  },
+  "reviewed_hashes": {
+    "candidate_records_base_sha256": "4ff010ebf0287f6faeb27fd614363c3eec7e9637ea1e68295ceac62bfb7c1148",
+    "mechanical_metadata_sha256": "0dfade108acbd9aa1a22fe26fcf8140c4d1aede50276256e464972cb114304e0",
+    "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+    "provenance_audit_sha256": "fed7989da253af1a8ce28137e6267b16b1848e30e6a4b6aaa8636808442cc11a",
+    "provenance_auditor_receipt_sha256": "2788805e78a271ee13c8c667ca810176f66e95d39b5214f9d36aa923ece612ab",
+    "sorted_record_identity_tuples_sha256": "509586e644c72b7c94df1b0d0a3ca9fd231944eb82e7aa74dbdeec5abb79ac23",
+    "sorted_record_state_tuples_sha256": "cbac98429da5d65e2f874fa9cf1befcbd12b03084033990502057149a89bb513"
+  },
+  "counts": {
+    "frozen_candidate_paths": 34,
+    "reviewed_candidate_paths": 34,
+    "frozen_hash_groups": 19,
+    "reviewed_hash_groups": 19,
+    "identity_tuple_mismatches_vs_candidate_base": 0,
+    "identity_tuple_mismatches_vs_mechanical_metadata": 0,
+    "identity_tuple_mismatches_vs_caller_inventory": 0,
+    "git_source_blob_oid_mismatches": 0,
+    "history_addition_missing": 0,
+    "provenance_state_objects": 102,
+    "unknown_state_objects": 102,
+    "state_schema_anomalies": 0,
+    "unknown_rationale_anomalies": 0,
+    "citation_objects": 0,
+    "blocked_reuse_and_adapt_records": 34,
+    "eligibility_pairing_anomalies": 0,
+    "artifact_receipt_resource_differences": 0
+  },
+  "verification": {
+    "record_identity": "All 34 canonical path, SHA-256, revision, source blob OID, and identical-hash-group tuples matched the applicable accepted Phase 1 inputs and pinned Git objects. Mechanical metadata has no group field; its 34 path/hash/revision/OID tuples matched.",
+    "states": "Every repository-introduction, upstream-provenance, and license object used the closed unknown-state schema with an empty citations list and a non-empty rationale. The history-introduction wording was checked against a path-specific Git addition for every path; no rationale promotes history to upstream provenance or license.",
+    "eligibility": "All 34 records are blocked for both reuse and adapt with reason_code evidence_incomplete. No Phase 4 disposition, suitability, inspection, reusable, or adaptable claim appears.",
+    "resources_and_isolation": "Artifact and producer receipt reproduce 34 paths, 19 groups, zero evidence records, 60 commands, 243059 bytes, and within_ceiling true. The producer receipt has the required provenance-auditor role, gpt-5.6-terra model, fork_turns none, inherited_narrative false, exact Phase 2 freeze hash, allowed inputs, and one output hash only."
+  },
+  "bounded_git_pinned_search": {
+    "scope": "The 34 AF-10 canonical paths only; fixed-string Git search of non-Measure tracked text at the two frozen source revisions.",
+    "non_measure_path_explicit_hits": {
+      "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286": 0,
+      "65fc00d872ce5aa63820662ee0a1f14952e63235": 0
+    },
+    "path_specific_history_additions": {
+      "paths_checked": 34,
+      "missing": 0,
+      "interpretation": "Repository history was checked only for repository introduction and was not promoted to upstream authorship or license evidence."
+    }
+  },
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": [
+      "No admissible path-explicit non-Measure provenance or license evidence was found for AF-10; the producer correctly retains all 34 records as explicit unknowns and blocks reuse/adapt pending later evidence."
+    ]
+  },
+  "decision": {
+    "admit": true,
+    "block": false,
+    "status": "pass",
+    "scope": "AF-10 Phase 2 provenance artifact only; this admission does not make Phase 2 Green, perform a disposition, or constitute lifecycle acceptance."
+  },
+  "resource_usage": {
+    "candidate_paths": 34,
+    "hash_groups": 19,
+    "review_records": 34,
+    "command_invocations": 74,
+    "bytes_read": 4194304,
+    "within_ceiling": true,
+    "measurement_basis": "The direct bounded helper executed 72 internal read-only Git subprocesses for frozen-contract validation, 34 source-blob checks, 34 path-specific addition checks, and two pinned-tree fixed-string searches. One helper process and one local JSON tuple/state reconciliation complete the 74 command count. The conservative four-MiB upper bound covers explicitly read artifacts and pinned-text inspection; both values are below the reviewer ceilings of 120 commands and 536870912 bytes."
+  }
+}

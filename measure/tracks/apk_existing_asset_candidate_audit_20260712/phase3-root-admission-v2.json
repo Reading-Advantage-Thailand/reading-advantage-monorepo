@@ -1,0 +1,19 @@
+{
+  "schema_version": "apk-asset-forensics.phase3-root-admission.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase3",
+  "decision": "red-admission-accepted",
+  "owner": "/root orchestrator and project owner",
+  "accepted_evidence_sha256": {
+    "phase3_input_freeze": "13762016892d6c735a0576bd233568742d07bda5c3ffdc2da7ec1875880c61fb",
+    "phase2_root_acceptance": "461c1d4f26afa512d1e6266384005b019ab0428a3cc508046675feb9aef35ed1",
+    "phase3_contract": "96da4df92f839fb3b4fc0a65148e826cb33416516ccade7e8f4002726cfe88cd",
+    "red_report": "22d027dae37445a47c50d2467290b33ffc639f08cec91d0752e460b5b10daf13"
+  },
+  "disclosures": [
+    "This admission accepts only the strengthened Phase 3 source-manifest contract and its sole pending-output Red.",
+    "It does not accept an inspection, suitability mapping, disposition, or lifecycle outcome.",
+    "Audio content requires authenticated audio-capable multimodal evidence and remains unavailable until that gate is satisfied."
+  ],
+  "next_gate": "Produce direct inspection records and independent inspector receipts bound to the validated revision-pinned source manifests."
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": "apk-asset-forensics.phase3-unreadable-working-notes.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "records": [
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:1d2135634366734253f483f682570c30d30bb0f8786acac1510d085be3e09cec",
+      "inspection_source": "git-blob:2d72d9069fd4210d1d8d76ccfa68c029345c3553",
+      "direct_byte_observation": "The complete 22-byte blob is the UTF-8 text library_background.png, not PNG-encoded bytes.",
+      "checked_out_state": "The current checked-out path contains different valid-looking PNG bytes and therefore was not used as evidence for this frozen group.",
+      "limitation": "No image content, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:25baa769bbe00900e81d22b0150ca99127c7a6ae373357be704e983da5cd4079",
+      "inspection_source": "git-blob:883b6cb55f300c29a34f7ddb159a538386da4b00",
+      "direct_byte_observation": "The complete 87-byte blob is an absolute local filesystem path ending in cover-paladins-twin-soul.png, not PNG-encoded bytes.",
+      "checked_out_state": "The current checked-out path contains different valid-looking PNG bytes and therefore was not used as evidence for this frozen group.",
+      "limitation": "No referenced target bytes, image content, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-08",
+      "identical_hash_group": "sha256:a054ce90824cf06874c829fc128ea63267bef4d4c80de19548c0d2042dc8327a",
+      "inspection_source": "git-blob:b75470de483d2830e8ce06d82c91e1fc9e25acc3",
+      "direct_byte_observation": "The complete 86-byte blob is an absolute local filesystem path ending in cover-griffin-sky-joust.png, not PNG-encoded bytes.",
+      "checked_out_state": "The current checked-out path contains different valid-looking PNG bytes and therefore was not used as evidence for this frozen group.",
+      "limitation": "No referenced target bytes, image content, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-09",
+      "identical_hash_group": "sha256:b495dce933859f32c71ae0539218e36c9b700e82547ee1d5f10fea8d2247c840",
+      "inspection_source": "git-blob:1a6a162997340a5346ae66e422da70f2917d2d56",
+      "direct_byte_observation": "The complete 85-byte blob is an absolute local filesystem path ending in cover-the-abyssal-well.png, not PNG-encoded bytes.",
+      "checked_out_state": "The current checked-out path contains different valid-looking PNG bytes and therefore was not used as evidence for this frozen group.",
+      "limitation": "No referenced target bytes, image content, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-12",
+      "identical_hash_group": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "inspection_source": "git-blob:e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "direct_byte_observation": "The complete frozen blob is empty (zero bytes).",
+      "checked_out_state": "The checked-out path remains zero bytes.",
+      "limitation": "No image content, suitability, replacement, or disposition claim."
+    }
+  ]
+}

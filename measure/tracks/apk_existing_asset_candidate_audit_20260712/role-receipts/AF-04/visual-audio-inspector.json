@@ -1,0 +1,149 @@
+{
+  "schema_version": "apk-role-receipt.phase3-visual-audio-inspector.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-04",
+  "role": "visual-audio-inspector",
+  "input_binding": {
+    "phase3_input_freeze_sha256": "13762016892d6c735a0576bd233568742d07bda5c3ffdc2da7ec1875880c61fb",
+    "inspection_source_manifest_sha256": "acf1cfbf0c6aefd7e67325ada670ce567a91d50e68013a13f4458b60e88066fb",
+    "inspection_records_sha256": "c02a7291599446dbe4dac2ad9f31ff16c11c004ea67e557e7c347508b6c02979"
+  },
+  "reviewed_groups": [
+    {
+      "identical_hash_group": "sha256:3bec9ea0ab16ff60618d4aa69b617f0b74427e8c08a6d12382e2391333ae3c36",
+      "sha256": "3bec9ea0ab16ff60618d4aa69b617f0b74427e8c08a6d12382e2391333ae3c36",
+      "media_class": "visual_or_video",
+      "primary_evidence_kind": "direct_visual",
+      "direct_inspection_confirmed": true,
+      "audio_capable_multimodal": false
+    },
+    {
+      "identical_hash_group": "sha256:41851bd0dd9d84daa41c1b53880be041558bcadc77ef3f0f787280c1dd4527b5",
+      "sha256": "41851bd0dd9d84daa41c1b53880be041558bcadc77ef3f0f787280c1dd4527b5",
+      "media_class": "visual_or_video",
+      "primary_evidence_kind": "direct_visual",
+      "direct_inspection_confirmed": true,
+      "audio_capable_multimodal": false
+    },
+    {
+      "identical_hash_group": "sha256:4268a22c8d3eef16c999dc5ab6d8f15dbcb33b34b22b7a3b053bc2daa5a20ea0",
+      "sha256": "4268a22c8d3eef16c999dc5ab6d8f15dbcb33b34b22b7a3b053bc2daa5a20ea0",
+      "media_class": "visual_or_video",
+      "primary_evidence_kind": "direct_visual",
+      "direct_inspection_confirmed": true,
+      "audio_capable_multimodal": false
+    },
+    {
+      "identical_hash_group": "sha256:42fd03ed729c8b94fdb379c095a5df5dfd5bd936ea08225490a2f04975a6927c",
+      "sha256": "42fd03ed729c8b94fdb379c095a5df5dfd5bd936ea08225490a2f04975a6927c",
+      "media_class": "visual_or_video",
+      "primary_evidence_kind": "direct_visual",
+      "direct_inspection_confirmed": true,
+      "audio_capable_multimodal": false
+    },
+    {
+      "identical_hash_group": "sha256:45683dc07d0e95c9e1eb7a6abd9e6b35a77fb84ecd90a32879db307683b56390",
+      "sha256": "45683dc07d0e95c9e1eb7a6abd9e6b35a77fb84ecd90a32879db307683b56390",
+      "media_class": "visual_or_video",
+      "primary_evidence_kind": "direct_visual",
+      "direct_inspection_confirmed": true,
+      "audio_capable_multimodal": false
+    },
+    {
+      "identical_hash_group": "sha256:46282a59d47e8f52fcf5ad6ee82294bb8009d7f5dbb7d6f30cc487dd5a7813ec",
+      "sha256": "46282a59d47e8f52fcf5ad6ee82294bb8009d7f5dbb7d6f30cc487dd5a7813ec",
+      "media_class": "text_or_data",
+      "primary_evidence_kind": "direct_text_read",
+      "direct_inspection_confirmed": true,
+      "audio_capable_multimodal": false
+    },
+    {
+      "identical_hash_group": "sha256:46e211ac512f046f29509084157dc3feef834780ae82e647c40b384cbd67f6a8",
+      "sha256": "46e211ac512f046f29509084157dc3feef834780ae82e647c40b384cbd67f6a8",
+      "media_class": "visual_or_video",
+      "primary_evidence_kind": "direct_visual",
+      "direct_inspection_confirmed": true,
+      "audio_capable_multimodal": false
+    },
+    {
+      "identical_hash_group": "sha256:4c076366e3e7bbdcc4b5333ca9974a5731a79e495c9e8737b31d3fcd724e54e5",
+      "sha256": "4c076366e3e7bbdcc4b5333ca9974a5731a79e495c9e8737b31d3fcd724e54e5",
+      "media_class": "visual_or_video",
+      "primary_evidence_kind": "direct_visual",
+      "direct_inspection_confirmed": true,
+      "audio_capable_multimodal": false
+    },
+    {
+      "identical_hash_group": "sha256:4cee5bcfc17efb9dfc80fc2347b49a5118dd18e403df5e1543d36c1b898ac08a",
+      "sha256": "4cee5bcfc17efb9dfc80fc2347b49a5118dd18e403df5e1543d36c1b898ac08a",
+      "media_class": "visual_or_video",
+      "primary_evidence_kind": "direct_visual",
+      "direct_inspection_confirmed": true,
+      "audio_capable_multimodal": false
+    },
+    {
+      "identical_hash_group": "sha256:4d59e880d08b92357c59851de67d7d5e56db09786bf138a5acf3ef3791de84a1",
+      "sha256": "4d59e880d08b92357c59851de67d7d5e56db09786bf138a5acf3ef3791de84a1",
+      "media_class": "text_or_data",
+      "primary_evidence_kind": "direct_text_read",
+      "direct_inspection_confirmed": true,
+      "audio_capable_multimodal": false
+    },
+    {
+      "identical_hash_group": "sha256:4d5d6eb3acd9c4ae2e4579155623150bbfa6409b294bbb3b65109844518ea290",
+      "sha256": "4d5d6eb3acd9c4ae2e4579155623150bbfa6409b294bbb3b65109844518ea290",
+      "media_class": "visual_or_video",
+      "primary_evidence_kind": "direct_visual",
+      "direct_inspection_confirmed": true,
+      "audio_capable_multimodal": false
+    },
+    {
+      "identical_hash_group": "sha256:4dc1dd4c05ff8a04ffa62f2aa0506f7ecfea1879f575b83da936c4844e5d6979",
+      "sha256": "4dc1dd4c05ff8a04ffa62f2aa0506f7ecfea1879f575b83da936c4844e5d6979",
+      "media_class": "text_or_data",
+      "primary_evidence_kind": "direct_text_read",
+      "direct_inspection_confirmed": true,
+      "audio_capable_multimodal": false
+    },
+    {
+      "identical_hash_group": "sha256:5125990489313bb97878ff72d971175822437fa684fe458ff2e70a21c3a98716",
+      "sha256": "5125990489313bb97878ff72d971175822437fa684fe458ff2e70a21c3a98716",
+      "media_class": "visual_or_video",
+      "primary_evidence_kind": "direct_visual",
+      "direct_inspection_confirmed": true,
+      "audio_capable_multimodal": false
+    },
+    {
+      "identical_hash_group": "sha256:5229b4c10089e4043a1377b2a4dfd04a34e63ced0a66d1e3ac026f91a8ba346a",
+      "sha256": "5229b4c10089e4043a1377b2a4dfd04a34e63ced0a66d1e3ac026f91a8ba346a",
+      "media_class": "visual_or_video",
+      "primary_evidence_kind": "direct_visual",
+      "direct_inspection_confirmed": true,
+      "audio_capable_multimodal": false
+    },
+    {
+      "identical_hash_group": "sha256:541c8c154c601945a6c0649c7ed6c34cf52adc1621ab6e4c1e81aea9aa69cecf",
+      "sha256": "541c8c154c601945a6c0649c7ed6c34cf52adc1621ab6e4c1e81aea9aa69cecf",
+      "media_class": "text_or_data",
+      "primary_evidence_kind": "direct_text_read",
+      "direct_inspection_confirmed": true,
+      "audio_capable_multimodal": false
+    },
+    {
+      "identical_hash_group": "sha256:55995dfad6ecb4945a1e856ddca03c5e16aa5bf13fd21b4df6a74ae79357bcfc",
+      "sha256": "55995dfad6ecb4945a1e856ddca03c5e16aa5bf13fd21b4df6a74ae79357bcfc",
+      "media_class": "visual_or_video",
+      "primary_evidence_kind": "direct_visual",
+      "direct_inspection_confirmed": true,
+      "audio_capable_multimodal": false
+    },
+    {
+      "identical_hash_group": "sha256:5720ead0f45f083c2c8eefe0a1b888b1416c7fc768426007ebf5657786600f81",
+      "sha256": "5720ead0f45f083c2c8eefe0a1b888b1416c7fc768426007ebf5657786600f81",
+      "media_class": "visual_or_video",
+      "primary_evidence_kind": "direct_visual",
+      "direct_inspection_confirmed": true,
+      "audio_capable_multimodal": false
+    }
+  ]
+}

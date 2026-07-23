@@ -1,0 +1,59 @@
+{
+  "schema_version": "apk-asset-forensics.phase3-audio-targeted-follow-up.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "evidence_boundary": "Targeted direct-audio conflict resolution only; no disposition, suitability decision, or Phase 3 acceptance.",
+  "provider": {
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "model": "google/gemini-2.5-flash",
+    "audio_capable_multimodal": true
+  },
+  "records": [
+    {
+      "batch_id": "AF-11",
+      "identical_hash_group": "sha256:d9c3c6b425e40eeb5c167d47832aa979833ff1cb632d58b040043d8479cf238c",
+      "inspection_source": {
+        "byte_size": 5832505,
+        "canonical_path": "apps/advantage-games/public/sounds/spellweavers-run-action.mp3",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "d9c3c6b425e40eeb5c167d47832aa979833ff1cb632d58b040043d8479cf238c",
+        "source_blob_oid": "cea3e907318feaf0ac693fbe690e36dad407830b"
+      },
+      "evidence_kind": "direct_audio_multimodal",
+      "model": "google/gemini-2.5-flash",
+      "provider_response_id": "gen-1784822859-yehDT3MWqguMcYGQHrv6",
+      "observation": {
+        "audible_content": "The audio features a musical piece with a prominent melody played by what sounds like a glockenspiel or similar mallet percussion instrument, accompanied by a string section providing harmony and rhythm. The music has a somewhat whimsical or lighthearted feel, with a clear, repeating melodic phrase. There are no discernible vocals or speech.",
+        "content_class": "music",
+        "speech_or_language": "not applicable",
+        "temporal_coverage": "The entire duration of the audio.",
+        "placeholder_risk_observation": "None.",
+        "corruption_or_clipping": "None."
+      },
+      "usage": {
+        "prompt_tokens": 4669,
+        "completion_tokens": 124,
+        "total_tokens": 4793,
+        "cost": 0.0049132,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 4575,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0049132,
+          "upstream_inference_prompt_cost": 0.0046032,
+          "upstream_inference_completions_cost": 0.00031
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "limitation": "Single model pass over exact frozen audio bytes; no runtime mixing, loudness normalization, loop-boundary, or gameplay suitability claim."
+    }
+  ]
+}

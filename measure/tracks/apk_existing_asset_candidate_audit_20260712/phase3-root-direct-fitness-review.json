@@ -1,0 +1,100 @@
+{
+  "schema_version": "apk-asset-forensics.phase3-root-direct-fitness-review.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "reviewer": "root-orchestrator-product-owner",
+  "review_date": "2026-07-23",
+  "scope_boundary": "Direct product-owner verification of representative high-risk Phase 3 observations and corrected classifications. This does not decide responsive suitability, reuse, adaptation, replacement, retirement, or final asset disposition.",
+  "direct_image_checks": [
+    {
+      "identical_hash_group": "sha256:41851bd0dd9d84daa41c1b53880be041558bcadc77ef3f0f787280c1dd4527b5",
+      "canonical_path": "apps/advantage-games/public/games/archers-revenge/archers-revenge-start-screen.png",
+      "checked_out_sha256": "41851bd0dd9d84daa41c1b53880be041558bcadc77ef3f0f787280c1dd4527b5",
+      "evidence_kind": "direct_view_image_original",
+      "observation": "The literal games.archersRevenge.title and games.archersRevenge.description keys are visible, confirming baked UI text and placeholder risk."
+    },
+    {
+      "identical_hash_group": "sha256:62a4d3e0d4e7e388f9b7091d2fd86010ca88e0e5aa79f1a5df1aa637797a918b",
+      "canonical_path": "apps/advantage-games/public/games/potion-rush/potion-rush-gameplay.png",
+      "checked_out_sha256": "62a4d3e0d4e7e388f9b7091d2fd86010ca88e0e5aa79f1a5df1aa637797a918b",
+      "evidence_kind": "direct_view_image_original",
+      "observation": "The hud.served: 0 label and multiple low-contrast overlays visibly collide with the scene, confirming baked UI text and placeholder risk."
+    },
+    {
+      "identical_hash_group": "sha256:46e211ac512f046f29509084157dc3feef834780ae82e647c40b384cbd67f6a8",
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/wizard-vs-zombie/tile-ruins.png",
+      "checked_out_sha256": "46e211ac512f046f29509084157dc3feef834780ae82e647c40b384cbd67f6a8",
+      "evidence_kind": "direct_view_image_original",
+      "observation": "Large swirled and smeared regions visibly distort the ruins tile, confirming corruption risk."
+    },
+    {
+      "identical_hash_group": "sha256:cac76ba5b6aad17410f854cfb9dc507bbb0651951a6b9be04080ef5f75ea7feb",
+      "canonical_path": "apps/advantage-games/public/games/cover/dragon-flight-cover.png",
+      "checked_out_sha256": "cac76ba5b6aad17410f854cfb9dc507bbb0651951a6b9be04080ef5f75ea7feb",
+      "evidence_kind": "direct_view_image_original",
+      "observation": "DRAGON FLIGHT and MOBILE ADVENTURE are visibly embedded in the cover, confirming baked text is present."
+    },
+    {
+      "identical_hash_group": "sha256:dd2077d6f9f23f48dd9ca147e643005b8d4c130a775ff227be9209959681b265",
+      "canonical_path": "apps/advantage-games/public/games/cover/cover-rune-forge-chamber.png",
+      "checked_out_sha256": "dd2077d6f9f23f48dd9ca147e643005b8d4c130a775ff227be9209959681b265",
+      "evidence_kind": "direct_view_image_original",
+      "observation": "The title and Forge the words. Master the rune. tagline are visibly embedded, confirming baked text is present."
+    },
+    {
+      "identical_hash_group": "sha256:e56cd2e933da0525bffba87751337037b685238d1e709ea2b50fc6cfa49315f6",
+      "canonical_path": "apps/advantage-games/public/games/cover/cover-devourer-slime.png",
+      "checked_out_sha256": "e56cd2e933da0525bffba87751337037b685238d1e709ea2b50fc6cfa49315f6",
+      "evidence_kind": "direct_view_image_original",
+      "observation": "The title, word fragments, and START SMALL. EAT THE WORDS. GROW TO DEVOUR! tagline are visibly embedded, confirming baked text is present."
+    }
+  ],
+  "direct_frozen_blob_checks": [
+    {
+      "identical_hash_group": "sha256:1d2135634366734253f483f682570c30d30bb0f8786acac1510d085be3e09cec",
+      "source_blob_oid": "2d72d9069fd4210d1d8d76ccfa68c029345c3553",
+      "byte_size": 22,
+      "direct_byte_observation": "The exact frozen blob is UTF-8 text library_background.png rather than PNG bytes."
+    },
+    {
+      "identical_hash_group": "sha256:25baa769bbe00900e81d22b0150ca99127c7a6ae373357be704e983da5cd4079",
+      "source_blob_oid": "883b6cb55f300c29a34f7ddb159a538386da4b00",
+      "byte_size": 87,
+      "direct_byte_observation": "The exact frozen blob is an absolute local filesystem path rather than PNG bytes."
+    },
+    {
+      "identical_hash_group": "sha256:a054ce90824cf06874c829fc128ea63267bef4d4c80de19548c0d2042dc8327a",
+      "source_blob_oid": "b75470de483d2830e8ce06d82c91e1fc9e25acc3",
+      "byte_size": 86,
+      "direct_byte_observation": "The exact frozen blob is an absolute local filesystem path rather than PNG bytes."
+    },
+    {
+      "identical_hash_group": "sha256:b495dce933859f32c71ae0539218e36c9b700e82547ee1d5f10fea8d2247c840",
+      "source_blob_oid": "1a6a162997340a5346ae66e422da70f2917d2d56",
+      "byte_size": 85,
+      "direct_byte_observation": "The exact frozen blob is an absolute local filesystem path rather than PNG bytes."
+    },
+    {
+      "identical_hash_group": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_blob_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "byte_size": 0,
+      "direct_byte_observation": "The exact frozen blob is empty."
+    }
+  ],
+  "supplemental_video_check": {
+    "identical_hash_group": "sha256:f33e636eceff074056538a0d1bd9f3af56803ed55c96383a0b2941de8523eb17",
+    "canonical_path": "apps/advantage-games/public/gameplay.webm",
+    "checked_out_sha256": "f33e636eceff074056538a0d1bd9f3af56803ed55c96383a0b2941de8523eb17",
+    "source_blob_oid": "33bb3aaacaa66e9d279f0ac6f7896640b85e98ff",
+    "extraction": "ffmpeg individual frames at 0, 10, 20, 30, and 40 seconds",
+    "frame_sha256": {
+      "0": "c2764724fbbb101fec1c3fc485e4bc7b766fe3e698a1401374e5fe3d09911f0f",
+      "10": "03e539737bedd4be8c609169927bb90a327f6aec39396a14a04e14cca83bf41c",
+      "20": "5a243fe1b51c2e0f0d5c438b18a84686d067ae39658c9cf7140504e4052760f7",
+      "30": "3d15a5373fac005cb331312580f8524bd6e0a038812ca88bff07f3190e57a4",
+      "40": "62045bba79725e7a097a1086891b8e6721fb323ee41c71251346da37a53fd8b7"
+    },
+    "observation": "The five directly viewed frames show distinct game-over and active-game states with embedded English and Thai UI. Because this is still sampled evidence rather than a full-frame decode, the official unknown corruption status remains appropriately conservative."
+  },
+  "decision": "ACCEPT_PHASE3_DIRECT_INSPECTION_FITNESS",
+  "rationale": "Representative product-owner checks corroborate the highest-risk positive findings, corrected baked-text classifications, exact frozen pointer/empty blobs, and conservative video scope. Full denominator coverage is supplied separately by the validated official records, receipts, and independent reviews."
+}

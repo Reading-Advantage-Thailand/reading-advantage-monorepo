@@ -1,0 +1,41 @@
+{
+  "schema_version": "apk-asset-forensics.phase3-audio-review-reconciliation.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "review_scope": {
+    "primary_records": 14,
+    "independent_review_records": 14,
+    "exact_content_class_agreements": 13,
+    "content_class_differences": 1,
+    "targeted_follow_up_groups": 2
+  },
+  "root_orchestrator_decisions": [
+    {
+      "identical_hash_group": "sha256:2da344189f4831c130645d8396df434a9b35007d2cef98244632bb35e8a83cb3",
+      "primary_response_id": "gen-1784821396-NSWuwp0Lh5eiEATTT2op",
+      "independent_response_id": "gen-1784821890-x8Guyp6VzlAvMTdUX49b",
+      "targeted_follow_up_response_id": "gen-1784822672-amjBvdEd3TrSo7E3tOiL",
+      "targeted_follow_up_model": "google/gemini-2.5-pro",
+      "targeted_follow_up_artifact": "inspection-working-notes/audio-targeted-follow-up-2da344189f4831c130645d8396df434a9b35007d2cef98244632bb35e8a83cb3.json",
+      "decision": "resolved_bubbling_and_gurgling_content",
+      "reason": "The primary pass reported a whoosh, splash, and sustained gurgling while the independent pass reported a whoosh followed by a metallic chime. A targeted third direct pass with a distinct audio-capable model reports a powerful whoosh followed by bubbly, gurgling sounds, corroborating the primary description. The isolated metallic-chime description is not retained as the reconciled audible-content finding."
+    },
+    {
+      "identical_hash_group": "sha256:a52c3be27272c5254d9d0e2941fad0ec15e0cb09b80eb445bfa538de56b2c361",
+      "primary_response_id": "gen-1784821421-MeI4qtQS7BkFQxrpemB9",
+      "independent_response_id": "gen-1784821910-JLaZscVuoCQWhVyc3xnR",
+      "decision": "accepted_non_blocking_taxonomy_difference",
+      "reason": "Both direct listeners report the same short multi-note electronic chime or musical sting. Music versus sound_effect is a presentation taxonomy boundary, not a conflict about the audible content, corruption, speech, or frozen bytes."
+    },
+    {
+      "identical_hash_group": "sha256:d9c3c6b425e40eeb5c167d47832aa979833ff1cb632d58b040043d8479cf238c",
+      "primary_response_id": "gen-1784821437-0ZrCCW0F2InbzgTydcKa",
+      "independent_response_id": "gen-1784821924-iwjLLF0rjq2dVFwnZsUp",
+      "targeted_follow_up_response_id": "gen-1784822859-yehDT3MWqguMcYGQHrv6",
+      "targeted_follow_up_model": "google/gemini-2.5-flash",
+      "targeted_follow_up_artifact": "inspection-working-notes/audio-targeted-follow-up-d9c3c6b425e40eeb5c167d47832aa979833ff1cb632d58b040043d8479cf238c.json",
+      "decision": "vocal_sample_presence_remains_uncertain_no_language_claim",
+      "reason": "The independent pass reported occasional vocal samples and labeled the language English, while both the primary and preserved targeted follow-up report instrumental music with no discernible speech or vocals. The evidence does not support an English-language claim, and the presence of nonverbal vocal samples remains explicitly uncertain."
+    }
+  ],
+  "acceptance_boundary": "This reconciles direct audio observations only. It does not decide gameplay suitability, replacement, reuse, adaptation, or final Phase 3 acceptance."
+}

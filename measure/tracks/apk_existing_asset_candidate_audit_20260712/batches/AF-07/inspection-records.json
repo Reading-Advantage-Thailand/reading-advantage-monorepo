@@ -1,0 +1,574 @@
+{
+  "schema_version": "apk-asset-forensics.phase3-inspection-records.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-07",
+  "input_binding": {
+    "phase3_input_freeze_sha256": "13762016892d6c735a0576bd233568742d07bda5c3ffdc2da7ec1875880c61fb",
+    "inspection_source_manifest_sha256": "6d3360ece1029cc9e0299f9cefa5195b25fdcfb426f9a76695e2b7908d6bc302",
+    "base_record_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "delta_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "effective_candidate_paths": 428,
+    "effective_identical_hash_groups": 227
+  },
+  "producer": {
+    "role": "visual-audio-inspector"
+  },
+  "groups": [
+    {
+      "identical_hash_group": "sha256:86439c52414fbdd7129b72c44aeec6c63134b17cbb0ec5af6395b05f2f083e88",
+      "sha256": "86439c52414fbdd7129b72c44aeec6c63134b17cbb0ec5af6395b05f2f083e88",
+      "media_class": "audio",
+      "member_paths": [
+        "apps/advantage-games/public/sounds/haunted-library-ambient.mp3"
+      ],
+      "inspection_source": {
+        "byte_size": 6489537,
+        "canonical_path": "apps/advantage-games/public/sounds/haunted-library-ambient.mp3",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "86439c52414fbdd7129b72c44aeec6c63134b17cbb0ec5af6395b05f2f083e88",
+        "source_blob_oid": "762ec7c5f9d2f2be4997378d0a0a374e601aeaf1"
+      },
+      "inspection": {
+        "primary_evidence": {
+          "kind": "direct_audio_multimodal",
+          "locator": "inspection-working-notes/audio-multimodal.json#sha256:86439c52414fbdd7129b72c44aeec6c63134b17cbb0ec5af6395b05f2f083e88; inspection-working-notes/audio-multimodal-independent-review.json#sha256:86439c52414fbdd7129b72c44aeec6c63134b17cbb0ec5af6395b05f2f083e88",
+          "observed_by": "openrouter:google/gemini-2.5-flash:gen-1784821404-0Zwb1YSEKeWyPmxmPiLb; openrouter:google/gemini-3-flash-preview:gen-1784821897-9WP3yZYDE6MTRuvPyqEq"
+        },
+        "observations": [
+          "Primary audible_content: A repeating, high-pitched, electronic melody plays throughout the audio. A low-pitched, electronic bassline accompanies the melody. A drum machine provides a consistent beat with a kick drum, snare drum, and hi-hat. The melody and bassline are consistent throughout the audio. The drum machine is consistent throughout the audio. The audio fades out at the end.",
+          "Primary content_class: music",
+          "Primary speech_or_language: not_applicable",
+          "Primary temporal_coverage: throughout",
+          "Primary placeholder_risk_observation: no_risk",
+          "Primary corruption_or_clipping: no_corruption_or_clipping",
+          "Independent review audible_content: A rhythmic, upbeat electronic music track with a prominent bassline and synthesized melodies.",
+          "Independent review content_class: music",
+          "Independent review speech_or_language: none",
+          "Independent review temporal_coverage: 00:00-01:59",
+          "Independent review placeholder_risk_observation: none",
+          "Independent review corruption_or_clipping: none",
+          "Limitation: 2 direct audio-capable model passes over exact frozen bytes; no runtime mixing, loudness normalization, loop-boundary, or gameplay suitability claim."
+        ],
+        "state_or_direction_coverage": "not_applicable",
+        "baked_text_or_ui": "not_applicable",
+        "placeholder_risk": "unknown",
+        "corruption_risk": "absent"
+      }
+    },
+    {
+      "identical_hash_group": "sha256:864ad893f61c2efb794a0fb42b4a33064b5f9c6908bc298dd6780742f9e1d519",
+      "sha256": "864ad893f61c2efb794a0fb42b4a33064b5f9c6908bc298dd6780742f9e1d519",
+      "media_class": "text_or_data",
+      "member_paths": [
+        "apps/advantage-games/measure/archive/wizard_vs_zombie_20260104/asset-spec.md"
+      ],
+      "inspection_source": {
+        "byte_size": 5582,
+        "canonical_path": "apps/advantage-games/measure/archive/wizard_vs_zombie_20260104/asset-spec.md",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "864ad893f61c2efb794a0fb42b4a33064b5f9c6908bc298dd6780742f9e1d519",
+        "source_blob_oid": "301307890bd17f1ee07ccb84b3f1ea9da2b84174"
+      },
+      "inspection": {
+        "primary_evidence": {
+          "kind": "direct_text_read",
+          "locator": "inspection-working-notes/text-data.json#sha256:864ad893f61c2efb794a0fb42b4a33064b5f9c6908bc298dd6780742f9e1d519",
+          "observed_by": "root-orchestrator:direct-frozen-text-read"
+        },
+        "observations": [
+          "{\"byte_length\": 5582, \"headings\": [\"Zombie Tag — Asset Inventory & Pose Sheet Plan\", \"# 1. Player Character — Wizard (CORE ASSET)\", \"## 1.1 Wizard Pose Sheet (3×3)\", \"## 1.2 Wizard Critical Overlay (STATIC)\", \"# 2. Enemy — Zombie (PRIMARY PRESSURE UNIT)\", \"## 2.1 Zombie Walk Pose Sheet (3×3)\", \"## 2.2 Zombie Shadow (STATIC)\", \"# 3. Vocabulary Orbs (CRITICAL LEARNING OBJECT)\", \"## 3.1 Orb Base (STATIC)\", \"## 3.2 Orb Glow Loop (3-Frame Mini Sheet)\", \"## 3.3 Orb Collected Effect (STATIC / MINI SHEET)\", \"# 4. Shockwave Effect (FEEDBACK CORE)\", \"## 4.1 Shockwave Ring (5–7 Frames)\", \"# 5. Arena Floor & Environment (STATIC TILES)\", \"## 5.1 Floor Tile (SEAMLESS)\", \"## 5.2 Arena Boundary Markers (OPTIONAL)\", \"# 6. UI-Related Visual Assets (NON-INTERACTIVE)\", \"## 6.1 Health Bar Elements\", \"## 6.2 Prompt Panel Background\", \"# 7. Universal Utility Assets\", \"## 7.1 Ground Shadow (GLOBAL)\", \"## 7.2 Hit / Contact Flash (STATIC)\", \"# 8. Asset Summary Table (Locked Scope)\", \"# 9. Explicitly Excluded (To Prevent Scope Creep)\"]}",
+          "Limitation: Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+        ],
+        "state_or_direction_coverage": "not_applicable",
+        "baked_text_or_ui": "not_applicable",
+        "placeholder_risk": "unknown",
+        "corruption_risk": "absent"
+      }
+    },
+    {
+      "identical_hash_group": "sha256:8810fb2acc4c2f5d02602fce1c079ec12741341629479469c6e7c17b37cfd695",
+      "sha256": "8810fb2acc4c2f5d02602fce1c079ec12741341629479469c6e7c17b37cfd695",
+      "media_class": "visual_or_video",
+      "member_paths": [
+        "apps/advantage-games/public/games/castle-defense/road_NS.png",
+        "apps/advantage-games/public/games/sentence/castle-defense/road_NS.png",
+        "apps/reading-advantage/public/games/sentence/castle-defense/road_NS.png"
+      ],
+      "inspection_source": {
+        "byte_size": 1292397,
+        "canonical_path": "apps/advantage-games/public/games/castle-defense/road_NS.png",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "8810fb2acc4c2f5d02602fce1c079ec12741341629479469c6e7c17b37cfd695",
+        "source_blob_oid": "55b90ca87d14fb8a5dd410d867039f1302e39c2f"
+      },
+      "inspection": {
+        "primary_evidence": {
+          "kind": "direct_visual",
+          "locator": "inspection-working-notes/AF-05-08-visual.json#sha256:8810fb2acc4c2f5d02602fce1c079ec12741341629479469c6e7c17b37cfd695",
+          "observed_by": "subagent:phase3_visual_b"
+        },
+        "observations": [
+          "Vertical dirt road with light stone edging and bright green grass/flowers on both sides.",
+          "Limitation: Single still-image inspection only."
+        ],
+        "state_or_direction_coverage": "not_applicable",
+        "baked_text_or_ui": "absent",
+        "placeholder_risk": "absent",
+        "corruption_risk": "absent"
+      }
+    },
+    {
+      "identical_hash_group": "sha256:896779b4c97f9c8b7d222af7d0a608517f61bd0b0d48ae386481a73f41cc92ce",
+      "sha256": "896779b4c97f9c8b7d222af7d0a608517f61bd0b0d48ae386481a73f41cc92ce",
+      "media_class": "visual_or_video",
+      "member_paths": [
+        "apps/advantage-games/public/games/enchanted-library/book_3x1_sheet.png",
+        "apps/advantage-games/public/games/vocabulary/enchanted-library/book_3x1_sheet.png",
+        "apps/reading-advantage/public/games/vocabulary/enchanted-library/book_3x1_sheet.png"
+      ],
+      "inspection_source": {
+        "byte_size": 177687,
+        "canonical_path": "apps/advantage-games/public/games/enchanted-library/book_3x1_sheet.png",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "896779b4c97f9c8b7d222af7d0a608517f61bd0b0d48ae386481a73f41cc92ce",
+        "source_blob_oid": "d92e3d5695131d061d7f3cefae4ca03ef7fda3b8"
+      },
+      "inspection": {
+        "primary_evidence": {
+          "kind": "direct_visual",
+          "locator": "inspection-working-notes/AF-05-08-visual.json#sha256:896779b4c97f9c8b7d222af7d0a608517f61bd0b0d48ae386481a73f41cc92ce",
+          "observed_by": "subagent:phase3_visual_b"
+        },
+        "observations": [
+          "Three book illustrations on transparent/black-rendered background: closed ornate blue book, open book, and glowing open book.",
+          "Limitation: Tool rendering background may differ from application compositing."
+        ],
+        "state_or_direction_coverage": "present",
+        "baked_text_or_ui": "absent",
+        "placeholder_risk": "absent",
+        "corruption_risk": "absent"
+      }
+    },
+    {
+      "identical_hash_group": "sha256:89dc4ac873d0b787a8e0ee7391c1153f47fecbc94291064fa3273f7e954efa10",
+      "sha256": "89dc4ac873d0b787a8e0ee7391c1153f47fecbc94291064fa3273f7e954efa10",
+      "media_class": "text_or_data",
+      "member_paths": [
+        "apps/advantage-games/measure/archive/rune_match_20260104/asset-spec.md"
+      ],
+      "inspection_source": {
+        "byte_size": 8294,
+        "canonical_path": "apps/advantage-games/measure/archive/rune_match_20260104/asset-spec.md",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "89dc4ac873d0b787a8e0ee7391c1153f47fecbc94291064fa3273f7e954efa10",
+        "source_blob_oid": "60dfe45bf7a5650cfef8dfc34679a14679ce8488"
+      },
+      "inspection": {
+        "primary_evidence": {
+          "kind": "direct_text_read",
+          "locator": "inspection-working-notes/text-data.json#sha256:89dc4ac873d0b787a8e0ee7391c1153f47fecbc94291064fa3273f7e954efa10",
+          "observed_by": "root-orchestrator:direct-frozen-text-read"
+        },
+        "observations": [
+          "{\"byte_length\": 8294, \"headings\": [\"Rune Match — Asset Inventory & Specification\", \"# 1. Monsters (PRIMARY ANTAGONISTS)\", \"## 1.1 Goblin (3 XP - Easy)\", \"## 1.2 Skeleton (6 XP - Medium)\", \"## 1.3 Orc (9 XP - Hard)\", \"## 1.4 Dragon (12 XP - Boss)\", \"## 1.5 Monster Display Size\", \"# 2. Rune Tiles (CORE GAMEPLAY OBJECTS)\", \"## 2.1 Base Vocabulary Rune (CRITICAL)\", \"## 2.2 Rune States\", \"## 2.3 Heal Rune (Power-Up)\", \"## 2.4 Shield Rune (Power-Up)\", \"# 3. Effects\", \"## 3.1 Match Explosion\", \"## 3.2 Cascade Indicator (OPTIONAL)\", \"## 3.3 Monster Attack Effect\", \"## 3.4 Heal Effect\", \"## 3.5 Shield Effect\", \"# 4. UI Elements\", \"## 4.1 HP Bars\", \"## 4.2 Power Word Display\", \"## 4.3 XP Badge\", \"# 5. Backgrounds\", \"## 5.1 Monster Selection Screen Background\", \"## 5.2 Game Board Background\", \"## 5.3 Monster Arena Area\", \"# 6. Game State Screens\", \"## 6.1 Victory Banner\", \"## 6.2 Defeat Banner\", \"# 7. Asset Summary Table\", \"# 8. Explicitly Excluded (Scope Control)\", \"# 9. Technical Notes\"]}",
+          "Limitation: Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+        ],
+        "state_or_direction_coverage": "not_applicable",
+        "baked_text_or_ui": "not_applicable",
+        "placeholder_risk": "unknown",
+        "corruption_risk": "absent"
+      }
+    },
+    {
+      "identical_hash_group": "sha256:8a6c6175d24ed6ba6bd324da2184bbf7cf3186308acc07fbdf4339724b4058f0",
+      "sha256": "8a6c6175d24ed6ba6bd324da2184bbf7cf3186308acc07fbdf4339724b4058f0",
+      "media_class": "text_or_data",
+      "member_paths": [
+        "apps/advantage-games/measure/archive/magic-defense-compliance-audit_20260426/metadata.json"
+      ],
+      "inspection_source": {
+        "byte_size": 347,
+        "canonical_path": "apps/advantage-games/measure/archive/magic-defense-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "8a6c6175d24ed6ba6bd324da2184bbf7cf3186308acc07fbdf4339724b4058f0",
+        "source_blob_oid": "9c57bcc932372452d507f25c8e17566fcc53d5ad"
+      },
+      "inspection": {
+        "primary_evidence": {
+          "kind": "direct_text_read",
+          "locator": "inspection-working-notes/text-data.json#sha256:8a6c6175d24ed6ba6bd324da2184bbf7cf3186308acc07fbdf4339724b4058f0",
+          "observed_by": "root-orchestrator:direct-frozen-text-read"
+        },
+        "observations": [
+          "{\"direct_scalar_fields\": {\"status\": \"completed\", \"track_id\": \"magic-defense-compliance-audit_20260426\"}, \"root_kind\": \"object\", \"top_level_keys\": [\"actual_tasks\", \"created_at\", \"description\", \"deviation_notes\", \"estimated_tasks\", \"status\", \"track_id\", \"type\", \"updated_at\"]}",
+          "Limitation: Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+        ],
+        "state_or_direction_coverage": "not_applicable",
+        "baked_text_or_ui": "not_applicable",
+        "placeholder_risk": "unknown",
+        "corruption_risk": "absent"
+      }
+    },
+    {
+      "identical_hash_group": "sha256:8b752de8f9acc4bc28107d805cb0d53964d55d36e862453c692ae0b794033bb1",
+      "sha256": "8b752de8f9acc4bc28107d805cb0d53964d55d36e862453c692ae0b794033bb1",
+      "media_class": "text_or_data",
+      "member_paths": [
+        "apps/advantage-games/measure/tracks/babel-architect-phaser-exemplar_20260708/metadata.json"
+      ],
+      "inspection_source": {
+        "byte_size": 1217,
+        "canonical_path": "apps/advantage-games/measure/tracks/babel-architect-phaser-exemplar_20260708/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "8b752de8f9acc4bc28107d805cb0d53964d55d36e862453c692ae0b794033bb1",
+        "source_blob_oid": "09b4cd28132c889b71f607e7b3bffdd9b627b4b0"
+      },
+      "inspection": {
+        "primary_evidence": {
+          "kind": "direct_text_read",
+          "locator": "inspection-working-notes/text-data.json#sha256:8b752de8f9acc4bc28107d805cb0d53964d55d36e862453c692ae0b794033bb1",
+          "observed_by": "root-orchestrator:direct-frozen-text-read"
+        },
+        "observations": [
+          "{\"direct_scalar_fields\": {\"status\": \"cancelled\", \"track_id\": \"babel-architect-phaser-exemplar_20260708\"}, \"root_kind\": \"object\", \"top_level_keys\": [\"actual_tasks\", \"created_at\", \"description\", \"deviation_notes\", \"estimated_tasks\", \"priority\", \"status\", \"track_id\", \"type\", \"updated_at\"]}",
+          "Limitation: Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+        ],
+        "state_or_direction_coverage": "not_applicable",
+        "baked_text_or_ui": "not_applicable",
+        "placeholder_risk": "unknown",
+        "corruption_risk": "absent"
+      }
+    },
+    {
+      "identical_hash_group": "sha256:8d2f76e7387d08043c56fe2d2a1326a9c2cb4b9f1d9fdbd68c6ae0a667e234fa",
+      "sha256": "8d2f76e7387d08043c56fe2d2a1326a9c2cb4b9f1d9fdbd68c6ae0a667e234fa",
+      "media_class": "visual_or_video",
+      "member_paths": [
+        "apps/advantage-games/public/games/dragon-rider/gates-3x3-sheet-facing-up.png",
+        "apps/advantage-games/public/games/vocabulary/dragon-rider/gates-3x3-sheet-facing-up.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-rider/gates-3x3-sheet-facing-up.png"
+      ],
+      "inspection_source": {
+        "byte_size": 1125002,
+        "canonical_path": "apps/advantage-games/public/games/dragon-rider/gates-3x3-sheet-facing-up.png",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "8d2f76e7387d08043c56fe2d2a1326a9c2cb4b9f1d9fdbd68c6ae0a667e234fa",
+        "source_blob_oid": "d9a32d2a130df0efe9e461bf0e81f31322830a41"
+      },
+      "inspection": {
+        "primary_evidence": {
+          "kind": "direct_visual",
+          "locator": "inspection-working-notes/AF-05-08-visual.json#sha256:8d2f76e7387d08043c56fe2d2a1326a9c2cb4b9f1d9fdbd68c6ae0a667e234fa",
+          "observed_by": "subagent:phase3_visual_b"
+        },
+        "observations": [
+          "3-by-3 white-background sheet of round wooden gate/target rings, including intact rings, arrow-hit variants, rope/metal variants, and a broken dark ring.",
+          "Limitation: Single still-image inspection only."
+        ],
+        "state_or_direction_coverage": "present",
+        "baked_text_or_ui": "absent",
+        "placeholder_risk": "absent",
+        "corruption_risk": "absent"
+      }
+    },
+    {
+      "identical_hash_group": "sha256:8d66f11caa3b1150086b4284613e4024cfd204650b23ad533cf373973a0e010f",
+      "sha256": "8d66f11caa3b1150086b4284613e4024cfd204650b23ad533cf373973a0e010f",
+      "media_class": "visual_or_video",
+      "member_paths": [
+        "apps/advantage-games/public/games/dragon-rider/loading-screen-background.png",
+        "apps/advantage-games/public/games/vocabulary/dragon-rider/loading-screen-background.png",
+        "apps/reading-advantage/public/games/cover/dragon-rider-cover.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-rider/loading-screen-background.png"
+      ],
+      "inspection_source": {
+        "byte_size": 1430672,
+        "canonical_path": "apps/advantage-games/public/games/dragon-rider/loading-screen-background.png",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "8d66f11caa3b1150086b4284613e4024cfd204650b23ad533cf373973a0e010f",
+        "source_blob_oid": "69a6a2c0c221ebfcb31ce9ddd9a17fa90400c67a"
+      },
+      "inspection": {
+        "primary_evidence": {
+          "kind": "direct_visual",
+          "locator": "inspection-working-notes/AF-05-08-visual.json#sha256:8d66f11caa3b1150086b4284613e4024cfd204650b23ad533cf373973a0e010f",
+          "observed_by": "subagent:phase3_visual_b"
+        },
+        "observations": [
+          "Loading-screen art reading 'DRAGON RIDER / THE SKIES OF ODIN' and 'PRESS START', showing a large black dragon and rider above mountains/ships.",
+          "Limitation: Baked text observed; no rights, suitability, or disposition claim."
+        ],
+        "state_or_direction_coverage": "not_applicable",
+        "baked_text_or_ui": "present",
+        "placeholder_risk": "absent",
+        "corruption_risk": "absent"
+      }
+    },
+    {
+      "identical_hash_group": "sha256:8d7d947c7b00cd5a13d8c6239e927367a17e99fe94fa219068c64f451ef51156",
+      "sha256": "8d7d947c7b00cd5a13d8c6239e927367a17e99fe94fa219068c64f451ef51156",
+      "media_class": "visual_or_video",
+      "member_paths": [
+        "apps/advantage-games/public/games/castle-defense/grass_B.png",
+        "apps/advantage-games/public/games/sentence/castle-defense/grass_B.png",
+        "apps/reading-advantage/public/games/sentence/castle-defense/grass_B.png"
+      ],
+      "inspection_source": {
+        "byte_size": 1238444,
+        "canonical_path": "apps/advantage-games/public/games/castle-defense/grass_B.png",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "8d7d947c7b00cd5a13d8c6239e927367a17e99fe94fa219068c64f451ef51156",
+        "source_blob_oid": "4f713e2fd9b0907b30c8180bda81e85a7d255d31"
+      },
+      "inspection": {
+        "primary_evidence": {
+          "kind": "direct_visual",
+          "locator": "inspection-working-notes/AF-05-08-visual.json#sha256:8d7d947c7b00cd5a13d8c6239e927367a17e99fe94fa219068c64f451ef51156",
+          "observed_by": "subagent:phase3_visual_b"
+        },
+        "observations": [
+          "Bright green grass terrain tile with bush, rocks, flowers, and subtle borders.",
+          "Limitation: Single still-image inspection only."
+        ],
+        "state_or_direction_coverage": "not_applicable",
+        "baked_text_or_ui": "absent",
+        "placeholder_risk": "absent",
+        "corruption_risk": "absent"
+      }
+    },
+    {
+      "identical_hash_group": "sha256:8f73b5f28883d172c3e1c561b68e80b6a4f3ffab566c7fdfbb3d3dab9ab6b8de",
+      "sha256": "8f73b5f28883d172c3e1c561b68e80b6a4f3ffab566c7fdfbb3d3dab9ab6b8de",
+      "media_class": "text_or_data",
+      "member_paths": [
+        "apps/advantage-games/measure/tracks/alchemists-synthesis-compliance-audit_20260426/metadata.json"
+      ],
+      "inspection_source": {
+        "byte_size": 361,
+        "canonical_path": "apps/advantage-games/measure/tracks/alchemists-synthesis-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "8f73b5f28883d172c3e1c561b68e80b6a4f3ffab566c7fdfbb3d3dab9ab6b8de",
+        "source_blob_oid": "d262649305d4298e956d8cc54806a2040290a902"
+      },
+      "inspection": {
+        "primary_evidence": {
+          "kind": "direct_text_read",
+          "locator": "inspection-working-notes/text-data.json#sha256:8f73b5f28883d172c3e1c561b68e80b6a4f3ffab566c7fdfbb3d3dab9ab6b8de",
+          "observed_by": "root-orchestrator:direct-frozen-text-read"
+        },
+        "observations": [
+          "{\"direct_scalar_fields\": {\"status\": \"completed\", \"track_id\": \"alchemists-synthesis-compliance-audit_20260426\"}, \"root_kind\": \"object\", \"top_level_keys\": [\"actual_tasks\", \"created_at\", \"description\", \"deviation_notes\", \"estimated_tasks\", \"status\", \"track_id\", \"type\", \"updated_at\"]}",
+          "Limitation: Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+        ],
+        "state_or_direction_coverage": "not_applicable",
+        "baked_text_or_ui": "not_applicable",
+        "placeholder_risk": "unknown",
+        "corruption_risk": "absent"
+      }
+    },
+    {
+      "identical_hash_group": "sha256:94e87ff6afa3be86a8b772103779109f6fea5c73eb287cad7607c0bd3df8a45b",
+      "sha256": "94e87ff6afa3be86a8b772103779109f6fea5c73eb287cad7607c0bd3df8a45b",
+      "media_class": "visual_or_video",
+      "member_paths": [
+        "apps/advantage-games/public/games/cover/cover-haunted-library.png"
+      ],
+      "inspection_source": {
+        "byte_size": 971089,
+        "canonical_path": "apps/advantage-games/public/games/cover/cover-haunted-library.png",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "94e87ff6afa3be86a8b772103779109f6fea5c73eb287cad7607c0bd3df8a45b",
+        "source_blob_oid": "df202c3bc915732cd82373a03e0eb7ffd8ab4ef6"
+      },
+      "inspection": {
+        "primary_evidence": {
+          "kind": "direct_visual",
+          "locator": "inspection-working-notes/AF-05-08-visual.json#sha256:94e87ff6afa3be86a8b772103779109f6fea5c73eb287cad7607c0bd3df8a45b",
+          "observed_by": "subagent:phase3_visual_b"
+        },
+        "observations": [
+          "Cover titled 'THE HAUNTED LIBRARY' showing a spectral library, green ghosts/floating books, a running figure, and 'OPEN THE DOORS. ESCAPE THE SPIRITS!' text.",
+          "Limitation: Baked text observed; no rights, suitability, or disposition claim."
+        ],
+        "state_or_direction_coverage": "not_applicable",
+        "baked_text_or_ui": "present",
+        "placeholder_risk": "absent",
+        "corruption_risk": "absent"
+      }
+    },
+    {
+      "identical_hash_group": "sha256:964a0a027d0ed0ec393529bcf98a57c3236a0b76634bda3e389525444386a043",
+      "sha256": "964a0a027d0ed0ec393529bcf98a57c3236a0b76634bda3e389525444386a043",
+      "media_class": "visual_or_video",
+      "member_paths": [
+        "apps/advantage-games/public/games/potion-rush/herb.png",
+        "apps/advantage-games/public/games/sentence/potion-rush/herb.png",
+        "apps/reading-advantage/public/games/sentence/potion-rush/herb.png"
+      ],
+      "inspection_source": {
+        "byte_size": 26949,
+        "canonical_path": "apps/advantage-games/public/games/potion-rush/herb.png",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "964a0a027d0ed0ec393529bcf98a57c3236a0b76634bda3e389525444386a043",
+        "source_blob_oid": "a044631fedc4d26ca3239be1e1c33834d4599c66"
+      },
+      "inspection": {
+        "primary_evidence": {
+          "kind": "direct_visual",
+          "locator": "inspection-working-notes/AF-05-08-visual.json#sha256:964a0a027d0ed0ec393529bcf98a57c3236a0b76634bda3e389525444386a043",
+          "observed_by": "subagent:phase3_visual_b"
+        },
+        "observations": [
+          "Small transparent-background bundled green herb illustration.",
+          "Limitation: Single still-image inspection only."
+        ],
+        "state_or_direction_coverage": "not_applicable",
+        "baked_text_or_ui": "absent",
+        "placeholder_risk": "absent",
+        "corruption_risk": "absent"
+      }
+    },
+    {
+      "identical_hash_group": "sha256:969055a3c35b3979832805eda4a9f12c71002ba4113e5587fb840ee501e63094",
+      "sha256": "969055a3c35b3979832805eda4a9f12c71002ba4113e5587fb840ee501e63094",
+      "media_class": "visual_or_video",
+      "member_paths": [
+        "apps/advantage-games/public/games/dungeon-liberator/slime-sheet.png",
+        "apps/advantage-games/public/games/sentence/dungeon-liberator/slime-sheet.png"
+      ],
+      "inspection_source": {
+        "byte_size": 538500,
+        "canonical_path": "apps/advantage-games/public/games/dungeon-liberator/slime-sheet.png",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "969055a3c35b3979832805eda4a9f12c71002ba4113e5587fb840ee501e63094",
+        "source_blob_oid": "60893e09bc44ba2b4640e9b24c80ed88f35b5e94"
+      },
+      "inspection": {
+        "primary_evidence": {
+          "kind": "direct_visual",
+          "locator": "inspection-working-notes/AF-05-08-visual.json#sha256:969055a3c35b3979832805eda4a9f12c71002ba4113e5587fb840ee501e63094",
+          "observed_by": "subagent:phase3_visual_b"
+        },
+        "observations": [
+          "Nine-panel red glossy slime sheet on transparent/black-rendered background with orange glowing centers and splash/size variants.",
+          "Limitation: Tool rendering background may differ from application compositing."
+        ],
+        "state_or_direction_coverage": "present",
+        "baked_text_or_ui": "absent",
+        "placeholder_risk": "absent",
+        "corruption_risk": "absent"
+      }
+    },
+    {
+      "identical_hash_group": "sha256:96f1ce4ff7e306f5a6e17b4ea260c117f84eb0e372045f3014c2892c05cc091c",
+      "sha256": "96f1ce4ff7e306f5a6e17b4ea260c117f84eb0e372045f3014c2892c05cc091c",
+      "media_class": "visual_or_video",
+      "member_paths": [
+        "apps/advantage-games/public/games/rpg-battle/hero_female_pose_sheet_3x3.png",
+        "apps/advantage-games/public/games/vocabulary/rpg-battle/hero_female_pose_sheet_3x3.png",
+        "apps/reading-advantage/public/games/vocabulary/rpg-battle/hero_female_pose_sheet_3x3.png"
+      ],
+      "inspection_source": {
+        "byte_size": 226841,
+        "canonical_path": "apps/advantage-games/public/games/rpg-battle/hero_female_pose_sheet_3x3.png",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "96f1ce4ff7e306f5a6e17b4ea260c117f84eb0e372045f3014c2892c05cc091c",
+        "source_blob_oid": "15ec5f9c8a504c181db676016c1bf0e57fe7f419"
+      },
+      "inspection": {
+        "primary_evidence": {
+          "kind": "direct_visual",
+          "locator": "inspection-working-notes/AF-05-08-visual.json#sha256:96f1ce4ff7e306f5a6e17b4ea260c117f84eb0e372045f3014c2892c05cc091c",
+          "observed_by": "subagent:phase3_visual_b"
+        },
+        "observations": [
+          "Nine-panel transparent-background anime-style female adventurer sheet with staff/sword poses, purple spell effect, running/guarding pose, and kneeling pose.",
+          "Limitation: Tool rendering background may differ from application compositing."
+        ],
+        "state_or_direction_coverage": "present",
+        "baked_text_or_ui": "absent",
+        "placeholder_risk": "absent",
+        "corruption_risk": "absent"
+      }
+    },
+    {
+      "identical_hash_group": "sha256:9ad91352509cc743af8038c5784e7e24c38940a838e14b907f5bdb5edee98c39",
+      "sha256": "9ad91352509cc743af8038c5784e7e24c38940a838e14b907f5bdb5edee98c39",
+      "media_class": "text_or_data",
+      "member_paths": [
+        "apps/advantage-games/measure/archive/village-guardian-20260320/metadata.json"
+      ],
+      "inspection_source": {
+        "byte_size": 376,
+        "canonical_path": "apps/advantage-games/measure/archive/village-guardian-20260320/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "9ad91352509cc743af8038c5784e7e24c38940a838e14b907f5bdb5edee98c39",
+        "source_blob_oid": "3e940583603eab376cafeb4b012d84959a8f9e84"
+      },
+      "inspection": {
+        "primary_evidence": {
+          "kind": "direct_text_read",
+          "locator": "inspection-working-notes/text-data.json#sha256:9ad91352509cc743af8038c5784e7e24c38940a838e14b907f5bdb5edee98c39",
+          "observed_by": "root-orchestrator:direct-frozen-text-read"
+        },
+        "observations": [
+          "{\"direct_scalar_fields\": {\"status\": \"completed\", \"track_id\": \"village-guardian-20260320\"}, \"root_kind\": \"object\", \"top_level_keys\": [\"completed_at\", \"created_at\", \"description\", \"status\", \"track_id\", \"type\"]}",
+          "Limitation: Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+        ],
+        "state_or_direction_coverage": "not_applicable",
+        "baked_text_or_ui": "not_applicable",
+        "placeholder_risk": "unknown",
+        "corruption_risk": "absent"
+      }
+    },
+    {
+      "identical_hash_group": "sha256:9f5fc0ae82caccd1e103607fe70c2af0062e6f196288ca143b97cd3d8f93827d",
+      "sha256": "9f5fc0ae82caccd1e103607fe70c2af0062e6f196288ca143b97cd3d8f93827d",
+      "media_class": "visual_or_video",
+      "member_paths": [
+        "apps/advantage-games/public/games/potion-rush/cauldron-yellow.png",
+        "apps/advantage-games/public/games/sentence/potion-rush/cauldron-yellow.png",
+        "apps/reading-advantage/public/games/sentence/potion-rush/cauldron-yellow.png"
+      ],
+      "inspection_source": {
+        "byte_size": 53011,
+        "canonical_path": "apps/advantage-games/public/games/potion-rush/cauldron-yellow.png",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "9f5fc0ae82caccd1e103607fe70c2af0062e6f196288ca143b97cd3d8f93827d",
+        "source_blob_oid": "cdff33d20deac3003537530a2f0eb0c84c975a92"
+      },
+      "inspection": {
+        "primary_evidence": {
+          "kind": "direct_visual",
+          "locator": "inspection-working-notes/AF-05-08-visual.json#sha256:9f5fc0ae82caccd1e103607fe70c2af0062e6f196288ca143b97cd3d8f93827d",
+          "observed_by": "subagent:phase3_visual_b"
+        },
+        "observations": [
+          "Small transparent-background gray cauldron with dripping yellow liquid.",
+          "Limitation: Single still-image inspection only."
+        ],
+        "state_or_direction_coverage": "not_applicable",
+        "baked_text_or_ui": "absent",
+        "placeholder_risk": "absent",
+        "corruption_risk": "absent"
+      }
+    }
+  ]
+}

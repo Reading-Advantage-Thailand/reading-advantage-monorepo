@@ -1,0 +1,15 @@
+{
+  "schema_version": "apk-asset-forensics.phase3-contract-red-report.v3",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase3",
+  "result": "expected-red",
+  "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase3-contract-test.py",
+  "exit_code": 1,
+  "observed_output": "RED: pending Phase 3 inspection outputs: inspection source manifests 12/12; inspection records 0/12; inspector receipts 0/12",
+  "phase3_input_freeze_sha256": "13762016892d6c735a0576bd233568742d07bda5c3ffdc2da7ec1875880c61fb",
+  "phase2_root_acceptance_sha256": "461c1d4f26afa512d1e6266384005b019ab0428a3cc508046675feb9aef35ed1",
+  "contract_sha256": "54d4754db9e8e1a7579646b39fa195022ae7889ff916147f54daa96d7bba858b",
+  "validated_source_manifests": 12,
+  "fixture_count": 0,
+  "sole_expected_red_reason": "Direct inspection records and independent visual-audio inspector receipts are absent."
+}

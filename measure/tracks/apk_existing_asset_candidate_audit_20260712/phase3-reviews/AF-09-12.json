@@ -1,0 +1,155 @@
+{
+  "schema_version": "apk-asset-forensics.phase3-independent-record-review.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "reviewer_task_name": "/root/phase3_record_audit_c",
+  "fork_turns": "none",
+  "batches": [
+    {
+      "batch_id": "AF-09",
+      "inspection_record_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-09/inspection-records.json",
+      "inspection_record_sha256": "9b2f00407c02547151561bbacf8841eb5d8c1d796ea7c38ff393b866f95f315e",
+      "identical_hash_groups": 17,
+      "member_paths": 35
+    },
+    {
+      "batch_id": "AF-10",
+      "inspection_record_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/inspection-records.json",
+      "inspection_record_sha256": "2a098b81c5cbefe2bf2b1c0f916541e8acb8a1a4a00e0e5da166e9a807ab93b8",
+      "identical_hash_groups": 19,
+      "member_paths": 34
+    },
+    {
+      "batch_id": "AF-11",
+      "inspection_record_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-11/inspection-records.json",
+      "inspection_record_sha256": "7c9ff185bf10a61c83721b9a08e0f1f41c5bd4063bc2c2379bd2e122ba77dc2e",
+      "identical_hash_groups": 18,
+      "member_paths": 40
+    },
+    {
+      "batch_id": "AF-12",
+      "inspection_record_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-12/inspection-records.json",
+      "inspection_record_sha256": "169f7677cb0cd1c89528b69f5b97bf3109abcca4dffd7e5688f90db59f46c8af",
+      "identical_hash_groups": 24,
+      "member_paths": 34
+    }
+  ],
+  "totals": {
+    "batches": 4,
+    "identical_hash_groups": 78,
+    "member_paths": 143
+  },
+  "prior_findings": [
+    {
+      "finding_id": "AF-09-12-PRIOR-001",
+      "original_severity": "high",
+      "summary": "Four baked-text classifications contradicted direct visual evidence.",
+      "affected_groups": [
+        "sha256:cac76ba5b6aad17410f854cfb9dc507bbb0651951a6b9be04080ef5f75ea7feb",
+        "sha256:dd2077d6f9f23f48dd9ca147e643005b8d4c130a775ff227be9209959681b265",
+        "sha256:e1595f14c815230e67fb3c66366cffe92d2d8f67176bde0d792fd9ae4cd48fd8",
+        "sha256:e56cd2e933da0525bffba87751337037b685238d1e709ea2b50fc6cfa49315f6"
+      ],
+      "status": "resolved",
+      "resolution_evidence": "The regenerated records classify cac76ba5, dd2077d6, and e56cd2e9 as baked_text_or_ui present and e1595f14 as absent, matching the frozen direct visual observations."
+    },
+    {
+      "finding_id": "AF-09-12-PRIOR-002",
+      "original_severity": "high",
+      "summary": "AF-11 d9c3c6b4 reconciliation lacked a raw targeted follow-up artifact and exact official evidence attribution.",
+      "affected_groups": [
+        "sha256:d9c3c6b425e40eeb5c167d47832aa979833ff1cb632d58b040043d8479cf238c"
+      ],
+      "status": "resolved",
+      "resolution_evidence": "The official locator and observed_by fields now bind the primary pass, independent Gemini pass, reconciliation, and audio-targeted-follow-up-d9c3c6b425e40eeb5c167d47832aa979833ff1cb632d58b040043d8479cf238c.json. The follow-up artifact binds the exact frozen inspection source, model, and response ID. The reconciliation retains uncertainty about nonverbal vocal samples and makes no language claim."
+    },
+    {
+      "finding_id": "AF-09-12-PRIOR-003",
+      "original_severity": "medium",
+      "summary": "Official audio limitations incorrectly described combined evidence as a single model pass.",
+      "affected_groups": [
+        "sha256:aee5ebd8cb91f84287f9f89e63446465a2111835d84f04cdd22320917963c571",
+        "sha256:af2a0e19895bada613c5bfb1e9f0008673bca2c4c83a29001552feff8ac9a1f8",
+        "sha256:c2ac41c1b294d5b682c83f1f6a7cf26a39f71e3951bfe2416d76cfd8671665b9",
+        "sha256:d9c3c6b425e40eeb5c167d47832aa979833ff1cb632d58b040043d8479cf238c",
+        "sha256:dfee4d38e6d58ee0a784a99dc2141c1817fae5358a36cd9c66323739a1d6f9cc",
+        "sha256:e48fd83fde67fa41bb86a49197df20f2a68038fe73a077ebad310e6c6ea266de",
+        "sha256:fa8ac6d3d7b33c926dd1043432298612f8a7f27f8ec0edb92e1d282bcc663269"
+      ],
+      "status": "resolved",
+      "resolution_evidence": "The regenerated records state two direct audio-capable model passes for ordinary audio groups and three passes for d9c3c6b4."
+    },
+    {
+      "finding_id": "AF-09-12-PRIOR-004",
+      "original_severity": "medium",
+      "summary": "AF-12 WebM state and corruption classifications exceeded the two-frame inspection scope.",
+      "affected_groups": [
+        "sha256:f33e636eceff074056538a0d1bd9f3af56803ed55c96383a0b2941de8523eb17"
+      ],
+      "status": "resolved",
+      "resolution_evidence": "The regenerated record sets state_or_direction_coverage and corruption_risk to unknown while preserving the limitation that only the 1-second and 3-second frames were inspected."
+    },
+    {
+      "finding_id": "AF-09-12-PRIOR-005",
+      "original_severity": "low",
+      "summary": "The working-note validator success banner incorrectly said official inspection records were pending after records validated 12/12.",
+      "affected_groups": [],
+      "status": "resolved",
+      "resolution_evidence": "The current validator reports that working-note evidence is complete and that Phase 3 acceptance remains governed by the official contract and independent inspector receipts. phase3_working_notes_validator_test.py passes against the corrected banner."
+    }
+  ],
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": []
+  },
+  "scope_boundary": {
+    "personal_audio_listening_performed": false,
+    "audio_review_basis": [
+      "primary Gemini audio-capable multimodal artifacts",
+      "independent Gemini audio-capable multimodal artifacts",
+      "targeted audio follow-up artifacts where reconciliation required them",
+      "root audio reconciliation artifact"
+    ],
+    "disposition_claims_made": false,
+    "suitability_claims_made": false,
+    "reviewed_scope": "Official Phase 3 inspection records and directly supporting frozen evidence for AF-09 through AF-12 only."
+  },
+  "validators_run": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase3_working_notes_validator.py",
+      "result": "pass",
+      "evidence": "227/227 direct working-note groups verified."
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/generate_phase3_inspection_records.py --check",
+      "result": "pass",
+      "evidence": "227/227 groups ready; check mode wrote no official records."
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/generate_phase3_inspection_records_test.py",
+      "result": "pass",
+      "evidence": "One regression test passed."
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase3_working_notes_validator_test.py",
+      "result": "pass",
+      "evidence": "One regression test passed."
+    },
+    {
+      "command": "Independent deterministic render comparison for AF-09 through AF-12",
+      "result": "pass",
+      "evidence": "All four current inspection-record JSON objects exactly matched generate_phase3_inspection_records.py output."
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase3-contract-test.py",
+      "result": "expected_red",
+      "evidence": "Source manifests 12/12 and inspection records 12/12 validate; inspector receipts remain 0/12."
+    }
+  ],
+  "remaining_phase_blockers": [
+    "Independent visual-audio-inspector receipts remain 0/12.",
+    "Root-orchestrator Phase 3 fitness acceptance remains pending."
+  ],
+  "final_status": "pass"
+}

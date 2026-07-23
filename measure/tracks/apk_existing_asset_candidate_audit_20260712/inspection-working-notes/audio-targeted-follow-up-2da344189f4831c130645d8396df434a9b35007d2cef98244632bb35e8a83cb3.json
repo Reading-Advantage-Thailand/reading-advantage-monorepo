@@ -1,0 +1,59 @@
+{
+  "schema_version": "apk-asset-forensics.phase3-audio-targeted-follow-up.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "evidence_boundary": "Targeted direct-audio conflict resolution only; no disposition, suitability decision, or Phase 3 acceptance.",
+  "provider": {
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "model": "google/gemini-2.5-pro",
+    "audio_capable_multimodal": true
+  },
+  "records": [
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:2da344189f4831c130645d8396df434a9b35007d2cef98244632bb35e8a83cb3",
+      "inspection_source": {
+        "byte_size": 208896,
+        "canonical_path": "apps/advantage-games/public/sounds/bubbling.mp3",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "2da344189f4831c130645d8396df434a9b35007d2cef98244632bb35e8a83cb3",
+        "source_blob_oid": "44494e931de3dee8d1b814f0ab9bab851f64c9f7"
+      },
+      "evidence_kind": "direct_audio_multimodal",
+      "model": "google/gemini-2.5-pro",
+      "provider_response_id": "gen-1784822672-amjBvdEd3TrSo7E3tOiL",
+      "observation": {
+        "audible_content": "A powerful whooshing sound effect, followed by a series of bubbly, gurgling sounds.",
+        "content_class": "sound_effect",
+        "speech_or_language": "no speech or language",
+        "temporal_coverage": "full",
+        "placeholder_risk_observation": "no",
+        "corruption_or_clipping": "no"
+      },
+      "usage": {
+        "prompt_tokens": 269,
+        "completion_tokens": 597,
+        "total_tokens": 866,
+        "cost": 0.00630625,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 175,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.00630625,
+          "upstream_inference_prompt_cost": 0.00033625,
+          "upstream_inference_completions_cost": 0.00597
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 528,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "limitation": "Single model pass over exact frozen audio bytes; no runtime mixing, loudness normalization, loop-boundary, or gameplay suitability claim."
+    }
+  ]
+}

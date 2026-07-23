@@ -1,0 +1,84 @@
+{
+  "schema_version": "apk-asset-forensics.phase2-adversarial-review.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase2",
+  "batch_id": "AF-07",
+  "review_role": "adversarial-reviewer",
+  "reviewed_at": "2026-07-23",
+  "authority_commit": "8e272ad9fa92ba524ee9f340754deeaa951a1a44",
+  "freeze_hashes": {
+    "phase0_input_freeze_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+    "phase0_role_ownership_manifest_sha256": "bdffe7d8248b08ebe3b1226082970cd09ba180ddf469c5096db3bebe2f811e36",
+    "phase2_input_freeze_sha256": "385248641ba8d7dcaeedd3920f4d11f67071987be06d336f3a624f5a31f724c0",
+    "phase1_root_acceptance_sha256": "2b30be13c8c0f6b7d1d404489c6058b48b6839f58d5ae2ce84b67f9d6a1a6d61"
+  },
+  "reviewed_hashes": {
+    "candidate_records_base_sha256": "f80d72b37bff130708fa8f7cf97a227488227282f1cad9a61ebbe3849bd7a90e",
+    "mechanical_metadata_sha256": "b41f8e142e209168ab7d7184e19155552f45c14ec21d9d0856c20edaa010fbea",
+    "caller_inventory_sha256": "be5c8f1e3272522a3c3f892865f599296fd03086ca49356123b252ef9c5ef1a7",
+    "provenance_audit_sha256": "0fa223a97764ebb20f65b82d7f36c79e40466e4f8c43680efe4a339688fdca15",
+    "provenance_auditor_receipt_sha256": "bb373cc37576f4b5f0a3b2bcd58c476b4e78a1d944565400e12872e504d7925c",
+    "sorted_record_identity_tuples_sha256": "3b5998fec6fd4bc41412d171af95d1b5509e9ce16c5b0bfd1e24c9473563e2f3",
+    "sorted_record_state_tuples_sha256": "85cd7b5c6b48ed1d6afff7d4eeeb361e4e50f9100bce03c77aed13cfd9cdcd62"
+  },
+  "counts": {
+    "frozen_candidate_paths": 35,
+    "reviewed_candidate_paths": 35,
+    "frozen_hash_groups": 17,
+    "reviewed_hash_groups": 17,
+    "identity_tuple_mismatches_vs_candidate_base": 0,
+    "identity_tuple_mismatches_vs_mechanical_metadata": 0,
+    "identity_tuple_mismatches_vs_caller_inventory": 0,
+    "git_source_blob_oid_mismatches": 0,
+    "history_addition_missing": 0,
+    "provenance_state_objects": 105,
+    "unknown_state_objects": 104,
+    "state_schema_anomalies": 0,
+    "unknown_rationale_anomalies": 0,
+    "citation_objects": 1,
+    "blocked_reuse_and_adapt_records": 35,
+    "eligibility_pairing_anomalies": 0,
+    "artifact_receipt_resource_differences": 0
+  },
+  "verification": {
+    "record_identity": "All 35 canonical path, SHA-256, revision, source blob OID, and identical-hash-group tuples matched the applicable accepted Phase 1 inputs and pinned Git objects. Mechanical metadata has no group field; its 35 path/hash/revision/OID tuples matched.",
+    "states": "The one evidenced repository-introduction citation is the exact Git-pinned .agents/skills/mmx-generate-game-music/SKILL.md range 182-192 at 23bb5ad578c01fb29f9e8bb76a7d934d24a4b286. It explicitly declares the candidate only as the mmx command --out path. It does not claim or establish a generated-byte match, upstream authorship, or license. Upstream provenance and license remain closed-schema unknown states for all 35 records.",
+    "eligibility": "All 35 records are blocked for both reuse and adapt with reason_code evidence_incomplete. No Phase 4 disposition, suitability, inspection, reusable, or adaptable claim appears.",
+    "resources_and_isolation": "Artifact and producer receipt reproduce 35 paths, 17 groups, one evidence record, 37 commands, 20773 bytes, and within_ceiling true. The producer receipt has the required provenance-auditor role, gpt-5.6-terra model, fork_turns none, inherited_narrative false, exact Phase 2 freeze hash, allowed inputs, and one output hash only."
+  },
+  "bounded_git_pinned_search": {
+    "scope": "The 35 AF-07 canonical paths only; fixed-string Git search of non-Measure tracked text at the two frozen source revisions.",
+    "non_measure_path_explicit_hits": {
+      "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286": 1,
+      "65fc00d872ce5aa63820662ee0a1f14952e63235": 1
+    },
+    "path_specific_history_additions": {
+      "paths_checked": 35,
+      "missing": 0,
+      "interpretation": "Repository history was checked only for repository introduction and was not promoted to upstream authorship or license evidence."
+    }
+  },
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": [
+      "The corrected haunted-library-ambient record properly limits its sole in-repository mapping to repository introduction. The mapping's --out declaration is path-specific evidence only; it is not a byte-match assertion and supplies neither upstream provenance nor license. Those two fields remain unknown and prospective reuse/adapt eligibility remains blocked."
+    ]
+  },
+  "decision": {
+    "admit": true,
+    "block": false,
+    "status": "pass",
+    "scope": "AF-07 Phase 2 provenance artifact only; this admission does not make Phase 2 Green, perform a disposition, or constitute lifecycle acceptance."
+  },
+  "resource_usage": {
+    "candidate_paths": 35,
+    "hash_groups": 17,
+    "review_records": 35,
+    "command_invocations": 82,
+    "bytes_read": 4194304,
+    "within_ceiling": true,
+    "measurement_basis": "The bounded helper used 77 internal read-only Git subprocesses, including frozen-input, artifact, receipt, source-blob, history, and two pinned-tree search checks. Two pinned source-context reads inspected the exact cited range and three additional read-only checkout/hash and closeout commands validated frozen bindings and final output context. The conservative four-MiB upper bound covers the explicitly read artifacts and pinned-text inspection; both values are below the reviewer ceilings of 120 commands and 536870912 bytes."
+  }
+}

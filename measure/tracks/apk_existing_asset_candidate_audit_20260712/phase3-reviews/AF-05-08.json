@@ -1,0 +1,191 @@
+{
+  "schema_version": "apk-asset-forensics.phase3-independent-record-review.v1",
+  "schema_contract": {
+    "additional_properties": false,
+    "top_level_keys": [
+      "schema_version",
+      "schema_contract",
+      "track_id",
+      "reviewer_task_name",
+      "fork_turns",
+      "batches",
+      "totals",
+      "prior_findings",
+      "findings",
+      "scope_boundary",
+      "validators_run",
+      "remaining_blockers",
+      "final_status"
+    ],
+    "batch_keys": [
+      "batch_id",
+      "inspection_records_path",
+      "inspection_records_sha256",
+      "identical_hash_groups",
+      "member_paths"
+    ],
+    "prior_finding_keys": [
+      "id",
+      "severity",
+      "status",
+      "affected_groups",
+      "prior_condition",
+      "resolution_evidence"
+    ],
+    "finding_levels": [
+      "critical",
+      "high",
+      "medium",
+      "low"
+    ],
+    "scope_boundary_keys": [
+      "personal_audio_listening",
+      "audio_review_basis",
+      "suitability_or_disposition_reviewed",
+      "excluded_claims"
+    ],
+    "validator_keys": [
+      "command",
+      "exit_code",
+      "status",
+      "evidence"
+    ],
+    "remaining_blocker_keys": [
+      "id",
+      "status",
+      "evidence"
+    ]
+  },
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "reviewer_task_name": "/root/phase3_record_audit_b",
+  "fork_turns": "none",
+  "batches": [
+    {
+      "batch_id": "AF-05",
+      "inspection_records_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/inspection-records.json",
+      "inspection_records_sha256": "47071e3648b2fb324fe7d10d7e3dad126e4d32ad2a0df67a3a0d50d9fa526247",
+      "identical_hash_groups": 18,
+      "member_paths": 39
+    },
+    {
+      "batch_id": "AF-06",
+      "inspection_records_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/inspection-records.json",
+      "inspection_records_sha256": "8c8ea06513edcf4efcee7b4d496b2804412191899a063e737ea83699270ea30c",
+      "identical_hash_groups": 21,
+      "member_paths": 35
+    },
+    {
+      "batch_id": "AF-07",
+      "inspection_records_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-07/inspection-records.json",
+      "inspection_records_sha256": "6fe9dd7f2da086d416a3f070291c317d733948e687ef9a5afc6f0e69fc1dcd84",
+      "identical_hash_groups": 17,
+      "member_paths": 35
+    },
+    {
+      "batch_id": "AF-08",
+      "inspection_records_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-08/inspection-records.json",
+      "inspection_records_sha256": "6a7fe68ed4e3ccaa388bc06ed012c6dcc7484da0549f5ca4d14470522ea78d03",
+      "identical_hash_groups": 19,
+      "member_paths": 35
+    }
+  ],
+  "totals": {
+    "batches": 4,
+    "identical_hash_groups": 75,
+    "member_paths": 144,
+    "audio_groups": 4
+  },
+  "prior_findings": [
+    {
+      "id": "audio-pass-count-limitation",
+      "severity": "medium",
+      "status": "resolved",
+      "affected_groups": [
+        "sha256:6ed15b6010af6453e0a2844340c0a2a4b61a99028d92aae5a4d5e60a7db9022f",
+        "sha256:86439c52414fbdd7129b72c44aeec6c63134b17cbb0ec5af6395b05f2f083e88",
+        "sha256:a29f23bd14bd6e088077e5f9f0c7ddeb1589932af7e28a62d2fc596c959ba18c",
+        "sha256:a52c3be27272c5254d9d0e2941fad0ec15e0cb09b80eb445bfa538de56b2c361"
+      ],
+      "prior_condition": "The official limitation text described a single model pass although each record incorporated primary and independent direct audio-capable model evidence.",
+      "resolution_evidence": "Each current official record states exactly two direct audio-capable model passes over exact frozen bytes, and each observed_by field names exactly the primary Gemini 2.5 Flash response and independent Gemini 3 Flash Preview response."
+    },
+    {
+      "id": "audio-reconciliation-attribution",
+      "severity": "medium",
+      "status": "resolved",
+      "affected_groups": [
+        "sha256:a52c3be27272c5254d9d0e2941fad0ec15e0cb09b80eb445bfa538de56b2c361"
+      ],
+      "prior_condition": "The official observation included a root reconciliation decision without citing the reconciliation artifact in the primary-evidence locator.",
+      "resolution_evidence": "The current locator cites audio-review-reconciliation.json at the exact group anchor; observed_by remains limited to the two actual model passes, so the root reconciliation is attributed without being miscounted as personal or model listening."
+    }
+  ],
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": []
+  },
+  "scope_boundary": {
+    "personal_audio_listening": false,
+    "audio_review_basis": "Official audio records were checked against the primary Gemini artifact, independent Gemini artifact, exact response identifiers, and applicable root reconciliation artifact only.",
+    "suitability_or_disposition_reviewed": false,
+    "excluded_claims": [
+      "personal audible-content confirmation",
+      "gameplay suitability",
+      "responsive suitability",
+      "reuse",
+      "adaptation",
+      "replacement",
+      "retirement",
+      "shipping or production adoption",
+      "final Phase 3 acceptance"
+    ]
+  },
+  "validators_run": [
+    {
+      "command": "python3 read-only deterministic comparison of generate_phase3_inspection_records.render_records() with AF-05 through AF-08 inspection-records.json",
+      "exit_code": 0,
+      "status": "pass",
+      "evidence": "AF-05 18/18, AF-06 21/21, AF-07 17/17, and AF-08 19/19 groups exactly matched deterministic rendering; all four scoped audio records had the correct two-pass limitation and reconciliation attribution."
+    },
+    {
+      "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase3_working_notes_validator.py",
+      "exit_code": 0,
+      "status": "pass",
+      "evidence": "Direct working notes validated 227/227 groups: visual_or_video 131/131, text_or_data 77/77, unreadable_or_pointer 5/5, audio 14/14."
+    },
+    {
+      "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/generate_phase3_inspection_records.py --check",
+      "exit_code": 0,
+      "status": "pass",
+      "evidence": "Renderer reported 227/227 frozen groups ready with direct observations and explicit classifications."
+    },
+    {
+      "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/generate_phase3_inspection_records_test.py",
+      "exit_code": 0,
+      "status": "pass",
+      "evidence": "One regression test passed."
+    },
+    {
+      "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase3_working_notes_validator_test.py",
+      "exit_code": 0,
+      "status": "pass",
+      "evidence": "One regression test passed."
+    },
+    {
+      "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase3-contract-test.py",
+      "exit_code": 1,
+      "status": "expected_red",
+      "evidence": "Inspection source manifests validated 12/12 and inspection records validated 12/12; visual-audio-inspector receipts remain 0/12."
+    }
+  ],
+  "remaining_blockers": [
+    {
+      "id": "phase3-inspector-receipts",
+      "status": "open",
+      "evidence": "The Phase 3 contract remains RED because visual-audio-inspector receipts are 0/12; later root-orchestrator fitness acceptance remains blocked."
+    }
+  ],
+  "final_status": "pass"
+}

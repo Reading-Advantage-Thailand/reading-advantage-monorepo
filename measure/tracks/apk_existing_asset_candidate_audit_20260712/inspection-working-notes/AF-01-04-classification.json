@@ -1,0 +1,608 @@
+{
+  "schema_version": "apk-asset-forensics.phase3-working-classification.v1",
+  "scope": {
+    "batches": [
+      "AF-01",
+      "AF-02",
+      "AF-03",
+      "AF-04"
+    ],
+    "frozen_group_count": 74,
+    "non_decisional": true
+  },
+  "method": "Classified only from frozen source manifests and recorded direct visual, audio-multimodal, text/data, and unreadable/pointer working notes. Statuses are observation-derived; no runtime, suitability, replacement, or disposition inference.",
+  "records": [
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:00a88649680edba33079e5a6e4fb604ca85945229c762dfa1c0fb1da978c60fb",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:0173afee01656c45d538b4361af57799b3ce21a6f5600cdb99738dd8ae38324f",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "absent",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:01a78cdd2f65d45c96090018039271ea9263ffabdc82594041c7262e3ca4dc51",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:024e32b44f5f749f78850a533e2cc43c6d277fcb4b94def59dfcfe8a0d22d607",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:03e13b089a8de6f1f4ebda1f2cc8cda705352c51bd50e9b3194339b648311a29",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:047da6178fe607e26260f6bf041fbdd7c6eda6701b20c2c36446d93086c59330",
+      "state_or_direction_coverage": "present",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:04f3c6fad82edbb3b699d3564953785085007662cece98ca5298748c33b1d219",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "present",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:05e9d81f811e1bc000f042618311c7e3ee6d158be73e954d18a13c6868e33bdd",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "present",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:0647d30917695e3e76c4fe5888775ea50efa5528fce7941c0f5979fc03b0d724",
+      "state_or_direction_coverage": "present",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:0a9fd00325736bcd48d66ab587170fc193b538fc7c2321d63beafc267695144d",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:0aadcc7ab27a447950b3b0e5e85984448a4ea974cd329f7385d2129ccd334215",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:0b1e073f4b214e66b7d4ede355fc507803e7ce383634ad3ccd0c6a5eed4fb72a",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:0b8ecd86898841c0e0142fe25b251aa15659d718d1bb6462ed9b342e67f3be08",
+      "state_or_direction_coverage": "present",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:0bc1f8bd8e366c1fc14b98c13408a8942151a3deef1de2d707a44a2857bd17fe",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "present",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:0d647b06eb5d566d8ebaf3b22804de556d369667b14225b9e9c15a71a6b9eed3",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:0ea7dbe9cd3ec89dd62bb809b868f4bef3ff0288f580e98f416c76b2034702a6",
+      "state_or_direction_coverage": "present",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:1455fc6650cf7670f48098d3e6687ba08f86ebe9f29c065255801d346d811396",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:147c3b039b965ee7079c49c89966a385fc6cf01b568c97e2fec2fe104b4c25d0",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "present",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:14bba75201cb9cf1495c890ef6b869ceed44d4db8f80d7babddf979331dd95e7",
+      "state_or_direction_coverage": "present",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:15ebcd82c2f12c0b2cac29d4a2cafdb89f50d8e64039f112a6700a399b35fdf4",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:17233192fc7df5598fc88a5df0560aebdc491f8204db8e32cc68ddd27f53b2ea",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "present",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:18088c63af52eb254264210c8db124e44afc1445b113c1cc0a044915de2de61e",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:18bccdb381fdf4e7054559b795278d710367726213e08232f089fa8359ea71c6",
+      "state_or_direction_coverage": "present",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:199628b00a9f7a2990725144c58bc6169816174b43387b959970171154d5603c",
+      "state_or_direction_coverage": "present",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:1a07211b2bc9ded37440346ca747832d996e749571bb57a85487f90ca9579d3b",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "absent",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:1a6770014d96a3fda659049d791c62ff4cd108b4df7c4d15cc2a3b959e5b0816",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:1ad8e7be14c115ef737b3dadd6d92bb50fa241fd86147534591223fdf5d3eab6",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:1af163381c2b74567635391e8d410070738ccd66f18ecb13f44f67ae4b8329cb",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "present",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:1bd65bd67966db2dd1aa3de7c52a3b9982c20647ab2ab1415869034e9671400f",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:1c39b75c2e686f08cfd14b6b241e0abe4486e0c45675c261b016fc38a4a075ab",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:1c6c1872fe831588be3e4816dc5a974c61eb1b19cab556159c2c68b18905b907",
+      "state_or_direction_coverage": "present",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:1d1de50e806434a5fd769f0e3545b14ab73b8e980f38e4cbf5513b3a6f447938",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "present",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:1d2135634366734253f483f682570c30d30bb0f8786acac1510d085be3e09cec",
+      "state_or_direction_coverage": "unknown",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "present"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:1eec5f737511b2628f5b5e115ade2d76d103a5ced47f8b9cb737b65fd84378ab",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:22536e6fd1c664c1a8d5b27caaf08b2b7ded9c1add226ae64927117a8c3d4886",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "present",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:2383a3b212ed48f803df643d6525e7b2fad76bb5772507e3550da9fda40fc19e",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:23eacc93a937c645242084d17dedc72ef10e04330633306e504d02f725235b56",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "present",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:243d46ad04fdc49a8413afc624c3259dba5d41cc8fc3478ddd80eeabe8ad1d44",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "present",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:25813faa405a155337b94a52f44d0207cbea1bba3a128daf60c6b217427b2a71",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:25baa769bbe00900e81d22b0150ca99127c7a6ae373357be704e983da5cd4079",
+      "state_or_direction_coverage": "unknown",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "present"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:26dc9b34c4333791d84043d9f5a04a19d431f37981ae12b2201c60d08a7ee9f8",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:27be4196879a0957857a69d65f250d2ab44a1169bc382e7bb8d260fde135b073",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:28e578e85065e5f52d438f1a0803a331d19df7ffa202b070b9f26f725e243a17",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:2aa6d76b5d8718fcd4ac4804e0200eecfedccb708f27ca993ea85919e867e421",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "present",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:2b18000ff3ef619644e2df78a96fd3148c56b614d5521b532ab895744763e7d5",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:2b669cad3951341f6c86235699dc04e7eab7246f45661ac52d347dd0a3c088fe",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:2b67812c325c199a02536cdbeea0c593a72f707d323b72ee3e08dbab06753bd4",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:2d2ec714685a29945494fdeb54c99b46112a3d45e73af574e864ebdcf8524427",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:2da344189f4831c130645d8396df434a9b35007d2cef98244632bb35e8a83cb3",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "absent",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:2eb9d92c6e1dd9ec86ebcf36c5138479c6ffdeb9166af85dff97c734425dd330",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:2ed50adfd2625e02c0bdf0ecea836ba01c22fb7e1281e5c5bf6e1cb149f6644c",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:304e8b13051796a1a8985160b496c673f81350388e1eb5392506328549134240",
+      "state_or_direction_coverage": "present",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:32564109aecf1f7b9d3fda4d0fe5bb6a16da71c6b682896bae89ee4e82446acf",
+      "state_or_direction_coverage": "present",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:32cc5a3461bc5d12c730f05ad7bfac720f08f804f453b2bb06fdafd842c4e8c0",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "present",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:3673c3f00084308b5a294e8c9866105386f0845729ac2eac3a01b71cc27e2561",
+      "state_or_direction_coverage": "present",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:37ae142f40f4e5dbe6c5f5667981b45b62c79f7d04ffea2320629975dae6af46",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:3a67113fe7cb71698af948d033047210a0131584f83f57389f7ca98efbb05f87",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:3bec9ea0ab16ff60618d4aa69b617f0b74427e8c08a6d12382e2391333ae3c36",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "present",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:41851bd0dd9d84daa41c1b53880be041558bcadc77ef3f0f787280c1dd4527b5",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "present",
+      "placeholder_risk": "present",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:4268a22c8d3eef16c999dc5ab6d8f15dbcb33b34b22b7a3b053bc2daa5a20ea0",
+      "state_or_direction_coverage": "present",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:42fd03ed729c8b94fdb379c095a5df5dfd5bd936ea08225490a2f04975a6927c",
+      "state_or_direction_coverage": "present",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:45683dc07d0e95c9e1eb7a6abd9e6b35a77fb84ecd90a32879db307683b56390",
+      "state_or_direction_coverage": "present",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:46282a59d47e8f52fcf5ad6ee82294bb8009d7f5dbb7d6f30cc487dd5a7813ec",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:46e211ac512f046f29509084157dc3feef834780ae82e647c40b384cbd67f6a8",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "present"
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:4c076366e3e7bbdcc4b5333ca9974a5731a79e495c9e8737b31d3fcd724e54e5",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "present",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:4cee5bcfc17efb9dfc80fc2347b49a5118dd18e403df5e1543d36c1b898ac08a",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:4d59e880d08b92357c59851de67d7d5e56db09786bf138a5acf3ef3791de84a1",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:4d5d6eb3acd9c4ae2e4579155623150bbfa6409b294bbb3b65109844518ea290",
+      "state_or_direction_coverage": "present",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:4dc1dd4c05ff8a04ffa62f2aa0506f7ecfea1879f575b83da936c4844e5d6979",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:5125990489313bb97878ff72d971175822437fa684fe458ff2e70a21c3a98716",
+      "state_or_direction_coverage": "present",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:5229b4c10089e4043a1377b2a4dfd04a34e63ced0a66d1e3ac026f91a8ba346a",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:541c8c154c601945a6c0649c7ed6c34cf52adc1621ab6e4c1e81aea9aa69cecf",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "not_applicable",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:55995dfad6ecb4945a1e856ddca03c5e16aa5bf13fd21b4df6a74ae79357bcfc",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "unknown",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:5720ead0f45f083c2c8eefe0a1b888b1416c7fc768426007ebf5657786600f81",
+      "state_or_direction_coverage": "not_applicable",
+      "baked_text_or_ui": "present",
+      "placeholder_risk": "unknown",
+      "corruption_risk": "absent"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-07",
+  "role": "provenance-auditor",
+  "native_task_name": "/root/t8_af06_07",
+  "declared_model": "gpt-5.6-terra",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "allowed_input_manifest_sha256": "385248641ba8d7dcaeedd3920f4d11f67071987be06d336f3a624f5a31f724c0",
+  "allowed_input_paths": [
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase2-input-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-root-acceptance.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-contract-test.py",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-green-test-report-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase1/caller-analyst.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-independent-review-v2.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-caller-v22-independent-review.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-caller-v21-disposition.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-07/candidate-records-base.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-07/mechanical-metadata.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-07/caller-inventory.json",
+    "git:ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d:measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+    "git-tree:23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "git-tree:65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "git-history:repository"
+  ],
+  "role_boundary": "Audited AF-07 provenance only: bounded pinned canonical-path non-Measure sidecar, mapping, and license searches plus path-specific repository-addition history. History was used only for repository-introduction review and no upstream, license, inspection, caller, suitability, disposition, reviewer, or lifecycle fact was authored.",
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-07/provenance-audit.json": "0fa223a97764ebb20f65b82d7f36c79e40466e4f8c43680efe4a339688fdca15"
+  },
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": [
+      "The haunted-library-ambient candidate has one Git-pinned in-repository mapping that evidences repository introduction only; no byte-match, upstream-provenance, or license claim is inferred. All 35 records retain unknown upstream provenance and license, so reuse and adapt remain blocked with evidence_incomplete."
+    ]
+  },
+  "resource_usage": {
+    "candidate_paths": 35,
+    "hash_groups": 17,
+    "evidence_records": 1,
+    "command_invocations": 37,
+    "bytes_read": 20773,
+    "within_ceiling": true
+  },
+  "final_status": "pass"
+}

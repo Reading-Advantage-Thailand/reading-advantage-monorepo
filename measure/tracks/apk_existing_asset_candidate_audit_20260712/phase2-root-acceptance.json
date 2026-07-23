@@ -1,0 +1,22 @@
+{
+  "schema_version": "apk-asset-forensics.phase2-root-acceptance.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase2",
+  "decision": "accepted",
+  "accepted_at": "2026-07-23T20:21:09+07:00",
+  "owner": "/root orchestrator and project owner",
+  "denominator": {"candidate_paths": 428, "identical_hash_groups": 227, "batches": 12},
+  "accepted_evidence_sha256": {
+    "phase2_contract": "f9830d6e56244453bcd20bceaa858339148d22823ceadc9438f47830ceb50882",
+    "phase2_input_freeze": "385248641ba8d7dcaeedd3920f4d11f67071987be06d336f3a624f5a31f724c0",
+    "provenance_artifacts": {
+      "AF-01": "b647af9e2775ff4ffb27c13b3eefef05c4c4131a738d63954f6e914a9ac48be6", "AF-02": "27431a9d267bbf8d769ffb9893569552e9273c1a44c8d168b7f2e6438882ef4a", "AF-03": "a461d8ea9b8c9a6ab19a22db9114c3a69633f5ad39499364ee4bac600c76c7a3", "AF-04": "1048a20089eafb60e5484b36f55079ddb697ea1e170540a1cd81cb40cf735c0d", "AF-05": "406952e1e725e8da5b383ef47dff6bb7609294e8828baabf1f046dfbb792c086", "AF-06": "653241762f86846342ab960ada8f14c4b3c3c591adc322646574582f9b13dee5", "AF-07": "0fa223a97764ebb20f65b82d7f36c79e40466e4f8c43680efe4a339688fdca15", "AF-08": "c72ea75e3aae8258e9bc0bbc45321450df27ccd463253273ef6a5723e25d120a", "AF-09": "339afd7f6d3603b1af020153dc3ee60f5931439f1d612ba50247b124741ccfe8", "AF-10": "fed7989da253af1a8ce28137e6267b16b1848e30e6a4b6aaa8636808442cc11a", "AF-11": "2cc2bc7e0d01d20893be342a115462871f29634723daea22be847fc94d31a0a8", "AF-12": "4868c16913ff91834e2041b4a105d4c1f628e1b765b9509099626fad51e5d32f"
+    },
+    "independent_reviews": {
+      "AF-01": "2c334f0909705efb7d8aa09ec6eabfa40c5641b7dc841232932c4bafa390349c", "AF-02": "7fdcf67c2e2d1c00acfb74e6a05194c9d722b9866a98656b6c9ba82d710276e5", "AF-03": "6f2ce82bd844784aeb01ad91a2a80ddf08cd4bb6c9c320153ec83ab2fecf6baa", "AF-04": "2363e8c06613170d624f719b22680f370b05d6b17df1e772e775bc58d3cb0d09", "AF-05": "2ded6ec06a63953775c1a07099515da4344405b1d5e8d1bfb25a8db0ab9f1167", "AF-06": "a172c60ffdacd2d03c1210b5b7d5837b6da086824e0f9ac60f92397e77f097a5", "AF-07": "214a04370befd4a32970d9bedce2262a341ff0138244ba67d8e7417400f0733b", "AF-08": "5e2af3ba4bba80476921c4c74ad18913bf9ec714b1fb7b01e8ba652131d297ab", "AF-09": "43a034cb282ceaebb7f53f8d2991e4e09f935e09b55030df2b5bc8e6d8f483c0", "AF-10": "3ce3bdfe99f02d74b17360d0d49efcceddeb9f5ad02e3b11466d31b6ae123b82", "AF-11": "104528d0963c80987d1b2cec15d6eacbcc716bd86ec12cbe554c94d2b36e3553", "AF-12": "6244bbdc16b0fba3b13fb15f94bb1647c7bf5d43e127d8bb6028b962632e8d7a"
+    }
+  },
+  "findings": {"critical": 0, "high": 0, "medium": 0, "low": 1},
+  "disclosures": ["One AF-07 path has a Git-pinned authoring command recorded only as repository-introduction evidence; it proves neither byte identity, upstream provenance, nor license.", "All unresolved upstream or license facts remain explicit unknowns and block reuse/adapt."],
+  "next_gate": "Phase 3 may open only against this acceptance and its exact accepted evidence; Phase 4 suitability, disposition, and lifecycle acceptance remain closed."
+}

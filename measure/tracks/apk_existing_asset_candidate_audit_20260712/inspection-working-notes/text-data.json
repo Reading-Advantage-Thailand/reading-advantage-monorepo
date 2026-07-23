@@ -1,0 +1,2364 @@
+{
+  "schema_version": "apk-asset-forensics.phase3-text-working-notes.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "records": [
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:00a88649680edba33079e5a6e4fb604ca85945229c762dfa1c0fb1da978c60fb",
+      "inspection_source": {
+        "byte_size": 257,
+        "canonical_path": "apps/advantage-games/measure/archive/rpg_battle_20260102/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "00a88649680edba33079e5a6e4fb604ca85945229c762dfa1c0fb1da978c60fb",
+        "source_blob_oid": "a63b7e49727653b7ccb91a3ad56879896fc11af2"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "rpg_battle_20260102"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:024e32b44f5f749f78850a533e2cc43c6d277fcb4b94def59dfcfe8a0d22d607",
+      "inspection_source": {
+        "byte_size": 291,
+        "canonical_path": "apps/advantage-games/measure/archive/spellweavers-run-20260319/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "024e32b44f5f749f78850a533e2cc43c6d277fcb4b94def59dfcfe8a0d22d607",
+        "source_blob_oid": "595839a4470cb6f6e1712d16d8432d800d358547"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "completed_at",
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "spellweavers-run-20260319"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:0b1e073f4b214e66b7d4ede355fc507803e7ce383634ad3ccd0c6a5eed4fb72a",
+      "inspection_source": {
+        "byte_size": 337,
+        "canonical_path": "apps/advantage-games/measure/archive/enchanted-library_20260130/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "0b1e073f4b214e66b7d4ede355fc507803e7ce383634ad3ccd0c6a5eed4fb72a",
+        "source_blob_oid": "a3afe884a1bfbcc5c7ce28d00823238f749d0a39"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "enchanted-library_20260130"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-01",
+      "identical_hash_group": "sha256:0d647b06eb5d566d8ebaf3b22804de556d369667b14225b9e9c15a71a6b9eed3",
+      "inspection_source": {
+        "byte_size": 369,
+        "canonical_path": "apps/advantage-games/measure/archive/potion-rush-refinements-20260129/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "0d647b06eb5d566d8ebaf3b22804de556d369667b14225b9e9c15a71a6b9eed3",
+        "source_blob_oid": "e159a29b0be2b0ac9885f3a021602607176aaf11"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "potion-rush-refinements-20260129"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:15ebcd82c2f12c0b2cac29d4a2cafdb89f50d8e64039f112a6700a399b35fdf4",
+      "inspection_source": {
+        "byte_size": 396,
+        "canonical_path": "apps/advantage-games/measure/archive/devourer-slime-20260328/devourer-slime/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "15ebcd82c2f12c0b2cac29d4a2cafdb89f50d8e64039f112a6700a399b35fdf4",
+        "source_blob_oid": "2202bfdec892e7ddb96e1f4b582e8bb35f21355b"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "completed_at",
+          "created_at",
+          "description",
+          "id",
+          "name",
+          "priority",
+          "status",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "name": "Devourer Slime",
+          "status": "completed"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:1ad8e7be14c115ef737b3dadd6d92bb50fa241fd86147534591223fdf5d3eab6",
+      "inspection_source": {
+        "byte_size": 357,
+        "canonical_path": "apps/advantage-games/measure/tracks/griffin-riders-escape-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "1ad8e7be14c115ef737b3dadd6d92bb50fa241fd86147534591223fdf5d3eab6",
+        "source_blob_oid": "4b589cae84b5af7042ae50295fb5ca992853db95"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "griffin-riders-escape-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:1bd65bd67966db2dd1aa3de7c52a3b9982c20647ab2ab1415869034e9671400f",
+      "inspection_source": {
+        "byte_size": 261,
+        "canonical_path": "apps/advantage-games/measure/archive/dragon-flight/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "1bd65bd67966db2dd1aa3de7c52a3b9982c20647ab2ab1415869034e9671400f",
+        "source_blob_oid": "43f744f3a6615ce115f739c448b9e72ab5249fd4"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "in_progress",
+          "track_id": "dragon-flight"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:1eec5f737511b2628f5b5e115ade2d76d103a5ced47f8b9cb737b65fd84378ab",
+      "inspection_source": {
+        "byte_size": 326,
+        "canonical_path": "apps/advantage-games/measure/archive/castle-defense-start-end-screens-20260130/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "1eec5f737511b2628f5b5e115ade2d76d103a5ced47f8b9cb737b65fd84378ab",
+        "source_blob_oid": "6cae32e10859fdf0111aae2f76c007066b481990"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "completed_at",
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "castle-defense-start-end-screens-20260130"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-02",
+      "identical_hash_group": "sha256:2383a3b212ed48f803df643d6525e7b2fad76bb5772507e3550da9fda40fc19e",
+      "inspection_source": {
+        "byte_size": 358,
+        "canonical_path": "apps/advantage-games/measure/tracks/paladins-twin-soul-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "2383a3b212ed48f803df643d6525e7b2fad76bb5772507e3550da9fda40fc19e",
+        "source_blob_oid": "18b6ceb0143233b382e7bc9ffe04d407ddc8595b"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "paladins-twin-soul-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:25813faa405a155337b94a52f44d0207cbea1bba3a128daf60c6b217427b2a71",
+      "inspection_source": {
+        "byte_size": 287,
+        "canonical_path": "apps/advantage-games/measure/archive/castle_defense_sprites_20260118/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "25813faa405a155337b94a52f44d0207cbea1bba3a128daf60c6b217427b2a71",
+        "source_blob_oid": "5d7d515f8f3b8b9306cc10cbe4d273b82c27899f"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "castle_defense_sprites_20260118"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:27be4196879a0957857a69d65f250d2ab44a1169bc382e7bb8d260fde135b073",
+      "inspection_source": {
+        "byte_size": 318,
+        "canonical_path": "apps/advantage-games/measure/archive/labyrinth-goblin-king-20260320/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "27be4196879a0957857a69d65f250d2ab44a1169bc382e7bb8d260fde135b073",
+        "source_blob_oid": "0ce1ef6f2f4bfeea1a3a206c0ce6865b8a18bfd2"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "completed_at",
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "labyrinth-goblin-king-20260320"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:2b669cad3951341f6c86235699dc04e7eab7246f45661ac52d347dd0a3c088fe",
+      "inspection_source": {
+        "byte_size": 422,
+        "canonical_path": "apps/advantage-games/measure/archive/archers-revenge-20260318/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "2b669cad3951341f6c86235699dc04e7eab7246f45661ac52d347dd0a3c088fe",
+        "source_blob_oid": "d1e9d9ee0109af5f44ab51a14b0eab36b8ac9bd2"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "completed_at",
+          "created",
+          "description",
+          "id",
+          "priority",
+          "status",
+          "title",
+          "type"
+        ],
+        "direct_scalar_fields": {
+          "title": "Archer's Revenge - Space Invaders Vocabulary Game",
+          "status": "completed"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:2d2ec714685a29945494fdeb54c99b46112a3d45e73af574e864ebdcf8524427",
+      "inspection_source": {
+        "byte_size": 270,
+        "canonical_path": "apps/advantage-games/measure/archive/dungeon-liberator-20260321/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "2d2ec714685a29945494fdeb54c99b46112a3d45e73af574e864ebdcf8524427",
+        "source_blob_oid": "99fe7ce3ac19c5f1c5aeff8655a1db3ac6dd22e7"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "completed_at",
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "dungeon-liberator-20260321"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:2eb9d92c6e1dd9ec86ebcf36c5138479c6ffdeb9166af85dff97c734425dd330",
+      "inspection_source": {
+        "byte_size": 344,
+        "canonical_path": "apps/advantage-games/measure/archive/the-haunted-library-20260328/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "2eb9d92c6e1dd9ec86ebcf36c5138479c6ffdeb9166af85dff97c734425dd330",
+        "source_blob_oid": "0310cd661461121fc7e44f18cba39eff0c349fe0"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "completed_at",
+          "created_at",
+          "description",
+          "id",
+          "name",
+          "priority",
+          "status",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "name": "The Haunted Library",
+          "status": "completed"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:2ed50adfd2625e02c0bdf0ecea836ba01c22fb7e1281e5c5bf6e1cb149f6644c",
+      "inspection_source": {
+        "byte_size": 346,
+        "canonical_path": "apps/advantage-games/measure/tracks/gryphon-patrol-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "2ed50adfd2625e02c0bdf0ecea836ba01c22fb7e1281e5c5bf6e1cb149f6644c",
+        "source_blob_oid": "0e881bc5f474def5ce2de7ba25126436f9023031"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "gryphon-patrol-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:37ae142f40f4e5dbe6c5f5667981b45b62c79f7d04ffea2320629975dae6af46",
+      "inspection_source": {
+        "byte_size": 337,
+        "canonical_path": "apps/advantage-games/measure/tracks/potion-rush-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "37ae142f40f4e5dbe6c5f5667981b45b62c79f7d04ffea2320629975dae6af46",
+        "source_blob_oid": "be82a17ce5ebdcef417d5b174935c215b116226b"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "potion-rush-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-03",
+      "identical_hash_group": "sha256:3a67113fe7cb71698af948d033047210a0131584f83f57389f7ca98efbb05f87",
+      "inspection_source": {
+        "byte_size": 355,
+        "canonical_path": "apps/advantage-games/measure/tracks/storm-castle-tower-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "3a67113fe7cb71698af948d033047210a0131584f83f57389f7ca98efbb05f87",
+        "source_blob_oid": "c68988334ca9373d126ec36efdcaad89972ad833"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "storm-castle-tower-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:46282a59d47e8f52fcf5ad6ee82294bb8009d7f5dbb7d6f30cc487dd5a7813ec",
+      "inspection_source": {
+        "byte_size": 348,
+        "canonical_path": "apps/advantage-games/measure/tracks/spellweavers-run-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "46282a59d47e8f52fcf5ad6ee82294bb8009d7f5dbb7d6f30cc487dd5a7813ec",
+        "source_blob_oid": "84c312c888d8b7e7e425476becce4df8548d7d76"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "spellweavers-run-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:4d59e880d08b92357c59851de67d7d5e56db09786bf138a5acf3ef3791de84a1",
+      "inspection_source": {
+        "byte_size": 339,
+        "canonical_path": "apps/advantage-games/measure/tracks/realm-carver-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "4d59e880d08b92357c59851de67d7d5e56db09786bf138a5acf3ef3791de84a1",
+        "source_blob_oid": "9164f07d7be74a22bd9e4bd6c683f4a0942f8648"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "realm-carver-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:4dc1dd4c05ff8a04ffa62f2aa0506f7ecfea1879f575b83da936c4844e5d6979",
+      "inspection_source": {
+        "byte_size": 275,
+        "canonical_path": "apps/advantage-games/measure/archive/castle-defense-assets-20260117/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "4dc1dd4c05ff8a04ffa62f2aa0506f7ecfea1879f575b83da936c4844e5d6979",
+        "source_blob_oid": "93a68610435431ba1cebd29cb1aaf3861602ac26"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "castle-defense-assets-20260117"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-04",
+      "identical_hash_group": "sha256:541c8c154c601945a6c0649c7ed6c34cf52adc1621ab6e4c1e81aea9aa69cecf",
+      "inspection_source": {
+        "byte_size": 349,
+        "canonical_path": "apps/advantage-games/measure/tracks/dungeon-liberator-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "541c8c154c601945a6c0649c7ed6c34cf52adc1621ab6e4c1e81aea9aa69cecf",
+        "source_blob_oid": "7aede194b1f365297354d78f78ee70b549c4d065"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "dungeon-liberator-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-05",
+      "identical_hash_group": "sha256:57cfe25d29a52dbbc35b0b236eb0a54cca9c5a108b518b22db076d1775261d0e",
+      "inspection_source": {
+        "byte_size": 474,
+        "canonical_path": "apps/advantage-games/measure/tracks/astral-mage-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "57cfe25d29a52dbbc35b0b236eb0a54cca9c5a108b518b22db076d1775261d0e",
+        "source_blob_oid": "9599e8ae98da5d708ddb344f7f423466c0ff3f53"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "astral-mage-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-05",
+      "identical_hash_group": "sha256:5bd6030ef6798d18c8df1a2646dd20b839fde5132ff290d63c8489031dd5c3aa",
+      "inspection_source": {
+        "byte_size": 358,
+        "canonical_path": "apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "5bd6030ef6798d18c8df1a2646dd20b839fde5132ff290d63c8489031dd5c3aa",
+        "source_blob_oid": "2e9c7b1aeb605b1fc4421f8ffe2d9c01b0cc0f6a"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created",
+          "description",
+          "estimated_tasks",
+          "priority",
+          "status",
+          "title",
+          "trackId",
+          "type",
+          "updated"
+        ],
+        "direct_scalar_fields": {
+          "title": "Gryphon Patrol RNG Injectable",
+          "status": "in_progress"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-05",
+      "identical_hash_group": "sha256:5d70cc9930188a6355eaad342c9fec5d41d998eb0c4383264a435312c65725c2",
+      "inspection_source": {
+        "byte_size": 361,
+        "canonical_path": "apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "5d70cc9930188a6355eaad342c9fec5d41d998eb0c4383264a435312c65725c2",
+        "source_blob_oid": "9caca74798beccfbd797c8cb91c1cae59950ab6d"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "component",
+          "created",
+          "description",
+          "priority",
+          "status",
+          "title",
+          "trackId",
+          "type",
+          "updated"
+        ],
+        "direct_scalar_fields": {
+          "title": "Gryphon Patrol Hook Dependencies Fix",
+          "status": "completed"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-05",
+      "identical_hash_group": "sha256:5d8fce2b7cc3243e64bcab10b5142016b71be08b74570e14abf77064cd585be9",
+      "inspection_source": {
+        "byte_size": 351,
+        "canonical_path": "apps/advantage-games/measure/tracks/rune-forge-chamber-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "5d8fce2b7cc3243e64bcab10b5142016b71be08b74570e14abf77064cd585be9",
+        "source_blob_oid": "0f87c8939830b359c22c4b3ec44b033adb3fa2ec"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "rune-forge-chamber-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-05",
+      "identical_hash_group": "sha256:601d3f31c835cea7349ae6cf279d9529fad5c562b39dcbdd92b03fe125a08527",
+      "inspection_source": {
+        "byte_size": 3135,
+        "canonical_path": "apps/advantage-games/measure/archive/shadow-gate-dungeon-20260320/asset-spec.md",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "601d3f31c835cea7349ae6cf279d9529fad5c562b39dcbdd92b03fe125a08527",
+        "source_blob_oid": "4e7f6be576973e797a40087c79d759db6657f2b4"
+      },
+      "evidence_kind": "direct_text_markdown_bytes",
+      "observation": {
+        "headings": [
+          "Shadow Gate Dungeon \u2014 Asset Inventory & Specification",
+          "# Platform Notes",
+          "# 1. Player Character (Knight)",
+          "## 1.1 Knight Sprite",
+          "# 2. Shadow Creature",
+          "## 2.1 Shadow Creature Sprite",
+          "# 3. Word Crystals",
+          "## 3.1 Crystal Base",
+          "# 4. Exit Gate",
+          "## 4.1 Magical Portal",
+          "# 5. Dungeon Background",
+          "## 5.1 Stone Floor Pattern",
+          "## 5.2 Wall Borders",
+          "# 6. UI Elements",
+          "## 6.1 Virtual DPad",
+          "# Asset Summary Table",
+          "# Asset Placement",
+          "# MVP Approach"
+        ],
+        "byte_length": 3135
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-05",
+      "identical_hash_group": "sha256:69ceaf480ac5eb5a9552e36b4e560a18569b3384af3290bda48ea3fd0171a8de",
+      "inspection_source": {
+        "byte_size": 364,
+        "canonical_path": "apps/advantage-games/measure/tracks/labyrinth-goblin-king-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "69ceaf480ac5eb5a9552e36b4e560a18569b3384af3290bda48ea3fd0171a8de",
+        "source_blob_oid": "46a1a75338fe2f0fc71d79b5770e706abd972979"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "labyrinth-goblin-king-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-05",
+      "identical_hash_group": "sha256:6a9374ce0831a80d2f6b6934cb5d68803778243be67a20c18bd60c00e7ad4036",
+      "inspection_source": {
+        "byte_size": 647,
+        "canonical_path": "apps/advantage-games/public/vocab/dragon-rider.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "6a9374ce0831a80d2f6b6934cb5d68803778243be67a20c18bd60c00e7ad4036",
+        "source_blob_oid": "7e33c7456d5f748675e7fcfb88dee43dffebfb10"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "array",
+        "item_count": 11
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-06",
+      "identical_hash_group": "sha256:71525c6f63a5ee08f477d1f490823280c4d04ff4dd7905b4030f82973e026cd8",
+      "inspection_source": {
+        "byte_size": 473,
+        "canonical_path": "apps/advantage-games/measure/archive/dungeon-liberator-sentences-bug/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "71525c6f63a5ee08f477d1f490823280c4d04ff4dd7905b4030f82973e026cd8",
+        "source_blob_oid": "c57535b28a8ab79abafbd1d8dd271290480dec7e"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created",
+          "description",
+          "estimated_tasks",
+          "plan",
+          "priority",
+          "spec",
+          "status",
+          "title",
+          "trackId",
+          "type",
+          "updated"
+        ],
+        "direct_scalar_fields": {
+          "title": "Dungeon Liberator Sentences Bug Fix",
+          "status": "completed"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-06",
+      "identical_hash_group": "sha256:72a31ae85afa63a25c629184a5b3c70091fa4e49af303d5faf83f160c38a0ef1",
+      "inspection_source": {
+        "byte_size": 3083,
+        "canonical_path": "packages/codecamp-knowledge/fixtures/apk-guided/activity-tutorial.json",
+        "locator_kind": "git_blob",
+        "revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+        "sha256": "72a31ae85afa63a25c629184a5b3c70091fa4e49af303d5faf83f160c38a0ef1",
+        "source_blob_oid": "f75c14e1d3da12e714ec1ccc9000ed7993ae5de6"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "activityId",
+          "activityVersion",
+          "allowedCommands",
+          "allowedFiles",
+          "completionCriteria",
+          "graphVersion",
+          "repositoryId",
+          "schemaVersion",
+          "steps"
+        ],
+        "direct_scalar_fields": {}
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-06",
+      "identical_hash_group": "sha256:765e2a7de091dae634f8ff13d47b553ae9ae7b5378bd3e61816e9fd2a6d3655f",
+      "inspection_source": {
+        "byte_size": 264,
+        "canonical_path": "apps/advantage-games/measure/archive/storm-castle-tower-20260320/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "765e2a7de091dae634f8ff13d47b553ae9ae7b5378bd3e61816e9fd2a6d3655f",
+        "source_blob_oid": "9b858d69b409ece19671ff506c8ec6f595f32906"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "completed_at",
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "storm-castle-tower-20260320"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-06",
+      "identical_hash_group": "sha256:81a06cc7e295a8fb0370ab9dd4618e59101eb619623340c420d1be333383cfe5",
+      "inspection_source": {
+        "byte_size": 349,
+        "canonical_path": "apps/advantage-games/measure/tracks/griffin-sky-joust-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "81a06cc7e295a8fb0370ab9dd4618e59101eb619623340c420d1be333383cfe5",
+        "source_blob_oid": "2ea5a60b3271c69a3aa684d588107d650c76a996"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "griffin-sky-joust-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-06",
+      "identical_hash_group": "sha256:821a9765e9b613afaefd0ae0341f14d2f5089578765cd2ea8ee7660fe9c49e3f",
+      "inspection_source": {
+        "byte_size": 461,
+        "canonical_path": "apps/advantage-games/measure/archive/haunted_library_flaky_fix_20260416/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "821a9765e9b613afaefd0ae0341f14d2f5089578765cd2ea8ee7660fe9c49e3f",
+        "source_blob_oid": "10dab975300478d6833edb04cbb7246ed571c57e"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created",
+          "description",
+          "estimated_tasks",
+          "plan",
+          "priority",
+          "spec",
+          "status",
+          "title",
+          "trackId",
+          "type",
+          "updated"
+        ],
+        "direct_scalar_fields": {
+          "title": "Haunted Library Flaky Tests Fix",
+          "status": "completed"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-06",
+      "identical_hash_group": "sha256:83e52d0cd0e24a372ef1de6cfc12e2a0190679e87937a604a0255059d3f400e2",
+      "inspection_source": {
+        "byte_size": 339,
+        "canonical_path": "apps/advantage-games/measure/archive/shadow-gate-dungeon-20260320/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "83e52d0cd0e24a372ef1de6cfc12e2a0190679e87937a604a0255059d3f400e2",
+        "source_blob_oid": "cf0b182366ed6faba624dad213c6c49814872d22"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "completed_at",
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "shadow-gate-dungeon-20260320"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-07",
+      "identical_hash_group": "sha256:864ad893f61c2efb794a0fb42b4a33064b5f9c6908bc298dd6780742f9e1d519",
+      "inspection_source": {
+        "byte_size": 5582,
+        "canonical_path": "apps/advantage-games/measure/archive/wizard_vs_zombie_20260104/asset-spec.md",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "864ad893f61c2efb794a0fb42b4a33064b5f9c6908bc298dd6780742f9e1d519",
+        "source_blob_oid": "301307890bd17f1ee07ccb84b3f1ea9da2b84174"
+      },
+      "evidence_kind": "direct_text_markdown_bytes",
+      "observation": {
+        "headings": [
+          "Zombie Tag \u2014 Asset Inventory & Pose Sheet Plan",
+          "# 1. Player Character \u2014 Wizard (CORE ASSET)",
+          "## 1.1 Wizard Pose Sheet (3\u00d73)",
+          "## 1.2 Wizard Critical Overlay (STATIC)",
+          "# 2. Enemy \u2014 Zombie (PRIMARY PRESSURE UNIT)",
+          "## 2.1 Zombie Walk Pose Sheet (3\u00d73)",
+          "## 2.2 Zombie Shadow (STATIC)",
+          "# 3. Vocabulary Orbs (CRITICAL LEARNING OBJECT)",
+          "## 3.1 Orb Base (STATIC)",
+          "## 3.2 Orb Glow Loop (3-Frame Mini Sheet)",
+          "## 3.3 Orb Collected Effect (STATIC / MINI SHEET)",
+          "# 4. Shockwave Effect (FEEDBACK CORE)",
+          "## 4.1 Shockwave Ring (5\u20137 Frames)",
+          "# 5. Arena Floor & Environment (STATIC TILES)",
+          "## 5.1 Floor Tile (SEAMLESS)",
+          "## 5.2 Arena Boundary Markers (OPTIONAL)",
+          "# 6. UI-Related Visual Assets (NON-INTERACTIVE)",
+          "## 6.1 Health Bar Elements",
+          "## 6.2 Prompt Panel Background",
+          "# 7. Universal Utility Assets",
+          "## 7.1 Ground Shadow (GLOBAL)",
+          "## 7.2 Hit / Contact Flash (STATIC)",
+          "# 8. Asset Summary Table (Locked Scope)",
+          "# 9. Explicitly Excluded (To Prevent Scope Creep)"
+        ],
+        "byte_length": 5582
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-07",
+      "identical_hash_group": "sha256:89dc4ac873d0b787a8e0ee7391c1153f47fecbc94291064fa3273f7e954efa10",
+      "inspection_source": {
+        "byte_size": 8294,
+        "canonical_path": "apps/advantage-games/measure/archive/rune_match_20260104/asset-spec.md",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "89dc4ac873d0b787a8e0ee7391c1153f47fecbc94291064fa3273f7e954efa10",
+        "source_blob_oid": "60dfe45bf7a5650cfef8dfc34679a14679ce8488"
+      },
+      "evidence_kind": "direct_text_markdown_bytes",
+      "observation": {
+        "headings": [
+          "Rune Match \u2014 Asset Inventory & Specification",
+          "# 1. Monsters (PRIMARY ANTAGONISTS)",
+          "## 1.1 Goblin (3 XP - Easy)",
+          "## 1.2 Skeleton (6 XP - Medium)",
+          "## 1.3 Orc (9 XP - Hard)",
+          "## 1.4 Dragon (12 XP - Boss)",
+          "## 1.5 Monster Display Size",
+          "# 2. Rune Tiles (CORE GAMEPLAY OBJECTS)",
+          "## 2.1 Base Vocabulary Rune (CRITICAL)",
+          "## 2.2 Rune States",
+          "## 2.3 Heal Rune (Power-Up)",
+          "## 2.4 Shield Rune (Power-Up)",
+          "# 3. Effects",
+          "## 3.1 Match Explosion",
+          "## 3.2 Cascade Indicator (OPTIONAL)",
+          "## 3.3 Monster Attack Effect",
+          "## 3.4 Heal Effect",
+          "## 3.5 Shield Effect",
+          "# 4. UI Elements",
+          "## 4.1 HP Bars",
+          "## 4.2 Power Word Display",
+          "## 4.3 XP Badge",
+          "# 5. Backgrounds",
+          "## 5.1 Monster Selection Screen Background",
+          "## 5.2 Game Board Background",
+          "## 5.3 Monster Arena Area",
+          "# 6. Game State Screens",
+          "## 6.1 Victory Banner",
+          "## 6.2 Defeat Banner",
+          "# 7. Asset Summary Table",
+          "# 8. Explicitly Excluded (Scope Control)",
+          "# 9. Technical Notes"
+        ],
+        "byte_length": 8294
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-07",
+      "identical_hash_group": "sha256:8a6c6175d24ed6ba6bd324da2184bbf7cf3186308acc07fbdf4339724b4058f0",
+      "inspection_source": {
+        "byte_size": 347,
+        "canonical_path": "apps/advantage-games/measure/archive/magic-defense-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "8a6c6175d24ed6ba6bd324da2184bbf7cf3186308acc07fbdf4339724b4058f0",
+        "source_blob_oid": "9c57bcc932372452d507f25c8e17566fcc53d5ad"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "magic-defense-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-07",
+      "identical_hash_group": "sha256:8b752de8f9acc4bc28107d805cb0d53964d55d36e862453c692ae0b794033bb1",
+      "inspection_source": {
+        "byte_size": 1217,
+        "canonical_path": "apps/advantage-games/measure/tracks/babel-architect-phaser-exemplar_20260708/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "8b752de8f9acc4bc28107d805cb0d53964d55d36e862453c692ae0b794033bb1",
+        "source_blob_oid": "09b4cd28132c889b71f607e7b3bffdd9b627b4b0"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "priority",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "cancelled",
+          "track_id": "babel-architect-phaser-exemplar_20260708"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-07",
+      "identical_hash_group": "sha256:8f73b5f28883d172c3e1c561b68e80b6a4f3ffab566c7fdfbb3d3dab9ab6b8de",
+      "inspection_source": {
+        "byte_size": 361,
+        "canonical_path": "apps/advantage-games/measure/tracks/alchemists-synthesis-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "8f73b5f28883d172c3e1c561b68e80b6a4f3ffab566c7fdfbb3d3dab9ab6b8de",
+        "source_blob_oid": "d262649305d4298e956d8cc54806a2040290a902"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "alchemists-synthesis-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-07",
+      "identical_hash_group": "sha256:9ad91352509cc743af8038c5784e7e24c38940a838e14b907f5bdb5edee98c39",
+      "inspection_source": {
+        "byte_size": 376,
+        "canonical_path": "apps/advantage-games/measure/archive/village-guardian-20260320/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "9ad91352509cc743af8038c5784e7e24c38940a838e14b907f5bdb5edee98c39",
+        "source_blob_oid": "3e940583603eab376cafeb4b012d84959a8f9e84"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "completed_at",
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "village-guardian-20260320"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-08",
+      "identical_hash_group": "sha256:9f8c13f96fe90c9d47d9b5fe5c65b0628a4bbcf0ad4a2299140ebbab4d624c49",
+      "inspection_source": {
+        "byte_size": 267,
+        "canonical_path": "apps/advantage-games/measure/archive/paladins-twin-soul-20260321/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "9f8c13f96fe90c9d47d9b5fe5c65b0628a4bbcf0ad4a2299140ebbab4d624c49",
+        "source_blob_oid": "5325d1240c6712c2b9c48db32e646a07e190c12b"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "completed_at",
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "paladins-twin-soul-20260321"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-08",
+      "identical_hash_group": "sha256:a05dc35f80130771bf0340794717f830793c9a9fa712f846514b08f45f4d556d",
+      "inspection_source": {
+        "byte_size": 722,
+        "canonical_path": "apps/advantage-games/public/vocab/wizard-vs-zombie.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "a05dc35f80130771bf0340794717f830793c9a9fa712f846514b08f45f4d556d",
+        "source_blob_oid": "af0580ca46f432c9d40c6d464f1cbb6e7bf86ff2"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "array",
+        "item_count": 12
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-08",
+      "identical_hash_group": "sha256:a22f062a6a895aebf110115aaf2755c58ac835ce4e988ac725ba16be49894772",
+      "inspection_source": {
+        "byte_size": 343,
+        "canonical_path": "apps/advantage-games/measure/tracks/castle-defense-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "a22f062a6a895aebf110115aaf2755c58ac835ce4e988ac725ba16be49894772",
+        "source_blob_oid": "302f60783964025a279bb2e3c3589dced28e4d10"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "castle-defense-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-08",
+      "identical_hash_group": "sha256:a302b9e13b2993c81cebff6a7eb8423389522e9b313e0ce4af865a01a64ba538",
+      "inspection_source": {
+        "byte_size": 341,
+        "canonical_path": "apps/advantage-games/measure/tracks/dragon-flight-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "a302b9e13b2993c81cebff6a7eb8423389522e9b313e0ce4af865a01a64ba538",
+        "source_blob_oid": "6c50fb7e3358fc8b6df5ca686b3624dcf6e77950"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "dragon-flight-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-08",
+      "identical_hash_group": "sha256:a3f8ff78c262331acb1edfbca251d8dabc970f68d7d6cbea5d669864961dab30",
+      "inspection_source": {
+        "byte_size": 384,
+        "canonical_path": "apps/advantage-games/measure/archive/griffin_sky_joust_any_type_fix_20260408/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "a3f8ff78c262331acb1edfbca251d8dabc970f68d7d6cbea5d669864961dab30",
+        "source_blob_oid": "5ae024af0509756dd3c5a5556e5e1542c77a3127"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "created",
+          "description",
+          "id",
+          "priority",
+          "status",
+          "techDebt",
+          "techDebtItem",
+          "title",
+          "type"
+        ],
+        "direct_scalar_fields": {
+          "title": "Griffin Sky-Joust any Type Fix",
+          "status": "completed"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-08",
+      "identical_hash_group": "sha256:a75f25333699e0f17ac269ff44409fda650633ae81dc9e7bd7e02b14cf197e2e",
+      "inspection_source": {
+        "byte_size": 347,
+        "canonical_path": "apps/advantage-games/measure/tracks/village-guardian-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "a75f25333699e0f17ac269ff44409fda650633ae81dc9e7bd7e02b14cf197e2e",
+        "source_blob_oid": "9afbc3a7b9b994e635314ac85e41c184d9da3a7b"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "village-guardian-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-08",
+      "identical_hash_group": "sha256:a820ae0db6cbc5a41ea770fdcb7c9a365fdf8eda35eb8a68fcb53aa7f5c8eeb0",
+      "inspection_source": {
+        "byte_size": 3049,
+        "canonical_path": "apps/advantage-games/measure/archive/spellweavers-run-20260319/asset-spec.md",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "a820ae0db6cbc5a41ea770fdcb7c9a365fdf8eda35eb8a68fcb53aa7f5c8eeb0",
+        "source_blob_oid": "2bb9f8c3c3d343f526b0d5cfb1cb595e2fe1a329"
+      },
+      "evidence_kind": "direct_text_markdown_bytes",
+      "observation": {
+        "headings": [
+          "Spellweaver's Run \u2014 Asset Inventory & Specification",
+          "# Platform Notes",
+          "# 1. Word Orbs",
+          "## 1.1 Word Orb Sprite",
+          "# 2. UI Elements",
+          "## 2.1 Floating Scroll",
+          "## 2.2 Mana Bar",
+          "# 3. Backgrounds",
+          "## 3.1 Parallax Layer 1 - Far Trees",
+          "## 3.2 Parallax Layer 2 - Mid Trees",
+          "## 3.3 Parallax Layer 3 - Near Elements",
+          "# 4. Effects (Optional)",
+          "## 4.1 Sparkle Particle",
+          "## 4.2 Magic Trail",
+          "# Asset Summary Table",
+          "# Asset Placement",
+          "# Explicitly Excluded (Scope Control)"
+        ],
+        "byte_length": 3049
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-08",
+      "identical_hash_group": "sha256:a886adccc7b9c27014fbd052418e9a55a7bfda26bafa195f4daa839beae8f6b9",
+      "inspection_source": {
+        "byte_size": 265,
+        "canonical_path": "apps/advantage-games/measure/archive/realm-carver-20260320/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "a886adccc7b9c27014fbd052418e9a55a7bfda26bafa195f4daa839beae8f6b9",
+        "source_blob_oid": "f7ee09ee0cfc5bd12a120c790f55ae5aa2da53f6"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "completed_at",
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "realm-carver-20260320"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-08",
+      "identical_hash_group": "sha256:a8ef7d446193e9e52930ba2f6443b0b19da8c37dceff8bdf4e9d0753e6f51eb5",
+      "inspection_source": {
+        "byte_size": 271,
+        "canonical_path": "apps/advantage-games/measure/archive/magic_defense_refactor_20260102/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "a8ef7d446193e9e52930ba2f6443b0b19da8c37dceff8bdf4e9d0753e6f51eb5",
+        "source_blob_oid": "79be45170c07909d121d3700980d8a5ec174a1b0"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "magic_defense_refactor_20260102"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-09",
+      "identical_hash_group": "sha256:ace05914dedaac215cc14eb511d4a490528c909a6ecd74fbfe554cac9e9c1c71",
+      "inspection_source": {
+        "byte_size": 345,
+        "canonical_path": "apps/advantage-games/measure/tracks/haunted-library-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "ace05914dedaac215cc14eb511d4a490528c909a6ecd74fbfe554cac9e9c1c71",
+        "source_blob_oid": "e54e28363082b735c175c2e8c2b95e6eb89c53fd"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "haunted-library-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-09",
+      "identical_hash_group": "sha256:b0d6db77341b211d18e6b200639db48dbce1f588e484fa50522924c9641e282f",
+      "inspection_source": {
+        "byte_size": 504,
+        "canonical_path": "apps/advantage-games/measure/archive/realm_carver_coverage_20260415/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "b0d6db77341b211d18e6b200639db48dbce1f588e484fa50522924c9641e282f",
+        "source_blob_oid": "256982c3694311d3fc5180ef29444db6bfc7a86a"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "realm_carver_coverage_20260415"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-09",
+      "identical_hash_group": "sha256:b25e681e415b2d1bbc784ccfb059dd4f29971d95a04d5945607ef5508943ab48",
+      "inspection_source": {
+        "byte_size": 438,
+        "canonical_path": "apps/advantage-games/measure/tracks/sorcerer-ziggurat-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "b25e681e415b2d1bbc784ccfb059dd4f29971d95a04d5945607ef5508943ab48",
+        "source_blob_oid": "ff376c683f8af1476cec40bf33120b497033b33f"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "sorcerer-ziggurat-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-09",
+      "identical_hash_group": "sha256:b682c99454ddd44ae9e8171888f44767fbb02f2e6e47f0c4581aa212559ca908",
+      "inspection_source": {
+        "byte_size": 272,
+        "canonical_path": "apps/advantage-games/measure/archive/gryphon-patrol-20260321/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "b682c99454ddd44ae9e8171888f44767fbb02f2e6e47f0c4581aa212559ca908",
+        "source_blob_oid": "dc2a0fd65a79efd8fa3474b2912c4685c3de9d44"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "completed_at",
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "gryphon-patrol-20260321"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-09",
+      "identical_hash_group": "sha256:b9673735740b30b0465b5a09869bce580d6ad5ab500ee5a8b688f78c381cdd1e",
+      "inspection_source": {
+        "byte_size": 346,
+        "canonical_path": "apps/advantage-games/measure/tracks/archers-revenge-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "b9673735740b30b0465b5a09869bce580d6ad5ab500ee5a8b688f78c381cdd1e",
+        "source_blob_oid": "d20c04939a0d0c4ae4f0c44f6fcde0c0502a459c"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "archers-revenge-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-10",
+      "identical_hash_group": "sha256:bfba8a4fdc7c3df1570f79f8a55534ad002c56ad76ba9d6f566b3c2e39a0c26f",
+      "inspection_source": {
+        "byte_size": 255,
+        "canonical_path": "apps/advantage-games/measure/archive/abyssal-well-20260320/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "bfba8a4fdc7c3df1570f79f8a55534ad002c56ad76ba9d6f566b3c2e39a0c26f",
+        "source_blob_oid": "5d6f3f282f1c5a6d568e5b44553d62c7598e3031"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "completed_at",
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "abyssal-well-20260320"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-10",
+      "identical_hash_group": "sha256:c00094c549954c36040ee3fdb594d156f9c298b66910886736a92d0330932266",
+      "inspection_source": {
+        "byte_size": 269,
+        "canonical_path": "apps/advantage-games/measure/archive/griffin-sky-joust-20260320/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "c00094c549954c36040ee3fdb594d156f9c298b66910886736a92d0330932266",
+        "source_blob_oid": "c0558d31033595cb566435b37ceadafc4d87c297"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "completed_at",
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "griffin-sky-joust-20260320"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-10",
+      "identical_hash_group": "sha256:c362cf88179321e1c29a8cb528dad1586d0e27b69197305c29999c9396d8123b",
+      "inspection_source": {
+        "byte_size": 560,
+        "canonical_path": "apps/advantage-games/public/vocab/rpg-battle.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "c362cf88179321e1c29a8cb528dad1586d0e27b69197305c29999c9396d8123b",
+        "source_blob_oid": "47ef8fb381349eedc7cd5979948f4f4b390dece8"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "array",
+        "item_count": 10
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-10",
+      "identical_hash_group": "sha256:c3fb517992a741dc477e717a3ce7699bbadc6f34578b388cf889ab79e441bd41",
+      "inspection_source": {
+        "byte_size": 335,
+        "canonical_path": "apps/advantage-games/measure/tracks/rune-match-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "c3fb517992a741dc477e717a3ce7699bbadc6f34578b388cf889ab79e441bd41",
+        "source_blob_oid": "5fe9593abcc06a450678e6bb1b1e72f037ea326c"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "rune-match-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-10",
+      "identical_hash_group": "sha256:c47bfd05f4fca2823a4353d5b8549cee35ef18d1669b209594310e7157a4f29d",
+      "inspection_source": {
+        "byte_size": 297,
+        "canonical_path": "apps/advantage-games/measure/archive/castle-defense-fixes-20260129/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "c47bfd05f4fca2823a4353d5b8549cee35ef18d1669b209594310e7157a4f29d",
+        "source_blob_oid": "c01692faee22a940be39e49bff48e541f9e132f5"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "castle-defense-fixes-20260129"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-10",
+      "identical_hash_group": "sha256:c6c572dd9f1f508f9906fc343c18788862b6a72198ebb35628c7a557ccbe181a",
+      "inspection_source": {
+        "byte_size": 393,
+        "canonical_path": "apps/advantage-games/measure/archive/dragon-rider-reskin-20260131/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "c6c572dd9f1f508f9906fc343c18788862b6a72198ebb35628c7a557ccbe181a",
+        "source_blob_oid": "7818a2ec3ec16b2922cc833ba614086407cc8906"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "completed_at",
+          "created",
+          "description",
+          "id",
+          "priority",
+          "status",
+          "title",
+          "type"
+        ],
+        "direct_scalar_fields": {
+          "title": "Dragon Rider - Reskin of Dragon Flight",
+          "status": "completed"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-10",
+      "identical_hash_group": "sha256:c865725efe13735a9ed1884a9491fb07f815c9daa60f05a0f166c2f30b097110",
+      "inspection_source": {
+        "byte_size": 393,
+        "canonical_path": "apps/advantage-games/measure/archive/griffin-riders-escape/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "c865725efe13735a9ed1884a9491fb07f815c9daa60f05a0f166c2f30b097110",
+        "source_blob_oid": "452079e80d6fa5c82610a153b7c5b378ea693217"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "estimated_tasks",
+          "id",
+          "name",
+          "priority",
+          "status",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "name": "Griffin Rider's Escape",
+          "status": "in_progress"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-10",
+      "identical_hash_group": "sha256:ca4e01fc113605d588769f7bce76a342c37fd301eac9ff6bd42e0461753e9446",
+      "inspection_source": {
+        "byte_size": 1439,
+        "canonical_path": "apps/advantage-games/measure/archive/rpg_battle_20260102/asset-spec.md",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "ca4e01fc113605d588769f7bce76a342c37fd301eac9ff6bd42e0461753e9446",
+        "source_blob_oid": "396f50d829dd32fdad0c1e2bae07656e1d93a106"
+      },
+      "evidence_kind": "direct_text_markdown_bytes",
+      "observation": {
+        "headings": [
+          "Asset Specification: 3\u00d73 RPG Pose Sheet",
+          "# Grid Layout (3\u00d73)",
+          "# Orientation Rules",
+          "# Paths and Naming"
+        ],
+        "byte_length": 1439
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-10",
+      "identical_hash_group": "sha256:caafc676b691338764db7da16eee41ca9daf4c112a0a7c7bd94c8196bcba86e5",
+      "inspection_source": {
+        "byte_size": 349,
+        "canonical_path": "apps/advantage-games/measure/tracks/enchanted-library-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "caafc676b691338764db7da16eee41ca9daf4c112a0a7c7bd94c8196bcba86e5",
+        "source_blob_oid": "387b4dbb88e6be4289adf599a507d12179b4e6f5"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "enchanted-library-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-10",
+      "identical_hash_group": "sha256:cb2dd69646a9eae037c3496764bf24b383660cf4b8f4c31ba30bf76f7f4b9e24",
+      "inspection_source": {
+        "byte_size": 1063,
+        "canonical_path": "apps/advantage-games/public/vocab/castle-defense.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "cb2dd69646a9eae037c3496764bf24b383660cf4b8f4c31ba30bf76f7f4b9e24",
+        "source_blob_oid": "fec9f311210d6da19730a9b4d30709ad96291483"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "array",
+        "item_count": 10
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-11",
+      "identical_hash_group": "sha256:cee877929a675958168bfeee3983279ba7578833d40bb2f1647d3984a5bbd360",
+      "inspection_source": {
+        "byte_size": 515,
+        "canonical_path": "apps/advantage-games/measure/archive/castle-defense-rewrite-20260127/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "cee877929a675958168bfeee3983279ba7578833d40bb2f1647d3984a5bbd360",
+        "source_blob_oid": "914ad20451008432a4350ebf936502404c3cdbbe"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "code_reduction",
+          "completed_at",
+          "completed_phases",
+          "created_at",
+          "description",
+          "estimated_phases",
+          "performance_result",
+          "priority",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "complete",
+          "track_id": "castle-defense-rewrite-20260127"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-11",
+      "identical_hash_group": "sha256:d508af47210202382f630545772f4a4a67111bace9dc618e076d61867b2597a0",
+      "inspection_source": {
+        "byte_size": 347,
+        "canonical_path": "apps/advantage-games/measure/tracks/wizard-vs-zombie-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "d508af47210202382f630545772f4a4a67111bace9dc618e076d61867b2597a0",
+        "source_blob_oid": "f8d98c0253a2125d79a16281d03fc33eb5160038"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "wizard-vs-zombie-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-11",
+      "identical_hash_group": "sha256:d779554b2f5344f348fc09cd3598c63952926eac3633aa908f090a283ae717b0",
+      "inspection_source": {
+        "byte_size": 335,
+        "canonical_path": "apps/advantage-games/measure/tracks/rpg-battle-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "d779554b2f5344f348fc09cd3598c63952926eac3633aa908f090a283ae717b0",
+        "source_blob_oid": "9b7132fd2085b9b2668f924966775e322cb02bea"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "rpg-battle-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-11",
+      "identical_hash_group": "sha256:da83207fc3ee9355543915924d58ce83618abeeb6f5e5e534b8f6ccad1357121",
+      "inspection_source": {
+        "byte_size": 299,
+        "canonical_path": "apps/advantage-games/measure/archive/castle-defense-20260115/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "da83207fc3ee9355543915924d58ce83618abeeb6f5e5e534b8f6ccad1357121",
+        "source_blob_oid": "77d42cead8388c69235e0df2b6d8da2fc402e7d0"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "castle-defense-20260115"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-11",
+      "identical_hash_group": "sha256:de63b64067b4fb141df8cbd6c2721b57902450b09a1e7597f96da515bc321697",
+      "inspection_source": {
+        "byte_size": 339,
+        "canonical_path": "apps/advantage-games/measure/tracks/dragon-rider-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "de63b64067b4fb141df8cbd6c2721b57902450b09a1e7597f96da515bc321697",
+        "source_blob_oid": "dba374c20ee211a52a36f1e5c483f849369cba91"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "dragon-rider-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-12",
+      "identical_hash_group": "sha256:e2c3e9f281a502fe12c41cbc06ae6a41b71b8c3a16648b34ebd6eafb9e3fdbe9",
+      "inspection_source": {
+        "byte_size": 2414,
+        "canonical_path": "apps/advantage-games/public/vocab/default.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "e2c3e9f281a502fe12c41cbc06ae6a41b71b8c3a16648b34ebd6eafb9e3fdbe9",
+        "source_blob_oid": "f1019f3b1e8effe19c8a9e6ba9e513aaa34c8566"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "array",
+        "item_count": 12
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-12",
+      "identical_hash_group": "sha256:e32923d6a4fa205c3c156a9b33fd0f08ef26db5cb0e8fcec6d0ab84530118684",
+      "inspection_source": {
+        "byte_size": 351,
+        "canonical_path": "apps/advantage-games/measure/archive/babel-architect-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "e32923d6a4fa205c3c156a9b33fd0f08ef26db5cb0e8fcec6d0ab84530118684",
+        "source_blob_oid": "f140bdf526f0ce7a06e8822f23391c877b1d07ed"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "babel-architect-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-12",
+      "identical_hash_group": "sha256:ec243a5be4b4ca89a38daf6dcf6a7bca58ba3c5eb34252b3c98060c422ab7ae0",
+      "inspection_source": {
+        "byte_size": 343,
+        "canonical_path": "apps/advantage-games/measure/tracks/abyssal-well-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "ec243a5be4b4ca89a38daf6dcf6a7bca58ba3c5eb34252b3c98060c422ab7ae0",
+        "source_blob_oid": "782bd10dfc01f9e7245831161d9e161fad5e9cf5"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "abyssal-well-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-12",
+      "identical_hash_group": "sha256:ecdbb1edb75045e54afdbbff523e007d8566e0fb0b3e762e26486f2c3d8d0e12",
+      "inspection_source": {
+        "byte_size": 353,
+        "canonical_path": "apps/advantage-games/measure/tracks/shadow-gate-dungeon-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "ecdbb1edb75045e54afdbbff523e007d8566e0fb0b3e762e26486f2c3d8d0e12",
+        "source_blob_oid": "ea472000d7a53271a6f94f6b292c8bf0a2558d98"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "shadow-gate-dungeon-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-12",
+      "identical_hash_group": "sha256:ee57d12ed5a9ad679a6eec74a6954d93bbf9b114b923b70db16097ed276a1732",
+      "inspection_source": {
+        "byte_size": 2263,
+        "canonical_path": "apps/advantage-games/measure/archive/potion-rush-20260107/asset-spec.md",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "ee57d12ed5a9ad679a6eec74a6954d93bbf9b114b923b70db16097ed276a1732",
+        "source_blob_oid": "d2c4f5dd5c392f9c0616f943426b8e4ada62ef63"
+      },
+      "evidence_kind": "direct_text_markdown_bytes",
+      "observation": {
+        "headings": [
+          "Asset Specification: Potion Rush",
+          "# Visual Style",
+          "# Required Sprites",
+          "## 1. The Cauldrons",
+          "## 2. Ingredients (Words)",
+          "## 3. Customers",
+          "## 4. Environment",
+          "## 5. UI Elements",
+          "# Audio Requirements"
+        ],
+        "byte_length": 2263
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-12",
+      "identical_hash_group": "sha256:ee7b7675b5f04beb282c124b7f92f88657f20631f9793ea23b3e19ce9d5cad0a",
+      "inspection_source": {
+        "byte_size": 343,
+        "canonical_path": "apps/advantage-games/measure/tracks/devourer-slime-compliance-audit_20260426/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "ee7b7675b5f04beb282c124b7f92f88657f20631f9793ea23b3e19ce9d5cad0a",
+        "source_blob_oid": "9aa575903d130fe370cb53d8f9ce57208683c498"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "actual_tasks",
+          "created_at",
+          "description",
+          "deviation_notes",
+          "estimated_tasks",
+          "status",
+          "track_id",
+          "type",
+          "updated_at"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "devourer-slime-compliance-audit_20260426"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-12",
+      "identical_hash_group": "sha256:f66d082492332561d0b77ec4c2d444ab071c77b688475343bbf2356bf3d5971a",
+      "inspection_source": {
+        "byte_size": 199,
+        "canonical_path": "apps/advantage-games/measure/archive/potion-rush-20260107/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "f66d082492332561d0b77ec4c2d444ab071c77b688475343bbf2356bf3d5971a",
+        "source_blob_oid": "76b0e6c18c594be6368e5ecea16f4818f2d180ed"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type"
+        ],
+        "direct_scalar_fields": {
+          "status": "new",
+          "track_id": "potion-rush-20260107"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    },
+    {
+      "batch_id": "AF-12",
+      "identical_hash_group": "sha256:fb00f3bc073bf2bbd2349ed0fd1e43e99ca44ff65d958233254e6d305fef7618",
+      "inspection_source": {
+        "byte_size": 351,
+        "canonical_path": "apps/advantage-games/measure/archive/rune-forge-chamber-20260320/metadata.json",
+        "locator_kind": "git_blob",
+        "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+        "sha256": "fb00f3bc073bf2bbd2349ed0fd1e43e99ca44ff65d958233254e6d305fef7618",
+        "source_blob_oid": "3669e0ca6e9cb7fb77e7867684d3325045f46812"
+      },
+      "evidence_kind": "direct_text_json_bytes",
+      "observation": {
+        "root_kind": "object",
+        "top_level_keys": [
+          "completed_at",
+          "created_at",
+          "description",
+          "status",
+          "track_id",
+          "type"
+        ],
+        "direct_scalar_fields": {
+          "status": "completed",
+          "track_id": "rune-forge-chamber-20260320"
+        }
+      },
+      "limitation": "Direct byte-level text/data observation only; no visual, audio, suitability, replacement, or disposition claim."
+    }
+  ]
+}

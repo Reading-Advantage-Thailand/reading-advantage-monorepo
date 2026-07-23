@@ -25,18 +25,18 @@
 
 ## Phase 3: Candidate-level visual and audio inspection
 
-- [~] Task: Inspect every candidate or justified identical-hash group; record each path
-- [b] Task: Record visible/audible content, state/direction coverage, baked text/UI, placeholder, and corruption risks — deferred:direct-audio-multimodal-inspection
-- [b] Task: Preserve contact sheets/audio playlists only as navigation evidence — deferred:direct-audio-multimodal-inspection
-- [b] Task: Reconcile every inspection receipt to candidate rows — deferred:phase3-inspection-records
-- [b] Task: BLOCKED — Root-orchestrator fitness verification for Phase 3 using direct asset inspection and independent evidence (deferred:phase3-green)
+- [x] Task: Inspect every candidate or justified identical-hash group; record each path (phase3-root-acceptance.json)
+- [x] Task: Record visible/audible content, state/direction coverage, baked text/UI, placeholder, and corruption risks (phase3-root-acceptance.json)
+- [x] Task: Preserve contact sheets/audio playlists only as navigation evidence (phase3-root-acceptance.json)
+- [x] Task: Reconcile every inspection receipt to candidate rows (phase3-root-acceptance.json)
+- [x] Task: Root-orchestrator fitness verification for Phase 3 using direct asset inspection and independent evidence (phase3-root-acceptance.json)
 
 ## Phase 4: Responsive legacy-function and replacement join
 
-- [b] Task: Join candidates to accepted concrete scene usages from pilot and cohort manifests — deferred:phase3-root-acceptance
-- [b] Task: Record compact/wide, text-capacity, focal/crop/tile/slice, state, collision/readability, and current legacy-function evidence — deferred:phase3-root-acceptance
-- [b] Task: Record semantic-role/state replacement or retirement evidence; direct legacy paths remain evidence only and never become canonical standard-pack candidate keys — deferred:phase3-root-acceptance
-- [b] Task: Stop on missing scene-usage evidence rather than infer suitability — deferred:phase3-root-acceptance
+- [~] Task: Join candidates to accepted concrete scene usages from pilot and cohort manifests
+- [b] Task: Record compact/wide, text-capacity, focal/crop/tile/slice, state, collision/readability, and current legacy-function evidence — deferred:phase4-scene-usage-join
+- [b] Task: Record semantic-role/state replacement or retirement evidence; direct legacy paths remain evidence only and never become canonical standard-pack candidate keys — deferred:phase4-scene-usage-join
+- [b] Task: Stop on missing scene-usage evidence rather than infer suitability — deferred:phase4-scene-usage-join
 - [b] Task: BLOCKED — Root-orchestrator fitness verification for Phase 4 using automated joins, Kimi WebBridge where applicable, and direct visual evidence (deferred:phase4-green)
 
 ## Phase 5: Independent acceptance

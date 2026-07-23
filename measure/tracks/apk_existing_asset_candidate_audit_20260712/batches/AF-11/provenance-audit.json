@@ -1,0 +1,1115 @@
+{
+  "schema_version": "apk-asset-forensics.phase2-provenance-audit.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-11",
+  "input_binding": {
+    "phase2_input_freeze_sha256": "385248641ba8d7dcaeedd3920f4d11f67071987be06d336f3a624f5a31f724c0",
+    "phase0_input_freeze_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+    "phase1_root_acceptance_sha256": "2b30be13c8c0f6b7d1d404489c6058b48b6839f58d5ae2ce84b67f9d6a1a6d61",
+    "phase1_batch_input_sha256": {
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-11/candidate-records-base.json": "0b0c8a9a99b2fe81a03402378f8536bee42b012b2f6fa97b2d24d77ddb32dc5e",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-11/mechanical-metadata.json": "ddd94f1f87b951a8613d4a942819ffc4e91867d634671ff6224ba1d09f0ad9ff",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-11/caller-inventory.json": "eee11fb390f3e172c238abdc40d30f50db5239480bb64d1d6ba989dc6657eaef"
+    },
+    "base_denominator_sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "accepted_delta_sha256": "71592625cbe09671937b7406afa38f3f59232c0345de455467121dc038863db2",
+    "base_record_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "delta_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "effective_candidate_paths": 428,
+    "effective_identical_hash_groups": 227
+  },
+  "producer": {
+    "role": "provenance-auditor",
+    "receipt_path": "role-receipts/AF-11/provenance-auditor.json"
+  },
+  "records": [
+    {
+      "canonical_path": "apps/advantage-games/public/games/dragon-flight/parallax-top-tiling.png",
+      "sha256": "cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "0012260e43a3383e9b0743b9e5c1b426c5e77c9e",
+      "identical_hash_group": "sha256:cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/dragon-rider/parallax-top-tiling.png",
+      "sha256": "cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "0012260e43a3383e9b0743b9e5c1b426c5e77c9e",
+      "identical_hash_group": "sha256:cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+      "sha256": "cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "0012260e43a3383e9b0743b9e5c1b426c5e77c9e",
+      "identical_hash_group": "sha256:cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-rider/parallax-top-tiling.png",
+      "sha256": "cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "0012260e43a3383e9b0743b9e5c1b426c5e77c9e",
+      "identical_hash_group": "sha256:cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+      "sha256": "cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "0012260e43a3383e9b0743b9e5c1b426c5e77c9e",
+      "identical_hash_group": "sha256:cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-rider/parallax-top-tiling.png",
+      "sha256": "cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "0012260e43a3383e9b0743b9e5c1b426c5e77c9e",
+      "identical_hash_group": "sha256:cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/dragon-flight/player-3x3-sheet-facing-down.png",
+      "sha256": "cdce8535723ea3c0d99aa2d3bd8763a38b6c8d4613e87b351ab68e56027d13ab",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "33d073a0980c48a386e5c651c8db4942035da9bf",
+      "identical_hash_group": "sha256:cdce8535723ea3c0d99aa2d3bd8763a38b6c8d4613e87b351ab68e56027d13ab",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png",
+      "sha256": "cdce8535723ea3c0d99aa2d3bd8763a38b6c8d4613e87b351ab68e56027d13ab",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "33d073a0980c48a386e5c651c8db4942035da9bf",
+      "identical_hash_group": "sha256:cdce8535723ea3c0d99aa2d3bd8763a38b6c8d4613e87b351ab68e56027d13ab",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png",
+      "sha256": "cdce8535723ea3c0d99aa2d3bd8763a38b6c8d4613e87b351ab68e56027d13ab",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "33d073a0980c48a386e5c651c8db4942035da9bf",
+      "identical_hash_group": "sha256:cdce8535723ea3c0d99aa2d3bd8763a38b6c8d4613e87b351ab68e56027d13ab",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/castle-defense-rewrite-20260127/metadata.json",
+      "sha256": "cee877929a675958168bfeee3983279ba7578833d40bb2f1647d3984a5bbd360",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "914ad20451008432a4350ebf936502404c3cdbbe",
+      "identical_hash_group": "sha256:cee877929a675958168bfeee3983279ba7578833d40bb2f1647d3984a5bbd360",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/castle-defense/skeletons.png",
+      "sha256": "d44971a10760932cc13274e0af64a462875ad9396fa6e66bde68105adcf8efaa",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "3a59eb14ea69e487a1fb321b3ddd2c4fbca0fa20",
+      "identical_hash_group": "sha256:d44971a10760932cc13274e0af64a462875ad9396fa6e66bde68105adcf8efaa",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/wizard-vs-zombie-compliance-audit_20260426/metadata.json",
+      "sha256": "d508af47210202382f630545772f4a4a67111bace9dc618e076d61867b2597a0",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "f8d98c0253a2125d79a16281d03fc33eb5160038",
+      "identical_hash_group": "sha256:d508af47210202382f630545772f4a4a67111bace9dc618e076d61867b2597a0",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/rpg-battle-compliance-audit_20260426/metadata.json",
+      "sha256": "d779554b2f5344f348fc09cd3598c63952926eac3633aa908f090a283ae717b0",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "9b7132fd2085b9b2668f924966775e322cb02bea",
+      "identical_hash_group": "sha256:d779554b2f5344f348fc09cd3598c63952926eac3633aa908f090a283ae717b0",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/sounds/spellweavers-run-action.mp3",
+      "sha256": "d9c3c6b425e40eeb5c167d47832aa979833ff1cb632d58b040043d8479cf238c",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "cea3e907318feaf0ac693fbe690e36dad407830b",
+      "identical_hash_group": "sha256:d9c3c6b425e40eeb5c167d47832aa979833ff1cb632d58b040043d8479cf238c",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/castle-defense-20260115/metadata.json",
+      "sha256": "da83207fc3ee9355543915924d58ce83618abeeb6f5e5e534b8f6ccad1357121",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "77d42cead8388c69235e0df2b6d8da2fc402e7d0",
+      "identical_hash_group": "sha256:da83207fc3ee9355543915924d58ce83618abeeb6f5e5e534b8f6ccad1357121",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/cover/cover-rune-forge-chamber.png",
+      "sha256": "dd2077d6f9f23f48dd9ca147e643005b8d4c130a775ff227be9209959681b265",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "f7962509e49d8aecb44991afec9793e4693905f4",
+      "identical_hash_group": "sha256:dd2077d6f9f23f48dd9ca147e643005b8d4c130a775ff227be9209959681b265",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/dragon-flight/loading-screen-background.png",
+      "sha256": "dd9a22a59f9786d7cfeab5a1b9c615f17c3229d7589d04e93f753eb3c25a6600",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "c38161d21931060345e13d4ceebcec90e0d10622",
+      "identical_hash_group": "sha256:dd9a22a59f9786d7cfeab5a1b9c615f17c3229d7589d04e93f753eb3c25a6600",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-flight/loading-screen-background.png",
+      "sha256": "dd9a22a59f9786d7cfeab5a1b9c615f17c3229d7589d04e93f753eb3c25a6600",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "c38161d21931060345e13d4ceebcec90e0d10622",
+      "identical_hash_group": "sha256:dd9a22a59f9786d7cfeab5a1b9c615f17c3229d7589d04e93f753eb3c25a6600",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/loading-screen-background.png",
+      "sha256": "dd9a22a59f9786d7cfeab5a1b9c615f17c3229d7589d04e93f753eb3c25a6600",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "c38161d21931060345e13d4ceebcec90e0d10622",
+      "identical_hash_group": "sha256:dd9a22a59f9786d7cfeab5a1b9c615f17c3229d7589d04e93f753eb3c25a6600",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/dragon-rider-compliance-audit_20260426/metadata.json",
+      "sha256": "de63b64067b4fb141df8cbd6c2721b57902450b09a1e7597f96da515bc321697",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "dba374c20ee211a52a36f1e5c483f849369cba91",
+      "identical_hash_group": "sha256:de63b64067b4fb141df8cbd6c2721b57902450b09a1e7597f96da515bc321697",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/potion-rush/shop-wall.png",
+      "sha256": "df4cd96233d15a12cf535d868c4339f481af6f5dd2ab8e7b660ab02ae7f14bac",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "41b6b9df740b179f718ff11b59fbef1829547ed4",
+      "identical_hash_group": "sha256:df4cd96233d15a12cf535d868c4339f481af6f5dd2ab8e7b660ab02ae7f14bac",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/shop-wall.png",
+      "sha256": "df4cd96233d15a12cf535d868c4339f481af6f5dd2ab8e7b660ab02ae7f14bac",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "41b6b9df740b179f718ff11b59fbef1829547ed4",
+      "identical_hash_group": "sha256:df4cd96233d15a12cf535d868c4339f481af6f5dd2ab8e7b660ab02ae7f14bac",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/shop-wall.png",
+      "sha256": "df4cd96233d15a12cf535d868c4339f481af6f5dd2ab8e7b660ab02ae7f14bac",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "41b6b9df740b179f718ff11b59fbef1829547ed4",
+      "identical_hash_group": "sha256:df4cd96233d15a12cf535d868c4339f481af6f5dd2ab8e7b660ab02ae7f14bac",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/potion-rush/mineral.png",
+      "sha256": "df77815896bf2859b65a314c7bcaf2009d802f3f9487371bf9b12e993af43989",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "0f8545c631f87f4eaa1f6c508dc603ef6c19860a",
+      "identical_hash_group": "sha256:df77815896bf2859b65a314c7bcaf2009d802f3f9487371bf9b12e993af43989",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/mineral.png",
+      "sha256": "df77815896bf2859b65a314c7bcaf2009d802f3f9487371bf9b12e993af43989",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "0f8545c631f87f4eaa1f6c508dc603ef6c19860a",
+      "identical_hash_group": "sha256:df77815896bf2859b65a314c7bcaf2009d802f3f9487371bf9b12e993af43989",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/mineral.png",
+      "sha256": "df77815896bf2859b65a314c7bcaf2009d802f3f9487371bf9b12e993af43989",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "0f8545c631f87f4eaa1f6c508dc603ef6c19860a",
+      "identical_hash_group": "sha256:df77815896bf2859b65a314c7bcaf2009d802f3f9487371bf9b12e993af43989",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/rpg-battle/hero_male_pose_sheet_3x3.png",
+      "sha256": "dfa497b128d015528b208d1722f5d0a79027b844baf59acfe2e9dd796d6a9e78",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "e8726ff55d5ae191e8b9f34cbfe6b5cdfd8eee0c",
+      "identical_hash_group": "sha256:dfa497b128d015528b208d1722f5d0a79027b844baf59acfe2e9dd796d6a9e78",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+      "sha256": "dfa497b128d015528b208d1722f5d0a79027b844baf59acfe2e9dd796d6a9e78",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "e8726ff55d5ae191e8b9f34cbfe6b5cdfd8eee0c",
+      "identical_hash_group": "sha256:dfa497b128d015528b208d1722f5d0a79027b844baf59acfe2e9dd796d6a9e78",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+      "sha256": "dfa497b128d015528b208d1722f5d0a79027b844baf59acfe2e9dd796d6a9e78",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "e8726ff55d5ae191e8b9f34cbfe6b5cdfd8eee0c",
+      "identical_hash_group": "sha256:dfa497b128d015528b208d1722f5d0a79027b844baf59acfe2e9dd796d6a9e78",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/sounds/error.mp3",
+      "sha256": "dfee4d38e6d58ee0a784a99dc2141c1817fae5358a36cd9c66323739a1d6f9cc",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "4eb2bbd3abffd8301d3dc16824b8ba8fbdee7bf8",
+      "identical_hash_group": "sha256:dfee4d38e6d58ee0a784a99dc2141c1817fae5358a36cd9c66323739a1d6f9cc",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sounds/error.mp3",
+      "sha256": "dfee4d38e6d58ee0a784a99dc2141c1817fae5358a36cd9c66323739a1d6f9cc",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "4eb2bbd3abffd8301d3dc16824b8ba8fbdee7bf8",
+      "identical_hash_group": "sha256:dfee4d38e6d58ee0a784a99dc2141c1817fae5358a36cd9c66323739a1d6f9cc",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/rune-match/runes/rune_heal_3x2_pose_sheet.png",
+      "sha256": "e0dc8f50f5667c16f18fd7afde7e8a6239a3e633cfb36e68e36d23ac72db240c",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "e3e3be46ffe2cd9efbca2a2de28837cadccc8639",
+      "identical_hash_group": "sha256:e0dc8f50f5667c16f18fd7afde7e8a6239a3e633cfb36e68e36d23ac72db240c",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/rune-match/runes/rune_heal_3x2_pose_sheet.png",
+      "sha256": "e0dc8f50f5667c16f18fd7afde7e8a6239a3e633cfb36e68e36d23ac72db240c",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "e3e3be46ffe2cd9efbca2a2de28837cadccc8639",
+      "identical_hash_group": "sha256:e0dc8f50f5667c16f18fd7afde7e8a6239a3e633cfb36e68e36d23ac72db240c",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/rune-match/runes/rune_heal_3x2_pose_sheet.png",
+      "sha256": "e0dc8f50f5667c16f18fd7afde7e8a6239a3e633cfb36e68e36d23ac72db240c",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "e3e3be46ffe2cd9efbca2a2de28837cadccc8639",
+      "identical_hash_group": "sha256:e0dc8f50f5667c16f18fd7afde7e8a6239a3e633cfb36e68e36d23ac72db240c",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/rune-match/monsters/goblin_3x4_pose_sheet.png",
+      "sha256": "e1595f14c815230e67fb3c66366cffe92d2d8f67176bde0d792fd9ae4cd48fd8",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "e2643febcd36b29399a53cd07640971232c06688",
+      "identical_hash_group": "sha256:e1595f14c815230e67fb3c66366cffe92d2d8f67176bde0d792fd9ae4cd48fd8",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png",
+      "sha256": "e1595f14c815230e67fb3c66366cffe92d2d8f67176bde0d792fd9ae4cd48fd8",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "e2643febcd36b29399a53cd07640971232c06688",
+      "identical_hash_group": "sha256:e1595f14c815230e67fb3c66366cffe92d2d8f67176bde0d792fd9ae4cd48fd8",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png",
+      "sha256": "e1595f14c815230e67fb3c66366cffe92d2d8f67176bde0d792fd9ae4cd48fd8",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "e2643febcd36b29399a53cd07640971232c06688",
+      "identical_hash_group": "sha256:e1595f14c815230e67fb3c66366cffe92d2d8f67176bde0d792fd9ae4cd48fd8",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/rune-match/runes/rune_base_3x2_pose_sheet.png",
+      "sha256": "e1f6299482e1e3055d75816cb9a36e211fb52d1c01acf62aadb5c81da660fbd5",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "5a1c962369b7b514105949207009ad127e39906d",
+      "identical_hash_group": "sha256:e1f6299482e1e3055d75816cb9a36e211fb52d1c01acf62aadb5c81da660fbd5",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/rune-match/runes/rune_base_3x2_pose_sheet.png",
+      "sha256": "e1f6299482e1e3055d75816cb9a36e211fb52d1c01acf62aadb5c81da660fbd5",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "5a1c962369b7b514105949207009ad127e39906d",
+      "identical_hash_group": "sha256:e1f6299482e1e3055d75816cb9a36e211fb52d1c01acf62aadb5c81da660fbd5",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/rune-match/runes/rune_base_3x2_pose_sheet.png",
+      "sha256": "e1f6299482e1e3055d75816cb9a36e211fb52d1c01acf62aadb5c81da660fbd5",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "5a1c962369b7b514105949207009ad127e39906d",
+      "identical_hash_group": "sha256:e1f6299482e1e3055d75816cb9a36e211fb52d1c01acf62aadb5c81da660fbd5",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    }
+  ],
+  "resource_usage": {
+    "candidate_paths": 40,
+    "hash_groups": 18,
+    "evidence_records": 0,
+    "command_invocations": 66,
+    "bytes_read": 274633,
+    "within_ceiling": true
+  }
+}

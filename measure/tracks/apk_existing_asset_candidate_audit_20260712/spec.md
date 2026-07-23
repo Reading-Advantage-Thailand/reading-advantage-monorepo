@@ -16,11 +16,10 @@ This track depends on accepted truth gates, denominator, pilot, and all four cor
 - Per-file visible/audible content inspection.
 - Text, checkerboard, placeholder, corruption, and baked-UI risks.
 - State/direction/animation coverage.
-- Compact/wide suitability.
-- `cute_chibi_v1` and original `heroic_stylized_v1` suitability. The latter may
-  use only broad heroic-fantasy readability principles; franchise-derived
-  characters, symbols, costumes, names, and distinctive combinations are not
-  admissible.
+- Compact/wide suitability linked to accepted concrete scene usage.
+- Legacy current function plus semantic-role/state replacement or retirement
+  evidence. A legacy path is evidence only: it is never a canonical standard-pack
+  candidate key or direct production adoption path.
 - `reuse`, `adapt`, `reference`, `reject`, `replace`, or `unknown` disposition with rationale.
 - Collector and reviewer receipts.
 
@@ -38,7 +37,8 @@ This track depends on accepted truth gates, denominator, pilot, and all four cor
 - One record per denominator path.
 - No filename or visual similarity is treated as provenance or contract proof.
 - Every current caller/use is reconciled.
-- Theme and responsive suitability link to accepted concrete scene usages.
+- Responsive and legacy-function replacement/retirement evidence link to accepted
+  concrete scene usages; unproven mappings remain blocked.
 - Full candidate totals, dispositions, unknowns, and duplicate groups reconcile mechanically.
 - Zero unresolved Critical, High, or Medium findings.
 - The root orchestrator, acting as project and product owner, accepts the exact
@@ -49,6 +49,9 @@ This track depends on accepted truth gates, denominator, pilot, and all four cor
 ## Out of scope
 
 - Generating or editing production assets.
+- Adding the ElvGames standard-pack corpus to this forensic denominator or
+  repeating its per-file audit. T10 validates the standard-pack contract,
+  catalog, receipts, release, and adopted mappings without reopening T8.
 - Defining final physical contracts.
 - Semantic ontology synthesis.
 - Unfinished outputs from `../fantasy-asset-forge/` or
