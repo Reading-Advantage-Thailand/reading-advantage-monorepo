@@ -1,0 +1,1007 @@
+{
+  "schema_version": "apk-asset-forensics.phase2-provenance-audit.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-01",
+  "input_binding": {
+    "phase2_input_freeze_sha256": "385248641ba8d7dcaeedd3920f4d11f67071987be06d336f3a624f5a31f724c0",
+    "phase0_input_freeze_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+    "phase1_root_acceptance_sha256": "2b30be13c8c0f6b7d1d404489c6058b48b6839f58d5ae2ce84b67f9d6a1a6d61",
+    "phase1_batch_input_sha256": {
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/candidate-records-base.json": "968f13af83e860e7cb63fb2b09941e6fd9f5b1d7b2e7e79aa221a3b5ddc4ffc2",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/mechanical-metadata.json": "159b5cb5ce8ee09b4af358b533c88b2fb7bc9701eb3e9d8b0e890188dba48e1b",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/caller-inventory.json": "338bc1c1f6cc25e06af2bbed8081fefe0d1c381c1b7e9c877825b83a8d2d5a22"
+    },
+    "base_denominator_sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "accepted_delta_sha256": "71592625cbe09671937b7406afa38f3f59232c0345de455467121dc038863db2",
+    "base_record_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "delta_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "effective_candidate_paths": 428,
+    "effective_identical_hash_groups": 227
+  },
+  "producer": {
+    "role": "provenance-auditor",
+    "receipt_path": "role-receipts/AF-01/provenance-auditor.json"
+  },
+  "records": [
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/rpg_battle_20260102/metadata.json",
+      "sha256": "00a88649680edba33079e5a6e4fb604ca85945229c762dfa1c0fb1da978c60fb",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "a63b7e49727653b7ccb91a3ad56879896fc11af2",
+      "identical_hash_group": "sha256:00a88649680edba33079e5a6e4fb604ca85945229c762dfa1c0fb1da978c60fb",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/sounds/angry-grunt.mp3",
+      "sha256": "0173afee01656c45d538b4361af57799b3ce21a6f5600cdb99738dd8ae38324f",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "7dfdaace4e1cd85b61b3fdc8bca00c81da0ee362",
+      "identical_hash_group": "sha256:0173afee01656c45d538b4361af57799b3ce21a6f5600cdb99738dd8ae38324f",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sounds/angry-grunt.mp3",
+      "sha256": "0173afee01656c45d538b4361af57799b3ce21a6f5600cdb99738dd8ae38324f",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "7dfdaace4e1cd85b61b3fdc8bca00c81da0ee362",
+      "identical_hash_group": "sha256:0173afee01656c45d538b4361af57799b3ce21a6f5600cdb99738dd8ae38324f",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/enchanted-library/library_background.png",
+      "sha256": "01a78cdd2f65d45c96090018039271ea9263ffabdc82594041c7262e3ca4dc51",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "d25b459e09334a6cdfa33e0b694a4e5172e70a0e",
+      "identical_hash_group": "sha256:01a78cdd2f65d45c96090018039271ea9263ffabdc82594041c7262e3ca4dc51",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/enchanted-library/library_background.png",
+      "sha256": "01a78cdd2f65d45c96090018039271ea9263ffabdc82594041c7262e3ca4dc51",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "d25b459e09334a6cdfa33e0b694a4e5172e70a0e",
+      "identical_hash_group": "sha256:01a78cdd2f65d45c96090018039271ea9263ffabdc82594041c7262e3ca4dc51",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/enchanted-library/library_background.png",
+      "sha256": "01a78cdd2f65d45c96090018039271ea9263ffabdc82594041c7262e3ca4dc51",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "d25b459e09334a6cdfa33e0b694a4e5172e70a0e",
+      "identical_hash_group": "sha256:01a78cdd2f65d45c96090018039271ea9263ffabdc82594041c7262e3ca4dc51",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/spellweavers-run-20260319/metadata.json",
+      "sha256": "024e32b44f5f749f78850a533e2cc43c6d277fcb4b94def59dfcfe8a0d22d607",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "595839a4470cb6f6e1712d16d8432d800d358547",
+      "identical_hash_group": "sha256:024e32b44f5f749f78850a533e2cc43c6d277fcb4b94def59dfcfe8a0d22d607",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-flight/projectile-boss.png",
+      "sha256": "03e13b089a8de6f1f4ebda1f2cc8cda705352c51bd50e9b3194339b648311a29",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "140974c997ff312996bb36436b6bd7c3a75ffd50",
+      "identical_hash_group": "sha256:03e13b089a8de6f1f4ebda1f2cc8cda705352c51bd50e9b3194339b648311a29",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-flight/projectile-fireball.png",
+      "sha256": "03e13b089a8de6f1f4ebda1f2cc8cda705352c51bd50e9b3194339b648311a29",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "140974c997ff312996bb36436b6bd7c3a75ffd50",
+      "identical_hash_group": "sha256:03e13b089a8de6f1f4ebda1f2cc8cda705352c51bd50e9b3194339b648311a29",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/enchanted-library/player_3x3_pose_sheet.png",
+      "sha256": "047da6178fe607e26260f6bf041fbdd7c6eda6701b20c2c36446d93086c59330",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "5fbe362f14c0d06ca926fb9c977a281fe203d597",
+      "identical_hash_group": "sha256:047da6178fe607e26260f6bf041fbdd7c6eda6701b20c2c36446d93086c59330",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/enchanted-library/player_3x3_pose_sheet.png",
+      "sha256": "047da6178fe607e26260f6bf041fbdd7c6eda6701b20c2c36446d93086c59330",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "5fbe362f14c0d06ca926fb9c977a281fe203d597",
+      "identical_hash_group": "sha256:047da6178fe607e26260f6bf041fbdd7c6eda6701b20c2c36446d93086c59330",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/enchanted-library/player_3x3_pose_sheet.png",
+      "sha256": "047da6178fe607e26260f6bf041fbdd7c6eda6701b20c2c36446d93086c59330",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "5fbe362f14c0d06ca926fb9c977a281fe203d597",
+      "identical_hash_group": "sha256:047da6178fe607e26260f6bf041fbdd7c6eda6701b20c2c36446d93086c59330",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/rune-forge-chamber/rune-forge-chamber-gameplay.png",
+      "sha256": "04f3c6fad82edbb3b699d3564953785085007662cece98ca5298748c33b1d219",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "0db818da12f0c20ef6565f82dd7dfc3feeaae94e",
+      "identical_hash_group": "sha256:04f3c6fad82edbb3b699d3564953785085007662cece98ca5298748c33b1d219",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/spellweavers-run/spellweavers-run-gameplay.png",
+      "sha256": "05e9d81f811e1bc000f042618311c7e3ee6d158be73e954d18a13c6868e33bdd",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "e5d2e411c9e84e009bdd82b75d26ca72d5721ce0",
+      "identical_hash_group": "sha256:05e9d81f811e1bc000f042618311c7e3ee6d158be73e954d18a13c6868e33bdd",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/magic-defense/skeletons_3x3_pose_sheet.png",
+      "sha256": "0647d30917695e3e76c4fe5888775ea50efa5528fce7941c0f5979fc03b0d724",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "7a54fb64319b5040297194012c08e7e4d317880f",
+      "identical_hash_group": "sha256:0647d30917695e3e76c4fe5888775ea50efa5528fce7941c0f5979fc03b0d724",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/magic-defense/skeletons_3x3_pose_sheet.png",
+      "sha256": "0647d30917695e3e76c4fe5888775ea50efa5528fce7941c0f5979fc03b0d724",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "7a54fb64319b5040297194012c08e7e4d317880f",
+      "identical_hash_group": "sha256:0647d30917695e3e76c4fe5888775ea50efa5528fce7941c0f5979fc03b0d724",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/potion-rush/mushroom.png",
+      "sha256": "0a9fd00325736bcd48d66ab587170fc193b538fc7c2321d63beafc267695144d",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "e58fab47412c5fc53810dc9a5cedf1546d39a4e1",
+      "identical_hash_group": "sha256:0a9fd00325736bcd48d66ab587170fc193b538fc7c2321d63beafc267695144d",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/mushroom.png",
+      "sha256": "0a9fd00325736bcd48d66ab587170fc193b538fc7c2321d63beafc267695144d",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "e58fab47412c5fc53810dc9a5cedf1546d39a4e1",
+      "identical_hash_group": "sha256:0a9fd00325736bcd48d66ab587170fc193b538fc7c2321d63beafc267695144d",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/mushroom.png",
+      "sha256": "0a9fd00325736bcd48d66ab587170fc193b538fc7c2321d63beafc267695144d",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "e58fab47412c5fc53810dc9a5cedf1546d39a4e1",
+      "identical_hash_group": "sha256:0a9fd00325736bcd48d66ab587170fc193b538fc7c2321d63beafc267695144d",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/castle-defense/road_corner.png",
+      "sha256": "0aadcc7ab27a447950b3b0e5e85984448a4ea974cd329f7385d2129ccd334215",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "cb0be27e2c81a15d2cf84ddf3dc85e76802b57b6",
+      "identical_hash_group": "sha256:0aadcc7ab27a447950b3b0e5e85984448a4ea974cd329f7385d2129ccd334215",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/castle-defense/road_corner.png",
+      "sha256": "0aadcc7ab27a447950b3b0e5e85984448a4ea974cd329f7385d2129ccd334215",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "cb0be27e2c81a15d2cf84ddf3dc85e76802b57b6",
+      "identical_hash_group": "sha256:0aadcc7ab27a447950b3b0e5e85984448a4ea974cd329f7385d2129ccd334215",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/castle-defense/road_corner.png",
+      "sha256": "0aadcc7ab27a447950b3b0e5e85984448a4ea974cd329f7385d2129ccd334215",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "cb0be27e2c81a15d2cf84ddf3dc85e76802b57b6",
+      "identical_hash_group": "sha256:0aadcc7ab27a447950b3b0e5e85984448a4ea974cd329f7385d2129ccd334215",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/enchanted-library_20260130/metadata.json",
+      "sha256": "0b1e073f4b214e66b7d4ede355fc507803e7ce383634ad3ccd0c6a5eed4fb72a",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "a3afe884a1bfbcc5c7ce28d00823238f749d0a39",
+      "identical_hash_group": "sha256:0b1e073f4b214e66b7d4ede355fc507803e7ce383634ad3ccd0c6a5eed4fb72a",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/rune-match/runes/rune_shield_3x2_pose_sheet.png",
+      "sha256": "0b8ecd86898841c0e0142fe25b251aa15659d718d1bb6462ed9b342e67f3be08",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "5c40a27f20edcdcd4637608f9ebc795d10cd40f1",
+      "identical_hash_group": "sha256:0b8ecd86898841c0e0142fe25b251aa15659d718d1bb6462ed9b342e67f3be08",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/rune-match/runes/rune_shield_3x2_pose_sheet.png",
+      "sha256": "0b8ecd86898841c0e0142fe25b251aa15659d718d1bb6462ed9b342e67f3be08",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "5c40a27f20edcdcd4637608f9ebc795d10cd40f1",
+      "identical_hash_group": "sha256:0b8ecd86898841c0e0142fe25b251aa15659d718d1bb6462ed9b342e67f3be08",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/rune-match/runes/rune_shield_3x2_pose_sheet.png",
+      "sha256": "0b8ecd86898841c0e0142fe25b251aa15659d718d1bb6462ed9b342e67f3be08",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "5c40a27f20edcdcd4637608f9ebc795d10cd40f1",
+      "identical_hash_group": "sha256:0b8ecd86898841c0e0142fe25b251aa15659d718d1bb6462ed9b342e67f3be08",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/cover/cover-alchemists-synthesis.png",
+      "sha256": "0bc1f8bd8e366c1fc14b98c13408a8942151a3deef1de2d707a44a2857bd17fe",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "c8695ced1a7a51e163b3d25e72edd5c20f38ae4d",
+      "identical_hash_group": "sha256:0bc1f8bd8e366c1fc14b98c13408a8942151a3deef1de2d707a44a2857bd17fe",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/potion-rush-refinements-20260129/metadata.json",
+      "sha256": "0d647b06eb5d566d8ebaf3b22804de556d369667b14225b9e9c15a71a6b9eed3",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "e159a29b0be2b0ac9885f3a021602607176aaf11",
+      "identical_hash_group": "sha256:0d647b06eb5d566d8ebaf3b22804de556d369667b14225b9e9c15a71a6b9eed3",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/dragon-flight/player-3x3-sheet-facing-camera.png",
+      "sha256": "0ea7dbe9cd3ec89dd62bb809b868f4bef3ff0288f580e98f416c76b2034702a6",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "f95e471c41f00fa97125c8804b8a1eef427bcf66",
+      "identical_hash_group": "sha256:0ea7dbe9cd3ec89dd62bb809b868f4bef3ff0288f580e98f416c76b2034702a6",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/griffin-riders-escape/player-3x3-sheet.png",
+      "sha256": "0ea7dbe9cd3ec89dd62bb809b868f4bef3ff0288f580e98f416c76b2034702a6",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "f95e471c41f00fa97125c8804b8a1eef427bcf66",
+      "identical_hash_group": "sha256:0ea7dbe9cd3ec89dd62bb809b868f4bef3ff0288f580e98f416c76b2034702a6",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-camera.png",
+      "sha256": "0ea7dbe9cd3ec89dd62bb809b868f4bef3ff0288f580e98f416c76b2034702a6",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "f95e471c41f00fa97125c8804b8a1eef427bcf66",
+      "identical_hash_group": "sha256:0ea7dbe9cd3ec89dd62bb809b868f4bef3ff0288f580e98f416c76b2034702a6",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-camera.png",
+      "sha256": "0ea7dbe9cd3ec89dd62bb809b868f4bef3ff0288f580e98f416c76b2034702a6",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "f95e471c41f00fa97125c8804b8a1eef427bcf66",
+      "identical_hash_group": "sha256:0ea7dbe9cd3ec89dd62bb809b868f4bef3ff0288f580e98f416c76b2034702a6",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/potion-rush/cauldron-blue.png",
+      "sha256": "1455fc6650cf7670f48098d3e6687ba08f86ebe9f29c065255801d346d811396",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "0acc31312a319ad589f9b49bd3c19cb18679b2ee",
+      "identical_hash_group": "sha256:1455fc6650cf7670f48098d3e6687ba08f86ebe9f29c065255801d346d811396",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/cauldron-blue.png",
+      "sha256": "1455fc6650cf7670f48098d3e6687ba08f86ebe9f29c065255801d346d811396",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "0acc31312a319ad589f9b49bd3c19cb18679b2ee",
+      "identical_hash_group": "sha256:1455fc6650cf7670f48098d3e6687ba08f86ebe9f29c065255801d346d811396",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/cauldron-blue.png",
+      "sha256": "1455fc6650cf7670f48098d3e6687ba08f86ebe9f29c065255801d346d811396",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "source_blob_oid": "0acc31312a319ad589f9b49bd3c19cb18679b2ee",
+      "identical_hash_group": "sha256:1455fc6650cf7670f48098d3e6687ba08f86ebe9f29c065255801d346d811396",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/vibe-coding-poster.jpg",
+      "sha256": "147c3b039b965ee7079c49c89966a385fc6cf01b568c97e2fec2fe104b4c25d0",
+      "revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+      "source_blob_oid": "769d5c820831c625276f6965ab9b4be0ac7b2a73",
+      "identical_hash_group": "sha256:147c3b039b965ee7079c49c89966a385fc6cf01b568c97e2fec2fe104b4c25d0",
+      "repository_introduction": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "Repository history confirms a repository addition but no admissible path-explicit Git-blob mapping was identified for a line-bound introduction claim."
+      },
+      "upstream_provenance": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned sidecar or mapping explicitly identifies an upstream source for this path or its complete identical-hash group."
+      },
+      "license": {
+        "status": "unknown",
+        "citations": [],
+        "unknown_rationale": "No admissible Git-pinned asset-specific license mapping explicitly covers this path or its complete identical-hash group."
+      },
+      "prospective_eligibility": {
+        "reuse": "blocked",
+        "adapt": "blocked",
+        "reason_code": "evidence_incomplete"
+      }
+    }
+  ],
+  "resource_usage": {
+    "candidate_paths": 36,
+    "hash_groups": 18,
+    "evidence_records": 0,
+    "command_invocations": 11,
+    "bytes_read": 147456,
+    "within_ceiling": true
+  }
+}

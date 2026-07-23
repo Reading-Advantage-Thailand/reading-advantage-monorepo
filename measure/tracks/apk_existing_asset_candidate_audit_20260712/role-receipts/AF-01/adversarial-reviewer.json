@@ -1,0 +1,46 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-01",
+  "role": "adversarial-reviewer",
+  "native_task_name": "T8 Phase 2 AF-01 bounded adversarial review",
+  "declared_model": "gpt-5.6-terra",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "allowed_input_manifest_sha256": "385248641ba8d7dcaeedd3920f4d11f67071987be06d336f3a624f5a31f724c0",
+  "allowed_input_paths": [
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase2-input-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/candidate-records-base.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/mechanical-metadata.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/caller-inventory.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/provenance-audit.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-01/provenance-auditor.json",
+    "git-tree:23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "git-tree:65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "git-history:repository",
+    "git:1c44854682b18a2393efd265c2271f824e228a3d:apps/advantage-games/public/games/dragon-flight/ASSETS.md",
+    "git:1c44854682b18a2393efd265c2271f824e228a3d:apps/advantage-games/public/games/vocabulary/dragon-flight/ASSETS.md"
+  ],
+  "role_boundary": "Independently reviewed only the frozen AF-01 Phase 2 provenance artifact and producer receipt against the Phase 2 freeze, exactly three Phase 1 batch inputs, path-specific pinned Git objects, bounded non-Measure fixed-string evidence, and the two known Dragon Flight ASSETS sidecars. Did not repair producer evidence, inspect assets, infer provenance or license, evaluate suitability, or perform a Phase 4 disposition.",
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase2-reviews/AF-01.json": "2c334f0909705efb7d8aa09ec6eabfa40c5641b7dc841232932c4bafa390349c"
+  },
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": [
+      "No admissible path-explicit non-Measure provenance or license evidence was found. The producer correctly retains all 36 records as explicit unknowns and blocks reuse/adapt pending later evidence."
+    ]
+  },
+  "resource_usage": {
+    "candidate_paths": 36,
+    "hash_groups": 18,
+    "review_records": 36,
+    "command_invocations": 76,
+    "bytes_read": 4194304,
+    "within_ceiling": true,
+    "measurement_basis": "The 76 count includes every internal read-only Git subprocess in the single bounded verifier; the four-MiB upper bound covers the explicitly read artifacts and pinned-text inspection."
+  },
+  "final_status": "pass"
+}
