@@ -1,0 +1,41 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-03",
+  "role": "adversarial-reviewer",
+  "native_task_name": "/root/t8_phase2_af03_receipt_verifier",
+  "declared_model": "gpt-5.6-terra",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "allowed_input_manifest_sha256": "385248641ba8d7dcaeedd3920f4d11f67071987be06d336f3a624f5a31f724c0",
+  "allowed_input_paths": [
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase2-input-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase2-reviews/AF-03.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase2-review-reports/AF-03.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase2-batch-review-check.py",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-03/provenance-audit.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-03/provenance-auditor.json"
+  ],
+  "role_boundary": "receipt-only verification of independently authored static review and root-executed automation evidence",
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase2-reviews/AF-03.json": "6f2ce82bd844784aeb01ad91a2a80ddf08cd4bb6c9c320153ec83ab2fecf6baa"
+  },
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": [
+      "No admissible path-explicit non-Measure provenance or license evidence was found for AF-03; the producer correctly retains all 35 records as explicit unknowns and blocks reuse/adapt pending later evidence."
+    ]
+  },
+  "resource_usage": {
+    "candidate_paths": 35,
+    "hash_groups": 21,
+    "review_records": 35,
+    "command_invocations": 4,
+    "bytes_read": 4194304,
+    "within_ceiling": true,
+    "measurement_basis": "Four static read/hash invocations inspected the persisted AF-03 review, root-executed automation report, helper source, producer audit, and producer receipt; this conservative four-MiB bound covers only this verifier's reads and excludes the helper's 74 root-executed Git subprocesses."
+  },
+  "final_status": "pass"
+}

@@ -1,0 +1,91 @@
+{
+  "schema_version": "apk-asset-forensics.phase2-adversarial-review.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase2",
+  "batch_id": "AF-03",
+  "review_role": "adversarial-reviewer",
+  "reviewed_at": "2026-07-23",
+  "authority_commit": "1047ea1238865078241880743eccfda8b693a69c",
+  "freeze_hashes": {
+    "phase0_input_freeze_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+    "phase0_role_ownership_manifest_sha256": "bdffe7d8248b08ebe3b1226082970cd09ba180ddf469c5096db3bebe2f811e36",
+    "phase2_input_freeze_sha256": "385248641ba8d7dcaeedd3920f4d11f67071987be06d336f3a624f5a31f724c0",
+    "phase1_root_acceptance_sha256": "2b30be13c8c0f6b7d1d404489c6058b48b6839f58d5ae2ce84b67f9d6a1a6d61"
+  },
+  "reviewed_hashes": {
+    "candidate_records_base_sha256": "8e82e5a17b36faba7c33acbff0f682b74433e3aa97f77c722328ba7f782f2b66",
+    "mechanical_metadata_sha256": "a3316ae5b0cda6e928c89bcec75adda3857e77f506495d35d8d6372b67132f27",
+    "caller_inventory_sha256": "b44cf0c10882c90286311d7960b026e61e6b72692ce7d1d26a538b6c8cfd5edc",
+    "provenance_audit_sha256": "a461d8ea9b8c9a6ab19a22db9114c3a69633f5ad39499364ee4bac600c76c7a3",
+    "provenance_auditor_receipt_sha256": "862bc68a574696ca419a0e4e70c0a311ff53c4bd44c3bd79dc1d3632937ab22d",
+    "sorted_record_identity_tuples_sha256": "83401ad855577fb9080694faf862852c53bf803a4fabd4873e2595a4edf3ec3b",
+    "sorted_record_state_tuples_sha256": "36ca7f89aea23e9f5665ba1778a728310f167e0a0ab935b29875e1696168e1f0",
+    "phase2_contract_sha256": "f9830d6e56244453bcd20bceaa858339148d22823ceadc9438f47830ceb50882",
+    "phase2_helper_sha256": "611acf41dd3d361ae23e4833aaf92781e89b42baeaa056b5b162b64b4741b4bc",
+    "automation_report_sha256": "9fd9e5cec111693783fcc9540298b5cd007c9216004e73dc974a9579195e7ac4"
+  },
+  "counts": {
+    "frozen_candidate_paths": 35,
+    "reviewed_candidate_paths": 35,
+    "frozen_hash_groups": 21,
+    "reviewed_hash_groups": 21,
+    "identity_tuple_mismatches_vs_candidate_base": 0,
+    "identity_tuple_mismatches_vs_mechanical_metadata": 0,
+    "identity_tuple_mismatches_vs_caller_inventory": 0,
+    "git_source_blob_oid_mismatches": 0,
+    "history_addition_missing": 0,
+    "provenance_state_objects": 105,
+    "unknown_state_objects": 105,
+    "state_schema_anomalies": 0,
+    "unknown_rationale_anomalies": 0,
+    "citation_objects": 0,
+    "blocked_reuse_and_adapt_records": 35,
+    "eligibility_pairing_anomalies": 0,
+    "artifact_receipt_resource_differences": 0,
+    "root_executed_helper_internal_git_subprocesses": 74
+  },
+  "verification": {
+    "report_binding": "The persisted root-executed automation report's contract, helper, provenance artifact, and producer receipt hashes all match the exact current bytes. Its status is pass, admit is true, mismatches is empty, and both frozen-revision non-Measure hit lists are empty.",
+    "record_identity": "Static tuple reconciliation found zero differences between all 35 artifact canonical-path/SHA-256/revision/source-blob-OID/group tuples and the candidate base and caller inventory; the 35 path/SHA-256/revision/source-blob-OID tuples also exactly match mechanical metadata.",
+    "states": "All 105 repository-introduction, upstream-provenance, and license state objects are closed explicit unknowns with empty citations and non-empty rationales. The root-executed helper reports zero missing path-specific additions; this reviewer did not re-run those Git queries.",
+    "eligibility": "All 35 records are blocked for both reuse and adapt with reason_code evidence_incomplete. No Phase 4 disposition, suitability, inspection, reusable, or adaptable claim appears.",
+    "resources_and_isolation": "Artifact and producer receipt reproduce 35 paths, 21 groups, zero evidence records, 10 commands, 199173 bytes, and within_ceiling true. The producer receipt has the required provenance-auditor role, gpt-5.6-terra model, fork_turns none, inherited_narrative false, exact Phase 2 freeze hash, allowed inputs, and one output hash only."
+  },
+  "bounded_git_pinned_search": {
+    "scope": "Root-executed read-only helper: the 35 AF-03 canonical paths only, fixed-string Git search of non-Measure tracked text at the two frozen source revisions.",
+    "non_measure_path_explicit_hits": {
+      "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286": 0,
+      "65fc00d872ce5aa63820662ee0a1f14952e63235": 0
+    },
+    "path_specific_history_additions": {
+      "paths_checked": 35,
+      "missing": 0,
+      "interpretation": "The root-executed helper checked repository introduction only; it did not promote history to upstream authorship or license evidence."
+    }
+  },
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": [
+      "No admissible path-explicit non-Measure provenance or license evidence was found for AF-03; the producer correctly retains all 35 records as explicit unknowns and blocks reuse/adapt pending later evidence."
+    ]
+  },
+  "decision": {
+    "admit": true,
+    "block": false,
+    "status": "pass",
+    "scope": "AF-03 Phase 2 provenance artifact only; this static review relies on the root-executed automation report, does not make Phase 2 Green, perform a disposition, or constitute lifecycle acceptance."
+  },
+  "resource_usage": {
+    "candidate_paths": 35,
+    "hash_groups": 21,
+    "review_records": 35,
+    "command_invocations": 8,
+    "bytes_read": 4194304,
+    "within_ceiling": true,
+    "measurement_basis": "Eight static read/hash/reconciliation invocations inspected the frozen inputs, helper and contract source, producer artifact and receipt, persisted automation report, and review output context. The root-executed helper's 74 internal read-only Git subprocesses are automation evidence only and are excluded from this reviewer's resource count; four MiB is a conservative bound for the artifacts read."
+  },
+  "review_basis": "Static independent review of the root-orchestrator-test-executor's persisted automation evidence; this reviewer did not execute the local helper or its Git subprocesses.",
+  "helper_bypass_review": "The byte-bound helper first rechecks frozen Phase 1 inputs, imports the byte-bound contract, derives the authoritative denominator and immutable batch set, validates every artifact record and producer receipt, and treats any mismatch, missing history addition, over-ceiling Git count, or non-Measure path-explicit hit as non-admissible. Its report binding makes a substituted helper, contract, artifact, or receipt detectable. No bypass that would preserve this report's current bindings and pass result was identified in static review."
+}
