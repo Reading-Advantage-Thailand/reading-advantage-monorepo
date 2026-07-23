@@ -1,0 +1,54 @@
+{
+  "batch_id": "AF-04",
+  "bindings": {
+    "contract_sha256": "f9830d6e56244453bcd20bceaa858339148d22823ceadc9438f47830ceb50882",
+    "helper_sha256": "611acf41dd3d361ae23e4833aaf92781e89b42baeaa056b5b162b64b4741b4bc",
+    "provenance_audit_sha256": "1048a20089eafb60e5484b36f55079ddb697ea1e170540a1cd81cb40cf735c0d",
+    "provenance_auditor_receipt_sha256": "bbee44b40fad715820a8c45d5720c34e999075311146186e6a336885337b1274"
+  },
+  "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase2-batch-review-check.py AF-04",
+  "executor_role": "root-orchestrator-test-executor",
+  "exit_code": 0,
+  "phase": "phase2",
+  "result": {
+    "counts": {
+      "artifact_receipt_resource_differences": 0,
+      "artifact_resource_usage": {
+        "bytes_read": 1435,
+        "candidate_paths": 35,
+        "command_invocations": 37,
+        "evidence_records": 0,
+        "hash_groups": 17,
+        "within_ceiling": true
+      },
+      "citation_objects": 0,
+      "eligibility_pairing_anomalies": 0,
+      "frozen_candidate_paths": 35,
+      "frozen_hash_groups": 17,
+      "history_addition_missing": 0,
+      "history_addition_paths_checked": 35,
+      "internal_git_subprocesses": 74,
+      "non_measure_path_explicit_hits": {
+        "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286": 0,
+        "65fc00d872ce5aa63820662ee0a1f14952e63235": 0
+      },
+      "provenance_state_objects": 105,
+      "reviewed_candidate_paths": 35,
+      "reviewed_hash_groups": 17,
+      "unknown_state_objects": 105
+    },
+    "decision": {
+      "admit": true,
+      "reason": "all frozen checks passed with no admissible path-explicit non-Measure hit",
+      "status": "pass"
+    },
+    "hits": {
+      "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286": [],
+      "65fc00d872ce5aa63820662ee0a1f14952e63235": []
+    },
+    "mismatches": []
+  },
+  "schema_version": "apk-asset-forensics.phase2-batch-automation-report.v1",
+  "scope": "Root executed the read-only deterministic helper. This report is automated evidence, not an independent reviewer decision or a provenance fact.",
+  "track_id": "apk_existing_asset_candidate_audit_20260712"
+}
