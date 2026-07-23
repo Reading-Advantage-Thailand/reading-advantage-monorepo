@@ -9,7 +9,7 @@ const STANDARD_ROOT = join(process.cwd(), "assets/standard");
 
 function assetPaths(directory = STANDARD_ROOT, prefix = ""): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-    if (entry.name.endsWith(".md") || entry.name.endsWith(".txt")) return [];
+    if (entry.name.endsWith(".md") || entry.name.endsWith(".txt") || entry.name.endsWith(".tsv")) return [];
     const path = prefix ? `${prefix}/${entry.name}` : entry.name;
     return entry.isDirectory() ? assetPaths(join(directory, entry.name), path) : [path];
   });
@@ -27,7 +27,12 @@ describe("APK standard asset library", () => {
       "effects/32x32/combat/hit-01.png",
       "audio/native/combat/hit-01.ogg",
     ]));
-    expect(validateStandardAssetCatalog(paths)).toHaveLength(7);
+    const importedRecords = readFileSync(join(STANDARD_ROOT, "IMPORT-RECEIPT.tsv"), "utf8")
+      .trim()
+      .split("\n")
+      .slice(1);
+    expect(importedRecords).toHaveLength(43_068);
+    expect(validateStandardAssetCatalog(paths)).toHaveLength(importedRecords.length + 7);
     expect(paths.every((path) => statSync(join(STANDARD_ROOT, path)).size > 0)).toBe(true);
   });
 

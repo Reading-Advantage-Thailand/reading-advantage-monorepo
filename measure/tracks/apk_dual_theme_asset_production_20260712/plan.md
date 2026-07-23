@@ -28,9 +28,11 @@
 
 ## Phase 3: Continue bounded semantic ingestion [checkpoint: pending]
 
-- [ ] Task: Organize remaining assets in reviewed batches by view, intended cell size,
-  and semantic role, preserving source provenance and avoiding engine duplicates
-- [ ] Task: Add derived build-time indexing only when the curated tree is large enough
-  to require it; the filesystem remains authoritative
+- [x] Task: Import every PNG from every top-level and nested purchased archive by view,
+  inferred cell size, and source-derived semantic category; preserve every source record
+- [x] Task: Verify the import receipt exactly covers every discovered PNG (43,068) and retain
+  source duplicates until an explicit deduplication decision
+- [ ] Task: Add derived build-time indexing only when the complete imported tree is large
+  enough to require it; the filesystem remains authoritative
 - [ ] Task: Open separate cartridge adoption work only after the shared-kit and
   acceptance dependencies authorize game integration

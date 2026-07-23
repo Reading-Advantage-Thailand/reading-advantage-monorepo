@@ -52,10 +52,12 @@ Acceptance criteria:
 
 Acceptance criteria:
 
-- Ingestion excludes executable tools, engine caches, generated project metadata,
-  duplicate engine exports, and raw nested archive bundles.
-- The initial library contains representative UI, item, VFX, top-down, side-view,
-  and audio assets, each in a semantic directory with a source record.
+- The complete pixel-art baseline imports every PNG from every top-level and nested
+  purchased archive; the receipt records its exact source archive chain and member path.
+- Executable tools, engine caches, generated project metadata, audio, fonts, and raw
+  nested archive files remain outside the pixel-art import.
+- Source duplicates remain imported and traceable until a later, explicit deduplication
+  decision; no source art is silently dropped.
 - The source license and the required ElvGames credit are retained beside the library.
 - Broader ingestion proceeds in bounded semantic batches; source files are never
   dumped into individual games.

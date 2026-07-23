@@ -31,6 +31,7 @@ describe("standard APK asset paths", () => {
       cellSize: null,
       extension: "ogg",
     });
+    expect(parseStandardAssetPath("ui/native/sheets/inventory.png").cellSize).toBeNull();
   });
 
   it("rejects unsafe, ambiguous, or unsupported paths", () => {
@@ -39,7 +40,6 @@ describe("standard APK asset paths", () => {
       "ui/16x16/icons/Bad_Name.png",
       "unknown/16x16/icons/coin.png",
       "audio/16x16/ui/confirm.ogg",
-      "ui/native/icons/coin.png",
       "ui/16x16/icons/coin.exe",
       "ui/16/icons/coin.png",
     ]) {

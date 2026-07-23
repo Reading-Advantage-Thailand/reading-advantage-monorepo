@@ -39,7 +39,7 @@ const AUDIO_EXTENSIONS = new Set(["ogg", "mp3", "wav"]);
 const FONT_EXTENSIONS = new Set(["ttf", "otf", "woff2"]);
 const NAME_SEGMENT = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 const CELL_SIZE = /^(?<width>[1-9][0-9]*)x(?<height>[1-9][0-9]*)$/u;
-const NATIVE_VIEWS = new Set<StandardAssetView>(["audio", "font", "world"]);
+const NATIVE_VIEWS = new Set<StandardAssetView>(STANDARD_ASSET_VIEWS);
 
 function invalid(path: string, reason: string): never {
   throw new Error(`Invalid APK standard asset path ${JSON.stringify(path)}: ${reason}`);

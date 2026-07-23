@@ -1,4 +1,4 @@
-# Curated source records — batch 001
+# Curated alias source records — batch 001
 
 All paths below were copied unchanged from the purchased archives at
 `Asset Packs/`. The destination filesystem path is the APK
