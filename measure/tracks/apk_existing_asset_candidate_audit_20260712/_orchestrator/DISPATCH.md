@@ -2,11 +2,11 @@
 
 ## Current state
 
-Phase 0 is strategy-only. The truth contract and denominator-delta reviews exist;
-the qualifying 428/227 discovery-auditor report and final Phase 0 review remain the
-only open strategy gates. No metadata extraction, caller analysis, provenance
-research, visible/audible inspection, suitability mapping, candidate publication,
-or acceptance work has been dispatched.
+Phase 0 is complete and immutable at commit `79ab26dc`: 428 paths / 227 groups,
+qualifying discovery receipt, focused contract Green, and zero-blocking successor
+review. Phase 1 is open with only mechanical metadata recording active. Caller
+analysis, provenance research, visible/audible inspection, suitability mapping,
+candidate publication, and acceptance remain undispatched.
 
 ## Admission
 

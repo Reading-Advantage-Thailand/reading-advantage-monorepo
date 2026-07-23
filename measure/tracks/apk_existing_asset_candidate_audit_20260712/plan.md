@@ -2,14 +2,14 @@
 
 ## Phase 0: Freeze candidate denominator and roles
 
-- [~] Task: Verify accepted gate, denominator, and pilot hashes
-- [~] Task: Publish role ownership and dispatch only the Phase 0 discovery, truth-test, and independent-review roles; later content roles remain undispatched
-- [b] Task: Freeze roots, exact candidate count, identical-hash grouping policy, inspection batches, and stop-loss budget (deferred:phase0-red-contract)
-- [b] Task: Root-orchestrator fitness verification for Phase 0 using automated contracts and independent review (deferred:phase0-red-contract)
+- [x] Task: Verify accepted gate, denominator, and pilot hashes (79ab26dc)
+- [x] Task: Publish role ownership and dispatch only the Phase 0 discovery, truth-test, and independent-review roles; later content roles remain undispatched (79ab26dc)
+- [x] Task: Freeze roots, exact candidate count, identical-hash grouping policy, inspection batches, and stop-loss budget (79ab26dc)
+- [x] Task: Root-orchestrator fitness verification for Phase 0 using automated contracts and independent review (79ab26dc)
 
 ## Phase 1: Mechanical metadata and caller inventory
 
-- [ ] Task: Record hash, format, dimensions/duration, encoding, alpha/color/audio metadata for every path
+- [~] Task: Record hash, format, dimensions/duration, encoding, alpha/color/audio metadata for every path
 - [ ] Task: Detect corrupt, empty, mislabeled, text, and unreadable files
 - [ ] Task: Map every candidate to current callers/use and duplicate paths
 - [ ] Task: Reconcile output count exactly to the denominator
