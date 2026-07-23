@@ -2,7 +2,7 @@
 
 ## Objective
 
-Create Advantage Play Kit (APK) as the standard way to develop, test, theme,
+Create Advantage Play Kit (APK) as the standard way to develop, test,
 package, and ship Reading Advantage and Primary Advantage vocabulary and sentence
 games.
 
@@ -60,13 +60,17 @@ reality.
    where a mechanic cannot use a standard capability.
 5. Reuse is derived from the complete game corpus, not one exemplar.
 6. Compact and wide compositions are intentional layouts, not scaled copies.
-7. The licensed ElvGames pixel-art collection is the standard visual library for
-   all APK games; a cartridge may not introduce a competing visual theme without
-   an explicit product decision.
-8. Physical asset formats follow proven semantic and gameplay requirements.
-9. Cartridge cohorts must improve shared APK capabilities when repeated needs
+7. `packages/advantage-play-kit/assets/standard` is the sole production-art
+   source for all past and future APK games. A cartridge may not introduce a
+   competing source, theme, or external art without an explicit product decision,
+   canonical import, attribution, and pinned successor pack version.
+8. Build-time host deployment copies are deterministic selected outputs of that
+   canonical source and include only assets required by selected cartridges; APK
+   does not ship the whole approximately 287 MB standard pack by default.
+9. Physical asset formats follow proven semantic and gameplay requirements.
+10. Cartridge cohorts must improve shared APK capabilities when repeated needs
    appear; they must not recreate one-off controllers and infrastructure.
-10. Production exposure returns one verified game at a time.
+11. Production exposure returns one verified game at a time.
 
 ## Dependency order
 
@@ -90,10 +94,12 @@ Ready cartridge rebuild cohorts
 Reading/Primary host cutover and exact legacy retirement
 ```
 
-The developer-kit and asset-production tracks may proceed in parallel only after
-the replacement evidence program's independent T10 acceptance manifest is published.
-Cartridge cohorts require the shared capabilities and asset batches used by that
-cohort, not necessarily unrelated later batches.
+The standard-library import, generated catalog, resolver, gallery, and versioned
+release may proceed in parallel with T8-T10 because they do not alter the frozen
+legacy evidence denominator. Per-game semantic adoption remains blocked until T10
+accepts the role/state mappings. The developer kit requires both T10 successor
+hashes and an accepted standard-pack release. Cartridge cohorts additionally
+require the shared capabilities and selected canonical assets used by that cohort.
 
 ## Tracks
 
@@ -114,16 +120,18 @@ documentation, and an Advantage Games authoring/QC workflow.
 ### 3. APK Standard Asset Library Contract and Production
 
 [`apk_dual_theme_asset_production_20260712`](./tracks/apk_dual_theme_asset_production_20260712/)
-turns the purchased, licensed ElvGames collection into a single APK-standard,
-filesystem-organized asset library. It provides semantic keys, grid-size and
-view metadata, attribution, validation, and curated ingestion batches.
+turns the purchased, licensed ElvGames collection into the single canonical
+production-art source at `packages/advantage-play-kit/assets/standard`. It
+provides a versioned semantic catalog, grid-size and view metadata, attribution,
+validation, curated ingestion, and deterministic selected-deployment outputs.
 
 ### 4. APK Cartridge Rebuild, Integration, and Cutover
 
 [`apk_cartridge_semantic_rewrite_20260712`](./tracks/apk_cartridge_semantic_rewrite_20260712/)
 opens bounded cartridge-cohort tracks, rebuilds games through the shared kit and
-semantic assets, verifies compact/wide behavior in both themes, cuts accepted
-cartridges into Reading and Primary hosts, and retires exact legacy copies.
+one pinned canonical semantic asset pack, verifies compact/wide behavior, cuts
+the same cartridges and binding manifests into Reading and Primary hosts, and
+retires exact legacy copies only after host proof.
 
 ## Required capability domains
 
@@ -152,22 +160,27 @@ standardize, extend, or bespoke decision for:
 - A gameplay variant exists only when behavior, strength, movement, attack,
   scale, collision/readability, or scene function requires a distinguishable
   identity.
-- The standard library treatment is the licensed ElvGames pixel-art collection;
-  variant files are alternatives within that library, not parallel audience themes.
+- The standard library treatment is the licensed ElvGames pixel-art collection at
+  `packages/advantage-play-kit/assets/standard`; it is the sole production-art
+  source, and variant files are alternatives within its pinned canonical version.
 - Environment assets form reusable, corpus-proven kits.
 - UI assets must satisfy compact and wide region, text, and safe-area contracts.
 - Physical sheets, atlases, strips, tiles, static images, and slice dimensions
   are selected only after states and runtime usage are known.
-- Every curated asset entry traces to a source archive, license record, and its
-  semantic filesystem path. Game-specific adoption remains separately justified.
+- Every curated asset entry traces to a source archive, license record, credit,
+  and semantic filesystem path. Game-specific adoption remains separately justified.
+- A deployment copy is a build-time selected output linked to an exact canonical
+  pack version and semantic binding manifest. It cannot become a source of truth
+  or a new app-local asset inventory.
 
 ## Change control
 
 If implementation discovers an absent capability or asset requirement, the
 affected cartridge pauses. The requirement is added to the accepted matrices with
-source evidence, classified as reusable or bespoke, implemented or produced for
-both required themes/profiles, and validated before work resumes. Child tracks
-may not introduce private substitutes merely to keep moving.
+source evidence, classified as reusable or bespoke, and validated as a canonical
+standard-library import before work resumes. New external art additionally needs
+an explicit product decision and attribution. Child tracks may not introduce
+private substitutes merely to keep moving.
 
 ## Program completion
 
@@ -177,14 +190,17 @@ The program is complete only when:
   mapping.
 - APK exposes the accepted shared developer systems, components, tests, and
   authoring workflow.
-- Every standard-library asset is discoverable through its semantic filesystem key
-  and retains its ElvGames source and credit record.
+- Every standard-library asset is discoverable through its semantic filesystem key,
+  pinned canonical version, and ElvGames source and credit record.
 - Every restored cartridge uses shared capabilities where required and contains
   only justified bespoke game logic.
 - Compact and wide compositions pass real-input verification with readable,
   unobstructed Thai and English content.
-- Reading and Primary consume the same cartridge packages through stable host
-  adapters.
-- Exact replaced legacy components, routes, logic, and copied assets are retired.
+- Reading and Primary consume the same cartridge packages, canonical pack version,
+  and semantic binding manifests through stable host adapters.
+- Derived deployment outputs are selected and bounded; the whole standard pack is
+  never a default production payload.
+- Exact replaced legacy components, routes, logic, and copied assets are retired
+  only after both hosts prove the same cartridge/binding manifest.
 - A new representative game can be scaffolded, implemented, tested, and run in
   QC with standard-library assets without recreating platform infrastructure.

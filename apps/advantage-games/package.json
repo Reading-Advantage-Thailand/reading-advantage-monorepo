@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "eslint .",
     "check-types": "tsc --noEmit",
+    "generate:standard-pack-qc-preview": "node scripts/generate-standard-pack-qc-preview.mjs",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:e2e": "playwright test"

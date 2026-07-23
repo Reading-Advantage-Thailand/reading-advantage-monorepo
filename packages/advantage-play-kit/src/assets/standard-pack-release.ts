@@ -10,6 +10,20 @@ import type {
 /** Credit text every consumer of the standard ElvGames pack must display. */
 export const STANDARD_ASSET_REQUIRED_CREDIT = "Pixel art assets by ElvGames";
 
+/** Byte-level metadata for one immutable standard-pack file. */
+export interface StandardAssetPhysicalMetadata {
+  /** Content category derived from the validated file extension. */
+  readonly kind: "image" | "audio" | "font";
+  /** Exact encoded transfer size in bytes. */
+  readonly byteSize: number;
+  /** Lowercase SHA-256 digest of the encoded file. */
+  readonly sha256: string;
+  /** Encoded image dimensions, or null for non-raster files. */
+  readonly dimensions: Readonly<{ width: number; height: number }> | null;
+  /** Explicit grid declaration only; never inferred from directory names. */
+  readonly frameGrid: null;
+}
+
 /** One generated, filesystem-derived entry in a released standard asset catalog. */
 export interface StandardAssetCatalogEntry {
   readonly path: string;
@@ -18,6 +32,10 @@ export interface StandardAssetCatalogEntry {
   readonly cellSize: AssetCellSize | null;
   readonly category: string;
   readonly extension: string;
+  /** Verified encoded-file facts, independent of semantic path metadata. */
+  readonly physical: StandardAssetPhysicalMetadata;
+  /** Immutable receipt row that records how this physical asset entered the pack. */
+  readonly sourceReceiptLocator: string;
 }
 
 /** Immutable metadata for a catalog generated from the canonical standard-pack filesystem. */
@@ -36,6 +54,10 @@ export interface CreateStandardAssetCatalogInput {
   readonly catalogDigest: string;
   readonly sourceReceiptDigest: string;
   readonly paths: readonly string[];
+  /** Exact per-path receipt locators derived by the generator from the import ledgers. */
+  readonly sourceReceiptLocators: Readonly<Record<string, string>>;
+  /** Exact physical metadata derived from the canonical release bytes. */
+  readonly physicalAssets: Readonly<Record<string, StandardAssetPhysicalMetadata>>;
 }
 
 /** Exact release values a cartridge must pin before resolving standard-pack assets. */
@@ -53,6 +75,49 @@ export interface StandardAssetResolver {
 
 function requireNonEmpty(value: string, label: string): void {
   if (!value.trim()) throw new Error(`Standard asset ${label} must not be empty`);
+}
+
+function sameCellSize(left: AssetCellSize | null, right: AssetCellSize | null): boolean {
+  return left === right || (left !== null && right !== null && left.width === right.width && left.height === right.height);
+}
+
+function expectedPhysicalKind(extension: string): StandardAssetPhysicalMetadata["kind"] {
+  if (extension === "png") return "image";
+  if (extension === "ogg" || extension === "mp3" || extension === "wav") return "audio";
+  return "font";
+}
+
+function validPhysicalMetadata(value: StandardAssetPhysicalMetadata, extension: string): boolean {
+  return Boolean(value)
+    && value.kind === expectedPhysicalKind(extension)
+    && Number.isInteger(value.byteSize) && value.byteSize > 0
+    && /^[a-f0-9]{64}$/u.test(value.sha256)
+    && value.frameGrid === null
+    && (value.kind === "image"
+      ? value.dimensions !== null && Number.isInteger(value.dimensions.width) && value.dimensions.width > 0
+        && Number.isInteger(value.dimensions.height) && value.dimensions.height > 0
+      : value.dimensions === null);
+}
+
+function validateReleasedCatalog(catalog: StandardAssetCatalog): void {
+  const keys = new Set<string>();
+  for (const asset of catalog.assets) {
+    const parsed = parseStandardAssetPath(asset.path);
+    if (
+      parsed.key !== asset.key
+      || parsed.view !== asset.view
+      || !sameCellSize(parsed.cellSize, asset.cellSize)
+      || parsed.category !== asset.category
+      || parsed.extension !== asset.extension
+      || typeof asset.sourceReceiptLocator !== "string"
+      || !asset.sourceReceiptLocator.trim()
+      || !validPhysicalMetadata(asset.physical, parsed.extension)
+    ) {
+      throw new Error(`Invalid standard asset catalog metadata for ${JSON.stringify(asset.path)}`);
+    }
+    if (keys.has(asset.key)) throw new Error(`Duplicate standard asset catalog key ${JSON.stringify(asset.key)}`);
+    keys.add(asset.key);
+  }
 }
 
 /**
@@ -73,6 +138,8 @@ export function createStandardAssetCatalog(input: CreateStandardAssetCatalogInpu
       cellSize: record.cellSize,
       category: record.category,
       extension: record.extension,
+      sourceReceiptLocator: input.sourceReceiptLocators[record.path],
+      physical: input.physicalAssets[record.path],
     }))
     .sort((left, right) => left.key.localeCompare(right.key));
   return Object.freeze({
@@ -81,7 +148,15 @@ export function createStandardAssetCatalog(input: CreateStandardAssetCatalogInpu
     digest: input.catalogDigest,
     sourceReceiptDigest: input.sourceReceiptDigest,
     requiredCredit: STANDARD_ASSET_REQUIRED_CREDIT,
-    assets: Object.freeze(byKey),
+    assets: Object.freeze(byKey.map((asset) => {
+      if (typeof asset.sourceReceiptLocator !== "string" || !asset.sourceReceiptLocator.trim()) {
+        throw new Error(`Missing source receipt locator for ${JSON.stringify(asset.path)}`);
+      }
+      if (!asset.physical || !validPhysicalMetadata(asset.physical, asset.extension)) {
+        throw new Error(`Missing or invalid physical release metadata for ${JSON.stringify(asset.path)}`);
+      }
+      return asset;
+    })),
   });
 }
 
@@ -104,6 +179,8 @@ export function serializeStandardAssetCatalog(catalog: StandardAssetCatalog): st
       cellSize: asset.cellSize,
       category: asset.category,
       extension: asset.extension,
+      sourceReceiptLocator: asset.sourceReceiptLocator,
+      physical: asset.physical,
     })),
   })}\n`;
 }
@@ -126,6 +203,8 @@ export function serializeStandardAssetCatalogPayload(catalog: StandardAssetCatal
       cellSize: asset.cellSize,
       category: asset.category,
       extension: asset.extension,
+      sourceReceiptLocator: asset.sourceReceiptLocator,
+      physical: asset.physical,
     })),
   })}\n`;
 }
@@ -141,6 +220,7 @@ export function createStandardAssetResolver(
   catalog: StandardAssetCatalog,
   binding: StandardAssetReleaseBinding,
 ): StandardAssetResolver {
+  validateReleasedCatalog(catalog);
   if (catalog.version !== binding.version
     || catalog.digest !== binding.catalogDigest
     || catalog.sourceReceiptDigest !== binding.sourceReceiptDigest) {

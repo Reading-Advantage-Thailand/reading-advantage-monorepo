@@ -42,19 +42,27 @@ Track `advantage_play_kit_20260710` establishes Phaser 4 as the canonical gamepl
 runtime for new and rebuilt language games. The shared boundary is split into:
 
 - `@reading-advantage/game-contracts` — browser-safe educational I/O and cartridge schemas.
-- `@reading-advantage/advantage-play-kit` — Phaser lifecycle, controls, editions, diagnostics, and React bridge.
-- `@reading-advantage/game-cartridges` — reusable game cartridges and Primary/Secondary editions.
+- `@reading-advantage/advantage-play-kit` — Phaser lifecycle, controls, canonical
+  standard-pack resolution/materialization, diagnostics, and React bridge.
+- `@reading-advantage/game-cartridges` — reusable game cartridges and version-pinned
+  semantic asset-binding manifests.
 
 Reading and Primary consume workspace packages; they do not copy cartridge source or
 asset trees. Existing Konva/R3F implementations remain legacy references until their
 mechanics are rebuilt.
 
-APK uses the licensed ElvGames pixel-art collection as its standard visual asset
-library. `@reading-advantage/advantage-play-kit` owns the browser-safe semantic
-asset-key contract and validates the filesystem taxonomy; source files are organized
-by view, intended cell size, and semantic role. A generated index may accelerate
-builds, but the filesystem remains the source of truth. Every shipped use retains
-the required ElvGames credit record.
+`packages/advantage-play-kit/assets/standard` is the sole production-art source for
+all past and future APK games. The licensed ElvGames collection lives there as a
+version-pinned canonical pack; `@reading-advantage/advantage-play-kit` owns its
+browser-safe semantic asset-key and binding-manifest contracts and validates the
+filesystem taxonomy. Source files are organized by view, intended cell size, and
+semantic role. A generated catalog and host-specific build-time selected deployment
+copies may accelerate delivery, but they are derived outputs, never source of truth;
+only assets required by selected cartridges may be deployed, and the whole
+approximately 287 MB pack does not ship by default. Reading and Primary use the same
+cartridges, pack version, and binding manifests. Every shipped use retains the
+required ElvGames credit record. New external art requires an explicit product
+decision, canonical import with attribution, and a pinned successor pack before use.
 
 ## Backend & Data
 

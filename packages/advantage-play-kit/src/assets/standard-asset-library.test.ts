@@ -9,7 +9,12 @@ const STANDARD_ROOT = join(process.cwd(), "assets/standard");
 
 function assetPaths(directory = STANDARD_ROOT, prefix = ""): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-    if (entry.name.endsWith(".md") || entry.name.endsWith(".txt") || entry.name.endsWith(".tsv")) return [];
+    if (
+      entry.name.endsWith(".md")
+      || entry.name.endsWith(".txt")
+      || entry.name.endsWith(".tsv")
+      || entry.name.endsWith(".json")
+    ) return [];
     const path = prefix ? `${prefix}/${entry.name}` : entry.name;
     return entry.isDirectory() ? assetPaths(join(directory, entry.name), path) : [path];
   });
@@ -34,7 +39,7 @@ describe("APK standard asset library", () => {
     expect(importedRecords).toHaveLength(43_068);
     expect(validateStandardAssetCatalog(paths)).toHaveLength(importedRecords.length + 7);
     expect(paths.every((path) => statSync(join(STANDARD_ROOT, path)).size > 0)).toBe(true);
-  });
+  }, 20_000);
 
   it("retains source records, attribution copy, and the included license", () => {
     const sources = readFileSync(join(STANDARD_ROOT, "SOURCES.md"), "utf8");

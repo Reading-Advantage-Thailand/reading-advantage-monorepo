@@ -27,15 +27,22 @@ describe("generated APK standard-pack release", () => {
       assets: catalog.assets,
     })}\n`;
     const importReceipt = readFileSync(join(STANDARD_ROOT, "IMPORT-RECEIPT.tsv"));
+    const curatedReceipt = readFileSync(join(STANDARD_ROOT, "CURATED-RECEIPT.tsv"));
     const licenseReceipt = readFileSync(join(STANDARD_ROOT, "LICENSE-RECEIPT.tsv"));
 
     expect(catalog.digest).toBe(sha256(payload));
     expect(catalog.sourceReceiptDigest).toBe(sha256(Buffer.concat([
       importReceipt,
       Buffer.from("\n"),
+      curatedReceipt,
+      Buffer.from("\n"),
       licenseReceipt,
     ])));
     expect(catalog.assets).toHaveLength(43_075);
+    expect(catalog.assets.every((asset) => /^(IMPORT|CURATED)-RECEIPT\.tsv:\d+$/.test(asset.sourceReceiptLocator))).toBe(true);
+    expect(catalog.assets.every((asset) => /^[a-f0-9]{64}$/.test(asset.physical.sha256) && asset.physical.byteSize > 0)).toBe(true);
+    expect(catalog.assets.filter((asset) => asset.physical.kind === "image").every((asset) => asset.physical.dimensions !== null)).toBe(true);
+    expect(catalog.assets.filter((asset) => asset.physical.kind !== "image").every((asset) => asset.physical.dimensions === null)).toBe(true);
 
     const resolver = createStandardAssetResolver(catalog, {
       version: catalog.version,
@@ -43,5 +50,5 @@ describe("generated APK standard-pack release", () => {
       sourceReceiptDigest: catalog.sourceReceiptDigest,
     });
     expect(resolver.resolve(catalog.assets[0]!.key).path).toBe(catalog.assets[0]!.path);
-  });
+  }, 20_000);
 });

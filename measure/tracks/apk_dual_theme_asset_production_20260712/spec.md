@@ -8,6 +8,11 @@ two-theme, generated-art plan. The work establishes a curated, filesystem-first
 library rather than making every game choose a visual style or maintain a private
 asset folder.
 
+`packages/advantage-play-kit/assets/standard/` is the canonical source root for
+all production APK art and audio. Cartridges, hosts, QC, and future scaffolds
+consume semantic keys resolved from a released standard-pack catalog; they do
+not import vendor paths, retain edition-specific pack trees, or copy source files.
+
 The library's source of truth is its directory tree. A file path encodes its stable
 semantic key, projection/view, intended cell size, and semantic category. Build-time
 generated indexes are allowed as derived artifacts; an application database or a
@@ -20,6 +25,9 @@ hand-maintained monolithic JSON manifest is not.
 - Shipped APK games and customer applications that use the library display the
   credit `Pixel art assets by ElvGames` in their shared Credits/About or end screen.
 - The library does not resell, relicense, or claim ownership of the source assets.
+- A released pack records its version, catalog digest, source-receipt digest, and
+  required credit text. A build materializer may emit only the union selected by
+  accepted cartridge manifests, never a private or whole-source game copy.
 - Windows creator tools, engine cache files, executables, and engine-specific
   project metadata are not runtime APK assets.
 
@@ -75,6 +83,32 @@ Acceptance criteria:
 - The helpers do not read the server filesystem at runtime.
 - Tests cover valid keys, grid-size semantics, invalid paths, unsafe traversal,
   unsupported formats, and duplicate-key detection.
+
+### Story S4: Release a deterministic canonical standard pack
+
+**As a** cartridge, host, or QC author
+**I want** a versioned generated catalog and typed resolver for the standard pack
+**So that** every current and future APK game can request approved semantics and
+ship only its selected asset union.
+
+Acceptance criteria:
+
+- A deterministic build scans `packages/advantage-play-kit/assets/standard/` and
+  emits a derived catalog/index, release version, and SHA-256 digests for the
+  catalog and source receipt; the filesystem remains authoritative.
+- The public resolver returns typed semantic-key metadata including physical kind,
+  dimensions or frame/grid metadata where applicable, source receipt locator,
+  and required attribution. It fails closed for unknown keys or stale bindings.
+- A browser-safe searchable gallery and Advantage Games QC view use the generated
+  catalog only; neither reads the server filesystem at runtime.
+- The materializer accepts validated cartridge semantic requirements and emits
+  exactly their deduplicated selected union. It rejects direct physical paths,
+  missing keys, stale release digests, and files outside the canonical root.
+- Filesystem, generated catalog, source receipt, materialized union, and
+  attribution records have parity checks. The release is accepted only when the
+  required API, browser, build, and package-boundary tests pass.
+- Curating semantics is bounded and evidence-backed. Release acceptance does not
+  require a per-file visual review of all 43,068 imported PNGs.
 
 ## Out of scope
 

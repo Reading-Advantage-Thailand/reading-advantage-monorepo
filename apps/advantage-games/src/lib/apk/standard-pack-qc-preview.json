@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "version": "2026.07.23",
+  "catalogDigest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+  "sourceReceiptDigest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9",
+  "requiredCredit": "Pixel art assets by ElvGames",
+  "assets": [
+    {
+      "key": "audio/native/combat/hit-01",
+      "view": "audio",
+      "category": "combat",
+      "extension": "ogg",
+      "cellSize": null,
+      "mediaType": "audio",
+      "previewUrl": "/assets/apk/standard-pack-qc/asset-25c239ed9b6c9cd8.ogg"
+    },
+    {
+      "key": "effects/32x32/combat/hit-01",
+      "view": "effects",
+      "category": "combat",
+      "extension": "png",
+      "cellSize": {
+        "width": 32,
+        "height": 32
+      },
+      "mediaType": "image",
+      "previewUrl": "/assets/apk/standard-pack-qc/asset-5062b915d194a51d.png"
+    },
+    {
+      "key": "side-view/32x32/characters/enemy-001-idle",
+      "view": "side-view",
+      "category": "characters",
+      "extension": "png",
+      "cellSize": {
+        "width": 32,
+        "height": 32
+      },
+      "mediaType": "image",
+      "previewUrl": "/assets/apk/standard-pack-qc/asset-0edfb7ed11f9c4cf.png"
+    },
+    {
+      "key": "top-down/32x32/characters/hero-01",
+      "view": "top-down",
+      "category": "characters",
+      "extension": "png",
+      "cellSize": {
+        "width": 32,
+        "height": 32
+      },
+      "mediaType": "image",
+      "previewUrl": "/assets/apk/standard-pack-qc/asset-6aeab3f50c0f6be4.png"
+    },
+    {
+      "key": "ui/16x16/controls/gamepad-buttons",
+      "view": "ui",
+      "category": "controls",
+      "extension": "png",
+      "cellSize": {
+        "width": 16,
+        "height": 16
+      },
+      "mediaType": "image",
+      "previewUrl": "/assets/apk/standard-pack-qc/asset-860451d3140de5ef.png"
+    },
+    {
+      "key": "ui/20x20/inventory/slot",
+      "view": "ui",
+      "category": "inventory",
+      "extension": "png",
+      "cellSize": {
+        "width": 20,
+        "height": 20
+      },
+      "mediaType": "image",
+      "previewUrl": "/assets/apk/standard-pack-qc/asset-364560d9df9ebc14.png"
+    },
+    {
+      "key": "ui/32x32/items/armor-icons",
+      "view": "ui",
+      "category": "items",
+      "extension": "png",
+      "cellSize": {
+        "width": 32,
+        "height": 32
+      },
+      "mediaType": "image",
+      "previewUrl": "/assets/apk/standard-pack-qc/asset-b01bae484f26a7ee.png"
+    }
+  ]
+}

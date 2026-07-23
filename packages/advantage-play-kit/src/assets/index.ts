@@ -27,3 +27,13 @@ export type {
   StandardAssetReleaseBinding,
   StandardAssetResolver,
 } from "./standard-pack-release.js";
+/** Root-accepted standard-pack identity and fail-closed downstream resolver. */
+export {
+  ACCEPTED_STANDARD_ASSET_RELEASE,
+  createAcceptedStandardAssetResolver,
+} from "./accepted-standard-pack-release.js";
+export type {
+  AcceptedStandardAssetRelease,
+  StandardAssetAcceptanceEvidence,
+  StandardAssetDownstreamConsumptionRules,
+} from "./accepted-standard-pack-release.js";
