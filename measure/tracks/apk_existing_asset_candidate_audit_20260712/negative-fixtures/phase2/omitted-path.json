@@ -1,0 +1,5 @@
+{
+  "kind": "omitted-path",
+  "expected_error": "AF-01 provenance records omit or add frozen paths",
+  "mutation": "omitted"
+}

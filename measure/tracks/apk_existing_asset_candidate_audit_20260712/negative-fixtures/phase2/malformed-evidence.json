@@ -1,0 +1,5 @@
+{
+  "kind": "malformed-evidence",
+  "expected_error": "AF-01 repository introduction citation 0 keys differ; missing=['claim_scope', 'line_end', 'line_start', 'locator_text_sha256', 'mapping_scope', 'source_blob_oid', 'source_path', 'source_revision', 'source_type', 'target_paths'] extra=['bad']",
+  "mutation": "malformed"
+}

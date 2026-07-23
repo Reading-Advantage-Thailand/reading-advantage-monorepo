@@ -1,0 +1,5 @@
+{
+  "kind": "stale-path-hash",
+  "expected_error": "AF-01 provenance record has stale sha256: assets/a.png",
+  "mutation": "stale_path"
+}

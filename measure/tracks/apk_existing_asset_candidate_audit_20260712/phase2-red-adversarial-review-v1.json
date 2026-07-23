@@ -1,0 +1,104 @@
+{
+  "schema_version": "apk-asset-forensics.phase2-red-adversarial-review.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase2",
+  "review_type": "independent-adversarial-red-admission",
+  "reviewer_role": "adversarial-reviewer",
+  "review_scope": [
+    "phase2-input-freeze-v1.json",
+    "forensics-contract-tests.py",
+    "forensics-contract-red-report-v1.json",
+    "negative-fixtures/phase2/*.json",
+    "role-receipts/phase2/truth-test-author.json"
+  ],
+  "commands": [
+    {
+      "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/forensics-contract-tests.py --fixtures",
+      "exit_code": 1,
+      "observed_output": "RED: pending Phase 2 provenance outputs: provenance-audit files 0/12; provenance receipts 0/12"
+    },
+    {
+      "command": "sha256sum accepted Phase 0/Phase 1 inputs and Phase 2 declared outputs",
+      "result": "Phase 0, accepted delta, root acceptance, six accepted Phase 1 evidence artifacts, Phase 2 freeze, contract, and Red report match their declared hashes; the truth-author receipt correctly hashes its outputs and does not self-hash."
+    }
+  ],
+  "verified_passes": [
+    "The contract derives and binds 428 candidate paths, 227 identical-hash groups, and 12 frozen batches.",
+    "The contract verifies all 36 Phase 1 per-batch input hashes before the intended Red.",
+    "The current sole Red reason exactly matches the freeze and Red report: 0/12 provenance artifacts and 0/12 provenance receipts.",
+    "The current artifact schema excludes a disposition field, unknown upstream provenance or license blocks both prospective eligibility values, and the current record schema has no caller-status field."
+  ],
+  "findings": [
+    {
+      "id": "P2-RED-H1",
+      "severity": "high",
+      "title": "Digest-only citations can promote a path-specific sidecar or license to every identical-hash peer.",
+      "evidence": [
+        "test-strategy.md:39-43 requires every path to retain its own provenance record even when a hash group is shared.",
+        "forensics-contract-tests.py:225-242 accepts a citation when either the canonical path or only candidate_sha appears in the cited lines.",
+        "forensics-contract-tests.py:282-284 applies that rule to upstream provenance and license for every path record.",
+        "forensics-contract-tests.py:377-378 only evaluates boolean fixture fields and does not execute assert_citation or assert_artifact."
+      ],
+      "impact": "A sidecar or license that names one content digest but no peer path can turn unknown upstream provenance or license into evidenced for all same-hash paths, allowing eligible_for_later_evaluation despite the per-path evidence policy.",
+      "minimum_fix": "For upstream_provenance and license, require the cited range to contain the record canonical_path; remove candidate_sha as an alternate selector. Add real validator fixtures containing two same-hash paths and a one-path sidecar/license, and require the peer record to fail."
+    },
+    {
+      "id": "P2-RED-H2",
+      "severity": "high",
+      "title": "Evidence-record accounting can be falsified while still passing all per-batch ceilings.",
+      "evidence": [
+        "forensics-contract-tests.py:299-306 validates evidence_records only as a nonnegative value at or below 200; it never counts the citations accepted at lines 282-284.",
+        "forensics-contract-tests.py:338-343 independently cap receipt evidence_records but never compare it with artifact resource_usage.",
+        "forensics-contract-tests.py:374 treats resource drift as a standalone dictionary comparison rather than exercising either production validator."
+      ],
+      "impact": "A producer can include more than 200 factual citations in an artifact while declaring evidence_records=0, and a receipt can declare a different value. The 200-evidence stop-loss ceiling and auditable resource accounting are therefore bypassable.",
+      "minimum_fix": "Derive citation_count while validating records; require artifact resource_usage.evidence_records == citation_count and require the receipt evidence_records to equal the artifact value. Require the complete receipt resource_usage to equal the artifact resource_usage unless a separately hash-bound execution ledger supplies auditable command and byte measurements."
+    },
+    {
+      "id": "P2-RED-H3",
+      "severity": "high",
+      "title": "The negative fixtures are predicate demonstrations, not counterexamples against the production validator.",
+      "evidence": [
+        "forensics-contract-tests.py:355-382 implements fixture_error using fixture-local booleans and comparisons.",
+        "forensics-contract-tests.py:385-393 invokes only fixture_error; it never creates or loads a provenance-audit artifact or receipt from a fixture.",
+        "negative-fixtures/phase2/generic-license-as-asset-license.json:1-6, sidecar-promoted-to-peers.json:1-7, and cross-role-ownership.json:1-6 therefore cannot demonstrate that assert_citation, assert_artifact, or assert_receipt rejects the stated condition."
+      ],
+      "impact": "The package reports 24 passing negative fixtures even if a future edit removes the corresponding production rejection. This is especially unsafe for the generic-license, sidecar, same-hash, and ownership traps claimed by the Red gate.",
+      "minimum_fix": "Replace each predicate-only fixture with a minimal complete artifact/receipt fixture, or a temporary fixture-root invocation of the same validators, and assert the exact rejection before Green."
+    },
+    {
+      "id": "P2-RED-H4",
+      "severity": "high",
+      "title": "Role separation is only partially checked and the Phase 2 role plan is not hash-bound by the contract.",
+      "evidence": [
+        "phase0-role-ownership-manifest-v1.json:36 requires provenance-auditor and forbids evidence-collector, mechanical-metadata-inspector, caller-analyst, visual-audio-inspector, requirements-mapper, truth-test-author, and adversarial-reviewer for the Phase 2 producer.",
+        "forensics-contract-tests.py:152-155 checks only that the manifest owner is provenance-auditor and that evidence-collector is forbidden.",
+        "forensics-contract-tests.py:323-343 validates a producer receipt but not the truth-test-author receipt, and lines 372 and 385-393 do not exercise production receipt validation with the cross-role fixture."
+      ],
+      "impact": "A role-manifest change can permit the truth-test author, reviewer, or another forbidden producer role without a contract failure, undermining the required factual-producer/test-author/reviewer separation.",
+      "minimum_fix": "Hash-bind the role manifest in the Phase 2 freeze, require the exact Phase 2 task owner/reviewer/forbidden-role set, and validate the truth-test-author receipt as a distinct role/task before accepting a producer Green."
+    },
+    {
+      "id": "P2-RED-M1",
+      "severity": "medium",
+      "title": "Phase 4 disposition leakage remains possible through unrestricted free text.",
+      "evidence": [
+        "phase2-input-freeze-v1.json:100-110 excludes a disposition field but permits a free-text prospective_eligibility reason.",
+        "forensics-contract-tests.py:285-289 accepts any nonempty reason except strings containing reusable or adaptable.",
+        "forensics-contract-tests.py:346-352 checks only a small fixed set of later-phase filenames, while lines 380 and 385-393 do not test a real record containing a Phase 4 claim."
+      ],
+      "impact": "A Phase 2 record can state a final Phase 4 conclusion such as final disposition: reuse in reason while preserving the closed field schema.",
+      "minimum_fix": "Replace reason with a small Phase 2 reason-code enum, or reject disposition and suitability vocabulary explicitly; add a complete-record leakage counterexample."
+    }
+  ],
+  "severity_summary": {
+    "critical": 0,
+    "high": 4,
+    "medium": 1,
+    "low": 0
+  },
+  "recommendation": {
+    "decision": "block",
+    "reason": "The current Red state is correctly reproduced, but four High contract gaps make future Phase 2 Green unverifiable and permit unsupported provenance, resource, or role-separation claims. Resolve all High findings, rerun the focused contract with real counterexamples, then request a fresh independent Red admission review."
+  }
+}

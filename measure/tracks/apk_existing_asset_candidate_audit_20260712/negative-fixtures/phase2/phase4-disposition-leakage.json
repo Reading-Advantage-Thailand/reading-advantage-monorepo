@@ -1,0 +1,5 @@
+{
+  "kind": "phase4-disposition-leakage",
+  "expected_error": "AF-01 prospective eligibility keys differ; missing=['reason_code'] extra=['reason']",
+  "mutation": "legacy_reason"
+}

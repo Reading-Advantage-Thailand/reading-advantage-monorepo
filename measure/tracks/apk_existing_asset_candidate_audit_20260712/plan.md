@@ -17,7 +17,7 @@
 
 ## Phase 2: Provenance and license audit
 
-- [ ] Task: Inspect sidecars, repository history, approved authoring sources, and licenses per candidate/group
+- [~] Task: Inspect sidecars, repository history, approved authoring sources, and licenses per candidate/group
 - [ ] Task: Record exact provenance evidence or explicit unknown status
 - [ ] Task: Prove unknown provenance cannot receive reuse/adapt disposition
 - [ ] Task: Run independent provenance review

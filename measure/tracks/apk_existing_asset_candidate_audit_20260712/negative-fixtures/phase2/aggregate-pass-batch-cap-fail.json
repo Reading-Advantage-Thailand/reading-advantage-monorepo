@@ -1,0 +1,5 @@
+{
+  "kind": "aggregate-pass-batch-cap-fail",
+  "expected_error": "AF-01 provenance resource usage resource ceiling exceeded",
+  "mutation": "batch_cap"
+}

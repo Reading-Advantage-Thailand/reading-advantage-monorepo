@@ -1,0 +1,5 @@
+{
+  "kind": "generic-license-as-asset-license",
+  "expected_error": "AF-01 license citation 0 cited evidence does not explicitly map every target path",
+  "mutation": "generic_license"
+}

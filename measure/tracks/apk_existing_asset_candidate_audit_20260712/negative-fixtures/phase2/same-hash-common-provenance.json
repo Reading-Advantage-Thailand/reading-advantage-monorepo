@@ -1,0 +1,5 @@
+{
+  "kind": "same-hash-common-provenance",
+  "expected_error": "AF-01 repository introduction citation 0 cited evidence does not explicitly map every target path",
+  "mutation": "same_hash"
+}

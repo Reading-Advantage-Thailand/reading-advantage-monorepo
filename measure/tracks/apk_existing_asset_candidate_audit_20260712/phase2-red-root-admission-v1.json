@@ -1,0 +1,37 @@
+{
+  "schema_version": "apk-asset-forensics.phase2-red-root-admission.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase2",
+  "decision": "admitted-for-provenance-production",
+  "denominator": {
+    "candidate_paths": 428,
+    "identical_hash_groups": 227,
+    "batches": 12
+  },
+  "bindings": {
+    "phase2_input_freeze_sha256": "385248641ba8d7dcaeedd3920f4d11f67071987be06d336f3a624f5a31f724c0",
+    "contract_sha256": "f9830d6e56244453bcd20bceaa858339148d22823ceadc9438f47830ceb50882",
+    "red_report_sha256": "9170eb7b3f787d842af41b05cfd0b30a2ada013430270acc04b072643b911e24",
+    "truth_author_receipt_sha256": "978c73e8a6194bc0094bd8c9b83630cfabddb7d6365c115dfdbcd5eda0476b51",
+    "phase1_root_acceptance_sha256": "2b30be13c8c0f6b7d1d404489c6058b48b6839f58d5ae2ce84b67f9d6a1a6d61"
+  },
+  "observed_red": {
+    "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/forensics-contract-tests.py",
+    "exit_code": 1,
+    "output": "RED: pending Phase 2 provenance outputs: provenance-audit files 0/12; provenance receipts 0/12"
+  },
+  "independent_admission": {
+    "native_task_name": "/root/t8_phase2_stoploss_admission",
+    "declared_model": "gpt-5.6-terra",
+    "fork_turns": "none",
+    "delta_severity": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "decision": "admit"
+  },
+  "root_scope": "Root accepts the stabilized Red contract only. No provenance, license, inspection, suitability, disposition, candidate manifest, or final T8 acceptance is claimed.",
+  "next_action": "Dispatch only AF-01 to a fresh isolated provenance-auditor."
+}

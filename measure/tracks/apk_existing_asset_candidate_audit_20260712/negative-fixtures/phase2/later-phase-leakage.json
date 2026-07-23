@@ -1,0 +1,5 @@
+{
+  "kind": "later-phase-leakage",
+  "expected_error": "pre-Phase-3 batch JSON allowlist differs",
+  "mutation": "allowlist"
+}

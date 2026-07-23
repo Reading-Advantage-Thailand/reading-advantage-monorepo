@@ -1,0 +1,5 @@
+{
+  "kind": "resource-drift",
+  "expected_error": "AF-01 provenance resource usage counts or evidence-record accounting differ",
+  "mutation": "resource_drift"
+}

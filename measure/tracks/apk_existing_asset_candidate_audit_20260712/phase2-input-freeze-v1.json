@@ -1,0 +1,210 @@
+{
+  "schema_version": "apk-asset-forensics.phase2-input-freeze.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase2",
+  "admission_status": "red-admission-only",
+  "phase0_input_freeze": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+    "sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b"
+  },
+  "phase1_acceptance": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-root-acceptance.json",
+    "sha256": "2b30be13c8c0f6b7d1d404489c6058b48b6839f58d5ae2ce84b67f9d6a1a6d61",
+    "accepted_evidence": {
+      "phase1_contract": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-contract-test.py",
+        "sha256": "9bd2d9b77bc313932549c1062d8ec14920b87db245f00a4c5b502be708c130b5"
+      },
+      "phase1_green_report": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-green-test-report-v1.json",
+        "sha256": "43b82cb7bad24fb3b4b06e3c2051eaf4f4355cf15e947370ed7cfe6e6ef93e6d"
+      },
+      "caller_receipt": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase1/caller-analyst.json",
+        "sha256": "fa5b875194082200d92864e50e9776279f4bf93d52e90acaee6b2c52238e83de"
+      },
+      "mechanical_independent_review": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-independent-review-v2.json",
+        "sha256": "3a0c2be188882c8f9f91eee7de977b4caa2db43f9e76a1846ad06c7601e76b10"
+      },
+      "caller_independent_review": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-caller-v22-independent-review.json",
+        "sha256": "545e6c821640af3781c31d565d7816819b794c88315b2f5126f6a25abbb1f7e1"
+      },
+      "v21_nonconsumable_disposition": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-caller-v21-disposition.json",
+        "sha256": "61b5be388f805c96dffa33ad0b3b1d38ab7619fc3524de8e9d534da202a126ad"
+      }
+    },
+    "denominator": {
+      "candidate_paths": 428,
+      "identical_hash_groups": 227,
+      "batches": 12
+    }
+  },
+  "effective_denominator_binding": {
+    "base_manifest_publication_revision": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+    "base_record_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "base_denominator_sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "accepted_delta_sha256": "71592625cbe09671937b7406afa38f3f59232c0345de455467121dc038863db2",
+    "delta_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "candidate_paths": 428,
+    "identical_hash_groups": 227,
+    "batches": 12
+  },
+  "ownership": {
+    "producer_role": "provenance-auditor",
+    "producer_output": "batches/<batch-id>/provenance-audit.json",
+    "truth_test_role": "truth-test-author",
+    "reviewer_role": "adversarial-reviewer",
+    "forbidden_producer_roles": [
+      "evidence-collector",
+      "mechanical-metadata-inspector",
+      "caller-analyst",
+      "visual-audio-inspector",
+      "requirements-mapper",
+      "truth-test-author",
+      "adversarial-reviewer"
+    ],
+    "receipt_pattern": "role-receipts/<batch-id>/provenance-auditor.json",
+    "receipt_count": 12,
+    "truth_author_receipt": "role-receipts/phase2/truth-test-author.json"
+  },
+  "evidence_policy": {
+    "allowed_source_types": [
+      "in_repo_sidecar",
+      "in_repo_mapping",
+      "in_repo_license",
+      "repository_history"
+    ],
+    "approved_external_authoring_sources": [],
+    "repository_history_limit": "Repository history may evidence repository introduction only; it never proves upstream authorship or license.",
+    "citation_requirement": "Every factual citation must pin Git revision, repository path, source blob OID, line start/end, and SHA-256 of the exact cited line range. Filename and visual inference are forbidden.",
+    "unknown_policy": "Unknown upstream provenance or unknown license requires blocked prospective reuse and adapt eligibility with reason_code evidence_incomplete. Complete evidence permits only eligible_for_later_evaluation with reason_code evidence_complete_pending_later_evaluation; this is not a Phase 4 disposition.",
+    "forbidden_claims": [
+      "external-authoring-source-approved",
+      "upstream-provenance-from-history",
+      "license-from-history",
+      "filename-inference",
+      "visual-inference",
+      "phase4-disposition",
+      "phase3-inspection",
+      "phase5-acceptance"
+    ],
+    "citation_target_mapping": "Each citation must declare either an explicit individual target path or the complete frozen identical-hash group path set. Every declared target path must occur in the exact cited Git line range; a shared hash alone never establishes upstream provenance or license for any peer.",
+    "source_scope_policy": {
+      "in_repo_sidecar": [
+        "repository_introduction",
+        "upstream_provenance",
+        "license"
+      ],
+      "in_repo_mapping": [
+        "repository_introduction",
+        "upstream_provenance",
+        "license"
+      ],
+      "in_repo_license": [
+        "license"
+      ],
+      "repository_history": [
+        "repository_introduction"
+      ]
+    },
+    "resource_accounting": "Artifact evidence_records equals the exact count of citation objects across all records; the same per-batch resource_usage object must be reproduced byte-for-value in its provenance-auditor receipt."
+  },
+  "resource_ceilings_per_batch": {
+    "candidate_paths": 40,
+    "evidence_records": 200,
+    "command_invocations": 120,
+    "bytes_read": 268435456
+  },
+  "required_output_schema": {
+    "artifact_schema_version": "apk-asset-forensics.phase2-provenance-audit.v1",
+    "record_statuses": [
+      "evidenced",
+      "unknown"
+    ],
+    "no_phase4_disposition_field": true,
+    "prospective_eligibility_reason_codes": [
+      "evidence_incomplete",
+      "evidence_complete_pending_later_evaluation"
+    ]
+  },
+  "red_admission_expectation": {
+    "provenance_audit_outputs": "0/12",
+    "provenance_receipts": "0/12",
+    "sole_expected_red_reason": "pending Phase 2 provenance outputs: provenance-audit files 0/12; provenance receipts 0/12"
+  },
+  "phase1_batch_inputs": {
+    "AF-01": {
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/candidate-records-base.json": "968f13af83e860e7cb63fb2b09941e6fd9f5b1d7b2e7e79aa221a3b5ddc4ffc2",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/mechanical-metadata.json": "159b5cb5ce8ee09b4af358b533c88b2fb7bc9701eb3e9d8b0e890188dba48e1b",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/caller-inventory.json": "338bc1c1f6cc25e06af2bbed8081fefe0d1c381c1b7e9c877825b83a8d2d5a22"
+    },
+    "AF-02": {
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/candidate-records-base.json": "3d5bf6eec57a815d07591f4caf63cd514f7cced64e997fa6df732d57bb8328d3",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/mechanical-metadata.json": "9197e77bbff6e5712758d76e0c0a46d0164c1433ce9fe17fd3dece8df699c595",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/caller-inventory.json": "b0bd048787b2650a635c580fef295cbb2c0e5c3edd8f24f048accff5bdccc8ae"
+    },
+    "AF-03": {
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-03/candidate-records-base.json": "8e82e5a17b36faba7c33acbff0f682b74433e3aa97f77c722328ba7f782f2b66",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-03/mechanical-metadata.json": "a3316ae5b0cda6e928c89bcec75adda3857e77f506495d35d8d6372b67132f27",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-03/caller-inventory.json": "b44cf0c10882c90286311d7960b026e61e6b72692ce7d1d26a538b6c8cfd5edc"
+    },
+    "AF-04": {
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/candidate-records-base.json": "af02f834c174dc003f98618012a8c44327692429e40941ea7dd1833a80f1f02b",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/mechanical-metadata.json": "5e5edfcc397da2f6862f3bfbce3505bec5ad5d742138388970bbfd3741249647",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/caller-inventory.json": "95e7a98f128e5bf0a0ee35158c590df2e8c6894e333d5feaf707ca44007534a7"
+    },
+    "AF-05": {
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/candidate-records-base.json": "023efc1314011a2b3e643df741bdaab46dfa2592150822c80c45a997a08440e3",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/mechanical-metadata.json": "0dc113e3a809237279db31860ea18a1db7638e562b6215a4ce857816d7b28037",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/caller-inventory.json": "46447571bcd0019a79b97ef8b42ab14821892bc8e96d7856459e6a6ee0fdb145"
+    },
+    "AF-06": {
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/candidate-records-base.json": "bf324f5fdb8b379f9183e1174bdfa4462374887b3aae744e445f9d0204934131",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/mechanical-metadata.json": "62cc298423d89b215e49c69ccbdd94378a8b35bb24a83edfe93f25fb347f678a",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/caller-inventory.json": "76a6c58470b3c84d48c01592058499cb763cd76a61f4eade7953e5a3d4dd1f09"
+    },
+    "AF-07": {
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-07/candidate-records-base.json": "f80d72b37bff130708fa8f7cf97a227488227282f1cad9a61ebbe3849bd7a90e",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-07/mechanical-metadata.json": "b41f8e142e209168ab7d7184e19155552f45c14ec21d9d0856c20edaa010fbea",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-07/caller-inventory.json": "be5c8f1e3272522a3c3f892865f599296fd03086ca49356123b252ef9c5ef1a7"
+    },
+    "AF-08": {
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-08/candidate-records-base.json": "8d03d4ac7d0053bb0c69285d1530c878e20413d66c5d6360aa1c25f8d52dc757",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-08/mechanical-metadata.json": "b671e8d51dc95075a8db6a277053e0420955022e148b8c9a228ada89d5d1f84a",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-08/caller-inventory.json": "9426bb8624fca696d0f95a9310206a2c2ca60647ea87687a8582da9fc81e663f"
+    },
+    "AF-09": {
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-09/candidate-records-base.json": "2eec3a8b7be1b795afc7486a832da7e5e39c99e3e05b3f82da0501f4bc78fe34",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-09/mechanical-metadata.json": "e86335e88d779e2948911caaed3cf4490d6b23fb26ad91d5ab370d32e5cf3509",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-09/caller-inventory.json": "4159162642f7d3647d764f53f04715caeae8f847909b2cb47e61beb28050999f"
+    },
+    "AF-10": {
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/candidate-records-base.json": "4ff010ebf0287f6faeb27fd614363c3eec7e9637ea1e68295ceac62bfb7c1148",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/mechanical-metadata.json": "0dfade108acbd9aa1a22fe26fcf8140c4d1aede50276256e464972cb114304e0",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b"
+    },
+    "AF-11": {
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-11/candidate-records-base.json": "0b0c8a9a99b2fe81a03402378f8536bee42b012b2f6fa97b2d24d77ddb32dc5e",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-11/mechanical-metadata.json": "ddd94f1f87b951a8613d4a942819ffc4e91867d634671ff6224ba1d09f0ad9ff",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-11/caller-inventory.json": "eee11fb390f3e172c238abdc40d30f50db5239480bb64d1d6ba989dc6657eaef"
+    },
+    "AF-12": {
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-12/candidate-records-base.json": "dd9f594d2e4d39a8ac3c805dc5ada17d3e73734207f9940ce36f2e29bc0b8061",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-12/mechanical-metadata.json": "19d4bfc766363a7e9fb6aabd0b4618702ebf3f8bcdf0839cd8eb486a55f85196",
+      "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-12/caller-inventory.json": "766ae87fa7f091e351bb3b98d0d3fe939527911da43d2fc3c38ed48e7a363322"
+    }
+  },
+  "phase0_role_ownership_manifest": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-role-ownership-manifest-v1.json",
+    "sha256": "bdffe7d8248b08ebe3b1226082970cd09ba180ddf469c5096db3bebe2f811e36"
+  },
+  "pre_phase3_batch_json_allowlist": [
+    "candidate-records-base.json",
+    "mechanical-metadata.json",
+    "caller-inventory.json",
+    "provenance-audit.json"
+  ]
+}

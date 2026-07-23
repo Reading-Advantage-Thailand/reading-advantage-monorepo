@@ -1,0 +1,5 @@
+{
+  "kind": "stale-source-oid",
+  "expected_error": "AF-01 provenance record source blob OID differs: assets/a.png",
+  "mutation": "stale_oid"
+}

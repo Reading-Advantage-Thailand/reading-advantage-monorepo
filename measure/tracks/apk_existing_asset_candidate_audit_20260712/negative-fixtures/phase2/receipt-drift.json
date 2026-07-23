@@ -1,0 +1,5 @@
+{
+  "kind": "receipt-drift",
+  "expected_error": "AF-01 provenance receipt resource usage differs from artifact resource usage",
+  "mutation": "receipt_drift"
+}

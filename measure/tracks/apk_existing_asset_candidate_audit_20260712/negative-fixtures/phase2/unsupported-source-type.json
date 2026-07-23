@@ -1,0 +1,5 @@
+{
+  "kind": "unsupported-source-type",
+  "expected_error": "AF-01 repository introduction citation 0 source type or claim scope differs",
+  "mutation": "unsupported_source"
+}

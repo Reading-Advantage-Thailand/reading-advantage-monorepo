@@ -2,11 +2,13 @@
 
 ## Current state
 
-Phase 0 is complete and immutable at commit `79ab26dc`: 428 paths / 227 groups,
-qualifying discovery receipt, focused contract Green, and zero-blocking successor
-review. Phase 1 base records and mechanical metadata are independently accepted
-through commit `b2ea5b49`. Caller analysis is now the only active Phase 1 producer
-task. Provenance research, visible/audible inspection, suitability mapping,
+Phase 0 is complete and immutable at commit `79ab26dc`. Phase 1 is complete and
+root-accepted at commit `2c956877`: 428 paths / 227 groups / 12 batches reconcile,
+including mechanical metadata and caller analysis. Phase 2's stop-loss-redesigned
+contract is admitted at freeze `385248641ba8d7dcaeedd3920f4d11f67071987be06d336f3a624f5a31f724c0`
+and contract `f9830d6e56244453bcd20bceaa858339148d22823ceadc9438f47830ceb50882`.
+The only active producer is the Phase 2 `provenance-auditor`, beginning with
+`AF-01`. Later Phase 2 batches, visible/audible inspection, suitability mapping,
 candidate publication, and acceptance remain undispatched.
 
 ## Admission

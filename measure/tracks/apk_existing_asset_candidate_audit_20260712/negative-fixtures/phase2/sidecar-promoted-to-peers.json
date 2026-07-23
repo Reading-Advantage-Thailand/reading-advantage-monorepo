@@ -1,0 +1,5 @@
+{
+  "kind": "sidecar-promoted-to-peers",
+  "expected_error": "AF-01 repository introduction citation 0 target mapping is not exact",
+  "mutation": "sidecar_peer"
+}

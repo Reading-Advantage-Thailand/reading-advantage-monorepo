@@ -1,0 +1,5 @@
+{
+  "kind": "stale-evidence",
+  "expected_error": "AF-01 repository introduction citation 0 cited line hash is stale",
+  "mutation": "stale_evidence"
+}

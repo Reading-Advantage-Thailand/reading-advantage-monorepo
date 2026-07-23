@@ -1,0 +1,5 @@
+{
+  "kind": "wrong-group",
+  "expected_error": "AF-01 provenance record has stale identical_hash_group: assets/a.png",
+  "mutation": "wrong_group"
+}

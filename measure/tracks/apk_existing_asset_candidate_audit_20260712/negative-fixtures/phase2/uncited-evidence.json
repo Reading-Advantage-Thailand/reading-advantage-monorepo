@@ -1,0 +1,5 @@
+{
+  "kind": "uncited-evidence",
+  "expected_error": "AF-01 license evidenced state lacks citations or contradicts its status",
+  "mutation": "uncited"
+}

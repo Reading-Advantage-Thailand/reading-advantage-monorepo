@@ -1,0 +1,5 @@
+{
+  "kind": "cross-role-ownership",
+  "expected_error": "AF-01 provenance receipt identity or isolation differs",
+  "mutation": "cross_role"
+}

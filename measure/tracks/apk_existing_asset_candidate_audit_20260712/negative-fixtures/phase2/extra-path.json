@@ -1,0 +1,5 @@
+{
+  "kind": "extra-path",
+  "expected_error": "AF-01 provenance record has omitted, extra, or cross-batch path",
+  "mutation": "extra"
+}
