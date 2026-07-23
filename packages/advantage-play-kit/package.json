@@ -37,6 +37,7 @@
     "build": "tsc",
     "check-types": "tsc --noEmit",
     "lint": "eslint src/",
+    "generate:standard-pack-catalog": "pnpm build && node scripts/generate-standard-pack-release.mjs",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },

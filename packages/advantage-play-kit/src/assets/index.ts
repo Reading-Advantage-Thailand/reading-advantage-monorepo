@@ -11,3 +11,19 @@ export type {
   StandardAssetPath,
   StandardAssetView,
 } from "./standard-asset-contract.js";
+/** Versioned standard-pack catalog, resolver, and selected-union exports. */
+export {
+  createStandardAssetCatalog,
+  createStandardAssetResolver,
+  materializeStandardAssetUnion,
+  serializeStandardAssetCatalog,
+  serializeStandardAssetCatalogPayload,
+  STANDARD_ASSET_REQUIRED_CREDIT,
+} from "./standard-pack-release.js";
+export type {
+  CreateStandardAssetCatalogInput,
+  StandardAssetCatalog,
+  StandardAssetCatalogEntry,
+  StandardAssetReleaseBinding,
+  StandardAssetResolver,
+} from "./standard-pack-release.js";
