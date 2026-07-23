@@ -49,6 +49,13 @@ Reading and Primary consume workspace packages; they do not copy cartridge sourc
 asset trees. Existing Konva/R3F implementations remain legacy references until their
 mechanics are rebuilt.
 
+APK uses the licensed ElvGames pixel-art collection as its standard visual asset
+library. `@reading-advantage/advantage-play-kit` owns the browser-safe semantic
+asset-key contract and validates the filesystem taxonomy; source files are organized
+by view, intended cell size, and semantic role. A generated index may accelerate
+builds, but the filesystem remains the source of truth. Every shipped use retains
+the required ElvGames credit record.
+
 ## Backend & Data
 
 | Technology | Usage |

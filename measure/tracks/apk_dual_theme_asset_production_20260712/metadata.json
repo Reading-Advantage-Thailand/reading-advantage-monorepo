@@ -1,12 +1,12 @@
 {
   "track_id": "apk_dual_theme_asset_production_20260712",
   "type": "feature",
-  "status": "pending",
+  "status": "in_progress",
   "created_at": "2026-07-12T00:00:00Z",
-  "updated_at": "2026-07-12T00:00:00Z",
-  "description": "Convert the accepted semantic ontology, responsive UI requirements, and audio/presentation roles into type-specific physical contracts and produce mirrored Chibi Quest and Riven Lands assets in bounded batches.",
-  "estimated_tasks": 41,
+  "updated_at": "2026-07-23T00:00:00Z",
+  "description": "Organize the purchased, licensed ElvGames collection as APK's single standard asset library with filesystem-derived semantic keys, view and cell-size taxonomy, attribution, validation, and curated ingestion batches.",
+  "estimated_tasks": 11,
   "actual_tasks": null,
-  "depends_on": ["apk_independent_acceptance_handoff_20260712"],
-  "deviation_notes": "Physical layouts and file counts remain deferred until the expanded predecessor proves mechanics, developer-capability links, responsive profiles, semantic types, states, variants, audio roles, environment kits, and priorities. Asset contracts coordinate with the public APK loader boundary."
+  "depends_on": [],
+  "deviation_notes": "Rebased by product decision on 2026-07-23: the purchased ElvGames library supersedes the speculative Chibi Quest/Riven Lands generated-art plan. The shared library foundation may proceed now; cartridge adoption remains separately gated."
 }

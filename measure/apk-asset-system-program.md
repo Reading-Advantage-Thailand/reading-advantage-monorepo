@@ -19,7 +19,7 @@ Advantage Play Kit cartridge
   - shared Phaser runtime and lifecycle
   - standard developer systems and components
   - responsive compact/wide composition
-  - two semantic asset themes
+  - one standard semantic asset library
   - bespoke game mechanics
         |
         v
@@ -60,7 +60,9 @@ reality.
    where a mechanic cannot use a standard capability.
 5. Reuse is derived from the complete game corpus, not one exemplar.
 6. Compact and wide compositions are intentional layouts, not scaled copies.
-7. Chibi Quest and Riven Lands implement the same semantic capabilities.
+7. The licensed ElvGames pixel-art collection is the standard visual library for
+   all APK games; a cartridge may not introduce a competing visual theme without
+   an explicit product decision.
 8. Physical asset formats follow proven semantic and gameplay requirements.
 9. Cartridge cohorts must improve shared APK capabilities when repeated needs
    appear; they must not recreate one-off controllers and infrastructure.
@@ -77,8 +79,8 @@ Game, mechanic, developer-capability, responsive, and asset requirements audit
               +----------+----------+
               |                     |
               v                     v
-Shared APK developer kit      Dual-theme asset contracts
-and authoring workflow        and production batches
+Shared APK developer kit      Standard asset-library contract
+and authoring workflow        and curated ingestion batches
               |                     |
               +----------+----------+
                          v
@@ -109,11 +111,12 @@ turns accepted repeated capabilities into typed Phaser systems, standard UI and
 responsive composition primitives, testing fixtures, cartridge scaffolding,
 documentation, and an Advantage Games authoring/QC workflow.
 
-### 3. APK Dual-Theme Asset Contract and Production
+### 3. APK Standard Asset Library Contract and Production
 
 [`apk_dual_theme_asset_production_20260712`](./tracks/apk_dual_theme_asset_production_20260712/)
-turns the accepted semantic ontology into type-appropriate physical contracts and
-produces mirrored Chibi Quest and Riven Lands assets in coverage-driven batches.
+turns the purchased, licensed ElvGames collection into a single APK-standard,
+filesystem-organized asset library. It provides semantic keys, grid-size and
+view metadata, attribution, validation, and curated ingestion batches.
 
 ### 4. APK Cartridge Rebuild, Integration, and Cutover
 
@@ -149,13 +152,14 @@ standardize, extend, or bespoke decision for:
 - A gameplay variant exists only when behavior, strength, movement, attack,
   scale, collision/readability, or scene function requires a distinguishable
   identity.
-- A theme treatment is the Chibi Quest or Riven Lands expression of the same
-  semantic asset; it is not a new gameplay variant.
+- The standard library treatment is the licensed ElvGames pixel-art collection;
+  variant files are alternatives within that library, not parallel audience themes.
 - Environment assets form reusable, corpus-proven kits.
 - UI assets must satisfy compact and wide region, text, and safe-area contracts.
 - Physical sheets, atlases, strips, tiles, static images, and slice dimensions
   are selected only after states and runtime usage are known.
-- Every ontology entry traces to a real game/scene or an explicitly accepted gap.
+- Every curated asset entry traces to a source archive, license record, and its
+  semantic filesystem path. Game-specific adoption remains separately justified.
 
 ## Change control
 
@@ -173,7 +177,8 @@ The program is complete only when:
   mapping.
 - APK exposes the accepted shared developer systems, components, tests, and
   authoring workflow.
-- Every required semantic asset exists in both themes.
+- Every standard-library asset is discoverable through its semantic filesystem key
+  and retains its ElvGames source and credit record.
 - Every restored cartridge uses shared capabilities where required and contains
   only justified bespoke game logic.
 - Compact and wide compositions pass real-input verification with readable,
@@ -181,5 +186,5 @@ The program is complete only when:
 - Reading and Primary consume the same cartridge packages through stable host
   adapters.
 - Exact replaced legacy components, routes, logic, and copied assets are retired.
-- A new representative game can be scaffolded, implemented, tested, themed, and
-  run in QC without recreating platform infrastructure.
+- A new representative game can be scaffolded, implemented, tested, and run in
+  QC with standard-library assets without recreating platform infrastructure.

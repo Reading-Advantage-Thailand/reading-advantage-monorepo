@@ -1,137 +1,83 @@
-# Specification: APK Dual-Theme Asset Contract and Production
+# Specification: APK Standard Asset Library Contract and Production
 
 ## Overview
 
-This track converts the product-owner-approved cross-game asset ontology into
-physical delivery contracts and two complete visual treatments:
+APK will use the purchased ElvGames pixel-art collection as the single standard
+visual library for all present and future mini-games. This replaces the previous
+two-theme, generated-art plan. The work establishes a curated, filesystem-first
+library rather than making every game choose a visual style or maintain a private
+asset folder.
 
-- **Chibi Quest** for younger learners.
-- **Riven Lands** for older learners.
+The library's source of truth is its directory tree. A file path encodes its stable
+semantic key, projection/view, intended cell size, and semantic category. Build-time
+generated indexes are allowed as derived artifacts; an application database or a
+hand-maintained monolithic JSON manifest is not.
 
-The accepted ontology determines what must exist. This track determines how
-each asset type is physically delivered and then produces it. It does not copy
-legacy file layouts and does not force actors, creatures, terrain, projectiles,
-VFX, UI, and backgrounds into one universal sheet format.
+## Source, license, and credit
 
-## Required predecessor artifacts
-
-Work may not start until `apk_independent_acceptance_handoff_20260712` publishes
-an accepted manifest bound to product-owner acceptance and exact hashes for:
-
-- Complete game corpus.
-- Accepted mechanic blueprints and developer-capability links.
-- Scene-level asset usage matrix.
-- Existing-asset audit.
-- Normalized ontology and variant rules.
-- Environment-kit definitions.
-- Responsive compact/wide UI, control, text-capacity, and safe-region requirements.
-- Accepted audio roles or an explicit no-audio disposition for each usage.
-- Gap analysis and coverage-driven production priorities.
-
-Any unresolved Must-have requirement blocks physical contract freeze.
+- Source archives are the purchased `Asset Packs/` ElvGames collection.
+- Every ingested asset retains its source archive and included license record.
+- Shipped APK games and customer applications that use the library display the
+  credit `Pixel art assets by ElvGames` in their shared Credits/About or end screen.
+- The library does not resell, relicense, or claim ownership of the source assets.
+- Windows creator tools, engine cache files, executables, and engine-specific
+  project metadata are not runtime APK assets.
 
 ## Stories
 
-### Story S1: Define type-specific physical contracts
+### Story S1: Define the standard filesystem contract
 
-**As a** cartridge and asset developer
-**I want** each accepted semantic family to have an appropriate physical format
-**So that** rewritten games consume stable capabilities without inheriting old layouts.
-
-Acceptance criteria:
-
-- Every accepted semantic type declares its physical kind, dimensions or sizing
-  rules, states, directions, animation semantics, origin/collision when relevant,
-  scaling, slicing/tiling behavior, and runtime usage.
-- Humanoid actors, large creatures, flying mounts, directional projectiles,
-  environment kits, animated props, one-shot VFX, UI states, and backgrounds may
-  use different contracts when their accepted usages require it.
-- A previous 4x8, 4x4, Wang, strip, atlas, or static-image format is retained
-  only when it satisfies the accepted type; previous formats are not normative.
-- Chibi Quest and Riven Lands implement the same semantic IDs, states, and
-  per-type physical structure for drop-in theme replacement.
-- The contract distinguishes gameplay variants from theme treatments.
-- UI/control assets declare nine-slice, text-capacity, safe-padding, compact/wide,
-  and focal/cropping behavior required by the responsive composition specification.
-- Audio roles use typed delivery/state contracts when the accepted corpus requires them.
-
-### Story S2: Plan bounded production batches
-
-**As a** product owner
-**I want** art produced in evidence-backed batches
-**So that** each batch unlocks identifiable games and can be inspected completely.
+**As a** game developer
+**I want** assets to have stable paths and semantic keys
+**So that** every mini-game can reuse consistent art without a database lookup.
 
 Acceptance criteria:
 
-- `production-batches.md` maps every batch to exact semantic IDs, both theme
-  outputs, dependent games/scenes, shared contract types, and acceptance tests.
-- Batches are prioritized by cross-game coverage, dependency order, and coherent
-  art direction—not by an arbitrary knight/skeleton-first sequence.
-- Each batch is small enough for complete frame/state inspection and is executed
-  in its own Measure child track with explicit inputs and outputs.
-- No batch contains an asset without an ontology or accepted-gap reference.
+- The canonical path is `<view>/<cell-size>/<semantic-category...>/<asset-name>.<ext>`.
+- `top-down`, `side-view`, `ui`, `world`, `effects`, `audio`, and `font` are
+  supported views; cell size is a grid/cell declaration such as `8x8`, `16x16`,
+  or `32x32`, not the outer PNG dimensions.
+- Semantic keys are the normalized relative path without the extension.
+- The library validates safe paths, supported extensions, normalized names,
+  view/cell-size combinations, and duplicate semantic keys.
+- The contract supports animation sheets, tile sheets, static sprites, UI assets,
+  audio, and fonts without incorrectly treating a sheet's full image dimensions as
+  its cell size.
 
-### Story S3: Use a deterministic generation and import pipeline
+### Story S2: Curate a licensed APK-standard source library
 
-**As an** asset producer
-**I want** generated outputs normalized and validated mechanically
-**So that** attractive but unusable images cannot enter a pack.
-
-Acceptance criteria:
-
-- New art is produced with the built-in image generator; MMX and unrelated
-  external generation tools are not used.
-- Generation uses a flat unique chroma field, normally `#ff00ff`, never baked
-  checkerboards or simulated transparency.
-- Reference identities and palettes are approved per semantic family/theme
-  before dependent animation/state production.
-- Deterministic processing creates exact physical outputs, real alpha, hashes,
-  provenance, and stable semantic/state mappings.
-- Validators reject wrong dimensions, missing states, invalid frame boundaries,
-  chroma residue, non-alpha masters, excessive bleed, pair drift, and unsafe paths.
-
-### Story S4: Produce both theme implementations
-
-**As a** learner
-**I want** age-appropriate but mechanically equivalent visual themes
-**So that** theme choice does not alter game meaning or difficulty.
+**As a** platform maintainer
+**I want** selected source assets organized under the standard filesystem contract
+**So that** cartridges can browse and adopt approved assets consistently.
 
 Acceptance criteria:
 
-- Each semantic type and gameplay variant exists in both themes before its batch
-  is accepted.
-- Actors and animated assets preserve identity, equipment, silhouette, facing,
-  state readability, baseline, and scale across frames.
-- Strength and behavior variants remain visibly distinguishable in both themes.
-- Environment kits are internally coherent and contain every capability required
-  by their mapped games.
-- UI, controls, prompts, and results preserve usable text and gameplay regions in
-  compact and wide compositions.
-- Accepted audio roles exist with equivalent gameplay meaning in both themes.
-- Existing assets are reused only according to the accepted manual audit and
-  retain provenance/license evidence.
+- Ingestion excludes executable tools, engine caches, generated project metadata,
+  duplicate engine exports, and raw nested archive bundles.
+- The initial library contains representative UI, item, VFX, top-down, side-view,
+  and audio assets, each in a semantic directory with a source record.
+- The source license and the required ElvGames credit are retained beside the library.
+- Broader ingestion proceeds in bounded semantic batches; source files are never
+  dumped into individual games.
 
-### Story S5: Assemble production-ready packs
+### Story S3: Expose a browser-safe discovery contract
 
-**As a** runtime maintainer
-**I want** validated manifests and inspection evidence
-**So that** cartridge tracks can rely on the packs without hidden fallbacks.
+**As a** cartridge author
+**I want** to validate and resolve standard asset keys
+**So that** game code uses stable semantics instead of vendor filenames or ad-hoc paths.
 
 Acceptance criteria:
 
-- Both manifests contain exact semantic-to-physical mappings, content hashes,
-  dimensions, state/frame definitions, provenance, and versioning.
-- Pack parity is validated at the semantic capability and physical-contract level.
-- Real assets are inspected in the authoring harness and Kimi WebBridge; generated
-  placeholders cannot satisfy manual acceptance.
-- No production binding resolves to procedural art, missing files, cover art, or
-  an unreviewed substitute.
-- Independent review leaves no Critical, High, or Medium finding open.
+- `@reading-advantage/advantage-play-kit/assets` exports parsing and validation
+  helpers for standard asset paths and keys.
+- The helpers do not read the server filesystem at runtime.
+- Tests cover valid keys, grid-size semantics, invalid paths, unsafe traversal,
+  unsupported formats, and duplicate-key detection.
 
 ## Out of scope
 
-- Rewriting cartridge gameplay or educational rules.
-- Reopening withdrawn catalog routes.
-- Adding assets not justified by the accepted ontology/change-control process.
-- Audio uses or variants absent from the accepted corpus ontology.
-- Preserving legacy renderer or filename compatibility.
+- Migrating existing games to the library.
+- Rebuilding cartridge mechanics, educational rules, or host integrations.
+- A second audience theme, generated artwork, SVG replacement art, or a new 3D
+  sprite-production workflow.
+- Treating preliminary source filenames as final gameplay semantics without curation.

@@ -168,8 +168,8 @@ program, priority order when picking the next track is:
 - [~] **Track: APK Shared Developer Kit and Authoring Workflow** *Link: [./tracks/apk_shared_developer_kit_20260712/](./tracks/apk_shared_developer_kit_20260712/)*
   *Status: PRECONDITION-READY (orchestrator handoff documents in place under `_orchestrator/`); BLOCKED until T10 publishes valid successor hashes. Then implement accepted shared capabilities and authoring workflow.*
 
-- [ ] **Track: APK Dual-Theme Asset Contract and Production** *Link: [./tracks/apk_dual_theme_asset_production_20260712/](./tracks/apk_dual_theme_asset_production_20260712/)*
-  BLOCKED until the independent acceptance track publishes valid hashes. Then define physical contracts and mirrored theme batches.
+- [~] **Track: APK Standard Asset Library Contract and Production** *Link: [./tracks/apk_dual_theme_asset_production_20260712/](./tracks/apk_dual_theme_asset_production_20260712/)*
+  In progress: replace the speculative two-theme/generation plan with the purchased, licensed ElvGames pixel-art library; establish semantic filesystem contracts, attribution, validation, and curated standard-asset ingestion. Cartridge adoption remains separately gated by the shared-kit and acceptance work.
 
 - [ ] **Track: APK Cartridge Rebuild, Integration, and Cutover** *Link: [./tracks/apk_cartridge_semantic_rewrite_20260712/](./tracks/apk_cartridge_semantic_rewrite_20260712/)*
   BLOCKED until independent acceptance, accepted kit capabilities, and required both-theme batches exist.

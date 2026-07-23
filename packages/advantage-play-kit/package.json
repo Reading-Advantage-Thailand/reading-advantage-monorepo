@@ -23,6 +23,10 @@
       "types": "./dist/editions/index.d.ts",
       "import": "./dist/editions/index.js"
     },
+    "./assets": {
+      "types": "./dist/assets/index.d.ts",
+      "import": "./dist/assets/index.js"
+    },
     "./testing": {
       "types": "./dist/testing/index.d.ts",
       "import": "./dist/testing/index.js"
