@@ -1,7 +1,7 @@
 {
   "track_id": "apk_corpus_audit_action_defense_20260712",
   "type": "chore",
-  "status": "accepted-with-disclosure",
+  "status": "archived",
   "created_at": "2026-07-12T00:00:00Z",
   "updated_at": "2026-07-22T13:42:00Z",
   "description": "Recover exact evidence packages for eight action, defense, escort, projectile, and arena games in bounded independently reviewed batches.",
