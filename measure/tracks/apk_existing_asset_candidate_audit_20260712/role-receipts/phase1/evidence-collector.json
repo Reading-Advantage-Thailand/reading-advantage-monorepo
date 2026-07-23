@@ -1,0 +1,48 @@
+{
+  "allowed_input_manifest_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+  "allowed_input_paths": [
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+    "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d:measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/accepted-denominator-delta-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/candidate-denominator-delta-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-denominator-discovery-report-v2.json"
+  ],
+  "batch_id": "phase1",
+  "declared_model": "gpt-5.6-terra",
+  "final_status": "pass",
+  "findings": {
+    "critical": [],
+    "high": [],
+    "low": [],
+    "medium": []
+  },
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "native_task_name": "/root/t8_phase1_base_records",
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/candidate-records-base.json": "968f13af83e860e7cb63fb2b09941e6fd9f5b1d7b2e7e79aa221a3b5ddc4ffc2",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/candidate-records-base.json": "3d5bf6eec57a815d07591f4caf63cd514f7cced64e997fa6df732d57bb8328d3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-03/candidate-records-base.json": "8e82e5a17b36faba7c33acbff0f682b74433e3aa97f77c722328ba7f782f2b66",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/candidate-records-base.json": "af02f834c174dc003f98618012a8c44327692429e40941ea7dd1833a80f1f02b",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/candidate-records-base.json": "023efc1314011a2b3e643df741bdaab46dfa2592150822c80c45a997a08440e3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/candidate-records-base.json": "bf324f5fdb8b379f9183e1174bdfa4462374887b3aae744e445f9d0204934131",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-07/candidate-records-base.json": "f80d72b37bff130708fa8f7cf97a227488227282f1cad9a61ebbe3849bd7a90e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-08/candidate-records-base.json": "8d03d4ac7d0053bb0c69285d1530c878e20413d66c5d6360aa1c25f8d52dc757",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-09/candidate-records-base.json": "2eec3a8b7be1b795afc7486a832da7e5e39c99e3e05b3f82da0501f4bc78fe34",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/candidate-records-base.json": "4ff010ebf0287f6faeb27fd614363c3eec7e9637ea1e68295ceac62bfb7c1148",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-11/candidate-records-base.json": "0b0c8a9a99b2fe81a03402378f8536bee42b012b2f6fa97b2d24d77ddb32dc5e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-12/candidate-records-base.json": "dd9f594d2e4d39a8ac3c805dc5ada17d3e73734207f9940ce36f2e29bc0b8061"
+  },
+  "resource_usage": {
+    "batch_count": 12,
+    "bytes_read": 2517536,
+    "candidate_paths": 428,
+    "command_invocations": 2,
+    "hash_groups": 227,
+    "within_ceiling": true
+  },
+  "role": "evidence-collector",
+  "role_boundary": "Path-specific base records and denominator reconciliation only; no candidate asset-byte/content inspection, caller analysis, provenance or license conclusion, suitability, disposition, review, or mechanical metadata output.",
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712"
+}

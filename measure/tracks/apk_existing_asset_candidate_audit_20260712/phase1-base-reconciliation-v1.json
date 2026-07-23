@@ -1,0 +1,183 @@
+{
+  "authority": {
+    "authorization_commit": "79ab26dc",
+    "phase1_opened_commit": "872d0de9"
+  },
+  "batch_partition": {
+    "batches": [
+      {
+        "batch_id": "AF-01",
+        "first_group": "sha256:00a88649680edba33079e5a6e4fb604ca85945229c762dfa1c0fb1da978c60fb",
+        "group_count": 18,
+        "last_group": "sha256:147c3b039b965ee7079c49c89966a385fc6cf01b568c97e2fec2fe104b4c25d0",
+        "path_count": 36
+      },
+      {
+        "batch_id": "AF-02",
+        "first_group": "sha256:14bba75201cb9cf1495c890ef6b869ceed44d4db8f80d7babddf979331dd95e7",
+        "group_count": 18,
+        "last_group": "sha256:2383a3b212ed48f803df643d6525e7b2fad76bb5772507e3550da9fda40fc19e",
+        "path_count": 35
+      },
+      {
+        "batch_id": "AF-03",
+        "first_group": "sha256:23eacc93a937c645242084d17dedc72ef10e04330633306e504d02f725235b56",
+        "group_count": 21,
+        "last_group": "sha256:3a67113fe7cb71698af948d033047210a0131584f83f57389f7ca98efbb05f87",
+        "path_count": 35
+      },
+      {
+        "batch_id": "AF-04",
+        "first_group": "sha256:3bec9ea0ab16ff60618d4aa69b617f0b74427e8c08a6d12382e2391333ae3c36",
+        "group_count": 17,
+        "last_group": "sha256:5720ead0f45f083c2c8eefe0a1b888b1416c7fc768426007ebf5657786600f81",
+        "path_count": 35
+      },
+      {
+        "batch_id": "AF-05",
+        "first_group": "sha256:576ec5070a1fd3c1238c31ca9cbe26a0acee1ec8e4a6383852196dc09604e0f6",
+        "group_count": 18,
+        "last_group": "sha256:6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+        "path_count": 39
+      },
+      {
+        "batch_id": "AF-06",
+        "first_group": "sha256:6ed15b6010af6453e0a2844340c0a2a4b61a99028d92aae5a4d5e60a7db9022f",
+        "group_count": 21,
+        "last_group": "sha256:8554c1486cd5735a2adba9dc26157dc1e23165d35e37c5efb691dcb5af9008fd",
+        "path_count": 35
+      },
+      {
+        "batch_id": "AF-07",
+        "first_group": "sha256:86439c52414fbdd7129b72c44aeec6c63134b17cbb0ec5af6395b05f2f083e88",
+        "group_count": 17,
+        "last_group": "sha256:9f5fc0ae82caccd1e103607fe70c2af0062e6f196288ca143b97cd3d8f93827d",
+        "path_count": 35
+      },
+      {
+        "batch_id": "AF-08",
+        "first_group": "sha256:9f8c13f96fe90c9d47d9b5fe5c65b0628a4bbcf0ad4a2299140ebbab4d624c49",
+        "group_count": 19,
+        "last_group": "sha256:ac0581c08b6bb79ff54020a68a9ff66cb290cadfe931f28a2a311a21c21e79ae",
+        "path_count": 35
+      },
+      {
+        "batch_id": "AF-09",
+        "first_group": "sha256:acc33d140f9c6228d448034dc1ab9698b6e0b846f7d3947f27e2f92f4d8c04b4",
+        "group_count": 17,
+        "last_group": "sha256:bb1c38361ba56ccb553a6ddc6d9e21b75a9ec97b724917b186e740c9c7f0d94f",
+        "path_count": 35
+      },
+      {
+        "batch_id": "AF-10",
+        "first_group": "sha256:bd02d8146701783c7fe9542dd8afc2d8f919cbdb30c653a9e6e9b620577243db",
+        "group_count": 19,
+        "last_group": "sha256:cb5e5c99a49da484e0a7856cef335c5428e0894534f0f148d45e6dd81f47408b",
+        "path_count": 34
+      },
+      {
+        "batch_id": "AF-11",
+        "first_group": "sha256:cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+        "group_count": 18,
+        "last_group": "sha256:e1f6299482e1e3055d75816cb9a36e211fb52d1c01acf62aadb5c81da660fbd5",
+        "path_count": 40
+      },
+      {
+        "batch_id": "AF-12",
+        "first_group": "sha256:e2c3e9f281a502fe12c41cbc06ae6a41b71b8c3a16648b34ebd6eafb9e3fdbe9",
+        "group_count": 24,
+        "last_group": "sha256:fd6ad1367e4bd340a74c320732408781674741b300738e58f9a7ad710eea335a",
+        "path_count": 34
+      }
+    ],
+    "duplicates": 0,
+    "group_sum": 227,
+    "omissions": 0,
+    "path_sum": 428
+  },
+  "boundary_interpretation": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-denominator-discovery-report-v2.json",
+    "rule": "For each non-final boundary, select the nearest target boundary among those that keep the current batch and every remaining batch ceiling-feasible; ties choose the earlier boundary. This required lookahead makes AF-11 end at 18 groups and 40 paths so AF-12 remains within its 24-group ceiling.",
+    "sha256": "b71333db3768e8646bb9673755e7092480e943fed4e8542857162f9ed824bb40"
+  },
+  "delta_reconciliation": {
+    "accepted_additions": [
+      {
+        "canonical_path": "apps/advantage-games/public/vibe-coding-bg.jpg",
+        "present": true,
+        "sha256": "ed69029981933a197fc9234a05784d84d3203e8739bbd7fa74541f9c1f1c05e8"
+      },
+      {
+        "canonical_path": "apps/advantage-games/public/vibe-coding-poster.jpg",
+        "present": true,
+        "sha256": "147c3b039b965ee7079c49c89966a385fc6cf01b568c97e2fec2fe104b4c25d0"
+      }
+    ],
+    "replacement": {
+      "canonical_path": "packages/codecamp-knowledge/fixtures/apk-guided/activity-tutorial.json",
+      "current_hash_present": true,
+      "current_sha256": "72a31ae85afa63a25c629184a5b3c70091fa4e49af303d5faf83f160c38a0ef1",
+      "prior_hash_absent": true,
+      "prior_sha256": "b4e17309cb3e4a63ca60127b5af2285a1ed82b0c7fa570b0a7f36b67d8b59d4d"
+    }
+  },
+  "effective_denominator": {
+    "identical_hash_groups": 227,
+    "unique_paths": 428
+  },
+  "generator": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/generate_phase1_base_records.py",
+    "sha256": "ff13f7c51b3d408535da809f84fc29106b3efd3a104e2823e421acf8bf5e8d68"
+  },
+  "input_bindings": [
+    {
+      "name": "phase0_input_freeze",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+      "sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b"
+    },
+    {
+      "name": "t2_asset_denominator",
+      "path": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d:measure/tracks/apk_source_denominator_inventory_20260712/asset-file-denominator.json",
+      "sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438"
+    },
+    {
+      "name": "candidate_delta",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/candidate-denominator-delta-v1.json",
+      "sha256": "c354a57e162876d035f7df284149f683596d11145fe8e9d6c827beda4ccc15df"
+    },
+    {
+      "name": "accepted_delta",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/accepted-denominator-delta-v1.json",
+      "sha256": "71592625cbe09671937b7406afa38f3f59232c0345de455467121dc038863db2"
+    },
+    {
+      "name": "phase0_discovery_report",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-denominator-discovery-report-v2.json",
+      "sha256": "b71333db3768e8646bb9673755e7092480e943fed4e8542857162f9ed824bb40"
+    }
+  ],
+  "output_batch_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/candidate-records-base.json": "968f13af83e860e7cb63fb2b09941e6fd9f5b1d7b2e7e79aa221a3b5ddc4ffc2",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/candidate-records-base.json": "3d5bf6eec57a815d07591f4caf63cd514f7cced64e997fa6df732d57bb8328d3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-03/candidate-records-base.json": "8e82e5a17b36faba7c33acbff0f682b74433e3aa97f77c722328ba7f782f2b66",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/candidate-records-base.json": "af02f834c174dc003f98618012a8c44327692429e40941ea7dd1833a80f1f02b",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/candidate-records-base.json": "023efc1314011a2b3e643df741bdaab46dfa2592150822c80c45a997a08440e3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/candidate-records-base.json": "bf324f5fdb8b379f9183e1174bdfa4462374887b3aae744e445f9d0204934131",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-07/candidate-records-base.json": "f80d72b37bff130708fa8f7cf97a227488227282f1cad9a61ebbe3849bd7a90e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-08/candidate-records-base.json": "8d03d4ac7d0053bb0c69285d1530c878e20413d66c5d6360aa1c25f8d52dc757",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-09/candidate-records-base.json": "2eec3a8b7be1b795afc7486a832da7e5e39c99e3e05b3f82da0501f4bc78fe34",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/candidate-records-base.json": "4ff010ebf0287f6faeb27fd614363c3eec7e9637ea1e68295ceac62bfb7c1148",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-11/candidate-records-base.json": "0b0c8a9a99b2fe81a03402378f8536bee42b012b2f6fa97b2d24d77ddb32dc5e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-12/candidate-records-base.json": "dd9f594d2e4d39a8ac3c805dc5ada17d3e73734207f9940ce36f2e29bc0b8061"
+  },
+  "root_path_counts": {
+    "apps/advantage-games/measure": 72,
+    "apps/advantage-games/public": 250,
+    "apps/primary-advantage/public/games": 0,
+    "apps/reading-advantage/public/games": 105,
+    "packages/codecamp-knowledge/fixtures/apk-guided": 1
+  },
+  "schema_version": "apk-asset-forensics.phase1-base-reconciliation.v1",
+  "status": "pass",
+  "track_id": "apk_existing_asset_candidate_audit_20260712"
+}

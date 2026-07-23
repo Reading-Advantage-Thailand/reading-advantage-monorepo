@@ -1,0 +1,379 @@
+{
+  "batch_id": "AF-05",
+  "input_binding": {
+    "accepted_delta_sha256": "71592625cbe09671937b7406afa38f3f59232c0345de455467121dc038863db2",
+    "base_denominator_sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "base_manifest_publication_revision": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+    "base_record_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "delta_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "effective_candidate_paths": 428,
+    "effective_identical_hash_groups": 227,
+    "phase0_input_freeze_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b"
+  },
+  "producer": {
+    "receipt_path": "role-receipts/phase1/evidence-collector.json",
+    "role": "evidence-collector"
+  },
+  "records": [
+    {
+      "canonical_path": "apps/advantage-games/public/games/magic-defense/background.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:576ec5070a1fd3c1238c31ca9cbe26a0acee1ec8e4a6383852196dc09604e0f6",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "576ec5070a1fd3c1238c31ca9cbe26a0acee1ec8e4a6383852196dc09604e0f6",
+      "source_blob_oid": "c1126cf36df844bf462f684f5d7e4907934024ff"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/castle-defense/background.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:576ec5070a1fd3c1238c31ca9cbe26a0acee1ec8e4a6383852196dc09604e0f6",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "576ec5070a1fd3c1238c31ca9cbe26a0acee1ec8e4a6383852196dc09604e0f6",
+      "source_blob_oid": "c1126cf36df844bf462f684f5d7e4907934024ff"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/magic-defense/background.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:576ec5070a1fd3c1238c31ca9cbe26a0acee1ec8e4a6383852196dc09604e0f6",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "576ec5070a1fd3c1238c31ca9cbe26a0acee1ec8e4a6383852196dc09604e0f6",
+      "source_blob_oid": "c1126cf36df844bf462f684f5d7e4907934024ff"
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/astral-mage-compliance-audit_20260426/metadata.json",
+      "file_kind": "data",
+      "identical_hash_group": "sha256:57cfe25d29a52dbbc35b0b236eb0a54cca9c5a108b518b22db076d1775261d0e",
+      "relevance_rule_id": "game-measure-asset-sidecars",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "57cfe25d29a52dbbc35b0b236eb0a54cca9c5a108b518b22db076d1775261d0e",
+      "source_blob_oid": "9599e8ae98da5d708ddb344f7f423466c0ff3f53"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/rune-match.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:5916220191be753a0e0170340fbe1123ee5a39ca8748512a2909978e3d9e4386",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "5916220191be753a0e0170340fbe1123ee5a39ca8748512a2909978e3d9e4386",
+      "source_blob_oid": "d997ad51accfb4a0a3809512b072edc0ec47cc22"
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/metadata.json",
+      "file_kind": "data",
+      "identical_hash_group": "sha256:5bd6030ef6798d18c8df1a2646dd20b839fde5132ff290d63c8489031dd5c3aa",
+      "relevance_rule_id": "game-measure-asset-sidecars",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "5bd6030ef6798d18c8df1a2646dd20b839fde5132ff290d63c8489031dd5c3aa",
+      "source_blob_oid": "2e9c7b1aeb605b1fc4421f8ffe2d9c01b0cc0f6a"
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/metadata.json",
+      "file_kind": "data",
+      "identical_hash_group": "sha256:5d70cc9930188a6355eaad342c9fec5d41d998eb0c4383264a435312c65725c2",
+      "relevance_rule_id": "game-measure-asset-sidecars",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "5d70cc9930188a6355eaad342c9fec5d41d998eb0c4383264a435312c65725c2",
+      "source_blob_oid": "9caca74798beccfbd797c8cb91c1cae59950ab6d"
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/rune-forge-chamber-compliance-audit_20260426/metadata.json",
+      "file_kind": "data",
+      "identical_hash_group": "sha256:5d8fce2b7cc3243e64bcab10b5142016b71be08b74570e14abf77064cd585be9",
+      "relevance_rule_id": "game-measure-asset-sidecars",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "5d8fce2b7cc3243e64bcab10b5142016b71be08b74570e14abf77064cd585be9",
+      "source_blob_oid": "0f87c8939830b359c22c4b3ec44b033adb3fa2ec"
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/shadow-gate-dungeon-20260320/asset-spec.md",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:601d3f31c835cea7349ae6cf279d9529fad5c562b39dcbdd92b03fe125a08527",
+      "relevance_rule_id": "game-measure-asset-sidecars",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "601d3f31c835cea7349ae6cf279d9529fad5c562b39dcbdd92b03fe125a08527",
+      "source_blob_oid": "4e7f6be576973e797a40087c79d759db6657f2b4"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/castle-defense/tower-built.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6085561e7a7034bfea1160c675717050c0f35c49c4069e2600a8f42eab26fdac",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6085561e7a7034bfea1160c675717050c0f35c49c4069e2600a8f42eab26fdac",
+      "source_blob_oid": "3363687b88844cbe53e5ca1781983adf65e91788"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/castle-defense/tower-built.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6085561e7a7034bfea1160c675717050c0f35c49c4069e2600a8f42eab26fdac",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6085561e7a7034bfea1160c675717050c0f35c49c4069e2600a8f42eab26fdac",
+      "source_blob_oid": "3363687b88844cbe53e5ca1781983adf65e91788"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/castle-defense/tower-built.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6085561e7a7034bfea1160c675717050c0f35c49c4069e2600a8f42eab26fdac",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6085561e7a7034bfea1160c675717050c0f35c49c4069e2600a8f42eab26fdac",
+      "source_blob_oid": "3363687b88844cbe53e5ca1781983adf65e91788"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/cover/cover-paladins-twin-soul.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6124a087e9270ff30afe3df8a5b739adcc326fd05aeec93613e00d94a4ad8896",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6124a087e9270ff30afe3df8a5b739adcc326fd05aeec93613e00d94a4ad8896",
+      "source_blob_oid": "d35d199502ba8af3f662b796f394fde0bf30c050"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/potion-rush/character-sheet-2.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:61440da17e12a64b6455cd53fb3a2795a3947851514f91ed9d7ee423457751a6",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "61440da17e12a64b6455cd53fb3a2795a3947851514f91ed9d7ee423457751a6",
+      "source_blob_oid": "31b79762addb8cf29f8b26dbc7fc6f0cce8edf08"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/character-sheet-2.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:61440da17e12a64b6455cd53fb3a2795a3947851514f91ed9d7ee423457751a6",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "61440da17e12a64b6455cd53fb3a2795a3947851514f91ed9d7ee423457751a6",
+      "source_blob_oid": "31b79762addb8cf29f8b26dbc7fc6f0cce8edf08"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/character-sheet-2.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:61440da17e12a64b6455cd53fb3a2795a3947851514f91ed9d7ee423457751a6",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "61440da17e12a64b6455cd53fb3a2795a3947851514f91ed9d7ee423457751a6",
+      "source_blob_oid": "31b79762addb8cf29f8b26dbc7fc6f0cce8edf08"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/potion-rush/potion-rush-gameplay.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:62a4d3e0d4e7e388f9b7091d2fd86010ca88e0e5aa79f1a5df1aa637797a918b",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "62a4d3e0d4e7e388f9b7091d2fd86010ca88e0e5aa79f1a5df1aa637797a918b",
+      "source_blob_oid": "493beb0e3f71d51f887c84ee1f10efc9096d5325"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/potion-rush/item-sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:62a9de029ed1ddf7d3b68f69bd39d0242de82672bd9e3026eaf11d536d0c2cd7",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "62a9de029ed1ddf7d3b68f69bd39d0242de82672bd9e3026eaf11d536d0c2cd7",
+      "source_blob_oid": "fe792c70865bbca886a6aa749506aaacc820e058"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/item-sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:62a9de029ed1ddf7d3b68f69bd39d0242de82672bd9e3026eaf11d536d0c2cd7",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "62a9de029ed1ddf7d3b68f69bd39d0242de82672bd9e3026eaf11d536d0c2cd7",
+      "source_blob_oid": "fe792c70865bbca886a6aa749506aaacc820e058"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/item-sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:62a9de029ed1ddf7d3b68f69bd39d0242de82672bd9e3026eaf11d536d0c2cd7",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "62a9de029ed1ddf7d3b68f69bd39d0242de82672bd9e3026eaf11d536d0c2cd7",
+      "source_blob_oid": "fe792c70865bbca886a6aa749506aaacc820e058"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/potion-rush/potion.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6408e81e2b705d8ab4646b8bac2111fbeba6fcfc62151bfb2acc63d15aedd87d",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6408e81e2b705d8ab4646b8bac2111fbeba6fcfc62151bfb2acc63d15aedd87d",
+      "source_blob_oid": "663d32aa0abf0bfa71f78eac5efb4ba91a3a3148"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/potion.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6408e81e2b705d8ab4646b8bac2111fbeba6fcfc62151bfb2acc63d15aedd87d",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6408e81e2b705d8ab4646b8bac2111fbeba6fcfc62151bfb2acc63d15aedd87d",
+      "source_blob_oid": "663d32aa0abf0bfa71f78eac5efb4ba91a3a3148"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/potion.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6408e81e2b705d8ab4646b8bac2111fbeba6fcfc62151bfb2acc63d15aedd87d",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6408e81e2b705d8ab4646b8bac2111fbeba6fcfc62151bfb2acc63d15aedd87d",
+      "source_blob_oid": "663d32aa0abf0bfa71f78eac5efb4ba91a3a3148"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/window.svg",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:644768c4aaeb4767bce293344eeb0c125fb804a94d801440424072202d85e3a1",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "644768c4aaeb4767bce293344eeb0c125fb804a94d801440424072202d85e3a1",
+      "source_blob_oid": "b2b2a44f6ebc70c450043c05a002e7a93ba5d651"
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/labyrinth-goblin-king-compliance-audit_20260426/metadata.json",
+      "file_kind": "data",
+      "identical_hash_group": "sha256:69ceaf480ac5eb5a9552e36b4e560a18569b3384af3290bda48ea3fd0171a8de",
+      "relevance_rule_id": "game-measure-asset-sidecars",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "69ceaf480ac5eb5a9552e36b4e560a18569b3384af3290bda48ea3fd0171a8de",
+      "source_blob_oid": "46a1a75338fe2f0fc71d79b5770e706abd972979"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/potion-rush/character-sheet-2-adjusted.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6a857867de0d60bd334021f1d95f649df342c02470ba104d9121759e08847f0b",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6a857867de0d60bd334021f1d95f649df342c02470ba104d9121759e08847f0b",
+      "source_blob_oid": "2129cefb1acb32afe92efb793188cc7b814e0eb5"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/character-sheet-2-adjusted.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6a857867de0d60bd334021f1d95f649df342c02470ba104d9121759e08847f0b",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6a857867de0d60bd334021f1d95f649df342c02470ba104d9121759e08847f0b",
+      "source_blob_oid": "2129cefb1acb32afe92efb793188cc7b814e0eb5"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/character-sheet-2-adjusted.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6a857867de0d60bd334021f1d95f649df342c02470ba104d9121759e08847f0b",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6a857867de0d60bd334021f1d95f649df342c02470ba104d9121759e08847f0b",
+      "source_blob_oid": "2129cefb1acb32afe92efb793188cc7b814e0eb5"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/vocab/dragon-rider.json",
+      "file_kind": "data",
+      "identical_hash_group": "sha256:6a9374ce0831a80d2f6b6934cb5d68803778243be67a20c18bd60c00e7ad4036",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6a9374ce0831a80d2f6b6934cb5d68803778243be67a20c18bd60c00e7ad4036",
+      "source_blob_oid": "7e33c7456d5f748675e7fcfb88dee43dffebfb10"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/vocab/enchanted-library.json",
+      "file_kind": "data",
+      "identical_hash_group": "sha256:6a9374ce0831a80d2f6b6934cb5d68803778243be67a20c18bd60c00e7ad4036",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6a9374ce0831a80d2f6b6934cb5d68803778243be67a20c18bd60c00e7ad4036",
+      "source_blob_oid": "7e33c7456d5f748675e7fcfb88dee43dffebfb10"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/castle-defense/zombie_3x3_pose_sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "source_blob_oid": "0ca136390700eb402a57163524a2c1e6d6e60994"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/enchanted-library/zombie_3x3_pose_sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "source_blob_oid": "0ca136390700eb402a57163524a2c1e6d6e60994"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/castle-defense/zombie_3x3_pose_sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "source_blob_oid": "0ca136390700eb402a57163524a2c1e6d6e60994"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/enchanted-library/zombie_3x3_pose_sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "source_blob_oid": "0ca136390700eb402a57163524a2c1e6d6e60994"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/wizard-vs-zombie/zombie_3x3_pose_sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "source_blob_oid": "0ca136390700eb402a57163524a2c1e6d6e60994"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/wizard-vs-zombie/zombie_3x3_pose_sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "source_blob_oid": "0ca136390700eb402a57163524a2c1e6d6e60994"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/castle-defense/zombie_3x3_pose_sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "source_blob_oid": "0ca136390700eb402a57163524a2c1e6d6e60994"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/enchanted-library/zombie_3x3_pose_sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "source_blob_oid": "0ca136390700eb402a57163524a2c1e6d6e60994"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/wizard-vs-zombie/zombie_3x3_pose_sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "source_blob_oid": "0ca136390700eb402a57163524a2c1e6d6e60994"
+    }
+  ],
+  "resource_usage": {
+    "bytes_read": 0,
+    "candidate_paths": 39,
+    "command_invocations": 0,
+    "hash_groups": 18,
+    "within_ceiling": true
+  },
+  "schema_version": "apk-asset-forensics.phase1-candidate-record-base.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712"
+}

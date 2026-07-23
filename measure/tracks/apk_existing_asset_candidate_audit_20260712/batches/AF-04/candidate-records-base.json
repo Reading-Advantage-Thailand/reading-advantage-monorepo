@@ -1,0 +1,343 @@
+{
+  "batch_id": "AF-04",
+  "input_binding": {
+    "accepted_delta_sha256": "71592625cbe09671937b7406afa38f3f59232c0345de455467121dc038863db2",
+    "base_denominator_sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "base_manifest_publication_revision": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+    "base_record_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "delta_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "effective_candidate_paths": 428,
+    "effective_identical_hash_groups": 227,
+    "phase0_input_freeze_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b"
+  },
+  "producer": {
+    "receipt_path": "role-receipts/phase1/evidence-collector.json",
+    "role": "evidence-collector"
+  },
+  "records": [
+    {
+      "canonical_path": "apps/advantage-games/public/games/cover/rune-match-cover.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:3bec9ea0ab16ff60618d4aa69b617f0b74427e8c08a6d12382e2391333ae3c36",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "3bec9ea0ab16ff60618d4aa69b617f0b74427e8c08a6d12382e2391333ae3c36",
+      "source_blob_oid": "da103e51d802d13e2b0aa665474a9ea2dea130a7"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/cover/rune-match-cover.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:3bec9ea0ab16ff60618d4aa69b617f0b74427e8c08a6d12382e2391333ae3c36",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "3bec9ea0ab16ff60618d4aa69b617f0b74427e8c08a6d12382e2391333ae3c36",
+      "source_blob_oid": "da103e51d802d13e2b0aa665474a9ea2dea130a7"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/archers-revenge/archers-revenge-start-screen.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:41851bd0dd9d84daa41c1b53880be041558bcadc77ef3f0f787280c1dd4527b5",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "41851bd0dd9d84daa41c1b53880be041558bcadc77ef3f0f787280c1dd4527b5",
+      "source_blob_oid": "fbfe374874eb3e5bfbbced45ab9ecc0eb52919f2"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/dragon-flight/boss-3x3-sheet-facing-up.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:4268a22c8d3eef16c999dc5ab6d8f15dbcb33b34b22b7a3b053bc2daa5a20ea0",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "4268a22c8d3eef16c999dc5ab6d8f15dbcb33b34b22b7a3b053bc2daa5a20ea0",
+      "source_blob_oid": "049bb8053b4883612c59fd99c006292e156ef200"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-flight/boss-3x3-sheet-facing-up.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:4268a22c8d3eef16c999dc5ab6d8f15dbcb33b34b22b7a3b053bc2daa5a20ea0",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "4268a22c8d3eef16c999dc5ab6d8f15dbcb33b34b22b7a3b053bc2daa5a20ea0",
+      "source_blob_oid": "049bb8053b4883612c59fd99c006292e156ef200"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/boss-3x3-sheet-facing-up.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:4268a22c8d3eef16c999dc5ab6d8f15dbcb33b34b22b7a3b053bc2daa5a20ea0",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "4268a22c8d3eef16c999dc5ab6d8f15dbcb33b34b22b7a3b053bc2daa5a20ea0",
+      "source_blob_oid": "049bb8053b4883612c59fd99c006292e156ef200"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/enchanted-library/spirit_3x3_pose_sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:42fd03ed729c8b94fdb379c095a5df5dfd5bd936ea08225490a2f04975a6927c",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "42fd03ed729c8b94fdb379c095a5df5dfd5bd936ea08225490a2f04975a6927c",
+      "source_blob_oid": "d8c12c66dc6cf5c441e4144992ac830a8d402bda"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/enchanted-library/spirit_3x3_pose_sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:42fd03ed729c8b94fdb379c095a5df5dfd5bd936ea08225490a2f04975a6927c",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "42fd03ed729c8b94fdb379c095a5df5dfd5bd936ea08225490a2f04975a6927c",
+      "source_blob_oid": "d8c12c66dc6cf5c441e4144992ac830a8d402bda"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/enchanted-library/spirit_3x3_pose_sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:42fd03ed729c8b94fdb379c095a5df5dfd5bd936ea08225490a2f04975a6927c",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "42fd03ed729c8b94fdb379c095a5df5dfd5bd936ea08225490a2f04975a6927c",
+      "source_blob_oid": "d8c12c66dc6cf5c441e4144992ac830a8d402bda"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/dragon-rider/dragon-army-3x3-sheet-facing-up.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:45683dc07d0e95c9e1eb7a6abd9e6b35a77fb84ecd90a32879db307683b56390",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "45683dc07d0e95c9e1eb7a6abd9e6b35a77fb84ecd90a32879db307683b56390",
+      "source_blob_oid": "a7e4c49fa1749c772b6034cbff0c94a20cce7d16"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-rider/dragon-army-3x3-sheet-facing-up.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:45683dc07d0e95c9e1eb7a6abd9e6b35a77fb84ecd90a32879db307683b56390",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "45683dc07d0e95c9e1eb7a6abd9e6b35a77fb84ecd90a32879db307683b56390",
+      "source_blob_oid": "a7e4c49fa1749c772b6034cbff0c94a20cce7d16"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-rider/dragon-army-3x3-sheet-facing-up.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:45683dc07d0e95c9e1eb7a6abd9e6b35a77fb84ecd90a32879db307683b56390",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "45683dc07d0e95c9e1eb7a6abd9e6b35a77fb84ecd90a32879db307683b56390",
+      "source_blob_oid": "a7e4c49fa1749c772b6034cbff0c94a20cce7d16"
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/spellweavers-run-compliance-audit_20260426/metadata.json",
+      "file_kind": "data",
+      "identical_hash_group": "sha256:46282a59d47e8f52fcf5ad6ee82294bb8009d7f5dbb7d6f30cc487dd5a7813ec",
+      "relevance_rule_id": "game-measure-asset-sidecars",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "46282a59d47e8f52fcf5ad6ee82294bb8009d7f5dbb7d6f30cc487dd5a7813ec",
+      "source_blob_oid": "84c312c888d8b7e7e425476becce4df8548d7d76"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/wizard-vs-zombie/tile-ruins.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:46e211ac512f046f29509084157dc3feef834780ae82e647c40b384cbd67f6a8",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "46e211ac512f046f29509084157dc3feef834780ae82e647c40b384cbd67f6a8",
+      "source_blob_oid": "39860c6eae0c357839054dea2e8d4f3461a2072b"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/wizard-vs-zombie/tile-ruins.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:46e211ac512f046f29509084157dc3feef834780ae82e647c40b384cbd67f6a8",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "46e211ac512f046f29509084157dc3feef834780ae82e647c40b384cbd67f6a8",
+      "source_blob_oid": "39860c6eae0c357839054dea2e8d4f3461a2072b"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/wizard-vs-zombie/tile-ruins.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:46e211ac512f046f29509084157dc3feef834780ae82e647c40b384cbd67f6a8",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "46e211ac512f046f29509084157dc3feef834780ae82e647c40b384cbd67f6a8",
+      "source_blob_oid": "39860c6eae0c357839054dea2e8d4f3461a2072b"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/rpg-battle.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:4c076366e3e7bbdcc4b5333ca9974a5731a79e495c9e8737b31d3fcd724e54e5",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "4c076366e3e7bbdcc4b5333ca9974a5731a79e495c9e8737b31d3fcd724e54e5",
+      "source_blob_oid": "27a6cda38dc443b69e8ed33abc29808e1a742ae4"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/rpg-battle/background_forest_clearing.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:4cee5bcfc17efb9dfc80fc2347b49a5118dd18e403df5e1543d36c1b898ac08a",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "4cee5bcfc17efb9dfc80fc2347b49a5118dd18e403df5e1543d36c1b898ac08a",
+      "source_blob_oid": "aebe0b7c1506160b204b6a68f92e35e4f324d723"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/rpg-battle/background_forest_clearing.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:4cee5bcfc17efb9dfc80fc2347b49a5118dd18e403df5e1543d36c1b898ac08a",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "4cee5bcfc17efb9dfc80fc2347b49a5118dd18e403df5e1543d36c1b898ac08a",
+      "source_blob_oid": "aebe0b7c1506160b204b6a68f92e35e4f324d723"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/rpg-battle/background_forest_clearing.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:4cee5bcfc17efb9dfc80fc2347b49a5118dd18e403df5e1543d36c1b898ac08a",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "4cee5bcfc17efb9dfc80fc2347b49a5118dd18e403df5e1543d36c1b898ac08a",
+      "source_blob_oid": "aebe0b7c1506160b204b6a68f92e35e4f324d723"
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/realm-carver-compliance-audit_20260426/metadata.json",
+      "file_kind": "data",
+      "identical_hash_group": "sha256:4d59e880d08b92357c59851de67d7d5e56db09786bf138a5acf3ef3791de84a1",
+      "relevance_rule_id": "game-measure-asset-sidecars",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "4d59e880d08b92357c59851de67d7d5e56db09786bf138a5acf3ef3791de84a1",
+      "source_blob_oid": "9164f07d7be74a22bd9e4bd6c683f4a0942f8648"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/rune-match/monsters/orc_3x4_pose_sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:4d5d6eb3acd9c4ae2e4579155623150bbfa6409b294bbb3b65109844518ea290",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "4d5d6eb3acd9c4ae2e4579155623150bbfa6409b294bbb3b65109844518ea290",
+      "source_blob_oid": "abb702de3e23eabc983a97d8ce07d388a6d52eb5"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/rune-match/monsters/orc_3x4_pose_sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:4d5d6eb3acd9c4ae2e4579155623150bbfa6409b294bbb3b65109844518ea290",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "4d5d6eb3acd9c4ae2e4579155623150bbfa6409b294bbb3b65109844518ea290",
+      "source_blob_oid": "abb702de3e23eabc983a97d8ce07d388a6d52eb5"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/rune-match/monsters/orc_3x4_pose_sheet.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:4d5d6eb3acd9c4ae2e4579155623150bbfa6409b294bbb3b65109844518ea290",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "4d5d6eb3acd9c4ae2e4579155623150bbfa6409b294bbb3b65109844518ea290",
+      "source_blob_oid": "abb702de3e23eabc983a97d8ce07d388a6d52eb5"
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/castle-defense-assets-20260117/metadata.json",
+      "file_kind": "data",
+      "identical_hash_group": "sha256:4dc1dd4c05ff8a04ffa62f2aa0506f7ecfea1879f575b83da936c4844e5d6979",
+      "relevance_rule_id": "game-measure-asset-sidecars",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "4dc1dd4c05ff8a04ffa62f2aa0506f7ecfea1879f575b83da936c4844e5d6979",
+      "source_blob_oid": "93a68610435431ba1cebd29cb1aaf3861602ac26"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/dragon-rider/player-3x3-sheet-facing-down.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:5125990489313bb97878ff72d971175822437fa684fe458ff2e70a21c3a98716",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "5125990489313bb97878ff72d971175822437fa684fe458ff2e70a21c3a98716",
+      "source_blob_oid": "03fdbf320ad2f1d3b110ce5cdf19584c31572fe8"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-rider/player-3x3-sheet-facing-down.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:5125990489313bb97878ff72d971175822437fa684fe458ff2e70a21c3a98716",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "5125990489313bb97878ff72d971175822437fa684fe458ff2e70a21c3a98716",
+      "source_blob_oid": "03fdbf320ad2f1d3b110ce5cdf19584c31572fe8"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-rider/player-3x3-sheet-facing-down.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:5125990489313bb97878ff72d971175822437fa684fe458ff2e70a21c3a98716",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "5125990489313bb97878ff72d971175822437fa684fe458ff2e70a21c3a98716",
+      "source_blob_oid": "03fdbf320ad2f1d3b110ce5cdf19584c31572fe8"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/castle-defense/grass_A.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:5229b4c10089e4043a1377b2a4dfd04a34e63ced0a66d1e3ac026f91a8ba346a",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "5229b4c10089e4043a1377b2a4dfd04a34e63ced0a66d1e3ac026f91a8ba346a",
+      "source_blob_oid": "cbd66b0985ed21ca762e82d7df7ce8fb020ebee8"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/castle-defense/grass_A.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:5229b4c10089e4043a1377b2a4dfd04a34e63ced0a66d1e3ac026f91a8ba346a",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "5229b4c10089e4043a1377b2a4dfd04a34e63ced0a66d1e3ac026f91a8ba346a",
+      "source_blob_oid": "cbd66b0985ed21ca762e82d7df7ce8fb020ebee8"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/castle-defense/grass_A.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:5229b4c10089e4043a1377b2a4dfd04a34e63ced0a66d1e3ac026f91a8ba346a",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "5229b4c10089e4043a1377b2a4dfd04a34e63ced0a66d1e3ac026f91a8ba346a",
+      "source_blob_oid": "cbd66b0985ed21ca762e82d7df7ce8fb020ebee8"
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/dungeon-liberator-compliance-audit_20260426/metadata.json",
+      "file_kind": "data",
+      "identical_hash_group": "sha256:541c8c154c601945a6c0649c7ed6c34cf52adc1621ab6e4c1e81aea9aa69cecf",
+      "relevance_rule_id": "game-measure-asset-sidecars",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "541c8c154c601945a6c0649c7ed6c34cf52adc1621ab6e4c1e81aea9aa69cecf",
+      "source_blob_oid": "7aede194b1f365297354d78f78ee70b549c4d065"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/next.svg",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:55995dfad6ecb4945a1e856ddca03c5e16aa5bf13fd21b4df6a74ae79357bcfc",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "55995dfad6ecb4945a1e856ddca03c5e16aa5bf13fd21b4df6a74ae79357bcfc",
+      "source_blob_oid": "5174b28c565c285e3e312ec5178be64fbeca8398"
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/cover/castle-defense-cover.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:5720ead0f45f083c2c8eefe0a1b888b1416c7fc768426007ebf5657786600f81",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "5720ead0f45f083c2c8eefe0a1b888b1416c7fc768426007ebf5657786600f81",
+      "source_blob_oid": "0afef0d3f3e3ab926a9a19c190231180b4276fa5"
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/cover/castle-defense-cover.png",
+      "file_kind": "asset",
+      "identical_hash_group": "sha256:5720ead0f45f083c2c8eefe0a1b888b1416c7fc768426007ebf5657786600f81",
+      "relevance_rule_id": "public-game-media-audio-data",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "5720ead0f45f083c2c8eefe0a1b888b1416c7fc768426007ebf5657786600f81",
+      "source_blob_oid": "0afef0d3f3e3ab926a9a19c190231180b4276fa5"
+    }
+  ],
+  "resource_usage": {
+    "bytes_read": 0,
+    "candidate_paths": 35,
+    "command_invocations": 0,
+    "hash_groups": 17,
+    "within_ceiling": true
+  },
+  "schema_version": "apk-asset-forensics.phase1-candidate-record-base.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712"
+}
