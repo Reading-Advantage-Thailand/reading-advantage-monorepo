@@ -17,32 +17,32 @@
 
 ## Phase 2: Provenance and license audit
 
-- [~] Task: Inspect sidecars, repository history, approved authoring sources, and licenses per candidate/group
-- [ ] Task: Record exact provenance evidence or explicit unknown status
-- [ ] Task: Prove unknown provenance cannot receive reuse/adapt disposition
-- [ ] Task: Run independent provenance review
-- [b] Task: Root-orchestrator fitness verification for Phase 2 using automated and independent evidence (deferred:phase2-green)
+- [x] Task: Inspect sidecars, repository history, approved authoring sources, and licenses per candidate/group
+- [x] Task: Record exact provenance evidence or explicit unknown status
+- [x] Task: Prove unknown provenance cannot receive reuse/adapt disposition
+- [x] Task: Run independent provenance review
+- [x] Task: Root-orchestrator fitness verification for Phase 2 using automated and independent evidence (forensics-contract-tests.py GREEN; AF-01..AF-12 independent reviews)
 
 ## Phase 3: Candidate-level visual and audio inspection
 
-- [ ] Task: Inspect every candidate or justified identical-hash group; record each path
-- [ ] Task: Record visible/audible content, state/direction coverage, baked text/UI, placeholder, and corruption risks
-- [ ] Task: Preserve contact sheets/audio playlists only as navigation evidence
-- [ ] Task: Reconcile every inspection receipt to candidate rows
-- [b] Task: Root-orchestrator fitness verification for Phase 3 using direct asset inspection and independent evidence (deferred:phase3-green)
+- [~] Task: Inspect every candidate or justified identical-hash group; record each path
+- [b] Task: Record visible/audible content, state/direction coverage, baked text/UI, placeholder, and corruption risks — deferred:direct-audio-multimodal-inspection
+- [b] Task: Preserve contact sheets/audio playlists only as navigation evidence — deferred:direct-audio-multimodal-inspection
+- [b] Task: Reconcile every inspection receipt to candidate rows — deferred:phase3-inspection-records
+- [b] Task: BLOCKED — Root-orchestrator fitness verification for Phase 3 using direct asset inspection and independent evidence (deferred:phase3-green)
 
-## Phase 4: Responsive/theme suitability join
+## Phase 4: Responsive legacy-function and replacement join
 
-- [ ] Task: Join candidates to accepted concrete scene usages from pilot and cohort manifests
-- [ ] Task: Record compact/wide, text-capacity, focal/crop/tile/slice, state, and collision/readability suitability
-- [ ] Task: Record separate `cute_chibi_v1` and original `heroic_stylized_v1` suitability without treating style as gameplay meaning
-- [ ] Task: Stop on missing scene-usage evidence rather than infer suitability
-- [b] Task: Root-orchestrator fitness verification for Phase 4 using automated joins, Kimi WebBridge where applicable, and direct visual evidence (deferred:phase4-green)
+- [b] Task: Join candidates to accepted concrete scene usages from pilot and cohort manifests — deferred:phase3-root-acceptance
+- [b] Task: Record compact/wide, text-capacity, focal/crop/tile/slice, state, collision/readability, and current legacy-function evidence — deferred:phase3-root-acceptance
+- [b] Task: Record semantic-role/state replacement or retirement evidence; direct legacy paths remain evidence only and never become canonical standard-pack candidate keys — deferred:phase3-root-acceptance
+- [b] Task: Stop on missing scene-usage evidence rather than infer suitability — deferred:phase3-root-acceptance
+- [b] Task: BLOCKED — Root-orchestrator fitness verification for Phase 4 using automated joins, Kimi WebBridge where applicable, and direct visual evidence (deferred:phase4-green)
 
 ## Phase 5: Independent acceptance
 
-- [ ] Task: Run full count, hash, path, caller, provenance, inspection, and disposition reconciliation
-- [ ] Task: Spawn `fork_turns="none"` asset reviewers for every candidate disposition and substantive inspection record
-- [ ] Task: Remediate every Critical, High, and Medium finding
-- [ ] Task: Publish a non-consumable candidate manifest and complete review report; after root-orchestrator product-owner acceptance bound to their hashes, publish the accepted manifest
-- [b] Task: Root-orchestrator final fitness acceptance using automated, Kimi WebBridge, independent LLM, and direct visual evidence (deferred:phase5-reviewed-candidate)
+- [b] Task: Run full count, hash, path, caller, provenance, inspection, and disposition reconciliation — deferred:phase4-root-acceptance
+- [b] Task: Spawn `fork_turns="none"` asset reviewers for every candidate disposition and substantive inspection record — deferred:phase4-root-acceptance
+- [b] Task: Remediate every Critical, High, and Medium finding — deferred:phase4-independent-review
+- [b] Task: Publish a non-consumable candidate manifest and complete review report; after root-orchestrator product-owner acceptance bound to their hashes, publish the accepted manifest — deferred:phase4-independent-review
+- [b] Task: BLOCKED — Root-orchestrator final fitness acceptance using automated, Kimi WebBridge, independent LLM, and direct visual evidence (deferred:phase5-reviewed-candidate)
