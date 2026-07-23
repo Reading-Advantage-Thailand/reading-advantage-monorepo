@@ -1,0 +1,20 @@
+{
+  "schema_version": "apk-asset-forensics.phase1-green-test-report.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-contract-test.py --fixtures",
+  "result": "green",
+  "exit_code": 0,
+  "observed_output": "GREEN: Phase 1 base, mechanical metadata, and caller outputs exactly reconcile to the frozen denominator",
+  "executed_at": "2026-07-23T10:29:37+07:00",
+  "contract_sha256": "9bd2d9b77bc313932549c1062d8ec14920b87db245f00a4c5b502be708c130b5",
+  "caller_receipt_sha256": "fa5b875194082200d92864e50e9776279f4bf93d52e90acaee6b2c52238e83de",
+  "counts": {
+    "candidate_paths": 428,
+    "identical_hash_groups": 227,
+    "batches": 12,
+    "eligible_caller_locators": 533,
+    "eligible_caller_sources": 73,
+    "dynamic_unresolved_candidates": 217,
+    "excluded_measure_evidence_occurrences": 12009
+  }
+}

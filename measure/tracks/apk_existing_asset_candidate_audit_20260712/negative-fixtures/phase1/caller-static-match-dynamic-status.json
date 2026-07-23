@@ -1,0 +1,6 @@
+{
+  "expected_error": "caller-static-match-dynamic-status",
+  "kind": "caller-static-match-dynamic-status",
+  "literal_match_count": 1,
+  "status": "dynamic_unresolved"
+}

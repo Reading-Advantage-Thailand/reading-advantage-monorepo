@@ -1,0 +1,6 @@
+{
+  "caller_path": "measure/archive/apk_source_denominator_inventory_20260712/phase3-reconciliation.json",
+  "expected_error": "caller-measure-evidence-promoted",
+  "kind": "caller-measure-evidence-promoted",
+  "promoted_as_current": true
+}

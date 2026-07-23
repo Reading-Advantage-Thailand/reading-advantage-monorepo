@@ -1,0 +1,42 @@
+{
+  "schema_version": "apk-asset-forensics.phase1-caller-attempt-disposition.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "attempt": "caller-v2.1",
+  "status": "non-consumable-superseded-before-checkpoint",
+  "recorded_at": "2026-07-23T10:02:18+07:00",
+  "reason": "Exact literal scanning incorrectly promoted Measure-owned audit and denominator mentions to current callers, producing 12,542 locators and breaching the immutable 800-record AF-01 ceiling. No Phase 1 checkpoint or acceptance consumed these outputs.",
+  "frozen_inputs_unchanged": true,
+  "observed": {
+    "candidate_paths": 428,
+    "caller_records": 12542,
+    "source_files": 252,
+    "root_measure_occurrences": 11934,
+    "app_measure_occurrences": 75,
+    "qualifying_after_bounded_filter": 533
+  },
+  "successor_rule": {
+    "algorithm_version": "2.2.0",
+    "exclude_source_paths": [
+      "measure/**",
+      "apps/*/measure/**"
+    ],
+    "preserve_candidate_denominator": 428,
+    "preserve_batches": 12,
+    "preserve_pinned_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235"
+  },
+  "non_consumable_file_hashes": {
+    "batches/AF-01/caller-inventory.json": "61da7f77763dd43bc8db13e43c0194a954a2301950f1095b798b06d113a5f2cc",
+    "batches/AF-02/caller-inventory.json": "16cd2224ebd11bccc7037f70d6fe524bf29a5cf612081f8f1538504c82a20a41",
+    "batches/AF-03/caller-inventory.json": "2d62bef25894a08fd1eb9b9a7f05b89accaa5bb5da79672587b0fd755430c336",
+    "batches/AF-04/caller-inventory.json": "e0eb93c2a438b6661bef9225309228ff42b54d77baf22818a9a6fb757bcc2ff0",
+    "batches/AF-05/caller-inventory.json": "43cf57d1e62858a0b693214edc83a7a8aa5c55e12351d0935037ba11686e2b83",
+    "batches/AF-06/caller-inventory.json": "1ac794a9b62d73445cb7630cad53e7c927c413bde78577f47a6313ca504395f5",
+    "batches/AF-07/caller-inventory.json": "b3788205ad7af7ff22a62e6fbfd49c09d9e1cbe4946cafed5a6d2f57fbf78321",
+    "batches/AF-08/caller-inventory.json": "6af85646bf5819bbba25f8f2e51aa8eaf541a8ef02945788761f612dbcc3021d",
+    "batches/AF-09/caller-inventory.json": "1166b8fad468bb3af775a1bfc3e4f1897ff9cbbe13cc5c05ad778345ccc8c2db",
+    "batches/AF-10/caller-inventory.json": "a05f211eb234f14b2951bcfb50b6ca8f53f193176fdf0d6923f0a024ece8f71f",
+    "batches/AF-11/caller-inventory.json": "dd6cf5f655728189e9015e182e2d243803a71d8e9286a499ba81edaaf9dc624a",
+    "batches/AF-12/caller-inventory.json": "a0d3bc12a8295448b061c8a9688517477ebaae105587f799fb40bdfc47113a73",
+    "role-receipts/phase1/caller-analyst.json": "79e2de4fc5fdefb0dc17b5501bc641353d31708ad4dfae08d998262fd435bdd9"
+  }
+}

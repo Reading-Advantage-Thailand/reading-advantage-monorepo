@@ -1,0 +1,1299 @@
+{
+  "batch_id": "AF-11",
+  "input_binding": {
+    "accepted_delta_sha256": "71592625cbe09671937b7406afa38f3f59232c0345de455467121dc038863db2",
+    "base_denominator_sha256": "41c9ede1a8e5ddab21b74a99959fbddc35b5f5a6902740a740a48f174bf7f438",
+    "base_manifest_publication_revision": "ba95e6fb1db6acdaecd0808ca1f22dec339d6c5d",
+    "base_record_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+    "delta_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "effective_candidate_paths": 428,
+    "effective_identical_hash_groups": 227,
+    "phase0_input_freeze_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b"
+  },
+  "producer": {
+    "receipt_path": "role-receipts/phase1/caller-analyst.json",
+    "role": "caller-analyst"
+  },
+  "records": [
+    {
+      "canonical_path": "apps/advantage-games/public/games/dragon-flight/parallax-top-tiling.png",
+      "current_callers": [],
+      "derived_public_url": "/games/dragon-flight/parallax-top-tiling.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/dragon-rider/parallax-top-tiling.png",
+        "apps/advantage-games/public/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+        "apps/advantage-games/public/games/vocabulary/dragon-rider/parallax-top-tiling.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-rider/parallax-top-tiling.png"
+      ],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "source_blob_oid": "0012260e43a3383e9b0743b9e5c1b426c5e77c9e",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/dragon-rider/parallax-top-tiling.png",
+      "current_callers": [],
+      "derived_public_url": "/games/dragon-rider/parallax-top-tiling.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/dragon-flight/parallax-top-tiling.png",
+        "apps/advantage-games/public/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+        "apps/advantage-games/public/games/vocabulary/dragon-rider/parallax-top-tiling.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-rider/parallax-top-tiling.png"
+      ],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "source_blob_oid": "0012260e43a3383e9b0743b9e5c1b426c5e77c9e",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 134,
+          "line_start": 134,
+          "locator_text_sha256": "e8db8140a2b135e8e3908535af07d0c08a394ad057c2dc6e345b0733d17e4b23",
+          "matched_literal": "/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 131,
+          "line_start": 131,
+          "locator_text_sha256": "e8db8140a2b135e8e3908535af07d0c08a394ad057c2dc6e345b0733d17e4b23",
+          "matched_literal": "/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/dragon-flight/parallax-top-tiling.png",
+        "apps/advantage-games/public/games/dragon-rider/parallax-top-tiling.png",
+        "apps/advantage-games/public/games/vocabulary/dragon-rider/parallax-top-tiling.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-rider/parallax-top-tiling.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "source_blob_oid": "0012260e43a3383e9b0743b9e5c1b426c5e77c9e",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-rider/parallax-top-tiling.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 140,
+          "line_start": 140,
+          "locator_text_sha256": "26ed44f4bb2d1b774ffb08b40a0f70bf0a6a7b931d9f8c8ea2686ffdb08ff4c1",
+          "matched_literal": "/games/vocabulary/dragon-rider/parallax-top-tiling.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/vocabulary/dragon-rider/parallax-top-tiling.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/dragon-flight/parallax-top-tiling.png",
+        "apps/advantage-games/public/games/dragon-rider/parallax-top-tiling.png",
+        "apps/advantage-games/public/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-rider/parallax-top-tiling.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "source_blob_oid": "0012260e43a3383e9b0743b9e5c1b426c5e77c9e",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 134,
+          "line_start": 134,
+          "locator_text_sha256": "e8db8140a2b135e8e3908535af07d0c08a394ad057c2dc6e345b0733d17e4b23",
+          "matched_literal": "/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 131,
+          "line_start": 131,
+          "locator_text_sha256": "e8db8140a2b135e8e3908535af07d0c08a394ad057c2dc6e345b0733d17e4b23",
+          "matched_literal": "/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/dragon-flight/parallax-top-tiling.png",
+        "apps/advantage-games/public/games/dragon-rider/parallax-top-tiling.png",
+        "apps/advantage-games/public/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+        "apps/advantage-games/public/games/vocabulary/dragon-rider/parallax-top-tiling.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-rider/parallax-top-tiling.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "source_blob_oid": "0012260e43a3383e9b0743b9e5c1b426c5e77c9e",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-rider/parallax-top-tiling.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 140,
+          "line_start": 140,
+          "locator_text_sha256": "26ed44f4bb2d1b774ffb08b40a0f70bf0a6a7b931d9f8c8ea2686ffdb08ff4c1",
+          "matched_literal": "/games/vocabulary/dragon-rider/parallax-top-tiling.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/vocabulary/dragon-rider/parallax-top-tiling.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/dragon-flight/parallax-top-tiling.png",
+        "apps/advantage-games/public/games/dragon-rider/parallax-top-tiling.png",
+        "apps/advantage-games/public/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+        "apps/advantage-games/public/games/vocabulary/dragon-rider/parallax-top-tiling.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-flight/parallax-top-tiling.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "cd1130a856af45851dbe77a282a70e23139846c71d29c20fdec4ae0030e65900",
+      "source_blob_oid": "0012260e43a3383e9b0743b9e5c1b426c5e77c9e",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/dragon-flight/player-3x3-sheet-facing-down.png",
+      "current_callers": [],
+      "derived_public_url": "/games/dragon-flight/player-3x3-sheet-facing-down.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png"
+      ],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:cdce8535723ea3c0d99aa2d3bd8763a38b6c8d4613e87b351ab68e56027d13ab",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "cdce8535723ea3c0d99aa2d3bd8763a38b6c8d4613e87b351ab68e56027d13ab",
+      "source_blob_oid": "33d073a0980c48a386e5c651c8db4942035da9bf",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 125,
+          "line_start": 125,
+          "locator_text_sha256": "33459f5fae27631a5430375a276f8820b5a766b051328c189013b447210ab905",
+          "matched_literal": "/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 122,
+          "line_start": 122,
+          "locator_text_sha256": "33459f5fae27631a5430375a276f8820b5a766b051328c189013b447210ab905",
+          "matched_literal": "/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/dragon-flight/player-3x3-sheet-facing-down.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:cdce8535723ea3c0d99aa2d3bd8763a38b6c8d4613e87b351ab68e56027d13ab",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "cdce8535723ea3c0d99aa2d3bd8763a38b6c8d4613e87b351ab68e56027d13ab",
+      "source_blob_oid": "33d073a0980c48a386e5c651c8db4942035da9bf",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 125,
+          "line_start": 125,
+          "locator_text_sha256": "33459f5fae27631a5430375a276f8820b5a766b051328c189013b447210ab905",
+          "matched_literal": "/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 122,
+          "line_start": 122,
+          "locator_text_sha256": "33459f5fae27631a5430375a276f8820b5a766b051328c189013b447210ab905",
+          "matched_literal": "/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/dragon-flight/player-3x3-sheet-facing-down.png",
+        "apps/advantage-games/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:cdce8535723ea3c0d99aa2d3bd8763a38b6c8d4613e87b351ab68e56027d13ab",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "cdce8535723ea3c0d99aa2d3bd8763a38b6c8d4613e87b351ab68e56027d13ab",
+      "source_blob_oid": "33d073a0980c48a386e5c651c8db4942035da9bf",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/castle-defense-rewrite-20260127/metadata.json",
+      "current_callers": [],
+      "derived_public_url": null,
+      "duplicate_path_peers": [],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:cee877929a675958168bfeee3983279ba7578833d40bb2f1647d3984a5bbd360",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "cee877929a675958168bfeee3983279ba7578833d40bb2f1647d3984a5bbd360",
+      "source_blob_oid": "914ad20451008432a4350ebf936502404c3cdbbe",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/castle-defense/skeletons.png",
+      "current_callers": [],
+      "derived_public_url": "/games/vocabulary/castle-defense/skeletons.png",
+      "duplicate_path_peers": [],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:d44971a10760932cc13274e0af64a462875ad9396fa6e66bde68105adcf8efaa",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "d44971a10760932cc13274e0af64a462875ad9396fa6e66bde68105adcf8efaa",
+      "source_blob_oid": "3a59eb14ea69e487a1fb321b3ddd2c4fbca0fa20",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/wizard-vs-zombie-compliance-audit_20260426/metadata.json",
+      "current_callers": [],
+      "derived_public_url": null,
+      "duplicate_path_peers": [],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:d508af47210202382f630545772f4a4a67111bace9dc618e076d61867b2597a0",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "d508af47210202382f630545772f4a4a67111bace9dc618e076d61867b2597a0",
+      "source_blob_oid": "f8d98c0253a2125d79a16281d03fc33eb5160038",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/rpg-battle-compliance-audit_20260426/metadata.json",
+      "current_callers": [],
+      "derived_public_url": null,
+      "duplicate_path_peers": [],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:d779554b2f5344f348fc09cd3598c63952926eac3633aa908f090a283ae717b0",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "d779554b2f5344f348fc09cd3598c63952926eac3633aa908f090a283ae717b0",
+      "source_blob_oid": "9b7132fd2085b9b2668f924966775e322cb02bea",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/sounds/spellweavers-run-action.mp3",
+      "current_callers": [],
+      "derived_public_url": "/sounds/spellweavers-run-action.mp3",
+      "duplicate_path_peers": [],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:d9c3c6b425e40eeb5c167d47832aa979833ff1cb632d58b040043d8479cf238c",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "d9c3c6b425e40eeb5c167d47832aa979833ff1cb632d58b040043d8479cf238c",
+      "source_blob_oid": "cea3e907318feaf0ac693fbe690e36dad407830b",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/castle-defense-20260115/metadata.json",
+      "current_callers": [],
+      "derived_public_url": null,
+      "duplicate_path_peers": [],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:da83207fc3ee9355543915924d58ce83618abeeb6f5e5e534b8f6ccad1357121",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "da83207fc3ee9355543915924d58ce83618abeeb6f5e5e534b8f6ccad1357121",
+      "source_blob_oid": "77d42cead8388c69235e0df2b6d8da2fc402e7d0",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/cover/cover-rune-forge-chamber.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/lib/gameCards.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 133,
+          "line_start": 133,
+          "locator_text_sha256": "03835526ef3a127375987ebf3f4225c2dd9e8df05780e38ad7e231e1d5bbe997",
+          "matched_literal": "/games/cover/cover-rune-forge-chamber.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/cover/cover-rune-forge-chamber.png",
+      "duplicate_path_peers": [],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:dd2077d6f9f23f48dd9ca147e643005b8d4c130a775ff227be9209959681b265",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "dd2077d6f9f23f48dd9ca147e643005b8d4c130a775ff227be9209959681b265",
+      "source_blob_oid": "f7962509e49d8aecb44991afec9793e4693905f4",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/dragon-flight/loading-screen-background.png",
+      "current_callers": [],
+      "derived_public_url": "/games/dragon-flight/loading-screen-background.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/vocabulary/dragon-flight/loading-screen-background.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-flight/loading-screen-background.png"
+      ],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:dd9a22a59f9786d7cfeab5a1b9c615f17c3229d7589d04e93f753eb3c25a6600",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "dd9a22a59f9786d7cfeab5a1b9c615f17c3229d7589d04e93f753eb3c25a6600",
+      "source_blob_oid": "c38161d21931060345e13d4ceebcec90e0d10622",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-flight/loading-screen-background.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 143,
+          "line_start": 143,
+          "locator_text_sha256": "df0a77ccd2d345a1dc497eb991b3fee2eaddcd17cfbd64fb4a3937a1ead3aa7e",
+          "matched_literal": "/games/vocabulary/dragon-flight/loading-screen-background.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 140,
+          "line_start": 140,
+          "locator_text_sha256": "df0a77ccd2d345a1dc497eb991b3fee2eaddcd17cfbd64fb4a3937a1ead3aa7e",
+          "matched_literal": "/games/vocabulary/dragon-flight/loading-screen-background.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/vocabulary/dragon-flight/loading-screen-background.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/dragon-flight/loading-screen-background.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-flight/loading-screen-background.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:dd9a22a59f9786d7cfeab5a1b9c615f17c3229d7589d04e93f753eb3c25a6600",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "dd9a22a59f9786d7cfeab5a1b9c615f17c3229d7589d04e93f753eb3c25a6600",
+      "source_blob_oid": "c38161d21931060345e13d4ceebcec90e0d10622",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/loading-screen-background.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 143,
+          "line_start": 143,
+          "locator_text_sha256": "df0a77ccd2d345a1dc497eb991b3fee2eaddcd17cfbd64fb4a3937a1ead3aa7e",
+          "matched_literal": "/games/vocabulary/dragon-flight/loading-screen-background.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 140,
+          "line_start": 140,
+          "locator_text_sha256": "df0a77ccd2d345a1dc497eb991b3fee2eaddcd17cfbd64fb4a3937a1ead3aa7e",
+          "matched_literal": "/games/vocabulary/dragon-flight/loading-screen-background.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/vocabulary/dragon-flight/loading-screen-background.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/dragon-flight/loading-screen-background.png",
+        "apps/advantage-games/public/games/vocabulary/dragon-flight/loading-screen-background.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:dd9a22a59f9786d7cfeab5a1b9c615f17c3229d7589d04e93f753eb3c25a6600",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "dd9a22a59f9786d7cfeab5a1b9c615f17c3229d7589d04e93f753eb3c25a6600",
+      "source_blob_oid": "c38161d21931060345e13d4ceebcec90e0d10622",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/dragon-rider-compliance-audit_20260426/metadata.json",
+      "current_callers": [],
+      "derived_public_url": null,
+      "duplicate_path_peers": [],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:de63b64067b4fb141df8cbd6c2721b57902450b09a1e7597f96da515bc321697",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "de63b64067b4fb141df8cbd6c2721b57902450b09a1e7597f96da515bc321697",
+      "source_blob_oid": "dba374c20ee211a52a36f1e5c483f849369cba91",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/potion-rush/shop-wall.png",
+      "current_callers": [],
+      "derived_public_url": "/games/potion-rush/shop-wall.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/sentence/potion-rush/shop-wall.png",
+        "apps/reading-advantage/public/games/sentence/potion-rush/shop-wall.png"
+      ],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:df4cd96233d15a12cf535d868c4339f481af6f5dd2ab8e7b660ab02ae7f14bac",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "df4cd96233d15a12cf535d868c4339f481af6f5dd2ab8e7b660ab02ae7f14bac",
+      "source_blob_oid": "41b6b9df740b179f718ff11b59fbef1829547ed4",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/shop-wall.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 51,
+          "line_start": 51,
+          "locator_text_sha256": "cb82e272bafe4a9299026629392040ff74d8d66a03d96c1e0cc01d3c125edb5f",
+          "matched_literal": "/games/sentence/potion-rush/shop-wall.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/sentence/potion-rush/PotionRushGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 57,
+          "line_start": 57,
+          "locator_text_sha256": "cb82e272bafe4a9299026629392040ff74d8d66a03d96c1e0cc01d3c125edb5f",
+          "matched_literal": "/games/sentence/potion-rush/shop-wall.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/sentence/potion-rush/shop-wall.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/potion-rush/shop-wall.png",
+        "apps/reading-advantage/public/games/sentence/potion-rush/shop-wall.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:df4cd96233d15a12cf535d868c4339f481af6f5dd2ab8e7b660ab02ae7f14bac",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "df4cd96233d15a12cf535d868c4339f481af6f5dd2ab8e7b660ab02ae7f14bac",
+      "source_blob_oid": "41b6b9df740b179f718ff11b59fbef1829547ed4",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/shop-wall.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 51,
+          "line_start": 51,
+          "locator_text_sha256": "cb82e272bafe4a9299026629392040ff74d8d66a03d96c1e0cc01d3c125edb5f",
+          "matched_literal": "/games/sentence/potion-rush/shop-wall.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/sentence/potion-rush/PotionRushGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 57,
+          "line_start": 57,
+          "locator_text_sha256": "cb82e272bafe4a9299026629392040ff74d8d66a03d96c1e0cc01d3c125edb5f",
+          "matched_literal": "/games/sentence/potion-rush/shop-wall.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/sentence/potion-rush/shop-wall.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/potion-rush/shop-wall.png",
+        "apps/advantage-games/public/games/sentence/potion-rush/shop-wall.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:df4cd96233d15a12cf535d868c4339f481af6f5dd2ab8e7b660ab02ae7f14bac",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "df4cd96233d15a12cf535d868c4339f481af6f5dd2ab8e7b660ab02ae7f14bac",
+      "source_blob_oid": "41b6b9df740b179f718ff11b59fbef1829547ed4",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/potion-rush/mineral.png",
+      "current_callers": [],
+      "derived_public_url": "/games/potion-rush/mineral.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/sentence/potion-rush/mineral.png",
+        "apps/reading-advantage/public/games/sentence/potion-rush/mineral.png"
+      ],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:df77815896bf2859b65a314c7bcaf2009d802f3f9487371bf9b12e993af43989",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "df77815896bf2859b65a314c7bcaf2009d802f3f9487371bf9b12e993af43989",
+      "source_blob_oid": "0f8545c631f87f4eaa1f6c508dc603ef6c19860a",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/mineral.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/components/games/sentence/potion-rush/ConveyorBelt.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 35,
+          "line_start": 35,
+          "locator_text_sha256": "e87a3f6aa4a8c457004c7c655d9bb22d41cd8279f30a77c3d3a1035dfda3c81b",
+          "matched_literal": "/games/sentence/potion-rush/mineral.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/sentence/potion-rush/ConveyorBelt.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 35,
+          "line_start": 35,
+          "locator_text_sha256": "e87a3f6aa4a8c457004c7c655d9bb22d41cd8279f30a77c3d3a1035dfda3c81b",
+          "matched_literal": "/games/sentence/potion-rush/mineral.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/sentence/potion-rush/mineral.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/potion-rush/mineral.png",
+        "apps/reading-advantage/public/games/sentence/potion-rush/mineral.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:df77815896bf2859b65a314c7bcaf2009d802f3f9487371bf9b12e993af43989",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "df77815896bf2859b65a314c7bcaf2009d802f3f9487371bf9b12e993af43989",
+      "source_blob_oid": "0f8545c631f87f4eaa1f6c508dc603ef6c19860a",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/mineral.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/components/games/sentence/potion-rush/ConveyorBelt.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 35,
+          "line_start": 35,
+          "locator_text_sha256": "e87a3f6aa4a8c457004c7c655d9bb22d41cd8279f30a77c3d3a1035dfda3c81b",
+          "matched_literal": "/games/sentence/potion-rush/mineral.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/sentence/potion-rush/ConveyorBelt.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 35,
+          "line_start": 35,
+          "locator_text_sha256": "e87a3f6aa4a8c457004c7c655d9bb22d41cd8279f30a77c3d3a1035dfda3c81b",
+          "matched_literal": "/games/sentence/potion-rush/mineral.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/sentence/potion-rush/mineral.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/potion-rush/mineral.png",
+        "apps/advantage-games/public/games/sentence/potion-rush/mineral.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:df77815896bf2859b65a314c7bcaf2009d802f3f9487371bf9b12e993af43989",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "df77815896bf2859b65a314c7bcaf2009d802f3f9487371bf9b12e993af43989",
+      "source_blob_oid": "0f8545c631f87f4eaa1f6c508dc603ef6c19860a",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/rpg-battle/hero_male_pose_sheet_3x3.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/PlayerSprite.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 8,
+          "line_start": 8,
+          "locator_text_sha256": "ddec52c7a6c84d9e269cac84b005c9881e5ca8e24763281d77fb32ad7620d435",
+          "matched_literal": "/games/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "ui_render"
+        },
+        {
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.test.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 8,
+          "line_start": 8,
+          "locator_text_sha256": "ddec52c7a6c84d9e269cac84b005c9881e5ca8e24763281d77fb32ad7620d435",
+          "matched_literal": "/games/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "test_fixture"
+        },
+        {
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/rpg-battle/Sprite.test.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 23,
+          "line_start": 23,
+          "locator_text_sha256": "ddec52c7a6c84d9e269cac84b005c9881e5ca8e24763281d77fb32ad7620d435",
+          "matched_literal": "/games/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "test_fixture"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/PlayerSprite.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 8,
+          "line_start": 8,
+          "locator_text_sha256": "ddec52c7a6c84d9e269cac84b005c9881e5ca8e24763281d77fb32ad7620d435",
+          "matched_literal": "/games/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "ui_render"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.test.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 8,
+          "line_start": 8,
+          "locator_text_sha256": "ddec52c7a6c84d9e269cac84b005c9881e5ca8e24763281d77fb32ad7620d435",
+          "matched_literal": "/games/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "test_fixture"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/rpg-battle/Sprite.test.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 23,
+          "line_start": 23,
+          "locator_text_sha256": "ddec52c7a6c84d9e269cac84b005c9881e5ca8e24763281d77fb32ad7620d435",
+          "matched_literal": "/games/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "test_fixture"
+        }
+      ],
+      "derived_public_url": "/games/rpg-battle/hero_male_pose_sheet_3x3.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+        "apps/reading-advantage/public/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:dfa497b128d015528b208d1722f5d0a79027b844baf59acfe2e9dd796d6a9e78",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "dfa497b128d015528b208d1722f5d0a79027b844baf59acfe2e9dd796d6a9e78",
+      "source_blob_oid": "e8726ff55d5ae191e8b9f34cbfe6b5cdfd8eee0c",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/lib/games/rpgBattleSelection.test.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 10,
+          "line_start": 10,
+          "locator_text_sha256": "946f52bbb247e8874793ee3132ba6cbea190559da2c67837f97bd31e248c5618",
+          "matched_literal": "/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "test_fixture"
+        },
+        {
+          "caller_path": "apps/advantage-games/src/lib/games/rpgBattleSelection.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 30,
+          "line_start": 30,
+          "locator_text_sha256": "c849943768f227102155b48cd6ad9cdd205b2f250b7f6ec30d1d287003663c99",
+          "matched_literal": "/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/advantage-games/src/lib/games/rpgBattleSprites.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 4,
+          "line_start": 4,
+          "locator_text_sha256": "c5c849a65d78520a22748e5948430915513ea524071cc86deefe0edc7883da9b",
+          "matched_literal": "/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/lib/games/rpgBattleSelection.test.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 10,
+          "line_start": 10,
+          "locator_text_sha256": "946f52bbb247e8874793ee3132ba6cbea190559da2c67837f97bd31e248c5618",
+          "matched_literal": "/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "test_fixture"
+        },
+        {
+          "caller_path": "apps/reading-advantage/lib/games/rpgBattleSelection.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 30,
+          "line_start": 30,
+          "locator_text_sha256": "c849943768f227102155b48cd6ad9cdd205b2f250b7f6ec30d1d287003663c99",
+          "matched_literal": "/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/lib/games/rpgBattleSprites.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 4,
+          "line_start": 4,
+          "locator_text_sha256": "c5c849a65d78520a22748e5948430915513ea524071cc86deefe0edc7883da9b",
+          "matched_literal": "/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/rpg-battle/hero_male_pose_sheet_3x3.png",
+        "apps/reading-advantage/public/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:dfa497b128d015528b208d1722f5d0a79027b844baf59acfe2e9dd796d6a9e78",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "dfa497b128d015528b208d1722f5d0a79027b844baf59acfe2e9dd796d6a9e78",
+      "source_blob_oid": "e8726ff55d5ae191e8b9f34cbfe6b5cdfd8eee0c",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/lib/games/rpgBattleSelection.test.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 10,
+          "line_start": 10,
+          "locator_text_sha256": "946f52bbb247e8874793ee3132ba6cbea190559da2c67837f97bd31e248c5618",
+          "matched_literal": "/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "test_fixture"
+        },
+        {
+          "caller_path": "apps/advantage-games/src/lib/games/rpgBattleSelection.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 30,
+          "line_start": 30,
+          "locator_text_sha256": "c849943768f227102155b48cd6ad9cdd205b2f250b7f6ec30d1d287003663c99",
+          "matched_literal": "/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/advantage-games/src/lib/games/rpgBattleSprites.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 4,
+          "line_start": 4,
+          "locator_text_sha256": "c5c849a65d78520a22748e5948430915513ea524071cc86deefe0edc7883da9b",
+          "matched_literal": "/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/lib/games/rpgBattleSelection.test.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 10,
+          "line_start": 10,
+          "locator_text_sha256": "946f52bbb247e8874793ee3132ba6cbea190559da2c67837f97bd31e248c5618",
+          "matched_literal": "/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "test_fixture"
+        },
+        {
+          "caller_path": "apps/reading-advantage/lib/games/rpgBattleSelection.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 30,
+          "line_start": 30,
+          "locator_text_sha256": "c849943768f227102155b48cd6ad9cdd205b2f250b7f6ec30d1d287003663c99",
+          "matched_literal": "/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/lib/games/rpgBattleSprites.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 4,
+          "line_start": 4,
+          "locator_text_sha256": "c5c849a65d78520a22748e5948430915513ea524071cc86deefe0edc7883da9b",
+          "matched_literal": "/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/rpg-battle/hero_male_pose_sheet_3x3.png",
+        "apps/advantage-games/public/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:dfa497b128d015528b208d1722f5d0a79027b844baf59acfe2e9dd796d6a9e78",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "dfa497b128d015528b208d1722f5d0a79027b844baf59acfe2e9dd796d6a9e78",
+      "source_blob_oid": "e8726ff55d5ae191e8b9f34cbfe6b5cdfd8eee0c",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/sounds/error.mp3",
+      "current_callers": [],
+      "derived_public_url": "/sounds/error.mp3",
+      "duplicate_path_peers": [
+        "apps/reading-advantage/public/games/sounds/error.mp3"
+      ],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:dfee4d38e6d58ee0a784a99dc2141c1817fae5358a36cd9c66323739a1d6f9cc",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "dfee4d38e6d58ee0a784a99dc2141c1817fae5358a36cd9c66323739a1d6f9cc",
+      "source_blob_oid": "4eb2bbd3abffd8301d3dc16824b8ba8fbdee7bf8",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sounds/error.mp3",
+      "current_callers": [],
+      "derived_public_url": "/games/sounds/error.mp3",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/sounds/error.mp3"
+      ],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:dfee4d38e6d58ee0a784a99dc2141c1817fae5358a36cd9c66323739a1d6f9cc",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "dfee4d38e6d58ee0a784a99dc2141c1817fae5358a36cd9c66323739a1d6f9cc",
+      "source_blob_oid": "4eb2bbd3abffd8301d3dc16824b8ba8fbdee7bf8",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/rune-match/runes/rune_heal_3x2_pose_sheet.png",
+      "current_callers": [],
+      "derived_public_url": "/games/rune-match/runes/rune_heal_3x2_pose_sheet.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/vocabulary/rune-match/runes/rune_heal_3x2_pose_sheet.png",
+        "apps/reading-advantage/public/games/vocabulary/rune-match/runes/rune_heal_3x2_pose_sheet.png"
+      ],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:e0dc8f50f5667c16f18fd7afde7e8a6239a3e633cfb36e68e36d23ac72db240c",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "e0dc8f50f5667c16f18fd7afde7e8a6239a3e633cfb36e68e36d23ac72db240c",
+      "source_blob_oid": "e3e3be46ffe2cd9efbca2a2de28837cadccc8639",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/rune-match/runes/rune_heal_3x2_pose_sheet.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 218,
+          "line_start": 218,
+          "locator_text_sha256": "3e7523ccee3f2a20fe6b5ab807f782dabfa01b7b13c65dc1a4bb1d210f86a2ce",
+          "matched_literal": "/games/vocabulary/rune-match/runes/rune_heal_3x2_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 211,
+          "line_start": 211,
+          "locator_text_sha256": "3e7523ccee3f2a20fe6b5ab807f782dabfa01b7b13c65dc1a4bb1d210f86a2ce",
+          "matched_literal": "/games/vocabulary/rune-match/runes/rune_heal_3x2_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/vocabulary/rune-match/runes/rune_heal_3x2_pose_sheet.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/rune-match/runes/rune_heal_3x2_pose_sheet.png",
+        "apps/reading-advantage/public/games/vocabulary/rune-match/runes/rune_heal_3x2_pose_sheet.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:e0dc8f50f5667c16f18fd7afde7e8a6239a3e633cfb36e68e36d23ac72db240c",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "e0dc8f50f5667c16f18fd7afde7e8a6239a3e633cfb36e68e36d23ac72db240c",
+      "source_blob_oid": "e3e3be46ffe2cd9efbca2a2de28837cadccc8639",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/rune-match/runes/rune_heal_3x2_pose_sheet.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 218,
+          "line_start": 218,
+          "locator_text_sha256": "3e7523ccee3f2a20fe6b5ab807f782dabfa01b7b13c65dc1a4bb1d210f86a2ce",
+          "matched_literal": "/games/vocabulary/rune-match/runes/rune_heal_3x2_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 211,
+          "line_start": 211,
+          "locator_text_sha256": "3e7523ccee3f2a20fe6b5ab807f782dabfa01b7b13c65dc1a4bb1d210f86a2ce",
+          "matched_literal": "/games/vocabulary/rune-match/runes/rune_heal_3x2_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/vocabulary/rune-match/runes/rune_heal_3x2_pose_sheet.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/rune-match/runes/rune_heal_3x2_pose_sheet.png",
+        "apps/advantage-games/public/games/vocabulary/rune-match/runes/rune_heal_3x2_pose_sheet.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:e0dc8f50f5667c16f18fd7afde7e8a6239a3e633cfb36e68e36d23ac72db240c",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "e0dc8f50f5667c16f18fd7afde7e8a6239a3e633cfb36e68e36d23ac72db240c",
+      "source_blob_oid": "e3e3be46ffe2cd9efbca2a2de28837cadccc8639",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/rune-match/monsters/goblin_3x4_pose_sheet.png",
+      "current_callers": [],
+      "derived_public_url": "/games/rune-match/monsters/goblin_3x4_pose_sheet.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png",
+        "apps/reading-advantage/public/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png"
+      ],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:e1595f14c815230e67fb3c66366cffe92d2d8f67176bde0d792fd9ae4cd48fd8",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "e1595f14c815230e67fb3c66366cffe92d2d8f67176bde0d792fd9ae4cd48fd8",
+      "source_blob_oid": "e2643febcd36b29399a53cd07640971232c06688",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/rune-match/MonsterSelection.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 15,
+          "line_start": 15,
+          "locator_text_sha256": "eda86e82f63501da5e1009d721afbd6787f7fad5bd288caf481568c6e6a4d20b",
+          "matched_literal": "/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 213,
+          "line_start": 213,
+          "locator_text_sha256": "af3b6b70bb03eef7cd0d00dd9c4f345dc876e96596293f3b5791d22bb68bfcde",
+          "matched_literal": "/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/rune-match/MonsterSelection.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 15,
+          "line_start": 15,
+          "locator_text_sha256": "eda86e82f63501da5e1009d721afbd6787f7fad5bd288caf481568c6e6a4d20b",
+          "matched_literal": "/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 206,
+          "line_start": 206,
+          "locator_text_sha256": "af3b6b70bb03eef7cd0d00dd9c4f345dc876e96596293f3b5791d22bb68bfcde",
+          "matched_literal": "/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/rune-match/StartScreen.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 18,
+          "line_start": 18,
+          "locator_text_sha256": "7d333f5f6543b91342faf66f322d2d16d793e67c1909fb5e5a4fbe8bfe4d6bc9",
+          "matched_literal": "/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/rune-match/monsters/goblin_3x4_pose_sheet.png",
+        "apps/reading-advantage/public/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:e1595f14c815230e67fb3c66366cffe92d2d8f67176bde0d792fd9ae4cd48fd8",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "e1595f14c815230e67fb3c66366cffe92d2d8f67176bde0d792fd9ae4cd48fd8",
+      "source_blob_oid": "e2643febcd36b29399a53cd07640971232c06688",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/rune-match/MonsterSelection.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 15,
+          "line_start": 15,
+          "locator_text_sha256": "eda86e82f63501da5e1009d721afbd6787f7fad5bd288caf481568c6e6a4d20b",
+          "matched_literal": "/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 213,
+          "line_start": 213,
+          "locator_text_sha256": "af3b6b70bb03eef7cd0d00dd9c4f345dc876e96596293f3b5791d22bb68bfcde",
+          "matched_literal": "/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/rune-match/MonsterSelection.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 15,
+          "line_start": 15,
+          "locator_text_sha256": "eda86e82f63501da5e1009d721afbd6787f7fad5bd288caf481568c6e6a4d20b",
+          "matched_literal": "/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 206,
+          "line_start": 206,
+          "locator_text_sha256": "af3b6b70bb03eef7cd0d00dd9c4f345dc876e96596293f3b5791d22bb68bfcde",
+          "matched_literal": "/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/rune-match/StartScreen.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 18,
+          "line_start": 18,
+          "locator_text_sha256": "7d333f5f6543b91342faf66f322d2d16d793e67c1909fb5e5a4fbe8bfe4d6bc9",
+          "matched_literal": "/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/rune-match/monsters/goblin_3x4_pose_sheet.png",
+        "apps/advantage-games/public/games/vocabulary/rune-match/monsters/goblin_3x4_pose_sheet.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:e1595f14c815230e67fb3c66366cffe92d2d8f67176bde0d792fd9ae4cd48fd8",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "e1595f14c815230e67fb3c66366cffe92d2d8f67176bde0d792fd9ae4cd48fd8",
+      "source_blob_oid": "e2643febcd36b29399a53cd07640971232c06688",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/rune-match/runes/rune_base_3x2_pose_sheet.png",
+      "current_callers": [],
+      "derived_public_url": "/games/rune-match/runes/rune_base_3x2_pose_sheet.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/vocabulary/rune-match/runes/rune_base_3x2_pose_sheet.png",
+        "apps/reading-advantage/public/games/vocabulary/rune-match/runes/rune_base_3x2_pose_sheet.png"
+      ],
+      "dynamic_risk": true,
+      "identical_hash_group": "sha256:e1f6299482e1e3055d75816cb9a36e211fb52d1c01acf62aadb5c81da660fbd5",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "e1f6299482e1e3055d75816cb9a36e211fb52d1c01acf62aadb5c81da660fbd5",
+      "source_blob_oid": "5a1c962369b7b514105949207009ad127e39906d",
+      "static_reference_status": "dynamic_unresolved",
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved."
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/rune-match/runes/rune_base_3x2_pose_sheet.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 217,
+          "line_start": 217,
+          "locator_text_sha256": "68fdfb30fc7312757dab5c9f21f29b9eccb849ce8f28fb233ce1cda914d2811f",
+          "matched_literal": "/games/vocabulary/rune-match/runes/rune_base_3x2_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 210,
+          "line_start": 210,
+          "locator_text_sha256": "68fdfb30fc7312757dab5c9f21f29b9eccb849ce8f28fb233ce1cda914d2811f",
+          "matched_literal": "/games/vocabulary/rune-match/runes/rune_base_3x2_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/vocabulary/rune-match/runes/rune_base_3x2_pose_sheet.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/rune-match/runes/rune_base_3x2_pose_sheet.png",
+        "apps/reading-advantage/public/games/vocabulary/rune-match/runes/rune_base_3x2_pose_sheet.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:e1f6299482e1e3055d75816cb9a36e211fb52d1c01acf62aadb5c81da660fbd5",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "e1f6299482e1e3055d75816cb9a36e211fb52d1c01acf62aadb5c81da660fbd5",
+      "source_blob_oid": "5a1c962369b7b514105949207009ad127e39906d",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/rune-match/runes/rune_base_3x2_pose_sheet.png",
+      "current_callers": [
+        {
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 217,
+          "line_start": 217,
+          "locator_text_sha256": "68fdfb30fc7312757dab5c9f21f29b9eccb849ce8f28fb233ce1cda914d2811f",
+          "matched_literal": "/games/vocabulary/rune-match/runes/rune_base_3x2_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 210,
+          "line_start": 210,
+          "locator_text_sha256": "68fdfb30fc7312757dab5c9f21f29b9eccb849ce8f28fb233ce1cda914d2811f",
+          "matched_literal": "/games/vocabulary/rune-match/runes/rune_base_3x2_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "derived_public_url": "/games/vocabulary/rune-match/runes/rune_base_3x2_pose_sheet.png",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/rune-match/runes/rune_base_3x2_pose_sheet.png",
+        "apps/advantage-games/public/games/vocabulary/rune-match/runes/rune_base_3x2_pose_sheet.png"
+      ],
+      "dynamic_risk": false,
+      "identical_hash_group": "sha256:e1f6299482e1e3055d75816cb9a36e211fb52d1c01acf62aadb5c81da660fbd5",
+      "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+      "sha256": "e1f6299482e1e3055d75816cb9a36e211fb52d1c01acf62aadb5c81da660fbd5",
+      "source_blob_oid": "5a1c962369b7b514105949207009ad127e39906d",
+      "static_reference_status": "found",
+      "unknown_rationale": null
+    }
+  ],
+  "resource_usage": {
+    "bytes_read": 102530741,
+    "caller_records": 59,
+    "candidate_paths": 40,
+    "command_invocations": 3,
+    "source_files": 23,
+    "within_ceiling": true
+  },
+  "scan_contract": {
+    "algorithm_id": "apk-phase1-pinned-blob-rg-exact-literal",
+    "algorithm_version": "2.2.0",
+    "build_graph_used": false,
+    "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "case_sensitive": true,
+    "excluded_caller_path_rules": [
+      {
+        "category": "root_measure",
+        "path_prefix": "measure/"
+      },
+      {
+        "category": "app_measure",
+        "path_regex": "^apps/[^/]+/measure/"
+      }
+    ],
+    "excluded_occurrence_digest_policy": "SHA-256 of sorted canonical JSONL records containing canonical_path, caller_path, line_start, locator_text_sha256, matched_literal, and category; excluded Measure evidence stays in scan reconciliation but is never a current caller",
+    "line_locator_policy": "one record per candidate/caller-path/line; SHA-256 of line bytes excluding terminator",
+    "overlap_policy": "longest token; tie order repo_path, public_url, relative_path",
+    "source_denominator": "one git ls-tree -rlz enumeration of every blob at caller_revision; one git cat-file --batch materialization of those exact OIDs as regular files in a unique /tmp snapshot; exact path/OID/size reconciliation; one local rg --json --fixed-strings --file pattern-file --hidden --no-ignore scan with binary files suppressed by rg defaults; bytes_read is exact ls-tree bytes plus materialized blob bytes plus pattern bytes plus rg summary bytes_searched plus allocated base-input bytes",
+    "token_kinds": [
+      "repo_path",
+      "public_url",
+      "relative_path"
+    ]
+  },
+  "schema_version": "apk-asset-forensics.phase1-caller-inventory.v4",
+  "track_id": "apk_existing_asset_candidate_audit_20260712"
+}

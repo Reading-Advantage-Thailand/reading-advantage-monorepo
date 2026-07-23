@@ -1,0 +1,66 @@
+{
+  "allowed_input_manifest_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+  "allowed_input_paths": [
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/candidate-records-base.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/candidate-records-base.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-03/candidate-records-base.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/candidate-records-base.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/candidate-records-base.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/candidate-records-base.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-07/candidate-records-base.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-08/candidate-records-base.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-09/candidate-records-base.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/candidate-records-base.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-11/candidate-records-base.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-12/candidate-records-base.json",
+    "git-tree:65fc00d872ce5aa63820662ee0a1f14952e63235"
+  ],
+  "batch_id": "phase1",
+  "declared_model": "gpt-5.6-terra",
+  "final_status": "pass",
+  "findings": {
+    "critical": [],
+    "high": [],
+    "low": [
+      {
+        "app_measure_occurrences": 75,
+        "finding_id": "excluded-measure-evidence-literal-occurrences",
+        "occurrence_sha256": "1136408260f54bb25b060903da93bba27aed380d41949c4a1d242fe544e919d6",
+        "root_measure_occurrences": 11934,
+        "total_occurrences": 12009
+      }
+    ],
+    "medium": []
+  },
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "native_task_name": "/root/t8_phase1_caller_v22_producer + /root stop-loss recovery",
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/caller-inventory.json": "338bc1c1f6cc25e06af2bbed8081fefe0d1c381c1b7e9c877825b83a8d2d5a22",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/caller-inventory.json": "b0bd048787b2650a635c580fef295cbb2c0e5c3edd8f24f048accff5bdccc8ae",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-03/caller-inventory.json": "b44cf0c10882c90286311d7960b026e61e6b72692ce7d1d26a538b6c8cfd5edc",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/caller-inventory.json": "95e7a98f128e5bf0a0ee35158c590df2e8c6894e333d5feaf707ca44007534a7",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/caller-inventory.json": "46447571bcd0019a79b97ef8b42ab14821892bc8e96d7856459e6a6ee0fdb145",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/caller-inventory.json": "76a6c58470b3c84d48c01592058499cb763cd76a61f4eade7953e5a3d4dd1f09",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-07/caller-inventory.json": "be5c8f1e3272522a3c3f892865f599296fd03086ca49356123b252ef9c5ef1a7",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-08/caller-inventory.json": "9426bb8624fca696d0f95a9310206a2c2ca60647ea87687a8582da9fc81e663f",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-09/caller-inventory.json": "4159162642f7d3647d764f53f04715caeae8f847909b2cb47e61beb28050999f",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-11/caller-inventory.json": "eee11fb390f3e172c238abdc40d30f50db5239480bb64d1d6ba989dc6657eaef",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-12/caller-inventory.json": "766ae87fa7f091e351bb3b98d0d3fe939527911da43d2fc3c38ed48e7a363322"
+  },
+  "resource_usage": {
+    "batch_count": 12,
+    "bytes_read": 1230340233,
+    "caller_records": 533,
+    "candidate_paths": 428,
+    "command_invocations": 3,
+    "source_files": 73,
+    "within_ceiling": true
+  },
+  "role": "caller-analyst",
+  "role_boundary": "Exact case-sensitive literal caller evidence recovered by filtering the disposition-bound v2.1 raw locator set with the v2.2 closed Measure-evidence rules; the independent contract rederives every final locator from the pinned Git tree. No provenance, content, runtime behavior, suitability, disposition, or unused claim.",
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712"
+}

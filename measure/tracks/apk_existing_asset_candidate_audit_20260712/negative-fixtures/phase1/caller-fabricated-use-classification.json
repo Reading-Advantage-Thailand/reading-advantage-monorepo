@@ -1,0 +1,6 @@
+{
+  "expected_error": "caller-fabricated-use-classification",
+  "expected_use_classification": "metadata_reference",
+  "kind": "caller-fabricated-use-classification",
+  "use_classification": "runtime_load"
+}

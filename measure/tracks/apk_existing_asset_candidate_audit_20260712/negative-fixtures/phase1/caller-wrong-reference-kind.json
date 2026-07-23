@@ -1,0 +1,6 @@
+{
+  "expected_error": "caller-wrong-reference-kind",
+  "expected_reference_kind": "public_url",
+  "kind": "caller-wrong-reference-kind",
+  "reference_kind": "relative_path"
+}

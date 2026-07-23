@@ -1,0 +1,16 @@
+{
+  "expected": {
+    "app_measure_occurrences": 75,
+    "occurrence_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "root_measure_occurrences": 11934,
+    "total_occurrences": 12009
+  },
+  "expected_error": "caller-exclusion-disclosure-drift",
+  "kind": "caller-exclusion-disclosure-drift",
+  "reported": {
+    "app_measure_occurrences": 75,
+    "occurrence_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "root_measure_occurrences": 11933,
+    "total_occurrences": 12008
+  }
+}

@@ -1,0 +1,1 @@
+{"kind":"caller-snapshot-scan-binding","schema_version":"apk-asset-forensics.phase1-caller-inventory.v1","expected_error":"caller-snapshot-scan-binding","algorithm_id":"apk-phase1-exact-literal-tokens","algorithm_version":"1.0.0","source_denominator":"git-grep -I over all tracked blobs at caller_revision; source_files counts unique matched caller blobs"}

@@ -11,9 +11,9 @@
 
 - [x] Task: Record hash, format, dimensions/duration, encoding, alpha/color/audio metadata for every path (b2ea5b49)
 - [x] Task: Detect corrupt, empty, mislabeled, text, and unreadable files (b2ea5b49)
-- [~] Task: Map every candidate to current callers/use and duplicate paths
-- [ ] Task: Reconcile output count exactly to the denominator
-- [b] Task: Root-orchestrator fitness verification for Phase 1 using automated and independent evidence (deferred:phase1-green)
+- [x] Task: Map every candidate to current callers/use and duplicate paths (phase1-caller-v22-independent-review.json)
+- [x] Task: Reconcile output count exactly to the denominator (phase1-green-test-report-v1.json)
+- [x] Task: Root-orchestrator fitness verification for Phase 1 using automated and independent evidence (phase1-root-acceptance.json)
 
 ## Phase 2: Provenance and license audit
 

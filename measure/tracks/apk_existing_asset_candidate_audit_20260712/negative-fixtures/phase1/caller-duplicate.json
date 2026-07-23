@@ -1,0 +1,1 @@
+{"kind":"caller-duplicate","expected_error":"caller-duplicate","locator_ids":["src/a.ts:1","src/a.ts:1"]}

@@ -1,0 +1,100 @@
+{
+  "schema_version": "apk-asset-forensics.phase1-caller-v22-independent-review.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "review_role": "independent-adversarial-reviewer",
+  "reviewed_at": "2026-07-23",
+  "status": "pass",
+  "scope": "Read-only independent reconciliation of the quarantined non-consumable caller-v2.1 records to the current caller-v2.2 inventories. The generator and full contract were deliberately not rerun; the root already recorded one Green admission.",
+  "reviewed_artifact_sha256": {
+    "phase0_input_freeze_v1": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+    "phase1_caller_v21_disposition": "61b5be388f805c96dffa33ad0b3b1d38ab7619fc3524de8e9d534da202a126ad",
+    "phase1_independent_review_v2": "3a0c2be188882c8f9f91eee7de977b4caa2db43f9e76a1846ad06c7601e76b10",
+    "phase1_contract_test": "9bd2d9b77bc313932549c1062d8ec14920b87db245f00a4c5b502be708c130b5",
+    "phase1_red_test_report_v1": "e534ed9f9b22f6170dc71a935e0789c30c281ec85010d605fa55b760ada86004",
+    "caller_analyst_receipt_v22": "fa5b875194082200d92864e50e9776279f4bf93d52e90acaee6b2c52238e83de",
+    "truth_test_author_receipt": "ca2aff3b4d4b5ac010528ef8ff64733c0e95a2c0e09ec94cc6828a3a26ff2af6"
+  },
+  "quarantine_disposition_hashes": {
+    "batches/AF-01/caller-inventory.json": "61da7f77763dd43bc8db13e43c0194a954a2301950f1095b798b06d113a5f2cc",
+    "batches/AF-02/caller-inventory.json": "16cd2224ebd11bccc7037f70d6fe524bf29a5cf612081f8f1538504c82a20a41",
+    "batches/AF-03/caller-inventory.json": "2d62bef25894a08fd1eb9b9a7f05b89accaa5bb5da79672587b0fd755430c336",
+    "batches/AF-04/caller-inventory.json": "e0eb93c2a438b6661bef9225309228ff42b54d77baf22818a9a6fb757bcc2ff0",
+    "batches/AF-05/caller-inventory.json": "43cf57d1e62858a0b693214edc83a7a8aa5c55e12351d0935037ba11686e2b83",
+    "batches/AF-06/caller-inventory.json": "1ac794a9b62d73445cb7630cad53e7c927c413bde78577f47a6313ca504395f5",
+    "batches/AF-07/caller-inventory.json": "b3788205ad7af7ff22a62e6fbfd49c09d9e1cbe4946cafed5a6d2f57fbf78321",
+    "batches/AF-08/caller-inventory.json": "6af85646bf5819bbba25f8f2e51aa8eaf541a8ef02945788761f612dbcc3021d",
+    "batches/AF-09/caller-inventory.json": "1166b8fad468bb3af775a1bfc3e4f1897ff9cbbe13cc5c05ad778345ccc8c2db",
+    "batches/AF-10/caller-inventory.json": "a05f211eb234f14b2951bcfb50b6ca8f53f193176fdf0d6923f0a024ece8f71f",
+    "batches/AF-11/caller-inventory.json": "dd6cf5f655728189e9015e182e2d243803a71d8e9286a499ba81edaaf9dc624a",
+    "batches/AF-12/caller-inventory.json": "a0d3bc12a8295448b061c8a9688517477ebaae105587f799fb40bdfc47113a73",
+    "role-receipts/phase1/caller-analyst.json": "79e2de4fc5fdefb0dc17b5501bc641353d31708ad4dfae08d998262fd435bdd9"
+  },
+  "final_inventory_hashes": {
+    "AF-01": "338bc1c1f6cc25e06af2bbed8081fefe0d1c381c1b7e9c877825b83a8d2d5a22",
+    "AF-02": "b0bd048787b2650a635c580fef295cbb2c0e5c3edd8f24f048accff5bdccc8ae",
+    "AF-03": "b44cf0c10882c90286311d7960b026e61e6b72692ce7d1d26a538b6c8cfd5edc",
+    "AF-04": "95e7a98f128e5bf0a0ee35158c590df2e8c6894e333d5feaf707ca44007534a7",
+    "AF-05": "46447571bcd0019a79b97ef8b42ab14821892bc8e96d7856459e6a6ee0fdb145",
+    "AF-06": "76a6c58470b3c84d48c01592058499cb763cd76a61f4eade7953e5a3d4dd1f09",
+    "AF-07": "be5c8f1e3272522a3c3f892865f599296fd03086ca49356123b252ef9c5ef1a7",
+    "AF-08": "9426bb8624fca696d0f95a9310206a2c2ca60647ea87687a8582da9fc81e663f",
+    "AF-09": "4159162642f7d3647d764f53f04715caeae8f847909b2cb47e61beb28050999f",
+    "AF-10": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+    "AF-11": "eee11fb390f3e172c238abdc40d30f50db5239480bb64d1d6ba989dc6657eaef",
+    "AF-12": "766ae87fa7f091e351bb3b98d0d3fe939527911da43d2fc3c38ed48e7a363322"
+  },
+  "schema_and_contract": {
+    "final_inventory_schema_version": "apk-asset-forensics.phase1-caller-inventory.v4",
+    "algorithm_version": "2.2.0",
+    "pinned_caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+    "closed_exclusions": ["measure/**", "^apps/[^/]+/measure/"],
+    "all_12_inventory_schemas_and_scan_contracts_exact": true,
+    "all_428_records_have_exact_schema": true,
+    "all_final_locator_schemas_exact": true,
+    "truth_receipt_declared_contract_report_and_fixture_hashes_exact": true
+  },
+  "reconciliation": {
+    "candidate_paths": 428,
+    "identical_hash_groups": 227,
+    "all_candidate_bindings_exact": true,
+    "all_duplicate_path_peer_groups_exact": true,
+    "all_final_locator_lists_equal_raw_v21_after_only_closed_filter": true,
+    "all_final_locator_order_and_classification_exact": true,
+    "measure_paths_retained_as_current_callers": 0,
+    "raw_v21_locator_count": 12542,
+    "excluded_root_measure_occurrences": 11934,
+    "excluded_app_measure_occurrences": 75,
+    "excluded_total_occurrences": 12009,
+    "excluded_occurrence_sha256": "1136408260f54bb25b060903da93bba27aed380d41949c4a1d242fe544e919d6",
+    "final_v22_locator_count": 533,
+    "final_source_files": 73,
+    "zero_eligible_candidates_dynamic_unresolved": 217,
+    "per_batch_caller_records": [43, 50, 72, 61, 28, 62, 40, 27, 26, 30, 59, 35],
+    "all_428_statuses_match_eligible_locator_presence": true
+  },
+  "resource_reconciliation": {
+    "caller_analyst_receipt": {
+      "batch_count": 12,
+      "candidate_paths": 428,
+      "source_files": 73,
+      "caller_records": 533,
+      "command_invocations": 3,
+      "bytes_read": 1230340233,
+      "within_ceiling": true
+    },
+    "all_per_batch_counts_and_receipt_aggregate_exact": true,
+    "all_final_inventory_hashes_match_caller_analyst_receipt": true,
+    "all_13_disposition_hashes_match_quarantine": true
+  },
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": []
+  },
+  "decision": {
+    "status": "pass",
+    "rule": "Pass requires zero Critical, High, and Medium findings.",
+    "next_action": "Caller-v2.2 evidence is independently reconciled; this review does not close T8 or authorize later semantic, provenance, suitability, or disposition work."
+  }
+}

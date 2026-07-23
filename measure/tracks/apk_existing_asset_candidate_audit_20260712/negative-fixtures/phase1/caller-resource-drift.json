@@ -1,0 +1,14 @@
+{
+  "expected": {
+    "bytes_read": 102400000,
+    "command_invocations": 3,
+    "source_files": 21
+  },
+  "expected_error": "caller-resource-drift",
+  "kind": "caller-resource-drift",
+  "reported": {
+    "bytes_read": 0,
+    "command_invocations": 0,
+    "source_files": 0
+  }
+}

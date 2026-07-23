@@ -1,0 +1,47 @@
+{
+  "schema_version": "apk-asset-forensics.phase1-root-acceptance.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase1",
+  "decision": "accepted",
+  "accepted_at": "2026-07-23T10:29:37+07:00",
+  "owner": "/root orchestrator and project owner",
+  "denominator": {
+    "candidate_paths": 428,
+    "identical_hash_groups": 227,
+    "batches": 12
+  },
+  "mechanical_findings": {
+    "decode_failures": 8,
+    "empty": 2,
+    "mislabeled": 15
+  },
+  "caller_findings": {
+    "eligible_locators": 533,
+    "eligible_source_files": 73,
+    "candidates_with_eligible_static_callers": 211,
+    "dynamic_unresolved_candidates": 217,
+    "excluded_root_measure_occurrences": 11934,
+    "excluded_app_measure_occurrences": 75,
+    "excluded_occurrence_sha256": "1136408260f54bb25b060903da93bba27aed380d41949c4a1d242fe544e919d6"
+  },
+  "accepted_evidence_sha256": {
+    "phase1_contract": "9bd2d9b77bc313932549c1062d8ec14920b87db245f00a4c5b502be708c130b5",
+    "phase1_green_report": "43b82cb7bad24fb3b4b06e3c2051eaf4f4355cf15e947370ed7cfe6e6ef93e6d",
+    "caller_receipt": "fa5b875194082200d92864e50e9776279f4bf93d52e90acaee6b2c52238e83de",
+    "mechanical_independent_review": "3a0c2be188882c8f9f91eee7de977b4caa2db43f9e76a1846ad06c7601e76b10",
+    "caller_independent_review": "545e6c821640af3781c31d565d7816819b794c88315b2f5126f6a25abbb1f7e1",
+    "v21_nonconsumable_disposition": "61b5be388f805c96dffa33ad0b3b1d38ab7619fc3524de8e9d534da202a126ad"
+  },
+  "independent_findings": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "disclosures": [
+    "Caller evidence proves only exact eligible literal relationships at pinned revision 65fc00d872ce5aa63820662ee0a1f14952e63235; dynamic or constructed references remain unresolved.",
+    "Measure-owned audit and track evidence mentions are full-scan reconciled but are not current callers.",
+    "No provenance, license, visual, audio, theme, responsive suitability, reuse, adapt, or final disposition is accepted in Phase 1."
+  ],
+  "next_gate": "Phase 2 provenance and license audit may open against these exact accepted Phase 1 hashes."
+}
