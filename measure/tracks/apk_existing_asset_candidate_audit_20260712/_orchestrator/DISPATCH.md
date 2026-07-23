@@ -4,8 +4,9 @@
 
 Phase 0 is complete and immutable at commit `79ab26dc`: 428 paths / 227 groups,
 qualifying discovery receipt, focused contract Green, and zero-blocking successor
-review. Phase 1 is open with only mechanical metadata recording active. Caller
-analysis, provenance research, visible/audible inspection, suitability mapping,
+review. Phase 1 base records and mechanical metadata are independently accepted
+through commit `b2ea5b49`. Caller analysis is now the only active Phase 1 producer
+task. Provenance research, visible/audible inspection, suitability mapping,
 candidate publication, and acceptance remain undispatched.
 
 ## Admission

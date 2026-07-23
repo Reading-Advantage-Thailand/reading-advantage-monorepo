@@ -9,9 +9,9 @@
 
 ## Phase 1: Mechanical metadata and caller inventory
 
-- [~] Task: Record hash, format, dimensions/duration, encoding, alpha/color/audio metadata for every path
-- [ ] Task: Detect corrupt, empty, mislabeled, text, and unreadable files
-- [ ] Task: Map every candidate to current callers/use and duplicate paths
+- [x] Task: Record hash, format, dimensions/duration, encoding, alpha/color/audio metadata for every path (b2ea5b49)
+- [x] Task: Detect corrupt, empty, mislabeled, text, and unreadable files (b2ea5b49)
+- [~] Task: Map every candidate to current callers/use and duplicate paths
 - [ ] Task: Reconcile output count exactly to the denominator
 - [b] Task: Root-orchestrator fitness verification for Phase 1 using automated and independent evidence (deferred:phase1-green)
 
