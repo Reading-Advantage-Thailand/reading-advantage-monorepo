@@ -1,0 +1,61 @@
+{
+  "schema_version": "apk-t9-phase1-mechanics-capability-reviewer-receipt.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 1,
+  "task_id": "phase1-review-mechanics-and-effort",
+  "role": "mechanics-capability-reviewer",
+  "agent_ref": "/root/phase5_review_b",
+  "completed_at": "2026-07-24T16:30:23Z",
+  "status": "independent-review-pass",
+  "dispatch_binding": {
+    "path": "phase1-role-dispatch-v2.json",
+    "sha256": "2032327e85c55bf789782ed6dd1635e03fa5efb323bb4ef2bc3fe29791ff7c7c"
+  },
+  "review_binding": {
+    "path": "phase1-independent-review.json",
+    "sha256": "87760a9abc8b987db714d1815841c369d9e83f5f443b676366d06daf9b8cbd99"
+  },
+  "reviewed_artifact_bindings": {
+    "phase1_truth_verifier.py": "df86b554e3db74b6e876efafa57a586447cf0445806d6d2315ab34ba9dbabe49",
+    "phase1_truth_verifier_test.py": "8746947941499f65f594e21ee5e1a2c2943f1e2f8e314bf4744f153001f1462f",
+    "phase1-fixture-manifest-v1.json": "6def0a763251bf00789868ee2a6e7dabc1d79bc34f98173b8e2e37072f1e6aed",
+    "phase1-red-report-v1.json": "5417782771b7f84156d6e61f7d7dd760ff6bd3000d48bf0504ef9ee364789882",
+    "phase1-green-report-v1.json": "7840d97ed345ff7b142cf18ab2019b207689d9425d205bb522f162ce27d0b08c",
+    "role-receipts/phase1/truth-test-author.json": "316823e4552d4f16e1352b1915cba17964184ad9814abcc36e355952b333b908",
+    "phase1-source-resolution-index-v1.json": "2900222c4fc4db8ffb354d4f25f5c1a8bef6930b2d7e8e1bb692dab27d860bd0",
+    "phase1-mechanic-blueprints-v1.json": "ed3bee70f5e7e94ac101f295d9de3f768cdaf9d97d40d4529f2fbbbe8f479d61",
+    "phase1-developer-effort-baseline-v1.json": "168403610d0c69160777ddeca5753dcc57b97e2a7db6ceed65f3e4ce64d14f91",
+    "phase1-claim-dependency-edges-v1.json": "2b279df4896c9620ea9acf17506e942c9df98e2b4d6c06a29d5293106aff0987",
+    "role-receipts/phase1/mechanics-capability-mapper.json": "2d05dfdc8c9d698064a342e7cee5eeeb540d05afa640c637ec19dc55925357e5"
+  },
+  "verification_attestation": {
+    "focused_tests_passed": 14,
+    "focused_tests_failed": 0,
+    "negative_fixture_files": 16,
+    "negative_fixture_cases": 80,
+    "negative_cases_rejected_with_exact_codes": true,
+    "live_cli_state": "VERIFIED",
+    "live_cli_checks": 2298,
+    "live_cli_findings": 0,
+    "claims_verified": 1248,
+    "mechanic_records_verified": 633,
+    "effort_records_verified": 376,
+    "dependency_fields_verified": 1009,
+    "dependency_edges_verified": 1009,
+    "source_document_hashes_verified": 32,
+    "terminal_leaf_hashes_verified": 28,
+    "canonical_readable_values_verified": true,
+    "dependency_multiplicity_verified": true,
+    "prior_false_green_classes_rejected": true,
+    "all_budgets_passed": true,
+    "ruff": "pass"
+  },
+  "findings_remaining": {
+    "Critical": 0,
+    "High": 0,
+    "Medium": 0,
+    "Low": 0
+  },
+  "authority_boundary": "Reviewer receipt only; no root acceptance, Phase 2 authorization, capability classification, responsive decision, asset decision, implementation authorization, or shipping authorization was made.",
+  "self_hash_note": "The receipt does not self-bind because embedding its own digest would change its bytes."
+}

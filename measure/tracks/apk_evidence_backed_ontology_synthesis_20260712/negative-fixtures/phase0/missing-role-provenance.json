@@ -1,0 +1,9 @@
+{
+  "schema_version": "apk-t9-phase0-negative-fixture.v1",
+    "id": "receipt-substitution-unbound-author",
+    "mutation": {
+        "type": "provider-counterexample",
+        "case": "substituted-unbound-author-receipt"
+    },
+    "expected_codes": ["UNBOUND_GOVERNANCE_AUTHOR"]
+}

@@ -1,0 +1,16 @@
+{
+  "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+  "dispatch_sha256": "b7dc7be6ec593623a21656afd3215b2764188a41915e0b2e709be6e338e26eb7",
+  "output_hashes": {
+    "phase2-capability-classification-v5.json": "274a3538b782499828c6af9cc7033f72fa5de0b1d6da0c0eb769dad568e78a34",
+    "phase2-capability-comparisons-v5.json": "c8e71208bc60cc3c1299840b1905255dcf02578e32acec16558dc3177801157a",
+    "phase2-claim-dependency-edges-v5.json": "30b174ca160be204749f7c9bdeb65ba517990cc73ec7ee656ef49d2466019155",
+    "phase2-curated-capability-evidence-v1.json": "4a71bce114ca00f11ab27f9eededdc19ea4476068776e5867b2874463e886df4",
+    "phase2-extension-boundaries-v5.json": "bcee20de256ef1ac44fad89353faeff73f03bec4ad7f0e57358f6b1862252c66"
+  },
+  "owner_role": "capability-mapper",
+  "root_mapper_release_sha256": "8eefc6703efab3fe4ace996eb847fb4f5feade7b6f78663c44fe27de9694f6b0",
+  "root_truth_seal_sha256": "5f5c0677b8ceea2b2f1751ff651f69c3ef6218abb0cc4a49e8779088bd5db8af",
+  "status": "candidate",
+  "task_id": "phase2-curated-evidence-mapper-v5-v10"
+}

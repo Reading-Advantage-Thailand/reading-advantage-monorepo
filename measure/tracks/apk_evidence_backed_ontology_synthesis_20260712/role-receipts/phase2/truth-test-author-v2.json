@@ -1,0 +1,49 @@
+{
+  "schema_version": "apk-t9-phase2-role-receipt.v2",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "task_id": "phase2-author-truth-tests-v2",
+  "owner_role": "truth-test-author",
+  "agent_ref": "/root/t9_phase0_governance_author",
+  "dispatch": {
+    "path": "phase2-role-dispatch-v2.json",
+    "sha256": "ccd86d8fc70d5e3dbbdfd83b32f033ef9945ee7518056fbae8773ca1a564ebf5"
+  },
+  "status": "sealed-red-v2-published-waiting-for-mapper-outputs",
+  "outputs": {
+    "phase2_v2_truth_verifier.py": "e0d87971d76a38812e9db7471f729b045817e19c8e47287db69cbfd687a1d5fd",
+    "phase2_v2_truth_verifier_test.py": "a5909e5f4bc647475ec132eb65fd24cce3a1fad6230329f505ca39380af95d61",
+    "phase2-v2-fixture-manifest.json": "4d4b0285080bca1f9edf767db4446a733cf29aa3d19ccc3dd07c120e2e2ec11b",
+    "phase2-v2-red-report.json": "c3f4e6a2a226d4bec0ae221a96b3c1c856a23cef47f8c32f0dd109bd6ef2021e"
+  },
+  "verification": {
+    "focused_suite": "8/8 pass",
+    "fixture_files": 10,
+    "negative_cases": 20,
+    "negative_result": "20/20 rejected with exact bound codes",
+    "runtime_seconds": 2.79,
+    "runtime_ceiling_seconds": 30,
+    "live_state": "RED_WAITING_FOR_MAPPER_OUTPUTS",
+    "live_checks": 12,
+    "live_finding_codes": [
+      "PHASE2_MAPPER_OUTPUTS_MISSING"
+    ],
+    "ruff": "pass",
+    "accepted_phase1_claims": 1248,
+    "accepted_mechanic_records": 633,
+    "resolvable_games": 28,
+    "upstream_unknowns_preserved": 24
+  },
+  "superseded_v1": {
+    "status": "rejected-superseded-non-authoritative-history",
+    "red_report_sha256": "0d5699924bc7d22bf4170bd8983fef2577792cc0731342495a71a3b757a229c1",
+    "history_deleted_or_overwritten": false
+  },
+  "green_report_published": false,
+  "scope": {
+    "mapper_decisions_authored": false,
+    "phase3_authorized": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "assignments": [
+    {
+      "agent_ref": "/root/t9_phase0_governance_author",
+      "allowed_outputs": [
+        "phase2_v3_truth_verifier.py",
+        "phase2_v3_truth_verifier_test.py",
+        "phase2-v3-fixture-manifest.json",
+        "negative-fixtures/phase2-v3/*",
+        "phase2-v3-green-report.json",
+        "role-receipts/phase2/truth-test-author-v3.json"
+      ],
+      "forbidden_outputs": [
+        "all preserved v2 Red files",
+        "all mapper outputs",
+        "mapper receipt",
+        "review outputs",
+        "phase2-root-acceptance.json"
+      ],
+      "owner_role": "green-lifecycle-truth-author",
+      "task_id": "phase2-green-lifecycle-v3"
+    },
+    {
+      "agent_ref": "/root/phase5_review_b",
+      "allowed_outputs": [
+        "phase2-v3-independent-review.json",
+        "role-receipts/phase2/capability-reviewer-v3.json"
+      ],
+      "forbidden_outputs": [
+        "truth outputs",
+        "mapper outputs",
+        "phase2-root-acceptance.json"
+      ],
+      "owner_role": "capability-reviewer",
+      "task_id": "phase2-review-capabilities-v3"
+    },
+    {
+      "agent_ref": "/root",
+      "allowed_outputs": [
+        "phase2-role-dispatch-v3.json",
+        "phase2-root-acceptance.json",
+        "plan.md"
+      ],
+      "forbidden_outputs": [
+        "truth outputs",
+        "mapper outputs",
+        "review outputs"
+      ],
+      "owner_role": "product-owner-acceptance-author",
+      "task_id": "phase2-product-owner-acceptance-v3"
+    }
+  ],
+  "authority": "delegated-root-product-owner",
+  "candidate_bindings": {
+    "phase2-capability-classification-v1.json": "9ac4c3cb2c1aafc099878d40458f988f93a02fc1ab9f6c400003bc17d3ba6636",
+    "phase2-capability-comparisons-v1.json": "776b97fc62073234c5152d8323985eb23a62066d4ff7717e4da0e1704df33c89",
+    "phase2-claim-dependency-edges-v1.json": "064785f673de2902083089ba6174960f2d6210c331464c35504cea88c44beb19",
+    "phase2-extension-boundaries-v1.json": "b869ed12f8443f8d08eddd0de8e4448099ae9ef35a7f7f6253a2a29293deb130",
+    "role-receipts/phase2/capability-mapper.json": "c5362b5ab897aba9bcb603fd62b7650c5f9ec82e711fb535405df6587c3399e7"
+  },
+  "issued_at": "2026-07-24T17:26:25.363007Z",
+  "issued_by": "/root",
+  "lifecycle_contract": {
+    "all_successor_tests_must_pass": true,
+    "green_report_must_record_v2_to_v3_hash_chain": true,
+    "isolated_missing_output_expected_state": "RED_WAITING_FOR_MAPPER_OUTPUTS",
+    "isolated_missing_output_must_not_mutate_workspace": true,
+    "live_candidate_expected_state": "VERIFIED",
+    "preserve_all_mapper_bytes": true,
+    "preserve_all_v2_red_bytes": true,
+    "schema_and_negative_semantics_must_not_weaken": true,
+    "successor_verifier_must_validate_mapper_receipt_against_sealed_v2_truth_hashes": true
+  },
+  "next_gate": "Independent review and root usability acceptance after v3 Green.",
+  "phase": 2,
+  "required_verification": {
+    "diff_check": "pass",
+    "fixture_files_max": 16,
+    "json": "pass",
+    "live_checks_min": 3191,
+    "live_findings": 0,
+    "negative_cases_min": 20,
+    "published_output_bytes_max": 1048576,
+    "ruff": "pass",
+    "suite_runtime_seconds_max": 30
+  },
+  "schema_version": "apk-t9-phase2-role-dispatch.v3",
+  "scope": {
+    "asset_mapping_authorized": false,
+    "implementation_authorized": false,
+    "phase3_responsive_authorized": false,
+    "shipping_authorized": false
+  },
+  "status": "active-green-lifecycle-repair",
+  "supersedes": {
+    "dispatch": {
+      "path": "phase2-role-dispatch-v2.json",
+      "sha256": "ccd86d8fc70d5e3dbbdfd83b32f033ef9945ee7518056fbae8773ca1a564ebf5",
+      "status": "inactive-for-green-lifecycle-only"
+    },
+    "preserved_red_contract": [
+      {
+        "path": "phase2_v2_truth_verifier.py",
+        "sha256": "e0d87971d76a38812e9db7471f729b045817e19c8e47287db69cbfd687a1d5fd"
+      },
+      {
+        "path": "phase2_v2_truth_verifier_test.py",
+        "sha256": "a5909e5f4bc647475ec132eb65fd24cce3a1fad6230329f505ca39380af95d61"
+      },
+      {
+        "path": "phase2-v2-fixture-manifest.json",
+        "sha256": "4d4b0285080bca1f9edf767db4446a733cf29aa3d19ccc3dd07c120e2e2ec11b"
+      },
+      {
+        "path": "phase2-v2-red-report.json",
+        "sha256": "c3f4e6a2a226d4bec0ae221a96b3c1c856a23cef47f8c32f0dd109bd6ef2021e"
+      },
+      {
+        "path": "role-receipts/phase2/truth-test-author-v2.json",
+        "sha256": "4340ff91ad3a0ca70bcaf239d7793b812eee96fdf4ac9f7b1b37c2249ec9b36d"
+      }
+    ],
+    "reason": "The sealed Red tests correctly required missing mapper outputs before publication but are lifecycle-coupled and cannot be the live Green test suite without invalidating the mapper receipt."
+  },
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+}

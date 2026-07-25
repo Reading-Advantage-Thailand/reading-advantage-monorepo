@@ -1,0 +1,99 @@
+{
+  "schema_version": "apk-t9-phase2-role-dispatch.v11",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "status": "active-context-disposition-truth-repair",
+  "authority": "delegated-root-product-owner",
+  "issued_by": "/root",
+  "issued_at": "2026-07-25T04:14:45.291049001Z",
+  "inherits": {
+    "dispatch": {"path": "phase2-role-dispatch-v10.json", "sha256": "b7dc7be6ec593623a21656afd3215b2764188a41915e0b2e709be6e338e26eb7"},
+    "all_v10_authority_order_manifest_v9_structural_semantic_review_counterexample_and_budget_contracts": true,
+    "context_registry": {"path": "phase2-v9-context-counterexamples.json", "sha256": "9c1059df904d0d326aa714af4a24a773fa36dc870b25155d7135c907decb9583"}
+  },
+  "supersedes": {
+    "v10_root_seal": {"path": "phase2-v10-root-truth-seal.json", "sha256": "5f5c0677b8ceea2b2f1751ff651f69c3ef6218abb0cc4a49e8779088bd5db8af", "status": "inactive-context-model-defect"},
+    "v10_mapper_release": {"path": "phase2-v10-mapper-release.json", "sha256": "8eefc6703efab3fe4ace996eb847fb4f5feade7b6f78663c44fe27de9694f6b0", "status": "inactive-context-model-defect"},
+    "root_rejected_r1": {"curated_sha256": "982b03ae567535e5eaeef21f6fcbac25de25c22d2efb7b56e5d30f5c76f2161f", "review_sha256": "968cc839c2c2b708023e352a5425a8c5c23ffc04966d299b7ee21947524b5273", "reason": "SCT-MECH-H001 context rationale was corrected while audit.disposition_basis remained the contradictory no-complete-behavioral-anchors value."},
+    "defect": "The v9/v10 candidate validator forced every non-capability-context record to use no-complete-behavioral-anchors, making truthful redundant, bespoke, and provenance dispositions impossible."
+  },
+  "assignments": [
+    {"agent_ref": "/root/t9_phase0_governance_author", "owner_role": "truth-test-author", "task_id": "phase2-context-disposition-truth-v11", "allowed_outputs": ["phase2_v11_truth_verifier.py", "phase2_v11_truth_verifier_test.py", "phase2-v11-fixture-manifest.json", "negative-fixtures/phase2-v11/*", "phase2-v11-red-report.json", "phase2-v11-green-report.json", "role-receipts/phase2/truth-test-author-v11.json"], "forbidden_outputs": ["all v10 and earlier artifacts", "mapper outputs", "review outputs", "phase2-v11-root-truth-seal.json", "phase2-v11-mapper-release.json", "phase2-root-acceptance.json"]},
+    {"agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer", "owner_role": "capability-mapper", "task_id": "phase2-curated-evidence-mapper-v5-v11", "allowed_outputs": ["phase2-capability-taxonomy-inventory-v1.json", "phase2-curated-capability-evidence-v1.json", "phase2-capability-comparisons-v5.json", "phase2-capability-classification-v5.json", "phase2-extension-boundaries-v5.json", "phase2-claim-dependency-edges-v5.json", "role-receipts/phase2/capability-mapper-v5.json"], "must_preserve": ["rejected-candidates/phase2-v10-r1/*", "rejected-candidates/phase2-v10-r2/*"], "forbidden_outputs": ["truth outputs", "review outputs"]},
+    {"agent_ref": "/root/phase5_review_b", "owner_role": "capability-reviewer", "task_id": "phase2-curated-evidence-review-v11", "allowed_outputs": ["phase2-v11-independent-review.json", "role-receipts/phase2/capability-reviewer-v11.json"], "must_preserve": ["rejected-candidates/phase2-v10-r1/*", "rejected-candidates/phase2-v10-r2/*"], "forbidden_outputs": ["mapper outputs", "truth outputs"]},
+    {"agent_ref": "/root", "owner_role": "product-owner-and-truth-authority-author", "task_id": "phase2-product-owner-v11", "allowed_outputs": ["phase2-role-dispatch-v11.json", "phase2-v11-root-truth-seal.json", "phase2-v11-mapper-release.json", "phase2-root-acceptance.json", "plan.md"], "forbidden_outputs": ["mapper outputs", "review outputs", "truth outputs"]}
+  ],
+  "curated_schema_contract": {
+    "schema_version_exact": "apk-t9-phase2-curated-capability-evidence.v3",
+    "taxonomy_inventory_output": "phase2-capability-taxonomy-inventory-v1.json",
+    "taxonomy_inventory_contract": {
+      "schema_version_exact": "apk-t9-phase2-capability-taxonomy-inventory.v1",
+      "top_level_keys_exact": ["schema_version", "source_phase1_root_acceptance_sha256", "source_phase1_mechanic_blueprints_sha256", "source_phase1_developer_effort_baseline_sha256", "record_count", "taxonomy_entries"],
+      "record_count_exact": 633,
+      "entry_common_keys_exact": ["taxonomy_id", "atomic_dimension", "status", "capability_id", "candidate_record_ids", "cross_game_counterpart_record_ids", "evidence_refs", "incompatibility_evidence_refs"],
+      "selected_entry_exact_shape": {"capability_id": "nonempty-existing-classified-capability-id", "candidate_record_ids": "nonempty-distinct-record-ids-spanning-at-least-two-games", "cross_game_counterpart_record_ids": [], "evidence_refs": "nonempty-typed-accepted-phase1-record-refs-covering-every-candidate-record-id", "incompatibility_evidence_refs": []},
+      "insufficient_entry_exact_shape": {"capability_id": null, "candidate_record_ids": "nonempty-exact-candidate-record-ids", "cross_game_counterpart_record_ids": [], "evidence_refs": "nonempty-typed-accepted-phase1-record-refs-covering-every-candidate-record-id", "incompatibility_evidence_refs": []},
+      "bespoke_entry_exact_shape": {"capability_id": null, "candidate_record_ids": "nonempty-exact-bespoke-record-ids", "cross_game_counterpart_record_ids": "nonempty-exact-record-ids-from-at-least-one-other-game", "evidence_refs": "nonempty-typed-accepted-phase1-record-refs-covering-every-candidate-and-counterpart-record-id", "incompatibility_evidence_refs": "nonempty-typed-accepted-phase1-record-refs-proving-the-exact-incompatibility"},
+      "no_surplus_or_omitted_top_level_or_entry_keys": true,
+      "status_specific_null_empty_and_nonempty_contract_is_exact": true,
+      "all_record_and_evidence_refs_resolve_to_the_pinned_phase1_corpus": true,
+      "covers_every_atomic_cross_game_candidate_dimension_considered_across_all_633_records": true,
+      "entries_include_selected_and_rejected_candidates": true,
+      "taxonomy_ids_unique": true,
+      "selected_taxonomy_entries_and_classified_capabilities_are_one_to_one_equal": true,
+      "statuses": ["selected-capability", "rejected-insufficient-cross-game-evidence", "rejected-incompatible-bespoke"],
+      "selected_entry_requires_existing_capability_id": true,
+      "insufficient_entry_requires_exact_candidate_record_ids_and_evidence_refs": true,
+      "bespoke_entry_requires_exact_cross_game_counterpart_record_ids_and_incompatibility_evidence_refs": true,
+      "reviewer_verdicts_inventory_completeness_against_all_633_records": true
+    },
+    "audit_keys_exact": ["review_method", "reviewed_field_ids", "fact_category", "disposition_basis", "basis_evidence_refs", "evaluated_taxonomy_ids", "not_applicable_taxonomy_ids", "redundant_to_use_ids", "incompatibility_evidence_refs"],
+    "every_record_partitions_all_taxonomy_ids_between_evaluated_and_not_applicable": true,
+    "selected_basis": "selected-complete-behavioral-anchors",
+    "selected_evaluated_taxonomy_ids_resolve_to_exact_use_capability_ids": true,
+    "context_bases": {
+      "context-or-provenance-not-behavior": "The accepted record belongs to an exact enumerated non-behavioral fact category.",
+      "incomplete-behavioral-anchors": "The record describes behavior but lacks an explicit accepted precondition, action or transition, or observable outcome.",
+      "complete-behavior-no-cross-game-counterpart": "The record has complete behavior and evaluates one or more taxonomy candidates, but none has sufficient independent cross-game evidence.",
+      "incompatible-bespoke-behavior": "The record has complete behavior and exact evidence proves incompatibility with a named cross-game counterpart.",
+      "redundant-to-selected-atomic-evidence": "The record has complete behavior but another selected record for the same game and exact capability and atomic dimension already supplies the intended evidence."
+    },
+    "fact_categories": ["complete-behavior", "behavioral-fragment", "provenance-location", "type-vocabulary", "ui-render-scaffolding", "asset-loading", "test-fixture-or-test-id", "negative-search", "transport-or-api-wiring"],
+    "basis_evidence_refs": "typed exact accepted field and excerpt refs; complete-behavior bases require explicit precondition action-or-transition and observable-outcome roles",
+    "legacy_no_complete_behavioral_anchors_forbidden": true,
+    "context_rationale_must_name_specific_fact_and_basis": true,
+    "basis_specific_joins": {
+      "provenance_or_incomplete": "evaluated taxonomy may be empty; exact fact category and basis evidence refs required",
+      "complete_no_counterpart": "evaluated_taxonomy_ids nonempty and all resolve to rejected-insufficient-cross-game-evidence entries containing this record",
+      "incompatible_bespoke": "evaluated_taxonomy_ids nonempty and resolve to rejected-incompatible-bespoke entries; incompatibility refs and cross-game counterparts exact",
+      "redundant": "redundant_to_use_ids nonempty; every use exists, is selected by another record in the same game, and matches exact taxonomy capability and atomic dimension",
+      "selected": "evaluated taxonomy resolves exactly to this record's selected use capability IDs"
+    },
+    "substitution_normalized_template_detection": "normalize record IDs, game IDs, taxonomy and capability IDs, numbers, and quoted excerpts before duplicate/generic rationale checks",
+    "all_633_records_reclassified_individually": true,
+    "no_capability_or_finding_quota": true
+  },
+  "independent_review_contract": {
+    "taxonomy_inventory_reviews_verdict": ["completeness against all 633 records", "atomic dimension", "selected or rejected status", "cross-game sufficiency", "bespoke incompatibility evidence"],
+    "all_633_record_reviews_verdict": ["accepted fact category", "basis evidence refs and anchor completeness", "primary disposition", "disposition basis", "evaluated and not-applicable taxonomy partition", "redundant use or incompatibility joins", "context rationale or selected uses", "automatic-versus-individual decision"],
+    "all_uses_findings_and_games_reverified": true,
+    "canonical_reviewed_object_hash_includes_complete_audit_object": true,
+    "generic_or_repeated_basis_rationale_fails": true,
+    "any_reject_or_unresolved_medium_or_higher_state": "REVIEW_REJECTED",
+    "all_explicit_accepts_state": "VERIFIED_PENDING_ROOT_ACCEPTANCE"
+  },
+  "required_attacks": ["taxonomy omits a reusable candidate dimension", "complete no-counterpart record has empty evaluated taxonomy", "bespoke basis without exact cross-game incompatibility", "legacy no-complete basis on context", "complete redundant record mislabeled incomplete", "redundant basis without exact same-game same-capability same-dimension selected use", "evaluated and not-applicable taxonomy partition gap or overlap", "selected taxonomy differs from uses", "provenance basis on explicit complete behavior", "generated byte-unique rationales sharing one substitution-normalized template", "basis evidence ref or complete anchor role missing", "review omits taxonomy completeness or audit basis verdict", "review reviewed-object hash omits full audit object", "all v10 and v9 attacks including 48 context promotions"],
+  "mapper_output_binding_contract": {
+    "exact_semantic_output_set": ["phase2-capability-taxonomy-inventory-v1.json", "phase2-curated-capability-evidence-v1.json", "phase2-capability-comparisons-v5.json", "phase2-capability-classification-v5.json", "phase2-extension-boundaries-v5.json", "phase2-claim-dependency-edges-v5.json"],
+    "mapper_receipt_output_hashes_bind_all_six": true,
+    "review_artifact_mapper_output_hashes_bind_all_six": true,
+    "reviewer_receipt_mapper_output_hashes_bind_all_six": true,
+    "candidate_and_final_verifier_require_all_six": true,
+    "each_output_under_published_output_budget": true,
+    "taxonomy_inventory_drift_or_omission_invalid": true
+  },
+  "root_authority_contract": {"authority_before_mapper_presence": true, "externally_expected_v11_release_sha256_required": true, "v11_seal_pins_all_manifest_truth_and_fixture_bytes": true, "v11_mapper_and_reviewer_receipts_bind_dispatch_seal_release": true, "wrong_or_missing_expected_release_invalid": true},
+  "budget_contract": {"negative_fixture_files_max": 16, "published_output_bytes_max": 1048576, "complete_suite_runtime_seconds_max": 30},
+  "tdd_order": ["truth author publishes v11 Red preserving v10 bytes", "root reruns and publishes v11 seal and external release", "mapper reclassifies all 633 audit bases and publishes candidate", "independent reviewer verdicts all 633 audit objects plus uses findings and games", "root manually samples every basis family before acceptance"],
+  "scope": {"phase3_responsive_authorized": false, "asset_mapping_authorized": false, "implementation_authorized": false, "shipping_authorized": false}
+}

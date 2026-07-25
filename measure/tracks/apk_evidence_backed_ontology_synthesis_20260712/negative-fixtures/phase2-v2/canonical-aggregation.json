@@ -1,0 +1,45 @@
+{
+  "schema_version": "apk-t9-phase2-v2-negative-fixture-group.v1",
+  "id": "canonical-aggregation",
+  "cases": [
+    {
+      "id": "canonical-aggregation-01",
+      "mutation": {
+        "operation": "cross-batch-aggregation-missing"
+      },
+      "expected_codes": [
+        "CROSS_BATCH_AGGREGATION_MISSING"
+      ]
+    },
+    {
+      "id": "canonical-aggregation-02",
+      "mutation": {
+        "operation": "opaque-capability-contract"
+      },
+      "expected_codes": [
+        "OPAQUE_CAPABILITY_CONTRACT"
+      ]
+    },
+    {
+      "id": "canonical-aggregation-03",
+      "mutation": {
+        "operation": "scene-state-consumer-omitted"
+      },
+      "expected_codes": [
+        "INVENTED_BEHAVIOR",
+        "MISSING_REQUIRED_FIELD",
+        "PLACEMENT_STATUS_COLLAPSE",
+        "SCENE_STATE_CONSUMER_OMITTED"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "CROSS_BATCH_AGGREGATION_MISSING",
+    "INVENTED_BEHAVIOR",
+    "MISSING_REQUIRED_FIELD",
+    "OPAQUE_CAPABILITY_CONTRACT",
+    "PLACEMENT_STATUS_COLLAPSE",
+    "SCENE_STATE_CONSUMER_OMITTED"
+  ],
+  "expected_state": "INVALID"
+}

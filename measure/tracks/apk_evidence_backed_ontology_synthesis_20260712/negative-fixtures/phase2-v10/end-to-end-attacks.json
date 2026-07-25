@@ -1,0 +1,30 @@
+{
+  "schema_version": "apk-t9-phase2-v10-end-to-end-attacks.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "cases": [
+    {"id":"pre-root-authority","operation":"pre-root-authority","expected_state":"RED_WAITING_FOR_ROOT_V10_AUTHORITY","expected_codes":["ROOT_V10_AUTHORITY_MISSING"]},
+    {"id":"correct-release-missing-mapper","operation":"correct-release-missing-mapper","expected_state":"RED_WAITING_FOR_MAPPER_V5_OUTPUTS","expected_codes":["PHASE2_MAPPER_V5_OUTPUTS_MISSING"]},
+    {"id":"wrong-release-missing-mapper","operation":"wrong-release-missing-mapper","expected_state":"INVALID","expected_codes":["MAPPER_RELEASE_MISMATCH"],"forbidden_codes":["PHASE2_MAPPER_V5_OUTPUTS_MISSING"]},
+    {"id":"missing-expected-release","operation":"missing-expected-release","expected_state":"INVALID","expected_codes":["EXPECTED_MAPPER_RELEASE_REQUIRED"],"forbidden_codes":["PHASE2_MAPPER_V5_OUTPUTS_MISSING"]},
+    {"id":"manifest-extra-key","operation":"manifest-extra-key","expected_codes":["INVALID_FIXTURE_MANIFEST"]},
+    {"id":"manifest-wrong-track","operation":"manifest-wrong-track","expected_codes":["INVALID_FIXTURE_MANIFEST"]},
+    {"id":"manifest-wrong-dispatch","operation":"manifest-wrong-dispatch","expected_codes":["INVALID_FIXTURE_MANIFEST"]},
+    {"id":"duplicate-fixture-id","operation":"duplicate-fixture-id","expected_codes":["DUPLICATE_FIXTURE_ID"]},
+    {"id":"duplicate-fixture-path","operation":"duplicate-fixture-path","expected_codes":["DUPLICATE_FIXTURE_PATH"]},
+    {"id":"row-case-count-drift","operation":"row-case-count-drift","expected_codes":["FIXTURE_CASE_COUNT_MISMATCH","TOP_CASE_COUNT_MISMATCH"]},
+    {"id":"top-case-count-drift","operation":"top-case-count-drift","expected_codes":["TOP_CASE_COUNT_MISMATCH"]},
+    {"id":"fixture-schema-drift","operation":"fixture-schema-drift","expected_codes":["INVALID_FIXTURE_SCHEMA"]},
+    {"id":"fixture-track-drift","operation":"fixture-track-drift","expected_codes":["INVALID_FIXTURE_SCHEMA"]},
+    {"id":"valid-zero-use-file-backed","operation":"valid-zero-use","expected_state":"CANDIDATE_VERIFIED_PENDING_INDEPENDENT_REVIEW"},
+    {"id":"malformed-receipt-file-backed","operation":"malformed-receipt","expected_codes":["INVALID_SCHEMA"]},
+    {"id":"tampered-output-file-backed","operation":"tampered-output","expected_codes":["TAMPERED_OUTPUT"]},
+    {"id":"truth-drift-file-backed","operation":"truth-drift","expected_codes":["LIVE_TRUTH_DRIFT"]},
+    {"id":"all-48-context-promotions","operation":"promote-context-registry","exercised_record_count":48,"expected_codes":["CONTEXT_COUNTEREXAMPLE_PROMOTED"]},
+    {"id":"audit-typo-rejected","operation":"use-audit-typo-as-record-id","expected_codes":["CURATED_ACCOUNTING_MISMATCH"]},
+    {"id":"scene-state-mismatch","operation":"scene-state-mismatch","expected_codes":["SCENE_STATE_MISMATCH"]},
+    {"id":"cross-capability-mismatch","operation":"cross-capability-mismatch","expected_codes":["UNKNOWN_CAPABILITY_ID"]},
+    {"id":"rejected-v4-full-transform","operation":"rejected-v4-full-transform","expected_codes":["CURATED_USE_BUDGET_EXCEEDED"]},
+    {"id":"rejected-v4-under-budget-review-reject","operation":"rejected-v4-under-budget-review-reject","expected_state":"REVIEW_REJECTED","expected_codes":["SEMANTIC_REVIEW_REJECTED"]},
+    {"id":"fabricated-review-evidence-ref","operation":"fabricated-review-evidence-ref","expected_codes":["UNRESOLVED_REVIEW_EVIDENCE_REF"]}
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "schema_version": "apk-t9-phase1-negative-fixture-group.v2",
+  "id": "budget-stop-loss",
+  "cases": [
+    {
+      "id": "budget-stop-loss-01",
+      "mutation": {
+        "operation": "output-budget-overflow"
+      },
+      "expected_codes": [
+        "PHASE1_OUTPUT_BUDGET_EXCEEDED"
+      ]
+    },
+    {
+      "id": "budget-stop-loss-02",
+      "mutation": {
+        "operation": "source-record-overflow"
+      },
+      "expected_codes": [
+        "SOURCE_ARTIFACT_BUDGET_OR_SET_MISMATCH"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "PHASE1_OUTPUT_BUDGET_EXCEEDED",
+    "SOURCE_ARTIFACT_BUDGET_OR_SET_MISMATCH"
+  ],
+  "expected_state": "INVALID"
+}

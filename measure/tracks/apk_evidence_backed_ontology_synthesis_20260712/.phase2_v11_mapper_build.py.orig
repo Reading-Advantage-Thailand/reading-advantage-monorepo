@@ -1,0 +1,651 @@
+"""Builds the explicitly curated Phase 2 v11 mapper candidate.
+
+This temporary authoring utility contains the mapper's per-record decisions.
+It must be removed after publishing the six governed outputs and receipt.
+"""
+
+from __future__ import annotations
+
+import copy
+import hashlib
+import json
+from pathlib import Path
+from typing import Any
+import phase2_v9_truth_verifier as v9
+
+
+TRACK_ROOT = Path(__file__).resolve().parent
+
+PHASE1 = "phase1-mechanic-blueprints-v1.json"
+CURATED = "phase2-curated-capability-evidence-v1.json"
+COMPARISONS = "phase2-capability-comparisons-v5.json"
+CLASSIFICATION = "phase2-capability-classification-v5.json"
+BOUNDARIES = "phase2-extension-boundaries-v5.json"
+DEPENDENCIES = "phase2-claim-dependency-edges-v5.json"
+TAXONOMY = "phase2-capability-taxonomy-inventory-v1.json"
+RECEIPT = "role-receipts/phase2/capability-mapper-v5.json"
+
+DISPATCH_SHA256 = "5b4b87ef31382f29d61499804d57a82bcb4d6baa37fa4a98e6438c2c365c63e5"
+ROOT_SEAL_SHA256 = "03eb66bfc8ed6394213c44367307b45df9d67addec65ef0b95585d008ef09612"
+ROOT_RELEASE_SHA256 = "5068761648c89589bf464372a0d0861134a5059da245379724f78ebbba86b9ca"
+
+
+def load(path: str) -> dict[str, Any]:
+    """Loads one track-local JSON object.
+
+    Args:
+        path: Track-relative JSON path.
+
+    Returns:
+        Parsed JSON object.
+    """
+    return json.loads((TRACK_ROOT / path).read_text())
+
+
+def sha256(path: Path) -> str:
+    """Calculates the raw-byte SHA-256 digest for one path.
+
+    Args:
+        path: File whose bytes should be hashed.
+
+    Returns:
+        Lowercase hexadecimal digest.
+    """
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+PHASE1_DOCUMENT = load(PHASE1)
+PHASE1_RECORDS = {
+    row["record_id"]: row for row in PHASE1_DOCUMENT["records"]
+}
+BASE_CURATED = load(CURATED)
+PHASE1_BINDINGS = BASE_CURATED["phase1_bindings"]
+
+
+# Each selected entry is an independently reviewed atomic capability. The
+# candidate lists intentionally contain at most one primary evidence record
+# per game for that dimension. A record may support multiple dimensions.
+SELECTED: dict[str, dict[str, Any]] = {
+    "t01": {
+        "capability_id": "capability:bounded-frame-delta",
+        "dimension": "active frame delta clamp",
+        "records": [
+            "babel-architect:BA-HIST-011",
+            "rune-forge-chamber:RFC-CUR-015",
+            "spellweavers-run:SW-TRANS-004",
+            "village-guardian:VG3-COMP-004",
+            "wizard-vs-zombie:WVZ-MECH-011",
+        ],
+    },
+    "t02": {
+        "capability_id": "capability:single-completion-emission",
+        "dimension": "terminal completion fire-once guard",
+        "records": [
+            "abyssal-well:AW-HIST-023",
+            "babel-architect:BA-HIST-012",
+            "enchanted-library:EL-UI-002",
+            "rune-forge-chamber:RFC-CUR-016",
+            "shadow-gate-dungeon:SGD-RESULT-001",
+            "sorcerer-ziggurat:SZ-HIST-009",
+            "storm-castle-tower:SCT-TRANS-H002",
+            "village-guardian:VG3-COMP-006",
+        ],
+    },
+    "t03": {
+        "capability_id": "capability:nonempty-content-precondition",
+        "dimension": "empty playable content rejection",
+        "records": [
+            "abyssal-well:AW-HIST-011",
+            "archers-revenge:AR-B2-V8-012",
+            "astral-mage:AM-HIST-004",
+            "enchanted-library:EL-INIT-001",
+            "griffin-riders-escape:GRF-START-001",
+            "labyrinth-goblin-king:LGK-INIT-001",
+            "rune-forge-chamber:RFC-CUR-007",
+            "rune-match:RM-MECH-005",
+            "sorcerer-ziggurat:SZ-HIST-004",
+            "village-guardian:VG3-MODEL-001",
+            "wizard-vs-zombie:WVZ-MECH-003",
+        ],
+    },
+    "t04": {
+        "capability_id": "capability:input-action-normalization",
+        "dimension": "physical input to semantic action mapping",
+        "records": [
+            "abyssal-well:AW-HIST-040",
+            "astral-mage:AM-HIST-011",
+            "astral-mage:AM-HIST-012",
+            "babel-architect:BA-HIST-013",
+            "dragon-rider:DR-CONTROL-001",
+            "enchanted-library:EL-CONTROL-001",
+            "griffin-riders-escape:GRF-CART-002",
+            "magic-defense:MD-MECH-011",
+            "potion-rush:PR-CUR-017",
+            "rpg-battle:RPG-CTL-001",
+            "rune-forge-chamber:RFC-CUR-019",
+            "shadow-gate-dungeon:SGD-INPUT-001",
+            "sorcerer-ziggurat:SZ-HIST-014",
+            "spellweavers-run:SW-INPUT-002",
+            "storm-castle-tower:SCT-MECH-H008",
+        ],
+    },
+    "t05": {
+        "capability_id": "capability:time-and-frame-loop",
+        "dimension": "active time threshold transition",
+        "records": [
+            "alchemists-synthesis:AS-TRANS-001",
+            "babel-architect:BA-HIST-005",
+            "dragon-flight:DF-TRANS-001",
+            "dragon-rider:DR-TRANS-002",
+            "enchanted-library:EL-LOOP-001",
+            "magic-defense:MD-MECH-012",
+            "rune-forge-chamber:RFC-CUR-010",
+            "village-guardian:VG3-MODEL-006",
+        ],
+    },
+    "t06": {
+        "capability_id": "capability:language-target-progression",
+        "dimension": "correct target advances ordered progress",
+        "records": [
+            "astral-mage:AM-HIST-005",
+            "babel-architect:BA-HIST-004",
+            "dungeon-liberator:DL-COLL-001",
+            "enchanted-library:EL-COLL-001",
+            "griffin-riders-escape:GRF-TRANS-001",
+            "labyrinth-goblin-king:LGK-ORB-001",
+            "potion-rush:PR-CUR-011",
+            "rune-forge-chamber:RFC-CUR-011",
+            "shadow-gate-dungeon:SGD-PROG-001",
+            "sorcerer-ziggurat:SZ-HIST-006",
+            "spellweavers-run:SW-TRANS-002",
+            "spellweavers-run:SW-CART-016",
+            "storm-castle-tower:SCT-TRANS-H003",
+            "the-haunted-library:HL-CUR-010",
+            "village-guardian:VG3-MODEL-010",
+        ],
+    },
+    "t07": {
+        "capability_id": "capability:result-accounting",
+        "dimension": "performance counters to XP",
+        "records": [
+            "abyssal-well:AW-HIST-032",
+            "alchemists-synthesis:AS-RESULT-001",
+            "enchanted-library:EL-XP-001",
+            "magic-defense:MD-MECH-001",
+            "potion-rush:PR-CUR-014",
+            "rpg-battle:RPG-MECH-009",
+            "rune-forge-chamber:RFC-CUR-013",
+            "village-guardian:VG3-MODEL-017",
+        ],
+    },
+    "t08": {
+        "capability_id": "capability:inactive-state-noop-guard",
+        "dimension": "inactive state mutation no-op",
+        "records": [
+            "alchemists-synthesis:AS-TRANS-001",
+            "archers-revenge:AR-B2-V8-014",
+            "dragon-flight:DF-TRANS-002",
+            "dragon-rider:DR-TRANS-002",
+            "enchanted-library:EL-LOOP-001",
+            "rpg-battle:RPG-TR-004",
+        ],
+    },
+    "t09": {
+        "capability_id": "capability:content-unit-completion-transition",
+        "dimension": "completed content unit continuation or terminalization",
+        "records": [
+            "abyssal-well:AW-HIST-022",
+            "alchemists-synthesis:AS-TRANS-002",
+            "astral-mage:AM-HIST-006",
+            "babel-architect:BA-HIST-007",
+            "enchanted-library:EL-VICTORY-001",
+            "griffin-riders-escape:GRF-TRANS-001",
+            "sorcerer-ziggurat:SZ-HIST-007",
+            "spellweavers-run:SW-CART-016",
+            "storm-castle-tower:SCT-TRANS-H003",
+            "the-haunted-library:HL-CUR-011",
+        ],
+    },
+    "t10": {
+        "capability_id": "capability:direction-vector-normalization",
+        "dimension": "diagonal direction vector normalization",
+        "records": [
+            "astral-mage:AM-HIST-012",
+            "dungeon-liberator:DL-MOVE-002",
+            "enchanted-library:EL-LOOP-002",
+            "wizard-vs-zombie:WVZ-MECH-004",
+        ],
+    },
+    "t11": {
+        "capability_id": "capability:offscreen-target-indicator",
+        "dimension": "off-screen world target edge projection",
+        "records": [
+            "devourer-slime:DS-CL-C-008",
+            "dungeon-liberator:DL-IND-001",
+            "wizard-vs-zombie:WVZ-MECH-018",
+        ],
+    },
+    "t12": {
+        "capability_id": "capability:resource-threshold-terminal",
+        "dimension": "depleted gameplay resource terminal transition",
+        "records": [
+            "abyssal-well:AW-HIST-021",
+            "babel-architect:BA-HIST-005",
+            "dungeon-liberator:DL-COLL-002",
+            "enchanted-library:EL-LOOP-001",
+            "magic-defense:MD-TRANS-002",
+            "rpg-battle:RPG-TR-002",
+            "rune-forge-chamber:RFC-CUR-010",
+            "shadow-gate-dungeon:SGD-TRANS-002",
+            "spellweavers-run:SW-TRANS-003",
+            "storm-castle-tower:SCT-MECH-H005",
+            "the-haunted-library:HL-CUR-011",
+            "village-guardian:VG3-MODEL-008",
+        ],
+    },
+    "t13": {
+        "capability_id": "capability:incorrect-target-penalty",
+        "dimension": "incorrect target penalty without progress",
+        "records": [
+            "enchanted-library:EL-COLL-002",
+            "potion-rush:PR-CUR-011",
+            "rune-forge-chamber:RFC-CUR-011",
+            "shadow-gate-dungeon:SGD-PROG-001",
+            "spellweavers-run:SW-TRANS-003",
+            "storm-castle-tower:SCT-MECH-H005",
+            "the-haunted-library:HL-CUR-010",
+            "village-guardian:VG3-MODEL-011",
+        ],
+    },
+    "t14": {
+        "capability_id": "capability:reset-before-active-play",
+        "dimension": "reset model before active play",
+        "records": [
+            "abyssal-well:AW-HIST-020",
+            "dungeon-liberator:DL-START-001",
+            "storm-castle-tower:SCT-TRANS-H001",
+            "village-guardian:VG3-COMP-008",
+        ],
+    },
+    "t15": {
+        "capability_id": "capability:distractor-exclusion",
+        "dimension": "expected item exclusion from distractors",
+        "records": [
+            "alchemists-synthesis:AS-MECH-001",
+            "dragon-flight:DF-MECH-004",
+            "enchanted-library:EL-BOOK-001",
+            "sorcerer-ziggurat:SZ-HIST-016",
+            "wizard-vs-zombie:WVZ-MECH-007",
+        ],
+    },
+}
+
+
+def role_anchors(precondition: str, action: str, outcome: str) -> dict[str, str]:
+    """Returns one manually authored, role-specific complete anchor map."""
+    if len({precondition, action, outcome}) != 3:
+        raise AssertionError("complete anchors must be three distinct excerpts")
+    return {
+        "precondition": precondition,
+        "action_or_transition": action,
+        "observable_outcome": outcome,
+    }
+
+
+EXPLICIT_USE_ANCHORS: dict[tuple[str, str], dict[str, str]] = {}
+
+
+def selected_anchor(taxonomy_id: str, record_id: str, precondition: str, action: str, outcome: str) -> None:
+    """Registers one manually authored anchor map for a new selected use."""
+    key = (taxonomy_id, record_id)
+    if key in EXPLICIT_USE_ANCHORS:
+        raise AssertionError(f"duplicate selected anchors: {key}")
+    EXPLICIT_USE_ANCHORS[key] = role_anchors(precondition, action, outcome)
+
+
+SPECIAL_CONTEXT_ANCHORS: dict[str, dict[str, str]] = {}
+
+
+def special_anchor(record_id: str, precondition: str, action: str, outcome: str) -> None:
+    """Registers one manually authored complete anchor map for special context."""
+    if record_id in SPECIAL_CONTEXT_ANCHORS:
+        raise AssertionError(f"duplicate special anchors: {record_id}")
+    SPECIAL_CONTEXT_ANCHORS[record_id] = role_anchors(precondition, action, outcome)
+
+
+# New selected-use anchors, first reviewed capability group.
+selected_anchor("t02", "shadow-gate-dungeon:SGD-RESULT-001", "When gameState status is victory or defeat", "the component computes accuracy and XP", "calls onComplete once through hasReportedRef")
+selected_anchor("t03", "labyrinth-goblin-king:LGK-INIT-001", "an empty sentence list", "State creation rejects", "rejects an empty sentence list")
+selected_anchor("t03", "wizard-vs-zombie:WVZ-MECH-003", "if vocabulary.length===0", "createWizardZombieState (wizardZombie.ts lines 75-115) throws 'Vocabulary cannot be empty'", "throws 'Vocabulary cannot be empty'")
+selected_anchor("t04", "abyssal-well:AW-HIST-040", "during play", "ArrowLeft/A rotate counter-clockwise", "Space/Enter fire")
+selected_anchor("t04", "astral-mage:AM-HIST-012", "keyboard or touch direction", "normalized keyboard or touch direction", "set player velocity using edition speed tuning")
+selected_anchor("t04", "babel-architect:BA-HIST-013", "while playing", "Historical keyboard keys 1 through 9 select", "the corresponding active sentence block")
+selected_anchor("t04", "magic-defense:MD-MECH-011", "The Spacebar keyboard event", "triggers activateSpecialAbility", "activateSpecialAbility via a window keydown listener")
+selected_anchor("t04", "potion-rush:PR-CUR-017", "the final pointer position", "convert the final pointer position through the stage scale", "dispatching a drop")
+selected_anchor("t04", "rpg-battle:RPG-CTL-001", "Enter key or Cast button", "submitting the form (Enter key or Cast button) calls onSubmit", "onSubmit with the trimmed value")
+selected_anchor("t04", "shadow-gate-dungeon:SGD-INPUT-001", "recognized keydown inputs", "updates pressed keys", "computes a velocity")
+selected_anchor("t05", "alchemists-synthesis:AS-TRANS-001", "when accumulated time reaches 60000 milliseconds", "changes a playing state to gameover", "gameover when accumulated time reaches 60000 milliseconds")
+selected_anchor("t06", "labyrinth-goblin-king:LGK-ORB-001", "when its orderIndex equals targetIndex", "correct collection increments correctAnswers", "increments targetIndex")
+selected_anchor("t06", "shadow-gate-dungeon:SGD-PROG-001", "On player overlap with an uncollected crystal", "a correct word is marked collected, appended", "advances targetIndex")
+selected_anchor("t06", "spellweavers-run:SW-CART-016", "A correct lane", "advances the word", "advances sentences in order")
+selected_anchor("t06", "the-haunted-library:HL-CUR-010", "the expected word", "the expected word advances progress", "advances progress and score")
+
+# New selected-use anchors, inactive guard and content completion.
+selected_anchor("t08", "alchemists-synthesis:AS-TRANS-001", "when not playing", "Time advancement returns unchanged state", "unchanged state when not playing")
+selected_anchor("t08", "archers-revenge:AR-B2-V8-014", "when its status is not playing", "fireArrow returns the input state", "the input state when its status is not playing")
+selected_anchor("t08", "dragon-flight:DF-TRANS-002", "when status is not 'running'", "advanceDragonFlightTime is a no-op", "a no-op when status is not 'running'")
+selected_anchor("t08", "dragon-rider:DR-TRANS-002", "non-running states", "it ignores non-running states", "ignores non-running states")
+selected_anchor("t08", "enchanted-library:EL-LOOP-001", "terminal states", "The main step returns terminal states unchanged", "terminal states unchanged")
+selected_anchor("t08", "rpg-battle:RPG-TR-004", "unless status === 'playing' and turn === 'enemy'", "enemyAttack is a no-op", "a no-op unless status === 'playing' and turn === 'enemy'")
+selected_anchor("t09", "abyssal-well:AW-HIST-022", "when targetIndex >= words.length", "checkVictoryCondition transitions phase 'playing'->'victory'", "all words collected in order")
+selected_anchor("t09", "alchemists-synthesis:AS-TRANS-002", "after maxRounds", "advances the round", "ends after maxRounds with victory at least half correct or gameover otherwise")
+selected_anchor("t09", "astral-mage:AM-HIST-006", "After the final token", "either created the next sentence's seeded targets or marked complete", "created results after the final sentence")
+selected_anchor("t09", "babel-architect:BA-HIST-007", "Completing a historical sentence", "either transitions to victory or creates the next sentence's blocks", "records sentence-complete feedback")
+selected_anchor("t09", "enchanted-library:EL-VICTORY-001", "after all entries meet or exceed two", "The victory predicate returns false if any vocabulary progress count is below two", "true after all entries meet or exceed two")
+selected_anchor("t09", "griffin-riders-escape:GRF-TRANS-001", "the last word", "the last word sets victory", "sets victory")
+selected_anchor("t09", "sorcerer-ziggurat:SZ-HIST-007", "after the final sentence", "The historical transition either froze results", "created a seeded graph at origin for the next sentence")
+selected_anchor("t09", "spellweavers-run:SW-CART-016", "after all sentences", "advances sentences in order", "finishes victory after all sentences")
+selected_anchor("t09", "storm-castle-tower:SCT-TRANS-H003", "exhausting the final sentence", "calls finish with victory true", "loads the next sentence and resets player and target index")
+selected_anchor("t09", "the-haunted-library:HL-CUR-011", "Collecting all words", "Collecting all words transitions to victory", "transitions to victory")
+
+# New selected-use anchors, movement, indicators, and resource thresholds.
+selected_anchor("t10", "astral-mage:AM-HIST-012", "keyboard or touch direction", "normalized keyboard or touch direction", "set player velocity using edition speed tuning")
+selected_anchor("t10", "dungeon-liberator:DL-MOVE-002", "when both are nonzero", "Player input dx and dy are diagonal-normalized", "clamped to PLAYER_RADIUS through GAME_WIDTH/HEIGHT minus PLAYER_RADIUS")
+selected_anchor("t10", "enchanted-library:EL-LOOP-002", "diagonal movement", "normalizes diagonal movement", "clamps player coordinates to arena bounds")
+selected_anchor("t10", "wizard-vs-zombie:WVZ-MECH-004", "integrates one frame", "normalizes diagonal input", "clamps to world bounds")
+selected_anchor("t11", "devourer-slime:DS-CL-C-008", "when it lies outside viewport bounds", "locates the uneaten target orb", "adds an indicator when it lies outside viewport bounds")
+selected_anchor("t11", "dungeon-liberator:DL-IND-001", "for each position outside the viewport", "converts remaining world positions with camera scale and offset", "creates an edge-positioned indicator for each position outside the viewport")
+selected_anchor("t11", "wizard-vs-zombie:WVZ-MECH-018", "for each orb outside the viewport AABB", "computes off-screen orb indicators", "place a marker at the viewport edge intersected by the orb direction")
+selected_anchor("t12", "abyssal-well:AW-HIST-021", "when lives reach 0", "resolveHits transitions phase", "phase to 'defeat'")
+selected_anchor("t12", "babel-architect:BA-HIST-005", "zero stability", "Historical ticks add elapsed time, decay stability with a 250 ms clamp", "defeat on timeout or zero stability")
+selected_anchor("t12", "dungeon-liberator:DL-COLL-002", "player-monster contact", "otherwise decrements lives", "sets defeat at zero lives")
+selected_anchor("t12", "enchanted-library:EL-LOOP-001", "when mana or time reaches zero", "enters gameover", "gameover when mana or time reaches zero")
+selected_anchor("t12", "magic-defense:MD-TRANS-002", "when all three castles have HP=0", "Status transition playing -> game-over via damageCastle occurs", "game-over via damageCastle")
+selected_anchor("t12", "rpg-battle:RPG-TR-002", "only when status is 'playing' and resulting health is <= 0", "damagePlayer clamps playerHealth at 0 and, only when status is 'playing'", "transitions status to 'defeat' and playerPose to 'defeat'")
+selected_anchor("t12", "rune-forge-chamber:RFC-CUR-010", "expired time or non-positive health", "Ticking decrements time", "defeats on expired time or non-positive health")
+selected_anchor("t12", "shadow-gate-dungeon:SGD-TRANS-002", "when collision damage reduces player health to zero or below", "The state update returns", "status defeat")
+selected_anchor("t12", "spellweavers-run:SW-TRANS-003", "at zero mana", "subtracts 20 configured mana without going below zero", "defeats at zero mana")
+selected_anchor("t12", "storm-castle-tower:SCT-MECH-H005", "when lives are at most zero", "an incorrect selection closes that window, decrements lives", "finishes in defeat only when lives are at most zero")
+selected_anchor("t12", "the-haunted-library:HL-CUR-011", "lives at or below zero", "lives at or below zero transition", "transition to defeat")
+selected_anchor("t12", "village-guardian:VG3-MODEL-008", "After updates, lives at most zero", "lives at most zero sets status", "status to defeat")
+
+# New selected-use anchors, incorrect penalties, reset, and distractor filtering.
+selected_anchor("t13", "enchanted-library:EL-COLL-002", "Collecting an incorrect book", "subtracts five mana subject to a zero floor", "leaves the target word unchanged")
+selected_anchor("t13", "potion-rush:PR-CUR-011", "on a mismatch", "enters warning on a mismatch", "warning on a mismatch")
+selected_anchor("t13", "rune-forge-chamber:RFC-CUR-011", "while a mismatch", "a mismatch subtracts health", "may defeat")
+selected_anchor("t13", "shadow-gate-dungeon:SGD-PROG-001", "while a wrong word", "a wrong word damages health", "without advancing targetIndex")
+selected_anchor("t13", "spellweavers-run:SW-TRANS-003", "An incorrect legacy collection", "subtracts 20 configured mana without going below zero", "resets combo")
+selected_anchor("t13", "storm-castle-tower:SCT-MECH-H005", "an incorrect selection", "closes that window, decrements lives", "subtracts 20 score")
+selected_anchor("t13", "the-haunted-library:HL-CUR-010", "while a wrong/trap door", "removes a life", "spawns a bat")
+selected_anchor("t13", "village-guardian:VG3-MODEL-011", "The wrong-order branch", "increments wrongAnswers", "adds wrongWordTimePenalty to timer")
+selected_anchor("t14", "abyssal-well:AW-HIST-020", "phase 'start'", "resets the clock", "transitions phase 'start'->'playing'")
+selected_anchor("t14", "dungeon-liberator:DL-START-001", "its onStart callback", "resets the game", "sets the component phase to playing")
+selected_anchor("t14", "storm-castle-tower:SCT-TRANS-H001", "The historical start handler", "resets state", "sets gamePhase to playing")
+selected_anchor("t14", "village-guardian:VG3-COMP-008", "The start callback", "calls resetGame", "sets gamePhase to playing")
+selected_anchor("t15", "alchemists-synthesis:AS-MECH-001", "current word", "filters differing terms", "those wrong options")
+selected_anchor("t15", "dragon-flight:DF-MECH-004", "when vocabulary has more than one entry", "createGateRound picks a correct item", "a distinct decoy item")
+selected_anchor("t15", "enchanted-library:EL-BOOK-001", "the target term and translation", "filters out the target term", "takes up to three decoys")
+selected_anchor("t15", "sorcerer-ziggurat:SZ-HIST-016", "expected text", "excluded NFKC/case-equivalent expected text", "used glyph decoys when no alternate token existed")
+selected_anchor("t15", "wizard-vs-zombie:WVZ-MECH-007", "the target", "sampled from vocabulary entries whose term differs from the target", "three decoy orbs")
+
+# Special context anchors for redundant and incompatible records.
+special_anchor("abyssal-well:AW-HIST-041", "tap left of center-50px", "rotates counter-clockwise", "center band (±50px) fires")
+special_anchor("griffin-riders-escape:GRF-INPUT-001", "while the phase is playing", "maps nonzero directional input changes", "switchLane left or right")
+special_anchor("dragon-rider:DR-TRANS-001", "non-running state", "selectGate ignores", "ignores non-running state")
+special_anchor("dungeon-liberator:DL-INPUT-002", "starting", "calls resetGame", "sets gamePhase to playing")
+special_anchor("enchanted-library:EL-SHIELD-001", "when already active or when charges are zero", "Shield activation is a no-op", "a no-op when already active or when charges are zero")
+special_anchor("enchanted-library:EL-SPIRIT-001", "when the spawn timer is positive or the spirit count has reached maxSpirits", "Spirit spawning returns the input state", "returns the input state when the spawn timer is positive or the spirit count has reached maxSpirits")
+special_anchor("magic-defense:MD-MECH-002", "correctAnswers * accuracy", "MagicDefenseController.completeGame computes xpEarned", "xpEarned as Math.floor(correctAnswers * accuracy)")
+special_anchor("magic-defense:MD-MECH-006", "when all castles reach 0", "damageCastle reduces the targeted castle HP by 1 (clamped to 0) and sets status='game-over'", "sets status='game-over'")
+special_anchor("magic-defense:MD-TRANS-003", "when timeRemaining reaches 0", "Status transition playing -> game-over via timer occurs", "game-over via timer")
+special_anchor("rpg-battle:RPG-TR-003", "only when status is 'playing' and resulting health is <= 0", "damageEnemy clamps enemyHealth at 0 and, only when status is 'playing'", "transitions status to 'victory'")
+special_anchor("rpg-battle:RPG-TR-007", "unless the current step is 'hero'", "it is a no-op", "a no-op unless the current step is 'hero'")
+special_anchor("rpg-battle:RPG-TR-008", "unless current step is 'location'", "no-op", "no-op unless current step is 'location'")
+special_anchor("rpg-battle:RPG-TR-009", "unless current step is 'enemy'", "no-op", "no-op unless current step is 'enemy'")
+special_anchor("shadow-gate-dungeon:SGD-INPUT-002", "when the game is playing", "applies a supplied dx/dy velocity", "setPlayerVelocity")
+special_anchor("storm-castle-tower:SCT-MECH-H001", "only while gamePhase is playing", "maps Arrow/WASD keys to four movement directions", "Space/Enter to collection")
+special_anchor("storm-castle-tower:SCT-TRANS-H004", "lives at most zero", "calls finish", "victory false")
+special_anchor("dragon-flight:DF-MECH-005", "when vocabulary is empty", "createGateRound returns an empty round", "correctSide 'left'")
+special_anchor("dragon-rider:DR-MECH-002", "an empty vocabulary", "produces empty strings", "correctSide 'left'")
+
+def validate_anchor_map(label: Any, record_id: str, anchors: dict[str, str]) -> None:
+    """Asserts exact, complete, distinct role evidence for one record."""
+    record = PHASE1_RECORDS[record_id]
+    fact = record["derived_fields"][0]["value"]
+    if set(anchors) != {"precondition", "action_or_transition", "observable_outcome"}:
+        raise AssertionError(f"invalid anchor roles: {label}")
+    if len(set(anchors.values())) != 3:
+        raise AssertionError(f"identical role placeholders: {label}")
+    for role, excerpt in anchors.items():
+        if excerpt not in fact or not v9._complete_excerpt(excerpt):
+            raise AssertionError(f"invalid exact {role} anchor: {label}: {excerpt}")
+
+
+def assert_manual_anchor_coverage() -> None:
+    """Asserts exhaustive manual anchors before any candidate write."""
+    old_uses: dict[tuple[str, str], dict[str, Any]] = {}
+    for row in BASE_CURATED["records"]:
+        for use in row["capability_uses"]:
+            old_uses[(use["capability_id"], row["record_id"])] = use
+    required_new = {
+        (taxonomy_id, record_id)
+        for taxonomy_id, definition in SELECTED.items()
+        for record_id in definition["records"]
+        if (definition["capability_id"], record_id) not in old_uses
+    }
+    if set(EXPLICIT_USE_ANCHORS) != required_new:
+        raise AssertionError("new selected anchor coverage differs")
+    required_special = set(REDUNDANT) | set(BESPOKE_EMPTY_SENTINEL)
+    if set(SPECIAL_CONTEXT_ANCHORS) != required_special:
+        raise AssertionError("special context anchor coverage differs")
+    for key, anchors in EXPLICIT_USE_ANCHORS.items():
+        validate_anchor_map(key, key[1], anchors)
+    for record_id, anchors in SPECIAL_CONTEXT_ANCHORS.items():
+        validate_anchor_map(record_id, record_id, anchors)
+    for taxonomy_id, definition in SELECTED.items():
+        for record_id in definition["records"]:
+            key = (definition["capability_id"], record_id)
+            if key not in old_uses:
+                continue
+            anchors = {role: old_uses[key]["anchors"][role]["exact_excerpt"] for role in ("precondition", "action_or_transition", "observable_outcome")}
+            validate_anchor_map((taxonomy_id, record_id), record_id, anchors)
+# Context records with complete evidence that repeats a selected atomic
+# dimension in the same game. Each tuple is (taxonomy_id, selected use record).
+REDUNDANT: dict[str, tuple[str, str]] = {
+    "abyssal-well:AW-HIST-041": ("t04", "abyssal-well:AW-HIST-040"),
+    "dragon-rider:DR-TRANS-001": ("t08", "dragon-rider:DR-TRANS-002"),
+    "dungeon-liberator:DL-INPUT-002": ("t14", "dungeon-liberator:DL-START-001"),
+    "enchanted-library:EL-SHIELD-001": ("t08", "enchanted-library:EL-LOOP-001"),
+    "enchanted-library:EL-SPIRIT-001": ("t08", "enchanted-library:EL-LOOP-001"),
+    "griffin-riders-escape:GRF-INPUT-001": (
+        "t04",
+        "griffin-riders-escape:GRF-CART-002",
+    ),
+    "magic-defense:MD-MECH-002": ("t07", "magic-defense:MD-MECH-001"),
+    "magic-defense:MD-MECH-006": ("t12", "magic-defense:MD-TRANS-002"),
+    "magic-defense:MD-TRANS-003": ("t05", "magic-defense:MD-MECH-012"),
+    "rpg-battle:RPG-TR-003": ("t12", "rpg-battle:RPG-TR-002"),
+    "rpg-battle:RPG-TR-007": ("t08", "rpg-battle:RPG-TR-004"),
+    "rpg-battle:RPG-TR-008": ("t08", "rpg-battle:RPG-TR-004"),
+    "rpg-battle:RPG-TR-009": ("t08", "rpg-battle:RPG-TR-004"),
+    "shadow-gate-dungeon:SGD-INPUT-002": (
+        "t04",
+        "shadow-gate-dungeon:SGD-INPUT-001",
+    ),
+    "storm-castle-tower:SCT-MECH-H001": (
+        "t04",
+        "storm-castle-tower:SCT-MECH-H008",
+    ),
+    "storm-castle-tower:SCT-TRANS-H004": (
+        "t12",
+        "storm-castle-tower:SCT-MECH-H005",
+    ),
+}
+
+
+# Candidate records deliberately preserve an empty-content sentinel contract,
+# which is incompatible with the cross-game reject-empty precondition.
+BESPOKE_EMPTY_SENTINEL = [
+    "dragon-flight:DF-MECH-005",
+    "dragon-rider:DR-MECH-002",
+]
+BESPOKE_EMPTY_COUNTERPARTS = [
+    "abyssal-well:AW-HIST-011",
+    "wizard-vs-zombie:WVZ-MECH-003",
+]
+
+
+# The remaining explicit context decisions are added below. Each value is:
+# (fact_category, basis, evidence, full rationale, rejected dimension).
+# rejected dimension is only populated for complete no-counterpart decisions.
+CONTEXT: dict[str, tuple[str, str, Any, str, str | None]] = {}
+
+
+def context(
+    record_id: str,
+    fact_category: str,
+    basis: str,
+    evidence: str | dict[str, str],
+    rationale: str,
+    rejected_dimension: str | None = None,
+) -> None:
+    """Registers one individually authored context decision.
+
+    Args:
+        record_id: Canonical Phase 1 mechanic record identifier.
+        fact_category: Accepted v11 fact category.
+        basis: Accepted v11 context disposition basis.
+        evidence: Exact fact excerpt or manually role-mapped complete anchors.
+        rationale: Individually authored evidence-specific rationale.
+        rejected_dimension: Atomic candidate dimension when evidence is complete.
+
+    Returns:
+        None.
+    """
+    if record_id in CONTEXT:
+        raise AssertionError(f"duplicate context decision: {record_id}")
+    CONTEXT[record_id] = (
+        fact_category,
+        basis,
+        evidence,
+        rationale,
+        rejected_dimension,
+    )
+
+
+def provenance(
+    record_id: str,
+    fact_category: str,
+    exact_excerpt: str,
+    rationale: str,
+) -> None:
+    """Registers an explicitly authored non-behavior decision."""
+    context(
+        record_id,
+        fact_category,
+        "context-or-provenance-not-behavior",
+        exact_excerpt,
+        rationale,
+    )
+
+
+def fragment(record_id: str, exact_excerpt: str, rationale: str) -> None:
+    """Registers an explicitly authored behavioral-fragment decision."""
+    context(
+        record_id,
+        "behavioral-fragment",
+        "incomplete-behavioral-anchors",
+        exact_excerpt,
+        rationale,
+    )
+
+
+def insufficient(
+    record_id: str,
+    precondition: str,
+    action_or_transition: str,
+    observable_outcome: str,
+    rationale: str,
+    dimension: str,
+) -> None:
+    """Registers an explicitly authored insufficient-candidate decision."""
+    context(
+        record_id,
+        "complete-behavior",
+        "complete-behavior-no-cross-game-counterpart",
+        {
+            "precondition": precondition,
+            "action_or_transition": action_or_transition,
+            "observable_outcome": observable_outcome,
+        },
+        rationale,
+        dimension,
+    )
+
+
+# Abyssal Well: eleven individually reviewed context records.
+provenance("abyssal-well:AW-HIST-010", "type-vocabulary", "GamePhase", "AW-HIST-010 uses context-or-provenance-not-behavior: GamePhase is a declared state vocabulary, not an operation with a witnessed transition.")
+provenance("abyssal-well:AW-HIST-012", "ui-render-scaffolding", "pure R3F render layer", "AW-HIST-012 uses context-or-provenance-not-behavior: pure R3F render layer identifies presentation ownership while deliberately excluding game rules.")
+insufficient("abyssal-well:AW-HIST-013", "lane, depth", "wellProjection.ts maps (lane, depth) onto the tube wall", "lane angles wrap modulo lane count", "AW-HIST-013 uses complete-behavior-no-cross-game-counterpart: wellProjection.ts maps (lane, depth) onto the tube wall, an isolated cylindrical coordinate contract with no equivalent candidate.", "cylindrical lane-depth world projection")
+insufficient("abyssal-well:AW-HIST-030", "The implemented ruleset was 'cycling-words'", "wrong hits cost lives", "rim breaches wrap harmlessly and speed up each lap", "AW-HIST-030 uses complete-behavior-no-cross-game-counterpart: wrong hits cost lives under a cycling rule whose harmless breaches and lap acceleration remain game-specific.", "cycling word-orb well ruleset")
+insufficient("abyssal-well:AW-HIST-031", "on reaching depth>=1", "the enemy wraps to the deep end and laps increments", "each lap is 15% faster", "AW-HIST-031 uses complete-behavior-no-cross-game-counterpart: the enemy wraps to the deep end and laps increments on the rim threshold, producing the game-specific each lap is 15% faster outcome.", "depth wrap with per-lap acceleration")
+provenance("abyssal-well:AW-HIST-033", "type-vocabulary", "ABYSSAL_WELL_CONFIG", "AW-HIST-033 uses context-or-provenance-not-behavior: ABYSSAL_WELL_CONFIG inventories tuning constants without establishing one transportable behavior.")
+provenance("abyssal-well:AW-HIST-034", "type-vocabulary", "Three difficulties", "AW-HIST-034 uses context-or-provenance-not-behavior: Three difficulties enumerate content and speed presets rather than an atomic runtime transition.")
+provenance("abyssal-well:AW-HIST-035", "transport-or-api-wiring", "/api/v1/games/abyssal-well/complete", "AW-HIST-035 uses context-or-provenance-not-behavior: /api/v1/games/abyssal-well/complete names host payload wiring, not portable domain behavior.")
+insufficient("abyssal-well:AW-HIST-042", "while held", "continuous rotation at 2.4 rad/s while held", "firing rate-limited to one projectile per 300ms", "AW-HIST-042 uses complete-behavior-no-cross-game-counterpart: while held, continuous rotation at 2.4 rad/s while held accompanies firing rate-limited to one projectile per 300ms, a bespoke cadence policy.", "held rotation with projectile fire-rate limit")
+provenance("abyssal-well:AW-HIST-060", "negative-search", "returns zero commits", "AW-HIST-060 uses context-or-provenance-not-behavior: returns zero commits records a bounded historical absence search and supplies no executable mechanic.")
+provenance("abyssal-well:AW-HIST-061", "test-fixture-or-test-id", "E2E helper module", "AW-HIST-061 uses context-or-provenance-not-behavior: E2E helper module describes deleted test support rather than player-visible state behavior.")
+
+# Alchemists Synthesis: three individually reviewed context records.
+insufficient("alchemists-synthesis:AS-STATE-001", "the selected difficulty", "State creation selects maxRounds as 5 for easy, 7 for normal, and 10 for hard", "initializes idle status, zero score and answer counters, round 1, and the selected difficulty", "AS-STATE-001 uses complete-behavior-no-cross-game-counterpart: State creation selects maxRounds as 5 for easy, 7 for normal, and 10 for hard, coupling the selected difficulty to a bespoke round initialization.", "difficulty-dependent round-count initialization")
+provenance("alchemists-synthesis:AS-UI-001", "ui-render-scaffolding", "initializes game state", "AS-UI-001 uses context-or-provenance-not-behavior: initializes game state only identifies a component call site and its default selection.")
+insufficient("alchemists-synthesis:AS-UI-002", "when the new status is victory or gameover", "Selecting an option calls handleAnswer", "calls onComplete with calculated results", "AS-UI-002 uses complete-behavior-no-cross-game-counterpart: when the new status is victory or gameover, Selecting an option calls handleAnswer and calls onComplete with calculated results without fire-once evidence.", "unguarded terminal result callback")
+
+# Archers Revenge: twenty-nine individually reviewed context records.
+fragment("archers-revenge:AR-B2-V8-008", "totalEnemies", "AR-B2-V8-008 uses incomplete-behavioral-anchors: totalEnemies is one arithmetic assignment without a formation precondition or observable lifecycle result.")
+fragment("archers-revenge:AR-B2-V8-009", "repeats its loop", "AR-B2-V8-009 uses incomplete-behavioral-anchors: repeats its loop exposes a fill-loop condition but not the completed enemy-placement behavior.")
+fragment("archers-revenge:AR-B2-V8-010", "targetIndex", "AR-B2-V8-010 uses incomplete-behavioral-anchors: targetIndex is a single derived index with neither selection trigger nor downstream shield outcome.")
+fragment("archers-revenge:AR-B2-V8-011", "shieldUp", "AR-B2-V8-011 uses incomplete-behavioral-anchors: shieldUp records one per-enemy field assignment, not a full collision or target transition.")
+provenance("archers-revenge:AR-B2-V8-013", "type-vocabulary", "status literal playing", "AR-B2-V8-013 uses context-or-provenance-not-behavior: status literal playing identifies an initializer value without a state-change contract.")
+fragment("archers-revenge:AR-B2-V8-015", "negative configured arrow speed", "AR-B2-V8-015 uses incomplete-behavioral-anchors: negative configured arrow speed is a projectile-field fragment without firing eligibility or impact outcome.")
+fragment("archers-revenge:AR-B2-V8-016", "subtracts dt", "AR-B2-V8-016 uses incomplete-behavioral-anchors: subtracts dt only reveals timer arithmetic and omits the expiry transition it may eventually enable.")
+fragment("archers-revenge:AR-B2-V8-017", "newTargetIndex", "AR-B2-V8-017 uses incomplete-behavioral-anchors: newTargetIndex is an isolated historical calculation without the full retargeting effect.")
+fragment("archers-revenge:AR-B2-V8-018", "selects newTarget", "AR-B2-V8-018 uses incomplete-behavioral-anchors: selects newTarget names one lookup step while leaving its trigger and player-visible result unstated.")
+fragment("archers-revenge:AR-B2-V8-019", "targetWord.term", "AR-B2-V8-019 uses incomplete-behavioral-anchors: targetWord.term is one field copy in a larger target update, not an independent behavior.")
+fragment("archers-revenge:AR-B2-V8-020", "targetWord.translation", "AR-B2-V8-020 uses incomplete-behavioral-anchors: targetWord.translation supplies the companion field assignment but no complete transition boundary.")
+fragment("archers-revenge:AR-B2-V8-021", "prior y plus moveY", "AR-B2-V8-021 uses incomplete-behavioral-anchors: prior y plus moveY is a movement integration fragment without bounds, phase gate, or collision outcome.")
+insufficient("archers-revenge:AR-B2-V8-022", "when its formation-bottom guard is true", "The historical tick returns status defeat", "status defeat", "AR-B2-V8-022 uses complete-behavior-no-cross-game-counterpart: when its formation-bottom guard is true, The historical tick returns status defeat under an isolated invader-depth rule.", "formation-bottom breach defeat")
+fragment("archers-revenge:AR-B2-V8-023", "retains arrows whose y is greater than zero", "AR-B2-V8-023 uses incomplete-behavioral-anchors: retains arrows whose y is greater than zero is an off-screen filter fragment without the projectile lifecycle around it.")
+fragment("archers-revenge:AR-B2-V8-024", "dx and dy half-size comparisons", "AR-B2-V8-024 uses incomplete-behavioral-anchors: dx and dy half-size comparisons disclose a predicate shape but not the complete collision consequence.")
+fragment("archers-revenge:AR-B2-V8-025", "increments correctAnswers by one", "AR-B2-V8-025 uses incomplete-behavioral-anchors: increments correctAnswers by one is only one shield-down collision effect, lacking its trigger and remaining state changes.")
+fragment("archers-revenge:AR-B2-V8-026", "newProjectiles push operation", "AR-B2-V8-026 uses incomplete-behavioral-anchors: newProjectiles push operation proves retaliation construction began but not the projectile behavior produced.")
+fragment("archers-revenge:AR-B2-V8-027", "enemy.projectileSpeed", "AR-B2-V8-027 uses incomplete-behavioral-anchors: enemy.projectileSpeed is a velocity source assignment rather than a complete retaliation transition.")
+fragment("archers-revenge:AR-B2-V8-028", "decrements hp by one", "AR-B2-V8-028 uses incomplete-behavioral-anchors: decrements hp by one captures damage arithmetic but no eligibility guard or terminal result.")
+fragment("archers-revenge:AR-B2-V8-029", "wave equal to nextWaveNum", "AR-B2-V8-029 uses incomplete-behavioral-anchors: wave equal to nextWaveNum is a return-field fragment with no wave-advance precondition.")
+fragment("archers-revenge:AR-B2-V8-030", "literal 1", "AR-B2-V8-030 uses incomplete-behavioral-anchors: literal 1 documents an XP clamp argument without enough formula context to establish result accounting.")
+fragment("archers-revenge:AR-B2-V8-031", "literal 10", "AR-B2-V8-031 uses incomplete-behavioral-anchors: literal 10 records the opposite XP bound but still lacks inputs, calculation, and returned outcome.")
+fragment("archers-revenge:AR-B2-V8-033", "pointerPosition.x divided by scale", "AR-B2-V8-033 uses incomplete-behavioral-anchors: pointerPosition.x divided by scale is coordinate conversion alone, not a resolved semantic action.")
+provenance("archers-revenge:AR-B2-V8-035", "transport-or-api-wiring", "correctAnswers", "AR-B2-V8-035 uses context-or-provenance-not-behavior: correctAnswers names one completion-request field and contains no domain calculation.")
+provenance("archers-revenge:AR-B2-V8-036", "transport-or-api-wiring", "totalAttempts", "AR-B2-V8-036 uses context-or-provenance-not-behavior: totalAttempts is another serialized request property rather than a mechanic transition.")
+provenance("archers-revenge:AR-B2-V8-037", "transport-or-api-wiring", "accuracy", "AR-B2-V8-037 uses context-or-provenance-not-behavior: accuracy only confirms payload plumbing and does not define how the measure is derived.")
+provenance("archers-revenge:AR-B2-V8-038", "transport-or-api-wiring", "score", "AR-B2-V8-038 uses context-or-provenance-not-behavior: score appears as a completion body field with no reusable scoring rule attached.")
+provenance("archers-revenge:AR-B2-V8-039", "transport-or-api-wiring", "timeTaken", "AR-B2-V8-039 uses context-or-provenance-not-behavior: timeTaken establishes transport shape only, not timing accumulation behavior.")
+provenance("archers-revenge:AR-B2-V8-040", "transport-or-api-wiring", "difficulty", "AR-B2-V8-040 uses context-or-provenance-not-behavior: difficulty closes the request-field inventory without exposing difficulty policy.")
+
+# Astral Mage: four individually reviewed context records.
+fragment("astral-mage:AM-HIST-003", "stable sentence-index/token-index target ID", "AM-HIST-003 uses incomplete-behavioral-anchors: stable sentence-index/token-index target ID describes seeded identity construction without a triggering transition or gameplay outcome.")
+provenance("astral-mage:AM-HIST-007", "ui-render-scaffolding", "960 by 540 zero-gravity Arcade Physics scene", "AM-HIST-007 uses context-or-provenance-not-behavior: 960 by 540 zero-gravity Arcade Physics scene records deleted renderer configuration rather than backend-neutral behavior.")
+provenance("astral-mage:AM-HIST-009", "ui-render-scaffolding", "one interactive body and label per target", "AM-HIST-009 uses context-or-provenance-not-behavior: one interactive body and label per target is scene presentation and pointer hookup, not the target-resolution rule.")
+insufficient("astral-mage:AM-HIST-010", "on overlap", "checked swept-path distance", "resolved only the intended target on overlap", "AM-HIST-010 uses complete-behavior-no-cross-game-counterpart: on overlap, the scene checked swept-path distance and resolved only the intended target on overlap, a game-specific combat contract.", "intended-target swept projectile resolution")
+
+# Babel Architect: seven individually reviewed context records.
+provenance("babel-architect:BA-HIST-001", "type-vocabulary", "playing/victory/defeat phases", "BA-HIST-001 uses context-or-provenance-not-behavior: playing/victory/defeat phases belong to a historical type inventory, not one executable state change.")
+provenance("babel-architect:BA-HIST-002", "type-vocabulary", "Historical presets", "BA-HIST-002 uses context-or-provenance-not-behavior: Historical presets enumerate tuning knobs while leaving their runtime transition sites unstated.")
+insufficient("babel-architect:BA-HIST-003", "for the first sentence", "Historical state creation filters empty terms", "starts playing at stability 100", "BA-HIST-003 uses complete-behavior-no-cross-game-counterpart: for the first sentence, Historical state creation filters empty terms and starts playing at stability 100 rather than enforcing reject-empty behavior.", "filter-empty state initialization with stability")
+provenance("babel-architect:BA-HIST-006", "transport-or-api-wiring", "canonical completion shape", "BA-HIST-006 uses context-or-provenance-not-behavior: canonical completion shape describes emitted result fields without proving an atomic XP computation or guard.")
+provenance("babel-architect:BA-HIST-008", "provenance-location", "dumb renderer", "BA-HIST-008 uses context-or-provenance-not-behavior: dumb renderer is an architecture-ownership statement separating the deleted scene from rules.")
+provenance("babel-architect:BA-HIST-009", "ui-render-scaffolding", "vertical tower", "BA-HIST-009 uses context-or-provenance-not-behavior: vertical tower records how blocks were reconciled visually, not how learning state changed.")
+provenance("babel-architect:BA-HIST-010", "ui-render-scaffolding", "start, playing, and ended UI phases", "BA-HIST-010 uses context-or-provenance-not-behavior: start, playing, and ended UI phases describe shell state and defaults rather than a reusable reset operation.")
+
+# PER_GAME_CONTEXT_DECISIONS
+

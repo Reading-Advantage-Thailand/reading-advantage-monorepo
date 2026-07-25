@@ -1,0 +1,12 @@
+{
+  "schema_version": "apk-t9-phase0-negative-fixture.v1",
+  "id": "role-overlap",
+  "mutation": {
+    "type": "assign-role-overlap",
+    "agent_ref": "fixture-agent",
+    "roles": [
+      "asset-mapper",
+      "asset-reviewer"
+    ]
+  }
+}

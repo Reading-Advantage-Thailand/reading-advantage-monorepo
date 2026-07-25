@@ -1,0 +1,140 @@
+{
+  "schema_version": "apk-t9-phase0-t3-leaf-binding-independent-review.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "reviewed_at": "2026-07-24T12:31:09Z",
+  "reviewer": {
+    "agent_ref": "/root/phase5_review_b",
+    "role": "t3-leaf-binding-independent-reviewer",
+    "independent_of_catalog_author": true,
+    "independent_of_truth_test_author": true
+  },
+  "dispatch_binding": {
+    "path": "phase0-t3-repair-role-dispatch-v1.json",
+    "sha256": "f6a9aedb3eb3246fc107363854aff75ab50b0ed1af19280b5925c3c8138a78e5"
+  },
+  "reviewed_artifact_bindings": {
+    "phase0-t3-leaf-binding-candidate-v1.json": "a04bc93f78ad33e22a56af7b94d61e721ae5828ed23fd509456c5250b366bbac",
+    "role-receipts/phase0/t3-leaf-binding-catalog-author.json": "67ec8d7b08810a3b34b4e575fc00b1b430bbd9459714b4c7c36225b9c048ae2f",
+    "phase0_t3_leaf_binding_verifier.py": "0faf71edca6d6d5157ed4bea9ada03bce869296077501b0233e565e404c891bb",
+    "phase0_t3_leaf_binding_verifier_test.py": "9dc1d598c118a8ff197eb6d082a29ef7f661101804ee2a86c0f84b807e0efc34",
+    "phase0-t3-leaf-binding-fixture-manifest-v1.json": "5f738e9a2895b31cd96f996a34aaee766e049113d13204539b708f903896ecbc",
+    "phase0-t3-leaf-binding-red-report-v1.json": "65feb28fa69fd27dd7ae99558fcff6c96f450787de85c308b5059740f9b35b62",
+    "phase0-t3-leaf-binding-green-report-v1.json": "35815a08c18c196f673c4d01e5c4f69ce1cbe366c4d9b6b011ad0a820c2ea1dc",
+    "role-receipts/phase0/t3-leaf-binding-truth-test-author.json": "bcb74a604122d689b802256d7739367fa26554d3fabfb4a7dd1f17f2b3b7fecb"
+  },
+  "superseded_pre_review_package": {
+    "green_report_sha256": "5f175ff9d59e219eee3a95d91e801c0aff910db10b1c1ed3613fd2a1d8205563",
+    "focused_test_sha256": "70af492d1d33c46708cff8d88274cb0f5de6102a8fb17bc8a07f84c115b20146",
+    "disposition": "Not used as passing review evidence because its 120-second focused-test stop loss was exceeded during independent execution."
+  },
+  "verification": {
+    "corrected_focused_suite": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 /usr/bin/time -f 'elapsed_seconds=%e exit_status=%x' python3 -m unittest -v phase0_t3_leaf_binding_verifier_test.py",
+      "tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "runtime_seconds": 121.908,
+      "wall_seconds": 122.18,
+      "stop_loss_seconds": 180,
+      "exit_code": 0
+    },
+    "immutable_t3_suite": {
+      "tests": 41,
+      "passes": 40,
+      "failures": 1,
+      "errors": 0,
+      "sole_failure": "T3StopLossContract.test_zero_failed_fix_review_cycles",
+      "required_failure_text": "adversarial review already exists",
+      "exact_lifecycle_predicate_audited": true,
+      "raw_41_of_41_claimed": false,
+      "verified": true
+    },
+    "accepted_chain": {
+      "bindings_verified": 5,
+      "hashes_matched": 5,
+      "governance_semantics_verified": true
+    },
+    "leaf_catalog": {
+      "leaf_count": 4,
+      "leaf_hashes_matched": 4,
+      "game_count": 3,
+      "required_games": [
+        "dragon-flight",
+        "rpg-battle",
+        "abyssal-well"
+      ],
+      "claim_count": 491,
+      "claim_ids_unique": true,
+      "negative_fixture_records": {
+        "dragon-flight": 3,
+        "rpg-battle": 3,
+        "abyssal-well": 2
+      }
+    },
+    "blueprint_reference_closure": {
+      "dragon-flight": 170,
+      "rpg-battle": 174,
+      "abyssal-well": 41,
+      "total_unique_references": 385,
+      "resolved": 385,
+      "unresolved": 0
+    },
+    "structured_coverage": {
+      "scene_lists_recomputed": true,
+      "state_lists_recomputed": true,
+      "scene_counts_recomputed": true,
+      "state_record_counts_recomputed": true,
+      "transition_counts_recomputed": true,
+      "mechanic_counts_recomputed": true,
+      "control_surface_counts_recomputed": true,
+      "learning_goal_counts_recomputed": true,
+      "terminal_result_mechanic_counts_recomputed": true,
+      "developer_effort_key_counts_recomputed": true,
+      "verified": true
+    },
+    "author_receipt_cross_binding": {
+      "expected_inputs": 9,
+      "actual_inputs": 9,
+      "missing": [],
+      "extra": [],
+      "output_binding_matched_candidate": true,
+      "verified": true
+    },
+    "negative_fixtures": {
+      "fixture_count": 7,
+      "hashes_matched": 7,
+      "all_rejected": true,
+      "exact_expected_codes": true
+    },
+    "disclosures_and_boundaries": {
+      "accepted_non_blocking_observations_preserved": true,
+      "phase3_responsive_browser_truth_executed": false,
+      "phase4_candidate_asset_truth_complete": false,
+      "browser_success_claimed": false,
+      "candidate_asset_runtime_success_claimed": false,
+      "implementation_authorized": false,
+      "shipping_authorized": false,
+      "candidate_consumable": false,
+      "acceptance_claimed": false,
+      "archive_rewrite_allowed": false,
+      "archived_leaf_bytes_modified": false,
+      "verified": true
+    },
+    "quality_checks": {
+      "ruff": "pass",
+      "json_validation": "pass",
+      "archive_git_status": "clean"
+    }
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "unresolved_medium_or_higher": 0,
+  "verdict": "independent-review-pass",
+  "authority_boundary": "This reviewer verdict does not accept the candidate, make it consumable, authorize Phase 1 publication, or make a product-owner decision."
+}

@@ -1,0 +1,105 @@
+{
+  "schema_version": "apk-t9-phase2-role-dispatch.v12",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "status": "active-v12-truth-authoring",
+  "issued_by": "/root",
+  "supersedes": {
+    "dispatch": "phase2-role-dispatch-v11.json",
+    "sha256": "5b4b87ef31382f29d61499804d57a82bcb4d6baa37fa4a98e6438c2c365c63e5",
+    "reason": "The v11 no-capability-or-finding-quota contract was contradicted by inherited global ceilings above 45 findings and 270 selected uses; the indirect capability ceiling was confirmed during v12 adversarial preflight."
+  },
+  "preserved_v11_authority": {
+    "phase2_v11_truth_verifier.py": "7fc8c08a4a7002f06adf3a6c698a8da5599c705153a14a8273588743845ba5aa",
+    "phase2_v11_truth_verifier_test.py": "90e67abed6cffa5cc5939b397676b1e9441e46b4f960758185b6f073bdb65f30",
+    "phase2-v11-fixture-manifest.json": "a68ac1eeb21575b9e6eb52f43a18d751fcb0901550f53f01eefbd8585951688c",
+    "negative-fixtures/phase2-v11/end-to-end-attacks.json": "8b1271176dc151dbe755248160890c00a8484146ec0f3609f0031d62b0ee9005",
+    "phase2-v11-red-report.json": "f07778750cbac48f697866176d038f13a665de38afcff59d68cbdc4c1381debf",
+    "role-receipts/phase2/truth-test-author-v11.json": "6cd6794093be03dea49193f7d974ff47cd57bc8e1382a66e525c981b5978e272",
+    "phase2-v11-root-truth-seal.json": "03eb66bfc8ed6394213c44367307b45df9d67addec65ef0b95585d008ef09612",
+    "phase2-v11-mapper-release.json": "5068761648c89589bf464372a0d0861134a5059da245379724f78ebbba86b9ca"
+  },
+  "assignments": [
+    {
+      "agent_ref": "/root/t9_phase0_governance_author",
+      "owner_role": "truth-test-author",
+      "task_id": "phase2-no-global-count-quota-truth-v12",
+      "allowed_outputs": ["phase2_v12_truth_verifier.py", "phase2_v12_truth_verifier_test.py", "phase2-v12-fixture-manifest.json", "negative-fixtures/phase2-v12/*", "phase2-v12-red-report.json", "role-receipts/phase2/truth-test-author-v12.json"],
+      "forbidden_outputs": ["v11-or-earlier artifacts", "mapper outputs", "review outputs", "phase2-v12-root-truth-seal.json", "phase2-v12-mapper-release.json", "phase2-root-acceptance.json"]
+    },
+    {
+      "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+      "owner_role": "capability-mapper",
+      "task_id": "phase2-curated-evidence-mapper-v5-v12",
+      "allowed_outputs": ["phase2-capability-taxonomy-inventory-v1.json", "phase2-curated-capability-evidence-v1.json", "phase2-capability-comparisons-v5.json", "phase2-capability-classification-v5.json", "phase2-extension-boundaries-v5.json", "phase2-claim-dependency-edges-v5.json", "role-receipts/phase2/capability-mapper-v5.json"],
+      "forbidden_outputs": ["truth outputs", "review outputs"]
+    },
+    {
+      "agent_ref": "/root/phase5_review_b",
+      "owner_role": "capability-reviewer",
+      "task_id": "phase2-curated-evidence-review-v12",
+      "allowed_outputs": ["phase2-v12-independent-review.json", "role-receipts/phase2/capability-reviewer-v12.json"],
+      "forbidden_outputs": ["mapper outputs", "truth outputs"]
+    },
+    {
+      "agent_ref": "/root",
+      "owner_role": "product-owner-and-truth-authority-author",
+      "task_id": "phase2-product-owner-v12",
+      "allowed_outputs": ["phase2-role-dispatch-v12.json", "phase2-v12-root-truth-seal.json", "phase2-v12-mapper-release.json", "phase2-root-acceptance.json", "plan.md"],
+      "forbidden_outputs": ["mapper outputs", "review outputs", "truth outputs"]
+    }
+  ],
+  "inherited_contract": {
+    "all_v11_schema_semantic_review_authority_order_manifest_hash_binding_counterexample_and_output_budget_contracts": true,
+    "all_v11_bytes_are_immutable": true,
+    "exact_six_mapper_outputs_unchanged": true,
+    "all_633_record_and_taxonomy_inventory_review_requirements_unchanged": true
+  },
+  "v12_delta_contract": {
+    "no_capability_or_finding_quota": true,
+    "curated_finding_budget_exceeded_is_not_inherited": true,
+    "curated_use_budget_exceeded_is_not_inherited": true,
+    "only_removed_inherited_global_count_codes": ["CURATED_FINDING_BUDGET_EXCEEDED", "CURATED_USE_BUDGET_EXCEEDED"],
+    "local_per_finding_similarity_difference_and_cross_game_coherence_limits_remain_semantic_requirements": true,
+    "all_other_inherited_structural_semantic_and_review_findings_remain_blocking": true,
+    "finding_rows_remain_exactly_joined_to_capabilities_uses_comparisons_boundaries_and_dependencies": true,
+    "mapper_and_reviewer_must_not_add_remove_or_reclassify_evidence_to_hit_a_count": true
+  },
+  "required_attacks": [
+    "an isolated otherwise-structurally-valid quota-stress candidate with at least 46 finding rows is not rejected solely for count",
+    "an isolated otherwise-structurally-valid quota-stress candidate with at least 271 selected uses is not rejected solely for count",
+    "the synthetic 46-plus-finding lifecycle fixture with exhaustive structural review reaches VERIFIED_PENDING_ROOT_ACCEPTANCE without constituting product semantic evidence",
+    "the same 46-plus candidate still fails any malformed finding or broken semantic join",
+    "the same 271-plus-use candidate still fails any malformed use or broken semantic join",
+    "exact removed inherited code set equals CURATED_FINDING_BUDGET_EXCEEDED and CURATED_USE_BUDGET_EXCEEDED rather than substring or category filtering",
+    "dependency dimension consumer-use selected-use classification and boundary corruptions retain their exact blocking join findings",
+    "a non-budget inherited v11 or v9 finding remains blocking",
+    "wrong or missing externally expected v12 mapper release fails before mapper presence",
+    "all v11 attacks remain green under v12"
+  ],
+  "root_authority_contract": {
+    "authority_before_mapper_presence": true,
+    "externally_expected_v12_release_sha256_required": true,
+    "v12_seal_pins_dispatch_all_v12_truth_and_fixture_bytes": true,
+    "v12_mapper_and_reviewer_receipts_bind_dispatch_seal_release_and_all_six_outputs": true,
+    "wrong_or_missing_expected_release_invalid": true
+  },
+  "budget_contract": {
+    "negative_fixture_files_max": 16,
+    "published_output_bytes_max_each": 1048576,
+    "complete_suite_runtime_seconds_max": 30
+  },
+  "tdd_order": [
+    "truth author publishes v12 Red while preserving every v11 byte",
+    "root independently reruns and publishes v12 seal and external release",
+    "mapper continues the already reviewed 633-record ledger without count tuning and publishes under v12",
+    "independent reviewer exhaustively reviews taxonomy all records uses findings and games",
+    "root manually samples every basis family and accepts or rejects"
+  ],
+  "scope": {
+    "phase3_responsive_authorized": false,
+    "asset_mapping_authorized": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false
+  }
+}

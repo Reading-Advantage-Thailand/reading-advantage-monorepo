@@ -1,0 +1,15 @@
+{
+  "schema_version": "apk-t9-phase2-v13-fixture-manifest.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "dispatch_sha256": "04eda4bfda92f171c61cda359843afe9c6057ddc673a6afca8e6c1f29048a766",
+  "fixture_count": 1,
+  "case_count": 15,
+  "fixtures": [
+    {
+      "id": "phase2-v13-end-to-end-attacks",
+      "path": "negative-fixtures/phase2-v13/end-to-end-attacks.json",
+      "sha256": "d8b9d688ef4280379968626f724658ad4c849c1c83c1ff725f33023e14efe4a3",
+      "case_count": 15
+    }
+  ]
+}

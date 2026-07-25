@@ -1,0 +1,46 @@
+{
+  "schema_version": "apk-t9-phase1-negative-fixture-group.v2",
+  "id": "denominator-castle",
+  "cases": [
+    {
+      "id": "denominator-castle-01",
+      "mutation": {
+        "operation": "change-denominator"
+      },
+      "expected_codes": [
+        "DENOMINATOR_MISMATCH"
+      ]
+    },
+    {
+      "id": "denominator-castle-02",
+      "mutation": {
+        "operation": "count-preserving-set-swap"
+      },
+      "expected_codes": [
+        "DENOMINATOR_MISMATCH"
+      ]
+    },
+    {
+      "id": "denominator-castle-03",
+      "mutation": {
+        "operation": "castle-omission-loss"
+      },
+      "expected_codes": [
+        "DENOMINATOR_MISMATCH"
+      ]
+    },
+    {
+      "id": "denominator-castle-04",
+      "mutation": {
+        "operation": "castle-fabricated-scene-state"
+      },
+      "expected_codes": [
+        "DENOMINATOR_MISMATCH"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "DENOMINATOR_MISMATCH"
+  ],
+  "expected_state": "INVALID"
+}

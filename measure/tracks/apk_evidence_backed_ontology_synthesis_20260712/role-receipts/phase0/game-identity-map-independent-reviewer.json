@@ -1,0 +1,45 @@
+{
+  "schema_version": "apk-t9-phase0-game-identity-map-independent-reviewer-receipt.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "task_id": "phase0-publish-game-identity-map-review",
+  "role": "game-identity-map-independent-reviewer",
+  "agent_ref": "/root/phase5_review_b",
+  "completed_at": "2026-07-24T12:18:49Z",
+  "status": "independent-review-pass",
+  "review_dispatch_binding": {
+    "path": "phase0-game-identity-map-review-dispatch-v1.json",
+    "sha256": "5b2d84de007ed421eb9e5cd625fd8b101b247e5ca94ebea40ebf9fdf4d7e6b97"
+  },
+  "review_binding": {
+    "path": "phase0-game-identity-map-independent-review-v1.json",
+    "sha256": "73c4d1981eb7ee6e1af3400c5b553f96437c8694d9814556df84ed9ee6e10eca"
+  },
+  "reviewed_artifact_bindings": {
+    "phase0-game-identity-map-v1.json": "7b2d3cf7fe5e17eab88f27804aac60e60c2da9e7089b82074b67d27721a47b3f",
+    "role-receipts/phase0/game-identity-map-author.json": "f097fb287d975bf1559362a1f6b66c390980524a4360261d1f46f820afcb4883",
+    "phase0-game-identity-map-role-dispatch-v1.json": "cb6f4e4f8def66e393e65e371fb5b11931f9d9d4bd654030940d0713362baa0d",
+    "phase0-role-ownership-manifest-v2.json": "b025b7494e51d493bf39e021a170cc8a2af99886eecf9807919c2a3d2ef2b7c9",
+    "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0"
+  },
+  "verification_attestation": {
+    "entries_verified": 29,
+    "ordered_t2_pointers_and_labels_verified": 29,
+    "identity_source_hashes_verified": 29,
+    "identity_source_pointers_verified": 29,
+    "identity_extractions_verified": 29,
+    "unique_game_ids_verified": 29,
+    "author_receipt_unique_inputs_verified": 13,
+    "mapping_digest": "458a5c20db75617820604948cb004a14d579c828cedecbbcb7bdbada2f0a2b0a",
+    "mapping_digest_recomputed": true,
+    "candidate_boundary_verified": true
+  },
+  "findings_remaining": {
+    "Critical": 0,
+    "High": 0,
+    "Medium": 0,
+    "Low": 0
+  },
+  "authority_boundary": "Reviewer receipt only; no candidate acceptance, Phase 1 authorization, or product-owner decision was made.",
+  "self_hash_note": "The receipt does not self-bind because embedding its own digest would change its bytes."
+}

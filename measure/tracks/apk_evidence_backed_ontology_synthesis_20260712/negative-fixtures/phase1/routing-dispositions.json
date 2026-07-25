@@ -1,0 +1,88 @@
+{
+  "schema_version": "apk-t9-phase1-negative-fixture-group.v2",
+  "id": "routing-dispositions",
+  "cases": [
+    {
+      "id": "routing-dispositions-01",
+      "mutation": {
+        "operation": "normalized-materialization-fault",
+        "fault": "provenance-routing-override",
+        "game_id": "paladins-twin-soul",
+        "claim_id": "PTS-C-STATE-001"
+      },
+      "expected_codes": [
+        "EFFECTIVE_CLAIM_MATERIALIZATION_MISMATCH",
+        "ORPHAN_UPSTREAM_CLAIM"
+      ]
+    },
+    {
+      "id": "routing-dispositions-02",
+      "mutation": {
+        "operation": "normalized-materialization-fault",
+        "fault": "unsupported-category",
+        "game_id": "gryphon-patrol",
+        "claim_id": "C06-state-and-transitions"
+      },
+      "expected_codes": [
+        "EFFECTIVE_CLAIM_SET_MISMATCH",
+        "ORPHAN_UPSTREAM_CLAIM"
+      ]
+    },
+    {
+      "id": "routing-dispositions-03",
+      "mutation": {
+        "operation": "normalized-materialization-fault",
+        "fault": "asset-workflow-deferred",
+        "game_id": "dragon-rider",
+        "claim_id": "DR-ASSET-001B"
+      },
+      "expected_codes": [
+        "EFFECTIVE_CLAIM_MATERIALIZATION_MISMATCH",
+        "ORPHAN_UPSTREAM_CLAIM"
+      ]
+    },
+    {
+      "id": "routing-dispositions-04",
+      "mutation": {
+        "operation": "normalized-materialization-fault",
+        "fault": "asset-content-effort",
+        "game_id": "paladins-twin-soul",
+        "claim_id": "PTS-C-ASSET-001"
+      },
+      "expected_codes": [
+        "EFFECTIVE_CLAIM_MATERIALIZATION_MISMATCH",
+        "ORPHAN_UPSTREAM_CLAIM"
+      ]
+    },
+    {
+      "id": "routing-dispositions-05",
+      "mutation": {
+        "operation": "normalized-materialization-fault",
+        "fault": "duplicate-primary-routing",
+        "game_id": "paladins-twin-soul",
+        "claim_id": "PTS-C-STATE-001"
+      },
+      "expected_codes": [
+        "MULTIPLE_ROUTING_DISPOSITIONS",
+        "ORPHAN_UPSTREAM_CLAIM"
+      ]
+    },
+    {
+      "id": "routing-dispositions-06",
+      "mutation": {
+        "operation": "handoff-duplicated-field"
+      },
+      "expected_codes": [
+        "DUPLICATED_FUTURE_HANDOFF"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "DUPLICATED_FUTURE_HANDOFF",
+    "EFFECTIVE_CLAIM_MATERIALIZATION_MISMATCH",
+    "EFFECTIVE_CLAIM_SET_MISMATCH",
+    "MULTIPLE_ROUTING_DISPOSITIONS",
+    "ORPHAN_UPSTREAM_CLAIM"
+  ],
+  "expected_state": "INVALID"
+}

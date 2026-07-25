@@ -1,0 +1,29 @@
+{
+  "schema_version": "apk-t9-phase2-negative-fixture-group.v1",
+  "id": "ownership-receipt",
+  "cases": [
+    {
+      "id": "ownership-receipt-01",
+      "mutation": {
+        "operation": "wrong-owner"
+      },
+      "expected_codes": [
+        "WRONG_OWNER"
+      ]
+    },
+    {
+      "id": "ownership-receipt-02",
+      "mutation": {
+        "operation": "stale-receipt"
+      },
+      "expected_codes": [
+        "MAPPER_RECEIPT_MISMATCH"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "MAPPER_RECEIPT_MISMATCH",
+    "WRONG_OWNER"
+  ],
+  "expected_state": "INVALID"
+}

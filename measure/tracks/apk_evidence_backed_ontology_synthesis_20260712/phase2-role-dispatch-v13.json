@@ -1,0 +1,483 @@
+{
+  "schema_version": "apk-t9-phase2-role-dispatch.v13",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "status": "active-v13-truth-authoring",
+  "issued_by": "/root",
+  "supersedes": {
+    "dispatch": "phase2-role-dispatch-v12.json",
+    "sha256": "5e482c2803762ccffeb36ca8ca463f221752f46c15a27ad9ad61872209711af4",
+    "reason": "The v12 disposition model cannot truthfully quarantine accepted negative-control fixtures or internally contradictory accepted facts without mislabeling them as provenance, insufficient evidence, or cross-game bespoke behavior."
+  },
+  "preserved_v12_authority": {
+    "phase2_v12_truth_verifier.py": "c9603f2caeb40df5626d6e35a3c2a754d5dac9099827eb8f02cd7c204a3972a4",
+    "phase2_v12_truth_verifier_test.py": "a61f55d5914c5b6892949b54ceb0e7f8b7805d150d8e270bacf227f187e444ed",
+    "phase2-v12-fixture-manifest.json": "85947c29737e2d7f43509d8fb0b9f381d38a9c8240bdf0bb5948a8087ca470fc",
+    "negative-fixtures/phase2-v12/end-to-end-attacks.json": "17535c7b22b814044535237463f33731ba56ca2fcc92073dd71fdede36621259",
+    "phase2-v12-red-report.json": "912ea9a31aeeb71d6196ff48a77d2d959db4fa56eed8c840a69d3428c5c5f54e",
+    "role-receipts/phase2/truth-test-author-v12.json": "456436e0d479e18ac6797709909d57041e2c4434a23368fe12749386dbb1533b",
+    "phase2-v12-root-truth-seal.json": "100df74cd9fb6782b38688b7cfb6f0749a70c05356fb0356cbbc6e95df4a8859",
+    "phase2-v12-mapper-release.json": "50464bf42dfc89a4a79a44b8ec3ce66a4ca03b10725267158f557f34042aa35b"
+  },
+  "assignments": [
+    {
+      "agent_ref": "/root/t9_phase0_governance_author",
+      "owner_role": "truth-test-author",
+      "task_id": "phase2-contradictory-accepted-evidence-truth-v13",
+      "allowed_outputs": [
+        "phase2_v13_truth_verifier.py",
+        "phase2_v13_truth_verifier_test.py",
+        "phase2-v13-fixture-manifest.json",
+        "negative-fixtures/phase2-v13/*",
+        "phase2-v13-red-report.json",
+        "role-receipts/phase2/truth-test-author-v13.json"
+      ],
+      "forbidden_outputs": [
+        "v12-or-earlier artifacts",
+        "mapper outputs",
+        "review outputs",
+        "phase2-v13-root-truth-seal.json",
+        "phase2-v13-mapper-release.json",
+        "phase2-root-acceptance.json"
+      ]
+    },
+    {
+      "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+      "owner_role": "capability-mapper",
+      "task_id": "phase2-curated-evidence-mapper-v5-v13",
+      "allowed_outputs": [
+        "phase2-capability-taxonomy-inventory-v1.json",
+        "phase2-curated-capability-evidence-v1.json",
+        "phase2-capability-comparisons-v5.json",
+        "phase2-capability-classification-v5.json",
+        "phase2-extension-boundaries-v5.json",
+        "phase2-claim-dependency-edges-v5.json",
+        "role-receipts/phase2/capability-mapper-v5.json"
+      ],
+      "forbidden_outputs": [
+        "truth outputs",
+        "review outputs"
+      ]
+    },
+    {
+      "agent_ref": "/root/phase5_review_b",
+      "owner_role": "capability-reviewer",
+      "task_id": "phase2-curated-evidence-review-v13",
+      "allowed_outputs": [
+        "phase2-v13-independent-review.json",
+        "role-receipts/phase2/capability-reviewer-v13.json"
+      ],
+      "forbidden_outputs": [
+        "mapper outputs",
+        "truth outputs"
+      ]
+    },
+    {
+      "agent_ref": "/root",
+      "owner_role": "product-owner-and-truth-authority-author",
+      "task_id": "phase2-product-owner-v13",
+      "allowed_outputs": [
+        "phase2-role-dispatch-v13.json",
+        "phase2-v13-root-truth-seal.json",
+        "phase2-v13-mapper-release.json",
+        "phase2-root-acceptance.json",
+        "plan.md"
+      ],
+      "forbidden_outputs": [
+        "mapper outputs",
+        "review outputs",
+        "truth outputs"
+      ]
+    }
+  ],
+  "inherited_contract": {
+    "all_v12_schema_semantic_review_authority_manifest_hash_binding_counterexample_no_global_count_quota_and_output_budget_contracts": true,
+    "all_v12_bytes_are_immutable": true,
+    "exact_six_mapper_outputs_unchanged": true,
+    "all_633_record_taxonomy_and_exhaustive_review_requirements_unchanged": true
+  },
+  "v13_curated_schema_contract": {
+    "schema_version_exact": "apk-t9-phase2-curated-capability-evidence.v4",
+    "new_fact_category": "accepted-negative-control",
+    "new_context_basis": "contradictory-accepted-evidence",
+    "contradictory_records_have_no_capability_uses_or_taxonomy_candidates": true,
+    "contradictory_records_mark_every_taxonomy_id_not_applicable": true,
+    "contradictory_records_require_nonempty_typed_same_game_conflict_refs": true,
+    "accepted_negative_control_resolution": "exclude-negative-control",
+    "internally_contradictory_complete_fact_resolution": "quarantine-pending-phase1-repair",
+    "all_other_fact_categories_bases_keys_and_null_empty_contracts_inherit_v12": true,
+    "audit_keys_exact": [
+      "review_method",
+      "reviewed_field_ids",
+      "fact_category",
+      "disposition_basis",
+      "basis_evidence_refs",
+      "evaluated_taxonomy_ids",
+      "not_applicable_taxonomy_ids",
+      "redundant_to_use_ids",
+      "incompatibility_evidence_refs",
+      "contradiction_kind",
+      "contradiction_resolution",
+      "conflict_evidence_refs",
+      "conflict_provenance_refs"
+    ],
+    "contradiction_kind_values_exact": [
+      "accepted-negative-control",
+      "internal-mutually-exclusive-claims"
+    ],
+    "contradiction_resolution_values_exact": [
+      "exclude-negative-control",
+      "quarantine-pending-phase1-repair"
+    ],
+    "conflict_evidence_ref_keys_exact": [
+      "role",
+      "record_id",
+      "field_id",
+      "exact_excerpt",
+      "value_sha256"
+    ],
+    "conflict_evidence_ref_role_values_exact": [
+      "basis-record",
+      "same-game-counterpart"
+    ],
+    "conflict_provenance_ref_variants_exact": {
+      "phase1-record": [
+        "type",
+        "record_id",
+        "source_claim_id",
+        "field_id",
+        "value_sha256"
+      ],
+      "negative-control-fixture": [
+        "type",
+        "record_id",
+        "source_claim_id",
+        "source_resolution_pointer",
+        "terminal_document_id",
+        "terminal_document_sha256",
+        "fixture_kind",
+        "expected_disposition",
+        "claim_text_sha256"
+      ]
+    },
+    "contradiction_basis_record_ids_exact": [
+      "magic-defense:MD-TRANS-006",
+      "rpg-battle:RPG-NEG-001"
+    ],
+    "contradiction_basis_is_exclusive_to_exact_registry": true,
+    "every_registry_record_requires_contradiction_basis": true,
+    "non_registry_audit_null_empty_contract": {
+      "contradiction_kind": null,
+      "contradiction_resolution": null,
+      "conflict_evidence_refs": [],
+      "conflict_provenance_refs": []
+    },
+    "contradictory_context_rationale_exact_content_rule": "The rationale contains the current source_claim_id, the literal basis contradictory-accepted-evidence, the exact conflict_kind, the exact contradiction_resolution, and every conflict_evidence_refs exact_excerpt.",
+    "contradictory_basis_evidence_refs_equal_registry_exactly": true
+  },
+  "known_contradiction_registry": [
+    {
+      "record_id": "rpg-battle:RPG-NEG-001",
+      "conflict_kind": "accepted-negative-control",
+      "resolution": "exclude-negative-control",
+      "required_same_game_counterpart_record_ids": [
+        "rpg-battle:RPG-MECH-020"
+      ],
+      "required_source_resolution_pointer": "/negative_evidence_fixtures/0",
+      "required_terminal_document_id": "s31",
+      "required_terminal_document_sha256": "b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6",
+      "required_fixture_kind": "unsupported-claim-injection",
+      "required_expected_disposition": "REJECTED",
+      "required_supporting_location_fields": {
+        "file_path": null,
+        "line_start": null,
+        "line_end": null,
+        "cited_range_sha256": null,
+        "blob_sha256": null
+      },
+      "required_fact_category": "accepted-negative-control",
+      "required_basis_record_value": "RPG Battle has a mana system: each power attack consumes 5 MP from a 20 MP pool that regenerates 2 MP per turn.",
+      "required_basis_record_value_sha256": "55508897272bb14f7193ab35d05cb4ac53a12c021d16c6d47c1d2d8eaae9dc88",
+      "required_counterpart_value": "There is no mana/MP system: grep -rni 'mana' over the rpg-battle components, page, store, and rpgBattle libs returns no non-test match at the baseline.",
+      "required_counterpart_value_sha256": "34c7962b9fba0e6309cb0463a537c7f48a2946c511485128297abb80c0445afa",
+      "required_source_resolution_traversal": {
+        "source_index_record_selector": {
+          "game_id": "rpg-battle",
+          "claim_id": "RPG-NEG-001"
+        },
+        "materialization_rule": "exact-terminal-row",
+        "materialization_steps_exact": [
+          {
+            "document_id": "s31",
+            "pointer": "/negative_evidence_fixtures/0"
+          }
+        ],
+        "terminal_source_artifact_selector": {
+          "document_id": "s31",
+          "path": "measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json",
+          "sha256": "b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6"
+        },
+        "terminal_value_pointer": "/claim_text",
+        "terminal_value_sha256": "55508897272bb14f7193ab35d05cb4ac53a12c021d16c6d47c1d2d8eaae9dc88"
+      },
+      "required_conflict_evidence_refs_exact": [
+        {
+          "role": "basis-record",
+          "record_id": "rpg-battle:RPG-NEG-001",
+          "field_id": "fact",
+          "exact_excerpt": "RPG Battle has a mana system: each power attack consumes 5 MP from a 20 MP pool that regenerates 2 MP per turn.",
+          "value_sha256": "55508897272bb14f7193ab35d05cb4ac53a12c021d16c6d47c1d2d8eaae9dc88"
+        },
+        {
+          "role": "same-game-counterpart",
+          "record_id": "rpg-battle:RPG-MECH-020",
+          "field_id": "fact",
+          "exact_excerpt": "There is no mana/MP system: grep -rni 'mana' over the rpg-battle components, page, store, and rpgBattle libs returns no non-test match at the baseline.",
+          "value_sha256": "34c7962b9fba0e6309cb0463a537c7f48a2946c511485128297abb80c0445afa"
+        }
+      ],
+      "required_conflict_provenance_refs_exact": [
+        {
+          "type": "negative-control-fixture",
+          "record_id": "rpg-battle:RPG-NEG-001",
+          "source_claim_id": "RPG-NEG-001",
+          "source_resolution_pointer": "/negative_evidence_fixtures/0",
+          "terminal_document_id": "s31",
+          "terminal_document_sha256": "b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6",
+          "fixture_kind": "unsupported-claim-injection",
+          "expected_disposition": "REJECTED",
+          "claim_text_sha256": "55508897272bb14f7193ab35d05cb4ac53a12c021d16c6d47c1d2d8eaae9dc88"
+        },
+        {
+          "type": "phase1-record",
+          "record_id": "rpg-battle:RPG-MECH-020",
+          "source_claim_id": "RPG-MECH-020",
+          "field_id": "fact",
+          "value_sha256": "34c7962b9fba0e6309cb0463a537c7f48a2946c511485128297abb80c0445afa"
+        }
+      ],
+      "required_basis_evidence_refs_exact": [
+        {
+          "role": "fact",
+          "field_id": "fact",
+          "exact_excerpt": "RPG Battle has a mana system: each power attack consumes 5 MP from a 20 MP pool that regenerates 2 MP per turn."
+        }
+      ]
+    },
+    {
+      "record_id": "magic-defense:MD-TRANS-006",
+      "conflict_kind": "internal-mutually-exclusive-claims",
+      "resolution": "quarantine-pending-phase1-repair",
+      "required_same_game_counterpart_record_ids": [
+        "magic-defense:MD-TRANS-001"
+      ],
+      "required_internal_excerpts": [
+        "game-over -> idle",
+        "status=playing"
+      ],
+      "required_scene_id": "game-over->playing (reset)",
+      "required_fact_category": "complete-behavior",
+      "required_basis_record_value": "Status reset (game-over -> idle) happens via resetGame which clears score/castles/status=playing (useGameStore.ts lines 46-55). The ResultsScreen onRestart prop wires to resetGame (ResultsScreen.tsx lines 18-19).",
+      "required_basis_record_value_sha256": "6a76e801319a35633e94ba0176eb760ce0b1cfda8ef772e726b75efca1d763b2",
+      "required_counterpart_value": "Status transition idle -> playing is triggered by StartScreen handleStart() -> resetGame() (GameContainer.tsx lines 39-42; useGameStore.ts lines 46-55).",
+      "required_counterpart_value_sha256": "33a01283c4827107e30ae92bae15795ed9591afce68275f61efa78c8e0cdd3be",
+      "required_conflict_evidence_refs_exact": [
+        {
+          "role": "basis-record",
+          "record_id": "magic-defense:MD-TRANS-006",
+          "field_id": "fact",
+          "exact_excerpt": "game-over -> idle",
+          "value_sha256": "6a76e801319a35633e94ba0176eb760ce0b1cfda8ef772e726b75efca1d763b2"
+        },
+        {
+          "role": "basis-record",
+          "record_id": "magic-defense:MD-TRANS-006",
+          "field_id": "fact",
+          "exact_excerpt": "status=playing",
+          "value_sha256": "6a76e801319a35633e94ba0176eb760ce0b1cfda8ef772e726b75efca1d763b2"
+        },
+        {
+          "role": "same-game-counterpart",
+          "record_id": "magic-defense:MD-TRANS-001",
+          "field_id": "fact",
+          "exact_excerpt": "Status transition idle -> playing is triggered by StartScreen handleStart() -> resetGame()",
+          "value_sha256": "33a01283c4827107e30ae92bae15795ed9591afce68275f61efa78c8e0cdd3be"
+        }
+      ],
+      "required_conflict_provenance_refs_exact": [
+        {
+          "type": "phase1-record",
+          "record_id": "magic-defense:MD-TRANS-006",
+          "source_claim_id": "MD-TRANS-006",
+          "field_id": "fact",
+          "value_sha256": "6a76e801319a35633e94ba0176eb760ce0b1cfda8ef772e726b75efca1d763b2"
+        },
+        {
+          "type": "phase1-record",
+          "record_id": "magic-defense:MD-TRANS-001",
+          "source_claim_id": "MD-TRANS-001",
+          "field_id": "fact",
+          "value_sha256": "33a01283c4827107e30ae92bae15795ed9591afce68275f61efa78c8e0cdd3be"
+        }
+      ],
+      "required_basis_evidence_refs_exact": [
+        {
+          "role": "fact",
+          "field_id": "fact",
+          "exact_excerpt": "Status reset (game-over -> idle) happens via resetGame which clears score/castles/status=playing (useGameStore.ts lines 46-55). The ResultsScreen onRestart prop wires to resetGame (ResultsScreen.tsx lines 18-19)."
+        }
+      ]
+    }
+  ],
+  "non_contradiction_controls": [
+    {
+      "kind": "host-qualified-divergence",
+      "record_ids": [
+        "wizard-vs-zombie:WVZ-STT-004",
+        "wizard-vs-zombie:WVZ-STT-005"
+      ]
+    },
+    {
+      "kind": "version-qualified-divergence",
+      "record_ids": [
+        "storm-castle-tower:SCT-ABS-001",
+        "storm-castle-tower:SCT-IMPL-H003"
+      ]
+    },
+    {
+      "kind": "type-vocabulary-versus-runtime-use",
+      "record_ids": [
+        "rpg-battle:RPG-MECH-021",
+        "rpg-battle:RPG-ST-007",
+        "rpg-battle:RPG-ST-016"
+      ]
+    },
+    {
+      "kind": "denominator-versus-behavior",
+      "record_ids": [
+        "rpg-battle:RPG-TR-022",
+        "rpg-battle:RPG-TR-001"
+      ]
+    },
+    {
+      "kind": "named-subsystem-vocabulary",
+      "record_ids": [
+        "magic-defense:MD-MECH-014",
+        "magic-defense:MD-ST-013"
+      ]
+    },
+    {
+      "kind": "rules-versus-ui-state-machine",
+      "record_ids": [
+        "rune-forge-chamber:RFC-CUR-006",
+        "rune-forge-chamber:RFC-CUR-014"
+      ]
+    }
+  ],
+  "independent_review_delta": {
+    "every_known_contradiction_gets_explicit_conflict_kind_provenance_resolution_and_quarantine_verdicts": true,
+    "reviewed_object_hash_includes_complete_v4_audit_object": true,
+    "any_reject_or_unresolved_medium_or_higher_state": "REVIEW_REJECTED",
+    "all_explicit_accepts_state": "VERIFIED_PENDING_ROOT_ACCEPTANCE",
+    "schema_version_exact": "apk-t9-phase2-independent-review.v13",
+    "record_review_row_keys_exact": [
+      "record_id",
+      "reviewed_object_sha256",
+      "verdicts",
+      "rationale",
+      "evidence_refs"
+    ],
+    "record_review_verdict_keys_exact": [
+      "accepted_fact_category",
+      "basis_evidence_refs_and_anchor_completeness",
+      "primary_disposition",
+      "disposition_basis",
+      "evaluated_and_not_applicable_taxonomy_partition",
+      "redundant_use_or_incompatibility_joins",
+      "context_rationale_or_selected_uses",
+      "automatic_versus_individual_decision",
+      "contradiction_kind",
+      "contradiction_provenance",
+      "contradiction_resolution",
+      "quarantine_verdict"
+    ],
+    "record_review_verdict_values_exact": [
+      "accept",
+      "reject"
+    ],
+    "normal_record_contradiction_verdict_meaning": "accept means the reviewed v4 audit has null contradiction_kind and contradiction_resolution plus empty conflict evidence and provenance refs.",
+    "contradictory_record_contradiction_verdict_meaning": "accept means the reviewed v4 audit exactly matches its registry conflict kind, resolution, evidence refs, provenance refs, quarantine disposition, and exclusion from uses and taxonomy candidates.",
+    "contradiction_review_evidence_ref_keys_exact": [
+      "type",
+      "record_id",
+      "conflict_kind",
+      "contradiction_resolution",
+      "conflict_evidence_refs_sha256",
+      "conflict_provenance_refs_sha256",
+      "audit_sha256"
+    ],
+    "contradiction_review_evidence_ref_type_exact": "contradiction-projection",
+    "record_review_evidence_refs_exact_rule": "Every record retains its inherited v9 record projection ref; each exact registry record appends exactly one contradiction-projection ref and every non-registry record appends none.",
+    "v13_to_inherited_review_projection": {
+      "purpose": "structural inheritance only after native v13 semantics pass",
+      "strip_record_verdict_keys": [
+        "accepted_fact_category",
+        "disposition_basis",
+        "evaluated_and_not_applicable_taxonomy_partition",
+        "redundant_use_or_incompatibility_joins",
+        "contradiction_kind",
+        "contradiction_provenance",
+        "contradiction_resolution",
+        "quarantine_verdict"
+      ],
+      "rename_record_verdict_key": {
+        "basis_evidence_refs_and_anchor_completeness": "anchor_completeness"
+      },
+      "retain_record_verdict_keys": [
+        "primary_disposition",
+        "context_rationale_or_selected_uses",
+        "automatic_versus_individual_decision"
+      ],
+      "projected_record_object_rule": "Before inherited hash and evidence-ref validation, remove the four v13 audit fields from every record; project RPG-NEG-001 to fact_category negative-search and basis context-or-provenance-not-behavior; project MD-TRANS-006 to basis complete-behavior-no-cross-game-counterpart; recompute each projected reviewed_object_sha256 and inherited record-projection ref from that same projected record.",
+      "native_v13_validation_precedes_projection": true,
+      "projection_cannot_override_v13_rejection": true
+    }
+  },
+  "required_attacks": [
+    "RPG-NEG-001 selected promoted insufficient provenance or bespoke disposition fails",
+    "RPG-NEG-001 missing wrong or drifted negative-control pointer ledger metadata or expected REJECTED disposition fails",
+    "RPG-NEG-001 conflict refs omit the false claim or RPG-MECH-020 negative-search counterpart fails",
+    "MD-TRANS-006 selected insufficient or non-contradictory disposition fails",
+    "MD-TRANS-006 conflict refs omit idle playing or MD-TRANS-001 evidence fails",
+    "contradictory record with any capability use evaluated taxonomy or incomplete not-applicable partition fails",
+    "host version subsystem state-machine denominator or layer controls are automatically quarantined fails",
+    "review omits conflict kind provenance resolution quarantine or full v4 audit hash fails",
+    "all v12 and v11 attacks remain green",
+    "wrong or missing externally expected v13 mapper release fails before mapper presence"
+  ],
+  "root_authority_contract": {
+    "authority_before_mapper_presence": true,
+    "externally_expected_v13_release_sha256_required": true,
+    "v13_seal_pins_dispatch_all_v13_truth_and_fixture_bytes": true,
+    "v13_mapper_and_reviewer_receipts_bind_dispatch_seal_release_and_all_six_outputs": true,
+    "wrong_or_missing_expected_release_invalid": true
+  },
+  "budget_contract": {
+    "negative_fixture_files_max": 16,
+    "published_output_bytes_max_each": 1048576,
+    "complete_suite_runtime_seconds_max": 30
+  },
+  "tdd_order": [
+    "truth author publishes v13 Red while preserving every v12 byte",
+    "root independently reruns and publishes v13 seal and external release",
+    "mapper classifies all 633 records including the two quarantines and publishes under v13",
+    "independent reviewer exhaustively reviews taxonomy all records uses findings contradictions and games",
+    "root manually samples every basis family and accepts or rejects"
+  ],
+  "scope": {
+    "phase3_responsive_authorized": false,
+    "asset_mapping_authorized": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false
+  }
+}

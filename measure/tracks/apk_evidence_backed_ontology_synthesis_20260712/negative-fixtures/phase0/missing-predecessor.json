@@ -1,0 +1,8 @@
+{
+  "schema_version": "apk-t9-phase0-negative-fixture.v1",
+  "id": "missing-predecessor",
+  "mutation": {
+    "type": "remove-source",
+    "source_id": "t3-accepted-pilot"
+  }
+}

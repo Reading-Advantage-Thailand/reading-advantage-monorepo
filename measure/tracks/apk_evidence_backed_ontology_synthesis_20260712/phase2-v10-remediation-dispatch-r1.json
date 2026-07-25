@@ -1,0 +1,72 @@
+{
+  "schema_version": "apk-t9-phase2-v10-remediation-dispatch.r1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "status": "active-one-record-review-remediation",
+  "authority": "delegated-root-product-owner",
+  "issued_by": "/root",
+  "issued_at": "2026-07-25T03:59:05.016204088Z",
+  "base_authority": {
+    "dispatch_sha256": "b7dc7be6ec593623a21656afd3215b2764188a41915e0b2e709be6e338e26eb7",
+    "root_truth_seal_sha256": "5f5c0677b8ceea2b2f1751ff651f69c3ef6218abb0cc4a49e8779088bd5db8af",
+    "root_mapper_release_sha256": "8eefc6703efab3fe4ace996eb847fb4f5feade7b6f78663c44fe27de9694f6b0",
+    "receipt_schema_and_identity_remain_bound_to_sealed_v10_verifier": true
+  },
+  "rejected_candidate": {
+    "state": "REVIEW_REJECTED",
+    "checks": 1577,
+    "sole_code": "SEMANTIC_REVIEW_REJECTED",
+    "mapper_hashes": {
+      "phase2-curated-capability-evidence-v1.json": "4a71bce114ca00f11ab27f9eededdc19ea4476068776e5867b2874463e886df4",
+      "phase2-capability-comparisons-v5.json": "c8e71208bc60cc3c1299840b1905255dcf02578e32acec16558dc3177801157a",
+      "phase2-capability-classification-v5.json": "274a3538b782499828c6af9cc7033f72fa5de0b1d6da0c0eb769dad568e78a34",
+      "phase2-extension-boundaries-v5.json": "bcee20de256ef1ac44fad89353faeff73f03bec4ad7f0e57358f6b1862252c66",
+      "phase2-claim-dependency-edges-v5.json": "30b174ca160be204749f7c9bdeb65ba517990cc73ec7ee656ef49d2466019155",
+      "role-receipts/phase2/capability-mapper-v5.json": "35380ea80262ac5cb4f5fba9471e5af5fac180d71e836ac41085acf4944cfed1"
+    },
+    "review_hashes": {
+      "phase2-v10-independent-review.json": "a57c78e9ef2f408e27868ac28200d4a6eb99051ade26d428209f542bc8abec32",
+      "role-receipts/phase2/capability-reviewer-v10.json": "ddede07a9d91795a3de9ff8a60d49bbf8ecf3d0f39eb42eebb54157e19fdf29c"
+    }
+  },
+  "blocking_finding": {
+    "severity": "Medium",
+    "record_id": "storm-castle-tower:SCT-MECH-H001",
+    "rejected_subverdicts": ["anchor_completeness", "context_rationale_or_selected_uses"],
+    "accepted_primary_disposition": "non-capability-context",
+    "required_correction": "Keep the record as redundant context, but replace the false no-anchor/no-counterpart rationale with a record-specific explanation that its complete keyboard behavior is redundant to selected SCT-MECH-H008 evidence for the same capability."
+  },
+  "assignments": [
+    {
+      "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+      "owner_role": "capability-mapper",
+      "task_id": "phase2-curated-evidence-mapper-v5-v10-r1",
+      "archive_outputs": ["rejected-candidates/phase2-v10-r1/mapper/*"],
+      "live_outputs": ["phase2-curated-capability-evidence-v1.json", "role-receipts/phase2/capability-mapper-v5.json"],
+      "must_remain_byte_identical": ["phase2-capability-comparisons-v5.json", "phase2-capability-classification-v5.json", "phase2-extension-boundaries-v5.json", "phase2-claim-dependency-edges-v5.json"],
+      "forbidden": ["truth files", "review files", "any record other than storm-castle-tower:SCT-MECH-H001"]
+    },
+    {
+      "agent_ref": "/root/phase5_review_b",
+      "owner_role": "capability-reviewer",
+      "task_id": "phase2-curated-evidence-review-v10-r1",
+      "archive_outputs": ["rejected-candidates/phase2-v10-r1/reviewer/*"],
+      "live_outputs": ["phase2-v10-independent-review.json", "role-receipts/phase2/capability-reviewer-v10.json"],
+      "forbidden": ["mapper files", "truth files"]
+    },
+    {
+      "agent_ref": "/root",
+      "owner_role": "product-owner",
+      "task_id": "phase2-product-owner-v10-r1",
+      "allowed_outputs": ["phase2-v10-remediation-dispatch-r1.json", "phase2-root-acceptance.json", "plan.md"],
+      "forbidden": ["mapper files", "review files", "truth files"]
+    }
+  ],
+  "archive_contract": {
+    "archive_before_live_edit": true,
+    "archive_bytes_equal_rejected_candidate_hashes": true,
+    "archive_paths_are_audit_history_not_verifier_inputs": true
+  },
+  "verification_order": ["archive rejected mapper and review bytes", "change exactly one context rationale and mapper receipt hashes", "verify candidate pending independent review", "republish exhaustive 633-record 56-use 21-finding 28-game review bound to successor mapper hashes", "verify VERIFIED_PENDING_ROOT_ACCEPTANCE or REVIEW_REJECTED", "root semantic acceptance"],
+  "scope": {"phase3_responsive_authorized": false, "asset_mapping_authorized": false, "implementation_authorized": false, "shipping_authorized": false}
+}

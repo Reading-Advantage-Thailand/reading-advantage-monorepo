@@ -1,0 +1,74 @@
+{
+  "schema_version": "apk-t9-canonical-pack-policy.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "state": "frozen-policy-pending-input-acceptance",
+  "policy_is_factual_evidence": false,
+  "canonical_root": "packages/advantage-play-kit/assets/standard",
+  "accepted_release": {
+    "version": "2026.07.23",
+    "catalog_digest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+    "source_receipt_digest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9"
+  },
+  "semantic_key_grammar": {
+    "source_path_shape": "<view>/<cell-size-or-native>/<category...>/<lowercase-kebab-name>.<allowed-extension>",
+    "key_shape": "<source-path-with-final-extension-removed>",
+    "views": [
+      "top-down",
+      "side-view",
+      "ui",
+      "world",
+      "effects",
+      "audio",
+      "font"
+    ],
+    "cell_size": "native or positive-integer x positive-integer; audio and font require native",
+    "name_segment_pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+    "extensions": {
+      "raster": [
+        "png"
+      ],
+      "audio": [
+        "ogg",
+        "mp3",
+        "wav"
+      ],
+      "font": [
+        "ttf",
+        "otf",
+        "woff2"
+      ]
+    },
+    "catalog_membership_required": true,
+    "extension_in_key_forbidden": true,
+    "absolute_path_forbidden": true,
+    "legacy_app_path_forbidden": true,
+    "inferred_near_match_forbidden": true,
+    "directory_reference_forbidden": true
+  },
+  "adoption_contract": {
+    "allowed_states": [
+      "candidate",
+      "blocked"
+    ],
+    "candidate": "Requires one exact accepted-catalog semantic key.",
+    "blocked": "Requires null standard_pack_key plus an explicit blocker and upstream claim set.",
+    "unknown_non_blocked_mapping": "forbidden",
+    "direct_legacy_adoption": "forbidden",
+    "vendor_filename_without_catalog_key": "forbidden"
+  },
+  "contract_sources": [
+    {
+      "path": "packages/advantage-play-kit/src/assets/standard-asset-contract.ts",
+      "sha256": "730b4118a1431e07e4a814e26dda9deb9ea32e4fbb3f69da6692fbf069a469bd"
+    },
+    {
+      "path": "packages/advantage-play-kit/src/assets/standard-pack-release.ts",
+      "sha256": "55b8ed93dfbe4d8833f7e4349edc0896518b3d17a3dc14e8648c6b8434986b31"
+    },
+    {
+      "path": "packages/advantage-play-kit/src/assets/accepted-standard-pack-release.ts",
+      "sha256": "0b3c63c7587093233faab2cf8c12aafe37a197c5e999db0a63ee1e9d5dcf2f40"
+    }
+  ],
+  "boundary": "This policy constrains forward adoption only and cannot add, replace, reinterpret, or upgrade any T2-T8 factual claim."
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": "apk-t9-phase2-negative-fixture-group.v1",
+  "id": "schema-shape",
+  "cases": [
+    {
+      "id": "schema-shape-01",
+      "mutation": {
+        "operation": "missing-required-field"
+      },
+      "expected_codes": [
+        "INVALID_SCHEMA",
+        "MISSING_REQUIRED_FIELD"
+      ]
+    },
+    {
+      "id": "schema-shape-02",
+      "mutation": {
+        "operation": "surplus-field"
+      },
+      "expected_codes": [
+        "SURPLUS_FIELD"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "INVALID_SCHEMA",
+    "MISSING_REQUIRED_FIELD",
+    "SURPLUS_FIELD"
+  ],
+  "expected_state": "INVALID"
+}

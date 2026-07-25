@@ -1,0 +1,85 @@
+{
+  "schema_version": "apk-t9-phase2-v10-red-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "status": "valid-red-v10-waiting-for-root-v10-authority",
+  "state": "RED_WAITING_FOR_ROOT_V10_AUTHORITY",
+  "authority": {
+    "path": "phase2-role-dispatch-v10.json",
+    "sha256": "b7dc7be6ec593623a21656afd3215b2764188a41915e0b2e709be6e338e26eb7"
+  },
+  "truth_package": {
+    "phase2_v10_truth_verifier.py": "3cf4eb598055a8d03e5ea5a38bef79f5bf2ec1b50c43b48d142ef26c5b70d1e8",
+    "phase2_v10_truth_verifier_test.py": "920209f26b3cd13a9e7545531a36c80ff21ee0e5ea4be861958e312ccfc3abb2",
+    "phase2-v10-fixture-manifest.json": "99be6b366188670d9e73ff10f684a695fb08c6b31552714c2edeb33cc9cfdd5e",
+    "negative-fixtures/phase2-v10/end-to-end-attacks.json": "cbf5d09d9b84faf95a2437f00a4f0c8baf304193b8a1e1838cb4f09ada2dc772",
+    "fixture_files": 1,
+    "fixture_cases": 24,
+    "focused_suite": "2/2 pass",
+    "runtime_seconds": 19.002,
+    "wall_runtime_seconds": 19.39,
+    "ruff": "pass",
+    "py_compile": "pass",
+    "json_validation": "pass",
+    "diff_check": "pass",
+    "stop_loss_cycle": 1
+  },
+  "authority_order_results": {
+    "before_root_authority": {
+      "state": "RED_WAITING_FOR_ROOT_V10_AUTHORITY",
+      "sole_code": "ROOT_V10_AUTHORITY_MISSING"
+    },
+    "correct_expected_release_with_missing_mapper": {
+      "state": "RED_WAITING_FOR_MAPPER_V5_OUTPUTS",
+      "sole_code": "PHASE2_MAPPER_V5_OUTPUTS_MISSING"
+    },
+    "wrong_expected_release_with_missing_mapper": {
+      "state": "INVALID",
+      "sole_code": "MAPPER_RELEASE_MISMATCH",
+      "missing_mapper_code_present": false
+    },
+    "missing_expected_release_after_release_exists": {
+      "state": "INVALID",
+      "sole_code": "EXPECTED_MAPPER_RELEASE_REQUIRED",
+      "missing_mapper_code_present": false
+    },
+    "authority_validation_precedes_mapper_presence": true,
+    "public_entrypoint": "verify_phase2",
+    "mocks_used": false
+  },
+  "manifest_contract_results": {
+    "exact_top_level_keys": true,
+    "exact_track_and_dispatch_identity": true,
+    "exact_fixture_row_keys": true,
+    "unique_fixture_ids_and_paths": true,
+    "fixture_schema_and_track_identity": true,
+    "fixture_hashes": true,
+    "row_declared_case_count_equals_actual": true,
+    "top_case_count_equals_declared_sum_and_actual": true,
+    "all_declared_fixtures_root_seal_discovered": true,
+    "required_manifest_attacks_passed": 9
+  },
+  "inherited_v9_contract": {
+    "all_v9_truth_and_root_authority_bytes_preserved": true,
+    "v9_dispatch_sha256": "60a0337eec7a67afa327f8a790620f0d0b1364717bb421dfdea86b324bd90a3b",
+    "v9_verifier_sha256": "edf0130b20af2f9436b29e1b48c251624266b95223a322349075b5bf7bf60f09",
+    "all_v9_file_backed_attacks_executed_through_v10": true,
+    "all_48_context_promotions_executed_through_v10": true,
+    "full_and_under_budget_v4_transforms_executed": true,
+    "semantic_review_rejection_and_fabricated_ref_attacks_executed": true
+  },
+  "live_red": {
+    "state": "RED_WAITING_FOR_ROOT_V10_AUTHORITY",
+    "sole_finding": "ROOT_V10_AUTHORITY_MISSING",
+    "checks": 57
+  },
+  "budgets": {
+    "fixture_files_max": 16,
+    "fixture_files_actual": 1,
+    "suite_runtime_seconds_max": 30,
+    "suite_runtime_seconds_actual": 19.002,
+    "published_output_bytes_max_each": 1048576
+  },
+  "green_publication_authorized": false,
+  "next_action": "Root must independently rerun v10, publish the v10 truth seal and externally hashed v10 mapper release, then verify correct, wrong, and missing expected release states before releasing mapper v5."
+}

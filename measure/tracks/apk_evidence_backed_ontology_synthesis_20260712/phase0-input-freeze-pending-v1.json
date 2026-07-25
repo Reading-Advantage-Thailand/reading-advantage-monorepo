@@ -1,0 +1,106 @@
+{
+    "schema_version": "apk-t9-phase0-input-freeze.v1",
+    "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+    "frozen_at": "2026-07-24T09:22:29+07:00",
+    "status": "STOPPED_BEFORE_SYNTHESIS",
+    "candidate_only": true,
+    "consumable": false,
+    "immutable_after_publication": true,
+    "allowed_work": [
+        "Phase 0 contract preparation",
+        "fail-closed truth verification",
+        "negative-fixture execution",
+        "independent review of these pending artifacts"
+    ],
+    "forbidden_work": [
+        "mechanics decisions",
+        "capability decisions",
+        "responsive decisions",
+        "asset-role decisions",
+        "canonical adoption mappings",
+        "ontology assignments",
+        "implementation",
+        "shipping",
+        "product-owner acceptance"
+    ],
+    "source_registry": {
+        "path": "phase0-source-registry-pending-v1.json",
+        "sha256": "29dcb7cea1aa206c551ba7aa90741585bb80509e4c31937b259cb69077c7e6b5"
+    },
+    "contract_bindings": [
+        {
+            "id": "canonical-pack-policy",
+            "path": "phase0-canonical-pack-policy-pending-v1.json",
+            "sha256": "e4173d05b26f84c82d6687e95226b306b0402d238df02cfa66678e25973e20b5"
+        },
+        {
+            "id": "role-ownership",
+            "path": "phase0-role-ownership-manifest-pending-v1.json",
+            "sha256": "9f4eb756fb6f79b9099b83fc84f191dc421e111a3b35ba25f15ea8c77678b382"
+        },
+        {
+            "id": "derivation-schema",
+            "path": "phase0-derivation-schema-pending-v1.json",
+            "sha256": "b9ad36f77ee54127b15b75b563ae220b3fce07151ce1f0ba4052f69c66c3bc5e"
+        },
+        {
+            "id": "claim-dependency-schema",
+            "path": "phase0-claim-dependency-schema-pending-v1.json",
+            "sha256": "fad2307bb50d8ccbb38870c05af9880deb5756eae5833d25501ed3051364a947"
+        },
+        {
+            "id": "budget-stop-loss",
+            "path": "phase0-budget-stop-loss-pending-v1.json",
+            "sha256": "1119945944a903e753a8f244b4a4d249f9d66642e069c2251c5a1a99638349ee"
+        }
+    ],
+    "governing_bindings": [
+        {
+            "path": "measure/apk-evidence-reconstruction-program.md",
+            "sha256": "ac77839f0969ea78e628ea9a533176fbc59f9697f7adfc494b22e703d94aff1b"
+        },
+        {
+            "path": "measure/apk-asset-system-program.md",
+            "sha256": "082e66fa9d6bc0ba53cd256443877fd77da55c5da0ffddfadd00297f33bd09f5"
+        },
+        {
+            "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/spec.md",
+            "sha256": "2476dcf3f6c6819b5ca8729d47b90cefeda929de2ca7777fd4b6e30146cfffa3"
+        },
+        {
+            "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/plan.md",
+            "sha256": "e837c4347824acb4fbed6c0b66f1d833a576907f53765dfe2cf88c156a2afea6"
+        },
+        {
+            "path": "measure/tracks.md",
+            "sha256": "d461d0c1087a910ae4aceffe54929113d1c23b38f292e3f8a6cf68b31965bd12"
+        }
+    ],
+    "accepted_input_ids": [
+        "t1-evidence-integrity-gate",
+        "t2-accepted-denominator",
+        "t2-accepted-partition",
+        "t3-accepted-pilot",
+        "t4-accepted-cohort",
+        "t5-accepted-cohort",
+        "t6-accepted-cohort",
+        "t7-accepted-cohort",
+        "standard-pack-accepted-release"
+    ],
+    "blocked_input": {
+        "id": "t8-accepted-candidate-forensics",
+        "state": "PENDING_POST_REVIEW_USER_APPROVAL",
+        "required_successor_hashes": null
+    },
+    "failed_monolith_policy": {
+        "path_prefix": "measure/archive/apk_cross_game_asset_ontology_20260712",
+        "allowed_use": "labeled-negative-fixture-only",
+        "present_in_live_input_graph": false
+    },
+    "closure": {
+        "phase0_complete": false,
+        "green_report_authorized": false,
+        "green_receipt_authorized": false,
+        "next_action": "Obtain exact product-owner direction for the two-cycle stop-loss, then obtain the separate tool-resolved post-review T8 approval and publish additive successor freezes before Phase 1."
+    }
+}

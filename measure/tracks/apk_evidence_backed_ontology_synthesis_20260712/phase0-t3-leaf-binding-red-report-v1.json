@@ -1,0 +1,24 @@
+{
+  "schema_version": "apk-t9-phase0-t3-leaf-binding-red-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "state": "RED",
+  "status": "blocked-before-candidate-publication",
+  "verification_mode": "temporary-track-with-dispatch-and-author-receipt-but-no-candidate",
+  "runtime_seconds": 0.000502,
+  "checks": 3,
+  "findings": [
+    {
+      "code": "T3_CATALOG_MISSING",
+      "message": "Missing phase0-t3-leaf-binding-candidate-v1.json."
+    }
+  ],
+  "bindings": {
+    "repair_dispatch_sha256": "f6a9aedb3eb3246fc107363854aff75ab50b0ed1af19280b5925c3c8138a78e5",
+    "catalog_author_receipt_sha256": "67ec8d7b08810a3b34b4e575fc00b1b430bbd9459714b4c7c36225b9c048ae2f",
+    "verifier_sha256": "0faf71edca6d6d5157ed4bea9ada03bce869296077501b0233e565e404c891bb"
+  },
+  "candidate_consumed": false,
+  "decisions_authored": false,
+  "archive_modified": false
+}

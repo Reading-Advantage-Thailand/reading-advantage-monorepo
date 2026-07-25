@@ -1,0 +1,80 @@
+{
+  "schema_version": "apk-t9-phase2-v8-red-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "status": "valid-red-v8-waiting-for-file-backed-mapper-v5",
+  "state": "RED_WAITING_FOR_MAPPER_V5_OUTPUTS",
+  "authority": {
+    "path": "phase2-role-dispatch-v8.json",
+    "sha256": "5ae31c7f2f7342aabc364e3f847f4f1da2a3184ef1b6b995949776d14e4b8bf8"
+  },
+  "truth_package": {
+    "phase2_v8_truth_verifier.py": "1499aa4ad7469cf2b7764f8adaf82802e02eaf6e8a8200668631595aacab24b7",
+    "phase2_v8_truth_verifier_test.py": "3a1847abe842ef6595d47d019f39e7b64fba884db05a8fba390342be58b61f35",
+    "phase2-v8-fixture-manifest.json": "db75e581b07a6b4edcbf97b41bd6b484cc2be65e905dd04dbadf6ff918d2ff09",
+    "fixture_files": 8,
+    "fixture_cases": 76,
+    "focused_v8_cases": "12/12 matched",
+    "focused_suite": "7/7 pass",
+    "inherited_v7_suite": "7/7 pass",
+    "runtime_seconds": 25.596,
+    "ruff": "pass",
+    "py_compile": "pass",
+    "stop_loss_cycle": 1
+  },
+  "curated_contract": {
+    "all_633_records_exactly_once": true,
+    "zero_use_baseline_permitted_and_tested": true,
+    "finding_max": 45,
+    "use_max": 270,
+    "games_per_finding": "2-3",
+    "similarity_claims": "exactly-one-per-game-and-at-most-four-total",
+    "difference_claims": "one-to-two-per-game-and-at-most-six-total",
+    "atomic_dimension_and_one_sentence_no_pipe_summaries": true,
+    "manual_individual_review_and_counterfactual_pertinence": true,
+    "all_game_dispositions_required": true,
+    "rejected_mapper_v4_fails": true
+  },
+  "candidate_lifecycle": {
+    "correct_receipt_schema_symbol": "v5.v4.RECEIPT_KEYS",
+    "valid_zero_use_candidate_present": {
+      "executed": true,
+      "expected_state": "VERIFIED",
+      "findings": 0,
+      "exception": false
+    },
+    "malformed_receipt_candidate_present": {
+      "executed": true,
+      "expected_finding": "INVALID_SCHEMA",
+      "exception": false
+    },
+    "missing_candidate": {
+      "state": "RED_WAITING_FOR_MAPPER_V5_OUTPUTS",
+      "sole_finding": "PHASE2_MAPPER_V5_OUTPUTS_MISSING",
+      "checks": 38
+    }
+  },
+  "inherited_contract": {
+    "v7_dispatch_sha256": "a06cbac2c3cee7c993c96c39a470c777782e375119c0e29d3e4905bed69b4035",
+    "v7_verifier_sha256": "807d335ce68d81b7d0090f4cadcde3461c6db7e323fbbffdd4ab90ea02ec244b",
+    "all_v7_tests_and_attacks_executable": true,
+    "prior_truth_bytes_preserved": true
+  },
+  "budgets": {
+    "fixture_files_max": 16,
+    "fixture_files_actual": 8,
+    "suite_runtime_seconds_max": 30,
+    "suite_runtime_seconds_actual": 25.596,
+    "published_output_bytes_max_each": 1048576
+  },
+  "missing_mapper_v5_outputs": [
+    "phase2-curated-capability-evidence-v1.json",
+    "phase2-capability-comparisons-v5.json",
+    "phase2-capability-classification-v5.json",
+    "phase2-extension-boundaries-v5.json",
+    "phase2-claim-dependency-edges-v5.json",
+    "role-receipts/phase2/capability-mapper-v5.json"
+  ],
+  "green_publication_authorized": false,
+  "next_action": "Mapper v5 may publish only file-backed outputs bound to this exact sealed Red v8 contract; the unchanged candidate-present verifier must execute before Green."
+}

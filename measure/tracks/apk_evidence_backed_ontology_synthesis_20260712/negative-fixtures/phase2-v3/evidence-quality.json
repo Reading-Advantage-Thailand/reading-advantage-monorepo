@@ -1,0 +1,26 @@
+{
+  "schema_version": "apk-t9-phase2-v2-negative-fixture-group.v1",
+  "id": "evidence-quality",
+  "cases": [
+    {
+      "id": "evidence-quality-01",
+      "mutation": {"operation": "noun-art-only-standardization"},
+      "expected_codes": [
+        "INVENTED_BEHAVIOR",
+        "NOUN_ART_ONLY_STANDARDIZATION",
+        "PROVISIONAL_ONLY_STANDARDIZATION"
+      ]
+    },
+    {
+      "id": "evidence-quality-02",
+      "mutation": {"operation": "provisional-only-standardization"},
+      "expected_codes": ["PROVISIONAL_ONLY_STANDARDIZATION"]
+    }
+  ],
+  "expected_codes": [
+    "INVENTED_BEHAVIOR",
+    "NOUN_ART_ONLY_STANDARDIZATION",
+    "PROVISIONAL_ONLY_STANDARDIZATION"
+  ],
+  "expected_state": "INVALID"
+}

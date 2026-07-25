@@ -1,0 +1,28 @@
+{
+  "schema_version": "apk-t9-phase2-v4-negative-fixture-group.v1",
+  "id": "readable-length-bounds",
+  "cases": [
+    {
+      "id": "readable-length-bounds-01",
+      "mutation": {"operation": "oversized-statement"},
+      "expected_codes": ["BOUNDARY_EFFECT_LENGTH", "OPAQUE_FINDING_STATEMENT"]
+    },
+    {
+      "id": "readable-length-bounds-02",
+      "mutation": {"operation": "oversized-per-game-behavior"},
+      "expected_codes": ["GAME_BEHAVIOR_CONSUMER_MISMATCH", "PER_GAME_BEHAVIOR_LENGTH"]
+    },
+    {
+      "id": "readable-length-bounds-03",
+      "mutation": {"operation": "oversized-boundary-effect"},
+      "expected_codes": ["BOUNDARY_EFFECT_LENGTH"]
+    }
+  ],
+  "expected_codes": [
+    "BOUNDARY_EFFECT_LENGTH",
+    "GAME_BEHAVIOR_CONSUMER_MISMATCH",
+    "OPAQUE_FINDING_STATEMENT",
+    "PER_GAME_BEHAVIOR_LENGTH"
+  ],
+  "expected_state": "INVALID"
+}

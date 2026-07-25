@@ -1,0 +1,48 @@
+{
+  "schema_version": "apk-t9-phase1-negative-fixture-group.v2",
+  "id": "ownership-receipt",
+  "cases": [
+    {
+      "id": "ownership-receipt-01",
+      "mutation": {
+        "operation": "wrong-owner"
+      },
+      "expected_codes": [
+        "WRONG_MAPPER_OWNER"
+      ]
+    },
+    {
+      "id": "ownership-receipt-02",
+      "mutation": {
+        "operation": "stale-mapper-receipt"
+      },
+      "expected_codes": [
+        "STALE_MAPPER_RECEIPT"
+      ]
+    },
+    {
+      "id": "ownership-receipt-03",
+      "mutation": {
+        "operation": "stale-output-hash"
+      },
+      "expected_codes": [
+        "STALE_MAPPER_RECEIPT"
+      ]
+    },
+    {
+      "id": "ownership-receipt-04",
+      "mutation": {
+        "operation": "generator-authored-decision"
+      },
+      "expected_codes": [
+        "GENERATOR_AUTHORED_DECISION_FIELD"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "GENERATOR_AUTHORED_DECISION_FIELD",
+    "STALE_MAPPER_RECEIPT",
+    "WRONG_MAPPER_OWNER"
+  ],
+  "expected_state": "INVALID"
+}

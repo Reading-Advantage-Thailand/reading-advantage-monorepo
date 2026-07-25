@@ -1,0 +1,308 @@
+{
+  "schema_version": "apk-t9-phase0-game-identity-map.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "status": "candidate-only-non-consumable",
+  "marker": "MEASURE_AGENT_RESULT",
+  "candidate_only": true,
+  "consumable": false,
+  "revoked": false,
+  "acceptance_claimed": false,
+  "dispatch_binding": {
+    "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase0-game-identity-map-role-dispatch-v1.json",
+    "sha256": "cb6f4e4f8def66e393e65e371fb5b11931f9d9d4bd654030940d0713362baa0d",
+    "owner_role": "game-identity-map-author",
+    "task_id": "phase0-publish-game-identity-map"
+  },
+  "base_role_contract_binding": {
+    "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase0-role-ownership-manifest-v2.json",
+    "sha256": "b025b7494e51d493bf39e021a170cc8a2af99886eecf9807919c2a3d2ef2b7c9"
+  },
+  "t2_partition_binding": {
+    "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+    "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "entry_order": "assignments array order"
+  },
+  "mapping_contract": {
+    "entry_count": 29,
+    "entry_order": "accepted T2 partition assignment order",
+    "generic_slugification_allowed": false,
+    "identity_source_required": true,
+    "canonicalization": "SHA-256 of the UTF-8 JSON.stringify(entries) byte sequence with no trailing newline; entry order is T2 assignments 0 through 28; property order is t2_pointer, t2_label, game_id, id_source_path, id_source_sha256, id_source_pointer, id_extraction.",
+    "mapping_digest": "458a5c20db75617820604948cb004a14d579c828cedecbbcb7bdbada2f0a2b0a"
+  },
+  "entries": [
+    {
+      "t2_pointer": "/assignments/0/canonical_identity_label",
+      "t2_label": "Dragon Flight — large current action implementation.",
+      "game_id": "dragon-flight",
+      "id_source_path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "id_source_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+      "id_source_pointer": "/pilot_games/0",
+      "id_extraction": "exact-value"
+    },
+    {
+      "t2_pointer": "/assignments/1/canonical_identity_label",
+      "t2_label": "RPG Battle — multi-state turn-based implementation.",
+      "game_id": "rpg-battle",
+      "id_source_path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "id_source_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+      "id_source_pointer": "/pilot_games/1",
+      "id_extraction": "exact-value"
+    },
+    {
+      "t2_pointer": "/assignments/2/canonical_identity_label",
+      "t2_label": "The Abyssal Well — stale/historical evidence recovery.",
+      "game_id": "abyssal-well",
+      "id_source_path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "id_source_sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+      "id_source_pointer": "/pilot_games/2",
+      "id_extraction": "exact-value"
+    },
+    {
+      "t2_pointer": "/assignments/3/canonical_identity_label",
+      "t2_label": "Castle Defense",
+      "game_id": "castle-defense",
+      "id_source_path": "measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+      "id_source_sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80",
+      "id_source_pointer": "/full_cohort_roster/entries/0/1",
+      "id_extraction": "exact-value"
+    },
+    {
+      "t2_pointer": "/assignments/4/canonical_identity_label",
+      "t2_label": "Magic Defense",
+      "game_id": "magic-defense",
+      "id_source_path": "measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+      "id_source_sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80",
+      "id_source_pointer": "/full_cohort_roster/entries/1/1",
+      "id_extraction": "exact-value"
+    },
+    {
+      "t2_pointer": "/assignments/5/canonical_identity_label",
+      "t2_label": "Wizard vs Zombie",
+      "game_id": "wizard-vs-zombie",
+      "id_source_path": "measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+      "id_source_sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80",
+      "id_source_pointer": "/full_cohort_roster/entries/2/1",
+      "id_extraction": "exact-value"
+    },
+    {
+      "t2_pointer": "/assignments/6/canonical_identity_label",
+      "t2_label": "Village Guardian",
+      "game_id": "village-guardian",
+      "id_source_path": "measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+      "id_source_sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80",
+      "id_source_pointer": "/full_cohort_roster/entries/3/1",
+      "id_extraction": "exact-value"
+    },
+    {
+      "t2_pointer": "/assignments/7/canonical_identity_label",
+      "t2_label": "Archer's Revenge",
+      "game_id": "archers-revenge",
+      "id_source_path": "measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+      "id_source_sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80",
+      "id_source_pointer": "/full_cohort_roster/entries/4/1",
+      "id_extraction": "exact-value"
+    },
+    {
+      "t2_pointer": "/assignments/8/canonical_identity_label",
+      "t2_label": "Storm the Castle Tower",
+      "game_id": "storm-castle-tower",
+      "id_source_path": "measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+      "id_source_sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80",
+      "id_source_pointer": "/full_cohort_roster/entries/5/1",
+      "id_extraction": "exact-value"
+    },
+    {
+      "t2_pointer": "/assignments/9/canonical_identity_label",
+      "t2_label": "Paladin's Twin-Soul",
+      "game_id": "paladins-twin-soul",
+      "id_source_path": "measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+      "id_source_sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80",
+      "id_source_pointer": "/full_cohort_roster/entries/6/1",
+      "id_extraction": "exact-value"
+    },
+    {
+      "t2_pointer": "/assignments/10/canonical_identity_label",
+      "t2_label": "Gryphon Patrol",
+      "game_id": "gryphon-patrol",
+      "id_source_path": "measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+      "id_source_sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80",
+      "id_source_pointer": "/full_cohort_roster/entries/7/1",
+      "id_extraction": "exact-value"
+    },
+    {
+      "t2_pointer": "/assignments/11/canonical_identity_label",
+      "t2_label": "Dragon Rider",
+      "game_id": "dragon-rider",
+      "id_source_path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/candidate-cohort-manifest-batch-a-v6.json",
+      "id_source_sha256": "0df0946f3f298b7ece3bea8b13af1bcfeaa9b288161f7ca040f56b1cb49b054d",
+      "id_source_pointer": "/scope/packages/0",
+      "id_extraction": "terminal-path-segment"
+    },
+    {
+      "t2_pointer": "/assignments/12/canonical_identity_label",
+      "t2_label": "Dungeon Liberator",
+      "game_id": "dungeon-liberator",
+      "id_source_path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/candidate-cohort-manifest-batch-a-v6.json",
+      "id_source_sha256": "0df0946f3f298b7ece3bea8b13af1bcfeaa9b288161f7ca040f56b1cb49b054d",
+      "id_source_pointer": "/scope/packages/1",
+      "id_extraction": "terminal-path-segment"
+    },
+    {
+      "t2_pointer": "/assignments/13/canonical_identity_label",
+      "t2_label": "Spellweaver's Run",
+      "game_id": "spellweavers-run",
+      "id_source_path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/candidate-cohort-manifest-batch-a-v6.json",
+      "id_source_sha256": "0df0946f3f298b7ece3bea8b13af1bcfeaa9b288161f7ca040f56b1cb49b054d",
+      "id_source_pointer": "/scope/packages/2",
+      "id_extraction": "terminal-path-segment"
+    },
+    {
+      "t2_pointer": "/assignments/14/canonical_identity_label",
+      "t2_label": "Shadow Gate Dungeon",
+      "game_id": "shadow-gate-dungeon",
+      "id_source_path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/candidate-cohort-manifest-batch-b-v2.json",
+      "id_source_sha256": "30ca8aaa951a20b5dbc2b744ea57b1310ed623f211a40d550769b15320583065",
+      "id_source_pointer": "/scope/packages/0",
+      "id_extraction": "terminal-path-segment"
+    },
+    {
+      "t2_pointer": "/assignments/15/canonical_identity_label",
+      "t2_label": "Labyrinth of the Goblin King",
+      "game_id": "labyrinth-goblin-king",
+      "id_source_path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/candidate-cohort-manifest-batch-b-v2.json",
+      "id_source_sha256": "30ca8aaa951a20b5dbc2b744ea57b1310ed623f211a40d550769b15320583065",
+      "id_source_pointer": "/scope/packages/1",
+      "id_extraction": "terminal-path-segment"
+    },
+    {
+      "t2_pointer": "/assignments/16/canonical_identity_label",
+      "t2_label": "Griffin Rider's Escape",
+      "game_id": "griffin-riders-escape",
+      "id_source_path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/candidate-cohort-manifest-batch-b-v2.json",
+      "id_source_sha256": "30ca8aaa951a20b5dbc2b744ea57b1310ed623f211a40d550769b15320583065",
+      "id_source_pointer": "/scope/packages/2",
+      "id_extraction": "terminal-path-segment"
+    },
+    {
+      "t2_pointer": "/assignments/17/canonical_identity_label",
+      "t2_label": "The Sorcerer's Ziggurat",
+      "game_id": "sorcerer-ziggurat",
+      "id_source_path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/claim-evidence-ledger-v2.json",
+      "id_source_sha256": "b99ba08b3db22ffd352ac6ea9fa0ad99d2c30595b7e90e7b389611e7a18e2c4a",
+      "id_source_pointer": "/canonical_identity",
+      "id_extraction": "terminal-path-segment"
+    },
+    {
+      "t2_pointer": "/assignments/18/canonical_identity_label",
+      "t2_label": "Enchanted Library",
+      "game_id": "enchanted-library",
+      "id_source_path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/candidate-cohort-manifest-batch-a-v3.json",
+      "id_source_sha256": "3bd8274d302399d014349fa9fba80432c3ec73a187013b367187f66655d83909",
+      "id_source_pointer": "/scope/packages/0",
+      "id_extraction": "terminal-path-segment"
+    },
+    {
+      "t2_pointer": "/assignments/19/canonical_identity_label",
+      "t2_label": "Rune Match",
+      "game_id": "rune-match",
+      "id_source_path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/candidate-cohort-manifest-batch-a-v3.json",
+      "id_source_sha256": "3bd8274d302399d014349fa9fba80432c3ec73a187013b367187f66655d83909",
+      "id_source_pointer": "/scope/packages/1",
+      "id_extraction": "terminal-path-segment"
+    },
+    {
+      "t2_pointer": "/assignments/20/canonical_identity_label",
+      "t2_label": "Alchemist's Synthesis",
+      "game_id": "alchemists-synthesis",
+      "id_source_path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/candidate-cohort-manifest-batch-a-v3.json",
+      "id_source_sha256": "3bd8274d302399d014349fa9fba80432c3ec73a187013b367187f66655d83909",
+      "id_source_pointer": "/scope/packages/2",
+      "id_extraction": "terminal-path-segment"
+    },
+    {
+      "t2_pointer": "/assignments/21/canonical_identity_label",
+      "t2_label": "Potion Rush",
+      "game_id": "potion-rush",
+      "id_source_path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+      "id_source_sha256": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+      "id_source_pointer": "/normalized_game_id",
+      "id_extraction": "terminal-path-segment"
+    },
+    {
+      "t2_pointer": "/assignments/22/canonical_identity_label",
+      "t2_label": "Rune Forge Chamber",
+      "game_id": "rune-forge-chamber",
+      "id_source_path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b/rune-forge-chamber/claim-evidence-ledger-v2.json",
+      "id_source_sha256": "bf4590a79dd712348cc8fb8f7ceb9ad5139fa934506ae712806f1bcd8fc71b60",
+      "id_source_pointer": "/normalized_game_id",
+      "id_extraction": "terminal-path-segment"
+    },
+    {
+      "t2_pointer": "/assignments/23/canonical_identity_label",
+      "t2_label": "Astral Mage",
+      "game_id": "astral-mage",
+      "id_source_path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger-v2.json",
+      "id_source_sha256": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+      "id_source_pointer": "/normalized_game_id",
+      "id_extraction": "terminal-path-segment"
+    },
+    {
+      "t2_pointer": "/assignments/24/canonical_identity_label",
+      "t2_label": "Griffin Sky-Joust",
+      "game_id": "griffin-sky-joust",
+      "id_source_path": "measure/archive/apk_corpus_audit_special_historical_20260712/batch-a/candidate-manifest.json",
+      "id_source_sha256": "5552a5e8703a34c5b0c0d2fa7bb2c28d9a6ae5fbb7fab9edf2c268bbc3a48d5d",
+      "id_source_pointer": "/scope/packages/0",
+      "id_extraction": "terminal-path-segment"
+    },
+    {
+      "t2_pointer": "/assignments/25/canonical_identity_label",
+      "t2_label": "Realm Carver",
+      "game_id": "realm-carver",
+      "id_source_path": "measure/archive/apk_corpus_audit_special_historical_20260712/batch-a/candidate-manifest.json",
+      "id_source_sha256": "5552a5e8703a34c5b0c0d2fa7bb2c28d9a6ae5fbb7fab9edf2c268bbc3a48d5d",
+      "id_source_pointer": "/scope/packages/1",
+      "id_extraction": "terminal-path-segment"
+    },
+    {
+      "t2_pointer": "/assignments/26/canonical_identity_label",
+      "t2_label": "Devourer Slime",
+      "game_id": "devourer-slime",
+      "id_source_path": "measure/archive/apk_corpus_audit_special_historical_20260712/batch-a/candidate-manifest.json",
+      "id_source_sha256": "5552a5e8703a34c5b0c0d2fa7bb2c28d9a6ae5fbb7fab9edf2c268bbc3a48d5d",
+      "id_source_pointer": "/scope/packages/2",
+      "id_extraction": "terminal-path-segment"
+    },
+    {
+      "t2_pointer": "/assignments/27/canonical_identity_label",
+      "t2_label": "The Haunted Library",
+      "game_id": "the-haunted-library",
+      "id_source_path": "measure/archive/apk_corpus_audit_special_historical_20260712/role-receipts/evidence-collector-batch-b-the-haunted-library.json",
+      "id_source_sha256": "c9dd8168ae9e5fea4dafeacc6b1ddff00b56a5946056e553e355ae27cd5e7796",
+      "id_source_pointer": "/output_hashes/measure~1tracks~1apk_corpus_audit_special_historical_20260712~1packages~1the-haunted-library~1claim-ledger-batch-b.json",
+      "id_extraction": "package-directory-segment-from-output-hash-key"
+    },
+    {
+      "t2_pointer": "/assignments/28/canonical_identity_label",
+      "t2_label": "Babel Architect",
+      "game_id": "babel-architect",
+      "id_source_path": "measure/archive/apk_corpus_audit_special_historical_20260712/role-receipts/evidence-collector-batch-b-babel-architect.json",
+      "id_source_sha256": "d2b8be93563885d074df276aede25ca6e7d8bf2fe93a6b31cc901f70080fcf5d",
+      "id_source_pointer": "/output_hashes/measure~1tracks~1apk_corpus_audit_special_historical_20260712~1packages~1babel-architect~1claim-ledger-batch-b.json",
+      "id_extraction": "package-directory-segment-from-output-hash-key"
+    }
+  ],
+  "scope": {
+    "identity_mapping_only": true,
+    "phase1_mapper_publication_authorized": false,
+    "ontology_authorized": false,
+    "cross_game_standardization_authorized": false,
+    "implementation_authorized": false,
+    "responsive_or_asset_decisions_authorized": false,
+    "shipping_authorized": false,
+    "product_success_claimed": false
+  },
+  "next_required_event": "Independent truth validation and independent review must pass before root may bind this candidate into Phase 0 successor acceptance, source registry, input freeze, or Phase 1 dispatch."
+}

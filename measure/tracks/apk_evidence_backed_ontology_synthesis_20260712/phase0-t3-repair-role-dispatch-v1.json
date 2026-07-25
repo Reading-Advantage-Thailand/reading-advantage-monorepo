@@ -1,0 +1,113 @@
+{
+  "assignments": [
+    {
+      "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+      "allowed_outputs": [
+        "phase0-t3-leaf-binding-candidate-v1.json",
+        "role-receipts/phase0/t3-leaf-binding-catalog-author.json"
+      ],
+      "forbidden_outputs": [
+        "phase0_t3_leaf_binding_verifier.py",
+        "phase0_t3_leaf_binding_verifier_test.py",
+        "phase0-t3-leaf-binding-independent-review-v1.json",
+        "phase0-t3-leaf-binding-acceptance-v1.json"
+      ],
+      "owner_role": "t3-leaf-binding-catalog-author",
+      "task_id": "phase0-repair-t3-leaf-bindings"
+    },
+    {
+      "agent_ref": "/root/t9_phase0_governance_author",
+      "allowed_outputs": [
+        "phase0_t3_leaf_binding_verifier.py",
+        "phase0_t3_leaf_binding_verifier_test.py",
+        "phase0-t3-leaf-binding-fixture-manifest-v1.json",
+        "negative-fixtures/phase0-t3/*",
+        "phase0-t3-leaf-binding-red-report-v1.json",
+        "phase0-t3-leaf-binding-green-report-v1.json",
+        "role-receipts/phase0/t3-leaf-binding-truth-test-author.json"
+      ],
+      "forbidden_outputs": [
+        "phase0-t3-leaf-binding-candidate-v1.json",
+        "phase0-t3-leaf-binding-independent-review-v1.json",
+        "phase0-t3-leaf-binding-acceptance-v1.json"
+      ],
+      "owner_role": "t3-leaf-binding-truth-test-author",
+      "task_id": "phase0-verify-t3-leaf-bindings"
+    },
+    {
+      "agent_ref": "/root/phase5_review_b",
+      "allowed_outputs": [
+        "phase0-t3-leaf-binding-independent-review-v1.json",
+        "role-receipts/phase0/t3-leaf-binding-independent-reviewer.json"
+      ],
+      "forbidden_outputs": [
+        "catalog outputs",
+        "truth-test outputs",
+        "acceptance outputs"
+      ],
+      "owner_role": "t3-leaf-binding-independent-reviewer",
+      "task_id": "phase0-review-t3-leaf-bindings"
+    },
+    {
+      "agent_ref": "/root",
+      "allowed_outputs": [
+        "phase0-t3-leaf-binding-acceptance-v1.json",
+        "phase0-source-registry-v3.json",
+        "phase0-input-freeze-v3.json",
+        "phase0-root-acceptance-v3.json",
+        "phase1-role-dispatch-v2.json",
+        "plan.md"
+      ],
+      "forbidden_outputs": [
+        "catalog outputs",
+        "truth-test outputs",
+        "review outputs"
+      ],
+      "owner_role": "product-owner-acceptance-author",
+      "task_id": "phase0-accept-t3-leaf-binding-repair"
+    }
+  ],
+  "authority": "delegated-root-product-owner",
+  "base_role_contract": {
+    "path": "phase0-role-ownership-manifest-v2.json",
+    "sha256": "b025b7494e51d493bf39e021a170cc8a2af99886eecf9807919c2a3d2ef2b7c9"
+  },
+  "finding": {
+    "code": "T3_ACCEPTED_LEAF_BINDINGS_MISSING",
+    "disposition": "bounded-additive-predecessor-repair",
+    "severity": "Critical"
+  },
+  "issued_at": "2026-07-24T11:39:34.485Z",
+  "issued_by": "/root",
+  "phase": 0,
+  "phase0_acceptance_superseded_on_repair": {
+    "path": "phase0-root-acceptance-v2.json",
+    "sha256": "76bd4d4da9b0fea14656a59edc950a8abea16fbb2ed708a56bc69b1a78f2a7b6"
+  },
+  "phase1_dispatch_paused_on_repair": {
+    "path": "phase1-role-dispatch-v1.json",
+    "sha256": "045e0c31096fec4cb8a254a0805b6a0480ae0395fffd8b9ebce3bbbb74895b7b"
+  },
+  "repair_requirements": {
+    "archive_rewrite_allowed": false,
+    "candidate_leaf_count": 4,
+    "claim_count": 491,
+    "game_count": 3,
+    "preserve_phase3_phase4_no_success_disclosures": true,
+    "required_games": [
+      "dragon-flight",
+      "rpg-battle",
+      "abyssal-well"
+    ]
+  },
+  "schema_version": "apk-t9-phase0-t3-repair-role-dispatch.v1",
+  "scope": {
+    "asset_mapping_authorized": false,
+    "implementation_authorized": false,
+    "phase1_mapper_publication_authorized": false,
+    "responsive_decisions_authorized": false,
+    "shipping_authorized": false
+  },
+  "status": "active",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+}

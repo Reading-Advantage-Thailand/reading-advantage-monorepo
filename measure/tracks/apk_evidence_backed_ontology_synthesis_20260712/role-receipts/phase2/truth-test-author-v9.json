@@ -1,0 +1,50 @@
+{
+  "schema_version": "apk-t9-phase2-role-receipt.v9",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "task_id": "phase2-end-to-end-truth-v9",
+  "owner_role": "truth-test-author",
+  "agent_ref": "/root/t9_phase0_governance_author",
+  "dispatch": {
+    "path": "phase2-role-dispatch-v9.json",
+    "sha256": "60a0337eec7a67afa327f8a790620f0d0b1364717bb421dfdea86b324bd90a3b"
+  },
+  "status": "sealed-red-v9-published-waiting-for-root-release-and-mapper-v5",
+  "outputs": {
+    "phase2_v9_truth_verifier.py": "edf0130b20af2f9436b29e1b48c251624266b95223a322349075b5bf7bf60f09",
+    "phase2_v9_truth_verifier_test.py": "749cf36a1a527ecd199ed60cde5c4a5ec0c5a50a0e61da4e8010752fb31cfcfb",
+    "phase2-v9-fixture-manifest.json": "40b1609e14b92144e6188a7bcc47466b1d3c4a1f1fa86b075c233f49bea7422a",
+    "phase2-v9-context-counterexamples.json": "9c1059df904d0d326aa714af4a24a773fa36dc870b25155d7135c907decb9583",
+    "negative-fixtures/phase2-v9/end-to-end-attacks.json": "c7c6e1f2dd4f7a20e4af08af3da94ef0253e87291b9badd9ce9d34cf466abb20",
+    "phase2-v9-red-report.json": "64d925f6c21663e7f61ebcd8bd4c34a9343554d88c468aedc060b74cd86b7ab8"
+  },
+  "verification": {
+    "focused_suite": "2/2 pass",
+    "file_backed_fixture_cases": 11,
+    "context_promotions_exercised": 48,
+    "runtime_seconds": 25.357,
+    "runtime_ceiling_seconds": 30,
+    "mocks_used": false,
+    "valid_zero_use_candidate_state": "CANDIDATE_VERIFIED_PENDING_INDEPENDENT_REVIEW",
+    "under_budget_v4_state": "REVIEW_REJECTED",
+    "fabricated_review_ref": "UNRESOLVED_REVIEW_EVIDENCE_REF",
+    "live_missing_candidate_state": "RED_WAITING_FOR_MAPPER_V5_OUTPUTS",
+    "live_sole_finding": "PHASE2_MAPPER_V5_OUTPUTS_MISSING",
+    "live_checks": 10,
+    "stop_loss_cycle": 2,
+    "ruff": "pass",
+    "py_compile": "pass",
+    "json_validation": "pass",
+    "diff_check": "pass"
+  },
+  "green_report_published": false,
+  "scope": {
+    "mapper_decisions_authored": false,
+    "review_decisions_authored": false,
+    "root_truth_seal_authored": false,
+    "root_mapper_release_authored": false,
+    "phase3_authorized": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false
+  }
+}

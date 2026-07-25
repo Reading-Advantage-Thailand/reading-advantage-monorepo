@@ -1,0 +1,8 @@
+{
+  "schema_version": "apk-t9-phase0-negative-fixture.v1",
+  "id": "direct-legacy-key",
+  "mutation": {
+    "type": "set-policy-probe",
+    "asset_reference": "apps/advantage-games/public/assets/legacy/dragon.png"
+  }
+}

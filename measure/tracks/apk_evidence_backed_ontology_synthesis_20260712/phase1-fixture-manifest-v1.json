@@ -1,0 +1,203 @@
+{
+  "schema_version": "apk-t9-phase1-fixture-manifest.v2",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 1,
+  "fixture_count": 16,
+  "case_count": 80,
+  "max_negative_fixtures": 16,
+  "bindings": {
+    "phase0_root_acceptance": {
+      "path": "phase0-root-acceptance-v3.json",
+      "sha256": "0480362baab8a237cf71fafc20800979793848fd70907013e27a462330690960"
+    },
+    "phase0_input_freeze": {
+      "path": "phase0-input-freeze-v3.json",
+      "sha256": "0517288c5aa267ddbd5f22fd6929cd74aaaacc74b9321d43094c72ade8614dae"
+    },
+    "phase0_source_registry": {
+      "path": "phase0-source-registry-v3.json",
+      "sha256": "ae6050cc6c075614b34b6d8832a350f7d28945154315adebb25667fffc5b858c"
+    },
+    "phase0_game_identity_map": {
+      "path": "phase0-game-identity-map-v1.json",
+      "sha256": "7b2d3cf7fe5e17eab88f27804aac60e60c2da9e7089b82074b67d27721a47b3f",
+      "mapping_digest": "458a5c20db75617820604948cb004a14d579c828cedecbbcb7bdbada2f0a2b0a"
+    },
+    "phase1_role_dispatch": {
+      "path": "phase1-role-dispatch-v2.json",
+      "sha256": "2032327e85c55bf789782ed6dd1635e03fa5efb323bb4ef2bc3fe29791ff7c7c"
+    }
+  },
+  "fixtures": [
+    {
+      "id": "budget-stop-loss",
+      "path": "negative-fixtures/phase1/budget-stop-loss.json",
+      "sha256": "ea55e192788f08e65992815435f1c5117e92d4feb04e97f11d0a233aed0e4437",
+      "expected_codes": [
+        "PHASE1_OUTPUT_BUDGET_EXCEEDED",
+        "SOURCE_ARTIFACT_BUDGET_OR_SET_MISMATCH"
+      ]
+    },
+    {
+      "id": "composite-overlay",
+      "path": "negative-fixtures/phase1/composite-overlay.json",
+      "sha256": "5b5bf239d6748c4bb7aecdc078547f8df8d1605994e39aad21b6788223834814",
+      "expected_codes": [
+        "EFFECTIVE_CLAIM_MATERIALIZATION_MISMATCH",
+        "EFFECTIVE_CLAIM_SET_MISMATCH",
+        "ORPHAN_UPSTREAM_CLAIM"
+      ]
+    },
+    {
+      "id": "composite-retention",
+      "path": "negative-fixtures/phase1/composite-retention.json",
+      "sha256": "df286ce8a84d9a973648a3375874cb83ff3f14d40e072fca6905bdb9a870a129",
+      "expected_codes": [
+        "EFFECTIVE_CLAIM_MATERIALIZATION_MISMATCH",
+        "EFFECTIVE_CLAIM_SET_MISMATCH",
+        "ORPHAN_UPSTREAM_CLAIM",
+        "SOURCE_ARTIFACT_BUDGET_OR_SET_MISMATCH"
+      ]
+    },
+    {
+      "id": "contamination-defaults",
+      "path": "negative-fixtures/phase1/contamination-defaults.json",
+      "sha256": "54b12391e6e705f247c9a54cbf48ebb7e2c8fe1a820314c85f39c5a123385350",
+      "expected_codes": [
+        "FABRICATED_SCENE_STATE_DEFAULT",
+        "FAILED_MONOLITH_CONTAMINATION"
+      ]
+    },
+    {
+      "id": "coverage-loss",
+      "path": "negative-fixtures/phase1/coverage-loss.json",
+      "sha256": "6be9f4c52ac6a42e7afb1bafb9dbb2fa5b10a56a3b22a8bcbf2fee3d1a0227d2",
+      "expected_codes": [
+        "GAME_SCENE_STATE_LOSS"
+      ]
+    },
+    {
+      "id": "denominator-castle",
+      "path": "negative-fixtures/phase1/denominator-castle.json",
+      "sha256": "2986555466bb2613fc72bd1575fa743f6cd1d409cca3f1661f3861876fa50a26",
+      "expected_codes": [
+        "DENOMINATOR_MISMATCH"
+      ]
+    },
+    {
+      "id": "dependency-integrity",
+      "path": "negative-fixtures/phase1/dependency-integrity.json",
+      "sha256": "9de12bc9509804c68984f972196c67d5ed936e752e9264a6fe9bcd7a60a47318",
+      "expected_codes": [
+        "CURRENT_CLAIM_RECORD_CARDINALITY_MISMATCH",
+        "DEPENDENCY_ROUTING_DISPOSITION_MISMATCH",
+        "DUPLICATE_DERIVED_FIELD",
+        "GHOST_DEPENDENCY_EDGE",
+        "INCOMPLETE_DEPENDENCY_SET",
+        "MISSING_UPSTREAM_CLAIM",
+        "ORPHAN_UPSTREAM_CLAIM",
+        "WRONG_OUTPUT_ROLE"
+      ]
+    },
+    {
+      "id": "derivation-semantics",
+      "path": "negative-fixtures/phase1/derivation-semantics.json",
+      "sha256": "3fab2448d2fbc13b6d5b019d2fa24358d8dd9bab7c1be764149dc24f6f7bd770",
+      "expected_codes": [
+        "DERIVATION_SEMANTIC_MISMATCH",
+        "DERIVED_VALUE_DIGEST_MISMATCH",
+        "UNSUPPORTED_INFERRED_FACT"
+      ]
+    },
+    {
+      "id": "governance-bindings",
+      "path": "negative-fixtures/phase1/governance-bindings.json",
+      "sha256": "4ec60a085c4e6222e6448335a68e16106cf11f2e167810f564db3afe814f4417",
+      "expected_codes": [
+        "PHASE1_FROZEN_INPUT_DRIFT"
+      ]
+    },
+    {
+      "id": "leaf-resolution",
+      "path": "negative-fixtures/phase1/leaf-resolution.json",
+      "sha256": "d853ba8694fca3ddd770dd0178fafab75b7a4feef635fa84245ee00aef3a43e4",
+      "expected_codes": [
+        "INCORRECT_ARCHIVE_RELOCATION",
+        "INTERMEDIATE_CANDIDATE_LEAF",
+        "STALE_EVIDENCE_HASH",
+        "UNSUPPORTED_INFERRED_FACT"
+      ]
+    },
+    {
+      "id": "output-role-routing",
+      "path": "negative-fixtures/phase1/output-role-routing.json",
+      "sha256": "5695916769cd1f3358b50e4f7d529357ad9179a4592cb873572b72bd1032e5b0",
+      "expected_codes": [
+        "GHOST_DEPENDENCY_EDGE",
+        "INCOMPLETE_DEPENDENCY_SET",
+        "MISSING_REQUIRED_DECISION_FIELD",
+        "UNSUPPORTED_DECISION_FIELD",
+        "WRONG_ARTIFACT_CATEGORY",
+        "WRONG_OUTPUT_ROLE"
+      ]
+    },
+    {
+      "id": "ownership-receipt",
+      "path": "negative-fixtures/phase1/ownership-receipt.json",
+      "sha256": "4bf7d36028ec036094bf33ae9f5f79ebe3c18a6b4c506ab446c7296e71456145",
+      "expected_codes": [
+        "GENERATOR_AUTHORED_DECISION_FIELD",
+        "STALE_MAPPER_RECEIPT",
+        "WRONG_MAPPER_OWNER"
+      ]
+    },
+    {
+      "id": "parent-provenance",
+      "path": "negative-fixtures/phase1/parent-provenance.json",
+      "sha256": "64f7b43e02db783a02f5cb40b6967dd1a9458e54eb58ed92b568a1df7bcf8fa6",
+      "expected_codes": [
+        "UNBOUND_SCENE_STATE_INHERITANCE"
+      ]
+    },
+    {
+      "id": "routing-dispositions",
+      "path": "negative-fixtures/phase1/routing-dispositions.json",
+      "sha256": "24ad309ed6d14fc2abba2f513f917c71ba1e57b56fe254e37bac4c1c42681427",
+      "expected_codes": [
+        "DUPLICATED_FUTURE_HANDOFF",
+        "EFFECTIVE_CLAIM_MATERIALIZATION_MISMATCH",
+        "EFFECTIVE_CLAIM_SET_MISMATCH",
+        "MULTIPLE_ROUTING_DISPOSITIONS",
+        "ORPHAN_UPSTREAM_CLAIM"
+      ]
+    },
+    {
+      "id": "scope-placement",
+      "path": "negative-fixtures/phase1/scope-placement.json",
+      "sha256": "dca8adeab1822c5b0d12f988aeb5070e4cf82060b749c718aa4eb8483aa49b48",
+      "expected_codes": [
+        "AMBIGUOUS_SCENE_DOWNGRADED_TO_GAME",
+        "ARBITRARY_SCOPE_ASSIGNMENT",
+        "BLOCKED_UNKNOWN_COUNTED_AS_COVERAGE",
+        "CURRENT_CLAIM_RECORD_CARDINALITY_MISMATCH",
+        "FACTUAL_SCOPE_STATUS_CONFLATION",
+        "GAME_SCENE_STATE_LOSS",
+        "MISSING_REQUIRED_DECISION_FIELD",
+        "RECORD_SCOPE_PROVENANCE_MISMATCH"
+      ]
+    },
+    {
+      "id": "value-contract",
+      "path": "negative-fixtures/phase1/value-contract.json",
+      "sha256": "823ea7985104dc595e238887717d0ea8b4c4169e1bb69d015d0ca9bae9f7618c",
+      "expected_codes": [
+        "DERIVATION_SEMANTIC_MISMATCH",
+        "DERIVED_VALUE_DIGEST_MISMATCH",
+        "DERIVED_VALUE_DIGEST_MISSING",
+        "DIGEST_ONLY_DERIVED_VALUE",
+        "MISSING_REQUIRED_DECISION_FIELD",
+        "WHOLE_CLAIM_ENVELOPE_COPY"
+      ]
+    }
+  ]
+}

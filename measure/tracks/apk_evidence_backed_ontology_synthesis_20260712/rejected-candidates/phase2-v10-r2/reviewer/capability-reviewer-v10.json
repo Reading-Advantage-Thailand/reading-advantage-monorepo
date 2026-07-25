@@ -1,0 +1,17 @@
+{
+  "agent_ref": "/root/phase5_review_b",
+  "owner_role": "capability-reviewer",
+  "task_id": "phase2-curated-evidence-review-v10",
+  "dispatch_sha256": "b7dc7be6ec593623a21656afd3215b2764188a41915e0b2e709be6e338e26eb7",
+  "root_truth_seal_sha256": "5f5c0677b8ceea2b2f1751ff651f69c3ef6218abb0cc4a49e8779088bd5db8af",
+  "root_mapper_release_sha256": "8eefc6703efab3fe4ace996eb847fb4f5feade7b6f78663c44fe27de9694f6b0",
+  "review_artifact_sha256": "968cc839c2c2b708023e352a5425a8c5c23ffc04966d299b7ee21947524b5273",
+  "mapper_output_hashes": {
+    "phase2-curated-capability-evidence-v1.json": "982b03ae567535e5eaeef21f6fcbac25de25c22d2efb7b56e5d30f5c76f2161f",
+    "phase2-capability-comparisons-v5.json": "c8e71208bc60cc3c1299840b1905255dcf02578e32acec16558dc3177801157a",
+    "phase2-capability-classification-v5.json": "274a3538b782499828c6af9cc7033f72fa5de0b1d6da0c0eb769dad568e78a34",
+    "phase2-extension-boundaries-v5.json": "bcee20de256ef1ac44fad89353faeff73f03bec4ad7f0e57358f6b1862252c66",
+    "phase2-claim-dependency-edges-v5.json": "30b174ca160be204749f7c9bdeb65ba517990cc73ec7ee656ef49d2466019155"
+  },
+  "status": "accepted"
+}

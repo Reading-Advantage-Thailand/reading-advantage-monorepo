@@ -1,0 +1,9 @@
+{
+    "schema_version": "apk-t9-phase0-negative-fixture.v1",
+    "id": "output-hash-mismatch",
+    "mutation": {
+        "type": "provider-counterexample",
+        "case": "historical-output-hash-mismatch"
+    },
+    "expected_codes": ["OUTPUT_OWNERSHIP_MISMATCH"]
+}

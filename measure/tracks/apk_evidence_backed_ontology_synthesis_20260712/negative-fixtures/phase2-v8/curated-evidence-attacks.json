@@ -1,0 +1,66 @@
+{
+  "schema_version": "apk-t9-phase2-v8-curated-evidence-attacks.v1",
+  "cases": [
+    {
+      "id": "rejected-v4-over-batched-inventory",
+      "mutation": {"operation": "rejected-mapper-v4-over-batched-inventory"},
+      "expected_codes": ["CURATED_FINDING_BUDGET_EXCEEDED", "CURATED_USE_BUDGET_EXCEEDED", "MISSING_CURATED_ACCOUNTING", "AUTOMATIC_KEYWORD_ROUTING", "MIXED_BEHAVIORAL_DIMENSIONS"]
+    },
+    {
+      "id": "finding-count-over-budget",
+      "mutation": {"operation": "finding-count-over-budget"},
+      "expected_codes": ["CURATED_FINDING_BUDGET_EXCEEDED"]
+    },
+    {
+      "id": "use-count-over-budget",
+      "mutation": {"operation": "use-count-over-budget"},
+      "expected_codes": ["CURATED_USE_BUDGET_EXCEEDED"]
+    },
+    {
+      "id": "claims-per-game-over-cap",
+      "mutation": {"operation": "more-than-allowed-claims-per-game"},
+      "expected_codes": ["SIMILARITY_CLAIM_CAP_EXCEEDED"]
+    },
+    {
+      "id": "pipe-concatenated-game-variant",
+      "mutation": {"operation": "pipe-concatenated-game-variant"},
+      "expected_codes": ["INVALID_GAME_BEHAVIOR_SUMMARY"]
+    },
+    {
+      "id": "multi-dimension-finding",
+      "mutation": {"operation": "multi-dimension-finding"},
+      "expected_codes": ["MIXED_BEHAVIORAL_DIMENSIONS"]
+    },
+    {
+      "id": "context-promoted-to-capability",
+      "mutation": {"operation": "context-or-provenance-promoted-to-capability"},
+      "expected_codes": ["GOLD_LABEL_COUNTEREXAMPLE"]
+    },
+    {
+      "id": "unreviewed-curated-use",
+      "mutation": {"operation": "unreviewed-curated-use"},
+      "expected_codes": ["UNREVIEWED_CURATED_USE"]
+    },
+    {
+      "id": "automatic-keyword-routing",
+      "mutation": {"operation": "automatic-keyword-routing"},
+      "expected_codes": ["AUTOMATIC_KEYWORD_ROUTING"]
+    },
+    {
+      "id": "game-without-disposition",
+      "mutation": {"operation": "game-without-explicit-disposition"},
+      "expected_codes": ["MISSING_GAME_DISPOSITION"]
+    },
+    {
+      "id": "gold-cross-capability-counterexample",
+      "mutation": {"operation": "gold-labelled-cross-capability-counterexample"},
+      "expected_codes": ["GOLD_LABEL_COUNTEREXAMPLE"]
+    },
+    {
+      "id": "zero-use-baseline",
+      "mutation": {"operation": "zero-use-baseline-valid"},
+      "expected_codes": [],
+      "exact_codes": true
+    }
+  ]
+}

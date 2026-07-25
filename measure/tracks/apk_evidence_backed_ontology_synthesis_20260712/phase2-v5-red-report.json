@@ -1,0 +1,72 @@
+{
+  "schema_version": "apk-t9-phase2-v5-red-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "captured_at": "2026-07-25T00:00:00Z",
+  "status": "valid-red-v5-waiting-for-systemic-semantic-mapper-v3",
+  "state": "RED_WAITING_FOR_MAPPER_V3_OUTPUTS",
+  "authority": {
+    "path": "phase2-role-dispatch-v5.json",
+    "sha256": "586a21f5ae1fd0ac1a5b429de6303394362e0e3f53e28b1374dfb5d45fd7f558"
+  },
+  "truth_package": {
+    "phase2_v5_truth_verifier.py": "caf4d13a7709c305199702df36f8593310df11be3988debecfb26c8064dbb0ba",
+    "phase2_v5_truth_verifier_test.py": "749acf58aa0eeae0174b12c1d9c8f71e5bb58bf6bd02464f329ddcb6d2b2ff86",
+    "phase2-v5-fixture-manifest.json": "27c1cef4115d479e35ac030eefc58434542c2a87678a560b5aa3fcd93bb1542a",
+    "fixture_files": 6,
+    "bound_fixture_cases": 52,
+    "exhaustive_route_matrix_cases": 36,
+    "negative_cases": 88,
+    "fixture_suite_digest": "dd0e2e42b052181d1f5f350555e501b38f62fe38ebd5f52572ee0052d8b570ec",
+    "focused_suite": "9/9 pass",
+    "negative_result": "88/88 rejected across bound fixtures and exhaustive audited-route probes",
+    "runtime_seconds": 4.69,
+    "ruff": "pass"
+  },
+  "systemic_semantic_contract": {
+    "capability_use_fields": ["record_id", "game_id", "claim_id", "field_id", "value", "scope_status", "factual_status", "placement_status", "exact_excerpt", "relevance_statement"],
+    "exact_excerpt": "Required concise 24-240 character exact substring of the accepted Phase 1 derived field value; ellipses forbidden.",
+    "relevance_statement": "Required complete 40-300 character capability consequence; file, path, import, export, helper, test, source, copy, and occurrence provenance cannot establish capability use.",
+    "multi_capability_evidence": "The same accepted mechanic may support multiple capabilities, while duplicate use within one capability is forbidden.",
+    "accounting": "Every one of 633 accepted mechanic records appears in at least one capability or exactly once as explicit non-capability context; capability and context sets are disjoint.",
+    "audited_routes": 28,
+    "required_context_claims": 17,
+    "games_accounted": 28,
+    "unknowns_unresolved": 24
+  },
+  "readable_finding_contract": {
+    "comparison_finding_fields": ["finding_id", "basis", "statement", "per_game_behaviors", "boundary_effect", "consumer_refs"],
+    "statement_chars": [40, 300],
+    "statement_rule": "Complete statement with neither literal nor Unicode ellipsis.",
+    "per_game_behavior_fields": ["game_id", "behavior", "consumer_record_ids"],
+    "per_game_behavior_chars": [24, 480],
+    "boundary_effect_fields": ["shared_core_ownership", "game_extension_ownership", "interface_consequence"],
+    "boundary_effect_chars_each": [30, 280],
+    "boundary_effect_rule": "All three fields are distinct, name the canonical capability, state concrete ownership or interface consequences, and neither copy nor prefix the statement."
+  },
+  "rejected_mapper_v2": {
+    "status": "non-accepted-counterexample",
+    "rejection_codes": ["AUDITED_CONTEXT_REGRESSION", "AUDITED_ROUTING_REGRESSION", "BOUNDARY_EFFECT_COPIES_STATEMENT", "ELLIPSIS_FORBIDDEN", "MISSING_BOUNDARY_EFFECT_FIELDS", "MISSING_EXACT_EXCERPT", "MISSING_RELEVANCE_STATEMENT", "MULTI_CAPABILITY_EVIDENCE_MISSING", "SEMANTIC_SPLIT_REQUIREMENT_MISSING"]
+  },
+  "preserved_history": {
+    "v2_red_sha256": "c3f4e6a2a226d4bec0ae221a96b3c1c856a23cef47f8c32f0dd109bd6ef2021e",
+    "v4_red_sha256": "548f67f03c9e4fbf29729c605d72430f833ff80a0980045f010ff0e5277efb68",
+    "v4_receipt_sha256": "e815c2deecfc1888f4b9b6221c3b4b3e5c837c794ab1e7e14a0ed1fe8a40d40d",
+    "prior_bytes_modified": false
+  },
+  "budgets": {
+    "fixture_files_max": 16,
+    "fixture_files_actual": 6,
+    "suite_runtime_seconds_max": 30,
+    "suite_runtime_seconds_actual": 4.69,
+    "published_output_bytes_max_each": 1048576,
+    "truth_package_bytes_excluding_report": 62868
+  },
+  "live_verification": {
+    "checks": 23,
+    "sole_finding": "PHASE2_MAPPER_V3_OUTPUTS_MISSING"
+  },
+  "missing_mapper_v3_outputs": ["phase2-capability-comparisons-v3.json", "phase2-capability-classification-v3.json", "phase2-extension-boundaries-v3.json", "phase2-claim-dependency-edges-v3.json", "role-receipts/phase2/capability-mapper-v3.json"],
+  "green_publication_authorized": false,
+  "next_action": "Mapper v3 may publish only its dispatch-owned outputs bound to this exact Red package; truth expectations must not be revised to accommodate mapper output."
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": "apk-t9-phase1-negative-fixture-group.v2",
+  "id": "derivation-semantics",
+  "cases": [
+    {
+      "id": "derivation-semantics-01",
+      "mutation": {
+        "operation": "unsupported-inferred-fact"
+      },
+      "expected_codes": [
+        "UNSUPPORTED_INFERRED_FACT"
+      ]
+    },
+    {
+      "id": "derivation-semantics-02",
+      "mutation": {
+        "operation": "exact-copy-mismatch"
+      },
+      "expected_codes": [
+        "DERIVATION_SEMANTIC_MISMATCH",
+        "DERIVED_VALUE_DIGEST_MISMATCH"
+      ]
+    },
+    {
+      "id": "derivation-semantics-03",
+      "mutation": {
+        "operation": "set-semantic-mismatch",
+        "rule": "set-union"
+      },
+      "expected_codes": [
+        "DERIVATION_SEMANTIC_MISMATCH",
+        "DERIVED_VALUE_DIGEST_MISMATCH"
+      ]
+    },
+    {
+      "id": "derivation-semantics-04",
+      "mutation": {
+        "operation": "set-semantic-mismatch",
+        "rule": "set-intersection"
+      },
+      "expected_codes": [
+        "DERIVATION_SEMANTIC_MISMATCH",
+        "DERIVED_VALUE_DIGEST_MISMATCH"
+      ]
+    },
+    {
+      "id": "derivation-semantics-05",
+      "mutation": {
+        "operation": "comparison-semantic-mismatch"
+      },
+      "expected_codes": [
+        "DERIVATION_SEMANTIC_MISMATCH"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "DERIVATION_SEMANTIC_MISMATCH",
+    "DERIVED_VALUE_DIGEST_MISMATCH",
+    "UNSUPPORTED_INFERRED_FACT"
+  ],
+  "expected_state": "INVALID"
+}

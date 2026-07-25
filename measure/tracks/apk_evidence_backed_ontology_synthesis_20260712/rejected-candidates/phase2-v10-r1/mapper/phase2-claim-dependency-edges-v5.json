@@ -1,0 +1,369 @@
+{
+  "dependencies": [
+    {
+      "claim_ids": [
+        "BA-HIST-011",
+        "RFC-CUR-015",
+        "SW-TRANS-004"
+      ],
+      "finding_id": "similarity:bounded-frame-delta:01",
+      "record_ids": [
+        "babel-architect:BA-HIST-011",
+        "rune-forge-chamber:RFC-CUR-015",
+        "spellweavers-run:SW-TRANS-004"
+      ],
+      "use_ids": [
+        "use:bounded-frame-delta:babel-architect:BA-HIST-011",
+        "use:bounded-frame-delta:rune-forge-chamber:RFC-CUR-015",
+        "use:bounded-frame-delta:spellweavers-run:SW-TRANS-004"
+      ]
+    },
+    {
+      "claim_ids": [
+        "VG3-COMP-004",
+        "WVZ-MECH-011"
+      ],
+      "finding_id": "similarity:bounded-frame-delta:02",
+      "record_ids": [
+        "village-guardian:VG3-COMP-004",
+        "wizard-vs-zombie:WVZ-MECH-011"
+      ],
+      "use_ids": [
+        "use:bounded-frame-delta:village-guardian:VG3-COMP-004",
+        "use:bounded-frame-delta:wizard-vs-zombie:WVZ-MECH-011"
+      ]
+    },
+    {
+      "claim_ids": [
+        "AW-HIST-023",
+        "VG3-COMP-006",
+        "SCT-TRANS-H002"
+      ],
+      "finding_id": "similarity:single-completion-emission:01",
+      "record_ids": [
+        "abyssal-well:AW-HIST-023",
+        "village-guardian:VG3-COMP-006",
+        "storm-castle-tower:SCT-TRANS-H002"
+      ],
+      "use_ids": [
+        "use:single-completion-emission:abyssal-well:AW-HIST-023",
+        "use:single-completion-emission:village-guardian:VG3-COMP-006",
+        "use:single-completion-emission:storm-castle-tower:SCT-TRANS-H002"
+      ]
+    },
+    {
+      "claim_ids": [
+        "GRF-CART-004",
+        "SZ-HIST-009",
+        "EL-UI-002"
+      ],
+      "finding_id": "similarity:single-completion-emission:02",
+      "record_ids": [
+        "griffin-riders-escape:GRF-CART-004",
+        "sorcerer-ziggurat:SZ-HIST-009",
+        "enchanted-library:EL-UI-002"
+      ],
+      "use_ids": [
+        "use:single-completion-emission:griffin-riders-escape:GRF-CART-004",
+        "use:single-completion-emission:sorcerer-ziggurat:SZ-HIST-009",
+        "use:single-completion-emission:enchanted-library:EL-UI-002"
+      ]
+    },
+    {
+      "claim_ids": [
+        "RFC-CUR-016",
+        "BA-HIST-012"
+      ],
+      "finding_id": "similarity:single-completion-emission:03",
+      "record_ids": [
+        "rune-forge-chamber:RFC-CUR-016",
+        "babel-architect:BA-HIST-012"
+      ],
+      "use_ids": [
+        "use:single-completion-emission:rune-forge-chamber:RFC-CUR-016",
+        "use:single-completion-emission:babel-architect:BA-HIST-012"
+      ]
+    },
+    {
+      "claim_ids": [
+        "AW-HIST-011",
+        "VG3-MODEL-001",
+        "AR-B2-V8-012"
+      ],
+      "finding_id": "similarity:nonempty-content-precondition:01",
+      "record_ids": [
+        "abyssal-well:AW-HIST-011",
+        "village-guardian:VG3-MODEL-001",
+        "archers-revenge:AR-B2-V8-012"
+      ],
+      "use_ids": [
+        "use:nonempty-content-precondition:abyssal-well:AW-HIST-011",
+        "use:nonempty-content-precondition:village-guardian:VG3-MODEL-001",
+        "use:nonempty-content-precondition:archers-revenge:AR-B2-V8-012"
+      ]
+    },
+    {
+      "claim_ids": [
+        "GRF-START-001",
+        "SZ-HIST-004",
+        "EL-INIT-001"
+      ],
+      "finding_id": "similarity:nonempty-content-precondition:02",
+      "record_ids": [
+        "griffin-riders-escape:GRF-START-001",
+        "sorcerer-ziggurat:SZ-HIST-004",
+        "enchanted-library:EL-INIT-001"
+      ],
+      "use_ids": [
+        "use:nonempty-content-precondition:griffin-riders-escape:GRF-START-001",
+        "use:nonempty-content-precondition:sorcerer-ziggurat:SZ-HIST-004",
+        "use:nonempty-content-precondition:enchanted-library:EL-INIT-001"
+      ]
+    },
+    {
+      "claim_ids": [
+        "RM-MECH-005",
+        "RFC-CUR-007",
+        "AM-HIST-004"
+      ],
+      "finding_id": "similarity:nonempty-content-precondition:03",
+      "record_ids": [
+        "rune-match:RM-MECH-005",
+        "rune-forge-chamber:RFC-CUR-007",
+        "astral-mage:AM-HIST-004"
+      ],
+      "use_ids": [
+        "use:nonempty-content-precondition:rune-match:RM-MECH-005",
+        "use:nonempty-content-precondition:rune-forge-chamber:RFC-CUR-007",
+        "use:nonempty-content-precondition:astral-mage:AM-HIST-004"
+      ]
+    },
+    {
+      "claim_ids": [
+        "RFC-CUR-019",
+        "SCT-MECH-H008",
+        "SW-INPUT-002"
+      ],
+      "finding_id": "similarity:input-action-normalization:01",
+      "record_ids": [
+        "rune-forge-chamber:RFC-CUR-019",
+        "storm-castle-tower:SCT-MECH-H008",
+        "spellweavers-run:SW-INPUT-002"
+      ],
+      "use_ids": [
+        "use:input-action-normalization:rune-forge-chamber:RFC-CUR-019",
+        "use:input-action-normalization:storm-castle-tower:SCT-MECH-H008",
+        "use:input-action-normalization:spellweavers-run:SW-INPUT-002"
+      ]
+    },
+    {
+      "claim_ids": [
+        "DR-CONTROL-001",
+        "GRF-CART-002",
+        "SZ-HIST-014"
+      ],
+      "finding_id": "similarity:input-action-normalization:02",
+      "record_ids": [
+        "dragon-rider:DR-CONTROL-001",
+        "griffin-riders-escape:GRF-CART-002",
+        "sorcerer-ziggurat:SZ-HIST-014"
+      ],
+      "use_ids": [
+        "use:input-action-normalization:dragon-rider:DR-CONTROL-001",
+        "use:input-action-normalization:griffin-riders-escape:GRF-CART-002",
+        "use:input-action-normalization:sorcerer-ziggurat:SZ-HIST-014"
+      ]
+    },
+    {
+      "claim_ids": [
+        "EL-CONTROL-001",
+        "AM-HIST-011"
+      ],
+      "finding_id": "similarity:input-action-normalization:03",
+      "record_ids": [
+        "enchanted-library:EL-CONTROL-001",
+        "astral-mage:AM-HIST-011"
+      ],
+      "use_ids": [
+        "use:input-action-normalization:enchanted-library:EL-CONTROL-001",
+        "use:input-action-normalization:astral-mage:AM-HIST-011"
+      ]
+    },
+    {
+      "claim_ids": [
+        "DF-TRANS-001",
+        "DR-TRANS-002"
+      ],
+      "finding_id": "similarity:time-and-frame-loop:01",
+      "record_ids": [
+        "dragon-flight:DF-TRANS-001",
+        "dragon-rider:DR-TRANS-002"
+      ],
+      "use_ids": [
+        "use:time-and-frame-loop:dragon-flight:DF-TRANS-001",
+        "use:time-and-frame-loop:dragon-rider:DR-TRANS-002"
+      ]
+    },
+    {
+      "claim_ids": [
+        "MD-MECH-012",
+        "VG3-MODEL-006",
+        "EL-LOOP-001"
+      ],
+      "finding_id": "similarity:time-and-frame-loop:02",
+      "record_ids": [
+        "magic-defense:MD-MECH-012",
+        "village-guardian:VG3-MODEL-006",
+        "enchanted-library:EL-LOOP-001"
+      ],
+      "use_ids": [
+        "use:time-and-frame-loop:magic-defense:MD-MECH-012",
+        "use:time-and-frame-loop:village-guardian:VG3-MODEL-006",
+        "use:time-and-frame-loop:enchanted-library:EL-LOOP-001"
+      ]
+    },
+    {
+      "claim_ids": [
+        "RFC-CUR-010",
+        "BA-HIST-005"
+      ],
+      "finding_id": "difference:time-and-frame-loop:03",
+      "record_ids": [
+        "rune-forge-chamber:RFC-CUR-010",
+        "babel-architect:BA-HIST-005"
+      ],
+      "use_ids": [
+        "use:time-and-frame-loop:rune-forge-chamber:RFC-CUR-010",
+        "use:time-and-frame-loop:babel-architect:BA-HIST-005"
+      ]
+    },
+    {
+      "claim_ids": [
+        "VG3-MODEL-010",
+        "SW-TRANS-002",
+        "RFC-CUR-011"
+      ],
+      "finding_id": "similarity:language-target-progression:01",
+      "record_ids": [
+        "village-guardian:VG3-MODEL-010",
+        "spellweavers-run:SW-TRANS-002",
+        "rune-forge-chamber:RFC-CUR-011"
+      ],
+      "use_ids": [
+        "use:language-target-progression:village-guardian:VG3-MODEL-010",
+        "use:language-target-progression:spellweavers-run:SW-TRANS-002",
+        "use:language-target-progression:rune-forge-chamber:RFC-CUR-011"
+      ]
+    },
+    {
+      "claim_ids": [
+        "SCT-TRANS-H003",
+        "GRF-TRANS-001",
+        "SZ-HIST-006"
+      ],
+      "finding_id": "similarity:language-target-progression:02",
+      "record_ids": [
+        "storm-castle-tower:SCT-TRANS-H003",
+        "griffin-riders-escape:GRF-TRANS-001",
+        "sorcerer-ziggurat:SZ-HIST-006"
+      ],
+      "use_ids": [
+        "use:language-target-progression:storm-castle-tower:SCT-TRANS-H003",
+        "use:language-target-progression:griffin-riders-escape:GRF-TRANS-001",
+        "use:language-target-progression:sorcerer-ziggurat:SZ-HIST-006"
+      ]
+    },
+    {
+      "claim_ids": [
+        "DL-COLL-001",
+        "EL-COLL-001",
+        "PR-CUR-011"
+      ],
+      "finding_id": "similarity:language-target-progression:03",
+      "record_ids": [
+        "dungeon-liberator:DL-COLL-001",
+        "enchanted-library:EL-COLL-001",
+        "potion-rush:PR-CUR-011"
+      ],
+      "use_ids": [
+        "use:language-target-progression:dungeon-liberator:DL-COLL-001",
+        "use:language-target-progression:enchanted-library:EL-COLL-001",
+        "use:language-target-progression:potion-rush:PR-CUR-011"
+      ]
+    },
+    {
+      "claim_ids": [
+        "AM-HIST-005",
+        "BA-HIST-004"
+      ],
+      "finding_id": "similarity:language-target-progression:04",
+      "record_ids": [
+        "astral-mage:AM-HIST-005",
+        "babel-architect:BA-HIST-004"
+      ],
+      "use_ids": [
+        "use:language-target-progression:astral-mage:AM-HIST-005",
+        "use:language-target-progression:babel-architect:BA-HIST-004"
+      ]
+    },
+    {
+      "claim_ids": [
+        "RPG-MECH-009",
+        "AW-HIST-032",
+        "VG3-MODEL-017"
+      ],
+      "finding_id": "difference:result-accounting:01",
+      "record_ids": [
+        "rpg-battle:RPG-MECH-009",
+        "abyssal-well:AW-HIST-032",
+        "village-guardian:VG3-MODEL-017"
+      ],
+      "use_ids": [
+        "use:result-accounting:rpg-battle:RPG-MECH-009",
+        "use:result-accounting:abyssal-well:AW-HIST-032",
+        "use:result-accounting:village-guardian:VG3-MODEL-017"
+      ]
+    },
+    {
+      "claim_ids": [
+        "EL-XP-001",
+        "AS-RESULT-001",
+        "PR-CUR-014"
+      ],
+      "finding_id": "difference:result-accounting:02",
+      "record_ids": [
+        "enchanted-library:EL-XP-001",
+        "alchemists-synthesis:AS-RESULT-001",
+        "potion-rush:PR-CUR-014"
+      ],
+      "use_ids": [
+        "use:result-accounting:enchanted-library:EL-XP-001",
+        "use:result-accounting:alchemists-synthesis:AS-RESULT-001",
+        "use:result-accounting:potion-rush:PR-CUR-014"
+      ]
+    },
+    {
+      "claim_ids": [
+        "MD-MECH-001",
+        "RFC-CUR-013"
+      ],
+      "finding_id": "difference:result-accounting:03",
+      "record_ids": [
+        "magic-defense:MD-MECH-001",
+        "rune-forge-chamber:RFC-CUR-013"
+      ],
+      "use_ids": [
+        "use:result-accounting:magic-defense:MD-MECH-001",
+        "use:result-accounting:rune-forge-chamber:RFC-CUR-013"
+      ]
+    }
+  ],
+  "phase1_bindings": {
+    "phase1-claim-dependency-edges-v1.json": "2b279df4896c9620ea9acf17506e942c9df98e2b4d6c06a29d5293106aff0987",
+    "phase1-developer-effort-baseline-v1.json": "168403610d0c69160777ddeca5753dcc57b97e2a7db6ceed65f3e4ce64d14f91",
+    "phase1-mechanic-blueprints-v1.json": "ed3bee70f5e7e94ac101f295d9de3f768cdaf9d97d40d4529f2fbbbe8f479d61",
+    "phase1-root-acceptance.json": "bd911f865c95e24874dde657e856718910a05b1737634222055654b331dd020d",
+    "phase1-source-resolution-index-v1.json": "2900222c4fc4db8ffb354d4f25f5c1a8bef6930b2d7e8e1bb692dab27d860bd0"
+  },
+  "schema_version": "apk-t9-phase2-claim-dependency-edges.v5"
+}

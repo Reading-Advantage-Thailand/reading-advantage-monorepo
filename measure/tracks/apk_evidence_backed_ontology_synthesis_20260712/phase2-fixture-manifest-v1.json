@@ -1,0 +1,113 @@
+{
+  "schema_version": "apk-t9-phase2-fixture-manifest.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "fixture_count": 10,
+  "case_count": 19,
+  "max_negative_fixtures": 16,
+  "bindings": {
+    "phase2_role_dispatch": {
+      "path": "phase2-role-dispatch-v1.json",
+      "sha256": "67e737601f8a6eb0337884a9dcac97258452437fc6dc156073707fecd9b783e1"
+    },
+    "phase1_root_acceptance": {
+      "path": "phase1-root-acceptance.json",
+      "sha256": "bd911f865c95e24874dde657e856718910a05b1737634222055654b331dd020d"
+    }
+  },
+  "fixtures": [
+    {
+      "id": "negative-equivalence",
+      "path": "negative-fixtures/phase2/negative-equivalence.json",
+      "sha256": "95f7bfa27a05581aa7f7f7d84a8ca80a0515e41c0ef5671f7d35722c57bc869a",
+      "expected_codes": [
+        "DEPENDENCY_MISMATCH",
+        "INVENTED_BEHAVIOR",
+        "NOUN_ART_ONLY_STANDARDIZATION",
+        "PROVISIONAL_ONLY_STANDARDIZATION"
+      ]
+    },
+    {
+      "id": "behavior-integrity",
+      "path": "negative-fixtures/phase2/behavior-integrity.json",
+      "sha256": "6ca17fbceab4a91c9ab4a6ceb9e214e5c6c57981e436efc2f593cb508a01a224",
+      "expected_codes": [
+        "DEPENDENCY_MISMATCH",
+        "INVENTED_BEHAVIOR",
+        "NOUN_ART_ONLY_STANDARDIZATION",
+        "PLACEMENT_STATUS_COLLAPSE",
+        "UNKNOWN_RESOLUTION"
+      ]
+    },
+    {
+      "id": "batch-contract",
+      "path": "negative-fixtures/phase2/batch-contract.json",
+      "sha256": "24ffdbfb8ee3870279281c908e603705caac1d44821704b357aff0202c6e58f9",
+      "expected_codes": [
+        "BATCH_GAME_LIMIT_EXCEEDED"
+      ]
+    },
+    {
+      "id": "schema-shape",
+      "path": "negative-fixtures/phase2/schema-shape.json",
+      "sha256": "45b914bf7bb6a12c45e476178e8eeba5ba8a96772b14f7c05540a5643e2c1a93",
+      "expected_codes": [
+        "INVALID_SCHEMA",
+        "MISSING_REQUIRED_FIELD",
+        "SURPLUS_FIELD"
+      ]
+    },
+    {
+      "id": "hash-binding",
+      "path": "negative-fixtures/phase2/hash-binding.json",
+      "sha256": "017e96478bb05693c86e8ded5c84d94cdb77facfe23fbe41c2028131e810dced",
+      "expected_codes": [
+        "TAMPERED_HASH"
+      ]
+    },
+    {
+      "id": "claim-preservation",
+      "path": "negative-fixtures/phase2/claim-preservation.json",
+      "sha256": "7dd12394360508a7cbcde6b693cb23615700c462246ad823b71c620f433c4f58",
+      "expected_codes": [
+        "CLAIM_SET_MISMATCH",
+        "DEPENDENCY_MISMATCH"
+      ]
+    },
+    {
+      "id": "referential-integrity",
+      "path": "negative-fixtures/phase2/referential-integrity.json",
+      "sha256": "7af8f33518703b72c9bf70440aef9f48b7e78f9d9d6db17868bf6a0c03678de5",
+      "expected_codes": [
+        "REFERENTIAL_INTEGRITY"
+      ]
+    },
+    {
+      "id": "budget-stop-loss",
+      "path": "negative-fixtures/phase2/budget-stop-loss.json",
+      "sha256": "aed297edbe587c49bac95e1fa9a72246436503be3bf2c7d1b5d149c78e38c98c",
+      "expected_codes": [
+        "OUTPUT_BUDGET_EXCEEDED",
+        "SOURCE_DOCUMENT_BUDGET",
+        "SURPLUS_FIELD"
+      ]
+    },
+    {
+      "id": "ownership-receipt",
+      "path": "negative-fixtures/phase2/ownership-receipt.json",
+      "sha256": "3bec4628d2b291124aaee1db958d95e037cdb89f885d210d2f0f8c625cadfbf6",
+      "expected_codes": [
+        "MAPPER_RECEIPT_MISMATCH",
+        "WRONG_OWNER"
+      ]
+    },
+    {
+      "id": "dispatch-drift",
+      "path": "negative-fixtures/phase2/dispatch-drift.json",
+      "sha256": "18f65f3c32a1d35bd6742012c25727acfa328f0643dbacfe1e43a130de811b03",
+      "expected_codes": [
+        "TAMPERED_HASH"
+      ]
+    }
+  ]
+}

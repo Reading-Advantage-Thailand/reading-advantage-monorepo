@@ -1,0 +1,52 @@
+{
+  "schema_version": "apk-t9-phase0-cohort-leaf-binding-green-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "state": "VERIFIED",
+  "status": "candidate-independently-verified",
+  "checks": 1157,
+  "findings": [],
+  "bindings": {
+    "repair_dispatch_sha256": "7a7ec749bb4f83c5dfab0e7c63bd754f686eabe77506fb2f83480bf48f828400",
+    "candidate_sha256": "2a9c5f2eb24d235dbbb59c81b63e81a162ff08c4a6f0aa95fff66bea58194fef",
+    "catalog_author_receipt_sha256": "6bd34ea232bdab1f130491a52a871d06a1001c69583ff2c45cfb9687cf51eef3",
+    "verifier_sha256": "05f2f4379429bae819cd6d72931d5c1779c2ee69fe862cf83671e73f818630c2",
+    "focused_test_sha256": "62a7e1f37264b8393fca1c3e17653c8fe1d66d6f914c6eab1ab9b13235bb8b38",
+    "fixture_manifest_sha256": "afeb3360606fa85b198f4c3ebbe93a410c35356579d138e1f4127af54bb553df"
+  },
+  "supersedes_non_authorized_draft": {
+    "status": "non-consumable-governance-invalid",
+    "finding": "Fixture paths used phase0-cohort instead of the dispatch-authorized phase0-cohort-leaf directory.",
+    "verifier_sha256": "05f2f4379429bae819cd6d72931d5c1779c2ee69fe862cf83671e73f818630c2",
+    "focused_test_sha256": "d7bfe88110b549922158f83ce17cd4e00ca64e9f12285a02c0d21fb193264b9b",
+    "fixture_manifest_sha256": "e1ce3802390b02032da6da0574ed8b41f97c15ddc40709e5c48e6c7a146ae4bf",
+    "red_report_sha256": "4690e351df2373bf8b40c4a0708e5c63a3eecaff2f58a2823ea221a4f6aa452b",
+    "green_report_sha256": "1d084501764e3d1e80774a84cf1f905092a93d342c7021ef1ddf37c6ec027fda",
+    "truth_author_receipt_sha256": "1ac4acb3c27c27ea966480610624d198518b2da5fd68b08b184bbeb654dff440"
+  },
+  "coverage": {
+    "leaf_count": 6,
+    "game_count": 6,
+    "claim_count": 226,
+    "explicit_unknown_count": 24,
+    "negative_fixture_count": 30,
+    "git_blob_and_exact_range_rederivations": 220,
+    "bounded_query_rederivations": 6,
+    "source_references_resolved": 226,
+    "scene_or_state_reference_count": 216,
+    "per_game_distinct_scene_or_state_id_count_sum": 179,
+    "accepted_chain_and_selected_receipt_bindings": 27,
+    "retained_disclosure_sets": 8
+  },
+  "focused_suite": {
+    "tests": 4,
+    "passes": 4,
+    "failures": 0,
+    "errors": 0,
+    "runtime_seconds": 4.467,
+    "stop_loss_seconds": 30,
+    "hash_bound_negative_fixtures": 12
+  },
+  "decisions_authored": false,
+  "archive_modified": false
+}

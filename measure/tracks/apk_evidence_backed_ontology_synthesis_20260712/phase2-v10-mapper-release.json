@@ -1,0 +1,19 @@
+{
+  "schema_version": "apk-t9-phase2-mapper-release.v10",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "status": "released-for-mapper-v5",
+  "dispatch_sha256": "b7dc7be6ec593623a21656afd3215b2764188a41915e0b2e709be6e338e26eb7",
+  "root_truth_seal": {
+    "path": "phase2-v10-root-truth-seal.json",
+    "sha256": "5f5c0677b8ceea2b2f1751ff651f69c3ef6218abb0cc4a49e8779088bd5db8af"
+  },
+  "truth_artifacts": {
+    "phase2-role-dispatch-v10.json": "b7dc7be6ec593623a21656afd3215b2764188a41915e0b2e709be6e338e26eb7",
+    "phase2_v10_truth_verifier.py": "3cf4eb598055a8d03e5ea5a38bef79f5bf2ec1b50c43b48d142ef26c5b70d1e8",
+    "phase2_v10_truth_verifier_test.py": "920209f26b3cd13a9e7545531a36c80ff21ee0e5ea4be861958e312ccfc3abb2",
+    "phase2-v10-fixture-manifest.json": "99be6b366188670d9e73ff10f684a695fb08c6b31552714c2edeb33cc9cfdd5e",
+    "phase2-v10-red-report.json": "67b56ef72ffbd5bc9a5503dfaa4d5dc660978baccd93e0271969b0c10653ef4a",
+    "role-receipts/phase2/truth-test-author-v10.json": "94c1b9c53aca2857f46da9ec6f7290d609fa001703dd3881009f3c6aa9818149",
+    "negative-fixtures/phase2-v10/end-to-end-attacks.json": "cbf5d09d9b84faf95a2437f00a4f0c8baf304193b8a1e1838cb4f09ada2dc772"
+  }
+}

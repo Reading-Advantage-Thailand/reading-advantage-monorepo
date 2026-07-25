@@ -1,0 +1,12 @@
+{
+  "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+  "dispatch_sha256": "2032327e85c55bf789782ed6dd1635e03fa5efb323bb4ef2bc3fe29791ff7c7c",
+  "output_hashes": {
+    "phase1-claim-dependency-edges-v1.json": "2b279df4896c9620ea9acf17506e942c9df98e2b4d6c06a29d5293106aff0987",
+    "phase1-developer-effort-baseline-v1.json": "168403610d0c69160777ddeca5753dcc57b97e2a7db6ceed65f3e4ce64d14f91",
+    "phase1-mechanic-blueprints-v1.json": "ed3bee70f5e7e94ac101f295d9de3f768cdaf9d97d40d4529f2fbbbe8f479d61",
+    "phase1-source-resolution-index-v1.json": "2900222c4fc4db8ffb354d4f25f5c1a8bef6930b2d7e8e1bb692dab27d860bd0"
+  },
+  "owner_role": "mechanics-capability-mapper",
+  "task_id": "phase1-map-mechanics-and-effort"
+}

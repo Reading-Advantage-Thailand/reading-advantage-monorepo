@@ -1,0 +1,15 @@
+{
+  "schema_version": "apk-t9-phase2-root-truth-seal.v12",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "dispatch_sha256": "5e482c2803762ccffeb36ca8ca463f221752f46c15a27ad9ad61872209711af4",
+  "status": "sealed-red-v12",
+  "pins": {
+    "phase2-role-dispatch-v12.json": "5e482c2803762ccffeb36ca8ca463f221752f46c15a27ad9ad61872209711af4",
+    "phase2_v12_truth_verifier.py": "c9603f2caeb40df5626d6e35a3c2a754d5dac9099827eb8f02cd7c204a3972a4",
+    "phase2_v12_truth_verifier_test.py": "a61f55d5914c5b6892949b54ceb0e7f8b7805d150d8e270bacf227f187e444ed",
+    "phase2-v12-fixture-manifest.json": "85947c29737e2d7f43509d8fb0b9f381d38a9c8240bdf0bb5948a8087ca470fc",
+    "phase2-v12-red-report.json": "912ea9a31aeeb71d6196ff48a77d2d959db4fa56eed8c840a69d3428c5c5f54e",
+    "role-receipts/phase2/truth-test-author-v12.json": "456436e0d479e18ac6797709909d57041e2c4434a23368fe12749386dbb1533b",
+    "negative-fixtures/phase2-v12/end-to-end-attacks.json": "17535c7b22b814044535237463f33731ba56ca2fcc92073dd71fdede36621259"
+  }
+}

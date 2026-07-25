@@ -1,0 +1,55 @@
+{
+  "schema_version": "apk-t9-phase0-v3-independent-reviewer-receipt.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "task_id": "phase0-v3-review-governance",
+  "role": "phase0-v3-independent-reviewer",
+  "agent_ref": "/root/phase5_review_b",
+  "completed_at": "2026-07-24T13:34:29Z",
+  "status": "independent-review-pass",
+  "dispatch_binding": {
+    "path": "phase0-v3-role-dispatch-v1.json",
+    "sha256": "a34ade4b97794bab87be92d6f72f7505e524861b3dd1013d68979e7784f6793f"
+  },
+  "review_binding": {
+    "path": "phase0-v3-independent-review-v1.json",
+    "sha256": "ac93946436589a37354c2a828e3c49e9df8d95d9c3d6438109258fb7494ff5fd"
+  },
+  "reviewed_artifact_bindings": {
+    "phase0-source-registry-v3.json": "ae6050cc6c075614b34b6d8832a350f7d28945154315adebb25667fffc5b858c",
+    "phase0-input-freeze-v3.json": "0517288c5aa267ddbd5f22fd6929cd74aaaacc74b9321d43094c72ade8614dae",
+    "phase0_v3_truth_verifier.py": "20312ab8442af0bb6e2288b0476977710dc5752b857e358f6b3703c9282076f8",
+    "phase0_v3_truth_verifier_test.py": "270d89ed711a1b11e47e8cae99ea098693d800bce1a665da0d02e22a6603d967",
+    "phase0-v3-fixture-manifest-v1.json": "974586ea6987e79b2299328d16d89f4d345dd192df9fd1666e2cc52adbecb0d2",
+    "phase0-v3-red-report-v1.json": "3fe6656d1c06adb3ac28e28df58689118c8347a90f421e4a33dfe8e1579cdb9a",
+    "phase0-v3-green-report-v1.json": "451da6ddb8c795254f674cede40568b83b41c5aab1c591f25e82f6be1e067bb3",
+    "role-receipts/phase0/phase0-v3-truth-test-author.json": "983070f5126988a07d9a6050a58760b71be455a3c4311afd9de9a2582c0720e0"
+  },
+  "verification_attestation": {
+    "focused_tests_passed": 5,
+    "focused_tests_failed": 0,
+    "live_cli_state": "VERIFIED",
+    "live_cli_checks": 70,
+    "live_cli_findings": 0,
+    "registry_bindings_verified": 25,
+    "dispatch_inputs_verified": 5,
+    "identity_entries_verified": 29,
+    "t2_pointers_and_labels_verified": 29,
+    "identity_source_extractions_verified": 29,
+    "resolvable_game_ids_verified": 28,
+    "castle_omission_and_no_fabrication_verified": true,
+    "fixtures_verified": 13,
+    "phase0_v2_acceptance_inactive": true,
+    "phase1_authorized": false,
+    "historical_red_preserved": true,
+    "prior_pre_review_findings_remediated": true
+  },
+  "findings_remaining": {
+    "Critical": 0,
+    "High": 0,
+    "Medium": 0,
+    "Low": 0
+  },
+  "authority_boundary": "Reviewer receipt only; no registry activation, root acceptance, Phase 1 authorization, or product-owner decision was made.",
+  "self_hash_note": "The receipt does not self-bind because embedding its own digest would change its bytes."
+}

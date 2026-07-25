@@ -1,0 +1,59 @@
+{
+  "schema_version": "apk-t9-phase2-role-receipt.v5",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "task_id": "phase2-systemic-semantic-red-green-v5",
+  "owner_role": "truth-test-author",
+  "agent_ref": "/root/t9_phase0_governance_author",
+  "dispatch": {
+    "path": "phase2-role-dispatch-v5.json",
+    "sha256": "586a21f5ae1fd0ac1a5b429de6303394362e0e3f53e28b1374dfb5d45fd7f558"
+  },
+  "status": "verified-green-v5-published-awaiting-independent-acceptance",
+  "outputs": {
+    "phase2_v5_truth_verifier.py": "caf4d13a7709c305199702df36f8593310df11be3988debecfb26c8064dbb0ba",
+    "phase2_v5_truth_verifier_test.py": "749acf58aa0eeae0174b12c1d9c8f71e5bb58bf6bd02464f329ddcb6d2b2ff86",
+    "phase2-v5-fixture-manifest.json": "27c1cef4115d479e35ac030eefc58434542c2a87678a560b5aa3fcd93bb1542a",
+    "phase2-v5-red-report.json": "3e0e40c20519facf1b1822654e09d06ae8c631abbff170eb988021f33be0d3e7",
+    "phase2-v5-green-report.json": "a2bf211de569bfc1517f1e9fb1e272cba6046a66abd15a4a5520122afbf0b3a7"
+  },
+  "verification": {
+    "focused_suite": "9/9 pass",
+    "fixture_files": 6,
+    "bound_fixture_cases": 52,
+    "exhaustive_route_matrix_cases": 36,
+    "negative_cases": 88,
+    "negative_result": "88/88 rejected",
+    "runtime_seconds": 4.69,
+    "runtime_ceiling_seconds": 30,
+    "live_state": "VERIFIED",
+    "live_checks": 3386,
+    "live_finding_codes": [],
+    "stop_loss_cycle": 2,
+    "ruff": "pass"
+  },
+  "semantic_contract": {
+    "audited_capability_routes": 28,
+    "required_context_claims": 17,
+    "multi_capability_evidence_allowed": true,
+    "duplicate_use_within_capability_forbidden": true,
+    "mechanics_accounted": 633,
+    "games_accounted": 28,
+    "unknowns_unresolved": 24
+  },
+  "readability_bounds": {
+    "statement_chars": [40, 300],
+    "exact_excerpt_chars": [24, 240],
+    "relevance_statement_chars": [40, 300],
+    "boundary_effect_chars_each": [30, 280],
+    "per_game_behavior_chars": [24, 480]
+  },
+  "budget_scope": "1 MiB maximum applies to each published mapper output independently.",
+  "green_report_published": true,
+  "scope": {
+    "mapper_decisions_authored": false,
+    "phase3_authorized": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false
+  }
+}

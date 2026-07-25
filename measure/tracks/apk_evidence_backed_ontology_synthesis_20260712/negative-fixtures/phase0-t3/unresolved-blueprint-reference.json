@@ -1,0 +1,5 @@
+{
+  "id": "unresolved-blueprint-reference",
+  "operation": "unresolved-blueprint-reference",
+  "expected_codes": ["UNRESOLVED_BLUEPRINT_REFERENCE"]
+}

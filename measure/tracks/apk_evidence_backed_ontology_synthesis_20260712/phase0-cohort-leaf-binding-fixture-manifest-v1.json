@@ -1,0 +1,20 @@
+{
+  "schema_version": "apk-t9-phase0-cohort-leaf-binding-fixtures.v1",
+  "dispatch": {"path":"phase0-cohort-leaf-repair-role-dispatch-v1.json","sha256":"7a7ec749bb4f83c5dfab0e7c63bd754f686eabe77506fb2f83480bf48f828400"},
+  "candidate": {"path":"phase0-cohort-leaf-binding-candidate-v1.json","sha256":"2a9c5f2eb24d235dbbb59c81b63e81a162ff08c4a6f0aa95fff66bea58194fef"},
+  "fixture_count": 12,
+  "fixtures": [
+    {"path":"negative-fixtures/phase0-cohort-leaf/archive-integrity.json","sha256":"47109d9fdfb0176b60a9e148b31804cd1287fc27f66dbb1c2af2f8575eecb2fc","expected_codes":["COHORT_DISCLOSURE_LOSS"]},
+    {"path":"negative-fixtures/phase0-cohort-leaf/chain-relation.json","sha256":"52e1fec84adb74691ea895233ce5e1a70415b818c99c2436d876250ef81e89e7","expected_codes":["ACCEPTED_CHAIN_RELATION_MISMATCH"]},
+    {"path":"negative-fixtures/phase0-cohort-leaf/citation-hash-drift.json","sha256":"5c3118a35afc90cfc30f3238b8612fdb3ba119116c77ad305dd6c07dbb771da1","expected_codes":["COHORT_SOURCE_REFERENCE_DRIFT"]},
+    {"path":"negative-fixtures/phase0-cohort-leaf/citation-range-drift.json","sha256":"7af1e84a8740bdc0e2b068040ebb1448c0a96d61e01b469eccc297a79aa336cb","expected_codes":["COHORT_SOURCE_REFERENCE_DRIFT"]},
+    {"path":"negative-fixtures/phase0-cohort-leaf/claim-count.json","sha256":"6adcdcd616cda78ac3822a187787b0a6940952e5240c559c668d85b6eb6a8cb8","expected_codes":["COHORT_COVERAGE_MISMATCH"]},
+    {"path":"negative-fixtures/phase0-cohort-leaf/coverage-attestation.json","sha256":"0f43f0aabb16db3f6bb09d636b281ea6a5d41bdc0a8acf52c8e5c2408cd9988c","expected_codes":["COHORT_COVERAGE_MISMATCH"]},
+    {"path":"negative-fixtures/phase0-cohort-leaf/disclosure-loss.json","sha256":"333c691000cc2062745034aea262f6e6d1fb619da320f8edca08e9c4ce46a53e","expected_codes":["COHORT_DISCLOSURE_LOSS"]},
+    {"path":"negative-fixtures/phase0-cohort-leaf/missing-leaf.json","sha256":"58a4921e82a08f54f6a4228b124e24b26d83fb35c9dc9858db6e7bee6c350bfb","expected_codes":["INCOMPLETE_COHORT_LEAF_SET"]},
+    {"path":"negative-fixtures/phase0-cohort-leaf/query-drift.json","sha256":"03303007260406361f6482a6cd17d156467ae2d5bc811fdcb350f38901bc3707","expected_codes":["COHORT_SOURCE_REFERENCE_DRIFT"]},
+    {"path":"negative-fixtures/phase0-cohort-leaf/receipt-binding-mismatch.json","sha256":"8bf5f14ffc3affcbddcbca4aa65c38b208178d0cb263e3ee518bbd78bf218f26","expected_codes":["RECEIPT_LEAF_BINDING_MISMATCH"]},
+    {"path":"negative-fixtures/phase0-cohort-leaf/stale-leaf-hash.json","sha256":"9659d7c641784d071927957d758fc3a0ff774b51229fa8168e224a8c5bd96b1c","expected_codes":["STALE_COHORT_LEAF_HASH"]},
+    {"path":"negative-fixtures/phase0-cohort-leaf/wrong-game.json","sha256":"06a42066a608e7463ab21b2e8751b1472146aa90eeed2a319d193c1a9332487c","expected_codes":["INCOMPLETE_COHORT_LEAF_SET"]}
+  ]
+}

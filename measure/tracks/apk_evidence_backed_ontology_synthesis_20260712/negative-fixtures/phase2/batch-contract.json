@@ -1,0 +1,19 @@
+{
+  "schema_version": "apk-t9-phase2-negative-fixture-group.v1",
+  "id": "batch-contract",
+  "cases": [
+    {
+      "id": "batch-contract-01",
+      "mutation": {
+        "operation": "four-game-batch"
+      },
+      "expected_codes": [
+        "BATCH_GAME_LIMIT_EXCEEDED"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "BATCH_GAME_LIMIT_EXCEEDED"
+  ],
+  "expected_state": "INVALID"
+}

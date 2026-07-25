@@ -1,0 +1,230 @@
+{
+  "assignments": [
+    {
+      "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+      "allowed_outputs": [
+        "phase2-capability-comparisons-v1.json",
+        "phase2-capability-classification-v1.json",
+        "phase2-extension-boundaries-v1.json",
+        "phase2-claim-dependency-edges-v1.json",
+        "role-receipts/phase2/capability-mapper.json"
+      ],
+      "forbidden_outputs": [
+        "phase2_v2_truth_verifier.py",
+        "phase2_v2_truth_verifier_test.py",
+        "negative-fixtures/phase2-v2/*",
+        "phase2-v2-independent-review.json",
+        "phase2-root-acceptance.json"
+      ],
+      "owner_role": "capability-mapper",
+      "task_id": "phase2-map-capabilities-v2"
+    },
+    {
+      "agent_ref": "/root/t9_phase0_governance_author",
+      "allowed_outputs": [
+        "phase2_v2_truth_verifier.py",
+        "phase2_v2_truth_verifier_test.py",
+        "phase2-v2-fixture-manifest.json",
+        "negative-fixtures/phase2-v2/*",
+        "phase2-v2-red-report.json",
+        "phase2-v2-green-report.json",
+        "role-receipts/phase2/truth-test-author-v2.json"
+      ],
+      "forbidden_outputs": [
+        "phase2-capability-comparisons-v1.json",
+        "phase2-capability-classification-v1.json",
+        "phase2-extension-boundaries-v1.json",
+        "phase2-claim-dependency-edges-v1.json",
+        "phase2-v2-independent-review.json",
+        "phase2-root-acceptance.json"
+      ],
+      "owner_role": "truth-test-author",
+      "task_id": "phase2-author-truth-tests-v2"
+    },
+    {
+      "agent_ref": "/root/phase5_review_b",
+      "allowed_outputs": [
+        "phase2-v2-independent-review.json",
+        "role-receipts/phase2/capability-reviewer-v2.json"
+      ],
+      "forbidden_outputs": [
+        "mapper outputs",
+        "truth-test outputs",
+        "phase2-root-acceptance.json"
+      ],
+      "owner_role": "capability-reviewer",
+      "task_id": "phase2-review-capabilities-v2"
+    },
+    {
+      "agent_ref": "/root",
+      "allowed_outputs": [
+        "phase2-role-dispatch-v2.json",
+        "phase2-root-acceptance.json",
+        "plan.md"
+      ],
+      "forbidden_outputs": [
+        "mapper outputs",
+        "truth-test outputs",
+        "review outputs"
+      ],
+      "owner_role": "product-owner-acceptance-author",
+      "task_id": "phase2-product-owner-acceptance-v2"
+    }
+  ],
+  "authority": "delegated-root-product-owner",
+  "budget_contract": {
+    "negative_fixture_files_max": 16,
+    "normalized_source_documents_max": 32,
+    "published_output_bytes_max": 1048576,
+    "suite_runtime_seconds_max": 30
+  },
+  "input_contract": {
+    "claim_dependency_edges": {
+      "path": "phase1-claim-dependency-edges-v1.json",
+      "sha256": "2b279df4896c9620ea9acf17506e942c9df98e2b4d6c06a29d5293106aff0987"
+    },
+    "effective_claims": 1248,
+    "effort_baseline": {
+      "path": "phase1-developer-effort-baseline-v1.json",
+      "sha256": "168403610d0c69160777ddeca5753dcc57b97e2a7db6ceed65f3e4ce64d14f91"
+    },
+    "mechanic_blueprints": {
+      "path": "phase1-mechanic-blueprints-v1.json",
+      "sha256": "ed3bee70f5e7e94ac101f295d9de3f768cdaf9d97d40d4529f2fbbbe8f479d61"
+    },
+    "mechanic_records": 633,
+    "resolvable_games": 28,
+    "source_resolution_index": {
+      "path": "phase1-source-resolution-index-v1.json",
+      "sha256": "2900222c4fc4db8ffb354d4f25f5c1a8bef6930b2d7e8e1bb692dab27d860bd0"
+    },
+    "upstream_unknowns": 24
+  },
+  "issued_at": "2026-07-24T16:51:53.345424Z",
+  "issued_by": "/root",
+  "next_gate": "Only v2 truth Green, independent review with zero unresolved Medium+, and root usability acceptance can open Phase 3.",
+  "phase": 2,
+  "phase1_gate": {
+    "decision": "ACCEPT_PHASE1_OPEN_PHASE2",
+    "path": "phase1-root-acceptance.json",
+    "sha256": "bd911f865c95e24874dde657e856718910a05b1737634222055654b331dd020d"
+  },
+  "product_contract": {
+    "canonical_capability": {
+      "fields": [
+        "capability_id",
+        "name",
+        "behavior_contract",
+        "owner",
+        "extension_boundary",
+        "tests",
+        "disposition",
+        "evidence_batch_ids",
+        "consumers",
+        "similarities",
+        "differences"
+      ],
+      "readable_name_and_behavior": true,
+      "required": true
+    },
+    "comparison_batches": {
+      "canonical_capability_may_aggregate_multiple_batches": true,
+      "games_per_batch_max": 3,
+      "games_per_batch_min": 2,
+      "overlap_allowed": true,
+      "whole_game_partition_forbidden": true
+    },
+    "consumer_contract": {
+      "direct_fields": [
+        "game_id",
+        "scene_id",
+        "state_id",
+        "coverage_granularity",
+        "scope_status",
+        "factual_evidence_status",
+        "claim_id",
+        "record_id",
+        "field_id",
+        "value_sha256"
+      ],
+      "preserve_null_scene_or_state": true,
+      "preserve_placement_blocked_status": true
+    },
+    "coverage": {
+      "all_24_upstream_unknowns_preserved_unresolved": true,
+      "all_28_resolvable_games_accounted_for": true,
+      "all_633_mechanic_records_routed_exactly_once": true,
+      "non_capability_context_disposition_allowed": true
+    },
+    "extend": {
+      "minimum_distinct_independently_evidenced_games": 2,
+      "shared_core_and_meaningful_differences_required": true
+    },
+    "game_specific": {
+      "incompatibility_difference_evidence_required": true
+    },
+    "no_invented_behavior": true,
+    "standardize": {
+      "minimum_distinct_independently_evidenced_games": 2,
+      "noun_or_art_only_forbidden": true,
+      "provisional_only_forbidden": true,
+      "resolved_consumers_required": true
+    }
+  },
+  "required_negative_tests": [
+    "disjoint-whole-game-partition-assumption",
+    "overlap-rejected",
+    "cross-batch-aggregation-missing",
+    "opaque-capability-contract",
+    "scene-state-consumer-omitted",
+    "noun-art-only-standardization",
+    "provisional-only-standardization",
+    "bespoke-without-incompatibility",
+    "invented-behavior",
+    "placement-status-collapse",
+    "unknown-resolution",
+    "missing-or-surplus-field",
+    "tampered-hash",
+    "output-budget-exceeded"
+  ],
+  "schema_version": "apk-t9-phase2-role-dispatch.v2",
+  "scope": {
+    "asset_mapping_authorized": false,
+    "implementation_authorized": false,
+    "phase2_capability_classification_authorized": true,
+    "phase3_responsive_authorized": false,
+    "shipping_authorized": false
+  },
+  "status": "active",
+  "supersedes": {
+    "dispatch": {
+      "path": "phase2-role-dispatch-v1.json",
+      "sha256": "67e737601f8a6eb0337884a9dcac97258452437fc6dc156073707fecd9b783e1",
+      "status": "inactive"
+    },
+    "rejected_truth_contract": [
+      {
+        "path": "phase2_truth_verifier.py",
+        "sha256": "1c51ed35184b260f73a053555efeae894fdfc9cf5a810765438ebbca6280c454"
+      },
+      {
+        "path": "phase2_truth_verifier_test.py",
+        "sha256": "d6a5a57ab8cde097d7ae892872dcc7e7acfa35deccbf131fb6cbbaa151031366"
+      },
+      {
+        "path": "phase2-fixture-manifest-v1.json",
+        "sha256": "ec748ba02b12369c70b23d1be3d1cb370a4532c7f96c59260fa4599e77033899"
+      },
+      {
+        "path": "phase2-red-report-v1.json",
+        "sha256": "0d5699924bc7d22bf4170bd8983fef2577792cc0731342495a71a3b757a229c1"
+      },
+      {
+        "path": "role-receipts/phase2/truth-test-author.json",
+        "sha256": "90082f7f030f1da6e80d4c4383909c76a379e722ea3553712a775dffa2c25980"
+      }
+    ],
+    "rejection_reason": "The v1 contract forced disjoint whole-game partitions, prevented canonical capability aggregation across bounded evidence batches, and omitted readable capability contracts and direct scene/state consumers."
+  },
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+}

@@ -1,0 +1,48 @@
+{
+  "ancestry_ids": [
+    "019f8e88-86b8-7142-9cb4-6bd7c34b1385",
+    "019f8e88-86b8-7142-9cb4-6bd7c34b1385",
+    "019f928d-70aa-7343-8ebf-36b60a2ee7f0"
+  ],
+  "commit_note": "Baseline commit at spawn; owned uncommitted outputs are bound by declaration and live final response.",
+  "commit_sha": "f85ef85f47b549b16ee1c734b2cd2cbe70e62186",
+  "end_event": {
+    "id": "019f93aa-a4ff-7d20-a211-d8bdd96b4266",
+    "record_sha256": "1abb757ffa1e2d8f54ea0d4efd7a94f9c08ca833abd9eb79cc142536c0dd9484",
+    "timestamp": "2026-07-24T10:30:53.468Z"
+  },
+  "final_response_record_sha256": "aeea7c81997ba3f562c1f45888555efa123b525f05626d3265cf3e475554c1ef",
+  "final_response_sha256": "8b401b4ff5579e330700fc5ae5e40f5c9d27b39c72e835caa49704bb62069181",
+  "fork_turns_none": true,
+  "output_declaration": {
+    "path": "role-receipts/phase0/governance-remediation-author-output-declaration-v1.json",
+    "sha256": "b43a7d97f5557d2c2b5d16379dbbab76049500572b1d67a21eba17ec70f43681"
+  },
+  "parent_session_id": "019f8e88-86b8-7142-9cb4-6bd7c34b1385",
+  "parent_task_path": "/root",
+  "prompt_encoding": "encrypted_content",
+  "prompt_sha256": "1cd2db469a1dbcabb21035dd3d3227da5dcf2e49e324f8c59b51936bc0ec41fb",
+  "provider": "codex-collaboration",
+  "schema_version": "apk-t9-governance-author-provider-attestation.v1",
+  "session_id": "019f928d-70aa-7343-8ebf-36b60a2ee7f0",
+  "source_rollout_bindings": {
+    "child": {
+      "bytes": 3667127,
+      "path": "/home/daniel-bo/.codex/sessions/2026/07/24/rollout-2026-07-24T12-16-10-019f928d-70aa-7343-8ebf-36b60a2ee7f0.jsonl",
+      "sha256": "53dfcf0b6cc8adaa6009412a7a354f2eed2110759a3b4b27628a0d8d6b86f498"
+    },
+    "parent": {
+      "path": "/home/daniel-bo/.codex/sessions/2026/07/23/rollout-2026-07-23T17-32-19-019f8e88-86b8-7142-9cb4-6bd7c34b1385.jsonl",
+      "prefix_bytes": 43324572,
+      "prefix_sha256": "edb9905ee8fc3b78e84012f24b22f82dc01c791497589b78b54f1656a777881c"
+    }
+  },
+  "spawn_id": "call_drQAtukec0LEleWAWG4TudwF",
+  "start_event": {
+    "id": "019f928d-71d7-7252-93d4-aa25eca2a1de",
+    "record_sha256": "397c5e145562e7a83ed33de6bdf0d1326c9e84a9f300958b2e87b568a78e32f1",
+    "timestamp": "2026-07-24T05:16:11.252Z"
+  },
+  "status": "attested",
+  "task_path": "/root/t9_phase0_governance_author"
+}

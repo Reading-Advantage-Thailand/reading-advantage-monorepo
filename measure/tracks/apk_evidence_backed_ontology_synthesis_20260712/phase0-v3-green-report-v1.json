@@ -1,0 +1,52 @@
+{
+  "schema_version": "apk-t9-phase0-v3-green-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "state": "VERIFIED",
+  "status": "input-freeze-v3-independently-truth-verified",
+  "checks": 70,
+  "findings": [],
+  "bindings": {
+    "role_dispatch_sha256": "a34ade4b97794bab87be92d6f72f7505e524861b3dd1013d68979e7784f6793f",
+    "source_registry_sha256": "ae6050cc6c075614b34b6d8832a350f7d28945154315adebb25667fffc5b858c",
+    "input_freeze_sha256": "0517288c5aa267ddbd5f22fd6929cd74aaaacc74b9321d43094c72ade8614dae",
+    "verifier_sha256": "20312ab8442af0bb6e2288b0476977710dc5752b857e358f6b3703c9282076f8",
+    "focused_test_sha256": "270d89ed711a1b11e47e8cae99ea098693d800bce1a665da0d02e22a6603d967",
+    "fixture_manifest_sha256": "974586ea6987e79b2299328d16d89f4d345dd192df9fd1666e2cc52adbecb0d2",
+    "sealed_red_report_sha256": "3fe6656d1c06adb3ac28e28df58689118c8347a90f421e4a33dfe8e1579cdb9a"
+  },
+  "historical_red_package": {
+    "status": "sealed-historical-red-before-root-freeze",
+    "verifier_sha256": "50ba12d62a7dccb0aa9a8d5969d711377d3fc8ac04460d9d67859f19e2dbfa6e",
+    "focused_test_sha256": "e49edb23329c17c29b1f3db1b52b4f18eeadc52a85a42c00755d96eab5ff2f24",
+    "fixture_manifest_sha256": "974586ea6987e79b2299328d16d89f4d345dd192df9fd1666e2cc52adbecb0d2",
+    "red_report_sha256": "3fe6656d1c06adb3ac28e28df58689118c8347a90f421e4a33dfe8e1579cdb9a",
+    "red_stage_receipt_sha256": "c87cc959afefb24c23b16438f7b0e6cca73447c25836da193c78587a02ad0243",
+    "finding": "PHASE0_V3_FREEZE_MISSING"
+  },
+  "focused_suite": {
+    "tests": 5,
+    "passes": 5,
+    "failures": 0,
+    "errors": 0,
+    "runtime_seconds": 0.211,
+    "live_cli_runtime_seconds": 0.12,
+    "adversarial_fixtures": 13,
+    "historical_missing_freeze_red_preserved": true
+  },
+  "coverage": {
+    "registry_authority_and_source_bindings": 25,
+    "dispatch_required_inputs": 5,
+    "identity_entries": 29,
+    "exact_t2_pointers_and_labels": 29,
+    "exact_identity_source_extractions": 29,
+    "resolvable_game_ids": 28,
+    "castle_defense_disposition": "blocked-by-unknown",
+    "fabricated_castle_scene_state_allowed": false,
+    "generic_slugification_allowed": false,
+    "phase0_v2_activation": false,
+    "phase1_authorized": false
+  },
+  "root_acceptance_authored": false,
+  "phase1_dispatch_authored": false
+}

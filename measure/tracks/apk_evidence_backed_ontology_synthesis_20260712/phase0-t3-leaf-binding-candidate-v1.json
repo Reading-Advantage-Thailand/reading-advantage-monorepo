@@ -1,0 +1,217 @@
+{
+  "schema_version": "apk-t9-phase0-t3-leaf-binding-candidate.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "status": "candidate-non-consumable",
+  "consumable": false,
+  "revoked": false,
+  "acceptance_claimed": false,
+  "repair_dispatch": {
+    "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase0-t3-repair-role-dispatch-v1.json",
+    "sha256": "f6a9aedb3eb3246fc107363854aff75ab50b0ed1af19280b5925c3c8138a78e5",
+    "task_id": "phase0-repair-t3-leaf-bindings",
+    "owner_role": "t3-leaf-binding-catalog-author"
+  },
+  "accepted_chain": {
+    "accepted_pilot": {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+      "status": "accepted-conditional",
+      "consumable": true
+    },
+    "owner_acceptance": {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/product-owner-acceptance.json",
+      "sha256": "3a59c50e9269aed4bf2c49fe9ff3fa9943684580553cdbc6c37eaa34b780a004"
+    },
+    "candidate_pilot": {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/candidate-pilot-manifest.json",
+      "sha256": "cd1a2fe12f6b723451a395f286e4a00fe56ae09ead337eddda0d9a71986a9168"
+    },
+    "independent_review": {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/pilot-independent-review.json",
+      "sha256": "ddd4c4ab9e4ea9e9de824ef78c748729e0ce9b6dbbf17d698ae88f0baf89dcd8",
+      "review_disposition": "conditional-pass"
+    },
+    "adversarial_reviewer_receipt": {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/role-receipts/adversarial-reviewer.json",
+      "sha256": "9d2de4b10b6f3085f8748da064a9f8f1d5045fefa88402717d1efe9e63b99bd5"
+    }
+  },
+  "leaf_bindings": [
+    {
+      "leaf_id": "t3-pilot-blueprint",
+      "leaf_kind": "blueprint",
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/pilot-blueprint.json",
+      "sha256": "358f9a0f32905a0d48cba1b976a43accae6ea51c43f648f35b4af8813d5e0cc9",
+      "game_pointers": {
+        "dragon-flight": "/games/dragon-flight",
+        "rpg-battle": "/games/rpg-battle",
+        "abyssal-well": "/games/abyssal-well"
+      }
+    },
+    {
+      "leaf_id": "t3-dragon-flight-claim-ledger",
+      "leaf_kind": "claim-ledger",
+      "game_id": "dragon-flight",
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json",
+      "sha256": "84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e",
+      "claims_pointer": "",
+      "claim_records": 225,
+      "negative_fixture_records": 3,
+      "negative_fixture_storage": "included-in-claim-records",
+      "accepted_claim_count": 225
+    },
+    {
+      "leaf_id": "t3-rpg-battle-claim-ledger",
+      "leaf_kind": "claim-ledger",
+      "game_id": "rpg-battle",
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json",
+      "sha256": "b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6",
+      "claims_pointer": "/claims",
+      "negative_fixtures_pointer": "/negative_evidence_fixtures",
+      "claim_records": 212,
+      "negative_fixture_records": 3,
+      "negative_fixture_storage": "separate-from-claim-records",
+      "accepted_claim_count": 215
+    },
+    {
+      "leaf_id": "t3-abyssal-well-claim-ledger",
+      "leaf_kind": "claim-ledger",
+      "game_id": "abyssal-well",
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/abyssal-well-claim-ledger.json",
+      "sha256": "4f3042a2dba0d39a885e5b8c0f707adcfbafd5fbf72edebc6c14a6594a413566",
+      "claims_pointer": "/claims",
+      "negative_fixtures_pointer": "/negative_fixture_claims",
+      "claim_records": 51,
+      "negative_fixture_records": 2,
+      "negative_fixture_storage": "included-in-claim-records",
+      "accepted_claim_count": 51
+    }
+  ],
+  "coverage": {
+    "leaf_count": 4,
+    "game_count": 3,
+    "claim_count": 491,
+    "blueprint_internal_reference_count": 385,
+    "blueprint_internal_references_resolved": 385,
+    "blueprint_internal_references_unresolved": 0,
+    "games": [
+      {
+        "game_id": "dragon-flight",
+        "accepted_claim_count": 225,
+        "blueprint_pointer": "/games/dragon-flight",
+        "scene_count": 2,
+        "state_record_count": 4,
+        "transition_count": 8,
+        "mechanic_count": 11,
+        "control_surface_count": 5,
+        "learning_goal_count": 1,
+        "terminal_result_mechanic_count": 1,
+        "developer_effort_key_count": 6,
+        "internal_reference_count": 170,
+        "internal_references_resolved": 170,
+        "scenes": [
+          "vocabulary/dragon-flight/scene=DragonFlightGame",
+          "vocabulary/dragon-flight/scene=DragonFlightGame/inner=DragonFlightCanvas"
+        ],
+        "states": [
+          "vocabulary/dragon-flight/state=ready",
+          "vocabulary/dragon-flight/state=running",
+          "vocabulary/dragon-flight/state=boss",
+          "vocabulary/dragon-flight/state=results"
+        ]
+      },
+      {
+        "game_id": "rpg-battle",
+        "accepted_claim_count": 215,
+        "blueprint_pointer": "/games/rpg-battle",
+        "scene_count": 7,
+        "state_record_count": 15,
+        "transition_count": 20,
+        "mechanic_count": 15,
+        "control_surface_count": 5,
+        "learning_goal_count": 1,
+        "terminal_result_mechanic_count": 1,
+        "developer_effort_key_count": 7,
+        "internal_reference_count": 174,
+        "internal_references_resolved": 174,
+        "scenes": [
+          "scene:StartScreen",
+          "scene:BattleSelectionModal",
+          "scene:BattleScene",
+          "scene:GameEndScreen",
+          "scene:BattleResults",
+          "scene:Loading",
+          "scene:Error"
+        ],
+        "states": [
+          "BattleStatus",
+          "BattleTurn",
+          "SpritePose",
+          "BattlePose (store-side)",
+          "BattleSelectionStep",
+          "BattleAttackPower",
+          "ActionPower (lib-local duplicate)",
+          "BattleLogEntry.type",
+          "FlashTone",
+          "FloatingTextItem.type",
+          "TabType (StartScreen)",
+          "page-local flags",
+          "store input/reveal",
+          "store initial numerics",
+          "store initial selection"
+        ]
+      },
+      {
+        "game_id": "abyssal-well",
+        "accepted_claim_count": 51,
+        "blueprint_pointer": "/games/abyssal-well",
+        "scene_count": 3,
+        "state_record_count": 3,
+        "transition_count": 4,
+        "mechanic_count": 6,
+        "control_surface_count": 3,
+        "learning_goal_count": 1,
+        "terminal_result_mechanic_count": 1,
+        "developer_effort_key_count": 8,
+        "internal_reference_count": 41,
+        "internal_references_resolved": 41,
+        "scenes": [
+          "sentence/abyssal-well/scene=AbyssalWellGame (historical)",
+          "sentence/abyssal-well/scene=AbyssalWellScene (historical)",
+          "sentence/abyssal-well/scene=StartScreen (historical)"
+        ],
+        "states": [
+          "GamePhase (logic, historical)",
+          "AbyssalWellState.player (logic, historical)",
+          "UI phase (shell, historical)"
+        ]
+      }
+    ]
+  },
+  "accepted_non_blocking_observations": [
+    "Phase 3 (responsive/browser truth) and Phase 4 (candidate-level asset truth) are unexecuted; spec acceptance criteria covering browser evidence and candidate audit rows are therefore unevaluated. Gate product-owner acceptance on their completion.",
+    "AW evidence-collector receipt lacks a literal prompt_sha256/commit_sha (prose basis recorded instead); recommend schema normalization before T4+.",
+    "T2 committed phase test modules fail at HEAD on A9 archival path relocation only (path-class, zero content failures); orchestrator infrastructure repair.",
+    "Phase 3 browser audit not executed in this session (gated by environment; deferred)",
+    "Phase 4 asset audit partially executed; per-path records deferred"
+  ],
+  "no_success_disclosures": {
+    "phase3_responsive_browser_truth_executed": false,
+    "phase4_candidate_asset_truth_complete": false,
+    "browser_success_claimed": false,
+    "candidate_asset_runtime_success_claimed": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false
+  },
+  "archive_integrity": {
+    "archive_rewrite_allowed": false,
+    "archived_leaf_bytes_modified": false
+  },
+  "publication_boundary": {
+    "phase1_mapper_publication_authorized": false,
+    "independent_verification_required": true,
+    "independent_review_required": true,
+    "product_owner_acceptance_required": true
+  }
+}

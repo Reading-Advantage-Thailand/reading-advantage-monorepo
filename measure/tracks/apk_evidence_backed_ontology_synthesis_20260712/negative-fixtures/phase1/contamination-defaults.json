@@ -1,0 +1,29 @@
+{
+  "schema_version": "apk-t9-phase1-negative-fixture-group.v2",
+  "id": "contamination-defaults",
+  "cases": [
+    {
+      "id": "contamination-defaults-01",
+      "mutation": {
+        "operation": "failed-monolith-contamination"
+      },
+      "expected_codes": [
+        "FAILED_MONOLITH_CONTAMINATION"
+      ]
+    },
+    {
+      "id": "contamination-defaults-02",
+      "mutation": {
+        "operation": "fabricated-default-scene-state"
+      },
+      "expected_codes": [
+        "FABRICATED_SCENE_STATE_DEFAULT"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "FABRICATED_SCENE_STATE_DEFAULT",
+    "FAILED_MONOLITH_CONTAMINATION"
+  ],
+  "expected_state": "INVALID"
+}

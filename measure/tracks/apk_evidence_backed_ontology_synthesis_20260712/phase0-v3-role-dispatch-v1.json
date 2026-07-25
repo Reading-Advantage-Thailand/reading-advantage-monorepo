@@ -1,0 +1,96 @@
+{
+  "assignments": [
+    {
+      "agent_ref": "/root",
+      "allowed_outputs": [
+        "phase0-source-registry-v3.json",
+        "phase0-input-freeze-v3.json",
+        "phase0-root-acceptance-v3.json",
+        "phase1-role-dispatch-v2.json",
+        "plan.md"
+      ],
+      "forbidden_outputs": [
+        "phase0 v3 truth-test outputs",
+        "phase0 v3 independent-review outputs"
+      ],
+      "owner_role": "orchestrator-and-product-owner",
+      "task_id": "phase0-v3-publish-governance"
+    },
+    {
+      "agent_ref": "/root/t9_phase0_governance_author",
+      "allowed_outputs": [
+        "phase0_v3_truth_verifier.py",
+        "phase0_v3_truth_verifier_test.py",
+        "phase0-v3-fixture-manifest-v1.json",
+        "negative-fixtures/phase0-v3/*",
+        "phase0-v3-red-report-v1.json",
+        "phase0-v3-green-report-v1.json",
+        "role-receipts/phase0/phase0-v3-truth-test-author.json"
+      ],
+      "forbidden_outputs": [
+        "phase0-source-registry-v3.json",
+        "phase0-input-freeze-v3.json",
+        "phase0-root-acceptance-v3.json",
+        "phase1-role-dispatch-v2.json",
+        "phase0 v3 independent-review outputs"
+      ],
+      "owner_role": "phase0-v3-truth-test-author",
+      "task_id": "phase0-v3-author-truth-gates"
+    },
+    {
+      "agent_ref": "/root/phase5_review_b",
+      "allowed_outputs": [
+        "phase0-v3-independent-review-v1.json",
+        "role-receipts/phase0/phase0-v3-independent-reviewer.json"
+      ],
+      "forbidden_outputs": [
+        "phase0 v3 governance outputs",
+        "phase0 v3 truth-test outputs",
+        "phase0-root-acceptance-v3.json",
+        "phase1-role-dispatch-v2.json"
+      ],
+      "owner_role": "phase0-v3-independent-reviewer",
+      "task_id": "phase0-v3-review-governance"
+    }
+  ],
+  "authority": "delegated-root-product-owner",
+  "base_role_contract": {
+    "path": "phase0-role-ownership-manifest-v2.json",
+    "sha256": "b025b7494e51d493bf39e021a170cc8a2af99886eecf9807919c2a3d2ef2b7c9"
+  },
+  "issued_at": "2026-07-24T13:03:32.113Z",
+  "issued_by": "/root",
+  "required_inputs": {
+    "cohort_leaf_acceptance": {
+      "path": "phase0-cohort-leaf-binding-acceptance-v1.json",
+      "sha256": "24faee63cf3894954f0cc4af9af4d753db76ee1e28f9a39c02c428bb489701ae"
+    },
+    "game_identity_candidate": {
+      "path": "phase0-game-identity-map-v1.json",
+      "sha256": "7b2d3cf7fe5e17eab88f27804aac60e60c2da9e7089b82074b67d27721a47b3f"
+    },
+    "game_identity_review": {
+      "path": "phase0-game-identity-map-independent-review-v1.json",
+      "sha256": "73c4d1981eb7ee6e1af3400c5b553f96437c8694d9814556df84ed9ee6e10eca"
+    },
+    "phase0_v2_acceptance": {
+      "path": "phase0-root-acceptance-v2.json",
+      "sha256": "76bd4d4da9b0fea14656a59edc950a8abea16fbb2ed708a56bc69b1a78f2a7b6"
+    },
+    "t3_leaf_acceptance": {
+      "path": "phase0-t3-leaf-binding-acceptance-v1.json",
+      "sha256": "a550017ca170efc70b3b8b0741ab1062a818e0027282a54bdac655744d635b01"
+    }
+  },
+  "required_outcome": {
+    "castle_defense_remains_explicit_omission": true,
+    "game_count": 29,
+    "generic_slugification_allowed": false,
+    "phase1_authorized_only_after_root_acceptance_v3": true,
+    "resolvable_game_count": 28,
+    "unresolved_medium_or_higher": 0
+  },
+  "schema_version": "apk-t9-phase0-v3-role-dispatch.v1",
+  "status": "active",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+}

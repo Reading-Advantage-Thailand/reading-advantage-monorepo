@@ -1,0 +1,35 @@
+{
+  "schema_version": "apk-t9-phase0-v2-independent-reviewer-receipt.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "role": "phase0-adversarial-reviewer",
+  "agent_ref": "/root/phase5_review_b",
+  "completed_at": "2026-07-24T11:12:18Z",
+  "status": "independent-review-pass",
+  "review_binding": {
+    "path": "phase0-v2-independent-review.json",
+    "sha256": "3d22c717a2c83c30f0ba6d3739899c1526af9777e5ee6e99f6c8a924f808754d"
+  },
+  "reviewed_artifact_bindings": {
+    "phase0-source-registry-v2.json": "c770189b2202526f13015cdca8f9f0a688cb4fb2dbc663c969b7c582301e7d9b",
+    "phase0-budget-stop-loss-v2.json": "5c101f0bb267a4fc79cf938c86ab5f5f10422f3cf79ce53f3f06e66a6dc891d8",
+    "phase0-input-freeze-v2.json": "7f1cd3a995f4c3c0f1a4b6e938f43bfb10a613c1eda9548aad87833530707456",
+    "phase0-role-ownership-manifest-v2.json": "b025b7494e51d493bf39e021a170cc8a2af99886eecf9807919c2a3d2ef2b7c9",
+    "phase0-fixture-manifest-v2.json": "7019be8b36a58bc036bc70fecb6922f5ce432f34e221edaf91a0f19300ec67e0",
+    "phase0_active_truth_verifier.py": "d1f9d41a7f3923c5ce7c62bd2c5db54c86b816410c306a2e9ffe056e6c6e3c68",
+    "phase0_active_truth_verifier_test.py": "28628b2c58bf346d7d811694317dbe42cc13bcf95ef791be1ccca02f25ee4d4e",
+    "phase0-green-verification-report-v2.json": "cc6721b6c3e881dc130c824ef9e2025a952b6dc70714897d2c55f5c3abb7d8a3"
+  },
+  "preserved_v1_role_contract": {
+    "path": "phase0-role-ownership-manifest-pending-v1.json",
+    "sha256": "9f4eb756fb6f79b9099b83fc84f191dc421e111a3b35ba25f15ea8c77678b382"
+  },
+  "prior_high_remediation_verified": true,
+  "findings_remaining": {
+    "Critical": 0,
+    "High": 0,
+    "Medium": 0,
+    "Low": 0
+  },
+  "authority_boundary": "Reviewer receipt only; no product-owner decision was made."
+}

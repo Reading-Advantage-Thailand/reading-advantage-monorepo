@@ -1,0 +1,21 @@
+{
+  "schema_version": "apk-t9-phase2-v13-end-to-end-attacks.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "cases": [
+    {"id": "rpg-selected-insufficient-provenance-or-bespoke", "expected_code": "INVALID_CONTRADICTION_DISPOSITION"},
+    {"id": "rpg-negative-control-pointer-or-ledger-metadata-drift", "expected_code": "INVALID_CONFLICT_PROVENANCE_REFS"},
+    {"id": "rpg-false-claim-or-negative-search-counterpart-omitted", "expected_code": "INVALID_CONFLICT_EVIDENCE_REFS"},
+    {"id": "rpg-terminal-s31-traversal", "expected_state": "CANDIDATE_VERIFIED_PENDING_INDEPENDENT_REVIEW"},
+    {"id": "md-selected-insufficient-or-noncontradictory", "expected_code": "INVALID_CONTRADICTION_DISPOSITION"},
+    {"id": "md-idle-playing-or-counterpart-omitted", "expected_code": "INVALID_CONFLICT_EVIDENCE_REFS"},
+    {"id": "contradiction-use-taxonomy-or-partition", "expected_code": "INVALID_CONTRADICTION_DISPOSITION"},
+    {"id": "host-version-subsystem-state-machine-denominator-layer-controls", "expected_code": "UNAUTHORIZED_CONTRADICTION_QUARANTINE"},
+    {"id": "native-review-omits-contradiction-verdict", "expected_code": "MISSING_CONTRADICTION_REVIEW_VERDICT"},
+    {"id": "native-review-omits-contradiction-projection", "expected_code": "INVALID_CONTRADICTION_REVIEW_EVIDENCE"},
+    {"id": "native-review-hash-omits-v4-audit", "expected_code": "MISSING_CONTRADICTION_REVIEW_VERDICT"},
+    {"id": "native-v13-review-acceptance", "expected_state": "VERIFIED_PENDING_ROOT_ACCEPTANCE"},
+    {"id": "non-budget-inherited-finding-remains-blocking", "expected_code": "CURATED_ACCOUNTING_MISMATCH"},
+    {"id": "all-v12-v11-contracts-preserved", "expected_state": "PRESERVED_V12_BYTES_VERIFIED"},
+    {"id": "wrong-or-missing-v13-release-before-mapper", "expected_state": "INVALID"}
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": "apk-t9-phase2-v2-negative-fixture-group.v1",
+  "id": "dependency",
+  "cases": [
+    {
+      "id": "dependency-01",
+      "mutation": {"operation": "remove-dependency-edge"},
+      "expected_codes": ["DEPENDENCY_MISMATCH"]
+    }
+  ],
+  "expected_codes": ["DEPENDENCY_MISMATCH"],
+  "expected_state": "INVALID"
+}

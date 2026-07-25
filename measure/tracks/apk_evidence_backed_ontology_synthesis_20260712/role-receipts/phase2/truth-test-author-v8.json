@@ -1,0 +1,43 @@
+{
+  "schema_version": "apk-t9-phase2-role-receipt.v8",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "task_id": "phase2-curated-evidence-truth-v8",
+  "owner_role": "truth-test-author",
+  "agent_ref": "/root/t9_phase0_governance_author",
+  "dispatch": {
+    "path": "phase2-role-dispatch-v8.json",
+    "sha256": "5ae31c7f2f7342aabc364e3f847f4f1da2a3184ef1b6b995949776d14e4b8bf8"
+  },
+  "status": "sealed-red-v8-published-waiting-for-file-backed-mapper-v5",
+  "outputs": {
+    "phase2_v8_truth_verifier.py": "1499aa4ad7469cf2b7764f8adaf82802e02eaf6e8a8200668631595aacab24b7",
+    "phase2_v8_truth_verifier_test.py": "3a1847abe842ef6595d47d019f39e7b64fba884db05a8fba390342be58b61f35",
+    "phase2-v8-fixture-manifest.json": "db75e581b07a6b4edcbf97b41bd6b484cc2be65e905dd04dbadf6ff918d2ff09",
+    "negative-fixtures/phase2-v8/curated-evidence-attacks.json": "a6b333a41db47854e2b75f7d68e8ba5b5ea4eb7833cfb555a3b374405bb2a58a",
+    "phase2-v8-red-report.json": "ee922d80eab89e5ab9bc1ddb7192d97a920a8b8c9b2da70dca617e960ad0c9fd"
+  },
+  "verification": {
+    "focused_suite": "7/7 pass",
+    "focused_v8_cases": "12/12 matched",
+    "inherited_v7_suite": "7/7 pass",
+    "fixture_files": 8,
+    "fixture_cases": 76,
+    "runtime_seconds": 25.596,
+    "runtime_ceiling_seconds": 30,
+    "valid_zero_use_candidate_present": "pass-zero-findings",
+    "malformed_candidate_present": "INVALID_SCHEMA-no-exception",
+    "missing_candidate_state": "RED_WAITING_FOR_MAPPER_V5_OUTPUTS",
+    "live_checks": 38,
+    "stop_loss_cycle": 1,
+    "ruff": "pass",
+    "py_compile": "pass"
+  },
+  "green_report_published": false,
+  "scope": {
+    "mapper_decisions_authored": false,
+    "phase3_authorized": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false
+  }
+}

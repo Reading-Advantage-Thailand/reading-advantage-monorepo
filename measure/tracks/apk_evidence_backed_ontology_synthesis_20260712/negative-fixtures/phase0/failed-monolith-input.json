@@ -1,0 +1,13 @@
+{
+  "schema_version": "apk-t9-phase0-negative-fixture.v1",
+  "id": "failed-monolith-input",
+  "mutation": {
+    "type": "add-source",
+    "source": {
+      "id": "failed-monolith-ontology",
+      "path": "measure/archive/apk_cross_game_asset_ontology_20260712/asset-ontology.json",
+      "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_values": {}
+    }
+  }
+}

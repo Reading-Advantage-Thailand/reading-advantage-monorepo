@@ -1,0 +1,71 @@
+{
+  "schema_version": "apk-t9-phase0-v3-truth-test-author-receipt.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "task_id": "phase0-v3-author-truth-gates",
+  "role": "phase0-v3-truth-test-author",
+  "agent_ref": "/root/t9_phase0_governance_author",
+  "status": "red-to-green-verification-complete",
+  "dispatch_binding": {
+    "path": "phase0-v3-role-dispatch-v1.json",
+    "sha256": "a34ade4b97794bab87be92d6f72f7505e524861b3dd1013d68979e7784f6793f"
+  },
+  "registry_binding": {
+    "path": "phase0-source-registry-v3.json",
+    "sha256": "ae6050cc6c075614b34b6d8832a350f7d28945154315adebb25667fffc5b858c"
+  },
+  "input_freeze_binding": {
+    "path": "phase0-input-freeze-v3.json",
+    "sha256": "0517288c5aa267ddbd5f22fd6929cd74aaaacc74b9321d43094c72ade8614dae"
+  },
+  "output_bindings": [
+    {
+      "path": "phase0_v3_truth_verifier.py",
+      "sha256": "20312ab8442af0bb6e2288b0476977710dc5752b857e358f6b3703c9282076f8"
+    },
+    {
+      "path": "phase0_v3_truth_verifier_test.py",
+      "sha256": "270d89ed711a1b11e47e8cae99ea098693d800bce1a665da0d02e22a6603d967"
+    },
+    {
+      "path": "phase0-v3-fixture-manifest-v1.json",
+      "sha256": "974586ea6987e79b2299328d16d89f4d345dd192df9fd1666e2cc52adbecb0d2"
+    },
+    {
+      "path": "phase0-v3-red-report-v1.json",
+      "sha256": "3fe6656d1c06adb3ac28e28df58689118c8347a90f421e4a33dfe8e1579cdb9a"
+    },
+    {
+      "path": "phase0-v3-green-report-v1.json",
+      "sha256": "451da6ddb8c795254f674cede40568b83b41c5aab1c591f25e82f6be1e067bb3"
+    }
+  ],
+  "historical_red_package": {
+    "verifier_sha256": "50ba12d62a7dccb0aa9a8d5969d711377d3fc8ac04460d9d67859f19e2dbfa6e",
+    "focused_test_sha256": "e49edb23329c17c29b1f3db1b52b4f18eeadc52a85a42c00755d96eab5ff2f24",
+    "fixture_manifest_sha256": "974586ea6987e79b2299328d16d89f4d345dd192df9fd1666e2cc52adbecb0d2",
+    "red_report_sha256": "3fe6656d1c06adb3ac28e28df58689118c8347a90f421e4a33dfe8e1579cdb9a",
+    "red_stage_receipt_sha256": "c87cc959afefb24c23b16438f7b0e6cca73447c25836da193c78587a02ad0243"
+  },
+  "attestation": {
+    "live_state": "VERIFIED",
+    "live_checks": 70,
+    "live_findings": 0,
+    "focused_tests": 5,
+    "focused_passes": 5,
+    "adversarial_fixtures": 13,
+    "exact_identity_entries_rederived": 29,
+    "exact_t2_pointers_and_labels_rederived": 29,
+    "exact_identity_source_extractions_rederived": 29,
+    "exact_game_id_digest_verified": true,
+    "exact_resolvable_game_id_digest_verified": true,
+    "dispatch_required_input_closure_verified": true,
+    "registry_expected_values_verified": true,
+    "phase0_v2_acceptance_inactive": true,
+    "historical_missing_freeze_red_preserved": true,
+    "green_report_authored": true,
+    "root_owned_freeze_verified": true,
+    "review_or_acceptance_authored": false
+  },
+  "self_hash_note": "Receipt does not self-bind because that would change its bytes."
+}

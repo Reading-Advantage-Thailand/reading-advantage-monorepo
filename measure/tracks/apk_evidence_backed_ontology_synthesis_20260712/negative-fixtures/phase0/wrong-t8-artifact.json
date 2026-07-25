@@ -1,0 +1,8 @@
+{
+  "schema_version": "apk-t9-phase0-negative-fixture.v1",
+  "id": "wrong-t8-artifact",
+  "mutation": {
+    "type": "replace-t8-manifest-sha256",
+    "sha256": "1e3f3ca76214c9e582aa9e82c6bf1bece654fee808bfa91860621a6d39c6f766"
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "capabilities": [
+    {
+      "capability_id": "capability:bounded-frame-delta",
+      "consumer_use_ids": [
+        "use:bounded-frame-delta:babel-architect:BA-HIST-011",
+        "use:bounded-frame-delta:rune-forge-chamber:RFC-CUR-015",
+        "use:bounded-frame-delta:spellweavers-run:SW-TRANS-004",
+        "use:bounded-frame-delta:village-guardian:VG3-COMP-004",
+        "use:bounded-frame-delta:wizard-vs-zombie:WVZ-MECH-011"
+      ],
+      "disposition": "standardize",
+      "finding_ids": [
+        "similarity:bounded-frame-delta:01",
+        "similarity:bounded-frame-delta:02"
+      ]
+    },
+    {
+      "capability_id": "capability:single-completion-emission",
+      "consumer_use_ids": [
+        "use:single-completion-emission:abyssal-well:AW-HIST-023",
+        "use:single-completion-emission:babel-architect:BA-HIST-012",
+        "use:single-completion-emission:enchanted-library:EL-UI-002",
+        "use:single-completion-emission:griffin-riders-escape:GRF-CART-004",
+        "use:single-completion-emission:rune-forge-chamber:RFC-CUR-016",
+        "use:single-completion-emission:sorcerer-ziggurat:SZ-HIST-009",
+        "use:single-completion-emission:storm-castle-tower:SCT-TRANS-H002",
+        "use:single-completion-emission:village-guardian:VG3-COMP-006"
+      ],
+      "disposition": "standardize",
+      "finding_ids": [
+        "similarity:single-completion-emission:01",
+        "similarity:single-completion-emission:02",
+        "similarity:single-completion-emission:03"
+      ]
+    },
+    {
+      "capability_id": "capability:nonempty-content-precondition",
+      "consumer_use_ids": [
+        "use:nonempty-content-precondition:abyssal-well:AW-HIST-011",
+        "use:nonempty-content-precondition:archers-revenge:AR-B2-V8-012",
+        "use:nonempty-content-precondition:astral-mage:AM-HIST-004",
+        "use:nonempty-content-precondition:enchanted-library:EL-INIT-001",
+        "use:nonempty-content-precondition:griffin-riders-escape:GRF-START-001",
+        "use:nonempty-content-precondition:rune-forge-chamber:RFC-CUR-007",
+        "use:nonempty-content-precondition:rune-match:RM-MECH-005",
+        "use:nonempty-content-precondition:sorcerer-ziggurat:SZ-HIST-004",
+        "use:nonempty-content-precondition:village-guardian:VG3-MODEL-001"
+      ],
+      "disposition": "standardize",
+      "finding_ids": [
+        "similarity:nonempty-content-precondition:01",
+        "similarity:nonempty-content-precondition:02",
+        "similarity:nonempty-content-precondition:03"
+      ]
+    },
+    {
+      "capability_id": "capability:input-action-normalization",
+      "consumer_use_ids": [
+        "use:input-action-normalization:astral-mage:AM-HIST-011",
+        "use:input-action-normalization:dragon-rider:DR-CONTROL-001",
+        "use:input-action-normalization:enchanted-library:EL-CONTROL-001",
+        "use:input-action-normalization:griffin-riders-escape:GRF-CART-002",
+        "use:input-action-normalization:rune-forge-chamber:RFC-CUR-019",
+        "use:input-action-normalization:sorcerer-ziggurat:SZ-HIST-014",
+        "use:input-action-normalization:spellweavers-run:SW-INPUT-002",
+        "use:input-action-normalization:storm-castle-tower:SCT-MECH-H008"
+      ],
+      "disposition": "standardize",
+      "finding_ids": [
+        "similarity:input-action-normalization:01",
+        "similarity:input-action-normalization:02",
+        "similarity:input-action-normalization:03"
+      ]
+    },
+    {
+      "capability_id": "capability:time-and-frame-loop",
+      "consumer_use_ids": [
+        "use:time-and-frame-loop:babel-architect:BA-HIST-005",
+        "use:time-and-frame-loop:dragon-flight:DF-TRANS-001",
+        "use:time-and-frame-loop:dragon-rider:DR-TRANS-002",
+        "use:time-and-frame-loop:enchanted-library:EL-LOOP-001",
+        "use:time-and-frame-loop:magic-defense:MD-MECH-012",
+        "use:time-and-frame-loop:rune-forge-chamber:RFC-CUR-010",
+        "use:time-and-frame-loop:village-guardian:VG3-MODEL-006"
+      ],
+      "disposition": "extend",
+      "finding_ids": [
+        "similarity:time-and-frame-loop:01",
+        "similarity:time-and-frame-loop:02",
+        "difference:time-and-frame-loop:03"
+      ]
+    },
+    {
+      "capability_id": "capability:language-target-progression",
+      "consumer_use_ids": [
+        "use:language-target-progression:astral-mage:AM-HIST-005",
+        "use:language-target-progression:babel-architect:BA-HIST-004",
+        "use:language-target-progression:dungeon-liberator:DL-COLL-001",
+        "use:language-target-progression:enchanted-library:EL-COLL-001",
+        "use:language-target-progression:griffin-riders-escape:GRF-TRANS-001",
+        "use:language-target-progression:potion-rush:PR-CUR-011",
+        "use:language-target-progression:rune-forge-chamber:RFC-CUR-011",
+        "use:language-target-progression:sorcerer-ziggurat:SZ-HIST-006",
+        "use:language-target-progression:spellweavers-run:SW-TRANS-002",
+        "use:language-target-progression:storm-castle-tower:SCT-TRANS-H003",
+        "use:language-target-progression:village-guardian:VG3-MODEL-010"
+      ],
+      "disposition": "extend",
+      "finding_ids": [
+        "similarity:language-target-progression:01",
+        "similarity:language-target-progression:02",
+        "similarity:language-target-progression:03",
+        "similarity:language-target-progression:04"
+      ]
+    },
+    {
+      "capability_id": "capability:result-accounting",
+      "consumer_use_ids": [
+        "use:result-accounting:abyssal-well:AW-HIST-032",
+        "use:result-accounting:alchemists-synthesis:AS-RESULT-001",
+        "use:result-accounting:enchanted-library:EL-XP-001",
+        "use:result-accounting:magic-defense:MD-MECH-001",
+        "use:result-accounting:potion-rush:PR-CUR-014",
+        "use:result-accounting:rpg-battle:RPG-MECH-009",
+        "use:result-accounting:rune-forge-chamber:RFC-CUR-013",
+        "use:result-accounting:village-guardian:VG3-MODEL-017"
+      ],
+      "disposition": "extend",
+      "finding_ids": [
+        "difference:result-accounting:01",
+        "difference:result-accounting:02",
+        "difference:result-accounting:03"
+      ]
+    }
+  ],
+  "phase1_bindings": {
+    "phase1-claim-dependency-edges-v1.json": "2b279df4896c9620ea9acf17506e942c9df98e2b4d6c06a29d5293106aff0987",
+    "phase1-developer-effort-baseline-v1.json": "168403610d0c69160777ddeca5753dcc57b97e2a7db6ceed65f3e4ce64d14f91",
+    "phase1-mechanic-blueprints-v1.json": "ed3bee70f5e7e94ac101f295d9de3f768cdaf9d97d40d4529f2fbbbe8f479d61",
+    "phase1-root-acceptance.json": "bd911f865c95e24874dde657e856718910a05b1737634222055654b331dd020d",
+    "phase1-source-resolution-index-v1.json": "2900222c4fc4db8ffb354d4f25f5c1a8bef6930b2d7e8e1bb692dab27d860bd0"
+  },
+  "schema_version": "apk-t9-phase2-capability-classification.v5"
+}

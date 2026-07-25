@@ -1,0 +1,54 @@
+{
+  "schema_version": "apk-t9-phase1-negative-fixture-group.v2",
+  "id": "value-contract",
+  "cases": [
+    {
+      "id": "value-contract-01",
+      "mutation": {
+        "operation": "whole-envelope-copy"
+      },
+      "expected_codes": [
+        "WHOLE_CLAIM_ENVELOPE_COPY"
+      ]
+    },
+    {
+      "id": "value-contract-02",
+      "mutation": {
+        "operation": "digest-only-value"
+      },
+      "expected_codes": [
+        "DERIVATION_SEMANTIC_MISMATCH",
+        "DIGEST_ONLY_DERIVED_VALUE"
+      ]
+    },
+    {
+      "id": "value-contract-03",
+      "mutation": {
+        "operation": "value-digest-mismatch"
+      },
+      "expected_codes": [
+        "DERIVED_VALUE_DIGEST_MISMATCH"
+      ]
+    },
+    {
+      "id": "value-contract-04",
+      "mutation": {
+        "operation": "missing-value-digest",
+        "full_corpus": true
+      },
+      "expected_codes": [
+        "DERIVED_VALUE_DIGEST_MISSING",
+        "MISSING_REQUIRED_DECISION_FIELD"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "DERIVATION_SEMANTIC_MISMATCH",
+    "DERIVED_VALUE_DIGEST_MISMATCH",
+    "DERIVED_VALUE_DIGEST_MISSING",
+    "DIGEST_ONLY_DERIVED_VALUE",
+    "MISSING_REQUIRED_DECISION_FIELD",
+    "WHOLE_CLAIM_ENVELOPE_COPY"
+  ],
+  "expected_state": "INVALID"
+}

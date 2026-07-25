@@ -1,0 +1,35 @@
+{
+  "schema_version": "apk-t9-phase2-role-receipt.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "task_id": "phase2-author-truth-tests",
+  "owner_role": "truth-test-author",
+  "agent_ref": "/root/t9_phase0_governance_author",
+  "dispatch": {
+    "path": "phase2-role-dispatch-v1.json",
+    "sha256": "67e737601f8a6eb0337884a9dcac97258452437fc6dc156073707fecd9b783e1"
+  },
+  "status": "red-package-published-waiting-for-mapper-outputs",
+  "outputs": {
+    "phase2_truth_verifier.py": "1c51ed35184b260f73a053555efeae894fdfc9cf5a810765438ebbca6280c454",
+    "phase2_truth_verifier_test.py": "d6a5a57ab8cde097d7ae892872dcc7e7acfa35deccbf131fb6cbbaa151031366",
+    "phase2-fixture-manifest-v1.json": "ec748ba02b12369c70b23d1be3d1cb370a4532c7f96c59260fa4599e77033899",
+    "phase2-red-report-v1.json": "0d5699924bc7d22bf4170bd8983fef2577792cc0731342495a71a3b757a229c1"
+  },
+  "verification": {
+    "fixture_files": 10,
+    "negative_cases": 19,
+    "live_state": "RED_WAITING_FOR_MAPPER_OUTPUTS",
+    "live_finding_codes": [
+      "PHASE2_MAPPER_OUTPUTS_MISSING"
+    ],
+    "suite_status": "pending-final-seal"
+  },
+  "green_report_published": false,
+  "scope": {
+    "mapper_decisions_authored": false,
+    "phase3_authorized": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false
+  }
+}

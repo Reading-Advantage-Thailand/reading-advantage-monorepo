@@ -1,0 +1,92 @@
+{
+  "schema_version": "apk-t9-phase0-t3-leaf-binding-catalog-author-receipt.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "task_id": "phase0-repair-t3-leaf-bindings",
+  "role": "t3-leaf-binding-catalog-author",
+  "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+  "status": "candidate-authored-awaiting-independent-verification",
+  "repair_dispatch": {
+    "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase0-t3-repair-role-dispatch-v1.json",
+    "sha256": "f6a9aedb3eb3246fc107363854aff75ab50b0ed1af19280b5925c3c8138a78e5"
+  },
+  "input_bindings": [
+    {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b"
+    },
+    {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/product-owner-acceptance.json",
+      "sha256": "3a59c50e9269aed4bf2c49fe9ff3fa9943684580553cdbc6c37eaa34b780a004"
+    },
+    {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/candidate-pilot-manifest.json",
+      "sha256": "cd1a2fe12f6b723451a395f286e4a00fe56ae09ead337eddda0d9a71986a9168"
+    },
+    {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/pilot-independent-review.json",
+      "sha256": "ddd4c4ab9e4ea9e9de824ef78c748729e0ce9b6dbbf17d698ae88f0baf89dcd8"
+    },
+    {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/role-receipts/adversarial-reviewer.json",
+      "sha256": "9d2de4b10b6f3085f8748da064a9f8f1d5045fefa88402717d1efe9e63b99bd5"
+    },
+    {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/pilot-blueprint.json",
+      "sha256": "358f9a0f32905a0d48cba1b976a43accae6ea51c43f648f35b4af8813d5e0cc9"
+    },
+    {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json",
+      "sha256": "84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e"
+    },
+    {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json",
+      "sha256": "b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6"
+    },
+    {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/abyssal-well-claim-ledger.json",
+      "sha256": "4f3042a2dba0d39a885e5b8c0f707adcfbafd5fbf72edebc6c14a6594a413566"
+    }
+  ],
+  "output_bindings": [
+    {
+      "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase0-t3-leaf-binding-candidate-v1.json",
+      "sha256": "a04bc93f78ad33e22a56af7b94d61e721ae5828ed23fd509456c5250b366bbac"
+    }
+  ],
+  "coverage_attestation": {
+    "leaf_count": 4,
+    "claim_count": 491,
+    "game_count": 3,
+    "blueprint_internal_reference_count": 385,
+    "blueprint_internal_references_resolved": 385,
+    "blueprint_internal_references_unresolved": 0,
+    "required_games": [
+      "dragon-flight",
+      "rpg-battle",
+      "abyssal-well"
+    ]
+  },
+  "scope_attestation": {
+    "archived_inputs_modified": false,
+    "phase1_outputs_authored": false,
+    "truth_test_outputs_authored": false,
+    "review_outputs_authored": false,
+    "acceptance_outputs_authored": false,
+    "responsive_decisions_authored": false,
+    "asset_decisions_authored": false,
+    "implementation_or_shipping_authorized": false
+  },
+  "provenance": {
+    "assignment_source": "phase0-t3-repair-role-dispatch-v1.json",
+    "fork_turns_none_claimed": false,
+    "prior_role_history": [
+      "phase0 reviewer and coordinator work preceded the explicit additive catalog-author reassignment",
+      "phase1 mechanics-capability mapper work was paused before output publication when the missing T3 leaf bindings were identified"
+    ],
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "unavailable_fields_not_fabricated": true
+  },
+  "self_hash_note": "The receipt does not self-bind because embedding its own digest would change its bytes."
+}

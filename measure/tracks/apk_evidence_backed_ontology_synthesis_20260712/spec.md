@@ -2,7 +2,7 @@
 
 ## Overview
 
-Derive cross-game mechanic, capability, responsive, and semantic asset requirements only from accepted, hash-pinned denominator, pilot, cohort, and candidate-forensics manifests. Synthesis cannot add factual claims.
+Derive cross-game mechanic, capability, responsive, and semantic asset requirements only from accepted, hash-pinned denominator, pilot, cohort, and candidate-forensics manifests. Synthesis cannot add factual claims. It also emits a forward-only canonical-adoption matrix under the program's fixed ElvGames pack policy; that policy is a delivery constraint, not evidence about a legacy asset.
 
 Generators may render approved decisions but may not decide mechanics, scenes, capabilities, responsive strategies, asset roles, confidence, conflicts, or reuse dispositions.
 
@@ -13,6 +13,12 @@ Generators may render approved decisions but may not decide mechanics, scenes, c
 - Accepted T4–T7 cohort manifests.
 - Accepted T8 per-candidate asset manifest.
 - Immutable T1 gate version.
+- The program's canonical ElvGames pack policy: source root
+  `packages/advantage-play-kit/assets/standard` and the standard-pack semantic-key
+  grammar. This policy cannot add, replace, or upgrade any T2-T8 factual claim.
+- The accepted versioned standard-pack release, generated catalog digest, and
+  source-receipt digest. These constrain candidate-key selection but do not add
+  historical claims about legacy games or assets.
 
 Failed `apk_cross_game_asset_ontology_20260712` outputs are forbidden inputs except labeled counterexamples.
 
@@ -32,7 +38,7 @@ Derive game-specific compact/wide requirements from accepted current/browser/his
 
 ### FR4: Asset normalization
 
-Normalize concrete scene usages into semantic families after usage evidence exists. Link every semantic role to concrete usages, capabilities, profiles, and candidate dispositions. Separate gameplay variants from theme treatments.
+Normalize concrete scene usages into semantic families after usage evidence exists. Link every semantic role/state to concrete usages, capabilities, profiles, candidate dispositions, and a standard-pack candidate key or an explicit blocked state. The matrix uses standard-pack-relative semantic keys only; direct legacy paths, vendor filenames, and inferred near matches are forbidden. Separate gameplay variants from source-pack treatments.
 
 ### FR5: Gaps and delivery
 
@@ -43,6 +49,8 @@ Rank missing capabilities, responsive primitives, physical assets, and cartridge
 - Removing a cited upstream claim invalidates every dependent record.
 - Synthetic scenes, generic responsive templates, unsupported roles, directory citations, and stale candidate counts fail.
 - Candidate rows exactly equal T8 accepted denominator.
+- A direct legacy path, vendor filename, absent standard-pack candidate key, or
+  non-blocked unknown adoption mapping fails.
 - Standardization without two exact consumers fails.
 - Output generation is deterministic and decision-free.
 
@@ -59,3 +67,5 @@ Rank missing capabilities, responsive primitives, physical assets, and cartridge
 
 - Final acceptance and handoff.
 - Shared-kit, art, or cartridge implementation.
+- Per-file visual inspection of the complete ElvGames pack; only selected adopted
+  mappings advance to T10 contract, catalog, receipt, release, and visual validation.

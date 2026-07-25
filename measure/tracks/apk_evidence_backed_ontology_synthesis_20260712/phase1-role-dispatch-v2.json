@@ -1,0 +1,151 @@
+{
+  "schema_version": "apk-t9-phase1-role-dispatch.v2",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 1,
+  "status": "active",
+  "authority": "delegated-root-product-owner",
+  "issued_at": "2026-07-24T13:38:12.576Z",
+  "issued_by": "/root",
+  "assignments": [
+    {
+      "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+      "allowed_outputs": [
+        "phase1-source-resolution-index-v1.json",
+        "phase1-mechanic-blueprints-v1.json",
+        "phase1-developer-effort-baseline-v1.json",
+        "phase1-claim-dependency-edges-v1.json",
+        "role-receipts/phase1/mechanics-capability-mapper.json"
+      ],
+      "forbidden_outputs": [
+        "phase1_truth_verifier.py",
+        "phase1_truth_verifier_test.py",
+        "negative-fixtures/phase1/*",
+        "phase1-independent-review.json",
+        "phase1-root-acceptance.json"
+      ],
+      "owner_role": "mechanics-capability-mapper",
+      "task_id": "phase1-map-mechanics-and-effort"
+    },
+    {
+      "agent_ref": "/root/t9_phase0_governance_author",
+      "allowed_outputs": [
+        "phase1_truth_verifier.py",
+        "phase1_truth_verifier_test.py",
+        "phase1-fixture-manifest-v1.json",
+        "negative-fixtures/phase1/*",
+        "phase1-red-report-v1.json",
+        "role-receipts/phase1/truth-test-author.json",
+        "phase1-green-report-v1.json"
+      ],
+      "forbidden_outputs": [
+        "phase1-source-resolution-index-v1.json",
+        "phase1-mechanic-blueprints-v1.json",
+        "phase1-developer-effort-baseline-v1.json",
+        "phase1-claim-dependency-edges-v1.json",
+        "phase1-independent-review.json",
+        "phase1-root-acceptance.json"
+      ],
+      "owner_role": "truth-test-author",
+      "task_id": "phase1-author-truth-tests"
+    },
+    {
+      "agent_ref": "/root/phase5_review_b",
+      "allowed_outputs": [
+        "phase1-independent-review.json",
+        "role-receipts/phase1/mechanics-capability-reviewer.json"
+      ],
+      "forbidden_outputs": [
+        "mapper outputs",
+        "truth-test outputs"
+      ],
+      "owner_role": "mechanics-capability-reviewer",
+      "task_id": "phase1-review-mechanics-and-effort"
+    },
+    {
+      "agent_ref": "/root",
+      "allowed_outputs": [
+        "phase1-root-acceptance.json",
+        "plan.md"
+      ],
+      "forbidden_outputs": [
+        "mapper outputs",
+        "truth-test outputs",
+        "review outputs"
+      ],
+      "owner_role": "product-owner-acceptance-author",
+      "task_id": "phase1-product-owner-acceptance"
+    }
+  ],
+  "incompatible_role_pairs": [
+    [
+      "mechanics-capability-mapper",
+      "mechanics-capability-reviewer"
+    ],
+    [
+      "truth-test-author",
+      "mechanics-capability-reviewer"
+    ],
+    [
+      "orchestrator",
+      "mechanics-capability-mapper"
+    ],
+    [
+      "orchestrator",
+      "truth-test-author"
+    ],
+    [
+      "orchestrator",
+      "mechanics-capability-reviewer"
+    ]
+  ],
+  "base_role_contract": {
+    "path": "phase0-role-ownership-manifest-v2.json",
+    "sha256": "b025b7494e51d493bf39e021a170cc8a2af99886eecf9807919c2a3d2ef2b7c9"
+  },
+  "phase0_v3_bindings": {
+    "root_acceptance": {
+      "path": "phase0-root-acceptance-v3.json",
+      "sha256": "0480362baab8a237cf71fafc20800979793848fd70907013e27a462330690960"
+    },
+    "source_registry": {
+      "path": "phase0-source-registry-v3.json",
+      "sha256": "ae6050cc6c075614b34b6d8832a350f7d28945154315adebb25667fffc5b858c"
+    },
+    "input_freeze": {
+      "path": "phase0-input-freeze-v3.json",
+      "sha256": "0517288c5aa267ddbd5f22fd6929cd74aaaacc74b9321d43094c72ade8614dae"
+    },
+    "identity_map": {
+      "path": "phase0-game-identity-map-v1.json",
+      "sha256": "7b2d3cf7fe5e17eab88f27804aac60e60c2da9e7089b82074b67d27721a47b3f",
+      "mapping_digest": "458a5c20db75617820604948cb004a14d579c828cedecbbcb7bdbada2f0a2b0a"
+    },
+    "independent_review": {
+      "path": "phase0-v3-independent-review-v1.json",
+      "sha256": "ac93946436589a37354c2a828e3c49e9df8d95d9c3d6438109258fb7494ff5fd"
+    }
+  },
+  "input_contract": {
+    "game_count": 29,
+    "resolvable_game_count": 28,
+    "game_ids_sha256": "84c9b442ac27cdd8bb9e895d5bf7c9874beecdf22674f766f612ee26c54f71a5",
+    "resolvable_game_ids_sha256": "8dd4aea6de41c80b97515ae7d82fce87b617e0c438ee429db02667e99b18eed3",
+    "castle_defense_disposition": "blocked-by-unknown",
+    "castle_scene_or_state_ids": [],
+    "fabricated_castle_scene_state_allowed": false,
+    "generic_slugification_allowed": false,
+    "accepted_leaf_resolution_required": true
+  },
+  "supersedes": {
+    "path": "phase1-role-dispatch-v1.json",
+    "sha256": "045e0c31096fec4cb8a254a0805b6a0480ae0395fffd8b9ebce3bbbb74895b7b",
+    "status": "inactive"
+  },
+  "scope": {
+    "asset_mapping_authorized": false,
+    "implementation_authorized": false,
+    "phase2_capability_classification_authorized": false,
+    "responsive_decisions_authorized": false,
+    "shipping_authorized": false
+  }
+}

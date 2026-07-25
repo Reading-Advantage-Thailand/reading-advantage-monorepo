@@ -1,0 +1,5 @@
+{
+  "id": "stale-leaf-hash",
+  "operation": "stale-leaf-hash",
+  "expected_codes": ["STALE_LEAF_HASH"]
+}

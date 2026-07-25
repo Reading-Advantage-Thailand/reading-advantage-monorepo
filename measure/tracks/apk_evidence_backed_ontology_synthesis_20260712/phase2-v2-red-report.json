@@ -1,0 +1,146 @@
+{
+  "schema_version": "apk-t9-phase2-v2-red-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "captured_at": "2026-07-24T17:05:15Z",
+  "status": "valid-red-v2-waiting-for-mapper-outputs",
+  "state": "RED_WAITING_FOR_MAPPER_OUTPUTS",
+  "supersession_and_remediation": {
+    "rejected_contract": "phase2-red-report-v1.json",
+    "rejected_contract_sha256": "0d5699924bc7d22bf4170bd8983fef2577792cc0731342495a71a3b757a229c1",
+    "status": "rejected-superseded-non-authoritative-history",
+    "defects": [
+      "Disjoint whole-game partition confused evidence-processing batches with ontology membership.",
+      "One-to-one comparison/classification prevented canonical cross-batch aggregation.",
+      "Canonical capabilities lacked readable names and behavior contracts.",
+      "Exact scene/state consumers were not directly exposed."
+    ],
+    "bounded_remediation": [
+      "Allow overlapping evidence batches of two to three games without requiring a whole-game partition.",
+      "Aggregate one canonical capability across one or more evidence batches.",
+      "Require a readable capability name and behavior contract.",
+      "Bind direct consumers with exact game, scene, state, coverage, status, claim, record, field, and value evidence.",
+      "Route all 633 mechanic records exactly once and account for all 28 games through capability or explicit non-capability-context routing.",
+      "Require two independently evidenced games for standardize/extend and exact incompatibility differences for game-specific/bespoke."
+    ],
+    "history_deleted_or_overwritten": false,
+    "preserved_v1_hashes": {
+      "phase2_truth_verifier.py": "1c51ed35184b260f73a053555efeae894fdfc9cf5a810765438ebbca6280c454",
+      "phase2_truth_verifier_test.py": "d6a5a57ab8cde097d7ae892872dcc7e7acfa35deccbf131fb6cbbaa151031366",
+      "phase2-fixture-manifest-v1.json": "ec748ba02b12369c70b23d1be3d1cb370a4532c7f96c59260fa4599e77033899",
+      "phase2-red-report-v1.json": "0d5699924bc7d22bf4170bd8983fef2577792cc0731342495a71a3b757a229c1",
+      "role-receipts/phase2/truth-test-author.json": "90082f7f030f1da6e80d4c4383909c76a379e722ea3553712a775dffa2c25980"
+    }
+  },
+  "bindings": {
+    "phase2-role-dispatch-v2.json": "ccd86d8fc70d5e3dbbdfd83b32f033ef9945ee7518056fbae8773ca1a564ebf5",
+    "phase1-root-acceptance.json": "bd911f865c95e24874dde657e856718910a05b1737634222055654b331dd020d",
+    "phase1-source-resolution-index-v1.json": "2900222c4fc4db8ffb354d4f25f5c1a8bef6930b2d7e8e1bb692dab27d860bd0",
+    "phase1-mechanic-blueprints-v1.json": "ed3bee70f5e7e94ac101f295d9de3f768cdaf9d97d40d4529f2fbbbe8f479d61",
+    "phase1-developer-effort-baseline-v1.json": "168403610d0c69160777ddeca5753dcc57b97e2a7db6ceed65f3e4ce64d14f91",
+    "phase1-claim-dependency-edges-v1.json": "2b279df4896c9620ea9acf17506e942c9df98e2b4d6c06a29d5293106aff0987"
+  },
+  "truth_package": {
+    "phase2_v2_truth_verifier.py": "e0d87971d76a38812e9db7471f729b045817e19c8e47287db69cbfd687a1d5fd",
+    "phase2_v2_truth_verifier_test.py": "a5909e5f4bc647475ec132eb65fd24cce3a1fad6230329f505ca39380af95d61",
+    "phase2-v2-fixture-manifest.json": "4d4b0285080bca1f9edf767db4446a733cf29aa3d19ccc3dd07c120e2e2ec11b",
+    "fixture_count": 10,
+    "case_count": 20,
+    "fixture_suite_digest": "f69f80e05e877701322615439438aef5f75c0d781b4aae439f1474dc580200ce",
+    "focused_suite": "8/8 pass",
+    "runtime_seconds": 2.79,
+    "ruff": "pass"
+  },
+  "production_contract": {
+    "comparison_batches": {
+      "shape": [
+        "batch_id",
+        "capability_id",
+        "game_ids",
+        "similarities",
+        "differences"
+      ],
+      "games_per_batch": "2-3 unique resolvable games",
+      "overlap_allowed": true,
+      "whole_game_partition_required": false,
+      "canonical_capability_may_aggregate_multiple_batches": true
+    },
+    "canonical_capability": {
+      "shape": [
+        "capability_id",
+        "name",
+        "behavior_contract",
+        "owner",
+        "extension_boundary",
+        "tests",
+        "disposition",
+        "evidence_batch_ids",
+        "consumers",
+        "similarities",
+        "differences"
+      ],
+      "readable_name_and_behavior_required": true,
+      "all_targeted_batches_findings_and_consumers_aggregated_exactly": true
+    },
+    "direct_consumer_shape": [
+      "game_id",
+      "scene_id",
+      "state_id",
+      "coverage_granularity",
+      "scope_status",
+      "factual_evidence_status",
+      "claim_id",
+      "record_id",
+      "field_id",
+      "value_sha256"
+    ],
+    "consumer_rules": "Exact Phase 1 mechanic record binding; explicit null scene/state preserved; placement/scope/factual status cannot collapse.",
+    "standardize": "At least two distinct independently evidenced games, resolved accepted strong mechanic consumers only; noun/art and provisional evidence cannot establish standardization.",
+    "extend": "At least two distinct independently evidenced games plus shared similarities, meaningful differences, readable shared core, and extension points.",
+    "game_specific_or_bespoke": "Exact difference evidence and boundary incompatibility references are mandatory.",
+    "mechanic_routing": "All 633 Phase 1 mechanic records route exactly once to a capability consumer or explicit non-capability-context row; routed records account for all 28 resolvable games.",
+    "claim_preservation": "All 1,248 Phase 1 claims retained; all 24 upstream unknowns preserved unresolved; dependency edges exactly equal evidence references.",
+    "shape": "Missing and surplus fields rejected for every declared container and row.",
+    "budgets": {
+      "negative_fixture_files_max": 16,
+      "normalized_source_documents_max": 32,
+      "published_output_bytes_max": 1048576,
+      "suite_runtime_seconds_max": 30
+    }
+  },
+  "required_rejections": [
+    "DISJOINT_PARTITION_ASSUMPTION",
+    "OVERLAP_REJECTED",
+    "BATCH_GAME_LIMIT_EXCEEDED",
+    "CROSS_BATCH_AGGREGATION_MISSING",
+    "OPAQUE_CAPABILITY_CONTRACT",
+    "SCENE_STATE_CONSUMER_OMITTED",
+    "NOUN_ART_ONLY_STANDARDIZATION",
+    "PROVISIONAL_ONLY_STANDARDIZATION",
+    "BESPOKE_WITHOUT_INCOMPATIBILITY",
+    "INVENTED_BEHAVIOR",
+    "PLACEMENT_STATUS_COLLAPSE",
+    "UNKNOWN_RESOLUTION",
+    "MISSING_REQUIRED_FIELD",
+    "SURPLUS_FIELD",
+    "TAMPERED_HASH",
+    "OUTPUT_BUDGET_EXCEEDED",
+    "MECHANIC_ROUTING_MISMATCH",
+    "CLAIM_SET_MISMATCH",
+    "DEPENDENCY_MISMATCH",
+    "STALE_OR_WRONG_RECEIPT"
+  ],
+  "missing_mapper_outputs": [
+    "phase2-capability-comparisons-v1.json",
+    "phase2-capability-classification-v1.json",
+    "phase2-extension-boundaries-v1.json",
+    "phase2-claim-dependency-edges-v1.json",
+    "role-receipts/phase2/capability-mapper.json"
+  ],
+  "live_verification": {
+    "checks": 12,
+    "sole_finding": "PHASE2_MAPPER_OUTPUTS_MISSING"
+  },
+  "green_publication_authorized": false,
+  "next_action": "Capability mapper may publish only dispatch-owned outputs bound to this exact v2 truth contract; truth author must not revise Red expectations to accommodate mapper output."
+}

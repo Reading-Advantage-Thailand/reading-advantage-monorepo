@@ -1,0 +1,70 @@
+{
+  "schema_version": "apk-t9-phase2-v13-red-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "status": "valid-red-v13-waiting-for-root-v13-authority",
+  "state": "RED_WAITING_FOR_ROOT_V13_AUTHORITY",
+  "authority": {"path": "phase2-role-dispatch-v13.json", "sha256": "04eda4bfda92f171c61cda359843afe9c6057ddc673a6afca8e6c1f29048a766"},
+  "truth_package": {
+    "phase2_v13_truth_verifier.py": "0ed4c48ad6835fa12662de455c226011c7de3f0a1e02abb3cc2f73ebead85b18",
+    "phase2_v13_truth_verifier_test.py": "6802a680f830c8a466a37b3984b122c5833ae195b2f1ff931c01111f60541cc4",
+    "phase2-v13-fixture-manifest.json": "d72968ce40caddcba24f3d1ac8bc04f64d4a56ff5d8741e5c212c5471aa01316",
+    "negative-fixtures/phase2-v13/end-to-end-attacks.json": "d8b9d688ef4280379968626f724658ad4c849c1c83c1ff725f33023e14efe4a3",
+    "fixture_files": 1,
+    "fixture_cases": 15,
+    "focused_suite": "4/4 pass",
+    "runtime_seconds": 8.109,
+    "wall_runtime_seconds": 8.37,
+    "maxrss_kb": 46796,
+    "ruff": "pass",
+    "py_compile": "pass",
+    "json_validation": "pass"
+  },
+  "v13_contradiction_results": {
+    "curated_schema": "apk-t9-phase2-curated-capability-evidence.v4",
+    "exact_contradiction_allowlist": ["magic-defense:MD-TRANS-006", "rpg-battle:RPG-NEG-001"],
+    "normal_record_null_empty_contract": true,
+    "contradiction_basis_exclusive_to_allowlist": true,
+    "contradiction_records_excluded_from_uses_and_taxonomy_candidates": true,
+    "all_taxonomy_ids_not_applicable_on_contradictions": true,
+    "basis_conflict_and_provenance_refs_equal_registry_exactly": true,
+    "rpg_source_index_to_s31_terminal_traversal_verified": true,
+    "rpg_terminal_document_sha256": "b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6",
+    "rpg_fixture_kind_and_expected_rejected_verified": true,
+    "rpg_supporting_location_nulls_verified": true,
+    "md_full_fact_category_scene_internal_excerpts_and_counterpart_verified": true,
+    "all_six_non_contradiction_control_families_reject_automatic_quarantine": true
+  },
+  "native_review_results": {
+    "schema": "apk-t9-phase2-independent-review.v13",
+    "all_633_record_rows_required": true,
+    "twelve_exact_record_verdicts_required": true,
+    "full_v4_audit_hash_required": true,
+    "registry_contradiction_projection_required": true,
+    "non_registry_contradiction_projection_forbidden": true,
+    "native_v13_validation_precedes_projection": true,
+    "rpg_and_md_inherited_projection_recomputed": true,
+    "valid_review_state": "VERIFIED_PENDING_ROOT_ACCEPTANCE"
+  },
+  "authority_order_results": {
+    "before_root_authority": {"state": "RED_WAITING_FOR_ROOT_V13_AUTHORITY", "sole_code": "ROOT_V13_AUTHORITY_MISSING"},
+    "correct_expected_release_with_missing_mapper": {"state": "RED_WAITING_FOR_MAPPER_V5_OUTPUTS", "sole_code": "PHASE2_MAPPER_V5_OUTPUTS_MISSING"},
+    "wrong_expected_release_with_missing_mapper": {"state": "INVALID", "sole_code": "MAPPER_RELEASE_MISMATCH"},
+    "missing_expected_release_after_release_exists": {"state": "INVALID", "sole_code": "EXPECTED_MAPPER_RELEASE_REQUIRED"},
+    "authority_validation_precedes_mapper_presence": true,
+    "six_mapper_outputs_bound": true,
+    "public_entrypoint": "verify_phase2",
+    "mocks_used": false
+  },
+  "inherited_contract": {
+    "all_v12_bytes_preserved": true,
+    "all_v12_and_v11_schema_semantic_review_authority_manifest_counterexample_no_global_count_quota_and_output_budget_contracts_inherited": true,
+    "v12_verifier_sha256": "c9603f2caeb40df5626d6e35a3c2a754d5dac9099827eb8f02cd7c204a3972a4",
+    "v12_test_sha256": "a61f55d5914c5b6892949b54ceb0e7f8b7805d150d8e270bacf227f187e444ed",
+    "non_v13_curated_accounting_attack_remains_blocking": true
+  },
+  "live_red": {"state": "RED_WAITING_FOR_ROOT_V13_AUTHORITY", "sole_finding": "ROOT_V13_AUTHORITY_MISSING", "checks": 79},
+  "budgets": {"fixture_files_max": 16, "fixture_files_actual": 1, "suite_runtime_seconds_max": 30, "suite_runtime_seconds_actual": 8.109, "published_output_bytes_max_each": 1048576},
+  "green_publication_authorized": false,
+  "next_action": "Root independently reruns v13, publishes the v13 truth seal and externally hashed mapper release, then releases mapper v5-v13 for the two exact quarantines and all normal records."
+}

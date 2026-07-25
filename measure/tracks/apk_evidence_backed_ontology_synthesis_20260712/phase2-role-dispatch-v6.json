@@ -1,0 +1,230 @@
+{
+  "assignments": [
+    {
+      "agent_ref": "/root/t9_phase0_governance_author",
+      "allowed_outputs": [
+        "phase2_v6_truth_verifier.py",
+        "phase2_v6_truth_verifier_test.py",
+        "phase2-v6-fixture-manifest.json",
+        "negative-fixtures/phase2-v6/*",
+        "phase2-v6-red-report.json",
+        "phase2-v6-green-report.json",
+        "role-receipts/phase2/truth-test-author-v6.json"
+      ],
+      "forbidden_outputs": [
+        "all prior artifacts",
+        "mapper v4 outputs",
+        "review outputs",
+        "phase2-root-acceptance.json"
+      ],
+      "owner_role": "truth-test-author",
+      "task_id": "phase2-specificity-red-green-v6"
+    },
+    {
+      "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+      "allowed_outputs": [
+        "phase2-capability-comparisons-v4.json",
+        "phase2-capability-classification-v4.json",
+        "phase2-extension-boundaries-v4.json",
+        "phase2-claim-dependency-edges-v4.json",
+        "role-receipts/phase2/capability-mapper-v4.json"
+      ],
+      "forbidden_outputs": [
+        "all prior artifacts",
+        "truth outputs",
+        "review outputs",
+        "phase2-root-acceptance.json"
+      ],
+      "owner_role": "capability-mapper",
+      "task_id": "phase2-specificity-mapper-v4"
+    },
+    {
+      "agent_ref": "/root/phase5_review_b",
+      "allowed_outputs": [
+        "phase2-v6-independent-review.json",
+        "role-receipts/phase2/capability-reviewer-v6.json"
+      ],
+      "forbidden_outputs": [
+        "mapper outputs",
+        "truth outputs",
+        "phase2-root-acceptance.json"
+      ],
+      "owner_role": "capability-reviewer",
+      "task_id": "phase2-specificity-review-v6"
+    },
+    {
+      "agent_ref": "/root",
+      "allowed_outputs": [
+        "phase2-role-dispatch-v6.json",
+        "phase2-root-acceptance.json",
+        "plan.md"
+      ],
+      "forbidden_outputs": [
+        "mapper outputs",
+        "truth outputs",
+        "review outputs"
+      ],
+      "owner_role": "product-owner-acceptance-author",
+      "task_id": "phase2-product-owner-acceptance-v6"
+    }
+  ],
+  "authority": "delegated-root-product-owner",
+  "budget_contract": {
+    "negative_fixture_files_max": 16,
+    "published_output_bytes_max": 1048576,
+    "suite_runtime_seconds_max": 30
+  },
+  "issued_at": "2026-07-25T00:47:40.963653Z",
+  "issued_by": "/root",
+  "next_gate": "V6 Green, fresh exhaustive independent review with zero unresolved Medium+, and root product-usability acceptance.",
+  "phase": 2,
+  "required_negative_tests": [
+    "generic-difference-rules-and-parameters",
+    "difference-omits-comparison-dimension",
+    "difference-omits-game-variant",
+    "repeated-boundary-effect",
+    "generic-boundary-template",
+    "reused-relevance-template",
+    "relevance-does-not-name-excerpt-behavior",
+    "each-nine-residual-misroute",
+    "unbalanced-parentheses",
+    "unbalanced-quotes",
+    "mid-clause-ending",
+    "rejected-v5-candidate-fails",
+    "all-prior-semantic-lifecycle-and-budget-attacks"
+  ],
+  "residual_routing_regressions": {
+    "AW-HIST-030": "May support multiple capabilities only through separate complete behavioral excerpts; otherwise context.",
+    "capability:difficulty-configuration": [
+      "RPG-MECH-005",
+      "WVZ-MECH-009"
+    ],
+    "capability:nonempty-content-precondition": [
+      "AW-HIST-011"
+    ],
+    "non-capability-context": [
+      "DF-COPY-008",
+      "RPG-GRAPH-001",
+      "RPG-GRAPH-002",
+      "RPG-GRAPH-003",
+      "DF-COPY-010",
+      "AW-HIST-012"
+    ]
+  },
+  "review_finding_bindings": {
+    "P2V5-HIGH-001": "71 generic difference statements",
+    "P2V5-HIGH-002": "87 templated boundary effects",
+    "P2V5-HIGH-003": "570 uses with 13 relevance templates plus nine misroutes",
+    "P2V5-HIGH-004": "false Green truth package",
+    "P2V5-MEDIUM-001": "three incomplete excerpts"
+  },
+  "schema_version": "apk-t9-phase2-role-dispatch.v6",
+  "scope": {
+    "asset_mapping_authorized": false,
+    "implementation_authorized": false,
+    "phase3_responsive_authorized": false,
+    "shipping_authorized": false
+  },
+  "specificity_contract": {
+    "boundary_effect": {
+      "finding_specific": true,
+      "generic_phrases_forbidden": [
+        "typed invariant and shared orchestration",
+        "accepted tuning, rules, and presentation behavior",
+        "typed inputs and outcomes"
+      ],
+      "must_name_concrete_invariant_or_variant": true,
+      "required_fields": [
+        "shared_core_ownership",
+        "game_extension_ownership",
+        "interface_consequence"
+      ],
+      "unique_per_finding": true
+    },
+    "capability_use": {
+      "generic_capability_template_forbidden": true,
+      "must_name_behavior_from_excerpt": true,
+      "relevance_statement_must_be_excerpt_specific": true,
+      "relevance_statement_unique_per_record_and_capability": true
+    },
+    "difference_finding": {
+      "comparison_dimension": "Names the concrete behavioral axis that differs.",
+      "per_game_variant_fields": [
+        "game_id",
+        "variant_summary",
+        "consumer_record_ids"
+      ],
+      "required_fields": [
+        "comparison_dimension",
+        "per_game_variants",
+        "statement"
+      ],
+      "statement": "Names the comparison dimension and every game variant; generic rules-and-parameters language forbidden.",
+      "variant_summary": "Complete concise game-specific behavior grounded in exact excerpts."
+    },
+    "excerpt": {
+      "balanced_parentheses_required": true,
+      "balanced_quotes_required": true,
+      "complete_clause_required": true,
+      "ellipsis_forbidden": true,
+      "literal_substring_required": true,
+      "mid_clause_ending_forbidden": true
+    },
+    "similarity_finding": {
+      "statement_must_name_exact_shared_invariant": true
+    }
+  },
+  "status": "active-independent-review-remediation",
+  "supersedes": {
+    "dispatch": {
+      "path": "phase2-role-dispatch-v5.json",
+      "sha256": "586a21f5ae1fd0ac1a5b429de6303394362e0e3f53e28b1374dfb5d45fd7f558",
+      "status": "inactive"
+    },
+    "rejected_false_green": {
+      "candidate": [
+        {
+          "path": "phase2-capability-comparisons-v3.json",
+          "sha256": "9407896e691f2c156b4ba22ea07f76c64c9e052b2b892e31fcff68a7091ec8a4"
+        },
+        {
+          "path": "phase2-capability-classification-v3.json",
+          "sha256": "6a76369c35bfd1fe6e4b2b021544628002e99a440cddcd3f620f6d920ff0765b"
+        },
+        {
+          "path": "phase2-extension-boundaries-v3.json",
+          "sha256": "84595467e1c834f4155b566f422585cb538d46a8de262acd43c1e2d029928a7e"
+        },
+        {
+          "path": "phase2-claim-dependency-edges-v3.json",
+          "sha256": "242b79c50bba9a9a4a1d1c602b66a6e5dd820c5bb0eeb33a974ba4fdd7966bdd"
+        },
+        {
+          "path": "role-receipts/phase2/capability-mapper-v3.json",
+          "sha256": "bbae271bb2a7bf8d9d4f8cfeea492a5c90a23def934bc0de4023e07ebfaf9eda"
+        },
+        {
+          "path": "phase2-v5-green-report.json",
+          "sha256": "a2bf211de569bfc1517f1e9fb1e272cba6046a66abd15a4a5520122afbf0b3a7"
+        },
+        {
+          "path": "role-receipts/phase2/truth-test-author-v5.json",
+          "sha256": "cef4ceeb47d00a15120e73b811ddf1261ede4eeb89575a5f706ec2fdf4826abe"
+        }
+      ],
+      "review": {
+        "High": 4,
+        "Medium": 1,
+        "path": "phase2-v5-independent-review.json",
+        "receipt": "d0a1940ff720cb5800478f5bc8687fd0bc3694c9bd1e58667e18af03c066fbc1",
+        "sha256": "94886c8a6625704ad94173da1690e60f83223294bdf863e5dde1326831d97df9",
+        "verdict": "independent-review-blocked"
+      }
+    }
+  },
+  "tdd_order": {
+    "green_only_after_mapper_v4": true,
+    "sealed_red_v6_before_mapper_v4": true
+  },
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+}

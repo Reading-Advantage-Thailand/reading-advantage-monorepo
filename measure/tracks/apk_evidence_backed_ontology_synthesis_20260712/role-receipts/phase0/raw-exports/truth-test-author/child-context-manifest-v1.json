@@ -1,0 +1,87 @@
+{
+  "first_inter_agent_task_line": 10,
+  "first_inter_agent_task_record_sha256": "5cd09efbbb9ffc127011e512188e363fa5b1d24afcd32a26eeb94a2eac351188",
+  "fresh_context_only": true,
+  "inherited_narrative": false,
+  "note": "Provider bootstrap, policy, AGENTS, and turn-context records precede the first task; no inherited conversational or inter-agent task turn precedes it.",
+  "pre_task_inter_agent_message_count": 0,
+  "pre_task_record_count": 9,
+  "pre_task_records": [
+    {
+      "is_inter_agent_message": false,
+      "line": 1,
+      "payload_type": null,
+      "record_sha256": "e68b6ff6e1c8cde39ed47e80c869a23333a18e9b6ea2571389c32bd5c4cf1f3f",
+      "record_type": "session_meta",
+      "role": null
+    },
+    {
+      "is_inter_agent_message": false,
+      "line": 2,
+      "payload_type": "task_started",
+      "record_sha256": "1e27c29c29527b2f1fa70f6016bab356a220e17a9b6473caf315ab3eaa796c0d",
+      "record_type": "event_msg",
+      "role": null
+    },
+    {
+      "is_inter_agent_message": false,
+      "line": 3,
+      "payload_type": "message",
+      "record_sha256": "98d5f336e4ad0ec827d69126f4594db2b100a5b0f63455d6a8fc6c14b9fa97e8",
+      "record_type": "response_item",
+      "role": "developer"
+    },
+    {
+      "is_inter_agent_message": false,
+      "line": 4,
+      "payload_type": "message",
+      "record_sha256": "2944490c58acba3f15fae0fdc76f96a355ab39c822dd43aee6cad2be65a26cc6",
+      "record_type": "response_item",
+      "role": "developer"
+    },
+    {
+      "is_inter_agent_message": false,
+      "line": 5,
+      "payload_type": "message",
+      "record_sha256": "7dddf91f236953217a17c9bcfe3ff68ad865cc402afaf170d8e8a1e54c50c7e5",
+      "record_type": "response_item",
+      "role": "developer"
+    },
+    {
+      "is_inter_agent_message": false,
+      "line": 6,
+      "payload_type": "message",
+      "record_sha256": "6186e939ed260273ea93f6243163a2a8c913d580baf0c56deadb35a8b9e4bfa7",
+      "record_type": "response_item",
+      "role": "user"
+    },
+    {
+      "is_inter_agent_message": false,
+      "line": 7,
+      "payload_type": null,
+      "record_sha256": "35692c3bad1740b93f83df46a5d9a393c8e36456cc474f7a459fac2991f782dd",
+      "record_type": "world_state",
+      "role": null
+    },
+    {
+      "is_inter_agent_message": false,
+      "line": 8,
+      "payload_type": null,
+      "record_sha256": "41b5c628faf9e9c5b563aa27535c2f566f4fb15de8faad1ef30853b148a6ad47",
+      "record_type": "turn_context",
+      "role": null
+    },
+    {
+      "is_inter_agent_message": false,
+      "line": 9,
+      "payload_type": null,
+      "record_sha256": "b49f496354b553312497df0329e89122fa5dc3d713548e95a7f06246f8682520",
+      "record_type": "inter_agent_communication_metadata",
+      "role": null
+    }
+  ],
+  "schema_version": "apk-t9-role-context-manifest.v1",
+  "session_id": "019f91e9-0b77-7683-9ec5-76a33c41d9fa",
+  "session_rollout_bytes": 1531705,
+  "session_rollout_sha256": "e09da1b526878656e822e99f638d0d9d439a7feb9f358ec0ff965c2dbcd46f45"
+}

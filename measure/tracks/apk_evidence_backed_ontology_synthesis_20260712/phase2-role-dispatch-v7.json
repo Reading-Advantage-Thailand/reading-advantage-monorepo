@@ -1,0 +1,150 @@
+{
+  "assignments": [
+    {
+      "agent_ref": "/root/t9_phase0_governance_author",
+      "allowed_outputs": [
+        "phase2_v7_truth_verifier.py",
+        "phase2_v7_truth_verifier_test.py",
+        "phase2-v7-fixture-manifest.json",
+        "negative-fixtures/phase2-v7/*",
+        "phase2-v7-red-report.json",
+        "phase2-v7-green-report.json",
+        "role-receipts/phase2/truth-test-author-v7.json"
+      ],
+      "forbidden_outputs": [
+        "all prior artifacts",
+        "mapper v4 outputs",
+        "review outputs",
+        "phase2-root-acceptance.json"
+      ],
+      "owner_role": "truth-test-author",
+      "task_id": "phase2-candidate-lifecycle-red-green-v7"
+    },
+    {
+      "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+      "allowed_outputs": [
+        "phase2-capability-comparisons-v4.json",
+        "phase2-capability-classification-v4.json",
+        "phase2-extension-boundaries-v4.json",
+        "phase2-claim-dependency-edges-v4.json",
+        "role-receipts/phase2/capability-mapper-v4.json"
+      ],
+      "forbidden_outputs": [
+        "all prior artifacts",
+        "truth outputs",
+        "review outputs",
+        "phase2-root-acceptance.json"
+      ],
+      "owner_role": "capability-mapper",
+      "task_id": "phase2-specificity-mapper-v4-v7"
+    },
+    {
+      "agent_ref": "/root/phase5_review_b",
+      "allowed_outputs": [
+        "phase2-v7-independent-review.json",
+        "role-receipts/phase2/capability-reviewer-v7.json"
+      ],
+      "forbidden_outputs": [
+        "mapper outputs",
+        "truth outputs",
+        "phase2-root-acceptance.json"
+      ],
+      "owner_role": "capability-reviewer",
+      "task_id": "phase2-specificity-review-v7"
+    },
+    {
+      "agent_ref": "/root",
+      "allowed_outputs": [
+        "phase2-role-dispatch-v7.json",
+        "phase2-root-acceptance.json",
+        "plan.md"
+      ],
+      "forbidden_outputs": [
+        "mapper outputs",
+        "truth outputs",
+        "review outputs"
+      ],
+      "owner_role": "product-owner-acceptance-author",
+      "task_id": "phase2-product-owner-acceptance-v7"
+    }
+  ],
+  "authority": "delegated-root-product-owner",
+  "budget_contract": {
+    "negative_fixture_files_max": 16,
+    "published_output_bytes_max": 1048576,
+    "suite_runtime_seconds_max": 30
+  },
+  "inherited_contract": {
+    "all_semantic_specificity_routing_excerpt_budget_and_scope_requirements_unchanged": true,
+    "dispatch": "phase2-role-dispatch-v6.json",
+    "sha256": "62fb22f1e81f142cc2b60cde455304b21d4c9dcd368e70f5fa235573dd13c60f"
+  },
+  "issued_at": "2026-07-25T01:21:24.290123Z",
+  "issued_by": "/root",
+  "next_gate": "V7 Green, fresh independent review with zero unresolved Medium+, and root usability acceptance.",
+  "phase": 2,
+  "required_tests": [
+    "valid-candidate-present-smoke",
+    "malformed-candidate-receipt-shape",
+    "missing-candidate-red",
+    "all-v6-tests-and-attacks"
+  ],
+  "schema_version": "apk-t9-phase2-role-dispatch.v7",
+  "scope": {
+    "asset_mapping_authorized": false,
+    "implementation_authorized": false,
+    "phase3_responsive_authorized": false,
+    "shipping_authorized": false
+  },
+  "status": "active-truth-lifecycle-repair",
+  "supersedes": {
+    "defect": {
+      "correct_symbol": "v5.v4.RECEIPT_KEYS",
+      "coverage_gap": "Red suite did not execute a candidate-present bundle, so the candidate path was unproven.",
+      "error": "AttributeError: module v5 has no attribute RECEIPT_KEYS",
+      "location": "phase2_v6_truth_verifier.py:526",
+      "severity": "High"
+    },
+    "dispatch": {
+      "path": "phase2-role-dispatch-v6.json",
+      "sha256": "62fb22f1e81f142cc2b60cde455304b21d4c9dcd368e70f5fa235573dd13c60f",
+      "status": "inactive"
+    },
+    "failed_sealed_truth": [
+      {
+        "path": "phase2_v6_truth_verifier.py",
+        "sha256": "523794616e2f764bb020a6fe6a915e6ed3060da7358d0b157cb902277b9af78c"
+      },
+      {
+        "path": "phase2_v6_truth_verifier_test.py",
+        "sha256": "c0797f8620226ad537b42d59c11077fec334bed5ddf99d6e2851b2a51008898e"
+      },
+      {
+        "path": "phase2-v6-fixture-manifest.json",
+        "sha256": "48eaeb5c4cc7314e404b9f1dfa3ea61ec53a43284a7ee5827982302c12b489d7"
+      },
+      {
+        "path": "phase2-v6-red-report.json",
+        "sha256": "7d7af5c8a33dc60f52d640b476023d8357e602356cbcc0dd97fbc7a7371926bb"
+      },
+      {
+        "path": "role-receipts/phase2/truth-test-author-v6.json",
+        "sha256": "474da3e8c8ba383554e66952074ad0100167706f22c6cca14d66ad251038729b"
+      }
+    ]
+  },
+  "tdd_order": {
+    "green_only_after_file_backed_mapper_v4": true,
+    "sealed_red_v7_before_mapper_v4_publication": true
+  },
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "truth_lifecycle_contract": {
+    "candidate_present_malformed_receipt_expected_finding": "INVALID_SCHEMA",
+    "candidate_present_malformed_receipt_must_execute": true,
+    "candidate_present_valid_baseline_expected_state": "VERIFIED",
+    "candidate_present_valid_baseline_must_execute": true,
+    "failed_v6_truth_bytes_preserved": true,
+    "missing_candidate_expected_state": "RED_WAITING_FOR_MAPPER_V4_OUTPUTS",
+    "no_exception_or_traceback_allowed": true
+  }
+}

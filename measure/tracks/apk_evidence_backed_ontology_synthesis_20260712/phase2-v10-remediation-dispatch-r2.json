@@ -1,0 +1,37 @@
+{
+  "schema_version": "apk-t9-phase2-v10-remediation-dispatch.r2",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "status": "active-root-semantic-rejection-remediation",
+  "authority": "delegated-root-product-owner",
+  "issued_by": "/root",
+  "issued_at": "2026-07-25T04:11:12.095103661Z",
+  "base_authority": {
+    "dispatch_sha256": "b7dc7be6ec593623a21656afd3215b2764188a41915e0b2e709be6e338e26eb7",
+    "root_truth_seal_sha256": "5f5c0677b8ceea2b2f1751ff651f69c3ef6218abb0cc4a49e8779088bd5db8af",
+    "root_mapper_release_sha256": "8eefc6703efab3fe4ace996eb847fb4f5feade7b6f78663c44fe27de9694f6b0"
+  },
+  "supersedes_remediation_dispatch": {"path": "phase2-v10-remediation-dispatch-r1.json", "sha256": "3843854f3db8e59a896beed0fa5ee74f8120ceb084f1d98557ae3c4bdf302284"},
+  "root_rejected_candidate": {
+    "prior_state": "VERIFIED_PENDING_ROOT_ACCEPTANCE",
+    "checks": 1577,
+    "mapper_hashes": {"curated": "982b03ae567535e5eaeef21f6fcbac25de25c22d2efb7b56e5d30f5c76f2161f", "comparisons": "c8e71208bc60cc3c1299840b1905255dcf02578e32acec16558dc3177801157a", "classification": "274a3538b782499828c6af9cc7033f72fa5de0b1d6da0c0eb769dad568e78a34", "boundaries": "bcee20de256ef1ac44fad89353faeff73f03bec4ad7f0e57358f6b1862252c66", "dependencies": "30b174ca160be204749f7c9bdeb65ba517990cc73ec7ee656ef49d2466019155", "receipt": "af587eb1d28192cdafa39cf52549fabdeb7edbfc9d709dabedf6562a5cf1f229"},
+    "review_hashes": {"review": "968cc839c2c2b708023e352a5425a8c5c23ffc04966d299b7ee21947524b5273", "receipt": "dfee162e90e1d58fa3df92d8c0642baec5a30c4eda4c4f1590149b5e69b2d776"},
+    "root_finding": {
+      "severity": "Medium",
+      "record_id": "storm-castle-tower:SCT-MECH-H001",
+      "field": "audit.disposition_basis",
+      "observed": "no-complete-behavioral-anchors",
+      "contradiction": "The accepted fact has complete keyboard anchors and the corrected context rationale says it is redundant to selected SCT-MECH-H008.",
+      "required": "redundant-to-selected-atomic-evidence"
+    }
+  },
+  "assignments": [
+    {"agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer", "owner_role": "capability-mapper", "task_id": "phase2-curated-evidence-mapper-v5-v10-r2", "archive_outputs": ["rejected-candidates/phase2-v10-r2/mapper/*"], "live_outputs": ["phase2-curated-capability-evidence-v1.json", "role-receipts/phase2/capability-mapper-v5.json"], "must_remain_byte_identical": ["phase2-capability-comparisons-v5.json", "phase2-capability-classification-v5.json", "phase2-extension-boundaries-v5.json", "phase2-claim-dependency-edges-v5.json"], "forbidden": ["truth files", "review files", "any field except SCT-MECH-H001.audit.disposition_basis"]},
+    {"agent_ref": "/root/phase5_review_b", "owner_role": "capability-reviewer", "task_id": "phase2-curated-evidence-review-v10-r2", "archive_outputs": ["rejected-candidates/phase2-v10-r2/reviewer/*"], "live_outputs": ["phase2-v10-independent-review.json", "role-receipts/phase2/capability-reviewer-v10.json"], "required_special_check": "The SCT-MECH-H001 canonical reviewed-object and record verdict must explicitly bind both its context_rationale and audit.disposition_basis with no contradictory no-anchor language.", "forbidden": ["mapper files", "truth files"]},
+    {"agent_ref": "/root", "owner_role": "product-owner", "task_id": "phase2-product-owner-v10-r2", "allowed_outputs": ["phase2-v10-remediation-dispatch-r2.json", "phase2-root-acceptance.json", "plan.md"], "forbidden": ["mapper files", "review files", "truth files"]}
+  ],
+  "archive_contract": {"archive_before_live_edit": true, "archive_bytes_equal_root_rejected_hashes": true, "archive_paths_are_audit_history_not_verifier_inputs": true},
+  "verification_order": ["archive r1 mapper and review bytes", "change exactly SCT-MECH-H001.audit.disposition_basis and mapper receipt hash", "remove archived live review pair", "verify candidate pending review", "republish exhaustive review with explicit SCT field coherence verdict", "root repeats semantic sample before acceptance"],
+  "scope": {"phase3_responsive_authorized": false, "asset_mapping_authorized": false, "implementation_authorized": false, "shipping_authorized": false}
+}

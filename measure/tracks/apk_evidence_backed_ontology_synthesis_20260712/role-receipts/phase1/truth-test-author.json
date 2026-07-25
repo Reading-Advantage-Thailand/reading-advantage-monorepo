@@ -1,0 +1,128 @@
+{
+  "schema_version": "apk-t9-phase1-role-receipt.v6",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 1,
+  "task_id": "phase1-author-truth-tests",
+  "owner_role": "truth-test-author",
+  "agent_ref": "/root/t9_phase0_governance_author",
+  "dispatch": {
+    "path": "phase1-role-dispatch-v2.json",
+    "sha256": "2032327e85c55bf789782ed6dd1635e03fa5efb323bb4ef2bc3fe29791ff7c7c"
+  },
+  "status": "green-published-verified",
+  "outputs": {
+    "phase1_truth_verifier.py": "df86b554e3db74b6e876efafa57a586447cf0445806d6d2315ab34ba9dbabe49",
+    "phase1_truth_verifier_test.py": "8746947941499f65f594e21ee5e1a2c2943f1e2f8e314bf4744f153001f1462f",
+    "phase1-fixture-manifest-v1.json": "6def0a763251bf00789868ee2a6e7dabc1d79bc34f98173b8e2e37072f1e6aed",
+    "phase1-red-report-v1.json": "5417782771b7f84156d6e61f7d7dd760ff6bd3000d48bf0504ef9ee364789882",
+    "phase1-green-report-v1.json": "7840d97ed345ff7b142cf18ab2019b207689d9425d205bb522f162ce27d0b08c"
+  },
+  "verification": {
+    "focused_suite": "14/14 pass",
+    "negative_fixtures": {
+      "files": 16,
+      "cases": 80,
+      "result": "80/80 rejected with exact bound codes",
+      "suite_sha256": "57999dee880e286454b1492bf47faefab99a898f19eb9b29095c64e5c8363b18"
+    },
+    "runtime_seconds": 15.018,
+    "full_reference_checks": 2273,
+    "current_records": 1009,
+    "live_state": "VERIFIED",
+    "live_finding_codes": [],
+    "ruff": "pass",
+    "budgets": {
+      "max_fixture_files": 16,
+      "max_source_documents": 32,
+      "max_output_bytes_each": 1048576,
+      "max_runtime_seconds": 30,
+      "unmeasured_budgets": 0
+    },
+    "reference_serialized_bytes": {
+      "phase1-source-resolution-index-v1.json": 780843,
+      "phase1-mechanic-blueprints-v1.json": 731563,
+      "phase1-developer-effort-baseline-v1.json": 408825,
+      "phase1-claim-dependency-edges-v1.json": 424740
+    },
+    "effective_corpus": {
+      "total": 1248,
+      "direct_accepted": 573,
+      "explicit_game_package_global_accepted": 421,
+      "verified_parent_linked_accepted": 20,
+      "accepted_placement_blocked": 210,
+      "upstream_unknown": 24
+    },
+    "routing": {
+      "phase1_mechanic": 633,
+      "phase1_effort": 376,
+      "deferred_asset": 146,
+      "deferred_responsive": 52,
+      "context_only": 17,
+      "blocked_upstream_unknown": 24
+    },
+    "source_documents": 32,
+    "opaque_claim_id_fallbacks": 0,
+    "shape_contract": "exact required-key equality across every mapper container, row, receipt/hash map, nested binding, selector, and provenance variant; explicit null/empty members mandatory",
+    "canonical_record_id": "<game_id>:<source_claim_id>",
+    "negative_case_runtime_seconds": 13.88,
+    "live_status": "pass",
+    "live_checks": 2298,
+    "missing_output_red_simulation": "RED_WAITING_FOR_MAPPER_OUTPUTS with sole PHASE1_MAPPER_OUTPUTS_MISSING",
+    "runtime_optimization": "process-local hash-bound immutable source caches and deep-copied grouped bundle templates; production CLI remains full validation"
+  },
+  "superseded_packages": [
+    {
+      "status": "REJECTED_SUPERSEDED_FALSE_GREEN",
+      "phase1_truth_verifier.py": "34ba34bd6468bdae00c098d31ec12f0521d4bfe3fa1c78eabecb5a83167be809",
+      "phase1_truth_verifier_test.py": "6a62be07e83ee094361a5877ad39113861dac98ce49518acb47d85cb68d898c3",
+      "phase1-fixture-manifest-v1.json": "cdcd815b1267d912dcb001dd5c8848500d2b4bf15dd1a61e9aaec2a0677290d0",
+      "phase1-red-report-v1.json": "b2573bd0e838bdbbbd1ee7fa8144c01caf48f6c99e4b3eaa05cdcf760b352604",
+      "role_receipt": "15f20b72dde20ece61d6e045c80e54f9e03b157312eadcdbfb9452e74999eb0c"
+    },
+    {
+      "status": "REJECTED_SUPERSEDED_FALSE_GREEN",
+      "phase1_truth_verifier.py": "8cefeff61cd0f9dc773c47a0c72e60554f6a91b4950a53fff1677209166e2a88",
+      "phase1_truth_verifier_test.py": "482e4bbade18dd6e6d46315e9eea3b9a729579ce833fbadc977db3f4f4eadf30",
+      "phase1-fixture-manifest-v1.json": "401fdce9af9312890c9cfb864f287bc081e6d51733a1b2067ed5ab408bc0a4a3",
+      "phase1-red-report-v1.json": "29df64dcb82036253bd743ca84d3524d391aa5260a8b5dfc9344265d2035c05b",
+      "role_receipt": "e11e6fa3e9fc3400890488ae41f3e0c08616998a6c919ffef62b09908f4ebe04"
+    },
+    {
+      "status": "REJECTED_SUPERSEDED_FALSE_GREEN",
+      "phase1_truth_verifier.py": "bcecf507ff5ca7f8726f0cb55c456e85cc012c30795a094fdd67e0e31d45bdea",
+      "phase1_truth_verifier_test.py": "586e769aa92c36ecc857494551cd7902c162f3b742cce5bd1e4e412368791f86",
+      "phase1-fixture-manifest-v1.json": "b0ae93cad0143bf4e4791352cc0bdaa1a3264ee65e631b37d9644a5d5bb27bc6",
+      "phase1-red-report-v1.json": "5534590a807b858f928a6d7e1cf190b92450c72c7e0b0db495cd2a19f4fb2076",
+      "role_receipt": "aa93f23909b3b5f87eb762316b21934f78fd1036d90a1a669cafa082aaef396d"
+    },
+    {
+      "status": "REJECTED_SUPERSEDED_FALSE_GREEN",
+      "phase1_truth_verifier.py": "baf1fea8e569477d76e5cb1577f7bda0840c4d67feeea3fe1bfa0ed3b6f098bc",
+      "phase1_truth_verifier_test.py": "c02b873266e74ee53ed5088c12243451d14cd9069600e96b18cc0ade9f1dc91f",
+      "phase1-fixture-manifest-v1.json": "9a2be32b42b344d0b8391df2ca691f1f6a020d780a60133c11a6ded206423ec0",
+      "phase1-red-report-v1.json": "065be36cf631a84eb7db2494df940cecfb46334f78999e50229be980503dd039",
+      "role_receipt": "00e3cdb7fd57bca959f7725b69a3bc9395e27c0fc0c16a05aa6b28ade136e731"
+    }
+  ],
+  "green_report_published": true,
+  "scope": {
+    "mapper_decisions_authored": false,
+    "phase2_authorized": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false
+  },
+  "mapper_package": {
+    "phase1-source-resolution-index-v1.json": "2900222c4fc4db8ffb354d4f25f5c1a8bef6930b2d7e8e1bb692dab27d860bd0",
+    "phase1-mechanic-blueprints-v1.json": "ed3bee70f5e7e94ac101f295d9de3f768cdaf9d97d40d4529f2fbbbe8f479d61",
+    "phase1-developer-effort-baseline-v1.json": "168403610d0c69160777ddeca5753dcc57b97e2a7db6ceed65f3e4ce64d14f91",
+    "phase1-claim-dependency-edges-v1.json": "2b279df4896c9620ea9acf17506e942c9df98e2b4d6c06a29d5293106aff0987",
+    "role-receipts/phase1/mechanics-capability-mapper.json": "2d05dfdc8c9d698064a342e7cee5eeeb540d05afa640c637ec19dc55925357e5"
+  },
+  "runtime_stop_loss_history": {
+    "status": "REJECTED_RUNTIME_STOP_LOSS",
+    "attempted_test_hash": "634e420b17bc71eded868621d6268d1f89bc9abbfe8b8d4ff8fe8da50bbc654c",
+    "observed_case_runtime_seconds": 30.412,
+    "green_report_published": false,
+    "receipt_published_as_green": false
+  }
+}

@@ -1,0 +1,43 @@
+{
+    "schema_version": "apk-t9-governance-author-output-declaration.v1",
+    "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+    "phase": 0,
+    "author_task_path": "/root/t9_phase0_governance_author",
+    "status": "authored-pending-provider-attestation-and-post-final-rebind",
+    "consumable": false,
+    "owned_output_count": 22,
+    "owned_outputs": {
+        "phase0_truth_verifier.py": "c6431c6caa341a25a45e7e79e03dbd2c5ffa3221c75daa186150883cdacd1b19",
+        "phase0_truth_verifier_test.py": "9171d5e5fbaa659318cf2b8f305f2ebedf9a2c4ff90df33daa94a16337337acd",
+        "phase0-fixture-manifest-pending-v1.json": "cdf1b43e90a70441d9fefa2166c5fbd98de523607659484453b3f783bf5f19ca",
+        "phase0-tdd-red-evidence-v1.json": "e3bfbb0d839e69d5f7aef149a818a52bd56bd0017089b0adfc8fa2f8140a9e61",
+        "phase0-fix-review-cycle-ledger-v1.json": "48d561466d8590212e234c905b603c76ff1fe691e9cddd5fcd4e741b94c74ea2",
+        "phase0-current-governance-receipt-schema-v2.json": "bb4ba3023138f74c44f3f325870ca3a5782691e3385b2b520f20c56a458640ae",
+        "negative-fixtures/phase0/direct-legacy-key.json": "b3c1b125580ba31f4642db23393d0dba290894f4a12e07c0e2993db7a9578842",
+        "negative-fixtures/phase0/failed-monolith-input.json": "286f5f6ec1cf0a279381dddd7368dddecf1ed4f7d3fa0d7b33e53abeaae706d3",
+        "negative-fixtures/phase0/false-stop-loss-accounting.json": "b5e89b76e0e6ac07374a2286c4002866dbf0510137eb68adfe4c49f574a1d1d3",
+        "negative-fixtures/phase0/forged-ancestry-lifecycle.json": "bae5a9d4471e444222bfc9df94cb27e656f551f5a4392e838a9c232994477412",
+        "negative-fixtures/phase0/missing-gap-delivery-assignment.json": "53023ba45e5b23e827484ef06800b112e87988c655e5afc2dd3f05898686942f",
+        "negative-fixtures/phase0/missing-predecessor.json": "c6d0a6e06c3a38325323e2ac6f3a6743365636fbef3a63fc00a68d9d64052cfa",
+        "negative-fixtures/phase0/missing-role-provenance.json": "d9e122943a0f583bf5c99bfbda960770e5271e4bf28177b77cd258e42f11eb13",
+        "negative-fixtures/phase0/orchestrator-reviewer-overlap.json": "7a19391c5b561ade61af3deef61b100cb95133383e9752622034ea52aaab3bf0",
+        "negative-fixtures/phase0/output-hash-mismatch.json": "92c6edcce978be258a5413cbf85492fb5be9a7523c646ea064ed6d03487f9fe8",
+        "negative-fixtures/phase0/role-overlap.json": "eb26d755f3c4a340699f191373a117c4fbc2c84e79feb827ed8bcb53ab85ece5",
+        "negative-fixtures/phase0/schema-drift.json": "abfd40199eb9237da2906b370df9e7b4797005eb57cc190b937463a304743327",
+        "negative-fixtures/phase0/stale-predecessor.json": "7179da347c01604098719aa1529309cf7bd2f795a5868622dcbc7c78686155a5",
+        "negative-fixtures/phase0/wrong-standard-pack-catalog.json": "3470b182b13852eb840959ae536a93376bc5922abdbdd2715c45d6d5fb639f96",
+        "negative-fixtures/phase0/wrong-standard-pack-receipt.json": "305d7edc9ec6c861a94078ec3cd860db31fdca5e842b16e81a2bd7b01928c3c8",
+        "negative-fixtures/phase0/wrong-standard-pack-release.json": "7db68ef39acf2a3b07a254cae67df7163317b51136cf32f9c75d95a4e3dca80c",
+        "negative-fixtures/phase0/wrong-t8-artifact.json": "a1928b39f06b0bce1efff2a59fcb0ec1f6b6260edaa969c3dc404b6ad62d6997"
+    },
+    "declaration_self_binding": {
+        "method": "external-provider-attestation-and-final-response",
+        "reason": "The declaration cannot contain its own SHA-256 without a self-hash cycle."
+    },
+    "excluded_post_final_rebind_outputs": [
+        "phase0-role-ownership-manifest-pending-v1.json",
+        "phase0-input-freeze-pending-v1.json",
+        "role-receipts/phase0/governance-remediation-author-provider-attestation-v1.json",
+        "role-receipts/phase0/governance-remediation-author-pending-v1.json"
+    ]
+}

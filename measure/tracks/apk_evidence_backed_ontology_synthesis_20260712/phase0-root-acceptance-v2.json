@@ -1,0 +1,64 @@
+{
+  "accepted_at": "2026-07-24T11:15:50.302Z",
+  "accepted_by": "root-orchestrator-product-owner",
+  "artifact_bindings": {
+    "phase0-budget-stop-loss-v2.json": "5c101f0bb267a4fc79cf938c86ab5f5f10422f3cf79ce53f3f06e66a6dc891d8",
+    "phase0-fixture-manifest-v2.json": "7019be8b36a58bc036bc70fecb6922f5ce432f34e221edaf91a0f19300ec67e0",
+    "phase0-green-verification-report-v2.json": "cc6721b6c3e881dc130c824ef9e2025a952b6dc70714897d2c55f5c3abb7d8a3",
+    "phase0-input-freeze-v2.json": "7f1cd3a995f4c3c0f1a4b6e938f43bfb10a613c1eda9548aad87833530707456",
+    "phase0-role-ownership-manifest-v2.json": "b025b7494e51d493bf39e021a170cc8a2af99886eecf9807919c2a3d2ef2b7c9",
+    "phase0-source-registry-v2.json": "c770189b2202526f13015cdca8f9f0a688cb4fb2dbc663c969b7c582301e7d9b",
+    "phase0-v2-independent-review.json": "3d22c717a2c83c30f0ba6d3739899c1526af9777e5ee6e99f6c8a924f808754d",
+    "phase0_active_truth_verifier.py": "d1f9d41a7f3923c5ce7c62bd2c5db54c86b816410c306a2e9ffe056e6c6e3c68",
+    "phase0_active_truth_verifier_test.py": "28628b2c58bf346d7d811694317dbe42cc13bcf95ef791be1ccca02f25ee4d4e",
+    "role-receipts/phase0/phase0-v2-independent-reviewer.json": "b63e6c3c139cfcefa7287a4b267c27dca06761b190fe990ac0ea5429c20ab407"
+  },
+  "authority": "delegated-root-product-owner",
+  "decision": "ACCEPT_PHASE0_OPEN_PHASE1",
+  "delegated_owner_event": {
+    "decision": "ACCEPT_T8_FOR_T9_ONLY_CONSUMPTION",
+    "delegation_message": "Again YOU ARE THE PRODUCT OWNER!",
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-owner-approval-event-v1.json",
+    "sha256": "4892bd5b1b83a52c6f2f6d537cacbc0af8eafd3bc401712e8cb47fa044e1825e"
+  },
+  "independent_review": {
+    "path": "phase0-v2-independent-review.json",
+    "receipt_path": "role-receipts/phase0/phase0-v2-independent-reviewer.json",
+    "receipt_sha256": "b63e6c3c139cfcefa7287a4b267c27dca06761b190fe990ac0ea5429c20ab407",
+    "sha256": "3d22c717a2c83c30f0ba6d3739899c1526af9777e5ee6e99f6c8a924f808754d",
+    "unresolved_findings": {
+      "Critical": [],
+      "High": [],
+      "Low": [],
+      "Medium": []
+    }
+  },
+  "next_action": "Dispatch the assigned mechanics-capability mapper for Phase 1 against only the v2 frozen inputs.",
+  "owner_identity": "/root",
+  "phase": 0,
+  "remediated_findings": [
+    {
+      "code": "DELEGATED_OWNER_ROLE_CONTRADICTION",
+      "disposition": "Remediated by the v2 role contract, active cross-contract verification, and hash-bound negative fixture.",
+      "severity": "High"
+    }
+  ],
+  "schema_version": "apk-t9-phase0-root-acceptance.v2",
+  "scope": {
+    "direct_legacy_adoption_authorized": false,
+    "implementation_authorized": false,
+    "phase1_authorized": true,
+    "shipping_authorized": false,
+    "t9_synthesis_only": true,
+    "unknown_must_have_resolution_authorized": false
+  },
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "verification": {
+    "checks": 216,
+    "negative_fixtures_rejected": 17,
+    "runtime_budget_seconds": 30,
+    "state": "VERIFIED",
+    "status": "pass",
+    "tests_passed": 7
+  }
+}

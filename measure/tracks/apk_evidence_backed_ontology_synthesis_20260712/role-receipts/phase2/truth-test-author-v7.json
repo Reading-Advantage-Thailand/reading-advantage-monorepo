@@ -1,0 +1,14 @@
+{
+  "schema_version":"apk-t9-phase2-role-receipt.v7",
+  "track_id":"apk_evidence_backed_ontology_synthesis_20260712",
+  "phase":2,
+  "task_id":"phase2-candidate-lifecycle-red-green-v7",
+  "owner_role":"truth-test-author",
+  "agent_ref":"/root/t9_phase0_governance_author",
+  "dispatch":{"path":"phase2-role-dispatch-v7.json","sha256":"a06cbac2c3cee7c993c96c39a470c777782e375119c0e29d3e4905bed69b4035"},
+  "status":"sealed-red-v7-published-waiting-for-file-backed-mapper-v4",
+  "outputs":{"phase2_v7_truth_verifier.py":"807d335ce68d81b7d0090f4cadcde3461c6db7e323fbbffdd4ab90ea02ec244b","phase2_v7_truth_verifier_test.py":"e250484923a402021e5d4c4fb8595e260d08836ae12aa116828ad864017a0977","phase2-v7-fixture-manifest.json":"ce25b00a2da01da800feb200774690c10fbc00b984c8a1667ce421b8641c13d7","phase2-v7-red-report.json":"045949eea2def5452ab6da6dc91d115a36dc8f538b2fb06fa4050c5f039ee0fb"},
+  "verification":{"focused_suite":"7/7 pass","inherited_v6_suite":"9/9 pass","fixture_files":7,"inherited_fixture_cases":64,"runtime_seconds":17.233,"runtime_ceiling_seconds":30,"valid_candidate_present":"pass-zero-findings","malformed_candidate_present":"INVALID_SCHEMA-no-exception","missing_candidate_state":"RED_WAITING_FOR_MAPPER_V4_OUTPUTS","live_checks":27,"stop_loss_cycle":1,"ruff":"pass"},
+  "green_report_published":false,
+  "scope":{"mapper_decisions_authored":false,"phase3_authorized":false,"implementation_authorized":false,"shipping_authorized":false}
+}

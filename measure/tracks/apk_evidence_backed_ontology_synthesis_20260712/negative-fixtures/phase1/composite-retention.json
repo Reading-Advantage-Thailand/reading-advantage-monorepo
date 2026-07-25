@@ -1,0 +1,91 @@
+{
+  "schema_version": "apk-t9-phase1-negative-fixture-group.v2",
+  "id": "composite-retention",
+  "cases": [
+    {
+      "id": "composite-retention-01",
+      "mutation": {
+        "operation": "normalized-materialization-fault",
+        "fault": "missing-base",
+        "game_id": "dragon-rider",
+        "claim_id": "DR-ID-001"
+      },
+      "expected_codes": [
+        "EFFECTIVE_CLAIM_MATERIALIZATION_MISMATCH",
+        "ORPHAN_UPSTREAM_CLAIM"
+      ]
+    },
+    {
+      "id": "composite-retention-02",
+      "mutation": {
+        "operation": "normalized-materialization-fault",
+        "fault": "base-hash",
+        "game_id": "dragon-rider",
+        "claim_id": "DR-ID-001"
+      },
+      "expected_codes": [
+        "ORPHAN_UPSTREAM_CLAIM",
+        "SOURCE_ARTIFACT_BUDGET_OR_SET_MISMATCH"
+      ]
+    },
+    {
+      "id": "composite-retention-03",
+      "mutation": {
+        "operation": "normalized-materialization-fault",
+        "fault": "base-pointer",
+        "game_id": "dragon-rider",
+        "claim_id": "DR-ID-001"
+      },
+      "expected_codes": [
+        "EFFECTIVE_CLAIM_MATERIALIZATION_MISMATCH",
+        "ORPHAN_UPSTREAM_CLAIM"
+      ]
+    },
+    {
+      "id": "composite-retention-04",
+      "mutation": {
+        "operation": "normalized-materialization-fault",
+        "fault": "base-pointer-terminal-mismatch",
+        "game_id": "dragon-rider",
+        "claim_id": "DR-ID-001"
+      },
+      "expected_codes": [
+        "EFFECTIVE_CLAIM_MATERIALIZATION_MISMATCH",
+        "ORPHAN_UPSTREAM_CLAIM"
+      ]
+    },
+    {
+      "id": "composite-retention-05",
+      "mutation": {
+        "operation": "normalized-materialization-fault",
+        "fault": "wrong-supplying-binding",
+        "game_id": "dungeon-liberator",
+        "claim_id": "DL-TOPO-001"
+      },
+      "expected_codes": [
+        "EFFECTIVE_CLAIM_MATERIALIZATION_MISMATCH",
+        "ORPHAN_UPSTREAM_CLAIM"
+      ]
+    },
+    {
+      "id": "composite-retention-06",
+      "mutation": {
+        "operation": "normalized-materialization-fault",
+        "fault": "duplicate-retained-replacement",
+        "game_id": "dragon-rider",
+        "claim_id": "DR-ID-001"
+      },
+      "expected_codes": [
+        "EFFECTIVE_CLAIM_SET_MISMATCH",
+        "ORPHAN_UPSTREAM_CLAIM"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "EFFECTIVE_CLAIM_MATERIALIZATION_MISMATCH",
+    "EFFECTIVE_CLAIM_SET_MISMATCH",
+    "ORPHAN_UPSTREAM_CLAIM",
+    "SOURCE_ARTIFACT_BUDGET_OR_SET_MISMATCH"
+  ],
+  "expected_state": "INVALID"
+}

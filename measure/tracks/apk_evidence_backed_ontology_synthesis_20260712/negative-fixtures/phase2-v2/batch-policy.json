@@ -1,0 +1,27 @@
+{
+  "schema_version": "apk-t9-phase2-v2-negative-fixture-group.v1",
+  "id": "batch-policy",
+  "cases": [
+    {
+      "id": "batch-policy-01",
+      "mutation": {"operation": "disjoint-whole-game-partition-assumption"},
+      "expected_codes": ["DISJOINT_PARTITION_ASSUMPTION"]
+    },
+    {
+      "id": "batch-policy-02",
+      "mutation": {"operation": "overlap-rejected"},
+      "expected_codes": ["OVERLAP_REJECTED"]
+    },
+    {
+      "id": "batch-policy-03",
+      "mutation": {"operation": "four-game-batch"},
+      "expected_codes": ["BATCH_GAME_LIMIT_EXCEEDED"]
+    }
+  ],
+  "expected_codes": [
+    "BATCH_GAME_LIMIT_EXCEEDED",
+    "DISJOINT_PARTITION_ASSUMPTION",
+    "OVERLAP_REJECTED"
+  ],
+  "expected_state": "INVALID"
+}

@@ -1,0 +1,53 @@
+{
+  "schema_version": "apk-t9-phase0-t3-leaf-binding-truth-test-author-receipt.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "task_id": "phase0-verify-t3-leaf-bindings",
+  "role": "t3-leaf-binding-truth-test-author",
+  "agent_ref": "/root/t9_phase0_governance_author",
+  "status": "red-to-green-verification-complete",
+  "repair_dispatch": {
+    "path": "phase0-t3-repair-role-dispatch-v1.json",
+    "sha256": "f6a9aedb3eb3246fc107363854aff75ab50b0ed1af19280b5925c3c8138a78e5"
+  },
+  "input_bindings": [
+    {
+      "path": "phase0-t3-leaf-binding-candidate-v1.json",
+      "sha256": "a04bc93f78ad33e22a56af7b94d61e721ae5828ed23fd509456c5250b366bbac"
+    },
+    {
+      "path": "role-receipts/phase0/t3-leaf-binding-catalog-author.json",
+      "sha256": "67ec8d7b08810a3b34b4e575fc00b1b430bbd9459714b4c7c36225b9c048ae2f"
+    }
+  ],
+  "output_bindings": [
+    {
+      "path": "phase0_t3_leaf_binding_verifier.py",
+      "sha256": "0faf71edca6d6d5157ed4bea9ada03bce869296077501b0233e565e404c891bb"
+    },
+    {
+      "path": "phase0_t3_leaf_binding_verifier_test.py",
+      "sha256": "9dc1d598c118a8ff197eb6d082a29ef7f661101804ee2a86c0f84b807e0efc34"
+    },
+    {
+      "path": "phase0-t3-leaf-binding-fixture-manifest-v1.json",
+      "sha256": "5f738e9a2895b31cd96f996a34aaee766e049113d13204539b708f903896ecbc"
+    },
+    {
+      "path": "phase0-t3-leaf-binding-red-report-v1.json",
+      "sha256": "65feb28fa69fd27dd7ae99558fcff6c96f450787de85c308b5059740f9b35b62"
+    },
+    {
+      "path": "phase0-t3-leaf-binding-green-report-v1.json",
+      "sha256": "35815a08c18c196f673c4d01e5c4f69ce1cbe366c4d9b6b011ad0a820c2ea1dc"
+    }
+  ],
+  "attestation": {
+    "candidate_authored": false,
+    "review_or_acceptance_authored": false,
+    "archive_modified": false,
+    "immutable_suite_contract": "40 pass plus sole known lifecycle failure",
+    "fixture_count": 7
+  },
+  "self_hash_note": "Receipt does not self-bind because that would change its bytes."
+}

@@ -1,0 +1,65 @@
+{
+  "accepted_at": "2026-07-24T12:33:18.933Z",
+  "accepted_by": "/root",
+  "authority": "delegated-root-product-owner",
+  "bindings": {
+    "candidate": {
+      "path": "phase0-t3-leaf-binding-candidate-v1.json",
+      "sha256": "a04bc93f78ad33e22a56af7b94d61e721ae5828ed23fd509456c5250b366bbac"
+    },
+    "catalog_author_receipt": {
+      "path": "role-receipts/phase0/t3-leaf-binding-catalog-author.json",
+      "sha256": "67ec8d7b08810a3b34b4e575fc00b1b430bbd9459714b4c7c36225b9c048ae2f"
+    },
+    "green_report": {
+      "path": "phase0-t3-leaf-binding-green-report-v1.json",
+      "sha256": "35815a08c18c196f673c4d01e5c4f69ce1cbe366c4d9b6b011ad0a820c2ea1dc"
+    },
+    "independent_review": {
+      "path": "phase0-t3-leaf-binding-independent-review-v1.json",
+      "sha256": "1dde00415c717e5a35ca180e37aa4f1bd8835079b3a4964a0028dba1636233de"
+    },
+    "independent_reviewer_receipt": {
+      "path": "role-receipts/phase0/t3-leaf-binding-independent-reviewer.json",
+      "sha256": "5250b53cfc26c492270b2708697045a8af0b79c9ba9ea75bd4535dba31ea1d55"
+    },
+    "repair_dispatch": {
+      "path": "phase0-t3-repair-role-dispatch-v1.json",
+      "sha256": "f6a9aedb3eb3246fc107363854aff75ab50b0ed1af19280b5925c3c8138a78e5"
+    },
+    "truth_test_author_receipt": {
+      "path": "role-receipts/phase0/t3-leaf-binding-truth-test-author.json",
+      "sha256": "bcb74a604122d689b802256d7739367fa26554d3fabfb4a7dd1f17f2b3b7fecb"
+    }
+  },
+  "decision": "ACCEPT_T3_LEAF_BINDING_REPAIR_FOR_PHASE0_V3",
+  "manual_assessment": {
+    "archive_rewrite_detected": false,
+    "browser_or_asset_success_inferred": false,
+    "claim_count": 491,
+    "game_count": 3,
+    "immutable_suite_errors": 0,
+    "immutable_suite_known_lifecycle_failures": 1,
+    "immutable_suite_passes": 40,
+    "immutable_suite_tests": 41,
+    "independent_focused_suite": "4/4 pass in 121.908 seconds",
+    "leaf_count": 4,
+    "structured_blueprint_references": "385/385 resolved",
+    "unresolved_medium_or_higher": 0
+  },
+  "preserved_disclosures": {
+    "candidate_asset_runtime_success_claimed": false,
+    "implementation_authorized": false,
+    "phase3_responsive_browser_truth_executed": false,
+    "phase4_candidate_asset_truth_complete": false,
+    "shipping_authorized": false
+  },
+  "schema_version": "apk-t9-phase0-t3-leaf-binding-acceptance.v1",
+  "scope": {
+    "direct_phase1_consumption_authorized": false,
+    "phase0_v3_input_authorized": true,
+    "requires_phase0_v3_registry_and_acceptance": true
+  },
+  "status": "accepted-for-phase0-v3-input-only",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+}

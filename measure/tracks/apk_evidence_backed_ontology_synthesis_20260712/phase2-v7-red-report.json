@@ -1,0 +1,31 @@
+{
+  "schema_version":"apk-t9-phase2-v7-red-report.v1",
+  "track_id":"apk_evidence_backed_ontology_synthesis_20260712",
+  "phase":2,
+  "status":"valid-red-v7-waiting-for-file-backed-mapper-v4",
+  "state":"RED_WAITING_FOR_MAPPER_V4_OUTPUTS",
+  "authority":{"path":"phase2-role-dispatch-v7.json","sha256":"a06cbac2c3cee7c993c96c39a470c777782e375119c0e29d3e4905bed69b4035"},
+  "truth_package":{
+    "phase2_v7_truth_verifier.py":"807d335ce68d81b7d0090f4cadcde3461c6db7e323fbbffdd4ab90ea02ec244b",
+    "phase2_v7_truth_verifier_test.py":"e250484923a402021e5d4c4fb8595e260d08836ae12aa116828ad864017a0977",
+    "phase2-v7-fixture-manifest.json":"ce25b00a2da01da800feb200774690c10fbc00b984c8a1667ce421b8641c13d7",
+    "fixture_files":7,
+    "inherited_fixture_cases":64,
+    "focused_suite":"7/7 pass",
+    "inherited_v6_suite":"9/9 pass",
+    "runtime_seconds":17.233,
+    "ruff":"pass",
+    "stop_loss_cycle":1
+  },
+  "candidate_lifecycle":{
+    "correct_receipt_schema_symbol":"v5.v4.RECEIPT_KEYS",
+    "valid_candidate_present":{"executed":true,"expected_state":"VERIFIED","findings":0,"exception":false},
+    "malformed_receipt_candidate_present":{"executed":true,"expected_finding":"INVALID_SCHEMA","exception":false},
+    "missing_candidate":{"state":"RED_WAITING_FOR_MAPPER_V4_OUTPUTS","sole_finding":"PHASE2_MAPPER_V4_OUTPUTS_MISSING","checks":27}
+  },
+  "inherited_contract":{"v6_dispatch_sha256":"62fb22f1e81f142cc2b60cde455304b21d4c9dcd368e70f5fa235573dd13c60f","v6_verifier_sha256":"523794616e2f764bb020a6fe6a915e6ed3060da7358d0b157cb902277b9af78c","all_v6_specificity_routing_excerpt_budget_and_scope_tests_executable":true,"failed_v6_truth_bytes_preserved":true},
+  "budgets":{"fixture_files_max":16,"fixture_files_actual":7,"suite_runtime_seconds_max":30,"suite_runtime_seconds_actual":17.233,"published_output_bytes_max_each":1048576},
+  "missing_mapper_v4_outputs":["phase2-capability-comparisons-v4.json","phase2-capability-classification-v4.json","phase2-extension-boundaries-v4.json","phase2-claim-dependency-edges-v4.json","role-receipts/phase2/capability-mapper-v4.json"],
+  "green_publication_authorized":false,
+  "next_action":"Mapper v4 may publish only file-backed outputs bound to this exact Red v7 contract; the unchanged candidate-present verifier must execute before Green."
+}

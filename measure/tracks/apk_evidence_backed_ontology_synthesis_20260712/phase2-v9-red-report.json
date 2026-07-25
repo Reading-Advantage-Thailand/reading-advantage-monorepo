@@ -1,0 +1,93 @@
+{
+  "schema_version": "apk-t9-phase2-v9-red-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "status": "valid-red-v9-waiting-for-root-truth-seal-release-and-mapper-v5",
+  "state": "RED_WAITING_FOR_MAPPER_V5_OUTPUTS",
+  "authority": {
+    "path": "phase2-role-dispatch-v9.json",
+    "sha256": "60a0337eec7a67afa327f8a790620f0d0b1364717bb421dfdea86b324bd90a3b"
+  },
+  "truth_package": {
+    "phase2_v9_truth_verifier.py": "edf0130b20af2f9436b29e1b48c251624266b95223a322349075b5bf7bf60f09",
+    "phase2_v9_truth_verifier_test.py": "749cf36a1a527ecd199ed60cde5c4a5ec0c5a50a0e61da4e8010752fb31cfcfb",
+    "phase2-v9-fixture-manifest.json": "40b1609e14b92144e6188a7bcc47466b1d3c4a1f1fa86b075c233f49bea7422a",
+    "phase2-v9-context-counterexamples.json": "9c1059df904d0d326aa714af4a24a773fa36dc870b25155d7135c907decb9583",
+    "negative-fixtures/phase2-v9/end-to-end-attacks.json": "c7c6e1f2dd4f7a20e4af08af3da94ef0253e87291b9badd9ce9d34cf466abb20",
+    "fixture_files": 1,
+    "fixture_cases": 11,
+    "focused_suite": "2/2 pass",
+    "runtime_seconds": 25.357,
+    "wall_runtime_seconds": 26.05,
+    "ruff": "pass",
+    "py_compile": "pass",
+    "json_validation": "pass",
+    "diff_check": "pass",
+    "stop_loss_cycle": 2
+  },
+  "file_backed_lifecycle": {
+    "public_entrypoint": "verify_phase2",
+    "mocks_used": false,
+    "valid_zero_use_candidate": "CANDIDATE_VERIFIED_PENDING_INDEPENDENT_REVIEW",
+    "malformed_mapper_receipt": "INVALID_SCHEMA",
+    "tampered_mapper_output": "TAMPERED_OUTPUT",
+    "live_truth_drift": "LIVE_TRUTH_DRIFT",
+    "expected_external_release_required": true,
+    "manifest_declared_fixtures_discovered_and_sealed": true,
+    "full_rejected_v4_transform": "CURATED_USE_BUDGET_EXCEEDED",
+    "under_budget_rejected_v4_transform": "REVIEW_REJECTED",
+    "fabricated_review_reference": "UNRESOLVED_REVIEW_EVIDENCE_REF"
+  },
+  "evidence_contract": {
+    "exact_phase1_bindings_shared_across_all_outputs": true,
+    "all_633_records_accounted_once": true,
+    "per_record_field_audit_proof_required": true,
+    "scene_state_exact_including_null": true,
+    "three_typed_accepted_field_anchors_required": true,
+    "selected_uses_join_findings_exactly_once": true,
+    "findings_max": 45,
+    "uses_max": 270,
+    "strong_resolved_standardization_required": true,
+    "inherited_semantic_routes_or_dispositions_enforced": false
+  },
+  "context_counterexamples": {
+    "canonical_record_count": 48,
+    "all_48_exercised_file_backed": true,
+    "source_audit_sha256": "1bf26342676329e22c5522033b81ade2760ab8a4ecaaa4c772ece15727ceb4ef",
+    "audit_typo": "rune-match:RM-CONT-001",
+    "canonical_replacement": "rune-match:RM-CONTENT-001",
+    "audit_typo_rejected_as_candidate_record_id": true
+  },
+  "independent_review_contract": {
+    "all_633_record_decisions_required": true,
+    "every_use_finding_and_game_disposition_required": true,
+    "canonical_reviewed_object_sha256_required": true,
+    "typed_exact_evidence_reference_resolution_required": true,
+    "same_excerpt_multiple_anchor_roles_has_explicit_verdict": true,
+    "non_template_rationale_required": true,
+    "reviewer_receipt_exact_identity_hash_release_and_seal_joins": true,
+    "rejection_state": "REVIEW_REJECTED",
+    "accepted_state": "VERIFIED_PENDING_ROOT_ACCEPTANCE"
+  },
+  "root_release_contract": {
+    "root_truth_seal_path": "phase2-v9-root-truth-seal.json",
+    "root_mapper_release_path": "phase2-v9-mapper-release.json",
+    "candidate_cli_requires_expected_root_mapper_release_sha256": true,
+    "release_pins_root_seal_and_all_manifest_discovered_truth_artifacts": true,
+    "dynamic_self_acceptance_forbidden": true
+  },
+  "live_red": {
+    "state": "RED_WAITING_FOR_MAPPER_V5_OUTPUTS",
+    "sole_finding": "PHASE2_MAPPER_V5_OUTPUTS_MISSING",
+    "checks": 10
+  },
+  "budgets": {
+    "fixture_files_max": 16,
+    "fixture_files_actual": 1,
+    "suite_runtime_seconds_max": 30,
+    "suite_runtime_seconds_actual": 25.357,
+    "published_output_bytes_max_each": 1048576
+  },
+  "green_publication_authorized": false,
+  "next_action": "Root must independently rerun this Red, publish the root truth seal and externally hashed mapper release, then explicitly release mapper v5 with the expected release SHA-256."
+}

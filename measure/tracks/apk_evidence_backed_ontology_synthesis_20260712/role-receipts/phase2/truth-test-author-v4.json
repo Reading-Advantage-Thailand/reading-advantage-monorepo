@@ -1,0 +1,64 @@
+{
+  "schema_version": "apk-t9-phase2-role-receipt.v4",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "task_id": "phase2-readable-findings-red-green-v4",
+  "owner_role": "truth-test-author",
+  "agent_ref": "/root/t9_phase0_governance_author",
+  "dispatch": {
+    "path": "phase2-role-dispatch-v4.json",
+    "sha256": "0bd25f2ddfd303c19717b7fb3432a6ab01a416be9a44830f23e6afe444f9cd0b"
+  },
+  "status": "sealed-red-v4-published-waiting-for-readable-mapper-v2",
+  "outputs": {
+    "phase2_v4_truth_verifier.py": "70b4c3158f7a6fee5af570d750d6e397e0a260233f8e21eae12938d09a06239e",
+    "phase2_v4_truth_verifier_test.py": "183c3b16e778ff606e3a0184ee5740da5803540aa88132f516fbcd67dc5b3669",
+    "phase2-v4-fixture-manifest.json": "ba02abbb0e13af5af4f3582228ccc617058139e362173036aad2ddea5ed0304f",
+    "phase2-v4-red-report.json": "548f67f03c9e4fbf29729c605d72430f833ff80a0980045f010ff0e5277efb68"
+  },
+  "verification": {
+    "focused_suite": "8/8 pass",
+    "fixture_files": 4,
+    "negative_cases": 32,
+    "negative_result": "32/32 rejected with exact bound codes",
+    "runtime_seconds": 3.97,
+    "runtime_ceiling_seconds": 30,
+    "live_state": "RED_WAITING_FOR_MAPPER_V2_OUTPUTS",
+    "live_checks": 26,
+    "live_finding_codes": [
+      "PHASE2_MAPPER_V2_OUTPUTS_MISSING"
+    ],
+    "rejected_mapper_v1_readability_codes": [
+      "BOUNDARY_EFFECT_MISSING",
+      "BOUNDARY_READABLE_INCOMPATIBILITY_DROPPED",
+      "CLASSIFICATION_READABLE_FINDING_DROPPED",
+      "MISSING_READABLE_FINDING_FIELD",
+      "MISSING_REQUIRED_FIELD",
+      "PER_GAME_BEHAVIOR_MISSING"
+    ],
+    "stop_loss_cycle": 2,
+    "ruff": "pass"
+  },
+  "readability_bounds": {
+    "statement_chars": [
+      40,
+      280
+    ],
+    "boundary_effect_chars": [
+      24,
+      280
+    ],
+    "per_game_behavior_chars": [
+      24,
+      480
+    ]
+  },
+  "budget_scope": "1 MiB maximum applies to each published mapper output independently.",
+  "green_report_published": false,
+  "scope": {
+    "mapper_decisions_authored": false,
+    "phase3_authorized": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false
+  }
+}

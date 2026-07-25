@@ -1,0 +1,27 @@
+{
+  "schema_version": "apk-t9-phase2-v11-end-to-end-attacks.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "cases": [
+    {"id": "taxonomy-omits-reusable-candidate-dimension", "expected_code": "TAXONOMY_PARTITION_MISMATCH"},
+    {"id": "taxonomy-id-duplicate", "expected_code": "DUPLICATE_TAXONOMY_ID"},
+    {"id": "selected-taxonomy-classification-bijection", "expected_code": "TAXONOMY_CLASSIFICATION_BIJECTION_MISMATCH"},
+    {"id": "taxonomy-inventory-drift", "expected_code": "TAMPERED_OUTPUT"},
+    {"id": "complete-no-counterpart-empty-evaluation", "expected_code": "NO_COUNTERPART_TAXONOMY_MISMATCH"},
+    {"id": "bespoke-without-exact-cross-game-incompatibility", "expected_code": "BESPOKE_INCOMPATIBILITY_MISSING"},
+    {"id": "malformed-or-unresolved-incompatibility-ref", "expected_code": "INVALID_INCOMPATIBILITY_EVIDENCE_REF"},
+    {"id": "irrelevant-basis-specific-array", "expected_code": "IRRELEVANT_DISPOSITION_EVIDENCE"},
+    {"id": "legacy-no-complete-context-basis", "expected_code": "LEGACY_CONTEXT_BASIS"},
+    {"id": "complete-redundant-mislabeled-incomplete", "expected_code": "REDUNDANT_SELECTED_USE_JOIN_MISSING"},
+    {"id": "redundant-selected-use-join-mismatch", "expected_code": "REDUNDANT_SELECTED_USE_JOIN_MISSING"},
+    {"id": "taxonomy-partition-gap-or-overlap", "expected_code": "TAXONOMY_PARTITION_MISMATCH"},
+    {"id": "selected-taxonomy-differs-from-uses", "expected_code": "SELECTED_TAXONOMY_USE_MISMATCH"},
+    {"id": "provenance-on-explicit-complete-behavior", "expected_code": "PROVENANCE_BASIS_ON_COMPLETE_BEHAVIOR"},
+    {"id": "substitution-normalized-context-template", "expected_code": "TEMPLATED_CONTEXT_RATIONALE"},
+    {"id": "basis-ref-or-complete-anchor-role-missing", "expected_code": "BASIS_EVIDENCE_REF_MISSING"},
+    {"id": "review-omits-taxonomy-completeness-or-audit-basis", "expected_code": "MISSING_AUDIT_BASIS_VERDICT"},
+    {"id": "review-non-enum-verdict-value", "expected_code": "MISSING_AUDIT_BASIS_VERDICT"},
+    {"id": "taxonomy-review-substitution-template", "expected_code": "GENERIC_REVIEW_RATIONALE"},
+    {"id": "review-object-hash-omits-full-audit", "expected_code": "UNRESOLVED_REVIEW_EVIDENCE_REF"},
+    {"id": "all-v10-v9-attacks-and-48-context-promotions", "expected_code": "CONTEXT_COUNTEREXAMPLE_PROMOTED"}
+  ]
+}

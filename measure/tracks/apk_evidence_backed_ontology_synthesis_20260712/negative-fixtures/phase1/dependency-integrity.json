@@ -1,0 +1,125 @@
+{
+  "schema_version": "apk-t9-phase1-negative-fixture-group.v2",
+  "id": "dependency-integrity",
+  "cases": [
+    {
+      "id": "dependency-integrity-01",
+      "mutation": {
+        "operation": "incomplete-dependency-set"
+      },
+      "expected_codes": [
+        "INCOMPLETE_DEPENDENCY_SET"
+      ]
+    },
+    {
+      "id": "dependency-integrity-02",
+      "mutation": {
+        "operation": "orphan-claim"
+      },
+      "expected_codes": [
+        "ORPHAN_UPSTREAM_CLAIM"
+      ]
+    },
+    {
+      "id": "dependency-integrity-03",
+      "mutation": {
+        "operation": "ghost-edge"
+      },
+      "expected_codes": [
+        "GHOST_DEPENDENCY_EDGE",
+        "INCOMPLETE_DEPENDENCY_SET"
+      ]
+    },
+    {
+      "id": "dependency-integrity-04",
+      "mutation": {
+        "operation": "duplicate-field"
+      },
+      "expected_codes": [
+        "DUPLICATE_DERIVED_FIELD",
+        "INCOMPLETE_DEPENDENCY_SET"
+      ]
+    },
+    {
+      "id": "dependency-integrity-05",
+      "mutation": {
+        "operation": "remove-upstream-claim"
+      },
+      "expected_codes": [
+        "MISSING_UPSTREAM_CLAIM"
+      ]
+    },
+    {
+      "id": "dependency-integrity-06",
+      "mutation": {
+        "operation": "duplicate-dependency-claim",
+        "full_corpus": true
+      },
+      "expected_codes": [
+        "DEPENDENCY_ROUTING_DISPOSITION_MISMATCH"
+      ]
+    },
+    {
+      "id": "dependency-integrity-07",
+      "mutation": {
+        "operation": "duplicate-dependency-field-row",
+        "full_corpus": true
+      },
+      "expected_codes": [
+        "INCOMPLETE_DEPENDENCY_SET"
+      ]
+    },
+    {
+      "id": "dependency-integrity-08",
+      "mutation": {
+        "operation": "duplicate-dependency-edge",
+        "full_corpus": true
+      },
+      "expected_codes": [
+        "INCOMPLETE_DEPENDENCY_SET"
+      ]
+    },
+    {
+      "id": "dependency-integrity-09",
+      "mutation": {
+        "operation": "dependency-field-role-swap",
+        "full_corpus": true
+      },
+      "expected_codes": [
+        "INCOMPLETE_DEPENDENCY_SET",
+        "WRONG_OUTPUT_ROLE"
+      ]
+    },
+    {
+      "id": "dependency-integrity-10",
+      "mutation": {
+        "operation": "duplicate-current-record",
+        "full_corpus": true
+      },
+      "expected_codes": [
+        "CURRENT_CLAIM_RECORD_CARDINALITY_MISMATCH"
+      ]
+    },
+    {
+      "id": "dependency-integrity-11",
+      "mutation": {
+        "operation": "renamed-canonical-record-id",
+        "full_corpus": true
+      },
+      "expected_codes": [
+        "CURRENT_CLAIM_RECORD_CARDINALITY_MISMATCH"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "CURRENT_CLAIM_RECORD_CARDINALITY_MISMATCH",
+    "DEPENDENCY_ROUTING_DISPOSITION_MISMATCH",
+    "DUPLICATE_DERIVED_FIELD",
+    "GHOST_DEPENDENCY_EDGE",
+    "INCOMPLETE_DEPENDENCY_SET",
+    "MISSING_UPSTREAM_CLAIM",
+    "ORPHAN_UPSTREAM_CLAIM",
+    "WRONG_OUTPUT_ROLE"
+  ],
+  "expected_state": "INVALID"
+}

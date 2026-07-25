@@ -1,0 +1,5 @@
+{
+  "id": "accepted-chain-hash-drift",
+  "operation": "accepted-chain-hash-drift",
+  "expected_codes": ["ACCEPTED_CHAIN_HASH_DRIFT"]
+}

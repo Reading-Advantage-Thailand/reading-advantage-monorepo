@@ -1,0 +1,17 @@
+{
+  "schema_version": "apk-t9-phase2-v6-negative-fixtures.v1",
+  "cases": [
+    {"id":"generic-difference","mutation":{"operation":"generic-difference-rules-and-parameters"},"expected_codes":["GENERIC_DIFFERENCE_STATEMENT","MISSING_COMPARISON_DIMENSION","MISSING_PER_GAME_VARIANTS","MISSING_REQUIRED_FIELD"]},
+    {"id":"missing-dimension","mutation":{"operation":"difference-omits-comparison-dimension"},"expected_codes":["DIFFERENCE_OMITS_COMPARISON_DIMENSION"]},
+    {"id":"missing-variant","mutation":{"operation":"difference-omits-game-variant"},"expected_codes":["DIFFERENCE_OMITS_GAME_VARIANT"]},
+    {"id":"repeated-boundary","mutation":{"operation":"repeated-boundary-effect"},"expected_codes":["REPEATED_BOUNDARY_EFFECT"]},
+    {"id":"generic-boundary","mutation":{"operation":"generic-boundary-template"},"expected_codes":["GENERIC_BOUNDARY_TEMPLATE"]},
+    {"id":"reused-relevance","mutation":{"operation":"reused-relevance-template"},"expected_codes":["REUSED_RELEVANCE_TEMPLATE"]},
+    {"id":"irrelevant-relevance","mutation":{"operation":"relevance-does-not-name-excerpt-behavior"},"expected_codes":["RELEVANCE_DOES_NOT_NAME_EXCERPT_BEHAVIOR"]},
+    {"id":"nine-residual-routes","mutation":{"operation":"each-nine-residual-misroute"},"expected_codes":["RESIDUAL_ROUTING_REGRESSION"]},
+    {"id":"unbalanced-parentheses","mutation":{"operation":"unbalanced-parentheses"},"expected_codes":["INCOMPLETE_EXCERPT"]},
+    {"id":"unbalanced-quotes","mutation":{"operation":"unbalanced-quotes"},"expected_codes":["INCOMPLETE_EXCERPT"]},
+    {"id":"mid-clause-ending","mutation":{"operation":"mid-clause-ending"},"expected_codes":["INCOMPLETE_EXCERPT"]},
+    {"id":"rejected-v5-false-green","mutation":{"operation":"rejected-v5-candidate-fails"},"expected_codes":["GENERIC_BOUNDARY_TEMPLATE","GENERIC_DIFFERENCE_STATEMENT","GENERIC_RELEVANCE_TEMPLATE","GENERIC_SIMILARITY_STATEMENT","INCOMPLETE_EXCERPT","MISSING_COMPARISON_DIMENSION","MISSING_PER_GAME_VARIANTS","MISSING_REQUIRED_FIELD","RELEVANCE_DOES_NOT_NAME_EXCERPT_BEHAVIOR","REPEATED_BOUNDARY_EFFECT","RESIDUAL_ROUTING_REGRESSION","REUSED_RELEVANCE_TEMPLATE"]}
+  ]
+}

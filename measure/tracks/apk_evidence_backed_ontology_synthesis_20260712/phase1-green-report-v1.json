@@ -1,0 +1,100 @@
+{
+  "schema_version": "apk-t9-phase1-green-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 1,
+  "captured_at": "2026-07-24T17:02:00Z",
+  "status": "pass",
+  "state": "VERIFIED",
+  "bindings": {
+    "phase0_root_acceptance_sha256": "0480362baab8a237cf71fafc20800979793848fd70907013e27a462330690960",
+    "phase0_input_freeze_sha256": "0517288c5aa267ddbd5f22fd6929cd74aaaacc74b9321d43094c72ade8614dae",
+    "phase0_source_registry_sha256": "ae6050cc6c075614b34b6d8832a350f7d28945154315adebb25667fffc5b858c",
+    "phase0_game_identity_map_sha256": "7b2d3cf7fe5e17eab88f27804aac60e60c2da9e7089b82074b67d27721a47b3f",
+    "phase1_role_dispatch_sha256": "2032327e85c55bf789782ed6dd1635e03fa5efb323bb4ef2bc3fe29791ff7c7c",
+    "sealed_red_report": {
+      "path": "phase1-red-report-v1.json",
+      "sha256": "5417782771b7f84156d6e61f7d7dd760ff6bd3000d48bf0504ef9ee364789882"
+    }
+  },
+  "truth_package": {
+    "phase1_truth_verifier.py": "df86b554e3db74b6e876efafa57a586447cf0445806d6d2315ab34ba9dbabe49",
+    "phase1_truth_verifier_test.py": "8746947941499f65f594e21ee5e1a2c2943f1e2f8e314bf4744f153001f1462f",
+    "phase1-fixture-manifest-v1.json": "6def0a763251bf00789868ee2a6e7dabc1d79bc34f98173b8e2e37072f1e6aed",
+    "fixture_count": 16,
+    "case_count": 80,
+    "fixture_suite_digest": "57999dee880e286454b1492bf47faefab99a898f19eb9b29095c64e5c8363b18"
+  },
+  "mapper_package": {
+    "phase1-source-resolution-index-v1.json": {
+      "sha256": "2900222c4fc4db8ffb354d4f25f5c1a8bef6930b2d7e8e1bb692dab27d860bd0",
+      "bytes": 1013616
+    },
+    "phase1-mechanic-blueprints-v1.json": {
+      "sha256": "ed3bee70f5e7e94ac101f295d9de3f768cdaf9d97d40d4529f2fbbbe8f479d61",
+      "bytes": 989539
+    },
+    "phase1-developer-effort-baseline-v1.json": {
+      "sha256": "168403610d0c69160777ddeca5753dcc57b97e2a7db6ceed65f3e4ce64d14f91",
+      "bytes": 558844
+    },
+    "phase1-claim-dependency-edges-v1.json": {
+      "sha256": "2b279df4896c9620ea9acf17506e942c9df98e2b4d6c06a29d5293106aff0987",
+      "bytes": 563919
+    },
+    "role-receipts/phase1/mechanics-capability-mapper.json": {
+      "sha256": "2d05dfdc8c9d698064a342e7cee5eeeb540d05afa640c637ec19dc55925357e5"
+    }
+  },
+  "verification": {
+    "live_state": "VERIFIED",
+    "live_status": "pass",
+    "live_checks": 2298,
+    "live_findings": [],
+    "focused_tests": 14,
+    "focused_tests_passed": 14,
+    "negative_fixture_files_rejected_exactly": 16,
+    "negative_cases_rejected_exactly": 80,
+    "suite_runtime_seconds": 15.018,
+    "negative_case_runtime_seconds": 13.88,
+    "runtime_stop_loss_seconds": 30,
+    "ruff_check": "pass",
+    "ruff_format_check": "pass",
+    "missing_output_red_simulation": {
+      "method": "temporary track copy omitting only five mapper-owned files",
+      "state": "RED_WAITING_FOR_MAPPER_OUTPUTS",
+      "finding_codes": [
+        "PHASE1_MAPPER_OUTPUTS_MISSING"
+      ]
+    },
+    "production_cli_validation": "fresh process performs full frozen-input and mapper validation; caches are process-local immutable test-run optimization"
+  },
+  "effective_corpus": {
+    "claims": 1248,
+    "current_records": 1009,
+    "direct_accepted": 573,
+    "explicit_game_package_global_accepted": 421,
+    "verified_parent_linked_accepted": 20,
+    "accepted_placement_blocked": 210,
+    "upstream_unknown": 24,
+    "source_documents": 32
+  },
+  "routing": {
+    "phase1_mechanic": 633,
+    "phase1_effort": 376,
+    "deferred_asset": 146,
+    "deferred_responsive": 52,
+    "context_only": 17,
+    "blocked_upstream_unknown": 24
+  },
+  "budget_result": {
+    "max_fixture_files": 16,
+    "max_source_documents": 32,
+    "max_output_bytes_each": 1048576,
+    "max_runtime_seconds": 30,
+    "all_pass": true
+  },
+  "phase1_gate": "GREEN",
+  "phase2_authorized": false,
+  "implementation_authorized": false,
+  "shipping_authorized": false
+}

@@ -1,0 +1,10 @@
+{
+  "expected_codes": [
+    "DELEGATED_OWNER_ROLE_CONTRADICTION"
+  ],
+  "id": "delegated-owner-role-policy-mismatch",
+  "mutation": {
+    "type": "restore-root-product-owner-prohibition"
+  },
+  "schema_version": "apk-t9-phase0-negative-fixture.v2"
+}

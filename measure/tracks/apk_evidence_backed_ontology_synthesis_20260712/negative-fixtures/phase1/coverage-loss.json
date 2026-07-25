@@ -1,0 +1,19 @@
+{
+  "schema_version": "apk-t9-phase1-negative-fixture-group.v2",
+  "id": "coverage-loss",
+  "cases": [
+    {
+      "id": "coverage-loss-01",
+      "mutation": {
+        "operation": "remove-game-scene-state"
+      },
+      "expected_codes": [
+        "GAME_SCENE_STATE_LOSS"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "GAME_SCENE_STATE_LOSS"
+  ],
+  "expected_state": "INVALID"
+}

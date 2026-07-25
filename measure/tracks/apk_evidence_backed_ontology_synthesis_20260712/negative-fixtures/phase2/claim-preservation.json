@@ -1,0 +1,38 @@
+{
+  "schema_version": "apk-t9-phase2-negative-fixture-group.v1",
+  "id": "claim-preservation",
+  "cases": [
+    {
+      "id": "claim-preservation-01",
+      "mutation": {
+        "operation": "remove-upstream-claim"
+      },
+      "expected_codes": [
+        "CLAIM_SET_MISMATCH"
+      ]
+    },
+    {
+      "id": "claim-preservation-02",
+      "mutation": {
+        "operation": "duplicate-upstream-claim"
+      },
+      "expected_codes": [
+        "CLAIM_SET_MISMATCH"
+      ]
+    },
+    {
+      "id": "claim-preservation-03",
+      "mutation": {
+        "operation": "remove-dependency-edge"
+      },
+      "expected_codes": [
+        "DEPENDENCY_MISMATCH"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "CLAIM_SET_MISMATCH",
+    "DEPENDENCY_MISMATCH"
+  ],
+  "expected_state": "INVALID"
+}

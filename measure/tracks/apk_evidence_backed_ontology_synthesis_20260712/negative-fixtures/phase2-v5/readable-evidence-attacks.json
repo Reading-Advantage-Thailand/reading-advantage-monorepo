@@ -1,0 +1,9 @@
+{"schema_version":"apk-t9-phase2-v5-negative-fixtures.v1","cases":[
+{"id":"literal-ellipsis","contract":"finding-v5","mutation":{"operation":"literal-ellipsis"},"expected_codes":["ELLIPSIS_FORBIDDEN"]},
+{"id":"unicode-ellipsis","contract":"finding-v5","mutation":{"operation":"unicode-ellipsis"},"expected_codes":["ELLIPSIS_FORBIDDEN"]},
+{"id":"boundary-effect-copies-statement","contract":"finding-v5","mutation":{"operation":"boundary-effect-copies-statement"},"expected_codes":["ARCHITECTURAL_CONSEQUENCE_MISSING","BOUNDARY_EFFECT_COPIES_STATEMENT"]},
+{"id":"boundary-effect-fields-copy-each-other","contract":"finding-v5","mutation":{"operation":"boundary-effect-fields-copy-each-other"},"expected_codes":["ARCHITECTURAL_CONSEQUENCE_MISSING","BOUNDARY_EFFECT_FIELDS_COPY_EACH_OTHER"]},
+{"id":"missing-exact-excerpt","contract":"finding-v5","mutation":{"operation":"missing-exact-excerpt"},"expected_codes":["GAME_BEHAVIOR_CONSUMER_MISMATCH","MISSING_EXACT_EXCERPT","MISSING_REQUIRED_FIELD"]},
+{"id":"excerpt-not-substring","contract":"finding-v5","mutation":{"operation":"excerpt-not-substring-of-accepted-fact"},"expected_codes":["EXCERPT_NOT_ACCEPTED_SUBSTRING","GAME_BEHAVIOR_CONSUMER_MISMATCH"]},
+{"id":"provenance-only-use","contract":"finding-v5","mutation":{"operation":"provenance-only-capability-use"},"expected_codes":["PROVENANCE_ONLY_CAPABILITY_USE"]}
+]}

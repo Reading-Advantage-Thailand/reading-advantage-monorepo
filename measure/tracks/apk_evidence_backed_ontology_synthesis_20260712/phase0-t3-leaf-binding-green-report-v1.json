@@ -1,0 +1,39 @@
+{
+  "schema_version": "apk-t9-phase0-t3-leaf-binding-green-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "state": "VERIFIED",
+  "status": "candidate-independently-verified",
+  "checks": 950,
+  "findings": [],
+  "bindings": {
+    "repair_dispatch_sha256": "f6a9aedb3eb3246fc107363854aff75ab50b0ed1af19280b5925c3c8138a78e5",
+    "candidate_sha256": "a04bc93f78ad33e22a56af7b94d61e721ae5828ed23fd509456c5250b366bbac",
+    "catalog_author_receipt_sha256": "67ec8d7b08810a3b34b4e575fc00b1b430bbd9459714b4c7c36225b9c048ae2f",
+    "verifier_sha256": "0faf71edca6d6d5157ed4bea9ada03bce869296077501b0233e565e404c891bb",
+    "focused_test_sha256": "9dc1d598c118a8ff197eb6d082a29ef7f661101804ee2a86c0f84b807e0efc34",
+    "fixture_manifest_sha256": "5f738e9a2895b31cd96f996a34aaee766e049113d13204539b708f903896ecbc"
+  },
+  "coverage": {
+    "leaf_count": 4,
+    "game_count": 3,
+    "claim_count": 491,
+    "unique_blueprint_claim_references": 385,
+    "structured_scene_state_and_mechanic_effort_rows_recomputed": true,
+    "accepted_chain_and_author_receipt_semantics_verified": true,
+    "negative_fixtures": 7
+  },
+  "immutable_suite": {
+    "tests": 41,
+    "passes": 40,
+    "failures": 1,
+    "errors": 0,
+    "sole_failure": "T3StopLossContract.test_zero_failed_fix_review_cycles",
+    "failure_disposition": "known post-review adversarial-receipt lifecycle assertion",
+    "focused_suite_tests": 4,
+    "focused_suite_runtime_seconds": 125.01,
+    "focused_suite_stop_loss_seconds": 180
+  },
+  "decisions_authored": false,
+  "archive_modified": false
+}

@@ -1,0 +1,69 @@
+{
+  "schema_version": "apk-t9-phase2-red-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "captured_at": "2026-07-24T17:35:00Z",
+  "status": "valid-red-waiting-for-mapper-outputs",
+  "state": "RED_WAITING_FOR_MAPPER_OUTPUTS",
+  "bindings": {
+    "phase2-role-dispatch-v1.json": "67e737601f8a6eb0337884a9dcac97258452437fc6dc156073707fecd9b783e1",
+    "phase1-root-acceptance.json": "bd911f865c95e24874dde657e856718910a05b1737634222055654b331dd020d",
+    "phase1-source-resolution-index-v1.json": "2900222c4fc4db8ffb354d4f25f5c1a8bef6930b2d7e8e1bb692dab27d860bd0",
+    "phase1-mechanic-blueprints-v1.json": "ed3bee70f5e7e94ac101f295d9de3f768cdaf9d97d40d4529f2fbbbe8f479d61",
+    "phase1-developer-effort-baseline-v1.json": "168403610d0c69160777ddeca5753dcc57b97e2a7db6ceed65f3e4ce64d14f91",
+    "phase1-claim-dependency-edges-v1.json": "2b279df4896c9620ea9acf17506e942c9df98e2b4d6c06a29d5293106aff0987"
+  },
+  "truth_package": {
+    "phase2_truth_verifier.py": "1c51ed35184b260f73a053555efeae894fdfc9cf5a810765438ebbca6280c454",
+    "phase2_truth_verifier_test.py": "d6a5a57ab8cde097d7ae892872dcc7e7acfa35deccbf131fb6cbbaa151031366",
+    "phase2-fixture-manifest-v1.json": "ec748ba02b12369c70b23d1be3d1cb370a4532c7f96c59260fa4599e77033899",
+    "fixture_count": 10,
+    "case_count": 19,
+    "fixture_suite_digest": "59c0d0549c0feb532cdfed8c406b5da891aa2cbf036c3136c583d8fb16be3a82"
+  },
+  "production_contract": {
+    "comparison_batches": "2-3 unique games; production batches partition all 28 resolvable games exactly once",
+    "behavioral_basis": "similarities and differences contain only exact Phase 1 mechanic claim references with canonical record/field/value/scope/factual bindings",
+    "negative_equivalence": "standardization rejects noun/art/non-mechanic evidence and low-or-medium-only provisional evidence",
+    "required_fields": [
+      "similarities",
+      "differences",
+      "owner",
+      "extension_boundary",
+      "tests",
+      "disposition"
+    ],
+    "classification": "one canonical classification per comparison, copying games/finding ids/owner/boundary/tests/disposition exactly",
+    "extension_boundaries": "one exact boundary per classification",
+    "claim_preservation": "all 1,248 Phase 1 claims retained exactly; 24 upstream unknowns preserved unresolved; dependency edges exactly equal evidence refs",
+    "shape": "missing and surplus fields rejected at every declared container and row",
+    "budgets": {
+      "negative_fixture_files_max": 16,
+      "normalized_source_documents_max": 32,
+      "published_output_bytes_max": 1048576,
+      "suite_runtime_seconds_max": 30
+    }
+  },
+  "required_rejections": [
+    "NOUN_ART_ONLY_STANDARDIZATION",
+    "PROVISIONAL_ONLY_STANDARDIZATION",
+    "INVENTED_BEHAVIOR",
+    "PLACEMENT_STATUS_COLLAPSE",
+    "UNKNOWN_RESOLUTION",
+    "BATCH_GAME_LIMIT_EXCEEDED",
+    "MISSING_REQUIRED_FIELD",
+    "SURPLUS_FIELD",
+    "TAMPERED_HASH",
+    "CLAIM_SET_MISMATCH",
+    "OUTPUT_BUDGET_EXCEEDED"
+  ],
+  "missing_mapper_outputs": [
+    "phase2-capability-comparisons-v1.json",
+    "phase2-capability-classification-v1.json",
+    "phase2-extension-boundaries-v1.json",
+    "phase2-claim-dependency-edges-v1.json",
+    "role-receipts/phase2/capability-mapper.json"
+  ],
+  "green_publication_authorized": false,
+  "next_action": "Capability mapper publishes only dispatch-owned outputs bound to this exact truth contract; truth author reruns without revising Red expectations."
+}

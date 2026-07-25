@@ -1,0 +1,95 @@
+{
+  "schema_version": "apk-t9-phase0-v2-independent-review.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "reviewed_at": "2026-07-24T11:12:18Z",
+  "reviewer": {
+    "agent_ref": "/root/phase5_review_b",
+    "role": "phase0-adversarial-reviewer",
+    "independent_of_author": true
+  },
+  "scope": "Additive T9 Phase 0 v2 publication and its exact T8 and preserved v1 governance dependencies.",
+  "reviewed_artifacts": {
+    "phase0-source-registry-v2.json": "c770189b2202526f13015cdca8f9f0a688cb4fb2dbc663c969b7c582301e7d9b",
+    "phase0-budget-stop-loss-v2.json": "5c101f0bb267a4fc79cf938c86ab5f5f10422f3cf79ce53f3f06e66a6dc891d8",
+    "phase0-input-freeze-v2.json": "7f1cd3a995f4c3c0f1a4b6e938f43bfb10a613c1eda9548aad87833530707456",
+    "phase0-role-ownership-manifest-v2.json": "b025b7494e51d493bf39e021a170cc8a2af99886eecf9807919c2a3d2ef2b7c9",
+    "phase0-fixture-manifest-v2.json": "7019be8b36a58bc036bc70fecb6922f5ce432f34e221edaf91a0f19300ec67e0",
+    "phase0_active_truth_verifier.py": "d1f9d41a7f3923c5ce7c62bd2c5db54c86b816410c306a2e9ffe056e6c6e3c68",
+    "phase0_active_truth_verifier_test.py": "28628b2c58bf346d7d811694317dbe42cc13bcf95ef791be1ccca02f25ee4d4e",
+    "phase0-green-verification-report-v2.json": "cc6721b6c3e881dc130c824ef9e2025a952b6dc70714897d2c55f5c3abb7d8a3"
+  },
+  "preserved_v1_bindings": {
+    "phase0-role-ownership-manifest-pending-v1.json": "9f4eb756fb6f79b9099b83fc84f191dc421e111a3b35ba25f15ea8c77678b382",
+    "phase0-fixture-manifest-pending-v1.json": "cdf1b43e90a70441d9fefa2166c5fbd98de523607659484453b3f783bf5f19ca",
+    "phase0-input-freeze-pending-v1.json": "fe358ce3dec3fb65613d52a261dd6dbd68b2c2a3e626ee20297094fbd2bdf57e",
+    "phase0-source-registry-pending-v1.json": "29dcb7cea1aa206c551ba7aa90741585bb80509e4c31937b259cb69077c7e6b5",
+    "phase0_truth_verifier.py": "c6431c6caa341a25a45e7e79e03dbd2c5ffa3221c75daa186150883cdacd1b19",
+    "role-receipts/phase0/governance-remediation-author-provider-attestation-v1.json": "7c1c31d2c5557a848dda6c6f0ebe88221152e616417353c40e708a6dbe985a0c",
+    "role-receipts/phase0/governance-remediation-author-output-declaration-v1.json": "b43a7d97f5557d2c2b5d16379dbbab76049500572b1d67a21eba17ec70f43681",
+    "role-receipts/phase0/governance-remediation-author-receipt-v1.json": "067f61e7f42971f3ae4498b17d1795cd4cb5469e12ec6dd27d0bcbeb533b2bcd"
+  },
+  "t8_acceptance_bindings": {
+    "acceptance_gate_receipt": "2459f3ffa8e511794c7356ffb466c02ee86190bf10e25ece7b92ae52776b02c1",
+    "acceptance_gate_report": "8b33353f3ebda940f1eec60761584c62d6df3d0cdc953c87bd92108b785010a5",
+    "accepted_manifest": "20930a1cb30b763323f0c3d77a0625cb1c54c7aba7094284b91d508f3d68665f",
+    "delegated_owner_event": "4892bd5b1b83a52c6f2f6d537cacbc0af8eafd3bc401712e8cb47fa044e1825e",
+    "root_acceptance": "4e6fc46898dadb42d255127de1214f52514b8a1bd97fcd2ad2073d379d373c86",
+    "fresh_review_AF_01_AF_06": "c789ef9c07eba1e4281d25084684c1c6590eefae809ddf5ca21b56b4acde7eec",
+    "fresh_review_AF_07_AF_12": "44944d6948a15e50593f3adc2b6882ae9510359bcebcafc2fd66d24eeb0db00d"
+  },
+  "prior_high_remediation": {
+    "finding": "The active freeze authorized delegated root product-owner decisions while the pending v1 role contract forbade the product-owner acceptance role.",
+    "resolution": [
+      "Published an additive active v2 role contract preserving the exact pending v1 bytes.",
+      "Added cross-contract delegated-owner verification.",
+      "Added a hash-bound delegated-owner contradiction fixture.",
+      "Corrected the real-root overlap fixture and activated a 17-fixture manifest.",
+      "Rebound the freeze, verifier tests, and green report."
+    ],
+    "verified": true
+  },
+  "verification": {
+    "live_verifier": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 /usr/bin/time -f 'elapsed_seconds=%e exit_status=%x' python3 measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase0_active_truth_verifier.py --repo-root . --track-root measure/tracks/apk_evidence_backed_ontology_synthesis_20260712",
+      "checks": 216,
+      "status": "pass",
+      "exit_code": 0,
+      "elapsed_seconds": 3.43,
+      "report_byte_match": true
+    },
+    "unit_tests": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v phase0_active_truth_verifier_test.py",
+      "passed": 7,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "fixture_matrix": {
+      "fixture_count": 17,
+      "all_rejected": true,
+      "elapsed_seconds": 6.171758
+    },
+    "strict_contradiction_rejection": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 phase0_active_truth_verifier.py --repo-root ../../.. --track-root . --fixture negative-fixtures/phase0/delegated-owner-role-policy-mismatch.json --expect-codes DELEGATED_OWNER_ROLE_CONTRADICTION ROLE_OVERLAP",
+      "exact_codes": [
+        "DELEGATED_OWNER_ROLE_CONTRADICTION",
+        "ROLE_OVERLAP"
+      ],
+      "exit_code": 0
+    },
+    "ruff": "pass",
+    "google_docstrings": "pass",
+    "max_line_length_80": "pass",
+    "json_files_validated": 17,
+    "git_diff_check": "pass"
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "verdict": "independent-review-pass",
+  "phase1_gate_assessment": "Reviewer evidence supports Phase 1 authorization.",
+  "authority_boundary": "This is an independent reviewer verdict only and is not a product-owner decision."
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "apk-t9-phase2-v2-negative-fixture-group.v1",
+  "id": "hash-receipt",
+  "cases": [
+    {
+      "id": "hash-receipt-01",
+      "mutation": {"operation": "tampered-hash"},
+      "expected_codes": ["TAMPERED_HASH"]
+    },
+    {
+      "id": "hash-receipt-02",
+      "mutation": {"operation": "wrong-owner"},
+      "expected_codes": ["STALE_OR_WRONG_RECEIPT"]
+    }
+  ],
+  "expected_codes": ["STALE_OR_WRONG_RECEIPT", "TAMPERED_HASH"],
+  "expected_state": "INVALID"
+}

@@ -1,0 +1,9 @@
+{
+    "schema_version": "apk-t9-phase0-negative-fixture.v1",
+    "id": "forged-ancestry-lifecycle",
+    "mutation": {
+        "type": "provider-counterexample",
+        "case": "forged-ancestry-lifecycle"
+    },
+    "expected_codes": ["FORGED_ANCESTRY_OR_LIFECYCLE"]
+}

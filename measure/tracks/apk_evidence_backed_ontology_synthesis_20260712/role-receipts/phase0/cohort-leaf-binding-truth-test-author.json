@@ -1,0 +1,67 @@
+{
+  "schema_version": "apk-t9-phase0-cohort-leaf-binding-truth-test-author-receipt.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "task_id": "phase0-verify-t4b-t6b-leaf-bindings",
+  "role": "cohort-leaf-binding-truth-test-author",
+  "agent_ref": "/root/t9_phase0_governance_author",
+  "status": "red-to-green-verification-complete",
+  "repair_dispatch": {
+    "path": "phase0-cohort-leaf-repair-role-dispatch-v1.json",
+    "sha256": "7a7ec749bb4f83c5dfab0e7c63bd754f686eabe77506fb2f83480bf48f828400"
+  },
+  "input_bindings": [
+    {
+      "path": "phase0-cohort-leaf-binding-candidate-v1.json",
+      "sha256": "2a9c5f2eb24d235dbbb59c81b63e81a162ff08c4a6f0aa95fff66bea58194fef"
+    },
+    {
+      "path": "role-receipts/phase0/cohort-leaf-binding-catalog-author.json",
+      "sha256": "6bd34ea232bdab1f130491a52a871d06a1001c69583ff2c45cfb9687cf51eef3"
+    }
+  ],
+  "output_bindings": [
+    {
+      "path": "phase0_cohort_leaf_binding_verifier.py",
+      "sha256": "05f2f4379429bae819cd6d72931d5c1779c2ee69fe862cf83671e73f818630c2"
+    },
+    {
+      "path": "phase0_cohort_leaf_binding_verifier_test.py",
+      "sha256": "62a7e1f37264b8393fca1c3e17653c8fe1d66d6f914c6eab1ab9b13235bb8b38"
+    },
+    {
+      "path": "phase0-cohort-leaf-binding-fixture-manifest-v1.json",
+      "sha256": "afeb3360606fa85b198f4c3ebbe93a410c35356579d138e1f4127af54bb553df"
+    },
+    {
+      "path": "phase0-cohort-leaf-binding-red-report-v1.json",
+      "sha256": "9dcb27a6d1a583f6a63d7bc296f3aca7fbde3395c649db74ef8560becbc11300"
+    },
+    {
+      "path": "phase0-cohort-leaf-binding-green-report-v1.json",
+      "sha256": "bfa360221f78d4124a9b28492664432d9d7ee666cae8decfa3d663ab87c2b2ac"
+    }
+  ],
+  "supersedes_non_authorized_draft": {
+    "status": "non-consumable-governance-invalid",
+    "finding": "Fixture paths used phase0-cohort instead of the dispatch-authorized phase0-cohort-leaf directory.",
+    "verifier_sha256": "05f2f4379429bae819cd6d72931d5c1779c2ee69fe862cf83671e73f818630c2",
+    "focused_test_sha256": "d7bfe88110b549922158f83ce17cd4e00ca64e9f12285a02c0d21fb193264b9b",
+    "fixture_manifest_sha256": "e1ce3802390b02032da6da0574ed8b41f97c15ddc40709e5c48e6c7a146ae4bf",
+    "red_report_sha256": "4690e351df2373bf8b40c4a0708e5c63a3eecaff2f58a2823ea221a4f6aa452b",
+    "green_report_sha256": "1d084501764e3d1e80774a84cf1f905092a93d342c7021ef1ddf37c6ec027fda",
+    "truth_author_receipt_sha256": "1ac4acb3c27c27ea966480610624d198518b2da5fd68b08b184bbeb654dff440"
+  },
+  "attestation": {
+    "candidate_authored": false,
+    "review_or_acceptance_authored": false,
+    "archive_modified": false,
+    "git_blob_and_exact_range_rederivations": 220,
+    "bounded_query_rederivations": 6,
+    "accepted_chain_and_selected_receipt_bindings": 27,
+    "all_candidate_coverage_fields_recomputed": true,
+    "fixture_paths_match_dispatch_allowed_outputs": true,
+    "fixture_count": 12
+  },
+  "self_hash_note": "Receipt does not self-bind because that would change its bytes."
+}

@@ -1,0 +1,137 @@
+{
+  "schema_version": "apk-t9-phase0-game-identity-map-independent-review.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "reviewed_at": "2026-07-24T12:18:49Z",
+  "reviewer": {
+    "agent_ref": "/root/phase5_review_b",
+    "role": "game-identity-map-independent-reviewer",
+    "independent_of_author": true
+  },
+  "review_dispatch_binding": {
+    "path": "phase0-game-identity-map-review-dispatch-v1.json",
+    "sha256": "5b2d84de007ed421eb9e5cd625fd8b101b247e5ca94ebea40ebf9fdf4d7e6b97"
+  },
+  "candidate_binding": {
+    "path": "phase0-game-identity-map-v1.json",
+    "sha256": "7b2d3cf7fe5e17eab88f27804aac60e60c2da9e7089b82074b67d27721a47b3f"
+  },
+  "author_receipt_binding": {
+    "path": "role-receipts/phase0/game-identity-map-author.json",
+    "sha256": "f097fb287d975bf1559362a1f6b66c390980524a4360261d1f46f820afcb4883"
+  },
+  "author_dispatch_binding": {
+    "path": "phase0-game-identity-map-role-dispatch-v1.json",
+    "sha256": "cb6f4e4f8def66e393e65e371fb5b11931f9d9d4bd654030940d0713362baa0d"
+  },
+  "base_role_contract_binding": {
+    "path": "phase0-role-ownership-manifest-v2.json",
+    "sha256": "b025b7494e51d493bf39e021a170cc8a2af99886eecf9807919c2a3d2ef2b7c9"
+  },
+  "t2_partition_binding": {
+    "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+    "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+    "entry_order": "assignments array order"
+  },
+  "verification": {
+    "entry_count": {
+      "expected": 29,
+      "actual": 29,
+      "verified": true
+    },
+    "unique_game_ids": {
+      "expected": 29,
+      "actual": 29,
+      "verified": true
+    },
+    "ordered_t2_pointers": {
+      "expected": 29,
+      "actual": 29,
+      "pattern": "/assignments/{index}/canonical_identity_label for indexes 0 through 28",
+      "labels_resolved_and_exact": 29,
+      "verified": true
+    },
+    "identity_sources": {
+      "source_paths_resolved": 29,
+      "source_hashes_matched": 29,
+      "source_pointers_resolved": 29,
+      "extractions_matched_game_id": 29,
+      "allowed_extractions": [
+        "exact-value",
+        "terminal-path-segment",
+        "package-directory-segment-from-output-hash-key"
+      ],
+      "verified": true
+    },
+    "author_receipt_inputs": {
+      "expected_unique_inputs": 13,
+      "actual_unique_inputs": 13,
+      "missing": [],
+      "extra": [],
+      "hashes_matched": 13,
+      "verified": true
+    },
+    "mapping_digest": {
+      "declared": "458a5c20db75617820604948cb004a14d579c828cedecbbcb7bdbada2f0a2b0a",
+      "recomputed": "458a5c20db75617820604948cb004a14d579c828cedecbbcb7bdbada2f0a2b0a",
+      "canonicalization": "SHA-256 of the UTF-8 compact JSON encoding of entries, with preserved entry and property order, ensure_ascii false, and no trailing newline.",
+      "verified": true
+    },
+    "verified_game_ids_in_t2_order": [
+      "dragon-flight",
+      "rpg-battle",
+      "abyssal-well",
+      "castle-defense",
+      "magic-defense",
+      "wizard-vs-zombie",
+      "village-guardian",
+      "archers-revenge",
+      "storm-castle-tower",
+      "paladins-twin-soul",
+      "gryphon-patrol",
+      "dragon-rider",
+      "dungeon-liberator",
+      "spellweavers-run",
+      "shadow-gate-dungeon",
+      "labyrinth-goblin-king",
+      "griffin-riders-escape",
+      "sorcerer-ziggurat",
+      "enchanted-library",
+      "rune-match",
+      "alchemists-synthesis",
+      "potion-rush",
+      "rune-forge-chamber",
+      "astral-mage",
+      "griffin-sky-joust",
+      "realm-carver",
+      "devourer-slime",
+      "the-haunted-library",
+      "babel-architect"
+    ],
+    "candidate_boundary": {
+      "status": "candidate-only-non-consumable",
+      "candidate_only": true,
+      "consumable": false,
+      "revoked": false,
+      "acceptance_claimed": false,
+      "identity_mapping_only": true,
+      "phase1_mapper_publication_authorized": false,
+      "ontology_authorized": false,
+      "cross_game_standardization_authorized": false,
+      "implementation_authorized": false,
+      "responsive_or_asset_decisions_authorized": false,
+      "shipping_authorized": false,
+      "product_success_claimed": false,
+      "verified": true
+    }
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "unresolved_medium_or_higher": 0,
+  "verdict": "independent-review-pass",
+  "authority_boundary": "This is an independent reviewer verdict only. It does not accept the candidate, make it consumable, authorize Phase 1 publication, or make a product-owner decision."
+}

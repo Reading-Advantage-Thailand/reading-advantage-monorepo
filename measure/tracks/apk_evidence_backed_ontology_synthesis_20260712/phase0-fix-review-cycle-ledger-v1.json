@@ -1,0 +1,91 @@
+{
+  "schema_version": "apk-t9-phase0-fix-review-cycle-ledger.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "failed_cycle_count": 2,
+  "cycles": [
+    {
+      "cycle": 1,
+      "reviewer_task_path": "/root/phase5_review_a/t9_phase0_final_reviewer",
+      "reviewer_rollout": {
+        "path": "/home/daniel-bo/.codex/sessions/2026/07/24/rollout-2026-07-24T11-39-29-019f926b-da2e-7a90-8b3b-f13b154ab881.jsonl",
+        "bytes": 782898,
+        "sha256": "dddb19bdd53d464b83bc09d791eadcfeb1517c1271ec9c5a292cedb25e03eb55",
+        "session_id": "019f926b-da2e-7a90-8b3b-f13b154ab881",
+        "parent_session_id": "019f919e-7f07-79b3-918c-06f16cf574a5",
+        "agent_path": "/root/phase5_review_a/t9_phase0_final_reviewer"
+      },
+      "final_response": {
+        "turn_id": "019f926b-dab9-7d02-a3b1-2d674744faf0",
+        "timestamp": "2026-07-24T04:47:09.034Z",
+        "record_sha256": "68faa6f57bb96e8b0f7fe0fafee43e90b17d2c97ca738e8366170f148579ea3e",
+        "text_sha256": "3fd20e2d7acb47bfaf7f7b8e273ae02b89e2e29c5f53fca892f736670321a3c9"
+      },
+      "task_complete": {
+        "turn_id": "019f926b-dab9-7d02-a3b1-2d674744faf0",
+        "timestamp": "2026-07-24T04:47:10.094Z",
+        "record_sha256": "7d8978ac736981cd30128ff62f952e4fb6ebed3e02e1f4a91d57e2cc531eb89e"
+      },
+      "findings": [
+        {
+          "code": "MISSING_ROLE_PROVENANCE",
+          "severity": "High"
+        },
+        {
+          "code": "INCOMPLETE_ROLE_SEPARATION",
+          "severity": "Medium"
+        },
+        {
+          "code": "MISSING_GAP_DELIVERY_ASSIGNMENT",
+          "severity": "Medium"
+        }
+      ],
+      "remediation_transition": {
+        "from": "phase0-final-review-failed",
+        "to": "phase0-governance-remediation",
+        "author_task_path": "/root/t9_phase0_governance_author"
+      }
+    },
+    {
+      "cycle": 2,
+      "reviewer_task_path": "/root/t9_phase0_postbind_reviewer",
+      "reviewer_rollout": {
+        "path": "/home/daniel-bo/.codex/sessions/2026/07/24/rollout-2026-07-24T13-41-01-019f92db-1efc-7710-9955-4d5f2bec60a2.jsonl",
+        "bytes": 659496,
+        "sha256": "036becd6bf34b1ee820f862f090a81c0296bb0c383a64f27884e3cc6470e641c",
+        "session_id": "019f92db-1efc-7710-9955-4d5f2bec60a2",
+        "parent_session_id": "019f8e88-86b8-7142-9cb4-6bd7c34b1385",
+        "agent_path": "/root/t9_phase0_postbind_reviewer"
+      },
+      "final_response": {
+        "turn_id": "019f92db-1f82-7d50-a833-0bd63d7580ea",
+        "timestamp": "2026-07-24T06:51:16.685Z",
+        "record_sha256": "9667e1d8c19378f36bd168b4df638ec59aae4a0ee8b54cdeeb3c21562ad8f263",
+        "text_sha256": "24f8cd7834b00617a0d335a469f9977b4d66ac46e3db85e953ad1906012799e5"
+      },
+      "task_complete": {
+        "turn_id": "019f92db-1f82-7d50-a833-0bd63d7580ea",
+        "timestamp": "2026-07-24T06:51:16.744Z",
+        "record_sha256": "c352cc913689137ad1f1b13dc59e2cc972e8b8a68afd9df4c8a079b12ca6f787"
+      },
+      "findings": [
+        {
+          "code": "PRODUCT_OWNER_DIRECTION_BYPASS",
+          "severity": "High"
+        },
+        {
+          "code": "UNATTESTED_FIX_REVIEW_CYCLE_LEDGER",
+          "severity": "Medium"
+        },
+        {
+          "code": "UNBOUND_CURRENT_GOVERNANCE_RECEIPT",
+          "severity": "Medium"
+        }
+      ],
+      "remediation_transition": {
+        "from": "post-bind-review-failed",
+        "to": "final-governance-truth-contract-remediation",
+        "author_task_path": "/root/t9_phase0_governance_author"
+      }
+    }
+  ]
+}

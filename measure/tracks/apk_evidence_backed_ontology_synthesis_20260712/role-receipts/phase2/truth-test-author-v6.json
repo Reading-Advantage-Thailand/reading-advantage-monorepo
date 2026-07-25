@@ -1,0 +1,19 @@
+{
+  "schema_version":"apk-t9-phase2-role-receipt.v6",
+  "track_id":"apk_evidence_backed_ontology_synthesis_20260712",
+  "phase":2,
+  "task_id":"phase2-specificity-red-green-v6",
+  "owner_role":"truth-test-author",
+  "agent_ref":"/root/t9_phase0_governance_author",
+  "dispatch":{"path":"phase2-role-dispatch-v6.json","sha256":"62fb22f1e81f142cc2b60cde455304b21d4c9dcd368e70f5fa235573dd13c60f"},
+  "status":"sealed-red-v6-published-waiting-for-specificity-mapper-v4",
+  "outputs":{
+    "phase2_v6_truth_verifier.py":"523794616e2f764bb020a6fe6a915e6ed3060da7358d0b157cb902277b9af78c",
+    "phase2_v6_truth_verifier_test.py":"c0797f8620226ad537b42d59c11077fec334bed5ddf99d6e2851b2a51008898e",
+    "phase2-v6-fixture-manifest.json":"48eaeb5c4cc7314e404b9f1dfa3ea61ec53a43284a7ee5827982302c12b489d7",
+    "phase2-v6-red-report.json":"7d7af5c8a33dc60f52d640b476023d8357e602356cbcc0dd97fbc7a7371926bb"
+  },
+  "verification":{"focused_suite":"9/9 pass","fixture_files":7,"bound_fixture_cases":64,"runtime_seconds":21.733,"runtime_ceiling_seconds":30,"live_state":"RED_WAITING_FOR_MAPPER_V4_OUTPUTS","live_checks":21,"live_finding_codes":["PHASE2_MAPPER_V4_OUTPUTS_MISSING"],"rejected_v5_codes":12,"residual_misroutes_bound":9,"stop_loss_cycle":2,"ruff":"pass"},
+  "green_report_published":false,
+  "scope":{"mapper_decisions_authored":false,"phase3_authorized":false,"implementation_authorized":false,"shipping_authorized":false}
+}

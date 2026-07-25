@@ -1,0 +1,64 @@
+{
+  "schema_version": "apk-t9-phase2-v11-red-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "status": "valid-red-v11-waiting-for-root-v11-authority",
+  "state": "RED_WAITING_FOR_ROOT_V11_AUTHORITY",
+  "authority": {
+    "path": "phase2-role-dispatch-v11.json",
+    "sha256": "5b4b87ef31382f29d61499804d57a82bcb4d6baa37fa4a98e6438c2c365c63e5"
+  },
+  "truth_package": {
+    "phase2_v11_truth_verifier.py": "7fc8c08a4a7002f06adf3a6c698a8da5599c705153a14a8273588743845ba5aa",
+    "phase2_v11_truth_verifier_test.py": "90e67abed6cffa5cc5939b397676b1e9441e46b4f960758185b6f073bdb65f30",
+    "phase2-v11-fixture-manifest.json": "a68ac1eeb21575b9e6eb52f43a18d751fcb0901550f53f01eefbd8585951688c",
+    "negative-fixtures/phase2-v11/end-to-end-attacks.json": "8b1271176dc151dbe755248160890c00a8484146ec0f3609f0031d62b0ee9005",
+    "fixture_files": 1,
+    "fixture_cases": 21,
+    "focused_suite": "3/3 pass",
+    "runtime_seconds": 29.179,
+    "wall_runtime_seconds": 29.54,
+    "maxrss_kb": 44948,
+    "ruff": "pass",
+    "py_compile": "pass",
+    "json_validation": "pass"
+  },
+  "authority_order_results": {
+    "before_root_authority": {"state": "RED_WAITING_FOR_ROOT_V11_AUTHORITY", "sole_code": "ROOT_V11_AUTHORITY_MISSING"},
+    "correct_expected_release_with_missing_mapper": {"state": "RED_WAITING_FOR_MAPPER_V5_OUTPUTS", "sole_code": "PHASE2_MAPPER_V5_OUTPUTS_MISSING"},
+    "wrong_expected_release_with_missing_mapper": {"state": "INVALID", "sole_code": "MAPPER_RELEASE_MISMATCH"},
+    "missing_expected_release_after_release_exists": {"state": "INVALID", "sole_code": "EXPECTED_MAPPER_RELEASE_REQUIRED"},
+    "authority_validation_precedes_mapper_presence": true,
+    "public_entrypoint": "verify_phase2",
+    "mocks_used": false
+  },
+  "taxonomy_contract_results": {
+    "exact_top_level_and_status_specific_shapes": true,
+    "all_six_mapper_outputs_bound": true,
+    "inventory_drift_and_omission_rejected": true,
+    "taxonomy_ids_unique": true,
+    "selected_taxonomy_and_classified_capabilities_one_to_one": true,
+    "all_record_taxonomy_partitions_enforced": true,
+    "basis_specific_joins_and_irrelevant_arrays_enforced": true,
+    "typed_resolved_bespoke_incompatibility_refs_enforced": true,
+    "substitution_normalized_context_and_taxonomy_review_templates_rejected": true,
+    "expanded_record_verdict_values_exact_accept_or_reject": true,
+    "full_audit_object_hash_reviewed": true,
+    "all_48_context_promotions_exercised": true
+  },
+  "inherited_contract": {
+    "all_v10_bytes_preserved": true,
+    "all_v10_authority_manifest_and_v9_structural_semantic_review_counterexample_contracts_inherited": true,
+    "v10_verifier_sha256": "3cf4eb598055a8d03e5ea5a38bef79f5bf2ec1b50c43b48d142ef26c5b70d1e8",
+    "v10_test_sha256": "920209f26b3cd13a9e7545531a36c80ff21ee0e5ea4be861958e312ccfc3abb2"
+  },
+  "budgets": {
+    "fixture_files_max": 16,
+    "fixture_files_actual": 1,
+    "suite_runtime_seconds_max": 30,
+    "suite_runtime_seconds_actual": 29.179,
+    "published_output_bytes_max_each": 1048576
+  },
+  "green_publication_authorized": false,
+  "next_action": "Root independently reruns v11, publishes the v11 truth seal and externally hashed mapper release, then releases mapper v5-v11 for six-output publication."
+}

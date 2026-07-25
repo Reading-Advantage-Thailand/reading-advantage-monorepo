@@ -1,0 +1,61 @@
+{
+  "schema_version": "apk-t9-phase0-v3-red-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "state": "RED",
+  "status": "blocked-awaiting-root-owned-input-freeze-v3",
+  "runtime_seconds": 0.10,
+  "checks": 3,
+  "findings": [
+    {
+      "code": "PHASE0_V3_FREEZE_MISSING",
+      "message": "Missing phase0-input-freeze-v3.json."
+    }
+  ],
+  "bindings": {
+    "role_dispatch_sha256": "a34ade4b97794bab87be92d6f72f7505e524861b3dd1013d68979e7784f6793f",
+    "source_registry_sha256": "ae6050cc6c075614b34b6d8832a350f7d28945154315adebb25667fffc5b858c",
+    "verifier_sha256": "50ba12d62a7dccb0aa9a8d5969d711377d3fc8ac04460d9d67859f19e2dbfa6e",
+    "focused_test_sha256": "e49edb23329c17c29b1f3db1b52b4f18eeadc52a85a42c00755d96eab5ff2f24",
+    "fixture_manifest_sha256": "974586ea6987e79b2299328d16d89f4d345dd192df9fd1666e2cc52adbecb0d2"
+  },
+  "green_contract_proof": {
+    "focused_tests": 4,
+    "focused_passes": 4,
+    "runtime_seconds": 0.197,
+    "in_memory_exact_freeze_checks": 70,
+    "adversarial_fixtures": 13,
+    "registry_authority_and_source_bindings": 25
+  },
+  "required_root_freeze_bindings": {
+    "registry_sha256": "ae6050cc6c075614b34b6d8832a350f7d28945154315adebb25667fffc5b858c",
+    "role_dispatch_sha256": "a34ade4b97794bab87be92d6f72f7505e524861b3dd1013d68979e7784f6793f",
+    "phase0_v2_acceptance_sha256": "76bd4d4da9b0fea14656a59edc950a8abea16fbb2ed708a56bc69b1a78f2a7b6",
+    "t3_leaf_acceptance_sha256": "a550017ca170efc70b3b8b0741ab1062a818e0027282a54bdac655744d635b01",
+    "cohort_leaf_acceptance_sha256": "24faee63cf3894954f0cc4af9af4d753db76ee1e28f9a39c02c428bb489701ae",
+    "game_identity_candidate_sha256": "7b2d3cf7fe5e17eab88f27804aac60e60c2da9e7089b82074b67d27721a47b3f",
+    "game_identity_review_sha256": "73c4d1981eb7ee6e1af3400c5b553f96437c8694d9814556df84ed9ee6e10eca"
+  },
+  "required_root_freeze_semantics": {
+    "state": "FROZEN_AWAITING_PHASE0_V3_ROOT_ACCEPTANCE",
+    "status": "candidate-non-consumable",
+    "consumable": false,
+    "mapping_digest": "458a5c20db75617820604948cb004a14d579c828cedecbbcb7bdbada2f0a2b0a",
+    "game_count": 29,
+    "game_ids_sha256": "84c9b442ac27cdd8bb9e895d5bf7c9874beecdf22674f766f612ee26c54f71a5",
+    "resolvable_game_count": 28,
+    "resolvable_game_ids_sha256": "8dd4aea6de41c80b97515ae7d82fce87b617e0c438ee429db02667e99b18eed3",
+    "castle_defense_disposition": "blocked-by-unknown",
+    "castle_scene_or_state_ids": [],
+    "generic_slugification_allowed": false,
+    "v2_disposition": "superseded-baseline-only",
+    "v2_phase1_authorization_active": false,
+    "failed_monolith_admitted": false,
+    "phase1_authorized": false,
+    "direct_phase1_activation": false,
+    "requires_root_acceptance_v3": true
+  },
+  "root_owned_freeze_authored": false,
+  "green_report_authored": false,
+  "review_or_acceptance_authored": false
+}

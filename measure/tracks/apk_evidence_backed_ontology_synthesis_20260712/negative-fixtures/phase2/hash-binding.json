@@ -1,0 +1,19 @@
+{
+  "schema_version": "apk-t9-phase2-negative-fixture-group.v1",
+  "id": "hash-binding",
+  "cases": [
+    {
+      "id": "hash-binding-01",
+      "mutation": {
+        "operation": "tampered-phase1-hash"
+      },
+      "expected_codes": [
+        "TAMPERED_HASH"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "TAMPERED_HASH"
+  ],
+  "expected_state": "INVALID"
+}

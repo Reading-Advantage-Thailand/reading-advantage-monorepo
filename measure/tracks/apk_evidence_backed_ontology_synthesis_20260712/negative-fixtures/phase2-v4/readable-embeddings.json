@@ -1,0 +1,46 @@
+{
+  "schema_version": "apk-t9-phase2-v4-negative-fixture-group.v1",
+  "id": "readable-embeddings",
+  "cases": [
+    {
+      "id": "readable-embeddings-01",
+      "mutation": {
+        "operation": "classification-drops-readable-finding"
+      },
+      "expected_codes": [
+        "BOUNDARY_READABLE_INCOMPATIBILITY_DROPPED",
+        "CLASSIFICATION_READABLE_FINDING_DROPPED",
+        "CROSS_BATCH_AGGREGATION_MISSING",
+        "REFERENTIAL_INTEGRITY"
+      ]
+    },
+    {
+      "id": "readable-embeddings-02",
+      "mutation": {
+        "operation": "boundary-drops-readable-incompatibility"
+      },
+      "expected_codes": [
+        "BESPOKE_WITHOUT_INCOMPATIBILITY",
+        "BOUNDARY_READABLE_INCOMPATIBILITY_DROPPED"
+      ]
+    },
+    {
+      "id": "readable-embeddings-03",
+      "mutation": {
+        "operation": "invented-summary"
+      },
+      "expected_codes": [
+        "INVENTED_SUMMARY"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "BESPOKE_WITHOUT_INCOMPATIBILITY",
+    "BOUNDARY_READABLE_INCOMPATIBILITY_DROPPED",
+    "CLASSIFICATION_READABLE_FINDING_DROPPED",
+    "CROSS_BATCH_AGGREGATION_MISSING",
+    "INVENTED_SUMMARY",
+    "REFERENTIAL_INTEGRITY"
+  ],
+  "expected_state": "INVALID"
+}

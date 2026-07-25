@@ -1,0 +1,295 @@
+{
+  "additional_split_requirements": [
+    {
+      "must_not_remain_only_in": "capability:result-accounting",
+      "source_group": [
+        "AM-HIST-004",
+        "AM-HIST-005"
+      ]
+    },
+    {
+      "must_not_remain_only_in": "capability:time-and-frame-loop",
+      "source_group": [
+        "GRF-WORLD-001",
+        "GRF-COLL-001"
+      ]
+    },
+    {
+      "must_not_remain_only_in": "capability:actor-world-update",
+      "source_group": [
+        "PR-CUR-007",
+        "PR-CUR-010",
+        "PR-CUR-016"
+      ]
+    },
+    {
+      "required_capabilities": [
+        "capability:input-action-normalization",
+        "capability:session-feedback-surfaces"
+      ],
+      "source_group": [
+        "DS-CL-H-005"
+      ]
+    }
+  ],
+  "assignments": [
+    {
+      "agent_ref": "/root/t9_phase0_governance_author",
+      "allowed_outputs": [
+        "phase2_v5_truth_verifier.py",
+        "phase2_v5_truth_verifier_test.py",
+        "phase2-v5-fixture-manifest.json",
+        "negative-fixtures/phase2-v5/*",
+        "phase2-v5-red-report.json",
+        "phase2-v5-green-report.json",
+        "role-receipts/phase2/truth-test-author-v5.json"
+      ],
+      "forbidden_outputs": [
+        "all prior artifacts",
+        "mapper v3 outputs",
+        "review outputs",
+        "phase2-root-acceptance.json"
+      ],
+      "owner_role": "truth-test-author",
+      "task_id": "phase2-systemic-semantic-red-green-v5"
+    },
+    {
+      "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+      "allowed_outputs": [
+        "phase2-capability-comparisons-v3.json",
+        "phase2-capability-classification-v3.json",
+        "phase2-extension-boundaries-v3.json",
+        "phase2-claim-dependency-edges-v3.json",
+        "role-receipts/phase2/capability-mapper-v3.json"
+      ],
+      "forbidden_outputs": [
+        "all prior artifacts",
+        "truth outputs",
+        "review outputs",
+        "phase2-root-acceptance.json"
+      ],
+      "owner_role": "capability-mapper",
+      "task_id": "phase2-systemic-semantic-mapper-v3"
+    },
+    {
+      "agent_ref": "/root/phase5_review_b",
+      "allowed_outputs": [
+        "phase2-v5-independent-review.json",
+        "role-receipts/phase2/capability-reviewer-v5.json"
+      ],
+      "forbidden_outputs": [
+        "mapper outputs",
+        "truth outputs",
+        "phase2-root-acceptance.json"
+      ],
+      "owner_role": "capability-reviewer",
+      "task_id": "phase2-systemic-semantic-review-v5"
+    },
+    {
+      "agent_ref": "/root",
+      "allowed_outputs": [
+        "phase2-role-dispatch-v5.json",
+        "phase2-root-acceptance.json",
+        "plan.md"
+      ],
+      "forbidden_outputs": [
+        "mapper outputs",
+        "truth outputs",
+        "review outputs"
+      ],
+      "owner_role": "product-owner-acceptance-author",
+      "task_id": "phase2-product-owner-acceptance-v5"
+    }
+  ],
+  "audited_routing_regressions": {
+    "capability:actor-world-update": [
+      "DL-TOPO-002",
+      "SGD-WORLD-001",
+      "WVZ-MECH-001",
+      "GRF-WORLD-001"
+    ],
+    "capability:collision-resource-resolution": [
+      "GRF-COLL-001",
+      "PR-CUR-010"
+    ],
+    "capability:difficulty-configuration": [
+      "PR-CUR-007"
+    ],
+    "capability:input-action-normalization": [
+      "RFC-CUR-019",
+      "DS-CL-H-005"
+    ],
+    "capability:language-target-progression": [
+      "RFC-CUR-011",
+      "AM-HIST-005",
+      "GRF-START-001"
+    ],
+    "capability:nonempty-content-precondition": [
+      "GRF-START-001",
+      "AM-HIST-004"
+    ],
+    "capability:session-feedback-surfaces": [
+      "RPG-SC-005",
+      "RPG-SC-007",
+      "RPG-SC-009",
+      "DS-CL-C-008",
+      "WVZ-MECH-015",
+      "WVZ-MECH-016",
+      "RFC-CUR-017",
+      "RFC-CUR-021",
+      "RC-HIST-007",
+      "PR-CUR-016",
+      "DS-CL-H-005"
+    ],
+    "capability:time-and-frame-loop": [
+      "RFC-CUR-008",
+      "RFC-CUR-009",
+      "PR-CUR-010"
+    ],
+    "non-capability-context": [
+      "AW-HIST-061",
+      "DR-SCENE-001",
+      "DF-COPY-009",
+      "RPG-SC-002",
+      "RPG-SC-004",
+      "DF-COPY-020",
+      "DS-CL-C-002",
+      "DS-CL-H-002",
+      "RPG-ST-001",
+      "RPG-ST-002",
+      "RPG-ST-003",
+      "RPG-ST-004",
+      "RPG-ST-005",
+      "RPG-ST-006",
+      "RPG-ST-007",
+      "RPG-ST-008",
+      "RPG-ST-009"
+    ]
+  },
+  "authority": "delegated-root-product-owner",
+  "budget_contract": {
+    "negative_fixture_files_max": 16,
+    "published_output_bytes_max": 1048576,
+    "suite_runtime_seconds_max": 30
+  },
+  "issued_at": "2026-07-24T18:07:26.773473Z",
+  "issued_by": "/root",
+  "next_gate": "V5 Green, exhaustive independent semantic re-review with zero unresolved Medium+, and root usability acceptance.",
+  "phase": 2,
+  "readability_contract": {
+    "boundary_effect": {
+      "each_chars": {
+        "max": 280,
+        "min": 30
+      },
+      "must_not_copy_other_effect_fields": true,
+      "must_not_copy_statement": true,
+      "must_state_architectural_consequence": true,
+      "required_fields": [
+        "shared_core_ownership",
+        "game_extension_ownership",
+        "interface_consequence"
+      ],
+      "type": "object"
+    },
+    "boundary_embeds_readable_incompatibilities": true,
+    "canonical_classification_embeds_readable_findings": true,
+    "ellipsis_forbidden": [
+      "...",
+      "\u2026"
+    ],
+    "per_game_behavior_chars": {
+      "max": 480,
+      "min": 24
+    },
+    "statement_chars": {
+      "max": 300,
+      "min": 40
+    },
+    "statement_complete": true
+  },
+  "required_negative_tests": [
+    "literal-ellipsis",
+    "unicode-ellipsis",
+    "boundary-effect-copies-statement",
+    "boundary-effect-fields-copy-each-other",
+    "missing-exact-excerpt",
+    "excerpt-not-substring-of-accepted-fact",
+    "provenance-only-capability-use",
+    "single-capability-partition-for-multibehavior-claim",
+    "each-audited-routing-regression",
+    "all-prior-semantic-and-lifecycle-attacks"
+  ],
+  "schema_version": "apk-t9-phase2-role-dispatch.v5",
+  "scope": {
+    "asset_mapping_authorized": false,
+    "implementation_authorized": false,
+    "phase3_responsive_authorized": false,
+    "shipping_authorized": false
+  },
+  "semantic_model": {
+    "capability_use_requires": [
+      "record_id",
+      "exact_excerpt",
+      "relevance_statement"
+    ],
+    "context_only_explicit": true,
+    "duplicate_use_within_same_capability_forbidden": true,
+    "every_record_accounted": true,
+    "exact_excerpt": "A concise exact substring of the accepted Phase 1 fact that demonstrates this capability use.",
+    "exactly_once_capability_partition_forbidden": true,
+    "mechanic_records_total": 633,
+    "multi_capability_evidence_allowed": true,
+    "relevance_statement": "A complete readable explanation of why the excerpt supports this capability; no file-location, import, test-helper, or provenance-only promotion."
+  },
+  "status": "active-systemic-semantic-remediation",
+  "supersedes": {
+    "dispatch": {
+      "path": "phase2-role-dispatch-v4.json",
+      "sha256": "0bd25f2ddfd303c19717b7fb3432a6ab01a416be9a44830f23e6afe444f9cd0b",
+      "status": "inactive"
+    },
+    "rejected_candidate": {
+      "findings": {
+        "High": [
+          "69 of 70 statements contain truncating ellipses.",
+          "70 of 70 boundary effects copy the statement with only a prefix.",
+          "The v4 verifier falsely reports Green despite semantic fitness failures."
+        ],
+        "Medium": [
+          "At least 18 audited routing groups contain irrelevant or mixed-capability evidence."
+        ]
+      },
+      "paths": [
+        {
+          "path": "phase2-capability-comparisons-v2.json",
+          "sha256": "879aaebd1ac5e2c6ac16fa9b42dea8962ccc0200a40285239671ac100c9aedc6"
+        },
+        {
+          "path": "phase2-capability-classification-v2.json",
+          "sha256": "ad0a3cee6cf8080bbaeaaa580d83dcc4c3da609285d0a8a0bfafb123495e9580"
+        },
+        {
+          "path": "phase2-extension-boundaries-v2.json",
+          "sha256": "c2b946ab4b4342f05c7b27983ea2e54c441b5e1fe7e0e98ae8f745c6803dbb55"
+        },
+        {
+          "path": "phase2-claim-dependency-edges-v2.json",
+          "sha256": "064785f673de2902083089ba6174960f2d6210c331464c35504cea88c44beb19"
+        },
+        {
+          "path": "role-receipts/phase2/capability-mapper-v2.json",
+          "sha256": "be41bd47ba0e25f55a2697060aef146ad68b6fbb933f33e1f71ab2473f04b3fe"
+        }
+      ],
+      "status": "non-accepted-counterexample"
+    },
+    "v4_green_status": "blocked-before-publication"
+  },
+  "tdd_order": {
+    "green_only_after_mapper_v3": true,
+    "rejected_v2_candidate_must_fail_before_mapper_v3": true,
+    "sealed_red_v5_before_mapper_v3": true
+  },
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+}

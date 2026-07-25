@@ -1,0 +1,154 @@
+{
+  "schema_version": "apk-t9-phase0-input-freeze.v3",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "state": "FROZEN_AWAITING_PHASE0_V3_ROOT_ACCEPTANCE",
+  "status": "candidate-non-consumable",
+  "consumable": false,
+  "registry": {
+    "path": "phase0-source-registry-v3.json",
+    "sha256": "ae6050cc6c075614b34b6d8832a350f7d28945154315adebb25667fffc5b858c"
+  },
+  "role_dispatch": {
+    "path": "phase0-v3-role-dispatch-v1.json",
+    "sha256": "a34ade4b97794bab87be92d6f72f7505e524861b3dd1013d68979e7784f6793f"
+  },
+  "predecessor_inputs": {
+    "cohort_leaf_acceptance": {
+      "path": "phase0-cohort-leaf-binding-acceptance-v1.json",
+      "sha256": "24faee63cf3894954f0cc4af9af4d753db76ee1e28f9a39c02c428bb489701ae"
+    },
+    "game_identity_candidate": {
+      "path": "phase0-game-identity-map-v1.json",
+      "sha256": "7b2d3cf7fe5e17eab88f27804aac60e60c2da9e7089b82074b67d27721a47b3f"
+    },
+    "game_identity_review": {
+      "path": "phase0-game-identity-map-independent-review-v1.json",
+      "sha256": "73c4d1981eb7ee6e1af3400c5b553f96437c8694d9814556df84ed9ee6e10eca"
+    },
+    "phase0_v2_acceptance": {
+      "path": "phase0-root-acceptance-v2.json",
+      "sha256": "76bd4d4da9b0fea14656a59edc950a8abea16fbb2ed708a56bc69b1a78f2a7b6"
+    },
+    "t3_leaf_acceptance": {
+      "path": "phase0-t3-leaf-binding-acceptance-v1.json",
+      "sha256": "a550017ca170efc70b3b8b0741ab1062a818e0027282a54bdac655744d635b01"
+    }
+  },
+  "game_identity": {
+    "path": "phase0-game-identity-map-v1.json",
+    "sha256": "7b2d3cf7fe5e17eab88f27804aac60e60c2da9e7089b82074b67d27721a47b3f",
+    "entry_count": 29,
+    "mapping_digest": "458a5c20db75617820604948cb004a14d579c828cedecbbcb7bdbada2f0a2b0a",
+    "generic_slugification_allowed": false,
+    "game_ids": [
+      "dragon-flight",
+      "rpg-battle",
+      "abyssal-well",
+      "castle-defense",
+      "magic-defense",
+      "wizard-vs-zombie",
+      "village-guardian",
+      "archers-revenge",
+      "storm-castle-tower",
+      "paladins-twin-soul",
+      "gryphon-patrol",
+      "dragon-rider",
+      "dungeon-liberator",
+      "spellweavers-run",
+      "shadow-gate-dungeon",
+      "labyrinth-goblin-king",
+      "griffin-riders-escape",
+      "sorcerer-ziggurat",
+      "enchanted-library",
+      "rune-match",
+      "alchemists-synthesis",
+      "potion-rush",
+      "rune-forge-chamber",
+      "astral-mage",
+      "griffin-sky-joust",
+      "realm-carver",
+      "devourer-slime",
+      "the-haunted-library",
+      "babel-architect"
+    ],
+    "game_ids_sha256": "84c9b442ac27cdd8bb9e895d5bf7c9874beecdf22674f766f612ee26c54f71a5"
+  },
+  "denominator": {
+    "game_count": 29,
+    "resolvable_game_count": 28,
+    "castle_defense": {
+      "game_id": "castle-defense",
+      "disposition": "blocked-by-unknown",
+      "scene_or_state_ids": [],
+      "fabricated_scene_state_allowed": false
+    },
+    "resolvable_game_ids": [
+      "dragon-flight",
+      "rpg-battle",
+      "abyssal-well",
+      "magic-defense",
+      "wizard-vs-zombie",
+      "village-guardian",
+      "archers-revenge",
+      "storm-castle-tower",
+      "paladins-twin-soul",
+      "gryphon-patrol",
+      "dragon-rider",
+      "dungeon-liberator",
+      "spellweavers-run",
+      "shadow-gate-dungeon",
+      "labyrinth-goblin-king",
+      "griffin-riders-escape",
+      "sorcerer-ziggurat",
+      "enchanted-library",
+      "rune-match",
+      "alchemists-synthesis",
+      "potion-rush",
+      "rune-forge-chamber",
+      "astral-mage",
+      "griffin-sky-joust",
+      "realm-carver",
+      "devourer-slime",
+      "the-haunted-library",
+      "babel-architect"
+    ],
+    "resolvable_game_ids_sha256": "8dd4aea6de41c80b97515ae7d82fce87b617e0c438ee429db02667e99b18eed3"
+  },
+  "truth_author_contract": {
+    "agent_ref": "/root/t9_phase0_governance_author",
+    "owner_role": "phase0-v3-truth-test-author",
+    "task_id": "phase0-v3-author-truth-gates",
+    "allowed_outputs": [
+      "phase0_v3_truth_verifier.py",
+      "phase0_v3_truth_verifier_test.py",
+      "phase0-v3-fixture-manifest-v1.json",
+      "negative-fixtures/phase0-v3/*",
+      "phase0-v3-red-report-v1.json",
+      "phase0-v3-green-report-v1.json",
+      "role-receipts/phase0/phase0-v3-truth-test-author.json"
+    ]
+  },
+  "forbidden_inputs": [
+    {
+      "disposition": "failed-monolith-counterexample-only",
+      "path_prefix": "measure/archive/apk_cross_game_asset_ontology_20260712"
+    }
+  ],
+  "supersession": {
+    "v2_path": "phase0-source-registry-v2.json",
+    "v2_sha256": "c770189b2202526f13015cdca8f9f0a688cb4fb2dbc663c969b7c582301e7d9b",
+    "v2_activation": false,
+    "phase0_v2_acceptance": {
+      "path": "phase0-root-acceptance-v2.json",
+      "sha256": "76bd4d4da9b0fea14656a59edc950a8abea16fbb2ed708a56bc69b1a78f2a7b6",
+      "disposition": "superseded-baseline-only",
+      "phase1_authorization_active": false
+    }
+  },
+  "activation": {
+    "phase0_root_acceptance_path": "phase0-root-acceptance-v3.json",
+    "requires_root_acceptance_v3": true,
+    "phase1_authorized": false,
+    "direct_phase1_activation": false
+  }
+}

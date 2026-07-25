@@ -1,0 +1,83 @@
+{
+  "schema_version": "apk-t9-phase2-role-dispatch.v10",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "status": "active-root-authority-order-repair",
+  "authority": "delegated-root-product-owner",
+  "issued_by": "/root",
+  "issued_at": "2026-07-25T02:55:24.851903163Z",
+  "assignments": [
+    {
+      "agent_ref": "/root/t9_phase0_governance_author",
+      "owner_role": "truth-test-author",
+      "task_id": "phase2-root-authority-order-truth-v10",
+      "allowed_outputs": ["phase2_v10_truth_verifier.py", "phase2_v10_truth_verifier_test.py", "phase2-v10-fixture-manifest.json", "negative-fixtures/phase2-v10/*", "phase2-v10-red-report.json", "phase2-v10-green-report.json", "role-receipts/phase2/truth-test-author-v10.json"],
+      "forbidden_outputs": ["all v9 and earlier artifacts", "mapper outputs", "review outputs", "phase2-v10-root-truth-seal.json", "phase2-v10-mapper-release.json", "phase2-root-acceptance.json"]
+    },
+    {
+      "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+      "owner_role": "capability-mapper",
+      "task_id": "phase2-curated-evidence-mapper-v5-v10",
+      "allowed_outputs": ["phase2-curated-capability-evidence-v1.json", "phase2-capability-comparisons-v5.json", "phase2-capability-classification-v5.json", "phase2-extension-boundaries-v5.json", "phase2-claim-dependency-edges-v5.json", "role-receipts/phase2/capability-mapper-v5.json"],
+      "forbidden_outputs": ["all truth outputs", "review outputs", "phase2-root-acceptance.json"]
+    },
+    {
+      "agent_ref": "/root/phase5_review_b",
+      "owner_role": "capability-reviewer",
+      "task_id": "phase2-curated-evidence-review-v10",
+      "allowed_outputs": ["phase2-v10-independent-review.json", "role-receipts/phase2/capability-reviewer-v10.json"],
+      "forbidden_outputs": ["mapper outputs", "truth outputs", "phase2-v10-root-truth-seal.json", "phase2-v10-mapper-release.json", "phase2-root-acceptance.json"]
+    },
+    {
+      "agent_ref": "/root",
+      "owner_role": "product-owner-and-truth-authority-author",
+      "task_id": "phase2-product-owner-v10",
+      "allowed_outputs": ["phase2-role-dispatch-v10.json", "phase2-v10-root-truth-seal.json", "phase2-v10-mapper-release.json", "phase2-root-acceptance.json", "plan.md"],
+      "forbidden_outputs": ["mapper outputs", "truth outputs", "review outputs"]
+    }
+  ],
+  "inherits": {
+    "dispatch": {"path": "phase2-role-dispatch-v9.json", "sha256": "60a0337eec7a67afa327f8a790620f0d0b1364717bb421dfdea86b324bd90a3b"},
+    "all_v9_structural_curation_semantic_review_counterexample_and_budget_contracts": true,
+    "context_counterexamples": {"path": "phase2-v9-context-counterexamples.json", "sha256": "9c1059df904d0d326aa714af4a24a773fa36dc870b25155d7135c907decb9583"},
+    "pre_remediation_audit": {"path": "phase2-v8-pre-remediation-audit.json", "sha256": "1bf26342676329e22c5522033b81ade2760ab8a4ecaaa4c772ece15727ceb4ef"}
+  },
+  "supersedes": {
+    "v9_root_truth_seal": {"path": "phase2-v9-root-truth-seal.json", "sha256": "b0464ae8fcbee916ceaf1fa5085544cf3ee9ee878cc263ea1477e2b12341e9dd", "status": "inactive-verifier-order-defect"},
+    "v9_mapper_release": {"path": "phase2-v9-mapper-release.json", "sha256": "b70e2042f615fa1592b5c10f389f6b88510987dfe5e9e70c2f0197403ffc8285", "status": "inactive-verifier-order-defect"},
+    "defects": ["public verifier returned missing-mapper Red before validating expected external release", "manifest validator omitted exact top-level track dispatch ID and declared-versus-actual case-count joins"]
+  },
+  "root_authority_order_contract": {
+    "authority_validation_precedes_mapper_presence_check": true,
+    "correct_expected_release_with_missing_mapper": {"state": "RED_WAITING_FOR_MAPPER_V5_OUTPUTS", "sole_code": "PHASE2_MAPPER_V5_OUTPUTS_MISSING"},
+    "wrong_expected_release_with_missing_mapper": {"state": "INVALID", "required_code": "MAPPER_RELEASE_MISMATCH", "missing_mapper_code_forbidden": true},
+    "missing_expected_release_after_release_exists": {"state": "INVALID", "required_code": "EXPECTED_MAPPER_RELEASE_REQUIRED", "missing_mapper_code_forbidden": true},
+    "before_root_authority_publication": {"state": "RED_WAITING_FOR_ROOT_V10_AUTHORITY", "required_code": "ROOT_V10_AUTHORITY_MISSING"},
+    "same_public_entrypoint_and_file_backed_path_for_all_cases": true,
+    "mocks_forbidden": true
+  },
+  "manifest_contract": {
+    "exact_top_level_keys": ["schema_version", "track_id", "dispatch_sha256", "fixture_count", "case_count", "fixtures"],
+    "exact_fixture_row_keys": ["id", "path", "sha256", "case_count"],
+    "track_id_and_dispatch_sha256_exact": true,
+    "fixture_ids_and_paths_unique": true,
+    "fixture_file_schema_and_track_exact": true,
+    "fixture_count_equals_rows": true,
+    "each_row_case_count_equals_actual_fixture_cases": true,
+    "top_case_count_equals_sum_of_rows_and_actual_cases": true,
+    "every_declared_fixture_hash_exact": true,
+    "all_declared_fixtures_pinned_by_root_seal": true
+  },
+  "full_lifecycle_tests": ["correct release plus missing mapper", "wrong release plus missing mapper", "missing expected release after release exists", "pre-root-authority state", "manifest extra key", "manifest wrong track", "manifest wrong dispatch", "duplicate fixture ID", "duplicate fixture path", "row case-count drift", "top case-count drift", "fixture schema drift", "fixture track drift", "all v9 file-backed attacks and all 48 context promotions"],
+  "root_truth_authority_contract": {
+    "root_reruns_complete_v10_suite": true,
+    "root_seal": "phase2-v10-root-truth-seal.json",
+    "root_mapper_release": "phase2-v10-mapper-release.json",
+    "candidate_and_final_cli_require_externally_supplied_v10_release_sha256": true,
+    "mapper_and_reviewer_receipts_bind_v10_dispatch_seal_and_release": true,
+    "any_v9_or_v10_truth_drift_fails": true
+  },
+  "budget_contract": {"negative_fixture_files_max": 16, "published_output_bytes_max": 1048576, "complete_suite_runtime_seconds_max": 30},
+  "tdd_order": ["truth author publishes sealed v10 Red while preserving v9 bytes", "root reruns and publishes v10 seal plus externally hashed v10 release", "root verifies correct wrong and missing expected release pre-mapper", "root explicitly releases mapper v5 with v10 expected release SHA", "candidate Green pending exhaustive independent review", "review reject-or-accept lifecycle", "root usability acceptance"],
+  "scope": {"phase3_responsive_authorized": false, "asset_mapping_authorized": false, "implementation_authorized": false, "shipping_authorized": false}
+}

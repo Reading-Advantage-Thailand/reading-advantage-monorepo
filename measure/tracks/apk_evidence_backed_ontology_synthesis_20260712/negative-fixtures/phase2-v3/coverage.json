@@ -1,0 +1,31 @@
+{
+  "schema_version": "apk-t9-phase2-v2-negative-fixture-group.v1",
+  "id": "coverage",
+  "cases": [
+    {
+      "id": "coverage-01",
+      "mutation": {
+        "operation": "remove-mechanic-route"
+      },
+      "expected_codes": [
+        "MECHANIC_ROUTING_MISMATCH"
+      ]
+    },
+    {
+      "id": "coverage-02",
+      "mutation": {
+        "operation": "remove-upstream-claim"
+      },
+      "expected_codes": [
+        "CLAIM_SET_MISMATCH",
+        "UNKNOWN_RESOLUTION"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "CLAIM_SET_MISMATCH",
+    "MECHANIC_ROUTING_MISMATCH",
+    "UNKNOWN_RESOLUTION"
+  ],
+  "expected_state": "INVALID"
+}

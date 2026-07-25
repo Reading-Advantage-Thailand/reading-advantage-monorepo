@@ -1,0 +1,36 @@
+{
+  "assignment": {
+    "agent_ref": "/root/phase5_review_b",
+    "allowed_outputs": [
+      "phase0-game-identity-map-independent-review-v1.json",
+      "role-receipts/phase0/game-identity-map-independent-reviewer.json"
+    ],
+    "forbidden_outputs": [
+      "identity-map author outputs",
+      "identity-map truth-test outputs",
+      "identity-map acceptance outputs"
+    ],
+    "owner_role": "game-identity-map-independent-reviewer",
+    "task_id": "phase0-publish-game-identity-map-review"
+  },
+  "authority": "delegated-root-product-owner",
+  "candidate": {
+    "path": "phase0-game-identity-map-v1.json",
+    "sha256": "7b2d3cf7fe5e17eab88f27804aac60e60c2da9e7089b82074b67d27721a47b3f"
+  },
+  "issued_at": "2026-07-24T12:16:59.033Z",
+  "issued_by": "/root",
+  "required_review": {
+    "entry_count": 29,
+    "mapping_digest": "458a5c20db75617820604948cb004a14d579c828cedecbbcb7bdbada2f0a2b0a",
+    "maximum_unresolved_medium_or_higher": 0,
+    "source_pointer_count": 29
+  },
+  "schema_version": "apk-t9-phase0-game-identity-map-review-dispatch.v1",
+  "status": "active",
+  "supersedes_review_output_scope_only": {
+    "path": "phase0-game-identity-map-role-dispatch-v1.json",
+    "sha256": "cb6f4e4f8def66e393e65e371fb5b11931f9d9d4bd654030940d0713362baa0d"
+  },
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+}

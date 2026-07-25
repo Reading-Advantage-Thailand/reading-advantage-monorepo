@@ -1,0 +1,103 @@
+{
+  "schema_version": "apk-t9-phase0-cohort-leaf-binding-catalog-author-receipt.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "task_id": "phase0-repair-t4b-t6b-leaf-bindings",
+  "role": "cohort-leaf-binding-catalog-author",
+  "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+  "status": "candidate-authored-awaiting-independent-verification",
+  "repair_dispatch": {
+    "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase0-cohort-leaf-repair-role-dispatch-v1.json",
+    "sha256": "7a7ec749bb4f83c5dfab0e7c63bd754f686eabe77506fb2f83480bf48f828400"
+  },
+  "base_role_contract_binding": {
+    "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase0-role-ownership-manifest-v2.json",
+    "sha256": "b025b7494e51d493bf39e021a170cc8a2af99886eecf9807919c2a3d2ef2b7c9"
+  },
+  "accepted_root_inputs": [
+    {
+      "cohort": "T4 Batch B",
+      "path": "measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+      "sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80"
+    },
+    {
+      "cohort": "T6 Batch B",
+      "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/successor-accepted-cohort-manifest-v2.json",
+      "sha256": "9666b564ba969ef7d0559fb53d8d74c684a746b10264784a9728e52b6284888b"
+    }
+  ],
+  "output_bindings": [
+    {
+      "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase0-cohort-leaf-binding-candidate-v1.json",
+      "sha256": "2a9c5f2eb24d235dbbb59c81b63e81a162ff08c4a6f0aa95fff66bea58194fef"
+    }
+  ],
+  "catalog_attestation": {
+    "leaf_count": 6,
+    "game_count": 6,
+    "required_games": [
+      "village-guardian",
+      "archers-revenge",
+      "storm-castle-tower",
+      "potion-rush",
+      "rune-forge-chamber",
+      "astral-mage"
+    ],
+    "accepted_chain_and_selected_receipt_binding_count": 27,
+    "negative_fixture_support_binding_count": 3,
+    "claim_count": 226,
+    "explicit_unknown_count": 24,
+    "negative_fixture_count": 30,
+    "source_reference_count": 226,
+    "blob_or_range_reference_count": 220,
+    "bounded_query_reference_count": 6,
+    "source_references_resolved": 226,
+    "source_references_unresolved": 0,
+    "scene_or_state_reference_count": 216,
+    "per_game_distinct_scene_or_state_id_count_sum": 179,
+    "retained_disclosure_set_count": 8
+  },
+  "full_denominator_audit_attestation": {
+    "resolvable_game_count": 28,
+    "cohorts_audited": [
+      "T3 repaired",
+      "T4 Batch A",
+      "T4 Batch B",
+      "T4 Batch C",
+      "T5",
+      "T6 Batch A",
+      "T6 Batch B",
+      "T7"
+    ],
+    "additional_leaf_binding_gaps_found": 0,
+    "remaining_gaps_after_acceptance_of_t3_and_this_candidate": 0,
+    "castle_defense_retained_as_known_accepted_omission": true,
+    "all_28_leaf_hashes_recomputed": true,
+    "hash_only_uniqueness_scans_passed": true,
+    "python_input_map_treated_as_json_acceptance_binding": false,
+    "unhashed_receipt_path_treated_as_json_acceptance_binding": false
+  },
+  "scope_attestation": {
+    "archived_inputs_modified": false,
+    "phase1_outputs_authored": false,
+    "truth_test_outputs_authored": false,
+    "review_outputs_authored": false,
+    "acceptance_outputs_authored": false,
+    "responsive_decisions_authored": false,
+    "asset_decisions_authored": false,
+    "implementation_or_shipping_authorized": false
+  },
+  "provenance": {
+    "assignment_source": "phase0-cohort-leaf-repair-role-dispatch-v1.json",
+    "fork_turns_none_claimed": false,
+    "prior_role_history": [
+      "phase0 reviewer and coordinator work preceded the explicit cohort-leaf-binding-catalog-author reassignment",
+      "the T3 leaf-binding repair and game-identity map were authored under separate bounded dispatches",
+      "phase1 mechanics-capability mapper work remained paused and no Phase1 output was published"
+    ],
+    "provider_spawn_id": null,
+    "provider_session_id": null,
+    "unavailable_fields_not_fabricated": true
+  },
+  "self_hash_note": "The receipt does not self-bind because embedding its own digest would change its bytes."
+}

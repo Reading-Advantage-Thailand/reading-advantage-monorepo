@@ -1,0 +1,59 @@
+{
+  "schema_version": "apk-t9-phase1-negative-fixture-group.v2",
+  "id": "leaf-resolution",
+  "cases": [
+    {
+      "id": "leaf-resolution-01",
+      "mutation": {
+        "operation": "stale-evidence-hash"
+      },
+      "expected_codes": [
+        "STALE_EVIDENCE_HASH"
+      ]
+    },
+    {
+      "id": "leaf-resolution-02",
+      "mutation": {
+        "operation": "incorrect-archive-relocation"
+      },
+      "expected_codes": [
+        "INCORRECT_ARCHIVE_RELOCATION"
+      ]
+    },
+    {
+      "id": "leaf-resolution-03",
+      "mutation": {
+        "operation": "pointer-drift"
+      },
+      "expected_codes": [
+        "UNSUPPORTED_INFERRED_FACT"
+      ]
+    },
+    {
+      "id": "leaf-resolution-04",
+      "mutation": {
+        "operation": "hash-only-resolution"
+      },
+      "expected_codes": [
+        "INCORRECT_ARCHIVE_RELOCATION"
+      ]
+    },
+    {
+      "id": "leaf-resolution-05",
+      "mutation": {
+        "operation": "intermediate-candidate-leaf"
+      },
+      "expected_codes": [
+        "INTERMEDIATE_CANDIDATE_LEAF",
+        "UNSUPPORTED_INFERRED_FACT"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "INCORRECT_ARCHIVE_RELOCATION",
+    "INTERMEDIATE_CANDIDATE_LEAF",
+    "STALE_EVIDENCE_HASH",
+    "UNSUPPORTED_INFERRED_FACT"
+  ],
+  "expected_state": "INVALID"
+}

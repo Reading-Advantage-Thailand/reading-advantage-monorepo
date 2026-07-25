@@ -1,0 +1,78 @@
+{
+  "schema_version": "apk-t9-phase0-root-acceptance.v3",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "accepted_at": "2026-07-24T13:37:45.999Z",
+  "accepted_by": "root-orchestrator-product-owner",
+  "owner_identity": "/root",
+  "authority": "delegated-root-product-owner",
+  "decision": "ACCEPT_PHASE0_V3_OPEN_PHASE1",
+  "artifact_bindings": {
+    "phase0-v3-role-dispatch-v1.json": "a34ade4b97794bab87be92d6f72f7505e524861b3dd1013d68979e7784f6793f",
+    "phase0-source-registry-v3.json": "ae6050cc6c075614b34b6d8832a350f7d28945154315adebb25667fffc5b858c",
+    "phase0-input-freeze-v3.json": "0517288c5aa267ddbd5f22fd6929cd74aaaacc74b9321d43094c72ade8614dae",
+    "phase0_v3_truth_verifier.py": "20312ab8442af0bb6e2288b0476977710dc5752b857e358f6b3703c9282076f8",
+    "phase0_v3_truth_verifier_test.py": "270d89ed711a1b11e47e8cae99ea098693d800bce1a665da0d02e22a6603d967",
+    "phase0-v3-fixture-manifest-v1.json": "974586ea6987e79b2299328d16d89f4d345dd192df9fd1666e2cc52adbecb0d2",
+    "phase0-v3-red-report-v1.json": "3fe6656d1c06adb3ac28e28df58689118c8347a90f421e4a33dfe8e1579cdb9a",
+    "phase0-v3-green-report-v1.json": "451da6ddb8c795254f674cede40568b83b41c5aab1c591f25e82f6be1e067bb3",
+    "role-receipts/phase0/phase0-v3-truth-test-author.json": "983070f5126988a07d9a6050a58760b71be455a3c4311afd9de9a2582c0720e0",
+    "phase0-v3-independent-review-v1.json": "ac93946436589a37354c2a828e3c49e9df8d95d9c3d6438109258fb7494ff5fd",
+    "role-receipts/phase0/phase0-v3-independent-reviewer.json": "57fba8be17797ffff9b9044a8abccf7ebd3c954f333343c8d7077931233df2a9",
+    "phase0-t3-leaf-binding-acceptance-v1.json": "a550017ca170efc70b3b8b0741ab1062a818e0027282a54bdac655744d635b01",
+    "phase0-game-identity-map-v1.json": "7b2d3cf7fe5e17eab88f27804aac60e60c2da9e7089b82074b67d27721a47b3f",
+    "phase0-game-identity-map-independent-review-v1.json": "73c4d1981eb7ee6e1af3400c5b553f96437c8694d9814556df84ed9ee6e10eca",
+    "phase0-cohort-leaf-binding-acceptance-v1.json": "24faee63cf3894954f0cc4af9af4d753db76ee1e28f9a39c02c428bb489701ae"
+  },
+  "verification": {
+    "state": "VERIFIED",
+    "status": "pass",
+    "checks": 70,
+    "tests_passed": 5,
+    "negative_fixtures_rejected": 13,
+    "unresolved_medium_or_higher": 0
+  },
+  "denominator": {
+    "game_count": 29,
+    "resolvable_game_count": 28,
+    "game_ids_sha256": "84c9b442ac27cdd8bb9e895d5bf7c9874beecdf22674f766f612ee26c54f71a5",
+    "resolvable_game_ids_sha256": "8dd4aea6de41c80b97515ae7d82fce87b617e0c438ee429db02667e99b18eed3",
+    "castle_defense": {
+      "disposition": "blocked-by-unknown",
+      "scene_or_state_ids": [],
+      "fabricated_scene_state_allowed": false
+    },
+    "generic_slugification_allowed": false
+  },
+  "independent_review": {
+    "path": "phase0-v3-independent-review-v1.json",
+    "sha256": "ac93946436589a37354c2a828e3c49e9df8d95d9c3d6438109258fb7494ff5fd",
+    "receipt_path": "role-receipts/phase0/phase0-v3-independent-reviewer.json",
+    "receipt_sha256": "57fba8be17797ffff9b9044a8abccf7ebd3c954f333343c8d7077931233df2a9",
+    "verdict": "independent-review-pass",
+    "unresolved_medium_or_higher": 0
+  },
+  "supersession": {
+    "phase0_root_acceptance_v2": {
+      "path": "phase0-root-acceptance-v2.json",
+      "sha256": "76bd4d4da9b0fea14656a59edc950a8abea16fbb2ed708a56bc69b1a78f2a7b6",
+      "phase1_authorization_active": false
+    },
+    "phase1_role_dispatch_v1": {
+      "path": "phase1-role-dispatch-v1.json",
+      "sha256": "045e0c31096fec4cb8a254a0805b6a0480ae0395fffd8b9ebce3bbbb74895b7b",
+      "status": "superseded-inactive"
+    }
+  },
+  "scope": {
+    "t9_synthesis_only": true,
+    "phase1_authorized": true,
+    "implementation_authorized": false,
+    "asset_mapping_authorized": false,
+    "direct_legacy_adoption_authorized": false,
+    "shipping_authorized": false,
+    "unknown_must_have_resolution_authorized": false
+  },
+  "owner_acceptance_rationale": "Exact predecessor bindings, identity closure, denominator closure, historical Red, Green truth verification, and independent review all pass with zero unresolved Medium-or-higher findings.",
+  "next_action": "Issue Phase 1 role dispatch v2 bound only to this Phase 0 v3 acceptance, registry, freeze, and exact identity contract."
+}

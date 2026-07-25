@@ -1,0 +1,88 @@
+{
+  "assignments": [
+    {
+      "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+      "allowed_outputs": [
+        "phase0-game-identity-map-v1.json",
+        "role-receipts/phase0/game-identity-map-author.json"
+      ],
+      "forbidden_outputs": [
+        "identity-map truth tests",
+        "identity-map review outputs",
+        "identity-map acceptance outputs"
+      ],
+      "owner_role": "game-identity-map-author",
+      "task_id": "phase0-publish-game-identity-map"
+    },
+    {
+      "agent_ref": "/root/t9_phase0_governance_author",
+      "allowed_outputs": [
+        "identity-map validation in phase1_truth_verifier.py",
+        "identity-map tests in phase1_truth_verifier_test.py",
+        "identity-map negative fixtures"
+      ],
+      "forbidden_outputs": [
+        "phase0-game-identity-map-v1.json",
+        "identity-map review outputs",
+        "identity-map acceptance outputs"
+      ],
+      "owner_role": "game-identity-map-truth-test-author",
+      "task_id": "phase0-verify-game-identity-map"
+    },
+    {
+      "agent_ref": "/root/phase5_review_b",
+      "allowed_outputs": [
+        "identity-map findings in phase1-independent-review.json"
+      ],
+      "forbidden_outputs": [
+        "identity-map author outputs",
+        "identity-map truth-test outputs",
+        "identity-map acceptance outputs"
+      ],
+      "owner_role": "game-identity-map-independent-reviewer",
+      "task_id": "phase0-review-game-identity-map"
+    },
+    {
+      "agent_ref": "/root",
+      "allowed_outputs": [
+        "identity-map acceptance in phase0-root-acceptance-v3.json",
+        "phase0-source-registry-v3.json",
+        "phase0-input-freeze-v3.json",
+        "phase1-role-dispatch-v2.json",
+        "plan.md"
+      ],
+      "forbidden_outputs": [
+        "identity-map author outputs",
+        "identity-map truth-test outputs",
+        "identity-map review outputs"
+      ],
+      "owner_role": "product-owner-acceptance-author",
+      "task_id": "phase0-accept-game-identity-map"
+    }
+  ],
+  "authority": "delegated-root-product-owner",
+  "base_role_contract": {
+    "path": "phase0-role-ownership-manifest-v2.json",
+    "sha256": "b025b7494e51d493bf39e021a170cc8a2af99886eecf9807919c2a3d2ef2b7c9"
+  },
+  "issued_at": "2026-07-24T11:55:22.734Z",
+  "issued_by": "/root",
+  "phase": 0,
+  "required_contract": {
+    "entry_count": 29,
+    "entry_order": "accepted T2 partition assignment order",
+    "generic_slugification_allowed": false,
+    "identity_source_required": true,
+    "mapping_digest": "458a5c20db75617820604948cb004a14d579c828cedecbbcb7bdbada2f0a2b0a",
+    "t2_partition_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0"
+  },
+  "schema_version": "apk-t9-phase0-game-identity-map-role-dispatch.v1",
+  "scope": {
+    "implementation_authorized": false,
+    "phase1_mapper_publication_authorized": false,
+    "responsive_or_asset_decisions_authorized": false,
+    "shipping_authorized": false
+  },
+  "status": "active",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+}

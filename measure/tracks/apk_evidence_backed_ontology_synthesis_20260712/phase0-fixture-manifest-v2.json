@@ -1,0 +1,147 @@
+{
+  "fixtures": [
+    {
+      "expected_codes": [
+        "MISSING_PREDECESSOR"
+      ],
+      "id": "missing-predecessor",
+      "path": "negative-fixtures/phase0/missing-predecessor.json",
+      "sha256": "c6d0a6e06c3a38325323e2ac6f3a6743365636fbef3a63fc00a68d9d64052cfa"
+    },
+    {
+      "expected_codes": [
+        "STALE_PREDECESSOR"
+      ],
+      "id": "stale-predecessor",
+      "path": "negative-fixtures/phase0/stale-predecessor.json",
+      "sha256": "7179da347c01604098719aa1529309cf7bd2f795a5868622dcbc7c78686155a5"
+    },
+    {
+      "expected_codes": [
+        "WRONG_T8_ARTIFACT"
+      ],
+      "id": "wrong-t8-artifact",
+      "path": "negative-fixtures/phase0/wrong-t8-artifact.json",
+      "sha256": "a1928b39f06b0bce1efff2a59fcb0ec1f6b6260edaa969c3dc404b6ad62d6997"
+    },
+    {
+      "expected_codes": [
+        "WRONG_STANDARD_PACK_RELEASE"
+      ],
+      "id": "wrong-standard-pack-release",
+      "path": "negative-fixtures/phase0/wrong-standard-pack-release.json",
+      "sha256": "7db68ef39acf2a3b07a254cae67df7163317b51136cf32f9c75d95a4e3dca80c"
+    },
+    {
+      "expected_codes": [
+        "WRONG_STANDARD_PACK_CATALOG"
+      ],
+      "id": "wrong-standard-pack-catalog",
+      "path": "negative-fixtures/phase0/wrong-standard-pack-catalog.json",
+      "sha256": "3470b182b13852eb840959ae536a93376bc5922abdbdd2715c45d6d5fb639f96"
+    },
+    {
+      "expected_codes": [
+        "WRONG_STANDARD_PACK_RECEIPT"
+      ],
+      "id": "wrong-standard-pack-receipt",
+      "path": "negative-fixtures/phase0/wrong-standard-pack-receipt.json",
+      "sha256": "305d7edc9ec6c861a94078ec3cd860db31fdca5e842b16e81a2bd7b01928c3c8"
+    },
+    {
+      "expected_codes": [
+        "FAILED_MONOLITH_INPUT"
+      ],
+      "id": "failed-monolith-input",
+      "path": "negative-fixtures/phase0/failed-monolith-input.json",
+      "sha256": "286f5f6ec1cf0a279381dddd7368dddecf1ed4f7d3fa0d7b33e53abeaae706d3"
+    },
+    {
+      "expected_codes": [
+        "DIRECT_LEGACY_KEY_POLICY_VIOLATION"
+      ],
+      "id": "direct-legacy-key",
+      "path": "negative-fixtures/phase0/direct-legacy-key.json",
+      "sha256": "b3c1b125580ba31f4642db23393d0dba290894f4a12e07c0e2993db7a9578842"
+    },
+    {
+      "expected_codes": [
+        "ROLE_OVERLAP"
+      ],
+      "id": "role-overlap",
+      "path": "negative-fixtures/phase0/role-overlap.json",
+      "sha256": "eb26d755f3c4a340699f191373a117c4fbc2c84e79feb827ed8bcb53ab85ece5"
+    },
+    {
+      "expected_codes": [
+        "SCHEMA_DRIFT"
+      ],
+      "id": "schema-drift",
+      "path": "negative-fixtures/phase0/schema-drift.json",
+      "sha256": "abfd40199eb9237da2906b370df9e7b4797005eb57cc190b937463a304743327"
+    },
+    {
+      "expected_codes": [
+        "UNBOUND_GOVERNANCE_AUTHOR"
+      ],
+      "id": "receipt-substitution-unbound-author",
+      "path": "negative-fixtures/phase0/missing-role-provenance.json",
+      "sha256": "d9e122943a0f583bf5c99bfbda960770e5271e4bf28177b77cd258e42f11eb13"
+    },
+    {
+      "expected_codes": [
+        "ROLE_OVERLAP"
+      ],
+      "id": "orchestrator-reviewer-overlap",
+      "path": "negative-fixtures/phase0/orchestrator-reviewer-overlap-v2.json",
+      "sha256": "dd38256511b04c40d9de10ad380f0a612fb7c19210770d3acac132e7e02aa5b8"
+    },
+    {
+      "expected_codes": [
+        "MISSING_ROLE_ASSIGNMENT"
+      ],
+      "id": "missing-gap-delivery-assignment",
+      "path": "negative-fixtures/phase0/missing-gap-delivery-assignment.json",
+      "sha256": "53023ba45e5b23e827484ef06800b112e87988c655e5afc2dd3f05898686942f"
+    },
+    {
+      "expected_codes": [
+        "OUTPUT_OWNERSHIP_MISMATCH"
+      ],
+      "id": "output-hash-mismatch",
+      "path": "negative-fixtures/phase0/output-hash-mismatch.json",
+      "sha256": "92c6edcce978be258a5413cbf85492fb5be9a7523c646ea064ed6d03487f9fe8"
+    },
+    {
+      "expected_codes": [
+        "FORGED_ANCESTRY_OR_LIFECYCLE"
+      ],
+      "id": "forged-ancestry-lifecycle",
+      "path": "negative-fixtures/phase0/forged-ancestry-lifecycle.json",
+      "sha256": "bae5a9d4471e444222bfc9df94cb27e656f551f5a4392e838a9c232994477412"
+    },
+    {
+      "expected_codes": [
+        "FALSE_STOP_LOSS_ACCOUNTING"
+      ],
+      "id": "false-stop-loss-accounting",
+      "path": "negative-fixtures/phase0/false-stop-loss-accounting.json",
+      "sha256": "b5e89b76e0e6ac07374a2286c4002866dbf0510137eb68adfe4c49f574a1d1d3"
+    },
+    {
+      "expected_codes": [
+        "DELEGATED_OWNER_ROLE_CONTRADICTION"
+      ],
+      "id": "delegated-owner-role-policy-mismatch",
+      "path": "negative-fixtures/phase0/delegated-owner-role-policy-mismatch.json",
+      "sha256": "c83f252c2996b1babdd85cc298dda5afeb9c556f0e2b3a95477952c90bbbc84c"
+    }
+  ],
+  "schema_version": "apk-t9-phase0-fixture-manifest.v2",
+  "state": "active-delegated-owner-gate",
+  "supersedes": {
+    "path": "phase0-fixture-manifest-pending-v1.json",
+    "sha256": "cdf1b43e90a70441d9fefa2166c5fbd98de523607659484453b3f783bf5f19ca"
+  },
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+}

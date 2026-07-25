@@ -1,0 +1,129 @@
+{
+  "schema_version": "apk-t9-phase2-v3-fixture-manifest.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "dispatch_sha256": "c8d62db60bb3ccaac5d211cd740c7b8c82085edcda11ab8769b136c4a71b01fd",
+  "fixture_count": 10,
+  "case_count": 20,
+  "fixtures": [
+    {
+      "id": "batch-policy",
+      "path": "negative-fixtures/phase2-v3/batch-policy.json",
+      "sha256": "030323c304b45d0a26c2d6ea5b92bb8faf1bb17792b97ef19de39a4c77d88ee9",
+      "expected_state": "INVALID",
+      "expected_codes": [
+        "BATCH_GAME_LIMIT_EXCEEDED",
+        "DISJOINT_PARTITION_ASSUMPTION",
+        "OVERLAP_REJECTED"
+      ],
+      "case_count": 3
+    },
+    {
+      "id": "budget",
+      "path": "negative-fixtures/phase2-v3/budget.json",
+      "sha256": "e5d3c784b3ef560c02d9110506b3ffdce84c4ee0d819bdbb5300a34c9f52a9c3",
+      "expected_state": "INVALID",
+      "expected_codes": [
+        "OUTPUT_BUDGET_EXCEEDED"
+      ],
+      "case_count": 1
+    },
+    {
+      "id": "canonical-aggregation",
+      "path": "negative-fixtures/phase2-v3/canonical-aggregation.json",
+      "sha256": "9e1b5b76e2e8c26da15774bd989deaa7bfe6a0995da023615df838db2711fb8f",
+      "expected_state": "INVALID",
+      "expected_codes": [
+        "CROSS_BATCH_AGGREGATION_MISSING",
+        "INVENTED_BEHAVIOR",
+        "MISSING_REQUIRED_FIELD",
+        "OPAQUE_CAPABILITY_CONTRACT",
+        "PLACEMENT_STATUS_COLLAPSE",
+        "SCENE_STATE_CONSUMER_OMITTED"
+      ],
+      "case_count": 3
+    },
+    {
+      "id": "coverage",
+      "path": "negative-fixtures/phase2-v3/coverage.json",
+      "sha256": "6ba6977bbc27473948a6d0f2a0b7f0c4cb204cfb0d4604b59ffcc766dac1f19c",
+      "expected_state": "INVALID",
+      "expected_codes": [
+        "CLAIM_SET_MISMATCH",
+        "MECHANIC_ROUTING_MISMATCH",
+        "UNKNOWN_RESOLUTION"
+      ],
+      "case_count": 2
+    },
+    {
+      "id": "dependency",
+      "path": "negative-fixtures/phase2-v3/dependency.json",
+      "sha256": "1bb1afc14ac2844fbe858b23251f43f7e84b8cb5bbe6371bc057f159df5f3014",
+      "expected_state": "INVALID",
+      "expected_codes": [
+        "DEPENDENCY_MISMATCH"
+      ],
+      "case_count": 1
+    },
+    {
+      "id": "disposition",
+      "path": "negative-fixtures/phase2-v3/disposition.json",
+      "sha256": "06c14d9432e2b1b9aba4e5535fc085cdd582dc50b96469ae71f773ee23944209",
+      "expected_state": "INVALID",
+      "expected_codes": [
+        "BESPOKE_WITHOUT_INCOMPATIBILITY"
+      ],
+      "case_count": 1
+    },
+    {
+      "id": "evidence-integrity",
+      "path": "negative-fixtures/phase2-v3/evidence-integrity.json",
+      "sha256": "830c4997e063c33ee05c1c22b3e8fc0d35b1bf8a9d78ec00be52f1d5d3f30e40",
+      "expected_state": "INVALID",
+      "expected_codes": [
+        "DEPENDENCY_MISMATCH",
+        "INVENTED_BEHAVIOR",
+        "NOUN_ART_ONLY_STANDARDIZATION",
+        "PLACEMENT_STATUS_COLLAPSE",
+        "REFERENTIAL_INTEGRITY",
+        "SCENE_STATE_CONSUMER_OMITTED",
+        "UNKNOWN_RESOLUTION"
+      ],
+      "case_count": 3
+    },
+    {
+      "id": "evidence-quality",
+      "path": "negative-fixtures/phase2-v3/evidence-quality.json",
+      "sha256": "e6ff74d5589fa5eb59ce9bf7bd5a13669e6c9a22cfeba58f87773cbe62ca8ce6",
+      "expected_state": "INVALID",
+      "expected_codes": [
+        "INVENTED_BEHAVIOR",
+        "NOUN_ART_ONLY_STANDARDIZATION",
+        "PROVISIONAL_ONLY_STANDARDIZATION"
+      ],
+      "case_count": 2
+    },
+    {
+      "id": "hash-receipt",
+      "path": "negative-fixtures/phase2-v3/hash-receipt.json",
+      "sha256": "d519411a8d2a515253ac9101b819f0f434016d4b19fb77c3582f4ce30b17f47d",
+      "expected_state": "INVALID",
+      "expected_codes": [
+        "STALE_OR_WRONG_RECEIPT",
+        "TAMPERED_HASH"
+      ],
+      "case_count": 2
+    },
+    {
+      "id": "schema-shape",
+      "path": "negative-fixtures/phase2-v3/schema-shape.json",
+      "sha256": "161a4d027f8b5d97b33f65902a4be89c7a130c8c7caca7377ec7c05e4d9ca549",
+      "expected_state": "INVALID",
+      "expected_codes": [
+        "INVALID_SCHEMA",
+        "MISSING_REQUIRED_FIELD",
+        "SURPLUS_FIELD"
+      ],
+      "case_count": 2
+    }
+  ]
+}

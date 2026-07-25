@@ -1,0 +1,5 @@
+{
+  "id": "disclosure-loss",
+  "operation": "disclosure-loss",
+  "expected_codes": ["DISCLOSURE_LOSS"]
+}

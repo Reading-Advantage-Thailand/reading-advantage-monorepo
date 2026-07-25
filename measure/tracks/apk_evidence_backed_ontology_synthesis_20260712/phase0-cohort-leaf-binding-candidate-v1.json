@@ -1,0 +1,658 @@
+{
+  "schema_version": "apk-t9-phase0-cohort-leaf-binding-candidate.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "status": "candidate-non-consumable",
+  "consumable": false,
+  "revoked": false,
+  "acceptance_claimed": false,
+  "repair_dispatch": {
+    "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase0-cohort-leaf-repair-role-dispatch-v1.json",
+    "sha256": "7a7ec749bb4f83c5dfab0e7c63bd754f686eabe77506fb2f83480bf48f828400",
+    "task_id": "phase0-repair-t4b-t6b-leaf-bindings",
+    "owner_role": "cohort-leaf-binding-catalog-author"
+  },
+  "full_resolvable_denominator_audit": {
+    "resolvable_game_count": 28,
+    "accepted_json_leaf_chains_green_before_pending_repairs": 19,
+    "t3_leaf_binding_candidate_games_pending_acceptance": 3,
+    "this_candidate_game_count": 6,
+    "additional_leaf_binding_gaps_found": 0,
+    "remaining_leaf_binding_gaps_after_acceptance_of_both_repair_candidates": 0,
+    "known_non_resolvable_game": {
+      "game_id": "castle-defense",
+      "disposition": "accepted T4 Batch A manifest omission retained; excluded from the 28-resolvable-game denominator"
+    },
+    "cohorts_audited": [
+      "T3 repaired",
+      "T4 Batch A",
+      "T4 Batch B",
+      "T4 Batch C",
+      "T5 Batch A",
+      "T5 Batch B",
+      "T5 Batch C",
+      "T6 Batch A",
+      "T6 Batch B",
+      "T7 Batch A",
+      "T7 Batch B"
+    ],
+    "python_input_map_treated_as_json_acceptance_binding": false,
+    "unhashed_receipt_path_treated_as_json_acceptance_binding": false
+  },
+  "accepted_chains": {
+    "t4_batch_b": {
+      "accepted_root": {
+        "path": "measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+        "sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80",
+        "status": "accepted-with-disclosure",
+        "consumable": true
+      },
+      "chain_artifacts": [
+        {
+          "stage": "full-cohort-candidate",
+          "path": "measure/archive/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v2-81bfe78e-20260722T130706Z-codex.json",
+          "sha256": "436d15249549fb0762edcb5c63d1fdcc4f4d51c80852200f929050ca0a0840f5"
+        },
+        {
+          "stage": "full-cohort-owner-acceptance",
+          "path": "measure/archive/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-t4-v2.json",
+          "sha256": "56bc530ddff17e8ff20741517d6c29b17ba250cbb35ec3a772a3cd71a23ed318"
+        },
+        {
+          "stage": "full-cohort-independent-review",
+          "path": "measure/archive/apk_corpus_audit_action_defense_20260712/full-cohort-independent-review-v4-d009b9a3-20260722T125310Z-codex.json",
+          "sha256": "95f9d5b91ea2caea1477c07605ee664e4c94cdf7f301a9490954ee9f978f2f43"
+        },
+        {
+          "stage": "batch-b-accepted-manifest",
+          "path": "measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-b-v20.json",
+          "sha256": "3026323c6a6aed61f3fbcb03bacf200a1a610cb2da852606b6e9fe61f90f63d7"
+        },
+        {
+          "stage": "batch-b-candidate",
+          "path": "measure/archive/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-batch-b-v20.json",
+          "sha256": "2357e8c078aa78f4f007f676599203326ddb5b53db2c14166c4eded149e9b926"
+        },
+        {
+          "stage": "batch-b-owner-acceptance",
+          "path": "measure/archive/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-batch-b-v20.json",
+          "sha256": "4b680fda18e8dc34dd062a59dc9b4b8f351ecda721b87e49f53e8240f392e9bb"
+        },
+        {
+          "stage": "batch-b-independent-review",
+          "path": "measure/archive/apk_corpus_audit_action_defense_20260712/batch-b-independent-review-v20.json",
+          "sha256": "803aa6d6204b5aba4d10bee12bb359486c16f33f803a55b2984b35fec3db1812"
+        },
+        {
+          "stage": "batch-b-source-truth-gate",
+          "path": "measure/archive/apk_corpus_audit_action_defense_20260712/batch-b-truth-tests-v16.py",
+          "sha256": "9f84d9ed72952715fc20f1fc42d3478a12fbbc822ebccc2038ef7ce50aecfa5d"
+        }
+      ],
+      "selected_collector_receipts": [
+        {
+          "game_id": "village-guardian",
+          "path": "measure/archive/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-village-guardian-batch-b-v16-complete.json",
+          "sha256": "00facb0ccfb6e792a9003eb50658e746937860541f416938b5172a6327fa4044",
+          "ledger_output_pointer": "/outputs/0"
+        },
+        {
+          "game_id": "archers-revenge",
+          "path": "measure/archive/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-archers-revenge-batch-b-v16-complete.json",
+          "sha256": "366f9092421df5fa704d460143494e547e46e66de142fdefe802c6b0478e6e77",
+          "ledger_output_pointer": "/outputs/0"
+        },
+        {
+          "game_id": "storm-castle-tower",
+          "path": "measure/archive/apk_corpus_audit_action_defense_20260712/role-receipts/evidence-collector-storm-castle-tower-batch-b-v16-complete.json",
+          "sha256": "08fdb2733a8bd277409d3c644e9d6b109a99ca4955491d68f072c3cc6a65a672",
+          "ledger_output_pointer": "/outputs/0"
+        }
+      ],
+      "prior_gap": "The accepted JSON chain stopped at a Python truth gate and count summaries; Python input maps are not JSON acceptance bindings.",
+      "repair_effect": "This candidate additively binds the three selected collector receipts and their exact ledger outputs without changing archived bytes."
+    },
+    "t6_batch_b": {
+      "accepted_root": {
+        "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/successor-accepted-cohort-manifest-v2.json",
+        "sha256": "9666b564ba969ef7d0559fb53d8d74c684a746b10264784a9728e52b6284888b",
+        "status": "accepted-for-conditional-evidence-consumption-only",
+        "consumable": true
+      },
+      "chain_artifacts": [
+        {
+          "stage": "full-cohort-candidate",
+          "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/successor-candidate-cohort-manifest-v2.json",
+          "sha256": "d48f518dd3cb19ea54dfe39dc63942592750493b915e82153923c5fa9eb78fb7"
+        },
+        {
+          "stage": "full-cohort-owner-acceptance",
+          "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/product-owner-acceptance-successor-v2.json",
+          "sha256": "fbc6f24f7b56a6ce8c5972e7fba29c8702813f8bc6def09e866530f6d2ecf4df"
+        },
+        {
+          "stage": "full-cohort-independent-review",
+          "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/full-cohort-independent-review-v2.json",
+          "sha256": "43e5ad76695cc67e57ab082468ce4400f973a388005dfb45b1810608d8115505"
+        },
+        {
+          "stage": "full-cohort-independent-review-receipt",
+          "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/adversarial-reviewer-full-cohort-v2.json",
+          "sha256": "5d97a63c64a401dc71aefecdb6c440330bc555917e142fd889c63d263bc9a319"
+        },
+        {
+          "stage": "batch-b-accepted-manifest",
+          "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/accepted-cohort-manifest-batch-b-v3.json",
+          "sha256": "5b11e1c44f0b109b740b91a36c694774a48d6c364d8715e95719b9e0574dc271"
+        },
+        {
+          "stage": "batch-b-candidate",
+          "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/candidate-cohort-manifest-batch-b-v3.json",
+          "sha256": "ad0a031ac4d2c16453bcc535eb6bbcaf1a001352ed1137b396bfc56dd8fae755"
+        },
+        {
+          "stage": "batch-b-owner-acceptance",
+          "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/product-owner-acceptance-batch-b-v3.json",
+          "sha256": "36b4f78227063af78aa05f19662c6ee77940bcaf257f9b45533270febdc6dda9"
+        },
+        {
+          "stage": "batch-b-independent-review",
+          "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b-independent-review-v3.json",
+          "sha256": "a88634ca187cf972440dac88ce0370980132c23d5e0a13660d35ba045527f34d"
+        },
+        {
+          "stage": "batch-b-local-role-ratification",
+          "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b-v3-role-session-ratification.json",
+          "sha256": "2b3b2d44cf81d22a93d82e6344e7dc1365f613dac85a6f8cbfbbfbac114615f0"
+        },
+        {
+          "stage": "batch-b-source-truth-gate",
+          "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b-truth-tests-v2.py",
+          "sha256": "01bf38dff073064d481ae713efe8918167f10dff82fdea339775331af72fcc41"
+        },
+        {
+          "stage": "batch-b-source-gate-report",
+          "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b-v2-gate-report.json",
+          "sha256": "efc227fb6774495e93c2ea810c7b4d5ceed3d0ee6b24333c89b7598fc6b5ac74"
+        }
+      ],
+      "selected_collector_receipts": [
+        {
+          "game_id": "potion-rush",
+          "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-potion-rush-batch-b-v2.json",
+          "sha256": "14084dda94ef137585a4fdaa2af659cd364dc76c794a2cae33a1d1ab6a2c0015",
+          "ledger_output_pointer": "/output_hashes/measure~1tracks~1apk_corpus_audit_puzzle_crafting_20260712~1batch-b~1potion-rush~1claim-evidence-ledger-v2.json"
+        },
+        {
+          "game_id": "rune-forge-chamber",
+          "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-rune-forge-chamber-batch-b-v2.json",
+          "sha256": "8d3ccdcdbed561d02d4b4b6f83977727ac1148b4547f41c3e1c9c774fd25a9e9",
+          "ledger_output_pointer": "/output_hashes/measure~1tracks~1apk_corpus_audit_puzzle_crafting_20260712~1batch-b~1rune-forge-chamber~1claim-evidence-ledger-v2.json"
+        },
+        {
+          "game_id": "astral-mage",
+          "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/role-receipts/evidence-collector-astral-mage-batch-b-v2.json",
+          "sha256": "607a870bee06654c1ef60835d5d8a49df61e98bb0c2fffc275f2d90f33d68ff1",
+          "ledger_output_pointer": "/output_hashes/measure~1tracks~1apk_corpus_audit_puzzle_crafting_20260712~1batch-b~1astral-mage~1claim-evidence-ledger-v2.json"
+        }
+      ],
+      "prior_gap": "The accepted JSON chain reached a ratification document whose selected receipt fields contained paths without hashes; un-hashed receipt paths are not JSON acceptance bindings.",
+      "repair_effect": "This candidate additively binds the three selected collector receipts, their exact ledger outputs, and their negative-fixture support files without changing archived bytes."
+    }
+  },
+  "leaf_bindings": [
+    {
+      "leaf_id": "t4b-village-guardian-claim-ledger",
+      "cohort": "T4 Batch B",
+      "game_id": "village-guardian",
+      "path": "measure/archive/apk_corpus_audit_action_defense_20260712/village-guardian-claim-ledger-batch-b-v3.json",
+      "sha256": "3be82cd7a9ddb144ae82ae220c36b439c6d14bbd58e1c988c897af6156b20484",
+      "claims_pointer": "/claims",
+      "unknowns_pointer": "/unknowns",
+      "negative_fixtures_pointer": "/negative_fixtures",
+      "selected_receipt_pointer": "/accepted_chains/t4_batch_b/selected_collector_receipts/0"
+    },
+    {
+      "leaf_id": "t4b-archers-revenge-claim-ledger",
+      "cohort": "T4 Batch B",
+      "game_id": "archers-revenge",
+      "path": "measure/archive/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v8.json",
+      "sha256": "1fedca7dffa8897a3bb0f5482a1c74c484bc3f16e5361ddd06dcc89ec8ec1ca3",
+      "claims_pointer": "/claims",
+      "negative_fixtures_pointer": "/negative_fixtures",
+      "selected_receipt_pointer": "/accepted_chains/t4_batch_b/selected_collector_receipts/1"
+    },
+    {
+      "leaf_id": "t4b-storm-castle-tower-claim-ledger",
+      "cohort": "T4 Batch B",
+      "game_id": "storm-castle-tower",
+      "path": "measure/archive/apk_corpus_audit_action_defense_20260712/storm-castle-tower-claim-ledger-batch-b.json",
+      "sha256": "9f9337ec9b86161337553a8b8ab92e57cc954d2a0deb42018dad0ed99394e9d9",
+      "claims_pointer": "/claims",
+      "unknowns_pointer": "/unknowns",
+      "negative_fixtures_pointer": "/negative_fixtures",
+      "bounded_query_evidence_pointer": "/bounded_query_evidence",
+      "selected_receipt_pointer": "/accepted_chains/t4_batch_b/selected_collector_receipts/2"
+    },
+    {
+      "leaf_id": "t6b-potion-rush-claim-ledger",
+      "cohort": "T6 Batch B",
+      "game_id": "potion-rush",
+      "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+      "sha256": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+      "claims_pointer": "/claims",
+      "unknowns_pointer": "/unknowns",
+      "selected_receipt_pointer": "/accepted_chains/t6_batch_b/selected_collector_receipts/0"
+    },
+    {
+      "leaf_id": "t6b-rune-forge-chamber-claim-ledger",
+      "cohort": "T6 Batch B",
+      "game_id": "rune-forge-chamber",
+      "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b/rune-forge-chamber/claim-evidence-ledger-v2.json",
+      "sha256": "bf4590a79dd712348cc8fb8f7ceb9ad5139fa934506ae712806f1bcd8fc71b60",
+      "claims_pointer": "/claims",
+      "unknowns_pointer": "/unknowns",
+      "selected_receipt_pointer": "/accepted_chains/t6_batch_b/selected_collector_receipts/1"
+    },
+    {
+      "leaf_id": "t6b-astral-mage-claim-ledger",
+      "cohort": "T6 Batch B",
+      "game_id": "astral-mage",
+      "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger-v2.json",
+      "sha256": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+      "claims_pointer": "/claims",
+      "unknowns_pointer": "/unknowns",
+      "selected_receipt_pointer": "/accepted_chains/t6_batch_b/selected_collector_receipts/2"
+    }
+  ],
+  "supporting_evidence_bindings": [
+    {
+      "support_id": "t6b-potion-rush-negative-fixtures",
+      "game_id": "potion-rush",
+      "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/negative-fixtures-v2.json",
+      "sha256": "253526b8b63106b4c62eb13cb5524b239adb978ee077a866a8942947cc3be287",
+      "fixtures_pointer": "/fixtures",
+      "fixture_count": 6
+    },
+    {
+      "support_id": "t6b-rune-forge-chamber-negative-fixtures",
+      "game_id": "rune-forge-chamber",
+      "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b/rune-forge-chamber/negative-fixtures-v2.json",
+      "sha256": "48c11e797b24e621b3c6be71f6161e5dd68b6e05c3f9bc322abfb067f79a4073",
+      "fixtures_pointer": "/fixtures",
+      "fixture_count": 6
+    },
+    {
+      "support_id": "t6b-astral-mage-negative-fixtures",
+      "game_id": "astral-mage",
+      "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/negative-fixtures-v2.json",
+      "sha256": "09ae2cfd3e3b064c73cbe2e2fa62a38ba21cc4d0a640ec3e36641809091341dd",
+      "fixtures_pointer": "/fixtures",
+      "fixture_count": 6
+    }
+  ],
+  "coverage": {
+    "leaf_count": 6,
+    "game_count": 6,
+    "claim_count": 226,
+    "explicit_unknown_count": 24,
+    "negative_fixture_count": 30,
+    "source_reference_count": 226,
+    "blob_or_range_reference_count": 220,
+    "bounded_query_reference_count": 6,
+    "source_references_resolved": 226,
+    "source_references_unresolved": 0,
+    "scene_or_state_reference_count": 216,
+    "per_game_distinct_scene_or_state_id_count_sum": 179,
+    "games": [
+      {
+        "game_id": "village-guardian",
+        "claim_count": 73,
+        "explicit_unknown_count": 6,
+        "negative_fixture_count": 4,
+        "source_reference_count": 73,
+        "blob_or_range_reference_count": 73,
+        "bounded_query_reference_count": 0,
+        "source_references_unresolved": 0,
+        "scene_or_state_reference_count": 73,
+        "distinct_scene_or_state_id_count": 37,
+        "scene_or_state_ids": [
+          "XP calculation",
+          "catalog",
+          "catalog cover candidate",
+          "completion route module",
+          "completion submit",
+          "component initialization",
+          "component module",
+          "component remainder",
+          "config",
+          "difficulty options",
+          "ended",
+          "ended transition",
+          "gameplay capture candidate",
+          "hiding villager",
+          "initialization",
+          "layout",
+          "level progression",
+          "level transition",
+          "model config",
+          "model initialization",
+          "model tick",
+          "monster collision",
+          "monster movement",
+          "monster/knight collision",
+          "monster/trail collision",
+          "opponent movement",
+          "playing",
+          "playing tick",
+          "results",
+          "sentence fetch",
+          "sentences route module",
+          "start",
+          "start-to-playing",
+          "trail following",
+          "villager collision",
+          "villager collision: correct order",
+          "villager collision: wrong order"
+        ]
+      },
+      {
+        "game_id": "archers-revenge",
+        "claim_count": 43,
+        "explicit_unknown_count": 0,
+        "negative_fixture_count": 4,
+        "source_reference_count": 43,
+        "blob_or_range_reference_count": 43,
+        "bounded_query_reference_count": 0,
+        "source_references_unresolved": 0,
+        "scene_or_state_reference_count": 43,
+        "distinct_scene_or_state_id_count": 43,
+        "scene_or_state_ids": [
+          "completion-request.accuracy",
+          "completion-request.correct-answers",
+          "completion-request.difficulty",
+          "completion-request.score",
+          "completion-request.time-taken",
+          "completion-request.total-attempts",
+          "config.arrow.fire-rate",
+          "config.arrow.speed",
+          "config.formation.columns",
+          "config.player.hp.easy",
+          "config.player.hp.extreme",
+          "config.player.hp.hard",
+          "config.player.hp.normal",
+          "cover-candidate",
+          "enemy-collision.predicate",
+          "enemy-motion.y",
+          "fire-arrow.guard",
+          "fire-arrow.velocity",
+          "formation-bottom-guard",
+          "formation.creation.total",
+          "formation.shields",
+          "formation.target.initial",
+          "formation.vocabulary.repeat",
+          "gameplay-capture-candidate",
+          "initial-state.guard",
+          "initial-state.status",
+          "next-wave.number",
+          "projectile-lifecycle.arrow-filter",
+          "projectile-player-collision.hp",
+          "shield-down-hit.correct-answer",
+          "shield-up-hit.projectile-append",
+          "shield-up-hit.projectile-velocity",
+          "stage-input.pointer-x",
+          "stage-scale",
+          "start-screen-capture-candidate",
+          "target-timer.decrement",
+          "target-timer.index",
+          "target-timer.selection",
+          "target-timer.term",
+          "target-timer.translation",
+          "vocabulary-loading.minimum",
+          "xp.lower-bound",
+          "xp.upper-bound"
+        ]
+      },
+      {
+        "game_id": "storm-castle-tower",
+        "claim_count": 42,
+        "explicit_unknown_count": 6,
+        "negative_fixture_count": 4,
+        "source_reference_count": 42,
+        "blob_or_range_reference_count": 36,
+        "bounded_query_reference_count": 6,
+        "source_references_unresolved": 0,
+        "scene_or_state_reference_count": 32,
+        "distinct_scene_or_state_id_count": 31,
+        "scene_or_state_ids": [
+          "catalog-card",
+          "historical-active-hazards",
+          "historical-cartridge-barrel",
+          "historical-cartridge-config-test",
+          "historical-cartridge-correct-window",
+          "historical-cartridge-defeat",
+          "historical-cartridge-hazard-collision",
+          "historical-cartridge-hazard-spawn",
+          "historical-cartridge-incorrect-window",
+          "historical-cartridge-initial-state",
+          "historical-cartridge-input-bindings",
+          "historical-cartridge-manifest",
+          "historical-cartridge-preload",
+          "historical-cartridge-result-test",
+          "historical-cartridge-slots",
+          "historical-cartridge-update",
+          "historical-complete-route",
+          "historical-component-phase",
+          "historical-container-measurement",
+          "historical-keyboard-input",
+          "historical-page",
+          "historical-page-complete",
+          "historical-page-load",
+          "historical-results",
+          "historical-scale-calculation",
+          "historical-sentences-route",
+          "historical-stage-scale",
+          "historical-start-test",
+          "historical-start-to-playing",
+          "historical-terminal-to-ended",
+          "historical-touch-input"
+        ]
+      },
+      {
+        "game_id": "potion-rush",
+        "claim_count": 28,
+        "explicit_unknown_count": 4,
+        "negative_fixture_count": 6,
+        "source_reference_count": 28,
+        "blob_or_range_reference_count": 28,
+        "bounded_query_reference_count": 0,
+        "source_references_unresolved": 0,
+        "scene_or_state_reference_count": 28,
+        "distinct_scene_or_state_id_count": 28,
+        "scene_or_state_ids": [
+          "belt-tick",
+          "catalog",
+          "cauldron-assets",
+          "cauldron-dump",
+          "cauldron-slots",
+          "complete-api",
+          "completion-submit",
+          "customer-assets",
+          "customer-expiry",
+          "customer-request",
+          "customer-spawn",
+          "e2e-declaration",
+          "ingredient-assets",
+          "ingredient-drag",
+          "ingredient-drop",
+          "page-game-surface",
+          "page-import",
+          "playing-scene",
+          "ranking-api",
+          "sentence-load",
+          "sentences-api",
+          "serve-customer",
+          "shop-assets",
+          "start-transition",
+          "state-types",
+          "store-surface",
+          "virtual-layout",
+          "xp-calculation"
+        ]
+      },
+      {
+        "game_id": "rune-forge-chamber",
+        "claim_count": 24,
+        "explicit_unknown_count": 5,
+        "negative_fixture_count": 6,
+        "source_reference_count": 24,
+        "blob_or_range_reference_count": 24,
+        "bounded_query_reference_count": 0,
+        "source_references_unresolved": 0,
+        "scene_or_state_reference_count": 24,
+        "distinct_scene_or_state_id_count": 24,
+        "scene_or_state_ids": [
+          "catalog",
+          "circle-input",
+          "circle-select",
+          "complete-api",
+          "completion-submit",
+          "configuration",
+          "defeat-to-ended",
+          "e2e-declaration",
+          "hud",
+          "initial-angle-shuffle",
+          "level-advance",
+          "page-import",
+          "playing-layout",
+          "raf-loop",
+          "rules-state",
+          "rune-stone-copy",
+          "sentence-load",
+          "sentences-api",
+          "start-screen",
+          "state-create",
+          "tick",
+          "ui-state",
+          "warning-copy",
+          "xp-calculation"
+        ]
+      },
+      {
+        "game_id": "astral-mage",
+        "claim_count": 16,
+        "explicit_unknown_count": 3,
+        "negative_fixture_count": 6,
+        "source_reference_count": 16,
+        "blob_or_range_reference_count": 16,
+        "bounded_query_reference_count": 0,
+        "source_references_unresolved": 0,
+        "scene_or_state_reference_count": 16,
+        "distinct_scene_or_state_id_count": 16,
+        "scene_or_state_ids": [
+          "catalog-card",
+          "catalog-export",
+          "historical-complete",
+          "historical-controls",
+          "historical-definition",
+          "historical-hud",
+          "historical-projectile",
+          "historical-scene-contract",
+          "historical-scene-create",
+          "historical-state-create",
+          "historical-target-create",
+          "historical-target-hit",
+          "historical-target-render",
+          "historical-test",
+          "historical-update",
+          "withdrawn-set"
+        ]
+      }
+    ]
+  },
+  "retained_disclosures": {
+    "t4_root_conditions": [
+      "This manifest is conditionally consumable only together with every candidate, owner-acceptance, Batch A, Batch B, and Batch C disclosure recorded in its bound artifacts.",
+      "Batch A retains the Castle Defense manifest omission, DISC-001, and the 178-of-187 resolved-claim limitation; no unrecorded success is inferred.",
+      "Batch B retains synthetic untrusted DOM input, hidden-tab scheduler behavior, HTTP 400 completion responses, exact-route HTTP 404 results, historical-source limits, asset-use unknowns, and unavailable provider-session provenance.",
+      "Batch C excludes Browser v5; Browser v6 records five required screenshot.sh attempts, helper exits 4 and 28 including a wide timeout, and byte-identical helper-triggered daemon post-process PNG recoveries. No successful helper file write or direct screenshot API action is claimed, and the exact routes were HTTP 404 and non-runnable.",
+      "The selected Asset v5 receipt retains five pending self-check fields and is conditionally usable only with its separately bound independent validation companion; collision-invalid Asset V4 and Gryphon Mapper V5 outputs remain excluded.",
+      "Encrypted-prompt and provider-event evidence are unavailable in this harness and are not fabricated; Git ordering and hashes record artifact chronology only.",
+      "Full-review v1, reconciliation v2, the v1 lifecycle, and admission gates v1-v3 remain historical failed or stop-loss evidence and are non-consumable.",
+      "No runtime asset loading, suitability, licensing, production use, ontology, cross-game standardization, implementation, shipping, gameplay, responsive behavior, completion, persistence, XP, idempotency, or API correctness is established or authorized."
+    ],
+    "t4_batch_b_accepted_conditions": [
+      "Consume with every candidate and acceptance disclosure.",
+      "Synthetic DOM input, hidden-tab scheduling, HTTP 400 completion responses, HTTP 404 non-runnable routes, historical-only source, and asset-use unknowns retain their exact bounded meanings.",
+      "Git chronology authenticates lifecycle and preflight provenance only and never substitutes source/evidence/review tests.",
+      "No ontology, cross-game standardization, implementation, asset suitability, licensing, production, or shipping decision follows from this manifest."
+    ],
+    "t4_batch_b_candidate_disclosures": [
+      "Village Guardian browser input was synthetic DOM input with isTrusted=false and used a hidden-tab scheduler adapter; trusted native input and foreground timing are not claimed.",
+      "Village Guardian completion requests returned HTTP 400; completion success, persistence, XP, idempotency, and API correctness are not claimed.",
+      "Archer's Revenge and Storm the Castle Tower returned HTTP 404 at their exact reviewed routes; historical source is not promoted to current runtime behavior.",
+      "Asset presence and catalog binding do not establish runtime loading, suitability, licensing, or production use.",
+      "Provider session provenance remains unavailable and is not fabricated; owner-authorized Git substitution applies only to lifecycle and preflight provenance."
+    ],
+    "t6_root_conditions": [
+      "Consume only with every exact bound artifact, both accepted batch manifests, the reconciliation, every active gate, and every retained disclosure.",
+      "Any changed digest, missing artifact, revoked or superseded bound input, failed active gate, or nonzero unresolved Critical, High, or Medium finding immediately stops consumption.",
+      "Consumption is evidence-only and conditional; it does not authorize ontology, implementation, shipping, or product completion."
+    ],
+    "t6_root_disclosures": [
+      "Browser-dependent product behavior remains unknown. This manifest permits no gameplay, state-transition, responsive, trusted-input, completion, persistence, XP, API, production, or asset-loading success claim.",
+      "Provider message, event, encrypted-prompt, and timestamp fields remain unavailable and null in the acceptance artifact. No provider ancestry, session, prompt, timing, raw-export, or event claim is made.",
+      "V1 lifecycle artifacts remain historical non-authoritative context exactly as classified by the candidate and review. This successor manifest neither mutates nor consumes V1.",
+      "This is a conditional evidence-consumption manifest, not behavior verification, implementation approval, shipping approval, or a completion declaration."
+    ],
+    "t6_batch_b_accepted_conditions": [
+      "Consume only with the candidate, owner acceptance, V3 review, V3 local role ratification, V2 ledgers/maps/fixtures, and all their disclosures.",
+      "Do not promote no-browser evidence or historical Astral Mage evidence to current product behavior.",
+      "A source, bound-artifact, review, or authority change stops consumption pending additive supersession and fresh review."
+    ],
+    "t6_batch_b_candidate_disclosures": [
+      "This candidate is not an accepted manifest.",
+      "No browser run or browser-success claim exists.",
+      "Local role receipts are not provider-attested session provenance.",
+      "All 12 explicit unknowns and historical classifications remain binding."
+    ],
+    "t6_batch_b_owner_acceptance_disclosures": [
+      "Acceptance preserves every candidate, review, ledger, unknown, and historical-classification disclosure.",
+      "No browser-dependent success is accepted or implied.",
+      "Local receipts do not become provider-attested session provenance.",
+      "This acceptance does not authorize implementation, shipping, ontology, or a cohort manifest without a separately published lifecycle artifact."
+    ]
+  },
+  "no_success_claims": {
+    "ontology": false,
+    "cross_game_standardization": false,
+    "implementation": false,
+    "shipping": false,
+    "gameplay": false,
+    "state_transition_success": false,
+    "responsive": false,
+    "trusted_input": false,
+    "completion": false,
+    "persistence": false,
+    "xp": false,
+    "idempotency": false,
+    "api_correctness": false,
+    "asset_loading": false,
+    "asset_suitability": false,
+    "licensing": false,
+    "production_use": false
+  },
+  "archive_integrity": {
+    "archive_rewrite_allowed": false,
+    "archived_inputs_modified": false,
+    "archived_leaf_bytes_modified": false
+  },
+  "publication_boundary": {
+    "phase1_mapper_publication_authorized": false,
+    "responsive_or_asset_decisions_authorized": false,
+    "implementation_or_shipping_authorized": false,
+    "independent_verification_required": true,
+    "independent_review_required": true,
+    "product_owner_acceptance_required": true
+  }
+}

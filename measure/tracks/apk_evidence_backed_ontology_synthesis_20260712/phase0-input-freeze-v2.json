@@ -1,0 +1,134 @@
+{
+  "accepted_input_ids": [
+    "t1-evidence-integrity-gate",
+    "t2-accepted-denominator",
+    "t2-accepted-partition",
+    "t3-accepted-pilot",
+    "t4-accepted-cohort",
+    "t5-accepted-cohort",
+    "t6-accepted-cohort",
+    "t7-accepted-cohort",
+    "t8-accepted-candidate-forensics",
+    "standard-pack-accepted-release"
+  ],
+  "allowed_work": [
+    "T9 evidence-backed synthesis phases 1 through 6",
+    "fail-closed truth verification and negative-fixture execution",
+    "independent domain review and root product-owner phase decisions"
+  ],
+  "candidate_only": true,
+  "closure": {
+    "green_report_authorized": true,
+    "next_action": "Begin Phase 1 evidence-backed mechanic and effort derivation.",
+    "phase0_complete": true,
+    "phase1_authorized": true
+  },
+  "consumable": true,
+  "contract_bindings": [
+    {
+      "id": "canonical-pack-policy",
+      "path": "phase0-canonical-pack-policy-pending-v1.json",
+      "sha256": "e4173d05b26f84c82d6687e95226b306b0402d238df02cfa66678e25973e20b5"
+    },
+    {
+      "id": "role-ownership",
+      "path": "phase0-role-ownership-manifest-v2.json",
+      "sha256": "b025b7494e51d493bf39e021a170cc8a2af99886eecf9807919c2a3d2ef2b7c9"
+    },
+    {
+      "id": "derivation-schema",
+      "path": "phase0-derivation-schema-pending-v1.json",
+      "sha256": "b9ad36f77ee54127b15b75b563ae220b3fce07151ce1f0ba4052f69c66c3bc5e"
+    },
+    {
+      "id": "claim-dependency-schema",
+      "path": "phase0-claim-dependency-schema-pending-v1.json",
+      "sha256": "fad2307bb50d8ccbb38870c05af9880deb5756eae5833d25501ed3051364a947"
+    },
+    {
+      "id": "budget-stop-loss",
+      "path": "phase0-budget-stop-loss-v2.json",
+      "sha256": "5c101f0bb267a4fc79cf938c86ab5f5f10422f3cf79ce53f3f06e66a6dc891d8"
+    },
+    {
+      "id": "fixture-manifest",
+      "path": "phase0-fixture-manifest-v2.json",
+      "sha256": "7019be8b36a58bc036bc70fecb6922f5ce432f34e221edaf91a0f19300ec67e0"
+    },
+    {
+      "id": "pending-verifier",
+      "path": "phase0_truth_verifier.py",
+      "sha256": "c6431c6caa341a25a45e7e79e03dbd2c5ffa3221c75daa186150883cdacd1b19"
+    },
+    {
+      "id": "active-verifier",
+      "path": "phase0_active_truth_verifier.py",
+      "sha256": "d1f9d41a7f3923c5ce7c62bd2c5db54c86b816410c306a2e9ffe056e6c6e3c68"
+    },
+    {
+      "id": "active-verifier-tests",
+      "path": "phase0_active_truth_verifier_test.py",
+      "sha256": "28628b2c58bf346d7d811694317dbe42cc13bcf95ef791be1ccca02f25ee4d4e"
+    },
+    {
+      "id": "preserved-pending-role-contract",
+      "path": "phase0-role-ownership-manifest-pending-v1.json",
+      "sha256": "9f4eb756fb6f79b9099b83fc84f191dc421e111a3b35ba25f15ea8c77678b382"
+    }
+  ],
+  "failed_monolith_policy": {
+    "allowed_use": "labeled-negative-fixture-only",
+    "path_prefix": "measure/archive/apk_cross_game_asset_ontology_20260712",
+    "present_in_live_input_graph": false
+  },
+  "forbidden_work": [
+    "unsupported factual claims",
+    "direct legacy asset adoption",
+    "unknown Must-have resolution without evidence",
+    "shared-kit implementation",
+    "asset production",
+    "cartridge implementation",
+    "shipping"
+  ],
+  "frozen_at": "2026-07-24T10:54:56.561Z",
+  "governing_bindings": [
+    {
+      "path": "measure/apk-evidence-reconstruction-program.md",
+      "sha256": "ac77839f0969ea78e628ea9a533176fbc59f9697f7adfc494b22e703d94aff1b"
+    },
+    {
+      "path": "measure/apk-asset-system-program.md",
+      "sha256": "082e66fa9d6bc0ba53cd256443877fd77da55c5da0ffddfadd00297f33bd09f5"
+    },
+    {
+      "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/spec.md",
+      "sha256": "2476dcf3f6c6819b5ca8729d47b90cefeda929de2ca7777fd4b6e30146cfffa3"
+    }
+  ],
+  "immutable_after_publication": true,
+  "remediation": {
+    "disposition": "remediated-pending-independent-re-review",
+    "finding": "DELEGATED_OWNER_ROLE_CONTRADICTION",
+    "negative_fixture": {
+      "path": "negative-fixtures/phase0/delegated-owner-role-policy-mismatch.json",
+      "sha256": "c83f252c2996b1babdd85cc298dda5afeb9c556f0e2b3a95477952c90bbbc84c"
+    },
+    "severity": "High",
+    "successor_role_contract": {
+      "path": "phase0-role-ownership-manifest-v2.json",
+      "sha256": "b025b7494e51d493bf39e021a170cc8a2af99886eecf9807919c2a3d2ef2b7c9"
+    }
+  },
+  "schema_version": "apk-t9-phase0-input-freeze.v2",
+  "source_registry": {
+    "path": "phase0-source-registry-v2.json",
+    "sha256": "c770189b2202526f13015cdca8f9f0a688cb4fb2dbc663c969b7c582301e7d9b"
+  },
+  "status": "VERIFIED_INPUTS",
+  "supersedes": {
+    "disposition": "preserved-pending-state-evidence",
+    "path": "phase0-input-freeze-pending-v1.json",
+    "sha256": "fe358ce3dec3fb65613d52a261dd6dbd68b2c2a3e626ee20297094fbd2bdf57e"
+  },
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+}

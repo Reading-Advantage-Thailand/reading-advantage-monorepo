@@ -1,0 +1,18 @@
+{
+  "agent_ref": "/root/phase5_review_b",
+  "dispatch_sha256": "04eda4bfda92f171c61cda359843afe9c6057ddc673a6afca8e6c1f29048a766",
+  "mapper_output_hashes": {
+    "phase2-capability-classification-v5.json": "274a3538b782499828c6af9cc7033f72fa5de0b1d6da0c0eb769dad568e78a34",
+    "phase2-capability-comparisons-v5.json": "c8e71208bc60cc3c1299840b1905255dcf02578e32acec16558dc3177801157a",
+    "phase2-capability-taxonomy-inventory-v1.json": "a7b1768c38c1018ba3d8b2488727ac6b635c316de6c4617ddd98f03edfe477f8",
+    "phase2-claim-dependency-edges-v5.json": "30b174ca160be204749f7c9bdeb65ba517990cc73ec7ee656ef49d2466019155",
+    "phase2-curated-capability-evidence-v1.json": "e071e1ef627dba5e447d73160162c1b3594f7590f4e4b8071f25a6909ed4c723",
+    "phase2-extension-boundaries-v5.json": "bcee20de256ef1ac44fad89353faeff73f03bec4ad7f0e57358f6b1862252c66"
+  },
+  "owner_role": "capability-reviewer",
+  "review_artifact_sha256": "4a0021f6c6ea99d4f3e633d1cc93c8acebe4e29639783dab259631ed91a03078",
+  "root_mapper_release_sha256": "5609589e8913c73bf21acdec1a1c4cb2b23ba840c654397b1d3d5bcc4ea9f48a",
+  "root_truth_seal_sha256": "b6bb2f4b3f27cee0cde79c8fcd94adcde8a1edd8d53ac59ba1ea366c9816ac0f",
+  "status": "rejected",
+  "task_id": "phase2-curated-evidence-review-v13"
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": "apk-t9-phase1-negative-fixture-group.v2",
+  "id": "governance-bindings",
+  "cases": [
+    {
+      "id": "governance-bindings-01",
+      "mutation": {
+        "operation": "stale-dispatch-binding"
+      },
+      "expected_codes": [
+        "PHASE1_FROZEN_INPUT_DRIFT"
+      ]
+    },
+    {
+      "id": "governance-bindings-02",
+      "mutation": {
+        "operation": "stale-acceptance-binding"
+      },
+      "expected_codes": [
+        "PHASE1_FROZEN_INPUT_DRIFT"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "PHASE1_FROZEN_INPUT_DRIFT"
+  ],
+  "expected_state": "INVALID"
+}

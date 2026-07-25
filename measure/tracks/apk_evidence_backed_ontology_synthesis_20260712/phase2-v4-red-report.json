@@ -1,0 +1,157 @@
+{
+  "schema_version": "apk-t9-phase2-v4-red-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "captured_at": "2026-07-24T17:46:56Z",
+  "status": "valid-red-v4-waiting-for-readable-mapper-v2",
+  "state": "RED_WAITING_FOR_MAPPER_V2_OUTPUTS",
+  "authority": {
+    "path": "phase2-role-dispatch-v4.json",
+    "sha256": "0bd25f2ddfd303c19717b7fb3432a6ab01a416be9a44830f23e6afe444f9cd0b"
+  },
+  "truth_package": {
+    "phase2_v4_truth_verifier.py": "70b4c3158f7a6fee5af570d750d6e397e0a260233f8e21eae12938d09a06239e",
+    "phase2_v4_truth_verifier_test.py": "183c3b16e778ff606e3a0184ee5740da5803540aa88132f516fbcd67dc5b3669",
+    "phase2-v4-fixture-manifest.json": "ba02abbb0e13af5af4f3582228ccc617058139e362173036aad2ddea5ed0304f",
+    "fixture_files": 4,
+    "negative_cases": 32,
+    "fixture_suite_digest": "d2979dbde2399092320244c68e6cdc57067997c4f0267edbad389fdcded21e22",
+    "focused_suite": "8/8 pass",
+    "negative_result": "32/32 rejected with exact bound codes",
+    "runtime_seconds": 3.97,
+    "ruff": "pass"
+  },
+  "readable_finding_contract": {
+    "comparison_finding_fields": [
+      "finding_id",
+      "basis",
+      "statement",
+      "per_game_behaviors",
+      "boundary_effect",
+      "consumer_refs"
+    ],
+    "per_game_behavior_fields": [
+      "game_id",
+      "behavior",
+      "consumer_record_ids"
+    ],
+    "canonical_embedded_finding_fields": [
+      "finding_id",
+      "statement",
+      "per_game_behaviors",
+      "boundary_effect"
+    ],
+    "boundary_fields": [
+      "boundary_id",
+      "capability_id",
+      "shared_core",
+      "extension_points",
+      "incompatibility_differences"
+    ],
+    "length_bounds": {
+      "statement_chars": [
+        40,
+        280
+      ],
+      "boundary_effect_chars": [
+        24,
+        280
+      ],
+      "per_game_behavior_chars": [
+        24,
+        480
+      ]
+    },
+    "statement_rules": "Plain-language Shared behavior or Meaningful difference statement; material vocabulary must come from exact accepted per-game evidence plus controlled relation words.",
+    "per_game_behavior_rules": "Deterministic evidence-grounded extractive text; exact game consumer_record_ids must equal the finding consumer subset; long raw evidence uses a word-bounded extractive prefix.",
+    "boundary_effect_rules": "Controlled Shared core, Extension point, or Incompatibility consequence ending with the exact finding statement.",
+    "classification_embedding": "Every canonical capability embeds exact readable similarity and difference projections, never only opaque IDs.",
+    "boundary_embedding": "shared_core embeds similarities; extension_points embeds standardize/extend differences; incompatibility_differences embeds game-specific/bespoke differences.",
+    "evidence_bindings": "Complete exact consumer_refs remain in comparison findings and project losslessly into the sealed v2 semantic validator."
+  },
+  "preserved_semantic_contract": {
+    "composition": "V4 projects into and executes the sealed v2 validator without altering its schema/evidence rejection logic.",
+    "overlapping_batches": true,
+    "cross_batch_capabilities": true,
+    "direct_scene_state_consumers": true,
+    "claims_preserved": 1248,
+    "mechanics_routed_once": 633,
+    "games_accounted": 28,
+    "unknowns_unresolved": 24,
+    "standardize_minimum_independent_games": 2,
+    "bespoke_requires_incompatibility": true
+  },
+  "rejected_mapper_v1": {
+    "status": "non-accepted-counterexample",
+    "bindings": {
+      "phase2-capability-comparisons-v1.json": "776b97fc62073234c5152d8323985eb23a62066d4ff7717e4da0e1704df33c89",
+      "phase2-capability-classification-v1.json": "9ac4c3cb2c1aafc099878d40458f988f93a02fc1ab9f6c400003bc17d3ba6636",
+      "phase2-extension-boundaries-v1.json": "b869ed12f8443f8d08eddd0de8e4448099ae9ef35a7f7f6253a2a29293deb130",
+      "phase2-claim-dependency-edges-v1.json": "064785f673de2902083089ba6174960f2d6210c331464c35504cea88c44beb19",
+      "role-receipts/phase2/capability-mapper.json": "c5362b5ab897aba9bcb603fd62b7650c5f9ec82e711fb535405df6587c3399e7"
+    },
+    "rejection_codes": [
+      "BOUNDARY_EFFECT_MISSING",
+      "BOUNDARY_READABLE_INCOMPATIBILITY_DROPPED",
+      "CLASSIFICATION_READABLE_FINDING_DROPPED",
+      "MISSING_READABLE_FINDING_FIELD",
+      "MISSING_REQUIRED_FIELD",
+      "PER_GAME_BEHAVIOR_MISSING"
+    ]
+  },
+  "preserved_history": {
+    "sealed_v2_red_sha256": "c3f4e6a2a226d4bec0ae221a96b3c1c856a23cef47f8c32f0dd109bd6ef2021e",
+    "v3_status": "paused-before-green-due-to-accepted-medium-finding",
+    "v3_verifier_sha256": "a3bbb40549a236c33274f537ba2fab83d4ff53463dd92e880c6404501f37c5df",
+    "v3_test_sha256": "58ede0c2d0d76ea882646b2d80e950bacf1166ed7c206974b66091968dc6f129",
+    "v3_manifest_sha256": "2ba5982af4814826c3e41d1ffdc509664a9bb8715848e908ad61c36dc28730d7",
+    "prior_bytes_modified": false
+  },
+  "budgets": {
+    "fixture_files_max": 16,
+    "fixture_files_actual": 4,
+    "suite_runtime_seconds_max": 30,
+    "suite_runtime_seconds_actual": 3.97,
+    "published_output_bytes_max_each": 1048576,
+    "truth_package_bytes": 56226
+  },
+  "required_rejections": [
+    "MISSING_READABLE_FINDING_FIELD",
+    "OPAQUE_FINDING_STATEMENT",
+    "PER_GAME_BEHAVIOR_MISSING",
+    "GAME_BEHAVIOR_CONSUMER_MISMATCH",
+    "BOUNDARY_EFFECT_MISSING",
+    "GENERIC_BOUNDARY_EFFECT",
+    "CLASSIFICATION_READABLE_FINDING_DROPPED",
+    "BOUNDARY_READABLE_INCOMPATIBILITY_DROPPED",
+    "INVENTED_SUMMARY",
+    "PER_GAME_BEHAVIOR_LENGTH",
+    "BOUNDARY_EFFECT_LENGTH",
+    "DISJOINT_PARTITION_ASSUMPTION",
+    "OVERLAP_REJECTED",
+    "CROSS_BATCH_AGGREGATION_MISSING",
+    "NOUN_ART_ONLY_STANDARDIZATION",
+    "PROVISIONAL_ONLY_STANDARDIZATION",
+    "BESPOKE_WITHOUT_INCOMPATIBILITY",
+    "INVENTED_BEHAVIOR",
+    "PLACEMENT_STATUS_COLLAPSE",
+    "UNKNOWN_RESOLUTION",
+    "MISSING_REQUIRED_FIELD",
+    "SURPLUS_FIELD",
+    "TAMPERED_HASH",
+    "OUTPUT_BUDGET_EXCEEDED"
+  ],
+  "live_verification": {
+    "checks": 26,
+    "sole_finding": "PHASE2_MAPPER_V2_OUTPUTS_MISSING"
+  },
+  "missing_mapper_v2_outputs": [
+    "phase2-capability-comparisons-v2.json",
+    "phase2-capability-classification-v2.json",
+    "phase2-extension-boundaries-v2.json",
+    "phase2-claim-dependency-edges-v2.json",
+    "role-receipts/phase2/capability-mapper-v2.json"
+  ],
+  "green_publication_authorized": false,
+  "next_action": "Mapper v2 may publish only its v4-dispatch-owned readable outputs bound to this exact Red package; truth expectations must not be revised to accommodate mapper output."
+}

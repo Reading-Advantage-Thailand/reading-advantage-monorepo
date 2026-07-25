@@ -1,0 +1,47 @@
+{
+  "schema_version": "apk-t9-phase2-v4-negative-fixture-group.v1",
+  "id": "readable-findings",
+  "cases": [
+    {
+      "id": "readable-findings-01",
+      "mutation": {"operation": "missing-statement"},
+      "expected_codes": ["MISSING_READABLE_FINDING_FIELD", "MISSING_REQUIRED_FIELD"]
+    },
+    {
+      "id": "readable-findings-02",
+      "mutation": {"operation": "opaque-statement"},
+      "expected_codes": ["INVENTED_SUMMARY", "OPAQUE_FINDING_STATEMENT"]
+    },
+    {
+      "id": "readable-findings-03",
+      "mutation": {"operation": "missing-per-game-behavior"},
+      "expected_codes": ["MISSING_REQUIRED_FIELD", "PER_GAME_BEHAVIOR_MISSING"]
+    },
+    {
+      "id": "readable-findings-04",
+      "mutation": {"operation": "game-behavior-consumer-mismatch"},
+      "expected_codes": ["GAME_BEHAVIOR_CONSUMER_MISMATCH"]
+    },
+    {
+      "id": "readable-findings-05",
+      "mutation": {"operation": "missing-boundary-effect"},
+      "expected_codes": ["BOUNDARY_EFFECT_MISSING", "MISSING_REQUIRED_FIELD"]
+    },
+    {
+      "id": "readable-findings-06",
+      "mutation": {"operation": "generic-boundary-effect"},
+      "expected_codes": ["GENERIC_BOUNDARY_EFFECT"]
+    }
+  ],
+  "expected_codes": [
+    "BOUNDARY_EFFECT_MISSING",
+    "GAME_BEHAVIOR_CONSUMER_MISMATCH",
+    "GENERIC_BOUNDARY_EFFECT",
+    "INVENTED_SUMMARY",
+    "MISSING_READABLE_FINDING_FIELD",
+    "MISSING_REQUIRED_FIELD",
+    "OPAQUE_FINDING_STATEMENT",
+    "PER_GAME_BEHAVIOR_MISSING"
+  ],
+  "expected_state": "INVALID"
+}

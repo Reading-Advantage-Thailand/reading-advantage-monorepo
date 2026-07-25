@@ -1,0 +1,45 @@
+{
+  "schema_version": "apk-t9-phase2-negative-fixture-group.v1",
+  "id": "behavior-integrity",
+  "cases": [
+    {
+      "id": "behavior-integrity-01",
+      "mutation": {
+        "operation": "invented-behavior"
+      },
+      "expected_codes": [
+        "INVENTED_BEHAVIOR"
+      ]
+    },
+    {
+      "id": "behavior-integrity-02",
+      "mutation": {
+        "operation": "placement-status-collapse"
+      },
+      "expected_codes": [
+        "INVENTED_BEHAVIOR",
+        "PLACEMENT_STATUS_COLLAPSE"
+      ]
+    },
+    {
+      "id": "behavior-integrity-03",
+      "mutation": {
+        "operation": "resolve-upstream-unknown"
+      },
+      "expected_codes": [
+        "DEPENDENCY_MISMATCH",
+        "INVENTED_BEHAVIOR",
+        "NOUN_ART_ONLY_STANDARDIZATION",
+        "UNKNOWN_RESOLUTION"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "DEPENDENCY_MISMATCH",
+    "INVENTED_BEHAVIOR",
+    "NOUN_ART_ONLY_STANDARDIZATION",
+    "PLACEMENT_STATUS_COLLAPSE",
+    "UNKNOWN_RESOLUTION"
+  ],
+  "expected_state": "INVALID"
+}

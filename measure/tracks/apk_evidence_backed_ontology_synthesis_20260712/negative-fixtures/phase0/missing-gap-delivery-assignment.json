@@ -1,0 +1,9 @@
+{
+  "schema_version": "apk-t9-phase0-negative-fixture.v1",
+  "id": "missing-gap-delivery-assignment",
+  "mutation": {
+    "type": "remove-role-assignment",
+    "owner_role": "gap-delivery-mapper"
+  },
+  "expected_code": "MISSING_ROLE_ASSIGNMENT"
+}

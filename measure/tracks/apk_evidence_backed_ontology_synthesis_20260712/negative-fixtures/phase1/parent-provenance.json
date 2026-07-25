@@ -1,0 +1,64 @@
+{
+  "schema_version": "apk-t9-phase1-negative-fixture-group.v2",
+  "id": "parent-provenance",
+  "cases": [
+    {
+      "id": "parent-provenance-01",
+      "mutation": {
+        "operation": "unbound-scene-state-inheritance"
+      },
+      "expected_codes": [
+        "UNBOUND_SCENE_STATE_INHERITANCE"
+      ]
+    },
+    {
+      "id": "parent-provenance-02",
+      "mutation": {
+        "operation": "invalid-parent-path"
+      },
+      "expected_codes": [
+        "UNBOUND_SCENE_STATE_INHERITANCE"
+      ]
+    },
+    {
+      "id": "parent-provenance-03",
+      "mutation": {
+        "operation": "invalid-parent-hash"
+      },
+      "expected_codes": [
+        "UNBOUND_SCENE_STATE_INHERITANCE"
+      ]
+    },
+    {
+      "id": "parent-provenance-04",
+      "mutation": {
+        "operation": "invalid-parent-pointer"
+      },
+      "expected_codes": [
+        "UNBOUND_SCENE_STATE_INHERITANCE"
+      ]
+    },
+    {
+      "id": "parent-provenance-05",
+      "mutation": {
+        "operation": "invalid-parent-value"
+      },
+      "expected_codes": [
+        "UNBOUND_SCENE_STATE_INHERITANCE"
+      ]
+    },
+    {
+      "id": "parent-provenance-06",
+      "mutation": {
+        "operation": "hardcoded-parent-link"
+      },
+      "expected_codes": [
+        "UNBOUND_SCENE_STATE_INHERITANCE"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "UNBOUND_SCENE_STATE_INHERITANCE"
+  ],
+  "expected_state": "INVALID"
+}

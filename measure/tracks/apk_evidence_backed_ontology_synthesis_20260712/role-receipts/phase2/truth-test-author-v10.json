@@ -1,0 +1,49 @@
+{
+  "schema_version": "apk-t9-phase2-role-receipt.v10",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "task_id": "phase2-root-authority-order-truth-v10",
+  "owner_role": "truth-test-author",
+  "agent_ref": "/root/t9_phase0_governance_author",
+  "dispatch": {
+    "path": "phase2-role-dispatch-v10.json",
+    "sha256": "b7dc7be6ec593623a21656afd3215b2764188a41915e0b2e709be6e338e26eb7"
+  },
+  "status": "sealed-red-v10-published-waiting-for-root-v10-authority",
+  "outputs": {
+    "phase2_v10_truth_verifier.py": "3cf4eb598055a8d03e5ea5a38bef79f5bf2ec1b50c43b48d142ef26c5b70d1e8",
+    "phase2_v10_truth_verifier_test.py": "920209f26b3cd13a9e7545531a36c80ff21ee0e5ea4be861958e312ccfc3abb2",
+    "phase2-v10-fixture-manifest.json": "99be6b366188670d9e73ff10f684a695fb08c6b31552714c2edeb33cc9cfdd5e",
+    "negative-fixtures/phase2-v10/end-to-end-attacks.json": "cbf5d09d9b84faf95a2437f00a4f0c8baf304193b8a1e1838cb4f09ada2dc772",
+    "phase2-v10-red-report.json": "67b56ef72ffbd5bc9a5503dfaa4d5dc660978baccd93e0271969b0c10653ef4a"
+  },
+  "verification": {
+    "focused_suite": "2/2 pass",
+    "fixture_cases": 24,
+    "context_promotions_exercised": 48,
+    "runtime_seconds": 19.002,
+    "runtime_ceiling_seconds": 30,
+    "mocks_used": false,
+    "pre_authority_state": "RED_WAITING_FOR_ROOT_V10_AUTHORITY",
+    "correct_release_missing_mapper_state": "RED_WAITING_FOR_MAPPER_V5_OUTPUTS",
+    "wrong_release_state": "INVALID-MAPPER_RELEASE_MISMATCH",
+    "missing_expected_release_state": "INVALID-EXPECTED_MAPPER_RELEASE_REQUIRED",
+    "manifest_attack_count": 9,
+    "live_checks": 57,
+    "stop_loss_cycle": 1,
+    "ruff": "pass",
+    "py_compile": "pass",
+    "json_validation": "pass",
+    "diff_check": "pass"
+  },
+  "green_report_published": false,
+  "scope": {
+    "v9_bytes_modified": false,
+    "mapper_decisions_authored": false,
+    "review_decisions_authored": false,
+    "root_v10_authority_authored": false,
+    "phase3_authorized": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false
+  }
+}

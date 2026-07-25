@@ -1,0 +1,34 @@
+{
+  "schema_version": "apk-t9-phase2-negative-fixture-group.v1",
+  "id": "negative-equivalence",
+  "cases": [
+    {
+      "id": "negative-equivalence-01",
+      "mutation": {
+        "operation": "noun-art-standardization"
+      },
+      "expected_codes": [
+        "DEPENDENCY_MISMATCH",
+        "INVENTED_BEHAVIOR",
+        "NOUN_ART_ONLY_STANDARDIZATION"
+      ]
+    },
+    {
+      "id": "negative-equivalence-02",
+      "mutation": {
+        "operation": "provisional-only-standardization"
+      },
+      "expected_codes": [
+        "DEPENDENCY_MISMATCH",
+        "PROVISIONAL_ONLY_STANDARDIZATION"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "DEPENDENCY_MISMATCH",
+    "INVENTED_BEHAVIOR",
+    "NOUN_ART_ONLY_STANDARDIZATION",
+    "PROVISIONAL_ONLY_STANDARDIZATION"
+  ],
+  "expected_state": "INVALID"
+}

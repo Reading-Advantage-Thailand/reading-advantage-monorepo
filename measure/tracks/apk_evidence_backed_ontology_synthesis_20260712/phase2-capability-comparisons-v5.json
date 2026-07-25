@@ -1,0 +1,629 @@
+{
+  "evidence_batches": [
+    {
+      "capability_id": "capability:bounded-frame-delta",
+      "differences": [],
+      "similarities": [
+        {
+          "boundary_effect": {
+            "game_extensions": "These games retain adapter refresh, rules ticking, fullscreen entry, and cleanup behavior after the guarded delta.",
+            "interface_consequence": "The loop interface accepts raw frame time and invokes a game callback with a bounded delta.",
+            "shared_core": "The shared scheduler owns the 50 millisecond maximum-delta guard before dispatch."
+          },
+          "consumer_use_ids": [
+            "use:bounded-frame-delta:babel-architect:BA-HIST-011",
+            "use:bounded-frame-delta:rune-forge-chamber:RFC-CUR-015",
+            "use:bounded-frame-delta:spellweavers-run:SW-TRANS-004"
+          ],
+          "dimension": "active frame delta clamp",
+          "finding_id": "similarity:bounded-frame-delta:01",
+          "per_game_summaries": [
+            {
+              "game_id": "babel-architect",
+              "summary": "Babel Architect clamps each requestAnimationFrame delta to 50 ms before updating its rules adapter."
+            },
+            {
+              "game_id": "rune-forge-chamber",
+              "summary": "Rune Forge Chamber applies a 50 millisecond delta cap before its playing-state rules tick."
+            },
+            {
+              "game_id": "spellweavers-run",
+              "summary": "Spellweavers Run caps each active animation-frame delta at 50 milliseconds before ticking game state."
+            }
+          ],
+          "statement": "Babel Architect, Rune Forge Chamber, and Spellweavers Run cap each active frame delta at 50 milliseconds before a game-owned update."
+        },
+        {
+          "boundary_effect": {
+            "game_extensions": "Village Guardian supplies its model tick, while Wizard vs Zombie retains juice diffing, camera effects, and terminal transition logic.",
+            "interface_consequence": "The callback boundary exposes only capped elapsed time and leaves rendering side effects to the consumer.",
+            "shared_core": "The reusable frame driver owns delta measurement and the 50 millisecond ceiling."
+          },
+          "consumer_use_ids": [
+            "use:bounded-frame-delta:village-guardian:VG3-COMP-004",
+            "use:bounded-frame-delta:wizard-vs-zombie:WVZ-MECH-011"
+          ],
+          "dimension": "active frame delta clamp",
+          "finding_id": "similarity:bounded-frame-delta:02",
+          "per_game_summaries": [
+            {
+              "game_id": "village-guardian",
+              "summary": "Village Guardian clamps requestAnimationFrame delta to 50 before calling its playing-model tick."
+            },
+            {
+              "game_id": "wizard-vs-zombie",
+              "summary": "Wizard vs Zombie clamps active requestAnimationFrame dt at 50 ms before loop-owned effects and transitions."
+            }
+          ],
+          "statement": "Village Guardian and Wizard vs Zombie also cap requestAnimationFrame delta at 50 milliseconds before loop-owned state work."
+        }
+      ]
+    },
+    {
+      "capability_id": "capability:single-completion-emission",
+      "differences": [],
+      "similarities": [
+        {
+          "boundary_effect": {
+            "game_extensions": "Each game retains its accuracy and XP calculation plus its terminal-to-ended phase transition.",
+            "interface_consequence": "The emitter accepts a terminal result and host callback, returning whether that result was newly reported.",
+            "shared_core": "The shared completion gate owns the reported latch and suppresses repeat emission for one terminal result."
+          },
+          "consumer_use_ids": [
+            "use:single-completion-emission:abyssal-well:AW-HIST-023",
+            "use:single-completion-emission:village-guardian:VG3-COMP-006",
+            "use:single-completion-emission:storm-castle-tower:SCT-TRANS-H002"
+          ],
+          "dimension": "terminal completion fire-once guard",
+          "finding_id": "similarity:single-completion-emission:01",
+          "per_game_summaries": [
+            {
+              "game_id": "abyssal-well",
+              "summary": "Abyssal Well uses hasReportedRef to emit one host completion after victory or defeat results exist."
+            },
+            {
+              "game_id": "village-guardian",
+              "summary": "Village Guardian marks its ended result reported before invoking the completion callback."
+            },
+            {
+              "game_id": "storm-castle-tower",
+              "summary": "Storm Castle Tower separates terminal result creation from a single ended-result completion effect."
+            }
+          ],
+          "statement": "Abyssal Well, Village Guardian, and Storm Castle Tower latch terminal results before invoking host completion once."
+        },
+        {
+          "boundary_effect": {
+            "game_extensions": "The cartridge chooses model completion, Sorcerer Ziggurat also guards diagnostics, and Enchanted Library stores UI results.",
+            "interface_consequence": "The contract accepts completion readiness and one or more callbacks behind a single-use latch.",
+            "shared_core": "The common emitter owns one-time delivery once a model or result is terminal."
+          },
+          "consumer_use_ids": [
+            "use:single-completion-emission:griffin-riders-escape:GRF-CART-004",
+            "use:single-completion-emission:sorcerer-ziggurat:SZ-HIST-009",
+            "use:single-completion-emission:enchanted-library:EL-UI-002"
+          ],
+          "dimension": "terminal completion fire-once guard",
+          "finding_id": "similarity:single-completion-emission:02",
+          "per_game_summaries": [
+            {
+              "game_id": "griffin-riders-escape",
+              "summary": "Griffin Riders Escape delivers completion once after the cartridge model becomes complete."
+            },
+            {
+              "game_id": "sorcerer-ziggurat",
+              "summary": "Sorcerer Ziggurat protects both host and diagnostic completion callbacks with one local latch."
+            },
+            {
+              "game_id": "enchanted-library",
+              "summary": "Enchanted Library invokes its host completion at most once after victory or gameover results are stored."
+            }
+          ],
+          "statement": "Griffin Riders Escape, Sorcerer Ziggurat, and Enchanted Library expose a fire-once boundary after model completion."
+        },
+        {
+          "boundary_effect": {
+            "game_extensions": "Rune Forge Chamber retains fullscreen exit and defeat XP, while Babel Architect retains summary construction and estimated XP.",
+            "interface_consequence": "The bridge consumes a terminal outcome and game-built result, then performs one host report alongside game-owned UI effects.",
+            "shared_core": "The reusable terminal bridge owns the one-report invariant during a rules-to-UI transition."
+          },
+          "consumer_use_ids": [
+            "use:single-completion-emission:rune-forge-chamber:RFC-CUR-016",
+            "use:single-completion-emission:babel-architect:BA-HIST-012"
+          ],
+          "dimension": "terminal completion fire-once guard",
+          "finding_id": "similarity:single-completion-emission:03",
+          "per_game_summaries": [
+            {
+              "game_id": "rune-forge-chamber",
+              "summary": "Rune Forge Chamber reports completion once while moving a rules defeat into ended UI."
+            },
+            {
+              "game_id": "babel-architect",
+              "summary": "Babel Architect enters ended UI and reports one completion summary after either terminal outcome."
+            }
+          ],
+          "statement": "Rune Forge Chamber and Babel Architect report one result while converting a terminal rules outcome into ended UI."
+        }
+      ]
+    },
+    {
+      "capability_id": "capability:nonempty-content-precondition",
+      "differences": [],
+      "similarities": [
+        {
+          "boundary_effect": {
+            "game_extensions": "Each game retains its error wording and the sentence or vocabulary transformation that follows validation.",
+            "interface_consequence": "State factories receive a validated nonempty content collection or return a structured construction failure.",
+            "shared_core": "The shared constructor guard owns the nonempty collection assertion before any random selection or entity creation."
+          },
+          "consumer_use_ids": [
+            "use:nonempty-content-precondition:abyssal-well:AW-HIST-011",
+            "use:nonempty-content-precondition:village-guardian:VG3-MODEL-001",
+            "use:nonempty-content-precondition:archers-revenge:AR-B2-V8-012"
+          ],
+          "dimension": "empty playable content rejection",
+          "finding_id": "similarity:nonempty-content-precondition:01",
+          "per_game_summaries": [
+            {
+              "game_id": "abyssal-well",
+              "summary": "Abyssal Well rejects empty sentence input before selecting or splitting playable content."
+            },
+            {
+              "game_id": "village-guardian",
+              "summary": "Village Guardian throws a named validation error when vocabulary is empty."
+            },
+            {
+              "game_id": "archers-revenge",
+              "summary": "Archers Revenge rejects empty vocabulary at state creation."
+            }
+          ],
+          "statement": "Abyssal Well, Village Guardian, and Archers Revenge reject empty playable content before state construction."
+        },
+        {
+          "boundary_effect": {
+            "game_extensions": "Sentence splitting, seeded graph construction, and vocabulary-progress initialization remain game extensions.",
+            "interface_consequence": "The initializer boundary separates content validation from the game-specific target-building callback.",
+            "shared_core": "The shared entry guard owns rejection of empty collections, including blank sentence content where supplied."
+          },
+          "consumer_use_ids": [
+            "use:nonempty-content-precondition:griffin-riders-escape:GRF-START-001",
+            "use:nonempty-content-precondition:sorcerer-ziggurat:SZ-HIST-004",
+            "use:nonempty-content-precondition:enchanted-library:EL-INIT-001"
+          ],
+          "dimension": "empty playable content rejection",
+          "finding_id": "similarity:nonempty-content-precondition:02",
+          "per_game_summaries": [
+            {
+              "game_id": "griffin-riders-escape",
+              "summary": "Griffin Riders Escape rejects empty vocabulary before choosing and splitting a sentence."
+            },
+            {
+              "game_id": "sorcerer-ziggurat",
+              "summary": "Sorcerer Ziggurat rejects both absent and blank sentence content before graph construction."
+            },
+            {
+              "game_id": "enchanted-library",
+              "summary": "Enchanted Library rejects empty vocabulary before progress and target initialization."
+            }
+          ],
+          "statement": "Griffin Riders Escape, Sorcerer Ziggurat, and Enchanted Library validate nonblank content before target initialization."
+        },
+        {
+          "boundary_effect": {
+            "game_extensions": "Shuffling, rune-circle generation, and stable seeded target creation remain consumer-owned setup.",
+            "interface_consequence": "The setup contract yields validated learning entries before invoking a game-specific deterministic initializer.",
+            "shared_core": "The common validation core owns the playable-content presence check, including blank term and translation rejection."
+          },
+          "consumer_use_ids": [
+            "use:nonempty-content-precondition:rune-match:RM-MECH-005",
+            "use:nonempty-content-precondition:rune-forge-chamber:RFC-CUR-007",
+            "use:nonempty-content-precondition:astral-mage:AM-HIST-004"
+          ],
+          "dimension": "empty playable content rejection",
+          "finding_id": "similarity:nonempty-content-precondition:03",
+          "per_game_summaries": [
+            {
+              "game_id": "rune-match",
+              "summary": "Rune Match rejects empty vocabulary before shuffling its active word pool."
+            },
+            {
+              "game_id": "rune-forge-chamber",
+              "summary": "Rune Forge Chamber rejects empty vocabulary before sentence selection and circle creation."
+            },
+            {
+              "game_id": "astral-mage",
+              "summary": "Astral Mage rejects absent inputs plus blank terms or translations before deterministic target creation."
+            }
+          ],
+          "statement": "Rune Match, Rune Forge Chamber, and Astral Mage reject empty or blank learning inputs before deterministic setup."
+        }
+      ]
+    },
+    {
+      "capability_id": "capability:input-action-normalization",
+      "differences": [],
+      "similarities": [
+        {
+          "boundary_effect": {
+            "game_extensions": "Circle selection, four-way movement with collect, and three-lane movement remain game-defined action vocabularies.",
+            "interface_consequence": "Adapters emit semantic actions without exposing DOM, Phaser, keyboard, or pointer event objects to rules code.",
+            "shared_core": "The shared input layer owns deduplication of equivalent click, tap, key, and normalized-region events into action identifiers."
+          },
+          "consumer_use_ids": [
+            "use:input-action-normalization:rune-forge-chamber:RFC-CUR-019",
+            "use:input-action-normalization:storm-castle-tower:SCT-MECH-H008",
+            "use:input-action-normalization:spellweavers-run:SW-INPUT-002"
+          ],
+          "dimension": "physical input to semantic action mapping",
+          "finding_id": "similarity:input-action-normalization:01",
+          "per_game_summaries": [
+            {
+              "game_id": "rune-forge-chamber",
+              "summary": "Rune Forge Chamber maps click and tap activation to one circle-selection action."
+            },
+            {
+              "game_id": "storm-castle-tower",
+              "summary": "Storm Castle Tower maps paired keyboard keys and normalized pointer regions to movement and collect actions."
+            },
+            {
+              "game_id": "spellweavers-run",
+              "summary": "Spellweavers Run maps alternate arrow and letter keys to the same three lane actions while active."
+            }
+          ],
+          "statement": "Rune Forge Chamber, Storm Castle Tower, and Spellweavers Run map multiple physical events to bounded semantic actions."
+        },
+        {
+          "boundary_effect": {
+            "game_extensions": "Binary gate choice, swipe thresholds, and isometric left-forward-right movement remain game extensions.",
+            "interface_consequence": "The rules-facing interface consumes traversal actions while modality thresholds and bindings stay in adapters.",
+            "shared_core": "The common control adapter owns alternate-key and gesture-to-direction normalization."
+          },
+          "consumer_use_ids": [
+            "use:input-action-normalization:dragon-rider:DR-CONTROL-001",
+            "use:input-action-normalization:griffin-riders-escape:GRF-CART-002",
+            "use:input-action-normalization:sorcerer-ziggurat:SZ-HIST-014"
+          ],
+          "dimension": "physical input to semantic action mapping",
+          "finding_id": "similarity:input-action-normalization:02",
+          "per_game_summaries": [
+            {
+              "game_id": "dragon-rider",
+              "summary": "Dragon Rider exposes the same left and right choices through paired keys and pointer buttons."
+            },
+            {
+              "game_id": "griffin-riders-escape",
+              "summary": "Griffin Riders Escape normalizes paired keys, pointer regions, and swipe gestures into traversal actions."
+            },
+            {
+              "game_id": "sorcerer-ziggurat",
+              "summary": "Sorcerer Ziggurat maps touch controls and paired keyboard keys to three directional steps."
+            }
+          ],
+          "statement": "Dragon Rider, Griffin Riders Escape, and Sorcerer Ziggurat normalize keyboard and touch or pointer controls into traversal choices."
+        },
+        {
+          "boundary_effect": {
+            "game_extensions": "Enchanted Library retains cast truthiness, while Astral Mage retains Space and pointer FIRE bindings.",
+            "interface_consequence": "The boundary exposes a small directional-action snapshot independent of the originating control surface.",
+            "shared_core": "The reusable adapter owns conversion from signed axes and discrete physical controls to movement plus ability actions."
+          },
+          "consumer_use_ids": [
+            "use:input-action-normalization:enchanted-library:EL-CONTROL-001",
+            "use:input-action-normalization:astral-mage:AM-HIST-011"
+          ],
+          "dimension": "physical input to semantic action mapping",
+          "finding_id": "similarity:input-action-normalization:03",
+          "per_game_summaries": [
+            {
+              "game_id": "enchanted-library",
+              "summary": "Enchanted Library converts directional adapter values and cast truthiness into semantic input flags."
+            },
+            {
+              "game_id": "astral-mage",
+              "summary": "Astral Mage binds paired movement keys and pointer controls to movement and fire actions."
+            }
+          ],
+          "statement": "Enchanted Library and Astral Mage convert directional and fire or cast controls into rules-facing action flags."
+        }
+      ]
+    },
+    {
+      "capability_id": "capability:time-and-frame-loop",
+      "differences": [
+        {
+          "boundary_effect": {
+            "game_extensions": "Rune Forge Chamber supplies health and rotating-level behavior, while Babel Architect supplies stability decay and its clamp.",
+            "interface_consequence": "The evaluator accepts a time predicate and a game-owned terminal predicate, returning one terminal reason without merging resources.",
+            "shared_core": "The shared threshold evaluator can own elapsed-time expiry without owning the secondary resource predicate."
+          },
+          "consumer_use_ids": [
+            "use:time-and-frame-loop:rune-forge-chamber:RFC-CUR-010",
+            "use:time-and-frame-loop:babel-architect:BA-HIST-005"
+          ],
+          "dimension": "active time threshold transition",
+          "finding_id": "difference:time-and-frame-loop:03",
+          "per_game_summaries": [
+            {
+              "game_id": "rune-forge-chamber",
+              "summary": "Rune Forge Chamber decrements active time and defeats on time expiry or depleted health."
+            },
+            {
+              "game_id": "babel-architect",
+              "summary": "Babel Architect advances elapsed time and defeats on timeout or zero stability."
+            }
+          ],
+          "statement": "Rune Forge Chamber and Babel Architect share timeout termination but couple it to health and stability resources respectively."
+        }
+      ],
+      "similarities": [
+        {
+          "boundary_effect": {
+            "game_extensions": "Both dragon games retain their running and boss state vocabulary plus any boss-entry effects.",
+            "interface_consequence": "The time interface receives elapsed delta and duration, returning bounded elapsed time with a threshold event.",
+            "shared_core": "The shared duration tracker owns monotonic elapsed-time clamping and the single threshold-crossed signal."
+          },
+          "consumer_use_ids": [
+            "use:time-and-frame-loop:dragon-flight:DF-TRANS-001",
+            "use:time-and-frame-loop:dragon-rider:DR-TRANS-002"
+          ],
+          "dimension": "active time threshold transition",
+          "finding_id": "similarity:time-and-frame-loop:01",
+          "per_game_summaries": [
+            {
+              "game_id": "dragon-flight",
+              "summary": "Dragon Flight clamps elapsed time at its duration and enters boss state at the threshold."
+            },
+            {
+              "game_id": "dragon-rider",
+              "summary": "Dragon Rider clamps elapsed time at duration and changes a running state to boss."
+            }
+          ],
+          "statement": "Dragon Flight and Dragon Rider clamp elapsed time at a configured duration and enter boss state when that threshold is reached."
+        },
+        {
+          "boundary_effect": {
+            "game_extensions": "End-game invocation, defeat return, and mana-or-time gameover policy remain distinct game extensions.",
+            "interface_consequence": "The tick contract returns remaining time plus a threshold event that game rules map to their terminal state.",
+            "shared_core": "The common countdown core owns nonnegative decrement and detection of the zero boundary during active play."
+          },
+          "consumer_use_ids": [
+            "use:time-and-frame-loop:magic-defense:MD-MECH-012",
+            "use:time-and-frame-loop:village-guardian:VG3-MODEL-006",
+            "use:time-and-frame-loop:enchanted-library:EL-LOOP-001"
+          ],
+          "dimension": "active time threshold transition",
+          "finding_id": "similarity:time-and-frame-loop:02",
+          "per_game_summaries": [
+            {
+              "game_id": "magic-defense",
+              "summary": "Magic Defense decrements its playing timer once per second and ends the game at zero."
+            },
+            {
+              "game_id": "village-guardian",
+              "summary": "Village Guardian transitions the ticked model to defeat when its decremented timer crosses zero."
+            },
+            {
+              "game_id": "enchanted-library",
+              "summary": "Enchanted Library floors remaining time at zero and enters gameover when time or mana is exhausted."
+            }
+          ],
+          "statement": "Magic Defense, Village Guardian, and Enchanted Library transition active play when a countdown reaches zero."
+        }
+      ]
+    },
+    {
+      "capability_id": "capability:language-target-progression",
+      "differences": [],
+      "similarities": [
+        {
+          "boundary_effect": {
+            "game_extensions": "Trail append, orb removal with combo, and rune health penalties remain game-owned consequences.",
+            "interface_consequence": "The interface accepts current target and candidate identity, returning match status and next progress index.",
+            "shared_core": "The shared progression core owns current-target comparison and one-step ordered advancement."
+          },
+          "consumer_use_ids": [
+            "use:language-target-progression:village-guardian:VG3-MODEL-010",
+            "use:language-target-progression:spellweavers-run:SW-TRANS-002",
+            "use:language-target-progression:rune-forge-chamber:RFC-CUR-011"
+          ],
+          "dimension": "correct target advances ordered progress",
+          "finding_id": "similarity:language-target-progression:01",
+          "per_game_summaries": [
+            {
+              "game_id": "village-guardian",
+              "summary": "Village Guardian collects the in-order villager and advances its target index."
+            },
+            {
+              "game_id": "spellweavers-run",
+              "summary": "Spellweavers Run removes a correct orb, advances target progress, and wins after the final word."
+            },
+            {
+              "game_id": "rune-forge-chamber",
+              "summary": "Rune Forge Chamber advances progress only when the selected circle word matches the current target."
+            }
+          ],
+          "statement": "Village Guardian, Spellweavers Run, and Rune Forge Chamber advance ordered progress only after the current target is selected."
+        },
+        {
+          "boundary_effect": {
+            "game_extensions": "Sentence loading, gate penalties and combo, plus graph-node lighting remain game extensions.",
+            "interface_consequence": "The sequencer returns next target position and sequence-complete status to a game-owned transition handler.",
+            "shared_core": "The reusable target sequencer owns correct-choice advancement and detection of the sequence boundary."
+          },
+          "consumer_use_ids": [
+            "use:language-target-progression:storm-castle-tower:SCT-TRANS-H003",
+            "use:language-target-progression:griffin-riders-escape:GRF-TRANS-001",
+            "use:language-target-progression:sorcerer-ziggurat:SZ-HIST-006"
+          ],
+          "dimension": "correct target advances ordered progress",
+          "finding_id": "similarity:language-target-progression:02",
+          "per_game_summaries": [
+            {
+              "game_id": "storm-castle-tower",
+              "summary": "Storm Castle Tower advances a correct target and finishes or loads the next sentence at its boundary."
+            },
+            {
+              "game_id": "griffin-riders-escape",
+              "summary": "Griffin Riders Escape advances collected words and target index for a correct gate."
+            },
+            {
+              "game_id": "sorcerer-ziggurat",
+              "summary": "Sorcerer Ziggurat advances token and graph-node progress after a legal correct step."
+            }
+          ],
+          "statement": "Storm Castle Tower, Griffin Riders Escape, and Sorcerer Ziggurat advance ordered targets after a correct spatial choice."
+        },
+        {
+          "boundary_effect": {
+            "game_extensions": "Trail scattering, mastery and shield rewards, and cauldron warning or completion behavior stay game-specific.",
+            "interface_consequence": "The contract returns correct or incorrect plus an updated progress token while extensions apply spatial and resource effects.",
+            "shared_core": "The shared matcher owns expected-content comparison and successful progress mutation."
+          },
+          "consumer_use_ids": [
+            "use:language-target-progression:dungeon-liberator:DL-COLL-001",
+            "use:language-target-progression:enchanted-library:EL-COLL-001",
+            "use:language-target-progression:potion-rush:PR-CUR-011"
+          ],
+          "dimension": "correct target advances ordered progress",
+          "finding_id": "similarity:language-target-progression:03",
+          "per_game_summaries": [
+            {
+              "game_id": "dungeon-liberator",
+              "summary": "Dungeon Liberator appends an in-order prisoner to the progress trail while scattering out-of-order contact."
+            },
+            {
+              "game_id": "enchanted-library",
+              "summary": "Enchanted Library advances the selected word's mastery progress after a correct book collision."
+            },
+            {
+              "game_id": "potion-rush",
+              "summary": "Potion Rush starts on the indexed first word and advances only exact next ingredients in sequence."
+            }
+          ],
+          "statement": "Dungeon Liberator, Enchanted Library, and Potion Rush record progress only for the expected ordered content interaction."
+        },
+        {
+          "boundary_effect": {
+            "game_extensions": "Astral Mage retains wrong-token score deduction, while Babel Architect retains unstable placements and stability loss.",
+            "interface_consequence": "The interface requires stable candidate identity rather than visible text alone and returns the advanced position.",
+            "shared_core": "The common ordered-target core owns identity-safe matching and advancement of exactly one expected position."
+          },
+          "consumer_use_ids": [
+            "use:language-target-progression:astral-mage:AM-HIST-005",
+            "use:language-target-progression:babel-architect:BA-HIST-004"
+          ],
+          "dimension": "correct target advances ordered progress",
+          "finding_id": "similarity:language-target-progression:04",
+          "per_game_summaries": [
+            {
+              "game_id": "astral-mage",
+              "summary": "Astral Mage advances ordered progress by stable target identity and leaves wrong visible-token hits unadvanced."
+            },
+            {
+              "game_id": "babel-architect",
+              "summary": "Babel Architect advances ordered construction only for the expected block."
+            }
+          ],
+          "statement": "Astral Mage and Babel Architect advance ordered progress only for a stable target identity or expected block."
+        }
+      ]
+    },
+    {
+      "capability_id": "capability:result-accounting",
+      "differences": [
+        {
+          "boundary_effect": {
+            "game_extensions": "Weighted combat efficiency, zero-attempt handling, and configured survival or speed bonuses remain separate formulas.",
+            "interface_consequence": "The calculator interface accepts named counters and a game-owned formula policy, returning bounded XP with no UI dependency.",
+            "shared_core": "The shared result layer can own validated performance inputs, finite arithmetic, and an explicit XP cap."
+          },
+          "consumer_use_ids": [
+            "use:result-accounting:rpg-battle:RPG-MECH-009",
+            "use:result-accounting:abyssal-well:AW-HIST-032",
+            "use:result-accounting:village-guardian:VG3-MODEL-017"
+          ],
+          "dimension": "performance counters to XP",
+          "finding_id": "difference:result-accounting:01",
+          "per_game_summaries": [
+            {
+              "game_id": "rpg-battle",
+              "summary": "RPG Battle combines health, turn efficiency, and streak performance into XP clamped from one through ten."
+            },
+            {
+              "game_id": "abyssal-well",
+              "summary": "Abyssal Well derives capped XP from attempts, correct words, accuracy, survival, and speed."
+            },
+            {
+              "game_id": "village-guardian",
+              "summary": "Village Guardian caps correct-answer base XP after applying accuracy, speed, and survival bonuses."
+            }
+          ],
+          "statement": "RPG Battle, Abyssal Well, and Village Guardian derive capped XP from different combinations of accuracy, efficiency, survival, speed, and streak counters."
+        },
+        {
+          "boundary_effect": {
+            "game_extensions": "Mana and speed bonuses, floor-of-accuracy multiplication, and reputation or progression bonuses remain game policies.",
+            "interface_consequence": "The result function receives normalized counters and an injected policy that declares rounding and cap behavior.",
+            "shared_core": "The reusable accounting boundary owns counter validation and deterministic XP result construction."
+          },
+          "consumer_use_ids": [
+            "use:result-accounting:enchanted-library:EL-XP-001",
+            "use:result-accounting:alchemists-synthesis:AS-RESULT-001",
+            "use:result-accounting:potion-rush:PR-CUR-014"
+          ],
+          "dimension": "performance counters to XP",
+          "finding_id": "difference:result-accounting:02",
+          "per_game_summaries": [
+            {
+              "game_id": "enchanted-library",
+              "summary": "Enchanted Library derives XP from attempts, accuracy, mana, and elapsed-time bonuses with a ten-point cap."
+            },
+            {
+              "game_id": "alchemists-synthesis",
+              "summary": "Alchemists Synthesis multiplies correct answers by derived accuracy and floors the XP result."
+            },
+            {
+              "game_id": "potion-rush",
+              "summary": "Potion Rush combines completed sentences with accuracy, reputation, speed, and progression bonuses under a cap."
+            }
+          ],
+          "statement": "Enchanted Library, Alchemists Synthesis, and Potion Rush all derive XP from performance but use distinct bonus and cap policies."
+        },
+        {
+          "boundary_effect": {
+            "game_extensions": "Magic Defense retains multiplicative flooring, while Rune Forge Chamber retains additive bonuses and maxXP.",
+            "interface_consequence": "The interface makes rounding, bonus weights, and upper bounds explicit policy inputs rather than hidden shared defaults.",
+            "shared_core": "The shared accounting contract owns typed performance counters and integer XP output, not one universal formula."
+          },
+          "consumer_use_ids": [
+            "use:result-accounting:magic-defense:MD-MECH-001",
+            "use:result-accounting:rune-forge-chamber:RFC-CUR-013"
+          ],
+          "dimension": "performance counters to XP",
+          "finding_id": "difference:result-accounting:03",
+          "per_game_summaries": [
+            {
+              "game_id": "magic-defense",
+              "summary": "Magic Defense floors the product of correct answers and accuracy to produce XP."
+            },
+            {
+              "game_id": "rune-forge-chamber",
+              "summary": "Rune Forge Chamber caps per-word base XP after accuracy, speed, and survival bonuses."
+            }
+          ],
+          "statement": "Magic Defense multiplies correct answers by accuracy, while Rune Forge Chamber adds accuracy, speed, and survival bonuses to per-word XP."
+        }
+      ],
+      "similarities": []
+    }
+  ],
+  "phase1_bindings": {
+    "phase1-claim-dependency-edges-v1.json": "2b279df4896c9620ea9acf17506e942c9df98e2b4d6c06a29d5293106aff0987",
+    "phase1-developer-effort-baseline-v1.json": "168403610d0c69160777ddeca5753dcc57b97e2a7db6ceed65f3e4ce64d14f91",
+    "phase1-mechanic-blueprints-v1.json": "ed3bee70f5e7e94ac101f295d9de3f768cdaf9d97d40d4529f2fbbbe8f479d61",
+    "phase1-root-acceptance.json": "bd911f865c95e24874dde657e856718910a05b1737634222055654b331dd020d",
+    "phase1-source-resolution-index-v1.json": "2900222c4fc4db8ffb354d4f25f5c1a8bef6930b2d7e8e1bb692dab27d860bd0"
+  },
+  "schema_version": "apk-t9-phase2-capability-comparisons.v5"
+}

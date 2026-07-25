@@ -1,0 +1,103 @@
+{
+  "boundaries": [
+    {
+      "capability_id": "capability:bounded-frame-delta",
+      "effects": {
+        "game_extensions": "Each game owns its tick, adapter, rendering effects, cleanup, and terminal transitions.",
+        "interface_consequence": "A scheduler passes bounded delta to a transport-independent game callback.",
+        "shared_core": "Shared loop infrastructure owns elapsed-frame measurement and the 50 millisecond ceiling."
+      },
+      "finding_ids": [
+        "similarity:bounded-frame-delta:01",
+        "similarity:bounded-frame-delta:02"
+      ]
+    },
+    {
+      "capability_id": "capability:single-completion-emission",
+      "effects": {
+        "game_extensions": "Games own result construction, terminal phase mapping, diagnostics, fullscreen effects, and host payload shape.",
+        "interface_consequence": "The emitter accepts a completed result and callback without importing any UI or transport layer.",
+        "shared_core": "A shared completion latch owns at-most-once delivery for a terminal result."
+      },
+      "finding_ids": [
+        "similarity:single-completion-emission:01",
+        "similarity:single-completion-emission:02",
+        "similarity:single-completion-emission:03"
+      ]
+    },
+    {
+      "capability_id": "capability:nonempty-content-precondition",
+      "effects": {
+        "game_extensions": "Games own error copy and all sentence, vocabulary, graph, circle, or target initialization after validation.",
+        "interface_consequence": "Backend or rules constructors consume a validated nonempty collection before game-specific setup.",
+        "shared_core": "A shared validation guard owns rejection of empty or blank playable content."
+      },
+      "finding_ids": [
+        "similarity:nonempty-content-precondition:01",
+        "similarity:nonempty-content-precondition:02",
+        "similarity:nonempty-content-precondition:03"
+      ]
+    },
+    {
+      "capability_id": "capability:input-action-normalization",
+      "effects": {
+        "game_extensions": "Games own action vocabularies, gesture thresholds, hit regions, and whether an action is currently enabled.",
+        "interface_consequence": "Rules receive semantic actions and never depend on DOM, pointer, keyboard, touch, or engine event objects.",
+        "shared_core": "Shared adapters own translation from physical modalities to bounded semantic action identifiers."
+      },
+      "finding_ids": [
+        "similarity:input-action-normalization:01",
+        "similarity:input-action-normalization:02",
+        "similarity:input-action-normalization:03"
+      ]
+    },
+    {
+      "capability_id": "capability:time-and-frame-loop",
+      "effects": {
+        "game_extensions": "Games own count direction, duration, terminal state, secondary health or stability predicates, and threshold effects.",
+        "interface_consequence": "A pure tick contract returns updated time and a threshold signal to game-owned rules.",
+        "shared_core": "Shared timing primitives own bounded elapsed or remaining time and threshold detection."
+      },
+      "finding_ids": [
+        "similarity:time-and-frame-loop:01",
+        "similarity:time-and-frame-loop:02",
+        "difference:time-and-frame-loop:03"
+      ]
+    },
+    {
+      "capability_id": "capability:language-target-progression",
+      "effects": {
+        "game_extensions": "Games own spatial selection, penalties, rewards, combo, trails, mastery, sentence changes, and terminal effects.",
+        "interface_consequence": "A pure matcher consumes stable target and candidate identity and returns progress without rendering or transport coupling.",
+        "shared_core": "Shared progression primitives own current-target matching and ordered index advancement."
+      },
+      "finding_ids": [
+        "similarity:language-target-progression:01",
+        "similarity:language-target-progression:02",
+        "similarity:language-target-progression:03",
+        "similarity:language-target-progression:04"
+      ]
+    },
+    {
+      "capability_id": "capability:result-accounting",
+      "effects": {
+        "game_extensions": "Games own formula weights, bonus policies, performance dimensions, and zero-attempt treatment.",
+        "interface_consequence": "A pure calculator accepts normalized performance counters plus an explicit game policy and returns XP.",
+        "shared_core": "Shared result infrastructure owns typed counters, finite arithmetic, rounding declarations, and optional caps."
+      },
+      "finding_ids": [
+        "difference:result-accounting:01",
+        "difference:result-accounting:02",
+        "difference:result-accounting:03"
+      ]
+    }
+  ],
+  "phase1_bindings": {
+    "phase1-claim-dependency-edges-v1.json": "2b279df4896c9620ea9acf17506e942c9df98e2b4d6c06a29d5293106aff0987",
+    "phase1-developer-effort-baseline-v1.json": "168403610d0c69160777ddeca5753dcc57b97e2a7db6ceed65f3e4ce64d14f91",
+    "phase1-mechanic-blueprints-v1.json": "ed3bee70f5e7e94ac101f295d9de3f768cdaf9d97d40d4529f2fbbbe8f479d61",
+    "phase1-root-acceptance.json": "bd911f865c95e24874dde657e856718910a05b1737634222055654b331dd020d",
+    "phase1-source-resolution-index-v1.json": "2900222c4fc4db8ffb354d4f25f5c1a8bef6930b2d7e8e1bb692dab27d860bd0"
+  },
+  "schema_version": "apk-t9-phase2-extension-boundaries.v5"
+}

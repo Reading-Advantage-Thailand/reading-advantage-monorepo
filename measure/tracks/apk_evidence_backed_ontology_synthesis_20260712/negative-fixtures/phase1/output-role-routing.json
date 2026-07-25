@@ -1,0 +1,103 @@
+{
+  "schema_version": "apk-t9-phase1-negative-fixture-group.v2",
+  "id": "output-role-routing",
+  "cases": [
+    {
+      "id": "output-role-routing-01",
+      "mutation": {
+        "operation": "wrong-output-subtype"
+      },
+      "expected_codes": [
+        "WRONG_OUTPUT_ROLE"
+      ]
+    },
+    {
+      "id": "output-role-routing-02",
+      "mutation": {
+        "operation": "swapped-output-role"
+      },
+      "expected_codes": [
+        "WRONG_OUTPUT_ROLE"
+      ]
+    },
+    {
+      "id": "output-role-routing-03",
+      "mutation": {
+        "operation": "wrong-edge-role"
+      },
+      "expected_codes": [
+        "GHOST_DEPENDENCY_EDGE",
+        "INCOMPLETE_DEPENDENCY_SET"
+      ]
+    },
+    {
+      "id": "output-role-routing-04",
+      "mutation": {
+        "operation": "wrong-artifact-category"
+      },
+      "expected_codes": [
+        "WRONG_ARTIFACT_CATEGORY"
+      ]
+    },
+    {
+      "id": "output-role-routing-05",
+      "mutation": {
+        "operation": "unsupported-record-field",
+        "full_corpus": true
+      },
+      "expected_codes": [
+        "UNSUPPORTED_DECISION_FIELD"
+      ]
+    },
+    {
+      "id": "output-role-routing-06",
+      "mutation": {
+        "operation": "unsupported-derived-field",
+        "full_corpus": true
+      },
+      "expected_codes": [
+        "UNSUPPORTED_DECISION_FIELD"
+      ]
+    },
+    {
+      "id": "output-role-routing-07",
+      "mutation": {
+        "operation": "unsupported-provenance-field",
+        "full_corpus": true,
+        "claim_id": "DF-SCENE-001"
+      },
+      "expected_codes": [
+        "UNSUPPORTED_DECISION_FIELD"
+      ]
+    },
+    {
+      "id": "output-role-routing-08",
+      "mutation": {
+        "operation": "unknown-shape-all-surfaces",
+        "full_corpus": true
+      },
+      "expected_codes": [
+        "UNSUPPORTED_DECISION_FIELD"
+      ]
+    },
+    {
+      "id": "output-role-routing-09",
+      "mutation": {
+        "operation": "missing-required-null-empty-keys",
+        "full_corpus": true
+      },
+      "expected_codes": [
+        "MISSING_REQUIRED_DECISION_FIELD"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "GHOST_DEPENDENCY_EDGE",
+    "INCOMPLETE_DEPENDENCY_SET",
+    "MISSING_REQUIRED_DECISION_FIELD",
+    "UNSUPPORTED_DECISION_FIELD",
+    "WRONG_ARTIFACT_CATEGORY",
+    "WRONG_OUTPUT_ROLE"
+  ],
+  "expected_state": "INVALID"
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": "apk-t9-phase0-v3-fixtures.v1",
+  "dispatch": {"path":"phase0-v3-role-dispatch-v1.json","sha256":"a34ade4b97794bab87be92d6f72f7505e524861b3dd1013d68979e7784f6793f"},
+  "registry": {"path":"phase0-source-registry-v3.json","sha256":"ae6050cc6c075614b34b6d8832a350f7d28945154315adebb25667fffc5b858c"},
+  "fixture_count": 13,
+  "fixtures": [
+    {"path":"negative-fixtures/phase0-v3/castle-fabricated-scene.json","sha256":"be47f79bacbc352a816d84251327cbb5e6c8b4b7cabd5957e2e842a025fb7fad","expected_codes":["DENOMINATOR_OR_CASTLE_DRIFT"]},
+    {"path":"negative-fixtures/phase0-v3/castle-omission-loss.json","sha256":"e1cb37736cc8df0096c72e3aed30f867602ff8fcffffe88b2c1c6a7837a314dd","expected_codes":["DENOMINATOR_OR_CASTLE_DRIFT"]},
+    {"path":"negative-fixtures/phase0-v3/dispatch-input-closure.json","sha256":"538e2e7878316d357227eadf5dfc9aa2b54ccce5b1f95c50ae2a7729e0e82095","expected_codes":["DISPATCH_INPUT_CLOSURE_FAILURE"]},
+    {"path":"negative-fixtures/phase0-v3/direct-phase1-activation.json","sha256":"3fd3caa0fc1256b41c812edde4d2ec2c4cb704317b562e0cac6e3f4df7f1d311","expected_codes":["PREMATURE_PHASE1_ACTIVATION"]},
+    {"path":"negative-fixtures/phase0-v3/failed-monolith.json","sha256":"5b1aea402494c7ff008cda6e737d3f98cdcb3e3316b067015f90f88cade3b0bd","expected_codes":["FAILED_MONOLITH_INPUT_ADMITTED"]},
+    {"path":"negative-fixtures/phase0-v3/generic-slugification.json","sha256":"5781ca8f0502a3d51286be281641333d3fbdac39d5aefe6c7e11c026c05e8837","expected_codes":["GAME_IDENTITY_CONTRACT_DRIFT"]},
+    {"path":"negative-fixtures/phase0-v3/identity-digest.json","sha256":"e5d95ae50320f1071f612204d92a712544df6e7689bfe3d063bc63244efafd4c","expected_codes":["GAME_IDENTITY_CONTRACT_DRIFT"]},
+    {"path":"negative-fixtures/phase0-v3/identity-count-preserving-swap.json","sha256":"b508b7b3ba9d23af5cf807deacb0c16101b4156aa00b6d86d86ceef47c8ffdbd","expected_codes":["GAME_IDENTITY_CONTRACT_DRIFT"]},
+    {"path":"negative-fixtures/phase0-v3/identity-entry-count.json","sha256":"4d8b772e8ad066356e77d7512931cbfd71b82e4397b49469e19d96a36b832564","expected_codes":["GAME_IDENTITY_CONTRACT_DRIFT"]},
+    {"path":"negative-fixtures/phase0-v3/predecessor-hash-drift.json","sha256":"62a7b0dd70c2b6cdd81b5fb53d60dfc5956309a4ea173fded35fc380d9984633","expected_codes":["PREDECESSOR_BINDING_DRIFT"]},
+    {"path":"negative-fixtures/phase0-v3/resolvable-set-digest.json","sha256":"c4d5df48e37b076dbff96e1cd94ade1add9a311f78ca1224d63965181cb92ccf","expected_codes":["DENOMINATOR_OR_CASTLE_DRIFT"]},
+    {"path":"negative-fixtures/phase0-v3/role-output-mismatch.json","sha256":"87bc2b351392e20a639ad8a9a761e675ec24e3b821d32e9e5d231c35421f9bb1","expected_codes":["ROLE_OUTPUT_CONTRACT_MISMATCH"]},
+    {"path":"negative-fixtures/phase0-v3/stale-v2-activation.json","sha256":"b3bac847beb76c69f6a9bf926d62df97012d9ecfecb4875f468fb87a52867b86","expected_codes":["STALE_V2_ACTIVATION"]}
+  ]
+}

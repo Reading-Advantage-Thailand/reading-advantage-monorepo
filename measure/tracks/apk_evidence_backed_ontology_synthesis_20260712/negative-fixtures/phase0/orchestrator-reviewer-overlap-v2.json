@@ -1,0 +1,18 @@
+{
+  "expected_codes": [
+    "ROLE_OVERLAP"
+  ],
+  "id": "orchestrator-reviewer-overlap",
+  "mutation": {
+    "agent_ref": "/root",
+    "roles": [
+      "phase0-adversarial-reviewer"
+    ],
+    "type": "assign-role-overlap"
+  },
+  "schema_version": "apk-t9-phase0-negative-fixture.v2",
+  "supersedes": {
+    "disposition": "preserved-former-orchestrator-identity-fixture",
+    "path": "negative-fixtures/phase0/orchestrator-reviewer-overlap.json"
+  }
+}

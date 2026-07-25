@@ -1,0 +1,87 @@
+{
+    "schema_version": "apk-t9-phase0-fixture-manifest.v1",
+    "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+    "state": "pending-live-gate",
+    "fixtures": [
+        {
+            "id": "missing-predecessor",
+            "path": "negative-fixtures/phase0/missing-predecessor.json",
+            "expected_codes": ["MISSING_PREDECESSOR"]
+        },
+        {
+            "id": "stale-predecessor",
+            "path": "negative-fixtures/phase0/stale-predecessor.json",
+            "expected_codes": ["STALE_PREDECESSOR"]
+        },
+        {
+            "id": "wrong-t8-artifact",
+            "path": "negative-fixtures/phase0/wrong-t8-artifact.json",
+            "expected_codes": ["WRONG_T8_ARTIFACT"]
+        },
+        {
+            "id": "wrong-standard-pack-release",
+            "path": "negative-fixtures/phase0/wrong-standard-pack-release.json",
+            "expected_codes": ["WRONG_STANDARD_PACK_RELEASE"]
+        },
+        {
+            "id": "wrong-standard-pack-catalog",
+            "path": "negative-fixtures/phase0/wrong-standard-pack-catalog.json",
+            "expected_codes": ["WRONG_STANDARD_PACK_CATALOG"]
+        },
+        {
+            "id": "wrong-standard-pack-receipt",
+            "path": "negative-fixtures/phase0/wrong-standard-pack-receipt.json",
+            "expected_codes": ["WRONG_STANDARD_PACK_RECEIPT"]
+        },
+        {
+            "id": "failed-monolith-input",
+            "path": "negative-fixtures/phase0/failed-monolith-input.json",
+            "expected_codes": ["FAILED_MONOLITH_INPUT"]
+        },
+        {
+            "id": "direct-legacy-key",
+            "path": "negative-fixtures/phase0/direct-legacy-key.json",
+            "expected_codes": ["DIRECT_LEGACY_KEY_POLICY_VIOLATION"]
+        },
+        {
+            "id": "role-overlap",
+            "path": "negative-fixtures/phase0/role-overlap.json",
+            "expected_codes": ["ROLE_OVERLAP"]
+        },
+        {
+            "id": "schema-drift",
+            "path": "negative-fixtures/phase0/schema-drift.json",
+            "expected_codes": ["SCHEMA_DRIFT"]
+        },
+        {
+            "id": "receipt-substitution-unbound-author",
+            "path": "negative-fixtures/phase0/missing-role-provenance.json",
+            "expected_codes": ["UNBOUND_GOVERNANCE_AUTHOR"]
+        },
+        {
+            "id": "orchestrator-reviewer-overlap",
+            "path": "negative-fixtures/phase0/orchestrator-reviewer-overlap.json",
+            "expected_codes": ["ROLE_OVERLAP"]
+        },
+        {
+            "id": "missing-gap-delivery-assignment",
+            "path": "negative-fixtures/phase0/missing-gap-delivery-assignment.json",
+            "expected_codes": ["MISSING_ROLE_ASSIGNMENT"]
+        },
+        {
+            "id": "output-hash-mismatch",
+            "path": "negative-fixtures/phase0/output-hash-mismatch.json",
+            "expected_codes": ["OUTPUT_OWNERSHIP_MISMATCH"]
+        },
+        {
+            "id": "forged-ancestry-lifecycle",
+            "path": "negative-fixtures/phase0/forged-ancestry-lifecycle.json",
+            "expected_codes": ["FORGED_ANCESTRY_OR_LIFECYCLE"]
+        },
+        {
+            "id": "false-stop-loss-accounting",
+            "path": "negative-fixtures/phase0/false-stop-loss-accounting.json",
+            "expected_codes": ["FALSE_STOP_LOSS_ACCOUNTING"]
+        }
+    ]
+}

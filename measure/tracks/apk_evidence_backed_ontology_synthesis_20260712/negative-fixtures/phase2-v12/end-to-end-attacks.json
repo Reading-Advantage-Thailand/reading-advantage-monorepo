@@ -1,0 +1,19 @@
+{
+  "schema_version": "apk-t9-phase2-v12-end-to-end-attacks.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "cases": [
+    {"id": "forty-six-structurally-valid-lifecycle-findings-reviewed", "expected_state": "VERIFIED_PENDING_ROOT_ACCEPTANCE"},
+    {"id": "two-hundred-seventy-two-structurally-valid-lifecycle-uses", "expected_state": "CANDIDATE_VERIFIED_PENDING_INDEPENDENT_REVIEW"},
+    {"id": "exact-two-global-count-codes-removed", "expected_removed_codes": ["CURATED_FINDING_BUDGET_EXCEEDED", "CURATED_USE_BUDGET_EXCEEDED"]},
+    {"id": "malformed-consumer-use-join", "expected_code": "FINDING_USE_JOIN_MISMATCH"},
+    {"id": "broken-dependency-join", "expected_code": "DEPENDENCY_JOIN_MISMATCH"},
+    {"id": "broken-atomic-dimension-join", "expected_code": "ATOMIC_DIMENSION_MISMATCH"},
+    {"id": "broken-selected-use-join", "expected_code": "SELECTED_USE_JOIN_MISMATCH"},
+    {"id": "local-similarity-cap-remains-blocking", "expected_code": "SIMILARITY_CLAIM_CAP_EXCEEDED"},
+    {"id": "broken-classification-join", "expected_code": "CLASSIFICATION_JOIN_MISMATCH"},
+    {"id": "broken-boundary-join", "expected_code": "BOUNDARY_JOIN_MISMATCH"},
+    {"id": "unrelated-inherited-scene-state-finding", "expected_code": "SCENE_STATE_MISMATCH"},
+    {"id": "wrong-or-missing-v12-authority-before-mapper", "expected_state": "INVALID"},
+    {"id": "all-v11-contracts-inherited", "expected_state": "PRESERVED_V11_BYTES_VERIFIED"}
+  ]
+}

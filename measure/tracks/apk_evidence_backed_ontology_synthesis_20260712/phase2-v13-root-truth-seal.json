@@ -1,0 +1,15 @@
+{
+  "dispatch_sha256": "04eda4bfda92f171c61cda359843afe9c6057ddc673a6afca8e6c1f29048a766",
+  "pins": {
+    "negative-fixtures/phase2-v13/end-to-end-attacks.json": "d8b9d688ef4280379968626f724658ad4c849c1c83c1ff725f33023e14efe4a3",
+    "phase2-role-dispatch-v13.json": "04eda4bfda92f171c61cda359843afe9c6057ddc673a6afca8e6c1f29048a766",
+    "phase2-v13-fixture-manifest.json": "d72968ce40caddcba24f3d1ac8bc04f64d4a56ff5d8741e5c212c5471aa01316",
+    "phase2-v13-red-report.json": "1a6b5368b50ce60693e8a34acc9124cb2fb2589ca7b7a171139c04d257cfde5f",
+    "phase2_v13_truth_verifier.py": "0ed4c48ad6835fa12662de455c226011c7de3f0a1e02abb3cc2f73ebead85b18",
+    "phase2_v13_truth_verifier_test.py": "6802a680f830c8a466a37b3984b122c5833ae195b2f1ff931c01111f60541cc4",
+    "role-receipts/phase2/truth-test-author-v13.json": "da8c8a1499b5c8b280289f3571f3ba05e99dc034cc4086122fdb3a82131b3770"
+  },
+  "schema_version": "apk-t9-phase2-root-truth-seal.v13",
+  "status": "sealed-red-v13",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+}

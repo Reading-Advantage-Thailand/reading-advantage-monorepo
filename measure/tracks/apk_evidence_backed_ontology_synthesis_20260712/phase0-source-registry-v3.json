@@ -1,0 +1,357 @@
+{
+  "authority_evidence": [
+    {
+      "id": "t1-final-acceptance",
+      "path": "measure/archive/measure_apk_evidence_integrity_gates_20260712/final-acceptance.json",
+      "sha256": "1030b650732976234c83149cd2acff5f86eca1da4465c9c13e5c7d7bc33981d4"
+    },
+    {
+      "id": "t2-owner-acceptance",
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/product-owner-acceptance.json",
+      "sha256": "b413cbf8c0db59c0a47de2fb68e6ceec629bde25af8b25eeb4d706ed0706f336"
+    },
+    {
+      "id": "t3-owner-acceptance",
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/product-owner-acceptance.json",
+      "sha256": "3a59c50e9269aed4bf2c49fe9ff3fa9943684580553cdbc6c37eaa34b780a004"
+    },
+    {
+      "id": "t4-owner-acceptance-v2",
+      "path": "measure/archive/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-t4-v2.json",
+      "sha256": "56bc530ddff17e8ff20741517d6c29b17ba250cbb35ec3a772a3cd71a23ed318"
+    },
+    {
+      "id": "t4-root-disposition-v4",
+      "path": "measure/archive/apk_corpus_audit_action_defense_20260712/t4-admission-owner-disposition-v4.json",
+      "sha256": "40a73444f5f3924cf57bebe67e452dd941fa93262430030bbb43cf1355c29318"
+    },
+    {
+      "id": "t5-successor-owner-acceptance",
+      "path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/t5-product-owner-acceptance-v1.json",
+      "sha256": "761d3fe586ad27539ac5a24cd75db80a2765645e9e782200ea1e2a5d460e2175"
+    },
+    {
+      "id": "t6-successor-owner-acceptance",
+      "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/product-owner-acceptance-successor-v2.json",
+      "sha256": "fbc6f24f7b56a6ce8c5972e7fba29c8702813f8bc6def09e866530f6d2ecf4df"
+    },
+    {
+      "id": "t7-owner-ratification",
+      "path": "measure/archive/apk_corpus_audit_special_historical_20260712/cohort-product-owner-acceptance-retroactive-20260722.json",
+      "sha256": "b796f06a1be5a1d3cfb9aa4248f23cc3ac7883e35e30259dfe7ad7c90e3ba243"
+    },
+    {
+      "id": "standard-pack-root-registry",
+      "path": "measure/archive/apk_dual_theme_asset_production_20260712/index.md",
+      "sha256": "1d5bf9f28b5f02b90b67d95d97f88beefcb46b0ad9bc0dfb9fbaf47d1bcb96a5"
+    },
+    {
+      "id": "t3-leaf-binding-repair-acceptance",
+      "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase0-t3-leaf-binding-acceptance-v1.json",
+      "sha256": "a550017ca170efc70b3b8b0741ab1062a818e0027282a54bdac655744d635b01"
+    },
+    {
+      "id": "game-identity-map-independent-review",
+      "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase0-game-identity-map-independent-review-v1.json",
+      "sha256": "73c4d1981eb7ee6e1af3400c5b553f96437c8694d9814556df84ed9ee6e10eca"
+    },
+    {
+      "id": "cohort-leaf-binding-repair-acceptance",
+      "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase0-cohort-leaf-binding-acceptance-v1.json",
+      "sha256": "24faee63cf3894954f0cc4af9af4d753db76ee1e28f9a39c02c428bb489701ae"
+    },
+    {
+      "id": "phase0-v2-root-acceptance-superseded-baseline",
+      "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase0-root-acceptance-v2.json",
+      "sha256": "76bd4d4da9b0fea14656a59edc950a8abea16fbb2ed708a56bc69b1a78f2a7b6",
+      "disposition": "superseded-baseline-only",
+      "phase1_authorization_active": false
+    }
+  ],
+  "authority_resolution_rule": "Select current artifacts only from the Measure registry plus the accepted owner/root/successor chain; filenames alone never confer authority.",
+  "candidate_only": true,
+  "consumable": false,
+  "forbidden_inputs": [
+    {
+      "disposition": "failed-monolith-counterexample-only",
+      "path_prefix": "measure/archive/apk_cross_game_asset_ontology_20260712"
+    }
+  ],
+  "schema_version": "apk-t9-phase0-source-registry.v3",
+  "sources": [
+    {
+      "expected_values": {
+        "consumable": true,
+        "gate_version": "phase4-v8-candidate",
+        "revoked": false,
+        "status": "accepted"
+      },
+      "id": "t1-evidence-integrity-gate",
+      "path": "measure/evidence-integrity-accepted-gate.json",
+      "sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3"
+    },
+    {
+      "expected_values": {
+        "consumable": true,
+        "revoked": false,
+        "status": "accepted"
+      },
+      "id": "t2-accepted-denominator",
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729"
+    },
+    {
+      "expected_values": {
+        "consumable": true,
+        "revoked": false,
+        "status": "accepted"
+      },
+      "id": "t2-accepted-partition",
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0"
+    },
+    {
+      "expected_values": {
+        "consumable": true,
+        "status": "accepted-conditional"
+      },
+      "id": "t3-accepted-pilot",
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b"
+    },
+    {
+      "expected_values": {
+        "consumable": true,
+        "status": "accepted-with-disclosure"
+      },
+      "id": "t4-accepted-cohort",
+      "path": "measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+      "sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80"
+    },
+    {
+      "expected_values": {
+        "consumable": true,
+        "revoked": false,
+        "status": "accepted"
+      },
+      "id": "t5-accepted-cohort",
+      "path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/t5-accepted-cohort-manifest-v1.json",
+      "sha256": "4052c243ca66977256a4b60116439884f3f3151fba463ef860e624ed8d050f5d"
+    },
+    {
+      "expected_values": {
+        "consumable": true,
+        "status": "accepted-for-conditional-evidence-consumption-only"
+      },
+      "id": "t6-accepted-cohort",
+      "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/successor-accepted-cohort-manifest-v2.json",
+      "sha256": "9666b564ba969ef7d0559fb53d8d74c684a746b10264784a9728e52b6284888b"
+    },
+    {
+      "expected_values": {
+        "consumable": true,
+        "revoked": false,
+        "status": "accepted-with-disclosure"
+      },
+      "id": "t7-accepted-cohort",
+      "path": "measure/archive/apk_corpus_audit_special_historical_20260712/cohort-accepted-manifest-20260722.json",
+      "sha256": "4186dfd20fcef683a1a33664a1ffa9d4350280fbee31fe56d553fa0f5a87b2b0"
+    },
+    {
+      "expected_values": {
+        "catalogDigest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+        "sourceReceiptDigest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9",
+        "status": "accepted",
+        "version": "2026.07.23"
+      },
+      "id": "standard-pack-accepted-release",
+      "path": "packages/advantage-play-kit/assets/standard/accepted-standard-pack-release.json",
+      "sha256": "61984e0b53c4ba85379cf6a4f0f33ee956665c4eaad4b3d681e3dccd98389844"
+    },
+    {
+      "expected_values": {
+        "status": "candidate-non-consumable",
+        "consumable": false,
+        "acceptance_claimed": false
+      },
+      "id": "t3-leaf-binding-catalog",
+      "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase0-t3-leaf-binding-candidate-v1.json",
+      "sha256": "a04bc93f78ad33e22a56af7b94d61e721ae5828ed23fd509456c5250b366bbac"
+    },
+    {
+      "expected_values": {
+        "status": "candidate-only-non-consumable",
+        "consumable": false,
+        "acceptance_claimed": false,
+        "mapping_contract.mapping_digest": "458a5c20db75617820604948cb004a14d579c828cedecbbcb7bdbada2f0a2b0a"
+      },
+      "id": "accepted-game-identity-map",
+      "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase0-game-identity-map-v1.json",
+      "sha256": "7b2d3cf7fe5e17eab88f27804aac60e60c2da9e7089b82074b67d27721a47b3f"
+    },
+    {
+      "expected_values": {
+        "status": "candidate-non-consumable",
+        "consumable": false,
+        "acceptance_claimed": false
+      },
+      "id": "t4b-t6b-leaf-binding-catalog",
+      "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase0-cohort-leaf-binding-candidate-v1.json",
+      "sha256": "2a9c5f2eb24d235dbbb59c81b63e81a162ff08c4a6f0aa95fff66bea58194fef"
+    }
+  ],
+  "standard_pack": {
+    "asset_count": 43075,
+    "canonical_root": "packages/advantage-play-kit/assets/standard",
+    "catalog_artifact_sha256": "ef432a798a78585df3416d60aca30fe11a2d1d8b833e0d65ceb7fac5c8b19932",
+    "catalog_digest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+    "catalog_path": "packages/advantage-play-kit/assets/standard/standard-pack-release.json",
+    "receipt_paths": [
+      "packages/advantage-play-kit/assets/standard/IMPORT-RECEIPT.tsv",
+      "packages/advantage-play-kit/assets/standard/CURATED-RECEIPT.tsv",
+      "packages/advantage-play-kit/assets/standard/LICENSE-RECEIPT.tsv"
+    ],
+    "source_receipt_digest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9",
+    "version": "2026.07.23"
+  },
+  "state": "PENDING_PHASE0_V3_ROOT_ACCEPTANCE",
+  "t8_accepted": {
+    "acceptance_gate_receipt": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase5/acceptance-truth-test-author.json",
+      "required_status": "acceptance-contract-pass",
+      "sha256": "2459f3ffa8e511794c7356ffb466c02ee86190bf10e25ece7b92ae52776b02c1"
+    },
+    "acceptance_gate_report": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-acceptance-green-report.json",
+      "required_status": "acceptance-contract-pass",
+      "sha256": "8b33353f3ebda940f1eec60761584c62d6df3d0cdc953c87bd92108b785010a5"
+    },
+    "accepted_manifest": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-accepted-manifest-v1.json",
+      "required_consumer_scope": "T9_ontology_only",
+      "required_revocation_state": "active",
+      "required_status": "ACCEPTED_PHASE5",
+      "sha256": "20930a1cb30b763323f0c3d77a0625cb1c54c7aba7094284b91d508f3d68665f"
+    },
+    "delegated_owner_event": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-owner-approval-event-v1.json",
+      "required_authority": "delegated-root-product-owner",
+      "required_decision": "ACCEPT_T8_FOR_T9_ONLY_CONSUMPTION",
+      "required_event_type": "delegated-product-owner-decision",
+      "sha256": "4892bd5b1b83a52c6f2f6d537cacbc0af8eafd3bc401712e8cb47fa044e1825e"
+    },
+    "fresh_reviews": [
+      {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-01-AF-06-v2.json",
+        "sha256": "c789ef9c07eba1e4281d25084684c1c6590eefae809ddf5ca21b56b4acde7eec"
+      },
+      {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-07-AF-12-v2.json",
+        "sha256": "44944d6948a15e50593f3adc2b6882ae9510359bcebcafc2fd66d24eeb0db00d"
+      }
+    ],
+    "root_acceptance": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-root-acceptance.json",
+      "required_decision": "ACCEPT_PHASE5",
+      "required_revocation_state": "active",
+      "required_scope": "T9-only consumption",
+      "sha256": "4e6fc46898dadb42d255127de1214f52514b8a1bd97fcd2ad2073d379d373c86"
+    },
+    "state": "ACCEPTED_T9_ONLY",
+    "supersedes_pending_registry": {
+      "path": "phase0-source-registry-pending-v1.json",
+      "sha256": "29dcb7cea1aa206c551ba7aa90741585bb80509e4c31937b259cb69077c7e6b5"
+    }
+  },
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "predecessor_repairs": {
+    "t3_leaf_bindings": {
+      "acceptance": {
+        "path": "phase0-t3-leaf-binding-acceptance-v1.json",
+        "sha256": "a550017ca170efc70b3b8b0741ab1062a818e0027282a54bdac655744d635b01"
+      },
+      "game_count": 3,
+      "leaf_count": 4,
+      "claim_count": 491,
+      "status": "accepted-for-phase0-v3-input-only"
+    },
+    "game_identity_map": {
+      "candidate": {
+        "path": "phase0-game-identity-map-v1.json",
+        "sha256": "7b2d3cf7fe5e17eab88f27804aac60e60c2da9e7089b82074b67d27721a47b3f"
+      },
+      "independent_review": {
+        "path": "phase0-game-identity-map-independent-review-v1.json",
+        "sha256": "73c4d1981eb7ee6e1af3400c5b553f96437c8694d9814556df84ed9ee6e10eca"
+      },
+      "entry_count": 29,
+      "mapping_digest": "458a5c20db75617820604948cb004a14d579c828cedecbbcb7bdbada2f0a2b0a",
+      "status": "pending-phase0-v3-root-acceptance"
+    },
+    "cohort_leaf_bindings": {
+      "acceptance": {
+        "path": "phase0-cohort-leaf-binding-acceptance-v1.json",
+        "sha256": "24faee63cf3894954f0cc4af9af4d753db76ee1e28f9a39c02c428bb489701ae"
+      },
+      "game_count": 6,
+      "leaf_count": 6,
+      "claim_count": 226,
+      "status": "accepted-for-phase0-v3-input-only"
+    },
+    "denominator": {
+      "game_count": 29,
+      "resolvable_game_count": 28,
+      "explicit_omission": {
+        "game_id": "castle-defense",
+        "disposition": "blocked-by-unknown",
+        "fabricated_scene_state_allowed": false
+      },
+      "game_ids_sha256": "84c9b442ac27cdd8bb9e895d5bf7c9874beecdf22674f766f612ee26c54f71a5",
+      "resolvable_game_ids": [
+        "dragon-flight",
+        "rpg-battle",
+        "abyssal-well",
+        "magic-defense",
+        "wizard-vs-zombie",
+        "village-guardian",
+        "archers-revenge",
+        "storm-castle-tower",
+        "paladins-twin-soul",
+        "gryphon-patrol",
+        "dragon-rider",
+        "dungeon-liberator",
+        "spellweavers-run",
+        "shadow-gate-dungeon",
+        "labyrinth-goblin-king",
+        "griffin-riders-escape",
+        "sorcerer-ziggurat",
+        "enchanted-library",
+        "rune-match",
+        "alchemists-synthesis",
+        "potion-rush",
+        "rune-forge-chamber",
+        "astral-mage",
+        "griffin-sky-joust",
+        "realm-carver",
+        "devourer-slime",
+        "the-haunted-library",
+        "babel-architect"
+      ],
+      "resolvable_game_ids_sha256": "8dd4aea6de41c80b97515ae7d82fce87b617e0c438ee429db02667e99b18eed3",
+      "set_digest_contract": "SHA-256 of compact JSON UTF-8 array in T2 assignment order"
+    }
+  },
+  "phase0_v3_governance": {
+    "role_dispatch": {
+      "path": "phase0-v3-role-dispatch-v1.json",
+      "sha256": "a34ade4b97794bab87be92d6f72f7505e524861b3dd1013d68979e7784f6793f"
+    },
+    "phase1_authorized": false,
+    "activation": "phase0-root-acceptance-v3.json"
+  },
+  "supersedes_registry": {
+    "path": "phase0-source-registry-v2.json",
+    "sha256": "c770189b2202526f13015cdca8f9f0a688cb4fb2dbc663c969b7c582301e7d9b",
+    "disposition": "preserved accepted Phase 0 v2 input set, superseded by additive predecessor bindings"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": "apk-t9-phase0-cohort-leaf-binding-independent-reviewer-receipt.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "task_id": "phase0-review-t4b-t6b-leaf-bindings",
+  "role": "cohort-leaf-binding-independent-reviewer",
+  "agent_ref": "/root/phase5_review_b",
+  "completed_at": "2026-07-24T13:00:20Z",
+  "status": "independent-review-pass",
+  "dispatch_binding": {
+    "path": "phase0-cohort-leaf-repair-role-dispatch-v1.json",
+    "sha256": "7a7ec749bb4f83c5dfab0e7c63bd754f686eabe77506fb2f83480bf48f828400"
+  },
+  "review_binding": {
+    "path": "phase0-cohort-leaf-binding-independent-review-v1.json",
+    "sha256": "a822ab25fc9912ecc00da1d8da01a4359fb4111623a6c68d96400b12d5b7fe8b"
+  },
+  "reviewed_artifact_bindings": {
+    "phase0-cohort-leaf-binding-candidate-v1.json": "2a9c5f2eb24d235dbbb59c81b63e81a162ff08c4a6f0aa95fff66bea58194fef",
+    "role-receipts/phase0/cohort-leaf-binding-catalog-author.json": "6bd34ea232bdab1f130491a52a871d06a1001c69583ff2c45cfb9687cf51eef3",
+    "phase0_cohort_leaf_binding_verifier.py": "05f2f4379429bae819cd6d72931d5c1779c2ee69fe862cf83671e73f818630c2",
+    "phase0_cohort_leaf_binding_verifier_test.py": "62a7e1f37264b8393fca1c3e17653c8fe1d66d6f914c6eab1ab9b13235bb8b38",
+    "phase0-cohort-leaf-binding-fixture-manifest-v1.json": "afeb3360606fa85b198f4c3ebbe93a410c35356579d138e1f4127af54bb553df",
+    "phase0-cohort-leaf-binding-red-report-v1.json": "9dcb27a6d1a583f6a63d7bc296f3aca7fbde3395c649db74ef8560becbc11300",
+    "phase0-cohort-leaf-binding-green-report-v1.json": "bfa360221f78d4124a9b28492664432d9d7ee666cae8decfa3d663ab87c2b2ac",
+    "role-receipts/phase0/cohort-leaf-binding-truth-test-author.json": "f24faf590369caab1450eebfac1b3f7188072b0545190ff63ce926ef0dcd4802"
+  },
+  "verification_attestation": {
+    "focused_tests_passed": 4,
+    "focused_tests_failed": 0,
+    "focused_runtime_seconds": 4.815,
+    "focused_stop_loss_seconds": 30,
+    "live_verifier_checks": 1157,
+    "fixture_paths_authorized": 12,
+    "fixture_hashes_verified": 12,
+    "accepted_chain_and_receipt_bindings_verified": 27,
+    "leaf_bindings_verified": 6,
+    "git_citations_rederived": 220,
+    "bounded_queries_rederived": 6,
+    "claim_records_verified": 226,
+    "explicit_unknowns_verified": 24,
+    "negative_fixture_records_verified": 30,
+    "scene_or_state_references_verified": 216,
+    "retained_disclosure_sets_verified": 8,
+    "prior_governance_high_remediated": true,
+    "archive_boundary_verified": true
+  },
+  "findings_remaining": {
+    "Critical": 0,
+    "High": 0,
+    "Medium": 0,
+    "Low": 0
+  },
+  "authority_boundary": "Reviewer receipt only; no candidate acceptance, Phase 1 authorization, or product-owner decision was made.",
+  "self_hash_note": "The receipt does not self-bind because embedding its own digest would change its bytes."
+}

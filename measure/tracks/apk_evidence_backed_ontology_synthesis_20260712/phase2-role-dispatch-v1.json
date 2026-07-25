@@ -1,0 +1,163 @@
+{
+  "assignments": [
+    {
+      "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+      "allowed_outputs": [
+        "phase2-capability-comparisons-v1.json",
+        "phase2-capability-classification-v1.json",
+        "phase2-extension-boundaries-v1.json",
+        "phase2-claim-dependency-edges-v1.json",
+        "role-receipts/phase2/capability-mapper.json"
+      ],
+      "forbidden_outputs": [
+        "phase2_truth_verifier.py",
+        "phase2_truth_verifier_test.py",
+        "negative-fixtures/phase2/*",
+        "phase2-independent-review.json",
+        "phase2-root-acceptance.json"
+      ],
+      "owner_role": "capability-mapper",
+      "task_id": "phase2-map-capabilities"
+    },
+    {
+      "agent_ref": "/root/t9_phase0_governance_author",
+      "allowed_outputs": [
+        "phase2_truth_verifier.py",
+        "phase2_truth_verifier_test.py",
+        "phase2-fixture-manifest-v1.json",
+        "negative-fixtures/phase2/*",
+        "phase2-red-report-v1.json",
+        "phase2-green-report-v1.json",
+        "role-receipts/phase2/truth-test-author.json"
+      ],
+      "forbidden_outputs": [
+        "phase2-capability-comparisons-v1.json",
+        "phase2-capability-classification-v1.json",
+        "phase2-extension-boundaries-v1.json",
+        "phase2-claim-dependency-edges-v1.json",
+        "phase2-independent-review.json",
+        "phase2-root-acceptance.json"
+      ],
+      "owner_role": "truth-test-author",
+      "task_id": "phase2-author-truth-tests"
+    },
+    {
+      "agent_ref": "/root/phase5_review_b",
+      "allowed_outputs": [
+        "phase2-independent-review.json",
+        "role-receipts/phase2/capability-reviewer.json"
+      ],
+      "forbidden_outputs": [
+        "mapper outputs",
+        "truth-test outputs",
+        "phase2-root-acceptance.json"
+      ],
+      "owner_role": "capability-reviewer",
+      "task_id": "phase2-review-capabilities"
+    },
+    {
+      "agent_ref": "/root",
+      "allowed_outputs": [
+        "phase2-role-dispatch-v1.json",
+        "phase2-root-acceptance.json",
+        "plan.md"
+      ],
+      "forbidden_outputs": [
+        "mapper outputs",
+        "truth-test outputs",
+        "review outputs"
+      ],
+      "owner_role": "product-owner-acceptance-author",
+      "task_id": "phase2-product-owner-acceptance"
+    }
+  ],
+  "authority": "delegated-root-product-owner",
+  "budget_contract": {
+    "negative_fixture_files_max": 16,
+    "normalized_source_documents_max": 32,
+    "published_output_bytes_max": 1048576,
+    "suite_runtime_seconds_max": 30
+  },
+  "incompatible_role_pairs": [
+    [
+      "capability-mapper",
+      "capability-reviewer"
+    ],
+    [
+      "truth-test-author",
+      "capability-reviewer"
+    ],
+    [
+      "orchestrator",
+      "capability-mapper"
+    ],
+    [
+      "orchestrator",
+      "truth-test-author"
+    ],
+    [
+      "orchestrator",
+      "capability-reviewer"
+    ]
+  ],
+  "input_contract": {
+    "claim_dependency_edges": {
+      "path": "phase1-claim-dependency-edges-v1.json",
+      "sha256": "2b279df4896c9620ea9acf17506e942c9df98e2b4d6c06a29d5293106aff0987"
+    },
+    "effective_claims": 1248,
+    "effort_baseline": {
+      "path": "phase1-developer-effort-baseline-v1.json",
+      "sha256": "168403610d0c69160777ddeca5753dcc57b97e2a7db6ceed65f3e4ce64d14f91"
+    },
+    "effort_records": 376,
+    "mechanic_blueprints": {
+      "path": "phase1-mechanic-blueprints-v1.json",
+      "sha256": "ed3bee70f5e7e94ac101f295d9de3f768cdaf9d97d40d4529f2fbbbe8f479d61"
+    },
+    "mechanic_records": 633,
+    "resolvable_games": 28,
+    "source_resolution_index": {
+      "path": "phase1-source-resolution-index-v1.json",
+      "sha256": "2900222c4fc4db8ffb354d4f25f5c1a8bef6930b2d7e8e1bb692dab27d860bd0"
+    },
+    "upstream_unknowns": 24
+  },
+  "issued_at": "2026-07-24T16:37:31.784076Z",
+  "issued_by": "/root",
+  "next_gate": "Independent capability review, truth verification, and root product-owner acceptance are all required before Phase 3 opens.",
+  "phase": 2,
+  "phase1_gate": {
+    "decision": "ACCEPT_PHASE1_OPEN_PHASE2",
+    "path": "phase1-root-acceptance.json",
+    "sha256": "bd911f865c95e24874dde657e856718910a05b1737634222055654b331dd020d"
+  },
+  "product_contract": {
+    "batch_max_games": 3,
+    "comparison_basis": "exact accepted behavioral claims across games and scenes",
+    "no_invented_behavior": true,
+    "preserve_placement_blocked_status": true,
+    "preserve_upstream_unknowns": true,
+    "reject_noun_or_art_similarity": true,
+    "reject_provisional_only_standardization": true,
+    "required_fields": [
+      "similarities",
+      "differences",
+      "owner",
+      "extension_boundary",
+      "tests",
+      "disposition"
+    ]
+  },
+  "schema_version": "apk-t9-phase2-role-dispatch.v1",
+  "scope": {
+    "asset_mapping_authorized": false,
+    "implementation_authorized": false,
+    "phase2_capability_classification_authorized": true,
+    "phase3_responsive_authorized": false,
+    "shipping_authorized": false,
+    "unknown_must_have_resolution_authorized": false
+  },
+  "status": "active",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+}

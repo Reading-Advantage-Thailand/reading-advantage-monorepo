@@ -1,0 +1,119 @@
+{
+  "schema_version": "apk-t9-phase1-negative-fixture-group.v2",
+  "id": "scope-placement",
+  "cases": [
+    {
+      "id": "scope-placement-01",
+      "mutation": {
+        "operation": "blocked-unknown-counted-as-coverage"
+      },
+      "expected_codes": [
+        "BLOCKED_UNKNOWN_COUNTED_AS_COVERAGE"
+      ]
+    },
+    {
+      "id": "scope-placement-02",
+      "mutation": {
+        "operation": "blocked-count-false"
+      },
+      "expected_codes": [
+        "GAME_SCENE_STATE_LOSS"
+      ]
+    },
+    {
+      "id": "scope-placement-03",
+      "mutation": {
+        "operation": "arbitrary-scope"
+      },
+      "expected_codes": [
+        "ARBITRARY_SCOPE_ASSIGNMENT"
+      ]
+    },
+    {
+      "id": "scope-placement-04",
+      "mutation": {
+        "operation": "ambiguous-scene-downgraded-to-game"
+      },
+      "expected_codes": [
+        "AMBIGUOUS_SCENE_DOWNGRADED_TO_GAME"
+      ]
+    },
+    {
+      "id": "scope-placement-05",
+      "mutation": {
+        "operation": "factual-scope-status-conflation"
+      },
+      "expected_codes": [
+        "FACTUAL_SCOPE_STATUS_CONFLATION"
+      ]
+    },
+    {
+      "id": "scope-placement-06",
+      "mutation": {
+        "operation": "missing-record-provenance",
+        "full_corpus": true,
+        "claim_id": "DF-SCENE-001"
+      },
+      "expected_codes": [
+        "MISSING_REQUIRED_DECISION_FIELD",
+        "RECORD_SCOPE_PROVENANCE_MISMATCH"
+      ]
+    },
+    {
+      "id": "scope-placement-07",
+      "mutation": {
+        "operation": "fabricated-direct-scene-state",
+        "full_corpus": true,
+        "claim_id": "DF-SCENE-001"
+      },
+      "expected_codes": [
+        "RECORD_SCOPE_PROVENANCE_MISMATCH"
+      ]
+    },
+    {
+      "id": "scope-placement-08",
+      "mutation": {
+        "operation": "blocked-nonnull-placement",
+        "full_corpus": true,
+        "claim_id": "DF-STATE-008"
+      },
+      "expected_codes": [
+        "RECORD_SCOPE_PROVENANCE_MISMATCH"
+      ]
+    },
+    {
+      "id": "scope-placement-09",
+      "mutation": {
+        "operation": "explicit-game-nonnull-placement",
+        "full_corpus": true,
+        "claim_id": "DF-ID-001"
+      },
+      "expected_codes": [
+        "RECORD_SCOPE_PROVENANCE_MISMATCH"
+      ]
+    },
+    {
+      "id": "scope-placement-10",
+      "mutation": {
+        "operation": "wrong-record-game",
+        "full_corpus": true,
+        "claim_id": "DF-ID-013"
+      },
+      "expected_codes": [
+        "CURRENT_CLAIM_RECORD_CARDINALITY_MISMATCH",
+        "RECORD_SCOPE_PROVENANCE_MISMATCH"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "AMBIGUOUS_SCENE_DOWNGRADED_TO_GAME",
+    "ARBITRARY_SCOPE_ASSIGNMENT",
+    "BLOCKED_UNKNOWN_COUNTED_AS_COVERAGE",
+    "CURRENT_CLAIM_RECORD_CARDINALITY_MISMATCH",
+    "FACTUAL_SCOPE_STATUS_CONFLATION",
+    "GAME_SCENE_STATE_LOSS",
+    "MISSING_REQUIRED_DECISION_FIELD",
+    "RECORD_SCOPE_PROVENANCE_MISMATCH"
+  ],
+  "expected_state": "INVALID"
+}

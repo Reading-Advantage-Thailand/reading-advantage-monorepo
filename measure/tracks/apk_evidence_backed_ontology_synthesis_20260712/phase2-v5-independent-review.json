@@ -1,0 +1,248 @@
+{
+  "schema_version": "apk-t9-phase2-independent-review.v5",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "task_id": "phase2-systemic-semantic-review-v5",
+  "reviewed_at": "2026-07-25T00:43:59Z",
+  "reviewer": {
+    "agent_ref": "/root/phase5_review_b",
+    "role": "capability-reviewer",
+    "independent_of_mapper": true,
+    "independent_of_truth_test_author": true,
+    "independent_of_product_owner_acceptance_author": true
+  },
+  "dispatch_binding": {
+    "path": "phase2-role-dispatch-v5.json",
+    "sha256": "586a21f5ae1fd0ac1a5b429de6303394362e0e3f53e28b1374dfb5d45fd7f558"
+  },
+  "reviewed_artifact_bindings": {
+    "phase2-capability-comparisons-v3.json": "9407896e691f2c156b4ba22ea07f76c64c9e052b2b892e31fcff68a7091ec8a4",
+    "phase2-capability-classification-v3.json": "6a76369c35bfd1fe6e4b2b021544628002e99a440cddcd3f620f6d920ff0765b",
+    "phase2-extension-boundaries-v3.json": "84595467e1c834f4155b566f422585cb538d46a8de262acd43c1e2d029928a7e",
+    "phase2-claim-dependency-edges-v3.json": "242b79c50bba9a9a4a1d1c602b66a6e5dd820c5bb0eeb33a974ba4fdd7966bdd",
+    "role-receipts/phase2/capability-mapper-v3.json": "bbae271bb2a7bf8d9d4f8cfeea492a5c90a23def934bc0de4023e07ebfaf9eda",
+    "phase2_v5_truth_verifier.py": "caf4d13a7709c305199702df36f8593310df11be3988debecfb26c8064dbb0ba",
+    "phase2_v5_truth_verifier_test.py": "749acf58aa0eeae0174b12c1d9c8f71e5bb58bf6bd02464f329ddcb6d2b2ff86",
+    "phase2-v5-fixture-manifest.json": "27c1cef4115d479e35ac030eefc58434542c2a87678a560b5aa3fcd93bb1542a",
+    "phase2-v5-red-report.json": "3e0e40c20519facf1b1822654e09d06ae8c631abbff170eb988021f33be0d3e7",
+    "phase2-v5-green-report.json": "a2bf211de569bfc1517f1e9fb1e272cba6046a66abd15a4a5520122afbf0b3a7",
+    "role-receipts/phase2/truth-test-author-v5.json": "cef4ceeb47d00a15120e73b811ddf1261ede4eeb89575a5f706ec2fdf4826abe"
+  },
+  "verification": {
+    "candidate_hash_closure": {
+      "artifacts_expected": 11,
+      "artifacts_hash_matched": 11,
+      "dispatch_hash_matched": true,
+      "verified": true
+    },
+    "focused_suite": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v phase2_v5_truth_verifier_test.py",
+      "tests": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "runtime_seconds": 6.886,
+      "exit_code": 0
+    },
+    "live_cli": {
+      "state": "VERIFIED",
+      "checks": 3386,
+      "findings": 0,
+      "exit_code": 0
+    },
+    "quality_checks": {
+      "ruff_check": "pass",
+      "ruff_format_check": "pass",
+      "json_validation": "pending-final-publication-check",
+      "browser_runtime_check": "skipped-no-frontend-changes",
+      "graph_caller_check": "not-applicable-no-typescript-symbol-change"
+    },
+    "corpus_accounting": {
+      "capabilities": 13,
+      "findings": 87,
+      "similarities": 16,
+      "differences": 71,
+      "per_game_behaviors": 244,
+      "capability_uses": 570,
+      "unique_capability_records": 565,
+      "context_only_records": 68,
+      "mechanic_records_accounted": 633,
+      "mechanic_records_missing": 0,
+      "games_accounted": 28,
+      "claims_verified": 1248,
+      "unknowns_preserved": 24
+    },
+    "routing_regression_reprobe": {
+      "audited_capability_routes": 28,
+      "required_context_claims": 17,
+      "mechanically_passed": true,
+      "semantic_scan_found_additional_misroutes": true
+    },
+    "budgets": {
+      "max_output_bytes_each": 1048576,
+      "published_output_bytes": {
+        "phase2-capability-comparisons-v3.json": 746085,
+        "phase2-capability-classification-v3.json": 747164,
+        "phase2-extension-boundaries-v3.json": 205293,
+        "phase2-claim-dependency-edges-v3.json": 570396
+      },
+      "max_suite_runtime_seconds": 30,
+      "suite_runtime_seconds": 6.886,
+      "all_pass": true
+    },
+    "scope_boundary": {
+      "phase2_capability_semantics_reviewed": true,
+      "asset_mapping_reviewed": false,
+      "responsive_decisions_reviewed": false,
+      "implementation_reviewed": false,
+      "shipping_reviewed": false,
+      "root_acceptance_authored": false
+    }
+  },
+  "findings": {
+    "Critical": [],
+    "High": [
+      {
+        "finding_id": "P2V5-HIGH-001",
+        "title": "All extend difference statements are generic rather than evidence-backed meaningful differences",
+        "affected_count": 71,
+        "affected_scope": "Every difference:*:game-extension finding in phase2-capability-comparisons-v3.json and its embedded copies.",
+        "affected_breakdown": {
+          "binary-gate-round-loop": 7,
+          "session-lifecycle": 13,
+          "input-action-normalization": 8,
+          "language-target-progression": 12,
+          "difficulty-configuration": 6,
+          "result-accounting": 9,
+          "time-and-frame-loop": 5,
+          "collision-resource-resolution": 5,
+          "actor-world-update": 4,
+          "session-feedback-surfaces": 2
+        },
+        "evidence": "All 71 statements use the same form: \"Meaningful difference across <games>: each game retains its accepted <capability> rules and parameters behind the shared contract.\" The statements name neither a differing dimension nor the actual game variants.",
+        "contract_failure": "The evidence does not establish meaningful differences for extend classification and is not developer-usable as a capability boundary.",
+        "required_remediation": "Rewrite every difference statement from its per-game exact excerpts to name the concrete differing dimension and the actual game-specific variants. Add a negative attack that rejects this boilerplate and equivalent generic rules-and-parameters formulations."
+      },
+      {
+        "finding_id": "P2V5-HIGH-002",
+        "title": "Every boundary effect is a repeated capability-name template",
+        "affected_count": 87,
+        "affected_scope": "Every similarity and difference finding across all 13 capabilities.",
+        "evidence": "There are only 13 unique boundary-effect objects for 87 findings, one per capability. Each substitutes the capability display name into the same three claims: shared core owns the typed invariant and orchestration; game extension owns accepted tuning, rules, and presentation; interface exposes typed inputs and outcomes.",
+        "representative_record": "similarity:bounded-frame-delta:01:shared-contract",
+        "representative_semantic_gap": "The effect does not state that shared code clamps elapsed time to 50 ms before a tick, which layer owns requestAnimationFrame scheduling and cleanup, or what bounded-delta value the interface passes.",
+        "contract_failure": "The effects satisfy shape and length checks but do not state finding-specific architectural consequences, violating the v5 readability contract.",
+        "required_remediation": "Author a concrete shared-core ownership, game-extension ownership, and interface consequence for each finding. Add attacks for repeated per-capability effects and generic typed-invariant/tuning/typed-outcomes templates."
+      },
+      {
+        "finding_id": "P2V5-HIGH-003",
+        "title": "Capability-use relevance is templated and semantically irrelevant evidence remains promoted",
+        "affected_count": 570,
+        "affected_scope": "All capability uses in classification v3 and their embedded comparison, boundary, and dependency records.",
+        "evidence": "The 570 uses contain only 13 unique relevance statements, exactly one per capability. The relevance text is not excerpt-specific and therefore does not demonstrate why each accepted fact supports the assigned capability.",
+        "confirmed_semantic_misroutes": [
+          {
+            "record_id": "dragon-flight:DF-COPY-008",
+            "current_capability": "capability:language-target-progression",
+            "reason": "A useCallback removal and translation as-any copy diff is implementation provenance, not target progression.",
+            "required_route": "non-capability-context"
+          },
+          {
+            "record_id": "reading-rpg:RPG-GRAPH-001",
+            "current_capability": "capability:language-target-progression",
+            "reason": "The fact is an import graph.",
+            "required_route": "non-capability-context"
+          },
+          {
+            "record_id": "reading-rpg:RPG-GRAPH-002",
+            "current_capability": "capability:language-target-progression",
+            "reason": "The fact is an import graph.",
+            "required_route": "non-capability-context"
+          },
+          {
+            "record_id": "reading-rpg:RPG-GRAPH-003",
+            "current_capability": "capability:language-target-progression",
+            "reason": "The fact is an import graph.",
+            "required_route": "non-capability-context"
+          },
+          {
+            "record_id": "dragon-flight:DF-COPY-010",
+            "current_capability": "capability:difficulty-configuration",
+            "reason": "Absence of adaptive-difficulty imports is provenance evidence, not selected tuning behavior.",
+            "required_route": "non-capability-context"
+          },
+          {
+            "record_id": "abyssal-well:AW-HIST-012",
+            "current_capability": "capability:language-target-progression",
+            "reason": "A pure R3F render-layer statement does not establish target progression.",
+            "required_route": "non-capability-context"
+          },
+          {
+            "record_id": "abyssal-well:AW-HIST-011",
+            "current_capability": "capability:language-target-progression",
+            "reason": "Empty-sentence rejection supports the nonempty-content precondition, not target progression.",
+            "required_route": "capability:nonempty-content-precondition"
+          },
+          {
+            "record_id": "abyssal-well:AW-HIST-030",
+            "current_capability": "capability:language-target-progression",
+            "reason": "The incomplete ruleset-history excerpt does not demonstrate target progression.",
+            "required_route": "non-capability-context unless a complete behavioral excerpt establishes a capability"
+          },
+          {
+            "record_id": "reading-rpg:RPG-MECH-005",
+            "current_capability": "capability:language-target-progression",
+            "reason": "Enemy-health scaling is combat or difficulty behavior, not language-target progression.",
+            "required_route": "capability:difficulty-configuration or non-capability-context based on a complete accepted fact"
+          }
+        ],
+        "contract_failure": "A capability use requires an excerpt-specific readable explanation, and provenance, import, render-layer, or unrelated mechanic facts cannot be promoted merely by attaching a capability-wide sentence.",
+        "required_remediation": "Re-audit all 570 uses, write excerpt-specific relevance, reroute the confirmed records, and add attacks that reject identical relevance across unrelated excerpts plus import-, location-, absence-, and provenance-only evidence."
+      },
+      {
+        "finding_id": "P2V5-HIGH-004",
+        "title": "The v5 verifier and 9-test suite produce a false Green",
+        "affected_count": 1,
+        "affected_scope": "phase2_v5_truth_verifier.py, phase2_v5_truth_verifier_test.py, fixture manifest, and Green report.",
+        "evidence": "The independent rerun passes 9/9 tests and reports VERIFIED with 3386 checks and 0 findings while P2V5-HIGH-001 through P2V5-HIGH-003 are present in the bound candidate.",
+        "contract_failure": "The truth package checks readability shape and selected routes but does not prove semantic specificity or exhaustive evidence relevance.",
+        "required_remediation": "Add bound negative fixtures and live checks for generic difference boilerplate, repeated boundary templates, non-excerpt-specific relevance, and every confirmed semantic misroute. The repaired candidate must fail before remediation and pass only after all Medium-or-higher findings are closed."
+      }
+    ],
+    "Medium": [
+      {
+        "finding_id": "P2V5-MEDIUM-001",
+        "title": "Several exact excerpts end mid-clause despite passing completeness checks",
+        "affected_count": 3,
+        "affected_records": [
+          {
+            "record_id": "dragon-flight:DF-COPY-008",
+            "ending": "(diff-verified"
+          },
+          {
+            "record_id": "abyssal-well:AW-HIST-030",
+            "ending": "(Story S5"
+          },
+          {
+            "record_id": "wizard-vs-zombie:WVZ-MECH-009",
+            "ending": "(min 0.5"
+          }
+        ],
+        "contract_failure": "The excerpts are exact substrings but are not complete readable evidence for a developer.",
+        "required_remediation": "Select complete clauses or sentences and add completeness validation for unbalanced punctuation and mid-clause endings rather than checking only ellipses and terminal stopwords."
+      }
+    ],
+    "Low": []
+  },
+  "severity_ledger": {
+    "Critical": 0,
+    "High": 4,
+    "Medium": 1,
+    "Low": 0,
+    "unresolved_medium_or_higher": 5
+  },
+  "unresolved_medium_or_higher": 5,
+  "verdict": "independent-review-blocked",
+  "phase2_acceptance_assessment": "The bound v3 candidate and v5 truth package do not support Phase 2 product-owner acceptance. The mechanically Green result is explicitly rejected as a false Green until the four High and one Medium findings are remediated and independently re-reviewed.",
+  "authority_boundary": "This reviewer verdict does not author root acceptance, modify mapper or truth artifacts, authorize Phase 3, select assets, make responsive decisions, authorize implementation, or authorize shipping."
+}

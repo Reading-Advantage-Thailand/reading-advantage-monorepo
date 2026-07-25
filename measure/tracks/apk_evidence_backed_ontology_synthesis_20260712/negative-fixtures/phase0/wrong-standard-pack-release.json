@@ -1,0 +1,8 @@
+{
+  "schema_version": "apk-t9-phase0-negative-fixture.v1",
+  "id": "wrong-standard-pack-release",
+  "mutation": {
+    "type": "replace-pack-version",
+    "version": "2026.07.22"
+  }
+}

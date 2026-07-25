@@ -1,0 +1,63 @@
+{
+  "schema_version": "apk-t9-phase2-v5-green-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "verified_at": "2026-07-24T18:41:17Z",
+  "status": "verified-systemic-semantic-mapper-v3",
+  "state": "VERIFIED",
+  "authority": {"path": "phase2-role-dispatch-v5.json", "sha256": "586a21f5ae1fd0ac1a5b429de6303394362e0e3f53e28b1374dfb5d45fd7f558"},
+  "sealed_red_contract": {
+    "phase2_v5_truth_verifier.py": "caf4d13a7709c305199702df36f8593310df11be3988debecfb26c8064dbb0ba",
+    "phase2_v5_truth_verifier_test.py": "749acf58aa0eeae0174b12c1d9c8f71e5bb58bf6bd02464f329ddcb6d2b2ff86",
+    "phase2-v5-fixture-manifest.json": "27c1cef4115d479e35ac030eefc58434542c2a87678a560b5aa3fcd93bb1542a",
+    "phase2-v5-red-report.json": "3e0e40c20519facf1b1822654e09d06ae8c631abbff170eb988021f33be0d3e7"
+  },
+  "mapper_v3_outputs": {
+    "phase2-capability-comparisons-v3.json": {"sha256": "9407896e691f2c156b4ba22ea07f76c64c9e052b2b892e31fcff68a7091ec8a4", "bytes": 746085},
+    "phase2-capability-classification-v3.json": {"sha256": "6a76369c35bfd1fe6e4b2b021544628002e99a440cddcd3f620f6d920ff0765b", "bytes": 747164},
+    "phase2-extension-boundaries-v3.json": {"sha256": "84595467e1c834f4155b566f422585cb538d46a8de262acd43c1e2d029928a7e", "bytes": 205293},
+    "phase2-claim-dependency-edges-v3.json": {"sha256": "242b79c50bba9a9a4a1d1c602b66a6e5dd820c5bb0eeb33a974ba4fdd7966bdd", "bytes": 570396},
+    "role-receipts/phase2/capability-mapper-v3.json": {"sha256": "bbae271bb2a7bf8d9d4f8cfeea492a5c90a23def934bc0de4023e07ebfaf9eda", "bytes": 1193}
+  },
+  "verification": {
+    "verifier_state": "VERIFIED",
+    "verifier_checks": 3386,
+    "verifier_findings": 0,
+    "focused_suite": "9/9 pass",
+    "focused_suite_runtime_seconds": 4.635,
+    "negative_cases": 88,
+    "ruff": "pass"
+  },
+  "semantic_results": {
+    "capabilities": 13,
+    "evidence_batches": 87,
+    "readable_findings": 87,
+    "capability_claims": 565,
+    "capability_uses": 570,
+    "explicit_context_claims": 68,
+    "mechanics_accounted": 633,
+    "audited_routes_passed": "28/28",
+    "required_context_passed": "17/17",
+    "exact_accepted_substring_uses": "570/570",
+    "duplicate_uses_within_capability": 0,
+    "incomplete_or_stopword_ended_excerpts": 0,
+    "excerpt_or_relevance_ellipses": 0,
+    "provenance_only_relevance": 0,
+    "copied_boundary_effect_findings": 0,
+    "unknowns_unresolved": 24
+  },
+  "compound_use_assertions": {
+    "DS-CL-H-005": ["capability:input-action-normalization", "capability:session-feedback-surfaces"],
+    "GRF-START-001": ["capability:language-target-progression", "capability:nonempty-content-precondition"],
+    "PR-CUR-010": ["capability:collision-resource-resolution", "capability:time-and-frame-loop"],
+    "AM-HIST-004": ["capability:nonempty-content-precondition", "capability:result-accounting"],
+    "AM-HIST-005": ["capability:language-target-progression", "capability:result-accounting"]
+  },
+  "semantic_sampling": "Compound uses have distinct pertinent whole-word accepted excerpts; Actor World Update names shared-core ownership, game-extension ownership, and interface requirements in separate fields.",
+  "prior_red_bytes_modified": false,
+  "phase2_green": true,
+  "phase3_authorized": false,
+  "implementation_authorized": false,
+  "shipping_authorized": false,
+  "next_action": "Submit the v5 Green package for independent acceptance; do not open Phase 3 until the root product owner records acceptance."
+}

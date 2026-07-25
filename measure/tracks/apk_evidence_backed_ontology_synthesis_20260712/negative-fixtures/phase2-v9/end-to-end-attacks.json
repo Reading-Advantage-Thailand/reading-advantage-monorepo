@@ -1,0 +1,17 @@
+{
+  "schema_version": "apk-t9-phase2-v9-end-to-end-attacks.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "cases": [
+    {"id":"valid-zero-use-file-backed","operation":"valid-zero-use","expected_state":"CANDIDATE_VERIFIED_PENDING_INDEPENDENT_REVIEW","expected_codes":[]},
+    {"id":"malformed-receipt-file-backed","operation":"malformed-receipt","expected_state":"INVALID","expected_codes":["INVALID_SCHEMA"]},
+    {"id":"tampered-output-file-backed","operation":"tampered-output","expected_state":"INVALID","expected_codes":["TAMPERED_OUTPUT"]},
+    {"id":"truth-drift-file-backed","operation":"truth-drift","expected_state":"INVALID","expected_codes":["LIVE_TRUTH_DRIFT"]},
+    {"id":"all-48-context-promotions","operation":"promote-context-registry","exercised_record_count":48,"expected_state":"INVALID","expected_codes":["CONTEXT_COUNTEREXAMPLE_PROMOTED"]},
+    {"id":"audit-typo-rejected","operation":"use-audit-typo-as-record-id","source_record_id":"rune-match:RM-CONT-001","expected_state":"INVALID","expected_codes":["CURATED_ACCOUNTING_MISMATCH"]},
+    {"id":"scene-state-mismatch","operation":"scene-state-mismatch","expected_state":"INVALID","expected_codes":["SCENE_STATE_MISMATCH"]},
+    {"id":"cross-capability-mismatch","operation":"cross-capability-mismatch","expected_state":"INVALID","expected_codes":["UNKNOWN_CAPABILITY_ID"]},
+    {"id":"rejected-v4-full-schema-valid-transform","operation":"rejected-v4-full-transform","manual_label_spoofed":true,"valid_hashes_and_receipt":true,"expected_state":"INVALID","expected_codes":["CURATED_USE_BUDGET_EXCEEDED"]},
+    {"id":"rejected-v4-under-budget-semantic-rejection","operation":"rejected-v4-under-budget-review-reject","finding_max":45,"use_max":270,"manual_label_spoofed":true,"valid_hashes_and_receipt":true,"expected_state":"REVIEW_REJECTED","expected_codes":["SEMANTIC_REVIEW_REJECTED"]},
+    {"id":"fabricated-review-evidence-ref","operation":"fabricated-review-evidence-ref","expected_state":"INVALID","expected_codes":["UNRESOLVED_REVIEW_EVIDENCE_REF"]}
+  ]
+}

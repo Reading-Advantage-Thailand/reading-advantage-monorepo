@@ -1,0 +1,139 @@
+{
+  "schema_version": "apk-t9-phase2-role-dispatch.v9",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "status": "active-end-to-end-truth-repair",
+  "authority": "delegated-root-product-owner",
+  "issued_by": "/root",
+  "issued_at": "2026-07-25T02:16:38.003174729Z",
+  "assignments": [
+    {
+      "agent_ref": "/root/t9_phase0_governance_author",
+      "owner_role": "truth-test-author",
+      "task_id": "phase2-end-to-end-truth-v9",
+      "allowed_outputs": ["phase2_v9_truth_verifier.py", "phase2_v9_truth_verifier_test.py", "phase2-v9-fixture-manifest.json", "phase2-v9-context-counterexamples.json", "negative-fixtures/phase2-v9/*", "phase2-v9-red-report.json", "phase2-v9-green-report.json", "role-receipts/phase2/truth-test-author-v9.json"],
+      "forbidden_outputs": ["all prior artifacts", "mapper v5 outputs", "review outputs", "phase2-v9-root-truth-seal.json", "phase2-root-acceptance.json"]
+    },
+    {
+      "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+      "owner_role": "capability-mapper",
+      "task_id": "phase2-curated-evidence-mapper-v5-v9",
+      "allowed_outputs": ["phase2-curated-capability-evidence-v1.json", "phase2-capability-comparisons-v5.json", "phase2-capability-classification-v5.json", "phase2-extension-boundaries-v5.json", "phase2-claim-dependency-edges-v5.json", "role-receipts/phase2/capability-mapper-v5.json"],
+      "forbidden_outputs": ["all prior artifacts", "truth outputs", "review outputs", "phase2-root-acceptance.json"]
+    },
+    {
+      "agent_ref": "/root/phase5_review_b",
+      "owner_role": "capability-reviewer",
+      "task_id": "phase2-curated-evidence-review-v9",
+      "allowed_outputs": ["phase2-v9-independent-review.json", "role-receipts/phase2/capability-reviewer-v9.json"],
+      "forbidden_outputs": ["mapper outputs", "truth outputs", "phase2-v9-root-truth-seal.json", "phase2-root-acceptance.json"]
+    },
+    {
+      "agent_ref": "/root",
+      "owner_role": "product-owner-and-truth-seal-author",
+      "task_id": "phase2-product-owner-v9",
+      "allowed_outputs": ["phase2-role-dispatch-v9.json", "phase2-v9-root-truth-seal.json", "phase2-v9-mapper-release.json", "phase2-root-acceptance.json", "plan.md"],
+      "forbidden_outputs": ["mapper outputs", "truth outputs", "review outputs"]
+    }
+  ],
+  "supersedes": {
+    "dispatch": {"path": "phase2-role-dispatch-v8.json", "sha256": "5ae31c7f2f7342aabc364e3f847f4f1da2a3184ef1b6b995949776d14e4b8bf8", "status": "inactive-blocked-truth"},
+    "v8_truth": {
+      "status": "product-rejected",
+      "verifier_sha256": "1499aa4ad7469cf2b7764f8adaf82802e02eaf6e8a8200668631595aacab24b7",
+      "test_sha256": "3a1847abe842ef6595d47d019f39e7b64fba884db05a8fba390342be58b61f35",
+      "manifest_sha256": "db75e581b07a6b4edcbf97b41bd6b484cc2be65e905dd04dbadf6ff918d2ff09",
+      "red_sha256": "ee922d80eab89e5ab9bc1ddb7192d97a920a8b8c9b2da70dca617e960ad0c9fd",
+      "receipt_sha256": "2718464c5e75af07d6fc07ba40d9fb380dcd772b19432b6344e6aaaf89e53ff1",
+      "blocking_defects": ["candidate-present baseline mocked full validation", "inherited audited and residual routing contradicted zero-minimum curation", "fabricated semantic review fields passed", "rejected-v4 fixture used unconditional oracle", "46 known context regressions were unprotected", "curated lineage and live truth seal were not enforced"]
+    },
+    "pre_remediation_audit": {"path": "phase2-v8-pre-remediation-audit.json", "sha256": "1bf26342676329e22c5522033b81ade2760ab8a4ecaaa4c772ece15727ceb4ef"}
+  },
+  "candidate_contract": {
+    "state_before_review": "CANDIDATE_VERIFIED_PENDING_INDEPENDENT_REVIEW",
+    "state_after_review": "VERIFIED_PENDING_ROOT_ACCEPTANCE",
+    "semantic_routing_policy": "fresh-curation-with-zero-mandatory-positive-routes",
+    "forbidden_inherited_policy": ["AUDITED_ROUTING", "RESIDUAL_CAPABILITY_ROUTES", "disjoint capability partition", "prior classification or disposition requirements"],
+    "retained_inherited_rules": ["exact accepted inputs and Phase 1 bindings", "633-record exact accounting", "exact excerpt provenance", "referential integrity", "cross-output joins", "strong resolved evidence for standardize", "receipts", "hashes", "budgets", "determinism"],
+    "mapper_review_attestation_satisfies_independent_review": false
+  },
+  "curated_evidence_contract": {
+    "schema_version_exact": "apk-t9-phase2-curated-capability-evidence.v2",
+    "phase1_bindings_exact_and_shared_across_all_outputs": true,
+    "all_633_records_exactly_once": true,
+    "positive_capability_route_minimum": 0,
+    "findings_max": 45,
+    "uses_max": 270,
+    "games_per_finding": {"min": 2, "max": 3},
+    "similarity": {"one_invariant": true, "claims_per_game": 1, "claims_total_max": 4},
+    "difference": {"one_axis": true, "claims_per_game_min": 1, "claims_per_game_max": 2, "claims_total_max": 6},
+    "scene_state": "must equal the accepted Phase 1 record values including null",
+    "behavioral_anchors": {
+      "required": ["precondition", "action_or_transition", "observable_outcome"],
+      "shape": "each anchor names an accepted derived field and a complete exact substring of that field",
+      "anchors_may_reference_different_accepted_fields": true,
+      "missing_or_implicit_anchor_disposition": "non-capability-context",
+      "free_form_length_checks_are_insufficient": true
+    },
+    "game_disposition_capability_ids_equal_selected_uses": true,
+    "every_capability_id_exists_in_classification": true,
+    "every_selected_use_is_joined_once_to_a_finding": true,
+    "automatic_or_label-only-manual-routing_forbidden": "proved by per-record audit evidence and independent reviewer verdicts, never by selection_method text",
+    "invented_reuse_for_coverage_forbidden": true
+  },
+  "counterexample_contract": {
+    "audit_typo_correction": {"source_record_id": "rune-match:RM-CONT-001", "canonical_phase1_record_id": "rune-match:RM-CONTENT-001", "source_typo_is_not_an_accepted_alias": true, "typo_rejection_test_required": true},
+    "all_48_pre_audit_context_record_ids_registry_required": true,
+    "registry_bound_to_pre_audit_sha256": "1bf26342676329e22c5522033b81ade2760ab8a4ecaaa4c772ece15727ceb4ef",
+    "every_context_counterexample_exercised": true,
+    "positive_capability_routes_forced": 0,
+    "scene_state_mismatch_attacks_required": true,
+    "cross_capability_attacks_required": true
+  },
+  "full_lifecycle_contract": {
+    "file_backed_temp_candidate_no_mocks": true,
+    "calls_public_verify_phase2_entrypoint": true,
+    "valid_zero-use_candidate_must_reach_candidate_state": true,
+    "malformed_receipt_tampered_output_and_truth_drift_use_same_path": true,
+    "rejected_v4_full_transform": "schema-valid manual-labelled candidate proves budget and accounting failures",
+    "rejected_v4_under_budget_slice": "at most 45 findings and 270 uses; grammatical manual-labelled incoherent semantics cannot reach final acceptance",
+    "rejected_v4_attacks_use_valid_hashes_and_receipts": true,
+    "rejected_v4_failure_codes_must_come_from_candidate_or_final_validator": true,
+    "unconditional_oracle_findings_forbidden": true
+  },
+  "independent_review_contract": {
+    "review_joins_and_verdicts_all_633_record_ids": ["canonical-record-decision-sha256", "primary-disposition", "anchor-completeness", "context-rationale-or-selected-uses", "automatic-versus-individual-decision"],
+    "each_review_row_binds_canonical_reviewed_object_sha256": true,
+    "use_review_evidence_refs_echo_exact_role_field_excerpt_and_anchor_sha256": true,
+    "finding_and_game_review_evidence_refs_bind_exact_canonical_projections": true,
+    "all_evidence_refs_are_typed_schema_valid_and_resolve": true,
+    "same_excerpt_for_multiple_anchor_roles_requires_explicit_specific_reviewer_acceptance": true,
+    "review_joins_and_verdicts_every_use_id": ["anchor-role-correctness", "counterfactual-pertinence", "atomic-dimension", "context-or-capability-routing"],
+    "review_joins_and_verdicts_every_finding_id": ["one-invariant-or-axis-coherence", "cross-game-pertinence", "per-game-summary", "boundary-ownership", "classification-disposition"],
+    "review_joins_and_verdicts_every_game_disposition": ["capability-set", "supported-or-no-supported-reuse", "rationale"],
+    "review_binds_all_mapper_output_hashes": true,
+    "review_rationale_must_be_specific_and_non_template": true,
+    "generic_or_repeated_approval_text_fails": true,
+    "reviewer_receipt_binds": ["exact agent_ref", "owner_role", "task_id", "dispatch sha256", "root truth seal sha256", "root mapper release sha256", "review artifact sha256", "all mapper output sha256 values"],
+    "rejection_state": "REVIEW_REJECTED",
+    "any_reject_or_unresolved_medium_or_higher_reaches_rejection_state": true,
+    "only_all_explicit_accept_verdicts_reach_verified_pending_root_acceptance": true,
+    "sampling_forbidden": true,
+    "unresolved_medium_or_higher_allowed": 0
+  },
+  "root_truth_seal_contract": {
+    "published_after_root_reruns_red": true,
+    "manifest_is_parsed_and_schema_hash_count_validated": true,
+    "every_manifest_declared_fixture_is_pinned_no_hardcoded_subset": true,
+    "pins": ["dispatch", "verifier", "test", "fixture manifest", "every manifest-declared fixture", "context counterexamples", "Red report", "truth-author receipt"],
+    "root_mapper_release_pins": ["dispatch sha256", "root truth seal sha256", "every sealed truth artifact sha256"],
+    "candidate_and_final_cli_require_expected_root_mapper_release_sha256": true,
+    "missing_or_mismatched_external_expected_release_fails": true,
+    "mapper_and_reviewer_receipts_bind_release_and_seal_sha256": true,
+    "dynamic_live_hash_self_acceptance_forbidden": true,
+    "any_live_truth_drift_fails": true
+  },
+  "budget_contract": {"negative_fixture_files_max": 16, "published_output_bytes_max": 1048576, "complete_suite_runtime_seconds_max": 30},
+  "tdd_order": ["truth-author publishes sealed v9 Red", "root independently reruns Red and publishes root truth seal plus externally hashed mapper release", "root explicitly releases mapper v5 with expected release sha256", "candidate file-backed Green using expected release sha256", "independent exhaustive review of all 633 records plus every use finding and game disposition", "final verification using expected release sha256", "root usability acceptance"],
+  "scope": {"phase3_responsive_authorized": false, "asset_mapping_authorized": false, "implementation_authorized": false, "shipping_authorized": false}
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version":"apk-t9-phase2-v6-red-report.v1",
+  "track_id":"apk_evidence_backed_ontology_synthesis_20260712",
+  "phase":2,
+  "captured_at":"2026-07-25T00:00:00Z",
+  "status":"valid-red-v6-waiting-for-specificity-mapper-v4",
+  "state":"RED_WAITING_FOR_MAPPER_V4_OUTPUTS",
+  "authority":{"path":"phase2-role-dispatch-v6.json","sha256":"62fb22f1e81f142cc2b60cde455304b21d4c9dcd368e70f5fa235573dd13c60f"},
+  "truth_package":{
+    "phase2_v6_truth_verifier.py":"523794616e2f764bb020a6fe6a915e6ed3060da7358d0b157cb902277b9af78c",
+    "phase2_v6_truth_verifier_test.py":"c0797f8620226ad537b42d59c11077fec334bed5ddf99d6e2851b2a51008898e",
+    "phase2-v6-fixture-manifest.json":"48eaeb5c4cc7314e404b9f1dfa3ea61ec53a43284a7ee5827982302c12b489d7",
+    "fixture_files":7,
+    "bound_fixture_cases":64,
+    "fixture_suite_digest":"9b94dee4ddda83c193afc8dd05d397785c6e920ebde8ec00d4f661fd111643ba",
+    "focused_suite":"9/9 pass",
+    "runtime_seconds":21.733,
+    "ruff":"pass",
+    "stop_loss_cycle":2
+  },
+  "specificity_contract":{
+    "difference_required_fields":["comparison_dimension","per_game_variants","statement"],
+    "per_game_variant_fields":["game_id","variant_summary","consumer_record_ids"],
+    "difference_rule":"Statement names its concrete behavioral axis and every game-specific variant; generic rules-and-parameters language is forbidden.",
+    "similarity_rule":"Statement names an exact shared invariant grounded in accepted excerpts.",
+    "boundary_rule":"Three ownership/interface fields are unique per finding, concrete, and cannot use the three forbidden generic templates.",
+    "relevance_rule":"Every record/capability relevance is unique, excerpt-specific, and names meaningful behavior tokens from its accepted excerpt.",
+    "excerpt_rule":"Literal accepted substring with balanced parentheses and quotes, no ellipsis, and no mid-clause or stopword ending."
+  },
+  "residual_routing_contract":{
+    "difficulty_configuration":["RPG-MECH-005","WVZ-MECH-009"],
+    "nonempty_content_precondition":["AW-HIST-011"],
+    "required_context":["DF-COPY-008","RPG-GRAPH-001","RPG-GRAPH-002","RPG-GRAPH-003","DF-COPY-010","AW-HIST-012"],
+    "conditional":"AW-HIST-030 may support capabilities only through separate complete behavioral excerpts; otherwise it is explicit context.",
+    "rejected_residual_misroutes":9
+  },
+  "rejected_v5_false_green":{
+    "review_findings":{"High":4,"Medium":1},
+    "rejection_codes":["GENERIC_BOUNDARY_TEMPLATE","GENERIC_DIFFERENCE_STATEMENT","GENERIC_RELEVANCE_TEMPLATE","GENERIC_SIMILARITY_STATEMENT","INCOMPLETE_EXCERPT","MISSING_COMPARISON_DIMENSION","MISSING_PER_GAME_VARIANTS","MISSING_REQUIRED_FIELD","RELEVANCE_DOES_NOT_NAME_EXCERPT_BEHAVIOR","REPEATED_BOUNDARY_EFFECT","RESIDUAL_ROUTING_REGRESSION","REUSED_RELEVANCE_TEMPLATE"],
+    "status":"non-accepted-counterexample"
+  },
+  "preserved_contract":{
+    "v5_verifier_sha256":"caf4d13a7709c305199702df36f8593310df11be3988debecfb26c8064dbb0ba",
+    "v5_green_sha256":"a2bf211de569bfc1517f1e9fb1e272cba6046a66abd15a4a5520122afbf0b3a7",
+    "v5_truth_receipt_sha256":"cef4ceeb47d00a15120e73b811ddf1261ede4eeb89575a5f706ec2fdf4826abe",
+    "all_prior_attacks_executable":true,
+    "prior_bytes_modified":false
+  },
+  "budgets":{"fixture_files_max":16,"fixture_files_actual":7,"suite_runtime_seconds_max":30,"suite_runtime_seconds_actual":21.733,"published_output_bytes_max_each":1048576},
+  "live_verification":{"checks":21,"sole_finding":"PHASE2_MAPPER_V4_OUTPUTS_MISSING"},
+  "missing_mapper_v4_outputs":["phase2-capability-comparisons-v4.json","phase2-capability-classification-v4.json","phase2-extension-boundaries-v4.json","phase2-claim-dependency-edges-v4.json","role-receipts/phase2/capability-mapper-v4.json"],
+  "green_publication_authorized":false,
+  "next_action":"Mapper v4 may publish only its dispatch-owned outputs bound to this exact Red package; truth expectations must not be revised to accommodate mapper output."
+}

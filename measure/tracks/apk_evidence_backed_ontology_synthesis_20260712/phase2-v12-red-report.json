@@ -1,0 +1,60 @@
+{
+  "schema_version": "apk-t9-phase2-v12-red-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "status": "valid-red-v12-waiting-for-root-v12-authority",
+  "state": "RED_WAITING_FOR_ROOT_V12_AUTHORITY",
+  "authority": {"path": "phase2-role-dispatch-v12.json", "sha256": "5e482c2803762ccffeb36ca8ca463f221752f46c15a27ad9ad61872209711af4"},
+  "truth_package": {
+    "phase2_v12_truth_verifier.py": "c9603f2caeb40df5626d6e35a3c2a754d5dac9099827eb8f02cd7c204a3972a4",
+    "phase2_v12_truth_verifier_test.py": "a61f55d5914c5b6892949b54ceb0e7f8b7805d150d8e270bacf227f187e444ed",
+    "phase2-v12-fixture-manifest.json": "85947c29737e2d7f43509d8fb0b9f381d38a9c8240bdf0bb5948a8087ca470fc",
+    "negative-fixtures/phase2-v12/end-to-end-attacks.json": "17535c7b22b814044535237463f33731ba56ca2fcc92073dd71fdede36621259",
+    "fixture_files": 1,
+    "fixture_cases": 13,
+    "focused_suite": "4/4 pass",
+    "runtime_seconds": 6.294,
+    "wall_runtime_seconds": 6.69,
+    "maxrss_kb": 49184,
+    "ruff": "pass",
+    "py_compile": "pass",
+    "json_validation": "pass"
+  },
+  "quota_delta_results": {
+    "removed_global_count_codes_exact": ["CURATED_FINDING_BUDGET_EXCEEDED", "CURATED_USE_BUDGET_EXCEEDED"],
+    "forty_six_finding_lifecycle_fixture_state": "VERIFIED_PENDING_ROOT_ACCEPTANCE",
+    "two_hundred_seventy_two_use_lifecycle_fixture_state": "CANDIDATE_VERIFIED_PENDING_INDEPENDENT_REVIEW",
+    "fixture_semantic_scope": "isolated-structurally-valid-lifecycle-quota-stress-only",
+    "product_semantic_evidence_claimed": false,
+    "synthetic_review_scope": "lifecycle-only-not-product-semantic-acceptance",
+    "actual_mapper_semantics_still_require_exhaustive_independent_review": true,
+    "local_similarity_cap_remains_blocking": true,
+    "malformed_consumer_use_join_remains_blocking": true,
+    "broken_dependency_join_remains_blocking": true,
+    "broken_atomic_dimension_join_remains_blocking": true,
+    "broken_selected_use_join_remains_blocking": true,
+    "broken_classification_join_remains_blocking": true,
+    "broken_boundary_join_remains_blocking": true,
+    "unrelated_scene_state_finding_remains_blocking": true
+  },
+  "authority_order_results": {
+    "before_root_authority": {"state": "RED_WAITING_FOR_ROOT_V12_AUTHORITY", "sole_code": "ROOT_V12_AUTHORITY_MISSING"},
+    "correct_expected_release_with_missing_mapper": {"state": "RED_WAITING_FOR_MAPPER_V5_OUTPUTS", "sole_code": "PHASE2_MAPPER_V5_OUTPUTS_MISSING"},
+    "wrong_expected_release_with_missing_mapper": {"state": "INVALID", "sole_code": "MAPPER_RELEASE_MISMATCH"},
+    "missing_expected_release_after_release_exists": {"state": "INVALID", "sole_code": "EXPECTED_MAPPER_RELEASE_REQUIRED"},
+    "authority_validation_precedes_mapper_presence": true,
+    "six_mapper_outputs_bound": true,
+    "public_entrypoint": "verify_phase2",
+    "mocks_used": false
+  },
+  "inherited_contract": {
+    "all_v11_bytes_preserved": true,
+    "all_v11_schema_semantic_review_authority_manifest_counterexample_and_output_budget_contracts_inherited": true,
+    "v11_verifier_sha256": "7fc8c08a4a7002f06adf3a6c698a8da5599c705153a14a8273588743845ba5aa",
+    "v11_test_sha256": "90e67abed6cffa5cc5939b397676b1e9441e46b4f960758185b6f073bdb65f30"
+  },
+  "live_red": {"state": "RED_WAITING_FOR_ROOT_V12_AUTHORITY", "sole_finding": "ROOT_V12_AUTHORITY_MISSING", "checks": 67},
+  "budgets": {"fixture_files_max": 16, "fixture_files_actual": 1, "suite_runtime_seconds_max": 30, "suite_runtime_seconds_actual": 6.294, "published_output_bytes_max_each": 1048576},
+  "green_publication_authorized": false,
+  "next_action": "Root independently reruns v12, publishes the v12 truth seal and externally hashed mapper release, then releases mapper v5-v12 without global count tuning."
+}

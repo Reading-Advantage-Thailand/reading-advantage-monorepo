@@ -1,0 +1,12 @@
+{
+  "schema_version": "apk-t9-phase0-negative-fixture.v1",
+  "id": "orchestrator-reviewer-overlap",
+  "mutation": {
+    "type": "assign-role-overlap",
+    "agent_ref": "/root/phase5_review_a",
+    "roles": [
+      "phase0-adversarial-reviewer"
+    ]
+  },
+  "expected_code": "ROLE_OVERLAP"
+}

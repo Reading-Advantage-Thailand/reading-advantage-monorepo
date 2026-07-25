@@ -1,0 +1,146 @@
+{
+    "schema_version": "apk-t9-phase0-truth-test-role-receipt.v1",
+    "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+    "phase": 0,
+    "role": "truth-test-author",
+    "status": "historical-superseded-negative-control",
+    "consumable": false,
+    "green_receipt": false,
+    "task_path": "/root/phase5_review_a/t9_phase0_truth_author",
+    "parent_task_path": "/root/phase5_review_a",
+    "owned_scope": [
+        "Phase 0 input and source truth contracts",
+        "Phase 0 generic derivation and claim-dependency schemas",
+        "Phase 0 fail-closed verifier and counterexample fixtures"
+    ],
+    "forbidden_decisions_observed": [
+        "mechanics",
+        "capabilities",
+        "responsive-strategy",
+        "asset-role",
+        "canonical-mapping",
+        "ontology-assignment",
+        "adoption",
+        "product-owner-acceptance"
+    ],
+    "provider_attestation": {
+        "status": "attested",
+        "session_id": "019f91e9-0b77-7683-9ec5-76a33c41d9fa",
+        "spawn_id": "call_jIacFh3fv9dBJ5nyetTBSafV",
+        "parent_session_id": "019f919e-7f07-79b3-918c-06f16cf574a5",
+        "ancestry_ids": [
+            "019f8e88-86b8-7142-9cb4-6bd7c34b1385",
+            "019f919e-7f07-79b3-918c-06f16cf574a5",
+            "019f91e9-0b77-7683-9ec5-76a33c41d9fa"
+        ],
+        "fork_turns_none": true,
+        "fresh_context_only": true,
+        "inherited_narrative": false,
+        "prompt_encoding": "encrypted_content",
+        "prompt_sha256": "8d87eb01a226e9ee1705224bb3b7e56b3f2e6fdb867e627d3e44635b8b6a4b0b",
+        "allowed_input_manifest": {
+            "path": "phase0-source-registry-pending-v1.json",
+            "sha256": "29dcb7cea1aa206c551ba7aa90741585bb80509e4c31937b259cb69077c7e6b5"
+        },
+        "actual_context_manifest": {
+            "path": "role-receipts/phase0/raw-exports/truth-test-author/child-context-manifest-v1.json",
+            "sha256": "4ee6a3846d3651a8f382a01785450823ddedc5e3954ce0f298529b946e7bc2eb"
+        },
+        "prior_role_history": [],
+        "start_event": {
+            "id": "019f91e9-0d5b-7073-8a06-4ce9146d879b",
+            "timestamp": "2026-07-24T02:16:37.698Z"
+        },
+        "end_event": {
+            "id": "019f9209-adee-7650-8bc8-ab0aa43e0be9",
+            "timestamp": "2026-07-24T02:52:59.924Z"
+        },
+        "final_response_sha256": "506f71eb076554d7c40ca859d9bface9d57d21008ced0f9928c939bc7a8b6edb",
+        "budget_declaration": {
+            "path": "phase0-budget-stop-loss-pending-v1.json",
+            "sha256": "b63cb7c3f9e1c8c6cc9d146b5df89199d72575e8fe954a8e03d0cca54d4204b0"
+        },
+        "commit_sha": "f85ef85f47b549b16ee1c734b2cd2cbe70e62186",
+        "provider_attestation_path": "role-receipts/phase0/phase0-truth-author-provider-attestation-v1.json",
+        "provider_attestation_sha256": "2cb0cc879ae1f59bd2420ded572bb80361342c5c60ae219f7a63d12658897461"
+    },
+    "artifact_bindings": {
+        "phase0-source-registry-pending-v1.json": "29dcb7cea1aa206c551ba7aa90741585bb80509e4c31937b259cb69077c7e6b5",
+        "phase0-canonical-pack-policy-pending-v1.json": "e4173d05b26f84c82d6687e95226b306b0402d238df02cfa66678e25973e20b5",
+        "phase0-role-ownership-manifest-pending-v1.json": "3b4eb03c8dbaacd8a89db5c5bf25ec8e6fded24332c4f9a84e4f91eb77451ee5",
+        "phase0-derivation-schema-pending-v1.json": "b9ad36f77ee54127b15b75b563ae220b3fce07151ce1f0ba4052f69c66c3bc5e",
+        "phase0-claim-dependency-schema-pending-v1.json": "fad2307bb50d8ccbb38870c05af9880deb5756eae5833d25501ed3051364a947",
+        "phase0-budget-stop-loss-pending-v1.json": "b63cb7c3f9e1c8c6cc9d146b5df89199d72575e8fe954a8e03d0cca54d4204b0",
+        "phase0-input-freeze-pending-v1.json": "18e6b7ed553c3ef583953a78c33a51228e1ef70e880149ad42abd6a5161fe62f",
+        "phase0-fixture-manifest-pending-v1.json": "8565f8f36873301102d2c88c422b3ba668b48d729ce8552b24bf952f26527c73",
+        "phase0-tdd-red-evidence-v1.json": "ab186b068000d5fc8e76fab56eb390fc00530ba4c8775d6b2cc861850cb81e18",
+        "phase0-red-pending-report-v1.json": "c73b230b72949e1470fa5b09fbee0b6005b80882c4f28e06708dfaa30b652743",
+        "phase0_truth_verifier.py": "bc69769f534cf6186403a4fab9f3b38f7ed7199167df3d5b9c2bb19fe33a67a1",
+        "phase0_truth_verifier_test.py": "c40660fa7379aabf94436290d23350cab55a9598394352466e893190cc66c099"
+    },
+    "fixture_bindings": {
+        "direct-legacy-key.json": "b3c1b125580ba31f4642db23393d0dba290894f4a12e07c0e2993db7a9578842",
+        "failed-monolith-input.json": "286f5f6ec1cf0a279381dddd7368dddecf1ed4f7d3fa0d7b33e53abeaae706d3",
+        "missing-gap-delivery-assignment.json": "53023ba45e5b23e827484ef06800b112e87988c655e5afc2dd3f05898686942f",
+        "missing-predecessor.json": "c6d0a6e06c3a38325323e2ac6f3a6743365636fbef3a63fc00a68d9d64052cfa",
+        "missing-role-provenance.json": "d28ce721a20c0da53fbc27abeacec41d24aa80d4c7315a44e1871af1453280a5",
+        "orchestrator-reviewer-overlap.json": "7a19391c5b561ade61af3deef61b100cb95133383e9752622034ea52aaab3bf0",
+        "role-overlap.json": "eb26d755f3c4a340699f191373a117c4fbc2c84e79feb827ed8bcb53ab85ece5",
+        "schema-drift.json": "abfd40199eb9237da2906b370df9e7b4797005eb57cc190b937463a304743327",
+        "stale-predecessor.json": "7179da347c01604098719aa1529309cf7bd2f795a5868622dcbc7c78686155a5",
+        "wrong-standard-pack-catalog.json": "3470b182b13852eb840959ae536a93376bc5922abdbdd2715c45d6d5fb639f96",
+        "wrong-standard-pack-receipt.json": "305d7edc9ec6c861a94078ec3cd860db31fdca5e842b16e81a2bd7b01928c3c8",
+        "wrong-standard-pack-release.json": "7db68ef39acf2a3b07a254cae67df7163317b51136cf32f9c75d95a4e3dca80c",
+        "wrong-t8-artifact.json": "a1928b39f06b0bce1efff2a59fcb0ec1f6b6260edaa969c3dc404b6ad62d6997"
+    },
+    "verification": [
+        {
+            "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v phase0_truth_verifier_test.py",
+            "result": "5 tests passed; required negative fixtures 13/13 rejected with exact expected finding sets; expected-code mode rejects companion findings"
+        },
+        {
+            "command": "PYTHONDONTWRITEBYTECODE=1 python3 phase0_truth_verifier.py --repo-root ../../.. --track-root . --write-report phase0-red-pending-report-v1.json",
+            "result": "expected exit 1; 106 checks; sole finding T8_PENDING_POST_REVIEW_USER_APPROVAL"
+        },
+        {
+            "command": "PYTHONDONTWRITEBYTECODE=1 python3 phase0_truth_verifier.py --repo-root ../../.. --track-root . --expect-code T8_PENDING_POST_REVIEW_USER_APPROVAL",
+            "result": "exit 0; sole exact live blocker confirmed"
+        },
+        {
+            "command": "pnpm --filter @reading-advantage/advantage-play-kit exec vitest run src/assets/standard-pack-acceptance.integration.test.ts",
+            "result": "1 file passed; 1 test passed"
+        },
+        {
+            "command": "python3 -m json.tool for every Phase 0 JSON artifact and fixture",
+            "result": "pending final validation"
+        }
+    ],
+    "findings": [
+        {
+            "severity": "Critical",
+            "code": "T8_PENDING_POST_REVIEW_USER_APPROVAL",
+            "disposition": "open-stop-loss",
+            "summary": "T8 is revoked and non-consumable until a later tool-resolved post-review user event and exact successor owner/accepted artifacts exist."
+        }
+    ],
+    "closure": {
+        "phase0_closed": false,
+        "phase1_ready": false,
+        "independent_review_pending": true,
+        "green_report_prohibited": true,
+        "green_receipt_prohibited": true
+    },
+    "self_sha256": null,
+    "self_hash_note": "The immutable receipt is bound externally by its reported SHA-256 to avoid a self-hash cycle.",
+    "provider_evidence_bindings": {
+        "role-receipts/phase0/phase0-truth-author-provider-attestation-v1.json": "2cb0cc879ae1f59bd2420ded572bb80361342c5c60ae219f7a63d12658897461",
+        "role-receipts/phase0/raw-exports/truth-test-author/child-final-response-record.jsonl": "0dc6b05a1fa6bcd7b2f3b3cd865580bc0f5d5ae6baae7b004a85c7848148230a",
+        "role-receipts/phase0/raw-exports/truth-test-author/child-task-record.jsonl": "1e6e842015ffe9f908e827a8584c2a0a20dcf0246673689378c11afced8b63a0",
+        "role-receipts/phase0/raw-exports/truth-test-author/parent-spawn-output.jsonl": "43328db690330aa391749744127f7cef4c8823932287bc6ff4ffb1d89dec802b",
+        "role-receipts/phase0/raw-exports/truth-test-author/parent-spawn-request.jsonl": "d4facc9d0ab8d7f904b0fb29789ede8b7a51ca73faa5ca367ad08d5e6f323203",
+        "role-receipts/phase0/raw-exports/truth-test-author/child-context-manifest-v1.json": "4ee6a3846d3651a8f382a01785450823ddedc5e3954ce0f298529b946e7bc2eb"
+    },
+    "current_package_claim": false,
+    "superseded_by": "role-receipts/phase0/governance-remediation-author-receipt-v1.json",
+    "known_output_mismatch": "Preserved intentionally for the output-hash-mismatch counterexample; this historical receipt does not attest current bytes."
+}

@@ -1,0 +1,13 @@
+{
+  "checks": 141,
+  "findings": [
+    {
+      "code": "T8_PENDING_POST_REVIEW_USER_APPROVAL",
+      "message": "T8 is revoked and non-consumable until a later tool-resolved user approval event and exact successor artifacts are bound.",
+      "severity": "Critical"
+    }
+  ],
+  "schema_version": "apk-t9-phase0-verification-report.v1",
+  "state": "STOPPED_BEFORE_SYNTHESIS",
+  "status": "blocked"
+}

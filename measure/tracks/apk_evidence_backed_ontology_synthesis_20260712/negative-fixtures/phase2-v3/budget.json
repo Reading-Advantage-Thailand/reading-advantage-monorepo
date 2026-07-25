@@ -1,0 +1,13 @@
+{
+  "schema_version": "apk-t9-phase2-v2-negative-fixture-group.v1",
+  "id": "budget",
+  "cases": [
+    {
+      "id": "budget-01",
+      "mutation": {"operation": "output-budget-exceeded"},
+      "expected_codes": ["OUTPUT_BUDGET_EXCEEDED"]
+    }
+  ],
+  "expected_codes": ["OUTPUT_BUDGET_EXCEEDED"],
+  "expected_state": "INVALID"
+}

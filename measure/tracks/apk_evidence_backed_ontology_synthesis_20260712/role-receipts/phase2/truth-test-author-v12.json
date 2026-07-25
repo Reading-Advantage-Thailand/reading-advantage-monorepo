@@ -1,0 +1,49 @@
+{
+  "schema_version": "apk-t9-phase2-role-receipt.v12",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "task_id": "phase2-no-global-count-quota-truth-v12",
+  "owner_role": "truth-test-author",
+  "agent_ref": "/root/t9_phase0_governance_author",
+  "dispatch": {"path": "phase2-role-dispatch-v12.json", "sha256": "5e482c2803762ccffeb36ca8ca463f221752f46c15a27ad9ad61872209711af4"},
+  "status": "sealed-red-v12-published-waiting-for-root-v12-authority",
+  "outputs": {
+    "phase2_v12_truth_verifier.py": "c9603f2caeb40df5626d6e35a3c2a754d5dac9099827eb8f02cd7c204a3972a4",
+    "phase2_v12_truth_verifier_test.py": "a61f55d5914c5b6892949b54ceb0e7f8b7805d150d8e270bacf227f187e444ed",
+    "phase2-v12-fixture-manifest.json": "85947c29737e2d7f43509d8fb0b9f381d38a9c8240bdf0bb5948a8087ca470fc",
+    "negative-fixtures/phase2-v12/end-to-end-attacks.json": "17535c7b22b814044535237463f33731ba56ca2fcc92073dd71fdede36621259",
+    "phase2-v12-red-report.json": "912ea9a31aeeb71d6196ff48a77d2d959db4fa56eed8c840a69d3428c5c5f54e"
+  },
+  "verification": {
+    "focused_suite": "4/4 pass",
+    "fixture_cases": 13,
+    "runtime_seconds": 6.294,
+    "runtime_ceiling_seconds": 30,
+    "mocks_used": false,
+    "pre_authority_state": "RED_WAITING_FOR_ROOT_V12_AUTHORITY",
+    "live_checks": 67,
+    "six_mapper_outputs_bound": true,
+    "removed_global_count_codes_exact": ["CURATED_FINDING_BUDGET_EXCEEDED", "CURATED_USE_BUDGET_EXCEEDED"],
+    "forty_six_finding_lifecycle_review_state": "VERIFIED_PENDING_ROOT_ACCEPTANCE",
+    "two_hundred_seventy_two_use_lifecycle_state": "CANDIDATE_VERIFIED_PENDING_INDEPENDENT_REVIEW",
+    "quota_fixture_is_product_semantic_evidence": false,
+    "synthetic_review_is_lifecycle_only": true,
+    "all_required_broken_join_attacks": true,
+    "unrelated_inherited_finding_attack": true,
+    "local_per_finding_cap_attack": true,
+    "ruff": "pass",
+    "py_compile": "pass",
+    "json_validation": "pass"
+  },
+  "green_report_published": false,
+  "scope": {
+    "v11_or_earlier_bytes_modified": false,
+    "mapper_decisions_authored": false,
+    "review_decisions_authored": false,
+    "root_v12_authority_authored": false,
+    "product_semantic_evidence_authored": false,
+    "phase3_authorized": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false
+  }
+}

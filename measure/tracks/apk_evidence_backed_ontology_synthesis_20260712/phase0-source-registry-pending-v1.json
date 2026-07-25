@@ -1,0 +1,203 @@
+{
+  "schema_version": "apk-t9-phase0-source-registry.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "state": "PENDING_POST_REVIEW_USER_APPROVAL",
+  "candidate_only": true,
+  "consumable": false,
+  "authority_resolution_rule": "Select current artifacts only from the Measure registry plus the accepted owner/root/successor chain; filenames alone never confer authority.",
+  "sources": [
+    {
+      "id": "t1-evidence-integrity-gate",
+      "path": "measure/evidence-integrity-accepted-gate.json",
+      "sha256": "d9f5c4771a755bae72c037fdbed6e330e523e9f2fabf60010154b981bfb283a3",
+      "expected_values": {
+        "status": "accepted",
+        "consumable": true,
+        "revoked": false,
+        "gate_version": "phase4-v8-candidate"
+      }
+    },
+    {
+      "id": "t2-accepted-denominator",
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+      "expected_values": {
+        "status": "accepted",
+        "consumable": true,
+        "revoked": false
+      }
+    },
+    {
+      "id": "t2-accepted-partition",
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+      "expected_values": {
+        "status": "accepted",
+        "consumable": true,
+        "revoked": false
+      }
+    },
+    {
+      "id": "t3-accepted-pilot",
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+      "expected_values": {
+        "status": "accepted-conditional",
+        "consumable": true
+      }
+    },
+    {
+      "id": "t4-accepted-cohort",
+      "path": "measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+      "sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80",
+      "expected_values": {
+        "status": "accepted-with-disclosure",
+        "consumable": true
+      }
+    },
+    {
+      "id": "t5-accepted-cohort",
+      "path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/t5-accepted-cohort-manifest-v1.json",
+      "sha256": "4052c243ca66977256a4b60116439884f3f3151fba463ef860e624ed8d050f5d",
+      "expected_values": {
+        "status": "accepted",
+        "consumable": true,
+        "revoked": false
+      }
+    },
+    {
+      "id": "t6-accepted-cohort",
+      "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/successor-accepted-cohort-manifest-v2.json",
+      "sha256": "9666b564ba969ef7d0559fb53d8d74c684a746b10264784a9728e52b6284888b",
+      "expected_values": {
+        "status": "accepted-for-conditional-evidence-consumption-only",
+        "consumable": true
+      }
+    },
+    {
+      "id": "t7-accepted-cohort",
+      "path": "measure/archive/apk_corpus_audit_special_historical_20260712/cohort-accepted-manifest-20260722.json",
+      "sha256": "4186dfd20fcef683a1a33664a1ffa9d4350280fbee31fe56d553fa0f5a87b2b0",
+      "expected_values": {
+        "status": "accepted-with-disclosure",
+        "consumable": true,
+        "revoked": false
+      }
+    },
+    {
+      "id": "standard-pack-accepted-release",
+      "path": "packages/advantage-play-kit/assets/standard/accepted-standard-pack-release.json",
+      "sha256": "61984e0b53c4ba85379cf6a4f0f33ee956665c4eaad4b3d681e3dccd98389844",
+      "expected_values": {
+        "status": "accepted",
+        "version": "2026.07.23",
+        "catalogDigest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+        "sourceReceiptDigest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9"
+      }
+    }
+  ],
+  "authority_evidence": [
+    {
+      "id": "t1-final-acceptance",
+      "path": "measure/archive/measure_apk_evidence_integrity_gates_20260712/final-acceptance.json",
+      "sha256": "1030b650732976234c83149cd2acff5f86eca1da4465c9c13e5c7d7bc33981d4"
+    },
+    {
+      "id": "t2-owner-acceptance",
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/product-owner-acceptance.json",
+      "sha256": "b413cbf8c0db59c0a47de2fb68e6ceec629bde25af8b25eeb4d706ed0706f336"
+    },
+    {
+      "id": "t3-owner-acceptance",
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/product-owner-acceptance.json",
+      "sha256": "3a59c50e9269aed4bf2c49fe9ff3fa9943684580553cdbc6c37eaa34b780a004"
+    },
+    {
+      "id": "t4-owner-acceptance-v2",
+      "path": "measure/archive/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-t4-v2.json",
+      "sha256": "56bc530ddff17e8ff20741517d6c29b17ba250cbb35ec3a772a3cd71a23ed318"
+    },
+    {
+      "id": "t4-root-disposition-v4",
+      "path": "measure/archive/apk_corpus_audit_action_defense_20260712/t4-admission-owner-disposition-v4.json",
+      "sha256": "40a73444f5f3924cf57bebe67e452dd941fa93262430030bbb43cf1355c29318"
+    },
+    {
+      "id": "t5-successor-owner-acceptance",
+      "path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/t5-product-owner-acceptance-v1.json",
+      "sha256": "761d3fe586ad27539ac5a24cd75db80a2765645e9e782200ea1e2a5d460e2175"
+    },
+    {
+      "id": "t6-successor-owner-acceptance",
+      "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/product-owner-acceptance-successor-v2.json",
+      "sha256": "fbc6f24f7b56a6ce8c5972e7fba29c8702813f8bc6def09e866530f6d2ecf4df"
+    },
+    {
+      "id": "t7-owner-ratification",
+      "path": "measure/archive/apk_corpus_audit_special_historical_20260712/cohort-product-owner-acceptance-retroactive-20260722.json",
+      "sha256": "b796f06a1be5a1d3cfb9aa4248f23cc3ac7883e35e30259dfe7ad7c90e3ba243"
+    },
+    {
+      "id": "standard-pack-root-registry",
+      "path": "measure/archive/apk_dual_theme_asset_production_20260712/index.md",
+      "sha256": "1d5bf9f28b5f02b90b67d95d97f88beefcb46b0ad9bc0dfb9fbaf47d1bcb96a5"
+    }
+  ],
+  "t8_pending": {
+    "state": "PENDING_POST_REVIEW_USER_APPROVAL",
+    "current_manifest": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-accepted-manifest-v1.json",
+      "sha256": "809ec86af964c9b9287c778474b1c8127481f11fbf795e6e9b23c026178fcfa9",
+      "required_status": "REVOKED_NON_CONSUMABLE_PENDING_USER_APPROVAL"
+    },
+    "current_root_acceptance": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-root-acceptance.json",
+      "sha256": "92b09c51105888141819409f31201b7ae3f15b8cabeed26f31c03db5e0df033f",
+      "required_decision": "PENDING_POST_REVIEW_USER_APPROVAL",
+      "required_revocation_state": "revoked"
+    },
+    "fresh_reviews": [
+      {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-01-AF-06-v2.json",
+        "sha256": "c789ef9c07eba1e4281d25084684c1c6590eefae809ddf5ca21b56b4acde7eec"
+      },
+      {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-07-AF-12-v2.json",
+        "sha256": "44944d6948a15e50593f3adc2b6882ae9510359bcebcafc2fd66d24eeb0db00d"
+      }
+    ],
+    "superseded_pre_revocation_hashes": {
+      "manifest_sha256": "1e3f3ca76214c9e582aa9e82c6bf1bece654fee808bfa91860621a6d39c6f766",
+      "root_acceptance_sha256": "eec16a094cfe347b37b6ebefa0d21a059e971fd98151f7108673b96708f2ea3a",
+      "disposition": "No longer match current bytes after the fail-closed program correction; forbidden as accepted T9 inputs."
+    },
+    "required_successor": {
+      "tool_resolved_user_event_id": null,
+      "approval_message": "ACCEPT T8 for T9-only consumption",
+      "owner_acceptance_path": null,
+      "owner_acceptance_sha256": null,
+      "accepted_manifest_path": null,
+      "accepted_manifest_sha256": null
+    }
+  },
+  "standard_pack": {
+    "canonical_root": "packages/advantage-play-kit/assets/standard",
+    "version": "2026.07.23",
+    "catalog_digest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+    "source_receipt_digest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9",
+    "catalog_path": "packages/advantage-play-kit/assets/standard/standard-pack-release.json",
+    "catalog_artifact_sha256": "ef432a798a78585df3416d60aca30fe11a2d1d8b833e0d65ceb7fac5c8b19932",
+    "asset_count": 43075,
+    "receipt_paths": [
+      "packages/advantage-play-kit/assets/standard/IMPORT-RECEIPT.tsv",
+      "packages/advantage-play-kit/assets/standard/CURATED-RECEIPT.tsv",
+      "packages/advantage-play-kit/assets/standard/LICENSE-RECEIPT.tsv"
+    ]
+  },
+  "forbidden_inputs": [
+    {
+      "path_prefix": "measure/archive/apk_cross_game_asset_ontology_20260712",
+      "disposition": "failed-monolith-counterexample-only"
+    }
+  ]
+}

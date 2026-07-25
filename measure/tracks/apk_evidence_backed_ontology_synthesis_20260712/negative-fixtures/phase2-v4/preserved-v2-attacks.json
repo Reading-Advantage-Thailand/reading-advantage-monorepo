@@ -1,0 +1,247 @@
+{
+  "schema_version": "apk-t9-phase2-v4-negative-fixture-group.v1",
+  "id": "preserved-v2-attacks",
+  "cases": [
+    {
+      "id": "preserved-v2:batch-policy-01",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "disjoint-whole-game-partition-assumption"
+      },
+      "expected_codes": [
+        "DISJOINT_PARTITION_ASSUMPTION"
+      ]
+    },
+    {
+      "id": "preserved-v2:batch-policy-02",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "overlap-rejected"
+      },
+      "expected_codes": [
+        "OVERLAP_REJECTED"
+      ]
+    },
+    {
+      "id": "preserved-v2:batch-policy-03",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "four-game-batch"
+      },
+      "expected_codes": [
+        "BATCH_GAME_LIMIT_EXCEEDED"
+      ]
+    },
+    {
+      "id": "preserved-v2:budget-01",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "output-budget-exceeded"
+      },
+      "expected_codes": [
+        "OUTPUT_BUDGET_EXCEEDED"
+      ]
+    },
+    {
+      "id": "preserved-v2:canonical-aggregation-01",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "cross-batch-aggregation-missing"
+      },
+      "expected_codes": [
+        "CROSS_BATCH_AGGREGATION_MISSING"
+      ]
+    },
+    {
+      "id": "preserved-v2:canonical-aggregation-02",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "opaque-capability-contract"
+      },
+      "expected_codes": [
+        "OPAQUE_CAPABILITY_CONTRACT"
+      ]
+    },
+    {
+      "id": "preserved-v2:canonical-aggregation-03",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "scene-state-consumer-omitted"
+      },
+      "expected_codes": [
+        "INVENTED_BEHAVIOR",
+        "MISSING_REQUIRED_FIELD",
+        "PLACEMENT_STATUS_COLLAPSE",
+        "SCENE_STATE_CONSUMER_OMITTED"
+      ]
+    },
+    {
+      "id": "preserved-v2:coverage-01",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "remove-mechanic-route"
+      },
+      "expected_codes": [
+        "MECHANIC_ROUTING_MISMATCH"
+      ]
+    },
+    {
+      "id": "preserved-v2:coverage-02",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "remove-upstream-claim"
+      },
+      "expected_codes": [
+        "CLAIM_SET_MISMATCH",
+        "UNKNOWN_RESOLUTION"
+      ]
+    },
+    {
+      "id": "preserved-v2:dependency-01",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "remove-dependency-edge"
+      },
+      "expected_codes": [
+        "DEPENDENCY_MISMATCH"
+      ]
+    },
+    {
+      "id": "preserved-v2:disposition-01",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "bespoke-without-incompatibility"
+      },
+      "expected_codes": [
+        "BESPOKE_WITHOUT_INCOMPATIBILITY"
+      ]
+    },
+    {
+      "id": "preserved-v2:evidence-integrity-01",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "invented-behavior"
+      },
+      "expected_codes": [
+        "DEPENDENCY_MISMATCH",
+        "INVENTED_BEHAVIOR",
+        "SCENE_STATE_CONSUMER_OMITTED"
+      ]
+    },
+    {
+      "id": "preserved-v2:evidence-integrity-02",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "placement-status-collapse"
+      },
+      "expected_codes": [
+        "INVENTED_BEHAVIOR",
+        "PLACEMENT_STATUS_COLLAPSE",
+        "SCENE_STATE_CONSUMER_OMITTED"
+      ]
+    },
+    {
+      "id": "preserved-v2:evidence-integrity-03",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "unknown-resolution"
+      },
+      "expected_codes": [
+        "DEPENDENCY_MISMATCH",
+        "INVENTED_BEHAVIOR",
+        "NOUN_ART_ONLY_STANDARDIZATION",
+        "REFERENTIAL_INTEGRITY",
+        "SCENE_STATE_CONSUMER_OMITTED",
+        "UNKNOWN_RESOLUTION"
+      ]
+    },
+    {
+      "id": "preserved-v2:evidence-quality-01",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "noun-art-only-standardization"
+      },
+      "expected_codes": [
+        "INVENTED_BEHAVIOR",
+        "NOUN_ART_ONLY_STANDARDIZATION",
+        "PROVISIONAL_ONLY_STANDARDIZATION"
+      ]
+    },
+    {
+      "id": "preserved-v2:evidence-quality-02",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "provisional-only-standardization"
+      },
+      "expected_codes": [
+        "PROVISIONAL_ONLY_STANDARDIZATION"
+      ]
+    },
+    {
+      "id": "preserved-v2:hash-receipt-01",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "tampered-hash"
+      },
+      "expected_codes": [
+        "TAMPERED_HASH"
+      ]
+    },
+    {
+      "id": "preserved-v2:hash-receipt-02",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "wrong-owner"
+      },
+      "expected_codes": [
+        "STALE_OR_WRONG_RECEIPT"
+      ]
+    },
+    {
+      "id": "preserved-v2:schema-shape-01",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "missing-required-field"
+      },
+      "expected_codes": [
+        "INVALID_SCHEMA",
+        "MISSING_REQUIRED_FIELD"
+      ]
+    },
+    {
+      "id": "preserved-v2:schema-shape-02",
+      "contract": "preserved-v2",
+      "mutation": {
+        "operation": "surplus-field"
+      },
+      "expected_codes": [
+        "SURPLUS_FIELD"
+      ]
+    }
+  ],
+  "expected_codes": [
+    "BATCH_GAME_LIMIT_EXCEEDED",
+    "BESPOKE_WITHOUT_INCOMPATIBILITY",
+    "CLAIM_SET_MISMATCH",
+    "CROSS_BATCH_AGGREGATION_MISSING",
+    "DEPENDENCY_MISMATCH",
+    "DISJOINT_PARTITION_ASSUMPTION",
+    "INVALID_SCHEMA",
+    "INVENTED_BEHAVIOR",
+    "MECHANIC_ROUTING_MISMATCH",
+    "MISSING_REQUIRED_FIELD",
+    "NOUN_ART_ONLY_STANDARDIZATION",
+    "OPAQUE_CAPABILITY_CONTRACT",
+    "OUTPUT_BUDGET_EXCEEDED",
+    "OVERLAP_REJECTED",
+    "PLACEMENT_STATUS_COLLAPSE",
+    "PROVISIONAL_ONLY_STANDARDIZATION",
+    "REFERENTIAL_INTEGRITY",
+    "SCENE_STATE_CONSUMER_OMITTED",
+    "STALE_OR_WRONG_RECEIPT",
+    "SURPLUS_FIELD",
+    "TAMPERED_HASH",
+    "UNKNOWN_RESOLUTION"
+  ],
+  "expected_state": "INVALID"
+}

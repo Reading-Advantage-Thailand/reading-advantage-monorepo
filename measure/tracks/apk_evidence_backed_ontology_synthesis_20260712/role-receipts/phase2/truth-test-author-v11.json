@@ -1,0 +1,50 @@
+{
+  "schema_version": "apk-t9-phase2-role-receipt.v11",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "task_id": "phase2-context-disposition-truth-v11",
+  "owner_role": "truth-test-author",
+  "agent_ref": "/root/t9_phase0_governance_author",
+  "dispatch": {"path": "phase2-role-dispatch-v11.json", "sha256": "5b4b87ef31382f29d61499804d57a82bcb4d6baa37fa4a98e6438c2c365c63e5"},
+  "status": "sealed-red-v11-published-waiting-for-root-v11-authority",
+  "outputs": {
+    "phase2_v11_truth_verifier.py": "7fc8c08a4a7002f06adf3a6c698a8da5599c705153a14a8273588743845ba5aa",
+    "phase2_v11_truth_verifier_test.py": "90e67abed6cffa5cc5939b397676b1e9441e46b4f960758185b6f073bdb65f30",
+    "phase2-v11-fixture-manifest.json": "a68ac1eeb21575b9e6eb52f43a18d751fcb0901550f53f01eefbd8585951688c",
+    "negative-fixtures/phase2-v11/end-to-end-attacks.json": "8b1271176dc151dbe755248160890c00a8484146ec0f3609f0031d62b0ee9005",
+    "phase2-v11-red-report.json": "f07778750cbac48f697866176d038f13a665de38afcff59d68cbdc4c1381debf"
+  },
+  "verification": {
+    "focused_suite": "3/3 pass",
+    "fixture_cases": 21,
+    "context_promotions_exercised": 48,
+    "runtime_seconds": 29.179,
+    "runtime_ceiling_seconds": 30,
+    "mocks_used": false,
+    "pre_authority_state": "RED_WAITING_FOR_ROOT_V11_AUTHORITY",
+    "correct_release_missing_mapper_state": "RED_WAITING_FOR_MAPPER_V5_OUTPUTS",
+    "wrong_release_state": "INVALID-MAPPER_RELEASE_MISMATCH",
+    "missing_expected_release_state": "INVALID-EXPECTED_MAPPER_RELEASE_REQUIRED",
+    "live_checks": 65,
+    "six_mapper_outputs_bound": true,
+    "taxonomy_ids_unique_attack": true,
+    "taxonomy_classification_bijection_attack": true,
+    "invalid_new_record_verdict_value_attack": true,
+    "malformed_and_mismatched_incompatibility_ref_attacks": true,
+    "taxonomy_review_template_attack": true,
+    "irrelevant_array_attack": true,
+    "ruff": "pass",
+    "py_compile": "pass",
+    "json_validation": "pass"
+  },
+  "green_report_published": false,
+  "scope": {
+    "v10_or_earlier_bytes_modified": false,
+    "mapper_decisions_authored": false,
+    "review_decisions_authored": false,
+    "root_v11_authority_authored": false,
+    "phase3_authorized": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false
+  }
+}

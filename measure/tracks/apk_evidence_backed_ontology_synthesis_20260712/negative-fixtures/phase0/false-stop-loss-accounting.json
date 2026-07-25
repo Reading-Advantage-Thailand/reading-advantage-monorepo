@@ -1,0 +1,9 @@
+{
+    "schema_version": "apk-t9-phase0-negative-fixture.v1",
+    "id": "false-stop-loss-accounting",
+    "mutation": {
+        "type": "replace-failed-fix-review-cycles",
+        "value": 0
+    },
+    "expected_codes": ["FALSE_STOP_LOSS_ACCOUNTING"]
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": "apk-t9-phase2-root-truth-seal.v9",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "dispatch_sha256": "60a0337eec7a67afa327f8a790620f0d0b1364717bb421dfdea86b324bd90a3b",
+  "status": "sealed-red-v9",
+  "pins": {
+    "phase2-role-dispatch-v9.json": "60a0337eec7a67afa327f8a790620f0d0b1364717bb421dfdea86b324bd90a3b",
+    "phase2_v9_truth_verifier.py": "edf0130b20af2f9436b29e1b48c251624266b95223a322349075b5bf7bf60f09",
+    "phase2_v9_truth_verifier_test.py": "749cf36a1a527ecd199ed60cde5c4a5ec0c5a50a0e61da4e8010752fb31cfcfb",
+    "phase2-v9-fixture-manifest.json": "40b1609e14b92144e6188a7bcc47466b1d3c4a1f1fa86b075c233f49bea7422a",
+    "phase2-v9-context-counterexamples.json": "9c1059df904d0d326aa714af4a24a773fa36dc870b25155d7135c907decb9583",
+    "phase2-v9-red-report.json": "64d925f6c21663e7f61ebcd8bd4c34a9343554d88c468aedc060b74cd86b7ab8",
+    "role-receipts/phase2/truth-test-author-v9.json": "fb0c74ef015cca3adfda9ee6f17a72cb8140d037e623d0fb2be653cbc5982dfc",
+    "negative-fixtures/phase2-v9/end-to-end-attacks.json": "c7c6e1f2dd4f7a20e4af08af3da94ef0253e87291b9badd9ce9d34cf466abb20"
+  }
+}

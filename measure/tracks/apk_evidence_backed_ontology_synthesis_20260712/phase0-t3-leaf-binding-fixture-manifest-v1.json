@@ -1,0 +1,49 @@
+{
+  "schema_version": "apk-t9-phase0-t3-leaf-binding-fixtures.v1",
+  "dispatch": {
+    "path": "phase0-t3-repair-role-dispatch-v1.json",
+    "sha256": "f6a9aedb3eb3246fc107363854aff75ab50b0ed1af19280b5925c3c8138a78e5"
+  },
+  "candidate": {
+    "path": "phase0-t3-leaf-binding-candidate-v1.json",
+    "sha256": "a04bc93f78ad33e22a56af7b94d61e721ae5828ed23fd509456c5250b366bbac"
+  },
+  "fixture_count": 7,
+  "fixtures": [
+    {
+      "path": "negative-fixtures/phase0-t3/stale-leaf-hash.json",
+      "sha256": "2a31e53702fce2d361c74e4fac336ce2444023026d940d5d063c39d93e3d2291",
+      "expected_codes": ["STALE_LEAF_HASH"]
+    },
+    {
+      "path": "negative-fixtures/phase0-t3/missing-leaf.json",
+      "sha256": "755d6f9b2254265e2188c5fbfdf5a33ba82a0f82e9ef4c1279f8b74724b4609f",
+      "expected_codes": ["INCOMPLETE_LEAF_SET"]
+    },
+    {
+      "path": "negative-fixtures/phase0-t3/extra-leaf.json",
+      "sha256": "bd1d6c4970aa9935518d263beb54b2cffa4dbea694e7745482da13eedcb3dfe6",
+      "expected_codes": ["INCOMPLETE_LEAF_SET"]
+    },
+    {
+      "path": "negative-fixtures/phase0-t3/wrong-game.json",
+      "sha256": "b8d0324e8a1ba6f049a9257294ccbd52c029906a33f78c5da8e6c569d96d10be",
+      "expected_codes": ["WRONG_GAME_BINDING"]
+    },
+    {
+      "path": "negative-fixtures/phase0-t3/disclosure-loss.json",
+      "sha256": "c2794bdbc1ed46870307a688100e48e3b3aa2102fe8966250068c052c7dc0fb1",
+      "expected_codes": ["DISCLOSURE_LOSS"]
+    },
+    {
+      "path": "negative-fixtures/phase0-t3/accepted-chain-hash-drift.json",
+      "sha256": "e30ab2be6736a90e9a4071ca3f447f08f0c5b28386090553000227f135f8e9fc",
+      "expected_codes": ["ACCEPTED_CHAIN_HASH_DRIFT"]
+    },
+    {
+      "path": "negative-fixtures/phase0-t3/unresolved-blueprint-reference.json",
+      "sha256": "159ed08df403e72a1481fa74d0ace3448aa8fbcc66b333e3cc786356cbfdc3b6",
+      "expected_codes": ["UNRESOLVED_BLUEPRINT_REFERENCE"]
+    }
+  ]
+}

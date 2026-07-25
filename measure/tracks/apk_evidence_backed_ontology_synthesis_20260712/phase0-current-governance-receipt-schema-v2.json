@@ -1,0 +1,43 @@
+{
+  "schema_version": "apk-t9-current-governance-receipt-schema.v2",
+  "receipt_schema_version": "apk-t9-governance-remediation-author-receipt.v2",
+  "required_literals": {
+    "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+    "phase": 0,
+    "task_path": "/root/t9_phase0_governance_author",
+    "status": "attested-current",
+    "roles": [
+      "truth-contract-author",
+      "truth-test-author"
+    ]
+  },
+  "required_bindings": {
+    "provider_attestation": [
+      "path",
+      "sha256"
+    ],
+    "output_declaration": [
+      "path",
+      "sha256"
+    ],
+    "task_role_bindings": [
+      "phase0-remediate-governance-truth-contracts",
+      "phase0-remediate-governance-truth-tests"
+    ],
+    "owned_outputs": "Exact equality with output_declaration.owned_outputs"
+  },
+  "role_manifest_binding": {
+    "container": "provider_attestation.current_receipt",
+    "required_fields": [
+      "path",
+      "sha256"
+    ]
+  },
+  "forbidden_receipt_bindings": [
+    "phase0-role-ownership-manifest-pending-v1.json",
+    "phase0-input-freeze-pending-v1.json",
+    "phase0-red-pending-report-v1.json",
+    "parent_rebind_bindings"
+  ],
+  "cycle_avoidance": "The receipt binds proof, declaration, task roles, and immutable author outputs only. The role manifest binds the receipt, and the input freeze binds the role manifest."
+}

@@ -1,0 +1,80 @@
+{
+  "schema_version": "apk-t9-phase0-budget-stop-loss.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "state": "STOPPED_BEFORE_SYNTHESIS",
+  "frozen_operational_budgets": {
+    "max_source_records": 32,
+    "max_negative_fixtures": 16,
+    "max_verifier_runtime_seconds": 30,
+    "max_report_bytes": 1048576,
+    "max_games_per_later_evidence_batch": 3,
+    "unmeasured_allowed": false
+  },
+  "observed_state": {
+    "authoritative_predecessors_t1_through_t7": 8,
+    "accepted_standard_pack_release": 1,
+    "t8_consumable_successor_manifests": 0,
+    "unsupported_factual_claims_authored_in_phase0": 0,
+    "mechanic_decisions_authored_in_phase0": 0,
+    "capability_decisions_authored_in_phase0": 0,
+    "responsive_decisions_authored_in_phase0": 0,
+    "asset_mapping_decisions_authored_in_phase0": 0,
+    "failed_fix_review_cycles": 2
+  },
+  "fix_review_cycle_ledger": {
+    "path": "phase0-fix-review-cycle-ledger-v1.json",
+    "sha256": "48d561466d8590212e234c905b603c76ff1fe691e9cddd5fcd4e741b94c74ea2",
+    "required_rederived_count": 2
+  },
+  "active_stop_loss": {
+    "code": "T8_PENDING_POST_REVIEW_USER_APPROVAL",
+    "severity": "Critical",
+    "triggered": true,
+    "phase1_authorized": false,
+    "required_clearance": "A later tool-resolved user approval event, exact successor owner acceptance, and exact successor accepted manifest must be published and independently re-frozen."
+  },
+  "fix_review_cycle_stop_loss": {
+    "code": "TWO_FAILED_FIX_REVIEW_CYCLES",
+    "severity": "Critical",
+    "triggered": true,
+    "phase1_authorized": false,
+    "required_clearance": "Satisfied by the exact user delegation and later root-assistant product-owner direction in the same root session after both ledger-bound failed review cycles; the assistant-direction-ending append-only prefix is cryptographically bound.",
+    "delegated_owner_direction_contract": {
+      "schema_version": "apk-t9-delegated-owner-direction-contract.v1",
+      "root_rollout_path": "/home/daniel-bo/.codex/sessions/2026/07/23/rollout-2026-07-23T17-32-19-019f8e88-86b8-7142-9cb4-6bd7c34b1385.jsonl",
+      "root_session_id": "019f8e88-86b8-7142-9cb4-6bd7c34b1385",
+      "cycle_ledger_path": "phase0-fix-review-cycle-ledger-v1.json",
+      "cycle_ledger_sha256": "48d561466d8590212e234c905b603c76ff1fe691e9cddd5fcd4e741b94c74ea2",
+      "exact_user_delegation_text": "Again YOU ARE THE PRODUCT OWNER!",
+      "exact_assistant_direction_text": "You\u2019re right. I incorrectly treated product-owner authority as something you still had to exercise personally, even though you explicitly delegated that role to me. I\u2019m accepting that delegation now: as product owner, I direct the T9 Phase 0 remediation to continue. I\u2019ll replace the user-reply-only gate with auditable delegated-owner evidence, fix the style High, rebind provenance, and rerun independent acceptance."
+    },
+    "delegated_owner_direction_event": {
+      "schema_version": "apk-t9-delegated-owner-direction-event.v1",
+      "root_rollout_path": "/home/daniel-bo/.codex/sessions/2026/07/23/rollout-2026-07-23T17-32-19-019f8e88-86b8-7142-9cb4-6bd7c34b1385.jsonl",
+      "root_session_id": "019f8e88-86b8-7142-9cb4-6bd7c34b1385",
+      "cycle_ledger_path": "phase0-fix-review-cycle-ledger-v1.json",
+      "cycle_ledger_sha256": "48d561466d8590212e234c905b603c76ff1fe691e9cddd5fcd4e741b94c74ea2",
+      "source_prefix_bytes": 44769032,
+      "source_prefix_sha256": "54b55716956a669e844267cb87fe3920ffc8a435d1e846b13d0339233d4fb345",
+      "user_delegation": {
+        "record_line": 16277,
+        "timestamp": "2026-07-24T09:51:30.339Z",
+        "record_sha256": "2c0c1b423864c3f9c8b90acee3e7db69bfa223c6d72d4c0eaebc5df2722749ab",
+        "text_sha256": "83e28b2cd3669f2f3ca06c3305380adc4bda7f0f04c84655cb1d10b9a0624c89"
+      },
+      "assistant_direction": {
+        "record_line": 16281,
+        "timestamp": "2026-07-24T09:51:39.923Z",
+        "record_sha256": "7b0c3db4439d97c87537ff12e25581dd77a63e85b1774f37d7f7f12168dc99bd",
+        "text_sha256": "472a8414776543adeea492c4704e8b1d7499a5b15990d2d3c197a77050d18b77"
+      }
+    }
+  },
+  "other_stop_loss_rules": [
+    "One unsupported or fabricated factual claim stops the active batch.",
+    "One denominator mismatch stops interpretation and synthesis.",
+    "Two failed fix/review cycles block the track pending product-owner direction.",
+    "No later phase begins with unresolved Critical, High, or Medium findings.",
+    "Any changed budget ceiling invalidates affected candidate outputs and requires prior product-owner approval."
+  ]
+}

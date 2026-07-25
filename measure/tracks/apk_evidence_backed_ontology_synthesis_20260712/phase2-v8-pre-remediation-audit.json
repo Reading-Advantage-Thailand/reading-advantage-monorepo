@@ -1,0 +1,325 @@
+{
+  "schema_version": "apk-t9-phase2-v8-pre-remediation-audit.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 2,
+  "task_id": "phase2-curated-evidence-review-v8",
+  "audited_at": "2026-07-25T01:50:20Z",
+  "reviewer": {
+    "agent_ref": "/root/phase5_review_b",
+    "role": "capability-reviewer",
+    "independent_of_mapper": true,
+    "independent_of_truth_test_author": true,
+    "independent_of_product_owner_acceptance_author": true
+  },
+  "dispatch_binding": {
+    "path": "phase2-role-dispatch-v8.json",
+    "sha256": "5ae31c7f2f7342aabc364e3f847f4f1da2a3184ef1b6b995949776d14e4b8bf8"
+  },
+  "rejected_v4_bindings": {
+    "phase2-capability-comparisons-v4.json": "c0cb1d1c0ab322e550ba805070e4a31dfc58bd17bcb57f76854f69747ab29821",
+    "phase2-capability-classification-v4.json": "11a1acb51e2112ff21215b12b6d1aff0a84ad9ca67fb5fea92fbec4711e6d705",
+    "phase2-extension-boundaries-v4.json": "b9de252e7f0ef1843470d7b9dba3470c4827cd79754106c4df044b6f1805220c",
+    "phase2-claim-dependency-edges-v4.json": "d1c92725989fe3d09a7793f52e19bf284b253bf6f91c0559f9e68c38d6646702",
+    "role-receipts/phase2/capability-mapper-v4.json": "41fac5239d44fadc2041122caf26f6fcb3c572029be3364c55e96a222f67b6b6"
+  },
+  "audit_scope": {
+    "findings_reviewed": 87,
+    "uses_reviewed": 563,
+    "per_game_behavior_summaries_reviewed": 246,
+    "game_and_capability_semantic_coherence_reviewed": true,
+    "mapper_v5_reviewed": false,
+    "v8_green_reviewed": false,
+    "final_v8_review_published": false,
+    "final_reviewer_receipt_published": false,
+    "root_acceptance_authored": false
+  },
+  "rejected_candidate_inventory": {
+    "capabilities": 13,
+    "findings": 87,
+    "similarities": 16,
+    "differences": 71,
+    "capability_uses": 563,
+    "unique_capability_records": 558,
+    "per_game_behaviors": 246,
+    "current_non_capability_context_records": 75,
+    "unique_statements": 87,
+    "unique_boundary_effect_objects": 87,
+    "unique_relevance_statements": 563,
+    "uniqueness_assessment": "Text values are byte-unique because game names, capability names, dimensions, and excerpt keywords were substituted into generators; uniqueness does not establish semantic authorship or pertinence."
+  },
+  "blocking_findings": [
+    {
+      "finding_id": "P2V8-PRE-HIGH-001",
+      "severity": "High",
+      "title": "At least 60 of 87 findings mix unrelated behavioral dimensions or capabilities",
+      "quantification_kind": "conservative-confirmed-lower-bound",
+      "confirmed_minimum": 60,
+      "candidate_total": 87,
+      "by_capability": {
+        "binary-gate-round-loop": 4,
+        "session-lifecycle": 13,
+        "input-action-normalization": 3,
+        "language-target-progression": 14,
+        "difficulty-configuration": 4,
+        "result-accounting": 10,
+        "time-and-frame-loop": 2,
+        "collision-resource-resolution": 3,
+        "actor-world-update": 4,
+        "session-feedback-surfaces": 3
+      },
+      "representative_failures": [
+        {
+          "finding_id": "similarity:session-lifecycle:01:shared-contract",
+          "mixed_evidence": [
+            "Dragon Flight boss overlay, emoji, sprite-row, test-id, readiness, and boss-sequence display state",
+            "Magic Defense castle defeat, missile and bolt render states, and HUD readiness",
+            "RPG Battle render gates and pose type literals"
+          ]
+        },
+        {
+          "finding_id": "difference:session-lifecycle:02:game-extension",
+          "mixed_evidence": [
+            "Dragon Flight boss movement, results timeout, start, and restart",
+            "Dungeon Liberator collision consequence, tick order, and start-screen behavior",
+            "RPG Battle status type literals and initial turn"
+          ]
+        },
+        {
+          "finding_id": "difference:input-action-normalization:02:game-extension",
+          "mixed_evidence": [
+            "Dragon Flight keyboard cleanup and touch behavior",
+            "Dragon Flight difficulty selector",
+            "Dragon Flight start button",
+            "Dragon Flight Trophy ranking-dialog button",
+            "Dungeon Liberator movement adapter, start screen, and fullscreen orchestration"
+          ]
+        },
+        {
+          "finding_id": "similarity:language-target-progression:01:shared-contract",
+          "mixed_evidence": [
+            "Enchanted Library target-book creation and spatial placement",
+            "RPG Battle player damage, enemy damage, and enemy scaling",
+            "Sorcerer Ziggurat graph initialization, wrong-target penalty, and sentence completion"
+          ]
+        },
+        {
+          "finding_id": "difference:language-target-progression:13:game-extension",
+          "mixed_evidence": [
+            "Spellweavers Run viewport and logical-stage scaling",
+            "Wizard Vs Zombie asset loading, visual rendering, and fallback content"
+          ]
+        },
+        {
+          "finding_id": "difference:result-accounting:02:game-extension",
+          "mixed_evidence": [
+            "Magic Defense XP formula and score mutation",
+            "Magic Defense ActiveExplosion rendering",
+            "RPG Battle API route validation and result surface",
+            "Spellweavers Run word progression, result calculation, and end-screen navigation"
+          ]
+        },
+        {
+          "finding_id": "difference:actor-world-update:02:game-extension",
+          "mixed_evidence": [
+            "Griffin Riders Escape lane movement",
+            "Labyrinth Goblin King corner collision checks",
+            "Magic Defense nearest-castle selection"
+          ]
+        }
+      ],
+      "impact": "The findings cannot define reusable shared-kit contracts because their statements and boundaries do not correspond to one causal behavior that all included claims exercise.",
+      "required_remediation": "Discard automatic claim batches. Curate each finding around one invariant or one comparison axis, then select only direct claims that would make the statement unsupported if removed."
+    },
+    {
+      "finding_id": "P2V8-PRE-HIGH-002",
+      "severity": "High",
+      "title": "At least 48 of 563 capability uses are high-confidence context-only records",
+      "quantification_kind": "conservative-exact-identified-set",
+      "confirmed_minimum": 48,
+      "candidate_total": 563,
+      "by_capability": {
+        "binary-gate-round-loop": 1,
+        "session-lifecycle": 34,
+        "input-action-normalization": 4,
+        "language-target-progression": 6,
+        "result-accounting": 2,
+        "collision-resource-resolution": 1
+      },
+      "exact_record_ids": {
+        "binary-gate-round-loop": [
+          "dragon-flight:DF-CTRL-016"
+        ],
+        "session-lifecycle": [
+          "rpg-battle:RPG-ST-010",
+          "rpg-battle:RPG-ST-011",
+          "rpg-battle:RPG-ST-012",
+          "rpg-battle:RPG-ST-013",
+          "magic-defense:MD-ST-004",
+          "rpg-battle:RPG-ST-014",
+          "rpg-battle:RPG-ST-015",
+          "rpg-battle:RPG-ST-016",
+          "rpg-battle:RPG-ST-017",
+          "rpg-battle:RPG-ST-018",
+          "rpg-battle:RPG-ST-019",
+          "dragon-flight:DF-STATE-008",
+          "magic-defense:MD-ST-008",
+          "rpg-battle:RPG-ST-020",
+          "rpg-battle:RPG-ST-021",
+          "rpg-battle:RPG-ST-022",
+          "rpg-battle:RPG-ST-023",
+          "rpg-battle:RPG-ST-025",
+          "rpg-battle:RPG-ST-026",
+          "rpg-battle:RPG-ST-028",
+          "wizard-vs-zombie:WVZ-STT-001",
+          "rpg-battle:RPG-ST-030",
+          "rpg-battle:RPG-ST-031",
+          "rpg-battle:RPG-ST-032",
+          "rpg-battle:RPG-ST-033",
+          "rpg-battle:RPG-ST-035",
+          "rpg-battle:RPG-ST-036",
+          "rpg-battle:RPG-ST-037",
+          "rpg-battle:RPG-ST-038",
+          "rpg-battle:RPG-ST-039",
+          "rpg-battle:RPG-ST-040",
+          "rpg-battle:RPG-ST-041",
+          "rpg-battle:RPG-ST-042",
+          "rpg-battle:RPG-ST-043"
+        ],
+        "input-action-normalization": [
+          "dragon-flight:DF-CTRL-013",
+          "dragon-flight:DF-CTRL-015",
+          "rpg-battle:RPG-CTL-007",
+          "rpg-battle:RPG-CTL-009"
+        ],
+        "language-target-progression": [
+          "rune-match:RM-CONT-001",
+          "dragon-flight:DF-COPY-005",
+          "enchanted-library:EL-CONT-001",
+          "the-haunted-library:HL-CUR-002",
+          "wizard-vs-zombie:WVZ-MECH-008",
+          "spellweavers-run:SW-WORLD-002"
+        ],
+        "result-accounting": [
+          "magic-defense:MD-ST-003",
+          "rpg-battle:RPG-TR-017"
+        ],
+        "collision-resource-resolution": [
+          "dragon-flight:DF-MECH-039"
+        ]
+      },
+      "selection_rule": "This exact set is restricted to clear type-vocabulary, file or negative-search, route or fixture, test-id, rendering, UI-scaffolding, asset-loading, navigation, or unrelated presentation records. It deliberately excludes less-certain cross-capability candidates, so 48 is a lower bound.",
+      "impact": "Generated excerpt-paraphrase relevance sentences promote context by assertion and allow irrelevant records to satisfy capability and cross-game denominators.",
+      "required_remediation": "Route the exact set to non-capability context unless a separate complete excerpt demonstrates a directly supported capability. Apply the v8 counterfactual pertinence question to every remaining curated use."
+    },
+    {
+      "finding_id": "P2V8-PRE-HIGH-003",
+      "severity": "High",
+      "title": "All 87 boundary effects are generated validation, sequencing, choices, and hidden-policy templates",
+      "affected_count": 87,
+      "exact_pattern_counts": {
+        "shared_core_owns_validation_and_sequencing_for": 87,
+        "game_extension_owns_the_evidenced_choices": 87,
+        "interface_selects_evidenced_variant_without_hidden_policy": 87
+      },
+      "impact": "The effects are syntactically unique but do not state a hand-authored shared invariant, game-owned variant, or implementable interface consequence.",
+      "required_remediation": "Write one concrete ownership decision per curated finding after its evidence is fixed. Reject effects that can be recreated by substituting the capability, dimension, game names, or excerpt keywords."
+    },
+    {
+      "finding_id": "P2V8-PRE-HIGH-004",
+      "severity": "High",
+      "title": "All 87 statements are generated keyword summaries rather than complete evidence synthesis",
+      "affected_count": 87,
+      "exact_pattern_counts": {
+        "shared_behavior_across_with_accepted_evidence_names": 16,
+        "dimension_differs_with_game_uses_fragments": 71
+      },
+      "observed_failure_modes": [
+        "keyword fragments omit verbs, objects, qualifiers, or consequences",
+        "the first available excerpt fragments are treated as the finding dimension",
+        "per-game summaries concatenate inventories with pipe separators",
+        "different mechanics are made comparable merely because they share capability vocabulary",
+        "statements remain grammatical only at the outer template level"
+      ],
+      "impact": "A developer cannot derive a stable shared contract or game extension from the text without reopening the complete Phase 1 evidence.",
+      "required_remediation": "Hand-author one complete statement after selecting a bounded direct-evidence set. Each per-game behavior must be one sentence and each difference must name the same behavioral axis for every game."
+    }
+  ],
+  "preliminary_severity_ledger": {
+    "Critical": 0,
+    "High": 4,
+    "Medium": 0,
+    "Low": 0,
+    "unresolved_medium_or_higher": 4
+  },
+  "required_curated_evidence_model": {
+    "accounting": {
+      "mechanic_records": 633,
+      "rule": "Account for every record exactly once as curated capability evidence or non-capability context, but do not force every record into a reusable capability."
+    },
+    "capability_selection": {
+      "curated_capability_uses_max": 270,
+      "counterfactual_pertinence_question": "If this claim were removed, would the exact invariant or game-specific variant become unsupported?",
+      "required_behavior_shape": [
+        "precondition",
+        "action or transition",
+        "observable outcome"
+      ],
+      "default_context_forms": [
+        "type declarations",
+        "imports",
+        "file paths",
+        "test IDs",
+        "fixtures",
+        "asset loading",
+        "UI scaffolding",
+        "API wiring",
+        "negative searches",
+        "render-only facts outside presentation or feedback findings"
+      ]
+    },
+    "similarity": {
+      "atomic_invariants": 1,
+      "games_min": 2,
+      "games_max": 3,
+      "direct_claims_per_game": 1,
+      "direct_claims_total_max": 4
+    },
+    "difference": {
+      "comparison_axes": 1,
+      "games_min": 2,
+      "games_max": 3,
+      "direct_claims_per_game_min": 1,
+      "direct_claims_per_game_max": 2,
+      "direct_claims_total_max": 6
+    },
+    "capability_budget": {
+      "curated_findings_review_target": "35-45-non-binding; evidence may justify fewer",
+      "curated_findings_max": 45,
+      "invented_reuse_to_reach_review_target_forbidden": true,
+      "standardize_similarity_findings_max": 2,
+      "extend_similarity_findings": 1,
+      "extend_difference_findings_max": 3
+    },
+    "assembly_order": [
+      "Classify every accepted Phase 1 mechanic record as directly reusable evidence or context.",
+      "For each potential use, answer the counterfactual pertinence question and select one complete excerpt.",
+      "Group selected uses only when they express one identical invariant or one identical comparison axis.",
+      "Write one-sentence per-game behavior summaries without pipe-concatenated inventories.",
+      "Hand-author the finding statement and three architectural consequences from the curated evidence.",
+      "Verify all game dispositions, claim limits, context routes, and dependency bindings before truth Green."
+    ],
+    "truth_requirements": [
+      "Reject the bound mapper v4 bundle as an over-batched counterexample.",
+      "Reject findings and use sets above the v8 budgets.",
+      "Reject more than the allowed direct claims per game or finding.",
+      "Reject pipe-concatenated per-game inventories.",
+      "Reject multi-dimension findings.",
+      "Reject promoted context or provenance.",
+      "Reject automatic keyword routing.",
+      "Exercise manually gold-labelled cross-capability counterexamples."
+    ]
+  },
+  "verdict": "blocking-pre-remediation-audit",
+  "candidate_assessment": "The rejected mapper v4 bundle is not suitable as a shared-kit capability contract and must not be repaired by text substitution alone. Evidence must be reclassified and curated before mapper v5 findings are assembled.",
+  "publication_boundary": "This is a pre-remediation audit only. It is not the final v8 independent review or reviewer receipt and does not review mapper v5, v8 Green, root acceptance, Phase 3, assets, responsive behavior, implementation, or shipping."
+}

@@ -1,0 +1,62 @@
+{
+  "accepted_at": "2026-07-24T13:02:42.665Z",
+  "accepted_by": "/root",
+  "authority": "delegated-root-product-owner",
+  "bindings": {
+    "candidate": {
+      "path": "phase0-cohort-leaf-binding-candidate-v1.json",
+      "sha256": "2a9c5f2eb24d235dbbb59c81b63e81a162ff08c4a6f0aa95fff66bea58194fef"
+    },
+    "catalog_author_receipt": {
+      "path": "role-receipts/phase0/cohort-leaf-binding-catalog-author.json",
+      "sha256": "6bd34ea232bdab1f130491a52a871d06a1001c69583ff2c45cfb9687cf51eef3"
+    },
+    "green_report": {
+      "path": "phase0-cohort-leaf-binding-green-report-v1.json",
+      "sha256": "bfa360221f78d4124a9b28492664432d9d7ee666cae8decfa3d663ab87c2b2ac"
+    },
+    "independent_review": {
+      "path": "phase0-cohort-leaf-binding-independent-review-v1.json",
+      "sha256": "a822ab25fc9912ecc00da1d8da01a4359fb4111623a6c68d96400b12d5b7fe8b"
+    },
+    "independent_reviewer_receipt": {
+      "path": "role-receipts/phase0/cohort-leaf-binding-independent-reviewer.json",
+      "sha256": "668ccc2dd55c4981306e68178c92638f5af619b1aa82402edc80e209de55bd0d"
+    },
+    "repair_dispatch": {
+      "path": "phase0-cohort-leaf-repair-role-dispatch-v1.json",
+      "sha256": "7a7ec749bb4f83c5dfab0e7c63bd754f686eabe77506fb2f83480bf48f828400"
+    },
+    "truth_test_author_receipt": {
+      "path": "role-receipts/phase0/cohort-leaf-binding-truth-test-author.json",
+      "sha256": "f24faf590369caab1450eebfac1b3f7188072b0545190ff63ce926ef0dcd4802"
+    }
+  },
+  "decision": "ACCEPT_T4B_T6B_LEAF_BINDING_REPAIR_FOR_PHASE0_V3",
+  "manual_assessment": {
+    "accepted_chain_and_receipt_bindings": "27/27",
+    "bounded_queries_rederived": "6/6",
+    "claim_count": 226,
+    "explicit_unknown_count": 24,
+    "focused_suite": "4/4 pass in 4.815 seconds",
+    "game_count": 6,
+    "git_blob_and_exact_range_citations": "220/220",
+    "leaf_count": 6,
+    "negative_fixture_count": 30,
+    "source_references": "226/226 resolved",
+    "unresolved_medium_or_higher": 0
+  },
+  "prior_high_disposition": {
+    "finding": "Initial fixtures were outside the truth-test author's dispatched path.",
+    "remaining_unauthorized_fixture_files": 0,
+    "status": "remediated-and-independently-verified"
+  },
+  "scope": {
+    "direct_phase1_consumption_authorized": false,
+    "phase0_v3_input_authorized": true,
+    "requires_phase0_v3_registry_and_acceptance": true
+  },
+  "status": "accepted-for-phase0-v3-input-only",
+  "schema_version": "apk-t9-phase0-cohort-leaf-binding-acceptance.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+}

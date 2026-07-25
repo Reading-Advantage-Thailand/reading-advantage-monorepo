@@ -1,0 +1,50 @@
+{
+  "agent_ref": "/root/t9_phase2_v13_truth_reverifier",
+  "dispatch": {
+    "path": "phase2-role-dispatch-v13.json",
+    "sha256": "04eda4bfda92f171c61cda359843afe9c6057ddc673a6afca8e6c1f29048a766"
+  },
+  "green_report_published": false,
+  "outputs": {
+    "negative-fixtures/phase2-v13/end-to-end-attacks.json": "d8b9d688ef4280379968626f724658ad4c849c1c83c1ff725f33023e14efe4a3",
+    "phase2-v13-fixture-manifest.json": "d72968ce40caddcba24f3d1ac8bc04f64d4a56ff5d8741e5c212c5471aa01316",
+    "phase2-v13-red-report.json": "1a6b5368b50ce60693e8a34acc9124cb2fb2589ca7b7a171139c04d257cfde5f",
+    "phase2_v13_truth_verifier.py": "0ed4c48ad6835fa12662de455c226011c7de3f0a1e02abb3cc2f73ebead85b18",
+    "phase2_v13_truth_verifier_test.py": "6802a680f830c8a466a37b3984b122c5833ae195b2f1ff931c01111f60541cc4"
+  },
+  "owner_role": "truth-test-author",
+  "phase": 2,
+  "provenance_note": "The v13 truth artifacts (phase2_v13_truth_verifier.py, phase2_v13_truth_verifier_test.py, phase2-v13-fixture-manifest.json, negative-fixtures/phase2-v13/end-to-end-attacks.json, phase2-v13-red-report.json) were authored in a prior session by /root/t9_phase0_governance_author. This role independently re-verified the complete v13 truth package in a fresh session without modifying any artifact: all six SHA-256 hashes match the red report; the focused suite passes 4/4; live verification confirms 79 checks at RED_WAITING_FOR_ROOT_V13_AUTHORITY with sole finding ROOT_V13_AUTHORITY_MISSING; py_compile, ruff, and JSON validation all pass cleanly.",
+  "schema_version": "apk-t9-phase2-role-receipt.v13",
+  "scope": {
+    "implementation_authorized": false,
+    "mapper_decisions_authored": false,
+    "phase3_authorized": false,
+    "product_semantic_evidence_authored": false,
+    "review_decisions_authored": false,
+    "root_v13_authority_authored": false,
+    "shipping_authorized": false,
+    "v12_or_earlier_bytes_modified": false
+  },
+  "status": "reverified-red-v13-published-waiting-for-root-v13-authority",
+  "task_id": "phase2-contradictory-accepted-evidence-truth-v13",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "verification": {
+    "contradiction_allowlist": [
+      "magic-defense:MD-TRANS-006",
+      "rpg-battle:RPG-NEG-001"
+    ],
+    "fixture_cases": 15,
+    "focused_suite": "4/4 pass",
+    "json_validation": "pass",
+    "live_checks": 79,
+    "mocks_used": false,
+    "pre_authority_state": "RED_WAITING_FOR_ROOT_V13_AUTHORITY",
+    "ruff": "pass",
+    "runtime_ceiling_seconds": 30,
+    "runtime_seconds": 10.211,
+    "six_mapper_outputs_bound": true,
+    "six_non_contradiction_control_families_reject_automatic_quarantine": true,
+    "py_compile": "pass"
+  }
+}

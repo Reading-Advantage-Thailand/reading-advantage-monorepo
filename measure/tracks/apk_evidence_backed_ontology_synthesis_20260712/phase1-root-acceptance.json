@@ -1,0 +1,107 @@
+{
+  "schema_version": "apk-t9-phase1-root-acceptance.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 1,
+  "accepted_at": "2026-07-24T16:34:36.153Z",
+  "accepted_by": "root-orchestrator-product-owner",
+  "owner_identity": "/root",
+  "authority": "delegated-root-product-owner",
+  "decision": "ACCEPT_PHASE1_OPEN_PHASE2",
+  "artifact_bindings": {
+    "phase1-role-dispatch-v2.json": "2032327e85c55bf789782ed6dd1635e03fa5efb323bb4ef2bc3fe29791ff7c7c",
+    "phase0-root-acceptance-v3.json": "0480362baab8a237cf71fafc20800979793848fd70907013e27a462330690960",
+    "phase1-source-resolution-index-v1.json": "2900222c4fc4db8ffb354d4f25f5c1a8bef6930b2d7e8e1bb692dab27d860bd0",
+    "phase1-mechanic-blueprints-v1.json": "ed3bee70f5e7e94ac101f295d9de3f768cdaf9d97d40d4529f2fbbbe8f479d61",
+    "phase1-developer-effort-baseline-v1.json": "168403610d0c69160777ddeca5753dcc57b97e2a7db6ceed65f3e4ce64d14f91",
+    "phase1-claim-dependency-edges-v1.json": "2b279df4896c9620ea9acf17506e942c9df98e2b4d6c06a29d5293106aff0987",
+    "role-receipts/phase1/mechanics-capability-mapper.json": "2d05dfdc8c9d698064a342e7cee5eeeb540d05afa640c637ec19dc55925357e5",
+    "phase1_truth_verifier.py": "df86b554e3db74b6e876efafa57a586447cf0445806d6d2315ab34ba9dbabe49",
+    "phase1_truth_verifier_test.py": "8746947941499f65f594e21ee5e1a2c2943f1e2f8e314bf4744f153001f1462f",
+    "phase1-fixture-manifest-v1.json": "6def0a763251bf00789868ee2a6e7dabc1d79bc34f98173b8e2e37072f1e6aed",
+    "phase1-red-report-v1.json": "5417782771b7f84156d6e61f7d7dd760ff6bd3000d48bf0504ef9ee364789882",
+    "phase1-green-report-v1.json": "7840d97ed345ff7b142cf18ab2019b207689d9425d205bb522f162ce27d0b08c",
+    "role-receipts/phase1/truth-test-author.json": "316823e4552d4f16e1352b1915cba17964184ad9814abcc36e355952b333b908",
+    "phase1-independent-review.json": "87760a9abc8b987db714d1815841c369d9e83f5f443b676366d06daf9b8cbd99",
+    "role-receipts/phase1/mechanics-capability-reviewer.json": "cd4896ebcb429c10c16fc692cf2f13606c9d92a2d5d5fa7b52284629ce2e5491"
+  },
+  "verification": {
+    "state": "VERIFIED",
+    "status": "pass",
+    "live_checks": 2298,
+    "live_findings": 0,
+    "focused_tests_passed": 14,
+    "negative_cases_rejected": 80,
+    "negative_fixture_files": 16,
+    "root_suite_runtime_seconds": 15.273,
+    "verifier_runtime_seconds": 0.72,
+    "exact_production_shapes": 29,
+    "required_key_deletions_rejected": 158,
+    "surplus_key_insertions_rejected": 29,
+    "unresolved_medium_or_higher": 0
+  },
+  "effective_corpus": {
+    "total_claims": 1248,
+    "direct_accepted": 573,
+    "explicit_game_package_global_accepted": 421,
+    "verified_parent_linked_accepted": 20,
+    "accepted_scene_state_placement_blocked": 210,
+    "upstream_unknown": 24,
+    "normalized_source_documents": 32,
+    "current_records": 1009,
+    "resolvable_games": 28,
+    "castle_defense_disposition": "blocked-by-unknown"
+  },
+  "routing": {
+    "phase1_mechanic": 633,
+    "phase1_effort": 376,
+    "deferred_asset": 146,
+    "deferred_responsive": 52,
+    "context_only": 17,
+    "blocked_upstream_unknown": 24,
+    "games_with_zero_mechanics": []
+  },
+  "product_usability_assessment": {
+    "readable_canonical_fact_values": true,
+    "opaque_claim_id_fallbacks": 0,
+    "mechanic_games_covered": 28,
+    "placement_blocked_facts_preserve_accepted_factual_status": true,
+    "placement_blocked_counts_as_resolved_coverage": false,
+    "upstream_unknowns_separate_from_accepted_facts": true,
+    "composite_overlays_materialized": true,
+    "unsupported_or_undeclared_fact_fields_rejected": true
+  },
+  "independent_review": {
+    "path": "phase1-independent-review.json",
+    "sha256": "87760a9abc8b987db714d1815841c369d9e83f5f443b676366d06daf9b8cbd99",
+    "receipt_path": "role-receipts/phase1/mechanics-capability-reviewer.json",
+    "receipt_sha256": "cd4896ebcb429c10c16fc692cf2f13606c9d92a2d5d5fa7b52284629ce2e5491",
+    "verdict": "independent-review-pass",
+    "findings": {
+      "Critical": 0,
+      "High": 0,
+      "Medium": 0,
+      "Low": 0
+    },
+    "unresolved_medium_or_higher": 0
+  },
+  "external_llm_review": {
+    "attempted": true,
+    "completed": false,
+    "disposition": "approval-reviewer-rejected-external-unpublished-artifact-transfer; no workaround attempted",
+    "compensating_evidence": [
+      "independent mapper consolidated audits",
+      "formal independent Phase 1 review",
+      "root automated and readability sampling"
+    ]
+  },
+  "scope": {
+    "phase2_capability_classification_authorized": true,
+    "phase3_responsive_authorized": false,
+    "asset_mapping_authorized": false,
+    "implementation_authorized": false,
+    "shipping_authorized": false,
+    "unknown_must_have_resolution_authorized": false
+  },
+  "owner_acceptance_rationale": "The complete evidence-backed mechanic and effort derivation is readable, source-resolved, budget-compliant, adversarially fail-closed, independently reviewed with zero findings, and fit to feed capability classification without authorizing implementation or asset adoption.",
+  "next_action": "Issue a Phase 2 role dispatch for evidence-backed capability comparison and classification against only the accepted Phase 1 hashes."
+}

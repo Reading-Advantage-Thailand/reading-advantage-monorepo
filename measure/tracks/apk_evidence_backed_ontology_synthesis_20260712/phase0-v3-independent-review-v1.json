@@ -1,0 +1,170 @@
+{
+  "schema_version": "apk-t9-phase0-v3-independent-review.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "reviewed_at": "2026-07-24T13:34:29Z",
+  "reviewer": {
+    "agent_ref": "/root/phase5_review_b",
+    "role": "phase0-v3-independent-reviewer",
+    "independent_of_governance_author": true,
+    "independent_of_truth_test_author": true
+  },
+  "dispatch_binding": {
+    "path": "phase0-v3-role-dispatch-v1.json",
+    "sha256": "a34ade4b97794bab87be92d6f72f7505e524861b3dd1013d68979e7784f6793f"
+  },
+  "reviewed_artifact_bindings": {
+    "phase0-source-registry-v3.json": "ae6050cc6c075614b34b6d8832a350f7d28945154315adebb25667fffc5b858c",
+    "phase0-input-freeze-v3.json": "0517288c5aa267ddbd5f22fd6929cd74aaaacc74b9321d43094c72ade8614dae",
+    "phase0_v3_truth_verifier.py": "20312ab8442af0bb6e2288b0476977710dc5752b857e358f6b3703c9282076f8",
+    "phase0_v3_truth_verifier_test.py": "270d89ed711a1b11e47e8cae99ea098693d800bce1a665da0d02e22a6603d967",
+    "phase0-v3-fixture-manifest-v1.json": "974586ea6987e79b2299328d16d89f4d345dd192df9fd1666e2cc52adbecb0d2",
+    "phase0-v3-red-report-v1.json": "3fe6656d1c06adb3ac28e28df58689118c8347a90f421e4a33dfe8e1579cdb9a",
+    "phase0-v3-green-report-v1.json": "451da6ddb8c795254f674cede40568b83b41c5aab1c591f25e82f6be1e067bb3",
+    "role-receipts/phase0/phase0-v3-truth-test-author.json": "983070f5126988a07d9a6050a58760b71be455a3c4311afd9de9a2582c0720e0"
+  },
+  "prior_pre_review_remediation": {
+    "findings": [
+      {
+        "severity": "High",
+        "finding": "The registry omitted the dispatch-required Phase 0 v2 acceptance binding and superseded-baseline disposition.",
+        "resolution": "The registry, freeze, verifier, and fixtures now bind the exact v2 acceptance and enforce that its prior Phase 1 authorization is inactive."
+      },
+      {
+        "severity": "High",
+        "finding": "The identity mapping digest expected-value path targeted a nonexistent top-level field.",
+        "resolution": "The registry now uses mapping_contract.mapping_digest, and the verifier resolves every dotted expected-value path."
+      },
+      {
+        "severity": "Medium",
+        "finding": "The 29/28 denominator exposed only aggregate counts and allowed a count-preserving false Green.",
+        "resolution": "The registry and freeze now bind exact ordered game ID lists and digests; the verifier recomputes both digests and exact Castle subtraction."
+      },
+      {
+        "severity": "High",
+        "finding": "The initial v3 verifier draft did not enforce dispatch-input closure, expected-value semantics, exact denominator sets, or v2 supersession.",
+        "resolution": "The final verifier enforces each contract and the fixture matrix includes dispatch closure, count-preserving identity swap, and resolvable-set digest counterexamples."
+      }
+    ],
+    "all_verified": true,
+    "remaining_finding": false
+  },
+  "verification": {
+    "focused_suite": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 /usr/bin/time -f 'suite_elapsed_seconds=%e suite_exit_status=%x' python3 -m unittest -v phase0_v3_truth_verifier_test.py",
+      "tests": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "runtime_seconds": 0.211,
+      "wall_seconds": 0.33,
+      "exit_code": 0
+    },
+    "live_cli": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 /usr/bin/time -f 'cli_elapsed_seconds=%e cli_exit_status=%x' python3 phase0_v3_truth_verifier.py --repo-root ../../.. --track-root .",
+      "state": "VERIFIED",
+      "status": "pass",
+      "checks": 70,
+      "findings": 0,
+      "runtime_seconds": 0.12,
+      "exit_code": 0
+    },
+    "registry_and_dispatch_closure": {
+      "authority_and_source_bindings_expected": 25,
+      "authority_and_source_bindings_verified": 25,
+      "hashes_matched": 25,
+      "source_expected_value_contracts_verified": true,
+      "dispatch_required_inputs_expected": 5,
+      "dispatch_required_inputs_verified": 5,
+      "dispatch_inputs_closed_by_registry": true,
+      "verified": true
+    },
+    "predecessor_scopes": {
+      "phase0_v2_acceptance_sha256": "76bd4d4da9b0fea14656a59edc950a8abea16fbb2ed708a56bc69b1a78f2a7b6",
+      "phase0_v2_disposition": "superseded-baseline-only",
+      "phase0_v2_phase1_authorization_active": false,
+      "t3_leaf_acceptance_sha256": "a550017ca170efc70b3b8b0741ab1062a818e0027282a54bdac655744d635b01",
+      "t3_direct_phase1_consumption_authorized": false,
+      "cohort_leaf_acceptance_sha256": "24faee63cf3894954f0cc4af9af4d753db76ee1e28f9a39c02c428bb489701ae",
+      "cohort_direct_phase1_consumption_authorized": false,
+      "verified": true
+    },
+    "identity_contract": {
+      "entries": 29,
+      "unique_game_ids": 29,
+      "ordered_t2_pointers_and_labels_verified": 29,
+      "identity_source_hashes_and_pointers_verified": 29,
+      "exact_identity_extractions_verified": 29,
+      "mapping_digest": "458a5c20db75617820604948cb004a14d579c828cedecbbcb7bdbada2f0a2b0a",
+      "game_ids_sha256": "84c9b442ac27cdd8bb9e895d5bf7c9874beecdf22674f766f612ee26c54f71a5",
+      "generic_slugification_allowed": false,
+      "verified": true
+    },
+    "denominator_and_castle": {
+      "game_count": 29,
+      "resolvable_game_count": 28,
+      "resolvable_game_ids_verified": 28,
+      "resolvable_game_ids_sha256": "8dd4aea6de41c80b97515ae7d82fce87b617e0c438ee429db02667e99b18eed3",
+      "exact_set_relation": "resolvable game IDs equal all identity game IDs minus castle-defense",
+      "castle_defense_disposition": "blocked-by-unknown",
+      "castle_scene_or_state_ids": [],
+      "fabricated_castle_scene_state_allowed": false,
+      "verified": true
+    },
+    "fixture_matrix": {
+      "fixture_count": 13,
+      "fixture_hashes_matched": 13,
+      "all_paths_inside_dispatched_prefix": true,
+      "all_rejected": true,
+      "exact_expected_codes": true,
+      "count_preserving_identity_swap_rejected": true,
+      "dispatch_input_closure_loss_rejected": true,
+      "resolvable_set_digest_drift_rejected": true,
+      "verified": true
+    },
+    "role_and_output_contract": {
+      "truth_author_agent_ref": "/root/t9_phase0_governance_author",
+      "truth_author_output_paths_exact": true,
+      "truth_author_outputs_verified": 5,
+      "root_owned_freeze_inside_root_assignment": true,
+      "review_outputs_not_authored_by_truth_author": true,
+      "acceptance_outputs_not_authored_by_truth_author": true,
+      "verified": true
+    },
+    "red_to_green_lifecycle": {
+      "sealed_red_report_sha256": "3fe6656d1c06adb3ac28e28df58689118c8347a90f421e4a33dfe8e1579cdb9a",
+      "historical_red_finding": "PHASE0_V3_FREEZE_MISSING",
+      "historical_red_preserved_by_green_report": true,
+      "missing_freeze_red_reproduced_without_file_mutation": true,
+      "live_exact_freeze_green": true,
+      "verified": true
+    },
+    "publication_and_activation_boundary": {
+      "registry_candidate_only": true,
+      "registry_consumable": false,
+      "freeze_status": "candidate-non-consumable",
+      "freeze_consumable": false,
+      "requires_phase0_root_acceptance_v3": true,
+      "phase1_authorized": false,
+      "direct_phase1_activation": false,
+      "root_acceptance_authored": false,
+      "phase1_dispatch_authored": false,
+      "verified": true
+    },
+    "quality_checks": {
+      "ruff": "pass",
+      "json_validation": "pass",
+      "git_diff_check": "pass"
+    }
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "unresolved_medium_or_higher": 0,
+  "verdict": "independent-review-pass",
+  "phase0_v3_acceptance_assessment": "Reviewer evidence supports a separate root Phase 0 v3 acceptance decision.",
+  "authority_boundary": "This reviewer verdict does not activate the registry or freeze, authorize Phase 1, author root acceptance, or make a product-owner decision."
+}

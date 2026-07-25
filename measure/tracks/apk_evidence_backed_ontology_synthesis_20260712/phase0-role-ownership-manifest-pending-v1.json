@@ -1,0 +1,292 @@
+{
+    "schema_version": "apk-t9-phase0-role-ownership.v1",
+    "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+    "state": "pending-independent-review-and-predecessor-acceptance",
+    "root_orchestrator": {
+        "agent_ref": "/root/phase5_review_a",
+        "role": "orchestrator",
+        "forbidden_roles": [
+            "truth-contract-author",
+            "truth-test-author",
+            "phase0-adversarial-reviewer",
+            "mechanics-capability-mapper",
+            "mechanics-capability-reviewer",
+            "responsive-mapper",
+            "responsive-reviewer",
+            "asset-mapper",
+            "asset-reviewer",
+            "gap-delivery-mapper",
+            "gap-delivery-reviewer",
+            "synthesis-adversarial-reviewer",
+            "product-owner-acceptance-author"
+        ]
+    },
+    "assignments": [
+        {
+            "task_id": "phase0-author-truth-contracts",
+            "phase": 0,
+            "owner_role": "truth-contract-author",
+            "agent_ref": "/root/phase5_review_a/t9_phase0_truth_author",
+            "status": "authored-pending-review",
+            "allowed_outputs": [
+                "phase0-*-pending-v1.json",
+                "phase0_truth_verifier.py",
+                "phase0_truth_verifier_test.py",
+                "negative-fixtures/phase0/*.json"
+            ],
+            "forbidden_decisions": [
+                "mechanics",
+                "capabilities",
+                "responsive-strategy",
+                "asset-role",
+                "canonical-mapping",
+                "ontology-assignment",
+                "product-owner-acceptance"
+            ]
+        },
+        {
+            "task_id": "phase0-author-truth-tests",
+            "phase": 0,
+            "owner_role": "truth-test-author",
+            "agent_ref": "/root/phase5_review_a/t9_phase0_truth_author",
+            "status": "authored-pending-independent-review",
+            "reviewer_role": "phase0-adversarial-reviewer",
+            "reviewer_agent_ref": null
+        },
+        {
+            "task_id": "phase1-map-mechanics-capabilities",
+            "phase": 1,
+            "owner_role": "mechanics-capability-mapper",
+            "agent_ref": null,
+            "status": "blocked-unassigned"
+        },
+        {
+            "task_id": "phase1-review-mechanics-capabilities",
+            "phase": 1,
+            "owner_role": "mechanics-capability-reviewer",
+            "agent_ref": null,
+            "status": "blocked-unassigned"
+        },
+        {
+            "task_id": "phase3-map-responsive",
+            "phase": 3,
+            "owner_role": "responsive-mapper",
+            "agent_ref": null,
+            "status": "blocked-unassigned"
+        },
+        {
+            "task_id": "phase3-review-responsive",
+            "phase": 3,
+            "owner_role": "responsive-reviewer",
+            "agent_ref": null,
+            "status": "blocked-unassigned"
+        },
+        {
+            "task_id": "phase4-map-assets",
+            "phase": 4,
+            "owner_role": "asset-mapper",
+            "agent_ref": null,
+            "status": "blocked-unassigned"
+        },
+        {
+            "task_id": "phase4-review-assets",
+            "phase": 4,
+            "owner_role": "asset-reviewer",
+            "agent_ref": null,
+            "status": "blocked-unassigned"
+        },
+        {
+            "task_id": "phase6-adversarial-synthesis-review",
+            "phase": 6,
+            "owner_role": "synthesis-adversarial-reviewer",
+            "agent_ref": null,
+            "status": "blocked-unassigned"
+        },
+        {
+            "task_id": "phase6-product-owner-acceptance",
+            "phase": 6,
+            "owner_role": "product-owner-acceptance-author",
+            "agent_ref": null,
+            "status": "blocked-unassigned"
+        },
+        {
+            "task_id": "phase0-review-truth-contracts",
+            "phase": 0,
+            "owner_role": "phase0-adversarial-reviewer",
+            "agent_ref": null,
+            "status": "blocked-unassigned"
+        },
+        {
+            "task_id": "phase5-map-gaps-delivery",
+            "phase": 5,
+            "owner_role": "gap-delivery-mapper",
+            "agent_ref": null,
+            "status": "blocked-unassigned"
+        },
+        {
+            "task_id": "phase5-review-gaps-delivery",
+            "phase": 5,
+            "owner_role": "gap-delivery-reviewer",
+            "agent_ref": null,
+            "status": "blocked-unassigned"
+        },
+        {
+            "task_id": "phase2-compare-capability-claims",
+            "phase": 2,
+            "owner_role": "mechanics-capability-mapper",
+            "agent_ref": null,
+            "status": "blocked-unassigned-until-phase-dispatch"
+        },
+        {
+            "task_id": "phase2-classify-capabilities",
+            "phase": 2,
+            "owner_role": "mechanics-capability-mapper",
+            "agent_ref": null,
+            "status": "blocked-unassigned-until-phase-dispatch"
+        },
+        {
+            "task_id": "phase2-run-capability-truth-tests",
+            "phase": 2,
+            "owner_role": "truth-test-author",
+            "agent_ref": null,
+            "status": "blocked-unassigned-until-phase-dispatch"
+        },
+        {
+            "task_id": "phase2-review-capabilities",
+            "phase": 2,
+            "owner_role": "mechanics-capability-reviewer",
+            "agent_ref": null,
+            "status": "blocked-unassigned-until-phase-dispatch"
+        },
+        {
+            "task_id": "phase5-test-unknown-must-have-preservation",
+            "phase": 5,
+            "owner_role": "truth-test-author",
+            "agent_ref": null,
+            "status": "blocked-unassigned-until-phase-dispatch"
+        },
+        {
+            "task_id": "later-artifact-specific-truth-test-author",
+            "phase": 6,
+            "owner_role": "truth-test-author",
+            "agent_ref": null,
+            "status": "blocked-unassigned-until-phase-dispatch"
+        },
+        {
+            "task_id": "phase0-remediate-governance-truth-contracts",
+            "phase": 0,
+            "owner_role": "truth-contract-author",
+            "agent_ref": "/root/t9_phase0_governance_author",
+            "status": "authored-attested",
+            "reviewer_role": "phase0-adversarial-reviewer",
+            "reviewer_agent_ref": null
+        },
+        {
+            "task_id": "phase0-remediate-governance-truth-tests",
+            "phase": 0,
+            "owner_role": "truth-test-author",
+            "agent_ref": "/root/t9_phase0_governance_author",
+            "status": "authored-attested",
+            "reviewer_role": "phase0-adversarial-reviewer",
+            "reviewer_agent_ref": null
+        }
+    ],
+    "incompatible_role_pairs": [
+        [
+            "mechanics-capability-mapper",
+            "mechanics-capability-reviewer"
+        ],
+        [
+            "responsive-mapper",
+            "responsive-reviewer"
+        ],
+        [
+            "asset-mapper",
+            "asset-reviewer"
+        ],
+        [
+            "gap-delivery-mapper",
+            "gap-delivery-reviewer"
+        ],
+        [
+            "truth-test-author",
+            "phase0-adversarial-reviewer"
+        ],
+        [
+            "truth-test-author",
+            "synthesis-adversarial-reviewer"
+        ],
+        [
+            "orchestrator",
+            "truth-contract-author"
+        ],
+        [
+            "orchestrator",
+            "truth-test-author"
+        ],
+        [
+            "orchestrator",
+            "phase0-adversarial-reviewer"
+        ],
+        [
+            "orchestrator",
+            "mechanics-capability-mapper"
+        ],
+        [
+            "orchestrator",
+            "mechanics-capability-reviewer"
+        ],
+        [
+            "orchestrator",
+            "responsive-mapper"
+        ],
+        [
+            "orchestrator",
+            "responsive-reviewer"
+        ],
+        [
+            "orchestrator",
+            "asset-mapper"
+        ],
+        [
+            "orchestrator",
+            "asset-reviewer"
+        ],
+        [
+            "orchestrator",
+            "gap-delivery-mapper"
+        ],
+        [
+            "orchestrator",
+            "gap-delivery-reviewer"
+        ],
+        [
+            "orchestrator",
+            "synthesis-adversarial-reviewer"
+        ],
+        [
+            "orchestrator",
+            "product-owner-acceptance-author"
+        ]
+    ],
+    "provider_attestation": {
+        "status": "attested-current-governance-author",
+        "fork_turns_none": true,
+        "session_id": "019f928d-70aa-7343-8ebf-36b60a2ee7f0",
+        "spawn_id": "call_drQAtukec0LEleWAWG4TudwF",
+        "prompt_sha256": "1cd2db469a1dbcabb21035dd3d3227da5dcf2e49e324f8c59b51936bc0ec41fb",
+        "task_path": "/root/t9_phase0_governance_author",
+        "attestation_path": "role-receipts/phase0/governance-remediation-author-provider-attestation-v1.json",
+        "attestation_sha256": "7c1c31d2c5557a848dda6c6f0ebe88221152e616417353c40e708a6dbe985a0c",
+        "output_declaration": {
+            "path": "role-receipts/phase0/governance-remediation-author-output-declaration-v1.json",
+            "sha256": "b43a7d97f5557d2c2b5d16379dbbab76049500572b1d67a21eba17ec70f43681"
+        },
+        "inherited_narrative": false,
+        "fresh_context_only": true,
+        "current_receipt": {
+            "path": "role-receipts/phase0/governance-remediation-author-receipt-v1.json",
+            "sha256": "067f61e7f42971f3ae4498b17d1795cd4cb5469e12ec6dd27d0bcbeb533b2bcd"
+        }
+    }
+}

@@ -1,0 +1,187 @@
+{
+  "schema_version": "apk-t9-phase0-cohort-leaf-binding-independent-review.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "reviewed_at": "2026-07-24T13:00:20Z",
+  "reviewer": {
+    "agent_ref": "/root/phase5_review_b",
+    "role": "cohort-leaf-binding-independent-reviewer",
+    "independent_of_catalog_author": true,
+    "independent_of_truth_test_author": true
+  },
+  "dispatch_binding": {
+    "path": "phase0-cohort-leaf-repair-role-dispatch-v1.json",
+    "sha256": "7a7ec749bb4f83c5dfab0e7c63bd754f686eabe77506fb2f83480bf48f828400"
+  },
+  "reviewed_artifact_bindings": {
+    "phase0-cohort-leaf-binding-candidate-v1.json": "2a9c5f2eb24d235dbbb59c81b63e81a162ff08c4a6f0aa95fff66bea58194fef",
+    "role-receipts/phase0/cohort-leaf-binding-catalog-author.json": "6bd34ea232bdab1f130491a52a871d06a1001c69583ff2c45cfb9687cf51eef3",
+    "phase0_cohort_leaf_binding_verifier.py": "05f2f4379429bae819cd6d72931d5c1779c2ee69fe862cf83671e73f818630c2",
+    "phase0_cohort_leaf_binding_verifier_test.py": "62a7e1f37264b8393fca1c3e17653c8fe1d66d6f914c6eab1ab9b13235bb8b38",
+    "phase0-cohort-leaf-binding-fixture-manifest-v1.json": "afeb3360606fa85b198f4c3ebbe93a410c35356579d138e1f4127af54bb553df",
+    "phase0-cohort-leaf-binding-red-report-v1.json": "9dcb27a6d1a583f6a63d7bc296f3aca7fbde3395c649db74ef8560becbc11300",
+    "phase0-cohort-leaf-binding-green-report-v1.json": "bfa360221f78d4124a9b28492664432d9d7ee666cae8decfa3d663ab87c2b2ac",
+    "role-receipts/phase0/cohort-leaf-binding-truth-test-author.json": "f24faf590369caab1450eebfac1b3f7188072b0545190ff63ce926ef0dcd4802"
+  },
+  "prior_high_remediation": {
+    "finding": "The truth-test dispatch authorized fixtures only under negative-fixtures/phase0-cohort-leaf/*, while the first draft bound files under negative-fixtures/phase0-cohort/*.",
+    "severity": "High",
+    "resolution": [
+      "Moved all 12 fixtures to the dispatch-authorized phase0-cohort-leaf directory.",
+      "Removed every file from the unauthorized phase0-cohort namespace.",
+      "Rebound the fixture manifest, focused test, Red report, Green report, and truth-test-author receipt.",
+      "Added a focused-test assertion that every manifest fixture path is inside the truth-test author's dispatched allowed_outputs.",
+      "Recorded the governance-invalid draft as non-consumable superseded provenance."
+    ],
+    "verified": true,
+    "remaining_finding": false
+  },
+  "verification": {
+    "focused_suite": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 /usr/bin/time -f 'elapsed_seconds=%e exit_status=%x' python3 -m unittest -v phase0_cohort_leaf_binding_verifier_test.py",
+      "tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "runtime_seconds": 4.815,
+      "wall_seconds": 4.95,
+      "stop_loss_seconds": 30,
+      "live_verifier_checks": 1157,
+      "exit_code": 0
+    },
+    "fixture_governance": {
+      "fixture_count": 12,
+      "fixture_hashes_matched": 12,
+      "all_rejected": true,
+      "exact_expected_codes": true,
+      "dispatch_allowed_prefix": "negative-fixtures/phase0-cohort-leaf/",
+      "all_fixture_paths_authorized": true,
+      "unauthorized_namespace_files_remaining": 0,
+      "verified": true
+    },
+    "accepted_chains_and_receipts": {
+      "bindings_expected": 27,
+      "bindings_verified": 27,
+      "hashes_matched": 27,
+      "selected_receipt_output_pointers_matched_ledgers": 6,
+      "catalog_author_receipt_output_matched_candidate": true,
+      "truth_test_receipt_outputs_matched": 5,
+      "verified": true
+    },
+    "leaf_and_support_bindings": {
+      "leaf_count": 6,
+      "leaf_hashes_matched": 6,
+      "supporting_evidence_bindings": 3,
+      "supporting_evidence_hashes_matched": 3,
+      "required_games": [
+        "village-guardian",
+        "archers-revenge",
+        "storm-castle-tower",
+        "potion-rush",
+        "rune-forge-chamber",
+        "astral-mage"
+      ],
+      "verified": true
+    },
+    "source_rederivation": {
+      "git_blob_and_exact_range_citations": 220,
+      "git_blob_and_exact_range_citations_verified": 220,
+      "bounded_queries": 6,
+      "bounded_queries_verified": 6,
+      "source_references_resolved": 226,
+      "source_references_unresolved": 0,
+      "verified": true
+    },
+    "coverage": {
+      "claim_count": 226,
+      "claim_ids_unique": 226,
+      "explicit_unknown_count": 24,
+      "negative_fixture_count": 30,
+      "scene_or_state_reference_count": 216,
+      "per_game_distinct_scene_or_state_id_count_sum": 179,
+      "per_game": {
+        "village-guardian": {
+          "claims": 73,
+          "explicit_unknowns": 6,
+          "negative_fixtures": 4,
+          "source_references": 73,
+          "scene_or_state_references": 73,
+          "distinct_scene_or_state_ids": 37
+        },
+        "archers-revenge": {
+          "claims": 43,
+          "explicit_unknowns": 0,
+          "negative_fixtures": 4,
+          "source_references": 43,
+          "scene_or_state_references": 43,
+          "distinct_scene_or_state_ids": 43
+        },
+        "storm-castle-tower": {
+          "claims": 42,
+          "explicit_unknowns": 6,
+          "negative_fixtures": 4,
+          "source_references": 42,
+          "blob_or_range_references": 36,
+          "bounded_query_references": 6,
+          "scene_or_state_references": 32,
+          "distinct_scene_or_state_ids": 31
+        },
+        "potion-rush": {
+          "claims": 28,
+          "explicit_unknowns": 4,
+          "negative_fixtures": 6,
+          "source_references": 28,
+          "scene_or_state_references": 28,
+          "distinct_scene_or_state_ids": 28
+        },
+        "rune-forge-chamber": {
+          "claims": 24,
+          "explicit_unknowns": 5,
+          "negative_fixtures": 6,
+          "source_references": 24,
+          "scene_or_state_references": 24,
+          "distinct_scene_or_state_ids": 24
+        },
+        "astral-mage": {
+          "claims": 16,
+          "explicit_unknowns": 3,
+          "negative_fixtures": 6,
+          "source_references": 16,
+          "scene_or_state_references": 16,
+          "distinct_scene_or_state_ids": 16
+        }
+      },
+      "all_candidate_coverage_fields_recomputed": true,
+      "verified": true
+    },
+    "disclosures_and_boundaries": {
+      "retained_disclosure_sets": 8,
+      "retained_disclosure_sets_found_in_accepted_chain": 8,
+      "no_success_claims_preserved": true,
+      "candidate_consumable": false,
+      "acceptance_claimed": false,
+      "phase1_mapper_publication_authorized": false,
+      "responsive_or_asset_decisions_authorized": false,
+      "implementation_or_shipping_authorized": false,
+      "archive_rewrite_allowed": false,
+      "archived_inputs_modified": false,
+      "archived_leaf_bytes_modified": false,
+      "verified": true
+    },
+    "quality_checks": {
+      "ruff": "pass",
+      "json_validation": "pass",
+      "git_diff_check": "pass",
+      "archive_git_status": "clean"
+    }
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "unresolved_medium_or_higher": 0,
+  "verdict": "independent-review-pass",
+  "authority_boundary": "This reviewer verdict does not accept the candidate, make it consumable, authorize Phase 1 publication, or make a product-owner decision."
+}

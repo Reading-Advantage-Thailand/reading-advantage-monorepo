@@ -1,0 +1,62 @@
+{
+  "actual_context_manifest": {
+    "path": "role-receipts/phase0/raw-exports/truth-test-author/child-context-manifest-v1.json",
+    "sha256": "4ee6a3846d3651a8f382a01785450823ddedc5e3954ce0f298529b946e7bc2eb"
+  },
+  "allowed_input_manifest": {
+    "path": "phase0-source-registry-pending-v1.json",
+    "sha256": "29dcb7cea1aa206c551ba7aa90741585bb80509e4c31937b259cb69077c7e6b5"
+  },
+  "ancestry_ids": [
+    "019f8e88-86b8-7142-9cb4-6bd7c34b1385",
+    "019f919e-7f07-79b3-918c-06f16cf574a5",
+    "019f91e9-0b77-7683-9ec5-76a33c41d9fa"
+  ],
+  "budget_declaration": {
+    "path": "phase0-budget-stop-loss-pending-v1.json",
+    "sha256": "b63cb7c3f9e1c8c6cc9d146b5df89199d72575e8fe954a8e03d0cca54d4204b0"
+  },
+  "commit_sha": "f85ef85f47b549b16ee1c734b2cd2cbe70e62186",
+  "end_event": {
+    "id": "019f9209-adee-7650-8bc8-ab0aa43e0be9",
+    "timestamp": "2026-07-24T02:52:59.924Z"
+  },
+  "final_response_sha256": "506f71eb076554d7c40ca859d9bface9d57d21008ced0f9928c939bc7a8b6edb",
+  "fork_turns_none": true,
+  "output_ownership_corroboration": {
+    "final_response_enumerates_outputs": true,
+    "final_response_record": "role-receipts/phase0/raw-exports/truth-test-author/child-final-response-record.jsonl"
+  },
+  "parent_session_id": "019f919e-7f07-79b3-918c-06f16cf574a5",
+  "prior_role_history": [],
+  "prompt_encoding": "encrypted_content",
+  "prompt_sha256": "8d87eb01a226e9ee1705224bb3b7e56b3f2e6fdb867e627d3e44635b8b6a4b0b",
+  "provider": "codex-collaboration",
+  "raw_record_bindings": {
+    "child-final-response-record.jsonl": "0dc6b05a1fa6bcd7b2f3b3cd865580bc0f5d5ae6baae7b004a85c7848148230a",
+    "child-task-record.jsonl": "1e6e842015ffe9f908e827a8584c2a0a20dcf0246673689378c11afced8b63a0",
+    "parent-spawn-output.jsonl": "43328db690330aa391749744127f7cef4c8823932287bc6ff4ffb1d89dec802b",
+    "parent-spawn-request.jsonl": "d4facc9d0ab8d7f904b0fb29789ede8b7a51ca73faa5ca367ad08d5e6f323203"
+  },
+  "schema_version": "apk-t9-role-provider-attestation.v1",
+  "session_id": "019f91e9-0b77-7683-9ec5-76a33c41d9fa",
+  "source_rollout_bindings": {
+    "child": {
+      "bytes": 1531705,
+      "path": "/home/daniel-bo/.codex/sessions/2026/07/24/rollout-2026-07-24T09-16-37-019f91e9-0b77-7683-9ec5-76a33c41d9fa.jsonl",
+      "sha256": "e09da1b526878656e822e99f638d0d9d439a7feb9f358ec0ff965c2dbcd46f45"
+    },
+    "parent": {
+      "bytes": 203534260,
+      "path": "/home/daniel-bo/.codex/sessions/2026/07/24/rollout-2026-07-24T07-55-11-019f919e-7f07-79b3-918c-06f16cf574a5.jsonl",
+      "sha256": "52a83229ef81a537ebbd5dfe56f67a31c007a9e4690b92531a4db58bcf7b59ed"
+    }
+  },
+  "spawn_id": "call_jIacFh3fv9dBJ5nyetTBSafV",
+  "start_event": {
+    "id": "019f91e9-0d5b-7073-8a06-4ce9146d879b",
+    "timestamp": "2026-07-24T02:16:37.698Z"
+  },
+  "status": "attested",
+  "task_path": "/root/phase5_review_a/t9_phase0_truth_author"
+}

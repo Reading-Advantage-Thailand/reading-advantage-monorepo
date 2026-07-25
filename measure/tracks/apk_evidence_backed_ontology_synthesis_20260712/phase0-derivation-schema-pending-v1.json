@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:reading-advantage:apk:t9:derivation:v1",
+  "title": "T9 evidence-only derived record",
+  "schema_version": "apk-t9-derivation-schema.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_id",
+    "record_type",
+    "status",
+    "owner_role",
+    "derived_fields",
+    "review"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "apk-t9-derived-record.v1"
+    },
+    "record_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._:-]*$"
+    },
+    "record_type": {
+      "enum": [
+        "mechanic-effort",
+        "capability",
+        "responsive",
+        "asset-normalization",
+        "gap-delivery"
+      ]
+    },
+    "status": {
+      "enum": [
+        "candidate",
+        "blocked"
+      ]
+    },
+    "owner_role": {
+      "enum": [
+        "mechanics-capability-mapper",
+        "responsive-mapper",
+        "asset-mapper",
+        "gap-delivery-mapper"
+      ]
+    },
+    "game_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "scene_state_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "derived_fields": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "field_id",
+          "value",
+          "upstream_claim_ids",
+          "derivation_rule"
+        ],
+        "properties": {
+          "field_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value": true,
+          "upstream_claim_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "derivation_rule": {
+            "enum": [
+              "exact-copy",
+              "set-union",
+              "set-intersection",
+              "explicit-comparison",
+              "blocked-by-unknown"
+            ]
+          },
+          "unknown_blockers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "canonical_adoption": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state",
+            "standard_pack_key",
+            "upstream_claim_ids"
+          ],
+          "properties": {
+            "state": {
+              "const": "candidate"
+            },
+            "standard_pack_key": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^./\\\\]+(?:/[^./\\\\]+)+$"
+            },
+            "upstream_claim_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state",
+            "standard_pack_key",
+            "blocker",
+            "upstream_claim_ids"
+          ],
+          "properties": {
+            "state": {
+              "const": "blocked"
+            },
+            "standard_pack_key": {
+              "type": "null"
+            },
+            "blocker": {
+              "type": "string",
+              "minLength": 1
+            },
+            "upstream_claim_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewer_role",
+        "status"
+      ],
+      "properties": {
+        "reviewer_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "passed",
+            "blocked"
+          ]
+        },
+        "finding_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
+    }
+  },
+  "semantic_rules": [
+    "Every derived field has the complete non-empty upstream claim set.",
+    "Removing any upstream claim invalidates every transitively dependent field.",
+    "Capability standardization requires two independently evidenced exact consumers.",
+    "Unknown Must-have inputs and unresolved adoption mappings remain blocked.",
+    "A canonical adoption candidate must resolve to the exact accepted standard-pack catalog.",
+    "No generator may choose a value, claim, role, confidence, conflict resolution, or disposition."
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "agent_ref": "/root/phase5_review_a/t9_phase0_final_reviewer",
+  "dispatch_sha256": "a06cbac2c3cee7c993c96c39a470c777782e375119c0e29d3e4905bed69b4035",
+  "output_hashes": {
+    "phase2-capability-classification-v4.json": "11a1acb51e2112ff21215b12b6d1aff0a84ad9ca67fb5fea92fbec4711e6d705",
+    "phase2-capability-comparisons-v4.json": "c0cb1d1c0ab322e550ba805070e4a31dfc58bd17bcb57f76854f69747ab29821",
+    "phase2-claim-dependency-edges-v4.json": "d1c92725989fe3d09a7793f52e19bf284b253bf6f91c0559f9e68c38d6646702",
+    "phase2-extension-boundaries-v4.json": "b9de252e7f0ef1843470d7b9dba3470c4827cd79754106c4df044b6f1805220c"
+  },
+  "owner_role": "capability-mapper",
+  "status": "candidate",
+  "task_id": "phase2-specificity-mapper-v4-v7",
+  "truth_contract": {
+    "phase2-v7-fixture-manifest.json": "ce25b00a2da01da800feb200774690c10fbc00b984c8a1667ce421b8641c13d7",
+    "phase2-v7-red-report.json": "045949eea2def5452ab6da6dc91d115a36dc8f538b2fb06fa4050c5f039ee0fb",
+    "phase2_v7_truth_verifier.py": "807d335ce68d81b7d0090f4cadcde3461c6db7e323fbbffdd4ab90ea02ec244b",
+    "phase2_v7_truth_verifier_test.py": "e250484923a402021e5d4c4fb8595e260d08836ae12aa116828ad864017a0977"
+  }
+}

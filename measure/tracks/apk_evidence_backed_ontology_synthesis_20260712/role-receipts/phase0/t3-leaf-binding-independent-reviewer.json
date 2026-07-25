@@ -1,0 +1,54 @@
+{
+  "schema_version": "apk-t9-phase0-t3-leaf-binding-independent-reviewer-receipt.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "phase": 0,
+  "task_id": "phase0-review-t3-leaf-bindings",
+  "role": "t3-leaf-binding-independent-reviewer",
+  "agent_ref": "/root/phase5_review_b",
+  "completed_at": "2026-07-24T12:31:09Z",
+  "status": "independent-review-pass",
+  "dispatch_binding": {
+    "path": "phase0-t3-repair-role-dispatch-v1.json",
+    "sha256": "f6a9aedb3eb3246fc107363854aff75ab50b0ed1af19280b5925c3c8138a78e5"
+  },
+  "review_binding": {
+    "path": "phase0-t3-leaf-binding-independent-review-v1.json",
+    "sha256": "1dde00415c717e5a35ca180e37aa4f1bd8835079b3a4964a0028dba1636233de"
+  },
+  "reviewed_artifact_bindings": {
+    "phase0-t3-leaf-binding-candidate-v1.json": "a04bc93f78ad33e22a56af7b94d61e721ae5828ed23fd509456c5250b366bbac",
+    "role-receipts/phase0/t3-leaf-binding-catalog-author.json": "67ec8d7b08810a3b34b4e575fc00b1b430bbd9459714b4c7c36225b9c048ae2f",
+    "phase0_t3_leaf_binding_verifier.py": "0faf71edca6d6d5157ed4bea9ada03bce869296077501b0233e565e404c891bb",
+    "phase0_t3_leaf_binding_verifier_test.py": "9dc1d598c118a8ff197eb6d082a29ef7f661101804ee2a86c0f84b807e0efc34",
+    "phase0-t3-leaf-binding-fixture-manifest-v1.json": "5f738e9a2895b31cd96f996a34aaee766e049113d13204539b708f903896ecbc",
+    "phase0-t3-leaf-binding-red-report-v1.json": "65feb28fa69fd27dd7ae99558fcff6c96f450787de85c308b5059740f9b35b62",
+    "phase0-t3-leaf-binding-green-report-v1.json": "35815a08c18c196f673c4d01e5c4f69ce1cbe366c4d9b6b011ad0a820c2ea1dc",
+    "role-receipts/phase0/t3-leaf-binding-truth-test-author.json": "bcb74a604122d689b802256d7739367fa26554d3fabfb4a7dd1f17f2b3b7fecb"
+  },
+  "verification_attestation": {
+    "focused_tests_passed": 4,
+    "focused_tests_failed": 0,
+    "focused_runtime_seconds": 121.908,
+    "focused_stop_loss_seconds": 180,
+    "immutable_tests": 41,
+    "immutable_passes": 40,
+    "immutable_failures": 1,
+    "immutable_errors": 0,
+    "sole_known_lifecycle_failure": "T3StopLossContract.test_zero_failed_fix_review_cycles",
+    "accepted_chain_bindings_verified": 5,
+    "leaf_bindings_verified": 4,
+    "claim_records_verified": 491,
+    "blueprint_references_resolved": 385,
+    "blueprint_references_unresolved": 0,
+    "negative_fixtures_verified": 7,
+    "disclosures_and_archive_boundary_verified": true
+  },
+  "findings_remaining": {
+    "Critical": 0,
+    "High": 0,
+    "Medium": 0,
+    "Low": 0
+  },
+  "authority_boundary": "Reviewer receipt only; no candidate acceptance, Phase 1 authorization, or product-owner decision was made.",
+  "self_hash_note": "The receipt does not self-bind because embedding its own digest would change its bytes."
+}
