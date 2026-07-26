@@ -1,0 +1,167 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-adversarial-review.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "batch_id": "AF-12",
+  "review_role": "adversarial-reviewer",
+  "reviewer_task_name": "/root/phase4_review_af12",
+  "declared_model": "gpt-5.6-sol",
+  "reasoning_effort": "xhigh",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "reviewed_at": "2026-07-24",
+  "reviewed_output_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-12/phase4-path-usage-joins.json": "33a627f6475b7fcf6e3ed120d05bc6d12168b5dc1963ad02436d128e49a0e2ec",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-12/phase4-group-rollup.json": "010ca97661b0dc68bf86515e46b45f358a222bd7f144572b3d5bcdcd892ae36d",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-12/requirements-mapper.json": "19d64b0cee59e71f4d4d2a08e7c10f3cc3bdb133e0668d2100b682bd97535c9b",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-12/truth-test-author.json": "b4b33218d70ce383cd7e31f156d903c727bc5081ab55c88ef6b5ff4a5ff2a929",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-12/adversarial-reviewer.json": "59d8b8db8fb3147155c55affbbe7542a36e17e5a470ca87108c976152f68988c",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-batch-test-reports/AF-12.json": "7be2261b8465b4d1577e7cd158cbc04e69b1d4f3f40ed835558e56f9fc8dabfe",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-v2-batch-schema-test-reports/AF-12.json": "5a9e9f2a8f5b9d37ea466a9588c003fbbd0abd4f05c74e5888b36dfb1ef56f0b"
+  },
+  "byte_hash_verification": {
+    "all_supplied_live_hashes_match": true,
+    "phase4_batch_contract_test.py": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+    "phase4_v2_batch_schema_contract_test.py": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519",
+    "phase4_v2_batch_schema_contract_test_v2.py": "174fba885907260824503708180cd4dbe2b873e06aaf8e86c4fb440c319c9956"
+  },
+  "reviewed_counts": {
+    "candidate_paths": 34,
+    "current_candidate_path_byte_hash_matches": 34,
+    "identical_hash_groups": 24,
+    "caller_locators": 35,
+    "accepted_path_usage_links": 5,
+    "scene_links": 5,
+    "non_scene_links": 0,
+    "unique_scene_usage_records": 3,
+    "unique_usage_ids": 3,
+    "responsive_assessment_cells": 20,
+    "eight_facet_cells": 20,
+    "dispositions": {
+      "replace": 5,
+      "reject": 2,
+      "unknown": 27
+    },
+    "priority1_paths": 2,
+    "priority1_rejected_retired_paths": [
+      "apps/advantage-games/public/games/sentence/griffin-riders-escape/gate.png",
+      "apps/advantage-games/public/games/sentence/griffin-riders-escape/obstacle.png"
+    ],
+    "mixed_path_specific_disposition_groups": 2,
+    "review_slice_game_count": 3,
+    "review_slice_games": [
+      "dragon-flight",
+      "potion-rush",
+      "rpg-battle"
+    ],
+    "review_slice_candidate_paths": 5,
+    "separate_catalog_locator_records": 7,
+    "catalog_records_added_to_candidate_denominator": 0,
+    "reusable_paths": 0,
+    "adaptable_paths": 0,
+    "reference_allowed_paths": 0,
+    "non_null_canonical_standard_pack_keys": 0,
+    "direct_legacy_adoption_true": 0,
+    "review_records": 162
+  },
+  "substantive_review": {
+    "recursive_v2_shapes_exact_and_no_extras": true,
+    "all_34_current_candidate_path_bytes_match_frozen_sha256": true,
+    "all_34_frozen_git_blobs_match_path_sha256_and_blob_oid": true,
+    "all_34_join_status_values_equal_frozen_scaffold_rules": true,
+    "all_35_caller_locators_resolve_to_frozen_inventory_pointers_and_pinned_git_lines": true,
+    "all_5_links_are_exact_source_bound": true,
+    "all_5_links_are_scene_links_and_no_non_scene_link_is_present": true,
+    "all_normalizer_source_paths_hashes_json_pointers_claim_ids_and_source_artifact_hashes_resolve": true,
+    "all_5_semantic_requirements_are_exact_source_copies": true,
+    "all_5_top_level_semantic_requirement_wrappers_mirror_ordered_link_requirements": true,
+    "all_5_scene_links_have_exact_compact_wide_by_two_theme_cell_matrices": true,
+    "all_20_cells_have_exact_eight_facet_shapes": true,
+    "both_priority1_paths_are_zero_byte_exact_accepted_phase3_corruption_evidence": true,
+    "both_priority1_paths_are_reject_retire_at_priority_1": true,
+    "five_exact_joined_paths_are_replace_and_remaining_27_non_priority_paths_are_unknown": true,
+    "rollup_member_paths_nested_dispositions_two_mixed_groups_and_current_joins_sha_are_exact": true,
+    "three_game_review_slice_exactly_covers_five_joined_paths_and_three_usage_ids": true,
+    "seven_catalog_locator_records_are_count_reference_only_and_non_additive": true,
+    "unknown_provenance_blocks_reuse_and_adapt_and_reference_remains_forbidden": true,
+    "direct_legacy_adoption_false_and_canonical_keys_null_forbidden_pending_T9_for_all_paths": true,
+    "browser_evidence_is_composite_scene_only": true,
+    "dragon_flight_compact_controls_begin_below_initial_viewport_and_wide_is_supported_by_bounded_scene_evidence": true,
+    "potion_rush_compact_gameplay_has_unresolved_hud_key_and_overlay_pressure_while_wide_start_is_supported": true,
+    "rpg_battle_is_blocked_by_repeated_vocabulary_fetch_loop_at_both_widths": true,
+    "browser_evidence_not_promoted_to_per_path_runtime_load_suitability_theme_provenance_license_or_adoption": true,
+    "mapper_receipt_identity_hashes_resources_outputs_and_prohibitions_are_truthful": true,
+    "truth_receipt_identity_hashes_reports_verifiers_fixtures_resources_and_prohibitions_are_truthful": true,
+    "phase2_reviewer_receipt_is_preserved_separate_and_unchanged": true,
+    "green_verifiers_were_used_as_structural_support_not_as_sole_substantive_evidence": true,
+    "transparent_mapper_prepublication_red_lineage": {
+      "missing_artifacts": {
+        "exit_code": 1,
+        "authority": "none",
+        "production_errors": [
+          "required-document-missing: joins:measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-12/phase4-path-usage-joins.json",
+          "required-document-missing: rollup:measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-12/phase4-group-rollup.json",
+          "required-document-missing: mapper:measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-12/requirements-mapper.json",
+          "value-verifier-failed: AF-12"
+        ],
+        "interpretation": "This was the expected prepublication red before mapper-owned artifacts existed and is not a product, evidence, or acceptance finding."
+      },
+      "final_postpublication_state": "Both unchanged supported verifiers exit zero, reproduce the persisted report bytes exactly, and the mapper remains explicitly pending truth review, independent review, and root acceptance."
+    }
+  },
+  "verifier_review": {
+    "production_errors_empty": true,
+    "all_16_of_16_value_fixtures_rejected": true,
+    "all_14_of_14_v2_fixtures_rejected": true,
+    "both_verifier_resource_ceilings_pass": true,
+    "value": {
+      "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_batch_contract_test.py --root . --batch AF-12 --json",
+      "exit_code": 0,
+      "report_byte_reproduced": true,
+      "parsed_json_equal": true,
+      "production_errors": [],
+      "counterexamples": 16,
+      "test_cases": 17,
+      "bytes_read": 103157917
+    },
+    "versioned_v2": {
+      "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_v2_batch_schema_contract_test_v2.py --root . --batch AF-12",
+      "exit_code": 0,
+      "report_byte_reproduced": true,
+      "parsed_json_equal": true,
+      "production_errors": [],
+      "counterexamples": 14,
+      "structural_test_cases": 15,
+      "test_cases": 32,
+      "bytes_read": 105503013,
+      "nested_value_report_exact": true
+    }
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "unresolved_blocking_findings": 0,
+  "stop_loss_events": [],
+  "resource_usage": {
+    "candidate_paths": 34,
+    "hash_groups": 24,
+    "review_records": 162,
+    "command_invocations": 112,
+    "bytes_read": 300000000,
+    "ceilings": {
+      "candidate_paths": 40,
+      "hash_groups": 24,
+      "review_records": 280,
+      "command_invocations": 120,
+      "bytes_read": 536870912
+    },
+    "within_ceiling": true,
+    "measurement_basis": "Conservative accounting includes separate fresh value and v2 verifier processes, the v2 nested value invocation as reported, live frozen JSON and receipt hashing, all 35 caller Git-line checks, all 34 current and frozen candidate-byte checks, three source-claim bindings, five normalized links, 20 responsive cells, both P1 zero-byte retirement records, and 162 independently reviewed path, group, caller, link, cell, fixture, report, receipt, catalog, and source-claim records."
+  },
+  "scope_boundary": "Fresh isolated AF-12 Phase 4 adversarial review of live hash-bound producer records, rollup, mapper and truth receipts, immutable verifiers and byte-reproduced reports, frozen source pointers, bounded browser composite, and separate Phase 2 receipt. This review did not produce or repair joins, rollups, mapper or truth artifacts, verifiers, fixtures, reports, freezes, plans, product code, acceptance state, or commits; did not rerun a browser; and does not authorize T9, canonical keys, direct legacy adoption, production, shipping, suitability, licensing, adoption, or product-success claims.",
+  "decision": "No Critical, High, Medium, Low, blocker, or reviewer stop-loss finding was identified. Review pass is limited to the exact hash-bound AF-12 evidence and remains pending root-orchestrator Phase 4 acceptance only.",
+  "final_status": "review-pass-pending-root-acceptance"
+}

@@ -1,0 +1,217 @@
+{
+  "all_counterexamples_rejected": true,
+  "counterexample_count": 19,
+  "counterexamples": [
+    {
+      "error_codes": [
+        "forbidden-reuse-adapt-reference",
+        "global-count"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/bad-disposition.json",
+      "fixture_sha256": "4e9736ae7568e0a444ee5c3255550589339b94ecae2d78479f72e4e738855274",
+      "operation": "bad_disposition",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "browser-not-composite-only"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/browser-path-load.json",
+      "fixture_sha256": "511225ad5b08f4a32490c0b597d0c6c6765435cf3f528697167ce766560add34",
+      "operation": "browser_path_load",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "canonical-key-forbidden"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/canonical-key.json",
+      "fixture_sha256": "73d0357ceae823eec88992beca0683f61689ee58721ab8cc1defe5b6eca021be",
+      "operation": "canonical_key",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "caller-locator-ownership"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/duplicate-caller-locator-id.json",
+      "fixture_sha256": "165448db08a839ce209c0651d591920870f58093df62f9b81f06a50b6fc822df",
+      "operation": "duplicate_caller_locator_id",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "duplicate-candidate-path",
+        "global-count"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/duplicate-path.json",
+      "fixture_sha256": "7cb74e9a0e82dfee210e43dc9ec4679f223458b14ede4fbb1425bc5a6d9efbfa",
+      "operation": "duplicate_path",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "batch-frozen-binding"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/frozen-hash-drift.json",
+      "fixture_sha256": "1bf25b0684516503803eac1e936a004a8e5d156bee09580d6fdc628d567947d4",
+      "operation": "frozen_hash_drift",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "mapper-joins-hash-binding"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/mapper-hash-drift.json",
+      "fixture_sha256": "93b30bdc7a9cc862b3d2173efd4bd1a9561ae0901bfd5079699b383a0c7c1af2",
+      "operation": "mapper_hash_drift",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "batch-coverage",
+        "caller-locator-ownership",
+        "global-count"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/missing-batch.json",
+      "fixture_sha256": "54957a05658b91b4fd798b7af696013b4e09088f9a8a0ee6af8ce6a82afa82b7",
+      "operation": "missing_batch",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "global-count",
+        "priority1-not-rejected-retired"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/priority1-not-rejected.json",
+      "fixture_sha256": "c650525e48856076171c5d9fb5a26bf2ff1d9d94fe9a584f900cc5bd9669343a",
+      "operation": "priority1_not_rejected",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "review-receipt-findings-present"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/receipt-finding.json",
+      "fixture_sha256": "29dad2890d505b2ac50c5f193431af45582da799b8b7be00f6ed3b50947e5060",
+      "operation": "receipt_finding",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "review-findings-present"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/review-finding.json",
+      "fixture_sha256": "77f2301a888244b75fde440e58286667981a29a5c03838fe987b9ff64aef8f0b",
+      "operation": "review_finding",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "truth-receipt-hash-binding"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/stale-truth-receipt-bindings.json",
+      "fixture_sha256": "01091cebce2f2e276d539c919260e4c2efc7c7eb833cc9d22306e480f149d923",
+      "operation": "stale_truth_receipt_bindings",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "fixture-manifest-binding"
+      ],
+      "fixture": "in-memory-fixture-set",
+      "operation": "fixture_set_missing",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "fixture-manifest-binding"
+      ],
+      "fixture": "in-memory-fixture-set",
+      "operation": "fixture_set_extra",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "fixture-manifest-binding"
+      ],
+      "fixture": "in-memory-fixture-set",
+      "operation": "fixture_set_renamed",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "fixture-manifest-binding"
+      ],
+      "fixture": "in-memory-fixture-set",
+      "operation": "fixture_set_duplicate_operation",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "fixture-manifest-binding"
+      ],
+      "fixture": "in-memory-fixture-set",
+      "operation": "fixture_set_repurposed_operation",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "fixture-manifest-binding"
+      ],
+      "fixture": "in-memory-fixture-set",
+      "operation": "fixture_set_expected_code_drift",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "fixture-manifest-binding"
+      ],
+      "fixture": "in-memory-fixture-set",
+      "operation": "fixture_set_byte_drift",
+      "rejected": true
+    }
+  ],
+  "final_status": "truth-test-pass-pending-fresh-v3-independent-global-review-and-root-acceptance",
+  "fixture_manifest": {
+    "behavior_fixture_count": 12,
+    "fixture_set_sha256": "dd4595f8976843ca34a833311d6508a7a4f33203f10d940cd9f827049ab45245",
+    "meta_counterexample_count": 7,
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-fixture-manifest-v1.json",
+    "sha256": "4a232e2de84d7d9a3a3a6ea488f1e60a07a76281ae5e285eb8d146f8c818bd6f"
+  },
+  "frozen_input_hashes": {
+    "phase4-browser-evidence-freeze-v1.json": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+    "phase4-input-freeze-v1.json": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+    "phase4-join-scaffold-v1.json": "2162076fe26911a2659b7e0ef23f49398c8ebb4b5343b0ab0479c78a5d1a1de4",
+    "phase4-source-registry-v1.json": "450f5ab66215178aa730e057cb28a220bfb550dfd924959a7f7f1da2eea02f9e"
+  },
+  "production": {
+    "errors": [],
+    "measured": {
+      "accepted_path_usage_links": 85,
+      "caller_locators": 533,
+      "candidate_paths": 428,
+      "dispositions": {
+        "reject": 14,
+        "replace": 85,
+        "unknown": 329
+      },
+      "identical_hash_groups": 227,
+      "non_scene_links": 8,
+      "priority1_paths": 14,
+      "responsive_assessment_cells": 308,
+      "scene_links": 77,
+      "unique_candidate_paths": 428,
+      "unique_non_scene_usage_ids": 5,
+      "unique_scene_usage_ids": 40,
+      "unique_usage_ids": 45
+    },
+    "passed": true
+  },
+  "role": "phase4-global-truth-test-author",
+  "schema_version": "apk-asset-forensics.phase4-global-contract-test-report.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "verifier": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_global_contract_test.py",
+  "verifier_sha256": "39d773c8799f8a59d1664f76de4a0cf694cb318fea43bcf50fc1f2e81f366f66"
+}

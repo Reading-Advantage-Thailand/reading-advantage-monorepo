@@ -1,0 +1,60 @@
+{
+  "accepted_at": "2026-07-26T01:21:00Z",
+  "accepted_capability_inputs": {
+    "phase2-capability-classification-v5.json": "274a3538b782499828c6af9cc7033f72fa5de0b1d6da0c0eb769dad568e78a34",
+    "phase2-curated-capability-evidence-v1.json": "18769fa2880164c47c73bb628e518806eb5d6f7a50a24ba376b89cd17aea2349",
+    "phase2-extension-boundaries-v5.json": "bcee20de256ef1ac44fad89353faeff73f03bec4ad7f0e57358f6b1862252c66"
+  },
+  "adoption_policy": {
+    "accepted_runtime_contracts": 0,
+    "approved_asset_mappings": 0,
+    "asset_root": "packages/advantage-play-kit/assets/standard",
+    "blocked_asset_mappings": 85,
+    "browser_success_claimed": false,
+    "direct_legacy_paths": "prohibited",
+    "private_pack_trees": "prohibited",
+    "unknown_must_haves": "blocked"
+  },
+  "blocked_evidence_inputs": {
+    "phase3-responsive-contracts-v1.json": "615fd11ec1eb0ba6ea7680a8a69a65b854cdfef942455ff1f1e62b5a9ead3991",
+    "phase4-asset-normalization-v1.json": "be70383b685b32ad8927aa4238cd8ae5aec51a65c0967760f795b74a9ba98dd8",
+    "phase4-canonical-adoption-matrix-v1.json": "6c37aded802d31c424790c2ad04627b366186d397731d3374251f36a6c6d80e4",
+    "phase5-gap-delivery-ranking-v1.json": "16403089e8caac83007350a06dced47f07c4a6c734a45e0bf22aee52750d4d32"
+  },
+  "claim_overlay": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-claim-disposition-overlay-v1.json",
+    "sha256": "06e692daff932334a5edc2a06d7121651a6bb2426f05f1b00d8d0a5c1ecb6e41"
+  },
+  "consumable": true,
+  "consumer_scope": "T11_shared_developer_kit_only",
+  "independent_review": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-independent-acceptance-review-v1.json",
+    "sha256": "efca1bc8391328fc274c34ac463c362dcffcd921c96204905091b9025554688d"
+  },
+  "owner_acceptance": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/product-owner-acceptance-v1.json",
+    "sha256": "165e21c9ddb5a6e0b2f61f3190d604fbb3133459b5f00331a8c66ee1e7572753"
+  },
+  "revocation_state": "active",
+  "schema_version": "apk-t10-accepted-successor-manifest.v1",
+  "standard_pack": {
+    "accepted_release_sha256": "61984e0b53c4ba85379cf6a4f0f33ee956665c4eaad4b3d681e3dccd98389844",
+    "catalog_artifact_sha256": "ef432a798a78585df3416d60aca30fe11a2d1d8b833e0d65ceb7fac5c8b19932",
+    "catalog_digest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+    "required_credit": "Pixel art assets by ElvGames",
+    "root": "packages/advantage-play-kit/assets/standard",
+    "source_receipt_digest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9",
+    "version": "2026.07.23"
+  },
+  "status": "accepted",
+  "successor_gate": "T11 must verify successor-hashes-v1.json and reject missing, stale, revoked, mismatched, direct-legacy, private-tree, or non-standard-pack input.",
+  "t9_candidate": {
+    "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase6-candidate-synthesis-manifest-v1.json",
+    "sha256": "550b15d5f14e294deafec2df86ff8e09f43ba8d7fd204f4c167ebf811f0563ff"
+  },
+  "t9_root_acceptance": {
+    "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase6-root-acceptance-v1.json",
+    "sha256": "b02672818991231837afcd1bfc3dbdc59c40d230d1cf3a309d8acec2c5f0341b"
+  },
+  "track_id": "apk_independent_acceptance_handoff_20260712"
+}

@@ -1,0 +1,141 @@
+{
+  "schema_version": "apk-t8-phase4-browser-evidence-v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "status": "bounded-root-evidence-not-acceptance",
+  "collector": {
+    "role": "root-orchestrator-product-owner",
+    "tool": "Kimi WebBridge",
+    "session": "apk-t8-phase4-qc",
+    "tab_id": 915225174,
+    "collected_at": "2026-07-23T23:52:38+07:00"
+  },
+  "runtime": {
+    "url": "http://127.0.0.1:4201/en/student/games/vocabulary/dragon-flight",
+    "http_status": 200,
+    "framework": "Next.js 16.2.9",
+    "compiler": "webpack",
+    "compiler_disclosure": "The Turbopack dev manifest omitted the complete [locale] route tree while the webpack compiler admitted and served the same source route. No application source was changed to obtain this evidence."
+  },
+  "captures": [
+    {
+      "state": "start",
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "device_scale_factor": 1,
+        "mobile": true
+      },
+      "screenshot_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/dragon-flight-compact-start.png",
+      "screenshot_sha256": "0a1b7598c727fbe3faba52abae0d450bc875737f69f12e70e821824cacaa20b3",
+      "observations": [
+        "The start surface renders with readable title, briefing, vocabulary rows, and background art.",
+        "The Start Game control is below the initial viewport and requires vertical scrolling."
+      ]
+    },
+    {
+      "state": "start",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "device_scale_factor": 1,
+        "mobile": false
+      },
+      "screenshot_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/dragon-flight-wide-start.png",
+      "screenshot_sha256": "f0ec3070c28613263fa5415ea59fcd3e0e8049fd3dd4229f652b507421489bf1",
+      "document_geometry": {
+        "viewport": [
+          1440,
+          900
+        ],
+        "scroll_height": 915,
+        "body_scroll_width": 1425
+      },
+      "observations": [
+        "The start surface renders all required controls and vocabulary content without horizontal overflow.",
+        "The document is 15 pixels taller than the viewport."
+      ]
+    },
+    {
+      "state": "gameplay",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "device_scale_factor": 1,
+        "mobile": false
+      },
+      "screenshot_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/dragon-flight-wide-gameplay.png",
+      "screenshot_sha256": "23bdf02a55ba6c7862baa8fbbd957fdee8e0ec839bef2217cc505237be5a5ad2",
+      "observations": [
+        "Prompt, timer, answer labels, gate targets, player, and both direction controls are visible together.",
+        "The accepted legacy art provides a legible wide current-function reference."
+      ]
+    },
+    {
+      "state": "gameplay",
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "device_scale_factor": 1,
+        "mobile": true
+      },
+      "screenshot_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/dragon-flight-compact-gameplay.png",
+      "screenshot_sha256": "d69cbd74bd703fe957bd2d3e258f1d530a0b8968e2d6989bf44a3ec696cfcc7d",
+      "document_geometry": {
+        "viewport": [
+          390,
+          844
+        ],
+        "scroll_size": [
+          390,
+          993
+        ],
+        "canvas_rects": [
+          [
+            3,
+            248,
+            386,
+            704
+          ]
+        ],
+        "left_control_rect": [
+          115,
+          846,
+          48,
+          48
+        ],
+        "right_control_rect": [
+          227,
+          846,
+          48,
+          48
+        ]
+      },
+      "observations": [
+        "Prompt, timer, dragon count, gate targets, and answer labels are readable in the initial viewport.",
+        "Both required direction controls begin at y=846, two pixels below the 844-pixel viewport, so gameplay is not compact-fit without vertical scrolling."
+      ]
+    }
+  ],
+  "exact_runtime_asset_observations": [
+    {
+      "url": "http://127.0.0.1:4201/games/vocabulary/dragon-flight/loading-screen-background.png",
+      "dom_usage": "CSS background image on the start surface"
+    },
+    {
+      "url": "http://127.0.0.1:4201/games/vocabulary/dragon-flight/player-3x3-sheet-facing-camera.png",
+      "dom_usage": "CSS background image on the animated start-surface player"
+    }
+  ],
+  "fitness_decision": {
+    "wide_current_legacy_function": "supported-by-bounded-browser-evidence",
+    "compact_current_legacy_function": "incompatible-required-controls-outside-initial-viewport",
+    "cross_game_generalization": "forbidden",
+    "theme_compatibility": "not-assessed-by-this-artifact",
+    "candidate_disposition": "not-assessed-by-this-artifact"
+  },
+  "limitations": [
+    "Canvas-rendered gameplay asset URLs are not exposed as DOM image or CSS background values by this capture.",
+    "This evidence does not prove provenance, license, canonical standard-pack mapping, cute/chibi compatibility, heroic/stylized compatibility, or reuse fitness.",
+    "The Kimi session remains open."
+  ]
+}

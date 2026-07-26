@@ -1,0 +1,3931 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-path-usage-joins.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-10",
+  "role": "requirements-mapper",
+  "status": "mapped_pending_independent_truth_test_review_and_root_acceptance",
+  "scope": {
+    "batch_only": "AF-10",
+    "catalog_locator_records_embedded": false,
+    "catalog_locator_records_non_additive_count": 7,
+    "accepted_join_rule": "Exact accepted path-specific caller locator and canonical normalized usage pointer only.",
+    "prohibited_inferences": [
+      "filename",
+      "folder",
+      "slug",
+      "game name",
+      "visual similarity",
+      "identical hash group without path-specific caller evidence"
+    ]
+  },
+  "counts": {
+    "candidate_paths": 34,
+    "identical_hash_groups": 19,
+    "caller_locators": 30,
+    "accepted_path_usage_links": 4,
+    "unique_scene_usage_records": 1,
+    "responsive_assessment_cells": 8,
+    "dispositions": {
+      "reject": 0,
+      "replace": 4,
+      "unknown": 30
+    },
+    "separate_catalog_locator_records": 7,
+    "additive_92_path_claim": false
+  },
+  "input_binding": {
+    "phase4_input_freeze": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json",
+      "sha256": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3"
+    },
+    "phase4_join_scaffold": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-join-scaffold-v1.json",
+      "sha256": "2162076fe26911a2659b7e0ef23f49398c8ebb4b5343b0ab0479c78a5d1a1de4"
+    },
+    "phase4_browser_evidence_freeze": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json",
+      "sha256": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231"
+    },
+    "phase4_source_registry": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json",
+      "sha256": "450f5ab66215178aa730e057cb28a220bfb550dfd924959a7f7f1da2eea02f9e"
+    },
+    "caller_inventory": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+      "sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b"
+    },
+    "provenance_audit": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/provenance-audit.json",
+      "sha256": "fed7989da253af1a8ce28137e6267b16b1848e30e6a4b6aaa8636808442cc11a"
+    },
+    "inspection_records": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/inspection-records.json",
+      "sha256": "2a098b81c5cbefe2bf2b1c0f916541e8acb8a1a4a00e0e5da166e9a807ab93b8"
+    },
+    "strict_caller_scene_join_aid": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/strict-caller-scene-joins.json",
+      "sha256": "39fc827a12dc2ad7719d56ee3c616045caecdf4aef816c24a9fed5c3803f4f0c"
+    }
+  },
+  "review_slices": [
+    {
+      "slice_id": "AF-10-exact-joined-one-game-scene-slice",
+      "games": [
+        "dragon-flight"
+      ],
+      "game_count": 1,
+      "candidate_paths": [
+        "apps/advantage-games/public/games/cover/dragon-flight-cover.png",
+        "apps/advantage-games/public/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+        "apps/reading-advantage/public/games/cover/dragon-flight-cover.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png"
+      ],
+      "accepted_usage_ids": [
+        "t3:dragon-flight:catalog-card:catalog:df-id-004",
+        "t3:dragon-flight:scene:dragon-flight-game:df-asset-001"
+      ],
+      "scope": "Exact accepted joined path coverage only; browser evidence is composite legacy behavior, never candidate-path load or suitability proof."
+    }
+  ],
+  "records": [
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/abyssal-well-20260320/metadata.json",
+      "sha256": "bfba8a4fdc7c3df1570f79f8a55534ad002c56ad76ba9d6f566b3c2e39a0c26f",
+      "identical_hash_group": "sha256:bfba8a4fdc7c3df1570f79f8a55534ad002c56ad76ba9d6f566b3c2e39a0c26f",
+      "duplicate_path_peers": [],
+      "derived_public_url": null,
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/castle-defense-fixes-20260129/metadata.json",
+      "sha256": "c47bfd05f4fca2823a4353d5b8549cee35ef18d1669b209594310e7157a4f29d",
+      "identical_hash_group": "sha256:c47bfd05f4fca2823a4353d5b8549cee35ef18d1669b209594310e7157a4f29d",
+      "duplicate_path_peers": [],
+      "derived_public_url": null,
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/dragon-rider-reskin-20260131/metadata.json",
+      "sha256": "c6c572dd9f1f508f9906fc343c18788862b6a72198ebb35628c7a557ccbe181a",
+      "identical_hash_group": "sha256:c6c572dd9f1f508f9906fc343c18788862b6a72198ebb35628c7a557ccbe181a",
+      "duplicate_path_peers": [],
+      "derived_public_url": null,
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/griffin-riders-escape/metadata.json",
+      "sha256": "c865725efe13735a9ed1884a9491fb07f815c9daa60f05a0f166c2f30b097110",
+      "identical_hash_group": "sha256:c865725efe13735a9ed1884a9491fb07f815c9daa60f05a0f166c2f30b097110",
+      "duplicate_path_peers": [],
+      "derived_public_url": null,
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/griffin-sky-joust-20260320/metadata.json",
+      "sha256": "c00094c549954c36040ee3fdb594d156f9c298b66910886736a92d0330932266",
+      "identical_hash_group": "sha256:c00094c549954c36040ee3fdb594d156f9c298b66910886736a92d0330932266",
+      "duplicate_path_peers": [],
+      "derived_public_url": null,
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/archive/rpg_battle_20260102/asset-spec.md",
+      "sha256": "ca4e01fc113605d588769f7bce76a342c37fd301eac9ff6bd42e0461753e9446",
+      "identical_hash_group": "sha256:ca4e01fc113605d588769f7bce76a342c37fd301eac9ff6bd42e0461753e9446",
+      "duplicate_path_peers": [],
+      "derived_public_url": null,
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/enchanted-library-compliance-audit_20260426/metadata.json",
+      "sha256": "caafc676b691338764db7da16eee41ca9daf4c112a0a7c7bd94c8196bcba86e5",
+      "identical_hash_group": "sha256:caafc676b691338764db7da16eee41ca9daf4c112a0a7c7bd94c8196bcba86e5",
+      "duplicate_path_peers": [],
+      "derived_public_url": null,
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/measure/tracks/rune-match-compliance-audit_20260426/metadata.json",
+      "sha256": "c3fb517992a741dc477e717a3ce7699bbadc6f34578b388cf889ab79e441bd41",
+      "identical_hash_group": "sha256:c3fb517992a741dc477e717a3ce7699bbadc6f34578b388cf889ab79e441bd41",
+      "duplicate_path_peers": [],
+      "derived_public_url": null,
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/castle-defense/goblin_3x3_pose_sheet.png",
+      "sha256": "c238839602a1cfb59085d0e71136d2ff5c7e26ce49bbb798a00538cf4b22be17",
+      "identical_hash_group": "sha256:c238839602a1cfb59085d0e71136d2ff5c7e26ce49bbb798a00538cf4b22be17",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/sentence/castle-defense/goblin_3x3_pose_sheet.png",
+        "apps/reading-advantage/public/games/sentence/castle-defense/goblin_3x3_pose_sheet.png"
+      ],
+      "derived_public_url": "/games/castle-defense/goblin_3x3_pose_sheet.png",
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/castle-defense/player_3x3_pose_sheet.png",
+      "sha256": "c061298b5626ab2c49e13a200c0738d3c9efa3b987d61a2e686a712f009bdbe0",
+      "identical_hash_group": "sha256:c061298b5626ab2c49e13a200c0738d3c9efa3b987d61a2e686a712f009bdbe0",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/sentence/castle-defense/player_3x3_pose_sheet.png",
+        "apps/advantage-games/public/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png",
+        "apps/advantage-games/public/games/wizard-vs-zombie/player_3x3_pose_sheet.png",
+        "apps/reading-advantage/public/games/sentence/castle-defense/player_3x3_pose_sheet.png",
+        "apps/reading-advantage/public/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png"
+      ],
+      "derived_public_url": "/games/castle-defense/player_3x3_pose_sheet.png",
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/cover/cover-archers-revenge.png",
+      "sha256": "c339c349243113ecb47a867f021a94dfd03b82e8c8e7587010d4a4d4c393c73c",
+      "identical_hash_group": "sha256:c339c349243113ecb47a867f021a94dfd03b82e8c8e7587010d4a4d4c393c73c",
+      "duplicate_path_peers": [],
+      "derived_public_url": "/games/cover/cover-archers-revenge.png",
+      "static_reference_status": "found",
+      "dynamic_risk": false,
+      "unknown_rationale": null,
+      "caller_locators": [
+        {
+          "locator_id": "caller:81567ece9c7fea58a8d5a27512de01de6d2e7753920427e1762c01d3369a5289",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/16/current_callers/0",
+          "caller_path": "apps/advantage-games/src/lib/gameCards.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 157,
+          "line_start": 157,
+          "locator_text_sha256": "81c124152e4f18fe970f97f8d8a96b513176b861f76ed305a8b32e0728fadb04",
+          "matched_literal": "/games/cover/cover-archers-revenge.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/cover/dragon-flight-cover.png",
+      "sha256": "cac76ba5b6aad17410f854cfb9dc507bbb0651951a6b9be04080ef5f75ea7feb",
+      "identical_hash_group": "sha256:cac76ba5b6aad17410f854cfb9dc507bbb0651951a6b9be04080ef5f75ea7feb",
+      "duplicate_path_peers": [
+        "apps/reading-advantage/public/games/cover/dragon-flight-cover.png"
+      ],
+      "derived_public_url": "/games/cover/dragon-flight-cover.png",
+      "static_reference_status": "found",
+      "dynamic_risk": false,
+      "unknown_rationale": null,
+      "caller_locators": [
+        {
+          "locator_id": "caller:8031d11b68494a082cccdc116e3fdcfbf5c6f6e36d3fc6788aa1269c7addf316",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/29/current_callers/0",
+          "caller_path": "apps/advantage-games/src/lib/gameCards.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 62,
+          "line_start": 62,
+          "locator_text_sha256": "ebe308ec090deeca653b1a95931d11fbf3f23d44ad8aa2003cb0a325798234f7",
+          "matched_literal": "/games/cover/dragon-flight-cover.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "locator_id": "caller:306cf7e886eadc0b13b3156d09310d2d2c40210de233971d2682f25d9e7d3354",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/29/current_callers/1",
+          "caller_path": "apps/reading-advantage/app/[locale]/(student)/student/games/page.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 101,
+          "line_start": 101,
+          "locator_text_sha256": "fa710bcd487f07670ce37a519b53e5391496832084bbc394aa9e5e7581352974",
+          "matched_literal": "/games/cover/dragon-flight-cover.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "locator_id": "caller:35497a289d6bfe2091c388678c25334e2df485eb9891fa43c7256035fccd7e43",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/29/current_callers/2",
+          "caller_path": "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 78,
+          "line_start": 78,
+          "locator_text_sha256": "36d821f8ca4ffa5e93ba2d72cfbf790cd3bcdab083cf0e1c75c5c1148f0d7590",
+          "matched_literal": "/games/cover/dragon-flight-cover.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "locator_id": "caller:4860c2a36ac555abf26bb1a27873e8b8535f5e17c8135cfe4885bc3c4d6d5de4",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/29/current_callers/3",
+          "caller_path": "apps/reading-advantage/lib/games/gameCards.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 33,
+          "line_start": 33,
+          "locator_text_sha256": "ebe308ec090deeca653b1a95931d11fbf3f23d44ad8aa2003cb0a325798234f7",
+          "matched_literal": "/games/cover/dragon-flight-cover.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "accepted_usage_ids": [
+        "t3:dragon-flight:catalog-card:catalog:df-id-004"
+      ],
+      "accepted_join_caller_locator_ids": [
+        "caller:306cf7e886eadc0b13b3156d09310d2d2c40210de233971d2682f25d9e7d3354",
+        "caller:35497a289d6bfe2091c388678c25334e2df485eb9891fa43c7256035fccd7e43",
+        "caller:4860c2a36ac555abf26bb1a27873e8b8535f5e17c8135cfe4885bc3c4d6d5de4",
+        "caller:8031d11b68494a082cccdc116e3fdcfbf5c6f6e36d3fc6788aa1269c7addf316"
+      ],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "replace_with_standard_pack_requirement",
+        "value": "replace",
+        "policy_priority": 2,
+        "replacement_action": "replace_with_standard_pack_requirement"
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "accepted_exact_normalized_join",
+      "usage_links": [
+        {
+          "usage_id": "t3:dragon-flight:catalog-card:catalog:df-id-004",
+          "source": {
+            "normalizer_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json",
+            "normalizer_sha256": "5ef6370e6a789b9de14d1843c12380d2a10eb2558799fe16985e810709a998c6",
+            "normalizer_json_pointer": "/usage_records/1"
+          },
+          "normalized_usage": {
+            "usage_id": "t3:dragon-flight:catalog-card:catalog:df-id-004",
+            "track": "T3",
+            "game_id": "dragon-flight",
+            "surface_kind": "non_scene",
+            "surface_id": "catalog-card",
+            "asset_locator_literal": "/games/cover/dragon-flight-cover.png",
+            "category": "catalog_cover_binding",
+            "claim_ids": [
+              "DF-ID-004"
+            ],
+            "source_path": "measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json",
+            "source_sha256": "84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e",
+            "source_json_pointers": [
+              "/3"
+            ],
+            "evidence_class": "current-source",
+            "accepted_scope": "Source-declared catalog cover assignment.",
+            "disclosures": [
+              "Catalog assignment does not establish live loading."
+            ]
+          },
+          "responsive_assessment_cells": [],
+          "semantic_replacement_requirement": {
+            "usage_id": "t3:dragon-flight:catalog-card:catalog:df-id-004",
+            "source": {
+              "normalizer_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json",
+              "normalizer_sha256": "5ef6370e6a789b9de14d1843c12380d2a10eb2558799fe16985e810709a998c6",
+              "normalizer_json_pointer": "/usage_records/1"
+            },
+            "accepted_usage_fields": {
+              "track": "T3",
+              "game_id": "dragon-flight",
+              "surface_kind": "non_scene",
+              "surface_id": "catalog-card",
+              "asset_locator_literal": "/games/cover/dragon-flight-cover.png",
+              "category": "catalog_cover_binding",
+              "claim_ids": [
+                "DF-ID-004"
+              ],
+              "evidence_class": "current-source",
+              "source_class": null,
+              "accepted_scope": "Source-declared catalog cover assignment.",
+              "disclosures": [
+                "Catalog assignment does not establish live loading."
+              ]
+            },
+            "canonical_semantic_role": null,
+            "canonical_state": null,
+            "ontology_status": "not_defined_pending_T9"
+          }
+        }
+      ],
+      "semantic_replacement_requirements": {
+        "status": "source_bound_pending_T9",
+        "requirements": [
+          {
+            "usage_id": "t3:dragon-flight:catalog-card:catalog:df-id-004",
+            "source": {
+              "normalizer_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json",
+              "normalizer_sha256": "5ef6370e6a789b9de14d1843c12380d2a10eb2558799fe16985e810709a998c6",
+              "normalizer_json_pointer": "/usage_records/1"
+            },
+            "accepted_usage_fields": {
+              "track": "T3",
+              "game_id": "dragon-flight",
+              "surface_kind": "non_scene",
+              "surface_id": "catalog-card",
+              "asset_locator_literal": "/games/cover/dragon-flight-cover.png",
+              "category": "catalog_cover_binding",
+              "claim_ids": [
+                "DF-ID-004"
+              ],
+              "evidence_class": "current-source",
+              "source_class": null,
+              "accepted_scope": "Source-declared catalog cover assignment.",
+              "disclosures": [
+                "Catalog assignment does not establish live loading."
+              ]
+            },
+            "canonical_semantic_role": null,
+            "canonical_state": null,
+            "ontology_status": "not_defined_pending_T9"
+          }
+        ]
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/cover/dungeon-liberator.png",
+      "sha256": "c642b04169875bac2e90e5f555b47e7da0d85521e4eaf3de33b673c52b069d24",
+      "identical_hash_group": "sha256:c642b04169875bac2e90e5f555b47e7da0d85521e4eaf3de33b673c52b069d24",
+      "duplicate_path_peers": [],
+      "derived_public_url": "/games/cover/dungeon-liberator.png",
+      "static_reference_status": "found",
+      "dynamic_risk": false,
+      "unknown_rationale": null,
+      "caller_locators": [
+        {
+          "locator_id": "caller:b46e5b9266f0e310398ebfd736e0a53f38c7bbdff9ac3903f801fb1d17439446",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/24/current_callers/0",
+          "caller_path": "apps/advantage-games/src/lib/gameCards.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 110,
+          "line_start": 110,
+          "locator_text_sha256": "07363d8835754c3ba3078adde0c7e3ac55e076311f66c593c4d006acbe4de770",
+          "matched_literal": "/games/cover/dungeon-liberator.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/dragon-flight/gates-3x3-sheet-facing-up.png",
+      "sha256": "c3b205a3cf4c5968cde34da021b4e53cc138f6932fe4fe40a30d8c374705c4e4",
+      "identical_hash_group": "sha256:c3b205a3cf4c5968cde34da021b4e53cc138f6932fe4fe40a30d8c374705c4e4",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png"
+      ],
+      "derived_public_url": "/games/dragon-flight/gates-3x3-sheet-facing-up.png",
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/dragon-rider/boss-3x3-sheet-facing-up.png",
+      "sha256": "bd02d8146701783c7fe9542dd8afc2d8f919cbdb30c653a9e6e9b620577243db",
+      "identical_hash_group": "sha256:bd02d8146701783c7fe9542dd8afc2d8f919cbdb30c653a9e6e9b620577243db",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/vocabulary/dragon-rider/boss-3x3-sheet-facing-up.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-rider/boss-3x3-sheet-facing-up.png"
+      ],
+      "derived_public_url": "/games/dragon-rider/boss-3x3-sheet-facing-up.png",
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/castle-defense/goblin_3x3_pose_sheet.png",
+      "sha256": "c238839602a1cfb59085d0e71136d2ff5c7e26ce49bbb798a00538cf4b22be17",
+      "identical_hash_group": "sha256:c238839602a1cfb59085d0e71136d2ff5c7e26ce49bbb798a00538cf4b22be17",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/castle-defense/goblin_3x3_pose_sheet.png",
+        "apps/reading-advantage/public/games/sentence/castle-defense/goblin_3x3_pose_sheet.png"
+      ],
+      "derived_public_url": "/games/sentence/castle-defense/goblin_3x3_pose_sheet.png",
+      "static_reference_status": "found",
+      "dynamic_risk": false,
+      "unknown_rationale": null,
+      "caller_locators": [
+        {
+          "locator_id": "caller:31e3c7b829895608cbeaf87f5d00c85c148f28331eaa06129e58747d9e433264",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/12/current_callers/0",
+          "caller_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 177,
+          "line_start": 177,
+          "locator_text_sha256": "21c9c362e1cb477cba6921637709d18c78756fafcadbbd9a0268103619a16295",
+          "matched_literal": "/games/sentence/castle-defense/goblin_3x3_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "locator_id": "caller:3fe94bd113b9ee3d3dc9a1e25a03c2f33817295c4f57d221208d40ff144d7a41",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/12/current_callers/1",
+          "caller_path": "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 166,
+          "line_start": 166,
+          "locator_text_sha256": "21c9c362e1cb477cba6921637709d18c78756fafcadbbd9a0268103619a16295",
+          "matched_literal": "/games/sentence/castle-defense/goblin_3x3_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/sentence/castle-defense/player_3x3_pose_sheet.png",
+      "sha256": "c061298b5626ab2c49e13a200c0738d3c9efa3b987d61a2e686a712f009bdbe0",
+      "identical_hash_group": "sha256:c061298b5626ab2c49e13a200c0738d3c9efa3b987d61a2e686a712f009bdbe0",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/castle-defense/player_3x3_pose_sheet.png",
+        "apps/advantage-games/public/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png",
+        "apps/advantage-games/public/games/wizard-vs-zombie/player_3x3_pose_sheet.png",
+        "apps/reading-advantage/public/games/sentence/castle-defense/player_3x3_pose_sheet.png",
+        "apps/reading-advantage/public/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png"
+      ],
+      "derived_public_url": "/games/sentence/castle-defense/player_3x3_pose_sheet.png",
+      "static_reference_status": "found",
+      "dynamic_risk": false,
+      "unknown_rationale": null,
+      "caller_locators": [
+        {
+          "locator_id": "caller:72b14489d5d4974f844a87ddfad74029a48f1719d8f78730eefa842d73758ad0",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/6/current_callers/0",
+          "caller_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 174,
+          "line_start": 174,
+          "locator_text_sha256": "2e6df82f77ffe1cdde2c1fefe7f5c0481f44427f276fc3ba3dbe16c467d0d2fd",
+          "matched_literal": "/games/sentence/castle-defense/player_3x3_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "locator_id": "caller:f4e169b7313add54e4639a9435cc115ef1726748c0c64f94b36f7057391bab46",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/6/current_callers/1",
+          "caller_path": "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 163,
+          "line_start": 163,
+          "locator_text_sha256": "2e6df82f77ffe1cdde2c1fefe7f5c0481f44427f276fc3ba3dbe16c467d0d2fd",
+          "matched_literal": "/games/sentence/castle-defense/player_3x3_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/storm-castle-tower/storm-castle-tower-gameplay.png",
+      "sha256": "cb5e5c99a49da484e0a7856cef335c5428e0894534f0f148d45e6dd81f47408b",
+      "identical_hash_group": "sha256:cb5e5c99a49da484e0a7856cef335c5428e0894534f0f148d45e6dd81f47408b",
+      "duplicate_path_peers": [],
+      "derived_public_url": "/games/storm-castle-tower/storm-castle-tower-gameplay.png",
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+      "sha256": "c3b205a3cf4c5968cde34da021b4e53cc138f6932fe4fe40a30d8c374705c4e4",
+      "identical_hash_group": "sha256:c3b205a3cf4c5968cde34da021b4e53cc138f6932fe4fe40a30d8c374705c4e4",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/dragon-flight/gates-3x3-sheet-facing-up.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png"
+      ],
+      "derived_public_url": "/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+      "static_reference_status": "found",
+      "dynamic_risk": false,
+      "unknown_rationale": null,
+      "caller_locators": [
+        {
+          "locator_id": "caller:fba8a39a78dd739ac2083f354276cb1dc06a2b4a94f1c55bfb780e36da534810",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/20/current_callers/0",
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 119,
+          "line_start": 119,
+          "locator_text_sha256": "2285f5217a58514ff2183818c2ff5339afbcbe916509d205af62c693a9deeebc",
+          "matched_literal": "/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "locator_id": "caller:4e7c7a93f2fed79843f41ce74b003a14090983efb7677a1653c25d36850168b9",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/20/current_callers/1",
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 116,
+          "line_start": 116,
+          "locator_text_sha256": "2285f5217a58514ff2183818c2ff5339afbcbe916509d205af62c693a9deeebc",
+          "matched_literal": "/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "accepted_usage_ids": [
+        "t3:dragon-flight:scene:dragon-flight-game:df-asset-001"
+      ],
+      "accepted_join_caller_locator_ids": [
+        "caller:4e7c7a93f2fed79843f41ce74b003a14090983efb7677a1653c25d36850168b9",
+        "caller:fba8a39a78dd739ac2083f354276cb1dc06a2b4a94f1c55bfb780e36da534810"
+      ],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "replace_with_standard_pack_requirement",
+        "value": "replace",
+        "policy_priority": 2,
+        "replacement_action": "replace_with_standard_pack_requirement"
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "accepted_exact_normalized_join",
+      "usage_links": [
+        {
+          "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-001",
+          "source": {
+            "normalizer_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json",
+            "normalizer_sha256": "5ef6370e6a789b9de14d1843c12380d2a10eb2558799fe16985e810709a998c6",
+            "normalizer_json_pointer": "/usage_records/2"
+          },
+          "normalized_usage": {
+            "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-001",
+            "track": "T3",
+            "game_id": "dragon-flight",
+            "surface_kind": "scene",
+            "surface_id": "vocabulary/dragon-flight/scene=DragonFlightGame:gates",
+            "asset_locator_literal": "/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+            "category": "runtime_sprite_binding",
+            "claim_ids": [
+              "DF-ASSET-001"
+            ],
+            "source_path": "measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json",
+            "source_sha256": "84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e",
+            "source_json_pointers": [
+              "/110"
+            ],
+            "evidence_class": "asset",
+            "accepted_scope": "ASSETS.gates source binding.",
+            "disclosures": []
+          },
+          "responsive_assessment_cells": [
+            {
+              "viewport": "compact",
+              "theme": "cute_chibi_v1",
+              "status": "blocked_unknown",
+              "assessment": null,
+              "facets": {
+                "text_capacity": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "focal_crop_tile_slice": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "state_coverage": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "collision_readability": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "theme_suitability": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "current_legacy_function": {
+                  "status": "bounded_composite_scene_evidence",
+                  "evidence": {
+                    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json",
+                    "sha256": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+                    "json_pointer": "/root_direct_visual_decisions/0"
+                  },
+                  "value": "incompatible-required-direction-controls-begin-below-initial-viewport",
+                  "scope": "composite_scene_only_not_candidate_path_load",
+                  "per_path_runtime_load": "not_established"
+                },
+                "semantic_role_state_replacement_or_retirement": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "per_path_runtime_load": {
+                  "status": "not_established",
+                  "evidence": null
+                }
+              }
+            },
+            {
+              "viewport": "compact",
+              "theme": "heroic_stylized_v1",
+              "status": "blocked_unknown",
+              "assessment": null,
+              "facets": {
+                "text_capacity": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "focal_crop_tile_slice": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "state_coverage": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "collision_readability": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "theme_suitability": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "current_legacy_function": {
+                  "status": "bounded_composite_scene_evidence",
+                  "evidence": {
+                    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json",
+                    "sha256": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+                    "json_pointer": "/root_direct_visual_decisions/0"
+                  },
+                  "value": "incompatible-required-direction-controls-begin-below-initial-viewport",
+                  "scope": "composite_scene_only_not_candidate_path_load",
+                  "per_path_runtime_load": "not_established"
+                },
+                "semantic_role_state_replacement_or_retirement": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "per_path_runtime_load": {
+                  "status": "not_established",
+                  "evidence": null
+                }
+              }
+            },
+            {
+              "viewport": "wide",
+              "theme": "cute_chibi_v1",
+              "status": "blocked_unknown",
+              "assessment": null,
+              "facets": {
+                "text_capacity": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "focal_crop_tile_slice": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "state_coverage": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "collision_readability": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "theme_suitability": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "current_legacy_function": {
+                  "status": "bounded_composite_scene_evidence",
+                  "evidence": {
+                    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json",
+                    "sha256": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+                    "json_pointer": "/root_direct_visual_decisions/0"
+                  },
+                  "value": "supported-by-bounded-scene-evidence",
+                  "scope": "composite_scene_only_not_candidate_path_load",
+                  "per_path_runtime_load": "not_established"
+                },
+                "semantic_role_state_replacement_or_retirement": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "per_path_runtime_load": {
+                  "status": "not_established",
+                  "evidence": null
+                }
+              }
+            },
+            {
+              "viewport": "wide",
+              "theme": "heroic_stylized_v1",
+              "status": "blocked_unknown",
+              "assessment": null,
+              "facets": {
+                "text_capacity": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "focal_crop_tile_slice": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "state_coverage": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "collision_readability": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "theme_suitability": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "current_legacy_function": {
+                  "status": "bounded_composite_scene_evidence",
+                  "evidence": {
+                    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json",
+                    "sha256": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+                    "json_pointer": "/root_direct_visual_decisions/0"
+                  },
+                  "value": "supported-by-bounded-scene-evidence",
+                  "scope": "composite_scene_only_not_candidate_path_load",
+                  "per_path_runtime_load": "not_established"
+                },
+                "semantic_role_state_replacement_or_retirement": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "per_path_runtime_load": {
+                  "status": "not_established",
+                  "evidence": null
+                }
+              }
+            }
+          ],
+          "semantic_replacement_requirement": {
+            "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-001",
+            "source": {
+              "normalizer_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json",
+              "normalizer_sha256": "5ef6370e6a789b9de14d1843c12380d2a10eb2558799fe16985e810709a998c6",
+              "normalizer_json_pointer": "/usage_records/2"
+            },
+            "accepted_usage_fields": {
+              "track": "T3",
+              "game_id": "dragon-flight",
+              "surface_kind": "scene",
+              "surface_id": "vocabulary/dragon-flight/scene=DragonFlightGame:gates",
+              "asset_locator_literal": "/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+              "category": "runtime_sprite_binding",
+              "claim_ids": [
+                "DF-ASSET-001"
+              ],
+              "evidence_class": "asset",
+              "source_class": null,
+              "accepted_scope": "ASSETS.gates source binding.",
+              "disclosures": []
+            },
+            "canonical_semantic_role": null,
+            "canonical_state": null,
+            "ontology_status": "not_defined_pending_T9"
+          }
+        }
+      ],
+      "semantic_replacement_requirements": {
+        "status": "source_bound_pending_T9",
+        "requirements": [
+          {
+            "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-001",
+            "source": {
+              "normalizer_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json",
+              "normalizer_sha256": "5ef6370e6a789b9de14d1843c12380d2a10eb2558799fe16985e810709a998c6",
+              "normalizer_json_pointer": "/usage_records/2"
+            },
+            "accepted_usage_fields": {
+              "track": "T3",
+              "game_id": "dragon-flight",
+              "surface_kind": "scene",
+              "surface_id": "vocabulary/dragon-flight/scene=DragonFlightGame:gates",
+              "asset_locator_literal": "/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+              "category": "runtime_sprite_binding",
+              "claim_ids": [
+                "DF-ASSET-001"
+              ],
+              "evidence_class": "asset",
+              "source_class": null,
+              "accepted_scope": "ASSETS.gates source binding.",
+              "disclosures": []
+            },
+            "canonical_semantic_role": null,
+            "canonical_state": null,
+            "ontology_status": "not_defined_pending_T9"
+          }
+        ]
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-rider/boss-3x3-sheet-facing-up.png",
+      "sha256": "bd02d8146701783c7fe9542dd8afc2d8f919cbdb30c653a9e6e9b620577243db",
+      "identical_hash_group": "sha256:bd02d8146701783c7fe9542dd8afc2d8f919cbdb30c653a9e6e9b620577243db",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/dragon-rider/boss-3x3-sheet-facing-up.png",
+        "apps/reading-advantage/public/games/vocabulary/dragon-rider/boss-3x3-sheet-facing-up.png"
+      ],
+      "derived_public_url": "/games/vocabulary/dragon-rider/boss-3x3-sheet-facing-up.png",
+      "static_reference_status": "found",
+      "dynamic_risk": false,
+      "unknown_rationale": null,
+      "caller_locators": [
+        {
+          "locator_id": "caller:aaf9d62db9a486fa653b99f7609229d3f906f654d89cdfe890e58b98a0609e57",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/1/current_callers/0",
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 128,
+          "line_start": 128,
+          "locator_text_sha256": "289eaad664894edd7bbf99ae46a5a4ecd1b9b7844ead6dfc2699e9d26ce27ad9",
+          "matched_literal": "/games/vocabulary/dragon-rider/boss-3x3-sheet-facing-up.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png",
+      "sha256": "c061298b5626ab2c49e13a200c0738d3c9efa3b987d61a2e686a712f009bdbe0",
+      "identical_hash_group": "sha256:c061298b5626ab2c49e13a200c0738d3c9efa3b987d61a2e686a712f009bdbe0",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/castle-defense/player_3x3_pose_sheet.png",
+        "apps/advantage-games/public/games/sentence/castle-defense/player_3x3_pose_sheet.png",
+        "apps/advantage-games/public/games/wizard-vs-zombie/player_3x3_pose_sheet.png",
+        "apps/reading-advantage/public/games/sentence/castle-defense/player_3x3_pose_sheet.png",
+        "apps/reading-advantage/public/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png"
+      ],
+      "derived_public_url": "/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png",
+      "static_reference_status": "found",
+      "dynamic_risk": false,
+      "unknown_rationale": null,
+      "caller_locators": [
+        {
+          "locator_id": "caller:62a07bb6aabb89dbdb742a7247428cec82158870caee9e953303bbed40ef1710",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/7/current_callers/0",
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 173,
+          "line_start": 173,
+          "locator_text_sha256": "0b1cd81cf0c6bef279207893e16481e464c046169835f16b3e78bc59d3dfda55",
+          "matched_literal": "/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "locator_id": "caller:270d01380227ed9740da3e11c78b83971ab45ec60587a1503ff52145d5238b4c",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/7/current_callers/1",
+          "caller_path": "apps/advantage-games/src/remotion/compositions/WizardZombieGameRenderer.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 55,
+          "line_start": 55,
+          "locator_text_sha256": "3f6108ea4882f9832167bcf3b1ece2880552191dfb0195a6572326dd5b5bd18b",
+          "matched_literal": "/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "locator_id": "caller:1bd957e7697a0fd4acc82f8d016106c7180efeef8fdc96973f96aa7adf36901e",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/7/current_callers/2",
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 137,
+          "line_start": 137,
+          "locator_text_sha256": "0b1cd81cf0c6bef279207893e16481e464c046169835f16b3e78bc59d3dfda55",
+          "matched_literal": "/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/games/wizard-vs-zombie/player_3x3_pose_sheet.png",
+      "sha256": "c061298b5626ab2c49e13a200c0738d3c9efa3b987d61a2e686a712f009bdbe0",
+      "identical_hash_group": "sha256:c061298b5626ab2c49e13a200c0738d3c9efa3b987d61a2e686a712f009bdbe0",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/castle-defense/player_3x3_pose_sheet.png",
+        "apps/advantage-games/public/games/sentence/castle-defense/player_3x3_pose_sheet.png",
+        "apps/advantage-games/public/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png",
+        "apps/reading-advantage/public/games/sentence/castle-defense/player_3x3_pose_sheet.png",
+        "apps/reading-advantage/public/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png"
+      ],
+      "derived_public_url": "/games/wizard-vs-zombie/player_3x3_pose_sheet.png",
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/sounds/healing-magic-6-378666.mp3",
+      "sha256": "c2ac41c1b294d5b682c83f1f6a7cf26a39f71e3951bfe2416d76cfd8671665b9",
+      "identical_hash_group": "sha256:c2ac41c1b294d5b682c83f1f6a7cf26a39f71e3951bfe2416d76cfd8671665b9",
+      "duplicate_path_peers": [
+        "apps/reading-advantage/public/games/sounds/healing-magic-6-378666.mp3"
+      ],
+      "derived_public_url": "/sounds/healing-magic-6-378666.mp3",
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/vocab/castle-defense.json",
+      "sha256": "cb2dd69646a9eae037c3496764bf24b383660cf4b8f4c31ba30bf76f7f4b9e24",
+      "identical_hash_group": "sha256:cb2dd69646a9eae037c3496764bf24b383660cf4b8f4c31ba30bf76f7f4b9e24",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/vocab/potion-rush.json"
+      ],
+      "derived_public_url": "/vocab/castle-defense.json",
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/vocab/potion-rush.json",
+      "sha256": "cb2dd69646a9eae037c3496764bf24b383660cf4b8f4c31ba30bf76f7f4b9e24",
+      "identical_hash_group": "sha256:cb2dd69646a9eae037c3496764bf24b383660cf4b8f4c31ba30bf76f7f4b9e24",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/vocab/castle-defense.json"
+      ],
+      "derived_public_url": "/vocab/potion-rush.json",
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/vocab/rpg-battle.json",
+      "sha256": "c362cf88179321e1c29a8cb528dad1586d0e27b69197305c29999c9396d8123b",
+      "identical_hash_group": "sha256:c362cf88179321e1c29a8cb528dad1586d0e27b69197305c29999c9396d8123b",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/vocab/rune-match.json"
+      ],
+      "derived_public_url": "/vocab/rpg-battle.json",
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/advantage-games/public/vocab/rune-match.json",
+      "sha256": "c362cf88179321e1c29a8cb528dad1586d0e27b69197305c29999c9396d8123b",
+      "identical_hash_group": "sha256:c362cf88179321e1c29a8cb528dad1586d0e27b69197305c29999c9396d8123b",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/vocab/rpg-battle.json"
+      ],
+      "derived_public_url": "/vocab/rune-match.json",
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/cover/dragon-flight-cover.png",
+      "sha256": "cac76ba5b6aad17410f854cfb9dc507bbb0651951a6b9be04080ef5f75ea7feb",
+      "identical_hash_group": "sha256:cac76ba5b6aad17410f854cfb9dc507bbb0651951a6b9be04080ef5f75ea7feb",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/cover/dragon-flight-cover.png"
+      ],
+      "derived_public_url": "/games/cover/dragon-flight-cover.png",
+      "static_reference_status": "found",
+      "dynamic_risk": false,
+      "unknown_rationale": null,
+      "caller_locators": [
+        {
+          "locator_id": "caller:18be19e91c725647cdb1852d740154f5f9b726dd150c0db02108cd34305478b9",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/30/current_callers/0",
+          "caller_path": "apps/advantage-games/src/lib/gameCards.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 62,
+          "line_start": 62,
+          "locator_text_sha256": "ebe308ec090deeca653b1a95931d11fbf3f23d44ad8aa2003cb0a325798234f7",
+          "matched_literal": "/games/cover/dragon-flight-cover.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "locator_id": "caller:0d69d91aa2d39c580183b2cac976872bf961eed00393058cc1c71cc5fc24348e",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/30/current_callers/1",
+          "caller_path": "apps/reading-advantage/app/[locale]/(student)/student/games/page.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 101,
+          "line_start": 101,
+          "locator_text_sha256": "fa710bcd487f07670ce37a519b53e5391496832084bbc394aa9e5e7581352974",
+          "matched_literal": "/games/cover/dragon-flight-cover.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "locator_id": "caller:392e078a4c0c8da742292fe7b73be9aebcb8b4fb138ab045fbd11afa3952504b",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/30/current_callers/2",
+          "caller_path": "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 78,
+          "line_start": 78,
+          "locator_text_sha256": "36d821f8ca4ffa5e93ba2d72cfbf790cd3bcdab083cf0e1c75c5c1148f0d7590",
+          "matched_literal": "/games/cover/dragon-flight-cover.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "locator_id": "caller:818025c3d8740fab6f0f6c94befb4bd1a681f502f15d95c216e9649419f71b41",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/30/current_callers/3",
+          "caller_path": "apps/reading-advantage/lib/games/gameCards.ts",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 33,
+          "line_start": 33,
+          "locator_text_sha256": "ebe308ec090deeca653b1a95931d11fbf3f23d44ad8aa2003cb0a325798234f7",
+          "matched_literal": "/games/cover/dragon-flight-cover.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "accepted_usage_ids": [
+        "t3:dragon-flight:catalog-card:catalog:df-id-004"
+      ],
+      "accepted_join_caller_locator_ids": [
+        "caller:0d69d91aa2d39c580183b2cac976872bf961eed00393058cc1c71cc5fc24348e",
+        "caller:18be19e91c725647cdb1852d740154f5f9b726dd150c0db02108cd34305478b9",
+        "caller:392e078a4c0c8da742292fe7b73be9aebcb8b4fb138ab045fbd11afa3952504b",
+        "caller:818025c3d8740fab6f0f6c94befb4bd1a681f502f15d95c216e9649419f71b41"
+      ],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "replace_with_standard_pack_requirement",
+        "value": "replace",
+        "policy_priority": 2,
+        "replacement_action": "replace_with_standard_pack_requirement"
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "accepted_exact_normalized_join",
+      "usage_links": [
+        {
+          "usage_id": "t3:dragon-flight:catalog-card:catalog:df-id-004",
+          "source": {
+            "normalizer_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json",
+            "normalizer_sha256": "5ef6370e6a789b9de14d1843c12380d2a10eb2558799fe16985e810709a998c6",
+            "normalizer_json_pointer": "/usage_records/1"
+          },
+          "normalized_usage": {
+            "usage_id": "t3:dragon-flight:catalog-card:catalog:df-id-004",
+            "track": "T3",
+            "game_id": "dragon-flight",
+            "surface_kind": "non_scene",
+            "surface_id": "catalog-card",
+            "asset_locator_literal": "/games/cover/dragon-flight-cover.png",
+            "category": "catalog_cover_binding",
+            "claim_ids": [
+              "DF-ID-004"
+            ],
+            "source_path": "measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json",
+            "source_sha256": "84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e",
+            "source_json_pointers": [
+              "/3"
+            ],
+            "evidence_class": "current-source",
+            "accepted_scope": "Source-declared catalog cover assignment.",
+            "disclosures": [
+              "Catalog assignment does not establish live loading."
+            ]
+          },
+          "responsive_assessment_cells": [],
+          "semantic_replacement_requirement": {
+            "usage_id": "t3:dragon-flight:catalog-card:catalog:df-id-004",
+            "source": {
+              "normalizer_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json",
+              "normalizer_sha256": "5ef6370e6a789b9de14d1843c12380d2a10eb2558799fe16985e810709a998c6",
+              "normalizer_json_pointer": "/usage_records/1"
+            },
+            "accepted_usage_fields": {
+              "track": "T3",
+              "game_id": "dragon-flight",
+              "surface_kind": "non_scene",
+              "surface_id": "catalog-card",
+              "asset_locator_literal": "/games/cover/dragon-flight-cover.png",
+              "category": "catalog_cover_binding",
+              "claim_ids": [
+                "DF-ID-004"
+              ],
+              "evidence_class": "current-source",
+              "source_class": null,
+              "accepted_scope": "Source-declared catalog cover assignment.",
+              "disclosures": [
+                "Catalog assignment does not establish live loading."
+              ]
+            },
+            "canonical_semantic_role": null,
+            "canonical_state": null,
+            "ontology_status": "not_defined_pending_T9"
+          }
+        }
+      ],
+      "semantic_replacement_requirements": {
+        "status": "source_bound_pending_T9",
+        "requirements": [
+          {
+            "usage_id": "t3:dragon-flight:catalog-card:catalog:df-id-004",
+            "source": {
+              "normalizer_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json",
+              "normalizer_sha256": "5ef6370e6a789b9de14d1843c12380d2a10eb2558799fe16985e810709a998c6",
+              "normalizer_json_pointer": "/usage_records/1"
+            },
+            "accepted_usage_fields": {
+              "track": "T3",
+              "game_id": "dragon-flight",
+              "surface_kind": "non_scene",
+              "surface_id": "catalog-card",
+              "asset_locator_literal": "/games/cover/dragon-flight-cover.png",
+              "category": "catalog_cover_binding",
+              "claim_ids": [
+                "DF-ID-004"
+              ],
+              "evidence_class": "current-source",
+              "source_class": null,
+              "accepted_scope": "Source-declared catalog cover assignment.",
+              "disclosures": [
+                "Catalog assignment does not establish live loading."
+              ]
+            },
+            "canonical_semantic_role": null,
+            "canonical_state": null,
+            "ontology_status": "not_defined_pending_T9"
+          }
+        ]
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/castle-defense/goblin_3x3_pose_sheet.png",
+      "sha256": "c238839602a1cfb59085d0e71136d2ff5c7e26ce49bbb798a00538cf4b22be17",
+      "identical_hash_group": "sha256:c238839602a1cfb59085d0e71136d2ff5c7e26ce49bbb798a00538cf4b22be17",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/castle-defense/goblin_3x3_pose_sheet.png",
+        "apps/advantage-games/public/games/sentence/castle-defense/goblin_3x3_pose_sheet.png"
+      ],
+      "derived_public_url": "/games/sentence/castle-defense/goblin_3x3_pose_sheet.png",
+      "static_reference_status": "found",
+      "dynamic_risk": false,
+      "unknown_rationale": null,
+      "caller_locators": [
+        {
+          "locator_id": "caller:b373412dac2f0763a3642dc0dbe7f6acae30c1bc7e264f8a1b2bb7b877c9cbbd",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/13/current_callers/0",
+          "caller_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 177,
+          "line_start": 177,
+          "locator_text_sha256": "21c9c362e1cb477cba6921637709d18c78756fafcadbbd9a0268103619a16295",
+          "matched_literal": "/games/sentence/castle-defense/goblin_3x3_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "locator_id": "caller:09905880a521cb74666f0cd018e3e72c860921e89671103bfff6c6cc5d3bdab3",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/13/current_callers/1",
+          "caller_path": "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 166,
+          "line_start": 166,
+          "locator_text_sha256": "21c9c362e1cb477cba6921637709d18c78756fafcadbbd9a0268103619a16295",
+          "matched_literal": "/games/sentence/castle-defense/goblin_3x3_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sentence/castle-defense/player_3x3_pose_sheet.png",
+      "sha256": "c061298b5626ab2c49e13a200c0738d3c9efa3b987d61a2e686a712f009bdbe0",
+      "identical_hash_group": "sha256:c061298b5626ab2c49e13a200c0738d3c9efa3b987d61a2e686a712f009bdbe0",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/castle-defense/player_3x3_pose_sheet.png",
+        "apps/advantage-games/public/games/sentence/castle-defense/player_3x3_pose_sheet.png",
+        "apps/advantage-games/public/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png",
+        "apps/advantage-games/public/games/wizard-vs-zombie/player_3x3_pose_sheet.png",
+        "apps/reading-advantage/public/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png"
+      ],
+      "derived_public_url": "/games/sentence/castle-defense/player_3x3_pose_sheet.png",
+      "static_reference_status": "found",
+      "dynamic_risk": false,
+      "unknown_rationale": null,
+      "caller_locators": [
+        {
+          "locator_id": "caller:ef2193e58d3023cb4759a30314f65059e9e444d0496f026a31e81096651d040d",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/9/current_callers/0",
+          "caller_path": "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 174,
+          "line_start": 174,
+          "locator_text_sha256": "2e6df82f77ffe1cdde2c1fefe7f5c0481f44427f276fc3ba3dbe16c467d0d2fd",
+          "matched_literal": "/games/sentence/castle-defense/player_3x3_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "locator_id": "caller:ae89f54022f3d1377e4337415117138aea8f3b32efddf7f1c5206ad6f1ab9378",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/9/current_callers/1",
+          "caller_path": "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 163,
+          "line_start": 163,
+          "locator_text_sha256": "2e6df82f77ffe1cdde2c1fefe7f5c0481f44427f276fc3ba3dbe16c467d0d2fd",
+          "matched_literal": "/games/sentence/castle-defense/player_3x3_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/sounds/healing-magic-6-378666.mp3",
+      "sha256": "c2ac41c1b294d5b682c83f1f6a7cf26a39f71e3951bfe2416d76cfd8671665b9",
+      "identical_hash_group": "sha256:c2ac41c1b294d5b682c83f1f6a7cf26a39f71e3951bfe2416d76cfd8671665b9",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/sounds/healing-magic-6-378666.mp3"
+      ],
+      "derived_public_url": "/games/sounds/healing-magic-6-378666.mp3",
+      "static_reference_status": "dynamic_unresolved",
+      "dynamic_risk": true,
+      "unknown_rationale": "No case-sensitive fixed repo-path, public-URL, or relative-path literal was found in tracked text blobs at the pinned revision; dynamic or constructed references remain unresolved.",
+      "caller_locators": [],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+      "sha256": "c3b205a3cf4c5968cde34da021b4e53cc138f6932fe4fe40a30d8c374705c4e4",
+      "identical_hash_group": "sha256:c3b205a3cf4c5968cde34da021b4e53cc138f6932fe4fe40a30d8c374705c4e4",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/dragon-flight/gates-3x3-sheet-facing-up.png",
+        "apps/advantage-games/public/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png"
+      ],
+      "derived_public_url": "/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+      "static_reference_status": "found",
+      "dynamic_risk": false,
+      "unknown_rationale": null,
+      "caller_locators": [
+        {
+          "locator_id": "caller:d07553cbc2c5d35d6fe6c69b2e8e941fc6e7ffc16cd1bdd39b7ca85eab627885",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/21/current_callers/0",
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 119,
+          "line_start": 119,
+          "locator_text_sha256": "2285f5217a58514ff2183818c2ff5339afbcbe916509d205af62c693a9deeebc",
+          "matched_literal": "/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "locator_id": "caller:4f45687b360458ff0b15b4e1777b2b9f4dca12f9b3805d0336398b5b91fe7766",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/21/current_callers/1",
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 116,
+          "line_start": 116,
+          "locator_text_sha256": "2285f5217a58514ff2183818c2ff5339afbcbe916509d205af62c693a9deeebc",
+          "matched_literal": "/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "accepted_usage_ids": [
+        "t3:dragon-flight:scene:dragon-flight-game:df-asset-001"
+      ],
+      "accepted_join_caller_locator_ids": [
+        "caller:4f45687b360458ff0b15b4e1777b2b9f4dca12f9b3805d0336398b5b91fe7766",
+        "caller:d07553cbc2c5d35d6fe6c69b2e8e941fc6e7ffc16cd1bdd39b7ca85eab627885"
+      ],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "replace_with_standard_pack_requirement",
+        "value": "replace",
+        "policy_priority": 2,
+        "replacement_action": "replace_with_standard_pack_requirement"
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "accepted_exact_normalized_join",
+      "usage_links": [
+        {
+          "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-001",
+          "source": {
+            "normalizer_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json",
+            "normalizer_sha256": "5ef6370e6a789b9de14d1843c12380d2a10eb2558799fe16985e810709a998c6",
+            "normalizer_json_pointer": "/usage_records/2"
+          },
+          "normalized_usage": {
+            "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-001",
+            "track": "T3",
+            "game_id": "dragon-flight",
+            "surface_kind": "scene",
+            "surface_id": "vocabulary/dragon-flight/scene=DragonFlightGame:gates",
+            "asset_locator_literal": "/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+            "category": "runtime_sprite_binding",
+            "claim_ids": [
+              "DF-ASSET-001"
+            ],
+            "source_path": "measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json",
+            "source_sha256": "84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e",
+            "source_json_pointers": [
+              "/110"
+            ],
+            "evidence_class": "asset",
+            "accepted_scope": "ASSETS.gates source binding.",
+            "disclosures": []
+          },
+          "responsive_assessment_cells": [
+            {
+              "viewport": "compact",
+              "theme": "cute_chibi_v1",
+              "status": "blocked_unknown",
+              "assessment": null,
+              "facets": {
+                "text_capacity": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "focal_crop_tile_slice": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "state_coverage": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "collision_readability": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "theme_suitability": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "current_legacy_function": {
+                  "status": "bounded_composite_scene_evidence",
+                  "evidence": {
+                    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json",
+                    "sha256": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+                    "json_pointer": "/root_direct_visual_decisions/0"
+                  },
+                  "value": "incompatible-required-direction-controls-begin-below-initial-viewport",
+                  "scope": "composite_scene_only_not_candidate_path_load",
+                  "per_path_runtime_load": "not_established"
+                },
+                "semantic_role_state_replacement_or_retirement": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "per_path_runtime_load": {
+                  "status": "not_established",
+                  "evidence": null
+                }
+              }
+            },
+            {
+              "viewport": "compact",
+              "theme": "heroic_stylized_v1",
+              "status": "blocked_unknown",
+              "assessment": null,
+              "facets": {
+                "text_capacity": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "focal_crop_tile_slice": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "state_coverage": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "collision_readability": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "theme_suitability": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "current_legacy_function": {
+                  "status": "bounded_composite_scene_evidence",
+                  "evidence": {
+                    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json",
+                    "sha256": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+                    "json_pointer": "/root_direct_visual_decisions/0"
+                  },
+                  "value": "incompatible-required-direction-controls-begin-below-initial-viewport",
+                  "scope": "composite_scene_only_not_candidate_path_load",
+                  "per_path_runtime_load": "not_established"
+                },
+                "semantic_role_state_replacement_or_retirement": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "per_path_runtime_load": {
+                  "status": "not_established",
+                  "evidence": null
+                }
+              }
+            },
+            {
+              "viewport": "wide",
+              "theme": "cute_chibi_v1",
+              "status": "blocked_unknown",
+              "assessment": null,
+              "facets": {
+                "text_capacity": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "focal_crop_tile_slice": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "state_coverage": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "collision_readability": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "theme_suitability": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "current_legacy_function": {
+                  "status": "bounded_composite_scene_evidence",
+                  "evidence": {
+                    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json",
+                    "sha256": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+                    "json_pointer": "/root_direct_visual_decisions/0"
+                  },
+                  "value": "supported-by-bounded-scene-evidence",
+                  "scope": "composite_scene_only_not_candidate_path_load",
+                  "per_path_runtime_load": "not_established"
+                },
+                "semantic_role_state_replacement_or_retirement": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "per_path_runtime_load": {
+                  "status": "not_established",
+                  "evidence": null
+                }
+              }
+            },
+            {
+              "viewport": "wide",
+              "theme": "heroic_stylized_v1",
+              "status": "blocked_unknown",
+              "assessment": null,
+              "facets": {
+                "text_capacity": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "focal_crop_tile_slice": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "state_coverage": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "collision_readability": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "theme_suitability": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "current_legacy_function": {
+                  "status": "bounded_composite_scene_evidence",
+                  "evidence": {
+                    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json",
+                    "sha256": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+                    "json_pointer": "/root_direct_visual_decisions/0"
+                  },
+                  "value": "supported-by-bounded-scene-evidence",
+                  "scope": "composite_scene_only_not_candidate_path_load",
+                  "per_path_runtime_load": "not_established"
+                },
+                "semantic_role_state_replacement_or_retirement": {
+                  "status": "blocked_unknown",
+                  "evidence": null
+                },
+                "per_path_runtime_load": {
+                  "status": "not_established",
+                  "evidence": null
+                }
+              }
+            }
+          ],
+          "semantic_replacement_requirement": {
+            "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-001",
+            "source": {
+              "normalizer_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json",
+              "normalizer_sha256": "5ef6370e6a789b9de14d1843c12380d2a10eb2558799fe16985e810709a998c6",
+              "normalizer_json_pointer": "/usage_records/2"
+            },
+            "accepted_usage_fields": {
+              "track": "T3",
+              "game_id": "dragon-flight",
+              "surface_kind": "scene",
+              "surface_id": "vocabulary/dragon-flight/scene=DragonFlightGame:gates",
+              "asset_locator_literal": "/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+              "category": "runtime_sprite_binding",
+              "claim_ids": [
+                "DF-ASSET-001"
+              ],
+              "evidence_class": "asset",
+              "source_class": null,
+              "accepted_scope": "ASSETS.gates source binding.",
+              "disclosures": []
+            },
+            "canonical_semantic_role": null,
+            "canonical_state": null,
+            "ontology_status": "not_defined_pending_T9"
+          }
+        }
+      ],
+      "semantic_replacement_requirements": {
+        "status": "source_bound_pending_T9",
+        "requirements": [
+          {
+            "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-001",
+            "source": {
+              "normalizer_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json",
+              "normalizer_sha256": "5ef6370e6a789b9de14d1843c12380d2a10eb2558799fe16985e810709a998c6",
+              "normalizer_json_pointer": "/usage_records/2"
+            },
+            "accepted_usage_fields": {
+              "track": "T3",
+              "game_id": "dragon-flight",
+              "surface_kind": "scene",
+              "surface_id": "vocabulary/dragon-flight/scene=DragonFlightGame:gates",
+              "asset_locator_literal": "/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+              "category": "runtime_sprite_binding",
+              "claim_ids": [
+                "DF-ASSET-001"
+              ],
+              "evidence_class": "asset",
+              "source_class": null,
+              "accepted_scope": "ASSETS.gates source binding.",
+              "disclosures": []
+            },
+            "canonical_semantic_role": null,
+            "canonical_state": null,
+            "ontology_status": "not_defined_pending_T9"
+          }
+        ]
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-rider/boss-3x3-sheet-facing-up.png",
+      "sha256": "bd02d8146701783c7fe9542dd8afc2d8f919cbdb30c653a9e6e9b620577243db",
+      "identical_hash_group": "sha256:bd02d8146701783c7fe9542dd8afc2d8f919cbdb30c653a9e6e9b620577243db",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/dragon-rider/boss-3x3-sheet-facing-up.png",
+        "apps/advantage-games/public/games/vocabulary/dragon-rider/boss-3x3-sheet-facing-up.png"
+      ],
+      "derived_public_url": "/games/vocabulary/dragon-rider/boss-3x3-sheet-facing-up.png",
+      "static_reference_status": "found",
+      "dynamic_risk": false,
+      "unknown_rationale": null,
+      "caller_locators": [
+        {
+          "locator_id": "caller:b7e299eaa8bba1896b62a726998821b848224f08173ade24cd5478164d9429e7",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/2/current_callers/0",
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 128,
+          "line_start": 128,
+          "locator_text_sha256": "289eaad664894edd7bbf99ae46a5a4ecd1b9b7844ead6dfc2699e9d26ce27ad9",
+          "matched_literal": "/games/vocabulary/dragon-rider/boss-3x3-sheet-facing-up.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    },
+    {
+      "canonical_path": "apps/reading-advantage/public/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png",
+      "sha256": "c061298b5626ab2c49e13a200c0738d3c9efa3b987d61a2e686a712f009bdbe0",
+      "identical_hash_group": "sha256:c061298b5626ab2c49e13a200c0738d3c9efa3b987d61a2e686a712f009bdbe0",
+      "duplicate_path_peers": [
+        "apps/advantage-games/public/games/castle-defense/player_3x3_pose_sheet.png",
+        "apps/advantage-games/public/games/sentence/castle-defense/player_3x3_pose_sheet.png",
+        "apps/advantage-games/public/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png",
+        "apps/advantage-games/public/games/wizard-vs-zombie/player_3x3_pose_sheet.png",
+        "apps/reading-advantage/public/games/sentence/castle-defense/player_3x3_pose_sheet.png"
+      ],
+      "derived_public_url": "/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png",
+      "static_reference_status": "found",
+      "dynamic_risk": false,
+      "unknown_rationale": null,
+      "caller_locators": [
+        {
+          "locator_id": "caller:3cb446c565ffb2e750ef63816053ec91e2dbe751e5e9e703ab2b2306e3c9d25c",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/10/current_callers/0",
+          "caller_path": "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 173,
+          "line_start": 173,
+          "locator_text_sha256": "0b1cd81cf0c6bef279207893e16481e464c046169835f16b3e78bc59d3dfda55",
+          "matched_literal": "/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "locator_id": "caller:9ea391b4217e1e41608611f7730edcf55b7552f45bb0daa33b0c403c7bd4e5b0",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/10/current_callers/1",
+          "caller_path": "apps/advantage-games/src/remotion/compositions/WizardZombieGameRenderer.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 55,
+          "line_start": 55,
+          "locator_text_sha256": "3f6108ea4882f9832167bcf3b1ece2880552191dfb0195a6572326dd5b5bd18b",
+          "matched_literal": "/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        },
+        {
+          "locator_id": "caller:5ac4432654fc7e2a1b65a0119fbb679412a994b559dfe3ca656b461b1a6e91cd",
+          "batch_id": "AF-10",
+          "caller_inventory_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+          "caller_inventory_sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+          "caller_inventory_json_pointer": "/records/10/current_callers/2",
+          "caller_path": "apps/reading-advantage/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx",
+          "caller_revision": "65fc00d872ce5aa63820662ee0a1f14952e63235",
+          "line_end": 137,
+          "line_start": 137,
+          "locator_text_sha256": "0b1cd81cf0c6bef279207893e16481e464c046169835f16b3e78bc59d3dfda55",
+          "matched_literal": "/games/vocabulary/wizard-vs-zombie/player_3x3_pose_sheet.png",
+          "reference_kind": "public_url",
+          "use_classification": "unknown"
+        }
+      ],
+      "accepted_usage_ids": [],
+      "accepted_join_caller_locator_ids": [],
+      "priority1_evidence": {
+        "applies": false,
+        "status": "not_established",
+        "evidence": [],
+        "disposition_decided": false
+      },
+      "provenance": {
+        "repository_introduction": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible explicit non-Measure repository-introduction mapping was found by the bounded pinned canonical-path search; path-specific history was inspected but is not a substitute for a Git-pinned textual citation."
+        },
+        "upstream_provenance": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository sidecar or mapping explicitly identifies upstream provenance for this canonical path."
+        },
+        "license": {
+          "status": "unknown",
+          "citations": [],
+          "unknown_rationale": "No admissible in-repository license record explicitly maps a license to this canonical path."
+        },
+        "prospective_eligibility": {
+          "reuse": "blocked",
+          "adapt": "blocked",
+          "reason_code": "evidence_incomplete"
+        }
+      },
+      "disposition": {
+        "status": "blocked_unknown",
+        "value": "unknown",
+        "policy_priority": 3,
+        "replacement_action": null
+      },
+      "canonical_standard_pack_candidate_key": {
+        "status": "forbidden-pending-T9",
+        "value": null
+      },
+      "direct_legacy_adoption": false,
+      "eligibility": {
+        "reuse": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "adapt": {
+          "allowed": false,
+          "status": "blocked_unknown_provenance_or_license",
+          "evidence": null
+        },
+        "reference": {
+          "allowed": false,
+          "status": "forbidden_absent_exact_independent_support",
+          "evidence": null
+        }
+      },
+      "join_status": "blocked_unknown",
+      "usage_links": [],
+      "semantic_replacement_requirements": {
+        "status": "blocked_unknown",
+        "requirements": []
+      }
+    }
+  ]
+}

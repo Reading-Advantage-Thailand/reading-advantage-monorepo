@@ -1,0 +1,24 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-global-adversarial-reviewer-receipt.v4",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "Phase 4 global reconciliation",
+  "native_task_name": "phase4_global_review_v4",
+  "role": "independent-adversarial-global-reviewer-v4",
+  "role_boundary": "Independent findings-first global review only; no producer, verifier, manifest, fixture, report, batch, plan, specification, product, root-acceptance, or prior-review edits.",
+  "exact_verified_inputs": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_global_contract_test.py": "9fadb918fec90f1537f9c0783ef158924d792ea263716498213f66ba70cb9897",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-fixture-manifest-v1.json": "4a232e2de84d7d9a3a3a6ea488f1e60a07a76281ae5e285eb8d146f8c818bd6f",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-test-report.json": "63e84630ff59cc611d836489263b6a5eb4854f0befec6fc2b653761264441185",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase4-global/truth-test-author.json": "b72673b8724c6568d59ec1fb9d2bf73b18b2bfd6f3159ff2157c44784359f43f"
+  },
+  "prior_finding_status": {"P4G-H-01": "remediated", "P4G-H-02": "remediated", "P4G-H-03": "remediated", "P4G-M-01": "remediated"},
+  "verifier_replay": {"run_count": 2, "run_1_exit_code": 0, "run_2_exit_code": 0, "run_1_output_sha256": "63e84630ff59cc611d836489263b6a5eb4854f0befec6fc2b653761264441185", "run_2_output_sha256": "63e84630ff59cc611d836489263b6a5eb4854f0befec6fc2b653761264441185", "byte_identical": true},
+  "structured_failure_summary": {"missing_manifest": "structured truth-test-failed exit 1 without traceback or producer verification", "malformed_manifest": "structured truth-test-failed exit 1 without traceback or producer verification", "missing_required_fixture": "structured truth-test-failed exit 1 without traceback or producer verification", "renamed_required_fixture": "structured truth-test-failed exit 1 without traceback or producer verification"},
+  "fixture_manifest": {"path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-fixture-manifest-v1.json", "sha256": "4a232e2de84d7d9a3a3a6ea488f1e60a07a76281ae5e285eb8d146f8c818bd6f", "fixture_set_sha256": "dd4595f8976843ca34a833311d6508a7a4f33203f10d940cd9f827049ab45245", "behavior_fixture_count": 12, "meta_counterexample_count": 11, "all_fixture_set_tamper_cases_rejected": true, "report_and_truth_receipt_bindings_match_live": true},
+  "reconciliation_summary": {"global_counts_match": true, "published_counterexamples": 23, "all_published_counterexamples_rejected": true, "frozen_live_caller_pairs": 533, "frozen_live_caller_pair_sets_equal": true, "duplicate_caller_ownership_rejected": true, "browser_composite_only_boundary_violations": 0, "global_truth_receipt_live_bindings": true},
+  "findings": {"Critical": [], "High": [], "Medium": [], "Low": []},
+  "unresolved_blocking_findings": [],
+  "decision": {"admit": true, "block": false, "next_authority": "root project and product-owner acceptance only"},
+  "final_status": "review-pass-pending-root-product-owner-acceptance",
+  "output_file_hashes": {"measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-review-v4.json": "f3fc70343d360ea806d204f6cae717c1b786449c23708e3f1c51517e54c91e83"}
+}

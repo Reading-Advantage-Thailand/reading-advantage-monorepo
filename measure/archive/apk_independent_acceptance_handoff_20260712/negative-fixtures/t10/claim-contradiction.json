@@ -1,0 +1,11 @@
+{
+  "fixture_id": "claim-contradiction",
+  "mutations": [
+    {
+      "artifact": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase1-mechanic-blueprints-v1.json",
+      "pointer": "/records/0/derived_fields/0/value",
+      "value": "contradicted source value"
+    }
+  ],
+  "expected_codes": ["DERIVATION_MISMATCH"]
+}

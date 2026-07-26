@@ -1,0 +1,211 @@
+{
+  "capability_reviews": [
+    {
+      "capability_id": "capability:bounded-frame-delta",
+      "consumer_use_ids": [
+        "use:bounded-frame-delta:babel-architect:BA-HIST-011",
+        "use:bounded-frame-delta:rune-forge-chamber:RFC-CUR-015",
+        "use:bounded-frame-delta:spellweavers-run:SW-TRANS-004",
+        "use:bounded-frame-delta:village-guardian:VG3-COMP-004",
+        "use:bounded-frame-delta:wizard-vs-zombie:WVZ-MECH-011"
+      ],
+      "disposition": "standardize",
+      "game_ids": [
+        "babel-architect",
+        "rune-forge-chamber",
+        "spellweavers-run",
+        "village-guardian",
+        "wizard-vs-zombie"
+      ],
+      "reviewed_object_sha256": "f9d867ed1cb1f376809378114d36ff39e101806e8850e8ac273dea6175345300",
+      "standardization_minimum_satisfied": true,
+      "verdict": "accept"
+    },
+    {
+      "capability_id": "capability:single-completion-emission",
+      "consumer_use_ids": [
+        "use:single-completion-emission:abyssal-well:AW-HIST-023",
+        "use:single-completion-emission:babel-architect:BA-HIST-012",
+        "use:single-completion-emission:enchanted-library:EL-UI-002",
+        "use:single-completion-emission:griffin-riders-escape:GRF-CART-004",
+        "use:single-completion-emission:rune-forge-chamber:RFC-CUR-016",
+        "use:single-completion-emission:sorcerer-ziggurat:SZ-HIST-009",
+        "use:single-completion-emission:storm-castle-tower:SCT-TRANS-H002",
+        "use:single-completion-emission:village-guardian:VG3-COMP-006"
+      ],
+      "disposition": "standardize",
+      "game_ids": [
+        "abyssal-well",
+        "babel-architect",
+        "enchanted-library",
+        "griffin-riders-escape",
+        "rune-forge-chamber",
+        "sorcerer-ziggurat",
+        "storm-castle-tower",
+        "village-guardian"
+      ],
+      "reviewed_object_sha256": "6124338e1a29a207464a20ff4d96586d4ce783cc1405f6ff6b14be2f2f877cae",
+      "standardization_minimum_satisfied": true,
+      "verdict": "accept"
+    },
+    {
+      "capability_id": "capability:nonempty-content-precondition",
+      "consumer_use_ids": [
+        "use:nonempty-content-precondition:abyssal-well:AW-HIST-011",
+        "use:nonempty-content-precondition:archers-revenge:AR-B2-V8-012",
+        "use:nonempty-content-precondition:astral-mage:AM-HIST-004",
+        "use:nonempty-content-precondition:enchanted-library:EL-INIT-001",
+        "use:nonempty-content-precondition:griffin-riders-escape:GRF-START-001",
+        "use:nonempty-content-precondition:rune-forge-chamber:RFC-CUR-007",
+        "use:nonempty-content-precondition:rune-match:RM-MECH-005",
+        "use:nonempty-content-precondition:sorcerer-ziggurat:SZ-HIST-004",
+        "use:nonempty-content-precondition:village-guardian:VG3-MODEL-001"
+      ],
+      "disposition": "standardize",
+      "game_ids": [
+        "abyssal-well",
+        "archers-revenge",
+        "astral-mage",
+        "enchanted-library",
+        "griffin-riders-escape",
+        "rune-forge-chamber",
+        "rune-match",
+        "sorcerer-ziggurat",
+        "village-guardian"
+      ],
+      "reviewed_object_sha256": "94c231b711a88dc5cf911f247d72d254809d38ae40b3a467599836f39a340e2a",
+      "standardization_minimum_satisfied": true,
+      "verdict": "accept"
+    },
+    {
+      "capability_id": "capability:input-action-normalization",
+      "consumer_use_ids": [
+        "use:input-action-normalization:astral-mage:AM-HIST-011",
+        "use:input-action-normalization:dragon-rider:DR-CONTROL-001",
+        "use:input-action-normalization:enchanted-library:EL-CONTROL-001",
+        "use:input-action-normalization:griffin-riders-escape:GRF-CART-002",
+        "use:input-action-normalization:rune-forge-chamber:RFC-CUR-019",
+        "use:input-action-normalization:sorcerer-ziggurat:SZ-HIST-014",
+        "use:input-action-normalization:spellweavers-run:SW-INPUT-002",
+        "use:input-action-normalization:storm-castle-tower:SCT-MECH-H008"
+      ],
+      "disposition": "standardize",
+      "game_ids": [
+        "astral-mage",
+        "dragon-rider",
+        "enchanted-library",
+        "griffin-riders-escape",
+        "rune-forge-chamber",
+        "sorcerer-ziggurat",
+        "spellweavers-run",
+        "storm-castle-tower"
+      ],
+      "reviewed_object_sha256": "8ab6a1baf6524863812041654529378b1cb7f117e43b0eab467e9a7e5251696f",
+      "standardization_minimum_satisfied": true,
+      "verdict": "accept"
+    },
+    {
+      "capability_id": "capability:time-and-frame-loop",
+      "consumer_use_ids": [
+        "use:time-and-frame-loop:babel-architect:BA-HIST-005",
+        "use:time-and-frame-loop:dragon-flight:DF-TRANS-001",
+        "use:time-and-frame-loop:dragon-rider:DR-TRANS-002",
+        "use:time-and-frame-loop:enchanted-library:EL-LOOP-001",
+        "use:time-and-frame-loop:magic-defense:MD-MECH-012",
+        "use:time-and-frame-loop:rune-forge-chamber:RFC-CUR-010",
+        "use:time-and-frame-loop:village-guardian:VG3-MODEL-006"
+      ],
+      "disposition": "extend",
+      "game_ids": [
+        "babel-architect",
+        "dragon-flight",
+        "dragon-rider",
+        "enchanted-library",
+        "magic-defense",
+        "rune-forge-chamber",
+        "village-guardian"
+      ],
+      "reviewed_object_sha256": "b586e00030a9b1d1442298d342fbc96c76dac4ee8b87944e26d69c7b3f34581b",
+      "standardization_minimum_satisfied": true,
+      "verdict": "accept"
+    },
+    {
+      "capability_id": "capability:language-target-progression",
+      "consumer_use_ids": [
+        "use:language-target-progression:astral-mage:AM-HIST-005",
+        "use:language-target-progression:babel-architect:BA-HIST-004",
+        "use:language-target-progression:dungeon-liberator:DL-COLL-001",
+        "use:language-target-progression:enchanted-library:EL-COLL-001",
+        "use:language-target-progression:griffin-riders-escape:GRF-TRANS-001",
+        "use:language-target-progression:potion-rush:PR-CUR-011",
+        "use:language-target-progression:rune-forge-chamber:RFC-CUR-011",
+        "use:language-target-progression:sorcerer-ziggurat:SZ-HIST-006",
+        "use:language-target-progression:spellweavers-run:SW-TRANS-002",
+        "use:language-target-progression:storm-castle-tower:SCT-TRANS-H003",
+        "use:language-target-progression:village-guardian:VG3-MODEL-010"
+      ],
+      "disposition": "extend",
+      "game_ids": [
+        "astral-mage",
+        "babel-architect",
+        "dungeon-liberator",
+        "enchanted-library",
+        "griffin-riders-escape",
+        "potion-rush",
+        "rune-forge-chamber",
+        "sorcerer-ziggurat",
+        "spellweavers-run",
+        "storm-castle-tower",
+        "village-guardian"
+      ],
+      "reviewed_object_sha256": "e9304b1017d97cc34a1019cd99e9c8569f1dd34e8001166691ff5b65721592f5",
+      "standardization_minimum_satisfied": true,
+      "verdict": "accept"
+    },
+    {
+      "capability_id": "capability:result-accounting",
+      "consumer_use_ids": [
+        "use:result-accounting:abyssal-well:AW-HIST-032",
+        "use:result-accounting:alchemists-synthesis:AS-RESULT-001",
+        "use:result-accounting:enchanted-library:EL-XP-001",
+        "use:result-accounting:magic-defense:MD-MECH-001",
+        "use:result-accounting:potion-rush:PR-CUR-014",
+        "use:result-accounting:rpg-battle:RPG-MECH-009",
+        "use:result-accounting:rune-forge-chamber:RFC-CUR-013",
+        "use:result-accounting:village-guardian:VG3-MODEL-017"
+      ],
+      "disposition": "extend",
+      "game_ids": [
+        "abyssal-well",
+        "alchemists-synthesis",
+        "enchanted-library",
+        "magic-defense",
+        "potion-rush",
+        "rpg-battle",
+        "rune-forge-chamber",
+        "village-guardian"
+      ],
+      "reviewed_object_sha256": "fcfcc27e876968fe070c4616669154fbddb38906368cec152b56dc86dfe64651",
+      "standardization_minimum_satisfied": true,
+      "verdict": "accept"
+    }
+  ],
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Low": [],
+    "Medium": []
+  },
+  "independence_basis": "separate exhaustive consumer re-derivation from accepted curated uses",
+  "input_bindings": {
+    "phase2-capability-classification-v5.json": "274a3538b782499828c6af9cc7033f72fa5de0b1d6da0c0eb769dad568e78a34",
+    "phase2-curated-capability-evidence-v1.json": "18769fa2880164c47c73bb628e518806eb5d6f7a50a24ba376b89cd17aea2349"
+  },
+  "provider_fork_turns_attested": false,
+  "provider_isolation_disclosure": "No independent provider session was available; no fork or fresh-session attestation is claimed.",
+  "reviewer_role": "mechanics-capability-domain-reviewer",
+  "sampling": "none-exhaustive",
+  "schema_version": "apk-t9-phase6-capability-consumer-review.v1",
+  "status": "review-pass-no-unresolved-critical-high-medium",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+}

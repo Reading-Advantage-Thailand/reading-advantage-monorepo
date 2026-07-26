@@ -1,0 +1,17 @@
+{
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Low": [],
+    "Medium": []
+  },
+  "owner_role": "asset-domain-reviewer",
+  "provider_fork_turns_attested": false,
+  "review_artifact": {
+    "path": "phase4-independent-asset-review-v1.json",
+    "sha256": "7d909ba16c26322a006a4992bd67ff9898f9bb2ff683fb0b414fc2a291871b41"
+  },
+  "sampling": "none-exhaustive",
+  "schema_version": "apk-t9-local-independent-review-receipt.v1",
+  "status": "review-pass-no-unresolved-critical-high-medium"
+}

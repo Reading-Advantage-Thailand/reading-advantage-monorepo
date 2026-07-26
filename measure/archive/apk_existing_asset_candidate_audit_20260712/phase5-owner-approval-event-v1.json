@@ -1,0 +1,42 @@
+{
+  "acceptance_gate_version": "apk-asset-forensics.phase5-acceptance-gate.v2",
+  "approved_input_bindings": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-acceptance-fixture-manifest-v1.json": "0bd817ea012155ba256ff39adcfcf4ce66f1f7d9eb714e2c1cd7ecb95038aab0",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-candidate-manifest-non-consumable-v1.json": "c5626db8afdf357feda20637c8bcacf52a391c363c2acf0d9de1cd0561c330be",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-candidate-report-v1.json": "ad7bbe10e513fabf1cceb2893833c8f983d4b429f3a5b503b53edf028bb04f47",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-01-AF-06-v2.json": "c789ef9c07eba1e4281d25084684c1c6590eefae809ddf5ca21b56b4acde7eec",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-07-AF-12-v2.json": "44944d6948a15e50593f3adc2b6882ae9510359bcebcafc2fd66d24eeb0db00d",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5_acceptance_test.py": "d5907a03e192b9ffde69c720d3393a99dbd8eba421fc4f71d289273f2dbdaa75"
+  },
+  "authoritative_rollout_approval_context": {
+    "assistant_decision": {
+      "frozen_record_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-owner-decision-rollout-record-v2.jsonl",
+      "frozen_record_sha256": "3a66ee47fb6fe47cb26404f506c8a1fa2e6956ac96666414431e72b1091687be",
+      "origin_line_number": 16933,
+      "origin_line_sha256": "3a66ee47fb6fe47cb26404f506c8a1fa2e6956ac96666414431e72b1091687be"
+    },
+    "origin_rollout_path": "/home/daniel-bo/.codex/sessions/2026/07/23/rollout-2026-07-23T17-32-19-019f8e88-86b8-7142-9cb4-6bd7c34b1385.jsonl",
+    "source_kind": "codex-rollout-user-delegation-plus-assistant-decision",
+    "user_delegation": {
+      "frozen_record_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-owner-delegation-rollout-record-v1.jsonl",
+      "frozen_record_sha256": "64f4858b34f3e3b60e7e94f6b923671bfb1965771df161725eabaecc791a9d43",
+      "origin_line_number": 16277,
+      "origin_line_sha256": "64f4858b34f3e3b60e7e94f6b923671bfb1965771df161725eabaecc791a9d43"
+    }
+  },
+  "authority": "delegated-root-product-owner",
+  "decision": "ACCEPT_T8_FOR_T9_ONLY_CONSUMPTION",
+  "decision_text": "PRODUCT_OWNER_DECISION_V2\ntrack=apk_existing_asset_candidate_audit_20260712\ndecision=ACCEPT_T8_FOR_T9_ONLY_CONSUMPTION\nauthority=delegated-root-product-owner\nscope=T9-only consumption\nbinding.measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-candidate-report-v1.json=ad7bbe10e513fabf1cceb2893833c8f983d4b429f3a5b503b53edf028bb04f47\nbinding.measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-candidate-manifest-non-consumable-v1.json=c5626db8afdf357feda20637c8bcacf52a391c363c2acf0d9de1cd0561c330be\nbinding.measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-01-AF-06-v2.json=c789ef9c07eba1e4281d25084684c1c6590eefae809ddf5ca21b56b4acde7eec\nbinding.measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-07-AF-12-v2.json=44944d6948a15e50593f3adc2b6882ae9510359bcebcafc2fd66d24eeb0db00d\nbinding.measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5_acceptance_test.py=d5907a03e192b9ffde69c720d3393a99dbd8eba421fc4f71d289273f2dbdaa75\nbinding.measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-acceptance-fixture-manifest-v1.json=0bd817ea012155ba256ff39adcfcf4ce66f1f7d9eb714e2c1cd7ecb95038aab0\nEND_PRODUCT_OWNER_DECISION_V2",
+  "decision_text_sha256": "8dd4417323c87a3f3cf5d927a57f2e39bfa633a4a31fad43fa1ed28f4c7dc088",
+  "decision_turn_event_id": "019f9389-8019-7431-9100-243b34490342",
+  "decision_turn_timestamp": "2026-07-24T10:46:22.775Z",
+  "delegation_message": "Again YOU ARE THE PRODUCT OWNER!",
+  "delegation_message_sha256": "83e28b2cd3669f2f3ca06c3305380adc4bda7f0f04c84655cb1d10b9a0624c89",
+  "delegation_turn_event_id": "019f9389-8019-7431-9100-243b34490342",
+  "event_type": "delegated-product-owner-decision",
+  "owner_identity": "root-orchestrator-product-owner",
+  "schema_version": "apk-asset-forensics.phase5-delegated-owner-decision-event.v2",
+  "scope": "T8-for-T9-only-consumption",
+  "thread_id": "019f8e88-86b8-7142-9cb4-6bd7c34b1385",
+  "track_id": "apk_existing_asset_candidate_audit_20260712"
+}

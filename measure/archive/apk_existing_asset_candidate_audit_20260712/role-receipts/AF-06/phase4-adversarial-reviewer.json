@@ -1,0 +1,137 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-06",
+  "phase": "phase4",
+  "role": "adversarial-reviewer",
+  "native_task_name": "/root/phase4_review_af06",
+  "declared_model": "gpt-5.6-terra",
+  "reasoning_effort": "xhigh",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "allowed_input_manifest_sha256": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+  "exact_verified_inputs": {
+    "current_producer": {
+      "joins": "00db239db4c8420fb2fc9aa4e23906b840eaba50d099053c066a2c7d2cb78608",
+      "rollup": "ed0f79dfcb87ebe72aee9708bb2e6e0fef1b0ed1f3d9073123e0813e050e3eac",
+      "mapper_receipt": "c4c4c48bdfbdc207b703e748cd957d85aaaa2a3d6f9046f348c4d9eb2730dd8b"
+    },
+    "verifiers": {
+      "phase4_batch_contract_test.py": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+      "phase4_v2_batch_schema_contract_test.py": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519",
+      "phase4_v2_batch_schema_contract_test_v2.py": "174fba885907260824503708180cd4dbe2b873e06aaf8e86c4fb440c319c9956"
+    },
+    "reports": {
+      "phase4-batch-test-reports/AF-06.json": "0e696f79773bc7daf0cbd89044068783a32ae6f3a6502c99327d902179dfeac3",
+      "phase4-v2-batch-schema-test-reports/AF-06.json": "b054d96b57e6ba6e0ebb8435918b422c0482a261e44bee658232d39790cf4fb8"
+    },
+    "truth_test_receipt": "da0713570525df64405e7439c5badfe78858c550d06833d7735f459b12d7cfad",
+    "preserved_phase2_reviewer_receipt": "b90f02617f2d2db0c117d67d28707b61437746b22843bf17bddb462ddf0a699a",
+    "fixtures": {
+      "phase4_value_fixture_count": 16,
+      "phase4_versioned_v2_fixture_count": 14,
+      "all_30_rejected_for_published_intended_codes": true,
+      "versioned_v2_fixture_hash_map_is_exactly_bound_by": "b054d96b57e6ba6e0ebb8435918b422c0482a261e44bee658232d39790cf4fb8"
+    },
+    "failed_cycle_archives": {
+      "v1_non_scene_fixture_noop": "The preserved v1 note records a no-op non-scene mutation. Its generic verifier remains a2fb3b50... and is AF-05 authority only.",
+      "truth_receipt_fixture_hash_typo_red_receipt": "7564619f7bab65756e7078599ae3234776ce453d6c0c0a65bf0eb0a692dadec3",
+      "corrected_truth_receipt": "da0713570525df64405e7439c5badfe78858c550d06833d7735f459b12d7cfad",
+      "preserved_as_non_authority": true
+    }
+  },
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-reviews/AF-06.json": "f7c781cad768b034a8dd547f9b9727aa50068eb0708c35dd77731fdd583ceff8"
+  },
+  "role_boundary": "Fresh isolated AF-06 Phase 4 adversarial review derived from live frozen inputs. Reviewed all 35 producer records, 21 groups, 62 caller locators, 12 path-usage links across seven unique usage IDs, seven scene links across four unique scene usages, five non-scene links, 28 responsive cells and eight facets, 35 path-specific dispositions, seven separate catalog locators, the mapper and corrected truth receipt, bounded browser evidence, and both AF-06 failed-cycle notes. Did not repair or alter producer, test, fixture, report, mapper, truth receipt, failed-cycle archive, freeze, plan, product code, acceptance state, or commits; did not authorize adoption/T9, capture new browser evidence, or accept Phase 4.",
+  "reviewed_counts": {
+    "candidate_paths": 35,
+    "hash_groups": 21,
+    "caller_locators": 62,
+    "accepted_path_usage_links": 12,
+    "scene_links": 7,
+    "non_scene_links": 5,
+    "unique_scene_usage_records": 4,
+    "unique_usage_ids": 7,
+    "responsive_assessment_cells": 28,
+    "priority1_paths": 1,
+    "dispositions": {
+      "replace": 12,
+      "reject": 1,
+      "unknown": 22
+    },
+    "mixed_groups": 3,
+    "catalog_locator_records": 7,
+    "review_records": 207
+  },
+  "verifier_results": {
+    "value": {
+      "exit_code": 0,
+      "report_byte_reproduced": true,
+      "parsed_json_equal": true,
+      "test_cases": 17,
+      "counterexamples": 16
+    },
+    "versioned_v2": {
+      "exit_code": 0,
+      "report_byte_reproduced": true,
+      "parsed_json_equal": true,
+      "total_test_cases": 32,
+      "structural_test_cases": 15,
+      "counterexamples": 14
+    },
+    "af05_no_write_regression": {
+      "exit_code": 0,
+      "generic_v1_report_review_and_receipt_bytes_unchanged": true,
+      "does_not_make_v2_af05_authority": true
+    },
+    "all_records_groups_links_cells_independently_rederived": true,
+    "green_not_sole_evidence": true
+  },
+  "substantive_results": {
+    "recursive_v2_shapes_exact_and_no_extras": true,
+    "all_35_join_status_values_equal_scaffold": true,
+    "all_12_six_key_semantic_requirements_are_exact_source_copies": true,
+    "all_12_path_mirrors_are_deep_and_order_equal": true,
+    "all_28_cells_have_exact_eight_facet_shapes": true,
+    "four_scene_usages_have_exact_four_cell_matrix": true,
+    "five_non_scene_usage_links_have_zero_cells": true,
+    "all_source_pointers_and_hashes_resolve": true,
+    "all_62_caller_locators_reconcile": true,
+    "rollup_counts_members_dispositions_mixed_count_and_current_joins_sha_are_exact": true,
+    "mapper_and_truth_receipt_are_truthful": true,
+    "browser_evidence_remains_composite_scene_only": true,
+    "direct_legacy_adoption_false_for_all_paths": true,
+    "canonical_candidate_key_null_forbidden_pending_T9_for_all_paths": true,
+    "reuse_adapt_reference_forbidden_for_all_paths": true,
+    "catalog_count_seven_and_non_additive": true,
+    "one_archers_revenge_priority1_png_is_reject_and_retire": true,
+    "phase2_reviewer_receipt_preserved_and_separate": true,
+    "failed_v1_noop_and_red_receipt_remain_non_authority": true
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "stop_loss_events": [],
+  "unresolved_blocking_findings": 0,
+  "measured_resource_usage": {
+    "candidate_paths": 35,
+    "hash_groups": 21,
+    "review_records": 207,
+    "command_invocations": 58,
+    "bytes_read": 470000000,
+    "within_ceiling": true,
+    "ceilings": {
+      "candidate_paths": 40,
+      "hash_groups": 24,
+      "review_records": 280,
+      "command_invocations": 120,
+      "bytes_read": 536870912
+    },
+    "measurement_basis": "Conservative AF-06 scope accounting: four AF-06 verifier reproductions report 457201150 bytes; bounded independent JSON, receipt, source-pointer, browser-freeze, routing, and publication-validation reads consume the stated remaining allowance. The required AF-05 no-write regression is reported separately as preservation evidence and is not combined into the AF-06 batch audit."
+  },
+  "final_status": "review-pass-pending-root-acceptance"
+}

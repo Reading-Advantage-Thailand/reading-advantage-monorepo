@@ -1,0 +1,44 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-v2-batch-schema-authoring-red.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "batch_id": "AF-06",
+  "role": "truth-test-author",
+  "status": "preserved_observed_red",
+  "immutable_v1_authority": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_v2_batch_schema_contract_test.py",
+    "sha256": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519",
+    "accepted_scope": "AF-05",
+    "accepted_af05_report_sha256": "c2d31814d2a9c8e5ccdfcff2a49f35cc976fd8eb3729324c80a62774329dc5f8",
+    "accepted_af05_truth_test_author_receipt_sha256": "bf59d58173485a17da38dca342ebe49fb15f2ca565012e481ffef60f27f287a5"
+  },
+  "af06_producer_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/phase4-path-usage-joins.json": "00db239db4c8420fb2fc9aa4e23906b840eaba50d099053c066a2c7d2cb78608",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/phase4-group-rollup.json": "ed0f79dfcb87ebe72aee9708bb2e6e0fef1b0ed1f3d9073123e0813e050e3eac",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-06/requirements-mapper.json": "c4c4c48bdfbdc207b703e748cd957d85aaaa2a3d6f9046f348c4d9eb2730dd8b"
+  },
+  "root_observed_failure": {
+    "production_passed": true,
+    "production_errors": [],
+    "structural_counterexample_count": 14,
+    "all_structural_counterexamples_rejected": false,
+    "operation": "non_scene_cells",
+    "expected_error_code": "non-scene-responsive-cell-leakage",
+    "observed_error_codes": [],
+    "rejected": false,
+    "combined_test_cases": 32,
+    "combined_bytes_read": 115516100,
+    "within_ceiling": true
+  },
+  "unchanged_value_verifier_observation": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_batch_contract_test.py",
+    "sha256": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+    "production_passed": true,
+    "counterexample_count": 16,
+    "all_counterexamples_rejected": true,
+    "test_cases": 17,
+    "bytes_read": 113084475
+  },
+  "cause": "The immutable v1 helper selected the lexically first joined link. In AF-06 that link was already non_scene with an empty responsive cell list, so changing surface_kind from non_scene to catalog did not create responsive-cell leakage and the intended counterexample was a no-op.",
+  "disposition": "This is a verifier fixture-mutation selection defect, not an AF-06 producer failure. The immutable v1 verifier remains the accepted AF-05 authority and is neither copied nor renamed as failed authority. AF-06 uses a versioned successor whose non_scene_cells operation deterministically selects an actual scene link and retains its four responsive cells while changing all three mirrored surface_kind fields."
+}

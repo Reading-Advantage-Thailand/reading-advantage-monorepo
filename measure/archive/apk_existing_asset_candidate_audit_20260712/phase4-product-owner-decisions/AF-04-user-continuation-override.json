@@ -1,0 +1,74 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-user-continuation-override.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": 4,
+  "batch_id": "AF-04",
+  "decision_id": "AF-04-user-continuation-override-20260724",
+  "decided_at": "2026-07-24T02:26:15+07:00",
+  "authority": {
+    "source": "renewed-user-goal-continuation",
+    "retained_user_instruction": "The root orchestrator is the project and product owner and must complete T8 through T11 to usability and fitness-for-purpose acceptance.",
+    "required_external_direction": "The prior root decision required user or external direction after a final-cycle failure; the user resumed the full active goal without narrowing it.",
+    "acting_role": "root-orchestrator-project-and-product-owner"
+  },
+  "supersedes_terminal_block_only_for": {
+    "prior_decision": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-product-owner-decisions/AF-04-final-schema-cycle.json",
+      "sha256": "41c0dd590f3be7368b5ed761f44f9473d44b644c9a2160453554ece4874c667f"
+    },
+    "producer_omission": "Six mirrored semantic_replacement_requirements.requirements objects retained status and disclosure after their corresponding usage_links semantic_replacement_requirement objects were correctly normalized.",
+    "scope_expansion": false
+  },
+  "preserved_failed_producer": {
+    "joins": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-04/final-cycle-producer-failure/phase4-path-usage-joins.json",
+      "sha256": "3baeee0af3948af4f36d04bb9d8c848f2dff4e6243c8837f457caacc92359ff6"
+    },
+    "rollup": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-04/final-cycle-producer-failure/phase4-group-rollup.json",
+      "sha256": "19f94e5cea4cfd1d422a7efa8aeadee565f7b368a993bbbe43949268aebd7ae2"
+    },
+    "mapper_receipt": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-04/final-cycle-producer-failure/requirements-mapper.json",
+      "sha256": "1ab78b0830213734bf0eb3d23242e562fb5104f5d905281cb9b1610fe90dd743"
+    }
+  },
+  "read_only_confirmation": {
+    "usage_link_requirement_objects": 6,
+    "usage_link_requirement_shape": [
+      "accepted_usage_fields",
+      "canonical_semantic_role",
+      "canonical_state",
+      "ontology_status",
+      "source",
+      "usage_id"
+    ],
+    "mirrored_requirement_objects": 6,
+    "forbidden_mirror_only_keys": [
+      "disclosure",
+      "status"
+    ],
+    "forbidden_key_instances": 12,
+    "all_other_final_cycle_schema_changes_present": true
+  },
+  "authorization": {
+    "status": "authorized-exact-mirror-correction-and-fresh-gates",
+    "producer_changes_allowed": [
+      "For each joined AF-04 record, replace semantic_replacement_requirements.requirements with exact deep copies of that record's usage_links semantic_replacement_requirement objects in usage-link order.",
+      "Update the AF-04 joins SHA binding in the AF-04 rollup.",
+      "Update the AF-04 requirements-mapper receipt to bind this override, the preserved failed producer, and the corrected output hashes."
+    ],
+    "producer_changes_forbidden": [
+      "Any candidate path, group, caller, usage, source, priority, disposition, provenance, eligibility, responsive cell, browser, semantic accepted-usage, count, slice, or catalog fact change.",
+      "Any prior batch, freeze, predecessor acceptance, product code, plan, T9 ontology, direct legacy adoption, or canonical standard-pack key change."
+    ],
+    "fresh_gate_requirements": [
+      "A fresh isolated truth-test author must run the unchanged Phase 4 value verifier.",
+      "The truth-test author must add and run a separate exact v2 structural contract with negative fixtures for every AF-04-P4-H1 blind spot and mirrored-requirement divergence.",
+      "A fresh fork_turns=none adversarial reviewer must review every AF-04 record, the exact before/after delta, both automated reports, all failed-cycle evidence, and resource ceilings.",
+      "Root acceptance requires zero Critical, High, or Medium findings and zero unresolved blockers."
+    ],
+    "next_batch_remains_blocked": true,
+    "terminal_rule": "Any mismatch outside the exact mirror correction, any automated failure, any receipt or ceiling defect, or any Critical, High, or Medium review finding blocks AF-04 and Phase 4 pending a new explicit user instruction."
+  }
+}

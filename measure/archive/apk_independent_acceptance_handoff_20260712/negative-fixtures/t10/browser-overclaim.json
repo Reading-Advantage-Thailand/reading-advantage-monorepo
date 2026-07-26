@@ -1,0 +1,11 @@
+{
+  "fixture_id": "browser-overclaim",
+  "mutations": [
+    {
+      "artifact": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase3-responsive-contracts-v1.json",
+      "pointer": "/contracts/0/profiles/0/aspect_states/geometry",
+      "value": "browser_pass"
+    }
+  ],
+  "expected_codes": ["BROWSER_OVERCLAIM"]
+}

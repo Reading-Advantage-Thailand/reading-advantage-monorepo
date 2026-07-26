@@ -1,0 +1,15 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-global-failed-cycle.v1",
+  "cycle": "v2-unbound-fixture-set",
+  "disposition": "archived-before-P4G-H-03-remediation",
+  "blocking_findings": ["P4G-H-03"],
+  "archived_exact_hashes": {
+    "phase4_global_contract_test.py": "f3e999c1b58668f0b5dd10b2f32db06a0d3b06142e19a4def83e3c150a83a5a0",
+    "phase4-global-test-report.json": "6ae23570940a8b35fccf82c9ee086cd43b079fb1f05101d41028cf2bc1a50db3",
+    "truth-test-author.json": "41ddf08eef174d959956bef272652110fd46d7bb55d2409080056496c037bdec",
+    "phase4-global-review-v2.json": "6ae1c317545194ddbb7b0237530379f8299d1a0b287be76cdc5f9c3fb4771ed5",
+    "adversarial-reviewer-v2.json": "41533d2140f80d2734c06ff9937ce48abe37136e6abf9550c1b746714a73220f"
+  },
+  "red_evidence_sha256": "e80006cead903c09d5f15f126e7f7d56be0e55e7cfb7a8c0b74ffa5332d9d7d8",
+  "required_repair": "Bind the exact behavior-fixture identity, metadata, and bytes through a pinned manifest before any fixture dispatch, while preserving all twelve behavior cases and adding seven isolated meta-counterexamples."
+}

@@ -1,0 +1,27 @@
+{
+  "accepted_manifest": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/accepted-successor-manifest-v1.json",
+    "sha256": "e9fc2c9c8074db74670fa2e2929bd4efb5b8d0fd2ef5a8b9819d2f5a6e39ba49"
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": []
+  },
+  "input_freeze": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-input-freeze-v1.json",
+    "sha256": "68fc7e0baaaa25c2dc1a2793aad7568b473eb4cd6c5449dfdf138fc58bf517cf"
+  },
+  "provider_fork_turns_attested": false,
+  "review_output": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-independent-acceptance-review-v1.json",
+    "sha256": "efca1bc8391328fc274c34ac463c362dcffcd921c96204905091b9025554688d"
+  },
+  "reviewer_identity": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/reviewer-identity-v1.json",
+    "sha256": "cb0d7c8402a4b67f8effcdb246151a39fbeaceeeef5e8d70a1b78cd26c66aa6d"
+  },
+  "sampling": "none",
+  "schema_version": "apk-t10-local-review-receipt.v1",
+  "tool_attestation_available": false
+}

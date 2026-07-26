@@ -1,0 +1,594 @@
+{
+  "batch_id": "AF-04",
+  "counts": {
+    "accepted_path_usage_links": 6,
+    "caller_locators": 61,
+    "candidate_paths": 35,
+    "dispositions": {
+      "reject": 4,
+      "replace": 6,
+      "unknown": 25
+    },
+    "groups_with_mixed_path_specific_dispositions": 3,
+    "identical_hash_groups": 17
+  },
+  "groups": [
+    {
+      "identical_hash_group": "sha256:3bec9ea0ab16ff60618d4aa69b617f0b74427e8c08a6d12382e2391333ae3c36",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/cover/rune-match-cover.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/cover/rune-match-cover.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/cover/rune-match-cover.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/cover/rune-match-cover.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        }
+      ],
+      "counts": {
+        "paths": 2,
+        "caller_locators": 8,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 2
+        }
+      }
+    },
+    {
+      "identical_hash_group": "sha256:41851bd0dd9d84daa41c1b53880be041558bcadc77ef3f0f787280c1dd4527b5",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/archers-revenge/archers-revenge-start-screen.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/archers-revenge/archers-revenge-start-screen.png",
+          "policy_priority": 1,
+          "value": "reject"
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 1,
+          "replace": 0,
+          "unknown": 0
+        }
+      }
+    },
+    {
+      "identical_hash_group": "sha256:4268a22c8d3eef16c999dc5ab6d8f15dbcb33b34b22b7a3b053bc2daa5a20ea0",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/dragon-flight/boss-3x3-sheet-facing-up.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-flight/boss-3x3-sheet-facing-up.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/boss-3x3-sheet-facing-up.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/dragon-flight/boss-3x3-sheet-facing-up.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-flight/boss-3x3-sheet-facing-up.png",
+          "policy_priority": 2,
+          "value": "replace"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/boss-3x3-sheet-facing-up.png",
+          "policy_priority": 2,
+          "value": "replace"
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 4,
+        "accepted_path_usage_links": 2,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 2,
+          "unknown": 1
+        }
+      }
+    },
+    {
+      "identical_hash_group": "sha256:42fd03ed729c8b94fdb379c095a5df5dfd5bd936ea08225490a2f04975a6927c",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/enchanted-library/spirit_3x3_pose_sheet.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/enchanted-library/spirit_3x3_pose_sheet.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/enchanted-library/spirit_3x3_pose_sheet.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/enchanted-library/spirit_3x3_pose_sheet.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/enchanted-library/spirit_3x3_pose_sheet.png",
+          "policy_priority": 2,
+          "value": "replace"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/enchanted-library/spirit_3x3_pose_sheet.png",
+          "policy_priority": 2,
+          "value": "replace"
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 4,
+        "accepted_path_usage_links": 2,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 2,
+          "unknown": 1
+        }
+      }
+    },
+    {
+      "identical_hash_group": "sha256:45683dc07d0e95c9e1eb7a6abd9e6b35a77fb84ecd90a32879db307683b56390",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/dragon-rider/dragon-army-3x3-sheet-facing-up.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-rider/dragon-army-3x3-sheet-facing-up.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-rider/dragon-army-3x3-sheet-facing-up.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/dragon-rider/dragon-army-3x3-sheet-facing-up.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-rider/dragon-army-3x3-sheet-facing-up.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-rider/dragon-army-3x3-sheet-facing-up.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 2,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 3
+        }
+      }
+    },
+    {
+      "identical_hash_group": "sha256:46282a59d47e8f52fcf5ad6ee82294bb8009d7f5dbb7d6f30cc487dd5a7813ec",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/measure/tracks/spellweavers-run-compliance-audit_20260426/metadata.json"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/measure/tracks/spellweavers-run-compliance-audit_20260426/metadata.json",
+          "policy_priority": 3,
+          "value": "unknown"
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 1
+        }
+      }
+    },
+    {
+      "identical_hash_group": "sha256:46e211ac512f046f29509084157dc3feef834780ae82e647c40b384cbd67f6a8",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/wizard-vs-zombie/tile-ruins.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/wizard-vs-zombie/tile-ruins.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/wizard-vs-zombie/tile-ruins.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/wizard-vs-zombie/tile-ruins.png",
+          "policy_priority": 1,
+          "value": "reject"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/wizard-vs-zombie/tile-ruins.png",
+          "policy_priority": 1,
+          "value": "reject"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/wizard-vs-zombie/tile-ruins.png",
+          "policy_priority": 1,
+          "value": "reject"
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 6,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 3,
+          "replace": 0,
+          "unknown": 0
+        }
+      }
+    },
+    {
+      "identical_hash_group": "sha256:4c076366e3e7bbdcc4b5333ca9974a5731a79e495c9e8737b31d3fcd724e54e5",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/rpg-battle.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/rpg-battle.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 4,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 1
+        }
+      }
+    },
+    {
+      "identical_hash_group": "sha256:4cee5bcfc17efb9dfc80fc2347b49a5118dd18e403df5e1543d36c1b898ac08a",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/rpg-battle/background_forest_clearing.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/rpg-battle/background_forest_clearing.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/rpg-battle/background_forest_clearing.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/rpg-battle/background_forest_clearing.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/rpg-battle/background_forest_clearing.png",
+          "policy_priority": 2,
+          "value": "replace"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/rpg-battle/background_forest_clearing.png",
+          "policy_priority": 2,
+          "value": "replace"
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 12,
+        "accepted_path_usage_links": 2,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 2,
+          "unknown": 1
+        }
+      }
+    },
+    {
+      "identical_hash_group": "sha256:4d59e880d08b92357c59851de67d7d5e56db09786bf138a5acf3ef3791de84a1",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/measure/tracks/realm-carver-compliance-audit_20260426/metadata.json"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/measure/tracks/realm-carver-compliance-audit_20260426/metadata.json",
+          "policy_priority": 3,
+          "value": "unknown"
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 1
+        }
+      }
+    },
+    {
+      "identical_hash_group": "sha256:4d5d6eb3acd9c4ae2e4579155623150bbfa6409b294bbb3b65109844518ea290",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/rune-match/monsters/orc_3x4_pose_sheet.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/rune-match/monsters/orc_3x4_pose_sheet.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/rune-match/monsters/orc_3x4_pose_sheet.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/rune-match/monsters/orc_3x4_pose_sheet.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/rune-match/monsters/orc_3x4_pose_sheet.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/rune-match/monsters/orc_3x4_pose_sheet.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 10,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 3
+        }
+      }
+    },
+    {
+      "identical_hash_group": "sha256:4dc1dd4c05ff8a04ffa62f2aa0506f7ecfea1879f575b83da936c4844e5d6979",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/measure/archive/castle-defense-assets-20260117/metadata.json"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/measure/archive/castle-defense-assets-20260117/metadata.json",
+          "policy_priority": 3,
+          "value": "unknown"
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 1
+        }
+      }
+    },
+    {
+      "identical_hash_group": "sha256:5125990489313bb97878ff72d971175822437fa684fe458ff2e70a21c3a98716",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/dragon-rider/player-3x3-sheet-facing-down.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-rider/player-3x3-sheet-facing-down.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-rider/player-3x3-sheet-facing-down.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/dragon-rider/player-3x3-sheet-facing-down.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-rider/player-3x3-sheet-facing-down.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-rider/player-3x3-sheet-facing-down.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 2,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 3
+        }
+      }
+    },
+    {
+      "identical_hash_group": "sha256:5229b4c10089e4043a1377b2a4dfd04a34e63ced0a66d1e3ac026f91a8ba346a",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/castle-defense/grass_A.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/castle-defense/grass_A.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sentence/castle-defense/grass_A.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/castle-defense/grass_A.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/castle-defense/grass_A.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sentence/castle-defense/grass_A.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 4,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 3
+        }
+      }
+    },
+    {
+      "identical_hash_group": "sha256:541c8c154c601945a6c0649c7ed6c34cf52adc1621ab6e4c1e81aea9aa69cecf",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/measure/tracks/dungeon-liberator-compliance-audit_20260426/metadata.json"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/measure/tracks/dungeon-liberator-compliance-audit_20260426/metadata.json",
+          "policy_priority": 3,
+          "value": "unknown"
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 1
+        }
+      }
+    },
+    {
+      "identical_hash_group": "sha256:55995dfad6ecb4945a1e856ddca03c5e16aa5bf13fd21b4df6a74ae79357bcfc",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/next.svg"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/next.svg",
+          "policy_priority": 3,
+          "value": "unknown"
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 1,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 1
+        }
+      }
+    },
+    {
+      "identical_hash_group": "sha256:5720ead0f45f083c2c8eefe0a1b888b1416c7fc768426007ebf5657786600f81",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/cover/castle-defense-cover.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/cover/castle-defense-cover.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/cover/castle-defense-cover.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/cover/castle-defense-cover.png",
+          "policy_priority": 3,
+          "value": "unknown"
+        }
+      ],
+      "counts": {
+        "paths": 2,
+        "caller_locators": 4,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 2
+        }
+      }
+    }
+  ],
+  "input_path_usage_joins": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/phase4-path-usage-joins.json",
+    "sha256": "08f3c820ad78dba42dfb36cdf1ca96291bc8e8850016ddc21b64e7968b7b3995"
+  },
+  "role": "requirements-mapper",
+  "schema_version": "apk-asset-forensics.phase4-group-rollup.v2",
+  "status": "path_specific_rollup_pending_independent_truth_test_review_and_root_acceptance",
+  "track_id": "apk_existing_asset_candidate_audit_20260712"
+}

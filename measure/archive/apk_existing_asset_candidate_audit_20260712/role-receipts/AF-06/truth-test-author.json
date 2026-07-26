@@ -1,0 +1,129 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "batch_id": "AF-06",
+  "role": "truth-test-author",
+  "native_task_name": "/root/phase4_v2_af06_fix",
+  "declared_model": "gpt-5.6-sol",
+  "reasoning_effort": "xhigh",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "disclosures": [
+    "The immutable generic v1 verifier remains the accepted AF-05 authority; it was not edited, copied into the failed-cycle note, renamed, or republished.",
+    "The AF-05 v2-successor run was no-write regression evidence only. Its accepted reports and receipt were not modified.",
+    "This receipt covers deterministic truth-test authoring and execution only. It is not independent review, adversarial acceptance, root acceptance, production authorization, or a product decision."
+  ],
+  "role_boundary": "Authored only the versioned successor to the generic v2 Phase 4 batch schema verifier, preserving all v1 logic and all 14 hash-bound fixtures except for deterministic scene-link selection in the non_scene_cells in-memory mutation. Ran AF-05 and AF-06 no-write gates, published only the AF-06 unchanged-value and v2 batch-schema reports, and did not alter producer payloads, frozen inputs, accepted AF-05 artifacts, reviews, plans, acceptance state, product code, or commits.",
+  "allowed_input_paths": [
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-join-scaffold-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/strict-caller-scene-joins.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/caller-inventory.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/provenance-audit.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/inspection-records.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/phase4-path-usage-joins.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/phase4-group-rollup.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-06/requirements-mapper.json"
+  ],
+  "allowed_input_manifest_sha256": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+  "input_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json": "450f5ab66215178aa730e057cb28a220bfb550dfd924959a7f7f1da2eea02f9e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-join-scaffold-v1.json": "2162076fe26911a2659b7e0ef23f49398c8ebb4b5343b0ab0479c78a5d1a1de4",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/strict-caller-scene-joins.json": "39fc827a12dc2ad7719d56ee3c616045caecdf4aef816c24a9fed5c3803f4f0c",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/caller-inventory.json": "76a6c58470b3c84d48c01592058499cb763cd76a61f4eade7953e5a3d4dd1f09",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/provenance-audit.json": "653241762f86846342ab960ada8f14c4b3c3c591adc322646574582f9b13dee5",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/inspection-records.json": "8c8ea06513edcf4efcee7b4d496b2804412191899a063e737ea83699270ea30c",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/phase4-path-usage-joins.json": "00db239db4c8420fb2fc9aa4e23906b840eaba50d099053c066a2c7d2cb78608",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/phase4-group-rollup.json": "ed0f79dfcb87ebe72aee9708bb2e6e0fef1b0ed1f3d9073123e0813e050e3eac",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-06/requirements-mapper.json": "c4c4c48bdfbdc207b703e748cd957d85aaaa2a3d6f9046f348c4d9eb2730dd8b"
+  },
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-batch-test-reports/AF-06.json": "0e696f79773bc7daf0cbd89044068783a32ae6f3a6502c99327d902179dfeac3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-v2-batch-schema-test-reports/AF-06.json": "b054d96b57e6ba6e0ebb8435918b422c0482a261e44bee658232d39790cf4fb8"
+  },
+  "verifier_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_batch_contract_test.py": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_v2_batch_schema_contract_test.py": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_v2_batch_schema_contract_test_v2.py": "174fba885907260824503708180cd4dbe2b873e06aaf8e86c4fb440c319c9956"
+  },
+  "fixture_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-v2-batch-schema/extra-link-requirement-key.json": "49ebac6cb719cf33488d6601892c66e9cfdbd9a7e56334c98197c51a94bc835b",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-v2-batch-schema/extra-mirror-key.json": "d3ecdadf12c242c2d8b39fd1c9c1c2a57275630d7ef172508a1942c01f1f47b0",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-v2-batch-schema/extra-schema-key.json": "e635765c58af27bc14ad471a7e0b90b1d5e8462d43b4a9a81f77343330d558b0",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-v2-batch-schema/factual-drift.json": "a6778e84cd45b77f4b5dbc739ce4075c696ea1a20710ab6c0ac235cf8c8dd3d6",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-v2-batch-schema/false-receipt-claim.json": "a46c97fb8c9034b24d3fbd423173e03e115ed75980206a7d0e8f5e855ea7f077",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-v2-batch-schema/group-disposition-count-scalar.json": "c50b5860e2e71af4e097cdd02038476c65c35349048f3865aaf2dab0d63803d8",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-v2-batch-schema/member-path-scalar.json": "6cadd9b3e01ed0f31a7d529ce5de96cf0b16cf0aa0aba7722357fc6117875ace",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-v2-batch-schema/mirror-mismatch.json": "470a7ef0357fcd904df7bced1bbc854b67b24c3cc4c390ef8e86693a56881e46",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-v2-batch-schema/missing-join-status.json": "2cafc7c52f119d2004fa9e4a546d2531255f3454cc4451e5d5f3a3d046b8f4af",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-v2-batch-schema/missing-rollup-sha.json": "5e7c871a3fa7ad55eb5f52473ddd944d71f68fe097eaeaaf2fd9b653b3c7b2ab",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-v2-batch-schema/non-scene-cells.json": "e085ec5f23c77aa38645c1586c062f754534ee4565743e4aed385db0866ab297",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-v2-batch-schema/stale-mapper-hash.json": "9ae2fb2df17ff8c2f7c15fb5a8502c2944b3665213755f478eb01178f7de2a24",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-v2-batch-schema/wrong-join-status.json": "109fdd24b390225a6330f1611fd2ec12de1468712b5d4a10cb381a15b4221510",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-v2-batch-schema/wrong-rollup-sha.json": "eaca0613fd10c42e1208a6233508822b2edc8d31a834d808d2b659a8d1abc120"
+  },
+  "negative_fixture_count": 14,
+  "af05_regression_compatibility": {
+    "mode": "no-write",
+    "production_passed": true,
+    "production_errors": [],
+    "structural_counterexample_count": 14,
+    "all_structural_counterexamples_rejected": true,
+    "value_counterexample_count": 16,
+    "all_value_counterexamples_rejected": true,
+    "test_cases": 32,
+    "structural_test_cases": 15,
+    "value_test_cases": 17,
+    "command_invocations": 2,
+    "bytes_read": 108877328,
+    "within_ceiling": true,
+    "accepted_v1_report_sha256_before_and_after": "c2d31814d2a9c8e5ccdfcff2a49f35cc976fd8eb3729324c80a62774329dc5f8",
+    "accepted_v1_truth_test_author_receipt_sha256": "bf59d58173485a17da38dca342ebe49fb15f2ca565012e481ffef60f27f287a5",
+    "accepted_v1_authority_sha256": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519",
+    "reports_republished": false
+  },
+  "measured_resource_usage": {
+    "test_cases": 32,
+    "structural_test_cases": 15,
+    "value_test_cases": 17,
+    "value_verifier_invocations": 1,
+    "command_invocations": 2,
+    "bytes_read": 115516100,
+    "within_ceiling": true,
+    "ceilings": {
+      "test_cases": 160,
+      "command_invocations": 80,
+      "bytes_read": 134217728
+    },
+    "measurement_basis": "AF-06 selected-batch run only: exact bytes read or digested by the v2 verifier plus the unchanged value verifier's separately reported exact bytes; command and test counts include its one nested invocation. AF-05 regression usage is reported separately and is not combined."
+  },
+  "authoring_red_audit": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-06/v1-non-scene-fixture-noop/failure-note.json",
+    "sha256": "237e52d1d94de577b741d5472b53aa6eca9f2e2aab85e254f5827ab62607f478",
+    "state": "v1 AF-06 non_scene_cells mutation selected an already non_scene link and returned no error codes; v1 remains the accepted AF-05 authority"
+  },
+  "receipt_authoring_red_audit": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-06/truth-receipt-fixture-hash-typo/failure-note.json",
+    "sha256": "cec7ecb643ea3e452195420811531602047dba20fee0e1fc790f09362c1eaf66",
+    "red_receipt_sha256": "7564619f7bab65756e7078599ae3234776ce453d6c0c0a65bf0eb0a692dadec3",
+    "state": "one stale-mapper-hash fixture digest was transcribed without the characters 37; corrected before no-edit equality verification"
+  },
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": [
+      "The AF-06 v2 successor and unchanged value verifier are green, but this truth-test receipt does not provide independent review, root acceptance, production authorization, direct legacy adoption, a canonical standard-pack key, or T9 ontology authorization."
+    ]
+  },
+  "unresolved_blocking_findings": 0,
+  "stop_loss_events": [],
+  "final_status": "truth-test-green-pending-independent-review-and-root-acceptance"
+}

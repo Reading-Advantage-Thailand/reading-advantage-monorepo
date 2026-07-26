@@ -1,0 +1,11 @@
+{
+  "fixture_id": "claim-omission",
+  "mutations": [
+    {
+      "artifact": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase1-source-resolution-index-v1.json",
+      "pointer": "/upstream_claims/0",
+      "operation": "remove"
+    }
+  ],
+  "expected_codes": ["RAW_CLAIM_DENOMINATOR"]
+}

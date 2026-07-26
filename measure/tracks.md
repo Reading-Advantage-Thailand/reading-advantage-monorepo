@@ -144,40 +144,59 @@ program, priority order when picking the next track is:
 - [x] **Track: APK Three-Game Source-Truth Pilot** *Link: [./archive/apk_three_game_truth_pilot_20260712/](./archive/apk_three_game_truth_pilot_20260712/)*
   Prove the method on Dragon Flight, RPG Battle, and Abyssal Well before authorizing corpus-scale work. *Status: COMPLETE (conditional acceptance). Five role-isolated role receipts; 491 atomic claims across Dragon Flight (225), RPG Battle (215), Abyssal Well (51); 8 negative fixtures; 41/41 truth tests pass; 15/15 claim re-derivations exact. Conditional open items: Phase 3 browser audit deferred (environment-gated); Phase 4 asset audit partial. Successor hashes: pilot manifest `cd1a2fe1…`, acceptance `3a59c50e…`, accepted `cbf04753…`.*
 
-- [x] **Track: APK Action and Defense Evidence Cohort** *Link: [./archive/apk_corpus_audit_action_defense_20260712/](./tracks/apk_corpus_audit_action_defense_20260712/)*
+- [x] **Track: APK Action and Defense Evidence Cohort** *Link: [./archive/apk_corpus_audit_action_defense_20260712/](./archive/apk_corpus_audit_action_defense_20260712/)*
    Recover exact independently reviewed evidence packages for eight action, defense, escort, projectile, and arena games. **Accepted with disclosure (v4 lineage, 2026-07-22):** reconciliation v4 `d009b9a3`, zero-Critical/High/Medium full-cohort review v4 `81bfe78e`, candidate v2 `d70959ce`, product-owner acceptance v2 `1d56853d`, accepted manifest v2 `8b3a83d3`, and owner admission disposition `43928b9a` bind the current conditional admission. The v1 lifecycle and raw admission-gate results v1-v4 remain historical/non-authority. Binding disclosures retain Batch A limitations; Batch B synthetic-input, HTTP-400, and 404 limits; Batch C Kimi helper-attempt/404 limits; and asset-companion limits. No gameplay, responsive, asset-loading, suitability, licensing, production, implementation, shipping, completion, persistence, XP, idempotency, or API success is claimed. T8 remains unauthorized by this admission; see `_orchestrator/LAST-BATCH-STATUS.md`.*
 
-- [x] **Track: APK Traversal and Exploration Evidence Cohort** *Link: [./archive/apk_corpus_audit_traversal_exploration_20260712/](./tracks/apk_corpus_audit_traversal_exploration_20260712/)*
+- [x] **Track: APK Traversal and Exploration Evidence Cohort** *Link: [./archive/apk_corpus_audit_traversal_exploration_20260712/](./archive/apk_corpus_audit_traversal_exploration_20260712/)*
   Recover exact world, camera, movement, collision, transition, responsive, and asset evidence for seven traversal/exploration games. **Accepted with disclosure (2026-07-22):** Additive candidate `8a28856e` corrects the immutable legacy cohort approval publication binding without rewriting history; its separate current delegated product-owner acceptance and successor accepted-cohort manifest at `2e939507` establish conditional consumption. The committed closeout gates pass 12/12. The four stale lifecycle assertions remain immutable historical red-stage/pre-publication evidence, and every batch-level historical and browser-unknown disclosure remains binding. No browser/gameplay, completion, persistence, XP, idempotency, API, production, or asset-loading success claim is made; native-provider provenance remains unavailable.
 
-- [x] **Track: APK Puzzle and Crafting Evidence Cohort** *Link: [./archive/apk_corpus_audit_puzzle_crafting_20260712/](./tracks/apk_corpus_audit_puzzle_crafting_20260712/)*
+- [x] **Track: APK Puzzle and Crafting Evidence Cohort** *Link: [./archive/apk_corpus_audit_puzzle_crafting_20260712/](./archive/apk_corpus_audit_puzzle_crafting_20260712/)*
   Recover exact board, station, matching, crafting, sequencing, content, responsive, and asset evidence for six games. **Accepted with disclosure (2026-07-22):** Fresh full-cohort review `752fecfd`, successor candidate `b3c95ab3`, ordered owner acceptance `ed1f3df3`, and accepted successor manifest `43b72620` establish conditional evidence consumption with zero unresolved Critical, High, or Medium findings. The active acceptance/consumption gate passes; V1 remains historical, non-authoritative, and non-consumable. Five product-owner manual-verification tasks remain explicitly deferred. No browser, gameplay, responsive, trusted-input, completion, persistence, XP, API, production, asset-loading, implementation, shipping, or ontology success is claimed.
 
-  - [x] **Track: APK Special and Historical Evidence Cohort** *Link: [./archive/apk_corpus_audit_special_historical_20260712/](./tracks/apk_corpus_audit_special_historical_20260712/)*
+  - [x] **Track: APK Special and Historical Evidence Cohort** *Link: [./archive/apk_corpus_audit_special_historical_20260712/](./archive/apk_corpus_audit_special_historical_20260712/)*
    Recover exact current and historical evidence for five distinctive, changed, cancelled, or missing games. **Accepted with disclosure (2026-07-22):** Batch A's unauthenticated nominal approval chronology was additively superseded by a current explicitly labeled retroactive ratification; Batch B candidate `497b2568` was additively superseded to correct its stale truth digest. The five-game reconciliation has 67 source-enveloped factual claims, 11 explicit unknowns, 30 negative fixtures, five bounded no-success browser dispositions, and 61/61 source/lifecycle gates green. Accepted manifest SHA-256: `4186dfd2…87b2b0`. No original message ID, gameplay success, responsive success, ontology, implementation, or shipping decision is claimed.
 
-- [~] **Track: APK Per-Candidate Asset Forensics** *Link: [./tracks/apk_existing_asset_candidate_audit_20260712/](./tracks/apk_existing_asset_candidate_audit_20260712/)*
+- [x] **Track: APK Per-Candidate Asset Forensics** *Link: [./archive/apk_existing_asset_candidate_audit_20260712/](./archive/apk_existing_asset_candidate_audit_20260712/)*
   Publish one forensic record per independently discovered legacy asset path;
   contact-sheet summaries cannot satisfy completion. The frozen denominator does
   not expand to the 43,068-file ElvGames standard pack. Remaining work records
-  current function, semantic replacement requirements, and retirement evidence.
+  current function, semantic replacement requirements, and retirement evidence. **Accepted for T9-only consumption (2026-07-24):** 428 paths, 227 groups, 533 callers, 85 usage links, 308 responsive cells, and 4,279 recursive evidence locators reconcile; all 14 Priority-1 paths are reject-plus-retire; fresh AF-01–06 and AF-07–12 reviews are zero-Critical/High/Medium/Low. The active delegated-root successor binds owner event 4892bd5b…e1825e, root acceptance 4e6fc468…73c86, accepted manifest 20930a1c…68665f, and green report 8b33353f…010a5; the current acceptance gate passes production with zero errors and rejects 10/10 adversarial fixtures. Failed cycles v1/v2 remain quarantined and non-authoritative. The acceptance preserves six browser/usability defects plus 329 unknown dispositions and makes no implementation or shipping claim. The completed track remains at its active path through T11 to preserve hash-bound locator resolvability.
 
-- [ ] **Track: APK Evidence-Backed Ontology Synthesis** *Link: [./tracks/apk_evidence_backed_ontology_synthesis_20260712/](./tracks/apk_evidence_backed_ontology_synthesis_20260712/)*
-  BLOCKED on accepted T8 hashes and an accepted standard-pack release. Derive mechanics, capabilities, responsive
-  contracts, semantic roles/states, and a non-consumable canonical-adoption matrix
-  mapping each role to a standard-pack candidate key or explicit blocker.
+- [x] **Track: APK Evidence-Backed Ontology Synthesis** *Link: [./archive/apk_evidence_backed_ontology_synthesis_20260712/](./archive/apk_evidence_backed_ontology_synthesis_20260712/)*
+  Bound the accepted T2–T8 evidence and standard-pack release; published evidence-only responsive contracts, 45 normalized usages, the exact 428-row path-free canonical-adoption matrix with 85 blocked mappings and zero adopted keys, ranked gaps/delivery, deterministic truth gates, exhaustive local reviews, and a non-consumable T9 candidate package. **Completed 2026-07-26:** final state `T9_CANDIDATE_READY_FOR_T10_NON_CONSUMABLE`; all unknown Must-have decisions remain blocked; T10 may start independent acceptance and alone may publish consumable successor hashes.
 
-- [ ] **Track: APK Independent Acceptance and Handoff** *Link: [./tracks/apk_independent_acceptance_handoff_20260712/](./tracks/apk_independent_acceptance_handoff_20260712/)*
-  BLOCKED on T9. Revalidate the full corpus and adopted asset mappings; bind the
+- [x] **Track: APK Independent Acceptance and Handoff** *Link: [./archive/apk_independent_acceptance_handoff_20260712/](./archive/apk_independent_acceptance_handoff_20260712/)*
+  MAY START against the non-consumable T9 candidate package. Revalidate the full corpus and adopted asset mappings; bind the
   canonical root policy, catalog, receipts, and pack release; then exclusively
   publish post-approval successor hashes.
 
-- [ ] **Track: APK Shared Developer Kit and Authoring Workflow** *Link: [./tracks/apk_shared_developer_kit_20260712/](./tracks/apk_shared_developer_kit_20260712/)*
-  BLOCKED until T10 publishes valid successor hashes and the standard asset track
-  publishes an accepted versioned pack release. Then implement shared capabilities,
-  the canonical resolver/materializer, authoring scaffold, enforcement, and QC.
+- [x] **Track: APK Shared Developer Kit and Authoring Workflow** *Link: [./archive/apk_shared_developer_kit_20260712/](./archive/apk_shared_developer_kit_20260712/)*
+  Implement shared capabilities, the canonical resolver/materializer, authoring
+  scaffold, enforcement, and QC. **Historical bounded T11 acceptance, 2026-07-26:**
+  hash-bound owner acceptance was recorded after independent final
+  review/remediation. T10 accepted
+  (manifest `e9fc2c9c…39ba49`, successor hashes `c026c0bf…c74005`, owner
+  acceptance `165e21c9…727253`, standard-pack release `2026.07.23`). Phases 0,
+  1, 2, 5 (resolver contract), 6, 7 (scaffold/docs), and the simplification
+  report (8) are accepted for the seven capabilities with 201 tests
+  passing, lint/type/build/coverage green. Phases 3 (responsive) and 4
+  (presentation) are implemented as fail-closed guards because T10 blocks all
+  354 responsive contracts / 5664 cells and all 85 asset mappings. Browser,
+  mobile, and performance success were not claimed. Runtime contracts,
+  responsive contracts, all 85 historical asset mappings, Advantage Games QC,
+  and cartridge cutover were dependency-gated at that checkpoint.
+  **Owner-authorized extension completed 2026-07-26:** forward responsive,
+  presentation, semantic binding, gameplay/runtime, QC, browser-helper,
+  scaffold/exemplar, and Advantage Games `/qc` behavior is accepted with
+  disclosures in `t11-owner-extension-acceptance-v1.json`
+  (`c4753808…a3c3a0`). This additive acceptance preserves all historical T10/T11
+  evidence classifications and does not authorize cartridge cutover. Package
+  validation passed 234 tests at 89.69% statement coverage; targeted app and
+  Chromium verification passed. Unrelated flaky aggregate Jest behavior,
+  absent Reading/Primary consumers, representative-device FPS proof, and manual
+  owner browser inspection remain explicitly open.
 
-- [x] **Track: APK Standard Asset Library Contract and Production** *Link: [./archive/apk_dual_theme_asset_production_20260712/](./tracks/apk_dual_theme_asset_production_20260712/)*
+- [x] **Track: APK Standard Asset Library Contract and Production** *Link: [./archive/apk_dual_theme_asset_production_20260712/](./archive/apk_dual_theme_asset_production_20260712/)*
   Accepted release `2026.07.23`: 43,075 receipt-bound assets, catalog digest
   `ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087`,
   exact parity, selected-union materialization, compact/wide QC, package guards,

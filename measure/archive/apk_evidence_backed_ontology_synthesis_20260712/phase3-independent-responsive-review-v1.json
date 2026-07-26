@@ -1,0 +1,1792 @@
+{
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Low": [],
+    "Medium": []
+  },
+  "independence_basis": "separate exhaustive hash-bound review pass that does not call the mapper renderer",
+  "input_binding": {
+    "path": "phase3-responsive-contracts-v1.json",
+    "sha256": "615fd11ec1eb0ba6ea7680a8a69a65b854cdfef942455ff1f1e62b5a9ead3991"
+  },
+  "provider_fork_turns_attested": false,
+  "provider_isolation_disclosure": "No independent provider session was available; no fork or fresh-session attestation is claimed.",
+  "reviewed_contracts": [
+    {
+      "contract_id": "responsive:abyssal-well:09d1bda21c32",
+      "reviewed_object_sha256": "355f7e906d6f8f195907c0c1a05b87c100f2b90ee9713a8cc17644f266c29cdc",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:abyssal-well:14f5092e13ae",
+      "reviewed_object_sha256": "6d86d11aaed8611070ee9e6aaf40f3dca31e7f01f0a4741bda5edbc18ad7b20c",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:abyssal-well:4e51a73169c1",
+      "reviewed_object_sha256": "cd830fcdf947a42755172d11ca69d12ff5eb9704560e0e59f755d9f305505ed7",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:abyssal-well:7b29165d4a26",
+      "reviewed_object_sha256": "87ea7c753467d112afe295ae23ee26126912c1e0a519ae2084e00dfccc2e8371",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:abyssal-well:95cb9b4f84ce",
+      "reviewed_object_sha256": "72d201d883bac791de4518160ef8be39cd55c5821cdb4e3124a4a2af0eded261",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:abyssal-well:9eea2e4aeaa9",
+      "reviewed_object_sha256": "c3833a69b3ea5de26b50b4e36c0563edc96a4e5868ae5682a5826dc4fb2dc952",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:abyssal-well:c600b965937f",
+      "reviewed_object_sha256": "42838e0d13c8d3dbb4f2d150afdd41f4a11c318502ec68d8d71183334a209583",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:abyssal-well:c76444af3100",
+      "reviewed_object_sha256": "c48b37be9ce538735ea9b2faf20651761daad4c36ed9ab5245b91310bb748ba7",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:abyssal-well:e44791803f3d",
+      "reviewed_object_sha256": "d683d5f2626cbed77dec5209499618edb1d253f76d54130a8c4f92ebf78dcf31",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:alchemists-synthesis:95cb9b4f84ce",
+      "reviewed_object_sha256": "ee584da0cc77caf445caa8a9e51bebade9da96f6c4b47fa39b4eeb3c27b9abc6",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:010122797132",
+      "reviewed_object_sha256": "a680b88812d2b99e3be46c1108143889975576a4f45f6d4e5bb9217340947718",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:096218c354a7",
+      "reviewed_object_sha256": "627da4fdbdba2242c542e5d6ba0f9e7e52789c8b5454be1a2e6b581b4e97daec",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:0ac9c1fd2131",
+      "reviewed_object_sha256": "059c9bf89a4c181d0da804a6248df31f8b841adf84da1ed28275238ddaa76daa",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:1355d7f3f46e",
+      "reviewed_object_sha256": "1ff39770b8831482b2175c118417d418e472277fecee95723e5d374203822c2b",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:15064ce07d89",
+      "reviewed_object_sha256": "fe2b77432c16b588148ca750ee850242eabadfba21db3006704aed6ba53c4aa8",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:195310cd657d",
+      "reviewed_object_sha256": "a2945fe97193d24117bd5193ab09cdc302c8fde78785ddb05d337ce3b8c19f80",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:3f8e017974c6",
+      "reviewed_object_sha256": "8b110851c5566f3d80e1fe990b4394af30f14f80d948ff34686d75c2454f599f",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:464884b6032e",
+      "reviewed_object_sha256": "88ef0c781358fcfb83459aa97eda018dead5f2f47d7c40e159808b05be608022",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:54c7009c7b47",
+      "reviewed_object_sha256": "9d13a55600e2d5e6ae6a412fbae21fa7f070bf5fdc85ca2105342ad0faa62022",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:5e9cca7846a6",
+      "reviewed_object_sha256": "1428038c249cd47d67d492a541056cc3fc99c17b2b6428c9f0c16210fce8788e",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:61d63f68f479",
+      "reviewed_object_sha256": "32233c14fcd3e97f0626d1b0b2b8de0d5768dbb070db97815be05a45fa5d8035",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:67a7d0ebf155",
+      "reviewed_object_sha256": "c425440ad3404198816c294e09f42eed24f2175f27758cb68c259dac82c46294",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:6cb853fa5491",
+      "reviewed_object_sha256": "b2c53b6ff30ae1af4f4021e2cb66bc7855bb7e0eff9360272c32cc61633e4cac",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:6e59eda4809f",
+      "reviewed_object_sha256": "aa0f8eee497d0854ceaf2fa80b2a96ee5dacd80486f5868b781928b9c02b32c2",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:6e7c19b6e737",
+      "reviewed_object_sha256": "7d125ef856f4886b8c8654d2a21aab3cd571fc29c8cddb1f8030131972ffbc83",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:6f31b250d0d6",
+      "reviewed_object_sha256": "6fa652a7bcc5836cd9d29f44cf1a553b9d44ac2a44569b55424f2a539b48aa5e",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:762bab2f6036",
+      "reviewed_object_sha256": "ae263f44babee57247e445e0be0cfa8339e36479b901224643570d281757f691",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:76ea32c57766",
+      "reviewed_object_sha256": "eb2e6102fded7f01465db17526138b8b6e48e7942102ff640ef0f7f181e58d62",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:7c08452395d6",
+      "reviewed_object_sha256": "d8e43effff53177c133baef816b1833a7d0867b5de7853efaf237ea07c0ef9ff",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:83050322b8e3",
+      "reviewed_object_sha256": "aaf03746123ea5b09bfb606841ec2eee0b31a989c8df41113f2c9bf099c016fa",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:854b2bb1002e",
+      "reviewed_object_sha256": "6514c2eeebf578403752aebbd04aef90a5a865bd8e45792dd87cd9158ff24bbc",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:9957480401d3",
+      "reviewed_object_sha256": "ab955ded60206bc570822a85771d1e0d499655819a578ce5797ec182193f6ad1",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:a5a9466b7c16",
+      "reviewed_object_sha256": "28188da21d6cc80cd62556173f0c7d6e649b9c4aec9dcee067f2997fa2ac626a",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:b41a48b5a844",
+      "reviewed_object_sha256": "df577d07983c67e5701df882592bd7f54c10629cb4489da8993bffc9b3c2a6c3",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:bd3f7c439f7b",
+      "reviewed_object_sha256": "b3f84be596b41b35e89bf8273da54bb75b99b4400b148a3ac5f241d7c0389837",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:ce7c16a88ddd",
+      "reviewed_object_sha256": "f8a4e5021697ec9884ccf55d7db8d523b7ab263d1b18e5c52c737318c0d3c2e3",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:cea42f2afc5a",
+      "reviewed_object_sha256": "cca997ed193841bb23b2a43f12326642cb2be18a1f4dc651c54d0f921d23ab07",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:d91e29b07ac1",
+      "reviewed_object_sha256": "0aaa3c901b0f94652bd4d4b8f71b5c446d6e27f3cf72ad3f771c30cd1b274ca9",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:de31b5094c2e",
+      "reviewed_object_sha256": "05ea4ab67f7f074d7060e789f1049bc3a7ca5e000840dab2f6275211ed295cf1",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:f31b883c8c6b",
+      "reviewed_object_sha256": "274dded46f1f47d9f7ac459ee27e0237af68d9d10ae6505ea89e2ad60ccb2615",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:archers-revenge:fb73c859a03b",
+      "reviewed_object_sha256": "394cc75ddf1f9bfc5130b2a0d548698f1cdc5b74daaf4de234f8557106c3d707",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:astral-mage:0dc4bae6b6ac",
+      "reviewed_object_sha256": "c2ef24bbd6077e3af224840ba8d9cc6ea71aa9e09aa73e84a9c9d513d165b913",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:astral-mage:311b5bdad849",
+      "reviewed_object_sha256": "791cd0a509c88e801550834824c7f175dff3dc18d3421a23987a89488ceb3b73",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:astral-mage:48bc613c2039",
+      "reviewed_object_sha256": "a8a44aefb3c974a7fa6a91c3d73ad28c85ada0401e1e6a7abb1556efb62e3553",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:astral-mage:5983f14fec9b",
+      "reviewed_object_sha256": "c74378cd3c9103172de8052c586aa51e17db8909fcae9def19b1d75a47fffd47",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:astral-mage:9511f6cb31cd",
+      "reviewed_object_sha256": "ba7ef515d40917044371304e8d7ed18778dfecf365c1b162799bd469c1ad1066",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:astral-mage:ae153310bba9",
+      "reviewed_object_sha256": "aea28e8b9dc77f83aff9d85a14b737dd5be35b2a9d88574760d36a22281d416f",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:astral-mage:dd1fb2883f4a",
+      "reviewed_object_sha256": "6593598b99353d681fa1514abfc0659c609b0c61ff7054d6caa18e7eda114451",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:astral-mage:e9784111004a",
+      "reviewed_object_sha256": "8ac4af96cb6ecf95278759005909cde655e5cce82e2ee01b6e2d87dcad6df75a",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:astral-mage:f5eafd9c89ff",
+      "reviewed_object_sha256": "dc8db22bbf63c2975284c1f899cca03830bd38d5c1b81b5c6e1bbd3970c7973b",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:babel-architect:95cb9b4f84ce",
+      "reviewed_object_sha256": "2c162ec41b572494dff5c6537d22dff150ef40605358a740de7160608048b8d9",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:castle-defense:blocked-denominator",
+      "reviewed_object_sha256": "078cf4cbdf61c6968fcfbad2211f00c0770d30e52aa1dcc6e861cc25825e171d",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:devourer-slime:95cb9b4f84ce",
+      "reviewed_object_sha256": "6b7763f1ae9f0d1b03a655a3c62922caa3b0c70fcb8225436a0edee519f855ec",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-flight:1f6deb54412e",
+      "reviewed_object_sha256": "15f5215aabcc2227bd797c596d9e570c5410527ccc86bdedbc8d5449c8e133ed",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-flight:295f8b231bc2",
+      "reviewed_object_sha256": "63906e6ff66943e69b10a2f11d0fda7cedc3de28f3dce637c1c75401afa6cc31",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-flight:3188ad2c4548",
+      "reviewed_object_sha256": "50dba3c5e0337749ad8886507b2bc5dc7b0e17ef247947355a4415f5c766bcc1",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-flight:3ae2be4e5b22",
+      "reviewed_object_sha256": "9b66569f59085ec932b1833a32476f04dac1ac3e8ad04c88b940238044994f12",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-flight:4458c11617ec",
+      "reviewed_object_sha256": "5987356e99f4b8d5c3891e6b1065862449392b630287232577ef25278d04b498",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-flight:654245251858",
+      "reviewed_object_sha256": "b7b83ff7942bc14aabfecf5fda210bb06f61af969a999abc1f55439640a4ca11",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-flight:6a6bee6863ae",
+      "reviewed_object_sha256": "195eccebd6eb49712f44fd281c980d2e8f2aa1d7fb7b23d77b12d2ad7024c2de",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-flight:7d36770dfba0",
+      "reviewed_object_sha256": "1520d51168f9b08cd7042403c62cbaa48cab10e039c5879a5c225f27bc243707",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-flight:95cb9b4f84ce",
+      "reviewed_object_sha256": "bc3fd07613ace45323c3ee6a56294e5f3ebe9b33d7c53cbe9270a5458083d720",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-flight:bbfe4a09779f",
+      "reviewed_object_sha256": "dbc2133d4457fb9eacfeb39ddb970bb1bb6f48b4208c661c66742c63086d1c04",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-flight:bcf663212eb2",
+      "reviewed_object_sha256": "9b1c6cfbc1b0a6ba1b10d1243a20f2493def56840c6885df9744b01a842045c9",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-flight:c695b27d46c9",
+      "reviewed_object_sha256": "25cee5761427730aca2755a54c033a71996a4099ded5c164021aedfc5d68cac0",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-flight:f1b7eba8de5d",
+      "reviewed_object_sha256": "c813f79de9cf150fc00ec2885d2feea01e0e7b6506b280456d2b3ddb9c1f7bea",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-flight:f2fdd774bf73",
+      "reviewed_object_sha256": "f0eabba63646f391ced0f9245b805a62ca79515fae78da04f7969c023dca03a7",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-flight:f612fd03b552",
+      "reviewed_object_sha256": "e182f4663be6b45631af50da900f9cef3327b1fb167bf72a05df0bcd294c59dd",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-flight:fac9bcbe82d6",
+      "reviewed_object_sha256": "5549be5dbe668e82f8a77ab62ad25807b32da13308308fdebd043fd1dffed5ee",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-rider:21568f2fc745",
+      "reviewed_object_sha256": "be0287bf6587eee92932159f011c31e671b2f93fb8d44b31b63ab56aca735049",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-rider:2603f5774b1a",
+      "reviewed_object_sha256": "0317c31e20c39e0985cfc2f41c2bdbbe4bd5bb20c22b71c255508b6d7af19b5a",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-rider:27a818ff4daf",
+      "reviewed_object_sha256": "576e31c459da6533733f2e35c2d61084c5013c566b4cd3256c0d084123baf95a",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-rider:447cefd259ba",
+      "reviewed_object_sha256": "256eb36547304200184136795770dbb256ffd6c07984b42656c88750b04378c9",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-rider:95cb9b4f84ce",
+      "reviewed_object_sha256": "4d3793ceeb88b79cd66d7da46f957a8030e64d2055a7c1655aefdb8860377c17",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-rider:d1d19ec06602",
+      "reviewed_object_sha256": "f5936a73c0421614a694cb18fb3686701f22c1bb8daebf839eafb7317d549612",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-rider:d92b060dc04a",
+      "reviewed_object_sha256": "05bb9040eb839db82bd02314941541832f951aac9978805adc5dd175c2c32775",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-rider:e4b24f2e444e",
+      "reviewed_object_sha256": "80c152259a15b919da959460f85482691280a65638dfef53f001bc4b11461a76",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dragon-rider:f00d31afdda6",
+      "reviewed_object_sha256": "552aae33c2912dc577fba7255ca57487519af509cf1eace8f5b3a85fff75669a",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dungeon-liberator:300d4099122b",
+      "reviewed_object_sha256": "e734f1aed3f9dac88e70b1129bec2963c47b13cacde8bdae2ebb993dee4c2698",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dungeon-liberator:a4fc72bd0223",
+      "reviewed_object_sha256": "f5fa1b9634d76df57a02a95053da7e1c850a7cebb64e6ad19338b15cdb067106",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dungeon-liberator:aa9b7950789c",
+      "reviewed_object_sha256": "a7cc46787fec43f276d05b96cf5674a20b1374dfaf16cfd778e45d601513a10f",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:dungeon-liberator:e9e3b3477f07",
+      "reviewed_object_sha256": "6c6d3069580344a528fe7a8ca25391c08ff5f3446b88736f01508457a122ce57",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:0a5b4cc8a942",
+      "reviewed_object_sha256": "3aa46ffbaf17f6aecc4e121892202e36cbb96261ba3b2d3265241d53aa7fa9ba",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:0e6e215c7c3a",
+      "reviewed_object_sha256": "3b1d1afeb43ead4ddf188aa001e78efe03997bb8f1dcd4fb25c127148cd4d751",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:29c4ff9d0cbd",
+      "reviewed_object_sha256": "c6c8504aad5f0bb1765868d3a9f9ebf5be1a83097024749835ae48a4db80b2e8",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:327b1fb2bacb",
+      "reviewed_object_sha256": "cfc968e6ae14a801f6df86cc8f6d357df9cf3f8cd3985a91eff387623517b70b",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:40247d81e856",
+      "reviewed_object_sha256": "85f0e242ce0cdcba6e7f579d93e99f5c6e881f2d4dff226d132d21ff6197eb20",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:47250c8da65d",
+      "reviewed_object_sha256": "4645edaf81faa685670272c30ac83a97a214027035a8a598d32b8fd5437101d1",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:5b30bcaecff5",
+      "reviewed_object_sha256": "90d79f5f04b755c518b5d1882129f95ffccfb840093967acc4dd607557cdfa42",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:72e5fd806ccc",
+      "reviewed_object_sha256": "523c7057ea9fd5f7efb303899a51054d48e9d2cbd86819a71f3f12c182b16c33",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:a26a48d73e20",
+      "reviewed_object_sha256": "ecd8b16f23ec715cce783427689e9293b9be8c5c5f102e1bd0f0938b418d6d42",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:a34276a5f92e",
+      "reviewed_object_sha256": "2b7316d3559bb640a610126cb5882076beeeb17177d9e8492873504bf32c3a0d",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:a4fc72bd0223",
+      "reviewed_object_sha256": "1289ad54e7eab3db5a6e23510a9eb8df6fd084fd3f63293fc9a24d3981d12150",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:a581dae43931",
+      "reviewed_object_sha256": "d5780f28a31b81c0fb10d122cb3efc9c8ea503834c1c0d86e6065fda4709c553",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:c4e0ca06654e",
+      "reviewed_object_sha256": "aaa1a3b20fc2da5e4232a588bd8ce0955f7c4f4495cbf3f61d30999c694799ad",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:cd95a9b7bce4",
+      "reviewed_object_sha256": "c9289bb31491b00978abf079551b19887c07c192824cfceacdfa238bf416d195",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:cf94a8c7c91f",
+      "reviewed_object_sha256": "34ffeda47a45c97b1bb75f932a5d647258096c331cd5dc8f78ae3d122142992a",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:e0b58e304d03",
+      "reviewed_object_sha256": "4d5110461ed6f21b2466b409cf02c2bece52cd1e48be3f740dd16c673e15f8be",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:e89553b274d8",
+      "reviewed_object_sha256": "dcdccc6e5faa1e56129930875f23624301c119e01ad1c7639f542e1c0113a47d",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:e9e3b3477f07",
+      "reviewed_object_sha256": "8f96e1ca9bf0bead2a313a4e36b8b3d2aa28cc5e2c0318da569ef3ed2adc7452",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:eb537e3ab5d9",
+      "reviewed_object_sha256": "64888a695b277c1fac09334d7120df20dabe03153c4ecbac0783058bc338c56d",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:f23f963991dc",
+      "reviewed_object_sha256": "6e4e65eb1ed753f52369b53de4cb7b20a25af05d6bbdf3e3c1850bd4b3a80fe1",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:enchanted-library:ffc6bd5b970e",
+      "reviewed_object_sha256": "3ced15a3e282d24f0469414e31022a277876894db4f3b381d1c40e8a95a59dd1",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:griffin-riders-escape:647de60e802c",
+      "reviewed_object_sha256": "f5abb1a702c102c1c67bbfa796ce8a88e48566647d404517503f20baa3944b65",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:griffin-riders-escape:8c3c31c1d38c",
+      "reviewed_object_sha256": "d8f213cd3d7a14497d24cc02b80296a414a105a47a19b2168927142d3208a9cc",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:griffin-riders-escape:970bf0efc1e0",
+      "reviewed_object_sha256": "e333109db3ae6da2c65c47e1dedd374dfb0cfcfb91cc7ad9b0207c1e9c5dfae2",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:griffin-riders-escape:a068d101de3c",
+      "reviewed_object_sha256": "84f05e1eef396534873844f8435e6e505a717f38930d729f4c8b532d1f2a0697",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:griffin-riders-escape:a3688a9cb160",
+      "reviewed_object_sha256": "d4f5244d81b93295dd2350e3b7d6913b314c103a4b2e05075ea769d5e8ca7027",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:griffin-riders-escape:a8927f38537d",
+      "reviewed_object_sha256": "e5075559aa8538ad393f1643f422dbf6a6679f2111ce6d591d7ae48a8f2f5669",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:griffin-riders-escape:aa9b7950789c",
+      "reviewed_object_sha256": "f35412e253e154c09fa91baaf945e5ccb580d0b4fef691cfbef7d7637d4b95fb",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:griffin-riders-escape:b0103838c679",
+      "reviewed_object_sha256": "9398e313214216a5ff06fb16e5011d8a6e1be64311faf413bf67dd3471706771",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:griffin-riders-escape:bb85bf16409e",
+      "reviewed_object_sha256": "d2e4f0aaf6be8b105402a4ae8a8f3091d6662106e2864a7ac168a19156e01a2b",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:griffin-riders-escape:e24f7bfe5a62",
+      "reviewed_object_sha256": "781166f0d24838ae587144708becc0589d258845c5924a5dfdd65156d23eed1c",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:griffin-riders-escape:f8c2ad424a70",
+      "reviewed_object_sha256": "4ba1e6be7fe27fcc73eacecfbf8d3c9dc1ee5788cd33b06796486c0f27e997f2",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:griffin-sky-joust:95cb9b4f84ce",
+      "reviewed_object_sha256": "9a2de698b7f4a87986637253edb0fa608ab2e01d66b4048d4fed36b82d017062",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:gryphon-patrol:95cb9b4f84ce",
+      "reviewed_object_sha256": "8cd25940442fe2fd0a050845c9ecba7abc1c5ae5b410dc372922ca799c15da32",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:labyrinth-goblin-king:95cb9b4f84ce",
+      "reviewed_object_sha256": "28c2d054ed3f23a9c7c88ff47042d694b3f747c5e11abbeb294a89ce87e1d0f0",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:001530f3134c",
+      "reviewed_object_sha256": "cd24fd4e89d23a72cf227ff4a7b62719234ea453b40d6ce040f43dc19fcc7892",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:0ec30b1231d0",
+      "reviewed_object_sha256": "b8a514d1d6b30f8c7770e3cd8b9f9e0f9ff15e2192bd80a06dfe5142dcb4ff23",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:112a66c5086b",
+      "reviewed_object_sha256": "6009dcf96c2e6c9436d61a93df32391732d8594510f23d9efd4d7f8530eeed7a",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:2140cba96601",
+      "reviewed_object_sha256": "2102a4061c96fc230a90b8f27a3dcb2fe8a5b462464b427382bf87d548fcb9cf",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:2433b7807cc9",
+      "reviewed_object_sha256": "0c4f7d5be2783dc0dfd6022cceebb91c0c5ccff9f1ff3a8a4b512aff78690310",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:25968741a223",
+      "reviewed_object_sha256": "6dcd185fc1332d3309a356ec6702310fbd6d0a30410da90c96726055ce50b6da",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:29d4d6f8dcb3",
+      "reviewed_object_sha256": "81388a21bc0a9589b1466d2f953608334cdbbcc3c677226257c6407148dafa7a",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:367c35041ca1",
+      "reviewed_object_sha256": "eb601750bd3634f08da6b5203bf07e4398bffdc9a7eaa2159ab1807d3c3174db",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:3ae126ddd414",
+      "reviewed_object_sha256": "158c3e3dc52dc2d0f034ea0970a14b21a81fbf5430ee584a4a2c59778caf079b",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:3b7702e08586",
+      "reviewed_object_sha256": "a605643d7315d43c45640bb0b257aa83570a140c6ce219ff56c2f9e4d660956e",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:3f79e3b55f2d",
+      "reviewed_object_sha256": "7bebb9e06a1b4ddc75e1dd5b802658660be34a5a365893d42413b114b3a072cc",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:4152e7132851",
+      "reviewed_object_sha256": "e9732a3458dd7f76ca3df5358203dfd66107c0e9a74105e7c88ad025e6327b8c",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:43680dd92338",
+      "reviewed_object_sha256": "3d8f63c79b60d11eee1b569d7f090d938418004aa423e449761e4e00fa8660aa",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:446530e98db3",
+      "reviewed_object_sha256": "f41fc7d223fd82b9763fc15b0a28db95d52546ece5c87805fc8a5ccf502e18ef",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:46614be67091",
+      "reviewed_object_sha256": "f4c11ab7b4b8024b4ae4c82c9e2410a635087aeac3783528f4ee94bdb0efab16",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:48f91fb28d0d",
+      "reviewed_object_sha256": "77080d8efae4ee5010422f4f22aca925b1324e8d64f523bc87e81f3c55d46912",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:4c7a47108f19",
+      "reviewed_object_sha256": "5c6861c23d42a456cc75c6b0480d4e6e65a9d0a67b445a97ee6ff36f4e41e552",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:527a47b868ed",
+      "reviewed_object_sha256": "cac372b1c220e79e1f6e4e6554444cbd9b6253fbb027fe838e1543edcc2abec8",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:5b82d716d7f7",
+      "reviewed_object_sha256": "156f4a62132bd2d28d60048788eedca877f8619b5ba62a23fd34a61b6502e6cf",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:5df8b576036c",
+      "reviewed_object_sha256": "9795319dee1b2e13fcc454667320882542eeed40d57f726bb053ab8114b13342",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:6b5d7f419b66",
+      "reviewed_object_sha256": "7b97ba5b04d03e5bb356b41057f9e43cbce1811b0032c0b2fd25996d98991020",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:76f0f27c1cf9",
+      "reviewed_object_sha256": "daf62e1761f7c83d9fd2c9f4908168e11b8345eb2500afd7c6a6fc08f7dea26c",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:7a7aee4fa221",
+      "reviewed_object_sha256": "46ece356ced2148b2b91a3130f7bc58eaf778b2ee6086dea906d2473ec5a4ae2",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:7aa725b701ec",
+      "reviewed_object_sha256": "568504df11da5edf245b9e6d2e613aa1ca400dfad827eea5af98781ecba56af1",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:7fb6c61e6acf",
+      "reviewed_object_sha256": "a733e1f1bbca7799cd35ac127cb6c3b2e4f40d7de59e62a2abd3db1bc297f3e3",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:912406ad564a",
+      "reviewed_object_sha256": "b9cee8a2ecbea2ea7f408446320a6e561c52f966d2431f67fc0c23a0249a57e9",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:99f810ab19f5",
+      "reviewed_object_sha256": "59269a49ffdd71aabc50868ebdedae76b2900ccf17785f488dd7a26cd7dc3d40",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:9f7fdd91f7db",
+      "reviewed_object_sha256": "926c76d25dfc9e936ce2ebda75e7ffa5738e4e8bf2e4aed30a1f043ba5b86092",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:a26cc668348b",
+      "reviewed_object_sha256": "3ee6beaa733c90fba83c596a406c6dfb89ab65cf855ca3c8e0aae7e904b4adb8",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:a496513de748",
+      "reviewed_object_sha256": "1acf7ac7593da7a5472ff592e71664d34e7abc4b84bb646692909211c25a155e",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:a7b48cd5cc10",
+      "reviewed_object_sha256": "3c9d44fe9b23b21e93c8be0caba64d270ab3eb2ac0cae22edbd3152efc670074",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:ae5538558afc",
+      "reviewed_object_sha256": "bdfb598d6528790774d3dcfb40252073e1ee1c46f5a83a154f677796bbe1e1e1",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:bb58195e4e04",
+      "reviewed_object_sha256": "9efdbfebb55efdb2df12711181d036a75c031f5a09ea5f7da84c5535dc3ce7f6",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:bb590f819fd5",
+      "reviewed_object_sha256": "25fea655d21112a7367e44bedb9c31c3a2ee3e267dff8a15d1532b68c2bbe990",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:ca8851e7cdc3",
+      "reviewed_object_sha256": "6583ac28b678eca1e9f91a6feff0768842a495aa5b50d42f7f45bef90c504c90",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:ded5744b7151",
+      "reviewed_object_sha256": "ff1c07aea47813fdacd0eb7fbd3564a7f8aa7660c4e32e6c97e12b072293d785",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:df9d3cfdb314",
+      "reviewed_object_sha256": "a67b687a578b1f5425915a47a5295ffde6e1fc67da21bfcc160c1afa544f18a0",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:e2e18710f6aa",
+      "reviewed_object_sha256": "ad9bedde3bc67616c561539be7810091eccc30953e80e678a746f8e4b838b0ac",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:f183d4b2e699",
+      "reviewed_object_sha256": "a633306a00d53466647de17230f4b249c94fd094a6bd88c10f43caa2d0f51416",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:f1fdb4676fd0",
+      "reviewed_object_sha256": "65dd4595542c8479d6c231a20d3eeb59d4d46e3dc1a5a70a8fd315ec5a049825",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:magic-defense:fcc6a7f0d906",
+      "reviewed_object_sha256": "0b3609d905170b7f1e02bad781ac4800b20a33b80010b6abbad3a1b4de85ef94",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:paladins-twin-soul:95cb9b4f84ce",
+      "reviewed_object_sha256": "9d91822b7adb5e62a66de081be0d3d7dfd836de3e1fceb0f63ac59f75d84de41",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:potion-rush:0f7725ca9a5f",
+      "reviewed_object_sha256": "e9907f8e0cb8a7e7bbf60c6f904f70de6dcc4f7b76d63f214a1d74bcaff6fea8",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:potion-rush:1f8e140ec5e6",
+      "reviewed_object_sha256": "7a07d1c652755dbf273e7c81081014b144875aedc0dda104118a995b3dc6215f",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:potion-rush:23ee6e50e593",
+      "reviewed_object_sha256": "fdbc23a01e581817d168e15d1c8139f2285b4d622eb17da769ee236ab4cbe13b",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:potion-rush:42554b490997",
+      "reviewed_object_sha256": "ced581ebad7eebd348942fe8b77e891d0335a29f6899ffbcdccdc5b4f8e47522",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:potion-rush:457f01bc39de",
+      "reviewed_object_sha256": "9f262183d5322911fa27de812024f82244cf1eefba66552fa0d42a2a9ff0d67e",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:potion-rush:45969880ce54",
+      "reviewed_object_sha256": "14c079d74d00a2d90f59bb5967d0b036841a6ccdaa8b7a35ebd5747f8ed0f92d",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:potion-rush:53463c8b76a3",
+      "reviewed_object_sha256": "53ea896ce072317751259b85f44cd7f11599d91d24b3f6fc433beb5d920a965c",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:potion-rush:7283ed777dfa",
+      "reviewed_object_sha256": "22fcd0f58c5781c6b2ab6a8f92bb917d69bddfde4b37cd0b664e47230cccaa3f",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:potion-rush:7a6a802362f0",
+      "reviewed_object_sha256": "52308305621f6939cc6ac6ba78016fb2db5202a24d2dcb38351b9c227f903118",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:potion-rush:a5b14300b08a",
+      "reviewed_object_sha256": "35c22bc0832d90ad355c7b3cb769e6900951be726bd5f60a313e9c396610f4b1",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:potion-rush:b1f18249300f",
+      "reviewed_object_sha256": "1c30ed5a4b837eecf61084ed47c48b20257d37f05de772674bf5ebe080169975",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:potion-rush:b55fbf35dcdf",
+      "reviewed_object_sha256": "7b26c6847ff36cb74dd1b9f2ac87306f13733675871bb4697b3895bbead019ac",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:potion-rush:b7bf2c44590c",
+      "reviewed_object_sha256": "186eb7af7e6b26a0cb7cf1bb97f3840577c7a8dad6d1e48e7c3eaa2daca49924",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:potion-rush:c756aee10dc4",
+      "reviewed_object_sha256": "5635740d0d77e81b9aa551797123b90e2e1f953fb70ed6d143f615d1f22976d0",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:realm-carver:95cb9b4f84ce",
+      "reviewed_object_sha256": "6d7e8da5c9f90f75a4b76329d111a55b117b0c43fa103ab00b2872932ed6d718",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:0136499f8bce",
+      "reviewed_object_sha256": "9ba13184193e004d319f39f158205120207b7f530739f6e964722c485eb339d4",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:0179e9b7816b",
+      "reviewed_object_sha256": "eb80c5f378769b27988ad86bed5a40917c3c88870e662b41f1511bed09fd0a6b",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:04b67302412c",
+      "reviewed_object_sha256": "29ee6e5a83f8c1e94ec97ad59e160d857710e8d58f070c92fc9fe6c3caf4decd",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:066d950c5c83",
+      "reviewed_object_sha256": "aa7d3e0431282b4de9d4a46dea8931f56fb555235d48444b7f1cf12223d8ad47",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:079e2a58e074",
+      "reviewed_object_sha256": "f4938e6f8b4c55825372d0e08dbebb47c018f107ae061ed78648259c843016bd",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:0a5a9bc398ed",
+      "reviewed_object_sha256": "6d4e658148dee661a423b2d13c99b74f4d1293d93e174962945f4e5b302303e6",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:0b996e638d0e",
+      "reviewed_object_sha256": "86d51325de67d040637aace18a3473f6abd5630fa11e980e092543990105d5b0",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:0e61b74c6223",
+      "reviewed_object_sha256": "a43e8fef0d96f92edcae7bd0c102a4a0c9e4df39701047fa8044f654515904c7",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:0ec221daf929",
+      "reviewed_object_sha256": "c46c252561421d00335328eddc2de86904336b1ba02e42ac7d9aba2c408ef1ee",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:10f0d1af5b3d",
+      "reviewed_object_sha256": "3661dd813d158df900c9683107bd41edb2c7d800a3b7158375403eba2c7365e1",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:15638d7aa798",
+      "reviewed_object_sha256": "6b4a90d0e08a88ae3283c57768251f63bba9339a5d577185abaebd85e83e8a39",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:1769dc8fa565",
+      "reviewed_object_sha256": "7682595c28158654e8db924976c622d08624a19d148b1b8559124180452c39da",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:1cd6ebd8f305",
+      "reviewed_object_sha256": "a127995a4f40068913d3b85580f2cdcebac2f30b2cec7ffea6cef13eb90918a8",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:1d05acf45488",
+      "reviewed_object_sha256": "5a050c17a1dec0efb8a58afd53288a4a69818a5eb0ad40fa67d09b02314a9dd7",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:224015b5b5b4",
+      "reviewed_object_sha256": "420cefa23df4aeeb98a16edc7f1a80e14ddf60a1254382451f3fa3dbb82758cd",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:228a58a32adf",
+      "reviewed_object_sha256": "ec79eaad0bfbc22daeed297a03972c5a681434642ed0f88e416cd57cd7094c85",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:23654333b100",
+      "reviewed_object_sha256": "c1f6f8596ec6c52123128570f06ca8064bf0b3f96881a37846ee74cac5a74e5e",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:261f31879462",
+      "reviewed_object_sha256": "82fafaaaffa848dfa3a253d26dfccf186968c1b746321194c2e7515bd8f7b0ef",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:267cfb837454",
+      "reviewed_object_sha256": "1beac21f5e3fee06acfe80e628da3b3ab28245388391aba6f0b5df7eb07a44ba",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:2ffbc055bf28",
+      "reviewed_object_sha256": "0aa497b351a1f6fbde6f05487c6f0c53c7e39d87037887058ee17d0262f02d4c",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:305c70190fdb",
+      "reviewed_object_sha256": "ddba5fa5248f1a679e237038c258a7f69635322f819e3550fce42422cb076a92",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:30b55a64ef3a",
+      "reviewed_object_sha256": "12111a63815290ba4d9fbb1621abda60c8a62caba9c0ca4bff23b4a8d967b120",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:37f59e40124b",
+      "reviewed_object_sha256": "ffa25eac0569c9dd2cc16ffee326b6ca0204b147540a900b4afa519282145e89",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:42c31c72af1a",
+      "reviewed_object_sha256": "f760aeafb430d02fa8b221eb63bf556831d8432c7afa015951d004592ac2d5a1",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:4e4a7766f58e",
+      "reviewed_object_sha256": "b81532a9706cbd7f455a7ede909cec5dbbd5532d3dfe1bb45c925706a9cee093",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:53843b44c9bf",
+      "reviewed_object_sha256": "afb90ef334ecbb53cdfef56256dca208d411e00486d9480a04ba606fd6713036",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:54d21bbde064",
+      "reviewed_object_sha256": "379199117cba2ea800140b8f46f5545e799d9961476f8dbfa8e9777e69ba6e6c",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:5ebd5a144570",
+      "reviewed_object_sha256": "6cbfdb9fc92859db8110dd981ad31ac91f5abd801a87ebaae8f34f3025cb00c3",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:642d6e81b298",
+      "reviewed_object_sha256": "903eb1b043b4f92a65fc5da9fd39d60811b76d80cf5458673b1c4a398bcb0e91",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:667b31340b61",
+      "reviewed_object_sha256": "ace945b232d07282e009a627a4f93df4e2a201c328fa63c0755928e669a12f44",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:6887b0ecbaf5",
+      "reviewed_object_sha256": "1b0ee108bafbda1caace0a44cde165db7bdf313fb4cebe7c2ca0e5036896acb8",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:6c25b0902e9b",
+      "reviewed_object_sha256": "27e6dc1e05d0fddae6f5a5aa1744a27b76a8970d1f4439471d73db7a59d6013c",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:6dad38e49739",
+      "reviewed_object_sha256": "060eef7ae8ffcaff7d568c834d4936894bfe857e428194d5e4c804f091d4111b",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:6ee4489f7ee3",
+      "reviewed_object_sha256": "b1f8112d1a6a0d929df5a8823612e7a7f3a2e9ce5c0b8bd17814996840176482",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:724a17d16c43",
+      "reviewed_object_sha256": "37f8229328458242a569f45f0a99413268eca1dff8007cb6e0ef7beae74e06e2",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:7437f68bbfdc",
+      "reviewed_object_sha256": "de458de110a3c14e13e2c47affd9c5be5fa666a0429c3569647b57dbdfa11149",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:75ae6b623d9e",
+      "reviewed_object_sha256": "591e4c6dc64b51c226128e35acd625689036a838e77f85c524381570a534b5d5",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:7947ba577779",
+      "reviewed_object_sha256": "e50cad93e4387fdf0cb317a03531833ee2a4cde1f2474f95f6da8d6b39fb30bf",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:7a065336464e",
+      "reviewed_object_sha256": "6b69a39a4e7d60b1649458b0e37af80d12a879f8d319a8222e14256852030cb9",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:7ab7e6b79b55",
+      "reviewed_object_sha256": "1cde8571dd8a1ed736569c8403e4ddeb7fcb39f03304aa059ea1c729c9cc9f20",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:7f54e6f04a29",
+      "reviewed_object_sha256": "2e50e698fd6564527c223040388828197db39c7bb81e7ea95913b26118b3fef3",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:80408db65c84",
+      "reviewed_object_sha256": "ca397b04613de1fcde199e730b932a5e8a8f3e4301fb65231ee30fc6d450a098",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:8bf0f9143110",
+      "reviewed_object_sha256": "4646899146dce252a227131b9ef562d5999236b887705018fe4628706ad1761f",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:8cd94f3441d7",
+      "reviewed_object_sha256": "e0c99486ed1af891c4975d5f1a1fc73c2cc902f4613fbce092db0dc0dc461d9b",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:912493184fe4",
+      "reviewed_object_sha256": "407ae696e54d8108a16e781b0b95a073cd51aaacb7d0b955067a046d5c5e1516",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:92e9a0da9b88",
+      "reviewed_object_sha256": "5184fe571df162f5f5f95b8d43d33441d507871dbe3b3bdac3a66263784882cd",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:95cb9b4f84ce",
+      "reviewed_object_sha256": "fb9ed394d5689d30e10326ecde54a70496da4a74827ba2ec412fc918e460e63e",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:973b02f1d995",
+      "reviewed_object_sha256": "93651e92eae9bd577f29e593e275c106bf3617d0354314b6648c31babe214693",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:9d4f384b61c3",
+      "reviewed_object_sha256": "ce723bc0d1827d0156b09dd5312f1fe05432bc97816daef744cf6f9bd40cf400",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:a734f573b10c",
+      "reviewed_object_sha256": "c05c51b94462bd5b8fa098f9612c70c4bcc0e82b83e8ad36a94132130336eeb9",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:b002aecb8951",
+      "reviewed_object_sha256": "94be9517ba867367fcaac1971cb03c75cfb3d7fdb58c6a8129b24aea90a941c1",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:b6d7f3f0e0a7",
+      "reviewed_object_sha256": "f355b74c5e744603e509d0a6771cde7c220f9664a7a428ac9bd3ecd611b8a872",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:b896166ca953",
+      "reviewed_object_sha256": "ecc8e552ead2b546670a382f0ba1aa85c06a83e934596bb628c5a7b35d9fc5d4",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:b933442c130d",
+      "reviewed_object_sha256": "83cb1c6312b808d51068e300de00d5f2113d9b16e36a0fad2ccff5522798d516",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:bd27cc7daad7",
+      "reviewed_object_sha256": "0ebd50fbf0ca6fc01e7650d06308fea48db4cf2d7487b6716b28374950d9cdb0",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:bda80d2b0910",
+      "reviewed_object_sha256": "e02e46c8fe06e1ad87b3478ecc4006a0a602abab6edc267031ab5773733bd2d9",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:bfa6ca7452b5",
+      "reviewed_object_sha256": "d539502ec598d76b9cded150726a7065749ed2ba722e8bcd86a3847349ca3a63",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:c02be45a1731",
+      "reviewed_object_sha256": "8e5d32561633a87971dbb77b889a85d6fcdc78bce197339666865b08704c1108",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:c4462f1742e5",
+      "reviewed_object_sha256": "4bb895e800f4c8e5eb9f768ee75764baf1ac81783c612245de0bcf3fc05aee79",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:ca890afc4879",
+      "reviewed_object_sha256": "7d8d48c083acdb10239a034abdee2b69638f58ea267ba49c34f46dd1e0c806b2",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:ccf03b6dd879",
+      "reviewed_object_sha256": "e52a43d7c6c3820fa253ea129df20d143bb76e9bb587d5e40d92391f10192e75",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:d3810e605085",
+      "reviewed_object_sha256": "0a99a9b32a6c97093aeb0cef7f6bdbe7c5152a3c015c9330596eaab6ba851b88",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:d9b8144dad7c",
+      "reviewed_object_sha256": "c36139f145dd1298645d1d618f815ba8b3ba5d5b55cbb1aad8e162bde055f4fc",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:e0fe986c6325",
+      "reviewed_object_sha256": "70234ab5c96d297eee51dd2b1c8afb9b0daa3b0812e43e5929676fca9bd33df4",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:e1735fc8847a",
+      "reviewed_object_sha256": "0912b7981bd0e137aa876de3fbf104181488ba8694b7e8649ee131290617ba24",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:e4bdc2944ea9",
+      "reviewed_object_sha256": "35d98115ce2f7225c6e80713091f013f873c9aa603b4135d8a32c313ebe1fc76",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:ebe270c54b16",
+      "reviewed_object_sha256": "3aa2de8fa6d19a62bf2193aa37d4c53a5638639649e395f81a3dde76f53bcf94",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:ec39ebc4c174",
+      "reviewed_object_sha256": "d341829fe537ab005011f94e356f46025c54a6078c2a4eea5a94638175c4963b",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:ecb54fb4de18",
+      "reviewed_object_sha256": "c46bdae879168afa351d812ce8553011dd5eac23ee84d9f5fd989cd9886b8374",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:eecc67778f5e",
+      "reviewed_object_sha256": "82576ab9578af4f0cb5c4646ccc9b165a5ef57af07f2ef90efe40c33d4066ca5",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:f772a19f9974",
+      "reviewed_object_sha256": "9a33611669d497102928ff04bb6247b99510373b5321cd4229c8c7906a264e26",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:f8f0fcbaf514",
+      "reviewed_object_sha256": "25312f4be7d784c8a0cfa659f94c13e9ea5460ff5f495800bedce2cb1afff3d1",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:f994f8f6400e",
+      "reviewed_object_sha256": "033ba52971f5c98d7676bbb0edb60f4f5272712eb91f3f84d4ede5fa090d645b",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:f9985f55db0e",
+      "reviewed_object_sha256": "f0d3f51967cc9751afc5a0a66e755369e116ac9ef0d7e4e4f829b406f2393352",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rpg-battle:f9f19cd579ee",
+      "reviewed_object_sha256": "67492516dc98c101cb58f67a1f0a35d686277ebff0bc6643ffa886dd7a5440ea",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-forge-chamber:0f7725ca9a5f",
+      "reviewed_object_sha256": "552d4ff34c75be78df8c1fd03ffefd190c8bcea0df0fa7a57106d75d608b8588",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-forge-chamber:24d62396f973",
+      "reviewed_object_sha256": "82555599169266b5e9e5d9f29b066a3153cdf37b3aaf7f4d1642d9d6486bc0d6",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-forge-chamber:3a2ba87d6e32",
+      "reviewed_object_sha256": "eeb37cfb9f582e14edadb692095ea637292279def362c6b1709d2a87211d6ce3",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-forge-chamber:483e4fa05999",
+      "reviewed_object_sha256": "a90fa7f8a8a259e50106cbeaf4621446633d93487b32b9da77ffae03ed073628",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-forge-chamber:4ce977cee58a",
+      "reviewed_object_sha256": "0533c86bafb72bf8159bf79e42122f516b6d28434c1f16b8f399a01e71e147c6",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-forge-chamber:551b93613f33",
+      "reviewed_object_sha256": "70b39b8362ad812efd3be7b17079f4ff4f9e1ab4177cfaf575235f6f20b22e2a",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-forge-chamber:865f89602343",
+      "reviewed_object_sha256": "8482b06585f25843f4be5cfdac56662dd0b178d853e352db69f5e5eae9b0e41b",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-forge-chamber:965c6115d7a1",
+      "reviewed_object_sha256": "c0994fc120ea583675b6142a8a7ba30370780bcaca5254d82d2ee890a0106326",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-forge-chamber:aaeebaed132d",
+      "reviewed_object_sha256": "51ab5245ed9c33c271628179e9542e9105a4eb875c9a41f4713c5be5eee9b71e",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-forge-chamber:b791551863c7",
+      "reviewed_object_sha256": "2dc4b68767a3ddf8dae3cacef06f67e94d5ba6fe50efbd101b485ca7b9e2f59e",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-forge-chamber:d1bd963559a1",
+      "reviewed_object_sha256": "7b1be90b832338236f6864288a54c083054cb438a5b8e4c54ee9b8db9b3ce287",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-forge-chamber:e382087f2065",
+      "reviewed_object_sha256": "f122d0ffe0b7772286856f0760cec311b2cfd64d8f6f20d873acb5916ea9dc3f",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-forge-chamber:e65fac37b5d3",
+      "reviewed_object_sha256": "c5ec28e31dd156c952f399d8c29ae011a08588d85dcbf29bd962b67200313dd3",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-forge-chamber:eed1c18754a2",
+      "reviewed_object_sha256": "a20fe52bc8c3606a4da7ba69496341f168caaac52de35c59bdcedaae100f9aa5",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-match:2c68e8e5ebee",
+      "reviewed_object_sha256": "ed4b0b06b4c1cf51e6cef45e01012bb7f501f58102282cac0fd2076f02106c1e",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-match:53dc936b6413",
+      "reviewed_object_sha256": "a59d3f2428a5dbf9711362d5b43244389e69bdfb8ed578213212e515334c6b73",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-match:5b75a01913b7",
+      "reviewed_object_sha256": "ac0c810bc94ec7a542ac1575a148d47387768ee35bc56226f44b1cc7ba4f6fe9",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-match:9365a19a967c",
+      "reviewed_object_sha256": "c8b585976c8c73d376d7f0d063af25c14c3436aecf3ead2a69523157b1fde571",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-match:9788e6d35960",
+      "reviewed_object_sha256": "076a285c25c883af1f10cc65a3977de329fdd72c52b8c414caffb36aa93a3a07",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-match:aa5b98ecf87d",
+      "reviewed_object_sha256": "4a312fe17638ea08b0bfb166642d2551e40f47c05dbe7bdb408d223be87c323f",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:rune-match:f25cefe2cc57",
+      "reviewed_object_sha256": "5fb5256767bdd165d4c7e4611afc6f93a6cef3f86a1f52b90263199e2325109f",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:shadow-gate-dungeon:95cb9b4f84ce",
+      "reviewed_object_sha256": "d11c8fb716f61e229caeb1fa0f013fac80798264441ac039b0d1f6939e0f37a0",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:20626f953b57",
+      "reviewed_object_sha256": "99e520aff118354dafbe3d0941ed020a89d28e283d917ffb5b91f44f07e76de0",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:31107af3f262",
+      "reviewed_object_sha256": "11da4a2029b2a4c4ad777bd67739deb58da7150e4ae7db5c04cc590d99ce7ccd",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:3327207ba3c4",
+      "reviewed_object_sha256": "06331dff06510933c49a372a2a30bd76de02df38b51363bf856fd9b930b7e757",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:40c80a13cc18",
+      "reviewed_object_sha256": "d0f6eaf84093938d1eab630010e3d0abf48449c8ce7f14eb74148bc890f9aa30",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:42ba8b4b4022",
+      "reviewed_object_sha256": "9922e8f59a2733eaabd3c956336ecf2dde7a5eddc40504762b07f010f8f77e5e",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:52c1d3e9c991",
+      "reviewed_object_sha256": "bde80ac84dedea4942c0154d874be2093ef645790bb529a8ca5c6de952382e60",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:6582948813c2",
+      "reviewed_object_sha256": "5f1f988093bfb3b092c77ca2b17083bf099ab163afa19526b62d999b41599218",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:718ccbc48076",
+      "reviewed_object_sha256": "6f64c9ab4f325797960a6f821ae1441a40bcb308fadfd721c2ede00955e4343e",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:7a5d3f01cfd1",
+      "reviewed_object_sha256": "499336e86e9049c230ef560704fa3bc29f682ff64ce9e7b17db9d4ea8b9e2fe9",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:885f1f2adfce",
+      "reviewed_object_sha256": "4e6f5d6869107a3d66f99ba96fb300aaae3677ba27a6af3624cd503ec7d8b168",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:906502d56d05",
+      "reviewed_object_sha256": "c9b385fcae65907bf7672dba5ec67a0945c777c81ec85914e9309e5984f3f689",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:a5a4387d7e15",
+      "reviewed_object_sha256": "4b4903e23db8bcbb00df7b7c2be09d4070a2ddb92ae00f39e187db52174cb085",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:b85dfec6dbf5",
+      "reviewed_object_sha256": "aa32ae07b183bb55dbcdcc8d1c52c9001d995633ffcc35144d3645e6fb364ea3",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:ca9faae98b08",
+      "reviewed_object_sha256": "6e348bd86941d7866477b461bf213231d5cf446edf9412ad30a3bc279f830bb1",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:e1d5d737a5e3",
+      "reviewed_object_sha256": "b7b7c971f4f0dc50ceebb8046f5c48765f9ada3bfe0911636cdb961d5da86312",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:e2ad6383e25a",
+      "reviewed_object_sha256": "a4a0e67111a1bad9d381ba908adebac3140a670eb4bdc5815ab560965b960601",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:e58480b7333b",
+      "reviewed_object_sha256": "837dd15130fa4e34c67b02b1912853915b29f25612ee842ecfa9064b38e065fe",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:sorcerer-ziggurat:efe902c35c95",
+      "reviewed_object_sha256": "3c425856288f8fb21fd419d362ddaf62f160bb89b4da687be73e8bd2e9c9f7a4",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:06fe0050207d",
+      "reviewed_object_sha256": "5b9324c2a3b71b3e1b66f5fba13c46680985b47e1cdc465e662b5126f43fa1df",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:0e5bb0c6a1ac",
+      "reviewed_object_sha256": "0fe29a8ab664f4f40c28a62070b104b5cf29c24749946a6090a0326c0c2fadab",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:0fe404d707e5",
+      "reviewed_object_sha256": "2fbf15a11808e2beb2c29044c56517316d9876e744362e0935eda8e8443a8253",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:18fc1ec458ef",
+      "reviewed_object_sha256": "22cd9eff8c1da226c6d3c6df42e7de7eb08f6818dede1e43798a34740108058b",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:1b7124fd84b6",
+      "reviewed_object_sha256": "2292f21b547d4e655de119d494aee92b99e6e243236b2e2f3d5453e338d3e110",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:1f7f91bb0d69",
+      "reviewed_object_sha256": "c238d691e1f7cab4abe1715bf609cc49d46923674d5b8581d024948c297e7d53",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:25c7290f1187",
+      "reviewed_object_sha256": "bfc08ec5ed775e572e248067ba44f4edec88136e3b45313e2cc01350ee7aaef5",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:295685099272",
+      "reviewed_object_sha256": "289c43b3e2d5ab496674546dce5f39c421ac42f0abb556720172897fa551280c",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:4565fbd603a2",
+      "reviewed_object_sha256": "ce1ef5b9b3c860f5db2600a2dee2484ff5ba4624c24b6867e3b19ddcca93a6df",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:4dfbf681b3f1",
+      "reviewed_object_sha256": "4a862f52acdc0763222a84577370b6b045f25163fa2d8a141577a0be0a4f097b",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:57212de80282",
+      "reviewed_object_sha256": "9a827a261aacda072a8ffd709096b75e6eb7b8ee518fbf5a28b9601240a804e8",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:60bdbc2fc00e",
+      "reviewed_object_sha256": "c2ec9b39036b68672e13f9403b65966c1f4ae90349b76479c9200ec702454d95",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:693824d017f3",
+      "reviewed_object_sha256": "c8823cef5356b1643c745b019e6baa3b8baa184f89e0275e808d4c43b9556d9c",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:6cd2c254200f",
+      "reviewed_object_sha256": "82c72120a7f022ca0db09cf689edb99b1fe59a2fbff9294110ebbbd6850293e6",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:7ea134cc9053",
+      "reviewed_object_sha256": "82c2c10a63b3c6a1057fc8d5d339d72a9593707a91bedc4dfe40ff9111b365b6",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:84cc6d4daaa8",
+      "reviewed_object_sha256": "b1216144eab261cccfbef5e7e918dec7444336fee5be8e326f8d48e7993ccb3a",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:97c8aa0f683c",
+      "reviewed_object_sha256": "726d2de9ebacecb78b0a8fbf514af4fb770d4cd1acb81ae6222bf22c225326a6",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:9840c35ef150",
+      "reviewed_object_sha256": "009fbce0a2701dfbca8cf26fd09bab8b9b9dfa514a4479519ccea56528a378ff",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:a541b0e259f2",
+      "reviewed_object_sha256": "810a8c7d33e00e8edd6bb96603ff877ab816b09ff50ceb2748e1341f059122b6",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:ace1b08acf52",
+      "reviewed_object_sha256": "a44f77c125965c01d27b6877dae7cc443e6282efcb8a8aabf0e7e68faf9b866c",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:c274999c833a",
+      "reviewed_object_sha256": "fa66f094444dafe187c41ccb4c075286fb949f301323b1d10d780ade426f1a82",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:cd17a2598264",
+      "reviewed_object_sha256": "6c4a10f009cdcff8aa8de86f45a6a6292fdf71f70f64f00160f534d1dbaaef69",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:e24f7bfe5a62",
+      "reviewed_object_sha256": "ccbf958dc6fddcf015eccc2244a2ab58ca9e0dbd9e8d0b260e56438e4a036506",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:e71eeb522369",
+      "reviewed_object_sha256": "4a12b25289f1443caf17fe33093b22d1afcaafee7a8e7f644483c376a32e2e48",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:ee863c46db2c",
+      "reviewed_object_sha256": "627019a60b4995a3ba11c8f62149ed93e020bfa8c2ee5f54d86590aaf2fd9e89",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:spellweavers-run:f98592be2a57",
+      "reviewed_object_sha256": "e96578c4b1f37f079072e29234fe5c3bcbf59956110b7832a4c7cfda40ce7cdc",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:storm-castle-tower:0ad229948baf",
+      "reviewed_object_sha256": "01b584599011a1a6e44c75ef66e787143372a12c25cf6f756175d35b38e127e9",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:storm-castle-tower:0eeca1d977d1",
+      "reviewed_object_sha256": "44dc49f2c9f29f5eeb3339f348eafcfaf06f5cfb63188793c0edcca619dbf05b",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:storm-castle-tower:1845f8a6c028",
+      "reviewed_object_sha256": "b97a9fb5df544084609b2a0d9f1301caebe0894d2ef43c4745ee2f583d322c7f",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:storm-castle-tower:2332c9f3b151",
+      "reviewed_object_sha256": "31be9f535600f4f52ba31f8fa7337516f9110138f2635f6e7d647b6608e8c4c2",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:storm-castle-tower:32b7c0628b38",
+      "reviewed_object_sha256": "8d9bf02b499c1fd18986f38a73e124828869e5198a4f15ed74cf9813b3d6b828",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:storm-castle-tower:34c3f2685cae",
+      "reviewed_object_sha256": "a0bf390160b92faa5c1f15dd7e2278e440a4aaf7eee9d0ffd84f2499ec3c13d9",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:storm-castle-tower:3ca50041e291",
+      "reviewed_object_sha256": "1adec165dcc97c8b43f1a25e7a80822291a8f199073f659b4bcb0999c6efc3b0",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:storm-castle-tower:3d40ebea8431",
+      "reviewed_object_sha256": "afa6ba522c23f1e341be76b05769d5aee931b5cc190e264b56ffc9dbf26f11ff",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:storm-castle-tower:95cb9b4f84ce",
+      "reviewed_object_sha256": "77de1e771472c1121d05042589565f3051f46ed35c588f4071bfe3f10f79d541",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:storm-castle-tower:9d6d8fb26aee",
+      "reviewed_object_sha256": "bb7525bce7ec8fae9fdbbfc469e0044afc5b148e041c9015f10f8348e621d2b6",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:storm-castle-tower:9f0ea2cae1c7",
+      "reviewed_object_sha256": "22d6e8bf1c245399078299929408df513f444ee37b1a7c5a289ff3cf39fdd73a",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:storm-castle-tower:c34cfffabb52",
+      "reviewed_object_sha256": "d36b586b89f6588c58c97a73efa470669b095252ead9061bb739cc03a0c63c54",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:storm-castle-tower:c87bb29d92eb",
+      "reviewed_object_sha256": "1d07ade7e9b9ed45a54f38b97d3bb031f74828509f28fdbb23dbd4faeb37f799",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:storm-castle-tower:dbb95646e90b",
+      "reviewed_object_sha256": "3617aae0f28278626b559b8e1603375fa493a282fd1f88d7ab3909fc1ab9202a",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:storm-castle-tower:e06e6f739c6c",
+      "reviewed_object_sha256": "e5399807f368268d04c20d375f46824ec04bcd216864700905280df83662e2db",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:storm-castle-tower:e29e9f738982",
+      "reviewed_object_sha256": "1382d79db2934a3eef9120f7163d204252ae066f0048594887c485fbb3618ef0",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:storm-castle-tower:fe45bd75f1db",
+      "reviewed_object_sha256": "adf40e9975eee582c6b3f3c3c654433e39fd3de7450a0419ec2b407ca0ccec4d",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:the-haunted-library:95cb9b4f84ce",
+      "reviewed_object_sha256": "a380d5d77c9af5a2ce82fea2be244ccd4895b6e5a0eca8df8c7a2266429cefe5",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:village-guardian:0e6e215c7c3a",
+      "reviewed_object_sha256": "37532a8c290049e5aef4d91b6d46c7258de901585299852d288ec714a6ebc37c",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:village-guardian:0f53ca376d65",
+      "reviewed_object_sha256": "7ef49459e48c92a628cba597773a58d96f2ecd8a158e770df8b8d81505d9c21e",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:village-guardian:1f7f91bb0d69",
+      "reviewed_object_sha256": "2b7e4747adc1e7e2fbb91d29d92c249fcc3da24bfb4dd253720cb72618c62de9",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:village-guardian:327b1fb2bacb",
+      "reviewed_object_sha256": "28c10e39db75653de4a6f3abe911f2fbd7f1c11d8b83788a69e21af99d84e3bf",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:village-guardian:357dec0f06c3",
+      "reviewed_object_sha256": "02c2a34f20d69a7df5249f6074e4b97d3625662bd88c48954857f77d084a73e3",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:village-guardian:81d76ef6ec19",
+      "reviewed_object_sha256": "80ba6905109c7e31ecb51b5b0bbfc3aeb28025274ccc1487c63024b9dc98c5d4",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:village-guardian:849a9a696351",
+      "reviewed_object_sha256": "db24da5c7528c973e889b5670a9312ec45bc98d5df85fe62c7ab7ff808a94a30",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:village-guardian:aa3fd6590c70",
+      "reviewed_object_sha256": "e500d6daa4105d082cfb069734db1565776751ba07a65bd09898b2649fe399a3",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:village-guardian:aa9b7950789c",
+      "reviewed_object_sha256": "496430f6b640abd5c518a9ea763320860159efbb9a245ecafd7b9e19611fc8c5",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:village-guardian:af124ea661c7",
+      "reviewed_object_sha256": "16a629c8a75d2bb11a37c5228bd52ecdb765340ed79756a9a797c621d1d36238",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:village-guardian:b0437f87eb50",
+      "reviewed_object_sha256": "da858430bf5607eac490e3e5651f03760a4acc4b6bfd18814141e7cd04142345",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:village-guardian:c405fea1bd80",
+      "reviewed_object_sha256": "daa9f58ab152f7bc0edb48df2dcf9c4e468168eb5b4ac96a5612c5aedcd8d918",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:village-guardian:eabaa443b525",
+      "reviewed_object_sha256": "e935022926746150820e5c664439cfb0f21546127a728d28401eed3773125b6e",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:wizard-vs-zombie:599acae90958",
+      "reviewed_object_sha256": "35b058dbfca7f3a4f22a1bb4879605b6bf3a6bea14f83619155eedc17d4f4428",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:wizard-vs-zombie:8f56504eb4f2",
+      "reviewed_object_sha256": "5c7f4c7036aaf329efe471f1afa757b870713ef9a56b7f0556607e331006bc42",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:wizard-vs-zombie:95cb9b4f84ce",
+      "reviewed_object_sha256": "dce60152532158fe8348d9a9dc13cdb2b925c3e592880a0e129edcb310d7e256",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:wizard-vs-zombie:aa9b7950789c",
+      "reviewed_object_sha256": "e081269faa0f4cb19d9fc2fc019752f718daa75c2eecf098c0edb00084aaf077",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:wizard-vs-zombie:abd4523d2c1e",
+      "reviewed_object_sha256": "dec3d95cbd5f1f89cb1da3a1a6defbc6d70584e50f69ef64f2dc8398048ec735",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:wizard-vs-zombie:c403120c6342",
+      "reviewed_object_sha256": "67de28bbfbbd895c9a2ba499dbb936c46e35a5b988bb0615a8bed589cf58e553",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:wizard-vs-zombie:ed1b7ae68e2e",
+      "reviewed_object_sha256": "1a292af1ced0b1d179d3cf6839e49924ec4a59425649318bedb6c5d58f19da10",
+      "verdict": "accept_blocked_contract"
+    },
+    {
+      "contract_id": "responsive:wizard-vs-zombie:f995ccc9a8f3",
+      "reviewed_object_sha256": "0999326bd74d0f0b3fcf870bed6dcab21bdce1bf3e53e08da419ccac07b3918c",
+      "verdict": "accept_blocked_contract"
+    }
+  ],
+  "reviewer_role": "responsive-domain-reviewer",
+  "sampling": "none-exhaustive",
+  "schema_version": "apk-t9-phase3-independent-responsive-review.v1",
+  "status": "review-pass-no-unresolved-critical-high-medium",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+}

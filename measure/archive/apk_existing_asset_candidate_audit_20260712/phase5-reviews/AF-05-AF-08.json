@@ -1,0 +1,114 @@
+{
+  "schema_version": "apk-asset-forensics.phase5-fresh-independent-adversarial-review.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": 5,
+  "role": "fresh-independent-adversarial-reviewer",
+  "review_scope": {
+    "batch_ids": ["AF-05", "AF-06", "AF-07", "AF-08"],
+    "reviewed_report_records": 144,
+    "reviewed_manifest_entries": 144,
+    "reviewed_hash_groups": 75,
+    "reviewed_source_artifacts": {
+      "per_batch": 7,
+      "total": 28,
+      "names": [
+        "mechanical-metadata.json",
+        "caller-inventory.json",
+        "provenance-audit.json",
+        "inspection-source-manifest.json",
+        "inspection-records.json",
+        "phase4-path-usage-joins.json",
+        "phase4-group-rollup.json"
+      ]
+    }
+  },
+  "input_bindings": {
+    "phase_acceptances": {
+      "phase0-input-freeze-v1.json": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+      "phase1-root-acceptance.json": "2b30be13c8c0f6b7d1d404489c6058b48b6839f58d5ae2ce84b67f9d6a1a6d61",
+      "phase2-root-acceptance.json": "461c1d4f26afa512d1e6266384005b019ab0428a3cc508046675feb9aef35ed1",
+      "phase3-root-acceptance.json": "e855e7e50eba21fa9614719472f75179b7db9e7fd3d9756373d7bbd39b12a579",
+      "phase4-root-acceptance.json": "af708fe63bd10e4508809446e5e2420601cfd8e5e04601db41d32b4be33e53cd"
+    },
+    "phase5_publication": {
+      "generator": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/generate_phase5_candidate_report.py",
+        "sha256": "0431d515e85f5fbcdf1aecfbb79a345d2272add8fe3f3fa95e2e3e508ab8a9d0"
+      },
+      "report": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-candidate-report-v1.json",
+        "sha256": "ad7bbe10e513fabf1cceb2893833c8f983d4b429f3a5b503b53edf028bb04f47"
+      },
+      "manifest": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-candidate-manifest-non-consumable-v1.json",
+        "sha256": "c5626db8afdf357feda20637c8bcacf52a391c363c2acf0d9de1cd0561c330be"
+      },
+      "producer_receipt": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase5/report-manifest-producer.json",
+        "sha256": "fe9588b3df7777cffd257cfe47e32d0b3cd4f8d8fcf80c4764210aca7b13466e"
+      },
+      "contract_test": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5_contract_test.py",
+        "sha256": "33c561d830eb07ad5029d48dd83b30808305756e348a77833c037d45c8ae0e45"
+      },
+      "fixture_manifest": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-fixture-manifest-v1.json",
+        "sha256": "e7949ee4cc63fddf142106d070fd8b6c417632fcf149b81180aae4c7f9da8eaf"
+      },
+      "truth_test_report": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-contract-test-report.json",
+        "sha256": "92baa4d133827d6fce8a8873a10e258e08d547e112bdf826216159d5f25a497e"
+      }
+    }
+  },
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": []
+  },
+  "full_record_reconciliation": {
+    "schema_variants_verified": {
+      "phase4_path_usage_joins": "AF-05..AF-08 are v2",
+      "phase4_group_rollup": "AF-05..AF-08 are v2",
+      "phase5_report": "v1",
+      "phase5_non_consumable_manifest": "v1"
+    },
+    "batch_counts": {
+      "AF-05": {"paths": 39, "hash_groups": 18, "caller_locators": 28, "usage_links": 5, "responsive_cells": 20, "dispositions": {"replace": 5, "reject": 1, "unknown": 33}},
+      "AF-06": {"paths": 35, "hash_groups": 21, "caller_locators": 62, "usage_links": 12, "responsive_cells": 28, "dispositions": {"replace": 12, "reject": 1, "unknown": 22}},
+      "AF-07": {"paths": 35, "hash_groups": 17, "caller_locators": 40, "usage_links": 8, "responsive_cells": 32, "dispositions": {"replace": 8, "reject": 0, "unknown": 27}},
+      "AF-08": {"paths": 35, "hash_groups": 19, "caller_locators": 27, "usage_links": 5, "responsive_cells": 20, "dispositions": {"replace": 5, "reject": 1, "unknown": 29}}
+    },
+    "slice_totals": {"paths": 144, "hash_groups": 75, "caller_locators": 157, "usage_links": 30, "responsive_cells": 100, "dispositions": {"replace": 30, "reject": 3, "unknown": 111}},
+    "per_record_checks": [
+      "All 144 report records and matching manifest entries were reviewed; no sampling was used.",
+      "Every record's mechanical metadata, caller inventory, provenance/license envelope, substantive inspection group, Phase 4 join, group-rollup pointer, six evidence pointers, and canonical record hash exactly resolve to the assigned batch source artifact.",
+      "All 157 caller locators resolve to the exact caller-inventory record and locator object for the same canonical path; no locator is lost or reassigned.",
+      "All 30 usage links and 100 responsive assessment cells exactly match Phase 4; all 3 priority-one records are reject plus retire.",
+      "All 144 records retain unknown/blocked provenance eligibility; no reuse, adapt, or reference permission is enabled.",
+      "All 144 records retain canonical_standard_pack_candidate_key.value=null and direct_legacy_adoption=false."
+    ]
+  },
+  "substantive_inspection_coverage": {
+    "coverage_proof": "Each report record's substantive_inspection object was resolved through its inspection-records JSON pointer, and each member path was reconciled to its hash group and inspection-source-manifest member source.",
+    "direct_visual": {"working_note_records": 42, "existing_checked_out_media_files": 42, "method": "Reviewed a temporary composite containing every AF-05..AF-08 direct-visual working-note asset."},
+    "audio": {"files_checked": 4, "method": "ffprobe decode/stream inspection", "result": "All four assigned MP3 files are decodable; durations and channel/rate metadata agree with the inspection category."},
+    "priority_one_inspections": [
+      "AF-05 potion-rush-gameplay.png: baked HUD/placeholder risk supports reject plus retire.",
+      "AF-06 archers-revenge-gameplay.png: unresolved literal localization keys/placeholder risk supports reject plus retire.",
+      "AF-08 griffin-sky-joust-cover.png: frozen 86-byte path-pointer blob is unreadable/corrupt evidence and supports reject plus retire."
+    ],
+    "frozen_byte_disclosure_verified": "The current checked-out griffin-sky-joust cover PNG differs from the frozen unreadable source bytes. The report preserves the pinned source hash and direct-unreadable inspection, makes no visual/runtime inference from current bytes, and therefore has no source-hash or inspection drift."
+  },
+  "guard_and_truth_test_verification": {
+    "non_consumable": true,
+    "consumer_guard": false,
+    "no_accepted_phase5_manifest_present": true,
+    "browser_scope": "Composite-scene only; no per-path runtime-load, provenance, license, suitability, or adoption claim is present.",
+    "live_contract_test": {"production_passed": true, "production_errors": [], "counterexamples": 18, "all_counterexamples_rejected": true},
+    "negative_cases_confirmed": ["caller loss/ownership", "source and record hash drift", "usage/P1 disposition drift", "illicit reuse/adapt/reference", "canonical T9 key", "direct legacy adoption", "consumable status", "per-path browser claim", "stale producer receipt"]
+  },
+  "final_status": "pass-pending-global-review-and-root-orchestrator-product-owner-acceptance",
+  "claims_not_made": ["root acceptance", "accepted manifest", "consumer adoption", "T9 canonical key", "direct legacy adoption", "implementation", "shipping"]
+}

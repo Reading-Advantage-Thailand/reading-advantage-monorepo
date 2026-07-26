@@ -1,0 +1,135 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-adversarial-review.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "batch_id": "AF-07",
+  "review_role": "adversarial-reviewer",
+  "reviewer_task_name": "/root/phase4_review_af07",
+  "declared_model": "gpt-5.6-sol",
+  "reasoning_effort": "xhigh",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "reviewed_at": "2026-07-24",
+  "authority_commit": "129200815cef1140e8bbcbf936eeebbc904f79f3",
+  "reviewed_output_hashes": {
+    "phase4_path_usage_joins_sha256": "aec0b97a436b6e1b85c1b71d7ec290e3f22c528f3a1e207d8d67f7eb3c31e11f",
+    "phase4_group_rollup_sha256": "a8982fb20fac425c8e432126d5bd776809ebd45c487fdf154b902f29add5f4b6",
+    "requirements_mapper_receipt_sha256": "e113bab142898cd55e8f2b6891137b5285aaffc0c1dae7e3884a03771642d249",
+    "value_verifier_sha256": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+    "preserved_generic_v1_verifier_sha256": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519",
+    "af07_versioned_v2_verifier_sha256": "174fba885907260824503708180cd4dbe2b873e06aaf8e86c4fb440c319c9956",
+    "value_report_sha256": "0d099bd4042788b8864b58e238466c72bfd2f09b625c168cee6b2d8061e7f340",
+    "v2_schema_report_sha256": "a8dae3e1dd66073f305c5ae328a397516fb6962a80143490bae38c03bb2f89f3",
+    "truth_test_receipt_sha256": "4069c5b6f5e5a46893e32b0bc206ee4221edba3c1d5c84460a2ec087cd59e8",
+    "preserved_phase2_reviewer_receipt_sha256": "7d2267d40c36e56dccdf9e8c9e7e5ea1d3dec1a07d0aed3a2788ae8680fd31e2",
+    "archived_bad_truth_receipt_sha256": "edb0645e7343304e1cc4ae0633dba9a8c5542224a9372e1a9274922afff9be65",
+    "archived_failure_note_sha256": "35e1b6f4e3c8d6720b123852db7135a2ad882f92f67122adbfeb18c20893160d"
+  },
+  "reviewed_counts": {
+    "candidate_path_records": 35,
+    "identical_hash_groups": 17,
+    "caller_locators": 40,
+    "accepted_path_usage_links": 8,
+    "scene_links": 8,
+    "non_scene_links": 0,
+    "unique_scene_usage_records": 4,
+    "unique_usage_ids": 4,
+    "responsive_assessment_cells": 32,
+    "eight_facet_cells": 32,
+    "priority1_paths": 0,
+    "dispositions": {
+      "replace": 8,
+      "reject": 0,
+      "unknown": 27
+    },
+    "reusable_paths": 0,
+    "adaptable_paths": 0,
+    "reference_allowed_paths": 0,
+    "direct_legacy_adoption_true": 0,
+    "non_null_canonical_standard_pack_keys": 0,
+    "mixed_path_specific_disposition_groups": 4,
+    "separate_catalog_locator_records": 7,
+    "catalog_records_added_to_candidate_denominator": 0,
+    "review_records": 178
+  },
+  "substantive_review": {
+    "paths_groups_callers": "All 35 frozen AF-07 candidate paths, 17 identical-hash groups, and 40 exact caller locators reconcile to the live joins, frozen scaffold, caller inventory, and group rollup. The seven catalog locator records remain count/reference-only and non-additive; catalog_locator_records_embedded is false and additive_92_path_claim is false.",
+    "links_and_sources": "All eight accepted links are scene links across four unique usage IDs. Every normalizer path, SHA-256, JSON pointer, usage ID, accepted claim ID, cited ledger path/hash/pointer, semantic-requirement source wrapper, and copied accepted-source field resolves exactly. The cited frozen source ranges visibly contain the Enchanted Library book sheet, Potion Rush cauldron and herb, and RPG Battle female hero sheet literals. No filename, folder, slug, game name, visual similarity, or identical-hash group was accepted as join proof.",
+    "recursive_schema_and_semantics": "The live v2 producer, rollup, mapper receipt, saved reports, and corrected truth receipt satisfy recursive exact-key/no-extra validation. Every one of the 35 join_status values equals its frozen scaffold value. Each of the eight link-level semantic replacement requirements has exactly the six required wrapper keys, exact source identity, exact accepted-source copy, and exact deep/order-equal path-level mirror. All 32 responsive cells have the exact four viewport/theme combinations and all eight exact facet shapes.",
+    "responsive_boundary": "All eight accepted links are scene links and therefore carry exactly four cells, totaling 32; there are zero non-scene links and zero non-scene responsive cells. Every per_path_runtime_load facet remains not_established, every theme_suitability facet remains blocked_unknown, and no cell establishes candidate-path load, responsive suitability, theme fitness, provenance, license, or adoption.",
+    "slice_priority_and_prohibitions": "The only review slice is exactly the Enchanted Library, Potion Rush, and RPG Battle three-game slice, covering all eight joined paths and all four unique usage IDs. There are no priority-1 paths. Dispositions are exactly eight replace, zero reject, and 27 unknown. Reuse, adapt, and reference are forbidden for all paths; direct legacy adoption is false; every canonical standard-pack candidate key is null and forbidden pending T9.",
+    "rollup_and_receipts": "All 17 rollup groups have exact member objects, path-specific disposition objects, nested path/caller/link/disposition counts, four mixed groups, and the current joins path plus aec0b97a... SHA-256. Every declared mapper/truth input, output, verifier, report, and fixture hash resolves to current bytes. The corrected Phase 4 truth receipt is 4069c5b6...; the bad edb0645e... receipt and 35e1b6f4... failure note remain under failed-cycles and are not active authority. The prior Phase 2 adversarial receipt remains separately preserved at 7d2267d4....",
+    "browser_boundary": "Direct inspection of the bounded composite screenshots confirms only legacy scene behavior. Enchanted Library compact is supported with required vertical scroll; wide is blocked by screenshot capture timeout and no wide-support inference is made. Potion Rush compact gameplay visibly exposes unresolved hud.served text and HUD/overlay pressure; its wide start surface is bounded-supported. RPG Battle compact and wide remain blocked on the repeated vocabulary-fetch loading loop. These composites are never candidate-path load, suitability, theme, provenance, license, or adoption proof.",
+    "direct_asset_inspection": "The four unique joined image hashes were directly inspected: a three-state enchanted book strip, a yellow-liquid cauldron still, a bundled herb still, and a nine-pose female RPG hero sheet. This corroborates the Phase 3 visible-content records only and does not elevate any responsive, provenance, license, suitability, or adoption claim."
+  },
+  "failure_chain_and_active_selection": {
+    "preserved_generic_v1": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_v2_batch_schema_contract_test.py",
+      "sha256": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519",
+      "result": "Preserved unchanged historical/generic v1 lineage; it is not selected as AF-07 authority and is not superseded or rewritten by this review."
+    },
+    "active_versioned_v2": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_v2_batch_schema_contract_test_v2.py",
+      "sha256": "174fba885907260824503708180cd4dbe2b873e06aaf8e86c4fb440c319c9956",
+      "result": "Selected AF-07 structural authority; it emitted the byte-reproduced a8dae3e1... saved report and nests the unchanged value verifier."
+    },
+    "truth_receipt_fixture_hash_typo": {
+      "preserved_note": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-07/truth-receipt-fixture-hash-typo/failure-note.json",
+      "red_receipt_sha256": "edb0645e7343304e1cc4ae0633dba9a8c5542224a9372e1a9274922afff9be65",
+      "active_truth_receipt_sha256": "4069c5b6f5e5a46893e32b0bc206ee4221edba3c1d5c84460a2ec087cd59e8",
+      "result": "The archived red receipt contained one mistyped stale-mapper fixture digest. The exact failed bytes and failure note remain non-authority; the corrected active receipt binds the unchanged Green reports and current fixture hash."
+    },
+    "active_selection": "AF-07 review authority is the live joins aec0b97a..., rollup a8982fb2..., mapper e113bab1..., unchanged value verifier feb731ce..., versioned v2 verifier 174fba88..., saved value report 0d099bd4..., saved v2 report a8dae3e1..., and corrected truth receipt 4069c5b6...."
+  },
+  "verifier_review": {
+    "value_command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_batch_contract_test.py --root \"$PWD\" --batch AF-07 --json",
+    "value_exit_code": 0,
+    "value_report_byte_reproduced": true,
+    "value_report_parsed_json_equal": true,
+    "value_test_cases": 17,
+    "value_counterexamples": 16,
+    "value_production_errors": [],
+    "v2_command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_v2_batch_schema_contract_test_v2.py --root \"$PWD\" --batch AF-07",
+    "v2_exit_code": 0,
+    "v2_report_byte_reproduced": true,
+    "v2_report_parsed_json_equal": true,
+    "v2_total_test_cases": 32,
+    "v2_structural_test_cases": 15,
+    "v2_counterexamples": 14,
+    "v2_production_errors": [],
+    "all_30_counterexamples_rejected_for_intended_codes": true,
+    "coverage": "The unchanged value verifier rejected all 16 value counterexamples and the AF-07 versioned v2 verifier rejected all 14 structural counterexamples for their published intended codes. Independent path/group/caller/link/cell/source/receipt checks corroborated the Green reports rather than treating verifier output as sole evidence."
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "stop_loss_events": [],
+  "unresolved_blocking_findings": 0,
+  "resource_usage": {
+    "candidate_paths": 35,
+    "hash_groups": 17,
+    "review_records": 178,
+    "command_invocations": 50,
+    "bytes_read": 250000000,
+    "within_ceiling": true,
+    "ceilings": {
+      "candidate_paths": 40,
+      "hash_groups": 24,
+      "review_records": 280,
+      "command_invocations": 120,
+      "bytes_read": 536870912
+    },
+    "measurement_basis": "Conservative AF-07 accounting: the required standalone value reproduction reports 113788582 bytes and the required versioned-v2 reproduction reports 116176568 bytes including its nested value invocation, totaling 229965150 exact verifier-accounted bytes; bounded routing, JSON, source-range, receipt, image, screenshot, and publication-validation reads are covered by the stated conservative total."
+  },
+  "decision": {
+    "admit": true,
+    "block": false,
+    "status": "review-pass-pending-root-acceptance",
+    "scope": "AF-07 Phase 4 batch artifacts only; not root acceptance, Phase 4 program completion, direct legacy adoption, T9 ontology authorization, production authorization, or shipping approval.",
+    "next_authority": "root-orchestrator project-and-product-owner acceptance"
+  },
+  "final_status": "review-pass-pending-root-acceptance"
+}

@@ -1,0 +1,241 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-adversarial-review.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "batch_id": "AF-01",
+  "review_role": "adversarial-reviewer",
+  "reviewer_task_name": "/root/phase4_review_af01",
+  "declared_model": "gpt-5.6-sol",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "reviewed_at": "2026-07-24",
+  "authority_commit": "84abd0e2",
+  "byte_hash_verification": {
+    "status": "pass",
+    "verified_before_substantive_review": true,
+    "bound_file_count": 28,
+    "mismatches": 0,
+    "phase4_freezes": {
+      "source_registry_sha256": "450f5ab66215178aa730e057cb28a220bfb550dfd924959a7f7f1da2eea02f9e",
+      "input_freeze_sha256": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+      "join_scaffold_sha256": "2162076fe26911a2659b7e0ef23f49398c8ebb4b5343b0ab0479c78a5d1a1de4",
+      "browser_evidence_freeze_sha256": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231"
+    },
+    "accepted_predecessors": {
+      "phase0_input_freeze_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+      "phase0_adversarial_review_v2_sha256": "80a22372921bb0433b0417ff8a5ee28ccf561d66eefc36cff1b5520320db0a05",
+      "phase1_root_acceptance_sha256": "2b30be13c8c0f6b7d1d404489c6058b48b6839f58d5ae2ce84b67f9d6a1a6d61",
+      "phase2_root_acceptance_sha256": "461c1d4f26afa512d1e6266384005b019ab0428a3cc508046675feb9aef35ed1",
+      "phase3_root_acceptance_sha256": "e855e7e50eba21fa9614719472f75179b7db9e7fd3d9756373d7bbd39b12a579"
+    }
+  },
+  "reviewed_output_hashes": {
+    "phase4_path_usage_joins_sha256": "1ac78891146b454c10c4297c152faffd9ef03b588552602fca2fff31d7156e53",
+    "phase4_group_rollup_sha256": "ae5aa3825e11301ed7bbd3008a2b4296c5635fe68076c5dae69d493b74a91599",
+    "requirements_mapper_receipt_sha256": "de668bf863ced7363ddfedac1e7be96bafda7b920cbfba254906b73e09c9fcdd",
+    "deterministic_verifier_sha256": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+    "final_test_report_sha256": "568be805d54030fdc88e8c62db841d9b83059883d188ec8369a69d02969dd21c",
+    "truth_test_receipt_sha256": "be4f0591817732a6cab33b6d5b9c4fb9e3f1c8945702e1396a8ff9d8fbd07c9f",
+    "preserved_phase2_adversarial_reviewer_receipt_sha256": "ee5d6c5c01a393316800ad456c337bfaa58a40d708655a85b22f9771e6acbfd1"
+  },
+  "deterministic_verifier": {
+    "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_batch_contract_test.py --batch AF-01 --json",
+    "exit_code": 0,
+    "production_errors": [],
+    "production_passed": true,
+    "test_cases": 17,
+    "counterexamples": 16,
+    "all_counterexamples_rejected": true,
+    "report_matches_live_run": true,
+    "sufficiency_boundary": "The deterministic verifier was rerun but was not treated as independent substantive review."
+  },
+  "reviewed_counts": {
+    "candidate_path_records": 36,
+    "identical_hash_groups": 18,
+    "caller_locators": 43,
+    "git_pinned_caller_source_files": 18,
+    "accepted_path_usage_links": 13,
+    "accepted_join_locator_literal_bindings": 30,
+    "unique_scene_usage_records": 8,
+    "responsive_assessment_cells": 52,
+    "review_slices": 2,
+    "games_touched": 4,
+    "underlying_accepted_source_artifacts": 4,
+    "priority1_paths": 0,
+    "dispositions": {
+      "replace": 13,
+      "unknown": 23,
+      "reject": 0
+    },
+    "reuse_allowed": 0,
+    "adapt_allowed": 0,
+    "reference_allowed": 0,
+    "direct_legacy_adoption_true": 0,
+    "canonical_standard_pack_keys_non_null": 0,
+    "mixed_path_specific_disposition_groups": 6,
+    "separate_global_catalog_locator_records": 7,
+    "catalog_locator_candidate_join_overlap_usage_ids": 3,
+    "catalog_records_added_to_candidate_denominator": 0,
+    "review_records": 211
+  },
+  "reviewed_set_hashes": {
+    "canonical_paths_sha256": "a6055600063ae769164be914f21f3828c597b9bbb130cd9d5e13c284341ac2a7",
+    "identical_hash_groups_sha256": "25465a0ef3c6d51a018f647992b328c297409f5971395e947f00ce545dbad4c8",
+    "caller_locator_ids_sha256": "9bac630b08950940a34498140e6d6c9237999ad5b3f35e8f1e9919d593950d0c",
+    "path_usage_links_sha256": "78bc6a8af048d2603d3b4780d43d15fd2693d7691c3083383a461bcd78942c4b",
+    "unique_scene_usage_ids_sha256": "65e92646cf125974604eb2d582f2b31866879c72b632475f2aa6ae1716fd95b3",
+    "hash_basis": "SHA-256 of the sorted identifiers joined by LF with one trailing LF."
+  },
+  "reviewed_paths": [
+    "apps/advantage-games/measure/archive/enchanted-library_20260130/metadata.json",
+    "apps/advantage-games/measure/archive/potion-rush-refinements-20260129/metadata.json",
+    "apps/advantage-games/measure/archive/rpg_battle_20260102/metadata.json",
+    "apps/advantage-games/measure/archive/spellweavers-run-20260319/metadata.json",
+    "apps/advantage-games/public/games/castle-defense/road_corner.png",
+    "apps/advantage-games/public/games/cover/cover-alchemists-synthesis.png",
+    "apps/advantage-games/public/games/dragon-flight/player-3x3-sheet-facing-camera.png",
+    "apps/advantage-games/public/games/enchanted-library/library_background.png",
+    "apps/advantage-games/public/games/enchanted-library/player_3x3_pose_sheet.png",
+    "apps/advantage-games/public/games/magic-defense/skeletons_3x3_pose_sheet.png",
+    "apps/advantage-games/public/games/potion-rush/cauldron-blue.png",
+    "apps/advantage-games/public/games/potion-rush/mushroom.png",
+    "apps/advantage-games/public/games/rune-forge-chamber/rune-forge-chamber-gameplay.png",
+    "apps/advantage-games/public/games/rune-match/runes/rune_shield_3x2_pose_sheet.png",
+    "apps/advantage-games/public/games/sentence/castle-defense/road_corner.png",
+    "apps/advantage-games/public/games/sentence/griffin-riders-escape/player-3x3-sheet.png",
+    "apps/advantage-games/public/games/sentence/potion-rush/cauldron-blue.png",
+    "apps/advantage-games/public/games/sentence/potion-rush/mushroom.png",
+    "apps/advantage-games/public/games/spellweavers-run/spellweavers-run-gameplay.png",
+    "apps/advantage-games/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-camera.png",
+    "apps/advantage-games/public/games/vocabulary/dragon-flight/projectile-boss.png",
+    "apps/advantage-games/public/games/vocabulary/dragon-flight/projectile-fireball.png",
+    "apps/advantage-games/public/games/vocabulary/enchanted-library/library_background.png",
+    "apps/advantage-games/public/games/vocabulary/enchanted-library/player_3x3_pose_sheet.png",
+    "apps/advantage-games/public/games/vocabulary/rune-match/runes/rune_shield_3x2_pose_sheet.png",
+    "apps/advantage-games/public/sounds/angry-grunt.mp3",
+    "apps/advantage-games/public/vibe-coding-poster.jpg",
+    "apps/reading-advantage/public/games/sentence/castle-defense/road_corner.png",
+    "apps/reading-advantage/public/games/sentence/potion-rush/cauldron-blue.png",
+    "apps/reading-advantage/public/games/sentence/potion-rush/mushroom.png",
+    "apps/reading-advantage/public/games/sounds/angry-grunt.mp3",
+    "apps/reading-advantage/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-camera.png",
+    "apps/reading-advantage/public/games/vocabulary/enchanted-library/library_background.png",
+    "apps/reading-advantage/public/games/vocabulary/enchanted-library/player_3x3_pose_sheet.png",
+    "apps/reading-advantage/public/games/vocabulary/magic-defense/skeletons_3x3_pose_sheet.png",
+    "apps/reading-advantage/public/games/vocabulary/rune-match/runes/rune_shield_3x2_pose_sheet.png"
+  ],
+  "reviewed_identical_hash_groups": [
+    "sha256:00a88649680edba33079e5a6e4fb604ca85945229c762dfa1c0fb1da978c60fb",
+    "sha256:0173afee01656c45d538b4361af57799b3ce21a6f5600cdb99738dd8ae38324f",
+    "sha256:01a78cdd2f65d45c96090018039271ea9263ffabdc82594041c7262e3ca4dc51",
+    "sha256:024e32b44f5f749f78850a533e2cc43c6d277fcb4b94def59dfcfe8a0d22d607",
+    "sha256:03e13b089a8de6f1f4ebda1f2cc8cda705352c51bd50e9b3194339b648311a29",
+    "sha256:047da6178fe607e26260f6bf041fbdd7c6eda6701b20c2c36446d93086c59330",
+    "sha256:04f3c6fad82edbb3b699d3564953785085007662cece98ca5298748c33b1d219",
+    "sha256:05e9d81f811e1bc000f042618311c7e3ee6d158be73e954d18a13c6868e33bdd",
+    "sha256:0647d30917695e3e76c4fe5888775ea50efa5528fce7941c0f5979fc03b0d724",
+    "sha256:0a9fd00325736bcd48d66ab587170fc193b538fc7c2321d63beafc267695144d",
+    "sha256:0aadcc7ab27a447950b3b0e5e85984448a4ea974cd329f7385d2129ccd334215",
+    "sha256:0b1e073f4b214e66b7d4ede355fc507803e7ce383634ad3ccd0c6a5eed4fb72a",
+    "sha256:0b8ecd86898841c0e0142fe25b251aa15659d718d1bb6462ed9b342e67f3be08",
+    "sha256:0bc1f8bd8e366c1fc14b98c13408a8942151a3deef1de2d707a44a2857bd17fe",
+    "sha256:0d647b06eb5d566d8ebaf3b22804de556d369667b14225b9e9c15a71a6b9eed3",
+    "sha256:0ea7dbe9cd3ec89dd62bb809b868f4bef3ff0288f580e98f416c76b2034702a6",
+    "sha256:1455fc6650cf7670f48098d3e6687ba08f86ebe9f29c065255801d346d811396",
+    "sha256:147c3b039b965ee7079c49c89966a385fc6cf01b568c97e2fec2fe104b4c25d0"
+  ],
+  "reviewed_scene_usage_ids": [
+    "t3:dragon-flight:scene:dragon-flight-game:df-asset-004",
+    "t3:dragon-flight:scene:dragon-flight-game:df-asset-010",
+    "t3:dragon-flight:scene:dragon-flight-game:df-asset-011",
+    "t4:magic-defense:scene:enemy-render:md-asset-001",
+    "usage-3847536916bedeea9707b998",
+    "usage-475f04e11aec9b264ec1c967",
+    "usage-8876a5cbd0c49b8327b4c8a9",
+    "usage-f4d7c4f8710a5f535612addb"
+  ],
+  "review_slices": [
+    {
+      "slice_id": "AF-01-S1",
+      "games": [
+        "dragon-flight",
+        "enchanted-library",
+        "magic-defense"
+      ],
+      "game_count": 3,
+      "candidate_paths": 9,
+      "accepted_path_usage_links": 9,
+      "status": "pass"
+    },
+    {
+      "slice_id": "AF-01-S2",
+      "games": [
+        "potion-rush"
+      ],
+      "game_count": 1,
+      "candidate_paths": 4,
+      "accepted_path_usage_links": 4,
+      "status": "pass"
+    }
+  ],
+  "verification": {
+    "path_records": "All 36 candidate-path records exactly reconcile to the frozen AF-01 scaffold, Phase 1 caller inventory, Phase 2 provenance artifact, and Phase 3 inspection group membership without duplicate collapse.",
+    "caller_locators": "All 43 path-owned locators resolve to exact caller-inventory JSON pointers. Their line ranges were independently read from 18 Git-pinned source files, and every exact line-range SHA-256 and matched literal passed.",
+    "accepted_links_and_sources": "All 13 path-usage links resolve to exact frozen normalizer pointers and exact underlying accepted claim-ledger hashes and pointers. The 30 accepted join locator bindings use the same exact asset literal and remain owned by their candidate path.",
+    "responsive_cells": "All 52 cells are the exact compact/wide by cute_chibi_v1/heroic_stylized_v1 grid. Text capacity, crop/tile/slice, state coverage, collision/readability, theme suitability, and per-path runtime load remain blocked or not established.",
+    "browser_scope": "Every bounded current-legacy-function decision matches the exact game and viewport decision in the browser freeze and its underlying route evidence. Composite browser evidence is never promoted to candidate-path load, provenance, license, theme suitability, reference fitness, reuse, adaptation, or canonical mapping.",
+    "dispositions_and_provenance": "Frozen priority order yields exactly 13 replace and 23 unknown dispositions with zero reject. All 36 upstream and license states remain unknown; reuse and adapt are blocked; no independent exact reference support exists.",
+    "semantic_replacement": "Every joined path copies only its accepted usage envelope into the replacement requirement. Canonical semantic roles and states remain null pending T9; all unjoined paths remain blocked_unknown.",
+    "group_rollup": "All 18 group objects exactly reconcile path members, caller IDs, accepted usages, games, inspection pointers, dispositions, and counts. Six groups correctly preserve mixed path-specific dispositions without promoting a joined path to an unjoined identical-hash peer.",
+    "review_slices": "Both slices cover every and only joined path exactly once, reproduce their link counts and games, and remain within the frozen three-game ceiling.",
+    "role_isolation_and_receipts": "Requirements mapper and truth-test author have distinct native tasks, fork_turns none, inherited_narrative false, exact input/output hashes, bounded roles, measured usage, zero stop-loss events, and zero unresolved blocking findings. The prior Phase 2 adversarial-reviewer receipt remains byte-identical and was not overwritten.",
+    "resource_ceilings": "Requirements mapper usage is 36/40 paths, 13/240 scene-link records, 3/3 max games per slice, 16/80 commands, and 1691618/268435456 bytes. Truth-test usage is 17/160 tests, 1/80 commands, and 121976843/134217728 bytes.",
+    "catalog_non_additivity": "The seven catalog locator records remain a separate global grain, including three usage-ID overlaps with candidate joins. They add zero AF-01 candidate paths and zero responsive cells; no 92-path denominator is asserted."
+  },
+  "scope_boundary": {
+    "reviewed": "AF-01 Phase 4 producer joins, group rollup, exact accepted bindings, responsive blocked states, dispositions, receipts, and deterministic tests.",
+    "not_authorized": [
+      "repair producer output",
+      "alter freezes or tests",
+      "accept Phase 4 or T8",
+      "authorize T9",
+      "assign canonical standard-pack keys",
+      "adopt legacy paths directly",
+      "produce assets",
+      "implement product code",
+      "ship or claim product success"
+    ]
+  },
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": []
+  },
+  "stop_loss_events": [],
+  "unresolved_blocking_findings": 0,
+  "decision": {
+    "admit": true,
+    "block": false,
+    "status": "pass",
+    "blocking_severity_gate": "clear",
+    "scope": "AF-01 Phase 4 batch artifacts only; this review is not root-orchestrator acceptance and does not make Phase 4 Green."
+  },
+  "resource_usage": {
+    "candidate_paths": 36,
+    "hash_groups": 18,
+    "review_records": 211,
+    "command_invocations": 34,
+    "bytes_read": 125115669,
+    "within_ceiling": true,
+    "ceilings": {
+      "candidate_paths": 40,
+      "hash_groups": 24,
+      "review_records": 280,
+      "command_invocations": 120,
+      "bytes_read": 536870912
+    },
+    "measurement_basis": "Exact 2775125 bytes across 28 unique review inputs plus 363701 bytes from 18 unique Git-pinned caller source blobs plus the verifier's exact 121976843 bytes. Command count includes every top-level reviewer shell invocation through final publication validation, including failed interpreter and diagnostic-check invocations."
+  },
+  "final_status": "pass-pending-root-orchestrator-phase4-acceptance"
+}

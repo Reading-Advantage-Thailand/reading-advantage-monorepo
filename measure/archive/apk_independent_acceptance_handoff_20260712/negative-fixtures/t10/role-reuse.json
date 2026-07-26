@@ -1,0 +1,11 @@
+{
+  "fixture_id": "role-reuse",
+  "mutations": [
+    {
+      "artifact": "measure/tracks/apk_independent_acceptance_handoff_20260712/reviewer-identity-v1.json",
+      "pointer": "/reviewer_id",
+      "value": "/root/phase5_review_a"
+    }
+  ],
+  "expected_codes": ["ROLE_REUSE"]
+}

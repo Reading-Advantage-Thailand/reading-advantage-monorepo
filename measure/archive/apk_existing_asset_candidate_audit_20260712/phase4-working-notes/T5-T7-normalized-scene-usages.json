@@ -1,0 +1,1781 @@
+{
+  "schema_version": "apk-phase4-normalized-scene-usages.v1",
+  "artifact_kind": "non-decisional-working-artifact",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "status": "working-only-not-accepted-not-consumable",
+  "normalization_rule": {
+    "usage_id": "usage- plus first 24 hex characters of SHA-256 over track|game_id|surface_kind|surface_id|category|asset_locator_literal-or-empty|comma-joined-claim_ids|source-path|json-pointer",
+    "asset_locator_rule": "Only exact source literals or exact accepted semantic keys are populated; null means no exact locator literal was accepted. No locator is composed from filenames, directories, slugs, or denominator proximity.",
+    "scope_rule": "Only explicit accepted T5-T7 usage evidence is normalized. No suitability, compact/wide, disposition, ontology, implementation, shipping, or runtime-success conclusion is made."
+  },
+  "canonical_accepted_manifests": [
+    {
+      "track": "T5",
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/t5-accepted-cohort-manifest-v1.json",
+      "sha256": "4052c243ca66977256a4b60116439884f3f3151fba463ef860e624ed8d050f5d",
+      "expected_sha256": "4052c243ca66977256a4b60116439884f3f3151fba463ef860e624ed8d050f5d",
+      "digest_match": true,
+      "accepted_scope": "Conditionally consumable bounded T5 source/semantic evidence only, with every browser/historical/provenance/timing disclosure preserved."
+    },
+    {
+      "track": "T6",
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/successor-accepted-cohort-manifest-v2.json",
+      "sha256": "9666b564ba969ef7d0559fb53d8d74c684a746b10264784a9728e52b6284888b",
+      "expected_sha256": "9666b564ba969ef7d0559fb53d8d74c684a746b10264784a9728e52b6284888b",
+      "digest_match": true,
+      "accepted_scope": "Conditionally consumable T6 evidence only; no browser, gameplay, responsive, trusted-input, completion, persistence, XP, API, production, asset-loading, ontology, implementation, or shipping success."
+    },
+    {
+      "track": "T7",
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/cohort-accepted-manifest-20260722.json",
+      "sha256": "4186dfd20fcef683a1a33664a1ffa9d4350280fbee31fe56d553fa0f5a87b2b0",
+      "expected_sha256": "4186dfd20fcef683a1a33664a1ffa9d4350280fbee31fe56d553fa0f5a87b2b0",
+      "digest_match": true,
+      "accepted_scope": "Exact bounded T7 source-truth, chronology, source-class, mapping, local-provenance, and blocked/non-runnable browser-disposition evidence only."
+    }
+  ],
+  "transitive_admitted_underlying_source_artifacts": [
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/requirements-map.v2.json",
+      "sha256": "0ca3edbd2112f3bc0ffdfd95aa5dba857bee153d9a782ffc50705884aa34cd71",
+      "role": "accepted underlying zero-or-unknown closure source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/claim-evidence-ledger.v2.json",
+      "sha256": "8adc5b881104bf0ce78d0eb3895b65cb0485a4e516e9918461acfad0f7adfb2e",
+      "role": "accepted underlying usage source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-requirements-map.v2.json",
+      "sha256": "70c740939d6d11daa0b9164fc77a906f26e30e8f70e0d6ea8559ef75483c3383",
+      "role": "accepted underlying zero-or-unknown closure source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger-v2.json",
+      "sha256": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+      "role": "accepted underlying usage source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+      "sha256": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+      "role": "accepted underlying usage source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/rune-forge-chamber/requirements-map-v2.json",
+      "sha256": "2caa7b772202cf65f90fc4aeaf75aeb1afb68bd4a34f53bad82becf6c317869e",
+      "role": "accepted underlying zero-or-unknown closure source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/requirements-map-batch-b.json",
+      "sha256": "64ec421a63b7bb28308752553e7a552bc8613de3f5b39dc3323b2a36ca5a3bc4",
+      "role": "accepted underlying usage source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/requirements-map-v2.json",
+      "sha256": "15da4277229a09523f3ef9ac470fefd81685b19800e31b2daede32fccfbedc5c",
+      "role": "accepted underlying zero-or-unknown closure source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/requirements-map-v2.json",
+      "sha256": "531f34179c882c22b811a021c168742e2f0d81a5703da259efbc1de5c6a4ac50",
+      "role": "accepted underlying zero-or-unknown closure source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/claim-ledger-v2.json",
+      "sha256": "259b821e88143665203830814292ad19a78397d9974f2dee6edd9e92051e8afc",
+      "role": "accepted underlying zero-or-unknown closure source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/claim-ledger-batch-b.json",
+      "sha256": "5e888c0e7577ca767be873847b8dab5b4339efd2dee0490e98fc82ee97053ef1",
+      "role": "accepted underlying usage source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/claim-evidence-ledger-v2.json",
+      "sha256": "b99ba08b3db22ffd352ac6ea9fa0ad99d2c30595b7e90e7b389611e7a18e2c4a",
+      "role": "accepted underlying usage source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+      "sha256": "2cd708cbecf94133b92ce5f06822ad420da28a1d4417fdb74284528e7a9fe24b",
+      "role": "accepted underlying usage source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger-v2.json",
+      "sha256": "ff97238f94caa82a5359143c0a25d2a5ee8a2e479bb2fdd0bfea9aab05eef2bd",
+      "role": "accepted underlying usage source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
+      "sha256": "9269956e48572e3ef9f0359f731a0f4f3c9d2193ede6128c0952b5a4bdd4dd59",
+      "role": "accepted underlying zero-or-unknown closure source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/claim-evidence-ledger-batch-b-v2.json",
+      "sha256": "1b75beb8af13728ad5e564ed24ec8717341d775272099e92c9757a4fdbbddacb",
+      "role": "accepted underlying zero-or-unknown closure source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/claim-evidence-ledger-v2.json",
+      "sha256": "5c960768bb3f2002d4bc9b20205d32c5e31e3717b854db8ae04dab2fc556621c",
+      "role": "accepted underlying zero-or-unknown closure source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    },
+    {
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+      "sha256": "826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236",
+      "role": "accepted underlying usage source",
+      "accepted_scope": "Only exact JSON pointers cited by game_closure or usages; no uncited claim, denominator adjacency, filename meaning, suitability, or disposition is admitted."
+    }
+  ],
+  "rejected_superseded_versions": [
+    {
+      "track": "T5",
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-v1.json",
+      "reason": "superseded by canonical T5 successor accepted manifest"
+    },
+    {
+      "track": "T5",
+      "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-b-v2.json",
+      "reason": "superseded by retroactive accepted Batch B V3"
+    },
+    {
+      "track": "T6",
+      "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/accepted-cohort-manifest-v1.json",
+      "reason": "historical non-authoritative and non-consumable"
+    },
+    {
+      "track": "T7",
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-a/accepted-manifest.json",
+      "reason": "superseded by current retroactive-ratification accepted manifest"
+    },
+    {
+      "track": "T7",
+      "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/batch-b/candidate-manifest.json",
+      "reason": "stale truth and Batch A bindings; superseded and non-consumable"
+    }
+  ],
+  "acceptance_disclosures": {
+    "T5_batch_a": [
+      {
+        "id": "T5A-PROVENANCE-LOCAL",
+        "scope": "all Batch A role receipts",
+        "rule": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable and are not claimed. Exact local SHA-256 bindings, committed Git ancestry, declared role scope, immutable source envelopes, and fresh independent re-derivation are compensating controls."
+      },
+      {
+        "id": "T5A-BROWSER-DRAGON-RIDER",
+        "scope": "Dragon Rider browser evidence",
+        "rule": "Two bounded route attempts produced no application response. Route success, movement, transition, compact or wide behavior, input, persistence, production behavior, and asset loading remain unknown."
+      },
+      {
+        "id": "T5A-BROWSER-DUNGEON-LIBERATOR",
+        "scope": "Dungeon Liberator browser evidence",
+        "rule": "No browser session was available. Route reachability and all browser behavior remain unknown."
+      },
+      {
+        "id": "T5A-BROWSER-SPELLWEAVERS-RUN",
+        "scope": "Spellweaver's Run browser evidence",
+        "rule": "The disposition is NON-RUNNABLE/UNKNOWN. Retained test routes and historical sources are not promoted to current behavior."
+      },
+      {
+        "id": "T5A-TIMING-ACCOUNTING",
+        "scope": "selected Batch A receipts",
+        "rule": "Harness timing was unavailable. Every selected elapsed_minutes=0 value is an owner-directed accounting fallback only, not elapsed-time, duration, performance, session, or provider-timing evidence."
+      },
+      {
+        "id": "T5A-SPELLWEAVER-BUDGET",
+        "scope": "Spellweaver's Run evidence collector source_bytes only",
+        "rule": "The original 8000000-byte ceiling was exceeded by 3558850 bytes. The one-time approved ceiling is 12000000; measured actual is 11558850 and remaining approved margin is 441150. No other role, game, budget unit, or gate is waived."
+      },
+      {
+        "id": "T5A-V6-LIFECYCLE-NAMING",
+        "scope": "immutable V6 truth module lifecycle assertions",
+        "rule": "The module expects v6-named review artifacts and an older approval schema. The accepted chain instead binds the committed V5 review explicitly performed over V6 inputs and the exact ACCEPT-WITH-DISCLOSURE owner artifact. No stale assertion is represented as green."
+      },
+      {
+        "id": "T5A-ACCEPTANCE-TIMESTAMP",
+        "scope": "acceptance chronology",
+        "rule": "The nominal approval event timestamp predates candidate publication. It is preserved as bound metadata and is not represented as publication-order proof; immutable descendant Git order is the chronology control."
+      }
+    ],
+    "T5_batch_b": [
+      "All V2 source, browser-unknown, timing, and historical-claim disclosures remain binding.",
+      "This artifact repairs approval order only; it makes no new source or runtime claim."
+    ],
+    "T5_batch_c": [
+      "Historical implementation claims are not current behavior.",
+      "No browser run occurred; movement, transitions, responsive behavior, persistence, and asset loading remain unknown."
+    ],
+    "T6_successor": [
+      "Browser-dependent product behavior remains unknown. This manifest permits no gameplay, state-transition, responsive, trusted-input, completion, persistence, XP, API, production, or asset-loading success claim.",
+      "Provider message, event, encrypted-prompt, and timestamp fields remain unavailable and null in the acceptance artifact. No provider ancestry, session, prompt, timing, raw-export, or event claim is made.",
+      "V1 lifecycle artifacts remain historical non-authoritative context exactly as classified by the candidate and review. This successor manifest neither mutates nor consumes V1.",
+      "This is a conditional evidence-consumption manifest, not behavior verification, implementation approval, shipping approval, or a completion declaration."
+    ],
+    "T7_conditional_consumption": [
+      "Preserve all eleven explicit unknowns and all current-versus-historical source-class boundaries.",
+      "Do not use historical implementation, cancelled design, catalog prose, specification prose, analogy, or browser failure records to establish missing current behavior.",
+      "Do not claim successful route reachability, gameplay, trusted input, compact/wide responsive behavior, completion, persistence, XP, idempotency, API correctness, production behavior, or asset loading from the five browser dispositions.",
+      "Disclose that provider-side provenance was unavailable and that the acceptance uses local Git and SHA-256 compensating controls.",
+      "Disclose that owner approval is a current retroactive ratification and that no original message identifier is authenticated.",
+      "Do not treat this evidence acceptance as an ontology, shared-system, implementation, or shipping decision."
+    ],
+    "T5_batch_b_browser_unknown_disclosures": {
+      "shadow-gate-dungeon": "Bounded non-runnable/unknown disposition only. Movement, transition, compact/wide behavior, trusted input, responsive outcome, persistence, production result, and asset loading remain unknown; screenshots_alone_pass=false.",
+      "labyrinth-goblin-king": "Bounded non-runnable/unknown disposition only. Candidate routes and all live behavior remain unknown; screenshots_alone_pass=false.",
+      "griffin-riders-escape": "Bounded non-runnable/unknown disposition only. Candidate routes and all live behavior remain unknown; screenshots_alone_pass=false.",
+      "batch_boundary": "No browser behavior is accepted for any Batch B package; the three records are bounded unknown dispositions only."
+    },
+    "T5_batch_b_budget_and_timing_disclosures": {
+      "frozen_budget": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/phase0-budget-declaration.json",
+        "sha256": "81bceb19a002128ae6ccf859db8b6c07d8537b433d726d0fb0235997d9acf896"
+      },
+      "timing": "Harness timing was unavailable for the bound Batch B producer and reviewer receipts. Their elapsed_minutes=0 values are owner-directed accounting fallbacks only, not elapsed-time, duration, performance, session, or provider-timing evidence. Other units remain measured bounded integers.",
+      "candidate_author_budget": "The frozen declaration has no candidate-manifest-author ceiling. This artifact neither invents a ceiling nor claims a budget waiver.",
+      "stop_loss_status": "not-triggered at the reviewed V2-input stage; zero unsupported factual claims, denominator mismatches, stale active receipts, budget breaches, or unresolved Critical, High, or Medium findings"
+    },
+    "T5_batch_b_provider_provenance_disclosure": {
+      "provider_side_attestation_available": false,
+      "provider_attestation_claimed": false,
+      "unavailable_fields": [
+        "prompt",
+        "context manifest",
+        "spawn",
+        "session",
+        "ancestry",
+        "fork isolation",
+        "events",
+        "timing",
+        "final response",
+        "commit attestation"
+      ],
+      "compensating_controls": "Exact local SHA-256 bindings, committed Git bindings at the declared review and candidate role bases, declared role scope, immutable source envelopes, and fresh independent re-derivation are used under the bound provenance direction. No provider-attested isolation or provenance is claimed."
+    },
+    "T5_batch_c_candidate_disclosures": [
+      "This is a non-consumable candidate only; it is not product-owner acceptance or an accepted manifest.",
+      "The independent review has zero unresolved Critical, High, and Medium findings and authorizes only candidate publication.",
+      "No source claim or browser evidence was authored or claimed by the candidate role. No browser run occurred; browser behavior remains unknown.",
+      "Historical implementation claims remain historical and must not be promoted to current behavior.",
+      "Provider provenance is unavailable and unclaimed; local committed hashes are the only claimed bindings.",
+      "The frozen budget declaration has no candidate-manifest-author ceiling. This candidate claims no budget conclusion or waiver."
+    ],
+    "T6_batch_a_disclosures": [
+      {
+        "id": "T6A-PROVENANCE-LOCAL",
+        "scope": "all selected Batch A role receipts",
+        "rule": "Provider-side prompt, context, spawn, session, ancestry, fork, isolation, event, timing, final-response, and commit attestations were unavailable and are not claimed. Exact local SHA-256 bindings, committed Git ancestry, declared role scope, immutable source envelopes, and fresh independent re-derivation are the compensating controls."
+      },
+      {
+        "id": "T6A-BROWSER-ENCHANTED-LIBRARY",
+        "scope": "Enchanted Library browser evidence",
+        "rule": "The exact local candidate route returned HTTP 404. Only the 404 surface at the default wide viewport was observed; the screenshot helper failed and produced no capture. Gameplay, transitions, compact/wide behavior, trusted input, content variation, completion, persistence, XP, API correctness, production behavior, and asset loading remain unknown."
+      },
+      {
+        "id": "T6A-BROWSER-RUNE-MATCH",
+        "scope": "Rune Match browser evidence",
+        "rule": "The exact localhost candidate route returned HTTP 404. Only the 404 surface at 1920x927 was observed; API candidates were not visited and no capture was created. Gameplay and every dependent browser or product behavior remain unknown."
+      },
+      {
+        "id": "T6A-BROWSER-ALCHEMISTS-SYNTHESIS",
+        "scope": "Alchemist's Synthesis browser evidence",
+        "rule": "The exact candidate route returned HTTP 404 on both observed local Next ports, which belonged to another app. Only the 404 surface at 1920x927 was observed; API candidates were not visited and no capture was created. Gameplay and every dependent browser or product behavior remain unknown."
+      },
+      {
+        "id": "T6A-TIMING-ACCOUNTING",
+        "scope": "selected Batch A receipts",
+        "rule": "Harness timing was unavailable. Every selected elapsed_minutes=0 value is an accounting fallback only, not elapsed-time, duration, performance, provider-session, or wall-clock evidence."
+      },
+      {
+        "id": "T6A-CANDIDATE-PUBLICATION-STATE",
+        "scope": "immutable candidate and candidate-author receipt",
+        "rule": "The candidate and its receipt truthfully recorded that they were uncommitted at authorship time. Their exact bytes were later published together at commit 97716ad273a324c7d9a112ae701b37f7e9aa3be7. This accepted manifest binds that later immutable publication without mutating or treating the earlier authored-time statements as current publication state."
+      },
+      {
+        "id": "T6A-REVIEW-LIFECYCLE-STATE",
+        "scope": "immutable V3 review and review receipt",
+        "rule": "The review artifacts correctly authorized only candidate publication and recorded later lifecycle artifacts as absent at review time. Candidate, owner acceptance, and this manifest were added in descendant commits; the historical review authorization is not broadened or relabeled as owner acceptance."
+      },
+      {
+        "id": "T6A-ACCEPTANCE-TIMESTAMP",
+        "scope": "acceptance chronology",
+        "rule": "The nominal approval event timestamp predates review and candidate publication. It is preserved as bound metadata and is not represented as publication-order proof; exact hash bindings and immutable descendant Git publication order are the chronology controls."
+      },
+      {
+        "id": "T6A-ACCEPTANCE-SEPARATE-LIFECYCLE",
+        "scope": "owner acceptance authorization boundary",
+        "rule": "The owner acceptance is not itself a consumable manifest and explicitly requires a separately authored lifecycle artifact. This manifest is that separate artifact; it records but does not originate, replay, broaden, or replace the exact owner decision."
+      }
+    ],
+    "T6_batch_b_conditions": [
+      "Consume only with the candidate, owner acceptance, V3 review, V3 local role ratification, V2 ledgers/maps/fixtures, and all their disclosures.",
+      "Do not promote no-browser evidence or historical Astral Mage evidence to current product behavior.",
+      "A source, bound-artifact, review, or authority change stops consumption pending additive supersession and fresh review."
+    ],
+    "T6_batch_b_claims": {
+      "browser_behavior_success": false,
+      "completion": false,
+      "persistence": false,
+      "xp": false,
+      "api_correctness": false,
+      "implementation_authorized": false,
+      "shipping_authorized": false
+    },
+    "T6_batch_b_candidate_disclosures": [
+      "This candidate is not an accepted manifest.",
+      "No browser run or browser-success claim exists.",
+      "Local role receipts are not provider-attested session provenance.",
+      "All 12 explicit unknowns and historical classifications remain binding."
+    ],
+    "T7_batch_a_required_disclosures": [
+      "Historical implementation evidence remains historical and may not establish current behavior.",
+      "Explicit unknowns remain unknown.",
+      "The browser evidence proves only blocked, refused, or 404 dispositions; it proves no gameplay or responsive success.",
+      "Provider-side provenance remains unavailable; locally verifiable Git and SHA-256 bindings are the accepted compensating controls.",
+      "Owner authority is the current retroactive ratification, not the superseded nominal historical message fields.",
+      "No completion, persistence, XP, idempotency, API correctness, ontology, implementation, or shipping claim is accepted."
+    ],
+    "T7_batch_b_required_disclosures": [
+      "The Haunted Library and Babel Architect browser records reached no game surface and establish no gameplay or responsive success.",
+      "Babel Architect implementation evidence is historical; current implementation, route, runtime, manual UX, and future shipment remain unknown.",
+      "Cancelled design is not implementation fact; catalog and specification prose are not detailed mechanics evidence.",
+      "Provider-side provenance remains unavailable; local Git and SHA-256 controls are disclosed compensating controls.",
+      "The owner decision is a current retroactive commit ratification and does not claim an original historical approval message.",
+      "No completion, persistence, XP, idempotency, API correctness, production, ontology, implementation, or shipping decision is accepted."
+    ]
+  },
+  "counts": {
+    "games": 18,
+    "T5_games": 7,
+    "T6_games": 6,
+    "T7_games": 5,
+    "explicit_usage_records": 48,
+    "closed_zero_or_unknown_games": 9,
+    "transitive_admitted_underlying_source_artifacts": 18
+  },
+  "game_closure": [
+    {
+      "track": "T5",
+      "game_id": "dragon-rider",
+      "explicit_usage_count": 9,
+      "closure_state": "closed-explicit-usage-set",
+      "zero_or_unknown_basis": null,
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed"
+    },
+    {
+      "track": "T5",
+      "game_id": "dungeon-liberator",
+      "explicit_usage_count": 4,
+      "closure_state": "closed-explicit-usage-set",
+      "zero_or_unknown_basis": null,
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed"
+    },
+    {
+      "track": "T5",
+      "game_id": "spellweavers-run",
+      "explicit_usage_count": 2,
+      "closure_state": "closed-explicit-usage-set",
+      "zero_or_unknown_basis": null,
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed"
+    },
+    {
+      "track": "T5",
+      "game_id": "shadow-gate-dungeon",
+      "explicit_usage_count": 0,
+      "closure_state": "closed-explicit-zero-or-unknown",
+      "zero_or_unknown_basis": "accepted ledger contains no explicit asset-usage claim; browser asset loading remains unknown",
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed",
+      "closure_source": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/claim-evidence-ledger-v2.json",
+        "sha256": "5c960768bb3f2002d4bc9b20205d32c5e31e3717b854db8ae04dab2fc556621c",
+        "json_pointer": "/claims"
+      }
+    },
+    {
+      "track": "T5",
+      "game_id": "labyrinth-goblin-king",
+      "explicit_usage_count": 0,
+      "closure_state": "closed-explicit-zero-or-unknown",
+      "zero_or_unknown_basis": "accepted ledger contains no explicit asset-usage claim",
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed",
+      "closure_source": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/claim-evidence-ledger-batch-b-v2.json",
+        "sha256": "1b75beb8af13728ad5e564ed24ec8717341d775272099e92c9757a4fdbbddacb",
+        "json_pointer": "/claim_atoms"
+      }
+    },
+    {
+      "track": "T5",
+      "game_id": "griffin-riders-escape",
+      "explicit_usage_count": 0,
+      "closure_state": "closed-explicit-zero-or-unknown",
+      "zero_or_unknown_basis": "accepted evidence declares historical semantic slots but does not establish a concrete asset use",
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed",
+      "closure_source": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
+        "sha256": "9269956e48572e3ef9f0359f731a0f4f3c9d2193ede6128c0952b5a4bdd4dd59",
+        "json_pointer": "/claims/10"
+      }
+    },
+    {
+      "track": "T5",
+      "game_id": "sorcerer-ziggurat",
+      "explicit_usage_count": 4,
+      "closure_state": "closed-explicit-usage-set",
+      "zero_or_unknown_basis": null,
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed"
+    },
+    {
+      "track": "T6",
+      "game_id": "alchemists-synthesis",
+      "explicit_usage_count": 0,
+      "closure_state": "closed-explicit-zero-or-unknown",
+      "zero_or_unknown_basis": "accepted mapping explicitly rejects binary gameplay usage; zero explicit accepted usages",
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed",
+      "closure_source": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/requirements-map.v2.json",
+        "sha256": "0ca3edbd2112f3bc0ffdfd95aa5dba857bee153d9a782ffc50705884aa34cd71",
+        "json_pointer": "/evidence_boundaries/not_claimed/2"
+      }
+    },
+    {
+      "track": "T6",
+      "game_id": "enchanted-library",
+      "explicit_usage_count": 4,
+      "closure_state": "closed-explicit-usage-set",
+      "zero_or_unknown_basis": null,
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed"
+    },
+    {
+      "track": "T6",
+      "game_id": "rune-match",
+      "explicit_usage_count": 0,
+      "closure_state": "closed-explicit-zero-or-unknown",
+      "zero_or_unknown_basis": "accepted mapping states no asset-usage evidence was collected; zero explicit accepted usages",
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed",
+      "closure_source": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-requirements-map.v2.json",
+        "sha256": "70c740939d6d11daa0b9164fc77a906f26e30e8f70e0d6ea8559ef75483c3383",
+        "json_pointer": "/unknowns/0"
+      }
+    },
+    {
+      "track": "T6",
+      "game_id": "potion-rush",
+      "explicit_usage_count": 12,
+      "closure_state": "closed-explicit-usage-set",
+      "zero_or_unknown_basis": null,
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed"
+    },
+    {
+      "track": "T6",
+      "game_id": "rune-forge-chamber",
+      "explicit_usage_count": 0,
+      "closure_state": "closed-explicit-zero-or-unknown",
+      "zero_or_unknown_basis": "accepted mapping result is unknown-no-source-claim; zero explicit accepted usages",
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed",
+      "closure_source": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/rune-forge-chamber/requirements-map-v2.json",
+        "sha256": "2caa7b772202cf65f90fc4aeaf75aeb1afb68bd4a34f53bad82becf6c317869e",
+        "json_pointer": "/mappings/5"
+      }
+    },
+    {
+      "track": "T6",
+      "game_id": "astral-mage",
+      "explicit_usage_count": 11,
+      "closure_state": "closed-explicit-usage-set",
+      "zero_or_unknown_basis": null,
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed"
+    },
+    {
+      "track": "T7",
+      "game_id": "griffin-sky-joust",
+      "explicit_usage_count": 0,
+      "closure_state": "closed-explicit-zero-or-unknown",
+      "zero_or_unknown_basis": "current asset usage is explicitly unknown; no historical asset claim may substitute",
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed",
+      "closure_source": {
+        "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/requirements-map-v2.json",
+        "sha256": "531f34179c882c22b811a021c168742e2f0d81a5703da259efbc1de5c6a4ac50",
+        "json_pointer": "/mapped_records/4"
+      }
+    },
+    {
+      "track": "T7",
+      "game_id": "realm-carver",
+      "explicit_usage_count": 0,
+      "closure_state": "closed-explicit-zero-or-unknown",
+      "zero_or_unknown_basis": "current asset conclusion is explicitly unknown; zero accepted usage records",
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed",
+      "closure_source": {
+        "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/realm-carver/claim-ledger-v2.json",
+        "sha256": "259b821e88143665203830814292ad19a78397d9974f2dee6edd9e92051e8afc",
+        "json_pointer": "/claims/2"
+      }
+    },
+    {
+      "track": "T7",
+      "game_id": "devourer-slime",
+      "explicit_usage_count": 0,
+      "closure_state": "closed-explicit-zero-or-unknown",
+      "zero_or_unknown_basis": "accepted map preserves asset usage as unknown; zero accepted usage records",
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed",
+      "closure_source": {
+        "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/devourer-slime/requirements-map-v2.json",
+        "sha256": "15da4277229a09523f3ef9ac470fefd81685b19800e31b2daede32fccfbedc5c",
+        "json_pointer": "/preserved_unknowns/6"
+      }
+    },
+    {
+      "track": "T7",
+      "game_id": "the-haunted-library",
+      "explicit_usage_count": 1,
+      "closure_state": "closed-explicit-usage-set",
+      "zero_or_unknown_basis": null,
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed"
+    },
+    {
+      "track": "T7",
+      "game_id": "babel-architect",
+      "explicit_usage_count": 1,
+      "closure_state": "closed-explicit-usage-set",
+      "zero_or_unknown_basis": null,
+      "browser_state": "unknown",
+      "compact_wide_state": "not-assessed",
+      "disposition_state": "not-assessed"
+    }
+  ],
+  "usages": [
+    {
+      "usage_id": "usage-6f82d937482cd0ac2da90fcb",
+      "track": "T5",
+      "game_id": "dragon-rider",
+      "surface_kind": "scene",
+      "surface_id": "vocabulary/dragon-rider/scene=flight-canvas",
+      "asset_locator_literal": "/games/vocabulary/dragon-rider/boss-3x3-sheet-facing-up.png",
+      "category": "declared-and-source-load-orchestrated-image",
+      "claim_ids": [
+        "DR-ASSET-001A",
+        "DR-ASSET-001B"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+        "sha256": "826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236",
+        "json_pointer": "/claim_atoms"
+      },
+      "evidence_class": "current-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source declaration and load orchestration only",
+      "disclosures": [
+        "T5-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-ad8e335441483ab64225f38e",
+      "track": "T5",
+      "game_id": "dragon-rider",
+      "surface_kind": "scene",
+      "surface_id": "vocabulary/dragon-rider/scene=flight-canvas",
+      "asset_locator_literal": "/games/vocabulary/dragon-rider/dragon-army-3x3-sheet-facing-up.png",
+      "category": "declared-and-source-load-orchestrated-image",
+      "claim_ids": [
+        "DR-ASSET-001A",
+        "DR-ASSET-001B"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+        "sha256": "826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236",
+        "json_pointer": "/claim_atoms"
+      },
+      "evidence_class": "current-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source declaration and load orchestration only",
+      "disclosures": [
+        "T5-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-d37650c31d1fc23b19802bd5",
+      "track": "T5",
+      "game_id": "dragon-rider",
+      "surface_kind": "scene",
+      "surface_id": "vocabulary/dragon-rider/scene=flight-canvas",
+      "asset_locator_literal": "/games/vocabulary/dragon-rider/gates-3x3-sheet-facing-up.png",
+      "category": "declared-and-source-load-orchestrated-image",
+      "claim_ids": [
+        "DR-ASSET-001A",
+        "DR-ASSET-001B"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+        "sha256": "826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236",
+        "json_pointer": "/claim_atoms"
+      },
+      "evidence_class": "current-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source declaration and load orchestration only",
+      "disclosures": [
+        "T5-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-81767860248bcf3c30023a6d",
+      "track": "T5",
+      "game_id": "dragon-rider",
+      "surface_kind": "scene",
+      "surface_id": "vocabulary/dragon-rider/scene=flight-canvas",
+      "asset_locator_literal": "/games/vocabulary/dragon-rider/loading-screen-background.png",
+      "category": "declared-and-source-load-orchestrated-image",
+      "claim_ids": [
+        "DR-ASSET-001A",
+        "DR-ASSET-001B"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+        "sha256": "826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236",
+        "json_pointer": "/claim_atoms"
+      },
+      "evidence_class": "current-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source declaration and load orchestration only",
+      "disclosures": [
+        "T5-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-1a24e810e18d73671a46a2c5",
+      "track": "T5",
+      "game_id": "dragon-rider",
+      "surface_kind": "scene",
+      "surface_id": "vocabulary/dragon-rider/scene=flight-canvas",
+      "asset_locator_literal": "/games/vocabulary/dragon-rider/parallax-bottom-tiling.png",
+      "category": "declared-and-source-load-orchestrated-image",
+      "claim_ids": [
+        "DR-ASSET-001A",
+        "DR-ASSET-001B"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+        "sha256": "826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236",
+        "json_pointer": "/claim_atoms"
+      },
+      "evidence_class": "current-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source declaration and load orchestration only",
+      "disclosures": [
+        "T5-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-cb52d9d89f1d5d9904063861",
+      "track": "T5",
+      "game_id": "dragon-rider",
+      "surface_kind": "scene",
+      "surface_id": "vocabulary/dragon-rider/scene=flight-canvas",
+      "asset_locator_literal": "/games/vocabulary/dragon-rider/parallax-middle-tiling.png",
+      "category": "declared-and-source-load-orchestrated-image",
+      "claim_ids": [
+        "DR-ASSET-001A",
+        "DR-ASSET-001B"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+        "sha256": "826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236",
+        "json_pointer": "/claim_atoms"
+      },
+      "evidence_class": "current-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source declaration and load orchestration only",
+      "disclosures": [
+        "T5-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-300cc379145b5c42f9a9f2b0",
+      "track": "T5",
+      "game_id": "dragon-rider",
+      "surface_kind": "scene",
+      "surface_id": "vocabulary/dragon-rider/scene=flight-canvas",
+      "asset_locator_literal": "/games/vocabulary/dragon-rider/parallax-top-tiling.png",
+      "category": "declared-and-source-load-orchestrated-image",
+      "claim_ids": [
+        "DR-ASSET-001A",
+        "DR-ASSET-001B"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+        "sha256": "826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236",
+        "json_pointer": "/claim_atoms"
+      },
+      "evidence_class": "current-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source declaration and load orchestration only",
+      "disclosures": [
+        "T5-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-3c42e16bd21dfbf3b42b8296",
+      "track": "T5",
+      "game_id": "dragon-rider",
+      "surface_kind": "scene",
+      "surface_id": "vocabulary/dragon-rider/scene=flight-canvas",
+      "asset_locator_literal": "/games/vocabulary/dragon-rider/player-3x3-sheet-facing-camera.png",
+      "category": "declared-and-source-load-orchestrated-image",
+      "claim_ids": [
+        "DR-ASSET-001A",
+        "DR-ASSET-001B"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+        "sha256": "826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236",
+        "json_pointer": "/claim_atoms"
+      },
+      "evidence_class": "current-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source declaration and load orchestration only",
+      "disclosures": [
+        "T5-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-362f98b19efdb13311fff41d",
+      "track": "T5",
+      "game_id": "dragon-rider",
+      "surface_kind": "scene",
+      "surface_id": "vocabulary/dragon-rider/scene=flight-canvas",
+      "asset_locator_literal": "/games/vocabulary/dragon-rider/player-3x3-sheet-facing-down.png",
+      "category": "declared-and-source-load-orchestrated-image",
+      "claim_ids": [
+        "DR-ASSET-001A",
+        "DR-ASSET-001B"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+        "sha256": "826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236",
+        "json_pointer": "/claim_atoms"
+      },
+      "evidence_class": "current-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source declaration and load orchestration only",
+      "disclosures": [
+        "T5-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-b04a6b2b63331291d8c3cd12",
+      "track": "T5",
+      "game_id": "dungeon-liberator",
+      "surface_kind": "scene",
+      "surface_id": "playing",
+      "asset_locator_literal": "/games/sentence/dungeon-liberator/background.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "DL-ASSET-001"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger-v2.json",
+        "sha256": "ff97238f94caa82a5359143c0a25d2a5ee8a2e479bb2fdd0bfea9aab05eef2bd",
+        "json_pointer": "/claims/13"
+      },
+      "evidence_class": "current-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "concrete source-referenced render asset",
+      "disclosures": [
+        "T5-browser-unknown",
+        "binary-availability-dimensions-load-and-suitability-unknown"
+      ]
+    },
+    {
+      "usage_id": "usage-2e075beea55a227482153469",
+      "track": "T5",
+      "game_id": "dungeon-liberator",
+      "surface_kind": "scene",
+      "surface_id": "playing",
+      "asset_locator_literal": "/games/sentence/dungeon-liberator/player-sheet.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "DL-ASSET-001"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger-v2.json",
+        "sha256": "ff97238f94caa82a5359143c0a25d2a5ee8a2e479bb2fdd0bfea9aab05eef2bd",
+        "json_pointer": "/claims/13"
+      },
+      "evidence_class": "current-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "concrete source-referenced render asset",
+      "disclosures": [
+        "T5-browser-unknown",
+        "binary-availability-dimensions-load-and-suitability-unknown"
+      ]
+    },
+    {
+      "usage_id": "usage-f467eccd3359ed168cf2bf8d",
+      "track": "T5",
+      "game_id": "dungeon-liberator",
+      "surface_kind": "scene",
+      "surface_id": "playing",
+      "asset_locator_literal": "/games/sentence/dungeon-liberator/prisoner-sheet.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "DL-ASSET-001"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger-v2.json",
+        "sha256": "ff97238f94caa82a5359143c0a25d2a5ee8a2e479bb2fdd0bfea9aab05eef2bd",
+        "json_pointer": "/claims/13"
+      },
+      "evidence_class": "current-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "concrete source-referenced render asset",
+      "disclosures": [
+        "T5-browser-unknown",
+        "binary-availability-dimensions-load-and-suitability-unknown"
+      ]
+    },
+    {
+      "usage_id": "usage-fbb70af311596b85993e01c9",
+      "track": "T5",
+      "game_id": "dungeon-liberator",
+      "surface_kind": "scene",
+      "surface_id": "playing",
+      "asset_locator_literal": "/games/sentence/dungeon-liberator/slime-sheet.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "DL-ASSET-001"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger-v2.json",
+        "sha256": "ff97238f94caa82a5359143c0a25d2a5ee8a2e479bb2fdd0bfea9aab05eef2bd",
+        "json_pointer": "/claims/13"
+      },
+      "evidence_class": "current-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "concrete source-referenced render asset",
+      "disclosures": [
+        "T5-browser-unknown",
+        "binary-availability-dimensions-load-and-suitability-unknown"
+      ]
+    },
+    {
+      "usage_id": "usage-4335d0d7793ff91c1b22c926",
+      "track": "T5",
+      "game_id": "sorcerer-ziggurat",
+      "surface_kind": "scene",
+      "surface_id": "createSorcererZigguratGameConfig.player-camera",
+      "asset_locator_literal": "player.hero",
+      "category": "conditional-semantic-image-with-circle-fallback",
+      "claim_ids": [
+        "SZ-HIST-011"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/claim-evidence-ledger-v2.json",
+        "sha256": "b99ba08b3db22ffd352ac6ea9fa0ad99d2c30595b7e90e7b389611e7a18e2c4a",
+        "json_pointer": "/governing_claim_fields/15"
+      },
+      "evidence_class": "historical-source",
+      "source_class": "historical_implementation",
+      "accepted_scope": "historical concrete source usage only",
+      "disclosures": [
+        "T5-browser-unknown",
+        "historical-not-current",
+        "loading-and-visual-suitability-unknown"
+      ]
+    },
+    {
+      "usage_id": "usage-581b2db2877a7fad26f79ef7",
+      "track": "T5",
+      "game_id": "sorcerer-ziggurat",
+      "surface_kind": "scene",
+      "surface_id": "historical-background-hud-particles",
+      "asset_locator_literal": "ui.panel",
+      "category": "conditional-semantic-image",
+      "claim_ids": [
+        "SZ-HIST-020"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/claim-evidence-ledger-v2.json",
+        "sha256": "b99ba08b3db22ffd352ac6ea9fa0ad99d2c30595b7e90e7b389611e7a18e2c4a",
+        "json_pointer": "/governing_claim_fields/24"
+      },
+      "evidence_class": "historical-source",
+      "source_class": "historical_implementation",
+      "accepted_scope": "historical concrete source usage only",
+      "disclosures": [
+        "T5-browser-unknown",
+        "historical-not-current",
+        "loading-and-visual-suitability-unknown"
+      ]
+    },
+    {
+      "usage_id": "usage-4c390be3ba86b20ad516703c",
+      "track": "T5",
+      "game_id": "sorcerer-ziggurat",
+      "surface_kind": "scene",
+      "surface_id": "historical-background-hud-particles",
+      "asset_locator_literal": "world.background",
+      "category": "conditional-semantic-image",
+      "claim_ids": [
+        "SZ-HIST-020"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/claim-evidence-ledger-v2.json",
+        "sha256": "b99ba08b3db22ffd352ac6ea9fa0ad99d2c30595b7e90e7b389611e7a18e2c4a",
+        "json_pointer": "/governing_claim_fields/24"
+      },
+      "evidence_class": "historical-source",
+      "source_class": "historical_implementation",
+      "accepted_scope": "historical concrete source usage only",
+      "disclosures": [
+        "T5-browser-unknown",
+        "historical-not-current",
+        "loading-and-visual-suitability-unknown"
+      ]
+    },
+    {
+      "usage_id": "usage-0c8a11eb632901e07e057da9",
+      "track": "T5",
+      "game_id": "sorcerer-ziggurat",
+      "surface_kind": "scene",
+      "surface_id": "showSemanticEffect",
+      "asset_locator_literal": null,
+      "category": "dynamic-semantic-effect-image",
+      "claim_ids": [
+        "SZ-HIST-021"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/claim-evidence-ledger-v2.json",
+        "sha256": "b99ba08b3db22ffd352ac6ea9fa0ad99d2c30595b7e90e7b389611e7a18e2c4a",
+        "json_pointer": "/governing_claim_fields/25"
+      },
+      "evidence_class": "historical-source",
+      "source_class": "historical_implementation",
+      "accepted_scope": "historical concrete source usage only",
+      "disclosures": [
+        "T5-browser-unknown",
+        "historical-not-current",
+        "loading-and-visual-suitability-unknown"
+      ]
+    },
+    {
+      "usage_id": "usage-ba480a5acf4953335f1aff0d",
+      "track": "T5",
+      "game_id": "spellweavers-run",
+      "surface_kind": "scene",
+      "surface_id": "active/orbs",
+      "asset_locator_literal": null,
+      "category": "procedural-circle-and-text-rendering",
+      "claim_ids": [
+        "SW-ASSET-001"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+        "sha256": "2cd708cbecf94133b92ce5f06822ad420da28a1d4417fdb74284528e7a9fe24b",
+        "json_pointer": "/33"
+      },
+      "evidence_class": "history",
+      "source_class": "historical_implementation",
+      "accepted_scope": "historical concrete non-physical orb rendering",
+      "disclosures": [
+        "T5-browser-unknown",
+        "historical-not-current"
+      ]
+    },
+    {
+      "usage_id": "usage-3269ee58b14a9160ab6330a5",
+      "track": "T5",
+      "game_id": "spellweavers-run",
+      "surface_kind": "scene",
+      "surface_id": "cartridge/background",
+      "asset_locator_literal": "world.background",
+      "category": "conditional-semantic-image-with-rectangle-fallback",
+      "claim_ids": [
+        "SW-CART-005"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+        "sha256": "2cd708cbecf94133b92ce5f06822ad420da28a1d4417fdb74284528e7a9fe24b",
+        "json_pointer": "/40"
+      },
+      "evidence_class": "history",
+      "source_class": "historical_implementation",
+      "accepted_scope": "historical semantic asset usage only",
+      "disclosures": [
+        "T5-browser-unknown",
+        "historical-not-current",
+        "physical-binding-and-loading-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-f2ae9edac2d02ec48c2e7053",
+      "track": "T6",
+      "game_id": "astral-mage",
+      "surface_kind": "non-scene-contract",
+      "surface_id": "historical-scene-contract",
+      "asset_locator_literal": "feedback.correct",
+      "category": "historical-semantic-asset-slot-declaration",
+      "claim_ids": [
+        "AM-HIST-002"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger-v2.json",
+        "sha256": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+        "json_pointer": "/claims/4"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "historical_implementation",
+      "accepted_scope": "deleted implementation requirement only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "historical-not-current",
+        "physical-binding-loading-and-suitability-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-e5530f2418400248b6a242b6",
+      "track": "T6",
+      "game_id": "astral-mage",
+      "surface_kind": "non-scene-contract",
+      "surface_id": "historical-scene-contract",
+      "asset_locator_literal": "feedback.incorrect",
+      "category": "historical-semantic-asset-slot-declaration",
+      "claim_ids": [
+        "AM-HIST-002"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger-v2.json",
+        "sha256": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+        "json_pointer": "/claims/4"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "historical_implementation",
+      "accepted_scope": "deleted implementation requirement only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "historical-not-current",
+        "physical-binding-loading-and-suitability-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-8647cf3fbe20e5e4016af047",
+      "track": "T6",
+      "game_id": "astral-mage",
+      "surface_kind": "non-scene-contract",
+      "surface_id": "historical-scene-contract",
+      "asset_locator_literal": "indicator.offscreen",
+      "category": "historical-semantic-asset-slot-declaration",
+      "claim_ids": [
+        "AM-HIST-002"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger-v2.json",
+        "sha256": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+        "json_pointer": "/claims/4"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "historical_implementation",
+      "accepted_scope": "deleted implementation requirement only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "historical-not-current",
+        "physical-binding-loading-and-suitability-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-df92e3ff7509a431561b51db",
+      "track": "T6",
+      "game_id": "astral-mage",
+      "surface_kind": "non-scene-contract",
+      "surface_id": "historical-scene-contract",
+      "asset_locator_literal": "player.hero",
+      "category": "historical-semantic-asset-slot-declaration",
+      "claim_ids": [
+        "AM-HIST-002"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger-v2.json",
+        "sha256": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+        "json_pointer": "/claims/4"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "historical_implementation",
+      "accepted_scope": "deleted implementation requirement only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "historical-not-current",
+        "physical-binding-loading-and-suitability-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-2c45a6a755e0e375c2fa414a",
+      "track": "T6",
+      "game_id": "astral-mage",
+      "surface_kind": "non-scene-contract",
+      "surface_id": "historical-scene-contract",
+      "asset_locator_literal": "portal.complete",
+      "category": "historical-semantic-asset-slot-declaration",
+      "claim_ids": [
+        "AM-HIST-002"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger-v2.json",
+        "sha256": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+        "json_pointer": "/claims/4"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "historical_implementation",
+      "accepted_scope": "deleted implementation requirement only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "historical-not-current",
+        "physical-binding-loading-and-suitability-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-bb663b49a8f48b75c4d87ad9",
+      "track": "T6",
+      "game_id": "astral-mage",
+      "surface_kind": "non-scene-contract",
+      "surface_id": "historical-scene-contract",
+      "asset_locator_literal": "projectile.magic",
+      "category": "historical-semantic-asset-slot-declaration",
+      "claim_ids": [
+        "AM-HIST-002"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger-v2.json",
+        "sha256": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+        "json_pointer": "/claims/4"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "historical_implementation",
+      "accepted_scope": "deleted implementation requirement only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "historical-not-current",
+        "physical-binding-loading-and-suitability-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-9bc5070aa2b3251203a3c95b",
+      "track": "T6",
+      "game_id": "astral-mage",
+      "surface_kind": "non-scene-contract",
+      "surface_id": "historical-scene-contract",
+      "asset_locator_literal": "target.correct",
+      "category": "historical-semantic-asset-slot-declaration",
+      "claim_ids": [
+        "AM-HIST-002"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger-v2.json",
+        "sha256": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+        "json_pointer": "/claims/4"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "historical_implementation",
+      "accepted_scope": "deleted implementation requirement only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "historical-not-current",
+        "physical-binding-loading-and-suitability-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-974e3b6028f37367f2e32de2",
+      "track": "T6",
+      "game_id": "astral-mage",
+      "surface_kind": "non-scene-contract",
+      "surface_id": "historical-scene-contract",
+      "asset_locator_literal": "target.incorrect",
+      "category": "historical-semantic-asset-slot-declaration",
+      "claim_ids": [
+        "AM-HIST-002"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger-v2.json",
+        "sha256": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+        "json_pointer": "/claims/4"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "historical_implementation",
+      "accepted_scope": "deleted implementation requirement only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "historical-not-current",
+        "physical-binding-loading-and-suitability-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-0432398826f67d0783baf1c0",
+      "track": "T6",
+      "game_id": "astral-mage",
+      "surface_kind": "non-scene-contract",
+      "surface_id": "historical-scene-contract",
+      "asset_locator_literal": "target.word-crystal",
+      "category": "historical-semantic-asset-slot-declaration",
+      "claim_ids": [
+        "AM-HIST-002"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger-v2.json",
+        "sha256": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+        "json_pointer": "/claims/4"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "historical_implementation",
+      "accepted_scope": "deleted implementation requirement only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "historical-not-current",
+        "physical-binding-loading-and-suitability-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-602839a37fba3078ed870f2f",
+      "track": "T6",
+      "game_id": "astral-mage",
+      "surface_kind": "non-scene-contract",
+      "surface_id": "historical-scene-contract",
+      "asset_locator_literal": "ui.panel",
+      "category": "historical-semantic-asset-slot-declaration",
+      "claim_ids": [
+        "AM-HIST-002"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger-v2.json",
+        "sha256": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+        "json_pointer": "/claims/4"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "historical_implementation",
+      "accepted_scope": "deleted implementation requirement only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "historical-not-current",
+        "physical-binding-loading-and-suitability-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-b50d931f0cfc7c74efc89cde",
+      "track": "T6",
+      "game_id": "astral-mage",
+      "surface_kind": "non-scene-contract",
+      "surface_id": "historical-scene-contract",
+      "asset_locator_literal": "world.background",
+      "category": "historical-semantic-asset-slot-declaration",
+      "claim_ids": [
+        "AM-HIST-002"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger-v2.json",
+        "sha256": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+        "json_pointer": "/claims/4"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "historical_implementation",
+      "accepted_scope": "deleted implementation requirement only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "historical-not-current",
+        "physical-binding-loading-and-suitability-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-ab0c118dc4be90481ea32c30",
+      "track": "T6",
+      "game_id": "enchanted-library",
+      "surface_kind": "scene",
+      "surface_id": "asset-loading",
+      "asset_locator_literal": "/games/vocabulary/enchanted-library/book_3x1_sheet.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "EL-ASSET-001"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/claim-evidence-ledger.v2.json",
+        "sha256": "8adc5b881104bf0ce78d0eb3895b65cb0485a4e516e9918461acfad0f7adfb2e",
+        "json_pointer": "/claims/22"
+      },
+      "evidence_class": "asset",
+      "source_class": "current_implementation",
+      "accepted_scope": "runtime source reference only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "runtime-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-f4d7c4f8710a5f535612addb",
+      "track": "T6",
+      "game_id": "enchanted-library",
+      "surface_kind": "scene",
+      "surface_id": "asset-loading",
+      "asset_locator_literal": "/games/vocabulary/enchanted-library/library_background.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "EL-ASSET-001"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/claim-evidence-ledger.v2.json",
+        "sha256": "8adc5b881104bf0ce78d0eb3895b65cb0485a4e516e9918461acfad0f7adfb2e",
+        "json_pointer": "/claims/22"
+      },
+      "evidence_class": "asset",
+      "source_class": "current_implementation",
+      "accepted_scope": "runtime source reference only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "runtime-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-475f04e11aec9b264ec1c967",
+      "track": "T6",
+      "game_id": "enchanted-library",
+      "surface_kind": "scene",
+      "surface_id": "asset-loading",
+      "asset_locator_literal": "/games/vocabulary/enchanted-library/player_3x3_pose_sheet.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "EL-ASSET-001"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/claim-evidence-ledger.v2.json",
+        "sha256": "8adc5b881104bf0ce78d0eb3895b65cb0485a4e516e9918461acfad0f7adfb2e",
+        "json_pointer": "/claims/22"
+      },
+      "evidence_class": "asset",
+      "source_class": "current_implementation",
+      "accepted_scope": "runtime source reference only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "runtime-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-3194e801ec4247c4b206ab2c",
+      "track": "T6",
+      "game_id": "enchanted-library",
+      "surface_kind": "scene",
+      "surface_id": "asset-loading",
+      "asset_locator_literal": "/games/vocabulary/enchanted-library/spirit_3x3_pose_sheet.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "EL-ASSET-001"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/claim-evidence-ledger.v2.json",
+        "sha256": "8adc5b881104bf0ce78d0eb3895b65cb0485a4e516e9918461acfad0f7adfb2e",
+        "json_pointer": "/claims/22"
+      },
+      "evidence_class": "asset",
+      "source_class": "current_implementation",
+      "accepted_scope": "runtime source reference only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "runtime-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-8876a5cbd0c49b8327b4c8a9",
+      "track": "T6",
+      "game_id": "potion-rush",
+      "surface_kind": "scene",
+      "surface_id": "cauldron-assets",
+      "asset_locator_literal": "/games/sentence/potion-rush/cauldron-blue.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "PR-CUR-021"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+        "sha256": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+        "json_pointer": "/claims/20"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source request only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-bc8116392bca3e212b8a56c9",
+      "track": "T6",
+      "game_id": "potion-rush",
+      "surface_kind": "scene",
+      "surface_id": "cauldron-assets",
+      "asset_locator_literal": "/games/sentence/potion-rush/cauldron-green.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "PR-CUR-021"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+        "sha256": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+        "json_pointer": "/claims/20"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source request only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-af9528844e4200db4fbb484e",
+      "track": "T6",
+      "game_id": "potion-rush",
+      "surface_kind": "scene",
+      "surface_id": "cauldron-assets",
+      "asset_locator_literal": "/games/sentence/potion-rush/cauldron-yellow.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "PR-CUR-021"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+        "sha256": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+        "json_pointer": "/claims/20"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source request only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-0afb3981e898c7e4dd371558",
+      "track": "T6",
+      "game_id": "potion-rush",
+      "surface_kind": "scene",
+      "surface_id": "customer-assets",
+      "asset_locator_literal": "/games/sentence/potion-rush/character-sheet-2-adjusted.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "PR-CUR-023"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+        "sha256": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+        "json_pointer": "/claims/22"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source request only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-dd19bb4f7466112d8a0c2be7",
+      "track": "T6",
+      "game_id": "potion-rush",
+      "surface_kind": "scene",
+      "surface_id": "customer-assets",
+      "asset_locator_literal": "/games/sentence/potion-rush/character-sheet-adjusted.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "PR-CUR-023"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+        "sha256": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+        "json_pointer": "/claims/22"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source request only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-921de00e627d391607c72139",
+      "track": "T6",
+      "game_id": "potion-rush",
+      "surface_kind": "scene",
+      "surface_id": "ingredient-assets",
+      "asset_locator_literal": "/games/sentence/potion-rush/herb.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "PR-CUR-022"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+        "sha256": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+        "json_pointer": "/claims/21"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source request only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-503de5954d4db431e8359460",
+      "track": "T6",
+      "game_id": "potion-rush",
+      "surface_kind": "scene",
+      "surface_id": "ingredient-assets",
+      "asset_locator_literal": "/games/sentence/potion-rush/mineral.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "PR-CUR-022"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+        "sha256": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+        "json_pointer": "/claims/21"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source request only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-3847536916bedeea9707b998",
+      "track": "T6",
+      "game_id": "potion-rush",
+      "surface_kind": "scene",
+      "surface_id": "ingredient-assets",
+      "asset_locator_literal": "/games/sentence/potion-rush/mushroom.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "PR-CUR-022"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+        "sha256": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+        "json_pointer": "/claims/21"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source request only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-820ee8fe9196e704742c8e17",
+      "track": "T6",
+      "game_id": "potion-rush",
+      "surface_kind": "scene",
+      "surface_id": "ingredient-assets",
+      "asset_locator_literal": "/games/sentence/potion-rush/potion.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "PR-CUR-022"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+        "sha256": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+        "json_pointer": "/claims/21"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source request only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-7265ce200f41db55c6ff307b",
+      "track": "T6",
+      "game_id": "potion-rush",
+      "surface_kind": "scene",
+      "surface_id": "shop-assets",
+      "asset_locator_literal": "/games/sentence/potion-rush/shop-counter.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "PR-CUR-020"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+        "sha256": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+        "json_pointer": "/claims/19"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source request only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-6e9e5db24fef0880cf4c488a",
+      "track": "T6",
+      "game_id": "potion-rush",
+      "surface_kind": "scene",
+      "surface_id": "shop-assets",
+      "asset_locator_literal": "/games/sentence/potion-rush/shop-floor.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "PR-CUR-020"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+        "sha256": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+        "json_pointer": "/claims/19"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source request only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-146fded69b82853991326ee1",
+      "track": "T6",
+      "game_id": "potion-rush",
+      "surface_kind": "scene",
+      "surface_id": "shop-assets",
+      "asset_locator_literal": "/games/sentence/potion-rush/shop-wall.png",
+      "category": "source-requested-image",
+      "claim_ids": [
+        "PR-CUR-020"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+        "sha256": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+        "json_pointer": "/claims/19"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "source request only",
+      "disclosures": [
+        "T6-browser-unknown",
+        "asset-loading-success-not-claimed"
+      ]
+    },
+    {
+      "usage_id": "usage-5a951f199bda31944822293f",
+      "track": "T7",
+      "game_id": "babel-architect",
+      "surface_kind": "scene",
+      "surface_id": "historical-renderer",
+      "asset_locator_literal": null,
+      "category": "procedural-phaser-primitives-and-palette-manifest",
+      "claim_ids": [
+        "BA-HIST-008",
+        "BA-HIST-009",
+        "BA-UNK-001"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/babel-architect/requirements-map-batch-b.json",
+        "sha256": "64ec421a63b7bb28308752553e7a552bc8613de3f5b39dc3323b2a36ca5a3bc4",
+        "json_pointer": "/mappings/5"
+      },
+      "evidence_class": "accepted-requirements-mapping",
+      "source_class": "historical_implementation",
+      "accepted_scope": "historical rendering only",
+      "disclosures": [
+        "T7-browser-unknown",
+        "historical-not-current",
+        "denominator-cover-and-design-not-promoted"
+      ]
+    },
+    {
+      "usage_id": "usage-c9faed4d1c0485a80fa46669",
+      "track": "T7",
+      "game_id": "the-haunted-library",
+      "surface_kind": "scene",
+      "surface_id": "playing",
+      "asset_locator_literal": null,
+      "category": "procedural-konva-primitives",
+      "claim_ids": [
+        "HL-CUR-014"
+      ],
+      "source_artifact": {
+        "path": "measure/tracks/apk_corpus_audit_special_historical_20260712/packages/the-haunted-library/claim-ledger-batch-b.json",
+        "sha256": "5e888c0e7577ca767be873847b8dab5b4339efd2dee0490e98fc82ee97053ef1",
+        "json_pointer": "/claims/13"
+      },
+      "evidence_class": "exact-source",
+      "source_class": "current_implementation",
+      "accepted_scope": "current source rendering only",
+      "disclosures": [
+        "T7-browser-unknown",
+        "denominator-cover-and-ambient-not-promoted"
+      ]
+    }
+  ]
+}

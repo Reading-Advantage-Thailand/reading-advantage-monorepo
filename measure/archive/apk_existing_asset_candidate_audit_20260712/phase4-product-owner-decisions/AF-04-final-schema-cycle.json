@@ -1,0 +1,123 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-product-owner-stop-loss-decision.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": 4,
+  "batch_id": "AF-04",
+  "decision_id": "AF-04-final-schema-cycle-20260724",
+  "decided_at": "2026-07-24T02:19:57+07:00",
+  "authority": {
+    "role": "root-orchestrator-project-and-product-owner",
+    "repository_head": "129200815cef1140e8bbcbf936eeebbc904f79f3",
+    "basis": [
+      "The track specification assigns exact manifest and report acceptance to the root orchestrator acting as project and product owner.",
+      "The dispatch contract requires an additive product-owner decision after a stop-loss rather than a silent repair.",
+      "The active goal requires T8 through T11 to reach usability and fitness-for-purpose acceptance, not paper completion."
+    ]
+  },
+  "trigger": {
+    "status": "two-failed-cycle-limit-reached",
+    "unresolved_finding": "AF-04-P4-H1",
+    "severity": "high",
+    "finding_scope": "Evidence-schema and receipt-integrity mismatch only; frozen path membership, callers, joins, dispositions, priority evidence, and responsive blocked states reconciled.",
+    "cycle_1": {
+      "report": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-04/truth-test-report-cycle-1.json",
+        "sha256": "150d7292983bbf09e175e1c77b558a16f338408d33a1a0ce80064a60506768da"
+      },
+      "receipt": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-04/truth-test-receipt-cycle-1.json",
+        "sha256": "7a6c369bdd46603bbc0ac46665619820f26666bf2fc168115c3b6a61dd97427c"
+      }
+    },
+    "cycle_2": {
+      "producer_joins": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-04/cycle-2/phase4-path-usage-joins.json",
+        "sha256": "cf0f48973eb71c609fe784cdaf945152a3e92939471c6af83ae39eefbc01a439"
+      },
+      "producer_rollup": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-04/cycle-2/phase4-group-rollup.json",
+        "sha256": "ee7e21803c3071736e3278e52910438fcbe8b625f6a0dd02d06f0e2f5c37ddc0"
+      },
+      "mapper_receipt": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-04/cycle-2/requirements-mapper.json",
+        "sha256": "e21cceab0a0ff4cb58497d54d75a204495d9adc5e91cd08f4cb8893b536af995"
+      },
+      "truth_report": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-04/cycle-2/truth-test-report.json",
+        "sha256": "fd89ac76ab125ff1d257ef87f7d0fbec60b2a1cfaf03df71de458a1cc5a6233e"
+      },
+      "truth_receipt": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-04/cycle-2/truth-test-receipt.json",
+        "sha256": "31e3677be0037bad4cd176ad4508e635c674e3f81b9490bea2950f77cf20704e"
+      },
+      "review": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-04/cycle-2/adversarial-review.json",
+        "sha256": "98e3f211cc323c788487736544b6e71d53259c4e5892251b522d332a7a313dee"
+      },
+      "reviewer_receipt": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-04/cycle-2/adversarial-reviewer-receipt.json",
+        "sha256": "dca8be45c50a5dca59b29a7d6284257adc3b7f910969694b3ea2d4f426387a96"
+      }
+    }
+  },
+  "frozen_factual_envelope": {
+    "candidate_paths": 35,
+    "identical_hash_groups": 17,
+    "caller_locators": 61,
+    "accepted_path_usage_links": 6,
+    "unique_scene_usage_records": 3,
+    "responsive_assessment_cells": 24,
+    "priority1_paths": 4,
+    "dispositions": {
+      "replace": 6,
+      "reject": 4,
+      "unknown": 25
+    },
+    "mixed_path_specific_disposition_groups": 3,
+    "games": [
+      "dragon-flight",
+      "enchanted-library",
+      "rpg-battle"
+    ],
+    "facts_may_change": false
+  },
+  "decision": {
+    "status": "authorized-one-final-cycle",
+    "authorization": "One exceptional final AF-04 schema-only producer, truth-test, and adversarial-review cycle is authorized.",
+    "why_exception_is_bounded": [
+      "The blocking finding is mechanically exact and limited to missing or divergent evidence-contract fields plus a false receipt assertion.",
+      "Every substantive path, caller, source pointer, disposition, priority decision, browser boundary, and responsive blocked state already passed independent review.",
+      "Cycle-2 bytes are now preserved completely, curing the prior archival limitation for the final repair comparison."
+    ],
+    "invalidates_active_af04_outputs": true,
+    "does_not_invalidate_archived_failed_evidence": true,
+    "next_batch_remains_blocked": true
+  },
+  "final_cycle_contract": {
+    "producer_changes_allowed": [
+      "Set the AF-04 joins and rollup schema_version values to apk-asset-forensics.phase4-path-usage-joins.v2 and apk-asset-forensics.phase4-group-rollup.v2.",
+      "Add join_status to every candidate record by exact copy from the frozen Phase 4 scaffold.",
+      "For joined paths set semantic_replacement_requirements.status to source_bound_pending_T9; for unjoined paths retain blocked_unknown.",
+      "Require every semantic_replacement_requirement object to contain exactly usage_id, source, accepted_usage_fields, canonical_semantic_role, canonical_state, and ontology_status; remove producer-only status and disclosure keys.",
+      "Bind group-rollup input_path_usage_joins to both the current joins path and exact current joins SHA-256.",
+      "Update only the AF-04 requirements-mapper receipt to bind this decision, all archived cycles, and the repaired producer hashes."
+    ],
+    "producer_changes_forbidden": [
+      "Candidate path, group, caller, usage, priority, disposition, provenance, eligibility, responsive cell, browser, or semantic accepted-usage fact changes.",
+      "Changes to immutable freezes, predecessor acceptances, the existing Phase 4 value-contract verifier, or prior batch artifacts.",
+      "Plan, acceptance, production, shipping, T9 ontology, direct legacy adoption, or canonical standard-pack key changes."
+    ],
+    "truth_test_requirements": [
+      "Use a fresh isolated truth-test author.",
+      "Run the unchanged phase4_batch_contract_test.py value contract.",
+      "Add a separate v2 exact-shape contract and focused negative fixtures that fail on missing join_status, divergent semantic requirement keys, missing joins SHA binding, false exact-shape receipt assertions, and factual-envelope drift.",
+      "Publish current AF-04 value and v2-shape reports plus one receipt bound to both reports and all failed-cycle evidence."
+    ],
+    "review_requirements": [
+      "Use a fresh fork_turns=none adversarial reviewer.",
+      "Review every AF-04 record and the exact before/after schema delta.",
+      "Require zero Critical, High, or Medium findings, zero stop-loss events, exact resource ceilings, and byte-preserved failed-cycle evidence."
+    ],
+    "terminal_rule": "Any producer, truth-test, receipt, resource, or review failure in this final cycle blocks AF-04 and the Phase 4 program with no further self-authorized exception."
+  }
+}

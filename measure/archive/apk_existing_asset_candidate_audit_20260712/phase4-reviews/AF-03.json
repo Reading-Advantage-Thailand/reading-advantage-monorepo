@@ -1,0 +1,163 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-adversarial-review.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "batch_id": "AF-03",
+  "review_role": "adversarial-reviewer",
+  "reviewer_task_name": "/root/phase4_review_af03",
+  "declared_model": "gpt-5.6-sol",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "reviewed_at": "2026-07-24",
+  "authority_commit": "129200815",
+  "byte_hash_verification": {
+    "status": "pass",
+    "verified_before_substantive_review": true,
+    "mismatches": 0,
+    "phase4_freezes": {
+      "source_registry_sha256": "450f5ab66215178aa730e057cb28a220bfb550dfd924959a7f7f1da2eea02f9e",
+      "input_freeze_sha256": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+      "join_scaffold_sha256": "2162076fe26911a2659b7e0ef23f49398c8ebb4b5343b0ab0479c78a5d1a1de4",
+      "browser_evidence_freeze_sha256": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231"
+    },
+    "accepted_predecessors": {
+      "phase0_input_freeze_sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+      "phase0_adversarial_review_v2_sha256": "80a22372921bb0433b0417ff8a5ee28ccf561d66eefc36cff1b5520320db0a05",
+      "phase1_root_acceptance_sha256": "2b30be13c8c0f6b7d1d404489c6058b48b6839f58d5ae2ce84b67f9d6a1a6d61",
+      "phase2_root_acceptance_sha256": "461c1d4f26afa512d1e6266384005b019ab0428a3cc508046675feb9aef35ed1",
+      "phase3_root_acceptance_sha256": "e855e7e50eba21fa9614719472f75179b7db9e7fd3d9756373d7bbd39b12a579"
+    }
+  },
+  "reviewed_output_hashes": {
+    "phase4_path_usage_joins_sha256": "2015d48ae0ecc3b7ed51df44501c66037b9e5c367922940817a0363f03ec739d",
+    "phase4_group_rollup_sha256": "f7a1085af309e85130b863e7f235add4693e9afe46a792862f7fed5114cec00c",
+    "requirements_mapper_receipt_sha256": "b464b4a2040cf4255790a4b6623ece0fbe8d1c0c58b6aec45a9e353ef9088f16",
+    "deterministic_verifier_sha256": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+    "final_test_report_sha256": "1e30c3726f2508a25fdbb2ed49f698794018e20fbf35f5343dd03648b9e1e76a",
+    "truth_test_receipt_sha256": "f9675eb7a7c28851c1ad383b546d1190ef1088ff9ad79bdf264998d49896540b",
+    "preserved_phase2_adversarial_reviewer_receipt_sha256": "f45b1f8b46e9fb0cb9da72f9694338bc770abdd7183cadcf3d2b7957b58a88a5"
+  },
+  "deterministic_verifier": {
+    "command": "CI=true python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_batch_contract_test.py --batch AF-03 --json",
+    "exit_code": 0,
+    "production_errors": [],
+    "production_passed": true,
+    "test_cases": 17,
+    "counterexamples": 16,
+    "all_counterexamples_rejected": true,
+    "report_matches_live_run": true,
+    "sufficiency_boundary": "The verifier was rerun independently but was not treated as sufficient substantive review."
+  },
+  "reviewed_counts": {
+    "candidate_path_records": 35,
+    "identical_hash_groups": 21,
+    "caller_locators": 72,
+    "git_pinned_caller_source_files": 25,
+    "accepted_path_usage_links": 6,
+    "accepted_join_locator_literal_bindings": 20,
+    "unique_scene_usage_records": 3,
+    "responsive_assessment_cells": 24,
+    "review_slices": 1,
+    "games_touched": 2,
+    "underlying_accepted_source_artifacts": 2,
+    "priority1_paths": 1,
+    "dispositions": {
+      "replace": 6,
+      "reject": 1,
+      "unknown": 28
+    },
+    "reuse_allowed": 0,
+    "adapt_allowed": 0,
+    "reference_allowed": 0,
+    "direct_legacy_adoption_true": 0,
+    "canonical_standard_pack_keys_non_null": 0,
+    "mixed_path_specific_disposition_groups": 3,
+    "separate_global_catalog_locator_records": 7,
+    "catalog_locator_candidate_join_overlap_usage_ids": 3,
+    "catalog_records_added_to_candidate_denominator": 0,
+    "review_records": 208
+  },
+  "reviewed_set_hashes": {
+    "canonical_paths_sha256": "5974300562f7daa7044ff6fe2e3a708807d89877fadd70778d7313e44ef0dd20",
+    "identical_hash_groups_sha256": "6c86d7fa64be6f06d100ef9b75fea8812d617fce7a38bf2bb928f19815d517e2",
+    "caller_locator_ids_sha256": "2dd6e853855abdf472f3c9a365c011ac2141ea8ad488c624aa27055404c80cd6",
+    "path_usage_links_sha256": "b69290338e96e1e619768d082255827032649f5b2611d660a584ddb16147d86a",
+    "unique_scene_usage_ids_sha256": "35573dc732184df195c03a0c2aba03aa107c5d33c899a8591eff3eb403159b93",
+    "hash_basis": "SHA-256 of sorted identifiers joined by LF with one trailing LF. A path-usage link identifier is canonical_path|usage_id."
+  },
+  "review_slices": [
+    {
+      "slice_id": "AF-03-potion-rush-rpg-battle",
+      "games": [
+        "potion-rush",
+        "rpg-battle"
+      ],
+      "game_count": 2,
+      "candidate_paths": 6,
+      "accepted_path_usage_links": 6,
+      "status": "pass",
+      "scope": "Exact joined paths only; bounded composite browser evidence does not establish per-path runtime load."
+    }
+  ],
+  "verification": {
+    "same_v1_schema": "The AF-03 producer pair uses the established same-v1 top-level, candidate-record, caller-locator, usage-link, responsive-cell, and group-rollup key shapes seen in the accepted adjacent batch. It contains no duplicated catalog-locator payload. Every one of the 24 cells has exactly the eight established facets, including semantic_role_state_replacement_or_retirement.",
+    "path_records": "All 35 AF-03 candidate-path records independently reconcile to the frozen scaffold, candidate base, Phase 1 caller inventory, Phase 2 provenance audit, and Phase 3 inspection membership. All 21 identical-hash groups retain every path-specific member and duplicate peer; none was collapsed.",
+    "caller_locators": "All 72 locators resolve to their exact caller-inventory JSON pointers. Every cited line was independently read from 25 source blobs at the pinned 65fc00d872ce5aa63820662ee0a1f14952e63235 revision. All line hashes under the Phase 1 terminator-stripping policy and all matched literals pass.",
+    "accepted_links_and_sources": "All six path-usage links resolve exactly to Potion Rush /usages/43 and RPG Battle /usage_records/17 and /usage_records/18. The Potion copies resolve to PR-CUR-020 at /claims/19; the RPG copies resolve to RPG-ASSET-042 at /claims/169. Both source artifacts, normalizer hashes, pointers, copied evidence envelopes, and claim IDs pass. RPG-ASSET-042 remains a bounded asset-prefix claim rather than a browser-load claim.",
+    "responsive_cells": "All 24 cells are the exact compact/wide by cute_chibi_v1/heroic_stylized_v1 grid. Text capacity, crop/tile/slice, state coverage, collision/readability, theme suitability, semantic role/state replacement or retirement, and per-path runtime load remain blocked or not established.",
+    "browser_scope": "Potion Rush records only the frozen bounded composite current-legacy-function states: compact gameplay is incompatible because of the unresolved HUD key and overlay pressure, while wide has bounded start-surface support. RPG Battle is readiness-blocked at both viewports by the repeated vocabulary-fetch loop. Neither game asserts per-path load, suitability, production readiness, or success.",
+    "priority1_evidence": "Exactly apps/advantage-games/public/games/vocabulary/paladins-twin-soul/cover.png resolves to accepted Phase 3 /groups/3 at inspection hash 0ed0bbf1d150e29c17269c939af1193582d3c88b80de3d24221699bd6ad38893. The frozen blob is unreadable_or_pointer with corruption_risk present, so priority 1 yields reject/retire.",
+    "dispositions_and_provenance": "Priority policy yields six replace, one reject/retire, and 28 blocked unknown paths. Every upstream-provenance and license state remains unknown; reuse, adapt, and reference are blocked. No canonical standard-pack candidate key is assigned and direct legacy adoption is false for all 35 paths.",
+    "semantic_replacement": "Every joined path copies only its exact accepted source envelope. Canonical semantic roles and states are null pending T9; every unjoined path has an empty blocked semantic replacement requirement.",
+    "group_rollup": "All 21 rollups exactly reproduce members, path-specific dispositions, caller totals, and link totals. Three mixed groups preserve joined and unjoined duplicate paths separately. The seven catalog locator records remain a reference-only separate grain with three overlap usage IDs, adding neither paths nor responsive cells; no 92-path claim appears.",
+    "role_isolation_and_receipts": "The mapper and truth-test author have separate native tasks, fork_turns none, inherited_narrative false, exact input/output hashes, declared ceilings, zero stop-loss events, and zero unresolved blocking findings. This reviewer did not produce their outputs. The existing AF-03 Phase 2 adversarial-reviewer receipt remains byte-identical at f45b1f8b46e9fb0cb9da72f9694338bc770abdd7183cadcf3d2b7957b58a88a5.",
+    "resource_ceilings": "Mapper usage remains 35/40 paths, 3/240 unique scene usages, 2/3 maximum games per slice, 40/80 commands, and 2306818/268435456 bytes. Truth-test usage remains 17/160 tests, 1/80 commands, and 109948787/134217728 bytes. This reviewer used 35/40 paths, 21/24 groups, 208/280 review records, 40/120 commands, and 112724565/536870912 bytes."
+  },
+  "scope_boundary": {
+    "reviewed": "AF-03 Phase 4 frozen inputs, path-specific joins, group rollup, frozen browser scope, blocked responsive cells, dispositions, provenance restrictions, receipts, and deterministic tests.",
+    "not_authorized": [
+      "repair any output",
+      "alter freezes, test, plan, acceptance state, or an existing receipt",
+      "accept Phase 4 or T8",
+      "authorize T9",
+      "assign canonical keys",
+      "adopt legacy paths",
+      "produce assets",
+      "implement product code",
+      "ship or claim product success",
+      "commit"
+    ]
+  },
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": []
+  },
+  "stop_loss_events": [],
+  "unresolved_blocking_findings": 0,
+  "decision": {
+    "admit": true,
+    "block": false,
+    "status": "pass",
+    "blocking_severity_gate": "clear",
+    "scope": "AF-03 Phase 4 batch artifacts only; this is not root-orchestrator acceptance and does not make Phase 4 Green."
+  },
+  "resource_usage": {
+    "candidate_paths": 35,
+    "hash_groups": 21,
+    "review_records": 208,
+    "command_invocations": 40,
+    "bytes_read": 112724565,
+    "within_ceiling": true,
+    "ceilings": {
+      "candidate_paths": 40,
+      "hash_groups": 24,
+      "review_records": 280,
+      "command_invocations": 120,
+      "bytes_read": 536870912
+    },
+    "measurement_basis": "208 review records are 35 candidate records, 21 group rollups, 72 caller locators, six path-usage links, 24 responsive cells, six semantic requirements, 35 disposition decisions, one priority-1 evidence record, one review slice, and seven catalog locator records. Bytes are exact 2467028 bytes across 27 unique review inputs plus 308750 bytes from 25 unique Git-pinned caller source blobs plus the verifier's measured 109948787 bytes. Command count includes top-level reviewer shell invocations through publication validation, including the failed first locator-hash diagnostic and failed first aggregate-audit script."
+  },
+  "final_status": "pass-pending-root-orchestrator-phase4-acceptance"
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-global-failed-cycle.v1",
+  "cycle": "v1-two-high-false-greens",
+  "disposition": "archived-before-remediation",
+  "blocking_findings": ["P4G-H-01", "P4G-H-02"],
+  "archived_exact_hashes": {
+    "phase4_global_contract_test.py": "383365f43ce27c4f71b1f6cc8ef40ef210e8b868319619f909ab8313d995845a",
+    "phase4-global-test-report.json": "62750015a016dfc4357c75c1f0fec17f81e324b8cacb455bd9c5922562e3e071",
+    "truth-test-author.json": "ef7bc7b07ccb8b7e31c135813a534440241c1edda06d7c3a2c98ace13d7e6b41",
+    "phase4-global-review.json": "420a3c017d52cd4ebf71bbb5e073e42698b619f46249ed69996a21347fdf93ed",
+    "adversarial-reviewer.json": "d5aa30f23a5f36805e52a814ab9d94bc0cc2073f04d858f93a40026cbc7a7dc6"
+  },
+  "red_evidence_sha256": "e2b8708db7a522f6a377fdf4558348db0f77fb042b6891f57f0dc6f1db615107",
+  "required_repair": "Prove v1 false-green behavior, then enforce frozen scaffold caller ownership and live truth-receipt hash bindings without changing batch artifacts or the failed review."
+}

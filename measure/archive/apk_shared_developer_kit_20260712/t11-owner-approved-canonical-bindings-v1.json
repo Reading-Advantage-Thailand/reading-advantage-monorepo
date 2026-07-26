@@ -1,0 +1,23 @@
+{
+  "schema_version": "apk-owner-approved-canonical-bindings.v1",
+  "track_id": "apk_shared_developer_kit_20260712",
+  "classification": "normative_product_decision",
+  "legacy_evidence_claim": false,
+  "authority": "t11-owner-authorized-extension-v1",
+  "release": {
+    "version": "2026.07.23",
+    "catalog_digest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+    "source_receipt_digest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9"
+  },
+  "decision_scope": "Forward shared presentation, public exemplar, scaffold defaults, and Advantage Games QC only.",
+  "bindings": [
+    { "role": "player", "state": "idle", "semantic_key": "top-down/32x32/characters/hero-01", "usage": "image" },
+    { "role": "enemy", "state": "idle", "semantic_key": "side-view/32x32/characters/enemy-001-idle", "usage": "image" },
+    { "role": "feedback", "state": "correct", "semantic_key": "effects/32x32/combat/hit-01", "usage": "image" },
+    { "role": "control", "state": "confirm", "semantic_key": "ui/16x16/controls/gamepad-buttons", "usage": "image" },
+    { "role": "panel", "state": "default", "semantic_key": "ui/20x20/inventory/slot", "usage": "image" },
+    { "role": "status", "state": "armor", "semantic_key": "ui/32x32/items/armor-icons", "usage": "image" },
+    { "role": "audio-feedback", "state": "correct", "semantic_key": "audio/native/combat/hit-01", "usage": "audio" }
+  ],
+  "historical_disposition": "These rows do not approve, infer, or alter any of T10's 85 blocked historical adoption mappings."
+}

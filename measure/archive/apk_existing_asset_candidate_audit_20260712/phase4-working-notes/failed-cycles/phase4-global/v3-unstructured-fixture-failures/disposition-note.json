@@ -1,0 +1,15 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-global-failed-cycle.v1",
+  "cycle": "v3-unstructured-fixture-failures",
+  "disposition": "archived-before-P4G-M-01-remediation",
+  "blocking_findings": ["P4G-M-01"],
+  "archived_exact_hashes": {
+    "phase4_global_contract_test.py": "39d773c8799f8a59d1664f76de4a0cf694cb318fea43bcf50fc1f2e81f366f66",
+    "phase4-global-test-report.json": "4323c7cc8cec3f519ab24e1b9448cb85ffaa4c68064b2a3a5c1438c9fb467519",
+    "truth-test-author.json": "260a9f28531aa73df19d234c73de868c1300b27975cdac9cb1e240e0b22fb418",
+    "phase4-global-review-v3.json": "d7d4a6272b84679237b202d18dc909982e0aa77955220ffc2b804e37c12ee11b",
+    "adversarial-reviewer-v3.json": "49da398b84b5e3784d43306b160b80b95894a41556be9d1eecc09fed1f947de4"
+  },
+  "red_evidence_sha256": "18591e48ecb68f527c79cc9bfc9949986337e69da518085e8658502fc38a4d2c",
+  "required_repair": "Return deterministic fixture-manifest-binding JSON for all manifest and fixture identity failures before behavior, meta, or producer verification can execute."
+}

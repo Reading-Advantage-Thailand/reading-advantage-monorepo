@@ -1,0 +1,26 @@
+{
+  "accepted_manifest": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/accepted-successor-manifest-v1.json",
+    "sha256": "e9fc2c9c8074db74670fa2e2929bd4efb5b8d0fd2ef5a8b9819d2f5a6e39ba49"
+  },
+  "candidate_gate": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-candidate-gate-report-v1.json",
+    "sha256": "f18ec42f8cd7433968100894bf950015693d89c905bfa4041e2eb930b53fb1ad"
+  },
+  "canonical_pack_release": {
+    "path": "packages/advantage-play-kit/assets/standard/accepted-standard-pack-release.json",
+    "sha256": "61984e0b53c4ba85379cf6a4f0f33ee956665c4eaad4b3d681e3dccd98389844"
+  },
+  "consumer_scope": "T11_shared_developer_kit_only",
+  "independent_review": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-independent-acceptance-review-v1.json",
+    "sha256": "efca1bc8391328fc274c34ac463c362dcffcd921c96204905091b9025554688d"
+  },
+  "owner_acceptance": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/product-owner-acceptance-v1.json",
+    "sha256": "165e21c9ddb5a6e0b2f61f3190d604fbb3133459b5f00331a8c66ee1e7572753"
+  },
+  "revocation_state": "active",
+  "schema_version": "apk-t10-successor-hashes.v1",
+  "status": "accepted"
+}

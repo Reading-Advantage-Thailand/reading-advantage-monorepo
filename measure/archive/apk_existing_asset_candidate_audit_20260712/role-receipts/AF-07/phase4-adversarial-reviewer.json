@@ -1,0 +1,142 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-07",
+  "phase": "phase4",
+  "role": "adversarial-reviewer",
+  "native_task_name": "/root/phase4_review_af07",
+  "declared_model": "gpt-5.6-sol",
+  "reasoning_effort": "xhigh",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "allowed_input_manifest_sha256": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+  "exact_verified_inputs": {
+    "current_producer": {
+      "joins": "aec0b97a436b6e1b85c1b71d7ec290e3f22c528f3a1e207d8d67f7eb3c31e11f",
+      "rollup": "a8982fb20fac425c8e432126d5bd776809ebd45c487fdf154b902f29add5f4b6",
+      "mapper_receipt": "e113bab142898cd55e8f2b6891137b5285aaffc0c1dae7e3884a03771642d249"
+    },
+    "verifiers": {
+      "phase4_batch_contract_test.py": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+      "phase4_v2_batch_schema_contract_test.py": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519",
+      "phase4_v2_batch_schema_contract_test_v2.py": "174fba885907260824503708180cd4dbe2b873e06aaf8e86c4fb440c319c9956"
+    },
+    "reports": {
+      "phase4-batch-test-reports/AF-07.json": "0d099bd4042788b8864b58e238466c72bfd2f09b625c168cee6b2d8061e7f340",
+      "phase4-v2-batch-schema-test-reports/AF-07.json": "a8dae3e1dd66073f305c5ae328a397516fb6962a80143490bae38c03bb2f89f3"
+    },
+    "truth_test_receipt": "4069c5b6f5e5a46893e32b0bc206ee4221edba3c1d5c84460a2ec087cd59e8",
+    "preserved_phase2_reviewer_receipt": "7d2267d40c36e56dccdf9e8c9e7e5ea1d3dec1a07d0aed3a2788ae8680fd31e2",
+    "fixtures": {
+      "phase4_value_fixture_count": 16,
+      "phase4_versioned_v2_fixture_count": 14,
+      "all_30_rejected_for_published_intended_codes": true,
+      "versioned_v2_fixture_hash_map_is_exactly_bound_by": "a8dae3e1dd66073f305c5ae328a397516fb6962a80143490bae38c03bb2f89f3"
+    },
+    "failed_cycle_archives": {
+      "truth_receipt_fixture_hash_typo_red_receipt": "edb0645e7343304e1cc4ae0633dba9a8c5542224a9372e1a9274922afff9be65",
+      "failure_note": "35e1b6f4e3c8d6720b123852db7135a2ad882f92f67122adbfeb18c20893160d",
+      "corrected_truth_receipt": "4069c5b6f5e5a46893e32b0bc206ee4221edba3c1d5c84460a2ec087cd59e8",
+      "preserved_as_non_authority": true
+    }
+  },
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-reviews/AF-07.json": "a9ee10c54bcd4d4ef63f464e79d822b649b1a4eccc8e3469517e9203fc0ed9d4"
+  },
+  "role_boundary": "Fresh isolated AF-07 Phase 4 adversarial review derived from live frozen inputs. Reviewed all 35 producer records, 17 groups, 40 caller locators, eight scene-only path-usage links across four unique usage IDs, 32 responsive cells and all eight facets, 35 path-specific dispositions, seven separate catalog locators, the mapper and corrected truth receipt, bounded browser evidence, four unique joined image hashes, and the archived receipt-authoring failure chain. Did not repair or alter producer, test, fixture, report, mapper, truth receipt, failed-cycle archive, freeze, plan, product code, acceptance state, or commits; did not authorize adoption/T9, capture new browser evidence, or accept Phase 4.",
+  "reviewed_counts": {
+    "candidate_paths": 35,
+    "hash_groups": 17,
+    "caller_locators": 40,
+    "accepted_path_usage_links": 8,
+    "scene_links": 8,
+    "non_scene_links": 0,
+    "unique_scene_usage_records": 4,
+    "unique_usage_ids": 4,
+    "responsive_assessment_cells": 32,
+    "priority1_paths": 0,
+    "dispositions": {
+      "replace": 8,
+      "reject": 0,
+      "unknown": 27
+    },
+    "mixed_groups": 4,
+    "catalog_locator_records": 7,
+    "review_records": 178
+  },
+  "verifier_results": {
+    "value": {
+      "exit_code": 0,
+      "report_byte_reproduced": true,
+      "parsed_json_equal": true,
+      "test_cases": 17,
+      "counterexamples": 16,
+      "production_errors": []
+    },
+    "versioned_v2": {
+      "exit_code": 0,
+      "report_byte_reproduced": true,
+      "parsed_json_equal": true,
+      "total_test_cases": 32,
+      "structural_test_cases": 15,
+      "counterexamples": 14,
+      "production_errors": []
+    },
+    "preserved_generic_v1": {
+      "sha256_verified": true,
+      "selected_as_af07_authority": false,
+      "does_not_make_v1_af07_authority": true
+    },
+    "all_records_groups_links_cells_independently_rederived": true,
+    "green_not_sole_evidence": true
+  },
+  "substantive_results": {
+    "recursive_v2_shapes_exact_and_no_extras": true,
+    "all_35_join_status_values_equal_scaffold": true,
+    "all_8_six_key_semantic_requirements_are_exact_source_copies": true,
+    "all_8_path_mirrors_are_deep_and_order_equal": true,
+    "all_32_cells_have_exact_eight_facet_shapes": true,
+    "all_8_scene_links_have_exact_four_cell_matrix": true,
+    "non_scene_link_count_is_zero": true,
+    "all_source_pointers_hashes_and_claim_ids_resolve": true,
+    "all_40_caller_locators_reconcile": true,
+    "rollup_counts_members_dispositions_four_mixed_groups_and_current_joins_sha_are_exact": true,
+    "mapper_and_corrected_truth_receipt_are_truthful": true,
+    "browser_evidence_remains_composite_scene_only": true,
+    "enchanted_compact_scroll_supported_and_wide_timeout_blocked": true,
+    "potion_compact_hud_pressure_and_wide_start_support_bounded": true,
+    "rpg_both_widths_fetch_loop_blocked": true,
+    "direct_legacy_adoption_false_for_all_paths": true,
+    "canonical_candidate_key_null_forbidden_pending_T9_for_all_paths": true,
+    "reuse_adapt_reference_forbidden_for_all_paths": true,
+    "catalog_count_seven_and_non_additive": true,
+    "priority1_path_count_zero": true,
+    "phase2_reviewer_receipt_preserved_and_separate": true,
+    "archived_bad_receipt_and_failure_note_remain_non_authority": true
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "stop_loss_events": [],
+  "unresolved_blocking_findings": 0,
+  "measured_resource_usage": {
+    "candidate_paths": 35,
+    "hash_groups": 17,
+    "review_records": 178,
+    "command_invocations": 50,
+    "bytes_read": 250000000,
+    "within_ceiling": true,
+    "ceilings": {
+      "candidate_paths": 40,
+      "hash_groups": 24,
+      "review_records": 280,
+      "command_invocations": 120,
+      "bytes_read": 536870912
+    },
+    "measurement_basis": "Conservative AF-07 accounting: the required standalone value reproduction reports 113788582 bytes and the required versioned-v2 reproduction reports 116176568 bytes including its nested value invocation, totaling 229965150 exact verifier-accounted bytes; bounded routing, JSON, source-range, receipt, image, screenshot, and publication-validation reads are covered by the stated conservative total."
+  },
+  "final_status": "review-pass-pending-root-acceptance"
+}

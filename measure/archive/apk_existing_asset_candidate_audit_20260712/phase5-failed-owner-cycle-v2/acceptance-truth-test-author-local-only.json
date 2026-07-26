@@ -1,0 +1,17 @@
+{
+  "counterexamples": {
+    "all_rejected": true,
+    "count": 7
+  },
+  "final_status": "acceptance-contract-pass",
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-acceptance-green-report.json": "f5ad8f962910e1cdf423544eea99e2328e10e0790f43bc2f78f5d14daa94158b",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5_acceptance_test.py": "0a9e32c2550680ed0e6e707ef12078b352bca3d0fd60fcf9886ee7bab4ccb2fc"
+  },
+  "production": {
+    "errors": [],
+    "passed": true
+  },
+  "role": "phase5-acceptance-truth-test-author",
+  "schema_version": "apk-role-receipt.phase5-acceptance-truth-test-author.v1"
+}

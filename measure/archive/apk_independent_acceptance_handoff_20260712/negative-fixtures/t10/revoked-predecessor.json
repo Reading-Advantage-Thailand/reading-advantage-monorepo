@@ -1,0 +1,11 @@
+{
+  "fixture_id": "revoked-predecessor",
+  "mutations": [
+    {
+      "artifact": "measure/evidence-integrity-accepted-gate.json",
+      "pointer": "/revoked",
+      "value": true
+    }
+  ],
+  "expected_codes": ["REVOKED_PREDECESSOR"]
+}

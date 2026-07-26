@@ -1,0 +1,1016 @@
+{
+  "consumable": false,
+  "counts": {
+    "adopted_role_state_records": 0,
+    "blocked_role_state_records": 45,
+    "normalized_usage_records": 45
+  },
+  "input_bindings": {
+    "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase1-developer-effort-baseline-v1.json": "168403610d0c69160777ddeca5753dcc57b97e2a7db6ceed65f3e4ce64d14f91",
+    "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase1-mechanic-blueprints-v1.json": "ed3bee70f5e7e94ac101f295d9de3f768cdaf9d97d40d4529f2fbbbe8f479d61",
+    "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase1-root-acceptance.json": "bd911f865c95e24874dde657e856718910a05b1737634222055654b331dd020d",
+    "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase2-capability-classification-v5.json": "274a3538b782499828c6af9cc7033f72fa5de0b1d6da0c0eb769dad568e78a34",
+    "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase2-curated-capability-evidence-v1.json": "18769fa2880164c47c73bb628e518806eb5d6f7a50a24ba376b89cd17aea2349",
+    "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase2-extension-boundaries-v5.json": "bcee20de256ef1ac44fad89353faeff73f03bec4ad7f0e57358f6b1862252c66",
+    "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase2-root-acceptance.json": "911e66f2ae9da15ec0f5f0d8b749168f21b374f1c9c22d44b7d14f3c14e2f6db",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-acceptance-green-report.json": "8b33353f3ebda940f1eec60761584c62d6df3d0cdc953c87bd92108b785010a5",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-accepted-manifest-v1.json": "20930a1cb30b763323f0c3d77a0625cb1c54c7aba7094284b91d508f3d68665f",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-root-acceptance.json": "4e6fc46898dadb42d255127de1214f52514b8a1bd97fcd2ad2073d379d373c86",
+    "packages/advantage-play-kit/assets/standard/accepted-standard-pack-release.json": "61984e0b53c4ba85379cf6a4f0f33ee956665c4eaad4b3d681e3dccd98389844",
+    "packages/advantage-play-kit/assets/standard/standard-pack-release.json": "ef432a798a78585df3416d60aca30fe11a2d1d8b833e0d65ceb7fac5c8b19932"
+  },
+  "schema_version": "apk-t9-phase4-asset-normalization.v1",
+  "status": "candidate-non-consumable",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "usage_records": [
+    {
+      "candidate_record_indices": [
+        113,
+        323
+      ],
+      "game_id": "dragon-flight",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "catalog_cover_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "catalog-card",
+      "surface_kind": "non_scene",
+      "upstream_evidence_ids": [
+        "DF-ID-004"
+      ],
+      "usage_id": "t3:dragon-flight:catalog-card:catalog:df-id-004"
+    },
+    {
+      "candidate_record_indices": [
+        239,
+        377
+      ],
+      "game_id": "dragon-flight",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_sprite_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "vocabulary/dragon-flight/scene=DragonFlightGame:gates",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "DF-ASSET-001"
+      ],
+      "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-001"
+    },
+    {
+      "candidate_record_indices": [
+        237,
+        375
+      ],
+      "game_id": "dragon-flight",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_sprite_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "vocabulary/dragon-flight/scene=DragonFlightGame:boss",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "DF-ASSET-002"
+      ],
+      "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-002"
+    },
+    {
+      "candidate_record_indices": [
+        245,
+        383
+      ],
+      "game_id": "dragon-flight",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_sprite_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "vocabulary/dragon-flight/scene=DragonFlightGame:player",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "DF-ASSET-003"
+      ],
+      "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-003"
+    },
+    {
+      "candidate_record_indices": [
+        244,
+        382
+      ],
+      "game_id": "dragon-flight",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_sprite_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "vocabulary/dragon-flight/scene=DragonFlightGame:briefing-player-camera",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "DF-ASSET-004",
+        "DF-ASSET-040",
+        "DF-ASSET-041"
+      ],
+      "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-004"
+    },
+    {
+      "candidate_record_indices": [
+        238,
+        376
+      ],
+      "game_id": "dragon-flight",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_sprite_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "vocabulary/dragon-flight/scene=DragonFlightGame:army",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "DF-ASSET-005"
+      ],
+      "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-005"
+    },
+    {
+      "candidate_record_indices": [
+        243,
+        381
+      ],
+      "game_id": "dragon-flight",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_background_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "vocabulary/dragon-flight/scene=DragonFlightGame:parallax-top",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "DF-ASSET-006"
+      ],
+      "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-006"
+    },
+    {
+      "candidate_record_indices": [
+        242,
+        380
+      ],
+      "game_id": "dragon-flight",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_background_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "vocabulary/dragon-flight/scene=DragonFlightGame:parallax-middle",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "DF-ASSET-007"
+      ],
+      "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-007"
+    },
+    {
+      "candidate_record_indices": [
+        241,
+        379
+      ],
+      "game_id": "dragon-flight",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_background_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "vocabulary/dragon-flight/scene=DragonFlightGame:parallax-bottom",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "DF-ASSET-008"
+      ],
+      "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-008"
+    },
+    {
+      "candidate_record_indices": [
+        240,
+        378
+      ],
+      "game_id": "dragon-flight",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_background_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "vocabulary/dragon-flight/scene=DragonFlightGame:loading-backdrop",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "DF-ASSET-009",
+        "DF-ASSET-039"
+      ],
+      "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-009"
+    },
+    {
+      "candidate_record_indices": [
+        247,
+        385
+      ],
+      "game_id": "dragon-flight",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_sprite_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "vocabulary/dragon-flight/scene=DragonFlightGame:projectile-fireball",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "DF-ASSET-010"
+      ],
+      "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-010"
+    },
+    {
+      "candidate_record_indices": [
+        246,
+        384
+      ],
+      "game_id": "dragon-flight",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_sprite_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "vocabulary/dragon-flight/scene=DragonFlightGame:projectile-boss",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "DF-ASSET-011"
+      ],
+      "usage_id": "t3:dragon-flight:scene:dragon-flight-game:df-asset-011"
+    },
+    {
+      "candidate_record_indices": [
+        119,
+        328
+      ],
+      "game_id": "rpg-battle",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "catalog_cover_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "catalog:rpg-battle",
+      "surface_kind": "non_scene",
+      "upstream_evidence_ids": [
+        "RPG-ID-001"
+      ],
+      "usage_id": "t3:rpg-battle:catalog-card:catalog:rpg-id-001"
+    },
+    {
+      "candidate_record_indices": [
+        180
+      ],
+      "game_id": "rpg-battle",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "legacy_component_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "legacy-component:EnemySprite",
+      "surface_kind": "non_scene",
+      "upstream_evidence_ids": [
+        "RPG-ASSET-041"
+      ],
+      "usage_id": "t3:rpg-battle:legacy-component:enemy-sprite:rpg-asset-041-b"
+    },
+    {
+      "candidate_record_indices": [
+        183
+      ],
+      "game_id": "rpg-battle",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "legacy_component_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "legacy-component:PlayerSprite",
+      "surface_kind": "non_scene",
+      "upstream_evidence_ids": [
+        "RPG-ASSET-041"
+      ],
+      "usage_id": "t3:rpg-battle:legacy-component:player-sprite:rpg-asset-041-a"
+    },
+    {
+      "candidate_record_indices": [
+        269,
+        409
+      ],
+      "game_id": "rpg-battle",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_sprite_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "battle-enemy:elemental",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "RPG-ASSET-042"
+      ],
+      "usage_id": "t3:rpg-battle:scene:enemy-elemental:rpg-asset-042"
+    },
+    {
+      "candidate_record_indices": [
+        270,
+        410
+      ],
+      "game_id": "rpg-battle",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_sprite_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "battle-enemy:goblin",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "RPG-ASSET-042"
+      ],
+      "usage_id": "t3:rpg-battle:scene:enemy-goblin:rpg-asset-042"
+    },
+    {
+      "candidate_record_indices": [
+        271,
+        411
+      ],
+      "game_id": "rpg-battle",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_sprite_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "battle-enemy:slime",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "RPG-ASSET-042"
+      ],
+      "usage_id": "t3:rpg-battle:scene:enemy-slime:rpg-asset-042"
+    },
+    {
+      "candidate_record_indices": [
+        272,
+        412
+      ],
+      "game_id": "rpg-battle",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_sprite_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "battle-enemy:spectre",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "RPG-ASSET-042"
+      ],
+      "usage_id": "t3:rpg-battle:scene:enemy-spectre:rpg-asset-042"
+    },
+    {
+      "candidate_record_indices": [
+        273,
+        413
+      ],
+      "game_id": "rpg-battle",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_sprite_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "battle-hero:female",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "RPG-ASSET-042"
+      ],
+      "usage_id": "t3:rpg-battle:scene:hero-female:rpg-asset-042"
+    },
+    {
+      "candidate_record_indices": [
+        274,
+        414
+      ],
+      "game_id": "rpg-battle",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_sprite_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "battle-hero:male",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "RPG-ASSET-042"
+      ],
+      "usage_id": "t3:rpg-battle:scene:hero-male:rpg-asset-042"
+    },
+    {
+      "candidate_record_indices": [
+        265,
+        405
+      ],
+      "game_id": "rpg-battle",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_background_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "battle-location:forest-clearing",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "RPG-ASSET-042"
+      ],
+      "usage_id": "t3:rpg-battle:scene:location-forest-clearing:rpg-asset-042"
+    },
+    {
+      "candidate_record_indices": [
+        266,
+        406
+      ],
+      "game_id": "rpg-battle",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_background_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "battle-location:magic-arena",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "RPG-ASSET-042"
+      ],
+      "usage_id": "t3:rpg-battle:scene:location-magic-arena:rpg-asset-042"
+    },
+    {
+      "candidate_record_indices": [
+        267,
+        407
+      ],
+      "game_id": "rpg-battle",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_background_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "battle-location:ruined-road",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "RPG-ASSET-042"
+      ],
+      "usage_id": "t3:rpg-battle:scene:location-ruined-road:rpg-asset-042"
+    },
+    {
+      "candidate_record_indices": [
+        268,
+        408
+      ],
+      "game_id": "rpg-battle",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_background_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "battle-location:throne-hall",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "RPG-ASSET-042"
+      ],
+      "usage_id": "t3:rpg-battle:scene:location-throne-hall:rpg-asset-042"
+    },
+    {
+      "candidate_record_indices": [
+        117,
+        326
+      ],
+      "game_id": "magic-defense",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "catalog_cover_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "catalog-card",
+      "surface_kind": "non_scene",
+      "upstream_evidence_ids": [
+        "MD-ASSET-007"
+      ],
+      "usage_id": "t4:magic-defense:catalog-card:catalog:md-asset-007"
+    },
+    {
+      "candidate_record_indices": [
+        153
+      ],
+      "game_id": "magic-defense",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_sprite_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "Castle render",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "MD-ASSET-003"
+      ],
+      "usage_id": "t4:magic-defense:scene:castle-render:md-asset-003"
+    },
+    {
+      "candidate_record_indices": [
+        154
+      ],
+      "game_id": "magic-defense",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_sprite_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "Enemy render",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "MD-ASSET-001"
+      ],
+      "usage_id": "t4:magic-defense:scene:enemy-render:md-asset-001"
+    },
+    {
+      "candidate_record_indices": [
+        152
+      ],
+      "game_id": "magic-defense",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "runtime_background_binding",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "Game stage background",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "MD-ASSET-005",
+        "MD-ASSET-006"
+      ],
+      "usage_id": "t4:magic-defense:scene:stage-background:md-asset-005"
+    },
+    {
+      "candidate_record_indices": [
+        219,
+        349
+      ],
+      "game_id": "potion-rush",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "source-requested-image",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "customer-assets",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "PR-CUR-023"
+      ],
+      "usage_id": "usage-0afb3981e898c7e4dd371558"
+    },
+    {
+      "candidate_record_indices": [
+        231,
+        361
+      ],
+      "game_id": "potion-rush",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "source-requested-image",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "shop-assets",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "PR-CUR-020"
+      ],
+      "usage_id": "usage-146fded69b82853991326ee1"
+    },
+    {
+      "candidate_record_indices": [
+        261,
+        399
+      ],
+      "game_id": "enchanted-library",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "source-requested-image",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "asset-loading",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "EL-ASSET-001"
+      ],
+      "usage_id": "usage-3194e801ec4247c4b206ab2c"
+    },
+    {
+      "candidate_record_indices": [
+        226,
+        356
+      ],
+      "game_id": "potion-rush",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "source-requested-image",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "ingredient-assets",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "PR-CUR-022"
+      ],
+      "usage_id": "usage-3847536916bedeea9707b998"
+    },
+    {
+      "candidate_record_indices": [
+        260,
+        398
+      ],
+      "game_id": "enchanted-library",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "source-requested-image",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "asset-loading",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "EL-ASSET-001"
+      ],
+      "usage_id": "usage-475f04e11aec9b264ec1c967"
+    },
+    {
+      "candidate_record_indices": [
+        225,
+        355
+      ],
+      "game_id": "potion-rush",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "source-requested-image",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "ingredient-assets",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "PR-CUR-022"
+      ],
+      "usage_id": "usage-503de5954d4db431e8359460"
+    },
+    {
+      "candidate_record_indices": [
+        230,
+        360
+      ],
+      "game_id": "potion-rush",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "source-requested-image",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "shop-assets",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "PR-CUR-020"
+      ],
+      "usage_id": "usage-6e9e5db24fef0880cf4c488a"
+    },
+    {
+      "candidate_record_indices": [
+        229,
+        359
+      ],
+      "game_id": "potion-rush",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "source-requested-image",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "shop-assets",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "PR-CUR-020"
+      ],
+      "usage_id": "usage-7265ce200f41db55c6ff307b"
+    },
+    {
+      "candidate_record_indices": [
+        227,
+        357
+      ],
+      "game_id": "potion-rush",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "source-requested-image",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "ingredient-assets",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "PR-CUR-022"
+      ],
+      "usage_id": "usage-820ee8fe9196e704742c8e17"
+    },
+    {
+      "candidate_record_indices": [
+        216,
+        346
+      ],
+      "game_id": "potion-rush",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "source-requested-image",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "cauldron-assets",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "PR-CUR-021"
+      ],
+      "usage_id": "usage-8876a5cbd0c49b8327b4c8a9"
+    },
+    {
+      "candidate_record_indices": [
+        223,
+        353
+      ],
+      "game_id": "potion-rush",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "source-requested-image",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "ingredient-assets",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "PR-CUR-022"
+      ],
+      "usage_id": "usage-921de00e627d391607c72139"
+    },
+    {
+      "candidate_record_indices": [
+        257,
+        395
+      ],
+      "game_id": "enchanted-library",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "source-requested-image",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "asset-loading",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "EL-ASSET-001"
+      ],
+      "usage_id": "usage-ab0c118dc4be90481ea32c30"
+    },
+    {
+      "candidate_record_indices": [
+        218,
+        348
+      ],
+      "game_id": "potion-rush",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "source-requested-image",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "cauldron-assets",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "PR-CUR-021"
+      ],
+      "usage_id": "usage-af9528844e4200db4fbb484e"
+    },
+    {
+      "candidate_record_indices": [
+        217,
+        347
+      ],
+      "game_id": "potion-rush",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "source-requested-image",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "cauldron-assets",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "PR-CUR-021"
+      ],
+      "usage_id": "usage-bc8116392bca3e212b8a56c9"
+    },
+    {
+      "candidate_record_indices": [
+        221,
+        351
+      ],
+      "game_id": "potion-rush",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "source-requested-image",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "customer-assets",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "PR-CUR-023"
+      ],
+      "usage_id": "usage-dd19bb4f7466112d8a0c2be7"
+    },
+    {
+      "candidate_record_indices": [
+        258,
+        396
+      ],
+      "game_id": "enchanted-library",
+      "gameplay_variant": {
+        "status": "blocked_unknown",
+        "value": null
+      },
+      "normalization_status": "blocked_unknown_role_state",
+      "semantic_role": null,
+      "semantic_state": null,
+      "source_evidence_family": "source-requested-image",
+      "source_pack_treatment": "standard-pack-only-forward-policy-not-historical-fact",
+      "surface_id": "asset-loading",
+      "surface_kind": "scene",
+      "upstream_evidence_ids": [
+        "EL-ASSET-001"
+      ],
+      "usage_id": "usage-f4d7c4f8710a5f535612addb"
+    }
+  ]
+}

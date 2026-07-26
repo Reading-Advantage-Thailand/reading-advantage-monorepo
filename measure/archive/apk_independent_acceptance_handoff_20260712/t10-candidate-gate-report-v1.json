@@ -1,0 +1,47 @@
+{
+  "browser_scope": {
+    "accepted_runtime_contracts": 0,
+    "authentic_predecessor_artifacts_reviewed": 16,
+    "blocked_responsive_cells": 5664,
+    "browser_success_claimed": false,
+    "fresh_browser_session_run": false,
+    "routes_reviewed": 6
+  },
+  "claim_overlay": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-claim-disposition-overlay-v1.json",
+    "sha256": "06e692daff932334a5edc2a06d7121651a6bb2426f05f1b00d8d0a5c1ecb6e41"
+  },
+  "command": "python3 t10_acceptance_verifier.py",
+  "findings": [],
+  "input_freeze": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-input-freeze-v1.json",
+    "sha256": "68fc7e0baaaa25c2dc1a2793aad7568b473eb4cd6c5449dfdf138fc58bf517cf"
+  },
+  "metrics": {
+    "accepted_capabilities": 7,
+    "blocked_adoption_mappings": 85,
+    "blocked_claims": 163,
+    "blocked_must_have_gaps": 3,
+    "blocked_responsive_cells": 5664,
+    "browser_evidence_files": 16,
+    "browser_routes": 6,
+    "capability_uses": 56,
+    "derived_records": 1009,
+    "exact_claims": 1085,
+    "frozen_input_checks": 33,
+    "games": 29,
+    "negative_controls": 20,
+    "normalized_usages": 45,
+    "raw_claims": 1248,
+    "responsive_contracts": 354,
+    "role_identity_checks": 74,
+    "standard_pack_assets": 43075,
+    "t8_candidate_rows": 428
+  },
+  "red_report": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-red-report-v1.json",
+    "sha256": "ca07ea75c58a41a97f810870a1ef7b386ec16c74a1c0a73ec0d383cfadeead86"
+  },
+  "schema_version": "apk-t10-candidate-gate-report.v1",
+  "status": "pass-ready-for-owner-delegated-acceptance"
+}

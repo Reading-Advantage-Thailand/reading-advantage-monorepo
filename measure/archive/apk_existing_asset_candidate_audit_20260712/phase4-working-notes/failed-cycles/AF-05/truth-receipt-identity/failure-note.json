@@ -1,0 +1,26 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-truth-receipt-identity-correction.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-05",
+  "phase": "phase4",
+  "role": "truth-test-author",
+  "status": "superseded_before_review_or_root_acceptance",
+  "archived_receipt_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-05/truth-receipt-identity/truth-test-author.json",
+  "archived_receipt_sha256": "723c94413ac2e8f72695388ed96a0c462d8fd7ade0c88a5544b46bc309a78218",
+  "failure": {
+    "code": "receipt-identity-provenance-drift",
+    "incorrect_identity": {
+      "declared_model": "gpt-5.6-sol",
+      "fork_turns": "all",
+      "inherited_narrative": true
+    },
+    "corrected_identity": {
+      "native_task_name": "/root/phase4_v2_generic_author",
+      "declared_model": "gpt-5.6-terra",
+      "reasoning_effort": "xhigh",
+      "fork_turns": "none",
+      "inherited_narrative": false
+    }
+  },
+  "scope": "Only receipt identity and provenance metadata were corrected. Producer payloads, verifier and fixture bytes, reports, resource metrics, findings, reviews, plans, and commits were not changed."
+}

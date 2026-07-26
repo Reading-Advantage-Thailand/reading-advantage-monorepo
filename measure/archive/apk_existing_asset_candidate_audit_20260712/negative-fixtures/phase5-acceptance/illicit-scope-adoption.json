@@ -1,0 +1,4 @@
+{
+  "expected_error_code": "accepted-consumer-scope",
+  "operation": "illicit_scope_adoption"
+}

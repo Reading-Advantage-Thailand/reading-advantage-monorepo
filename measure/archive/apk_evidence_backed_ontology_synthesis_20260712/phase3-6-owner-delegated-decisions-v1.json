@@ -1,0 +1,63 @@
+{
+  "schema_version": "apk-t9-owner-delegated-phase-decisions.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "authority": "user-delegated-product-owner-gates",
+  "decided_by": "root-orchestrator-acting-under-explicit-user-delegation",
+  "decided_at": "2026-07-26T00:00:00Z",
+  "decision_order": "after-clean-automated-and-domain-review-evidence",
+  "automated_truth_report": {
+    "path": "phase6-truth-report-v1.json",
+    "sha256": "03b221a296025da923b91ec235a35ff28853dad58d74b6e6cea94887f353fe09"
+  },
+  "post_candidate_verification": {
+    "command": "python3 phase3_6_truth_verifier.py",
+    "state": "VERIFIED_PENDING_OWNER_DELEGATED_PHASE_GATES",
+    "checks": 2479,
+    "findings": []
+  },
+  "independent_review_bindings": {
+    "phase3-independent-responsive-review-v1.json": "1d6fbd260594fa8ab050a29bed61124a6b44dd881c0761104bcce9be64a83ae9",
+    "phase4-independent-asset-review-v1.json": "7d909ba16c26322a006a4992bd67ff9898f9bb2ff683fb0b414fc2a291871b41",
+    "phase6-capability-consumer-review-v1.json": "c6eeeb261933b0fc94d82fba2f708a68211535551f9ad9f7b6052a13ae1ce25c",
+    "phase6-adversarial-review-v1.json": "17a590732821e7c65f3cdc5a4088a4e04d7feb2437f68f70af7a51df0b577878"
+  },
+  "review_isolation_disclosure": "The three domain passes and adversarial pass are separate exhaustive hash-bound local reviews, but Kimi/fork_turns=none provider isolation was unavailable and is not claimed.",
+  "decisions": [
+    {
+      "phase": 3,
+      "decision": "ACCEPT_OWNER_DELEGATED_GATE",
+      "accepted_scope": "Evidence-only responsive contracts with all unsupported compact/wide aspects blocked and all six T8 usability defects preserved.",
+      "explicit_rejections": [
+        "Reject any claim that normative responsive policy is historical legacy evidence.",
+        "Reject any compact/wide, browser-success, content-fit, or transition-success claim not present in accepted evidence."
+      ]
+    },
+    {
+      "phase": 4,
+      "decision": "ACCEPT_OWNER_DELEGATED_GATE",
+      "accepted_scope": "Exact 428-row T8-relative, path-free canonical-adoption matrix with 45 normalized usages and 85 blocked mappings.",
+      "explicit_rejections": [
+        "Reject all direct legacy-path, vendor-filename, and visual near-match mappings.",
+        "Reject adoption of every currently blocked mapping; zero standard-pack keys are approved by T9."
+      ]
+    },
+    {
+      "phase": 5,
+      "decision": "ACCEPT_OWNER_DELEGATED_GATE",
+      "accepted_scope": "Deterministic gap and delivery ranking that leaves every unknown Must-have unresolved.",
+      "explicit_rejections": [
+        "Reject silent resolution of responsive, semantic-role/state, and standard-pack candidate-key Must-have gaps.",
+        "Reject cartridge or shared-kit implementation before the stated T10/T11 gates."
+      ]
+    },
+    {
+      "phase": 6,
+      "decision": "ACCEPT_OWNER_DELEGATED_GATE",
+      "accepted_scope": "Non-consumable T9 candidate package for T10 independent acceptance review only.",
+      "explicit_rejections": [
+        "Reject publication of consumable successor hashes by T9.",
+        "Reject any representation that local reviews had provider fork/session attestation."
+      ]
+    }
+  ]
+}

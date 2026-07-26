@@ -1,0 +1,152 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-08",
+  "phase": "phase4",
+  "role": "adversarial-reviewer",
+  "native_task_name": "/root/phase4_review_af08",
+  "declared_model": "gpt-5.6-terra",
+  "reasoning_effort": "xhigh",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "allowed_input_manifest_sha256": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+  "exact_verified_inputs": {
+    "current_producer": {
+      "joins": "aff3dbea7b736f0a5d5ec3b272398ab708f1fb809815f005c1f47cc74a43abcb",
+      "rollup": "88566b22196e1de861b257634e4604eca9e54be58e73703fe8a555fecf9bf241",
+      "mapper_receipt": "875c5cbd45c6133c5602d5bcae7c0255264b8d1fbc05fe9c51b353cd48c48328"
+    },
+    "verifiers": {
+      "phase4_batch_contract_test.py": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+      "phase4_v2_batch_schema_contract_test.py": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519",
+      "phase4_v2_batch_schema_contract_test_v2.py": "174fba885907260824503708180cd4dbe2b873e06aaf8e86c4fb440c319c9956"
+    },
+    "reports": {
+      "phase4-batch-test-reports/AF-08.json": "dba3cbad6f7580457c1fbbba4fb53d0249a22528bf315641f576ef302be1c6dc",
+      "phase4-v2-batch-schema-test-reports/AF-08.json": "aefa4a2f9f7c120d0506f414ddcbdb64a6d0ce3e97be4699b0f96291753f6c87"
+    },
+    "truth_test_receipt": "4a8b84c006a89647886cdf160ec28b82bd7b592c8ad9af6c1714cb5ad7c66ebb",
+    "preserved_phase2_reviewer_receipt": "83a29ac6aede33da158fc0f3f21af7420e65a55546a2d1f4e7b5e955045e4316",
+    "fixtures": {
+      "phase4_value_fixture_count": 16,
+      "phase4_versioned_v2_fixture_count": 14,
+      "all_value_fixtures_rejected": true,
+      "all_v2_fixtures_rejected": true,
+      "versioned_v2_fixture_hash_map_is_exactly_bound_by": "aefa4a2f9f7c120d0506f414ddcbdb64a6d0ce3e97be4699b0f96291753f6c87"
+    },
+    "transparent_red_lineage": {
+      "mapper_receipt_preserved_unsupported_invocation": {
+        "command": "phase4_v2_batch_schema_contract_test_v2.py --root . --batch AF-08 --json",
+        "exit_code": 2,
+        "stderr": "unrecognized arguments: --json",
+        "authoritative_follow_up": "Supported unchanged v2 invocation exited 0; this reviewer independently reran only that supported invocation."
+      },
+      "truth_receipt_auxiliary_comparator": {
+        "state": "local-authoring-red-corrected-before-publication",
+        "scope": "enriched caller-locator versus raw object comparison and insertion-order-sensitive derived count comparison",
+        "authoritative_gates": "Value and v2 contracts were independently reproduced green with byte-identical reports.",
+        "producer_product_finding": false
+      }
+    }
+  },
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-reviews/AF-08.json": "cb18f766deda43659b057e4032794d72f5ccbf51960d737c8462313684519ef6"
+  },
+  "role_boundary": "Fresh isolated AF-08 Phase 4 adversarial review derived from live frozen inputs. Reviewed all 35 producer records, 19 groups, 27 caller locators, five scene-only path-usage links across three unique usage IDs, 20 responsive cells and all eight facets, every path-specific disposition, the one priority-1 reject-and-retire cover, two mixed groups, seven separate catalog locators, source pointers and claims, mapper and truth receipts, their bounded red-lineage disclosures, and four cited frozen screenshots. Did not repair or alter producer, test, fixture, report, mapper, truth receipt, Phase 2 receipt, failed-cycle evidence, freeze, plan, product code, acceptance state, or commits; did not rerun a browser, authorize T9, canonical keys, direct legacy adoption, production, shipping, or root acceptance.",
+  "reviewed_counts": {
+    "candidate_paths": 35,
+    "hash_groups": 19,
+    "caller_locators": 27,
+    "accepted_path_usage_links": 5,
+    "scene_links": 5,
+    "non_scene_links": 0,
+    "unique_scene_usage_records": 3,
+    "responsive_assessment_cells": 20,
+    "eight_facet_cells": 20,
+    "priority1_paths": 1,
+    "priority1_rejected_retired_path": "apps/advantage-games/public/games/cover/griffin-sky-joust-cover.png",
+    "dispositions": {
+      "replace": 5,
+      "reject": 1,
+      "unknown": 29
+    },
+    "mixed_groups": 2,
+    "catalog_locator_records": 7,
+    "review_slice_games": [
+      "dragon-flight",
+      "potion-rush"
+    ],
+    "review_records": 176
+  },
+  "verifier_results": {
+    "value": {
+      "exit_code": 0,
+      "report_byte_reproduced": true,
+      "parsed_json_equal": true,
+      "test_cases": 17,
+      "counterexamples": 16,
+      "production_errors": []
+    },
+    "versioned_v2": {
+      "exit_code": 0,
+      "report_byte_reproduced": true,
+      "parsed_json_equal": true,
+      "test_cases": 32,
+      "structural_test_cases": 15,
+      "counterexamples": 14,
+      "production_errors": []
+    },
+    "v1_verifier_hash_verified": true,
+    "both_verifier_resource_ceilings_pass": true,
+    "green_not_sole_evidence": true
+  },
+  "substantive_results": {
+    "recursive_v2_shapes_exact_and_no_extras": true,
+    "all_35_join_status_values_equal_scaffold_rules": true,
+    "all_5_six_key_semantic_requirements_are_exact_source_copies": true,
+    "all_5_path_semantic_requirement_wrappers_mirror_ordered_links": true,
+    "all_20_cells_have_exact_eight_facet_shapes": true,
+    "all_5_scene_links_have_exact_four_cell_matrix": true,
+    "non_scene_link_count_is_zero": true,
+    "all_source_pointers_hashes_and_claim_ids_resolve": true,
+    "all_27_caller_locators_reconcile": true,
+    "rollup_member_paths_nested_dispositions_two_mixed_groups_and_current_joins_sha_are_exact": true,
+    "griffin_sky_joust_priority1_cover_is_rejected_and_retired": true,
+    "unknown_provenance_blocks_reuse_adapt_and_reference": true,
+    "direct_legacy_adoption_false_for_all_paths": true,
+    "canonical_candidate_key_null_forbidden_pending_T9_for_all_paths": true,
+    "catalog_count_seven_and_non_additive": true,
+    "browser_evidence_remains_composite_scene_only": true,
+    "dragon_compact_controls_below_viewport_and_wide_supported": true,
+    "potion_compact_hud_served_unresolved_hud_pressure_and_wide_start_supported": true,
+    "browser_never_promoted_to_path_load_suitability_theme_provenance_license_or_adoption": true,
+    "mapper_and_truth_receipt_identities_hashes_resources_and_prohibitions_truthful": true,
+    "phase2_reviewer_receipt_preserved_and_separate": true,
+    "transparent_red_lineage_disclosed_bounded_and_not_false_stop_loss_closure": true
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "stop_loss_events": [],
+  "unresolved_blocking_findings": 0,
+  "measured_resource_usage": {
+    "candidate_paths": 35,
+    "hash_groups": 19,
+    "review_records": 176,
+    "command_invocations": 20,
+    "bytes_read": 224000000,
+    "within_ceiling": true,
+    "ceilings": {
+      "candidate_paths": 40,
+      "hash_groups": 24,
+      "review_records": 280,
+      "command_invocations": 120,
+      "bytes_read": 536870912
+    },
+    "measurement_basis": "Conservative accounting includes the independently reproduced 102907651-byte value verifier and the separately reproduced 105237710-byte v2 verifier including its nested value invocation, plus frozen source, receipt, browser-freeze, and cited screenshot reads."
+  },
+  "final_status": "review-pass-pending-root-acceptance"
+}

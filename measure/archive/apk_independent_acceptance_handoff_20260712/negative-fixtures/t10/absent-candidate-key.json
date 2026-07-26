@@ -1,0 +1,11 @@
+{
+  "fixture_id": "absent-candidate-key",
+  "mutations": [
+    {
+      "artifact": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase4-canonical-adoption-matrix-v1.json",
+      "pointer": "/candidate_rows/113/mappings/0/adoption/state",
+      "value": "candidate"
+    }
+  ],
+  "expected_codes": ["ABSENT_CANDIDATE_KEY"]
+}

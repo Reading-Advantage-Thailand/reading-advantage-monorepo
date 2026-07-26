@@ -1,0 +1,7 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-acceptance-negative-fixture.v1",
+  "operation": "missing_visual_defect_disclosure",
+  "expected_error_codes": [
+    "acceptance-visual-disclosure"
+  ]
+}

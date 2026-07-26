@@ -1,0 +1,322 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-normalized-scene-usages.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "status": "working-notes-non-decisional",
+  "scope": {
+    "tracks": ["T3", "T4"],
+    "games_expected": 11,
+    "games_observed": 11,
+    "usage_records": 39,
+    "scene_usage_records": 28,
+    "non_scene_usage_records": 11,
+    "compact_wide_assessments": 0,
+    "suitability_claims": 0,
+    "disposition_claims": 0
+  },
+  "canonical_input_bindings": {
+    "T3": {
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b",
+      "status": "accepted-conditional",
+      "consumable": true
+    },
+    "T4": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+      "sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80",
+      "status": "accepted-with-disclosure",
+      "consumable": true,
+      "selected_lineage": "t4-full-eight-game-cohort-v4-lineage"
+    },
+    "T4_owner_disposition": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-admission-owner-disposition-v4.json",
+      "sha256": "40a73444f5f3924cf57bebe67e452dd941fa93262430030bbb43cf1355c29318",
+      "decision": "ADMIT-WITH-DISCLOSURE-NO-RERUN"
+    },
+    "T4_T8_authorization": {
+      "path": "measure/tracks/apk_corpus_audit_action_defense_20260712/t4-t8-consumption-authorization-v1.json",
+      "sha256": "451c749a84c2ab32d3250f7afb0fc5852a04e02b126527900f48393e2f483bef",
+      "decision": "AUTHORIZED",
+      "authorized_activity": "T8 per-candidate asset forensics only"
+    }
+  },
+  "normalization_contract": {
+    "usage_id": "Lowercase colon-join of track, game_id, surface_kind, surface_id, and primary claim or selected audit-row identity; exact source identities make the value deterministic.",
+    "locator_rule": "asset_locator_literal is copied only when an accepted source explicitly states the literal. A file path, slug, candidate ownership, or basename is never promoted to a locator.",
+    "surface_rule": "surface_kind and surface_id preserve an explicit accepted scene, catalog, component, data, or procedural-render surface. No surface is inferred from a path.",
+    "missing_rule": "Explicit zero, omitted, unknown, bounded-not-referenced, and non-runtime evidence remains in game_coverage and disclosures rather than becoming a positive usage.",
+    "decision_boundary": "This artifact normalizes accepted evidence only. It makes no compact/wide, crop, tile, slice, readability, suitability, replacement, retirement, or disposition decision.",
+    "ordering": "usage_records follow track, accepted game order, accepted source-record order, and explicit locator order when one accepted record contains multiple locators.",
+    "source_closure": "Every source_path and source_sha256 used by a record is present exactly once in source_registry; no source outside source_registry is admitted."
+  },
+  "game_coverage": [
+    {
+      "track": "T3",
+      "game_id": "abyssal-well",
+      "accepted_usage_records": 1,
+      "scene_usage_records": 0,
+      "non_scene_usage_records": 1,
+      "explicit_missing_or_zero": {
+        "current_implementation_claims": 0,
+        "historical_evidence_claims": 49,
+        "current_orphan_cover_assets": 1,
+        "audio_or_game_data_files_found_at_reachable_revisions": 0
+      },
+      "disclosures": [
+        "The one admitted usage is historical catalog-cover evidence at the deletion parent.",
+        "The surviving abyssal-well-cover.png is explicitly orphaned and is not promoted to a usage.",
+        "No current scene usage is established."
+      ]
+    },
+    {
+      "track": "T3",
+      "game_id": "dragon-flight",
+      "accepted_usage_records": 12,
+      "scene_usage_records": 11,
+      "non_scene_usage_records": 1,
+      "explicit_missing_or_zero": {
+        "standalone_public_image_source_references": 0,
+        "dragon_flight_adventure_mp3_component_references": 0
+      },
+      "disclosures": [
+        "The 11-entry ASSETS map is admitted as source-declared scene usage.",
+        "The standalone public image and slug-matched MP3 remain unverified and are not usage records."
+      ]
+    },
+    {
+      "track": "T3",
+      "game_id": "rpg-battle",
+      "accepted_usage_records": 13,
+      "scene_usage_records": 10,
+      "non_scene_usage_records": 3,
+      "explicit_missing_or_zero": {
+        "audio_asset_files": 0,
+        "legacy_component_importers_other_than_tests": 0
+      },
+      "disclosures": [
+        "Ten exact runtime locator literals are admitted from the accepted RPG-ASSET-042 source range.",
+        "Two legacy non-vocabulary sprite locators are retained as dead-component bindings, not current scene use.",
+        "Battle sounds are procedural; no audio-file locator is invented."
+      ]
+    },
+    {
+      "track": "T4",
+      "game_id": "archers-revenge",
+      "accepted_usage_records": 1,
+      "scene_usage_records": 0,
+      "non_scene_usage_records": 1,
+      "explicit_missing_or_zero": {
+        "source_runtime_asset_usages": 0,
+        "catalog_bindings": 1,
+        "bounded_not_referenced_assets": 2,
+        "non_runtime_sidecars": 2
+      },
+      "disclosures": ["The exact reviewed route returned HTTP 404; catalog binding does not establish runtime loading."]
+    },
+    {
+      "track": "T4",
+      "game_id": "castle-defense",
+      "accepted_usage_records": 0,
+      "scene_usage_records": 0,
+      "non_scene_usage_records": 0,
+      "explicit_missing_or_zero": {
+        "accepted_batch_a_manifest_game_entries": 0,
+        "normalized_usage_records": 0
+      },
+      "disclosures": [
+        "Castle Defense is in the eight-game cohort roster but is omitted from the accepted Batch A manifest game list.",
+        "The omission is binding and no usage is reconstructed from stale or unaccepted Castle Defense artifacts."
+      ]
+    },
+    {
+      "track": "T4",
+      "game_id": "gryphon-patrol",
+      "accepted_usage_records": 1,
+      "scene_usage_records": 0,
+      "non_scene_usage_records": 1,
+      "explicit_missing_or_zero": {
+        "selected_asset_candidates": 5,
+        "catalog_bindings": 1,
+        "runtime_usage_established": 0,
+        "unselected_or_non_surface_candidates": 4
+      },
+      "disclosures": [
+        "Only the v5 root-arbiter asset lineage selected by the v7 selector is admitted.",
+        "Asset V4 and Gryphon Mapper V5 are collision-invalid and excluded."
+      ]
+    },
+    {
+      "track": "T4",
+      "game_id": "magic-defense",
+      "accepted_usage_records": 5,
+      "scene_usage_records": 4,
+      "non_scene_usage_records": 1,
+      "explicit_missing_or_zero": {
+        "game_specific_audio_asset_files": 0
+      },
+      "disclosures": [
+        "MD-ASSET-016 remains subject to DISC-001 claim-text-overstatement disclosure.",
+        "The procedural bolt is a render usage with no physical asset locator."
+      ]
+    },
+    {
+      "track": "T4",
+      "game_id": "paladins-twin-soul",
+      "accepted_usage_records": 1,
+      "scene_usage_records": 0,
+      "non_scene_usage_records": 1,
+      "explicit_missing_or_zero": {
+        "selected_asset_candidates": 4,
+        "catalog_bindings": 1,
+        "runtime_usage_established": 0,
+        "unselected_or_non_surface_candidates": 3
+      },
+      "disclosures": [
+        "The vocabulary cover.png is an 87-byte Git symlink payload with no established surface and is not promoted to a usage.",
+        "The selected v5 receipt retains five pending self-check fields; the independent validation companion does not impersonate that role."
+      ]
+    },
+    {
+      "track": "T4",
+      "game_id": "storm-castle-tower",
+      "accepted_usage_records": 0,
+      "scene_usage_records": 0,
+      "non_scene_usage_records": 0,
+      "explicit_missing_or_zero": {
+        "source_runtime_asset_usages": 0,
+        "catalog_bindings": 0,
+        "bounded_not_referenced_assets": 1,
+        "non_runtime_sidecars": 2
+      },
+      "disclosures": ["The exact reviewed route returned HTTP 404; historical source is not promoted to current runtime behavior."]
+    },
+    {
+      "track": "T4",
+      "game_id": "village-guardian",
+      "accepted_usage_records": 1,
+      "scene_usage_records": 0,
+      "non_scene_usage_records": 1,
+      "explicit_missing_or_zero": {
+        "source_runtime_asset_usages": 0,
+        "catalog_bindings": 1,
+        "bounded_not_referenced_assets": 1,
+        "non_runtime_sidecars": 2
+      },
+      "disclosures": [
+        "The route audit bypassed the catalog and observed no cover request.",
+        "Synthetic DOM input, hidden-tab scheduling, and HTTP 400 completion disclosures remain binding."
+      ]
+    },
+    {
+      "track": "T4",
+      "game_id": "wizard-vs-zombie",
+      "accepted_usage_records": 4,
+      "scene_usage_records": 3,
+      "non_scene_usage_records": 1,
+      "explicit_missing_or_zero": {
+        "unreferenced_standalone_pngs": 1,
+        "unreferenced_out_of_denominator_mp3s": 1
+      },
+      "disclosures": [
+        "The accepted Batch A lineage resolves only 178 of 187 claims overall.",
+        "No use is inferred for the standalone PNG or marketing MP3."
+      ]
+    }
+  ],
+  "usage_records": [
+    {"usage_id":"t3:abyssal-well:catalog-card:historical-catalog:aw-hist-001","track":"T3","game_id":"abyssal-well","surface_kind":"non_scene","surface_id":"historical-catalog-card","asset_locator_literal":"/games/cover/cover-the-abyssal-well.png","category":"historical_catalog_cover_binding","claim_ids":["AW-HIST-001","AW-HIST-050"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/abyssal-well-claim-ledger.json","source_sha256":"4f3042a2dba0d39a885e5b8c0f707adcfbafd5fbf72edebc6c14a6594a413566","source_json_pointers":["/claims/0","/claims/23"],"evidence_class":"history","accepted_scope":"Historical catalog assignment at deletion-parent revision only.","disclosures":["No current implementation or current scene use is established."]},
+    {"usage_id":"t3:dragon-flight:catalog-card:catalog:df-id-004","track":"T3","game_id":"dragon-flight","surface_kind":"non_scene","surface_id":"catalog-card","asset_locator_literal":"/games/cover/dragon-flight-cover.png","category":"catalog_cover_binding","claim_ids":["DF-ID-004"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json","source_sha256":"84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e","source_json_pointers":["/3"],"evidence_class":"current-source","accepted_scope":"Source-declared catalog cover assignment.","disclosures":["Catalog assignment does not establish live loading."]},
+    {"usage_id":"t3:dragon-flight:scene:dragon-flight-game:df-asset-001","track":"T3","game_id":"dragon-flight","surface_kind":"scene","surface_id":"vocabulary/dragon-flight/scene=DragonFlightGame:gates","asset_locator_literal":"/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png","category":"runtime_sprite_binding","claim_ids":["DF-ASSET-001"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json","source_sha256":"84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e","source_json_pointers":["/110"],"evidence_class":"asset","accepted_scope":"ASSETS.gates source binding.","disclosures":[]},
+    {"usage_id":"t3:dragon-flight:scene:dragon-flight-game:df-asset-002","track":"T3","game_id":"dragon-flight","surface_kind":"scene","surface_id":"vocabulary/dragon-flight/scene=DragonFlightGame:boss","asset_locator_literal":"/games/vocabulary/dragon-flight/boss-3x3-sheet-facing-up.png","category":"runtime_sprite_binding","claim_ids":["DF-ASSET-002"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json","source_sha256":"84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e","source_json_pointers":["/111"],"evidence_class":"asset","accepted_scope":"ASSETS.boss source binding.","disclosures":[]},
+    {"usage_id":"t3:dragon-flight:scene:dragon-flight-game:df-asset-003","track":"T3","game_id":"dragon-flight","surface_kind":"scene","surface_id":"vocabulary/dragon-flight/scene=DragonFlightGame:player","asset_locator_literal":"/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png","category":"runtime_sprite_binding","claim_ids":["DF-ASSET-003"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json","source_sha256":"84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e","source_json_pointers":["/112"],"evidence_class":"asset","accepted_scope":"ASSETS.player source binding.","disclosures":[]},
+    {"usage_id":"t3:dragon-flight:scene:dragon-flight-game:df-asset-004","track":"T3","game_id":"dragon-flight","surface_kind":"scene","surface_id":"vocabulary/dragon-flight/scene=DragonFlightGame:briefing-player-camera","asset_locator_literal":"/games/vocabulary/dragon-flight/player-3x3-sheet-facing-camera.png","category":"runtime_sprite_binding","claim_ids":["DF-ASSET-004","DF-ASSET-040","DF-ASSET-041"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json","source_sha256":"84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e","source_json_pointers":["/113","/149","/150"],"evidence_class":"asset","accepted_scope":"ASSETS.playerCamera binding plus accepted briefing sprite and animation usage.","disclosures":[]},
+    {"usage_id":"t3:dragon-flight:scene:dragon-flight-game:df-asset-005","track":"T3","game_id":"dragon-flight","surface_kind":"scene","surface_id":"vocabulary/dragon-flight/scene=DragonFlightGame:army","asset_locator_literal":"/games/vocabulary/dragon-flight/dragon-army-3x3-sheet-facing-up.png","category":"runtime_sprite_binding","claim_ids":["DF-ASSET-005"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json","source_sha256":"84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e","source_json_pointers":["/114"],"evidence_class":"asset","accepted_scope":"ASSETS.army source binding.","disclosures":[]},
+    {"usage_id":"t3:dragon-flight:scene:dragon-flight-game:df-asset-006","track":"T3","game_id":"dragon-flight","surface_kind":"scene","surface_id":"vocabulary/dragon-flight/scene=DragonFlightGame:parallax-top","asset_locator_literal":"/games/vocabulary/dragon-flight/parallax-top-tiling.png","category":"runtime_background_binding","claim_ids":["DF-ASSET-006"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json","source_sha256":"84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e","source_json_pointers":["/115"],"evidence_class":"asset","accepted_scope":"ASSETS.parallaxTop source binding.","disclosures":[]},
+    {"usage_id":"t3:dragon-flight:scene:dragon-flight-game:df-asset-007","track":"T3","game_id":"dragon-flight","surface_kind":"scene","surface_id":"vocabulary/dragon-flight/scene=DragonFlightGame:parallax-middle","asset_locator_literal":"/games/vocabulary/dragon-flight/parallax-middle-tiling.png","category":"runtime_background_binding","claim_ids":["DF-ASSET-007"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json","source_sha256":"84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e","source_json_pointers":["/116"],"evidence_class":"asset","accepted_scope":"ASSETS.parallaxMiddle source binding.","disclosures":[]},
+    {"usage_id":"t3:dragon-flight:scene:dragon-flight-game:df-asset-008","track":"T3","game_id":"dragon-flight","surface_kind":"scene","surface_id":"vocabulary/dragon-flight/scene=DragonFlightGame:parallax-bottom","asset_locator_literal":"/games/vocabulary/dragon-flight/parallax-bottom-tiling.png","category":"runtime_background_binding","claim_ids":["DF-ASSET-008"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json","source_sha256":"84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e","source_json_pointers":["/117"],"evidence_class":"asset","accepted_scope":"ASSETS.parallaxBottom source binding.","disclosures":[]},
+    {"usage_id":"t3:dragon-flight:scene:dragon-flight-game:df-asset-009","track":"T3","game_id":"dragon-flight","surface_kind":"scene","surface_id":"vocabulary/dragon-flight/scene=DragonFlightGame:loading-backdrop","asset_locator_literal":"/games/vocabulary/dragon-flight/loading-screen-background.png","category":"runtime_background_binding","claim_ids":["DF-ASSET-009","DF-ASSET-039"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json","source_sha256":"84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e","source_json_pointers":["/118","/148"],"evidence_class":"asset","accepted_scope":"ASSETS.loadingBackground binding plus accepted CSS-backdrop usage.","disclosures":[]},
+    {"usage_id":"t3:dragon-flight:scene:dragon-flight-game:df-asset-010","track":"T3","game_id":"dragon-flight","surface_kind":"scene","surface_id":"vocabulary/dragon-flight/scene=DragonFlightGame:projectile-fireball","asset_locator_literal":"/games/vocabulary/dragon-flight/projectile-fireball.png","category":"runtime_sprite_binding","claim_ids":["DF-ASSET-010"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json","source_sha256":"84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e","source_json_pointers":["/119"],"evidence_class":"asset","accepted_scope":"ASSETS.projectileFireball source binding.","disclosures":[]},
+    {"usage_id":"t3:dragon-flight:scene:dragon-flight-game:df-asset-011","track":"T3","game_id":"dragon-flight","surface_kind":"scene","surface_id":"vocabulary/dragon-flight/scene=DragonFlightGame:projectile-boss","asset_locator_literal":"/games/vocabulary/dragon-flight/projectile-boss.png","category":"runtime_sprite_binding","claim_ids":["DF-ASSET-011"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json","source_sha256":"84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e","source_json_pointers":["/120"],"evidence_class":"asset","accepted_scope":"ASSETS.projectileBoss source binding.","disclosures":[]},
+    {"usage_id":"t3:rpg-battle:catalog-card:catalog:rpg-id-001","track":"T3","game_id":"rpg-battle","surface_kind":"non_scene","surface_id":"catalog:rpg-battle","asset_locator_literal":"/games/cover/rpg-battle-cover.png","category":"catalog_cover_binding","claim_ids":["RPG-ID-001"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json","source_sha256":"b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6","source_json_pointers":["/claims/0"],"evidence_class":"route","accepted_scope":"Source-declared catalog cover assignment.","disclosures":["Catalog assignment does not establish live loading."]},
+    {"usage_id":"t3:rpg-battle:scene:hero-male:rpg-asset-042","track":"T3","game_id":"rpg-battle","surface_kind":"scene","surface_id":"battle-hero:male","asset_locator_literal":"/games/vocabulary/rpg-battle/hero_male_pose_sheet_3x3.png","category":"runtime_sprite_binding","claim_ids":["RPG-ASSET-042"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json","source_sha256":"b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6","source_json_pointers":["/claims/169"],"evidence_class":"asset","accepted_scope":"Exact accepted battleHeroes locator in the cited source range.","disclosures":[]},
+    {"usage_id":"t3:rpg-battle:scene:hero-female:rpg-asset-042","track":"T3","game_id":"rpg-battle","surface_kind":"scene","surface_id":"battle-hero:female","asset_locator_literal":"/games/vocabulary/rpg-battle/hero_female_pose_sheet_3x3.png","category":"runtime_sprite_binding","claim_ids":["RPG-ASSET-042"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json","source_sha256":"b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6","source_json_pointers":["/claims/169"],"evidence_class":"asset","accepted_scope":"Exact accepted battleHeroes locator in the cited source range.","disclosures":[]},
+    {"usage_id":"t3:rpg-battle:scene:location-forest-clearing:rpg-asset-042","track":"T3","game_id":"rpg-battle","surface_kind":"scene","surface_id":"battle-location:forest-clearing","asset_locator_literal":"/games/vocabulary/rpg-battle/background_forest_clearing.png","category":"runtime_background_binding","claim_ids":["RPG-ASSET-042"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json","source_sha256":"b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6","source_json_pointers":["/claims/169"],"evidence_class":"asset","accepted_scope":"Exact accepted battleLocations locator in the cited source range.","disclosures":[]},
+    {"usage_id":"t3:rpg-battle:scene:location-magic-arena:rpg-asset-042","track":"T3","game_id":"rpg-battle","surface_kind":"scene","surface_id":"battle-location:magic-arena","asset_locator_literal":"/games/vocabulary/rpg-battle/background_magic_arena.png","category":"runtime_background_binding","claim_ids":["RPG-ASSET-042"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json","source_sha256":"b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6","source_json_pointers":["/claims/169"],"evidence_class":"asset","accepted_scope":"Exact accepted battleLocations locator in the cited source range.","disclosures":[]},
+    {"usage_id":"t3:rpg-battle:scene:location-ruined-road:rpg-asset-042","track":"T3","game_id":"rpg-battle","surface_kind":"scene","surface_id":"battle-location:ruined-road","asset_locator_literal":"/games/vocabulary/rpg-battle/background_ruined_road.png","category":"runtime_background_binding","claim_ids":["RPG-ASSET-042"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json","source_sha256":"b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6","source_json_pointers":["/claims/169"],"evidence_class":"asset","accepted_scope":"Exact accepted battleLocations locator in the cited source range.","disclosures":[]},
+    {"usage_id":"t3:rpg-battle:scene:location-throne-hall:rpg-asset-042","track":"T3","game_id":"rpg-battle","surface_kind":"scene","surface_id":"battle-location:throne-hall","asset_locator_literal":"/games/vocabulary/rpg-battle/background_throne_hall.png","category":"runtime_background_binding","claim_ids":["RPG-ASSET-042"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json","source_sha256":"b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6","source_json_pointers":["/claims/169"],"evidence_class":"asset","accepted_scope":"Exact accepted battleLocations locator in the cited source range.","disclosures":[]},
+    {"usage_id":"t3:rpg-battle:scene:enemy-slime:rpg-asset-042","track":"T3","game_id":"rpg-battle","surface_kind":"scene","surface_id":"battle-enemy:slime","asset_locator_literal":"/games/vocabulary/rpg-battle/enemy_slime_pose_sheet_3x3.png","category":"runtime_sprite_binding","claim_ids":["RPG-ASSET-042"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json","source_sha256":"b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6","source_json_pointers":["/claims/169"],"evidence_class":"asset","accepted_scope":"Exact accepted battleEnemies locator in the cited source range.","disclosures":[]},
+    {"usage_id":"t3:rpg-battle:scene:enemy-goblin:rpg-asset-042","track":"T3","game_id":"rpg-battle","surface_kind":"scene","surface_id":"battle-enemy:goblin","asset_locator_literal":"/games/vocabulary/rpg-battle/enemy_goblin_pose_sheet_3x3.png","category":"runtime_sprite_binding","claim_ids":["RPG-ASSET-042"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json","source_sha256":"b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6","source_json_pointers":["/claims/169"],"evidence_class":"asset","accepted_scope":"Exact accepted battleEnemies locator in the cited source range.","disclosures":[]},
+    {"usage_id":"t3:rpg-battle:scene:enemy-spectre:rpg-asset-042","track":"T3","game_id":"rpg-battle","surface_kind":"scene","surface_id":"battle-enemy:spectre","asset_locator_literal":"/games/vocabulary/rpg-battle/enemy_spectre_pose_sheet_3x3.png","category":"runtime_sprite_binding","claim_ids":["RPG-ASSET-042"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json","source_sha256":"b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6","source_json_pointers":["/claims/169"],"evidence_class":"asset","accepted_scope":"Exact accepted battleEnemies locator in the cited source range.","disclosures":[]},
+    {"usage_id":"t3:rpg-battle:scene:enemy-elemental:rpg-asset-042","track":"T3","game_id":"rpg-battle","surface_kind":"scene","surface_id":"battle-enemy:elemental","asset_locator_literal":"/games/vocabulary/rpg-battle/enemy_elemental_pose_sheet_3x3.png","category":"runtime_sprite_binding","claim_ids":["RPG-ASSET-042"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json","source_sha256":"b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6","source_json_pointers":["/claims/169"],"evidence_class":"asset","accepted_scope":"Exact accepted battleEnemies locator in the cited source range.","disclosures":[]},
+    {"usage_id":"t3:rpg-battle:legacy-component:player-sprite:rpg-asset-041-a","track":"T3","game_id":"rpg-battle","surface_kind":"non_scene","surface_id":"legacy-component:PlayerSprite","asset_locator_literal":"/games/rpg-battle/hero_male_pose_sheet_3x3.png","category":"legacy_component_binding","claim_ids":["RPG-ASSET-041"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json","source_sha256":"b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6","source_json_pointers":["/claims/168"],"evidence_class":"asset","accepted_scope":"Literal retained only as an unreferenced legacy-component binding.","disclosures":["No current page/component importer was found outside tests; not current scene use."]},
+    {"usage_id":"t3:rpg-battle:legacy-component:enemy-sprite:rpg-asset-041-b","track":"T3","game_id":"rpg-battle","surface_kind":"non_scene","surface_id":"legacy-component:EnemySprite","asset_locator_literal":"/games/rpg-battle/enemy_slime_pose_sheet_3x3.png","category":"legacy_component_binding","claim_ids":["RPG-ASSET-041"],"source_path":"measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json","source_sha256":"b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6","source_json_pointers":["/claims/168"],"evidence_class":"asset","accepted_scope":"Literal retained only as an unreferenced legacy-component binding.","disclosures":["No current page/component importer was found outside tests; not current scene use."]},
+    {"usage_id":"t4:archers-revenge:catalog-card:catalog:asset-row-8","track":"T4","game_id":"archers-revenge","surface_kind":"non_scene","surface_id":"catalog-card","asset_locator_literal":null,"category":"catalog_cover_binding","claim_ids":[],"source_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-asset-audit-v2.json","source_sha256":"c66b096726e441e6aab0c7a3ffd2cda81413befb00e1c8586cbe911a31329ebd","source_json_pointers":["/records/8"],"evidence_class":"source-catalog-binding-only","accepted_scope":"Catalog cover binding only; the accepted row does not preserve an exact locator literal.","disclosures":["Current catalog usage remains unknown; exact reviewed route returned HTTP 404."]},
+    {"usage_id":"t4:gryphon-patrol:catalog-card:catalog:candidate-6","track":"T4","game_id":"gryphon-patrol","surface_kind":"non_scene","surface_id":"catalog-card","asset_locator_literal":"/games/cover/cover-gryphon-patrol.png","category":"catalog_cover_binding","claim_ids":[],"source_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit-v5-root-arbiter-20260722-1726-a51d.json","source_sha256":"10b372b3eff78ce869062577c42ccdf7eccf10e56177315acca91b892e97195c","source_json_pointers":["/candidates/6"],"evidence_class":"source-declared-only","accepted_scope":"Static catalog-card cover assignment in selected v5 root-arbiter lineage.","disclosures":["Runtime loading, live rendering, suitability, licensing, and production use are not established."]},
+    {"usage_id":"t4:magic-defense:catalog-card:catalog:md-asset-007","track":"T4","game_id":"magic-defense","surface_kind":"non_scene","surface_id":"catalog-card","asset_locator_literal":"/games/cover/magic-defense-cover.png","category":"catalog_cover_binding","claim_ids":["MD-ASSET-007"],"source_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger-v2.json","source_sha256":"10d974bd3e620a4aaacde171a80e5f82945f58fdbd38db57b996805b62b71e45","source_json_pointers":["/claims/44"],"evidence_class":"asset","accepted_scope":"Source-declared catalog cover binding.","disclosures":["Catalog binding does not establish live loading."]},
+    {"usage_id":"t4:magic-defense:scene:enemy-render:md-asset-001","track":"T4","game_id":"magic-defense","surface_kind":"scene","surface_id":"Enemy render","asset_locator_literal":"/games/magic-defense/skeletons_3x3_pose_sheet.png","category":"runtime_sprite_binding","claim_ids":["MD-ASSET-001"],"source_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger-v2.json","source_sha256":"10d974bd3e620a4aaacde171a80e5f82945f58fdbd38db57b996805b62b71e45","source_json_pointers":["/claims/38"],"evidence_class":"asset","accepted_scope":"ENEMY_SPRITE source binding.","disclosures":[]},
+    {"usage_id":"t4:magic-defense:scene:castle-render:md-asset-003","track":"T4","game_id":"magic-defense","surface_kind":"scene","surface_id":"Castle render","asset_locator_literal":"/games/magic-defense/castles_3x2_sheet.png","category":"runtime_sprite_binding","claim_ids":["MD-ASSET-003"],"source_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger-v2.json","source_sha256":"10d974bd3e620a4aaacde171a80e5f82945f58fdbd38db57b996805b62b71e45","source_json_pointers":["/claims/40"],"evidence_class":"asset","accepted_scope":"CASTLE_CONFIG.sheet source binding.","disclosures":[]},
+    {"usage_id":"t4:magic-defense:scene:stage-background:md-asset-005","track":"T4","game_id":"magic-defense","surface_kind":"scene","surface_id":"Game stage background","asset_locator_literal":"/games/magic-defense/background.png","category":"runtime_background_binding","claim_ids":["MD-ASSET-005","MD-ASSET-006"],"source_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger-v2.json","source_sha256":"10d974bd3e620a4aaacde171a80e5f82945f58fdbd38db57b996805b62b71e45","source_json_pointers":["/claims/42","/claims/43"],"evidence_class":"asset","accepted_scope":"GAME_CONSTANTS.backgroundImage binding and accepted stage-wrapper application.","disclosures":["MD-ASSET-006 is not one of the five DISC-001 affected claims."]},
+    {"usage_id":"t4:magic-defense:scene:bolt-projectile:md-asset-016","track":"T4","game_id":"magic-defense","surface_kind":"scene","surface_id":"Bolt projectile render","asset_locator_literal":null,"category":"procedural_rendering","claim_ids":["MD-ASSET-016"],"source_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger-v2.json","source_sha256":"10d974bd3e620a4aaacde171a80e5f82945f58fdbd38db57b996805b62b71e45","source_json_pointers":["/claims/53"],"evidence_class":"asset","accepted_scope":"Procedural CSS projectile render; no physical asset locator.","disclosures":["DISC-001 retains a claim-text-overstatement limitation for MD-ASSET-016."]},
+    {"usage_id":"t4:paladins-twin-soul:catalog-card:catalog:candidate-7","track":"T4","game_id":"paladins-twin-soul","surface_kind":"non_scene","surface_id":"catalog-card","asset_locator_literal":"/games/cover/cover-paladins-twin-soul.png","category":"catalog_cover_binding","claim_ids":[],"source_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit-v5-root-arbiter-20260722-1726-a51d.json","source_sha256":"10b372b3eff78ce869062577c42ccdf7eccf10e56177315acca91b892e97195c","source_json_pointers":["/candidates/7"],"evidence_class":"source-declared-only","accepted_scope":"Static catalog-card cover assignment in selected v5 root-arbiter lineage.","disclosures":["Runtime loading, live rendering, suitability, licensing, and production use are not established."]},
+    {"usage_id":"t4:village-guardian:catalog-card:catalog:asset-row-2","track":"T4","game_id":"village-guardian","surface_kind":"non_scene","surface_id":"catalog-card","asset_locator_literal":null,"category":"catalog_cover_binding","claim_ids":[],"source_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-asset-audit-v2.json","source_sha256":"c66b096726e441e6aab0c7a3ffd2cda81413befb00e1c8586cbe911a31329ebd","source_json_pointers":["/records/2"],"evidence_class":"source-catalog-binding-only","accepted_scope":"Catalog cover binding only; the accepted row does not preserve an exact locator literal.","disclosures":["Route audit bypassed catalog card and recorded no cover request."]},
+    {"usage_id":"t4:wizard-vs-zombie:catalog-card:catalog:wvz-id-004","track":"T4","game_id":"wizard-vs-zombie","surface_kind":"non_scene","surface_id":"catalog-card","asset_locator_literal":"/games/cover/wizard-vs-zombie-cover.png","category":"catalog_cover_binding","claim_ids":["WVZ-ID-004"],"source_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-claim-ledger-v2.json","source_sha256":"28320b36f18645d476b6e353275d7cf3f07bc0f73bea719da1e50537e8e8b635","source_json_pointers":["/3"],"evidence_class":"current-source","accepted_scope":"Source-declared catalog cover binding.","disclosures":["Catalog binding does not establish live loading."]},
+    {"usage_id":"t4:wizard-vs-zombie:scene:floor-tile:wvz-asset-003","track":"T4","game_id":"wizard-vs-zombie","surface_kind":"scene","surface_id":"gameplay-floor-fill-pattern","asset_locator_literal":null,"category":"runtime_background_binding","claim_ids":["WVZ-ASSET-003"],"source_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-claim-ledger-v2.json","source_sha256":"28320b36f18645d476b6e353275d7cf3f07bc0f73bea719da1e50537e8e8b635","source_json_pointers":["/53"],"evidence_class":"asset","accepted_scope":"Accepted claim states tile-ruins.png is used for fillPatternRepeat='repeat'; it does not preserve an exact locator literal.","disclosures":[]},
+    {"usage_id":"t4:wizard-vs-zombie:scene:briefing-zombie:wvz-mech-022","track":"T4","game_id":"wizard-vs-zombie","surface_kind":"scene","surface_id":"briefing-tab-zombie-preview","asset_locator_literal":null,"category":"runtime_sprite_binding","claim_ids":["WVZ-ASSET-004","WVZ-MECH-022"],"source_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-claim-ledger-v2.json","source_sha256":"28320b36f18645d476b6e353275d7cf3f07bc0f73bea719da1e50537e8e8b635","source_json_pointers":["/54","/48"],"evidence_class":"mechanic","accepted_scope":"Accepted source states zombie_3x3_pose_sheet.png is rendered as a briefing CSS-frame sprite; no exact locator literal is preserved.","disclosures":[]},
+    {"usage_id":"t4:wizard-vs-zombie:data:vocabulary:wvz-asset-006","track":"T4","game_id":"wizard-vs-zombie","surface_kind":"scene","surface_id":"game-vocabulary-fixture","asset_locator_literal":null,"category":"static_data_binding","claim_ids":["WVZ-ASSET-006"],"source_path":"measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-claim-ledger-v2.json","source_sha256":"28320b36f18645d476b6e353275d7cf3f07bc0f73bea719da1e50537e8e8b635","source_json_pointers":["/56"],"evidence_class":"asset","accepted_scope":"Accepted live static vocabulary fixture; no runtime URL literal is preserved in this claim.","disclosures":[]}
+  ],
+  "source_registry": [
+    {"path":"measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json","sha256":"cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b","role":"T3 canonical accepted manifest","admitted":true},
+    {"path":"measure/archive/apk_three_game_truth_pilot_20260712/product-owner-acceptance.json","sha256":"3a59c50e9269aed4bf2c49fe9ff3fa9943684580553cdbc6c37eaa34b780a004","role":"T3 owner acceptance bound by canonical manifest","admitted":true},
+    {"path":"measure/archive/apk_three_game_truth_pilot_20260712/abyssal-well-claim-ledger.json","sha256":"4f3042a2dba0d39a885e5b8c0f707adcfbafd5fbf72edebc6c14a6594a413566","role":"T3 normalized usage source","admitted":true},
+    {"path":"measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json","sha256":"84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e","role":"T3 normalized usage source","admitted":true},
+    {"path":"measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json","sha256":"b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6","role":"T3 normalized usage source","admitted":true},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json","sha256":"824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80","role":"T4 canonical accepted manifest selecting v4 lineage","admitted":true},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/t4-admission-owner-disposition-v4.json","sha256":"40a73444f5f3924cf57bebe67e452dd941fa93262430030bbb43cf1355c29318","role":"T4 admission owner disposition","admitted":true},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/t4-t8-consumption-authorization-v1.json","sha256":"451c749a84c2ab32d3250f7afb0fc5852a04e02b126527900f48393e2f483bef","role":"Additive T8-only consumption authorization","admitted":true},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-t4-v2-81bfe78e-20260722T130706Z-codex.json","sha256":"436d15249549fb0762edcb5c63d1fdcc4f4d51c80852200f929050ca0a0840f5","role":"T4 accepted lifecycle candidate","admitted":true},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/product-owner-acceptance-t4-v2.json","sha256":"56bc530ddff17e8ff20741517d6c29b17ba250cbb35ec3a772a3cd71a23ed318","role":"T4 accepted lifecycle owner acceptance","admitted":true},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/cohort-reconciliation-v4.json","sha256":"6f202f838a97dd93fc049d6301cb0230b715f869b4c994e62dbf178c27658c8c","role":"T4 current v4 batch selector and disclosure chain","admitted":true},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-a.json","sha256":"b096d911b7d6bc9fb4d530e695cea10d3816a17158447a89303c2d069cf2a54c","role":"T4 Batch A accepted manifest with Castle omission and 178/187 limitation","admitted":true},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-batch-a.json","sha256":"8bd3c806a9e35a4caa9d42f3a3e67e374ee957f4285b8220e9756f56046d5ac8","role":"T4 Batch A selected source map","admitted":true},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger-v2.json","sha256":"10d974bd3e620a4aaacde171a80e5f82945f58fdbd38db57b996805b62b71e45","role":"T4 Batch A normalized usage source","admitted":true},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-claim-ledger-v2.json","sha256":"28320b36f18645d476b6e353275d7cf3f07bc0f73bea719da1e50537e8e8b635","role":"T4 Batch A normalized usage source","admitted":true},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-b-v20.json","sha256":"3026323c6a6aed61f3fbcb03bacf200a1a610cb2da852606b6e9fe61f90f63d7","role":"T4 Batch B accepted current lineage","admitted":true},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-batch-b-v20.json","sha256":"2357e8c078aa78f4f007f676599203326ddb5b53db2c14166c4eded149e9b926","role":"T4 Batch B selected current candidate","admitted":true},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/role-receipts/asset-auditor-batch-b-v16-complete.json","sha256":"fecab1f7b97cc8a80c888ef62f5fd2bce80e975e7f8194ddc25503f31cde961c","role":"T4 Batch B exact v2 asset-audit selector receipt","admitted":true},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-b-asset-audit-v2.json","sha256":"c66b096726e441e6aab0c7a3ffd2cda81413befb00e1c8586cbe911a31329ebd","role":"T4 Batch B normalized usage source","admitted":true},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-role-receipt-selection-v7-root-arbiter-20260722-1912-r7k3-19a7.json","sha256":"a58977ac3ea5891bd3d46f62577b6ed2a0a971e967833b450bdbbae8d0f5d342","role":"T4 Batch C selected v4/v5/v6 role lineage","admitted":true},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-usage-audit-v5-root-arbiter-20260722-1726-a51d.json","sha256":"10b372b3eff78ce869062577c42ccdf7eccf10e56177315acca91b892e97195c","role":"T4 Batch C normalized usage source","admitted":true},
+    {"path":"measure/tracks/apk_corpus_audit_action_defense_20260712/batch-c-asset-v5-independent-validation-v1.json","sha256":"ee322ac2d9f7f8d87cc4d94db16d83484a01dae0ae07e60b1c644ef9bd09ec5c","role":"T4 Batch C selected asset-audit validation companion","admitted":true}
+  ],
+  "excluded_stale_or_non_consumable_inputs": [
+    "T4 full-review v1, reconciliation v2, accepted-cohort-manifest-t4-v1, and admission gates v1-v3",
+    "T4 historical Batch B accepted manifest and all predecessor candidate chains superseded by v20",
+    "T4 Batch C Browser v5",
+    "T4 Batch C collision-invalid Asset V4 and Gryphon Mapper V5 outputs",
+    "Castle Defense artifacts omitted from accepted Batch A",
+    "Any path-, basename-, slug-, or franchise-derived inferred usage"
+  ],
+  "binding_disclosures": [
+    "T3 remains accepted-conditional; its browser and candidate-level asset limitations are not promoted.",
+    "T4 is consumable only with every bound condition and disclosure.",
+    "T4 Batch A retains Castle Defense manifest omission, DISC-001, and the 178-of-187 resolved-claim limitation.",
+    "T4 Batch B establishes zero source runtime asset usages and only two catalog bindings; all other assigned candidates remain sidecar or bounded unknown/not-referenced.",
+    "T4 Batch C establishes source-declared catalog bindings only; it does not establish runtime loading.",
+    "T8 authorization is limited to per-candidate asset forensics and does not authorize ontology, asset use, implementation, production, shipping, browser reruns, or success claims."
+  ],
+  "reproducibility_contract": {
+    "hash_algorithm": "sha256 exact file bytes",
+    "json_pointer_dialect": "RFC 6901",
+    "checks": [
+      "Parse this file and every admitted JSON source.",
+      "Recompute every source_registry SHA-256 and require exact equality.",
+      "Require every record source_path/source_sha256 pair to resolve to exactly one source_registry entry.",
+      "Resolve every source_json_pointer against its source JSON and require it to exist.",
+      "Require unique usage_id values and preserve the declared accepted-source ordering.",
+      "Require usage_records length 39; T3 length 26; T4 length 13.",
+      "Require game_coverage length 11 and per-game accepted_usage_records to sum to 39.",
+      "Require scene_usage_records 28 and non_scene_usage_records 11.",
+      "Require Castle Defense normalized usage count 0 and retain the 178-of-187 Batch A limitation.",
+      "Reject any record carrying compact, wide, suitability, disposition, replacement, or retirement conclusions."
+    ]
+  }
+}

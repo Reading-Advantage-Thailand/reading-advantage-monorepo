@@ -1,0 +1,167 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "batch_id": "AF-11",
+  "role": "adversarial-reviewer",
+  "native_task_name": "/root/phase4_review_af11",
+  "declared_model": "gpt-5.6-sol",
+  "reasoning_effort": "xhigh",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "allowed_input_manifest_sha256": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+  "exact_verified_inputs": {
+    "current_producer": {
+      "joins": "0fbb42411c47c1d99b51af25a44350f2b72c34a220beaee0b63b82db7e9b3505",
+      "rollup": "162d9aa18a2fcec014b779d9726984c8c2b14d6b538dc34e26130820a3f0ad01",
+      "mapper_receipt": "29120f0513d057cef7a86112db891f8a31e7bd48a2dce67024b08dde6d929402"
+    },
+    "truth_test_receipt": "9bedb30210f6ac18a882fc7d24c76208313315bc5fcbca9b4c8435b51e68a10b",
+    "preserved_phase2_reviewer_receipt": "7bc116017774ae90e70303d45725eb00d61e95917fee9312e94fa05d13d9940e",
+    "reports": {
+      "phase4-batch-test-reports/AF-11.json": "3d646428958f60568a292f115c23aaeb889e3827f9b4278943c99569b4c6bec4",
+      "phase4-v2-batch-schema-test-reports/AF-11.json": "d8ab5bc8aea690dcb68a951b0e9cee5c005ef42abfe38896b4b4b84ac2940302"
+    },
+    "verifiers": {
+      "phase4_batch_contract_test.py": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+      "phase4_v2_batch_schema_contract_test.py": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519",
+      "phase4_v2_batch_schema_contract_test_v2.py": "174fba885907260824503708180cd4dbe2b873e06aaf8e86c4fb440c319c9956"
+    },
+    "fixtures": {
+      "phase4_value_fixture_count": 16,
+      "phase4_versioned_v2_fixture_count": 14,
+      "all_value_fixtures_rejected": true,
+      "all_v2_fixtures_rejected": true,
+      "versioned_v2_fixture_hash_map_is_exactly_bound_by": "d8ab5bc8aea690dcb68a951b0e9cee5c005ef42abfe38896b4b4b84ac2940302"
+    },
+    "transparent_mapper_prepublication_red_lineage": {
+      "python_not_found": {
+        "exit_code": 127,
+        "authority": "none",
+        "bounded_correction": "Use the available python3 interpreter with the same supported verifier flags."
+      },
+      "missing_mapper_artifacts": {
+        "exit_code": 1,
+        "authority": "none",
+        "production_error_count": 4,
+        "bounded_correction": "Publish only the mapper-owned AF-11 artifacts, then rerun the unchanged verifier."
+      },
+      "failed_truth_receipt_schema_cycle": {
+        "failed_receipt_sha256": "ff5b1454d76da2f7db4a2484ba44629e6fd0eb2a7189ad6d369188906c978a4a",
+        "failure_note_sha256": "b7b7778e2f9d4433d8eba499155f9b67ee8765d1536e2187130b8ca4ab9d83d3",
+        "authority": "none",
+        "bounded_correction": "Preserve the exact failed receipt and mismatch note, retain both unchanged green reports, and replace only the live receipt with the accepted AF-10 key set."
+      },
+      "final_supported_postpublication_verifiers": "Both exit zero and reproduce the persisted report bytes exactly."
+    }
+  },
+  "reviewed_counts": {
+    "candidate_paths": 40,
+    "current_candidate_path_byte_hash_matches": 40,
+    "hash_groups": 18,
+    "caller_locators": 59,
+    "accepted_path_usage_links": 13,
+    "scene_links": 12,
+    "non_scene_links": 1,
+    "unique_scene_usage_records": 6,
+    "unique_usage_ids": 7,
+    "responsive_assessment_cells": 48,
+    "eight_facet_cells": 48,
+    "dispositions": {
+      "replace": 13,
+      "reject": 0,
+      "unknown": 27
+    },
+    "priority1_paths": 0,
+    "priority1_rejected_retired_path": null,
+    "mixed_groups": 5,
+    "review_slice_games": [
+      "dragon-flight",
+      "potion-rush",
+      "rpg-battle"
+    ],
+    "review_slice_candidate_paths": 13,
+    "catalog_locator_records": 7,
+    "review_records": 227
+  },
+  "substantive_results": {
+    "recursive_v2_shapes_exact_and_no_extras": true,
+    "all_40_current_candidate_path_bytes_match_frozen_sha256": true,
+    "all_40_join_status_values_equal_scaffold_rules": true,
+    "all_59_caller_locators_resolve_to_inventory_pointers_and_pinned_git_lines": true,
+    "all_13_links_are_exact_source_bound": true,
+    "scene_non_scene_split_is_exactly_12_and_1": true,
+    "all_source_pointers_hashes_claim_ids_blob_hashes_and_range_hashes_resolve": true,
+    "all_13_semantic_requirements_are_exact_source_copies": true,
+    "all_13_path_semantic_requirement_wrappers_mirror_ordered_links": true,
+    "all_12_scene_links_have_exact_four_cell_matrices": true,
+    "all_48_cells_have_exact_eight_facet_shapes": true,
+    "the_non_scene_link_has_zero_cells": true,
+    "no_priority1_condition_or_path_is_present": true,
+    "rollup_members_nested_dispositions_five_mixed_groups_and_current_joins_sha_are_exact": true,
+    "three_game_slice_exactly_covers_13_paths_and_7_usages": true,
+    "catalog_count_seven_and_non_additive": true,
+    "unknown_provenance_blocks_reuse_adapt_and_reference": true,
+    "canonical_candidate_key_null_forbidden_pending_T9_for_all_paths": true,
+    "direct_legacy_adoption_false_for_all_paths": true,
+    "dragon_potion_and_rpg_bounded_scene_results_are_preserved": true,
+    "browser_evidence_remains_composite_scene_only": true,
+    "browser_never_promoted_to_path_load_suitability_theme_provenance_license_or_adoption": true,
+    "mapper_and_truth_receipt_identities_hashes_resources_outputs_and_prohibitions_are_truthful": true,
+    "phase2_review_and_reviewer_receipt_are_preserved_and_separate": true,
+    "transparent_red_and_failed_receipt_lineage_is_disclosed_bounded_and_non_authoritative": true,
+    "reviewer_diagnostic_corrections_are_disclosed_and_non_authoritative": true
+  },
+  "verifier_results": {
+    "green_not_sole_evidence": true,
+    "both_verifier_resource_ceilings_pass": true,
+    "v1_structural_verifier_hash_verified_without_invocation": true,
+    "value": {
+      "exit_code": 0,
+      "production_errors": [],
+      "counterexamples": 16,
+      "test_cases": 17,
+      "report_byte_reproduced": true,
+      "parsed_json_equal": true
+    },
+    "versioned_v2": {
+      "exit_code": 0,
+      "production_errors": [],
+      "counterexamples": 14,
+      "structural_test_cases": 15,
+      "test_cases": 32,
+      "report_byte_reproduced": true,
+      "parsed_json_equal": true,
+      "nested_value_report_exact": true
+    }
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "unresolved_blocking_findings": 0,
+  "stop_loss_events": [],
+  "measured_resource_usage": {
+    "candidate_paths": 40,
+    "hash_groups": 18,
+    "review_records": 227,
+    "command_invocations": 96,
+    "bytes_read": 390000000,
+    "ceilings": {
+      "candidate_paths": 40,
+      "hash_groups": 24,
+      "review_records": 280,
+      "command_invocations": 120,
+      "bytes_read": 536870912
+    },
+    "within_ceiling": true,
+    "measurement_basis": "Conservative accounting includes separate fresh value and v2 verifier processes, the v2 nested value invocation as reported, frozen JSON and receipt hashing, all 59 caller Git-line checks, all seven source-claim blob and range checks, all 40 current candidate-byte checks, and 227 independently reviewed substantive records."
+  },
+  "role_boundary": "Fresh isolated AF-11 Phase 4 adversarial review derived from live frozen inputs. Reviewed all 40 producer records, 18 groups, 59 caller locators, thirteen path-usage links split into twelve scene and one non-scene link across seven unique usage IDs, 48 responsive cells and every facet, every disposition, the absence of any priority-1 path, five mixed groups, seven separate catalog locators, exact source pointers and claims, mapper and truth receipts, the archived failed truth-receipt cycle, and byte-reproduced verifier reports. Did not repair or alter producer, verifier, fixture, report, mapper, truth receipt, Phase 2 evidence, freeze, plan, product code, acceptance state, or commits; did not rerun a browser; and did not authorize T9, canonical keys, direct legacy adoption, production, shipping, suitability, licensing, adoption, product success, or root acceptance.",
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-reviews/AF-11.json": "14e1878fcf704b859de577eea305da27a4324458fb8f7b483c725baf554cfb4f"
+  },
+  "final_status": "review-pass-pending-root-acceptance"
+}

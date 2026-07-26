@@ -1,0 +1,11 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-global-v3-red-evidence.v1",
+  "archived_v3_verifier_sha256": "39d773c8799f8a59d1664f76de4a0cf694cb318fea43bcf50fc1f2e81f366f66",
+  "result": "all four fixture-gate variants raised instead of returning structured truth-test-failed JSON",
+  "tracebacks": [
+    {"variant":"missing_manifest","exception_type":"FileNotFoundError"},
+    {"variant":"malformed_manifest_json","exception_type":"JSONDecodeError"},
+    {"variant":"missing_required_fixture","exception_type":"KeyError"},
+    {"variant":"renamed_required_fixture","exception_type":"KeyError"}
+  ]
+}

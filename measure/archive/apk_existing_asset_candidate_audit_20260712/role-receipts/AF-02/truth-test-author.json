@@ -1,0 +1,80 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-02",
+  "phase": "phase4",
+  "role": "truth-test-author",
+  "native_task_name": "/root/phase4_test_af02",
+  "declared_model": "gpt-5.6-sol",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "allowed_input_manifest_sha256": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+  "allowed_input_paths": [
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-applicability-matrix-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-root-acceptance.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase2-root-acceptance.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase3-root-acceptance.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-join-scaffold-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/caller-inventory.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/provenance-audit.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/inspection-records.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/phase4-path-usage-joins.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/phase4-group-rollup.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-02/requirements-mapper.json"
+  ],
+  "input_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-applicability-matrix-v1.json": "ec35f558c071411506d0d2f4b71746d28d0a6e99fcf442ab0b80ba6ab62f7761",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-root-acceptance.json": "2b30be13c8c0f6b7d1d404489c6058b48b6839f58d5ae2ce84b67f9d6a1a6d61",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase2-root-acceptance.json": "461c1d4f26afa512d1e6266384005b019ab0428a3cc508046675feb9aef35ed1",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase3-root-acceptance.json": "e855e7e50eba21fa9614719472f75179b7db9e7fd3d9756373d7bbd39b12a579",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json": "450f5ab66215178aa730e057cb28a220bfb550dfd924959a7f7f1da2eea02f9e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-join-scaffold-v1.json": "2162076fe26911a2659b7e0ef23f49398c8ebb4b5343b0ab0479c78a5d1a1de4",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/caller-inventory.json": "b0bd048787b2650a635c580fef295cbb2c0e5c3edd8f24f048accff5bdccc8ae",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/provenance-audit.json": "27431a9d267bbf8d769ffb9893569552e9273c1a44c8d168b7f2e6438882ef4a",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/inspection-records.json": "a0251f246bed6f1dbb560265f52918c492c162c95d01e4d3f768c2c62ee580c3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/phase4-path-usage-joins.json": "22f8f68c4845b92feec72b2dc8110ccb00a06dcd8ce4fe50ca8283ceb67a41c2",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/phase4-group-rollup.json": "41082c8c5ccd17d3eaa51b5ec38974d8f8fe2e6206156f542882a6eecb3f85a3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-02/requirements-mapper.json": "52c27db57bde8ed20c40cbb91e7da11b9196d9b0d047d9386886093717e32bfd"
+  },
+  "role_boundary": "Ran only the existing deterministic parameterized Phase 4 batch contract verifier and its frozen negative fixtures for AF-02. Independently checked production contract output, exact path/group/caller and mapper bindings, counterexample rejection, scene-only responsive-cell reconciliation, and the frozen truth-test resource ceiling. Did not alter the verifier, fixtures, producer joins or rollup, mapper receipt, freezes, plan, review, acceptance state, or any product code; did not repair findings, review, accept, or commit.",
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_batch_contract_test.py": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-batch-test-reports/AF-02.json": "76ac080a8b90f3dfffa11c731bdc764bec547a1a0f133c00081e17717cd2e8e6"
+  },
+  "negative_fixture_count": 16,
+  "scene_only_responsive_count": {
+    "scene_links": 6,
+    "cells_per_scene_link": 4,
+    "responsive_cells": 24
+  },
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": [
+      "The AF-02 truth test passed but does not constitute independent review, root acceptance, production authorization, direct legacy adoption, a canonical standard-pack key, or T9 ontology authorization."
+    ]
+  },
+  "measured_resource_usage": {
+    "test_cases": 17,
+    "command_invocations": 1,
+    "bytes_read": 98932580,
+    "within_ceiling": true,
+    "ceilings": {
+      "test_cases": 160,
+      "command_invocations": 80,
+      "bytes_read": 134217728
+    },
+    "measurement_basis": "Exact bytes loaded or digested by the final one-command deterministic verifier process; interpreter and operating-system library reads are excluded."
+  },
+  "stop_loss_events": [],
+  "unresolved_blocking_findings": 0,
+  "final_status": "truth-test-green-pending-independent-review-and-root-acceptance"
+}

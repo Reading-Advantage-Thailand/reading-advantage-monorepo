@@ -1,0 +1,36 @@
+{
+  "schema_version": "apk-role-receipt.phase5-fresh-independent-adversarial-reviewer.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": 5,
+  "role": "fresh-independent-adversarial-reviewer",
+  "native_task_name": "/root/phase5_review_b",
+  "role_boundary": "Independent full-record adversarial review of only AF-05 through AF-08; no remediation, acceptance, adoption, implementation, or edits to reviewed artifacts.",
+  "review_report": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-05-AF-08.json",
+    "sha256": "f2c4fff40265d0b5a51700459c4f889cb75c46e50e071e492172e83f30144c65"
+  },
+  "coverage": {
+    "batch_ids": ["AF-05", "AF-06", "AF-07", "AF-08"],
+    "report_records": 144,
+    "manifest_entries": 144,
+    "hash_groups": 75,
+    "source_artifacts": 28,
+    "caller_locators": 157,
+    "usage_links": 30,
+    "responsive_assessment_cells": 100,
+    "direct_visual_working_note_assets": 42,
+    "audio_files_decoded": 4
+  },
+  "results": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "live_phase5_contract_test": "pass; 18 of 18 counterexamples rejected",
+    "full_record_pointer_hash_and_manifest_reconciliation": "pass",
+    "non_consumable_and_no_adoption_guards": "pass"
+  },
+  "frozen_byte_disclosure": "One current worktree file, cover-griffin-sky-joust.png, differs from its frozen unreadable source blob; the exact Phase 3/4 evidence declares this and the reviewed report does not infer from current bytes.",
+  "final_status": "pass-pending-global-review-and-root-orchestrator-product-owner-acceptance",
+  "claims_not_made": ["root acceptance", "accepted manifest", "consumer adoption", "canonical T9 key", "direct legacy adoption", "implementation", "shipping"]
+}

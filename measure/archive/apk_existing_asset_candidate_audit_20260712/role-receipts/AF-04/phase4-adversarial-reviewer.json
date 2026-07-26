@@ -1,0 +1,94 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-04",
+  "phase": "phase4",
+  "role": "adversarial-reviewer",
+  "native_task_name": "/root/phase4_review_af04_final",
+  "declared_model": "gpt-5.6-terra",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "allowed_input_manifest_sha256": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+  "exact_verified_inputs": {
+    "current_producer": {
+      "joins": "08f3c820ad78dba42dfb36cdf1ca96291bc8e8850016ddc21b64e7968b7b3995",
+      "rollup": "20f7cbf831f25f3523dc809db4132508d570e4d772338fa5afa35b744e5b9e14",
+      "mapper_receipt": "812676d88eb9f3136237a3a44438db1ba7f34e59594aacbf834b73abee6e09b4"
+    },
+    "decisions": {
+      "AF-04-final-schema-cycle.json": "41c0dd590f3be7368b5ed761f44f9473d44b644c9a2160453554ece4874c667f",
+      "AF-04-user-continuation-override.json": "7ab3354af2adf22cd13c522501d33fd157b166c987403ae685a03f5b9adf9e0e"
+    },
+    "verifiers": {
+      "phase4_batch_contract_test.py": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+      "phase4_v2_schema_contract_test.py": "66330866aea54902d3c3a7a70a3534921116da67521562f5440db380246ed319"
+    },
+    "reports": {
+      "phase4-batch-test-reports/AF-04.json": "ebac0541202d7621204d5a6a8c2bd79080f94d440d4308e64a83f6e715435525",
+      "phase4-v2-schema-test-reports/AF-04.json": "babac197a6405bf069c99e9e3c7912f1030ae195d44f151299d736b21e9bf0fa"
+    },
+    "truth_test_receipt": "08b5bb08cabefe80b25be45ed834bd00983e14112411607f8e2ca6dcb1d90762",
+    "preserved_phase2_reviewer_receipt": "2f85a84c9623f6f26dbc60978880069da301f74a9491a4986c6d57903d8e985e",
+    "fixtures": {
+      "phase4_value_fixture_count": 16,
+      "phase4_v2_fixture_count": 11,
+      "all_27_rejected_for_published_intended_codes": true,
+      "v2_fixture_hash_map_is_exactly_bound_by": "babac197a6405bf069c99e9e3c7912f1030ae195d44f151299d736b21e9bf0fa"
+    },
+    "archives": {
+      "cycle1_report": "150d7292983bbf09e175e1c77b558a16f338408d33a1a0ce80064a60506768da",
+      "cycle1_receipt": "7a6c369bdd46603bbc0ac46665619820f26666bf2fc168115c3b6a61dd97427c",
+      "cycle2_joins": "cf0f48973eb71c609fe784cdaf945152a3e92939471c6af83ae39eefbc01a439",
+      "cycle2_rollup": "ee7e21803c3071736e3278e52910438fcbe8b625f6a0dd02d06f0e2f5c37ddc0",
+      "final_producer_failure_joins": "3baeee0af3948af4f36d04bb9d8c848f2dff4e6243c8837f457caacc92359ff6",
+      "final_producer_failure_rollup": "19f94e5cea4cfd1d422a7efa8aeadee565f7b368a993bbbe43949268aebd7ae2",
+      "all_24_archive_hashes_exactly_verified_against_truth_receipt": true,
+      "all_24_archive_hashes_exactly_verified_against_v2_report": true
+    }
+  },
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-reviews/AF-04.json": "2aa4ac315d503cf4e0428afd37c0ddd0c30e04b3bbaa7b07556f0461c9506467"
+  },
+  "role_boundary": "Fresh isolated final AF-04 Phase 4 adversarial review. Reviewed the exact frozen inputs, all producer records and dispositions, caller pins, source and browser boundaries, v2 schema and archive chain. Did not repair or alter producer/test/fixture/report/decision/archive/freeze/plan/acceptance/product code or any existing receipt other than this active reviewer receipt; did not run browser capture, authorize adoption/T9, accept Phase 4, or commit.",
+  "reviewed_counts": {
+    "candidate_paths": 35,
+    "hash_groups": 17,
+    "caller_locators": 61,
+    "git_pinned_caller_source_files": 28,
+    "accepted_path_usage_links": 6,
+    "unique_scene_usage_records": 3,
+    "responsive_assessment_cells": 24,
+    "priority1_paths": 4,
+    "dispositions": { "replace": 6, "reject": 4, "unknown": 25 },
+    "mixed_groups": 3,
+    "catalog_locator_records": 7,
+    "review_records": 196
+  },
+  "verifier_results": {
+    "value": { "exit_code": 0, "report_byte_reproduced": true, "test_cases": 17, "counterexamples": 16 },
+    "v2": { "exit_code": 0, "report_byte_reproduced": true, "test_cases": 29, "counterexamples": 11 },
+    "green_not_sole_evidence": true
+  },
+  "final_delta": {
+    "deep_equal_joined_mirrors": 6,
+    "removed_mirror_only_keys": 12,
+    "removed_key_names": ["status", "disclosure"],
+    "all_other_factual_fields_unchanged": true,
+    "rollup_change_only_current_joins_sha256_binding": true,
+    "v2_join_status_restored_for_all_records": 35
+  },
+  "findings": { "critical": [], "high": [], "medium": [], "low": [] },
+  "stop_loss_events": [],
+  "unresolved_blocking_findings": 0,
+  "measured_resource_usage": {
+    "candidate_paths": 35,
+    "hash_groups": 17,
+    "review_records": 196,
+    "command_invocations": 16,
+    "bytes_read": 233000000,
+    "within_ceiling": true,
+    "ceilings": { "candidate_paths": 40, "hash_groups": 24, "review_records": 280, "command_invocations": 120, "bytes_read": 536870912 },
+    "measurement_basis": "Conservative sum of both independently rerun verifier process counters plus bounded record, source, archive and Git-pin reconciliation reads."
+  },
+  "final_status": "pass-pending-root-orchestrator-project-and-product-owner-acceptance"
+}

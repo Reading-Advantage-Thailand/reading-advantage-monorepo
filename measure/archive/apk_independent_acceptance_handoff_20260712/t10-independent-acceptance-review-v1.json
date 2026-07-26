@@ -1,0 +1,74 @@
+{
+  "candidate_gate": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-candidate-gate-report-v1.json",
+    "sha256": "f18ec42f8cd7433968100894bf950015693d89c905bfa4041e2eb930b53fb1ad"
+  },
+  "conclusion": "ACCEPT_EXACT_T9_EVIDENCE_FOR_BOUNDED_T11_HANDOFF_WITH_ALL_UNKNOWN_RUNTIME_AND_ASSET_DECISIONS_BLOCKED",
+  "findings_and_remediation": [
+    {
+      "finding": "163 of 1,248 upstream rows do not independently resolve to a complete exact Git citation envelope, including 20 negative controls.",
+      "finding_id": "T10-F-001",
+      "remediation": "Published a 100% claim-disposition overlay that blocks all 163 from factual successor consumption; all 56 accepted capability uses independently resolve to exact Git evidence.",
+      "severity": "Medium",
+      "status": "resolved-by-fail-closed-quarantine"
+    },
+    {
+      "finding": "T9 retains negative controls in Phase 1 derivation surfaces.",
+      "finding_id": "T10-F-002",
+      "remediation": "Verified every negative control is excluded from capability uses and explicitly denied it factual successor status in the overlay.",
+      "severity": "Medium",
+      "status": "resolved-by-explicit-negative-evidence-label"
+    },
+    {
+      "finding": "Browser evidence covers six bounded predecessor routes, not all games, and no fresh T10 browser session was available.",
+      "finding_id": "T10-F-003",
+      "remediation": "Accepted zero runnable/runtime contracts; retained all six disclosed defects and blocked all 5,664 responsive cells.",
+      "severity": "Medium",
+      "status": "resolved-by-runtime-non-acceptance"
+    },
+    {
+      "finding": "No subagent spawn/export mechanism was available for provider fork/session attestation.",
+      "finding_id": "T10-F-004",
+      "remediation": "Made no fork_turns or tool-attestation claim; bound the explicit user waiver, unique T10 reviewer identity, and fresh independent verifier.",
+      "severity": "Low",
+      "status": "accepted-limitation-not-a-provider-isolation-claim"
+    }
+  ],
+  "input_freeze": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-input-freeze-v1.json",
+    "sha256": "68fc7e0baaaa25c2dc1a2793aad7568b473eb4cd6c5449dfdf138fc58bf517cf"
+  },
+  "review_completed_at": "2026-07-26T01:10:00Z",
+  "review_coverage": {
+    "accepted_capabilities": 7,
+    "blocked_adoption_mappings": 85,
+    "blocked_claims": 163,
+    "blocked_must_have_gaps": 3,
+    "blocked_responsive_cells": 5664,
+    "browser_evidence_files": 16,
+    "browser_routes": 6,
+    "capability_uses": 56,
+    "derived_records": 1009,
+    "exact_claims": 1085,
+    "frozen_input_checks": 33,
+    "games": 29,
+    "negative_controls": 20,
+    "normalized_usages": 45,
+    "raw_claims": 1248,
+    "responsive_contracts": 354,
+    "role_identity_checks": 74,
+    "standard_pack_assets": 43075,
+    "t8_candidate_rows": 428
+  },
+  "reviewer_identity": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/reviewer-identity-v1.json",
+    "sha256": "cb0d7c8402a4b67f8effcdb246151a39fbeaceeeef5e8d70a1b78cd26c66aa6d"
+  },
+  "sampling": "none",
+  "schema_version": "apk-t10-independent-acceptance-review.v1",
+  "unresolved_findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": []
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "accepted_at": "2026-07-26T00:00:00Z",
+  "acceptance_scope": {
+    "capability_count": 7,
+    "capabilities": ["non-empty deterministic content", "language-target progression", "single-completion semantics", "result accounting", "input actions", "bounded frame loop", "time thresholds"],
+    "delivery": "T11 shared developer kit, forward contracts, canonical resolver/materializer contract, deterministic testing extensions, scaffold/exemplar, enforcement, and documentation"
+  },
+  "exclusions_and_dependency_gates": {
+    "runtime_contracts": {"status": "blocked", "accepted": 0},
+    "responsive_contracts": {"status": "blocked", "contracts": 354, "cells": 5664},
+    "asset_mappings": {"status": "blocked", "approved": 0, "blocked": 85},
+    "browser_mobile_performance": {"status": "not_claimed", "browser_success_claimed": false},
+    "presentation_components": {"status": "dependency-gated", "depends_on": ["responsive contracts", "asset mappings"]},
+    "advantage_games_qc_host": {"status": "dependency-gated", "depends_on": ["runtime contracts", "responsive contracts"]},
+    "cartridge_cutover": {"status": "dependency-gated", "next_track": "apk_cartridge_semantic_rewrite_20260712"},
+    "unsupported_scope_policy": "Excluded capabilities and all dependency-gated scopes are not accepted or claimed successful."
+  },
+  "package_validation_evidence": {
+    "package": "@reading-advantage/advantage-play-kit",
+    "tests": {"command": "pnpm run test -- --reporter=dot", "files": 35, "passed": 201},
+    "coverage": {"command": "pnpm run test:coverage", "statements_pct": 89.71, "branches_pct": 77.42, "functions_pct": 94.56, "lines_pct": 93.14},
+    "lint": {"command": "pnpm run lint", "status": "passed"},
+    "typecheck": {"command": "pnpm run check-types", "status": "passed"},
+    "build": {"command": "pnpm run build", "status": "passed"},
+    "hash_binding_check": {"command": "node scripts/check-accepted-inputs.mjs", "status": "passed", "accepted_capability_input_files": 3, "runtime_contracts": 0, "approved_asset_mappings": 0, "blocked_asset_mappings": 85, "browser_success_claimed": false},
+    "diff_check": {"status": "passed", "track_includes_production_code_changes": true, "acceptance_closeout_production_code_changes": false},
+    "evidence_hashes": {
+      "plan_review": {"path": "measure/tracks/apk_shared_developer_kit_20260712/plan-review.md", "sha256": "2d0f6f224caf232ae30a9516d5893f21b78b6e4a4f7ce655edf5fb9533f8a761"},
+      "package_manifest": {"path": "packages/advantage-play-kit/package.json", "sha256": "b47dddc8451f434621ad713c6a10c91e205f3f0f8c9d2293b605c09d2fe350ef"},
+      "accepted_inputs_guard": {"path": "packages/advantage-play-kit/src/guards/accepted-inputs.ts", "sha256": "08f794b23a140f5a802df47c51170439d677781dcf9d8e21357ecc4c6da4ddbd"},
+      "blocked_scopes_guard": {"path": "packages/advantage-play-kit/src/guards/blocked-scopes.ts", "sha256": "ab58ef0b69ad07057b33d84727af5765921218733f20de19e089ee42e0f0e926"},
+      "scaffold": {"path": "packages/advantage-play-kit/src/scaffolding/scaffold.ts", "sha256": "9db8a569a562cddc5e8553cb4fecb584702c111f5e36172681d69ecf4faf433c"},
+      "developer_kit_docs": {"path": "packages/advantage-play-kit/docs/developer-kit.md", "sha256": "cb227b62271b96889c34c3ab40fe49c2af69cb18a3e2abf2e49c14c0f65dfe64"},
+      "simplification_report": {"path": "packages/advantage-play-kit/docs/simplification-report.md", "sha256": "6e972042ca4a23432ce5da6852d5744602e32f3d0665f481ff09cc8feb4ff2ad"}
+    }
+  },
+  "t10_inputs": {
+    "accepted_manifest": {"path": "measure/tracks/apk_independent_acceptance_handoff_20260712/accepted-successor-manifest-v1.json", "sha256": "e9fc2c9c8074db74670fa2e2929bd4efb5b8d0fd2ef5a8b9819d2f5a6e39ba49"},
+    "successor_hashes": {"path": "measure/tracks/apk_independent_acceptance_handoff_20260712/successor-hashes-v1.json", "sha256": "c026c0bff62c3d6739c366fa80cb6593c455e96bffd2532a43223c829ec74005"},
+    "owner_acceptance": {"path": "measure/tracks/apk_independent_acceptance_handoff_20260712/product-owner-acceptance-v1.json", "sha256": "165e21c9ddb5a6e0b2f61f3190d604fbb3133459b5f00331a8c66ee1e7572753"},
+    "candidate_gate": {"path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-candidate-gate-report-v1.json", "sha256": "f18ec42f8cd7433968100894bf950015693d89c905bfa4041e2eb930b53fb1ad"},
+    "independent_review": {"path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-independent-acceptance-review-v1.json", "sha256": "efca1bc8391328fc274c34ac463c362dcffcd921c96204905091b9025554688d"},
+    "input_freeze": {"path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-input-freeze-v1.json", "sha256": "68fc7e0baaaa25c2dc1a2793aad7568b473eb4cd6c5449dfdf138fc58bf517cf"},
+    "claim_overlay": {"path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-claim-disposition-overlay-v1.json", "sha256": "06e692daff932334a5edc2a06d7121651a6bb2426f05f1b00d8d0a5c1ecb6e41"},
+    "canonical_pack_release": {"path": "packages/advantage-play-kit/assets/standard/accepted-standard-pack-release.json", "sha256": "61984e0b53c4ba85379cf6a4f0f33ee956665c4eaad4b3d681e3dccd98389844", "version": "2026.07.23", "catalog_digest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087", "source_receipt_digest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9"},
+    "accepted_capability_inputs": {"phase2-capability-classification-v5.json": "274a3538b782499828c6af9cc7033f72fa5de0b1d6da0c0eb769dad568e78a34", "phase2-curated-capability-evidence-v1.json": "18769fa2880164c47c73bb628e518806eb5d6f7a50a24ba376b89cd17aea2349", "phase2-extension-boundaries-v5.json": "bcee20de256ef1ac44fad89353faeff73f03bec4ad7f0e57358f6b1862252c66"},
+    "blocked_evidence_inputs": {"phase3-responsive-contracts-v1.json": "615fd11ec1eb0ba6ea7680a8a69a65b854cdfef942455ff1f1e62b5a9ead3991", "phase4-asset-normalization-v1.json": "be70383b685b32ad8927aa4238cd8ae5aec51a65c0967760f795b74a9ba98dd8", "phase4-canonical-adoption-matrix-v1.json": "6c37aded802d31c424790c2ad04627b366186d397731d3374251f36a6c6d80e4", "phase5-gap-delivery-ranking-v1.json": "16403089e8caac83007350a06dced47f07c4a6c734a45e0bf22aee52750d4d32"},
+    "t9_accepted_references": {"candidate": "550b15d5f14e294deafec2df86ff8e09f43ba8d7fd204f4c167ebf811f0563ff", "root_acceptance": "b02672818991231837afcd1bfc3dbdc59c40d230d1cf3a309d8acec2c5f0341b"}
+  },
+  "final_independent_review_and_remediation": {"review_reference": {"path": "measure/tracks/apk_shared_developer_kit_20260712/plan-review.md", "sha256": "2d0f6f224caf232ae30a9516d5893f21b78b6e4a4f7ce655edf5fb9533f8a761"}, "result": "Critical and High findings: 0; Medium and Low findings remediated", "remediations": ["test totals corrected to 201", "edition-free scan broadened", "accepted-input guard branches covered", "validation output clarified"]},
+  "owner_decision": {"authority": "explicit-user-delegated-final-owner-gate", "decision": "ACCEPT_BOUNDED_T11_DELIVERY", "status": "accepted_only_within_acceptance_scope", "no_production_code_change": true, "successor_direction": "T12 and cartridge work remain gated on runtime contracts, responsive contracts, all 85 asset mappings, Advantage Games QC host, browser/mobile/performance evidence, and cartridge cutover proof."},
+  "schema_version": "apk-t11-owner-delegated-acceptance.v1",
+  "track_id": "apk_shared_developer_kit_20260712"
+}

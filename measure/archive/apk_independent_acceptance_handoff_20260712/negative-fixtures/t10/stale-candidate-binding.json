@@ -1,0 +1,11 @@
+{
+  "fixture_id": "stale-candidate-binding",
+  "mutations": [
+    {
+      "artifact": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase6-root-acceptance-v1.json",
+      "pointer": "/candidate_manifest/sha256",
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "expected_codes": ["STALE_CANDIDATE_BINDING"]
+}

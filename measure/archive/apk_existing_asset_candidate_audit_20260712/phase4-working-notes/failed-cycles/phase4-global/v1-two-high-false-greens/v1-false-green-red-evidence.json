@@ -1,0 +1,27 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-global-v1-red-evidence.v1",
+  "archived_v1_verifier_sha256": "383365f43ce27c4f71b1f6cc8ef40ef210e8b868319619f909ab8313d995845a",
+  "result": "both focused counterexamples falsely passed the archived v1 verifier with zero production errors",
+  "counterexamples": [
+    {
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/duplicate-caller-locator-id.json",
+      "fixture_sha256": "165448db08a839ce209c0651d591920870f58093df62f9b81f06a50b6fc822df",
+      "operation": "replace one live locator_id with another live locator_id; preserve all 533 locator records",
+      "v1_errors": [],
+      "v1_passed": true
+    },
+    {
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/stale-truth-receipt-bindings.json",
+      "fixture_sha256": "01091cebce2f2e276d539c919260e4c2efc7c7eb833cc9d22306e480f149d923",
+      "operation": "zero AF-01 truth receipt input_file_hashes and output_file_hashes, then stale AF-04 report_hashes while preserving statuses",
+      "v1_errors": [],
+      "v1_passed": true
+    }
+  ],
+  "measured_counts_preserved": {
+    "candidate_paths": 428,
+    "caller_locators": 533,
+    "accepted_path_usage_links": 85,
+    "unique_usage_ids": 45
+  }
+}

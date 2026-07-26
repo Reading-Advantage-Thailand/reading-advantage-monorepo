@@ -1,0 +1,50 @@
+{
+  "schema_version": "apk-asset-forensics.phase5-role-receipt.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": 5,
+  "role": "fresh-independent-adversarial-reviewer",
+  "scope": [
+    "AF-01",
+    "AF-02",
+    "AF-03",
+    "AF-04"
+  ],
+  "review_result": "blocked-high-finding",
+  "finding_ids": [
+    "AF01-AF04-H-01"
+  ],
+  "final_status": "review-blocked-high-finding-pending-remediation-and-fresh-global-review",
+  "review_basis": "Pre-repair snapshot; exact hash-matched predecessor ledgers were missing at the declared active-track paths when reviewed.",
+  "outputs": [
+    {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-01-AF-04.json",
+      "sha256": "799ba539fe8b1258ca0e4cbf7dbd0961eb66d44a01da84fc7bd49d752704c990"
+    }
+  ],
+  "coverage": {
+    "records_reviewed": 141,
+    "inspection_groups_reviewed": 74,
+    "caller_locators_reviewed": 226,
+    "top_level_evidence_pointers_reviewed": 846,
+    "recursive_evidence_references_reviewed": 1609,
+    "affected_records": 15,
+    "frozen_source_blob_coverage_sha256": "3790188152c0b08083d0be9b965016a338c757a0bd399bff88f20c3e8ade25dd",
+    "substantive_inspection_coverage_sha256": "964dc5345ed2483ee49b4a4f9eb78da307b117cf771641512c57656ae972049a",
+    "caller_locator_coverage_sha256": "5bd4f5118428667d34ed7636405cf9e1911769fc233a8b98b7f9f7d3a699267d"
+  },
+  "finding_summary": {
+    "critical": 0,
+    "high": 1,
+    "medium": 0,
+    "low": 0,
+    "blocking_finding": "AF01-AF04-H-01",
+    "broken_nested_source_locators": 15,
+    "missing_declared_ledgers": 3,
+    "underlying_archive_evidence_hash_identical": true
+  },
+  "supersession": {
+    "required": true,
+    "reason": "The source-path repair occurred after this review observation point.",
+    "next_action": "Commission and publish a fresh independent post-repair review; do not reinterpret this pre-repair receipt as a pass."
+  }
+}

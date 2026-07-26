@@ -1,0 +1,153 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "batch_id": "AF-09",
+  "role": "adversarial-reviewer",
+  "native_task_name": "/root/phase4_review_af09",
+  "declared_model": "gpt-5.6-sol",
+  "reasoning_effort": "xhigh",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "allowed_input_manifest_sha256": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+  "exact_verified_inputs": {
+    "current_producer": {
+      "joins": "03c7403c8aacb5ae488bb28033e4074aa7e8faf08de4066955de5133cd3ccda4",
+      "rollup": "ecf14adf9780b8ef65ae9fdb2c453f69192c19a5011dee14bda564e8a7fb6470",
+      "mapper_receipt": "5e65fb7e30e0c0d80558296eb095e8ebdd6e8b80e783e409d25aa8f06f55c95a"
+    },
+    "truth_test_receipt": "239480dbd36c2020ba3d1c11108da1e563d4db16ec05a3fea8e2208be9be2d8f",
+    "preserved_phase2_reviewer_receipt": "0c35dbec0c8aadd073f757d2510a75492ee3d78cdcf58a10f721277cc3d49b44",
+    "reports": {
+      "phase4-batch-test-reports/AF-09.json": "c0e8ef9ccb5e01ca92ae935c9470828b8a10b8c824e440c909e8e1d751b1a08a",
+      "phase4-v2-batch-schema-test-reports/AF-09.json": "a345f9d6856a85406d46fe65bfdd33017bd282ab82e676428f98c9de72944d7e"
+    },
+    "verifiers": {
+      "phase4_batch_contract_test.py": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+      "phase4_v2_batch_schema_contract_test.py": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519",
+      "phase4_v2_batch_schema_contract_test_v2.py": "174fba885907260824503708180cd4dbe2b873e06aaf8e86c4fb440c319c9956"
+    },
+    "fixtures": {
+      "phase4_value_fixture_count": 16,
+      "phase4_versioned_v2_fixture_count": 14,
+      "all_value_fixtures_rejected": true,
+      "all_v2_fixtures_rejected": true,
+      "versioned_v2_fixture_hash_map_is_exactly_bound_by": "a345f9d6856a85406d46fe65bfdd33017bd282ab82e676428f98c9de72944d7e"
+    },
+    "transparent_mapper_prepublication_red_lineage": {
+      "python_not_found": {
+        "exit_code": 127,
+        "authority": "none",
+        "bounded_correction": "Use the available python3 interpreter with the same supported verifier flags."
+      },
+      "missing_mapper_artifacts": {
+        "exit_code": 1,
+        "authority": "none",
+        "production_error_count": 4,
+        "bounded_correction": "Publish only the mapper-owned AF-09 artifacts, then rerun the unchanged verifier."
+      },
+      "final_supported_postpublication_verifiers": "Both exit zero and reproduce the persisted report bytes exactly."
+    }
+  },
+  "reviewed_counts": {
+    "candidate_paths": 35,
+    "hash_groups": 17,
+    "caller_locators": 26,
+    "accepted_path_usage_links": 2,
+    "scene_links": 2,
+    "non_scene_links": 0,
+    "unique_scene_usage_records": 1,
+    "responsive_assessment_cells": 8,
+    "eight_facet_cells": 8,
+    "dispositions": {
+      "replace": 2,
+      "reject": 1,
+      "unknown": 32
+    },
+    "priority1_paths": 1,
+    "priority1_rejected_retired_path": "apps/advantage-games/public/games/cover/abyssal-well-cover.png",
+    "mixed_groups": 1,
+    "review_slice_games": [
+      "dragon-flight"
+    ],
+    "catalog_locator_records": 7,
+    "review_records": 132
+  },
+  "substantive_results": {
+    "recursive_v2_shapes_exact_and_no_extras": true,
+    "all_35_join_status_values_equal_scaffold_rules": true,
+    "all_26_caller_locators_resolve_to_inventory_pointers_and_pinned_git_lines": true,
+    "all_2_scene_links_are_exact_source_bound": true,
+    "all_source_pointers_hashes_claim_ids_blob_hashes_and_range_hashes_resolve": true,
+    "all_2_six_key_semantic_requirements_are_exact_source_copies": true,
+    "all_2_path_semantic_requirement_wrappers_mirror_ordered_links": true,
+    "all_2_scene_links_have_exact_four_cell_matrices": true,
+    "all_8_cells_have_exact_eight_facet_shapes": true,
+    "non_scene_link_and_cell_counts_are_zero": true,
+    "abyssal_well_priority1_cover_is_rejected_and_retired": true,
+    "rollup_members_nested_dispositions_one_mixed_group_and_current_joins_sha_are_exact": true,
+    "one_game_dragon_slice_exactly_covers_joined_paths_and_usage": true,
+    "catalog_count_seven_and_non_additive": true,
+    "unknown_provenance_blocks_reuse_adapt_and_reference": true,
+    "canonical_candidate_key_null_forbidden_pending_T9_for_all_paths": true,
+    "direct_legacy_adoption_false_for_all_paths": true,
+    "dragon_compact_controls_begin_below_initial_viewport_and_wide_is_supported": true,
+    "browser_evidence_remains_composite_scene_only": true,
+    "browser_never_promoted_to_path_load_suitability_theme_provenance_license_or_adoption": true,
+    "mapper_and_truth_receipt_identities_hashes_resources_outputs_and_prohibitions_are_truthful": true,
+    "phase2_reviewer_receipt_is_preserved_and_separate": true,
+    "transparent_red_lineage_is_disclosed_bounded_and_non_authoritative": true
+  },
+  "verifier_results": {
+    "green_not_sole_evidence": true,
+    "both_verifier_resource_ceilings_pass": true,
+    "v1_verifier_hash_verified": true,
+    "value": {
+      "exit_code": 0,
+      "production_errors": [],
+      "counterexamples": 16,
+      "test_cases": 17,
+      "report_byte_reproduced": true,
+      "parsed_json_equal": true
+    },
+    "versioned_v2": {
+      "exit_code": 0,
+      "production_errors": [],
+      "counterexamples": 14,
+      "structural_test_cases": 15,
+      "test_cases": 32,
+      "report_byte_reproduced": true,
+      "parsed_json_equal": true,
+      "nested_value_report_exact": true
+    }
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "unresolved_blocking_findings": 0,
+  "stop_loss_events": [],
+  "measured_resource_usage": {
+    "candidate_paths": 35,
+    "hash_groups": 17,
+    "review_records": 132,
+    "command_invocations": 56,
+    "bytes_read": 250000000,
+    "ceilings": {
+      "candidate_paths": 40,
+      "hash_groups": 24,
+      "review_records": 280,
+      "command_invocations": 120,
+      "bytes_read": 536870912
+    },
+    "within_ceiling": true,
+    "measurement_basis": "Conservative accounting includes separate fresh value and v2 verifier processes, the v2 nested value invocation as reported, frozen JSON and receipt hashing, all 26 caller Git-line checks, both source-claim blob/range checks, and 132 independently reviewed substantive records."
+  },
+  "role_boundary": "Fresh isolated AF-09 Phase 4 adversarial review derived from live frozen inputs. Reviewed all 35 producer records, 17 groups, 26 caller locators, two scene-only path-usage links to one unique Dragon usage, eight responsive cells and every facet, every disposition, the priority-1 abyssal-well reject-and-retire path, one mixed group, seven separate catalog locators, exact source pointers and claims, mapper and truth receipts, transparent prepublication red lineage, and byte-reproduced verifier reports. Did not repair or alter producer, verifier, fixture, report, mapper, truth receipt, Phase 2 receipt, freeze, plan, product code, acceptance state, or commits; did not rerun a browser; and did not authorize T9, canonical keys, direct legacy adoption, production, shipping, suitability, licensing, adoption, product success, or root acceptance.",
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-reviews/AF-09.json": "7cbe7da5a50cc7dace9cea8136af392e6a80b543595c6762d460f781b5a19242"
+  },
+  "final_status": "review-pass-pending-root-acceptance"
+}

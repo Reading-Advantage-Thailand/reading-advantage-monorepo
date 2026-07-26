@@ -1,0 +1,60 @@
+{
+  "counterexamples": {
+    "all_rejected": true,
+    "count": 23
+  },
+  "exact_verified_inputs": {
+    "phase4-browser-evidence-freeze-v1.json": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+    "phase4-input-freeze-v1.json": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+    "phase4-join-scaffold-v1.json": "2162076fe26911a2659b7e0ef23f49398c8ebb4b5343b0ab0479c78a5d1a1de4",
+    "phase4-source-registry-v1.json": "450f5ab66215178aa730e057cb28a220bfb550dfd924959a7f7f1da2eea02f9e"
+  },
+  "final_status": "truth-test-pass-pending-fresh-v4-independent-global-review-and-root-acceptance",
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Low": [],
+    "Medium": []
+  },
+  "fixture_manifest": {
+    "behavior_fixture_count": 12,
+    "fixture_set_sha256": "dd4595f8976843ca34a833311d6508a7a4f33203f10d940cd9f827049ab45245",
+    "meta_counterexample_count": 11,
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-fixture-manifest-v1.json",
+    "sha256": "4a232e2de84d7d9a3a3a6ea488f1e60a07a76281ae5e285eb8d146f8c818bd6f"
+  },
+  "native_task_name": "phase4_global_truth_test",
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-test-report.json": "63e84630ff59cc611d836489263b6a5eb4854f0befec6fc2b653761264441185",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_global_contract_test.py": "9fadb918fec90f1537f9c0783ef158924d792ea263716498213f66ba70cb9897"
+  },
+  "phase": "Phase 4 global reconciliation",
+  "production": {
+    "errors": [],
+    "measured": {
+      "accepted_path_usage_links": 85,
+      "caller_locators": 533,
+      "candidate_paths": 428,
+      "dispositions": {
+        "reject": 14,
+        "replace": 85,
+        "unknown": 329
+      },
+      "identical_hash_groups": 227,
+      "non_scene_links": 8,
+      "priority1_paths": 14,
+      "responsive_assessment_cells": 308,
+      "scene_links": 77,
+      "unique_candidate_paths": 428,
+      "unique_non_scene_usage_ids": 5,
+      "unique_scene_usage_ids": 40,
+      "unique_usage_ids": 45
+    },
+    "passed": true
+  },
+  "role": "truth-test-author",
+  "role_boundary": "Deterministic aggregate verification only; no independent review or root acceptance.",
+  "schema_version": "apk-asset-forensics.phase4-global-truth-test-receipt.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "unresolved_blocking_findings": []
+}

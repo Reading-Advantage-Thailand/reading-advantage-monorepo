@@ -1,0 +1,59 @@
+{
+  "schema_version": "apk-role-receipt.phase5-fresh-independent-adversarial-reviewer.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": 5,
+  "role": "fresh-independent-adversarial-reviewer",
+  "native_task_name": "/root/phase5_review_c",
+  "role_boundary": "Independent full-record adversarial review of only AF-09 through AF-12; no remediation, acceptance, adoption, implementation, or edits to reviewed artifacts.",
+  "review_report": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-09-AF-12.json",
+    "sha256": "c7e5bd17510d8bce25c31dd9ec584a58c042d858d1ba378156c45ca57609d0e4"
+  },
+  "coverage": {
+    "batch_ids": [
+      "AF-09",
+      "AF-10",
+      "AF-11",
+      "AF-12"
+    ],
+    "report_records": 143,
+    "manifest_entries": 143,
+    "hash_groups": 78,
+    "source_artifacts": 28,
+    "slice_role_receipts": 24,
+    "caller_locators": 150,
+    "usage_links": 24,
+    "responsive_assessment_cells": 84,
+    "substantive_inspection_groups": 78,
+    "direct_visual_groups": 41,
+    "audio_groups_decoded": 7,
+    "independent_assertions": 10559,
+    "sampling_used": false
+  },
+  "results": {
+    "critical": 0,
+    "high": 0,
+    "medium": 1,
+    "low": 0,
+    "affected_records": 6,
+    "finding_ids": [
+      "P5-AF09-12-M-001"
+    ],
+    "live_phase5_contract_test": "pass; 18/18 counterexamples rejected; nested predecessor locator blind spot remains",
+    "full_record_reconciliation": "fail only for six non-resolving nested T6 predecessor paths; archive-equivalent bytes/hashes verified",
+    "non_consumable_and_no_adoption_guards": "pass",
+    "priority1_retirements": "pass; 3/3 reject plus retire"
+  },
+  "final_status": "review-fail-medium-remediation-required",
+  "root_acceptance_ready": false,
+  "claims_not_made": [
+    "root acceptance",
+    "accepted manifest",
+    "consumer adoption",
+    "canonical T9 key",
+    "direct legacy adoption",
+    "implementation",
+    "shipping"
+  ],
+  "supersession_requirement": "This receipt remains a pre-repair failure record. Only a fresh independent review bound to the repaired exact hashes may supersede it."
+}

@@ -1,0 +1,127 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-adversarial-review.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "batch_id": "AF-06",
+  "review_role": "adversarial-reviewer",
+  "reviewer_task_name": "/root/phase4_review_af06",
+  "declared_model": "gpt-5.6-terra",
+  "reasoning_effort": "xhigh",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "reviewed_at": "2026-07-24",
+  "authority_commit": "129200815cef1140e8bbcbf936eeebbc904f79f3",
+  "reviewed_output_hashes": {
+    "phase4_path_usage_joins_sha256": "00db239db4c8420fb2fc9aa4e23906b840eaba50d099053c066a2c7d2cb78608",
+    "phase4_group_rollup_sha256": "ed0f79dfcb87ebe72aee9708bb2e6e0fef1b0ed1f3d9073123e0813e050e3eac",
+    "requirements_mapper_receipt_sha256": "c4c4c48bdfbdc207b703e748cd957d85aaaa2a3d6f9046f348c4d9eb2730dd8b",
+    "generic_v1_af05_only_verifier_sha256": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519",
+    "value_verifier_sha256": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+    "af06_versioned_v2_verifier_sha256": "174fba885907260824503708180cd4dbe2b873e06aaf8e86c4fb440c319c9956",
+    "value_report_sha256": "0e696f79773bc7daf0cbd89044068783a32ae6f3a6502c99327d902179dfeac3",
+    "v2_schema_report_sha256": "b054d96b57e6ba6e0ebb8435918b422c0482a261e44bee658232d39790cf4fb8",
+    "truth_test_receipt_sha256": "da0713570525df64405e7439c5badfe78858c550d06833d7735f459b12d7cfad",
+    "preserved_phase2_reviewer_receipt_sha256": "b90f02617f2d2db0c117d67d28707b61437746b22843bf17bddb462ddf0a699a"
+  },
+  "reviewed_counts": {
+    "candidate_path_records": 35,
+    "identical_hash_groups": 21,
+    "caller_locators": 62,
+    "accepted_path_usage_links": 12,
+    "scene_links": 7,
+    "non_scene_links": 5,
+    "unique_scene_usage_records": 4,
+    "unique_usage_ids": 7,
+    "responsive_assessment_cells": 28,
+    "eight_facet_cells": 28,
+    "priority1_paths": 1,
+    "dispositions": {
+      "replace": 12,
+      "reject": 1,
+      "unknown": 22
+    },
+    "reusable_paths": 0,
+    "adaptable_paths": 0,
+    "reference_allowed_paths": 0,
+    "direct_legacy_adoption_true": 0,
+    "non_null_canonical_standard_pack_keys": 0,
+    "mixed_path_specific_disposition_groups": 3,
+    "separate_catalog_locator_records": 7,
+    "catalog_records_added_to_candidate_denominator": 0,
+    "review_records": 207
+  },
+  "substantive_review": {
+    "paths_groups_callers": "All 35 frozen AF-06 candidate paths, 21 identical-hash groups, and 62 caller locators reconcile to the current joins and rollup. The seven separately counted catalog locator records remain non-additive; catalog_locator_records_embedded is false and neither the 35-path denominator nor the false additive-92-path claim changes.",
+    "links_and_sources": "All 12 exact path-usage links resolve to seven unique usage IDs: seven scene links across four scene usages and five non-scene links. Each link's normalizer path, SHA-256, JSON pointer, usage_id, semantic-requirement source wrapper, and copied accepted source fields resolves exactly to the normalized source. No filename, folder, slug, game name, visual similarity, or duplicate hash group was used as join proof.",
+    "recursive_schema_and_semantics": "The AF-06 versioned v2 verifier passes recursive exact-key validation with no producer, rollup, link, semantic-wrapper, cell, facet, mapper-receipt, or report-shape extras. All 35 join_status values equal the frozen scaffold. Every joined semantic replacement requirement has exactly the six required wrapper keys and an exact source-field copy; each path-level mirror is exact. All 28 responsive cells have the eight exact facet shapes.",
+    "responsive_and_non_scene_boundary": "The four scene usages each have the compact/wide by cute_chibi_v1/heroic_stylized_v1 four-cell matrix, totaling 28 cells. The five non-scene links, consisting of catalog-card and legacy-component evidence, have zero responsive cells and remain exact usage/replacement evidence only. Every per_path_runtime_load facet remains not_established, theme suitability remains blocked_unknown, and no cell establishes per-path load, suitability, provenance, license, or adoption.",
+    "slice_priority_and_prohibitions": "The one review slice is exactly the Dragon Flight, Magic Defense, and RPG Battle three-game slice; it covers all 12 joined paths and seven usage IDs. Exactly one priority-1 path is apps/advantage-games/public/games/archers-revenge/archers-revenge-gameplay.png, which resolves to accepted Phase 3 placeholder-risk evidence and is reject plus retire. The remaining path dispositions are 12 replace and 22 unknown. Reuse, adapt, and reference are forbidden for every path; direct legacy adoption is false; every canonical standard-pack candidate key is null and forbidden pending T9.",
+    "rollup_and_receipts": "All rollup member objects, nested path/caller/link/disposition counts, three mixed groups, and the current joins path plus SHA-256 are exact. The mapper receipt's 24 declared input/output hashes and the truth-test receipt's 32 declared input/output/verifier/fixture/audit hashes resolve to current bytes. The preserved Phase 2 reviewer receipt remains separate at b90f02617..., not a Phase 4 authority.",
+    "browser_boundary": "Frozen composite browser evidence is limited to legacy scene behavior: Dragon Flight compact required controls begin below the initial viewport while wide is bounded-supported; Magic Defense compact start content clips while wide is bounded-supported; RPG Battle compact and wide are blocked by the repeated vocabulary fetch loop. These composites are not candidate-path load, suitability, provenance, license, theme-fitness, or adoption proof."
+  },
+  "failure_chain_and_active_selection": {
+    "v1_non_scene_fixture_noop": {
+      "preserved_note": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-06/v1-non-scene-fixture-noop/failure-note.json",
+      "generic_v1_sha256": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519",
+      "result": "The immutable generic v1 fixture selected an already non-scene link and therefore made a no-op. It remains AF-05 authority only and is not AF-06 authority."
+    },
+    "truth_receipt_hash_typo": {
+      "preserved_note": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-06/truth-receipt-fixture-hash-typo/failure-note.json",
+      "red_receipt_sha256": "7564619f7bab65756e7078599ae3234776ce453d6c0c0a65bf0eb0a692dadec3",
+      "active_truth_receipt_sha256": "da0713570525df64405e7439c5badfe78858c550d06833d7735f459b12d7cfad",
+      "result": "The red receipt recorded one stale-mapper fixture digest without characters 37, failed closed before equality verification, and is preserved non-authority."
+    },
+    "active_selection": "AF-06 authority for this review is the current joins 00db239d..., rollup ed0f79df..., mapper c4c4c48b..., unchanged value verifier feb731ce..., versioned AF-06 v2 verifier 174fba88..., saved value report 0e696f79..., saved v2 report b054d96b..., and corrected truth receipt da071357.... The AF-05 generic v1 verifier and accepted AF-05 report/review artifacts were verified unchanged by a no-write regression; they are not replaced or repurposed."
+  },
+  "verifier_review": {
+    "value_command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_batch_contract_test.py --root $PWD --batch AF-06 --json",
+    "value_exit_code": 0,
+    "value_report_byte_reproduced": true,
+    "value_report_parsed_json_equal": true,
+    "value_test_cases": 17,
+    "value_counterexamples": 16,
+    "v2_command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_v2_batch_schema_contract_test_v2.py --root $PWD --batch AF-06",
+    "v2_exit_code": 0,
+    "v2_report_byte_reproduced": true,
+    "v2_report_parsed_json_equal": true,
+    "v2_total_test_cases": 32,
+    "v2_structural_test_cases": 15,
+    "v2_counterexamples": 14,
+    "all_30_counterexamples_rejected_for_intended_codes": true,
+    "af05_no_write_regression_exit_code": 0,
+    "af05_generic_v1_report_review_and_receipt_bytes_unchanged": true,
+    "coverage": "The unchanged value verifier rejected all 16 intended value counterexamples. The AF-06 versioned v2 verifier rejected all 14 intended structural counterexamples, including no-extra-key, join-status, exact mirror, rollup-SHA, mapper-receipt, and non-scene-cell violations. Independent record-level checks corroborated the Green results rather than treating them as the sole evidence."
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "stop_loss_events": [],
+  "unresolved_blocking_findings": 0,
+  "resource_usage": {
+    "candidate_paths": 35,
+    "hash_groups": 21,
+    "review_records": 207,
+    "command_invocations": 58,
+    "bytes_read": 470000000,
+    "within_ceiling": true,
+    "ceilings": {
+      "candidate_paths": 40,
+      "hash_groups": 24,
+      "review_records": 280,
+      "command_invocations": 120,
+      "bytes_read": 536870912
+    },
+    "measurement_basis": "Conservative AF-06 scope accounting: four AF-06 verifier reproductions report 457201150 bytes; bounded independent JSON, receipt, source-pointer, browser-freeze, routing, and publication-validation reads consume the stated remaining allowance. The required AF-05 no-write regression is recorded separately as preservation evidence and not combined into the AF-06 batch audit."
+  },
+  "decision": {
+    "admit": true,
+    "block": false,
+    "status": "review-pass-pending-root-acceptance",
+    "scope": "AF-06 Phase 4 batch artifacts only; not root acceptance, Phase 4 program completion, direct legacy adoption, T9 ontology authorization, production authorization, or shipping approval.",
+    "next_authority": "root-orchestrator project-and-product-owner acceptance"
+  },
+  "final_status": "review-pass-pending-root-acceptance"
+}

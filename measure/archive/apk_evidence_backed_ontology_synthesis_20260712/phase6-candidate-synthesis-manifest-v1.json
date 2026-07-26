@@ -1,0 +1,38 @@
+{
+  "schema_version": "apk-t9-phase6-candidate-synthesis-manifest.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "status": "candidate-non-consumable-for-T10-review-only",
+  "consumable": false,
+  "consumer_guard": false,
+  "permitted_consumer": "T10_independent_acceptance_review_only",
+  "artifact_bindings": {
+    "phase3-responsive-contracts-v1.json": "615fd11ec1eb0ba6ea7680a8a69a65b854cdfef942455ff1f1e62b5a9ead3991",
+    "phase4-asset-normalization-v1.json": "be70383b685b32ad8927aa4238cd8ae5aec51a65c0967760f795b74a9ba98dd8",
+    "phase4-canonical-adoption-matrix-v1.json": "6c37aded802d31c424790c2ad04627b366186d397731d3374251f36a6c6d80e4",
+    "phase5-gap-delivery-ranking-v1.json": "16403089e8caac83007350a06dced47f07c4a6c734a45e0bf22aee52750d4d32",
+    "phase6-resource-report-v1.json": "c3038b905428e8b2273318b1e09caea04752df9b816820dea08dee251380f834",
+    "phase3-independent-responsive-review-v1.json": "1d6fbd260594fa8ab050a29bed61124a6b44dd881c0761104bcce9be64a83ae9",
+    "phase4-independent-asset-review-v1.json": "7d909ba16c26322a006a4992bd67ff9898f9bb2ff683fb0b414fc2a291871b41",
+    "phase6-capability-consumer-review-v1.json": "c6eeeb261933b0fc94d82fba2f708a68211535551f9ad9f7b6052a13ae1ce25c",
+    "phase6-adversarial-review-v1.json": "17a590732821e7c65f3cdc5a4088a4e04d7feb2437f68f70af7a51df0b577878",
+    "phase6-truth-report-v1.json": "03b221a296025da923b91ec235a35ff28853dad58d74b6e6cea94887f353fe09"
+  },
+  "reconciliation": {
+    "games": 29,
+    "t8_candidate_rows": 428,
+    "normalized_usage_records": 45,
+    "candidate_mapping_rows": 85,
+    "candidate_key_rows": 0,
+    "accepted_capabilities": 7,
+    "unknown_t8_dispositions_preserved": 329,
+    "browser_usability_defects_preserved": 6
+  },
+  "scope_disclosures": [
+    "This package is evidence for T10 independent review only and is not a consumable successor manifest.",
+    "No standard-pack asset is adopted: all 85 candidate mapping rows remain blocked pending exact role/state and catalog selection.",
+    "No legacy path, vendor filename, or visual near match is a canonical mapping.",
+    "All unknown Must-have responsive and asset decisions remain blocked.",
+    "The local review passes explicitly lack provider fork/session attestation; no independent-provider claim is made.",
+    "T10 alone may publish post-review, post-owner-approval consumable successor hashes."
+  ]
+}

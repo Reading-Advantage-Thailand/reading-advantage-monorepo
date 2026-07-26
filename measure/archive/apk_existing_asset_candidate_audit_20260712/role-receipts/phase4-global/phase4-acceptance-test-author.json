@@ -1,0 +1,36 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-acceptance-truth-test-receipt.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "Phase 4 root acceptance",
+  "role": "phase4-root-acceptance-contract-test-author",
+  "role_boundary": "Deterministic root-acceptance contract verification only; no root decision, producer, global verifier, review, batch, plan, specification, or product edits.",
+  "exact_verified_inputs": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_acceptance_test.py": "42a51d6de0dfbe92dc5cd56b40d4c983ea80f46ddac32c0f3d9d89c16c1d1ae1",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-root-acceptance.json": "af708fe63bd10e4508809446e5e2420601cfd8e5e04601db41d32b4be33e53cd",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-review-v4.json": "f3fc70343d360ea806d204f6cae717c1b786449c23708e3f1c51517e54c91e83",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase4-global/adversarial-reviewer-v4.json": "7aa3e42fc2def3d3d9c7b500fe0a64bbb01465eac45e4c6cac72dd8738a9e7ae",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-acceptance-red-report.json": "832948bde4b3905ba5b7ff4c3e5fad765d320be90401c44263a600a728655f03"
+  },
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-acceptance-green-report.json": "21471a7fa3462a25bc998e1bef7a1686e0ba7930278ad65eec2c1d9a19ec20ae"
+  },
+  "production": {
+    "passed": true,
+    "errors": [],
+    "counterexample_count": 7,
+    "all_counterexamples_rejected": true
+  },
+  "red_to_green": {
+    "red_missing_acceptance_rejected": true,
+    "root_acceptance_added_by_product_owner": true,
+    "verifier_or_fixture_changes_between_red_and_green": false
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "unresolved_blocking_findings": [],
+  "final_status": "truth-test-pass-phase4-root-acceptance"
+}

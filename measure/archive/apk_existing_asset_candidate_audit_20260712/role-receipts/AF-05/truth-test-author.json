@@ -1,0 +1,85 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "batch_id": "AF-05",
+  "role": "truth-test-author",
+  "native_task_name": "/root/phase4_v2_generic_author",
+  "declared_model": "gpt-5.6-terra",
+  "reasoning_effort": "xhigh",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "disclosures": [
+    "The initial truth-test receipt identity was corrected before independent review or root acceptance; all producer, verifier, fixture, report, resource, and finding bindings remain unchanged."
+  ],
+  "role_boundary": "Authored and ran only the parameterized generic v2 Phase 4 schema contract for AF-05 through AF-12, then verified AF-05. It checked recursive exact schemas, frozen Phase 0/scaffold/caller/provenance truth, current bindings, semantic mirrors, responsive cells, group reconciliation, mapper hashes, and a single unchanged value-verifier invocation. It did not alter producer payloads, reviews, plans, acceptance state, product code, or commits; it does not constitute independent review or root acceptance.",
+  "allowed_input_paths": [
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-join-scaffold-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/strict-caller-scene-joins.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/caller-inventory.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/provenance-audit.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/inspection-records.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/phase4-path-usage-joins.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/phase4-group-rollup.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-05/requirements-mapper.json"
+  ],
+  "allowed_input_manifest_sha256": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+  "input_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json": "450f5ab66215178aa730e057cb28a220bfb550dfd924959a7f7f1da2eea02f9e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-join-scaffold-v1.json": "2162076fe26911a2659b7e0ef23f49398c8ebb4b5343b0ab0479c78a5d1a1de4",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/strict-caller-scene-joins.json": "39fc827a12dc2ad7719d56ee3c616045caecdf4aef816c24a9fed5c3803f4f0c",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/caller-inventory.json": "46447571bcd0019a79b97ef8b42ab14821892bc8e96d7856459e6a6ee0fdb145",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/provenance-audit.json": "406952e1e725e8da5b383ef47dff6bb7609294e8828baabf1f046dfbb792c086",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/inspection-records.json": "47071e3648b2fb324fe7d10d7e3dad126e4d32ad2a0df67a3a0d50d9fa526247",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/phase4-path-usage-joins.json": "21d2df2115b5eeadcbb67739a3b986d2c3d99944e6792c0f75a3ba1d0b736b3c",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/phase4-group-rollup.json": "d2ac10d7ef46400ab4d619af8c0533855da8f9b219ed4c7d17355f8c40626496",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-05/requirements-mapper.json": "070f99ab84b637b1df05ac1813360da080b147a1761cce8afd1c1d5f908239a0"
+  },
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-batch-test-reports/AF-05.json": "e785693b4798e5556da415e44fac3434e1d6bff985e5286925d89d645fef1209",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-v2-batch-schema-test-reports/AF-05.json": "c2d31814d2a9c8e5ccdfcff2a49f35cc976fd8eb3729324c80a62774329dc5f8"
+  },
+  "verifier_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_batch_contract_test.py": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_v2_batch_schema_contract_test.py": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519"
+  },
+  "negative_fixture_count": 14,
+  "measured_resource_usage": {
+    "test_cases": 32,
+    "structural_test_cases": 15,
+    "value_test_cases": 17,
+    "value_verifier_invocations": 1,
+    "command_invocations": 2,
+    "bytes_read": 108877328,
+    "within_ceiling": true,
+    "ceilings": {
+      "test_cases": 160,
+      "command_invocations": 80,
+      "bytes_read": 134217728
+    },
+    "measurement_basis": "Exact bytes read or digested by the generic verifier plus the unchanged value verifier's separately reported exact bytes; command and test counts include its one nested invocation."
+  },
+  "authoring_red_audit": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-05/v2-batch-schema-authoring-red/red-stage-audit.json",
+    "sha256": "958e7ac33bcc477cb461fb3be04bd220a32eb49cec397ecddd4938cd56e84147",
+    "state": "unsupported-batch from a raw-regex end-anchor escape; corrected before the final green run"
+  },
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": [
+      "The 14 generic structural counterexamples and the unchanged value verifier pass, but this truth-test receipt does not provide independent review, root acceptance, production authorization, direct legacy adoption, a canonical standard-pack key, or T9 ontology authorization."
+    ]
+  },
+  "unresolved_blocking_findings": 0,
+  "stop_loss_events": [],
+  "final_status": "truth-test-green-pending-independent-review-and-root-acceptance"
+}

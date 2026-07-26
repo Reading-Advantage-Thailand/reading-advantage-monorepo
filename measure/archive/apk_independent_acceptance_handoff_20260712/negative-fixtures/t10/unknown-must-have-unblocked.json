@@ -1,0 +1,11 @@
+{
+  "fixture_id": "unknown-must-have-unblocked",
+  "mutations": [
+    {
+      "artifact": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase5-gap-delivery-ranking-v1.json",
+      "pointer": "/ranked_gaps/0/decision_state",
+      "value": "accepted"
+    }
+  ],
+  "expected_codes": ["UNKNOWN_MUST_HAVE_UNBLOCKED"]
+}

@@ -1,0 +1,20 @@
+{
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "type": "chore",
+  "status": "archived",
+  "created_at": "2026-07-12T00:00:00Z",
+  "updated_at": "2026-07-25T00:00:00+07:00",
+  "description": "Produce an exact per-path forensic audit of every discovered legacy APK asset candidate, including provenance, callers, inspection, responsive and legacy-function replacement/retirement evidence, and disposition.",
+  "estimated_tasks": 29,
+  "actual_tasks": 29,
+  "deviation_notes": "Accepted Phase 5 after remediating three archive-relocation evidence paths and adding recursive locator verification. The completed track remains under measure/tracks through T11 because its 202 hash-bound source paths and downstream T9 input must remain resolvable; moving it before successor freeze would recreate the proven relocation defect. Archive only during coordinated cross-track closeout with an explicit relocation-safe successor. The first two owner publication cycles remain preserved as non-authoritative failed cycles under phase5-failed-owner-cycle-v1 and phase5-failed-owner-cycle-v2. The active delegated-root successor is T9-only: owner event 4892bd5b1b83a52c6f2f6d537cacbc0af8eafd3bc401712e8cb47fa044e1825e, root acceptance 4e6fc46898dadb42d255127de1214f52514b8a1bd97fcd2ad2073d379d373c86, accepted manifest 20930a1cb30b763323f0c3d77a0625cb1c54c7aba7094284b91d508f3d68665f, and green report 8b33353f3ebda940f1eec60761584c62d6df3d0cdc953c87bd92108b785010a5. It preserves six browser/usability defects and 329 unknown dispositions and makes no implementation or shipping claim.",
+  "depends_on": [
+    "measure_apk_evidence_integrity_gates_20260712",
+    "apk_source_denominator_inventory_20260712",
+    "apk_three_game_truth_pilot_20260712",
+    "apk_corpus_audit_action_defense_20260712",
+    "apk_corpus_audit_traversal_exploration_20260712",
+    "apk_corpus_audit_puzzle_crafting_20260712",
+    "apk_corpus_audit_special_historical_20260712"
+  ]
+}

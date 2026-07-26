@@ -1,0 +1,37 @@
+{
+  "schema_version": "apk-t9-phase6-adversarial-review.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "reviewer_role": "synthesis-adversarial-reviewer",
+  "status": "review-pass-no-unresolved-critical-high-medium",
+  "sampling": "none-exhaustive-contract-and-fixture-surface",
+  "independence_basis": "Separate file-backed adversarial pass over published mapper outputs, reviews, accepted predecessor bindings, and eight hash-bound counterexamples; mapper renderer code is not invoked by the review pass.",
+  "provider_fork_turns_attested": false,
+  "tool_attestation_available": false,
+  "provider_isolation_disclosure": "Kimi coders and a fresh fork_turns=none provider session were unavailable. No provider isolation, spawn, ancestry, or tool attestation is claimed; deterministic file-backed verification and explicit user-directed local execution are the compensating controls.",
+  "input_bindings": {
+    "phase3-responsive-contracts-v1.json": "615fd11ec1eb0ba6ea7680a8a69a65b854cdfef942455ff1f1e62b5a9ead3991",
+    "phase4-asset-normalization-v1.json": "be70383b685b32ad8927aa4238cd8ae5aec51a65c0967760f795b74a9ba98dd8",
+    "phase4-canonical-adoption-matrix-v1.json": "6c37aded802d31c424790c2ad04627b366186d397731d3374251f36a6c6d80e4",
+    "phase5-gap-delivery-ranking-v1.json": "16403089e8caac83007350a06dced47f07c4a6c734a45e0bf22aee52750d4d32",
+    "phase6-resource-report-v1.json": "c3038b905428e8b2273318b1e09caea04752df9b816820dea08dee251380f834",
+    "phase3-independent-responsive-review-v1.json": "1d6fbd260594fa8ab050a29bed61124a6b44dd881c0761104bcce9be64a83ae9",
+    "phase4-independent-asset-review-v1.json": "7d909ba16c26322a006a4992bd67ff9898f9bb2ff683fb0b414fc2a291871b41",
+    "phase6-capability-consumer-review-v1.json": "c6eeeb261933b0fc94d82fba2f708a68211535551f9ad9f7b6052a13ae1ce25c",
+    "phase6-truth-report-v1.json": "03b221a296025da923b91ec235a35ff28853dad58d74b6e6cea94887f353fe09",
+    "phase6-fixture-manifest-v1.json": "860c3690f65460d67edad8908133db280a932089e6a53a40ad8752b29369d165"
+  },
+  "review_findings": [],
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "review_conclusions": [
+    "All responsive facts remain evidence-only or explicitly blocked; the normative policy is separated from historical evidence.",
+    "All 428 T8 candidate rows remain path-free and non-adopted; all 85 mapping rows remain blocked pending exact role/state and catalog selection.",
+    "All seven standardized or extended capabilities retain at least two independently evidenced game consumers.",
+    "All unknown Must-have decisions remain blocked and no consumable T10 successor hash is published.",
+    "The absence of provider-isolated review is disclosed rather than misrepresented."
+  ]
+}

@@ -1,0 +1,175 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-source-registry.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "status": "frozen-input-registry",
+  "accepted_predecessors": [
+    {
+      "role": "phase0_denominator_and_batch_freeze",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+      "sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b"
+    },
+    {
+      "role": "phase1_caller_acceptance",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-root-acceptance.json",
+      "sha256": "2b30be13c8c0f6b7d1d404489c6058b48b6839f58d5ae2ce84b67f9d6a1a6d61"
+    },
+    {
+      "role": "phase2_provenance_acceptance",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase2-root-acceptance.json",
+      "sha256": "461c1d4f26afa512d1e6266384005b019ab0428a3cc508046675feb9aef35ed1"
+    },
+    {
+      "role": "phase3_inspection_acceptance",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase3-root-acceptance.json",
+      "sha256": "e855e7e50eba21fa9614719472f75179b7db9e7fd3d9756373d7bbd39b12a579"
+    }
+  ],
+  "candidate_and_caller_sources": [
+    {
+      "batch_id": "AF-01",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/caller-inventory.json",
+      "sha256": "338bc1c1f6cc25e06af2bbed8081fefe0d1c381c1b7e9c877825b83a8d2d5a22",
+      "candidate_records": 36,
+      "caller_locators": 43
+    },
+    {
+      "batch_id": "AF-02",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-02/caller-inventory.json",
+      "sha256": "b0bd048787b2650a635c580fef295cbb2c0e5c3edd8f24f048accff5bdccc8ae",
+      "candidate_records": 35,
+      "caller_locators": 50
+    },
+    {
+      "batch_id": "AF-03",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-03/caller-inventory.json",
+      "sha256": "b44cf0c10882c90286311d7960b026e61e6b72692ce7d1d26a538b6c8cfd5edc",
+      "candidate_records": 35,
+      "caller_locators": 72
+    },
+    {
+      "batch_id": "AF-04",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/caller-inventory.json",
+      "sha256": "95e7a98f128e5bf0a0ee35158c590df2e8c6894e333d5feaf707ca44007534a7",
+      "candidate_records": 35,
+      "caller_locators": 61
+    },
+    {
+      "batch_id": "AF-05",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/caller-inventory.json",
+      "sha256": "46447571bcd0019a79b97ef8b42ab14821892bc8e96d7856459e6a6ee0fdb145",
+      "candidate_records": 39,
+      "caller_locators": 28
+    },
+    {
+      "batch_id": "AF-06",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-06/caller-inventory.json",
+      "sha256": "76a6c58470b3c84d48c01592058499cb763cd76a61f4eade7953e5a3d4dd1f09",
+      "candidate_records": 35,
+      "caller_locators": 62
+    },
+    {
+      "batch_id": "AF-07",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-07/caller-inventory.json",
+      "sha256": "be5c8f1e3272522a3c3f892865f599296fd03086ca49356123b252ef9c5ef1a7",
+      "candidate_records": 35,
+      "caller_locators": 40
+    },
+    {
+      "batch_id": "AF-08",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-08/caller-inventory.json",
+      "sha256": "9426bb8624fca696d0f95a9310206a2c2ca60647ea87687a8582da9fc81e663f",
+      "candidate_records": 35,
+      "caller_locators": 27
+    },
+    {
+      "batch_id": "AF-09",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-09/caller-inventory.json",
+      "sha256": "4159162642f7d3647d764f53f04715caeae8f847909b2cb47e61beb28050999f",
+      "candidate_records": 35,
+      "caller_locators": 26
+    },
+    {
+      "batch_id": "AF-10",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+      "sha256": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+      "candidate_records": 34,
+      "caller_locators": 30
+    },
+    {
+      "batch_id": "AF-11",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-11/caller-inventory.json",
+      "sha256": "eee11fb390f3e172c238abdc40d30f50db5239480bb64d1d6ba989dc6657eaef",
+      "candidate_records": 40,
+      "caller_locators": 59
+    },
+    {
+      "batch_id": "AF-12",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-12/caller-inventory.json",
+      "sha256": "766ae87fa7f091e351bb3b98d0d3fe939527911da43d2fc3c38ed48e7a363322",
+      "candidate_records": 34,
+      "caller_locators": 35
+    }
+  ],
+  "canonical_scene_usage_normalizers": [
+    {
+      "tracks": [
+        "T3",
+        "T4"
+      ],
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json",
+      "sha256": "5ef6370e6a789b9de14d1843c12380d2a10eb2558799fe16985e810709a998c6",
+      "usage_array_json_pointer": "/usage_records",
+      "usage_records": 39
+    },
+    {
+      "tracks": [
+        "T5",
+        "T6",
+        "T7"
+      ],
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T5-T7-normalized-scene-usages.json",
+      "sha256": "b6134873c224ce98d4a3c8c5c466fa9af7c42a30cae3066dbf09b61a48c0add0",
+      "usage_array_json_pointer": "/usages",
+      "usage_records": 48
+    }
+  ],
+  "working_mapping_aid": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/strict-caller-scene-joins.json",
+    "sha256": "39fc827a12dc2ad7719d56ee3c616045caecdf4aef816c24a9fed5c3803f4f0c",
+    "authoritative": false,
+    "required_validation": "Every candidate path, caller locator, normalizer pointer, evidence envelope, and catalog locator must be revalidated against the frozen sources before rendering the scaffold.",
+    "candidate_path_joins": 85,
+    "catalog_locator_records": 7,
+    "additive_92_path_claim": false
+  },
+  "priority1_evidence_source": {
+    "acceptance_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase3-root-acceptance.json",
+    "batch_digest_pointer": "/input_binding/batch_bindings/*/inspection_records_sha256",
+    "record_path_template": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/{batch_id}/inspection-records.json",
+    "path_condition": "media_class is unreadable_or_pointer, corruption_risk is present, or placeholder_risk is present",
+    "evidence_paths": 14,
+    "accepted_candidate_path_join_overlap": 0,
+    "disposition_decided": false
+  },
+  "expected_counts": {
+    "candidate_paths": 428,
+    "identical_hash_groups": 227,
+    "caller_locators": 533,
+    "normalized_usage_records": 87,
+    "scene_usage_records": 65,
+    "catalog_or_non_scene_usage_records": 22,
+    "accepted_normalized_candidate_path_joins": 85,
+    "separate_catalog_locator_records": 7,
+    "catalog_locator_candidate_join_overlap_usage_ids": 3,
+    "priority1_evidence_paths": 14,
+    "priority1_join_overlap": 0
+  },
+  "grain_contract": {
+    "candidate_path": "Exactly one scaffold record per accepted Phase 1 canonical path. Identical hashes never collapse path records.",
+    "caller_locator": "Exactly one path-owned locator record per Phase 1 current_callers entry.",
+    "scene_usage": "A normalized accepted scene usage remains a usage-grain record and receives four blocked assessment cells until exact evidence supports them.",
+    "catalog_or_non_scene_usage": "Catalog and other non-scene usages remain usage-grain records and never increase the candidate-path denominator. A catalog usage ID may also have an exact candidate-path join; three of the seven catalog locator records do, without changing either grain.",
+    "prohibited_count": "The 85 exact normalized candidate-path joins and 7 catalog locator records are different grains and must never be summed into a 92-path denominator."
+  }
+}

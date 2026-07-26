@@ -1,0 +1,42 @@
+{
+  "budget": {
+    "negative_fixture_file_ceiling": 16,
+    "normalized_source_document_ceiling": 32,
+    "published_output_byte_ceiling": 1048576,
+    "verifier_runtime_seconds_ceiling": 30
+  },
+  "consumable": false,
+  "generator": {
+    "decision_boundary": "The renderer copies accepted identities and applies the approved fail-closed rule that absent exact evidence remains blocked; it never selects a semantic role, responsive fact, or catalog candidate.",
+    "path": "generate_phase3_6_candidate.py"
+  },
+  "outputs": [
+    {
+      "byte_size": 661775,
+      "path": "phase3-responsive-contracts-v1.json",
+      "sha256": "615fd11ec1eb0ba6ea7680a8a69a65b854cdfef942455ff1f1e62b5a9ead3991",
+      "within_byte_ceiling": true
+    },
+    {
+      "byte_size": 33506,
+      "path": "phase4-asset-normalization-v1.json",
+      "sha256": "be70383b685b32ad8927aa4238cd8ae5aec51a65c0967760f795b74a9ba98dd8",
+      "within_byte_ceiling": true
+    },
+    {
+      "byte_size": 297489,
+      "path": "phase4-canonical-adoption-matrix-v1.json",
+      "sha256": "6c37aded802d31c424790c2ad04627b366186d397731d3374251f36a6c6d80e4",
+      "within_byte_ceiling": true
+    },
+    {
+      "byte_size": 4684,
+      "path": "phase5-gap-delivery-ranking-v1.json",
+      "sha256": "16403089e8caac83007350a06dced47f07c4a6c734a45e0bf22aee52750d4d32",
+      "within_byte_ceiling": true
+    }
+  ],
+  "schema_version": "apk-t9-phase6-resource-report.v1",
+  "status": "candidate-non-consumable",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+}

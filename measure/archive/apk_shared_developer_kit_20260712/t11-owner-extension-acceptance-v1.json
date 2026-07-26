@@ -1,0 +1,245 @@
+{
+  "schema_version": "apk-t11-owner-extension-acceptance.v1",
+  "track_id": "apk_shared_developer_kit_20260712",
+  "accepted_at": "2026-07-26T21:45:00Z",
+  "remediation_round": "independent-review-remediation-2026-07-26",
+  "decision": {
+    "status": "accepted_with_disclosures",
+    "scope": "Owner-authorized forward-product extension of T11 phases 2 through 8, remediated after independent review",
+    "authority": "t11-owner-authorized-extension-v1",
+    "manual_product_owner_browser_inspection_claimed": false,
+    "historical_evidence_reclassified": false
+  },
+  "bound_history": {
+    "t10_accepted_manifest": {
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/accepted-successor-manifest-v1.json",
+      "sha256": "e9fc2c9c8074db74670fa2e2929bd4efb5b8d0fd2ef5a8b9819d2f5a6e39ba49"
+    },
+    "t10_successor_hashes": {
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/successor-hashes-v1.json",
+      "sha256": "c026c0bff62c3d6739c366fa80cb6593c455e96bffd2532a43223c829ec74005"
+    },
+    "t10_owner_acceptance": {
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/product-owner-acceptance-v1.json",
+      "sha256": "165e21c9ddb5a6e0b2f61f3190d604fbb3133459b5f00331a8c66ee1e7572753"
+    },
+    "bounded_t11_acceptance": {
+      "path": "measure/tracks/apk_shared_developer_kit_20260712/t11-owner-delegated-acceptance-v1.json",
+      "sha256": "d36b8ed89558ed202b0e6777efc9ec17efc54df2924a309763a148f6f810455f"
+    }
+  },
+  "extension_inputs": {
+    "authorization": {
+      "path": "measure/tracks/apk_shared_developer_kit_20260712/t11-owner-authorized-extension-v1.json",
+      "sha256": "460f64412cbdd19d26d5ef61bd6bb65bd4a15c8a2a1aca694c352815c9e24701"
+    },
+    "canonical_product_bindings": {
+      "path": "measure/tracks/apk_shared_developer_kit_20260712/t11-owner-approved-canonical-bindings-v1.json",
+      "sha256": "393cbadfeaea145c87c0173c497949fca654a83e1c4a13c3e6e79e8faa417867",
+      "classification": "normative_forward_product_decision_not_legacy_evidence",
+      "binding_count": 7
+    }
+  },
+  "accepted_extension_scope": {
+    "responsive_composition": "Strict Zod contracts, compact/wide profiles, independent input modes, safe areas, regions, transforms, camera helpers, text-fit diagnostics, unsupported-size handling, overlays, hysteresis, and state-preserving transitions",
+    "presentation": "Accessible loading, error, instruction, prompt, progress, HUD, feedback, navigation, and result components with semantic DOM equivalents",
+    "semantic_assets": "Owner-approved role/state resolver, selected-union materialization, attribution, and image/frame/animation/tileset/nine-slice/audio/font registration descriptors",
+    "gameplay_and_runtime": "Deterministic movement, AABB collision, pooling, spawning, projectile systems, gesture cancellation, responsive composition context, Phaser scene recompose hooks, and resize without canvas recreation",
+    "quality_control": "Strict authoring controls, six viewport fixtures, worst-case Thai/English fixtures, deterministic budget monitoring, and provider-neutral browser helpers",
+    "authoring_surface": "Working Advantage Games /qc field lab with responsive and accessibility controls, diagnostics, result inspection, semantic binding gallery, and attribution",
+    "scaffold_and_exemplar": "Ten-file non-copying public-API scaffold and complete public-API exemplar",
+    "developer_kit_api_contract_version": "2.0.0",
+    "package_distribution_version": "0.1.0"
+  },
+  "verification": {
+    "accepted_input_hashes": {
+      "command": "pnpm --filter @reading-advantage/advantage-play-kit exec node scripts/check-accepted-inputs.mjs",
+      "status": "passed"
+    },
+    "package_lint": {
+      "command": "pnpm --filter @reading-advantage/advantage-play-kit lint",
+      "status": "passed"
+    },
+    "package_typecheck": {
+      "command": "pnpm --filter @reading-advantage/advantage-play-kit check-types",
+      "status": "passed"
+    },
+    "package_tests": {
+      "command": "pnpm --filter @reading-advantage/advantage-play-kit test -- --reporter=dot",
+      "status": "passed",
+      "files": 40,
+      "tests": 234
+    },
+    "package_coverage": {
+      "command": "pnpm --filter @reading-advantage/advantage-play-kit test:coverage",
+      "status": "passed",
+      "statements_pct": 89.69,
+      "branches_pct": 78.81,
+      "functions_pct": 95.12,
+      "lines_pct": 92.72,
+      "presentation_statements_pct": 100,
+      "presentation_lines_pct": 100,
+      "qc_statements_pct": 100,
+      "qc_lines_pct": 100
+    },
+    "package_build": {
+      "command": "pnpm --filter @reading-advantage/advantage-play-kit build",
+      "status": "passed"
+    },
+    "advantage_games_targeted_validation": {
+      "status": "passed",
+      "lint": "Targeted changed-file ESLint passed for src/components/apk/* and src/app/qc/*",
+      "typecheck": "pnpm --filter vocabulary-games check-types passed",
+      "tests": "Three affected Jest suites passed with eight tests (StandardPackQc 4, AdvantageGamesAuthoringQc 3, StandardPackQcPage 1)",
+      "build": "pnpm --filter vocabulary-games build passed with one pre-existing non-failing NFT tracing warning"
+    },
+    "browser": {
+      "command": "pnpm --filter vocabulary-games exec playwright test tests/e2e/qc/authoring-qc.spec.ts --project=chromium",
+      "status": "passed",
+      "tests": 2,
+      "note": "Includes real-browser horizontal-overflow assertions at 390px and 320px with audio preview selected"
+    },
+    "react_doctor": {
+      "status": "passed_for_qc_surface",
+      "score": "src/app/qc 100/100; src/components/apk 94/100 (one performance warning)",
+      "issues": 1,
+      "note": "Full-app score remains 43/100 due to unrelated legacy game code outside the T11 QC surface"
+    },
+    "graph": {
+      "scan_command": "repo-graph update ./graph.db <changed files>",
+      "scan_status": "timed_out",
+      "undocumented_export_count": 0,
+      "note": "Incremental repo-graph update exceeded 300s; undocumented-export count could not be independently refreshed after remediation. The reported zero is the last bounded-acceptance scan result, not a newly verified count."
+    }
+  },
+  "evidence_hashes": {
+    "package_manifest": {
+      "path": "packages/advantage-play-kit/package.json",
+      "sha256": "026d51ffa770e19370a13cabd33995b52e001cc288986d867b5a823f65a9382d"
+    },
+    "capability_manifest": {
+      "path": "packages/advantage-play-kit/src/systems/capability-manifest.ts",
+      "sha256": "d58df0228243fd1a44030338558bc1083e9e0696ad32e22bbdff29cecafed2f4"
+    },
+    "blocked_scopes_guard": {
+      "path": "packages/advantage-play-kit/src/guards/blocked-scopes.ts",
+      "sha256": "0a7dad6971b997a0973616942cbf0d47a4c1e8a7e2d5e2ae84296b2497d1089a"
+    },
+    "guards_barrel": {
+      "path": "packages/advantage-play-kit/src/guards/index.ts",
+      "sha256": "78eb8606b80c941cdef31b617732fd16a0dd4e1811ce60607f88585a61b70179"
+    },
+    "root_barrel": {
+      "path": "packages/advantage-play-kit/src/index.ts",
+      "sha256": "f7818ca9e9d07e839922532ab8d3176e1ae84d5baae61ecbef5247012979ad86"
+    },
+    "developer_kit_api": {
+      "path": "packages/advantage-play-kit/src/compatibility/developer-kit-api.ts",
+      "sha256": "e45307e3a00cbbe8d408d2d9e8cfb88bbc53ab053cbb5ee043fa518ca0f592d0"
+    },
+    "standard_pack_acceptance_test": {
+      "path": "packages/advantage-play-kit/src/assets/standard-pack-acceptance.integration.test.ts",
+      "sha256": "7a71c6ba21a9f25066df2516ea34ff268314e766baf3bb686c25c161b9ae24ff"
+    },
+    "responsive_composition": {
+      "path": "packages/advantage-play-kit/src/responsive/responsive-composition.ts",
+      "sha256": "f0bd6b69f86d8214a0240eef6e1b620f925c980c57e31d687536728edfec4515"
+    },
+    "presentation": {
+      "path": "packages/advantage-play-kit/src/presentation/game-presentation.tsx",
+      "sha256": "8767365a53e335bb6e33ea45a77be8378a28b149931e8d5744aa4f1bd350d0e9"
+    },
+    "quality_control": {
+      "path": "packages/advantage-play-kit/src/qc/qc-kit.ts",
+      "sha256": "51324df008518bc982add99163e416304cfddcdfb902a1e48b487711a642f35e"
+    },
+    "semantic_product_bindings": {
+      "path": "packages/advantage-play-kit/src/assets/semantic-product-bindings.ts",
+      "sha256": "96cf0cbd7637ee4d83121010e4e17193e2819eb1ac8ffb51007c5e263166500e"
+    },
+    "gameplay_primitives": {
+      "path": "packages/advantage-play-kit/src/systems/gameplay-primitives.ts",
+      "sha256": "52ce4aaecd8600dd79b35acfd9b0c14141e72b37671f7ca3fb835c6ea341baec"
+    },
+    "runtime": {
+      "path": "packages/advantage-play-kit/src/runtime/runtime.ts",
+      "sha256": "7c9aa0bd4c707b366b2669600dc5581a04ce6d2f37f630ed46445df1cd0721c5"
+    },
+    "phaser_factory": {
+      "path": "packages/advantage-play-kit/src/runtime/phaser-factory.ts",
+      "sha256": "5f8e089ceed19c874171bd2ae0b9f3993a90825e962d946e706ef7eb424da112"
+    },
+    "scaffold": {
+      "path": "packages/advantage-play-kit/src/scaffolding/scaffold.ts",
+      "sha256": "acbc66ddc77c829bd89fa32f3efec33f3d3bb8dc3d4d634c67fb8f06886f0d2b"
+    },
+    "exemplar": {
+      "path": "packages/advantage-play-kit/src/scaffolding/exemplar.ts",
+      "sha256": "eb7f2bd71bc6321ce04cb3e642aa1e4cf3d94ac656f9595fe52efd96fe9f8f00"
+    },
+    "developer_kit_docs": {
+      "path": "packages/advantage-play-kit/docs/developer-kit.md",
+      "sha256": "30edb70bcb7ccf3e256111544d554a9104b229eda07bc57e52404bb9d639593e"
+    },
+    "simplification_report": {
+      "path": "packages/advantage-play-kit/docs/simplification-report.md",
+      "sha256": "4183dc50939d1d5618cc82e5a35fd08e70fc172a7e10c7458a771c7e92092001"
+    },
+    "advantage_games_qc": {
+      "path": "apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.tsx",
+      "sha256": "3899a1ea3b2c80d1ee1f2a507ef5b6c07df8c85a358074994be1c7ee60b8f849"
+    },
+    "advantage_games_standard_pack_qc": {
+      "path": "apps/advantage-games/src/components/apk/StandardPackQc.tsx",
+      "sha256": "af682f1768f66b7023f4f3370f72c7359c90c4f0142110888da759d858e5d265"
+    },
+    "advantage_games_qc_page": {
+      "path": "apps/advantage-games/src/app/qc/page.tsx",
+      "sha256": "e16b021e559b85b94616b68c0dcaa0710564da96fc7595d2ce56de9bf9bda202"
+    },
+    "advantage_games_qc_page_test": {
+      "path": "apps/advantage-games/src/app/qc/page.test.tsx",
+      "sha256": "21d695ecbee4cbc37c64dd4ebca9e6820a4093444b9157c3533fb7fceaa1fb46"
+    },
+    "browser_test": {
+      "path": "apps/advantage-games/tests/e2e/qc/authoring-qc.spec.ts",
+      "sha256": "3745b277ad56392005a5120e134de7a42c8ad18ca70fbf7f9c8d1f381381a449"
+    }
+  },
+  "open_verifiable_gaps": {
+    "uncommitted_acceptance_state": {
+      "status": "requires_follow_up",
+      "reason": "This acceptance artifact and its remediation changes are intentionally uncommitted in the working tree.",
+      "required_follow_up": "Commit the reviewed remediation and then refresh the immutable acceptance references before treating this acceptance as a committed release record."
+    },
+    "full_advantage_games_jest": {
+      "status": "not_fully_green",
+      "scope_relation": "unrelated_legacy_game_logic",
+      "evidence": [
+        "One aggregate run failed one devourerSlime assertion while 1455 tests passed; its isolated rerun passed 8/8.",
+        "A later aggregate run failed one hauntedLibrary assertion while 1460 tests passed; isolated reruns remained nondeterministic with differing assertions.",
+        "All three T11-affected suites passed."
+      ]
+    },
+    "reading_primary_import_smokes": {
+      "status": "not_run",
+      "reason": "Reading Advantage and Primary Advantage currently have no production imports of the extended public APIs. Consumer migration and host proof remain cartridge-track work."
+    },
+    "representative_device_performance": {
+      "status": "not_run",
+      "reason": "Deterministic frame/object/asset/memory/bundle budget instrumentation is implemented, but no representative mid-range-device Phaser 60 FPS benchmark was executed."
+    },
+    "manual_owner_qc": {
+      "status": "not_claimed",
+      "reason": "Automated Chromium verification passed at 390px and 320px with no horizontal overflow; no manual product-owner browser inspection is represented by this artifact."
+    }
+  },
+  "consumption_policy": {
+    "forward_kit_contracts_consumable": true,
+    "canonical_binding_scope": "presentation_exemplar_scaffold_and_qc_only",
+    "legacy_asset_adoption_approved": false,
+    "cartridge_cutover_authorized": false,
+    "host_identity_tenancy_persistence_and_xp_ownership_unchanged": true,
+    "future_consumer_requirement": "Cartridge tracks must separately prove semantic adoption, selected-union output, host integration, persistence, performance, and cutover."
+  }
+}

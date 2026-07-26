@@ -1,0 +1,45 @@
+{
+  "canonical_pack": {
+    "accepted_release_sha256": "61984e0b53c4ba85379cf6a4f0f33ee956665c4eaad4b3d681e3dccd98389844",
+    "catalog_artifact_sha256": "ef432a798a78585df3416d60aca30fe11a2d1d8b833e0d65ceb7fac5c8b19932",
+    "catalog_digest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+    "license_sha256": "3efc9b9a88752a089fa07de4fac43cabe6283b0051466661c55a97c1c625c48f",
+    "receipt_artifact_sha256": {
+      "CURATED-RECEIPT.tsv": "a192f1fe2826aa426228950092fb32cb47cb24dd4acd47057d7424a0dfd527bb",
+      "IMPORT-RECEIPT.tsv": "29b89199ce9d7ed6d49731cfc7e3a6cf021a38e27cbbea1e728a649d33047cc7",
+      "LICENSE-RECEIPT.tsv": "6bdb723698e6ff49c76e8bbf34cdcee004a9bf75f9ecbf92b7c5d45ee20c49d1"
+    },
+    "required_credit": "Pixel art assets by ElvGames",
+    "root": "packages/advantage-play-kit/assets/standard",
+    "source_receipt_digest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9",
+    "version": "2026.07.23"
+  },
+  "failed_monolith_policy": "counterexample-only-never-accepted-dependency",
+  "frozen_at": "2026-07-26T01:00:00Z",
+  "reviewer_identity": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/reviewer-identity-v1.json",
+    "sha256": "cb0d7c8402a4b67f8effcdb246151a39fbeaceeeef5e8d70a1b78cd26c66aa6d"
+  },
+  "schema_version": "apk-t10-input-freeze.v1",
+  "t8_accepted_manifest": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-accepted-manifest-v1.json",
+    "sha256": "20930a1cb30b763323f0c3d77a0625cb1c54c7aba7094284b91d508f3d68665f"
+  },
+  "t9_candidate": {
+    "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase6-candidate-synthesis-manifest-v1.json",
+    "sha256": "550b15d5f14e294deafec2df86ff8e09f43ba8d7fd204f4c167ebf811f0563ff"
+  },
+  "t9_root_acceptance": {
+    "path": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase6-root-acceptance-v1.json",
+    "sha256": "b02672818991231837afcd1bfc3dbdc59c40d230d1cf3a309d8acec2c5f0341b"
+  },
+  "tests": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10_acceptance_verifier_test.py",
+    "sha256": "b9dafe5983352267bd7da65e605f580bc59e17a50e98f99bd9a6c27b442896c2"
+  },
+  "track_id": "apk_independent_acceptance_handoff_20260712",
+  "verifier": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10_acceptance_verifier.py",
+    "sha256": "a6ba76a90356b3b1902778a7c471b0a798bcc22b172d76030d8ba7e756489ead"
+  }
+}

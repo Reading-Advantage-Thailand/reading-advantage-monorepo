@@ -1,0 +1,17 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-failed-producer-cycle.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-05",
+  "cycle": "group-disposition-count-shape",
+  "status": "preserved_failed_producer_bytes",
+  "failure": "The unchanged value verifier rejected all 18 rollup groups because counts.disposition_paths was a scalar instead of the exact per-disposition object derived from member records.",
+  "preserved_files": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-05/group-disposition-count-shape/phase4-group-rollup.json": "c14e23f73b709c680c3d4c9e11426443fd437946360eef37119e22a1a013a386",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-05/group-disposition-count-shape/requirements-mapper.json": "f06e053a07e1948f613bdad88af0dd08a06c38ecae6459106ab4106d9b80ff98"
+  },
+  "unchanged_joins": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/phase4-path-usage-joins.json",
+    "sha256": "21d2df2115b5eeadcbb67739a3b986d2c3d99944e6792c0f75a3ba1d0b736b3c"
+  },
+  "remediation_scope": "Change only each rollup group counts.disposition_paths to exact reject, replace, and unknown counts and update the active mapper receipt dependent rollup output hash; preserve joins byte-for-byte."
+}

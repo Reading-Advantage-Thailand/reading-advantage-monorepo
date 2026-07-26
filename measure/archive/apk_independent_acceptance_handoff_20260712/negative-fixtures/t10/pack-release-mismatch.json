@@ -1,0 +1,11 @@
+{
+  "fixture_id": "pack-release-mismatch",
+  "mutations": [
+    {
+      "artifact": "packages/advantage-play-kit/assets/standard/accepted-standard-pack-release.json",
+      "pointer": "/version",
+      "value": "2026.07.22"
+    }
+  ],
+  "expected_codes": ["PACK_RELEASE_MISMATCH"]
+}

@@ -1,0 +1,148 @@
+{
+  "accepted_by": "root-orchestrator-product-owner",
+  "accepted_reconciliation": {
+    "accepted_path_usage_links": {
+      "non_scene": 8,
+      "scene": 77,
+      "total": 85
+    },
+    "browser_usability_defects": 6,
+    "caller_locators": 533,
+    "candidate_paths": 428,
+    "dispositions": {
+      "reject": 14,
+      "replace": 85,
+      "unknown": 329
+    },
+    "identical_hash_groups": 227,
+    "priority1": {
+      "all_reconciled": true,
+      "paths": 14,
+      "required_disposition": "reject",
+      "required_replacement_action": "retire"
+    },
+    "responsive_assessment_cells": 308,
+    "unique_usage_ids": {
+      "non_scene": 5,
+      "scene": 40,
+      "total": 45
+    }
+  },
+  "blocking_findings": {
+    "Critical": [],
+    "High": [],
+    "Low": [],
+    "Medium": []
+  },
+  "browser_and_direct_visual_review": {
+    "browser_is_per_path_runtime_load_proof": false,
+    "evidence_scope": "bounded-composite-scene-only",
+    "root_direct_visual_review_preserved": true,
+    "source_phase4_root_acceptance": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-root-acceptance.json",
+      "sha256": "af708fe63bd10e4508809446e5e2420601cfd8e5e04601db41d32b4be33e53cd"
+    },
+    "usability_defect_disclosures": [
+      "Dragon Flight compact direction controls begin below the initial viewport.",
+      "RPG Battle remains blocked in a repeated vocabulary-fetch loop at both viewports.",
+      "Magic Defense compact start content is clipped at the edge.",
+      "Enchanted Library wide capture timed out and remains blocked.",
+      "Potion Rush compact gameplay shows an unresolved HUD key and overlay pressure.",
+      "Castle Defense compact post-start canvas extends below the viewport."
+    ]
+  },
+  "decision": "ACCEPT_PHASE5",
+  "failed_owner_cycles": [
+    {
+      "artifacts": {
+        "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-failed-owner-cycle-v1/acceptance-truth-test-author-stale.json": "bcd166cd54daa51d8b6ef6f4906126da2b291a6fe1e34ffe96e25d570c9d0494",
+        "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-failed-owner-cycle-v1/phase5-acceptance-false-green-report.json": "f5ad8f962910e1cdf423544eea99e2328e10e0790f43bc2f78f5d14daa94158b",
+        "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-failed-owner-cycle-v1/phase5-accepted-manifest-stale.json": "9d1a8697a3ab9314bfe02fadb54869a721a8a83c2c8c65e76d24bfb7c5a3f227",
+        "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-failed-owner-cycle-v1/phase5-root-acceptance-stale.json": "8c46eb8d231a24687e1fcb7f818c1ac21657bf5f9ccd74c3bbd2de683ac77543"
+      },
+      "authoritative": false,
+      "reason": "AF-01-AF-06 v2 reviewer finalized its review and receipt after the first owner publication, invalidating the original input bindings; the fail-closed acceptance contract detected acceptance-binding: AF-01-AF-06."
+    }
+  ],
+  "independent_review_coverage": {
+    "accepted_path_usage_links": 85,
+    "batches": [
+      "AF-01",
+      "AF-02",
+      "AF-03",
+      "AF-04",
+      "AF-05",
+      "AF-06",
+      "AF-07",
+      "AF-08",
+      "AF-09",
+      "AF-10",
+      "AF-11",
+      "AF-12"
+    ],
+    "caller_locators": 533,
+    "candidate_paths": 428,
+    "decoded_audio_groups": 14,
+    "identical_hash_groups": 227,
+    "recursive_locator_instances": 4279,
+    "responsive_assessment_cells": 308,
+    "sampling_used": false,
+    "visual_groups": 131
+  },
+  "input_bindings": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-root-acceptance.json": "af708fe63bd10e4508809446e5e2420601cfd8e5e04601db41d32b4be33e53cd",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-acceptance-fixture-manifest-v1.json": "1265cd1ba4a8c15539b3ed722252a65bb60eea40a8651c1b78089f2fae503978",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-candidate-manifest-non-consumable-v1.json": "c5626db8afdf357feda20637c8bcacf52a391c363c2acf0d9de1cd0561c330be",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-candidate-report-v1.json": "ad7bbe10e513fabf1cceb2893833c8f983d4b429f3a5b503b53edf028bb04f47",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-contract-test-report.json": "7aeaaec76c9b56ce0ba9c1fa11f2262164c4e76b3f178806a96a8a7c4e136861",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-fixture-manifest-v1.json": "25808bfc4dbdfd39a311177f17ea42669c884c781121313b8ed27455707f5b12",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-01-AF-06-v2.json": "c789ef9c07eba1e4281d25084684c1c6590eefae809ddf5ca21b56b4acde7eec",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-07-AF-12-v2.json": "44944d6948a15e50593f3adc2b6882ae9510359bcebcafc2fd66d24eeb0db00d",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5_acceptance_test.py": "0a9e32c2550680ed0e6e707ef12078b352bca3d0fd60fcf9886ee7bab4ccb2fc",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5_contract_test.py": "31062aeefe8abf7506eafd814a588f1e38e1a18488396870093561c8e80259d4",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase5/AF-01-AF-06-v2-adversarial-reviewer.json": "1426361c0f1cc1ca4ca5095f7e340a325885fe3b463673577ffca3c4fd8b3e10",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase5/AF-07-AF-12-v2-adversarial-reviewer.json": "0f479d39af732963ac0b9b2c2017efd6c733ec7e6f92093871b60f9877ddf702",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase5/report-manifest-producer.json": "fe9588b3df7777cffd257cfe47e32d0b3cd4f8d8fcf80c4764210aca7b13466e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase5/truth-test-author.json": "49e747b7df827b112be563abca584fd8facf290b683a550cd34d37df96995af2"
+  },
+  "next_gate": {
+    "name": "APK Evidence-Backed Ontology Synthesis",
+    "status": "OPEN_T9_ONLY",
+    "track_id": "apk_evidence_backed_ontology_synthesis_20260712"
+  },
+  "phase": 5,
+  "priority1_decision": {
+    "all_reconciled": true,
+    "paths": 14,
+    "required_disposition": "reject",
+    "required_replacement_action": "retire"
+  },
+  "rationale": "The exact candidate report and non-consumable manifest reconcile all 428 paths; the optimized recursive verifier passes production and rejects all 19 negative fixtures; two independent exhaustive v2 reviewers cover AF-01 through AF-12 with zero Critical, High, Medium, or Low findings; the three restored predecessor ledgers match their frozen hashes and all 4,279 recursive locator pairs resolve; all 14 Priority-1 paths remain reject plus retire; and the bounded Kimi/direct-visual evidence preserves all six usability defects without claiming per-path runtime loading.",
+  "restored_ledger_bindings": {
+    "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger-v2.json": "10d974bd3e620a4aaacde171a80e5f82945f58fdbd38db57b996805b62b71e45",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/claim-evidence-ledger.v2.json": "8adc5b881104bf0ce78d0eb3895b65cb0485a4e516e9918461acfad0f7adfb2e",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae"
+  },
+  "schema_version": "apk-asset-forensics.phase5-root-acceptance.v1",
+  "scope_disclosures": [
+    "This acceptance makes the exact 428-entry manifest consumable only as evidence input to T9 ontology synthesis.",
+    "Legacy paths remain forensic evidence only and are not canonical standard-pack candidate keys or direct production adoption paths.",
+    "The 329 unknown dispositions remain unknown; T9 must not silently resolve blocked or unknown Must-have decisions.",
+    "The browser evidence is bounded composite-scene evidence and does not prove per-candidate runtime loading.",
+    "Dragon Flight compact controls remain below the initial viewport; RPG Battle remains blocked by repeated vocabulary fetches; Magic Defense compact content remains clipped; Enchanted Library wide capture remains timed out; Potion Rush compact HUD/overlay defects remain; Castle Defense compact canvas remains below the viewport.",
+    "The pre-repair High, stale-clean, and Medium review cycles remain preserved, superseded, non-authoritative evidence.",
+    "No T9 canonical mapping, implementation, production adoption, shipping, or product-success claim is accepted here.",
+    "An external OpenRouter/Anthropic review attempt was denied by the permission boundary; no repository data was transmitted. Independent in-workspace LLM reviews provide the accepted review coverage.",
+    "The first owner publication cycle is preserved as non-authoritative false-green evidence because the AF-01-AF-06 reviewer finalized its hashes afterward; this successor acceptance binds only the final validated review and receipt hashes."
+  ],
+  "superseded_pre_repair_reviews": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-01-AF-04.json": "799ba539fe8b1258ca0e4cbf7dbd0961eb66d44a01da84fc7bd49d752704c990",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-05-AF-08.json": "f2c4fff40265d0b5a51700459c4f889cb75c46e50e071e492172e83f30144c65",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-09-AF-12.json": "c7e5bd17510d8bce25c31dd9ec584a58c042d858d1ba378156c45ca57609d0e4",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase5/AF-01-AF-04-adversarial-reviewer.json": "5fd6702e28c437dd42447514fa57c859ab56cf2236569e38da209bc0e64e4b67",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase5/AF-05-AF-08-adversarial-reviewer.json": "b4e6d8489af01e958bc591cfc25206bf5e06194d285d467f1cebe1e6f00ccffb",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase5/AF-09-AF-12-adversarial-reviewer.json": "250f97f69856824978dc08ddbf054e6b02e1f0a86f943fb35e19507934a8e958"
+  },
+  "track_id": "apk_existing_asset_candidate_audit_20260712"
+}

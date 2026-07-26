@@ -1,0 +1,86 @@
+{
+  "numeric_ceiling": {
+    "negative_fixtures": 16,
+    "published_artifact_bytes_each": 1048576
+  },
+  "outputs": [
+    {
+      "byte_size": 2489,
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-input-freeze-v1.json",
+      "sha256": "68fc7e0baaaa25c2dc1a2793aad7568b473eb4cd6c5449dfdf138fc58bf517cf"
+    },
+    {
+      "byte_size": 3448,
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-fixture-manifest-v1.json",
+      "sha256": "8e5463f87b56519d5130f20a582434b19f4cba2aa7f1367097f5086b3b0fab31"
+    },
+    {
+      "byte_size": 3366,
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-red-report-v1.json",
+      "sha256": "ca07ea75c58a41a97f810870a1ef7b386ec16c74a1c0a73ec0d383cfadeead86"
+    },
+    {
+      "byte_size": 28344,
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-claim-disposition-overlay-v1.json",
+      "sha256": "06e692daff932334a5edc2a06d7121651a6bb2426f05f1b00d8d0a5c1ecb6e41"
+    },
+    {
+      "byte_size": 1653,
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-candidate-gate-report-v1.json",
+      "sha256": "f18ec42f8cd7433968100894bf950015693d89c905bfa4041e2eb930b53fb1ad"
+    },
+    {
+      "byte_size": 3277,
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-independent-acceptance-review-v1.json",
+      "sha256": "efca1bc8391328fc274c34ac463c362dcffcd921c96204905091b9025554688d"
+    },
+    {
+      "byte_size": 971,
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-task-ownership-v1.json",
+      "sha256": "dbb5ec1af31bdb868e02b2baf9127c6f4c63322467518f0c5be17d52f4a3dea7"
+    },
+    {
+      "byte_size": 1570,
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/product-owner-acceptance-v1.json",
+      "sha256": "165e21c9ddb5a6e0b2f61f3190d604fbb3133459b5f00331a8c66ee1e7572753"
+    },
+    {
+      "byte_size": 3352,
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/accepted-successor-manifest-v1.json",
+      "sha256": "e9fc2c9c8074db74670fa2e2929bd4efb5b8d0fd2ef5a8b9819d2f5a6e39ba49"
+    },
+    {
+      "byte_size": 1256,
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/successor-hashes-v1.json",
+      "sha256": "c026c0bff62c3d6739c366fa80cb6593c455e96bffd2532a43223c829ec74005"
+    },
+    {
+      "byte_size": 1094,
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/role-receipt-t10-independent-reviewer-v1.json",
+      "sha256": "9a684a486071dab70a8bc92434bb277a159a6a53dda26162c0c43e020054a113"
+    }
+  ],
+  "schema_version": "apk-t10-resource-report.v1",
+  "verifier_metrics": {
+    "accepted_capabilities": 7,
+    "blocked_adoption_mappings": 85,
+    "blocked_claims": 163,
+    "blocked_must_have_gaps": 3,
+    "blocked_responsive_cells": 5664,
+    "browser_evidence_files": 16,
+    "browser_routes": 6,
+    "capability_uses": 56,
+    "derived_records": 1009,
+    "exact_claims": 1085,
+    "frozen_input_checks": 33,
+    "games": 29,
+    "negative_controls": 20,
+    "normalized_usages": 45,
+    "raw_claims": 1248,
+    "responsive_contracts": 354,
+    "role_identity_checks": 74,
+    "standard_pack_assets": 43075,
+    "t8_candidate_rows": 428
+  },
+  "within_ceiling": true
+}

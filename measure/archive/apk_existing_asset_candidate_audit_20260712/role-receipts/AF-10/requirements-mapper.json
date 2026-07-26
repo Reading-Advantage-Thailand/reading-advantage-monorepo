@@ -1,0 +1,95 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "batch_id": "AF-10",
+  "role": "requirements-mapper",
+  "native_task_name": "/root/phase4_map_af10",
+  "declared_model": "gpt-5.6-sol",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "role_boundary": "Derive and publish AF-10 path-specific Phase 4 joins, group rollup, and this mapper receipt only from frozen Phase 0 and Phase 4 inputs, accepted AF-10 caller, provenance, inspection, normalizer, cited-claim, and bounded browser evidence. Do not author tests, reports, reviews, plan updates, acceptance, product claims, commits, or verifier changes.",
+  "allowed_input_paths": [
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-join-scaffold-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/provenance-audit.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/inspection-records.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/strict-caller-scene-joins.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T5-T7-normalized-scene-usages.json"
+  ],
+  "allowed_input_manifest_sha256": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+  "input_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-join-scaffold-v1.json": "2162076fe26911a2659b7e0ef23f49398c8ebb4b5343b0ab0479c78a5d1a1de4",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json": "450f5ab66215178aa730e057cb28a220bfb550dfd924959a7f7f1da2eea02f9e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/caller-inventory.json": "0f2356459b970d657fb4e5bf8627ce2db53a6d3165aff809d082ff84f1756e4b",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/provenance-audit.json": "fed7989da253af1a8ce28137e6267b16b1848e30e6a4b6aaa8636808442cc11a",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/inspection-records.json": "2a098b81c5cbefe2bf2b1c0f916541e8acb8a1a4a00e0e5da166e9a807ab93b8",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/strict-caller-scene-joins.json": "39fc827a12dc2ad7719d56ee3c616045caecdf4aef816c24a9fed5c3803f4f0c",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json": "5ef6370e6a789b9de14d1843c12380d2a10eb2558799fe16985e810709a998c6",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T5-T7-normalized-scene-usages.json": "b6134873c224ce98d4a3c8c5c466fa9af7c42a30cae3066dbf09b61a48c0add0"
+  },
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/phase4-path-usage-joins.json": "edca0c67a0da3e29dcdb15604d067a342fb4962c26ac8210636c9e8ef733c5c9",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/phase4-group-rollup.json": "a7cef9ea7301acb01d6d7ab5fd2dca5cd25927381cb060c82f3de693eade9f4e"
+  },
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": []
+  },
+  "unresolved_blocking_findings": 0,
+  "stop_loss_events": [
+    {
+      "command": "python measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_v2_batch_schema_contract_test_v2.py --root . --batch AF-10",
+      "exit_code": 127,
+      "preserved_stderr": "/bin/bash: line 1: python: command not found",
+      "bounded_correction": "Used the available python3 interpreter with the same supported verifier flags; no producer content existed yet."
+    },
+    {
+      "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_v2_batch_schema_contract_test_v2.py --root . --batch AF-10",
+      "exit_code": 1,
+      "preserved_production_errors": [
+        "required-document-missing: joins:measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/phase4-path-usage-joins.json",
+        "required-document-missing: rollup:measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-10/phase4-group-rollup.json",
+        "required-document-missing: mapper:measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-10/requirements-mapper.json",
+        "value-verifier-failed: AF-10"
+      ],
+      "bounded_correction": "Published only the three AF-10 mapper-owned artifacts from the revalidated frozen envelope, then reran the unchanged recursive verifier."
+    }
+  ],
+  "measured_resource_usage": {
+    "candidate_paths": 34,
+    "scene_usage_records": 2,
+    "games_per_join_slice": 1,
+    "command_invocations": 16,
+    "bytes_read": 2234319,
+    "within_ceiling": true,
+    "ceilings": {
+      "candidate_paths": 40,
+      "scene_usage_records": 240,
+      "games_per_join_slice": 3,
+      "command_invocations": 80,
+      "bytes_read": 268435456
+    },
+    "measurement_basis": "Programmatically derived candidate/link/slice counts and exact unique byte sizes of the eleven frozen AF-10 producer inputs; command count includes orientation, independent source re-derivation, publication, both preserved pre-publication Red invocations, bounded correction, recursive verification, and unchanged-value verification."
+  },
+  "disclosures": [
+    "All 34 candidate paths remain explicit; identical hashes do not collapse path-specific callers, joins, requirements, or dispositions.",
+    "The four accepted path-usage links comprise two scene links to one exact source-bound usage ID and two non-scene links to one exact source-bound usage ID.",
+    "Unknown provenance and license block reuse and adaptation; reference remains forbidden absent exact independent support.",
+    "Browser evidence is bounded composite legacy-scene behavior only and does not establish per-path runtime load, suitability, theme compatibility, provenance, license, or adoption.",
+    "The seven catalog locator records are count/reference-only, embed no payload or cells, and are non-additive to the candidate-path denominator.",
+    "Canonical standard-pack candidate keys remain null and forbidden pending T9; direct legacy adoption is false.",
+    "Producer mapping is pending fresh truth test, independent review, and root acceptance."
+  ],
+  "final_status": "mapping-complete-pending-fresh-truth-test-review-and-root-acceptance"
+}

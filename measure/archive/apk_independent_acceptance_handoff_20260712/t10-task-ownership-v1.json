@@ -1,0 +1,20 @@
+{
+  "deviation": "The requested Kimi/forked subagents were unavailable; the user authorized one genuinely independent T10 session. No unavailable attestation is represented as present.",
+  "phases": {
+    "0": "openai-gpt-5.6-sol-t10-independent-20260726",
+    "1": "openai-gpt-5.6-sol-t10-independent-20260726",
+    "2": "openai-gpt-5.6-sol-t10-independent-20260726",
+    "3": "openai-gpt-5.6-sol-t10-independent-20260726",
+    "4": "openai-gpt-5.6-sol-t10-independent-20260726",
+    "5": "openai-gpt-5.6-sol-t10-independent-20260726"
+  },
+  "provider_fork_turns_attested": false,
+  "reviewer": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/reviewer-identity-v1.json",
+    "sha256": "cb0d7c8402a4b67f8effcdb246151a39fbeaceeeef5e8d70a1b78cd26c66aa6d"
+  },
+  "schema_version": "apk-t10-task-ownership.v1",
+  "tool_attestation_available": false,
+  "truth_gate_owner": "deterministic-t10_acceptance_verifier.py",
+  "upstream_role_reuse": false
+}

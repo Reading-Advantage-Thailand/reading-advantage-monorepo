@@ -1,0 +1,110 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-adversarial-review.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "batch_id": "AF-04",
+  "review_role": "adversarial-reviewer",
+  "reviewer_task_name": "/root/phase4_review_af04_final",
+  "declared_model": "gpt-5.6-terra",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "reviewed_at": "2026-07-24",
+  "authority_commit": "129200815cef1140e8bbcbf936eeebbc904f79f3",
+  "reviewed_output_hashes": {
+    "phase4_path_usage_joins_sha256": "08f3c820ad78dba42dfb36cdf1ca96291bc8e8850016ddc21b64e7968b7b3995",
+    "phase4_group_rollup_sha256": "20f7cbf831f25f3523dc809db4132508d570e4d772338fa5afa35b744e5b9e14",
+    "requirements_mapper_receipt_sha256": "812676d88eb9f3136237a3a44438db1ba7f34e59594aacbf834b73abee6e09b4",
+    "value_verifier_sha256": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+    "v2_schema_verifier_sha256": "66330866aea54902d3c3a7a70a3534921116da67521562f5440db380246ed319",
+    "value_report_sha256": "ebac0541202d7621204d5a6a8c2bd79080f94d440d4308e64a83f6e715435525",
+    "v2_schema_report_sha256": "babac197a6405bf069c99e9e3c7912f1030ae195d44f151299d736b21e9bf0fa",
+    "truth_test_receipt_sha256": "08b5bb08cabefe80b25be45ed834bd00983e14112411607f8e2ca6dcb1d90762",
+    "final_schema_cycle_decision_sha256": "41c0dd590f3be7368b5ed761f44f9473d44b644c9a2160453554ece4874c667f",
+    "user_continuation_override_sha256": "7ab3354af2adf22cd13c522501d33fd157b166c987403ae685a03f5b9adf9e0e",
+    "phase2_reviewer_receipt_sha256": "2f85a84c9623f6f26dbc60978880069da301f74a9491a4986c6d57903d8e985e"
+  },
+  "reviewed_counts": {
+    "candidate_path_records": 35,
+    "identical_hash_groups": 17,
+    "caller_locators": 61,
+    "git_pinned_caller_source_files": 28,
+    "accepted_path_usage_links": 6,
+    "unique_scene_usage_records": 3,
+    "responsive_assessment_cells": 24,
+    "eight_facet_cells": 24,
+    "priority1_paths": 4,
+    "dispositions": { "replace": 6, "reject": 4, "unknown": 25 },
+    "reusable_paths": 0,
+    "adaptable_paths": 0,
+    "reference_allowed_paths": 0,
+    "direct_legacy_adoption_true": 0,
+    "non_null_canonical_standard_pack_keys": 0,
+    "mixed_path_specific_disposition_groups": 3,
+    "separate_catalog_locator_records": 7,
+    "catalog_records_added_to_candidate_denominator": 0,
+    "review_records": 196
+  },
+  "substantive_review": {
+    "paths_groups_callers": "All 35 frozen paths and 17 groups reconcile. All 61 locators resolve to 28 distinct Git blobs at 65fc00d872ce5aa63820662ee0a1f14952e63235; each cited range hash and literal matched.",
+    "links_and_sources": "All six links resolve exactly to three normalized scene usages and their cited claim artifacts. Four links omit optional source_class and two retain it; the v2 verifier normalizes absence to null and accepts both declared shapes.",
+    "responsive_and_browser_boundary": "All 24 compact/wide theme cells contain the eight required facets. Every suitability, crop, state, collision/readability and semantic assessment remains blocked; per-path runtime load is not established. Frozen browser evidence is used only as composite-scene evidence: Dragon Flight compact is incompatible and wide bounded; Enchanted Library compact requires scroll and wide timed out; RPG Battle is blocked by its repeated fetch loop.",
+    "priority_and_prohibitions": "The four priority-1 paths retain reject/retire. All 35 upstream provenance states remain unknown, so reuse, adapt and reference are prohibited; every canonical standard-pack key remains null/forbidden-pending-T9 and direct legacy adoption is false.",
+    "duplicates_and_catalog": "All duplicate paths remain explicit. Exactly three mixed groups retain path-specific tuples. The seven global catalog locators remain a separate non-additive grain, with no catalog payload/cells and no 92-path claim."
+  },
+  "failure_chain_and_delta": {
+    "cycle1": {
+      "report_sha256": "150d7292983bbf09e175e1c77b558a16f338408d33a1a0ce80064a60506768da",
+      "receipt_sha256": "7a6c369bdd46603bbc0ac46665619820f26666bf2fc168115c3b6a61dd97427c",
+      "result": "preserved failed value-contract cycle"
+    },
+    "cycle2": {
+      "joins_sha256": "cf0f48973eb71c609fe784cdaf945152a3e92939471c6af83ae39eefbc01a439",
+      "rollup_sha256": "ee7e21803c3071736e3278e52910438fcbe8b625f6a0dd02d06f0e2f5c37ddc0",
+      "result": "preserved review failure that identified the v1 shape/receipt defect"
+    },
+    "final_producer_failure": {
+      "joins_sha256": "3baeee0af3948af4f36d04bb9d8c848f2dff4e6243c8837f457caacc92359ff6",
+      "rollup_sha256": "19f94e5cea4cfd1d422a7efa8aeadee565f7b368a993bbbe43949268aebd7ae2",
+      "mapper_sha256": "1ab78b0830213734bf0eb3d23242e562fb5104f5d905281cb9b1610fe90dd743",
+      "result": "preserved failed producer before the user-authorized exact mirror correction"
+    },
+    "final_delta": "All six joined mirror requirement arrays are exact deep copies of their usage-link requirements. Relative to the preserved final producer, precisely 12 forbidden mirror-only keys were removed: status and disclosure from each of six objects. The 35 non-mirror factual projections are identical; the rollup differs only by its current joins SHA-256 binding. v2 restores all 35 scaffold join_status fields and the rollup joins SHA binding.",
+    "archives": "All 24 truth-receipt archive hashes, including cycle 1, cycle 2, final-producer failure and v2 authoring-red evidence, match exact bytes."
+  },
+  "verifier_review": {
+    "value_command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_batch_contract_test.py --root <root> --batch AF-04 --json",
+    "value_exit_code": 0,
+    "value_report_byte_reproduced": true,
+    "value_test_cases": 17,
+    "value_counterexamples": 16,
+    "v2_command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_v2_schema_contract_test.py --root <root>",
+    "v2_exit_code": 0,
+    "v2_report_byte_reproduced": true,
+    "v2_test_cases": 29,
+    "v2_counterexamples": 11,
+    "all_27_counterexamples_rejected_for_intended_codes": true,
+    "coverage": "The value verifier covers denominator, caller ownership, provenance, disposition priority, browser limitations, prohibitions, source pointers, rollups and resource ceilings. The v2 verifier adds exact no-extra-key shapes, optional source_class handling, join_status, six-key link/mirror requirements, mirror equality, rollup SHA, mapper truthfulness, decisions, archives, factual envelope and fixtures. Green results were treated as corroboration, not as a substitute for the independent record, delta and archive audit.",
+    "authoring_red_classification": "The inherited optional-source_class crash and subsequent harness preflight defects are archived development-only authoring-red evidence, not final green evidence; the current verifier handles optional source_class deliberately."
+  },
+  "findings": { "critical": [], "high": [], "medium": [], "low": [] },
+  "stop_loss_events": [],
+  "unresolved_blocking_findings": 0,
+  "resource_usage": {
+    "candidate_paths": 35,
+    "hash_groups": 17,
+    "review_records": 196,
+    "command_invocations": 16,
+    "bytes_read": 233000000,
+    "within_ceiling": true,
+    "ceilings": { "candidate_paths": 40, "hash_groups": 24, "review_records": 280, "command_invocations": 120, "bytes_read": 536870912 },
+    "measurement_basis": "Conservative sum of both independently rerun verifier process counters (including their nested value run) plus bounded JSON, archive, claim-artifact and 28 Git-blob reconciliation reads; no browser capture or producer action was run."
+  },
+  "decision": {
+    "admit": true,
+    "block": false,
+    "status": "pass-pending-root-orchestrator-project-and-product-owner-acceptance",
+    "scope": "AF-04 Phase 4 batch artifacts only; not root acceptance and not T8/T9/Phase 4 program completion.",
+    "next_authority": "root-orchestrator project-and-product-owner acceptance"
+  },
+  "final_status": "pass-pending-root-orchestrator-project-and-product-owner-acceptance"
+}

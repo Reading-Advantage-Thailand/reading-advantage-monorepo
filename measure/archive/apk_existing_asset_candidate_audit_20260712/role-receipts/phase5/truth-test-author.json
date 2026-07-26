@@ -1,0 +1,35 @@
+{
+  "counterexamples": {
+    "all_rejected": true,
+    "count": 19
+  },
+  "final_status": "truth-test-pass-pending-fresh-independent-review-and-root-acceptance",
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-contract-test-report.json": "7aeaaec76c9b56ce0ba9c1fa11f2262164c4e76b3f178806a96a8a7c4e136861",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5_contract_test.py": "31062aeefe8abf7506eafd814a588f1e38e1a18488396870093561c8e80259d4"
+  },
+  "production": {
+    "errors": [],
+    "measured": {
+      "accepted_path_usage_links": 85,
+      "caller_locators": 533,
+      "candidate_paths": 428,
+      "dispositions": {
+        "reject": 14,
+        "replace": 85,
+        "unknown": 329
+      },
+      "identical_hash_groups": 227,
+      "non_scene_links": 8,
+      "priority1_paths": 14,
+      "responsive_assessment_cells": 308,
+      "scene_links": 77,
+      "unique_non_scene_usage_ids": 5,
+      "unique_scene_usage_ids": 40,
+      "unique_usage_ids": 45
+    },
+    "passed": true
+  },
+  "role": "phase5-truth-test-author",
+  "schema_version": "apk-asset-forensics.phase5-truth-test-author-receipt.v1"
+}

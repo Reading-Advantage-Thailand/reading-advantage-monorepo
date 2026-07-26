@@ -1,0 +1,825 @@
+{
+  "audited_claim_count": 1248,
+  "blocked_claim_count": 163,
+  "blocked_claims": [
+    {
+      "claim_ref": "abyssal-well:AW-HIST-050",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "abyssal-well:AW-HIST-NEG-001",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "abyssal-well:AW-HIST-NEG-002",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "archers-revenge:AR-B2-V8-ASSET-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "archers-revenge:AR-B2-V8-ASSET-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "archers-revenge:AR-B2-V8-ASSET-003",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "astral-mage:AM-UNK-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "astral-mage:AM-UNK-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "astral-mage:AM-UNK-003",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "babel-architect:BA-UNK-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "babel-architect:BA-UNK-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "babel-architect:BA-UNK-003",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "babel-architect:BA-UNK-004",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "devourer-slime:DS-CL-H-006",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "dragon-flight:DF-NEG-001",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "dragon-flight:DF-NEG-002",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "dragon-flight:DF-NEG-003",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "griffin-sky-joust:GSJ-CUR-UNK-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "gryphon-patrol:C01-identity",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "gryphon-patrol:C02-route-and-composition",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "gryphon-patrol:C03-implementation-and-scenes",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "gryphon-patrol:C04-copy",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "gryphon-patrol:C05-test",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "gryphon-patrol:C06-state-and-transitions",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "gryphon-patrol:C07-patrol-escort-aerial-movement",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "gryphon-patrol:C08-targets-projectiles-and-health",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "gryphon-patrol:C09-responsive-composition",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "gryphon-patrol:C10-config",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "gryphon-patrol:C11-apis",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "gryphon-patrol:C12-api-complete",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "gryphon-patrol:C13-api-ranking",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "gryphon-patrol:C14-cartridge-history",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "gryphon-patrol:C15-asset-binary",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "magic-defense:MD-ASSET-007",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "magic-defense:MD-ASSET-008",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "magic-defense:MD-ASSET-009",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "magic-defense:MD-ASSET-010",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "magic-defense:MD-ASSET-011",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "magic-defense:MD-ASSET-012",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "magic-defense:MD-ASSET-013",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "magic-defense:MD-ASSET-014",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "magic-defense:MD-HIST-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "magic-defense:MD-HIST-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "magic-defense:MD-HIST-008",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "magic-defense:MD-HIST-009",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "magic-defense:MD-NEG-001",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "magic-defense:MD-NEG-002",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "magic-defense:MD-NEG-003",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "magic-defense:MD-NEG-004",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "magic-defense:MD-NEG-005",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-API-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-API-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-ASSET-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-ASSET-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-CAPTURE-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-COMBAT-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-COMBAT-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-CONFIG-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-HEALTH-TERMINAL-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-HISTORY-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-IDENTITY-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-RENDER-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-RESPONSIVE-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-RESULT-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-ROUTE-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-SCENE-COPY-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-SCENE-TRANSITION-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-STATE-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-TEST-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-TEST-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "paladins-twin-soul:PTS-C-TRANSITION-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "potion-rush:PR-UNK-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "potion-rush:PR-UNK-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "potion-rush:PR-UNK-003",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "potion-rush:PR-UNK-004",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "realm-carver:RC-CUR-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "realm-carver:RC-CUR-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "realm-carver:RC-CUR-003",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "realm-carver:RC-CUR-004",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-003",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-004",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-005",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-006",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-007",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-008",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-009",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-010",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-011",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-012",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-013",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-014",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-015",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-016",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-017",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-018",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-019",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-020",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-021",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-022",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-023",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-024",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-025",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-026",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-027",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-028",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-029",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-030",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-031",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-032",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-033",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-034",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-035",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-036",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-037",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ASSET-039",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-HIST-004",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ID-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-ID-003",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-MECH-023",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-NEG-001",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-NEG-002",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-NEG-003",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-TEST-020",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rpg-battle:RPG-TR-022",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rune-forge-chamber:RFC-UNK-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rune-forge-chamber:RFC-UNK-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rune-forge-chamber:RFC-UNK-003",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rune-forge-chamber:RFC-UNK-004",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "rune-forge-chamber:RFC-UNK-005",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "spellweavers-run:SW-NEG-001",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "spellweavers-run:SW-NEG-002",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "spellweavers-run:SW-NEG-003",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "storm-castle-tower:SCT-ABS-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "storm-castle-tower:SCT-ASSET-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "storm-castle-tower:SCT-ASSET-ABS-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "storm-castle-tower:SCT-ASSET-ABS-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "storm-castle-tower:SCT-ASSET-ABS-003",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "storm-castle-tower:SCT-HIST-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "storm-castle-tower:SCT-HIST-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "the-haunted-library:HL-UNK-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "the-haunted-library:HL-UNK-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "the-haunted-library:HL-UNK-003",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "village-guardian:VG3-ASSET-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "village-guardian:VG3-ASSET-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "wizard-vs-zombie:WVZ-ASSET-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "wizard-vs-zombie:WVZ-ASSET-002",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "wizard-vs-zombie:WVZ-ASSET-003",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "wizard-vs-zombie:WVZ-ASSET-004",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "wizard-vs-zombie:WVZ-ASSET-005",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "wizard-vs-zombie:WVZ-ASSET-007",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "wizard-vs-zombie:WVZ-ASSET-008",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "wizard-vs-zombie:WVZ-ASSET-009",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "wizard-vs-zombie:WVZ-ASSET-010",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "wizard-vs-zombie:WVZ-HIST-001",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "wizard-vs-zombie:WVZ-ID-007",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "wizard-vs-zombie:WVZ-ID-008",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "wizard-vs-zombie:WVZ-ID-009",
+      "disposition": "blocked-insufficient-exact-git-envelope",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "wizard-vs-zombie:WVZ-NEG-001",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "wizard-vs-zombie:WVZ-NEG-002",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "wizard-vs-zombie:WVZ-NEG-003",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    },
+    {
+      "claim_ref": "wizard-vs-zombie:WVZ-NEG-004",
+      "disposition": "blocked-negative-control",
+      "successor_factual_consumption": false
+    }
+  ],
+  "exact_claim_count": 1085,
+  "exact_claim_refs_sha256": "52f28f373adba139b98ad6f1216b38791bd99d64a3fd634f445950cdbc1fd55d",
+  "policy": "Only exact claims may support accepted T11 capabilities; every other claim remains evidence-only and blocked from factual successor consumption.",
+  "schema_version": "apk-t10-claim-disposition-overlay.v1"
+}

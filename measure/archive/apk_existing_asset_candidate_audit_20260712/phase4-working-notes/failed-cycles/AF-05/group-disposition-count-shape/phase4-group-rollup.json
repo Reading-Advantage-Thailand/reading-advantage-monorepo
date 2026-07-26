@@ -1,0 +1,571 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-group-rollup.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-05",
+  "role": "requirements-mapper",
+  "status": "path_specific_rollup_pending_independent_truth_test_review_and_root_acceptance",
+  "input_path_usage_joins": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/phase4-path-usage-joins.json",
+    "sha256": "21d2df2115b5eeadcbb67739a3b986d2c3d99944e6792c0f75a3ba1d0b736b3c"
+  },
+  "counts": {
+    "candidate_paths": 39,
+    "identical_hash_groups": 18,
+    "caller_locators": 28,
+    "accepted_path_usage_links": 5,
+    "dispositions": {
+      "replace": 5,
+      "reject": 1,
+      "unknown": 33
+    },
+    "groups_with_mixed_path_specific_dispositions": 3
+  },
+  "groups": [
+    {
+      "identical_hash_group": "sha256:5d70cc9930188a6355eaad342c9fec5d41d998eb0c4383264a435312c65725c2",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/metadata.json"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/measure/archive/gryphon_patrol_deps_fix_20260417/metadata.json",
+          "value": "unknown",
+          "policy_priority": 3
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": 1
+      }
+    },
+    {
+      "identical_hash_group": "sha256:5bd6030ef6798d18c8df1a2646dd20b839fde5132ff290d63c8489031dd5c3aa",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/metadata.json"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/measure/archive/gryphon_patrol_rng_injectable_20260415/metadata.json",
+          "value": "unknown",
+          "policy_priority": 3
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": 1
+      }
+    },
+    {
+      "identical_hash_group": "sha256:601d3f31c835cea7349ae6cf279d9529fad5c562b39dcbdd92b03fe125a08527",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/measure/archive/shadow-gate-dungeon-20260320/asset-spec.md"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/measure/archive/shadow-gate-dungeon-20260320/asset-spec.md",
+          "value": "unknown",
+          "policy_priority": 3
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": 1
+      }
+    },
+    {
+      "identical_hash_group": "sha256:57cfe25d29a52dbbc35b0b236eb0a54cca9c5a108b518b22db076d1775261d0e",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/measure/tracks/astral-mage-compliance-audit_20260426/metadata.json"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/measure/tracks/astral-mage-compliance-audit_20260426/metadata.json",
+          "value": "unknown",
+          "policy_priority": 3
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": 1
+      }
+    },
+    {
+      "identical_hash_group": "sha256:69ceaf480ac5eb5a9552e36b4e560a18569b3384af3290bda48ea3fd0171a8de",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/measure/tracks/labyrinth-goblin-king-compliance-audit_20260426/metadata.json"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/measure/tracks/labyrinth-goblin-king-compliance-audit_20260426/metadata.json",
+          "value": "unknown",
+          "policy_priority": 3
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": 1
+      }
+    },
+    {
+      "identical_hash_group": "sha256:5d8fce2b7cc3243e64bcab10b5142016b71be08b74570e14abf77064cd585be9",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/measure/tracks/rune-forge-chamber-compliance-audit_20260426/metadata.json"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/measure/tracks/rune-forge-chamber-compliance-audit_20260426/metadata.json",
+          "value": "unknown",
+          "policy_priority": 3
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": 1
+      }
+    },
+    {
+      "identical_hash_group": "sha256:6085561e7a7034bfea1160c675717050c0f35c49c4069e2600a8f42eab26fdac",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/castle-defense/tower-built.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/castle-defense/tower-built.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sentence/castle-defense/tower-built.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/castle-defense/tower-built.png",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/castle-defense/tower-built.png",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sentence/castle-defense/tower-built.png",
+          "value": "unknown",
+          "policy_priority": 3
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 4,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": 3
+      }
+    },
+    {
+      "identical_hash_group": "sha256:6db52058942ff1c334806e577eb2fb7fed288f7b4ea810eb066914933c3c51dc",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/castle-defense/zombie_3x3_pose_sheet.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/enchanted-library/zombie_3x3_pose_sheet.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/castle-defense/zombie_3x3_pose_sheet.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/enchanted-library/zombie_3x3_pose_sheet.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/wizard-vs-zombie/zombie_3x3_pose_sheet.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/wizard-vs-zombie/zombie_3x3_pose_sheet.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sentence/castle-defense/zombie_3x3_pose_sheet.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/enchanted-library/zombie_3x3_pose_sheet.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/wizard-vs-zombie/zombie_3x3_pose_sheet.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/castle-defense/zombie_3x3_pose_sheet.png",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/enchanted-library/zombie_3x3_pose_sheet.png",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/castle-defense/zombie_3x3_pose_sheet.png",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/enchanted-library/zombie_3x3_pose_sheet.png",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/wizard-vs-zombie/zombie_3x3_pose_sheet.png",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/wizard-vs-zombie/zombie_3x3_pose_sheet.png",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sentence/castle-defense/zombie_3x3_pose_sheet.png",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/enchanted-library/zombie_3x3_pose_sheet.png",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/wizard-vs-zombie/zombie_3x3_pose_sheet.png",
+          "value": "unknown",
+          "policy_priority": 3
+        }
+      ],
+      "counts": {
+        "paths": 9,
+        "caller_locators": 8,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": 9
+      }
+    },
+    {
+      "identical_hash_group": "sha256:6124a087e9270ff30afe3df8a5b739adcc326fd05aeec93613e00d94a4ad8896",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/cover/cover-paladins-twin-soul.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/cover/cover-paladins-twin-soul.png",
+          "value": "unknown",
+          "policy_priority": 3
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 2,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": 1
+      }
+    },
+    {
+      "identical_hash_group": "sha256:576ec5070a1fd3c1238c31ca9cbe26a0acee1ec8e4a6383852196dc09604e0f6",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/magic-defense/background.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/castle-defense/background.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/magic-defense/background.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/magic-defense/background.png",
+          "value": "replace",
+          "policy_priority": 2
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/castle-defense/background.png",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/magic-defense/background.png",
+          "value": "unknown",
+          "policy_priority": 3
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 4,
+        "accepted_path_usage_links": 1,
+        "disposition_paths": 3
+      }
+    },
+    {
+      "identical_hash_group": "sha256:6a857867de0d60bd334021f1d95f649df342c02470ba104d9121759e08847f0b",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/potion-rush/character-sheet-2-adjusted.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/character-sheet-2-adjusted.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/character-sheet-2-adjusted.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/potion-rush/character-sheet-2-adjusted.png",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/character-sheet-2-adjusted.png",
+          "value": "replace",
+          "policy_priority": 2
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/character-sheet-2-adjusted.png",
+          "value": "replace",
+          "policy_priority": 2
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 4,
+        "accepted_path_usage_links": 2,
+        "disposition_paths": 3
+      }
+    },
+    {
+      "identical_hash_group": "sha256:61440da17e12a64b6455cd53fb3a2795a3947851514f91ed9d7ee423457751a6",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/potion-rush/character-sheet-2.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/character-sheet-2.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/character-sheet-2.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/potion-rush/character-sheet-2.png",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/character-sheet-2.png",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/character-sheet-2.png",
+          "value": "unknown",
+          "policy_priority": 3
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": 3
+      }
+    },
+    {
+      "identical_hash_group": "sha256:62a9de029ed1ddf7d3b68f69bd39d0242de82672bd9e3026eaf11d536d0c2cd7",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/potion-rush/item-sheet.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/item-sheet.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/item-sheet.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/potion-rush/item-sheet.png",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/item-sheet.png",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/item-sheet.png",
+          "value": "unknown",
+          "policy_priority": 3
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": 3
+      }
+    },
+    {
+      "identical_hash_group": "sha256:62a4d3e0d4e7e388f9b7091d2fd86010ca88e0e5aa79f1a5df1aa637797a918b",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/potion-rush/potion-rush-gameplay.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/potion-rush/potion-rush-gameplay.png",
+          "value": "reject",
+          "policy_priority": 1
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": 1
+      }
+    },
+    {
+      "identical_hash_group": "sha256:6408e81e2b705d8ab4646b8bac2111fbeba6fcfc62151bfb2acc63d15aedd87d",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/potion-rush/potion.png"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/potion.png"
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/potion.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/potion-rush/potion.png",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/potion.png",
+          "value": "replace",
+          "policy_priority": 2
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/potion.png",
+          "value": "replace",
+          "policy_priority": 2
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 4,
+        "accepted_path_usage_links": 2,
+        "disposition_paths": 3
+      }
+    },
+    {
+      "identical_hash_group": "sha256:5916220191be753a0e0170340fbe1123ee5a39ca8748512a2909978e3d9e4386",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/rune-match.png"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/rune-match.png",
+          "value": "unknown",
+          "policy_priority": 3
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 1,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": 1
+      }
+    },
+    {
+      "identical_hash_group": "sha256:6a9374ce0831a80d2f6b6934cb5d68803778243be67a20c18bd60c00e7ad4036",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/vocab/dragon-rider.json"
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/vocab/enchanted-library.json"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/vocab/dragon-rider.json",
+          "value": "unknown",
+          "policy_priority": 3
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/vocab/enchanted-library.json",
+          "value": "unknown",
+          "policy_priority": 3
+        }
+      ],
+      "counts": {
+        "paths": 2,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": 2
+      }
+    },
+    {
+      "identical_hash_group": "sha256:644768c4aaeb4767bce293344eeb0c125fb804a94d801440424072202d85e3a1",
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/window.svg"
+        }
+      ],
+      "path_specific_dispositions": [
+        {
+          "canonical_path": "apps/advantage-games/public/window.svg",
+          "value": "unknown",
+          "policy_priority": 3
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 1,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": 1
+      }
+    }
+  ]
+}

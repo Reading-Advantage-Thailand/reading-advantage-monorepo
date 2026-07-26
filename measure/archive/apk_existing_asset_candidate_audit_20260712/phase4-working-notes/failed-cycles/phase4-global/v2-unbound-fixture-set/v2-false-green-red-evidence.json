@@ -1,0 +1,10 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-global-v2-red-evidence.v1",
+  "archived_v2_verifier_sha256": "f3e999c1b58668f0b5dd10b2f32db06a0d3b06142e19a4def83e3c150a83a5a0",
+  "fixture_set_sha256": "dd4595f8976843ca34a833311d6508a7a4f33203f10d940cd9f827049ab45245",
+  "result": "both fixture-set mutations falsely produced a passing archived v2 report before any producer verification failure",
+  "counterexamples": [
+    {"operation":"fixture_deletion","mutation":"delete duplicate-caller-locator-id.json from a temporary cloned fixture set","fixture_count":11,"production_passed":true,"all_counterexamples_rejected":true,"final_status":"truth-test-pass-pending-independent-global-review-and-root-acceptance"},
+    {"operation":"fixture_repurpose","mutation":"replace duplicate-caller-locator-id.json with a second bad_disposition fixture in a temporary cloned fixture set","fixture_count":12,"production_passed":true,"all_counterexamples_rejected":true,"final_status":"truth-test-pass-pending-independent-global-review-and-root-acceptance"}
+  ]
+}

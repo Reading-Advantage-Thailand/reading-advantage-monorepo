@@ -1,0 +1,80 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-global-adversarial-review.v4",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "Phase 4 global reconciliation",
+  "native_task_name": "phase4_global_review_v4",
+  "review_role": "independent-adversarial-global-reviewer-v4",
+  "role_boundary": "Independent findings-first global review only; no producer, verifier, manifest, fixture, report, batch, plan, specification, product, root-acceptance, or prior-review edits.",
+  "reviewed_scope": {
+    "batches": ["AF-01", "AF-02", "AF-03", "AF-04", "AF-05", "AF-06", "AF-07", "AF-08", "AF-09", "AF-10", "AF-11", "AF-12"],
+    "prior_findings": ["P4G-H-01", "P4G-H-02", "P4G-H-03", "P4G-M-01"],
+    "failed_cycle_archives": ["v1-two-high-false-greens", "v2-unbound-fixture-set", "v3-unstructured-fixture-failures"]
+  },
+  "exact_verified_inputs": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_global_contract_test.py": "9fadb918fec90f1537f9c0783ef158924d792ea263716498213f66ba70cb9897",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-fixture-manifest-v1.json": "4a232e2de84d7d9a3a3a6ea488f1e60a07a76281ae5e285eb8d146f8c818bd6f",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-test-report.json": "63e84630ff59cc611d836489263b6a5eb4854f0befec6fc2b653761264441185",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase4-global/truth-test-author.json": "b72673b8724c6568d59ec1fb9d2bf73b18b2bfd6f3159ff2157c44784359f43f"
+  },
+  "prior_finding_remediation": {
+    "P4G-H-01": "remediated: live caller ownership is 533 unique path-locator pairs and exactly equals the frozen join-scaffold set; the duplicate locator mutation rejects with caller-locator-ownership.",
+    "P4G-H-02": "remediated: stale or removed batch truth-receipt bindings reject with truth-receipt-hash-binding; live bindings were recomputed for all twelve batches.",
+    "P4G-H-03": "remediated: the immutable 12-entry fixture manifest, exact fixture hashes, operation uniqueness, fixture-set digest, and all seven fixture-set tamper cases are checked before behavior dispatch.",
+    "P4G-M-01": "remediated: physical missing-manifest, malformed-manifest, missing-required-fixture, and renamed-required-fixture copies each exit 1 with parseable truth-test-failed JSON, fixture-manifest-binding, no stderr traceback, and no producer verification."
+  },
+  "verifier_replay": {
+    "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_global_contract_test.py --root .",
+    "run_count": 2,
+    "run_1_exit_code": 0,
+    "run_2_exit_code": 0,
+    "run_1_output_sha256": "63e84630ff59cc611d836489263b6a5eb4854f0befec6fc2b653761264441185",
+    "run_2_output_sha256": "63e84630ff59cc611d836489263b6a5eb4854f0befec6fc2b653761264441185",
+    "published_report_sha256": "63e84630ff59cc611d836489263b6a5eb4854f0befec6fc2b653761264441185",
+    "byte_identical": true,
+    "published_result": "green"
+  },
+  "structured_failure_variants": [
+    {"case": "missing-manifest", "exit_code": 1, "final_status": "truth-test-failed", "error_code": "fixture-manifest-binding", "structured_json_returned": true, "traceback_present": false, "producer_validation_reached": false},
+    {"case": "malformed-manifest", "exit_code": 1, "final_status": "truth-test-failed", "error_code": "fixture-manifest-binding", "structured_json_returned": true, "traceback_present": false, "producer_validation_reached": false},
+    {"case": "missing-required-fixture", "exit_code": 1, "final_status": "truth-test-failed", "error_code": "fixture-manifest-binding", "structured_json_returned": true, "traceback_present": false, "producer_validation_reached": false},
+    {"case": "renamed-required-fixture", "exit_code": 1, "final_status": "truth-test-failed", "error_code": "fixture-manifest-binding", "structured_json_returned": true, "traceback_present": false, "producer_validation_reached": false}
+  ],
+  "fixture_manifest_verification": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-fixture-manifest-v1.json",
+    "sha256": "4a232e2de84d7d9a3a3a6ea488f1e60a07a76281ae5e285eb8d146f8c818bd6f",
+    "fixture_set_sha256": "dd4595f8976843ca34a833311d6508a7a4f33203f10d940cd9f827049ab45245",
+    "behavior_fixture_count": 12,
+    "meta_counterexample_count": 11,
+    "all_seven_fixture_set_tamper_cases_rejected": true,
+    "all_four_fixture_gate_variants_rejected_structurally": true,
+    "report_binding_matches_live": true,
+    "truth_receipt_binding_matches_live": true
+  },
+  "reconciliation_summary": {
+    "global_counts_match": true,
+    "counts": {"candidate_paths": 428, "identical_hash_groups": 227, "caller_locators": 533, "accepted_path_usage_links": 85, "scene_links": 77, "non_scene_links": 8, "unique_usage_ids": 45, "unique_scene_usage_ids": 40, "unique_non_scene_usage_ids": 5, "responsive_assessment_cells": 308, "priority1_paths": 14, "dispositions": {"replace": 85, "reject": 14, "unknown": 329}},
+    "caller_pair_ownership": {"live": 533, "live_unique": 533, "frozen": 533, "exact_frozen_live_set_equal": true, "duplicate_caller_mutation_rejected": true},
+    "published_counterexamples": {"total_count": 23, "behavior_fixture_count": 12, "meta_counterexample_count": 11, "all_rejected": true},
+    "browser_composite_only_boundary_violations": 0,
+    "per_path_runtime_load_claimed": false,
+    "batch_findings": {"Critical": 0, "High": 0, "Medium": 0, "Low": 0}
+  },
+  "global_truth_receipt_live_bindings": {
+    "report_hash_matches_live": true,
+    "verifier_hash_matches_live": true,
+    "manifest_hash_matches_live": true,
+    "report_and_receipt_fixture_manifest_equal": true,
+    "findings_empty": true,
+    "unresolved_blocking_findings_empty": true
+  },
+  "findings": {"Critical": [], "High": [], "Medium": [], "Low": []},
+  "unresolved_blocking_findings": [],
+  "decision": {
+    "admit": true,
+    "block": false,
+    "blocking_severity_gate": "zero unresolved Critical, High, or Medium findings",
+    "next_authority": "root project and product-owner acceptance only",
+    "scope": "The global reconciliation review passes, but this is not root acceptance."
+  },
+  "final_status": "review-pass-pending-root-product-owner-acceptance"
+}

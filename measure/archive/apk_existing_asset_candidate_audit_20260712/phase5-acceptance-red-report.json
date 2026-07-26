@@ -1,0 +1,16 @@
+{
+  "all_counterexamples_rejected": false,
+  "counterexample_count": 0,
+  "counterexamples": [],
+  "final_status": "red-before-owner-publication",
+  "production": {
+    "errors": [
+      "owner-approval-evidence: missing measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-owner-approval-event-v1.json",
+      "accepted-manifest-schema: revoked or pending T9-only publication"
+    ],
+    "passed": false
+  },
+  "role": "phase5-acceptance-test-author",
+  "schema_version": "apk-asset-forensics.phase5-acceptance-test-report.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712"
+}

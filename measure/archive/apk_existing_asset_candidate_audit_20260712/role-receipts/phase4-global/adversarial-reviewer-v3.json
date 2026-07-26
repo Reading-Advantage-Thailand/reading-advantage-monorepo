@@ -1,0 +1,99 @@
+{
+  "decision": {
+    "admit": false,
+    "block": true,
+    "blocking_severity_gate": "one unresolved Medium finding violates the required zero-Critical-High-Medium acceptance threshold",
+    "next_authority": "Bounded structured-failure remediation in the global verifier followed by a fresh independent global review."
+  },
+  "exact_verified_inputs": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-fixture-manifest-v1.json": "4a232e2de84d7d9a3a3a6ea488f1e60a07a76281ae5e285eb8d146f8c818bd6f",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-test-report.json": "4323c7cc8cec3f519ab24e1b9448cb85ffaa4c68064b2a3a5c1438c9fb467519",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_global_contract_test.py": "39d773c8799f8a59d1664f76de4a0cf694cb318fea43bcf50fc1f2e81f366f66",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase4-global/truth-test-author.json": "260a9f28531aa73df19d234c73de868c1300b27975cdac9cb1e240e0b22fb418"
+  },
+  "final_status": "review-fail-blocking-remediation",
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Low": [],
+    "Medium": [
+      {
+        "id": "P4G-M-01",
+        "title": "Four manifest and fixture identity failures traceback instead of returning structured fail-closed JSON"
+      }
+    ]
+  },
+  "fixture_manifest": {
+    "behavior_fixture_count": 12,
+    "fixture_set_sha256": "dd4595f8976843ca34a833311d6508a7a4f33203f10d940cd9f827049ab45245",
+    "manifest_checked_before_producer_validation": true,
+    "meta_counterexample_count": 7,
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-fixture-manifest-v1.json",
+    "sha256": "4a232e2de84d7d9a3a3a6ea488f1e60a07a76281ae5e285eb8d146f8c818bd6f"
+  },
+  "mutation_summary": {
+    "duplicate_caller_ownership_rejected": true,
+    "fixture_byte_drift_rejected": true,
+    "fixture_expected_code_drift_rejected": true,
+    "fixture_extra_rejected": true,
+    "fixture_missing_rejected_by_traceback": true,
+    "fixture_operation_duplicate_rejected": true,
+    "fixture_operation_repurposed_rejected": true,
+    "fixture_renamed_rejected_by_traceback": true,
+    "producer_validation_reached_for_invalid_manifest_or_fixture_set": false,
+    "truth_receipt_hash_removal_rejected": true
+  },
+  "native_task_name": "phase4_global_review_v3",
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-review-v3.json": "d7d4a6272b84679237b202d18dc909982e0aa77955220ffc2b804e37c12ee11b"
+  },
+  "phase": "Phase 4 global reconciliation",
+  "reconciliation_summary": {
+    "batch_evidence_file_count": 93,
+    "batch_evidence_set_sha256": "d9650d754fac613961f302cad3d5c348085fcedcb9337e7c49a280aaa006e8d7",
+    "batch_findings": {
+      "Critical": 0,
+      "High": 0,
+      "Low": 0,
+      "Medium": 0
+    },
+    "browser_artifact_hash_mismatches": 0,
+    "browser_composite_only_boundary_violations": 0,
+    "global_counts_match": true
+  },
+  "role": "independent-adversarial-global-reviewer-v3",
+  "role_boundary": "Independent findings-first global review only; no producer, verifier, manifest, fixture, report, batch, plan, specification, product, root-acceptance, or prior-review edits.",
+  "schema_version": "apk-asset-forensics.phase4-global-adversarial-reviewer-receipt.v3",
+  "structured_failure_variants": [
+    {
+      "case": "missing-manifest",
+      "exception": "FileNotFoundError"
+    },
+    {
+      "case": "malformed-json-manifest",
+      "exception": "JSONDecodeError"
+    },
+    {
+      "case": "missing-required-fixture",
+      "exception": "KeyError"
+    },
+    {
+      "case": "renamed-required-fixture",
+      "exception": "KeyError"
+    }
+  ],
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "unresolved_blocking_findings": [
+    "P4G-M-01"
+  ],
+  "verifier_replay": {
+    "byte_identical": true,
+    "published_report_sha256": "4323c7cc8cec3f519ab24e1b9448cb85ffaa4c68064b2a3a5c1438c9fb467519",
+    "run_1_exit_code": 0,
+    "run_1_output_sha256": "4323c7cc8cec3f519ab24e1b9448cb85ffaa4c68064b2a3a5c1438c9fb467519",
+    "run_2_exit_code": 0,
+    "run_2_output_sha256": "4323c7cc8cec3f519ab24e1b9448cb85ffaa4c68064b2a3a5c1438c9fb467519",
+    "run_count": 2
+  }
+}

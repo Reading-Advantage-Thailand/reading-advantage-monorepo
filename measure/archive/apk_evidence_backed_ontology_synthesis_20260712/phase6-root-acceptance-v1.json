@@ -1,0 +1,30 @@
+{
+  "schema_version": "apk-t9-phase6-root-acceptance.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "accepted_at": "2026-07-26T00:01:00Z",
+  "accepted_by": "root-orchestrator-acting-under-explicit-user-delegation",
+  "decision": "ACCEPT_T9_CANDIDATE_FOR_T10_INDEPENDENT_REVIEW_ONLY",
+  "consumable": false,
+  "candidate_manifest": {
+    "path": "phase6-candidate-synthesis-manifest-v1.json",
+    "sha256": "550b15d5f14e294deafec2df86ff8e09f43ba8d7fd204f4c167ebf811f0563ff"
+  },
+  "owner_delegated_decisions": {
+    "path": "phase3-6-owner-delegated-decisions-v1.json",
+    "sha256": "acbac34c001c80ffef1128a8de0ae52bf92b2f8d2fb13673811c2160de679c2f"
+  },
+  "blocking_findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": []
+  },
+  "t10_may_start": true,
+  "t10_scope": "Independent revalidation and acceptance only; T10 alone may publish consumable successor hashes after its own review and owner gate.",
+  "scope_disclosures": [
+    "T9 publishes a hash-bound candidate package but no consumable successor manifest or successor-hash set.",
+    "All 85 canonical-adoption mappings remain blocked and contain no standard-pack candidate key.",
+    "All unknown Must-have responsive, semantic-role/state, and catalog-selection decisions remain unresolved.",
+    "Legacy paths remain confined to accepted predecessor evidence and do not appear in canonical mappings.",
+    "Kimi/fork_turns=none review isolation was unavailable and is explicitly unclaimed; local exhaustive review evidence is preserved for T10 scrutiny."
+  ]
+}

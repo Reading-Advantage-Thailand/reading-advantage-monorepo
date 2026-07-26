@@ -1,0 +1,17 @@
+{
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Low": [],
+    "Medium": []
+  },
+  "owner_role": "mechanics-capability-domain-reviewer",
+  "provider_fork_turns_attested": false,
+  "review_artifact": {
+    "path": "phase6-capability-consumer-review-v1.json",
+    "sha256": "c6eeeb261933b0fc94d82fba2f708a68211535551f9ad9f7b6052a13ae1ce25c"
+  },
+  "sampling": "none-exhaustive",
+  "schema_version": "apk-t9-local-independent-review-receipt.v1",
+  "status": "review-pass-no-unresolved-critical-high-medium"
+}

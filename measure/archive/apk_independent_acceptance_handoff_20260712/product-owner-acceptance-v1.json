@@ -1,0 +1,28 @@
+{
+  "accepted_at": "2026-07-26T01:20:00Z",
+  "approved_scope": "T11 shared developer kit may consume the seven exact-evidence capability contracts and canonical standard-pack release; no runtime contract or asset mapping is approved.",
+  "authority": "explicit-user-delegated-final-owner-gates",
+  "candidate_gate": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-candidate-gate-report-v1.json",
+    "sha256": "f18ec42f8cd7433968100894bf950015693d89c905bfa4041e2eb930b53fb1ad"
+  },
+  "claim_overlay": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-claim-disposition-overlay-v1.json",
+    "sha256": "06e692daff932334a5edc2a06d7121651a6bb2426f05f1b00d8d0a5c1ecb6e41"
+  },
+  "decided_by": "t10-independent-reviewer-acting-under-user-delegation",
+  "decision": "ACCEPT_BOUNDED_T10_HANDOFF_FOR_T11",
+  "delegation_record": {
+    "event_limitation": "The API session exposes no collaboration event resolver; no event ID is fabricated.",
+    "scope": "User delegates final owner gates; acceptance recorded only after the independent report passed.",
+    "source": "current user task request",
+    "tool_resolved_event_id": null
+  },
+  "independent_review": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-independent-acceptance-review-v1.json",
+    "sha256": "efca1bc8391328fc274c34ac463c362dcffcd921c96204905091b9025554688d"
+  },
+  "revocation_state": "active",
+  "schema_version": "apk-t10-owner-delegated-acceptance.v1",
+  "track_id": "apk_independent_acceptance_handoff_20260712"
+}

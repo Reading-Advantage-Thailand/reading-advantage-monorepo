@@ -1,0 +1,112 @@
+{
+  "all_counterexamples_rejected": true,
+  "counterexample_count": 7,
+  "counterexamples": [
+    {
+      "actual_error_codes": [
+        "acceptance-counts",
+        "acceptance-exact-schema"
+      ],
+      "expected_error_codes": [
+        "acceptance-counts"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-acceptance/count-drift.json",
+      "fixture_sha256": "0c161d230b5c274fe231a8db69a374b50ac8fb198d869edd734587f08020b4ff",
+      "operation": "count_drift",
+      "rejected": true
+    },
+    {
+      "actual_error_codes": [
+        "acceptance-browser-boundary",
+        "acceptance-exact-schema"
+      ],
+      "expected_error_codes": [
+        "acceptance-browser-boundary"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-acceptance/false-browser-per-path-claim.json",
+      "fixture_sha256": "98a8be65f2349ace70c82a291ef6bc3bb222c0c335f8e463d32eb49cc3b36879",
+      "operation": "false_browser_per_path_claim",
+      "rejected": true
+    },
+    {
+      "actual_error_codes": [
+        "acceptance-missing"
+      ],
+      "expected_error_codes": [
+        "acceptance-missing"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-acceptance/missing-acceptance.json",
+      "fixture_sha256": "ceda245203be4a9fa4178decc5b1de3a599f01af5f9b874267be59f8f19e77ba",
+      "operation": "missing_acceptance",
+      "rejected": true
+    },
+    {
+      "actual_error_codes": [
+        "acceptance-exact-schema",
+        "acceptance-visual-disclosure"
+      ],
+      "expected_error_codes": [
+        "acceptance-visual-disclosure"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-acceptance/missing-visual-defect-disclosure.json",
+      "fixture_sha256": "b25161b73aed8bdf74bea96b05b51a0c45644677376440048b33cc433b6a56d1",
+      "operation": "missing_visual_defect_disclosure",
+      "rejected": true
+    },
+    {
+      "actual_error_codes": [
+        "acceptance-binding",
+        "acceptance-exact-schema"
+      ],
+      "expected_error_codes": [
+        "acceptance-binding"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-acceptance/stale-hash.json",
+      "fixture_sha256": "82c5b3a44b158da8c5b325320ea0c25316ff1a4c2ccae64825d1e99e7301fac8",
+      "operation": "stale_hash",
+      "rejected": true
+    },
+    {
+      "actual_error_codes": [
+        "acceptance-exact-schema",
+        "acceptance-findings"
+      ],
+      "expected_error_codes": [
+        "acceptance-findings"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-acceptance/unresolved-finding.json",
+      "fixture_sha256": "be750a09abe6dd9f2b5d3ee24a0d46f0e039788033fe3a9dd4c23cbc6ff58ad0",
+      "operation": "unresolved_finding",
+      "rejected": true
+    },
+    {
+      "actual_error_codes": [
+        "acceptance-decision",
+        "acceptance-exact-schema",
+        "acceptance-next-gate"
+      ],
+      "expected_error_codes": [
+        "acceptance-decision",
+        "acceptance-next-gate"
+      ],
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-acceptance/wrong-decision-next-gate.json",
+      "fixture_sha256": "76aa09cd4872d26b8e3c612155e234d20951280dbd5b8bd7c8524187ca75df83",
+      "operation": "wrong_decision_next_gate",
+      "rejected": true
+    }
+  ],
+  "final_status": "acceptance-contract-red-pending-root-decision",
+  "production": {
+    "errors": [
+      "acceptance-missing: measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-root-acceptance.json"
+    ],
+    "missing_acceptance_rejected": true,
+    "passed": false
+  },
+  "required_acceptance": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-root-acceptance.json",
+  "role": "phase4-root-acceptance-contract-test-author",
+  "schema_version": "apk-asset-forensics.phase4-acceptance-test-report.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "verifier": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_acceptance_test.py",
+  "verifier_sha256": "42a51d6de0dfbe92dc5cd56b40d4c983ea80f46ddac32c0f3d9d89c16c1d1ae1"
+}

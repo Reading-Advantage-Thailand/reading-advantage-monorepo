@@ -1,0 +1,146 @@
+{
+  "accepted_by": "root-orchestrator-product-owner",
+  "accepted_reconciliation": {
+    "accepted_path_usage_links": 85,
+    "caller_locators": 533,
+    "candidate_paths": 428,
+    "dispositions": {
+      "reject": 14,
+      "replace": 85,
+      "unknown": 329
+    },
+    "identical_hash_groups": 227,
+    "non_scene_links": 8,
+    "priority1_paths": 14,
+    "responsive_assessment_cells": 308,
+    "scene_links": 77,
+    "unique_non_scene_usage_ids": 5,
+    "unique_scene_usage_ids": 40,
+    "unique_usage_ids": 45
+  },
+  "blocking_findings": {
+    "Critical": [],
+    "High": [],
+    "Low": [],
+    "Medium": []
+  },
+  "browser_and_direct_visual_review": {
+    "browser_is_candidate_suitability_or_adoption_proof": false,
+    "browser_is_per_path_runtime_load_proof": false,
+    "evidence_scope": "bounded-composite-scene-only",
+    "root_direct_visual_decisions": [
+      {
+        "candidate_join_scope": "exact joined game",
+        "compact_current_legacy_function": "incompatible-required-direction-controls-begin-below-initial-viewport",
+        "evidence_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/root-dragon-flight.json",
+        "game_id": "dragon-flight",
+        "wide_current_legacy_function": "supported-by-bounded-scene-evidence"
+      },
+      {
+        "candidate_join_scope": "exact joined game",
+        "compact_current_legacy_function": "blocked-repeated-vocabulary-fetch-loop",
+        "evidence_json_pointer": "/routes/1",
+        "evidence_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/index.json",
+        "game_id": "rpg-battle",
+        "wide_current_legacy_function": "blocked-repeated-vocabulary-fetch-loop"
+      },
+      {
+        "candidate_join_scope": "exact joined game",
+        "compact_current_legacy_function": "incompatible-start-surface-text-and-content-clipped-at-compact-edge",
+        "evidence_json_pointer": "/routes/2",
+        "evidence_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/index.json",
+        "game_id": "magic-defense",
+        "wide_current_legacy_function": "supported-by-bounded-start-surface-evidence"
+      },
+      {
+        "candidate_join_scope": "exact joined game",
+        "compact_current_legacy_function": "supported-with-required-vertical-scroll",
+        "evidence_json_pointer": "/routes/3",
+        "evidence_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/index.json",
+        "game_id": "enchanted-library",
+        "wide_current_legacy_function": "blocked-capture-timeout"
+      },
+      {
+        "candidate_join_scope": "exact joined game",
+        "compact_current_legacy_function": "incompatible-gameplay-shows-unresolved-hud-key-and-overlay-pressure",
+        "evidence_json_pointer": "/routes/4",
+        "evidence_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/index.json",
+        "game_id": "potion-rush",
+        "wide_current_legacy_function": "supported-by-bounded-start-surface-evidence"
+      },
+      {
+        "candidate_join_scope": "accepted-cohort-closure-only-no-exact-candidate-path-join",
+        "compact_current_legacy_function": "incompatible-post-start-canvas-extends-below-viewport",
+        "evidence_json_pointer": "/routes/0",
+        "evidence_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/index.json",
+        "game_id": "castle-defense",
+        "wide_current_legacy_function": "supported-with-vertical-document-overflow"
+      }
+    ],
+    "usability_defect_disclosures": [
+      "Dragon Flight compact direction controls begin below the initial viewport.",
+      "RPG Battle remains blocked in a repeated vocabulary-fetch loop at both viewports.",
+      "Magic Defense compact start content is clipped at the edge.",
+      "Enchanted Library wide capture timed out and remains blocked.",
+      "Potion Rush compact gameplay shows an unresolved HUD key and overlay pressure.",
+      "Castle Defense compact post-start canvas extends below the viewport."
+    ]
+  },
+  "decision": "ACCEPT_PHASE4",
+  "failed_review_cycles": [
+    {
+      "accepted": false,
+      "authoritative": false,
+      "final_status": "review-fail-blocking-remediation",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-review.json",
+      "sha256": "420a3c017d52cd4ebf71bbb5e073e42698b619f46249ed69996a21347fdf93ed"
+    },
+    {
+      "accepted": false,
+      "authoritative": false,
+      "final_status": "review-fail-blocking-remediation",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-review-v2.json",
+      "sha256": "6ae1c317545194ddbb7b0237530379f8299d1a0b287be76cdc5f9c3fb4771ed5"
+    },
+    {
+      "accepted": false,
+      "authoritative": false,
+      "final_status": "review-fail-blocking-remediation",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-review-v3.json",
+      "sha256": "d7d4a6272b84679237b202d18dc909982e0aa77955220ffc2b804e37c12ee11b"
+    }
+  ],
+  "input_bindings": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-review-v4.json": "f3fc70343d360ea806d204f6cae717c1b786449c23708e3f1c51517e54c91e83",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-test-report.json": "63e84630ff59cc611d836489263b6a5eb4854f0befec6fc2b653761264441185",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json": "450f5ab66215178aa730e057cb28a220bfb550dfd924959a7f7f1da2eea02f9e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_global_contract_test.py": "9fadb918fec90f1537f9c0783ef158924d792ea263716498213f66ba70cb9897",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase4-global/adversarial-reviewer-v4.json": "7aa3e42fc2def3d3d9c7b500fe0a64bbb01465eac45e4c6cac72dd8738a9e7ae",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase4-global/truth-test-author.json": "b72673b8724c6568d59ec1fb9d2bf73b18b2bfd6f3159ff2157c44784359f43f"
+  },
+  "next_gate": {
+    "name": "Independent acceptance",
+    "only_next_gate": true,
+    "phase": 5,
+    "status": "OPEN_PHASE5_ONLY"
+  },
+  "phase": 4,
+  "priority1_decision": {
+    "all_rejected_and_retired": true,
+    "priority1_paths": 14,
+    "required_disposition": "reject",
+    "required_replacement_action": "retire"
+  },
+  "rationale": "The exact v4 global verifier, report, truth receipt, independent review, reviewer receipt, frozen browser evidence, input freeze, and source registry are hash-bound; all required counts reconcile; all 14 priority-1 paths are rejected and retired; all Critical, High, Medium, and Low findings are empty; and the root direct-visual decisions preserve every disclosed usability defect.",
+  "schema_version": "apk-asset-forensics.phase4-root-acceptance.v1",
+  "scope_disclosures": [
+    "Phase 4 accepts the responsive legacy-function and replacement-or-retirement join only.",
+    "Legacy paths remain evidence only and never become canonical standard-pack candidate keys or direct production adoption paths.",
+    "The browser evidence is composite-scene evidence only and does not prove per-candidate-path runtime loading.",
+    "The v1, v2, and v3 failed global review cycles remain disclosed, rejected, and non-authoritative.",
+    "Phase 4 acceptance does not accept the final candidate manifest, semantic ontology, implementation, production adoption, or shipping."
+  ],
+  "track_id": "apk_existing_asset_candidate_audit_20260712"
+}

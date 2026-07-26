@@ -1,0 +1,18 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-global-fixture-manifest.v1",
+  "fixture_directory": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global",
+  "fixtures": [
+    {"path":"measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/bad-disposition.json","sha256":"4e9736ae7568e0a444ee5c3255550589339b94ecae2d78479f72e4e738855274","operation":"bad_disposition","expected_error_code":"forbidden-reuse-adapt-reference"},
+    {"path":"measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/browser-path-load.json","sha256":"511225ad5b08f4a32490c0b597d0c6c6765435cf3f528697167ce766560add34","operation":"browser_path_load","expected_error_code":"browser-not-composite-only"},
+    {"path":"measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/canonical-key.json","sha256":"73d0357ceae823eec88992beca0683f61689ee58721ab8cc1defe5b6eca021be","operation":"canonical_key","expected_error_code":"canonical-key-forbidden"},
+    {"path":"measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/duplicate-caller-locator-id.json","sha256":"165448db08a839ce209c0651d591920870f58093df62f9b81f06a50b6fc822df","operation":"duplicate_caller_locator_id","expected_error_code":"caller-locator-ownership"},
+    {"path":"measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/duplicate-path.json","sha256":"7cb74e9a0e82dfee210e43dc9ec4679f223458b14ede4fbb1425bc5a6d9efbfa","operation":"duplicate_path","expected_error_code":"duplicate-candidate-path"},
+    {"path":"measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/frozen-hash-drift.json","sha256":"1bf25b0684516503803eac1e936a004a8e5d156bee09580d6fdc628d567947d4","operation":"frozen_hash_drift","expected_error_code":"batch-frozen-binding"},
+    {"path":"measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/mapper-hash-drift.json","sha256":"93b30bdc7a9cc862b3d2173efd4bd1a9561ae0901bfd5079699b383a0c7c1af2","operation":"mapper_hash_drift","expected_error_code":"mapper-joins-hash-binding"},
+    {"path":"measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/missing-batch.json","sha256":"54957a05658b91b4fd798b7af696013b4e09088f9a8a0ee6af8ce6a82afa82b7","operation":"missing_batch","expected_error_code":"batch-coverage"},
+    {"path":"measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/priority1-not-rejected.json","sha256":"c650525e48856076171c5d9fb5a26bf2ff1d9d94fe9a584f900cc5bd9669343a","operation":"priority1_not_rejected","expected_error_code":"priority1-not-rejected-retired"},
+    {"path":"measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/receipt-finding.json","sha256":"29dad2890d505b2ac50c5f193431af45582da799b8b7be00f6ed3b50947e5060","operation":"receipt_finding","expected_error_code":"review-receipt-findings-present"},
+    {"path":"measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/review-finding.json","sha256":"77f2301a888244b75fde440e58286667981a29a5c03838fe987b9ff64aef8f0b","operation":"review_finding","expected_error_code":"review-findings-present"},
+    {"path":"measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-global/stale-truth-receipt-bindings.json","sha256":"01091cebce2f2e276d539c919260e4c2efc7c7eb833cc9d22306e480f149d923","operation":"stale_truth_receipt_bindings","expected_error_code":"truth-receipt-hash-binding"}
+  ]
+}

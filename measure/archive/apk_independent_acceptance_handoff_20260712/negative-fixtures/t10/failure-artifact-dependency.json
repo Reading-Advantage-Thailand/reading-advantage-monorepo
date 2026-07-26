@@ -1,0 +1,11 @@
+{
+  "fixture_id": "failure-artifact-dependency",
+  "mutations": [
+    {
+      "artifact": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase6-candidate-synthesis-manifest-v1.json",
+      "pointer": "/artifact_bindings/measure~1archive~1apk_cross_game_asset_ontology_20260712~1candidate.json",
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "expected_codes": ["FAILED_MONOLITH_DEPENDENCY"]
+}

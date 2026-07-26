@@ -1,0 +1,90 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-browser-evidence-freeze.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "status": "frozen-bounded-browser-evidence-not-acceptance",
+  "tool": "Kimi WebBridge",
+  "session": "apk-t8-phase4-qc",
+  "group_title": "APK T8 Phase 4 QC",
+  "server": {
+    "url": "http://127.0.0.1:4201",
+    "framework": "Next.js 16.2.9",
+    "compiler": "webpack",
+    "compiler_disclosure": "The Turbopack dev manifest omitted the complete [locale] route tree. The webpack compiler admitted the same source routes without an application-source change."
+  },
+  "evidence_bindings": [
+    {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/index.json",
+      "sha256": "e3e8ae52adfce1ee5eedf84d4f63c43fb02195971145298430645020c894c1cc",
+      "artifact_count": 12,
+      "route_count": 5
+    },
+    {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/root-dragon-flight.json",
+      "sha256": "6f7789fd3a658e064f7a25021359d2470f89098c1adb643f997040f43fa1ad1e",
+      "artifact_count": 4,
+      "route_count": 1
+    }
+  ],
+  "root_direct_visual_decisions": [
+    {
+      "game_id": "dragon-flight",
+      "candidate_join_scope": "exact joined game",
+      "compact_current_legacy_function": "incompatible-required-direction-controls-begin-below-initial-viewport",
+      "wide_current_legacy_function": "supported-by-bounded-scene-evidence",
+      "evidence_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/root-dragon-flight.json"
+    },
+    {
+      "game_id": "rpg-battle",
+      "candidate_join_scope": "exact joined game",
+      "compact_current_legacy_function": "blocked-repeated-vocabulary-fetch-loop",
+      "wide_current_legacy_function": "blocked-repeated-vocabulary-fetch-loop",
+      "evidence_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/index.json",
+      "evidence_json_pointer": "/routes/1"
+    },
+    {
+      "game_id": "magic-defense",
+      "candidate_join_scope": "exact joined game",
+      "compact_current_legacy_function": "incompatible-start-surface-text-and-content-clipped-at-compact-edge",
+      "wide_current_legacy_function": "supported-by-bounded-start-surface-evidence",
+      "evidence_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/index.json",
+      "evidence_json_pointer": "/routes/2"
+    },
+    {
+      "game_id": "enchanted-library",
+      "candidate_join_scope": "exact joined game",
+      "compact_current_legacy_function": "supported-with-required-vertical-scroll",
+      "wide_current_legacy_function": "blocked-capture-timeout",
+      "evidence_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/index.json",
+      "evidence_json_pointer": "/routes/3"
+    },
+    {
+      "game_id": "potion-rush",
+      "candidate_join_scope": "exact joined game",
+      "compact_current_legacy_function": "incompatible-gameplay-shows-unresolved-hud-key-and-overlay-pressure",
+      "wide_current_legacy_function": "supported-by-bounded-start-surface-evidence",
+      "evidence_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/index.json",
+      "evidence_json_pointer": "/routes/4"
+    },
+    {
+      "game_id": "castle-defense",
+      "candidate_join_scope": "accepted-cohort-closure-only-no-exact-candidate-path-join",
+      "compact_current_legacy_function": "incompatible-post-start-canvas-extends-below-viewport",
+      "wide_current_legacy_function": "supported-with-vertical-document-overflow",
+      "evidence_path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/index.json",
+      "evidence_json_pointer": "/routes/0"
+    }
+  ],
+  "admission_rules": [
+    "A composite scene capture may support or contradict current legacy scene behavior but does not prove that every source-bound candidate path loaded in that capture.",
+    "DOM asset_urls are exact empty observations for the captured DOM states and are not network-wide absence claims.",
+    "No browser result establishes provenance, license, reuse, adaptation, theme compatibility, a canonical standard-pack candidate key, or direct legacy adoption.",
+    "Wrong-tab and unindexed screenshots are excluded from this freeze.",
+    "Missing wide or gameplay evidence remains blocked rather than inferred."
+  ],
+  "excluded_evidence_roots": [
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/invalid-wrong-tab",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/unindexed-browser-captures"
+  ],
+  "session_lifecycle": "The Kimi session remains open because the user did not request closure.",
+  "acceptance": false
+}

@@ -1,0 +1,234 @@
+{
+  "schema_version": "apk-asset-forensics.phase5-adversarial-review.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": 5,
+  "role": "fresh-independent-adversarial-reviewer",
+  "scope": {
+    "batch_ids": [
+      "AF-01",
+      "AF-02",
+      "AF-03",
+      "AF-04"
+    ],
+    "sampling": "none",
+    "record_count": 141,
+    "inspection_group_count": 74,
+    "caller_locator_count": 226,
+    "accepted_path_usage_link_count": 31,
+    "responsive_matrix_cell_count": 124
+  },
+  "review_status": "review-blocked-high-finding",
+  "decision": "BLOCK_PHASE5_ACCEPTANCE_PENDING_REMEDIATION_AND_FRESH_REREVIEW",
+  "findings": [
+    {
+      "id": "AF01-AF04-H-01",
+      "severity": "High",
+      "title": "Fifteen normalized-usage source locators point at archived predecessor ledgers through nonexistent active-track paths",
+      "affected_record_count": 15,
+      "impact": "The final report's nested mechanical source linkage is not fully resolvable as published. The cited claims are recoverable from exact hash-identical archive copies, so this is not a loss of underlying evidence, but Phase 5 acceptance must remain blocked until the report and Phase 4 inputs are rebound and the contract validates recursive source locators.",
+      "required_remediation": [
+        "Rebind each affected normalized_usage.source_artifact.path to the existing archive path or regenerate the Phase 4 joins and final report from current registry paths.",
+        "Add recursive evidence-pointer path, hash, and JSON-pointer resolution to the Phase 5 contract test so nested source failures cannot pass.",
+        "Commission a fresh independent post-repair review before root acceptance."
+      ],
+      "recursive_reference_scan": {
+        "repository_evidence_references_checked": 1609,
+        "broken_references_in_scope": 15,
+        "affected_records_in_scope": 15,
+        "other_broken_references_in_scope": 0
+      },
+      "missing_source_ledgers": [
+        {
+          "declared_missing_path": "measure/tracks/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger-v2.json",
+          "declared_sha256": "10d974bd3e620a4aaacde171a80e5f82945f58fdbd38db57b996805b62b71e45",
+          "hash_identical_archive_path": "measure/archive/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger-v2.json",
+          "verified_pointer": "/claims/38",
+          "resolved_claim_id": "MD-ASSET-001"
+        },
+        {
+          "declared_missing_path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/claim-evidence-ledger.v2.json",
+          "declared_sha256": "8adc5b881104bf0ce78d0eb3895b65cb0485a4e516e9918461acfad0f7adfb2e",
+          "hash_identical_archive_path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/claim-evidence-ledger.v2.json",
+          "verified_pointer": "/claims/22",
+          "resolved_claim_id": "EL-ASSET-001"
+        },
+        {
+          "declared_missing_path": "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+          "declared_sha256": "4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+          "hash_identical_archive_path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+          "verified_pointers": [
+            {
+              "pointer": "/claims/19",
+              "resolved_claim_id": "PR-CUR-020"
+            },
+            {
+              "pointer": "/claims/20",
+              "resolved_claim_id": "PR-CUR-021"
+            },
+            {
+              "pointer": "/claims/21",
+              "resolved_claim_id": "PR-CUR-022"
+            }
+          ]
+        }
+      ],
+      "affected_records": [
+        {
+          "batch_id": "AF-01",
+          "canonical_path": "apps/advantage-games/public/games/magic-defense/skeletons_3x3_pose_sheet.png",
+          "usage_id": "t4:magic-defense:scene:enemy-render:md-asset-001"
+        },
+        {
+          "batch_id": "AF-01",
+          "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/cauldron-blue.png",
+          "usage_id": "usage-8876a5cbd0c49b8327b4c8a9"
+        },
+        {
+          "batch_id": "AF-01",
+          "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/mushroom.png",
+          "usage_id": "usage-3847536916bedeea9707b998"
+        },
+        {
+          "batch_id": "AF-01",
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/enchanted-library/library_background.png",
+          "usage_id": "usage-f4d7c4f8710a5f535612addb"
+        },
+        {
+          "batch_id": "AF-01",
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/enchanted-library/player_3x3_pose_sheet.png",
+          "usage_id": "usage-475f04e11aec9b264ec1c967"
+        },
+        {
+          "batch_id": "AF-01",
+          "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/cauldron-blue.png",
+          "usage_id": "usage-8876a5cbd0c49b8327b4c8a9"
+        },
+        {
+          "batch_id": "AF-01",
+          "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/mushroom.png",
+          "usage_id": "usage-3847536916bedeea9707b998"
+        },
+        {
+          "batch_id": "AF-01",
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/enchanted-library/library_background.png",
+          "usage_id": "usage-f4d7c4f8710a5f535612addb"
+        },
+        {
+          "batch_id": "AF-01",
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/enchanted-library/player_3x3_pose_sheet.png",
+          "usage_id": "usage-475f04e11aec9b264ec1c967"
+        },
+        {
+          "batch_id": "AF-02",
+          "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/shop-floor.png",
+          "usage_id": "usage-6e9e5db24fef0880cf4c488a"
+        },
+        {
+          "batch_id": "AF-02",
+          "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/shop-floor.png",
+          "usage_id": "usage-6e9e5db24fef0880cf4c488a"
+        },
+        {
+          "batch_id": "AF-03",
+          "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/shop-counter.png",
+          "usage_id": "usage-7265ce200f41db55c6ff307b"
+        },
+        {
+          "batch_id": "AF-03",
+          "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/shop-counter.png",
+          "usage_id": "usage-7265ce200f41db55c6ff307b"
+        },
+        {
+          "batch_id": "AF-04",
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/enchanted-library/spirit_3x3_pose_sheet.png",
+          "usage_id": "usage-3194e801ec4247c4b206ab2c"
+        },
+        {
+          "batch_id": "AF-04",
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/enchanted-library/spirit_3x3_pose_sheet.png",
+          "usage_id": "usage-3194e801ec4247c4b206ab2c"
+        }
+      ]
+    }
+  ],
+  "severity_counts": {
+    "critical": 0,
+    "high": 1,
+    "medium": 0,
+    "low": 0
+  },
+  "final_status": "review-blocked-high-finding-pending-remediation-and-fresh-global-review",
+  "review_basis": "Pre-repair snapshot observed before the predecessor-ledger paths were restored. This review is intentionally not converted into a post-repair pass.",
+  "coverage": {
+    "all_slice_records_reviewed": true,
+    "all_substantive_inspections_reviewed": true,
+    "all_caller_locators_reopened": true,
+    "batch_record_counts": {
+      "AF-01": 36,
+      "AF-02": 35,
+      "AF-03": 35,
+      "AF-04": 35
+    },
+    "batch_inspection_group_counts": {
+      "AF-01": 18,
+      "AF-02": 18,
+      "AF-03": 21,
+      "AF-04": 17
+    },
+    "media_class_group_counts": {
+      "visual": 48,
+      "text_or_data": 21,
+      "audio": 3,
+      "unreadable_or_pointer": 2
+    },
+    "frozen_source_blob_coverage": {
+      "item_count": 141,
+      "sha256_of_reviewed_coverage_list": "3790188152c0b08083d0be9b965016a338c757a0bd399bff88f20c3e8ade25dd",
+      "definition": "SHA-256 of the deterministic reviewed list covering every slice path, frozen blob identity, and report-record identity."
+    },
+    "substantive_inspection_coverage": {
+      "item_count": 74,
+      "sha256_of_reviewed_coverage_list": "964dc5345ed2483ee49b4a4f9eb78da307b117cf771641512c57656ae972049a",
+      "definition": "SHA-256 of the deterministic reviewed list covering every distinct-content inspection group, media class, member set, and inspection record."
+    },
+    "caller_locator_coverage": {
+      "item_count": 226,
+      "sha256_of_reviewed_coverage_list": "5bd4f5118428667d34ed7636405cf9e1911769fc233a8b98b7f9f7d3a699267d",
+      "definition": "SHA-256 of the deterministic reviewed locator list after frozen caller blob, line range, line hash, and matched-literal validation."
+    },
+    "top_level_evidence_pointer_count": 846,
+    "record_sha256_recomputations": 141,
+    "manifest_record_parity_checks": 141,
+    "frozen_git_blob_reopens": 141,
+    "visual_blob_direct_reopens": 48,
+    "text_or_data_payload_parses": 21,
+    "audio_evidence_reviews": 3,
+    "unreadable_or_pointer_payload_reviews": 2
+  },
+  "reconciliation": {
+    "distinct_paths": 141,
+    "distinct_content_groups": 74,
+    "dispositions": {
+      "replace": 31,
+      "reject": 8,
+      "unknown": 102
+    },
+    "priority_1_records": 8,
+    "accepted_path_usage_links": 31,
+    "responsive_matrix_cells": 124
+  },
+  "clean_checks": [
+    "All 141 frozen source blobs resolved from the recorded Git object identities with matching byte sizes and SHA-256 values.",
+    "All 141 report record hashes recomputed and matched; all 141 manifest entries matched their report records.",
+    "All 846 top-level evidence pointers resolved with matching artifact hashes.",
+    "All 226 caller locators resolved against frozen caller blobs with matching line hashes and literals.",
+    "All 74 inspection group membership sets matched the exact source grouping.",
+    "All 48 visual groups were directly reopened; 21 text/data payloads were parsed; 3 audio and 2 unreadable/pointer evidence sets were reviewed.",
+    "No Critical, Medium, or Low findings were identified in this bounded pre-repair review."
+  ],
+  "supersession": {
+    "required": true,
+    "reason": "Restoring the exact hash-matched ledgers changes the resolvability state after this review observation point.",
+    "required_next_review": "A fresh independent reviewer must rerun recursive path, hash, and pointer resolution and publish a superseding post-repair disposition."
+  }
+}

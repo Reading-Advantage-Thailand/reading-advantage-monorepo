@@ -1,0 +1,11 @@
+{
+  "fixture_id": "approval-order",
+  "mutations": [
+    {
+      "artifact": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase6-root-acceptance-v1.json",
+      "pointer": "/accepted_at",
+      "value": "2026-07-01T00:00:00Z"
+    }
+  ],
+  "expected_codes": ["APPROVAL_ORDER"]
+}

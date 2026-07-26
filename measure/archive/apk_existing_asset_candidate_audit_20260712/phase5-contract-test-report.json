@@ -1,0 +1,235 @@
+{
+  "all_counterexamples_rejected": true,
+  "counterexample_count": 19,
+  "counterexamples": [
+    {
+      "error_codes": [
+        "browser-scope-disclosure"
+      ],
+      "expected_error_code": "browser-scope-disclosure",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/browser-per-path-claim.json",
+      "operation": "browser_per_path_claim",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "caller-locator-ownership",
+        "record-hash",
+        "source-hash-pointer-parity",
+        "summary-parity"
+      ],
+      "expected_error_code": "caller-locator-ownership",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/caller-loss.json",
+      "operation": "caller_loss",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "caller-locator-ownership",
+        "record-hash",
+        "source-hash-pointer-parity"
+      ],
+      "expected_error_code": "caller-locator-ownership",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/caller-ownership-swap.json",
+      "operation": "caller_ownership_swap",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "non-consumable-guard"
+      ],
+      "expected_error_code": "non-consumable-guard",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/consumable-status-guard.json",
+      "operation": "consumable_status_guard",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "disposition-priority1",
+        "record-hash",
+        "source-hash-pointer-parity",
+        "summary-parity"
+      ],
+      "expected_error_code": "disposition-priority1",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/disposition-p1-drift.json",
+      "operation": "disposition_p1_drift",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "path-set",
+        "summary-parity"
+      ],
+      "expected_error_code": "path-set",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/duplicate-path.json",
+      "operation": "duplicate_path",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "path-set",
+        "summary-parity"
+      ],
+      "expected_error_code": "path-set",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/extra-path.json",
+      "operation": "extra_path",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "canonical-key-direct-adoption",
+        "record-hash",
+        "source-hash-pointer-parity"
+      ],
+      "expected_error_code": "canonical-key-direct-adoption",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/illicit-canonical-key.json",
+      "operation": "illicit_canonical_key",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "canonical-key-direct-adoption",
+        "record-hash",
+        "source-hash-pointer-parity"
+      ],
+      "expected_error_code": "canonical-key-direct-adoption",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/illicit-direct-adoption.json",
+      "operation": "illicit_direct_adoption",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "record-hash",
+        "reuse-adapt-reference-forbidden",
+        "source-hash-pointer-parity",
+        "summary-parity"
+      ],
+      "expected_error_code": "reuse-adapt-reference-forbidden",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/illicit-reuse.json",
+      "operation": "illicit_reuse",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "record-hash",
+        "source-hash-pointer-parity"
+      ],
+      "expected_error_code": "source-hash-pointer-parity",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/mechanical-provenance-inspection-swap.json",
+      "operation": "mechanical_provenance_inspection_swap",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "path-set",
+        "summary-parity"
+      ],
+      "expected_error_code": "path-set",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/missing-path.json",
+      "operation": "missing_path",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "nested-evidence-locator",
+        "record-hash",
+        "source-hash-pointer-parity"
+      ],
+      "expected_error_code": "nested-evidence-locator",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/nested-evidence-locator-drift.json",
+      "operation": "nested_evidence_locator_drift",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "report-manifest-binding"
+      ],
+      "expected_error_code": "report-manifest-binding",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/report-manifest-pointer-hash-mismatch.json",
+      "operation": "report_manifest_pointer_hash_mismatch",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "record-hash",
+        "report-manifest-binding",
+        "source-hash-pointer-parity"
+      ],
+      "expected_error_code": "source-hash-pointer-parity",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/source-hash-drift.json",
+      "operation": "source_hash_drift",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "nested-evidence-locator",
+        "record-hash",
+        "source-hash-pointer-parity"
+      ],
+      "expected_error_code": "source-hash-pointer-parity",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/source-pointer-drift.json",
+      "operation": "source_pointer_drift",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "producer-receipt-binding"
+      ],
+      "expected_error_code": "producer-receipt-binding",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/stale-producer-receipt.json",
+      "operation": "stale_producer_receipt",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "summary-parity"
+      ],
+      "expected_error_code": "summary-parity",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/summary-drift.json",
+      "operation": "summary_drift",
+      "rejected": true
+    },
+    {
+      "error_codes": [
+        "record-hash",
+        "source-hash-pointer-parity",
+        "summary-parity",
+        "usage-cell-parity"
+      ],
+      "expected_error_code": "usage-cell-parity",
+      "fixture": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase5/usage-cell-drift.json",
+      "operation": "usage_cell_drift",
+      "rejected": true
+    }
+  ],
+  "current_worktree_diagnostic": {
+    "authoritative": false,
+    "current_worktree_absent_paths": []
+  },
+  "final_status": "truth-test-pass-pending-fresh-independent-review-and-root-acceptance",
+  "production": {
+    "errors": [],
+    "measured": {
+      "accepted_path_usage_links": 85,
+      "caller_locators": 533,
+      "candidate_paths": 428,
+      "dispositions": {
+        "reject": 14,
+        "replace": 85,
+        "unknown": 329
+      },
+      "identical_hash_groups": 227,
+      "non_scene_links": 8,
+      "priority1_paths": 14,
+      "responsive_assessment_cells": 308,
+      "scene_links": 77,
+      "unique_non_scene_usage_ids": 5,
+      "unique_scene_usage_ids": 40,
+      "unique_usage_ids": 45
+    },
+    "passed": true
+  },
+  "role": "phase5-truth-test-author",
+  "schema_version": "apk-asset-forensics.phase5-contract-test-report.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712"
+}

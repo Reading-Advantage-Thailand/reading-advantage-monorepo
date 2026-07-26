@@ -1,0 +1,131 @@
+{
+  "schema_version": "apk-role-receipt.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-05",
+  "phase": "phase4",
+  "role": "adversarial-reviewer",
+  "native_task_name": "/root/phase4_review_af05",
+  "declared_model": "gpt-5.6-sol",
+  "reasoning_effort": "xhigh",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "allowed_input_manifest_sha256": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+  "exact_verified_inputs": {
+    "current_producer": {
+      "joins": "21d2df2115b5eeadcbb67739a3b986d2c3d99944e6792c0f75a3ba1d0b736b3c",
+      "rollup": "d2ac10d7ef46400ab4d619af8c0533855da8f9b219ed4c7d17355f8c40626496",
+      "mapper_receipt": "070f99ab84b637b1df05ac1813360da080b147a1761cce8afd1c1d5f908239a0"
+    },
+    "verifiers": {
+      "phase4_v2_batch_schema_contract_test.py": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519",
+      "phase4_batch_contract_test.py": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0"
+    },
+    "reports": {
+      "phase4-batch-test-reports/AF-05.json": "e785693b4798e5556da415e44fac3434e1d6bff985e5286925d89d645fef1209",
+      "phase4-v2-batch-schema-test-reports/AF-05.json": "c2d31814d2a9c8e5ccdfcff2a49f35cc976fd8eb3729324c80a62774329dc5f8"
+    },
+    "corrected_truth_test_receipt": "bf59d58173485a17da38dca342ebe49fb15f2ca565012e481ffef60f27f287a5",
+    "preserved_phase2_reviewer_receipt": "b19a5630257e47e4f584a2a9d99c516eabbdf9051a8b85b6c2bc2b62a7d0f34a",
+    "fixtures": {
+      "phase4_value_fixture_count": 16,
+      "phase4_generic_v2_fixture_count": 14,
+      "all_30_rejected_for_published_intended_codes": true,
+      "generic_v2_fixture_hash_map_is_exactly_bound_by": "c2d31814d2a9c8e5ccdfcff2a49f35cc976fd8eb3729324c80a62774329dc5f8"
+    },
+    "failed_cycle_archives": {
+      "member_path_shape_rollup": "16b734a8cccd59deabcf77cec08ce560b0b4cf4fdc5f6bb0817ba23410e6d757",
+      "member_path_shape_mapper": "1433727d353d95268d3249265874ac7d96daf11aff733dca37b578705658fe3d",
+      "group_disposition_count_shape_rollup": "c14e23f73b709c680c3d4c9e11426443fd437946360eef37119e22a1a013a386",
+      "group_disposition_count_shape_mapper": "f06e053a07e1948f613bdad88af0dd08a06c38ecae6459106ab4106d9b80ff98",
+      "superseded_truth_receipt": "723c94413ac2e8f72695388ed96a0c462d8fd7ade0c88a5544b46bc309a78218",
+      "authoring_red_verifier": "0f68c453628578fb437622d5226fdb057c94c611ccc3fb2729d1278f82dc3fd9",
+      "authoring_red_audit": "958e7ac33bcc477cb461fb3be04bd220a32eb49cec397ecddd4938cd56e84147",
+      "preserved_as_non_authority": true
+    }
+  },
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-reviews/AF-05.json": "696ae02c2cdf1e4e63be419f936834f25b1e474a378e29c80413c7556850c034"
+  },
+  "role_boundary": "Fresh isolated AF-05 Phase 4 adversarial review derived from live frozen inputs. Reviewed all 39 producer records, 18 groups, 28 caller locators and pinned Git ranges, five path-usage links, three unique scene usages and source claims, 20 responsive cells and eight facets, 39 path-specific dispositions, seven separate catalog locators, the mapper and corrected truth receipt, bounded browser evidence, and all preserved AF-05 failed-cycle families. Did not repair or alter producer, test, fixture, report, mapper, truth receipt, failed-cycle archive, freeze, plan, product code, acceptance state or commits; did not capture new browser evidence, authorize adoption/T9, or accept Phase 4.",
+  "reviewed_counts": {
+    "candidate_paths": 39,
+    "hash_groups": 18,
+    "caller_locators": 28,
+    "git_pinned_caller_source_files": 18,
+    "accepted_path_usage_links": 5,
+    "unique_scene_usage_records": 3,
+    "responsive_assessment_cells": 20,
+    "priority1_paths": 1,
+    "dispositions": {
+      "replace": 5,
+      "reject": 1,
+      "unknown": 33
+    },
+    "mixed_groups": 3,
+    "catalog_locator_records": 7,
+    "review_records": 173
+  },
+  "verifier_results": {
+    "value": {
+      "exit_code": 0,
+      "report_byte_reproduced": true,
+      "parsed_json_equal": true,
+      "test_cases": 17,
+      "counterexamples": 16
+    },
+    "generic_v2": {
+      "exit_code": 0,
+      "report_byte_reproduced": true,
+      "parsed_json_equal": true,
+      "total_test_cases": 32,
+      "structural_test_cases": 15,
+      "counterexamples": 14
+    },
+    "independent_assertions": 2492,
+    "all_records_groups_links_cells_independently_rederived": true,
+    "green_not_sole_evidence": true
+  },
+  "substantive_results": {
+    "recursive_v2_shapes_exact": true,
+    "all_39_join_status_values_equal_scaffold": true,
+    "all_five_six_key_semantic_requirements_are_exact_source_copies": true,
+    "all_five_path_mirrors_are_deep_and_order_equal": true,
+    "all_20_cells_have_exact_eight_facet_shapes": true,
+    "all_scene_usages_have_exact_four_cell_matrix": true,
+    "all_non_scene_usages_have_zero_cells": true,
+    "all_source_and_claim_pointers_resolve": true,
+    "all_28_caller_ranges_and_literals_match_pinned_git": true,
+    "rollup_counts_members_dispositions_mixed_count_and_current_joins_sha_are_exact": true,
+    "mapper_and_corrected_truth_receipt_are_truthful": true,
+    "browser_evidence_remains_composite_scene_only": true,
+    "direct_legacy_adoption_false_for_all_paths": true,
+    "canonical_candidate_key_null_forbidden_pending_T9_for_all_paths": true,
+    "catalog_count_seven_and_non_additive": true,
+    "phase2_reviewer_receipt_preserved_and_separate": true
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "stop_loss_events": [],
+  "unresolved_blocking_findings": 0,
+  "measured_resource_usage": {
+    "candidate_paths": 39,
+    "hash_groups": 18,
+    "review_records": 173,
+    "command_invocations": 111,
+    "bytes_read": 448000000,
+    "within_ceiling": true,
+    "ceilings": {
+      "candidate_paths": 40,
+      "hash_groups": 24,
+      "review_records": 280,
+      "command_invocations": 120,
+      "bytes_read": 536870912
+    },
+    "measurement_basis": "Conservative accounting through final publication: four verifier reproductions total 430775794 verifier-reported bytes; the consolidated independent audit measured 3791988 bytes across unique JSON/evidence files, 18 pinned Git blobs and four direct visual artifacts; the remaining allowance covers routing documents, repeated bounded evidence views and publication validation. Command count includes reviewer tool calls plus bounded verifier and Git subprocesses through closeout."
+  },
+  "final_status": "review-pass-pending-root-acceptance"
+}

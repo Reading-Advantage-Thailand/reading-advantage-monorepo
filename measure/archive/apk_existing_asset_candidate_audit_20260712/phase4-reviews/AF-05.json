@@ -1,0 +1,132 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-adversarial-review.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "batch_id": "AF-05",
+  "review_role": "adversarial-reviewer",
+  "reviewer_task_name": "/root/phase4_review_af05",
+  "declared_model": "gpt-5.6-sol",
+  "reasoning_effort": "xhigh",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "reviewed_at": "2026-07-24",
+  "authority_commit": "129200815cef1140e8bbcbf936eeebbc904f79f3",
+  "reviewed_output_hashes": {
+    "phase4_path_usage_joins_sha256": "21d2df2115b5eeadcbb67739a3b986d2c3d99944e6792c0f75a3ba1d0b736b3c",
+    "phase4_group_rollup_sha256": "d2ac10d7ef46400ab4d619af8c0533855da8f9b219ed4c7d17355f8c40626496",
+    "requirements_mapper_receipt_sha256": "070f99ab84b637b1df05ac1813360da080b147a1761cce8afd1c1d5f908239a0",
+    "generic_v2_schema_verifier_sha256": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519",
+    "value_verifier_sha256": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+    "value_report_sha256": "e785693b4798e5556da415e44fac3434e1d6bff985e5286925d89d645fef1209",
+    "v2_schema_report_sha256": "c2d31814d2a9c8e5ccdfcff2a49f35cc976fd8eb3729324c80a62774329dc5f8",
+    "corrected_truth_test_receipt_sha256": "bf59d58173485a17da38dca342ebe49fb15f2ca565012e481ffef60f27f287a5",
+    "phase2_reviewer_receipt_sha256": "b19a5630257e47e4f584a2a9d99c516eabbdf9051a8b85b6c2bc2b62a7d0f34a"
+  },
+  "reviewed_counts": {
+    "candidate_path_records": 39,
+    "identical_hash_groups": 18,
+    "caller_locators": 28,
+    "git_pinned_caller_source_files": 18,
+    "accepted_path_usage_links": 5,
+    "unique_scene_usage_records": 3,
+    "responsive_assessment_cells": 20,
+    "eight_facet_cells": 20,
+    "priority1_paths": 1,
+    "dispositions": {
+      "replace": 5,
+      "reject": 1,
+      "unknown": 33
+    },
+    "reusable_paths": 0,
+    "adaptable_paths": 0,
+    "reference_allowed_paths": 0,
+    "direct_legacy_adoption_true": 0,
+    "non_null_canonical_standard_pack_keys": 0,
+    "mixed_path_specific_disposition_groups": 3,
+    "separate_catalog_locator_records": 7,
+    "catalog_records_added_to_candidate_denominator": 0,
+    "review_records": 173
+  },
+  "substantive_review": {
+    "paths_groups_callers": "All 39 frozen AF-05 paths and all 18 identical-hash groups reconcile exactly. All 28 caller locators resolve to their exact AF-05 caller-inventory pointers and to 18 distinct Git blobs at revision 65fc00d872ce5aa63820662ee0a1f14952e63235; every cited line-range SHA-256 and matched literal was independently reproduced.",
+    "links_and_sources": "All five path-usage links resolve exactly to three accepted scene usages across Magic Defense and Potion Rush. Every normalizer path, SHA-256 and JSON pointer resolves to the exact embedded normalized usage; the two Magic Defense source-claim pointers and the two distinct Potion Rush source-claim pointers resolve to the declared claim IDs and exact source artifact hashes.",
+    "recursive_schema_and_semantics": "Every v2 producer object has the exact recursive key shape. All 39 join_status values equal the frozen scaffold. Each joined semantic replacement requirement has exactly six wrapper keys and an exact source-field copy; all five path-level mirrors are deep- and order-equal to their usage-link requirements, while every non-joined wrapper remains blocked_unknown with an empty requirement array.",
+    "responsive_and_browser_boundary": "All five links contain the exact compact/wide by cute_chibi_v1/heroic_stylized_v1 four-cell matrix, for 20 cells total. Every cell has all eight exact facet shapes, remains blocked for suitability and per-path load, and binds current_legacy_function only to the frozen composite-scene decision. The global scaffold retains four cells for every scene usage and zero cells for every catalog or non-scene usage. Direct inspection of the frozen artifacts confirms the bounded composite claims: Magic Defense compact start content is clipped while compact gameplay is coherent; Potion Rush wide start is coherent while compact gameplay retains unresolved hud.served text and HUD pressure. None of this proves per-path load, suitability, license, provenance or adoption.",
+    "priority_and_prohibitions": "Exactly one priority-1 path resolves to accepted Phase 3 placeholder-risk evidence and is reject plus retire. The five exact joined paths are replace; the remaining 33 paths are unknown. Every path retains unknown provenance and license, reuse/adapt/reference remain prohibited, direct legacy adoption is false, and the canonical standard-pack candidate key is null with forbidden-pending-T9 status.",
+    "duplicates_catalog_and_slice": "All duplicate members remain explicit and three groups correctly retain mixed path-specific dispositions. The sole review slice is exactly the two-game Magic Defense/Potion Rush slice. The seven catalog locator records remain a separate count-only, non-additive grain and do not expand the 39-path AF-05 denominator."
+  },
+  "failure_chain_and_delta": {
+    "member_path_shape_cycle": {
+      "failed_rollup_sha256": "16b734a8cccd59deabcf77cec08ce560b0b4cf4fdc5f6bb0817ba23410e6d757",
+      "failed_mapper_sha256": "1433727d353d95268d3249265874ac7d96daf11aff733dca37b578705658fe3d",
+      "result": "preserved failed producer bytes; non-authority"
+    },
+    "group_disposition_count_shape_cycle": {
+      "failed_rollup_sha256": "c14e23f73b709c680c3d4c9e11426443fd437946360eef37119e22a1a013a386",
+      "failed_mapper_sha256": "f06e053a07e1948f613bdad88af0dd08a06c38ecae6459106ab4106d9b80ff98",
+      "result": "preserved failed producer bytes; non-authority"
+    },
+    "truth_receipt_identity_cycle": {
+      "archived_receipt_sha256": "723c94413ac2e8f72695388ed96a0c462d8fd7ade0c88a5544b46bc309a78218",
+      "corrected_receipt_sha256": "bf59d58173485a17da38dca342ebe49fb15f2ca565012e481ffef60f27f287a5",
+      "result": "superseded before review or root acceptance; substantive producer, verifier, fixture, report, resource and finding bindings are unchanged"
+    },
+    "v2_authoring_red_cycle": {
+      "archived_verifier_sha256": "0f68c453628578fb437622d5226fdb057c94c611ccc3fb2729d1278f82dc3fd9",
+      "red_stage_audit_sha256": "958e7ac33bcc477cb461fb3be04bd220a32eb49cec397ecddd4938cd56e84147",
+      "active_verifier_sha256": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519",
+      "result": "preserved truth-test authoring-red evidence; non-authority"
+    },
+    "active_authority_selection": "The active joins retain their intentionally unchanged SHA-256 across the two producer-shape repair cycles. Only the current rollup d2ac10d7..., current mapper 070f99ab..., corrected truth receipt bf59d581..., current generic verifier a2fb3b50... and current saved reports are reviewed Green inputs. Failed rollups, failed mappers, the superseded truth receipt and the authoring-red verifier are not active authority."
+  },
+  "verifier_review": {
+    "value_command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_batch_contract_test.py --root <root> --batch AF-05 --json",
+    "value_exit_code": 0,
+    "value_report_byte_reproduced": true,
+    "value_report_parsed_json_equal": true,
+    "value_test_cases": 17,
+    "value_counterexamples": 16,
+    "v2_command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_v2_batch_schema_contract_test.py --root <root> --batch AF-05",
+    "v2_exit_code": 0,
+    "v2_report_byte_reproduced": true,
+    "v2_report_parsed_json_equal": true,
+    "v2_total_test_cases": 32,
+    "v2_structural_test_cases": 15,
+    "v2_counterexamples": 14,
+    "all_30_counterexamples_rejected_for_intended_codes": true,
+    "independent_assertions": 2492,
+    "coverage": "The value verifier covers denominators, caller ownership, provenance, priority dispositions, browser limitations, prohibitions, source pointers, rollups and resource ceilings. The generic v2 verifier adds recursive no-extra-key shapes, scaffold join_status equality, six-key semantic requirements, exact source-field copying, mirror equality, cell and facet shapes, non-scene zero-cell enforcement, rollup SHA binding, mapper truthfulness, factual-envelope protection and 14 generic fixtures. The independent audit separately re-derived every AF-05 record, group, locator, link, source, claim, cell, disposition, rollup and authority binding; Green commands were corroboration only."
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "stop_loss_events": [],
+  "unresolved_blocking_findings": 0,
+  "resource_usage": {
+    "candidate_paths": 39,
+    "hash_groups": 18,
+    "review_records": 173,
+    "command_invocations": 111,
+    "bytes_read": 448000000,
+    "within_ceiling": true,
+    "ceilings": {
+      "candidate_paths": 40,
+      "hash_groups": 24,
+      "review_records": 280,
+      "command_invocations": 120,
+      "bytes_read": 536870912
+    },
+    "measurement_basis": "Conservative accounting through final publication: four verifier reproductions total 430775794 verifier-reported bytes; the consolidated independent audit measured 3791988 bytes across unique JSON/evidence files, 18 pinned Git blobs and four direct visual artifacts; the remaining allowance covers routing documents, repeated bounded evidence views and publication validation. Command count includes reviewer tool calls plus bounded verifier and Git subprocesses through closeout."
+  },
+  "decision": {
+    "admit": true,
+    "block": false,
+    "status": "review-pass-pending-root-acceptance",
+    "scope": "AF-05 Phase 4 batch artifacts only; not root acceptance, not Phase 4 program completion, and not T8/T9 authorization.",
+    "next_authority": "root-orchestrator project-and-product-owner acceptance"
+  },
+  "final_status": "review-pass-pending-root-acceptance"
+}

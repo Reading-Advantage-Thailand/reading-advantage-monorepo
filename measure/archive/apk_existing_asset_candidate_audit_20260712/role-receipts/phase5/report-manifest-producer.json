@@ -1,0 +1,78 @@
+{
+  "schema_version": "apk-role-receipt.phase5-report-manifest-producer.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": 5,
+  "role": "phase5-report-manifest-producer",
+  "native_task_name": "/root/phase5_report_producer",
+  "role_boundary": "Deterministic candidate report and non-consumable compact manifest publication only; no testing, independent review, remediation, acceptance, accepted manifest, T9 authorization, adoption, or shipping.",
+  "final_status": "producer-complete-pending-independent-review-and-root-acceptance",
+  "consumer_guard": false,
+  "source_artifact_count": 202,
+  "source_artifact_bindings_sha256": "359999025c91d7a53e77d4c50a896e300524fdb5397fd04f9da2d6584a663626",
+  "phase4_root_acceptance": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-root-acceptance.json",
+    "sha256": "af708fe63bd10e4508809446e5e2420601cfd8e5e04601db41d32b4be33e53cd"
+  },
+  "generator": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/generate_phase5_candidate_report.py",
+    "sha256": "0431d515e85f5fbcdf1aecfbb79a345d2272add8fe3f3fa95e2e3e508ab8a9d0",
+    "byte_size": 45613
+  },
+  "outputs": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-candidate-report-v1.json": {
+      "sha256": "ad7bbe10e513fabf1cceb2893833c8f983d4b429f3a5b503b53edf028bb04f47",
+      "byte_size": 6826918,
+      "record_count": 428
+    },
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-candidate-manifest-non-consumable-v1.json": {
+      "sha256": "c5626db8afdf357feda20637c8bcacf52a391c363c2acf0d9de1cd0561c330be",
+      "byte_size": 625876,
+      "entry_count": 428
+    }
+  },
+  "reconciliation_summary": {
+    "candidate_paths": 428,
+    "identical_hash_groups": 227,
+    "caller_locators": 533,
+    "accepted_path_usage_links": {
+      "total": 85,
+      "scene": 77,
+      "non_scene": 8
+    },
+    "unique_usage_ids": {
+      "total": 45,
+      "scene": 40,
+      "non_scene": 5
+    },
+    "responsive_assessment_cells": 308,
+    "dispositions": {
+      "replace": 85,
+      "reject": 14,
+      "unknown": 329
+    },
+    "priority1": {
+      "paths": 14,
+      "required_disposition": "reject",
+      "required_replacement_action": "retire",
+      "all_reconciled": true
+    },
+    "browser_usability_defects": 6
+  },
+  "determinism": {
+    "serialization": "UTF-8 JSON, two-space indent, LF terminator",
+    "record_hash_serialization": "UTF-8 canonical JSON with sorted keys and compact separators",
+    "ordering": "canonical_path ascending",
+    "wall_clock_fields": false
+  },
+  "claims_not_made": [
+    "independent-review-pass",
+    "root-acceptance",
+    "accepted-manifest",
+    "consumer-adoption",
+    "canonical-T9-key",
+    "direct-legacy-adoption",
+    "implementation",
+    "production",
+    "shipping"
+  ]
+}

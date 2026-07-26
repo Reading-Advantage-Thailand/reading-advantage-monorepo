@@ -1,0 +1,26 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-truth-receipt-authoring-red.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "batch_id": "AF-06",
+  "role": "truth-test-author",
+  "status": "preserved_authoring_red",
+  "red_receipt": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-06/truth-test-author.json",
+    "sha256": "7564619f7bab65756e7078599ae3234776ce453d6c0c0a65bf0eb0a692dadec3"
+  },
+  "validation_failure": {
+    "code": "receipt-fixture-hash-mismatch",
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-v2-batch-schema/stale-mapper-hash.json",
+    "declared_sha256": "9ae2fb2df17ff8c2f7c15fb5a8502c2944b3665215f478eb01178f7de2a24",
+    "actual_sha256": "9ae2fb2df17ff8c2f7c15fb5a8502c2944b3665213755f478eb01178f7de2a24",
+    "mismatch_count": 1
+  },
+  "unaffected_green_outputs": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-batch-test-reports/AF-06.json": "0e696f79773bc7daf0cbd89044068783a32ae6f3a6502c99327d902179dfeac3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-v2-batch-schema-test-reports/AF-06.json": "b054d96b57e6ba6e0ebb8435918b422c0482a261e44bee658232d39790cf4fb8",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_v2_batch_schema_contract_test_v2.py": "174fba885907260824503708180cd4dbe2b873e06aaf8e86c4fb440c319c9956"
+  },
+  "cause": "A single fixture SHA-256 was transcribed without the characters 37 while authoring the AF-06 truth-test receipt.",
+  "disposition": "Fail closed before no-edit equality verification. Preserve this red receipt digest and exact mismatch, correct only the receipt fixture binding, bind this audit note in the corrected receipt, and rerun all receipt and report equality checks."
+}

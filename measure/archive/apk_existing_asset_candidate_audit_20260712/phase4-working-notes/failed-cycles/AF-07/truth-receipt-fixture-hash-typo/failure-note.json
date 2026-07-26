@@ -1,0 +1,20 @@
+{
+  "archived_bad_receipt": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-07/truth-receipt-fixture-hash-typo/truth-test-author.json",
+    "sha256": "edb0645e7343304e1cc4ae0633dba9a8c5542224a9372e1a9274922afff9be65"
+  },
+  "failure": {
+    "field": "fixture_hashes.measure/tracks/apk_existing_asset_candidate_audit_20260712/negative-fixtures/phase4-v2-batch-schema/stale-mapper-hash.json",
+    "live_expected_sha256": "9ae2fb2df17ff8c2f7c15fb5a8502c2944b3665213755f478eb01178f7de2a24",
+    "recorded_bad_sha256": "9ae2fb3c8f2c7c15fb5a8502c2944b3665213755f478eb01178f7de2a24"
+  },
+  "active_corrected_receipt": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-07/truth-test-author.json",
+    "sha256": "4069c5b6f5e5e5a46893e32b0bc206ee4221edba3c1d5c84460a2ec087cd59e8"
+  },
+  "active_reports_unchanged": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-batch-test-reports/AF-07.json": "0d099bd4042788b8864b58e238466c72bfd2f09b625c168cee6b2d8061e7f340",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-v2-batch-schema-test-reports/AF-07.json": "a8dae3e1dd66073f305c5ae328a397516fb6962a80143490bae38c03bb2f89f3"
+  },
+  "status": "exact-bad-receipt-byte-reconstruction-verified-before-archive-publication"
+}

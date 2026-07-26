@@ -1,0 +1,146 @@
+{
+  "attacks": [
+    {
+      "expected_codes": [
+        "ABSENT_CANDIDATE_KEY"
+      ],
+      "fixture_id": "absent-candidate-key",
+      "observed_codes": [
+        "ABSENT_CANDIDATE_KEY",
+        "CANDIDATE_BINDING",
+        "UNKNOWN_MUST_HAVE_UNBLOCKED"
+      ],
+      "rejected": true
+    },
+    {
+      "expected_codes": [
+        "APPROVAL_ORDER"
+      ],
+      "fixture_id": "approval-order",
+      "observed_codes": [
+        "APPROVAL_ORDER",
+        "T9_ROOT_HASH"
+      ],
+      "rejected": true
+    },
+    {
+      "expected_codes": [
+        "BROWSER_OVERCLAIM"
+      ],
+      "fixture_id": "browser-overclaim",
+      "observed_codes": [
+        "BROWSER_OVERCLAIM",
+        "CANDIDATE_BINDING"
+      ],
+      "rejected": true
+    },
+    {
+      "expected_codes": [
+        "DERIVATION_MISMATCH"
+      ],
+      "fixture_id": "claim-contradiction",
+      "observed_codes": [
+        "DERIVATION_MISMATCH"
+      ],
+      "rejected": true
+    },
+    {
+      "expected_codes": [
+        "RAW_CLAIM_DENOMINATOR"
+      ],
+      "fixture_id": "claim-omission",
+      "observed_codes": [
+        "DERIVATION_MISMATCH",
+        "RAW_CLAIM_DENOMINATOR"
+      ],
+      "rejected": true
+    },
+    {
+      "expected_codes": [
+        "DIRECT_LEGACY_PATH"
+      ],
+      "fixture_id": "direct-legacy-path",
+      "observed_codes": [
+        "CANDIDATE_BINDING",
+        "DIRECT_LEGACY_PATH",
+        "UNAPPROVED_CANDIDATE_KEY"
+      ],
+      "rejected": true
+    },
+    {
+      "expected_codes": [
+        "FAILED_MONOLITH_DEPENDENCY"
+      ],
+      "fixture_id": "failure-artifact-dependency",
+      "observed_codes": [
+        "FAILED_MONOLITH_DEPENDENCY",
+        "STALE_CANDIDATE_BINDING",
+        "T9_CANDIDATE_HASH"
+      ],
+      "rejected": true
+    },
+    {
+      "expected_codes": [
+        "PACK_RELEASE_MISMATCH"
+      ],
+      "fixture_id": "pack-release-mismatch",
+      "observed_codes": [
+        "PACK_ACCEPTANCE_HASH",
+        "PACK_RELEASE_MISMATCH",
+        "REVOKED_PREDECESSOR",
+        "STALE_PREDECESSOR_HASH"
+      ],
+      "rejected": true
+    },
+    {
+      "expected_codes": [
+        "REVOKED_PREDECESSOR"
+      ],
+      "fixture_id": "revoked-predecessor",
+      "observed_codes": [
+        "REVOKED_PREDECESSOR",
+        "STALE_PREDECESSOR_HASH"
+      ],
+      "rejected": true
+    },
+    {
+      "expected_codes": [
+        "ROLE_REUSE"
+      ],
+      "fixture_id": "role-reuse",
+      "observed_codes": [
+        "ROLE_REUSE"
+      ],
+      "rejected": true
+    },
+    {
+      "expected_codes": [
+        "STALE_CANDIDATE_BINDING"
+      ],
+      "fixture_id": "stale-candidate-binding",
+      "observed_codes": [
+        "STALE_CANDIDATE_BINDING",
+        "T9_ROOT_HASH"
+      ],
+      "rejected": true
+    },
+    {
+      "expected_codes": [
+        "UNKNOWN_MUST_HAVE_UNBLOCKED"
+      ],
+      "fixture_id": "unknown-must-have-unblocked",
+      "observed_codes": [
+        "CANDIDATE_BINDING",
+        "UNKNOWN_MUST_HAVE_UNBLOCKED"
+      ],
+      "rejected": true
+    }
+  ],
+  "fixture_manifest": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-fixture-manifest-v1.json",
+    "sha256": "8e5463f87b56519d5130f20a582434b19f4cba2aa7f1367097f5086b3b0fab31"
+  },
+  "published_before_final_review": true,
+  "schema_version": "apk-t10-red-report.v1",
+  "status": "expected-red-counterexamples-all-rejected"
+}

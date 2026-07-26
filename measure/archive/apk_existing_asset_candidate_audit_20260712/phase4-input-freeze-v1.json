@@ -1,0 +1,118 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-input-freeze.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "status": "contract-scaffold-only",
+  "source_registry": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json",
+    "sha256": "450f5ab66215178aa730e057cb28a220bfb550dfd924959a7f7f1da2eea02f9e"
+  },
+  "browser_evidence_supplement": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json",
+    "sha256": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+    "status": "frozen-bounded-browser-evidence-not-acceptance"
+  },
+  "frozen_denominators": {
+    "candidate_paths": 428,
+    "identical_hash_groups": 227,
+    "caller_locators": 533,
+    "normalized_usage_records": 87,
+    "scene_usage_records": 65,
+    "catalog_or_non_scene_usage_records": 22,
+    "accepted_normalized_candidate_path_joins": 85,
+    "separate_catalog_locator_records": 7,
+    "catalog_locator_candidate_join_overlap_usage_ids": 3,
+    "priority1_evidence_paths": 14,
+    "priority1_join_overlap": 0,
+    "additive_92_path_claim": false
+  },
+  "join_policy": {
+    "accepted_join_rule": "Only a path-specific join revalidated through the frozen working mapping aid to an exact Phase 1 caller locator and exact canonical-normalizer usage pointer may be represented as accepted.",
+    "catalog_overlap_rule": "A catalog usage may also have an exact candidate-path join. The catalog locator record remains a separate record grain and never adds a candidate path.",
+    "unproven_join_state": "blocked_unknown",
+    "analogy_forbidden": [
+      "filename",
+      "folder",
+      "slug",
+      "game name",
+      "visual similarity",
+      "same identical-hash group without path-specific caller evidence"
+    ],
+    "zero_static_caller_rule": "A path with no accepted join remains blocked_unknown; it is never inferred unused."
+  },
+  "duplicate_policy": {
+    "record_grain": "candidate_path",
+    "shared_fact_grain": "identical_hash_group",
+    "path_specific_fields": [
+      "caller_locators",
+      "accepted_usage_ids",
+      "join_status",
+      "semantic_replacement_requirements",
+      "disposition"
+    ],
+    "collapse_paths": false
+  },
+  "responsive_assessment_contract": {
+    "applicable_usage_grain": "scene",
+    "viewports": [
+      "compact",
+      "wide"
+    ],
+    "themes": [
+      "cute_chibi_v1",
+      "heroic_stylized_v1"
+    ],
+    "cells_per_scene_usage": 4,
+    "required_fields": [
+      "text_capacity",
+      "focal_crop_tile_slice",
+      "state_coverage",
+      "collision_readability",
+      "current_legacy_function",
+      "semantic_role_state_replacement_or_retirement"
+    ],
+    "default_cell_status": "blocked_unknown",
+    "default_evidence": null,
+    "catalog_or_non_scene_cells": 0
+  },
+  "disposition_policy": {
+    "scaffold_value": null,
+    "priority_order": [
+      {
+        "priority": 1,
+        "condition": "Exact accepted Phase 3 evidence establishes invalid, unreadable, empty, corrupt, or placeholder_risk present.",
+        "allowed_disposition": "reject",
+        "allowed_replacement_action": "retire"
+      },
+      {
+        "priority": 2,
+        "condition": "An exact accepted candidate-path join exists and priority 1 does not apply.",
+        "expected_disposition": "replace",
+        "required_support": "Source-bound semantic role/state replacement requirements."
+      },
+      {
+        "priority": 3,
+        "condition": "No accepted candidate-path usage join is proven.",
+        "required_disposition": "unknown",
+        "required_state": "blocked"
+      }
+    ],
+    "unknown_provenance_forbids": [
+      "reuse",
+      "adapt"
+    ],
+    "canonical_standard_pack_candidate_key": {
+      "value": null,
+      "status": "forbidden-pending-T9"
+    },
+    "direct_legacy_adoption": false
+  },
+  "scope_boundaries": {
+    "authorizes_suitability_decisions": false,
+    "authorizes_disposition_decisions": false,
+    "authorizes_acceptance": false,
+    "authorizes_T9": false,
+    "authorizes_production_or_shipping": false,
+    "output": "A deterministic decision-free scaffold and contract validation only."
+  }
+}

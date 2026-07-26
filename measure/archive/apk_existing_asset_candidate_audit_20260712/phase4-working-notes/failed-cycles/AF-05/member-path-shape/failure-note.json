@@ -1,0 +1,17 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-failed-producer-cycle.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-05",
+  "cycle": "member-path-shape",
+  "status": "preserved_failed_producer_bytes",
+  "failure": "Root-orchestrator reported the unchanged value verifier crashed because every rollup member_paths entry was a string instead of the required exact object {canonical_path}.",
+  "preserved_files": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-05/member-path-shape/phase4-group-rollup.json": "16b734a8cccd59deabcf77cec08ce560b0b4cf4fdc5f6bb0817ba23410e6d757",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-05/member-path-shape/requirements-mapper.json": "1433727d353d95268d3249265874ac7d96daf11aff733dca37b578705658fe3d"
+  },
+  "unchanged_joins": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-05/phase4-path-usage-joins.json",
+    "sha256": "21d2df2115b5eeadcbb67739a3b986d2c3d99944e6792c0f75a3ba1d0b736b3c"
+  },
+  "remediation_scope": "Change only rollup member_paths entries to exact canonical_path objects and update the active mapper receipt dependent rollup output hash; preserve joins byte-for-byte."
+}

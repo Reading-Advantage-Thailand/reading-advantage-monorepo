@@ -1,0 +1,21 @@
+{
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "type": "chore",
+  "status": "archived",
+  "created_at": "2026-07-12T00:00:00Z",
+  "updated_at": "2026-07-26T00:01:00Z",
+  "description": "Derive mechanic, capability, responsive, semantic asset, gap, delivery, and forward-only canonical ElvGames pack adoption artifacts exclusively from accepted evidence manifests.",
+  "estimated_tasks": 38,
+  "actual_tasks": 49,
+  "deviation_notes": "Phases 3-6 resumed after the T8-for-T9-only acceptance became available. The requested Kimi/fork_turns=none provider-isolated adversarial reviewer could not be spawned because Kimi coders were unavailable; under the user's direction to perform the implementation locally, a separate exhaustive hash-bound review pass was completed instead, with provider isolation explicitly unclaimed. The final package is non-consumable, contains zero adopted standard-pack keys, preserves all unknown Must-have blockers, and authorizes T10 independent acceptance review only.",
+  "depends_on": [
+    "apk_source_denominator_inventory_20260712",
+    "apk_three_game_truth_pilot_20260712",
+    "apk_corpus_audit_action_defense_20260712",
+    "apk_corpus_audit_traversal_exploration_20260712",
+    "apk_corpus_audit_puzzle_crafting_20260712",
+    "apk_corpus_audit_special_historical_20260712",
+    "apk_existing_asset_candidate_audit_20260712",
+    "apk_dual_theme_asset_production_20260712"
+  ]
+}

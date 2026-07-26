@@ -1,0 +1,166 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-04",
+  "phase": "phase4",
+  "role": "adversarial-reviewer",
+  "native_task_name": "/root/phase4_review_af04",
+  "declared_model": "gpt-5.6-sol",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "allowed_input_manifest_sha256": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+  "allowed_input_paths": [
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-applicability-matrix-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-adversarial-review-v2.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-root-acceptance.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase2-root-acceptance.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase3-root-acceptance.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-join-scaffold-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/index.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/root-dragon-flight.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T5-T7-normalized-scene-usages.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/candidate-records-base.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/caller-inventory.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/provenance-audit.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/inspection-records.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/phase4-path-usage-joins.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/phase4-group-rollup.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-04/requirements-mapper.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_batch_contract_test.py",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-batch-test-reports/AF-04.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-04/truth-test-author.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-04/truth-test-report-cycle-1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-04/truth-test-receipt-cycle-1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-04/adversarial-reviewer.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-04/visual-audio-inspector.json",
+    "measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json",
+    "measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/claim-evidence-ledger.v2.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-03/phase4-path-usage-joins.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-03/phase4-group-rollup.json"
+  ],
+  "input_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-applicability-matrix-v1.json": "ec35f558c071411506d0d2f4b71746d28d0a6e99fcf442ab0b80ba6ab62f7761",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-adversarial-review-v2.json": "80a22372921bb0433b0417ff8a5ee28ccf561d66eefc36cff1b5520320db0a05",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-root-acceptance.json": "2b30be13c8c0f6b7d1d404489c6058b48b6839f58d5ae2ce84b67f9d6a1a6d61",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase2-root-acceptance.json": "461c1d4f26afa512d1e6266384005b019ab0428a3cc508046675feb9aef35ed1",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase3-root-acceptance.json": "e855e7e50eba21fa9614719472f75179b7db9e7fd3d9756373d7bbd39b12a579",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json": "450f5ab66215178aa730e057cb28a220bfb550dfd924959a7f7f1da2eea02f9e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-join-scaffold-v1.json": "2162076fe26911a2659b7e0ef23f49398c8ebb4b5343b0ab0479c78a5d1a1de4",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/index.json": "e3e8ae52adfce1ee5eedf84d4f63c43fb02195971145298430645020c894c1cc",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence/root-dragon-flight.json": "6f7789fd3a658e064f7a25021359d2470f89098c1adb643f997040f43fa1ad1e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json": "5ef6370e6a789b9de14d1843c12380d2a10eb2558799fe16985e810709a998c6",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T5-T7-normalized-scene-usages.json": "b6134873c224ce98d4a3c8c5c466fa9af7c42a30cae3066dbf09b61a48c0add0",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/candidate-records-base.json": "af02f834c174dc003f98618012a8c44327692429e40941ea7dd1833a80f1f02b",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/caller-inventory.json": "95e7a98f128e5bf0a0ee35158c590df2e8c6894e333d5feaf707ca44007534a7",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/provenance-audit.json": "1048a20089eafb60e5484b36f55079ddb697ea1e170540a1cd81cb40cf735c0d",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/inspection-records.json": "c02a7291599446dbe4dac2ad9f31ff16c11c004ea67e557e7c347508b6c02979",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/phase4-path-usage-joins.json": "cf0f48973eb71c609fe784cdaf945152a3e92939471c6af83ae39eefbc01a439",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-04/phase4-group-rollup.json": "ee7e21803c3071736e3278e52910438fcbe8b625f6a0dd02d06f0e2f5c37ddc0",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-04/requirements-mapper.json": "e21cceab0a0ff4cb58497d54d75a204495d9adc5e91cd08f4cb8893b536af995",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_batch_contract_test.py": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-batch-test-reports/AF-04.json": "fd89ac76ab125ff1d257ef87f7d0fbec60b2a1cfaf03df71de458a1cc5a6233e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-04/truth-test-author.json": "31e3677be0037bad4cd176ad4508e635c674e3f81b9490bea2950f77cf20704e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-04/truth-test-report-cycle-1.json": "150d7292983bbf09e175e1c77b558a16f338408d33a1a0ce80064a60506768da",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/AF-04/truth-test-receipt-cycle-1.json": "7a6c369bdd46603bbc0ac46665619820f26666bf2fc168115c3b6a61dd97427c",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-04/adversarial-reviewer.json": "2f85a84c9623f6f26dbc60978880069da301f74a9491a4986c6d57903d8e985e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-04/visual-audio-inspector.json": "3448db6fbd9a8c22c79afb2e297ca15c822d29d445f083c32e68853efb8fea40",
+    "measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json": "84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e",
+    "measure/archive/apk_three_game_truth_pilot_20260712/rpg-battle-claim-ledger.json": "b57c0ee531bdc05ff1249d6182af92d9504a12c4408a8ad67b5c3b51f19063c6",
+    "measure/tracks/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/claim-evidence-ledger.v2.json": "8adc5b881104bf0ce78d0eb3895b65cb0485a4e516e9918461acfad0f7adfb2e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-03/phase4-path-usage-joins.json": "2015d48ae0ecc3b7ed51df44501c66037b9e5c367922940817a0363f03ec739d",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-03/phase4-group-rollup.json": "f7a1085af309e85130b863e7f235add4693e9afe46a792862f7fed5114cec00c"
+  },
+  "role_boundary": "Fresh isolated AF-04 Phase 4 adversarial review. Independently audited all 35 paths, 17 groups, 61 Git-pinned caller locators, six links, three usages, 24 eight-facet cells, four priority-1 paths, all dispositions, exact normalizer/claim pointers, frozen Dragon Flight/Enchanted Library/RPG Battle browser pointers, provenance/license and adoption prohibitions, duplicate specificity, fix-cycle archives, roles, hashes, stop losses, and ceilings. Did not produce or repair joins; alter producer/test/archive/freeze/plan/acceptance/code or an existing receipt; rerun browser capture; accept Phase 4 or T8; authorize T9, canonical keys, adoption, production, shipping, or product-success claims; or commit.",
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-reviews/AF-04.json": "98e3f211cc323c788487736544b6e71d53259c4e5892251b522d332a7a313dee"
+  },
+  "reviewed_counts": {
+    "candidate_paths": 35,
+    "hash_groups": 17,
+    "caller_locators": 61,
+    "accepted_path_usage_links": 6,
+    "unique_scene_usage_records": 3,
+    "responsive_assessment_cells": 24,
+    "priority1_paths": 4,
+    "review_slices": 1,
+    "games": 3,
+    "dispositions": {
+      "replace": 6,
+      "reject": 4,
+      "unknown": 25
+    },
+    "mixed_groups": 3,
+    "review_records": 196
+  },
+  "schema_differences": {
+    "records_missing_join_status": 35,
+    "semantic_requirements_with_divergent_same_v1_keys": 6,
+    "rollup_input_bindings_missing_sha256": 1,
+    "truth_receipt_shape_assertions_false": [
+      "producer_record_shape_exact",
+      "semantic_replacement_requirement_shape_exact",
+      "group_rollup_shape_exact"
+    ],
+    "verifier_detects_these_differences": false
+  },
+  "fix_cycle": {
+    "failed_cycles_before_review": 1,
+    "current_review_failed": true,
+    "failed_cycles_after_review": 2,
+    "two_failed_cycle_limit": 2,
+    "limit_status": "reached",
+    "archived_failed_report_sha256": "150d7292983bbf09e175e1c77b558a16f338408d33a1a0ce80064a60506768da",
+    "archived_failed_receipt_sha256": "7a6c369bdd46603bbc0ac46665619820f26666bf2fc168115c3b6a61dd97427c",
+    "old_rollup_sha256": "2025e9ef47e9b7568ccca80d7d37356977e4f2957dffcc1a38c1ce75822edf0a",
+    "current_rollup_sha256": "ee7e21803c3071736e3278e52910438fcbe8b625f6a0dd02d06f0e2f5c37ddc0",
+    "current_mixed_group_count": 3,
+    "current_path_specific_tuples_exact": true
+  },
+  "findings": {
+    "critical": [],
+    "high": [
+      "AF-04-P4-H1: The green truth receipt falsely attests exact same-v1 producer shapes. All 35 records omit frozen/adjacent-v1 join_status, six semantic requirements use a divergent key set, and the rollup self-binding omits the joins SHA-256; the verifier checks none of those structural facts."
+    ],
+    "medium": [],
+    "low": [
+      "AF-04-P4-L1: The archived failed report and receipt bind the old rollup hash but do not preserve its bytes, so the historical nested-shape defect cannot be reconstructed directly; the current corrected nested shape was verified."
+    ]
+  },
+  "measured_resource_usage": {
+    "candidate_paths": 35,
+    "hash_groups": 17,
+    "review_records": 196,
+    "command_invocations": 30,
+    "bytes_read": 109716726,
+    "within_ceiling": true,
+    "ceilings": {
+      "candidate_paths": 40,
+      "hash_groups": 24,
+      "review_records": 280,
+      "command_invocations": 120,
+      "bytes_read": 536870912
+    },
+    "measurement_basis": "196 review records are 35 candidate records, 17 group rollups, 61 caller locators, six path-usage links, 24 responsive cells, six semantic requirements, 35 disposition decisions, four priority-1 path decisions, one review slice, and seven catalog locator records. Bytes are exact unique bounded review inputs plus 563676 bytes from 28 Git-pinned caller blobs, 554481 bytes from three accepted claim artifacts and their cited Git blobs, and the verifier's 106107461 measured bytes. Commands include all top-level reviewer shell invocations through final validation, including three failed diagnostics."
+  },
+  "stop_loss_events": [
+    "AF-04-P4-H1 triggered the blocking-severity gate after the full bounded review. No repair was attempted."
+  ],
+  "unresolved_blocking_findings": 1,
+  "numeric_blockers": {
+    "critical": 0,
+    "high": 1,
+    "medium": 0,
+    "stop_loss_events": 1,
+    "total_blocking_findings": 1
+  },
+  "final_status": "fail-blocked-two-failed-cycle-limit-reached-pending-root-orchestrator-direction"
+}

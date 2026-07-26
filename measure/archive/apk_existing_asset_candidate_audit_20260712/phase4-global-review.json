@@ -1,0 +1,154 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-global-adversarial-review.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "Phase 4 global reconciliation",
+  "review_role": "independent-adversarial-global-reviewer",
+  "native_task_name": "phase4_global_review",
+  "role_boundary": "Independent review of the frozen Phase 4 batch evidence, global verifier, counterexamples, browser-evidence boundary, and truth receipt only. This review is not root product-owner acceptance.",
+  "reviewed_scope": {
+    "batches": [
+      "AF-01",
+      "AF-02",
+      "AF-03",
+      "AF-04",
+      "AF-05",
+      "AF-06",
+      "AF-07",
+      "AF-08",
+      "AF-09",
+      "AF-10",
+      "AF-11",
+      "AF-12"
+    ],
+    "batch_evidence_file_count": 93,
+    "batch_evidence_set_hash_algorithm": "SHA-256 over lexicographically sorted UTF-8 entries of repository-relative path, NUL, live SHA-256, newline",
+    "batch_evidence_set_sha256": "d9650d754fac613961f302cad3d5c348085fcedcb9337e7c49a280aaa006e8d7",
+    "global_fixture_count": 10,
+    "global_fixture_set_hash_algorithm": "SHA-256 over lexicographically sorted UTF-8 entries of repository-relative path, NUL, live SHA-256, newline",
+    "global_fixture_set_sha256": "2e94e3b22f5da4807ca1bd06459ae4b0747da098f71d9ec0e6315f790a9c4517"
+  },
+  "exact_verified_inputs": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_global_contract_test.py": "383365f43ce27c4f71b1f6cc8ef40ef210e8b868319619f909ab8313d995845a",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-test-report.json": "62750015a016dfc4357c75c1f0fec17f81e324b8cacb455bd9c5922562e3e071",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase4-global/truth-test-author.json": "ef7bc7b07ccb8b7e31c135813a534440241c1edda06d7c3a2c98ace13d7e6b41",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json": "450f5ab66215178aa730e057cb28a220bfb550dfd924959a7f7f1da2eea02f9e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-join-scaffold-v1.json": "2162076fe26911a2659b7e0ef23f49398c8ebb4b5343b0ab0479c78a5d1a1de4",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231"
+  },
+  "verifier_replay": {
+    "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_global_contract_test.py --root .",
+    "run_count": 2,
+    "run_1_output_sha256": "62750015a016dfc4357c75c1f0fec17f81e324b8cacb455bd9c5922562e3e071",
+    "run_2_output_sha256": "62750015a016dfc4357c75c1f0fec17f81e324b8cacb455bd9c5922562e3e071",
+    "published_report_sha256": "62750015a016dfc4357c75c1f0fec17f81e324b8cacb455bd9c5922562e3e071",
+    "byte_identical": true,
+    "published_result": "green",
+    "independent_semantic_result": "false-green"
+  },
+  "current_live_state": {
+    "candidate_paths": 428,
+    "unique_candidate_paths": 428,
+    "identical_hash_groups": 227,
+    "caller_locators": 533,
+    "unique_caller_locator_ids": 533,
+    "accepted_path_usage_links": 85,
+    "scene_links": 77,
+    "non_scene_links": 8,
+    "unique_usage_ids": 45,
+    "unique_scene_usage_ids": 40,
+    "unique_non_scene_usage_ids": 5,
+    "responsive_assessment_cells": 308,
+    "priority1_paths": 14,
+    "dispositions": {
+      "replace": 85,
+      "reject": 14,
+      "unknown": 329
+    },
+    "priority1_policy": "All 14 current Priority-1 paths are reject plus retire.",
+    "review_findings": {
+      "Critical": 0,
+      "High": 0,
+      "Medium": 0,
+      "Low": 0
+    },
+    "live_path_keyed_receipt_hash_mismatches": 0,
+    "assessment": "The current artifacts reconcile to the declared totals and current path-keyed receipt mappings. That current cleanliness does not cure the verifier's false-green semantics."
+  },
+  "browser_and_visual_boundary": {
+    "assessment": "pass",
+    "bounded_composite_scene_evidence_only": true,
+    "per_path_runtime_load_claimed": false,
+    "disclosed_usability_defects": [
+      "Dragon Flight compact direction controls begin below the initial viewport.",
+      "RPG Battle remains blocked in a repeated vocabulary-fetch loop at both viewports.",
+      "Magic Defense compact start content is clipped at the edge.",
+      "Enchanted Library wide capture timed out and remains blocked.",
+      "Potion Rush compact gameplay shows unresolved hud.served text and overlay pressure.",
+      "Castle Defense compact post-start canvas extends below the viewport."
+    ],
+    "scope_note": "The frozen Kimi evidence supports or contradicts bounded current legacy scene behavior only. It is not candidate-path load, provenance, license, suitability, reuse, adoption, production, or shipping proof."
+  },
+  "semantic_counterexamples": [
+    {
+      "id": "GX-01",
+      "mutation": "Replace one caller locator with a duplicate of another while preserving the total caller count.",
+      "expected": "reject",
+      "actual": "pass",
+      "errors": []
+    },
+    {
+      "id": "GX-02",
+      "mutation": "Replace every AF-01 truth receipt input and output hash with an all-zero SHA-256 while retaining its green status string.",
+      "expected": "reject",
+      "actual": "pass",
+      "errors": []
+    }
+  ],
+  "fixture_adequacy": {
+    "published_fixture_result": "10 of 10 published fixtures rejected",
+    "assessment": "fail",
+    "missing_counterexample_classes": [
+      "Count-preserving duplicate caller locator ID.",
+      "Stale truth receipt input and output hashes."
+    ]
+  },
+  "findings": {
+    "Critical": [],
+    "High": [
+      {
+        "id": "P4G-H-01",
+        "title": "Caller reconciliation is count-only and accepts duplicate locator IDs",
+        "file": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_global_contract_test.py",
+        "context": "The verifier sums caller_locators but never asserts global locator_id uniqueness or equality to the frozen caller denominator. GX-01 preserves 533 locators, introduces a duplicate ID, and still returns zero errors. The current corpus happens to be 533 of 533 unique, but the acceptance gate does not enforce that fact.",
+        "required_remediation": "Re-derive the exact caller locator ID multiset from the frozen accepted source, assert one-to-one path ownership and global uniqueness, and add a count-preserving duplicate-caller negative fixture."
+      },
+      {
+        "id": "P4G-H-02",
+        "title": "Truth receipt hash and report bindings can be stale while the global verifier remains green",
+        "file": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_global_contract_test.py",
+        "context": "The verifier checks each truth receipt's final_status prefix but does not verify its live input_file_hashes, output_file_hashes, batch report hash, or verifier hash binding. GX-02 zeroes all AF-01 truth receipt hashes and passes.",
+        "required_remediation": "Recompute all report and verifier hashes, validate every truth receipt input/output mapping against live bytes, and add a stale-receipt-hash negative fixture."
+      }
+    ],
+    "Medium": [],
+    "Low": []
+  },
+  "unresolved_blocking_findings": [
+    "P4G-H-01",
+    "P4G-H-02"
+  ],
+  "decision": {
+    "admit": false,
+    "block": true,
+    "blocking_severity_gate": "two unresolved High findings",
+    "scope": "Phase 4 global reconciliation is not ready for root product-owner acceptance."
+  },
+  "required_re_review_gate": [
+    "Both GX counterexamples must be represented by durable negative fixtures and rejected.",
+    "Both verifier replays must remain deterministic and match the republished report.",
+    "All exact global totals and current live receipt bindings must still reconcile.",
+    "A fresh independent global reviewer must report zero Critical, High, Medium, and Low findings before root acceptance."
+  ],
+  "final_status": "review-fail-blocking-remediation"
+}

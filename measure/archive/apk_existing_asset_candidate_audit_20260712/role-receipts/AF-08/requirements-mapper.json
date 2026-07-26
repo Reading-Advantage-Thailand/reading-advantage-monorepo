@@ -1,0 +1,84 @@
+{
+  "schema_version": "apk-role-receipt.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "batch_id": "AF-08",
+  "role": "requirements-mapper",
+  "native_task_name": "/root/phase4_map_af08",
+  "declared_model": "gpt-5.6-terra",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "role_boundary": "Derive and publish AF-08 path-specific Phase 4 joins, group rollup, and this mapper receipt only from frozen Phase 0 and Phase 4 inputs, accepted AF-08 caller, provenance, inspection, normalizer, cited-claim, and bounded browser evidence. Do not author tests, reports, reviews, plan updates, acceptance, product claims, commits, or verifier changes.",
+  "allowed_input_paths": [
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-join-scaffold-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-08/caller-inventory.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-08/provenance-audit.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-08/inspection-records.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/strict-caller-scene-joins.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T5-T7-normalized-scene-usages.json"
+  ],
+  "allowed_input_manifest_sha256": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+  "input_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-join-scaffold-v1.json": "2162076fe26911a2659b7e0ef23f49398c8ebb4b5343b0ab0479c78a5d1a1de4",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json": "450f5ab66215178aa730e057cb28a220bfb550dfd924959a7f7f1da2eea02f9e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-08/caller-inventory.json": "9426bb8624fca696d0f95a9310206a2c2ca60647ea87687a8582da9fc81e663f",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-08/provenance-audit.json": "c72ea75e3aae8258e9bc0bbc45321450df27ccd463253273ef6a5723e25d120a",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-08/inspection-records.json": "6a7fe68ed4e3ccaa388bc06ed012c6dcc7484da0549f5ca4d14470522ea78d03",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/strict-caller-scene-joins.json": "39fc827a12dc2ad7719d56ee3c616045caecdf4aef816c24a9fed5c3803f4f0c",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T3-T4-normalized-scene-usages.json": "5ef6370e6a789b9de14d1843c12380d2a10eb2558799fe16985e810709a998c6",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/T5-T7-normalized-scene-usages.json": "b6134873c224ce98d4a3c8c5c466fa9af7c42a30cae3066dbf09b61a48c0add0"
+  },
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-08/phase4-path-usage-joins.json": "aff3dbea7b736f0a5d5ec3b272398ab708f1fb809815f005c1f47cc74a43abcb",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-08/phase4-group-rollup.json": "88566b22196e1de861b257634e4604eca9e54be58e73703fe8a555fecf9bf241"
+  },
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": []
+  },
+  "unresolved_blocking_findings": 0,
+  "stop_loss_events": [
+    {
+      "command": "phase4_v2_batch_schema_contract_test_v2.py --root . --batch AF-08 --json",
+      "exit_code": 2,
+      "preserved_stderr": "unrecognized arguments: --json",
+      "bounded_correction": "Re-ran the unchanged recursive verifier with its supported arguments; it exited 0."
+    }
+  ],
+  "measured_resource_usage": {
+    "candidate_paths": 35,
+    "scene_usage_records": 5,
+    "games_per_join_slice": 2,
+    "command_invocations": 21,
+    "bytes_read": 2230090,
+    "within_ceiling": true,
+    "ceilings": {
+      "candidate_paths": 40,
+      "scene_usage_records": 240,
+      "games_per_join_slice": 3,
+      "command_invocations": 80,
+      "bytes_read": 268435456
+    },
+    "measurement_basis": "Exact unique byte sizes of the eleven frozen AF-08 producer inputs; command count includes orientation, independent derivation, publication, the preserved unsupported-argument red invocation, bounded rerun, and required unchanged-value verification."
+  },
+  "disclosures": [
+    "All 35 candidate paths remain explicit; identical hashes do not collapse path-specific callers, joins, requirements, or dispositions.",
+    "All five accepted path-usage links are scene links across three unique usage IDs; no non-scene link is represented.",
+    "Unknown provenance and license block reuse and adaptation; reference remains forbidden absent exact independent support.",
+    "Browser evidence is bounded composite legacy-scene behavior only and does not establish per-path runtime load, suitability, theme compatibility, provenance, license, or adoption.",
+    "The seven catalog locator records are count/reference-only, embed no payload or cells, and are non-additive to the candidate-path denominator.",
+    "Canonical standard-pack candidate keys remain null and forbidden pending T9; direct legacy adoption is false.",
+    "Producer mapping is pending fresh truth test, independent review, and root acceptance."
+  ],
+  "final_status": "mapping-complete-pending-fresh-truth-test-review-and-root-acceptance"
+}

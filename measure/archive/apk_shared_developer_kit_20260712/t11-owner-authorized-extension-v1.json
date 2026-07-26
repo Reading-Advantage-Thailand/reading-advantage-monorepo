@@ -1,0 +1,87 @@
+{
+  "schema_version": "apk-t11-owner-authorized-extension.v1",
+  "track_id": "apk_shared_developer_kit_20260712",
+  "authorized_at": "2026-07-26T00:00:00Z",
+  "authority": {
+    "kind": "explicit_product_owner_instruction",
+    "instruction": "Reopen and fully extend T11; unblock any scope needed without a further approval gate.",
+    "may_define_owner_owned_canonical_mappings": true,
+    "may_reclassify_historical_evidence": false
+  },
+  "supersession": {
+    "supersedes_only": "The dependency-gated implementation ceiling recorded by the bounded T11 acceptance.",
+    "does_not_supersede": [
+      "T10 evidence dispositions or historical claims",
+      "T10 or bounded-T11 hashes",
+      "package and host ownership boundaries",
+      "stable educational input/output contracts",
+      "host ownership of identity, tenancy, authoritative persistence, and authoritative XP",
+      "the canonical standard-pack release and attribution requirements"
+    ],
+    "prior_t11_acceptance_remains_historical_fact": true,
+    "rewrite_bound_artifacts": false
+  },
+  "bound_history": {
+    "t10_accepted_manifest": {
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/accepted-successor-manifest-v1.json",
+      "sha256": "e9fc2c9c8074db74670fa2e2929bd4efb5b8d0fd2ef5a8b9819d2f5a6e39ba49"
+    },
+    "t10_successor_hashes": {
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/successor-hashes-v1.json",
+      "sha256": "c026c0bff62c3d6739c366fa80cb6593c455e96bffd2532a43223c829ec74005"
+    },
+    "t10_owner_acceptance": {
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/product-owner-acceptance-v1.json",
+      "sha256": "165e21c9ddb5a6e0b2f61f3190d604fbb3133459b5f00331a8c66ee1e7572753"
+    },
+    "bounded_t11_acceptance": {
+      "path": "measure/tracks/apk_shared_developer_kit_20260712/t11-owner-delegated-acceptance-v1.json",
+      "sha256": "d36b8ed89558ed202b0e6777efc9ec17efc54df2924a309763a148f6f810455f"
+    }
+  },
+  "historical_and_evidence_claims": {
+    "classification": "descriptive_non_normative",
+    "claims": [
+      "T10 accepted seven capability contracts and accepted zero historical runtime contracts.",
+      "T10 approved zero of 85 historical asset-adoption mappings.",
+      "The bounded T11 delivery intentionally failed closed for responsive, presentation, browser, performance, and QC-host behavior.",
+      "This extension does not convert blocked, unknown, synthetic, or absent historical evidence into observed legacy behavior."
+    ]
+  },
+  "normative_product_decisions": {
+    "classification": "owner_owned_forward_product_policy",
+    "decisions": [
+      "Implement T11 specification phases 2 through 8 as supported forward product behavior.",
+      "Use the normative responsive composition specification as the canonical compact/wide product contract.",
+      "Define bounded canonical semantic asset mappings when required for the public exemplar, scaffold, presentation components, and QC surface.",
+      "Label those mappings as owner-approved product bindings, never as recovered legacy evidence.",
+      "Keep cartridges pack-independent and materialize only the selected semantic union from the pinned accepted standard-pack release.",
+      "Expose accessible DOM semantics for required non-canvas information and controls.",
+      "Fail closed with structured diagnostics for invalid geometry, configuration, asset keys, release bindings, attribution, or unsupported sizes.",
+      "Treat browser and performance results as verification evidence only when commands actually run and pass."
+    ]
+  },
+  "authorized_scope": {
+    "phases": [2, 3, 4, 5, 6, 7, 8],
+    "deliverables": [
+      "responsive compact/wide profile resolution and independent input-mode resolution",
+      "safe areas, regions, transforms, camera helpers, and state-preserving resize transitions",
+      "accessible presentation components and DOM semantics",
+      "semantic asset resolver, selected-union materialization, registration, and attribution behavior",
+      "reusable gameplay/runtime systems required by the T11 specification",
+      "QC controls, diagnostics, performance probes, and browser-test helpers",
+      "working Advantage Games authoring/QC surface",
+      "complete public-API exemplar and non-copying scaffold"
+    ]
+  },
+  "acceptance_policy": {
+    "no_further_scope_approval_required": true,
+    "tests_first_where_practical": true,
+    "strict_typescript_and_zod_boundaries": true,
+    "adapter_neutrality_required": true,
+    "direct_pack_or_edition_imports_forbidden": true,
+    "jsdoc_required_for_exported_api": true,
+    "invalid_configuration_policy": "fail_closed",
+    "remaining_gaps_must_be_reported_as_open_and_verifiable": true
+  }
+}

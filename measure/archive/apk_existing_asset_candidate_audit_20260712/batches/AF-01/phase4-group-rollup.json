@@ -1,0 +1,1162 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-group-rollup.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-01",
+  "phase": "phase4",
+  "role": "requirements-mapper",
+  "status": "producer-complete-pending-truth-test-independent-review-and-root-acceptance",
+  "input_binding": {
+    "role_applicability_matrix": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-applicability-matrix-v1.json",
+      "sha256": "ec35f558c071411506d0d2f4b71746d28d0a6e99fcf442ab0b80ba6ab62f7761"
+    },
+    "phase0_input_freeze": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase0-input-freeze-v1.json",
+      "sha256": "d4bd3606c7c75f495f2d8486ea4220f48aefd9eb216689b765aa9d96f58f2a9b"
+    },
+    "phase1_root_acceptance": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase1-root-acceptance.json",
+      "sha256": "2b30be13c8c0f6b7d1d404489c6058b48b6839f58d5ae2ce84b67f9d6a1a6d61"
+    },
+    "phase2_root_acceptance": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase2-root-acceptance.json",
+      "sha256": "461c1d4f26afa512d1e6266384005b019ab0428a3cc508046675feb9aef35ed1"
+    },
+    "phase3_root_acceptance": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase3-root-acceptance.json",
+      "sha256": "e855e7e50eba21fa9614719472f75179b7db9e7fd3d9756373d7bbd39b12a579"
+    },
+    "phase4_source_registry": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json",
+      "sha256": "450f5ab66215178aa730e057cb28a220bfb550dfd924959a7f7f1da2eea02f9e"
+    },
+    "phase4_input_freeze": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json",
+      "sha256": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3"
+    },
+    "phase4_join_scaffold": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-join-scaffold-v1.json",
+      "sha256": "2162076fe26911a2659b7e0ef23f49398c8ebb4b5343b0ab0479c78a5d1a1de4"
+    },
+    "phase4_browser_evidence_freeze": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json",
+      "sha256": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231"
+    },
+    "caller_inventory": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/caller-inventory.json",
+      "sha256": "338bc1c1f6cc25e06af2bbed8081fefe0d1c381c1b7e9c877825b83a8d2d5a22"
+    },
+    "provenance_audit": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/provenance-audit.json",
+      "sha256": "b647af9e2775ff4ffb27c13b3eefef05c4c4131a738d63954f6e914a9ac48be6"
+    },
+    "inspection_records": {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+      "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9"
+    }
+  },
+  "counts": {
+    "candidate_paths": 36,
+    "identical_hash_groups": 18,
+    "caller_locators": 43,
+    "accepted_path_usage_links": 13,
+    "groups_with_mixed_path_specific_dispositions": 6
+  },
+  "groups": [
+    {
+      "identical_hash_group": "sha256:00a88649680edba33079e5a6e4fb604ca85945229c762dfa1c0fb1da978c60fb",
+      "sha256": "00a88649680edba33079e5a6e4fb604ca85945229c762dfa1c0fb1da978c60fb",
+      "media_class": "text_or_data",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/0"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/measure/archive/rpg_battle_20260102/metadata.json",
+          "caller_locator_ids": [],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 1
+        }
+      },
+      "accepted_usage_ids": [],
+      "games": [],
+      "rollup_status": "uniform_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    },
+    {
+      "identical_hash_group": "sha256:0173afee01656c45d538b4361af57799b3ce21a6f5600cdb99738dd8ae38324f",
+      "sha256": "0173afee01656c45d538b4361af57799b3ce21a6f5600cdb99738dd8ae38324f",
+      "media_class": "audio",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/1"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/sounds/angry-grunt.mp3",
+          "caller_locator_ids": [],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sounds/angry-grunt.mp3",
+          "caller_locator_ids": [],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 2,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 2
+        }
+      },
+      "accepted_usage_ids": [],
+      "games": [],
+      "rollup_status": "uniform_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    },
+    {
+      "identical_hash_group": "sha256:01a78cdd2f65d45c96090018039271ea9263ffabdc82594041c7262e3ca4dc51",
+      "sha256": "01a78cdd2f65d45c96090018039271ea9263ffabdc82594041c7262e3ca4dc51",
+      "media_class": "visual_or_video",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/2"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/enchanted-library/library_background.png",
+          "caller_locator_ids": [],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/enchanted-library/library_background.png",
+          "caller_locator_ids": [
+            "caller:f79cb9ce5f356abef9fa8c9f6a1f32e3a649fb6b15820bc10b0d3e0764bac6c8",
+            "caller:bb825e6ac8d46b94736ced45834d36ba56e9081afeceafd36d670b4c94dff8af"
+          ],
+          "accepted_usage_ids": [
+            "usage-f4d7c4f8710a5f535612addb"
+          ],
+          "join_status": "accepted_exact_normalized_join",
+          "disposition": {
+            "status": "decided_by_frozen_priority_policy",
+            "value": "replace",
+            "replacement_action": "replace_with_standard_pack_requirement",
+            "policy_priority": 2
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/enchanted-library/library_background.png",
+          "caller_locator_ids": [
+            "caller:ae2e86c9f91c6bb34ad41cf4832bca207067368d1faae55031cc7dd2ec59b0b0",
+            "caller:a0f1bc07e27bfe84574fcfe40e9c7d549114b5a48cb0cb415f795460f3d5a617"
+          ],
+          "accepted_usage_ids": [
+            "usage-f4d7c4f8710a5f535612addb"
+          ],
+          "join_status": "accepted_exact_normalized_join",
+          "disposition": {
+            "status": "decided_by_frozen_priority_policy",
+            "value": "replace",
+            "replacement_action": "replace_with_standard_pack_requirement",
+            "policy_priority": 2
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 4,
+        "accepted_path_usage_links": 2,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 2,
+          "unknown": 1
+        }
+      },
+      "accepted_usage_ids": [
+        "usage-f4d7c4f8710a5f535612addb"
+      ],
+      "games": [
+        "enchanted-library"
+      ],
+      "rollup_status": "mixed_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    },
+    {
+      "identical_hash_group": "sha256:024e32b44f5f749f78850a533e2cc43c6d277fcb4b94def59dfcfe8a0d22d607",
+      "sha256": "024e32b44f5f749f78850a533e2cc43c6d277fcb4b94def59dfcfe8a0d22d607",
+      "media_class": "text_or_data",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/3"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/measure/archive/spellweavers-run-20260319/metadata.json",
+          "caller_locator_ids": [],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 1
+        }
+      },
+      "accepted_usage_ids": [],
+      "games": [],
+      "rollup_status": "uniform_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    },
+    {
+      "identical_hash_group": "sha256:03e13b089a8de6f1f4ebda1f2cc8cda705352c51bd50e9b3194339b648311a29",
+      "sha256": "03e13b089a8de6f1f4ebda1f2cc8cda705352c51bd50e9b3194339b648311a29",
+      "media_class": "visual_or_video",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/4"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-flight/projectile-boss.png",
+          "caller_locator_ids": [
+            "caller:294c368ff529452244dfe6c63362763ca608815c15fec7d4d8d20af9f42b22f7",
+            "caller:6976bc64ab2788c98a88c70fc518036ebc7177cc57f248b9b04e951e02d1fbe2"
+          ],
+          "accepted_usage_ids": [
+            "t3:dragon-flight:scene:dragon-flight-game:df-asset-011"
+          ],
+          "join_status": "accepted_exact_normalized_join",
+          "disposition": {
+            "status": "decided_by_frozen_priority_policy",
+            "value": "replace",
+            "replacement_action": "replace_with_standard_pack_requirement",
+            "policy_priority": 2
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-flight/projectile-fireball.png",
+          "caller_locator_ids": [
+            "caller:a8aeaf7c59a0c64a9932b2975e18f335dcdf145f2f92337a171090fccedb4d99",
+            "caller:2a2696cad99184aedf273a6ac0f691421f7a9a1e0dc117c6beda4fb1f1c39ce1"
+          ],
+          "accepted_usage_ids": [
+            "t3:dragon-flight:scene:dragon-flight-game:df-asset-010"
+          ],
+          "join_status": "accepted_exact_normalized_join",
+          "disposition": {
+            "status": "decided_by_frozen_priority_policy",
+            "value": "replace",
+            "replacement_action": "replace_with_standard_pack_requirement",
+            "policy_priority": 2
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 2,
+        "caller_locators": 4,
+        "accepted_path_usage_links": 2,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 2,
+          "unknown": 0
+        }
+      },
+      "accepted_usage_ids": [
+        "t3:dragon-flight:scene:dragon-flight-game:df-asset-010",
+        "t3:dragon-flight:scene:dragon-flight-game:df-asset-011"
+      ],
+      "games": [
+        "dragon-flight"
+      ],
+      "rollup_status": "uniform_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    },
+    {
+      "identical_hash_group": "sha256:047da6178fe607e26260f6bf041fbdd7c6eda6701b20c2c36446d93086c59330",
+      "sha256": "047da6178fe607e26260f6bf041fbdd7c6eda6701b20c2c36446d93086c59330",
+      "media_class": "visual_or_video",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/5"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/enchanted-library/player_3x3_pose_sheet.png",
+          "caller_locator_ids": [],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/enchanted-library/player_3x3_pose_sheet.png",
+          "caller_locator_ids": [
+            "caller:de9b90975d5c59537884c0ac8b2fbe4943792f57c7cbbcba0383c902065bcdf9",
+            "caller:b74517f83c9ff02bc638062083113539e5ec43972a08a694b4b45e4144bc006f"
+          ],
+          "accepted_usage_ids": [
+            "usage-475f04e11aec9b264ec1c967"
+          ],
+          "join_status": "accepted_exact_normalized_join",
+          "disposition": {
+            "status": "decided_by_frozen_priority_policy",
+            "value": "replace",
+            "replacement_action": "replace_with_standard_pack_requirement",
+            "policy_priority": 2
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/enchanted-library/player_3x3_pose_sheet.png",
+          "caller_locator_ids": [
+            "caller:0ebbe7095cbbf9d147867d375d96f2216126541269afba8cd42a1077822d1332",
+            "caller:17fdb6d528b5b6d8a26bfdb20843e9b4d7a8a43ca13cb45622157bd82eb2bcd1"
+          ],
+          "accepted_usage_ids": [
+            "usage-475f04e11aec9b264ec1c967"
+          ],
+          "join_status": "accepted_exact_normalized_join",
+          "disposition": {
+            "status": "decided_by_frozen_priority_policy",
+            "value": "replace",
+            "replacement_action": "replace_with_standard_pack_requirement",
+            "policy_priority": 2
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 4,
+        "accepted_path_usage_links": 2,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 2,
+          "unknown": 1
+        }
+      },
+      "accepted_usage_ids": [
+        "usage-475f04e11aec9b264ec1c967"
+      ],
+      "games": [
+        "enchanted-library"
+      ],
+      "rollup_status": "mixed_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    },
+    {
+      "identical_hash_group": "sha256:04f3c6fad82edbb3b699d3564953785085007662cece98ca5298748c33b1d219",
+      "sha256": "04f3c6fad82edbb3b699d3564953785085007662cece98ca5298748c33b1d219",
+      "media_class": "visual_or_video",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/6"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/rune-forge-chamber/rune-forge-chamber-gameplay.png",
+          "caller_locator_ids": [],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 1
+        }
+      },
+      "accepted_usage_ids": [],
+      "games": [],
+      "rollup_status": "uniform_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    },
+    {
+      "identical_hash_group": "sha256:05e9d81f811e1bc000f042618311c7e3ee6d158be73e954d18a13c6868e33bdd",
+      "sha256": "05e9d81f811e1bc000f042618311c7e3ee6d158be73e954d18a13c6868e33bdd",
+      "media_class": "visual_or_video",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/7"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/spellweavers-run/spellweavers-run-gameplay.png",
+          "caller_locator_ids": [],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 1
+        }
+      },
+      "accepted_usage_ids": [],
+      "games": [],
+      "rollup_status": "uniform_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    },
+    {
+      "identical_hash_group": "sha256:0647d30917695e3e76c4fe5888775ea50efa5528fce7941c0f5979fc03b0d724",
+      "sha256": "0647d30917695e3e76c4fe5888775ea50efa5528fce7941c0f5979fc03b0d724",
+      "media_class": "visual_or_video",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/8"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/magic-defense/skeletons_3x3_pose_sheet.png",
+          "caller_locator_ids": [
+            "caller:3bacff1f0efaf99f31b88204f3fd26de4deb9767a11aab83e4fc8981556b38c3",
+            "caller:0adddd7114d772ec414174437b5055fbb3fcf52ae6f8349ec8c0847183898367"
+          ],
+          "accepted_usage_ids": [
+            "t4:magic-defense:scene:enemy-render:md-asset-001"
+          ],
+          "join_status": "accepted_exact_normalized_join",
+          "disposition": {
+            "status": "decided_by_frozen_priority_policy",
+            "value": "replace",
+            "replacement_action": "replace_with_standard_pack_requirement",
+            "policy_priority": 2
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/magic-defense/skeletons_3x3_pose_sheet.png",
+          "caller_locator_ids": [
+            "caller:14c97c762124ed7d8da9a11071dddf13c9c4d137f085900a3cf182ccd1ba2c99",
+            "caller:6865b381447338efd2e1c7565e8ea795d7835b91d33f72815d6bdb9fc2de38de"
+          ],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 2,
+        "caller_locators": 4,
+        "accepted_path_usage_links": 1,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 1,
+          "unknown": 1
+        }
+      },
+      "accepted_usage_ids": [
+        "t4:magic-defense:scene:enemy-render:md-asset-001"
+      ],
+      "games": [
+        "magic-defense"
+      ],
+      "rollup_status": "mixed_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    },
+    {
+      "identical_hash_group": "sha256:0a9fd00325736bcd48d66ab587170fc193b538fc7c2321d63beafc267695144d",
+      "sha256": "0a9fd00325736bcd48d66ab587170fc193b538fc7c2321d63beafc267695144d",
+      "media_class": "visual_or_video",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/9"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/potion-rush/mushroom.png",
+          "caller_locator_ids": [],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/mushroom.png",
+          "caller_locator_ids": [
+            "caller:ac92e2a6eaecdf0de21b6b944c81ea72f53e02036d65902c0e88927e19e0054b",
+            "caller:6c21941402855842a970e2b3c7d595c00bd4795494c51d5c401b264fc05d106a"
+          ],
+          "accepted_usage_ids": [
+            "usage-3847536916bedeea9707b998"
+          ],
+          "join_status": "accepted_exact_normalized_join",
+          "disposition": {
+            "status": "decided_by_frozen_priority_policy",
+            "value": "replace",
+            "replacement_action": "replace_with_standard_pack_requirement",
+            "policy_priority": 2
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/mushroom.png",
+          "caller_locator_ids": [
+            "caller:536f6bf03e5306ede21e0bda1df5fe36713d550deb3c2d05769bf5942f98d824",
+            "caller:290fb5c68501680b3bcb203d0def3152e7bf80bfba33ad2d3b39f8d6df5197da"
+          ],
+          "accepted_usage_ids": [
+            "usage-3847536916bedeea9707b998"
+          ],
+          "join_status": "accepted_exact_normalized_join",
+          "disposition": {
+            "status": "decided_by_frozen_priority_policy",
+            "value": "replace",
+            "replacement_action": "replace_with_standard_pack_requirement",
+            "policy_priority": 2
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 4,
+        "accepted_path_usage_links": 2,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 2,
+          "unknown": 1
+        }
+      },
+      "accepted_usage_ids": [
+        "usage-3847536916bedeea9707b998"
+      ],
+      "games": [
+        "potion-rush"
+      ],
+      "rollup_status": "mixed_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    },
+    {
+      "identical_hash_group": "sha256:0aadcc7ab27a447950b3b0e5e85984448a4ea974cd329f7385d2129ccd334215",
+      "sha256": "0aadcc7ab27a447950b3b0e5e85984448a4ea974cd329f7385d2129ccd334215",
+      "media_class": "visual_or_video",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/10"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/castle-defense/road_corner.png",
+          "caller_locator_ids": [],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/castle-defense/road_corner.png",
+          "caller_locator_ids": [
+            "caller:45908b8b53b9b1df66b69a0e368ae604c1e977ca6e428e1fe6953257cb0ad906",
+            "caller:c85fe86fc5d73942772db8d8edab1d895be585e31f0c884938e63826b676e3ce"
+          ],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sentence/castle-defense/road_corner.png",
+          "caller_locator_ids": [
+            "caller:25168a69af14fee1424ec22570935d950bd183d6f33b80010132fb0dc374f65f",
+            "caller:b24fb335925db975fca8262adda9087a85776acf047dadec7da826e559c6a5b4"
+          ],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 4,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 3
+        }
+      },
+      "accepted_usage_ids": [],
+      "games": [],
+      "rollup_status": "uniform_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    },
+    {
+      "identical_hash_group": "sha256:0b1e073f4b214e66b7d4ede355fc507803e7ce383634ad3ccd0c6a5eed4fb72a",
+      "sha256": "0b1e073f4b214e66b7d4ede355fc507803e7ce383634ad3ccd0c6a5eed4fb72a",
+      "media_class": "text_or_data",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/11"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/measure/archive/enchanted-library_20260130/metadata.json",
+          "caller_locator_ids": [],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 1
+        }
+      },
+      "accepted_usage_ids": [],
+      "games": [],
+      "rollup_status": "uniform_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    },
+    {
+      "identical_hash_group": "sha256:0b8ecd86898841c0e0142fe25b251aa15659d718d1bb6462ed9b342e67f3be08",
+      "sha256": "0b8ecd86898841c0e0142fe25b251aa15659d718d1bb6462ed9b342e67f3be08",
+      "media_class": "visual_or_video",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/12"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/rune-match/runes/rune_shield_3x2_pose_sheet.png",
+          "caller_locator_ids": [],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/rune-match/runes/rune_shield_3x2_pose_sheet.png",
+          "caller_locator_ids": [
+            "caller:d6303c439773ccea91eb93d20a60dab4333f3c86e29aed39300741400cfb42b5",
+            "caller:c9b72fce6a3dbf19ba6317656b4d26b5ebee3a86d95f9c437b3ae56176af1c32"
+          ],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/rune-match/runes/rune_shield_3x2_pose_sheet.png",
+          "caller_locator_ids": [
+            "caller:25ce52abc9b6ee2033581c97091381c6f9d17fafe3ef808ffc93e3e96eb7e8a1",
+            "caller:04c6945dd7943effba35281d9ca372e7312697814d3e7b19d36e8d91f06af51a"
+          ],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 4,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 3
+        }
+      },
+      "accepted_usage_ids": [],
+      "games": [],
+      "rollup_status": "uniform_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    },
+    {
+      "identical_hash_group": "sha256:0bc1f8bd8e366c1fc14b98c13408a8942151a3deef1de2d707a44a2857bd17fe",
+      "sha256": "0bc1f8bd8e366c1fc14b98c13408a8942151a3deef1de2d707a44a2857bd17fe",
+      "media_class": "visual_or_video",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/13"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/cover/cover-alchemists-synthesis.png",
+          "caller_locator_ids": [
+            "caller:a3c439568f8403420fa625795241c12f5067d6a13a568879ba1862225b366bc4"
+          ],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 1,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 1
+        }
+      },
+      "accepted_usage_ids": [],
+      "games": [],
+      "rollup_status": "uniform_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    },
+    {
+      "identical_hash_group": "sha256:0d647b06eb5d566d8ebaf3b22804de556d369667b14225b9e9c15a71a6b9eed3",
+      "sha256": "0d647b06eb5d566d8ebaf3b22804de556d369667b14225b9e9c15a71a6b9eed3",
+      "media_class": "text_or_data",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/14"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/measure/archive/potion-rush-refinements-20260129/metadata.json",
+          "caller_locator_ids": [],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 0,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 1
+        }
+      },
+      "accepted_usage_ids": [],
+      "games": [],
+      "rollup_status": "uniform_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    },
+    {
+      "identical_hash_group": "sha256:0ea7dbe9cd3ec89dd62bb809b868f4bef3ff0288f580e98f416c76b2034702a6",
+      "sha256": "0ea7dbe9cd3ec89dd62bb809b868f4bef3ff0288f580e98f416c76b2034702a6",
+      "media_class": "visual_or_video",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/15"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/dragon-flight/player-3x3-sheet-facing-camera.png",
+          "caller_locator_ids": [],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/griffin-riders-escape/player-3x3-sheet.png",
+          "caller_locator_ids": [],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-camera.png",
+          "caller_locator_ids": [
+            "caller:6bc4860f39bf6cfd69ea3ecf8acd0a12ccb47ea9b0ab60d85a7c5b55ed261541",
+            "caller:def80707e7c32f62f61a1093a93dd5ae356c82c87f2511ba1d2f4123cec45aae",
+            "caller:e99caf321331c3c5eee4576ff366b903b33439307c2a84e70b81ebc5facde3b7",
+            "caller:bb71a72f84c2f3afbd1a4f44af0b448e916e824df5f1afdce93feb8c86a94a76"
+          ],
+          "accepted_usage_ids": [
+            "t3:dragon-flight:scene:dragon-flight-game:df-asset-004"
+          ],
+          "join_status": "accepted_exact_normalized_join",
+          "disposition": {
+            "status": "decided_by_frozen_priority_policy",
+            "value": "replace",
+            "replacement_action": "replace_with_standard_pack_requirement",
+            "policy_priority": 2
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-camera.png",
+          "caller_locator_ids": [
+            "caller:db8a8db87fa98f3b25b6f6fb83590d835748bc1d64415492a4659e3397bd419d",
+            "caller:a33ede3ba7f20fb4d333fef768c53d5fbc23c2837bc5f91fbbd7809bce478a23",
+            "caller:3328ae9f521f362138699e454237193b5c9c73a23a47338c322f1a2da23cd237",
+            "caller:503cd17529b4da6ceece52766f93da77f9352f4122d222e327ccf3f461910a51"
+          ],
+          "accepted_usage_ids": [
+            "t3:dragon-flight:scene:dragon-flight-game:df-asset-004"
+          ],
+          "join_status": "accepted_exact_normalized_join",
+          "disposition": {
+            "status": "decided_by_frozen_priority_policy",
+            "value": "replace",
+            "replacement_action": "replace_with_standard_pack_requirement",
+            "policy_priority": 2
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 4,
+        "caller_locators": 8,
+        "accepted_path_usage_links": 2,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 2,
+          "unknown": 2
+        }
+      },
+      "accepted_usage_ids": [
+        "t3:dragon-flight:scene:dragon-flight-game:df-asset-004"
+      ],
+      "games": [
+        "dragon-flight"
+      ],
+      "rollup_status": "mixed_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    },
+    {
+      "identical_hash_group": "sha256:1455fc6650cf7670f48098d3e6687ba08f86ebe9f29c065255801d346d811396",
+      "sha256": "1455fc6650cf7670f48098d3e6687ba08f86ebe9f29c065255801d346d811396",
+      "media_class": "visual_or_video",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/16"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/games/potion-rush/cauldron-blue.png",
+          "caller_locator_ids": [],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/advantage-games/public/games/sentence/potion-rush/cauldron-blue.png",
+          "caller_locator_ids": [
+            "caller:ccc530a183e893266a0482383bd74704e0796e156fdf44d7936e49c21aa783e6",
+            "caller:ddaa1e797ba10e757bc02fe51e153737e1f1cfd840304896e2907e8b4f438376"
+          ],
+          "accepted_usage_ids": [
+            "usage-8876a5cbd0c49b8327b4c8a9"
+          ],
+          "join_status": "accepted_exact_normalized_join",
+          "disposition": {
+            "status": "decided_by_frozen_priority_policy",
+            "value": "replace",
+            "replacement_action": "replace_with_standard_pack_requirement",
+            "policy_priority": 2
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        },
+        {
+          "canonical_path": "apps/reading-advantage/public/games/sentence/potion-rush/cauldron-blue.png",
+          "caller_locator_ids": [
+            "caller:d3389233aad7660a3ec52e50b293d74cd173a680cc08983edc1e662e1049c843",
+            "caller:f573d1c158079f88f95f2cfb4e9a0b1ecf9d9f4f03679e71ae31a288f12865d9"
+          ],
+          "accepted_usage_ids": [
+            "usage-8876a5cbd0c49b8327b4c8a9"
+          ],
+          "join_status": "accepted_exact_normalized_join",
+          "disposition": {
+            "status": "decided_by_frozen_priority_policy",
+            "value": "replace",
+            "replacement_action": "replace_with_standard_pack_requirement",
+            "policy_priority": 2
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 3,
+        "caller_locators": 4,
+        "accepted_path_usage_links": 2,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 2,
+          "unknown": 1
+        }
+      },
+      "accepted_usage_ids": [
+        "usage-8876a5cbd0c49b8327b4c8a9"
+      ],
+      "games": [
+        "potion-rush"
+      ],
+      "rollup_status": "mixed_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    },
+    {
+      "identical_hash_group": "sha256:147c3b039b965ee7079c49c89966a385fc6cf01b568c97e2fec2fe104b4c25d0",
+      "sha256": "147c3b039b965ee7079c49c89966a385fc6cf01b568c97e2fec2fe104b4c25d0",
+      "media_class": "visual_or_video",
+      "inspection_binding": {
+        "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-01/inspection-records.json",
+        "sha256": "7d50b14edcaf98d4442eb79958f3fc352b52f9cc2c58d159d00d46b0a5d607c9",
+        "json_pointer": "/groups/17"
+      },
+      "member_paths": [
+        {
+          "canonical_path": "apps/advantage-games/public/vibe-coding-poster.jpg",
+          "caller_locator_ids": [
+            "caller:99dd67eea92ad69f40aca79a206430fbb2a9179140cc9380b80449aace10788e",
+            "caller:f472a278325d16794b3217ce2222f8809f91e36c5a354bd21cf9c01c31fedbb7"
+          ],
+          "accepted_usage_ids": [],
+          "join_status": "blocked_unknown",
+          "disposition": {
+            "status": "blocked",
+            "value": "unknown",
+            "replacement_action": null,
+            "policy_priority": 3
+          },
+          "direct_legacy_adoption": false,
+          "canonical_standard_pack_candidate_key": null
+        }
+      ],
+      "counts": {
+        "paths": 1,
+        "caller_locators": 2,
+        "accepted_path_usage_links": 0,
+        "disposition_paths": {
+          "reject": 0,
+          "replace": 0,
+          "unknown": 1
+        }
+      },
+      "accepted_usage_ids": [],
+      "games": [],
+      "rollup_status": "uniform_path_specific",
+      "shared_fact_boundary": "Media inspection may be shared at identical-hash-group grain; callers, accepted usages, semantic requirements, and dispositions remain candidate-path-specific."
+    }
+  ],
+  "disclosures": [
+    "No identical-hash group collapses its member paths.",
+    "A joined member path does not promote an unjoined peer to accepted usage, replacement, reference, reuse, adaptation, or direct adoption.",
+    "Canonical standard-pack candidate keys remain null and forbidden pending T9."
+  ]
+}

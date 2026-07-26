@@ -1,0 +1,17 @@
+{
+  "schema_version": "apk-t9-phase6-truth-report.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "status": "automated-pass-pending-owner-delegated-phase-gates",
+  "command": "python3 phase3_6_truth_verifier.py",
+  "state": "VERIFIED_PENDING_OWNER_DELEGATED_PHASE_GATES",
+  "checks": 2467,
+  "findings": [],
+  "production_passed": true,
+  "generator_deterministic": true,
+  "fixture_manifest": {
+    "path": "phase6-fixture-manifest-v1.json",
+    "sha256": "860c3690f65460d67edad8908133db280a932089e6a53a40ad8752b29369d165",
+    "fixture_count": 8
+  },
+  "scope": "Pre-owner automated evidence only; this report is not acceptance and publishes no consumable successor hash."
+}

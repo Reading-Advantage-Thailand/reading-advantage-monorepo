@@ -1,0 +1,98 @@
+{
+  "track_id": "apk_shared_developer_kit_20260712",
+  "type": "feature",
+  "status": "archived",
+  "created_at": "2026-07-12T00:00:00Z",
+  "updated_at": "2026-07-26T00:00:00Z",
+  "completed_at": "2026-07-26T00:00:00Z",
+  "description": "Implement the corpus-approved shared Phaser systems, responsive composition primitives, standard game UI, canonical ElvGames standard-pack resolver and enforcement, testing tools, scaffolding, documentation, and Advantage Games QC workflow that make APK games simpler to develop.",
+  "estimated_tasks": 65,
+  "actual_tasks": 65,
+  "depends_on": [
+    "apk_independent_acceptance_handoff_20260712",
+    "apk_dual_theme_asset_production_20260712"
+  ],
+  "deviation_notes": "The bounded T11 delivery remains immutable history. On 2026-07-26 the product owner authorized an additive extension that superseded only its dependency-gated implementation ceiling; phases 2-8 were reopened and completed as forward product implementation without reclassifying T10 evidence.",
+  "extension_contract": "./t11-owner-authorized-extension-v1.json",
+  "bounded_acceptance_artifact": "./t11-owner-delegated-acceptance-v1.json",
+  "acceptance_artifact": "./t11-owner-extension-acceptance-v1.json",
+  "acceptance_artifact_sha256": "60fbb63f846cd19873578393684c71e742a73595cf13efd4d96949812598215d",
+  "t10_accepted_inputs": {
+    "accepted_manifest_sha256": "e9fc2c9c8074db74670fa2e2929bd4efb5b8d0fd2ef5a8b9819d2f5a6e39ba49",
+    "successor_hashes_sha256": "c026c0bff62c3d6739c366fa80cb6593c455e96bffd2532a43223c829ec74005",
+    "owner_acceptance_sha256": "165e21c9ddb5a6e0b2f61f3190d604fbb3133459b5f00331a8c66ee1e7572753",
+    "standard_pack_release_version": "2026.07.23",
+    "standard_pack_catalog_digest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+    "standard_pack_source_receipt_digest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9",
+    "accepted_runtime_contracts": 0,
+    "approved_asset_mappings": 0,
+    "blocked_asset_mappings": 85,
+    "blocked_responsive_cells": 5664,
+    "browser_success_claimed": false
+  },
+  "implemented_scope": {
+    "accepted_capabilities": 7,
+    "shared_core_modules": [
+      "src/systems/nonempty-content.ts",
+      "src/systems/language-target-progression.ts",
+      "src/systems/single-completion.ts",
+      "src/systems/result-accounting.ts",
+      "src/systems/input-actions.ts",
+      "src/systems/bounded-frame-loop.ts",
+      "src/systems/time-threshold.ts"
+    ],
+    "guards": [
+      "src/guards/accepted-inputs.ts",
+      "src/guards/blocked-scopes.ts",
+      "src/guards/legacy-edition-policy.ts"
+    ],
+    "scaffolding": [
+      "src/scaffolding/cartridge-manifest.ts",
+      "src/scaffolding/scaffold.ts",
+      "src/scaffolding/exemplar.ts"
+    ],
+    "compatibility": ["src/compatibility/developer-kit-api.ts"],
+    "diagnostics": ["src/diagnostics/structured-error.ts"],
+    "testing_extensions": [
+      "src/testing/deterministic-fixtures.ts",
+      "src/testing/assertions.ts"
+    ],
+    "docs": [
+      "docs/developer-kit.md",
+      "docs/simplification-report.md"
+    ],
+    "scripts": ["scripts/check-accepted-inputs.mjs"],
+    "tests": 234,
+    "coverage_statements_pct": 89.69,
+    "extension_modules": [
+      "src/responsive/",
+      "src/presentation/",
+      "src/qc/",
+      "src/assets/semantic-product-bindings.ts",
+      "src/systems/gameplay-primitives.ts",
+      "src/runtime/runtime.ts",
+      "src/runtime/phaser-factory.ts"
+    ],
+    "extension_app_surface": "apps/advantage-games/src/app/qc/page.tsx",
+    "browser_tests": 2,
+    "browser_tests_passed": 2,
+    "developer_kit_api_contract_version": "2.0.0",
+    "package_distribution_version": "0.1.0"
+  },
+  "historical_bounded_dependency_gates": {
+    "status": "preserved_as_immutable_history",
+    "responsive_composition": "T10 blocked 354 contracts / 5664 cells",
+    "presentation_components": "T10 blocked responsive behavior and 85 historical mappings",
+    "asset_mappings": "T10 approved zero and blocked 85 historical adoption mappings",
+    "runtime_contracts": "T10 accepted zero historical runtime contracts",
+    "browser_mobile_perf_success": "The bounded acceptance claimed no browser, mobile, or performance success"
+  },
+  "extension_open_verifiable_gaps": {
+    "uncommitted_acceptance_state": "Required follow-up: the acceptance and remediation are intentionally uncommitted; commit and refresh immutable references before treating this as a committed release record.",
+    "full_advantage_games_jest": "not fully green because unrelated legacy devourerSlime and hauntedLibrary assertions were nondeterministic; all affected T11 suites pass",
+    "reading_primary_import_smokes": "not run because neither app currently imports the extended APIs in production",
+    "representative_device_performance": "deterministic instrumentation implemented; no mid-range-device 60 FPS benchmark run",
+    "manual_owner_qc": "automated Chromium proof passed; manual owner browser inspection not claimed",
+    "cartridge_cutover": "not authorized; remains owned by apk_cartridge_semantic_rewrite_20260712"
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-global-adversarial-reviewer-receipt.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "Phase 4 global reconciliation",
+  "role": "independent-adversarial-global-reviewer-v2",
+  "native_task_name": "phase4_global_review_v2",
+  "role_boundary": "Independent findings-first global review only; no producer, verifier, fixture, report, batch, plan, specification, product, or root-acceptance edits.",
+  "exact_verified_inputs": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_global_contract_test.py": "f3e999c1b58668f0b5dd10b2f32db06a0d3b06142e19a4def83e3c150a83a5a0",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-test-report.json": "6ae23570940a8b35fccf82c9ee086cd43b079fb1f05101d41028cf2bc1a50db3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase4-global/truth-test-author.json": "41ddf08eef174d959956bef272652110fd46d7bb55d2409080056496c037bdec",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json": "450f5ab66215178aa730e057cb28a220bfb550dfd924959a7f7f1da2eea02f9e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-join-scaffold-v1.json": "2162076fe26911a2659b7e0ef23f49398c8ebb4b5343b0ab0479c78a5d1a1de4",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-review.json": "420a3c017d52cd4ebf71bbb5e073e42698b619f46249ed69996a21347fdf93ed"
+  },
+  "reviewed_evidence_sets": {
+    "batch_evidence_file_count": 93,
+    "batch_evidence_set_sha256": "d9650d754fac613961f302cad3d5c348085fcedcb9337e7c49a280aaa006e8d7",
+    "live_global_fixture_count": 12,
+    "live_global_fixture_set_sha256": "dd4595f8976843ca34a833311d6508a7a4f33203f10d940cd9f827049ab45245",
+    "frozen_browser_artifact_count": 16,
+    "browser_artifact_hash_mismatches": 0
+  },
+  "verifier_replay": {
+    "run_count": 2,
+    "run_1_exit_code": 0,
+    "run_2_exit_code": 0,
+    "run_1_output_sha256": "6ae23570940a8b35fccf82c9ee086cd43b079fb1f05101d41028cf2bc1a50db3",
+    "run_2_output_sha256": "6ae23570940a8b35fccf82c9ee086cd43b079fb1f05101d41028cf2bc1a50db3",
+    "published_report_sha256": "6ae23570940a8b35fccf82c9ee086cd43b079fb1f05101d41028cf2bc1a50db3",
+    "byte_identical": true,
+    "published_result": "green",
+    "independent_semantic_result": "false-green-fixture-set-unbound"
+  },
+  "remediation_results": {
+    "P4G-H-01": "remediated; exact frozen/live 533-pair ownership matches and count-preserving duplicate plus wrong-owner swap are rejected",
+    "P4G-H-02": "remediated; empty, zeroed, and stale truth-receipt mappings are rejected across AF-01, AF-04, and both schema-report variants"
+  },
+  "new_counterexample_results": [
+    {
+      "id": "GX-03",
+      "operation": "Delete the duplicate-caller fixture from a temporary exact fixture copy.",
+      "expected_result": "rejected",
+      "actual_result": "passed",
+      "counterexample_count": 11,
+      "all_counterexamples_rejected": true
+    },
+    {
+      "id": "GX-04",
+      "operation": "Repurpose the duplicate-caller fixture as a second bad_disposition fixture while preserving 12 filenames.",
+      "expected_result": "rejected",
+      "actual_result": "passed",
+      "counterexample_count": 12,
+      "duplicate_bad_disposition_operation_count": 2,
+      "all_counterexamples_rejected": true
+    }
+  ],
+  "output_file_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-review-v2.json": "6ae1c317545194ddbb7b0237530379f8299d1a0b287be76cdc5f9c3fb4771ed5"
+  },
+  "findings": {
+    "Critical": [],
+    "High": [
+      {
+        "id": "P4G-H-03",
+        "title": "The global fixture set is discovered dynamically and is not identity- or digest-bound"
+      }
+    ],
+    "Medium": [],
+    "Low": []
+  },
+  "unresolved_blocking_findings": [
+    "P4G-H-03"
+  ],
+  "decision": {
+    "admit": false,
+    "block": true,
+    "next_authority": "Bounded verifier and global truth-receipt fixture-manifest remediation followed by a fresh independent global review."
+  },
+  "final_status": "review-fail-blocking-remediation"
+}

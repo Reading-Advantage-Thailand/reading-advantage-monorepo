@@ -1,0 +1,7 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-acceptance-negative-fixture.v1",
+  "operation": "false_browser_per_path_claim",
+  "expected_error_codes": [
+    "acceptance-browser-boundary"
+  ]
+}

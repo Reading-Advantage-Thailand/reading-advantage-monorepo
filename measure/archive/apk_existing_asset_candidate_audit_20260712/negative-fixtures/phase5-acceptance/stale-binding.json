@@ -1,0 +1,4 @@
+{
+  "expected_error_code": "acceptance-binding",
+  "operation": "stale_binding"
+}

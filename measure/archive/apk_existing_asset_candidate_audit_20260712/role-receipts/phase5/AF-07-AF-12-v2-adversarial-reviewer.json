@@ -1,0 +1,84 @@
+{
+  "schema_version": "apk-role-receipt.phase5-fresh-independent-adversarial-reviewer.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": 5,
+  "role": "fresh-independent-adversarial-reviewer",
+  "native_task_name": "/root/phase5_review_c",
+  "role_boundary": "Independent full-record adversarial superseding review of AF-07 through AF-12 only; no remediation, root acceptance, adoption, implementation, or edits to reviewed producer artifacts.",
+  "review_report": {
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-07-AF-12-v2.json",
+    "sha256": "44944d6948a15e50593f3adc2b6882ae9510359bcebcafc2fd66d24eeb0db00d"
+  },
+  "exact_artifact_bindings": {
+    "candidate_report_sha256": "ad7bbe10e513fabf1cceb2893833c8f983d4b429f3a5b503b53edf028bb04f47",
+    "non_consumable_manifest_sha256": "c5626db8afdf357feda20637c8bcacf52a391c363c2acf0d9de1cd0561c330be",
+    "hardened_verifier_sha256": "31062aeefe8abf7506eafd814a588f1e38e1a18488396870093561c8e80259d4",
+    "contract_report_sha256": "7aeaaec76c9b56ce0ba9c1fa11f2262164c4e76b3f178806a96a8a7c4e136861",
+    "fixture_manifest_sha256": "25808bfc4dbdfd39a311177f17ea42669c884c781121313b8ed27455707f5b12",
+    "truth_receipt_sha256": "49e747b7df827b112be563abca584fd8facf290b683a550cd34d37df96995af2"
+  },
+  "coverage": {
+    "batch_ids": [
+      "AF-07",
+      "AF-08",
+      "AF-09",
+      "AF-10",
+      "AF-11",
+      "AF-12"
+    ],
+    "report_records": 213,
+    "manifest_entries": 213,
+    "hash_groups": 114,
+    "source_artifacts": 42,
+    "slice_role_receipts": 36,
+    "all_source_bindings_hashed": 202,
+    "caller_locators": 217,
+    "usage_links": 37,
+    "responsive_assessment_cells": 136,
+    "substantive_inspection_groups": 114,
+    "direct_visual_groups": 58,
+    "audio_groups_decoded": 10,
+    "recursive_locator_instances": 1996,
+    "recursive_json_pointers": 1994,
+    "independent_assertions": 25408,
+    "assertion_families": 93,
+    "sampling_used": false
+  },
+  "results": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "finding_ids": [],
+    "production_contract": "pass with zero errors",
+    "negative_fixtures": "19/19 rejected at expected error code",
+    "full_record_reconciliation": "pass",
+    "nested_evidence_reconciliation": "pass; all paths, hashes, and pointers resolve",
+    "prior_medium_remediation": "P5-AF09-12-M-001 fully remediated at restored SHA-256 4183d0514812cd781f2ffd9a7442e692604eb2f2d86cf7ead7af54bc06f25dae",
+    "non_consumable_and_no_adoption_guards": "pass",
+    "priority1_retirements": "pass; 4/4 reject plus retire"
+  },
+  "supersedes": [
+    {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-05-AF-08.json",
+      "sha256": "f2c4fff40265d0b5a51700459c4f889cb75c46e50e071e492172e83f30144c65",
+      "scope": "AF-07/AF-08 only"
+    },
+    {
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-reviews/AF-09-AF-12.json",
+      "sha256": "c7e5bd17510d8bce25c31dd9ec584a58c042d858d1ba378156c45ca57609d0e4",
+      "scope": "AF-09 through AF-12 pre-repair verdict"
+    }
+  ],
+  "final_status": "review-pass-no-unresolved-critical-high-medium-pending-root-acceptance",
+  "root_acceptance_ready": true,
+  "claims_not_made": [
+    "root acceptance",
+    "accepted manifest",
+    "consumer adoption",
+    "canonical T9 key",
+    "direct legacy adoption",
+    "implementation",
+    "shipping"
+  ]
+}

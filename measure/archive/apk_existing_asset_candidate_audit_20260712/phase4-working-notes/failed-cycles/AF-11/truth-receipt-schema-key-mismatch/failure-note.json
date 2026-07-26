@@ -1,0 +1,22 @@
+{
+  "batch_id": "AF-11",
+  "role": "truth-test-author",
+  "failure_kind": "receipt-schema-key-mismatch",
+  "failed_artifact": "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-11/truth-test-author.json",
+  "failed_artifact_sha256": "ff5b1454d76da2f7db4a2484ba44629e6fd0eb2a7189ad6d369188906c978a4a",
+  "detected_by": "post-publication AF-10-schema key-set comparison",
+  "mismatch": {
+    "missing_keys": [
+      "fixture_hashes",
+      "independent_reconciliation",
+      "machine_preflight",
+      "mapper_prepublication_reds",
+      "reasoning_effort",
+      "verifier_hashes"
+    ],
+    "unexpected_keys": [
+      "stop_loss_events"
+    ]
+  },
+  "disposition": "Archived exact failed receipt bytes before replacing only the live receipt with an AF-10-schema-conformant receipt; the two independently green verifier reports were not modified."
+}

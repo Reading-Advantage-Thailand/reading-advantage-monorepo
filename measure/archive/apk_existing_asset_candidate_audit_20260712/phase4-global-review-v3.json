@@ -1,0 +1,292 @@
+{
+  "batch_and_global_reconciliation": {
+    "batch_evidence_file_count": 93,
+    "batch_evidence_set_hash_algorithm": "SHA-256 over lexicographically sorted UTF-8 entries of repository-relative path, NUL, live SHA-256, newline",
+    "batch_evidence_set_sha256": "d9650d754fac613961f302cad3d5c348085fcedcb9337e7c49a280aaa006e8d7",
+    "batch_report_errors": 0,
+    "batch_report_failures": 0,
+    "batch_review_findings": {
+      "Critical": 0,
+      "High": 0,
+      "Low": 0,
+      "Medium": 0
+    },
+    "batch_unresolved_blocking_findings": 0,
+    "counts": {
+      "accepted_path_usage_links": 85,
+      "caller_locators": 533,
+      "candidate_paths": 428,
+      "dispositions": {
+        "reject": 14,
+        "replace": 85,
+        "unknown": 329
+      },
+      "identical_hash_groups": 227,
+      "non_scene_links": 8,
+      "priority1_paths": 14,
+      "responsive_assessment_cells": 308,
+      "scene_links": 77,
+      "unique_caller_pairs": 533,
+      "unique_candidate_paths": 428,
+      "unique_non_scene_usage_ids": 5,
+      "unique_scene_usage_ids": 40,
+      "unique_usage_ids": 45
+    },
+    "exact_frozen_live_caller_pair_set_equal": true,
+    "exact_frozen_live_candidate_path_set_equal": true,
+    "priority1_all_reject_and_retire": true
+  },
+  "browser_and_visual_boundary": {
+    "assessment": "pass",
+    "bounded_composite_scene_evidence_only": true,
+    "browser_evidence_acceptance": false,
+    "disclosed_usability_defects": [
+      "Dragon Flight compact direction controls begin below the initial viewport.",
+      "RPG Battle remains blocked in a repeated vocabulary-fetch loop at both viewports.",
+      "Magic Defense compact start content is clipped at the edge.",
+      "Enchanted Library wide capture timed out and remains blocked.",
+      "Potion Rush compact gameplay shows an unresolved HUD key and overlay pressure.",
+      "Castle Defense compact post-start canvas extends below the viewport."
+    ],
+    "frozen_browser_artifact_count": 16,
+    "frozen_browser_artifact_hash_mismatches": 0,
+    "frozen_evidence_binding_count": 2,
+    "frozen_evidence_binding_hash_mismatches": 0,
+    "per_path_runtime_load_claimed": false,
+    "responsive_cell_boundary_violations": 0,
+    "root_direct_visual_decision_count": 6,
+    "scope_note": "Frozen Kimi evidence supports or contradicts bounded current legacy scene behavior only. It is not candidate-path load, provenance, license, suitability, reuse, adoption, production, shipping, or Phase 4 acceptance proof."
+  },
+  "decision": {
+    "admit": false,
+    "block": true,
+    "blocking_severity_gate": "one unresolved Medium finding violates the required zero-Critical-High-Medium acceptance threshold",
+    "next_authority": "Bounded structured-failure remediation in the global verifier followed by a fresh independent global review.",
+    "scope": "Phase 4 global reconciliation is not ready for root project and product-owner acceptance."
+  },
+  "exact_verified_inputs": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-browser-evidence-freeze-v1.json": "5c64618ccd05b39ab63f1befb8d74d75f6a7fdf5b9613d31c8ee1b3369065231",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-fixture-manifest-v1.json": "4a232e2de84d7d9a3a3a6ea488f1e60a07a76281ae5e285eb8d146f8c818bd6f",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-review-v2.json": "6ae1c317545194ddbb7b0237530379f8299d1a0b287be76cdc5f9c3fb4771ed5",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-review.json": "420a3c017d52cd4ebf71bbb5e073e42698b619f46249ed69996a21347fdf93ed",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-test-report.json": "4323c7cc8cec3f519ab24e1b9448cb85ffaa4c68064b2a3a5c1438c9fb467519",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-input-freeze-v1.json": "ae387ae1e9a10d6398e8fd340924a12fc9ca19d706d9c079a2b071babcbbfcd3",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-join-scaffold-v1.json": "2162076fe26911a2659b7e0ef23f49398c8ebb4b5343b0ab0479c78a5d1a1de4",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-source-registry-v1.json": "450f5ab66215178aa730e057cb28a220bfb550dfd924959a7f7f1da2eea02f9e",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_global_contract_test.py": "39d773c8799f8a59d1664f76de4a0cf694cb318fea43bcf50fc1f2e81f366f66",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/phase4-global/truth-test-author.json": "260a9f28531aa73df19d234c73de868c1300b27975cdac9cb1e240e0b22fb418"
+  },
+  "failed_cycle_archives": {
+    "v1-two-high-false-greens": {
+      "archived_review_sha256": "420a3c017d52cd4ebf71bbb5e073e42698b619f46249ed69996a21347fdf93ed",
+      "archived_reviewer_receipt_sha256": "d5aa30f23a5f36805e52a814ab9d94bc0cc2073f04d858f93a40026cbc7a7dc6",
+      "archived_truth_receipt_sha256": "ef7bc7b07ccb8b7e31c135813a534440241c1edda06d7c3a2c98ace13d7e6b41",
+      "archived_verifier_sha256": "383365f43ce27c4f71b1f6cc8ef40ef210e8b868319619f909ab8313d995845a",
+      "disposition_note_sha256": "0974ec6cb8831fbd4da2797ef6587546ac224dae750ce33520244250a835adb2",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/phase4-global/v1-two-high-false-greens",
+      "red_evidence_sha256": "e2b8708db7a522f6a377fdf4558348db0f77fb042b6891f57f0dc6f1db615107",
+      "test_report_sha256": "62750015a016dfc4357c75c1f0fec17f81e324b8cacb455bd9c5922562e3e071"
+    },
+    "v2-unbound-fixture-set": {
+      "archived_review_sha256": "6ae1c317545194ddbb7b0237530379f8299d1a0b287be76cdc5f9c3fb4771ed5",
+      "archived_reviewer_receipt_sha256": "41533d2140f80d2734c06ff9937ce48abe37136e6abf9550c1b746714a73220f",
+      "archived_truth_receipt_sha256": "41ddf08eef174d959956bef272652110fd46d7bb55d2409080056496c037bdec",
+      "archived_verifier_sha256": "f3e999c1b58668f0b5dd10b2f32db06a0d3b06142e19a4def83e3c150a83a5a0",
+      "disposition_note_sha256": "146c9dab04a80ab79bd64e98ca9ac51a4221acaf2c100270b7c5021359bb6ec5",
+      "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-working-notes/failed-cycles/phase4-global/v2-unbound-fixture-set",
+      "red_evidence_sha256": "e80006cead903c09d5f15f126e7f7d56be0e55e7cfb7a8c0b74ffa5332d9d7d8",
+      "test_report_sha256": "6ae23570940a8b35fccf82c9ee086cd43b079fb1f05101d41028cf2bc1a50db3"
+    }
+  },
+  "final_status": "review-fail-blocking-remediation",
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Low": [],
+    "Medium": [
+      {
+        "context": "The manifest checks run before make_snapshot() and therefore before producer validation, but report() does not consistently convert manifest and fixture identity failures into its stable JSON failure contract. A missing manifest raises FileNotFoundError at digest(); syntactically malformed manifest JSON raises JSONDecodeError at load(); a missing required fixture and a renamed required fixture are both detected as fixture-manifest-binding by validate_fixture_set(), then report() unconditionally invokes run_fixture_set_meta_counterexamples(), whose current.pop(target) raises KeyError. All four variants fail closed and never reach producer validation, so this is not a false green. However, the verifier emits a traceback instead of an auditable truth-test-failed report for these exact drift classes.",
+        "file": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_global_contract_test.py",
+        "id": "P4G-M-01",
+        "lines": [
+          500,
+          536,
+          537,
+          541,
+          544
+        ],
+        "required_remediation": "Catch missing/unreadable/invalid-JSON manifest failures as fixture-manifest-binding, and when manifest_errors is non-empty either skip meta-counterexample execution against the invalid inventory or make every meta mutation defensive. The CLI must return exit 1 plus structured truth-test-failed JSON for missing manifest, malformed manifest JSON, missing required fixture, and renamed required fixture. Add durable tests for all four variants without changing the required manifest identity.",
+        "severity": "Medium",
+        "title": "Four manifest and fixture identity failures traceback instead of returning structured fail-closed JSON"
+      }
+    ]
+  },
+  "fixture_manifest_verification": {
+    "behavior_fixture_count": 12,
+    "exact_manifest_metadata_and_hashes_match": true,
+    "exact_manifest_path_set_matches_live_directory": true,
+    "fixture_set_sha256": "dd4595f8976843ca34a833311d6508a7a4f33203f10d940cd9f827049ab45245",
+    "manifest_checked_before_behavior_dispatch": true,
+    "manifest_checked_before_producer_validation": true,
+    "manifest_operation_count": 12,
+    "manifest_operations_unique": true,
+    "meta_counterexample_count": 7,
+    "path": "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-global-fixture-manifest-v1.json",
+    "report_binding_matches": true,
+    "sha256": "4a232e2de84d7d9a3a3a6ea488f1e60a07a76281ae5e285eb8d146f8c818bd6f",
+    "truth_receipt_binding_matches": true
+  },
+  "independent_mutation_results": [
+    {
+      "case": "fixture-set-missing",
+      "expected_error_code_detected_before_dispatch": "fixture-manifest-binding",
+      "producer_validation_reached": false,
+      "result": "rejected-by-KeyError-traceback",
+      "structured_json_returned": false
+    },
+    {
+      "behavior_fixture_results_executed": 0,
+      "case": "fixture-set-extra",
+      "error_codes": [
+        "fixture-manifest-binding"
+      ],
+      "producer_validation_reached": false,
+      "result": "truth-test-failed",
+      "structured_json_returned": true
+    },
+    {
+      "case": "fixture-set-renamed",
+      "expected_error_code_detected_before_dispatch": "fixture-manifest-binding",
+      "producer_validation_reached": false,
+      "result": "rejected-by-KeyError-traceback",
+      "structured_json_returned": false
+    },
+    {
+      "behavior_fixture_results_executed": 0,
+      "case": "fixture-set-duplicate-operation",
+      "error_codes": [
+        "fixture-manifest-binding"
+      ],
+      "producer_validation_reached": false,
+      "result": "truth-test-failed",
+      "structured_json_returned": true
+    },
+    {
+      "behavior_fixture_results_executed": 0,
+      "case": "fixture-set-repurposed-operation",
+      "error_codes": [
+        "fixture-manifest-binding"
+      ],
+      "producer_validation_reached": false,
+      "result": "truth-test-failed",
+      "structured_json_returned": true
+    },
+    {
+      "behavior_fixture_results_executed": 0,
+      "case": "fixture-set-expected-code-drift",
+      "error_codes": [
+        "fixture-manifest-binding"
+      ],
+      "producer_validation_reached": false,
+      "result": "truth-test-failed",
+      "structured_json_returned": true
+    },
+    {
+      "behavior_fixture_results_executed": 0,
+      "case": "fixture-set-byte-drift",
+      "error_codes": [
+        "fixture-manifest-binding"
+      ],
+      "producer_validation_reached": false,
+      "result": "truth-test-failed",
+      "structured_json_returned": true
+    },
+    {
+      "case": "duplicate-caller-ownership",
+      "error_codes": [
+        "caller-locator-ownership"
+      ],
+      "measured_caller_locators": 533,
+      "result": "rejected"
+    },
+    {
+      "case": "truth-receipt-output-hash-map-removal",
+      "error_codes": [
+        "truth-receipt-hash-binding"
+      ],
+      "result": "rejected"
+    }
+  ],
+  "native_task_name": "phase4_global_review_v3",
+  "phase": "Phase 4 global reconciliation",
+  "published_counterexamples": {
+    "all_rejected": true,
+    "behavior_fixture_count": 12,
+    "meta_counterexample_count": 7,
+    "total_count": 19
+  },
+  "review_role": "independent-adversarial-global-reviewer-v3",
+  "reviewed_scope": {
+    "batches": [
+      "AF-01",
+      "AF-02",
+      "AF-03",
+      "AF-04",
+      "AF-05",
+      "AF-06",
+      "AF-07",
+      "AF-08",
+      "AF-09",
+      "AF-10",
+      "AF-11",
+      "AF-12"
+    ],
+    "failed_cycles": [
+      "v1-two-high-false-greens",
+      "v2-unbound-fixture-set"
+    ]
+  },
+  "role_boundary": "Independent findings-first review of the corrected global gate, both archived failed cycles, frozen Phase 4 inputs, all AF-01 through AF-12 producer/truth/review evidence, exact global fixture manifest and fixtures, and bounded browser evidence. No producer, verifier, manifest, fixture, report, batch, plan, specification, product, root-acceptance, or prior-review edits.",
+  "schema_version": "apk-asset-forensics.phase4-global-adversarial-review.v3",
+  "structured_failure_variants": [
+    {
+      "case": "missing-manifest",
+      "exception": "FileNotFoundError",
+      "producer_validation_reached": false,
+      "structured_json_returned": false
+    },
+    {
+      "case": "malformed-json-manifest",
+      "exception": "JSONDecodeError",
+      "producer_validation_reached": false,
+      "structured_json_returned": false
+    },
+    {
+      "case": "missing-required-fixture",
+      "exception": "KeyError",
+      "producer_validation_reached": false,
+      "structured_json_returned": false
+    },
+    {
+      "case": "renamed-required-fixture",
+      "exception": "KeyError",
+      "producer_validation_reached": false,
+      "structured_json_returned": false
+    }
+  ],
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "unresolved_blocking_findings": [
+    "P4G-M-01"
+  ],
+  "verifier_replay": {
+    "byte_identical": true,
+    "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_global_contract_test.py --root .",
+    "published_report_sha256": "4323c7cc8cec3f519ab24e1b9448cb85ffaa4c68064b2a3a5c1438c9fb467519",
+    "published_result": "green",
+    "run_1_exit_code": 0,
+    "run_1_output_sha256": "4323c7cc8cec3f519ab24e1b9448cb85ffaa4c68064b2a3a5c1438c9fb467519",
+    "run_2_exit_code": 0,
+    "run_2_output_sha256": "4323c7cc8cec3f519ab24e1b9448cb85ffaa4c68064b2a3a5c1438c9fb467519",
+    "run_count": 2
+  }
+}

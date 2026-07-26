@@ -1,0 +1,54 @@
+{
+  "schema_version": "apk-t9-phase6-fixture-manifest.v1",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "fixtures": [
+    {
+      "path": "negative-fixtures/phase3-6/absent-standard-key.json",
+      "sha256": "46fed1012e029f14507260b54f75c2ecc420a3454b78208c6a7613ad26f5e79d",
+      "operation": "inject_absent_catalog_key",
+      "expected_error_code": "ABSENT_STANDARD_PACK_KEY"
+    },
+    {
+      "path": "negative-fixtures/phase3-6/blocking-review-finding.json",
+      "sha256": "48bdeb6c9b81f5ec0f21bee6324b3f850b0b564ed780a1ba6fc62037e8e4e9a9",
+      "operation": "add_high_review_finding",
+      "expected_error_code": "BLOCKING_REVIEW_FINDING"
+    },
+    {
+      "path": "negative-fixtures/phase3-6/candidate-denominator.json",
+      "sha256": "7480c2daa3b155c1b18bc0ff860a91288400b1d237674183900bd6898ec47bc9",
+      "operation": "remove_candidate_row",
+      "expected_error_code": "T8_CANDIDATE_DENOMINATOR"
+    },
+    {
+      "path": "negative-fixtures/phase3-6/claim-removal.json",
+      "sha256": "62eda968a1887151ec51e1e727de7f71e50bdf9c82b14a9d01e8f27d1c41d35d",
+      "operation": "remove_upstream_claim",
+      "expected_error_code": "RESPONSIVE_CLAIM_CLOSURE"
+    },
+    {
+      "path": "negative-fixtures/phase3-6/consumable-successor.json",
+      "sha256": "830a9bd507edcc27ce3fc61fae51523280d01073eb1e0bcd5c67584a9cd607f1",
+      "operation": "publish_successor_hash",
+      "expected_error_code": "CONSUMABLE_SUCCESSOR_PUBLICATION"
+    },
+    {
+      "path": "negative-fixtures/phase3-6/direct-legacy-path.json",
+      "sha256": "f2adbbd39e7189ea9b2481c1f1ae3d9fd8d307c9ee1c8c43bffdbcc700584fef",
+      "operation": "inject_legacy_path",
+      "expected_error_code": "DIRECT_OR_VENDOR_MAPPING"
+    },
+    {
+      "path": "negative-fixtures/phase3-6/one-consumer-standardization.json",
+      "sha256": "a25c309cbf7290529d6693c2fa9ee4875cc9f7e186d63cd829155ae0a26dbf90",
+      "operation": "reduce_standardized_consumers",
+      "expected_error_code": "STANDARDIZATION_CONSUMER_COUNT"
+    },
+    {
+      "path": "negative-fixtures/phase3-6/unknown-must-have.json",
+      "sha256": "c13620adae23ccad7df7f16e26d1f8a8b6a9a2925c36a6adcacbb44666cb5f12",
+      "operation": "resolve_unknown_must_have",
+      "expected_error_code": "UNKNOWN_MUST_HAVE_RESOLVED"
+    }
+  ]
+}

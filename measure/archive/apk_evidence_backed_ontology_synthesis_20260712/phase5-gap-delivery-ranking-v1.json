@@ -1,0 +1,73 @@
+{
+  "consumable": false,
+  "input_bindings": {
+    "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase1-developer-effort-baseline-v1.json": "168403610d0c69160777ddeca5753dcc57b97e2a7db6ceed65f3e4ce64d14f91",
+    "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase1-mechanic-blueprints-v1.json": "ed3bee70f5e7e94ac101f295d9de3f768cdaf9d97d40d4529f2fbbbe8f479d61",
+    "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase1-root-acceptance.json": "bd911f865c95e24874dde657e856718910a05b1737634222055654b331dd020d",
+    "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase2-capability-classification-v5.json": "274a3538b782499828c6af9cc7033f72fa5de0b1d6da0c0eb769dad568e78a34",
+    "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase2-curated-capability-evidence-v1.json": "18769fa2880164c47c73bb628e518806eb5d6f7a50a24ba376b89cd17aea2349",
+    "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase2-extension-boundaries-v5.json": "bcee20de256ef1ac44fad89353faeff73f03bec4ad7f0e57358f6b1862252c66",
+    "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase2-root-acceptance.json": "911e66f2ae9da15ec0f5f0d8b749168f21b374f1c9c22d44b7d14f3c14e2f6db",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-acceptance-green-report.json": "8b33353f3ebda940f1eec60761584c62d6df3d0cdc953c87bd92108b785010a5",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-accepted-manifest-v1.json": "20930a1cb30b763323f0c3d77a0625cb1c54c7aba7094284b91d508f3d68665f",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase5-root-acceptance.json": "4e6fc46898dadb42d255127de1214f52514b8a1bd97fcd2ad2073d379d373c86",
+    "packages/advantage-play-kit/assets/standard/accepted-standard-pack-release.json": "61984e0b53c4ba85379cf6a4f0f33ee956665c4eaad4b3d681e3dccd98389844",
+    "packages/advantage-play-kit/assets/standard/standard-pack-release.json": "ef432a798a78585df3416d60aca30fe11a2d1d8b833e0d65ceb7fac5c8b19932"
+  },
+  "ranked_gaps": [
+    {
+      "affected_count": 5664,
+      "decision_state": "blocked_unknown",
+      "delivery_owner": "T10-independent-validation-then-cartridge-cohorts",
+      "gap_id": "gap:responsive-profile-evidence",
+      "kind": "responsive-primitive-and-contract-evidence",
+      "priority": "Must-have",
+      "rank": 1,
+      "recommendation": "Collect exact compact/wide geometry, camera, visibility, region, control, content, transition, and state-preservation evidence per contract; preserve the six accepted failures."
+    },
+    {
+      "affected_count": 45,
+      "decision_state": "blocked_unknown",
+      "delivery_owner": "T10-independent-asset-review",
+      "gap_id": "gap:semantic-role-state-decisions",
+      "kind": "physical-asset-requirement",
+      "priority": "Must-have",
+      "rank": 2,
+      "recommendation": "Independently decide source-backed semantic role/state identities before any catalog candidate is selected."
+    },
+    {
+      "affected_count": 85,
+      "decision_state": "blocked_unknown",
+      "delivery_owner": "T10-independent-asset-review",
+      "gap_id": "gap:standard-pack-candidate-selection",
+      "kind": "standard-pack-candidate-key",
+      "priority": "Must-have",
+      "rank": 3,
+      "recommendation": "Select only exact catalog keys after role/state approval and visual/contract validation; near matches and vendor filenames remain forbidden."
+    },
+    {
+      "affected_count": 7,
+      "decision_state": "candidate_recommendation_only",
+      "delivery_owner": "T11-shared-developer-kit",
+      "gap_id": "gap:accepted-capability-delivery",
+      "kind": "kit-capability",
+      "priority": "Should-have-after-T10",
+      "rank": 4,
+      "recommendation": "Implement only the seven accepted standardize/extend capability contracts after T10 publishes consumable hashes."
+    },
+    {
+      "affected_count": 29,
+      "decision_state": "candidate_recommendation_only",
+      "delivery_owner": "cartridge-rebuild-successor",
+      "gap_id": "gap:cartridge-cohort-delivery",
+      "kind": "cartridge-cohort",
+      "priority": "Should-have-after-T10-and-T11",
+      "rank": 5,
+      "recommendation": "Retain the accepted pilot/action-traversal-puzzle-special partition; start no cohort until T10 and required shared capabilities are accepted."
+    }
+  ],
+  "schema_version": "apk-t9-phase5-gap-delivery-ranking.v1",
+  "status": "candidate-non-consumable",
+  "track_id": "apk_evidence_backed_ontology_synthesis_20260712",
+  "unknown_must_have_resolution_policy": "Every unknown Must-have remains blocked for an explicit successor decision."
+}

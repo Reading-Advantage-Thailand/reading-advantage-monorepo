@@ -1,0 +1,11 @@
+{
+  "fixture_id": "direct-legacy-path",
+  "mutations": [
+    {
+      "artifact": "measure/tracks/apk_evidence_backed_ontology_synthesis_20260712/phase4-canonical-adoption-matrix-v1.json",
+      "pointer": "/candidate_rows/113/mappings/0/adoption/standard_pack_key",
+      "value": "apps/advantage-games/public/games/legacy.png"
+    }
+  ],
+  "expected_codes": ["DIRECT_LEGACY_PATH"]
+}

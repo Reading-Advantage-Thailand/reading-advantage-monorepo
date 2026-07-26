@@ -1,0 +1,160 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-adversarial-review.v2",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "phase": "phase4",
+  "batch_id": "AF-09",
+  "review_role": "adversarial-reviewer",
+  "reviewer_task_name": "/root/phase4_review_af09",
+  "declared_model": "gpt-5.6-sol",
+  "reasoning_effort": "xhigh",
+  "fork_turns": "none",
+  "inherited_narrative": false,
+  "reviewed_at": "2026-07-24",
+  "reviewed_output_hashes": {
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-09/phase4-path-usage-joins.json": "03c7403c8aacb5ae488bb28033e4074aa7e8faf08de4066955de5133cd3ccda4",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-09/phase4-group-rollup.json": "ecf14adf9780b8ef65ae9fdb2c453f69192c19a5011dee14bda564e8a7fb6470",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-09/requirements-mapper.json": "5e65fb7e30e0c0d80558296eb095e8ebdd6e8b80e783e409d25aa8f06f55c95a",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-09/truth-test-author.json": "239480dbd36c2020ba3d1c11108da1e563d4db16ec05a3fea8e2208be9be2d8f",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-09/adversarial-reviewer.json": "0c35dbec0c8aadd073f757d2510a75492ee3d78cdcf58a10f721277cc3d49b44",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-batch-test-reports/AF-09.json": "c0e8ef9ccb5e01ca92ae935c9470828b8a10b8c824e440c909e8e1d751b1a08a",
+    "measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4-v2-batch-schema-test-reports/AF-09.json": "a345f9d6856a85406d46fe65bfdd33017bd282ab82e676428f98c9de72944d7e"
+  },
+  "byte_hash_verification": {
+    "all_supplied_live_hashes_match": true,
+    "phase4_batch_contract_test.py": "feb731ce1096399ee6a790b62e8a82c7341373d8236fc00b64fdd089a5518aa0",
+    "phase4_v2_batch_schema_contract_test.py": "a2fb3b50277b251e944dbb4bd559b9039acd459773fbb9d4665a32c7b0045519",
+    "phase4_v2_batch_schema_contract_test_v2.py": "174fba885907260824503708180cd4dbe2b873e06aaf8e86c4fb440c319c9956"
+  },
+  "reviewed_counts": {
+    "candidate_paths": 35,
+    "identical_hash_groups": 17,
+    "caller_locators": 26,
+    "accepted_path_usage_links": 2,
+    "scene_links": 2,
+    "non_scene_links": 0,
+    "unique_scene_usage_records": 1,
+    "unique_usage_ids": 1,
+    "responsive_assessment_cells": 8,
+    "eight_facet_cells": 8,
+    "dispositions": {
+      "replace": 2,
+      "reject": 1,
+      "unknown": 32
+    },
+    "priority1_paths": 1,
+    "priority1_rejected_retired_path": "apps/advantage-games/public/games/cover/abyssal-well-cover.png",
+    "mixed_path_specific_disposition_groups": 1,
+    "review_slice_game_count": 1,
+    "review_slice_games": [
+      "dragon-flight"
+    ],
+    "separate_catalog_locator_records": 7,
+    "catalog_records_added_to_candidate_denominator": 0,
+    "reusable_paths": 0,
+    "adaptable_paths": 0,
+    "reference_allowed_paths": 0,
+    "non_null_canonical_standard_pack_keys": 0,
+    "direct_legacy_adoption_true": 0,
+    "review_records": 132
+  },
+  "substantive_review": {
+    "recursive_v2_shapes_exact_and_no_extras": true,
+    "all_35_join_status_values_equal_frozen_scaffold_rules": true,
+    "all_26_caller_locators_resolve_to_frozen_inventory_pointers_and_pinned_git_lines": true,
+    "all_2_links_are_scene_only_and_exact_source_bound": true,
+    "all_normalizer_source_paths_hashes_json_pointers_claim_ids_blob_hashes_and_range_hashes_resolve": true,
+    "all_2_six_key_semantic_requirements_are_exact_source_copies": true,
+    "all_2_top_level_semantic_requirement_wrappers_mirror_ordered_link_requirements": true,
+    "all_2_scene_links_have_exact_compact_wide_by_two_theme_cell_matrices": true,
+    "all_8_cells_have_exact_eight_facet_shapes": true,
+    "non_scene_link_count_is_zero_and_non_scene_cell_count_is_zero": true,
+    "priority1_abyssal_well_cover_is_rejected_and_retired_from_exact_phase3_unreadable_corruption_evidence": true,
+    "two_exact_joined_dragon_paths_are_replace_and_remaining_32_paths_are_unknown": true,
+    "rollup_member_paths_nested_dispositions_one_mixed_group_and_current_joins_sha_are_exact": true,
+    "one_game_dragon_review_slice_exactly_covers_joined_paths_and_usage": true,
+    "seven_catalog_locator_records_are_count_reference_only_and_non_additive": true,
+    "unknown_provenance_blocks_reuse_and_adapt_and_reference_remains_forbidden": true,
+    "direct_legacy_adoption_false_and_canonical_keys_null_forbidden_pending_T9_for_all_paths": true,
+    "browser_evidence_is_composite_scene_only": true,
+    "dragon_flight_compact_controls_begin_below_initial_viewport_and_wide_is_supported_by_bounded_scene_evidence": true,
+    "browser_evidence_not_promoted_to_per_path_runtime_load_suitability_theme_provenance_license_or_adoption": true,
+    "mapper_receipt_identity_hashes_resources_outputs_and_prohibitions_are_truthful": true,
+    "truth_receipt_identity_hashes_reports_verifiers_fixtures_resources_and_prohibitions_are_truthful": true,
+    "phase2_reviewer_receipt_is_preserved_separate_and_unchanged": true,
+    "green_verifiers_were_used_as_structural_support_not_as_sole_substantive_evidence": true,
+    "transparent_mapper_prepublication_red_lineage": {
+      "python_not_found": {
+        "exit_code": 127,
+        "authority": "none",
+        "interpretation": "The literal python command was unavailable; it produced no producer or verifier authority. The supported python3 path was used without changing verifier flags or evidence."
+      },
+      "missing_artifacts": {
+        "exit_code": 1,
+        "authority": "none",
+        "production_errors": [
+          "required-document-missing: joins:measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-09/phase4-path-usage-joins.json",
+          "required-document-missing: rollup:measure/tracks/apk_existing_asset_candidate_audit_20260712/batches/AF-09/phase4-group-rollup.json",
+          "required-document-missing: mapper:measure/tracks/apk_existing_asset_candidate_audit_20260712/role-receipts/AF-09/requirements-mapper.json",
+          "value-verifier-failed: AF-09"
+        ],
+        "interpretation": "This was the expected prepublication red before mapper-owned artifacts existed and is not a product, evidence, or acceptance finding."
+      },
+      "final_postpublication_state": "Both unchanged supported verifiers exit zero, reproduce the persisted report bytes exactly, and the mapper remains explicitly pending truth review, independent review, and root acceptance."
+    }
+  },
+  "verifier_review": {
+    "production_errors_empty": true,
+    "all_16_of_16_value_fixtures_rejected": true,
+    "all_14_of_14_v2_fixtures_rejected": true,
+    "both_verifier_resource_ceilings_pass": true,
+    "value": {
+      "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_batch_contract_test.py --batch AF-09 --json",
+      "exit_code": 0,
+      "report_byte_reproduced": true,
+      "parsed_json_equal": true,
+      "production_errors": [],
+      "counterexamples": 16,
+      "test_cases": 17,
+      "bytes_read": 95063307
+    },
+    "versioned_v2": {
+      "command": "python3 measure/tracks/apk_existing_asset_candidate_audit_20260712/phase4_v2_batch_schema_contract_test_v2.py --batch AF-09",
+      "exit_code": 0,
+      "report_byte_reproduced": true,
+      "parsed_json_equal": true,
+      "production_errors": [],
+      "counterexamples": 14,
+      "structural_test_cases": 15,
+      "test_cases": 32,
+      "bytes_read": 97353171,
+      "nested_value_report_exact": true
+    }
+  },
+  "findings": {
+    "Critical": [],
+    "High": [],
+    "Medium": [],
+    "Low": []
+  },
+  "unresolved_blocking_findings": 0,
+  "stop_loss_events": [],
+  "resource_usage": {
+    "candidate_paths": 35,
+    "hash_groups": 17,
+    "review_records": 132,
+    "command_invocations": 56,
+    "bytes_read": 250000000,
+    "ceilings": {
+      "candidate_paths": 40,
+      "hash_groups": 24,
+      "review_records": 280,
+      "command_invocations": 120,
+      "bytes_read": 536870912
+    },
+    "within_ceiling": true,
+    "measurement_basis": "Conservative accounting includes separate fresh value and v2 verifier processes, the v2 nested value invocation as reported, live frozen JSON and receipt hashing, all 26 caller Git-line checks, two claim blob/range checks, pointer resolution, and substantive path, group, link, cell, catalog, fixture, report, receipt, browser-freeze, and priority-1 records."
+  },
+  "scope_boundary": "Fresh isolated AF-09 Phase 4 adversarial review of live hash-bound producer records, rollup, mapper and truth receipts, immutable verifiers and byte-reproduced reports, frozen source pointers, bounded browser composite, and separate Phase 2 receipt. This review did not produce or repair joins, rollups, mapper or truth artifacts, verifiers, fixtures, reports, freezes, plans, product code, acceptance state, or commits; did not rerun a browser; and does not authorize T9, canonical keys, direct legacy adoption, production, shipping, suitability, licensing, adoption, or product-success claims.",
+  "decision": "No Critical, High, Medium, Low, blocker, or reviewer stop-loss finding was identified. Review pass is limited to the exact hash-bound AF-09 evidence and remains pending root-orchestrator Phase 4 acceptance only.",
+  "final_status": "review-pass-pending-root-acceptance"
+}

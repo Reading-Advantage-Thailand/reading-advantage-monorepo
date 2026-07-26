@@ -1,0 +1,70 @@
+{
+  "fixture_count": 12,
+  "fixtures": [
+    {
+      "fixture_id": "absent-candidate-key",
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/negative-fixtures/t10/absent-candidate-key.json",
+      "sha256": "17f2fd114e6e5de9d7a7f5208a60ed383bc4fa47eb807b64b700d26ebdeba471"
+    },
+    {
+      "fixture_id": "approval-order",
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/negative-fixtures/t10/approval-order.json",
+      "sha256": "d43bb2060b66abb4ce42038a0d7f8f7afe5d7f38987e70101af7ed7e79598fff"
+    },
+    {
+      "fixture_id": "browser-overclaim",
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/negative-fixtures/t10/browser-overclaim.json",
+      "sha256": "d45039eca77ba42ea4b4c7be5e9b3f16fd33e47d5b4b2610ebda7afb1ccfc797"
+    },
+    {
+      "fixture_id": "claim-contradiction",
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/negative-fixtures/t10/claim-contradiction.json",
+      "sha256": "d7359e536177fe53b8afeff4631b456c5436f11af4f6d6d3c374e41c070dd172"
+    },
+    {
+      "fixture_id": "claim-omission",
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/negative-fixtures/t10/claim-omission.json",
+      "sha256": "489e3e0b8ca02561900f5ab78dba76dc2ffd29a3ede3a9699c8fb2f7a42f0a4e"
+    },
+    {
+      "fixture_id": "direct-legacy-path",
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/negative-fixtures/t10/direct-legacy-path.json",
+      "sha256": "77d79b08c79cb71cc7bfb3afc50ef29a50cfe6ff21799f202d0a7ab5be424582"
+    },
+    {
+      "fixture_id": "failure-artifact-dependency",
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/negative-fixtures/t10/failure-artifact-dependency.json",
+      "sha256": "d869d272ab4da6652d294ce3bb6f7fefffbc145fe5ac04eac15f535f31d2afe1"
+    },
+    {
+      "fixture_id": "pack-release-mismatch",
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/negative-fixtures/t10/pack-release-mismatch.json",
+      "sha256": "ec4722138feee0dd4d59ffb3f5a02cdb5ce2a2a91e75afe0a8961faa88316114"
+    },
+    {
+      "fixture_id": "revoked-predecessor",
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/negative-fixtures/t10/revoked-predecessor.json",
+      "sha256": "fc54f90c6c29385447c03d2e2b0ada92fa02667aed1b3e03a2443d4cdbf56dea"
+    },
+    {
+      "fixture_id": "role-reuse",
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/negative-fixtures/t10/role-reuse.json",
+      "sha256": "f32c9c081df045f7ad8d6c942e3d33a5c80fe5a8c849574762fce5e4c281e293"
+    },
+    {
+      "fixture_id": "stale-candidate-binding",
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/negative-fixtures/t10/stale-candidate-binding.json",
+      "sha256": "e205628b71e9ba90c57fb4d595688ba4eadadb08b9d2e3e65fd493d52b8cac2a"
+    },
+    {
+      "fixture_id": "unknown-must-have-unblocked",
+      "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/negative-fixtures/t10/unknown-must-have-unblocked.json",
+      "sha256": "f16149a2c07e2edd3a57e2c9a21c7ad0d8247e7eddd3fbd7e4839f3db4773f8a"
+    }
+  ],
+  "input_freeze": {
+    "path": "measure/tracks/apk_independent_acceptance_handoff_20260712/t10-input-freeze-v1.json",
+    "sha256": "68fc7e0baaaa25c2dc1a2793aad7568b473eb4cd6c5449dfdf138fc58bf517cf"
+  },
+  "schema_version": "apk-t10-fixture-manifest.v1"
+}

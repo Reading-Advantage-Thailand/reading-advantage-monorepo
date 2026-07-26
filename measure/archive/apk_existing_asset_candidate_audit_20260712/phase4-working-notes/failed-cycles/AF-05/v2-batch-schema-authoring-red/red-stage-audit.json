@@ -1,0 +1,16 @@
+{
+  "schema_version": "apk-asset-forensics.phase4-v2-batch-schema-authoring-red.v1",
+  "track_id": "apk_existing_asset_candidate_audit_20260712",
+  "batch_id": "AF-05",
+  "phase": "phase4",
+  "role": "truth-test-author",
+  "status": "preserved_authoring_red",
+  "failure": {
+    "code": "unsupported-batch",
+    "cause": "The raw SUPPORTED_BATCH regex used a double backslash before Z and matched a literal backslash instead of the end-of-string anchor."
+  },
+  "root_observed_script_sha256": "2e814988a825d9c17be2762e3e9c4de317ff9452001b257b9c87236d60ec4e21",
+  "archived_script_sha256": "0f68c453628578fb437622d5226fdb057c94c611ccc3fb2729d1278f82dc3fd9",
+  "archived_fixture_count": 12,
+  "disclosure": "The differing script digests reflect concurrent authoring states; neither digest is producer payload evidence."
+}

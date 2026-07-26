@@ -1,0 +1,11 @@
+{
+  "schema_version": "apk-t10-reviewer-identity.v1",
+  "reviewer_id": "openai-gpt-5.6-sol-t10-independent-20260726",
+  "reviewer_role": "t10-independent-acceptance-critical-reviewer",
+  "provider_fork_turns_attested": false,
+  "tool_attestation_available": false,
+  "prior_upstream_role": false,
+  "independence_basis": "A new T10-only verifier and direct raw-artifact audit were performed in this session without relying on T9 summary conclusions.",
+  "limitation": "No subagent spawn/session-export tool was available. This record does not claim fork_turns=none, provider ancestry proof, or collaboration-tool attestation.",
+  "user_waiver": "The user explicitly stated Kimi agents are unavailable and directed this session to act as the genuinely independent T10 reviewer."
+}
