@@ -1,0 +1,12 @@
+{
+  "track_id": "apk_cartridge_semantic_rewrite_20260712",
+  "type": "chore",
+  "status": "archived",
+  "created_at": "2026-07-12T00:00:00Z",
+  "updated_at": "2026-07-28T05:05:00Z",
+  "description": "Planning-only APK migration umbrella that pins accepted inputs, reconciles the denominator discrepancy, and delegates bounded vertical implementation to child tracks.",
+  "estimated_tasks": 7,
+  "actual_tasks": 7,
+  "depends_on": ["apk_independent_acceptance_handoff_20260712", "apk_shared_developer_kit_20260712", "apk_dual_theme_asset_production_20260712"],
+  "deviation_notes": "Planning complete. Accepted readiness receipt d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720 resolves the 27/29 gate as 27 source identities plus two historical labels and authorizes only the six listed child cohorts to begin scoped work. It does not make a cohort ready or authorize cutover, deletion, historical rebuild, or completeness claims."
+}

@@ -203,11 +203,31 @@ program, priority order when picking the next track is:
   credit enforcement, and fail-closed accepted-release resolution. Cartridge
   adoption remains separately gated by T9/T10 and shared-kit acceptance.
 
-- [ ] **Track: APK Cartridge Rebuild, Integration, and Cutover** *Link: [./tracks/apk_cartridge_semantic_rewrite_20260712/](./tracks/apk_cartridge_semantic_rewrite_20260712/)*
-  BLOCKED until independent acceptance, accepted kit capabilities, and a pinned canonical
-  standard-pack catalog/credit receipt plus selected-deployment contract exist. It will
-  migrate legacy app-local asset URLs and copies by cohort, use the same cartridge and
-  semantic binding manifests in Reading/Primary, and delete copies only after both-host proof.
+- [x] **Track: APK Cartridge Migration Umbrella (planning only)** *Link: [./archive/apk_cartridge_semantic_rewrite_20260712/](./archive/apk_cartridge_semantic_rewrite_20260712/)*
+  Pins accepted T10/T11/standard-pack inputs and disclosures, resolves the accepted T2
+  27-source-identity/29-partition-assignment discrepancy before any completeness claim,
+  and delegates vertical implementation. **Planning completed 2026-07-27:** accepted receipt
+  `d371fc5d…f1720` resolves 29 assignments as 27 source identities plus two historical labels
+  and authorizes only the six listed cohorts to begin scoped work. No cohort is thereby ready;
+  cutover, deletion, historical rebuild, and completeness claims remain cohort-gated.
+  - [x] **Track: APK Denominator, Readiness, and T11 Release Integrity** *Link: [./tracks/apk_denominator_readiness_t11_integrity_20260727/](./tracks/apk_denominator_readiness_t11_integrity_20260727/)*
+    Accepted exact owner message `approved`; receipt `d371fc5d…f1720` preserves all reviewed hashes, restrictions, disclosures, and child authorization boundaries.
+  - [ ] **Track: APK Existing Core Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_core_cutover_20260727/](./tracks/apk_existing_core_cutover_20260727/)*
+    Vertically revalidates Dragon Flight, Magic Defense, Dungeon Liberator, The Sorcerer's Ziggurat, and Astral Mage.
+  - [ ] **Track: APK Existing Action Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_action_cutover_20260727/](./tracks/apk_existing_action_cutover_20260727/)*
+    Vertically revalidates Archer's Revenge, Paladin's Twin-Soul, Griffin Sky-Joust, Gryphon Patrol, and Realm Carver.
+  - [ ] **Track: APK Legacy Defense Rebuild and Cutover** *Link: [./tracks/apk_legacy_defense_cutover_20260727/](./tracks/apk_legacy_defense_cutover_20260727/)*
+    Vertically rebuilds Castle Defense, Wizard vs Zombie, Village Guardian, and Storm the Castle Tower.
+  - [ ] **Track: APK Legacy Traversal Rebuild and Cutover** *Link: [./tracks/apk_legacy_traversal_cutover_20260727/](./tracks/apk_legacy_traversal_cutover_20260727/)*
+    Vertically rebuilds Dragon Rider, Spellweaver's Run, Shadow Gate Dungeon, Labyrinth of the Goblin King, and Griffin Rider's Escape.
+  - [ ] **Track: APK Legacy Puzzle Rebuild and Cutover** *Link: [./tracks/apk_legacy_puzzle_cutover_20260727/](./tracks/apk_legacy_puzzle_cutover_20260727/)*
+    Vertically rebuilds Enchanted Library, Rune Match, Alchemist's Synthesis, Potion Rush, and Rune Forge Chamber.
+  - [ ] **Track: APK Historical/Cancelled Identity Disposition** *Link: [./tracks/apk_historical_identity_disposition_20260727/](./tracks/apk_historical_identity_disposition_20260727/)*
+    Explicitly gates RPG Battle, The Abyssal Well, Devourer Slime, The Haunted Library, and Babel Architect; it does not authorize rebuilds.
+  - [ ] **Track: APK Planned/New-Game Intake** *Link: [./tracks/apk_new_game_intake_20260727/](./tracks/apk_new_game_intake_20260727/)*
+    Defines evidence-first future intake and rejects placeholder titles, implementation, routes, and catalog exposure.
+  - [ ] **Track: APK Residual Cross-Host Retirement and Closeout** *Link: [./tracks/apk_cross_host_closeout_20260727/](./tracks/apk_cross_host_closeout_20260727/)*
+    Owns only residual cross-host work that no vertical cohort owns after cohort outcomes are accepted or explicitly blocked.
 
 - [x] **Track: APK Dual-Theme Production Asset Packs — SUPERSEDED, DO NOT IMPLEMENT** *Link: [./archive/apk_dual_theme_asset_packs_20260711/](./archive/apk_dual_theme_asset_packs_20260711/)*
   Superseded 2026-07-12 because it froze a speculative physical inventory before completing cross-game requirements analysis. Retained as failure evidence; no completion claim is made.
