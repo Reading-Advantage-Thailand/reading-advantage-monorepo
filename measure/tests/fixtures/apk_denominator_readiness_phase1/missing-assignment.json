@@ -1,0 +1,9 @@
+{
+  "schema_version": "apk-denominator-crosswalk-negative-fixture.v1",
+  "fixture_id": "missing-assignment",
+  "mutation": {
+    "kind": "missing-assignment",
+    "assignment_index": 0
+  },
+  "expected_code": "MISSING_ASSIGNMENT"
+}

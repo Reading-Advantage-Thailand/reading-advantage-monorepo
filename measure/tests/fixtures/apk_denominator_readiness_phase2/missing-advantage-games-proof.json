@@ -1,0 +1,1 @@
+{"mutation":{"kind":"remove-host-proof","host":"advantage_games"},"expected_code":"ADVANTAGE_GAMES_PROOF_MISSING"}

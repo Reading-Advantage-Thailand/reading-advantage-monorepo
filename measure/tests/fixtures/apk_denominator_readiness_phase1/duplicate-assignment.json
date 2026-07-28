@@ -1,0 +1,10 @@
+{
+  "schema_version": "apk-denominator-crosswalk-negative-fixture.v1",
+  "fixture_id": "duplicate-assignment",
+  "mutation": {
+    "kind": "duplicate-assignment",
+    "source_assignment_index": 0,
+    "target_assignment_index": 1
+  },
+  "expected_code": "DUPLICATE_ASSIGNMENT"
+}

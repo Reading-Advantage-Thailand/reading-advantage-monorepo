@@ -1,0 +1,9 @@
+{
+  "schema_version": "apk-denominator-crosswalk-negative-fixture.v1",
+  "fixture_id": "unexplained-assignment",
+  "mutation": {
+    "kind": "unexplained-assignment",
+    "assignment_index": 2
+  },
+  "expected_code": "UNEXPLAINED_ASSIGNMENT"
+}

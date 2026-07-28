@@ -1,0 +1,159 @@
+{
+  "schema_version": "apk-accepted-readiness-governance-receipt.v1",
+  "receipt_id": "apk_denominator_readiness_t11_integrity_20260727_accepted_readiness_v1",
+  "track_id": "apk_denominator_readiness_t11_integrity_20260727",
+  "status": "accepted",
+  "revocation_state": "active",
+  "published_at": "2026-07-27T10:10:51Z",
+  "receipt_kind": "planning-crosswalk-and-fail-closed-readiness-governance",
+  "bindings": {
+    "phase1_crosswalk": {
+      "path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+      "sha256": "eb395d3d365115696fc31359406a4e9f126604ca159ea8358a0eb8931c8c5f57"
+    },
+    "phase1_independent_review": {
+      "path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/phase1-independent-review-report.json",
+      "sha256": "681367b80285451c92bcecbaee52c0a213b5db99ae52702d752c5a614fd8a8ad"
+    },
+    "phase2_independent_review": {
+      "path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/phase2-independent-review-report.json",
+      "sha256": "591c1c04dc03f1a2a6faa33cf4395363a307d1cb14925940961a8c2a709f802b"
+    },
+    "phase2_candidate_receipt": {
+      "path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/phase2-readiness-candidate-receipt.json",
+      "sha256": "3d18b6ec01b30ee676ec56cc66e33770d626977a22df5080983e5c495106844c"
+    },
+    "product_owner_acceptance": {
+      "path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/product-owner-acceptance-v1.json",
+      "sha256": "aa9b842f036c2a4975c14c9f9ec97915d3a7fa20bcae5e873093e3d8e3839a12"
+    }
+  },
+  "hash_governance": {
+    "reviewed_subjects_are_byte_immutable": true,
+    "owner_acceptance_subject_set_is_exhaustive": true,
+    "hash_drift_invalidates_this_receipt": true,
+    "successor_receipt_required_after_any_bound_change": true
+  },
+  "crosswalk_governance": {
+    "status": "owner-accepted",
+    "consumable_for_child_planning": true,
+    "source_identity_count": 27,
+    "partition_assignment_count": 29,
+    "source_identity_assignments": 27,
+    "historical_label_assignments": 2,
+    "historical_labels": [
+      "The Abyssal Well — stale/historical evidence recovery.",
+      "Babel Architect"
+    ],
+    "completeness_boundary": "Every accepted T2 partition assignment is explained exactly once. This is not a claim of 29 source identities, current gameplay, migration completion, or retirement completion."
+  },
+  "readiness_governance": {
+    "contract_status": "owner-accepted",
+    "contract_consumable_by_authorized_child_cohorts": true,
+    "any_cohort_currently_ready_by_this_receipt": false,
+    "any_cartridge_cutover_authorized_by_this_receipt": false,
+    "phase2_candidate_placeholder_evidence_accepted_as_cohort_proof": false,
+    "required_per_game_evidence": [
+      "semantic adoption binding",
+      "selected standard-pack output",
+      "Advantage Games proof",
+      "Reading proof",
+      "Primary proof",
+      "exact retirement path and blob SHA-256"
+    ],
+    "cohort_acceptance_requirement": "Each child cohort must publish its own hash-bound evidence, independent review, and product-owner acceptance before cutover or retirement claims."
+  },
+  "binding_disclosures": {
+    "phase1_low_findings": [
+      "The deleted-page evidence points at the deletion revision while the last-present content is in its parent; independently recomputed content SHA-256 values match."
+    ],
+    "phase2_low_findings": [
+      "Candidate evidence values are explicit placeholders, not real cohort receipts.",
+      "The Phase-2 validator does not itself scan nested forbidden success-claim keys.",
+      "The Phase-2 candidate acceptance flag is not auto-verified against the Phase-1 crosswalk.",
+      "The immutable candidate records crosswalk owner acceptance as absent because it predates this acceptance overlay."
+    ],
+    "t10_restrictions": [
+      "accepted_runtime_contracts=0",
+      "approved_asset_mappings=0",
+      "browser_success_claimed=false"
+    ],
+    "t11_restrictions": [
+      "legacy_asset_adoption_approved=false",
+      "cartridge_cutover_authorized=false"
+    ],
+    "t11_open_gaps": [
+      "uncommitted_acceptance_state",
+      "full_advantage_games_jest",
+      "reading_primary_import_smokes",
+      "representative_device_performance",
+      "manual_owner_qc"
+    ]
+  },
+  "downstream_authorization": {
+    "status": "authorized-for-listed-child-work-only",
+    "authorized_child_cohorts": {
+      "apk_existing_core_cutover_20260727": [
+        "Dragon Flight",
+        "Magic Defense",
+        "Dungeon Liberator",
+        "The Sorcerer's Ziggurat",
+        "Astral Mage"
+      ],
+      "apk_existing_action_cutover_20260727": [
+        "Archer's Revenge",
+        "Paladin's Twin-Soul",
+        "Griffin Sky-Joust",
+        "Gryphon Patrol",
+        "Realm Carver"
+      ],
+      "apk_legacy_defense_cutover_20260727": [
+        "Castle Defense",
+        "Wizard vs Zombie",
+        "Village Guardian",
+        "Storm the Castle Tower"
+      ],
+      "apk_legacy_traversal_cutover_20260727": [
+        "Dragon Rider",
+        "Spellweaver's Run",
+        "Shadow Gate Dungeon",
+        "Labyrinth of the Goblin King",
+        "Griffin Rider's Escape"
+      ],
+      "apk_legacy_puzzle_cutover_20260727": [
+        "Enchanted Library",
+        "Rune Match",
+        "Alchemist's Synthesis",
+        "Potion Rush",
+        "Rune Forge Chamber"
+      ],
+      "apk_historical_identity_disposition_20260727": [
+        "RPG Battle",
+        "The Abyssal Well",
+        "Devourer Slime",
+        "The Haunted Library",
+        "Babel Architect"
+      ]
+    },
+    "historical_disposition_only": true,
+    "excluded_child_tracks": [
+      "apk_new_game_intake_20260727",
+      "apk_cross_host_closeout_20260727"
+    ],
+    "authorization_boundary": "Authorization removes only the denominator/readiness predecessor block for the listed child cohorts. It does not satisfy any child task, prove any game ready, authorize historical rebuilds, authorize cutover or deletion, or waive child review and owner acceptance."
+  },
+  "claims": {
+    "crosswalk_accepted": true,
+    "readiness_contract_accepted": true,
+    "cohort_readiness_claimed": false,
+    "gameplay_success_claimed": false,
+    "browser_success_claimed": false,
+    "performance_success_claimed": false,
+    "host_adoption_success_claimed": false,
+    "asset_adoption_success_claimed": false,
+    "migration_complete_claimed": false,
+    "retirement_complete_claimed": false,
+    "production_code_modified_for_this_acceptance": false,
+    "commit_created_for_this_acceptance": false
+  }
+}

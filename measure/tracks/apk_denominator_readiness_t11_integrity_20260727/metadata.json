@@ -1,0 +1,12 @@
+{
+  "track_id": "apk_denominator_readiness_t11_integrity_20260727",
+  "type": "chore",
+  "status": "completed",
+  "created_at": "2026-07-27T00:00:00Z",
+  "updated_at": "2026-07-27T10:10:51Z",
+  "description": "Resolve the T2 27/29 discrepancy and publish T11-aware fail-closed readiness gates for APK cohorts.",
+  "estimated_tasks": 6,
+  "actual_tasks": 6,
+  "depends_on": ["apk_cartridge_semantic_rewrite_20260712"],
+  "deviation_notes": "Completed as planning/evidence governance only. Exact owner message `approved` is recorded in product-owner-acceptance-v1.json (SHA-256 aa9b842f036c2a4975c14c9f9ec97915d3a7fa20bcae5e873093e3d8e3839a12); the environment exposed no durable user message/event ID or authoritative event timestamp, so none was fabricated. Accepted readiness receipt d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720 binds the immutable Phase-1 crosswalk, both independent reviews, Phase-2 candidate, and owner acceptance. It preserves all LOW findings, T10/T11 restrictions, and open disclosures; authorizes only the five implementation cohorts and historical disposition cohort to begin scoped work; and makes no cohort readiness, gameplay/browser/performance/host/asset success, cutover, deletion, historical rebuild, or completeness claim. No commit or production edit was made for acceptance."
+}

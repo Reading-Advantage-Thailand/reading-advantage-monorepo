@@ -1,0 +1,366 @@
+{
+  "schema_version": "apk-denominator-27-to-29-crosswalk.v1",
+  "track_id": "apk_denominator_readiness_t11_integrity_20260727",
+  "status": "candidate-complete-awaiting-independent-review",
+  "consumable": false,
+  "portfolio_status": "blocked",
+  "source_baseline_revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+  "source_artifacts": {
+    "accepted_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729"
+    },
+    "accepted_partition": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0"
+    },
+    "identity_ledger": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+      "sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407"
+    },
+    "source_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/source-denominator.json",
+      "sha256": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d"
+    },
+    "historical_source_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json",
+      "sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f"
+    }
+  },
+  "counts": {
+    "source_identities": 27,
+    "partition_assignments": 29,
+    "direct_source_identity_assignments": 27,
+    "historical_label_assignments": 2
+  },
+  "difference": {
+    "count": 2,
+    "classification": "historical_label",
+    "assignment_labels": [
+      "The Abyssal Well — stale/historical evidence recovery.",
+      "Babel Architect"
+    ],
+    "statement": "The two partition-only labels are absent from the 27-row catalog identity ledger and each has an exact deleted-page record in the accepted T2 historical source denominator. This classifies the arithmetic difference only; it does not establish current runtime or gameplay behavior."
+  },
+  "assignments": [
+    {
+      "assignment_index": 0,
+      "canonical_identity_label": "Dragon Flight — large current action implementation.",
+      "cohort": "Pilot",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/0"},
+      "classification": "source_identity",
+      "source_identity_id": "vocabulary/dragon-flight",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/20"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity dragon-flight."
+    },
+    {
+      "assignment_index": 1,
+      "canonical_identity_label": "RPG Battle — multi-state turn-based implementation.",
+      "cohort": "Pilot",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/1"},
+      "classification": "source_identity",
+      "source_identity_id": "vocabulary/rpg-battle",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/24"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity rpg-battle."
+    },
+    {
+      "assignment_index": 2,
+      "canonical_identity_label": "The Abyssal Well — stale/historical evidence recovery.",
+      "cohort": "Pilot",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/2"},
+      "classification": "historical_label",
+      "source_identity_id": null,
+      "source_locator": {
+        "artifact": "historical_source_denominator",
+        "classification": "deleted",
+        "evidence_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/abyssal-well/page.tsx",
+        "evidence_blob_sha256": "319603dbf1ef3ecca622255f366a5ade8b362c82754145243ccfcdc007abc938"
+      },
+      "explanation": "No abyssal-well catalog identity occurs in the 27-row T2 ledger; the T2 historical denominator records this exact page as deleted."
+    },
+    {
+      "assignment_index": 3,
+      "canonical_identity_label": "Castle Defense",
+      "cohort": "Action and defense",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/3"},
+      "classification": "source_identity",
+      "source_identity_id": "sentence/castle-defense",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/10"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity castle-defense."
+    },
+    {
+      "assignment_index": 4,
+      "canonical_identity_label": "Magic Defense",
+      "cohort": "Action and defense",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/4"},
+      "classification": "source_identity",
+      "source_identity_id": "vocabulary/magic-defense",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/23"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity magic-defense."
+    },
+    {
+      "assignment_index": 5,
+      "canonical_identity_label": "Wizard vs Zombie",
+      "cohort": "Action and defense",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/5"},
+      "classification": "source_identity",
+      "source_identity_id": "vocabulary/wizard-vs-zombie",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/26"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity wizard-vs-zombie."
+    },
+    {
+      "assignment_index": 6,
+      "canonical_identity_label": "Village Guardian",
+      "cohort": "Action and defense",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/6"},
+      "classification": "source_identity",
+      "source_identity_id": "sentence/village-guardian",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/18"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity village-guardian."
+    },
+    {
+      "assignment_index": 7,
+      "canonical_identity_label": "Archer's Revenge",
+      "cohort": "Action and defense",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/7"},
+      "classification": "source_identity",
+      "source_identity_id": "catalog/archers-revenge",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/0"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity archers-revenge."
+    },
+    {
+      "assignment_index": 8,
+      "canonical_identity_label": "Storm the Castle Tower",
+      "cohort": "Action and defense",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/8"},
+      "classification": "source_identity",
+      "source_identity_id": "catalog/storm-castle-tower",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/9"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity storm-castle-tower."
+    },
+    {
+      "assignment_index": 9,
+      "canonical_identity_label": "Paladin's Twin-Soul",
+      "cohort": "Action and defense",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/9"},
+      "classification": "source_identity",
+      "source_identity_id": "catalog/paladins-twin-soul",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/5"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity paladins-twin-soul."
+    },
+    {
+      "assignment_index": 10,
+      "canonical_identity_label": "Gryphon Patrol",
+      "cohort": "Action and defense",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/10"},
+      "classification": "source_identity",
+      "source_identity_id": "catalog/gryphon-patrol",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/4"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity gryphon-patrol."
+    },
+    {
+      "assignment_index": 11,
+      "canonical_identity_label": "Dragon Rider",
+      "cohort": "Traversal and exploration",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/11"},
+      "classification": "source_identity",
+      "source_identity_id": "vocabulary/dragon-rider",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/21"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity dragon-rider."
+    },
+    {
+      "assignment_index": 12,
+      "canonical_identity_label": "Dungeon Liberator",
+      "cohort": "Traversal and exploration",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/12"},
+      "classification": "source_identity",
+      "source_identity_id": "sentence/dungeon-liberator",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/12"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity dungeon-liberator."
+    },
+    {
+      "assignment_index": 13,
+      "canonical_identity_label": "Spellweaver's Run",
+      "cohort": "Traversal and exploration",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/13"},
+      "classification": "source_identity",
+      "source_identity_id": "catalog/spellweavers-run",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/8"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity spellweavers-run."
+    },
+    {
+      "assignment_index": 14,
+      "canonical_identity_label": "Shadow Gate Dungeon",
+      "cohort": "Traversal and exploration",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/14"},
+      "classification": "source_identity",
+      "source_identity_id": "sentence/shadow-gate-dungeon",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/17"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity shadow-gate-dungeon."
+    },
+    {
+      "assignment_index": 15,
+      "canonical_identity_label": "Labyrinth of the Goblin King",
+      "cohort": "Traversal and exploration",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/15"},
+      "classification": "source_identity",
+      "source_identity_id": "sentence/labyrinth-goblin-king",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/14"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity labyrinth-goblin-king."
+    },
+    {
+      "assignment_index": 16,
+      "canonical_identity_label": "Griffin Rider's Escape",
+      "cohort": "Traversal and exploration",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/16"},
+      "classification": "source_identity",
+      "source_identity_id": "catalog/griffin-riders-escape",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/2"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity griffin-riders-escape."
+    },
+    {
+      "assignment_index": 17,
+      "canonical_identity_label": "The Sorcerer's Ziggurat",
+      "cohort": "Traversal and exploration",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/17"},
+      "classification": "source_identity",
+      "source_identity_id": "catalog/sorcerer-ziggurat",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/7"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity sorcerer-ziggurat."
+    },
+    {
+      "assignment_index": 18,
+      "canonical_identity_label": "Enchanted Library",
+      "cohort": "Puzzle and crafting",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/18"},
+      "classification": "source_identity",
+      "source_identity_id": "vocabulary/enchanted-library",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/22"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity enchanted-library."
+    },
+    {
+      "assignment_index": 19,
+      "canonical_identity_label": "Rune Match",
+      "cohort": "Puzzle and crafting",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/19"},
+      "classification": "source_identity",
+      "source_identity_id": "vocabulary/rune-match",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/25"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity rune-match."
+    },
+    {
+      "assignment_index": 20,
+      "canonical_identity_label": "Alchemist's Synthesis",
+      "cohort": "Puzzle and crafting",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/20"},
+      "classification": "source_identity",
+      "source_identity_id": "vocabulary/alchemists-synthesis",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/19"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity alchemists-synthesis."
+    },
+    {
+      "assignment_index": 21,
+      "canonical_identity_label": "Potion Rush",
+      "cohort": "Puzzle and crafting",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/21"},
+      "classification": "source_identity",
+      "source_identity_id": "sentence/potion-rush",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/15"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity potion-rush."
+    },
+    {
+      "assignment_index": 22,
+      "canonical_identity_label": "Rune Forge Chamber",
+      "cohort": "Puzzle and crafting",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/22"},
+      "classification": "source_identity",
+      "source_identity_id": "sentence/rune-forge-chamber",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/16"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity rune-forge-chamber."
+    },
+    {
+      "assignment_index": 23,
+      "canonical_identity_label": "Astral Mage",
+      "cohort": "Puzzle and crafting",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/23"},
+      "classification": "source_identity",
+      "source_identity_id": "catalog/astral-mage",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/1"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity astral-mage."
+    },
+    {
+      "assignment_index": 24,
+      "canonical_identity_label": "Griffin Sky-Joust",
+      "cohort": "Special and historical",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/24"},
+      "classification": "source_identity",
+      "source_identity_id": "catalog/griffin-sky-joust",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/3"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity griffin-sky-joust."
+    },
+    {
+      "assignment_index": 25,
+      "canonical_identity_label": "Realm Carver",
+      "cohort": "Special and historical",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/25"},
+      "classification": "source_identity",
+      "source_identity_id": "catalog/realm-carver",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/6"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity realm-carver."
+    },
+    {
+      "assignment_index": 26,
+      "canonical_identity_label": "Devourer Slime",
+      "cohort": "Special and historical",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/26"},
+      "classification": "source_identity",
+      "source_identity_id": "sentence/devourer-slime",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/11"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity devourer-slime."
+    },
+    {
+      "assignment_index": 27,
+      "canonical_identity_label": "The Haunted Library",
+      "cohort": "Special and historical",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/27"},
+      "classification": "source_identity",
+      "source_identity_id": "sentence/haunted-library",
+      "source_locator": {"artifact": "identity_ledger", "json_pointer": "/identity_records/13"},
+      "explanation": "The accepted partition label resolves to T2 ledger catalog identity haunted-library."
+    },
+    {
+      "assignment_index": 28,
+      "canonical_identity_label": "Babel Architect",
+      "cohort": "Special and historical",
+      "assignment_locator": {"artifact": "accepted_partition", "json_pointer": "/assignments/28"},
+      "classification": "historical_label",
+      "source_identity_id": null,
+      "source_locator": {
+        "artifact": "historical_source_denominator",
+        "classification": "deleted",
+        "evidence_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/babel-architect/page.tsx",
+        "evidence_blob_sha256": "f438feea924cc464ba6366949b3cd3926ee4b36a13f15c3c1b7162b1b5c76565"
+      },
+      "explanation": "No babel-architect catalog identity occurs in the 27-row T2 ledger; the T2 historical denominator records this exact page as deleted."
+    }
+  ],
+  "governance": {
+    "independent_review": "pending",
+    "product_owner_acceptance": "not-requested",
+    "downstream_authorization": "blocked"
+  },
+  "claim_boundary": {
+    "asserted": [
+      "accepted T2 artifact identity and partition counts",
+      "exact assignment-to-ledger or assignment-to-deleted-record correspondence"
+    ],
+    "not_asserted": [
+      "gameplay behavior",
+      "browser behavior",
+      "performance",
+      "host adoption",
+      "asset adoption",
+      "cohort readiness"
+    ]
+  }
+}

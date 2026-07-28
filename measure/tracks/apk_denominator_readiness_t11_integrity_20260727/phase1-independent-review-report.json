@@ -1,0 +1,277 @@
+{
+  "schema_version": "apk-denominator-independent-review-report.v1",
+  "track_id": "apk_denominator_readiness_t11_integrity_20260727",
+  "review_kind": "fresh-source-independent-review",
+  "subject_candidate": {
+    "path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/phase1-independent-review-candidate.json",
+    "subject_crosswalk": {
+      "path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+      "sha256": "eb395d3d365115696fc31359406a4e9f126604ca159ea8358a0eb8931c8c5f57"
+    }
+  },
+  "reviewer_identity": {
+    "role": "independent-fresh-source-reviewer",
+    "session_kind": "fresh-context-clean-export",
+    "narrative_pre_read": false,
+    "summary": "Review executed without consulting the candidate's asserted conclusions before hash recomputation, identity derivation, and pointer resolution. The crosswalk and review-candidate were treated as opaque JSON inputs whose structure was only validated against the allowed inputs."
+  },
+  "fresh_context_statement": {
+    "declared": true,
+    "explanation": "Reviewer did not inherit conclusions from the candidate crosswalk. Every ledger identity, every partition assignment, every evidence pointer, and both cited deleted-page blob hashes were re-derived directly from the five allowed T2 source artifacts and the local git object store before the candidate conclusions were accepted.",
+    "raw_export_proof": [
+      "Recomputed SHA-256 of all six allowed inputs; byte-identical to candidate.",
+      "Parsed accepted-denominator-manifest.json to confirm identities=27.",
+      "Parsed game-identity-ledger.json to enumerate 27 canonical_identity_id records.",
+      "Parsed accepted-partition-manifest.json to enumerate 29 partition assignments.",
+      "Computed set difference between ledger ids and partition labels; Abyssal Well and Babel Architect are the only two labels with no ledger entry.",
+      "Confirmed via grep that no ledger record carries 'abyssal' or 'babel' substrings.",
+      "Resolved each assignment_locator (/assignments/N) in the crosswalk against accepted-partition-manifest.json.",
+      "Resolved each source_locator for source_identity rows against /identity_records/N.",
+      "Resolved each historical_label locator against the historical-source-denominator.json records; both source the T2 deletion path with the exact cited blob_sha256.",
+      "Recomputed SHA-256 of the parent-revision file content for both deleted pages and matched against cited blob_sha256 and range.sha256."
+    ]
+  },
+  "reviewed_input_hashes": {
+    "candidate_crosswalk": {
+      "path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+      "cited_sha256": "eb395d3d365115696fc31359406a4e9f126604ca159ea8358a0eb8931c8c5f57",
+      "recomputed_sha256": "eb395d3d365115696fc31359406a4e9f126604ca159ea8358a0eb8931c8c5f57",
+      "match": true
+    },
+    "t2_accepted_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "cited_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+      "recomputed_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+      "match": true
+    },
+    "t2_accepted_partition": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "cited_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+      "recomputed_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+      "match": true
+    },
+    "t2_identity_ledger": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+      "cited_sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+      "recomputed_sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+      "match": true
+    },
+    "t2_source_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/source-denominator.json",
+      "cited_sha256": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d",
+      "recomputed_sha256": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d",
+      "match": true
+    },
+    "t2_historical_source_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json",
+      "cited_sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
+      "recomputed_sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
+      "match": true
+    }
+  },
+  "ledger_and_partition_derivations": {
+    "identity_ledger_record_count": 27,
+    "identity_ledger_source_class_breakdown": {
+      "identity_source_record_subset": 17,
+      "catalog_withdrawn_registration_only": 10,
+      "sum_matches_ledger_count": true
+    },
+    "partition_assignment_count": 29,
+    "accepted_denominator_identities_field": 27,
+    "set_difference": {
+      "count": 2,
+      "missing_from_ledger": [
+        "abyssal-well",
+        "babel-architect"
+      ],
+      "independent_substring_scan_negative_for": [
+        "abyssal",
+        "babel",
+        "well",
+        "architect"
+      ],
+      "exact_partition_labels_without_ledger_entry": [
+        "The Abyssal Well — stale/historical evidence recovery.",
+        "Babel Architect"
+      ]
+    }
+  },
+  "crosswalk_pointer_resolution": {
+    "total_assignment_locators_resolved": 29,
+    "all_label_and_cohort_matches": true,
+    "source_identity_resolutions": 27,
+    "all_source_identity_ids_match_ledger_canonical_id": true,
+    "historical_label_resolutions": 2,
+    "both_resolve_to_unique_deleted_record_in_historical_source_denominator": true
+  },
+  "deleted_page_locator_verification": {
+    "abyssal_well": {
+      "evidence_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/abyssal-well/page.tsx",
+      "evidence_blob_sha256": "319603dbf1ef3ecca622255f366a5ade8b362c82754145243ccfcdc007abc938",
+      "cited_revision": "c76f6af3f62c03979f5073a871e775afd952a070",
+      "parent_revision_containing_blob": "8611070b9debece772f0e686a08f4cfcfc495880",
+      "git_blob_sha1_at_parent": "e021d35be92b534de6780b838f59cde996503915",
+      "recomputed_sha256_of_full_blob": "319603dbf1ef3ecca622255f366a5ade8b362c82754145243ccfcdc007abc938",
+      "recomputed_sha256_of_range_1_to_216": "319603dbf1ef3ecca622255f366a5ade8b362c82754145243ccfcdc007abc938",
+      "blob_match": true,
+      "range_match": true,
+      "historical_classification_in_denominator": "deleted",
+      "page_path_in_denominator_record_matches_evidence_path": true
+    },
+    "babel_architect": {
+      "evidence_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/babel-architect/page.tsx",
+      "evidence_blob_sha256": "f438feea924cc464ba6366949b3cd3926ee4b36a13f15c3c1b7162b1b5c76565",
+      "cited_revision": "c76f6af3f62c03979f5073a871e775afd952a070",
+      "parent_revision_containing_blob": "8611070b9debece772f0e686a08f4cfcfc495880",
+      "git_blob_sha1_at_parent": "f831bb5c2fd4fb656bfc74d4e2bc1bb046b6afb2",
+      "recomputed_sha256_of_full_blob": "f438feea924cc464ba6366949b3cd3926ee4b36a13f15c3c1b7162b1b5c76565",
+      "recomputed_sha256_of_range_1_to_221": "f438feea924cc464ba6366949b3cd3926ee4b36a13f15c3c1b7162b1b5c76565",
+      "blob_match": true,
+      "range_match": true,
+      "historical_classification_in_denominator": "deleted",
+      "page_path_in_denominator_record_matches_evidence_path": true
+    }
+  },
+  "validation_command_and_result": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_denominator_readiness_phase1",
+    "exit_code": 0,
+    "tests_run": 5,
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "tests": [
+      {
+        "test_id": "test_source_grounded_control_is_complete_but_downstream_blocked",
+        "result": "ok",
+        "result_value": {
+          "ok": true,
+          "source_identity_count": 27,
+          "partition_assignment_count": 29,
+          "historical_label_count": 2,
+          "portfolio_status": "blocked"
+        }
+      },
+      {
+        "test_id": "test_duplicate_assignment_fixture_is_rejected",
+        "result": "ok",
+        "fixture": "measure/tests/fixtures/apk_denominator_readiness_phase1/duplicate-assignment.json",
+        "expected_code": "DUPLICATE_ASSIGNMENT",
+        "returned_code": "DUPLICATE_ASSIGNMENT"
+      },
+      {
+        "test_id": "test_missing_assignment_fixture_is_rejected",
+        "result": "ok",
+        "fixture": "measure/tests/fixtures/apk_denominator_readiness_phase1/missing-assignment.json",
+        "expected_code": "MISSING_ASSIGNMENT",
+        "returned_code": "MISSING_ASSIGNMENT"
+      },
+      {
+        "test_id": "test_unexplained_assignment_fixture_is_rejected",
+        "result": "ok",
+        "fixture": "measure/tests/fixtures/apk_denominator_readiness_phase1/unexplained-assignment.json",
+        "expected_code": "UNEXPLAINED_ASSIGNMENT",
+        "returned_code": "UNEXPLAINED_ASSIGNMENT"
+      },
+      {
+        "test_id": "test_review_artifact_is_candidate_only_and_cannot_authorize_downstream",
+        "result": "ok",
+        "result_value": {
+          "ok": true,
+          "independent_acceptance": false
+        },
+        "preserved_state": {
+          "status": "awaiting-independent-review",
+          "disposition": "not-reviewed",
+          "downstream_authorization": "blocked",
+          "reviewer": null,
+          "product_owner_acceptance": "not-requested",
+          "independent_acceptance": false
+        }
+      }
+    ]
+  },
+  "claims_boundary_check": {
+    "asserted_in_candidate_crosswalk": [
+      "accepted T2 artifact identity and partition counts",
+      "exact assignment-to-ledger or assignment-to-deleted-record correspondence"
+    ],
+    "explicitly_not_asserted_in_candidate_crosswalk": [
+      "gameplay behavior",
+      "browser behavior",
+      "performance",
+      "host adoption",
+      "asset adoption",
+      "cohort readiness"
+    ],
+    "forbidden_claim_key_scan": {
+      "scanned_keys": [
+        "adoption_success",
+        "asset_adoption_success",
+        "browser_success",
+        "gameplay_claim",
+        "gameplay_success",
+        "host_success",
+        "performance_success",
+        "ready"
+      ],
+      "any_present_in_candidate_crosswalk": false,
+      "any_present_in_review_candidate": false
+    }
+  },
+  "governance_state_preserved_in_candidate": {
+    "independent_review": "pending",
+    "product_owner_acceptance": "not-requested",
+    "downstream_authorization": "blocked",
+    "candidate_status": "awaiting-independent-review",
+    "candidate_disposition": "not-reviewed",
+    "candidate_independent_acceptance": false,
+    "candidate_reviewer": null,
+    "candidate_consumable": false,
+    "candidate_portfolio_status": "blocked"
+  },
+  "findings_by_severity": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": [
+      {
+        "id": "LOW-001",
+        "title": "Cited T2 deletion revision does not contain the deleted page in its tree",
+        "description": "The historical-source-denominator evidence row cites revision c76f6af3f62c03979f5073a871e775afd952a070 for both abyssal-well/page.tsx and babel-architect/page.tsx, but git ls-tree at that revision shows neither path. The file content is at the parent revision 8611070b9debece772f0e686a08f4cfcfc495880, not at c76f6af3. The cited blob SHA-256 nevertheless matches the parent-revision content because git show <rev>:<path> walks back when the path is absent at <rev>. This is consistent with the historical-source-denominator's claim that these are the first-commit deletions and is not a defect, but the citation would be less ambiguous if it pointed to the parent (last-present) revision.",
+        "severity_rationale": "Does not break any validator check; the SHA-256 of the cited file content is correct. Recorded only so a future maintainer is not surprised.",
+        "required_action": false
+      }
+    ],
+    "info": [
+      {
+        "id": "INFO-001",
+        "title": "Candidate hypothesis on the 27/29 classification is independently supported",
+        "description": "Independent re-derivation produced the same 27 source identities and the same 29 partition rows, the same set difference of {abyssal-well, babel-architect}, and both cited deleted-page blob_sha256 values match the file content present in the parent revision. The classification 'historical_label' for those two assignments is the only consistent classification supported by the allowed T2 inputs.",
+        "severity_rationale": "Confirms the candidate classification without endorsing downstream authorization."
+      },
+      {
+        "id": "INFO-002",
+        "title": "No product-owner acceptance or downstream authorization was produced",
+        "description": "The candidate review handoff explicitly carries reviewer=null, disposition=not-reviewed, product_owner_acceptance=not-requested, independent_acceptance=false, downstream_authorization=blocked. This review does not change any of those fields. Phase 1 Task 3 remains pending per the plan and metadata.",
+        "severity_rationale": "Process boundary preserved."
+      }
+    ]
+  },
+  "disposition": {
+    "research_evidence_disposition": "pass-with-informational-findings",
+    "fail_closed_for_product_owner_acceptance": true,
+    "downstream_authorization_remains_blocked": true,
+    "rationale": "All allowed input hashes recompute identically. The 27 ledger identities, 29 partition assignments, and the two-record {abyssal-well, babel-architect} historical-label set are re-derivable from the T2 source artifacts. Every crosswalk JSON pointer resolves to the cited record with matching canonical identity labels and cohorts. Both cited deleted-page blob_sha256 values are correct SHA-256 hashes of the file content at the parent revision. The validator and all three negative fixtures behave as specified. No critical/high/medium findings require remediation. Per the spec and the candidate's own claim boundary, product-owner acceptance, cohort readiness, gameplay claims, and downstream authorization remain absent and are explicitly NOT asserted by this report."
+  },
+  "completed_at": "2026-07-26T23:31:03Z",
+  "explicit_acknowledgements": {
+    "product_owner_acceptance": "absent",
+    "downstream_authorization": "absent",
+    "cohort_readiness_claim": "absent",
+    "gameplay_or_performance_or_host_or_asset_adoption_claim": "absent",
+    "track_block_state_preserved": true,
+    "phase1_task3_state": "pending (no product owner signature on this report)"
+  },
+  "no_production_code_modified": true,
+  "candidate_crosswalk_not_modified": true,
+  "no_commit_created": true
+}

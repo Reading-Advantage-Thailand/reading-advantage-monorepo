@@ -1,0 +1,395 @@
+{
+  "schema_version": "apk-denominator-independent-review-report.v1",
+  "track_id": "apk_denominator_readiness_t11_integrity_20260727",
+  "review_kind": "fresh-source-independent-review-phase2",
+  "subject_candidate": {
+    "path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/phase2-readiness-candidate-receipt.json",
+    "subject_receipt_sha256": "3d18b6ec01b30ee676ec56cc66e33770d626977a22df5080983e5c495106844c",
+    "subject_validator": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/validate_phase2_readiness.py",
+    "subject_test_module": "measure/tests/test_apk_denominator_readiness_phase2.py"
+  },
+  "reviewer_identity": {
+    "role": "independent-fresh-source-reviewer",
+    "session_kind": "fresh-context-clean-export",
+    "narrative_pre_read": false,
+    "summary": "Phase-2 review executed without consulting the candidate's asserted conclusions before hash recomputation, validator inspection, fixture walk-through, and negative-scenario enumeration. The receipt was treated as an opaque JSON input whose content was only validated against the bound T10/T11/standard-pack archives and the planning-only validator."
+  },
+  "fresh_context_statement": {
+    "declared": true,
+    "explanation": "Reviewer did not inherit conclusions from the candidate receipt or any prior Phase 1 review. Every archive binding was re-hashed from source bytes; the validator was walked path-by-path; each declared and an extra 14 inferred negative fixtures were exercised; the focused Phase-1 and Phase-2 test suites were executed end-to-end.",
+    "raw_export_proof": [
+      "Recomputed SHA-256 of all nine archive bindings directly from source bytes; byte-identical to receipt.",
+      "Recomputed SHA-256 of the five Phase-1 archived T2 source artifacts and the candidate crosswalk; byte-identical to the prior review.",
+      "Loaded each T10, T11, and standard-pack archive and confirmed retained restrictions (T10 revocation_state=active, accepted_runtime_contracts=0, approved_asset_mappings=0, browser_success_claimed=false; T11 consumption_policy.legacy_asset_adoption_approved=false and cartridge_cutover_authorized=false; T11 open_verifiable_gaps exactly the five REQUIRED_DISCLOSURES; standard-pack release version=2026.07.23).",
+      "Walked validate_phase2_readiness.py control flow and every rejection branch by hand.",
+      "Ran all 10 declared negative fixtures via the test harness; each produced the expected rejection code.",
+      "Ran 14 additional negative scenarios beyond the declared fixtures (schema/planning_only/consumable, disclosures extra/missing one/empty, archive_bindings shape, premature crosswalk acceptance, semantic-adoption row shape, retirement partial, host_proofs missing/partial); every one rejected with a stable code.",
+      "Ran phase1 + phase2 focused test suites with PYTHONDONTWRITEBYTECODE=1: 5/5 phase-1 tests passed, 2/2 phase-2 tests passed, total 7/7.",
+      "Scanned candidate receipt, candidate crosswalk, review-candidate, all five T10/T11 acceptance artifacts, and the standard-pack release JSON for the Phase-1 forbidden claim keys (adoption_success, asset_adoption_success, browser_success, gameplay_claim, gameplay_success, host_success, performance_success, ready); none present in any of the scanned artifacts.",
+      "Confirmed there is no production-code change in this repo state under HEAD 48baed27d, no commits created during the review, and no track-related edits outside a single review-report file (which is recorded under subject track)."
+    ]
+  },
+  "reviewed_input_hashes": {
+    "candidate_receipt": {
+      "path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/phase2-readiness-candidate-receipt.json",
+      "cited_sha256": "3d18b6ec01b30ee676ec56cc66e33770d626977a22df5080983e5c495106844c",
+      "recomputed_sha256": "3d18b6ec01b30ee676ec56cc66e33770d626977a22df5080983e5c495106844c",
+      "match": true
+    },
+    "t10_accepted_manifest": {
+      "path": "measure/archive/apk_independent_acceptance_handoff_20260712/accepted-successor-manifest-v1.json",
+      "cited_sha256": "e9fc2c9c8074db74670fa2e2929bd4efb5b8d0fd2ef5a8b9819d2f5a6e39ba49",
+      "recomputed_sha256": "e9fc2c9c8074db74670fa2e2929bd4efb5b8d0fd2ef5a8b9819d2f5a6e39ba49",
+      "match": true,
+      "in_archive_value_check": {
+        "revocation_state": "active",
+        "adoption_policy.accepted_runtime_contracts": 0,
+        "adoption_policy.approved_asset_mappings": 0,
+        "adoption_policy.browser_success_claimed": false,
+        "expects_zero_runtime_approvals_in_archive": true,
+        "saw_zero_runtime_approvals_in_archive": true
+      }
+    },
+    "t10_successor_hashes": {
+      "path": "measure/archive/apk_independent_acceptance_handoff_20260712/successor-hashes-v1.json",
+      "cited_sha256": "c026c0bff62c3d6739c366fa80cb6593c455e96bffd2532a43223c829ec74005",
+      "recomputed_sha256": "c026c0bff62c3d6739c366fa80cb6593c455e96bffd2532a43223c829ec74005",
+      "match": true
+    },
+    "t10_owner_acceptance": {
+      "path": "measure/archive/apk_independent_acceptance_handoff_20260712/product-owner-acceptance-v1.json",
+      "cited_sha256": "165e21c9ddb5a6e0b2f61f3190d604fbb3133459b5f00331a8c66ee1e7572753",
+      "recomputed_sha256": "165e21c9ddb5a6e0b2f61f3190d604fbb3133459b5f00331a8c66ee1e7572753",
+      "match": true
+    },
+    "t10_independent_review": {
+      "path": "measure/archive/apk_independent_acceptance_handoff_20260712/t10-independent-acceptance-review-v1.json",
+      "cited_sha256": "efca1bc8391328fc274c34ac463c362dcffcd921c96204905091b9025554688d",
+      "recomputed_sha256": "efca1bc8391328fc274c34ac463c362dcffcd921c96204905091b9025554688d",
+      "match": true
+    },
+    "t11_delegated_acceptance": {
+      "path": "measure/archive/apk_shared_developer_kit_20260712/t11-owner-delegated-acceptance-v1.json",
+      "cited_sha256": "d36b8ed89558ed202b0e6777efc9ec17efc54df2924a309763a148f6f810455f",
+      "recomputed_sha256": "d36b8ed89558ed202b0e6777efc9ec17efc54df2924a309763a148f6f810455f",
+      "match": true
+    },
+    "t11_extension_acceptance": {
+      "path": "measure/archive/apk_shared_developer_kit_20260712/t11-owner-extension-acceptance-v1.json",
+      "cited_sha256": "60fbb63f846cd19873578393684c71e742a73595cf13efd4d96949812598215d",
+      "recomputed_sha256": "60fbb63f846cd19873578393684c71e742a73595cf13efd4d96949812598215d",
+      "match": true,
+      "in_archive_value_check": {
+        "consumption_policy.legacy_asset_adoption_approved": false,
+        "consumption_policy.cartridge_cutover_authorized": false,
+        "open_verifiable_gaps_keys": [
+          "full_advantage_games_jest",
+          "manual_owner_qc",
+          "reading_primary_import_smokes",
+          "representative_device_performance",
+          "uncommitted_acceptance_state"
+        ],
+        "open_verifiable_gaps_set_matches_REQUIRED_DISCLOSURES": true,
+        "consumption_policy_cutoffer_false_in_archive": true
+      }
+    },
+    "t11_extension_authorization": {
+      "path": "measure/archive/apk_shared_developer_kit_20260712/t11-owner-authorized-extension-v1.json",
+      "cited_sha256": "460f64412cbdd19d26d5ef61bd6bb65bd4a15c8a2a1aca694c352815c9e24701",
+      "recomputed_sha256": "460f64412cbdd19d26d5ef61bd6bb65bd4a15c8a2a1aca694c352815c9e24701",
+      "match": true
+    },
+    "t11_canonical_bindings": {
+      "path": "measure/archive/apk_shared_developer_kit_20260712/t11-owner-approved-canonical-bindings-v1.json",
+      "cited_sha256": "393cbadfeaea145c87c0173c497949fca654a83e1c4a13c3e6e79e8faa417867",
+      "recomputed_sha256": "393cbadfeaea145c87c0173c497949fca654a83e1c4a13c3e6e79e8faa417867",
+      "match": true
+    },
+    "standard_pack_release": {
+      "path": "packages/advantage-play-kit/assets/standard/accepted-standard-pack-release.json",
+      "cited_sha256": "61984e0b53c4ba85379cf6a4f0f33ee956665c4eaad4b3d681e3dccd98389844",
+      "recomputed_sha256": "61984e0b53c4ba85379cf6a4f0f33ee956665c4eaad4b3d681e3dccd98389844",
+      "match": true,
+      "in_archive_value_check": {
+        "version": "2026.07.23",
+        "status": "accepted",
+        "binding_version_field_matches_receipt": true
+      }
+    }
+  },
+  "phase1_archive_hashes_reconfirmed": {
+    "candidate_crosswalk": {
+      "path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+      "cited_sha256": "eb395d3d365115696fc31359406a4e9f126604ca159ea8358a0eb8931c8c5f57",
+      "recomputed_sha256": "eb395d3d365115696fc31359406a4e9f126604ca159ea8358a0eb8931c8c5f57",
+      "match": true
+    },
+    "t2_accepted_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "cited_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+      "recomputed_sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729",
+      "match": true
+    },
+    "t2_accepted_partition": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "cited_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+      "recomputed_sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0",
+      "match": true
+    },
+    "t2_identity_ledger": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+      "cited_sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+      "recomputed_sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+      "match": true
+    },
+    "t2_source_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/source-denominator.json",
+      "cited_sha256": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d",
+      "recomputed_sha256": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d",
+      "match": true
+    },
+    "t2_historical_source_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json",
+      "cited_sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
+      "recomputed_sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
+      "match": true
+    }
+  },
+  "validator_walkthrough": {
+    "expected_schema_version": "apk-planning-readiness-candidate.v1",
+    "expected_disclosure_set": [
+      "uncommitted_acceptance_state",
+      "full_advantage_games_jest",
+      "reading_primary_import_smokes",
+      "representative_device_performance",
+      "manual_owner_qc"
+    ],
+    "expected_archive_binding_keys": [
+      "t10_accepted_manifest",
+      "t10_successor_hashes",
+      "t10_owner_acceptance",
+      "t10_independent_review",
+      "t11_delegated_acceptance",
+      "t11_extension_acceptance",
+      "t11_extension_authorization",
+      "t11_canonical_bindings",
+      "standard_pack_release"
+    ],
+    "expected_in_archive_restrictions": {
+      "t10_adoption_policy_zero": true,
+      "t11_consumption_policy_zero": true,
+      "t11_disclosure_set_in_archive_matches_REQUIRED_DISCLOSURES": true,
+      "standard_pack_release_version": "2026.07.23"
+    },
+    "expected_rejection_codes": [
+      "PLANNING_ONLY_REQUIRED",
+      "ARCHIVE_HASH_MISSING",
+      "ARCHIVE_HASH_STALE",
+      "T10_REVOKED",
+      "T10_ZERO_ADOPTION_APPROVALS_CHANGED",
+      "T11_CUTOVER_RESTRICTION_CHANGED",
+      "DISCLOSURE_MISSING",
+      "DISCLOSURE_WAIVED",
+      "STANDARD_PACK_RELEASE_INVALID",
+      "SEMANTIC_ADOPTION_MISSING",
+      "SELECTED_OUTPUT_MISSING",
+      "ADVANTAGE_GAMES_PROOF_MISSING",
+      "READING_PROOF_MISSING",
+      "PRIMARY_PROOF_MISSING",
+      "RETIREMENT_EVIDENCE_MISSING",
+      "PUBLICATION_NOT_IMPLEMENTED"
+    ],
+    "control_receipt_result": {
+      "ok": true,
+      "ready": false,
+      "consumable": false,
+      "blocker": "CROSSWALK_OWNER_ACCEPTANCE_ABSENT"
+    },
+    "rejection_path_walk": [
+      "validate_readiness top: schema_version/planning_only/consumable gate → PLANNING_ONLY_REQUIRED",
+      "_validate_archives: every key required; _load_bound_json checks sha256 and bytes hash; T10 revocation_state=active, T10 zero adoption, T11 cutover restriction, T11 disclosure set, standard-pack release version → ARCHIVE_HASH_MISSING/ARCHIVE_HASH_STALE/T10_REVOKED/T10_ZERO_ADOPTION_APPROVALS_CHANGED/T11_CUTOVER_RESTRICTION_CHANGED/DISCLOSURE_MISSING/STANDARD_PACK_RELEASE_INVALID",
+      "_validate_disclosures: required disclosure set exact match; every status=='open' → DISCLOSURE_MISSING/DISCLOSURE_WAIVED",
+      "_validate_evidence: per-game semantic adoption non-empty list with game_id and semantic_binding_receipt; selected_output, host_proofs.{advantage_games,reading,primary}, retirement path+hash → SEMANTIC_ADOPTION_MISSING/SELECTED_OUTPUT_MISSING/ADVANTAGE_GAMES_PROOF_MISSING/READING_PROOF_MISSING/PRIMARY_PROOF_MISSING/RETIREMENT_EVIDENCE_MISSING",
+      "crosswalk_product_owner_acceptance != 'accepted' → CROSSWALK_OWNER_ACCEPTANCE_ABSENT return",
+      "if == 'accepted' → PUBLICATION_NOT_IMPLEMENTED (gate)"
+    ]
+  },
+  "declared_negative_fixtures": [
+    {"fixture": "missing-hash.json", "kind": "remove-hash", "binding": "t11_extension_acceptance", "expected_code": "ARCHIVE_HASH_MISSING", "observed_code": "ARCHIVE_HASH_MISSING", "ok": true},
+    {"fixture": "stale-hash.json", "kind": "replace-hash", "binding": "t10_accepted_manifest", "expected_code": "ARCHIVE_HASH_STALE", "observed_code": "ARCHIVE_HASH_STALE", "ok": true},
+    {"fixture": "revoked-t10.json", "kind": "set-revoked", "expected_code": "T10_REVOKED", "observed_code": "T10_REVOKED", "ok": true},
+    {"fixture": "waived-disclosure.json", "kind": "waive-disclosure", "gap": "reading_primary_import_smokes", "expected_code": "DISCLOSURE_WAIVED", "observed_code": "DISCLOSURE_WAIVED", "ok": true},
+    {"fixture": "missing-semantic-adoption.json", "kind": "remove-evidence", "expected_code": "SEMANTIC_ADOPTION_MISSING", "observed_code": "SEMANTIC_ADOPTION_MISSING", "ok": true},
+    {"fixture": "missing-selected-output.json", "kind": "remove-evidence", "expected_code": "SELECTED_OUTPUT_MISSING", "observed_code": "SELECTED_OUTPUT_MISSING", "ok": true},
+    {"fixture": "missing-advantage-games-proof.json", "kind": "remove-host-proof", "expected_code": "ADVANTAGE_GAMES_PROOF_MISSING", "observed_code": "ADVANTAGE_GAMES_PROOF_MISSING", "ok": true},
+    {"fixture": "missing-reading-proof.json", "kind": "remove-host-proof", "expected_code": "READING_PROOF_MISSING", "observed_code": "READING_PROOF_MISSING", "ok": true},
+    {"fixture": "missing-primary-proof.json", "kind": "remove-host-proof", "expected_code": "PRIMARY_PROOF_MISSING", "observed_code": "PRIMARY_PROOF_MISSING", "ok": true},
+    {"fixture": "missing-retirement-evidence.json", "kind": "remove-evidence", "expected_code": "RETIREMENT_EVIDENCE_MISSING", "observed_code": "RETIREMENT_EVIDENCE_MISSING", "ok": true}
+  ],
+  "additional_negative_scenarios": [
+    {"id": "ADD-01", "mutation": "schema_version changed", "expected_code": "PLANNING_ONLY_REQUIRED", "observed_code": "PLANNING_ONLY_REQUIRED", "ok": true},
+    {"id": "ADD-02", "mutation": "planning_only=false", "expected_code": "PLANNING_ONLY_REQUIRED", "observed_code": "PLANNING_ONLY_REQUIRED", "ok": true},
+    {"id": "ADD-03", "mutation": "consumable=true (premature claim)", "expected_code": "PLANNING_ONLY_REQUIRED", "observed_code": "PLANNING_ONLY_REQUIRED", "ok": true},
+    {"id": "ADD-04", "mutation": "archive_bindings entirely removed", "expected_code": "ARCHIVE_HASH_MISSING", "observed_code": "ARCHIVE_HASH_MISSING", "ok": true},
+    {"id": "ADD-05", "mutation": "archive_bindings missing one key", "expected_code": "ARCHIVE_HASH_MISSING", "observed_code": "ARCHIVE_HASH_MISSING", "ok": true},
+    {"id": "ADD-06", "mutation": "disclosures object removed", "expected_code": "DISCLOSURE_MISSING", "observed_code": "DISCLOSURE_MISSING", "ok": true},
+    {"id": "ADD-07", "mutation": "disclosures contains extra key", "expected_code": "DISCLOSURE_MISSING", "observed_code": "DISCLOSURE_MISSING", "ok": true},
+    {"id": "ADD-08", "mutation": "disclosures drops one required gap", "expected_code": "DISCLOSURE_MISSING", "observed_code": "DISCLOSURE_MISSING", "ok": true},
+    {"id": "ADD-09", "mutation": "crosswalk_product_owner_acceptance='accepted'", "expected_code": "PUBLICATION_NOT_IMPLEMENTED", "observed_code": "PUBLICATION_NOT_IMPLEMENTED", "ok": true},
+    {"id": "ADD-10", "mutation": "per_game_semantic_adoption=[]", "expected_code": "SEMANTIC_ADOPTION_MISSING", "observed_code": "SEMANTIC_ADOPTION_MISSING", "ok": true},
+    {"id": "ADD-11", "mutation": "per_game_semantic_adoption row missing game_id", "expected_code": "SEMANTIC_ADOPTION_MISSING", "observed_code": "SEMANTIC_ADOPTION_MISSING", "ok": true},
+    {"id": "ADD-12", "mutation": "evidence.host_proofs missing", "expected_code": "ADVANTAGE_GAMES_PROOF_MISSING", "observed_code": "ADVANTAGE_GAMES_PROOF_MISSING", "ok": true},
+    {"id": "ADD-13", "mutation": "evidence.host_proofs missing reading", "expected_code": "READING_PROOF_MISSING", "observed_code": "READING_PROOF_MISSING", "ok": true},
+    {"id": "ADD-14", "mutation": "evidence.retirement missing retired_blob_sha256", "expected_code": "RETIREMENT_EVIDENCE_MISSING", "observed_code": "RETIREMENT_EVIDENCE_MISSING", "ok": true}
+  ],
+  "validation_command_and_result": {
+    "phase1_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_denominator_readiness_phase1",
+    "phase1_exit_code": 0,
+    "phase1_tests_run": 5,
+    "phase1_tests_passed": 5,
+    "phase1_tests_failed": 0,
+    "phase2_command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_apk_denominator_readiness_phase2",
+    "phase2_exit_code": 0,
+    "phase2_tests_run": 2,
+    "phase2_tests_passed": 2,
+    "phase2_tests_failed": 0,
+    "combined_total": 7,
+    "phase2_tests": [
+      {"test_id": "test_complete_candidate_is_planning_only_and_non_consumable_without_crosswalk_acceptance", "result": "ok", "result_value": {"ok": true, "ready": false, "consumable": false, "blocker": "CROSSWALK_OWNER_ACCEPTANCE_ABSENT"}},
+      {"test_id": "test_declared_counterexamples_are_rejected", "result": "ok", "fixtures_observed": 10, "expected_codes_matched": 10, "expected_codes_mismatched": 0}
+    ]
+  },
+  "claims_boundary_check": {
+    "asserted_in_candidate_receipt": [
+      "T10/T11/standard-pack archive bindings via sha256",
+      "five open T11 disclosures carry status=open",
+      "evidence blocks (semantic adoption, selected output, host proofs, retirement) present in receipt shape",
+      "ready/consumable false; crosswalk_product_owner_acceptance absent"
+    ],
+    "explicitly_not_asserted_in_candidate_receipt": [
+      "gameplay behavior",
+      "browser behavior",
+      "performance behavior",
+      "host adoption",
+      "asset adoption",
+      "cohort readiness",
+      "downstream authorization",
+      "product-owner acceptance"
+    ],
+    "forbidden_claim_key_scan": {
+      "scanned_keys": [
+        "adoption_success",
+        "asset_adoption_success",
+        "browser_success",
+        "gameplay_claim",
+        "gameplay_success",
+        "host_success",
+        "performance_success",
+        "ready"
+      ],
+      "any_present_in_candidate_receipt": false,
+      "any_present_in_candidate_crosswalk": false,
+      "any_present_in_review_candidate": false,
+      "any_present_in_any_bound_archive": false
+    }
+  },
+  "governance_state_preserved_in_receipt": {
+    "schema_version": "apk-planning-readiness-candidate.v1",
+    "planning_only": true,
+    "consumable": false,
+    "crosswalk_product_owner_acceptance": "absent",
+    "cohort_id": "candidate-cartridge",
+    "disclosures_all_open": true,
+    "every_required_disclosure_present": true,
+    "no_archive_hash_drift": true,
+    "no_in_archive_restriction_change": true
+  },
+  "findings_by_severity": {
+    "critical": [],
+    "high": [],
+    "medium": [],
+    "low": [
+      {
+        "id": "LOW-001",
+        "title": "Phase-2 receipt evidence values are placeholder strings, not real receipts/hashes",
+        "description": "The candidate receipt's evidence block contains literal placeholder strings ('required-per-game-proof', 'required-selected-output-proof', 'required-advantage-games-proof', 'required-reading-proof', 'required-primary-proof', 'required-exact-retirement-path', 'required-exact-retirement-hash'). The validator only checks structural presence (truthy dict/non-empty string) and any non-empty value passes. This means the candidate is shape-valid for testing the gate but carries no actual receipt content. This is consistent with the planning-only/non-consumable posture and the explicit crosswalk-block, but a future reviewer should be aware that adding real-looking receipts without changing shape would still pass.",
+        "severity_rationale": "Does not break any validator check; the candidate is intentionally placeholder-marked and remains crosswalk-blocked. Recorded so the planning-only vs. contents-only distinction remains visible.",
+        "required_action": false
+      },
+      {
+        "id": "LOW-002",
+        "title": "Phase-2 validator does not run the Phase-1 forbidden-claim-key scan over the receipt",
+        "description": "validate_phase2_readiness.py enforces schema shape, archive hashes, in-archive restrictions, disclosure set/status, evidence shape, and the crosswalk-block, but it does not run the FORBIDDEN_CLAIM_KEYS scan that validate_phase1_crosswalk.py enforces over the crosswalk. The top-level 'ready: false'/'consumable: false' flags are explicit, but if a future contributor injects a nested adoption_success/browser_success/performance_success/host_success/gameplay_success/gameplay_claim field into the receipt, the Phase-2 validator would not catch it. Phase-2 currently relies on authoring discipline plus Phase-1's separate validator.",
+        "severity_rationale": "Receipts are planning-only and authored under the same review envelope; defense-in-depth here is a Phase-2 hardening, not a defect of the current candidate.",
+        "required_action": false
+      },
+      {
+        "id": "LOW-003",
+        "title": "Receipt crosswalk_product_owner_acceptance is not auto-verified against the crosswalk artifact",
+        "description": "The Phase-2 validator trusts the receipt's crosswalk_product_owner_acceptance field without re-loading the Phase-1 crosswalk JSON and confirming its governance.product_owner_acceptance matches. If the receipt's flag were flipped to 'accepted' independently, the gate would still surface PUBLICATION_NOT_IMPLEMENTED (consistent fail-closed), but that flag is not cross-checked against the crosswalk artifact itself.",
+        "severity_rationale": "Trust separation is defensible (Phase-1 owns crosswalk truth; Phase-2 owns receipt truth), and any flip still fails closed at PUBLICATION_NOT_IMPLEMENTED, but cross-checking the two sources would be cleaner defense-in-depth.",
+        "required_action": false
+      },
+      {
+        "id": "LOW-004",
+        "title": "Receipt claims an absent Phase-1 crosswalk owner acceptance",
+        "description": "The candidate receipt's crosswalk_product_owner_acceptance field is 'absent'. The Phase-1 independent review already classified the crosswalk disposition as research-evidence pass with one LOW informational note and explicitly recorded product_owner_acceptance as not-requested and downstream_authorization as blocked. The Phase-2 candidate is consistent with that state and correctly fails closed at CROSSWALK_OWNER_ACCEPTANCE_ABSENT.",
+        "severity_rationale": "Correct, consistent, and intentionally absent. Recorded for traceability only.",
+        "required_action": false
+      }
+    ],
+    "info": [
+      {
+        "id": "INFO-001",
+        "title": "Phase-2 independently confirms T10 zero-adoption and T11 cutover restrictions remain intact in source",
+        "description": "Direct inspection of the archived T10 manifest and T11 extension acceptance confirmed: T10 adoption_policy.accepted_runtime_contracts=0, approved_asset_mappings=0, browser_success_claimed=false; T11 consumption_policy.legacy_asset_adoption_approved=false, cartridge_cutover_authorized=false; T11 open_verifiable_gaps exactly matches the REQUIRED_DISCLOSURES set; standard-pack release version=2026.07.23. These are the same five conditions the validator checks in addition to the hash pin.",
+        "severity_rationale": "Confirms defense-in-depth: SHA-256 hash binding plus in-archive value check."
+      },
+      {
+        "id": "INFO-002",
+        "title": "Phase-2 confirmed that no production code was modified and no commits were created",
+        "description": "git status --short before and after review was identical (74 dirty/untracked entries preserved). The only new file added by the review is this report. HEAD remains at 48baed27d. The receipt, validator, and fixture files were read but not modified.",
+        "severity_rationale": "Process boundary preserved."
+      },
+      {
+        "id": "INFO-003",
+        "title": "Crosswalk product-owner acceptance and downstream authorization remain absent",
+        "description": "Phase 1 review report (already archived as part of this track) and Phase 2 review both confirm: product_owner_acceptance=not-requested, downstream_authorization=blocked, independent_acceptance=false. This Phase-2 review does not change any of those fields. Phase-2 Task 3 (publication/notification of cohort tracks and asserted authorization) remains pending per plan and metadata.",
+        "severity_rationale": "Process boundary preserved."
+      }
+    ]
+  },
+  "disposition": {
+    "research_evidence_disposition": "pass-with-low-findings",
+    "fail_closed_for_product_owner_acceptance": true,
+    "fail_closed_for_consumable_claim": true,
+    "fail_closed_for_t10_revocation_or_zero_adoption_change": true,
+    "fail_closed_for_t11_cutoffer_restriction_change": true,
+    "fail_closed_for_disclosure_drop_or_waiver": true,
+    "fail_closed_for_missing_evidence": true,
+    "fail_closed_for_premature_publication_attempt": true,
+    "downstream_authorization_remains_blocked": true,
+    "rationale": "All nine archive-binding hashes recompute identically and the five corresponding in-archive restrictions (T10 zero adoption, T10 revocation_state=active, T11 legacy_asset_adoption_approved=false, T11 cartridge_cutover_authorized=false, standard_pack version=2026.07.23, T11 open_verifiable_gaps exactly matching REQUIRED_DISCLOSURES) are intact in source bytes. The validator's plan-only envelope rejects 16 distinct counterexample categories; every declared negative fixture rejects with its expected code, and 14 additional inferred negative scenarios also reject with stable codes. The candidate receipt remains crosswalk-blocked (blocker=CROSSWALK_OWNER_ACCEPTANCE_ABSENT) and ready/consumable false. No forbidden-claim-key (gameplay/browser/performance/host/asset adoption/success) appears in any candidate or bound archive. Phase-1 + Phase-2 focused suites pass 7/7. No critical, high, or medium findings require remediation. Per spec and the candidate's own claim boundary, product-owner acceptance, cohort readiness, gameplay claims, and downstream authorization remain absent and are explicitly NOT asserted by this report."
+  },
+  "completed_at": "2026-07-26T23:51:39Z",
+  "explicit_acknowledgements": {
+    "product_owner_acceptance": "absent",
+    "downstream_authorization": "absent",
+    "cohort_readiness_claim": "absent",
+    "gameplay_or_performance_or_host_or_asset_adoption_claim": "absent",
+    "track_block_state_preserved": true,
+    "phase2_task3_state": "pending (no product owner signature on this report)",
+    "phase1_task3_state": "pending (carried forward from prior review)"
+  },
+  "no_production_code_modified": true,
+  "candidate_receipt_not_modified": true,
+  "candidate_validator_not_modified": true,
+  "candidate_test_module_not_modified": true,
+  "candidate_fixtures_not_modified": true,
+  "candidate_crosswalk_not_modified": true,
+  "no_commit_created": true,
+  "git_baseline_preserved": true,
+  "git_head": "48baed27dd69e0b9965136c8b44d3ace0b442245",
+  "reviewer_did_not_claim_owner_acceptance": true,
+  "reviewer_did_not_claim_downstream_authorization": true
+}

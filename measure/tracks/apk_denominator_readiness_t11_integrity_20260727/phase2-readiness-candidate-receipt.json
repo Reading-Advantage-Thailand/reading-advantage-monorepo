@@ -1,0 +1,35 @@
+{
+  "schema_version": "apk-planning-readiness-candidate.v1",
+  "planning_only": true,
+  "consumable": false,
+  "crosswalk_product_owner_acceptance": "absent",
+  "cohort_id": "candidate-cartridge",
+  "archive_bindings": {
+    "t10_accepted_manifest": {"path": "measure/archive/apk_independent_acceptance_handoff_20260712/accepted-successor-manifest-v1.json", "sha256": "e9fc2c9c8074db74670fa2e2929bd4efb5b8d0fd2ef5a8b9819d2f5a6e39ba49", "revocation_state": "active"},
+    "t10_successor_hashes": {"path": "measure/archive/apk_independent_acceptance_handoff_20260712/successor-hashes-v1.json", "sha256": "c026c0bff62c3d6739c366fa80cb6593c455e96bffd2532a43223c829ec74005"},
+    "t10_owner_acceptance": {"path": "measure/archive/apk_independent_acceptance_handoff_20260712/product-owner-acceptance-v1.json", "sha256": "165e21c9ddb5a6e0b2f61f3190d604fbb3133459b5f00331a8c66ee1e7572753"},
+    "t10_independent_review": {"path": "measure/archive/apk_independent_acceptance_handoff_20260712/t10-independent-acceptance-review-v1.json", "sha256": "efca1bc8391328fc274c34ac463c362dcffcd921c96204905091b9025554688d"},
+    "t11_delegated_acceptance": {"path": "measure/archive/apk_shared_developer_kit_20260712/t11-owner-delegated-acceptance-v1.json", "sha256": "d36b8ed89558ed202b0e6777efc9ec17efc54df2924a309763a148f6f810455f"},
+    "t11_extension_acceptance": {"path": "measure/archive/apk_shared_developer_kit_20260712/t11-owner-extension-acceptance-v1.json", "sha256": "60fbb63f846cd19873578393684c71e742a73595cf13efd4d96949812598215d"},
+    "t11_extension_authorization": {"path": "measure/archive/apk_shared_developer_kit_20260712/t11-owner-authorized-extension-v1.json", "sha256": "460f64412cbdd19d26d5ef61bd6bb65bd4a15c8a2a1aca694c352815c9e24701"},
+    "t11_canonical_bindings": {"path": "measure/archive/apk_shared_developer_kit_20260712/t11-owner-approved-canonical-bindings-v1.json", "sha256": "393cbadfeaea145c87c0173c497949fca654a83e1c4a13c3e6e79e8faa417867"},
+    "standard_pack_release": {"path": "packages/advantage-play-kit/assets/standard/accepted-standard-pack-release.json", "sha256": "61984e0b53c4ba85379cf6a4f0f33ee956665c4eaad4b3d681e3dccd98389844", "version": "2026.07.23"}
+  },
+  "disclosures": {
+    "uncommitted_acceptance_state": {"status": "open"},
+    "full_advantage_games_jest": {"status": "open"},
+    "reading_primary_import_smokes": {"status": "open"},
+    "representative_device_performance": {"status": "open"},
+    "manual_owner_qc": {"status": "open"}
+  },
+  "evidence": {
+    "per_game_semantic_adoption": [{"game_id": "candidate-cartridge", "semantic_binding_receipt": "required-per-game-proof"}],
+    "selected_output": {"selected_union_receipt": "required-selected-output-proof"},
+    "host_proofs": {
+      "advantage_games": {"receipt": "required-advantage-games-proof"},
+      "reading": {"receipt": "required-reading-proof"},
+      "primary": {"receipt": "required-primary-proof"}
+    },
+    "retirement": {"retired_path": "required-exact-retirement-path", "retired_blob_sha256": "required-exact-retirement-hash"}
+  }
+}

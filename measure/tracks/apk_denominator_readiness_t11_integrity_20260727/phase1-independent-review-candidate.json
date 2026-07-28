@@ -1,0 +1,74 @@
+{
+  "schema_version": "apk-denominator-independent-review-candidate.v1",
+  "track_id": "apk_denominator_readiness_t11_integrity_20260727",
+  "report_kind": "coordinator-authored-review-handoff",
+  "status": "awaiting-independent-review",
+  "disposition": "not-reviewed",
+  "independent_acceptance": false,
+  "reviewer": null,
+  "product_owner_acceptance": "not-requested",
+  "downstream_authorization": "blocked",
+  "candidate_crosswalk": {
+    "path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+    "sha256": "eb395d3d365115696fc31359406a4e9f126604ca159ea8358a0eb8931c8c5f57"
+  },
+  "fresh_source_review": {
+    "required": true,
+    "inherited_narrative_allowed": false,
+    "allowed_inputs": [
+      {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+        "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729"
+      },
+      {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+        "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0"
+      },
+      {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+        "sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407"
+      },
+      {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/source-denominator.json",
+        "sha256": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d"
+      },
+      {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json",
+        "sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f"
+      },
+      {
+        "path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+        "sha256": "eb395d3d365115696fc31359406a4e9f126604ca159ea8358a0eb8931c8c5f57"
+      }
+    ],
+    "review_steps": [
+      "Recompute every allowed-input SHA-256 before reading the candidate conclusions.",
+      "Derive the 27 ledger IDs, their identity source records, and 29 accepted partition assignments directly from the five archived T2 artifacts.",
+      "Resolve every crosswalk JSON pointer and both deleted-page locators against their exact committed blob and range hashes.",
+      "Run the focused Phase-1 validator tests, including duplicate, missing, and unexplained negative fixtures.",
+      "Report findings by severity without treating this coordinator-authored handoff as prior independent review."
+    ]
+  },
+  "candidate_observations_for_verification": [
+    {
+      "id": "CANDIDATE-OBS-001",
+      "statement": "The accepted denominator records 27 identities and the accepted partition contains 29 assignments.",
+      "independently_verified": false
+    },
+    {
+      "id": "CANDIDATE-OBS-002",
+      "statement": "The Abyssal Well and Babel Architect are the two partition labels without a catalog identity in the 27-row ledger; exact deleted page records exist in the T2 historical denominator.",
+      "independently_verified": false
+    }
+  ],
+  "required_independent_report_fields": [
+    "reviewer_identity",
+    "fresh_context_or_raw_export_proof",
+    "reviewed_input_hashes",
+    "validation_command_and_result",
+    "findings_by_severity",
+    "disposition",
+    "completed_at"
+  ],
+  "claim_boundary": "This handoff is not an independent report, owner acceptance, readiness receipt, or authorization for downstream cohort work."
+}

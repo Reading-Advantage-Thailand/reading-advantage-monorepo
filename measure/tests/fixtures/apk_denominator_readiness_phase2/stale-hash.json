@@ -1,0 +1,1 @@
+{"mutation":{"kind":"replace-hash","binding":"t10_accepted_manifest","value":"00"},"expected_code":"ARCHIVE_HASH_STALE"}

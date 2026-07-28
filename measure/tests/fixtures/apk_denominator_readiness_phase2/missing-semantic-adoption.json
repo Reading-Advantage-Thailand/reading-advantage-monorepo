@@ -1,0 +1,1 @@
+{"mutation":{"kind":"remove-evidence","evidence":"per_game_semantic_adoption"},"expected_code":"SEMANTIC_ADOPTION_MISSING"}
