@@ -32,13 +32,23 @@ T4 Action/defense   T5 Traversal     T6 Puzzle/craft  T7 Special/history
                                            |
                                            v
                               T10 Independent acceptance
-                                           |
-                         +-----------------+-----------------+
-                         v                 v                 v
-                    Shared kit       Asset production   Cartridge rebuilds
+                                           |                  Canonical standard-pack
+                                           |                  import/catalog/release
+                                           +---------------------------+
+                                                                       v
+                                                               Shared developer kit
+                                                                       |
+                                                                       v
+                                                               Cartridge rebuilds
 ```
 
-Tracks T4–T7 may run in parallel only after T3 is accepted. T8 begins only after T4–T7 are accepted because suitability requires their concrete scene usages. T9 requires accepted hashes from T2–T8. T10 alone may publish consumable successor hashes.
+Tracks T4–T7 may run in parallel only after T3 is accepted. T8 begins only after
+T4–T7 are accepted because suitability requires their concrete scene usages. T9
+requires accepted hashes from T2–T8 plus the accepted standard-pack release used
+for candidate-key mapping. T10 alone may publish consumable successor evidence
+hashes. The canonical standard-pack import/catalog/release may proceed
+without altering the frozen T8 denominator; per-game adoption waits for T10.
+The shared developer kit requires both T10 and the accepted pack release.
 
 ## Mandatory role contract
 
@@ -168,4 +178,8 @@ Required order: review complete -> zero blocking findings -> product-owner accep
 
 ## Successor blockade
 
-The shared-kit, dual-theme production, and cartridge-rebuild tracks must reject missing, revoked, stale, or mismatched T10 hashes. No file from the failed monolithic track may appear in the accepted dependency graph except as labeled negative/failure evidence.
+The shared-kit and cartridge-rebuild tracks must reject missing, revoked, stale,
+or mismatched T10 hashes and missing or mismatched canonical pack-release bindings.
+They also reject direct legacy asset paths, private production-art trees, and
+non-standard-pack adoption inputs. No file from the failed monolithic track may
+appear in the accepted dependency graph except as labeled negative/failure evidence.

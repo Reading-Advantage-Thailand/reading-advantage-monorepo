@@ -154,7 +154,7 @@ It publishes additive release/binding evidence only; it does not migrate a game.
 
 ### 6. APK Cartridge Migration Umbrella and Vertical Cohorts
 
-[`apk_cartridge_semantic_rewrite_20260712`](./tracks/apk_cartridge_semantic_rewrite_20260712/)
+[`apk_cartridge_semantic_rewrite_20260712`](./archive/apk_cartridge_semantic_rewrite_20260712/)
 is planning-only: it pins accepted T10/T11/standard-pack artifacts and their
 disclosures, then requires its foundation child track to reconcile T2's
 27-source-identity denominator against its 29-assignment partition before any
