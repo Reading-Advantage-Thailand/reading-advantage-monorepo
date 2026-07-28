@@ -5,6 +5,12 @@ import type {
 } from "@reading-advantage/game-contracts";
 
 import type { APKInputController } from "./input.js";
+import type {
+  ResponsiveInputMode,
+  ResponsiveLayoutConfig,
+  SafeAreaInsets,
+  SupportedResponsiveComposition,
+} from "../responsive/responsive-composition.js";
 
 /** Current browser runtime contract understood by the APK package. */
 export const APK_RUNTIME_API_VERSION = "1.0.0";
@@ -233,6 +239,8 @@ export interface CartridgeGameConfigContext {
   diagnostic: (event: APKDiagnosticInput) => void;
   /** Normalized live browser input. */
   inputController: APKInputController;
+  /** Initial responsive composition when the host enables responsive runtime ownership. */
+  composition?: SupportedResponsiveComposition;
   /** Optional deterministic session seed. */
   seed?: number;
 }
@@ -301,6 +309,10 @@ export interface APKRuntimeDiagnostics {
   width: number;
   /** Last measured container height. */
   height: number;
+  /** Current resolved layout profile when responsive ownership is enabled. */
+  layoutProfile?: "compact" | "wide";
+  /** Current independently resolved input mode when responsive ownership is enabled. */
+  inputMode?: ResponsiveInputMode;
   /** Most recent diagnostic event. */
   lastEvent?: APKDiagnosticEvent;
 }
@@ -313,6 +325,12 @@ export interface APKGameInstance {
   resume?(): void;
   /** Resizes the renderer to the host container. */
   resize?(width: number, height: number): void;
+  /** Captures game-owned state before a responsive reflow. */
+  captureResponsiveState?(): unknown;
+  /** Restores game-owned state after a responsive reflow. */
+  restoreResponsiveState?(state: unknown): void;
+  /** Atomically applies camera, world, HUD, text, and controls for a new composition. */
+  recompose?(composition: SupportedResponsiveComposition): void;
   /** Changes the renderer mute state. */
   setMuted?(muted: boolean): void;
   /** Permanently destroys this renderer instance. */
@@ -335,6 +353,8 @@ export interface GameFactoryContext {
   diagnostic: (event: APKDiagnosticInput) => void;
   /** Normalized browser input controller. */
   inputController: APKInputController;
+  /** Initial responsive composition when host-owned responsive configuration is present. */
+  composition?: SupportedResponsiveComposition;
   /** Optional deterministic seed. */
   seed?: number;
 }
@@ -343,6 +363,20 @@ export interface GameFactoryContext {
 export type GameFactory = (
   context: GameFactoryContext,
 ) => APKGameInstance | Promise<APKGameInstance>;
+
+/** Host values enabling APK-owned responsive recomposition. */
+export interface ResponsiveRuntimeOptions {
+  /** Strict compact/wide layout policy. */
+  readonly config: ResponsiveLayoutConfig;
+  /** Current browser/device safe-area insets. */
+  readonly safeArea: SafeAreaInsets;
+  /** Current independently detected input capabilities. */
+  readonly inputCapabilities: Readonly<{ touch: boolean; pointer: boolean; keyboard: boolean }>;
+  /** Current accessibility scaling values. */
+  readonly accessibility: Readonly<{ textScale: number; touchScale: number }>;
+  /** Whether the runtime starts in fullscreen. */
+  readonly fullscreen?: boolean;
+}
 
 /** Options required to mount one cartridge session. */
 export interface MountCartridgeOptions {
@@ -358,6 +392,8 @@ export interface MountCartridgeOptions {
   host: APKHostAdapter;
   /** Optional deterministic seed. */
   seed?: number;
+  /** Optional responsive runtime ownership; omitted for legacy fixed-composition cartridges. */
+  responsive?: ResponsiveRuntimeOptions;
 }
 
 /** Imperative lifecycle and diagnostics API returned to a host. */

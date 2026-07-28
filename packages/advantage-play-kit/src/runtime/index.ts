@@ -37,6 +37,7 @@ export type {
   MountCartridgeOptions,
   RuntimeCartridge,
   RuntimeCartridgeManifest,
+  ResponsiveRuntimeOptions,
   NineSliceInsets,
   PhysicalAssetFile,
   PhysicalAssetKind,

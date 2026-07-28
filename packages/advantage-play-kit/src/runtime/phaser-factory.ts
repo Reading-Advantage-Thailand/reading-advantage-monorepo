@@ -5,6 +5,9 @@ interface PhaserSceneLike {
     pause?(): void;
     resume?(): void;
   };
+  apkCaptureResponsiveState?(): unknown;
+  apkRestoreResponsiveState?(state: unknown): void;
+  apkRecompose?(composition: import("../responsive/responsive-composition.js").SupportedResponsiveComposition): void;
 }
 
 interface PhaserGameLike {
@@ -42,6 +45,7 @@ export function createPhaserGameFactory(
       complete: context.complete,
       diagnostic: context.diagnostic,
       inputController: context.inputController,
+      ...(context.composition ? { composition: context.composition } : {}),
       ...(context.seed === undefined ? {} : { seed: context.seed }),
     });
     const game = new Phaser.Game({
@@ -61,10 +65,31 @@ export function createPhaserGameFactory(
       }
     };
 
+    const responsiveStateByScene = new WeakMap<PhaserSceneLike, unknown>();
+
     return {
       pause: () => forEachActiveScene("pause"),
       resume: () => forEachActiveScene("resume"),
       resize: () => game.scale?.refresh?.(),
+      captureResponsiveState: () => {
+        const scenes = game.scene?.getScenes(true) ?? [];
+        for (const scene of scenes) {
+          const state = scene.apkCaptureResponsiveState?.();
+          responsiveStateByScene.set(scene, state);
+        }
+        return scenes;
+      },
+      restoreResponsiveState: (snapshot) => {
+        if (!Array.isArray(snapshot)) throw new Error("Phaser responsive state snapshot is invalid");
+        for (const scene of snapshot as PhaserSceneLike[]) {
+          scene.apkRestoreResponsiveState?.(responsiveStateByScene.get(scene));
+          responsiveStateByScene.delete(scene);
+        }
+      },
+      recompose: (composition) => {
+        for (const scene of game.scene?.getScenes(true) ?? []) scene.apkRecompose?.(composition);
+        game.scale?.refresh?.();
+      },
       setMuted: (muted) => {
         if (game.sound) game.sound.mute = muted;
       },

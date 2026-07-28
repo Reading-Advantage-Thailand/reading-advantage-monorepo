@@ -36,6 +36,8 @@ export interface APKInputSnapshot {
 export interface APKInputController {
   /** Returns the current normalized input state. */
   snapshot(): APKInputSnapshot;
+  /** Cancels an active pointer gesture before responsive targets move. */
+  cancelActiveGesture(): void;
   /** Releases listeners and restores host element styles. */
   destroy(): void;
 }
@@ -128,6 +130,13 @@ export function createInputController(surface: HTMLElement): APKInputController 
       pressed.clear();
       pointer.released = false;
       return snapshot;
+    },
+    cancelActiveGesture: () => {
+      if (!pointer.down && pointer.id === null) return;
+      pointer.down = false;
+      pointer.released = false;
+      pointer.cancelled = true;
+      pointer.id = null;
     },
     destroy: () => {
       if (destroyed) return;

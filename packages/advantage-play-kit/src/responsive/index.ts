@@ -1,0 +1,40 @@
+/** Responsive schemas, resolution, geometry, transforms, text, transitions, and QC overlays. */
+export {
+  DEFAULT_RESPONSIVE_LAYOUT_CONFIG,
+  responsiveLayoutConfigSchema,
+  containerPointToWorld,
+  createResponsiveDebugOverlays,
+  createResponsiveTransitionCoordinator,
+  evaluateTextFit,
+  inspectCompositionGeometry,
+  resolveResponsiveComposition,
+  worldPointToContainer,
+} from "./responsive-composition.js";
+
+/** Public responsive composition types. */
+export type {
+  CameraTransform,
+  LayoutPoint,
+  LayoutProfile,
+  LayoutRect,
+  ResponsiveComposition,
+  ResponsiveCompositionRequest,
+  ResponsiveDebugOverlay,
+  ResponsiveDiagnostic,
+  ResponsiveInputMode,
+  ResponsiveLayoutConfig,
+  ResponsiveTransitionAdapter,
+  ResponsiveTransitionCoordinator,
+  ResponsiveTransitionReason,
+  SafeAreaInsets,
+  StandardRegionId,
+  StandardRegionPlan,
+  SupportedResponsiveComposition,
+  TextFitRequest,
+  TextFitResult,
+  TextFitStyle,
+  TextMeasurement,
+  TextMeasurementAdapter,
+  UnsupportedResponsiveComposition,
+  WorldAdaptationStrategy,
+} from "./responsive-composition.js";

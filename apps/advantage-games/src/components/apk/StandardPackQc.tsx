@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 
 /** One browser-safe, semantic entry in the generated QC preview manifest. */
 export interface StandardPackQcAsset {
@@ -58,11 +59,11 @@ export function StandardPackQc({ preview }: StandardPackQcProps) {
   const selected = assets.find((asset) => asset.key === selectedKey) ?? assets[0];
 
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-8 text-slate-100 sm:px-8">
+    <section aria-label="Standard pack preview" className="bg-slate-950 px-4 py-8 text-slate-100 sm:px-8">
       <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.8fr)]">
-        <section className="rounded-xl border border-slate-700 bg-slate-900 p-5 shadow-2xl">
+        <section aria-labelledby="standard-pack-preview-heading" className="rounded-xl border border-slate-700 bg-slate-900 p-5 shadow-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300">Release quality control</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight">Standard Pack preview</h1>
+          <h2 className="mt-2 text-3xl font-bold tracking-tight" id="standard-pack-preview-heading">Standard Pack preview</h2>
           <p className="mt-2 text-sm text-slate-300">A finite materialized preview set. Search and select semantic metadata; source-vendor paths are not part of this surface.</p>
           <label className="mt-5 block text-sm font-medium" htmlFor="standard-pack-qc-search">
             Search semantic metadata
@@ -109,9 +110,23 @@ export function StandardPackQc({ preview }: StandardPackQcProps) {
                 } : undefined}
               >
                 {selected.mediaType === "image" ? (
-                  <img alt={`Preview of ${selected.key}`} className="max-h-96 w-full object-contain [image-rendering:pixelated]" src={selected.previewUrl} />
+                  <Image
+                    alt={`Preview of ${selected.key}`}
+                    className="max-h-96 w-full object-contain [image-rendering:pixelated]"
+                    height={512}
+                    src={selected.previewUrl}
+                    width={512}
+                  />
                 ) : selected.mediaType === "audio" ? (
-                  <audio aria-label={`Preview audio for ${selected.key}`} controls preload="metadata" src={selected.previewUrl} />
+                  <div className="min-w-0 max-w-full px-1">
+                    <audio
+                      aria-label={`Preview audio for ${selected.key}`}
+                      className="w-full max-w-full"
+                      controls
+                      preload="metadata"
+                      src={selected.previewUrl}
+                    />
+                  </div>
                 ) : (
                   <p className="text-sm text-slate-300">This media type has no browser preview.</p>
                 )}
@@ -126,6 +141,6 @@ export function StandardPackQc({ preview }: StandardPackQcProps) {
           </dl>
         </aside>
       </div>
-    </main>
+    </section>
   );
 }

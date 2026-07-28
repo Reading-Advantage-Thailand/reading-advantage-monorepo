@@ -8,6 +8,10 @@ import { validateEdition } from "../editions/editions.js";
 import { APKRuntimeError, toAPKRuntimeError } from "./errors.js";
 import { createInputController } from "./input.js";
 import {
+  resolveResponsiveComposition,
+  type SupportedResponsiveComposition,
+} from "../responsive/responsive-composition.js";
+import {
   APK_RUNTIME_API_VERSION,
   type APKDiagnosticEvent,
   type APKGameHandle,
@@ -63,9 +67,29 @@ export async function mountCartridge(
   let width = container.clientWidth;
   let height = container.clientHeight;
   let lastEvent: APKDiagnosticEvent | undefined;
+  let composition: SupportedResponsiveComposition | undefined;
   let operation = Promise.resolve();
   const previousTouchAction = container.style.touchAction;
   const inputController = createInputController(container);
+
+  const resolveComposition = (): SupportedResponsiveComposition | undefined => {
+    if (!options.responsive) return undefined;
+    const resolved = resolveResponsiveComposition({
+      viewport: { width, height },
+      safeArea: options.responsive.safeArea,
+      inputCapabilities: options.responsive.inputCapabilities,
+      accessibility: options.responsive.accessibility,
+      fullscreen: options.responsive.fullscreen ?? false,
+      ...(composition ? { previousProfile: composition.profile } : {}),
+      config: options.responsive.config,
+    });
+    if (!resolved.supported) {
+      throw new APKRuntimeError(resolved.code, resolved.guidance, { diagnostics: resolved.diagnostics });
+    }
+    return resolved;
+  };
+
+  composition = resolveComposition();
 
   const diagnostics = (): APKRuntimeDiagnostics => ({
     status,
@@ -76,6 +100,7 @@ export async function mountCartridge(
     muted,
     width,
     height,
+    ...(composition ? { layoutProfile: composition.profile, inputMode: composition.inputMode } : {}),
     ...(lastEvent ? { lastEvent } : {}),
   });
 
@@ -121,6 +146,7 @@ export async function mountCartridge(
         complete,
         diagnostic: (event) => diagnostic(event),
         inputController,
+        ...(composition ? { composition } : {}),
         ...(options.seed === undefined ? {} : { seed: options.seed }),
       });
       instance.setMuted?.(muted);
@@ -142,9 +168,42 @@ export async function mountCartridge(
   };
 
   const resize = (): void => {
+    const previousComposition = composition;
     width = container.clientWidth;
     height = container.clientHeight;
-    if (width > 0 && height > 0) instance?.resize?.(width, height);
+    if (width > 0 && height > 0) {
+      instance?.resize?.(width, height);
+      try {
+        const nextComposition = resolveComposition();
+        if (previousComposition && nextComposition
+          && (previousComposition.profile !== nextComposition.profile
+            || previousComposition.inputMode !== nextComposition.inputMode
+            || JSON.stringify(previousComposition.safeRect) !== JSON.stringify(nextComposition.safeRect))) {
+          const snapshot = instance?.captureResponsiveState?.();
+          instance?.pause?.();
+          inputController.cancelActiveGesture();
+          instance?.recompose?.(nextComposition);
+          if (snapshot !== undefined) instance?.restoreResponsiveState?.(snapshot);
+          if (!explicitlyPaused && completionCount === 0) instance?.resume?.();
+          diagnostic({
+            level: "info",
+            code: "RESPONSIVE_RECOMPOSED",
+            message: `Responsive composition changed from ${previousComposition.profile} to ${nextComposition.profile}`,
+            details: {
+              oldProfile: previousComposition.profile,
+              newProfile: nextComposition.profile,
+              oldGeometry: previousComposition.safeRect,
+              newGeometry: nextComposition.safeRect,
+            },
+          });
+        }
+        composition = nextComposition;
+      } catch (error) {
+        instance?.pause?.();
+        const runtimeError = toAPKRuntimeError(error, "RESPONSIVE_COMPOSITION_FAILED", "Responsive composition failed");
+        diagnostic({ level: "error", code: runtimeError.code, message: runtimeError.message, details: runtimeError.details });
+      }
+    }
     diagnostic({
       level: "debug",
       code: "VIEWPORT_RESIZED",

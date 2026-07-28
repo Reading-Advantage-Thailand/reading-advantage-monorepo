@@ -30,6 +30,38 @@
     "./testing": {
       "types": "./dist/testing/index.d.ts",
       "import": "./dist/testing/index.js"
+    },
+    "./systems": {
+      "types": "./dist/systems/index.d.ts",
+      "import": "./dist/systems/index.js"
+    },
+    "./guards": {
+      "types": "./dist/guards/index.d.ts",
+      "import": "./dist/guards/index.js"
+    },
+    "./scaffolding": {
+      "types": "./dist/scaffolding/index.d.ts",
+      "import": "./dist/scaffolding/index.js"
+    },
+    "./compatibility": {
+      "types": "./dist/compatibility/index.d.ts",
+      "import": "./dist/compatibility/index.js"
+    },
+    "./diagnostics": {
+      "types": "./dist/diagnostics/index.d.ts",
+      "import": "./dist/diagnostics/index.js"
+    },
+    "./responsive": {
+      "types": "./dist/responsive/index.d.ts",
+      "import": "./dist/responsive/index.js"
+    },
+    "./presentation": {
+      "types": "./dist/presentation/index.d.ts",
+      "import": "./dist/presentation/index.js"
+    },
+    "./qc": {
+      "types": "./dist/qc/index.d.ts",
+      "import": "./dist/qc/index.js"
     }
   },
   "files": ["dist"],

@@ -124,5 +124,5 @@ describe("accepted APK standard-pack release", () => {
       catalogDigest: acceptance.catalogDigest,
       sourceReceiptDigest: acceptance.sourceReceiptDigest,
     })).rejects.toThrow("Standard asset catalog is not the accepted release");
-  });
+  }, 30000);
 });

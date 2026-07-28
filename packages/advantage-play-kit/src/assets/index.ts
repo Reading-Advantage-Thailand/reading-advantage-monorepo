@@ -32,6 +32,21 @@ export {
   ACCEPTED_STANDARD_ASSET_RELEASE,
   createAcceptedStandardAssetResolver,
 } from "./accepted-standard-pack-release.js";
+
+/** Owner-approved forward semantic role/state product bindings. */
+export {
+  OWNER_APPROVED_CANONICAL_BINDINGS,
+  createAcceptedSemanticAssetResolver,
+  createSemanticAssetResolver,
+  validateSemanticProductBindings,
+} from "./semantic-product-bindings.js";
+export type {
+  SemanticAssetRegistration,
+  SemanticAssetRequirement,
+  SemanticAssetSelection,
+  SemanticProductAssetResolver,
+  SemanticProductBindingManifest,
+} from "./semantic-product-bindings.js";
 export type {
   AcceptedStandardAssetRelease,
   StandardAssetAcceptanceEvidence,

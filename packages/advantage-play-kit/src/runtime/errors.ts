@@ -7,7 +7,10 @@ export type APKRuntimeErrorCode =
   | "MISSING_ASSET_SLOT"
   | "MISSING_EDITION"
   | "MOUNT_FAILED"
-  | "RUNTIME_DESTROYED";
+  | "RESPONSIVE_COMPOSITION_FAILED"
+  | "RUNTIME_DESTROYED"
+  | "UNSUPPORTED_INPUT_MODE"
+  | "UNSUPPORTED_VIEWPORT_SIZE";
 
 /** Structured error raised by runtime, edition, and asset boundaries. */
 export class APKRuntimeError extends Error {

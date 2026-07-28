@@ -6,6 +6,7 @@ import {
 } from "../editions/asset-contract.js";
 import type { RuntimeCartridge, RuntimeEdition } from "../runtime/types.js";
 
+/** A valid GameResults-shaped fixture for deterministic APK tests. */
 export const validResults = {
   accuracy: 1,
   xp: 5,

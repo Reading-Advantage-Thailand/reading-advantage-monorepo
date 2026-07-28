@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mountCartridge, type APKGameInstance, type GameFactory } from "./runtime.js";
 import { createRuntimeCartridge, createRuntimeEdition, validResults } from "../testing/fixtures.js";
+import { DEFAULT_RESPONSIVE_LAYOUT_CONFIG } from "../responsive/responsive-composition.js";
 
 class ResizeObserverStub {
   static instances: ResizeObserverStub[] = [];
@@ -150,6 +151,54 @@ describe("mountCartridge", () => {
     expect(instance.setMuted).toHaveBeenCalledWith(true);
     expect(handle.getDiagnostics()).toMatchObject({ status: "running", muted: true, restartCount: 0 });
     expect(onDiagnostic).toHaveBeenCalled();
+    await handle.destroy();
+  });
+
+  it("recomposes on resize without recreating the canvas and restores game-owned state", async () => {
+    const state = { score: 90, target: "river" };
+    const instance: APKGameInstance = {
+      pause: vi.fn(),
+      resume: vi.fn(),
+      resize: vi.fn(),
+      captureResponsiveState: vi.fn(() => state),
+      restoreResponsiveState: vi.fn(),
+      recompose: vi.fn(),
+      destroy: vi.fn(),
+    };
+    const factory: GameFactory = vi.fn(async (context) => {
+      expect(context.composition?.profile).toBe("compact");
+      return instance;
+    });
+    const container = document.createElement("div");
+    Object.defineProperties(container, {
+      clientWidth: { configurable: true, value: 390 },
+      clientHeight: { configurable: true, value: 844 },
+    });
+    const handle = await mountCartridge({
+      container,
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn() },
+      responsive: {
+        config: DEFAULT_RESPONSIVE_LAYOUT_CONFIG,
+        safeArea: { top: 0, right: 0, bottom: 0, left: 0 },
+        inputCapabilities: { touch: true, pointer: true, keyboard: true },
+        accessibility: { textScale: 1, touchScale: 1 },
+      },
+    }, factory);
+
+    Object.defineProperties(container, {
+      clientWidth: { configurable: true, value: 1440 },
+      clientHeight: { configurable: true, value: 900 },
+    });
+    ResizeObserverStub.instances[0]?.callback([], ResizeObserverStub.instances[0] as unknown as ResizeObserver);
+
+    expect(factory).toHaveBeenCalledOnce();
+    expect(instance.captureResponsiveState).toHaveBeenCalledOnce();
+    expect(instance.recompose).toHaveBeenCalledWith(expect.objectContaining({ profile: "wide" }));
+    expect(instance.restoreResponsiveState).toHaveBeenCalledWith(state);
+    expect(handle.getDiagnostics()).toMatchObject({ layoutProfile: "wide", inputMode: "hybrid" });
     await handle.destroy();
   });
 });

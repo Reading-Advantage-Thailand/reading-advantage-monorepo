@@ -23,6 +23,7 @@ const nextConfig: NextConfig = {
     "@reading-advantage/api",
     "@reading-advantage/auth",
     "@reading-advantage/db",
+    "@reading-advantage/advantage-play-kit",
   ],
   serverExternalPackages: ["@node-rs/argon2"],
   basePath: basePath || undefined,
