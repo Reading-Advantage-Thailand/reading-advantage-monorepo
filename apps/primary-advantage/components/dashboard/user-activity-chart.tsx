@@ -43,64 +43,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useLocale, useTranslations } from "next-intl";
+import { formatCumulativeXpForDays } from "./user-activity-chart-data";
 
-// Function to calculate the data for the chart
-// This function takes in the articles and the number of days to go back
-// It returns an array of objects with the day of the week and the total number of articles read on that day
-// Example: [{ day: "Sun 1", total: 5 }, { day: "Mon 2", total: 10 }, ...]
-
-function formatDataForDays(
-  articles: UserXpLog[],
-  calendarValue: DateRange | undefined,
-) {
-  // ISO date
-  let startDate: Date;
-  let endDate: Date;
-
-  if (calendarValue) {
-    startDate = calendarValue.from ? new Date(calendarValue.from) : new Date();
-    endDate = calendarValue.to ? new Date(calendarValue.to) : new Date();
-  } else {
-    // Handle the case when calendarValue is null
-    // You can set default values for startDate and endDate here
-    startDate = new Date(); // default start date
-    endDate = new Date(); // default end date
-  }
-
-  startDate.setHours(0, 0, 0, 0); // Set start of the day
-  endDate.setHours(23, 59, 59, 999); // Set end of the day
-
-  const data = [];
-  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-  const lastedLevel = 0;
-
-  for (let i = new Date(startDate); i <= endDate; i.setDate(i.getDate() + 1)) {
-    const dayOfWeek = daysOfWeek[i.getDay()];
-    const dayOfMonth = i.getDate();
-
-    const filteredArticles = articles.filter((article: UserXpLog) => {
-      const articleDate = new Date(article.createdAt);
-      articleDate.setHours(0, 0, 0, 0);
-      return articleDate.toDateString() === i.toDateString();
-    });
-
-    // get the latest level of the user for that day is the status is completed
-    // if level is dosent change then the user didnt complete any article that day return the last user updatedLevel
-    let xpEarned = lastedLevel;
-
-    for (let j = 0; j < filteredArticles.length; j++) {
-      xpEarned += filteredArticles[j].xpEarned;
-    }
-
-    data.push({
-      day: `${dayOfWeek} ${dayOfMonth}`,
-      xpEarned,
-    });
-  }
-
-  return data;
-}
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
@@ -135,7 +79,7 @@ export function UserActivityChart({ data, xpLogs }: UserActiviryChartProps) {
     to: addDays(new Date(), 0),
   });
 
-  const formattedData = formatDataForDays(xpLogs, date);
+  const formattedData = formatCumulativeXpForDays(xpLogs, date);
 
   const inProgressCount = data.filter(
     (item: UserActivityLog) => !item.completed,

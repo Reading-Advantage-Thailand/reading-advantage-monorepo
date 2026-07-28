@@ -24,6 +24,13 @@ program, priority order when picking the next track is:
 - [x] **Track: OpenCode Agent Roster Refresh** *Link: [./archive/opencode_agent_roster_20260712/](./archive/opencode_agent_roster_20260712/)*
   Refresh global coding and Measure agents for the GPT-5.6 Luna/Terra/Sol family, remove unavailable Moonshot routing, and prioritize active subscription-backed providers. **Completed 2026-07-20** — implementation 3/3 with validation evidence; product-owner manual verification (OpenCode restart model enumeration) remains as owner follow-up.
 
+- [~] **Track: Primary Dashboard Cumulative XP Correction** *Link: [./tracks/primary_dashboard_cumulative_xp_20260728/](./tracks/primary_dashboard_cumulative_xp_20260728/)*
+  Extract and prove the dashboard’s cumulative XP calculation so selected ranges retain prior XP totals.
+- [~] **Track: Primary Proxy Role Normalization** *Link: [./tracks/primary_proxy_role_normalization_20260728/](./tracks/primary_proxy_role_normalization_20260728/)*
+  Normalize authenticated Primary role keys before access checks and keep the proxy on the Node runtime.
+- [~] **Track: Reading Remote Font Removal** *Link: [./tracks/reading_remote_font_removal_20260728/](./tracks/reading_remote_font_removal_20260728/)*
+  Remove external book-font imports from Reading’s global stylesheet for locally deterministic rendering.
+
 ---
 
 ## Small-Company Operations Program (created 2026-07-22)
