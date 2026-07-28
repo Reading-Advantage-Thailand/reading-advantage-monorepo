@@ -39,7 +39,7 @@ export default async function middleware(request: NextRequest) {
     const token = session;
 
     if (token) {
-      const userRole = token.role as string;
+      const userRole = (token.role as string).toLowerCase();
       const callbackUrl = request.nextUrl.searchParams.get("callbackUrl");
 
       if (callbackUrl) {
@@ -89,7 +89,7 @@ export default async function middleware(request: NextRequest) {
     }
 
     // Check if user has required role for the route
-    const userRole = token.role as string;
+    const userRole = (token.role as string).toLowerCase();
     const requiredRoles = Object.entries(protectedRoutes).find(([route]) =>
       pathWithoutLocale.startsWith(route),
     )?.[1];
@@ -104,6 +104,8 @@ export default async function middleware(request: NextRequest) {
 
   return response;
 }
+
+export const runtime = "nodejs";
 
 export const config = {
   // Match all pathnames except for
