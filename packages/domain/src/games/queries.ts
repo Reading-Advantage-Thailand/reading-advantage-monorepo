@@ -1,9 +1,10 @@
-import { eq, and, desc, sql } from "drizzle-orm";
+import { eq, and, desc, inArray, sql } from "drizzle-orm";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
 import { gameCompletions } from "@reading-advantage/db/schema";
 import type { z } from "zod";
 import type { leaderboardEntrySchema } from "./schema.js";
+import type { GameCompletionHistoryQuery } from "./contracts.js";
 
 /**
  * Inferred TypeScript type for a leaderboard entry row. Matches the
@@ -53,7 +54,7 @@ export interface GameCompletion {
  * @param db - TenantDB
  * @param user - Authenticated user context
  * @param tenant - Tenant (school) scope
- * @param input - Optional `gameType` filter and `limit` (default 50)
+ * @param input - Optional exact/allowlist game filters and `limit` (default 50)
  * @returns Array of game completions (newest first)
  */
 export async function getGameCompletions({
@@ -65,17 +66,18 @@ export async function getGameCompletions({
   db: TenantDB;
   user: UserContext;
   tenant: Tenant;
-  input?: { gameType?: string; limit?: number };
+  input?: GameCompletionHistoryQuery;
 }): Promise<GameCompletion[]> {
   assertCan(user, "games:read:own", tenant);
 
   const limit = input?.limit ?? 50;
 
-  const conditions = [
-    eq(gameCompletions.userId, user.id),
-  ];
+  const conditions = [eq(gameCompletions.userId, user.id)];
   if (input?.gameType) {
     conditions.push(eq(gameCompletions.gameType, input.gameType));
+  }
+  if (input?.gameTypes) {
+    conditions.push(inArray(gameCompletions.gameType, [...input.gameTypes]));
   }
 
   const rows = await db

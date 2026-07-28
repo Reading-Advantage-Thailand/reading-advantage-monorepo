@@ -11,3 +11,13 @@ import type {
  */
 export type GameCompletionInput = z.infer<typeof gameCompletionInputSchema>;
 export type GameCompletionResult = z.infer<typeof gameCompletionResultSchema>;
+
+/** Filters applied by the tenant-scoped game-completion history query. */
+export interface GameCompletionHistoryQuery {
+  /** Optional exact game identifier. */
+  gameType?: string;
+  /** Optional allowlist of game identifiers applied in SQL. */
+  gameTypes?: readonly string[];
+  /** Maximum rows returned after filtering and ordering. */
+  limit?: number;
+}

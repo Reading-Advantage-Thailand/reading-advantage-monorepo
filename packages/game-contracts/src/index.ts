@@ -30,6 +30,22 @@ export type {
   HostCompletionContext,
 } from "./completion.js";
 
+/** Public existing-core Reading/Primary host-proof binding contract. */
+export {
+  EXISTING_CORE_HOST_PROOF_BINDINGS,
+  EXISTING_CORE_HOST_PROOF_RECEIPTS,
+  existingCoreHostProofBindingSchema,
+  existingCoreHostProofCartridgeIdSchema,
+  getExistingCoreHostProofBinding,
+  isExistingCoreHostProofCartridge,
+} from "./host-proof-bindings.js";
+
+/** Public existing-core host-proof binding types. */
+export type {
+  ExistingCoreHostProofBinding,
+  ExistingCoreHostProofCartridgeId,
+} from "./host-proof-bindings.js";
+
 /** Public APK source-architecture scanner. */
 export { scanAPKArchitecture } from "./architecture.js";
 

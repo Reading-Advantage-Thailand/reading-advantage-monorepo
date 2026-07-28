@@ -20,7 +20,11 @@ export {
 } from "./schema.js";
 
 // Inferred types
-export type { GameCompletionInput, GameCompletionResult } from "./contracts.js";
+export type {
+  GameCompletionHistoryQuery,
+  GameCompletionInput,
+  GameCompletionResult,
+} from "./contracts.js";
 
 // Pure XP formula
 export { calculateGameXP } from "./xp.js";
@@ -43,3 +47,24 @@ export {
   DuplicateCompletionError,
   InvalidGameCompletionError,
 } from "./errors.js";
+
+// Host-proof adapter (Task 5 — Reading/Primary existing-core host proof)
+export {
+  HOST_PROOF_ERROR_CODES,
+  HostProofCompletionError,
+  getHostProofGameCompletions,
+  hostProofCompletionRequestSchema,
+  hostProofCompletionResponseSchema,
+  hostProofErrorHttpStatus,
+  hostProofHistoryEntrySchema,
+  hostProofHistoryInputSchema,
+  listHostProofCartridgeBindings,
+  recordHostProofGameCompletion,
+} from "./host-proof.js";
+export type {
+  HostProofCompletionRequest,
+  HostProofCompletionResponse,
+  HostProofErrorCode,
+  HostProofHistoryEntry,
+  HostProofHistoryInput,
+} from "./host-proof.js";
