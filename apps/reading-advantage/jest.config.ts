@@ -14,6 +14,7 @@ const config: Config = {
   testEnvironment: "jsdom",
   moduleNameMapper: {
     "^@reading-advantage/advantage-play-kit$": "<rootDir>/../../packages/advantage-play-kit/src/index.ts",
+    "^@reading-advantage/game-cartridges/qc$": "<rootDir>/../../packages/game-cartridges/src/existing-core-cutover-qc.ts",
     "^@reading-advantage/game-cartridges/(.*)$": "<rootDir>/../../packages/game-cartridges/src/$1.ts",
     "^@reading-advantage/game-contracts$": "<rootDir>/../../packages/game-contracts/src/index.ts",
     "^@reading-advantage/utils$": "<rootDir>/../../packages/utils/src/index.ts",
@@ -27,6 +28,7 @@ const config: Config = {
     "^@reading-advantage/api$": "<rootDir>/../../packages/api/src/index.ts",
     "^@reading-advantage/types$": "<rootDir>/../../packages/types/src/index.ts",
     "^@reading-advantage/domain$": "<rootDir>/../../packages/domain/src/index.ts",
+    "^@reading-advantage/domain/games$": "<rootDir>/../../packages/domain/src/games/index.ts",
     "^@reading-advantage/ai$": "<rootDir>/../../packages/ai/src/index.ts",
     "^@reading-advantage/ai/internal-sdk$": "<rootDir>/../../packages/ai/src/internal-sdk.ts",
     "^@/(.*)$": "<rootDir>/$1",
