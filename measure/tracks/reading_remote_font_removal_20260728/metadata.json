@@ -1,0 +1,12 @@
+{
+  "track_id": "reading_remote_font_removal_20260728",
+  "type": "chore",
+  "status": "in_progress",
+  "created_at": "2026-07-28T00:00:00Z",
+  "updated_at": "2026-07-28T00:00:00Z",
+  "description": "Remove Reading global external book-font imports.",
+  "estimated_tasks": 2,
+  "actual_tasks": null,
+  "depends_on": [],
+  "deviation_notes": "Recovery track created to assign a previously uncommitted stylesheet change."
+}

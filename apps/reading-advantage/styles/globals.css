@@ -7,10 +7,6 @@
 @import "@radix-ui/colors/violet.css";
 @import "@radix-ui/colors/blue.css";
 
-/* Book Fonts */
-@import url("https://fonts.googleapis.com/css?family=Indie+Flower");
-@import url("https://fonts.googleapis.com/css?family=Amatic+SC");
-
 @theme inline {
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
