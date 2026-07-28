@@ -1,0 +1,181 @@
+{
+  "track_id": "apk_existing_core_cutover_20260727",
+  "type": "feature",
+  "status": "in_progress",
+  "created_at": "2026-07-27T00:00:00Z",
+  "updated_at": "2026-07-28T04:21:02Z",
+  "description": "Vertical revalidation and cutover of five already-built core APK cartridges.",
+  "estimated_tasks": 7,
+  "actual_tasks": null,
+  "depends_on": [
+    "apk_denominator_readiness_t11_integrity_20260727"
+  ],
+  "deviation_notes": "Denominator/readiness predecessor satisfied by accepted receipt d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720; this cohort is authorized to begin scoped work. Task 2's invalid failed/superseded ontology lineage was replaced by exact accepted T3/T4/T5/T6/T7/T10 hashes and title claim locators. T10/T11 still approve zero legacy mappings. The seven dedicated fail-closed invariant groups cover missing role/state bindings, stale catalog/release hashes, direct/private paths, duplicate physical sources, full-pack delivery, unsupported mappings, and premature consumability. The candidate suite passes 22/22 tests. Task 3 is owner-accepted through an additive, hash-bound semantic-adoption receipt; the reviewed source remains candidate/non-consumable and catalog/loaders remain quarantined. Task 4 Advantage Games QC and compact/wide real-input proof are owner-accepted after independent remediation, K3 zero-finding re-review, and bounded R-1 documentation verification; all 11 implementation bindings validated exactly and the game-cartridges suite is 61/61 green. Authorization advances only to beginning Task 5 Reading/Primary host proof. Production catalog exposure, Task-5 success, retirement, cutover, and broader cohort acceptance remain unclaimed and unauthorized.",
+  "reviews": [
+    {
+      "reviewed_at": "2026-07-27T18:55:00Z",
+      "kind": "independent-fresh-source-review",
+      "scope": "task-3 semantic candidates for Dragon Flight, Magic Defense, Dungeon Liberator, Sorcerer's Ziggurat, and Astral Mage",
+      "report_path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates.md",
+      "report_sha256": "d1968c8c0ccf8d2db538c3d16875da97451aba39c6cb06014da7890f51eef87a",
+      "disposition": "conditional-hold",
+      "owner_approval_claimed": false,
+      "verdict_summary": "All advertised hashes verified; candidates remain non-consumable; quarantine intact; owner approval absent.",
+      "severity_findings": {
+        "medium": [
+          "Only six of seven labeled fail-closed invariant groups exist as describe blocks. The dedicated stale catalog/release-hash block is absent."
+        ],
+        "low": [
+          "The reported candidate test count was stale.",
+          "The tampered-resolver test checked key presence rather than key/descriptor/source integrity.",
+          "The duplicate-path assertion was structurally vacuous."
+        ]
+      },
+      "task3_state_after_review": "in-progress (no Green cartridge implementation; no owner approval)"
+    },
+    {
+      "reviewed_at": "2026-07-27T20:03:00Z",
+      "kind": "independent-fresh-remediation-rereview",
+      "scope": "task-3 semantic candidates and remediation integrity for Dragon Flight, Magic Defense, Dungeon Liberator, Sorcerer's Ziggurat, and Astral Mage",
+      "report_path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-rereview.md",
+      "report_sha256": "7c3675aca01499e81eba60dcea049715c4652e1474716a633eb8676d3c28a526",
+      "disposition": "review-pass-progression-hold",
+      "owner_approval_claimed": false,
+      "verdict_summary": "Remediation independently verified; candidate mappings remain byte-identical, lineage and release identity are exact, outputs remain minimal and deterministic, and catalog/loaders remain quarantined.",
+      "severity_findings": {
+        "critical": [],
+        "high": [],
+        "medium": [],
+        "low": [],
+        "informational": [
+          "Twenty deliberate Red failures remain for absent catalog/loaders/mechanic factories.",
+          "Product-owner acceptance and host/exact-retirement proof remain absent."
+        ]
+      },
+      "task3_state_after_review": "in-progress (reviewer verification only; no owner approval or promotion)"
+    },
+    {
+      "reviewed_at": "2026-07-28T10:05:00Z",
+      "kind": "independent-fresh-source-review",
+      "scope": "task-4 Advantage Games QC and compact/wide real-input proof for Dragon Flight, Magic Defense, Dungeon Liberator, Sorcerer's Ziggurat, and Astral Mage",
+      "report_path": "measure/tracks/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc.md",
+      "report_sha256": "1ed692503ae5de28eaa7045db73b677a435f231740decef957117a616477d71b",
+      "disposition": "review-pass-progression-hold",
+      "owner_approval_claimed": false,
+      "verdict_summary": "All evidence/receipt/source/asset hashes recomputed exactly; QC registry confined to the explicit ./qc subpath with empty production catalog/loaders at source, built-artifact, and runtime levels; Task-3 bindings and 7-asset selected union exact; per-title deterministic mechanics match accepted claim locators; package/app gates, guards, and independent Playwright Chromium real-input proof reproduced with screenshot/DOM inspection; no Critical or High findings.",
+      "severity_findings": {
+        "critical": [],
+        "high": [],
+        "medium": [
+          "M-1: task-3 acceptance guard test_plan_and_metadata_complete_only_task3 hard-asserts plan task 4 as pending and now fails 1/6 against the authorized in-progress marker; guard is stale, plan state is correct."
+        ],
+        "low": [
+          "L-1: astral-mage QC wrong-hit score not floored at zero (accepted historical source floors with Math.max(0, ...)); claim text still satisfied.",
+          "L-2: evidence targeted_tests label (3 files/7 tests) omits the also-modified StandardPackQc.test.tsx; touched suites total 4 files/11 tests, all passing.",
+          "L-3: app graph scan drifted +11 nodes/+10 edges from regenerated .next/types artifacts; main graph.db remains unrefreshed (disclosed as OS-blocked).",
+          "L-4: metadata deviation_notes still describes 20 intentional Red failures; the game-cartridges suite is now 61/61 green."
+        ]
+      },
+      "task4_state_after_review": "in-progress (reviewer verification only; no owner approval or progression)"
+    },
+    {
+      "reviewed_at": "2026-07-28T11:05:00Z",
+      "kind": "independent-fresh-remediation-rereview",
+      "scope": "remediated task-4 Advantage Games QC and compact/wide real-input proof for Dragon Flight, Magic Defense, Dungeon Liberator, Sorcerer's Ziggurat, and Astral Mage",
+      "report_path": "measure/tracks/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc-rereview.md",
+      "report_sha256": "ec718ede5041e7b9e16dbafba414ee59c013da205c63928a8a28334e996c61de",
+      "disposition": "review-pass-progression-hold",
+      "owner_approval_claimed": false,
+      "verdict_summary": "M-1/L-1/L-2/L-3/L-4 independently verified resolved without weakened guards: task-3 acceptance guard is tamper-evident in four mutated-plan probes; Astral Mage score floor matches the accepted historical source exactly in code, tests, and live browser; evidence suite counts accurate and reproduced; graph disclosure reproducible and bounded to artifact drift; metadata current. R-1 documentation count corrected to 6/6 and hashes rebound. All hashes recompute exactly; quarantine holds at source/built/runtime levels; independent real-input compact/wide Playwright probe passed with screenshot/DOM inspection.",
+      "severity_findings": {
+        "critical": [],
+        "high": [],
+        "medium": [],
+        "low": [],
+        "informational": [
+          "Plan task-2 completed-task narrative retains the historical Red-phase 20-failure description; current-suite statement in deviation_notes is accurate.",
+          "Fresh scoped graph scan drifted +9/+13 from this review's own forced dist rebuilds; no post-remediation source modification; main graph.db remains stale as disclosed.",
+          "Pre-existing parallel Jest wall-clock flake (performance-benchmark) reproduced the disclosed contention class; passes in isolation and bounded-worker full run; outside task-4 surface.",
+          "R-1 corrected: remediation document now states evidence lineage 6/6 passed; remediation evidence SHA-256 and this rereport SHA-256 have been rebound. No implementation, test, plan task state, or owner acceptance changed."
+        ]
+      },
+      "task4_state_after_review": "in-progress (reviewer verification only; no owner approval or progression)"
+    }
+  ],
+  "review_remediations": [
+    {
+      "remediated_at": "2026-07-27T19:47:40Z",
+      "source_review_path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates.md",
+      "evidence_path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
+      "evidence_sha256": "9b7df1be5dd9c89c3ea6aa25c6fe01ea4d450b886a472276cd68372ec2154e44",
+      "findings_addressed": ["4.1", "4.2", "4.3", "4.4"],
+      "candidate_mappings_changed": false,
+      "catalog_or_loaders_exposed": false,
+      "owner_approval_claimed": false,
+      "status": "remediated-awaiting-fresh-independent-review-and-owner-acceptance",
+      "candidate_test_count": 22,
+      "intentional_red_test_count": 20
+    },
+    {
+      "remediated_at": "2026-07-28T09:55:00Z",
+      "source_review_path": "measure/tracks/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc.md",
+      "evidence_path": "measure/tracks/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc-remediation.md",
+      "evidence_sha256": "c2bdbdeb98dddf140db53e4147b3d2e371d9d83dbf43fae4b0b7dabf372cecf8",
+      "findings_addressed": ["M-1", "L-1", "L-2", "L-3", "L-4"],
+      "candidate_mappings_changed": false,
+      "catalog_or_loaders_exposed": false,
+      "owner_approval_claimed": false,
+      "status": "remediated-awaiting-fresh-independent-review-and-owner-acceptance",
+      "game_cartridges_test_count": 61,
+      "intentional_red_test_count": 0
+    }
+  ],
+  "verification_addenda": [
+    {
+      "verified_at": "2026-07-28",
+      "scope": "independent bounded verification of the doc-only Task 4 R-1 correction",
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task4-r1-correction-verification-addendum.md",
+      "sha256": "d0a3437b53de360dcab6e41fb5461362adbe6f9664a81e8346325be4e24fecb3",
+      "owner_approval_claimed": false
+    }
+  ],
+  "task_acceptances": [
+    {
+      "task_number": 3,
+      "accepted_at": "2026-07-27T23:44:28Z",
+      "approval_message_exact": "Approved. Continue",
+      "approval_message_sha256": "4a6bf421eb4ea11252f61fc59eda6a3fe4edec86f42cfc9d8d0bc66263524de7",
+      "product_owner_acceptance_path": "measure/tracks/apk_existing_core_cutover_20260727/task3-product-owner-acceptance-v1.json",
+      "product_owner_acceptance_sha256": "65ffbaa27ef19be1f65015daa8fad4d2f4ca58990ba2fea5653327627452c3b1",
+      "accepted_receipt_path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
+      "accepted_receipt_sha256": "e82d42d9ec046b85eb4aeac7800623bce3c3bf4a39a9c0f44288bd93d07be240",
+      "durable_user_message_id": null,
+      "durable_user_event_id": null,
+      "authorization": "begin-task4-advantage-games-qc-and-compact-wide-host-proof-only",
+      "catalog_or_loaders_exposed": false,
+      "host_proof_claimed": false,
+      "retirement_claimed": false,
+      "broader_cohort_accepted": false
+    },
+    {
+      "task_number": 4,
+      "accepted_at": "2026-07-28T04:21:02Z",
+      "approval_message_exact": "Approved. I fixed the k2p7 agent and it should be usable now.",
+      "approval_message_sha256": "59273e1970a6c0be4d938dac88c011a86721ecbb98b4c94af0a3e332a259c69f",
+      "product_owner_acceptance_path": "measure/tracks/apk_existing_core_cutover_20260727/task4-product-owner-acceptance-v1.json",
+      "product_owner_acceptance_sha256": "20483a277d1d1addf87b0f98184cd76fd9dccd878a4f87bd850bb52d9bac05db",
+      "accepted_receipt_path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-task4-qc-receipt-v1.json",
+      "accepted_receipt_sha256": "b6ffefcebf8a75d9967f196693fe7cf14a133d66123537d201b52e9af4745dd9",
+      "durable_user_message_id": null,
+      "durable_user_event_id": null,
+      "bound_evidence_subject_count": 5,
+      "validated_implementation_binding_count": 11,
+      "authorization": "begin-task5-reading-primary-host-proof-only",
+      "advantage_games_host_proof_accepted": true,
+      "production_catalog_or_loaders_exposed": false,
+      "task5_success_claimed": false,
+      "retirement_claimed": false,
+      "broader_cohort_accepted": false
+    }
+  ]
+}

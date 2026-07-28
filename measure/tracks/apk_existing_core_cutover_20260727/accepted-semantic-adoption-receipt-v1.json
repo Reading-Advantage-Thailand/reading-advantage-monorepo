@@ -1,0 +1,151 @@
+{
+  "schema_version": "apk-existing-core-accepted-semantic-adoption-receipt.v1",
+  "receipt_id": "apk_existing_core_cutover_20260727_task3_accepted_semantic_adoption_v1",
+  "track_id": "apk_existing_core_cutover_20260727",
+  "task_number": 3,
+  "status": "accepted",
+  "revocation_state": "active",
+  "published_at": "2026-07-27T23:44:28Z",
+  "receipt_kind": "five-title-semantic-adoption-only",
+  "bindings": {
+    "semantic_candidate_source": {
+      "path": "packages/game-cartridges/src/existing-core-cutover-semantic-candidates.ts",
+      "sha256": "8d33f785fed5487ac81dd7e6501d5b867cd5faa614274726fa8d3d299148a9d3"
+    },
+    "evidence_fixture": {
+      "path": "packages/game-cartridges/src/existing-core-cutover.evidence.json",
+      "sha256": "85d1ff9012d9bab6311f48ed1571877e78ce680b640939d87154ab80fc9cdffb"
+    },
+    "remediation_evidence": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
+      "sha256": "9b7df1be5dd9c89c3ea6aa25c6fe01ea4d450b886a472276cd68372ec2154e44"
+    },
+    "independent_zero_finding_rereview": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-rereview.md",
+      "sha256": "7c3675aca01499e81eba60dcea049715c4652e1474716a633eb8676d3c28a526"
+    },
+    "product_owner_acceptance": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-product-owner-acceptance-v1.json",
+      "sha256": "65ffbaa27ef19be1f65015daa8fad4d2f4ca58990ba2fea5653327627452c3b1"
+    }
+  },
+  "hash_governance": {
+    "accepted_subject_set_is_exhaustive": true,
+    "accepted_subjects_are_byte_immutable": true,
+    "hash_drift_invalidates_this_receipt": true,
+    "successor_review_acceptance_and_receipt_required_after_any_bound_change": true
+  },
+  "standard_pack_release": {
+    "version": "2026.07.23",
+    "catalog_digest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+    "source_receipt_digest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9",
+    "required_credit": "Pixel art assets by ElvGames",
+    "asset_count": 43075,
+    "materialization": "accepted-cartridge-selected-union-only"
+  },
+  "semantic_adoptions": [
+    {
+      "public_id": "dragon-flight",
+      "canonical_id": "game:dragon-flight",
+      "title": "Dragon Flight",
+      "input_mode": "vocabulary",
+      "temporal_label": "current-source",
+      "mappings": [
+        { "role": "player", "state": "idle", "semantic_key": "top-down/32x32/characters/hero-01" },
+        { "role": "feedback", "state": "correct", "semantic_key": "effects/32x32/combat/hit-01" },
+        { "role": "audio-feedback", "state": "correct", "semantic_key": "audio/native/combat/hit-01" }
+      ]
+    },
+    {
+      "public_id": "magic-defense",
+      "canonical_id": "game:magic-defense",
+      "title": "Magic Defense",
+      "input_mode": "vocabulary",
+      "temporal_label": "current-source",
+      "mappings": [
+        { "role": "panel", "state": "default", "semantic_key": "ui/20x20/inventory/slot" },
+        { "role": "status", "state": "armor", "semantic_key": "ui/32x32/items/armor-icons" },
+        { "role": "feedback", "state": "correct", "semantic_key": "effects/32x32/combat/hit-01" },
+        { "role": "audio-feedback", "state": "correct", "semantic_key": "audio/native/combat/hit-01" }
+      ]
+    },
+    {
+      "public_id": "dungeon-liberator",
+      "canonical_id": "game:dungeon-liberator",
+      "title": "Dungeon Liberator",
+      "input_mode": "sentence",
+      "temporal_label": "current-source",
+      "mappings": [
+        { "role": "player", "state": "idle", "semantic_key": "top-down/32x32/characters/hero-01" },
+        { "role": "enemy", "state": "idle", "semantic_key": "side-view/32x32/characters/enemy-001-idle" },
+        { "role": "feedback", "state": "correct", "semantic_key": "effects/32x32/combat/hit-01" },
+        { "role": "control", "state": "confirm", "semantic_key": "ui/16x16/controls/gamepad-buttons" }
+      ]
+    },
+    {
+      "public_id": "sorcerer-ziggurat",
+      "canonical_id": "game:sorcerer-ziggurat",
+      "title": "The Sorcerer's Ziggurat",
+      "input_mode": "sentence",
+      "temporal_label": "historical-source-only",
+      "mappings": [
+        { "role": "player", "state": "idle", "semantic_key": "top-down/32x32/characters/hero-01" },
+        { "role": "feedback", "state": "correct", "semantic_key": "effects/32x32/combat/hit-01" },
+        { "role": "control", "state": "confirm", "semantic_key": "ui/16x16/controls/gamepad-buttons" }
+      ]
+    },
+    {
+      "public_id": "astral-mage",
+      "canonical_id": "game:astral-mage",
+      "title": "Astral Mage",
+      "input_mode": "sentence",
+      "temporal_label": "historical-source-only",
+      "mappings": [
+        { "role": "player", "state": "idle", "semantic_key": "top-down/32x32/characters/hero-01" },
+        { "role": "feedback", "state": "correct", "semantic_key": "effects/32x32/combat/hit-01" },
+        { "role": "audio-feedback", "state": "correct", "semantic_key": "audio/native/combat/hit-01" }
+      ]
+    }
+  ],
+  "binding_disclosures": [
+    "T10 and T11 approve zero legacy asset mappings and zero accepted runtime contracts; these are forward semantic product decisions only.",
+    "The accepted source remains classified as a per-title semantic-adoption candidate with status candidate and consumable=false; acceptance does not expose catalog or loader entries.",
+    "Current-source labels describe accepted source evidence, not Advantage Games browser, responsive, performance, or host-proof success.",
+    "Sorcerer's Ziggurat and Astral Mage remain historical-source-only; no current-source or current-gameplay promotion is claimed.",
+    "Only selected standard-pack unions from release 2026.07.23 are accepted; direct paths, private packs, duplicate physical sources, and full-pack delivery remain prohibited.",
+    "The independent re-review's pre-approval statement that product-owner acceptance was absent remains historically accurate.",
+    "Reading and Primary host proof, tenant-safe persistence, replay, navigation, exact retirement, cutover, broader cohort acceptance, and production readiness remain unproved and unauthorized."
+  ],
+  "downstream_authorization": {
+    "status": "authorized-for-task4-advantage-games-qc-only",
+    "authorized_track": "apk_existing_core_cutover_20260727",
+    "authorized_task": 4,
+    "authorized_work": [
+      "begin Advantage Games QC for the five accepted semantic adoptions",
+      "begin compact and wide real-input host-proof work in Advantage Games"
+    ],
+    "excluded_actions": [
+      "catalog or loader exposure",
+      "cartridge consumability or cutover",
+      "Reading or Primary host proof",
+      "legacy path deletion or retirement",
+      "broader cohort or track acceptance",
+      "production readiness or deployment"
+    ],
+    "authorization_boundary": "This acceptance completes only task 3 and removes only task 4's semantic-adoption predecessor block. It does not supply task 4 host evidence or authorize any later task."
+  },
+  "claims": {
+    "task3_semantic_adoption_accepted": true,
+    "task4_advantage_games_work_may_begin": true,
+    "candidate_source_consumable": false,
+    "catalog_or_loader_exposed": false,
+    "advantage_games_host_proof_claimed": false,
+    "reading_host_proof_claimed": false,
+    "primary_host_proof_claimed": false,
+    "tenant_safe_persistence_claimed": false,
+    "retirement_complete_claimed": false,
+    "cartridge_cutover_authorized": false,
+    "broader_cohort_accepted": false,
+    "commit_created_for_this_acceptance": false
+  }
+}

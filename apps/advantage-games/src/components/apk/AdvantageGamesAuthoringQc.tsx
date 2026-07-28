@@ -22,6 +22,7 @@ import {
 } from "@reading-advantage/advantage-play-kit/presentation";
 import { parseQcControls } from "@reading-advantage/advantage-play-kit/qc";
 
+import { ExistingCoreCartridgeQc } from "./ExistingCoreCartridgeQc";
 import { StandardPackQc, type StandardPackQcPreview } from "./StandardPackQc";
 
 const CONTENT_FIXTURES = {
@@ -293,6 +294,8 @@ export function AdvantageGamesAuthoringQc({ preview }: AdvantageGamesAuthoringQc
           </dl>
         </aside>
       </div>
+
+      <ExistingCoreCartridgeQc preview={preview} />
 
       <section aria-label="Canonical pack release gallery" className="border-t border-[#335c4b] bg-[#07110e] px-4 py-6 sm:px-8">
         <div className="mx-auto max-w-7xl">

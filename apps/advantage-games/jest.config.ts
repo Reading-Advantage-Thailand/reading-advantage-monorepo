@@ -16,6 +16,8 @@ const config: Config = {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^next/server$': '<rootDir>/src/__mocks__/next/server.ts',
     '^@reading-advantage/advantage-play-kit(/.*)?$': '<rootDir>/../../packages/advantage-play-kit/dist$1',
+    '^@reading-advantage/game-cartridges/qc$': '<rootDir>/../../packages/game-cartridges/dist/existing-core-cutover-qc.js',
+    '^@reading-advantage/game-cartridges$': '<rootDir>/../../packages/game-cartridges/dist/index.js',
     '^@reading-advantage/game-contracts$': '<rootDir>/../../packages/game-contracts/dist/index.js',
     '^@reading-advantage/utils(/.*)?$': '<rootDir>/../../packages/utils/dist$1',
     '^@reading-advantage/ui(/.*)?$': '<rootDir>/../../packages/ui/dist$1',

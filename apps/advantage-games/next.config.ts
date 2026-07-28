@@ -24,6 +24,7 @@ const nextConfig: NextConfig = {
     "@reading-advantage/auth",
     "@reading-advantage/db",
     "@reading-advantage/advantage-play-kit",
+    "@reading-advantage/game-cartridges",
   ],
   serverExternalPackages: ["@node-rs/argon2"],
   basePath: basePath || undefined,

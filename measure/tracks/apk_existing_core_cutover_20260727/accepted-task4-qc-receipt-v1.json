@@ -1,0 +1,141 @@
+{
+  "schema_version": "apk-existing-core-accepted-task4-qc-receipt.v1",
+  "receipt_id": "apk_existing_core_cutover_20260727_task4_accepted_qc_v1",
+  "track_id": "apk_existing_core_cutover_20260727",
+  "task_number": 4,
+  "status": "accepted",
+  "revocation_state": "active",
+  "published_at": "2026-07-28T04:21:02Z",
+  "receipt_kind": "five-title-advantage-games-qc-and-compact-wide-real-input-only",
+  "evidence_bindings": {
+    "task4_qc_evidence": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task4-advantage-games-qc-evidence-v1.json",
+      "sha256": "7a9dae4d640f881f76c001be73315b74d07b19258226d01f09390c37adaba058"
+    },
+    "task4_remediation_evidence": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc-remediation.md",
+      "sha256": "c2bdbdeb98dddf140db53e4147b3d2e371d9d83dbf43fae4b0b7dabf372cecf8"
+    },
+    "k3_independent_zero_finding_rereview": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc-rereview.md",
+      "sha256": "ec718ede5041e7b9e16dbafba414ee59c013da205c63928a8a28334e996c61de"
+    },
+    "doc_correction_verification_addendum": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task4-r1-correction-verification-addendum.md",
+      "sha256": "d0a3437b53de360dcab6e41fb5461362adbe6f9664a81e8346325be4e24fecb3"
+    },
+    "accepted_task3_semantic_receipt": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
+      "sha256": "e82d42d9ec046b85eb4aeac7800623bce3c3bf4a39a9c0f44288bd93d07be240"
+    }
+  },
+  "product_owner_acceptance": {
+    "path": "measure/tracks/apk_existing_core_cutover_20260727/task4-product-owner-acceptance-v1.json",
+    "sha256": "20483a277d1d1addf87b0f98184cd76fd9dccd878a4f87bd850bb52d9bac05db"
+  },
+  "implementation_bindings": {
+    "qc_registry_and_mechanics": {
+      "path": "packages/game-cartridges/src/existing-core-cutover-qc.ts",
+      "sha256": "6d1730bdb24f3c5effe0bb473d48487fcccf04c0a9964d0311a78d9253347951"
+    },
+    "cartridge_tests": {
+      "path": "packages/game-cartridges/src/existing-core-cutover.red.test.ts",
+      "sha256": "b4808c5d1109a183dc44e3ba2f052e8bb00e18e42b6bbfda489ff7fd87021a9f"
+    },
+    "game_cartridges_manifest": {
+      "path": "packages/game-cartridges/package.json",
+      "sha256": "1041ad5c98290fb58714dfa73e56f5376f59682e6b4f74667214bc48ac62fa47"
+    },
+    "qc_surface": {
+      "path": "apps/advantage-games/src/components/apk/ExistingCoreCartridgeQc.tsx",
+      "sha256": "a5b4d691f27e62482bd28eec78eeef7c586761f69bbc31cbe39094b3d3c80d89"
+    },
+    "qc_surface_tests": {
+      "path": "apps/advantage-games/src/components/apk/ExistingCoreCartridgeQc.test.tsx",
+      "sha256": "da2affbacdca3a440c1a3298d5b3dda8a5ef370f8ebf2fc3329424166963827a"
+    },
+    "qc_host": {
+      "path": "apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.tsx",
+      "sha256": "daef9738ca3293084a728c592e367ac1ead591fd32e962e1001d115484c61a31"
+    },
+    "qc_route": {
+      "path": "apps/advantage-games/src/app/qc/page.tsx",
+      "sha256": "e16b021e559b85b94616b68c0dcaa0710564da96fc7595d2ce56de9bf9bda202"
+    },
+    "real_input_browser_test": {
+      "path": "apps/advantage-games/tests/e2e/qc/existing-core-cartridges.spec.ts",
+      "sha256": "120fc8e98cf55b58ebdd947b94e332f9ca47dafd168a28e8a9ac0d4eebad6349"
+    },
+    "finite_preview_manifest": {
+      "path": "apps/advantage-games/src/lib/apk/standard-pack-qc-preview.json",
+      "sha256": "0f5935e224b02c9157fc610802c05b6391d84eb2ac9444badf8309a46121e9ab"
+    },
+    "production_catalog": {
+      "path": "packages/game-cartridges/src/catalog.ts",
+      "sha256": "14afe602f10710db17edc3a311177f16f148cac24473d3d975de4284ca19b55b",
+      "remained_empty": true
+    },
+    "production_root_exports": {
+      "path": "packages/game-cartridges/src/index.ts",
+      "sha256": "1f9fdca42f51e5140dc998752ab2c6f6049ef07e1b78b3a90693e5e4fdbf8eda",
+      "qc_registry_exported_from_root": false
+    }
+  },
+  "hash_governance": {
+    "accepted_evidence_subject_set_is_exhaustive": true,
+    "accepted_implementation_set_is_exhaustive": true,
+    "accepted_subjects_are_byte_immutable": true,
+    "hash_drift_invalidates_this_receipt": true,
+    "successor_review_acceptance_and_receipt_required_after_any_bound_change": true
+  },
+  "accepted_scope": {
+    "scope": "advantage-games-qc-and-compact-wide-real-input-only",
+    "public_ids": [
+      "dragon-flight",
+      "magic-defense",
+      "dungeon-liberator",
+      "sorcerer-ziggurat",
+      "astral-mage"
+    ]
+  },
+  "binding_disclosures": [
+    "Acceptance applies only to the exact Task-4 evidence, remediation, K3 re-review, documentation-correction verification addendum, accepted Task-3 semantic receipt, and implementation bytes bound in this receipt.",
+    "The Task-3 semantic candidate remains non-consumable and the production catalog and root loaders remain unexposed.",
+    "Sorcerer's Ziggurat and Astral Mage remain historical-source-only; no current-source promotion is accepted.",
+    "Reading and Primary Task-5 outcomes remain unproved; authorization is only to begin the bounded host-proof work.",
+    "No legacy retirement, cartridge cutover, broader cohort acceptance, production catalog exposure, production readiness, or deployment is accepted or authorized."
+  ],
+  "downstream_authorization": {
+    "status": "authorized-to-begin-task5-reading-primary-host-proof-only",
+    "authorized_track": "apk_existing_core_cutover_20260727",
+    "authorized_task": 5,
+    "authorized_work": [
+      "begin Reading and Primary host proof using the same accepted five-title binding",
+      "test load, completion, tenant-safe persistence, replay, and navigation in both hosts"
+    ],
+    "excluded_actions": [
+      "production catalog or loader exposure",
+      "declaring Task 5 success or completion",
+      "legacy path deletion or retirement",
+      "cartridge consumability or cutover",
+      "broader cohort or track acceptance",
+      "production readiness or deployment"
+    ],
+    "authorization_boundary": "This acceptance completes only Task 4 and removes only Task 5's predecessor block. It authorizes starting bounded Reading and Primary proof work but supplies no Task-5 success evidence and authorizes no later task."
+  },
+  "claims": {
+    "task4_advantage_games_qc_accepted": true,
+    "task4_compact_wide_real_input_accepted": true,
+    "task5_reading_primary_work_may_begin": true,
+    "candidate_source_consumable": false,
+    "production_catalog_or_loader_exposed": false,
+    "task5_host_proof_success_claimed": false,
+    "reading_host_proof_success_claimed": false,
+    "primary_host_proof_success_claimed": false,
+    "tenant_safe_persistence_success_claimed": false,
+    "retirement_complete_claimed": false,
+    "cartridge_cutover_authorized": false,
+    "broader_cohort_accepted": false,
+    "commit_created_for_this_acceptance": false
+  }
+}

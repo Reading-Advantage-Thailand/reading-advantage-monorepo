@@ -1,0 +1,176 @@
+{
+  "schemaVersion": "apk-existing-core-cutover-evidence.v1",
+  "planningAuthorization": {
+    "path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/accepted-readiness-receipt-v1.json",
+    "sha256": "d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720"
+  },
+  "authorities": [
+    {
+      "phase": "T3",
+      "path": "measure/archive/apk_three_game_truth_pilot_20260712/accepted-pilot-manifest.json",
+      "sha256": "cbf04753aa21b0c43999ea202b718573616472a16dce94961242fdcb0260ca1b"
+    },
+    {
+      "phase": "T4",
+      "path": "measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+      "sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80"
+    },
+    {
+      "phase": "T5",
+      "path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/t5-accepted-cohort-manifest-v1.json",
+      "sha256": "4052c243ca66977256a4b60116439884f3f3151fba463ef860e624ed8d050f5d"
+    },
+    {
+      "phase": "T6",
+      "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/successor-accepted-cohort-manifest-v2.json",
+      "sha256": "9666b564ba969ef7d0559fb53d8d74c684a746b10264784a9728e52b6284888b"
+    },
+    {
+      "phase": "T7",
+      "path": "measure/archive/apk_corpus_audit_special_historical_20260712/cohort-accepted-manifest-20260722.json",
+      "sha256": "4186dfd20fcef683a1a33664a1ffa9d4350280fbee31fe56d553fa0f5a87b2b0"
+    },
+    {
+      "phase": "T10",
+      "path": "measure/archive/apk_independent_acceptance_handoff_20260712/accepted-successor-manifest-v1.json",
+      "sha256": "e9fc2c9c8074db74670fa2e2929bd4efb5b8d0fd2ef5a8b9819d2f5a6e39ba49"
+    }
+  ],
+  "t10ClaimOverlay": {
+    "path": "measure/archive/apk_independent_acceptance_handoff_20260712/t10-claim-disposition-overlay-v1.json",
+    "sha256": "06e692daff932334a5edc2a06d7121651a6bb2426f05f1b00d8d0a5c1ecb6e41"
+  },
+  "titles": [
+    {
+      "publicId": "dragon-flight",
+      "canonicalId": "game:dragon-flight",
+      "title": "Dragon Flight",
+      "inputMode": "vocabulary",
+      "evidencePhase": "T3",
+      "acceptedEvidence": {
+        "path": "measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-claim-ledger.json",
+        "sha256": "84bd9335c44424142c2d9cb407a2f48d28dd400997741f1904f65cdb6ce6083e",
+        "collection": "$"
+      },
+      "acceptanceChain": [
+        {
+          "kind": "accepted-review",
+          "path": "measure/archive/apk_three_game_truth_pilot_20260712/pilot-independent-review.json",
+          "sha256": "ddd4c4ab9e4ea9e9de824ef78c748729e0ce9b6dbbf17d698ae88f0baf89dcd8"
+        },
+        {
+          "kind": "accepted-evidence-report",
+          "path": "measure/archive/apk_three_game_truth_pilot_20260712/dragon-flight-evidence-final-report.json",
+          "sha256": "d93e23e20a4bcd00287b4b97f5bcfa13b947afd270f0a68790d1afbd8edfa9ba"
+        }
+      ],
+      "mechanicFacts": [
+        {"claimId":"DF-MECH-003","locator":"$[?claim_id='DF-MECH-003']","temporalScope":"current-source","fact":"createDragonFlightState initializes attempts 0, correctAnswers 0, dragonCount 1, elapsedMs 0 (lib lines 92-98)."},
+        {"claimId":"DF-MECH-007","locator":"$[?claim_id='DF-MECH-007']","temporalScope":"current-source","fact":"selectGate increments attempts by 1 on every selection (lib line 116)."},
+        {"claimId":"DF-MECH-008","locator":"$[?claim_id='DF-MECH-008']","temporalScope":"current-source","fact":"selectGate increments correctAnswers only when the chosen side matches round.correctSide (lib line 117)."},
+        {"claimId":"DF-MECH-009","locator":"$[?claim_id='DF-MECH-009']","temporalScope":"current-source","fact":"In the core reducer, a correct selection increments dragonCount by 1 and an incorrect one decrements it with a floor of 1 (lib lines 110-112)."},
+        {"claimId":"DF-MECH-010","locator":"$[?claim_id='DF-MECH-010']","temporalScope":"current-source","fact":"selectGate is a no-op when status is not 'running' (lib line 107)."}
+      ]
+    },
+    {
+      "publicId": "magic-defense",
+      "canonicalId": "game:magic-defense",
+      "title": "Magic Defense",
+      "inputMode": "vocabulary",
+      "evidencePhase": "T4",
+      "acceptedEvidence": {
+        "path": "measure/archive/apk_corpus_audit_action_defense_20260712/magic-defense-claim-ledger-v2.json",
+        "sha256": "10d974bd3e620a4aaacde171a80e5f82945f58fdbd38db57b996805b62b71e45",
+        "collection": "$.claims"
+      },
+      "acceptanceChain": [
+        {"kind":"accepted-batch","path":"measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-a.json","sha256":"b096d911b7d6bc9fb4d530e695cea10d3816a17158447a89303c2d069cf2a54c"},
+        {"kind":"bound-candidate","path":"measure/archive/apk_corpus_audit_action_defense_20260712/candidate-cohort-manifest-batch-a.json","sha256":"8bd3c806a9e35a4caa9d42f3a3e67e374ee957f4285b8220e9756f56046d5ac8","acceptedBy":"measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-batch-a.json"}
+      ],
+      "mechanicFacts": [
+        {"claimId":"MD-MECH-003","locator":"$.claims[?claim_id='MD-MECH-003']","temporalScope":"current-source","fact":"MAX_CASTLE_HP is exported as the constant 3 from useGameStore.ts line 9."},
+        {"claimId":"MD-MECH-005","locator":"$.claims[?claim_id='MD-MECH-005']","temporalScope":"current-source","fact":"DEFAULT_CASTLES initializes left/center/right to MAX_CASTLE_HP=3 (useGameStore.ts lines 10-14)."},
+        {"claimId":"MD-MECH-008","locator":"$.claims[?claim_id='MD-MECH-008']","temporalScope":"current-source","fact":"checkAnswer matches the input by lowercased translation equality against falling missiles (GameEngine.tsx lines 337-340)."},
+        {"claimId":"MD-MECH-017","locator":"$.claims[?claim_id='MD-MECH-017']","temporalScope":"current-source","fact":"Correct answer increments combo, adds 10 mana, spawns a MagicBolt from a random alive castle, increments score by 10 (GameEngine.tsx lines 343-388)."},
+        {"claimId":"MD-MECH-018","locator":"$.claims[?claim_id='MD-MECH-018']","temporalScope":"current-source","fact":"On wrong answer, checkAnswer plays 'error', shows feedback='incorrect' for 500ms, resets combo, and increments totalAttempts (GameEngine.tsx lines 393-401)."},
+        {"claimId":"MD-MECH-022","locator":"$.claims[?claim_id='MD-MECH-022']","temporalScope":"current-source","fact":"endGame reducer simply sets status='game-over' (useGameStore.ts line 104)."}
+      ]
+    },
+    {
+      "publicId": "dungeon-liberator",
+      "canonicalId": "game:dungeon-liberator",
+      "title": "Dungeon Liberator",
+      "inputMode": "sentence",
+      "evidencePhase": "T5",
+      "acceptedEvidence": {
+        "path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger-v3.json",
+        "sha256": "f8112af605465ffcf461669e5560037261943df98185bfeb8728a6496997e2a2"
+      },
+      "claimArtifact": {
+        "path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger-v2.json",
+        "sha256": "ff97238f94caa82a5359143c0a25d2a5ee8a2e479bb2fdd0bfea9aab05eef2bd",
+        "collection": "$.claims"
+      },
+      "acceptanceChain": [
+        {"kind":"accepted-batch","path":"measure/archive/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-a-v6.json","sha256":"f5a215f44815c79025e86e97a3217d7a85c4a33db86f80db2909f30dd3a9caa3"},
+        {"kind":"bound-candidate","path":"measure/archive/apk_corpus_audit_traversal_exploration_20260712/candidate-cohort-manifest-batch-a-v6.json","sha256":"0df0946f3f298b7ece3bea8b13af1bcfeaa9b288161f7ca040f56b1cb49b054d","acceptedBy":"measure/archive/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-a-v6.json"},
+        {"kind":"accepted-ledger-selection","path":"measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/dungeon-liberator/claim-evidence-ledger-v3.json","sha256":"f8112af605465ffcf461669e5560037261943df98185bfeb8728a6496997e2a2"}
+      ],
+      "mechanicFacts": [
+        {"claimId":"DL-COLL-001","locator":"$.claims[?claim_id='DL-COLL-001']","temporalScope":"current-source","fact":"A player-prisoner collision is detected when distance is less than the sum of their radii; an in-order prisoner is collected and appended to the trail, while an out-of-order prisoner flees for 1500 ms and the collected trail is rescattered and reset."},
+        {"claimId":"DL-COLL-002","locator":"$.claims[?claim_id='DL-COLL-002']","temporalScope":"current-source","fact":"Monster-trail contact rescatteres the affected trail suffix and grants player invulnerability; player-monster contact clears a nonempty trail or otherwise decrements lives and sets defeat at zero lives."},
+        {"claimId":"DL-TRANS-001","locator":"$.claims[?claim_id='DL-TRANS-001']","temporalScope":"current-source","fact":"checkVictoryCondition sets phase to victory only when player-portal distance is less than the sum of their radii and trail.length equals words.length."},
+        {"claimId":"DL-TRANS-002","locator":"$.claims[?claim_id='DL-TRANS-002']","temporalScope":"current-source","fact":"advanceToNextLevel increments level, creates a new sentence and prisoner set, appends one spawned monster, resets trail and targetIndex, and resets the player position to (100, GAME_HEIGHT / 2)."}
+      ]
+    },
+    {
+      "publicId": "sorcerer-ziggurat",
+      "canonicalId": "game:sorcerer-ziggurat",
+      "title": "The Sorcerer's Ziggurat",
+      "inputMode": "sentence",
+      "evidencePhase": "T5",
+      "acceptedEvidence": {
+        "path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/claim-evidence-ledger-v2.json",
+        "sha256": "b99ba08b3db22ffd352ac6ea9fa0ad99d2c30595b7e90e7b389611e7a18e2c4a"
+      },
+      "claimArtifact": {
+        "path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/claim-evidence-ledger.json",
+        "sha256": "54bd65f6f655730125c933c15ba79e992479b905869856c9796b508bcffceeca",
+        "collection": "$.claims"
+      },
+      "acceptanceChain": [
+        {"kind":"accepted-batch","path":"measure/archive/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-c-v2-retroactive.json","sha256":"f9cef57c46ec6e63f61d7ac0df4e8fd0737252f711c21186f86b846e4c56f0ff"},
+        {"kind":"bound-candidate","path":"measure/archive/apk_corpus_audit_traversal_exploration_20260712/candidate-cohort-manifest-batch-c-v2.json","sha256":"b0e857e24f593d811d52970f1cc53f7f0f61ce0516a93de7268bbcd717ef46ec","acceptedBy":"measure/archive/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-c-v2-retroactive.json"},
+        {"kind":"accepted-supersession-overlay","path":"measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/sorcerer-ziggurat/claim-evidence-ledger-v2.json","sha256":"b99ba08b3db22ffd352ac6ea9fa0ad99d2c30595b7e90e7b389611e7a18e2c4a"}
+      ],
+      "mechanicFacts": [
+        {"claimId":"SZ-HIST-005","locator":"$.claims[?claim_id='SZ-HIST-005']","temporalScope":"historical-source-only","fact":"The historical transition returned unchanged state for completed/nonadjacent selections and penalized a legal wrong target while incrementing attempts."},
+        {"claimId":"SZ-HIST-006","locator":"$.claims[?claim_id='SZ-HIST-006']","temporalScope":"historical-source-only","fact":"A nonfinal historical correct step advanced the token and current node, lit the target, added score/correct/attempt counts, and recorded a correct outcome."},
+        {"claimId":"SZ-HIST-007","locator":"$.claims[?claim_id='SZ-HIST-007']","temporalScope":"historical-source-only","fact":"The historical transition either froze results after the final sentence or created a seeded graph at origin for the next sentence."},
+        {"claimId":"SZ-HIST-009","locator":"$.claims[?claim_id='SZ-HIST-009']","temporalScope":"historical-source-only","fact":"The historical completion emitter guarded host completion and diagnostic callbacks with a local fire-once flag."}
+      ]
+    },
+    {
+      "publicId": "astral-mage",
+      "canonicalId": "game:astral-mage",
+      "title": "Astral Mage",
+      "inputMode": "sentence",
+      "evidencePhase": "T6",
+      "acceptedEvidence": {
+        "path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b/astral-mage/claim-evidence-ledger-v2.json",
+        "sha256": "da7122e80d300c6ff3eab073c2e9151a67c81b707fa470fe64f101a5bbb4eb7e",
+        "collection": "$.claims"
+      },
+      "acceptanceChain": [
+        {"kind":"accepted-batch","path":"measure/archive/apk_corpus_audit_puzzle_crafting_20260712/accepted-cohort-manifest-batch-b-v3.json","sha256":"5b11e1c44f0b109b740b91a36c694774a48d6c364d8715e95719b9e0574dc271"},
+        {"kind":"bound-candidate","path":"measure/archive/apk_corpus_audit_puzzle_crafting_20260712/candidate-cohort-manifest-batch-b-v3.json","sha256":"ad0a031ac4d2c16453bcc535eb6bbcaf1a001352ed1137b396bfc56dd8fae755","acceptedBy":"measure/archive/apk_corpus_audit_puzzle_crafting_20260712/accepted-cohort-manifest-batch-b-v3.json"},
+        {"kind":"accepted-review","path":"measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b-independent-review-v3.json","sha256":"a88634ca187cf972440dac88ce0370980132c23d5e0a13660d35ba045527f34d"}
+      ],
+      "mechanicFacts": [
+        {"claimId":"AM-HIST-004","locator":"$.claims[?claim_id='AM-HIST-004']","temporalScope":"historical-source-only","fact":"The shared dependency rejected empty inputs and blank translations or terms and initialized deterministic targets, progress, score, counts, and incomplete state from the host seed."},
+        {"claimId":"AM-HIST-005","locator":"$.claims[?claim_id='AM-HIST-005']","temporalScope":"historical-source-only","fact":"The shared dependency ignored inactive targets, counted live-target attempts, deducted score for wrong visible-token hits, and deactivated only the stable ID of a correct target while advancing ordered progress."},
+        {"claimId":"AM-HIST-006","locator":"$.claims[?claim_id='AM-HIST-006']","temporalScope":"historical-source-only","fact":"After the final token the shared dependency either created the next sentence's seeded targets or marked complete and created results after the final sentence."}
+      ]
+    }
+  ]
+}
