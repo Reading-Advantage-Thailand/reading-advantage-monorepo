@@ -477,6 +477,9 @@ importers:
       '@react-three/postprocessing':
         specifier: 'catalog:'
         version: 3.0.4(@react-three/fiber@9.6.1(@types/react@19.2.2)(immer@11.1.8)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(three@0.185.1))(@types/three@0.185.0)(react@19.2.7)(three@0.185.1)
+      '@reading-advantage/advantage-play-kit':
+        specifier: workspace:*
+        version: link:../../packages/advantage-play-kit
       '@reading-advantage/api':
         specifier: workspace:*
         version: link:../../packages/api
@@ -489,6 +492,9 @@ importers:
       '@reading-advantage/domain':
         specifier: workspace:*
         version: link:../../packages/domain
+      '@reading-advantage/game-cartridges':
+        specifier: workspace:*
+        version: link:../../packages/game-cartridges
       '@reading-advantage/game-contracts':
         specifier: workspace:*
         version: link:../../packages/game-contracts
@@ -948,6 +954,12 @@ importers:
       '@reading-advantage/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@reading-advantage/domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
+      '@reading-advantage/game-cartridges':
+        specifier: workspace:*
+        version: link:../../packages/game-cartridges
       '@reading-advantage/game-contracts':
         specifier: workspace:*
         version: link:../../packages/game-contracts
@@ -1090,6 +1102,9 @@ importers:
       '@faker-js/faker':
         specifier: ^9.9.0
         version: 9.9.0
+      '@playwright/test':
+        specifier: 'catalog:'
+        version: 1.61.0
       '@reading-advantage/config':
         specifier: workspace:*
         version: link:../../packages/config
@@ -1270,6 +1285,9 @@ importers:
       '@reading-advantage/domain':
         specifier: workspace:*
         version: link:../../packages/domain
+      '@reading-advantage/game-cartridges':
+        specifier: workspace:*
+        version: link:../../packages/game-cartridges
       '@reading-advantage/game-contracts':
         specifier: workspace:*
         version: link:../../packages/game-contracts
@@ -1478,6 +1496,9 @@ importers:
       '@eslint/eslintrc':
         specifier: 'catalog:'
         version: 3.3.5
+      '@playwright/test':
+        specifier: 'catalog:'
+        version: 1.61.0
       '@reading-advantage/config':
         specifier: workspace:*
         version: link:../../packages/config
@@ -2594,6 +2615,9 @@ importers:
       '@reading-advantage/db':
         specifier: workspace:*
         version: link:../db
+      '@reading-advantage/game-contracts':
+        specifier: workspace:*
+        version: link:../game-contracts
       '@reading-advantage/integrations-github':
         specifier: workspace:*
         version: link:../integrations/github
@@ -2628,9 +2652,15 @@ importers:
 
   packages/game-cartridges:
     dependencies:
+      '@reading-advantage/advantage-play-kit':
+        specifier: workspace:*
+        version: link:../advantage-play-kit
       '@reading-advantage/game-contracts':
         specifier: workspace:*
         version: link:../game-contracts
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
     devDependencies:
       '@reading-advantage/config':
         specifier: workspace:*
