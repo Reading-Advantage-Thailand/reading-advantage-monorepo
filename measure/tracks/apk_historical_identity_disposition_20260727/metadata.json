@@ -1,0 +1,12 @@
+{
+  "track_id": "apk_historical_identity_disposition_20260727",
+  "type": "chore",
+  "status": "pending",
+  "created_at": "2026-07-27T00:00:00Z",
+  "updated_at": "2026-07-27T10:10:51Z",
+  "description": "Evidence-backed disposition of five historical or cancelled APK identities without authorizing rebuilds.",
+  "estimated_tasks": 6,
+  "actual_tasks": null,
+  "depends_on": ["apk_denominator_readiness_t11_integrity_20260727"],
+  "deviation_notes": "Denominator/readiness predecessor satisfied by accepted receipt d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720; this cohort is authorized only for scoped evidence/disposition work. Explicitly gated identities and historical labels are not a cutover cohort, are not authorized for rebuild, and remain non-playable unless a future track is approved."
+}
