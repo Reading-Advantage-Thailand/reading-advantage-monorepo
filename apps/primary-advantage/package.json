@@ -11,7 +11,9 @@
     "lint": "eslint .",
     "check-types": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@ai-sdk/google": "catalog:",
@@ -43,6 +45,8 @@
     "@reading-advantage/auth": "workspace:*",
     "@reading-advantage/auth-client": "workspace:*",
     "@reading-advantage/db": "workspace:*",
+    "@reading-advantage/domain": "workspace:*",
+    "@reading-advantage/game-cartridges": "workspace:*",
     "@reading-advantage/game-contracts": "workspace:*",
     "@reading-advantage/ui": "workspace:*",
     "@reading-advantage/utils": "workspace:*",
@@ -102,6 +106,7 @@
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "@types/sbd": "^1.0.5",
+    "@playwright/test": "catalog:",
     "jsdom": "catalog:",
     "prettier": "catalog:",
     "prettier-plugin-tailwindcss": "catalog:",
