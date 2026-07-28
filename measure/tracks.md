@@ -203,6 +203,16 @@ program, priority order when picking the next track is:
   credit enforcement, and fail-closed accepted-release resolution. Cartridge
   adoption remains separately gated by T9/T10 and shared-kit acceptance.
 
+- [ ] **Track: APK Asset Contract v2** *Link: [./tracks/apk_asset_contract_v2_20260728/](./tracks/apk_asset_contract_v2_20260728/)*
+  Additive successor that separates semantic role/state, physical descriptor,
+  and cartridge presentation behavior. It makes animation and selected-union
+  metadata descriptor-driven without reopening T10/T11 or authorizing migration.
+
+- [ ] **Track: APK Standard-Pack Suitability and Canonical Ingestion** *Link: [./tracks/apk_standard_pack_suitability_ingestion_20260728/](./tracks/apk_standard_pack_suitability_ingestion_20260728/)*
+  Consumes Asset Contract v2 to decide per role whether to reuse suitable
+  canonical art, canonically ingest approved legacy art with provenance, or
+  block the role; it publishes additive release and binding evidence only.
+
 - [x] **Track: APK Cartridge Migration Umbrella (planning only)** *Link: [./archive/apk_cartridge_semantic_rewrite_20260712/](./archive/apk_cartridge_semantic_rewrite_20260712/)*
   Pins accepted T10/T11/standard-pack inputs and disclosures, resolves the accepted T2
   27-source-identity/29-partition-assignment discrepancy before any completeness claim,
@@ -212,8 +222,8 @@ program, priority order when picking the next track is:
   cutover, deletion, historical rebuild, and completeness claims remain cohort-gated.
   - [x] **Track: APK Denominator, Readiness, and T11 Release Integrity** *Link: [./tracks/apk_denominator_readiness_t11_integrity_20260727/](./tracks/apk_denominator_readiness_t11_integrity_20260727/)*
     Accepted exact owner message `approved`; receipt `d371fc5d…f1720` preserves all reviewed hashes, restrictions, disclosures, and child authorization boundaries.
-  - [ ] **Track: APK Existing Core Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_core_cutover_20260727/](./tracks/apk_existing_core_cutover_20260727/)*
-    Vertically revalidates Dragon Flight, Magic Defense, Dungeon Liberator, The Sorcerer's Ziggurat, and Astral Mage.
+- [~] **Track: APK Existing Core Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_core_cutover_20260727/](./tracks/apk_existing_core_cutover_20260727/)*
+    Vertically revalidates Dragon Flight, Magic Defense, Dungeon Liberator, The Sorcerer's Ziggurat, and Astral Mage. **Task 4 accepted:** exact hash-bound Advantage Games QC and compact/wide real-input proof is accepted; authorization is limited to beginning Task 5 Reading/Primary host proof. New title-acceptance evidence additionally requires Asset Contract v2 and accepted suitability/ingestion dossiers. No production catalog exposure, Task-5 success, retirement, cutover, or cohort acceptance is claimed.
   - [ ] **Track: APK Existing Action Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_action_cutover_20260727/](./tracks/apk_existing_action_cutover_20260727/)*
     Vertically revalidates Archer's Revenge, Paladin's Twin-Soul, Griffin Sky-Joust, Gryphon Patrol, and Realm Carver.
   - [ ] **Track: APK Legacy Defense Rebuild and Cutover** *Link: [./tracks/apk_legacy_defense_cutover_20260727/](./tracks/apk_legacy_defense_cutover_20260727/)*

@@ -87,6 +87,14 @@ Shared APK developer kit      Standard asset-library contract
 and authoring workflow        and curated ingestion batches
               |                     |
               +----------+----------+
+                         |
+                         v
+Asset Contract v2: semantic identity, physical descriptor,
+and presentation-behavior adapter
+                         |
+                         v
+Suitability dossier: reuse canonical, canonically ingest legacy, or block
+                         |
                          v
 Ready cartridge rebuild cohorts
                          |
@@ -99,7 +107,9 @@ release may proceed in parallel with T8-T10 because they do not alter the frozen
 legacy evidence denominator. Per-game semantic adoption remains blocked until T10
 accepts the role/state mappings. The developer kit requires both T10 successor
 hashes and an accepted standard-pack release. Cartridge cohorts additionally
-require the shared capabilities and selected canonical assets used by that cohort.
+require the shared capabilities, accepted Asset Contract v2, and accepted
+suitability/ingestion evidence for every selected canonical asset used by that
+cohort.
 
 ## Tracks
 
@@ -112,26 +122,49 @@ consumable successor dependencies.
 
 ### 2. APK Shared Developer Kit and Authoring Workflow
 
-[`apk_shared_developer_kit_20260712`](./tracks/apk_shared_developer_kit_20260712/)
+[`apk_shared_developer_kit_20260712`](./archive/apk_shared_developer_kit_20260712/)
 turns accepted repeated capabilities into typed Phaser systems, standard UI and
 responsive composition primitives, testing fixtures, cartridge scaffolding,
 documentation, and an Advantage Games authoring/QC workflow.
 
 ### 3. APK Standard Asset Library Contract and Production
 
-[`apk_dual_theme_asset_production_20260712`](./tracks/apk_dual_theme_asset_production_20260712/)
+[`apk_dual_theme_asset_production_20260712`](./archive/apk_dual_theme_asset_production_20260712/)
 turns the purchased, licensed ElvGames collection into the single canonical
 production-art source at `packages/advantage-play-kit/assets/standard`. It
 provides a versioned semantic catalog, grid-size and view metadata, attribution,
 validation, curated ingestion, and deterministic selected-deployment outputs.
 
-### 4. APK Cartridge Rebuild, Integration, and Cutover
+### 4. APK Asset Contract v2
+
+[`apk_asset_contract_v2_20260728`](./tracks/apk_asset_contract_v2_20260728/)
+is the additive shared-contract successor to T11. It separates a requested
+semantic role/state from the selected asset's physical descriptor and the
+cartridge presentation adapter. It is the owner of descriptor-driven animation
+and selected-union metadata; it does not make a cartridge consumable or alter
+historical T10/T11 acceptance.
+
+### 5. APK Standard-Pack Suitability and Canonical Ingestion
+
+[`apk_standard_pack_suitability_ingestion_20260728`](./tracks/apk_standard_pack_suitability_ingestion_20260728/)
+evaluates each required role/state and behavior contract against the standard
+pack. Its accepted outcome is exactly one of reuse a suitable canonical asset,
+canonically ingest an approved legacy asset with provenance, or block the role.
+It publishes additive release/binding evidence only; it does not migrate a game.
+
+### 6. APK Cartridge Migration Umbrella and Vertical Cohorts
 
 [`apk_cartridge_semantic_rewrite_20260712`](./tracks/apk_cartridge_semantic_rewrite_20260712/)
-opens bounded cartridge-cohort tracks, rebuilds games through the shared kit and
-one pinned canonical semantic asset pack, verifies compact/wide behavior, cuts
-the same cartridges and binding manifests into Reading and Primary hosts, and
-retires exact legacy copies only after host proof.
+is planning-only: it pins accepted T10/T11/standard-pack artifacts and their
+disclosures, then requires its foundation child track to reconcile T2's
+27-source-identity denominator against its 29-assignment partition before any
+completeness claim. It delegates all implementation to bounded 20260727 tracks:
+two existing-cartridge revalidation/cutover cohorts, three remaining legacy
+rebuild/cutover cohorts, historical/cancelled disposition, planned/new-game
+intake, and residual-only cross-host closeout. Every implementation cohort is
+limited to five games and owns vertical Advantage Games, Reading, Primary, and
+exact-retirement proof. The closeout track cannot take work owned by a cohort;
+no big-bang host track is authorized.
 
 ## Required capability domains
 
@@ -157,6 +190,13 @@ standardize, extend, or bespoke decision for:
 ## Asset modeling rules
 
 - An asset type describes a reusable gameplay or presentation capability.
+- Semantic identity (`player:walk`) is independent from physical source metadata
+  (sheet/atlas layout, frame count/order, timing, directions, anchors, scale,
+  readability, collision envelope, and media-specific details).
+- A cartridge presentation adapter maps a gameplay-selected semantic state to a
+  validated descriptor-defined clip. It must not encode a legacy frame count as
+  semantic meaning; gameplay movement and collision behavior remain cartridge
+  owned.
 - A gameplay variant exists only when behavior, strength, movement, attack,
   scale, collision/readability, or scene function requires a distinguishable
   identity.
@@ -172,6 +212,9 @@ standardize, extend, or bespoke decision for:
 - A deployment copy is a build-time selected output linked to an exact canonical
   pack version and semantic binding manifest. It cannot become a source of truth
   or a new app-local asset inventory.
+- Before a cohort uses a role/state, an accepted suitability dossier must decide
+  whether to reuse a suitable canonical asset, canonically ingest the approved
+  legacy source, or block the role. Visual similarity alone is insufficient.
 
 ## Change control
 
@@ -182,16 +225,28 @@ standard-library import before work resumes. New external art additionally needs
 an explicit product decision and attribution. Child tracks may not introduce
 private substitutes merely to keep moving.
 
+An asset-suitability or descriptor mismatch is an absent requirement for this
+purpose. A cohort may continue non-asset host infrastructure, but it may not
+claim title migration, host proof completion, cutover, retirement, or deployment
+until the v2 contract and accepted suitability/ingestion evidence are consumed.
+
 ## Program completion
 
 The program is complete only when:
 
-- Every in-scope game has an accepted mechanic, capability, responsive, and asset
-  mapping.
+- The foundation crosswalk has resolved or explicitly corrected the accepted
+  27-source-identity/29-assignment discrepancy; before then no corpus
+  completeness claim is valid.
+- Every in-scope identity is assigned once to a vertical cohort or has an accepted
+  explicit historical/cancelled disposition.
+- Every rebuilt or revalidated game has accepted mechanic, capability, responsive,
+  semantic-adoption, and asset mapping evidence.
 - APK exposes the accepted shared developer systems, components, tests, and
   authoring workflow.
 - Every standard-library asset is discoverable through its semantic filesystem key,
   pinned canonical version, and ElvGames source and credit record.
+- Every adopted role/state has a validated physical descriptor and an accepted
+  reuse, canonical-ingestion, or blocked suitability disposition.
 - Every restored cartridge uses shared capabilities where required and contains
   only justified bespoke game logic.
 - Compact and wide compositions pass real-input verification with readable,

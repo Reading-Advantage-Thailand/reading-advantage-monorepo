@@ -1,0 +1,15 @@
+{
+  "track_id": "apk_asset_contract_v2_20260728",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-07-28T00:00:00Z",
+  "updated_at": "2026-07-28T00:00:00Z",
+  "description": "Add reusable APK contracts that separate asset semantics, physical descriptors, and cartridge presentation behavior.",
+  "estimated_tasks": 20,
+  "actual_tasks": null,
+  "depends_on": [
+    "apk_shared_developer_kit_20260712",
+    "apk_dual_theme_asset_production_20260712"
+  ],
+  "deviation_notes": "Additive successor only. It does not alter hash-bound archive history, approve a legacy mapping, ingest assets, or migrate a cartridge."
+}
