@@ -24,8 +24,8 @@ program, priority order when picking the next track is:
 - [x] **Track: OpenCode Agent Roster Refresh** *Link: [./archive/opencode_agent_roster_20260712/](./archive/opencode_agent_roster_20260712/)*
   Refresh global coding and Measure agents for the GPT-5.6 Luna/Terra/Sol family, remove unavailable Moonshot routing, and prioritize active subscription-backed providers. **Completed 2026-07-20** — implementation 3/3 with validation evidence; product-owner manual verification (OpenCode restart model enumeration) remains as owner follow-up.
 
-- [~] **Track: Primary Dashboard Cumulative XP Correction** *Link: [./tracks/primary_dashboard_cumulative_xp_20260728/](./tracks/primary_dashboard_cumulative_xp_20260728/)*
-  Extract and prove the dashboard’s cumulative XP calculation so selected ranges retain prior XP totals.
+- [x] **Track: Primary Dashboard Cumulative XP Correction** *Link: [./archive/primary_dashboard_cumulative_xp_20260728/](./archive/primary_dashboard_cumulative_xp_20260728/)*
+  Extract and prove the dashboard’s cumulative XP calculation so selected ranges retain prior XP totals. **Completed 2026-07-30** — `formatCumulativeXpForDays` extracted with unit tests; local vitest and `tsc --noEmit` passed.
 - [~] **Track: Primary Proxy Role Normalization** *Link: [./tracks/primary_proxy_role_normalization_20260728/](./tracks/primary_proxy_role_normalization_20260728/)*
   Normalize authenticated Primary role keys before access checks and keep the proxy on the Node runtime.
 - [~] **Track: Reading Remote Font Removal** *Link: [./tracks/reading_remote_font_removal_20260728/](./tracks/reading_remote_font_removal_20260728/)*
@@ -210,7 +210,7 @@ program, priority order when picking the next track is:
   credit enforcement, and fail-closed accepted-release resolution. Cartridge
   adoption remains separately gated by T9/T10 and shared-kit acceptance.
 
-- [ ] **Track: APK Asset Contract v2** *Link: [./tracks/apk_asset_contract_v2_20260728/](./tracks/apk_asset_contract_v2_20260728/)*
+- [x] **Track: APK Asset Contract v2** *Link: [./archive/apk_asset_contract_v2_20260728/](./archive/apk_asset_contract_v2_20260728/)*
   Additive successor that separates semantic role/state, physical descriptor,
   and cartridge presentation behavior. It makes animation and selected-union
   metadata descriptor-driven without reopening T10/T11 or authorizing migration.
@@ -227,7 +227,7 @@ program, priority order when picking the next track is:
   `d371fc5d…f1720` resolves 29 assignments as 27 source identities plus two historical labels
   and authorizes only the six listed cohorts to begin scoped work. No cohort is thereby ready;
   cutover, deletion, historical rebuild, and completeness claims remain cohort-gated.
-  - [x] **Track: APK Denominator, Readiness, and T11 Release Integrity** *Link: [./tracks/apk_denominator_readiness_t11_integrity_20260727/](./tracks/apk_denominator_readiness_t11_integrity_20260727/)*
+  - [x] **Track: APK Denominator, Readiness, and T11 Release Integrity** *Link: [./archive/apk_denominator_readiness_t11_integrity_20260727/](./archive/apk_denominator_readiness_t11_integrity_20260727/)*
     Accepted exact owner message `approved`; receipt `d371fc5d…f1720` preserves all reviewed hashes, restrictions, disclosures, and child authorization boundaries.
 - [~] **Track: APK Existing Core Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_core_cutover_20260727/](./tracks/apk_existing_core_cutover_20260727/)*
     Vertically revalidates Dragon Flight, Magic Defense, Dungeon Liberator, The Sorcerer's Ziggurat, and Astral Mage. **Task 4 accepted:** exact hash-bound Advantage Games QC and compact/wide real-input proof is accepted; authorization is limited to beginning Task 5 Reading/Primary host proof. New title-acceptance evidence additionally requires Asset Contract v2 and accepted suitability/ingestion dossiers. No production catalog exposure, Task-5 success, retirement, cutover, or cohort acceptance is claimed.

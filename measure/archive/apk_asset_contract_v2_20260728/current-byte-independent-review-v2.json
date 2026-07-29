@@ -1,0 +1,48 @@
+{
+  "schema_version": "apk-current-byte-independent-review.v2",
+  "record_id": "apk_asset_contract_v2_20260728_current_byte_independent_review_v2",
+  "reviewed_at": "2026-07-29T17:35:00Z",
+  "reviewer": {"agent": "terra_current_release", "role": "independent-release-reviewer", "independence": "The reviewer did not author the current-byte implementation changes."},
+  "review_scope": {
+    "included": ["v2 contract and resolver bindings", "suitability ingestion and additive receipt bindings", "current focused tests and package verification gates", "historical acceptance hash-drift rules", "authority and predecessor disclosures"],
+    "excluded": ["accepting any legacy title asset", "verifying external provenance, license, credit, or behavior suitability", "authorizing ingestion, migration, cutover, retirement, or deployment"]
+  },
+  "current_verification": {
+    "package_typecheck": "passed: CI=true pnpm --filter @reading-advantage/advantage-play-kit run check-types",
+    "package_build": "passed: CI=true pnpm --filter @reading-advantage/advantage-play-kit run build",
+    "package_lint": "passed with 3 warnings: CI=true pnpm --filter @reading-advantage/advantage-play-kit run lint",
+    "focused_contract_tests": "passed: 2 files / 14 tests",
+    "focused_resolver_and_public_api_tests": "passed: 3 files / 13 tests",
+    "focused_ledger_and_additive_receipt_tests": "passed: 2 files / 17 tests"
+  },
+  "v2_implementation_bindings": {
+    "contract": {"path": "packages/advantage-play-kit/src/assets/asset-contract-v2.ts", "sha256": "f4530e834751eebe4480f360852cc36ffd9d561afdf3826d4c77ea3c51193cc5"},
+    "provenance": {"path": "packages/advantage-play-kit/src/assets/asset-contract-v2-provenance.ts", "sha256": "dfc4d571d9d92bab31200ab33ca984a403babbd65dad6485312ad1e3b1a5b8df"},
+    "resolver": {"path": "packages/advantage-play-kit/src/assets/semantic-product-bindings.ts", "sha256": "e2660244d7335bead0e7dbef0a52694e054a0e7b53e8fa9fc5e02809910536e3"},
+    "accepted_resolver": {"path": "packages/advantage-play-kit/src/assets/accepted-standard-pack-release.ts", "sha256": "9a931e5ebde9d328697f00129ac803a7d56ca106ed46cb4940445f94c81a4584"},
+    "browser_qc_host": {"path": "apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.tsx", "sha256": "daef9738ca3293084a728c592e367ac1ead591fd32e962e1001d115484c61a31"},
+    "consumer_check": {"path": "packages/advantage-play-kit/scripts/verify-assets-consumer-entrypoint.mjs", "sha256": "485be649a271c0433d65859df908edfefd9dde748b7176882cdd1d21224cccce"}
+  },
+  "suitability_implementation_bindings": {
+    "additive_receipt_source_sha256": {"path": "packages/advantage-play-kit/src/assets/standard-pack-additive-release.ts", "sha256": "abc9b03e0aef08ba1c1e72f5b51374b9a831cd990fdfc57b8e0964ca932aaa3f"},
+    "ingestion_ledger_source_sha256": {"path": "packages/advantage-play-kit/src/assets/standard-pack-ingestion-ledger.ts", "sha256": "bfedd73349a317c654cba8ff7f0e0e9a55da4a3b4c23cffe851331fbb2b1f2ae"},
+    "semantic_binding_source_sha256": {"path": "packages/advantage-play-kit/src/assets/semantic-product-bindings.ts", "sha256": "e2660244d7335bead0e7dbef0a52694e054a0e7b53e8fa9fc5e02809910536e3"},
+    "ledger_test_sha256": {"path": "packages/advantage-play-kit/src/assets/standard-pack-ingestion-ledger.test.ts", "sha256": "82ca0f5bb9c4bb1375e4828a79ab92a60472335b9ed955d815f5bc4c33f9f724"},
+    "semantic_test_sha256": {"path": "packages/advantage-play-kit/src/assets/semantic-product-bindings.test.ts", "sha256": "dca4178324e76c3c2d85a51a44100ca86faf3ceb5e0d31496638eb8dda6230c9"},
+    "additive_receipt_test_sha256": {"path": "packages/advantage-play-kit/src/assets/standard-pack-additive-release.test.ts", "sha256": "7c23ea1ed0bc7dd2ea8e3d76225c9c45351e5416939ec0ed598431a1e22bfe8a"}
+  },
+  "reviewed_test_bindings": {
+    "asset_contract_v2": {"path": "packages/advantage-play-kit/src/assets/asset-contract-v2.test.ts", "sha256": "b3335afd3d332cbae81ab1841497475ba6f023c5281ef8b5757d5142cab9af26"},
+    "asset_contract_v2_adversarial": {"path": "packages/advantage-play-kit/src/assets/asset-contract-v2-adversarial.test.ts", "sha256": "61fef33b980be03b2e40bd6ec1dadac42e1a173b0454e36ff2dcdf5c76a342f3"},
+    "semantic_product_bindings_v2": {"path": "packages/advantage-play-kit/src/assets/semantic-product-bindings-v2.test.ts", "sha256": "59277483feceae15edbe11a56d65c7682ea38e940f1b71fa970b1c800378ef88"},
+    "assets_public_api": {"path": "packages/advantage-play-kit/src/assets/assets-public-api.test.ts", "sha256": "6ae0cec8b5a29afc855cdfc79a3dd0275a36d059fc0b7c6d2f1a37620bb26cb5"},
+    "standard_pack_ingestion_ledger": {"path": "packages/advantage-play-kit/src/assets/standard-pack-ingestion-ledger.test.ts", "sha256": "82ca0f5bb9c4bb1375e4828a79ab92a60472335b9ed955d815f5bc4c33f9f724"},
+    "standard_pack_additive_release": {"path": "packages/advantage-play-kit/src/assets/standard-pack-additive-release.test.ts", "sha256": "7c23ea1ed0bc7dd2ea8e3d76225c9c45351e5416939ec0ed598431a1e22bfe8a"}
+  },
+  "findings": [
+    {"id": "APK-CURRENT-BYTE-001", "severity": "release-blocking-for-title-adoption", "finding": "No authoritative legacy source packet supplies provenance, license, credit, or title-specific semantic and behavior suitability for Existing Core.", "required_disposition": "Keep all production-use, ingestion, migration, cutover, retirement, and deployment authority false."},
+    {"id": "APK-CURRENT-BYTE-002", "severity": "governance-required", "finding": "The historical v1 owner records no longer bind the resolver, QC host, ledger, additive receipt, and related tests after legitimate implementation changes.", "required_disposition": "Preserve the historical records; any later owner decision must be separately authorized and bind the then-current bytes."}
+  ],
+  "verdict": "current-byte-audit-complete-owner-decision-required",
+  "authorization": {"productionUseAuthorized": false, "ingestionAuthorized": false, "migrationAuthorized": false, "cutoverAuthorized": false, "retirementAuthorized": false, "deploymentAuthorized": false}
+}

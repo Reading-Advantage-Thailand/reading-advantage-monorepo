@@ -1,0 +1,50 @@
+{
+  "schema_version": "apk-asset-contract-v2-owner-acceptance.v1",
+  "record_id": "apk_asset_contract_v2_20260728_owner_acceptance_v1",
+  "track_id": "apk_asset_contract_v2_20260728",
+  "status": "accepted-with-environment-disclosure",
+  "recorded_at": "2026-07-29T01:16:00Z",
+  "authority": {
+    "role": "product-owner-orchestrator",
+    "basis": "The current user authorized the orchestrator to make project decisions."
+  },
+  "verification": {
+    "focused_v2_tests": "4 files / 19 tests passed",
+    "focused_v2_coverage": "71.55 statements, 71.57 branches, 74.44 functions, 74.31 lines",
+    "package_lint": "passed",
+    "package_typecheck_and_build": "passed",
+    "standard_asset_boundary": "passed",
+    "built_consumer_entrypoint": "passed",
+    "advantage_games_component_test": "1 suite / 3 tests passed",
+    "advantage_games_browser_qc": "2 Chromium tests passed against /qc",
+    "independent_review": "Terra accepted with no blocking finding"
+  },
+  "implementation_bindings": {
+    "contract": { "path": "packages/advantage-play-kit/src/assets/asset-contract-v2.ts", "sha256": "f4530e834751eebe4480f360852cc36ffd9d561afdf3826d4c77ea3c51193cc5" },
+    "provenance": { "path": "packages/advantage-play-kit/src/assets/asset-contract-v2-provenance.ts", "sha256": "dfc4d571d9d92bab31200ab33ca984a403babbd65dad6485312ad1e3b1a5b8df" },
+    "resolver": { "path": "packages/advantage-play-kit/src/assets/semantic-product-bindings.ts", "sha256": "6dd8e046b9aa21814e1d370aea4358ff1bf320b72bb064486cf00c2f62efd62f" },
+    "accepted_resolver": { "path": "packages/advantage-play-kit/src/assets/accepted-standard-pack-release.ts", "sha256": "9a931e5ebde9d328697f00129ac803a7d56ca106ed46cb4940445f94c81a4584" },
+    "browser_qc_host": { "path": "apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.tsx", "sha256": "8d5a158ba8db738c0bd90c00974f4fbae8cf912d32a162fa41bd829cafd69686" },
+    "consumer_check": { "path": "packages/advantage-play-kit/scripts/verify-assets-consumer-entrypoint.mjs", "sha256": "485be649a271c0433d65859df908edfefd9dde748b7176882cdd1d21224cccce" }
+  },
+  "scope": {
+    "accepted": ["additive Asset Contract v2", "resolver-issued provenance", "descriptor-driven QC contract fixture"],
+    "not_accepted": ["per-title suitability", "asset ingestion", "legacy retirement", "cartridge migration", "deployment"],
+    "qc_fixture_disclosure": "The /qc exemplar is deterministic contract evidence only; it is not an accepted-catalog registration, selected-union proof, suitability decision, or real-media proof."
+  },
+  "environment_disclosures": [
+    "build-graph is unavailable and graph.db is stale; no graph update is claimed.",
+    "Measure doctor still fails on deprecated markers in unrelated pre-existing tracks.",
+    "The time-bounded full package coverage run produced no final coverage artifact; only the recorded focused v2 coverage result is accepted."
+  ],
+  "hash_governance": {
+    "acceptance_applies_only_to_exact_bound_bytes": true,
+    "hash_drift_invalidates_this_acceptance": true,
+    "changed_implementation_requires_fresh_independent_review_and_owner_decision": true
+  },
+  "downstream_authorization": {
+    "authorized_track": "apk_standard_pack_suitability_ingestion_20260728",
+    "authorized_work": ["begin bounded suitability and ingestion implementation"],
+    "excluded_actions": ["title migration", "legacy retirement", "deployment", "treating the QC exemplar as a suitability decision"]
+  }
+}
