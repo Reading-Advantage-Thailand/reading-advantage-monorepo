@@ -1,6 +1,5 @@
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
 
 import { createPostgresStandardPackSuccessorCommitmentStore } from "@reading-advantage/db";
 import postgres from "postgres";
@@ -10,6 +9,18 @@ import { createStandardPackSuccessorRegistryPort } from "../index.js";
 
 const PG_TEST_URL = process.env.PG_TEST_URL;
 const isolatedSuite = PG_TEST_URL === undefined ? describe.skip : describe;
+const successorCommitmentMigrationUrl = new URL(
+  "../../../../../db/drizzle/0044_standard_pack_successor_commitments.sql",
+  import.meta.url,
+);
+
+/** Verifies that the migration fixture remains module-relative for package and repository test invocations. */
+describe("PostgreSQL successor-registry integration fixture", () => {
+  it("locates the commitment migration without relying on process cwd", async () => {
+    await expect(readFile(successorCommitmentMigrationUrl, "utf8"))
+      .resolves.toContain("standard_pack_successor_commitments");
+  });
+});
 
 /** Creates one deterministic SHA-256-shaped fixture digest from a hexadecimal character. */
 function digest(letter: string): string {
@@ -127,13 +138,7 @@ isolatedSuite("PostgreSQL standard-pack successor registry integration", () => {
     first = postgres(databaseUrl, { max: 1 });
     second = postgres(databaseUrl, { max: 1 });
     restarted = postgres(databaseUrl, { max: 1 });
-    const migration = await readFile(
-      resolve(
-        process.cwd(),
-        "../../packages/db/drizzle/0044_standard_pack_successor_commitments.sql",
-      ),
-      "utf8",
-    );
+    const migration = await readFile(successorCommitmentMigrationUrl, "utf8");
     for (const statement of migration.split("--> statement-breakpoint")) {
       if (statement.trim().length > 0) await first.unsafe(statement);
     }
