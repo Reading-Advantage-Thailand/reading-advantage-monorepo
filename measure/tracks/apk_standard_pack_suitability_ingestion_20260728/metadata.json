@@ -3,7 +3,7 @@
   "type": "feature",
   "status": "in_progress",
   "created_at": "2026-07-28T00:00:00Z",
-  "updated_at": "2026-07-29T01:18:00Z",
+  "updated_at": "2026-07-30T13:56:25Z",
   "description": "Evaluate standard-pack asset suitability and canonically ingest approved legacy assets when the pack has no suitable replacement.",
   "estimated_tasks": 15,
   "actual_tasks": null,
@@ -11,5 +11,5 @@
     "apk_asset_contract_v2_20260728",
     "apk_dual_theme_asset_production_20260712"
   ],
-  "deviation_notes": "Centralized adoption and ingestion governance only. It publishes reusable decisions and additive release evidence; it does not migrate or cut over any cartridge."
+  "deviation_notes": "Centralized evidence-only governance only. The current-byte review and bounded owner decision bind implementation bytes but do not accept a real legacy asset or authorize title adoption, ingestion, migration, cutover, retirement, or deployment."
 }

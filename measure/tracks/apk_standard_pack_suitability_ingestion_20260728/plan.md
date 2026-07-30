@@ -50,11 +50,12 @@
 
 ## Phase 5: Verification and acceptance
 
-- [ ] Run focused unit, integration, catalog, resolver, materializer, lint,
-  type-check, build, coverage, QC/browser, and package-boundary checks; record
-  commands and results.
-- [ ] Run independent review covering source provenance, licensing, semantic and
-  behavior suitability, release integrity, security, test quality, and archive
-  disclosures.
-- [~] Obtain product-owner acceptance and publish hash-bound decision/release
-  records. Do not authorize title migration, cutover, retirement, or deployment.
+- [~] Run focused code-level ledger, v2/public API, lint, type-check, and build
+  checks; record commands and results. Catalog/materializer coverage, QC/browser,
+  package-boundary review, and real-asset verification remain outstanding.
+- [~] Run independent review of current code bytes for release integrity, source
+  packet linkage, descriptor binding, and test quality. External provenance,
+  licensing, and behavior suitability remain unreviewed until an actual asset exists.
+- [~] Obtain a hash-bound bounded owner decision for the current evidence-only
+  contract. Do not authorize real ingestion, title migration, cutover, retirement,
+  deployment, or title adoption.

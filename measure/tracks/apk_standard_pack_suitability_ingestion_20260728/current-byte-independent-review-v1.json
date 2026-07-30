@@ -1,0 +1,86 @@
+{
+  "schema_version": "apk-standard-pack-suitability-current-byte-review.v1",
+  "record_id": "apk_standard_pack_suitability_ingestion_20260728_current_byte_independent_review_v1",
+  "reviewed_at": "2026-07-30T13:56:25Z",
+  "reviewed_commit": "b7877a4bd5781780feb4e4d1b504b8adf0aa6048",
+  "reviewer": {
+    "agent": "postcommit_integrity_review",
+    "role": "independent-evidence-contract-reviewer",
+    "independence": "The reviewer did not author the implementation in reviewed commits f313245452c7ada7fa2f4bdb1bc71c76d2cf22f9, 96f9f81ba, or b7877a4bd."
+  },
+  "review_scope": {
+    "included": [
+      "descriptor content binding",
+      "source-packet and selected-dossier linkage",
+      "durable successor reservation across rehydration and fresh-index restart",
+      "current focused tests and package validation",
+      "historical acceptance revocation"
+    ],
+    "excluded": [
+      "accepting a real legacy asset",
+      "external provenance, license, credit, or behavior review for a title",
+      "wiring a production durable-registry adapter",
+      "authorizing ingestion, migration, cutover, retirement, deployment, or title adoption"
+    ]
+  },
+  "verification": {
+    "focused_ledger": "passed: 16/16 with CI=true pnpm --filter @reading-advantage/advantage-play-kit exec vitest run --maxWorkers=1 --fileParallelism=false src/assets/standard-pack-ingestion-ledger.test.ts",
+    "adjacent_v2_and_public_api": "passed: 27/27 across asset-contract-v2, adversarial, semantic bindings, and public API suites",
+    "package_typecheck": "passed: ../../node_modules/.bin/tsc -p tsconfig.json --noEmit",
+    "package_lint": "passed: pnpm --filter @reading-advantage/advantage-play-kit run lint",
+    "package_build": "passed: pnpm --filter @reading-advantage/advantage-play-kit run build"
+  },
+  "implementation_bindings": {
+    "asset_contract_v2": {
+      "path": "packages/advantage-play-kit/src/assets/asset-contract-v2.ts",
+      "sha256": "96f745479559ae35b918204738073eec183d05b2e9c79556b00217bd07fb2da2"
+    },
+    "semantic_bindings": {
+      "path": "packages/advantage-play-kit/src/assets/semantic-product-bindings.ts",
+      "sha256": "0c5aa44959c9c91af4aa64d3531457ef5c073d2182c0a4fb5d3aa31161ac43df"
+    },
+    "ingestion_ledger": {
+      "path": "packages/advantage-play-kit/src/assets/standard-pack-ingestion-ledger.ts",
+      "sha256": "d868d8b6c7108d18813ec1b2ae111fe4dda88b2e197cbebe41902613bd87ee1d"
+    },
+    "source_packet": {
+      "path": "packages/advantage-play-kit/src/assets/standard-pack-legacy-source-packet.ts",
+      "sha256": "76d50fbad14be06c76cd2dc5d436f36ff6784568e74543d2c9f21dcc260274d9"
+    },
+    "additive_receipt": {
+      "path": "packages/advantage-play-kit/src/assets/standard-pack-additive-release.ts",
+      "sha256": "abc9b03e0aef08ba1c1e72f5b51374b9a831cd990fdfc57b8e0964ca932aaa3f"
+    },
+    "ledger_test": {
+      "path": "packages/advantage-play-kit/src/assets/standard-pack-ingestion-ledger.test.ts",
+      "sha256": "a394ae305c12a9aadd6c84dbedc8f95d2faf27ff65ecbd06dc9617b60e7c2111"
+    },
+    "public_api_test": {
+      "path": "packages/advantage-play-kit/src/assets/assets-public-api.test.ts",
+      "sha256": "6ae0cec8b5a29afc855cdfc79a3dd0275a36d059fc0b7c6d2f1a37620bb26cb5"
+    }
+  },
+  "findings": [
+    {
+      "id": "APK-CURRENT-BYTE-20260730-001",
+      "severity": "operational-prerequisite",
+      "finding": "The package validates only the shape of the injected successor registry. A production caller must supply an authoritative atomic durable adapter; the focused test uses an in-memory stand-in.",
+      "required_disposition": "Do not use the evidence contract to admit a real successor until a trusted persistent adapter is wired at the owning application boundary."
+    },
+    {
+      "id": "APK-CURRENT-BYTE-20260730-002",
+      "severity": "release-blocking-for-title-adoption",
+      "finding": "No accepted real legacy asset, dossier, or additive release is present in this track.",
+      "required_disposition": "Keep all real ingestion, migration, cutover, retirement, deployment, and title-adoption authority false."
+    }
+  ],
+  "verdict": "current-byte-code-review-complete-bounded-owner-decision-eligible",
+  "authorization": {
+    "productionUseAuthorized": false,
+    "ingestionAuthorized": false,
+    "migrationAuthorized": false,
+    "cutoverAuthorized": false,
+    "retirementAuthorized": false,
+    "deploymentAuthorized": false
+  }
+}
