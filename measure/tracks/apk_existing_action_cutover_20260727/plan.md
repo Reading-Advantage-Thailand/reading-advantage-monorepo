@@ -1,6 +1,6 @@
 # Implementation Plan: Existing Action Cutover
 
-- [ ] Verify the accepted crosswalk/readiness receipt and establish exact legacy manifests for the five titles.
+- [~] Verify the accepted crosswalk/readiness receipt and establish exact legacy manifests for the five titles.
 - [ ] Consume accepted Asset Contract v2 and suitability/ingestion records; freeze each title's semantic roles, physical behavior descriptors, legacy source manifests, and reuse/ingest/block decisions before implementation.
 - [ ] Write deterministic mechanic and educational Red tests per title.
 - [ ] Revalidate current cartridges against T11 public APIs and approved semantic bindings.
