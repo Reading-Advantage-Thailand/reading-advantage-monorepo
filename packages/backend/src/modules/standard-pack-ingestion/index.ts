@@ -8,3 +8,4 @@ export * from "./admission-errors.js";
 export * from "./admission-port.js";
 export * from "./successor-admission-command.js";
 export * from "./successor-admission-persistence-adapter.js";
+export * from "./ledger-successor-admission-facade.js";
