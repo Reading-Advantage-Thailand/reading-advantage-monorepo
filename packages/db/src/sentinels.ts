@@ -248,4 +248,11 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
     kind: "table",
     target: "standard_pack_successor_admission_receipts",
   },
+  "0046_standard_pack_successor_admission_receipt_integrity": {
+    tag: "0046_standard_pack_successor_admission_receipt_integrity",
+    kind: "unique_constraint",
+    target: "standard_pack_successor_commitments_commitment_candidate_unique",
+    table: "standard_pack_successor_commitments",
+    columns: ["commitment_digest", "candidate_digest"],
+  },
 };

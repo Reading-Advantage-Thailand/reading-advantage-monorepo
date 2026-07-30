@@ -90,21 +90,35 @@ function receiptLookup(): StandardPackSuccessorAdmissionReceiptLookupInput {
   };
 }
 
-/** Creates one full 0045 receipt projection for the supplied raw commitment row. */
+/** Creates one full receipt-contract projection for the supplied raw commitment row. */
 function receiptInput(
   reservation: Readonly<StandardPackSuccessorCommitmentStoreInput>,
 ): StandardPackSuccessorAdmissionReceiptAppendInput {
   const lookup = receiptLookup();
+  const requestInputDigest = digest("8");
+  const correlationId = "0f941a87-0abe-4436-af6f-0e6807c67bc0";
+  const recordedAt = "2026-07-30T15:00:02.000Z";
+  const metadata = {
+    outcome: "reserved" as const,
+    actorId: lookup.actorId,
+    policyId: lookup.policyId,
+    correlationId,
+    predecessorIndexDigest: reservation.predecessorIndexDigest,
+    successorBatchDigest: reservation.successorBatchDigest,
+    candidateDigest: reservation.candidateDigest,
+    commitmentDigest: reservation.commitmentDigest,
+    idempotencyKeyFingerprint: lookup.idempotencyKeyFingerprint,
+    requestInputDigest,
+  };
   const safeAuditJson = {
     eventType: "standard-pack.successor-admission",
-    outcome: "reserved",
+    ...metadata,
+    recordedAt,
   };
   const observabilityJson = {
     operation: "standard-pack.successor-admission",
-    outcome: "reserved",
+    ...metadata,
   };
-  const correlationId = "0f941a87-0abe-4436-af6f-0e6807c67bc0";
-  const recordedAt = "2026-07-30T15:00:02.000Z";
   return {
     id: "5b57ed22-369d-46e3-a96f-514f7a7ff70e",
     schemaVersion: 1,
@@ -113,7 +127,7 @@ function receiptInput(
     actorId: lookup.actorId,
     policyId: lookup.policyId,
     idempotencyKeyFingerprint: lookup.idempotencyKeyFingerprint,
-    requestInputDigest: digest("8"),
+    requestInputDigest,
     correlationId,
     outcome: "reserved",
     safeAuditJson,
@@ -126,7 +140,7 @@ function receiptInput(
       actorId: lookup.actorId,
       policyId: lookup.policyId,
       idempotencyKeyFingerprint: lookup.idempotencyKeyFingerprint,
-      requestInputDigest: digest("8"),
+      requestInputDigest,
       correlationId,
       outcome: "reserved",
       safeAudit: safeAuditJson,
@@ -160,6 +174,7 @@ isolatedSuite("PostgreSQL successor-admission persistence integration", () => {
     for (const migrationName of [
       "0044_standard_pack_successor_commitments.sql",
       "0045_standard_pack_successor_admission_receipts.sql",
+      "0046_standard_pack_successor_admission_receipt_integrity.sql",
     ]) {
       const migration = await readFile(
         resolve(PACKAGE_ROOT, "drizzle", migrationName),
@@ -198,6 +213,211 @@ isolatedSuite("PostgreSQL successor-admission persistence integration", () => {
       expect(await transaction.readReceipt(receiptLookup())).toBeNull();
       await transaction.reserveSuccessor(reservation);
       await transaction.appendReceipt(receipt);
+    })).rejects.toMatchObject({
+      code: "UNAVAILABLE",
+      retryable: true,
+    });
+
+    const [commitmentCount, receiptCount] = await Promise.all([
+      database.unsafe(
+        "SELECT count(*)::int AS count FROM standard_pack_successor_commitments WHERE predecessor_index_digest = $1",
+        [reservation.predecessorIndexDigest],
+      ),
+      database.unsafe(
+        "SELECT count(*)::int AS count FROM standard_pack_successor_admission_receipts WHERE actor_id = $1",
+        [receipt.actorId],
+      ),
+    ]);
+    expect(commitmentCount[0]?.count).toBe(0);
+    expect(receiptCount[0]?.count).toBe(0);
+    await database.unsafe(
+      "DROP TRIGGER standard_pack_successor_admission_test_reject_receipt ON standard_pack_successor_admission_receipts",
+    );
+    await database.unsafe(
+      "DROP FUNCTION standard_pack_successor_admission_test_reject_receipt()",
+    );
+  });
+
+  it("rejects a receipt whose embedded audit identity does not match the durable columns", async () => {
+    if (database === undefined) {
+      throw new Error("Isolated PostgreSQL client was not initialized.");
+    }
+    const reservation = reservationInput();
+    const receipt = receiptInput(reservation);
+    const safeAuditJson = { ...receipt.safeAuditJson, actorId: "other-admin" };
+    const malformedReceipt = {
+      ...receipt,
+      safeAuditJson,
+      receiptJson: { ...receipt.receiptJson, safeAudit: safeAuditJson },
+    };
+    const store = createPostgresStandardPackSuccessorAdmissionPersistenceStore(database);
+
+    await expect(store.transaction(async (transaction) => {
+      expect(await transaction.readReceipt(receiptLookup())).toBeNull();
+      await transaction.reserveSuccessor(reservation);
+      await transaction.appendReceipt(malformedReceipt);
+    })).rejects.toMatchObject({
+      code: "UNAVAILABLE",
+      retryable: true,
+    });
+
+    const [commitmentCount, receiptCount] = await Promise.all([
+      database.unsafe(
+        "SELECT count(*)::int AS count FROM standard_pack_successor_commitments WHERE predecessor_index_digest = $1",
+        [reservation.predecessorIndexDigest],
+      ),
+      database.unsafe(
+        "SELECT count(*)::int AS count FROM standard_pack_successor_admission_receipts WHERE actor_id = $1",
+        [receipt.actorId],
+      ),
+    ]);
+    expect(commitmentCount[0]?.count).toBe(0);
+    expect(receiptCount[0]?.count).toBe(0);
+  });
+
+  it("rejects a receipt that omits required observability registry evidence", async () => {
+    if (database === undefined) {
+      throw new Error("Isolated PostgreSQL client was not initialized.");
+    }
+    const reservation = reservationInput();
+    const receipt = receiptInput(reservation);
+    const { predecessorIndexDigest: _missing, ...observabilityJson } = receipt.observabilityJson;
+    const malformedReceipt = {
+      ...receipt,
+      observabilityJson,
+      receiptJson: { ...receipt.receiptJson, observability: observabilityJson },
+    };
+    const store = createPostgresStandardPackSuccessorAdmissionPersistenceStore(database);
+
+    await expect(store.transaction(async (transaction) => {
+      expect(await transaction.readReceipt(receiptLookup())).toBeNull();
+      await transaction.reserveSuccessor(reservation);
+      await transaction.appendReceipt(malformedReceipt);
+    })).rejects.toMatchObject({
+      code: "UNAVAILABLE",
+      retryable: true,
+    });
+
+    const [commitmentCount, receiptCount] = await Promise.all([
+      database.unsafe(
+        "SELECT count(*)::int AS count FROM standard_pack_successor_commitments WHERE predecessor_index_digest = $1",
+        [reservation.predecessorIndexDigest],
+      ),
+      database.unsafe(
+        "SELECT count(*)::int AS count FROM standard_pack_successor_admission_receipts WHERE actor_id = $1",
+        [receipt.actorId],
+      ),
+    ]);
+    expect(commitmentCount[0]?.count).toBe(0);
+    expect(receiptCount[0]?.count).toBe(0);
+  });
+
+  it("rejects a receipt whose JSON schema version is a string instead of a number", async () => {
+    if (database === undefined) {
+      throw new Error("Isolated PostgreSQL client was not initialized.");
+    }
+    const reservation = reservationInput();
+    const receipt = receiptInput(reservation);
+    const malformedReceipt = {
+      ...receipt,
+      receiptJson: { ...receipt.receiptJson, schemaVersion: "1" },
+    };
+    const store = createPostgresStandardPackSuccessorAdmissionPersistenceStore(database);
+
+    await expect(store.transaction(async (transaction) => {
+      expect(await transaction.readReceipt(receiptLookup())).toBeNull();
+      await transaction.reserveSuccessor(reservation);
+      await transaction.appendReceipt(malformedReceipt);
+    })).rejects.toMatchObject({
+      code: "UNAVAILABLE",
+      retryable: true,
+    });
+
+    const [commitmentCount, receiptCount] = await Promise.all([
+      database.unsafe(
+        "SELECT count(*)::int AS count FROM standard_pack_successor_commitments WHERE predecessor_index_digest = $1",
+        [reservation.predecessorIndexDigest],
+      ),
+      database.unsafe(
+        "SELECT count(*)::int AS count FROM standard_pack_successor_admission_receipts WHERE actor_id = $1",
+        [receipt.actorId],
+      ),
+    ]);
+    expect(commitmentCount[0]?.count).toBe(0);
+    expect(receiptCount[0]?.count).toBe(0);
+  });
+
+  it("rejects matching but malformed nested registry digests", async () => {
+    if (database === undefined) {
+      throw new Error("Isolated PostgreSQL client was not initialized.");
+    }
+    const reservation = reservationInput();
+    const receipt = receiptInput(reservation);
+    const predecessorIndexDigest = "not-a-digest";
+    const safeAuditJson = { ...receipt.safeAuditJson, predecessorIndexDigest };
+    const observabilityJson = { ...receipt.observabilityJson, predecessorIndexDigest };
+    const malformedReceipt = {
+      ...receipt,
+      safeAuditJson,
+      observabilityJson,
+      receiptJson: {
+        ...receipt.receiptJson,
+        safeAudit: safeAuditJson,
+        observability: observabilityJson,
+      },
+    };
+    const store = createPostgresStandardPackSuccessorAdmissionPersistenceStore(database);
+
+    await expect(store.transaction(async (transaction) => {
+      expect(await transaction.readReceipt(receiptLookup())).toBeNull();
+      await transaction.reserveSuccessor(reservation);
+      await transaction.appendReceipt(malformedReceipt);
+    })).rejects.toMatchObject({
+      code: "UNAVAILABLE",
+      retryable: true,
+    });
+
+    const [commitmentCount, receiptCount] = await Promise.all([
+      database.unsafe(
+        "SELECT count(*)::int AS count FROM standard_pack_successor_commitments WHERE predecessor_index_digest = $1",
+        [reservation.predecessorIndexDigest],
+      ),
+      database.unsafe(
+        "SELECT count(*)::int AS count FROM standard_pack_successor_admission_receipts WHERE actor_id = $1",
+        [receipt.actorId],
+      ),
+    ]);
+    expect(commitmentCount[0]?.count).toBe(0);
+    expect(receiptCount[0]?.count).toBe(0);
+  });
+
+  it("rejects a receipt candidate that is not the committed registry candidate", async () => {
+    if (database === undefined) {
+      throw new Error("Isolated PostgreSQL client was not initialized.");
+    }
+    const reservation = reservationInput();
+    const receipt = receiptInput(reservation);
+    const candidateDigest = digest("6");
+    const safeAuditJson = { ...receipt.safeAuditJson, candidateDigest };
+    const observabilityJson = { ...receipt.observabilityJson, candidateDigest };
+    const mismatchedReceipt = {
+      ...receipt,
+      candidateDigest,
+      safeAuditJson,
+      observabilityJson,
+      receiptJson: {
+        ...receipt.receiptJson,
+        candidateDigest,
+        safeAudit: safeAuditJson,
+        observability: observabilityJson,
+      },
+    };
+    const store = createPostgresStandardPackSuccessorAdmissionPersistenceStore(database);
+
+    await expect(store.transaction(async (transaction) => {
+      expect(await transaction.readReceipt(receiptLookup())).toBeNull();
+      await transaction.reserveSuccessor(reservation);
+      await transaction.appendReceipt(mismatchedReceipt);
     })).rejects.toMatchObject({
       code: "UNAVAILABLE",
       retryable: true,

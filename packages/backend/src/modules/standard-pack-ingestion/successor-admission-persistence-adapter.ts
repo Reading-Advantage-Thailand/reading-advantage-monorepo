@@ -321,6 +321,25 @@ function decodeReceiptRow(
   return receipt;
 }
 
+/** Validates that a replayed receipt's nested metadata names the exact linked registry record. */
+function assertReceiptMetadataMatchesRegistry(
+  receipt: Readonly<StandardPackSuccessorAdmissionReceipt>,
+  registryRecord: Readonly<StandardPackSuccessorRegistryRecord>,
+): void {
+  const metadata = [receipt.safeAudit, receipt.observability];
+  const matchesRegistry = metadata.every((value) =>
+    value.predecessorIndexDigest === registryRecord.commitment.predecessorIndexDigest
+    && value.successorBatchDigest === registryRecord.commitment.successorBatchDigest
+    && value.candidateDigest === registryRecord.candidate.candidateDigest
+    && value.commitmentDigest === registryRecord.commitment.commitmentDigest);
+  if (!matchesRegistry) {
+    throw evidenceFailure(
+      "SUCCESSOR_ADMISSION_RECEIPT_FAILURE",
+      "Stored successor-admission receipt metadata does not match its reserved successor.",
+    );
+  }
+}
+
 /** Rehydrates one locked receipt and its linked registry evidence before command replay evaluation. */
 function decodeReplayRecord(
   row: Readonly<StandardPackSuccessorAdmissionReplayStoreRow>,
@@ -336,6 +355,7 @@ function decodeReplayRecord(
       "Stored successor-admission receipt does not match its reserved successor.",
     );
   }
+  assertReceiptMetadataMatchesRegistry(receipt, registryRecord);
   return { receipt, registryRecord };
 }
 

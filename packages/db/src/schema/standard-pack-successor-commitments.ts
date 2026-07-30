@@ -57,6 +57,10 @@ export const standardPackSuccessorCommitments = pgTable(
     unique("standard_pack_successor_commitments_commitment_digest_unique").on(
       table.commitmentDigest,
     ),
+    unique("standard_pack_successor_commitments_commitment_candidate_unique").on(
+      table.commitmentDigest,
+      table.candidateDigest,
+    ),
     check(
       "standard_pack_successor_commitments_schema_version_check",
       sql`${table.schemaVersion} = 1`,

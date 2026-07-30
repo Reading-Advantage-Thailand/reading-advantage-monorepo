@@ -40,14 +40,15 @@ describe("standard-pack successor admission receipt persistence", () => {
       "standard_pack_successor_admission_receipts_outcome_check",
       "standard_pack_successor_admission_receipts_json_object_check",
       "standard_pack_successor_admission_receipts_receipt_projection_check",
+      "standard_pack_successor_admission_receipts_receipt_contract_check",
     ]));
   });
 
-  it("ships a generated migration with append-only receipt protection and a sentinel", () => {
+  it("ships a generated integrity migration with a registry-identity sentinel", () => {
     const migration = readFileSync(
       resolve(
         PACKAGE_ROOT,
-        "drizzle/0045_standard_pack_successor_admission_receipts.sql",
+        "drizzle/0046_standard_pack_successor_admission_receipt_integrity.sql",
       ),
       "utf8",
     );
@@ -57,47 +58,48 @@ describe("standard-pack successor admission receipt persistence", () => {
     )) as { entries: Array<{ idx: number; when: number; tag: string }> };
     const prior = journal.entries.find((entry) => entry.idx === 44);
     const successor = journal.entries.find((entry) => entry.idx === 45);
+    const integrity = journal.entries.find((entry) => entry.idx === 46);
 
     expect(migration).toContain(
-      'CREATE TABLE "standard_pack_successor_admission_receipts"',
+      "standard_pack_successor_admission_receipts_commitment_candidate_registry_fk",
     );
     expect(migration).toContain(
-      "standard_pack_successor_admission_receipts_actor_idempotency_unique",
+      "standard_pack_successor_commitments_commitment_candidate_unique",
     );
     expect(migration).toContain(
-      "standard_pack_successor_admission_receipts_commitment_digest_standard_pack_successor_commitments_commitment_digest_fk",
+      "standard_pack_successor_admission_receipts_receipt_contract_check",
     );
-    expect(migration).toContain(
-      "standard_pack_successor_admission_receipts_json_object_check",
-    );
-    expect(migration).toContain(
-      "standard_pack_successor_admission_receipts_receipt_projection_check",
-    );
-    expect(migration).toContain("jsonb_typeof");
+    expect(migration).toContain("?& ARRAY");
     expect(migration).toContain("IS NOT DISTINCT FROM");
+    expect(migration).toContain("safe_audit_json");
+    expect(migration).toContain("observability_json");
     expect(migration).toContain(
-      "(\"standard_pack_successor_admission_receipts\".\"receipt_json\" ->> 'recordedAt')::timestamptz IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"recorded_at\"",
+      "jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"receipt_json\" -> 'schemaVersion') = 'number'",
     );
     expect(migration).toContain(
-      '"recorded_at" timestamp with time zone NOT NULL',
-    );
-    expect(migration).not.toContain(
-      '"recorded_at" timestamp with time zone DEFAULT now() NOT NULL',
+      "jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" -> 'actorId') = 'string'",
     );
     expect(migration).toContain(
-      "standard_pack_successor_admission_receipts_immutable",
-    );
-    expect(migration).toContain("BEFORE UPDATE OR DELETE OR TRUNCATE");
-    expect(migration).toContain(
-      "REVOKE UPDATE, DELETE, TRUNCATE ON TABLE public.standard_pack_successor_admission_receipts FROM app_user",
+      "(\"standard_pack_successor_admission_receipts\".\"observability_json\" ->> 'predecessorIndexDigest') ~ '^[a-f0-9]{64}$'",
     );
     expect(prior?.tag).toBe("0044_standard_pack_successor_commitments");
     expect(successor?.tag).toBe("0045_standard_pack_successor_admission_receipts");
-    expect(successor!.when).toBeGreaterThan(prior!.when);
+    expect(integrity?.tag).toBe("0046_standard_pack_successor_admission_receipt_integrity");
+    expect(integrity!.when).toBeGreaterThan(successor!.when);
+    expect(migration.indexOf("standard_pack_successor_commitments_commitment_candidate_unique")).toBeLessThan(
+      migration.indexOf("standard_pack_successor_admission_receipts_commitment_candidate_registry_fk"),
+    );
     expect(sentinelProbes["0045_standard_pack_successor_admission_receipts"]).toEqual({
       tag: "0045_standard_pack_successor_admission_receipts",
       kind: "table",
       target: "standard_pack_successor_admission_receipts",
+    });
+    expect(sentinelProbes["0046_standard_pack_successor_admission_receipt_integrity"]).toEqual({
+      tag: "0046_standard_pack_successor_admission_receipt_integrity",
+      kind: "unique_constraint",
+      target: "standard_pack_successor_commitments_commitment_candidate_unique",
+      table: "standard_pack_successor_commitments",
+      columns: ["commitment_digest", "candidate_digest"],
     });
   });
 });

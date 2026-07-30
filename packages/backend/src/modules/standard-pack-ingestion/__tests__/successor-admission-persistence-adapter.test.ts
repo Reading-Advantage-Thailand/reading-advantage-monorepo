@@ -337,6 +337,34 @@ describe("standard-pack successor admission persistence adapter", () => {
     });
   });
 
+  it("rejects a locked receipt whose nested metadata names a different registry record", async () => {
+    const safeAudit = { ...receipt.safeAudit, predecessorIndexDigest: digest("6") };
+    const observability = { ...receipt.observability, predecessorIndexDigest: digest("6") };
+    const raw = createStoreTransaction({
+      existingReceipt: {
+        receipt: {
+          ...receiptRow(),
+          safeAuditJson: safeAudit,
+          observabilityJson: observability,
+          receiptJson: { ...receipt, safeAudit, observability },
+        },
+        registryRow: registryRow(),
+      },
+    });
+    const port = createStandardPackSuccessorAdmissionPersistencePort(createStore(raw));
+
+    await port.transaction(async (transaction) => {
+      await expect(transaction.readReceipt({
+        actorId: receipt.actorId,
+        policyId: receipt.policyId,
+        idempotencyKeyFingerprint: receipt.idempotencyKeyFingerprint,
+      })).rejects.toMatchObject({
+        code: "SUCCESSOR_ADMISSION_RECEIPT_FAILURE",
+        retryable: false,
+      } satisfies Partial<StandardPackSuccessorAdmissionError>);
+    });
+  });
+
   it("rejects malformed locked rows and receipt projections before command replay logic can trust them", async () => {
     const raw = createStoreTransaction({
       existingReceipt: {

@@ -31,6 +31,7 @@ describe("standard-pack successor commitment persistence", () => {
       "standard_pack_successor_commitments_predecessor_index_unique",
       "standard_pack_successor_commitments_successor_batch_digest_unique",
       "standard_pack_successor_commitments_commitment_digest_unique",
+      "standard_pack_successor_commitments_commitment_candidate_unique",
     ]));
     expect(checkNames).toEqual(expect.arrayContaining([
       "standard_pack_successor_commitments_digest_format_check",
