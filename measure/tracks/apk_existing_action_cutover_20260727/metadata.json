@@ -1,9 +1,9 @@
 {
   "track_id": "apk_existing_action_cutover_20260727",
   "type": "feature",
-  "status": "pending",
+  "status": "in_progress",
   "created_at": "2026-07-27T00:00:00Z",
-  "updated_at": "2026-07-27T10:10:51Z",
+  "updated_at": "2026-07-30T23:30:44Z",
   "description": "Vertical revalidation and cutover of five historical existing action cartridges.",
   "estimated_tasks": 8,
   "actual_tasks": null,
