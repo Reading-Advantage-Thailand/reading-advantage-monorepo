@@ -2,11 +2,14 @@
 
 ## Phase 1: Backend contract and red tests
 
-- [~] Define the backend-owned commitment, candidate, receipt, port, error, and
+- [x] Define the backend-owned commitment, candidate, receipt, port, error, and
   authorization contracts; retain the play-kit ledger as a portable consumer.
-- [b] Add red tests for independent-process fork rejection, exact retry,
-  rehydration, malformed candidates, and transaction failure.
-  (deferred:phase-1-contract)
+  Strict runtime-contract validation is green; the durable adapter remains out
+  of this completed contract slice.
+- [~] Add red tests for independent-process fork rejection, exact retry,
+  rehydration, malformed candidates, and transaction failure. The provider
+  boundary and multi-process cases are explicitly deferred as Phase 2 test
+  specifications until a real database adapter exists.
 
 ## Phase 2: Durable schema and transactional adapter
 
