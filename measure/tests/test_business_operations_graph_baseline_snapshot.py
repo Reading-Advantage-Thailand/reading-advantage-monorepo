@@ -41,7 +41,7 @@ class BusinessOperationsGraphSnapshotRedTests(unittest.TestCase):
         )
         self._write("package.json", '{"name":"snapshot-fixture"}\n')
         self._write("packages/demo/package.json", '{"name":"demo"}\n')
-        self._write("pnpm-workspace.yaml", "packages:\n  - packages/*\n")
+        self._write("pnpm-workspace.yaml", "packages:\n  - \"packages/*\"\n")
         self._write("pnpm-lock.yaml", "lockfileVersion: '9.0'\n")
         self._write("build-graph.config.json", '{"include":["**/*.ts"]}\n')
         self._git("add", ".")

@@ -331,9 +331,9 @@ def _parse_yaml_simple(text: str) -> dict[str, Any]:
         if capturing:
             if indent == 0:
                 break
-            value = stripped.split(":", 1)[-1].strip().strip("'\"")
-            if value.startswith("- "):
-                value = value[2:].strip()
+            if not stripped.startswith("- "):
+                continue
+            value = stripped[2:].strip().strip("'\"")
             if value:
                 packages.append(value)
     return {"packages": packages} if packages else {}
