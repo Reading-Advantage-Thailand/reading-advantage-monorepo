@@ -218,9 +218,9 @@ async function lockReceiptIdentity(
     SELECT pg_advisory_xact_lock(
       hashtextextended(
         jsonb_build_array(
-          ${lookup.actorId},
-          ${lookup.policyId},
-          ${lookup.idempotencyKeyFingerprint}
+          ${lookup.actorId}::text,
+          ${lookup.policyId}::text,
+          ${lookup.idempotencyKeyFingerprint}::text
         )::text,
         0
       )
