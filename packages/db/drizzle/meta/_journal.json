@@ -309,6 +309,13 @@
       "when": 1784446059725,
       "tag": "0043_codecamp_company_principal_sync",
       "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1785424051922,
+      "tag": "0044_standard_pack_successor_commitments",
+      "breakpoints": true
     }
   ]
 }

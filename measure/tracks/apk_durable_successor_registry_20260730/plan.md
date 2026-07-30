@@ -6,19 +6,21 @@
   authorization contracts; retain the play-kit ledger as a portable consumer.
   Strict runtime-contract validation is green; the durable adapter remains out
   of this completed contract slice.
-- [~] Add red tests for independent-process fork rejection, exact retry,
+- [b] Add red tests for independent-process fork rejection, exact retry,
   rehydration, malformed candidates, and transaction failure. The provider
-  boundary and multi-process cases are explicitly deferred as Phase 2 test
-  specifications until a real database adapter exists.
+  boundary and multi-process cases are explicit Phase 2 specifications and
+  require the real adapter before activation.
+  (deferred:phase-2-adapter)
 
 ## Phase 2: Durable schema and transactional adapter
 
-- [b] Add the global Drizzle schema, reviewed migration, tenant-registry
-  classification, and append-only/uniqueness protections.
-  (deferred:phase-1-tests)
-- [b] Implement the PostgreSQL transaction-bound compare-and-reserve adapter
+- [x] Add the global Drizzle schema, generator-backed migration metadata,
+  tenant-registry classification, and append-only/uniqueness protections.
+  The migration's 0044 journal entry and snapshot were generated from the
+  0043 chain; append-only trigger and JSON-projection protections are
+  additionally reviewed.
+- [~] Implement the PostgreSQL transaction-bound compare-and-reserve adapter
   using insert-on-conflict and conflict-row locking rather than process memory.
-  (deferred:phase-2-schema)
 
 ## Phase 3: Command, receipt, and release boundary
 

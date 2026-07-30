@@ -238,4 +238,9 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
     kind: "function",
     target: "public.sync_codecamp_company_principal(uuid,text,uuid,text,text)",
   },
+  "0044_standard_pack_successor_commitments": {
+    tag: "0044_standard_pack_successor_commitments",
+    kind: "table",
+    target: "standard_pack_successor_commitments",
+  },
 };

@@ -155,6 +155,7 @@ import {
   loginAttempts,
   capabilityIdempotencyRecords,
   companyProductPrincipals,
+  standardPackSuccessorCommitments,
 } from "@reading-advantage/db";
 
 // auth infrastructure — identifier/token/expires; not scoped to a school.
@@ -173,6 +174,8 @@ register(activityTutorialCaptureLeases, "EXEMPT");
 // Global rows and school-scoped rows share this table, so TenantDB must not
 // infer scope from the nullable/global namespace representation.
 register(capabilityIdempotencyRecords, "EXEMPT");
+// Canonical standard-pack release evidence is global, never school-scoped.
+register(standardPackSuccessorCommitments, "EXEMPT");
 // Explicit product identity links are global authentication infrastructure;
 // application and local-user keys are validated by the mapping adapter.
 
