@@ -243,4 +243,9 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
     kind: "table",
     target: "standard_pack_successor_commitments",
   },
+  "0045_standard_pack_successor_admission_receipts": {
+    tag: "0045_standard_pack_successor_admission_receipts",
+    kind: "table",
+    target: "standard_pack_successor_admission_receipts",
+  },
 };

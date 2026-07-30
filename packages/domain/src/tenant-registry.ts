@@ -156,6 +156,7 @@ import {
   capabilityIdempotencyRecords,
   companyProductPrincipals,
   standardPackSuccessorCommitments,
+  standardPackSuccessorAdmissionReceipts,
 } from "@reading-advantage/db";
 
 // auth infrastructure — identifier/token/expires; not scoped to a school.
@@ -176,6 +177,8 @@ register(activityTutorialCaptureLeases, "EXEMPT");
 register(capabilityIdempotencyRecords, "EXEMPT");
 // Canonical standard-pack release evidence is global, never school-scoped.
 register(standardPackSuccessorCommitments, "EXEMPT");
+// Canonical successor-admission audit receipts are global, never school-scoped.
+register(standardPackSuccessorAdmissionReceipts, "EXEMPT");
 // Explicit product identity links are global authentication infrastructure;
 // application and local-user keys are validated by the mapping adapter.
 
