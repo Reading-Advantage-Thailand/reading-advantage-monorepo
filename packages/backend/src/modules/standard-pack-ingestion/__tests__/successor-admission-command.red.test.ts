@@ -198,7 +198,7 @@ function createDependencies(inputOptions: {
   readonly appendError?: Error;
   readonly changedRequestInputDigest?: string;
 } = {}) {
-  const transaction: StandardPackSuccessorAdmissionTransaction = {
+  const transaction = {
     readReceipt: vi.fn(async () => inputOptions.receipt ?? null),
     reserveSuccessor: vi.fn(async () => inputOptions.reservation ?? {
       outcome: "reserved" as const,
@@ -208,9 +208,10 @@ function createDependencies(inputOptions: {
       if (inputOptions.appendError !== undefined) throw inputOptions.appendError;
       return nextReceipt;
     }),
-  };
+  } satisfies StandardPackSuccessorAdmissionTransaction;
   const rollbackCalls = { count: 0 };
-  const dependencies: StandardPackSuccessorAdmissionCommandDependencies = {
+  const transactionCalls = { count: 0 };
+  const dependencies = {
     authorization: {
       authorize: vi.fn(async () => inputOptions.authorization === "denied"
         ? { outcome: "denied" as const, reasonCode: "POLICY_DENIED" as const }
@@ -231,7 +232,10 @@ function createDependencies(inputOptions: {
       )),
     },
     persistence: {
-      async transaction<T>(work: (active: StandardPackSuccessorAdmissionTransaction) => Promise<T>): Promise<T> {
+      async transaction<T>(
+        work: (active: StandardPackSuccessorAdmissionTransaction) => Promise<T>,
+      ): Promise<T> {
+        transactionCalls.count += 1;
         try {
           return await work(transaction);
         } catch (error) {
@@ -244,8 +248,8 @@ function createDependencies(inputOptions: {
     observability: { emit: vi.fn() },
     createReceiptId: vi.fn(() => receipt.id),
     now: vi.fn(() => new Date(receipt.recordedAt)),
-  };
-  return { dependencies, rollbackCalls, transaction };
+  } satisfies StandardPackSuccessorAdmissionCommandDependencies;
+  return { dependencies, rollbackCalls, transaction, transactionCalls };
 }
 
 type ExpectedAdmissionCommandFactory = (
@@ -285,7 +289,7 @@ describe("standard-pack successor-admission contracts", () => {
 
 describe("standard-pack successor-admission command (red)", () => {
   it("denies authorization before Git verification or transaction persistence", async () => {
-    const { dependencies, transaction } = createDependencies({ authorization: "denied" });
+    const { dependencies, transaction, transactionCalls } = createDependencies({ authorization: "denied" });
     const command = createCommand(dependencies);
 
     await expect(command.admit(input, context)).rejects.toMatchObject({
@@ -293,21 +297,24 @@ describe("standard-pack successor-admission command (red)", () => {
       retryable: false,
     });
     expect(dependencies.gitCandidateVerifier.verify).not.toHaveBeenCalled();
-    expect(dependencies.persistence.transaction).not.toHaveBeenCalled();
+    expect(transactionCalls.count).toBe(0);
     expect(transaction.readReceipt).not.toHaveBeenCalled();
   });
 
-  it("rejects an immutable Git-verification failure before transaction persistence", async () => {
+  it("allows receipt-only replay lookup before a Git-verification failure, without reserving or appending", async () => {
     const verifierError = new StandardPackSuccessorAdmissionError(
       "SUCCESSOR_ADMISSION_GIT_CANDIDATE_INVALID",
       "The immutable candidate cannot be verified.",
       false,
     );
-    const { dependencies } = createDependencies({ verifierError });
+    const { dependencies, transaction, transactionCalls } = createDependencies({ verifierError });
     const command = createCommand(dependencies);
 
     await expect(command.admit(input, context)).rejects.toBe(verifierError);
-    expect(dependencies.persistence.transaction).not.toHaveBeenCalled();
+    expect(transactionCalls.count).toBe(1);
+    expect(transaction.readReceipt).toHaveBeenCalledTimes(1);
+    expect(transaction.reserveSuccessor).not.toHaveBeenCalled();
+    expect(transaction.appendReceipt).not.toHaveBeenCalled();
   });
 
   it("delegates rollback of a receipt append failure to the atomic persistence boundary", async () => {

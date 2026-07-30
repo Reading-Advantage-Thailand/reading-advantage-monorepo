@@ -6,3 +6,5 @@ export * from "./postgres-successor-registry.js";
 export * from "./admission-contracts.js";
 export * from "./admission-errors.js";
 export * from "./admission-port.js";
+export * from "./successor-admission-command.js";
+export * from "./successor-admission-persistence-adapter.js";
