@@ -25,12 +25,12 @@
 
 ## Phase R1: Bind the dirty-worktree source and graph
 
-- [~] Task: Implement a deterministic, documented snapshot producer that captures the complete scanner-input denominator, normalized archive, per-path hashes/metadata, HEAD/branch/tool/config, porcelain-status hash, and staged-diff hash without changing the real index or unrelated paths. Add unit tests for tracked modifications, untracked inputs, deletions, symlinks, duplicate paths, archive tampering, and concurrent drift. (deferred:phase-r0-contract-green)
+- [x] Task: Implement a deterministic, documented snapshot producer that captures the complete scanner-input denominator, normalized archive, per-path hashes/metadata, HEAD/branch/tool/config, porcelain-status hash, and staged-diff hash without changing the real index or unrelated paths. Add unit tests for tracked modifications, untracked inputs, deletions, symlinks, duplicate paths, archive tampering, and concurrent drift. (deferred:phase-r0-contract-green)
 
   Producer: `measure/business_operations_graph_baseline_snapshot.py` (`produce_snapshot`, `replay_archive`, `verify_snapshot`).
   Focused tests: `measure/tests/test_business_operations_graph_baseline_snapshot.py` (`17` tests, all `OK`, `6.272s`). Adversaries now cover untouched replay, already-dirty byte drift with unchanged status, nested workspace-export `extends`, staged deletion, non-master, alternate scanner root, second worktree, executable `lstat` mode, and produced-artifact R0 validation.
   Red receipt: `r1-task1-snapshot-producer-red-receipt-20260730.md`.
-  High-finding remediation receipt: `r1-task1-high-remediation-20260730.md`. Task remains `[~]` pending independent rereview of `R1-T1-H1` through `R1-T1-H5`.
+  High-finding remediation receipt: `r1-task1-high-remediation-20260730.md`. Independent rereview `r1-task1-independent-rereview-20260730.json` reports `PASS` at audited HEAD `96f9f81ba`; `R1-T1-H1` through `R1-T1-H5` are closed. This accepts Task 1 only and does not accept Task 2 or unblock any parent/successor gate.
   Integration check: a producer-written R0 v1 projection is accepted end to end by the unchanged validator, and the accepted R0 regression suite (`measure.tests.test_business_operations_graph_baseline_remediation`, `29` tests) passes (`8.227s`). The R0 validator is not modified.
   No parent or successor gate was changed; the master worktree dirty tree, the real Git index, and unrelated paths are preserved.
 - [~] Task: Capture the candidate source snapshot in a coordinated stable window, prove archive replay equals its manifest, and prove pre-scan/post-scan denominator, status, and staged-diff identity. Abort rather than normalize or clean the dirty tree when drift occurs. (deferred:phase-r1-producer-green)

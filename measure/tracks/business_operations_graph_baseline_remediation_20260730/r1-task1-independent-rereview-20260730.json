@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "task": "R1 Task 1 — deterministic dirty-worktree snapshot producer independent rereview",
+  "role": "independent-reviewer",
+  "reviewed_at": "2026-07-30",
+  "audited_head_sha": "96f9f81babf28ef77fd6fa6c6d9abb1b6775e415",
+  "decision": "PASS",
+  "task1_marker_may_move_to_x": true,
+  "production_code_modified": false,
+  "commit_created": false,
+  "scope": [
+    "measure/business_operations_graph_baseline_snapshot.py",
+    "measure/tests/test_business_operations_graph_baseline_snapshot.py",
+    "measure/tests/test_business_operations_graph_baseline_remediation.py",
+    "measure/business_operations_graph_baseline_validation.py",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r1-task1-high-remediation-20260730.md"
+  ],
+  "verification": {
+    "focused_suite": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_snapshot measure.tests.test_business_operations_graph_baseline_remediation -v",
+      "exit_code": 0,
+      "tests_run": 51,
+      "duration_seconds": 20.153,
+      "result": "PASS"
+    },
+    "worktree_scope": {
+      "result": "PASS: audited R1 paths were clean and git diff --check HEAD -- <R1 paths> passed; no reviewer changes were made"
+    }
+  },
+  "closed_findings": [
+    "R1-T1-H1",
+    "R1-T1-H2",
+    "R1-T1-H3",
+    "R1-T1-H4",
+    "R1-T1-H5"
+  ],
+  "new_findings": [],
+  "required_disposition": {
+    "task1": "PASS: the R1 Task 1 marker may move from [~] to [x]",
+    "task2": "remains [~] pending a fresh coordinated stable-window scan and durable publication",
+    "r1_task3_and_later": "remain blocked; this review neither accepts scan evidence nor authorizes a parent or successor unblock",
+    "parent_review_b": "remains FAIL/BLOCKED"
+  }
+}
