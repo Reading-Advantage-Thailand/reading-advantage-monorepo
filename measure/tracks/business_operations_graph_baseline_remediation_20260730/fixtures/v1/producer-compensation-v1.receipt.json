@@ -1,0 +1,13 @@
+{
+  "candidateManifest": {
+    "path": "candidate-compensation-v1.manifest.json",
+    "sha256": "0e519af808e081aa1bedf6b8be017eb437134fb8f75ac1cb58a6802422b0b179",
+    "size": 1824
+  },
+  "candidateSha256": "cdb25eb57b635e8f11f6c3c78ffb010ce81c06d2904f929409c3a784900f2142",
+  "identity": "producer@example.test",
+  "role": "producer",
+  "schemaVersion": 1,
+  "state": "CANDIDATE_PUBLISHED",
+  "timestamp": "2026-07-30T00:00:00Z"
+}

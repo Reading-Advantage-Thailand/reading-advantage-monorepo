@@ -1,0 +1,101 @@
+{
+  "records": [
+    {
+      "command": "CI=true pnpm --filter accounts test",
+      "exitCode": 0,
+      "name": "accounts-test",
+      "recordSha256": "0d0dc5f0f277db87dd3d82de686a24f9e25ea07f959a069f58ff1dcefe04659c",
+      "snapshotManifestSha256": "3904e5710dd83550aa1ed82ab9c785b0db002ce5e93739abb5e31393caa3ab5b",
+      "status": "PASS",
+      "stderr": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "fixture contract result: accounts-test: PASS\n",
+      "stdoutSha256": "1c546c277f203ff0d60926313f4da37a00120471605d433956978e1c70401433"
+    },
+    {
+      "command": "CI=true pnpm --filter accounts check-types",
+      "exitCode": 0,
+      "name": "accounts-check-types",
+      "recordSha256": "7d004ff8738d3f49188622dff712e30788f7dd0ddc229ef8459dcb020c42294e",
+      "snapshotManifestSha256": "3904e5710dd83550aa1ed82ab9c785b0db002ce5e93739abb5e31393caa3ab5b",
+      "status": "PASS",
+      "stderr": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "fixture contract result: accounts-check-types: PASS\n",
+      "stdoutSha256": "edd5f76cce28d727787fce6d54b749b3c59b569482b6a6725d0b1e90187eb627"
+    },
+    {
+      "command": "CI=true pnpm --filter @reading-advantage/backend test",
+      "exitCode": 0,
+      "name": "backend-test",
+      "recordSha256": "0cb1cd3151abd24973b537b95efd7c4bde4237f9668854b46decbd6bbf3b702e",
+      "snapshotManifestSha256": "3904e5710dd83550aa1ed82ab9c785b0db002ce5e93739abb5e31393caa3ab5b",
+      "status": "PASS",
+      "stderr": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "fixture contract result: backend-test: PASS\n",
+      "stdoutSha256": "19693123b5fd0a65c1ca1ec9cb12b99a652ebb2874f07b0212bd5649daabdfda"
+    },
+    {
+      "command": "CI=true pnpm --filter @reading-advantage/backend check-types",
+      "exitCode": 0,
+      "name": "backend-check-types",
+      "recordSha256": "0253fb3bccb8ccb2859d2a529a68d2ef3d33cdbc4dc20a1b27db6c7fc895a6db",
+      "snapshotManifestSha256": "3904e5710dd83550aa1ed82ab9c785b0db002ce5e93739abb5e31393caa3ab5b",
+      "status": "PASS",
+      "stderr": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "fixture contract result: backend-check-types: PASS\n",
+      "stdoutSha256": "34277dfc6f535264346a1552a3ee33527b6a9a0aa5d47390e3f8cdb9902da882"
+    },
+    {
+      "command": "CI=true pnpm --filter @reading-advantage/advantage-play-kit test",
+      "exitCode": 0,
+      "name": "apk-test",
+      "recordSha256": "aa9bf02d59c9d258cee451dfb07800d585487dfbd559a3d203a2fb8a59995e78",
+      "snapshotManifestSha256": "3904e5710dd83550aa1ed82ab9c785b0db002ce5e93739abb5e31393caa3ab5b",
+      "status": "PASS",
+      "stderr": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "fixture contract result: apk-test: PASS\n",
+      "stdoutSha256": "f27ceccc55479de24bcbb5c644cba230ed5c1eaa2e9b8e7dc0000cefa16df1d4"
+    },
+    {
+      "command": "CI=true pnpm --filter @reading-advantage/advantage-play-kit check-types",
+      "exitCode": 0,
+      "name": "apk-check-types",
+      "recordSha256": "b202b27b17c8146669e466efd646ca4494cb6c7e475f23cd150d42236bba295e",
+      "snapshotManifestSha256": "3904e5710dd83550aa1ed82ab9c785b0db002ce5e93739abb5e31393caa3ab5b",
+      "status": "PASS",
+      "stderr": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "fixture contract result: apk-check-types: PASS\n",
+      "stdoutSha256": "bd3167f0095c949dd0f1ca891f81fd49f45e1db3396e1a2be43b0267dfe6a6e4"
+    },
+    {
+      "command": "CI=true pnpm --filter vocabulary-games test -- --runInBand",
+      "exitCode": 0,
+      "name": "vocabulary-games-test",
+      "recordSha256": "834ba12b8f1fb7232c7ee385cc8b94e1e2fea0478dd86f1d9e79554728fb7fff",
+      "snapshotManifestSha256": "3904e5710dd83550aa1ed82ab9c785b0db002ce5e93739abb5e31393caa3ab5b",
+      "status": "PASS",
+      "stderr": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "fixture contract result: vocabulary-games-test: PASS\n",
+      "stdoutSha256": "e7721f1ef84ad6b3de2b90a82397c923e4f43444828bba030f54a16cc0e762a7"
+    },
+    {
+      "command": "CI=true pnpm --filter vocabulary-games check-types",
+      "exitCode": 0,
+      "name": "vocabulary-games-check-types",
+      "recordSha256": "d8bce8847e0b1b9d5c734d6f21943389ab9bcce1e74b82c031cd0636e47ea283",
+      "snapshotManifestSha256": "3904e5710dd83550aa1ed82ab9c785b0db002ce5e93739abb5e31393caa3ab5b",
+      "status": "PASS",
+      "stderr": "",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "fixture contract result: vocabulary-games-check-types: PASS\n",
+      "stdoutSha256": "ab607a6cabf7ec1549844d6e99b5f44e37be5e0842ba22bd37d81941b8567465"
+    }
+  ],
+  "schemaVersion": 1
+}

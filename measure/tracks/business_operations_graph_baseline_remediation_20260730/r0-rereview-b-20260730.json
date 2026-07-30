@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "phase": "R0",
+  "review": "independent security/provenance re-review of Review B Critical/High remediation",
+  "reviewed_at": "2026-07-30",
+  "decision": "PASS",
+  "phase_r0_contract_acceptance": "ACCEPT",
+  "production_code_modified": false,
+  "review_scope": [
+    "measure/business_operations_graph_baseline_validation.py",
+    "measure/tests/test_business_operations_graph_baseline_remediation.py",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/fixtures/v1/",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/plan.md",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r0-review-b-safety-20260730.json",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r0-critical-high-remediation-20260730.json"
+  ],
+  "verification": {
+    "focused_suite": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_remediation -v",
+      "exit_code": 0,
+      "tests_run": 29
+    },
+    "targeted_adversarial_probes": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_business_operations_graph_baseline_remediation.BusinessOperationsGraphBaselineRemediationRedTests.test_archive_paths_are_canonical_repository_relative_and_unique measure.tests.test_business_operations_graph_baseline_remediation.BusinessOperationsGraphBaselineRemediationRedTests.test_source_provenance_and_archive_manifest_replay_are_mandatory measure.tests.test_business_operations_graph_baseline_remediation.BusinessOperationsGraphBaselineRemediationRedTests.test_reviewer_reject_or_critical_high_finding_blocks_acceptance measure.tests.test_business_operations_graph_baseline_remediation.BusinessOperationsGraphBaselineRemediationRedTests.test_security_evidence_is_route_and_category_specific measure.tests.test_business_operations_graph_baseline_remediation.BusinessOperationsGraphBaselineRemediationRedTests.test_compensation_requires_exact_complete_reconciliation measure.tests.test_business_operations_graph_baseline_remediation.BusinessOperationsGraphBaselineRemediationRedTests.test_parent_trust_roots_and_exact_receipt_artifact_set_are_required",
+      "exit_code": 0,
+      "tests_run": 6,
+      "probes": [
+        "Absolute, traversal, alias, backslash, and duplicate archive paths are BLOCKED; archive/manifest replay, required discovery provenance, and truncated-denominator mutations are BLOCKED.",
+        "FINAL reviewer REJECT, Critical/High findings, and non-FINAL review state are BLOCKED.",
+        "An admin authorization downgrade with health-route evidence is BLOCKED by route/category expectation binding.",
+        "Omitted, partial, duplicate, miscounted, or unhashed compensation reconciliation is BLOCKED; tool-limitation compensation requires an immutable upstream-issue receipt.",
+        "Missing or drifted pinned parent evidence and a candidate-manifest artifact omission are BLOCKED."
+      ]
+    }
+  },
+  "critical_high_findings": [
+    {
+      "id": "R0-RB-C1",
+      "status": "PASS",
+      "basis": "Canonical repository-relative archive paths, exact archive-to-manifest metadata replay, denominator recomputation, full pre/post state-artifact hashes, and frozen discovery/source inventory checks are enforced."
+    },
+    {
+      "id": "R0-RB-C2",
+      "status": "PASS",
+      "basis": "Acceptance requires a FINAL independent-reviewer ACCEPT with no Critical or High finding; malformed lineage remains fail-closed."
+    },
+    {
+      "id": "R0-RB-H1",
+      "status": "PASS",
+      "basis": "Per-route/category dispositions, claims, permitted anchor paths, range hashes, and assertion tokens are enforced."
+    },
+    {
+      "id": "R0-RB-H2",
+      "status": "PASS",
+      "basis": "Compensation counts, inventories, two inventory digests, exact reconciliations, and the conditional issue receipt are enforced."
+    },
+    {
+      "id": "R0-RB-H3",
+      "status": "PASS",
+      "basis": "Normal candidate validation requires pinned parent FAIL evidence and derives the candidate-manifest/reviewer-ledger artifact set from the candidate body."
+    },
+    {
+      "id": "R0-RA-C1",
+      "status": "PASS",
+      "basis": "The public validator totality boundary returns BLOCKED for malformed external values, including missing lineage references."
+    },
+    {
+      "id": "R0-RA-H1",
+      "status": "PASS",
+      "basis": "Exact route/field reconciliation and count equality are required."
+    },
+    {
+      "id": "R0-RA-H2",
+      "status": "PASS",
+      "basis": "Snapshot manifest/archive and graph-file inventory/provenance bindings are required."
+    },
+    {
+      "id": "R0-RA-H3",
+      "status": "PASS",
+      "basis": "Pinned parent-failure evidence is mandatory for normal candidate acceptance."
+    }
+  ],
+  "findings": [],
+  "next_disposition": {
+    "phase_r0": "ACCEPTED for the R0 contract/validator remediation only.",
+    "phase_r1": "Eligible to begin under its existing plan tasks; no R1 evidence was reviewed or accepted here.",
+    "small_company_admin_phase_s1": "REMAIN_BLOCKED",
+    "customer_licensing_crm_contract_schema_red": "REMAIN_BLOCKED",
+    "unblock_authority": "No successor unblock is authorized. It still requires the later hash-bound candidate, independent R3 acceptance, and owner confirmation."
+  }
+}

@@ -21,7 +21,9 @@ Unify Reading Advantage's student-facing learning applications into a single, ma
 
 - **Primary:** Students (K-12) using learning applications
 - **Secondary:** Teachers and administrators managing classrooms
-- **Tertiary:** Developers building and maintaining the platform
+- **Company operations:** The company owner and authorized finance operators preparing controlled monthly accountant handoffs
+- **Tertiary:** Curriculum editors, publishers, and auditors producing approved instructional materials
+- **Quaternary:** Developers building and maintaining the platform
 
 ## Key Goals
 
@@ -41,7 +43,10 @@ Unify Reading Advantage's student-facing learning applications into a single, ma
 | reading-advantage | Next.js (web) | Prisma, Firebase Functions, AI SDK | Reading comprehension |
 | primary-advantage | Next.js 15.2 | Prisma, NextAuth, AI SDK, Framer Motion | Primary education |
 | www-reading-advantage | Next.js 15.5 | MDX, Radix UI, Tailwind, i18n | Company website / marketing |
+| sales-advantage | Next.js web app | tRPC, Drizzle, audio roleplay, internal AI adapter | Internal salesperson and distributor-rep training; it owns learning evidence, not leads, customer records, invoices, or sales settlement |
 | codecamp-advantage | Next.js 16.0 | tRPC, Drizzle, AI SDK, next-intl, GitHub API, Vitest | Intern bootcamp — full-stack web dev training from fundamentals, with fork-based exercises, LLM PR review, and GitHub Issues practice |
+| workbooks (planned) | Next.js web app | Backend capability modules, Drizzle, S3-compatible storage, durable rendering, internal AI adapter | Governed curriculum publishing, immutable workbook editions, and Reading/Primary content reuse |
+| accounting (planned) | Next.js web app | Backend capability modules, Drizzle/PostgreSQL, S3-compatible storage, durable jobs, document/export adapters | Company AP, reimbursements, payroll-summary imports, school billing, Tutor reconciliation, historical import, and monthly accountant handoff |
 
 ## Migration Notes
 
@@ -49,7 +54,6 @@ Unify Reading Advantage's student-facing learning applications into a single, ma
 
 ## Out of Scope
 
-- **Workbooks** — Teacher-facing workbook generation tool (different deployment target, different user base)
 - **advantage-pr** — Marketing documentation and playbooks (no code, not buildable)
 
 ## Success Criteria

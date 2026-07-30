@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "task": "Exact Next Red Task",
+  "role": "independent-reviewer",
+  "reviewed_at": "2026-07-30",
+  "baseline_head": "3ff9b734a9e5a69f777108827b569e4f20a5ceb8",
+  "decision": "FAIL",
+  "production_code_modified": false,
+  "commit_created": false,
+  "review_scope": [
+    "spec.md",
+    "plan.md",
+    "measure/tests/test_business_operations_graph_baseline_remediation.py",
+    "fixtures/v1/candidate-envelopes-v1.json",
+    "fixtures/v1/invalid-candidates-v1.json",
+    "fixtures/v1/snapshot-clean-v1.archive.json",
+    "fixtures/v1/snapshot-compensation-v1.archive.json",
+    "red-run-receipt-20260730.md",
+    "red-review-correctness-20260730.json"
+  ],
+  "verification": {
+    "command": "python3 -m unittest measure.tests.test_business_operations_graph_baseline_remediation -v",
+    "exit_code": 1,
+    "result": "7 tests ran and all 7 failed only because measure.business_operations_graph_baseline_validation is absent; the recorded Red result is accurate."
+  },
+  "prior_findings": {
+    "RED-C1": "OPEN",
+    "RED-C2": "PARTIALLY_RESOLVED",
+    "RED-H1": "OPEN",
+    "RED-H2": "OPEN",
+    "RED-H3": "OPEN",
+    "RED-M1": "OPEN",
+    "RED-M2": "OPEN"
+  },
+  "findings": [
+    {
+      "id": "RED-RR-C1",
+      "severity": "Critical",
+      "summary": "The claimed parent-baseline preservation is not a fixture of the parent Review B FAIL evidence.",
+      "evidence": "parentReviewBaseline derives from the synthetic clean candidate and merely deletes sourceSnapshot. The Red test never loads, hashes, or semantically classifies the actual immutable parent producer receipt and Review B FAIL artifact. Consequently it does not prove that parent FAIL evidence is preserved or cannot be rewritten to pass.",
+      "impact": "R0 could implement a validator against synthetic data while the historical RB-01/RB-02/RB-03 evidence remains mutable or is relabeled.",
+      "remediation": "Add immutable, hash-pinned parent producer and Review B FAIL fixtures (or read-only baseline-content fixtures), and assert their unchanged hashes and BLOCKED classification separately from candidate-envelope cases."
+    },
+    {
+      "id": "RED-RR-H1",
+      "severity": "High",
+      "summary": "The fixture corpus is more semantic than the prior Red test, but still permits false-pass validator implementations and omits required boundary cases.",
+      "evidence": "The suite only asserts the future validator's final decision/reason-code intersection. It has no cases for missing pre-scan status or staged-diff evidence, pre-scan denominator drift, staged-diff drift, archive-entry/content replay mismatch beyond the archive digest field, declaration-anchor omission, or count-to-inventory mismatch. The valid envelopes also use placeholder digests and omit baseline HEAD, tool/config, and complete command evidence required by FR2/FR4/FR5.",
+      "impact": "A validator can special-case candidate IDs or check only the exercised mutations and still satisfy the Red suite without enforcing reproducible provenance, exact inventories, and required gates.",
+      "remediation": "Add minimally valid complete envelopes and focused invalid fixtures for every required pre/post binding, archive replay, source anchor, labeled denominator count, and required command record; assert recomputed hashes and exact inventory equality rather than only decision codes."
+    },
+    {
+      "id": "RED-RR-H2",
+      "severity": "High",
+      "summary": "Independent acceptance and receipt lineage are not adequately specified by executable tests.",
+      "evidence": "Producer and reviewer candidateSha256 values are identical placeholders in both accepted candidates, with no canonical candidate digest to recompute. The tests cover same-identity, stale review hash, and ACCEPT-with-High, but not missing decision, reviewer recomputation of referenced artifact hashes, stale producer receipt, reviewer identity/role provenance, or explicit preservation of both successor gates on rejection.",
+      "impact": "Producer-controlled or stale evidence could be accepted without proving that an independent reviewer reviewed the exact candidate.",
+      "remediation": "Add hash-pinned producer/reviewer receipt fixtures with distinct identities, canonical candidate/artifact digests, explicit decision and gate fields, and rejection cases for every hash/identity/severity mismatch."
+    },
+    {
+      "id": "RED-RR-H3",
+      "severity": "High",
+      "summary": "Required security, exclusion, command, and anti-pattern coverage remains absent or insufficient.",
+      "evidence": "The compensation fixture contains one synthetic Accounts route, not the discovered set with the 17-route minimum, and only two required commands (test commands, not the FR4/FR5 check-types and APK/Advantage Games gates). The exclusion ledger contains one synthetic file and does not establish a computed candidate-TypeScript-minus-graph denominator. There are no executable assertions for A3 count reconciliation, A7 complete-inventory preservation, A8 marker vocabulary, A15 receipt/artifact lineage, or A16 single shared master-worktree preflight; A4 and A5 have only partial branch cases.",
+      "impact": "A future Green implementation can omit security-sensitive route dispositions, excluded-file coverage, required failing gates, or anti-pattern controls while all current Red tests pass.",
+      "remediation": "Add versioned fixtures and tests for the complete discovered route/security matrix, all required command records and exits, computed exclusion denominator and per-file dispositions, and explicit A3/A4/A5/A7/A8/A15/A16 invariants."
+    },
+    {
+      "id": "RED-RR-M1",
+      "severity": "Medium",
+      "summary": "Source provenance is not pinned to the stated baseline or a fully immutable fixture identity.",
+      "evidence": "The candidate worktree root names the live shared checkout, while the envelope has no baseline HEAD, tool version, scan command/config, porcelain hash, staged-diff provenance record, or fixture manifest hash. Only the two archive file hashes are checked indirectly by the future validator contract.",
+      "impact": "Concurrent edits or replacement of supporting fixtures can change the acceptance target without the Red suite detecting it.",
+      "remediation": "Pin the baseline and all fixture/artifact hashes in a read-only fixture manifest and test rejection of mutable/out-of-snapshot references and provenance drift."
+    },
+    {
+      "id": "RED-RR-M2",
+      "severity": "Medium",
+      "summary": "Clean/compensation branch separation is improved but conditional issue coverage is incomplete.",
+      "evidence": "Separate clean and compensation candidates now encode exit 0 versus exit 1, and invalid cases cover false clean, zero denominator, inventory drift, and issue present when unrequired. However, no invalid fixture makes compensation's toolLimitation predicate false while an issue is required, and no accepted branch tests the complete clean integrity collections or all FR6 decision outcomes.",
+      "impact": "The validator may accept an upstream issue or compensation claim without enforcing the documented conditional rule.",
+      "remediation": "Add both issue-required/tool-limitation and issue-not-required/project-owned cases, including cross-branch rejection and complete integrity/unaudited collection checks."
+    }
+  ],
+  "anti_pattern_assessment": {
+    "A3": "Fail: no labeled count-to-inventory equality case.",
+    "A4": "Partial: zero-item and omission cases exist, but no complete non-vacuous denominator invariant is proven.",
+    "A5": "Partial: clean versus compensation cases are no longer inverted, but complete claim/result conflict coverage is absent.",
+    "A7": "Fail: no complete-inventory/filter-preservation assertion.",
+    "A8": "Fail: marker vocabulary is not tested.",
+    "A15": "Fail: receipt/artifact lineage and canonical digest recomputation are not tested.",
+    "A16": "Fail: no executable single-shared-master-worktree preflight contract."
+  },
+  "required_disposition": {
+    "exact_next_red_task": "Remain [~]; do not begin R0 Green.",
+    "r0_green_may_begin": false,
+    "parent_gate": "Do not accept the parent gate; preserve parent Review B FAIL and RB-01/RB-02/RB-03.",
+    "successor_tracks": "Keep Admin S1 and CRM contract/schema/Red work blocked.",
+    "acceptance": "Denied until the remaining Critical/High findings are closed with immutable parent evidence, complete semantic provenance/branch/lineage fixtures, and executable security/exclusion/anti-pattern coverage."
+  }
+}

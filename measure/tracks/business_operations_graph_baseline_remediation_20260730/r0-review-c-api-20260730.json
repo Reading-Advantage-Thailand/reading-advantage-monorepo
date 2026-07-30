@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "phase": "R0",
+  "task": "Measure Review C — public API, determinism, error-result contract, and plan-truthfulness audit",
+  "role": "independent-reviewer",
+  "reviewed_at": "2026-07-30",
+  "decision": "FAIL",
+  "ux_applicability": "not_applicable",
+  "production_code_modified": false,
+  "commit_created": false,
+  "review_scope": [
+    "measure/business_operations_graph_baseline_validation.py",
+    "measure/tests/test_business_operations_graph_baseline_remediation.py",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/spec.md",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/plan.md",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r0-critical-high-remediation-20260730.json",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r0-rereview-a-20260730.json",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r0-rereview-b-20260730.json"
+  ],
+  "verification": {
+    "focused_unittest": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_remediation -v",
+      "exit_code": 0,
+      "tests_run": 29,
+      "result": "PASS"
+    },
+    "public_api": {
+      "entrypoint": "validate_candidate(candidate, *, fixture_root)",
+      "result_shape": "PASS: returns a dict with decision ACCEPT or BLOCKED and a list of reasons for normal and caught failure paths",
+      "documentation": "PASS: the public entrypoint and module contract have docstrings; no separate API document is required by the track"
+    },
+    "determinism": {
+      "result": "PASS: repeated validation of the same frozen candidate is stable; canonical digests and first-seen reason deduplication are implemented"
+    },
+    "browser_review": "NOT_APPLICABLE: non-UI Python validator"
+  },
+  "findings": [
+    {
+      "id": "R0-RC-M2",
+      "severity": "Low",
+      "summary": "The public API documents the result shape but not the fixture-root trust and portability contract.",
+      "file": "measure/business_operations_graph_baseline_validation.py",
+      "lines": "2014-2061",
+      "context": "validate_candidate documents candidate validation and the {decision, reasons} result, but does not state that fixture_root must be a trusted local fixture tree containing hash-pinned artifacts, nor explain that the validator is intentionally bound to the frozen absolute repository root and baseline constants. Invalid fixture_root values are converted to a generic VALIDATOR_INTERNAL_ERROR rather than a documented input error code. This leaves callers without a precise public-boundary contract.",
+      "suggestion": "Document fixture_root requirements and the v1/frozen-baseline scope, and return a stable input/fixture error code for invalid roots instead of exposing implementation exception names."
+    },
+    {
+      "id": "R0-RC-M1",
+      "severity": "Medium",
+      "summary": "The active plan is stale after both successful R0 Critical/High rereviews.",
+      "file": "measure/tracks/business_operations_graph_baseline_remediation_20260730/plan.md",
+      "lines": "3-21",
+      "context": "The plan still says the prior correctness and safety reviews found Critical/High defects whose remediation requires independent rereview, and leaves the R0 remediation task [~]. r0-rereview-a and r0-rereview-b report PASS with no Critical/High findings, while the remediation receipt records Green and pending independent rereview. The remaining open fixture-generator --check Medium finding is not represented in the plan, and no task/checkpoint identity is recorded.",
+      "suggestion": "Reconcile the plan with the successful rereviews: record the remaining Medium follow-up and exact acceptance boundary, then update markers/checkpoint identity only according to the authorized Measure workflow. Keep successor gates blocked."
+    }
+  ],
+  "required_disposition": {
+    "phase_r0": "BLOCKED for this API/documentation/determinism review; no Critical/High regression was found",
+    "successor_gates": "REMAIN_BLOCKED",
+    "parent_review_b": "REMAINS_FAIL_BLOCKED",
+    "scope": "Audit-only; no source, plan, fixture, or unrelated worktree files were modified"
+  }
+}

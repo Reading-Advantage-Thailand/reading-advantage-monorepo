@@ -1,0 +1,68 @@
+{
+  "artifacts": [
+    {
+      "path": "snapshot-compensation-v1.archive.json",
+      "sha256": "7e0d88aadaf10a6aa65630cde788ff3d1e50831060e57b2a0c3908d435424b20",
+      "size": 1552243
+    },
+    {
+      "path": "snapshot-compensation-v1.manifest.json",
+      "sha256": "3904e5710dd83550aa1ed82ab9c785b0db002ce5e93739abb5e31393caa3ab5b",
+      "size": 15565
+    },
+    {
+      "path": "source-state-compensation-pre-v1.json",
+      "sha256": "a8b593c70030510e4201d9a1b2efc38b97c089fac5795690f6762c936847aa3f",
+      "size": 131
+    },
+    {
+      "path": "source-state-compensation-post-v1.json",
+      "sha256": "a8b593c70030510e4201d9a1b2efc38b97c089fac5795690f6762c936847aa3f",
+      "size": 131
+    },
+    {
+      "path": "graph-compensation-v1.json",
+      "sha256": "fa77051e455e6d73481d1673fc9235990577acd4873fa315653a92188a44b82b",
+      "size": 3297
+    },
+    {
+      "path": "command-results-compensation-v1.json",
+      "sha256": "a72267bce1645b70b618f4d3bc07657a1c0a36af729ba19746b1baf7db8620a6",
+      "size": 5061
+    },
+    {
+      "path": "parent-fail-artifacts-v1/manifest.json",
+      "sha256": "15f3c61fbcea4ea13c777e4f80ff061de2fa007985ef38b77dd560b1c8c77d50",
+      "size": 2209
+    },
+    {
+      "path": "upstream-issue-compensation-v1.receipt.json",
+      "sha256": "4c420fb553beaef273ae8a915c63632f6add3bde20502fe7abdee27d1c8641ac",
+      "size": 593
+    },
+    {
+      "path": "candidate-compensation-v1.manifest.json",
+      "sha256": "0e519af808e081aa1bedf6b8be017eb437134fb8f75ac1cb58a6802422b0b179",
+      "size": 1824
+    },
+    {
+      "path": "producer-compensation-v1.receipt.json",
+      "sha256": "40e0368c100c85dd48a87bc32c17abe05c5f94500d9228c7fbe8fafb2c43e3eb",
+      "size": 432
+    }
+  ],
+  "candidateSha256": "cdb25eb57b635e8f11f6c3c78ffb010ce81c06d2904f929409c3a784900f2142",
+  "schemaVersion": 1,
+  "successorGates": [
+    {
+      "name": "small_company_admin_privileges_20260722:Phase-S1",
+      "recordSha256": "fe947918c1747c01ae97078182b3325b9a85797ef002c146b5bd070d32531b27",
+      "state": "BLOCKED_UNTIL_HASH_BOUND_HANDOFF"
+    },
+    {
+      "name": "customer_licensing_crm_20260722:contract-schema-red",
+      "recordSha256": "0d85e05f82c211f12a4514bf37a4568df9a93cc51717a70d81f554f23bb98e5b",
+      "state": "BLOCKED_UNTIL_HASH_BOUND_HANDOFF"
+    }
+  ]
+}

@@ -1,0 +1,624 @@
+{
+  "acceptance": [
+    {
+      "base": "compensation",
+      "id": "required-issue-missing",
+      "reasonCodes": [
+        "UPSTREAM_ISSUE_REQUIRED"
+      ],
+      "set": {
+        "upstreamIssue.issue": null
+      }
+    },
+    {
+      "base": "clean",
+      "id": "clean-issue-present",
+      "reasonCodes": [
+        "UPSTREAM_ISSUE_NOT_PERMITTED"
+      ],
+      "set": {
+        "upstreamIssue.issue": {
+          "url": "https://example.test/1"
+        },
+        "upstreamIssue.required": true,
+        "upstreamIssue.state": "REQUIRED_RECORDED"
+      }
+    },
+    {
+      "base": "clean",
+      "id": "producer-self-review",
+      "reasonCodes": [
+        "PRODUCER_SELF_APPROVAL"
+      ],
+      "set": {
+        "lineage.reviewerReceipt": {
+          "path": "producer-clean-v1.receipt.json",
+          "sha256": "8382499898d828111ba1e74443cc7e17b7dc667895f49cf3dac64c842371b8a0",
+          "size": 425
+        }
+      }
+    },
+    {
+      "base": "clean",
+      "id": "reviewer-receipt-hash",
+      "reasonCodes": [
+        "REVIEW_RECEIPT_HASH_MISMATCH"
+      ],
+      "set": {
+        "lineage.reviewerReceipt.sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "base": "clean",
+      "id": "unknown-review-decision",
+      "reasonCodes": [
+        "REVIEW_DECISION_UNKNOWN"
+      ],
+      "set": {
+        "lineage.reviewerReceipt": {
+          "path": "reviewer-clean-unknown-state-v1.receipt.json",
+          "sha256": "57bea1183bb1004dc34b19aa31341b008980abfdb6c243dbecd7c69eb835a27f",
+          "size": 920
+        }
+      }
+    },
+    {
+      "base": "clean",
+      "id": "unknown-finding-severity",
+      "reasonCodes": [
+        "REVIEW_FINDING_SEVERITY_UNKNOWN"
+      ],
+      "set": {
+        "lineage.reviewerReceipt": {
+          "path": "reviewer-clean-unknown-severity-v1.receipt.json",
+          "sha256": "658cb51ac102ec0fdd456041e12f7ca98254da48e39e611a825c4f59f1e6f4e0",
+          "size": 986
+        }
+      }
+    },
+    {
+      "base": "clean",
+      "id": "worktree-unknown-state",
+      "reasonCodes": [
+        "WORKTREE_STATE_UNKNOWN"
+      ],
+      "set": {
+        "worktree.state": "UNKNOWN"
+      }
+    },
+    {
+      "base": "clean",
+      "id": "worktree-wrong-branch",
+      "reasonCodes": [
+        "WORKTREE_BRANCH_NOT_MASTER"
+      ],
+      "set": {
+        "worktree.branch": "feature"
+      }
+    },
+    {
+      "base": "clean",
+      "id": "worktree-multiple",
+      "reasonCodes": [
+        "WORKTREE_COUNT_NOT_ONE"
+      ],
+      "set": {
+        "worktree.worktreeCount": 2
+      }
+    },
+    {
+      "base": "clean",
+      "id": "unexpected-candidate-field",
+      "reasonCodes": [
+        "CANDIDATE_UNKNOWN_FIELD"
+      ],
+      "set": {
+        "unexpected": true
+      }
+    }
+  ],
+  "antiPatterns": [
+    {
+      "base": "compensation",
+      "id": "a3-count",
+      "reasonCodes": [
+        "SECURITY_ROUTE_COUNT_MISMATCH"
+      ],
+      "set": {
+        "securityRoutes.discoveredRouteCount": 99
+      }
+    },
+    {
+      "base": "compensation",
+      "id": "a4-vacuous",
+      "reasonCodes": [
+        "COMPENSATION_DENOMINATOR_EMPTY"
+      ],
+      "set": {
+        "compensation.routeCount": 0
+      }
+    },
+    {
+      "base": "clean",
+      "id": "a5-conflict",
+      "reasonCodes": [
+        "AUDIT_DISPOSITION_MISMATCH"
+      ],
+      "set": {
+        "audit.disposition": "compensation"
+      }
+    },
+    {
+      "base": "clean",
+      "delete": [
+        "requiredCommands.requiredNames.0"
+      ],
+      "id": "a7-filter-drop",
+      "reasonCodes": [
+        "REQUIRED_COMMAND_MISSING"
+      ]
+    },
+    {
+      "base": "clean",
+      "id": "a15-stale-producer",
+      "reasonCodes": [
+        "PRODUCER_RECEIPT_HASH_MISMATCH"
+      ],
+      "set": {
+        "lineage.producerReceipt.sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "base": "clean",
+      "delete": [
+        "worktree.singleSharedWorktree"
+      ],
+      "id": "a16-shared-flag",
+      "reasonCodes": [
+        "WORKTREE_SINGLE_SHARED_FLAG_MISSING"
+      ]
+    }
+  ],
+  "auditBranches": [
+    {
+      "base": "clean",
+      "id": "nonzero-labeled-clean",
+      "reasonCodes": [
+        "CLEAN_AUDIT_NOT_ZERO"
+      ],
+      "set": {
+        "audit.exitCode": 1
+      }
+    },
+    {
+      "base": "compensation",
+      "id": "clean-with-compensation",
+      "reasonCodes": [
+        "CLEAN_AUDIT_NOT_EMPTY",
+        "CLEAN_BRANCH_HAS_COMPENSATION"
+      ],
+      "set": {
+        "audit.disposition": "clean",
+        "audit.exitCode": 0,
+        "audit.state": "CLEAN"
+      }
+    },
+    {
+      "base": "compensation",
+      "id": "compensation-empty",
+      "reasonCodes": [
+        "COMPENSATION_DENOMINATOR_EMPTY"
+      ],
+      "set": {
+        "audit.unauditedFields": [],
+        "audit.unauditedRoutes": [],
+        "compensation.fieldCount": 0,
+        "compensation.routeCount": 0
+      }
+    },
+    {
+      "base": "compensation",
+      "id": "compensation-project-owned-no-issue",
+      "reasonCodes": [
+        "PROJECT_OWNED_COMPENSATION_FORBIDDEN"
+      ],
+      "set": {
+        "compensation.toolLimitation": false,
+        "upstreamIssue.issue": null,
+        "upstreamIssue.required": false,
+        "upstreamIssue.state": "NOT_REQUIRED"
+      }
+    },
+    {
+      "base": "clean",
+      "id": "unknown-audit-state",
+      "reasonCodes": [
+        "AUDIT_STATE_UNKNOWN"
+      ],
+      "set": {
+        "audit.state": "UNKNOWN"
+      }
+    },
+    {
+      "base": "clean",
+      "id": "unknown-audit-disposition",
+      "reasonCodes": [
+        "AUDIT_DISPOSITION_UNKNOWN"
+      ],
+      "set": {
+        "audit.disposition": "maybe"
+      }
+    }
+  ],
+  "compensationLedgers": [
+    {
+      "base": "compensation",
+      "delete": [
+        "securityRoutes.routes.0"
+      ],
+      "id": "omitted-review-b-route",
+      "reasonCodes": [
+        "SECURITY_ROUTE_DENOMINATOR_MISMATCH"
+      ]
+    },
+    {
+      "base": "compensation",
+      "delete": [
+        "compensation.routeReconciliation.0.declarationAnchor"
+      ],
+      "id": "omitted-route-anchor",
+      "reasonCodes": [
+        "DECLARATION_ANCHOR_MISSING"
+      ]
+    },
+    {
+      "base": "compensation",
+      "id": "route-range-hash",
+      "reasonCodes": [
+        "ROUTE_SOURCE_RANGE_HASH_MISMATCH"
+      ],
+      "set": {
+        "compensation.routeReconciliation.0.sourceRangeSha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "base": "compensation",
+      "delete": [
+        "exclusions.ledger.0"
+      ],
+      "id": "omitted-exclusion",
+      "reasonCodes": [
+        "EXCLUSION_LEDGER_INCOMPLETE"
+      ]
+    },
+    {
+      "base": "compensation",
+      "delete": [
+        "exclusions.candidateTypeScript.0"
+      ],
+      "id": "candidate-denominator-drift",
+      "reasonCodes": [
+        "EXCLUSION_DENOMINATOR_DRIFT"
+      ]
+    },
+    {
+      "base": "clean",
+      "id": "command-artifact-hash",
+      "reasonCodes": [
+        "COMMAND_ARTIFACT_HASH_MISMATCH"
+      ],
+      "set": {
+        "requiredCommands.artifact.sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "base": "clean",
+      "id": "command-unknown-state",
+      "reasonCodes": [
+        "COMMAND_STATE_UNKNOWN"
+      ],
+      "set": {
+        "requiredCommands.artifact": {
+          "path": "command-results-clean-unknown-state-v1.json",
+          "sha256": "b45783fc8bfc83039ffc04bf9566e1ba06c2811523f7f8386efe1529e1590352",
+          "size": 5085
+        }
+      }
+    }
+  ],
+  "graphReconciliation": [
+    {
+      "base": "clean",
+      "id": "graph-artifact-hash",
+      "reasonCodes": [
+        "GRAPH_ARTIFACT_HASH_MISMATCH"
+      ],
+      "set": {
+        "graph.sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "base": "clean",
+      "id": "graph-outside-snapshot",
+      "reasonCodes": [
+        "GRAPH_FILE_NOT_IN_SNAPSHOT"
+      ],
+      "set": {
+        "exclusions.graphFiles.0": "outside.ts"
+      }
+    }
+  ],
+  "schemaVersion": 1,
+  "securityDispositions": [
+    {
+      "base": "clean",
+      "delete": [
+        "securityRoutes.routes.0.security.0.category"
+      ],
+      "id": "security-category-missing",
+      "reasonCodes": [
+        "SECURITY_CATEGORY_MISSING"
+      ]
+    },
+    {
+      "append": {
+        "securityRoutes.routes.0.security": {
+          "anchor": {},
+          "category": "authentication",
+          "disposition": "public",
+          "evidenceKind": "reviewed-source-assertion",
+          "rationale": "authentication: duplicate"
+        }
+      },
+      "base": "clean",
+      "id": "security-category-duplicated",
+      "reasonCodes": [
+        "SECURITY_CATEGORY_DUPLICATE"
+      ]
+    },
+    {
+      "base": "clean",
+      "id": "security-category-unsupported",
+      "reasonCodes": [
+        "SECURITY_CATEGORY_UNSUPPORTED"
+      ],
+      "set": {
+        "securityRoutes.routes.0.security.0.category": "csrf"
+      }
+    },
+    {
+      "base": "clean",
+      "delete": [
+        "securityRoutes.routes.0.security.0.disposition"
+      ],
+      "id": "security-disposition-missing",
+      "reasonCodes": [
+        "SECURITY_DISPOSITION_MISSING"
+      ]
+    },
+    {
+      "base": "clean",
+      "id": "security-disposition-fabricated",
+      "reasonCodes": [
+        "SECURITY_DISPOSITION_UNSUPPORTED"
+      ],
+      "set": {
+        "securityRoutes.routes.0.security.0.disposition": "implicitly-trusted"
+      }
+    },
+    {
+      "base": "clean",
+      "id": "security-evidence-kind-fabricated",
+      "reasonCodes": [
+        "SECURITY_EVIDENCE_KIND_UNSUPPORTED"
+      ],
+      "set": {
+        "securityRoutes.routes.0.security.0.evidenceKind": "reviewed-by-generator"
+      }
+    },
+    {
+      "base": "clean",
+      "id": "copied-route-wide-evidence",
+      "reasonCodes": [
+        "SECURITY_EVIDENCE_COPIED_ACROSS_CATEGORIES"
+      ],
+      "set": {
+        "securityRoutes.routes.0.security.0.anchor": {
+          "category": "authentication",
+          "kind": "SecuritySourceRange",
+          "lineEnd": 22,
+          "lineStart": 8,
+          "path": "apps/accounts/app/api/admin/employees/[accountId]/company-roles/route.ts",
+          "sourceRangeSha256": "09bc4d2c873b629c4d6db1bf69cb40344edd33d2804e305b1d85a312c8ae9f2c"
+        },
+        "securityRoutes.routes.0.security.0.assertion.forbiddenTokens": [],
+        "securityRoutes.routes.0.security.0.assertion.requiredTokens": [
+          "function PUT"
+        ],
+        "securityRoutes.routes.0.security.0.rationale": "The same whole-handler range is copied as evidence without proving this category.",
+        "securityRoutes.routes.0.security.1.anchor": {
+          "category": "authorization",
+          "kind": "SecuritySourceRange",
+          "lineEnd": 22,
+          "lineStart": 8,
+          "path": "apps/accounts/app/api/admin/employees/[accountId]/company-roles/route.ts",
+          "sourceRangeSha256": "09bc4d2c873b629c4d6db1bf69cb40344edd33d2804e305b1d85a312c8ae9f2c"
+        },
+        "securityRoutes.routes.0.security.1.assertion.forbiddenTokens": [],
+        "securityRoutes.routes.0.security.1.assertion.requiredTokens": [
+          "function PUT"
+        ],
+        "securityRoutes.routes.0.security.1.rationale": "The same whole-handler range is copied as evidence without proving this category.",
+        "securityRoutes.routes.0.security.2.anchor": {
+          "category": "validation",
+          "kind": "SecuritySourceRange",
+          "lineEnd": 22,
+          "lineStart": 8,
+          "path": "apps/accounts/app/api/admin/employees/[accountId]/company-roles/route.ts",
+          "sourceRangeSha256": "09bc4d2c873b629c4d6db1bf69cb40344edd33d2804e305b1d85a312c8ae9f2c"
+        },
+        "securityRoutes.routes.0.security.2.assertion.forbiddenTokens": [],
+        "securityRoutes.routes.0.security.2.assertion.requiredTokens": [
+          "function PUT"
+        ],
+        "securityRoutes.routes.0.security.2.rationale": "The same whole-handler range is copied as evidence without proving this category.",
+        "securityRoutes.routes.0.security.3.anchor": {
+          "category": "scope",
+          "kind": "SecuritySourceRange",
+          "lineEnd": 22,
+          "lineStart": 8,
+          "path": "apps/accounts/app/api/admin/employees/[accountId]/company-roles/route.ts",
+          "sourceRangeSha256": "09bc4d2c873b629c4d6db1bf69cb40344edd33d2804e305b1d85a312c8ae9f2c"
+        },
+        "securityRoutes.routes.0.security.3.assertion.forbiddenTokens": [],
+        "securityRoutes.routes.0.security.3.assertion.requiredTokens": [
+          "function PUT"
+        ],
+        "securityRoutes.routes.0.security.3.rationale": "The same whole-handler range is copied as evidence without proving this category.",
+        "securityRoutes.routes.0.security.4.anchor": {
+          "category": "audit",
+          "kind": "SecuritySourceRange",
+          "lineEnd": 22,
+          "lineStart": 8,
+          "path": "apps/accounts/app/api/admin/employees/[accountId]/company-roles/route.ts",
+          "sourceRangeSha256": "09bc4d2c873b629c4d6db1bf69cb40344edd33d2804e305b1d85a312c8ae9f2c"
+        },
+        "securityRoutes.routes.0.security.4.assertion.forbiddenTokens": [],
+        "securityRoutes.routes.0.security.4.assertion.requiredTokens": [
+          "function PUT"
+        ],
+        "securityRoutes.routes.0.security.4.rationale": "The same whole-handler range is copied as evidence without proving this category.",
+        "securityRoutes.routes.0.security.5.anchor": {
+          "category": "destructiveEffect",
+          "kind": "SecuritySourceRange",
+          "lineEnd": 22,
+          "lineStart": 8,
+          "path": "apps/accounts/app/api/admin/employees/[accountId]/company-roles/route.ts",
+          "sourceRangeSha256": "09bc4d2c873b629c4d6db1bf69cb40344edd33d2804e305b1d85a312c8ae9f2c"
+        },
+        "securityRoutes.routes.0.security.5.assertion.forbiddenTokens": [],
+        "securityRoutes.routes.0.security.5.assertion.requiredTokens": [
+          "function PUT"
+        ],
+        "securityRoutes.routes.0.security.5.rationale": "The same whole-handler range is copied as evidence without proving this category."
+      }
+    },
+    {
+      "base": "clean",
+      "id": "fabricated-category-assertion",
+      "reasonCodes": [
+        "SECURITY_ASSERTION_SOURCE_MISMATCH"
+      ],
+      "set": {
+        "securityRoutes.routes.0.security.1.assertion.claim": "authorization.no-company-admin-capability"
+      }
+    },
+    {
+      "base": "clean",
+      "id": "public-exception-source-mismatch",
+      "reasonCodes": [
+        "SECURITY_EXCEPTION_SOURCE_MISMATCH"
+      ],
+      "set": {
+        "securityRoutes.routes.7.security.0.anchor": {
+          "category": "authentication",
+          "kind": "SecuritySourceRange",
+          "lineEnd": 12,
+          "lineStart": 12,
+          "path": "apps/accounts/app/api/admin/employees/[accountId]/company-roles/route.ts",
+          "sourceRangeSha256": "a2310a1af2ae326d3a9f8c77fb78d38204e26cbb3d81d546a9093c803e48489d"
+        },
+        "securityRoutes.routes.7.security.0.assertion": {
+          "claim": "authentication.session-evidence",
+          "forbiddenTokens": [],
+          "requiredTokens": [
+            "identityAuthenticationEvidence()"
+          ],
+          "rule": "all-required-and-no-forbidden-tokens-in-range"
+        }
+      }
+    },
+    {
+      "base": "clean",
+      "id": "admin-public-exception-fabricated",
+      "reasonCodes": [
+        "SECURITY_EXCEPTION_SOURCE_MISMATCH"
+      ],
+      "set": {
+        "securityRoutes.routes.0.security.0.disposition": "public"
+      }
+    },
+    {
+      "base": "clean",
+      "id": "public-route-authenticated",
+      "reasonCodes": [
+        "PUBLIC_ROUTE_AUTHENTICATED"
+      ],
+      "set": {
+        "securityRoutes.routes.7.security.0.disposition": "authenticated"
+      }
+    },
+    {
+      "base": "clean",
+      "id": "global-route-tenant-scoped",
+      "reasonCodes": [
+        "GLOBAL_ROUTE_TENANT_SCOPED"
+      ],
+      "set": {
+        "securityRoutes.routes.7.security.3.disposition": "tenant-scoped"
+      }
+    }
+  ],
+  "sourceSnapshot": [
+    {
+      "base": "clean",
+      "id": "archive-digest-tampered",
+      "reasonCodes": [
+        "ARCHIVE_DIGEST_MISMATCH"
+      ],
+      "set": {
+        "sourceSnapshot.archive.sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "base": "clean",
+      "id": "archive-mutable-path",
+      "reasonCodes": [
+        "MUTABLE_EVIDENCE_PATH"
+      ],
+      "set": {
+        "sourceSnapshot.archive.path": "../live.json"
+      }
+    },
+    {
+      "base": "clean",
+      "id": "pre-scan-denominator-drift",
+      "reasonCodes": [
+        "PRE_SCAN_DENOMINATOR_DRIFT"
+      ],
+      "set": {
+        "sourceSnapshot.preScan.denominatorSha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "base": "clean",
+      "id": "post-scan-status-drift",
+      "reasonCodes": [
+        "POST_SCAN_DRIFT"
+      ],
+      "set": {
+        "sourceSnapshot.postScan.statusSha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "base": "clean",
+      "delete": [
+        "sourceSnapshot.manifest"
+      ],
+      "id": "manifest-missing",
+      "reasonCodes": [
+        "SOURCE_MANIFEST_MISSING"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "phase": "R1",
+  "task": "Task 1 — deterministic dirty-worktree snapshot producer",
+  "review_type": "audit-only independent rereview",
+  "reviewed_at": "2026-07-30",
+  "decision": "PASS",
+  "task_may_be_accepted": true,
+  "parent_or_successor_unblock_authorized": false,
+  "reviewed_inputs": {
+    "producer": "measure/business_operations_graph_baseline_snapshot.py",
+    "producer_tests": "measure/tests/test_business_operations_graph_baseline_snapshot.py",
+    "r0_tests": "measure/tests/test_business_operations_graph_baseline_remediation.py",
+    "plan": "measure/tracks/business_operations_graph_baseline_remediation_20260730/plan.md",
+    "prior_r1_review": "measure/tracks/business_operations_graph_baseline_remediation_20260730/r1-task1-review-20260730.json",
+    "remediation_receipt": "measure/tracks/business_operations_graph_baseline_remediation_20260730/r1-task1-high-remediation-20260730.md",
+    "r0_acceptance": "measure/tracks/business_operations_graph_baseline_remediation_20260730/r0-phase-acceptance-20260730.json"
+  },
+  "verification": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_snapshot measure.tests.test_business_operations_graph_baseline_remediation -v",
+      "exit_code": 0,
+      "tests_run": 46,
+      "result": "PASS",
+      "observed_duration_seconds": 14.659
+    }
+  ],
+  "high_finding_reassessment": [
+    {
+      "id": "R1-T1-H1",
+      "status": "CLOSED",
+      "basis": "verify_snapshot schema-checks rich archive and manifest entries, compares their exact metadata, recomputes the denominator digest, and the untouched-bundle replay test passes while tampering still rejects."
+    },
+    {
+      "id": "R1-T1-H2",
+      "status": "CLOSED",
+      "basis": "The producer rediscoveres and compares full denominator path/metadata/content before and after the seam in addition to HEAD, branch, porcelain, and staged-diff hashes; the already-dirty byte-drift adversary aborts with unchanged Git status."
+    },
+    {
+      "id": "R1-T1-H3",
+      "status": "CLOSED",
+      "basis": "The v2 bundle emits a strict v1 archive, manifest, state artifacts, and sourceSnapshot projection; a producer-written projection is accepted end-to-end by the unchanged R0 validate_candidate contract."
+    },
+    {
+      "id": "R1-T1-H4",
+      "status": "CLOSED",
+      "basis": "Reachable in-repository extends targets are recursively parsed and added, including non-tsconfig-named nested targets and workspace exports; staged and unstaged deletions are unioned and baseline-archived."
+    },
+    {
+      "id": "R1-T1-H5",
+      "status": "CLOSED",
+      "basis": "The actual symbolic branch, Git top-level, and sole worktree root are required, and modes derive from lstat/baseline tree; non-master, alternate-root, second-worktree, and executable-mode adversaries pass."
+    }
+  ],
+  "findings": [],
+  "gate_disposition": {
+    "phase_r1_task_1": "MAY_BE_ACCEPTED",
+    "phase_r0": "REMAINS_ACCEPTED_ONLY_FOR_RECORDED_VALIDATOR_CONTRACT_SCOPE",
+    "parent_phase_0": "REMAINS_BLOCKED",
+    "small_company_admin_phase_s1": "REMAINS_BLOCKED",
+    "customer_licensing_crm_contract_schema_red": "REMAINS_BLOCKED"
+  }
+}

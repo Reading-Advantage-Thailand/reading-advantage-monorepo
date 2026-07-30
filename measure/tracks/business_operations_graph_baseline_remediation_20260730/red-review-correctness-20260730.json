@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "task": "Exact Next Red Task",
+  "role": "independent-reviewer",
+  "reviewed_at": "2026-07-30",
+  "baseline_head": "3ff9b734a9e5a69f777108827b569e4f20a5ceb8",
+  "decision": "FAIL",
+  "production_code_modified": false,
+  "commit_created": false,
+  "review_scope": [
+    "spec.md",
+    "plan.md",
+    "measure/tests/test_business_operations_graph_baseline_remediation.py",
+    "red-run-receipt-20260730.md"
+  ],
+  "verification": {
+    "command": "python3 -m unittest measure.tests.test_business_operations_graph_baseline_remediation -v",
+    "exit_code": 1,
+    "result": "8 failures observed; the receipt accurately reports Red, but the failures do not constitute valid immutable-contract tests."
+  },
+  "findings": [
+    {
+      "id": "RED-C1",
+      "severity": "Critical",
+      "summary": "The Red suite mutates its acceptance target into the failed parent evidence instead of testing a new candidate acceptance envelope.",
+      "evidence": "Every test reads the live parent producer Markdown or the live Review B JSON. Several assertions require the historical failed Review B to become audit exit 0, label clean, role independent-reviewer, and ACCEPT. FR1 requires the current failed evidence to remain classified blocked; FR3 permits a non-zero audit only on the compensation branch.",
+      "impact": "The shortest Green path is to rewrite failed parent evidence/review history rather than add a validator and new candidate evidence. That would erase RB-01/RB-02/RB-03 and can falsely unblock successor work.",
+      "remediation": "Replace parent-evidence assertions with fixtures for a new versioned candidate envelope. Preserve the parent Review B fixture as immutable FAIL input and add an explicit regression asserting it is classified BLOCKED. Test valid clean and valid compensation candidates independently; no test may require modifying the parent receipt or Review B result."
+    },
+    {
+      "id": "RED-C2",
+      "severity": "Critical",
+      "summary": "Clean-versus-compensation branch logic is inverted and cannot accept the required compensation path.",
+      "evidence": "test_rb02_nonzero_audit_cannot_be_labeled_clean and test_required_upstream_issue_is_recorded_for_compensation_branch both assert exitCode == 0. The former then requires label clean, while the latter describes compensation and requires an issue. This contradicts FR3.2-4 and FR6.2.",
+      "impact": "A correct compensated candidate with exit 1, preserved limitations, a complete reconciliation, and a required issue will fail. Conversely, a clean candidate can be made to satisfy issue-related assertions without proving the conditional decision rule.",
+      "remediation": "Add separate parameterized fixture cases: clean requires exit 0 and every integrity/unaudited collection empty and forbids compensation/required issue; compensation requires non-zero exit, non-empty frozen denominator, complete route/field reconciliation, two-scan inventory equality, preserved limitation text, and an upstream issue only when the documented-tool-limitation predicate is true. Add negative fixtures for both invalid cross-branch combinations."
+    },
+    {
+      "id": "RED-H1",
+      "severity": "High",
+      "summary": "Text regexes and field-presence checks are false-pass-prone and do not validate the specified immutable evidence contracts.",
+      "evidence": "RB-01 and RB-03 tests search Markdown for phrases such as source snapshot, archive/manifest, field names, exclusion ledger, and postgres16-harness digest. The lists test checks only that two arrays exist and are non-empty. No test parses a schema, hashes an archive, verifies manifest paths/digests/modes/status, reconciles graph file rows, rejects duplicate paths, validates declaration anchors, or compares denominator counts to inventory.",
+      "impact": "Appending words or arbitrary non-empty arrays can turn tests green while all replay, provenance, coverage, and security requirements remain unmet.",
+      "remediation": "Define JSON schemas and a validator API first. Use isolated immutable JSON/archive fixtures and assert semantic outcomes. Include tampered archive, digest mismatch, duplicate path, mutable evidence path, missing pre/post status or staged-diff drift, zero-item compensation, incomplete graph-row reconciliation, omitted route/field, and omitted exclusion fixtures. Verify exact normalized inventories and all referenced SHA-256 values rather than prose."
+    },
+    {
+      "id": "RED-H2",
+      "severity": "High",
+      "summary": "The suite does not establish independent acceptance semantics and attempts to turn the historical independent FAIL review into acceptance.",
+      "evidence": "The independent-review test only compares a free-text role to independent-reviewer, requires machineReadable ACCEPT in Review B, and treats a missing producerAccepted flag as failure. It does not bind reviewer identity to a distinct producer identity, candidate/evidence hashes, reviewed baseline, a severity gate, or successor-block decisions. Review B is expressly a FAIL artifact.",
+      "impact": "A producer can add magic fields or relabel a review and obtain a false acceptance without independent verification of the exact candidate.",
+      "remediation": "Model producer and reviewer receipts as separate versioned artifacts. Require distinct immutable identities, candidate manifest SHA-256, reviewer recomputation of every referenced artifact hash, explicit ACCEPT/REJECT, severity-ranked findings, and a rule that Critical/High or hash mismatch forces REJECT and keeps both successor gates blocked. Add producer-self-approval, same-identity, stale-hash, missing-decision, and ACCEPT-with-High fixtures."
+    },
+    {
+      "id": "RED-H3",
+      "severity": "High",
+      "summary": "The required invalid-fixture corpus and several required counterexamples are absent.",
+      "evidence": "Plan line 14 requires versioned invalid fixtures, but the task adds no fixture files. The eight tests do not exercise concurrent source drift, replay/tamper behavior, duplicate paths, mutable evidence paths, zero-item compensation, false clean claims with all collections, Accounts security-route dispositions, required focused command exits, exact per-file exclusion classifications, or both conditional upstream-issue outcomes.",
+      "impact": "The future validator has no executable boundary for most FR1-FR7 rejection conditions and can pass the current suite while omitting security-critical acceptance logic.",
+      "remediation": "Create a named fixture corpus under the track/test convention before Green. For each FR requirement, include one minimally valid candidate and one focused invalid counterexample, with expected accept/reject reason. Cover Accounts matrices and all required command records, TypeScript exclusion denominator/ledger entries, and issue-required versus issue-not-required decisions."
+    },
+    {
+      "id": "RED-M1",
+      "severity": "Medium",
+      "summary": "The Red test is bound to mutable live shared-tree paths and neither pins the stated baseline nor detects evidence drift.",
+      "evidence": "REPO_ROOT resolves live files and the test/receipt record no SHA-256 for their own parent inputs. The worktree is explicitly dirty; the producer evidence file itself is modified in the shared tree. The test does not read the baseline commit version, fixture copies, or expected input hashes.",
+      "impact": "A concurrent edit can change the test's target between runs, making Red/Green results irreproducible and enabling retrospective evidence changes.",
+      "remediation": "Copy only non-sensitive baseline excerpts into immutable test fixtures with fixture hashes, or load parent artifacts by baseline commit content in a read-only test helper. Assert source artifact SHA-256 before evaluating it, and test that mutable/out-of-snapshot evidence references are rejected."
+    },
+    {
+      "id": "RED-M2",
+      "severity": "Medium",
+      "summary": "Anti-pattern defenses are incomplete or not executable for this task.",
+      "evidence": "A3 has no labeled/parsed count checks; A4 has no assertion that accepted evidence contains at least one complete denominator/reconciliation item; A5 is contradicted by tests that call a non-zero audit clean; A7 has no filtering test for complete inventory preservation; A8 is not checked; A15 has no evidence/receipt hash lineage test; A16 has no one-shared-master-worktree preflight. The receipt names A5/A8/A10/A15/A16 but does not prove them.",
+      "impact": "The requested A3/A4/A5/A7/A8/A15/A16 audit surfaces can regress silently while superficial tests pass.",
+      "remediation": "Add focused semantic tests: parse labeled integer counts and compare them to unique inventories (A3); reject empty denominators/reconciliation where compensation is selected (A4); reject claim/result conflicts (A5); prove no inventory item is dropped by filtering (A7); reject disallowed task markers in track evidence (A8); recompute every receipt/artifact hash and reject stale lineage (A15); and have the producer preflight emit and validator require the single-master-worktree record (A16)."
+    }
+  ],
+  "anti_pattern_assessment": {
+    "A3": "Fail: no parsed labeled-count-to-inventory assertions.",
+    "A4": "Fail: no non-vacuous completion/reconciliation invariant.",
+    "A5": "Fail: non-zero audit is asserted as clean rather than tested as rejected or compensated.",
+    "A7": "Fail: no complete-inventory/filter-preservation coverage.",
+    "A8": "Not covered: marker vocabulary is not tested.",
+    "A15": "Fail: parent/candidate/reviewer artifact hashes and receipt lineage are not verified.",
+    "A16": "Not covered: no single shared master-worktree invariant in the contract."
+  },
+  "required_disposition": {
+    "exact_next_red_task": "Remain [~]; do not begin R0 Green.",
+    "parent_phase0": "Keep blocked; preserve Review B FAIL and RB-01/RB-02/RB-03 evidence.",
+    "successor_tracks": "Keep Admin S1 and CRM contract/schema/Red work blocked.",
+    "acceptance": "Denied until replacement Red tests use immutable candidate fixtures and correctly encode clean/compensation and independent-review contracts."
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "task": "Phase R0 — Review A correctness audit",
+  "role": "independent-reviewer",
+  "reviewed_at": "2026-07-30",
+  "baseline_head": "3ff9b734a9e5a69f777108827b569e4f20a5ceb8",
+  "decision": "FAIL",
+  "production_code_modified": false,
+  "commit_created": false,
+  "review_scope": [
+    "AGENTS.md",
+    "measure/index.md",
+    "measure/workflow.md",
+    "measure/anti-patterns.md",
+    "measure/code_styleguides/python.md",
+    "measure/code_styleguides/general.md",
+    "measure/business_operations_graph_baseline_validation.py",
+    "measure/tests/test_business_operations_graph_baseline_remediation.py",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/spec.md",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/plan.md",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/fixtures/v1/",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/red-green-gate-20260730.json",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/red-green-authorization-review-20260730.json"
+  ],
+  "preflight": {
+    "head": "3ff9b734a9e5a69f777108827b569e4f20a5ceb8",
+    "branch": "master",
+    "worktree_count": 1,
+    "shared_worktree": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "dirty_tree_preserved": true,
+    "scope_escape_found": false
+  },
+  "verification": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_remediation -v",
+    "exit_code": 0,
+    "tests_run": 19,
+    "result": "PASS: all focused contract and fixture tests passed. This verifies the frozen positive/negative corpus, not completeness of the validator's runtime schema enforcement."
+  },
+  "findings": [
+    {
+      "id": "R0-RA-C1",
+      "severity": "Critical",
+      "summary": "Malformed lineage can crash the validator instead of producing a fail-closed BLOCKED result.",
+      "file": "measure/business_operations_graph_baseline_validation.py",
+      "lines": "998-1003",
+      "context": "After recording LINEAGE_KEYS_INVALID, _validate_lineage indexes lineage['candidateManifest'], producerReceipt, reviewerReceipt, and recomputedArtifactLedger directly. A candidate with one required lineage key deleted raises KeyError; an external JSON boundary therefore escapes the {decision, reasons} contract. The focused suite has no missing-lineage-key counterexample.",
+      "suggestion": "Validate all four references before indexing them and return BLOCKED with a specific schema/lineage reason for every missing or malformed key. Add a fixture that deletes each required lineage key and asserts no exception."
+    },
+    {
+      "id": "R0-RA-H1",
+      "severity": "High",
+      "summary": "Compensation does not require complete route/field reconciliation or count equality.",
+      "file": "measure/business_operations_graph_baseline_validation.py",
+      "lines": "547-567",
+      "context": "The validator checks only zero-item compensation and optional reconciliation lists. It never requires routeReconciliation and fieldReconciliation, never compares their unique paths to unauditedRoutes/unauditedFields, and never compares routeCount/fieldCount to the actual inventories. A positive-count compensation candidate can omit a reconciliation list or provide a partial list and still pass this gate. Tests cover an altered anchor but not omitted/partial reconciliation or count mismatch.",
+      "suggestion": "Require both reconciliation ledgers, exact normalized inventory equality, unique-item checks, and count-to-inventory equality. Add omission, partial, duplicate, and count-mismatch counterexamples."
+    },
+    {
+      "id": "R0-RA-H2",
+      "severity": "High",
+      "summary": "Snapshot and graph schema checks do not establish the required provenance and exact inventory bindings.",
+      "file": "measure/business_operations_graph_baseline_validation.py",
+      "lines": "385-498",
+      "context": "Source validation checks artifact references and pre/post digest equality, but does not require or validate manifest entries, baselineHead, branch, tool/config, archive-to-manifest inventory equality, or archive metadata. Graph validation checks row source hashes but does not require graph metadata (schema/tool/commands/size) or exact equality between graph fileRows and exclusions.graphFiles. Direct probes showed candidates still return ACCEPT when manifest metadata is removed or graph metadata is absent. This leaves FR2/FR5 and A7 vulnerable to omission.",
+      "suggestion": "Define and enforce required nested schemas, replay archive entries into the exact manifest inventory, validate all provenance fields, and compare graph rows with the declared graph inventory. Add omission and mismatched-inventory fixtures."
+    },
+    {
+      "id": "R0-RA-H3",
+      "severity": "High",
+      "summary": "Parent FAIL evidence is not required or cryptographically bound to normal candidate acceptance.",
+      "file": "measure/business_operations_graph_baseline_validation.py",
+      "lines": "1094-1180",
+      "context": "Accepted clean and compensation envelopes contain neither parentArtifact nor parentArtifacts, and validate_candidate never requires either. The parentArtifacts branch validates only candidate-supplied metadata shape; it does not load referenced authoritative artifacts or compare their bytes to the pinned parent fixture roots. The parent preflight tests preserve current bytes, but the validator contract itself can accept a candidate without proving RB-01/RB-02/RB-03 remain BLOCKED.",
+      "suggestion": "Make the required parent-failure evidence an immutable, hash-pinned input to candidate validation, validate exact artifact references and FAIL/BLOCKED semantics, and add an accepted-candidate test proving the parent evidence is mandatory."
+    },
+    {
+      "id": "R0-RA-M1",
+      "severity": "Medium",
+      "summary": "Nested schema validation and external-value typing are incomplete.",
+      "file": "measure/business_operations_graph_baseline_validation.py",
+      "lines": "336-363, 524-555, 686-755",
+      "context": "_validate_schema rejects unknown top-level keys only; nested unknown keys and malformed field types are accepted in several structures. Compensation accepts any exitCode other than integer 0, and security assertion token collections are not type-checked before set/iteration. This is weaker than FR1's runtime validation requirement and is not exercised by the corpus.",
+      "suggestion": "Use explicit strict schemas for every nested envelope/artifact structure, require integer exit codes, validate list/string/boolean types before processing, and add malformed-type and nested-unknown-field fixtures."
+    },
+    {
+      "id": "R0-RA-M2",
+      "severity": "Medium",
+      "summary": "The plan markers do not truthfully describe the current R0 state.",
+      "file": "measure/tracks/business_operations_graph_baseline_remediation_20260730/plan.md",
+      "lines": "12-18",
+      "context": "The exact-next-Red task remains [~] even though its tests, fixtures, and validator now exist and the focused command passes. Conversely, the R0 task is [x] without a task commit SHA, Green result artifact, or phase checkpoint. The available Green authorization only authorized beginning R0; it did not record completion. This conflicts with the workflow's marker/commit truthfulness rules and leaves the plan ambiguous about whether R0 is complete or in progress.",
+      "suggestion": "Record the actual R0 implementation/Green evidence and commit/checkpoint identity, then update only the relevant task/phase markers; otherwise leave R0 in progress and state the missing gate explicitly."
+    }
+  ],
+  "anti_pattern_assessment": {
+    "A3": "Partial: route count is compared with route-list length, but reconciliation and graph inventory count-to-content equality are not enforced.",
+    "A4": "Partial: zero-item compensation is rejected, but incomplete positive compensation can pass.",
+    "A5": "Partial: clean versus compensation disposition conflicts are tested; parent-failure preservation is not required by normal validation.",
+    "A6": "Pass for reviewed plan/context: no successor unblock or resolved-parent claim was found.",
+    "A7": "Fail: graph rows and snapshot manifest inventories are not required to equal declared inventories.",
+    "A8": "Pass: current plan task markers are limited to [~], [x], and [b].",
+    "A10": "Not applicable to this R0 contract-only change.",
+    "A15": "Partial: candidate/producer/reviewer hashes are checked, but malformed lineage can crash and parent evidence is not bound to acceptance.",
+    "A16": "Pass: focused preflight and validator enforce one master worktree in the candidate contract."
+  },
+  "required_disposition": {
+    "recommendation": "Fix the Critical/High findings before accepting Phase R0 or starting downstream remediation phases.",
+    "phase_r0": "BLOCKED",
+    "parent_gate": "Keep Review B FAIL and RB-01/RB-02/RB-03 blocked.",
+    "successor_tracks": "Keep Admin S1 and CRM contract/schema/Red work blocked.",
+    "scope": "No implementation, test, plan, parent evidence, or unrelated work was modified by this review; only this audit artifact was written."
+  }
+}

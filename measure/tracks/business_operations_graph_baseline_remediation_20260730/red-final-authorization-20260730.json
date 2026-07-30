@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "task": "Exact Next Red Task — independent final authorization review",
+  "role": "independent-reviewer",
+  "reviewed_at": "2026-07-30",
+  "decision": "FAIL",
+  "r0_green_may_begin": false,
+  "production_code_modified": false,
+  "commit_created": false,
+  "verification": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_remediation -v",
+    "exit_code": 1,
+    "tests_run": 19,
+    "failures": 60,
+    "result": "Expected Red: every observed failure is the intentionally absent measure.business_operations_graph_baseline_validation module after the Python archive, manifest, route-range, exclusion, command, and lineage preflights complete."
+  },
+  "red_green_h1": {
+    "status": "OPEN",
+    "severity": "High",
+    "summary": "The revised matrix constrains category names and disposition vocabulary, but it still does not make each security disposition semantically evidentiary.",
+    "evidence": [
+      "fixtures/v1/generate-fixtures.py:180-191 derives every disposition from route path and HTTP method, rather than from the frozen handler bytes or an executable test.",
+      "fixtures/v1/generate-fixtures.py:203-219 creates all six category entries by looping over categories and assigns each the identical whole-handler line range and source-range digest; only category, disposition, and templated rationale differ.",
+      "measure/tests/test_business_operations_graph_baseline_remediation.py:342-349 verifies vocabulary, templated rationale, and equality with the route-wide anchor, but does not require a category-specific code anchor, executable test reference, or source assertion that proves the stated disposition.",
+      "fixtures/v1/invalid-candidates-v1.json:352-418 rejects missing, duplicated, unsupported category, missing disposition, and two health-route lies, but has no counterexample for an unsupported/fabricated disposition on an otherwise valid category, a copied route-wide assertion used as evidence for a different category, or an admin-route public/global exception unsupported by the frozen source."
+    ],
+    "impact": "A Green validator can accept mechanically generated assertions whenever they use allowed labels and the handler digest matches, without establishing authentication, permission ownership, validation, tenant/global scope, immutable audit behavior, or destructive effect for any route. The public-health checks do not close that general false-evidence path.",
+    "required_remediation": "Keep the task Red. Require each category to reference either an executable test artifact or a category-specific frozen-source anchor/range with a constrained assertion rule and non-templated rationale; add adversarial fixtures for unsupported dispositions/evidence kinds, duplicated route-wide evidence across categories, fabricated category assertions, and public/global exceptions that disagree with their asserted source evidence. Preserve the current positive archive/route/exclusion consistency preflights."
+  },
+  "consistency_checks": {
+    "valid_fixture_python_preflights": "pass before absent-validator calls",
+    "source_archives_replay_to_manifests": true,
+    "expected_accounts_route_set_and_route_ranges": "17/17 for clean and compensation",
+    "typescript_minus_graph_ledger": "clean=0; compensation=26",
+    "parent_fail_literals_and_current_authoritative_bytes": "match",
+    "plan_marker_vocabulary": "only [~], [x], and [b]"
+  },
+  "required_disposition": {
+    "exact_next_red_task": "Remain [~]; repair RED-GREEN-H1 and rerun independent Red authorization review.",
+    "r0_green_may_begin": false,
+    "parent_gate": "Keep Review B FAIL and RB-01/RB-02/RB-03 blocked.",
+    "successor_tracks": "Keep Admin S1 and CRM contract/schema/Red work blocked.",
+    "acceptance": "Denied: one High authorization-contract finding remains open."
+  }
+}

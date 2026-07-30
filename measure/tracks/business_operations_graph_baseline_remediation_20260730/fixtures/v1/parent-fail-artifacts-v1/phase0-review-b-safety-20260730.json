@@ -1,0 +1,129 @@
+{
+  "review": {
+    "role": "Measure Review B",
+    "scope": "security and plan truthfulness",
+    "track": "small_company_admin_privileges_20260722",
+    "phase": "Phase 0: Restore the program graph baseline",
+    "date": "2026-07-30",
+    "baselineHead": "3ff9b734a9e5a69f777108827b569e4f20a5ceb8",
+    "preRoleSnapshot": "/tmp/small-company-phase0-pre-review.json"
+  },
+  "verdict": "FAIL",
+  "decision": {
+    "phase0AcceptanceMayTruthfullyBeGranted": false,
+    "liftSmallCompanyPhaseS1Block": false,
+    "liftCustomerLicensingCrmBlock": false,
+    "summary": "The revised producer evidence is materially more truthful, but the graph is a non-commit-bound scan of a dirty shared tree, its audit exits 1 with 3,965 unaudited symbols including security-sensitive Accounts routes, and 26 current TypeScript files are outside graph file coverage. Those limitations make the baseline unsafe as authorization to begin owner-role or CRM work."
+  },
+  "findings": [
+    {
+      "id": "RB-01",
+      "severity": "High",
+      "title": "The graph artifact is not bound to an immutable source revision",
+      "finding": "The artifact hash identifies graph.db bytes, but not the source bytes scanned. The scan consumed a dirty shared master tree while metadata records commitSha as null. Concurrent unrelated work is present, so HEAD alone cannot reproduce the graph input and the receipt cannot establish a stable security-review baseline.",
+      "impact": "Lifting either block would authorize security-sensitive role and licensing work from a baseline whose exact source state cannot be reconstructed from Git. This is a provenance failure, not evidence that the indexed source is malicious.",
+      "evidence": [
+        "Producer evidence lines 13-24 states HEAD 3ff9b734a9e5a69f777108827b569e4f20a5ceb8, a dirty tree, and commitSha null.",
+        "Independent command `git rev-parse HEAD` returned 3ff9b734a9e5a69f777108827b569e4f20a5ceb8; `git branch --show-current` returned master.",
+        "Independent `git status --short` showed extensive modified and untracked work; its output exactly matched the pre-role snapshot status, and the snapshot reported an empty staged diff.",
+        "Independent meta query returned schemaVersion 2.0.0, commitSha null, and lastIndexedAt 1785376142259.",
+        "Independent SHA-256 revalidation matched the receipt: 3c0fab1a59947e947f9e652219e14386f422b2cbf424d60ccc86d446db543d1a."
+      ]
+    },
+    {
+      "id": "RB-02",
+      "severity": "High",
+      "title": "The graph audit does not cover 3,965 symbols, including Accounts authorization routes",
+      "finding": "`repo-graph audit ./graph.db --json` exits 1. It reports 3,300 unaudited fields and 665 unaudited routes. A focused read of the audit payload found 17 unaudited routes under apps/accounts, including company-role, role, session, credential, and employee-status administration routes.",
+      "impact": "The audit cannot independently establish stale-symbol safety for the exact Accounts boundary that Phase S1 intends to change. Empty missing/stale/orphan arrays and fresh indexed-file rows do not convert the non-zero audit into a clean security baseline.",
+      "evidence": [
+        "Independent audit summary: missingFiles=0, staleSymbols=0, orphanEdges=0, duplicateNodes=0, unauditedSymbols=3965, audit exit=1.",
+        "Independent type grouping: field=3300 and route=665.",
+        "Independent Accounts filter: 17 unaudited route nodes; samples include PUT /api/admin/employees/:accountId/company-roles, PUT /api/admin/employees/:accountId/roles, DELETE /api/admin/employees/:accountId/sessions, and PATCH /api/admin/employees/:accountId/status.",
+        "AGENTS.md lines 233-241 separates authentication from authorization; lines 330-353 require schoolId tenant scoping; lines 409-425 require ownership, role, tenant, and resource checks in permission modules; lines 530-541 require immutable audit events for permission changes and destructive actions."
+      ]
+    },
+    {
+      "id": "RB-03",
+      "severity": "High",
+      "title": "Current TypeScript source and test coverage is incomplete",
+      "finding": "Graph freshness covers only existing graph file rows. Independent status-to-files-table comparison reproduced 23 current dirty-tree TypeScript files absent from graph coverage: 19 packages/advantage-play-kit files and 4 apps/advantage-games test/spec files. Three additional tracked backend postgres16 harness/test files exist but have no graph file row, for 26 verified exclusions total.",
+      "impact": "A baseline that omits current tests, test support, configuration, and backend harness files cannot truthfully be described as a complete current-source program graph. Excluded tests remove counterexample and boundary evidence that is especially important before owner-role, auth, tenant, and CRM changes.",
+      "evidence": [
+        "Producer evidence lines 116-139 discloses the 26 exclusions and correctly limits the freshness claim.",
+        "Independent comparison reported STATUS_TS_FILES=64 and STATUS_TS_FILES_ABSENT_FROM_GRAPH=23, reproducing the 19 package plus 4 app split.",
+        "Independent graph query returned indexed=0 for packages/backend/src/jobs/__tests__/postgres16-harness.integration.test.ts, postgres16-harness.test.ts, and postgres16-harness.ts; `git ls-files` plus file existence checks confirmed all three are tracked and present.",
+        "AGENTS.md lines 560-582 makes backend, permission, database, API, and auth testing a primary gate and requires the repository test command to pass."
+      ]
+    }
+  ],
+  "securityConstraintAssessment": {
+    "directSecurityTenantOrAuthBypassObservedInReviewedPhase0Artifacts": false,
+    "absenceOfBypassProvenByThisBaseline": false,
+    "assessment": "The reviewed plan and producer evidence do not themselves change permissions, tenant queries, authentication, or product code, and they correctly keep both successor tracks blocked. However, the incomplete and non-immutable graph cannot prove that auth, authorization, schoolId tenant scoping, boundary validation, or security-audit constraints are intact. Granting acceptance despite these known gaps would bypass the Phase 0 safety gate rather than satisfy it."
+  },
+  "planTruthfulness": {
+    "currentState": "Truthful and blocked",
+    "evidence": [
+      "plan.md line 16 keeps the producer/acceptance task at [~].",
+      "plan.md line 18 says independent review is pending and Phase S1 plus Track 2 remain blocked.",
+      "plan.md lines 23-27 keep every Phase S1 task at [b] with the Phase 0 acceptance deferral.",
+      "Producer evidence lines 148-155 explicitly says the artifact is not acceptance-ready and preserves both blocks."
+    ],
+    "acceptanceStatement": "Changing Phase 0 to accepted on the reviewed evidence would be false plan text because it would contradict the verified audit exit, provenance limitation, and source exclusions."
+  },
+  "antiPatternAssessment": {
+    "A5": {
+      "result": "Pass in current artifacts",
+      "assessment": "The revised receipt no longer claims a clean audit and the plan does not claim acceptance. An acceptance grant now would create the A5 false-claim condition."
+    },
+    "A8": {
+      "result": "Pass",
+      "assessment": "The reviewed plan uses only [x], [~], and [b] task markers; no ambiguous [ ] marker is present."
+    },
+    "A10": {
+      "result": "Not sufficient for acceptance",
+      "assessment": "Graph freshness is clean only for indexed rows, while current sources are excluded and the shared tree contains modified generated facts. No claim of complete generated-fact alignment is supportable from this artifact."
+    },
+    "A15": {
+      "result": "Partial fail",
+      "assessment": "The graph SHA in the revised receipt is current and independently matches, so no stale graph hash was detected. Provenance still fails because the receipt is not bound to a committed source snapshot and commitSha remains null."
+    },
+    "A16": {
+      "result": "Pass",
+      "assessment": "Independent worktree inspection found exactly one worktree at the required repository path on master. The shared-tree invariant is satisfied, but it makes dirty-tree snapshot drift a material acceptance risk rather than curing it."
+    }
+  },
+  "verifiedArtifact": {
+    "toolVersion": "0.1.0",
+    "sha256": "3c0fab1a59947e947f9e652219e14386f422b2cbf424d60ccc86d446db543d1a",
+    "sizeBytes": 180015104,
+    "schemaVersion": "2.0.0",
+    "commitSha": null,
+    "lastIndexedAt": 1785376142259,
+    "stats": {
+      "files": 3400,
+      "nodes": 88414,
+      "edges": 116683,
+      "freshnessStale": 0,
+      "freshnessMissing": 0
+    },
+    "audit": {
+      "exitCode": 1,
+      "missingFiles": 0,
+      "staleSymbols": 0,
+      "orphanEdges": 0,
+      "duplicateNodes": 0,
+      "unauditedSymbols": 3965,
+      "unauditedFields": 3300,
+      "unauditedRoutes": 665,
+      "unauditedAccountsRoutes": 17
+    }
+  },
+  "requiredDisposition": {
+    "phase0TaskMarker": "Keep [~]",
+    "phaseS1Markers": "Keep [b]",
+    "sharedCrmTrack": "Keep blocked",
+    "acceptance": "Denied until a reproducible source-bound baseline and adequate graph or compensating security coverage resolve the stated limitations."
+  }
+}

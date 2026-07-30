@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "task": "Phase R0 — independent rereview A of Critical/High remediation",
+  "role": "independent-reviewer",
+  "reviewed_at": "2026-07-30",
+  "decision": "PASS",
+  "phase_r0_acceptance_may_be_granted": true,
+  "production_code_modified": false,
+  "commit_created": false,
+  "scope": [
+    "measure/business_operations_graph_baseline_validation.py",
+    "measure/tests/test_business_operations_graph_baseline_remediation.py",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/fixtures/v1/",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/plan.md",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r0-review-a-correctness-20260730.json",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r0-review-b-safety-20260730.json",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r0-critical-high-remediation-20260730.json"
+  ],
+  "verification": {
+    "focused_suite": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_remediation -v",
+      "exit_code": 0,
+      "tests_run": 29,
+      "result": "PASS"
+    },
+    "syntax": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/business_operations_graph_baseline_validation.py measure/tests/test_business_operations_graph_baseline_remediation.py",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    "fixture_command": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/business_operations_graph_baseline_remediation_20260730/fixtures/v1/generate-fixtures.py --check",
+      "exit_code": 0,
+      "result": "PROCESS_PASS; --check is not implemented and is ignored by the generator"
+    },
+    "worktree": {
+      "result": "PASS: existing unrelated dirty work was preserved; no unrelated path was edited by this rereview"
+    }
+  },
+  "adversarial_coverage": {
+    "totality": "PASS: missing each lineage reference, malformed nested values, malformed archive entries, unsafe paths, duplicate paths, and malformed security token collections return BLOCKED rather than escaping the decision/reasons boundary",
+    "source_provenance": "PASS: archive replay, canonical repository-relative paths, exact archive/manifest metadata, frozen discovery denominator, pre/post status and staged-diff bindings, and truncated-denominator mutations are rejected",
+    "graph_binding": "PASS: graph schema/provenance omissions, source-row hash drift, outside-snapshot rows, duplicate rows, and declared/file-row inventory mismatch are rejected",
+    "compensation": "PASS: missing, partial, duplicate, malformed, unhashed, and count-mismatched route/field reconciliation plus zero-item compensation are rejected",
+    "security": "PASS: route/category-specific dispositions and claims, source anchors, copied whole-handler evidence, cross-route substitution, fabricated public/admin exceptions, public-authenticated, and global-tenant-scoped cases are rejected",
+    "review_lineage": "PASS: reviewer REJECT, non-FINAL state, Critical/High findings, self-review, missing/mismatched receipts, incomplete derived artifact sets, and reviewer/producer digest drift are rejected",
+    "parent_and_issue": "PASS: pinned parent FAIL/BLOCKED evidence is mandatory for normal acceptance and tool-limitation compensation requires the immutable upstream issue receipt",
+    "plan_state": "PASS: current plan keeps R0 and the exact next Red task in progress, with successor work blocked and only [~], [x], and [b] markers"
+  },
+  "closed_findings": [
+    "R0-RA-C1",
+    "R0-RA-H1",
+    "R0-RA-H2",
+    "R0-RA-H3",
+    "R0-RB-C1",
+    "R0-RB-C2",
+    "R0-RB-H1",
+    "R0-RB-H2",
+    "R0-RB-H3"
+  ],
+  "new_findings": [
+    {
+      "id": "R0-REREVIEW-M1",
+      "severity": "Medium",
+      "status": "OPEN",
+      "summary": "The fixture generator accepts --check but does not implement a non-writing check mode.",
+      "evidence": "generate-fixtures.py dispatches directly to main() without argument parsing; the observed --check command exited 0 but is therefore not an independent drift check.",
+      "impact": "The cited fixture-check receipt remains misleading, although this does not create a Critical/High candidate-acceptance bypass in the validator.",
+      "required_follow_up": "Implement and test a genuinely non-writing --check mode before relying on that command as fixture-integrity evidence."
+    }
+  ],
+  "required_disposition": {
+    "critical_high_findings_remaining": [],
+    "successor_gates_changed": false,
+    "parent_review_b": "remains FAIL/BLOCKED",
+    "successor_tracks": "remain blocked until a separately authorized hash-bound handoff",
+    "acceptance_basis": "PASS is limited to closure of all prior R0 Critical/High findings; the open Medium finding remains documented and does not authorize successor unblocking"
+  }
+}

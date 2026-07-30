@@ -1,0 +1,11 @@
+{
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "type": "chore",
+  "status": "in_progress",
+  "created_at": "2026-07-30T00:00:00Z",
+  "updated_at": "2026-07-30T00:00:00Z",
+  "description": "Remediate the failed business-operations graph baseline by binding an exact dirty-tree source snapshot, closing or compensating for repo-graph audit and tsconfig coverage gaps, and requiring independent acceptance before successor work begins.",
+  "estimated_tasks": 15,
+  "actual_tasks": null,
+  "deviation_notes": "Opened after Measure Review B denied small_company_admin_privileges_20260722 Phase 0 acceptance with RB-01 through RB-03. No blocker is resolved by creating this track; Admin S1 and customer/licensing CRM remain blocked."
+}

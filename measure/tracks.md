@@ -11,8 +11,8 @@ program, priority order when picking the next track is:
 
 1. **Small-company operations.** Simplify `COMPANY_ADMIN`, establish the bounded
    customer/licensing CRM, connect www lead intake, and prove Reading-first
-   licensing. Track 1 and Track 2 may begin in parallel after the repository
-   graph is rebuilt successfully.
+   licensing. Track 1 and Track 2 remain blocked until the dedicated graph
+   baseline remediation receives independent acceptance.
 2. **Backend platform.** Finish the capability kernel and begin the durable job
    worker foundation; customer/licensing capabilities consume the accepted
    kernel rather than creating a parallel framework.
@@ -45,7 +45,11 @@ program, priority order when picking the next track is:
   Make `COMPANY_ADMIN` the intentional owner/operator role with exact inherited
   administrator access to Marketing, Sales, Codecamp, and future internal apps,
   while ordinary employees retain explicit app roles.
-- [ ] **Track: Customer, Licensing, and Minimal CRM Control Plane** *Link: [./tracks/customer_licensing_crm_20260722/](./tracks/customer_licensing_crm_20260722/)*
+- [~] **Track: Business Operations Graph Baseline Remediation** *Link: [./tracks/business_operations_graph_baseline_remediation_20260730/](./tracks/business_operations_graph_baseline_remediation_20260730/)*
+  Remediate the failed shared Phase 0 graph gate by binding a reproducible source
+  snapshot, reconciling unaudited routes/fields and tsconfig-excluded tests, and
+  obtaining independent acceptance. This entry does not unblock Admin S1 or CRM.
+- [b] **Track: Customer, Licensing, and Minimal CRM Control Plane** *Link: [./tracks/customer_licensing_crm_20260722/](./tracks/customer_licensing_crm_20260722/)*
   Add leads, customers, contacts, school sites, sales ownership, shared demos,
   school trials, subscriptions, provisioning ports, and future revenue/commission
   attribution seams behind Company Admin.

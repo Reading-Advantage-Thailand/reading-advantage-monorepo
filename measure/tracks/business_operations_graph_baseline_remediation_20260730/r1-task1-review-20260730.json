@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "phase": "R1",
+  "task": "Task 1 — deterministic dirty-worktree snapshot producer",
+  "review_type": "audit-only correctness/security review",
+  "reviewed_at": "2026-07-30",
+  "decision": "REJECT",
+  "task_1_acceptance": false,
+  "parent_or_successor_unblock_authorized": false,
+  "scope": [
+    "measure/business_operations_graph_baseline_snapshot.py",
+    "measure/tests/test_business_operations_graph_baseline_snapshot.py",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r1-task1-snapshot-producer-red-receipt-20260730.md",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/plan.md",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/spec.md",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r0-phase-acceptance-20260730.json",
+    "AGENTS.md"
+  ],
+  "verification": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_snapshot -v",
+      "exit_code": 0,
+      "tests_run": 9,
+      "result": "PASS",
+      "observed_duration_seconds": 1.667
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_remediation -v",
+      "exit_code": 0,
+      "tests_run": 29,
+      "result": "PASS",
+      "observed_duration_seconds": 7.25
+    }
+  ],
+  "findings": [
+    {
+      "id": "R1-T1-H1",
+      "severity": "High",
+      "status": "OPEN",
+      "area": "archive integrity",
+      "summary": "verify_snapshot rejects every producer-generated bundle rather than proving archive/manifest replay.",
+      "evidence": "The producer's manifest entries contain kind, resolvedTargetPath, and symlinkTarget (lines 618-631), but verify_snapshot constructs archive_metadata with only path, sha256, size, mode, and state (lines 1062-1065) and compares those unequal objects at line 1066. The normal successful replay path is untested; the tampering test only observes a rejection.",
+      "impact": "The required archive-replay proof cannot be obtained from the produced artifact, so the snapshot cannot serve as integrity evidence.",
+      "required_remediation": "Make manifest/archive metadata comparison exact and schema-aware, add a passing verification test for an untouched bundle, and retain tampering tests."
+    },
+    {
+      "id": "R1-T1-H2",
+      "severity": "High",
+      "status": "OPEN",
+      "area": "drift detection",
+      "summary": "Pre/post checks do not hash the scanner-input denominator and miss content drift within an already-dirty tracked file.",
+      "evidence": "Descriptors and their bytes are collected before pre-state capture (lines 924-934). The subsequent comparison only checks porcelain/status and staged-diff hashes (lines 938-945). Mutating a tracked file that was already unstaged-modified between those captures leaves both status and staged diff unchanged, while the accepted scan can consume different bytes from the archived manifest.",
+      "impact": "This violates FR2's required immediate pre/post complete-denominator hash and permits an unbound dirty-worktree scan.",
+      "required_remediation": "Re-discover and hash the full denominator immediately before and after the scan boundary, compare paths, metadata, and bytes, and add an adversarial test that changes an already-dirty tracked TypeScript input."
+    },
+    {
+      "id": "R1-T1-H3",
+      "severity": "High",
+      "status": "OPEN",
+      "area": "R0 integration",
+      "summary": "The advertised R0 projection is not consumable by the accepted R0 validator.",
+      "evidence": "The producer emits schemaVersion 2 and archive entries with kind/symlink fields (lines 32, 637-650, 793-800). The unchanged accepted R0 validator requires archive schemaVersion 1 and exactly contentBase64/mode/path/sha256/size/state entry keys (measure/business_operations_graph_baseline_validation.py lines 433-466). The only integration test validates static v1 fixtures, not a produced source_snapshot/candidate.",
+      "impact": "A real R1 artifact cannot be validated through the accepted R0 boundary, contrary to the claimed R0 integration and the required fail-closed evidence chain.",
+      "required_remediation": "Either produce the accepted v1 artifact contract or version and independently accept a compatible validator contract; add an end-to-end produced-artifact validation test without weakening R0."
+    },
+    {
+      "id": "R1-T1-H4",
+      "severity": "High",
+      "status": "OPEN",
+      "area": "denominator completeness",
+      "summary": "The source denominator is incomplete for nested tsconfig extends chains and staged deletions.",
+      "evidence": "Only files whose names match tsconfig*.json are parsed into configs (lines 443-447). A direct extended config such as config/base.json is added as a descriptor later (lines 464-482) but never parsed, so its own extends target is not discovered. Separately, deleted inputs come only from git ls-files --deleted (lines 178-181 and 487-503); a staged deletion has already been removed from the index and is not covered, despite staged status being separately observed.",
+      "impact": "The producer can omit scanner-relevant configuration or deleted TypeScript inputs, defeating the complete denominator required by FR2.",
+      "required_remediation": "Resolve and parse every reachable in-repository extends target recursively (including safe symlinked configs where supported), union staged and unstaged deletions, and test nested extends plus staged deletion cases."
+    },
+    {
+      "id": "R1-T1-H5",
+      "severity": "High",
+      "status": "OPEN",
+      "area": "worktree safety and metadata fidelity",
+      "summary": "The master-branch invariant is not actually enforced and regular-file modes are fabricated.",
+      "evidence": "_git_worktree_state hard-codes branch: master rather than reading Git (lines 210-219), so _check_worktree_state's branch check (lines 222-233) always passes. Regular descriptors set mode to 100644 without inspecting stat data (lines 451-463 and 471-482), losing executable metadata required by FR2.",
+      "impact": "The producer may create evidence from another branch while labeling it master and cannot faithfully reproduce required path metadata.",
+      "required_remediation": "Read and require the actual symbolic branch, validate the supplied scanner root is the sole worktree root, capture lstat-derived modes, and add non-master and executable-input rejection/fidelity tests."
+    }
+  ],
+  "positive_observations": [
+    "The focused tests exercise tracked and untracked inputs, an unstaged deletion, a simple symlink, path traversal/duplication rejection, and a visible-status drift case.",
+    "Producer Git invocations shown in the reviewed implementation are read-only; no reviewed command stages, resets, stashes, or otherwise writes the real index."
+  ],
+  "gate_disposition": {
+    "phase_r0": "Remains accepted only for its recorded validator/contract scope.",
+    "phase_r1_task_1": "REJECTED pending closure and independent rereview of all High findings.",
+    "parent_phase_0": "REMAINS_BLOCKED",
+    "small_company_admin_phase_s1": "REMAINS_BLOCKED",
+    "customer_licensing_crm_contract_schema_red": "REMAINS_BLOCKED"
+  }
+}

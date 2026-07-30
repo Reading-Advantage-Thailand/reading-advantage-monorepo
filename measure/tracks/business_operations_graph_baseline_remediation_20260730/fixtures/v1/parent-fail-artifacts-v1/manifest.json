@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "trackId": "business_operations_graph_baseline_remediation_20260730",
+  "purpose": "Hash-pinned immutable fixtures of the actual parent FAIL artifacts (Review B, producer evidence, mid-red re-review). The validator must classify each as BLOCKED; any drift in content, classification, or pinned hash forces a fresh BLOCKED decision with PARENT_*_HASH_DRIFT and preserves the original RB-01/RB-02/RB-03 state.",
+  "baselineHead": "3ff9b734a9e5a69f777108827b569e4f20a5ceb8",
+  "expectedClassification": "BLOCKED",
+  "artifacts": {
+    "phase0-review-b-safety-20260730.json": {
+      "kind": "independent-review-fail",
+      "path": "parent-fail-artifacts-v1/phase0-review-b-safety-20260730.json",
+      "sha256": "5bfe10b18aaf650687a337f02a64dab35de378ef8ba333e4946af6e80143fc9f",
+      "size": 9256,
+      "verdict": "FAIL",
+      "openFindings": ["RB-01", "RB-02", "RB-03"],
+      "reason": "Independent Review B denied Phase 0 acceptance; the parent producer receipt and Review B remain the only authoritative FAIL inputs."
+    },
+    "phase0-graph-baseline-producer-evidence-20260722.md": {
+      "kind": "producer-evidence-fail",
+      "path": "parent-fail-artifacts-v1/phase0-graph-baseline-producer-evidence-20260722.md",
+      "sha256": "6d3613787361d0747d6ed9f590583257d92ac15f6717fbd58d9a1bcc006181db",
+      "size": 7206,
+      "auditExitCode": 1,
+      "unauditedSymbols": 3965,
+      "excludedTypeScriptCount": 26,
+      "reason": "Producer evidence acknowledges audit exit 1 with 3,965 unaudited symbols and 26 tsconfig-excluded current TypeScript files; the artifact is not acceptance-ready."
+    },
+    "red-rereview-correctness-20260730.json": {
+      "kind": "mid-red-rereview-fail",
+      "path": "parent-fail-artifacts-v1/red-rereview-correctness-20260730.json",
+      "sha256": "e64fdbd2f67145a18c8e0d821b39629ec750cb71eae78acde357d245ddf19d73",
+      "size": 8665,
+      "decision": "FAIL",
+      "openFindings": ["RED-RR-C1", "RED-RR-H1", "RED-RR-H2", "RED-RR-H3", "RED-RR-M1", "RED-RR-M2"],
+      "reason": "Mid-Red re-review denied the prior Red suite; Critical/High findings remain open and the validator must remain absent until they are closed."
+    }
+  }
+}

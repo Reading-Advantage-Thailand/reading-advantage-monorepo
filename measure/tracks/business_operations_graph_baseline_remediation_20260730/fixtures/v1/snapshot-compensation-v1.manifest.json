@@ -1,0 +1,455 @@
+{
+  "baselineHead": "3ff9b734a9e5a69f777108827b569e4f20a5ceb8",
+  "branch": "master",
+  "denominatorSha256": "81a7d6a33fa3591e21db1cb83e6ff8f63f2a35360fd30cdc101252b6ca58d052",
+  "discovery": {
+    "candidateExtensions": [
+      ".ts",
+      ".tsx",
+      ".mts",
+      ".cts"
+    ],
+    "configPaths": [
+      "apps/accounts/package.json",
+      "apps/accounts/tsconfig.json",
+      "apps/accounts/tsconfig.test.json",
+      "apps/advantage-games/package.json",
+      "apps/advantage-games/tsconfig.json",
+      "package.json",
+      "packages/advantage-play-kit/package.json",
+      "packages/advantage-play-kit/tsconfig.json",
+      "packages/backend/package.json",
+      "packages/backend/tsconfig.json",
+      "packages/backend/tsconfig.test.json",
+      "packages/config/package.json",
+      "packages/config/tsconfig/base.json",
+      "pnpm-lock.yaml",
+      "pnpm-workspace.yaml"
+    ],
+    "rule": "frozen-repository-discovery-v1",
+    "sourcePathCount": 59,
+    "sourcePathsSha256": "831043541e95e071fe47dd6185ef13339f0c6974371b07eca5e103c16fce7ab5"
+  },
+  "entries": [
+    {
+      "mode": "100644",
+      "path": "apps/accounts/app/api/admin/employees/[accountId]/company-roles/route.ts",
+      "sha256": "8bec3e207a068cf8533ac7431712969528704c380b5b2a9fb3b79dce81da2a88",
+      "size": 1078,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/app/api/admin/employees/[accountId]/credential/route.ts",
+      "sha256": "bc196fb2bbb9016530acb266b06329be9ca07a1649e32eff56bde9ef3f8ab0ac",
+      "size": 1015,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/app/api/admin/employees/[accountId]/roles/route.ts",
+      "sha256": "938d05c0ee4c521864df36963eb3d788a16bd54a1233ab644a42c78552c8cbee",
+      "size": 1071,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/app/api/admin/employees/[accountId]/sessions/route.ts",
+      "sha256": "e1b1a4813a026880e9126edd645c0df996515cd517a090a9b58469d691c543d2",
+      "size": 1017,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/app/api/admin/employees/[accountId]/status/route.ts",
+      "sha256": "50048e929cf01518abaa1a67b4ae2219cf0674f336e7be23211c244ecaeeecb7",
+      "size": 1045,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/app/api/admin/employees/route.ts",
+      "sha256": "ec9645608535fa08fd5d3cc21fe024cd945c179bb1c7a9bde1741e85048fcf68",
+      "size": 1412,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/app/api/health/route.ts",
+      "sha256": "1296189272ff900dd53a6f75157f837eaff9393d0b696ecf1fddb4d320e8f351",
+      "size": 343,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/app/api/oidc/authorize/route.ts",
+      "sha256": "6caba8a802be4de536111b48d5ff5917968539b8ecb0e3b5dba69a8cb50b4a5f",
+      "size": 1549,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/app/api/oidc/introspect/route.ts",
+      "sha256": "4077096a96b7342eb19a3e144fe9d6b7817272fe14abd2335a9696164dae66f3",
+      "size": 1411,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/app/api/oidc/jwks/route.ts",
+      "sha256": "ffc321cb5bf561d80dd99419615943debb61caaa8fbe63c3f971660a19bf7580",
+      "size": 318,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/app/api/oidc/logout/route.ts",
+      "sha256": "be6df1821386d9b69984e76045726b6993ffb1971a665318b4afafd2426b2c5d",
+      "size": 562,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/app/api/oidc/token/route.ts",
+      "sha256": "d3f27f2acdb4e805bf486ae0942051f66d42ef9a87f442ab54f755fab1cf3cb5",
+      "size": 2185,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/app/api/ready/route.ts",
+      "sha256": "c1d454033703039ba248f18025d5dc0ad6e55bcacea8a391a78bc7f891201d16",
+      "size": 774,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/app/api/session/login/route.ts",
+      "sha256": "c82e76c7b68ec4cbec0feabc27b693b71a7f1b7262b94f44ba548fcb89fdb13c",
+      "size": 1217,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/app/api/session/logout/route.ts",
+      "sha256": "ded2120e91f2d9ba29926491cde469578b7b45e5bca0034a666ea286c1daeb78",
+      "size": 1000,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/app/layout.tsx",
+      "sha256": "695adf0aabcbec8cf133d77cad176d038739e483ee4f3bce217e4f390545d05a",
+      "size": 779,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/app/page.tsx",
+      "sha256": "1db7076c9487c66413c706333a32d8ebc6e08d2cbb25665eb2f95f4ee79c376b",
+      "size": 1547,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/package.json",
+      "sha256": "5058b4c380d58d970e666e60d213e669333cef797bf93c5a25c3e8721c955f4c",
+      "size": 1203,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/tsconfig.json",
+      "sha256": "8a04a37d0e381ceab44014ac32fbea2d2e1c9cd5b590a03403369e31913d13f2",
+      "size": 358,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/accounts/tsconfig.test.json",
+      "sha256": "bafd726c4f92f154ad73c531bf2a3424b4bf2f2a206a1fa59c89a8d55cd74c6a",
+      "size": 203,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/advantage-games/package.json",
+      "sha256": "0d2c0478b08a4be5b4cefba30cd777275f0c77e37b0f9a09ed6b41decd9983c7",
+      "size": 2792,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.test.tsx",
+      "sha256": "3a7c41fb2d52e4272787713d2589b560aaa4aa3917bee6737e7064ae59857356",
+      "size": 4757,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/advantage-games/src/components/apk/AssetContractV2Qc.test.tsx",
+      "sha256": "85249d9cc1bb8d68d98332eb236bccb3f74288420b71d9f5c84f8ed07269c3cb",
+      "size": 1199,
+      "state": "untracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/advantage-games/src/components/apk/StandardPackSuitabilityQc.test.tsx",
+      "sha256": "16d6f6006f4bbf32d710410f14446723c98f105c357cd0c138ad77af87bfe7a1",
+      "size": 7351,
+      "state": "untracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/advantage-games/tests/e2e/qc/authoring-qc.spec.ts",
+      "sha256": "697f4bf1a703734c8ce30202db665943658aca1ed43d22ad07ff5b51fc902646",
+      "size": 3705,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "apps/advantage-games/tsconfig.json",
+      "sha256": "65725323c7309f6c4b78a92d686b97c12c9d67fe85d02b07328e8d209be04d9a",
+      "size": 456,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "package.json",
+      "sha256": "8990ef8772249b7e7a61ec6cfe32b258e1465881aef85ec49134de31c36a2b60",
+      "size": 2080,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/package.json",
+      "sha256": "3293eb53247e553b4b09c832389d637349bcfed6dd6d0a2007d71ac6c79f4fc9",
+      "size": 3067,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/assets/asset-contract-v2-adversarial.test.ts",
+      "sha256": "61fef33b980be03b2e40bd6ec1dadac42e1a173b0454e36ff2dcdf5c76a342f3",
+      "size": 9739,
+      "state": "untracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/assets/asset-contract-v2.test.ts",
+      "sha256": "b3335afd3d332cbae81ab1841497475ba6f023c5281ef8b5757d5142cab9af26",
+      "size": 11411,
+      "state": "untracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/assets/assets-public-api.test.ts",
+      "sha256": "6ae0cec8b5a29afc855cdfc79a3dd0275a36d059fc0b7c6d2f1a37620bb26cb5",
+      "size": 3205,
+      "state": "untracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/assets/semantic-product-bindings-v2.test.ts",
+      "sha256": "59277483feceae15edbe11a56d65c7682ea38e940f1b71fa970b1c800378ef88",
+      "size": 7755,
+      "state": "untracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/assets/semantic-product-bindings.test.ts",
+      "sha256": "dca4178324e76c3c2d85a51a44100ca86faf3ceb5e0d31496638eb8dda6230c9",
+      "size": 6743,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/assets/standard-pack-additive-release.test.ts",
+      "sha256": "7c23ea1ed0bc7dd2ea8e3d76225c9c45351e5416939ec0ed598431a1e22bfe8a",
+      "size": 5355,
+      "state": "untracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/assets/standard-pack-ingestion-ledger.test.ts",
+      "sha256": "d74a4abc1dc3cb3888cf6f3bb29d45e290e3123b564789193997b447c2f048d6",
+      "size": 38165,
+      "state": "untracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/assets/standard-pack-legacy-source-packet.test.ts",
+      "sha256": "bfbb9c2e157386601ca170493aa8f2f1d5c816c23ecdb62b9e03604a3becdb6c",
+      "size": 5505,
+      "state": "untracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/assets/standard-pack-suitability-comparison-fixtures.test.ts",
+      "sha256": "6f029e225a23461eeed2fcb3a579e82a63c2ffc7c48e40aa357c950774ae445b",
+      "size": 4332,
+      "state": "untracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/assets/standard-pack-suitability-ingestion-negative-fixtures.test-support.ts",
+      "sha256": "60488a1ad1b70d7daed6319be913aee3748b4358bf35958d082f628d7fde3831",
+      "size": 7530,
+      "state": "untracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/assets/standard-pack-suitability-ingestion-negative.test.ts",
+      "sha256": "511c923f5e8c7ee50fc8443e060c03b2e729d8c6fa22fed014d57e59364d2ebf",
+      "size": 1945,
+      "state": "untracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/assets/standard-pack-suitability-test-fixtures.test-support.ts",
+      "sha256": "89031c0837b5bc1743117d302a5566e07d6a16287b0b5bb02f10290be2d7d809",
+      "size": 12007,
+      "state": "untracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/assets/standard-pack-suitability.test.ts",
+      "sha256": "5ec0a422a8c0c1716b7d2fcfa87a2139c727bd47db8465014607261b008d639a",
+      "size": 35388,
+      "state": "untracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/assets/standard-pack-test-paths.test-support.ts",
+      "sha256": "44f42519df1cf3b3791649f687eb835b1435bd97a9c54aff601aefbf6b9f392f",
+      "size": 1452,
+      "state": "untracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/qc/__tests__/qc-kit.test.ts",
+      "sha256": "6e2e76d3df632070f1486c84808c63ea92078906566becf5e36604aaae1a2cef",
+      "size": 4827,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/qc/__tests__/standard-pack-suitability-qc.test.ts",
+      "sha256": "3cdf2fafb0450125d990605d4b6133ce7f95c507f029c0404d957a0cceda164c",
+      "size": 6061,
+      "state": "untracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/scaffolding/__tests__/exemplar.test.ts",
+      "sha256": "bde9500081447b5851d557a3464bb774073170ac6e6526c2395976ee683e60a9",
+      "size": 4552,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/src/scaffolding/__tests__/scaffold.test.ts",
+      "sha256": "fe6287e54e332f6a74f79980b906b50d3c8d88b8645e1c15bd88ae57c52502bc",
+      "size": 4544,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/tsconfig.json",
+      "sha256": "572a9c125754a2e5846bebd067bd58b5fcc9dcfd5104b8c01bcbcfb09d4404f1",
+      "size": 288,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/advantage-play-kit/vitest.config.ts",
+      "sha256": "442b7a8bfde97adf063e8dfb0da3b298f2f9f6cf9e0dba1e98f3bb91a47bff72",
+      "size": 568,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/backend/package.json",
+      "sha256": "58c31d9d87801d4a64a41d22aaf636d67a9881d7f2f56de8e6931f469185472a",
+      "size": 845,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/backend/src/jobs/__tests__/postgres16-harness.integration.test.ts",
+      "sha256": "88170cb491a83d75f2e2a1bedbb1249acc5d3d20b15f5f8f4a6238d370220274",
+      "size": 3329,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/backend/src/jobs/__tests__/postgres16-harness.test.ts",
+      "sha256": "827c7635093e123bbd82bc4e4a795210174348776d91558c3446dfd1c6c24aac",
+      "size": 5152,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/backend/src/jobs/__tests__/postgres16-harness.ts",
+      "sha256": "42851e5db77162adfe81a17b89b25f628c1646375f77343674ef9aae0e9e8628",
+      "size": 15737,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/backend/src/modules/company-identity/capabilities.ts",
+      "sha256": "895fe72d54521e8f1e873fe6c5423e545a8161c6ed3289c0565b52f37d060a9f",
+      "size": 10710,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/backend/tsconfig.json",
+      "sha256": "6733c5f2351cb24faa9c18813d1c16f490bd4348190cbfd21dee406fc3588aef",
+      "size": 278,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/backend/tsconfig.test.json",
+      "sha256": "8781fe0ef6be05085bc36a582da6c62ec83d3831aa6853c225c8ae910cd0a84a",
+      "size": 156,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/config/package.json",
+      "sha256": "7a49f50f48c5c0ba085af1baab33d947bf715084a570df8fb8464ef918973747",
+      "size": 728,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "packages/config/tsconfig/base.json",
+      "sha256": "609c4dcf887bb927df24e2571ad4562a48880a3f6131339175bfc0b1a6a29b67",
+      "size": 720,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "pnpm-lock.yaml",
+      "sha256": "6bc184a4a74a9aeb1ab360e9c72a52d7dd6493d465be2192ffb80fc8f609976b",
+      "size": 894090,
+      "state": "tracked"
+    },
+    {
+      "mode": "100644",
+      "path": "pnpm-workspace.yaml",
+      "sha256": "342585c3477f52ebb2e19b43c14e7de0e98b802584c53e15c62d56c17d498fcb",
+      "size": 3659,
+      "state": "tracked"
+    }
+  ],
+  "porcelainSha256": "57c93051d545b0b80fbeaccf99dd387db53d38b6ddb6cdda7332fd34756ad921",
+  "scanCommand": "repo-graph scan . ./graph.db",
+  "scanConfig": null,
+  "schemaVersion": 1,
+  "stagedDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "statusSha256": "5f51e0c509a6c766930cb0dc9787cf8f002bf7944fcaccd4b38c52c2e035db47",
+  "toolVersion": "0.1.0"
+}

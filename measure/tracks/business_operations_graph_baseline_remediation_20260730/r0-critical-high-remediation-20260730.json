@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "phase": "R0",
+  "recorded_at": "2026-07-30",
+  "state": "IN_PROGRESS_PENDING_INDEPENDENT_REREVIEW",
+  "acceptance_claimed": false,
+  "successor_gates_changed": false,
+  "reviews_remediated": [
+    "r0-review-a-correctness-20260730.json",
+    "r0-review-b-safety-20260730.json"
+  ],
+  "red": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_remediation -v",
+    "exit_code": 1,
+    "result": "EXPECTED_FAIL: new adversarial totality, provenance, reconciliation, parent-lineage, reviewer-gate, security, upstream-issue, and command-artifact tests failed before remediation."
+  },
+  "green": {
+    "commands": [
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile measure/business_operations_graph_baseline_validation.py measure/tests/test_business_operations_graph_baseline_remediation.py",
+        "exit_code": 0,
+        "result": "PASS"
+      },
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_remediation -v",
+        "exit_code": 0,
+        "tests_run": 29,
+        "result": "PASS"
+      }
+    ]
+  },
+  "disposition": "Implementation and focused tests are Green, but Phase R0 and both successor gates remain blocked until independent re-review reports ACCEPT with no Critical/High findings."
+}

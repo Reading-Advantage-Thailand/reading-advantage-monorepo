@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "task": "Exact Next Red Task — independent Red-to-Green authorization review",
+  "role": "independent-reviewer",
+  "reviewed_at": "2026-07-30",
+  "baseline_head": "3ff9b734a9e5a69f777108827b569e4f20a5ceb8",
+  "decision": "FAIL",
+  "r0_green_may_begin": false,
+  "production_code_modified": false,
+  "commit_created": false,
+  "preflight": {
+    "branch": "master",
+    "worktree_count": 1,
+    "shared_worktree": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "dirty_tree_preserved": true
+  },
+  "verification": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_remediation -v",
+    "exit_code": 1,
+    "tests_run": 18,
+    "failures": 54,
+    "result": "The suite is Red solely at the intentionally absent measure.business_operations_graph_baseline_validation boundary. All Python-side replay, digest, parent-byte, route-range, exclusion, command-record, and lineage preflights completed before that boundary."
+  },
+  "finding_disposition": {
+    "RED-FINAL-C1": "CLOSED: literal trust roots pin the parent manifest/index and authoritative parent bytes, while the test verifies the original FAIL/BLOCKED RB-01/RB-02/RB-03 state.",
+    "RED-FINAL-C2": "CLOSED: both fixture archives contain base64 source bytes and Python preflights recompute archive, manifest, graph, candidate, and lineage digests successfully.",
+    "RED-FINAL-H1": "OPEN",
+    "RED-FINAL-H2": "CLOSED: candidate manifest, producer receipt, reviewer receipt, and reviewer artifact ledger are distinct hash-bound artifacts with distinct producer/reviewer identities and pre-review candidate digest.",
+    "RED-FINAL-H3": "CLOSED: all eight required commands are hash-bound to snapshot manifests with stdout/stderr/exit/status records, and the corpus includes unknown-state and compensation/upstream cross-branch negatives."
+  },
+  "findings": [
+    {
+      "id": "RED-GREEN-H1",
+      "severity": "High",
+      "summary": "The Accounts security matrix is source-anchored but not semantically dispositive, so RED-FINAL-H1 is not genuinely closed.",
+      "evidence": "The fixture generator creates each of the six required security entries by copying the same whole-handler range and only changing an assertion label (generate-fixtures.py lines 188-207). The Red test then verifies only the entry-key set and that every entry repeats the route path and range digest (test lines 320-323); it never requires a disposition or a linked executable test/source assertion that establishes the stated authentication, authorization, validation, scope, audit, or destructive-effect result. For example, the public /api/health handler contains only a liveness response, yet its fixture has the same opaque reviewed-source-assertion shape for authentication, authorization, validation, audit, and destructive effect as an employee mutation. The contract therefore cannot distinguish an explicit documented not-applicable/public disposition from a fabricated or unsupported one.",
+      "impact": "A Green validator can accept all 17 routes with six mechanically duplicated anchors per route without proving the FR4 security dispositions or their executable/reviewed evidence. This preserves the semantic-vacuity problem identified by RED-FINAL-H1 despite correct path and range hashes.",
+      "remediation": "Before Green, make every security category carry a constrained explicit disposition and evidence kind (executable test reference or reviewed source assertion with category-specific rationale/anchor), and add positive/negative Red cases that reject an unsupported duplicated category, a missing disposition, and a public/global route labeled as an authenticated or tenant-scoped route without its documented exception."
+    }
+  ],
+  "consistency_checks": {
+    "archive_entries_match_current_source_bytes": {
+      "clean": "27/27",
+      "compensation": "53/53"
+    },
+    "parent_fail_artifacts_match_literal_pins": true,
+    "valid_fixture_python_preflights": "pass before absent-validator calls",
+    "plan_marker_vocabulary": "only [~], [x], and [b]"
+  },
+  "required_disposition": {
+    "exact_next_red_task": "Remain [~]. Repair the semantic security-disposition contract and rerun the independent Red review.",
+    "r0_green_may_begin": false,
+    "parent_gate": "Keep Review B FAIL and RB-01/RB-02/RB-03 blocked.",
+    "successor_tracks": "Keep Admin S1 and CRM contract/schema/Red work blocked.",
+    "acceptance": "Denied: one Critical/High final-review finding remains open."
+  }
+}

@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "phase": "R1",
+  "task": "Task 2 — coordinated stable-window source snapshot capture",
+  "review_type": "audit-only independent review",
+  "reviewed_at": "2026-07-30",
+  "decision": "ACCEPT",
+  "task_may_be_accepted": true,
+  "parent_or_successor_unblock_authorized": false,
+  "reviewed_inputs": {
+    "producer": {
+      "path": "measure/business_operations_graph_baseline_snapshot.py",
+      "sha256": "90e9757c3efc62e4afc388c82b449251df60ca14fcc04995be3f16d89c3883da"
+    },
+    "producer_tests": {
+      "path": "measure/tests/test_business_operations_graph_baseline_snapshot.py",
+      "sha256": "003e0717d760503ae19ce4cbc4de1b72de0ef23e148871b44c377d47fa3bc59a"
+    },
+    "r0_tests": {
+      "path": "measure/tests/test_business_operations_graph_baseline_remediation.py",
+      "sha256": "16720ba8d0b0f91802eeceb319cb566ccb1cc245237a5f4d3408b6d93cf7d747"
+    },
+    "run_receipt": {
+      "path": "measure/tracks/business_operations_graph_baseline_remediation_20260730/r1-task2-source-snapshot-run-receipt-20260730.md",
+      "sha256": "20687673434bb3424e651f34e46c15144e83e99c9e72231b195d11c45791177f"
+    },
+    "plan": {
+      "path": "measure/tracks/business_operations_graph_baseline_remediation_20260730/plan.md",
+      "sha256": "f0076598a0c757d47832a8499e9af99fa06cd4c4f8ab5bead90aecd601734bd2"
+    },
+    "spec": {
+      "path": "measure/tracks/business_operations_graph_baseline_remediation_20260730/spec.md",
+      "sha256": "8a7e1525678d04abae1eaecf86fd9457f1e63b8c216c7a87291197c6cd6927df"
+    },
+    "artifact_directory": "/tmp/opencode/r1-task2-snapshot"
+  },
+  "artifact_verification": {
+    "all_receipt_size_and_sha256_claims_match": true,
+    "artifacts": [
+      {
+        "path": "snapshot.archive.json",
+        "size": 43974733,
+        "sha256": "4bf9fdc8e1abb4de76196c660d3cb010e4c1c26a16972db1804d17b0d46fae73"
+      },
+      {
+        "path": "snapshot.manifest.json",
+        "size": 1394901,
+        "sha256": "e0a1c1b15ececf0c9b2398ffcf84c2f2b00c7c636085c2c9a85a001f603138fc"
+      },
+      {
+        "path": "snapshot.pre-state.json",
+        "size": 33158,
+        "sha256": "6e6d2c67815e4a73a055ee764855c5e481cb93931f0fed3766a22af5dba0c046"
+      },
+      {
+        "path": "snapshot.post-state.json",
+        "size": 33158,
+        "sha256": "6e6d2c67815e4a73a055ee764855c5e481cb93931f0fed3766a22af5dba0c046"
+      },
+      {
+        "path": "snapshot.r0.archive.json",
+        "size": 43620337,
+        "sha256": "f35c50269fee0445f002121033bd5f9381300c5034e94bae0a849fae6f650286"
+      },
+      {
+        "path": "snapshot.r0.manifest.json",
+        "size": 1023493,
+        "sha256": "def957969e56d376ab7e862cad2ad61ad49d354815b4e09a62649dbfc2b81014"
+      },
+      {
+        "path": "snapshot.r0.pre-state.json",
+        "size": 32802,
+        "sha256": "c35d6fc2d7e9a3a3a6fb24a24db850879c181e7d2aeaab60c79d510aa0b5564a"
+      },
+      {
+        "path": "snapshot.r0.post-state.json",
+        "size": 32802,
+        "sha256": "c35d6fc2d7e9a3a3a6fb24a24db850879c181e7d2aeaab60c79d510aa0b5564a"
+      }
+    ]
+  },
+  "independent_replay": {
+    "entry_count": 4167,
+    "unique_path_count": 4167,
+    "paths_sorted": true,
+    "all_base64_payloads_valid": true,
+    "all_payload_sizes_match": true,
+    "all_payload_sha256_values_match": true,
+    "archive_metadata_equals_manifest_entries": true,
+    "recomputed_denominator_sha256": "0514487a787421fb64614a7d3e04ccbb981536bdd626795c00eb67f8d3045349",
+    "denominator_matches_manifest": true,
+    "source_path_count_and_sha256_match": true,
+    "r0_projection_replays": true,
+    "r0_path_set_equals_rich_path_set": true,
+    "producer_verify_snapshot_entry_count": 4167
+  },
+  "pre_post_binding_verification": {
+    "baseline_head": "3ff9b734a9e5a69f777108827b569e4f20a5ceb8",
+    "branch": "master",
+    "worktree_count": 1,
+    "installed_repo_graph_version": "0.1.0",
+    "pre_post_state_artifacts_byte_identical": true,
+    "denominator_sha256_equal_and_manifest_bound": true,
+    "expanded_porcelain_sha256_equal_and_manifest_bound": true,
+    "expanded_porcelain_sha256": "7718a941385b11925c393a4726a9ccfca5fac802d4c6fab37b3d5afa84253f34",
+    "default_git_status_porcelain_pre_post_sha256_equal": true,
+    "default_git_status_porcelain_sha256": "5953b8e8e8f1bd04c989e1ca6f8fb5ca2ba2fc48c37219ea0909b68c0602487b",
+    "staged_diff_pre_post_sha256_equal": true,
+    "staged_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "working_tree_diff_pre_post_sha256_equal": true,
+    "working_tree_diff_sha256": "e77e4bd878a7b1d73a6a405068a79b4748c96cea55bfa544061c67b02e771f84",
+    "raw_untracked_listing_pre_post_sha256_equal": true,
+    "raw_untracked_listing_sha256": "e6f3413201f4b02fdf166325b9de74d6ef711490638df6d3fa1ceb8c5ef6bf9e",
+    "current_live_source_matches_all_4167_non_deleted_snapshot_entries": true,
+    "current_live_source_drift_outside_denominator": [
+      "measure/tracks/business_operations_graph_baseline_remediation_20260730/r1-task2-source-snapshot-run-receipt-20260730.md"
+    ]
+  },
+  "denominator_verification": {
+    "direct_required_scanner_inputs_discovered_independently": 4164,
+    "missing_direct_required_scanner_inputs": [],
+    "recursive_in_repository_extends_targets_discovered_independently": 10,
+    "extends_targets_equal_manifest_discovery": true,
+    "unresolved_in_repository_extends_targets": [],
+    "workspace_package_manifest_omissions": [],
+    "manifest_entries": 4167,
+    "non_required_additional_entries": [
+      "apps/advantage-games/public/games/enchanted-library/tile-library.png",
+      "apps/advantage-games/public/games/vocabulary/enchanted-library/tile-library.png"
+    ],
+    "assessment": "The manifest contains every required TypeScript candidate, tsconfig, recursive in-repository extends target, package manifest, pnpm workspace/lock file, and discovered build-graph config. The two additional safe in-repository image symlinks make the denominator conservative rather than incomplete."
+  },
+  "verification_commands": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -c \"from measure.business_operations_graph_baseline_snapshot import verify_snapshot; print(len(verify_snapshot('/tmp/opencode/r1-task2-snapshot')))\"",
+      "exit_code": 0,
+      "result": "4167"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_snapshot measure.tests.test_business_operations_graph_baseline_remediation -v",
+      "exit_code": 0,
+      "tests_run": 46,
+      "result": "PASS"
+    }
+  ],
+  "findings": [
+    {
+      "id": "R1-T2-M1",
+      "severity": "Medium",
+      "status": "OPEN_NON_BLOCKING_FOR_TASK_2",
+      "area": "discovery metadata accuracy",
+      "summary": "discovery.packageGlobs is false-empty.",
+      "evidence": "The archived pnpm-workspace.yaml declares apps/*, packages/*, packages/integrations/*, and services/*, while snapshot.manifest.json records packageGlobs as []. _build_package_globs passes parsed workspace data directly to _resolve_package_globs, which instead looks up a pnpm-workspace.yaml key.",
+      "impact": "The rich discovery annotation is inaccurate and must not be treated as the workspace package-glob inventory. It does not omit scanner-input bytes in this snapshot because pnpm-workspace.yaml itself and all 47 package.json files are archived unconditionally; all workspace package manifests are present, and packageGlobs is outside the accepted R0 v1 projection.",
+      "disposition": "Does not invalidate Task 2 replay, pre/post identity, or denominator completeness. Correct and test this field before a downstream contract relies on it or before promoting a new snapshot schema."
+    },
+    {
+      "id": "R1-T2-L1",
+      "severity": "Low",
+      "status": "OPEN_DOCUMENTATION_ONLY",
+      "area": "receipt consistency",
+      "summary": "The receipt's untracked-listing narrative contradicts the retained raw pre/post evidence.",
+      "evidence": "Receipt line 125 reports a post hash of ad16ff4a... and 'no', while the retained /tmp/opencode/r1-task2-pre-untracked.txt and post-untracked.txt both contain e6f34132...; receipt lines 10 and 147 also say the listing was unchanged. The ad16ff4a... value is the later live value after the receipt was added.",
+      "impact": "The table/note is inaccurate, but the raw stable-window pre/post files, the byte-identical expanded status artifacts, and the scanner-input denominator establish the claimed identity.",
+      "disposition": "Non-blocking documentation defect; do not use receipt line 125 as the stable-window hash."
+    }
+  ],
+  "acceptance_basis": "No Critical or High finding remains. Artifact hashes and sizes match, independent replay and digest recomputation pass, pre/post denominator/status/staged bindings are equal, no required scanner input is omitted, and the packageGlobs defect does not affect the frozen denominator or R0 projection.",
+  "gate_disposition": {
+    "phase_r1_task_2": "MAY_BE_ACCEPTED",
+    "phase_r1_task_3": "REMAINS_BLOCKED_UNTIL_SEPARATELY_STARTED_AND_VERIFIED",
+    "parent_phase_0": "REMAINS_BLOCKED",
+    "small_company_admin_phase_s1": "REMAINS_BLOCKED",
+    "customer_licensing_crm_contract_schema_red": "REMAINS_BLOCKED"
+  }
+}

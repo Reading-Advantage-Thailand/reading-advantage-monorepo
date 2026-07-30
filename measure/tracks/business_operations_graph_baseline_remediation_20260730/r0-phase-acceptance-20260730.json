@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "phase": "R0",
+  "role": "Measure Phase Acceptance",
+  "reviewed_at": "2026-07-30",
+  "decision": "ACCEPT",
+  "acceptance_scope": "Phase R0 validator/contract remediation only",
+  "baseline": {
+    "expected_head": "3ff9b734a9e5a69f777108827b569e4f20a5ceb8",
+    "observed_head": "3ff9b734a9e5a69f777108827b569e4f20a5ceb8",
+    "branch": "master",
+    "worktree_count": 1,
+    "staged_diff_empty": true,
+    "shared_dirty_worktree_preserved": true
+  },
+  "focused_verification": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_remediation -v",
+    "exit_code": 0,
+    "tests_run": 29,
+    "result": "OK",
+    "observed_duration_seconds": 8.52
+  },
+  "current_source": {
+    "validator": {
+      "path": "measure/business_operations_graph_baseline_validation.py",
+      "sha256": "44eb521e98e75b271b3f34e2a0bae88eb2dee0e5f1a94809015e3780bb64a2d5"
+    },
+    "focused_tests": {
+      "path": "measure/tests/test_business_operations_graph_baseline_remediation.py",
+      "sha256": "16720ba8d0b0f91802eeceb319cb566ccb1cc245237a5f4d3408b6d93cf7d747"
+    },
+    "plan": {
+      "path": "measure/tracks/business_operations_graph_baseline_remediation_20260730/plan.md",
+      "sha256": "74a6bd3f93c356c5ad7b62ca2b9579655125155d4e54d8c9b3460e77efba55be"
+    }
+  },
+  "critical_high_finding_reassessment": {
+    "all_findings_target_current_source": true,
+    "remaining_critical_high_findings": [],
+    "findings": [
+      {
+        "id": "R0-RA-C1",
+        "status": "CLOSED",
+        "current_source_basis": "Strict envelope validation, early lineage-key rejection, guarded artifact loading, and the total public boundary cover malformed or missing lineage.",
+        "focused_test_basis": "test_malformed_external_values_are_total_and_fail_closed"
+      },
+      {
+        "id": "R0-RA-H1",
+        "status": "CLOSED",
+        "current_source_basis": "Compensation requires exact counts, non-empty inventories, equal inventory digests, unique complete route/field reconciliations, and source replay.",
+        "focused_test_basis": "test_compensation_requires_exact_complete_reconciliation"
+      },
+      {
+        "id": "R0-RA-H2",
+        "status": "CLOSED",
+        "current_source_basis": "Snapshot archive/manifest provenance, denominator replay, pre/post state artifacts, graph metadata, graph row hashes, and exact declared graph inventory are enforced.",
+        "focused_test_basis": "test_source_provenance_and_archive_manifest_replay_are_mandatory; test_graph_metadata_and_exact_file_inventory_are_mandatory"
+      },
+      {
+        "id": "R0-RA-H3",
+        "status": "CLOSED",
+        "current_source_basis": "Normal acceptance requires the literal-pinned parent manifest and verifies the frozen authoritative FAIL/BLOCKED semantics for RB-01, RB-02, and RB-03.",
+        "focused_test_basis": "test_authoritative_parent_fail_bytes_match_literal_frozen_pins; test_parent_trust_roots_and_exact_receipt_artifact_set_are_required"
+      },
+      {
+        "id": "R0-RB-C1",
+        "status": "CLOSED",
+        "current_source_basis": "Evidence and archive paths must be canonical repository-relative POSIX paths; duplicate, traversal, alias, absolute, backslash, metadata, and denominator omissions fail closed.",
+        "focused_test_basis": "test_archive_paths_are_canonical_repository_relative_and_unique; test_source_snapshot_failures_are_blocked"
+      },
+      {
+        "id": "R0-RB-C2",
+        "status": "CLOSED",
+        "current_source_basis": "Reviewer evidence must be FINAL independent-reviewer ACCEPT with the exact severity gate and no Critical/High finding; successor gate state remains blocked-until-handoff.",
+        "focused_test_basis": "test_reviewer_reject_or_critical_high_finding_blocks_acceptance"
+      },
+      {
+        "id": "R0-RB-H1",
+        "status": "CLOSED",
+        "current_source_basis": "All 17 Accounts routes are bound to route/category-specific dispositions, claims, permitted source paths, range hashes, assertion tokens, and non-copied evidence.",
+        "focused_test_basis": "test_review_b_accounts_route_denominator_is_source_anchored; test_security_evidence_is_route_and_category_specific; test_security_disposition_counterexamples_are_blocked"
+      },
+      {
+        "id": "R0-RB-H2",
+        "status": "CLOSED",
+        "current_source_basis": "Tool-limitation compensation cannot suppress exact reconciliation or the required immutable upstream issue receipt.",
+        "focused_test_basis": "test_tool_limitation_requires_immutable_upstream_issue_receipt; test_complete_clean_compensation_and_project_owned_branch_matrix"
+      },
+      {
+        "id": "R0-RB-H3",
+        "status": "CLOSED",
+        "current_source_basis": "The candidate manifest and reviewer recomputation ledger are derived from the exact candidate artifact references and are bound to pinned parent failure evidence and distinct producer/reviewer identities.",
+        "focused_test_basis": "test_distinct_candidate_producer_reviewer_and_recomputed_ledgers; test_parent_trust_roots_and_exact_receipt_artifact_set_are_required"
+      }
+    ]
+  },
+  "review_evidence": {
+    "review_a": {
+      "initial_decision": "FAIL",
+      "rereview_decision": "PASS",
+      "rereview_sha256": "aca3bf9935c8d26bb80269ddb44be888a4b9f63ef2c47ad2501c7e15f66afc33"
+    },
+    "review_b": {
+      "initial_decision": "FAIL",
+      "rereview_decision": "PASS",
+      "rereview_phase_r0_contract_acceptance": "ACCEPT",
+      "rereview_sha256": "ba169351ddfd896aae920c776ce718734d9efc6c8829de320596638100709109"
+    },
+    "review_c": {
+      "initial_decision": "FAIL",
+      "rereview_decision": "PASS",
+      "rereview_sha256": "c5cad845fc89522b97da883a68c91bce7a768425bfff93143b003aa89fe24bb8"
+    },
+    "implementation_acceptance_evidence": {
+      "path": "measure/tracks/business_operations_graph_baseline_remediation_20260730/r0-review-c-implementation-acceptance-20260730.md",
+      "sha256": "0ee903899d60d2851637112c5c172a455afcb8905d897988bd64278619c52708"
+    }
+  },
+  "plan_truthfulness": {
+    "status": "PASS",
+    "basis": [
+      "The exact R0 Critical/High remediation task and R0 contract task are marked [x] only after Green evidence and independent rereviews A and B reported no remaining Critical/High findings.",
+      "The open fixture-generator follow-up and every R1, R2, and R3 task remain [b].",
+      "The plan explicitly limits acceptance to R0 and states that R1+ evidence and all parent/successor unblocking remain unavailable.",
+      "All task markers are within the allowed [x], [b], and [~] vocabulary."
+    ]
+  },
+  "remaining_findings": [
+    {
+      "id": "R0-REREVIEW-M1",
+      "severity": "Medium",
+      "status": "OPEN_DOCUMENTED",
+      "path": "measure/tracks/business_operations_graph_baseline_remediation_20260730/fixtures/v1/generate-fixtures.py",
+      "sha256": "3188e81e3c6bb56c5ad87ee637e7ec95184a4488d95da8629166aa095cc54f07",
+      "basis": "The generator invokes main() directly and has no argument parsing or non-writing --check implementation. plan.md line 24 records this as a blocked follow-up and does not claim completion.",
+      "constraint": "Implement and test a genuinely non-writing --check mode before citing that command as fixture-integrity evidence."
+    }
+  ],
+  "gate_verification": {
+    "parent_phase_0": {
+      "state": "BLOCKED",
+      "basis": "small_company_admin_privileges_20260722 plan Phase 0 evidence/acceptance task remains [~] and explicitly says Phase S1 and Track 2 remain blocked.",
+      "plan_sha256": "5ba1d279a1eb3a6fb4b4aec1bed587655a72aeeb4a2942977c3689326681b44a"
+    },
+    "small_company_admin_phase_s1": {
+      "state": "BLOCKED",
+      "basis": "All Phase S1 tasks remain [b] deferred on parent Phase 0 acceptance."
+    },
+    "customer_licensing_crm_contract_schema_red": {
+      "state": "BLOCKED",
+      "basis": "CRM contract, schema, and Red tasks remain [b] deferred on small_company_admin_privileges_20260722 Phase 0 acceptance.",
+      "plan_sha256": "1d39db59b9ccee3ba2f58187117994df7e4fbaa2803830aa596a037020cba260"
+    },
+    "successor_unblock_authorized": false
+  },
+  "required_next_phase": {
+    "phase": "R1",
+    "name": "Bind the dirty-worktree source and graph",
+    "first_required_task": "Implement and test the deterministic non-mutating snapshot producer defined in plan.md, then capture a stable-window source snapshot before running and binding the canonical repo-graph scan.",
+    "constraints": [
+      "Do not treat this R0 acceptance as acceptance of any R1, R2, or R3 candidate evidence.",
+      "Do not unblock parent, Admin, or CRM gates.",
+      "Preserve unrelated dirty work and the real Git index.",
+      "Keep R0-REREVIEW-M1 open until separately authorized and verified."
+    ]
+  }
+}

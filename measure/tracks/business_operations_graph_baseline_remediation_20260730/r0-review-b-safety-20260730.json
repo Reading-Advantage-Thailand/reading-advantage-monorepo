@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "task": "Phase R0 — Measure Review B security and provenance audit",
+  "role": "Measure Review B",
+  "reviewed_at": "2026-07-30",
+  "baseline_head": "3ff9b734a9e5a69f777108827b569e4f20a5ceb8",
+  "pre_role_snapshot": "/tmp/business-operations-graph-r0-pre-review.json",
+  "decision": "FAIL",
+  "phase_r0_acceptance_may_be_granted": false,
+  "production_code_modified": false,
+  "commit_created": false,
+  "review_scope": [
+    "AGENTS.md",
+    "measure/index.md",
+    "measure/workflow.md",
+    "measure/anti-patterns.md",
+    "measure/code_styleguides/general.md",
+    "measure/code_styleguides/python.md",
+    "measure/business_operations_graph_baseline_validation.py",
+    "measure/tests/test_business_operations_graph_baseline_remediation.py",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/spec.md",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/plan.md",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/fixtures/v1/",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/red-green-gate-20260730.json",
+    "measure/tracks/small_company_admin_privileges_20260722/plan.md",
+    "measure/tracks/customer_licensing_crm_20260722/plan.md"
+  ],
+  "preflight": {
+    "head": "3ff9b734a9e5a69f777108827b569e4f20a5ceb8",
+    "branch": "master",
+    "worktree_count": 1,
+    "shared_worktree": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "staged_diff_empty": true,
+    "snapshot_matched_before_review": {
+      "head": true,
+      "diff": true,
+      "staged_diff": true,
+      "status": true
+    },
+    "snapshot_hashes": {
+      "diff_sha256": "e77e4bd878a7b1d73a6a405068a79b4748c96cea55bfa544061c67b02e771f84",
+      "staged_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status_sha256": "79ba107390e3449ab9c6f0028dcba3770ef9795de90d1c2f37c5b7f2112278d3"
+    },
+    "dirty_tree_preserved": true,
+    "scope_escape_found": false,
+    "concurrent_review_artifact_observed_after_preflight": "measure/tracks/business_operations_graph_baseline_remediation_20260730/r0-review-a-correctness-20260730.json"
+  },
+  "verification": {
+    "focused_test": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_remediation -v",
+      "exit_code": 0,
+      "tests_run": 19,
+      "result": "PASS: all frozen positive and negative corpus tests passed. The pass does not cover the adversarial boundaries identified below."
+    },
+    "adversarial_probes": [
+      {
+        "probe": "Source validation with an archive/manifest inventory mismatch, an absolute archive-entry path, and preScan containing only denominatorSha256",
+        "observed": "No rejection reasons were produced."
+      },
+      {
+        "probe": "Archive replay with /absolute.ts, ../escape.ts, a/../same.ts, and same.ts",
+        "observed": "All four paths were admitted into the replay map."
+      },
+      {
+        "probe": "Lineage receipt changed to decision REJECT with a High finding while preserving the candidate digest and references",
+        "observed": "No rejection reasons were produced."
+      },
+      {
+        "probe": "Admin employee-role authorization relabeled public and supported by an unrelated health-route source range",
+        "observed": "No security-matrix rejection reasons were produced."
+      },
+      {
+        "probe": "Compensation with routeCount/fieldCount set to 999, reconciliation lists and inventory hashes removed, and upstream issue marked not required",
+        "observed": "Neither audit nor upstream-issue validation produced a rejection reason."
+      },
+      {
+        "probe": "Malformed archive entries and lineage with candidateManifest deleted",
+        "observed": "The validator raised KeyError/TypeError instead of returning BLOCKED."
+      }
+    ]
+  },
+  "findings": [
+    {
+      "id": "R0-RB-C1",
+      "severity": "Critical",
+      "summary": "The source snapshot is a self-selected denominator and accepts malicious or non-replay-equivalent archive paths.",
+      "file": "measure/business_operations_graph_baseline_validation.py",
+      "lines": "275-333, 385-443, 844-873",
+      "context": "Archive entry paths are never normalized or constrained to repository-relative paths, archive metadata is not compared with manifest entries, the manifest denominator is not recomputed, and preScan is checked only for denominatorSha256. The fixture producer hashes synthetic branch strings for porcelain/status and builds the clean archive from a 28-entry hand-selected list that omits the known 26 exclusions; candidateTypeScript is then derived from that same truncated archive, making the clean ledger vacuously empty. Direct probes admitted absolute/traversal/alias paths and accepted an archive/manifest mismatch with incomplete pre-scan state.",
+      "impact": "RB-01 and RB-03 can be reported resolved by omitting scanner inputs or substituting self-consistent metadata rather than binding the complete dirty-worktree source bytes. This defeats FR2, AGENTS.md runtime-boundary validation, and the A4/A7 omission defenses.",
+      "suggestion": "Enforce a strict repository-relative path schema for references and archive entries, reject symlink/root escape and normalized duplicates, replay exact archive metadata into the manifest, recompute the denominator, require all pre/post status fields and their source artifacts, and derive the scanner-input denominator from frozen discovery rules rather than from the submitted archive. Add malicious-path, archive/manifest mismatch, omitted-lock/config/extends-chain, and truncated-clean-denominator tests."
+    },
+    {
+      "id": "R0-RB-C2",
+      "severity": "Critical",
+      "summary": "A reviewer REJECT or Critical/High finding does not prevent candidate acceptance.",
+      "file": "measure/business_operations_graph_baseline_validation.py",
+      "lines": "1041-1062, 1183-1221",
+      "context": "Lineage validation checks only that decision is one of ACCEPT or REJECT and that finding severities are known. It never requires ACCEPT and never blocks ACCEPT accompanied by Critical/High findings. An isolated probe using the otherwise valid clean lineage with decision REJECT and one High finding produced no reason. Missing lineage keys also raise before a fail-closed result is returned.",
+      "impact": "The validator can return ACCEPT for evidence explicitly rejected by the independent reviewer, creating a false successor-authorization signal contrary to FR7.2-FR7.4. A later handoff that trusts this result could incorrectly lift Admin S1 or CRM gates.",
+      "suggestion": "Require reviewer decision ACCEPT, FINAL state, the exact severity-gate contract, no Critical/High findings, and both successor gates still blocked until a separate hash-bound handoff. Return BLOCKED for every missing/malformed lineage field and add REJECT, ACCEPT-with-High, and missing-key counterexamples."
+    },
+    {
+      "id": "R0-RB-H1",
+      "severity": "High",
+      "summary": "The security matrix permits a false public-authorization disposition for an admin route when evidence is borrowed from an unrelated route.",
+      "file": "measure/business_operations_graph_baseline_validation.py",
+      "lines": "633-842",
+      "context": "The validator does not enforce the route-specific expected disposition/claim maps used by the test preflight. Its exception checks are concentrated on authentication, and the last_claim check does not validate each category. A direct probe changed the company-role admin route's authorization to public, used the permitted no-company-admin claim, and anchored it to the health handler; the complete matrix validator returned no reason.",
+      "impact": "A source-hashed but semantically unrelated range can falsely certify permission ownership. The matrix therefore cannot establish the AGENTS.md authorization, tenant/global-scope, immutable-audit, or destructive-effect boundary required by FR4.",
+      "suggestion": "Enforce exact per-route category dispositions and claims, constrain evidence paths to the owning route or an explicitly permitted shared capability descriptor, validate each category independently, and add cross-route evidence substitution plus admin authorization/audit downgrade cases."
+    },
+    {
+      "id": "R0-RB-H2",
+      "severity": "High",
+      "summary": "Positive-count compensation can omit reconciliation and suppress the required upstream issue.",
+      "file": "measure/business_operations_graph_baseline_validation.py",
+      "lines": "532-567, 958-985",
+      "context": "routeCount and fieldCount are not compared with their inventories, routeReconciliation and fieldReconciliation are optional, exact set equality is absent, and inventory hashes are optional. For a tool-limitation compensation branch, upstreamIssue.required may be false with no issue artifact. A direct probe combining all of these omissions produced no reason.",
+      "impact": "RB-02 can be compensated by labels and positive integers without reconciling every unaudited node or recording the issue required by FR6. This is a direct A3, A4, and A7 false-green path.",
+      "suggestion": "Require non-empty unique reconciliation ledgers, exact equality with normalized unaudited route/field inventories, exact labeled count equality, two mandatory equal inventory digests, and required=true plus a validated immutable issue receipt whenever toolLimitation is true."
+    },
+    {
+      "id": "R0-RB-H3",
+      "severity": "High",
+      "summary": "Receipt lineage is self-referential and normal candidate acceptance is not bound to the pinned parent failure evidence.",
+      "file": "measure/business_operations_graph_baseline_validation.py",
+      "lines": "988-1091, 1094-1200",
+      "context": "The recomputation ledger is compared with the candidate manifest's submitted artifact list, but that list is not required to equal the candidate's actual archive, source manifest, graph, and command references. Parent trust roots are asserted only by Python test literals; accepted candidate envelopes contain no parent reference, while the parentArtifacts runtime branch validates candidate-supplied metadata and always returns BLOCKED without loading authoritative pinned bytes.",
+      "impact": "A producer can construct internally matching receipts that omit an evidence artifact, and a normal ACCEPT is disconnected from the immutable RB-01/RB-02/RB-03 failure lineage. This leaves A15 and the no-false-parent/successor-acceptance guarantee incomplete.",
+      "suggestion": "Derive the exact manifest artifact set from the candidate body, require the reviewer ledger to recompute that exact set, bind immutable parent trust-root references and semantics into the candidate lineage, and distinguish parent-block classification from candidate acceptance with explicit schemas."
+    },
+    {
+      "id": "R0-RB-M1",
+      "severity": "Medium",
+      "summary": "Malformed external archive and lineage shapes can raise instead of returning BLOCKED.",
+      "file": "measure/business_operations_graph_baseline_validation.py",
+      "lines": "314-333, 998-1021",
+      "context": "Archive entries are indexed before their type and required keys are validated, and lineage required keys are indexed after merely recording LINEAGE_KEYS_INVALID. Probes produced KeyError and TypeError for missing contentBase64, non-object entries, unhashable paths, and a missing candidateManifest.",
+      "impact": "Hostile or corrupted external JSON can turn validation into a denial of service and violates the advertised fail-closed decision contract.",
+      "suggestion": "Apply strict nested schemas before dereferencing values, bound archive sizes/counts, and catch decoding/path/type failures at validate_candidate so every malformed input returns deterministic BLOCKED reasons."
+    },
+    {
+      "id": "R0-RB-M2",
+      "severity": "Medium",
+      "summary": "The plan and prior Green authorization artifact overstate the executable fixture-check state.",
+      "file": "measure/tracks/business_operations_graph_baseline_remediation_20260730/plan.md",
+      "lines": "3-18",
+      "context": "The exact Red task remains [~] while its validator suite is Green, and R0 is [x] despite this Review B failure and without a recorded task SHA/checkpoint. red-green-gate-20260730.json also claims generate-fixtures.py --check verified no drift, but generate-fixtures.py has no check-mode argument handling and always rewrites fixtures via main().",
+      "impact": "The plan does not clearly distinguish Red completion, Green implementation, and independent R0 acceptance, and the claimed non-mutating fixture check is not executable as described. This is an A5 truthfulness problem even though successor plans currently remain blocked.",
+      "suggestion": "Keep R0 blocked, record the actual Green command/result and review disposition, implement a genuinely non-writing --check mode before citing it, and update task markers only after Critical/High findings are closed with auditable commit/checkpoint identity."
+    }
+  ],
+  "fixture_integrity_assessment": {
+    "literal_fixture_index_pin": "PASS",
+    "authoritative_parent_byte_pins": "PASS at the pre-role snapshot",
+    "current_archive_entry_hashes_and_manifest_equality": "PASS for the frozen fixtures",
+    "semantic_source_denominator_completeness": "FAIL: clean is a 28-entry submitted subset with 18 TypeScript paths and a zero ledger; compensation is 54 entries with 44 TypeScript paths and a 26-row ledger.",
+    "dirty_tree_status_receipt_binding": "FAIL: fixture status/porcelain hashes are synthetic strings and the validator does not require replayable status/staged-diff bytes.",
+    "malicious_archive_boundary": "FAIL: unsafe paths are accepted and malformed entries can raise."
+  },
+  "parent_and_successor_assessment": {
+    "current_parent_review_b_state": "FAIL/BLOCKED",
+    "current_small_company_phase_s1_marker": "BLOCKED",
+    "current_customer_licensing_crm_markers": "BLOCKED",
+    "current_false_unblock_edit_observed": false,
+    "parent_special_payload_returns_blocked": true,
+    "normal_candidate_cryptographically_binds_parent_fail_evidence": false,
+    "reviewer_reject_or_high_finding_blocks_validator_acceptance": false,
+    "result": "FAIL: current plan text has not unblocked successors, but the validator does not prove that a rejected or parent-disconnected candidate cannot become a future false acceptance signal."
+  },
+  "agents_md_assessment": {
+    "runtime_external_boundary_validation": "FAIL",
+    "authorization_permission_ownership_evidence": "FAIL",
+    "tenant_global_scope_evidence": "FAIL closed only for the frozen positive fixture; cross-route evidence substitution remains accepted.",
+    "immutable_audit_evidence": "Not independently trustworthy while security dispositions can be substituted.",
+    "provider_sdk_or_product_security_code_change_observed": false,
+    "unrelated_dirty_work_preserved": true
+  },
+  "anti_pattern_assessment": {
+    "A3": "FAIL: compensation routeCount/fieldCount need not equal the labeled inventories.",
+    "A4": "FAIL: positive counts can accompany missing reconciliation, and the clean fixture obtains zero exclusions from a truncated submitted denominator.",
+    "A5": "FAIL: the prior gate cites a non-writing --check mode that does not exist, and the plan does not truthfully separate Red, Green, and accepted R0 state.",
+    "A7": "FAIL: archive, manifest, graph, command, and receipt inventories are not enforced as exact derived sets; omitted inputs can disappear from the denominator.",
+    "A8": "PASS: current track task markers use only [~], [x], and [b].",
+    "A15": "FAIL: reviewer rejection/severity does not block, candidate-manifest artifact completeness is not derived, malformed lineage can crash, and parent trust roots are not in normal acceptance lineage.",
+    "A16": "PARTIAL: the live checkout is exactly one master worktree, but candidate validation trusts declarations and does not verify the declared root or baseline HEAD against the shared checkout."
+  },
+  "required_disposition": {
+    "phase_r0": "BLOCKED",
+    "exact_next_red_task": "Keep in progress until the missing adversarial cases are added and the corrected validator passes them.",
+    "parent_gate": "Keep Review B FAIL and RB-01/RB-02/RB-03 open.",
+    "small_company_admin_phase_s1": "Keep blocked.",
+    "customer_licensing_crm": "Keep contract/schema/Red work blocked.",
+    "recommendation": "Resolve every Critical/High finding and rerun independent Review B before beginning R1 or treating any candidate as acceptance-capable."
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "commitSha": null,
+  "fileRows": [
+    {
+      "path": "apps/accounts/app/api/admin/employees/[accountId]/company-roles/route.ts",
+      "sourceSha256": "8bec3e207a068cf8533ac7431712969528704c380b5b2a9fb3b79dce81da2a88"
+    },
+    {
+      "path": "apps/accounts/app/api/admin/employees/[accountId]/credential/route.ts",
+      "sourceSha256": "bc196fb2bbb9016530acb266b06329be9ca07a1649e32eff56bde9ef3f8ab0ac"
+    },
+    {
+      "path": "apps/accounts/app/api/admin/employees/[accountId]/roles/route.ts",
+      "sourceSha256": "938d05c0ee4c521864df36963eb3d788a16bd54a1233ab644a42c78552c8cbee"
+    },
+    {
+      "path": "apps/accounts/app/api/admin/employees/[accountId]/sessions/route.ts",
+      "sourceSha256": "e1b1a4813a026880e9126edd645c0df996515cd517a090a9b58469d691c543d2"
+    },
+    {
+      "path": "apps/accounts/app/api/admin/employees/[accountId]/status/route.ts",
+      "sourceSha256": "50048e929cf01518abaa1a67b4ae2219cf0674f336e7be23211c244ecaeeecb7"
+    },
+    {
+      "path": "apps/accounts/app/api/admin/employees/route.ts",
+      "sourceSha256": "ec9645608535fa08fd5d3cc21fe024cd945c179bb1c7a9bde1741e85048fcf68"
+    },
+    {
+      "path": "apps/accounts/app/api/health/route.ts",
+      "sourceSha256": "1296189272ff900dd53a6f75157f837eaff9393d0b696ecf1fddb4d320e8f351"
+    },
+    {
+      "path": "apps/accounts/app/api/oidc/authorize/route.ts",
+      "sourceSha256": "6caba8a802be4de536111b48d5ff5917968539b8ecb0e3b5dba69a8cb50b4a5f"
+    },
+    {
+      "path": "apps/accounts/app/api/oidc/introspect/route.ts",
+      "sourceSha256": "4077096a96b7342eb19a3e144fe9d6b7817272fe14abd2335a9696164dae66f3"
+    },
+    {
+      "path": "apps/accounts/app/api/oidc/jwks/route.ts",
+      "sourceSha256": "ffc321cb5bf561d80dd99419615943debb61caaa8fbe63c3f971660a19bf7580"
+    },
+    {
+      "path": "apps/accounts/app/api/oidc/logout/route.ts",
+      "sourceSha256": "be6df1821386d9b69984e76045726b6993ffb1971a665318b4afafd2426b2c5d"
+    },
+    {
+      "path": "apps/accounts/app/api/oidc/token/route.ts",
+      "sourceSha256": "d3f27f2acdb4e805bf486ae0942051f66d42ef9a87f442ab54f755fab1cf3cb5"
+    },
+    {
+      "path": "apps/accounts/app/api/ready/route.ts",
+      "sourceSha256": "c1d454033703039ba248f18025d5dc0ad6e55bcacea8a391a78bc7f891201d16"
+    },
+    {
+      "path": "apps/accounts/app/api/session/login/route.ts",
+      "sourceSha256": "c82e76c7b68ec4cbec0feabc27b693b71a7f1b7262b94f44ba548fcb89fdb13c"
+    },
+    {
+      "path": "apps/accounts/app/api/session/logout/route.ts",
+      "sourceSha256": "ded2120e91f2d9ba29926491cde469578b7b45e5bca0034a666ea286c1daeb78"
+    },
+    {
+      "path": "apps/accounts/app/layout.tsx",
+      "sourceSha256": "695adf0aabcbec8cf133d77cad176d038739e483ee4f3bce217e4f390545d05a"
+    },
+    {
+      "path": "apps/accounts/app/page.tsx",
+      "sourceSha256": "1db7076c9487c66413c706333a32d8ebc6e08d2cbb25665eb2f95f4ee79c376b"
+    },
+    {
+      "path": "packages/backend/src/modules/company-identity/capabilities.ts",
+      "sourceSha256": "895fe72d54521e8f1e873fe6c5423e545a8161c6ed3289c0565b52f37d060a9f"
+    }
+  ],
+  "scanCommand": "repo-graph scan . ./graph.db",
+  "scanConfig": null,
+  "schemaVersion": "2.0.0",
+  "sourceManifestSha256": "3904e5710dd83550aa1ed82ab9c785b0db002ce5e93739abb5e31393caa3ab5b",
+  "toolVersion": "0.1.0"
+}

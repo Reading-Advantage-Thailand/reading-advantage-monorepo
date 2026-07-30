@@ -1,0 +1,27 @@
+{
+  "candidateManifest": {
+    "path": "candidate-clean-v1.manifest.json",
+    "sha256": "aa29bf83f1b488a97d42fca148736ae61f3e9bd5d1f42e21c6ccb3ac9734f5a7",
+    "size": 1599
+  },
+  "candidateSha256": "25a3f17b6cb262f238e9ec11861d99d00ae6e7c05e99aeabd6cef503b4bffa1b",
+  "decision": "MAYBE",
+  "findings": [],
+  "identity": "reviewer@example.test",
+  "producerReceipt": {
+    "path": "producer-clean-v1.receipt.json",
+    "sha256": "8382499898d828111ba1e74443cc7e17b7dc667895f49cf3dac64c842371b8a0",
+    "size": 425
+  },
+  "recomputedArtifactLedger": {
+    "path": "reviewer-clean-v1.artifact-ledger.json",
+    "sha256": "78fbd3e2ded6dafe0ee450d54ab50c5c2996e686abfffd989ae562e5127e69fa",
+    "size": 2079
+  },
+  "role": "independent-reviewer",
+  "schemaVersion": 1,
+  "severityGate": "Critical/High forces REJECT",
+  "state": "FINAL",
+  "successorGates": "blocked-until-handoff",
+  "timestamp": "2026-07-30T01:00:00Z"
+}

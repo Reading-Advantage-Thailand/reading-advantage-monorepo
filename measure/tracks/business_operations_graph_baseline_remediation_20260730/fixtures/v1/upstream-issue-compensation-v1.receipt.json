@@ -1,0 +1,15 @@
+{
+  "auditExcerptSha256": "14dcd2e5183baf365f2ce06ee3267559bc5d60be421ec4e471db39b1c37ea9d4",
+  "commands": [
+    "repo-graph scan . ./graph.db",
+    "repo-graph audit ./graph.db --json"
+  ],
+  "expected": "scanner-emitted route and field nodes can be audited",
+  "fixtureSha256": "f869457cbe79b41e1eecc56a352225cf147734241a7389b37682f6f55a7ce28e",
+  "issueNumber": 123,
+  "observed": "audit exit 1 retains scanner-emitted unaudited nodes",
+  "repository": "bodangren/repo-graph",
+  "schemaVersion": 1,
+  "toolVersion": "0.1.0",
+  "url": "https://github.com/bodangren/repo-graph/issues/123"
+}

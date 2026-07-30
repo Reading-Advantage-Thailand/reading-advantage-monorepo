@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "task": "Exact Next Red Task — final audit-only review",
+  "role": "independent-reviewer",
+  "reviewed_at": "2026-07-30",
+  "baseline_head": "3ff9b734a9e5a69f777108827b569e4f20a5ceb8",
+  "decision": "FAIL",
+  "production_code_modified": false,
+  "commit_created": false,
+  "review_scope": [
+    "AGENTS.md",
+    "measure/index.md",
+    "measure/workflow.md",
+    "measure/anti-patterns.md",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/spec.md",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/plan.md",
+    "measure/tests/test_business_operations_graph_baseline_remediation.py",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/fixtures/v1/candidate-envelopes-v1.json",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/fixtures/v1/invalid-candidates-v1.json",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/fixtures/v1/snapshot-clean-v1.archive.json",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/fixtures/v1/snapshot-compensation-v1.archive.json",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/fixtures/v1/parent-fail-artifacts-v1/manifest.json",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/fixtures/v1/parent-fail-artifacts-v1/phase0-review-b-safety-20260730.json",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/fixtures/v1/parent-fail-artifacts-v1/phase0-graph-baseline-producer-evidence-20260722.md",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/fixtures/v1/parent-fail-artifacts-v1/red-rereview-correctness-20260730.json",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/red-run-receipt-20260730.md",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/red-review-correctness-20260730.json",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/red-rereview-correctness-20260730.json"
+  ],
+  "preflight": {
+    "head": "3ff9b734a9e5a69f777108827b569e4f20a5ceb8",
+    "branch": "master",
+    "worktree_count": 1,
+    "shared_worktree": "/home/daniel-bo/Desktop/reading-advantage-monorepo",
+    "dirty_tree_preserved": true
+  },
+  "verification": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_remediation -v",
+    "exit_code": 1,
+    "tests_run": 18,
+    "failures": 84,
+    "result": "The independently rerun suite is Red and matches the receipt count: all 84 failures are the intentional missing-module boundary for measure.business_operations_graph_baseline_validation. That common failure occurs before the validator-dependent semantic assertions can prove that the purported valid fixtures are internally satisfiable."
+  },
+  "latest_finding_disposition": {
+    "RED-RR-C1": "OPEN",
+    "RED-RR-H1": "OPEN",
+    "RED-RR-H2": "OPEN",
+    "RED-RR-H3": "OPEN",
+    "RED-RR-M1": "OPEN",
+    "RED-RR-M2": "PARTIALLY_RESOLVED"
+  },
+  "findings": [
+    {
+      "id": "RED-FINAL-C1",
+      "severity": "Critical",
+      "summary": "Parent FAIL evidence is currently copied and hash-matched, but it is not immutably pinned and the suite can green after authoritative parent evidence is changed.",
+      "evidence": "The three frozen copies currently match manifest.json and their live counterparts at SHA-256 values 5bfe10b18aaf650687a337f02a64dab35de378ef8ba333e4946af6e80143fc9f, 6d3613787361d0747d6ed9f590583257d92ac15f6717fbd58d9a1bcc006181db, and e64fdbd2f67145a18c8e0d821b39629ec750cb71eae78acde357d245ddf19d73. However, the test loads every expected digest from the same mutable, unpinned fixture manifest; no test pins the manifest digest in code or immutable baseline content. The tests never compare the authoritative live parent producer/Review B files with the frozen copies. Rewriting a live parent artifact leaves the suite unchanged, and rewriting a frozen artifact together with manifest.json makes the Python preflight accept the new bytes.",
+      "impact": "Green can pass without preserving the historical Review B FAIL bytes, so RB-01/RB-02/RB-03 can be erased or relabeled outside the fixture directory without an executable regression. This fails the explicit no-green-by-changing-parent-evidence requirement and leaves RED-RR-C1 open.",
+      "remediation": "Pin a trusted manifest/artifact digest outside the mutable fixture payload (or load baseline Git bytes), compare the authoritative parent paths to those pins, and semantically require their original FAIL/BLOCKED state. A coordinated change to evidence plus manifest must fail."
+    },
+    {
+      "id": "RED-FINAL-C2",
+      "severity": "Critical",
+      "summary": "The two fixtures asserted as valid cannot satisfy the suite's own replay and A15 lineage contracts.",
+      "evidence": "Using the exact canonicalization in test lines 360-365, clean computes candidate digest 3c137fbc4fd702c994f936a044928c302465f50694f5d85fea37fef5769c51bb but declares 9328ec98b0c146348fa02a6cb2fe5768efbb93bb53995d4c96039b29bdbba429; compensation computes 92401cc86f57f0a89c76704f59b013eb150ab1cf58387d69c761f577c3c52746 but declares 8c0639db2b9253e53dbff2f04faebe633367e8fd1bf76b62e83938a66e28a1f9. Both archives have the declared outer file digest, but neither archive entry inventory equals its manifest: clean's single entry has a different path-content digest, while compensation has 2 archive entries versus 4 manifest entries with different paths/digests. The archive JSON stores metadata only, not the exact source bytes required for replay. test_clean_candidate_is_accepted, test_compensation_candidate_is_accepted, and test_a15_recompute_candidate_digest_for_producer_reviewer_lineage therefore cannot all pass under a semantic validator.",
+      "impact": "A correct R0 implementation is forced either to reject the supposedly valid candidates or to bypass digest/archive semantics. The Red contract is not a valid implementation target, leaving RED-RR-H1 and RED-RR-H2 open.",
+      "remediation": "Regenerate internally consistent valid envelopes from actual replayable archive bytes, recompute every manifest/candidate/receipt digest using one documented canonicalization, and add a Python-side positive preflight that proves the valid fixtures are self-consistent before importing the absent validator."
+    },
+    {
+      "id": "RED-FINAL-H1",
+      "severity": "High",
+      "summary": "Security-route and TypeScript-exclusion fixtures are synthetic rather than source-anchored, so RED-RR-H3 lacks executable semantic coverage.",
+      "evidence": "All 17 securityRoutes paths and all 102 cited security evidence paths in both candidates are absent from the checkout; the actual Accounts admin handlers are under apps/accounts/app/api/admin/employees/**/route.ts, not apps/accounts/lib/server/admin/*.ts. The graph row path packages/accounts/src/routes/users.ts is also absent. In compensation, 23 of the 26 candidateTypeScript/ledger paths do not exist, only the 3 backend harness paths exist, and only 3 of 26 exclusion paths appear in the four-entry snapshot manifest. No route path appears in that snapshot. Consequently declaration fingerprints, source-range digests, security evidence, and exclusion digests cannot be recomputed from the frozen archive.",
+      "impact": "A validator can accept invented anchors and ledgers without covering the discovered 17 Accounts routes or the actual candidate-TypeScript-minus-graph set. Required authorization, validation, tenant/global scope, audit, destructive-effect, and excluded-file dispositions remain vacuous.",
+      "remediation": "Use the actual Review B route denominator and actual snapshot paths, include every referenced source/evidence byte in the replayable snapshot, and assert exact set equality plus recomputed range/file hashes. Derive candidate TypeScript minus graph files from snapshot inventories rather than a hand-authored synthetic list."
+    },
+    {
+      "id": "RED-FINAL-H2",
+      "severity": "High",
+      "summary": "Independent-review and receipt lineage remain producer-controlled placeholders rather than separate immutable evidence.",
+      "evidence": "Each candidate embeds producer and review objects in one JSON body, has no producer receipt body, review receipt body, candidate manifest artifact, or reviewer recomputation ledger, and assigns the producer and reviewer the same receiptSha256. The test's candidate digest includes the review identity, decision, findings, and timestamp, so a producer digest cannot be finalized before the independent review it supposedly precedes. The invalid corpus checks selected field mutations but cannot recompute the nonexistent receipts or prove review of every referenced artifact.",
+      "impact": "A producer-controlled envelope can manufacture reviewer fields, and stale or fabricated receipt hashes cannot be distinguished from independently recomputed evidence. RED-RR-H2 and A15 remain open.",
+      "remediation": "Model candidate manifest, producer receipt, and reviewer receipt as separate hash-pinned artifacts. Hash the producer candidate before review, require a distinct reviewer identity and receipt digest, and bind reviewer-recomputed hashes for every candidate artifact and both named successor gates."
+    },
+    {
+      "id": "RED-FINAL-H3",
+      "severity": "High",
+      "summary": "External command evidence and the compensation/upstream decision matrix remain incomplete.",
+      "evidence": "requiredCommands records only name, command, and exitCode; there is no stdout/stderr, result artifact hash, snapshot binding, or unknown-state rejection despite FR1/FR3 requiring runtime-validated command-result evidence. The corpus rejects compensation.toolLimitation=false only when an issue remains present, but has no case proving that compensation with toolLimitation=false, required=false, and issue=null is itself blocked or corrected to the clean path. Unknown review/audit success states and unexpected schema fields are also untested.",
+      "impact": "Green can trust fabricated zero exits, accept a non-tool-limitation compensation branch without the required FR6 disposition, or ignore malformed external states. RED-RR-H1, RED-RR-H3, and RED-RR-M2 are not fully closed.",
+      "remediation": "Add hash-bound command-result artifacts with stdout/stderr/exits and exact required-command set checks; test unknown fields/states; and cover all clean, tool-limitation compensation with required issue, and project-owned/no-compensation outcomes including cross-branch negatives."
+    }
+  ],
+  "parent_evidence_assessment": {
+    "current_frozen_hashes_match_manifest": true,
+    "current_live_parent_bytes_match_frozen_copies": true,
+    "current_parent_decision": "FAIL/BLOCKED",
+    "immutable_pin_proven": false,
+    "protected_against_live_parent_change": false,
+    "no_green_via_parent_evidence_change": false,
+    "result": "FAIL"
+  },
+  "branch_assessment": {
+    "clean_exit_and_empty_integrity_shape_present": true,
+    "nonzero_compensation_shape_present": true,
+    "valid_fixture_replay_consistent": false,
+    "conditional_upstream_issue_matrix_complete": false,
+    "result": "FAIL"
+  },
+  "anti_pattern_assessment": {
+    "A3": "Partial: numeric inventory-count checks exist, but the valid fixture inventories are not source/replay consistent.",
+    "A4": "Partial: a zero-denominator negative exists, but the direct A4 test deletes one of 17 routes rather than testing the stated minimum-one boundary, and valid compensation is not replayable.",
+    "A5": "Partial: false-clean/disposition negatives exist, but one named claim-result fixture is actually a clean-with-nonempty-audit case and the parent FAIL claim is not immutably protected.",
+    "A7": "Partial: required command names are checked for preservation, but command evidence is not hash-bound and the fixture is not a real inventory.",
+    "A8": "Pass for current plan bytes: only [~], [x], and [b] task markers are present.",
+    "A15": "Fail: declared candidate digests do not match the test's canonical digest and producer/reviewer receipts are identical placeholders without receipt bodies.",
+    "A16": "Pass for current checkout preflight: exactly one worktree is on master at the required root; negative branch/count cases are executable."
+  },
+  "required_disposition": {
+    "exact_next_red_task": "Remain [~]; repair and rerun the Red contract before R0 Green.",
+    "r0_green_may_begin": false,
+    "parent_gate": "Keep Review B FAIL and RB-01/RB-02/RB-03 blocked; do not edit parent evidence to satisfy this suite.",
+    "successor_tracks": "Keep Admin S1 and CRM contract/schema/Red work blocked.",
+    "acceptance": "Denied. The latest Critical/High findings do not yet have an internally satisfiable, immutable, source-semantic, non-vacuous executable contract."
+  }
+}

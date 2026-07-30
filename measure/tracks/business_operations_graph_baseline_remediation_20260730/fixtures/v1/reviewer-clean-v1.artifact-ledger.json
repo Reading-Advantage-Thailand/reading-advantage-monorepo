@@ -1,0 +1,63 @@
+{
+  "artifacts": [
+    {
+      "path": "snapshot-clean-v1.archive.json",
+      "sha256": "7e0d88aadaf10a6aa65630cde788ff3d1e50831060e57b2a0c3908d435424b20",
+      "size": 1552243
+    },
+    {
+      "path": "snapshot-clean-v1.manifest.json",
+      "sha256": "1844a7825b101ccbeaa58d9456747360bf1a81555e90dd92904001d6c7781c4a",
+      "size": 15565
+    },
+    {
+      "path": "source-state-clean-pre-v1.json",
+      "sha256": "9607d4f84180bdb82355b6e3a43caabb9d9a1d6129c77252095a5083fc5d8416",
+      "size": 117
+    },
+    {
+      "path": "source-state-clean-post-v1.json",
+      "sha256": "9607d4f84180bdb82355b6e3a43caabb9d9a1d6129c77252095a5083fc5d8416",
+      "size": 117
+    },
+    {
+      "path": "graph-clean-v1.json",
+      "sha256": "d1926d16d8dbb3ffa8eb5392ec4791d62c6ed6962545d64a0734eb9084f78777",
+      "size": 8324
+    },
+    {
+      "path": "command-results-clean-v1.json",
+      "sha256": "34bfae9cf90b483f4651ae7b3858366599ac1df2140069ab230055eab74207d8",
+      "size": 5061
+    },
+    {
+      "path": "parent-fail-artifacts-v1/manifest.json",
+      "sha256": "15f3c61fbcea4ea13c777e4f80ff061de2fa007985ef38b77dd560b1c8c77d50",
+      "size": 2209
+    },
+    {
+      "path": "candidate-clean-v1.manifest.json",
+      "sha256": "aa29bf83f1b488a97d42fca148736ae61f3e9bd5d1f42e21c6ccb3ac9734f5a7",
+      "size": 1599
+    },
+    {
+      "path": "producer-clean-v1.receipt.json",
+      "sha256": "8382499898d828111ba1e74443cc7e17b7dc667895f49cf3dac64c842371b8a0",
+      "size": 425
+    }
+  ],
+  "candidateSha256": "25a3f17b6cb262f238e9ec11861d99d00ae6e7c05e99aeabd6cef503b4bffa1b",
+  "schemaVersion": 1,
+  "successorGates": [
+    {
+      "name": "small_company_admin_privileges_20260722:Phase-S1",
+      "recordSha256": "fe947918c1747c01ae97078182b3325b9a85797ef002c146b5bd070d32531b27",
+      "state": "BLOCKED_UNTIL_HASH_BOUND_HANDOFF"
+    },
+    {
+      "name": "customer_licensing_crm_20260722:contract-schema-red",
+      "recordSha256": "0d85e05f82c211f12a4514bf37a4568df9a93cc51717a70d81f554f23bb98e5b",
+      "state": "BLOCKED_UNTIL_HASH_BOUND_HANDOFF"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "track_id": "business_operations_graph_baseline_remediation_20260730",
+  "phase": "R0",
+  "review": "Review C rereview: fixture-root contract and plan-truthfulness follow-up",
+  "reviewed_at": "2026-07-30",
+  "decision": "PASS",
+  "production_code_modified": false,
+  "scope": [
+    "measure/business_operations_graph_baseline_validation.py",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/fixtures/v1/generate-fixtures.py",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/plan.md",
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r0-review-c-implementation-acceptance-20260730.md"
+  ],
+  "verification": {
+    "fixture_root_doc_error_contract": {
+      "status": "PASS",
+      "basis": "validate_candidate documents the trusted local non-symlink v1 fixture-root contract and frozen-baseline scope; invalid, missing, non-directory, and symlink roots return the stable FIXTURE_ROOT_INVALID reason.",
+      "probes": "None, missing, regular-file, and symlink roots each returned decision BLOCKED with reasons [FIXTURE_ROOT_INVALID]."
+    },
+    "focused_suite": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_remediation -v",
+      "exit_code": 0,
+      "tests_run": 29,
+      "status": "PASS"
+    },
+    "plan_truthfulness_follow_up": {
+      "status": "PASS",
+      "basis": "The plan explicitly leaves R0-REREVIEW-M1 open and states that --check is separately authorized and not completed; generate-fixtures.py still has no --check implementation, so the plan makes no false completion claim."
+    }
+  },
+  "findings": [
+    {
+      "id": "R0-REREVIEW-M1",
+      "severity": "Medium",
+      "status": "OPEN",
+      "summary": "The fixture generator still accepts --check without implementing a non-writing check mode.",
+      "disposition": "Preserved as an explicitly blocked follow-up; not a Critical/High R0 validator-contract failure."
+    }
+  ],
+  "gate_disposition": {
+    "phase_r0": "PASS for this rereview only; existing R0 acceptance boundary is unchanged.",
+    "parent_review_b": "REMAIN_BLOCKED",
+    "small_company_admin_phase_s1": "REMAIN_BLOCKED",
+    "customer_licensing_crm_contract_schema_red": "REMAIN_BLOCKED",
+    "successor_unblock_authorized": false
+  }
+}
