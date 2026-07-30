@@ -73,6 +73,9 @@ export const ACCEPTED_STANDARD_ASSET_RELEASE = Object.freeze({
   }),
 }) satisfies AcceptedStandardAssetRelease;
 
+/** Accepted resolvers whose catalog and binding passed root-release verification. */
+const acceptedStandardAssetResolvers = new WeakSet<object>();
+
 async function sha256(value: string): Promise<string> {
   if (!globalThis.crypto?.subtle) {
     throw new Error("Web Crypto SHA-256 is required to validate the accepted standard asset catalog");
@@ -117,5 +120,16 @@ export async function createAcceptedStandardAssetResolver(
   if (payloadDigest !== catalog.digest) {
     throw new Error("Standard asset catalog payload does not match its digest");
   }
-  return createStandardAssetResolver(catalog, binding);
+  const resolver = createStandardAssetResolver(catalog, binding);
+  acceptedStandardAssetResolvers.add(resolver);
+  return resolver;
+}
+
+/**
+ * Checks whether a resolver was created after accepted-release catalog verification.
+ * @param candidate Resolver candidate supplied to an APK v2 provenance boundary.
+ * @returns Whether the exact resolver instance is bound to the accepted standard-pack release.
+ */
+export function isAcceptedStandardAssetResolver(candidate: unknown): candidate is StandardAssetResolver {
+  return typeof candidate === "object" && candidate !== null && acceptedStandardAssetResolvers.has(candidate);
 }

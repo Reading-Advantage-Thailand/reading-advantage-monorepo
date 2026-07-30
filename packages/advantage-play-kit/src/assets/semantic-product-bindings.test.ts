@@ -2,10 +2,14 @@ import { describe, expect, it } from "vitest";
 
 import {
   OWNER_APPROVED_CANONICAL_BINDINGS,
+  createAcceptedSemanticAssetResolver,
+  createReleaseBoundSemanticAssetResolver,
   createSemanticAssetResolver,
   validateSemanticProductBindings,
 } from "./semantic-product-bindings.js";
+import { ACCEPTED_STANDARD_ASSET_RELEASE } from "./accepted-standard-pack-release.js";
 import type { StandardAssetCatalogEntry, StandardAssetResolver } from "./standard-pack-release.js";
+import { readStandardPackCatalogFixture } from "./standard-pack-test-paths.test-support.js";
 
 function createBaseResolver(): StandardAssetResolver {
   const entries = new Map(OWNER_APPROVED_CANONICAL_BINDINGS.bindings.map((binding) => [binding.semanticKey, {
@@ -58,6 +62,28 @@ describe("owner-approved semantic product bindings", () => {
   it("fails closed for an unmapped role/state", () => {
     const resolver = createSemanticAssetResolver(createBaseResolver(), OWNER_APPROVED_CANONICAL_BINDINGS);
     expect(() => resolver.resolve({ role: "player", state: "flying" })).toThrow(/unmapped/i);
+  });
+
+  it("binds semantic resolution to the exact supplied release and reserves the accepted helper for root-pinned manifests", async () => {
+    const catalog = readStandardPackCatalogFixture();
+    const rootBinding = {
+      version: ACCEPTED_STANDARD_ASSET_RELEASE.version,
+      catalogDigest: ACCEPTED_STANDARD_ASSET_RELEASE.catalogDigest,
+      sourceReceiptDigest: ACCEPTED_STANDARD_ASSET_RELEASE.sourceReceiptDigest,
+    };
+    await expect(createReleaseBoundSemanticAssetResolver(
+      catalog, rootBinding, OWNER_APPROVED_CANONICAL_BINDINGS, {} as never, {} as never, [], []
+    )).rejects.toThrow(/issued validated ingestion ledger/i);
+
+    const successorPinnedManifest = validateSemanticProductBindings({
+      ...OWNER_APPROVED_CANONICAL_BINDINGS,
+      release: { ...rootBinding, version: "2026.07.30" },
+    });
+    await expect(createReleaseBoundSemanticAssetResolver(
+      catalog, rootBinding, successorPinnedManifest, {} as never, {} as never, [], []
+    )).rejects.toThrow(/issued validated ingestion ledger/i);
+    await expect(createAcceptedSemanticAssetResolver(catalog, rootBinding, successorPinnedManifest))
+      .rejects.toThrow(/root-pinned semantic bindings/i);
   });
 
   it("rejects resolver entries whose key, descriptor, or source binding is tampered", () => {
