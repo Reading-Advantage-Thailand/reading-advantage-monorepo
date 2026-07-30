@@ -811,11 +811,63 @@ def _write_atomic(path: Path, data: bytes) -> None:
         raise
 
 
+def _json_artifact_bytes(value: Any) -> bytes:
+    """Returns deterministic on-disk JSON bytes for one snapshot artifact."""
+    return (json.dumps(value, indent=2, sort_keys=True) + "\n").encode("utf-8")
+
+
 def _write_json(path: Path, value: Any) -> dict[str, Any]:
     """Writes one canonical JSON file atomically and returns its reference dict."""
-    data = (json.dumps(value, indent=2, sort_keys=True) + "\n").encode("utf-8")
+    data = _json_artifact_bytes(value)
     _write_atomic(path, data)
     return {"path": path.name, "sha256": _sha(data), "size": len(data)}
+
+
+def _run_canonical_scan(repo: Path) -> dict[str, Any]:
+    """Runs the required repo-graph command and returns bound result metadata."""
+    result = subprocess.run(
+        ["repo-graph", "scan", ".", "./graph.db"],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return {
+        "command": SCAN_COMMAND,
+        "exitCode": result.returncode,
+        "graphPath": "graph.db",
+        "stderr": result.stderr,
+        "stdout": result.stdout,
+    }
+
+
+def _validate_scan_result(repo: Path, value: Any) -> dict[str, Any]:
+    """Validates one canonical scan result and binds its generated graph bytes."""
+    required = {"command", "exitCode", "graphPath", "stderr", "stdout"}
+    if not isinstance(value, dict) or set(value) != required:
+        raise SnapshotError("scan runner result schema is invalid")
+    if value["command"] != SCAN_COMMAND or value["exitCode"] != 0:
+        raise SnapshotError("canonical repo-graph scan did not exit successfully")
+    if not isinstance(value["stdout"], str) or not isinstance(value["stderr"], str):
+        raise SnapshotError("scan runner output must be text")
+    try:
+        graph_path = _normalize_repo_path(value["graphPath"])
+    except SnapshotValidationError as error:
+        raise SnapshotError("scan graph path is invalid") from error
+    if graph_path != "graph.db":
+        raise SnapshotError("canonical scan must write graph.db")
+    graph = repo / graph_path
+    if not graph.is_file() or graph.is_symlink():
+        raise SnapshotError("canonical scan did not produce a regular graph.db")
+    data = graph.read_bytes()
+    return {
+        "command": SCAN_COMMAND,
+        "exitCode": 0,
+        "graph": {"path": graph_path, "sha256": _sha(data), "size": len(data)},
+        "schemaVersion": 1,
+        "stderr": value["stderr"],
+        "stdout": value["stdout"],
+    }
 
 
 def _resolve_package_globs(configs: dict[str, dict[str, Any]], manifest_paths: dict[str, dict[str, Any]]) -> list[str]:
@@ -1012,7 +1064,9 @@ def _build_package_globs(worktree_root: Path) -> list[str]:
     if not workspace_path.is_file() or workspace_path.is_symlink():
         return []
     try:
-        return _resolve_package_globs({}, _read_jsonc(workspace_path))
+        return _resolve_package_globs(
+            {}, {"pnpm-workspace.yaml": _read_jsonc(workspace_path)}
+        )
     except (OSError, ValueError):
         return []
 
@@ -1069,6 +1123,7 @@ def produce_snapshot(
     *,
     tool_version: str = EXPECTED_TOOL_VERSION,
     before_post_check: Callable[[], None] | None = None,
+    scan_runner: Callable[[Path], dict[str, Any]] | None = None,
     worktree_root: Path | str | None = None,
 ) -> SnapshotArtifacts:
     """Produces a replayable source snapshot for the dirty shared worktree.
@@ -1077,6 +1132,7 @@ def produce_snapshot(
     @param output_directory Directory to write the snapshot bundle into.
     @param tool_version Tool identity recorded in the manifest.
     @param before_post_check Optional drift hook used by the concurrent-drift test.
+    @param scan_runner Optional canonical scan executor run between the state captures.
     @param worktree_root Override for the scanner walk root (defaults to ``repo_root``).
     @returns The :class:`SnapshotArtifacts` describing the bundle and R0 projection.
     @raises SnapshotDriftError When pre/post drift is detected.
@@ -1107,6 +1163,7 @@ def produce_snapshot(
     descriptors, deleted, configs, extends_targets, package_globs = _capture_denominator(repo)
     pre_denominator = _denominator_metadata(descriptors, deleted)
     pre_body, pre_digests = _capture_state(repo)
+    scan_result = _validate_scan_result(repo, scan_runner(repo)) if scan_runner is not None else None
     if before_post_check is not None:
         before_post_check()
     post_body, post_digests = _capture_state(repo)
@@ -1184,6 +1241,15 @@ def produce_snapshot(
             output / "snapshot.r0.post-state.json", _r0_state_body(post_state)
         ),
     }
+    if scan_result is not None:
+        _write_json(
+            output / "snapshot.scan.json",
+            {
+                **scan_result,
+                "postStateArtifact": post_state["stateArtifactRef"],
+                "preStateArtifact": pre_state["stateArtifactRef"],
+            },
+        )
     source_snapshot = _r0_projection(
         r0_archive_ref,
         r0_manifest_ref,
@@ -1201,6 +1267,24 @@ def produce_snapshot(
         pre_state=pre_state,
         post_state=post_state,
         source_snapshot=source_snapshot,
+    )
+
+
+def produce_scan_bracketed_snapshot(
+    repo_root: Path | str,
+    output_directory: Path | str,
+    *,
+    tool_version: str = EXPECTED_TOOL_VERSION,
+    before_post_check: Callable[[], None] | None = None,
+    scan_runner: Callable[[Path], dict[str, Any]] | None = None,
+) -> SnapshotArtifacts:
+    """Produces a snapshot only after a successful canonical scan in its stable window."""
+    return produce_snapshot(
+        repo_root,
+        output_directory,
+        tool_version=tool_version,
+        before_post_check=before_post_check,
+        scan_runner=scan_runner or _run_canonical_scan,
     )
 
 
@@ -1275,15 +1359,146 @@ def replay_archive(archive: dict[str, Any]) -> dict[str, bytes]:
     return replay
 
 
+def _read_snapshot_json(output: Path, name: str) -> dict[str, Any]:
+    """Reads one required snapshot JSON object or rejects malformed evidence."""
+    path = output / name
+    if not path.is_file() or path.is_symlink():
+        raise SnapshotValidationError(f"snapshot artifact is missing or unsafe: {name}")
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise SnapshotValidationError(f"snapshot artifact is unreadable: {name}") from error
+    if not isinstance(value, dict):
+        raise SnapshotValidationError(f"snapshot artifact must be an object: {name}")
+    return value
+
+
+def _artifact_reference(output: Path, name: str) -> dict[str, Any]:
+    """Returns the immutable reference for one required on-disk artifact."""
+    data = (output / name).read_bytes()
+    return {"path": name, "sha256": _sha(data), "size": len(data)}
+
+
+def _verify_r0_projection_artifacts(
+    output: Path, archive: dict[str, Any], manifest: dict[str, Any]
+) -> None:
+    """Verifies the complete R0 projection is exactly derived from the rich bundle."""
+    r0_entries = [
+        {
+            "contentBase64": entry["contentBase64"],
+            "mode": "100644" if entry["mode"] == "120000" else entry["mode"],
+            "path": entry["path"],
+            "sha256": entry["sha256"],
+            "size": entry["size"],
+            "state": "tracked" if entry["state"] == "deleted" else entry["state"],
+        }
+        for entry in archive["entries"]
+    ]
+    r0_metadata = [
+        {key: entry[key] for key in ("mode", "path", "sha256", "size", "state")}
+        for entry in r0_entries
+    ]
+    paths = [entry["path"] for entry in r0_metadata]
+    expected_archive = {
+        "archiveKind": ARCHIVE_KIND,
+        "encoding": ARCHIVE_ENCODING,
+        "entries": r0_entries,
+        "schemaVersion": R0_SCHEMA_VERSION,
+    }
+    expected_manifest = {
+        "baselineHead": manifest["baselineHead"],
+        "branch": manifest["branch"],
+        "denominatorSha256": _sha(_canonical(r0_metadata)),
+        "discovery": {
+            "candidateExtensions": list(CANDIDATE_EXTENSIONS),
+            "configPaths": [path for path in paths if not path.endswith(CANDIDATE_EXTENSIONS)],
+            "rule": "frozen-repository-discovery-v1",
+            "sourcePathCount": len(paths),
+            "sourcePathsSha256": _sha(_canonical(paths)),
+        },
+        "entries": r0_metadata,
+        "porcelainSha256": manifest["porcelainSha256"],
+        "scanCommand": SCAN_COMMAND,
+        "scanConfig": None,
+        "schemaVersion": R0_SCHEMA_VERSION,
+        "stagedDiffSha256": manifest["stagedDiffSha256"],
+        "statusSha256": manifest["statusSha256"],
+        "toolVersion": manifest["toolVersion"],
+    }
+    if _read_snapshot_json(output, "snapshot.r0.archive.json") != expected_archive:
+        raise SnapshotValidationError("R0 archive does not match the rich bundle projection")
+    if _read_snapshot_json(output, "snapshot.r0.manifest.json") != expected_manifest:
+        raise SnapshotValidationError("R0 manifest does not match the rich bundle projection")
+
+
+def _verify_state_artifacts(output: Path, manifest: dict[str, Any]) -> None:
+    """Verifies rich and R0 pre/post state artifacts against the manifest and each other."""
+    rich_keys = {
+        "denominatorSha256", "porcelain", "porcelainSha256", "schemaVersion",
+        "stagedDiff", "stagedDiffSha256", "status", "statusSha256",
+    }
+    rich_states = [
+        _read_snapshot_json(output, "snapshot.pre-state.json"),
+        _read_snapshot_json(output, "snapshot.post-state.json"),
+    ]
+    for state in rich_states:
+        if set(state) != rich_keys or state["schemaVersion"] != SCHEMA_VERSION:
+            raise SnapshotValidationError("rich state artifact schema is invalid")
+        if state["denominatorSha256"] != manifest["denominatorSha256"]:
+            raise SnapshotValidationError("rich state denominator does not match manifest")
+        if state["porcelain"] != state["status"]:
+            raise SnapshotValidationError("rich state porcelain and status differ")
+        if state["porcelainSha256"] != _sha(state["porcelain"].encode("utf-8")):
+            raise SnapshotValidationError("rich state porcelain digest is invalid")
+        if state["statusSha256"] != _sha(state["status"].encode("utf-8")):
+            raise SnapshotValidationError("rich state status digest is invalid")
+        if state["stagedDiffSha256"] != _sha(state["stagedDiff"].encode("utf-8")):
+            raise SnapshotValidationError("rich state staged diff digest is invalid")
+        for key in ("porcelainSha256", "statusSha256", "stagedDiffSha256"):
+            if state[key] != manifest[key]:
+                raise SnapshotValidationError("rich state digest does not match manifest")
+    if rich_states[0] != rich_states[1]:
+        raise SnapshotValidationError("rich pre and post state artifacts differ")
+    r0_states = [
+        _read_snapshot_json(output, "snapshot.r0.pre-state.json"),
+        _read_snapshot_json(output, "snapshot.r0.post-state.json"),
+    ]
+    for rich_state, r0_state in zip(rich_states, r0_states, strict=True):
+        if r0_state != _r0_state_body(rich_state):
+            raise SnapshotValidationError("R0 state artifact does not match rich state projection")
+
+
+def _verify_scan_artifact(output: Path) -> None:
+    """Verifies a scan record binds the exact on-disk pre and post state artifacts."""
+    record = _read_snapshot_json(output, "snapshot.scan.json")
+    required = {
+        "command", "exitCode", "graph", "postStateArtifact", "preStateArtifact",
+        "schemaVersion", "stderr", "stdout",
+    }
+    if set(record) != required or record["schemaVersion"] != 1:
+        raise SnapshotValidationError("scan artifact schema is invalid")
+    if record["command"] != SCAN_COMMAND or record["exitCode"] != 0:
+        raise SnapshotValidationError("scan artifact does not record a successful canonical scan")
+    if not isinstance(record["stdout"], str) or not isinstance(record["stderr"], str):
+        raise SnapshotValidationError("scan artifact output must be text")
+    graph = record["graph"]
+    if not isinstance(graph, dict) or set(graph) != {"path", "sha256", "size"}:
+        raise SnapshotValidationError("scan graph reference schema is invalid")
+    if graph["path"] != "graph.db" or not isinstance(graph["size"], int) or graph["size"] < 0:
+        raise SnapshotValidationError("scan graph reference is invalid")
+    if not isinstance(graph["sha256"], str) or not re.fullmatch(r"[0-9a-f]{64}", graph["sha256"]):
+        raise SnapshotValidationError("scan graph digest is invalid")
+    if record["preStateArtifact"] != _artifact_reference(output, "snapshot.pre-state.json"):
+        raise SnapshotValidationError("scan artifact pre-state reference is invalid")
+    if record["postStateArtifact"] != _artifact_reference(output, "snapshot.post-state.json"):
+        raise SnapshotValidationError("scan artifact post-state reference is invalid")
+
+
 def verify_snapshot(output_directory: Path | str) -> dict[str, bytes]:
-    """Replays and verifies a snapshot bundle on disk."""
+    """Replays and verifies a snapshot bundle on disk, including every state artifact."""
     output = Path(output_directory)
-    archive_path = output / "snapshot.archive.json"
-    manifest_path = output / "snapshot.manifest.json"
-    if not archive_path.exists() or not manifest_path.exists():
-        raise SnapshotValidationError("snapshot bundle is incomplete")
-    archive = json.loads(archive_path.read_text(encoding="utf-8"))
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    archive = _read_snapshot_json(output, "snapshot.archive.json")
+    manifest = _read_snapshot_json(output, "snapshot.manifest.json")
     if set(manifest) != {
         "archiveKind", "baselineHead", "branch", "deletedInputs",
         "denominatorSha256", "discovery", "entries", "porcelainSha256",
@@ -1309,7 +1524,61 @@ def verify_snapshot(output_directory: Path | str) -> dict[str, bytes]:
     expected_denominator = _sha(_canonical(manifest_entries))
     if expected_denominator != manifest.get("denominatorSha256"):
         raise SnapshotValidationError("manifest denominator does not match entries")
+    _verify_r0_projection_artifacts(output, archive, manifest)
+    _verify_state_artifacts(output, manifest)
+    if (output / "snapshot.scan.json").exists():
+        _verify_scan_artifact(output)
     return replay
+
+
+def verify_scan_bracketed_snapshot(output_directory: Path | str) -> dict[str, bytes]:
+    """Verifies a snapshot bundle and requires a bound canonical scan record."""
+    output = Path(output_directory)
+    replay = verify_snapshot(output)
+    if not (output / "snapshot.scan.json").is_file():
+        raise SnapshotValidationError("scan-bracketed snapshot is missing snapshot.scan.json")
+    _verify_scan_artifact(output)
+    return replay
+
+
+def publish_scan_bracketed_snapshot(
+    repo_root: Path | str,
+    source_directory: Path | str,
+    relative_destination: str,
+) -> dict[str, Any]:
+    """Publishes one verified external scan bundle under its Measure track path."""
+    repo = Path(repo_root).resolve(strict=False)
+    source = Path(source_directory).resolve(strict=False)
+    destination_path = _normalize_repo_path(relative_destination)
+    if not destination_path.startswith("measure/tracks/"):
+        raise SnapshotError("published snapshot evidence must live under measure/tracks")
+    if source == repo or repo in source.parents:
+        raise SnapshotError("source snapshot bundle must live outside the repository")
+    destination = repo / destination_path
+    if destination.exists() or not _is_safely_within_root(destination, repo):
+        raise SnapshotError("published snapshot destination is unsafe or already exists")
+    replay = verify_scan_bracketed_snapshot(source)
+    required = {
+        "snapshot.archive.json", "snapshot.manifest.json", "snapshot.pre-state.json",
+        "snapshot.post-state.json", "snapshot.r0.archive.json",
+        "snapshot.r0.manifest.json", "snapshot.r0.pre-state.json",
+        "snapshot.r0.post-state.json", "snapshot.scan.json",
+    }
+    if not source.is_dir() or {child.name for child in source.iterdir()} != required:
+        raise SnapshotError("source snapshot bundle has unexpected artifact paths")
+    destination.mkdir(parents=True, exist_ok=False)
+    for name in sorted(required):
+        child = source / name
+        if not child.is_file() or child.is_symlink():
+            raise SnapshotError(f"source snapshot artifact is unsafe: {name}")
+        _write_atomic(destination / name, child.read_bytes())
+    verify_scan_bracketed_snapshot(destination)
+    return {
+        "artifactCount": len(required),
+        "denominatorSha256": _read_snapshot_json(destination, "snapshot.manifest.json")["denominatorSha256"],
+        "path": destination_path,
+        "replayEntryCount": len(replay),
+    }
 
 
 __all__ = [
@@ -1324,7 +1593,10 @@ __all__ = [
     "SnapshotDriftError",
     "SnapshotError",
     "SnapshotValidationError",
+    "produce_scan_bracketed_snapshot",
+    "publish_scan_bracketed_snapshot",
     "produce_snapshot",
     "replay_archive",
+    "verify_scan_bracketed_snapshot",
     "verify_snapshot",
 ]

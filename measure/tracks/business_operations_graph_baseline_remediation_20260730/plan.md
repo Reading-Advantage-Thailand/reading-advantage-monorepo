@@ -34,6 +34,8 @@
   Integration check: a producer-written R0 v1 projection is accepted end to end by the unchanged validator, and the accepted R0 regression suite (`measure.tests.test_business_operations_graph_baseline_remediation`, `29` tests) passes (`8.227s`). The R0 validator is not modified.
   No parent or successor gate was changed; the master worktree dirty tree, the real Git index, and unrelated paths are preserved.
 - [~] Task: Capture the candidate source snapshot in a coordinated stable window, prove archive replay equals its manifest, and prove pre-scan/post-scan denominator, status, and staged-diff identity. Abort rather than normalize or clean the dirty tree when drift occurs. (deferred:phase-r1-producer-green)
+
+  The prior `r1-task2-source-snapshot-run-receipt-20260730.md` is invalidated: it did not execute the canonical scan in the producer transaction, kept the full bundle only outside the repository, and its verifier omitted rich/R0 state artifacts. `r1-task2-evidence-transaction-remediation-20260730.md` records the bounded correction and 50-test Green run. A fresh stable-window scan and durable publication are still required before this task can be marked `[x]`.
 - [b] Task: Run the canonical `repo-graph scan . ./graph.db` between equal source manifests; bind graph SHA/size/schema/tool/commands and every graph file-row hash to the snapshot; rerun exact Accounts, backend-kernel, company-identity, license, and www `search`/`inspect`/`callers` probes. (deferred:phase-r1-stable-snapshot)
 
 ## Phase R2: Close or compensate graph coverage gaps

@@ -237,6 +237,130 @@ class BusinessOperationsGraphSnapshotRedTests(unittest.TestCase):
             replay = verify_snapshot(output_path)
         self.assertEqual(replay["src/app.ts"], b"export const app = 1;\n")
 
+    def test_workspace_package_globs_are_recorded_from_pnpm_workspace(self) -> None:
+        """Records the declared workspace globs in the rich discovery manifest."""
+        with tempfile.TemporaryDirectory() as output:
+            result = self._producer()(self.root, output, tool_version="test")
+        self.assertEqual(result.manifest["discovery"]["packageGlobs"], ["packages/*"])
+
+    def test_scan_runner_executes_between_state_captures_and_binds_its_record(self) -> None:
+        """Runs the injected canonical scan between pre and post state captures."""
+        import measure.business_operations_graph_baseline_snapshot as snapshot_module
+        from measure.business_operations_graph_baseline_snapshot import (
+            produce_scan_bracketed_snapshot,
+            verify_scan_bracketed_snapshot,
+        )
+
+        events: list[str] = []
+        (self.root / ".git/info/exclude").write_text("graph.db\n", encoding="utf-8")
+        original_capture = snapshot_module._capture_state
+
+        def capture(repo: Path):
+            events.append("capture")
+            return original_capture(repo)
+
+        def scan_runner(repo: Path) -> dict[str, object]:
+            events.append("scan")
+            (repo / "graph.db").write_bytes(b"graph output\n")
+            return {
+                "command": "repo-graph scan . ./graph.db",
+                "exitCode": 0,
+                "graphPath": "graph.db",
+                "stderr": "",
+                "stdout": "scanned",
+            }
+
+        with tempfile.TemporaryDirectory() as output:
+            output_path = Path(output)
+            with mock.patch.object(snapshot_module, "_capture_state", side_effect=capture):
+                produce_scan_bracketed_snapshot(
+                    self.root, output_path, tool_version="test", scan_runner=scan_runner
+                )
+            self.assertEqual(events, ["capture", "scan", "capture"])
+            record = json.loads((output_path / "snapshot.scan.json").read_text(encoding="utf-8"))
+            self.assertEqual(record["command"], "repo-graph scan . ./graph.db")
+            self.assertEqual(record["exitCode"], 0)
+            self.assertEqual(record["graph"]["sha256"], hashlib.sha256(b"graph output\n").hexdigest())
+            self.assertEqual(verify_scan_bracketed_snapshot(output_path)["src/app.ts"], b"export const app = 1;\n")
+
+    def test_verification_rejects_tampered_rich_and_r0_state_artifacts(self) -> None:
+        """Fails closed when any pre or post state artifact changes after capture."""
+        from measure.business_operations_graph_baseline_snapshot import (
+            SnapshotValidationError,
+            verify_snapshot,
+        )
+
+        for name in (
+            "snapshot.pre-state.json",
+            "snapshot.post-state.json",
+            "snapshot.r0.pre-state.json",
+            "snapshot.r0.post-state.json",
+        ):
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as output:
+                output_path = Path(output)
+                self._producer()(self.root, output_path, tool_version="test")
+                path = output_path / name
+                state = json.loads(path.read_text(encoding="utf-8"))
+                state["status"] = "tampered"
+                path.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+                with self.assertRaises(SnapshotValidationError):
+                    verify_snapshot(output_path)
+
+    def test_verification_rejects_tampered_r0_archive_and_manifest(self) -> None:
+        """Fails closed when either R0 projection artifact changes after capture."""
+        from measure.business_operations_graph_baseline_snapshot import (
+            SnapshotValidationError,
+            verify_snapshot,
+        )
+
+        for name in ("snapshot.r0.archive.json", "snapshot.r0.manifest.json"):
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as output:
+                output_path = Path(output)
+                self._producer()(self.root, output_path, tool_version="test")
+                path = output_path / name
+                value = json.loads(path.read_text(encoding="utf-8"))
+                if name.endswith("archive.json"):
+                    value["entries"][0]["size"] = 0
+                else:
+                    value["branch"] = "tampered"
+                path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+                with self.assertRaises(SnapshotValidationError):
+                    verify_snapshot(output_path)
+
+    def test_publish_scan_snapshot_keeps_a_durable_verified_bundle(self) -> None:
+        """Publishes an external scan bundle into the track after stable-window verification."""
+        from measure.business_operations_graph_baseline_snapshot import (
+            produce_scan_bracketed_snapshot,
+            publish_scan_bracketed_snapshot,
+            verify_scan_bracketed_snapshot,
+        )
+
+        (self.root / ".git/info/exclude").write_text("graph.db\n", encoding="utf-8")
+
+        def scan_runner(repo: Path) -> dict[str, object]:
+            (repo / "graph.db").write_bytes(b"graph output\n")
+            return {
+                "command": "repo-graph scan . ./graph.db",
+                "exitCode": 0,
+                "graphPath": "graph.db",
+                "stderr": "",
+                "stdout": "scanned",
+            }
+
+        source = Path(self.temporary.name) / "external-snapshot"
+        produce_scan_bracketed_snapshot(
+            self.root, source, tool_version="test", scan_runner=scan_runner
+        )
+        published = publish_scan_bracketed_snapshot(
+            self.root, source, "measure/tracks/r1/evidence"
+        )
+        shutil.rmtree(source)
+        self.assertEqual(published["path"], "measure/tracks/r1/evidence")
+        self.assertEqual(
+            verify_scan_bracketed_snapshot(self.root / published["path"])["src/app.ts"],
+            b"export const app = 1;\n",
+        )
+
     def test_concurrent_drift_aborts_before_publishing_artifacts(self) -> None:
         """Aborts when source bytes or status change in the coordinated window."""
         from measure.business_operations_graph_baseline_snapshot import (
