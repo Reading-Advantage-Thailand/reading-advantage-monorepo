@@ -1176,8 +1176,17 @@ def produce_snapshot(
             "concurrent baseline HEAD or branch drift detected"
         )
     if pre_denominator != post_denominator:
+        pre_entries = {entry["path"]: entry for entry in pre_denominator}
+        post_entries = {entry["path"]: entry for entry in post_denominator}
+        pre_only = sorted(set(pre_entries) - set(post_entries))
+        post_only = sorted(set(post_entries) - set(pre_entries))
+        changed = sorted(
+            path for path in set(pre_entries) & set(post_entries)
+            if pre_entries[path] != post_entries[path]
+        )
         raise SnapshotDriftError(
-            "concurrent scanner-input path, metadata, or content drift detected"
+            "concurrent scanner-input path, metadata, or content drift detected: "
+            f"preOnly={pre_only} postOnly={post_only} changed={changed}"
         )
     if (
         pre_digests["porcelainSha256"] != post_digests["porcelainSha256"]

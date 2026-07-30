@@ -373,13 +373,14 @@ class BusinessOperationsGraphSnapshotRedTests(unittest.TestCase):
             """Mutates a source file at the producer's post-capture test seam."""
             self._write("src/app.ts", "export const app = 99;\n")
 
-        with self.assertRaises(SnapshotDriftError):
+        with self.assertRaises(SnapshotDriftError) as caught:
             self._producer()(
                 self.root,
                 output,
                 tool_version="test",
                 before_post_check=drift,
             )
+        self.assertIn("src/app.ts", str(caught.exception))
         self.assertFalse(output.exists())
 
     def test_already_dirty_content_drift_aborts_with_unchanged_git_status(self) -> None:
