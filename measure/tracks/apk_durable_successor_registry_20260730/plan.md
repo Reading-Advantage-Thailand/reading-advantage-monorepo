@@ -25,10 +25,9 @@
 
 ## Phase 3: Command, receipt, and release boundary
 
-- [b] Implement the transport-independent backend command with Zod validation,
+- [~] Implement the transport-independent backend command with Zod validation,
   authorization, audit/observability metadata, idempotency, and atomic receipt
   persistence.
-  (deferred:phase-2-adapter)
 - [b] Define and test the immutable Git-candidate admission boundary so a
   database transaction never claims to publish a Git release.
   (deferred:phase-3-command)
