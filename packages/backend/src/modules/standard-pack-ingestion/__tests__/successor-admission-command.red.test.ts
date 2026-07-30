@@ -194,8 +194,11 @@ function createDependencies(inputOptions: {
   readonly authorization?: "allowed" | "denied";
   readonly receipt?: StandardPackSuccessorAdmissionReplayRecord | null;
   readonly reservation?: StandardPackSuccessorAdmissionReservationResult;
+  readonly authorizationError?: Error;
   readonly verifierError?: Error;
   readonly appendError?: Error;
+  readonly auditError?: Error;
+  readonly observabilityError?: Error;
   readonly changedRequestInputDigest?: string;
 } = {}) {
   const transaction = {
@@ -213,9 +216,12 @@ function createDependencies(inputOptions: {
   const transactionCalls = { count: 0 };
   const dependencies = {
     authorization: {
-      authorize: vi.fn(async () => inputOptions.authorization === "denied"
-        ? { outcome: "denied" as const, reasonCode: "POLICY_DENIED" as const }
-        : { outcome: "allowed" as const }),
+      authorize: vi.fn(async () => {
+        if (inputOptions.authorizationError !== undefined) throw inputOptions.authorizationError;
+        return inputOptions.authorization === "denied"
+          ? { outcome: "denied" as const, reasonCode: "POLICY_DENIED" as const }
+          : { outcome: "allowed" as const };
+      }),
     },
     gitCandidateVerifier: {
       verify: vi.fn(async () => {
@@ -244,8 +250,16 @@ function createDependencies(inputOptions: {
         }
       },
     },
-    audit: { append: vi.fn(async () => undefined) },
-    observability: { emit: vi.fn() },
+    audit: {
+      append: vi.fn(async () => {
+        if (inputOptions.auditError !== undefined) throw inputOptions.auditError;
+      }),
+    },
+    observability: {
+      emit: vi.fn(() => {
+        if (inputOptions.observabilityError !== undefined) throw inputOptions.observabilityError;
+      }),
+    },
     createReceiptId: vi.fn(() => receipt.id),
     now: vi.fn(() => new Date(receipt.recordedAt)),
   } satisfies StandardPackSuccessorAdmissionCommandDependencies;
@@ -301,6 +315,20 @@ describe("standard-pack successor-admission command (red)", () => {
     expect(transaction.readReceipt).not.toHaveBeenCalled();
   });
 
+  it("maps an untyped authorization adapter failure to the public retryable error contract", async () => {
+    const authorizationError = new Error("policy adapter database host is unavailable");
+    const { dependencies, transactionCalls } = createDependencies({ authorizationError });
+    const command = createCommand(dependencies);
+
+    await expect(command.admit(input, context)).rejects.toMatchObject({
+      code: "SUCCESSOR_ADMISSION_UNAVAILABLE",
+      retryable: true,
+      message: "Successor-admission processing is temporarily unavailable.",
+    });
+    expect(dependencies.gitCandidateVerifier.verify).not.toHaveBeenCalled();
+    expect(transactionCalls.count).toBe(0);
+  });
+
   it("allows receipt-only replay lookup before a Git-verification failure, without reserving or appending", async () => {
     const verifierError = new StandardPackSuccessorAdmissionError(
       "SUCCESSOR_ADMISSION_GIT_CANDIDATE_INVALID",
@@ -317,12 +345,16 @@ describe("standard-pack successor-admission command (red)", () => {
     expect(transaction.appendReceipt).not.toHaveBeenCalled();
   });
 
-  it("delegates rollback of a receipt append failure to the atomic persistence boundary", async () => {
+  it("rolls back and maps an untyped receipt-persistence failure to the public retryable error contract", async () => {
     const receiptError = new Error("receipt append rejected");
     const { dependencies, rollbackCalls, transaction } = createDependencies({ appendError: receiptError });
     const command = createCommand(dependencies);
 
-    await expect(command.admit(input, context)).rejects.toBe(receiptError);
+    await expect(command.admit(input, context)).rejects.toMatchObject({
+      code: "SUCCESSOR_ADMISSION_UNAVAILABLE",
+      retryable: true,
+      message: "Successor-admission processing is temporarily unavailable.",
+    });
     expect(transaction.reserveSuccessor).toHaveBeenCalledTimes(1);
     expect(transaction.appendReceipt).toHaveBeenCalledTimes(1);
     expect(rollbackCalls.count).toBe(1);
@@ -341,6 +373,39 @@ describe("standard-pack successor-admission command (red)", () => {
     expect(dependencies.gitCandidateVerifier.verify).not.toHaveBeenCalled();
     expect(transaction.reserveSuccessor).not.toHaveBeenCalled();
     expect(transaction.appendReceipt).not.toHaveBeenCalled();
+    expect(dependencies.audit.append).not.toHaveBeenCalled();
+    expect(dependencies.observability.emit).not.toHaveBeenCalled();
+  });
+
+  it("returns the durable result when a post-commit audit mirror fails", async () => {
+    const auditError = new Error("external audit endpoint rejected the event");
+    const { dependencies, transaction } = createDependencies({ auditError });
+    const command = createCommand(dependencies);
+
+    await expect(command.admit(input, context)).resolves.toEqual({
+      outcome: "admitted",
+      receipt,
+    });
+    expect(transaction.reserveSuccessor).toHaveBeenCalledTimes(1);
+    expect(transaction.appendReceipt).toHaveBeenCalledTimes(1);
+    expect(dependencies.audit.append).toHaveBeenCalledTimes(1);
+    expect(dependencies.audit.append).toHaveBeenCalledWith(receipt.safeAudit);
+    expect(dependencies.observability.emit).toHaveBeenCalledTimes(1);
+  });
+
+  it("returns the durable result when a post-commit observability mirror fails", async () => {
+    const observabilityError = new Error("observability endpoint rejected the event");
+    const { dependencies, transaction } = createDependencies({ observabilityError });
+    const command = createCommand(dependencies);
+
+    await expect(command.admit(input, context)).resolves.toEqual({
+      outcome: "admitted",
+      receipt,
+    });
+    expect(transaction.reserveSuccessor).toHaveBeenCalledTimes(1);
+    expect(transaction.appendReceipt).toHaveBeenCalledTimes(1);
+    expect(dependencies.audit.append).toHaveBeenCalledTimes(1);
+    expect(dependencies.observability.emit).toHaveBeenCalledTimes(1);
   });
 
   it("rejects changed evidence that reuses an idempotency key without another reservation", async () => {

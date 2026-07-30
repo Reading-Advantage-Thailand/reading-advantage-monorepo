@@ -82,6 +82,12 @@ function unavailable(message: string): StandardPackSuccessorAdmissionError {
   );
 }
 
+/** Maps an untyped command dependency failure to the public successor-admission error contract. */
+function mapCommandError(error: unknown): StandardPackSuccessorAdmissionError {
+  if (error instanceof StandardPackSuccessorAdmissionError) return error;
+  return unavailable("Successor-admission processing is temporarily unavailable.");
+}
+
 /** Produces durable hash-only identity fields without propagating the raw idempotency key. */
 async function idempotencyIdentityFor(
   dependencies: Readonly<StandardPackSuccessorAdmissionCommandDependencies>,
@@ -328,13 +334,22 @@ function assertAppendedReceipt(
   return parsed.data;
 }
 
-/** Emits a final redacted audit and observability pair only after one admission outcome is durable. */
-async function emitOutcomeMetadata(
+/** Mirrors a newly durable admission best-effort without changing its canonical receipt outcome. */
+async function mirrorDurableAdmission(
   dependencies: Readonly<StandardPackSuccessorAdmissionCommandDependencies>,
   result: Readonly<StandardPackSuccessorAdmissionResult>,
 ): Promise<void> {
-  await dependencies.audit.append(result.receipt.safeAudit);
-  dependencies.observability.emit(result.receipt.observability);
+  if (result.outcome !== "admitted") return;
+  try {
+    await dependencies.audit.append(result.receipt.safeAudit);
+  } catch {
+    // The immutable receipt remains the audit record when an external mirror is unavailable.
+  }
+  try {
+    dependencies.observability.emit(result.receipt.observability);
+  } catch {
+    // Operational mirroring must not turn an already durable admission into a false failure.
+  }
 }
 
 /**
@@ -350,75 +365,79 @@ export function createStandardPackSuccessorAdmissionCommand(
       untrustedInput: Readonly<StandardPackSuccessorAdmissionInput>,
       trustedContext: Readonly<StandardPackSuccessorAdmissionTrustedContext>,
     ): Promise<Readonly<StandardPackSuccessorAdmissionResult>> {
-      const input = parseInput(untrustedInput);
-      const context = parseTrustedContext(trustedContext);
-      const reservation = reservationFor(input);
-      const authorization = await dependencies.authorization.authorize({
-        context,
-        candidate: reservation.candidate,
-        commitment: reservation.commitment,
-      });
-      if (authorization.outcome !== "allowed") {
-        throw new StandardPackSuccessorAdmissionError(
-          "SUCCESSOR_ADMISSION_UNAUTHORIZED",
-          "The trusted actor is not authorized to admit this successor candidate.",
-          false,
-        );
-      }
-
-      const identity = await idempotencyIdentityFor(
-        dependencies,
-        input.idempotencyKey,
-        reservation,
-      );
-      const result = await dependencies.persistence.transaction(async (transaction) => {
-        const existing = await transaction.readReceipt({
-          actorId: context.actorId,
-          policyId: context.policyId,
-          idempotencyKeyFingerprint: identity.idempotencyKeyFingerprint,
+      try {
+        const input = parseInput(untrustedInput);
+        const context = parseTrustedContext(trustedContext);
+        const reservation = reservationFor(input);
+        const authorization = await dependencies.authorization.authorize({
+          context,
+          candidate: reservation.candidate,
+          commitment: reservation.commitment,
         });
-        if (existing !== null) {
-          const replay = parseReplayRecord(existing);
-          if (!isExactReplay(replay, reservation, context, identity)) {
-            throw new StandardPackSuccessorAdmissionError(
-              "SUCCESSOR_ADMISSION_IDEMPOTENCY_CONFLICT",
-              "The idempotency key was already used for different successor evidence.",
-              false,
-            );
-          }
-          return standardPackSuccessorAdmissionResultSchema.parse({
-            outcome: "replayed",
-            receipt: replay.receipt,
-          });
-        }
-
-        await verifyCandidate(dependencies, reservation);
-        const reservationResult = await transaction.reserveSuccessor(reservation);
-        if (reservationResult.outcome === "conflict") {
+        if (authorization.outcome !== "allowed") {
           throw new StandardPackSuccessorAdmissionError(
-            "SUCCESSOR_ADMISSION_REGISTRY_CONFLICT",
-            "A different successor is already committed for this predecessor index.",
+            "SUCCESSOR_ADMISSION_UNAUTHORIZED",
+            "The trusted actor is not authorized to admit this successor candidate.",
             false,
           );
         }
-        const receipt = receiptFor(
+
+        const identity = await idempotencyIdentityFor(
           dependencies,
-          reservationResult.outcome,
+          input.idempotencyKey,
           reservation,
-          context,
-          identity,
         );
-        const appendedReceipt = assertAppendedReceipt(
-          receipt,
-          await transaction.appendReceipt({ receipt }),
-        );
-        return standardPackSuccessorAdmissionResultSchema.parse({
-          outcome: "admitted",
-          receipt: appendedReceipt,
+        const result = await dependencies.persistence.transaction(async (transaction) => {
+          const existing = await transaction.readReceipt({
+            actorId: context.actorId,
+            policyId: context.policyId,
+            idempotencyKeyFingerprint: identity.idempotencyKeyFingerprint,
+          });
+          if (existing !== null) {
+            const replay = parseReplayRecord(existing);
+            if (!isExactReplay(replay, reservation, context, identity)) {
+              throw new StandardPackSuccessorAdmissionError(
+                "SUCCESSOR_ADMISSION_IDEMPOTENCY_CONFLICT",
+                "The idempotency key was already used for different successor evidence.",
+                false,
+              );
+            }
+            return standardPackSuccessorAdmissionResultSchema.parse({
+              outcome: "replayed",
+              receipt: replay.receipt,
+            });
+          }
+
+          await verifyCandidate(dependencies, reservation);
+          const reservationResult = await transaction.reserveSuccessor(reservation);
+          if (reservationResult.outcome === "conflict") {
+            throw new StandardPackSuccessorAdmissionError(
+              "SUCCESSOR_ADMISSION_REGISTRY_CONFLICT",
+              "A different successor is already committed for this predecessor index.",
+              false,
+            );
+          }
+          const receipt = receiptFor(
+            dependencies,
+            reservationResult.outcome,
+            reservation,
+            context,
+            identity,
+          );
+          const appendedReceipt = assertAppendedReceipt(
+            receipt,
+            await transaction.appendReceipt({ receipt }),
+          );
+          return standardPackSuccessorAdmissionResultSchema.parse({
+            outcome: "admitted",
+            receipt: appendedReceipt,
+          });
         });
-      });
-      await emitOutcomeMetadata(dependencies, result);
-      return result;
+        await mirrorDurableAdmission(dependencies, result);
+        return result;
+      } catch (error) {
+        throw mapCommandError(error);
+      }
     },
   });
 }
