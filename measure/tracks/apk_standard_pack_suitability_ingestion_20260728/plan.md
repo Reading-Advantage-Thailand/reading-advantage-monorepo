@@ -38,8 +38,10 @@
   license, credit, taxonomy/key, descriptor, catalog validation, and duplicate
   physical/source-receipt protection. Persisted predecessor indexes and additive
   receipts now revalidate against the exact catalog, ledger, and digest after a
-  process restart while retaining literal non-production authorization; no actual
-  legacy asset, dossier, or release has been ingested.
+  process restart while retaining literal non-production authorization. Admission now
+  binds source-packet documents to selected dossier evidence and descriptor content
+  digests to resolver candidates; rehydration requires an exact successor
+  commitment. No actual legacy asset, dossier, or release has been ingested.
 - [ ] Generate an additive pinned standard-pack release and resolver receipt for
   accepted ingestions without altering historical release records.
 - [ ] Publish accepted semantic bindings and selected-union inputs only from

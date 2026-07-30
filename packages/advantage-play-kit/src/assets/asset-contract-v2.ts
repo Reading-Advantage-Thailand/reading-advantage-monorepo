@@ -259,6 +259,28 @@ function failureCodeForDescriptorIssues(issues: readonly z.ZodIssue[]): AssetCon
   return "incompatible-descriptor";
 }
 
+/** Serializes JSON data with stable object-key order for descriptor integrity hashing. */
+function stableJson(value: unknown): string {
+  if (value === null || typeof value === "boolean" || typeof value === "number" || typeof value === "string") {
+    return JSON.stringify(value);
+  }
+  if (Array.isArray(value)) return "[" + value.map(stableJson).join(",") + "]";
+  const record = value as Readonly<Record<string, unknown>>;
+  return `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${stableJson(record[key])}`).join(",")}}`;
+}
+
+/**
+ * Serializes presentation-owned descriptor content without its separately pinned release identity.
+ * @param candidate Untrusted physical descriptor candidate.
+ * @returns Canonical content bytes whose digest can be accepted before the successor release is minted.
+ * @throws When the descriptor structure is invalid.
+ */
+export function serializeAssetContractV2PhysicalDescriptorPayload(candidate: unknown): string {
+  const descriptor = assetContractV2PhysicalDescriptorSchema.parse(candidate);
+  const { release: _release, ...presentationPayload } = descriptor;
+  return stableJson(presentationPayload);
+}
+
 /**
  * Validates untrusted descriptor configuration against one exact release identity.
  * @param candidate Untrusted descriptor configuration.

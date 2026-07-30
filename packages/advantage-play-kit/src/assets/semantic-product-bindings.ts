@@ -20,6 +20,7 @@ import {
 } from "./standard-pack-suitability.js";
 import {
   ASSET_CONTRACT_V2_VERSION,
+  serializeAssetContractV2PhysicalDescriptorPayload,
   validateAssetContractV2DescriptorForRelease,
 } from "./asset-contract-v2.js";
 import { issueAssetContractV2SemanticRegistration } from "./asset-contract-v2-provenance.js";
@@ -510,12 +511,12 @@ async function validateSuccessorSemanticPublicationEvidence(
   evidenceBundles: readonly StandardPackSemanticPublicationEvidenceBundle[],
   ledger: StandardPackIngestionLedger,
   additiveReceipt: StandardPackAdditiveReleaseReceipt,
-): Promise<ReadonlyMap<string, string>> {
+): Promise<ReadonlyMap<string, Readonly<{ descriptorId: string; descriptorDigest: string }>>> {
   if (evidenceBundles.length !== bindings.bindings.length) {
     throw new Error("Successor semantic publication requires exactly one accepted suitability evidence bundle per binding");
   }
   const seenIdentities = new Set<string>();
-  const expectedDescriptorIds = new Map<string, string>();
+  const expectedDescriptorIds = new Map<string, Readonly<{ descriptorId: string; descriptorDigest: string }>>();
   for (const [index, binding] of bindings.bindings.entries()) {
     const evidenceBundle = evidenceBundles[index];
     if (!evidenceBundle) throw new Error("Successor semantic publication is missing a required suitability evidence bundle");
@@ -550,7 +551,10 @@ async function validateSuccessorSemanticPublicationEvidence(
     if (expectedDescriptorIds.has(binding.semanticKey)) {
       throw new Error(`Successor semantic publication repeats a descriptor catalog key ${JSON.stringify(binding.semanticKey)}`);
     }
-    expectedDescriptorIds.set(binding.semanticKey, candidate.descriptor.descriptorId);
+    expectedDescriptorIds.set(binding.semanticKey, Object.freeze({
+      descriptorId: candidate.descriptor.descriptorId,
+      descriptorDigest: candidate.descriptor.descriptorDigest,
+    }));
     if (manifest.decision.disposition === "reuse-canonical") {
       if (
         candidate.origin !== "canonical"
@@ -647,18 +651,32 @@ export async function createReleaseBoundSemanticAssetResolver(
   if (validated.release.version !== binding.version || validated.release.catalogDigest !== binding.catalogDigest || validated.release.sourceReceiptDigest !== binding.sourceReceiptDigest) {
     throw new Error("Semantic product bindings must pin the exact supplied release");
   }
-  const expectedDescriptorIds = await validateSuccessorSemanticPublicationEvidence(
+  const expectedDescriptorEvidence = await validateSuccessorSemanticPublicationEvidence(
     validated,
     evidenceBundles,
     ledger,
     additiveReceipt,
   );
+  const validatedDescriptorCandidates = await Promise.all(descriptorCandidates.map(async (candidate) => {
+    const descriptor = validateAssetContractV2DescriptorForRelease(candidate, binding);
+    const expected = expectedDescriptorEvidence.get(descriptor.catalogEntryKey);
+    if (!expected) {
+      throw new Error(`Successor descriptor has no accepted suitability evidence for ${JSON.stringify(descriptor.catalogEntryKey)}`);
+    }
+    if (descriptor.descriptorId !== expected.descriptorId) {
+      throw new Error(`Asset Contract v2 descriptor identity does not match accepted suitability evidence for ${JSON.stringify(descriptor.catalogEntryKey)}`);
+    }
+    if (await sha256(serializeAssetContractV2PhysicalDescriptorPayload(descriptor)) !== expected.descriptorDigest) {
+      throw new Error(`Asset Contract v2 descriptor content does not match accepted suitability evidence for ${JSON.stringify(descriptor.catalogEntryKey)}`);
+    }
+    return descriptor;
+  }));
   return createDescriptorAwareResolverForRelease(
     createStandardAssetResolver(catalog, binding),
     validated,
-    descriptorCandidates,
+    validatedDescriptorCandidates,
     binding,
     catalog.assets.length,
-    expectedDescriptorIds,
+    new Map([...expectedDescriptorEvidence].map(([key, value]) => [key, value.descriptorId])),
   );
 }

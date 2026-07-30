@@ -363,14 +363,15 @@ export async function createStandardPackIngestionLedgerPredecessorIndex(
  * @param candidate Persisted predecessor-index artifact supplied after process restart.
  * @param catalog Complete catalog whose identity must match the persisted index.
  * @param binding Exact release identity expected for the persisted index.
+ * @param successorCommitmentCandidate Durable commitment proving the sole already-issued successor for this index.
  * @returns A frozen predecessor index issued for this process without granting product authority.
- * @throws When the artifact digest, catalog identities, or release binding differs.
+ * @throws When the artifact digest, catalog identities, release binding, or required successor commitment differs.
  */
 export async function rehydrateStandardPackIngestionLedgerPredecessorIndex(
   candidate: unknown,
   catalog: StandardAssetCatalog,
   binding: StandardAssetReleaseBinding,
-  successorCommitmentCandidate?: unknown,
+  successorCommitmentCandidate: unknown,
 ): Promise<StandardPackIngestionLedgerPredecessorIndex> {
   const parsed = standardPackIngestionLedgerPredecessorIndexSchema.parse(candidate);
   if (await sha256(serializeStandardPackIngestionLedgerPredecessorIndexPayload(parsed)) !== parsed.snapshotDigest) {
@@ -401,19 +402,17 @@ export async function rehydrateStandardPackIngestionLedgerPredecessorIndex(
     entries: Object.freeze(parsed.entries.map((entry) => Object.freeze({ ...entry }))),
     catalogEntries: Object.freeze(parsed.catalogEntries.map((entry) => Object.freeze({ ...entry }))),
   }) as StandardPackIngestionLedgerPredecessorIndex;
-  if (successorCommitmentCandidate !== undefined) {
-    const commitment = standardPackIngestionLedgerSuccessorCommitmentSchema.parse(successorCommitmentCandidate);
-    if (await sha256(serializeStandardPackIngestionLedgerSuccessorCommitmentPayload(commitment)) !== commitment.commitmentDigest) {
-      throw new Error("Persisted ingestion ledger successor commitment digest does not match its payload");
-    }
-    if (
-      commitment.predecessorIndexDigest !== frozen.snapshotDigest
-      || !sameRelease(commitment.predecessorRelease, frozen.predecessorRelease)
-    ) {
-      throw new Error("Persisted ingestion ledger successor commitment does not bind the rehydrated predecessor index");
-    }
-    predecessorSuccessorBatchDigests.set(frozen, commitment.successorBatchDigest);
+  const commitment = standardPackIngestionLedgerSuccessorCommitmentSchema.parse(successorCommitmentCandidate);
+  if (await sha256(serializeStandardPackIngestionLedgerSuccessorCommitmentPayload(commitment)) !== commitment.commitmentDigest) {
+    throw new Error("Persisted ingestion ledger successor commitment digest does not match its payload");
   }
+  if (
+    commitment.predecessorIndexDigest !== frozen.snapshotDigest
+    || !sameRelease(commitment.predecessorRelease, frozen.predecessorRelease)
+  ) {
+    throw new Error("Persisted ingestion ledger successor commitment does not bind the rehydrated predecessor index");
+  }
+  predecessorSuccessorBatchDigests.set(frozen, commitment.successorBatchDigest);
   issuedPredecessorIndexes.add(frozen);
   return frozen;
 }
@@ -527,6 +526,33 @@ async function validateEvidenceBundle(
   }
   if (sourcePacket.inventoryBinding.sourceSha256 !== sourceBytesDigest || sourcePacket.inventoryBinding.sourceSha256 !== receipt.sourceSha256) {
     throw new Error("Append-only ingestion ledger source packet bytes do not match the accepted receipt source digest");
+  }
+  const evidenceById = new Map(dossier.sourceEvidence.map((item) => [item.evidenceId, item]));
+  const documentByKind = new Map(sourcePacket.documents.map((document) => [document.kind, document]));
+  const provenanceDocument = documentByKind.get("provenance");
+  const licenseDocument = documentByKind.get("license");
+  const creditDocument = documentByKind.get("credit");
+  const selectedProvenance = dossier.provenance.find((item) => item.candidateId === receipt.candidateId);
+  const selectedLicense = dossier.licensing.find((item) => item.candidateId === receipt.candidateId);
+  const selectedCredit = dossier.credits.find((item) => item.candidateId === receipt.candidateId);
+  const documentEvidenceMatches = (document: StandardPackLegacySourcePacket["documents"][number] | undefined) => {
+    if (!document) return false;
+    const dossierEvidence = evidenceById.get(document.documentId);
+    return dossierEvidence !== undefined
+      && dossierEvidence.kind === document.kind
+      && dossierEvidence.locator === document.locator
+      && dossierEvidence.sha256 === document.sha256
+      && dossierEvidence.sourceReceiptDigest === receipt.sourceReceiptDigest;
+  };
+  if (
+    !documentEvidenceMatches(provenanceDocument)
+    || !documentEvidenceMatches(licenseDocument)
+    || !documentEvidenceMatches(creditDocument)
+    || !selectedProvenance?.chainOfCustody.includes(provenanceDocument!.documentId)
+    || selectedLicense?.evidenceId !== licenseDocument!.documentId
+    || selectedCredit?.evidenceId !== creditDocument!.documentId
+  ) {
+    throw new Error("Append-only ingestion ledger source-packet documents do not match accepted dossier provenance, license, and credit evidence");
   }
   return Object.freeze({ dossier, manifest, receipt, sourcePacket, sourceBytesDigest });
 }

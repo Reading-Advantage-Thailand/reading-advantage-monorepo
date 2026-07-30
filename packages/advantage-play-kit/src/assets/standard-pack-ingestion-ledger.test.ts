@@ -8,6 +8,7 @@ import {
   validateStandardPackAdditiveReleaseReceipt,
 } from "./standard-pack-additive-release.js";
 import { ACCEPTED_STANDARD_ASSET_RELEASE } from "./accepted-standard-pack-release.js";
+import { serializeAssetContractV2PhysicalDescriptorPayload } from "./asset-contract-v2.js";
 import {
   createStandardPackIngestionLedgerPredecessorIndex,
   createStandardPackIngestionLedgerSuccessorCommitment,
@@ -107,22 +108,64 @@ async function createSourcePacket(
   return { ...draft, packetDigest };
 }
 
+/** Creates a descriptor whose content digest deliberately excludes separately pinned release identity. */
+function createFixtureDescriptor(
+  descriptorId: string,
+  catalogEntryKey: string,
+  release: { readonly version: string; readonly catalogDigest: string; readonly sourceReceiptDigest: string },
+) {
+  return {
+    contractVersion: 2 as const,
+    descriptorId,
+    catalogEntryKey,
+    release: {
+      version: release.version,
+      catalogDigest: release.catalogDigest,
+      sourceReceiptDigest: release.sourceReceiptDigest,
+    },
+    mediaKind: "image" as const,
+    geometry: { width: 32, height: 32, frameWidth: 32, frameHeight: 32, columns: 1, rows: 1 },
+    anchor: { x: 0.5, y: 1 },
+    renderScale: 1,
+    collisionEnvelope: { x: 0.2, y: 0.2, width: 0.6, height: 0.7 },
+    readabilityEnvelope: { minimumRenderPixels: 16, minimumContrastRatio: 3 },
+  };
+}
+
 /** Produces a valid accepted ingest decision and digest-bound dossier from the shared legacy fixture. */
 async function createAcceptedIngestionEvidence() {
   const draft = LEGACY_INGESTION_REQUIRED_FIXTURE;
   const catalogEntryKey = "top-down/32x32/characters/legacy-hero-walk";
+  const sourceRepositoryPath = "apps/advantage-games/public/games/fixture/legacy-hero-walk.png";
   const sourceBytes = new TextEncoder().encode("fixture legacy hero source bytes v1");
   const sourceSha256 = await sha256(new TextDecoder().decode(sourceBytes));
   const rawReceipt = await createCanonicalIngestionReceiptFixture();
   const sourceReceiptDigest = rawReceipt.sourceReceiptDigest;
-  const sourceEvidence = draft.sourceEvidence.map((evidence, index) => index === 0
-    ? {
-      ...evidence,
-      locator: "apps/advantage-games/public/games/fixture/legacy-hero-walk.png",
-      sha256: sourceSha256,
-      sourceReceiptDigest,
-    }
-    : evidence);
+  const sourcePacket = await createSourcePacket(
+    "fixture-legacy-hero-source-packet",
+    sourceRepositoryPath,
+    sourceSha256,
+  );
+  const documentsByKind = new Map(sourcePacket.documents.map((document) => [document.kind, document]));
+  const packetEvidence = sourcePacket.documents.map((document) => ({
+    evidenceId: document.documentId,
+    kind: document.kind,
+    locator: document.locator,
+    sha256: document.sha256,
+    sourceReceiptDigest,
+    capturedAt: draft.sourceEvidence[0]!.capturedAt,
+    recordedBy: draft.sourceEvidence[0]!.recordedBy,
+  }));
+  const sourceEvidence = [
+    ...draft.sourceEvidence.map((evidence, index) => index === 0
+      ? { ...evidence, locator: sourceRepositoryPath, sha256: sourceSha256, sourceReceiptDigest }
+      : evidence),
+    ...packetEvidence,
+  ];
+  const descriptorId = draft.candidates[0]!.descriptor.descriptorId;
+  const descriptorDigest = await sha256(serializeAssetContractV2PhysicalDescriptorPayload(
+    createFixtureDescriptor(descriptorId, catalogEntryKey, ACCEPTED_STANDARD_ASSET_RELEASE),
+  ));
   const draftWithKey = {
     ...draft,
     sourceEvidence,
@@ -130,8 +173,20 @@ async function createAcceptedIngestionEvidence() {
       ...provenance,
       sourceSha256,
       sourceReceiptDigest,
+      chainOfCustody: [...provenance.chainOfCustody, documentsByKind.get("provenance")!.documentId],
     })),
-    candidates: [{ ...draft.candidates[0], descriptor: { ...draft.candidates[0].descriptor, catalogEntryKey } }],
+    licensing: draft.licensing.map((license) => ({
+      ...license,
+      evidenceId: documentsByKind.get("license")!.documentId,
+    })),
+    credits: draft.credits.map((credit) => ({
+      ...credit,
+      evidenceId: documentsByKind.get("credit")!.documentId,
+    })),
+    candidates: [{
+      ...draft.candidates[0],
+      descriptor: { ...draft.candidates[0]!.descriptor, catalogEntryKey, descriptorDigest },
+    }],
   };
   const decision = { ...draftWithKey.decision, decisionDigest: "" };
   decision.decisionDigest = await sha256(serializeStandardPackSuitabilityDecisionPayload(decision as never));
@@ -167,16 +222,15 @@ async function createAcceptedIngestionEvidence() {
   const receipt = {
     ...rawReceipt,
     catalogEntryKey,
+    descriptorId,
+    descriptorDigest,
     sourceSha256,
     sourceReceiptDigest,
+    license: dossier.licensing[0],
+    credit: dossier.credits[0],
     receiptDigest: "",
   };
   receipt.receiptDigest = await sha256(serializeStandardPackCanonicalIngestionReceiptPayload(receipt as never));
-  const sourcePacket = await createSourcePacket(
-    "fixture-legacy-hero-source-packet",
-    sourceEvidence[0]!.locator,
-    sourceSha256,
-  );
   return {
     dossier,
     manifest,
@@ -194,25 +248,43 @@ async function createIndependentIngestionEvidence() {
   const descriptorId = "legacy-mage-walk-proposed";
   const catalogEntryKey = "top-down/32x32/characters/legacy-mage-walk";
   const sourceEvidenceId = "legacy-mage-source";
+  const sourceRepositoryPath = "apps/advantage-games/public/games/fixture/legacy-mage-walk.png";
   const sourceBytes = new TextEncoder().encode("fixture legacy mage source bytes v1");
   const sourceSha256 = await sha256(new TextDecoder().decode(sourceBytes));
   const sourceReceiptDigest = "d".repeat(64);
-  const sourceEvidence = base.dossier.sourceEvidence.map((evidence, index) => ({
-    ...evidence,
-    evidenceId: index === 0 ? sourceEvidenceId : `${candidateId}-${index === 1 ? "visual" : "technical"}`,
-    locator: `measure/tracks/apk_standard_pack_suitability_ingestion_20260728/fixtures/${candidateId}-${index}.json`,
-    sourceReceiptDigest: index === 0 ? sourceReceiptDigest : evidence.sourceReceiptDigest,
-    sha256: index === 0 ? sourceSha256 : evidence.sha256,
-  }));
+  const sourcePacket = await createSourcePacket(
+    "fixture-legacy-mage-source-packet",
+    sourceRepositoryPath,
+    sourceSha256,
+  );
+  const documentsByKind = new Map(sourcePacket.documents.map((document) => [document.kind, document]));
+  const baseCoreEvidence = base.dossier.sourceEvidence.slice(0, 3);
+  const sourceEvidence = [
+    { ...baseCoreEvidence[0], evidenceId: sourceEvidenceId, locator: sourceRepositoryPath, sha256: sourceSha256, sourceReceiptDigest },
+    { ...baseCoreEvidence[1], evidenceId: candidateId + "-visual", locator: "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/fixtures/legacy-mage-visual.json" },
+    { ...baseCoreEvidence[2], evidenceId: candidateId + "-technical", locator: "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/fixtures/legacy-mage-technical.json" },
+    ...sourcePacket.documents.map((document) => ({
+      evidenceId: document.documentId,
+      kind: document.kind,
+      locator: document.locator,
+      sha256: document.sha256,
+      sourceReceiptDigest,
+      capturedAt: baseCoreEvidence[0]!.capturedAt,
+      recordedBy: baseCoreEvidence[0]!.recordedBy,
+    })),
+  ];
+  const descriptorDigest = await sha256(serializeAssetContractV2PhysicalDescriptorPayload(
+    createFixtureDescriptor(descriptorId, catalogEntryKey, ACCEPTED_STANDARD_ASSET_RELEASE),
+  ));
   const draft = {
     ...base.dossier,
     dossierId: "fixture-legacy-mage-ingestion",
     sourceEvidence,
-    candidates: [{ ...base.dossier.candidates[0], candidateId, descriptor: { ...base.dossier.candidates[0].descriptor, descriptorId, descriptorDigest: "f".repeat(64), catalogEntryKey }, sourceEvidenceIds: [sourceEvidenceId], comparisonEvidenceIds: [`${candidateId}-visual`, `${candidateId}-technical`] }],
-    reviewerFindings: [{ ...base.dossier.reviewerFindings[0], candidateId, evidenceIds: [`${candidateId}-visual`, `${candidateId}-technical`] }],
-    provenance: [{ ...base.dossier.provenance[0], candidateId, sourceIdentity: "legacy:fixture-title/mage-walk", sourceSha256, sourceReceiptDigest, chainOfCustody: [sourceEvidenceId] }],
-    licensing: [{ ...base.dossier.licensing[0], candidateId, evidenceId: sourceEvidenceId }],
-    credits: [{ ...base.dossier.credits[0], candidateId, evidenceId: sourceEvidenceId }],
+    candidates: [{ ...base.dossier.candidates[0], candidateId, descriptor: { ...base.dossier.candidates[0].descriptor, descriptorId, descriptorDigest, catalogEntryKey }, sourceEvidenceIds: [sourceEvidenceId], comparisonEvidenceIds: [candidateId + "-visual", candidateId + "-technical"] }],
+    reviewerFindings: [{ ...base.dossier.reviewerFindings[0], candidateId, evidenceIds: [candidateId + "-visual", candidateId + "-technical"] }],
+    provenance: [{ ...base.dossier.provenance[0], candidateId, sourceIdentity: "legacy:fixture-title/mage-walk", sourceSha256, sourceReceiptDigest, chainOfCustody: [sourceEvidenceId, documentsByKind.get("provenance")!.documentId] }],
+    licensing: [{ ...base.dossier.licensing[0], candidateId, evidenceId: documentsByKind.get("license")!.documentId }],
+    credits: [{ ...base.dossier.credits[0], candidateId, evidenceId: documentsByKind.get("credit")!.documentId }],
     releaseBinding: { ...base.dossier.releaseBinding, predecessorDescriptorIds: [descriptorId] },
     decision: { ...base.dossier.decision, candidateId, descriptorId, decisionDigest: "" },
     dossierDigest: "",
@@ -225,13 +297,8 @@ async function createIndependentIngestionEvidence() {
   acceptedDecision.decisionDigest = await sha256(serializeStandardPackSuitabilityDecisionPayload(acceptedDecision as never));
   const manifest = { ...base.manifest, manifestId: "fixture-legacy-mage-ingestion-manifest", dossierId: dossier.dossierId, dossierDigest: dossier.dossierDigest, decision: acceptedDecision, reviewerApproval: acceptedDecision.reviewerApproval, ownerApproval: acceptedDecision.ownerApproval, releaseBinding: dossier.releaseBinding, authorization: acceptedDecision.authorization, manifestDigest: "" };
   manifest.manifestDigest = await sha256(serializeStandardPackSuitabilityAcceptedDecisionManifestPayload(manifest as never));
-  const receipt = { ...base.receipt, receiptId: "fixture-legacy-mage-ingestion-receipt", candidateId, sourceIdentity: draft.provenance[0].sourceIdentity, sourceSha256, sourceReceiptDigest, license: draft.licensing[0], credit: draft.credits[0], catalogEntryKey, descriptorId, descriptorDigest: draft.candidates[0].descriptor.descriptorDigest, receiptDigest: "" };
+  const receipt = { ...base.receipt, receiptId: "fixture-legacy-mage-ingestion-receipt", candidateId, sourceIdentity: draft.provenance[0].sourceIdentity, sourceSha256, sourceReceiptDigest, license: draft.licensing[0], credit: draft.credits[0], catalogEntryKey, descriptorId, descriptorDigest, receiptDigest: "" };
   receipt.receiptDigest = await sha256(serializeStandardPackCanonicalIngestionReceiptPayload(receipt as never));
-  const sourcePacket = await createSourcePacket(
-    "fixture-legacy-mage-source-packet",
-    dossier.sourceEvidence[0]!.locator,
-    sourceSha256,
-  );
   return {
     dossier,
     manifest,
@@ -332,18 +399,7 @@ function createSuccessorDescriptor(
   evidence: Awaited<ReturnType<typeof createAcceptedIngestionEvidence>>,
   release: { readonly version: string; readonly catalogDigest: string; readonly sourceReceiptDigest: string },
 ) {
-  return {
-    contractVersion: 2 as const,
-    descriptorId: evidence.receipt.descriptorId,
-    catalogEntryKey: evidence.receipt.catalogEntryKey,
-    release,
-    mediaKind: "image" as const,
-    geometry: { width: 32, height: 32, frameWidth: 32, frameHeight: 32, columns: 1, rows: 1 },
-    anchor: { x: 0.5, y: 1 },
-    renderScale: 1,
-    collisionEnvelope: { x: 0.2, y: 0.2, width: 0.6, height: 0.7 },
-    readabilityEnvelope: { minimumRenderPixels: 16, minimumContrastRatio: 3 },
-  };
+  return createFixtureDescriptor(evidence.receipt.descriptorId, evidence.receipt.catalogEntryKey, release);
 }
 
 describe("standard-pack append-only ingestion ledger", () => {
@@ -365,6 +421,28 @@ describe("standard-pack append-only ingestion ledger", () => {
       ...createLedgerEvidenceBundle(evidence),
       sourceBytes: new TextEncoder().encode("tampered source bytes"),
     }])).rejects.toThrow(/source packet bytes/i);
+    const packetWithUnlinkedLicense = {
+      ...evidence.sourcePacket,
+      documents: evidence.sourcePacket.documents.map((document) => document.kind === "license"
+        ? { ...document, locator: "measure/intake/forged-license.txt" }
+        : document),
+      packetDigest: "",
+    };
+    packetWithUnlinkedLicense.packetDigest = await sha256(
+      serializeStandardPackLegacySourcePacketPayload(packetWithUnlinkedLicense),
+    );
+    const ledgerWithUnlinkedPacket = {
+      ...ledger,
+      entries: [{ ...ledger.entries[0], sourcePacketDigest: packetWithUnlinkedLicense.packetDigest }],
+      batchDigest: "",
+    };
+    ledgerWithUnlinkedPacket.batchDigest = await sha256(
+      serializeStandardPackIngestionLedgerPayload(ledgerWithUnlinkedPacket as never),
+    );
+    await expect(validateLedger(ledgerWithUnlinkedPacket, [{
+      ...createLedgerEvidenceBundle(evidence),
+      sourcePacketCandidate: packetWithUnlinkedLicense,
+    }])).rejects.toThrow(/source-packet documents.*dossier provenance, license, and credit evidence/i);
   }, 30_000);
 
   it("rejects a distinct successor batch fork from the same issued predecessor index", async () => {
@@ -495,6 +573,15 @@ describe("standard-pack append-only ingestion ledger", () => {
       [createLedgerEvidenceBundle(evidence)],
       [{ ...createSuccessorDescriptor(evidence, b1Release), descriptorId: "wrong-successor-descriptor" }],
     )).rejects.toThrow(/descriptor identity.*accepted suitability/i);
+    await expect(createReleaseBoundSemanticAssetResolver(
+      b1Catalog,
+      b1Release,
+      successorManifest,
+      acceptedB1,
+      additiveReceipt,
+      [createLedgerEvidenceBundle(evidence)],
+      [{ ...createSuccessorDescriptor(evidence, b1Release), anchor: { x: 0.3, y: 1 } }],
+    )).rejects.toThrow(/descriptor content.*accepted suitability/i);
   }, 60_000);
 
   it("rehydrates persisted B1 evidence without granting production authority", async () => {
@@ -518,10 +605,23 @@ describe("standard-pack append-only ingestion ledger", () => {
     const evidence = { ...rawEvidence, receipt };
     const ledger = await createLedger(evidence);
     const index = await createStandardPackIngestionLedgerPredecessorIndex(rootCatalog, ledger.predecessorRelease);
+    const acceptedOriginal = await validateStandardPackIngestionLedger(
+      ledger,
+      [createLedgerEvidenceBundle(evidence)],
+      index,
+    );
+    const successorCommitment = await createStandardPackIngestionLedgerSuccessorCommitment(acceptedOriginal);
+    await expect(rehydrateStandardPackIngestionLedgerPredecessorIndex(
+      structuredClone(index),
+      rootCatalog,
+      ledger.predecessorRelease,
+      undefined,
+    )).rejects.toThrow();
     const rehydratedIndex = await rehydrateStandardPackIngestionLedgerPredecessorIndex(
       structuredClone(index),
       rootCatalog,
       ledger.predecessorRelease,
+      structuredClone(successorCommitment),
     );
     const rehydratedLedger = await validateStandardPackIngestionLedger(
       structuredClone(ledger),
@@ -556,6 +656,7 @@ describe("standard-pack append-only ingestion ledger", () => {
       catalogMismatch,
       rootCatalog,
       ledger.predecessorRelease,
+      structuredClone(successorCommitment),
     )).rejects.toThrow(/catalog identities/i);
     const receiptMismatch = {
       ...structuredClone(issuedReceipt),

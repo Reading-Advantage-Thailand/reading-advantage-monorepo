@@ -1,0 +1,39 @@
+{
+  "schema_version": "apk-standard-pack-suitability-owner-acceptance.v1",
+  "track_id": "apk_standard_pack_suitability_ingestion_20260728",
+  "decision": "ACCEPT_BOUNDED_EVIDENCE_ONLY_ADDITIVE_RELEASE_GOVERNANCE",
+  "accepted_at": "2026-07-29T15:50:00Z",
+  "decided_by": "apk-orchestrator-acting-under-explicit-user-project-owner-delegation",
+  "authority": "explicit-user-delegated-project-owner-decision",
+  "approved_scope": "Evidence-only legacy-ingestion ledger, additive release receipt, and release-bound semantic resolver. This decision does not approve a physical production release.",
+  "verification": {
+    "package_typecheck": "passed: tsc -p packages/advantage-play-kit/tsconfig.json --noEmit",
+    "ledger_baseline": "passed: 1/1 in 5.41s with explicit 15s timeout",
+    "ledger_cumulative": "passed: B1 to B2 to B3 integration in 19.22s with an explicit 30s timeout",
+    "ledger_b1_successor_index": "passed: 1/1 in 18.17s with an explicit 15s timeout",
+    "ledger_negative_matrix": "passed: 10/10 in 10.56s with an explicit 30s timeout",
+    "additive_release_receipt": "passed: 2/2 in 5.58s",
+    "semantic_bindings": "passed: 7/7 in 5.99s including exact-release and root-boundary rejection",
+    "semantic_descriptor_selected_union": "passed: 4/4 in 8.43s"
+  },
+  "verification_updated_at": "2026-07-29T16:06:00Z",
+  "integrity": {
+    "additive_receipt_source_sha256": "312aa099579bac5c2d1604814391d93caca573008316b280d8d14cc59eb5c8b8",
+    "ingestion_ledger_source_sha256": "93480e543ce9968c2946c7744712876a90b48acfd64d335967059191df762c54",
+    "semantic_binding_source_sha256": "5d27a66781392e7e12fca233ce227847b7862ecffd11b82b73d38be45ed18efd",
+    "ledger_test_sha256": "d3b874d328b0258303940044df66f4dd3bcaa73cd548cebd19a30fb7f0bd1c46",
+    "semantic_test_sha256": "dc96e417340cfd7e93c897bfb439293bc1d7ad011f66ea5b79808d1750817846",
+    "additive_receipt_test_sha256": "b9af690ffb0be73d78eeba08f8c85e60a8adac9ffaf86927a5195a051f912f3a"
+  },
+  "authorization": {
+    "productionUseAuthorized": false,
+    "migrationAuthorized": false,
+    "cutoverAuthorized": false,
+    "deploymentAuthorized": false
+  },
+  "revocation_state": "revoked-current-byte-drift",
+  "revoked_at": "2026-07-30T13:01:01Z",
+  "revoked_by": "apk-orchestrator-acting-under-explicit-user-project-owner-delegation",
+  "revocation_reason": "The record binds historical integrity hashes that no longer match committed Phase 1-4 implementation f31324545. It cannot authorize the current bytes.",
+  "supersession_requirement": "A later record must bind independently reviewed current bytes; this revocation grants no production, ingestion, migration, cutover, retirement, or deployment authority."
+}

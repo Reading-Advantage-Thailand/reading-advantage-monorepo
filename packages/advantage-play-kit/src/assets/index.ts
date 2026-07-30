@@ -89,6 +89,7 @@ export {
   assetContractV2TimingSchema,
   createAssetContractV2CompatibilityReport,
   createDescriptorDrivenPresentationAdapter,
+  serializeAssetContractV2PhysicalDescriptorPayload,
   validateAssetContractV2Descriptor,
   validateAssetContractV2DescriptorForRelease,
 } from "./asset-contract-v2.js";
