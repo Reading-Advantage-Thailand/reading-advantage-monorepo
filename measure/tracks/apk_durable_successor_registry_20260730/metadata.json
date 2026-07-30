@@ -3,7 +3,7 @@
   "type": "feature",
   "status": "in_progress",
   "created_at": "2026-07-30T14:09:50Z",
-  "updated_at": "2026-07-30T17:52:46Z",
+  "updated_at": "2026-07-30T18:42:27Z",
   "description": "Replace process-local APK successor reservations with a transaction-safe, durable, backend-owned registry for immutable release-candidate admission.",
   "estimated_tasks": 10,
   "actual_tasks": null,

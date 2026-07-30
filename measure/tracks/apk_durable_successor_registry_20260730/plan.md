@@ -37,12 +37,15 @@
 
 ## Phase 4: Ledger integration and safeguards
 
-- [b] Wire the durable adapter through the existing ledger registry interface
-  without placing business logic in apps, route handlers, or QC components.
-  (deferred:phase-4-ledger-integration)
-- [b] Add rollback, duplicate, and cross-adapter integration coverage plus
-  structured error and audit assertions.
-  (deferred:phase-4-integration)
+- [x] Wire the durable adapter through the existing ledger registry interface
+  without placing business logic in apps, route handlers, or QC components. A
+  backend-only resolver facade is captured by the real PlayKit predecessor-index
+  lifecycle; it retains opaque proof context and calls the Phase 3 command only
+  after the ledger computes the exact successor commitment.
+- [x] Add rollback, duplicate, and cross-adapter integration coverage plus
+  structured error and audit assertions. Unit, isolated PostgreSQL, and real
+  PlayKit lifecycle proofs cover generic reads, replay, conflict, receipt
+  rollback, redaction, and one-time mirrors.
 
 ## Phase 5: Verification and bounded closeout
 
