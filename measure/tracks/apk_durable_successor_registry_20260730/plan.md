@@ -6,11 +6,10 @@
   authorization contracts; retain the play-kit ledger as a portable consumer.
   Strict runtime-contract validation is green; the durable adapter remains out
   of this completed contract slice.
-- [b] Add red tests for independent-process fork rejection, exact retry,
-  rehydration, malformed candidates, and transaction failure. The provider
-  boundary and multi-process cases are explicit Phase 2 specifications and
-  require the real adapter before activation.
-  (deferred:phase-2-adapter)
+- [x] Add adapter-backed proof for independent-process fork rejection, exact
+  retry, rehydration, malformed candidates, secondary uniqueness, and transaction
+  failure. Contract/unit coverage is green; the isolated PostgreSQL suite passed
+  concurrent fork/restart, secondary-collision, and forced-rollback cases.
 
 ## Phase 2: Durable schema and transactional adapter
 
@@ -19,8 +18,10 @@
   The migration's 0044 journal entry and snapshot were generated from the
   0043 chain; append-only trigger and JSON-projection protections are
   additionally reviewed.
-- [~] Implement the PostgreSQL transaction-bound compare-and-reserve adapter
-  using insert-on-conflict and conflict-row locking rather than process memory.
+- [x] Implement the PostgreSQL transaction-bound compare-and-reserve adapter
+  using DB-owned insert-on-conflict and conflict-row locking rather than process
+  memory. Backend validates evidence/digests through a provider-neutral store;
+  independent review accepted the final Phase 2 bytes.
 
 ## Phase 3: Command, receipt, and release boundary
 

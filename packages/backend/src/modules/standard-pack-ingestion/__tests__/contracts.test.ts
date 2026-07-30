@@ -54,26 +54,6 @@ const request = {
   commitment,
 };
 
-/** Deliberately unsafe isolated-process stand-in used to establish the Phase 2 red behavior. */
-function createProcessLocalRegistry(): StandardPackSuccessorRegistryPort {
-  const records = new Map<string, unknown>();
-  return {
-    async read(lookup) {
-      return (records.get(lookup.predecessorIndexDigest) as never) ?? null;
-    },
-    async reserve(candidate) {
-      const key = candidate.commitment.predecessorIndexDigest;
-      const record = {
-        candidate: candidate.candidate,
-        commitment: candidate.commitment,
-        reservedAt: "2026-07-30T14:00:00.000Z",
-      };
-      records.set(key, record);
-      return { outcome: "reserved", record } as const;
-    },
-  };
-}
-
 describe("standard-pack successor-registry contract matrix", () => {
   it("defines provider-neutral read and compare-and-reserve operations", () => {
     expectTypeOf<keyof StandardPackSuccessorRegistryPort>().toEqualTypeOf<
@@ -106,50 +86,5 @@ describe("standard-pack successor-registry contract matrix", () => {
       commitment,
       reservedAt: "2026-07-30T14:00:00.000Z",
     }).success).toBe(false);
-  });
-
-  it.skip("Phase 2: rejects a malformed candidate at the provider boundary without reserving it", async () => {
-    const registry = createProcessLocalRegistry();
-    const malformed = {
-      ...request,
-      candidate: { ...request.candidate, gitCandidate: { ...request.candidate.gitCandidate, revision: "HEAD" } },
-    };
-
-    await expect(registry.reserve(malformed as never)).rejects.toThrow();
-    await expect(registry.read({ predecessorIndexDigest: request.commitment.predecessorIndexDigest }))
-      .resolves.toBeNull();
-  });
-
-  it.skip("Phase 2: rejects a fork when two independently constructed processes target one predecessor", async () => {
-    const firstProcess = createProcessLocalRegistry();
-    const secondProcess = createProcessLocalRegistry();
-    const fork = {
-      ...request,
-      candidate: {
-        ...request.candidate,
-        successorBatchId: "legacy-mage-batch",
-        successorBatchDigest: digest("6"),
-        successorRelease: {
-          version: "2026.07.31",
-          catalogDigest: digest("7"),
-          sourceReceiptDigest: digest("8"),
-        },
-        commitmentDigest: digest("9"),
-      },
-      commitment: {
-        ...commitment,
-        successorBatchId: "legacy-mage-batch",
-        successorBatchDigest: digest("6"),
-        successorRelease: {
-          version: "2026.07.31",
-          catalogDigest: digest("7"),
-          sourceReceiptDigest: digest("8"),
-        },
-        commitmentDigest: digest("9"),
-      },
-    };
-
-    await expect(firstProcess.reserve(request)).resolves.toMatchObject({ outcome: "reserved" });
-    await expect(secondProcess.reserve(fork)).resolves.toMatchObject({ outcome: "conflict" });
   });
 });

@@ -6,3 +6,4 @@
 export * from "./kernel/index.js";
 export * from "./jobs/index.js";
 export * from "./modules/company-identity/index.js";
+export * from "./modules/standard-pack-ingestion/index.js";

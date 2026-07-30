@@ -2474,6 +2474,9 @@ importers:
 
   packages/backend:
     dependencies:
+      '@reading-advantage/db':
+        specifier: workspace:*
+        version: link:../db
       postgres:
         specifier: 'catalog:'
         version: 3.4.9
