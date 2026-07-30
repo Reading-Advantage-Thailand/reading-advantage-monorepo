@@ -224,7 +224,7 @@ program, priority order when picking the next track is:
   canonical art, canonically ingest approved legacy art with provenance, or
   block the role; it publishes additive release and binding evidence only.
 
-- [~] **Track: APK Durable Successor Registry and Release Admission** *Link: [./tracks/apk_durable_successor_registry_20260730/](./tracks/apk_durable_successor_registry_20260730/)*
+- [x] **Track: APK Durable Successor Registry and Release Admission** *Link: [./tracks/apk_durable_successor_registry_20260730/](./tracks/apk_durable_successor_registry_20260730/)*
   Replaces process-local APK successor reservations with a transaction-safe,
   backend-owned registry for immutable release-candidate admission. This
   infrastructure does not accept a real asset or authorize ingestion, title

@@ -49,10 +49,11 @@
 
 ## Phase 5: Verification and bounded closeout
 
-- [b] Run focused backend/database/play-kit tests, tenant coverage, lint,
-  type-check, and relevant package builds; record exact commands and results.
-  (deferred:phase-4-tests)
-- [b] Obtain an independent implementation review and record a bounded
+- [x] Run focused backend/database/play-kit tests, tenant coverage, lint,
+  type-check, and relevant package builds; exact commands and results are
+  recorded in phase-5-review.md. The final module-relative fixture proof also
+  passes from repository root with isolated PostgreSQL.
+- [x] Obtain an independent implementation review and record a bounded
   infrastructure-only decision that explicitly withholds real asset and title
-  authorization.
-  (deferred:phase-5-verification)
+  authorization. The final review accepted the implementation and confirmed
+  its scope contains no apps, real assets, dossiers, title, or release authority.
