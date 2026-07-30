@@ -4,35 +4,13 @@
   "status": "new",
   "created_at": "2026-07-11T07:26:37Z",
   "updated_at": "2026-07-11T07:26:37Z",
-  "description": "Create versioned, reproducible workbook editions that reference Reading Advantage and Primary Advantage articles and storage assets without duplicating their mutable source content.",
-  "estimated_tasks": 15,
+  "description": "Import advantage-workbooks as an internal curriculum-publishing web app with source-owned Reading/Primary content, immutable editions, object-storage artifacts, durable rendering, reviewed AI proposals, and governed live-app promotion.",
+  "estimated_tasks": 43,
   "actual_tasks": null,
-  "deviation_notes": "Planning only. The standalone advantage-workbooks dashboard import, a full canonical-content migration, and PDF rendering implementation are intentionally deferred until this edition contract is proven.",
+  "deviation_notes": "This rewritten track supersedes the earlier foundation-only scope. It keeps workbook source content owned by Reading and Primary, places publishing artifacts in a separate workbook operational boundary, and limits teachers to approved-edition consumption in the MVP.",
   "sprint": {
-    "goal": "Publish reproducible workbook editions from existing Reading Advantage and Primary Advantage content without creating a second mutable content corpus.",
-    "stories": [
-      {
-        "id": "S1",
-        "title": "Select source content",
-        "size": "M",
-        "priority": "Must",
-        "status": "pending"
-      },
-      {
-        "id": "S2",
-        "title": "Publish immutable editions",
-        "size": "L",
-        "priority": "Must",
-        "status": "pending"
-      },
-      {
-        "id": "S3",
-        "title": "Reproduce release artifacts",
-        "size": "M",
-        "priority": "Must",
-        "status": "pending"
-      }
-    ],
+    "goal": "Turn advantage-workbooks into a governed web publishing pipeline that produces reproducible workbook editions and improves the live Reading and Primary content ecosystem without creating a second mutable corpus.",
+    "stories": [{"id":"S0","title":"Establish the workbook product boundary","size":"S","priority":"Must","status":"pending"},{"id":"S1","title":"Select governed source content","size":"L","priority":"Must","status":"pending"},{"id":"S2","title":"Publish immutable editions","size":"L","priority":"Must","status":"pending"},{"id":"S3","title":"Import legacy workbook projects and assets","size":"L","priority":"Must","status":"pending"},{"id":"S4","title":"Use the web publishing workspace","size":"XL","priority":"Must","status":"pending"},{"id":"S5","title":"Render and distribute approved editions","size":"L","priority":"Must","status":"pending"},{"id":"S6","title":"Review AI proposals and promote reusable additions","size":"XL","priority":"Must","status":"pending"},{"id":"S7","title":"Pilot classroom consumption and retire standalone writes","size":"L","priority":"Must","status":"pending"}],
     "demo_notes": null,
     "retro_ref": null
   }
