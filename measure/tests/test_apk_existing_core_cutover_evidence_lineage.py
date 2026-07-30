@@ -16,6 +16,12 @@ FIXTURE_PATH = (
     REPO_ROOT
     / "packages/game-cartridges/src/existing-core-cutover.evidence.json"
 )
+LOCATOR_CORRECTION_PATH = (
+    REPO_ROOT
+    / "measure/tracks/apk_existing_core_cutover_20260727"
+    / "task3-planning-authorization-locator-correction-v1.json"
+)
+EXPECTED_LOCATOR_CORRECTION_SHA256 = "d511895ef3ecc78c7c7813c0a07609fc9d7529411b182f288d37e0bdb9384a73"
 FORBIDDEN_PATH_PARTS = (
     "apk_cross_game_asset_ontology_20260712",
     "mechanic-blueprints",
@@ -157,7 +163,41 @@ def _assert_artifact(binding: dict[str, Any]) -> Any:
         raise AssertionError(f"Quarantined or generic ontology evidence is forbidden: {path}")
     artifact_path = REPO_ROOT / path
     if not artifact_path.is_file():
-        raise AssertionError(f"Bound artifact does not exist: {path}")
+        correction = _load_json(LOCATOR_CORRECTION_PATH)
+        if _sha256(LOCATOR_CORRECTION_PATH) != EXPECTED_LOCATOR_CORRECTION_SHA256:
+            raise AssertionError("Planning-authorization locator correction drift")
+        if correction.get("status") != "verified-additive-locator-correction":
+            raise AssertionError("Planning-authorization locator correction is not verified")
+        expected_fixture_binding = {
+            "path": "packages/game-cartridges/src/existing-core-cutover.evidence.json",
+            "sha256": _sha256(FIXTURE_PATH),
+        }
+        if correction.get("bound_fixture") != expected_fixture_binding:
+            raise AssertionError("Locator correction does not bind the current evidence fixture")
+        rebind = correction.get("locator_rebind", {})
+        if rebind.get("original_binding") != {"path": path, "sha256": digest}:
+            raise AssertionError(f"Bound artifact does not exist: {path}")
+        resolved = rebind.get("resolved_binding", {})
+        if resolved.get("sha256") != digest:
+            raise AssertionError("Locator correction changes accepted receipt bytes")
+        governance = correction.get("governance", {})
+        required_false = (
+            "bound_fixture_rewritten",
+            "accepted_receipt_rewritten",
+            "accepted_receipt_bytes_changed",
+            "owner_acceptance_claimed_by_this_correction",
+            "downstream_authorization_expanded",
+            "task5_acceptance_authorized",
+            "retirement_or_cutover_authorized",
+        )
+        if any(governance.get(field) is not False for field in required_false):
+            raise AssertionError("Locator correction expands or rewrites accepted authority")
+        resolved_path = resolved.get("path")
+        if not isinstance(resolved_path, str):
+            raise AssertionError("Locator correction is missing the resolved path")
+        artifact_path = REPO_ROOT / resolved_path
+        if not artifact_path.is_file():
+            raise AssertionError(f"Resolved artifact does not exist: {resolved_path}")
     actual_digest = _sha256(artifact_path)
     if actual_digest != digest:
         raise AssertionError(f"Stale hash for {path}: {digest} != {actual_digest}")

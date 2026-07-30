@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import base64
 import hashlib
 import json
 import unittest
@@ -13,8 +14,11 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 TRACK_ROOT = REPO_ROOT / "measure/tracks/apk_existing_core_cutover_20260727"
 ACCEPTANCE_PATH = TRACK_ROOT / "task3-product-owner-acceptance-v1.json"
 RECEIPT_PATH = TRACK_ROOT / "accepted-semantic-adoption-receipt-v1.json"
+CORRECTION_PATH = TRACK_ROOT / "task3-evidence-lineage-correction-v1.json"
 EXPECTED_ACCEPTANCE_SHA256 = "65ffbaa27ef19be1f65015daa8fad4d2f4ca58990ba2fea5653327627452c3b1"
 EXPECTED_RECEIPT_SHA256 = "e82d42d9ec046b85eb4aeac7800623bce3c3bf4a39a9c0f44288bd93d07be240"
+EXPECTED_CORRECTION_SHA256 = "008b042ddab1e5486c2b51fb5625b8f89084c471fc03a3bc4dab29231e509796"
+CORRECTED_SUBJECT_KEYS = {"remediation_evidence", "independent_zero_finding_rereview"}
 
 EXPECTED_SUBJECTS = {
     "semantic_candidate_source": {
@@ -124,14 +128,69 @@ def _load_object(path: Path) -> dict[str, Any]:
     return value
 
 
+def _assert_subject_bytes(
+    subject_key: str,
+    subject: dict[str, str],
+    correction: dict[str, Any],
+) -> None:
+    """Validates either a current subject or its exact recovered historical bytes."""
+    if subject_key not in CORRECTED_SUBJECT_KEYS:
+        if _sha256(REPO_ROOT / subject["path"]) != subject["sha256"]:
+            raise AssertionError(f"Accepted subject drift: {subject_key}")
+        return
+
+    recovery = correction["recovered_subjects"][subject_key]
+    if recovery["accepted_binding"] != subject:
+        raise AssertionError(f"Correction changes accepted binding: {subject_key}")
+    snapshot = recovery["recovered_snapshot"]
+    descendant = recovery["current_descendant"]
+    snapshot_path = REPO_ROOT / snapshot["path"]
+    if snapshot["encoding"] != "base64":
+        raise AssertionError(f"Unsupported snapshot encoding: {subject_key}")
+    if _sha256(snapshot_path) != snapshot["artifact_sha256"]:
+        raise AssertionError(f"Encoded snapshot drift: {subject_key}")
+    accepted_bytes = base64.b64decode(snapshot_path.read_bytes(), validate=True)
+    accepted_sha256 = hashlib.sha256(accepted_bytes).hexdigest()
+    if snapshot["decoded_sha256"] != subject["sha256"] or accepted_sha256 != subject["sha256"]:
+        raise AssertionError(f"Snapshot does not preserve accepted hash: {subject_key}")
+    if descendant["path"] != subject["path"]:
+        raise AssertionError(f"Correction disguises descendant path: {subject_key}")
+    if _sha256(REPO_ROOT / descendant["path"]) != descendant["sha256"]:
+        raise AssertionError(f"Current descendant drift: {subject_key}")
+    if recovery["drift_classification"] != "markdown-hard-line-break-trailing-space-normalization-only":
+        raise AssertionError(f"Unsupported accepted-subject drift: {subject_key}")
+    if recovery["semantic_content_changed"] is not False:
+        raise AssertionError(f"Correction claims semantic drift: {subject_key}")
+
+    accepted_text = accepted_bytes.decode("utf-8")
+    descendant_text = (REPO_ROOT / descendant["path"]).read_text(encoding="utf-8")
+    normalized_text = "\n".join(line.rstrip(" ") for line in accepted_text.split("\n"))
+    if descendant_text != normalized_text:
+        raise AssertionError(f"Descendant differs beyond trailing-space normalization: {subject_key}")
+
+
 class ExistingCoreTask3AcceptanceTests(unittest.TestCase):
     """Pins owner acceptance and the bounded accepted semantic-adoption receipt."""
 
     def test_product_owner_acceptance_binds_only_current_reviewed_subjects(self) -> None:
         """Requires exact approval provenance and the exhaustive four-subject binding."""
         acceptance = _load_object(ACCEPTANCE_PATH)
+        correction = _load_object(CORRECTION_PATH)
 
         self.assertEqual(_sha256(ACCEPTANCE_PATH), EXPECTED_ACCEPTANCE_SHA256)
+        self.assertEqual(_sha256(CORRECTION_PATH), EXPECTED_CORRECTION_SHA256)
+        self.assertEqual(correction["track_id"], "apk_existing_core_cutover_20260727")
+        self.assertEqual(correction["task_number"], 3)
+        self.assertEqual(
+            set(correction["recovered_subjects"]),
+            CORRECTED_SUBJECT_KEYS,
+        )
+        self.assertFalse(correction["governance"]["immutable_acceptance_record_rewritten"])
+        self.assertFalse(correction["governance"]["immutable_accepted_receipt_rewritten"])
+        self.assertFalse(correction["governance"]["accepted_subject_bytes_changed"])
+        self.assertFalse(correction["governance"]["owner_acceptance_claimed_by_this_correction"])
+        self.assertFalse(correction["governance"]["downstream_authorization_expanded"])
+        self.assertFalse(correction["governance"]["task5_acceptance_authorized"])
         self.assertEqual(acceptance["schema_version"], "apk-existing-core-task3-product-owner-acceptance.v1")
         self.assertEqual(acceptance["track_id"], "apk_existing_core_cutover_20260727")
         self.assertEqual(acceptance["task_number"], 3)
@@ -151,8 +210,8 @@ class ExistingCoreTask3AcceptanceTests(unittest.TestCase):
         self.assertFalse(acceptance["approval_event"]["event_timestamp_available"])
         self.assertEqual(acceptance["accepted_subjects"], EXPECTED_SUBJECTS)
 
-        for subject in EXPECTED_SUBJECTS.values():
-            self.assertEqual(_sha256(REPO_ROOT / subject["path"]), subject["sha256"])
+        for subject_key, subject in EXPECTED_SUBJECTS.items():
+            _assert_subject_bytes(subject_key, subject, correction)
 
     def test_acceptance_records_exact_release_scope_mappings_and_disclosures(self) -> None:
         """Requires the five-title adoption and every limiting disclosure verbatim."""

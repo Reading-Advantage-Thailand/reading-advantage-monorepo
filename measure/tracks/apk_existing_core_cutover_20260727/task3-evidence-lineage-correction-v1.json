@@ -1,0 +1,88 @@
+{
+  "schema_version": "apk-existing-core-task3-evidence-lineage-correction.v1",
+  "correction_id": "apk_existing_core_cutover_20260727_task3_lineage_correction_v1",
+  "track_id": "apk_existing_core_cutover_20260727",
+  "task_number": 3,
+  "status": "verified-additive-byte-preservation-correction",
+  "scope": "historical Task-3 accepted review bytes only",
+  "source_commit": "e0a5fb2a5",
+  "acceptance_records": {
+    "product_owner_acceptance": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-product-owner-acceptance-v1.json",
+      "sha256": "65ffbaa27ef19be1f65015daa8fad4d2f4ca58990ba2fea5653327627452c3b1"
+    },
+    "accepted_receipt": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
+      "sha256": "e82d42d9ec046b85eb4aeac7800623bce3c3bf4a39a9c0f44288bd93d07be240"
+    }
+  },
+  "recovered_subjects": {
+    "remediation_evidence": {
+      "accepted_binding": {
+        "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
+        "sha256": "9b7df1be5dd9c89c3ea6aa25c6fe01ea4d450b886a472276cd68372ec2154e44"
+      },
+      "recovered_snapshot": {
+        "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-accepted-remediation-snapshot-v1.b64",
+        "encoding": "base64",
+        "artifact_sha256": "458b072227b8c989c96a730d113121be47bccf415c60450f7354ae21790dbc1c",
+        "decoded_sha256": "9b7df1be5dd9c89c3ea6aa25c6fe01ea4d450b886a472276cd68372ec2154e44",
+        "git_blob": "290b198b3ea447bc215c2a57f4dc21ea856d04af"
+      },
+      "current_descendant": {
+        "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
+        "sha256": "e2ee8519bc9afe35d5d8dedd55a3430390cfacdc27284830b59dbcfdc579b1fb",
+        "git_blob": "012d90f8bd29651cca68b40f38ceb4598c1fb7d6"
+      },
+      "drift_classification": "markdown-hard-line-break-trailing-space-normalization-only",
+      "normalized_lines": [3, 4, 5],
+      "semantic_content_changed": false
+    },
+    "independent_zero_finding_rereview": {
+      "accepted_binding": {
+        "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-rereview.md",
+        "sha256": "7c3675aca01499e81eba60dcea049715c4652e1474716a633eb8676d3c28a526"
+      },
+      "recovered_snapshot": {
+        "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-accepted-rereview-snapshot-v1.b64",
+        "encoding": "base64",
+        "artifact_sha256": "2a7a6912ffd6d121970fab66cd03a2ae9a0f188f999ee55d0c4554fd7442f543",
+        "decoded_sha256": "7c3675aca01499e81eba60dcea049715c4652e1474716a633eb8676d3c28a526",
+        "git_blob": "5e5881bae98f949220755c018bd7859f6eadc23a"
+      },
+      "current_descendant": {
+        "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-rereview.md",
+        "sha256": "ac8eccd4fed958add9af9b3fd526c4de748f8510909c8d767d288b3ae830e076",
+        "git_blob": "4d8b174a3d35c7338b161b77c52304545a5eb84d"
+      },
+      "drift_classification": "markdown-hard-line-break-trailing-space-normalization-only",
+      "normalized_lines": [3, 4, 5, 6, 7],
+      "semantic_content_changed": false
+    }
+  },
+  "recovery_provenance": {
+    "method": "git fsck object discovery followed by exact SHA-256 match and git cat-file recovery",
+    "original_blobs_were_pre_commit_staged_objects": true,
+    "original_blobs_were_unreachable_before_recovery": true,
+    "snapshot_bytes_changed_during_recovery": false,
+    "snapshot_storage_encoding": "base64 to prevent whitespace normalization"
+  },
+  "governance": {
+    "immutable_acceptance_record_rewritten": false,
+    "immutable_accepted_receipt_rewritten": false,
+    "accepted_subject_bytes_changed": false,
+    "semantic_adoptions_changed": false,
+    "owner_acceptance_claimed_by_this_correction": false,
+    "new_owner_acceptance_required": false,
+    "new_owner_acceptance_rationale": "The exact owner-bound bytes were recovered without modification; this correction changes only their durable locator and discloses whitespace-only descendant drift.",
+    "downstream_authorization_expanded": false,
+    "task5_acceptance_authorized": false,
+    "retirement_or_cutover_authorized": false
+  },
+  "disclosures": [
+    "The historical acceptance and receipt continue to bind their original path/hash pairs and were not rewritten.",
+    "The two original paths currently contain descendant documents whose only byte difference is removal of Markdown hard-line-break trailing spaces.",
+    "The recovered snapshots exactly match the owner-bound SHA-256 values and preserve those historical bytes as additive versioned artifacts.",
+    "This correction makes no new product-owner acceptance claim and authorizes no Task-5 acceptance, retirement, catalog exposure, cutover, cohort acceptance, production readiness, or deployment."
+  ]
+}

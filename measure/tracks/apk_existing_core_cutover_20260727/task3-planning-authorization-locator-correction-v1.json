@@ -1,0 +1,40 @@
+{
+  "schema_version": "apk-existing-core-planning-authorization-locator-correction.v1",
+  "correction_id": "apk_existing_core_cutover_20260727_planning_authorization_locator_correction_v1",
+  "track_id": "apk_existing_core_cutover_20260727",
+  "status": "verified-additive-locator-correction",
+  "scope": "accepted readiness receipt repository relocation only",
+  "bound_fixture": {
+    "path": "packages/game-cartridges/src/existing-core-cutover.evidence.json",
+    "sha256": "85d1ff9012d9bab6311f48ed1571877e78ce680b640939d87154ab80fc9cdffb"
+  },
+  "locator_rebind": {
+    "original_binding": {
+      "path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/accepted-readiness-receipt-v1.json",
+      "sha256": "d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720"
+    },
+    "resolved_binding": {
+      "path": "measure/archive/apk_denominator_readiness_t11_integrity_20260727/accepted-readiness-receipt-v1.json",
+      "sha256": "d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720"
+    },
+    "relocation_kind": "completed-measure-track-archive-move",
+    "content_changed": false,
+    "authority_changed": false
+  },
+  "governance": {
+    "bound_fixture_rewritten": false,
+    "accepted_receipt_rewritten": false,
+    "accepted_receipt_bytes_changed": false,
+    "accepted_status_required": true,
+    "active_revocation_state_required": true,
+    "owner_acceptance_claimed_by_this_correction": false,
+    "downstream_authorization_expanded": false,
+    "task5_acceptance_authorized": false,
+    "retirement_or_cutover_authorized": false
+  },
+  "disclosures": [
+    "The accepted readiness receipt moved from measure/tracks to measure/archive as part of completed-track archival.",
+    "The SHA-256, accepted status, active revocation state, crosswalk counts, and downstream authorization are unchanged.",
+    "This correction changes only current locator resolution and grants no new acceptance or authority."
+  ]
+}
