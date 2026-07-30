@@ -1,6 +1,6 @@
 # Implementation Plan: Legacy Defense Cutover
 
-- [ ] Verify the accepted crosswalk/readiness receipt and freeze exact legacy manifests for all four titles.
+- [~] Verify the accepted crosswalk/readiness receipt and freeze exact legacy manifests for all four titles.
 - [ ] Consume accepted Asset Contract v2 and suitability/ingestion records; freeze each title's semantic roles, physical behavior descriptors, legacy source manifests, and reuse/ingest/block decisions before implementation.
 - [ ] Write failing deterministic mechanic, educational, and completion-boundary tests.
 - [ ] Build cartridges with T11 public APIs and independently approved semantic bindings only.
