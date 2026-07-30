@@ -1,0 +1,144 @@
+{
+  "schema_version": "apk-historical-identity-source-lock.v1",
+  "source_lock_id": "apk_historical_identity_disposition_20260727_source_lock_v1",
+  "track_id": "apk_historical_identity_disposition_20260727",
+  "status": "evidence-locked-awaiting-independent-review",
+  "scope": "historical-identity-disposition-evidence-only",
+  "predecessor_receipt": {
+    "path": "measure/archive/apk_denominator_readiness_t11_integrity_20260727/accepted-readiness-receipt-v1.json",
+    "sha256": "d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720"
+  },
+  "foundation_crosswalk": {
+    "path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+    "sha256": "eb395d3d365115696fc31359406a4e9f126604ca159ea8358a0eb8931c8c5f57"
+  },
+  "source_artifacts": {
+    "accepted_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-denominator-manifest.json",
+      "sha256": "d524171dbc412a213ed4be7ad7a77e2eb404e7c5bf4a5debe2ad68dd121b5729"
+    },
+    "accepted_partition": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/accepted-partition-manifest.json",
+      "sha256": "6badf73b625567b3fc6d4558c52ab68bd0e4fe2fb3afe3792aca4126df2d27b0"
+    },
+    "identity_ledger": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+      "sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407"
+    },
+    "source_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/source-denominator.json",
+      "sha256": "0dbf97dac93ba2056228e79433fb91e6f2ef1898b6f09eff62fe0755082ba21d"
+    },
+    "historical_source_denominator": {
+      "path": "measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json",
+      "sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f"
+    }
+  },
+  "counts": {
+    "source_identities": 27,
+    "partition_assignments": 29,
+    "historical_label_assignments": 2,
+    "historical_labels": [
+      "The Abyssal Well — stale/historical evidence recovery.",
+      "Babel Architect"
+    ]
+  },
+  "identities": [
+    {
+      "identity_id": "rpg-battle",
+      "accepted_label": "RPG Battle — multi-state turn-based implementation.",
+      "assignment_index": 1,
+      "cohort": "Pilot",
+      "classification": "source_identity",
+      "source_identity_id": "vocabulary/rpg-battle",
+      "source_locator": {
+        "artifact": "identity_ledger",
+        "json_pointer": "/identity_records/24"
+      },
+      "disposition_state": "gated-no-rebuild-authority"
+    },
+    {
+      "identity_id": "the-abyssal-well",
+      "accepted_label": "The Abyssal Well — stale/historical evidence recovery.",
+      "assignment_index": 2,
+      "cohort": "Pilot",
+      "classification": "historical_label",
+      "source_identity_id": null,
+      "source_locator": {
+        "artifact": "historical_source_denominator",
+        "classification": "deleted",
+        "evidence_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/abyssal-well/page.tsx",
+        "evidence_blob_sha256": "319603dbf1ef3ecca622255f366a5ade8b362c82754145243ccfcdc007abc938"
+      },
+      "disposition_state": "gated-no-rebuild-authority"
+    },
+    {
+      "identity_id": "devourer-slime",
+      "accepted_label": "Devourer Slime",
+      "assignment_index": 26,
+      "cohort": "Special and historical",
+      "classification": "source_identity",
+      "source_identity_id": "sentence/devourer-slime",
+      "source_locator": {
+        "artifact": "identity_ledger",
+        "json_pointer": "/identity_records/11"
+      },
+      "disposition_state": "gated-no-rebuild-authority"
+    },
+    {
+      "identity_id": "the-haunted-library",
+      "accepted_label": "The Haunted Library",
+      "assignment_index": 27,
+      "cohort": "Special and historical",
+      "classification": "source_identity",
+      "source_identity_id": "sentence/haunted-library",
+      "source_locator": {
+        "artifact": "identity_ledger",
+        "json_pointer": "/identity_records/13"
+      },
+      "disposition_state": "gated-no-rebuild-authority"
+    },
+    {
+      "identity_id": "babel-architect",
+      "accepted_label": "Babel Architect",
+      "assignment_index": 28,
+      "cohort": "Special and historical",
+      "classification": "historical_label",
+      "source_identity_id": null,
+      "source_locator": {
+        "artifact": "historical_source_denominator",
+        "classification": "deleted",
+        "evidence_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/babel-architect/page.tsx",
+        "evidence_blob_sha256": "f438feea924cc464ba6366949b3cd3926ee4b36a13f15c3c1b7162b1b5c76565"
+      },
+      "disposition_state": "gated-no-rebuild-authority"
+    }
+  ],
+  "boundaries": {
+    "evidence_only": true,
+    "no_rebuild": true,
+    "no_placeholder": true,
+    "no_route": true,
+    "no_catalog": true,
+    "no_host": true,
+    "no_asset": true,
+    "no_cutover": true
+  },
+  "claims": {
+    "current_runtime_claimed": false,
+    "playable_claimed": false,
+    "rebuild_authorized": false,
+    "placeholder_authorized": false,
+    "catalog_route_authorized": false,
+    "host_import_authorized": false,
+    "asset_adoption_authorized": false,
+    "cutover_authorized": false,
+    "owner_acceptance_claimed": false,
+    "program_complete_claimed": false
+  },
+  "required_before_owner_acceptance": [
+    "independent review of one disposition per identity against this source lock",
+    "explicit product-owner acceptance recorded by Task 5",
+    "a separately proposed bounded child implementation track before any rebuild"
+  ]
+}

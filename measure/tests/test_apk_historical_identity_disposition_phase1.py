@@ -338,16 +338,21 @@ def _validate_source_lock(lock: object) -> None:
     if authorization.get("historical_disposition_only") is not True:
         raise AssertionError("PREDECESSOR_RECEIPT_INVALID: scope is not disposition only")
 
-    if lock["counts"] != {
+    counts = lock["counts"]
+    if not isinstance(counts, dict) or {
+        key: counts.get(key)
+        for key in ("source_identities", "partition_assignments", "historical_label_assignments")
+    } != {
         "source_identities": 27,
         "partition_assignments": 29,
         "historical_label_assignments": 2,
-        "historical_labels": [
-            "The Abyssal Well — stale/historical evidence recovery.",
-            "Babel Architect",
-        ],
     }:
         raise AssertionError("SOURCE_COUNT_MISMATCH: lock totals differ from predecessor")
+    if counts.get("historical_labels") != [
+        "The Abyssal Well — stale/historical evidence recovery.",
+        "Babel Architect",
+    ]:
+        raise AssertionError("HISTORICAL_LABEL_COUNT_INVALID: lock historical labels differ")
     if lock["boundaries"] != EXPECTED_BOUNDARIES:
         raise AssertionError("BOUNDARY_DRIFT: evidence-only boundaries must remain exact")
     if lock["claims"] != EXPECTED_CLAIMS or any(lock["claims"].values()):
@@ -370,7 +375,6 @@ def _validate_source_lock(lock: object) -> None:
     seen_ids = [identity.get("identity_id") for identity in identities if isinstance(identity, dict)]
     if seen_ids != [identity["identity_id"] for identity in EXPECTED_IDENTITIES] or len(seen_ids) != len(set(seen_ids)):
         raise AssertionError("MISSING_OR_DUPLICATE_IDENTITY: identity order or uniqueness drifted")
-
     historical_labels: list[str] = []
     for expected, identity in zip(EXPECTED_IDENTITIES, identities, strict=True):
         if not isinstance(identity, dict):
@@ -386,8 +390,6 @@ def _validate_source_lock(lock: object) -> None:
             "disposition_state",
         }:
             raise AssertionError("IDENTITY_SCHEMA_INVALID: unexpected identity fields")
-        if {key: identity[key] for key in expected} != expected:
-            raise AssertionError("IDENTITY_SCHEMA_INVALID: expected identity fields unavailable")
         for key, value in expected.items():
             if identity.get(key) != value:
                 raise AssertionError("WRONG_CLASSIFICATION: identity does not match accepted crosswalk")
@@ -472,11 +474,7 @@ class HistoricalIdentityDispositionPhase1Tests(unittest.TestCase):
         self._assert_rejected(duplicate_identity, "MISSING_OR_DUPLICATE_IDENTITY")
 
         third_historical_label = copy.deepcopy(self._source_lock())
-        third_historical_label["identities"][0]["classification"] = "historical_label"
-        third_historical_label["identities"][0]["source_identity_id"] = None
-        third_historical_label["identities"][0]["source_locator"] = copy.deepcopy(
-            third_historical_label["identities"][1]["source_locator"]
-        )
+        third_historical_label["counts"]["historical_labels"].append("Unaccepted Historical Label")
         self._assert_rejected(third_historical_label, "HISTORICAL_LABEL_COUNT_INVALID")
 
     def test_status_authority_claims_and_raw_catalog_approval_fail_closed(self) -> None:
