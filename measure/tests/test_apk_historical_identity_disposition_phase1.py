@@ -127,6 +127,68 @@ EXPECTED_BOUNDARIES = {
     "no_cutover": True,
 }
 
+CANDIDATE_DISPOSITIONS_PATH = TRACK_DIR / "candidate-dispositions-v1.json"
+CANDIDATE_SOURCE_LOCK = {
+    "path": "measure/tracks/apk_historical_identity_disposition_20260727/source-lock-v1.json",
+    "sha256": "d59f0527a6a713d6e3b43c89ec3d6761fc704612e8245c0decd3ade0b386ce8f",
+}
+CANDIDATE_AUTHORIZATION_FLAGS = {
+    "owner_acceptance": False,
+    "rebuild": False,
+    "placeholder": False,
+    "route": False,
+    "catalog": False,
+    "host_import": False,
+    "asset_adoption": False,
+    "migration": False,
+    "cutover": False,
+    "release": False,
+}
+CANDIDATE_EVIDENCE = {
+    "rpg-battle": {
+        "artifact": "identity_ledger",
+        "json_pointer": "/identity_records/24/source_states/0",
+        "observation": "current-source-evidence-only",
+        "source_state": "current-page-source",
+    },
+    "the-abyssal-well": {
+        "artifact": "historical_source_denominator",
+        "json_pointer": "/records/214",
+        "observation": "deleted-historical-source-evidence-only",
+        "source_state": "deleted",
+    },
+    "devourer-slime": {
+        "artifact": "identity_ledger",
+        "json_pointer": "/identity_records/11/source_states/0",
+        "observation": "current-source-evidence-only",
+        "source_state": "current-page-source",
+    },
+    "the-haunted-library": {
+        "artifact": "identity_ledger",
+        "json_pointer": "/identity_records/13/source_states/0",
+        "observation": "current-source-evidence-only",
+        "source_state": "current-page-source",
+    },
+    "babel-architect": {
+        "artifact": "historical_source_denominator",
+        "json_pointer": "/records/216",
+        "observation": "deleted-historical-source-evidence-only",
+        "source_state": "deleted",
+    },
+}
+CANDIDATE_DISPOSITIONS = {
+    "rpg-battle": "defer",
+    "the-abyssal-well": "retain-history",
+    "devourer-slime": "defer",
+    "the-haunted-library": "defer",
+    "babel-architect": "retain-history",
+}
+BABEL_CANCELLATION_CONTEXT = {
+    "path": "measure/archive/advantage_play_kit_20260710/architecture.md",
+    "sha256": "732ff9e7def309d3896ab84eea9d82bada8f93d47c29b66f808434008f120e47",
+    "statement": "Cancelled Babel Architect Phaser 3 and R3F tracks are evidence, not retained foundations.",
+}
+
 
 def _load_json(path: Path) -> dict[str, Any]:
     """Loads a required JSON object.
@@ -415,6 +477,109 @@ def _validate_source_lock(lock: object) -> None:
         raise AssertionError("HISTORICAL_LABEL_COUNT_INVALID: only the two accepted historical labels are allowed")
 
 
+def _validate_candidate_dispositions(candidate: object) -> None:
+    """Validates non-authorizing candidate dispositions against the frozen source lock.
+
+    Args:
+        candidate: Candidate disposition document to validate.
+
+    Raises:
+        AssertionError: If any candidate gains status, authority, or source drift.
+    """
+    if not isinstance(candidate, dict):
+        raise AssertionError("CANDIDATE_SCHEMA_INVALID: document must be an object")
+    _reject_raw_catalog_as_approval(candidate)
+    expected_keys = {
+        "schema_version",
+        "candidate_set_id",
+        "track_id",
+        "status",
+        "scope",
+        "source_lock",
+        "dispositions",
+        "authorization_flags",
+        "required_before_owner_acceptance",
+    }
+    if set(candidate) != expected_keys:
+        raise AssertionError("CANDIDATE_SCHEMA_INVALID: unexpected candidate fields")
+    if candidate.get("schema_version") != "apk-historical-identity-candidate-dispositions.v1":
+        raise AssertionError("CANDIDATE_SCHEMA_INVALID: schema version")
+    if candidate.get("candidate_set_id") != "apk_historical_identity_disposition_20260727_candidates_v1":
+        raise AssertionError("CANDIDATE_SCHEMA_INVALID: candidate set id")
+    if candidate.get("track_id") != TRACK_ID:
+        raise AssertionError("CANDIDATE_SCHEMA_INVALID: track id")
+    if candidate.get("status") != "candidate-awaiting-independent-review":
+        raise AssertionError("FORBIDDEN_CANDIDATE_STATUS: candidate status gained authority")
+    if candidate.get("scope") != "evidence-only-historical-identity-disposition":
+        raise AssertionError("CANDIDATE_SCHEMA_INVALID: scope")
+    _require_binding(candidate.get("source_lock"), CANDIDATE_SOURCE_LOCK, "SOURCE_LOCK_DRIFT")
+    _validate_source_lock(_load_json(SOURCE_LOCK_PATH))
+    if candidate.get("authorization_flags") != CANDIDATE_AUTHORIZATION_FLAGS:
+        raise AssertionError("FORBIDDEN_CANDIDATE_AUTHORITY: authorization flags must all be false")
+    required = candidate.get("required_before_owner_acceptance")
+    if required != [
+        "independent review of these candidate dispositions",
+        "explicit product-owner acceptance of each disposition",
+        "a separately proposed bounded child implementation track before any rebuild",
+    ]:
+        raise AssertionError("OWNER_ACCEPTANCE_FABRICATED: future prerequisites drifted")
+
+    dispositions = candidate.get("dispositions")
+    if not isinstance(dispositions, list) or len(dispositions) != len(CANDIDATE_DISPOSITIONS):
+        raise AssertionError("CANDIDATE_IDENTITY_SET_INVALID: exact five candidates required")
+    identities = [row.get("identity_id") for row in dispositions if isinstance(row, dict)]
+    if identities != list(CANDIDATE_DISPOSITIONS) or len(identities) != len(set(identities)):
+        raise AssertionError("CANDIDATE_IDENTITY_SET_INVALID: candidate identities drifted")
+
+    for row in dispositions:
+        if not isinstance(row, dict):
+            raise AssertionError("CANDIDATE_SCHEMA_INVALID: disposition row must be an object")
+        if set(row) != {
+            "identity_id",
+            "candidate_disposition",
+            "evidence_observation",
+            "evidence_locator",
+            "cancellation_context",
+            "rationale",
+        }:
+            raise AssertionError("CANDIDATE_SCHEMA_INVALID: disposition row fields")
+        identity_id = row.get("identity_id")
+        if not isinstance(identity_id, str) or identity_id not in CANDIDATE_DISPOSITIONS:
+            raise AssertionError("CANDIDATE_IDENTITY_SET_INVALID: identity unknown")
+        if row.get("candidate_disposition") != CANDIDATE_DISPOSITIONS[identity_id]:
+            raise AssertionError("FORBIDDEN_CANDIDATE_STATUS: candidate disposition is unsupported")
+        expected_evidence = CANDIDATE_EVIDENCE[identity_id]
+        if row.get("evidence_observation") != expected_evidence["observation"]:
+            raise AssertionError("CANDIDATE_EVIDENCE_DRIFT: evidence observation differs")
+        locator = row.get("evidence_locator")
+        if not isinstance(locator, dict) or set(locator) != {"path", "sha256", "json_pointer"}:
+            raise AssertionError("CANDIDATE_EVIDENCE_DRIFT: evidence locator malformed")
+        binding = SOURCE_ARTIFACTS[expected_evidence["artifact"]]
+        _require_binding(
+            {"path": locator.get("path"), "sha256": locator.get("sha256")},
+            binding,
+            "CANDIDATE_EVIDENCE_DRIFT",
+        )
+        if locator.get("json_pointer") != expected_evidence["json_pointer"]:
+            raise AssertionError("CANDIDATE_EVIDENCE_DRIFT: evidence pointer differs")
+        source = _load_json(_archive_aware_path(binding["path"]))
+        pointed = _pointer(source, expected_evidence["json_pointer"])
+        if not isinstance(pointed, dict):
+            raise AssertionError("CANDIDATE_EVIDENCE_DRIFT: evidence pointer must resolve an object")
+        observed = pointed.get("source_class", pointed.get("classification"))
+        if observed != expected_evidence["source_state"]:
+            raise AssertionError("CANDIDATE_EVIDENCE_DRIFT: frozen source state differs")
+        if not isinstance(row.get("rationale"), str) or not row["rationale"].strip():
+            raise AssertionError("CANDIDATE_SCHEMA_INVALID: candidate rationale is required")
+        cancellation_context = row.get("cancellation_context")
+        if identity_id == "babel-architect":
+            if cancellation_context != BABEL_CANCELLATION_CONTEXT:
+                raise AssertionError("CANCELLATION_EVIDENCE_DRIFT: Babel context differs")
+            _require_binding(cancellation_context, BABEL_CANCELLATION_CONTEXT, "CANCELLATION_EVIDENCE_DRIFT")
+        elif cancellation_context is not None:
+            raise AssertionError("CANDIDATE_SCHEMA_INVALID: unsupported cancellation context")
+
+
 class HistoricalIdentityDispositionPhase1Tests(unittest.TestCase):
     """Ensures historical APK disposition work stays hash-bound and authority-free."""
 
@@ -497,6 +662,60 @@ class HistoricalIdentityDispositionPhase1Tests(unittest.TestCase):
             "sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
         }
         self._assert_rejected(raw_catalog_approval, "RAW_CATALOG_AS_APPROVAL")
+
+
+    def _candidate_dispositions(self) -> dict[str, Any]:
+        """Loads the candidate disposition document.
+
+        Returns:
+            Parsed candidate dispositions.
+        """
+        return _load_json(CANDIDATE_DISPOSITIONS_PATH)
+
+    def _assert_candidate_rejected(self, candidate: dict[str, Any], code: str) -> None:
+        """Requires one altered candidate document to fail closed.
+
+        Args:
+            candidate: Mutated candidate disposition document.
+            code: Expected stable rejection code.
+        """
+        with self.assertRaisesRegex(AssertionError, code):
+            _validate_candidate_dispositions(candidate)
+
+    def test_candidate_dispositions_are_evidence_only_and_hash_bound(self) -> None:
+        """Accepts only the exact five non-authorizing candidate dispositions."""
+        _validate_candidate_dispositions(self._candidate_dispositions())
+
+    def test_candidate_status_authority_and_raw_catalog_approval_fail_closed(self) -> None:
+        """Rejects any candidate disposition that gains unreviewed authority."""
+        accepted_status = copy.deepcopy(self._candidate_dispositions())
+        accepted_status["status"] = "accepted"
+        self._assert_candidate_rejected(accepted_status, "FORBIDDEN_CANDIDATE_STATUS")
+
+        current_disposition = copy.deepcopy(self._candidate_dispositions())
+        current_disposition["dispositions"][0]["candidate_disposition"] = "current"
+        self._assert_candidate_rejected(current_disposition, "FORBIDDEN_CANDIDATE_STATUS")
+
+        authority = copy.deepcopy(self._candidate_dispositions())
+        authority["authorization_flags"]["rebuild"] = True
+        self._assert_candidate_rejected(authority, "FORBIDDEN_CANDIDATE_AUTHORITY")
+
+        raw_catalog_approval = copy.deepcopy(self._candidate_dispositions())
+        raw_catalog_approval["owner_approval"] = {
+            "path": RAW_CATALOG_PATH,
+            "sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+        }
+        self._assert_candidate_rejected(raw_catalog_approval, "RAW_CATALOG_AS_APPROVAL")
+
+    def test_candidate_locator_and_identity_drift_fail_closed(self) -> None:
+        """Rejects stale evidence pointers and incomplete candidate identity sets."""
+        locator_drift = copy.deepcopy(self._candidate_dispositions())
+        locator_drift["dispositions"][0]["evidence_locator"]["sha256"] = "0" * 64
+        self._assert_candidate_rejected(locator_drift, "CANDIDATE_EVIDENCE_DRIFT")
+
+        missing_identity = copy.deepcopy(self._candidate_dispositions())
+        missing_identity["dispositions"].pop()
+        self._assert_candidate_rejected(missing_identity, "CANDIDATE_IDENTITY_SET_INVALID")
 
 
 if __name__ == "__main__":

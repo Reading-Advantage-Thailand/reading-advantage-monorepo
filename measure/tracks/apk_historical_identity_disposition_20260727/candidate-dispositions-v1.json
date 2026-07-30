@@ -1,0 +1,94 @@
+{
+  "schema_version": "apk-historical-identity-candidate-dispositions.v1",
+  "candidate_set_id": "apk_historical_identity_disposition_20260727_candidates_v1",
+  "track_id": "apk_historical_identity_disposition_20260727",
+  "status": "candidate-awaiting-independent-review",
+  "scope": "evidence-only-historical-identity-disposition",
+  "source_lock": {
+    "path": "measure/tracks/apk_historical_identity_disposition_20260727/source-lock-v1.json",
+    "sha256": "d59f0527a6a713d6e3b43c89ec3d6761fc704612e8245c0decd3ade0b386ce8f"
+  },
+  "dispositions": [
+    {
+      "identity_id": "rpg-battle",
+      "candidate_disposition": "defer",
+      "evidence_observation": "current-source-evidence-only",
+      "evidence_locator": {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+        "sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+        "json_pointer": "/identity_records/24/source_states/0"
+      },
+      "cancellation_context": null,
+      "rationale": "The frozen ledger records current-page-source evidence at the source revision only; it does not establish a present runtime, browser result, host import, catalog exposure, or product readiness, so this candidate defers any implementation decision."
+    },
+    {
+      "identity_id": "the-abyssal-well",
+      "candidate_disposition": "retain-history",
+      "evidence_observation": "deleted-historical-source-evidence-only",
+      "evidence_locator": {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json",
+        "sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
+        "json_pointer": "/records/214"
+      },
+      "cancellation_context": null,
+      "rationale": "The frozen historical denominator records a deleted page at its historical revision; retaining that reference preserves evidence without restoring, retiring, or authorizing a successor."
+    },
+    {
+      "identity_id": "devourer-slime",
+      "candidate_disposition": "defer",
+      "evidence_observation": "current-source-evidence-only",
+      "evidence_locator": {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+        "sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+        "json_pointer": "/identity_records/11/source_states/0"
+      },
+      "cancellation_context": null,
+      "rationale": "The frozen ledger records current-page-source evidence at the source revision only; it does not establish a present runtime, browser result, host import, catalog exposure, or product readiness, so this candidate defers any implementation decision."
+    },
+    {
+      "identity_id": "the-haunted-library",
+      "candidate_disposition": "defer",
+      "evidence_observation": "current-source-evidence-only",
+      "evidence_locator": {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+        "sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+        "json_pointer": "/identity_records/13/source_states/0"
+      },
+      "cancellation_context": null,
+      "rationale": "The frozen ledger records current-page-source evidence at the source revision only; it does not establish a present runtime, browser result, host import, catalog exposure, or product readiness, so this candidate defers any implementation decision."
+    },
+    {
+      "identity_id": "babel-architect",
+      "candidate_disposition": "retain-history",
+      "evidence_observation": "deleted-historical-source-evidence-only",
+      "evidence_locator": {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json",
+        "sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
+        "json_pointer": "/records/216"
+      },
+      "cancellation_context": {
+        "path": "measure/archive/advantage_play_kit_20260710/architecture.md",
+        "sha256": "732ff9e7def309d3896ab84eea9d82bada8f93d47c29b66f808434008f120e47",
+        "statement": "Cancelled Babel Architect Phaser 3 and R3F tracks are evidence, not retained foundations."
+      },
+      "rationale": "The frozen historical denominator records a deleted page, and the archived architecture records cancelled Babel experiments as evidence rather than retained foundations; this candidate retains history only and does not revive that implementation."
+    }
+  ],
+  "authorization_flags": {
+    "owner_acceptance": false,
+    "rebuild": false,
+    "placeholder": false,
+    "route": false,
+    "catalog": false,
+    "host_import": false,
+    "asset_adoption": false,
+    "migration": false,
+    "cutover": false,
+    "release": false
+  },
+  "required_before_owner_acceptance": [
+    "independent review of these candidate dispositions",
+    "explicit product-owner acceptance of each disposition",
+    "a separately proposed bounded child implementation track before any rebuild"
+  ]
+}
