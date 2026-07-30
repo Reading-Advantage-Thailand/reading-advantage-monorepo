@@ -60,7 +60,7 @@ const issuedPredecessorIndexes = new WeakSet<object>();
 const issuedLedgerBatches = new WeakSet<object>();
 const validatedLedgerPredecessorIndexes = new WeakMap<object, StandardPackIngestionLedgerPredecessorIndex>();
 const successorBatchDigests = new WeakMap<object, string>();
-const predecessorSuccessorBatchDigests = new WeakMap<object, string>();
+const predecessorIndexRegistries = new WeakMap<object, StandardPackIngestionLedgerSuccessorRegistry>();
 
 const normalizedSourceIdentitySchema = z.string().min(1).superRefine((value, context) => {
   if (value !== normalizeSourceIdentity(value)) {
@@ -155,6 +155,23 @@ export const standardPackIngestionLedgerSuccessorCommitmentSchema = z.object({
 export type StandardPackIngestionLedgerSuccessorCommitment =
   z.infer<typeof standardPackIngestionLedgerSuccessorCommitmentSchema>;
 
+/**
+ * Defines the durable authority that records the sole successor of every predecessor index.
+ * Implementations must persist the reservation atomically and return the already-recorded
+ * commitment when another writer has reserved that predecessor first.
+ */
+export interface StandardPackIngestionLedgerSuccessorRegistry {
+  /** Reads the current durable successor commitment, or undefined when the predecessor remains open. */
+  readonly readSuccessorCommitment: (
+    predecessorIndex: StandardPackIngestionLedgerPredecessorIndex,
+  ) => Promise<unknown | undefined>;
+  /** Atomically records a candidate successor or returns the commitment already recorded for the predecessor. */
+  readonly reserveSuccessorCommitment: (
+    predecessorIndex: StandardPackIngestionLedgerPredecessorIndex,
+    candidate: StandardPackIngestionLedgerSuccessorCommitment,
+  ) => Promise<unknown>;
+}
+
 /** Validates one immutable append-only batch of standard-pack legacy-ingestion records. */
 export const standardPackIngestionLedgerSchema = z.object({
   schemaVersion: z.literal(1),
@@ -235,7 +252,7 @@ async function sha256(value: string): Promise<string> {
 /** Computes a lowercase SHA-256 digest for exact untransformed source bytes. */
 async function sha256Bytes(value: Uint8Array): Promise<string> {
   if (!globalThis.crypto?.subtle) throw new Error("Web Crypto SHA-256 is required to validate ingestion ledger evidence");
-  const digest = await globalThis.crypto.subtle.digest("SHA-256", value);
+  const digest = await globalThis.crypto.subtle.digest("SHA-256", Uint8Array.from(value));
   return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
@@ -261,20 +278,50 @@ export function serializeStandardPackIngestionLedgerSuccessorCommitmentPayload(
   return stableJson(payload);
 }
 
-/**
- * Creates a durable restart-safe successor commitment from one exact validated ledger batch.
- * @param ledger Exact issued ledger batch whose sole successor relationship is being persisted.
- * @returns A hash-bound successor commitment that may be rehydrated with its predecessor index.
- * @throws When the ledger was not issued by the evidence validator.
- */
-export async function createStandardPackIngestionLedgerSuccessorCommitment(
-  ledger: StandardPackIngestionLedger,
-): Promise<StandardPackIngestionLedgerSuccessorCommitment> {
-  if (!isValidatedStandardPackIngestionLedger(ledger)) {
-    throw new Error("Ingestion ledger successor commitment requires an issued validated ledger batch");
+/** Validates that a caller supplied the durable authority needed for cross-restart successor reservations. */
+function assertStandardPackIngestionLedgerSuccessorRegistry(
+  candidate: unknown,
+): StandardPackIngestionLedgerSuccessorRegistry {
+  if (
+    typeof candidate !== "object"
+    || candidate === null
+    || typeof (candidate as { readonly readSuccessorCommitment?: unknown }).readSuccessorCommitment !== "function"
+    || typeof (candidate as { readonly reserveSuccessorCommitment?: unknown }).reserveSuccessorCommitment !== "function"
+  ) {
+    throw new Error("Ingestion ledger predecessor index requires an authoritative durable successor registry");
   }
-  const predecessorIndex = validatedLedgerPredecessorIndexes.get(ledger);
-  if (!predecessorIndex) throw new Error("Ingestion ledger successor commitment requires the validator predecessor index");
+  return candidate as StandardPackIngestionLedgerSuccessorRegistry;
+}
+
+/** Reads and verifies the durable commitment currently registered for one predecessor index. */
+async function readRegisteredSuccessorCommitment(
+  registry: StandardPackIngestionLedgerSuccessorRegistry,
+  predecessorIndex: StandardPackIngestionLedgerPredecessorIndex,
+): Promise<StandardPackIngestionLedgerSuccessorCommitment | undefined> {
+  const candidate = await registry.readSuccessorCommitment(predecessorIndex);
+  if (candidate === undefined) return undefined;
+  const commitment = standardPackIngestionLedgerSuccessorCommitmentSchema.parse(candidate);
+  if (await sha256(serializeStandardPackIngestionLedgerSuccessorCommitmentPayload(commitment)) !== commitment.commitmentDigest) {
+    throw new Error("Durable ingestion ledger successor registry commitment digest does not match its payload");
+  }
+  if (
+    commitment.predecessorIndexDigest !== predecessorIndex.snapshotDigest
+    || !sameRelease(commitment.predecessorRelease, predecessorIndex.predecessorRelease)
+  ) {
+    throw new Error("Durable ingestion ledger successor registry commitment does not bind the predecessor index");
+  }
+  return Object.freeze({
+    ...commitment,
+    predecessorRelease: Object.freeze({ ...commitment.predecessorRelease }),
+    successorRelease: Object.freeze({ ...commitment.successorRelease }),
+  });
+}
+
+/** Creates the exact successor commitment for a validated ledger and its issued predecessor index. */
+async function createSuccessorCommitmentForLedger(
+  ledger: StandardPackIngestionLedger,
+  predecessorIndex: StandardPackIngestionLedgerPredecessorIndex,
+): Promise<StandardPackIngestionLedgerSuccessorCommitment> {
   const commitment = {
     schemaVersion: 1 as const,
     predecessorIndexDigest: predecessorIndex.snapshotDigest,
@@ -293,12 +340,39 @@ export async function createStandardPackIngestionLedgerSuccessorCommitment(
   });
 }
 
-/** Creates a private issued predecessor index from one exact validated catalog and release binding. */
+/**
+ * Creates the durable successor commitment for one exact validated ledger batch.
+ * @param ledger Exact issued ledger batch whose sole successor relationship is being persisted.
+ * @returns A hash-bound successor commitment recorded by the validator registry.
+ * @throws When the ledger was not issued by the evidence validator.
+ */
+export async function createStandardPackIngestionLedgerSuccessorCommitment(
+  ledger: StandardPackIngestionLedger,
+): Promise<StandardPackIngestionLedgerSuccessorCommitment> {
+  if (!isValidatedStandardPackIngestionLedger(ledger)) {
+    throw new Error("Ingestion ledger successor commitment requires an issued validated ledger batch");
+  }
+  const predecessorIndex = validatedLedgerPredecessorIndexes.get(ledger);
+  if (!predecessorIndex) throw new Error("Ingestion ledger successor commitment requires the validator predecessor index");
+  return createSuccessorCommitmentForLedger(ledger, predecessorIndex);
+}
+
+/**
+ * Creates an issued predecessor index after binding it to the authoritative durable successor registry.
+ * @param catalog Exact catalog that contributes its immutable identity snapshot.
+ * @param binding Exact release identity pinned by the catalog.
+ * @param acceptedPriorBatchCandidate Optional exact validated predecessor batch for a successor catalog.
+ * @param registry Durable authority that reserves the sole successor across process restarts.
+ * @returns A frozen predecessor identity index issued for this process.
+ * @throws When catalog, lineage, or durable registry verification fails.
+ */
 export async function createStandardPackIngestionLedgerPredecessorIndex(
   catalog: StandardAssetCatalog,
   binding: StandardAssetReleaseBinding,
-  acceptedPriorBatchCandidate?: unknown,
+  acceptedPriorBatchCandidate: unknown | undefined,
+  registry: StandardPackIngestionLedgerSuccessorRegistry,
 ): Promise<StandardPackIngestionLedgerPredecessorIndex> {
+  const durableRegistry = assertStandardPackIngestionLedgerSuccessorRegistry(registry);
   if (catalog.version !== binding.version || catalog.digest !== binding.catalogDigest || catalog.sourceReceiptDigest !== binding.sourceReceiptDigest) {
     throw new Error("Ingestion ledger predecessor index requires an exact catalog release binding");
   }
@@ -354,25 +428,28 @@ export async function createStandardPackIngestionLedgerPredecessorIndex(
     entries: Object.freeze(parsedIndex.entries.map((entry) => Object.freeze({ ...entry }))),
     catalogEntries: Object.freeze(parsedIndex.catalogEntries.map((entry) => Object.freeze({ ...entry }))),
   }) as StandardPackIngestionLedgerPredecessorIndex;
+  await readRegisteredSuccessorCommitment(durableRegistry, frozen);
+  predecessorIndexRegistries.set(frozen, durableRegistry);
   issuedPredecessorIndexes.add(frozen);
   return frozen;
 }
 
 /**
- * Revalidates a serialized predecessor index against its exact catalog before admitting it to a new process.
+ * Revalidates a serialized predecessor index and reconnects it to the authoritative durable registry after a restart.
  * @param candidate Persisted predecessor-index artifact supplied after process restart.
  * @param catalog Complete catalog whose identity must match the persisted index.
  * @param binding Exact release identity expected for the persisted index.
- * @param successorCommitmentCandidate Durable commitment proving the sole already-issued successor for this index.
+ * @param registry Durable authority that resolves and atomically reserves the sole successor.
  * @returns A frozen predecessor index issued for this process without granting product authority.
- * @throws When the artifact digest, catalog identities, release binding, or required successor commitment differs.
+ * @throws When the artifact digest, catalog identities, release binding, or durable registry differs.
  */
 export async function rehydrateStandardPackIngestionLedgerPredecessorIndex(
   candidate: unknown,
   catalog: StandardAssetCatalog,
   binding: StandardAssetReleaseBinding,
-  successorCommitmentCandidate: unknown,
+  registry: StandardPackIngestionLedgerSuccessorRegistry,
 ): Promise<StandardPackIngestionLedgerPredecessorIndex> {
+  const durableRegistry = assertStandardPackIngestionLedgerSuccessorRegistry(registry);
   const parsed = standardPackIngestionLedgerPredecessorIndexSchema.parse(candidate);
   if (await sha256(serializeStandardPackIngestionLedgerPredecessorIndexPayload(parsed)) !== parsed.snapshotDigest) {
     throw new Error("Persisted ingestion ledger predecessor index digest does not match its payload");
@@ -402,17 +479,8 @@ export async function rehydrateStandardPackIngestionLedgerPredecessorIndex(
     entries: Object.freeze(parsed.entries.map((entry) => Object.freeze({ ...entry }))),
     catalogEntries: Object.freeze(parsed.catalogEntries.map((entry) => Object.freeze({ ...entry }))),
   }) as StandardPackIngestionLedgerPredecessorIndex;
-  const commitment = standardPackIngestionLedgerSuccessorCommitmentSchema.parse(successorCommitmentCandidate);
-  if (await sha256(serializeStandardPackIngestionLedgerSuccessorCommitmentPayload(commitment)) !== commitment.commitmentDigest) {
-    throw new Error("Persisted ingestion ledger successor commitment digest does not match its payload");
-  }
-  if (
-    commitment.predecessorIndexDigest !== frozen.snapshotDigest
-    || !sameRelease(commitment.predecessorRelease, frozen.predecessorRelease)
-  ) {
-    throw new Error("Persisted ingestion ledger successor commitment does not bind the rehydrated predecessor index");
-  }
-  predecessorSuccessorBatchDigests.set(frozen, commitment.successorBatchDigest);
+  await readRegisteredSuccessorCommitment(durableRegistry, frozen);
+  predecessorIndexRegistries.set(frozen, durableRegistry);
   issuedPredecessorIndexes.add(frozen);
   return frozen;
 }
@@ -597,6 +665,7 @@ function assertEntryMatchesEvidence(
  * Validates a pure append-only ledger batch against raw accepted ingestion evidence and an optional prior batch.
  * @param ledgerCandidate Untrusted ledger batch candidate.
  * @param evidenceBundles Raw dossier, manifest, and receipt candidates for every appended entry.
+ * @param predecessorIndexCandidate Issued index carrying its authoritative durable successor registry.
  * @param priorBatchCandidate Optional raw immediately preceding ledger batch candidate.
  * @returns A frozen evidence-only ledger batch.
  * @throws When integrity, append-only uniqueness, lineage, release pins, or authority constraints fail.
@@ -617,6 +686,8 @@ export async function validateStandardPackIngestionLedger(
     throw new Error("Append-only ingestion ledger requires an issued predecessor catalog index");
   }
   const predecessorIndex = predecessorIndexCandidate as StandardPackIngestionLedgerPredecessorIndex;
+  const registry = predecessorIndexRegistries.get(predecessorIndex);
+  if (!registry) throw new Error("Append-only ingestion ledger predecessor index lacks an authoritative durable successor registry");
   if (!sameRelease(predecessorIndex.predecessorRelease, ledger.predecessorRelease) || predecessorIndex.catalogDigest !== ledger.predecessorRelease.catalogDigest) {
     throw new Error("Append-only ingestion ledger predecessor index does not pin the ledger predecessor catalog digest");
   }
@@ -663,11 +734,20 @@ export async function validateStandardPackIngestionLedger(
     if (!item) throw new Error(`Append-only ingestion ledger entry references unknown receipt ${JSON.stringify(entry.receiptId)}`);
     assertEntryMatchesEvidence(entry, ledger, item);
   }
-  const acceptedSuccessorDigest = predecessorSuccessorBatchDigests.get(predecessorIndex);
-  if (acceptedSuccessorDigest !== undefined && acceptedSuccessorDigest !== ledger.batchDigest) {
+  const proposedCommitment = await createSuccessorCommitmentForLedger(ledger, predecessorIndex);
+  const reservedCommitment = standardPackIngestionLedgerSuccessorCommitmentSchema.parse(
+    await registry.reserveSuccessorCommitment(predecessorIndex, proposedCommitment),
+  );
+  if (await sha256(serializeStandardPackIngestionLedgerSuccessorCommitmentPayload(reservedCommitment)) !== reservedCommitment.commitmentDigest) {
+    throw new Error("Durable ingestion ledger successor registry commitment digest does not match its payload");
+  }
+  if (
+    reservedCommitment.predecessorIndexDigest !== predecessorIndex.snapshotDigest
+    || !sameRelease(reservedCommitment.predecessorRelease, predecessorIndex.predecessorRelease)
+    || reservedCommitment.successorBatchDigest !== ledger.batchDigest
+  ) {
     throw new Error("Append-only ingestion ledger predecessor index already has a distinct accepted successor");
   }
-  predecessorSuccessorBatchDigests.set(predecessorIndex, ledger.batchDigest);
   const frozen = freezeLedger(ledger, predecessorIndex);
   if (priorBatchCandidate !== undefined) successorBatchDigests.set(priorBatchCandidate as object, ledger.batchDigest);
   return frozen;

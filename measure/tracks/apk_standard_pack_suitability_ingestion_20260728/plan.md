@@ -40,8 +40,9 @@
   receipts now revalidate against the exact catalog, ledger, and digest after a
   process restart while retaining literal non-production authorization. Admission now
   binds source-packet documents to selected dossier evidence and descriptor content
-  digests to resolver candidates; rehydration requires an exact successor
-  commitment. No actual legacy asset, dossier, or release has been ingested.
+  digests to resolver candidates. A durable compare-and-reserve registry, rather
+  than process-local state, records the sole successor for each predecessor index
+  across restarts. No actual legacy asset, dossier, or release has been ingested.
 - [ ] Generate an additive pinned standard-pack release and resolver receipt for
   accepted ingestions without altering historical release records.
 - [ ] Publish accepted semantic bindings and selected-union inputs only from

@@ -11,7 +11,6 @@ import { ACCEPTED_STANDARD_ASSET_RELEASE } from "./accepted-standard-pack-releas
 import { serializeAssetContractV2PhysicalDescriptorPayload } from "./asset-contract-v2.js";
 import {
   createStandardPackIngestionLedgerPredecessorIndex,
-  createStandardPackIngestionLedgerSuccessorCommitment,
   rehydrateStandardPackIngestionLedgerPredecessorIndex,
   serializeStandardPackIngestionLedgerPayload,
   serializeStandardPackIngestionLedgerPredecessorIndexPayload,
@@ -40,6 +39,20 @@ import { readStandardPackCatalogFixture } from "./standard-pack-test-paths.test-
 async function sha256(value: string): Promise<string> {
   const digest = await globalThis.crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
   return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+/** Creates an in-memory stand-in for the durable compare-and-reserve successor registry boundary. */
+function createDurableSuccessorRegistry() {
+  const commitments = new Map<string, unknown>();
+  return Object.freeze({
+    readSuccessorCommitment: async (predecessorIndex: { readonly snapshotDigest: string }) => commitments.get(predecessorIndex.snapshotDigest),
+    reserveSuccessorCommitment: async (predecessorIndex: { readonly snapshotDigest: string }, candidate: unknown) => {
+      const existing = commitments.get(predecessorIndex.snapshotDigest);
+      if (existing !== undefined) return existing;
+      commitments.set(predecessorIndex.snapshotDigest, candidate);
+      return candidate;
+    },
+  });
 }
 
 /** Appends one synthetic ingested image to a real catalog and recomputes its release digest. */
@@ -366,11 +379,15 @@ async function createLedger(evidence: Awaited<ReturnType<typeof createAcceptedIn
 
 /** Creates a sealed empty cumulative predecessor index for one initial append batch. */
 let issuedRootPredecessorIndex: ReturnType<typeof createStandardPackIngestionLedgerPredecessorIndex> | undefined;
+let issuedRootSuccessorRegistry: ReturnType<typeof createDurableSuccessorRegistry> | undefined;
 
 async function createPredecessorIndex(ledger: Awaited<ReturnType<typeof createLedger>>) {
+  const registry = issuedRootSuccessorRegistry ??= createDurableSuccessorRegistry();
   return issuedRootPredecessorIndex ??= createStandardPackIngestionLedgerPredecessorIndex(
     readStandardPackCatalogFixture(),
     ledger.predecessorRelease,
+    undefined,
+    registry,
   );
 }
 
@@ -445,12 +462,15 @@ describe("standard-pack append-only ingestion ledger", () => {
     }])).rejects.toThrow(/source-packet documents.*dossier provenance, license, and credit evidence/i);
   }, 30_000);
 
-  it("rejects a distinct successor batch fork from the same issued predecessor index", async () => {
+  it("rejects a distinct successor batch fork from a fresh index after restart", async () => {
     const evidence = await createAcceptedIngestionEvidence();
     const ledger = await createLedger(evidence);
+    const registry = createDurableSuccessorRegistry();
     const predecessorIndex = await createStandardPackIngestionLedgerPredecessorIndex(
       readStandardPackCatalogFixture(),
       ledger.predecessorRelease,
+      undefined,
+      registry,
     );
     const evidenceBundles = [createLedgerEvidenceBundle(evidence)];
 
@@ -476,19 +496,28 @@ describe("standard-pack append-only ingestion ledger", () => {
       predecessorIndex,
     )).rejects.toThrow(/predecessor index already has a distinct accepted successor/i);
 
-    const successorCommitment = await createStandardPackIngestionLedgerSuccessorCommitment(
-      await validateStandardPackIngestionLedger(ledger, evidenceBundles, predecessorIndex),
-    );
     const rehydratedPredecessorIndex = await rehydrateStandardPackIngestionLedgerPredecessorIndex(
       structuredClone(predecessorIndex),
       readStandardPackCatalogFixture(),
       ledger.predecessorRelease,
-      structuredClone(successorCommitment),
+      registry,
     );
     await expect(validateStandardPackIngestionLedger(
       forkedLedger,
       evidenceBundles,
       rehydratedPredecessorIndex,
+    )).rejects.toThrow(/predecessor index already has a distinct accepted successor/i);
+
+    const freshPredecessorIndex = await createStandardPackIngestionLedgerPredecessorIndex(
+      readStandardPackCatalogFixture(),
+      ledger.predecessorRelease,
+      undefined,
+      registry,
+    );
+    await expect(validateStandardPackIngestionLedger(
+      forkedLedger,
+      evidenceBundles,
+      freshPredecessorIndex,
     )).rejects.toThrow(/predecessor index already has a distinct accepted successor/i);
   }, 60_000);
 
@@ -512,12 +541,19 @@ describe("standard-pack append-only ingestion ledger", () => {
     receipt.receiptDigest = await sha256(serializeStandardPackCanonicalIngestionReceiptPayload(receipt as never));
     const evidence = { ...rawEvidence, receipt };
     const ledger = await createLedger(evidence);
-    const rootIndex = await createStandardPackIngestionLedgerPredecessorIndex(rootCatalog, ledger.predecessorRelease);
+    const registry = createDurableSuccessorRegistry();
+    const rootIndex = await createStandardPackIngestionLedgerPredecessorIndex(
+      rootCatalog,
+      ledger.predecessorRelease,
+      undefined,
+      registry,
+    );
     const acceptedB1 = await validateStandardPackIngestionLedger(ledger, [createLedgerEvidenceBundle(evidence)], rootIndex);
     const b1Index = await createStandardPackIngestionLedgerPredecessorIndex(
       b1Catalog,
       acceptedB1.proposedSuccessorRelease,
       acceptedB1,
+      registry,
     );
     const additiveReceipt = await createStandardPackAdditiveReleaseReceipt(
       acceptedB1,
@@ -604,24 +640,29 @@ describe("standard-pack append-only ingestion ledger", () => {
     receipt.receiptDigest = await sha256(serializeStandardPackCanonicalIngestionReceiptPayload(receipt as never));
     const evidence = { ...rawEvidence, receipt };
     const ledger = await createLedger(evidence);
-    const index = await createStandardPackIngestionLedgerPredecessorIndex(rootCatalog, ledger.predecessorRelease);
+    const registry = createDurableSuccessorRegistry();
+    const index = await createStandardPackIngestionLedgerPredecessorIndex(
+      rootCatalog,
+      ledger.predecessorRelease,
+      undefined,
+      registry,
+    );
     const acceptedOriginal = await validateStandardPackIngestionLedger(
       ledger,
       [createLedgerEvidenceBundle(evidence)],
       index,
     );
-    const successorCommitment = await createStandardPackIngestionLedgerSuccessorCommitment(acceptedOriginal);
     await expect(rehydrateStandardPackIngestionLedgerPredecessorIndex(
       structuredClone(index),
       rootCatalog,
       ledger.predecessorRelease,
-      undefined,
-    )).rejects.toThrow();
+      {} as never,
+    )).rejects.toThrow(/authoritative durable successor registry/i);
     const rehydratedIndex = await rehydrateStandardPackIngestionLedgerPredecessorIndex(
       structuredClone(index),
       rootCatalog,
       ledger.predecessorRelease,
-      structuredClone(successorCommitment),
+      registry,
     );
     const rehydratedLedger = await validateStandardPackIngestionLedger(
       structuredClone(ledger),
@@ -656,7 +697,7 @@ describe("standard-pack append-only ingestion ledger", () => {
       catalogMismatch,
       rootCatalog,
       ledger.predecessorRelease,
-      structuredClone(successorCommitment),
+      registry,
     )).rejects.toThrow(/catalog identities/i);
     const receiptMismatch = {
       ...structuredClone(issuedReceipt),
@@ -722,7 +763,13 @@ describe("standard-pack append-only ingestion ledger", () => {
     receipt.receiptDigest = await sha256(serializeStandardPackCanonicalIngestionReceiptPayload(receipt as never));
     const evidence = { ...rawEvidence, receipt };
     const ledger = await createLedger(evidence);
-    const rootIndex = await createStandardPackIngestionLedgerPredecessorIndex(rootCatalog, ledger.predecessorRelease);
+    const registry = createDurableSuccessorRegistry();
+    const rootIndex = await createStandardPackIngestionLedgerPredecessorIndex(
+      rootCatalog,
+      ledger.predecessorRelease,
+      undefined,
+      registry,
+    );
     const acceptedLedger = await validateStandardPackIngestionLedger(ledger, [createLedgerEvidenceBundle(evidence)], rootIndex);
 
     await expect(
@@ -739,7 +786,13 @@ describe("standard-pack append-only ingestion ledger", () => {
     b1Receipt.receiptDigest = await sha256(serializeStandardPackCanonicalIngestionReceiptPayload(b1Receipt as never));
     const b1Evidence = { ...rawB1, receipt: b1Receipt };
     const b1Ledger = await createLedger(b1Evidence);
-    const rootIndex = await createStandardPackIngestionLedgerPredecessorIndex(rootCatalog, b1Ledger.predecessorRelease);
+    const registry = createDurableSuccessorRegistry();
+    const rootIndex = await createStandardPackIngestionLedgerPredecessorIndex(
+      rootCatalog,
+      b1Ledger.predecessorRelease,
+      undefined,
+      registry,
+    );
     const acceptedB1 = await validateStandardPackIngestionLedger(b1Ledger, [createLedgerEvidenceBundle(b1Evidence)], rootIndex);
 
     const rawB2 = await createIndependentIngestionEvidence();
@@ -783,7 +836,7 @@ describe("standard-pack append-only ingestion ledger", () => {
       batchDigest: "",
     };
     b2Ledger.batchDigest = await sha256(serializeStandardPackIngestionLedgerPayload(b2Ledger as never));
-    const b2Index = await createStandardPackIngestionLedgerPredecessorIndex(b1Catalog, b1Release, acceptedB1);
+    const b2Index = await createStandardPackIngestionLedgerPredecessorIndex(b1Catalog, b1Release, acceptedB1, registry);
     const acceptedB2 = await validateStandardPackIngestionLedger(b2Ledger, [createLedgerEvidenceBundle(b2Evidence)], b2Index, acceptedB1);
     const forkedB2 = { ...b2Ledger, batchId: "fixture-legacy-mage-fork", proposedSuccessorRelease: { version: "2026.07.32", catalogDigest: "5".repeat(64), sourceReceiptDigest: "6".repeat(64) }, batchDigest: "" };
     forkedB2.batchDigest = await sha256(serializeStandardPackIngestionLedgerPayload(forkedB2 as never));
@@ -795,7 +848,7 @@ describe("standard-pack append-only ingestion ledger", () => {
     )).rejects.toThrow(/distinct accepted successor/i);
 
     expect(acceptedB2.predecessorRelease).toEqual(b1Release);
-    const b3Index = await createStandardPackIngestionLedgerPredecessorIndex(b2Catalog, b2Release, acceptedB2);
+    const b3Index = await createStandardPackIngestionLedgerPredecessorIndex(b2Catalog, b2Release, acceptedB2, registry);
     expect(b3Index.entries).toEqual(expect.arrayContaining([
       expect.objectContaining({ entryId: acceptedB1.entries[0].entryId }),
       expect.objectContaining({ entryId: acceptedB2.entries[0].entryId }),

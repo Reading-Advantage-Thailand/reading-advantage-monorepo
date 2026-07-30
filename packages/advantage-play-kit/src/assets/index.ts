@@ -223,5 +223,6 @@ export type {
   StandardPackIngestionLedgerHistoricalIdentity,
   StandardPackIngestionLedgerPredecessorIndex,
   StandardPackIngestionLedgerSuccessorCommitment,
+  StandardPackIngestionLedgerSuccessorRegistry,
   StandardPackIngestionLedgerEvidenceBundle,
 } from "./standard-pack-ingestion-ledger.js";
