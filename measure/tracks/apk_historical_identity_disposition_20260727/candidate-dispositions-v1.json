@@ -19,7 +19,10 @@
         "json_pointer": "/identity_records/24/source_states/0"
       },
       "cancellation_context": null,
-      "rationale": "The frozen ledger records current-page-source evidence at the source revision only; it does not establish a present runtime, browser result, host import, catalog exposure, or product readiness, so this candidate defers any implementation decision."
+      "rationale": {
+        "evidence_state": "frozen-current-page-source-only",
+        "non_authorizing_conclusion": "defer-without-runtime-playability-or-adoption-claim"
+      }
     },
     {
       "identity_id": "the-abyssal-well",
@@ -31,7 +34,10 @@
         "json_pointer": "/records/214"
       },
       "cancellation_context": null,
-      "rationale": "The frozen historical denominator records a deleted page at its historical revision; retaining that reference preserves evidence without restoring, retiring, or authorizing a successor."
+      "rationale": {
+        "evidence_state": "frozen-deleted-historical-page-only",
+        "non_authorizing_conclusion": "retain-history-without-restore-retirement-or-successor-claim"
+      }
     },
     {
       "identity_id": "devourer-slime",
@@ -43,7 +49,10 @@
         "json_pointer": "/identity_records/11/source_states/0"
       },
       "cancellation_context": null,
-      "rationale": "The frozen ledger records current-page-source evidence at the source revision only; it does not establish a present runtime, browser result, host import, catalog exposure, or product readiness, so this candidate defers any implementation decision."
+      "rationale": {
+        "evidence_state": "frozen-current-page-source-only",
+        "non_authorizing_conclusion": "defer-without-runtime-playability-or-adoption-claim"
+      }
     },
     {
       "identity_id": "the-haunted-library",
@@ -55,7 +64,10 @@
         "json_pointer": "/identity_records/13/source_states/0"
       },
       "cancellation_context": null,
-      "rationale": "The frozen ledger records current-page-source evidence at the source revision only; it does not establish a present runtime, browser result, host import, catalog exposure, or product readiness, so this candidate defers any implementation decision."
+      "rationale": {
+        "evidence_state": "frozen-current-page-source-only",
+        "non_authorizing_conclusion": "defer-without-runtime-playability-or-adoption-claim"
+      }
     },
     {
       "identity_id": "babel-architect",
@@ -71,7 +83,10 @@
         "sha256": "732ff9e7def309d3896ab84eea9d82bada8f93d47c29b66f808434008f120e47",
         "statement": "Cancelled Babel Architect Phaser 3 and R3F tracks are evidence, not retained foundations."
       },
-      "rationale": "The frozen historical denominator records a deleted page, and the archived architecture records cancelled Babel experiments as evidence rather than retained foundations; this candidate retains history only and does not revive that implementation."
+      "rationale": {
+        "evidence_state": "frozen-deleted-historical-page-and-cancelled-track-boundary",
+        "non_authorizing_conclusion": "retain-history-without-revival-or-retained-foundation-claim"
+      }
     }
   ],
   "authorization_flags": {

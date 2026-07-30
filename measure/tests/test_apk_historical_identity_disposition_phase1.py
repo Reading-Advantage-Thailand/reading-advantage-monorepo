@@ -183,6 +183,29 @@ CANDIDATE_DISPOSITIONS = {
     "the-haunted-library": "defer",
     "babel-architect": "retain-history",
 }
+CANDIDATE_RATIONALES = {
+    "rpg-battle": {
+        "evidence_state": "frozen-current-page-source-only",
+        "non_authorizing_conclusion": "defer-without-runtime-playability-or-adoption-claim",
+    },
+    "the-abyssal-well": {
+        "evidence_state": "frozen-deleted-historical-page-only",
+        "non_authorizing_conclusion": "retain-history-without-restore-retirement-or-successor-claim",
+    },
+    "devourer-slime": {
+        "evidence_state": "frozen-current-page-source-only",
+        "non_authorizing_conclusion": "defer-without-runtime-playability-or-adoption-claim",
+    },
+    "the-haunted-library": {
+        "evidence_state": "frozen-current-page-source-only",
+        "non_authorizing_conclusion": "defer-without-runtime-playability-or-adoption-claim",
+    },
+    "babel-architect": {
+        "evidence_state": "frozen-deleted-historical-page-and-cancelled-track-boundary",
+        "non_authorizing_conclusion": "retain-history-without-revival-or-retained-foundation-claim",
+    },
+}
+
 BABEL_CANCELLATION_CONTEXT = {
     "path": "measure/archive/advantage_play_kit_20260710/architecture.md",
     "sha256": "732ff9e7def309d3896ab84eea9d82bada8f93d47c29b66f808434008f120e47",
@@ -569,8 +592,8 @@ def _validate_candidate_dispositions(candidate: object) -> None:
         observed = pointed.get("source_class", pointed.get("classification"))
         if observed != expected_evidence["source_state"]:
             raise AssertionError("CANDIDATE_EVIDENCE_DRIFT: frozen source state differs")
-        if not isinstance(row.get("rationale"), str) or not row["rationale"].strip():
-            raise AssertionError("CANDIDATE_SCHEMA_INVALID: candidate rationale is required")
+        if row.get("rationale") != CANDIDATE_RATIONALES[identity_id]:
+            raise AssertionError("CANDIDATE_RATIONALE_INVALID: rationale must match the safe evidence matrix")
         cancellation_context = row.get("cancellation_context")
         if identity_id == "babel-architect":
             if cancellation_context != BABEL_CANCELLATION_CONTEXT:
@@ -699,6 +722,13 @@ class HistoricalIdentityDispositionPhase1Tests(unittest.TestCase):
         authority = copy.deepcopy(self._candidate_dispositions())
         authority["authorization_flags"]["rebuild"] = True
         self._assert_candidate_rejected(authority, "FORBIDDEN_CANDIDATE_AUTHORITY")
+
+        shipping_rationale = copy.deepcopy(self._candidate_dispositions())
+        shipping_rationale["dispositions"][0]["rationale"] = {
+            "evidence_state": "frozen-current-page-source-only",
+            "non_authorizing_conclusion": "production-shipping-and-gameplay-approved",
+        }
+        self._assert_candidate_rejected(shipping_rationale, "CANDIDATE_RATIONALE_INVALID")
 
         raw_catalog_approval = copy.deepcopy(self._candidate_dispositions())
         raw_catalog_approval["owner_approval"] = {
