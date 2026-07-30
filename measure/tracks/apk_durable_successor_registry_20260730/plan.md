@@ -25,18 +25,21 @@
 
 ## Phase 3: Command, receipt, and release boundary
 
-- [~] Implement the transport-independent backend command with Zod validation,
+- [x] Implement the transport-independent backend command with Zod validation,
   authorization, audit/observability metadata, idempotency, and atomic receipt
-  persistence.
-- [b] Define and test the immutable Git-candidate admission boundary so a
-  database transaction never claims to publish a Git release.
-  (deferred:phase-3-command)
+  persistence. The 0046 receipt-integrity migration binds each receipt to its
+  exact registry candidate and rejects contract-invalid or inconsistent JSON;
+  full 0044-0046 composition, rollback, and replay proofs are green.
+- [x] Define and test the immutable Git-candidate admission boundary so a
+  database transaction never claims to publish a Git release. The verifier is
+  read-only and hash-binds pre-existing candidate evidence; independent review
+  confirmed no Git publication or mutation surface.
 
 ## Phase 4: Ledger integration and safeguards
 
 - [b] Wire the durable adapter through the existing ledger registry interface
   without placing business logic in apps, route handlers, or QC components.
-  (deferred:phase-3-boundary)
+  (deferred:phase-4-ledger-integration)
 - [b] Add rollback, duplicate, and cross-adapter integration coverage plus
   structured error and audit assertions.
   (deferred:phase-4-integration)
