@@ -71,6 +71,8 @@ const validRequest = {
     capabilityAssessment: [
       {
         capabilityId: "evidence-sequencing",
+        plannedDisposition: "bespoke" as const,
+        rationale: "The required evidence-ordering interaction is not present in the legacy denominator.",
         expectedOutcome: "The learner can order cited cipher evidence.",
         evidenceDigest: digest("2"),
       },
@@ -83,10 +85,15 @@ const validRequest = {
         evidenceDigest: digest("3"),
       },
     ],
-    physicalBehaviorDescriptors: [
+    physicalBehaviorRequirements: [
       {
-        descriptorId: "harbor-signal-feedback",
-        behavior: "Feedback distinguishes a correct sequence from an incorrect sequence.",
+        requirementId: "harbor-signal-feedback",
+        mediaKind: "visual-feedback" as const,
+        directions: ["Distinguish correct and incorrect sequence outcomes without selecting an asset."],
+        clipRequirements: ["correct-sequence", "incorrect-sequence"],
+        minimumFrameCount: 2,
+        geometryConstraints: ["Keep feedback clear beside the cipher sequence."],
+        accessibilityConstraints: ["Provide a non-color outcome cue."],
         evidenceDigest: digest("4"),
       },
     ],
@@ -138,6 +145,24 @@ describe("planned-game intake contract", () => {
     });
   });
 
+  it("normalizes ordinary letters, diacritics, and apostrophe punctuation without losing identity characters", () => {
+    expect(plannedGameIntakeValidationRequestSchema.safeParse({
+      ...validRequest,
+      intake: {
+        ...validRequest.intake,
+        identity: {
+          ...validRequest.intake.identity,
+          title: "L\u00famina's Puzzle",
+          key: "luminas-puzzle",
+        },
+        childTrack: {
+          ...validRequest.intake.childTrack,
+          trackId: "apk_future_luminas_puzzle_implementation",
+        },
+      },
+    }).success).toBe(true);
+  });
+
   it("rejects blank, placeholder, generic, duplicate, and legacy-denominator identities", () => {
     expect(plannedGameIntakeValidationRequestSchema.safeParse({
       ...validRequest,
@@ -151,6 +176,7 @@ describe("planned-game intake contract", () => {
       ["New Game", "new-game"],
       ["Sample Game", "sample-game"],
       ["Example Game", "example-game"],
+      ["Generic Game", "generic-game"],
       ["Untitled", "untitled"],
     ]) {
       expect(plannedGameIntakeValidationRequestSchema.safeParse({
@@ -179,8 +205,37 @@ describe("planned-game intake contract", () => {
       },
     }).success).toBe(false);
 
+    expect(plannedGameIntakeValidationRequestSchema.safeParse({
+      ...validRequest,
+      intake: {
+        ...validRequest.intake,
+        identity: {
+          ...validRequest.intake.identity,
+          title: "catalog/archers-revenge",
+          key: "catalog-archers-revenge",
+        },
+        childTrack: {
+          ...validRequest.intake.childTrack,
+          trackId: "apk_future_catalog_archers_revenge_implementation",
+        },
+      },
+    }).success).toBe(false);
+
+    expect(legacyDenominatorIdentityKeys).toHaveLength(29);
+    expect(new Set(legacyDenominatorIdentityKeys).size).toBe(29);
     expect(legacyDenominatorIdentityKeys).toContain("dragon-flight");
     expect(legacyDenominatorIdentityKeys).toContain("babel-architect");
+
+    expect(plannedGameIntakeValidationRequestSchema.safeParse({
+      ...validRequest,
+      intake: {
+        ...validRequest.intake,
+        childTrack: {
+          ...validRequest.intake.childTrack,
+          trackId: "apk_future_other_game_implementation",
+        },
+      },
+    }).success).toBe(false);
   });
 
   it("requires complete, independently bound evidence and rejects all unselected physical data", () => {
@@ -229,12 +284,42 @@ describe("planned-game intake contract", () => {
       ...validRequest,
       intake: {
         ...validRequest.intake,
-        physicalBehaviorDescriptors: [{
-          ...validRequest.intake.physicalBehaviorDescriptors[0],
-          selectedSpritePath: "/art/selected.png",
+        capabilityAssessment: [{
+          ...validRequest.intake.capabilityAssessment[0],
+          rationale: " ",
         }],
       },
     }).success).toBe(false);
+
+    expect(plannedGameIntakeValidationRequestSchema.safeParse({
+      ...validRequest,
+      intake: {
+        ...validRequest.intake,
+        capabilityAssessment: [{
+          ...validRequest.intake.capabilityAssessment[0],
+          plannedDisposition: "unplanned",
+        }],
+      },
+    }).success).toBe(false);
+
+    for (const forbiddenField of [
+      "descriptorId",
+      "selectedAsset",
+      "canonicalDescriptor",
+      "sourcePath",
+      "catalogKey",
+    ]) {
+      expect(plannedGameIntakeValidationRequestSchema.safeParse({
+        ...validRequest,
+        intake: {
+          ...validRequest.intake,
+          physicalBehaviorRequirements: [{
+            ...validRequest.intake.physicalBehaviorRequirements[0],
+            [forbiddenField]: "not-allowed",
+          }],
+        },
+      }).success).toBe(false);
+    }
 
     expect(plannedGameIntakeValidationRequestSchema.safeParse({
       ...validRequest,
