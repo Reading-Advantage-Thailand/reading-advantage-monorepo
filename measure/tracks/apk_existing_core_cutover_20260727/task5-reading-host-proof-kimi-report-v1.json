@@ -1,0 +1,37 @@
+{
+  "schema_version": "apk-existing-core-task5-host-proof-kimi-observation.v1",
+  "application": "reading-advantage",
+  "status": "passed",
+  "base_url": "http://127.0.0.1:3011",
+  "route": "/en/student/host-proof/games",
+  "feature_flag": "HOST_PROOF_ENABLED=true",
+  "runner": "kimi-webbridge",
+  "authentication_fixture": "disposable local Docker PostgreSQL student account; no credential or session value retained",
+  "database_fixture": "disposable local Docker PostgreSQL school, user, and one completion record",
+  "source_bindings": {
+    "reading_host_client": {"path": "apps/reading-advantage/components/host-proof/HostProofGameClient.tsx", "sha256": "393ac9d71b1b18ac305229bf7ab7852abd76476626eefc7bc08c45c4d646b189"},
+    "reading_host_page": {"path": "apps/reading-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx", "sha256": "153eb18bb0617f9b9f0a9ec85d61b4136d8c2e04535fae143948f7d7eed327bb"},
+    "reading_host_route": {"path": "apps/reading-advantage/app/api/host-proof/games/completions/route.ts", "sha256": "ffa3d5d21530eada589138c7e790aa5f281659f9085cc45366c4805c759ae2f9"},
+    "reading_host_gate": {"path": "apps/reading-advantage/lib/host-proof-config.ts", "sha256": "b99c2384bd7cb279e2c89729f0804e40fdeb4c9e511786ad0bb4cfd221c93c32"},
+    "reading_qc_loader": {"path": "apps/reading-advantage/lib/host-proof-qc-loader.ts", "sha256": "d5c56bc6b4e0b5259617427522e79179e4a6f07c1ce37e89de7da0856ba2334d"},
+    "reading_next_config": {"path": "apps/reading-advantage/next.config.ts", "sha256": "a36ccd5f233892d954bf4bac713efc969e37f88cfb39f42f2be22b1402be42bc"}
+  },
+  "observations": [
+    "authenticated hidden host-proof route hydrated at a 1920px viewport and reported the wide profile",
+    "history endpoint settled from loading to an empty state before the test completion",
+    "Dragon Flight, Magic Defense, Dungeon Liberator, The Sorcerer's Ziggurat, and Astral Mage each loaded through the bounded switcher",
+    "one Astral Mage primary pointer input updated attempts, correct answers, score, progress, and active-target count",
+    "one Astral Mage completion returned +5 XP, an activity ID, and a refreshed history entry"
+  ],
+  "observation_only": true,
+  "source_status": "historical-before-remediation",
+  "claims": {
+    "task5_acceptance_claimed": false,
+    "asset_adoption_claimed": false,
+    "migration_claimed": false,
+    "cartridge_cutover_claimed": false,
+    "legacy_retirement_claimed": false,
+    "deployment_claimed": false,
+    "product_owner_acceptance_claimed": false
+  }
+}

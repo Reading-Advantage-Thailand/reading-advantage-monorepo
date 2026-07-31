@@ -1,0 +1,59 @@
+{
+  "schema_version": "apk-existing-core-task3-current-lineage-receipt.v1",
+  "receipt_id": "apk_existing_core_cutover_20260727_task3_current_lineage_v1",
+  "track_id": "apk_existing_core_cutover_20260727",
+  "task_number": 3,
+  "status": "current-lineage-verified-additive",
+  "historical_acceptance": {
+    "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-product-owner-acceptance-v1.json",
+    "sha256": "65ffbaa27ef19be1f65015daa8fad4d2f4ca58990ba2fea5653327627452c3b1"
+  },
+  "historical_accepted_receipt": {
+    "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
+    "sha256": "e82d42d9ec046b85eb4aeac7800623bce3c3bf4a39a9c0f44288bd93d07be240"
+  },
+  "correction": {
+    "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-evidence-lineage-correction-v1.json",
+    "sha256": "008b042ddab1e5486c2b51fb5625b8f89084c471fc03a3bc4dab29231e509796"
+  },
+  "historical_accepted_subjects": {
+    "remediation_evidence": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
+      "sha256": "9b7df1be5dd9c89c3ea6aa25c6fe01ea4d450b886a472276cd68372ec2154e44",
+      "recovered_snapshot": "measure/tracks/apk_existing_core_cutover_20260727/task3-accepted-remediation-snapshot-v1.b64"
+    },
+    "independent_zero_finding_rereview": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-rereview.md",
+      "sha256": "7c3675aca01499e81eba60dcea049715c4652e1474716a633eb8676d3c28a526",
+      "recovered_snapshot": "measure/tracks/apk_existing_core_cutover_20260727/task3-accepted-rereview-snapshot-v1.b64"
+    }
+  },
+  "current_descendants": {
+    "remediation_evidence": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
+      "sha256": "e2ee8519bc9afe35d5d8dedd55a3430390cfacdc27284830b59dbcfdc579b1fb",
+      "drift": "markdown-hard-line-break-trailing-space-normalization-only"
+    },
+    "independent_zero_finding_rereview": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-rereview.md",
+      "sha256": "ac8eccd4fed958add9af9b3fd526c4de748f8510909c8d767d288b3ae830e076",
+      "drift": "markdown-hard-line-break-trailing-space-normalization-only"
+    }
+  },
+  "current_review": {
+    "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-current-lineage-v1.md",
+    "sha256": "2042061ffe67246c56f47cd1c4639ec39e1bd4ec5156952e6b46415fff24a657",
+    "disposition": "pass-additive-lineage-integrity"
+  },
+  "governance": {
+    "historical_acceptance_rewritten": false,
+    "historical_accepted_receipt_rewritten": false,
+    "historical_subject_bytes_rewritten": false,
+    "semantic_adoptions_changed": false,
+    "downstream_authorization_expanded": false,
+    "task5_acceptance_claimed": false,
+    "title_adoption_authorized": false,
+    "retirement_or_cutover_authorized": false,
+    "deployment_authorized": false
+  }
+}

@@ -11,4 +11,11 @@
 - [Task 4 R-1 Correction Verification Addendum](./task4-r1-correction-verification-addendum.md)
 - [Task 4 Product-owner Acceptance](./task4-product-owner-acceptance-v1.json)
 - [Accepted Task 4 QC Receipt](./accepted-task4-qc-receipt-v1.json)
+- [Task 3 Current Lineage Receipt](./task3-current-lineage-receipt-v1.json)
+- [Task 3 Current Lineage Review](./review-task3-current-lineage-v1.md)
+- [Task 5 Canonical-reuse Dossiers](./task5-canonical-reuse-dossiers-v1.json)
+- [Task 5 Canonical-reuse Owner Decision](./task5-canonical-reuse-owner-acceptance-v1.json)
+- [Task 5/6 Consumable Owner Acceptance](./task5-task6-product-owner-acceptance-v1.json)
+- [Task 5 Reading/Primary Host-proof Evidence](./task5-reading-primary-host-proof-evidence-v1.json)
+- [Task 5 Reading Host-proof Playwright Rerun](./task5-reading-host-proof-playwright-report-v2.json) — supersedes the v1 historical-before-remediation report
 - [Foundation](../apk_denominator_readiness_t11_integrity_20260727/)

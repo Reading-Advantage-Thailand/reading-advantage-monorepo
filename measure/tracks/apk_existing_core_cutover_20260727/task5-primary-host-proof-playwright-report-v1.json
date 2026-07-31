@@ -1,0 +1,72 @@
+{
+  "schema_version": "apk-existing-core-task5-host-proof-playwright-observation.v1",
+  "application": "primary-advantage",
+  "status": "passed",
+  "base_url": "http://localhost:3139",
+  "route": "/student/host-proof/games",
+  "feature_flag": "HOST_PROOF_ENABLED=true",
+  "runner": "playwright",
+  "project": "chromium",
+  "authentication_fixture": "seeded-test-session-without-secret-recording",
+  "database_fixture": "local-test-database-without-credential-recording",
+  "execution_binding": {
+    "command_template": "DATABASE_URL=<local-test-database> CI=true PLAYWRIGHT_PORT=3139 pnpm --filter primary-advantage exec playwright test tests/e2e/host-proof-games.spec.ts",
+    "command_sha256": "2e6e6b0cda1c64705d7e1ff690f261731238936548a654f5fbcbb5a733c83455",
+    "environment": {
+      "parent": {
+        "CI": "true",
+        "DATABASE_URL": "<local-test-database>",
+        "PLAYWRIGHT_PORT": "3139"
+      },
+      "web_server": {
+        "HOST_PROOF_ENABLED": "true",
+        "PORT": "3139"
+      },
+      "values_redacted": true,
+      "environment_sha256": "65fe40dac86d7f07e53613a6ef579dd28c86fc47601a654455e65f4233a9879a"
+    }
+  },
+  "test_result_file": {
+    "path": "apps/primary-advantage/test-results/host-proof-results.json",
+    "sha256": "31e2d05abf49bcab17083974dce49d0348abefa7a20973a1471bce5d4f5dfe99",
+    "status": "passed",
+    "failed_tests": []
+  },
+  "test_bindings": {
+    "playwright_config": {
+      "path": "apps/primary-advantage/playwright.config.ts",
+      "sha256": "a15e524a27b5da72b065f46b1d34319280c9fff79f4208c018a50868886886a2"
+    },
+    "auth_setup": {
+      "path": "apps/primary-advantage/tests/e2e/host-proof-auth.setup.ts",
+      "sha256": "755c66a63aa7d35e78c1091d6434ec81a12004fb84b2a5ca22c59a5a681444f9"
+    },
+    "host_matrix": {
+      "path": "apps/primary-advantage/tests/e2e/host-proof-games.spec.ts",
+      "sha256": "2f8191da34e4af508310cb2ffdf9c6b69f50f5d1ba101a039e3b448d1bbe9299"
+    },
+    "credential_config": {
+      "path": "apps/primary-advantage/host-proof-test-config.ts",
+      "sha256": "acc25660c7abc31219a3eba35d14a351151ca27bea126db724e4374752357401"
+    },
+    "seed_script": {
+      "path": "apps/primary-advantage/scripts/seed-host-proof-session.ts",
+      "sha256": "7d9fcd005db35b1dce4fd5e2796903b85a477fd2d9e024f48746f9b6d7326b41"
+    }
+  },
+  "tests": {
+    "passed": 40,
+    "failed": 0,
+    "skipped": 0,
+    "setup_project": "passed separately and excluded from the 40 browser-case total",
+    "result_artifact": {
+      "stats_expected": 41,
+      "stats_unexpected": 0,
+      "stats_skipped": 0,
+      "browser_case_total": 40
+    },
+    "matrix_definition": "five fixed bindings times compact/wide and keyboard/pointer/touch, plus five duplicate-completion and five replay-navigation cases"
+  },
+  "observation_only": true,
+  "source_status": "current-source-rerun"
+}

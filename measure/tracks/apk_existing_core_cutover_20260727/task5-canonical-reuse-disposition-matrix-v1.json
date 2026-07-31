@@ -1,0 +1,39 @@
+{
+  "schema_version": "apk-existing-core-task5-canonical-reuse-disposition-matrix.v1",
+  "status": "reviewed-canonical-reuse-drafts-pending-owner-acceptance",
+  "release": "2026.07.23",
+  "dossier_source": "measure/tracks/apk_existing_core_cutover_20260727/task5-canonical-reuse-dossiers-v1.json",
+  "current_task3_lineage_receipt": "measure/tracks/apk_existing_core_cutover_20260727/task3-current-lineage-receipt-v1.json",
+  "rows": [
+    {"title_id":"dragon-flight","role":"player","state":"idle","semantic_key":"top-down/32x32/characters/hero-01","disposition":"reuse-canonical","legacy_ingestion_authorized":false,"legacy_retirement_candidates":[]},
+    {"title_id":"dragon-flight","role":"feedback","state":"correct","semantic_key":"effects/32x32/combat/hit-01","disposition":"reuse-canonical","legacy_ingestion_authorized":false,"legacy_retirement_candidates":[]},
+    {"title_id":"dragon-flight","role":"audio-feedback","state":"correct","semantic_key":"audio/native/combat/hit-01","disposition":"reuse-canonical","legacy_ingestion_authorized":false,"legacy_retirement_candidates":[]},
+    {"title_id":"magic-defense","role":"panel","state":"default","semantic_key":"ui/20x20/inventory/slot","disposition":"reuse-canonical","legacy_ingestion_authorized":false,"legacy_retirement_candidates":[]},
+    {"title_id":"magic-defense","role":"status","state":"armor","semantic_key":"ui/32x32/items/armor-icons","disposition":"reuse-canonical","legacy_ingestion_authorized":false,"legacy_retirement_candidates":[]},
+    {"title_id":"magic-defense","role":"feedback","state":"correct","semantic_key":"effects/32x32/combat/hit-01","disposition":"reuse-canonical","legacy_ingestion_authorized":false,"legacy_retirement_candidates":[]},
+    {"title_id":"magic-defense","role":"audio-feedback","state":"correct","semantic_key":"audio/native/combat/hit-01","disposition":"reuse-canonical","legacy_ingestion_authorized":false,"legacy_retirement_candidates":[]},
+    {"title_id":"dungeon-liberator","role":"player","state":"idle","semantic_key":"top-down/32x32/characters/hero-01","disposition":"reuse-canonical","legacy_ingestion_authorized":false,"legacy_retirement_candidates":[]},
+    {"title_id":"dungeon-liberator","role":"enemy","state":"idle","semantic_key":"side-view/32x32/characters/enemy-001-idle","disposition":"reuse-canonical","legacy_ingestion_authorized":false,"legacy_retirement_candidates":[]},
+    {"title_id":"dungeon-liberator","role":"feedback","state":"correct","semantic_key":"effects/32x32/combat/hit-01","disposition":"reuse-canonical","legacy_ingestion_authorized":false,"legacy_retirement_candidates":[]},
+    {"title_id":"dungeon-liberator","role":"control","state":"confirm","semantic_key":"ui/16x16/controls/gamepad-buttons","disposition":"reuse-canonical","legacy_ingestion_authorized":false,"legacy_retirement_candidates":[]},
+    {"title_id":"sorcerer-ziggurat","role":"player","state":"idle","semantic_key":"top-down/32x32/characters/hero-01","disposition":"reuse-canonical","legacy_ingestion_authorized":false,"legacy_retirement_candidates":[]},
+    {"title_id":"sorcerer-ziggurat","role":"feedback","state":"correct","semantic_key":"effects/32x32/combat/hit-01","disposition":"reuse-canonical","legacy_ingestion_authorized":false,"legacy_retirement_candidates":[]},
+    {"title_id":"sorcerer-ziggurat","role":"control","state":"confirm","semantic_key":"ui/16x16/controls/gamepad-buttons","disposition":"reuse-canonical","legacy_ingestion_authorized":false,"legacy_retirement_candidates":[]},
+    {"title_id":"astral-mage","role":"player","state":"idle","semantic_key":"top-down/32x32/characters/hero-01","disposition":"reuse-canonical","legacy_ingestion_authorized":false,"legacy_retirement_candidates":[]},
+    {"title_id":"astral-mage","role":"feedback","state":"correct","semantic_key":"effects/32x32/combat/hit-01","disposition":"reuse-canonical","legacy_ingestion_authorized":false,"legacy_retirement_candidates":[]},
+    {"title_id":"astral-mage","role":"audio-feedback","state":"correct","semantic_key":"audio/native/combat/hit-01","disposition":"reuse-canonical","legacy_ingestion_authorized":false,"legacy_retirement_candidates":[]}
+  ],
+  "rejected_candidate": {
+    "semantic_key": "side-view/native/platformer-world/heroes/hero-002/hero-002-walk-source-6c451bbfab72",
+    "applies_to": ["dragon-flight","dungeon-liberator","sorcerer-ziggurat","astral-mage"],
+    "disposition": "rejected-as-behaviorally-incompatible",
+    "reason": "The 192x32 side-view hero is not a valid substitute for the selected 192x384 top-down player-idle descriptor."
+  },
+  "authorization": {
+    "title_adoption_authorized": false,
+    "task5_acceptance_claimed": false,
+    "legacy_ingestion_authorized": false,
+    "legacy_retirement_authorized": false,
+    "cutover_authorized": false
+  }
+}

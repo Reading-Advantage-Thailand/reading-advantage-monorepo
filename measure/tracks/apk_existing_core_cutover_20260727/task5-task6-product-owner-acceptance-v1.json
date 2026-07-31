@@ -1,0 +1,179 @@
+{
+  "schema_version": "apk-existing-core-task5-task6-product-owner-acceptance.v1",
+  "status": "accepted-task5-consumable-authorized-task6-begin",
+  "recorded_at": "2026-07-31",
+  "approval_event": {
+    "message_exact": "Approve the exact five-title/17-role canonical-reuse dossiers, disposition matrix, selected unions, additive lineage, and current Reading/Primary 41-result host proofs bound by the latest zero-blocker audit. Record additive product-owner acceptance with unavailable durable IDs null (never fabricated). Authorize these exact bindings as consumable for Existing Core Task 5 and authorize beginning Task 6 exact legacy retirement; do not yet authorize production catalog exposure, deployment, cohort closeout, or broader APK claims.",
+    "message_sha256": "fc1a516d1883de78f1b3f61e8b68bc0afd0cead98d2fa9e3a85f1a3edc55e7e4",
+    "source": "explicit-user-project-owner-instruction",
+    "durable_user_message_id": null,
+    "durable_user_message_id_available": false,
+    "durable_user_event_id": null,
+    "durable_user_event_id_available": false,
+    "event_timestamp": null,
+    "event_timestamp_available": false,
+    "limitation": "The explicit project-owner instruction is recorded without fabricating a durable user-message or user-event identifier or timestamp."
+  },
+  "approved_scope": {
+    "titles": [
+      "dragon-flight",
+      "magic-defense",
+      "dungeon-liberator",
+      "sorcerer-ziggurat",
+      "astral-mage"
+    ],
+    "role_count": 17,
+    "decision": "reuse-canonical",
+    "task5_consumable": true,
+    "meaning": "The exact dossier, matrix, selected-union, lineage, and current Reading/Primary host-proof bindings may be consumed as Existing Core Task 5 evidence."
+  },
+  "bound_inputs": {
+    "prior_non_authorizing_owner_acceptance": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-canonical-reuse-owner-acceptance-v1.json",
+      "sha256": "e8d8d32457ff5df5e362b2b400d396b4eaf956ae693d2b50e9b1d156154d21dd",
+      "preserved_as_historical": true
+    },
+    "suitability_governance_acceptance": {
+      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
+      "sha256": "a1e0fdb27d29d86d77362c67db0fa0ef3eb4d26aef4377954e9d5cab6c367a04"
+    },
+    "canonical_reuse_evidence": {
+      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/task5-canonical-reuse-evidence-v1.json",
+      "sha256": "a602d07e338327c04f5fcbb2a3cede179268aed963c0bc76292569db1eff1257"
+    },
+    "dossiers": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-canonical-reuse-dossiers-v1.json",
+      "sha256": "da78c02003654ca777c5ac2486c1a8b04a380460fb51e258a9f4557b35d85c79"
+    },
+    "disposition_matrix": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-canonical-reuse-disposition-matrix-v1.json",
+      "sha256": "e6ac0a592840eff4d3664c23c5c11e70e404f0f787b419e9f6f9a3c066b86489"
+    },
+    "selected_union_inputs": {
+      "source": {
+        "path": "packages/advantage-play-kit/src/assets/existing-core-suitability.ts",
+        "sha256": "04468a604d5a7aaaa421e2df5f9b7e3b677fcb55a622cf81be4c67d8100a4c99",
+        "export": "createExistingCoreTask5CanonicalReusePackage().selectedUnionInputs"
+      },
+      "test": {
+        "path": "packages/advantage-play-kit/src/assets/existing-core-suitability.test.ts",
+        "sha256": "ad028a1c070600e16d1c422327046bd51823dc972c3bf2dae4b35a7adce7b4cc"
+      },
+      "by_title": [
+        {
+          "title_id": "dragon-flight",
+          "semantic_keys": [
+            "audio/native/combat/hit-01",
+            "effects/32x32/combat/hit-01",
+            "top-down/32x32/characters/hero-01"
+          ]
+        },
+        {
+          "title_id": "magic-defense",
+          "semantic_keys": [
+            "audio/native/combat/hit-01",
+            "effects/32x32/combat/hit-01",
+            "ui/20x20/inventory/slot",
+            "ui/32x32/items/armor-icons"
+          ]
+        },
+        {
+          "title_id": "dungeon-liberator",
+          "semantic_keys": [
+            "effects/32x32/combat/hit-01",
+            "side-view/32x32/characters/enemy-001-idle",
+            "top-down/32x32/characters/hero-01",
+            "ui/16x16/controls/gamepad-buttons"
+          ]
+        },
+        {
+          "title_id": "sorcerer-ziggurat",
+          "semantic_keys": [
+            "effects/32x32/combat/hit-01",
+            "top-down/32x32/characters/hero-01",
+            "ui/16x16/controls/gamepad-buttons"
+          ]
+        },
+        {
+          "title_id": "astral-mage",
+          "semantic_keys": [
+            "audio/native/combat/hit-01",
+            "effects/32x32/combat/hit-01",
+            "top-down/32x32/characters/hero-01"
+          ]
+        }
+      ],
+      "unique_key_count": 7
+    },
+    "current_task3_lineage_receipt": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-current-lineage-receipt-v1.json",
+      "sha256": "c5ccb0ac3b54474e2ad99badb2aef5c1608689e57559e2f26c6fb489a5513d7f"
+    },
+    "current_task3_lineage_review": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-current-lineage-v1.md",
+      "sha256": "2042061ffe67246c56f47cd1c4639ec39e1bd4ec5156952e6b46415fff24a657"
+    },
+    "accepted_task4_qc_receipt": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-task4-qc-receipt-v1.json",
+      "sha256": "b6ffefcebf8a75d9967f196693fe7cf14a133d66123537d201b52e9af4745dd9"
+    },
+    "reading_primary_host_proof_evidence": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-reading-primary-host-proof-evidence-v1.json",
+      "sha256": "0c80f1a187657817bf657bed8f50181e4307499525f904d70ec2dbfa808edd83"
+    },
+    "reading_host_proof": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-reading-host-proof-playwright-report-v2.json",
+      "sha256": "4e1f69c24ad36717077cfde04c8db0a80f708464ae2d877c5383083c85876c80",
+      "result_stats": {
+        "expected": 41,
+        "unexpected": 0,
+        "skipped": 0,
+        "flaky": 0
+      }
+    },
+    "primary_host_proof": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-primary-host-proof-playwright-report-v1.json",
+      "sha256": "8e851a62a7c1ed2ef41ab6b9ddc3ed6ef293ede575408f4695bb4093432d9fae",
+      "result_stats": {
+        "expected": 41,
+        "unexpected": 0,
+        "skipped": 0,
+        "browser_cases": 40
+      }
+    },
+    "zero_blocker_audits": [
+      {
+        "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/review-task5-canonical-reuse-v1.md",
+        "sha256": "0e2f17bdbd909cde4eeb433ee9ee1749e8c030215624fd00ee062fdd1e379fb8",
+        "findings": {"critical": 0, "high": 0, "medium": 0, "low": 0}
+      },
+      {
+        "path": "measure/tracks/apk_existing_core_cutover_20260727/review-2026-07-31.md",
+        "sha256": "145a6a7cfc44d096d9c7f7874ea86ded535307c2f26cd54f47ac92c64cbb1d94",
+        "findings": {"critical": 0, "high": 0, "medium": 0, "low": 0}
+      }
+    ]
+  },
+  "authorization": {
+    "task5_consumable": true,
+    "task5_acceptance_claimed": true,
+    "task6_exact_legacy_retirement_begin_authorized": true,
+    "title_adoption_authorized": false,
+    "production_catalog_exposure_authorized": false,
+    "production_loaders_exposure_authorized": false,
+    "ingestion_authorized": false,
+    "migration_authorized": false,
+    "cutover_authorized": false,
+    "legacy_retirement_completed": false,
+    "deployment_authorized": false,
+    "cohort_closeout_authorized": false,
+    "broader_apk_claims_authorized": false
+  },
+  "disclosures": [
+    "This successor acceptance consumes only the exact hash-bound canonical-reuse decisions, selected unions, additive lineage, and current 41-result Reading/Primary host-proof observations for Existing Core Task 5.",
+    "The prior task5-canonical-reuse-owner-acceptance-v1.json remains immutable historical non-authorizing evidence; this record does not rewrite it or the draft dossier and matrix bytes.",
+    "Task 6 is only authorized to begin exact legacy-retirement work. No legacy path has been deleted or retired by this record.",
+    "Production catalog exposure, deployment, cohort closeout, and broader APK claims remain unauthorized."
+  ],
+  "next_step": "Begin Task 6 exact legacy-retirement inventory, caller/asset guards, and bounded dispositions without exposing the production catalog or claiming retirement completion."
+}

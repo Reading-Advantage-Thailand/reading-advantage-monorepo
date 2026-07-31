@@ -1,0 +1,232 @@
+{
+  "schema_version": "apk-existing-core-canonical-reuse-evidence.v1",
+  "status": "reviewed-canonical-reuse-evidence",
+  "scope": "Existing Core Task 5 asset-adoption prerequisite only",
+  "release": {
+    "version": "2026.07.23",
+    "catalog_digest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+    "source_receipt_digest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9",
+    "catalog_artifact": {
+      "path": "packages/advantage-play-kit/assets/standard/standard-pack-release.json",
+      "sha256": "ef432a798a78585df3416d60aca30fe11a2d1d8b833e0d65ceb7fac5c8b19932"
+    },
+    "curated_receipt": {
+      "path": "packages/advantage-play-kit/assets/standard/CURATED-RECEIPT.tsv",
+      "sha256": "a192f1fe2826aa426228950092fb32cb47cb24dd4acd47057d7424a0dfd527bb"
+    },
+    "import_receipt": {
+      "path": "packages/advantage-play-kit/assets/standard/IMPORT-RECEIPT.tsv",
+      "sha256": "29b89199ce9d7ed6d49731cfc7e3a6cf021a38e27cbbea1e728a649d33047cc7"
+    },
+    "license": {
+      "path": "packages/advantage-play-kit/assets/standard/LICENSE-ELVGAMES.txt",
+      "sha256": "3efc9b9a88752a089fa07de4fac43cabe6283b0051466661c55a97c1c625c48f",
+      "license_id": "ElvGames-License-ELVGAMES",
+      "obligations": ["retain-credit", "no-generative-ai-training", "no-crypto-nft", "no-resale", "no-authorship-claim"]
+    },
+    "credit": {
+      "path": "packages/advantage-play-kit/assets/standard/README.md",
+      "sha256": "6ace14005c2d155ed24376e6dbd6e02a53906db660866eccb1ba38868f0e04cb",
+      "display_text": "Pixel art assets by ElvGames"
+    }
+  },
+  "task3_lineage": {
+    "current_receipt": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-current-lineage-receipt-v1.json",
+      "sha256": "c5ccb0ac3b54474e2ad99badb2aef5c1608689e57559e2f26c6fb489a5513d7f"
+    },
+    "current_review": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-current-lineage-v1.md",
+      "sha256": "2042061ffe67246c56f47cd1c4639ec39e1bd4ec5156952e6b46415fff24a657"
+    },
+    "historical_receipt_preserved": true
+  },
+  "canonical_assets": [
+    {
+      "descriptor_id": "existing-core-hero-01-static-v1",
+      "semantic_key": "top-down/32x32/characters/hero-01",
+      "catalog_path": "top-down/32x32/characters/hero-01.png",
+      "source_receipt_locator": "CURATED-RECEIPT.tsv:2",
+      "sha256": "6aeab3f50c0f6be436eeb5594e7d9c1ae31f8f19ac3bdfa04d7fbcbf856ba5e4",
+      "dimensions": {"width": 192, "height": 384},
+      "cell_size": {"width": 32, "height": 32},
+      "presentation": {
+        "media_kind": "image",
+        "geometry": {"width": 192, "height": 384, "frame_width": 32, "frame_height": 32, "columns": 6, "rows": 12},
+        "clip_ids": [],
+        "direction_ids": [],
+        "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract",
+        "collision_envelope": {"x": 0.21875, "y": 0.375, "width": 0.78125, "height": 0.625},
+        "collision_evidence": "measured-alpha-union-across-68-populated-32px-cells; not a gameplay collision mask",
+        "readability_envelope": {"minimum_render_pixels": 32, "minimum_contrast_ratio": 1},
+        "readability_evidence": "native-cell-size measured from source; contrast background is unreviewed, so ratio 1 is an explicit conservative floor",
+        "alpha_measurement": {"populated_frame_count": 68, "empty_frame_count": 4, "minimum_opaque_pixels": 170, "minimum_opaque_width": 14, "minimum_opaque_height": 13}
+      },
+      "visual_review": "The top-down hero is a measured 6x12 atlas of 32px cells. The dossier records the atlas geometry but assigns no unreviewed clip or direction semantics to the image binding."
+    },
+    {
+      "descriptor_id": "existing-core-enemy-001-idle-static-v1",
+      "semantic_key": "side-view/32x32/characters/enemy-001-idle",
+      "catalog_path": "side-view/32x32/characters/enemy-001-idle.png",
+      "source_receipt_locator": "CURATED-RECEIPT.tsv:3",
+      "sha256": "0edfb7ed11f9c4cf46dfb97e2b158e391202dbf944789c059b0ec0b68e0492db",
+      "dimensions": {"width": 192, "height": 32},
+      "cell_size": {"width": 32, "height": 32},
+      "presentation": {
+        "media_kind": "image",
+        "geometry": {"width": 192, "height": 32, "frame_width": 32, "frame_height": 32, "columns": 6, "rows": 1},
+        "clip_ids": [],
+        "direction_ids": [],
+        "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract",
+        "collision_envelope": {"x": 0.3125, "y": 0.5, "width": 0.375, "height": 0.5},
+        "collision_evidence": "measured-alpha-union-across-6-populated-32px-cells; not a gameplay collision mask",
+        "readability_envelope": {"minimum_render_pixels": 16, "minimum_contrast_ratio": 1},
+        "readability_evidence": "native-cell-size measured from source; contrast background is unreviewed, so ratio 1 is an explicit conservative floor",
+        "alpha_measurement": {"populated_frame_count": 6, "empty_frame_count": 0, "minimum_opaque_pixels": 122, "minimum_opaque_width": 12, "minimum_opaque_height": 13}
+      },
+      "visual_review": "The enemy source is a measured six-cell 32px strip. Its atlas geometry is recorded, while clip and direction semantics remain unassigned rather than inferred."
+    },
+    {
+      "descriptor_id": "existing-core-hit-01-static-v1",
+      "semantic_key": "effects/32x32/combat/hit-01",
+      "catalog_path": "effects/32x32/combat/hit-01.png",
+      "source_receipt_locator": "CURATED-RECEIPT.tsv:7",
+      "sha256": "5062b915d194a51d1df910f2b00a8dd33f654e8e5f7b8f38baa0626d1f7528f1",
+      "dimensions": {"width": 192, "height": 128},
+      "cell_size": {"width": 32, "height": 32},
+      "presentation": {
+        "media_kind": "image",
+        "geometry": {"width": 192, "height": 128, "frame_width": 32, "frame_height": 32, "columns": 6, "rows": 4},
+        "clip_ids": [],
+        "direction_ids": [],
+        "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract",
+        "collision_envelope": {"x": 0.125, "y": 0.15625, "width": 0.71875, "height": 0.6875},
+        "collision_evidence": "measured-alpha-union-across-5-populated-32px-cells; collision is not required for feedback",
+        "readability_envelope": {"minimum_render_pixels": 16, "minimum_contrast_ratio": 1},
+        "readability_evidence": "native-cell-size measured from source; contrast background is unreviewed, so ratio 1 is an explicit conservative floor",
+        "alpha_measurement": {"populated_frame_count": 5, "empty_frame_count": 19, "minimum_opaque_pixels": 4, "minimum_opaque_width": 2, "minimum_opaque_height": 2}
+      },
+      "visual_review": "The hit-effect source is a measured 6x4 32px atlas with five populated cells in the first row; no timing, clip, or direction contract is inferred."
+    },
+    {
+      "descriptor_id": "existing-core-gamepad-buttons-static-v1",
+      "semantic_key": "ui/16x16/controls/gamepad-buttons",
+      "catalog_path": "ui/16x16/controls/gamepad-buttons.png",
+      "source_receipt_locator": "CURATED-RECEIPT.tsv:4",
+      "sha256": "860451d3140de5ef5b42d8ff5908e5a02a9012296eb1e8631a687373ced10100",
+      "dimensions": {"width": 352, "height": 160},
+      "cell_size": {"width": 16, "height": 16},
+      "presentation": {
+        "media_kind": "image",
+        "geometry": {"width": 352, "height": 160, "frame_width": 16, "frame_height": 16, "columns": 22, "rows": 10},
+        "clip_ids": [],
+        "direction_ids": [],
+        "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract",
+        "collision_envelope": {"x": 0.0625, "y": 0.0625, "width": 0.875, "height": 0.875},
+        "collision_evidence": "measured-alpha-union-across-130-populated-16px-cells; collision is not required for controls",
+        "readability_envelope": {"minimum_render_pixels": 16, "minimum_contrast_ratio": 1},
+        "readability_evidence": "native-cell-size measured from source; contrast background is unreviewed, so ratio 1 is an explicit conservative floor",
+        "alpha_measurement": {"populated_frame_count": 130, "empty_frame_count": 90, "minimum_opaque_pixels": 66, "minimum_opaque_width": 8, "minimum_opaque_height": 6}
+      },
+      "visual_review": "The control source is a measured 22x10 atlas of 16px cells. The semantic binding does not claim a fixed cell, clip, or direction mapping."
+    },
+    {
+      "descriptor_id": "existing-core-inventory-slot-static-v1",
+      "semantic_key": "ui/20x20/inventory/slot",
+      "catalog_path": "ui/20x20/inventory/slot.png",
+      "source_receipt_locator": "CURATED-RECEIPT.tsv:5",
+      "sha256": "364560d9df9ebc14a2806d687776015624af79430e5f5b1e192de3fcf1db7524",
+      "dimensions": {"width": 20, "height": 20},
+      "cell_size": {"width": 20, "height": 20},
+      "presentation": {
+        "media_kind": "image",
+        "geometry": {"width": 20, "height": 20, "frame_width": 20, "frame_height": 20, "columns": 1, "rows": 1},
+        "clip_ids": [],
+        "direction_ids": [],
+        "animation_behavior": "single-cell-static-source",
+        "collision_envelope": {"x": 0, "y": 0, "width": 1, "height": 1},
+        "collision_evidence": "measured-alpha-union-of-the-single-20px-cell; collision is not required for a panel",
+        "readability_envelope": {"minimum_render_pixels": 20, "minimum_contrast_ratio": 1},
+        "readability_evidence": "native-cell-size measured from source; contrast background is unreviewed, so ratio 1 is an explicit conservative floor",
+        "alpha_measurement": {"populated_frame_count": 1, "empty_frame_count": 0, "minimum_opaque_pixels": 400, "minimum_opaque_width": 20, "minimum_opaque_height": 20}
+      },
+      "visual_review": "The inventory slot is a measured single 20px cell and is the only selected image that is truthfully described as static."
+    },
+    {
+      "descriptor_id": "existing-core-armor-icons-static-v1",
+      "semantic_key": "ui/32x32/items/armor-icons",
+      "catalog_path": "ui/32x32/items/armor-icons.png",
+      "source_receipt_locator": "CURATED-RECEIPT.tsv:6",
+      "sha256": "b01bae484f26a7ee45c44f8b875ba76dade50827a9e5418cecbd2551018cb9ee",
+      "dimensions": {"width": 512, "height": 896},
+      "cell_size": {"width": 32, "height": 32},
+      "presentation": {
+        "media_kind": "image",
+        "geometry": {"width": 512, "height": 896, "frame_width": 32, "frame_height": 32, "columns": 16, "rows": 28},
+        "clip_ids": [],
+        "direction_ids": [],
+        "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract",
+        "collision_envelope": {"x": 0, "y": 0, "width": 1, "height": 0.96875},
+        "collision_evidence": "measured-alpha-union-across-424-populated-32px-cells; collision is not required for status icons",
+        "readability_envelope": {"minimum_render_pixels": 32, "minimum_contrast_ratio": 1},
+        "readability_evidence": "native-cell-size measured from source; contrast background is unreviewed, so ratio 1 is an explicit conservative floor",
+        "alpha_measurement": {"populated_frame_count": 424, "empty_frame_count": 24, "minimum_opaque_pixels": 190, "minimum_opaque_width": 21, "minimum_opaque_height": 13}
+      },
+      "visual_review": "The armor source is a measured 16x28 atlas of 32px cells. Its semantic status binding records the grid only and does not infer clips or directions."
+    },
+    {
+      "descriptor_id": "existing-core-hit-01-audio-v1",
+      "semantic_key": "audio/native/combat/hit-01",
+      "catalog_path": "audio/native/combat/hit-01.ogg",
+      "source_receipt_locator": "CURATED-RECEIPT.tsv:8",
+      "sha256": "25c239ed9b6c9cd898a2ffb2c2760e87499ee5f6330060aa51be87f548bd5f23",
+      "dimensions": null,
+      "presentation": {
+        "media_kind": "audio",
+        "animation_behavior": "not-applicable-to-audio-binding",
+        "audio": {"duration_ms": 1667, "channels": 2, "loop": false},
+        "audio_measurement": "ffprobe source duration 1.666667 seconds rounded to nearest millisecond; 48kHz stereo Vorbis"
+      },
+      "visual_review": "No visual, collision, or readability claim applies to the audio-only correct-feedback cue."
+    }
+  ],
+  "rejected_existing_candidate": {
+    "descriptor_id": "existing-core-side-hero-002-rejected-v1",
+    "semantic_key": "side-view/native/platformer-world/heroes/hero-002/hero-002-walk-source-6c451bbfab72",
+    "catalog_path": "side-view/native/platformer-world/heroes/hero-002/hero-002-walk-source-6c451bbfab72.png",
+    "source_receipt_locator": "IMPORT-RECEIPT.tsv:28087",
+    "sha256": "cbf1af836f41e53adb683cdab5ac0e779fc72109459e661bb814c9505e20113b",
+    "dimensions": {"width": 192, "height": 32},
+    "cell_size": {"width": 32, "height": 32},
+    "presentation": {
+      "media_kind": "image",
+      "geometry": {"width": 192, "height": 32, "frame_width": 32, "frame_height": 32, "columns": 6, "rows": 1},
+      "clip_ids": [],
+      "direction_ids": [],
+      "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract",
+      "collision_envelope": {"x": 0.28125, "y": 0.375, "width": 0.5, "height": 0.625},
+      "collision_evidence": "measured-alpha-union-across-6-populated-32px-cells; not a gameplay collision mask",
+      "readability_envelope": {"minimum_render_pixels": 16, "minimum_contrast_ratio": 1},
+      "readability_evidence": "native-cell-size measured from source; contrast background is unreviewed, so ratio 1 is an explicit conservative floor",
+      "alpha_measurement": {"populated_frame_count": 6, "empty_frame_count": 0, "minimum_opaque_pixels": 168, "minimum_opaque_width": 15, "minimum_opaque_height": 18}
+    },
+    "disposition": "rejected-for-player-idle",
+    "reason": "The visually related side-view hero is only a measured 6x1 192x32 atlas and fails the player-idle descriptor's required 192x384 presentation envelope. The selected top-down hero is the separate canonical source; no clip or direction mapping is inferred for either source."
+  },
+  "limitations": [
+    "Atlas geometry records the measured native cell grid for every selected image. Clip and direction arrays remain empty because the reviewed source packet does not establish row semantics, playback timing, or direction mappings.",
+    "Collision envelopes are measured alpha unions per native cell and are not gameplay collision masks. Contrast is not measured without a reviewed presentation background; ratio 1 is an explicit conservative floor.",
+    "Audio duration is measured from the exact accepted OGG source as 1.666667 seconds and represented as 1667 milliseconds; it is not a placeholder estimate.",
+    "This evidence evaluates canonical reuse only. No legacy byte is a candidate for ingestion, and no legacy source packet is represented or accepted.",
+    "Sorcerer's Ziggurat and Astral Mage retain their historical-source-only classification; selecting canonical role inputs does not identify an original asset for replacement or retirement."
+  ],
+  "authorization": {
+    "production_use_authorized": false,
+    "ingestion_authorized": false,
+    "migration_authorized": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "deployment_authorized": false,
+    "task5_acceptance_claimed": false
+  }
+}

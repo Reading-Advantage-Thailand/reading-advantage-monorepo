@@ -1,12 +1,13 @@
 {
   "schema_version": "apk-standard-pack-suitability-current-byte-review.v1",
   "record_id": "apk_standard_pack_suitability_ingestion_20260728_current_byte_independent_review_v1",
-  "reviewed_at": "2026-07-30T13:56:25Z",
-  "reviewed_commit": "b7877a4bd5781780feb4e4d1b504b8adf0aa6048",
+  "reviewed_at": "2026-07-31T09:55:00Z",
+  "reviewed_commit": "fd742232c629678c29b9b75ebebe586114045be3",
+  "reviewed_worktree_state": "dirty: bindings reflect uncommitted worktree bytes on top of the reviewed commit, including a per-test timeout robustness fix in standard-pack-ingestion-ledger.test.ts",
   "reviewer": {
     "agent": "postcommit_integrity_review",
     "role": "independent-evidence-contract-reviewer",
-    "independence": "The reviewer did not author the implementation in reviewed commits f313245452c7ada7fa2f4bdb1bc71c76d2cf22f9, 96f9f81ba, or b7877a4bd."
+    "independence": "The reviewer did not author the Phase 1-4 implementation; it re-binds the current worktree bytes after a Phase 5 timeout robustness fix."
   },
   "review_scope": {
     "included": [
@@ -24,10 +25,11 @@
     ]
   },
   "verification": {
-    "focused_ledger": "passed: 16/16 with CI=true pnpm --filter @reading-advantage/advantage-play-kit exec vitest run --maxWorkers=1 --fileParallelism=false src/assets/standard-pack-ingestion-ledger.test.ts",
-    "adjacent_v2_and_public_api": "passed: 27/27 across asset-contract-v2, adversarial, semantic bindings, and public API suites",
+    "focused_ledger": "passed: 16/16 in 118.29s after raising per-test timeouts from 60s to 180s for restart-heavy batches; CI=true pnpm --filter @reading-advantage/advantage-play-kit exec vitest run --maxWorkers=1 --fileParallelism=false src/assets/standard-pack-ingestion-ledger.test.ts",
+    "adjacent_asset_suites": "passed: 87/87 across 17 non-ledger asset and QC test files (additive-release, legacy-source-packet, asset-contract-v2, adversarial, semantic bindings, semantic bindings v2, public API, suitability, cohort, standard-asset-contract, standard-asset-library, standard-pack-release, acceptance integration, release integration, ingestion-negative, comparison-fixtures, qc-kit, suitability-qc)",
+    "advantage_games_qc_components": "passed: 7/7 across AssetContractV2Qc, StandardPackSuitabilityQc, and AdvantageGamesAuthoringQc suites",
     "package_typecheck": "passed: ../../node_modules/.bin/tsc -p tsconfig.json --noEmit",
-    "package_lint": "passed: pnpm --filter @reading-advantage/advantage-play-kit run lint",
+    "package_lint": "passed: 0 errors, 4 pre-existing unused-var warnings; pnpm --filter @reading-advantage/advantage-play-kit run lint",
     "package_build": "passed: pnpm --filter @reading-advantage/advantage-play-kit run build"
   },
   "implementation_bindings": {
@@ -53,7 +55,7 @@
     },
     "ledger_test": {
       "path": "packages/advantage-play-kit/src/assets/standard-pack-ingestion-ledger.test.ts",
-      "sha256": "a394ae305c12a9aadd6c84dbedc8f95d2faf27ff65ecbd06dc9617b60e7c2111"
+      "sha256": "d306889ae97559d8f731574559ec65ab48d3b2536c7baf71e1fe1c486b568e4c"
     },
     "public_api_test": {
       "path": "packages/advantage-play-kit/src/assets/assets-public-api.test.ts",
@@ -72,6 +74,12 @@
       "severity": "release-blocking-for-title-adoption",
       "finding": "No accepted real legacy asset, dossier, or additive release is present in this track.",
       "required_disposition": "Keep all real ingestion, migration, cutover, retirement, deployment, and title-adoption authority false."
+    },
+    {
+      "id": "APK-CURRENT-BYTE-20260731-003",
+      "severity": "non-functional-robustness",
+      "finding": "Per-test timeouts in standard-pack-ingestion-ledger.test.ts were raised from 60s to 180s for the four restart-heavy batches so they do not flake on a loaded CI machine. No assertion was weakened, added, or removed.",
+      "required_disposition": "Keep the 180s ceiling; do not lower it back to 60s without confirming the restart-heavy batches still complete under load."
     }
   ],
   "verdict": "current-byte-code-review-complete-bounded-owner-decision-eligible",

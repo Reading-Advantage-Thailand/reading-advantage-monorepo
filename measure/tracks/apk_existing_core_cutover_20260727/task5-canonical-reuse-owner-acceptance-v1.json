@@ -1,0 +1,69 @@
+{
+  "schema_version": "apk-existing-core-task5-canonical-reuse-owner-acceptance.v1",
+  "status": "accepted-exact-canonical-reuse-dossiers-non-authorizing",
+  "recorded_at": "2026-07-31T14:00:00Z",
+  "approval_event": {
+    "message_exact": "Approve exact canonical reuse dossiers only after all tests and an independent review pass; leave authorization false in this implementation turn.",
+    "message_sha256": "716f003040e49230d53d1bf3b5ac20d39423c4c5f51da31d67df792ffbd02161",
+    "source": "explicit-user-project-owner-instruction",
+    "durable_user_message_id": null,
+    "durable_user_message_id_available": false,
+    "durable_user_event_id": null,
+    "durable_user_event_id_available": false,
+    "event_timestamp": null,
+    "event_timestamp_available": false,
+    "limitation": "The explicit project-owner instruction is recorded without fabricating a durable user-message or user-event identifier."
+  },
+  "decision": "approve-exact-canonical-reuse-dossiers-after-independent-review-and-focused-gates",
+  "approved_scope": "The exact hash-bound five-title, 17-role canonical-reuse dossiers and disposition matrix are approved as non-authorizing evidence. No real legacy asset or production release is accepted.",
+  "bound_inputs": {
+    "suitability_governance_owner_acceptance": {
+      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
+      "sha256": "a1e0fdb27d29d86d77362c67db0fa0ef3eb4d26aef4377954e9d5cab6c367a04",
+      "scope": "accepted evidence-only ingestion governance; no real title or asset acceptance"
+    },
+    "current_task3_lineage_receipt": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-current-lineage-receipt-v1.json",
+      "sha256": "c5ccb0ac3b54474e2ad99badb2aef5c1608689e57559e2f26c6fb489a5513d7f"
+    },
+    "task3_current_lineage_review": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-current-lineage-v1.md",
+      "sha256": "2042061ffe67246c56f47cd1c4639ec39e1bd4ec5156952e6b46415fff24a657"
+    },
+    "accepted_semantic_adoption_receipt": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
+      "sha256": "e82d42d9ec046b85eb4aeac7800623bce3c3bf4a39a9c0f44288bd93d07be240"
+    },
+    "accepted_task4_qc_receipt": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-task4-qc-receipt-v1.json",
+      "sha256": "b6ffefcebf8a75d9967f196693fe7cf14a133d66123537d201b52e9af4745dd9"
+    },
+    "canonical_reuse_evidence": {
+      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/task5-canonical-reuse-evidence-v1.json",
+      "sha256": "a602d07e338327c04f5fcbb2a3cede179268aed963c0bc76292569db1eff1257"
+    },
+    "dossiers": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-canonical-reuse-dossiers-v1.json",
+      "sha256": "da78c02003654ca777c5ac2486c1a8b04a380460fb51e258a9f4557b35d85c79"
+    },
+    "disposition_matrix": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-canonical-reuse-disposition-matrix-v1.json",
+      "sha256": "e6ac0a592840eff4d3664c23c5c11e70e404f0f787b419e9f6f9a3c066b86489"
+    },
+    "independent_canonical_reuse_review": {
+      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/review-task5-canonical-reuse-v1.md",
+      "sha256": "0e2f17bdbd909cde4eeb433ee9ee1749e8c030215624fd00ee062fdd1e379fb8"
+    }
+  },
+  "authorization": {
+    "production_use_authorized": false,
+    "ingestion_authorized": false,
+    "migration_authorized": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "deployment_authorized": false,
+    "title_adoption_authorized": false,
+    "task5_acceptance_claimed": false
+  },
+  "next_step": "Run separately authorized Reading/Primary host and exact-retirement evidence. This bounded dossier approval does not publish an accepted decision manifest or permit cohort consumption."
+}

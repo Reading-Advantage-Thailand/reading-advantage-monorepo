@@ -199,8 +199,8 @@ class ExistingCoreTask4AcceptanceTests(unittest.TestCase):
             },
         )
 
-    def test_plan_metadata_and_index_advance_only_to_task5_start(self) -> None:
-        """Requires Task 4 complete, Task 5 started, and later tasks pending."""
+    def test_plan_metadata_and_index_preserve_task4_and_bound_later_progression(self) -> None:
+        """Requires Task 4 history to remain exact while Task 5 is accepted and Task 6 starts."""
         plan = (TRACK_ROOT / "plan.md").read_text(encoding="utf-8")
         metadata = _load_object(TRACK_ROOT / "metadata.json")
         index = (TRACK_ROOT / "index.md").read_text(encoding="utf-8")
@@ -208,13 +208,9 @@ class ExistingCoreTask4AcceptanceTests(unittest.TestCase):
         task4_line = next(line for line in plan.splitlines() if "Prove Advantage Games QC" in line)
         task5_line = next(line for line in plan.splitlines() if "Prove Reading and Primary load" in line)
         self.assertTrue(task4_line.startswith("- [x]"))
-        self.assertTrue(task5_line.startswith("- [~]"))
-        self.assertNotIn("- [x]", task5_line)
-        for marker in (
-            "Delete only each title's exact replaced legacy paths",
-            "Obtain independent review and product-owner acceptance",
-        ):
-            self.assertTrue(next(line for line in plan.splitlines() if marker in line).startswith("- [ ]"))
+        self.assertTrue(task5_line.startswith("- [x]"))
+        self.assertTrue(next(line for line in plan.splitlines() if "Delete only each title's exact replaced legacy paths" in line).startswith("- [~]"))
+        self.assertTrue(next(line for line in plan.splitlines() if "Obtain independent review and product-owner acceptance" in line).startswith("- [ ]"))
 
         task4_acceptance = next(item for item in metadata["task_acceptances"] if item["task_number"] == 4)
         self.assertEqual(task4_acceptance["approval_message_exact"], EXPECTED_APPROVAL_MESSAGE)

@@ -2,7 +2,7 @@
   "schema_version": "apk-standard-pack-suitability-owner-acceptance.v2",
   "track_id": "apk_standard_pack_suitability_ingestion_20260728",
   "decision": "ACCEPT_BOUNDED_EVIDENCE_ONLY_INGESTION_GOVERNANCE",
-  "accepted_at": "2026-07-30T13:56:25Z",
+  "accepted_at": "2026-07-31T09:55:00Z",
   "decided_by": "apk-orchestrator-acting-under-explicit-user-project-owner-delegation",
   "authority": "explicit-user-delegated-project-owner-decision",
   "supersedes": "product-owner-acceptance-v1.json remains revoked-current-byte-drift and grants no authority",
@@ -10,14 +10,15 @@
     "independent_review": {
       "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/current-byte-independent-review-v1.json",
       "record_id": "apk_standard_pack_suitability_ingestion_20260728_current_byte_independent_review_v1",
-      "reviewed_commit": "b7877a4bd5781780feb4e4d1b504b8adf0aa6048",
+      "reviewed_commit": "fd742232c629678c29b9b75ebebe586114045be3",
       "verdict": "current-byte-code-review-complete-bounded-owner-decision-eligible"
     },
     "verification": {
-      "focused_ledger": "passed: 16/16 with CI=true pnpm --filter @reading-advantage/advantage-play-kit exec vitest run --maxWorkers=1 --fileParallelism=false src/assets/standard-pack-ingestion-ledger.test.ts",
-      "adjacent_v2_and_public_api": "passed: 27/27 across asset-contract-v2, adversarial, semantic bindings, and public API suites",
+      "focused_ledger": "passed: 16/16 in 118.29s after raising per-test timeouts from 60s to 180s for restart-heavy batches; CI=true pnpm --filter @reading-advantage/advantage-play-kit exec vitest run --maxWorkers=1 --fileParallelism=false src/assets/standard-pack-ingestion-ledger.test.ts",
+      "adjacent_asset_suites": "passed: 87/87 across 17 non-ledger asset and QC test files",
+      "advantage_games_qc_components": "passed: 7/7 across AssetContractV2Qc, StandardPackSuitabilityQc, and AdvantageGamesAuthoringQc suites",
       "package_typecheck": "passed: ../../node_modules/.bin/tsc -p tsconfig.json --noEmit",
-      "package_lint": "passed: pnpm --filter @reading-advantage/advantage-play-kit run lint",
+      "package_lint": "passed: 0 errors, 4 pre-existing unused-var warnings; pnpm --filter @reading-advantage/advantage-play-kit run lint",
       "package_build": "passed: pnpm --filter @reading-advantage/advantage-play-kit run build"
     }
   },
@@ -44,7 +45,7 @@
     },
     "ledger_test": {
       "path": "packages/advantage-play-kit/src/assets/standard-pack-ingestion-ledger.test.ts",
-      "sha256": "a394ae305c12a9aadd6c84dbedc8f95d2faf27ff65ecbd06dc9617b60e7c2111"
+      "sha256": "d306889ae97559d8f731574559ec65ab48d3b2536c7baf71e1fe1c486b568e4c"
     },
     "public_api_test": {
       "path": "packages/advantage-play-kit/src/assets/assets-public-api.test.ts",
@@ -65,6 +66,16 @@
     "retirementAuthorized": false,
     "deploymentAuthorized": false,
     "titleAdoptionAuthorized": false
+  },
+  "real_asset_disposition": {
+    "status": "blocked",
+    "reason": "No lawful real legacy source packet, provenance, license, credit, or behavior-suitability review exists for any title in this track. The evidence-only ingestion ledger, additive-release receipt, source-packet contract, and release-bound semantic resolver are accepted as governance infrastructure only.",
+    "infrastructure_completed": [
+      "createStandardPackAdditiveReleaseReceipt generates an additive pinned release from a validated ledger without altering historical release records",
+      "createReleaseBoundSemanticAssetResolver publishes accepted semantic bindings and selected-union descriptor inputs only from an approved dossier, accepted additive receipt, and validated ledger",
+      "rehydrateStandardPackAdditiveReleaseReceipt and rehydrateStandardPackIngestionLedgerPredecessorIndex revalidate persisted evidence against the exact catalog, ledger, and digest after a process restart"
+    ],
+    "blocked_until": "A separately accepted real dossier, source packet, provenance, license, credit, behavior review, additive release, and independent review are supplied for a concrete title asset."
   },
   "revocation_rule": "Any implementation or test binding hash drift revokes this bounded acceptance."
 }

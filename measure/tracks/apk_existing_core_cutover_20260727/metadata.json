@@ -3,14 +3,14 @@
   "type": "feature",
   "status": "in_progress",
   "created_at": "2026-07-27T00:00:00Z",
-  "updated_at": "2026-07-28T04:21:02Z",
+  "updated_at": "2026-07-31T14:00:00Z",
   "description": "Vertical revalidation and cutover of five already-built core APK cartridges.",
   "estimated_tasks": 7,
   "actual_tasks": null,
   "depends_on": [
     "apk_denominator_readiness_t11_integrity_20260727"
   ],
-  "deviation_notes": "Denominator/readiness predecessor satisfied by accepted receipt d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720; this cohort is authorized to begin scoped work. Task 2's invalid failed/superseded ontology lineage was replaced by exact accepted T3/T4/T5/T6/T7/T10 hashes and title claim locators. T10/T11 still approve zero legacy mappings. The seven dedicated fail-closed invariant groups cover missing role/state bindings, stale catalog/release hashes, direct/private paths, duplicate physical sources, full-pack delivery, unsupported mappings, and premature consumability. The candidate suite passes 22/22 tests. Task 3 is owner-accepted through an additive, hash-bound semantic-adoption receipt; the reviewed source remains candidate/non-consumable and catalog/loaders remain quarantined. Task 4 Advantage Games QC and compact/wide real-input proof are owner-accepted after independent remediation, K3 zero-finding re-review, and bounded R-1 documentation verification; all 11 implementation bindings validated exactly and the game-cartridges suite is 61/61 green. Authorization advances only to beginning Task 5 Reading/Primary host proof. Production catalog exposure, Task-5 success, retirement, cutover, and broader cohort acceptance remain unclaimed and unauthorized.",
+  "deviation_notes": "Denominator/readiness predecessor satisfied by accepted receipt d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720; this cohort is authorized to begin scoped work. Task 2's invalid failed/superseded ontology lineage was replaced by exact accepted T3/T4/T5/T6/T7/T10 hashes and title claim locators. T10/T11 still approve zero legacy mappings. The seven dedicated fail-closed invariant groups cover missing role/state bindings, stale catalog/release hashes, direct/private paths, duplicate physical sources, full-pack delivery, unsupported mappings, and premature consumability. The candidate suite passes 22/22 tests. Task 3 is owner-accepted through an additive, hash-bound semantic-adoption receipt; the reviewed source remains candidate/non-consumable and catalog/loaders remain quarantined. Task 3's current lineage receipt and independent review now rebind whitespace-normalized descendants without rewriting historical accepted bytes. Task 4 Advantage Games QC and compact/wide real-input proof are owner-accepted after independent remediation, K3 zero-finding re-review, and bounded R-1 documentation verification; all 11 implementation bindings validated exactly and the game-cartridges suite is 61/61 green. The exact five-title/17-role canonical-reuse dossiers, disposition matrix, selected unions, additive lineage, and current Reading/Primary 41-result host proofs are consumed by the additive Task-5 acceptance `task5-task6-product-owner-acceptance-v1.json` (SHA-256 4ca0b6983a285ea998399ea2ed6a2e97864db0e62686aca32643932c9e598eda). Task 5 is accepted only for these exact evidence bindings; Task 6 exact legacy-retirement work may begin, while no path deletion, production catalog exposure, deployment, cohort closeout, or broader APK claim is authorized.",
   "reviews": [
     {
       "reviewed_at": "2026-07-27T18:55:00Z",
@@ -100,6 +100,27 @@
         ]
       },
       "task4_state_after_review": "in-progress (reviewer verification only; no owner approval or progression)"
+    },
+    {
+      "reviewed_at": "2026-07-31T00:00:00Z",
+      "kind": "independent-committed-host-proof-remediation-review",
+      "scope": "current committed Reading/Primary Task-5 host-proof files at HEAD, tests, config, domain reset helper, contract, and evidence",
+      "report_path": "measure/tracks/apk_existing_core_cutover_20260727/review-2026-07-31.md",
+      "report_sha256": "145a6a7cfc44d096d9c7f7874ea86ded535307c2f26cd54f47ac92c64cbb1d94",
+      "disposition": "remediated-execution-only-hold",
+      "owner_approval_claimed": false,
+      "verdict_summary": "Primary credentials/class-code seeding and result artifact binding are reproducible; PGlite reset preserves append-only registries; host responsive resolution is shared at the 800px boundary; the adapter consumes the exported request schema; current and historical browser evidence are distinguished without rebinding stale hashes.",
+      "severity_findings": {
+        "critical": [],
+        "high": [],
+        "medium": [],
+        "low": [],
+        "informational": [
+          "Reading post-remediation Playwright proof is bound to the current-source v2 rerun and per-test artifact; prior Reading/Kimi observations remain historical rather than rebound to changed source.",
+          "Task-5 evidence remains execution-only and does not claim asset adoption, migration, retirement, cutover, or cohort acceptance."
+        ]
+      },
+      "task5_state_after_review": "in-progress (remediation and current-source host observations verified; Task-5 acceptance remains pending)"
     }
   ],
   "review_remediations": [
@@ -176,6 +197,25 @@
       "task5_success_claimed": false,
       "retirement_claimed": false,
       "broader_cohort_accepted": false
+    },
+    {
+      "task_number": 5,
+      "accepted_at": "2026-07-31",
+      "approval_message_exact": "Approve the exact five-title/17-role canonical-reuse dossiers, disposition matrix, selected unions, additive lineage, and current Reading/Primary 41-result host proofs bound by the latest zero-blocker audit. Record additive product-owner acceptance with unavailable durable IDs null (never fabricated). Authorize these exact bindings as consumable for Existing Core Task 5 and authorize beginning Task 6 exact legacy retirement; do not yet authorize production catalog exposure, deployment, cohort closeout, or broader APK claims.",
+      "approval_message_sha256": "fc1a516d1883de78f1b3f61e8b68bc0afd0cead98d2fa9e3a85f1a3edc55e7e4",
+      "product_owner_acceptance_path": "measure/tracks/apk_existing_core_cutover_20260727/task5-task6-product-owner-acceptance-v1.json",
+      "product_owner_acceptance_sha256": "4ca0b6983a285ea998399ea2ed6a2e97864db0e62686aca32643932c9e598eda",
+      "durable_user_message_id": null,
+      "durable_user_event_id": null,
+      "authorization": "consume-exact-task5-bindings-and-begin-task6-exact-legacy-retirement",
+      "task5_consumable": true,
+      "task5_acceptance_claimed": true,
+      "task6_begin_authorized": true,
+      "production_catalog_or_loaders_exposed": false,
+      "deployment_authorized": false,
+      "cohort_closeout_authorized": false,
+      "broader_apk_claims_authorized": false,
+      "retirement_completed": false
     }
   ]
 }

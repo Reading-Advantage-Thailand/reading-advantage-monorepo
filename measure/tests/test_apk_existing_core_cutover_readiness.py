@@ -12,7 +12,7 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RECEIPT_PATH = (
     REPO_ROOT
-    / "measure/tracks/apk_denominator_readiness_t11_integrity_20260727"
+    / "measure/archive/apk_denominator_readiness_t11_integrity_20260727"
     / "accepted-readiness-receipt-v1.json"
 )
 EXPECTED_RECEIPT_SHA256 = "d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720"
