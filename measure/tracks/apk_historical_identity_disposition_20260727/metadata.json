@@ -1,12 +1,28 @@
 {
   "track_id": "apk_historical_identity_disposition_20260727",
   "type": "chore",
-  "status": "in_progress",
+  "status": "complete",
   "created_at": "2026-07-27T00:00:00Z",
-  "updated_at": "2026-07-31T00:00:00Z",
-  "description": "Evidence-backed disposition of five historical or cancelled APK identities without authorizing rebuilds.",
+  "updated_at": "2026-07-31T01:27:49Z",
+  "description": "Owner-accepted evidence-backed disposition of five historical or cancelled APK identities without authorizing rebuilds.",
   "estimated_tasks": 6,
-  "actual_tasks": null,
+  "actual_tasks": 6,
   "depends_on": ["apk_denominator_readiness_t11_integrity_20260727"],
-  "deviation_notes": "Denominator/readiness predecessor satisfied by accepted receipt d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720; this cohort is authorized only for scoped evidence/disposition work. Explicitly gated identities and historical labels are not a cutover cohort, are not authorized for rebuild, and remain non-playable unless a future track is approved."
+  "deviation_notes": "Denominator/readiness predecessor satisfied by accepted receipt d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720; this cohort is accepted only for the exact five evidence dispositions and published future-track criteria. Explicitly gated identities and historical labels are not a cutover cohort, are not authorized for rebuild, and remain non-playable unless a separate owner-approved child track is accepted. This track is complete but intentionally remains in its active directory pending archive handling.",
+  "acceptance": {
+    "path": "measure/tracks/apk_historical_identity_disposition_20260727/product-owner-acceptance-v1.json",
+    "sha256": "a06c146baad9dc8d77348f74a6c72b33a00dffe466b8256f68fdb91e45fde2ca"
+  },
+  "future_track_criteria": {
+    "path": "measure/tracks/apk_historical_identity_disposition_20260727/future-track-criteria-v1.json",
+    "sha256": "9d6b973d580293bbbab2ff4d1b25c356d747bacc81ff0ad59a9f092761f8014f"
+  },
+  "gating_state": {
+    "status": "accepted-gated-disposition-only",
+    "current_runtime_claimed": false,
+    "playable_claimed": false,
+    "implementation_authorized": false,
+    "rebuild_authorized": false,
+    "portfolio_completeness_claimed": false
+  }
 }
