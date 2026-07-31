@@ -1,0 +1,45 @@
+{
+  "schema_version": 2,
+  "role": "review-a",
+  "track": "business_operations_graph_baseline_remediation_20260730",
+  "phase": "Phase R2 Task 1 — documented clean-audit attempt independent review",
+  "baseline_sha": "735358479a1b995629a7800b93cf4dc8ddacec0f",
+  "audited_head_sha": "20733be08b322d60d52df238a4da7ee1c56b6f92",
+  "applicability": "applicable",
+  "status": "pass",
+  "summary": "The two audited commits preserve hash-bound raw config, scan, and audit streams; bind the attempt to the accepted R1 archive, manifest, and independent review; and deterministically pin the complete 3,971-symbol unaudited denominator. An independent full scan of a fresh external materialization reproduced config/scan/audit exits 0/0/1 and the raw audit JSON byte for byte without touching repository graph.db. All four integrity sets are empty, but the non-zero audit exit and 3,971 unaudited symbols make the clean branch ineligible, so COMPENSATION_REQUIRED is the only truthful bounded decision. This PASS accepts only R2 Task 1's clean-attempt decision evidence; it is not a clean-audit claim and does not accept compensation, R2 Tasks 2+, R3, or any successor unblock.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "The audited range is exactly two commits: 97cf830c8c600db43845609984881dcdf89693cd and 20733be08b322d60d52df238a4da7ee1c56b6f92, directly above baseline 735358479a1b995629a7800b93cf4dc8ddacec0f. It adds the focused evidence test, the bounded plan disposition, attempt.json, and six raw stream artifacts; git diff --check passed and the protected supervisor, accepted R0 validator, and R1 snapshot producer are unchanged.",
+    "The accepted R1 inputs independently matched the attempt references: snapshot.archive.json is 60,118,552 bytes at ec691ae0551ebf328d15471708104692066255063df496ff895b726c225bffce; snapshot.manifest.json is 2,351,317 bytes at 93f694e0207d941d0c9bdb421c9ed4651ed431c683a33382ff11cd5faac41853; and r1-tasks2-3-independent-review-20260731.json is 8,388 bytes at d410a4ead9ceb5bc0450e5d18eec0b3ea29ab0e737e4ab60b502a55177a6756f with status pass. Production verify_scan_bracketed_snapshot replayed all 6,783 entries and the manifest denominator remains 9786969557e9e36782473d90c823cec1eaf18d7d369d2133691099a45ccf55eb.",
+    "attempt.json is 5,466,733 bytes at 95e0d17e9ab69510e86b85a8b19611578468b4af1ae49fa4f8f54559c6122f1c. Every declared raw artifact path is local, regular, and hash/size exact: config stdout 1,181 bytes at 326eac4341ecd17158ca5fc461505563ce388222a4f9f44a16be40b3499877a4; scan stderr 57,973 bytes at 77023965600be6b12d3466065a7481a5cbb0a2b61284a02b36225891d37342b2; audit stdout 1,548,552 bytes at 6e3c6802b055583aae40cdae3c15b229264f5efc9023f7b625a10f17cb6e2034; and all other streams are empty at the standard SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.",
+    "The recorded repo-graph config command exited 0, its stdout exactly matches a fresh repo-graph 0.1.0 config invocation, and it documents customEdges as the published configuration surface. The attempt records the exact scan config as {customEdges: []}, no include globs, and the exact scan command with --config ../documented-clean-audit-config.json.",
+    "For independent execution, the accepted archive was freshly materialized at the evidence-recorded external root /tmp/opencode/r2-clean-audit-glpaggik/source, the declared resolver shim was added outside the archived denominator, and a config containing exactly {customEdges: []} was used. repo-graph config, scan, and audit independently exited 0, 0, and 1. The scan again reported 43 TypeScript configurations, 88,968 nodes, and 117,446 edges. Repository graph.db was never passed to any command.",
+    "The independently rerun audit stdout was byte-identical to repo-graph-audit.stdout.json. missingFiles, staleSymbols, orphanEdges, and duplicateNodes each remain empty, while unauditedSymbols contains exactly 3,971 unique IDs: 3,306 fields and 665 routes.",
+    "The complete raw unaudited array equals attempt.audit.unaudited, attempt.audit.result.unauditedSymbols, and attempt.compensationDenominator.symbols. Its independently recomputed canonical JSON SHA-256 is d2ee44b5e249a56f3c7bfe24d7371c70701ee30f2973f9d7a271f18de6722b42, exactly the digest pinned by commit 20733be08 and the focused test.",
+    "The clean rule was independently rederived as audit exit 0 AND an empty unaudited set AND empty integrity sets. It evaluates false because the audit exit is 1 and the unaudited denominator is non-empty. attempt.decision.cleanEligible is false, its branch and denominator label are COMPENSATION_REQUIRED, and the plan explicitly says this is not a clean-audit claim.",
+    "The focused deterministic unittest passed all 3 tests, including immutable R1 input references, all six raw stream references, exact 3,971 count, exact denominator digest, clean-eligibility logic, compensation labeling, and evidence-directory closure. A separate standard-library derivation also confirmed all 3,971 IDs are unique and every node is a field or route.",
+    "The repository graph.db SHA-256 remained 77877db9915dd928be649074cf9b860ad0eac37fbb89faec63ef735e36bff496 before and after review. The real Git index object remained c12d4c0b827791c9887445d4ff8bb17ccca612f5 with no staged diff. Existing unrelated dirty and untracked work was preserved; the external rerun directory was removed, and this report is the only repository file written by the reviewer.",
+    "R2 Task 2 and all later compensation, security-matrix, TypeScript-exclusion, upstream-issue, R3 acceptance, and successor-unblock work remain blocked in plan.md. This review makes no parent or successor gate change."
+  ],
+  "commands": [
+    "git status --short; git log --oneline; git show --stat 97cf830c8 20733be08; git diff --shortstat/--name-status/--check 97cf830c8^..20733be08 — pass; exact two-commit scope and intended evidence files confirmed",
+    "git merge-base --is-ancestor checks for 97cf830c8 -> 20733be08 -> HEAD and eed6097bd -> 97cf830c8 — pass; audited commits and accepted R1 baseline are on current history",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_business_operations_graph_baseline_r2_clean_audit — pass; 3 tests in 1.548s",
+    "Independent standard-library artifact/source/denominator verifier — pass; six raw streams, three accepted R1 references, 6,783 archive entries, four empty integrity sets, 3,971 unique unaudited IDs, 3,306 fields, 665 routes, and exact canonical digest verified",
+    "PYTHONDONTWRITEBYTECODE=1 production verify_scan_bracketed_snapshot against r1-task2-source-and-graph-20260731 — pass; 6,783 entries replayed",
+    "repo-graph version; repo-graph config — pass; installed version 0.1.0 and config output match the bound tool and raw config evidence",
+    "Fresh external archive materialization; repo-graph scan . ./audit-attempt.db --config ../documented-clean-audit-config.json; repo-graph audit ./audit-attempt.db --json — pass for expected disposition; exits 0/1 for scan/audit, 88,968 nodes, 117,446 edges, and byte-identical raw audit JSON",
+    "sha256sum graph.db before and after external rerun; git hash-object $(git rev-parse --git-path index); git diff --cached --quiet — pass; graph SHA-256 77877db9915dd928be649074cf9b860ad0eac37fbb89faec63ef735e36bff496 and index object c12d4c0b827791c9887445d4ff8bb17ccca612f5 preserved"
+  ],
+  "changed_files": [
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task1-independent-review-20260731.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": 2,
+  "role": "independent-reviewer",
+  "track": "business_operations_graph_baseline_remediation_20260730",
+  "phase": "Phase R0 follow-up M1 — non-writing fixture-generator check",
+  "baseline_sha": "20733be08b322d60d52df238a4da7ee1c56b6f92",
+  "audited_head_sha": "53cee6cedd1ccc4deb1cf0a3b0d1d968da48184f",
+  "applicability": "applicable",
+  "status": "pass",
+  "summary": "Commits fc2f3ea8e and 53cee6ced are current direct ancestry and close R0-REREVIEW-M1 within its bounded scope. Check mode writes regenerated artifacts only beneath a temporary directory, compares the complete fixture tree byte-for-byte, returns zero for a matching tree and nonzero for drift, and leaves fixture bytes/mtimes, Git status and diffs, and real-index bytes/mtime unchanged. The pass and mismatch tests are behaviorally non-vacuous, all 69 requested focused tests pass, and no Critical or High finding remains.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "HEAD was exactly 53cee6cedd1ccc4deb1cf0a3b0d1d968da48184f. Both reviewed commits are ancestors of HEAD; baseline 20733be08b322d60d52df238a4da7ee1c56b6f92..HEAD contains exactly fc2f3ea8e37c3506102af5ac83aee67cb2fc4348 and 53cee6cedd1ccc4deb1cf0a3b0d1d968da48184f.",
+    "The audited range changes six bounded files with 243 insertions and 18 deletions: the generator, focused generator tests, the R0 fixture-index trust-root pin, the R0 regression-test trust-root pin, the follow-up receipt, and this track's plan. git diff --check passed. measure/automation-supervisor.py and both successor-track directories are unchanged.",
+    "In --check mode, _check_generated_fixtures creates a TemporaryDirectory, copies only generate-fixtures.py and parent-fail-artifacts-v1 into that temporary root, and calls _generate_all with the temporary root. _generate_all redirects the module's existing write helpers through OUT inside try/finally and restores OUT afterward; the real fixture root is used only as the comparison source. The complete relative-path-to-bytes maps are compared over the union, so missing, extra, and changed files are drift.",
+    "The real CLI mismatch probe exited 1 and named 22 drifted fixture files, as expected because preserved dirty source bytes differ from the frozen R0 baseline. Independent before/after fingerprints proved the real fixture tree's bytes, sizes, and nanosecond mtimes unchanged; Git porcelain status, unstaged binary diff, staged binary diff, real-index SHA-256, and real-index mtime were also unchanged.",
+    "The focused generator suite exercised three distinct controls: a matching generated tree returned 0 and reported 32 matching fixture files; a deliberate candidate-envelopes-v1.json byte mutation returned 1 and named that file; and the real dirty-baseline CLI returned 1. The mutation uses a required replacement whose absence would make the test fail, and the mismatch assertion would fail if comparison were vacuous.",
+    "The matching test snapshots every fixture file's SHA-256, size, and nanosecond mtime plus Git status, unstaged/staged binary diffs, and real-index bytes/mtime before and after check mode. The deliberate-fixture mismatch test snapshots every fixture byte identity and mtime, while the real CLI mismatch test independently snapshots both fixture state and all Git/index state. Together they cover preservation on both return paths.",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_business_operations_graph_baseline_fixture_generator passed 3 tests in 67.128 seconds; the matching and mismatch branches were both observed rather than mocked away.",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_business_operations_graph_baseline_remediation passed all 29 accepted R0 tests in 38.663 seconds.",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_business_operations_graph_baseline_snapshot passed all 37 snapshot tests in 42.350 seconds. The three requested modules therefore passed 69 tests total.",
+    "The audited generator SHA-256 is a6d53355f28e72dbddd86d336b830596fe799bf34a0b3fcd388d3c3af40ed071 and the fixture-index SHA-256 is 887f5975b5f876b08751cd3884bb39ac70678320abc9e187875ed84a10e2ea4f, matching the receipt and R0 literal trust root. All reviewed target files remained byte-identical to HEAD after verification.",
+    "The real index SHA-256 remained 61162fb4d80cf483ce808bcaeb83f5ded87bfcfeca9e1d3420a2f0df75339de5 from the mismatch probe through final verification. Existing unrelated dirty and untracked work was not staged, reset, stashed, reverted, repaired, or overwritten; only this review JSON was added.",
+    "This PASS closes only documented Medium finding R0-REREVIEW-M1. Parent Review B and the Admin/CRM successor gates remain blocked; no parent, successor, R1+, or production acceptance is granted."
+  ],
+  "commands": [
+    "git status --short; git log --oneline --decorate -12; git merge-base --is-ancestor fc2f3ea8e HEAD; git merge-base --is-ancestor 53cee6ced HEAD — pass; dirty work recorded and both commits confirmed at current ancestry",
+    "git diff --shortstat/--name-status/--check 20733be08..53cee6ced; git rev-list --count 20733be08..53cee6ced — pass; six bounded files, two commits, and no whitespace errors",
+    "Independent real-fixture/Git/index fingerprint wrapper around PYTHONDONTWRITEBYTECODE=1 python3 measure/tracks/business_operations_graph_baseline_remediation_20260730/fixtures/v1/generate-fixtures.py --check — expected exit 1; 22 drift paths reported and fixture bytes/mtimes, status, unstaged/staged diffs, and index bytes/mtime all preserved",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_business_operations_graph_baseline_fixture_generator — pass; 3 tests in 67.128s",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_business_operations_graph_baseline_remediation — pass; 29 tests in 38.663s",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_business_operations_graph_baseline_snapshot — pass; 37 tests in 42.350s",
+    "sha256sum generate-fixtures.py fixture-index-v1.json; git diff --quiet HEAD -- reviewed targets; sha256sum real index — pass; pinned digests matched, reviewed targets matched HEAD, and index remained unchanged",
+    "git diff --name-only 20733be08..53cee6ced -- measure/automation-supervisor.py successor-track directories — pass; no protected or successor changes"
+  ],
+  "changed_files": [
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r0-m1-independent-review-20260731.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
