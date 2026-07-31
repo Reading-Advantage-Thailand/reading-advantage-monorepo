@@ -18,6 +18,8 @@ const mockLoadExistingCoreQcCartridge = jest.fn(async () => ({
 }));
 
 jest.mock("@reading-advantage/game-contracts", () => ({
+  resolveHostProofViewportProfile: (width: number, resolvedProfile?: "compact" | "wide") =>
+    resolvedProfile ?? (width >= 800 ? "wide" : "compact"),
   EXISTING_CORE_HOST_PROOF_BINDINGS: [
     {
       id: "dragon-flight",
@@ -76,7 +78,10 @@ describe("HostProofGameClient", () => {
   it("keeps one activity id for retries, creates a new one for replay, and resizes the live session", async () => {
     render(<HostProofGameClient />);
 
-    await screen.findByTestId("host-proof-game-container");
+    expect(await screen.findByTestId("host-proof-game-container")).toHaveAttribute(
+      "data-cartridge-id",
+      "dragon-flight",
+    );
     fireEvent.click(screen.getByTestId("host-proof-primary-button"));
 
     await act(async () => {
@@ -109,11 +114,30 @@ describe("HostProofGameClient", () => {
     expect(JSON.parse(replayRequest[1].body).idempotencyKey).not.toBe(retryIds[0]);
   });
 
+  it("uses the shared QC composition at the 768px compact/wide boundary", async () => {
+    Object.defineProperty(window, "innerWidth", { value: 768, writable: true, configurable: true });
+    Object.defineProperty(window, "innerHeight", { value: 800, writable: true, configurable: true });
+    mockResize.mockReturnValue({ supported: true, profile: "compact" });
+
+    render(<HostProofGameClient />);
+
+    expect(await screen.findByTestId("host-proof-profile")).toHaveTextContent("compact");
+  });
+
   it("navigates only among the shared accepted bindings", async () => {
     render(<HostProofGameClient />);
 
     const selector = await screen.findByLabelText("Select host-proof cartridge");
     expect(selector).toHaveValue("dragon-flight");
+
+    await screen.findByTestId("host-proof-game-container");
+    expect(mockCreateQcSession).toHaveBeenCalledTimes(1);
+    fireEvent.change(selector, { target: { value: "dragon-flight" } });
+    expect(screen.getByTestId("host-proof-game-container")).toHaveAttribute(
+      "data-cartridge-id",
+      "dragon-flight",
+    );
+    expect(mockCreateQcSession).toHaveBeenCalledTimes(1);
 
     fireEvent.click(screen.getByRole("button", { name: "Next host-proof cartridge" }));
     expect(selector).toHaveValue("magic-defense");

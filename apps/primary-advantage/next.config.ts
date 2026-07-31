@@ -3,6 +3,7 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
+  allowedDevOrigins: ["127.0.0.1"],
   reactStrictMode: false,
   transpilePackages: [],
   typescript: { ignoreBuildErrors: true },

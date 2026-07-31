@@ -26,7 +26,7 @@ describe("Primary host-proof test configuration", () => {
 
   it("starts Playwright server with the hidden host-proof surface enabled", () => {
     expect(createHostProofPlaywrightWebServerCommand(3001)).toBe(
-      "HOST_PROOF_ENABLED=true PORT=3001 npm run dev",
+      "pnpm exec tsx scripts/seed-host-proof-session.ts && HOST_PROOF_ENABLED=true PORT=3001 npm run dev",
     );
   });
 });

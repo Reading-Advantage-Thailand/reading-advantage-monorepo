@@ -48,10 +48,7 @@ function toHostProofErrorResponse(error: unknown): NextResponse {
  */
 export async function POST(request: NextRequest) {
   if (!isHostProofEnabled()) {
-    return NextResponse.json(
-      { error: { code: "HOST_PROOF_NOT_FOUND", message: "Not found" } },
-      { status: 404 },
-    );
+    return new NextResponse(null, { status: 404 });
   }
 
   const sessionUser = await getCurrentUser();
@@ -104,10 +101,7 @@ export async function POST(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   if (!isHostProofEnabled()) {
-    return NextResponse.json(
-      { error: { code: "HOST_PROOF_NOT_FOUND", message: "Not found" } },
-      { status: 404 },
-    );
+    return new NextResponse(null, { status: 404 });
   }
 
   const sessionUser = await getCurrentUser();
@@ -143,7 +137,10 @@ export async function GET(request: NextRequest) {
       db: tenantDb,
       user,
       tenant: { schoolId },
-      input: { ...(gameType ? { gameType } : {}), ...(limit ? { limit } : {}) },
+      input: {
+        ...(gameType ? { gameType } : {}),
+        ...(limitParam !== null ? { limit } : {}),
+      },
     });
     return NextResponse.json({ history }, { status: 200 });
   } catch (error) {

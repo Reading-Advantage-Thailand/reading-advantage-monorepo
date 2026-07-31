@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import {
   EXISTING_CORE_HOST_PROOF_BINDINGS,
+  resolveHostProofViewportProfile,
   type ExistingCoreHostProofBinding,
   type ExistingCoreHostProofCartridgeId,
 } from "@reading-advantage/game-contracts";
@@ -18,12 +19,6 @@ import type {
 import type { HostProofCompletionResponse, HostProofHistoryEntry } from "@reading-advantage/domain/games";
 
 type CompletionStatus = "idle" | "submitting" | "success" | "duplicate" | "error";
-
-const COMPACT_MAX_WIDTH = 767;
-
-function getViewportProfile(width: number): "compact" | "wide" {
-  return width <= COMPACT_MAX_WIDTH ? "compact" : "wide";
-}
 
 function makeIdempotencyKey(): string {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -49,6 +44,31 @@ interface HostProofUiState {
   historyLoading: boolean;
   completionAttemptId: string;
   replayNonce: number;
+}
+
+/**
+ * Resolves the shared responsive profile through the live QC session.
+ * @param session Active deterministic cartridge session, when loaded.
+ * @param width Browser viewport width in CSS pixels.
+ * @param height Browser viewport height in CSS pixels.
+ * @returns The session composition profile or the shared width fallback.
+ */
+function resolveProfileFromSession(
+  session: ExistingCoreQcSession | null,
+  width: number,
+  height: number,
+): "compact" | "wide" {
+  if (!session) {
+    return resolveHostProofViewportProfile(width);
+  }
+  const composition = session.resize({
+    width: Math.max(1, Math.round(width)),
+    height: Math.max(1, Math.round(height)),
+  });
+  return resolveHostProofViewportProfile(
+    width,
+    composition?.supported ? composition.profile : undefined,
+  );
 }
 
 function initialState(bindings: readonly ExistingCoreHostProofBinding[]): HostProofUiState {
@@ -83,15 +103,10 @@ export function HostProofGameClient() {
   useEffect(() => {
     const handleResize = () => {
       setState((prev) => {
-        if (!prev.session) {
-          return { ...prev, profile: getViewportProfile(window.innerWidth) };
-        }
-
-        prev.session.resize({ width: window.innerWidth, height: window.innerHeight });
         return {
           ...prev,
-          profile: getViewportProfile(window.innerWidth),
-          snapshot: prev.session.snapshot(),
+          profile: resolveProfileFromSession(prev.session, window.innerWidth, window.innerHeight),
+          ...(prev.session ? { snapshot: prev.session.snapshot() } : {}),
         };
       });
     };
@@ -106,16 +121,18 @@ export function HostProofGameClient() {
 
     void (async () => {
       try {
-        const { loadExistingCoreQcCartridge } = await import("@reading-advantage/game-cartridges/qc");
+        const { loadExistingCoreQcCartridge } = await import("@/lib/host-proof-qc-loader");
         const cartridge = await loadExistingCoreQcCartridge(state.selectedId);
         if (!active) return;
         const session = cartridge.createQcSession();
+        const profile = resolveProfileFromSession(session, window.innerWidth, window.innerHeight);
         const snapshot = session.snapshot();
         setState((prev) => ({
           ...prev,
           cartridge,
           session,
           snapshot,
+          profile,
           loading: false,
           totalAttempts: 0,
           correctAnswers: 0,
@@ -231,20 +248,26 @@ export function HostProofGameClient() {
   const selectCartridge = (id: string) => {
     const binding = bindings.find((b) => b.id === id);
     if (binding) {
-      setState((prev) => ({
-        ...prev,
-        selectedId: binding.id,
-        session: null,
-        snapshot: null,
-        cartridge: null,
-        loading: true,
-        totalAttempts: 0,
-        correctAnswers: 0,
-        completionStatus: "idle",
-        completionResult: null,
-        completionError: "",
-        completionAttemptId: makeIdempotencyKey(),
-      }));
+      setState((prev) => {
+        if (prev.selectedId === binding.id) {
+          return prev;
+        }
+
+        return {
+          ...prev,
+          selectedId: binding.id,
+          session: null,
+          snapshot: null,
+          cartridge: null,
+          loading: true,
+          totalAttempts: 0,
+          correctAnswers: 0,
+          completionStatus: "idle",
+          completionResult: null,
+          completionError: "",
+          completionAttemptId: makeIdempotencyKey(),
+        };
+      });
     }
   };
 
@@ -401,6 +424,7 @@ export function HostProofGameClient() {
                       state.profile === "compact" ? "max-w-sm" : "max-w-3xl"
                     }`}
                     data-testid="host-proof-game-container"
+                    data-cartridge-id={state.selectedId}
                     data-profile={state.profile}
                     onKeyDown={(e) => {
                       if (e.code === "Enter" || e.code === "Space" || e.code === "ArrowRight") {

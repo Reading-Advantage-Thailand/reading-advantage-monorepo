@@ -109,6 +109,7 @@ describe("/api/host-proof/games/completions", () => {
       const response = await POST(makeRequest(validInput));
 
       expect(response.status).toBe(404);
+      await expect(response.text()).resolves.toBe("");
       expect(mockGetCurrentUser).not.toHaveBeenCalled();
     });
 
@@ -176,6 +177,7 @@ describe("/api/host-proof/games/completions", () => {
       const response = await GET(makeRequest(undefined, "limit=10"));
 
       expect(response.status).toBe(404);
+      await expect(response.text()).resolves.toBe("");
       expect(mockGetCurrentUser).not.toHaveBeenCalled();
     });
 
@@ -225,6 +227,18 @@ describe("/api/host-proof/games/completions", () => {
       expect(response.status).toBe(400);
       expect(mockGetHostProofGameCompletions).toHaveBeenCalledWith(
         expect.objectContaining({ input: { limit: "not-a-number" } }),
+      );
+    });
+
+    it("preserves zero limits for the shared history validation", async () => {
+      mockGetCurrentUser.mockResolvedValue(mockUser);
+      mockGetHostProofGameCompletions.mockResolvedValue([]);
+
+      const response = await GET(makeRequest(undefined, "limit=0"));
+
+      expect(response.status).toBe(200);
+      expect(mockGetHostProofGameCompletions).toHaveBeenCalledWith(
+        expect.objectContaining({ input: { limit: 0 } }),
       );
     });
   });

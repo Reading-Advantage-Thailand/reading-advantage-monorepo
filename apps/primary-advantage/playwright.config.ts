@@ -10,7 +10,10 @@ export default defineConfig({
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: process.env.CI ? [["dot"]] : [["list"]],
+  reporter: [
+    [process.env.CI ? "dot" : "list"],
+    ["json", { outputFile: "test-results/host-proof-results.json" }],
+  ],
   use: {
     baseURL: BASE_URL,
     viewport: {
@@ -29,6 +32,7 @@ export default defineConfig({
       name: "chromium",
       use: {
         ...devices["Desktop Chrome"],
+        hasTouch: true,
         storageState: "playwright/.auth/host-proof-student.json",
       },
       dependencies: ["setup"],

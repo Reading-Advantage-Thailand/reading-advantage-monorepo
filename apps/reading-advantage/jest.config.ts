@@ -12,6 +12,7 @@ const config: Config = {
   // Add more setup options before each test is run
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   testEnvironment: "jsdom",
+  testPathIgnorePatterns: ["<rootDir>/tests/e2e/"],
   moduleNameMapper: {
     "^@reading-advantage/advantage-play-kit$": "<rootDir>/../../packages/advantage-play-kit/src/index.ts",
     "^@reading-advantage/game-cartridges/qc$": "<rootDir>/../../packages/game-cartridges/src/existing-core-cutover-qc.ts",

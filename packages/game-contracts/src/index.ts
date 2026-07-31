@@ -34,16 +34,20 @@ export type {
 export {
   EXISTING_CORE_HOST_PROOF_BINDINGS,
   EXISTING_CORE_HOST_PROOF_RECEIPTS,
+  HOST_PROOF_RESPONSIVE_WIDE_MIN_WIDTH,
   existingCoreHostProofBindingSchema,
   existingCoreHostProofCartridgeIdSchema,
+  hostProofViewportProfileSchema,
   getExistingCoreHostProofBinding,
   isExistingCoreHostProofCartridge,
+  resolveHostProofViewportProfile,
 } from "./host-proof-bindings.js";
 
 /** Public existing-core host-proof binding types. */
 export type {
   ExistingCoreHostProofBinding,
   ExistingCoreHostProofCartridgeId,
+  HostProofViewportProfile,
 } from "./host-proof-bindings.js";
 
 /** Public APK source-architecture scanner. */
