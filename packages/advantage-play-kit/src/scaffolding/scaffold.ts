@@ -10,6 +10,8 @@
  */
 
 import { validateCartridgeManifest, type CartridgeManifest } from "./cartridge-manifest.js";
+import { assetContractV2SemanticRequirementSchema } from "../assets/asset-contract-v2.js";
+import type { AssetContractV2SemanticRequirement } from "../assets/asset-contract-v2.js";
 import { ACCEPTED_STANDARD_PACK_BINDING } from "./cartridge-manifest.js";
 
 /** Options supplied to the scaffold generator. */
@@ -26,6 +28,8 @@ export interface ScaffoldOptions {
   readonly capabilities: readonly string[];
   /** Semantic asset role keys the cartridge requires (never physical paths). */
   readonly semanticAssetRequirements: readonly string[];
+  /** Optional product role/state requests resolved through descriptor-owned presentation metadata. */
+  readonly semanticStateRequirements?: readonly AssetContractV2SemanticRequirement[];
 }
 
 /** One generated file in the scaffold. */
@@ -53,6 +57,9 @@ export interface CartridgeScaffold {
  * @throws When capabilities are not accepted or semantic requirements contain physical paths.
  */
 export function generateCartridgeScaffold(options: ScaffoldOptions): CartridgeScaffold {
+  const semanticStateRequirements = validateSemanticStateRequirements(
+    options.semanticStateRequirements,
+  );
   const manifest = validateCartridgeManifest({
     schemaVersion: 1,
     id: options.id,
@@ -84,7 +91,7 @@ export function generateCartridgeScaffold(options: ScaffoldOptions): CartridgeSc
     { path: "scene.ts", content: generateSceneModule(manifest) },
     { path: "responsive.ts", content: generateResponsiveModule() },
     { path: "presentation.tsx", content: generatePresentationModule(manifest) },
-    { path: "assets.ts", content: generateAssetsModule(manifest) },
+    { path: "assets.ts", content: generateAssetsModule(manifest, semanticStateRequirements) },
     { path: "attribution.ts", content: generateAttributionModule() },
     { path: "logic.test.ts", content: generateLogicTest(manifest) },
     { path: "browser.test.ts", content: generateBrowserTest(manifest) },
@@ -96,6 +103,27 @@ export function generateCartridgeScaffold(options: ScaffoldOptions): CartridgeSc
     files: Object.freeze(files),
     copiedSourceTree: false,
   });
+}
+
+/**
+ * Validates role/state requests before they are embedded in generated source.
+ * @param candidate Untrusted semantic state requirements supplied by a cartridge author.
+ * @returns Frozen, path-free semantic state requirements.
+ * @throws When a requirement is malformed or contains a physical-path value.
+ */
+function validateSemanticStateRequirements(
+  candidate: unknown,
+): readonly AssetContractV2SemanticRequirement[] {
+  if (candidate === undefined) return Object.freeze([]);
+  const result = assetContractV2SemanticRequirementSchema.array().safeParse(candidate);
+  if (!result.success) {
+    throw new Error(
+      `Semantic state requirements are invalid: ${result.error.issues
+        .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
+        .join("; ")}`,
+    );
+  }
+  return Object.freeze(result.data.map((requirement) => Object.freeze({ ...requirement })));
 }
 
 function generateManifestJson(manifest: CartridgeManifest): string {
@@ -124,6 +152,10 @@ function generateLogicModule(manifest: CartridgeManifest): string {
  * Uses only public APK shared systems; no title-specific APIs, no direct asset paths.
  */
 
+/**
+ * Creates the generated cartridge's shared-system logic boundary.
+ * @returns A cartridge logic object that validates educational input.
+ */
 export function create${pascalCase(manifest.id)}Logic() {
   return {
     initialize(input: unknown) {
@@ -137,14 +169,39 @@ export function create${pascalCase(manifest.id)}Logic() {
 function generateSceneModule(manifest: CartridgeManifest): string {
   return `/**
  * ${manifest.title} scene stub.
- * Scene rendering is a game-owned concern; the scaffold provides the boundary
- * but does not implement rendering, responsive composition, or presentation.
+ * Scene rendering remains game-owned. Descriptor frame order and timing remain
+ * presentation-owned, so this boundary never assumes a frame count.
  */
 
-export function create${pascalCase(manifest.id)}Scene() {
+import {
+  createDescriptorDrivenPresentationAdapter,
+  type AssetContractV2SemanticRegistration,
+} from "@reading-advantage/advantage-play-kit/assets";
+
+/**
+ * Creates the game-owned scene boundary for the generated cartridge.
+ * @param registration Resolver-issued semantic descriptor registration.
+ * @returns A game-owned scene boundary with descriptor-driven clip playback.
+ */
+export function create${pascalCase(manifest.id)}Scene(registration: AssetContractV2SemanticRegistration) {
+  createDescriptorDrivenPresentationAdapter([], [registration]);
+  const descriptor = registration.descriptor;
+
   return {
     create() {
       // Game-owned scene initialization goes here.
+    },
+    /** Returns descriptor-owned clip behavior without imposing a game frame count. */
+    playDescriptorClip(clipId: string) {
+      const clip = descriptor.clips?.find((candidate) => candidate.id === clipId);
+      if (!clip) throw new Error(\`Descriptor \${descriptor.descriptorId} does not define clip \${clipId}\`);
+      return Object.freeze({
+        frames: clip.frames,
+        fps: clip.timing.fps,
+        loop: clip.timing.loop,
+        anchor: descriptor.anchor,
+        renderScale: descriptor.renderScale,
+      });
     },
     update() {
       // Game-owned per-tick update goes here.
@@ -165,6 +222,11 @@ import {
   type ResponsiveCompositionRequest,
 } from "@reading-advantage/advantage-play-kit/responsive";
 
+/**
+ * Resolves the generated cartridge's compact or wide composition.
+ * @param request Host geometry, input, safe-area, and accessibility values.
+ * @returns The supported composition or a structured unsupported-size result.
+ */
 export function resolveProfile(request: Omit<ResponsiveCompositionRequest, "config">) {
   return resolveResponsiveComposition({ ...request, config: DEFAULT_RESPONSIVE_LAYOUT_CONFIG });
 }
@@ -179,6 +241,7 @@ function generatePresentationModule(manifest: CartridgeManifest): string {
   PresentationShell,
 } from "@reading-advantage/advantage-play-kit/presentation";
 
+/** Props for the generated cartridge presentation shell. */
 export interface ${pascalCase(manifest.id)}PresentationProps {
   readonly prompt: string;
   readonly current: number;
@@ -186,6 +249,11 @@ export interface ${pascalCase(manifest.id)}PresentationProps {
   readonly feedback?: string;
 }
 
+/**
+ * Renders the generated cartridge's accessible educational presentation.
+ * @param props Prompt, progress, and optional feedback content.
+ * @returns Semantic DOM presentation components for the cartridge host.
+ */
 export function ${pascalCase(manifest.id)}Presentation(props: ${pascalCase(manifest.id)}PresentationProps) {
   return (
     <PresentationShell accessibleName=${JSON.stringify(manifest.title)}>
@@ -198,14 +266,32 @@ export function ${pascalCase(manifest.id)}Presentation(props: ${pascalCase(manif
 `;
 }
 
-function generateAssetsModule(manifest: CartridgeManifest): string {
+function generateAssetsModule(manifest: CartridgeManifest, semanticStateRequirements: readonly AssetContractV2SemanticRequirement[] = []): string {
   return `import {
   materializeStandardAssetUnion,
+  type AssetContractV2SemanticResolver,
   type StandardAssetCatalog,
 } from "@reading-advantage/advantage-play-kit/assets";
 
+/** Semantic catalog keys selected by the generated cartridge. */
 export const SEMANTIC_ASSET_REQUIREMENTS = ${JSON.stringify(manifest.semanticAssetRequirements)} as const;
+/** Product role/state requests whose presentation is descriptor-owned. */
+export const SEMANTIC_STATE_REQUIREMENTS = ${JSON.stringify(semanticStateRequirements)} as const;
 
+/**
+ * Selects descriptor-driven presentation metadata from product role/state requests.
+ * @param resolver Accepted resolver supplied by the cartridge host.
+ * @returns The descriptor-aware selected union for the generated state requests.
+ */
+export function select${pascalCase(manifest.id)}DescriptorAssets(resolver: AssetContractV2SemanticResolver) {
+  return resolver.select(SEMANTIC_STATE_REQUIREMENTS);
+}
+
+/**
+ * Materializes only the generated cartridge's selected semantic asset union.
+ * @param catalog Accepted standard-pack catalog supplied by the host.
+ * @returns The sorted selected-union asset entries.
+ */
 export function materialize${pascalCase(manifest.id)}Assets(catalog: StandardAssetCatalog) {
   return materializeStandardAssetUnion(catalog, SEMANTIC_ASSET_REQUIREMENTS);
 }
@@ -219,7 +305,9 @@ function generateAttributionModule(): string {
  * end-screen contract used by cartridge hosts and QC.
  */
 
+/** Required standard-pack attribution text. */
 export const REQUIRED_CREDIT = "Pixel art assets by ElvGames" as const;
+/** Host surface where the generated cartridge registers attribution. */
 export const CREDIT_PLACEMENT = "end-screen" as const;
 `;
 }
@@ -240,7 +328,11 @@ describe(${JSON.stringify(manifest.id)}, () => {
 function generateBrowserTest(manifest: CartridgeManifest): string {
   return `import { createBrowserQcDriver } from "@reading-advantage/advantage-play-kit/qc";
 
-/** Provider adapter is supplied by the host's real-browser test runner. */
+/**
+ * Runs the generated cartridge's provider-neutral browser QC sequence.
+ * @param page Provider adapter supplied by the host's real-browser test runner.
+ * @returns The attribution text read from the browser-rendered host surface.
+ */
 export async function verify${pascalCase(manifest.id)}BrowserQc(page: Parameters<typeof createBrowserQcDriver>[0]) {
   const driver = createBrowserQcDriver(page);
   await driver.resize({ width: 390, height: 844 });

@@ -18,6 +18,7 @@ describe("noninteractive cartridge scaffold generator", () => {
       "capability:result-accounting",
     ],
     semanticAssetRequirements: ["ui/16x16/icons/coin"],
+    semanticStateRequirements: [{ role: "player", state: "walk" }],
   };
 
   it("generates a validated manifest pinning the accepted standard-pack release", () => {
@@ -75,6 +76,20 @@ describe("noninteractive cartridge scaffold generator", () => {
     expect(logic?.content).toMatch(/validateNonEmptyContent|createLanguageTargetProgression/);
   });
 
+  it("generates descriptor-driven asset selection from semantic role/state requests", () => {
+    const scaffold = generateCartridgeScaffold(options);
+    const assets = scaffold.files.find((file) => file.path === "assets.ts");
+    const scene = scaffold.files.find((file) => file.path === "scene.ts");
+
+    expect(assets?.content).toMatch(/SEMANTIC_STATE_REQUIREMENTS/);
+    expect(assets?.content).toContain('{"role":"player","state":"walk"}');
+    expect(assets?.content).toMatch(/descriptor-driven/);
+    expect(scene?.content).toMatch(/AssetContractV2SemanticRegistration/);
+    expect(scene?.content).toMatch(/createDescriptorDrivenPresentationAdapter/);
+    expect(scene?.content).toMatch(/descriptor.clips/);
+    expect(scene?.content).not.toMatch(/frames.slice(0, 3)|frames.lengths*===s*3/);
+  });
+
   it("generates a QC registration that records the cartridge for the QC host", () => {
     const scaffold = generateCartridgeScaffold(options);
     const qc = scaffold.files.find((f) => f.path === "qc-registration.json");
@@ -99,5 +114,14 @@ describe("noninteractive cartridge scaffold generator", () => {
         semanticAssetRequirements: ["ui/16x16/icons/coin.png"],
       }),
     ).toThrow(/semantic/i);
+  });
+
+  it("rejects a scaffold request with a physical path in semantic state requirements", () => {
+    expect(() =>
+      generateCartridgeScaffold({
+        ...options,
+        semanticStateRequirements: [{ role: "player", state: "walk.png" }],
+      }),
+    ).toThrow(/semantic state requirements/i);
   });
 });

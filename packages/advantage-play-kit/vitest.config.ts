@@ -3,6 +3,7 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     environment: "jsdom",
+    environmentMatchGlobs: [["src/assets/**/*.test.ts", "node"], ["scripts/**/*.test.ts", "node"]],
     clearMocks: true,
     restoreMocks: true,
     coverage: {

@@ -31,6 +31,11 @@ import {
   type ResponsiveComposition,
   type ResponsiveCompositionRequest,
 } from "../responsive/responsive-composition.js";
+import {
+  validateAssetContractV2Descriptor,
+  type AssetContractV2PhysicalDescriptor,
+  type AssetContractV2SemanticRequirement,
+} from "../assets/asset-contract-v2.js";
 import type { SemanticAssetRequirement } from "../assets/semantic-product-bindings.js";
 import { parseQcControls, type QcControls } from "../qc/qc-kit.js";
 import {
@@ -48,6 +53,36 @@ export const EXEMPLAR_SEMANTIC_ASSET_REQUIREMENTS: readonly SemanticAssetRequire
   Object.freeze({ role: "feedback", state: "correct" }),
   Object.freeze({ role: "control", state: "confirm" }),
 ]);
+
+/** Gameplay-owned semantic identity for the exemplar walk state. */
+export const EXEMPLAR_WALK_SEMANTIC_REQUIREMENT: AssetContractV2SemanticRequirement = Object.freeze({
+  role: "player",
+  state: "walk",
+});
+
+/** A descriptor-owned six-frame walk presentation used only by the exemplar. */
+export const EXEMPLAR_SIX_FRAME_WALK_DESCRIPTOR: AssetContractV2PhysicalDescriptor = validateAssetContractV2Descriptor({
+  contractVersion: 2,
+  descriptorId: "exemplar-player-walk-six-frame",
+  catalogEntryKey: "top-down/32x32/characters/hero-walk",
+  release: {
+    version: "2026.07.23",
+    catalogDigest: "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+    sourceReceiptDigest: "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9",
+  },
+  mediaKind: "animation",
+  geometry: { width: 192, height: 32, frameWidth: 32, frameHeight: 32, columns: 6, rows: 1 },
+  clips: [{
+    id: "walk-down",
+    frames: [{ column: 0, row: 0 }, { column: 1, row: 0 }, { column: 2, row: 0 }, { column: 3, row: 0 }, { column: 4, row: 0 }, { column: 5, row: 0 }],
+    timing: { fps: 12, loop: true },
+  }],
+  directions: [{ direction: "down", clipId: "walk-down" }],
+  anchor: { x: 0.5, y: 1 },
+  renderScale: 2,
+  collisionEnvelope: { x: 0.2, y: 0.4, width: 0.6, height: 0.6 },
+  readabilityEnvelope: { minimumRenderPixels: 24, minimumContrastRatio: 3 },
+});
 
 /** Exemplar XP policy that weights correct answers and accuracy. */
 export const EXEMPLAR_XP_POLICY: ResultAccountingPolicy = Object.freeze({
