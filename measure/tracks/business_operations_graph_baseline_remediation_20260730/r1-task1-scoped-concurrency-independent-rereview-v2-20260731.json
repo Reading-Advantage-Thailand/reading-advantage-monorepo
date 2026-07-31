@@ -1,0 +1,47 @@
+{
+  "schema_version": 2,
+  "role": "review-a",
+  "track": "business_operations_graph_baseline_remediation_20260730",
+  "phase": "Phase R1 Task 1 — source-scoped concurrency independent rereview v2",
+  "baseline_sha": "5aac687a1f3e6d1dd83a8141ec6673fc9f9614fb",
+  "audited_head_sha": "25fd88dd0024960f5b264935121368bb9a8e63d7",
+  "applicability": "applicable",
+  "status": "fail",
+  "summary": "The audited direct descendant closes R1-SCOPED-H1 and R1-SCOPED-M1, and its direct physical-target handling closes the reported one-hop H2 examples while both focused unittest modules pass 64 tests. Acceptance remains blocked because H2 is not complete for a scanner symlink whose target traverses another in-repository symlink: the producer collapses the chain to the final regular target, omits the intermediate symlink from the artifact-bound dependency scope, and accepts changed-and-restored commits that can make the scan consume different bytes from the frozen snapshot.",
+  "blocking_findings": [
+    "[high][R1-SCOPED-H2-REREVIEW] Symlink-chain metadata remains outside the scanner dependency and intervening-commit scope. _descriptor_for_existing_path resolves a scanner symlink directly to its final regular target at measure/business_operations_graph_baseline_snapshot.py:487-506, and _dependency_scope records only the scanner path and that final resolvedTargetPath at lines 894-909. _committed_scanner_drift therefore knows neither an intermediate symlink path nor its target metadata (lines 707-735). An independent temporary-repository probe used src/alias.ts -> ../shared/hop.txt -> source-a.txt, committed hop.txt -> source-b.txt during the scan, then committed its restoration. produce_scan_bracketed_snapshot accepted the bundle and reported dependencyPaths containing src/alias.ts and shared/source-a.txt but not shared/hop.txt. A real scanner can consume source-b bytes while the accepted archive replays source-a bytes, so the changed-and-restored source-binding bypass from H2 remains. Exact remediation: either fail closed when a scanner symlink target traverses another symlink, or discover and artifact-bind every in-repository symlink hop (path, lstat mode, target, and final resolution), include every hop in pre/post denominator/state/staged-diff and intervening-commit scope, and add a changed-and-restored intermediate-symlink adversarial test that must abort. Rerun both unittest modules and obtain another independent rereview."
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "HEAD was verified as 25fd88dd0024960f5b264935121368bb9a8e63d7, exactly the required audited HEAD. The supplied baseline resolves to 5aac687a1f3e6d1dd83a8141ec6673fc9f9614fb; merge-base equals that baseline and the ancestry-path count is one.",
+    "The baseline range changes exactly four intended files with 477 insertions and 62 deletions: the snapshot producer, its focused test module, plan.md, and the remediation receipt. measure/automation-supervisor.py and the accepted R0 validator are unchanged. git diff --check passed.",
+    "The requested combined command passed 64 tests in 50.352 seconds: 35 snapshot-producer tests and 29 accepted R0 remediation tests.",
+    "Independent H1 probes passed outside the committed suite: staged and unstaged deletion of a directly extended nonstandard config retained tombstone, scanner scope, status, replay bytes, and index; staged deletion of a workspace-export target selected the exported nonstandard target and retained replay/state evidence; a staged src/app.ts -> docs/app.md rename retained the source tombstone, status, staged diff, replay bytes, and index while excluding the documentation destination.",
+    "Independent direct H2 probes passed: an unrelated Markdown symlink was absent from manifest and dependencyPaths; staged drift of a non-TypeScript physical target with restored live bytes aborted; changed-and-restored commits to that direct target aborted.",
+    "The additional independent multi-hop H2 probe failed closedness: changed-and-restored commits to shared/hop.txt were accepted, and dependencyPaths omitted shared/hop.txt. This is the sole blocking finding.",
+    "Independent M1 probes tampered both rich manifests and scan records with 41- and 63-character lowercase hexadecimal values. All four cases were rejected by the exact object-ID validation.",
+    "All independent probes created repositories and outputs only under /tmp/opencode. No probe staged, reset, stashed, reverted, repaired, or overwrote a path in the audited repository.",
+    "The shared checkout remained on the exact audited HEAD with no staged diff. Unrelated dirty and untracked work was left intact. Concurrent agents modified additional Advantage Play Kit test/evidence paths during this review, so a whole-worktree porcelain equality claim would be false; those paths were neither touched nor normalized here. The real index hash remained 346a2e347ee9f0d70167f676a04aff4b06cbf451 across the final report checks, and this review changed only the named report file."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git merge-base --is-ancestor 5aac687a1 25fd88dd0024960f5b264935121368bb9a8e63d7; git merge-base 5aac687a1 25fd88dd0024960f5b264935121368bb9a8e63d7; git rev-list --count 5aac687a1..25fd88dd0024960f5b264935121368bb9a8e63d7 — pass; exact audited HEAD and one-commit ancestry confirmed",
+    "git diff --shortstat/--name-status/--check 5aac687a1..25fd88dd0024960f5b264935121368bb9a8e63d7 — pass; four intended files and no whitespace errors",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_business_operations_graph_baseline_snapshot measure.tests.test_business_operations_graph_baseline_remediation — pass; 64 tests in 50.352s",
+    "Independent temporary-repository H1/H2/M1 probe script — requested cases pass: direct staged/unstaged and workspace-export deleted extends, scanner-to-documentation rename tombstone, unrelated symlink exclusion, direct physical-target staged and changed/restored drift rejection, and manifest/scan 41/63-character SHA rejection",
+    "Independent temporary-repository intermediate-symlink probe — fail: INTERMEDIATE_SYMLINK_CHANGED_RESTORED=ACCEPTED; dependencyPaths omitted shared/hop.txt",
+    "git status --porcelain=v2 --untracked-files=all; git diff --cached --quiet; git hash-object $(git rev-parse --git-path index) — no staged diff; unrelated shared-checkout work preserved rather than repaired"
+  ],
+  "changed_files": [
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r1-task1-scoped-concurrency-independent-rereview-v2-20260731.json"
+  ],
+  "test_strategy_violations": [
+    "The focused suite covers a scanner symlink that points directly to a regular physical target but has no adversary for an in-repository multi-hop symlink chain. That gap allows changed-and-restored commits to intermediate symlink metadata to evade the dependency commit scope while all 64 tests remain Green."
+  ],
+  "live_contract_violations": [
+    "FR2.2 and FR2.4 remain violated for multi-hop scanner symlinks: the complete byte-resolution dependency is not in the frozen denominator/state scope, and an intervening changed-and-restored commit can make the canonical scan consume bytes that do not match the accepted archive."
+  ],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high"
+}
