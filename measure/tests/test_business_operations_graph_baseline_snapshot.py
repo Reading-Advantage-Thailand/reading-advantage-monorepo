@@ -164,6 +164,117 @@ class BusinessOperationsGraphSnapshotRedTests(unittest.TestCase):
         self.assertIn("src/app.ts", deleted)
         self.assertIn("D src/app.ts", result.manifest["status"])
 
+    def test_unstaged_deleted_extends_target_is_preserved_in_scope_and_replay(self) -> None:
+        """Retains an unstaged nonstandard tsconfig extends target as a tombstone."""
+        from measure.business_operations_graph_baseline_snapshot import verify_snapshot
+
+        (self.root / "config/base.json").unlink()
+        index_before = (self.root / ".git/index").read_bytes()
+        output = Path(self.temporary.name) / "unstaged-extends-output"
+
+        result = self._producer()(self.root, output, tool_version="test")
+
+        deleted = {entry["path"] for entry in result.manifest["deletedInputs"]}
+        self.assertIn("config/base.json", deleted)
+        self.assertIn("config/base.json", result.pre_state["scannerPaths"])
+        self.assertIn("config/base.json", result.post_state["scannerPaths"])
+        self.assertIn(" D config/base.json", result.pre_state["status"])
+        self.assertEqual(
+            verify_snapshot(output)["config/base.json"],
+            b'{"compilerOptions":{"strict":true}}\n',
+        )
+        self.assertEqual(index_before, (self.root / ".git/index").read_bytes())
+
+    def test_staged_deleted_extends_target_is_preserved_in_scope_and_replay(self) -> None:
+        """Retains a staged nonstandard tsconfig extends target as a tombstone."""
+        from measure.business_operations_graph_baseline_snapshot import verify_snapshot
+
+        (self.root / "config/base.json").unlink()
+        self._git("add", "config/base.json")
+        index_before = (self.root / ".git/index").read_bytes()
+        output = Path(self.temporary.name) / "staged-extends-output"
+
+        result = self._producer()(self.root, output, tool_version="test")
+
+        deleted = {entry["path"] for entry in result.manifest["deletedInputs"]}
+        self.assertIn("config/base.json", deleted)
+        self.assertIn("config/base.json", result.pre_state["scannerPaths"])
+        self.assertIn("D config/base.json", result.pre_state["status"])
+        self.assertIn("config/base.json", result.pre_state["stagedDiff"])
+        self.assertEqual(
+            verify_snapshot(output)["config/base.json"],
+            b'{"compilerOptions":{"strict":true}}\n',
+        )
+        self.assertEqual(index_before, (self.root / ".git/index").read_bytes())
+
+    def test_staged_deleted_workspace_export_extends_target_is_preserved(self) -> None:
+        """Retains a deleted workspace-export tsconfig dependency outside filename rules."""
+        from measure.business_operations_graph_baseline_snapshot import verify_snapshot
+
+        self._write(
+            "packages/demo/package.json",
+            '{"name":"@snapshot/demo-config","exports":{"./strict":"./config/base.json"}}\n',
+        )
+        self._write(
+            "packages/demo/config/base.json",
+            '{"compilerOptions":{"noUncheckedIndexedAccess":true}}\n',
+        )
+        self._write(
+            "packages/demo/strict.json",
+            '{"compilerOptions":{"strict":false}}\n',
+        )
+        self._write(
+            "tsconfig.json",
+            '{"extends":"@snapshot/demo-config/strict","include":["src"]}\n',
+        )
+        self._git(
+            "add",
+            "packages/demo/package.json",
+            "packages/demo/config/base.json",
+            "packages/demo/strict.json",
+            "tsconfig.json",
+        )
+        self._git("commit", "-m", "add workspace config export")
+        (self.root / "packages/demo/config/base.json").unlink()
+        self._git("add", "packages/demo/config/base.json")
+        index_before = (self.root / ".git/index").read_bytes()
+        output = Path(self.temporary.name) / "workspace-extends-output"
+
+        result = self._producer()(self.root, output, tool_version="test")
+
+        target = "packages/demo/config/base.json"
+        self.assertIn(target, {entry["path"] for entry in result.manifest["deletedInputs"]})
+        self.assertIn(target, result.manifest["discovery"]["extendsPaths"])
+        self.assertIn(target, result.pre_state["scannerPaths"])
+        self.assertIn(target, result.pre_state["stagedDiff"])
+        self.assertEqual(
+            verify_snapshot(output)[target],
+            b'{"compilerOptions":{"noUncheckedIndexedAccess":true}}\n',
+        )
+        self.assertEqual(index_before, (self.root / ".git/index").read_bytes())
+
+    def test_staged_scanner_to_documentation_rename_keeps_source_tombstone(self) -> None:
+        """Retains a scanner rename source even when its destination is not a scanner input."""
+        from measure.business_operations_graph_baseline_snapshot import verify_snapshot
+
+        destination = self.root / "docs/app.md"
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        (self.root / "src/app.ts").rename(destination)
+        self._git("add", "-A")
+        index_before = (self.root / ".git/index").read_bytes()
+        output = Path(self.temporary.name) / "scanner-rename-output"
+
+        result = self._producer()(self.root, output, tool_version="test")
+
+        source = "src/app.ts"
+        self.assertIn(source, {entry["path"] for entry in result.manifest["deletedInputs"]})
+        self.assertIn(source, result.pre_state["scannerPaths"])
+        self.assertIn(source, result.post_state["scannerPaths"])
+        self.assertIn(source, result.pre_state["status"])
+        self.assertIn(source, result.pre_state["stagedDiff"])
+        self.assertEqual(verify_snapshot(output)[source], b"export const app = 1;\n")
+        self.assertEqual(index_before, (self.root / ".git/index").read_bytes())
+
     def test_symlink_is_archived_with_target_metadata_and_bytes(self) -> None:
         """Archives an in-repository TypeScript symlink without following directories."""
         (self.root / "src/alias.ts").symlink_to("app.ts")
@@ -175,9 +286,97 @@ class BusinessOperationsGraphSnapshotRedTests(unittest.TestCase):
         self.assertEqual(entry["resolvedTargetPath"], "src/app.ts")
         self.assertEqual(entry["sha256"], hashlib.sha256(b"export const app = 1;\n").hexdigest())
 
+    def test_non_scanner_markdown_symlink_is_excluded_from_discovery(self) -> None:
+        """Excludes unrelated file symlinks instead of adding every symlink to scope."""
+        markdown_link = self.root / "docs/alias.md"
+        markdown_link.parent.mkdir(parents=True, exist_ok=True)
+        markdown_link.symlink_to("../src/app.ts")
+
+        with tempfile.TemporaryDirectory() as output:
+            result = self._producer()(self.root, output, tool_version="test")
+
+        self.assertNotIn(
+            "docs/alias.md",
+            {entry["path"] for entry in result.manifest["entries"]},
+        )
+
+    def test_symlink_target_staged_drift_aborts_when_live_bytes_are_restored(self) -> None:
+        """Rejects staged drift in physical bytes supplied through a scanner symlink."""
+        from measure.business_operations_graph_baseline_snapshot import SnapshotDriftError
+
+        target = self.root / "shared/source.txt"
+        self._write("shared/source.txt", "export const source = 1;\n")
+        (self.root / "src/alias.ts").symlink_to("../shared/source.txt")
+        self._git("add", "shared/source.txt", "src/alias.ts")
+        self._git("commit", "-m", "add scanner symlink target")
+        index_after_drift: list[bytes] = []
+        output = Path(self.temporary.name) / "symlink-target-staged-drift-output"
+
+        with tempfile.TemporaryDirectory() as pristine_output:
+            pristine = self._producer()(self.root, pristine_output, tool_version="test")
+        self.assertIn("shared/source.txt", pristine.pre_state["dependencyPaths"])
+        self.assertIn("shared/source.txt", pristine.post_state["dependencyPaths"])
+
+        def staged_target_drift() -> None:
+            """Stages target bytes before restoring the live target content."""
+            self._write("shared/source.txt", "export const source = 2;\n")
+            self._git("add", "shared/source.txt")
+            self._write("shared/source.txt", "export const source = 1;\n")
+            index_after_drift.append((self.root / ".git/index").read_bytes())
+
+        with self.assertRaises(SnapshotDriftError) as caught:
+            self._producer()(
+                self.root,
+                output,
+                tool_version="test",
+                before_post_check=staged_target_drift,
+            )
+        self.assertIn("status or staged-diff", str(caught.exception))
+        self.assertEqual(index_after_drift, [(self.root / ".git/index").read_bytes()])
+        self.assertFalse(output.exists())
+
+    def test_changed_and_reverted_symlink_target_commits_during_scan_abort(self) -> None:
+        """Rejects changed-and-restored non-TypeScript target commits supplying scanner bytes."""
+        from measure.business_operations_graph_baseline_snapshot import (
+            SnapshotDriftError,
+            produce_scan_bracketed_snapshot,
+        )
+
+        self._write("shared/source.txt", "export const source = 1;\n")
+        (self.root / "src/alias.ts").symlink_to("../shared/source.txt")
+        self._git("add", "shared/source.txt", "src/alias.ts")
+        self._git("commit", "-m", "add scanner symlink target")
+        (self.root / ".git/info/exclude").write_text("graph.db\n", encoding="utf-8")
+        output = Path(self.temporary.name) / "symlink-target-commit-drift-output"
+
+        def scan_runner(repo: Path) -> dict[str, object]:
+            """Writes scan output while committing and restoring the physical target."""
+            (repo / "graph.db").write_bytes(b"graph output\n")
+            self._write("shared/source.txt", "export const source = 2;\n")
+            self._git("add", "shared/source.txt")
+            self._git("commit", "-m", "test: change symlink target")
+            self._write("shared/source.txt", "export const source = 1;\n")
+            self._git("add", "shared/source.txt")
+            self._git("commit", "-m", "test: restore symlink target")
+            return {
+                "command": "repo-graph scan . ./graph.db",
+                "exitCode": 0,
+                "graphPath": "graph.db",
+                "stderr": "",
+                "stdout": "scanned",
+            }
+
+        with self.assertRaises(SnapshotDriftError) as caught:
+            produce_scan_bracketed_snapshot(
+                self.root, output, tool_version="test", scan_runner=scan_runner
+            )
+        self.assertIn("shared/source.txt", str(caught.exception))
+        self.assertFalse(output.exists())
+
     def test_duplicate_and_traversal_archive_paths_are_rejected(self) -> None:
         """Rejects duplicate, absolute, traversal, and alias archive paths."""
         from measure.business_operations_graph_baseline_snapshot import (
+            SCHEMA_VERSION,
             SnapshotValidationError,
             replay_archive,
         )
@@ -187,7 +386,7 @@ class BusinessOperationsGraphSnapshotRedTests(unittest.TestCase):
             archive = {
                 "archiveKind": "source-snapshot",
                 "encoding": "base64-per-entry",
-                "schemaVersion": 2,
+                "schemaVersion": SCHEMA_VERSION,
                 "entries": [
                     {
                         "contentBase64": content,
@@ -255,9 +454,13 @@ class BusinessOperationsGraphSnapshotRedTests(unittest.TestCase):
         (self.root / ".git/info/exclude").write_text("graph.db\n", encoding="utf-8")
         original_capture = snapshot_module._capture_state
 
-        def capture(repo: Path, scanner_paths: object):
+        def capture(
+            repo: Path,
+            scanner_paths: object,
+            dependency_paths: object | None = None,
+        ):
             events.append("capture")
-            return original_capture(repo, scanner_paths)
+            return original_capture(repo, scanner_paths, dependency_paths)
 
         def scan_runner(repo: Path) -> dict[str, object]:
             events.append("scan")
@@ -464,6 +667,57 @@ class BusinessOperationsGraphSnapshotRedTests(unittest.TestCase):
                 state["status"] = "tampered"
                 path.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
                 with self.assertRaises(SnapshotValidationError):
+                    verify_snapshot(output_path)
+
+    def test_verification_rejects_noncanonical_manifest_and_scan_object_ids(self) -> None:
+        """Rejects 41- and 63-character SHA-like values in manifests and scan records."""
+        from measure.business_operations_graph_baseline_snapshot import (
+            SnapshotValidationError,
+            produce_scan_bracketed_snapshot,
+            verify_snapshot,
+        )
+
+        (self.root / ".git/info/exclude").write_text("graph.db\n", encoding="utf-8")
+
+        def scan_runner(repo: Path) -> dict[str, object]:
+            """Writes deterministic ignored graph bytes for scan-record verification."""
+            (repo / "graph.db").write_bytes(b"graph output\n")
+            return {
+                "command": "repo-graph scan . ./graph.db",
+                "exitCode": 0,
+                "graphPath": "graph.db",
+                "stderr": "",
+                "stdout": "scanned",
+            }
+
+        for length in (41, 63):
+            with self.subTest(artifact="manifest", length=length), tempfile.TemporaryDirectory() as output:
+                output_path = Path(output)
+                self._producer()(self.root, output_path, tool_version="test")
+                manifest_path = output_path / "snapshot.manifest.json"
+                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                manifest["baselineHead"] = "a" * length
+                manifest["preHead"] = "a" * length
+                manifest_path.write_text(
+                    json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+                    encoding="utf-8",
+                )
+                with self.assertRaisesRegex(SnapshotValidationError, "manifest HEAD interval is invalid"):
+                    verify_snapshot(output_path)
+
+            with self.subTest(artifact="scan", length=length), tempfile.TemporaryDirectory() as output:
+                output_path = Path(output)
+                produce_scan_bracketed_snapshot(
+                    self.root, output_path, tool_version="test", scan_runner=scan_runner
+                )
+                scan_path = output_path / "snapshot.scan.json"
+                scan = json.loads(scan_path.read_text(encoding="utf-8"))
+                scan["preHead"] = "a" * length
+                scan_path.write_text(
+                    json.dumps(scan, indent=2, sort_keys=True) + "\n",
+                    encoding="utf-8",
+                )
+                with self.assertRaisesRegex(SnapshotValidationError, "scan artifact HEAD interval is invalid"):
                     verify_snapshot(output_path)
 
     def test_verification_rejects_tampered_r0_archive_and_manifest(self) -> None:

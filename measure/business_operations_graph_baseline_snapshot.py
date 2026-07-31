@@ -32,7 +32,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any, Callable, Iterable
 
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 R0_SCHEMA_VERSION = 1
 ARCHIVE_KIND = "source-snapshot"
 ARCHIVE_ENCODING = "base64-per-entry"
@@ -69,6 +69,15 @@ class SnapshotDriftError(SnapshotError):
 
 
 @dataclasses.dataclass(frozen=True)
+class _GitNameStatus:
+    """One Git name-status record, retaining rename source and destination identity."""
+
+    code: str
+    path: str
+    destination_path: str | None = None
+
+
+@dataclasses.dataclass(frozen=True)
 class _FileDescriptor:
     """One discovered scanner-input entry after normalization."""
 
@@ -92,6 +101,11 @@ def _canonical(value: Any) -> bytes:
 def _sha(data: bytes) -> str:
     """Returns the lowercase SHA-256 hex digest of ``data``."""
     return hashlib.sha256(data).hexdigest()
+
+
+def _is_git_object_id(value: Any) -> bool:
+    """Reports whether a value is an exact SHA-1 or SHA-256 Git object ID."""
+    return isinstance(value, str) and re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", value) is not None
 
 
 def _normalize_repo_path(value: str) -> str:
@@ -171,23 +185,25 @@ def _git_pathspec_args(paths: Iterable[str] | None) -> list[str] | None:
 
 def _git_unstaged_status(
     repo: Path, paths: Iterable[str] | None = None
-) -> list[tuple[str, str]]:
+) -> list[_GitNameStatus]:
     """Returns scoped unstaged status entries without mutating the index."""
     pathspec = _git_pathspec_args(paths)
     if pathspec is None:
         return []
-    output = _git_text(repo, "diff", "--name-status", "-z", *pathspec)
+    output = _git_text(repo, "diff", "--find-renames", "--name-status", "-z", *pathspec)
     return _parse_name_status_z(output)
 
 
 def _git_staged_status(
     repo: Path, paths: Iterable[str] | None = None
-) -> list[tuple[str, str]]:
+) -> list[_GitNameStatus]:
     """Returns scoped staged status entries without mutating the index."""
     pathspec = _git_pathspec_args(paths)
     if pathspec is None:
         return []
-    output = _git_text(repo, "diff", "--cached", "--name-status", "-z", *pathspec)
+    output = _git_text(
+        repo, "diff", "--cached", "--find-renames", "--name-status", "-z", *pathspec
+    )
     return _parse_name_status_z(output)
 
 
@@ -204,15 +220,15 @@ def _git_deleted_tracked_paths(repo: Path) -> list[str]:
     """Returns staged and unstaged deleted tracked paths without mutating the index."""
     output = _git_text(repo, "ls-files", "--deleted", "-z")
     deleted = {entry for entry in output.split("\x00") if entry}
-    deleted.update(
-        path for code, path in _git_staged_status(repo) if code.startswith("D")
-    )
+    for record in [*_git_unstaged_status(repo), *_git_staged_status(repo)]:
+        if record.code.startswith("D") or record.code.startswith("R"):
+            deleted.add(record.path)
     return sorted(deleted)
 
 
-def _parse_name_status_z(output: str) -> list[tuple[str, str]]:
-    """Parses ``git diff-index -z`` output into ``(code, path)`` tuples."""
-    entries: list[tuple[str, str]] = []
+def _parse_name_status_z(output: str) -> list[_GitNameStatus]:
+    """Parses NUL-delimited Git name-status output without flattening renames."""
+    entries: list[_GitNameStatus] = []
     parts = output.split("\x00")
     index = 0
     while index < len(parts):
@@ -224,12 +240,16 @@ def _parse_name_status_z(output: str) -> list[tuple[str, str]]:
         index += 1
         if index >= len(parts):
             break
-        path_count = 2 if code.startswith(("R", "C")) else 1
-        for _ in range(path_count):
-            if index >= len(parts) or not parts[index]:
+        if code.startswith(("R", "C")):
+            if index + 1 >= len(parts) or not parts[index] or not parts[index + 1]:
                 break
-            entries.append((code, parts[index]))
-            index += 1
+            entries.append(_GitNameStatus(code, parts[index], parts[index + 1]))
+            index += 2
+            continue
+        if not parts[index]:
+            break
+        entries.append(_GitNameStatus(code, parts[index]))
+        index += 1
     return entries
 
 
@@ -403,8 +423,9 @@ def _resolve_existing_extends_path(
     extends: str,
     worktree_root: Path,
     workspace_packages: dict[str, tuple[str, dict[str, Any]]],
+    deleted_paths: set[str],
 ) -> str | None:
-    """Resolves one reachable in-repository tsconfig target if it exists safely."""
+    """Resolves one reachable in-repository tsconfig target or tracked tombstone safely."""
     if not extends or "\x00" in extends or "\\" in extends:
         return None
     raw_candidates: list[str]
@@ -425,12 +446,12 @@ def _resolve_existing_extends_path(
                 suffix = extends[len(name) + 1:]
             else:
                 continue
+            raw_candidates.insert(0, f"{package_dir}/{suffix}")
             export_target = exports.get("./" + suffix)
             if isinstance(export_target, str):
                 raw_candidates.insert(
                     0, f"{package_dir}/{export_target.removeprefix('./')}"
                 )
-            raw_candidates.insert(0, f"{package_dir}/{suffix}")
     candidates: list[str] = []
     for raw in raw_candidates:
         candidates.extend(
@@ -444,8 +465,13 @@ def _resolve_existing_extends_path(
         absolute = worktree_root / relative
         if (
             _is_safely_within_root(absolute, worktree_root)
-            and absolute.is_file()
-            and (not absolute.is_symlink() or _is_within_root(absolute, worktree_root))
+            and (
+                (
+                    absolute.is_file()
+                    and (not absolute.is_symlink() or _is_within_root(absolute, worktree_root))
+                )
+                or relative in deleted_paths
+            )
         ):
             return relative
     return None
@@ -502,6 +528,7 @@ def _load_reachable_extends(
     tracked: set[str],
     configs: dict[str, dict[str, Any]],
     descriptors: dict[str, _FileDescriptor],
+    deleted_paths: set[str],
 ) -> set[str]:
     """Parses every recursively reachable in-repository tsconfig extends target."""
     targets: set[str] = set()
@@ -537,7 +564,7 @@ def _load_reachable_extends(
             if not isinstance(value, str):
                 continue
             target = _resolve_existing_extends_path(
-                owner, value, worktree_root, workspace_packages
+                owner, value, worktree_root, workspace_packages, deleted_paths
             )
             if target is None:
                 continue
@@ -547,9 +574,14 @@ def _load_reachable_extends(
                 )
             targets.add(target)
             if target not in descriptors:
-                descriptors[target] = _descriptor_for_existing_path(
-                    worktree_root, target, tracked
-                )
+                if target in deleted_paths and not (worktree_root / target).exists():
+                    descriptors[target] = _deleted_descriptor(worktree_root, target)
+                else:
+                    descriptors[target] = _descriptor_for_existing_path(
+                        worktree_root, target, tracked
+                    )
+            if descriptors[target].state == "deleted":
+                continue
             if target not in configs:
                 configs[target] = _read_jsonc(worktree_root / target)
             visit(target, stack)
@@ -604,6 +636,7 @@ def _build_scanner_input_index(
 ]:
     """Builds the in-memory scanner-input set without writing any artifact."""
     package_globs_list = list(package_globs)
+    deleted_paths = set(_git_deleted_tracked_paths(worktree_root))
     configs: dict[str, dict[str, Any]] = {}
     symlink_files: dict[str, _FileDescriptor] = {}
     regular_files: dict[str, _FileDescriptor] = {}
@@ -611,6 +644,8 @@ def _build_scanner_input_index(
         relative = path.relative_to(worktree_root).as_posix()
         if path.is_symlink():
             if path.resolve(strict=False).is_dir():
+                continue
+            if not _is_scanner_input(relative, path.name, package_globs_list):
                 continue
             descriptor = _descriptor_for_existing_path(worktree_root, relative, tracked)
             symlink_files[relative] = descriptor
@@ -632,22 +667,25 @@ def _build_scanner_input_index(
         )
     all_files = {**regular_files, **symlink_files}
     extends_targets = _load_reachable_extends(
-        worktree_root, tracked, configs, all_files
+        worktree_root, tracked, configs, all_files, deleted_paths
     )
-    descriptors = sorted(
-        all_files.values(),
-        key=lambda item: item.path,
-    )
-    deleted = sorted(
-        (
-            _deleted_descriptor(worktree_root, relative)
-            for relative in _git_deleted_tracked_paths(worktree_root)
-            if _is_scanner_input(
-                relative, PurePosixPath(relative).name, package_globs_list
+    deleted_by_path = {
+        descriptor.path: descriptor
+        for descriptor in all_files.values()
+        if descriptor.state == "deleted"
+    }
+    for relative in deleted_paths:
+        if _is_scanner_input(
+            relative, PurePosixPath(relative).name, package_globs_list
+        ):
+            deleted_by_path.setdefault(
+                relative, _deleted_descriptor(worktree_root, relative)
             )
-        ),
+    descriptors = sorted(
+        (descriptor for descriptor in all_files.values() if descriptor.state != "deleted"),
         key=lambda item: item.path,
     )
+    deleted = sorted(deleted_by_path.values(), key=lambda item: item.path)
     return descriptors, deleted, configs, extends_targets
 
 
@@ -773,14 +811,20 @@ def _git_staged_diff(repo: Path, paths: Iterable[str] | None = None) -> str:
     pathspec = _git_pathspec_args(paths)
     if pathspec is None:
         return ""
-    return _git_text(repo, "diff", "--binary", "--no-color", "--cached", *pathspec)
+    return _git_text(
+        repo, "diff", "--binary", "--no-color", "--cached", "--find-renames", *pathspec
+    )
 
 
 def _serialize_state_artifact(
-    porcelain: str, staged_diff: str, scanner_paths: Iterable[str]
+    porcelain: str,
+    staged_diff: str,
+    scanner_paths: Iterable[str],
+    dependency_paths: Iterable[str],
 ) -> tuple[dict[str, Any], dict[str, str]]:
-    """Returns a scanner-scoped state artifact body and its derived digests."""
+    """Returns a scanner dependency-scoped state artifact body and its digests."""
     body = {
+        "dependencyPaths": sorted({_normalize_repo_path(path) for path in dependency_paths}),
         "porcelain": porcelain,
         "scannerPaths": sorted({_normalize_repo_path(path) for path in scanner_paths}),
         "schemaVersion": SCHEMA_VERSION,
@@ -847,26 +891,67 @@ def _deleted_entries(descriptors: Iterable[_FileDescriptor]) -> list[dict[str, A
     ]
 
 
+def _dependency_scope(
+    descriptors: Iterable[_FileDescriptor], deleted: Iterable[_FileDescriptor]
+) -> list[str]:
+    """Returns manifest inputs plus physical targets that supply live scanner bytes."""
+    all_descriptors = [*descriptors, *deleted]
+    paths = {descriptor.path for descriptor in all_descriptors}
+    paths.update(
+        descriptor.resolved_target_path
+        for descriptor in all_descriptors
+        if (
+            descriptor.state != "deleted"
+            and descriptor.kind == "symlink"
+            and descriptor.resolved_target_path is not None
+        )
+    )
+    return sorted(paths)
+
+
 def _capture_state(
-    repo: Path, scanner_paths: Iterable[str]
+    repo: Path,
+    scanner_paths: Iterable[str],
+    dependency_paths: Iterable[str] | None = None,
 ) -> tuple[dict[str, Any], dict[str, str]]:
-    """Captures scanner-scoped pre or post status and staged-diff evidence."""
+    """Captures pre or post status and staged diff for bound scanner dependencies."""
     paths = sorted({_normalize_repo_path(path) for path in scanner_paths})
-    porcelain = _build_porcelain(repo, paths)
-    staged_diff = _git_staged_diff(repo, paths)
-    return _serialize_state_artifact(porcelain, staged_diff, paths)
+    scope = sorted(
+        {
+            _normalize_repo_path(path)
+            for path in (dependency_paths if dependency_paths is not None else paths)
+        }
+    )
+    porcelain = _build_porcelain(repo, scope)
+    staged_diff = _git_staged_diff(repo, scope)
+    return _serialize_state_artifact(porcelain, staged_diff, paths, scope)
+
+
+def _scoped_status_paths(record: _GitNameStatus, paths: set[str]) -> list[str]:
+    """Returns the in-scope sides of one Git status record in source-first order."""
+    candidates = [record.path]
+    if record.destination_path is not None:
+        candidates.append(record.destination_path)
+    return [path for path in candidates if path in paths]
 
 
 def _build_porcelain(repo: Path, scanner_paths: Iterable[str]) -> str:
-    """Returns one scanner-scoped status string without mutating the Git index."""
+    """Returns one dependency-scoped status string without mutating the Git index."""
     parts: list[str] = []
-    paths = list(scanner_paths)
-    for code, path in _git_unstaged_status(repo, paths):
-        if code:
-            parts.append(f" {code[0]} {path}")
-    for code, path in _git_staged_status(repo, paths):
-        if code:
-            parts.append(f"{code[0]} {path}")
+    paths = sorted({_normalize_repo_path(path) for path in scanner_paths})
+    path_set = set(paths)
+    for record in _git_unstaged_status(repo, paths):
+        if record.code:
+            parts.extend(
+                f" {record.code[0]} {path}"
+                for path in _scoped_status_paths(record, path_set)
+            )
+    for record in _git_staged_status(repo, paths):
+        if record.code:
+            parts.extend(
+                f"{record.code[0]} {path}"
+                for path in _scoped_status_paths(record, path_set)
+            )
     for path in _git_untracked_paths(repo, paths):
         parts.append(f"?? {path}")
     return "\n".join(sorted(set(parts)))
@@ -1265,14 +1350,20 @@ def produce_snapshot(
     descriptors, deleted, configs, extends_targets, package_globs = _capture_denominator(repo)
     pre_denominator = _denominator_metadata(descriptors, deleted)
     pre_paths = [entry["path"] for entry in pre_denominator]
-    pre_body, pre_digests = _capture_state(repo, pre_paths)
+    pre_dependency_paths = _dependency_scope(descriptors, deleted)
+    pre_body, pre_digests = _capture_state(repo, pre_paths, pre_dependency_paths)
     scan_result = _validate_scan_result(repo, scan_runner(repo)) if scan_runner is not None else None
     if before_post_check is not None:
         before_post_check()
     post_descriptors, post_deleted, _, _, _ = _capture_denominator(repo)
     post_denominator = _denominator_metadata(post_descriptors, post_deleted)
     post_paths = [entry["path"] for entry in post_denominator]
-    post_body, post_digests = _capture_state(repo, sorted(set(pre_paths) | set(post_paths)))
+    post_dependency_paths = _dependency_scope(post_descriptors, post_deleted)
+    post_body, post_digests = _capture_state(
+        repo,
+        sorted(set(pre_paths) | set(post_paths)),
+        sorted(set(pre_dependency_paths) | set(post_dependency_paths)),
+    )
     post_head = _git_text(repo, "rev-parse", "HEAD").strip()
     try:
         post_worktree_state = _check_worktree_state(repo)
@@ -1312,7 +1403,7 @@ def produce_snapshot(
             repo,
             baseline_head,
             post_head,
-            sorted(set(pre_paths) | set(post_paths)),
+            sorted(set(pre_dependency_paths) | set(post_dependency_paths)),
             package_globs,
         )
         if committed_drift is not None:
@@ -1568,13 +1659,30 @@ def _verify_r0_projection_artifacts(
         raise SnapshotValidationError("R0 manifest does not match the rich bundle projection")
 
 
+def _manifest_dependency_scope(entries: Iterable[dict[str, Any]]) -> list[str]:
+    """Returns the artifact-bound scanner and physical-target scope from manifest entries."""
+    entry_list = list(entries)
+    paths = {_normalize_repo_path(entry["path"]) for entry in entry_list}
+    paths.update(
+        _normalize_repo_path(entry["resolvedTargetPath"])
+        for entry in entry_list
+        if (
+            entry["state"] != "deleted"
+            and entry["kind"] == "symlink"
+            and isinstance(entry["resolvedTargetPath"], str)
+        )
+    )
+    return sorted(paths)
+
+
 def _verify_state_artifacts(output: Path, manifest: dict[str, Any]) -> None:
     """Verifies rich and R0 pre/post state artifacts against the manifest and each other."""
     rich_keys = {
-        "denominatorSha256", "porcelain", "porcelainSha256", "schemaVersion",
+        "denominatorSha256", "dependencyPaths", "porcelain", "porcelainSha256", "schemaVersion",
         "scannerPaths", "stagedDiff", "stagedDiffSha256", "status", "statusSha256",
     }
     expected_scanner_paths = sorted(entry["path"] for entry in manifest["entries"])
+    expected_dependency_paths = _manifest_dependency_scope(manifest["entries"])
     rich_states = [
         _read_snapshot_json(output, "snapshot.pre-state.json"),
         _read_snapshot_json(output, "snapshot.post-state.json"),
@@ -1586,6 +1694,8 @@ def _verify_state_artifacts(output: Path, manifest: dict[str, Any]) -> None:
             raise SnapshotValidationError("rich state denominator does not match manifest")
         if state["scannerPaths"] != expected_scanner_paths:
             raise SnapshotValidationError("rich state scope does not match manifest inputs")
+        if state["dependencyPaths"] != expected_dependency_paths:
+            raise SnapshotValidationError("rich state dependency scope does not match manifest")
         if state["porcelain"] != state["status"]:
             raise SnapshotValidationError("rich state porcelain and status differ")
         if state["porcelainSha256"] != _sha(state["porcelain"].encode("utf-8")):
@@ -1621,6 +1731,8 @@ def _verify_scan_artifact(output: Path, manifest: dict[str, Any]) -> None:
         raise SnapshotValidationError("scan artifact does not record a successful canonical scan")
     if not isinstance(record["stdout"], str) or not isinstance(record["stderr"], str):
         raise SnapshotValidationError("scan artifact output must be text")
+    if not _is_git_object_id(record["preHead"]) or not _is_git_object_id(record["postHead"]):
+        raise SnapshotValidationError("scan artifact HEAD interval is invalid")
     if (
         record["preHead"] != manifest["preHead"]
         or record["postHead"] != manifest["postHead"]
@@ -1654,7 +1766,7 @@ def verify_snapshot(output_directory: Path | str) -> dict[str, bytes]:
     if manifest["preHead"] != manifest["baselineHead"]:
         raise SnapshotValidationError("manifest preHead does not match baselineHead")
     if not all(
-        isinstance(manifest[key], str) and re.fullmatch(r"[0-9a-f]{40,64}", manifest[key])
+        _is_git_object_id(manifest[key])
         for key in ("baselineHead", "preHead", "postHead")
     ):
         raise SnapshotValidationError("manifest HEAD interval is invalid")
