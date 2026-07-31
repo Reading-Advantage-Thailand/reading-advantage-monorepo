@@ -1,0 +1,48 @@
+{
+  "schema_version": 2,
+  "role": "review-a",
+  "track": "business_operations_graph_baseline_remediation_20260730",
+  "phase": "Phase R1 Tasks 2-3 — durable source bundle and graph-binding independent review",
+  "baseline_sha": "0dad54c3c1cdfcce1a06220cb0c3a5f92e319b27",
+  "audited_head_sha": "85ba0516b150d119ecc2623305b81602437ba850",
+  "applicability": "applicable",
+  "status": "pass",
+  "summary": "The exact audited HEAD contains a durable nine-artifact scan-bracketed bundle that independently replays all 6,783 source entries, covers the complete current scanner-input denominator including generated .next TypeScript declarations, and proves byte-identical pre/post source state at baseline 0dad54c3c. The scan-bound graph matches its recorded SHA-256, size, schema, installed tool version, all 3,420 file rows, and all 28 exact read-only command results across the Accounts, backend, company-identity, license, and www probe surfaces. Both focused unittest modules pass 66 tests, all independent omission/tamper controls fail closed, and no Critical, High, contract, production-wiring, route-parity, or test-strategy violation remains in the bounded R1 Tasks 2-3 scope.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "HEAD was verified as exactly 85ba0516b150d119ecc2623305b81602437ba850. Baseline 0dad54c3c1cdfcce1a06220cb0c3a5f92e319b27 is its direct ancestor, the range contains exactly one commit, git diff --check passed, and the range changes only the producer/test correction, bounded plan/receipt evidence, the nine durable snapshot artifacts, and the graph-binding ledger.",
+    "The durable directory contains exactly the required nine regular JSON artifacts. Every path, byte size, and SHA-256 in sourceSnapshot.artifactReferences matched the committed artifact; the committed bundle and graph ledger had no working-tree diff from audited HEAD.",
+    "Production verify_scan_bracketed_snapshot replayed the durable committed bundle successfully with 6,783 entries. A separate standard-library verifier strictly decoded every base64 payload, checked every payload size and SHA-256, proved sorted unique paths, matched archive metadata to the manifest, recomputed denominator SHA-256 9786969557e9e36782473d90c823cec1eaf18d7d369d2133691099a45ccf55eb, and verified the complete R0 projection.",
+    "An independent repository walk using the producer's scanner-input classes but not its discovery implementation derived 6,782 direct current inputs. The manifest contains every direct input plus exactly its one non-direct recursive extends input; all 11 declared extends paths are present. No direct scanner input is absent and no manifest input is unexplained.",
+    "The independent denominator walk intentionally did not skip .next. It found exactly the same 20 generated .next/**/*.d.ts paths as the manifest. The graph contains 16 generated .next/**/*.d.ts file rows, every one present with matching bytes in the snapshot; an independent omission control removed one such bound declaration and detected the resulting coverage failure.",
+    "snapshot.pre-state.json and snapshot.post-state.json are byte-identical. Their scanner path lists equal all 6,783 manifest paths, their dependency scopes are retained, and their denominator, porcelain/status, and staged-diff hashes recompute and equal the manifest values. The scan artifact binds those exact state-artifact references and records equal pre/post HEAD 0dad54c3c1cdfcce1a06220cb0c3a5f92e319b27 on master.",
+    "The live ignored graph.db matched the scan record and graph ledger at SHA-256 77877db9915dd928be649074cf9b860ad0eac37fbb89faec63ef735e36bff496 and 181850112 bytes before and after independent probe replay. Read-only SQLite inspection found persisted schemaVersion 2.0.0 and commitSha null; repo-graph version returned the bound installed tool version 0.1.0.",
+    "Read-only SQLite inspection returned exactly 3,420 sorted files(path, content_hash, size) rows. After independently normalizing the persisted absolute paths and sha256: prefixes, all rows exactly equal the evidence ledger, its canonical digest recomputes to 09a001168fc7df8a4b1a05c3a680749b692f78ce77e81c4d97ba4abd8c033862, and every path/hash/size tuple equals the archived snapshot entry.",
+    "All 28 exact evidence commands were rerun without shell reinterpretation and matched their recorded exit code plus stdout/stderr size and SHA-256 byte for byte: four graph/tool binding commands and 24 search/inspect/callers commands forming eight probe triplets. Independently parsed search/caller counts also matched Accounts 11/18, backend deepFreeze 7/9, backend CapabilityExecutor 2/0, company identity contract 3/0, company identity factory 11/0, license 20/0, www blog 3/3, and www contact 1/0.",
+    "Independent negative controls detected an archive payload mutation, manifest-entry omission, pre-state mutation, graph-row hash mutation, command-result hash mutation, and generated .next declaration omission. The committed focused suite independently covers archive/R0/state tampering, duplicate/traversal paths, drift, stable-window ordering, durable publication, and generated Next declaration discovery.",
+    "The combined focused command passed 66 tests in 26.375 seconds: 37 snapshot-producer tests and 29 accepted R0 remediation tests. Python compilation checks for the producer and both focused test modules passed.",
+    "The protected measure/automation-supervisor.py and accepted measure/business_operations_graph_baseline_validation.py are unchanged across the audited range. Parent Phase 0, Admin Phase S1, CRM contract/schema/Red, and R2/R3 remain blocked, so this PASS accepts only the bounded R1 Tasks 2-3 evidence and grants no successor unblock.",
+    "The real Git index hash remained ce7c0ff0cdc367304871c8f5c02d12bc9c7a5fce. Concurrent unrelated dirty and untracked work changed during the review and was preserved rather than normalized; this reviewer staged, reset, stashed, reverted, repaired, or overwrote none of it and added only this report file."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git merge-base --is-ancestor 0dad54c3c1cdfcce1a06220cb0c3a5f92e319b27 85ba0516b150d119ecc2623305b81602437ba850; git rev-list --count 0dad54c3c..85ba0516b — pass; exact audited HEAD, direct ancestry, and one-commit range confirmed",
+    "git diff --shortstat/--name-status/--check 0dad54c3c..85ba0516b — pass; 14 intended files, 289780 insertions, 10 deletions, and no whitespace errors",
+    "git diff --quiet 0dad54c3c..85ba0516b -- measure/automation-supervisor.py measure/business_operations_graph_baseline_validation.py — pass; protected supervisor and accepted R0 validator unchanged",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_business_operations_graph_baseline_snapshot measure.tests.test_business_operations_graph_baseline_remediation — pass; 66 tests in 26.375s",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -c from measure.business_operations_graph_baseline_snapshot import verify_scan_bracketed_snapshot ... — pass; durable committed bundle replayed 6783 entries",
+    "Independent standard-library bundle/denominator/state/graph/command/tamper verifier — pass; 9 artifacts, 6783 replay entries, 6782 direct inputs plus one non-direct extends input, 20 generated .next d.ts inputs, 3420 graph rows, 28 exact commands, 8 exact probe triplets, and 6 negative controls verified",
+    "Independent JSON result-count replay for all search/callers probes — pass; all eight search and caller result counts matched the graph-binding evidence",
+    "python3 -m py_compile measure/business_operations_graph_baseline_snapshot.py measure/tests/test_business_operations_graph_baseline_snapshot.py measure/tests/test_business_operations_graph_baseline_remediation.py — pass",
+    "git diff --quiet HEAD -- durable bundle and graph ledger; git hash-object $(git rev-parse --git-path index) — pass; committed evidence unchanged and index hash ce7c0ff0cdc367304871c8f5c02d12bc9c7a5fce"
+  ],
+  "changed_files": [
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r1-tasks2-3-independent-review-20260731.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
