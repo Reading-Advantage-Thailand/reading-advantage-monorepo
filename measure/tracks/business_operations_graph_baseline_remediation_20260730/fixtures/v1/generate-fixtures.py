@@ -1,14 +1,18 @@
 """Regenerates the frozen v1 Red-contract fixtures from source-anchored bytes."""
 from __future__ import annotations
 
+import argparse
 import base64
 import copy
 import hashlib
 import json
 import re
+import shutil
 import subprocess
+import sys
+import tempfile
 from pathlib import Path
-from typing import Any
+from typing import Any, Sequence
 
 
 REPO = Path(__file__).resolve().parents[5]
@@ -861,19 +865,78 @@ def invalid_corpus(clean: dict[str, Any], compensation: dict[str, Any]) -> dict[
     }
 
 
-def main() -> None:
-    """Regenerates all v1 fixtures and a hash-pinned fixture index."""
-    clean = candidate("clean", False)
-    compensation = candidate("compensation", True)
-    write_json("candidate-envelopes-v1.json", {"candidates": {"clean": clean, "compensation": compensation}, "schemaVersion": SCHEMA})
-    write_json("invalid-candidates-v1.json", invalid_corpus(clean, compensation))
-    names = sorted(path.name for path in OUT.glob("*.json") if path.name != "fixture-index-v1.json")
-    names.append("generate-fixtures.py")
-    write_json("fixture-index-v1.json", {
-        "artifacts": [artifact_ref(name) for name in sorted(names)],
-        "schemaVersion": SCHEMA,
-    })
+def _generate_all(output: Path) -> None:
+    """Writes all generated v1 fixtures into the supplied output directory."""
+    global OUT
+
+    previous_out = OUT
+    OUT = output
+    try:
+        clean = candidate("clean", False)
+        compensation = candidate("compensation", True)
+        write_json("candidate-envelopes-v1.json", {"candidates": {"clean": clean, "compensation": compensation}, "schemaVersion": SCHEMA})
+        write_json("invalid-candidates-v1.json", invalid_corpus(clean, compensation))
+        names = sorted(path.name for path in OUT.glob("*.json") if path.name != "fixture-index-v1.json")
+        names.append("generate-fixtures.py")
+        write_json("fixture-index-v1.json", {
+            "artifacts": [artifact_ref(name) for name in sorted(names)],
+            "schemaVersion": SCHEMA,
+        })
+    finally:
+        OUT = previous_out
+
+
+def _fixture_files(root: Path) -> dict[str, bytes]:
+    """Returns fixture file bytes while ignoring interpreter bytecode caches."""
+    return {
+        path.relative_to(root).as_posix(): path.read_bytes()
+        for path in root.rglob("*")
+        if path.is_file() and "__pycache__" not in path.parts
+    }
+
+
+def _check_generated_fixtures() -> int:
+    """Regenerates into a temporary directory and reports any fixture drift."""
+    with tempfile.TemporaryDirectory(prefix="r0-fixture-check-") as directory:
+        expected_root = Path(directory)
+        shutil.copy2(Path(__file__), expected_root / "generate-fixtures.py")
+        shutil.copytree(
+            OUT / "parent-fail-artifacts-v1",
+            expected_root / "parent-fail-artifacts-v1",
+        )
+        _generate_all(expected_root)
+
+        expected_files = _fixture_files(expected_root)
+        actual_files = _fixture_files(OUT)
+        mismatches: list[str] = []
+        for name in sorted(set(expected_files) | set(actual_files)):
+            if expected_files.get(name) != actual_files.get(name):
+                mismatches.append(name)
+
+    if mismatches:
+        print("CHECK FAIL: fixture drift detected", file=sys.stderr)
+        for name in mismatches:
+            print(f"- {name}", file=sys.stderr)
+        return 1
+    print(f"CHECK PASS: {len(actual_files)} fixture files match; no fixtures written")
+    return 0
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """Checks or regenerates all v1 fixtures according to the requested mode."""
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="compare regenerated fixtures without writing the fixture directory",
+    )
+    args = parser.parse_args(argv)
+    if args.check:
+        return _check_generated_fixtures()
+
+    _generate_all(OUT)
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
