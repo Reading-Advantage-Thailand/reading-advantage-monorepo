@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "role": "review-a",
+  "track": "business_operations_graph_baseline_remediation_20260730",
+  "phase": "Phase R1 Task 1 — source-scoped concurrency independent rereview",
+  "baseline_sha": "fd742232c629678c29b9b75ebebe586114045be3",
+  "audited_head_sha": "674bc8251e6e96d75b10dafcca72c389618b1887",
+  "applicability": "applicable",
+  "status": "fail",
+  "summary": "The audited commit is the single direct descendant of the supplied baseline, keeps Task 1 in progress, scopes ordinary staged/status evidence to scanner paths, records an ancestor-checked HEAD interval, rejects regular changed-and-restored scanner commits and non-ancestor history, produces deterministic artifacts in the covered cases, and preserves the existing dirty worktree and index while both 56-test unittest modules pass. Acceptance is still blocked because dependency-aware scanner scoping is incomplete: staged renames and deleted nonstandard tsconfig-extends inputs disappear from the denominator and state evidence, while symlink handling both captures unrelated documentation symlinks and permits changed-and-restored commits to a scanner symlink's physical target.",
+  "blocking_findings": [
+    "[high][R1-SCOPED-H1] Valid scanner-input deletion events disappear from the scoped denominator and Git-state evidence. The filename-only deletion filter at measure/business_operations_graph_baseline_snapshot.py:641-648 drops a staged or unstaged config/base.json deletion when tsconfig.json extends that nonstandard filename; _git_deleted_tracked_paths at lines 203-210 also drops the source side of staged src/app.ts -> docs/app.md because it accepts only D, not R. Independent probes emitted no tombstone and empty status for all three cases. Exact remediation: make deletion discovery dependency-aware by syntactically resolving surviving tsconfig extends references, including deleted nonstandard/workspace-export targets; parse rename records without flattening old/new identity and retain scanner-input rename sources; include every resulting tombstone in pre/post scannerPaths and staged/status evidence; add staged/unstaged deleted-extends and scanner-to-documentation rename adversarial tests asserting tombstone, status, staged diff where applicable, replay, and index preservation; rerun both unittest modules and obtain a fresh independent rereview.",
+    "[high][R1-SCOPED-H2] Symlink scope is overbroad and scanner symlink target drift evades the commit interval guard. measure/business_operations_graph_baseline_snapshot.py:612-619 adds every file symlink before applying _is_scanner_input, while lines 1265-1268 and 1310-1317 omit each scanner symlink's resolvedTargetPath from state and intervening-commit scope. Independent probes reported NON_SCANNER_SYMLINK_INCLUDED True and accepted changed-and-restored commits to shared/source.txt supplying src/alias.ts scanner bytes. Exact remediation: filter symlinks with the regular scanner predicate except explicitly resolved extends dependencies; define and artifact-bind dependency scope as manifest scanner paths plus every physical resolvedTargetPath supplying scanner bytes; use it for status, staged diff, and all intervening commit checks; add tests proving unrelated Markdown symlinks are excluded, staged target drift with restored live bytes aborts, and changed-and-restored commits to a non-TypeScript target of a TypeScript symlink abort; rerun both unittest modules and obtain a fresh independent rereview."
+  ],
+  "nonblocking_findings": [
+    "[medium][R1-SCOPED-M1] verify_snapshot uses `[0-9a-f]{40,64}` at measure/business_operations_graph_baseline_snapshot.py:1656-1659 and therefore accepts impossible 41- through 63-character object IDs. Validate exactly 40 or exactly 64 lowercase hex characters and add manifest/scan-record tampering tests for 41- and 63-character values."
+  ],
+  "evidence": [
+    "HEAD was 674bc8251e6e96d75b10dafcca72c389618b1887 before and after review commands, exactly matching the required audited HEAD.",
+    "git merge-base --is-ancestor fd742232c629678c29b9b75ebebe586114045be3 674bc8251e6e96d75b10dafcca72c389618b1887 passed; merge-base equals the supplied baseline and rev-list count is one, so 674bc8251 is its direct descendant.",
+    "The range changes exactly six files: the snapshot producer, its focused test module, plan.md, spec.md, and the Red/Green receipts. measure/automation-supervisor.py and the accepted R0 validator are unchanged; no symlink or mode transition occurs in the audited diff.",
+    "git diff --check fd742232c629678c29b9b75ebebe586114045be3..674bc8251 passed.",
+    "The combined requested unittest command passed 56 tests in 60.960 seconds: 27 snapshot tests and 29 accepted R0 remediation tests.",
+    "The preservation wrapper compared pre/post HEAD, the real .git/index blob hash, and complete porcelain-v2 status. All were identical; index hash remained d7a459bc0932c19e5a6cae07c46f0a5d99a3e9dd. Existing unrelated modified/untracked work was not staged, reverted, reset, stashed, overwritten, or repaired.",
+    "Covered regular-file behavior is sound: the committed test rejects changed-and-restored src/app.ts commits, accepts an ancestor HEAD advance touching only an unrelated plan, rejects non-ancestor history, and rejects scanner staged-diff drift with restored live bytes.",
+    "Covered artifact behavior is deterministic: the committed deterministic-output test byte-compares all eight rich/R0 archive, manifest, and state artifacts across identical captures, and tamper/replay tests pass.",
+    "Independent counterexamples show the remaining dependency-scope defects: deleted extends targets and staged rename sources are absent; unrelated documentation symlinks are included; changed-and-restored commits to the physical target of a TypeScript symlink are accepted."
+  ],
+  "commands": [
+    "git status --short --branch && git rev-parse HEAD && git merge-base --is-ancestor fd742232c629678c29b9b75ebebe586114045be3 674bc8251 && git rev-list --ancestry-path --reverse fd742232c629678c29b9b75ebebe586114045be3..674bc8251 && git log --oneline --decorate --no-merges fd742232c629678c29b9b75ebebe586114045be3..674bc8251 — pass; exact audited HEAD and one-commit ancestry confirmed",
+    "git diff --stat/--name-status/--summary/--raw fd742232c629678c29b9b75ebebe586114045be3..674bc8251 — pass; six intended files, no symlink or mode changes",
+    "git diff --check fd742232c629678c29b9b75ebebe586114045be3..674bc8251 — pass",
+    "git status --porcelain=v2 --untracked-files=all -- <audited paths>; git diff --cached --name-status; git diff --cached --stat — pass; audited paths clean and real index had no staged changes",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_business_operations_graph_baseline_snapshot measure.tests.test_business_operations_graph_baseline_remediation — pass, 56 tests in 60.960s",
+    "Preservation wrapper around the combined unittest command comparing git rev-parse HEAD, git hash-object .git/index, and complete git status --porcelain=v2 --untracked-files=all — pass; all pre/post values identical",
+    "Independent temporary-repository symlink probe — fail: NON_SCANNER_SYMLINK_INCLUDED True; SYMLINK_TARGET_CHANGE_REVERT_RESULT ACCEPTED",
+    "Independent temporary-repository deleted-extends probe — fail: staged and unstaged config/base.json deletions both omitted from entries and status",
+    "Independent temporary-repository staged-rename probe — fail: staged src/app.ts -> docs/app.md omitted the scanner source tombstone and emitted empty scoped status"
+  ],
+  "changed_files": [
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r1-task1-scoped-concurrency-independent-rereview-20260731.json"
+  ],
+  "test_strategy_violations": [
+    "The focused suite has no deleted nonstandard tsconfig-extends target or staged scanner-to-documentation rename adversary, allowing an incomplete scanner tombstone denominator to remain Green.",
+    "The focused suite tests a TypeScript symlink but does not test exclusion of unrelated symlinks or changed-and-restored/staged drift at the symlink's physical target, allowing both over-scoping and a commit-interval bypass."
+  ],
+  "live_contract_violations": [
+    "FR2.2 and FR2.4 are violated when a deleted tsconfig-extends dependency or staged rename source disappears from the scanner-input denominator and scoped Git-state evidence.",
+    "FR2.4 is violated when changed-and-restored commits to bytes supplied through a TypeScript symlink evade _committed_scanner_drift, while non-scanner documentation symlinks remain incorrectly in scope."
+  ],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high"
+}
