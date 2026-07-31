@@ -116,6 +116,39 @@ EXPECTED_CLAIMS = {
 }
 
 
+EXPECTED_READINESS_BOUNDARY = {
+    "receipt_status": "accepted-active",
+    "authorized_child_work_only": True,
+    "cohort_currently_ready": False,
+    "cartridge_cutover_authorized": False,
+    "meaning": "The receipt removes only the denominator/readiness predecessor block for this five-title child track. It does not satisfy Task 1 or any downstream task.",
+}
+
+EXPECTED_TOP_LEVEL_KEYS = {
+    "schema_version",
+    "track_id",
+    "task",
+    "status",
+    "archive_resolution_rule",
+    "source_bindings",
+    "readiness_boundary",
+    "titles",
+    "claims",
+    "required_before_any_adoption_or_cutover",
+    "revocation_rule",
+}
+
+EXPECTED_TITLE_KEYS = {
+    "title_id",
+    "title",
+    "assignment_index",
+    "source_identity_id",
+    "identity_record_index",
+    "evidence_binding",
+    "crosswalk_locator",
+    "identity_ledger_locator",
+}
+
 def _load_object(path: Path) -> dict[str, Any]:
     """Loads one JSON object and rejects non-object data."""
     value = json.loads(path.read_text(encoding="utf-8"))
@@ -140,6 +173,37 @@ def _repo_path(path: str) -> Path:
 def _sha256(path: Path) -> str:
     """Computes a SHA-256 digest from exact source bytes."""
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _validate_manifest_schema_and_readiness(manifest: dict[str, Any]) -> None:
+    """Rejects unmodeled fields and readiness authority escalation.
+
+    Args:
+        manifest: Candidate evidence-only Action Task 1 manifest.
+
+    Raises:
+        AssertionError: If the manifest schema or readiness boundary drifts.
+    """
+    if set(manifest) != EXPECTED_TOP_LEVEL_KEYS:
+        raise AssertionError("MANIFEST_SCHEMA_INVALID: unexpected manifest fields")
+    titles = manifest.get("titles")
+    if not isinstance(titles, list) or any(
+        not isinstance(title, dict) or set(title) != EXPECTED_TITLE_KEYS
+        for title in titles
+    ):
+        raise AssertionError("TITLE_SCHEMA_INVALID: title fields must remain exact")
+    readiness_boundary = manifest.get("readiness_boundary")
+    if not isinstance(readiness_boundary, dict):
+        raise AssertionError("READINESS_BOUNDARY_DRIFT: readiness boundary must be an object")
+    for field in (
+        "authorized_child_work_only",
+        "cohort_currently_ready",
+        "cartridge_cutover_authorized",
+    ):
+        if type(readiness_boundary.get(field)) is not bool:
+            raise AssertionError("READINESS_BOUNDARY_TYPE_INVALID: readiness flags must be bool")
+    if readiness_boundary != EXPECTED_READINESS_BOUNDARY:
+        raise AssertionError("READINESS_BOUNDARY_DRIFT: readiness boundary must remain exact")
 
 
 class ExistingActionSourceReadinessManifestTests(unittest.TestCase):
@@ -183,6 +247,14 @@ class ExistingActionSourceReadinessManifestTests(unittest.TestCase):
 
         crosswalk = _load_object(_repo_path(EXPECTED_BINDINGS["phase1_crosswalk"]["archive_preferred_path"]))
         ledger = _load_object(_repo_path(EXPECTED_BINDINGS["identity_ledger"]["archive_preferred_path"]))
+
+        action_evidence = _load_object(_repo_path(EXPECTED_BINDINGS["action_defense_evidence"]["archive_preferred_path"]))
+        special_evidence = _load_object(_repo_path(EXPECTED_BINDINGS["special_historical_evidence"]["archive_preferred_path"]))
+        action_title_pairs = {
+            (entry[0], entry[1])
+            for entry in action_evidence["full_cohort_roster"]["entries"]
+        }
+        special_titles = set(special_evidence["scope"]["games"])
         for expected, actual in zip(EXPECTED_TITLES, manifest["titles"], strict=True):
             assignment = crosswalk["assignments"][expected["assignment_index"]]
             self.assertEqual(assignment["canonical_identity_label"], expected["title"])
@@ -223,6 +295,12 @@ class ExistingActionSourceReadinessManifestTests(unittest.TestCase):
                 },
             })
 
+            if expected["evidence_binding"] == "action_defense_evidence":
+                self.assertIn((expected["title"], expected["title_id"]), action_title_pairs)
+            else:
+                self.assertEqual(expected["evidence_binding"], "special_historical_evidence")
+                self.assertIn(expected["title"], special_titles)
+
     def test_manifest_fails_closed_on_unsupported_authority_claims(self) -> None:
         """Requires explicit denial of every authority not granted by Task 1."""
         manifest = _load_object(MANIFEST_PATH)
@@ -236,6 +314,49 @@ class ExistingActionSourceReadinessManifestTests(unittest.TestCase):
             "exact legacy retirement disposition plus independent review and product-owner acceptance",
         ])
 
+
+    def test_manifest_schema_and_readiness_boundary_fail_closed(self) -> None:
+        """Rejects hidden approval data and every readiness or cutover escalation."""
+        manifest = _load_object(MANIFEST_PATH)
+        _validate_manifest_schema_and_readiness(manifest)
+
+        hidden_owner_acceptance = json.loads(json.dumps(manifest))
+        hidden_owner_acceptance["owner_acceptance"] = {
+            "decision": "approved",
+            "approvalDigest": "a" * 64,
+        }
+        with self.assertRaisesRegex(AssertionError, "MANIFEST_SCHEMA_INVALID"):
+            _validate_manifest_schema_and_readiness(hidden_owner_acceptance)
+
+        cohort_ready = json.loads(json.dumps(manifest))
+        cohort_ready["readiness_boundary"]["cohort_currently_ready"] = True
+        with self.assertRaisesRegex(AssertionError, "READINESS_BOUNDARY_DRIFT"):
+            _validate_manifest_schema_and_readiness(cohort_ready)
+
+        cutover_meaning = json.loads(json.dumps(manifest))
+        cutover_meaning["readiness_boundary"]["meaning"] = "This evidence authorizes cutover."
+        with self.assertRaisesRegex(AssertionError, "READINESS_BOUNDARY_DRIFT"):
+            _validate_manifest_schema_and_readiness(cutover_meaning)
+
+    def test_title_authority_injection_and_numeric_readiness_values_fail_closed(self) -> None:
+        """Rejects nested title authority and Python numeric values posing as booleans."""
+        manifest = _load_object(MANIFEST_PATH)
+
+        for field in ("owner_acceptance", "cutover_authorized", "cohort_currently_ready"):
+            title_authority = json.loads(json.dumps(manifest))
+            title_authority["titles"][0][field] = {"decision": "approved"} if field == "owner_acceptance" else True
+            with self.assertRaisesRegex(AssertionError, "TITLE_SCHEMA_INVALID"):
+                _validate_manifest_schema_and_readiness(title_authority)
+
+        for field, value in (
+            ("authorized_child_work_only", 1),
+            ("cohort_currently_ready", 0),
+            ("cartridge_cutover_authorized", 0),
+        ):
+            numeric_boolean = json.loads(json.dumps(manifest))
+            numeric_boolean["readiness_boundary"][field] = value
+            with self.assertRaisesRegex(AssertionError, "READINESS_BOUNDARY_TYPE_INVALID"):
+                _validate_manifest_schema_and_readiness(numeric_boolean)
 
 if __name__ == "__main__":
     unittest.main()
