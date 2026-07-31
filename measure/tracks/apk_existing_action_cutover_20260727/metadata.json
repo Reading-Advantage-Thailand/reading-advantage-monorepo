@@ -3,10 +3,10 @@
   "type": "feature",
   "status": "in_progress",
   "created_at": "2026-07-27T00:00:00Z",
-  "updated_at": "2026-07-31T00:00:00Z",
+  "updated_at": "2026-07-31T12:00:00Z",
   "description": "Vertical revalidation and cutover of five historical existing action cartridges.",
   "estimated_tasks": 8,
-  "actual_tasks": null,
+  "actual_tasks": 1,
   "depends_on": ["apk_denominator_readiness_t11_integrity_20260727", "apk_asset_contract_v2_20260728", "apk_standard_pack_suitability_ingestion_20260728"],
-  "deviation_notes": "Task 1 was reopened by independent audit: its existing hash bindings remain valid, but manifest-owned readiness authority and per-title evidence membership need strict fail-closed guards. No historical implementation or acceptance claim substitutes for current semantic-adoption, host, retirement, independent-review, or owner-acceptance proof."
+  "deviation_notes": "Task 1 was reopened by independent audit for High boundary bypass and Medium membership/tamper guards. Remediated in e022e439f with exact schema validation, native-boolean readiness flags, authority-injection probes, and Action/Special evidence-membership checks. Independently re-verified 2026-07-31: 5/5 tests pass, 5/5 evidence files hash-match, 5/5 titles are true evidence members. Fail-closed authority, exact five-title membership, evidence lineage, and tamper guards confirmed. Task 1 now closed."
 }
