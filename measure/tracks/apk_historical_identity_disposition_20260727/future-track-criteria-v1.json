@@ -1,0 +1,172 @@
+{
+  "schema_version": "apk-historical-identity-future-track-criteria.v1",
+  "track_id": "apk_historical_identity_disposition_20260727",
+  "status": "published-gating-criteria-only",
+  "scope": "future-track-proposal-and-implementation-gating",
+  "accepted_disposition_record": {
+    "path": "measure/tracks/apk_historical_identity_disposition_20260727/product-owner-acceptance-v1.json"
+  },
+  "criteria": [
+    {
+      "criterion_id": "FT-01",
+      "requirement": "Create a new bounded child track for any revalidation, restoration, rebuild, or implementation proposal; do not reopen or mutate this disposition track.",
+      "required_evidence": [
+        "a new track identifier and active track directory",
+        "an exact identity scope with no inherited implementation authority",
+        "a plan that keeps route, catalog, host, asset, migration, cutover, retirement, and release work gated"
+      ],
+      "blocks_until_met": [
+        "implementation",
+        "route",
+        "catalog",
+        "host_import",
+        "asset_adoption",
+        "migration",
+        "cutover",
+        "retirement",
+        "release"
+      ]
+    },
+    {
+      "criterion_id": "FT-02",
+      "requirement": "Re-establish identity-specific current or historical source evidence and exact locators for the proposed child-track scope.",
+      "required_evidence": [
+        "a source-bound identity record for every proposed title",
+        "reachable immutable source bytes and locator digests",
+        "an explicit distinction between current source, deleted historical source, and cancellation evidence"
+      ],
+      "blocks_until_met": [
+        "current_evidence_claim",
+        "historical_restoration_claim",
+        "successor_claim"
+      ]
+    },
+    {
+      "criterion_id": "FT-03",
+      "requirement": "Obtain explicit product-owner acceptance of the bounded child-track proposal and exact identity-specific scope.",
+      "required_evidence": [
+        "an acceptance record naming the exact proposal and bound evidence",
+        "durable user or event identifiers when the transport supplies them, otherwise null with disclosure",
+        "explicit authorization flags for implementation, adoption, cutover, and release"
+      ],
+      "blocks_until_met": [
+        "owner_authorized_work"
+      ]
+    },
+    {
+      "criterion_id": "FT-04",
+      "requirement": "Complete independent review of proposed current evidence, implementation bytes, and negative boundary checks before any consumable claim.",
+      "required_evidence": [
+        "a current-byte independent review with no unresolved Critical, High, Medium, or Low finding",
+        "focused tests that reject unsupported gameplay, shipping, completeness, and authority claims",
+        "a review scope that excludes unrelated worktree changes"
+      ],
+      "blocks_until_met": [
+        "consumable_claim",
+        "gameplay_claim",
+        "shipping_claim"
+      ]
+    },
+    {
+      "criterion_id": "FT-05",
+      "requirement": "For any asset adoption, bind accepted Asset Contract v2 and suitability/ingestion dossiers before selecting or releasing physical assets.",
+      "required_evidence": [
+        "semantic role and state intent",
+        "physical descriptor and selected-union keys",
+        "source provenance, license, credit, suitability, and ingestion decisions"
+      ],
+      "blocks_until_met": [
+        "asset_adoption",
+        "physical_production_release"
+      ]
+    },
+    {
+      "criterion_id": "FT-06",
+      "requirement": "Before claiming an implemented title, prove source-backed runtime behavior and host integration for that title.",
+      "required_evidence": [
+        "title-specific mechanic and completion behavior",
+        "real-input compact and wide host proof where applicable",
+        "tenant-safe persistence, idempotency, replay, and navigation proof",
+        "focused affected-package tests and independent review of the current bytes"
+      ],
+      "blocks_until_met": [
+        "implemented_claim",
+        "playable_claim",
+        "host_success_claim"
+      ]
+    },
+    {
+      "criterion_id": "FT-07",
+      "requirement": "Treat legacy retirement and catalog or cutover exposure as separate evidence and owner gates after implementation proof.",
+      "required_evidence": [
+        "exact caller and asset-retirement inventory",
+        "successful replacement and host proof for every retired path",
+        "separate owner acceptance for retirement, catalog exposure, and cutover"
+      ],
+      "blocks_until_met": [
+        "legacy_deletion",
+        "catalog_exposure",
+        "cutover"
+      ]
+    },
+    {
+      "criterion_id": "FT-08",
+      "requirement": "Keep production, release, and completeness claims withheld until every applicable cohort gate is separately accepted.",
+      "required_evidence": [
+        "a hash-bound accepted release or deployment decision when those actions are in scope",
+        "a reconciled denominator and explicit unresolved-disclosure list",
+        "a statement that this disposition record does not make the APK portfolio complete"
+      ],
+      "blocks_until_met": [
+        "production",
+        "release",
+        "portfolio_completeness"
+      ]
+    }
+  ],
+  "accepted_disposition_rules": [
+    {
+      "identity_id": "rpg-battle",
+      "accepted_disposition": "defer",
+      "future_track_rule": "A future child track may propose revalidation or rebuild, but this record authorizes neither."
+    },
+    {
+      "identity_id": "the-abyssal-well",
+      "accepted_disposition": "retain-history",
+      "future_track_rule": "Retain the deleted historical evidence only; any current replacement or restoration requires fresh evidence in a child track."
+    },
+    {
+      "identity_id": "devourer-slime",
+      "accepted_disposition": "defer",
+      "future_track_rule": "A future child track may propose revalidation or rebuild, but this record authorizes neither."
+    },
+    {
+      "identity_id": "the-haunted-library",
+      "accepted_disposition": "defer",
+      "future_track_rule": "A future child track may propose revalidation or rebuild, but this record authorizes neither."
+    },
+    {
+      "identity_id": "babel-architect",
+      "accepted_disposition": "retain-history",
+      "future_track_rule": "Retain the deleted and cancelled history only; it is not a current foundation and any revival requires fresh evidence in a child track."
+    }
+  ],
+  "authorization": {
+    "implementation_authorized": false,
+    "rebuild_authorized": false,
+    "route_authorized": false,
+    "catalog_authorized": false,
+    "host_import_authorized": false,
+    "asset_adoption_authorized": false,
+    "migration_authorized": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "release_authorized": false
+  },
+  "disclosures": [
+    "These criteria govern a future proposal only; they do not propose or authorize a child track.",
+    "The five accepted dispositions remain explicitly gated and non-playable.",
+    "Historical or cancelled evidence is not current runtime, gameplay, asset, implementation, shipping, or completeness evidence.",
+    "The portfolio ledger remains incomplete until each separately scoped cohort is accepted; this record does not change that state."
+  ]
+}

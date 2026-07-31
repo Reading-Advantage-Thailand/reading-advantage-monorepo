@@ -249,8 +249,8 @@ program, priority order when picking the next track is:
     Vertically rebuilds Dragon Rider, Spellweaver's Run, Shadow Gate Dungeon, Labyrinth of the Goblin King, and Griffin Rider's Escape.
   - [ ] **Track: APK Legacy Puzzle Rebuild and Cutover** *Link: [./tracks/apk_legacy_puzzle_cutover_20260727/](./tracks/apk_legacy_puzzle_cutover_20260727/)*
     Vertically rebuilds Enchanted Library, Rune Match, Alchemist's Synthesis, Potion Rush, and Rune Forge Chamber.
-  - [ ] **Track: APK Historical/Cancelled Identity Disposition** *Link: [./tracks/apk_historical_identity_disposition_20260727/](./tracks/apk_historical_identity_disposition_20260727/)*
-    Explicitly gates RPG Battle, The Abyssal Well, Devourer Slime, The Haunted Library, and Babel Architect; it does not authorize rebuilds.
+  - [x] **Track: APK Historical/Cancelled Identity Disposition** *Link: [./tracks/apk_historical_identity_disposition_20260727/](./tracks/apk_historical_identity_disposition_20260727/)*
+    **Accepted with disclosure (2026-07-31; accepted-gated-disposition-only):** `product-owner-acceptance-v1.json` binds defer for RPG Battle, Devourer Slime, and The Haunted Library, and retain-history for The Abyssal Well and Babel Architect, against the independently reviewed evidence. `future-track-criteria-v1.json` requires a separately accepted bounded child track for any future work. No gameplay, playable, rebuild, shipping, or portfolio-completeness claim is made; all five remain gated and non-playable.
   - [ ] **Track: APK Planned/New-Game Intake** *Link: [./tracks/apk_new_game_intake_20260727/](./tracks/apk_new_game_intake_20260727/)*
     Defines evidence-first future intake and rejects placeholder titles, implementation, routes, and catalog exposure.
   - [ ] **Track: APK Residual Cross-Host Retirement and Closeout** *Link: [./tracks/apk_cross_host_closeout_20260727/](./tracks/apk_cross_host_closeout_20260727/)*

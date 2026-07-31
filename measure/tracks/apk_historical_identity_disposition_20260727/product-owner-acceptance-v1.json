@@ -1,0 +1,209 @@
+{
+  "schema_version": "apk-historical-identity-disposition-owner-acceptance.v1",
+  "record_id": "apk_historical_identity_disposition_20260727_owner_acceptance_v1",
+  "track_id": "apk_historical_identity_disposition_20260727",
+  "decision": "ACCEPT_EXACT_FIVE_EVIDENCE_BACKED_DISPOSITIONS_WITHOUT_IMPLEMENTATION_AUTHORITY",
+  "status": "accepted",
+  "accepted_at": "2026-07-31T01:27:49Z",
+  "decided_by": "apk-orchestrator-acting-under-explicit-user-project-owner-delegation",
+  "authority": "explicit-user-delegated-project-owner-decision",
+  "approval_event": {
+    "message_exact": "Finish Tasks 5–6: act under owner authorization to bind an exact acceptance decision for the five already independently reviewed dispositions, publish explicit future-track criteria, update the portfolio ledger/gating state without gameplay or completeness overclaims, run dedicated tests, and make plan/metadata/registry truth consistent.",
+    "message_sha256": "2c6e12762c20f6ab0d50c7811edb34d3adfb0b6792e1b871691c167fd693b670",
+    "source": "current user task request",
+    "durable_user_message_id": null,
+    "durable_user_message_id_available": false,
+    "durable_user_event_id": null,
+    "durable_user_event_id_available": false,
+    "event_timestamp": null,
+    "event_timestamp_available": false,
+    "limitation": "This API environment does not expose a durable user message ID, durable user event ID, or authoritative user-message timestamp. None is fabricated; accepted_at is only the UTC artifact-recording time."
+  },
+  "authority_disclosure": {
+    "role": "product-owner",
+    "identity": null,
+    "identity_resolution": "The current API user supplied the exact task directive under explicit owner authorization; this environment does not expose a durable user identity claim."
+  },
+  "basis": {
+    "candidate_dispositions": {
+      "path": "measure/tracks/apk_historical_identity_disposition_20260727/candidate-dispositions-v1.json",
+      "sha256": "728337eb6497e88df93407cd9200441aeef739b15aab6efa3e7c05a7a79095d9",
+      "status": "candidate-awaiting-independent-review"
+    },
+    "source_lock": {
+      "path": "measure/tracks/apk_historical_identity_disposition_20260727/source-lock-v1.json",
+      "sha256": "d59f0527a6a713d6e3b43c89ec3d6761fc704612e8245c0decd3ade0b386ce8f",
+      "status": "evidence-locked-awaiting-independent-review"
+    },
+    "independent_review": {
+      "path": "measure/tracks/apk_historical_identity_disposition_20260727/task3-independent-review.md",
+      "sha256": "1d7c3013d5a3d9c7531d1083e95bbad0a9bd83a0c0a0bdfe710488f08a863731",
+      "status": "accepted",
+      "verdict": "zero-critical-high-medium-low-findings-after-remediation",
+      "reviewed_commit_refs": [
+        "4ea1a02aa",
+        "777003e48"
+      ]
+    },
+    "boundary_review": {
+      "path": "measure/tracks/apk_historical_identity_disposition_20260727/phase4-independent-review-2026-07-31.md",
+      "sha256": "f7169c609e3d7ada5881aedf07efa2d41ff74374349191e42dbd4edfcc61b40b",
+      "status": "accepted",
+      "verdict": "no-critical-high-medium-low-findings-and-no-forbidden-paths"
+    }
+  },
+  "accepted_dispositions": [
+    {
+      "identity_id": "rpg-battle",
+      "accepted_disposition": "defer",
+      "owner_accepted": true,
+      "evidence_observation": "current-source-evidence-only",
+      "evidence_locator": {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+        "sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+        "json_pointer": "/identity_records/24/source_states/0"
+      },
+      "cancellation_context": null,
+      "rationale": {
+        "evidence_state": "frozen-current-page-source-only",
+        "non_authorizing_conclusion": "defer-without-runtime-playability-or-adoption-claim"
+      }
+    },
+    {
+      "identity_id": "the-abyssal-well",
+      "accepted_disposition": "retain-history",
+      "owner_accepted": true,
+      "evidence_observation": "deleted-historical-source-evidence-only",
+      "evidence_locator": {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json",
+        "sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
+        "json_pointer": "/records/214"
+      },
+      "cancellation_context": null,
+      "rationale": {
+        "evidence_state": "frozen-deleted-historical-page-only",
+        "non_authorizing_conclusion": "retain-history-without-restore-retirement-or-successor-claim"
+      }
+    },
+    {
+      "identity_id": "devourer-slime",
+      "accepted_disposition": "defer",
+      "owner_accepted": true,
+      "evidence_observation": "current-source-evidence-only",
+      "evidence_locator": {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+        "sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+        "json_pointer": "/identity_records/11/source_states/0"
+      },
+      "cancellation_context": null,
+      "rationale": {
+        "evidence_state": "frozen-current-page-source-only",
+        "non_authorizing_conclusion": "defer-without-runtime-playability-or-adoption-claim"
+      }
+    },
+    {
+      "identity_id": "the-haunted-library",
+      "accepted_disposition": "defer",
+      "owner_accepted": true,
+      "evidence_observation": "current-source-evidence-only",
+      "evidence_locator": {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+        "sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407",
+        "json_pointer": "/identity_records/13/source_states/0"
+      },
+      "cancellation_context": null,
+      "rationale": {
+        "evidence_state": "frozen-current-page-source-only",
+        "non_authorizing_conclusion": "defer-without-runtime-playability-or-adoption-claim"
+      }
+    },
+    {
+      "identity_id": "babel-architect",
+      "accepted_disposition": "retain-history",
+      "owner_accepted": true,
+      "evidence_observation": "deleted-historical-source-evidence-only",
+      "evidence_locator": {
+        "path": "measure/archive/apk_source_denominator_inventory_20260712/historical-source-denominator.json",
+        "sha256": "6e313be829b414e7c85f4f20d4cb7e33283f15d743740b8784b589d0de2c7e6f",
+        "json_pointer": "/records/216"
+      },
+      "cancellation_context": {
+        "path": "measure/archive/advantage_play_kit_20260710/architecture.md",
+        "sha256": "732ff9e7def309d3896ab84eea9d82bada8f93d47c29b66f808434008f120e47",
+        "statement": "Cancelled Babel Architect Phaser 3 and R3F tracks are evidence, not retained foundations."
+      },
+      "rationale": {
+        "evidence_state": "frozen-deleted-historical-page-and-cancelled-track-boundary",
+        "non_authorizing_conclusion": "retain-history-without-revival-or-retained-foundation-claim"
+      }
+    }
+  ],
+  "future_track_criteria": {
+    "path": "measure/tracks/apk_historical_identity_disposition_20260727/future-track-criteria-v1.json",
+    "sha256": "9d6b973d580293bbbab2ff4d1b25c356d747bacc81ff0ad59a9f092761f8014f"
+  },
+  "claims": {
+    "owner_acceptance_claimed": true,
+    "current_runtime_claimed": false,
+    "playable_claimed": false,
+    "rebuild_authorized": false,
+    "placeholder_authorized": false,
+    "catalog_route_authorized": false,
+    "host_import_authorized": false,
+    "asset_adoption_authorized": false,
+    "migration_authorized": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "release_authorized": false,
+    "program_complete_claimed": false
+  },
+  "authorization": {
+    "current_runtime_authorized": false,
+    "playable_authorized": false,
+    "rebuild_authorized": false,
+    "placeholder_authorized": false,
+    "route_authorized": false,
+    "catalog_authorized": false,
+    "host_import_authorized": false,
+    "asset_adoption_authorized": false,
+    "migration_authorized": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "release_authorized": false
+  },
+  "accepted_scope": {
+    "scope": "five exact historical-or-cancelled identity dispositions",
+    "disposition_count": 5,
+    "track_tasks_complete": true,
+    "portfolio_completeness_claimed": false,
+    "implementation_scope": "none",
+    "gating_state": "accepted-gated-disposition-only"
+  },
+  "downstream_gate": {
+    "status": "accepted-gated-disposition-only",
+    "consumable": false,
+    "next_work": "Only a separately accepted bounded child track may perform future work under future-track-criteria-v1.json.",
+    "excluded_actions": [
+      "claiming current runtime or playability",
+      "rebuilding or restoring any identity",
+      "adding a placeholder, route, catalog entry, or host import",
+      "adopting assets or migrating legacy paths",
+      "retiring, cutting over, releasing, or deploying",
+      "claiming APK portfolio completeness"
+    ]
+  },
+  "binding_policy": {
+    "accepted_subject_set_is_exhaustive": true,
+    "accepted_evidence_is_exactly_bound": true,
+    "hash_drift_invalidates_this_acceptance": true,
+    "changed_subject_or_evidence_requires_new_independent_review_and_owner_acceptance": true,
+    "candidate_and_pre_acceptance_reviews_remain_immutable_historical_records": true
+  },
+  "disclosures": [
+    "This record accepts the five evidence-backed dispositions only; it does not accept gameplay, runtime, playability, implementation, shipping, or release behavior.",
+    "RPG Battle, Devourer Slime, and The Haunted Library are deferred; The Abyssal Well and Babel Architect retain historical evidence only.",
+    "All five identities remain explicitly gated and non-playable until a separate owner-approved child implementation track satisfies the published criteria.",
+    "The accepted denominator remains 27 source identities and 29 partition assignments with two historical labels; this record makes no completeness or portfolio-wide cutover claim.",
+    "The independent review's pre-acceptance statement that owner acceptance was absent remains historically accurate for its review time."
+  ]
+}
