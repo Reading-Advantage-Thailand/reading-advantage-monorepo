@@ -3,10 +3,10 @@
   "type": "feature",
   "status": "in_progress",
   "created_at": "2026-07-27T00:00:00Z",
-  "updated_at": "2026-07-30T23:30:44Z",
+  "updated_at": "2026-07-31T00:00:00Z",
   "description": "Vertical revalidation and cutover of five historical existing action cartridges.",
   "estimated_tasks": 8,
   "actual_tasks": null,
   "depends_on": ["apk_denominator_readiness_t11_integrity_20260727", "apk_asset_contract_v2_20260728", "apk_standard_pack_suitability_ingestion_20260728"],
-  "deviation_notes": "Denominator/readiness predecessor satisfied by accepted receipt d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720; this cohort is authorized to begin scoped work. No historical implementation or acceptance claim substitutes for current semantic-adoption, host, retirement, independent-review, or owner-acceptance proof."
+  "deviation_notes": "Task 1 was reopened by independent audit: its existing hash bindings remain valid, but manifest-owned readiness authority and per-title evidence membership need strict fail-closed guards. No historical implementation or acceptance claim substitutes for current semantic-adoption, host, retirement, independent-review, or owner-acceptance proof."
 }
