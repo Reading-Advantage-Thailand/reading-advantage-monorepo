@@ -6,6 +6,7 @@ import copy
 import hashlib
 import json
 import re
+import subprocess
 import unittest
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -211,6 +212,84 @@ BABEL_CANCELLATION_CONTEXT = {
     "sha256": "732ff9e7def309d3896ab84eea9d82bada8f93d47c29b66f808434008f120e47",
     "statement": "Cancelled Babel Architect Phaser 3 and R3F tracks are evidence, not retained foundations.",
 }
+
+
+TASK4_REVIEWED_COMMITS = (
+    "0f05a55e4",
+    "41e8bd22a",
+    "66a30cdaa",
+    "b5f8d14d1",
+    "4ea1a02aa",
+    "777003e48",
+    "16332446c",
+    "d60f46db5",
+)
+TASK4_ALLOWED_TRACK_PREFIX = "measure/tracks/apk_historical_identity_disposition_20260727/"
+TASK4_ALLOWED_TEST_PATH = "measure/tests/test_apk_historical_identity_disposition_phase1.py"
+
+
+def _task4_committed_paths(commit: str) -> tuple[str, ...]:
+    """Returns one reviewed commit's paths from Git history without reading the worktree.
+
+    Args:
+        commit: Immutable reviewed commit identifier.
+
+    Returns:
+        Repository-relative paths changed by the commit.
+
+    Raises:
+        AssertionError: If Git cannot resolve the commit or it changes no paths.
+    """
+    result = subprocess.run(
+        [
+            "git",
+            "diff-tree",
+            "--no-commit-id",
+            "--name-only",
+            "--root",
+            "-r",
+            "-z",
+            commit,
+        ],
+        cwd=REPO_ROOT,
+        check=False,
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        raise AssertionError(f"TASK4_COMMIT_UNAVAILABLE: {commit}")
+    paths = tuple(
+        encoded_path.decode("utf-8")
+        for encoded_path in result.stdout.split(b"\0")
+        if encoded_path
+    )
+    if not paths:
+        raise AssertionError(f"TASK4_VACUOUS_COMMIT: {commit} changed no paths")
+    return paths
+
+
+def _validate_task4_committed_paths(committed_paths: dict[str, tuple[str, ...]]) -> None:
+    """Rejects non-Measure or non-Historical paths in the reviewed Task 4 commit set.
+
+    Args:
+        committed_paths: Mapping from immutable reviewed commit to its changed paths.
+
+    Raises:
+        AssertionError: If a reviewed commit is empty or changes a forbidden path.
+    """
+    if set(committed_paths) != set(TASK4_REVIEWED_COMMITS):
+        raise AssertionError("TASK4_COMMIT_SET_DRIFT: exact reviewed commit set required")
+    for commit, paths in committed_paths.items():
+        if not paths:
+            raise AssertionError(f"TASK4_VACUOUS_COMMIT: {commit} changed no paths")
+        for changed_path in paths:
+            is_allowed = (
+                changed_path == TASK4_ALLOWED_TEST_PATH
+                or changed_path.startswith(TASK4_ALLOWED_TRACK_PREFIX)
+            )
+            if not is_allowed:
+                raise AssertionError(
+                    f"TASK4_FORBIDDEN_COMMITTED_PATH: {commit}:{changed_path}"
+                )
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -746,6 +825,27 @@ class HistoricalIdentityDispositionPhase1Tests(unittest.TestCase):
         missing_identity = copy.deepcopy(self._candidate_dispositions())
         missing_identity["dispositions"].pop()
         self._assert_candidate_rejected(missing_identity, "CANDIDATE_IDENTITY_SET_INVALID")
+
+
+    def test_task4_boundary_uses_only_reviewed_commit_diffs(self) -> None:
+        """Accepts only the intended Historical track and test paths from committed history."""
+        committed_paths = {
+            commit: _task4_committed_paths(commit)
+            for commit in TASK4_REVIEWED_COMMITS
+        }
+        self.assertEqual(sum(len(paths) for paths in committed_paths.values()), 14)
+        _validate_task4_committed_paths(committed_paths)
+
+    def test_task4_boundary_rejects_a_forbidden_committed_path(self) -> None:
+        """Rejects a synthetic application route without filtering unrelated worktree changes."""
+        with self.assertRaisesRegex(
+            AssertionError,
+            "TASK4_FORBIDDEN_COMMITTED_PATH",
+        ):
+            _validate_task4_committed_paths({
+                commit: ("apps/advantage-games/app/api/catalog/route.ts",)
+                for commit in TASK4_REVIEWED_COMMITS
+            })
 
 
 if __name__ == "__main__":
