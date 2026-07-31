@@ -255,9 +255,9 @@ class BusinessOperationsGraphSnapshotRedTests(unittest.TestCase):
         (self.root / ".git/info/exclude").write_text("graph.db\n", encoding="utf-8")
         original_capture = snapshot_module._capture_state
 
-        def capture(repo: Path):
+        def capture(repo: Path, scanner_paths: object):
             events.append("capture")
-            return original_capture(repo)
+            return original_capture(repo, scanner_paths)
 
         def scan_runner(repo: Path) -> dict[str, object]:
             events.append("scan")
@@ -282,6 +282,166 @@ class BusinessOperationsGraphSnapshotRedTests(unittest.TestCase):
             self.assertEqual(record["exitCode"], 0)
             self.assertEqual(record["graph"]["sha256"], hashlib.sha256(b"graph output\n").hexdigest())
             self.assertEqual(verify_scan_bracketed_snapshot(output_path)["src/app.ts"], b"export const app = 1;\n")
+
+    def test_non_scanner_commit_during_scan_preserves_source_snapshot_and_records_head_interval(
+        self,
+    ) -> None:
+        """Allows a committed non-scanner plan update while recording the Git-head interval."""
+        from measure.business_operations_graph_baseline_snapshot import (
+            produce_scan_bracketed_snapshot,
+            verify_scan_bracketed_snapshot,
+        )
+
+        (self.root / ".git/info/exclude").write_text("graph.db\n", encoding="utf-8")
+        pre_head = self._git("rev-parse", "HEAD").decode().strip()
+
+        def scan_runner(repo: Path) -> dict[str, object]:
+            """Writes ignored scan output and commits a non-scanner Measure-plan update."""
+            (repo / "graph.db").write_bytes(b"graph output\n")
+            self._write("measure/tracks/unrelated/plan.md", "# Unrelated plan\n")
+            self._git("add", "measure/tracks/unrelated/plan.md")
+            self._git("commit", "-m", "docs: update unrelated plan")
+            return {
+                "command": "repo-graph scan . ./graph.db",
+                "exitCode": 0,
+                "graphPath": "graph.db",
+                "stderr": "",
+                "stdout": "scanned",
+            }
+
+        with tempfile.TemporaryDirectory() as output:
+            output_path = Path(output)
+            result = produce_scan_bracketed_snapshot(
+                self.root, output_path, tool_version="test", scan_runner=scan_runner
+            )
+            post_head = self._git("rev-parse", "HEAD").decode().strip()
+            record = json.loads((output_path / "snapshot.scan.json").read_text(encoding="utf-8"))
+
+            self.assertEqual(result.manifest["baselineHead"], pre_head)
+            self.assertEqual(result.manifest["preHead"], pre_head)
+            self.assertEqual(result.manifest["postHead"], post_head)
+            self.assertEqual(result.pre_state["denominatorSha256"], result.post_state["denominatorSha256"])
+            self.assertEqual(result.pre_state["porcelain"], result.post_state["porcelain"])
+            self.assertEqual(result.pre_state["stagedDiff"], result.post_state["stagedDiff"])
+            self.assertEqual(record["preHead"], pre_head)
+            self.assertEqual(record["postHead"], post_head)
+            self.assertNotEqual(record["preHead"], record["postHead"])
+            self.assertEqual(
+                verify_scan_bracketed_snapshot(output_path)["src/app.ts"],
+                b"export const app = 1;\n",
+            )
+
+    def test_changed_and_reverted_scanner_commits_during_scan_abort(self) -> None:
+        """Rejects an ancestor HEAD advance that changes then restores scanner input bytes."""
+        from measure.business_operations_graph_baseline_snapshot import (
+            SnapshotDriftError,
+            produce_scan_bracketed_snapshot,
+        )
+
+        (self.root / ".git/info/exclude").write_text("graph.db\n", encoding="utf-8")
+        output = Path(self.temporary.name) / "changed-and-reverted-output"
+
+        def scan_runner(repo: Path) -> dict[str, object]:
+            """Commits and reverts a source edit before returning a scan result."""
+            (repo / "graph.db").write_bytes(b"graph output\n")
+            self._write("src/app.ts", "export const app = 2;\n")
+            self._git("add", "src/app.ts")
+            self._git("commit", "-m", "test: change scanner input")
+            self._write("src/app.ts", "export const app = 1;\n")
+            self._git("add", "src/app.ts")
+            self._git("commit", "-m", "test: restore scanner input")
+            return {
+                "command": "repo-graph scan . ./graph.db",
+                "exitCode": 0,
+                "graphPath": "graph.db",
+                "stderr": "",
+                "stdout": "scanned",
+            }
+
+        with self.assertRaises(SnapshotDriftError) as caught:
+            produce_scan_bracketed_snapshot(
+                self.root, output, tool_version="test", scan_runner=scan_runner
+            )
+        self.assertIn("src/app.ts", str(caught.exception))
+        self.assertFalse(output.exists())
+
+    def test_unrelated_staged_diff_drift_is_outside_the_scanner_scope(self) -> None:
+        """Allows concurrent documentation index changes outside the scanner denominator."""
+        self._write("docs/notes.md", "before\n")
+        self._git("add", "docs/notes.md")
+
+        def unrelated_drift() -> None:
+            """Changes only a staged documentation file after the pre-state capture."""
+            self._write("docs/notes.md", "after\n")
+            self._git("add", "docs/notes.md")
+
+        with tempfile.TemporaryDirectory() as output:
+            result = self._producer()(
+                self.root,
+                output,
+                tool_version="test",
+                before_post_check=unrelated_drift,
+            )
+
+        scanner_paths = sorted(entry["path"] for entry in result.manifest["entries"])
+        self.assertEqual(result.pre_state["scannerPaths"], scanner_paths)
+        self.assertEqual(result.pre_state["stagedDiff"], result.post_state["stagedDiff"])
+        self.assertNotIn("docs/notes.md", result.pre_state["stagedDiff"])
+
+    def test_scanner_staged_diff_drift_aborts_even_when_worktree_bytes_match(self) -> None:
+        """Rejects a scanner input whose Git index changes while its live bytes are restored."""
+        from measure.business_operations_graph_baseline_snapshot import SnapshotDriftError
+
+        output = Path(self.temporary.name) / "scanner-staged-drift-output"
+
+        def staged_drift() -> None:
+            """Stages different source bytes before restoring the live source file."""
+            self._write("src/app.ts", "export const app = 2;\n")
+            self._git("add", "src/app.ts")
+            self._write("src/app.ts", "export const app = 1;\n")
+
+        with self.assertRaises(SnapshotDriftError) as caught:
+            self._producer()(
+                self.root,
+                output,
+                tool_version="test",
+                before_post_check=staged_drift,
+            )
+        self.assertIn("status or staged-diff", str(caught.exception))
+        self.assertFalse(output.exists())
+
+    def test_non_ancestor_history_during_scan_aborts(self) -> None:
+        """Rejects a rewritten master history even when the final source bytes match."""
+        from measure.business_operations_graph_baseline_snapshot import (
+            SnapshotDriftError,
+            produce_scan_bracketed_snapshot,
+        )
+
+        (self.root / ".git/info/exclude").write_text("graph.db\n", encoding="utf-8")
+        output = Path(self.temporary.name) / "non-ancestor-output"
+
+        def scan_runner(repo: Path) -> dict[str, object]:
+            """Replaces master with an orphan commit that retains the source tree."""
+            (repo / "graph.db").write_bytes(b"graph output\n")
+            self._git("switch", "--orphan", "rewritten-history")
+            self._write("measure/tracks/unrelated/plan.md", "# Unrelated plan\n")
+            self._git("add", ".")
+            self._git("commit", "-m", "docs: rewrite unrelated plan")
+            self._git("branch", "-M", "master")
+            return {
+                "command": "repo-graph scan . ./graph.db",
+                "exitCode": 0,
+                "graphPath": "graph.db",
+                "stderr": "",
+                "stdout": "scanned",
+            }
+
+        with self.assertRaises(SnapshotDriftError) as caught:
+            produce_scan_bracketed_snapshot(
+                self.root, output, tool_version="test", scan_runner=scan_runner
+            )
+        self.assertIn("not an ancestor", str(caught.exception))
+        self.assertFalse(output.exists())
 
     def test_verification_rejects_tampered_rich_and_r0_state_artifacts(self) -> None:
         """Fails closed when any pre or post state artifact changes after capture."""

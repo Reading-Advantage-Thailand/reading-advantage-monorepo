@@ -55,11 +55,17 @@ arrays for already-indexed rows are not sufficient evidence.
    discovered `build-graph.config.json`.
 3. Publish a deterministic archive containing the exact denominator bytes and
    a manifest containing relative path, SHA-256, size, mode or symlink target,
-   Git tracked/untracked state, baseline HEAD, branch, tool version, scan
-   command/config, and hashes of porcelain status and staged diff.
+   Git tracked/untracked state, pre/post HEAD interval, branch, tool version,
+   scan command/config, and hashes of scanner-input-scoped porcelain status
+   and staged diff. The R0 projection retains the pre-scan HEAD and pre-scan
+   scanner-state aliases required by its unchanged v1 contract.
 4. Hash the complete denominator immediately before and after each accepted
-   scan. Any path, metadata, content, status, or staged-diff drift invalidates
-   the run; retry only after coordinating a stable window in the same worktree.
+   scan. Any scanner-input path, metadata, content, scanner-scoped status, or
+   scanner-scoped staged-diff drift invalidates the run. A branch change,
+   non-ancestor history rewrite, or any intervening committed scanner-input
+   path also invalidates the run, including a changed-and-reverted path.
+   Non-scanner documentation changes are recorded in the pre/post HEAD
+   interval but do not invalidate an otherwise identical source binding.
 5. Prove that the archive reproduces its manifest and that every graph file row
    resolves to the same path and content hash in the frozen snapshot. A null
    graph `commitSha` is acceptable only when this independent dirty-tree source

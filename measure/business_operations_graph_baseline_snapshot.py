@@ -161,21 +161,42 @@ def _git_bytes(repo: Path, *args: str) -> bytes:
     return result.stdout
 
 
-def _git_unstaged_status(repo: Path) -> list[tuple[str, str]]:
-    """Returns one ``(code, path)`` tuple per unstaged status entry without mutating the index."""
-    output = _git_text(repo, "diff-index", "--name-status", "-z", "HEAD", "--")
+def _git_pathspec_args(paths: Iterable[str] | None) -> list[str] | None:
+    """Returns canonical Git pathspec arguments, or ``None`` for an empty scope."""
+    if paths is None:
+        return ["--"]
+    normalized = sorted({_normalize_repo_path(path) for path in paths})
+    return ["--", *normalized] if normalized else None
+
+
+def _git_unstaged_status(
+    repo: Path, paths: Iterable[str] | None = None
+) -> list[tuple[str, str]]:
+    """Returns scoped unstaged status entries without mutating the index."""
+    pathspec = _git_pathspec_args(paths)
+    if pathspec is None:
+        return []
+    output = _git_text(repo, "diff", "--name-status", "-z", *pathspec)
     return _parse_name_status_z(output)
 
 
-def _git_staged_status(repo: Path) -> list[tuple[str, str]]:
-    """Returns one ``(code, path)`` tuple per staged status entry without mutating the index."""
-    output = _git_text(repo, "diff-index", "--cached", "--name-status", "-z", "HEAD", "--")
+def _git_staged_status(
+    repo: Path, paths: Iterable[str] | None = None
+) -> list[tuple[str, str]]:
+    """Returns scoped staged status entries without mutating the index."""
+    pathspec = _git_pathspec_args(paths)
+    if pathspec is None:
+        return []
+    output = _git_text(repo, "diff", "--cached", "--name-status", "-z", *pathspec)
     return _parse_name_status_z(output)
 
 
-def _git_untracked_paths(repo: Path) -> list[str]:
-    """Returns the list of untracked paths without consulting the index."""
-    output = _git_text(repo, "ls-files", "--others", "--exclude-standard", "-z")
+def _git_untracked_paths(repo: Path, paths: Iterable[str] | None = None) -> list[str]:
+    """Returns scoped untracked paths without consulting the index."""
+    pathspec = _git_pathspec_args(paths)
+    if pathspec is None:
+        return []
+    output = _git_text(repo, "ls-files", "--others", "--exclude-standard", "-z", *pathspec)
     return [entry for entry in output.split("\x00") if entry]
 
 
@@ -203,9 +224,12 @@ def _parse_name_status_z(output: str) -> list[tuple[str, str]]:
         index += 1
         if index >= len(parts):
             break
-        path = parts[index]
-        entries.append((code, path))
-        index += 1
+        path_count = 2 if code.startswith(("R", "C")) else 1
+        for _ in range(path_count):
+            if index >= len(parts) or not parts[index]:
+                break
+            entries.append((code, parts[index]))
+            index += 1
     return entries
 
 
@@ -213,6 +237,40 @@ def _git_tracked_paths(repo: Path) -> set[str]:
     """Returns the set of currently-tracked repository-relative paths."""
     output = _git_text(repo, "ls-files", "-z")
     return {entry for entry in output.split("\x00") if entry}
+
+
+def _git_is_ancestor(repo: Path, ancestor: str, descendant: str) -> bool:
+    """Reports whether ``ancestor`` is reachable from ``descendant`` in local history."""
+    if ancestor == descendant:
+        return True
+    result = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", ancestor, descendant],
+        cwd=repo,
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode in {0, 1}:
+        return result.returncode == 0
+    raise SnapshotError("could not verify the pre/post HEAD ancestry")
+
+
+def _git_commit_changed_paths(repo: Path, commit: str) -> set[str]:
+    """Returns every path changed by one commit, including each merge parent diff."""
+    output = _git_bytes(
+        repo,
+        "diff-tree",
+        "--no-commit-id",
+        "--name-only",
+        "-r",
+        "-m",
+        "-z",
+        commit,
+    )
+    return {
+        _normalize_repo_path(path)
+        for path in output.decode("utf-8").split("\x00")
+        if path
+    }
 
 
 def _git_worktree_state(repo: Path) -> dict[str, Any]:
@@ -233,8 +291,8 @@ def _git_worktree_state(repo: Path) -> dict[str, Any]:
     }
 
 
-def _check_worktree_state(repo: Path) -> None:
-    """Raises when the worktree invariant required by AGENTS A16 is violated."""
+def _check_worktree_state(repo: Path) -> dict[str, Any]:
+    """Validates and returns the worktree invariant required by AGENTS A16."""
     state = _git_worktree_state(repo)
     if state["worktreeCount"] != 1:
         raise SnapshotError(
@@ -252,6 +310,7 @@ def _check_worktree_state(repo: Path) -> None:
         raise SnapshotError(
             f"snapshot must run on master: branch={state['branch']!r}"
         )
+    return state
 
 
 def _lstat_mode(path: Path) -> str:
@@ -583,6 +642,9 @@ def _build_scanner_input_index(
         (
             _deleted_descriptor(worktree_root, relative)
             for relative in _git_deleted_tracked_paths(worktree_root)
+            if _is_scanner_input(
+                relative, PurePosixPath(relative).name, package_globs_list
+            )
         ),
         key=lambda item: item.path,
     )
@@ -602,6 +664,37 @@ def _is_scanner_input(relative: str, name: str, package_globs: Iterable[str]) ->
     if name == "package.json" and _matches_package_glob(relative, package_globs):
         return True
     return False
+
+
+def _committed_scanner_drift(
+    repo: Path,
+    pre_head: str,
+    post_head: str,
+    scanner_paths: Iterable[str],
+    package_globs: Iterable[str],
+) -> tuple[str, list[str]] | None:
+    """Returns the first intervening commit that touched a scanner input, if any.
+
+    This walks individual commits rather than comparing the endpoint trees so a
+    scanner-input change that is later reverted cannot evade the scan bracket.
+    """
+    known_paths = {_normalize_repo_path(path) for path in scanner_paths}
+    commits = [
+        commit
+        for commit in _git_text(repo, "rev-list", "--reverse", f"{pre_head}..{post_head}").splitlines()
+        if commit
+    ]
+    for commit in commits:
+        changed_paths = _git_commit_changed_paths(repo, commit)
+        affected = sorted(
+            path
+            for path in changed_paths
+            if path in known_paths
+            or _is_scanner_input(path, PurePosixPath(path).name, package_globs)
+        )
+        if affected:
+            return commit, affected
+    return None
 
 
 def _git_blob_mode(repo: Path, relative: str) -> str:
@@ -675,15 +768,21 @@ def _deleted_descriptor(repo: Path, relative: str) -> _FileDescriptor:
     )
 
 
-def _git_staged_diff(repo: Path) -> str:
-    """Returns the exact staged-diff bytes from Git's index without mutating it."""
-    return _git_text(repo, "diff", "--binary", "--no-color", "--cached")
+def _git_staged_diff(repo: Path, paths: Iterable[str] | None = None) -> str:
+    """Returns the exact scoped staged diff without mutating Git's index."""
+    pathspec = _git_pathspec_args(paths)
+    if pathspec is None:
+        return ""
+    return _git_text(repo, "diff", "--binary", "--no-color", "--cached", *pathspec)
 
 
-def _serialize_state_artifact(porcelain: str, staged_diff: str) -> tuple[dict[str, Any], dict[str, str]]:
-    """Returns a state-artifact body and its derived digests."""
+def _serialize_state_artifact(
+    porcelain: str, staged_diff: str, scanner_paths: Iterable[str]
+) -> tuple[dict[str, Any], dict[str, str]]:
+    """Returns a scanner-scoped state artifact body and its derived digests."""
     body = {
         "porcelain": porcelain,
+        "scannerPaths": sorted({_normalize_repo_path(path) for path in scanner_paths}),
         "schemaVersion": SCHEMA_VERSION,
         "stagedDiff": staged_diff,
         "status": porcelain,
@@ -748,29 +847,29 @@ def _deleted_entries(descriptors: Iterable[_FileDescriptor]) -> list[dict[str, A
     ]
 
 
-def _capture_state(repo: Path) -> tuple[dict[str, Any], dict[str, str]]:
-    """Captures the pre or post state artifact, returning body and digests."""
-    porcelain = _build_porcelain(repo)
-    staged_diff = _git_staged_diff(repo)
-    return _serialize_state_artifact(porcelain, staged_diff)
+def _capture_state(
+    repo: Path, scanner_paths: Iterable[str]
+) -> tuple[dict[str, Any], dict[str, str]]:
+    """Captures scanner-scoped pre or post status and staged-diff evidence."""
+    paths = sorted({_normalize_repo_path(path) for path in scanner_paths})
+    porcelain = _build_porcelain(repo, paths)
+    staged_diff = _git_staged_diff(repo, paths)
+    return _serialize_state_artifact(porcelain, staged_diff, paths)
 
 
-def _build_porcelain(repo: Path) -> str:
-    """Returns one combined status string without mutating the Git index."""
+def _build_porcelain(repo: Path, scanner_paths: Iterable[str]) -> str:
+    """Returns one scanner-scoped status string without mutating the Git index."""
     parts: list[str] = []
-    for code, path in _git_unstaged_status(repo):
-        if len(code) >= 2:
-            parts.append(f" {code[1]} {path}")
-        elif code:
+    paths = list(scanner_paths)
+    for code, path in _git_unstaged_status(repo, paths):
+        if code:
             parts.append(f" {code[0]} {path}")
-    for code, path in _git_staged_status(repo):
+    for code, path in _git_staged_status(repo, paths):
         if code:
             parts.append(f"{code[0]} {path}")
-    for path in _git_untracked_paths(repo):
+    for path in _git_untracked_paths(repo, paths):
         parts.append(f"?? {path}")
-    for path in _git_deleted_tracked_paths(repo):
-        parts.append(f" D {path}")
-    return "\n".join(sorted(parts))
+    return "\n".join(sorted(set(parts)))
 
 
 @dataclasses.dataclass(frozen=True)
@@ -886,6 +985,7 @@ def _build_manifest(
     build_graph_config_paths: list[str],
     package_globs: list[str],
     baseline_head: str,
+    post_head: str,
     branch: str,
     tool_version: str,
     pre_digests: dict[str, str],
@@ -918,6 +1018,8 @@ def _build_manifest(
         "discovery": discovery,
         "entries": entries,
         "porcelainSha256": pre_digests["porcelainSha256"],
+        "postHead": post_head,
+        "preHead": baseline_head,
         "scanCommand": SCAN_COMMAND,
         "scanConfig": None,
         "schemaVersion": SCHEMA_VERSION,
@@ -1154,26 +1256,35 @@ def produce_snapshot(
             "scanner root must equal the sole Git worktree root: "
             f"scanner={worktree_root_path} gitRoot={repo}"
         )
-    _check_worktree_state(repo)
+    pre_worktree_state = _check_worktree_state(repo)
     baseline_head = _git_text(repo, "rev-parse", "HEAD").strip()
-    branch = _git_text(repo, "symbolic-ref", "--quiet", "--short", "HEAD").strip()
+    branch = str(pre_worktree_state["branch"])
 
     # The complete byte/metadata denominator is captured immediately before
     # and after the caller's scan boundary, independently of Git status.
     descriptors, deleted, configs, extends_targets, package_globs = _capture_denominator(repo)
     pre_denominator = _denominator_metadata(descriptors, deleted)
-    pre_body, pre_digests = _capture_state(repo)
+    pre_paths = [entry["path"] for entry in pre_denominator]
+    pre_body, pre_digests = _capture_state(repo, pre_paths)
     scan_result = _validate_scan_result(repo, scan_runner(repo)) if scan_runner is not None else None
     if before_post_check is not None:
         before_post_check()
-    post_body, post_digests = _capture_state(repo)
     post_descriptors, post_deleted, _, _, _ = _capture_denominator(repo)
     post_denominator = _denominator_metadata(post_descriptors, post_deleted)
+    post_paths = [entry["path"] for entry in post_denominator]
+    post_body, post_digests = _capture_state(repo, sorted(set(pre_paths) | set(post_paths)))
     post_head = _git_text(repo, "rev-parse", "HEAD").strip()
-    post_branch = _git_text(repo, "symbolic-ref", "--quiet", "--short", "HEAD").strip()
-    if post_head != baseline_head or post_branch != branch:
+    try:
+        post_worktree_state = _check_worktree_state(repo)
+    except SnapshotError as error:
         raise SnapshotDriftError(
-            "concurrent baseline HEAD or branch drift detected"
+            "concurrent branch or worktree drift detected"
+        ) from error
+    if post_worktree_state != pre_worktree_state:
+        raise SnapshotDriftError("concurrent branch or worktree drift detected")
+    if post_head != baseline_head and not _git_is_ancestor(repo, baseline_head, post_head):
+        raise SnapshotDriftError(
+            "concurrent history drift detected: pre HEAD is not an ancestor of post HEAD"
         )
     if pre_denominator != post_denominator:
         pre_entries = {entry["path"]: entry for entry in pre_denominator}
@@ -1196,6 +1307,20 @@ def produce_snapshot(
         raise SnapshotDriftError(
             "concurrent source status or staged-diff drift detected"
         )
+    if post_head != baseline_head:
+        committed_drift = _committed_scanner_drift(
+            repo,
+            baseline_head,
+            post_head,
+            sorted(set(pre_paths) | set(post_paths)),
+            package_globs,
+        )
+        if committed_drift is not None:
+            commit, paths = committed_drift
+            raise SnapshotDriftError(
+                "concurrent committed scanner-input drift detected: "
+                f"commit={commit} paths={paths}"
+            )
 
     extends_paths = sorted(extends_targets)
     build_graph_config_paths = sorted(
@@ -1210,6 +1335,7 @@ def produce_snapshot(
         build_graph_config_paths,
         package_globs,
         baseline_head,
+        post_head,
         branch,
         tool_version,
         pre_digests,
@@ -1255,7 +1381,9 @@ def produce_snapshot(
             output / "snapshot.scan.json",
             {
                 **scan_result,
+                "postHead": post_head,
                 "postStateArtifact": post_state["stateArtifactRef"],
+                "preHead": baseline_head,
                 "preStateArtifact": pre_state["stateArtifactRef"],
             },
         )
@@ -1444,8 +1572,9 @@ def _verify_state_artifacts(output: Path, manifest: dict[str, Any]) -> None:
     """Verifies rich and R0 pre/post state artifacts against the manifest and each other."""
     rich_keys = {
         "denominatorSha256", "porcelain", "porcelainSha256", "schemaVersion",
-        "stagedDiff", "stagedDiffSha256", "status", "statusSha256",
+        "scannerPaths", "stagedDiff", "stagedDiffSha256", "status", "statusSha256",
     }
+    expected_scanner_paths = sorted(entry["path"] for entry in manifest["entries"])
     rich_states = [
         _read_snapshot_json(output, "snapshot.pre-state.json"),
         _read_snapshot_json(output, "snapshot.post-state.json"),
@@ -1455,6 +1584,8 @@ def _verify_state_artifacts(output: Path, manifest: dict[str, Any]) -> None:
             raise SnapshotValidationError("rich state artifact schema is invalid")
         if state["denominatorSha256"] != manifest["denominatorSha256"]:
             raise SnapshotValidationError("rich state denominator does not match manifest")
+        if state["scannerPaths"] != expected_scanner_paths:
+            raise SnapshotValidationError("rich state scope does not match manifest inputs")
         if state["porcelain"] != state["status"]:
             raise SnapshotValidationError("rich state porcelain and status differ")
         if state["porcelainSha256"] != _sha(state["porcelain"].encode("utf-8")):
@@ -1477,12 +1608,12 @@ def _verify_state_artifacts(output: Path, manifest: dict[str, Any]) -> None:
             raise SnapshotValidationError("R0 state artifact does not match rich state projection")
 
 
-def _verify_scan_artifact(output: Path) -> None:
+def _verify_scan_artifact(output: Path, manifest: dict[str, Any]) -> None:
     """Verifies a scan record binds the exact on-disk pre and post state artifacts."""
     record = _read_snapshot_json(output, "snapshot.scan.json")
     required = {
-        "command", "exitCode", "graph", "postStateArtifact", "preStateArtifact",
-        "schemaVersion", "stderr", "stdout",
+        "command", "exitCode", "graph", "postHead", "postStateArtifact",
+        "preHead", "preStateArtifact", "schemaVersion", "stderr", "stdout",
     }
     if set(record) != required or record["schemaVersion"] != 1:
         raise SnapshotValidationError("scan artifact schema is invalid")
@@ -1490,6 +1621,11 @@ def _verify_scan_artifact(output: Path) -> None:
         raise SnapshotValidationError("scan artifact does not record a successful canonical scan")
     if not isinstance(record["stdout"], str) or not isinstance(record["stderr"], str):
         raise SnapshotValidationError("scan artifact output must be text")
+    if (
+        record["preHead"] != manifest["preHead"]
+        or record["postHead"] != manifest["postHead"]
+    ):
+        raise SnapshotValidationError("scan artifact HEAD interval does not match manifest")
     graph = record["graph"]
     if not isinstance(graph, dict) or set(graph) != {"path", "sha256", "size"}:
         raise SnapshotValidationError("scan graph reference schema is invalid")
@@ -1511,10 +1647,17 @@ def verify_snapshot(output_directory: Path | str) -> dict[str, bytes]:
     if set(manifest) != {
         "archiveKind", "baselineHead", "branch", "deletedInputs",
         "denominatorSha256", "discovery", "entries", "porcelainSha256",
-        "scanCommand", "scanConfig", "schemaVersion", "stagedDiffSha256",
+        "postHead", "preHead", "scanCommand", "scanConfig", "schemaVersion", "stagedDiffSha256",
         "status", "statusSha256", "toolVersion",
     } or manifest.get("schemaVersion") != SCHEMA_VERSION:
         raise SnapshotValidationError("manifest schema contains missing or unknown fields")
+    if manifest["preHead"] != manifest["baselineHead"]:
+        raise SnapshotValidationError("manifest preHead does not match baselineHead")
+    if not all(
+        isinstance(manifest[key], str) and re.fullmatch(r"[0-9a-f]{40,64}", manifest[key])
+        for key in ("baselineHead", "preHead", "postHead")
+    ):
+        raise SnapshotValidationError("manifest HEAD interval is invalid")
     replay = replay_archive(archive)
     manifest_entries = manifest.get("entries", [])
     if len(replay) != len(manifest_entries):
@@ -1536,7 +1679,7 @@ def verify_snapshot(output_directory: Path | str) -> dict[str, bytes]:
     _verify_r0_projection_artifacts(output, archive, manifest)
     _verify_state_artifacts(output, manifest)
     if (output / "snapshot.scan.json").exists():
-        _verify_scan_artifact(output)
+        _verify_scan_artifact(output, manifest)
     return replay
 
 
@@ -1546,7 +1689,6 @@ def verify_scan_bracketed_snapshot(output_directory: Path | str) -> dict[str, by
     replay = verify_snapshot(output)
     if not (output / "snapshot.scan.json").is_file():
         raise SnapshotValidationError("scan-bracketed snapshot is missing snapshot.scan.json")
-    _verify_scan_artifact(output)
     return replay
 
 
