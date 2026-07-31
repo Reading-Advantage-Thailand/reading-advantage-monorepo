@@ -1,0 +1,43 @@
+{
+  "schema_version": 2,
+  "role": "review-a",
+  "track": "business_operations_graph_baseline_remediation_20260730",
+  "phase": "Phase R1 Task 1 — source-scoped concurrency independent rereview v3",
+  "baseline_sha": "9dddd951a7213be5a5e3648eca60e3f99e355718",
+  "audited_head_sha": "57afcd20beb5ddf3356cd6c09394a38a52b3ac94",
+  "applicability": "applicable",
+  "status": "pass",
+  "summary": "The audited direct descendant fixes the v2 High by rejecting every scanner symlink whose lexical target traverses another symlink before the scan window. The prior H1 deletion/rename coverage, direct-target H2 dependency scope and drift rejection, and M1 exact object-ID validation remain fixed; both focused unittest modules pass 65 tests, and an independent multi-hop changed/restored attack probe fails closed without invoking its scan callback. No Critical, High, contract, production-wiring, route-parity, or test-strategy violation remains in this R1 Task 1 scope.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "HEAD was verified as 57afcd20beb5ddf3356cd6c09394a38a52b3ac94, exactly the required audited HEAD. The supplied baseline resolves to 9dddd951a7213be5a5e3648eca60e3f99e355718; merge-base ancestry passed and the range contains exactly one commit.",
+    "The baseline range changes exactly four intended files with 79 insertions and 5 deletions: the snapshot producer, its focused test module, plan.md, and the rereview-remediation receipt. measure/automation-supervisor.py and the accepted R0 validator are unchanged. git diff --check passed.",
+    "The requested combined unittest command passed 65 tests in 25.544 seconds: 36 snapshot-producer tests and 29 accepted R0 remediation tests.",
+    "The v2 High is closed in production: _descriptor_for_existing_path lexically normalizes an in-repository scanner-symlink target, checks every target component with symlink-aware lstat semantics, and raises SnapshotValidationError before target resolution, byte reads, state capture, or scan execution when any component is another symlink.",
+    "An independent repository under /tmp/opencode armed src/alias.ts -> ../shared/hop.txt -> source-a.txt and a scan callback that would commit hop.txt -> source-b.txt and then restore hop.txt -> source-a.txt. Production rejected the chain with 'traverses another symlink'; the callback ran zero times, output remained absent, and the probe repository's HEAD, index bytes, and porcelain status were unchanged.",
+    "Prior H1 remains fixed: the full suite passed the unstaged and staged deleted nonstandard extends, staged deleted workspace-export target, and staged scanner-to-documentation rename tests, including tombstone, scoped state, staged-diff, replay, and index-preservation assertions.",
+    "Prior direct-target H2 remains fixed: the full suite passed unrelated Markdown-symlink exclusion, direct scanner-symlink archival, physical-target staged drift with restored live bytes, and changed-and-restored direct physical-target commit rejection. The new fail-closed chain check leaves direct regular-file targets and their artifact-bound dependencyPaths behavior intact.",
+    "Prior M1 remains fixed: _is_git_object_id accepts exactly 40- or 64-character lowercase hexadecimal IDs, and the manifest/scan-record 41- and 63-character tampering adversaries passed by rejecting all invalid values.",
+    "R1 Task 1 remains marked in progress and parent/successor gates remain blocked, so this scoped PASS does not claim later R1 evidence, R2/R3 acceptance, or successor unblocking.",
+    "The shared checkout remained at the exact audited HEAD with no staged diff. Existing unrelated dirty and untracked work was neither staged, reset, stashed, reverted, repaired, nor overwritten; this review added only the named report file."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git merge-base --is-ancestor 9dddd951a 57afcd20b; git merge-base 9dddd951a 57afcd20b; git rev-list --count 9dddd951a..57afcd20b — pass; exact audited HEAD and one-commit ancestry confirmed",
+    "git diff --shortstat/--name-status/--check 9dddd951a..57afcd20b — pass; four intended files, 79 insertions, 5 deletions, and no whitespace errors",
+    "git diff --quiet 9dddd951a..57afcd20b -- measure/automation-supervisor.py measure/business_operations_graph_baseline_validation.py — pass; protected supervisor and accepted R0 validator unchanged",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_business_operations_graph_baseline_snapshot measure.tests.test_business_operations_graph_baseline_remediation — pass; 65 tests in 25.544s",
+    "Independent /tmp/opencode multi-hop changed/restored scanner-symlink probe — pass; pre-scan SnapshotValidationError, zero scan callback calls, preserved probe HEAD/index/status, and absent output",
+    "python3 -m py_compile measure/business_operations_graph_baseline_snapshot.py measure/tests/test_business_operations_graph_baseline_snapshot.py — pass",
+    "git diff --cached --quiet; git rev-parse HEAD — pass; no staged diff and exact audited HEAD preserved"
+  ],
+  "changed_files": [
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r1-task1-scoped-concurrency-independent-rereview-v3-20260731.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
