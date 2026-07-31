@@ -31,7 +31,7 @@ BASELINE_HEAD = "3ff9b734a9e5a69f777108827b569e4f20a5ceb8"
 # These literals are the trust roots. Coordinated replacement of an artifact
 # and its mutable manifest/index still fails before the absent validator runs.
 PARENT_MANIFEST_SHA256 = "15f3c61fbcea4ea13c777e4f80ff061de2fa007985ef38b77dd560b1c8c77d50"
-FIXTURE_INDEX_SHA256 = "5e9e6624c7405570641bbfff16c5a7a8309fb4050bd20dcc5651fd5804e5c0c3"
+FIXTURE_INDEX_SHA256 = "887f5975b5f876b08751cd3884bb39ac70678320abc9e187875ed84a10e2ea4f"
 PARENT_PINS = {
     "phase0-review-b-safety-20260730.json": {
         "authoritative": "measure/tracks/small_company_admin_privileges_20260722/phase0-review-b-safety-20260730.json",

@@ -32,8 +32,8 @@
     },
     {
       "path": "generate-fixtures.py",
-      "sha256": "3188e81e3c6bb56c5ad87ee637e7ec95184a4488d95da8629166aa095cc54f07",
-      "size": 49439
+      "sha256": "a6d53355f28e72dbddd86d336b830596fe799bf34a0b3fcd388d3c3af40ed071",
+      "size": 51569
     },
     {
       "path": "graph-clean-v1.json",

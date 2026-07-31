@@ -21,7 +21,7 @@
 ## Phase R0: Freeze contracts and make Red executable
 
 - [x] Task: After the Red result is recorded, add the minimal versioned acceptance schemas, validator, source-snapshot denominator rules, and counterexample corpus needed to make only the frozen contract tests pass; keep this task in progress until independent re-review reports no Critical/High findings. Evidence: `red-run-receipt-20260730.md`, `r0-rereview-a-20260730.json`, and `r0-rereview-b-20260730.json`. Acceptance is limited to R0 validator/contract remediation; R1+ and all parent/successor gates remain blocked.
-- [b] Follow-up: implement and test a genuinely non-writing `fixtures/v1/generate-fixtures.py --check` mode before using that command as fixture-integrity evidence. Evidence: `r0-rereview-a-20260730.json` finding `R0-REREVIEW-M1` (Medium, OPEN). This follow-up is outside the authorized file scope of this update.
+- [~] Follow-up: implement and test a genuinely non-writing `fixtures/v1/generate-fixtures.py --check` mode before using that command as fixture-integrity evidence. Evidence: `r0-rereview-a-20260730.json` finding `R0-REREVIEW-M1` (Medium, OPEN). Scope is limited to the fixture generator, focused tests, this plan, and one follow-up receipt; no parent or successor gate changes.
 
 ## Phase R1: Bind the dirty-worktree source and graph
 
