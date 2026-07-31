@@ -19,6 +19,11 @@
   scanner paths plus each non-deleted symlink's resolved physical target that
   supplies scanner bytes. Status, staged diff, and intervening-commit checks
   use that scope; rich replay recomputes it from the manifest.
+- H2 follow-up: A scanner symlink target is normalized lexically and every
+  target path component is checked with `lstat` semantics. If any target
+  component is another symlink, production raises `SnapshotValidationError`
+  before entering the scan window, failing closed instead of permitting an
+  unbound intermediate-link change and restoration.
 - M1: Manifest and scan-record HEAD fields accept only exactly 40- or exactly
   64-character lowercase hexadecimal Git object IDs.
 
@@ -33,6 +38,8 @@
 - An unrelated Markdown symlink is excluded. Physical-target staged drift with
   restored live bytes and changed-and-restored physical-target commits both
   abort; the physical target is bound in rich state evidence.
+- A changed-and-restored intermediate-symlink attack against a scanner symlink
+  chain is rejected before the scan starts.
 - Manifest and scan record tampering with 41- and 63-character SHA-like values
   is rejected.
 
@@ -40,7 +47,7 @@
 
 ```text
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_business_operations_graph_baseline_snapshot measure.tests.test_business_operations_graph_baseline_remediation
-Ran 64 tests in 57.736s
+Ran 65 tests in 55.305s
 OK
 ```
 

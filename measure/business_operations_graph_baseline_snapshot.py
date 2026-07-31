@@ -490,7 +490,28 @@ def _descriptor_for_existing_path(
             raise SnapshotValidationError(
                 f"symlink {relative} must use a relative POSIX target: {target_relative!r}"
             )
-        target_path = (path.parent / target_relative).resolve(strict=False)
+        if "\x00" in target_relative:
+            raise SnapshotValidationError(
+                f"symlink {relative} has an invalid target: {target_relative!r}"
+            )
+        target_relative_path = posixpath.normpath(
+            (PurePosixPath(relative).parent / target_relative).as_posix()
+        )
+        try:
+            target_relative_path = _normalize_repo_path(target_relative_path)
+        except SnapshotValidationError as error:
+            raise SnapshotValidationError(
+                f"symlink {relative} has an unsafe target: {target_relative!r}"
+            ) from error
+        target_lexical = worktree_root / target_relative_path
+        current = worktree_root
+        for part in PurePosixPath(target_relative_path).parts:
+            current /= part
+            if current.is_symlink():
+                raise SnapshotValidationError(
+                    f"symlink {relative} traverses another symlink at {target_relative_path}"
+                )
+        target_path = target_lexical.resolve(strict=False)
         if not _is_within_root(target_path, worktree_root) or not target_path.is_file():
             raise SnapshotValidationError(
                 f"symlink {relative} has an unsafe or non-file target: {target_relative!r}"

@@ -373,6 +373,52 @@ class BusinessOperationsGraphSnapshotRedTests(unittest.TestCase):
         self.assertIn("shared/source.txt", str(caught.exception))
         self.assertFalse(output.exists())
 
+    def test_changed_and_reverted_intermediate_symlink_chain_aborts_closed(self) -> None:
+        """Rejects a scanner symlink chain before an intermediate-link attack can run."""
+        from measure.business_operations_graph_baseline_snapshot import (
+            SnapshotValidationError,
+            produce_scan_bracketed_snapshot,
+        )
+
+        self._write("shared/source-a.txt", "export const source = 1;\n")
+        self._write("shared/source-b.txt", "export const source = 2;\n")
+        (self.root / "shared/hop.txt").symlink_to("source-a.txt")
+        (self.root / "src/alias.ts").symlink_to("../shared/hop.txt")
+        self._git("add", "shared", "src/alias.ts")
+        self._git("commit", "-m", "add chained scanner symlink")
+        head_before = self._git("rev-parse", "HEAD")
+        scan_started = False
+        output = Path(self.temporary.name) / "intermediate-symlink-commit-drift-output"
+
+        def scan_runner(repo: Path) -> dict[str, object]:
+            """Attempts to change and restore the intermediate symlink during scanning."""
+            nonlocal scan_started
+            scan_started = True
+            (repo / "graph.db").write_bytes(b"graph output\n")
+            (repo / "shared/hop.txt").unlink()
+            (repo / "shared/hop.txt").symlink_to("source-b.txt")
+            self._git("add", "shared/hop.txt")
+            self._git("commit", "-m", "test: change intermediate symlink")
+            (repo / "shared/hop.txt").unlink()
+            (repo / "shared/hop.txt").symlink_to("source-a.txt")
+            self._git("add", "shared/hop.txt")
+            self._git("commit", "-m", "test: restore intermediate symlink")
+            return {
+                "command": "repo-graph scan . ./graph.db",
+                "exitCode": 0,
+                "graphPath": "graph.db",
+                "stderr": "",
+                "stdout": "scanned",
+            }
+
+        with self.assertRaisesRegex(SnapshotValidationError, "another symlink"):
+            produce_scan_bracketed_snapshot(
+                self.root, output, tool_version="test", scan_runner=scan_runner
+            )
+        self.assertFalse(scan_started)
+        self.assertEqual(head_before, self._git("rev-parse", "HEAD"))
+        self.assertFalse(output.exists())
+
     def test_duplicate_and_traversal_archive_paths_are_rejected(self) -> None:
         """Rejects duplicate, absolute, traversal, and alias archive paths."""
         from measure.business_operations_graph_baseline_snapshot import (
