@@ -1,0 +1,34 @@
+Scope: all 40 workspace projects
+✓ Lockfile passes supply-chain policies (verified 3h ago)
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 0, reused 1, downloaded 0, added 0
+Progress: resolved 0, reused 12, downloaded 0, added 0
+Progress: resolved 0, reused 24, downloaded 0, added 0
+Progress: resolved 0, reused 32, downloaded 0, added 0
+Progress: resolved 0, reused 44, downloaded 0, added 0
+Progress: resolved 0, reused 56, downloaded 0, added 0
+Packages: -313
+--------------------------------------------------------------------------------
+Progress: resolved 0, reused 73, downloaded 0, added 0
+Progress: resolved 0, reused 146, downloaded 0, added 0
+Progress: resolved 0, reused 287, downloaded 0, added 0
+Progress: resolved 0, reused 288, downloaded 0, added 0
+Progress: resolved 0, reused 288, downloaded 0, added 0, done
+
+. prepare$ husky
+. prepare: Done
+Done in 1m 33s using pnpm v11.8.0
+
+ RUN  v4.1.8 /home/daniel-bo/Desktop/reading-advantage-monorepo/packages/backend
+
+ ❯ src/modules/standard-pack-ingestion/__tests__/ledger-successor-admission-facade.playkit-lifecycle.test.ts (1 test | 1 failed) 33175ms
+     × captures the facade during real index creation and reuses it when the real validator reserves a synthetic batch 33150ms
+
+ Test Files  1 failed | 34 passed | 3 skipped (38)
+      Tests  1 failed | 309 passed | 14 skipped (324)
+   Start at  20:56:13
+   Duration  87.75s (transform 28.13s, setup 0ms, import 117.50s, tests 46.61s, environment 59ms)
+
+/home/daniel-bo/Desktop/reading-advantage-monorepo/packages/backend:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/backend@0.1.0 test: `vitest run`
+Exit status 1

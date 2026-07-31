@@ -1,0 +1,21 @@
+
+ RUN  v4.1.8 /home/daniel-bo/Desktop/reading-advantage-monorepo/packages/advantage-play-kit
+
+ ❯ src/assets/standard-pack-suitability.test.ts (19 tests | 1 failed) 6439ms
+     × searches and technically compares only accepted resolver entries without social verdicts 5318ms
+ ❯ src/assets/asset-contract-v2.test.ts (6 tests | 1 failed) 5816ms
+     × selects semantic states into descriptor-owned image, clip, tileset, UI, and audio behavior 5596ms
+ ❯ src/guards/__tests__/accepted-inputs-checker-paths.test.ts (2 tests | 2 failed) 12719ms
+     × resolves accepted artifacts from measure/archive 7426ms
+     × fails closed when the archived artifact directory is stale or missing 5252ms
+ ❯ src/assets/standard-pack-ingestion-ledger.test.ts (16 tests | 1 failed) 311166ms
+     × rejects a successor catalog that smuggles an unreviewed asset beside a validated ingestion 34605ms
+
+ Test Files  4 failed | 50 passed (54)
+      Tests  5 failed | 322 passed (327)
+   Start at  21:00:59
+   Duration  394.85s (transform 18.01s, setup 0ms, import 68.64s, tests 403.23s, environment 594.01s)
+
+/home/daniel-bo/Desktop/reading-advantage-monorepo/packages/advantage-play-kit:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/advantage-play-kit@0.1.0 test: `vitest run`
+Exit status 1

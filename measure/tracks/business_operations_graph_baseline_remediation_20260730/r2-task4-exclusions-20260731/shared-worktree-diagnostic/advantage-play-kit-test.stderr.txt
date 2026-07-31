@@ -1,0 +1,69 @@
+$ vitest run
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/assets/asset-contract-v2.test.ts > Asset Contract v2 > selects semantic states into descriptor-owned image, clip, tileset, UI, and audio behavior
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/assets/asset-contract-v2.test.ts:145:3
+    143|   });
+    144|
+    145|   it("selects semantic states into descriptor-owned image, clip, tiles…
+       |   ^
+    146|     const walk = createWalkDescriptor(6);
+    147|     const image = {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/assets/standard-pack-ingestion-ledger.test.ts > standard-pack append-only ingestion ledger > rejects a successor catalog that smuggles an unreviewed asset beside a validated ingestion
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/assets/standard-pack-ingestion-ledger.test.ts:738:3
+    736|   }, 180_000);
+    737|
+    738|   it("rejects a successor catalog that smuggles an unreviewed asset be…
+       |   ^
+    739|     const rawEvidence = await createAcceptedIngestionEvidence();
+    740|     const rootCatalog = readStandardPackCatalogFixture();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/assets/standard-pack-suitability.test.ts > standard-pack suitability contracts > searches and technically compares only accepted resolver entries without social verdicts
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/assets/standard-pack-suitability.test.ts:643:3
+    641|   });
+    642|
+    643|   it("searches and technically compares only accepted resolver entries…
+       |   ^
+    644|     const resolver = await createAcceptedStandardAssetResolver(accepte…
+    645|       version: ACCEPTED_STANDARD_ASSET_RELEASE.version,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/guards/__tests__/accepted-inputs-checker-paths.test.ts > accepted-inputs checker archive paths > resolves accepted artifacts from measure/archive
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/guards/__tests__/accepted-inputs-checker-paths.test.ts:35:3
+     33|
+     34| describe("accepted-inputs checker archive paths", () => {
+     35|   it("resolves accepted artifacts from measure/archive", () => {
+       |   ^
+     36|     const result = spawnSync(process.execPath, [checker], { encoding: …
+     37|     expect(result.status).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/guards/__tests__/accepted-inputs-checker-paths.test.ts > accepted-inputs checker archive paths > fails closed when the archived artifact directory is stale or missing
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/guards/__tests__/accepted-inputs-checker-paths.test.ts:41:3
+     39|   });
+     40|
+     41|   it("fails closed when the archived artifact directory is stale or mi…
+       |   ^
+     42|     const stale = runCheckerWithPathReplacement(
+     43|       "measure/tracks/apk_independent_acceptance_handoff_20260712",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+

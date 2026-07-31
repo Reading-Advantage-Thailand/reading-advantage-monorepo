@@ -1,0 +1,20 @@
+$ vitest run
+stderr | src/modules/standard-pack-ingestion/__tests__/ledger-successor-admission-facade.playkit-lifecycle.test.ts
+DATABASE_URL is not set — database operations will fail at query time.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/modules/standard-pack-ingestion/__tests__/ledger-successor-admission-facade.playkit-lifecycle.test.ts > standard-pack ingestion ledger facade PlayKit lifecycle > captures the facade during real index creation and reuses it when the real validator reserves a synthetic batch
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/modules/standard-pack-ingestion/__tests__/ledger-successor-admission-facade.playkit-lifecycle.test.ts:455:3
+    453| /** Exercises actual predecessor-index capture and validation reuse of…
+    454| describe("standard-pack ingestion ledger facade PlayKit lifecycle", ()…
+    455|   it("captures the facade during real index creation and reuses it whe…
+       |   ^
+    456|     const evidence = await createAcceptedEvidence();
+    457|     const ledger = await createLedger(evidence);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
