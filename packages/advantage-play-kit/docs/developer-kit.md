@@ -168,6 +168,22 @@ const paths = materializeStandardAssetUnion(catalog, [
 ]);
 ```
 
+## Asset Contract v2 descriptor-driven clips
+
+Asset Contract v2 is opt-in. Gameplay requests a stable semantic identity such as `{ role: "player", state: "walk" }`; the accepted selected-union resolver returns a registration whose descriptor owns physical clip frames, timing, anchor, scale, and media metadata. A cartridge never receives a direct source path and must not encode a fixed frame count for a semantic state.
+
+The generated `assets.ts` selects only the descriptor registrations requested by `SEMANTIC_STATE_REQUIREMENTS`. Its generated `scene.ts` accepts one selected `AssetContractV2SemanticRegistration` and plays a named clip from `registration.descriptor.clips`, returning the descriptor's frames, FPS, loop, anchor, and render scale unchanged.
+
+```ts
+const selection = resolver.select([{ role: "player", state: "walk" }]);
+const registration = selection.registrations[0]!;
+const scene = createMyVocabGameScene(registration);
+const playback = scene.playDescriptorClip("walk-down");
+renderer.play({ frames: playback.frames, fps: playback.fps, loop: playback.loop });
+```
+
+The public exemplar exports a six-frame `walk-down` descriptor at 12 FPS for the same `player:walk` semantic identity. That is representative presentation metadata, not a contract that other descriptors must have six frames; cartridges must always consume the descriptor-provided frame sequence.
+
 ## Attribution
 
 Every cartridge must register the required ElvGames credit in the shared
@@ -202,7 +218,16 @@ import {
 frame/object/asset/memory/bundle performance reports, and a provider-neutral
 browser adapter for real input, viewport changes, control activation,
 completion text, and attribution inspection. The working Advantage Games route
-is `/qc`.
+is `/qc`. Its Asset Contract v2 panel is a deterministic contract fixture only;
+it does not resolve or render media. Suitability review views, when supplied by
+an integrity-validating route owner, remain evidence-only and explicitly deny
+production, migration, cutover, and deployment authority.
+
+For a built-package consumer smoke test, run:
+
+```bash
+pnpm --filter @reading-advantage/advantage-play-kit check:assets-consumer-entrypoint
+```
 
 ## Extension and bespoke escape hatch
 

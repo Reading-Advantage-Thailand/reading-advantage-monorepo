@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { ACCEPTED_STANDARD_ASSET_RELEASE } from "../../assets/accepted-standard-pack-release.js";
+
 import {
+  createAssetContractV2QcDiagnostic,
   createBrowserQcDriver,
   createPerformanceMonitor,
   parseQcControls,
@@ -61,5 +64,48 @@ describe("QC kit", () => {
     await expect(driver.tap({ x: Number.NaN, y: 1 })).rejects.toThrow(/finite/i);
     await expect(driver.click(" ")).rejects.toThrow(/blank/i);
     await expect(driver.readText(" ")).rejects.toThrow(/blank/i);
+  });
+
+  it("separates semantic identity from physical descriptor and animation behavior for v2 QC", () => {
+    const diagnostic = createAssetContractV2QcDiagnostic(
+      { role: "player", state: "walk" },
+      {
+        contractVersion: 2,
+        descriptorId: "player-walk-6",
+        catalogEntryKey: "top-down/32x32/characters/hero-walk",
+        release: {
+          version: ACCEPTED_STANDARD_ASSET_RELEASE.version,
+          catalogDigest: ACCEPTED_STANDARD_ASSET_RELEASE.catalogDigest,
+          sourceReceiptDigest: ACCEPTED_STANDARD_ASSET_RELEASE.sourceReceiptDigest,
+        },
+        mediaKind: "animation",
+        geometry: { width: 192, height: 32, frameWidth: 32, frameHeight: 32, columns: 6, rows: 1 },
+        clips: [{
+          id: "walk",
+          frames: Array.from({ length: 6 }, (_, column) => ({ column, row: 0 })),
+          timing: { fps: 12, loop: true },
+        }],
+        directions: [{ direction: "down", clipId: "walk" }],
+        anchor: { x: 0.5, y: 1 },
+        renderScale: 2,
+        collisionEnvelope: { x: 0.2, y: 0.4, width: 0.6, height: 0.6 },
+        readabilityEnvelope: { minimumRenderPixels: 24, minimumContrastRatio: 3 },
+      },
+    );
+
+    expect(diagnostic.semantic).toEqual({ role: "player", state: "walk", identity: "player:walk" });
+    expect(diagnostic.physicalDescriptor).toMatchObject({ descriptorId: "player-walk-6", mediaKind: "animation" });
+    expect(diagnostic.animation).toEqual({
+      clips: [{ clipId: "walk", frameCount: 6, fps: 12, loop: true }],
+      directions: [{ direction: "down", clipId: "walk" }],
+    });
+    expect(Object.isFrozen(diagnostic)).toBe(true);
+    expect(Object.isFrozen(diagnostic.physicalDescriptor)).toBe(true);
+    expect(JSON.stringify(diagnostic)).not.toContain("hero-walk.png");
+    expect(() => createAssetContractV2QcDiagnostic({ role: "player", state: "walk" }, { descriptorId: "unsafe" })).toThrow(/descriptor/i);
+    expect(() => createAssetContractV2QcDiagnostic(
+      { role: "player", state: "walk" },
+      { ...diagnostic.physicalDescriptor, path: "/private/hero-walk.png" },
+    )).toThrow(/descriptor/i);
   });
 });

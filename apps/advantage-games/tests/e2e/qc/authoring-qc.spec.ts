@@ -8,6 +8,13 @@ test.describe("APK authoring and QC field lab", () => {
     await expect(page.getByRole("heading", { name: "Cartridge Field Lab" })).toBeVisible();
     await expect(page.getByRole("region", { name: "Composition preview" })).toContainText("compact · pointer-keyboard");
     await expect(page.getByRole("region", { name: "Game result" })).toBeVisible();
+    await expect(page.getByTestId("asset-contract-v2-qc-fixture")).toBeVisible();
+    await expect(page.getByTestId("asset-contract-v2-scope-note")).toContainText(
+      "Contract-only evidence: no resolver result, suitability verdict, or real media rendering.",
+    );
+    await expect(page.getByTestId("asset-contract-v2-semantic")).toContainText("player:walk");
+    await expect(page.getByTestId("asset-contract-v2-physical")).toContainText("exemplar-player-walk-six-frame");
+    await expect(page.getByTestId("asset-contract-v2-animation")).toContainText("12 FPS");
 
     await page.getByRole("button", { name: "wide" }).click();
     await page.getByLabel("Input mode").selectOption("touch");
@@ -35,6 +42,12 @@ test.describe("APK authoring and QC field lab", () => {
       await page.goto("/qc");
 
       await expect(page.getByRole("heading", { name: "Standard Pack preview" })).toBeVisible();
+      const contractFixture = page.getByTestId("asset-contract-v2-qc-fixture");
+      await expect(contractFixture).toBeVisible();
+      expect(
+        await contractFixture.evaluate((element) => element.scrollWidth <= element.clientWidth),
+        `Asset Contract v2 fixture overflow at ${width}px`,
+      ).toBe(true);
 
       const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
       expect(scrollWidth, `horizontal overflow at ${width}px`).toBeLessThanOrEqual(width);

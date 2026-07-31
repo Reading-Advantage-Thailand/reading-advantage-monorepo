@@ -73,6 +73,7 @@
     "materialize:standard-pack": "node scripts/materialize-standard-pack.mjs",
     "verify:standard-pack-parity": "node scripts/verify-standard-pack-parity.mjs",
     "check:standard-asset-boundaries": "node scripts/check-standard-asset-boundaries.mjs",
+    "check:assets-consumer-entrypoint": "pnpm build && node scripts/verify-assets-consumer-entrypoint.mjs",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },

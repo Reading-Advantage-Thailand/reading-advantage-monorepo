@@ -3,6 +3,9 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 
+import { AssetContractV2Qc } from "./AssetContractV2Qc";
+import { StandardPackSuitabilityQc } from "./StandardPackSuitabilityQc";
+
 /** One browser-safe, semantic entry in the generated QC preview manifest. */
 export interface StandardPackQcAsset {
   /** Stable semantic asset identifier. */
@@ -141,6 +144,8 @@ export function StandardPackQc({ preview }: StandardPackQcProps) {
           </dl>
         </aside>
       </div>
+      <AssetContractV2Qc />
+      <StandardPackSuitabilityQc reviews={[]} />
     </section>
   );
 }

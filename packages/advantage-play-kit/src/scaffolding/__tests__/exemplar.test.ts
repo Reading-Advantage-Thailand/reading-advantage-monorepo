@@ -4,6 +4,8 @@ import {
   buildExemplarCartridgeDefinition,
   buildExemplarPublicApiSurface,
   EXEMPLAR_CARTRIDGE_ID,
+  EXEMPLAR_SIX_FRAME_WALK_DESCRIPTOR,
+  EXEMPLAR_WALK_SEMANTIC_REQUIREMENT,
   runExemplarSimulation,
 } from "../exemplar.js";
 
@@ -59,6 +61,22 @@ describe("exemplar cartridge built through public APK APIs", () => {
     expect(result.results.totalAttempts).toBe(3);
     expect(result.results.correctAnswers).toBe(2);
     expect(result.results.accuracy).toBeCloseTo(2 / 3, 10);
+  });
+
+  it("uses a descriptor-owned six-frame walk clip without a legacy frame-count assumption", () => {
+    expect(EXEMPLAR_WALK_SEMANTIC_REQUIREMENT).toEqual({ role: "player", state: "walk" });
+    const walkClip = EXEMPLAR_SIX_FRAME_WALK_DESCRIPTOR.clips?.find((clip) => clip.id === "walk-down");
+
+    expect(walkClip?.frames).toHaveLength(6);
+    expect(walkClip?.frames).toEqual([
+      { column: 0, row: 0 },
+      { column: 1, row: 0 },
+      { column: 2, row: 0 },
+      { column: 3, row: 0 },
+      { column: 4, row: 0 },
+      { column: 5, row: 0 },
+    ]);
+    expect(walkClip?.timing).toEqual({ fps: 12, loop: true });
   });
 
   it("emits the required ElvGames attribution in its end-screen contract", () => {
