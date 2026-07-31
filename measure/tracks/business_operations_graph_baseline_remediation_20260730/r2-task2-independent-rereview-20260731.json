@@ -1,0 +1,47 @@
+{
+  "schema_version": 2,
+  "role": "independent-reviewer",
+  "track": "business_operations_graph_baseline_remediation_20260730",
+  "phase": "Phase R2 Task 2 — compensation denominator independent rereview",
+  "baseline_sha": "9c4a4e1d234854e6a1ae3e63d9d767ddd3bbd162",
+  "audited_head_sha": "8ece171c37022c2f25ee609e74be1ebc85160c18",
+  "applicability": "applicable",
+  "status": "pass",
+  "summary": "Remediation commit 8ece171c3 closes prior findings R2-T2-H1, R2-T2-H2, R2-T2-H3, and R2-T2-M1 exactly: the immutable R0 fixture regression is restored, two distinct full scans are bound to separately replayed 6,783-entry source roots and durable normalized inventories without a machine-local database dependency, every versioned adversarial mutation executes through the strict production validator, and null-span fallback is page.tsx-only with explicit provenance. The exact four-module regression passed 74 tests, independent same-scan/missing-artifact/tamper probes failed closed with the required codes, and no Critical, High, contract, production-wiring, route-parity, or test-strategy violation remains in this bounded R2 Task 2 scope.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "HEAD was exactly 8ece171c37022c2f25ee609e74be1ebc85160c18. Its direct parent is 9c4a4e1d234854e6a1ae3e63d9d767ddd3bbd162, the isolated remediation range contains one commit, and git diff --check passed. The range changes only the R2 Task 2 producer, focused tests, R2-owned fixtures/evidence/receipt/plan, and durable scan-transaction artifacts; measure/automation-supervisor.py plus the accepted R0 validator and R1 snapshot producer are unchanged.",
+    "R2-T2-H1 is closed. The R2-only corpus was removed from fixtures/v1 and now lives at r2-task2-adversarial-fixtures-v1.json. The accepted fixture-index-v1.json and generate-fixtures.py are byte-unchanged from accepted commit fc2f3ea8e, the literal fixture inventory contains no R2 corpus, and the accepted R0 literal-index regression passed in the exact four-module run.",
+    "R2-T2-H2 is closed in the producer. build_compensation_evidence verifies the accepted R1 bundle, creates scan-one-source and scan-two-source beneath a new external work root, materializes and checks all 6,783 manifest entries in each root before and after its own repo-graph scan, requires equal complete brackets and normalized inventories, rejects equal graph digests, publishes only hash-bound config/stdout/stderr/inventory artifacts under the track, and removes ephemeral source roots and databases. The API no longer accepts pre-existing graph_db_path or second_scan_db_path inputs.",
+    "The durable streams independently distinguish the scans: scan 1 contains 133 batch records exclusively under scan-one-source and ends with 88,968 nodes/117,446 edges; scan 2 contains 133 batch records exclusively under scan-two-source and ends with the same node/edge totals. Their ephemeral graph records have distinct names, sizes, and SHA-256 values (11c66479... versus 5c3dd409...), while their durable 3,420-file/665-route/3,306-field inventories are byte-identical and share canonical SHA-256 af8dc71b3b0eba6255b462cb7f03e0e0f7a434075cedfb7de7a9bd3f0217f894.",
+    "Every durable scan reference was independently rehashed and size-checked. Both pre/post brackets are identical and bind entryCount 6,783 plus denominator/entries SHA-256 9786969557e9e36782473d90c823cec1eaf18d7d369d2133691099a45ccf55eb. Production validation succeeded while sqlite3.connect was patched to raise, proving validation consumes the committed archive and durable inventories rather than root graph.db or a machine-local /tmp database. Absolute /tmp text retained in historical audit IDs and scan logs is provenance text, not a filesystem dependency.",
+    "R2-T2-H3 is closed. The R2 fixture corpus declares 14 non-empty mutations, and the focused test loads that file, applies every operation to a fresh clone of the real non-empty baseline, and requires validate_compensation_evidence to raise the declared stable code. Coverage includes route/field omission, duplicate field/route, cross-partition duplicate, anchor/path/name/span/fingerprint/source-range/symbol-digest tampering, same-scan reuse, and missing durable inventory.",
+    "Independent probes outside the fixture loop confirmed production rejection: matching scan 2's graph digest/size to scan 1 raised SAME_SCAN_ARTIFACT_REUSED; redirecting scan 2's inventory reference to an absent durable file raised REQUIRED_ARTIFACT_MISSING; and changing the first field declaration kind raised ANCHOR_KIND_MISMATCH. A preliminary reviewer probe copied the entire scan-1 graph reference and was correctly rejected earlier as SCAN_GRAPH_REFERENCE_INVALID because the scan-2 ephemeralPath became invalid; the corrected same-artifact probe above exercised the intended H2 boundary.",
+    "R2-T2-M1 is closed. resolve_route_position permits a null/null span only when the frozen source path basename is page.tsx, returns page-file-fallback provenance, and rejects a non-page null span with NULL_SPAN_FALLBACK_NON_PAGE. Independent inventory comparison found exactly 203 null-span routes, all page.tsx; the evidence has exactly 203 page-file-fallback entries, all page.tsx, and their normalized IDs exactly equal the null-span inventory ID set. The remaining 462 routes and all 3,306 fields record scanner-span provenance.",
+    "The strict validator replays the accepted R1 archive, verifies every source-bundle and durable artifact reference, preserves audit exit 1/cleanEligible false/COMPENSATION_REQUIRED, binds all 3,971 audit symbols to the equal fresh-scan inventory and frozen source ranges, and rejects unknown evidence keys. The exact denominator remains 3,306 fields plus 665 routes at SHA-256 d2ee44b5e249a56f3c7bfe24d7371c70701ee30f2973f9d7a271f18de6722b42.",
+    "The exact requested four-module command passed 74 tests in 79.627 seconds, matching the corrected receipt's test count and closing the prior false 88-test claim. The task remains marked in progress and all parent/successor gates remain blocked, so this PASS is limited to the four remediated R2 Task 2 findings and does not claim later R2/R3 acceptance or successor unblocking.",
+    "Existing unrelated dirty and untracked paths were ignored and were not staged, reset, stashed, reverted, repaired, or overwritten. Audited Task 2 paths matched HEAD before report creation; this review adds only the named rereview JSON."
+  ],
+  "commands": [
+    "git rev-parse HEAD 8ece171c3^; git merge-base --is-ancestor 8ece171c3^ 8ece171c3; git rev-list --count 8ece171c3^..8ece171c3; git diff --shortstat/--name-status/--check 8ece171c3^..8ece171c3 — pass; exact one-commit remediation scope confirmed",
+    "git diff --quiet 8ece171c3^..8ece171c3 -- measure/automation-supervisor.py measure/business_operations_graph_baseline_validation.py measure/business_operations_graph_baseline_snapshot.py — pass; protected supervisor and accepted R0/R1 implementation boundaries unchanged",
+    "git diff --quiet fc2f3ea8e -- fixtures/v1/fixture-index-v1.json fixtures/v1/generate-fixtures.py; git ls-tree -r 8ece171c3 fixtures/v1 — pass; immutable R0 index/generator preserved and no R2 fixture remains in the R0 trust root",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_business_operations_graph_baseline_snapshot measure.tests.test_business_operations_graph_baseline_remediation measure.tests.test_business_operations_graph_baseline_r2_clean_audit measure.tests.test_business_operations_graph_baseline_r2_compensation — pass; 74 tests in 79.627s",
+    "Independent strict-validator wrapper with sqlite3.connect forbidden — pass; committed valid evidence accepted without any graph database access",
+    "Independent same-scan probe — pass; reused scan-1 graph digest/size rejected as SAME_SCAN_ARTIFACT_REUSED",
+    "Independent missing-artifact probe — pass; absent scan-2 durable inventory rejected as REQUIRED_ARTIFACT_MISSING",
+    "Independent anchor tamper probe — pass; changed declaration kind rejected as ANCHOR_KIND_MISMATCH",
+    "Independent hash/count/root/inventory/null-span verifier — pass; two distinct 133-batch roots, 6,783-entry equal brackets, hash-bound durable artifacts, equal 3,420/665/3,306 inventories, and exact 203-page fallback ID parity confirmed",
+    "rg for prior machine-local database arguments/paths in the producer, focused test, candidate evidence, and R2 fixture — pass; no SECOND_SCAN_DB_PATH, graph_db_path, second_scan_db_path, old audit-attempt.db dependency, or old probe path remains"
+  ],
+  "changed_files": [
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task2-independent-rereview-20260731.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
