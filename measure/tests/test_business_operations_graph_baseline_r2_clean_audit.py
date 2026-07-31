@@ -18,6 +18,10 @@ R1_REVIEW_PATH = TRACK_DIR / "r1-tasks2-3-independent-review-20260731.json"
 R1_MANIFEST_PATH = TRACK_DIR / "r1-task2-source-and-graph-20260731" / "snapshot.manifest.json"
 R1_ARCHIVE_PATH = TRACK_DIR / "r1-task2-source-and-graph-20260731" / "snapshot.archive.json"
 BASELINE_REVISION = "eed6097bd"
+EXPECTED_UNAUDITED_SYMBOL_COUNT = 3971
+EXPECTED_UNAUDITED_SYMBOLS_SHA256 = (
+    "d2ee44b5e249a56f3c7bfe24d7371c70701ee30f2973f9d7a271f18de6722b42"
+)
 
 
 def _sha256(data: bytes) -> str:
@@ -167,7 +171,7 @@ class R2CleanAuditAttemptTests(unittest.TestCase):
             "cleanEligible": clean_eligible,
             "reason": "audit exit 1 and non-empty unaudited symbol denominator",
         })
-        self.assertGreater(len(audit["unaudited"]), 0)
+        self.assertEqual(len(audit["unaudited"]), EXPECTED_UNAUDITED_SYMBOL_COUNT)
         compensation = attempt["compensationDenominator"]
         self.assertEqual(compensation["label"], "COMPENSATION_REQUIRED")
         self.assertEqual(compensation["auditExitCode"], audit["exitCode"])
@@ -177,6 +181,9 @@ class R2CleanAuditAttemptTests(unittest.TestCase):
             _sha256(json.dumps(
                 compensation["symbols"], sort_keys=True, separators=(",", ":")
             ).encode("utf-8")),
+        )
+        self.assertEqual(
+            compensation["symbolsSha256"], EXPECTED_UNAUDITED_SYMBOLS_SHA256
         )
 
     def test_evidence_directory_contains_only_declared_raw_artifacts(self) -> None:
