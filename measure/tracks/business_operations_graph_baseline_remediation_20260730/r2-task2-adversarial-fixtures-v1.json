@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "phase": "Phase R2 Task 2 adversarial fixtures — executed compensation-evidence mutations",
+  "fixtures": [
+    {"name": "omit-route", "operation": "remove-last-route", "expectedFailure": "ROUTE_RECONCILIATION_INCOMPLETE"},
+    {"name": "omit-field", "operation": "remove-last-field", "expectedFailure": "FIELD_RECONCILIATION_INCOMPLETE"},
+    {"name": "duplicate-field", "operation": "duplicate-first-field", "expectedFailure": "DUPLICATE_RECONCILIATION_ID"},
+    {"name": "duplicate-route", "operation": "duplicate-first-route", "expectedFailure": "DUPLICATE_RECONCILIATION_ID"},
+    {"name": "cross-partition-duplicate", "operation": "copy-first-field-to-routes", "expectedFailure": "CROSS_PARTITION_DUPLICATE"},
+    {"name": "tamper-anchor", "operation": "tamper-first-field-anchor-kind", "expectedFailure": "ANCHOR_KIND_MISMATCH"},
+    {"name": "tamper-path", "operation": "tamper-first-field-path", "expectedFailure": "PATH_MISMATCH"},
+    {"name": "tamper-name", "operation": "tamper-first-field-name", "expectedFailure": "NAME_MISMATCH"},
+    {"name": "tamper-span", "operation": "tamper-first-route-span", "expectedFailure": "SPAN_MISMATCH"},
+    {"name": "tamper-fingerprint", "operation": "tamper-first-field-fingerprint", "expectedFailure": "FINGERPRINT_MISMATCH"},
+    {"name": "tamper-source-range", "operation": "tamper-first-field-source-range", "expectedFailure": "SOURCE_RANGE_HASH_MISMATCH"},
+    {"name": "tamper-symbol-digest", "operation": "tamper-symbol-digest", "expectedFailure": "COMPENSATION_SYMBOLS_DIGEST_DRIFT"},
+    {"name": "same-scan-reuse", "operation": "reuse-scan-one-as-scan-two", "expectedFailure": "SAME_SCAN_ARTIFACT_REUSED"},
+    {"name": "missing-scan-two-inventory", "operation": "remove-scan-two-inventory", "expectedFailure": "REQUIRED_ARTIFACT_MISSING"}
+  ]
+}
