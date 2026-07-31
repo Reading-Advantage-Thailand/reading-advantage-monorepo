@@ -1,0 +1,18 @@
+Scope: all 40 workspace projects
+✓ Lockfile passes supply-chain policies (verified 21h ago)
+[ERR_PNPM_LOCKFILE_CONFIG_MISMATCH] Cannot proceed with the frozen installation. The current "pnpmfileChecksum" configuration doesn't match the value found in the lockfile
+
+Update your lockfile using "pnpm install --no-frozen-lockfile"
+[ERROR] Command failed with exit code 1: /home/daniel-bo/.local/share/fnm/node-versions/v22.22.3/installation/bin/node /home/daniel-bo/.cache/node/corepack/v1/pnpm/11.8.0/bin/pnpm.mjs install
+
+pnpm: Command failed with exit code 1: /home/daniel-bo/.local/share/fnm/node-versions/v22.22.3/installation/bin/node /home/daniel-bo/.cache/node/corepack/v1/pnpm/11.8.0/bin/pnpm.mjs install
+    at getFinalError (file:///home/daniel-bo/.cache/node/corepack/v1/pnpm/11.8.0/dist/pnpm.mjs:34109:14)
+    at makeError (file:///home/daniel-bo/.cache/node/corepack/v1/pnpm/11.8.0/dist/pnpm.mjs:36416:21)
+    at getSyncResult (file:///home/daniel-bo/.cache/node/corepack/v1/pnpm/11.8.0/dist/pnpm.mjs:38260:10)
+    at spawnSubprocessSync (file:///home/daniel-bo/.cache/node/corepack/v1/pnpm/11.8.0/dist/pnpm.mjs:38220:14)
+    at execaCoreSync (file:///home/daniel-bo/.cache/node/corepack/v1/pnpm/11.8.0/dist/pnpm.mjs:38150:23)
+    at callBoundExeca (file:///home/daniel-bo/.cache/node/corepack/v1/pnpm/11.8.0/dist/pnpm.mjs:40678:23)
+    at boundExeca (file:///home/daniel-bo/.cache/node/corepack/v1/pnpm/11.8.0/dist/pnpm.mjs:40655:49)
+    at sync (file:///home/daniel-bo/.cache/node/corepack/v1/pnpm/11.8.0/dist/pnpm.mjs:40814:10)
+    at runPnpmCli (file:///home/daniel-bo/.cache/node/corepack/v1/pnpm/11.8.0/dist/pnpm.mjs:246476:5)
+    at runDepsStatusCheck (file:///home/daniel-bo/.cache/node/corepack/v1/pnpm/11.8.0/dist/pnpm.mjs:248210:7)

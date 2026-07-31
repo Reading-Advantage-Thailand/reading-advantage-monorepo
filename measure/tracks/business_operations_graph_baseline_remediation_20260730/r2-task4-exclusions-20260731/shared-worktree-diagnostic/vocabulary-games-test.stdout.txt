@@ -1,0 +1,16 @@
+jest-haste-map: duplicate manual mock found: next/server
+  The following files share their name; please delete one of them:
+    * <rootDir>/src/__mocks__/next/server.ts
+    * <rootDir>/.next/standalone/apps/advantage-games/src/__mocks__/next/server.ts
+
+No tests found, exiting with code 1
+Run with `--passWithNoTests` to exit with code 0
+In /home/daniel-bo/Desktop/reading-advantage-monorepo/apps/advantage-games
+  5547 files checked.
+  testMatch: **/__tests__/**/*.?([mc])[jt]s?(x), **/?(*.)+(spec|test).?([mc])[jt]s?(x) - 618 matches
+  testPathIgnorePatterns: /node_modules/, /.next/, /node_modules/, /tests/e2e/ - 550 matches
+  testRegex:  - 0 matches
+Pattern: --runInBand - 0 matches
+/home/daniel-bo/Desktop/reading-advantage-monorepo/apps/advantage-games:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] vocabulary-games@0.1.0 test: `jest -- --runInBand`
+Exit status 1
