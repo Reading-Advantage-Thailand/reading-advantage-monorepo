@@ -107,6 +107,18 @@ class BusinessOperationsGraphSnapshotRedTests(unittest.TestCase):
         self.assertEqual(discovery["candidateExtensions"], [".ts", ".tsx", ".mts", ".cts"])
         self.assertIn("config/base.json", discovery["extendsPaths"])
 
+    def test_next_generated_types_are_hashed_when_the_scanner_can_index_them(self) -> None:
+        """Includes generated Next TypeScript declarations in the scanner-input denominator."""
+        self._write("apps/demo/.next/types/routes.d.ts", "declare const route: string;\n")
+
+        with tempfile.TemporaryDirectory() as output:
+            result = self._producer()(self.root, output, tool_version="test")
+
+        self.assertIn(
+            "apps/demo/.next/types/routes.d.ts",
+            {entry["path"] for entry in result.manifest["entries"]},
+        )
+
     def test_nested_extends_chain_is_recursively_hashed(self) -> None:
         """Includes an extended config's own non-tsconfig-named extends target."""
         self._write("config/base.json", '{"extends":"./deep/shared"}\n')

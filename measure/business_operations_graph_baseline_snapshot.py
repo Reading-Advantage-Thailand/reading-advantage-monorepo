@@ -53,7 +53,7 @@ R0_SOURCE_SNAPSHOT_KEYS = {
     "scanConfig",
     "toolVersion",
 }
-SKIP_DIR_NAMES = {".git", "node_modules", ".turbo", ".next", "dist", "build", "coverage", "target"}
+SKIP_DIR_NAMES = {".git", "node_modules", ".turbo", "dist", "build", "coverage", "target"}
 
 
 class SnapshotError(RuntimeError):
