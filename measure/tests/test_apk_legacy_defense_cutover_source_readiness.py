@@ -90,6 +90,14 @@ EXPECTED_CLAIMS = {
 }
 
 
+EXPECTED_READINESS_BOUNDARY = {
+    "receipt_status": "accepted-active",
+    "authorized_child_work_only": True,
+    "cohort_currently_ready": False,
+    "cartridge_cutover_authorized": False,
+    "meaning": "The receipt removes only the denominator/readiness predecessor block for this four-title child track. It does not satisfy Task 1 or any downstream task.",
+};
+
 def _load_object(path: Path) -> dict[str, Any]:
     """Loads a required JSON object.
 
@@ -160,6 +168,23 @@ def _validate_manifest(manifest: object) -> None:
         raise AssertionError("INVALID_MANIFEST: schema version")
     if manifest.get("track_id") != TRACK_ID or manifest.get("status") != "evidence-only":
         raise AssertionError("FORBIDDEN_STATUS_OR_AUTHORITY: task scope")
+    expected_top_level_keys = {
+        "schema_version",
+        "track_id",
+        "task",
+        "status",
+        "archive_resolution_rule",
+        "source_bindings",
+        "readiness_boundary",
+        "titles",
+        "claims",
+        "required_before_any_adoption_or_cutover",
+        "revocation_rule",
+    }
+    if set(manifest) != expected_top_level_keys:
+        raise AssertionError("MANIFEST_SCHEMA_INVALID: unexpected manifest fields")
+    if manifest.get("readiness_boundary") != EXPECTED_READINESS_BOUNDARY:
+        raise AssertionError("READINESS_BOUNDARY_DRIFT: readiness boundary must remain exact")
     if manifest.get("source_bindings") != EXPECTED_BINDINGS:
         raise AssertionError("SOURCE_BINDING_DRIFT: exact source bindings required")
     for binding in EXPECTED_BINDINGS.values():
@@ -304,6 +329,23 @@ class LegacyDefenseSourceReadinessManifestTests(unittest.TestCase):
         cutover_status["status"] = "accepted-for-cutover"
         self._assert_rejected(cutover_status, "FORBIDDEN_STATUS_OR_AUTHORITY")
 
+
+    def test_hidden_owner_acceptance_and_readiness_boundary_escalation_fail_closed(self) -> None:
+        """Rejects unmodeled approval data and every readiness/cutover escalation."""
+        hidden_owner_acceptance = copy.deepcopy(self._manifest())
+        hidden_owner_acceptance["owner_acceptance"] = {
+            "decision": "approved",
+            "approvalDigest": "a" * 64,
+        }
+        self._assert_rejected(hidden_owner_acceptance, "MANIFEST_SCHEMA_INVALID")
+
+        cohort_ready = copy.deepcopy(self._manifest())
+        cohort_ready["readiness_boundary"]["cohort_currently_ready"] = True
+        self._assert_rejected(cohort_ready, "READINESS_BOUNDARY_DRIFT")
+
+        cutover_meaning = copy.deepcopy(self._manifest())
+        cutover_meaning["readiness_boundary"]["meaning"] = "This record authorizes cutover."
+        self._assert_rejected(cutover_meaning, "READINESS_BOUNDARY_DRIFT")
 
 if __name__ == "__main__":
     unittest.main()
