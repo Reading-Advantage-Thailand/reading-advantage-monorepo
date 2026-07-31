@@ -21,13 +21,14 @@ const placeholderOrGenericIdentityKeys = new Set([
 ]);
 
 /**
- * Exact normalized identities reserved by the accepted 27-source/29-assignment
- * foundation crosswalk and therefore unavailable to future-game intake.
+ * Complete normalized identities reserved by the accepted 27-source/29-assignment
+ * foundation crosswalk. It includes normalized title labels, articleless
+ * compatibility aliases, historical source aliases, and normalized source IDs.
  */
-export const legacyDenominatorIdentityKeys = [
+const acceptedFoundationNormalizedTitleKeys = [
   "dragon-flight",
   "rpg-battle",
-  "abyssal-well",
+  "the-abyssal-well",
   "castle-defense",
   "magic-defense",
   "wizard-vs-zombie",
@@ -42,7 +43,7 @@ export const legacyDenominatorIdentityKeys = [
   "shadow-gate-dungeon",
   "labyrinth-of-the-goblin-king",
   "griffin-riders-escape",
-  "sorcerers-ziggurat",
+  "the-sorcerers-ziggurat",
   "enchanted-library",
   "rune-match",
   "alchemists-synthesis",
@@ -56,8 +57,15 @@ export const legacyDenominatorIdentityKeys = [
   "babel-architect",
 ] as const;
 
-const legacyDenominatorIdentityKeySet = new Set<string>(legacyDenominatorIdentityKeys);
-const legacyDenominatorSourceIdentityAliasKeySet = new Set([
+const articleAndHistoricalLegacyAliasKeys = [
+  "abyssal-well",
+  "sorcerers-ziggurat",
+  "haunted-library",
+  "sentence-abyssal-well",
+  "sentence-babel-architect",
+] as const;
+
+const sourceIdentityLegacyAliasKeys = [
   "vocabulary-dragon-flight",
   "vocabulary-rpg-battle",
   "sentence-castle-defense",
@@ -85,9 +93,19 @@ const legacyDenominatorSourceIdentityAliasKeySet = new Set([
   "catalog-realm-carver",
   "sentence-devourer-slime",
   "sentence-haunted-library",
-]);
+] as const;
 
+/**
+ * Complete normalized title and source aliases reserved by the accepted
+ * foundation roster and therefore unavailable to future-game intake.
+ */
+export const legacyDenominatorIdentityKeys = [
+  ...acceptedFoundationNormalizedTitleKeys,
+  ...articleAndHistoricalLegacyAliasKeys,
+  ...sourceIdentityLegacyAliasKeys,
+] as const;
 
+const legacyDenominatorIdentityKeySet = new Set<string>(legacyDenominatorIdentityKeys);
 /** Normalizes a title into the exact lowercase key used by the intake boundary. */
 function normalizeIdentityKey(title: string): string {
   return title
@@ -267,7 +285,6 @@ export const plannedGameIntakeSchema = z.strictObject({
   }
   if (
     legacyDenominatorIdentityKeySet.has(normalizedTitleKey)
-    || legacyDenominatorSourceIdentityAliasKeySet.has(normalizedTitleKey)
   ) {
     context.addIssue({
       code: z.ZodIssueCode.custom,

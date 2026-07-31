@@ -25,6 +25,74 @@ const authority = {
   deploymentAuthorized: false as const,
   gitPublicationAuthorized: false as const,
 };
+/**
+ * Complete normalized legacy aliases from the accepted 27-source/29-assignment
+ * crosswalk, including article-preserving title forms and historical source aliases.
+ */
+const acceptedFoundationLegacyIdentityAliases = [
+  "dragon-flight",
+  "rpg-battle",
+  "the-abyssal-well",
+  "castle-defense",
+  "magic-defense",
+  "wizard-vs-zombie",
+  "village-guardian",
+  "archers-revenge",
+  "storm-the-castle-tower",
+  "paladins-twin-soul",
+  "gryphon-patrol",
+  "dragon-rider",
+  "dungeon-liberator",
+  "spellweavers-run",
+  "shadow-gate-dungeon",
+  "labyrinth-of-the-goblin-king",
+  "griffin-riders-escape",
+  "the-sorcerers-ziggurat",
+  "enchanted-library",
+  "rune-match",
+  "alchemists-synthesis",
+  "potion-rush",
+  "rune-forge-chamber",
+  "astral-mage",
+  "griffin-sky-joust",
+  "realm-carver",
+  "devourer-slime",
+  "the-haunted-library",
+  "babel-architect",
+  "abyssal-well",
+  "sorcerers-ziggurat",
+  "haunted-library",
+  "sentence-abyssal-well",
+  "sentence-babel-architect",
+  "vocabulary-dragon-flight",
+  "vocabulary-rpg-battle",
+  "sentence-castle-defense",
+  "vocabulary-magic-defense",
+  "vocabulary-wizard-vs-zombie",
+  "sentence-village-guardian",
+  "catalog-archers-revenge",
+  "catalog-storm-castle-tower",
+  "catalog-paladins-twin-soul",
+  "catalog-gryphon-patrol",
+  "vocabulary-dragon-rider",
+  "sentence-dungeon-liberator",
+  "catalog-spellweavers-run",
+  "sentence-shadow-gate-dungeon",
+  "sentence-labyrinth-goblin-king",
+  "catalog-griffin-riders-escape",
+  "catalog-sorcerer-ziggurat",
+  "vocabulary-enchanted-library",
+  "vocabulary-rune-match",
+  "vocabulary-alchemists-synthesis",
+  "sentence-potion-rush",
+  "sentence-rune-forge-chamber",
+  "catalog-astral-mage",
+  "catalog-griffin-sky-joust",
+  "catalog-realm-carver",
+  "sentence-devourer-slime",
+  "sentence-haunted-library",
+] as const;
+
 
 const validRequest = {
   intake: {
@@ -221,11 +289,6 @@ describe("planned-game intake contract", () => {
       },
     }).success).toBe(false);
 
-    expect(legacyDenominatorIdentityKeys).toHaveLength(29);
-    expect(new Set(legacyDenominatorIdentityKeys).size).toBe(29);
-    expect(legacyDenominatorIdentityKeys).toContain("dragon-flight");
-    expect(legacyDenominatorIdentityKeys).toContain("babel-architect");
-
     expect(plannedGameIntakeValidationRequestSchema.safeParse({
       ...validRequest,
       intake: {
@@ -236,6 +299,33 @@ describe("planned-game intake contract", () => {
         },
       },
     }).success).toBe(false);
+  });
+
+
+  it("rejects every normalized accepted foundation title and alias at the intake boundary", () => {
+    expect(legacyDenominatorIdentityKeys).toEqual(acceptedFoundationLegacyIdentityAliases);
+    expect(new Set(legacyDenominatorIdentityKeys).size).toBe(acceptedFoundationLegacyIdentityAliases.length);
+
+    for (const legacyIdentityKey of acceptedFoundationLegacyIdentityAliases) {
+      expect(
+        plannedGameIntakeValidationRequestSchema.safeParse({
+          ...validRequest,
+          intake: {
+            ...validRequest.intake,
+            identity: {
+              ...validRequest.intake.identity,
+              title: legacyIdentityKey,
+              key: legacyIdentityKey,
+            },
+            childTrack: {
+              ...validRequest.intake.childTrack,
+              trackId: `apk_future_${legacyIdentityKey.replace(/-/gu, "_")}_implementation`,
+            },
+          },
+        }).success,
+        legacyIdentityKey,
+      ).toBe(false);
+    }
   });
 
   it("requires complete, independently bound evidence and rejects all unselected physical data", () => {
