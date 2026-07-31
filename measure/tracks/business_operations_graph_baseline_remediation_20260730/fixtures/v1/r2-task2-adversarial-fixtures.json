@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "phase": "Phase R2 Task 2 adversarial fixtures — omission and tamper corpus",
+  "fixtures": [
+    {
+      "name": "omit-route",
+      "description": "Omit one route entry from routeReconciliation; the resulting count must drop below 665 and fail any compensating 17-route minimum assertion.",
+      "input": "evidence.unauditedDenominator.routeReconciliation",
+      "mutation": "pop()",
+      "expectedFailure": "ROUTE_RECONCILIATION_INCOMPLETE",
+      "asserted": {
+        "before": {
+          "routeCount": 665,
+          "firstInventorySha256": "915b91d0a5d9a25dcda37e18e4751e94d72b0a0e8270412172d2c41a84ba6d89"
+        },
+        "after": {
+          "routeCount": 664
+        }
+      }
+    },
+    {
+      "name": "omit-field",
+      "description": "Omit one field entry from fieldReconciliation; the resulting count must drop below 3306.",
+      "input": "evidence.unauditedDenominator.fieldReconciliation",
+      "mutation": "pop()",
+      "expectedFailure": "FIELD_RECONCILIATION_INCOMPLETE",
+      "asserted": {
+        "before": {
+          "fieldCount": 3306
+        },
+        "after": {
+          "fieldCount": 3305
+        }
+      }
+    },
+    {
+      "name": "duplicate-field",
+      "description": "Append a duplicate field entry to fieldReconciliation; the unique-id set must shrink by one.",
+      "input": "evidence.unauditedDenominator.fieldReconciliation",
+      "mutation": "append(deepcopy(first))",
+      "expectedFailure": "FIELD_RECONCILIATION_DUPLICATE",
+      "asserted": {
+        "before": {
+          "uniqueIds": 3306
+        },
+        "after": {
+          "uniqueIds": 3305
+        }
+      }
+    },
+    {
+      "name": "duplicate-route",
+      "description": "Append a duplicate route entry to routeReconciliation.",
+      "input": "evidence.unauditedDenominator.routeReconciliation",
+      "mutation": "append(deepcopy(first))",
+      "expectedFailure": "ROUTE_RECONCILIATION_DUPLICATE"
+    },
+    {
+      "name": "tamper-field-source-range",
+      "description": "Replace one field entry's sourceRangeSha256 with zero-bytes; the frozen R1 archive replay must produce a different digest.",
+      "input": "evidence.unauditedDenominator.fieldReconciliation[0].sourceRangeSha256",
+      "mutation": "set('0'*64)",
+      "expectedFailure": "FIELD_SOURCE_RANGE_HASH_MISMATCH"
+    },
+    {
+      "name": "tamper-route-line-range",
+      "description": "Mutate one route entry's lineStart/lineEnd to an out-of-range span; the frozen R1 archive replay must produce a different digest.",
+      "input": "evidence.unauditedDenominator.routeReconciliation[0].lineStart,lineEnd",
+      "mutation": "set(1, 999)",
+      "expectedFailure": "ROUTE_SOURCE_RANGE_HASH_MISMATCH"
+    },
+    {
+      "name": "tamper-symbol-digest",
+      "description": "Replace the canonical symbol-set SHA-256 with zero-bytes; the recomputed digest must differ.",
+      "input": "evidence.unauditedDenominator.symbolsSha256",
+      "mutation": "set('0'*64)",
+      "expectedFailure": "COMPENSATION_SYMBOLS_DIGEST_DRIFT"
+    },
+    {
+      "name": "tamper-symbol-count",
+      "description": "Decrement the total unaudited count by one; the fieldCount + routeCount sum must no longer match.",
+      "input": "evidence.unauditedDenominator.totalCount",
+      "mutation": "set(3970)",
+      "expectedFailure": "COMPENSATION_DENOMINATOR_COUNT_MISMATCH"
+    },
+    {
+      "name": "tamper-two-scan-identity",
+      "description": "Diverge the first and second scan inventory digests; the equality invariant must fail.",
+      "input": "evidence.unauditedDenominator.secondInventorySha256",
+      "mutation": "set('f'*64)",
+      "expectedFailure": "TWO_SCAN_INVENTORY_DRIFT"
+    },
+    {
+      "name": "tamper-audit-exit-code",
+      "description": "Set the preserved audit exit code to 0; the compensation label and exit code must remain mismatched.",
+      "input": "evidence.auditPreserved.exitCode",
+      "mutation": "set(0)",
+      "expectedFailure": "AUDIT_EXIT_CODE_FORBIDDEN"
+    },
+    {
+      "name": "tamper-compensation-label",
+      "description": "Relabel the decision branch from COMPENSATION_REQUIRED to CLEAN; the source-attempt decision binding must diverge.",
+      "input": "evidence.auditPreserved.decision",
+      "mutation": "set('CLEAN')",
+      "expectedFailure": "COMPENSATION_LABEL_LOST"
+    }
+  ]
+}
