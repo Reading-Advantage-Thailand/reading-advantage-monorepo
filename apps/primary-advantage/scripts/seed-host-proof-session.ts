@@ -13,7 +13,7 @@ import "dotenv/config";
 import { db } from "@reading-advantage/db";
 import { users, schools, classrooms, classroomStudents, accounts } from "@reading-advantage/db/schema";
 import { hashPassword } from "@reading-advantage/auth";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { getHostProofTestCredentials } from "../host-proof-test-config";
 
 const { classCode: CLASS_CODE, studentUsername: STUDENT_USERNAME } =
@@ -50,12 +50,27 @@ async function seedHostProofSession() {
       })
       .returning({ id: users.id });
     teacherId = teacher.id;
+  } else {
+    await db
+      .update(users)
+      .set({
+        name: "Host Proof Teacher",
+        email: TEACHER_EMAIL,
+        role: "TEACHER",
+        schoolId,
+      })
+      .where(eq(users.id, teacherId));
   }
 
   const [existingClassroom] = await db
     .select()
     .from(classrooms)
-    .where(eq(classrooms.passwordStudents, CLASS_CODE))
+    .where(
+      and(
+        eq(classrooms.schoolId, schoolId),
+        eq(classrooms.name, "Host Proof Classroom"),
+      ),
+    )
     .limit(1);
   let classroomId = existingClassroom?.id;
   if (!classroomId) {
@@ -69,6 +84,11 @@ async function seedHostProofSession() {
       })
       .returning({ id: classrooms.id });
     classroomId = classroom.id;
+  } else {
+    await db
+      .update(classrooms)
+      .set({ teacherId, passwordStudents: CLASS_CODE })
+      .where(eq(classrooms.id, classroomId));
   }
 
   const [existingStudent] = await db.select().from(users).where(eq(users.username, STUDENT_USERNAME)).limit(1);
@@ -87,12 +107,28 @@ async function seedHostProofSession() {
       })
       .returning({ id: users.id });
     studentId = student.id;
+  } else {
+    await db
+      .update(users)
+      .set({
+        displayUsername: STUDENT_USERNAME,
+        name: STUDENT_NAME,
+        email: STUDENT_EMAIL,
+        role: "STUDENT",
+        schoolId,
+      })
+      .where(eq(users.id, studentId));
   }
 
   const [existingMembership] = await db
     .select()
     .from(classroomStudents)
-    .where(eq(classroomStudents.studentId, studentId))
+    .where(
+      and(
+        eq(classroomStudents.classroomId, classroomId),
+        eq(classroomStudents.studentId, studentId),
+      ),
+    )
     .limit(1);
   if (!existingMembership) {
     await db.insert(classroomStudents).values({
@@ -106,23 +142,24 @@ async function seedHostProofSession() {
     .from(accounts)
     .where(eq(accounts.userId, studentId))
     .limit(1);
+  const passwordHash = await hashPassword(CLASS_CODE);
   if (!existingAccount) {
-    const passwordHash = await hashPassword(CLASS_CODE);
     await db.insert(accounts).values({
       id: `account-${STUDENT_USERNAME}`,
       userId: studentId,
       providerId: "credential",
       password: passwordHash,
     });
+  } else {
+    await db
+      .update(accounts)
+      .set({ password: passwordHash, providerId: "credential" })
+      .where(eq(accounts.userId, studentId));
   }
 
-  // eslint-disable-next-line no-console
   console.log("Host-proof test session seeded.");
-  // eslint-disable-next-line no-console
   console.log(`  Class code: ${CLASS_CODE}`);
-  // eslint-disable-next-line no-console
   console.log(`  Student name: ${STUDENT_NAME}`);
-  // eslint-disable-next-line no-console
   console.log(`  Student username: ${STUDENT_USERNAME}`);
 }
 

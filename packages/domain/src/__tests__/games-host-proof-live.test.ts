@@ -23,7 +23,11 @@ vi.mock("@reading-advantage/auth", () => ({
   },
 }));
 
-import { createTestDb, type TestDb } from "./helpers/testDb.js";
+import {
+  createTestDb,
+  TEST_DB_APPEND_ONLY_TABLES,
+  type TestDb,
+} from "./helpers/testDb.js";
 import {
   HOST_PROOF_ERROR_CODES,
   HostProofCompletionError,
@@ -124,6 +128,13 @@ function expectInternal(error: unknown): void {
 
 describe("Task 5 Gate C host-proof adapter (PGlite/live)", () => {
   let harness: TestDb;
+
+  it("preserves the production append-only registry boundary in test reset", () => {
+    expect(TEST_DB_APPEND_ONLY_TABLES).toEqual([
+      "standard_pack_successor_commitments",
+      "standard_pack_successor_admission_receipts",
+    ]);
+  });
 
   beforeAll(async () => {
     harness = await createTestDb();

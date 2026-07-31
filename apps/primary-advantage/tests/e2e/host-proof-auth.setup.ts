@@ -1,4 +1,4 @@
-import { test as setup } from "@playwright/test";
+import { expect, test as setup } from "@playwright/test";
 import { existsSync } from "node:fs";
 import { mkdirSync } from "node:fs";
 import { getHostProofTestCredentials } from "../../host-proof-test-config";

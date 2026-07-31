@@ -65,4 +65,8 @@ describe("jest30-config.contract — apps/reading-advantage/jest.config.ts", () 
     expect(source).toMatch(/from\s+["']next\/jest(\.js)?["']/);
     expect(source).toMatch(/nextJest\s*\(/);
   });
+
+  test("excludes Playwright E2E specs while preserving the app test root", () => {
+    expect(source).toContain("testPathIgnorePatterns: [\"<rootDir>/tests/e2e/\"]");
+  });
 });

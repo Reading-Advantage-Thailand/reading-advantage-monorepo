@@ -45,6 +45,12 @@ interface Journal {
   entries: JournalEntry[];
 }
 
+/** Tables deliberately preserved by the test reset because production marks them append-only. */
+export const TEST_DB_APPEND_ONLY_TABLES = Object.freeze([
+  "standard_pack_successor_commitments",
+  "standard_pack_successor_admission_receipts",
+] as const);
+
 export interface TestDb {
   /** Drizzle instance bound to the in-process PGlite database. */
   db: ReturnType<typeof drizzle<typeof schema>>;
@@ -104,8 +110,14 @@ export async function createTestDb(): Promise<TestDb> {
       );
       const tableNames = (result.rows as { tablename: string }[])
         .map((r) => r.tablename)
-        .filter(Boolean);
+        .filter(
+          (tableName): tableName is string =>
+            Boolean(tableName) &&
+            !(TEST_DB_APPEND_ONLY_TABLES as readonly string[]).includes(tableName),
+        );
       if (tableNames.length > 0) {
+        // Do not disable immutable triggers or mutate append-only registries in
+        // a test reset. Their rows are global release evidence, not fixtures.
         await db.execute(
           sql.raw(
             `TRUNCATE TABLE ${tableNames.join(", ")} RESTART IDENTITY CASCADE`,

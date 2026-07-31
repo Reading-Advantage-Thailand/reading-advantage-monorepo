@@ -18,10 +18,13 @@ export interface HostProofTestCredentials {
  * @returns The credentials used by both the seeder and Playwright login setup.
  */
 export function getHostProofTestCredentials(
-  environment: Pick<
+  environment: Partial<Pick<
     NodeJS.ProcessEnv,
     "HOST_PROOF_TEST_CLASS_CODE" | "HOST_PROOF_TEST_STUDENT_USERNAME"
-  > = process.env,
+  >> = {
+    HOST_PROOF_TEST_CLASS_CODE: process.env.HOST_PROOF_TEST_CLASS_CODE,
+    HOST_PROOF_TEST_STUDENT_USERNAME: process.env.HOST_PROOF_TEST_STUDENT_USERNAME,
+  },
 ): HostProofTestCredentials {
   return {
     classCode:
@@ -39,5 +42,5 @@ export function getHostProofTestCredentials(
  * @returns A command that enables the otherwise-hidden host-proof surface.
  */
 export function createHostProofPlaywrightWebServerCommand(port: number): string {
-  return `HOST_PROOF_ENABLED=true PORT=${port} npm run dev`;
+  return `pnpm exec tsx scripts/seed-host-proof-session.ts && HOST_PROOF_ENABLED=true PORT=${port} npm run dev`;
 }

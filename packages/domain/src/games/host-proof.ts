@@ -264,6 +264,15 @@ export async function recordHostProofGameCompletion({
     );
   }
 
+  const hostProofParsed = hostProofCompletionRequestSchema.safeParse(input);
+  if (!hostProofParsed.success) {
+    throw new HostProofCompletionError(
+      HOST_PROOF_ERROR_CODES.VALIDATION_FAILED,
+      "Host-proof completion payload failed validation",
+      hostProofParsed.error.issues,
+    );
+  }
+
   assertHostProofTenantCoherence(user, tenant);
 
   let result;
@@ -272,7 +281,7 @@ export async function recordHostProofGameCompletion({
       db,
       user,
       tenant,
-      input: baseParsed.data,
+      input: hostProofParsed.data,
     });
   } catch (error) {
     if (isAuthError(error)) {

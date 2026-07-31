@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   EXISTING_CORE_HOST_PROOF_BINDINGS,
   EXISTING_CORE_HOST_PROOF_RECEIPTS,
+  resolveHostProofViewportProfile,
   existingCoreHostProofBindingSchema,
   existingCoreHostProofCartridgeIdSchema,
   getExistingCoreHostProofBinding,
@@ -76,6 +77,16 @@ const ACCEPTED_TASK4_TITLE_PROOFS = [
 ] as const;
 
 describe("existing-core host-proof binding contract (Task 5)", () => {
+  it.each([
+    [767, "compact"],
+    [768, "compact"],
+    [799, "compact"],
+    [800, "wide"],
+    [801, "wide"],
+  ] as const)("uses the shared responsive boundary at %spx", (width, expected) => {
+    expect(resolveHostProofViewportProfile(width)).toBe(expected);
+  });
+
   it("pins the accepted Task-3 semantic and Task-4 QC receipt digests", () => {
     expect(EXISTING_CORE_HOST_PROOF_RECEIPTS).toEqual({
       acceptedSemanticAdoptionReceiptSha256:

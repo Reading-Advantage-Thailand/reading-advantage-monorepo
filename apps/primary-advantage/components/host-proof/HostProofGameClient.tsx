@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import {
   EXISTING_CORE_HOST_PROOF_BINDINGS,
+  resolveHostProofViewportProfile,
   type ExistingCoreHostProofBinding,
   type ExistingCoreHostProofCartridgeId,
 } from "@reading-advantage/game-contracts";
@@ -18,12 +19,6 @@ import type {
 import type { HostProofCompletionResponse, HostProofHistoryEntry } from "@reading-advantage/domain/games";
 
 type CompletionStatus = "idle" | "submitting" | "success" | "duplicate" | "error";
-
-const COMPACT_MAX_WIDTH = 767;
-
-function getViewportProfile(width: number): "compact" | "wide" {
-  return width <= COMPACT_MAX_WIDTH ? "compact" : "wide";
-}
 
 function makeIdempotencyKey(): string {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -47,6 +42,8 @@ interface HostProofUiState {
   completionError: string;
   history: HostProofHistoryEntry[];
   historyLoading: boolean;
+  completionAttemptId: string;
+  replayNonce: number;
 }
 
 function initialState(bindings: readonly ExistingCoreHostProofBinding[]): HostProofUiState {
@@ -65,6 +62,8 @@ function initialState(bindings: readonly ExistingCoreHostProofBinding[]): HostPr
     completionError: "",
     history: [],
     historyLoading: true,
+    completionAttemptId: makeIdempotencyKey(),
+    replayNonce: 0,
   };
 }
 
@@ -76,17 +75,25 @@ function initialState(bindings: readonly ExistingCoreHostProofBinding[]): HostPr
 function resolveProfileFromSession(
   session: ExistingCoreQcSession | null,
   width: number,
+  height: number,
 ): "compact" | "wide" {
   if (!session) {
-    return getViewportProfile(width);
+    return resolveHostProofViewportProfile(width);
   }
-  const composition = session.resize({ width, height: 0 });
-  if (composition.supported) {
-    return composition.profile;
-  }
-  return getViewportProfile(width);
+  const composition = session.resize({
+    width: Math.max(1, Math.round(width)),
+    height: Math.max(1, Math.round(height)),
+  });
+  return resolveHostProofViewportProfile(
+    width,
+    composition.supported ? composition.profile : undefined,
+  );
 }
 
+/**
+ * Renders the bounded client-only Task-5 cartridge host-proof surface.
+ * @returns The interactive hidden host-proof UI.
+ */
 export function HostProofGameClient() {
   const bindings = useMemo(() => EXISTING_CORE_HOST_PROOF_BINDINGS, []);
   const [state, setState] = useState<HostProofUiState>(() => initialState(bindings));
@@ -94,9 +101,14 @@ export function HostProofGameClient() {
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
+      const height = window.innerHeight;
       setState((prev) => {
-        const profile = resolveProfileFromSession(prev.session, width);
-        return { ...prev, profile };
+        const profile = resolveProfileFromSession(prev.session, width, height);
+        return {
+          ...prev,
+          profile,
+          ...(prev.session ? { snapshot: prev.session.snapshot() } : {}),
+        };
       });
     };
     handleResize();
@@ -114,7 +126,7 @@ export function HostProofGameClient() {
         const cartridge = await loadExistingCoreQcCartridge(state.selectedId);
         if (!active) return;
         const session = cartridge.createQcSession();
-        const profile = resolveProfileFromSession(session, window.innerWidth);
+        const profile = resolveProfileFromSession(session, window.innerWidth, window.innerHeight);
         const snapshot = session.snapshot();
         setState((prev) => ({
           ...prev,
@@ -142,7 +154,7 @@ export function HostProofGameClient() {
     return () => {
       active = false;
     };
-  }, [state.selectedId]);
+  }, [state.selectedId, state.replayNonce]);
 
   const fetchHistory = async () => {
     setState((prev) => ({ ...prev, historyLoading: true }));
@@ -201,7 +213,7 @@ export function HostProofGameClient() {
       totalAttempts: state.totalAttempts,
       duration: 1000,
       victory: true,
-      idempotencyKey: makeIdempotencyKey(),
+      idempotencyKey: state.completionAttemptId,
       clientTimestamp: Date.now(),
     };
 
@@ -237,20 +249,50 @@ export function HostProofGameClient() {
   const selectCartridge = (id: string) => {
     const binding = bindings.find((b) => b.id === id);
     if (binding) {
-      setState((prev) => ({
-        ...prev,
-        selectedId: binding.id,
-        session: null,
-        snapshot: null,
-        cartridge: null,
-        loading: true,
-        totalAttempts: 0,
-        correctAnswers: 0,
-        completionStatus: "idle",
-        completionResult: null,
-        completionError: "",
-      }));
+      setState((prev) => {
+        if (prev.selectedId === binding.id) {
+          return prev;
+        }
+
+        return {
+          ...prev,
+          selectedId: binding.id,
+          session: null,
+          snapshot: null,
+          cartridge: null,
+          loading: true,
+          totalAttempts: 0,
+          correctAnswers: 0,
+          completionStatus: "idle",
+          completionResult: null,
+          completionError: "",
+          completionAttemptId: makeIdempotencyKey(),
+        };
+      });
     }
+  };
+
+  const replay = () => {
+    setState((prev) => ({
+      ...prev,
+      session: null,
+      snapshot: null,
+      cartridge: null,
+      loading: true,
+      totalAttempts: 0,
+      correctAnswers: 0,
+      completionStatus: "idle",
+      completionResult: null,
+      completionError: "",
+      completionAttemptId: makeIdempotencyKey(),
+      replayNonce: prev.replayNonce + 1,
+    }));
+  };
+
+  const navigateCartridge = (direction: -1 | 1) => {
+    const currentIndex = bindings.findIndex((binding) => binding.id === state.selectedId);
+    const nextIndex = (currentIndex + direction + bindings.length) % bindings.length;
+    selectCartridge(bindings[nextIndex].id);
   };
 
   const selectedBinding = bindings.find((b) => b.id === state.selectedId);
@@ -291,6 +333,26 @@ export function HostProofGameClient() {
                   </option>
                 ))}
               </select>
+              <div className="mt-3 flex gap-2">
+                <Button
+                  aria-label="Previous host-proof cartridge"
+                  onClick={() => navigateCartridge(-1)}
+                  size="sm"
+                  type="button"
+                  variant="outline"
+                >
+                  Previous
+                </Button>
+                <Button
+                  aria-label="Next host-proof cartridge"
+                  onClick={() => navigateCartridge(1)}
+                  size="sm"
+                  type="button"
+                  variant="outline"
+                >
+                  Next
+                </Button>
+              </div>
               {selectedBinding && (
                 <div className="mt-4 space-y-2 text-xs">
                   <div className="flex justify-between">
@@ -362,6 +424,7 @@ export function HostProofGameClient() {
                     className={`rounded-md border-2 border-dashed border-border bg-muted p-6 ${
                       state.profile === "compact" ? "max-w-sm" : "max-w-3xl"
                     }`}
+                    data-cartridge-id={state.selectedId}
                     data-testid="host-proof-game-container"
                     data-profile={state.profile}
                     onKeyDown={(e) => {
@@ -452,6 +515,14 @@ export function HostProofGameClient() {
                       data-testid="host-proof-complete-button"
                     >
                       {state.completionStatus === "submitting" ? "Submitting…" : "Complete"}
+                    </Button>
+                    <Button
+                      data-testid="host-proof-replay-button"
+                      onClick={replay}
+                      type="button"
+                      variant="outline"
+                    >
+                      Replay
                     </Button>
                   </div>
 

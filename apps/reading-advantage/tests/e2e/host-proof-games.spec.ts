@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
 const CARTRIDGE_IDS = [
   "dragon-flight",
@@ -7,9 +7,6 @@ const CARTRIDGE_IDS = [
   "sorcerer-ziggurat",
   "astral-mage",
 ] as const;
-const TEST_USERNAME = process.env.HOST_PROOF_TEST_USERNAME ?? "";
-const TEST_PASSWORD = process.env.HOST_PROOF_TEST_PASSWORD ?? "";
-const TEST_SESSION_TOKEN = process.env.HOST_PROOF_TEST_SESSION_TOKEN ?? "";
 const VIEWPORTS = {
   compact: { width: 390, height: 844 },
   wide: { width: 1280, height: 800 },
@@ -17,51 +14,44 @@ const VIEWPORTS = {
 const INPUTS = ["keyboard", "pointer", "touch"] as const;
 
 test.describe.configure({ mode: "serial" });
+test.setTimeout(90_000);
 
-test.beforeEach(async ({ page }) => {
-  test.skip(
-    !TEST_SESSION_TOKEN && (!TEST_USERNAME || !TEST_PASSWORD),
-    "Set HOST_PROOF_TEST_SESSION_TOKEN or HOST_PROOF_TEST_USERNAME/PASSWORD",
-  );
-
-  if (TEST_SESSION_TOKEN) {
-    await page.context().addCookies([
-      { name: "session_token", value: TEST_SESSION_TOKEN, domain: "localhost", path: "/" },
-    ]);
-    return;
-  }
-
-  await page.goto("/auth/signin");
-  await page.fill("#username", TEST_USERNAME);
-  await page.fill("#password", TEST_PASSWORD);
-  await page.click("button[name='signin-button']");
-  await page.waitForURL("**/");
-});
+async function selectReadyCartridge(page: Page, cartridgeId: string) {
+  await page.waitForSelector("[data-host-proof-boundary='reading-primary-host-proof-only']");
+  const container = page.locator("[data-testid='host-proof-game-container']");
+  await expect(container).toHaveAttribute("data-cartridge-id", "dragon-flight", { timeout: 60_000 });
+  await page.selectOption("select[aria-label='Select host-proof cartridge']", cartridgeId);
+  await expect(container).toHaveAttribute("data-cartridge-id", cartridgeId, { timeout: 60_000 });
+  return container;
+}
 
 for (const cartridgeId of CARTRIDGE_IDS) {
   for (const [profileName, viewport] of Object.entries(VIEWPORTS)) {
     for (const input of INPUTS) {
       test(`${cartridgeId} accepts real ${input} input and persists completion in ${profileName}`, async ({ page }) => {
         await page.setViewportSize(viewport);
-        await page.goto("/student/host-proof/games");
-        await page.waitForSelector("[data-host-proof-boundary='reading-primary-host-proof-only']");
-        await page.selectOption("select[aria-label='Select host-proof cartridge']", cartridgeId);
-
-        const container = page.locator("[data-testid='host-proof-game-container']");
+        await page.goto("/en/student/host-proof/games");
+        const container = await selectReadyCartridge(page, cartridgeId);
+        await expect(page.locator("[data-testid='host-proof-profile']")).toHaveText(profileName);
         await expect(container).toHaveAttribute("data-profile", profileName);
 
         if (input === "keyboard") {
           await container.press("Enter");
+        } else if (input === "pointer") {
+          const size = await container.evaluate((element) => ({
+            width: element.clientWidth,
+            height: element.clientHeight,
+          }));
+          await container.click({
+            position: { x: size.width * 0.75, y: size.height / 2 },
+          });
         } else {
+          await container.scrollIntoViewIfNeeded();
           const box = await container.boundingBox();
           expect(box).not.toBeNull();
           const x = box!.x + box!.width * 0.75;
           const y = box!.y + box!.height / 2;
-          if (input === "touch") {
-            await page.touchscreen.tap(x, y);
-          } else {
-            await page.mouse.click(x, y);
-          }
+          await page.touchscreen.tap(x, y);
         }
 
         await expect(page.locator(`[data-testid='host-proof-${input}-count']`)).toHaveText("1");
@@ -74,9 +64,8 @@ for (const cartridgeId of CARTRIDGE_IDS) {
 
   test(`${cartridgeId} retains one persisted activity for a duplicate completion`, async ({ page }) => {
     await page.setViewportSize(VIEWPORTS.compact);
-    await page.goto("/student/host-proof/games");
-    await page.waitForSelector("[data-host-proof-boundary='reading-primary-host-proof-only']");
-    await page.selectOption("select[aria-label='Select host-proof cartridge']", cartridgeId);
+    await page.goto("/en/student/host-proof/games");
+    await selectReadyCartridge(page, cartridgeId);
     await page.click("[data-testid='host-proof-primary-button']");
     await page.click("[data-testid='host-proof-complete-button']");
     await expect(page.getByText("Completed!")).toBeVisible();
@@ -85,5 +74,43 @@ for (const cartridgeId of CARTRIDGE_IDS) {
     await page.click("[data-testid='host-proof-complete-button']");
     await expect(page.getByText("Duplicate completion recorded (no additional XP).")).toBeVisible();
     await expect(page.locator("[data-testid='host-proof-history-item']")).toHaveCount(historyCount);
+  });
+
+  test(`${cartridgeId} replays into a new completion and navigates only accepted bindings`, async ({ page }) => {
+    await page.setViewportSize(VIEWPORTS.compact);
+    await page.goto("/en/student/host-proof/games");
+    await selectReadyCartridge(page, cartridgeId);
+
+    const history = page.locator("[data-testid='host-proof-history-item']");
+    const initialHistoryCount = await history.count();
+    const primaryButton = page.locator("[data-testid='host-proof-primary-button']");
+    await expect(primaryButton).toBeVisible();
+    await primaryButton.click();
+    await page.click("[data-testid='host-proof-complete-button']");
+    await expect(page.getByText("Completed!")).toBeVisible();
+    await expect(history).toHaveCount(Math.min(initialHistoryCount + 1, 50));
+    await expect(history.first()).toContainText(cartridgeId);
+
+    await page.click("[data-testid='host-proof-replay-button']");
+    await expect(page.locator("[data-testid='host-proof-game-container']")).toHaveAttribute(
+      "data-cartridge-id",
+      cartridgeId,
+      { timeout: 60_000 },
+    );
+    await expect(page.locator("[data-testid='host-proof-score']")).toHaveText("0 / 0");
+
+    await expect(primaryButton).toBeVisible();
+    await primaryButton.click();
+    await page.click("[data-testid='host-proof-complete-button']");
+    await expect(page.getByText("Completed!")).toBeVisible();
+    await expect(history).toHaveCount(Math.min(initialHistoryCount + 2, 50));
+    await expect(history.first()).toContainText(cartridgeId);
+
+    const currentIndex = CARTRIDGE_IDS.indexOf(cartridgeId);
+    const nextCartridgeId = CARTRIDGE_IDS[(currentIndex + 1) % CARTRIDGE_IDS.length];
+    await page.getByRole("button", { name: "Next host-proof cartridge" }).click();
+    await expect(page.getByLabel("Select host-proof cartridge")).toHaveValue(nextCartridgeId);
+    await page.getByRole("button", { name: "Previous host-proof cartridge" }).click();
+    await expect(page.getByLabel("Select host-proof cartridge")).toHaveValue(cartridgeId);
   });
 }

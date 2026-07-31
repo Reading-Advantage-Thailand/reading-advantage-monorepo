@@ -55,6 +55,33 @@ export const EXISTING_CORE_HOST_PROOF_RECEIPTS = Object.freeze({
     "b6ffefcebf8a75d9967f196693fe7cf14a133d66123537d201b52e9af4745dd9",
 });
 
+/** Minimum viewport width at which the shared host-proof surface uses wide layout. */
+export const HOST_PROOF_RESPONSIVE_WIDE_MIN_WIDTH = 800 as const;
+
+/** Responsive profiles supported by the bounded host-proof surface. */
+export const hostProofViewportProfileSchema = z.enum(["compact", "wide"]);
+
+/** Inferred host-proof responsive profile type. */
+export type HostProofViewportProfile = z.infer<typeof hostProofViewportProfileSchema>;
+
+/**
+ * Resolves the shared host-proof fallback profile at the canonical 800px boundary.
+ * @param width Browser viewport width in CSS pixels.
+ * @param resolvedProfile Optional profile already resolved by a live cartridge session.
+ * @returns The live session profile when available, otherwise the width-based profile.
+ * @throws When width or resolvedProfile is not a valid host-proof profile input.
+ */
+export function resolveHostProofViewportProfile(
+  width: number,
+  resolvedProfile?: HostProofViewportProfile,
+): HostProofViewportProfile {
+  const parsedWidth = z.number().int().positive().parse(width);
+  if (resolvedProfile !== undefined) {
+    return hostProofViewportProfileSchema.parse(resolvedProfile);
+  }
+  return parsedWidth >= HOST_PROOF_RESPONSIVE_WIDE_MIN_WIDTH ? "wide" : "compact";
+}
+
 /** Strict schema for one accepted host-proof binding. */
 export const existingCoreHostProofBindingSchema = z
   .object({

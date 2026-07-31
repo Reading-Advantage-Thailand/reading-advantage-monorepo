@@ -1,7 +1,17 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@reading-advantage/auth-client", "@reading-advantage/ui", "@reading-advantage/utils"],
+  distDir: process.env.NEXT_DIST_DIR ?? ".next",
+  transpilePackages: [
+    "@reading-advantage/ai",
+    "@reading-advantage/advantage-play-kit",
+    "@reading-advantage/auth-client",
+    "@reading-advantage/game-cartridges",
+    "@reading-advantage/game-contracts",
+    "@reading-advantage/ui",
+    "@reading-advantage/utils",
+  ],
+  allowedDevOrigins: ["127.0.0.1"],
   reactStrictMode: false,
   pageExtensions: ["tsx", "ts", "jsx", "js"],
   images: {

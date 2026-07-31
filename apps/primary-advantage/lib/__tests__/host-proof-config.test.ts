@@ -7,12 +7,13 @@ describe("host-proof server configuration", () => {
 
   afterEach(() => {
     process.env.HOST_PROOF_ENABLED = originalHostProofEnabled;
+    vi.unstubAllEnvs();
     vi.resetModules();
   });
 
   it("fails closed when the flag is absent, including production", async () => {
     delete process.env.HOST_PROOF_ENABLED;
-    process.env.NODE_ENV = "production";
+    vi.stubEnv("NODE_ENV", "production");
 
     const { isHostProofEnabled } = await import("../host-proof-config");
 
