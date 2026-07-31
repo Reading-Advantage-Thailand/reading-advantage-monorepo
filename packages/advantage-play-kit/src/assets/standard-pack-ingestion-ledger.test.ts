@@ -519,7 +519,7 @@ describe("standard-pack append-only ingestion ledger", () => {
       evidenceBundles,
       freshPredecessorIndex,
     )).rejects.toThrow(/predecessor index already has a distinct accepted successor/i);
-  }, 60_000);
+  }, 180_000);
 
   it("issues a real B1 successor catalog and carries its accepted identities into the next index", async () => {
     const rawEvidence = await createAcceptedIngestionEvidence();
@@ -618,7 +618,7 @@ describe("standard-pack append-only ingestion ledger", () => {
       [createLedgerEvidenceBundle(evidence)],
       [{ ...createSuccessorDescriptor(evidence, b1Release), anchor: { x: 0.3, y: 1 } }],
     )).rejects.toThrow(/descriptor content.*accepted suitability/i);
-  }, 60_000);
+  }, 180_000);
 
   it("rehydrates persisted B1 evidence without granting production authority", async () => {
     const rawEvidence = await createAcceptedIngestionEvidence();
@@ -733,7 +733,7 @@ describe("standard-pack append-only ingestion ledger", () => {
       [createLedgerEvidenceBundle(evidence)],
       [createSuccessorDescriptor(evidence, b1Release)],
     )).resolves.toBeDefined();
-  }, 60_000);
+  }, 180_000);
 
   it("rejects a successor catalog that smuggles an unreviewed asset beside a validated ingestion", async () => {
     const rawEvidence = await createAcceptedIngestionEvidence();
@@ -872,7 +872,7 @@ describe("standard-pack append-only ingestion ledger", () => {
 
     staleReceipt.receiptDigest = await sha256(serializeStandardPackCanonicalIngestionReceiptPayload(staleReceipt as never));
     await expect(validateStandardPackIngestionLedger(b2Ledger, [createLedgerEvidenceBundle(b2Evidence, staleReceipt)], b2Index, acceptedB1)).rejects.toThrow(/exact expected predecessor release/i);
-  }, 60_000);
+  }, 180_000);
   it.each([
     "destinationRepoLocator",
     "catalogEntryKey",

@@ -1,0 +1,83 @@
+{
+  "schema_version": "apk-existing-core-task5-canonical-reuse-dossiers.v1",
+  "status": "reviewed-canonical-reuse-drafts-pending-owner-acceptance",
+  "release": {
+    "version": "2026.07.23",
+    "catalog_digest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+    "source_receipt_digest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9"
+  },
+  "evidence": {
+    "canonical_reuse_review": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/task5-canonical-reuse-evidence-v1.json",
+    "current_task3_lineage_receipt": "measure/tracks/apk_existing_core_cutover_20260727/task3-current-lineage-receipt-v1.json",
+    "accepted_semantic_adoption_receipt": "measure/tracks/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
+    "accepted_task4_qc_receipt": "measure/tracks/apk_existing_core_cutover_20260727/accepted-task4-qc-receipt-v1.json"
+  },
+  "titles": [
+    {
+      "title_id": "dragon-flight",
+      "title": "Dragon Flight",
+      "input_mode": "vocabulary",
+      "temporal_scope": "current-source",
+      "roles": [
+        {"dossier_id":"existing-core-dragon-flight-player-idle-canonical-reuse-v1","role":"player","state":"idle","descriptor_id":"existing-core-hero-01-static-v1","semantic_key":"top-down/32x32/characters/hero-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":384},"collision_envelope_required":true,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-core-dragon-flight-feedback-correct-canonical-reuse-v1","role":"feedback","state":"correct","descriptor_id":"existing-core-hit-01-static-v1","semantic_key":"effects/32x32/combat/hit-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":128},"collision_envelope_required":false,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-core-dragon-flight-audio-feedback-correct-canonical-reuse-v1","role":"audio-feedback","state":"correct","descriptor_id":"existing-core-hit-01-audio-v1","semantic_key":"audio/native/combat/hit-01","behavior":{"media_kind":"audio","minimum_geometry":null,"collision_envelope_required":false,"animation_behavior":"not-applicable"}}
+      ]
+    },
+    {
+      "title_id": "magic-defense",
+      "title": "Magic Defense",
+      "input_mode": "vocabulary",
+      "temporal_scope": "current-source",
+      "roles": [
+        {"dossier_id":"existing-core-magic-defense-panel-default-canonical-reuse-v1","role":"panel","state":"default","descriptor_id":"existing-core-inventory-slot-static-v1","semantic_key":"ui/20x20/inventory/slot","behavior":{"media_kind":"image","minimum_geometry":{"width":20,"height":20},"collision_envelope_required":false,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-core-magic-defense-status-armor-canonical-reuse-v1","role":"status","state":"armor","descriptor_id":"existing-core-armor-icons-static-v1","semantic_key":"ui/32x32/items/armor-icons","behavior":{"media_kind":"image","minimum_geometry":{"width":512,"height":896},"collision_envelope_required":false,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-core-magic-defense-feedback-correct-canonical-reuse-v1","role":"feedback","state":"correct","descriptor_id":"existing-core-hit-01-static-v1","semantic_key":"effects/32x32/combat/hit-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":128},"collision_envelope_required":false,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-core-magic-defense-audio-feedback-correct-canonical-reuse-v1","role":"audio-feedback","state":"correct","descriptor_id":"existing-core-hit-01-audio-v1","semantic_key":"audio/native/combat/hit-01","behavior":{"media_kind":"audio","minimum_geometry":null,"collision_envelope_required":false,"animation_behavior":"not-applicable"}}
+      ]
+    },
+    {
+      "title_id": "dungeon-liberator",
+      "title": "Dungeon Liberator",
+      "input_mode": "sentence",
+      "temporal_scope": "current-source",
+      "roles": [
+        {"dossier_id":"existing-core-dungeon-liberator-player-idle-canonical-reuse-v1","role":"player","state":"idle","descriptor_id":"existing-core-hero-01-static-v1","semantic_key":"top-down/32x32/characters/hero-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":384},"collision_envelope_required":true,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-core-dungeon-liberator-enemy-idle-canonical-reuse-v1","role":"enemy","state":"idle","descriptor_id":"existing-core-enemy-001-idle-static-v1","semantic_key":"side-view/32x32/characters/enemy-001-idle","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":32},"collision_envelope_required":true,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-core-dungeon-liberator-feedback-correct-canonical-reuse-v1","role":"feedback","state":"correct","descriptor_id":"existing-core-hit-01-static-v1","semantic_key":"effects/32x32/combat/hit-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":128},"collision_envelope_required":false,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-core-dungeon-liberator-control-confirm-canonical-reuse-v1","role":"control","state":"confirm","descriptor_id":"existing-core-gamepad-buttons-static-v1","semantic_key":"ui/16x16/controls/gamepad-buttons","behavior":{"media_kind":"image","minimum_geometry":{"width":352,"height":160},"collision_envelope_required":false,"animation_behavior":"not-applicable"}}
+      ]
+    },
+    {
+      "title_id": "sorcerer-ziggurat",
+      "title": "The Sorcerer's Ziggurat",
+      "input_mode": "sentence",
+      "temporal_scope": "historical-source-only",
+      "roles": [
+        {"dossier_id":"existing-core-sorcerer-ziggurat-player-idle-canonical-reuse-v1","role":"player","state":"idle","descriptor_id":"existing-core-hero-01-static-v1","semantic_key":"top-down/32x32/characters/hero-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":384},"collision_envelope_required":true,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-core-sorcerer-ziggurat-feedback-correct-canonical-reuse-v1","role":"feedback","state":"correct","descriptor_id":"existing-core-hit-01-static-v1","semantic_key":"effects/32x32/combat/hit-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":128},"collision_envelope_required":false,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-core-sorcerer-ziggurat-control-confirm-canonical-reuse-v1","role":"control","state":"confirm","descriptor_id":"existing-core-gamepad-buttons-static-v1","semantic_key":"ui/16x16/controls/gamepad-buttons","behavior":{"media_kind":"image","minimum_geometry":{"width":352,"height":160},"collision_envelope_required":false,"animation_behavior":"not-applicable"}}
+      ]
+    },
+    {
+      "title_id": "astral-mage",
+      "title": "Astral Mage",
+      "input_mode": "sentence",
+      "temporal_scope": "historical-source-only",
+      "roles": [
+        {"dossier_id":"existing-core-astral-mage-player-idle-canonical-reuse-v1","role":"player","state":"idle","descriptor_id":"existing-core-hero-01-static-v1","semantic_key":"top-down/32x32/characters/hero-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":384},"collision_envelope_required":true,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-core-astral-mage-feedback-correct-canonical-reuse-v1","role":"feedback","state":"correct","descriptor_id":"existing-core-hit-01-static-v1","semantic_key":"effects/32x32/combat/hit-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":128},"collision_envelope_required":false,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-core-astral-mage-audio-feedback-correct-canonical-reuse-v1","role":"audio-feedback","state":"correct","descriptor_id":"existing-core-hit-01-audio-v1","semantic_key":"audio/native/combat/hit-01","behavior":{"media_kind":"audio","minimum_geometry":null,"collision_envelope_required":false,"animation_behavior":"not-applicable"}}
+      ]
+    }
+  ],
+  "authorization": {
+    "production_use_authorized": false,
+    "ingestion_authorized": false,
+    "migration_authorized": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "deployment_authorized": false,
+    "task5_acceptance_claimed": false
+  }
+}

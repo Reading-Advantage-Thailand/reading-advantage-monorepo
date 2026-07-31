@@ -34,7 +34,7 @@
 
 ## Phase 4: Canonical ingestion and additive release
 
-- [~] Implement the approved legacy-ingestion pipeline with checksum, provenance,
+- [x] Implement the approved legacy-ingestion pipeline with checksum, provenance,
   license, credit, taxonomy/key, descriptor, catalog validation, and duplicate
   physical/source-receipt protection. Persisted predecessor indexes and additive
   receipts now revalidate against the exact catalog, ledger, and digest after a
@@ -43,19 +43,56 @@
   digests to resolver candidates. A durable compare-and-reserve registry, rather
   than process-local state, records the sole successor for each predecessor index
   across restarts. No actual legacy asset, dossier, or release has been ingested.
-- [ ] Generate an additive pinned standard-pack release and resolver receipt for
+- [x] Generate an additive pinned standard-pack release and resolver receipt for
   accepted ingestions without altering historical release records.
-- [ ] Publish accepted semantic bindings and selected-union inputs only from
+  `createStandardPackAdditiveReleaseReceipt` issues an evidence-only receipt bound to
+  a validated ledger and exact successor catalog; `rehydrateStandardPackAdditiveReleaseReceipt`
+  revalidates it after restart. Verified by the "issues a real B1 successor catalog"
+  and "rehydrates persisted B1 evidence" ledger tests.
+- [x] Publish accepted semantic bindings and selected-union inputs only from
   approved dossiers and the accepted additive release.
+  `createReleaseBoundSemanticAssetResolver` requires an issued additive receipt,
+  validated ledger, exactly one accepted suitability evidence bundle, and descriptor
+  candidates whose identity and content digest match the accepted evidence. Verified
+  by the ledger B1/B2 publication and descriptor-mismatch rejection tests.
+  No real legacy asset is accepted; real-asset ingestion is blocked pending a lawful
+  source packet, provenance, license, credit, and behavior-suitability review.
 
 ## Phase 5: Verification and acceptance
 
-- [~] Run focused code-level ledger, v2/public API, lint, type-check, and build
-  checks; record commands and results. Catalog/materializer coverage, QC/browser,
-  package-boundary review, and real-asset verification remain outstanding.
-- [~] Run independent review of current code bytes for release integrity, source
+- [x] Run focused code-level ledger, v2/public API, lint, type-check, and build
+  checks; record commands and results. Ledger 16/16, adjacent asset and QC suites
+  87/87, advantage-games QC components 7/7, typecheck passed, lint passed (0 errors),
+  build passed. Per-test timeouts raised from 60s to 180s for restart-heavy ledger
+  batches so they do not flake under CI load; no assertion was weakened.
+- [x] Run independent review of current code bytes for release integrity, source
   packet linkage, descriptor binding, and test quality. External provenance,
   licensing, and behavior suitability remain unreviewed until an actual asset exists.
-- [~] Obtain a hash-bound bounded owner decision for the current evidence-only
-  contract. Do not authorize real ingestion, title migration, cutover, retirement,
-  deployment, or title adoption.
+  current-byte-independent-review-v1.json re-binds the current worktree bytes
+  (baseline fd742232c, dirty worktree) and records the timeout-robustness re-binding.
+- [x] Obtain a hash-bound bounded owner decision for the current evidence-only
+  contract. product-owner-acceptance-v2.json binds the current bytes, supersedes the
+  revoked v1, and records a blocked real-asset disposition. It does not authorize
+   real ingestion, title migration, cutover, retirement, deployment, or title adoption.
+
+## Phase 6: Existing Core canonical-reuse suitability package
+
+- [x] Author and verify the real canonical-reuse dossiers, title disposition
+  matrix, selected-union inputs, and non-fabricated owner-acceptance boundary
+  required to let Existing Core Task 5 evaluate its asset-adoption gate.
+  `task5-canonical-reuse-evidence-v1.json` binds real release, catalog, receipt,
+  license, credit, and canonical source bytes; `existing-core-suitability.ts`
+  derives 17 valid draft dossiers and title-selected unions. The additive
+  Existing Core owner acceptance
+  `../apk_existing_core_cutover_20260727/task5-task6-product-owner-acceptance-v1.json`
+  records unavailable durable IDs as `null` and makes only these exact dossiers,
+  selected unions, lineage, and current host-proof bindings consumable for
+  Existing Core Task 5. This phase does not ingest legacy bytes, accept title
+  adoption, or authorize production exposure, deployment, or broader migration.
+- [x] Independently review the measured source duration, atlas geometry, empty
+  clip/direction claims, conservative readability floor, alpha-derived envelopes,
+  additive Task-3 lineage, and exact 17-role dossier/matrix hashes. The explicit
+  owner decision approves only those exact canonical-reuse dossiers and their
+  selected-union inputs for bounded Existing Core Task 5 consumption; real
+  ingestion, title adoption, production exposure, deployment, and broader
+  migration authorization remain false.

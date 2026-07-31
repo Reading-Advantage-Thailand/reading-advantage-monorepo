@@ -1,0 +1,41 @@
+{
+  "schema_version": "apk-existing-core-task5-host-proof-playwright-observation.v1",
+  "application": "reading-advantage",
+  "status": "passed",
+  "base_url": "http://localhost:3116",
+  "route": "/student/host-proof/games",
+  "feature_flag": "HOST_PROOF_ENABLED=true",
+  "runner": "playwright",
+  "project": "chromium",
+  "authentication_fixture": "ephemeral-test-session-without-secret-recording",
+  "database_fixture": "local-test-database-without-credential-recording",
+  "command_template": "CI=true PLAYWRIGHT_PORT=<free-port> HOST_PROOF_TEST_SESSION_TOKEN=<ephemeral-token> pnpm --filter reading-advantage exec playwright test tests/e2e/host-proof-games.spec.ts tests/e2e/host-proof-replay-navigation.spec.ts",
+  "test_result_file": {
+    "path": "apps/reading-advantage/test-results/.last-run.json",
+    "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903",
+    "status": "passed",
+    "failed_tests": []
+  },
+  "test_bindings": {
+    "playwright_config": {
+      "path": "apps/reading-advantage/playwright.config.ts",
+      "sha256": "9d514292c0abe9dfcd402b8f610cf3fac8e59714b031b1e9cfa678b09d52e7b8"
+    },
+    "host_matrix": {
+      "path": "apps/reading-advantage/tests/e2e/host-proof-games.spec.ts",
+      "sha256": "64712c2a192fb7c7b15261547420713e6bda323c4bc92077e916b931dcb56437"
+    },
+    "replay_navigation": {
+      "path": "apps/reading-advantage/tests/e2e/host-proof-replay-navigation.spec.ts",
+      "sha256": "f91f5eaeca1bf9729e22ae26b36cabd54250d5bf184497c02a3048d3d1f411e7"
+    }
+  },
+  "tests": {
+    "passed": 40,
+    "failed": 0,
+    "skipped": 0,
+    "matrix_definition": "five fixed bindings times compact/wide and keyboard/pointer/touch, plus five duplicate-completion and five replay-navigation cases"
+  },
+  "observation_only": true,
+  "source_status": "historical-before-remediation"
+}

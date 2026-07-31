@@ -15,9 +15,12 @@ TRACK_ROOT = REPO_ROOT / "measure/tracks/apk_existing_core_cutover_20260727"
 ACCEPTANCE_PATH = TRACK_ROOT / "task3-product-owner-acceptance-v1.json"
 RECEIPT_PATH = TRACK_ROOT / "accepted-semantic-adoption-receipt-v1.json"
 CORRECTION_PATH = TRACK_ROOT / "task3-evidence-lineage-correction-v1.json"
+CURRENT_LINEAGE_RECEIPT_PATH = TRACK_ROOT / "task3-current-lineage-receipt-v1.json"
+CURRENT_LINEAGE_REVIEW_PATH = TRACK_ROOT / "review-task3-current-lineage-v1.md"
 EXPECTED_ACCEPTANCE_SHA256 = "65ffbaa27ef19be1f65015daa8fad4d2f4ca58990ba2fea5653327627452c3b1"
 EXPECTED_RECEIPT_SHA256 = "e82d42d9ec046b85eb4aeac7800623bce3c3bf4a39a9c0f44288bd93d07be240"
 EXPECTED_CORRECTION_SHA256 = "008b042ddab1e5486c2b51fb5625b8f89084c471fc03a3bc4dab29231e509796"
+EXPECTED_CURRENT_LINEAGE_REVIEW_SHA256 = "2042061ffe67246c56f47cd1c4639ec39e1bd4ec5156952e6b46415fff24a657"
 CORRECTED_SUBJECT_KEYS = {"remediation_evidence", "independent_zero_finding_rereview"}
 
 EXPECTED_SUBJECTS = {
@@ -325,22 +328,22 @@ class ExistingCoreTask3AcceptanceTests(unittest.TestCase):
         )
         self.assertIn("- [x]", task4_line)
 
-        # Task 5 may begin, but no later task may claim progress or completion.
+        # The later additive Task-5 acceptance is complete and Task 6 has only begun.
         task5_line = next(
             (line for line in plan.splitlines() if "Prove Reading and Primary load" in line),
             "",
         )
-        self.assertTrue(task5_line.startswith("- [~]"))
-        self.assertNotIn("- [x]", task5_line)
-        for later_marker in (
-            "Delete only each title's exact replaced legacy paths",
-            "Obtain independent review and product-owner acceptance",
-        ):
-            later_line = next(
-                (line for line in plan.splitlines() if later_marker in line),
-                "",
-            )
-            self.assertTrue(later_line.startswith("- [ ]"), f"{later_marker} must remain pending")
+        self.assertTrue(task5_line.startswith("- [x]"))
+        task6_line = next(
+            (line for line in plan.splitlines() if "Delete only each title's exact replaced legacy paths" in line),
+            "",
+        )
+        self.assertTrue(task6_line.startswith("- [~]"))
+        task7_line = next(
+            (line for line in plan.splitlines() if "Obtain independent review and product-owner acceptance" in line),
+            "",
+        )
+        self.assertTrue(task7_line.startswith("- [ ]"))
 
         self.assertEqual(task_acceptance["task_number"], 3)
         self.assertEqual(task_acceptance["approval_message_exact"], "Approved. Continue")
@@ -353,6 +356,26 @@ class ExistingCoreTask3AcceptanceTests(unittest.TestCase):
         self.assertFalse(task_acceptance["host_proof_claimed"])
         self.assertFalse(task_acceptance["retirement_claimed"])
         self.assertFalse(task_acceptance["broader_cohort_accepted"])
+
+    def test_current_lineage_receipt_additively_rebinds_descendants_without_rewriting_history(self) -> None:
+        """Requires a current receipt and review to preserve historical Task-3 bytes exactly."""
+        receipt = _load_object(CURRENT_LINEAGE_RECEIPT_PATH)
+        self.assertEqual(_sha256(CURRENT_LINEAGE_RECEIPT_PATH), "c5ccb0ac3b54474e2ad99badb2aef5c1608689e57559e2f26c6fb489a5513d7f")
+        self.assertEqual(_sha256(CURRENT_LINEAGE_REVIEW_PATH), EXPECTED_CURRENT_LINEAGE_REVIEW_SHA256)
+        self.assertEqual(receipt["status"], "current-lineage-verified-additive")
+        self.assertEqual(receipt["historical_acceptance"]["sha256"], EXPECTED_ACCEPTANCE_SHA256)
+        self.assertEqual(receipt["historical_accepted_receipt"]["sha256"], EXPECTED_RECEIPT_SHA256)
+        self.assertEqual(receipt["correction"]["sha256"], EXPECTED_CORRECTION_SHA256)
+        self.assertEqual(receipt["current_review"], {
+            "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-current-lineage-v1.md",
+            "sha256": EXPECTED_CURRENT_LINEAGE_REVIEW_SHA256,
+            "disposition": "pass-additive-lineage-integrity",
+        })
+        self.assertFalse(receipt["governance"]["historical_acceptance_rewritten"])
+        self.assertFalse(receipt["governance"]["historical_accepted_receipt_rewritten"])
+        self.assertFalse(receipt["governance"]["historical_subject_bytes_rewritten"])
+        self.assertFalse(receipt["governance"]["semantic_adoptions_changed"])
+        self.assertFalse(receipt["governance"]["downstream_authorization_expanded"])
 
 
 if __name__ == "__main__":

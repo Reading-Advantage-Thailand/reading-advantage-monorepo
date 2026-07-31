@@ -1,0 +1,123 @@
+{
+  "schema_version": "apk-existing-core-task5-host-proof-playwright-observation.v2",
+  "application": "reading-advantage",
+  "status": "passed",
+  "base_url": "http://localhost:3128",
+  "route": "/en/student/host-proof/games",
+  "feature_flag": "HOST_PROOF_ENABLED=true",
+  "runner": "playwright",
+  "project": "chromium",
+  "authentication_fixture": "idempotent-seeded-local-student-and-setup-storage-state-without-secret-recording",
+  "database_fixture": "local-reading-postgresql-fixture-without-credential-recording",
+  "supersedes": {
+    "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-reading-host-proof-playwright-report-v1.json",
+    "sha256": "a22479fb00db47e2fa30f24f245c4e129e8a74373b937577e1a95e74fe1cf63a",
+    "reason": "Replaces the historical-before-remediation Reading observation with a current-source setup-backed rerun."
+  },
+  "execution_binding": {
+    "command_template": "DATABASE_URL=<local-test-database> DIRECT_DATABASE_URL=<local-test-database> CI=true PLAYWRIGHT_PORT=3128 pnpm --filter reading-advantage exec playwright test tests/e2e/host-proof-games.spec.ts",
+    "command_sha256": "2a8034c39ef3963afb73045e6ca4e103717946e72279ec77b71b3c5606756d52",
+    "environment": {
+      "parent": {
+        "CI": "true",
+        "DATABASE_URL": "<local-test-database>",
+        "DIRECT_DATABASE_URL": "<local-test-database>",
+        "PLAYWRIGHT_PORT": "3128"
+      },
+      "web_server": {
+        "HOST_PROOF_ENABLED": "true",
+        "NEXT_DIST_DIR": ".next/host-proof-3128",
+        "PORT": "3128"
+      },
+      "values_redacted": true,
+      "environment_sha256": "5127ffe70a15519345f4eb658f5a5642b87216b56241033e0725999408d5e900"
+    }
+  },
+  "test_result_file": {
+    "path": "apps/reading-advantage/test-results/host-proof-results.json",
+    "sha256": "b588e008dba394f920a0e0feb3b6dc78f6f43dec2833e727699a327f19bd104a",
+    "status": "passed",
+    "failed_tests": [],
+    "per_test_results": true,
+    "stats_expected": 41,
+    "stats_unexpected": 0,
+    "stats_skipped": 0,
+    "stats_flaky": 0
+  },
+  "test_bindings": {
+    "playwright_config": {
+      "path": "apps/reading-advantage/playwright.config.ts",
+      "sha256": "c9da3e45756ffd27a21a41a163fa9a4d1c94e9d240dc1c2d76ccb4e255832afb"
+    },
+    "auth_setup": {
+      "path": "apps/reading-advantage/tests/e2e/host-proof-auth.setup.ts",
+      "sha256": "e177b8d9effaa83b86e8b54864c75d5963c83b4c573f48d4c807e8bdb3db878b"
+    },
+    "host_matrix": {
+      "path": "apps/reading-advantage/tests/e2e/host-proof-games.spec.ts",
+      "sha256": "dcf3a3fb553ceb6f4bf7097c1565b0826a25ec510b2a64104e7b6553ffe23cbd"
+    },
+    "credential_config": {
+      "path": "apps/reading-advantage/host-proof-test-config.ts",
+      "sha256": "91ec29dd40db41ea3c20e96a69fb04d575b3727c23d36f5a7b62d5815f05ac36"
+    },
+    "seed_script": {
+      "path": "apps/reading-advantage/scripts/seed-host-proof-session.ts",
+      "sha256": "2215944f552737bd7ea9f5ecda6bc1c790cb9e95ef83b705fccff78499c21adf"
+    },
+    "host_client": {
+      "path": "apps/reading-advantage/components/host-proof/HostProofGameClient.tsx",
+      "sha256": "5ec5f4e953b2a1bed312516a4342717f538e28f27e7ce27cc9a88b9fcd352470"
+    },
+    "host_page": {
+      "path": "apps/reading-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx",
+      "sha256": "153eb18bb0617f9b9f0a9ec85d61b4136d8c2e04535fae143948f7d7eed327bb"
+    },
+    "host_route": {
+      "path": "apps/reading-advantage/app/api/host-proof/games/completions/route.ts",
+      "sha256": "ffa3d5d21530eada589138c7e790aa5f281659f9085cc45366c4805c759ae2f9"
+    },
+    "host_gate": {
+      "path": "apps/reading-advantage/lib/host-proof-config.ts",
+      "sha256": "b99c2384bd7cb279e2c89729f0804e40fdeb4c9e511786ad0bb4cfd221c93c32"
+    },
+    "qc_loader": {
+      "path": "apps/reading-advantage/lib/host-proof-qc-loader.ts",
+      "sha256": "d5c56bc6b4e0b5259617427522e79179e4a6f07c1ce37e89de7da0856ba2334d"
+    },
+    "next_config": {
+      "path": "apps/reading-advantage/next.config.ts",
+      "sha256": "07637e3b4c7dff391c602558c585ff63960344b9d43d30ac7beb86b1149d4da6"
+    },
+    "package_manifest": {
+      "path": "apps/reading-advantage/package.json",
+      "sha256": "d0baa969a988ce244c445a8383a6b10ac40a6954d158bb8d8b88019b3bfb8092"
+    }
+  },
+  "tests": {
+    "passed": 40,
+    "failed": 0,
+    "skipped": 0,
+    "setup_project": "passed separately and excluded from the 40 browser-case total",
+    "result_artifact": {
+      "stats_expected": 41,
+      "stats_unexpected": 0,
+      "stats_skipped": 0,
+      "stats_flaky": 0,
+      "browser_case_total": 40,
+      "setup_case_total": 1
+    },
+    "matrix_definition": "five fixed bindings times compact/wide and keyboard/pointer/touch, plus five duplicate-completion and five replay-navigation cases"
+  },
+  "observation_only": true,
+  "source_status": "current-source-rerun-after-remediation",
+  "claims": {
+    "task5_acceptance_claimed": false,
+    "asset_adoption_claimed": false,
+    "migration_claimed": false,
+    "cartridge_cutover_claimed": false,
+    "legacy_retirement_claimed": false,
+    "deployment_claimed": false,
+    "product_owner_acceptance_claimed": false
+  }
+}

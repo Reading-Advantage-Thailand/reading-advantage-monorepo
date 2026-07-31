@@ -3,7 +3,7 @@
   "type": "feature",
   "status": "in_progress",
   "created_at": "2026-07-28T00:00:00Z",
-  "updated_at": "2026-07-30T13:56:25Z",
+  "updated_at": "2026-07-31T14:00:00Z",
   "description": "Evaluate standard-pack asset suitability and canonically ingest approved legacy assets when the pack has no suitable replacement.",
   "estimated_tasks": 15,
   "actual_tasks": null,
@@ -11,5 +11,28 @@
     "apk_asset_contract_v2_20260728",
     "apk_dual_theme_asset_production_20260712"
   ],
-  "deviation_notes": "Centralized evidence-only governance only. The current-byte review and bounded owner decision bind implementation bytes but do not accept a real legacy asset or authorize title adoption, ingestion, migration, cutover, retirement, or deployment."
+  "deviation_notes": "Centralized evidence-only governance only. The current-byte review and bounded owner decision bind implementation bytes but do not accept a real legacy asset or authorize title adoption, ingestion, migration, cutover, retirement, or deployment. Phase 4 additive-release and release-bound semantic publication infrastructure is complete and tested with synthetic fixtures; real-asset ingestion is blocked pending a lawful source packet, provenance, license, credit, and behavior-suitability review for a concrete title. Existing Core canonical-reuse evidence is independently reviewed and is now consumed only through the additive core-track acceptance `measure/tracks/apk_existing_core_cutover_20260727/task5-task6-product-owner-acceptance-v1.json` (SHA-256 `4ca0b6983a285ea998399ea2ed6a2e97864db0e62686aca32643932c9e598eda`) as exact Task-5 evidence; source-derived audio duration, measured atlas geometry, alpha envelopes, conservative contrast evidence, and additive Task-3 lineage remain hash-bound. Production exposure, deployment, and broader APK claims remain unauthorized.",
+  "downstream_consumption": {
+    "track_id": "apk_existing_core_cutover_20260727",
+    "acceptance_path": "measure/tracks/apk_existing_core_cutover_20260727/task5-task6-product-owner-acceptance-v1.json",
+    "acceptance_sha256": "4ca0b6983a285ea998399ea2ed6a2e97864db0e62686aca32643932c9e598eda",
+    "scope": "exact canonical-reuse dossiers, selected unions, additive lineage, and current Reading/Primary host-proof bindings consumable for Existing Core Task 5 only",
+    "real_asset_ingestion_authorized": false,
+    "production_exposure_authorized": false,
+    "deployment_authorized": false,
+    "broader_apk_claims_authorized": false
+  },
+  "reviews": [
+    {
+      "reviewed_at": "2026-07-31T13:30:00Z",
+      "kind": "independent-existing-core-canonical-reuse-suitability-review",
+      "scope": "five Existing Core titles, 17 role dossiers, selected-union inputs, canonical source measurements, and additive Task-3 lineage",
+      "report_path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/review-task5-canonical-reuse-v1.md",
+      "report_sha256": "0e2f17bdbd909cde4eeb433ee9ee1749e8c030215624fd00ee062fdd1e379fb8",
+      "disposition": "review-pass-owner-decision-eligible",
+      "owner_approval_claimed": true,
+      "severity_findings": {"critical": [], "high": [], "medium": [], "low": []},
+      "authority_boundary": "exact canonical-reuse evidence consumable only for Existing Core Task 5 through the additive core-track acceptance; all production, ingestion, migration, title-adoption, retirement completion, cutover, and deployment authorization false"
+    }
+  ]
 }

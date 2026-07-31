@@ -176,6 +176,20 @@ export type {
   StandardPackCanonicalIngestionReceipt,
 } from "./standard-pack-suitability.js";
 
+/** Existing Core Task-5 draft canonical-reuse dossiers and evidence-only selected-union inputs. */
+export {
+  createExistingCoreTask5CanonicalReusePackage,
+  EXISTING_CORE_TASK5_CANONICAL_REUSE_INPUTS,
+} from "./existing-core-suitability.js";
+export type {
+  ExistingCoreTask5CanonicalReuseInput,
+  ExistingCoreTask5CanonicalReusePackage,
+  ExistingCoreTask5DispositionRow,
+  ExistingCoreTask5OwnerAcceptance,
+  ExistingCoreTask5SemanticBindingEvidence,
+  ExistingCoreTask5SelectedUnionInput,
+} from "./existing-core-suitability.js";
+
 /** Pure canonical resolver search, technical comparison, and accepted reuse decision helpers. */
 export {
   compareCanonicalSuitabilityDescriptor,
