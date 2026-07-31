@@ -1,0 +1,170 @@
+{
+  "schema_version": "apk-planned-game-intake-child-track-handoff.v1",
+  "track_id": "apk_new_game_intake_20260727",
+  "baseline_revision": "fd742232c",
+  "status": "template-only",
+  "purpose": "Copy this planning-only handoff only after replacing every placeholder with evidence bound to one future identity.",
+  "non_authorization": {
+    "statement": "This handoff is evidence for a bounded child-track proposal. It does not authorize implementation, routes, cartridges, catalog entries, semantic mappings, asset adoption, ingestion, title adoption, migration, cutover, retirement, deployment, git publication, or release. Product-owner approval and independent review are evidence gates, not operational authority.",
+    "operational_authority": false,
+    "owner_approval_is_evidence_only": true,
+    "independent_review_is_evidence_only": true,
+    "child_track_requires_separate_acceptance": true
+  },
+  "foundation_crosswalk": {
+    "crosswalk": {
+      "path": "measure/archive/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+      "sha256": "eb395d3d365115696fc31359406a4e9f126604ca159ea8358a0eb8931c8c5f57"
+    },
+    "readiness_receipt": {
+      "path": "measure/archive/apk_denominator_readiness_t11_integrity_20260727/accepted-readiness-receipt-v1.json",
+      "sha256": "d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720"
+    },
+    "source_identity_count": 27,
+    "partition_assignment_count": 29,
+    "historical_label_assignment_count": 2,
+    "boundary": "The accepted 27-to-29 crosswalk explains 27 source identities and two historical labels. It is not a 29-source identity denominator and does not authorize a future title."
+  },
+  "identity_gate": {
+    "normalization": "NFKD, remove combining marks and apostrophes, lowercase en-US, replace non-alphanumeric runs with hyphens, then trim hyphens.",
+    "legacyDenominatorMembership": false,
+    "reject_if_normalized_title_matches_reserved_alias": true,
+    "reject_if_existing_future_proposal_matches_key": true,
+    "reserved_alias_source": "Derive canonical labels, articleless title aliases, historical source aliases, and source-identity aliases from the bound crosswalk; do not admit a legacy alias by changing punctuation, articles, or source prefixes.",
+    "reserved_alias_count": 61
+  },
+  "intake_candidate": {
+    "schemaVersion": 1,
+    "intakeDigest": "<64-lowercase-hex-intake-digest>",
+    "submittedBy": "<identifier>",
+    "identity": {
+      "title": "<owner-approved-future-title>",
+      "key": "<normalized-title-key>",
+      "identityDigest": "<64-lowercase-hex-identity-digest>"
+    },
+    "ownerEvidence": {
+      "ownerId": "<product-owner-identifier>",
+      "candidateDigest": "<same-intake-digest>",
+      "identityDigest": "<same-identity-digest>",
+      "approvalDigest": "<64-lowercase-hex-approval-digest>",
+      "decision": "approved",
+      "reviewedAt": "<offset-datetime>"
+    },
+    "independentReview": {
+      "reviewerId": "<different-independent-reviewer-identifier>",
+      "candidateDigest": "<same-intake-digest>",
+      "reviewDigest": "<64-lowercase-hex-review-digest>",
+      "decision": "accepted",
+      "reviewedAt": "<offset-datetime>"
+    },
+    "learningObjective": {
+      "statement": "<evidence-backed learning objective>",
+      "objectiveIds": ["<objective-identifier>"],
+      "evidenceDigest": "<64-lowercase-hex-evidence-digest>"
+    },
+    "contentContract": {
+      "contentDigest": "<64-lowercase-hex-content-digest>",
+      "itemCount": "<positive-integer>",
+      "assessmentSignals": ["<assessment-signal-identifier>"]
+    },
+    "mechanicEvidence": [
+      {
+        "mechanicId": "<mechanic-identifier>",
+        "behavior": "<source-backed mechanic behavior>",
+        "evidenceDigest": "<64-lowercase-hex-evidence-digest>"
+      }
+    ],
+    "capabilityAssessment": [
+      {
+        "capabilityId": "<capability-identifier>",
+        "plannedDisposition": "reuse|extend|bespoke",
+        "rationale": "<evidence-backed capability rationale>",
+        "expectedOutcome": "<expected learner outcome>",
+        "evidenceDigest": "<64-lowercase-hex-evidence-digest>"
+      }
+    ],
+    "semanticRoleRequirements": [
+      {
+        "roleId": "<role-identifier>",
+        "state": "<state-identifier>",
+        "behaviorRequirement": "<behavior requirement without selecting an asset>",
+        "evidenceDigest": "<64-lowercase-hex-evidence-digest>"
+      }
+    ],
+    "physicalBehaviorRequirements": [
+      {
+        "requirementId": "<physical-requirement-identifier>",
+        "mediaKind": "animated-visual|audio-cue|interaction|layout|visual-feedback",
+        "directions": ["<directional behavior requirement>"],
+        "clipRequirements": ["<clip or timing requirement identifier>"],
+        "minimumFrameCount": "<positive-integer>",
+        "geometryConstraints": ["<geometry constraint>"],
+        "accessibilityConstraints": ["<accessibility constraint>"],
+        "evidenceDigest": "<64-lowercase-hex-evidence-digest>"
+      }
+    ],
+    "suitabilityAndIngestion": {
+      "status": "blocked-pending-separate-suitability",
+      "dependencyTrackId": "apk_standard_pack_suitability_ingestion_20260728",
+      "evidenceDigest": "<64-lowercase-hex-suitability-evidence-digest>",
+      "assetAdoptionAuthorized": false,
+      "ingestionAuthorized": false
+    },
+    "hostAndRetirementBoundary": {
+      "evidenceDigest": "<64-lowercase-hex-host-boundary-evidence-digest>",
+      "hostAdoptionAuthorized": false,
+      "retirementAuthorized": false
+    },
+    "childTrack": {
+      "trackId": "apk_future_<normalized_identity_with_underscores>_implementation",
+      "scope": "<bounded proposal scope only; no implementation authorization>",
+      "proposalDigest": "<same-intake-digest>"
+    },
+    "authority": {
+      "implementationAuthorized": false,
+      "routeAuthorized": false,
+      "cartridgeAuthorized": false,
+      "catalogAuthorized": false,
+      "semanticMappingAuthorized": false,
+      "assetAdoptionAuthorized": false,
+      "ingestionAuthorized": false,
+      "titleAdoptionAuthorized": false,
+      "migrationAuthorized": false,
+      "cutoverAuthorized": false,
+      "retirementAuthorized": false,
+      "deploymentAuthorized": false,
+      "gitPublicationAuthorized": false
+    }
+  },
+  "child_track_proposal": {
+    "proposalType": "bounded-child-track-proposal",
+    "parentTrackId": "apk_new_game_intake_20260727",
+    "trackId": "apk_future_<normalized_identity_with_underscores>_implementation",
+    "intakeDigest": "<same-intake-digest>",
+    "identity": {
+      "title": "<same-future-title>",
+      "key": "<same-normalized-title-key>"
+    },
+    "requiredEvidence": {
+      "ownerApprovalDigest": "<approval-digest>",
+      "independentReviewDigest": "<review-digest>",
+      "suitabilityDependencyDigest": "<suitability-evidence-digest>"
+    },
+    "legacyDenominatorMembership": false,
+    "authority": {
+      "implementationAuthorized": false,
+      "routeAuthorized": false,
+      "cartridgeAuthorized": false,
+      "catalogAuthorized": false,
+      "semanticMappingAuthorized": false,
+      "assetAdoptionAuthorized": false,
+      "ingestionAuthorized": false,
+      "titleAdoptionAuthorized": false,
+      "migrationAuthorized": false,
+      "cutoverAuthorized": false,
+      "retirementAuthorized": false,
+      "deploymentAuthorized": false,
+      "gitPublicationAuthorized": false
+    }
+  }
+}

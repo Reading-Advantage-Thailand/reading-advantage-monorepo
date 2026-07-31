@@ -1,12 +1,31 @@
 {
   "track_id": "apk_new_game_intake_20260727",
   "type": "chore",
-  "status": "in_progress",
+  "status": "complete",
   "created_at": "2026-07-27T00:00:00Z",
-  "updated_at": "2026-07-31T00:00:00Z",
-  "description": "Fail-closed evidence-first intake for future APK games; it does not authorize placeholder titles or implementation.",
+  "updated_at": "2026-07-31T03:56:33Z",
+  "description": "Fail-closed evidence-first intake for future APK games; the published handoff is a non-authorizing child-track proposal template and rejects the accepted foundation's identities and aliases.",
   "estimated_tasks": 6,
-  "actual_tasks": null,
+  "actual_tasks": 6,
   "depends_on": ["apk_denominator_readiness_t11_integrity_20260727"],
-  "deviation_notes": "No placeholder, generic sample, implementation, route, catalog, or asset adoption is authorized."
+  "deviation_notes": "No placeholder, generic sample, implementation, route, catalog, semantic mapping, asset adoption, ingestion, host adoption, migration, cutover, retirement, deployment, git publication, or release is authorized. Completion means only that the handoff template and crosswalk validation are published; no future game intake has been accepted.",
+  "handoff_template": {
+    "path": "measure/tracks/apk_new_game_intake_20260727/handoff-template-v1.json",
+    "sha256": "7c2b898328228c3be80b2014a2ddde00a37aaa0404ac7db9abfb194a9954b3be"
+  },
+  "crosswalk_validation": {
+    "path": "measure/tracks/apk_new_game_intake_20260727/crosswalk-validation-v1.json",
+    "sha256": "3c4761286dbd5bae50aab4656b793f33efd28b9906b1fee838771ea3aa42ae8e"
+  },
+  "validation": {
+    "baseline_revision": "fd742232c",
+    "source_identity_count": 27,
+    "partition_assignment_count": 29,
+    "reserved_legacy_alias_count": 61,
+    "legacy_aliases_rejected_before_child_track_proposal": true,
+    "operational_authority_granted": false,
+    "future_intake_accepted": false,
+    "focused_python_tests": "6/6",
+    "focused_backend_vitest": "6/6"
+  }
 }

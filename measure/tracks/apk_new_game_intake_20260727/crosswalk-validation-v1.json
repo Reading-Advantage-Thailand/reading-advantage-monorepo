@@ -1,0 +1,39 @@
+{
+  "schema_version": "apk-planned-game-intake-crosswalk-validation.v1",
+  "track_id": "apk_new_game_intake_20260727",
+  "baseline_revision": "fd742232c",
+  "status": "validated",
+  "template": {
+    "path": "measure/tracks/apk_new_game_intake_20260727/handoff-template-v1.json",
+    "sha256": "7c2b898328228c3be80b2014a2ddde00a37aaa0404ac7db9abfb194a9954b3be"
+  },
+  "foundation_crosswalk": {
+    "path": "measure/archive/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+    "sha256": "eb395d3d365115696fc31359406a4e9f126604ca159ea8358a0eb8931c8c5f57",
+    "readiness_receipt_path": "measure/archive/apk_denominator_readiness_t11_integrity_20260727/accepted-readiness-receipt-v1.json",
+    "readiness_receipt_sha256": "d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720",
+    "status": "owner-accepted-active-consumable-for-child-planning",
+    "source_identity_count": 27,
+    "partition_assignment_count": 29,
+    "historical_label_assignment_count": 2
+  },
+  "legacy_identity_gate": {
+    "reserved_alias_count": 61,
+    "categories": {
+      "canonical_title_keys": 29,
+      "articleless_title_aliases": 3,
+      "historical_source_aliases": 2,
+      "source_identity_aliases": 27
+    },
+    "reject_before_child_track_proposal": true,
+    "backend_contract_path": "packages/backend/src/modules/planned-game-intake/contracts.ts",
+    "backend_contract_export": "legacyDenominatorIdentityKeys",
+    "normalization_is_shared_with_backend": true,
+    "legacy_denominator_membership_is_always_false_for_future_intake": true
+  },
+  "authorization_boundary": {
+    "statement": "Validation proves only that the template is bound to the accepted foundation boundary and that legacy identities and aliases are rejected before future intake. It does not authorize implementation, routes, cartridges, catalog entries, semantic mappings, assets, ingestion, host adoption, migration, cutover, retirement, deployment, publication, or release.",
+    "child_track_proposal_only": true,
+    "all_operational_authority_false": true
+  }
+}
