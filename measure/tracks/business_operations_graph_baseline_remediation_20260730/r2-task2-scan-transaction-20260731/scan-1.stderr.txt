@@ -1,0 +1,938 @@
+Stage project_discovery: 164ms; RSS 105 MiB
+Stage project_discovery: 20444ms; RSS 204 MiB
+Stage primary_extraction [1/133]: 1851ms; RSS 262 MiB
+Stage schema_pass [1/133]: 49ms; RSS 264 MiB
+Stage framework_pass [1/133]: 84ms; RSS 269 MiB
+Stage string_literal_pass [1/133]: 69ms; RSS 272 MiB
+Stage param_flow_pass [1/133]: 11ms; RSS 272 MiB
+Stage route_pass [1/133]: 57ms; RSS 273 MiB
+Batch 1/133: 31 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/accounts/tsconfig.json in 2516ms; RSS 273 MiB
+Stage primary_extraction [2/133]: 17ms; RSS 277 MiB
+Stage schema_pass [2/133]: 17ms; RSS 277 MiB
+Stage framework_pass [2/133]: 1ms; RSS 277 MiB
+Stage string_literal_pass [2/133]: 1ms; RSS 277 MiB
+Stage param_flow_pass [2/133]: 7ms; RSS 277 MiB
+Stage route_pass [2/133]: 1ms; RSS 277 MiB
+Batch 2/133: 3 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/activity-vinext-fixture/tsconfig.json in 95ms; RSS 277 MiB
+Stage primary_extraction [3/133]: 1990ms; RSS 213 MiB
+Stage schema_pass [3/133]: 131ms; RSS 223 MiB
+Stage framework_pass [3/133]: 222ms; RSS 238 MiB
+Stage string_literal_pass [3/133]: 145ms; RSS 238 MiB
+Stage param_flow_pass [3/133]: 9ms; RSS 238 MiB
+Stage route_pass [3/133]: 229ms; RSS 239 MiB
+Batch 3/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/advantage-games/tsconfig.json in 3180ms; RSS 239 MiB
+Stage primary_extraction [4/133]: 93ms; RSS 242 MiB
+Stage schema_pass [4/133]: 661ms; RSS 197 MiB
+Stage framework_pass [4/133]: 6ms; RSS 195 MiB
+Stage string_literal_pass [4/133]: 3ms; RSS 195 MiB
+Stage param_flow_pass [4/133]: 5ms; RSS 195 MiB
+Stage route_pass [4/133]: 12ms; RSS 196 MiB
+Batch 4/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/advantage-games/tsconfig.json in 998ms; RSS 196 MiB
+Stage primary_extraction [5/133]: 6594ms; RSS 246 MiB
+Stage schema_pass [5/133]: 186ms; RSS 245 MiB
+Stage framework_pass [5/133]: 701ms; RSS 260 MiB
+Stage string_literal_pass [5/133]: 261ms; RSS 260 MiB
+Stage param_flow_pass [5/133]: 56ms; RSS 260 MiB
+Stage route_pass [5/133]: 400ms; RSS 260 MiB
+Batch 5/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/advantage-games/tsconfig.json in 9345ms; RSS 261 MiB
+Stage primary_extraction [6/133]: 3696ms; RSS 266 MiB
+Stage schema_pass [6/133]: 81ms; RSS 270 MiB
+Stage framework_pass [6/133]: 432ms; RSS 284 MiB
+Stage string_literal_pass [6/133]: 106ms; RSS 288 MiB
+Stage param_flow_pass [6/133]: 177ms; RSS 288 MiB
+Stage route_pass [6/133]: 249ms; RSS 289 MiB
+Batch 6/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/advantage-games/tsconfig.json in 5068ms; RSS 290 MiB
+Stage primary_extraction [7/133]: 2244ms; RSS 226 MiB
+Stage schema_pass [7/133]: 98ms; RSS 236 MiB
+Stage framework_pass [7/133]: 218ms; RSS 245 MiB
+Stage string_literal_pass [7/133]: 201ms; RSS 245 MiB
+Stage param_flow_pass [7/133]: 9ms; RSS 245 MiB
+Stage route_pass [7/133]: 100ms; RSS 256 MiB
+Batch 7/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/advantage-games/tsconfig.json in 3782ms; RSS 257 MiB
+Stage primary_extraction [8/133]: 548ms; RSS 220 MiB
+Stage schema_pass [8/133]: 30ms; RSS 224 MiB
+Stage framework_pass [8/133]: 47ms; RSS 231 MiB
+Stage string_literal_pass [8/133]: 87ms; RSS 226 MiB
+Stage param_flow_pass [8/133]: 7ms; RSS 226 MiB
+Stage route_pass [8/133]: 51ms; RSS 227 MiB
+Batch 8/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/advantage-games/tsconfig.json in 1004ms; RSS 227 MiB
+Stage primary_extraction [9/133]: 2054ms; RSS 250 MiB
+Stage schema_pass [9/133]: 241ms; RSS 267 MiB
+Stage framework_pass [9/133]: 194ms; RSS 274 MiB
+Stage string_literal_pass [9/133]: 225ms; RSS 280 MiB
+Stage param_flow_pass [9/133]: 70ms; RSS 281 MiB
+Stage route_pass [9/133]: 100ms; RSS 281 MiB
+Batch 9/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/advantage-games/tsconfig.json in 3425ms; RSS 281 MiB
+Stage primary_extraction [10/133]: 1484ms; RSS 243 MiB
+Stage schema_pass [10/133]: 249ms; RSS 249 MiB
+Stage framework_pass [10/133]: 141ms; RSS 256 MiB
+Stage string_literal_pass [10/133]: 40ms; RSS 256 MiB
+Stage param_flow_pass [10/133]: 34ms; RSS 253 MiB
+Stage route_pass [10/133]: 67ms; RSS 253 MiB
+Batch 10/133: 20 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/advantage-games/tsconfig.json in 2241ms; RSS 253 MiB
+Stage primary_extraction [11/133]: 1679ms; RSS 246 MiB
+Stage schema_pass [11/133]: 242ms; RSS 253 MiB
+Stage framework_pass [11/133]: 100ms; RSS 256 MiB
+Stage string_literal_pass [11/133]: 96ms; RSS 271 MiB
+Stage param_flow_pass [11/133]: 14ms; RSS 271 MiB
+Stage route_pass [11/133]: 248ms; RSS 278 MiB
+Batch 11/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/codecamp-advantage/tsconfig.json in 2599ms; RSS 279 MiB
+Stage primary_extraction [12/133]: 835ms; RSS 229 MiB
+Stage schema_pass [12/133]: 89ms; RSS 235 MiB
+Stage framework_pass [12/133]: 82ms; RSS 238 MiB
+Stage string_literal_pass [12/133]: 31ms; RSS 238 MiB
+Stage param_flow_pass [12/133]: 9ms; RSS 238 MiB
+Stage route_pass [12/133]: 40ms; RSS 239 MiB
+Batch 12/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/codecamp-advantage/tsconfig.json in 1192ms; RSS 239 MiB
+Stage primary_extraction [13/133]: 797ms; RSS 216 MiB
+Stage schema_pass [13/133]: 17ms; RSS 217 MiB
+Stage framework_pass [13/133]: 43ms; RSS 218 MiB
+Stage string_literal_pass [13/133]: 25ms; RSS 219 MiB
+Stage param_flow_pass [13/133]: 4ms; RSS 219 MiB
+Stage route_pass [13/133]: 24ms; RSS 221 MiB
+Batch 13/133: 13 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/codecamp-advantage/tsconfig.json in 1064ms; RSS 221 MiB
+Stage primary_extraction [14/133]: 1555ms; RSS 246 MiB
+Stage schema_pass [14/133]: 129ms; RSS 253 MiB
+Stage framework_pass [14/133]: 51ms; RSS 258 MiB
+Stage string_literal_pass [14/133]: 46ms; RSS 259 MiB
+Stage param_flow_pass [14/133]: 14ms; RSS 259 MiB
+Stage route_pass [14/133]: 180ms; RSS 261 MiB
+Batch 14/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/marketing/tsconfig.json in 2519ms; RSS 261 MiB
+Stage primary_extraction [15/133]: 1391ms; RSS 252 MiB
+Stage schema_pass [15/133]: 76ms; RSS 249 MiB
+Stage framework_pass [15/133]: 115ms; RSS 260 MiB
+Stage string_literal_pass [15/133]: 59ms; RSS 266 MiB
+Stage param_flow_pass [15/133]: 6ms; RSS 266 MiB
+Stage route_pass [15/133]: 159ms; RSS 267 MiB
+Batch 15/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/marketing/tsconfig.json in 2200ms; RSS 267 MiB
+Stage primary_extraction [16/133]: 643ms; RSS 227 MiB
+Stage schema_pass [16/133]: 37ms; RSS 229 MiB
+Stage framework_pass [16/133]: 42ms; RSS 232 MiB
+Stage string_literal_pass [16/133]: 15ms; RSS 234 MiB
+Stage param_flow_pass [16/133]: 4ms; RSS 234 MiB
+Stage route_pass [16/133]: 77ms; RSS 240 MiB
+Batch 16/133: 20 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/marketing/tsconfig.json in 936ms; RSS 240 MiB
+Stage primary_extraction [17/133]: 1463ms; RSS 256 MiB
+Stage schema_pass [17/133]: 72ms; RSS 263 MiB
+Stage framework_pass [17/133]: 122ms; RSS 277 MiB
+Stage string_literal_pass [17/133]: 179ms; RSS 285 MiB
+Stage param_flow_pass [17/133]: 16ms; RSS 284 MiB
+Stage route_pass [17/133]: 88ms; RSS 284 MiB
+Batch 17/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/primary-advantage/tsconfig.json in 2405ms; RSS 284 MiB
+Stage primary_extraction [18/133]: 2090ms; RSS 264 MiB
+Stage schema_pass [18/133]: 93ms; RSS 276 MiB
+Stage framework_pass [18/133]: 215ms; RSS 295 MiB
+Stage string_literal_pass [18/133]: 118ms; RSS 297 MiB
+Stage param_flow_pass [18/133]: 12ms; RSS 297 MiB
+Stage route_pass [18/133]: 80ms; RSS 298 MiB
+Batch 18/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/primary-advantage/tsconfig.json in 2872ms; RSS 298 MiB
+Stage primary_extraction [19/133]: 627ms; RSS 241 MiB
+Stage schema_pass [19/133]: 9ms; RSS 242 MiB
+Stage framework_pass [19/133]: 23ms; RSS 243 MiB
+Stage string_literal_pass [19/133]: 14ms; RSS 244 MiB
+Stage param_flow_pass [19/133]: 5ms; RSS 244 MiB
+Stage route_pass [19/133]: 29ms; RSS 247 MiB
+Batch 19/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/primary-advantage/tsconfig.json in 803ms; RSS 247 MiB
+Stage primary_extraction [20/133]: 1723ms; RSS 265 MiB
+Stage schema_pass [20/133]: 24ms; RSS 265 MiB
+Stage framework_pass [20/133]: 78ms; RSS 268 MiB
+Stage string_literal_pass [20/133]: 55ms; RSS 274 MiB
+Stage param_flow_pass [20/133]: 25ms; RSS 274 MiB
+Stage route_pass [20/133]: 80ms; RSS 285 MiB
+Batch 20/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/primary-advantage/tsconfig.json in 2227ms; RSS 285 MiB
+Stage primary_extraction [21/133]: 2320ms; RSS 297 MiB
+Stage schema_pass [21/133]: 58ms; RSS 297 MiB
+Stage framework_pass [21/133]: 320ms; RSS 316 MiB
+Stage string_literal_pass [21/133]: 112ms; RSS 317 MiB
+Stage param_flow_pass [21/133]: 8ms; RSS 317 MiB
+Stage route_pass [21/133]: 193ms; RSS 319 MiB
+Batch 21/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/primary-advantage/tsconfig.json in 3250ms; RSS 319 MiB
+Stage primary_extraction [22/133]: 1877ms; RSS 282 MiB
+Stage schema_pass [22/133]: 76ms; RSS 294 MiB
+Stage framework_pass [22/133]: 332ms; RSS 312 MiB
+Stage string_literal_pass [22/133]: 159ms; RSS 311 MiB
+Stage param_flow_pass [22/133]: 8ms; RSS 312 MiB
+Stage route_pass [22/133]: 141ms; RSS 321 MiB
+Batch 22/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/primary-advantage/tsconfig.json in 2777ms; RSS 321 MiB
+Stage primary_extraction [23/133]: 4533ms; RSS 333 MiB
+Stage schema_pass [23/133]: 135ms; RSS 353 MiB
+Stage framework_pass [23/133]: 400ms; RSS 371 MiB
+Stage string_literal_pass [23/133]: 170ms; RSS 383 MiB
+Stage param_flow_pass [23/133]: 311ms; RSS 385 MiB
+Stage route_pass [23/133]: 193ms; RSS 384 MiB
+Batch 23/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/primary-advantage/tsconfig.json in 6011ms; RSS 384 MiB
+Stage primary_extraction [24/133]: 2633ms; RSS 309 MiB
+Stage schema_pass [24/133]: 184ms; RSS 317 MiB
+Stage framework_pass [24/133]: 222ms; RSS 327 MiB
+Stage string_literal_pass [24/133]: 168ms; RSS 336 MiB
+Stage param_flow_pass [24/133]: 9ms; RSS 336 MiB
+Stage route_pass [24/133]: 123ms; RSS 337 MiB
+Batch 24/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/primary-advantage/tsconfig.json in 3678ms; RSS 337 MiB
+Stage primary_extraction [25/133]: 2856ms; RSS 326 MiB
+Stage schema_pass [25/133]: 118ms; RSS 335 MiB
+Stage framework_pass [25/133]: 350ms; RSS 353 MiB
+Stage string_literal_pass [25/133]: 157ms; RSS 354 MiB
+Stage param_flow_pass [25/133]: 8ms; RSS 354 MiB
+Stage route_pass [25/133]: 216ms; RSS 356 MiB
+Batch 25/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/primary-advantage/tsconfig.json in 4032ms; RSS 356 MiB
+Stage primary_extraction [26/133]: 985ms; RSS 292 MiB
+Stage schema_pass [26/133]: 41ms; RSS 298 MiB
+Stage framework_pass [26/133]: 94ms; RSS 310 MiB
+Stage string_literal_pass [26/133]: 99ms; RSS 315 MiB
+Stage param_flow_pass [26/133]: 59ms; RSS 314 MiB
+Stage route_pass [26/133]: 43ms; RSS 314 MiB
+Batch 26/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/primary-advantage/tsconfig.json in 1451ms; RSS 314 MiB
+Stage primary_extraction [27/133]: 246ms; RSS 320 MiB
+Stage schema_pass [27/133]: 25ms; RSS 320 MiB
+Stage framework_pass [27/133]: 10ms; RSS 319 MiB
+Stage string_literal_pass [27/133]: 9ms; RSS 309 MiB
+Stage param_flow_pass [27/133]: 13ms; RSS 301 MiB
+Stage route_pass [27/133]: 23ms; RSS 288 MiB
+Batch 27/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/primary-advantage/tsconfig.json in 405ms; RSS 286 MiB
+Stage primary_extraction [28/133]: 2082ms; RSS 304 MiB
+Stage schema_pass [28/133]: 189ms; RSS 313 MiB
+Stage framework_pass [28/133]: 219ms; RSS 336 MiB
+Stage string_literal_pass [28/133]: 107ms; RSS 335 MiB
+Stage param_flow_pass [28/133]: 31ms; RSS 335 MiB
+Stage route_pass [28/133]: 81ms; RSS 335 MiB
+Batch 28/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/primary-advantage/tsconfig.json in 2882ms; RSS 336 MiB
+Stage primary_extraction [29/133]: 1826ms; RSS 308 MiB
+Stage schema_pass [29/133]: 46ms; RSS 309 MiB
+Stage framework_pass [29/133]: 111ms; RSS 325 MiB
+Stage string_literal_pass [29/133]: 186ms; RSS 339 MiB
+Stage param_flow_pass [29/133]: 13ms; RSS 339 MiB
+Stage route_pass [29/133]: 188ms; RSS 341 MiB
+Batch 29/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/primary-advantage/tsconfig.json in 2604ms; RSS 341 MiB
+Stage primary_extraction [30/133]: 22ms; RSS 343 MiB
+Stage schema_pass [30/133]: 14ms; RSS 343 MiB
+Stage framework_pass [30/133]: 2ms; RSS 343 MiB
+Stage string_literal_pass [30/133]: 1ms; RSS 343 MiB
+Stage param_flow_pass [30/133]: 1ms; RSS 343 MiB
+Stage route_pass [30/133]: 3ms; RSS 343 MiB
+Batch 30/133: 4 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/primary-advantage/tsconfig.json in 58ms; RSS 343 MiB
+Stage primary_extraction [31/133]: 542ms; RSS 304 MiB
+Stage schema_pass [31/133]: 61ms; RSS 309 MiB
+Stage framework_pass [31/133]: 44ms; RSS 312 MiB
+Stage string_literal_pass [31/133]: 33ms; RSS 316 MiB
+Stage param_flow_pass [31/133]: 12ms; RSS 316 MiB
+Stage route_pass [31/133]: 88ms; RSS 328 MiB
+Batch 31/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 880ms; RSS 328 MiB
+Stage primary_extraction [32/133]: 836ms; RSS 322 MiB
+Stage schema_pass [32/133]: 139ms; RSS 327 MiB
+Stage framework_pass [32/133]: 13ms; RSS 327 MiB
+Stage string_literal_pass [32/133]: 8ms; RSS 327 MiB
+Stage param_flow_pass [32/133]: 8ms; RSS 327 MiB
+Stage route_pass [32/133]: 161ms; RSS 349 MiB
+Batch 32/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 1767ms; RSS 349 MiB
+Stage primary_extraction [33/133]: 1207ms; RSS 321 MiB
+Stage schema_pass [33/133]: 92ms; RSS 329 MiB
+Stage framework_pass [33/133]: 54ms; RSS 328 MiB
+Stage string_literal_pass [33/133]: 35ms; RSS 329 MiB
+Stage param_flow_pass [33/133]: 3ms; RSS 329 MiB
+Stage route_pass [33/133]: 77ms; RSS 340 MiB
+Batch 33/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 1619ms; RSS 340 MiB
+Stage primary_extraction [34/133]: 376ms; RSS 310 MiB
+Stage schema_pass [34/133]: 10ms; RSS 301 MiB
+Stage framework_pass [34/133]: 29ms; RSS 301 MiB
+Stage string_literal_pass [34/133]: 21ms; RSS 305 MiB
+Stage param_flow_pass [34/133]: 4ms; RSS 305 MiB
+Stage route_pass [34/133]: 36ms; RSS 312 MiB
+Batch 34/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 541ms; RSS 312 MiB
+Stage primary_extraction [35/133]: 493ms; RSS 303 MiB
+Stage schema_pass [35/133]: 20ms; RSS 306 MiB
+Stage framework_pass [35/133]: 47ms; RSS 319 MiB
+Stage string_literal_pass [35/133]: 36ms; RSS 325 MiB
+Stage param_flow_pass [35/133]: 4ms; RSS 326 MiB
+Stage route_pass [35/133]: 50ms; RSS 335 MiB
+Batch 35/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 719ms; RSS 336 MiB
+Stage primary_extraction [36/133]: 527ms; RSS 303 MiB
+Stage schema_pass [36/133]: 15ms; RSS 304 MiB
+Stage framework_pass [36/133]: 15ms; RSS 305 MiB
+Stage string_literal_pass [36/133]: 12ms; RSS 306 MiB
+Stage param_flow_pass [36/133]: 9ms; RSS 307 MiB
+Stage route_pass [36/133]: 31ms; RSS 309 MiB
+Batch 36/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 750ms; RSS 310 MiB
+Stage primary_extraction [37/133]: 319ms; RSS 300 MiB
+Stage schema_pass [37/133]: 10ms; RSS 300 MiB
+Stage framework_pass [37/133]: 8ms; RSS 301 MiB
+Stage string_literal_pass [37/133]: 6ms; RSS 301 MiB
+Stage param_flow_pass [37/133]: 6ms; RSS 301 MiB
+Stage route_pass [37/133]: 20ms; RSS 303 MiB
+Batch 37/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 421ms; RSS 303 MiB
+Stage primary_extraction [38/133]: 546ms; RSS 304 MiB
+Stage schema_pass [38/133]: 12ms; RSS 305 MiB
+Stage framework_pass [38/133]: 18ms; RSS 307 MiB
+Stage string_literal_pass [38/133]: 15ms; RSS 307 MiB
+Stage param_flow_pass [38/133]: 6ms; RSS 307 MiB
+Stage route_pass [38/133]: 27ms; RSS 310 MiB
+Batch 38/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 729ms; RSS 310 MiB
+Stage primary_extraction [39/133]: 297ms; RSS 313 MiB
+Stage schema_pass [39/133]: 10ms; RSS 314 MiB
+Stage framework_pass [39/133]: 10ms; RSS 314 MiB
+Stage string_literal_pass [39/133]: 6ms; RSS 315 MiB
+Stage param_flow_pass [39/133]: 5ms; RSS 316 MiB
+Stage route_pass [39/133]: 17ms; RSS 317 MiB
+Batch 39/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 500ms; RSS 317 MiB
+Stage primary_extraction [40/133]: 419ms; RSS 319 MiB
+Stage schema_pass [40/133]: 14ms; RSS 321 MiB
+Stage framework_pass [40/133]: 17ms; RSS 323 MiB
+Stage string_literal_pass [40/133]: 14ms; RSS 325 MiB
+Stage param_flow_pass [40/133]: 6ms; RSS 325 MiB
+Stage route_pass [40/133]: 35ms; RSS 331 MiB
+Batch 40/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 600ms; RSS 332 MiB
+Stage primary_extraction [41/133]: 378ms; RSS 324 MiB
+Stage schema_pass [41/133]: 13ms; RSS 326 MiB
+Stage framework_pass [41/133]: 20ms; RSS 329 MiB
+Stage string_literal_pass [41/133]: 15ms; RSS 331 MiB
+Stage param_flow_pass [41/133]: 7ms; RSS 331 MiB
+Stage route_pass [41/133]: 31ms; RSS 336 MiB
+Batch 41/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 525ms; RSS 336 MiB
+Stage primary_extraction [42/133]: 2007ms; RSS 367 MiB
+Stage schema_pass [42/133]: 48ms; RSS 368 MiB
+Stage framework_pass [42/133]: 142ms; RSS 384 MiB
+Stage string_literal_pass [42/133]: 130ms; RSS 402 MiB
+Stage param_flow_pass [42/133]: 9ms; RSS 402 MiB
+Stage route_pass [42/133]: 166ms; RSS 411 MiB
+Batch 42/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 2640ms; RSS 411 MiB
+Stage primary_extraction [43/133]: 2388ms; RSS 373 MiB
+Stage schema_pass [43/133]: 91ms; RSS 382 MiB
+Stage framework_pass [43/133]: 373ms; RSS 415 MiB
+Stage string_literal_pass [43/133]: 178ms; RSS 415 MiB
+Stage param_flow_pass [43/133]: 8ms; RSS 415 MiB
+Stage route_pass [43/133]: 140ms; RSS 415 MiB
+Batch 43/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 3406ms; RSS 419 MiB
+Stage primary_extraction [44/133]: 2084ms; RSS 387 MiB
+Stage schema_pass [44/133]: 51ms; RSS 387 MiB
+Stage framework_pass [44/133]: 196ms; RSS 411 MiB
+Stage string_literal_pass [44/133]: 277ms; RSS 433 MiB
+Stage param_flow_pass [44/133]: 14ms; RSS 434 MiB
+Stage route_pass [44/133]: 122ms; RSS 435 MiB
+Batch 44/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 2937ms; RSS 435 MiB
+Stage primary_extraction [45/133]: 1198ms; RSS 360 MiB
+Stage schema_pass [45/133]: 61ms; RSS 371 MiB
+Stage framework_pass [45/133]: 168ms; RSS 394 MiB
+Stage string_literal_pass [45/133]: 51ms; RSS 394 MiB
+Stage param_flow_pass [45/133]: 11ms; RSS 394 MiB
+Stage route_pass [45/133]: 111ms; RSS 393 MiB
+Batch 45/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 1796ms; RSS 393 MiB
+Stage primary_extraction [46/133]: 2102ms; RSS 389 MiB
+Stage schema_pass [46/133]: 68ms; RSS 392 MiB
+Stage framework_pass [46/133]: 257ms; RSS 422 MiB
+Stage string_literal_pass [46/133]: 187ms; RSS 436 MiB
+Stage param_flow_pass [46/133]: 37ms; RSS 436 MiB
+Stage route_pass [46/133]: 104ms; RSS 436 MiB
+Batch 46/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 2944ms; RSS 437 MiB
+Stage primary_extraction [47/133]: 1302ms; RSS 373 MiB
+Stage schema_pass [47/133]: 56ms; RSS 379 MiB
+Stage framework_pass [47/133]: 103ms; RSS 397 MiB
+Stage string_literal_pass [47/133]: 77ms; RSS 400 MiB
+Stage param_flow_pass [47/133]: 5ms; RSS 401 MiB
+Stage route_pass [47/133]: 218ms; RSS 407 MiB
+Batch 47/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 1890ms; RSS 407 MiB
+Stage primary_extraction [48/133]: 2626ms; RSS 403 MiB
+Stage schema_pass [48/133]: 207ms; RSS 420 MiB
+Stage framework_pass [48/133]: 343ms; RSS 440 MiB
+Stage string_literal_pass [48/133]: 122ms; RSS 440 MiB
+Stage param_flow_pass [48/133]: 7ms; RSS 440 MiB
+Stage route_pass [48/133]: 409ms; RSS 459 MiB
+Batch 48/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 3951ms; RSS 460 MiB
+Stage primary_extraction [49/133]: 2948ms; RSS 409 MiB
+Stage schema_pass [49/133]: 232ms; RSS 425 MiB
+Stage framework_pass [49/133]: 347ms; RSS 451 MiB
+Stage string_literal_pass [49/133]: 202ms; RSS 451 MiB
+Stage param_flow_pass [49/133]: 15ms; RSS 452 MiB
+Stage route_pass [49/133]: 384ms; RSS 470 MiB
+Batch 49/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 4358ms; RSS 471 MiB
+Stage primary_extraction [50/133]: 2046ms; RSS 409 MiB
+Stage schema_pass [50/133]: 53ms; RSS 409 MiB
+Stage framework_pass [50/133]: 253ms; RSS 424 MiB
+Stage string_literal_pass [50/133]: 129ms; RSS 447 MiB
+Stage param_flow_pass [50/133]: 25ms; RSS 447 MiB
+Stage route_pass [50/133]: 185ms; RSS 462 MiB
+Batch 50/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 2923ms; RSS 463 MiB
+Stage primary_extraction [51/133]: 2683ms; RSS 416 MiB
+Stage schema_pass [51/133]: 70ms; RSS 419 MiB
+Stage framework_pass [51/133]: 717ms; RSS 452 MiB
+Stage string_literal_pass [51/133]: 297ms; RSS 470 MiB
+Stage param_flow_pass [51/133]: 24ms; RSS 470 MiB
+Stage route_pass [51/133]: 241ms; RSS 470 MiB
+Batch 51/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 4321ms; RSS 470 MiB
+Stage primary_extraction [52/133]: 2215ms; RSS 392 MiB
+Stage schema_pass [52/133]: 73ms; RSS 404 MiB
+Stage framework_pass [52/133]: 384ms; RSS 431 MiB
+Stage string_literal_pass [52/133]: 93ms; RSS 431 MiB
+Stage param_flow_pass [52/133]: 9ms; RSS 431 MiB
+Stage route_pass [52/133]: 70ms; RSS 431 MiB
+Batch 52/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 3067ms; RSS 431 MiB
+Stage primary_extraction [53/133]: 636ms; RSS 368 MiB
+Stage schema_pass [53/133]: 30ms; RSS 370 MiB
+Stage framework_pass [53/133]: 22ms; RSS 372 MiB
+Stage string_literal_pass [53/133]: 22ms; RSS 373 MiB
+Stage param_flow_pass [53/133]: 8ms; RSS 374 MiB
+Stage route_pass [53/133]: 59ms; RSS 382 MiB
+Batch 53/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 875ms; RSS 382 MiB
+Stage primary_extraction [54/133]: 1104ms; RSS 389 MiB
+Stage schema_pass [54/133]: 47ms; RSS 395 MiB
+Stage framework_pass [54/133]: 113ms; RSS 404 MiB
+Stage string_literal_pass [54/133]: 78ms; RSS 417 MiB
+Stage param_flow_pass [54/133]: 5ms; RSS 417 MiB
+Stage route_pass [54/133]: 148ms; RSS 432 MiB
+Batch 54/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 1596ms; RSS 433 MiB
+Stage primary_extraction [55/133]: 907ms; RSS 378 MiB
+Stage schema_pass [55/133]: 59ms; RSS 383 MiB
+Stage framework_pass [55/133]: 59ms; RSS 394 MiB
+Stage string_literal_pass [55/133]: 44ms; RSS 400 MiB
+Stage param_flow_pass [55/133]: 7ms; RSS 400 MiB
+Stage route_pass [55/133]: 115ms; RSS 419 MiB
+Batch 55/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 1462ms; RSS 420 MiB
+Stage primary_extraction [56/133]: 989ms; RSS 403 MiB
+Stage schema_pass [56/133]: 104ms; RSS 417 MiB
+Stage framework_pass [56/133]: 95ms; RSS 432 MiB
+Stage string_literal_pass [56/133]: 59ms; RSS 441 MiB
+Stage param_flow_pass [56/133]: 44ms; RSS 443 MiB
+Stage route_pass [56/133]: 164ms; RSS 448 MiB
+Batch 56/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 1717ms; RSS 448 MiB
+Stage primary_extraction [57/133]: 1304ms; RSS 407 MiB
+Stage schema_pass [57/133]: 163ms; RSS 433 MiB
+Stage framework_pass [57/133]: 42ms; RSS 442 MiB
+Stage string_literal_pass [57/133]: 29ms; RSS 447 MiB
+Stage param_flow_pass [57/133]: 7ms; RSS 447 MiB
+Stage route_pass [57/133]: 201ms; RSS 450 MiB
+Batch 57/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 1970ms; RSS 450 MiB
+Stage primary_extraction [58/133]: 3500ms; RSS 488 MiB
+Stage schema_pass [58/133]: 84ms; RSS 489 MiB
+Stage framework_pass [58/133]: 215ms; RSS 528 MiB
+Stage string_literal_pass [58/133]: 278ms; RSS 551 MiB
+Stage param_flow_pass [58/133]: 23ms; RSS 552 MiB
+Stage route_pass [58/133]: 128ms; RSS 552 MiB
+Batch 58/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 4488ms; RSS 553 MiB
+Stage primary_extraction [59/133]: 6674ms; RSS 532 MiB
+Stage schema_pass [59/133]: 182ms; RSS 537 MiB
+Stage framework_pass [59/133]: 707ms; RSS 585 MiB
+Stage string_literal_pass [59/133]: 199ms; RSS 585 MiB
+Stage param_flow_pass [59/133]: 71ms; RSS 585 MiB
+Stage route_pass [59/133]: 579ms; RSS 592 MiB
+Batch 59/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 8882ms; RSS 594 MiB
+Stage primary_extraction [60/133]: 3771ms; RSS 536 MiB
+Stage schema_pass [60/133]: 79ms; RSS 535 MiB
+Stage framework_pass [60/133]: 195ms; RSS 552 MiB
+Stage string_literal_pass [60/133]: 248ms; RSS 579 MiB
+Stage param_flow_pass [60/133]: 73ms; RSS 579 MiB
+Stage route_pass [60/133]: 518ms; RSS 605 MiB
+Batch 60/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 5278ms; RSS 605 MiB
+Stage primary_extraction [61/133]: 711ms; RSS 449 MiB
+Stage schema_pass [61/133]: 53ms; RSS 453 MiB
+Stage framework_pass [61/133]: 42ms; RSS 459 MiB
+Stage string_literal_pass [61/133]: 30ms; RSS 464 MiB
+Stage param_flow_pass [61/133]: 7ms; RSS 464 MiB
+Stage route_pass [61/133]: 75ms; RSS 477 MiB
+Batch 61/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 1042ms; RSS 477 MiB
+Stage primary_extraction [62/133]: 166ms; RSS 494 MiB
+Stage schema_pass [62/133]: 13ms; RSS 493 MiB
+Stage framework_pass [62/133]: 4ms; RSS 493 MiB
+Stage string_literal_pass [62/133]: 4ms; RSS 493 MiB
+Stage param_flow_pass [62/133]: 2ms; RSS 493 MiB
+Stage route_pass [62/133]: 20ms; RSS 494 MiB
+Batch 62/133: 21 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/reading-advantage/tsconfig.json in 266ms; RSS 494 MiB
+Stage primary_extraction [63/133]: 704ms; RSS 409 MiB
+Stage schema_pass [63/133]: 80ms; RSS 412 MiB
+Stage framework_pass [63/133]: 50ms; RSS 418 MiB
+Stage string_literal_pass [63/133]: 37ms; RSS 423 MiB
+Stage param_flow_pass [63/133]: 4ms; RSS 423 MiB
+Stage route_pass [63/133]: 104ms; RSS 433 MiB
+Batch 63/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/sales-advantage/tsconfig.json in 1086ms; RSS 433 MiB
+Stage primary_extraction [64/133]: 694ms; RSS 418 MiB
+Stage schema_pass [64/133]: 81ms; RSS 424 MiB
+Stage framework_pass [64/133]: 74ms; RSS 434 MiB
+Stage string_literal_pass [64/133]: 39ms; RSS 440 MiB
+Stage param_flow_pass [64/133]: 12ms; RSS 441 MiB
+Stage route_pass [64/133]: 202ms; RSS 457 MiB
+Batch 64/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/sales-advantage/tsconfig.json in 1337ms; RSS 457 MiB
+Stage primary_extraction [65/133]: 930ms; RSS 413 MiB
+Stage schema_pass [65/133]: 96ms; RSS 423 MiB
+Stage framework_pass [65/133]: 43ms; RSS 428 MiB
+Stage string_literal_pass [65/133]: 31ms; RSS 432 MiB
+Stage param_flow_pass [65/133]: 23ms; RSS 433 MiB
+Stage route_pass [65/133]: 105ms; RSS 448 MiB
+Batch 65/133: 21 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/sales-advantage/tsconfig.json in 1412ms; RSS 448 MiB
+Stage primary_extraction [66/133]: 657ms; RSS 418 MiB
+Stage schema_pass [66/133]: 34ms; RSS 421 MiB
+Stage framework_pass [66/133]: 51ms; RSS 425 MiB
+Stage string_literal_pass [66/133]: 27ms; RSS 429 MiB
+Stage param_flow_pass [66/133]: 8ms; RSS 429 MiB
+Stage route_pass [66/133]: 68ms; RSS 440 MiB
+Batch 66/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/science-advantage/tsconfig.json in 936ms; RSS 440 MiB
+Stage primary_extraction [67/133]: 1216ms; RSS 452 MiB
+Stage schema_pass [67/133]: 107ms; RSS 464 MiB
+Stage framework_pass [67/133]: 79ms; RSS 478 MiB
+Stage string_literal_pass [67/133]: 57ms; RSS 487 MiB
+Stage param_flow_pass [67/133]: 11ms; RSS 488 MiB
+Stage route_pass [67/133]: 275ms; RSS 498 MiB
+Batch 67/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/science-advantage/tsconfig.json in 2146ms; RSS 498 MiB
+Stage primary_extraction [68/133]: 1218ms; RSS 461 MiB
+Stage schema_pass [68/133]: 109ms; RSS 471 MiB
+Stage framework_pass [68/133]: 80ms; RSS 485 MiB
+Stage string_literal_pass [68/133]: 55ms; RSS 494 MiB
+Stage param_flow_pass [68/133]: 11ms; RSS 494 MiB
+Stage route_pass [68/133]: 219ms; RSS 517 MiB
+Batch 68/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/science-advantage/tsconfig.json in 1856ms; RSS 517 MiB
+Stage primary_extraction [69/133]: 714ms; RSS 448 MiB
+Stage schema_pass [69/133]: 68ms; RSS 456 MiB
+Stage framework_pass [69/133]: 57ms; RSS 464 MiB
+Stage string_literal_pass [69/133]: 39ms; RSS 471 MiB
+Stage param_flow_pass [69/133]: 12ms; RSS 472 MiB
+Stage route_pass [69/133]: 189ms; RSS 495 MiB
+Batch 69/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/science-advantage/tsconfig.json in 1248ms; RSS 495 MiB
+Stage primary_extraction [70/133]: 1217ms; RSS 462 MiB
+Stage schema_pass [70/133]: 73ms; RSS 472 MiB
+Stage framework_pass [70/133]: 151ms; RSS 500 MiB
+Stage string_literal_pass [70/133]: 116ms; RSS 519 MiB
+Stage param_flow_pass [70/133]: 15ms; RSS 520 MiB
+Stage route_pass [70/133]: 153ms; RSS 519 MiB
+Batch 70/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/science-advantage/tsconfig.json in 1925ms; RSS 524 MiB
+Stage primary_extraction [71/133]: 1282ms; RSS 457 MiB
+Stage schema_pass [71/133]: 105ms; RSS 463 MiB
+Stage framework_pass [71/133]: 253ms; RSS 483 MiB
+Stage string_literal_pass [71/133]: 93ms; RSS 498 MiB
+Stage param_flow_pass [71/133]: 22ms; RSS 499 MiB
+Stage route_pass [71/133]: 185ms; RSS 520 MiB
+Batch 71/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/science-advantage/tsconfig.json in 2156ms; RSS 520 MiB
+Stage primary_extraction [72/133]: 836ms; RSS 452 MiB
+Stage schema_pass [72/133]: 103ms; RSS 462 MiB
+Stage framework_pass [72/133]: 35ms; RSS 467 MiB
+Stage string_literal_pass [72/133]: 30ms; RSS 471 MiB
+Stage param_flow_pass [72/133]: 9ms; RSS 471 MiB
+Stage route_pass [72/133]: 215ms; RSS 500 MiB
+Batch 72/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/science-advantage/tsconfig.json in 1472ms; RSS 500 MiB
+Stage primary_extraction [73/133]: 751ms; RSS 438 MiB
+Stage schema_pass [73/133]: 55ms; RSS 443 MiB
+Stage framework_pass [73/133]: 25ms; RSS 445 MiB
+Stage string_literal_pass [73/133]: 21ms; RSS 448 MiB
+Stage param_flow_pass [73/133]: 10ms; RSS 448 MiB
+Stage route_pass [73/133]: 104ms; RSS 462 MiB
+Batch 73/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/science-advantage/tsconfig.json in 1144ms; RSS 463 MiB
+Stage primary_extraction [74/133]: 757ms; RSS 442 MiB
+Stage schema_pass [74/133]: 83ms; RSS 447 MiB
+Stage framework_pass [74/133]: 26ms; RSS 450 MiB
+Stage string_literal_pass [74/133]: 25ms; RSS 453 MiB
+Stage param_flow_pass [74/133]: 13ms; RSS 453 MiB
+Stage route_pass [74/133]: 130ms; RSS 471 MiB
+Batch 74/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/science-advantage/tsconfig.json in 1256ms; RSS 471 MiB
+Stage primary_extraction [75/133]: 386ms; RSS 434 MiB
+Stage schema_pass [75/133]: 52ms; RSS 438 MiB
+Stage framework_pass [75/133]: 16ms; RSS 440 MiB
+Stage string_literal_pass [75/133]: 12ms; RSS 441 MiB
+Stage param_flow_pass [75/133]: 6ms; RSS 441 MiB
+Stage route_pass [75/133]: 93ms; RSS 450 MiB
+Batch 75/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/science-advantage/tsconfig.json in 690ms; RSS 450 MiB
+Stage primary_extraction [76/133]: 734ms; RSS 455 MiB
+Stage schema_pass [76/133]: 99ms; RSS 464 MiB
+Stage framework_pass [76/133]: 83ms; RSS 479 MiB
+Stage string_literal_pass [76/133]: 41ms; RSS 487 MiB
+Stage param_flow_pass [76/133]: 12ms; RSS 487 MiB
+Stage route_pass [76/133]: 219ms; RSS 518 MiB
+Batch 76/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/science-advantage/tsconfig.json in 1346ms; RSS 518 MiB
+Stage primary_extraction [77/133]: 361ms; RSS 445 MiB
+Stage schema_pass [77/133]: 41ms; RSS 448 MiB
+Stage framework_pass [77/133]: 23ms; RSS 451 MiB
+Stage string_literal_pass [77/133]: 16ms; RSS 452 MiB
+Stage param_flow_pass [77/133]: 3ms; RSS 453 MiB
+Stage route_pass [77/133]: 54ms; RSS 459 MiB
+Batch 77/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/science-advantage/tsconfig.json in 620ms; RSS 459 MiB
+Stage primary_extraction [78/133]: 1121ms; RSS 461 MiB
+Stage schema_pass [78/133]: 58ms; RSS 469 MiB
+Stage framework_pass [78/133]: 90ms; RSS 484 MiB
+Stage string_literal_pass [78/133]: 81ms; RSS 496 MiB
+Stage param_flow_pass [78/133]: 10ms; RSS 496 MiB
+Stage route_pass [78/133]: 122ms; RSS 517 MiB
+Batch 78/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/science-advantage/tsconfig.json in 1658ms; RSS 517 MiB
+Stage primary_extraction [79/133]: 7ms; RSS 527 MiB
+Stage schema_pass [79/133]: 1ms; RSS 527 MiB
+Stage framework_pass [79/133]: 0ms; RSS 527 MiB
+Stage string_literal_pass [79/133]: 0ms; RSS 527 MiB
+Stage param_flow_pass [79/133]: 0ms; RSS 527 MiB
+Stage route_pass [79/133]: 1ms; RSS 527 MiB
+Batch 79/133: 5 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/science-advantage/tsconfig.json in 23ms; RSS 526 MiB
+Stage primary_extraction [80/133]: 996ms; RSS 455 MiB
+Stage schema_pass [80/133]: 48ms; RSS 460 MiB
+Stage framework_pass [80/133]: 109ms; RSS 474 MiB
+Stage string_literal_pass [80/133]: 72ms; RSS 487 MiB
+Stage param_flow_pass [80/133]: 3ms; RSS 487 MiB
+Stage route_pass [80/133]: 105ms; RSS 507 MiB
+Batch 80/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/www-reading-advantage/tsconfig.json in 1464ms; RSS 507 MiB
+Stage primary_extraction [81/133]: 1005ms; RSS 472 MiB
+Stage schema_pass [81/133]: 53ms; RSS 479 MiB
+Stage framework_pass [81/133]: 131ms; RSS 498 MiB
+Stage string_literal_pass [81/133]: 92ms; RSS 515 MiB
+Stage param_flow_pass [81/133]: 4ms; RSS 515 MiB
+Stage route_pass [81/133]: 116ms; RSS 535 MiB
+Batch 81/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/www-reading-advantage/tsconfig.json in 1558ms; RSS 535 MiB
+Stage primary_extraction [82/133]: 704ms; RSS 456 MiB
+Stage schema_pass [82/133]: 60ms; RSS 464 MiB
+Stage framework_pass [82/133]: 60ms; RSS 471 MiB
+Stage string_literal_pass [82/133]: 44ms; RSS 475 MiB
+Stage param_flow_pass [82/133]: 4ms; RSS 475 MiB
+Stage route_pass [82/133]: 112ms; RSS 494 MiB
+Batch 82/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/www-reading-advantage/tsconfig.json in 1128ms; RSS 494 MiB
+Stage primary_extraction [83/133]: 187ms; RSS 457 MiB
+Stage schema_pass [83/133]: 78ms; RSS 449 MiB
+Stage framework_pass [83/133]: 7ms; RSS 449 MiB
+Stage string_literal_pass [83/133]: 5ms; RSS 449 MiB
+Stage param_flow_pass [83/133]: 5ms; RSS 449 MiB
+Stage route_pass [83/133]: 49ms; RSS 452 MiB
+Batch 83/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/www-reading-advantage/tsconfig.json in 408ms; RSS 452 MiB
+Stage primary_extraction [84/133]: 134ms; RSS 448 MiB
+Stage schema_pass [84/133]: 42ms; RSS 449 MiB
+Stage framework_pass [84/133]: 5ms; RSS 449 MiB
+Stage string_literal_pass [84/133]: 4ms; RSS 450 MiB
+Stage param_flow_pass [84/133]: 2ms; RSS 450 MiB
+Stage route_pass [84/133]: 21ms; RSS 452 MiB
+Batch 84/133: 19 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/apps/www-reading-advantage/tsconfig.json in 261ms; RSS 452 MiB
+Stage primary_extraction [85/133]: 6ms; RSS 451 MiB
+Stage schema_pass [85/133]: 15ms; RSS 451 MiB
+Stage framework_pass [85/133]: 0ms; RSS 451 MiB
+Stage string_literal_pass [85/133]: 0ms; RSS 451 MiB
+Stage param_flow_pass [85/133]: 0ms; RSS 451 MiB
+Stage route_pass [85/133]: 0ms; RSS 451 MiB
+Batch 85/133: 3 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/measure/tracks/company_identity_sso_20260715/fixtures/architecture/positive/apps/sales/tsconfig.json in 39ms; RSS 451 MiB
+Stage primary_extraction [86/133]: 227ms; RSS 441 MiB
+Stage schema_pass [86/133]: 11ms; RSS 442 MiB
+Stage framework_pass [86/133]: 24ms; RSS 443 MiB
+Stage string_literal_pass [86/133]: 15ms; RSS 444 MiB
+Stage param_flow_pass [86/133]: 4ms; RSS 444 MiB
+Stage route_pass [86/133]: 21ms; RSS 446 MiB
+Batch 86/133: 5 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/activity-react/tsconfig.json in 338ms; RSS 446 MiB
+Stage primary_extraction [87/133]: 375ms; RSS 448 MiB
+Stage schema_pass [87/133]: 33ms; RSS 451 MiB
+Stage framework_pass [87/133]: 30ms; RSS 454 MiB
+Stage string_literal_pass [87/133]: 22ms; RSS 455 MiB
+Stage param_flow_pass [87/133]: 12ms; RSS 455 MiB
+Stage route_pass [87/133]: 52ms; RSS 461 MiB
+Batch 87/133: 9 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/activity-runtime/tsconfig.json in 600ms; RSS 461 MiB
+Stage primary_extraction [88/133]: 265ms; RSS 449 MiB
+Stage schema_pass [88/133]: 18ms; RSS 448 MiB
+Stage framework_pass [88/133]: 20ms; RSS 450 MiB
+Stage string_literal_pass [88/133]: 14ms; RSS 451 MiB
+Stage param_flow_pass [88/133]: 6ms; RSS 451 MiB
+Stage route_pass [88/133]: 30ms; RSS 454 MiB
+Batch 88/133: 10 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/activity-tutorial/tsconfig.json in 409ms; RSS 454 MiB
+Stage primary_extraction [89/133]: 1533ms; RSS 488 MiB
+Stage schema_pass [89/133]: 117ms; RSS 502 MiB
+Stage framework_pass [89/133]: 141ms; RSS 528 MiB
+Stage string_literal_pass [89/133]: 95ms; RSS 546 MiB
+Stage param_flow_pass [89/133]: 79ms; RSS 549 MiB
+Stage route_pass [89/133]: 195ms; RSS 557 MiB
+Batch 89/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/advantage-play-kit/tsconfig.json in 2410ms; RSS 557 MiB
+Stage primary_extraction [90/133]: 1044ms; RSS 464 MiB
+Stage schema_pass [90/133]: 34ms; RSS 468 MiB
+Stage framework_pass [90/133]: 62ms; RSS 476 MiB
+Stage string_literal_pass [90/133]: 51ms; RSS 484 MiB
+Stage param_flow_pass [90/133]: 21ms; RSS 484 MiB
+Stage route_pass [90/133]: 86ms; RSS 497 MiB
+Batch 90/133: 29 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/advantage-play-kit/tsconfig.json in 1647ms; RSS 497 MiB
+Stage primary_extraction [91/133]: 456ms; RSS 454 MiB
+Stage schema_pass [91/133]: 72ms; RSS 459 MiB
+Stage framework_pass [91/133]: 20ms; RSS 461 MiB
+Stage string_literal_pass [91/133]: 15ms; RSS 462 MiB
+Stage param_flow_pass [91/133]: 6ms; RSS 463 MiB
+Stage route_pass [91/133]: 777ms; RSS 475 MiB
+Batch 91/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/ai/tsconfig.json in 1509ms; RSS 475 MiB
+Stage primary_extraction [92/133]: 461ms; RSS 451 MiB
+Stage schema_pass [92/133]: 21ms; RSS 452 MiB
+Stage framework_pass [92/133]: 4ms; RSS 452 MiB
+Stage string_literal_pass [92/133]: 3ms; RSS 453 MiB
+Stage param_flow_pass [92/133]: 1ms; RSS 453 MiB
+Stage route_pass [92/133]: 45ms; RSS 455 MiB
+Batch 92/133: 13 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/ai/tsconfig.json in 606ms; RSS 455 MiB
+Stage primary_extraction [93/133]: 623ms; RSS 476 MiB
+Stage schema_pass [93/133]: 108ms; RSS 482 MiB
+Stage framework_pass [93/133]: 17ms; RSS 484 MiB
+Stage string_literal_pass [93/133]: 13ms; RSS 486 MiB
+Stage param_flow_pass [93/133]: 6ms; RSS 486 MiB
+Stage route_pass [93/133]: 190ms; RSS 505 MiB
+Batch 93/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/api/tsconfig.json in 1186ms; RSS 505 MiB
+Stage primary_extraction [94/133]: 563ms; RSS 462 MiB
+Stage schema_pass [94/133]: 50ms; RSS 465 MiB
+Stage framework_pass [94/133]: 31ms; RSS 468 MiB
+Stage string_literal_pass [94/133]: 25ms; RSS 471 MiB
+Stage param_flow_pass [94/133]: 4ms; RSS 471 MiB
+Stage route_pass [94/133]: 97ms; RSS 486 MiB
+Batch 94/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/api/tsconfig.json in 946ms; RSS 486 MiB
+Stage primary_extraction [95/133]: 45ms; RSS 483 MiB
+Stage schema_pass [95/133]: 5ms; RSS 481 MiB
+Stage framework_pass [95/133]: 2ms; RSS 481 MiB
+Stage string_literal_pass [95/133]: 1ms; RSS 481 MiB
+Stage param_flow_pass [95/133]: 2ms; RSS 481 MiB
+Stage route_pass [95/133]: 3ms; RSS 481 MiB
+Batch 95/133: 3 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/api/tsconfig.json in 71ms; RSS 481 MiB
+Stage primary_extraction [96/133]: 1522ms; RSS 497 MiB
+Stage schema_pass [96/133]: 262ms; RSS 515 MiB
+Stage framework_pass [96/133]: 110ms; RSS 535 MiB
+Stage string_literal_pass [96/133]: 71ms; RSS 549 MiB
+Stage param_flow_pass [96/133]: 35ms; RSS 549 MiB
+Stage route_pass [96/133]: 232ms; RSS 564 MiB
+Batch 96/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/architecture-enforcement/tsconfig.json in 2500ms; RSS 564 MiB
+Stage primary_extraction [97/133]: 2063ms; RSS 499 MiB
+Stage schema_pass [97/133]: 76ms; RSS 511 MiB
+Stage framework_pass [97/133]: 131ms; RSS 536 MiB
+Stage string_literal_pass [97/133]: 97ms; RSS 554 MiB
+Stage param_flow_pass [97/133]: 55ms; RSS 554 MiB
+Stage route_pass [97/133]: 171ms; RSS 583 MiB
+Batch 97/133: 21 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/architecture-enforcement/tsconfig.json in 2846ms; RSS 583 MiB
+Stage primary_extraction [98/133]: 89ms; RSS 586 MiB
+Stage schema_pass [98/133]: 8ms; RSS 586 MiB
+Stage framework_pass [98/133]: 3ms; RSS 586 MiB
+Stage string_literal_pass [98/133]: 3ms; RSS 586 MiB
+Stage param_flow_pass [98/133]: 1ms; RSS 586 MiB
+Stage route_pass [98/133]: 11ms; RSS 586 MiB
+Batch 98/133: 5 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/auth-client/tsconfig.json in 145ms; RSS 586 MiB
+Stage primary_extraction [99/133]: 478ms; RSS 464 MiB
+Stage schema_pass [99/133]: 97ms; RSS 471 MiB
+Stage framework_pass [99/133]: 19ms; RSS 472 MiB
+Stage string_literal_pass [99/133]: 11ms; RSS 473 MiB
+Stage param_flow_pass [99/133]: 4ms; RSS 473 MiB
+Stage route_pass [99/133]: 127ms; RSS 491 MiB
+Batch 99/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/auth/tsconfig.json in 876ms; RSS 491 MiB
+Stage primary_extraction [100/133]: 682ms; RSS 463 MiB
+Stage schema_pass [100/133]: 43ms; RSS 466 MiB
+Stage framework_pass [100/133]: 41ms; RSS 470 MiB
+Stage string_literal_pass [100/133]: 35ms; RSS 473 MiB
+Stage param_flow_pass [100/133]: 15ms; RSS 473 MiB
+Stage route_pass [100/133]: 60ms; RSS 482 MiB
+Batch 100/133: 21 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/auth/tsconfig.json in 1041ms; RSS 483 MiB
+Stage primary_extraction [101/133]: 2141ms; RSS 497 MiB
+Stage schema_pass [101/133]: 248ms; RSS 509 MiB
+Stage framework_pass [101/133]: 359ms; RSS 534 MiB
+Stage string_literal_pass [101/133]: 143ms; RSS 552 MiB
+Stage param_flow_pass [101/133]: 36ms; RSS 553 MiB
+Stage route_pass [101/133]: 287ms; RSS 584 MiB
+Batch 101/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/backend/tsconfig.json in 3540ms; RSS 584 MiB
+Stage primary_extraction [102/133]: 701ms; RSS 465 MiB
+Stage schema_pass [102/133]: 27ms; RSS 468 MiB
+Stage framework_pass [102/133]: 45ms; RSS 472 MiB
+Stage string_literal_pass [102/133]: 28ms; RSS 474 MiB
+Stage param_flow_pass [102/133]: 18ms; RSS 475 MiB
+Stage route_pass [102/133]: 55ms; RSS 481 MiB
+Batch 102/133: 15 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/backend/tsconfig.json in 979ms; RSS 482 MiB
+Stage primary_extraction [103/133]: 636ms; RSS 463 MiB
+Stage schema_pass [103/133]: 36ms; RSS 467 MiB
+Stage framework_pass [103/133]: 41ms; RSS 473 MiB
+Stage string_literal_pass [103/133]: 33ms; RSS 478 MiB
+Stage param_flow_pass [103/133]: 9ms; RSS 478 MiB
+Stage route_pass [103/133]: 65ms; RSS 488 MiB
+Batch 103/133: 19 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/codecamp-knowledge/tsconfig.json in 904ms; RSS 488 MiB
+Stage primary_extraction [104/133]: 591ms; RSS 472 MiB
+Stage schema_pass [104/133]: 143ms; RSS 481 MiB
+Stage framework_pass [104/133]: 67ms; RSS 483 MiB
+Stage string_literal_pass [104/133]: 29ms; RSS 484 MiB
+Stage param_flow_pass [104/133]: 9ms; RSS 484 MiB
+Stage route_pass [104/133]: 186ms; RSS 513 MiB
+Batch 104/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/db/tsconfig.json in 1249ms; RSS 513 MiB
+Stage primary_extraction [105/133]: 662ms; RSS 476 MiB
+Stage schema_pass [105/133]: 101ms; RSS 488 MiB
+Stage framework_pass [105/133]: 20ms; RSS 490 MiB
+Stage string_literal_pass [105/133]: 15ms; RSS 492 MiB
+Stage param_flow_pass [105/133]: 11ms; RSS 493 MiB
+Stage route_pass [105/133]: 179ms; RSS 519 MiB
+Batch 105/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/db/tsconfig.json in 1172ms; RSS 519 MiB
+Stage primary_extraction [106/133]: 1329ms; RSS 497 MiB
+Stage schema_pass [106/133]: 107ms; RSS 511 MiB
+Stage framework_pass [106/133]: 73ms; RSS 525 MiB
+Stage string_literal_pass [106/133]: 58ms; RSS 536 MiB
+Stage param_flow_pass [106/133]: 18ms; RSS 537 MiB
+Stage route_pass [106/133]: 197ms; RSS 572 MiB
+Batch 106/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/db/tsconfig.json in 2004ms; RSS 572 MiB
+Stage primary_extraction [107/133]: 852ms; RSS 496 MiB
+Stage schema_pass [107/133]: 133ms; RSS 509 MiB
+Stage framework_pass [107/133]: 72ms; RSS 521 MiB
+Stage string_literal_pass [107/133]: 53ms; RSS 530 MiB
+Stage param_flow_pass [107/133]: 7ms; RSS 530 MiB
+Stage route_pass [107/133]: 210ms; RSS 560 MiB
+Batch 107/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/db/tsconfig.json in 1532ms; RSS 560 MiB
+Stage primary_extraction [108/133]: 181ms; RSS 481 MiB
+Stage schema_pass [108/133]: 28ms; RSS 481 MiB
+Stage framework_pass [108/133]: 11ms; RSS 482 MiB
+Stage string_literal_pass [108/133]: 7ms; RSS 483 MiB
+Stage param_flow_pass [108/133]: 6ms; RSS 483 MiB
+Stage route_pass [108/133]: 11ms; RSS 483 MiB
+Batch 108/133: 5 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/db/tsconfig.json in 294ms; RSS 484 MiB
+Stage primary_extraction [109/133]: 904ms; RSS 482 MiB
+Stage schema_pass [109/133]: 42ms; RSS 486 MiB
+Stage framework_pass [109/133]: 50ms; RSS 492 MiB
+Stage string_literal_pass [109/133]: 45ms; RSS 498 MiB
+Stage param_flow_pass [109/133]: 13ms; RSS 498 MiB
+Stage route_pass [109/133]: 102ms; RSS 514 MiB
+Batch 109/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/domain/tsconfig.json in 1278ms; RSS 514 MiB
+Stage primary_extraction [110/133]: 1940ms; RSS 509 MiB
+Stage schema_pass [110/133]: 88ms; RSS 522 MiB
+Stage framework_pass [110/133]: 181ms; RSS 553 MiB
+Stage string_literal_pass [110/133]: 264ms; RSS 576 MiB
+Stage param_flow_pass [110/133]: 62ms; RSS 577 MiB
+Stage route_pass [110/133]: 285ms; RSS 600 MiB
+Batch 110/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/domain/tsconfig.json in 3047ms; RSS 601 MiB
+Stage primary_extraction [111/133]: 907ms; RSS 481 MiB
+Stage schema_pass [111/133]: 23ms; RSS 483 MiB
+Stage framework_pass [111/133]: 77ms; RSS 485 MiB
+Stage string_literal_pass [111/133]: 92ms; RSS 487 MiB
+Stage param_flow_pass [111/133]: 36ms; RSS 487 MiB
+Stage route_pass [111/133]: 105ms; RSS 491 MiB
+Batch 111/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/domain/tsconfig.json in 1343ms; RSS 491 MiB
+Stage primary_extraction [112/133]: 838ms; RSS 484 MiB
+Stage schema_pass [112/133]: 38ms; RSS 488 MiB
+Stage framework_pass [112/133]: 44ms; RSS 493 MiB
+Stage string_literal_pass [112/133]: 37ms; RSS 498 MiB
+Stage param_flow_pass [112/133]: 11ms; RSS 499 MiB
+Stage route_pass [112/133]: 84ms; RSS 513 MiB
+Batch 112/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/domain/tsconfig.json in 1221ms; RSS 513 MiB
+Stage primary_extraction [113/133]: 1636ms; RSS 489 MiB
+Stage schema_pass [113/133]: 247ms; RSS 494 MiB
+Stage framework_pass [113/133]: 634ms; RSS 505 MiB
+Stage string_literal_pass [113/133]: 309ms; RSS 516 MiB
+Stage param_flow_pass [113/133]: 37ms; RSS 516 MiB
+Stage route_pass [113/133]: 126ms; RSS 534 MiB
+Batch 113/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/domain/tsconfig.json in 3196ms; RSS 534 MiB
+Stage primary_extraction [114/133]: 593ms; RSS 471 MiB
+Stage schema_pass [114/133]: 19ms; RSS 471 MiB
+Stage framework_pass [114/133]: 9ms; RSS 471 MiB
+Stage string_literal_pass [114/133]: 7ms; RSS 472 MiB
+Stage param_flow_pass [114/133]: 3ms; RSS 472 MiB
+Stage route_pass [114/133]: 18ms; RSS 472 MiB
+Batch 114/133: 16 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/domain/tsconfig.json in 702ms; RSS 472 MiB
+Stage primary_extraction [115/133]: 397ms; RSS 469 MiB
+Stage schema_pass [115/133]: 23ms; RSS 470 MiB
+Stage framework_pass [115/133]: 21ms; RSS 472 MiB
+Stage string_literal_pass [115/133]: 17ms; RSS 474 MiB
+Stage param_flow_pass [115/133]: 7ms; RSS 474 MiB
+Stage route_pass [115/133]: 43ms; RSS 478 MiB
+Batch 115/133: 9 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/game-cartridges/tsconfig.json in 567ms; RSS 478 MiB
+Stage primary_extraction [116/133]: 94ms; RSS 469 MiB
+Stage schema_pass [116/133]: 10ms; RSS 469 MiB
+Stage framework_pass [116/133]: 4ms; RSS 469 MiB
+Stage string_literal_pass [116/133]: 3ms; RSS 469 MiB
+Stage param_flow_pass [116/133]: 2ms; RSS 469 MiB
+Stage route_pass [116/133]: 15ms; RSS 470 MiB
+Batch 116/133: 11 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/game-contracts/tsconfig.json in 162ms; RSS 470 MiB
+Stage primary_extraction [117/133]: 71ms; RSS 466 MiB
+Stage schema_pass [117/133]: 5ms; RSS 466 MiB
+Stage framework_pass [117/133]: 2ms; RSS 466 MiB
+Stage string_literal_pass [117/133]: 1ms; RSS 466 MiB
+Stage param_flow_pass [117/133]: 1ms; RSS 466 MiB
+Stage route_pass [117/133]: 13ms; RSS 467 MiB
+Batch 117/133: 6 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/integrations/github/tsconfig.json in 113ms; RSS 467 MiB
+Stage primary_extraction [118/133]: 1034ms; RSS 489 MiB
+Stage schema_pass [118/133]: 93ms; RSS 493 MiB
+Stage framework_pass [118/133]: 147ms; RSS 504 MiB
+Stage string_literal_pass [118/133]: 62ms; RSS 514 MiB
+Stage param_flow_pass [118/133]: 26ms; RSS 515 MiB
+Stage route_pass [118/133]: 111ms; RSS 534 MiB
+Batch 118/133: 23 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/knowledge-space-core/tsconfig.json in 1625ms; RSS 534 MiB
+Stage primary_extraction [119/133]: 673ms; RSS 482 MiB
+Stage schema_pass [119/133]: 50ms; RSS 486 MiB
+Stage framework_pass [119/133]: 47ms; RSS 490 MiB
+Stage string_literal_pass [119/133]: 34ms; RSS 494 MiB
+Stage param_flow_pass [119/133]: 9ms; RSS 494 MiB
+Stage route_pass [119/133]: 78ms; RSS 503 MiB
+Batch 119/133: 25 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/knowledge-space-practice/tsconfig.json in 1040ms; RSS 504 MiB
+Stage primary_extraction [120/133]: 313ms; RSS 474 MiB
+Stage schema_pass [120/133]: 12ms; RSS 474 MiB
+Stage framework_pass [120/133]: 26ms; RSS 475 MiB
+Stage string_literal_pass [120/133]: 14ms; RSS 476 MiB
+Stage param_flow_pass [120/133]: 8ms; RSS 476 MiB
+Stage route_pass [120/133]: 18ms; RSS 477 MiB
+Batch 120/133: 4 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/mastery-runtime-compat/tsconfig.json in 450ms; RSS 477 MiB
+Stage primary_extraction [121/133]: 367ms; RSS 473 MiB
+Stage schema_pass [121/133]: 27ms; RSS 474 MiB
+Stage framework_pass [121/133]: 25ms; RSS 477 MiB
+Stage string_literal_pass [121/133]: 19ms; RSS 480 MiB
+Stage param_flow_pass [121/133]: 11ms; RSS 479 MiB
+Stage route_pass [121/133]: 36ms; RSS 484 MiB
+Batch 121/133: 13 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/practice-core/tsconfig.json in 585ms; RSS 484 MiB
+Stage primary_extraction [122/133]: 571ms; RSS 486 MiB
+Stage schema_pass [122/133]: 32ms; RSS 488 MiB
+Stage framework_pass [122/133]: 39ms; RSS 493 MiB
+Stage string_literal_pass [122/133]: 28ms; RSS 497 MiB
+Stage param_flow_pass [122/133]: 17ms; RSS 497 MiB
+Stage route_pass [122/133]: 57ms; RSS 507 MiB
+Batch 122/133: 16 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/srs-engine/tsconfig.json in 860ms; RSS 507 MiB
+Stage primary_extraction [123/133]: 83ms; RSS 480 MiB
+Stage schema_pass [123/133]: 6ms; RSS 481 MiB
+Stage framework_pass [123/133]: 1ms; RSS 481 MiB
+Stage string_literal_pass [123/133]: 1ms; RSS 481 MiB
+Stage param_flow_pass [123/133]: 1ms; RSS 481 MiB
+Stage route_pass [123/133]: 10ms; RSS 481 MiB
+Batch 123/133: 9 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/storage/tsconfig.json in 139ms; RSS 481 MiB
+Stage primary_extraction [124/133]: 546ms; RSS 474 MiB
+Stage schema_pass [124/133]: 160ms; RSS 476 MiB
+Stage framework_pass [124/133]: 5ms; RSS 476 MiB
+Stage string_literal_pass [124/133]: 3ms; RSS 476 MiB
+Stage param_flow_pass [124/133]: 2ms; RSS 476 MiB
+Stage route_pass [124/133]: 56ms; RSS 478 MiB
+Batch 124/133: 11 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/types/tsconfig.json in 845ms; RSS 479 MiB
+Stage primary_extraction [125/133]: 126ms; RSS 475 MiB
+Stage schema_pass [125/133]: 10ms; RSS 475 MiB
+Stage framework_pass [125/133]: 2ms; RSS 475 MiB
+Stage string_literal_pass [125/133]: 2ms; RSS 475 MiB
+Stage param_flow_pass [125/133]: 2ms; RSS 475 MiB
+Stage route_pass [125/133]: 13ms; RSS 476 MiB
+Batch 125/133: 22 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/ui/tsconfig.json in 193ms; RSS 476 MiB
+Stage primary_extraction [126/133]: 189ms; RSS 471 MiB
+Stage schema_pass [126/133]: 16ms; RSS 471 MiB
+Stage framework_pass [126/133]: 13ms; RSS 472 MiB
+Stage string_literal_pass [126/133]: 7ms; RSS 472 MiB
+Stage param_flow_pass [126/133]: 2ms; RSS 472 MiB
+Stage route_pass [126/133]: 12ms; RSS 473 MiB
+Batch 126/133: 9 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/utils/tsconfig.json in 271ms; RSS 473 MiB
+Stage primary_extraction [127/133]: 1279ms; RSS 506 MiB
+Stage schema_pass [127/133]: 187ms; RSS 519 MiB
+Stage framework_pass [127/133]: 62ms; RSS 527 MiB
+Stage string_literal_pass [127/133]: 48ms; RSS 534 MiB
+Stage param_flow_pass [127/133]: 19ms; RSS 534 MiB
+Stage route_pass [127/133]: 315ms; RSS 571 MiB
+Batch 127/133: 32 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/packages/webhooks/tsconfig.json in 2323ms; RSS 572 MiB
+Stage primary_extraction [128/133]: 525ms; RSS 484 MiB
+Stage schema_pass [128/133]: 17ms; RSS 484 MiB
+Stage framework_pass [128/133]: 8ms; RSS 485 MiB
+Stage string_literal_pass [128/133]: 8ms; RSS 485 MiB
+Stage param_flow_pass [128/133]: 4ms; RSS 486 MiB
+Stage route_pass [128/133]: 18ms; RSS 486 MiB
+Batch 128/133: 9 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/services/worker/tsconfig.json in 635ms; RSS 486 MiB
+Stage primary_extraction [129/133]: 6ms; RSS 482 MiB
+Stage schema_pass [129/133]: 1ms; RSS 482 MiB
+Stage framework_pass [129/133]: 0ms; RSS 482 MiB
+Stage string_literal_pass [129/133]: 0ms; RSS 482 MiB
+Stage param_flow_pass [129/133]: 0ms; RSS 482 MiB
+Stage route_pass [129/133]: 1ms; RSS 482 MiB
+Batch 129/133: 2 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/test-fixtures/architecture-enforcement/database/alias/tsconfig.json in 16ms; RSS 482 MiB
+Stage primary_extraction [130/133]: 5ms; RSS 485 MiB
+Stage schema_pass [130/133]: 0ms; RSS 485 MiB
+Stage framework_pass [130/133]: 0ms; RSS 485 MiB
+Stage string_literal_pass [130/133]: 0ms; RSS 485 MiB
+Stage param_flow_pass [130/133]: 0ms; RSS 485 MiB
+Stage route_pass [130/133]: 0ms; RSS 485 MiB
+Batch 130/133: 2 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/test-fixtures/architecture-enforcement/database/worker-job-port/tsconfig.json in 11ms; RSS 485 MiB
+Stage primary_extraction [131/133]: 4ms; RSS 490 MiB
+Stage schema_pass [131/133]: 0ms; RSS 490 MiB
+Stage framework_pass [131/133]: 0ms; RSS 490 MiB
+Stage string_literal_pass [131/133]: 0ms; RSS 490 MiB
+Stage param_flow_pass [131/133]: 0ms; RSS 490 MiB
+Stage route_pass [131/133]: 0ms; RSS 490 MiB
+Batch 131/133: 2 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/test-fixtures/architecture-enforcement/provider/ai-alias/tsconfig.json in 9ms; RSS 490 MiB
+Stage primary_extraction [132/133]: 4ms; RSS 496 MiB
+Stage schema_pass [132/133]: 0ms; RSS 496 MiB
+Stage framework_pass [132/133]: 0ms; RSS 496 MiB
+Stage string_literal_pass [132/133]: 0ms; RSS 496 MiB
+Stage param_flow_pass [132/133]: 0ms; RSS 496 MiB
+Stage route_pass [132/133]: 1ms; RSS 496 MiB
+Batch 132/133: 2 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/test-fixtures/architecture-enforcement/provider/ai-internal-interface/tsconfig.json in 10ms; RSS 496 MiB
+Stage primary_extraction [133/133]: 5ms; RSS 478 MiB
+Stage schema_pass [133/133]: 0ms; RSS 478 MiB
+Stage framework_pass [133/133]: 0ms; RSS 478 MiB
+Stage string_literal_pass [133/133]: 0ms; RSS 478 MiB
+Stage param_flow_pass [133/133]: 0ms; RSS 478 MiB
+Stage route_pass [133/133]: 0ms; RSS 478 MiB
+Batch 133/133: 2 files from /tmp/opencode/r2-task2-compensation-fresh-20260731/scan-one-source/test-fixtures/architecture-enforcement/provider/storage-internal-interface/tsconfig.json in 13ms; RSS 478 MiB
+Stage call_resolution: 1763ms; RSS 589 MiB
+Stage deduplication: 5264ms; RSS 1118 MiB
+Scanned 43 TypeScript configurations with at most 1 active Project
+Stage persistence: 62430ms; RSS 1093 MiB
+Scanned 88968 nodes, 117446 edges in 400684ms
