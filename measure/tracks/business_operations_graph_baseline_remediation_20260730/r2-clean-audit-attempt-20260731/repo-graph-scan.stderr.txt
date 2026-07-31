@@ -1,0 +1,938 @@
+Stage project_discovery: 166ms; RSS 105 MiB
+Stage project_discovery: 16827ms; RSS 191 MiB
+Stage primary_extraction [1/133]: 2166ms; RSS 247 MiB
+Stage schema_pass [1/133]: 52ms; RSS 249 MiB
+Stage framework_pass [1/133]: 110ms; RSS 256 MiB
+Stage string_literal_pass [1/133]: 127ms; RSS 256 MiB
+Stage param_flow_pass [1/133]: 29ms; RSS 257 MiB
+Stage route_pass [1/133]: 85ms; RSS 257 MiB
+Batch 1/133: 31 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/accounts/tsconfig.json in 3427ms; RSS 257 MiB
+Stage primary_extraction [2/133]: 18ms; RSS 263 MiB
+Stage schema_pass [2/133]: 16ms; RSS 263 MiB
+Stage framework_pass [2/133]: 1ms; RSS 263 MiB
+Stage string_literal_pass [2/133]: 1ms; RSS 263 MiB
+Stage param_flow_pass [2/133]: 1ms; RSS 263 MiB
+Stage route_pass [2/133]: 2ms; RSS 263 MiB
+Batch 2/133: 3 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/activity-vinext-fixture/tsconfig.json in 63ms; RSS 263 MiB
+Stage primary_extraction [3/133]: 3069ms; RSS 219 MiB
+Stage schema_pass [3/133]: 91ms; RSS 230 MiB
+Stage framework_pass [3/133]: 150ms; RSS 231 MiB
+Stage string_literal_pass [3/133]: 113ms; RSS 232 MiB
+Stage param_flow_pass [3/133]: 9ms; RSS 232 MiB
+Stage route_pass [3/133]: 344ms; RSS 241 MiB
+Batch 3/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/advantage-games/tsconfig.json in 4217ms; RSS 242 MiB
+Stage primary_extraction [4/133]: 50ms; RSS 242 MiB
+Stage schema_pass [4/133]: 475ms; RSS 176 MiB
+Stage framework_pass [4/133]: 5ms; RSS 176 MiB
+Stage string_literal_pass [4/133]: 4ms; RSS 176 MiB
+Stage param_flow_pass [4/133]: 5ms; RSS 176 MiB
+Stage route_pass [4/133]: 14ms; RSS 177 MiB
+Batch 4/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/advantage-games/tsconfig.json in 660ms; RSS 177 MiB
+Stage primary_extraction [5/133]: 3444ms; RSS 245 MiB
+Stage schema_pass [5/133]: 118ms; RSS 245 MiB
+Stage framework_pass [5/133]: 284ms; RSS 261 MiB
+Stage string_literal_pass [5/133]: 119ms; RSS 261 MiB
+Stage param_flow_pass [5/133]: 14ms; RSS 261 MiB
+Stage route_pass [5/133]: 244ms; RSS 263 MiB
+Batch 5/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/advantage-games/tsconfig.json in 4990ms; RSS 263 MiB
+Stage primary_extraction [6/133]: 3089ms; RSS 252 MiB
+Stage schema_pass [6/133]: 91ms; RSS 252 MiB
+Stage framework_pass [6/133]: 294ms; RSS 269 MiB
+Stage string_literal_pass [6/133]: 108ms; RSS 269 MiB
+Stage param_flow_pass [6/133]: 27ms; RSS 269 MiB
+Stage route_pass [6/133]: 218ms; RSS 271 MiB
+Batch 6/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/advantage-games/tsconfig.json in 4163ms; RSS 272 MiB
+Stage primary_extraction [7/133]: 1286ms; RSS 226 MiB
+Stage schema_pass [7/133]: 80ms; RSS 237 MiB
+Stage framework_pass [7/133]: 179ms; RSS 244 MiB
+Stage string_literal_pass [7/133]: 73ms; RSS 243 MiB
+Stage param_flow_pass [7/133]: 8ms; RSS 243 MiB
+Stage route_pass [7/133]: 134ms; RSS 257 MiB
+Batch 7/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/advantage-games/tsconfig.json in 1914ms; RSS 257 MiB
+Stage primary_extraction [8/133]: 622ms; RSS 218 MiB
+Stage schema_pass [8/133]: 60ms; RSS 219 MiB
+Stage framework_pass [8/133]: 20ms; RSS 219 MiB
+Stage string_literal_pass [8/133]: 15ms; RSS 219 MiB
+Stage param_flow_pass [8/133]: 5ms; RSS 219 MiB
+Stage route_pass [8/133]: 42ms; RSS 222 MiB
+Batch 8/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/advantage-games/tsconfig.json in 882ms; RSS 222 MiB
+Stage primary_extraction [9/133]: 1683ms; RSS 247 MiB
+Stage schema_pass [9/133]: 101ms; RSS 267 MiB
+Stage framework_pass [9/133]: 174ms; RSS 270 MiB
+Stage string_literal_pass [9/133]: 137ms; RSS 278 MiB
+Stage param_flow_pass [9/133]: 55ms; RSS 277 MiB
+Stage route_pass [9/133]: 153ms; RSS 286 MiB
+Batch 9/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/advantage-games/tsconfig.json in 2612ms; RSS 286 MiB
+Stage primary_extraction [10/133]: 740ms; RSS 232 MiB
+Stage schema_pass [10/133]: 64ms; RSS 244 MiB
+Stage framework_pass [10/133]: 47ms; RSS 253 MiB
+Stage string_literal_pass [10/133]: 37ms; RSS 260 MiB
+Stage param_flow_pass [10/133]: 81ms; RSS 258 MiB
+Stage route_pass [10/133]: 72ms; RSS 258 MiB
+Batch 10/133: 20 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/advantage-games/tsconfig.json in 1180ms; RSS 258 MiB
+Stage primary_extraction [11/133]: 1366ms; RSS 248 MiB
+Stage schema_pass [11/133]: 112ms; RSS 255 MiB
+Stage framework_pass [11/133]: 84ms; RSS 257 MiB
+Stage string_literal_pass [11/133]: 89ms; RSS 272 MiB
+Stage param_flow_pass [11/133]: 13ms; RSS 272 MiB
+Stage route_pass [11/133]: 148ms; RSS 281 MiB
+Batch 11/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/codecamp-advantage/tsconfig.json in 1994ms; RSS 281 MiB
+Stage primary_extraction [12/133]: 484ms; RSS 244 MiB
+Stage schema_pass [12/133]: 76ms; RSS 250 MiB
+Stage framework_pass [12/133]: 80ms; RSS 242 MiB
+Stage string_literal_pass [12/133]: 31ms; RSS 242 MiB
+Stage param_flow_pass [12/133]: 7ms; RSS 242 MiB
+Stage route_pass [12/133]: 59ms; RSS 244 MiB
+Batch 12/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/codecamp-advantage/tsconfig.json in 849ms; RSS 244 MiB
+Stage primary_extraction [13/133]: 154ms; RSS 248 MiB
+Stage schema_pass [13/133]: 6ms; RSS 248 MiB
+Stage framework_pass [13/133]: 8ms; RSS 248 MiB
+Stage string_literal_pass [13/133]: 7ms; RSS 248 MiB
+Stage param_flow_pass [13/133]: 2ms; RSS 248 MiB
+Stage route_pass [13/133]: 9ms; RSS 248 MiB
+Batch 13/133: 13 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/codecamp-advantage/tsconfig.json in 223ms; RSS 248 MiB
+Stage primary_extraction [14/133]: 719ms; RSS 249 MiB
+Stage schema_pass [14/133]: 103ms; RSS 255 MiB
+Stage framework_pass [14/133]: 24ms; RSS 259 MiB
+Stage string_literal_pass [14/133]: 37ms; RSS 262 MiB
+Stage param_flow_pass [14/133]: 6ms; RSS 262 MiB
+Stage route_pass [14/133]: 93ms; RSS 262 MiB
+Batch 14/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/marketing/tsconfig.json in 1202ms; RSS 262 MiB
+Stage primary_extraction [15/133]: 864ms; RSS 245 MiB
+Stage schema_pass [15/133]: 35ms; RSS 245 MiB
+Stage framework_pass [15/133]: 81ms; RSS 256 MiB
+Stage string_literal_pass [15/133]: 59ms; RSS 264 MiB
+Stage param_flow_pass [15/133]: 6ms; RSS 264 MiB
+Stage route_pass [15/133]: 75ms; RSS 263 MiB
+Batch 15/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/marketing/tsconfig.json in 1295ms; RSS 263 MiB
+Stage primary_extraction [16/133]: 374ms; RSS 227 MiB
+Stage schema_pass [16/133]: 22ms; RSS 228 MiB
+Stage framework_pass [16/133]: 19ms; RSS 231 MiB
+Stage string_literal_pass [16/133]: 15ms; RSS 233 MiB
+Stage param_flow_pass [16/133]: 4ms; RSS 233 MiB
+Stage route_pass [16/133]: 42ms; RSS 239 MiB
+Batch 16/133: 20 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/marketing/tsconfig.json in 529ms; RSS 239 MiB
+Stage primary_extraction [17/133]: 1165ms; RSS 255 MiB
+Stage schema_pass [17/133]: 56ms; RSS 262 MiB
+Stage framework_pass [17/133]: 89ms; RSS 275 MiB
+Stage string_literal_pass [17/133]: 74ms; RSS 286 MiB
+Stage param_flow_pass [17/133]: 12ms; RSS 287 MiB
+Stage route_pass [17/133]: 153ms; RSS 291 MiB
+Batch 17/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/primary-advantage/tsconfig.json in 1771ms; RSS 291 MiB
+Stage primary_extraction [18/133]: 1561ms; RSS 259 MiB
+Stage schema_pass [18/133]: 72ms; RSS 266 MiB
+Stage framework_pass [18/133]: 339ms; RSS 290 MiB
+Stage string_literal_pass [18/133]: 74ms; RSS 293 MiB
+Stage param_flow_pass [18/133]: 4ms; RSS 293 MiB
+Stage route_pass [18/133]: 83ms; RSS 299 MiB
+Batch 18/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/primary-advantage/tsconfig.json in 2394ms; RSS 299 MiB
+Stage primary_extraction [19/133]: 632ms; RSS 245 MiB
+Stage schema_pass [19/133]: 26ms; RSS 246 MiB
+Stage framework_pass [19/133]: 19ms; RSS 248 MiB
+Stage string_literal_pass [19/133]: 16ms; RSS 249 MiB
+Stage param_flow_pass [19/133]: 4ms; RSS 250 MiB
+Stage route_pass [19/133]: 20ms; RSS 253 MiB
+Batch 19/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/primary-advantage/tsconfig.json in 837ms; RSS 254 MiB
+Stage primary_extraction [20/133]: 1069ms; RSS 281 MiB
+Stage schema_pass [20/133]: 26ms; RSS 278 MiB
+Stage framework_pass [20/133]: 52ms; RSS 279 MiB
+Stage string_literal_pass [20/133]: 57ms; RSS 286 MiB
+Stage param_flow_pass [20/133]: 11ms; RSS 286 MiB
+Stage route_pass [20/133]: 76ms; RSS 294 MiB
+Batch 20/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/primary-advantage/tsconfig.json in 1401ms; RSS 293 MiB
+Stage primary_extraction [21/133]: 2551ms; RSS 295 MiB
+Stage schema_pass [21/133]: 122ms; RSS 295 MiB
+Stage framework_pass [21/133]: 222ms; RSS 315 MiB
+Stage string_literal_pass [21/133]: 107ms; RSS 316 MiB
+Stage param_flow_pass [21/133]: 7ms; RSS 316 MiB
+Stage route_pass [21/133]: 228ms; RSS 317 MiB
+Batch 21/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/primary-advantage/tsconfig.json in 3506ms; RSS 318 MiB
+Stage primary_extraction [22/133]: 1939ms; RSS 278 MiB
+Stage schema_pass [22/133]: 94ms; RSS 290 MiB
+Stage framework_pass [22/133]: 317ms; RSS 298 MiB
+Stage string_literal_pass [22/133]: 98ms; RSS 301 MiB
+Stage param_flow_pass [22/133]: 13ms; RSS 302 MiB
+Stage route_pass [22/133]: 174ms; RSS 310 MiB
+Batch 22/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/primary-advantage/tsconfig.json in 2885ms; RSS 310 MiB
+Stage primary_extraction [23/133]: 3283ms; RSS 327 MiB
+Stage schema_pass [23/133]: 162ms; RSS 348 MiB
+Stage framework_pass [23/133]: 442ms; RSS 368 MiB
+Stage string_literal_pass [23/133]: 264ms; RSS 379 MiB
+Stage param_flow_pass [23/133]: 10ms; RSS 379 MiB
+Stage route_pass [23/133]: 204ms; RSS 379 MiB
+Batch 23/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/primary-advantage/tsconfig.json in 4731ms; RSS 379 MiB
+Stage primary_extraction [24/133]: 2338ms; RSS 307 MiB
+Stage schema_pass [24/133]: 347ms; RSS 321 MiB
+Stage framework_pass [24/133]: 241ms; RSS 332 MiB
+Stage string_literal_pass [24/133]: 254ms; RSS 335 MiB
+Stage param_flow_pass [24/133]: 12ms; RSS 335 MiB
+Stage route_pass [24/133]: 203ms; RSS 335 MiB
+Batch 24/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/primary-advantage/tsconfig.json in 3694ms; RSS 336 MiB
+Stage primary_extraction [25/133]: 2420ms; RSS 324 MiB
+Stage schema_pass [25/133]: 80ms; RSS 328 MiB
+Stage framework_pass [25/133]: 378ms; RSS 350 MiB
+Stage string_literal_pass [25/133]: 136ms; RSS 351 MiB
+Stage param_flow_pass [25/133]: 7ms; RSS 351 MiB
+Stage route_pass [25/133]: 211ms; RSS 352 MiB
+Batch 25/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/primary-advantage/tsconfig.json in 3703ms; RSS 352 MiB
+Stage primary_extraction [26/133]: 903ms; RSS 286 MiB
+Stage schema_pass [26/133]: 43ms; RSS 293 MiB
+Stage framework_pass [26/133]: 97ms; RSS 307 MiB
+Stage string_literal_pass [26/133]: 97ms; RSS 309 MiB
+Stage param_flow_pass [26/133]: 77ms; RSS 309 MiB
+Stage route_pass [26/133]: 65ms; RSS 309 MiB
+Batch 26/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/primary-advantage/tsconfig.json in 1456ms; RSS 309 MiB
+Stage primary_extraction [27/133]: 320ms; RSS 271 MiB
+Stage schema_pass [27/133]: 31ms; RSS 272 MiB
+Stage framework_pass [27/133]: 19ms; RSS 273 MiB
+Stage string_literal_pass [27/133]: 11ms; RSS 274 MiB
+Stage param_flow_pass [27/133]: 6ms; RSS 274 MiB
+Stage route_pass [27/133]: 35ms; RSS 278 MiB
+Batch 27/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/primary-advantage/tsconfig.json in 510ms; RSS 278 MiB
+Stage primary_extraction [28/133]: 1742ms; RSS 303 MiB
+Stage schema_pass [28/133]: 96ms; RSS 309 MiB
+Stage framework_pass [28/133]: 139ms; RSS 330 MiB
+Stage string_literal_pass [28/133]: 113ms; RSS 330 MiB
+Stage param_flow_pass [28/133]: 23ms; RSS 330 MiB
+Stage route_pass [28/133]: 86ms; RSS 330 MiB
+Batch 28/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/primary-advantage/tsconfig.json in 2598ms; RSS 331 MiB
+Stage primary_extraction [29/133]: 1924ms; RSS 306 MiB
+Stage schema_pass [29/133]: 43ms; RSS 306 MiB
+Stage framework_pass [29/133]: 150ms; RSS 320 MiB
+Stage string_literal_pass [29/133]: 85ms; RSS 334 MiB
+Stage param_flow_pass [29/133]: 12ms; RSS 333 MiB
+Stage route_pass [29/133]: 198ms; RSS 337 MiB
+Batch 29/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/primary-advantage/tsconfig.json in 2655ms; RSS 337 MiB
+Stage primary_extraction [30/133]: 24ms; RSS 338 MiB
+Stage schema_pass [30/133]: 19ms; RSS 339 MiB
+Stage framework_pass [30/133]: 6ms; RSS 337 MiB
+Stage string_literal_pass [30/133]: 2ms; RSS 337 MiB
+Stage param_flow_pass [30/133]: 3ms; RSS 337 MiB
+Stage route_pass [30/133]: 2ms; RSS 337 MiB
+Batch 30/133: 4 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/primary-advantage/tsconfig.json in 67ms; RSS 337 MiB
+Stage primary_extraction [31/133]: 859ms; RSS 307 MiB
+Stage schema_pass [31/133]: 54ms; RSS 313 MiB
+Stage framework_pass [31/133]: 33ms; RSS 318 MiB
+Stage string_literal_pass [31/133]: 32ms; RSS 319 MiB
+Stage param_flow_pass [31/133]: 5ms; RSS 320 MiB
+Stage route_pass [31/133]: 92ms; RSS 335 MiB
+Batch 31/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 1187ms; RSS 335 MiB
+Stage primary_extraction [32/133]: 1006ms; RSS 317 MiB
+Stage schema_pass [32/133]: 161ms; RSS 329 MiB
+Stage framework_pass [32/133]: 10ms; RSS 328 MiB
+Stage string_literal_pass [32/133]: 7ms; RSS 328 MiB
+Stage param_flow_pass [32/133]: 7ms; RSS 328 MiB
+Stage route_pass [32/133]: 157ms; RSS 343 MiB
+Batch 32/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 1790ms; RSS 343 MiB
+Stage primary_extraction [33/133]: 1318ms; RSS 319 MiB
+Stage schema_pass [33/133]: 143ms; RSS 326 MiB
+Stage framework_pass [33/133]: 103ms; RSS 326 MiB
+Stage string_literal_pass [33/133]: 93ms; RSS 327 MiB
+Stage param_flow_pass [33/133]: 10ms; RSS 327 MiB
+Stage route_pass [33/133]: 179ms; RSS 337 MiB
+Batch 33/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 1986ms; RSS 337 MiB
+Stage primary_extraction [34/133]: 415ms; RSS 296 MiB
+Stage schema_pass [34/133]: 18ms; RSS 297 MiB
+Stage framework_pass [34/133]: 42ms; RSS 301 MiB
+Stage string_literal_pass [34/133]: 31ms; RSS 304 MiB
+Stage param_flow_pass [34/133]: 4ms; RSS 305 MiB
+Stage route_pass [34/133]: 38ms; RSS 311 MiB
+Batch 34/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 657ms; RSS 311 MiB
+Stage primary_extraction [35/133]: 618ms; RSS 300 MiB
+Stage schema_pass [35/133]: 47ms; RSS 302 MiB
+Stage framework_pass [35/133]: 121ms; RSS 309 MiB
+Stage string_literal_pass [35/133]: 37ms; RSS 315 MiB
+Stage param_flow_pass [35/133]: 3ms; RSS 315 MiB
+Stage route_pass [35/133]: 53ms; RSS 324 MiB
+Batch 35/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 1010ms; RSS 324 MiB
+Stage primary_extraction [36/133]: 482ms; RSS 305 MiB
+Stage schema_pass [36/133]: 32ms; RSS 307 MiB
+Stage framework_pass [36/133]: 26ms; RSS 308 MiB
+Stage string_literal_pass [36/133]: 21ms; RSS 308 MiB
+Stage param_flow_pass [36/133]: 5ms; RSS 308 MiB
+Stage route_pass [36/133]: 42ms; RSS 311 MiB
+Batch 36/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 782ms; RSS 311 MiB
+Stage primary_extraction [37/133]: 1059ms; RSS 295 MiB
+Stage schema_pass [37/133]: 29ms; RSS 295 MiB
+Stage framework_pass [37/133]: 7ms; RSS 296 MiB
+Stage string_literal_pass [37/133]: 6ms; RSS 296 MiB
+Stage param_flow_pass [37/133]: 5ms; RSS 296 MiB
+Stage route_pass [37/133]: 26ms; RSS 297 MiB
+Batch 37/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 1274ms; RSS 297 MiB
+Stage primary_extraction [38/133]: 1488ms; RSS 298 MiB
+Stage schema_pass [38/133]: 44ms; RSS 299 MiB
+Stage framework_pass [38/133]: 61ms; RSS 301 MiB
+Stage string_literal_pass [38/133]: 41ms; RSS 302 MiB
+Stage param_flow_pass [38/133]: 14ms; RSS 303 MiB
+Stage route_pass [38/133]: 91ms; RSS 307 MiB
+Batch 38/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 1960ms; RSS 307 MiB
+Stage primary_extraction [39/133]: 330ms; RSS 300 MiB
+Stage schema_pass [39/133]: 10ms; RSS 301 MiB
+Stage framework_pass [39/133]: 11ms; RSS 301 MiB
+Stage string_literal_pass [39/133]: 20ms; RSS 301 MiB
+Stage param_flow_pass [39/133]: 10ms; RSS 301 MiB
+Stage route_pass [39/133]: 26ms; RSS 302 MiB
+Batch 39/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 569ms; RSS 302 MiB
+Stage primary_extraction [40/133]: 829ms; RSS 309 MiB
+Stage schema_pass [40/133]: 21ms; RSS 311 MiB
+Stage framework_pass [40/133]: 24ms; RSS 313 MiB
+Stage string_literal_pass [40/133]: 19ms; RSS 315 MiB
+Stage param_flow_pass [40/133]: 7ms; RSS 316 MiB
+Stage route_pass [40/133]: 114ms; RSS 321 MiB
+Batch 40/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 1106ms; RSS 322 MiB
+Stage primary_extraction [41/133]: 1027ms; RSS 321 MiB
+Stage schema_pass [41/133]: 18ms; RSS 323 MiB
+Stage framework_pass [41/133]: 53ms; RSS 326 MiB
+Stage string_literal_pass [41/133]: 17ms; RSS 329 MiB
+Stage param_flow_pass [41/133]: 20ms; RSS 329 MiB
+Stage route_pass [41/133]: 84ms; RSS 333 MiB
+Batch 41/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 1382ms; RSS 333 MiB
+Stage primary_extraction [42/133]: 1928ms; RSS 362 MiB
+Stage schema_pass [42/133]: 69ms; RSS 362 MiB
+Stage framework_pass [42/133]: 147ms; RSS 379 MiB
+Stage string_literal_pass [42/133]: 124ms; RSS 397 MiB
+Stage param_flow_pass [42/133]: 7ms; RSS 398 MiB
+Stage route_pass [42/133]: 248ms; RSS 406 MiB
+Batch 42/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 2763ms; RSS 407 MiB
+Stage primary_extraction [43/133]: 2313ms; RSS 366 MiB
+Stage schema_pass [43/133]: 87ms; RSS 376 MiB
+Stage framework_pass [43/133]: 329ms; RSS 408 MiB
+Stage string_literal_pass [43/133]: 143ms; RSS 407 MiB
+Stage param_flow_pass [43/133]: 7ms; RSS 407 MiB
+Stage route_pass [43/133]: 137ms; RSS 409 MiB
+Batch 43/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 3335ms; RSS 413 MiB
+Stage primary_extraction [44/133]: 4181ms; RSS 372 MiB
+Stage schema_pass [44/133]: 62ms; RSS 376 MiB
+Stage framework_pass [44/133]: 272ms; RSS 405 MiB
+Stage string_literal_pass [44/133]: 452ms; RSS 420 MiB
+Stage param_flow_pass [44/133]: 40ms; RSS 420 MiB
+Stage route_pass [44/133]: 325ms; RSS 420 MiB
+Batch 44/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 5528ms; RSS 420 MiB
+Stage primary_extraction [45/133]: 1788ms; RSS 354 MiB
+Stage schema_pass [45/133]: 70ms; RSS 364 MiB
+Stage framework_pass [45/133]: 352ms; RSS 377 MiB
+Stage string_literal_pass [45/133]: 54ms; RSS 377 MiB
+Stage param_flow_pass [45/133]: 8ms; RSS 377 MiB
+Stage route_pass [45/133]: 112ms; RSS 377 MiB
+Batch 45/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 2594ms; RSS 377 MiB
+Stage primary_extraction [46/133]: 4607ms; RSS 381 MiB
+Stage schema_pass [46/133]: 240ms; RSS 386 MiB
+Stage framework_pass [46/133]: 372ms; RSS 417 MiB
+Stage string_literal_pass [46/133]: 449ms; RSS 430 MiB
+Stage param_flow_pass [46/133]: 103ms; RSS 430 MiB
+Stage route_pass [46/133]: 191ms; RSS 430 MiB
+Batch 46/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 6474ms; RSS 430 MiB
+Stage primary_extraction [47/133]: 1893ms; RSS 354 MiB
+Stage schema_pass [47/133]: 101ms; RSS 362 MiB
+Stage framework_pass [47/133]: 307ms; RSS 373 MiB
+Stage string_literal_pass [47/133]: 192ms; RSS 384 MiB
+Stage param_flow_pass [47/133]: 17ms; RSS 384 MiB
+Stage route_pass [47/133]: 147ms; RSS 385 MiB
+Batch 47/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 3185ms; RSS 385 MiB
+Stage primary_extraction [48/133]: 5888ms; RSS 395 MiB
+Stage schema_pass [48/133]: 199ms; RSS 412 MiB
+Stage framework_pass [48/133]: 562ms; RSS 429 MiB
+Stage string_literal_pass [48/133]: 170ms; RSS 430 MiB
+Stage param_flow_pass [48/133]: 13ms; RSS 430 MiB
+Stage route_pass [48/133]: 528ms; RSS 448 MiB
+Batch 48/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 7766ms; RSS 448 MiB
+Stage primary_extraction [49/133]: 5098ms; RSS 399 MiB
+Stage schema_pass [49/133]: 177ms; RSS 416 MiB
+Stage framework_pass [49/133]: 925ms; RSS 436 MiB
+Stage string_literal_pass [49/133]: 452ms; RSS 436 MiB
+Stage param_flow_pass [49/133]: 19ms; RSS 436 MiB
+Stage route_pass [49/133]: 538ms; RSS 454 MiB
+Batch 49/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 8161ms; RSS 455 MiB
+Stage primary_extraction [50/133]: 3164ms; RSS 397 MiB
+Stage schema_pass [50/133]: 56ms; RSS 399 MiB
+Stage framework_pass [50/133]: 272ms; RSS 421 MiB
+Stage string_literal_pass [50/133]: 314ms; RSS 443 MiB
+Stage param_flow_pass [50/133]: 68ms; RSS 442 MiB
+Stage route_pass [50/133]: 558ms; RSS 448 MiB
+Batch 50/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 5136ms; RSS 448 MiB
+Stage primary_extraction [51/133]: 7110ms; RSS 399 MiB
+Stage schema_pass [51/133]: 132ms; RSS 405 MiB
+Stage framework_pass [51/133]: 842ms; RSS 441 MiB
+Stage string_literal_pass [51/133]: 586ms; RSS 450 MiB
+Stage param_flow_pass [51/133]: 11ms; RSS 450 MiB
+Stage route_pass [51/133]: 118ms; RSS 450 MiB
+Batch 51/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 9750ms; RSS 450 MiB
+Stage primary_extraction [52/133]: 3135ms; RSS 386 MiB
+Stage schema_pass [52/133]: 84ms; RSS 398 MiB
+Stage framework_pass [52/133]: 423ms; RSS 417 MiB
+Stage string_literal_pass [52/133]: 148ms; RSS 417 MiB
+Stage param_flow_pass [52/133]: 13ms; RSS 417 MiB
+Stage route_pass [52/133]: 229ms; RSS 416 MiB
+Batch 52/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 4540ms; RSS 416 MiB
+Stage primary_extraction [53/133]: 795ms; RSS 348 MiB
+Stage schema_pass [53/133]: 49ms; RSS 350 MiB
+Stage framework_pass [53/133]: 29ms; RSS 352 MiB
+Stage string_literal_pass [53/133]: 19ms; RSS 353 MiB
+Stage param_flow_pass [53/133]: 6ms; RSS 353 MiB
+Stage route_pass [53/133]: 61ms; RSS 359 MiB
+Batch 53/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 1231ms; RSS 359 MiB
+Stage primary_extraction [54/133]: 1603ms; RSS 369 MiB
+Stage schema_pass [54/133]: 48ms; RSS 374 MiB
+Stage framework_pass [54/133]: 130ms; RSS 393 MiB
+Stage string_literal_pass [54/133]: 89ms; RSS 406 MiB
+Stage param_flow_pass [54/133]: 4ms; RSS 406 MiB
+Stage route_pass [54/133]: 235ms; RSS 411 MiB
+Batch 54/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 2542ms; RSS 412 MiB
+Stage primary_extraction [55/133]: 1534ms; RSS 367 MiB
+Stage schema_pass [55/133]: 87ms; RSS 374 MiB
+Stage framework_pass [55/133]: 58ms; RSS 384 MiB
+Stage string_literal_pass [55/133]: 54ms; RSS 391 MiB
+Stage param_flow_pass [55/133]: 10ms; RSS 391 MiB
+Stage route_pass [55/133]: 183ms; RSS 410 MiB
+Batch 55/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 2298ms; RSS 410 MiB
+Stage primary_extraction [56/133]: 3918ms; RSS 373 MiB
+Stage schema_pass [56/133]: 359ms; RSS 386 MiB
+Stage framework_pass [56/133]: 338ms; RSS 402 MiB
+Stage string_literal_pass [56/133]: 142ms; RSS 414 MiB
+Stage param_flow_pass [56/133]: 78ms; RSS 406 MiB
+Stage route_pass [56/133]: 347ms; RSS 411 MiB
+Batch 56/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 6133ms; RSS 411 MiB
+Stage primary_extraction [57/133]: 2349ms; RSS 366 MiB
+Stage schema_pass [57/133]: 298ms; RSS 397 MiB
+Stage framework_pass [57/133]: 197ms; RSS 402 MiB
+Stage string_literal_pass [57/133]: 38ms; RSS 402 MiB
+Stage param_flow_pass [57/133]: 29ms; RSS 402 MiB
+Stage route_pass [57/133]: 476ms; RSS 402 MiB
+Batch 57/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 4532ms; RSS 402 MiB
+Stage primary_extraction [58/133]: 10790ms; RSS 401 MiB
+Stage schema_pass [58/133]: 155ms; RSS 404 MiB
+Stage framework_pass [58/133]: 1073ms; RSS 445 MiB
+Stage string_literal_pass [58/133]: 895ms; RSS 457 MiB
+Stage param_flow_pass [58/133]: 43ms; RSS 457 MiB
+Stage route_pass [58/133]: 279ms; RSS 458 MiB
+Batch 58/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 14147ms; RSS 458 MiB
+Stage primary_extraction [59/133]: 10035ms; RSS 443 MiB
+Stage schema_pass [59/133]: 336ms; RSS 456 MiB
+Stage framework_pass [59/133]: 646ms; RSS 497 MiB
+Stage string_literal_pass [59/133]: 224ms; RSS 498 MiB
+Stage param_flow_pass [59/133]: 77ms; RSS 498 MiB
+Stage route_pass [59/133]: 742ms; RSS 503 MiB
+Batch 59/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 13629ms; RSS 503 MiB
+Stage primary_extraction [60/133]: 6398ms; RSS 444 MiB
+Stage schema_pass [60/133]: 244ms; RSS 444 MiB
+Stage framework_pass [60/133]: 584ms; RSS 468 MiB
+Stage string_literal_pass [60/133]: 952ms; RSS 497 MiB
+Stage param_flow_pass [60/133]: 205ms; RSS 498 MiB
+Stage route_pass [60/133]: 1242ms; RSS 512 MiB
+Batch 60/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 10258ms; RSS 513 MiB
+Stage primary_extraction [61/133]: 1017ms; RSS 362 MiB
+Stage schema_pass [61/133]: 100ms; RSS 368 MiB
+Stage framework_pass [61/133]: 62ms; RSS 373 MiB
+Stage string_literal_pass [61/133]: 36ms; RSS 378 MiB
+Stage param_flow_pass [61/133]: 10ms; RSS 378 MiB
+Stage route_pass [61/133]: 89ms; RSS 389 MiB
+Batch 61/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 1758ms; RSS 389 MiB
+Stage primary_extraction [62/133]: 250ms; RSS 391 MiB
+Stage schema_pass [62/133]: 14ms; RSS 385 MiB
+Stage framework_pass [62/133]: 4ms; RSS 384 MiB
+Stage string_literal_pass [62/133]: 4ms; RSS 383 MiB
+Stage param_flow_pass [62/133]: 2ms; RSS 382 MiB
+Stage route_pass [62/133]: 22ms; RSS 374 MiB
+Batch 62/133: 21 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/reading-advantage/tsconfig.json in 398ms; RSS 375 MiB
+Stage primary_extraction [63/133]: 681ms; RSS 320 MiB
+Stage schema_pass [63/133]: 51ms; RSS 324 MiB
+Stage framework_pass [63/133]: 60ms; RSS 329 MiB
+Stage string_literal_pass [63/133]: 36ms; RSS 334 MiB
+Stage param_flow_pass [63/133]: 4ms; RSS 334 MiB
+Stage route_pass [63/133]: 81ms; RSS 344 MiB
+Batch 63/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/sales-advantage/tsconfig.json in 1061ms; RSS 344 MiB
+Stage primary_extraction [64/133]: 927ms; RSS 330 MiB
+Stage schema_pass [64/133]: 193ms; RSS 334 MiB
+Stage framework_pass [64/133]: 58ms; RSS 342 MiB
+Stage string_literal_pass [64/133]: 42ms; RSS 348 MiB
+Stage param_flow_pass [64/133]: 11ms; RSS 348 MiB
+Stage route_pass [64/133]: 135ms; RSS 365 MiB
+Batch 64/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/sales-advantage/tsconfig.json in 1611ms; RSS 365 MiB
+Stage primary_extraction [65/133]: 1236ms; RSS 330 MiB
+Stage schema_pass [65/133]: 102ms; RSS 338 MiB
+Stage framework_pass [65/133]: 41ms; RSS 341 MiB
+Stage string_literal_pass [65/133]: 47ms; RSS 346 MiB
+Stage param_flow_pass [65/133]: 43ms; RSS 346 MiB
+Stage route_pass [65/133]: 224ms; RSS 362 MiB
+Batch 65/133: 21 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/sales-advantage/tsconfig.json in 1890ms; RSS 362 MiB
+Stage primary_extraction [66/133]: 1042ms; RSS 329 MiB
+Stage schema_pass [66/133]: 38ms; RSS 332 MiB
+Stage framework_pass [66/133]: 44ms; RSS 337 MiB
+Stage string_literal_pass [66/133]: 36ms; RSS 342 MiB
+Stage param_flow_pass [66/133]: 8ms; RSS 342 MiB
+Stage route_pass [66/133]: 74ms; RSS 353 MiB
+Batch 66/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/science-advantage/tsconfig.json in 1459ms; RSS 353 MiB
+Stage primary_extraction [67/133]: 1189ms; RSS 364 MiB
+Stage schema_pass [67/133]: 106ms; RSS 377 MiB
+Stage framework_pass [67/133]: 73ms; RSS 390 MiB
+Stage string_literal_pass [67/133]: 58ms; RSS 400 MiB
+Stage param_flow_pass [67/133]: 7ms; RSS 400 MiB
+Stage route_pass [67/133]: 210ms; RSS 411 MiB
+Batch 67/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/science-advantage/tsconfig.json in 2037ms; RSS 410 MiB
+Stage primary_extraction [68/133]: 1561ms; RSS 370 MiB
+Stage schema_pass [68/133]: 97ms; RSS 382 MiB
+Stage framework_pass [68/133]: 86ms; RSS 396 MiB
+Stage string_literal_pass [68/133]: 65ms; RSS 406 MiB
+Stage param_flow_pass [68/133]: 8ms; RSS 407 MiB
+Stage route_pass [68/133]: 252ms; RSS 427 MiB
+Batch 68/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/science-advantage/tsconfig.json in 2428ms; RSS 427 MiB
+Stage primary_extraction [69/133]: 903ms; RSS 362 MiB
+Stage schema_pass [69/133]: 73ms; RSS 369 MiB
+Stage framework_pass [69/133]: 58ms; RSS 378 MiB
+Stage string_literal_pass [69/133]: 43ms; RSS 385 MiB
+Stage param_flow_pass [69/133]: 12ms; RSS 385 MiB
+Stage route_pass [69/133]: 147ms; RSS 407 MiB
+Batch 69/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/science-advantage/tsconfig.json in 1649ms; RSS 408 MiB
+Stage primary_extraction [70/133]: 1265ms; RSS 379 MiB
+Stage schema_pass [70/133]: 82ms; RSS 390 MiB
+Stage framework_pass [70/133]: 246ms; RSS 417 MiB
+Stage string_literal_pass [70/133]: 228ms; RSS 429 MiB
+Stage param_flow_pass [70/133]: 19ms; RSS 429 MiB
+Stage route_pass [70/133]: 120ms; RSS 429 MiB
+Batch 70/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/science-advantage/tsconfig.json in 2213ms; RSS 432 MiB
+Stage primary_extraction [71/133]: 1431ms; RSS 371 MiB
+Stage schema_pass [71/133]: 71ms; RSS 378 MiB
+Stage framework_pass [71/133]: 189ms; RSS 398 MiB
+Stage string_literal_pass [71/133]: 109ms; RSS 414 MiB
+Stage param_flow_pass [71/133]: 22ms; RSS 415 MiB
+Stage route_pass [71/133]: 150ms; RSS 436 MiB
+Batch 71/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/science-advantage/tsconfig.json in 2235ms; RSS 436 MiB
+Stage primary_extraction [72/133]: 936ms; RSS 369 MiB
+Stage schema_pass [72/133]: 107ms; RSS 377 MiB
+Stage framework_pass [72/133]: 31ms; RSS 382 MiB
+Stage string_literal_pass [72/133]: 28ms; RSS 387 MiB
+Stage param_flow_pass [72/133]: 10ms; RSS 387 MiB
+Stage route_pass [72/133]: 328ms; RSS 416 MiB
+Batch 72/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/science-advantage/tsconfig.json in 1946ms; RSS 416 MiB
+Stage primary_extraction [73/133]: 1342ms; RSS 364 MiB
+Stage schema_pass [73/133]: 100ms; RSS 367 MiB
+Stage framework_pass [73/133]: 27ms; RSS 370 MiB
+Stage string_literal_pass [73/133]: 26ms; RSS 373 MiB
+Stage param_flow_pass [73/133]: 5ms; RSS 373 MiB
+Stage route_pass [73/133]: 163ms; RSS 382 MiB
+Batch 73/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/science-advantage/tsconfig.json in 1997ms; RSS 382 MiB
+Stage primary_extraction [74/133]: 978ms; RSS 353 MiB
+Stage schema_pass [74/133]: 79ms; RSS 359 MiB
+Stage framework_pass [74/133]: 57ms; RSS 362 MiB
+Stage string_literal_pass [74/133]: 79ms; RSS 365 MiB
+Stage param_flow_pass [74/133]: 30ms; RSS 365 MiB
+Stage route_pass [74/133]: 332ms; RSS 384 MiB
+Batch 74/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/science-advantage/tsconfig.json in 2068ms; RSS 384 MiB
+Stage primary_extraction [75/133]: 623ms; RSS 347 MiB
+Stage schema_pass [75/133]: 138ms; RSS 358 MiB
+Stage framework_pass [75/133]: 50ms; RSS 361 MiB
+Stage string_literal_pass [75/133]: 16ms; RSS 362 MiB
+Stage param_flow_pass [75/133]: 5ms; RSS 363 MiB
+Stage route_pass [75/133]: 110ms; RSS 375 MiB
+Batch 75/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/science-advantage/tsconfig.json in 1254ms; RSS 375 MiB
+Stage primary_extraction [76/133]: 1432ms; RSS 371 MiB
+Stage schema_pass [76/133]: 278ms; RSS 379 MiB
+Stage framework_pass [76/133]: 47ms; RSS 386 MiB
+Stage string_literal_pass [76/133]: 42ms; RSS 393 MiB
+Stage param_flow_pass [76/133]: 8ms; RSS 393 MiB
+Stage route_pass [76/133]: 247ms; RSS 419 MiB
+Batch 76/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/science-advantage/tsconfig.json in 2423ms; RSS 420 MiB
+Stage primary_extraction [77/133]: 517ms; RSS 351 MiB
+Stage schema_pass [77/133]: 57ms; RSS 354 MiB
+Stage framework_pass [77/133]: 23ms; RSS 356 MiB
+Stage string_literal_pass [77/133]: 18ms; RSS 357 MiB
+Stage param_flow_pass [77/133]: 3ms; RSS 358 MiB
+Stage route_pass [77/133]: 61ms; RSS 364 MiB
+Batch 77/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/science-advantage/tsconfig.json in 910ms; RSS 364 MiB
+Stage primary_extraction [78/133]: 1451ms; RSS 373 MiB
+Stage schema_pass [78/133]: 130ms; RSS 379 MiB
+Stage framework_pass [78/133]: 195ms; RSS 395 MiB
+Stage string_literal_pass [78/133]: 201ms; RSS 407 MiB
+Stage param_flow_pass [78/133]: 19ms; RSS 407 MiB
+Stage route_pass [78/133]: 190ms; RSS 430 MiB
+Batch 78/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/science-advantage/tsconfig.json in 2451ms; RSS 430 MiB
+Stage primary_extraction [79/133]: 24ms; RSS 437 MiB
+Stage schema_pass [79/133]: 1ms; RSS 437 MiB
+Stage framework_pass [79/133]: 0ms; RSS 437 MiB
+Stage string_literal_pass [79/133]: 0ms; RSS 437 MiB
+Stage param_flow_pass [79/133]: 0ms; RSS 437 MiB
+Stage route_pass [79/133]: 1ms; RSS 437 MiB
+Batch 79/133: 5 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/science-advantage/tsconfig.json in 42ms; RSS 437 MiB
+Stage primary_extraction [80/133]: 1690ms; RSS 367 MiB
+Stage schema_pass [80/133]: 54ms; RSS 372 MiB
+Stage framework_pass [80/133]: 134ms; RSS 386 MiB
+Stage string_literal_pass [80/133]: 73ms; RSS 399 MiB
+Stage param_flow_pass [80/133]: 3ms; RSS 399 MiB
+Stage route_pass [80/133]: 137ms; RSS 418 MiB
+Batch 80/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/www-reading-advantage/tsconfig.json in 2310ms; RSS 418 MiB
+Stage primary_extraction [81/133]: 1283ms; RSS 379 MiB
+Stage schema_pass [81/133]: 86ms; RSS 385 MiB
+Stage framework_pass [81/133]: 153ms; RSS 408 MiB
+Stage string_literal_pass [81/133]: 165ms; RSS 424 MiB
+Stage param_flow_pass [81/133]: 5ms; RSS 424 MiB
+Stage route_pass [81/133]: 167ms; RSS 445 MiB
+Batch 81/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/www-reading-advantage/tsconfig.json in 2082ms; RSS 445 MiB
+Stage primary_extraction [82/133]: 1189ms; RSS 382 MiB
+Stage schema_pass [82/133]: 65ms; RSS 388 MiB
+Stage framework_pass [82/133]: 61ms; RSS 395 MiB
+Stage string_literal_pass [82/133]: 63ms; RSS 395 MiB
+Stage param_flow_pass [82/133]: 7ms; RSS 395 MiB
+Stage route_pass [82/133]: 131ms; RSS 413 MiB
+Batch 82/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/www-reading-advantage/tsconfig.json in 1851ms; RSS 413 MiB
+Stage primary_extraction [83/133]: 257ms; RSS 354 MiB
+Stage schema_pass [83/133]: 87ms; RSS 357 MiB
+Stage framework_pass [83/133]: 7ms; RSS 357 MiB
+Stage string_literal_pass [83/133]: 6ms; RSS 357 MiB
+Stage param_flow_pass [83/133]: 3ms; RSS 357 MiB
+Stage route_pass [83/133]: 55ms; RSS 362 MiB
+Batch 83/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/www-reading-advantage/tsconfig.json in 626ms; RSS 362 MiB
+Stage primary_extraction [84/133]: 165ms; RSS 351 MiB
+Stage schema_pass [84/133]: 43ms; RSS 352 MiB
+Stage framework_pass [84/133]: 4ms; RSS 353 MiB
+Stage string_literal_pass [84/133]: 5ms; RSS 353 MiB
+Stage param_flow_pass [84/133]: 1ms; RSS 353 MiB
+Stage route_pass [84/133]: 41ms; RSS 355 MiB
+Batch 84/133: 19 files from /tmp/opencode/r2-clean-audit-glpaggik/source/apps/www-reading-advantage/tsconfig.json in 409ms; RSS 356 MiB
+Stage primary_extraction [85/133]: 21ms; RSS 358 MiB
+Stage schema_pass [85/133]: 32ms; RSS 358 MiB
+Stage framework_pass [85/133]: 0ms; RSS 357 MiB
+Stage string_literal_pass [85/133]: 0ms; RSS 357 MiB
+Stage param_flow_pass [85/133]: 0ms; RSS 355 MiB
+Stage route_pass [85/133]: 0ms; RSS 355 MiB
+Batch 85/133: 3 files from /tmp/opencode/r2-clean-audit-glpaggik/source/measure/tracks/company_identity_sso_20260715/fixtures/architecture/positive/apps/sales/tsconfig.json in 75ms; RSS 355 MiB
+Stage primary_extraction [86/133]: 576ms; RSS 351 MiB
+Stage schema_pass [86/133]: 16ms; RSS 352 MiB
+Stage framework_pass [86/133]: 26ms; RSS 353 MiB
+Stage string_literal_pass [86/133]: 18ms; RSS 355 MiB
+Stage param_flow_pass [86/133]: 3ms; RSS 355 MiB
+Stage route_pass [86/133]: 28ms; RSS 357 MiB
+Batch 86/133: 5 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/activity-react/tsconfig.json in 756ms; RSS 357 MiB
+Stage primary_extraction [87/133]: 877ms; RSS 358 MiB
+Stage schema_pass [87/133]: 40ms; RSS 361 MiB
+Stage framework_pass [87/133]: 36ms; RSS 364 MiB
+Stage string_literal_pass [87/133]: 33ms; RSS 366 MiB
+Stage param_flow_pass [87/133]: 17ms; RSS 366 MiB
+Stage route_pass [87/133]: 114ms; RSS 373 MiB
+Batch 87/133: 9 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/activity-runtime/tsconfig.json in 1356ms; RSS 373 MiB
+Stage primary_extraction [88/133]: 503ms; RSS 360 MiB
+Stage schema_pass [88/133]: 46ms; RSS 362 MiB
+Stage framework_pass [88/133]: 48ms; RSS 363 MiB
+Stage string_literal_pass [88/133]: 48ms; RSS 365 MiB
+Stage param_flow_pass [88/133]: 17ms; RSS 366 MiB
+Stage route_pass [88/133]: 84ms; RSS 373 MiB
+Batch 88/133: 10 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/activity-tutorial/tsconfig.json in 847ms; RSS 373 MiB
+Stage primary_extraction [89/133]: 2112ms; RSS 397 MiB
+Stage schema_pass [89/133]: 115ms; RSS 411 MiB
+Stage framework_pass [89/133]: 238ms; RSS 438 MiB
+Stage string_literal_pass [89/133]: 156ms; RSS 456 MiB
+Stage param_flow_pass [89/133]: 76ms; RSS 458 MiB
+Stage route_pass [89/133]: 222ms; RSS 460 MiB
+Batch 89/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/advantage-play-kit/tsconfig.json in 3388ms; RSS 460 MiB
+Stage primary_extraction [90/133]: 1166ms; RSS 378 MiB
+Stage schema_pass [90/133]: 42ms; RSS 382 MiB
+Stage framework_pass [90/133]: 65ms; RSS 390 MiB
+Stage string_literal_pass [90/133]: 90ms; RSS 397 MiB
+Stage param_flow_pass [90/133]: 38ms; RSS 397 MiB
+Stage route_pass [90/133]: 181ms; RSS 411 MiB
+Batch 90/133: 29 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/advantage-play-kit/tsconfig.json in 2004ms; RSS 411 MiB
+Stage primary_extraction [91/133]: 653ms; RSS 366 MiB
+Stage schema_pass [91/133]: 85ms; RSS 370 MiB
+Stage framework_pass [91/133]: 19ms; RSS 372 MiB
+Stage string_literal_pass [91/133]: 27ms; RSS 374 MiB
+Stage param_flow_pass [91/133]: 18ms; RSS 375 MiB
+Stage route_pass [91/133]: 213ms; RSS 388 MiB
+Batch 91/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/ai/tsconfig.json in 1451ms; RSS 388 MiB
+Stage primary_extraction [92/133]: 323ms; RSS 360 MiB
+Stage schema_pass [92/133]: 21ms; RSS 361 MiB
+Stage framework_pass [92/133]: 4ms; RSS 361 MiB
+Stage string_literal_pass [92/133]: 4ms; RSS 362 MiB
+Stage param_flow_pass [92/133]: 1ms; RSS 362 MiB
+Stage route_pass [92/133]: 30ms; RSS 364 MiB
+Batch 92/133: 13 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/ai/tsconfig.json in 549ms; RSS 364 MiB
+Stage primary_extraction [93/133]: 1069ms; RSS 376 MiB
+Stage schema_pass [93/133]: 146ms; RSS 385 MiB
+Stage framework_pass [93/133]: 31ms; RSS 387 MiB
+Stage string_literal_pass [93/133]: 14ms; RSS 388 MiB
+Stage param_flow_pass [93/133]: 5ms; RSS 389 MiB
+Stage route_pass [93/133]: 252ms; RSS 418 MiB
+Batch 93/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/api/tsconfig.json in 1861ms; RSS 418 MiB
+Stage primary_extraction [94/133]: 586ms; RSS 370 MiB
+Stage schema_pass [94/133]: 56ms; RSS 375 MiB
+Stage framework_pass [94/133]: 30ms; RSS 378 MiB
+Stage string_literal_pass [94/133]: 24ms; RSS 380 MiB
+Stage param_flow_pass [94/133]: 4ms; RSS 380 MiB
+Stage route_pass [94/133]: 99ms; RSS 393 MiB
+Batch 94/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/api/tsconfig.json in 1100ms; RSS 393 MiB
+Stage primary_extraction [95/133]: 83ms; RSS 363 MiB
+Stage schema_pass [95/133]: 3ms; RSS 363 MiB
+Stage framework_pass [95/133]: 2ms; RSS 363 MiB
+Stage string_literal_pass [95/133]: 1ms; RSS 363 MiB
+Stage param_flow_pass [95/133]: 1ms; RSS 363 MiB
+Stage route_pass [95/133]: 3ms; RSS 364 MiB
+Batch 95/133: 3 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/api/tsconfig.json in 111ms; RSS 364 MiB
+Stage primary_extraction [96/133]: 2037ms; RSS 408 MiB
+Stage schema_pass [96/133]: 215ms; RSS 428 MiB
+Stage framework_pass [96/133]: 138ms; RSS 448 MiB
+Stage string_literal_pass [96/133]: 91ms; RSS 463 MiB
+Stage param_flow_pass [96/133]: 100ms; RSS 463 MiB
+Stage route_pass [96/133]: 332ms; RSS 473 MiB
+Batch 96/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/architecture-enforcement/tsconfig.json in 3403ms; RSS 473 MiB
+Stage primary_extraction [97/133]: 2163ms; RSS 411 MiB
+Stage schema_pass [97/133]: 163ms; RSS 424 MiB
+Stage framework_pass [97/133]: 167ms; RSS 449 MiB
+Stage string_literal_pass [97/133]: 163ms; RSS 467 MiB
+Stage param_flow_pass [97/133]: 66ms; RSS 468 MiB
+Stage route_pass [97/133]: 490ms; RSS 496 MiB
+Batch 97/133: 21 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/architecture-enforcement/tsconfig.json in 3642ms; RSS 497 MiB
+Stage primary_extraction [98/133]: 118ms; RSS 497 MiB
+Stage schema_pass [98/133]: 8ms; RSS 497 MiB
+Stage framework_pass [98/133]: 3ms; RSS 497 MiB
+Stage string_literal_pass [98/133]: 4ms; RSS 497 MiB
+Stage param_flow_pass [98/133]: 1ms; RSS 497 MiB
+Stage route_pass [98/133]: 25ms; RSS 497 MiB
+Batch 98/133: 5 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/auth-client/tsconfig.json in 210ms; RSS 497 MiB
+Stage primary_extraction [99/133]: 1050ms; RSS 375 MiB
+Stage schema_pass [99/133]: 87ms; RSS 381 MiB
+Stage framework_pass [99/133]: 13ms; RSS 382 MiB
+Stage string_literal_pass [99/133]: 11ms; RSS 383 MiB
+Stage param_flow_pass [99/133]: 4ms; RSS 383 MiB
+Stage route_pass [99/133]: 153ms; RSS 402 MiB
+Batch 99/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/auth/tsconfig.json in 1964ms; RSS 402 MiB
+Stage primary_extraction [100/133]: 982ms; RSS 374 MiB
+Stage schema_pass [100/133]: 52ms; RSS 376 MiB
+Stage framework_pass [100/133]: 43ms; RSS 381 MiB
+Stage string_literal_pass [100/133]: 33ms; RSS 384 MiB
+Stage param_flow_pass [100/133]: 20ms; RSS 384 MiB
+Stage route_pass [100/133]: 75ms; RSS 394 MiB
+Batch 100/133: 21 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/auth/tsconfig.json in 1455ms; RSS 394 MiB
+Stage primary_extraction [101/133]: 1696ms; RSS 408 MiB
+Stage schema_pass [101/133]: 174ms; RSS 420 MiB
+Stage framework_pass [101/133]: 166ms; RSS 446 MiB
+Stage string_literal_pass [101/133]: 127ms; RSS 465 MiB
+Stage param_flow_pass [101/133]: 31ms; RSS 466 MiB
+Stage route_pass [101/133]: 167ms; RSS 497 MiB
+Batch 101/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/backend/tsconfig.json in 2981ms; RSS 497 MiB
+Stage primary_extraction [102/133]: 581ms; RSS 377 MiB
+Stage schema_pass [102/133]: 43ms; RSS 380 MiB
+Stage framework_pass [102/133]: 35ms; RSS 384 MiB
+Stage string_literal_pass [102/133]: 32ms; RSS 386 MiB
+Stage param_flow_pass [102/133]: 16ms; RSS 387 MiB
+Stage route_pass [102/133]: 60ms; RSS 398 MiB
+Batch 102/133: 15 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/backend/tsconfig.json in 884ms; RSS 398 MiB
+Stage primary_extraction [103/133]: 626ms; RSS 389 MiB
+Stage schema_pass [103/133]: 41ms; RSS 391 MiB
+Stage framework_pass [103/133]: 48ms; RSS 396 MiB
+Stage string_literal_pass [103/133]: 33ms; RSS 400 MiB
+Stage param_flow_pass [103/133]: 9ms; RSS 401 MiB
+Stage route_pass [103/133]: 84ms; RSS 404 MiB
+Batch 103/133: 19 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/codecamp-knowledge/tsconfig.json in 1041ms; RSS 404 MiB
+Stage primary_extraction [104/133]: 525ms; RSS 385 MiB
+Stage schema_pass [104/133]: 122ms; RSS 394 MiB
+Stage framework_pass [104/133]: 27ms; RSS 396 MiB
+Stage string_literal_pass [104/133]: 22ms; RSS 397 MiB
+Stage param_flow_pass [104/133]: 19ms; RSS 397 MiB
+Stage route_pass [104/133]: 233ms; RSS 426 MiB
+Batch 104/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/db/tsconfig.json in 1155ms; RSS 427 MiB
+Stage primary_extraction [105/133]: 707ms; RSS 405 MiB
+Stage schema_pass [105/133]: 96ms; RSS 418 MiB
+Stage framework_pass [105/133]: 19ms; RSS 421 MiB
+Stage string_literal_pass [105/133]: 19ms; RSS 424 MiB
+Stage param_flow_pass [105/133]: 9ms; RSS 424 MiB
+Stage route_pass [105/133]: 168ms; RSS 450 MiB
+Batch 105/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/db/tsconfig.json in 1227ms; RSS 450 MiB
+Stage primary_extraction [106/133]: 1296ms; RSS 409 MiB
+Stage schema_pass [106/133]: 135ms; RSS 425 MiB
+Stage framework_pass [106/133]: 115ms; RSS 452 MiB
+Stage string_literal_pass [106/133]: 125ms; RSS 464 MiB
+Stage param_flow_pass [106/133]: 51ms; RSS 464 MiB
+Stage route_pass [106/133]: 296ms; RSS 502 MiB
+Batch 106/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/db/tsconfig.json in 2348ms; RSS 502 MiB
+Stage primary_extraction [107/133]: 985ms; RSS 414 MiB
+Stage schema_pass [107/133]: 169ms; RSS 426 MiB
+Stage framework_pass [107/133]: 92ms; RSS 438 MiB
+Stage string_literal_pass [107/133]: 56ms; RSS 447 MiB
+Stage param_flow_pass [107/133]: 7ms; RSS 447 MiB
+Stage route_pass [107/133]: 242ms; RSS 476 MiB
+Batch 107/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/db/tsconfig.json in 1879ms; RSS 476 MiB
+Stage primary_extraction [108/133]: 326ms; RSS 471 MiB
+Stage schema_pass [108/133]: 16ms; RSS 462 MiB
+Stage framework_pass [108/133]: 8ms; RSS 459 MiB
+Stage string_literal_pass [108/133]: 7ms; RSS 453 MiB
+Stage param_flow_pass [108/133]: 7ms; RSS 447 MiB
+Stage route_pass [108/133]: 10ms; RSS 440 MiB
+Batch 108/133: 5 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/db/tsconfig.json in 452ms; RSS 439 MiB
+Stage primary_extraction [109/133]: 989ms; RSS 396 MiB
+Stage schema_pass [109/133]: 119ms; RSS 400 MiB
+Stage framework_pass [109/133]: 76ms; RSS 407 MiB
+Stage string_literal_pass [109/133]: 73ms; RSS 414 MiB
+Stage param_flow_pass [109/133]: 57ms; RSS 414 MiB
+Stage route_pass [109/133]: 350ms; RSS 430 MiB
+Batch 109/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/domain/tsconfig.json in 1838ms; RSS 430 MiB
+Stage primary_extraction [110/133]: 1891ms; RSS 428 MiB
+Stage schema_pass [110/133]: 97ms; RSS 442 MiB
+Stage framework_pass [110/133]: 200ms; RSS 473 MiB
+Stage string_literal_pass [110/133]: 298ms; RSS 495 MiB
+Stage param_flow_pass [110/133]: 153ms; RSS 496 MiB
+Stage route_pass [110/133]: 296ms; RSS 512 MiB
+Batch 110/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/domain/tsconfig.json in 3415ms; RSS 511 MiB
+Stage primary_extraction [111/133]: 865ms; RSS 397 MiB
+Stage schema_pass [111/133]: 25ms; RSS 398 MiB
+Stage framework_pass [111/133]: 27ms; RSS 399 MiB
+Stage string_literal_pass [111/133]: 48ms; RSS 400 MiB
+Stage param_flow_pass [111/133]: 22ms; RSS 401 MiB
+Stage route_pass [111/133]: 55ms; RSS 401 MiB
+Batch 111/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/domain/tsconfig.json in 1198ms; RSS 402 MiB
+Stage primary_extraction [112/133]: 1276ms; RSS 401 MiB
+Stage schema_pass [112/133]: 41ms; RSS 404 MiB
+Stage framework_pass [112/133]: 48ms; RSS 410 MiB
+Stage string_literal_pass [112/133]: 49ms; RSS 415 MiB
+Stage param_flow_pass [112/133]: 14ms; RSS 416 MiB
+Stage route_pass [112/133]: 193ms; RSS 431 MiB
+Batch 112/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/domain/tsconfig.json in 1937ms; RSS 431 MiB
+Stage primary_extraction [113/133]: 1038ms; RSS 409 MiB
+Stage schema_pass [113/133]: 69ms; RSS 413 MiB
+Stage framework_pass [113/133]: 96ms; RSS 423 MiB
+Stage string_literal_pass [113/133]: 75ms; RSS 434 MiB
+Stage param_flow_pass [113/133]: 26ms; RSS 434 MiB
+Stage route_pass [113/133]: 112ms; RSS 452 MiB
+Batch 113/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/domain/tsconfig.json in 1712ms; RSS 452 MiB
+Stage primary_extraction [114/133]: 496ms; RSS 389 MiB
+Stage schema_pass [114/133]: 22ms; RSS 390 MiB
+Stage framework_pass [114/133]: 11ms; RSS 390 MiB
+Stage string_literal_pass [114/133]: 8ms; RSS 390 MiB
+Stage param_flow_pass [114/133]: 3ms; RSS 390 MiB
+Stage route_pass [114/133]: 13ms; RSS 391 MiB
+Batch 114/133: 16 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/domain/tsconfig.json in 645ms; RSS 391 MiB
+Stage primary_extraction [115/133]: 507ms; RSS 387 MiB
+Stage schema_pass [115/133]: 65ms; RSS 388 MiB
+Stage framework_pass [115/133]: 52ms; RSS 390 MiB
+Stage string_literal_pass [115/133]: 30ms; RSS 392 MiB
+Stage param_flow_pass [115/133]: 7ms; RSS 392 MiB
+Stage route_pass [115/133]: 54ms; RSS 396 MiB
+Batch 115/133: 9 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/game-cartridges/tsconfig.json in 825ms; RSS 396 MiB
+Stage primary_extraction [116/133]: 259ms; RSS 383 MiB
+Stage schema_pass [116/133]: 17ms; RSS 383 MiB
+Stage framework_pass [116/133]: 11ms; RSS 383 MiB
+Stage string_literal_pass [116/133]: 9ms; RSS 383 MiB
+Stage param_flow_pass [116/133]: 4ms; RSS 383 MiB
+Stage route_pass [116/133]: 23ms; RSS 384 MiB
+Batch 116/133: 11 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/game-contracts/tsconfig.json in 406ms; RSS 384 MiB
+Stage primary_extraction [117/133]: 90ms; RSS 382 MiB
+Stage schema_pass [117/133]: 4ms; RSS 382 MiB
+Stage framework_pass [117/133]: 2ms; RSS 382 MiB
+Stage string_literal_pass [117/133]: 1ms; RSS 382 MiB
+Stage param_flow_pass [117/133]: 1ms; RSS 382 MiB
+Stage route_pass [117/133]: 6ms; RSS 382 MiB
+Batch 117/133: 6 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/integrations/github/tsconfig.json in 162ms; RSS 382 MiB
+Stage primary_extraction [118/133]: 1151ms; RSS 405 MiB
+Stage schema_pass [118/133]: 51ms; RSS 409 MiB
+Stage framework_pass [118/133]: 96ms; RSS 420 MiB
+Stage string_literal_pass [118/133]: 80ms; RSS 431 MiB
+Stage param_flow_pass [118/133]: 31ms; RSS 432 MiB
+Stage route_pass [118/133]: 232ms; RSS 450 MiB
+Batch 118/133: 23 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/knowledge-space-core/tsconfig.json in 1983ms; RSS 450 MiB
+Stage primary_extraction [119/133]: 1405ms; RSS 402 MiB
+Stage schema_pass [119/133]: 146ms; RSS 406 MiB
+Stage framework_pass [119/133]: 135ms; RSS 413 MiB
+Stage string_literal_pass [119/133]: 107ms; RSS 419 MiB
+Stage param_flow_pass [119/133]: 25ms; RSS 419 MiB
+Stage route_pass [119/133]: 318ms; RSS 427 MiB
+Batch 119/133: 25 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/knowledge-space-practice/tsconfig.json in 2447ms; RSS 426 MiB
+Stage primary_extraction [120/133]: 498ms; RSS 380 MiB
+Stage schema_pass [120/133]: 28ms; RSS 381 MiB
+Stage framework_pass [120/133]: 41ms; RSS 382 MiB
+Stage string_literal_pass [120/133]: 40ms; RSS 383 MiB
+Stage param_flow_pass [120/133]: 19ms; RSS 383 MiB
+Stage route_pass [120/133]: 37ms; RSS 384 MiB
+Batch 120/133: 4 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/mastery-runtime-compat/tsconfig.json in 790ms; RSS 384 MiB
+Stage primary_extraction [121/133]: 1075ms; RSS 381 MiB
+Stage schema_pass [121/133]: 52ms; RSS 382 MiB
+Stage framework_pass [121/133]: 62ms; RSS 385 MiB
+Stage string_literal_pass [121/133]: 69ms; RSS 387 MiB
+Stage param_flow_pass [121/133]: 39ms; RSS 388 MiB
+Stage route_pass [121/133]: 100ms; RSS 392 MiB
+Batch 121/133: 13 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/practice-core/tsconfig.json in 1700ms; RSS 392 MiB
+Stage primary_extraction [122/133]: 1916ms; RSS 384 MiB
+Stage schema_pass [122/133]: 39ms; RSS 387 MiB
+Stage framework_pass [122/133]: 65ms; RSS 392 MiB
+Stage string_literal_pass [122/133]: 36ms; RSS 396 MiB
+Stage param_flow_pass [122/133]: 18ms; RSS 396 MiB
+Stage route_pass [122/133]: 114ms; RSS 407 MiB
+Batch 122/133: 16 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/srs-engine/tsconfig.json in 2496ms; RSS 407 MiB
+Stage primary_extraction [123/133]: 300ms; RSS 370 MiB
+Stage schema_pass [123/133]: 19ms; RSS 371 MiB
+Stage framework_pass [123/133]: 5ms; RSS 371 MiB
+Stage string_literal_pass [123/133]: 10ms; RSS 371 MiB
+Stage param_flow_pass [123/133]: 1ms; RSS 371 MiB
+Stage route_pass [123/133]: 32ms; RSS 372 MiB
+Batch 123/133: 9 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/storage/tsconfig.json in 615ms; RSS 372 MiB
+Stage primary_extraction [124/133]: 892ms; RSS 372 MiB
+Stage schema_pass [124/133]: 274ms; RSS 374 MiB
+Stage framework_pass [124/133]: 5ms; RSS 374 MiB
+Stage string_literal_pass [124/133]: 11ms; RSS 374 MiB
+Stage param_flow_pass [124/133]: 3ms; RSS 374 MiB
+Stage route_pass [124/133]: 97ms; RSS 377 MiB
+Batch 124/133: 11 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/types/tsconfig.json in 1618ms; RSS 377 MiB
+Stage primary_extraction [125/133]: 675ms; RSS 372 MiB
+Stage schema_pass [125/133]: 27ms; RSS 372 MiB
+Stage framework_pass [125/133]: 5ms; RSS 372 MiB
+Stage string_literal_pass [125/133]: 5ms; RSS 372 MiB
+Stage param_flow_pass [125/133]: 6ms; RSS 372 MiB
+Stage route_pass [125/133]: 26ms; RSS 373 MiB
+Batch 125/133: 22 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/ui/tsconfig.json in 853ms; RSS 373 MiB
+Stage primary_extraction [126/133]: 438ms; RSS 370 MiB
+Stage schema_pass [126/133]: 8ms; RSS 370 MiB
+Stage framework_pass [126/133]: 6ms; RSS 371 MiB
+Stage string_literal_pass [126/133]: 5ms; RSS 371 MiB
+Stage param_flow_pass [126/133]: 1ms; RSS 371 MiB
+Stage route_pass [126/133]: 12ms; RSS 372 MiB
+Batch 126/133: 9 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/utils/tsconfig.json in 601ms; RSS 372 MiB
+Stage primary_extraction [127/133]: 2351ms; RSS 405 MiB
+Stage schema_pass [127/133]: 233ms; RSS 416 MiB
+Stage framework_pass [127/133]: 165ms; RSS 424 MiB
+Stage string_literal_pass [127/133]: 56ms; RSS 430 MiB
+Stage param_flow_pass [127/133]: 17ms; RSS 430 MiB
+Stage route_pass [127/133]: 485ms; RSS 468 MiB
+Batch 127/133: 32 files from /tmp/opencode/r2-clean-audit-glpaggik/source/packages/webhooks/tsconfig.json in 3932ms; RSS 468 MiB
+Stage primary_extraction [128/133]: 1159ms; RSS 382 MiB
+Stage schema_pass [128/133]: 30ms; RSS 383 MiB
+Stage framework_pass [128/133]: 13ms; RSS 383 MiB
+Stage string_literal_pass [128/133]: 7ms; RSS 383 MiB
+Stage param_flow_pass [128/133]: 5ms; RSS 384 MiB
+Stage route_pass [128/133]: 41ms; RSS 385 MiB
+Batch 128/133: 9 files from /tmp/opencode/r2-clean-audit-glpaggik/source/services/worker/tsconfig.json in 1489ms; RSS 385 MiB
+Stage primary_extraction [129/133]: 24ms; RSS 376 MiB
+Stage schema_pass [129/133]: 0ms; RSS 376 MiB
+Stage framework_pass [129/133]: 0ms; RSS 374 MiB
+Stage string_literal_pass [129/133]: 0ms; RSS 374 MiB
+Stage param_flow_pass [129/133]: 0ms; RSS 374 MiB
+Stage route_pass [129/133]: 0ms; RSS 374 MiB
+Batch 129/133: 2 files from /tmp/opencode/r2-clean-audit-glpaggik/source/test-fixtures/architecture-enforcement/database/alias/tsconfig.json in 58ms; RSS 374 MiB
+Stage primary_extraction [130/133]: 28ms; RSS 370 MiB
+Stage schema_pass [130/133]: 0ms; RSS 370 MiB
+Stage framework_pass [130/133]: 0ms; RSS 370 MiB
+Stage string_literal_pass [130/133]: 0ms; RSS 370 MiB
+Stage param_flow_pass [130/133]: 4ms; RSS 370 MiB
+Stage route_pass [130/133]: 0ms; RSS 370 MiB
+Batch 130/133: 2 files from /tmp/opencode/r2-clean-audit-glpaggik/source/test-fixtures/architecture-enforcement/database/worker-job-port/tsconfig.json in 47ms; RSS 370 MiB
+Stage primary_extraction [131/133]: 4ms; RSS 369 MiB
+Stage schema_pass [131/133]: 0ms; RSS 369 MiB
+Stage framework_pass [131/133]: 0ms; RSS 369 MiB
+Stage string_literal_pass [131/133]: 0ms; RSS 369 MiB
+Stage param_flow_pass [131/133]: 0ms; RSS 369 MiB
+Stage route_pass [131/133]: 0ms; RSS 369 MiB
+Batch 131/133: 2 files from /tmp/opencode/r2-clean-audit-glpaggik/source/test-fixtures/architecture-enforcement/provider/ai-alias/tsconfig.json in 14ms; RSS 369 MiB
+Stage primary_extraction [132/133]: 9ms; RSS 371 MiB
+Stage schema_pass [132/133]: 0ms; RSS 371 MiB
+Stage framework_pass [132/133]: 0ms; RSS 371 MiB
+Stage string_literal_pass [132/133]: 0ms; RSS 371 MiB
+Stage param_flow_pass [132/133]: 0ms; RSS 371 MiB
+Stage route_pass [132/133]: 0ms; RSS 371 MiB
+Batch 132/133: 2 files from /tmp/opencode/r2-clean-audit-glpaggik/source/test-fixtures/architecture-enforcement/provider/ai-internal-interface/tsconfig.json in 23ms; RSS 371 MiB
+Stage primary_extraction [133/133]: 3ms; RSS 370 MiB
+Stage schema_pass [133/133]: 0ms; RSS 370 MiB
+Stage framework_pass [133/133]: 0ms; RSS 370 MiB
+Stage string_literal_pass [133/133]: 0ms; RSS 370 MiB
+Stage param_flow_pass [133/133]: 0ms; RSS 370 MiB
+Stage route_pass [133/133]: 0ms; RSS 370 MiB
+Batch 133/133: 2 files from /tmp/opencode/r2-clean-audit-glpaggik/source/test-fixtures/architecture-enforcement/provider/storage-internal-interface/tsconfig.json in 12ms; RSS 370 MiB
+Stage call_resolution: 4078ms; RSS 490 MiB
+Stage deduplication: 15172ms; RSS 1038 MiB
+Scanned 43 TypeScript configurations with at most 1 active Project
+Stage persistence: 25606ms; RSS 1760 MiB
+Scanned 88968 nodes, 117446 edges in 472960ms
