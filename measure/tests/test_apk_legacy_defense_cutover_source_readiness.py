@@ -98,6 +98,25 @@ EXPECTED_READINESS_BOUNDARY = {
     "meaning": "The receipt removes only the denominator/readiness predecessor block for this four-title child track. It does not satisfy Task 1 or any downstream task.",
 };
 
+EXPECTED_TITLE_KEYS = {
+    "title_id",
+    "title",
+    "assignment_index",
+    "source_identity_id",
+    "identity_record_index",
+    "cohort",
+    "classification",
+    "crosswalk_locator",
+    "legacy_source_records",
+    "legacy_source_records_status",
+}
+
+READINESS_BOOLEAN_FIELDS = (
+    "authorized_child_work_only",
+    "cohort_currently_ready",
+    "cartridge_cutover_authorized",
+)
+
 def _load_object(path: Path) -> dict[str, Any]:
     """Loads a required JSON object.
 
@@ -183,7 +202,12 @@ def _validate_manifest(manifest: object) -> None:
     }
     if set(manifest) != expected_top_level_keys:
         raise AssertionError("MANIFEST_SCHEMA_INVALID: unexpected manifest fields")
-    if manifest.get("readiness_boundary") != EXPECTED_READINESS_BOUNDARY:
+    readiness_boundary = manifest.get("readiness_boundary")
+    if not isinstance(readiness_boundary, dict) or any(
+        type(readiness_boundary.get(field)) is not bool for field in READINESS_BOOLEAN_FIELDS
+    ):
+        raise AssertionError("READINESS_BOUNDARY_DRIFT: readiness booleans must be exact")
+    if readiness_boundary != EXPECTED_READINESS_BOUNDARY:
         raise AssertionError("READINESS_BOUNDARY_DRIFT: readiness boundary must remain exact")
     if manifest.get("source_bindings") != EXPECTED_BINDINGS:
         raise AssertionError("SOURCE_BINDING_DRIFT: exact source bindings required")
@@ -217,6 +241,8 @@ def _validate_manifest(manifest: object) -> None:
     titles = manifest.get("titles")
     if not isinstance(titles, list) or len(titles) != len(EXPECTED_TITLES):
         raise AssertionError("ROSTER_DRIFT: exactly four titles required")
+    if any(not isinstance(title, dict) or set(title) != EXPECTED_TITLE_KEYS for title in titles):
+        raise AssertionError("TITLE_SCHEMA_INVALID: unexpected title fields")
     observed_roster = [
         {key: title.get(key) for key in ("title_id", "title", "assignment_index", "source_identity_id", "identity_record_index", "cohort", "classification")}
         for title in titles
@@ -346,6 +372,33 @@ class LegacyDefenseSourceReadinessManifestTests(unittest.TestCase):
         cutover_meaning = copy.deepcopy(self._manifest())
         cutover_meaning["readiness_boundary"]["meaning"] = "This record authorizes cutover."
         self._assert_rejected(cutover_meaning, "READINESS_BOUNDARY_DRIFT")
+
+    def test_nested_title_authority_and_numeric_readiness_values_fail_closed(self) -> None:
+        """Rejects title-level authority claims and non-boolean readiness values."""
+        nested_owner_acceptance = copy.deepcopy(self._manifest())
+        nested_owner_acceptance["titles"][0]["owner_acceptance"] = {
+            "decision": "approved",
+            "approvalDigest": "a" * 64,
+        }
+        self._assert_rejected(nested_owner_acceptance, "TITLE_SCHEMA_INVALID")
+
+        title_cutover = copy.deepcopy(self._manifest())
+        title_cutover["titles"][0]["cartridge_cutover_authorized"] = True
+        self._assert_rejected(title_cutover, "TITLE_SCHEMA_INVALID")
+
+        title_cohort_ready = copy.deepcopy(self._manifest())
+        title_cohort_ready["titles"][0]["cohort_currently_ready"] = True
+        self._assert_rejected(title_cohort_ready, "TITLE_SCHEMA_INVALID")
+
+        for field, numeric_value in (
+            ("authorized_child_work_only", 1),
+            ("cohort_currently_ready", 0),
+            ("cartridge_cutover_authorized", 0),
+        ):
+            with self.subTest(field=field):
+                numeric_boundary = copy.deepcopy(self._manifest())
+                numeric_boundary["readiness_boundary"][field] = numeric_value
+                self._assert_rejected(numeric_boundary, "READINESS_BOUNDARY_DRIFT")
 
 if __name__ == "__main__":
     unittest.main()
