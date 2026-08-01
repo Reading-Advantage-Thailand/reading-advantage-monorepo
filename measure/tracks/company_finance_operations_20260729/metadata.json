@@ -1,0 +1,67 @@
+{
+  "track_id": "company_finance_operations_20260729",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-07-29T00:00:00Z",
+  "updated_at": "2026-07-29T00:00:00Z",
+  "description": "Build a company-wide Finance Operations web app for payables, reimbursements, payroll-summary imports, school-customer billing, Tutor Advantage reconciliation, historical accounting-report import, and monthly Thai-accountant handoff.",
+  "estimated_tasks": 56,
+  "actual_tasks": null,
+  "deviation_notes": "Planning only. Finance Operations is a separate global company-finance boundary from Company Operations CRM and every school/product database. Tutor Advantage remains the operational source of truth for its payments, enrollments, network commissions, settlement approval, payouts, transfers, and payout documents.",
+  "sprint": {
+    "goal": "Give the company one controlled finance-operations surface that produces a reconciled, immutable monthly accountant pack without replacing the accountant's statutory ledger or duplicating product-owned financial workflows.",
+    "stories": [
+      {
+        "id": "S0",
+        "title": "Ratify finance contracts",
+        "size": "L",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S1",
+        "title": "Operate payables and reimbursements",
+        "size": "XL",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S2",
+        "title": "Bill school customers",
+        "size": "XL",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S3",
+        "title": "Reconcile Tutor Advantage",
+        "size": "L",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S4",
+        "title": "Import historical reports",
+        "size": "XL",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S5",
+        "title": "Close and export month",
+        "size": "XL",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S6",
+        "title": "Pilot and cut over",
+        "size": "L",
+        "priority": "Must",
+        "status": "pending"
+      }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}

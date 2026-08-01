@@ -64,6 +64,21 @@ program, priority order when picking the next track is:
 
 ---
 
+## Finance Operations Program (registered 2026-08-01)
+
+> Separate global company-finance planning boundary. This program does not
+> expand the Small-Company Operations MVP into accounting, tax execution, or
+> commission execution; it begins only after its named owner/accountant and
+> source-contract inputs are accepted.
+
+- [ ] **Track: Company Finance Operations and Accounting Handoff** *Link: [./tracks/company_finance_operations_20260729/](./tracks/company_finance_operations_20260729/)*
+  Planning-only, currently `new`. S0 is awaiting the redacted discovery dossier,
+  owner/Thai-accountant decision register, Tutor conflict disposition, and
+  source-boundary decisions listed in its readiness intake; no finance code,
+  migration, production role, or tax/accounting behavior is authorized.
+
+---
+
 ## Backend Platform Program (created 2026-07-13)
 
 > Bounded program for the [portable backend-as-code architecture](./backend-platform-spec.md).
