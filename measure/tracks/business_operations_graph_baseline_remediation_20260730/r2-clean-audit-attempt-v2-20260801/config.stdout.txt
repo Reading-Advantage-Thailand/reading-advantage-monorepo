@@ -1,0 +1,30 @@
+Config file: build-graph.config.json
+
+Schema:
+  {
+    "customEdges": [
+      {
+        "type": "validates_with",        // edge type name (snake_case)
+        "description": "Route validates...", // optional
+        "sourceType": "route",             // node type: file|function|class|interface|type_alias|schema|field|route|param
+        "targetType": "schema",             // same list as sourceType
+        "pattern": {
+          "targetName": "*Schema"           // optional glob filter on target node name
+        },
+        "scope": "same-file"                // optional: same-file (default) | imported | all
+      }
+    ]
+  }
+
+Scope modes:
+  same-file  Only connect source/target nodes in the same file (default, safest)
+  imported   Also connect to targets in files the source file imports
+  all        Connect every matching pair (cartesian product, use with targetName filter)
+
+Route mode tags:
+  export const mode = 'practice'  ->  route node gets tag 'mode:practice'
+  Detected automatically during scan. No config needed.
+
+Example:
+  repo-graph scan ./ ./graph.db --config ./build-graph.config.json
+  repo-graph scan ./ ./graph.db --include 'supabase/seed/**/*.json'

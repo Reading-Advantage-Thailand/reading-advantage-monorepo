@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "kind": "measure-independent-acceptance-receipt",
+  "trackId": "business_operations_graph_baseline_remediation_20260730",
+  "reviewedAt": "2026-08-01",
+  "reviewer": {
+    "role": "Sol high-level acceptance",
+    "reasoningEffort": "xhigh",
+    "independentOfCandidateProduction": true
+  },
+  "decision": "ACCEPT",
+  "acceptanceScope": "Bounded technical acceptance of the frozen v2 R1 source/graph recapture and R2 Tasks 1-2 clean-audit decision and compensation-denominator evidence only.",
+  "acceptedComponents": [
+    "v2 R1 source and graph recapture",
+    "R2 Task 1 documented clean-audit decision",
+    "R2 Task 2 compensation denominator and two-scan inventory evidence"
+  ],
+  "excludedScope": [
+    "R2 Tasks 3-5",
+    "all R3 tasks",
+    "Business Operations track acceptance",
+    "Admin S1",
+    "Customer, Licensing, and Minimal CRM Control Plane",
+    "Company Finance Operations and Accounting Handoff",
+    "owner confirmation",
+    "successor handoff or unblock"
+  ],
+  "trackAccepted": false,
+  "r2PhaseAccepted": false,
+  "successorsUnblocked": false,
+  "evidenceBindings": {
+    "sourceBundle": {
+      "archive": {
+        "path": "r1-task2-source-and-graph-v2-20260801/snapshot.archive.json",
+        "sha256": "e5a638e11ed57cfe6750cbe60e5ab31cbdcb0fd4ff3000458bae7168f868332e",
+        "size": 61177049
+      },
+      "manifest": {
+        "path": "r1-task2-source-and-graph-v2-20260801/snapshot.manifest.json",
+        "sha256": "ec848eaacce6eef4450434217ee7199c9c98ec44edc5496fa6f57f289eb1ae85",
+        "size": 2381425
+      }
+    },
+    "graphBinding": {
+      "path": "r1-task3-graph-binding-v2-20260801.json",
+      "sha256": "e66054a57dde5f022f96d0b09a570646b321fad2b3a3a54594618e1b0a515f20",
+      "size": 766334,
+      "status": "CANDIDATE_UNACCEPTED"
+    },
+    "graphDatabase": {
+      "path": "graph.db",
+      "sha256": "c0775e694cc600c96d0a67a35120e880e9c610724efe46d0650719b11f86c107",
+      "size": 183611392,
+      "schemaVersion": "2.0.0",
+      "toolVersion": "0.1.0",
+      "fileRowCount": 3465,
+      "allGraphFileRowsBoundToSnapshot": true,
+      "commandCount": 28,
+      "probeCount": 8
+    },
+    "auditAttempt": {
+      "path": "r2-clean-audit-attempt-v2-20260801/attempt.json",
+      "sha256": "6d21536d5cfcda34a228b13aacad9420fea3a4ffde17bb4a1d366989defcbd8f",
+      "size": 5730264,
+      "configurationExitCode": 0,
+      "scanExitCode": 0,
+      "auditExitCode": 1,
+      "integritySetsEmpty": true,
+      "unauditedSymbolCount": 3972,
+      "branch": "COMPENSATION_REQUIRED",
+      "cleanEligible": false
+    },
+    "compensationEvidence": {
+      "path": "r2-task2-compensation-denominator-v2-20260801.json",
+      "sha256": "2ef221f24856be0bcd48d7efeb434ae623e8bf0b21348dca0567457513274f6d",
+      "size": 3343489,
+      "frozen": true,
+      "fileCount": 3465,
+      "fieldCount": 3306,
+      "routeCount": 666,
+      "totalCount": 3972,
+      "normalizedInventorySha256": "a06e69ed1e82d76217474f011c1b9b4d41b5ccf7f206617021ccd718f1a7bc0a",
+      "scan1Inventory": {
+        "path": "r2-task2-scan-transaction-v2-20260801/scan-1-normalized-inventory-v1.json",
+        "sha256": "b8f5f8274250bce7f5adc238d3eb831ee4f5b45e88752082976d50bbf8766043",
+        "size": 1886757
+      },
+      "scan2Inventory": {
+        "path": "r2-task2-scan-transaction-v2-20260801/scan-2-normalized-inventory-v1.json",
+        "sha256": "b8f5f8274250bce7f5adc238d3eb831ee4f5b45e88752082976d50bbf8766043",
+        "size": 1886757
+      },
+      "distinctEphemeralScanGraphs": true,
+      "equalNormalizedInventories": true
+    },
+    "terraPhaseReview": {
+      "path": "r1-r2-v2-terra-phase-review-20260801.md",
+      "sha256": "506e22baeefb8764ca1bc0b1c144e8117d760bb14217005f4581511f23cc3f0d",
+      "size": 2091,
+      "decision": "PASS_CANDIDATE_EVIDENCE_CONTRACT_ONLY"
+    }
+  },
+  "independentVerification": {
+    "command": "CI=true PYTHONDONTWRITEBYTECODE=1 python3 -m unittest measure.tests.test_business_operations_graph_baseline_snapshot measure.tests.test_business_operations_graph_baseline_remediation measure.tests.test_business_operations_graph_baseline_r2_clean_audit measure.tests.test_business_operations_graph_baseline_r2_compensation measure.tests.test_business_operations_graph_baseline_r1_r2_v2_acceptance",
+    "exitCode": 0,
+    "testsRun": 83,
+    "result": "OK",
+    "observedDurationSeconds": 75.37,
+    "gitDiffCheck": "PASS"
+  },
+  "findings": {
+    "critical": [],
+    "high": [],
+    "medium": [
+      {
+        "id": "SOL-R1-R2-V2-M1",
+        "status": "RESOLVED",
+        "area": "Measure plan bookkeeping",
+        "summary": "The stale Completion Rule incorrectly described all R2 tasks as blocked.",
+        "resolution": "The Completion Rule now distinguishes bounded v2 R1/R2 Tasks 1-2 acceptance from still-blocked R2 Tasks 3-5 and R3 work without changing task markers."
+      }
+    ],
+    "remainingCriticalHigh": []
+  },
+  "acceptanceBasis": [
+    "The frozen root graph bytes match the hash and size recorded by the graph binding.",
+    "The v2 archive, manifest, graph binding, audit attempt, compensation evidence, and two normalized inventories match their recorded hashes and sizes.",
+    "The audit raw result and retained exits truthfully select COMPENSATION_REQUIRED from 3972 unaudited symbols with empty integrity sets.",
+    "Two distinct unchanged-input scans produce equal normalized file, field, and route inventories.",
+    "The production compensation validator and all versioned adversarial mutations pass the focused acceptance suite.",
+    "No Critical or High finding remains within the accepted scope."
+  ],
+  "remainingBlockers": [
+    "Persist the candidate, tests, plan, Terra phase review, this receipt, and required Measure bookkeeping in the bounded task commit before changing the v2 recapture or R2 Tasks 1-2 markers.",
+    "R2 Tasks 3-5 remain blocked and prevent R2 phase acceptance.",
+    "All R3 tasks, owner manual confirmation, and the hash-bound handoff remain required before track acceptance or either successor unblock."
+  ]
+}

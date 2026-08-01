@@ -33,10 +33,11 @@ COMPENSATION_LABEL = "COMPENSATION_REQUIRED"
 EXPECTED_FIELD_KIND = "PropertyAssignment"
 EXPECTED_ROUTE_KIND = "RouteHandler"
 SCAN_CONFIG = {"customEdges": []}
-SCAN_ARTIFACT_DIRECTORY = "r2-task2-scan-transaction-20260731"
-EVIDENCE_FILENAME = "r2-task2-compensation-denominator-20260731.json"
-R1_BUNDLE_DIRECTORY = "r1-task2-source-and-graph-20260731"
-ATTEMPT_PATH = "r2-clean-audit-attempt-20260731/attempt.json"
+SCAN_ARTIFACT_DIRECTORY = "r2-task2-scan-transaction-v2-20260801"
+EVIDENCE_FILENAME = "r2-task2-compensation-denominator-v2-20260801.json"
+R1_BUNDLE_DIRECTORY = "r1-task2-source-and-graph-v2-20260801"
+R1_GRAPH_BINDING_PATH = "r1-task3-graph-binding-v2-20260801.json"
+ATTEMPT_PATH = "r2-clean-audit-attempt-v2-20260801/attempt.json"
 RESOLVER_SHIM_PATH = "node_modules/@reading-advantage/config"
 RESOLVER_SHIM_TARGET = "../../packages/config"
 SHA256_RE = re.compile(r"[0-9a-f]{64}\Z")
@@ -225,6 +226,8 @@ def _load_attempt(track_dir: Path) -> dict[str, Any]:
         _fail("ATTEMPT_INVALID")
     if attempt.get("tool") != {"name": TOOL_NAME, "version": TOOL_VERSION}:
         _fail("ATTEMPT_INVALID")
+    if attempt.get("sourceBundle") != _source_bundle_reference(track_dir):
+        _fail("ATTEMPT_SOURCE_BUNDLE_INVALID")
     audit = attempt.get("audit")
     decision = attempt.get("decision")
     if not isinstance(audit, dict) or audit.get("exitCode") != 1 or not isinstance(audit.get("unaudited"), list):
@@ -654,10 +657,13 @@ def _source_bundle_reference(track_dir: Path) -> dict[str, Any]:
     @returns The immutable R1 archive, manifest, and review references.
     """
     bundle = track_dir / R1_BUNDLE_DIRECTORY
+    graph_binding = _safe_track_file(track_dir, R1_GRAPH_BINDING_PATH)
+    if not graph_binding.is_file() or graph_binding.is_symlink():
+        _fail("R1_GRAPH_BINDING_MISSING")
     return {
         "archive": _artifact_reference(bundle / "snapshot.archive.json", track_dir),
         "manifest": _artifact_reference(bundle / "snapshot.manifest.json", track_dir),
-        "independentReview": _artifact_reference(bundle.parent / "r1-tasks2-3-independent-review-20260731.json", track_dir),
+        "graphBinding": _artifact_reference(graph_binding, track_dir),
     }
 
 
@@ -884,7 +890,7 @@ def _validate_source_bundle(evidence: dict[str, Any], track_dir: Path, manifest:
     @throws CompensationValidationError When source artifact references drift.
     """
     references = evidence.get("sourceBundle")
-    if not isinstance(references, dict) or set(references) != {"archive", "manifest", "independentReview"}:
+    if not isinstance(references, dict) or set(references) != {"archive", "manifest", "graphBinding"}:
         _fail("SOURCE_BUNDLE_REFERENCE_INVALID")
     expected = _source_bundle_reference(track_dir)
     if references != expected:

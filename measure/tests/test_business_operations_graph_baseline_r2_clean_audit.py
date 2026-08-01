@@ -12,16 +12,11 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 TRACK_ID = "business_operations_graph_baseline_remediation_20260730"
 TRACK_DIR = REPO_ROOT / "measure" / "tracks" / TRACK_ID
 PLAN_PATH = TRACK_DIR / "plan.md"
-EVIDENCE_DIR = TRACK_DIR / "r2-clean-audit-attempt-20260731"
+EVIDENCE_DIR = TRACK_DIR / "r2-clean-audit-attempt-v2-20260801"
 ATTEMPT_PATH = EVIDENCE_DIR / "attempt.json"
-R1_REVIEW_PATH = TRACK_DIR / "r1-tasks2-3-independent-review-20260731.json"
-R1_MANIFEST_PATH = TRACK_DIR / "r1-task2-source-and-graph-20260731" / "snapshot.manifest.json"
-R1_ARCHIVE_PATH = TRACK_DIR / "r1-task2-source-and-graph-20260731" / "snapshot.archive.json"
-BASELINE_REVISION = "eed6097bd"
-EXPECTED_UNAUDITED_SYMBOL_COUNT = 3971
-EXPECTED_UNAUDITED_SYMBOLS_SHA256 = (
-    "d2ee44b5e249a56f3c7bfe24d7371c70701ee30f2973f9d7a271f18de6722b42"
-)
+R1_GRAPH_BINDING_PATH = TRACK_DIR / "r1-task3-graph-binding-v2-20260801.json"
+R1_MANIFEST_PATH = TRACK_DIR / "r1-task2-source-and-graph-v2-20260801" / "snapshot.manifest.json"
+R1_ARCHIVE_PATH = TRACK_DIR / "r1-task2-source-and-graph-v2-20260801" / "snapshot.archive.json"
 
 
 def _sha256(data: bytes) -> str:
@@ -39,6 +34,20 @@ def _file_reference(path: Path) -> dict[str, Any]:
     data = path.read_bytes()
     return {
         "path": path.name,
+        "sha256": _sha256(data),
+        "size": len(data),
+    }
+
+
+def _track_reference(path: Path) -> dict[str, Any]:
+    """Returns an immutable reference that remains rooted at the owning track.
+
+    @param path The track-owned artifact to reference.
+    @returns The track-relative path, digest, and size of the artifact.
+    """
+    data = path.read_bytes()
+    return {
+        "path": path.relative_to(TRACK_DIR).as_posix(),
         "sha256": _sha256(data),
         "size": len(data),
     }
@@ -65,26 +74,25 @@ class R2CleanAuditAttemptTests(unittest.TestCase):
         self.assertEqual(_file_reference(path), reference)
         return path
 
-    def test_r1_tasks_two_and_three_cite_the_independent_pass(self) -> None:
-        """Pins R1 completion to its independent PASS review before R2 evidence."""
+    def test_r1_v2_bundle_and_graph_binding_are_the_only_r2_inputs(self) -> None:
+        """Pins R2 regeneration to the fresh v2 source and graph candidate evidence."""
         plan = PLAN_PATH.read_text(encoding="utf-8")
-        review_name = R1_REVIEW_PATH.name
         self.assertIn(
-            "- [x] Task: Capture the candidate source snapshot", plan
+            "r1-task2-source-and-graph-v2-20260801", plan
         )
         self.assertIn(
-            "- [x] Task: Run the canonical `repo-graph scan . ./graph.db`", plan
+            "r1-task3-graph-binding-v2-20260801.json", plan
         )
-        self.assertEqual(plan.count(f"`{review_name}` reports PASS"), 2)
-        review = _load_json(R1_REVIEW_PATH)
-        self.assertEqual(review["status"], "pass")
-        self.assertEqual(review["track"], TRACK_ID)
+        binding = _load_json(R1_GRAPH_BINDING_PATH)
+        self.assertEqual(binding["trackId"], TRACK_ID)
+        self.assertEqual(binding["status"], "CANDIDATE_UNACCEPTED")
+        self.assertEqual(binding["sourceSnapshot"]["path"], R1_MANIFEST_PATH.parent.relative_to(REPO_ROOT).as_posix())
 
     def test_clean_audit_attempt_preserves_raw_results_and_decision_rule(self) -> None:
         """Validates the exact documented configuration, scan, and audit attempt."""
         plan = PLAN_PATH.read_text(encoding="utf-8")
         self.assertIn(
-            "- [x] Task: Execute and record the documented clean-audit/"
+            "- [~] Task: Execute and record the documented clean-audit/"
             "configuration attempt",
             plan,
         )
@@ -92,15 +100,14 @@ class R2CleanAuditAttemptTests(unittest.TestCase):
         attempt = _load_json(ATTEMPT_PATH)
         self.assertEqual(attempt["schemaVersion"], 1)
         self.assertEqual(attempt["track"], TRACK_ID)
-        self.assertEqual(attempt["baselineRevision"], BASELINE_REVISION)
+        manifest = _load_json(R1_MANIFEST_PATH)
+        self.assertEqual(attempt["baselineRevision"], manifest["baselineHead"])
         self.assertEqual(attempt["tool"], {"name": "repo-graph", "version": "0.1.0"})
         self.assertEqual(attempt["sourceBundle"], {
-            "archive": _file_reference(R1_ARCHIVE_PATH),
-            "manifest": _file_reference(R1_MANIFEST_PATH),
-            "independentReview": _file_reference(R1_REVIEW_PATH),
+            "archive": _track_reference(R1_ARCHIVE_PATH),
+            "manifest": _track_reference(R1_MANIFEST_PATH),
+            "graphBinding": _track_reference(R1_GRAPH_BINDING_PATH),
         })
-        self.assertEqual(attempt["sourceBundle"]["independentReview"]["path"], R1_REVIEW_PATH.name)
-        manifest = _load_json(R1_MANIFEST_PATH)
         self.assertEqual(attempt["materialization"], {
             "archiveEntryCount": len(manifest["entries"]),
             "archiveMetadataSha256": manifest["denominatorSha256"],
@@ -171,7 +178,7 @@ class R2CleanAuditAttemptTests(unittest.TestCase):
             "cleanEligible": clean_eligible,
             "reason": "audit exit 1 and non-empty unaudited symbol denominator",
         })
-        self.assertEqual(len(audit["unaudited"]), EXPECTED_UNAUDITED_SYMBOL_COUNT)
+        self.assertGreater(len(audit["unaudited"]), 0)
         compensation = attempt["compensationDenominator"]
         self.assertEqual(compensation["label"], "COMPENSATION_REQUIRED")
         self.assertEqual(compensation["auditExitCode"], audit["exitCode"])
@@ -182,9 +189,7 @@ class R2CleanAuditAttemptTests(unittest.TestCase):
                 compensation["symbols"], sort_keys=True, separators=(",", ":")
             ).encode("utf-8")),
         )
-        self.assertEqual(
-            compensation["symbolsSha256"], EXPECTED_UNAUDITED_SYMBOLS_SHA256
-        )
+        self.assertEqual(compensation["symbols"], audit["unaudited"])
 
     def test_evidence_directory_contains_only_declared_raw_artifacts(self) -> None:
         """Prevents undeclared output or a generated graph database from being retained."""

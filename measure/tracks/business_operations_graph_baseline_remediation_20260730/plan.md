@@ -14,6 +14,31 @@
   stash, overwrite, or repair unrelated APK changes.
 - This track must not edit `measure/automation-supervisor.py`.
 
+## v2 Recapture Status
+
+- [~] Task: Recapture the R1 source/graph candidate and regenerate R2 Tasks 1-2
+  candidate evidence from the shared dirty `master` worktree at baseline
+  `e78fe22bb405de732de14c18590b19af0ce5f0de`, after the accepted root
+  `.pnpmfile.cjs` boundary correction and Company Identity security fixes. The
+  new candidate must use the accepted R1 producer, a canonical stable-window
+  scan, the documented clean-audit procedure, and the strict R2 compensation
+  validator. Its v2 graph-binding candidate is
+  `r1-task3-graph-binding-v2-20260801.json`. It is not R2 Task 3/4 acceptance
+  and cannot unblock either successor.
+
+## Superseded Historical Evidence
+
+- The retained R1 v1 bundle/graph binding (`r1-task2-source-and-graph-20260731/`,
+  `r1-task3-graph-binding-20260731.json`) and R2 v1 Task 1/2 evidence
+  (`r2-clean-audit-attempt-20260731/`,
+  `r2-task2-compensation-denominator-20260731.json`, and
+  `r2-task2-scan-transaction-20260731/`) remain immutable historical evidence.
+  They are superseded as current inputs by the forthcoming v2 candidate only;
+  their previous bounded review results are not rewritten or broadened.
+- R2 Task 3/4 evidence remains historical and does not become accepted through
+  this recapture. Both task markers stay blocked until their separately scoped
+  future work and review.
+
 ## Exact Next Red Task
 
 - [x] Task: Keep `measure/tests/test_business_operations_graph_baseline_remediation.py` and its versioned adversarial fixtures executable, close every Critical/High finding from `r0-review-a-correctness-20260730.json` and `r0-review-b-safety-20260730.json`, and obtain a passing independent re-review. Evidence: `r0-critical-high-remediation-20260730.json` Green receipt, `r0-rereview-a-20260730.json`, `r0-rereview-b-20260730.json`, and the focused unittest command recorded below. No parent/successor gate was changed.
@@ -40,8 +65,8 @@
 
 ## Phase R2: Close or compensate graph coverage gaps
 
-- [x] Task: Execute and record the documented clean-audit/configuration attempt, including `repo-graph config`, scan options, raw audit JSON, stdout/stderr, and exits; select the clean branch only for audit exit `0` with empty unaudited and integrity sets. Evidence: `r2-clean-audit-attempt-20260731/attempt.json` and its six hash-bound raw stream artifacts. The accepted R1 archive was materialized outside the repository, scanned with documented empty `customEdges` configuration, and audited without touching repository `graph.db`: config/scan exited `0`; audit exited `1`, returned empty missing/stale/orphan/duplicate integrity sets, and returned `3,971` unaudited symbols. The result is truthfully labeled `COMPENSATION_REQUIRED`, with the complete raw symbol denominator and digest preserved; it is not a clean-audit claim. (deferred:phase-r1-bound-graph)
-- [~] Task: If the clean branch is unavailable, generate the exact unaudited route/field denominator, reconcile every node to frozen source anchors and digests, and prove two unchanged-input full scans have identical normalized file/route/field inventories. Preserve audit exit `1` and the compensation label. The in-progress producer `measure/business_operations_graph_baseline_compensation.py` now materializes the accepted archive into two distinct external roots, brackets all `6,783` archive inputs before and after each fresh scan, rejects reused graph artifacts, and validates the candidate against durable R2-owned command/config/exit streams plus normalized inventories in `r2-task2-scan-transaction-20260731/`; it does not read root `graph.db` or a machine-local database. The strict validator is exercised by every mutation in `r2-task2-adversarial-fixtures-v1.json`, which lives outside immutable R0 fixtures, through `measure/tests/test_business_operations_graph_baseline_r2_compensation.py`. Focused evidence remains `r2-task2-compensation-denominator-20260731.json`; current results are recorded in `r2-task2-green-receipt-20260731.md`. The exact four-module regression passed `74` tests in `83.780s`; no parent/successor gate changed. (deferred:phase-r2-clean-decision)
+- [~] Task: Execute and record the documented clean-audit/configuration attempt, including `repo-graph config`, scan options, raw audit JSON, stdout/stderr, and exits; select the clean branch only for audit exit `0` with empty unaudited and integrity sets. The v2 candidate will bind `r2-clean-audit-attempt-v2-20260801/attempt.json` to the fresh R1 bundle and graph binding; it must retain the raw exit and choose the `COMPENSATION_REQUIRED` non-clean branch when unaudited symbols remain. This regeneration is not independent acceptance or an unblock. (deferred:phase-r1-bound-graph)
+- [~] Task: If the clean branch is unavailable, generate the exact unaudited route/field denominator, reconcile every node to frozen source anchors and digests, and prove two unchanged-input full scans have identical normalized file/route/field inventories. Preserve the actual audit exit and compensation label. The v2 producer input is `r1-task2-source-and-graph-v2-20260801/`; candidate output is `r2-task2-compensation-denominator-v2-20260801.json` plus the durable `r2-task2-scan-transaction-v2-20260801/` streams. `measure/business_operations_graph_baseline_compensation.py` must not read root `graph.db` or a machine-local database during validation. The strict validator is exercised by every mutation in `r2-task2-adversarial-fixtures-v1.json`, outside immutable R0 fixtures, through `measure/tests/test_business_operations_graph_baseline_r2_compensation.py`. No R2 Task 3/4 acceptance or parent/successor gate change is claimed. (deferred:phase-r2-clean-decision)
 - [b] Task: Produce and test the Accounts unaudited-route security matrix, covering the complete discovered set and explicit authentication, permission ownership, validation, tenant/global scope, audit, and destructive-effect dispositions; run the Accounts and backend test/type gates from FR4. (deferred:phase-r2-audit-disposition)
 - [b] Task: Compute the snapshot TypeScript-minus-graph denominator and resolve every excluded file by graph-safe inclusion or explicit source-anchor/type/test compensation; run the backend, Advantage Play Kit, and Advantage Games commands from FR5 without modifying failed unrelated APK code. (deferred:phase-r2-audit-disposition)
 - [b] Task: Apply the FR6 decision rule: create and record one minimal `bodangren/repo-graph` issue only if a verified tool limitation forces the compensation branch; otherwise record why no upstream issue is required. Test both decision outcomes. (deferred:phase-r2-clean-and-exclusion-decisions)
@@ -58,9 +83,11 @@
 
 The R0 validator/contract remediation is complete only within the acceptance
 boundary recorded above. R1 Tasks 1 through 3 are complete only within their
-bounded producer, stable-window, and scan-binding evidence scopes; all R2/R3
-tasks remain `[b]` because no later-phase evidence or authorization is recorded
-here.
+bounded producer, stable-window, and scan-binding evidence scopes. The v2
+recapture and R2 Tasks 1-2 have a bounded technical acceptance only after their
+independent receipt and task commit are persisted; until then their `[~]`
+markers remain honest. R2 Tasks 3-5 and all R3 tasks remain `[b]` because no
+later-phase evidence or authorization is recorded here.
 No Admin S1 or CRM work may begin from producer or R0 evidence alone, and all
 parent/successor gates remain blocked until the later hash-bound handoff,
 independent R3 acceptance, and owner confirmation.

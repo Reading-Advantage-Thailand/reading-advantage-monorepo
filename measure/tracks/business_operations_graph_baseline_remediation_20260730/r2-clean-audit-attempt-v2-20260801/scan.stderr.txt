@@ -1,0 +1,945 @@
+Stage project_discovery: 80ms; RSS 112 MiB
+Stage project_discovery: 9413ms; RSS 200 MiB
+Stage primary_extraction [1/134]: 1045ms; RSS 260 MiB
+Stage schema_pass [1/134]: 52ms; RSS 264 MiB
+Stage framework_pass [1/134]: 105ms; RSS 274 MiB
+Stage string_literal_pass [1/134]: 42ms; RSS 271 MiB
+Stage param_flow_pass [1/134]: 14ms; RSS 271 MiB
+Stage route_pass [1/134]: 64ms; RSS 271 MiB
+Batch 1/134: 31 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/accounts/tsconfig.json in 1685ms; RSS 271 MiB
+Stage primary_extraction [2/134]: 14ms; RSS 278 MiB
+Stage schema_pass [2/134]: 16ms; RSS 278 MiB
+Stage framework_pass [2/134]: 2ms; RSS 278 MiB
+Stage string_literal_pass [2/134]: 1ms; RSS 278 MiB
+Stage param_flow_pass [2/134]: 1ms; RSS 278 MiB
+Stage route_pass [2/134]: 1ms; RSS 278 MiB
+Batch 2/134: 3 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/activity-vinext-fixture/tsconfig.json in 44ms; RSS 278 MiB
+Stage primary_extraction [3/134]: 1351ms; RSS 225 MiB
+Stage schema_pass [3/134]: 103ms; RSS 236 MiB
+Stage framework_pass [3/134]: 73ms; RSS 237 MiB
+Stage string_literal_pass [3/134]: 56ms; RSS 243 MiB
+Stage param_flow_pass [3/134]: 3ms; RSS 243 MiB
+Stage route_pass [3/134]: 108ms; RSS 244 MiB
+Batch 3/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/advantage-games/tsconfig.json in 1909ms; RSS 245 MiB
+Stage primary_extraction [4/134]: 24ms; RSS 250 MiB
+Stage schema_pass [4/134]: 50ms; RSS 250 MiB
+Stage framework_pass [4/134]: 2ms; RSS 250 MiB
+Stage string_literal_pass [4/134]: 2ms; RSS 250 MiB
+Stage param_flow_pass [4/134]: 1ms; RSS 250 MiB
+Stage route_pass [4/134]: 5ms; RSS 250 MiB
+Batch 4/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/advantage-games/tsconfig.json in 117ms; RSS 250 MiB
+Stage primary_extraction [5/134]: 1427ms; RSS 252 MiB
+Stage schema_pass [5/134]: 83ms; RSS 257 MiB
+Stage framework_pass [5/134]: 102ms; RSS 267 MiB
+Stage string_literal_pass [5/134]: 81ms; RSS 270 MiB
+Stage param_flow_pass [5/134]: 10ms; RSS 270 MiB
+Stage route_pass [5/134]: 87ms; RSS 266 MiB
+Batch 5/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/advantage-games/tsconfig.json in 2045ms; RSS 267 MiB
+Stage primary_extraction [6/134]: 2077ms; RSS 269 MiB
+Stage schema_pass [6/134]: 124ms; RSS 283 MiB
+Stage framework_pass [6/134]: 107ms; RSS 290 MiB
+Stage string_literal_pass [6/134]: 126ms; RSS 296 MiB
+Stage param_flow_pass [6/134]: 16ms; RSS 296 MiB
+Stage route_pass [6/134]: 132ms; RSS 294 MiB
+Batch 6/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/advantage-games/tsconfig.json in 2834ms; RSS 295 MiB
+Stage primary_extraction [7/134]: 830ms; RSS 238 MiB
+Stage schema_pass [7/134]: 83ms; RSS 246 MiB
+Stage framework_pass [7/134]: 69ms; RSS 246 MiB
+Stage string_literal_pass [7/134]: 74ms; RSS 251 MiB
+Stage param_flow_pass [7/134]: 6ms; RSS 252 MiB
+Stage route_pass [7/134]: 55ms; RSS 253 MiB
+Batch 7/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/advantage-games/tsconfig.json in 1268ms; RSS 253 MiB
+Stage primary_extraction [8/134]: 323ms; RSS 229 MiB
+Stage schema_pass [8/134]: 23ms; RSS 234 MiB
+Stage framework_pass [8/134]: 49ms; RSS 237 MiB
+Stage string_literal_pass [8/134]: 13ms; RSS 237 MiB
+Stage param_flow_pass [8/134]: 7ms; RSS 237 MiB
+Stage route_pass [8/134]: 25ms; RSS 238 MiB
+Batch 8/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/advantage-games/tsconfig.json in 512ms; RSS 238 MiB
+Stage primary_extraction [9/134]: 1241ms; RSS 258 MiB
+Stage schema_pass [9/134]: 66ms; RSS 273 MiB
+Stage framework_pass [9/134]: 125ms; RSS 283 MiB
+Stage string_literal_pass [9/134]: 68ms; RSS 285 MiB
+Stage param_flow_pass [9/134]: 35ms; RSS 284 MiB
+Stage route_pass [9/134]: 100ms; RSS 288 MiB
+Batch 9/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/advantage-games/tsconfig.json in 1878ms; RSS 288 MiB
+Stage primary_extraction [10/134]: 760ms; RSS 239 MiB
+Stage schema_pass [10/134]: 71ms; RSS 249 MiB
+Stage framework_pass [10/134]: 58ms; RSS 259 MiB
+Stage string_literal_pass [10/134]: 90ms; RSS 264 MiB
+Stage param_flow_pass [10/134]: 18ms; RSS 264 MiB
+Stage route_pass [10/134]: 48ms; RSS 263 MiB
+Batch 10/134: 22 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/advantage-games/tsconfig.json in 1182ms; RSS 263 MiB
+Stage primary_extraction [11/134]: 1054ms; RSS 254 MiB
+Stage schema_pass [11/134]: 109ms; RSS 257 MiB
+Stage framework_pass [11/134]: 99ms; RSS 264 MiB
+Stage string_literal_pass [11/134]: 84ms; RSS 279 MiB
+Stage param_flow_pass [11/134]: 13ms; RSS 279 MiB
+Stage route_pass [11/134]: 94ms; RSS 283 MiB
+Batch 11/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/codecamp-advantage/tsconfig.json in 1606ms; RSS 283 MiB
+Stage primary_extraction [12/134]: 465ms; RSS 251 MiB
+Stage schema_pass [12/134]: 29ms; RSS 257 MiB
+Stage framework_pass [12/134]: 36ms; RSS 258 MiB
+Stage string_literal_pass [12/134]: 15ms; RSS 258 MiB
+Stage param_flow_pass [12/134]: 5ms; RSS 258 MiB
+Stage route_pass [12/134]: 38ms; RSS 255 MiB
+Batch 12/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/codecamp-advantage/tsconfig.json in 690ms; RSS 255 MiB
+Stage primary_extraction [13/134]: 121ms; RSS 253 MiB
+Stage schema_pass [13/134]: 4ms; RSS 253 MiB
+Stage framework_pass [13/134]: 6ms; RSS 253 MiB
+Stage string_literal_pass [13/134]: 5ms; RSS 253 MiB
+Stage param_flow_pass [13/134]: 2ms; RSS 253 MiB
+Stage route_pass [13/134]: 5ms; RSS 253 MiB
+Batch 13/134: 13 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/codecamp-advantage/tsconfig.json in 165ms; RSS 253 MiB
+Stage primary_extraction [14/134]: 728ms; RSS 284 MiB
+Stage schema_pass [14/134]: 77ms; RSS 293 MiB
+Stage framework_pass [14/134]: 26ms; RSS 299 MiB
+Stage string_literal_pass [14/134]: 25ms; RSS 299 MiB
+Stage param_flow_pass [14/134]: 8ms; RSS 300 MiB
+Stage route_pass [14/134]: 108ms; RSS 290 MiB
+Batch 14/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/marketing/tsconfig.json in 1131ms; RSS 290 MiB
+Stage primary_extraction [15/134]: 662ms; RSS 271 MiB
+Stage schema_pass [15/134]: 24ms; RSS 271 MiB
+Stage framework_pass [15/134]: 36ms; RSS 274 MiB
+Stage string_literal_pass [15/134]: 39ms; RSS 280 MiB
+Stage param_flow_pass [15/134]: 4ms; RSS 281 MiB
+Stage route_pass [15/134]: 56ms; RSS 294 MiB
+Batch 15/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/marketing/tsconfig.json in 901ms; RSS 294 MiB
+Stage primary_extraction [16/134]: 134ms; RSS 296 MiB
+Stage schema_pass [16/134]: 14ms; RSS 296 MiB
+Stage framework_pass [16/134]: 10ms; RSS 297 MiB
+Stage string_literal_pass [16/134]: 8ms; RSS 296 MiB
+Stage param_flow_pass [16/134]: 2ms; RSS 296 MiB
+Stage route_pass [16/134]: 14ms; RSS 296 MiB
+Batch 16/134: 20 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/marketing/tsconfig.json in 214ms; RSS 296 MiB
+Stage primary_extraction [17/134]: 838ms; RSS 268 MiB
+Stage schema_pass [17/134]: 61ms; RSS 279 MiB
+Stage framework_pass [17/134]: 123ms; RSS 290 MiB
+Stage string_literal_pass [17/134]: 33ms; RSS 290 MiB
+Stage param_flow_pass [17/134]: 10ms; RSS 290 MiB
+Stage route_pass [17/134]: 66ms; RSS 290 MiB
+Batch 17/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/primary-advantage/tsconfig.json in 1311ms; RSS 290 MiB
+Stage primary_extraction [18/134]: 737ms; RSS 267 MiB
+Stage schema_pass [18/134]: 35ms; RSS 271 MiB
+Stage framework_pass [18/134]: 95ms; RSS 288 MiB
+Stage string_literal_pass [18/134]: 34ms; RSS 288 MiB
+Stage param_flow_pass [18/134]: 2ms; RSS 288 MiB
+Stage route_pass [18/134]: 30ms; RSS 288 MiB
+Batch 18/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/primary-advantage/tsconfig.json in 1042ms; RSS 288 MiB
+Stage primary_extraction [19/134]: 176ms; RSS 253 MiB
+Stage schema_pass [19/134]: 5ms; RSS 254 MiB
+Stage framework_pass [19/134]: 11ms; RSS 256 MiB
+Stage string_literal_pass [19/134]: 8ms; RSS 257 MiB
+Stage param_flow_pass [19/134]: 2ms; RSS 257 MiB
+Stage route_pass [19/134]: 15ms; RSS 261 MiB
+Batch 19/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/primary-advantage/tsconfig.json in 244ms; RSS 261 MiB
+Stage primary_extraction [20/134]: 614ms; RSS 298 MiB
+Stage schema_pass [20/134]: 41ms; RSS 304 MiB
+Stage framework_pass [20/134]: 68ms; RSS 300 MiB
+Stage string_literal_pass [20/134]: 29ms; RSS 300 MiB
+Stage param_flow_pass [20/134]: 6ms; RSS 300 MiB
+Stage route_pass [20/134]: 55ms; RSS 303 MiB
+Batch 20/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/primary-advantage/tsconfig.json in 898ms; RSS 304 MiB
+Stage primary_extraction [21/134]: 1330ms; RSS 299 MiB
+Stage schema_pass [21/134]: 40ms; RSS 299 MiB
+Stage framework_pass [21/134]: 146ms; RSS 321 MiB
+Stage string_literal_pass [21/134]: 66ms; RSS 322 MiB
+Stage param_flow_pass [21/134]: 3ms; RSS 322 MiB
+Stage route_pass [21/134]: 103ms; RSS 322 MiB
+Batch 21/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/primary-advantage/tsconfig.json in 1880ms; RSS 323 MiB
+Stage primary_extraction [22/134]: 1036ms; RSS 290 MiB
+Stage schema_pass [22/134]: 47ms; RSS 298 MiB
+Stage framework_pass [22/134]: 138ms; RSS 312 MiB
+Stage string_literal_pass [22/134]: 36ms; RSS 312 MiB
+Stage param_flow_pass [22/134]: 4ms; RSS 312 MiB
+Stage route_pass [22/134]: 58ms; RSS 320 MiB
+Batch 22/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/primary-advantage/tsconfig.json in 1438ms; RSS 320 MiB
+Stage primary_extraction [23/134]: 1882ms; RSS 329 MiB
+Stage schema_pass [23/134]: 99ms; RSS 352 MiB
+Stage framework_pass [23/134]: 206ms; RSS 359 MiB
+Stage string_literal_pass [23/134]: 169ms; RSS 378 MiB
+Stage param_flow_pass [23/134]: 5ms; RSS 378 MiB
+Stage route_pass [23/134]: 114ms; RSS 379 MiB
+Batch 23/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/primary-advantage/tsconfig.json in 2686ms; RSS 380 MiB
+Stage primary_extraction [24/134]: 1630ms; RSS 314 MiB
+Stage schema_pass [24/134]: 91ms; RSS 319 MiB
+Stage framework_pass [24/134]: 107ms; RSS 332 MiB
+Stage string_literal_pass [24/134]: 104ms; RSS 340 MiB
+Stage param_flow_pass [24/134]: 6ms; RSS 340 MiB
+Stage route_pass [24/134]: 65ms; RSS 340 MiB
+Batch 24/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/primary-advantage/tsconfig.json in 2165ms; RSS 340 MiB
+Stage primary_extraction [25/134]: 1529ms; RSS 333 MiB
+Stage schema_pass [25/134]: 58ms; RSS 334 MiB
+Stage framework_pass [25/134]: 211ms; RSS 373 MiB
+Stage string_literal_pass [25/134]: 184ms; RSS 376 MiB
+Stage param_flow_pass [25/134]: 7ms; RSS 376 MiB
+Stage route_pass [25/134]: 101ms; RSS 376 MiB
+Batch 25/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/primary-advantage/tsconfig.json in 2297ms; RSS 376 MiB
+Stage primary_extraction [26/134]: 711ms; RSS 298 MiB
+Stage schema_pass [26/134]: 44ms; RSS 307 MiB
+Stage framework_pass [26/134]: 115ms; RSS 316 MiB
+Stage string_literal_pass [26/134]: 31ms; RSS 318 MiB
+Stage param_flow_pass [26/134]: 43ms; RSS 322 MiB
+Stage route_pass [26/134]: 41ms; RSS 321 MiB
+Batch 26/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/primary-advantage/tsconfig.json in 1088ms; RSS 321 MiB
+Stage primary_extraction [27/134]: 168ms; RSS 329 MiB
+Stage schema_pass [27/134]: 22ms; RSS 323 MiB
+Stage framework_pass [27/134]: 6ms; RSS 323 MiB
+Stage string_literal_pass [27/134]: 5ms; RSS 323 MiB
+Stage param_flow_pass [27/134]: 5ms; RSS 323 MiB
+Stage route_pass [27/134]: 17ms; RSS 324 MiB
+Batch 27/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/primary-advantage/tsconfig.json in 303ms; RSS 324 MiB
+Stage primary_extraction [28/134]: 1172ms; RSS 308 MiB
+Stage schema_pass [28/134]: 102ms; RSS 316 MiB
+Stage framework_pass [28/134]: 135ms; RSS 335 MiB
+Stage string_literal_pass [28/134]: 48ms; RSS 335 MiB
+Stage param_flow_pass [28/134]: 17ms; RSS 335 MiB
+Stage route_pass [28/134]: 65ms; RSS 334 MiB
+Batch 28/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/primary-advantage/tsconfig.json in 1678ms; RSS 334 MiB
+Stage primary_extraction [29/134]: 933ms; RSS 316 MiB
+Stage schema_pass [29/134]: 30ms; RSS 317 MiB
+Stage framework_pass [29/134]: 75ms; RSS 329 MiB
+Stage string_literal_pass [29/134]: 66ms; RSS 342 MiB
+Stage param_flow_pass [29/134]: 8ms; RSS 342 MiB
+Stage route_pass [29/134]: 72ms; RSS 345 MiB
+Batch 29/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/primary-advantage/tsconfig.json in 1330ms; RSS 345 MiB
+Stage primary_extraction [30/134]: 17ms; RSS 345 MiB
+Stage schema_pass [30/134]: 94ms; RSS 345 MiB
+Stage framework_pass [30/134]: 1ms; RSS 345 MiB
+Stage string_literal_pass [30/134]: 1ms; RSS 345 MiB
+Stage param_flow_pass [30/134]: 1ms; RSS 345 MiB
+Stage route_pass [30/134]: 2ms; RSS 345 MiB
+Batch 30/134: 4 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/primary-advantage/tsconfig.json in 126ms; RSS 345 MiB
+Stage primary_extraction [31/134]: 423ms; RSS 310 MiB
+Stage schema_pass [31/134]: 28ms; RSS 314 MiB
+Stage framework_pass [31/134]: 17ms; RSS 319 MiB
+Stage string_literal_pass [31/134]: 16ms; RSS 323 MiB
+Stage param_flow_pass [31/134]: 5ms; RSS 323 MiB
+Stage route_pass [31/134]: 56ms; RSS 335 MiB
+Batch 31/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 636ms; RSS 336 MiB
+Stage primary_extraction [32/134]: 694ms; RSS 343 MiB
+Stage schema_pass [32/134]: 102ms; RSS 347 MiB
+Stage framework_pass [32/134]: 11ms; RSS 347 MiB
+Stage string_literal_pass [32/134]: 6ms; RSS 348 MiB
+Stage param_flow_pass [32/134]: 7ms; RSS 348 MiB
+Stage route_pass [32/134]: 185ms; RSS 354 MiB
+Batch 32/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 1270ms; RSS 354 MiB
+Stage primary_extraction [33/134]: 567ms; RSS 325 MiB
+Stage schema_pass [33/134]: 89ms; RSS 334 MiB
+Stage framework_pass [33/134]: 45ms; RSS 336 MiB
+Stage string_literal_pass [33/134]: 28ms; RSS 335 MiB
+Stage param_flow_pass [33/134]: 2ms; RSS 335 MiB
+Stage route_pass [33/134]: 68ms; RSS 348 MiB
+Batch 33/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 868ms; RSS 348 MiB
+Stage primary_extraction [34/134]: 267ms; RSS 350 MiB
+Stage schema_pass [34/134]: 11ms; RSS 350 MiB
+Stage framework_pass [34/134]: 17ms; RSS 350 MiB
+Stage string_literal_pass [34/134]: 13ms; RSS 350 MiB
+Stage param_flow_pass [34/134]: 3ms; RSS 343 MiB
+Stage route_pass [34/134]: 21ms; RSS 313 MiB
+Batch 34/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 373ms; RSS 314 MiB
+Stage primary_extraction [35/134]: 349ms; RSS 309 MiB
+Stage schema_pass [35/134]: 15ms; RSS 311 MiB
+Stage framework_pass [35/134]: 27ms; RSS 318 MiB
+Stage string_literal_pass [35/134]: 26ms; RSS 321 MiB
+Stage param_flow_pass [35/134]: 2ms; RSS 321 MiB
+Stage route_pass [35/134]: 29ms; RSS 329 MiB
+Batch 35/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 499ms; RSS 329 MiB
+Stage primary_extraction [36/134]: 375ms; RSS 330 MiB
+Stage schema_pass [36/134]: 17ms; RSS 331 MiB
+Stage framework_pass [36/134]: 11ms; RSS 332 MiB
+Stage string_literal_pass [36/134]: 10ms; RSS 332 MiB
+Stage param_flow_pass [36/134]: 6ms; RSS 330 MiB
+Stage route_pass [36/134]: 30ms; RSS 334 MiB
+Batch 36/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 494ms; RSS 334 MiB
+Stage primary_extraction [37/134]: 266ms; RSS 315 MiB
+Stage schema_pass [37/134]: 8ms; RSS 316 MiB
+Stage framework_pass [37/134]: 5ms; RSS 316 MiB
+Stage string_literal_pass [37/134]: 4ms; RSS 317 MiB
+Stage param_flow_pass [37/134]: 4ms; RSS 317 MiB
+Stage route_pass [37/134]: 16ms; RSS 314 MiB
+Batch 37/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 337ms; RSS 312 MiB
+Stage primary_extraction [38/134]: 213ms; RSS 307 MiB
+Stage schema_pass [38/134]: 10ms; RSS 308 MiB
+Stage framework_pass [38/134]: 14ms; RSS 309 MiB
+Stage string_literal_pass [38/134]: 10ms; RSS 311 MiB
+Stage param_flow_pass [38/134]: 4ms; RSS 311 MiB
+Stage route_pass [38/134]: 16ms; RSS 314 MiB
+Batch 38/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 309ms; RSS 314 MiB
+Stage primary_extraction [39/134]: 165ms; RSS 311 MiB
+Stage schema_pass [39/134]: 7ms; RSS 311 MiB
+Stage framework_pass [39/134]: 6ms; RSS 312 MiB
+Stage string_literal_pass [39/134]: 6ms; RSS 312 MiB
+Stage param_flow_pass [39/134]: 3ms; RSS 312 MiB
+Stage route_pass [39/134]: 17ms; RSS 313 MiB
+Batch 39/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 235ms; RSS 313 MiB
+Stage primary_extraction [40/134]: 298ms; RSS 313 MiB
+Stage schema_pass [40/134]: 15ms; RSS 315 MiB
+Stage framework_pass [40/134]: 16ms; RSS 315 MiB
+Stage string_literal_pass [40/134]: 14ms; RSS 317 MiB
+Stage param_flow_pass [40/134]: 6ms; RSS 317 MiB
+Stage route_pass [40/134]: 39ms; RSS 322 MiB
+Batch 40/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 428ms; RSS 322 MiB
+Stage primary_extraction [41/134]: 258ms; RSS 317 MiB
+Stage schema_pass [41/134]: 15ms; RSS 319 MiB
+Stage framework_pass [41/134]: 20ms; RSS 321 MiB
+Stage string_literal_pass [41/134]: 12ms; RSS 321 MiB
+Stage param_flow_pass [41/134]: 5ms; RSS 321 MiB
+Stage route_pass [41/134]: 23ms; RSS 327 MiB
+Batch 41/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 374ms; RSS 327 MiB
+Stage primary_extraction [42/134]: 1113ms; RSS 367 MiB
+Stage schema_pass [42/134]: 31ms; RSS 367 MiB
+Stage framework_pass [42/134]: 74ms; RSS 376 MiB
+Stage string_literal_pass [42/134]: 63ms; RSS 392 MiB
+Stage param_flow_pass [42/134]: 4ms; RSS 392 MiB
+Stage route_pass [42/134]: 109ms; RSS 410 MiB
+Batch 42/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 1491ms; RSS 410 MiB
+Stage primary_extraction [43/134]: 1274ms; RSS 375 MiB
+Stage schema_pass [43/134]: 49ms; RSS 384 MiB
+Stage framework_pass [43/134]: 177ms; RSS 409 MiB
+Stage string_literal_pass [43/134]: 65ms; RSS 409 MiB
+Stage param_flow_pass [43/134]: 5ms; RSS 409 MiB
+Stage route_pass [43/134]: 85ms; RSS 417 MiB
+Batch 43/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 1812ms; RSS 422 MiB
+Stage primary_extraction [44/134]: 1216ms; RSS 382 MiB
+Stage schema_pass [44/134]: 52ms; RSS 383 MiB
+Stage framework_pass [44/134]: 138ms; RSS 411 MiB
+Stage string_literal_pass [44/134]: 124ms; RSS 428 MiB
+Stage param_flow_pass [44/134]: 6ms; RSS 428 MiB
+Stage route_pass [44/134]: 65ms; RSS 428 MiB
+Batch 44/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 1708ms; RSS 428 MiB
+Stage primary_extraction [45/134]: 600ms; RSS 364 MiB
+Stage schema_pass [45/134]: 46ms; RSS 375 MiB
+Stage framework_pass [45/134]: 113ms; RSS 388 MiB
+Stage string_literal_pass [45/134]: 29ms; RSS 388 MiB
+Stage param_flow_pass [45/134]: 4ms; RSS 388 MiB
+Stage route_pass [45/134]: 48ms; RSS 387 MiB
+Batch 45/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 936ms; RSS 387 MiB
+Stage primary_extraction [46/134]: 1225ms; RSS 386 MiB
+Stage schema_pass [46/134]: 57ms; RSS 391 MiB
+Stage framework_pass [46/134]: 115ms; RSS 424 MiB
+Stage string_literal_pass [46/134]: 107ms; RSS 431 MiB
+Stage param_flow_pass [46/134]: 25ms; RSS 431 MiB
+Stage route_pass [46/134]: 70ms; RSS 431 MiB
+Batch 46/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 1754ms; RSS 432 MiB
+Stage primary_extraction [47/134]: 531ms; RSS 351 MiB
+Stage schema_pass [47/134]: 37ms; RSS 359 MiB
+Stage framework_pass [47/134]: 70ms; RSS 377 MiB
+Stage string_literal_pass [47/134]: 44ms; RSS 390 MiB
+Stage param_flow_pass [47/134]: 3ms; RSS 390 MiB
+Stage route_pass [47/134]: 76ms; RSS 392 MiB
+Batch 47/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 832ms; RSS 392 MiB
+Stage primary_extraction [48/134]: 1466ms; RSS 400 MiB
+Stage schema_pass [48/134]: 98ms; RSS 416 MiB
+Stage framework_pass [48/134]: 209ms; RSS 435 MiB
+Stage string_literal_pass [48/134]: 74ms; RSS 435 MiB
+Stage param_flow_pass [48/134]: 4ms; RSS 435 MiB
+Stage route_pass [48/134]: 175ms; RSS 453 MiB
+Batch 48/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 2192ms; RSS 453 MiB
+Stage primary_extraction [49/134]: 1814ms; RSS 409 MiB
+Stage schema_pass [49/134]: 88ms; RSS 424 MiB
+Stage framework_pass [49/134]: 288ms; RSS 445 MiB
+Stage string_literal_pass [49/134]: 103ms; RSS 445 MiB
+Stage param_flow_pass [49/134]: 7ms; RSS 445 MiB
+Stage route_pass [49/134]: 250ms; RSS 463 MiB
+Batch 49/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 2719ms; RSS 463 MiB
+Stage primary_extraction [50/134]: 1466ms; RSS 405 MiB
+Stage schema_pass [50/134]: 33ms; RSS 406 MiB
+Stage framework_pass [50/134]: 95ms; RSS 420 MiB
+Stage string_literal_pass [50/134]: 77ms; RSS 440 MiB
+Stage param_flow_pass [50/134]: 10ms; RSS 440 MiB
+Stage route_pass [50/134]: 114ms; RSS 457 MiB
+Batch 50/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 2073ms; RSS 457 MiB
+Stage primary_extraction [51/134]: 1441ms; RSS 407 MiB
+Stage schema_pass [51/134]: 73ms; RSS 418 MiB
+Stage framework_pass [51/134]: 209ms; RSS 453 MiB
+Stage string_literal_pass [51/134]: 170ms; RSS 470 MiB
+Stage param_flow_pass [51/134]: 11ms; RSS 470 MiB
+Stage route_pass [51/134]: 94ms; RSS 473 MiB
+Batch 51/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 2160ms; RSS 473 MiB
+Stage primary_extraction [52/134]: 927ms; RSS 420 MiB
+Stage schema_pass [52/134]: 54ms; RSS 434 MiB
+Stage framework_pass [52/134]: 226ms; RSS 449 MiB
+Stage string_literal_pass [52/134]: 40ms; RSS 449 MiB
+Stage param_flow_pass [52/134]: 3ms; RSS 449 MiB
+Stage route_pass [52/134]: 55ms; RSS 449 MiB
+Batch 52/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 1400ms; RSS 450 MiB
+Stage primary_extraction [53/134]: 281ms; RSS 465 MiB
+Stage schema_pass [53/134]: 15ms; RSS 452 MiB
+Stage framework_pass [53/134]: 11ms; RSS 413 MiB
+Stage string_literal_pass [53/134]: 10ms; RSS 395 MiB
+Stage param_flow_pass [53/134]: 4ms; RSS 388 MiB
+Stage route_pass [53/134]: 34ms; RSS 376 MiB
+Batch 53/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 407ms; RSS 376 MiB
+Stage primary_extraction [54/134]: 469ms; RSS 381 MiB
+Stage schema_pass [54/134]: 31ms; RSS 386 MiB
+Stage framework_pass [54/134]: 71ms; RSS 403 MiB
+Stage string_literal_pass [54/134]: 53ms; RSS 416 MiB
+Stage param_flow_pass [54/134]: 4ms; RSS 416 MiB
+Stage route_pass [54/134]: 81ms; RSS 425 MiB
+Batch 54/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 801ms; RSS 425 MiB
+Stage primary_extraction [55/134]: 439ms; RSS 374 MiB
+Stage schema_pass [55/134]: 27ms; RSS 379 MiB
+Stage framework_pass [55/134]: 37ms; RSS 386 MiB
+Stage string_literal_pass [55/134]: 23ms; RSS 393 MiB
+Stage param_flow_pass [55/134]: 4ms; RSS 393 MiB
+Stage route_pass [55/134]: 55ms; RSS 408 MiB
+Batch 55/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 666ms; RSS 408 MiB
+Stage primary_extraction [56/134]: 649ms; RSS 412 MiB
+Stage schema_pass [56/134]: 67ms; RSS 413 MiB
+Stage framework_pass [56/134]: 79ms; RSS 420 MiB
+Stage string_literal_pass [56/134]: 53ms; RSS 431 MiB
+Stage param_flow_pass [56/134]: 35ms; RSS 430 MiB
+Stage route_pass [56/134]: 106ms; RSS 431 MiB
+Batch 56/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 1145ms; RSS 431 MiB
+Stage primary_extraction [57/134]: 393ms; RSS 395 MiB
+Stage schema_pass [57/134]: 89ms; RSS 421 MiB
+Stage framework_pass [57/134]: 20ms; RSS 429 MiB
+Stage string_literal_pass [57/134]: 19ms; RSS 428 MiB
+Stage param_flow_pass [57/134]: 5ms; RSS 428 MiB
+Stage route_pass [57/134]: 128ms; RSS 440 MiB
+Batch 57/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 777ms; RSS 440 MiB
+Stage primary_extraction [58/134]: 1938ms; RSS 471 MiB
+Stage schema_pass [58/134]: 66ms; RSS 480 MiB
+Stage framework_pass [58/134]: 153ms; RSS 521 MiB
+Stage string_literal_pass [58/134]: 209ms; RSS 532 MiB
+Stage param_flow_pass [58/134]: 20ms; RSS 532 MiB
+Stage route_pass [58/134]: 124ms; RSS 532 MiB
+Batch 58/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 2664ms; RSS 532 MiB
+Stage primary_extraction [59/134]: 3788ms; RSS 527 MiB
+Stage schema_pass [59/134]: 121ms; RSS 528 MiB
+Stage framework_pass [59/134]: 234ms; RSS 578 MiB
+Stage string_literal_pass [59/134]: 358ms; RSS 583 MiB
+Stage param_flow_pass [59/134]: 41ms; RSS 583 MiB
+Stage route_pass [59/134]: 143ms; RSS 583 MiB
+Batch 59/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 5018ms; RSS 584 MiB
+Stage primary_extraction [60/134]: 2745ms; RSS 533 MiB
+Stage schema_pass [60/134]: 92ms; RSS 545 MiB
+Stage framework_pass [60/134]: 465ms; RSS 586 MiB
+Stage string_literal_pass [60/134]: 91ms; RSS 585 MiB
+Stage param_flow_pass [60/134]: 36ms; RSS 585 MiB
+Stage route_pass [60/134]: 113ms; RSS 586 MiB
+Batch 60/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 3746ms; RSS 586 MiB
+Stage primary_extraction [61/134]: 322ms; RSS 455 MiB
+Stage schema_pass [61/134]: 41ms; RSS 450 MiB
+Stage framework_pass [61/134]: 32ms; RSS 456 MiB
+Stage string_literal_pass [61/134]: 23ms; RSS 461 MiB
+Stage param_flow_pass [61/134]: 5ms; RSS 461 MiB
+Stage route_pass [61/134]: 49ms; RSS 466 MiB
+Batch 61/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 545ms; RSS 466 MiB
+Stage primary_extraction [62/134]: 273ms; RSS 455 MiB
+Stage schema_pass [62/134]: 25ms; RSS 426 MiB
+Stage framework_pass [62/134]: 4ms; RSS 422 MiB
+Stage string_literal_pass [62/134]: 3ms; RSS 417 MiB
+Stage param_flow_pass [62/134]: 2ms; RSS 415 MiB
+Stage route_pass [62/134]: 49ms; RSS 415 MiB
+Batch 62/134: 24 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/reading-advantage/tsconfig.json in 424ms; RSS 415 MiB
+Stage primary_extraction [63/134]: 419ms; RSS 412 MiB
+Stage schema_pass [63/134]: 24ms; RSS 417 MiB
+Stage framework_pass [63/134]: 36ms; RSS 423 MiB
+Stage string_literal_pass [63/134]: 27ms; RSS 427 MiB
+Stage param_flow_pass [63/134]: 3ms; RSS 427 MiB
+Stage route_pass [63/134]: 64ms; RSS 436 MiB
+Batch 63/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/sales-advantage/tsconfig.json in 643ms; RSS 436 MiB
+Stage primary_extraction [64/134]: 602ms; RSS 417 MiB
+Stage schema_pass [64/134]: 38ms; RSS 421 MiB
+Stage framework_pass [64/134]: 49ms; RSS 429 MiB
+Stage string_literal_pass [64/134]: 29ms; RSS 435 MiB
+Stage param_flow_pass [64/134]: 9ms; RSS 436 MiB
+Stage route_pass [64/134]: 76ms; RSS 451 MiB
+Batch 64/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/sales-advantage/tsconfig.json in 958ms; RSS 451 MiB
+Stage primary_extraction [65/134]: 425ms; RSS 413 MiB
+Stage schema_pass [65/134]: 45ms; RSS 422 MiB
+Stage framework_pass [65/134]: 23ms; RSS 426 MiB
+Stage string_literal_pass [65/134]: 22ms; RSS 430 MiB
+Stage param_flow_pass [65/134]: 17ms; RSS 431 MiB
+Stage route_pass [65/134]: 65ms; RSS 445 MiB
+Batch 65/134: 21 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/sales-advantage/tsconfig.json in 661ms; RSS 445 MiB
+Stage primary_extraction [66/134]: 416ms; RSS 426 MiB
+Stage schema_pass [66/134]: 19ms; RSS 430 MiB
+Stage framework_pass [66/134]: 30ms; RSS 435 MiB
+Stage string_literal_pass [66/134]: 25ms; RSS 439 MiB
+Stage param_flow_pass [66/134]: 4ms; RSS 440 MiB
+Stage route_pass [66/134]: 41ms; RSS 449 MiB
+Batch 66/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/science-advantage/tsconfig.json in 596ms; RSS 450 MiB
+Stage primary_extraction [67/134]: 690ms; RSS 449 MiB
+Stage schema_pass [67/134]: 82ms; RSS 468 MiB
+Stage framework_pass [67/134]: 68ms; RSS 484 MiB
+Stage string_literal_pass [67/134]: 47ms; RSS 493 MiB
+Stage param_flow_pass [67/134]: 6ms; RSS 493 MiB
+Stage route_pass [67/134]: 184ms; RSS 509 MiB
+Batch 67/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/science-advantage/tsconfig.json in 1201ms; RSS 508 MiB
+Stage primary_extraction [68/134]: 764ms; RSS 459 MiB
+Stage schema_pass [68/134]: 72ms; RSS 471 MiB
+Stage framework_pass [68/134]: 59ms; RSS 482 MiB
+Stage string_literal_pass [68/134]: 41ms; RSS 493 MiB
+Stage param_flow_pass [68/134]: 7ms; RSS 493 MiB
+Stage route_pass [68/134]: 149ms; RSS 513 MiB
+Batch 68/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/science-advantage/tsconfig.json in 1248ms; RSS 513 MiB
+Stage primary_extraction [69/134]: 590ms; RSS 446 MiB
+Stage schema_pass [69/134]: 46ms; RSS 454 MiB
+Stage framework_pass [69/134]: 36ms; RSS 462 MiB
+Stage string_literal_pass [69/134]: 29ms; RSS 469 MiB
+Stage param_flow_pass [69/134]: 4ms; RSS 469 MiB
+Stage route_pass [69/134]: 90ms; RSS 491 MiB
+Batch 69/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/science-advantage/tsconfig.json in 934ms; RSS 491 MiB
+Stage primary_extraction [70/134]: 764ms; RSS 460 MiB
+Stage schema_pass [70/134]: 53ms; RSS 471 MiB
+Stage framework_pass [70/134]: 101ms; RSS 499 MiB
+Stage string_literal_pass [70/134]: 119ms; RSS 512 MiB
+Stage param_flow_pass [70/134]: 9ms; RSS 511 MiB
+Stage route_pass [70/134]: 53ms; RSS 511 MiB
+Batch 70/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/science-advantage/tsconfig.json in 1207ms; RSS 516 MiB
+Stage primary_extraction [71/134]: 540ms; RSS 456 MiB
+Stage schema_pass [71/134]: 36ms; RSS 463 MiB
+Stage framework_pass [71/134]: 79ms; RSS 481 MiB
+Stage string_literal_pass [71/134]: 60ms; RSS 496 MiB
+Stage param_flow_pass [71/134]: 10ms; RSS 496 MiB
+Stage route_pass [71/134]: 80ms; RSS 518 MiB
+Batch 71/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/science-advantage/tsconfig.json in 890ms; RSS 518 MiB
+Stage primary_extraction [72/134]: 581ms; RSS 454 MiB
+Stage schema_pass [72/134]: 69ms; RSS 463 MiB
+Stage framework_pass [72/134]: 19ms; RSS 468 MiB
+Stage string_literal_pass [72/134]: 16ms; RSS 473 MiB
+Stage param_flow_pass [72/134]: 6ms; RSS 473 MiB
+Stage route_pass [72/134]: 118ms; RSS 502 MiB
+Batch 72/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/science-advantage/tsconfig.json in 957ms; RSS 502 MiB
+Stage primary_extraction [73/134]: 423ms; RSS 463 MiB
+Stage schema_pass [73/134]: 50ms; RSS 465 MiB
+Stage framework_pass [73/134]: 17ms; RSS 468 MiB
+Stage string_literal_pass [73/134]: 12ms; RSS 470 MiB
+Stage param_flow_pass [73/134]: 3ms; RSS 471 MiB
+Stage route_pass [73/134]: 65ms; RSS 483 MiB
+Batch 73/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/science-advantage/tsconfig.json in 654ms; RSS 484 MiB
+Stage primary_extraction [74/134]: 456ms; RSS 441 MiB
+Stage schema_pass [74/134]: 68ms; RSS 447 MiB
+Stage framework_pass [74/134]: 22ms; RSS 450 MiB
+Stage string_literal_pass [74/134]: 21ms; RSS 452 MiB
+Stage param_flow_pass [74/134]: 9ms; RSS 452 MiB
+Stage route_pass [74/134]: 108ms; RSS 470 MiB
+Batch 74/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/science-advantage/tsconfig.json in 802ms; RSS 470 MiB
+Stage primary_extraction [75/134]: 236ms; RSS 434 MiB
+Stage schema_pass [75/134]: 38ms; RSS 439 MiB
+Stage framework_pass [75/134]: 12ms; RSS 441 MiB
+Stage string_literal_pass [75/134]: 8ms; RSS 442 MiB
+Stage param_flow_pass [75/134]: 4ms; RSS 442 MiB
+Stage route_pass [75/134]: 49ms; RSS 452 MiB
+Batch 75/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/science-advantage/tsconfig.json in 427ms; RSS 452 MiB
+Stage primary_extraction [76/134]: 485ms; RSS 452 MiB
+Stage schema_pass [76/134]: 81ms; RSS 463 MiB
+Stage framework_pass [76/134]: 35ms; RSS 470 MiB
+Stage string_literal_pass [76/134]: 23ms; RSS 476 MiB
+Stage param_flow_pass [76/134]: 4ms; RSS 476 MiB
+Stage route_pass [76/134]: 116ms; RSS 504 MiB
+Batch 76/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/science-advantage/tsconfig.json in 876ms; RSS 504 MiB
+Stage primary_extraction [77/134]: 266ms; RSS 436 MiB
+Stage schema_pass [77/134]: 37ms; RSS 443 MiB
+Stage framework_pass [77/134]: 21ms; RSS 446 MiB
+Stage string_literal_pass [77/134]: 12ms; RSS 447 MiB
+Stage param_flow_pass [77/134]: 2ms; RSS 447 MiB
+Stage route_pass [77/134]: 34ms; RSS 453 MiB
+Batch 77/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/science-advantage/tsconfig.json in 429ms; RSS 453 MiB
+Stage primary_extraction [78/134]: 634ms; RSS 458 MiB
+Stage schema_pass [78/134]: 33ms; RSS 465 MiB
+Stage framework_pass [78/134]: 64ms; RSS 480 MiB
+Stage string_literal_pass [78/134]: 43ms; RSS 493 MiB
+Stage param_flow_pass [78/134]: 5ms; RSS 494 MiB
+Stage route_pass [78/134]: 77ms; RSS 515 MiB
+Batch 78/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/science-advantage/tsconfig.json in 938ms; RSS 515 MiB
+Stage primary_extraction [79/134]: 5ms; RSS 526 MiB
+Stage schema_pass [79/134]: 0ms; RSS 526 MiB
+Stage framework_pass [79/134]: 0ms; RSS 526 MiB
+Stage string_literal_pass [79/134]: 0ms; RSS 526 MiB
+Stage param_flow_pass [79/134]: 0ms; RSS 526 MiB
+Stage route_pass [79/134]: 1ms; RSS 526 MiB
+Batch 79/134: 5 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/science-advantage/tsconfig.json in 12ms; RSS 526 MiB
+Stage primary_extraction [80/134]: 552ms; RSS 453 MiB
+Stage schema_pass [80/134]: 30ms; RSS 459 MiB
+Stage framework_pass [80/134]: 60ms; RSS 471 MiB
+Stage string_literal_pass [80/134]: 45ms; RSS 485 MiB
+Stage param_flow_pass [80/134]: 3ms; RSS 485 MiB
+Stage route_pass [80/134]: 73ms; RSS 502 MiB
+Batch 80/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/www-reading-advantage/tsconfig.json in 850ms; RSS 503 MiB
+Stage primary_extraction [81/134]: 794ms; RSS 467 MiB
+Stage schema_pass [81/134]: 55ms; RSS 473 MiB
+Stage framework_pass [81/134]: 120ms; RSS 495 MiB
+Stage string_literal_pass [81/134]: 65ms; RSS 511 MiB
+Stage param_flow_pass [81/134]: 3ms; RSS 512 MiB
+Stage route_pass [81/134]: 74ms; RSS 531 MiB
+Batch 81/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/www-reading-advantage/tsconfig.json in 1178ms; RSS 531 MiB
+Stage primary_extraction [82/134]: 332ms; RSS 452 MiB
+Stage schema_pass [82/134]: 41ms; RSS 461 MiB
+Stage framework_pass [82/134]: 29ms; RSS 467 MiB
+Stage string_literal_pass [82/134]: 26ms; RSS 473 MiB
+Stage param_flow_pass [82/134]: 3ms; RSS 473 MiB
+Stage route_pass [82/134]: 68ms; RSS 492 MiB
+Batch 82/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/www-reading-advantage/tsconfig.json in 563ms; RSS 492 MiB
+Stage primary_extraction [83/134]: 242ms; RSS 457 MiB
+Stage schema_pass [83/134]: 49ms; RSS 459 MiB
+Stage framework_pass [83/134]: 4ms; RSS 460 MiB
+Stage string_literal_pass [83/134]: 4ms; RSS 460 MiB
+Stage param_flow_pass [83/134]: 2ms; RSS 460 MiB
+Stage route_pass [83/134]: 34ms; RSS 453 MiB
+Batch 83/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/www-reading-advantage/tsconfig.json in 404ms; RSS 453 MiB
+Stage primary_extraction [84/134]: 92ms; RSS 441 MiB
+Stage schema_pass [84/134]: 30ms; RSS 442 MiB
+Stage framework_pass [84/134]: 4ms; RSS 443 MiB
+Stage string_literal_pass [84/134]: 2ms; RSS 443 MiB
+Stage param_flow_pass [84/134]: 1ms; RSS 443 MiB
+Stage route_pass [84/134]: 15ms; RSS 444 MiB
+Batch 84/134: 19 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/apps/www-reading-advantage/tsconfig.json in 177ms; RSS 444 MiB
+Stage primary_extraction [85/134]: 3ms; RSS 441 MiB
+Stage schema_pass [85/134]: 8ms; RSS 441 MiB
+Stage framework_pass [85/134]: 0ms; RSS 441 MiB
+Stage string_literal_pass [85/134]: 0ms; RSS 441 MiB
+Stage param_flow_pass [85/134]: 0ms; RSS 441 MiB
+Stage route_pass [85/134]: 0ms; RSS 441 MiB
+Batch 85/134: 3 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/measure/tracks/company_identity_sso_20260715/fixtures/architecture/positive/apps/sales/tsconfig.json in 14ms; RSS 441 MiB
+Stage primary_extraction [86/134]: 151ms; RSS 438 MiB
+Stage schema_pass [86/134]: 6ms; RSS 438 MiB
+Stage framework_pass [86/134]: 13ms; RSS 440 MiB
+Stage string_literal_pass [86/134]: 12ms; RSS 441 MiB
+Stage param_flow_pass [86/134]: 3ms; RSS 441 MiB
+Stage route_pass [86/134]: 14ms; RSS 443 MiB
+Batch 86/134: 5 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/activity-react/tsconfig.json in 222ms; RSS 443 MiB
+Stage primary_extraction [87/134]: 273ms; RSS 445 MiB
+Stage schema_pass [87/134]: 33ms; RSS 451 MiB
+Stage framework_pass [87/134]: 22ms; RSS 455 MiB
+Stage string_literal_pass [87/134]: 18ms; RSS 458 MiB
+Stage param_flow_pass [87/134]: 10ms; RSS 457 MiB
+Stage route_pass [87/134]: 47ms; RSS 465 MiB
+Batch 87/134: 9 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/activity-runtime/tsconfig.json in 444ms; RSS 465 MiB
+Stage primary_extraction [88/134]: 172ms; RSS 448 MiB
+Stage schema_pass [88/134]: 14ms; RSS 449 MiB
+Stage framework_pass [88/134]: 19ms; RSS 448 MiB
+Stage string_literal_pass [88/134]: 15ms; RSS 449 MiB
+Stage param_flow_pass [88/134]: 6ms; RSS 449 MiB
+Stage route_pass [88/134]: 31ms; RSS 453 MiB
+Batch 88/134: 10 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/activity-tutorial/tsconfig.json in 298ms; RSS 453 MiB
+Stage primary_extraction [89/134]: 911ms; RSS 487 MiB
+Stage schema_pass [89/134]: 78ms; RSS 504 MiB
+Stage framework_pass [89/134]: 93ms; RSS 533 MiB
+Stage string_literal_pass [89/134]: 109ms; RSS 544 MiB
+Stage param_flow_pass [89/134]: 42ms; RSS 545 MiB
+Stage route_pass [89/134]: 70ms; RSS 544 MiB
+Batch 89/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/advantage-play-kit/tsconfig.json in 1461ms; RSS 545 MiB
+Stage primary_extraction [90/134]: 497ms; RSS 468 MiB
+Stage schema_pass [90/134]: 30ms; RSS 473 MiB
+Stage framework_pass [90/134]: 48ms; RSS 486 MiB
+Stage string_literal_pass [90/134]: 39ms; RSS 497 MiB
+Stage param_flow_pass [90/134]: 14ms; RSS 497 MiB
+Stage route_pass [90/134]: 56ms; RSS 515 MiB
+Batch 90/134: 31 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/advantage-play-kit/tsconfig.json in 850ms; RSS 515 MiB
+Stage primary_extraction [91/134]: 380ms; RSS 456 MiB
+Stage schema_pass [91/134]: 46ms; RSS 471 MiB
+Stage framework_pass [91/134]: 13ms; RSS 473 MiB
+Stage string_literal_pass [91/134]: 14ms; RSS 474 MiB
+Stage param_flow_pass [91/134]: 7ms; RSS 474 MiB
+Stage route_pass [91/134]: 81ms; RSS 491 MiB
+Batch 91/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/ai/tsconfig.json in 656ms; RSS 491 MiB
+Stage primary_extraction [92/134]: 211ms; RSS 469 MiB
+Stage schema_pass [92/134]: 12ms; RSS 469 MiB
+Stage framework_pass [92/134]: 3ms; RSS 470 MiB
+Stage string_literal_pass [92/134]: 3ms; RSS 470 MiB
+Stage param_flow_pass [92/134]: 2ms; RSS 470 MiB
+Stage route_pass [92/134]: 22ms; RSS 472 MiB
+Batch 92/134: 13 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/ai/tsconfig.json in 324ms; RSS 472 MiB
+Stage primary_extraction [93/134]: 421ms; RSS 467 MiB
+Stage schema_pass [93/134]: 65ms; RSS 472 MiB
+Stage framework_pass [93/134]: 10ms; RSS 474 MiB
+Stage string_literal_pass [93/134]: 9ms; RSS 476 MiB
+Stage param_flow_pass [93/134]: 4ms; RSS 476 MiB
+Stage route_pass [93/134]: 117ms; RSS 504 MiB
+Batch 93/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/api/tsconfig.json in 735ms; RSS 504 MiB
+Stage primary_extraction [94/134]: 436ms; RSS 461 MiB
+Stage schema_pass [94/134]: 34ms; RSS 465 MiB
+Stage framework_pass [94/134]: 25ms; RSS 469 MiB
+Stage string_literal_pass [94/134]: 23ms; RSS 470 MiB
+Stage param_flow_pass [94/134]: 3ms; RSS 470 MiB
+Stage route_pass [94/134]: 67ms; RSS 482 MiB
+Batch 94/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/api/tsconfig.json in 684ms; RSS 482 MiB
+Stage primary_extraction [95/134]: 25ms; RSS 491 MiB
+Stage schema_pass [95/134]: 1ms; RSS 489 MiB
+Stage framework_pass [95/134]: 1ms; RSS 488 MiB
+Stage string_literal_pass [95/134]: 1ms; RSS 487 MiB
+Stage param_flow_pass [95/134]: 1ms; RSS 486 MiB
+Stage route_pass [95/134]: 2ms; RSS 483 MiB
+Batch 95/134: 3 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/api/tsconfig.json in 36ms; RSS 482 MiB
+Stage primary_extraction [96/134]: 879ms; RSS 492 MiB
+Stage schema_pass [96/134]: 93ms; RSS 509 MiB
+Stage framework_pass [96/134]: 69ms; RSS 529 MiB
+Stage string_literal_pass [96/134]: 50ms; RSS 543 MiB
+Stage param_flow_pass [96/134]: 20ms; RSS 544 MiB
+Stage route_pass [96/134]: 181ms; RSS 555 MiB
+Batch 96/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/architecture-enforcement/tsconfig.json in 1421ms; RSS 555 MiB
+Stage primary_extraction [97/134]: 886ms; RSS 492 MiB
+Stage schema_pass [97/134]: 52ms; RSS 505 MiB
+Stage framework_pass [97/134]: 85ms; RSS 530 MiB
+Stage string_literal_pass [97/134]: 62ms; RSS 549 MiB
+Stage param_flow_pass [97/134]: 35ms; RSS 549 MiB
+Stage route_pass [97/134]: 153ms; RSS 576 MiB
+Batch 97/134: 21 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/architecture-enforcement/tsconfig.json in 1405ms; RSS 577 MiB
+Stage primary_extraction [98/134]: 63ms; RSS 582 MiB
+Stage schema_pass [98/134]: 6ms; RSS 582 MiB
+Stage framework_pass [98/134]: 2ms; RSS 583 MiB
+Stage string_literal_pass [98/134]: 1ms; RSS 583 MiB
+Stage param_flow_pass [98/134]: 1ms; RSS 583 MiB
+Stage route_pass [98/134]: 9ms; RSS 583 MiB
+Batch 98/134: 5 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/auth-client/tsconfig.json in 103ms; RSS 583 MiB
+Stage primary_extraction [99/134]: 354ms; RSS 463 MiB
+Stage schema_pass [99/134]: 47ms; RSS 470 MiB
+Stage framework_pass [99/134]: 9ms; RSS 471 MiB
+Stage string_literal_pass [99/134]: 7ms; RSS 471 MiB
+Stage param_flow_pass [99/134]: 3ms; RSS 469 MiB
+Stage route_pass [99/134]: 96ms; RSS 486 MiB
+Batch 99/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/auth/tsconfig.json in 621ms; RSS 486 MiB
+Stage primary_extraction [100/134]: 307ms; RSS 459 MiB
+Stage schema_pass [100/134]: 25ms; RSS 463 MiB
+Stage framework_pass [100/134]: 25ms; RSS 467 MiB
+Stage string_literal_pass [100/134]: 16ms; RSS 470 MiB
+Stage param_flow_pass [100/134]: 10ms; RSS 470 MiB
+Stage route_pass [100/134]: 38ms; RSS 479 MiB
+Batch 100/134: 21 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/auth/tsconfig.json in 484ms; RSS 479 MiB
+Stage primary_extraction [101/134]: 831ms; RSS 494 MiB
+Stage schema_pass [101/134]: 64ms; RSS 507 MiB
+Stage framework_pass [101/134]: 85ms; RSS 532 MiB
+Stage string_literal_pass [101/134]: 61ms; RSS 551 MiB
+Stage param_flow_pass [101/134]: 22ms; RSS 551 MiB
+Stage route_pass [101/134]: 187ms; RSS 576 MiB
+Batch 101/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/backend/tsconfig.json in 1386ms; RSS 576 MiB
+Stage primary_extraction [102/134]: 386ms; RSS 466 MiB
+Stage schema_pass [102/134]: 31ms; RSS 469 MiB
+Stage framework_pass [102/134]: 32ms; RSS 473 MiB
+Stage string_literal_pass [102/134]: 26ms; RSS 476 MiB
+Stage param_flow_pass [102/134]: 16ms; RSS 476 MiB
+Stage route_pass [102/134]: 53ms; RSS 483 MiB
+Batch 102/134: 15 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/backend/tsconfig.json in 601ms; RSS 484 MiB
+Stage primary_extraction [103/134]: 283ms; RSS 486 MiB
+Stage schema_pass [103/134]: 25ms; RSS 465 MiB
+Stage framework_pass [103/134]: 29ms; RSS 470 MiB
+Stage string_literal_pass [103/134]: 20ms; RSS 474 MiB
+Stage param_flow_pass [103/134]: 5ms; RSS 474 MiB
+Stage route_pass [103/134]: 49ms; RSS 483 MiB
+Batch 103/134: 19 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/codecamp-knowledge/tsconfig.json in 469ms; RSS 483 MiB
+Stage primary_extraction [104/134]: 357ms; RSS 471 MiB
+Stage schema_pass [104/134]: 57ms; RSS 477 MiB
+Stage framework_pass [104/134]: 9ms; RSS 478 MiB
+Stage string_literal_pass [104/134]: 6ms; RSS 479 MiB
+Stage param_flow_pass [104/134]: 4ms; RSS 480 MiB
+Stage route_pass [104/134]: 122ms; RSS 507 MiB
+Batch 104/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/db/tsconfig.json in 672ms; RSS 508 MiB
+Stage primary_extraction [105/134]: 354ms; RSS 474 MiB
+Stage schema_pass [105/134]: 65ms; RSS 486 MiB
+Stage framework_pass [105/134]: 12ms; RSS 487 MiB
+Stage string_literal_pass [105/134]: 8ms; RSS 489 MiB
+Stage param_flow_pass [105/134]: 5ms; RSS 488 MiB
+Stage route_pass [105/134]: 108ms; RSS 514 MiB
+Batch 105/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/db/tsconfig.json in 663ms; RSS 514 MiB
+Stage primary_extraction [106/134]: 659ms; RSS 499 MiB
+Stage schema_pass [106/134]: 67ms; RSS 513 MiB
+Stage framework_pass [106/134]: 58ms; RSS 521 MiB
+Stage string_literal_pass [106/134]: 33ms; RSS 531 MiB
+Stage param_flow_pass [106/134]: 11ms; RSS 532 MiB
+Stage route_pass [106/134]: 150ms; RSS 566 MiB
+Batch 106/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/db/tsconfig.json in 1151ms; RSS 566 MiB
+Stage primary_extraction [107/134]: 639ms; RSS 494 MiB
+Stage schema_pass [107/134]: 82ms; RSS 504 MiB
+Stage framework_pass [107/134]: 47ms; RSS 516 MiB
+Stage string_literal_pass [107/134]: 28ms; RSS 525 MiB
+Stage param_flow_pass [107/134]: 4ms; RSS 525 MiB
+Stage route_pass [107/134]: 112ms; RSS 556 MiB
+Batch 107/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/db/tsconfig.json in 1009ms; RSS 556 MiB
+Stage primary_extraction [108/134]: 92ms; RSS 578 MiB
+Stage schema_pass [108/134]: 7ms; RSS 578 MiB
+Stage framework_pass [108/134]: 7ms; RSS 578 MiB
+Stage string_literal_pass [108/134]: 4ms; RSS 578 MiB
+Stage param_flow_pass [108/134]: 5ms; RSS 578 MiB
+Stage route_pass [108/134]: 6ms; RSS 578 MiB
+Batch 108/134: 5 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/db/tsconfig.json in 140ms; RSS 578 MiB
+Stage primary_extraction [109/134]: 647ms; RSS 477 MiB
+Stage schema_pass [109/134]: 27ms; RSS 481 MiB
+Stage framework_pass [109/134]: 36ms; RSS 488 MiB
+Stage string_literal_pass [109/134]: 27ms; RSS 493 MiB
+Stage param_flow_pass [109/134]: 7ms; RSS 494 MiB
+Stage route_pass [109/134]: 58ms; RSS 510 MiB
+Batch 109/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/domain/tsconfig.json in 937ms; RSS 510 MiB
+Stage primary_extraction [110/134]: 860ms; RSS 507 MiB
+Stage schema_pass [110/134]: 63ms; RSS 521 MiB
+Stage framework_pass [110/134]: 109ms; RSS 552 MiB
+Stage string_literal_pass [110/134]: 76ms; RSS 574 MiB
+Stage param_flow_pass [110/134]: 26ms; RSS 574 MiB
+Stage route_pass [110/134]: 141ms; RSS 588 MiB
+Batch 110/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/domain/tsconfig.json in 1389ms; RSS 589 MiB
+Stage primary_extraction [111/134]: 231ms; RSS 602 MiB
+Stage schema_pass [111/134]: 11ms; RSS 602 MiB
+Stage framework_pass [111/134]: 12ms; RSS 602 MiB
+Stage string_literal_pass [111/134]: 9ms; RSS 579 MiB
+Stage param_flow_pass [111/134]: 5ms; RSS 557 MiB
+Stage route_pass [111/134]: 24ms; RSS 514 MiB
+Batch 111/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/domain/tsconfig.json in 345ms; RSS 513 MiB
+Stage primary_extraction [112/134]: 540ms; RSS 483 MiB
+Stage schema_pass [112/134]: 28ms; RSS 487 MiB
+Stage framework_pass [112/134]: 25ms; RSS 493 MiB
+Stage string_literal_pass [112/134]: 19ms; RSS 497 MiB
+Stage param_flow_pass [112/134]: 6ms; RSS 497 MiB
+Stage route_pass [112/134]: 61ms; RSS 511 MiB
+Batch 112/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/domain/tsconfig.json in 745ms; RSS 512 MiB
+Stage primary_extraction [113/134]: 596ms; RSS 485 MiB
+Stage schema_pass [113/134]: 39ms; RSS 490 MiB
+Stage framework_pass [113/134]: 49ms; RSS 501 MiB
+Stage string_literal_pass [113/134]: 41ms; RSS 512 MiB
+Stage param_flow_pass [113/134]: 15ms; RSS 512 MiB
+Stage route_pass [113/134]: 60ms; RSS 530 MiB
+Batch 113/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/domain/tsconfig.json in 915ms; RSS 531 MiB
+Stage primary_extraction [114/134]: 100ms; RSS 478 MiB
+Stage schema_pass [114/134]: 7ms; RSS 478 MiB
+Stage framework_pass [114/134]: 6ms; RSS 479 MiB
+Stage string_literal_pass [114/134]: 4ms; RSS 479 MiB
+Stage param_flow_pass [114/134]: 2ms; RSS 479 MiB
+Stage route_pass [114/134]: 7ms; RSS 480 MiB
+Batch 114/134: 16 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/domain/tsconfig.json in 149ms; RSS 480 MiB
+Stage primary_extraction [115/134]: 608ms; RSS 499 MiB
+Stage schema_pass [115/134]: 40ms; RSS 505 MiB
+Stage framework_pass [115/134]: 36ms; RSS 513 MiB
+Stage string_literal_pass [115/134]: 34ms; RSS 522 MiB
+Stage param_flow_pass [115/134]: 10ms; RSS 522 MiB
+Stage route_pass [115/134]: 87ms; RSS 542 MiB
+Batch 115/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/game-cartridges/tsconfig.json in 921ms; RSS 542 MiB
+Stage primary_extraction [116/134]: 169ms; RSS 484 MiB
+Stage schema_pass [116/134]: 11ms; RSS 485 MiB
+Stage framework_pass [116/134]: 9ms; RSS 486 MiB
+Stage string_literal_pass [116/134]: 9ms; RSS 487 MiB
+Stage param_flow_pass [116/134]: 3ms; RSS 487 MiB
+Stage route_pass [116/134]: 23ms; RSS 490 MiB
+Batch 116/134: 15 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/game-cartridges/tsconfig.json in 256ms; RSS 490 MiB
+Stage primary_extraction [117/134]: 60ms; RSS 484 MiB
+Stage schema_pass [117/134]: 6ms; RSS 480 MiB
+Stage framework_pass [117/134]: 2ms; RSS 477 MiB
+Stage string_literal_pass [117/134]: 2ms; RSS 474 MiB
+Stage param_flow_pass [117/134]: 1ms; RSS 472 MiB
+Stage route_pass [117/134]: 11ms; RSS 471 MiB
+Batch 117/134: 11 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/game-contracts/tsconfig.json in 100ms; RSS 471 MiB
+Stage primary_extraction [118/134]: 44ms; RSS 469 MiB
+Stage schema_pass [118/134]: 3ms; RSS 469 MiB
+Stage framework_pass [118/134]: 1ms; RSS 469 MiB
+Stage string_literal_pass [118/134]: 1ms; RSS 469 MiB
+Stage param_flow_pass [118/134]: 0ms; RSS 469 MiB
+Stage route_pass [118/134]: 3ms; RSS 469 MiB
+Batch 118/134: 6 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/integrations/github/tsconfig.json in 63ms; RSS 469 MiB
+Stage primary_extraction [119/134]: 582ms; RSS 506 MiB
+Stage schema_pass [119/134]: 32ms; RSS 511 MiB
+Stage framework_pass [119/134]: 47ms; RSS 516 MiB
+Stage string_literal_pass [119/134]: 38ms; RSS 527 MiB
+Stage param_flow_pass [119/134]: 17ms; RSS 527 MiB
+Stage route_pass [119/134]: 63ms; RSS 535 MiB
+Batch 119/134: 23 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/knowledge-space-core/tsconfig.json in 898ms; RSS 535 MiB
+Stage primary_extraction [120/134]: 415ms; RSS 483 MiB
+Stage schema_pass [120/134]: 36ms; RSS 489 MiB
+Stage framework_pass [120/134]: 31ms; RSS 492 MiB
+Stage string_literal_pass [120/134]: 17ms; RSS 495 MiB
+Stage param_flow_pass [120/134]: 6ms; RSS 495 MiB
+Stage route_pass [120/134]: 44ms; RSS 506 MiB
+Batch 120/134: 25 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/knowledge-space-practice/tsconfig.json in 607ms; RSS 506 MiB
+Stage primary_extraction [121/134]: 154ms; RSS 479 MiB
+Stage schema_pass [121/134]: 7ms; RSS 479 MiB
+Stage framework_pass [121/134]: 11ms; RSS 480 MiB
+Stage string_literal_pass [121/134]: 8ms; RSS 481 MiB
+Stage param_flow_pass [121/134]: 4ms; RSS 481 MiB
+Stage route_pass [121/134]: 13ms; RSS 482 MiB
+Batch 121/134: 4 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/mastery-runtime-compat/tsconfig.json in 222ms; RSS 482 MiB
+Stage primary_extraction [122/134]: 309ms; RSS 477 MiB
+Stage schema_pass [122/134]: 27ms; RSS 477 MiB
+Stage framework_pass [122/134]: 21ms; RSS 479 MiB
+Stage string_literal_pass [122/134]: 13ms; RSS 481 MiB
+Stage param_flow_pass [122/134]: 11ms; RSS 481 MiB
+Stage route_pass [122/134]: 33ms; RSS 485 MiB
+Batch 122/134: 13 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/practice-core/tsconfig.json in 461ms; RSS 486 MiB
+Stage primary_extraction [123/134]: 406ms; RSS 487 MiB
+Stage schema_pass [123/134]: 16ms; RSS 490 MiB
+Stage framework_pass [123/134]: 31ms; RSS 495 MiB
+Stage string_literal_pass [123/134]: 22ms; RSS 499 MiB
+Stage param_flow_pass [123/134]: 10ms; RSS 499 MiB
+Stage route_pass [123/134]: 32ms; RSS 509 MiB
+Batch 123/134: 16 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/srs-engine/tsconfig.json in 574ms; RSS 509 MiB
+Stage primary_extraction [124/134]: 60ms; RSS 483 MiB
+Stage schema_pass [124/134]: 4ms; RSS 484 MiB
+Stage framework_pass [124/134]: 1ms; RSS 484 MiB
+Stage string_literal_pass [124/134]: 1ms; RSS 484 MiB
+Stage param_flow_pass [124/134]: 1ms; RSS 484 MiB
+Stage route_pass [124/134]: 8ms; RSS 484 MiB
+Batch 124/134: 9 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/storage/tsconfig.json in 98ms; RSS 484 MiB
+Stage primary_extraction [125/134]: 125ms; RSS 474 MiB
+Stage schema_pass [125/134]: 47ms; RSS 477 MiB
+Stage framework_pass [125/134]: 2ms; RSS 477 MiB
+Stage string_literal_pass [125/134]: 1ms; RSS 477 MiB
+Stage param_flow_pass [125/134]: 2ms; RSS 477 MiB
+Stage route_pass [125/134]: 29ms; RSS 480 MiB
+Batch 125/134: 11 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/types/tsconfig.json in 248ms; RSS 480 MiB
+Stage primary_extraction [126/134]: 91ms; RSS 474 MiB
+Stage schema_pass [126/134]: 8ms; RSS 474 MiB
+Stage framework_pass [126/134]: 2ms; RSS 474 MiB
+Stage string_literal_pass [126/134]: 2ms; RSS 474 MiB
+Stage param_flow_pass [126/134]: 2ms; RSS 474 MiB
+Stage route_pass [126/134]: 13ms; RSS 475 MiB
+Batch 126/134: 22 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/ui/tsconfig.json in 160ms; RSS 475 MiB
+Stage primary_extraction [127/134]: 95ms; RSS 471 MiB
+Stage schema_pass [127/134]: 7ms; RSS 472 MiB
+Stage framework_pass [127/134]: 5ms; RSS 472 MiB
+Stage string_literal_pass [127/134]: 4ms; RSS 472 MiB
+Stage param_flow_pass [127/134]: 1ms; RSS 472 MiB
+Stage route_pass [127/134]: 9ms; RSS 473 MiB
+Batch 127/134: 9 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/utils/tsconfig.json in 141ms; RSS 473 MiB
+Stage primary_extraction [128/134]: 562ms; RSS 506 MiB
+Stage schema_pass [128/134]: 71ms; RSS 518 MiB
+Stage framework_pass [128/134]: 31ms; RSS 526 MiB
+Stage string_literal_pass [128/134]: 19ms; RSS 532 MiB
+Stage param_flow_pass [128/134]: 10ms; RSS 533 MiB
+Stage route_pass [128/134]: 148ms; RSS 567 MiB
+Batch 128/134: 32 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/packages/webhooks/tsconfig.json in 1015ms; RSS 567 MiB
+Stage primary_extraction [129/134]: 209ms; RSS 498 MiB
+Stage schema_pass [129/134]: 8ms; RSS 499 MiB
+Stage framework_pass [129/134]: 5ms; RSS 499 MiB
+Stage string_literal_pass [129/134]: 4ms; RSS 500 MiB
+Stage param_flow_pass [129/134]: 2ms; RSS 500 MiB
+Stage route_pass [129/134]: 13ms; RSS 501 MiB
+Batch 129/134: 9 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/services/worker/tsconfig.json in 259ms; RSS 501 MiB
+Stage primary_extraction [130/134]: 2ms; RSS 487 MiB
+Stage schema_pass [130/134]: 0ms; RSS 487 MiB
+Stage framework_pass [130/134]: 0ms; RSS 486 MiB
+Stage string_literal_pass [130/134]: 0ms; RSS 486 MiB
+Stage param_flow_pass [130/134]: 0ms; RSS 486 MiB
+Stage route_pass [130/134]: 0ms; RSS 486 MiB
+Batch 130/134: 2 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/test-fixtures/architecture-enforcement/database/alias/tsconfig.json in 6ms; RSS 486 MiB
+Stage primary_extraction [131/134]: 3ms; RSS 476 MiB
+Stage schema_pass [131/134]: 0ms; RSS 476 MiB
+Stage framework_pass [131/134]: 0ms; RSS 476 MiB
+Stage string_literal_pass [131/134]: 0ms; RSS 476 MiB
+Stage param_flow_pass [131/134]: 0ms; RSS 476 MiB
+Stage route_pass [131/134]: 0ms; RSS 476 MiB
+Batch 131/134: 2 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/test-fixtures/architecture-enforcement/database/worker-job-port/tsconfig.json in 6ms; RSS 476 MiB
+Stage primary_extraction [132/134]: 1ms; RSS 471 MiB
+Stage schema_pass [132/134]: 0ms; RSS 471 MiB
+Stage framework_pass [132/134]: 0ms; RSS 471 MiB
+Stage string_literal_pass [132/134]: 0ms; RSS 471 MiB
+Stage param_flow_pass [132/134]: 0ms; RSS 471 MiB
+Stage route_pass [132/134]: 0ms; RSS 471 MiB
+Batch 132/134: 2 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/test-fixtures/architecture-enforcement/provider/ai-alias/tsconfig.json in 4ms; RSS 471 MiB
+Stage primary_extraction [133/134]: 2ms; RSS 472 MiB
+Stage schema_pass [133/134]: 0ms; RSS 472 MiB
+Stage framework_pass [133/134]: 0ms; RSS 472 MiB
+Stage string_literal_pass [133/134]: 0ms; RSS 472 MiB
+Stage param_flow_pass [133/134]: 0ms; RSS 472 MiB
+Stage route_pass [133/134]: 0ms; RSS 472 MiB
+Batch 133/134: 2 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/test-fixtures/architecture-enforcement/provider/ai-internal-interface/tsconfig.json in 7ms; RSS 472 MiB
+Stage primary_extraction [134/134]: 4ms; RSS 472 MiB
+Stage schema_pass [134/134]: 0ms; RSS 472 MiB
+Stage framework_pass [134/134]: 0ms; RSS 472 MiB
+Stage string_literal_pass [134/134]: 0ms; RSS 472 MiB
+Stage param_flow_pass [134/134]: 0ms; RSS 472 MiB
+Stage route_pass [134/134]: 0ms; RSS 472 MiB
+Batch 134/134: 2 files from /tmp/business-operations-r2-clean-audit-e6wuo16j/source/test-fixtures/architecture-enforcement/provider/storage-internal-interface/tsconfig.json in 10ms; RSS 472 MiB
+Stage call_resolution: 1192ms; RSS 585 MiB
+Stage deduplication: 3218ms; RSS 1158 MiB
+Scanned 43 TypeScript configurations with at most 1 active Project
+Stage persistence: 16439ms; RSS 1837 MiB
+Scanned 89943 nodes, 118591 edges in 197479ms
