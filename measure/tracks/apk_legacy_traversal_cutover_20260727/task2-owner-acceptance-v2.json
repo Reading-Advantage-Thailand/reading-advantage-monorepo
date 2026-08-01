@@ -1,0 +1,43 @@
+{
+  "schema_version": "apk-legacy-traversal-task2-owner-acceptance.v2",
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "record_id": "apk_legacy_traversal_cutover_20260727_task2_owner_acceptance_v2",
+  "status": "accepted-bounded-advantage-games-qc-only",
+  "accepted_at": "2026-08-01T00:00:00Z",
+  "decided_by": "explicit-user-directed project-owner scope",
+  "authority": "explicit user instruction for bounded traversal Tasks 1–5 remediation",
+  "accepted_input": {
+    "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/task2-canonical-suitability-dossiers-v2.json",
+    "sha256": "9acc9137a74b4bd5176dee43f6830f56df05ba8cff83b50ac12e2077d58c04a5",
+    "title_count": 5,
+    "role_dossier_count": 19,
+    "required_fields": ["claim_provenance", "descriptor_id", "decision", "selected_union"]
+  },
+  "decision": {
+    "canonical_reuse": "accepted-for-Advantage-Games-/qc-inspection-only",
+    "legacy_asset_reuse": "blocked",
+    "legacy_asset_ingestion": "blocked",
+    "mechanic_scope": "claim-bound local QC mechanics only",
+    "synthetic_host_progression_or_completion": "blocked"
+  },
+  "authorization": {
+    "advantage_games_qc_registration_authorized": true,
+    "production_use_authorized": false,
+    "title_adoption_authorized": false,
+    "reading_host_authorized": false,
+    "primary_host_authorized": false,
+    "completion_persistence_authorized": false,
+    "ingestion_authorized": false,
+    "migration_authorized": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "deployment_authorized": false
+  },
+  "conditions": [
+    "The QC adapter may consume only resolver-issued Asset Contract v2 registrations and must not expose physical standard-pack paths.",
+    "Every visible mechanic feature must retain an exact claim ID from the listed title claim artifact.",
+    "The `/qc` registration is excluded from production catalogs and all Reading and Primary host registries.",
+    "A later host, persistence, migration, cutover, retirement, or deployment decision requires separately accepted current evidence and a new owner decision.",
+    "Byte drift in the accepted dossier or a cited governance artifact revokes this acceptance."
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "schema_version": "apk-legacy-traversal-task2-canonical-suitability-dossiers.v2",
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "task_number": 2,
+  "status": "owner-accepted-for-advantage-games-qc-only",
+  "scope": "Root-accepted standard-pack canonical reuse for the isolated Advantage Games /qc traversal surface only.",
+  "accepted_governance": {
+    "asset_contract_v2_owner_acceptance": {
+      "path": "measure/archive/apk_asset_contract_v2_20260728/v2-owner-acceptance-v1.json",
+      "sha256": "98f6c6d3b98d615d3b30b0eaa4581eb5b5e2636705e25cb87f9fe3e5d3b958b3"
+    },
+    "suitability_owner_decision": {
+      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
+      "sha256": "a1e0fdb27d29d86d77362c67db0fa0ef3eb4d26aef4377954e9d5cab6c367a04"
+    },
+    "standard_pack_release": {
+      "version": "2026.07.23",
+      "catalog_digest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+      "source_receipt_digest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9",
+      "catalog_path": "packages/advantage-play-kit/assets/standard/standard-pack-release.json",
+      "catalog_sha256": "ef432a798a78585df3416d60aca30fe11a2d1d8b833e0d65ceb7fac5c8b19932"
+    }
+  },
+  "descriptor_registry": [
+    { "descriptor_id": "existing-core-hero-01-static-v1", "semantic_key": "top-down/32x32/characters/hero-01", "media_kind": "image" },
+    { "descriptor_id": "existing-core-enemy-001-idle-static-v1", "semantic_key": "side-view/32x32/characters/enemy-001-idle", "media_kind": "image" },
+    { "descriptor_id": "existing-core-hit-01-static-v1", "semantic_key": "effects/32x32/combat/hit-01", "media_kind": "image" },
+    { "descriptor_id": "existing-core-hit-01-audio-v1", "semantic_key": "audio/native/combat/hit-01", "media_kind": "audio" },
+    { "descriptor_id": "existing-core-gamepad-buttons-static-v1", "semantic_key": "ui/16x16/controls/gamepad-buttons", "media_kind": "image" }
+  ],
+  "titles": [
+    {
+      "title_id": "dragon-rider",
+      "title": "Dragon Rider",
+      "input_mode": "vocabulary",
+      "claim_artifact": { "path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json", "sha256": "826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236", "temporal_scope": "current-source-at-cited-revision" },
+      "selected_union": ["audio/native/combat/hit-01", "effects/32x32/combat/hit-01", "top-down/32x32/characters/hero-01", "ui/16x16/controls/gamepad-buttons"],
+      "role_dossiers": [
+        { "dossier_id": "traversal-dragon-rider-player-v2", "title_role": "dragon-rider-gate-rider", "semantic": { "role": "player", "state": "idle" }, "descriptor_id": "existing-core-hero-01-static-v1", "claim_provenance": { "claim_id": "DR-SCENE-002", "locator": "$.claims[?(@.claim_id == 'DR-SCENE-002')]" }, "decision": "reuse-canonical" },
+        { "dossier_id": "traversal-dragon-rider-feedback-v2", "title_role": "dragon-rider-gate-feedback", "semantic": { "role": "feedback", "state": "correct" }, "descriptor_id": "existing-core-hit-01-static-v1", "claim_provenance": { "claim_id": "DR-TRANS-001", "locator": "$.claims[?(@.claim_id == 'DR-TRANS-001')]" }, "decision": "reuse-canonical" },
+        { "dossier_id": "traversal-dragon-rider-audio-feedback-v2", "title_role": "dragon-rider-gate-feedback-audio", "semantic": { "role": "audio-feedback", "state": "correct" }, "descriptor_id": "existing-core-hit-01-audio-v1", "claim_provenance": { "claim_id": "DR-TRANS-001", "locator": "$.claims[?(@.claim_id == 'DR-TRANS-001')]" }, "decision": "reuse-canonical" },
+        { "dossier_id": "traversal-dragon-rider-control-v2", "title_role": "dragon-rider-gate-control", "semantic": { "role": "control", "state": "confirm" }, "descriptor_id": "existing-core-gamepad-buttons-static-v1", "claim_provenance": { "claim_id": "DR-CONTROL-001", "locator": "$.claims[?(@.claim_id == 'DR-CONTROL-001')]" }, "decision": "reuse-canonical" }
+      ]
+    },
+    {
+      "title_id": "spellweavers-run",
+      "title": "Spellweaver's Run",
+      "input_mode": "sentence",
+      "claim_artifact": { "path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json", "sha256": "2cd708cbecf94133b92ce5f06822ad420da28a1d4417fdb74284528e7a9fe24b", "temporal_scope": "historical-source-only" },
+      "selected_union": ["effects/32x32/combat/hit-01", "top-down/32x32/characters/hero-01", "ui/16x16/controls/gamepad-buttons"],
+      "role_dossiers": [
+        { "dossier_id": "traversal-spellweavers-run-player-v2", "title_role": "spellweavers-run-lane-selector", "semantic": { "role": "player", "state": "idle" }, "descriptor_id": "existing-core-hero-01-static-v1", "claim_provenance": { "claim_id": "SW-WORLD-002", "locator": "$[?(@.claim_id == 'SW-WORLD-002')]" }, "decision": "reuse-canonical" },
+        { "dossier_id": "traversal-spellweavers-run-feedback-v2", "title_role": "spellweavers-run-collection-feedback", "semantic": { "role": "feedback", "state": "correct" }, "descriptor_id": "existing-core-hit-01-static-v1", "claim_provenance": { "claim_id": "SW-TRANS-002", "locator": "$[?(@.claim_id == 'SW-TRANS-002')]" }, "decision": "reuse-canonical" },
+        { "dossier_id": "traversal-spellweavers-run-control-v2", "title_role": "spellweavers-run-lane-control", "semantic": { "role": "control", "state": "confirm" }, "descriptor_id": "existing-core-gamepad-buttons-static-v1", "claim_provenance": { "claim_id": "SW-INPUT-002", "locator": "$[?(@.claim_id == 'SW-INPUT-002')]" }, "decision": "reuse-canonical" }
+      ]
+    },
+    {
+      "title_id": "shadow-gate-dungeon",
+      "title": "Shadow Gate Dungeon",
+      "input_mode": "sentence",
+      "claim_artifact": { "path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/claim-evidence-ledger-v2.json", "sha256": "5c960768bb3f2002d4bc9b20205d32c5e31e3717b854db8ae04dab2fc556621c", "temporal_scope": "current-source-at-cited-revision" },
+      "selected_union": ["effects/32x32/combat/hit-01", "side-view/32x32/characters/enemy-001-idle", "top-down/32x32/characters/hero-01", "ui/16x16/controls/gamepad-buttons"],
+      "role_dossiers": [
+        { "dossier_id": "traversal-shadow-gate-dungeon-player-v2", "title_role": "shadow-gate-dungeon-stealth-player", "semantic": { "role": "player", "state": "idle" }, "descriptor_id": "existing-core-hero-01-static-v1", "claim_provenance": { "claim_id": "SGD-MOVE-001", "locator": "$.claims[?(@.claim_id == 'SGD-MOVE-001')]" }, "decision": "reuse-canonical" },
+        { "dossier_id": "traversal-shadow-gate-dungeon-enemy-v2", "title_role": "shadow-gate-dungeon-chasing-creature", "semantic": { "role": "enemy", "state": "idle" }, "descriptor_id": "existing-core-enemy-001-idle-static-v1", "claim_provenance": { "claim_id": "SGD-STEALTH-002", "locator": "$.claims[?(@.claim_id == 'SGD-STEALTH-002')]" }, "decision": "reuse-canonical" },
+        { "dossier_id": "traversal-shadow-gate-dungeon-feedback-v2", "title_role": "shadow-gate-dungeon-crystal-feedback", "semantic": { "role": "feedback", "state": "correct" }, "descriptor_id": "existing-core-hit-01-static-v1", "claim_provenance": { "claim_id": "SGD-PROG-001", "locator": "$.claims[?(@.claim_id == 'SGD-PROG-001')]" }, "decision": "reuse-canonical" },
+        { "dossier_id": "traversal-shadow-gate-dungeon-control-v2", "title_role": "shadow-gate-dungeon-dpad-control", "semantic": { "role": "control", "state": "confirm" }, "descriptor_id": "existing-core-gamepad-buttons-static-v1", "claim_provenance": { "claim_id": "SGD-INPUT-002", "locator": "$.claims[?(@.claim_id == 'SGD-INPUT-002')]" }, "decision": "reuse-canonical" }
+      ]
+    },
+    {
+      "title_id": "labyrinth-goblin-king",
+      "title": "Labyrinth of the Goblin King",
+      "input_mode": "sentence",
+      "claim_artifact": { "path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/claim-evidence-ledger-batch-b-v2.json", "sha256": "1b75beb8af13728ad5e564ed24ec8717341d775272099e92c9757a4fdbbddacb", "temporal_scope": "current-source-at-cited-revision" },
+      "selected_union": ["effects/32x32/combat/hit-01", "side-view/32x32/characters/enemy-001-idle", "top-down/32x32/characters/hero-01", "ui/16x16/controls/gamepad-buttons"],
+      "role_dossiers": [
+        { "dossier_id": "traversal-labyrinth-goblin-king-player-v2", "title_role": "labyrinth-goblin-king-maze-player", "semantic": { "role": "player", "state": "idle" }, "descriptor_id": "existing-core-hero-01-static-v1", "claim_provenance": { "claim_id": "LGK-MOVE-001", "locator": "$.claim_atoms[?(@.claim_id == 'LGK-MOVE-001')]" }, "decision": "reuse-canonical" },
+        { "dossier_id": "traversal-labyrinth-goblin-king-enemy-v2", "title_role": "labyrinth-goblin-king-goblin", "semantic": { "role": "enemy", "state": "idle" }, "descriptor_id": "existing-core-enemy-001-idle-static-v1", "claim_provenance": { "claim_id": "LGK-GOBLIN-001", "locator": "$.claim_atoms[?(@.claim_id == 'LGK-GOBLIN-001')]" }, "decision": "reuse-canonical" },
+        { "dossier_id": "traversal-labyrinth-goblin-king-feedback-v2", "title_role": "labyrinth-goblin-king-orb-feedback", "semantic": { "role": "feedback", "state": "correct" }, "descriptor_id": "existing-core-hit-01-static-v1", "claim_provenance": { "claim_id": "LGK-ORB-001", "locator": "$.claim_atoms[?(@.claim_id == 'LGK-ORB-001')]" }, "decision": "reuse-canonical" },
+        { "dossier_id": "traversal-labyrinth-goblin-king-control-v2", "title_role": "labyrinth-goblin-king-maze-control", "semantic": { "role": "control", "state": "confirm" }, "descriptor_id": "existing-core-gamepad-buttons-static-v1", "claim_provenance": { "claim_id": "LGK-MOVE-001", "locator": "$.claim_atoms[?(@.claim_id == 'LGK-MOVE-001')]" }, "decision": "reuse-canonical" }
+      ]
+    },
+    {
+      "title_id": "griffin-riders-escape",
+      "title": "Griffin Rider's Escape",
+      "input_mode": "sentence",
+      "claim_artifact": { "path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json", "sha256": "9269956e48572e3ef9f0359f731a0f4f3c9d2193ede6128c0952b5a4bdd4dd59", "temporal_scope": "historical-source-only", "correction": "Full 64-character ledger SHA; replaces the truncated Griffin binding." },
+      "selected_union": ["effects/32x32/combat/hit-01", "side-view/32x32/characters/enemy-001-idle", "top-down/32x32/characters/hero-01", "ui/16x16/controls/gamepad-buttons"],
+      "role_dossiers": [
+        { "dossier_id": "traversal-griffin-riders-escape-player-v2", "title_role": "griffin-riders-escape-flying-rider", "semantic": { "role": "player", "state": "idle" }, "descriptor_id": "existing-core-hero-01-static-v1", "claim_provenance": { "claim_id": "GRF-MOVE-001", "locator": "$.claims[?(@.claim_id == 'GRF-MOVE-001')]" }, "decision": "reuse-canonical" },
+        { "dossier_id": "traversal-griffin-riders-escape-enemy-v2", "title_role": "griffin-riders-escape-wave-obstacle", "semantic": { "role": "enemy", "state": "idle" }, "descriptor_id": "existing-core-enemy-001-idle-static-v1", "claim_provenance": { "claim_id": "GRF-WAVE-001", "locator": "$.claims[?(@.claim_id == 'GRF-WAVE-001')]" }, "decision": "reuse-canonical" },
+        { "dossier_id": "traversal-griffin-riders-escape-feedback-v2", "title_role": "griffin-riders-escape-gate-feedback", "semantic": { "role": "feedback", "state": "correct" }, "descriptor_id": "existing-core-hit-01-static-v1", "claim_provenance": { "claim_id": "GRF-TRANS-001", "locator": "$.claims[?(@.claim_id == 'GRF-TRANS-001')]" }, "decision": "reuse-canonical" },
+        { "dossier_id": "traversal-griffin-riders-escape-control-v2", "title_role": "griffin-riders-escape-lane-control", "semantic": { "role": "control", "state": "confirm" }, "descriptor_id": "existing-core-gamepad-buttons-static-v1", "claim_provenance": { "claim_id": "GRF-CART-002", "locator": "$.claims[?(@.claim_id == 'GRF-CART-002')]" }, "decision": "reuse-canonical" }
+      ]
+    }
+  ],
+  "implementation_bindings": {
+    "traversal_suitability": { "path": "packages/game-cartridges/src/traversal-suitability.ts", "sha256": "62993a81a3c2ca51dcae1a98efe49204047330a6eaf88b641e2f2a198685261c" },
+    "dragon_rider": { "path": "packages/game-cartridges/src/dragon-rider-cartridge.ts", "sha256": "e740b3e50b23a479c0a6e07734a068034b1b91115057be72bbe5d6a162ae2d44" },
+    "spellweavers_run": { "path": "packages/game-cartridges/src/spellweavers-run-cartridge.ts", "sha256": "d53abb801fe211c4cd653e0bc1d3f7f1fa86796c6b1fa3e03171a4378442b1eb" },
+    "shadow_gate_dungeon": { "path": "packages/game-cartridges/src/shadow-gate-dungeon-cartridge.ts", "sha256": "49be5c6f9ff880cf7ce0bd7c418337132c8534b26f4f078c9782e4e70b8b6a36" },
+    "labyrinth_goblin_king": { "path": "packages/game-cartridges/src/labyrinth-goblin-king-cartridge.ts", "sha256": "feb60fa2dcca1349bb75b18bb5e0b3261966104257561b8e96361c4e97a460b8" },
+    "griffin_riders_escape": { "path": "packages/game-cartridges/src/griffin-riders-escape-cartridge.ts", "sha256": "aae9e66df5e3cb75bdd0a9c296f8e26ade3facb4dd070665bbd723060d6a3b86" },
+    "qc_adapter": { "path": "packages/game-cartridges/src/legacy-traversal-qc.ts", "sha256": "a7d3ee6c732077b58946fb58d05d5020c7f0bb35c7ffd1111adb26a73459580d" },
+    "mechanic_test": { "path": "packages/game-cartridges/src/legacy-traversal-cartridges.test.ts", "sha256": "cdc29ebefecd3147fff4c43676a815072d00dbd15e5c491a248e2b122b611f3b" },
+    "qc_adapter_test": { "path": "packages/game-cartridges/src/legacy-traversal-qc.test.ts", "sha256": "bb25fe269c250188c43fc74c51bc1f9284f85e5ad9b2300565cd8db8800ae8d4" },
+    "qc_data": { "path": "apps/advantage-games/src/app/qc/legacy-traversal-qc-data.ts", "sha256": "3fa938471b3a0d46493738384f244315ab519f5f8c70bede8b1d514ba7078303" },
+    "qc_component": { "path": "apps/advantage-games/src/components/apk/LegacyTraversalCartridgeQc.tsx", "sha256": "04669869e31afe50d9e878bd31edf4b82e86a4f901d91b29610cb289ddbf7550" },
+    "qc_page_test": { "path": "apps/advantage-games/src/app/qc/page.test.tsx", "sha256": "b61f550e81162779961dfd6cfc1aaf37d41548a07c2682efdb1a19c0204ac8bc" },
+    "chromium_proof": { "path": "apps/advantage-games/tests/e2e/qc/legacy-traversal-cartridges.spec.ts", "sha256": "bfc7bc2969e302c4c6f529e9ce9917dcf50e243232735fe787216f49e6c227fd" }
+  },
+  "legacy_asset_disposition": {
+    "reuse": "blocked",
+    "ingestion": "blocked",
+    "reason": "The accepted source records do not establish current legacy-byte provenance, license, credit, or runtime authority."
+  },
+  "authorization": {
+    "advantage_games_qc_registration_authorized": true,
+    "production_use_authorized": false,
+    "reading_host_authorized": false,
+    "primary_host_authorized": false,
+    "completion_persistence_authorized": false,
+    "ingestion_authorized": false,
+    "migration_authorized": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "deployment_authorized": false,
+    "title_adoption_authorized": false
+  }
+}

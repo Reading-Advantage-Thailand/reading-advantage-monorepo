@@ -1,0 +1,107 @@
+{
+  "schema_version": "apk-legacy-traversal-task2-canonical-suitability.v1",
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "task": "Task 2: canonical suitability and ingestion disposition",
+  "status": "canonical-reuse-suitable-for-task3-to-task5-qc",
+  "basis": {
+    "asset_contract_v2_owner_acceptance": {
+      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
+      "decision": "ACCEPT_BOUNDED_EVIDENCE_ONLY_INGESTION_GOVERNANCE",
+      "scope": "The T11 owner-approved semantic bindings and accepted root standard-pack release are the only forward asset source; this record does not accept a legacy source byte."
+    },
+    "source_readiness_manifest": "measure/tracks/apk_legacy_traversal_cutover_20260727/task1-source-readiness-manifest-v1.json",
+    "semantic_binding_source": "packages/advantage-play-kit/src/assets/semantic-product-bindings.ts",
+    "canonical_release": {
+      "version": "2026.07.23",
+      "catalog_digest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+      "source_receipt_digest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9",
+      "required_credit": "Pixel art assets by ElvGames"
+    }
+  },
+  "titles": [
+    {
+      "title_id": "dragon-rider",
+      "title": "Dragon Rider",
+      "input_mode": "vocabulary",
+      "decision": "reuse-canonical",
+      "legacy_asset_disposition": "blocked-no-legacy-ingestion",
+      "roles": [
+        { "role": "player", "state": "idle", "semantic_key": "top-down/32x32/characters/hero-01", "descriptor": { "descriptor_id": "existing-core-hero-01-static-v1", "media_kind": "image", "minimum_geometry": { "width": 192, "height": 384 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": true } },
+        { "role": "feedback", "state": "correct", "semantic_key": "effects/32x32/combat/hit-01", "descriptor": { "descriptor_id": "existing-core-hit-01-static-v1", "media_kind": "image", "minimum_geometry": { "width": 192, "height": 128 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": false } },
+        { "role": "audio-feedback", "state": "correct", "semantic_key": "audio/native/combat/hit-01", "descriptor": { "descriptor_id": "existing-core-hit-01-audio-v1", "media_kind": "audio", "minimum_geometry": null, "animation_behavior": "not-applicable-to-audio-binding", "collision_envelope_required": false } },
+        { "role": "control", "state": "confirm", "semantic_key": "ui/16x16/controls/gamepad-buttons", "descriptor": { "descriptor_id": "existing-core-gamepad-buttons-static-v1", "media_kind": "image", "minimum_geometry": { "width": 352, "height": 160 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": false } }
+      ]
+    },
+    {
+      "title_id": "spellweavers-run",
+      "title": "Spellweaver's Run",
+      "input_mode": "sentence",
+      "decision": "reuse-canonical",
+      "legacy_asset_disposition": "blocked-no-legacy-ingestion",
+      "roles": [
+        { "role": "player", "state": "idle", "semantic_key": "top-down/32x32/characters/hero-01", "descriptor": { "descriptor_id": "existing-core-hero-01-static-v1", "media_kind": "image", "minimum_geometry": { "width": 192, "height": 384 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": true } },
+        { "role": "feedback", "state": "correct", "semantic_key": "effects/32x32/combat/hit-01", "descriptor": { "descriptor_id": "existing-core-hit-01-static-v1", "media_kind": "image", "minimum_geometry": { "width": 192, "height": 128 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": false } },
+        { "role": "control", "state": "confirm", "semantic_key": "ui/16x16/controls/gamepad-buttons", "descriptor": { "descriptor_id": "existing-core-gamepad-buttons-static-v1", "media_kind": "image", "minimum_geometry": { "width": 352, "height": 160 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": false } }
+      ]
+    },
+    {
+      "title_id": "shadow-gate-dungeon",
+      "title": "Shadow Gate Dungeon",
+      "input_mode": "sentence",
+      "decision": "reuse-canonical",
+      "legacy_asset_disposition": "blocked-no-legacy-ingestion",
+      "roles": [
+        { "role": "player", "state": "idle", "semantic_key": "top-down/32x32/characters/hero-01", "descriptor": { "descriptor_id": "existing-core-hero-01-static-v1", "media_kind": "image", "minimum_geometry": { "width": 192, "height": 384 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": true } },
+        { "role": "enemy", "state": "idle", "semantic_key": "side-view/32x32/characters/enemy-001-idle", "descriptor": { "descriptor_id": "existing-core-enemy-001-idle-static-v1", "media_kind": "image", "minimum_geometry": { "width": 192, "height": 32 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": true } },
+        { "role": "feedback", "state": "correct", "semantic_key": "effects/32x32/combat/hit-01", "descriptor": { "descriptor_id": "existing-core-hit-01-static-v1", "media_kind": "image", "minimum_geometry": { "width": 192, "height": 128 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": false } },
+        { "role": "control", "state": "confirm", "semantic_key": "ui/16x16/controls/gamepad-buttons", "descriptor": { "descriptor_id": "existing-core-gamepad-buttons-static-v1", "media_kind": "image", "minimum_geometry": { "width": 352, "height": 160 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": false } }
+      ]
+    },
+    {
+      "title_id": "labyrinth-goblin-king",
+      "title": "Labyrinth of the Goblin King",
+      "input_mode": "sentence",
+      "decision": "reuse-canonical",
+      "legacy_asset_disposition": "blocked-no-legacy-ingestion",
+      "roles": [
+        { "role": "player", "state": "idle", "semantic_key": "top-down/32x32/characters/hero-01", "descriptor": { "descriptor_id": "existing-core-hero-01-static-v1", "media_kind": "image", "minimum_geometry": { "width": 192, "height": 384 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": true } },
+        { "role": "enemy", "state": "idle", "semantic_key": "side-view/32x32/characters/enemy-001-idle", "descriptor": { "descriptor_id": "existing-core-enemy-001-idle-static-v1", "media_kind": "image", "minimum_geometry": { "width": 192, "height": 32 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": true } },
+        { "role": "feedback", "state": "correct", "semantic_key": "effects/32x32/combat/hit-01", "descriptor": { "descriptor_id": "existing-core-hit-01-static-v1", "media_kind": "image", "minimum_geometry": { "width": 192, "height": 128 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": false } },
+        { "role": "control", "state": "confirm", "semantic_key": "ui/16x16/controls/gamepad-buttons", "descriptor": { "descriptor_id": "existing-core-gamepad-buttons-static-v1", "media_kind": "image", "minimum_geometry": { "width": 352, "height": 160 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": false } }
+      ]
+    },
+    {
+      "title_id": "griffin-riders-escape",
+      "title": "Griffin Rider's Escape",
+      "input_mode": "sentence",
+      "decision": "reuse-canonical",
+      "legacy_asset_disposition": "blocked-no-legacy-ingestion",
+      "roles": [
+        { "role": "player", "state": "idle", "semantic_key": "top-down/32x32/characters/hero-01", "descriptor": { "descriptor_id": "existing-core-hero-01-static-v1", "media_kind": "image", "minimum_geometry": { "width": 192, "height": 384 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": true } },
+        { "role": "enemy", "state": "idle", "semantic_key": "side-view/32x32/characters/enemy-001-idle", "descriptor": { "descriptor_id": "existing-core-enemy-001-idle-static-v1", "media_kind": "image", "minimum_geometry": { "width": 192, "height": 32 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": true } },
+        { "role": "feedback", "state": "correct", "semantic_key": "effects/32x32/combat/hit-01", "descriptor": { "descriptor_id": "existing-core-hit-01-static-v1", "media_kind": "image", "minimum_geometry": { "width": 192, "height": 128 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": false } },
+        { "role": "control", "state": "confirm", "semantic_key": "ui/16x16/controls/gamepad-buttons", "descriptor": { "descriptor_id": "existing-core-gamepad-buttons-static-v1", "media_kind": "image", "minimum_geometry": { "width": 352, "height": 160 }, "animation_behavior": "atlas-grid-recorded-no-clip-or-direction-contract", "collision_envelope_required": false } }
+      ]
+    }
+  ],
+  "implementation_bindings": {
+    "traversal_suitability_module": { "path": "packages/game-cartridges/src/traversal-suitability.ts", "sha256": "62993a81a3c2ca51dcae1a98efe49204047330a6eaf88b641e2f2a198685261c" },
+    "traversal_suitability_test": { "path": "packages/game-cartridges/src/traversal-suitability.test.ts", "sha256": "169d430919ec57e918a6dc1e3a77059699534ec464b5a596478439fe1dba1204" },
+    "cartridge_test": { "path": "packages/game-cartridges/src/legacy-traversal-cartridges.test.ts", "sha256": "da3add71ea2f3e6e63139313c51318d0e8f5e5c9795f974e4fa7896d0daff7ea" },
+    "dragon_rider_cartridge": { "path": "packages/game-cartridges/src/dragon-rider-cartridge.ts", "sha256": "38ef235db64ee9a705fbc666eb23871e78caa9aedda98d196523bac6191120a3" },
+    "spellweavers_run_cartridge": { "path": "packages/game-cartridges/src/spellweavers-run-cartridge.ts", "sha256": "4d04c7b5800a46041d52dff10dabd5237659663c33013037d94908b16d40b850" },
+    "shadow_gate_dungeon_cartridge": { "path": "packages/game-cartridges/src/shadow-gate-dungeon-cartridge.ts", "sha256": "e67dffa0d4227ccf366c1d151108b252c68a90f71effba52187562792fbb10ac" },
+    "labyrinth_goblin_king_cartridge": { "path": "packages/game-cartridges/src/labyrinth-goblin-king-cartridge.ts", "sha256": "c80e2ea37745103eb5e9be14c0c2f936ba214e93e39d8771572947cc4f0d95d8" },
+    "griffin_riders_escape_cartridge": { "path": "packages/game-cartridges/src/griffin-riders-escape-cartridge.ts", "sha256": "7e6ef86e9d2b1b7fb1ec405998fd8b4938091bdc73538eb6ee41223af0a005a1" }
+  },
+  "authorization": {
+    "production_use_authorized": false,
+    "legacy_ingestion_authorized": false,
+    "migration_authorized": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "deployment_authorized": false,
+    "task2_acceptance_claimed": false
+  },
+  "revocation_rule": "Any canonical release, semantic-role, descriptor-behavior, source-manifest, implementation-binding, or authority-boundary drift invalidates this Task 2 record."
+}

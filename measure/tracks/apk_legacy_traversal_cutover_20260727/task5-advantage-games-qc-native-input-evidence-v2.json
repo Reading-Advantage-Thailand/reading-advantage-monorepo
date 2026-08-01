@@ -1,0 +1,49 @@
+{
+  "schema_version": "apk-legacy-traversal-task5-advantage-games-qc-native-input-evidence.v2",
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "captured_at": "2026-08-01T00:00:00Z",
+  "scope": "Local Chromium proof of the isolated Advantage Games /qc traversal surface only.",
+  "accepted_inputs": {
+    "task2_dossiers": {
+      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/task2-canonical-suitability-dossiers-v2.json",
+      "sha256": "9acc9137a74b4bd5176dee43f6830f56df05ba8cff83b50ac12e2077d58c04a5"
+    },
+    "owner_acceptance": {
+      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/task2-owner-acceptance-v2.json",
+      "sha256": "10480e53f2488bbb088cb6c4ade06a6f77b6164ee9ac308dc970c4dad0edf539"
+    }
+  },
+  "source": {
+    "playwright_spec": {
+      "path": "apps/advantage-games/tests/e2e/qc/legacy-traversal-cartridges.spec.ts",
+      "sha256": "bfc7bc2969e302c4c6f529e9ce9917dcf50e243232735fe787216f49e6c227fd"
+    },
+    "qc_component": {
+      "path": "apps/advantage-games/src/components/apk/LegacyTraversalCartridgeQc.tsx",
+      "sha256": "04669869e31afe50d9e878bd31edf4b82e86a4f901d91b29610cb289ddbf7550"
+    }
+  },
+  "command": "PLAYWRIGHT_PORT=3011 pnpm --filter vocabulary-games exec playwright test tests/e2e/qc/legacy-traversal-cartridges.spec.ts --project=chromium --workers=1",
+  "result": {
+    "status": "passed",
+    "tests": 2,
+    "browser": "Chromium",
+    "native_input": ["keyboard", "pointer", "touch"],
+    "profiles": ["compact", "wide"],
+    "resize": "same canvas node is retained while the local mechanic snapshot is preserved",
+    "titles": ["dragon-rider", "spellweavers-run", "shadow-gate-dungeon", "labyrinth-goblin-king", "griffin-riders-escape"],
+    "assertions": [
+      "Each title loads only through the Advantage Games /qc registry.",
+      "Keyboard, pointer, and touch events increment only native-input evidence counters.",
+      "Compact and wide profiles report no composition geometry issues or horizontal overflow.",
+      "Each selected union remains resolver-issued and title-scoped.",
+      "Every interaction keeps host completion emissions at zero."
+    ]
+  },
+  "disclosures": [
+    "This is not a production catalog, Reading host, Primary host, completion persistence, migration, cutover, retirement, or deployment proof.",
+    "The local mechanics are claim-bound QC implementations; the result does not claim legacy browser execution, source asset loading, or host-authoritative learning completion.",
+    "The proof records browser-native input wiring and responsive QC behavior only."
+  ],
+  "marker": "MEASURE_AGENT_RESULT"
+}
