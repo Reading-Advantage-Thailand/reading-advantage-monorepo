@@ -34,10 +34,10 @@ def _load_json(path: Path) -> Any:
 class R2Task2CompensationDenominatorTests(unittest.TestCase):
     """Binds the frozen denominator to durable scans and strict validation."""
 
-    def test_plan_marks_task_two_in_progress_with_evidence_scope(self) -> None:
-        """Pins the implementation-in-progress marker and evidence scope."""
+    def test_plan_marks_task_two_completed_with_evidence_scope(self) -> None:
+        """Pins the bounded completed-task marker and evidence scope."""
         plan = PLAN_PATH.read_text(encoding="utf-8")
-        self.assertIn("- [~] Task: If the clean branch is unavailable", plan)
+        self.assertIn("- [x] Task: If the clean branch is unavailable", plan)
         self.assertIn("measure/business_operations_graph_baseline_compensation.py", plan)
         self.assertIn("measure/tests/test_business_operations_graph_baseline_r2_compensation.py", plan)
         self.assertIn("r2-task2-compensation-denominator-v2-20260801.json", plan)

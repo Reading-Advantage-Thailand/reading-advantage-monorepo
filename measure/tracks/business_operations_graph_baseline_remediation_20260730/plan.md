@@ -16,15 +16,18 @@
 
 ## v2 Recapture Status
 
-- [~] Task: Recapture the R1 source/graph candidate and regenerate R2 Tasks 1-2
+- [x] Task: Recapture the R1 source/graph candidate and regenerate R2 Tasks 1-2
   candidate evidence from the shared dirty `master` worktree at baseline
   `e78fe22bb405de732de14c18590b19af0ce5f0de`, after the accepted root
   `.pnpmfile.cjs` boundary correction and Company Identity security fixes. The
-  new candidate must use the accepted R1 producer, a canonical stable-window
-  scan, the documented clean-audit procedure, and the strict R2 compensation
+  new candidate used the accepted R1 producer, a canonical stable-window scan,
+  the documented clean-audit procedure, and the strict R2 compensation
   validator. Its v2 graph-binding candidate is
-  `r1-task3-graph-binding-v2-20260801.json`. It is not R2 Task 3/4 acceptance
-  and cannot unblock either successor.
+  `r1-task3-graph-binding-v2-20260801.json`. Terra PASS and Sol bounded ACCEPT
+  are recorded in `r1-r2-v2-terra-phase-review-20260801.md` and
+  `r1-r2-v2-sol-independent-acceptance-20260801.json`; commit `772839f` binds
+  the evidence. It is not R2 Task 3/4 acceptance and cannot unblock either
+  successor.
 
 ## Superseded Historical Evidence
 
@@ -65,8 +68,8 @@
 
 ## Phase R2: Close or compensate graph coverage gaps
 
-- [~] Task: Execute and record the documented clean-audit/configuration attempt, including `repo-graph config`, scan options, raw audit JSON, stdout/stderr, and exits; select the clean branch only for audit exit `0` with empty unaudited and integrity sets. The v2 candidate will bind `r2-clean-audit-attempt-v2-20260801/attempt.json` to the fresh R1 bundle and graph binding; it must retain the raw exit and choose the `COMPENSATION_REQUIRED` non-clean branch when unaudited symbols remain. This regeneration is not independent acceptance or an unblock. (deferred:phase-r1-bound-graph)
-- [~] Task: If the clean branch is unavailable, generate the exact unaudited route/field denominator, reconcile every node to frozen source anchors and digests, and prove two unchanged-input full scans have identical normalized file/route/field inventories. Preserve the actual audit exit and compensation label. The v2 producer input is `r1-task2-source-and-graph-v2-20260801/`; candidate output is `r2-task2-compensation-denominator-v2-20260801.json` plus the durable `r2-task2-scan-transaction-v2-20260801/` streams. `measure/business_operations_graph_baseline_compensation.py` must not read root `graph.db` or a machine-local database during validation. The strict validator is exercised by every mutation in `r2-task2-adversarial-fixtures-v1.json`, outside immutable R0 fixtures, through `measure/tests/test_business_operations_graph_baseline_r2_compensation.py`. No R2 Task 3/4 acceptance or parent/successor gate change is claimed. (deferred:phase-r2-clean-decision)
+- [x] Task: Execute and record the documented clean-audit/configuration attempt, including `repo-graph config`, scan options, raw audit JSON, stdout/stderr, and exits; select the clean branch only for audit exit `0` with empty unaudited and integrity sets. The v2 candidate binds `r2-clean-audit-attempt-v2-20260801/attempt.json` to the fresh R1 bundle and graph binding; it retained the raw exit and selected the `COMPENSATION_REQUIRED` non-clean branch when unaudited symbols remained. Bounded technical acceptance is recorded by Terra and Sol in the v2 review receipts; commit `772839f` binds the evidence. This is not R2 phase acceptance or an unblock. (deferred:phase-r1-bound-graph)
+- [x] Task: If the clean branch is unavailable, generate the exact unaudited route/field denominator, reconcile every node to frozen source anchors and digests, and prove two unchanged-input full scans have identical normalized file/route/field inventories. The v2 evidence preserves the actual audit exit and compensation label. Its producer input is `r1-task2-source-and-graph-v2-20260801/`; output is `r2-task2-compensation-denominator-v2-20260801.json` plus durable `r2-task2-scan-transaction-v2-20260801/` streams. `measure/business_operations_graph_baseline_compensation.py` did not read root `graph.db` or a machine-local database during validation. The strict validator exercised every mutation in `r2-task2-adversarial-fixtures-v1.json`, outside immutable R0 fixtures, through `measure/tests/test_business_operations_graph_baseline_r2_compensation.py`. Terra PASS and Sol bounded ACCEPT are recorded in the v2 review receipts; commit `772839f` binds the evidence. No R2 Task 3/4 acceptance or parent/successor gate change is claimed. (deferred:phase-r2-clean-decision)
 - [b] Task: Produce and test the Accounts unaudited-route security matrix, covering the complete discovered set and explicit authentication, permission ownership, validation, tenant/global scope, audit, and destructive-effect dispositions; run the Accounts and backend test/type gates from FR4. (deferred:phase-r2-audit-disposition)
 - [b] Task: Compute the snapshot TypeScript-minus-graph denominator and resolve every excluded file by graph-safe inclusion or explicit source-anchor/type/test compensation; run the backend, Advantage Play Kit, and Advantage Games commands from FR5 without modifying failed unrelated APK code. (deferred:phase-r2-audit-disposition)
 - [b] Task: Apply the FR6 decision rule: create and record one minimal `bodangren/repo-graph` issue only if a verified tool limitation forces the compensation branch; otherwise record why no upstream issue is required. Test both decision outcomes. (deferred:phase-r2-clean-and-exclusion-decisions)
@@ -84,10 +87,10 @@
 The R0 validator/contract remediation is complete only within the acceptance
 boundary recorded above. R1 Tasks 1 through 3 are complete only within their
 bounded producer, stable-window, and scan-binding evidence scopes. The v2
-recapture and R2 Tasks 1-2 have a bounded technical acceptance only after their
-independent receipt and task commit are persisted; until then their `[~]`
-markers remain honest. R2 Tasks 3-5 and all R3 tasks remain `[b]` because no
-later-phase evidence or authorization is recorded here.
+recapture and R2 Tasks 1-2 are `[x]` only in their bounded technical evidence
+scope: `772839f` and the Terra/Sol receipts bind that conclusion. R2 Tasks 3-5
+and all R3 tasks remain `[b]` because no later-phase evidence or authorization
+is recorded here.
 No Admin S1 or CRM work may begin from producer or R0 evidence alone, and all
 parent/successor gates remain blocked until the later hash-bound handoff,
 independent R3 acceptance, and owner confirmation.

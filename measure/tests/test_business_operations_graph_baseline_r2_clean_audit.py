@@ -92,7 +92,7 @@ class R2CleanAuditAttemptTests(unittest.TestCase):
         """Validates the exact documented configuration, scan, and audit attempt."""
         plan = PLAN_PATH.read_text(encoding="utf-8")
         self.assertIn(
-            "- [~] Task: Execute and record the documented clean-audit/"
+            "- [x] Task: Execute and record the documented clean-audit/"
             "configuration attempt",
             plan,
         )
