@@ -74,6 +74,7 @@ import {
   schoolAdmins,
   leaderboards,
   gameCompletions,
+  hostProofAttempts,
   masteryCards,
   masteryPrincipals,
   masteryReviews,
@@ -122,6 +123,9 @@ register(leaderboards, "FLAT");
 // (schoolId, userId, activityId) is the primary fire-once guard for game
 // completions (Phase 4 Decision 4.1).
 register(gameCompletions, "FLAT");
+
+// Signed host-proof replay claims carry a non-null schoolId and fail closed.
+register(hostProofAttempts, "FLAT");
 
 // Mastery Engine Phase S3 — all persistence records carry schoolId directly.
 register(masteryCards, "FLAT");

@@ -61,10 +61,32 @@ export {
   listHostProofCartridgeBindings,
   recordHostProofGameCompletion,
 } from "./host-proof.js";
+export {
+  attestDragonFlightHostProofAction,
+  attestDragonFlightHostProofActionSchema,
+  completeDragonFlightHostProofAttempt,
+  completeDragonFlightHostProofAttemptSchema,
+  DRAGON_FLIGHT_HOST_PROOF_ATTEMPT_TTL_MS,
+  DRAGON_FLIGHT_HOST_PROOF_GATE_TO_LAUNCH_DWELL_MS,
+  issueDragonFlightHostProofAttempt,
+  issueDragonFlightHostProofAttemptSchema,
+} from "./host-proof.js";
+export {
+  createDragonFlightHostProofAttemptDependencies,
+  createDragonFlightHostProofAttemptStore,
+} from "./host-proof.js";
 export type {
   HostProofCompletionRequest,
   HostProofCompletionResponse,
   HostProofErrorCode,
   HostProofHistoryEntry,
   HostProofHistoryInput,
+} from "./host-proof.js";
+export type {
+  DragonFlightHostProofActionAttestation,
+  DragonFlightHostProofAttempt,
+  DragonFlightHostProofAttemptDependencies,
+  DragonFlightHostProofAttemptStore,
+  DragonFlightHostProofCompletion,
+  HostProofAttemptActor,
 } from "./host-proof.js";

@@ -416,3 +416,29 @@ export async function getHostProofGameCompletions({
     return parsed.data;
   });
 }
+
+/** Server-issued Dragon Flight attempt commands for the corrective host-proof phase. */
+export {
+  attestDragonFlightHostProofAction,
+  attestDragonFlightHostProofActionSchema,
+  completeDragonFlightHostProofAttempt,
+  completeDragonFlightHostProofAttemptSchema,
+  DRAGON_FLIGHT_HOST_PROOF_ATTEMPT_TTL_MS,
+  DRAGON_FLIGHT_HOST_PROOF_GATE_TO_LAUNCH_DWELL_MS,
+  issueDragonFlightHostProofAttempt,
+  issueDragonFlightHostProofAttemptSchema,
+} from "./dragon-flight-host-proof-attempt.js";
+export type {
+  DragonFlightHostProofActionAttestation,
+  DragonFlightHostProofAttempt,
+  DragonFlightHostProofAttemptDependencies,
+  DragonFlightHostProofAttemptStore,
+  DragonFlightHostProofCompletion,
+  HostProofAttemptActor,
+} from "./dragon-flight-host-proof-attempt.js";
+export {
+  createDragonFlightHostProofAttemptDependencies,
+} from "./dragon-flight-host-proof-attempt-adapter.js";
+export {
+  createDragonFlightHostProofAttemptStore,
+} from "./dragon-flight-host-proof-store.js";
