@@ -17,6 +17,7 @@ const previewModulePath = join(appRoot, "src", "lib", "apk", "standard-pack-qc-p
 const PREVIEW_KEYS = [
   "audio/native/combat/hit-01",
   "effects/32x32/combat/hit-01",
+  "side-view/native/platformer-world/heroes/hero-001/hero-001-walk-source-0c1cbfb7e747",
   "side-view/32x32/characters/enemy-001-idle",
   "top-down/32x32/characters/hero-01",
   "ui/16x16/controls/gamepad-buttons",

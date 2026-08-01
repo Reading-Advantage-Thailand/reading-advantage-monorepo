@@ -27,6 +27,15 @@
       "previewUrl": "/assets/apk/standard-pack-qc/asset-5062b915d194a51d.png"
     },
     {
+      "key": "side-view/native/platformer-world/heroes/hero-001/hero-001-walk-source-0c1cbfb7e747",
+      "view": "side-view",
+      "category": "platformer-world/heroes/hero-001",
+      "extension": "png",
+      "cellSize": null,
+      "mediaType": "image",
+      "previewUrl": "/assets/apk/standard-pack-qc/asset-e34a7e9a3f6bfe71.png"
+    },
+    {
       "key": "side-view/32x32/characters/enemy-001-idle",
       "view": "side-view",
       "category": "characters",

@@ -8,6 +8,8 @@ import {
 import {
   OWNER_APPROVED_CANONICAL_BINDINGS,
 } from "@reading-advantage/advantage-play-kit/assets";
+import type { ExistingActionCandidateSelectedUnion } from "@reading-advantage/game-cartridges/existing-action-candidates";
+import type { PuzzleQcSelectedUnion } from "@reading-advantage/game-cartridges/puzzle-qc";
 import {
   createResponsiveDebugOverlays,
   type LayoutProfile,
@@ -23,6 +25,8 @@ import {
 import { parseQcControls } from "@reading-advantage/advantage-play-kit/qc";
 
 import { ExistingCoreCartridgeQc } from "./ExistingCoreCartridgeQc";
+import { ExistingActionCartridgeQc } from "./ExistingActionCartridgeQc";
+import { LegacyPuzzleCartridgeQc } from "./LegacyPuzzleCartridgeQc";
 import { StandardPackQc, type StandardPackQcPreview } from "./StandardPackQc";
 
 const CONTENT_FIXTURES = {
@@ -52,6 +56,10 @@ const CONTENT_FIXTURES = {
 export interface AdvantageGamesAuthoringQcProps {
   /** Generated selected-output preview bound to the accepted standard-pack release. */
   readonly preview: StandardPackQcPreview;
+  /** Resolver-issued title-specific v2 descriptor selections for the quarantined action QC surface. */
+  readonly existingActionSelections?: readonly ExistingActionCandidateSelectedUnion[];
+  /** Resolver-issued title-specific v2 descriptor selections for the quarantined Legacy Puzzle QC surface. */
+  readonly legacyPuzzleSelections?: readonly PuzzleQcSelectedUnion[];
 }
 
 function capabilitiesFor(inputMode: ResponsiveInputMode) {
@@ -65,7 +73,7 @@ function capabilitiesFor(inputMode: ResponsiveInputMode) {
  * @param props Pinned finite canonical-pack preview.
  * @returns Responsive controls, diagnostics, result inspection, and searchable release QC.
  */
-export function AdvantageGamesAuthoringQc({ preview }: AdvantageGamesAuthoringQcProps) {
+export function AdvantageGamesAuthoringQc({ preview, existingActionSelections, legacyPuzzleSelections }: AdvantageGamesAuthoringQcProps) {
   const exemplar = useMemo(() => buildExemplarPublicApiSurface(), []);
   const [profile, setProfile] = useState<"auto" | LayoutProfile>("auto");
   const [inputMode, setInputMode] = useState<ResponsiveInputMode>("pointer-keyboard");
@@ -296,6 +304,12 @@ export function AdvantageGamesAuthoringQc({ preview }: AdvantageGamesAuthoringQc
       </div>
 
       <ExistingCoreCartridgeQc preview={preview} />
+      {existingActionSelections ? (
+        <ExistingActionCartridgeQc preview={preview} selections={existingActionSelections} />
+      ) : null}
+      {legacyPuzzleSelections ? (
+        <LegacyPuzzleCartridgeQc preview={preview} selections={legacyPuzzleSelections} />
+      ) : null}
 
       <section aria-label="Canonical pack release gallery" className="border-t border-[#335c4b] bg-[#07110e] px-4 py-6 sm:px-8">
         <div className="mx-auto max-w-7xl">
