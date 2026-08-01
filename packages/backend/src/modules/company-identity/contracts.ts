@@ -106,6 +106,16 @@ export const oidcTokenOutputSchema = z.strictObject({
   idToken: z.string().min(32),
 });
 
+/** Exact opaque application or SSO session-token grammar issued by Accounts. */
+export const sessionTokenSchema = z.string().regex(/^[A-Za-z0-9_-]{43}$/);
+
+/** Strict bearer authorization contract accepted by the OIDC local-logout endpoint. */
+export const oidcLogoutInputSchema = z.strictObject({
+  authorization: z.string().regex(/^Bearer [A-Za-z0-9_-]{43}$/),
+}).transform(({ authorization }) => ({
+  accessToken: sessionTokenSchema.parse(authorization.slice(7)),
+}));
+
 /** Authenticated confidential-client request for token introspection. */
 export const introspectionInputSchema = z.strictObject({
   accessToken: z.string().min(32),

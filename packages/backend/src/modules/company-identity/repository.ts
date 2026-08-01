@@ -141,6 +141,8 @@ export interface CompanyIdentityRepository {
     readonly scope: readonly string[];
     readonly issuedAt: Date;
     readonly expiresAt: Date;
+    /** Immutable audit event committed atomically with code issuance. */
+    readonly audit: IdentityAuditInput;
   }): Promise<void>;
   /** Consumes an authorization code atomically inside a transaction. */
   consumeAuthorizationCode<T>(
@@ -160,8 +162,10 @@ export interface CompanyIdentityRepository {
     readonly authVersion: number;
     readonly createdAt: Date;
     readonly expiresAt: Date;
+    /** Immutable audit event committed atomically with session issuance. */
+    readonly audit: IdentityAuditInput;
   }): Promise<void>;
-  /** Resolves an active application session and current audience claims. */
+  /** Resolves an active application session and current audience claims while refreshing SSO idle state without emitting an audit event. */
   introspectApplicationSession(tokenHash: string, now: Date, nextIdleExpiresAt: Date): Promise<{
     readonly sessionId: string;
     readonly employee: Employee;
@@ -172,10 +176,18 @@ export interface CompanyIdentityRepository {
     readonly authVersion: number;
     readonly expiresAt: Date;
   } | null>;
-  /** Revokes one application-local session. */
-  revokeApplicationSession(tokenHash: string, now: Date): Promise<boolean>;
-  /** Revokes the central SSO session and all derived application sessions. */
-  revokeSsoSession(tokenHash: string, now: Date): Promise<number>;
+  /** Revokes and audits one application-local session atomically. */
+  revokeApplicationSession(input: {
+    readonly tokenHash: string;
+    readonly now: Date;
+    readonly audit: IdentityAuditInput;
+  }): Promise<boolean>;
+  /** Revokes and audits the central SSO session and all derived application sessions atomically. */
+  revokeSsoSession(input: {
+    readonly tokenHash: string;
+    readonly now: Date;
+    readonly audit: IdentityAuditInput;
+  }): Promise<number>;
   /** Inserts immutable secret-safe audit evidence. */
   appendAudit(input: IdentityAuditInput): Promise<void>;
   /** Lists employees visible to a company administrator. */

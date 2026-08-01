@@ -204,6 +204,36 @@ describe("company identity service", () => {
       displayName: employee.displayName,
       status: "ACTIVE",
     }));
+    expect(repo.createAuthorizationCode).toHaveBeenCalledWith(expect.objectContaining({
+      audit: {
+        correlationId: expect.any(String),
+        actorAccountId: employee.id,
+        applicationId: "20000000-0000-4000-8000-000000000006",
+        organizationId: "20000000-0000-4000-8000-000000000003",
+        operation: "identity:authorization-code-issued",
+        outcome: "SUCCEEDED",
+        metadata: {
+          clientId: "sales-web",
+          expiresAt: "2026-07-18T00:05:00.000Z",
+          source: "accounts-oidc",
+        },
+      },
+    }));
+    expect(repo.createApplicationSession).toHaveBeenCalledWith(expect.objectContaining({
+      audit: {
+        correlationId: expect.any(String),
+        actorAccountId: employee.id,
+        applicationId: "20000000-0000-4000-8000-000000000006",
+        organizationId: "20000000-0000-4000-8000-000000000003",
+        operation: "identity:application-session-issued",
+        outcome: "SUCCEEDED",
+        metadata: {
+          clientId: "sales-web",
+          expiresAt: "2026-07-18T00:30:00.000Z",
+          source: "accounts-oidc",
+        },
+      },
+    }));
   });
 
   it.each([
@@ -275,6 +305,8 @@ describe("company identity service", () => {
       clientId: "sales-web",
       clientSecret: "x".repeat(32),
     })).resolves.toEqual({ active: false });
+    expect(repo.introspectApplicationSession).toHaveBeenCalledOnce();
+    expect(repo.appendAudit).not.toHaveBeenCalled();
   });
 
   it("rejects an invalid introspection client before reading an application token", async () => {
@@ -288,4 +320,46 @@ describe("company identity service", () => {
     })).rejects.toMatchObject({ code: "CLIENT_INVALID" });
     expect(repo.introspectApplicationSession).not.toHaveBeenCalled();
   });
+
+  it("records local and global logout through atomic repository audit contracts", async () => {
+    const repo = repository();
+    const identity = service(repo);
+
+    await expect(identity.localLogout("a".repeat(43))).resolves.toBe(true);
+    await expect(identity.globalLogout("s".repeat(43))).resolves.toBe(2);
+
+    expect(repo.revokeApplicationSession).toHaveBeenCalledWith({
+      audit: {
+        correlationId: expect.any(String),
+        operation: "identity:local-logout",
+        outcome: "SUCCEEDED",
+        metadata: { source: "accounts-oidc" },
+      },
+      now: new Date("2026-07-18T00:00:00.000Z"),
+      tokenHash: createHash("sha256").update("a".repeat(43)).digest("hex"),
+    });
+    expect(repo.revokeSsoSession).toHaveBeenCalledWith({
+      audit: {
+        correlationId: expect.any(String),
+        operation: "identity:global-logout",
+        outcome: "SUCCEEDED",
+        metadata: { source: "accounts-session" },
+      },
+      now: new Date("2026-07-18T00:00:00.000Z"),
+      tokenHash: createHash("sha256").update("s".repeat(43)).digest("hex"),
+    });
+  });
+
+  it.each(["", "malformed token", "a".repeat(44)])(
+    "rejects malformed logout session token %j before repository access",
+    async (token) => {
+      const repo = repository();
+      const identity = service(repo);
+
+      await expect(identity.localLogout(token)).rejects.toMatchObject({
+        name: "ZodError",
+      });
+      expect(repo.revokeApplicationSession).not.toHaveBeenCalled();
+    },
+  );
 });

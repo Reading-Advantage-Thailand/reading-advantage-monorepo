@@ -1,15 +1,19 @@
 import { NextResponse } from "next/server";
 
+import { oidcLogoutInputSchema } from "@reading-advantage/backend";
+
 import { getIdentityComposition } from "@/lib/server/identity";
 
 /** Revokes only the calling application's local session. */
 export async function POST(request: Request): Promise<NextResponse> {
-  const bearer = request.headers.get("authorization");
-  if (!bearer?.startsWith("Bearer ")) {
+  const input = oidcLogoutInputSchema.safeParse({
+    authorization: request.headers.get("authorization"),
+  });
+  if (!input.success) {
     return NextResponse.json({ error: "invalid_token" }, { status: 401 });
   }
   const revoked = await (await getIdentityComposition()).service.localLogout(
-    bearer.slice(7),
+    input.data.accessToken,
   );
   return NextResponse.json({ revoked });
 }

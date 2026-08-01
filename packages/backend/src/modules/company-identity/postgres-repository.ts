@@ -417,16 +417,20 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
     },
 
     async createAuthorizationCode(input) {
-      await sql`
-        insert into company_oidc_authorization_codes (
-          id, code_hash, oidc_client_id, redirect_uri_id, sso_session_id,
-          code_challenge, code_challenge_method, nonce, scope, issued_at, expires_at
-        ) values (
-          ${input.id}, ${input.codeHash}, ${input.clientId}, ${input.redirectUriId},
-          ${input.ssoSessionId}, ${input.codeChallenge}, 'S256', ${input.nonce},
-          ${input.scope}, ${input.issuedAt}, ${input.expiresAt}
-        )
-      `;
+      await sql.begin(async (transaction) => {
+        const tx = asSql(transaction);
+        await tx`
+          insert into company_oidc_authorization_codes (
+            id, code_hash, oidc_client_id, redirect_uri_id, sso_session_id,
+            code_challenge, code_challenge_method, nonce, scope, issued_at, expires_at
+          ) values (
+            ${input.id}, ${input.codeHash}, ${input.clientId}, ${input.redirectUriId},
+            ${input.ssoSessionId}, ${input.codeChallenge}, 'S256', ${input.nonce},
+            ${input.scope}, ${input.issuedAt}, ${input.expiresAt}
+          )
+        `;
+        await appendAudit(tx, input.audit);
+      });
     },
 
     async consumeAuthorizationCode(codeHash, now, handler) {
@@ -482,6 +486,7 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
           ${input.createdAt}, ${input.createdAt}, ${input.expiresAt}
         )
       `;
+      await appendAudit(tx, input.audit);
     },
 
     async introspectApplicationSession(tokenHash, now, nextIdleExpiresAt) {
@@ -541,32 +546,68 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
       } : null;
     },
 
-    async revokeApplicationSession(tokenHash, now) {
-      const rows = await sql`
-        update company_application_sessions
-           set revoked_at = ${now}, revoke_reason = 'LOCAL_LOGOUT'
-         where token_hash = ${tokenHash} and revoked_at is null
-        returning id
-      `;
-      return rows.length === 1;
-    },
-
-    async revokeSsoSession(tokenHash, now) {
+    async revokeApplicationSession(input) {
       return sql.begin(async (transaction) => {
         const tx = asSql(transaction);
-        const sessions = await tx<Array<{ id: string }>>`
-          update company_sso_sessions
-             set revoked_at = ${now}, revoke_reason = 'GLOBAL_LOGOUT'
-           where token_hash = ${tokenHash} and revoked_at is null
-          returning id
+        const [session] = await tx<Array<{
+          account_id: string;
+          application_id: string;
+          organization_id: string;
+        }>>`
+          update company_application_sessions app_session
+             set revoked_at = ${input.now}, revoke_reason = 'LOCAL_LOGOUT'
+            from company_organization_memberships membership
+           where app_session.token_hash = ${input.tokenHash}
+             and app_session.revoked_at is null
+             and membership.id = app_session.membership_id
+          returning membership.account_id, app_session.application_id,
+                    app_session.organization_id
+        `;
+        if (!session) return false;
+        await appendAudit(tx, {
+          ...input.audit,
+          actorAccountId: session.account_id,
+          applicationId: session.application_id,
+          organizationId: session.organization_id,
+          metadata: { ...input.audit.metadata, sessionCount: 1 },
+        });
+        return true;
+      });
+    },
+
+    async revokeSsoSession(input) {
+      return sql.begin(async (transaction) => {
+        const tx = asSql(transaction);
+        const sessions = await tx<Array<{
+          id: string;
+          account_id: string;
+          organization_id: string;
+        }>>`
+          update company_sso_sessions sso_session
+             set revoked_at = ${input.now}, revoke_reason = 'GLOBAL_LOGOUT'
+            from company_organization_memberships membership
+           where sso_session.token_hash = ${input.tokenHash}
+             and sso_session.revoked_at is null
+             and membership.id = sso_session.membership_id
+          returning sso_session.id, membership.account_id,
+                    sso_session.organization_id
         `;
         if (sessions.length === 0) return 0;
         const children = await tx`
           update company_application_sessions
-             set revoked_at = ${now}, revoke_reason = 'GLOBAL_LOGOUT'
+             set revoked_at = ${input.now}, revoke_reason = 'GLOBAL_LOGOUT'
            where sso_session_id = ${sessions[0]!.id} and revoked_at is null
           returning id
         `;
+        await appendAudit(tx, {
+          ...input.audit,
+          actorAccountId: sessions[0]!.account_id,
+          organizationId: sessions[0]!.organization_id,
+          metadata: {
+            ...input.audit.metadata,
+            sessionCount: children.length + 1,
+          },
+        });
         return children.length;
       });
     },

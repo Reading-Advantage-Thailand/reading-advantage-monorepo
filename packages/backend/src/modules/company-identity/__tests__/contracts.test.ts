@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   companyIdentityClaimsSchema,
   createEmployeeInputSchema,
+  oidcLogoutInputSchema,
   oidcAuthorizationInputSchema,
   oidcTokenInputSchema,
 } from "../contracts.js";
@@ -76,5 +77,19 @@ describe("company identity contracts", () => {
       createEmployeeInputSchema.safeParse({ ...input, initialPassword: "short" })
         .success,
     ).toBe(false);
+  });
+
+  it("accepts only an exact bearer application-session token for OIDC logout", () => {
+    const token = "a".repeat(43);
+
+    expect(oidcLogoutInputSchema.parse({
+      authorization: `Bearer ${token}`,
+    })).toEqual({ accessToken: token });
+    expect(oidcLogoutInputSchema.safeParse({ authorization: "Bearer " }).success)
+      .toBe(false);
+    expect(oidcLogoutInputSchema.safeParse({ authorization: "Bearer malformed token" }).success)
+      .toBe(false);
+    expect(oidcLogoutInputSchema.safeParse({ authorization: `Bearer ${"a".repeat(44)}` }).success)
+      .toBe(false);
   });
 });

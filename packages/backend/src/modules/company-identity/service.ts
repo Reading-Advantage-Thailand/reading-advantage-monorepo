@@ -14,6 +14,7 @@ import {
   oidcTokenOutputSchema,
   resetCredentialInputSchema,
   revokeEmployeeSessionsInputSchema,
+  sessionTokenSchema,
   setApplicationRolesInputSchema,
   setCompanyRolesInputSchema,
   setEmployeeStatusInputSchema,
@@ -82,7 +83,7 @@ export interface CompanyIdentityService {
   authorize(input: unknown): Promise<ReturnType<typeof oidcAuthorizationOutputSchema.parse>>;
   /** Atomically exchanges a one-time code for audience-specific tokens. */
   exchangeCode(input: unknown): Promise<ReturnType<typeof oidcTokenOutputSchema.parse>>;
-  /** Returns active identity state for an application bearer session. */
+  /** Returns active identity state for an authenticated confidential client; this status read may refresh SSO idle timestamps and intentionally emits no audit event. */
   introspect(input: unknown): Promise<ReturnType<typeof introspectionOutputSchema.parse>>;
   /** Returns the employee associated with a live Accounts SSO session. */
   currentEmployee(ssoSessionToken: string): Promise<Employee | null>;
@@ -263,6 +264,19 @@ export function createCompanyIdentityService(dependencies: {
         scope: parsed.scope.split(/\s+/),
         issuedAt: operationTime,
         expiresAt,
+        audit: {
+          correlationId: createId(),
+          actorAccountId: session.accountId,
+          applicationId: client.applicationId,
+          organizationId: session.organizationId,
+          operation: "identity:authorization-code-issued",
+          outcome: "SUCCEEDED",
+          metadata: projectSecretSafeAuditMetadata({
+            source: "accounts-oidc",
+            clientId: parsed.clientId,
+            expiresAt: expiresAt.toISOString(),
+          }),
+        },
       });
       return oidcAuthorizationOutputSchema.parse({
         code,
@@ -328,6 +342,19 @@ export function createCompanyIdentityService(dependencies: {
             authVersion: sso.authVersion,
             createdAt: operationTime,
             expiresAt,
+            audit: {
+              correlationId: createId(),
+              actorAccountId: sso.accountId,
+              applicationId: client.applicationId,
+              organizationId: sso.organizationId,
+              operation: "identity:application-session-issued",
+              outcome: "SUCCEEDED",
+              metadata: projectSecretSafeAuditMetadata({
+                source: "accounts-oidc",
+                clientId: parsed.clientId,
+                expiresAt: expiresAt.toISOString(),
+              }),
+            },
           });
           const claims: CompanyIdentityClaims = {
             iss: dependencies.config.issuerUrl,
@@ -360,6 +387,7 @@ export function createCompanyIdentityService(dependencies: {
     },
 
     async introspect(input: unknown) {
+      // Policy: authenticated status read with repository-owned idle refresh; no audit event.
       const parsed = introspectionInputSchema.parse(input);
       const client = await dependencies.repository.findOidcClientByClientId(parsed.clientId);
       const validClient =
@@ -409,11 +437,31 @@ export function createCompanyIdentityService(dependencies: {
     },
 
     async localLogout(accessToken: string) {
-      return dependencies.repository.revokeApplicationSession(hashBearerToken(accessToken), now());
+      const parsedToken = sessionTokenSchema.parse(accessToken);
+      return dependencies.repository.revokeApplicationSession({
+        tokenHash: hashBearerToken(parsedToken),
+        now: now(),
+        audit: {
+          correlationId: createId(),
+          operation: "identity:local-logout",
+          outcome: "SUCCEEDED",
+          metadata: projectSecretSafeAuditMetadata({ source: "accounts-oidc" }),
+        },
+      });
     },
 
     async globalLogout(ssoSessionToken: string) {
-      return dependencies.repository.revokeSsoSession(hashBearerToken(ssoSessionToken), now());
+      const parsedToken = sessionTokenSchema.parse(ssoSessionToken);
+      return dependencies.repository.revokeSsoSession({
+        tokenHash: hashBearerToken(parsedToken),
+        now: now(),
+        audit: {
+          correlationId: createId(),
+          operation: "identity:global-logout",
+          outcome: "SUCCEEDED",
+          metadata: projectSecretSafeAuditMetadata({ source: "accounts-session" }),
+        },
+      });
     },
 
     async listEmployees(actorAccountId: string) {
