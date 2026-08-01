@@ -1,0 +1,42 @@
+{
+  "schema_version": "apk-legacy-defense-task2-standard-pack-suitability-dossiers.v2",
+  "track_id": "apk_legacy_defense_cutover_20260727",
+  "task_number": 2,
+  "status": "reviewed-canonical-reuse-dossiers-awaiting-owner-record",
+  "scope": "advantage-games-qc-only",
+  "authority_boundary": {
+    "production_use_authorized": false,
+    "catalog_exposure_authorized": false,
+    "reading_host_authorized": false,
+    "primary_host_authorized": false,
+    "legacy_asset_reuse_authorized": false,
+    "legacy_asset_ingestion_authorized": false
+  },
+  "accepted_standard_pack": {
+    "version": "2026.07.23",
+    "catalog": {"path":"packages/advantage-play-kit/assets/standard/standard-pack-release.json","sha256":"ef432a798a78585df3416d60aca30fe11a2d1d8b833e0d65ceb7fac5c8b19932"},
+    "receipt": {"path":"packages/advantage-play-kit/assets/standard/CURATED-RECEIPT.tsv","sha256":"a192f1fe2826aa426228950092fb32cb47cb24dd4acd47057d7424a0dfd527bb"},
+    "license": {"path":"packages/advantage-play-kit/assets/standard/LICENSE-ELVGAMES.txt","sha256":"3efc9b9a88752a089fa07de4fac43cabe6283b0051466661c55a97c1c625c48f"},
+    "credit": {"path":"packages/advantage-play-kit/assets/standard/README.md","sha256":"6ace14005c2d155ed24376e6dbd6e02a53906db660866eccb1ba38868f0e04cb","required_text":"Pixel art assets by ElvGames"}
+  },
+  "comparison_evidence": {
+    "visual": {"path":"measure/tracks/apk_standard_pack_suitability_ingestion_20260728/current-byte-independent-review-v1.json","sha256":"b55be6fbba3526f70ac29930b6f7ae2f55011d19ef7f9ec1d41a7786c4b2873d"},
+    "technical": "this-artifact"
+  },
+  "descriptors": [
+    {"descriptor_id":"legacy-defense-hero-01-static-v2","semantic_key":"top-down/32x32/characters/hero-01","media_kind":"image","geometry":"192x384;32x32;6x12","legacy_asset_disposition":"blocked"},
+    {"descriptor_id":"legacy-defense-enemy-001-idle-static-v2","semantic_key":"side-view/32x32/characters/enemy-001-idle","media_kind":"image","geometry":"192x32;32x32;6x1","legacy_asset_disposition":"blocked"},
+    {"descriptor_id":"legacy-defense-hit-01-static-v2","semantic_key":"effects/32x32/combat/hit-01","media_kind":"image","geometry":"192x128;32x32;6x4","legacy_asset_disposition":"blocked"},
+    {"descriptor_id":"legacy-defense-gamepad-buttons-static-v2","semantic_key":"ui/16x16/controls/gamepad-buttons","media_kind":"image","geometry":"352x160;16x16;22x10","legacy_asset_disposition":"blocked"},
+    {"descriptor_id":"legacy-defense-hit-01-audio-v2","semantic_key":"audio/native/combat/hit-01","media_kind":"audio","duration_ms":1667,"legacy_asset_disposition":"blocked"}
+  ],
+  "titles": [
+    {"title_id":"castle-defense","source_manifest":{"path":"measure/archive/apk_corpus_audit_action_defense_20260712/castle-defense-claim-ledger.json","sha256":"ddb98a7c61f73cf4b5dc71dafa21ce652aeccaea2fc36dcf4f604aabd0848df3"},"selected_semantic_keys":["effects/32x32/combat/hit-01","side-view/32x32/characters/enemy-001-idle","top-down/32x32/characters/hero-01","ui/16x16/controls/gamepad-buttons"],"roles":[{"dossier_id":"legacy-defense-castle-defense-player-idle-canonical-reuse-v2","role":"player","state":"idle","descriptor_id":"legacy-defense-hero-01-static-v2","semantic_key":"top-down/32x32/characters/hero-01"},{"dossier_id":"legacy-defense-castle-defense-enemy-idle-canonical-reuse-v2","role":"enemy","state":"idle","descriptor_id":"legacy-defense-enemy-001-idle-static-v2","semantic_key":"side-view/32x32/characters/enemy-001-idle"},{"dossier_id":"legacy-defense-castle-defense-feedback-correct-canonical-reuse-v2","role":"feedback","state":"correct","descriptor_id":"legacy-defense-hit-01-static-v2","semantic_key":"effects/32x32/combat/hit-01"},{"dossier_id":"legacy-defense-castle-defense-control-confirm-canonical-reuse-v2","role":"control","state":"confirm","descriptor_id":"legacy-defense-gamepad-buttons-static-v2","semantic_key":"ui/16x16/controls/gamepad-buttons"}]},
+    {"title_id":"wizard-vs-zombie","source_manifest":{"path":"measure/archive/apk_corpus_audit_action_defense_20260712/wizard-vs-zombie-claim-ledger-v2.json","sha256":"28320b36f18645d476b6e353275d7cf3f07bc0f73bea719da1e50537e8e8b635"},"selected_semantic_keys":["audio/native/combat/hit-01","effects/32x32/combat/hit-01","side-view/32x32/characters/enemy-001-idle","top-down/32x32/characters/hero-01","ui/16x16/controls/gamepad-buttons"],"roles":[{"dossier_id":"legacy-defense-wizard-vs-zombie-player-idle-canonical-reuse-v2","role":"player","state":"idle","descriptor_id":"legacy-defense-hero-01-static-v2","semantic_key":"top-down/32x32/characters/hero-01"},{"dossier_id":"legacy-defense-wizard-vs-zombie-enemy-idle-canonical-reuse-v2","role":"enemy","state":"idle","descriptor_id":"legacy-defense-enemy-001-idle-static-v2","semantic_key":"side-view/32x32/characters/enemy-001-idle"},{"dossier_id":"legacy-defense-wizard-vs-zombie-feedback-correct-canonical-reuse-v2","role":"feedback","state":"correct","descriptor_id":"legacy-defense-hit-01-static-v2","semantic_key":"effects/32x32/combat/hit-01"},{"dossier_id":"legacy-defense-wizard-vs-zombie-control-confirm-canonical-reuse-v2","role":"control","state":"confirm","descriptor_id":"legacy-defense-gamepad-buttons-static-v2","semantic_key":"ui/16x16/controls/gamepad-buttons"},{"dossier_id":"legacy-defense-wizard-vs-zombie-audio-feedback-correct-canonical-reuse-v2","role":"audio-feedback","state":"correct","descriptor_id":"legacy-defense-hit-01-audio-v2","semantic_key":"audio/native/combat/hit-01"}]},
+    {"title_id":"village-guardian","source_manifest":{"path":"measure/archive/apk_corpus_audit_action_defense_20260712/village-guardian-claim-ledger-batch-b-v3.json","sha256":"3be82cd7a9ddb144ae82ae220c36b439c6d14bbd58e1c988c897af6156b20484"},"selected_semantic_keys":["effects/32x32/combat/hit-01","side-view/32x32/characters/enemy-001-idle","top-down/32x32/characters/hero-01","ui/16x16/controls/gamepad-buttons"],"roles":[{"dossier_id":"legacy-defense-village-guardian-player-idle-canonical-reuse-v2","role":"player","state":"idle","descriptor_id":"legacy-defense-hero-01-static-v2","semantic_key":"top-down/32x32/characters/hero-01"},{"dossier_id":"legacy-defense-village-guardian-enemy-idle-canonical-reuse-v2","role":"enemy","state":"idle","descriptor_id":"legacy-defense-enemy-001-idle-static-v2","semantic_key":"side-view/32x32/characters/enemy-001-idle"},{"dossier_id":"legacy-defense-village-guardian-feedback-correct-canonical-reuse-v2","role":"feedback","state":"correct","descriptor_id":"legacy-defense-hit-01-static-v2","semantic_key":"effects/32x32/combat/hit-01"},{"dossier_id":"legacy-defense-village-guardian-control-confirm-canonical-reuse-v2","role":"control","state":"confirm","descriptor_id":"legacy-defense-gamepad-buttons-static-v2","semantic_key":"ui/16x16/controls/gamepad-buttons"}]},
+    {"title_id":"storm-castle-tower","source_manifest":{"path":"measure/archive/apk_corpus_audit_action_defense_20260712/storm-castle-tower-claim-ledger-batch-b.json","sha256":"9f9337ec9b86161337553a8b8ab92e57cc954d2a0deb42018dad0ed99394e9d9"},"selected_semantic_keys":["effects/32x32/combat/hit-01","top-down/32x32/characters/hero-01","ui/16x16/controls/gamepad-buttons"],"roles":[{"dossier_id":"legacy-defense-storm-castle-tower-player-idle-canonical-reuse-v2","role":"player","state":"idle","descriptor_id":"legacy-defense-hero-01-static-v2","semantic_key":"top-down/32x32/characters/hero-01"},{"dossier_id":"legacy-defense-storm-castle-tower-feedback-correct-canonical-reuse-v2","role":"feedback","state":"correct","descriptor_id":"legacy-defense-hit-01-static-v2","semantic_key":"effects/32x32/combat/hit-01"},{"dossier_id":"legacy-defense-storm-castle-tower-control-confirm-canonical-reuse-v2","role":"control","state":"confirm","descriptor_id":"legacy-defense-gamepad-buttons-static-v2","semantic_key":"ui/16x16/controls/gamepad-buttons"}]}
+  ],
+  "role_count": 16,
+  "descriptor_count": 5,
+  "decision": "reuse-canonical-only; legacy assets remain blocked for reuse and ingestion"
+}

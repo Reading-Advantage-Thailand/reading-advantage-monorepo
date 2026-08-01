@@ -1,0 +1,32 @@
+{
+  "schema_version": "apk-legacy-defense-task2-owner-acceptance.v2",
+  "track_id": "apk_legacy_defense_cutover_20260727",
+  "status": "accepted-for-advantage-games-qc-only",
+  "accepted_at": "2026-08-01T00:00:00.000Z",
+  "accepted_by": "product-owner",
+  "dossier_artifact": {
+    "path": "measure/tracks/apk_legacy_defense_cutover_20260727/task2-standard-pack-suitability-dossiers-v2.json",
+    "sha256": "d9a8d86f7bdf84df0eec1a8d05c5d8b3238c458986a035fe810060d144a75e67",
+    "descriptor_count": 5,
+    "role_count": 16
+  },
+  "accepted_title_roles": [
+    "castle-defense-player-idle", "castle-defense-enemy-idle", "castle-defense-feedback-correct", "castle-defense-control-confirm",
+    "wizard-vs-zombie-player-idle", "wizard-vs-zombie-enemy-idle", "wizard-vs-zombie-feedback-correct", "wizard-vs-zombie-control-confirm", "wizard-vs-zombie-audio-feedback-correct",
+    "village-guardian-player-idle", "village-guardian-enemy-idle", "village-guardian-feedback-correct", "village-guardian-control-confirm",
+    "storm-castle-tower-player-idle", "storm-castle-tower-feedback-correct", "storm-castle-tower-control-confirm"
+  ],
+  "authorization": {
+    "advantage_games_qc_registration": true,
+    "production_catalog": false,
+    "reading_host": false,
+    "primary_host": false,
+    "completion_delivery": false,
+    "progress_persistence": false,
+    "legacy_asset_reuse": false,
+    "legacy_asset_ingestion": false,
+    "retirement": false,
+    "deployment": false
+  },
+  "revocation_rule": "Any descriptor, source receipt, source-ledger, role, or selection drift revokes this QC-only acceptance."
+}

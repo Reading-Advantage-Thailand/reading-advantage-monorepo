@@ -1,0 +1,26 @@
+{
+  "schema_version": "apk-legacy-defense-task5-advantage-games-qc-native-input-evidence.v2",
+  "track_id": "apk_legacy_defense_cutover_20260727",
+  "captured_at": "2026-08-01T00:00:00.000Z",
+  "scope": "advantage-games-qc-only",
+  "test": {
+    "runner": "Playwright Chromium",
+    "command": "PLAYWRIGHT_PORT=3200 PORT=3200 pnpm --filter vocabulary-games exec playwright test tests/e2e/qc/legacy-defense-cartridges.spec.ts --project=chromium --timeout=120000",
+    "result": "2 passed",
+    "spec": "apps/advantage-games/tests/e2e/qc/legacy-defense-cartridges.spec.ts"
+  },
+  "titles": [
+    {"id":"castle-defense","keyboard":true,"pointer":true,"touch":true,"compact":true,"wide":true,"completion_emissions":0},
+    {"id":"wizard-vs-zombie","keyboard":true,"pointer":true,"touch":true,"compact":true,"wide":true,"completion_emissions":0},
+    {"id":"village-guardian","keyboard":true,"pointer":true,"touch":true,"compact":true,"wide":true,"completion_emissions":0},
+    {"id":"storm-castle-tower","keyboard":true,"pointer":true,"touch":true,"compact":true,"wide":true,"completion_emissions":0,"mechanic_status":"blocked"}
+  ],
+  "negative_assertions": {
+    "production_catalog_exposed": false,
+    "reading_integration": false,
+    "primary_integration": false,
+    "completion_delivery": false,
+    "progress_persistence": false,
+    "legacy_asset_reuse": false
+  }
+}
