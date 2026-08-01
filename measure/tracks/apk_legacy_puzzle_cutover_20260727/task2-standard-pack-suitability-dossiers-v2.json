@@ -1,0 +1,87 @@
+{
+  "schema_version": "apk-legacy-puzzle-task2-suitability-dossiers.v2",
+  "track_id": "apk_legacy_puzzle_cutover_20260727",
+  "status": "accepted-for-task3-to-task5-advantage-games-qc",
+  "created_at": "2026-08-01T00:00:00.000Z",
+  "predecessors": {
+    "source_readiness_manifest": "measure/tracks/apk_legacy_puzzle_cutover_20260727/task1-source-readiness-manifest-v1.json",
+    "asset_contract_v2": "measure/archive/apk_asset_contract_v2_20260728/v2-owner-acceptance-v1.json",
+    "suitability_governance": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
+    "accepted_release": {
+      "version": "2026.07.23",
+      "catalog_digest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+      "source_receipt_digest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9",
+      "required_credit": "Pixel art assets by ElvGames"
+    }
+  },
+  "authority_boundary": {
+    "advantage_games_qc_authorized": true,
+    "selected_union_inspection_authorized": true,
+    "production_catalog_exposure_authorized": false,
+    "reading_host_authorized": false,
+    "primary_host_authorized": false,
+    "legacy_physical_reuse_authorized": false,
+    "legacy_canonical_ingestion_authorized": false,
+    "retirement_authorized": false,
+    "cutover_authorized": false,
+    "deployment_authorized": false
+  },
+  "title_dossiers": [
+    {
+      "title_id": "enchanted-library",
+      "title": "Enchanted Library",
+      "input_mode": "vocabulary",
+      "legacy_source_manifest": "task1-source-readiness-manifest-v1.json#enchanted-library",
+      "source_claim_ids": ["EL-COLL-001", "EL-VICTORY-001", "EL-XP-001"],
+      "semantic": {"role": "player", "state": "walk"},
+      "descriptor": {"descriptor_id": "enchanted-library-player-walk-v1", "semantic_key": "side-view/native/platformer-world/heroes/hero-001/hero-001-walk-source-0c1cbfb7e747", "media_kind": "animation", "geometry": "192x32; 32x32 cells; 6x1", "clip": {"id": "walk", "frame_count": 6, "fps": 12, "loop": true, "direction": "down"}},
+      "decision": {"decision_id": "puzzle-enchanted-library-player-walk-v2", "disposition": "reuse-canonical", "technical_compatibility": "pass", "legacy_physical_reuse": "blocked", "legacy_canonical_ingestion": "blocked"},
+      "selected_semantic_keys": ["side-view/native/platformer-world/heroes/hero-001/hero-001-walk-source-0c1cbfb7e747"]
+    },
+    {
+      "title_id": "rune-match",
+      "title": "Rune Match",
+      "input_mode": "vocabulary",
+      "legacy_source_manifest": "task1-source-readiness-manifest-v1.json#rune-match",
+      "source_claim_ids": ["RM-CONFIG-001", "RM-MECH-002", "RM-MECH-003", "RM-MECH-004"],
+      "semantic": {"role": "panel", "state": "default"},
+      "descriptor": {"descriptor_id": "rune-match-panel-default-v2", "semantic_key": "ui/20x20/inventory/slot", "media_kind": "image", "geometry": "20x20; 20x20 cells; 1x1"},
+      "decision": {"decision_id": "puzzle-rune-match-panel-default-v2", "disposition": "reuse-canonical", "technical_compatibility": "pass", "legacy_physical_reuse": "blocked", "legacy_canonical_ingestion": "blocked"},
+      "selected_semantic_keys": ["ui/20x20/inventory/slot"]
+    },
+    {
+      "title_id": "alchemists-synthesis",
+      "title": "Alchemist's Synthesis",
+      "input_mode": "vocabulary",
+      "legacy_source_manifest": "task1-source-readiness-manifest-v1.json#alchemists-synthesis",
+      "source_claim_ids": ["AS-TRANS-002", "AS-RESULT-001"],
+      "semantic": {"role": "feedback", "state": "correct"},
+      "descriptor": {"descriptor_id": "alchemists-synthesis-correct-feedback-v2", "semantic_key": "effects/32x32/combat/hit-01", "media_kind": "image", "geometry": "192x128; 32x32 cells; 6x4"},
+      "decision": {"decision_id": "puzzle-alchemists-synthesis-feedback-correct-v2", "disposition": "reuse-canonical", "technical_compatibility": "pass", "legacy_physical_reuse": "blocked", "legacy_canonical_ingestion": "blocked"},
+      "selected_semantic_keys": ["effects/32x32/combat/hit-01"]
+    },
+    {
+      "title_id": "potion-rush",
+      "title": "Potion Rush",
+      "input_mode": "sentence",
+      "legacy_source_manifest": "task1-source-readiness-manifest-v1.json#potion-rush",
+      "source_claim_ids": ["PR-CUR-005", "PR-CUR-008", "PR-CUR-010", "PR-CUR-011", "PR-CUR-013", "PR-CUR-014"],
+      "semantic": {"role": "control", "state": "confirm"},
+      "descriptor": {"descriptor_id": "potion-rush-confirm-control-v2", "semantic_key": "ui/16x16/controls/gamepad-buttons", "media_kind": "image", "geometry": "352x160; 16x16 cells; 22x10"},
+      "decision": {"decision_id": "puzzle-potion-rush-control-confirm-v2", "disposition": "reuse-canonical", "technical_compatibility": "pass", "legacy_physical_reuse": "blocked", "legacy_canonical_ingestion": "blocked"},
+      "selected_semantic_keys": ["ui/16x16/controls/gamepad-buttons"]
+    },
+    {
+      "title_id": "rune-forge-chamber",
+      "title": "Rune Forge Chamber",
+      "input_mode": "sentence",
+      "legacy_source_manifest": "task1-source-readiness-manifest-v1.json#rune-forge-chamber",
+      "source_claim_ids": ["RFC-CUR-011", "RFC-CUR-012", "RFC-CUR-013"],
+      "semantic": {"role": "player", "state": "idle"},
+      "descriptor": {"descriptor_id": "rune-forge-chamber-player-idle-v2", "semantic_key": "top-down/32x32/characters/hero-01", "media_kind": "image", "geometry": "192x384; 32x32 cells; 6x12"},
+      "decision": {"decision_id": "puzzle-rune-forge-chamber-player-idle-v2", "disposition": "reuse-canonical", "technical_compatibility": "pass", "legacy_physical_reuse": "blocked", "legacy_canonical_ingestion": "blocked"},
+      "selected_semantic_keys": ["top-down/32x32/characters/hero-01"]
+    }
+  ],
+  "revocation_rule": "Any title identity, source claim, accepted release, descriptor, decision, semantic key, or owner-acceptance drift invalidates this v2 QC-only successor. It never rewrites the Task 1 or v1 historical evidence."
+}

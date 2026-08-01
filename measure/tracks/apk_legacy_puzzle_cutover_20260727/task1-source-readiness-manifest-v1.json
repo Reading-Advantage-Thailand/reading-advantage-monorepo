@@ -1,0 +1,114 @@
+{
+  "schema_version": "apk-legacy-puzzle-task1-source-readiness-manifest.v1",
+  "track_id": "apk_legacy_puzzle_cutover_20260727",
+  "task": "Task 1: source/readiness manifest preparation",
+  "status": "evidence-only",
+  "source_bindings": {
+    "accepted_readiness_receipt": {
+      "archive_preferred_path": "measure/archive/apk_denominator_readiness_t11_integrity_20260727/accepted-readiness-receipt-v1.json",
+      "sha256": "d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720"
+    },
+    "phase1_crosswalk": {
+      "archive_preferred_path": "measure/archive/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+      "sha256": "eb395d3d365115696fc31359406a4e9f126604ca159ea8358a0eb8931c8c5f57"
+    },
+    "puzzle_evidence_successor": {
+      "archive_preferred_path": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/successor-accepted-cohort-manifest-v2.json",
+      "sha256": "not-embedded-self-hash; bound-successor-receipt-required"
+    },
+    "asset_contract_v2_acceptance": {
+      "archive_preferred_path": "measure/archive/apk_asset_contract_v2_20260728/v2-owner-acceptance-v1.json",
+      "status": "accepted-with-environment-disclosure"
+    },
+    "suitability_ingestion_governance": {
+      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
+      "status": "accepted-evidence-governance-only"
+    }
+  },
+  "readiness_boundary": {
+    "authorized_child_work_only": true,
+    "cohort_currently_ready": false,
+    "cartridge_cutover_authorized": false,
+    "meaning": "This manifest freezes observed legacy sources and accepted predecessor records only. It authorizes no per-title suitability decision, semantic adoption, selected-union output, host integration, retirement, cutover, or release."
+  },
+  "titles": [
+    {
+      "title_id": "enchanted-library",
+      "canonical_identity_id": "vocabulary/enchanted-library",
+      "assignment_index": 18,
+      "input_mode": "vocabulary",
+      "evidence_ledger": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-a/enchanted-library/claim-evidence-ledger.v2.json",
+      "legacy_source_records": [
+        {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/enchanted-library/page.tsx","blob_sha256":"940b18a18b2d31a93b6048948f216d75ca980f975002bfc3d61e90138ef8d616"},
+        {"path":"apps/advantage-games/src/lib/games/enchantedLibrary.ts","blob_sha256":"828eabe7aec6ac4cebd6c2870b4dc94f63b9e3684e28d8015d1c593db3d12b23"},
+        {"path":"apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx","blob_sha256":"342703a685400060427b112be4142740b51fb457194548244cb9619b9fc53dbd"},
+        {"path":"apps/advantage-games/public/vocab/enchanted-library.json","blob_sha256":"6a9374ce0831a80d2f6b6934cb5d68803778243be67a20c18bd60c00e7ad4036"}
+      ]
+    },
+    {
+      "title_id": "rune-match",
+      "canonical_identity_id": "vocabulary/rune-match",
+      "assignment_index": 19,
+      "input_mode": "vocabulary",
+      "evidence_ledger": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-a/rune-match/rune-match-claim-ledger.v2.json",
+      "legacy_source_records": [
+        {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rune-match/page.tsx","blob_sha256":"a951b2113f67f78730482ae034d49adcbf58a0303aa93495578e1cb0a196c918"},
+        {"path":"apps/advantage-games/src/lib/games/runeMatch.ts","blob_sha256":"3a746af63bf3eccd10e770cc1eaad1eacc543e29442217a1845e64394ec32774"},
+        {"path":"apps/advantage-games/src/lib/games/runeMatchConfig.ts","blob_sha256":"b8f44f39aa3e5f3a91e5457385598945c7e2e83498ce94b3186e0174ffaa7d94"},
+        {"path":"apps/advantage-games/src/lib/games/sampleVocabulary.ts","blob_sha256":"4abf4d641dfd8b90390c33053ca2206e2141cad133651ae032b13bdd2fc719d4"}
+      ]
+    },
+    {
+      "title_id": "alchemists-synthesis",
+      "canonical_identity_id": "vocabulary/alchemists-synthesis",
+      "assignment_index": 20,
+      "input_mode": "vocabulary",
+      "evidence_ledger": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-a/alchemists-synthesis/claim-evidence-ledger.v2.json",
+      "legacy_source_records": [
+        {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/alchemists-synthesis/page.tsx","blob_sha256":"b036d1ef56554ba0d98b8748219c933d2f64c718ad3bcc5460e681890e18ec82"},
+        {"path":"apps/advantage-games/src/lib/games/alchemistsSynthesis.ts","blob_sha256":"630f4f8149fef8966955dbae28827215a8a30a0193a2a411b801133ad7c988ca"},
+        {"path":"apps/advantage-games/src/components/games/vocabulary/alchemists-synthesis/AlchemistsSynthesisGame.tsx","blob_sha256":"185f861c2b1ba8dce54757e716a0ca7a35fd09a9a0d2498a195d9af6427cb1d4"},
+        {"path":"apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/vocabulary/route.ts","blob_sha256":"0998e726ff29a94a03f28e9f8e2e4cbfd6bda112f9eb5c94c751ef3771d950fd"}
+      ]
+    },
+    {
+      "title_id": "potion-rush",
+      "canonical_identity_id": "sentence/potion-rush",
+      "assignment_index": 21,
+      "input_mode": "sentence",
+      "evidence_ledger": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b/potion-rush/claim-evidence-ledger-v2.json",
+      "legacy_source_records": [
+        {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/potion-rush/page.tsx","blob_sha256":"f23a839f56a1d749c5bfe264442b7a08aeda52e8bfa282044d7bc1ce3702be3d"},
+        {"path":"apps/advantage-games/src/store/usePotionRushStore.ts","blob_sha256":"1dc51671435e17c6606bdfe68bc12dc44f8607016301f9cb1e738dd7467ccb02"},
+        {"path":"apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushGame.tsx","blob_sha256":"dcb1c616067d6c982ee27d3e3f54849ccf500898dcb677f8e6a2e72e4d78fbac"},
+        {"path":"apps/advantage-games/src/components/games/sentence/potion-rush/ConveyorBelt.tsx","blob_sha256":"a6c1a7476bf0283a73cec7446c3191bb7103fa15351faa6553ddbf69295b3261"}
+      ]
+    },
+    {
+      "title_id": "rune-forge-chamber",
+      "canonical_identity_id": "sentence/rune-forge-chamber",
+      "assignment_index": 22,
+      "input_mode": "sentence",
+      "evidence_ledger": "measure/archive/apk_corpus_audit_puzzle_crafting_20260712/batch-b/rune-forge-chamber/claim-evidence-ledger-v2.json",
+      "legacy_source_records": [
+        {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/rune-forge-chamber/page.tsx","blob_sha256":"efc5c35bb043100473599f3a6c70d7e47a1cf21f0be832a950f15032b6742a57"},
+        {"path":"apps/advantage-games/src/lib/games/runeForgeChamber.ts","blob_sha256":"13e9bbf18008248ab11d778d1f6407ce3e4591d8486a2097201fda6b9be994ff"},
+        {"path":"apps/advantage-games/src/lib/games/runeForgeChamberConfig.ts","blob_sha256":"bce9f868987e17e0ba61f3d5a67ffb5cbba10fadb6955d50df98ef937e44a60b"},
+        {"path":"apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx","blob_sha256":"45cf46e19255ba7107193d2ceeef63d88b4bcf959d54d830840c2e0cbca23d8f"}
+      ]
+    }
+  ],
+  "claims": {
+    "asset_suitability_claimed": false,
+    "semantic_adoption_claimed": false,
+    "selected_assets_claimed": false,
+    "implementation_claimed": false,
+    "advantage_games_qc_claimed": false,
+    "reading_host_proof_claimed": false,
+    "primary_host_proof_claimed": false,
+    "retirement_claimed": false,
+    "cutover_claimed": false,
+    "release_authority_granted": false
+  },
+  "revocation_rule": "Any title roster, source identity, source hash, accepted-predecessor, or authority-boundary drift invalidates this evidence-only manifest. Publish a successor record; do not rewrite historical source evidence."
+}

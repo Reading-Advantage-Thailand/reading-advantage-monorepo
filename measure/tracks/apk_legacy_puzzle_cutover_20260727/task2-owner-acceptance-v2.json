@@ -1,0 +1,31 @@
+{
+  "schema_version": "apk-legacy-puzzle-task2-owner-acceptance.v2",
+  "track_id": "apk_legacy_puzzle_cutover_20260727",
+  "status": "accepted",
+  "accepted_at": "2026-08-01T00:00:00.000Z",
+  "owner_evidence": {
+    "decision": "Accepted for Legacy Puzzle Tasks 2–5 Advantage Games /qc evidence only.",
+    "source": "direct product-owner work order",
+    "durable_message_id": null,
+    "durable_event_id": null
+  },
+  "accepted_artifacts": [
+    "task2-standard-pack-suitability-dossiers-v2.json",
+    "task2-accepted-decisions-v2.json",
+    "task2-selected-unions-v2.json"
+  ],
+  "accepted_titles": ["enchanted-library", "rune-match", "alchemists-synthesis", "potion-rush", "rune-forge-chamber"],
+  "authorization": {
+    "advantage_games_qc": true,
+    "selected_media_inspection": true,
+    "production_catalog": false,
+    "reading_host": false,
+    "primary_host": false,
+    "legacy_asset_reuse": false,
+    "legacy_asset_ingestion": false,
+    "retirement": false,
+    "cutover": false,
+    "deployment": false
+  },
+  "revocation_rule": "This acceptance is title- and artifact-specific. Any successor work needs a fresh decision; host proof, retirement, and production acceptance remain separate tasks."
+}

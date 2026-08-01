@@ -1,0 +1,142 @@
+{
+  "schema_version": "apk-legacy-puzzle-task2-canonical-suitability.v1",
+  "track_id": "apk_legacy_puzzle_cutover_20260727",
+  "task": "Task 2: title-scoped canonical descriptor suitability",
+  "status": "canonical-descriptor-comparison-only",
+  "scope": "candidate-cartridge-qc-only",
+  "basis": {
+    "source_readiness_manifest": "measure/tracks/apk_legacy_puzzle_cutover_20260727/task1-source-readiness-manifest-v1.json",
+    "asset_contract_v2": "packages/advantage-play-kit/src/assets/asset-contract-v2.ts",
+    "canonical_comparison": "packages/advantage-play-kit/src/assets/standard-pack-suitability-search.ts",
+    "accepted_release": {
+      "version": "2026.07.23",
+      "catalog_digest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+      "source_receipt_digest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9",
+      "required_credit": "Pixel art assets by ElvGames"
+    }
+  },
+  "authority_boundary": {
+    "title_specific_suitability_accepted": false,
+    "title_specific_semantic_binding_accepted": false,
+    "selected_union_materialization_authorized": false,
+    "production_catalog_exposure_authorized": false,
+    "host_integration_authorized": false,
+    "legacy_ingestion_authorized": false,
+    "cutover_authorized": false
+  },
+  "titles": [
+    {
+      "title_id": "enchanted-library",
+      "title": "Enchanted Library",
+      "input_mode": "vocabulary",
+      "semantic_requirement": { "role": "player", "state": "walk" },
+      "canonical_key": "side-view/native/platformer-world/heroes/hero-001/hero-001-walk-source-0c1cbfb7e747",
+      "descriptor": {
+        "descriptor_id": "enchanted-library-player-walk-v1",
+        "media_kind": "animation",
+        "geometry": { "width": 192, "height": 32, "frame_width": 32, "frame_height": 32, "columns": 6, "rows": 1 },
+        "clip": { "id": "walk", "frame_count": 6, "fps": 12, "loop": true, "direction": "down" }
+      },
+      "technical_compatibility": {
+        "animation_behavior": "pass",
+        "frame_direction_compatibility": "pass",
+        "geometry": "pass",
+        "collision_envelope": "pass",
+        "source_receipt": "pass"
+      },
+      "disposition": "blocked",
+      "blockers": ["missing-title-specific-accepted-suitability-dossier", "missing-title-specific-accepted-semantic-binding"],
+      "selected_semantic_keys": []
+    },
+    {
+      "title_id": "rune-match",
+      "title": "Rune Match",
+      "input_mode": "vocabulary",
+      "semantic_requirement": { "role": "panel", "state": "default" },
+      "canonical_key": "ui/20x20/inventory/slot",
+      "descriptor": {
+        "descriptor_id": "rune-match-panel-default-v1",
+        "media_kind": "image",
+        "geometry": { "width": 20, "height": 20, "frame_width": 20, "frame_height": 20, "columns": 1, "rows": 1 }
+      },
+      "technical_compatibility": {
+        "animation_behavior": "not-applicable",
+        "frame_direction_compatibility": "not-applicable",
+        "geometry": "pass",
+        "collision_envelope": "pass",
+        "source_receipt": "pass"
+      },
+      "disposition": "blocked",
+      "blockers": ["missing-title-specific-accepted-suitability-dossier", "missing-title-specific-accepted-semantic-binding"],
+      "selected_semantic_keys": []
+    },
+    {
+      "title_id": "alchemists-synthesis",
+      "title": "Alchemist's Synthesis",
+      "input_mode": "vocabulary",
+      "semantic_requirement": { "role": "feedback", "state": "correct" },
+      "canonical_key": "effects/32x32/combat/hit-01",
+      "descriptor": {
+        "descriptor_id": "alchemists-synthesis-correct-feedback-v1",
+        "media_kind": "image",
+        "geometry": { "width": 192, "height": 128, "frame_width": 32, "frame_height": 32, "columns": 6, "rows": 4 }
+      },
+      "technical_compatibility": {
+        "animation_behavior": "not-applicable",
+        "frame_direction_compatibility": "not-applicable",
+        "geometry": "pass",
+        "collision_envelope": "pass",
+        "source_receipt": "pass"
+      },
+      "disposition": "blocked",
+      "blockers": ["missing-title-specific-accepted-suitability-dossier", "missing-title-specific-accepted-semantic-binding"],
+      "selected_semantic_keys": []
+    },
+    {
+      "title_id": "potion-rush",
+      "title": "Potion Rush",
+      "input_mode": "sentence",
+      "semantic_requirement": { "role": "control", "state": "confirm" },
+      "canonical_key": "ui/16x16/controls/gamepad-buttons",
+      "descriptor": {
+        "descriptor_id": "potion-rush-confirm-control-v1",
+        "media_kind": "image",
+        "geometry": { "width": 352, "height": 160, "frame_width": 16, "frame_height": 16, "columns": 22, "rows": 10 }
+      },
+      "technical_compatibility": {
+        "animation_behavior": "not-applicable",
+        "frame_direction_compatibility": "not-applicable",
+        "geometry": "pass",
+        "collision_envelope": "pass",
+        "source_receipt": "pass"
+      },
+      "disposition": "blocked",
+      "blockers": ["missing-title-specific-accepted-suitability-dossier", "missing-title-specific-accepted-semantic-binding"],
+      "selected_semantic_keys": []
+    },
+    {
+      "title_id": "rune-forge-chamber",
+      "title": "Rune Forge Chamber",
+      "input_mode": "sentence",
+      "semantic_requirement": { "role": "player", "state": "idle" },
+      "canonical_key": "top-down/32x32/characters/hero-01",
+      "descriptor": {
+        "descriptor_id": "rune-forge-chamber-player-idle-v1",
+        "media_kind": "image",
+        "geometry": { "width": 192, "height": 384, "frame_width": 32, "frame_height": 32, "columns": 6, "rows": 12 }
+      },
+      "technical_compatibility": {
+        "animation_behavior": "not-applicable",
+        "frame_direction_compatibility": "not-applicable",
+        "geometry": "pass",
+        "collision_envelope": "pass",
+        "source_receipt": "pass"
+      },
+      "disposition": "blocked",
+      "blockers": ["missing-title-specific-accepted-suitability-dossier", "missing-title-specific-accepted-semantic-binding"],
+      "selected_semantic_keys": []
+    }
+  ],
+  "task3_to_task5_boundary": "Candidate mechanics and QC may use only public T11 APIs. They remain non-playable and return no selected semantic output until a title-specific accepted dossier and semantic binding exist.",
+  "revocation_rule": "Any accepted-release, descriptor, technical-comparison, title identity, source-readiness, or authority-boundary drift invalidates this evidence-only suitability record."
+}
