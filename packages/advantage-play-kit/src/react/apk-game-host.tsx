@@ -4,6 +4,7 @@ import {
   useEffect,
   useRef,
   useState,
+  type CSSProperties,
   type ComponentProps,
   type ReactNode,
 } from "react";
@@ -15,6 +16,7 @@ import type {
   APKDiagnosticEvent,
   APKGameHandle,
   GameFactory,
+  ResponsiveRuntimeOptions,
   RuntimeCartridge,
   RuntimeEdition,
 } from "../runtime/types.js";
@@ -31,6 +33,12 @@ export type APKGameHostProps = Omit<ComponentProps<"section">, "onComplete"> & {
   factory?: GameFactory;
   /** Optional deterministic session seed. */
   seed?: number;
+  /** Optional responsive runtime policy supplied by the host product. */
+  responsive?: ResponsiveRuntimeOptions;
+  /** Optional class applied to the DOM node that owns the Phaser canvas. */
+  canvasClassName?: string;
+  /** Optional style applied to the DOM node that owns the Phaser canvas. */
+  canvasStyle?: CSSProperties;
   /** Accessible instructions displayed outside the canvas. */
   instructions?: ReactNode;
   /** Receives the validated cartridge display result. */
@@ -39,6 +47,10 @@ export type APKGameHostProps = Omit<ComponentProps<"section">, "onComplete"> & {
   onDiagnostic?: (event: APKDiagnosticEvent) => void;
   /** Receives host-relative navigation requests. */
   onNavigate?: (destination: string) => void;
+  /** Whether to render the cartridge's local, pre-verification result summary. */
+  showClientResult?: boolean;
+  /** Whether to render the generic local restart control. */
+  showRestartControl?: boolean;
 };
 
 /**
@@ -52,10 +64,15 @@ export function APKGameHost({
   edition,
   factory,
   seed,
+  responsive,
+  canvasClassName,
+  canvasStyle,
   instructions,
   onComplete,
   onDiagnostic,
   onNavigate,
+  showClientResult = true,
+  showRestartControl = true,
   "aria-label": ariaLabel = "Language game",
   children,
   ...sectionProps
@@ -98,6 +115,7 @@ export function APKGameHost({
           diagnostic: onDiagnostic,
         },
         ...(seed === undefined ? {} : { seed }),
+        ...(responsive === undefined ? {} : { responsive }),
       },
       factory ?? createPhaserGameFactory(),
     )
@@ -121,7 +139,7 @@ export function APKGameHost({
       mountPoint.remove();
       void mountedHandle?.destroy();
     };
-  }, [cartridge, edition, factory, input, onComplete, onDiagnostic, onNavigate, seed]);
+  }, [cartridge, edition, factory, input, onComplete, onDiagnostic, onNavigate, responsive, seed]);
 
   const togglePause = () => {
     if (status === "paused") {
@@ -162,7 +180,13 @@ export function APKGameHost({
       </div>
       {instructions && <div>{instructions}</div>}
       {error && <div role="alert">Game could not start: {error}</div>}
-      <div ref={surfaceRef} data-apk-canvas-host="true" aria-hidden="true" />
+      <div
+        ref={surfaceRef}
+        className={canvasClassName}
+        style={canvasStyle}
+        data-apk-canvas-host="true"
+        aria-hidden="true"
+      />
       <div role="group" aria-label="Game controls">
         <button type="button" onClick={togglePause} disabled={status === "loading" || status === "error"}>
           {status === "paused" ? "Resume game" : "Pause game"}
@@ -170,11 +194,13 @@ export function APKGameHost({
         <button type="button" onClick={toggleMute} disabled={status === "loading" || status === "error"}>
           {muted ? "Unmute game" : "Mute game"}
         </button>
-        <button type="button" onClick={() => void restart()} disabled={status === "loading"}>
-          Restart game
-        </button>
+        {showRestartControl && (
+          <button type="button" onClick={() => void restart()} disabled={status === "loading"}>
+            Restart game
+          </button>
+        )}
       </div>
-      {result && (
+      {showClientResult && result && (
         <div aria-label="Game result">
           <p>Score: {result.score}</p>
           <p>Accuracy: {Math.round(result.accuracy * 100)}%</p>

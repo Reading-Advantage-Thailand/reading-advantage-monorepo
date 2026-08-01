@@ -24,6 +24,34 @@ import {
 } from "./types.js";
 
 /**
+ * Calculates a height that can contain every required responsive region before a browser reports layout.
+ * @param responsive Runtime responsive policy, safe-area insets, and accessibility settings.
+ * @returns The minimum CSS-pixel height needed for a usable responsive mount.
+ */
+function requiredResponsiveMountHeight(
+  responsive: NonNullable<MountCartridgeOptions["responsive"]>,
+): number {
+  const { accessibility, config, inputCapabilities, safeArea } = responsive;
+  const controlsHeight = inputCapabilities.touch
+    ? config.compact.controlsHeight * accessibility.touchScale
+    : 0;
+  const compactRequiredHeight = Math.max(
+    config.compact.minHeight,
+    config.compact.navigationHeight
+      + config.compact.promptHeight * accessibility.textScale
+      + config.compact.statusHeight * accessibility.textScale
+      + controlsHeight
+      + config.compact.gap * (controlsHeight > 0 ? 4 : 3)
+      + config.compact.minGameplayHeight,
+  );
+  const wideRequiredHeight = Math.max(
+    config.wide.minHeight,
+    config.wide.navigationHeight + config.wide.gap + config.wide.minGameplayHeight,
+  );
+  return Math.ceil(safeArea.top + safeArea.bottom + Math.max(compactRequiredHeight, wideRequiredHeight));
+}
+
+/**
  * Mounts one cartridge with deterministic browser lifecycle ownership.
  * @param options Cartridge, strict input array, edition, host, and container.
  * @param factory Injected Phaser renderer factory.
@@ -64,13 +92,37 @@ export async function mountCartridge(
   let muted = false;
   let explicitlyPaused = false;
   let destroyed = false;
-  let width = container.clientWidth;
-  let height = container.clientHeight;
   let lastEvent: APKDiagnosticEvent | undefined;
   let composition: SupportedResponsiveComposition | undefined;
   let operation = Promise.resolve();
   const previousTouchAction = container.style.touchAction;
+  const previousMinHeight = container.style.minHeight;
+  let provisionedResponsiveMountHeight = false;
+
+  const readViewport = (): { width: number; height: number } => {
+    const width = container.clientWidth;
+    const reportedHeight = container.clientHeight;
+    if (!options.responsive || width <= 0 || reportedHeight > 0) {
+      return { width, height: reportedHeight };
+    }
+    const height = requiredResponsiveMountHeight(options.responsive);
+    if (!Number.isFinite(height) || height <= 0) {
+      return { width, height: reportedHeight };
+    }
+    container.style.minHeight = String(height) + "px";
+    provisionedResponsiveMountHeight = true;
+    return { width, height };
+  };
+
+  const initialViewport = readViewport();
+  let width = initialViewport.width;
+  let height = initialViewport.height;
   const inputController = createInputController(container);
+
+  const restoreContainerStyles = (): void => {
+    container.style.touchAction = previousTouchAction;
+    if (provisionedResponsiveMountHeight) container.style.minHeight = previousMinHeight;
+  };
 
   const resolveComposition = (): SupportedResponsiveComposition | undefined => {
     if (!options.responsive) return undefined;
@@ -169,8 +221,9 @@ export async function mountCartridge(
 
   const resize = (): void => {
     const previousComposition = composition;
-    width = container.clientWidth;
-    height = container.clientHeight;
+    const viewport = readViewport();
+    width = viewport.width;
+    height = viewport.height;
     if (width > 0 && height > 0) {
       instance?.resize?.(width, height);
       try {
@@ -236,7 +289,7 @@ export async function mountCartridge(
     document.removeEventListener("visibilitychange", onVisibilityChange);
     resizeObserver?.disconnect();
     inputController.destroy();
-    container.style.touchAction = previousTouchAction;
+    restoreContainerStyles();
     throw error;
   }
 
@@ -284,7 +337,7 @@ export async function mountCartridge(
       document.removeEventListener("visibilitychange", onVisibilityChange);
       resizeObserver?.disconnect();
       inputController.destroy();
-      container.style.touchAction = previousTouchAction;
+      restoreContainerStyles();
       await operation.catch(() => undefined);
       await instance?.destroy();
       instance = undefined;

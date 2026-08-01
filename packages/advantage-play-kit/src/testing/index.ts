@@ -8,6 +8,9 @@ export {
 /** Public test-helper types. */
 export type { MockGameFactory, MockHostAdapter } from "./test-kit.js";
 
+/** Creates a valid runtime edition fixture for public APK consumer tests. */
+export { createRuntimeEdition } from "./fixtures.js";
+
 /** Deterministic clock, RNG, and input-sequence fixtures for the seven accepted capabilities. */
 export {
   createDeterministicClock,

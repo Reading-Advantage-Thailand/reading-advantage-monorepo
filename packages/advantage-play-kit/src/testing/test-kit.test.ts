@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createDeterministicRandom, createMockGameFactory, createMockHost } from "./test-kit.js";
+import { createRuntimeEdition as createPublicRuntimeEdition } from "./index.js";
 import { mountCartridge } from "../runtime/runtime.js";
 import { createRuntimeCartridge, createRuntimeEdition, validResults } from "./fixtures.js";
 
@@ -8,6 +9,14 @@ describe("APK test kit", () => {
     const first = createDeterministicRandom(42);
     const second = createDeterministicRandom(42);
     expect([first(), first(), first()]).toEqual([second(), second(), second()]);
+  });
+
+  it("exports a runtime-edition fixture from the public testing entrypoint", () => {
+    expect(createPublicRuntimeEdition()).toMatchObject({
+      id: "primary-chibi",
+      runtimeApiVersion: "1.0.0",
+      pack: expect.objectContaining({ id: "chibi-quest" }),
+    });
   });
 
   it("provides a mock factory and host with leak counters", async () => {

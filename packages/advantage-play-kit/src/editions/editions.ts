@@ -370,7 +370,8 @@ export function resolveAssetBinding(
   if (!binding) throw new APKRuntimeError("MISSING_ASSET_SLOT", `Edition ${edition.id} has no binding ${key}`);
   const file = edition.pack.files[binding.file];
   if (!file) invalid(`Binding ${key} references missing physical file ${binding.file}`);
-  const url = resolveUrl ? resolveUrl(edition.pack, file) : `${edition.pack.root}/${file.path}`;
+  const normalizedRoot = edition.pack.root.replace(/\/+$/u, "");
+  const url = resolveUrl ? resolveUrl(edition.pack, file) : `${normalizedRoot}/${file.path}`;
   return {
     binding,
     file,

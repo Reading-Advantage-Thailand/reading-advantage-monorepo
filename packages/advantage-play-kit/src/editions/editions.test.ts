@@ -137,6 +137,12 @@ describe("physical APK edition contract", () => {
       textureKey: "apk:primary-chibi:characters/knight_top",
       animationKey: "apk:primary-chibi:characters/knight_top:walk.down",
     });
+    const trailingRoot = cloneEdition({
+      pack: { ...primary.pack, root: "/assets/apk/chibi-quest/v1/" },
+    });
+    expect(resolveAssetBinding(trailingRoot, "player.hero.top.walk.down")).toMatchObject({
+      url: "/assets/apk/chibi-quest/v1/characters/knight_top.png",
+    });
   });
 
   it("preloads a shared physical sheet only once for multiple semantic animations", () => {

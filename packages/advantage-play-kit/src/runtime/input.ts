@@ -10,13 +10,13 @@ export interface APKPointerState {
   id: number | null;
   /** Browser pointer category retained through release for gesture resolution. */
   kind: "mouse" | "pen" | "touch" | null;
-  /** Client-space horizontal coordinate where the active gesture began. */
+  /** Surface-local CSS-pixel horizontal coordinate where the active gesture began. */
   startX: number;
-  /** Client-space vertical coordinate where the active gesture began. */
+  /** Surface-local CSS-pixel vertical coordinate where the active gesture began. */
   startY: number;
-  /** Client-space horizontal coordinate. */
+  /** Surface-local CSS-pixel horizontal coordinate. */
   x: number;
-  /** Client-space vertical coordinate. */
+  /** Surface-local CSS-pixel vertical coordinate. */
   y: number;
 }
 
@@ -64,6 +64,19 @@ export function createInputController(surface: HTMLElement): APKInputController 
   const previousTouchAction = surface.style.touchAction;
   let destroyed = false;
 
+  /**
+   * Converts browser client coordinates into CSS pixels local to the play surface.
+   * @param event Pointer event reported in viewport-relative client coordinates.
+   * @returns The pointer position relative to the surface's top-left corner.
+   */
+  const localPointerPosition = (event: PointerEvent) => {
+    const rect = surface.getBoundingClientRect();
+    return {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    };
+  };
+
   const onKeyDown = (event: KeyboardEvent) => {
     keys.add(event.code);
     if (!event.repeat) pressed.add(event.code);
@@ -73,6 +86,7 @@ export function createInputController(surface: HTMLElement): APKInputController 
   };
   const onKeyUp = (event: KeyboardEvent) => keys.delete(event.code);
   const onPointerDown = (event: PointerEvent) => {
+    const position = localPointerPosition(event);
     pointer.down = true;
     pointer.released = false;
     pointer.cancelled = false;
@@ -82,18 +96,20 @@ export function createInputController(surface: HTMLElement): APKInputController 
       event.pointerType === "mouse"
       ? event.pointerType
       : "mouse";
-    pointer.startX = event.clientX;
-    pointer.startY = event.clientY;
-    pointer.x = event.clientX;
-    pointer.y = event.clientY;
+    pointer.startX = position.x;
+    pointer.startY = position.y;
+    pointer.x = position.x;
+    pointer.y = position.y;
   };
   const onPointerMove = (event: PointerEvent) => {
     if (pointer.id !== null && event.pointerId !== pointer.id) return;
-    pointer.x = event.clientX;
-    pointer.y = event.clientY;
+    const position = localPointerPosition(event);
+    pointer.x = position.x;
+    pointer.y = position.y;
   };
   const finishPointer = (event: PointerEvent, cancelled: boolean) => {
     if (pointer.id !== null && event.pointerId !== pointer.id) return;
+    const position = localPointerPosition(event);
     pointer.down = false;
     pointer.released = !cancelled;
     pointer.cancelled = cancelled;
@@ -103,8 +119,8 @@ export function createInputController(surface: HTMLElement): APKInputController 
       event.pointerType === "mouse"
       ? event.pointerType
       : pointer.kind;
-    pointer.x = event.clientX;
-    pointer.y = event.clientY;
+    pointer.x = position.x;
+    pointer.y = position.y;
   };
   const onPointerUp = (event: PointerEvent) => finishPointer(event, false);
   const onPointerCancel = (event: PointerEvent) => finishPointer(event, true);

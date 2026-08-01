@@ -45,6 +45,36 @@ describe("createInputController", () => {
     controller.destroy();
   });
 
+  it("normalizes pointer origins and releases into surface-local CSS pixels", () => {
+    const surface = document.createElement("div");
+    Object.defineProperty(surface, "getBoundingClientRect", {
+      configurable: true,
+      value: () => ({ left: 500, top: 300, right: 890, bottom: 1144, width: 390, height: 844 }),
+    });
+    const controller = createInputController(surface);
+    surface.dispatchEvent(new PointerEvent("pointerdown", {
+      pointerId: 8,
+      pointerType: "touch",
+      clientX: 610,
+      clientY: 420,
+    }));
+    surface.dispatchEvent(new PointerEvent("pointerup", {
+      pointerId: 8,
+      pointerType: "touch",
+      clientX: 620,
+      clientY: 430,
+    }));
+
+    expect(controller.snapshot().pointer).toMatchObject({
+      startX: 110,
+      startY: 120,
+      x: 120,
+      y: 130,
+      released: true,
+    });
+    controller.destroy();
+  });
+
   it("retains pointer kind and origin through release for gesture resolution", () => {
     const surface = document.createElement("div");
     const controller = createInputController(surface);

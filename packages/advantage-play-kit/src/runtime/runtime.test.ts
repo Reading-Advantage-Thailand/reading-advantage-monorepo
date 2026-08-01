@@ -201,4 +201,75 @@ describe("mountCartridge", () => {
     expect(handle.getDiagnostics()).toMatchObject({ layoutProfile: "wide", inputMode: "hybrid" });
     await handle.destroy();
   });
+
+  it("provisions an initial zero-height responsive mount and restores caller styles on destroy", async () => {
+    const container = document.createElement("div");
+    container.style.minHeight = "17px";
+    container.style.touchAction = "manipulation";
+    Object.defineProperties(container, {
+      clientWidth: { configurable: true, value: 390 },
+      clientHeight: { configurable: true, value: 0 },
+    });
+    const instance: APKGameInstance = { destroy: vi.fn() };
+    const factory: GameFactory = vi.fn(async (context) => {
+      expect(context.composition?.safeRect.height).toBeGreaterThan(0);
+      return instance;
+    });
+
+    const handle = await mountCartridge({
+      container,
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn() },
+      responsive: {
+        config: DEFAULT_RESPONSIVE_LAYOUT_CONFIG,
+        safeArea: { top: 0, right: 0, bottom: 0, left: 0 },
+        inputCapabilities: { touch: true, pointer: true, keyboard: true },
+        accessibility: { textScale: 1, touchScale: 1 },
+      },
+    }, factory);
+
+    expect(Number.parseFloat(container.style.minHeight)).toBeGreaterThan(0);
+    expect(container.style.minHeight).not.toBe("17px");
+    expect(container.style.touchAction).toBe("none");
+
+    await handle.destroy();
+
+    expect(instance.destroy).toHaveBeenCalledOnce();
+    expect(container.style.minHeight).toBe("17px");
+    expect(container.style.touchAction).toBe("manipulation");
+  });
+
+  it("restores caller styles when a zero-height responsive mount factory rejects", async () => {
+    const container = document.createElement("div");
+    container.style.minHeight = "29px";
+    container.style.touchAction = "manipulation";
+    Object.defineProperties(container, {
+      clientWidth: { configurable: true, value: 390 },
+      clientHeight: { configurable: true, value: 0 },
+    });
+    const factory: GameFactory = vi.fn(async (context) => {
+      expect(context.composition?.safeRect.height).toBeGreaterThan(0);
+      expect(Number.parseFloat(container.style.minHeight)).toBeGreaterThan(0);
+      throw new Error("renderer unavailable");
+    });
+
+    await expect(mountCartridge({
+      container,
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn() },
+      responsive: {
+        config: DEFAULT_RESPONSIVE_LAYOUT_CONFIG,
+        safeArea: { top: 0, right: 0, bottom: 0, left: 0 },
+        inputCapabilities: { touch: true, pointer: true, keyboard: true },
+        accessibility: { textScale: 1, touchScale: 1 },
+      },
+    }, factory)).rejects.toMatchObject({ code: "MOUNT_FAILED" });
+
+    expect(container.style.minHeight).toBe("29px");
+    expect(container.style.touchAction).toBe("manipulation");
+  });
 });
