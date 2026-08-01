@@ -1,9 +1,9 @@
 {
   "track_id": "apk_standard_pack_suitability_ingestion_20260728",
   "type": "feature",
-  "status": "in_progress",
+  "status": "blocked",
   "created_at": "2026-07-28T00:00:00Z",
-  "updated_at": "2026-07-31T14:00:00Z",
+  "updated_at": "2026-08-02T00:00:00Z",
   "description": "Evaluate standard-pack asset suitability and canonically ingest approved legacy assets when the pack has no suitable replacement.",
   "estimated_tasks": 15,
   "actual_tasks": null,
@@ -12,6 +12,7 @@
     "apk_dual_theme_asset_production_20260712"
   ],
   "deviation_notes": "Centralized evidence-only governance only. The current-byte review and bounded owner decision bind implementation bytes but do not accept a real legacy asset or authorize title adoption, ingestion, migration, cutover, retirement, or deployment. Phase 4 additive-release and release-bound semantic publication infrastructure is complete and tested with synthetic fixtures; real-asset ingestion is blocked pending a lawful source packet, provenance, license, credit, and behavior-suitability review for a concrete title. Existing Core canonical-reuse evidence is independently reviewed and is now consumed only through the additive core-track acceptance `measure/tracks/apk_existing_core_cutover_20260727/task5-task6-product-owner-acceptance-v1.json` (SHA-256 `4ca0b6983a285ea998399ea2ed6a2e97864db0e62686aca32643932c9e598eda`) as exact Task-5 evidence; source-derived audio duration, measured atlas geometry, alpha envelopes, conservative contrast evidence, and additive Task-3 lineage remain hash-bound. Production exposure, deployment, and broader APK claims remain unauthorized.",
+  "completion_blocker": "External real-asset admission remains blocked until a concrete lawful source packet, provenance, license, credit, concrete-title behavior-suitability review, real additive release, independent review, and explicit owner acceptance are recorded. Evidence-only governance and canonical reuse do not close this track.",
   "downstream_consumption": {
     "track_id": "apk_existing_core_cutover_20260727",
     "acceptance_path": "measure/tracks/apk_existing_core_cutover_20260727/task5-task6-product-owner-acceptance-v1.json",

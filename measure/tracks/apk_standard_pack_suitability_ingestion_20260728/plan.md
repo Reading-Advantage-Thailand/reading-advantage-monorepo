@@ -96,3 +96,32 @@
   selected-union inputs for bounded Existing Core Task 5 consumption; real
   ingestion, title adoption, production exposure, deployment, and broader
   migration authorization remain false.
+
+
+## Phase 7: External real-asset admission and full-track closeout (blocked)
+
+- [b] Obtain a concrete real asset and lawful source packet with source identity,
+  checksum, provenance, license, credit, taxonomy/key, descriptor evidence, and
+  concrete-title behavior-suitability review. (deferred:external-lawful-real-asset-packet)
+- [b] before real successor admission, verify a trusted atomic durable
+  successor-registry adapter at the owning boundary. It must make the admitted
+  successor discoverable by semantic key and descriptor through a hash-pinned
+  additive release/receipt, with restart/rehydration and duplicate-protection proof.
+  (deferred:external-lawful-real-asset-packet)
+- [b] Perform the real additive ingestion only after the packet and suitability
+  review are accepted; bind the actual release/receipt and record a concrete
+  candidate comparison that rejects a visually similar but behaviorally
+  incompatible candidate. Run focused tests/package checks, obtain a fresh
+  independent review and explicit owner acceptance, and only then evaluate
+  full-track closeout.
+  (deferred:external-lawful-real-asset-packet)
+
+## Completion rule
+
+This track remains blocked until all Phase 7 tasks are accepted. The completed
+evidence-only governance and Existing Core canonical-reuse package do not stand in
+for a real asset, lawful source packet, real ingestion, title adoption, migration,
+cutover, retirement, deployment, or production authority. Any future acceptance
+authorizes only that canonical evidence/release, not title adoption, production
+exposure, catalog deployment, migration, host cutover, retirement, or broader
+cohort use.

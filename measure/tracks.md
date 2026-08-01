@@ -234,10 +234,13 @@ program, priority order when picking the next track is:
   and cartridge presentation behavior. It makes animation and selected-union
   metadata descriptor-driven without reopening T10/T11 or authorizing migration.
 
-- [ ] **Track: APK Standard-Pack Suitability and Canonical Ingestion** *Link: [./tracks/apk_standard_pack_suitability_ingestion_20260728/](./tracks/apk_standard_pack_suitability_ingestion_20260728/)*
+- [b] **Track: APK Standard-Pack Suitability and Canonical Ingestion** *Link: [./tracks/apk_standard_pack_suitability_ingestion_20260728/](./tracks/apk_standard_pack_suitability_ingestion_20260728/)*
   Consumes Asset Contract v2 to decide per role whether to reuse suitable
   canonical art, canonically ingest approved legacy art with provenance, or
   block the role; it publishes additive release and binding evidence only.
+  Evidence-only governance and Existing Core canonical reuse are complete; full
+  track closure is blocked on a concrete lawful real-asset packet and accepted
+  real-ingestion review.
 
 - [x] **Track: APK Durable Successor Registry and Release Admission** *Link: [./archive/apk_durable_successor_registry_20260730/](./archive/apk_durable_successor_registry_20260730/)*
   Replaces process-local APK successor reservations with a transaction-safe,
