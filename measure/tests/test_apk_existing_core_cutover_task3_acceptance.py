@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+import subprocess
 import unittest
 from pathlib import Path
 from typing import Any
@@ -21,6 +22,7 @@ EXPECTED_ACCEPTANCE_SHA256 = "65ffbaa27ef19be1f65015daa8fad4d2f4ca58990ba2fea565
 EXPECTED_RECEIPT_SHA256 = "e82d42d9ec046b85eb4aeac7800623bce3c3bf4a39a9c0f44288bd93d07be240"
 EXPECTED_CORRECTION_SHA256 = "008b042ddab1e5486c2b51fb5625b8f89084c471fc03a3bc4dab29231e509796"
 EXPECTED_CURRENT_LINEAGE_REVIEW_SHA256 = "2042061ffe67246c56f47cd1c4639ec39e1bd4ec5156952e6b46415fff24a657"
+TASK3_ACCEPTANCE_REVISION = "e0a5fb2a579ab7ec8d80c2336f4c93a946605452"
 CORRECTED_SUBJECT_KEYS = {"remediation_evidence", "independent_zero_finding_rereview"}
 
 EXPECTED_SUBJECTS = {
@@ -121,6 +123,17 @@ EXPECTED_DISCLOSURES = [
 def _sha256(path: Path) -> str:
     """Returns the SHA-256 digest of one file's exact bytes."""
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _git_blob_sha256(revision: str, relative_path: str) -> str:
+    """Returns one repository file digest at an immutable acceptance revision."""
+    value = subprocess.run(
+        ["git", "show", f"{revision}:{relative_path}"],
+        cwd=REPO_ROOT,
+        check=True,
+        capture_output=True,
+    ).stdout
+    return hashlib.sha256(value).hexdigest()
 
 
 def _load_object(path: Path) -> dict[str, Any]:
@@ -310,6 +323,23 @@ class ExistingCoreTask3AcceptanceTests(unittest.TestCase):
             "1f9fdca42f51e5140dc998752ab2c6f6049ef07e1b78b3a90693e5e4fdbf8eda",
         )
 
+    def test_catalog_and_loader_quarantine_history_matches_immutable_accepted_revision(self) -> None:
+        """Pins the historical quarantine record to immutable accepted bytes."""
+        self.assertEqual(
+            _git_blob_sha256(
+                TASK3_ACCEPTANCE_REVISION,
+                "packages/game-cartridges/src/catalog.ts",
+            ),
+            "14afe602f10710db17edc3a311177f16f148cac24473d3d975de4284ca19b55b",
+        )
+        self.assertEqual(
+            _git_blob_sha256(
+                TASK3_ACCEPTANCE_REVISION,
+                "packages/game-cartridges/src/index.ts",
+            ),
+            "1f9fdca42f51e5140dc998752ab2c6f6049ef07e1b78b3a90693e5e4fdbf8eda",
+        )
+
     def test_plan_and_metadata_preserve_task3_acceptance_after_task4_progression(self) -> None:
         """Requires task 3 acceptance to remain exact after separately authorized progression."""
         plan = (TRACK_ROOT / "plan.md").read_text(encoding="utf-8")
@@ -328,22 +358,57 @@ class ExistingCoreTask3AcceptanceTests(unittest.TestCase):
         )
         self.assertIn("- [x]", task4_line)
 
-        # The later additive Task-5 acceptance is complete and Task 6 has only begun.
+        # Current Task 5 is a Dragon Flight-only corrective phase, not a
+        # historical five-title host-proof completion.
         task5_line = next(
-            (line for line in plan.splitlines() if "Prove Reading and Primary load" in line),
+            (
+                line
+                for line in plan.splitlines()
+                if "Recover Task 5 through a Dragon Flight-only signed-attempt" in line
+            ),
             "",
         )
-        self.assertTrue(task5_line.startswith("- [x]"))
-        task6_line = next(
-            (line for line in plan.splitlines() if "Delete only each title's exact replaced legacy paths" in line),
+        self.assertTrue(task5_line.startswith("- [~]"))
+        self.assertIn("shared 24-title candidate", task5_line)
+        self.assertIn("historical non-consumable", task5_line)
+
+        task5_runtime_line = next(
+            (line for line in plan.splitlines() if "Dragon Flight dedicated runtime" in line),
             "",
         )
-        self.assertTrue(task6_line.startswith("- [~]"))
-        task7_line = next(
-            (line for line in plan.splitlines() if "Obtain independent review and product-owner acceptance" in line),
+        self.assertTrue(task5_runtime_line.startswith("  - [~]"))
+        self.assertIn("both host boundaries", task5_runtime_line)
+
+        task5_threat_model_line = next(
+            (line for line in plan.splitlines() if "both hosts must use the checkpoint protocol" in line),
             "",
         )
-        self.assertTrue(task7_line.startswith("- [ ]"))
+        self.assertTrue(task5_threat_model_line.startswith("  - [~]"))
+        self.assertIn("adversarial direct-JSON/same-frame-bypass tests must pass", task5_threat_model_line)
+
+        task5_checklist_line = next(
+            (line for line in plan.splitlines() if "Terra phase-acceptance checklist" in line),
+            "",
+        )
+        self.assertTrue(task5_checklist_line.startswith("  - [~]"))
+        self.assertIn("both host routes derive actor and tenant from the session", task5_checklist_line)
+        self.assertIn(
+            "real cartridge must prove same-frame choose-gate then launch works only after the server-issued dwell",
+            task5_checklist_line,
+        )
+        self.assertIn("failed or missing receipt prevents completion", task5_checklist_line)
+
+        deferred_marker = "(deferred:apk_existing_core_cutover_20260727-dragon-flight-reference-acceptance)"
+        for later_marker in (
+            "Retire only each title's exact replaced legacy paths",
+            "Obtain independent review and product-owner acceptance",
+        ):
+            later_line = next(
+                (line for line in plan.splitlines() if later_marker in line),
+                "",
+            )
+            self.assertTrue(later_line.startswith("- [b]"), f"{later_marker} must remain blocked")
+            self.assertIn(deferred_marker, later_line)
 
         self.assertEqual(task_acceptance["task_number"], 3)
         self.assertEqual(task_acceptance["approval_message_exact"], "Approved. Continue")
