@@ -1,0 +1,120 @@
+{
+  "schema_version": "apk-existing-action-task2-standard-pack-suitability-dossiers.v1",
+  "track_id": "apk_existing_action_cutover_20260727",
+  "task_number": 2,
+  "status": "reviewed-canonical-reuse-drafts-pending-owner-acceptance",
+  "scope": "real-root-accepted-standard-pack-canonical-reuse-only",
+  "accepted_governance": {
+    "asset_contract_v2_review": {
+      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/current-byte-independent-review-v1.json",
+      "sha256": "b55be6fbba3526f70ac29930b6f7ae2f55011d19ef7f9ec1d41a7786c4b2873d"
+    },
+    "asset_governance_owner_decision": {
+      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
+      "sha256": "a1e0fdb27d29d86d77362c67db0fa0ef3eb4d26aef4377954e9d5cab6c367a04"
+    },
+    "standard_pack_release": {
+      "version": "2026.07.23",
+      "catalog_path": "packages/advantage-play-kit/assets/standard/standard-pack-release.json",
+      "catalog_sha256": "ef432a798a78585df3416d60aca30fe11a2d1d8b833e0d65ceb7fac5c8b19932"
+    }
+  },
+  "titles": [
+    {
+      "title_id": "archers-revenge",
+      "title": "Archer's Revenge",
+      "input_mode": "vocabulary",
+      "temporal_scope": "historical-source-only",
+      "legacy_source_manifest": {"path": "measure/archive/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v8.json", "sha256": "1fedca7dffa8897a3bb0f5482a1c74c484bc3f16e5361ddd06dcc89ec8ec1ca3"},
+      "roles": [
+        {"dossier_id":"existing-action-archers-revenge-player-idle-canonical-reuse-v1","role":"player","state":"idle","descriptor_id":"existing-action-player-idle-static-v1","semantic_key":"top-down/32x32/characters/hero-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":384},"collision_envelope_required":true,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-action-archers-revenge-enemy-idle-canonical-reuse-v1","role":"enemy","state":"idle","descriptor_id":"existing-action-enemy-idle-static-v1","semantic_key":"side-view/32x32/characters/enemy-001-idle","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":32},"collision_envelope_required":true,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-action-archers-revenge-feedback-correct-canonical-reuse-v1","role":"feedback","state":"correct","descriptor_id":"existing-action-feedback-correct-static-v1","semantic_key":"effects/32x32/combat/hit-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":128},"collision_envelope_required":false,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-action-archers-revenge-audio-feedback-correct-canonical-reuse-v1","role":"audio-feedback","state":"correct","descriptor_id":"existing-action-feedback-correct-audio-v1","semantic_key":"audio/native/combat/hit-01","behavior":{"media_kind":"audio","minimum_geometry":null,"collision_envelope_required":false,"animation_behavior":"not-applicable"}}
+      ]
+    },
+    {
+      "title_id": "paladins-twin-soul",
+      "title": "Paladin's Twin-Soul",
+      "input_mode": "vocabulary",
+      "temporal_scope": "historical-source-only",
+      "legacy_source_manifest": {"path": "measure/archive/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-claim-ledger-batch-c-v4.json", "sha256": "809e51d319294a3cd4c7e6727a442382b831f4b18b40a900c0a900ebddfa7d8d"},
+      "roles": [
+        {"dossier_id":"existing-action-paladins-twin-soul-player-idle-canonical-reuse-v1","role":"player","state":"idle","descriptor_id":"existing-action-player-idle-static-v1","semantic_key":"top-down/32x32/characters/hero-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":384},"collision_envelope_required":true,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-action-paladins-twin-soul-enemy-idle-canonical-reuse-v1","role":"enemy","state":"idle","descriptor_id":"existing-action-enemy-idle-static-v1","semantic_key":"side-view/32x32/characters/enemy-001-idle","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":32},"collision_envelope_required":true,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-action-paladins-twin-soul-feedback-correct-canonical-reuse-v1","role":"feedback","state":"correct","descriptor_id":"existing-action-feedback-correct-static-v1","semantic_key":"effects/32x32/combat/hit-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":128},"collision_envelope_required":false,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-action-paladins-twin-soul-audio-feedback-correct-canonical-reuse-v1","role":"audio-feedback","state":"correct","descriptor_id":"existing-action-feedback-correct-audio-v1","semantic_key":"audio/native/combat/hit-01","behavior":{"media_kind":"audio","minimum_geometry":null,"collision_envelope_required":false,"animation_behavior":"not-applicable"}}
+      ]
+    },
+    {
+      "title_id": "griffin-sky-joust",
+      "title": "Griffin Sky-Joust",
+      "input_mode": "sentence",
+      "temporal_scope": "historical-source-only",
+      "legacy_source_manifest": {"path": "measure/archive/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/claim-ledger-v2.json", "sha256": "dbe69391387b5ae8bae2fe0e6d1a0e3b6a687ed9f372b3259cd00c9f92958905"},
+      "roles": [
+        {"dossier_id":"existing-action-griffin-sky-joust-player-idle-canonical-reuse-v1","role":"player","state":"idle","descriptor_id":"existing-action-player-idle-static-v1","semantic_key":"top-down/32x32/characters/hero-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":384},"collision_envelope_required":true,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-action-griffin-sky-joust-enemy-idle-canonical-reuse-v1","role":"enemy","state":"idle","descriptor_id":"existing-action-enemy-idle-static-v1","semantic_key":"side-view/32x32/characters/enemy-001-idle","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":32},"collision_envelope_required":true,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-action-griffin-sky-joust-feedback-correct-canonical-reuse-v1","role":"feedback","state":"correct","descriptor_id":"existing-action-feedback-correct-static-v1","semantic_key":"effects/32x32/combat/hit-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":128},"collision_envelope_required":false,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-action-griffin-sky-joust-audio-feedback-correct-canonical-reuse-v1","role":"audio-feedback","state":"correct","descriptor_id":"existing-action-feedback-correct-audio-v1","semantic_key":"audio/native/combat/hit-01","behavior":{"media_kind":"audio","minimum_geometry":null,"collision_envelope_required":false,"animation_behavior":"not-applicable"}}
+      ]
+    },
+    {
+      "title_id": "gryphon-patrol",
+      "title": "Gryphon Patrol",
+      "input_mode": "sentence",
+      "temporal_scope": "historical-source-only",
+      "legacy_source_manifest": {"path": "measure/archive/apk_corpus_audit_action_defense_20260712/gryphon-patrol-claim-ledger-batch-c-v4.json", "sha256": "d3e0de2a047d59ba5a128cb3780d1e5f42f04c8ae0361cb04e633ef8f671e4eb"},
+      "roles": [
+        {"dossier_id":"existing-action-gryphon-patrol-player-idle-canonical-reuse-v1","role":"player","state":"idle","descriptor_id":"existing-action-player-idle-static-v1","semantic_key":"top-down/32x32/characters/hero-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":384},"collision_envelope_required":true,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-action-gryphon-patrol-enemy-idle-canonical-reuse-v1","role":"enemy","state":"idle","descriptor_id":"existing-action-enemy-idle-static-v1","semantic_key":"side-view/32x32/characters/enemy-001-idle","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":32},"collision_envelope_required":true,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-action-gryphon-patrol-feedback-correct-canonical-reuse-v1","role":"feedback","state":"correct","descriptor_id":"existing-action-feedback-correct-static-v1","semantic_key":"effects/32x32/combat/hit-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":128},"collision_envelope_required":false,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-action-gryphon-patrol-audio-feedback-correct-canonical-reuse-v1","role":"audio-feedback","state":"correct","descriptor_id":"existing-action-feedback-correct-audio-v1","semantic_key":"audio/native/combat/hit-01","behavior":{"media_kind":"audio","minimum_geometry":null,"collision_envelope_required":false,"animation_behavior":"not-applicable"}}
+      ]
+    },
+    {
+      "title_id": "realm-carver",
+      "title": "Realm Carver",
+      "input_mode": "sentence",
+      "temporal_scope": "historical-source-only",
+      "legacy_source_manifest": {"path": "measure/archive/apk_corpus_audit_special_historical_20260712/packages/realm-carver/claim-ledger-v2.json", "sha256": "259b821e88143665203830814292ad19a78397d9974f2dee6edd9e92051e8afc"},
+      "roles": [
+        {"dossier_id":"existing-action-realm-carver-player-idle-canonical-reuse-v1","role":"player","state":"idle","descriptor_id":"existing-action-player-idle-static-v1","semantic_key":"top-down/32x32/characters/hero-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":384},"collision_envelope_required":true,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-action-realm-carver-enemy-idle-canonical-reuse-v1","role":"enemy","state":"idle","descriptor_id":"existing-action-enemy-idle-static-v1","semantic_key":"side-view/32x32/characters/enemy-001-idle","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":32},"collision_envelope_required":true,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-action-realm-carver-feedback-correct-canonical-reuse-v1","role":"feedback","state":"correct","descriptor_id":"existing-action-feedback-correct-static-v1","semantic_key":"effects/32x32/combat/hit-01","behavior":{"media_kind":"image","minimum_geometry":{"width":192,"height":128},"collision_envelope_required":false,"animation_behavior":"not-applicable"}},
+        {"dossier_id":"existing-action-realm-carver-audio-feedback-correct-canonical-reuse-v1","role":"audio-feedback","state":"correct","descriptor_id":"existing-action-feedback-correct-audio-v1","semantic_key":"audio/native/combat/hit-01","behavior":{"media_kind":"audio","minimum_geometry":null,"collision_envelope_required":false,"animation_behavior":"not-applicable"}}
+      ]
+    }
+  ],
+  "legacy_asset_disposition": {
+    "reuse": "blocked",
+    "ingestion": "blocked",
+    "reason": "The predecessor records provide historical source facts only. They do not provide a lawful real legacy source packet, provenance, license, credit, or behavior review for private or historical art."
+  },
+  "canonical_disposition": {
+    "decision": "reuse-canonical",
+    "source": "root-accepted-standard-pack-release",
+    "owner_approval": "pending",
+    "production_authorization": false,
+    "migration_authorization": false,
+    "cutover_authorization": false,
+    "deployment_authorization": false
+  },
+  "claims": {
+    "legacy_art_used": false,
+    "private_art_used": false,
+    "title_adoption_authorized": false,
+    "qc_evidence_claimed": false,
+    "host_proof_claimed": false,
+    "cutover_claimed": false
+  },
+  "authorization": {
+    "production_use_authorized": false,
+    "ingestion_authorized": false,
+    "migration_authorized": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "deployment_authorized": false,
+    "title_adoption_authorized": false
+  }
+}

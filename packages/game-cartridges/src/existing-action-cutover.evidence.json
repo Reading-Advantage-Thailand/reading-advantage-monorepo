@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "apk-existing-action-cutover-evidence.v2",
+  "scope": "Advantage Games QC only; not a production cartridge, host proof, persistence proof, cutover, deployment, or retirement authorization.",
+  "titles": [
+    {
+      "publicId": "archers-revenge",
+      "canonicalId": "game:archers-revenge",
+      "title": "Archer's Revenge",
+      "inputMode": "vocabulary",
+      "claimArtifact": { "path": "measure/archive/apk_corpus_audit_action_defense_20260712/archers-revenge-claim-ledger-batch-b-v8.json", "sha256": "1fedca7dffa8897a3bb0f5482a1c74c484bc3f16e5361ddd06dcc89ec8ec1ca3" },
+      "mechanicEvidence": [
+        { "action": "shoot-shield-down-target", "claimId": "AR-B2-V8-025", "locator": "$.claims[?(@.claim_id == 'AR-B2-V8-025')]", "temporalScope": "historical-source-only", "disposition": "blocked-historical" },
+        { "action": "shoot-shield-up-enemy", "claimId": "AR-B2-V8-026", "locator": "$.claims[?(@.claim_id == 'AR-B2-V8-026')]", "temporalScope": "historical-source-only", "disposition": "blocked-historical" }
+      ],
+      "roles": [
+        { "titleRole": "archers-revenge-bow-player", "role": "player", "state": "idle", "claimId": "AR-B2-V8-013", "locator": "$.claims[?(@.claim_id == 'AR-B2-V8-013')]" },
+        { "titleRole": "archers-revenge-shield-down-target", "role": "enemy", "state": "idle", "claimId": "AR-B2-V8-011", "locator": "$.claims[?(@.claim_id == 'AR-B2-V8-011')]" },
+        { "titleRole": "archers-revenge-correct-hit", "role": "feedback", "state": "correct", "claimId": "AR-B2-V8-025", "locator": "$.claims[?(@.claim_id == 'AR-B2-V8-025')]" },
+        { "titleRole": "archers-revenge-correct-hit-audio", "role": "audio-feedback", "state": "correct", "claimId": "AR-B2-V8-025", "locator": "$.claims[?(@.claim_id == 'AR-B2-V8-025')]" }
+      ]
+    },
+    {
+      "publicId": "paladins-twin-soul",
+      "canonicalId": "game:paladins-twin-soul",
+      "title": "Paladin's Twin-Soul",
+      "inputMode": "vocabulary",
+      "claimArtifact": { "path": "measure/archive/apk_corpus_audit_action_defense_20260712/paladins-twin-soul-semantic-supersession-batch-c-v2.json", "sha256": "9c9227e3b560cf15c35b977b9e23bba4b0fa9a346e0a6fae1308e0a298718613" },
+      "mechanicEvidence": [
+        { "action": "rescue-captured-twin", "claimId": "PTS-C-COMBAT-002", "locator": "$.claims[?(@.claim_id == 'PTS-C-COMBAT-002')]", "temporalScope": "historical-source-only", "disposition": "blocked-historical" },
+        { "action": "clear-next-word-wave", "claimId": "PTS-C-TRANSITION-001", "locator": "$.claims[?(@.claim_id == 'PTS-C-TRANSITION-001')]", "temporalScope": "historical-source-only", "disposition": "blocked-historical" }
+      ],
+      "roles": [
+        { "titleRole": "paladins-twin-soul-defender", "role": "player", "state": "idle", "claimId": "PTS-C-STATE-001", "locator": "$.claims[?(@.claim_id == 'PTS-C-STATE-001')]" },
+        { "titleRole": "paladins-twin-soul-captor", "role": "enemy", "state": "idle", "claimId": "PTS-C-COMBAT-002", "locator": "$.claims[?(@.claim_id == 'PTS-C-COMBAT-002')]" },
+        { "titleRole": "paladins-twin-soul-rescue-feedback", "role": "feedback", "state": "correct", "claimId": "PTS-C-COMBAT-002", "locator": "$.claims[?(@.claim_id == 'PTS-C-COMBAT-002')]" },
+        { "titleRole": "paladins-twin-soul-rescue-feedback-audio", "role": "audio-feedback", "state": "correct", "claimId": "PTS-C-COMBAT-002", "locator": "$.claims[?(@.claim_id == 'PTS-C-COMBAT-002')]" }
+      ]
+    },
+    {
+      "publicId": "griffin-sky-joust",
+      "canonicalId": "game:griffin-sky-joust",
+      "title": "Griffin Sky-Joust",
+      "inputMode": "sentence",
+      "claimArtifact": { "path": "measure/archive/apk_corpus_audit_special_historical_20260712/packages/griffin-sky-joust/claim-ledger-v2.json", "sha256": "dbe69391387b5ae8bae2fe0e6d1a0e3b6a687ed9f372b3259cd00c9f92958905" },
+      "mechanicEvidence": [
+        { "action": "strike-next-rider-from-above", "claimId": "GSJ-HIST-006", "locator": "$.claims[?(@.claim_id == 'GSJ-HIST-006')]", "temporalScope": "historical-source-only", "disposition": "blocked-historical" },
+        { "action": "strike-wrong-rider-from-above", "claimId": "GSJ-CUR-UNK-001", "locator": "$.current_observation[?(@.claim_id == 'GSJ-CUR-UNK-001')]", "temporalScope": "unknown", "disposition": "blocked-unknown" }
+      ],
+      "roles": [
+        { "titleRole": "griffin-sky-joust-rider", "role": "player", "state": "idle", "claimId": "GSJ-HIST-006", "locator": "$.claims[?(@.claim_id == 'GSJ-HIST-006')]" },
+        { "titleRole": "griffin-sky-joust-airborne-target", "role": "enemy", "state": "idle", "claimId": "GSJ-HIST-006", "locator": "$.claims[?(@.claim_id == 'GSJ-HIST-006')]" },
+        { "titleRole": "griffin-sky-joust-correct-strike", "role": "feedback", "state": "correct", "claimId": "GSJ-HIST-006", "locator": "$.claims[?(@.claim_id == 'GSJ-HIST-006')]" },
+        { "titleRole": "griffin-sky-joust-correct-strike-audio", "role": "audio-feedback", "state": "correct", "claimId": "GSJ-HIST-006", "locator": "$.claims[?(@.claim_id == 'GSJ-HIST-006')]" }
+      ]
+    },
+    {
+      "publicId": "gryphon-patrol",
+      "canonicalId": "game:gryphon-patrol",
+      "title": "Gryphon Patrol",
+      "inputMode": "sentence",
+      "claimArtifact": { "path": "measure/archive/apk_corpus_audit_action_defense_20260712/gryphon-patrol-semantic-supersession-batch-c-v2.json", "sha256": "2f0c23b6aa5a03b814107dbd8325bc1af5d7ce21fa15d6fbfdca87b77345efd4" },
+      "mechanicEvidence": [
+        { "action": "hit-next-aerial-target", "claimId": "C08-targets-projectiles-and-health", "locator": "$.claims[?(@.claim_id == 'C08-targets-projectiles-and-health')]", "temporalScope": "historical-source-only", "disposition": "blocked-historical" },
+        { "action": "collect-next-word-orb", "claimId": "C06-state-and-transitions", "locator": "$.claims[?(@.claim_id == 'C06-state-and-transitions')]", "temporalScope": "historical-source-only", "disposition": "blocked-historical" }
+      ],
+      "roles": [
+        { "titleRole": "gryphon-patrol-flying-player", "role": "player", "state": "idle", "claimId": "C07-patrol-escort-aerial-movement", "locator": "$.claims[?(@.claim_id == 'C07-patrol-escort-aerial-movement')]" },
+        { "titleRole": "gryphon-patrol-aerial-target", "role": "enemy", "state": "idle", "claimId": "C08-targets-projectiles-and-health", "locator": "$.claims[?(@.claim_id == 'C08-targets-projectiles-and-health')]" },
+        { "titleRole": "gryphon-patrol-word-orb", "role": "feedback", "state": "correct", "claimId": "C08-targets-projectiles-and-health", "locator": "$.claims[?(@.claim_id == 'C08-targets-projectiles-and-health')]" },
+        { "titleRole": "gryphon-patrol-word-orb-audio", "role": "audio-feedback", "state": "correct", "claimId": "C08-targets-projectiles-and-health", "locator": "$.claims[?(@.claim_id == 'C08-targets-projectiles-and-health')]" }
+      ]
+    },
+    {
+      "publicId": "realm-carver",
+      "canonicalId": "game:realm-carver",
+      "title": "Realm Carver",
+      "inputMode": "sentence",
+      "claimArtifact": { "path": "measure/archive/apk_corpus_audit_special_historical_20260712/packages/realm-carver/claim-ledger-v2.json", "sha256": "259b821e88143665203830814292ad19a78397d9974f2dee6edd9e92051e8afc" },
+      "mechanicEvidence": [
+        { "action": "close-circuit-with-next-word", "claimId": "RC-HIST-007", "locator": "$.claims[?(@.claim_id == 'RC-HIST-007')]", "temporalScope": "historical-source-only", "disposition": "blocked-historical" },
+        { "action": "close-circuit-with-wrong-word", "claimId": "RC-CUR-003", "locator": "$.claims[?(@.claim_id == 'RC-CUR-003')]", "temporalScope": "unknown", "disposition": "blocked-unknown" }
+      ],
+      "roles": [
+        { "titleRole": "realm-carver-circuit-player", "role": "player", "state": "idle", "claimId": "RC-HIST-006", "locator": "$.claims[?(@.claim_id == 'RC-HIST-006')]" },
+        { "titleRole": "realm-carver-circuit-threat", "role": "enemy", "state": "idle", "claimId": "RC-HIST-007", "locator": "$.claims[?(@.claim_id == 'RC-HIST-007')]" },
+        { "titleRole": "realm-carver-word-circuit-feedback", "role": "feedback", "state": "correct", "claimId": "RC-HIST-007", "locator": "$.claims[?(@.claim_id == 'RC-HIST-007')]" },
+        { "titleRole": "realm-carver-word-circuit-feedback-audio", "role": "audio-feedback", "state": "correct", "claimId": "RC-HIST-007", "locator": "$.claims[?(@.claim_id == 'RC-HIST-007')]" }
+      ]
+    }
+  ]
+}

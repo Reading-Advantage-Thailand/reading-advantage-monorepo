@@ -1,0 +1,42 @@
+{
+  "schema_version": "apk-existing-action-task2-owner-acceptance.v2",
+  "track_id": "apk_existing_action_cutover_20260727",
+  "record_id": "apk_existing_action_cutover_20260727_task2_owner_acceptance_v2",
+  "status": "accepted-bounded-advantage-games-qc-only",
+  "accepted_at": "2026-08-01T00:00:00Z",
+  "decided_by": "apk-orchestrator-acting-under-explicit-user-project-owner-delegation",
+  "authority": "explicit-user-delegated-project-owner-decision",
+  "accepted_input": {
+    "path": "measure/tracks/apk_existing_action_cutover_20260727/task2-standard-pack-suitability-dossiers-v2.json",
+    "sha256": "cb1d61cd50de16177de43c914b46ab71185904ff67f2f08ffaf337bf8e1f544d",
+    "title_count": 5,
+    "role_dossier_count": 20,
+    "required_digests": ["descriptor_digest", "draft_decision_digest", "provenance_digest"]
+  },
+  "decision": {
+    "canonical_reuse": "accepted-for-Advantage-Games-/qc-inspection-only",
+    "legacy_asset_reuse": "blocked",
+    "legacy_asset_ingestion": "blocked",
+    "historical_or_unknown_mechanic_promotion": "blocked",
+    "synthetic_progression_or_completion": "blocked"
+  },
+  "authorization": {
+    "advantage_games_qc_registration_authorized": true,
+    "production_use_authorized": false,
+    "title_adoption_authorized": false,
+    "reading_host_authorized": false,
+    "primary_host_authorized": false,
+    "completion_persistence_authorized": false,
+    "ingestion_authorized": false,
+    "migration_authorized": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "deployment_authorized": false
+  },
+  "conditions": [
+    "The QC adapter must consume only resolver-issued Asset Contract v2 descriptor registrations and may not expose physical pack paths.",
+    "Every mechanic action must name its exact claim ID and locator and must fail closed when the cited evidence is historical or unknown.",
+    "A later production, Reading, Primary, persistence, migration, cutover, retirement, or deployment decision requires separately accepted current evidence and a fresh owner decision.",
+    "Byte drift in the accepted input or any governance artifact revokes this acceptance."
+  ]
+}
