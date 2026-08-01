@@ -2,16 +2,37 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@reading-advantage/db";
 import { createTenantDB } from "@reading-advantage/domain";
 import {
+  completeDragonFlightHostProofAttempt,
+  completeDragonFlightHostProofAttemptSchema,
+  createDragonFlightHostProofAttemptDependencies,
+  getHostProofGameCompletions,
   HostProofCompletionError,
   hostProofErrorHttpStatus,
-  recordHostProofGameCompletion,
-  getHostProofGameCompletions,
-  type HostProofCompletionRequest,
 } from "@reading-advantage/domain/games";
 import type { UserContext } from "@reading-advantage/auth";
-import { getCurrentUser } from "@/lib/session";
-import { isHostProofEnabled } from "@/lib/host-proof-config";
+import { ZodError } from "zod";
 
+import { isHostProofEnabled } from "@/lib/host-proof-config";
+import { getCurrentUser } from "@/lib/session";
+
+/**
+ * Reads the server-only credential secret for the host-proof boundary.
+ * @returns A sufficiently long HMAC signing secret.
+ * @throws When the host has not configured a usable signing secret.
+ */
+function getHostProofAttemptSecret(): string {
+  const secret = process.env.HOST_PROOF_ATTEMPT_SECRET;
+  if (!secret || secret.length < 32) {
+    throw new Error("HOST_PROOF_ATTEMPT_SECRET must contain at least 32 characters");
+  }
+  return secret;
+}
+
+/**
+ * Converts a legacy host-proof history error into a stable JSON response.
+ * @param error Error raised by the legacy history query.
+ * @returns A stable JSON error response.
+ */
 function toHostProofErrorResponse(error: unknown): NextResponse {
   if (error instanceof HostProofCompletionError) {
     return NextResponse.json(
@@ -26,14 +47,38 @@ function toHostProofErrorResponse(error: unknown): NextResponse {
     );
   }
 
-  console.error({ level: "error", event: "host_proof_completion_unexpected", error });
+  console.error({ level: "error", event: "host_proof_history_failed", error });
   return NextResponse.json(
-    {
-      error: {
-        code: "HOST_PROOF_INTERNAL",
-        message: "Unable to process host-proof game completion",
-      },
-    },
+    { error: { code: "HOST_PROOF_INTERNAL", message: "Unable to load host-proof game history" } },
+    { status: 500 },
+  );
+}
+
+/**
+ * Converts untrusted signed-attempt errors into a safe public response.
+ * @param error Error raised while validating the signed completion transcript.
+ * @returns A stable JSON error response.
+ */
+function toAttemptErrorResponse(error: unknown): NextResponse {
+  if (error instanceof ZodError) {
+    return NextResponse.json(
+      { error: { code: "HOST_PROOF_VALIDATION_FAILED", message: "Completion request failed validation" } },
+      { status: 400 },
+    );
+  }
+  if (
+    error instanceof Error
+    && /credential|action transcript|checkpoint|dwell|attempt identity|attempt actor|attempt tenant|expired|Dragon Flight launch|Dragon Flight cannot choose a gate|Host-proof actions must use contiguous sequence numbers|Host-proof action timestamps must be nondecreasing|Dragon Flight completion requires a launch action|Host-proof attempt has already been claimed with a different transcript|(?:forged|foreign)\s+opaque\s+receipt/i.test(error.message)
+  ) {
+    return NextResponse.json(
+      { error: { code: "HOST_PROOF_ATTEMPT_REJECTED", message: "Completion transcript was rejected" } },
+      { status: 400 },
+    );
+  }
+
+  console.error({ level: "error", event: "host_proof_attempt_complete_failed", error });
+  return NextResponse.json(
+    { error: { code: "HOST_PROOF_INTERNAL", message: "Unable to complete host-proof attempt" } },
     { status: 500 },
   );
 }
@@ -41,10 +86,11 @@ function toHostProofErrorResponse(error: unknown): NextResponse {
 /**
  * POST /api/host-proof/games/completions
  *
- * Records one host-proof completion for an accepted existing-core cartridge.
- * The server derives the tenant from the authenticated session; the client
- * cannot supply a schoolId or XP value. The route is hidden behind the
- * fail-closed `HOST_PROOF_ENABLED` flag.
+ * Completes one signed Dragon Flight transcript using server-replayed facts.
+ * The payload contains only its issued credential and actual ordered runtime
+ * actions; score, XP, victory, and tenant are never client supplied.
+ * @param request Request containing a signed attempt transcript.
+ * @returns The server-derived fire-once completion outcome.
  */
 export async function POST(request: NextRequest) {
   if (!isHostProofEnabled()) {
@@ -78,26 +124,34 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const tenantDb = createTenantDB(db, { schoolId });
+  const parsedBody = completeDragonFlightHostProofAttemptSchema.safeParse(body);
+  if (!parsedBody.success) return toAttemptErrorResponse(parsedBody.error);
 
   try {
-    const result = await recordHostProofGameCompletion({
-      db: tenantDb,
+    const dependencies = createDragonFlightHostProofAttemptDependencies({
+      db: createTenantDB(db, { schoolId }),
       user,
       tenant: { schoolId },
-      input: body as HostProofCompletionRequest,
+      secret: getHostProofAttemptSecret(),
     });
+    const result = await completeDragonFlightHostProofAttempt(
+      { userId: user.id, schoolId },
+      parsedBody.data,
+      dependencies,
+    );
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
-    return toHostProofErrorResponse(error);
+    return toAttemptErrorResponse(error);
   }
 }
 
 /**
- * GET /api/host-proof/games/completions?gameType=<id>&limit=<n>
+ * GET /api/host-proof/games/completions?limit=<n>
  *
- * Returns the caller's host-proof completion history, limited to the five
- * accepted existing-core cartridges and scoped to the authenticated tenant.
+ * Returns the caller's Dragon Flight proof history under the authenticated
+ * tenant. The former multi-title candidate remains intentionally unavailable.
+ * @param request Request containing an optional bounded history limit.
+ * @returns Tenant-scoped Dragon Flight completion history.
  */
 export async function GET(request: NextRequest) {
   if (!isHostProofEnabled()) {
@@ -122,24 +176,24 @@ export async function GET(request: NextRequest) {
   }
 
   const { searchParams } = new URL(request.url);
-  const gameType = searchParams.get("gameType") ?? undefined;
   const limitParam = searchParams.get("limit");
-  let limit: number | string | undefined;
-  if (limitParam !== null) {
-    const parsed = Number(limitParam);
-    limit = Number.isNaN(parsed) ? limitParam : parsed;
+  const gameType = searchParams.get("gameType");
+  if (gameType && gameType !== "dragon-flight") {
+    return NextResponse.json(
+      { error: { code: "HOST_PROOF_UNKNOWN_CARTRIDGE", message: "Dragon Flight is the only available proof cartridge" } },
+      { status: 404 },
+    );
   }
 
   const tenantDb = createTenantDB(db, { schoolId });
-
   try {
     const history = await getHostProofGameCompletions({
       db: tenantDb,
       user,
       tenant: { schoolId },
       input: {
-        ...(gameType ? { gameType } : {}),
-        ...(limitParam !== null ? { limit } : {}),
+        gameType: "dragon-flight",
+        ...(limitParam !== null ? { limit: Number(limitParam) } : {}),
       },
     });
     return NextResponse.json({ history }, { status: 200 });

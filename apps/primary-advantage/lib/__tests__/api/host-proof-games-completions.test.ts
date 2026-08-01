@@ -1,245 +1,230 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 import { POST, GET } from "../../../app/api/host-proof/games/completions/route";
 
 const mockGetCurrentUser = vi.fn();
-const mockRecordHostProofGameCompletion = vi.fn();
+const mockCompleteDragonFlightHostProofAttempt = vi.fn();
+const mockCreateDragonFlightHostProofAttemptDependencies = vi.fn();
 const mockGetHostProofGameCompletions = vi.fn();
 const mockCreateTenantDB = vi.fn();
 const mockIsHostProofEnabled = vi.fn();
 
-vi.mock("@/lib/session", () => ({
-  getCurrentUser: (...args: unknown[]) => mockGetCurrentUser(...args),
-}));
+vi.mock("@/lib/session", () => ({ getCurrentUser: () => mockGetCurrentUser() }));
+vi.mock("@/lib/host-proof-config", () => ({ isHostProofEnabled: () => mockIsHostProofEnabled() }));
+vi.mock("@reading-advantage/domain", () => ({ createTenantDB: (...args: unknown[]) => mockCreateTenantDB(...args) }));
+vi.mock("@reading-advantage/db", () => ({ db: {} }));
+vi.mock("@reading-advantage/domain/games", async () => {
+  const actual = await vi.importActual<typeof import("@reading-advantage/domain/games")>(
+    "@reading-advantage/domain/games",
+  );
 
-vi.mock("@reading-advantage/domain/games", () => ({
-  HostProofCompletionError: class HostProofCompletionError extends Error {
-    code: string;
-    issues?: unknown;
-    constructor(code: string, message: string, issues?: unknown) {
-      super(message);
-      this.code = code;
-      this.issues = issues;
-      this.name = "HostProofCompletionError";
-    }
-    get httpStatus() {
-      const map: Record<string, number> = {
-        HOST_PROOF_UNAUTHENTICATED: 401,
-        HOST_PROOF_VALIDATION_FAILED: 400,
-        HOST_PROOF_UNKNOWN_CARTRIDGE: 404,
-        HOST_PROOF_FORBIDDEN: 403,
-        HOST_PROOF_TENANT_REQUIRED: 403,
-        HOST_PROOF_INTERNAL: 500,
-      };
-      return map[this.code] ?? 500;
-    }
-  },
-  hostProofErrorHttpStatus: (code: string) => {
-    const map: Record<string, number> = {
-      HOST_PROOF_UNAUTHENTICATED: 401,
-      HOST_PROOF_VALIDATION_FAILED: 400,
-      HOST_PROOF_UNKNOWN_CARTRIDGE: 404,
-      HOST_PROOF_FORBIDDEN: 403,
-      HOST_PROOF_TENANT_REQUIRED: 403,
-      HOST_PROOF_INTERNAL: 500,
-    };
-    return map[code] ?? 500;
-  },
-  recordHostProofGameCompletion: (...args: unknown[]) => mockRecordHostProofGameCompletion(...args),
-  getHostProofGameCompletions: (...args: unknown[]) => mockGetHostProofGameCompletions(...args),
-}));
+  return {
+    completeDragonFlightHostProofAttemptSchema: actual.completeDragonFlightHostProofAttemptSchema,
+    createDragonFlightHostProofAttemptDependencies: (...args: unknown[]) => mockCreateDragonFlightHostProofAttemptDependencies(...args),
+    completeDragonFlightHostProofAttempt: (...args: unknown[]) => mockCompleteDragonFlightHostProofAttempt(...args),
+    getHostProofGameCompletions: (...args: unknown[]) => mockGetHostProofGameCompletions(...args),
+    HostProofCompletionError: class HostProofCompletionError extends Error { readonly code = "HOST_PROOF_VALIDATION_FAILED"; },
+    hostProofErrorHttpStatus: () => 400,
+  };
+});
 
-vi.mock("@reading-advantage/domain", () => ({
-  createTenantDB: (...args: unknown[]) => mockCreateTenantDB(...args),
-}));
+const user = {
+  id: "user-1", username: "student-1", name: "Student", role: "STUDENT", schoolId: "school-1", xp: 0, level: 1, cefrLevel: "A1",
+};
+const transcript = {
+  attemptId: "11111111-1111-4111-8111-111111111111",
+  credential: "opaque-host-proof-credential",
+  idempotencyKey: "11111111-1111-4111-8111-111111111111",
+  actions: [
+    { sequence: 1, kind: "choose-gate", gate: "right", elapsedMs: 400 },
+    { sequence: 2, kind: "launch", elapsedMs: 700 },
+  ],
+  checkpoints: ["opaque-checkpoint-receipt-gate-00000001", "opaque-checkpoint-receipt-launch-00000002"],
+};
 
-vi.mock("@reading-advantage/db", () => ({
-  db: {},
-}));
-
-vi.mock("@/lib/host-proof-config", () => ({
-  isHostProofEnabled: () => mockIsHostProofEnabled(),
-}));
-
-function makeRequest(body?: unknown, query?: string): NextRequest {
-  return new NextRequest(`http://localhost:3000/api/host-proof/games/completions${query ? `?${query}` : ""}`, {
+/** Creates a route request with an optional signed completion body and query string. */
+function request(body?: unknown, query = ""): NextRequest {
+  return new NextRequest(`http://localhost:3000/api/host-proof/games/completions${query}`, {
     method: body === undefined ? "GET" : "POST",
     body: body === undefined ? null : JSON.stringify(body),
   });
 }
 
-const mockUser = {
-  id: "user-1",
-  username: "student1",
-  name: "Student",
-  role: "STUDENT" as const,
-  schoolId: "school-1",
-  xp: 0,
-  level: 1,
-  cefrLevel: "A1",
-};
-
-const validInput = {
-  gameType: "dragon-flight",
-  difficulty: "medium" as const,
-  score: 100,
-  accuracy: 1,
-  correctAnswers: 1,
-  totalAttempts: 1,
-  duration: 1000,
-  victory: true,
-  idempotencyKey: "11111111-1111-1111-1111-111111111111",
-  clientTimestamp: Date.now(),
-};
-
-describe("/api/host-proof/games/completions", () => {
+describe("Dragon Flight host-proof completion route", () => {
   beforeEach(() => {
-    mockGetCurrentUser.mockReset();
-    mockRecordHostProofGameCompletion.mockReset();
-    mockGetHostProofGameCompletions.mockReset();
-    mockCreateTenantDB.mockReset();
-    mockCreateTenantDB.mockReturnValue({});
+    vi.clearAllMocks();
+    process.env.HOST_PROOF_ATTEMPT_SECRET = "a".repeat(32);
     mockIsHostProofEnabled.mockReturnValue(true);
+    mockCreateTenantDB.mockReturnValue({ tenant: true });
+    mockCreateDragonFlightHostProofAttemptDependencies.mockReturnValue({ attemptDeps: true });
   });
 
-  describe("POST", () => {
-    it("fails closed with 404 when host proof is disabled", async () => {
-      mockIsHostProofEnabled.mockReturnValue(false);
+  it("fails closed before auth when proof mode is disabled", async () => {
+    mockIsHostProofEnabled.mockReturnValue(false);
+    expect((await POST(request(transcript))).status).toBe(404);
+    expect(mockGetCurrentUser).not.toHaveBeenCalled();
+  });
 
-      const response = await POST(makeRequest(validInput));
+  it("requires an authenticated tenant-bound actor", async () => {
+    mockGetCurrentUser.mockResolvedValueOnce(null);
+    expect((await POST(request(transcript))).status).toBe(401);
+    mockGetCurrentUser.mockResolvedValueOnce({ ...user, schoolId: null });
+    expect((await POST(request(transcript))).status).toBe(403);
+    expect(mockCompleteDragonFlightHostProofAttempt).not.toHaveBeenCalled();
+  });
 
-      expect(response.status).toBe(404);
-      await expect(response.text()).resolves.toBe("");
-      expect(mockGetCurrentUser).not.toHaveBeenCalled();
+  it("returns validation failure for malformed JSON", async () => {
+    mockGetCurrentUser.mockResolvedValue(user);
+    const malformed = new NextRequest("http://localhost:3000/api/host-proof/games/completions", { method: "POST", body: "{" });
+    expect((await POST(malformed)).status).toBe(400);
+  });
+
+  it("delegates only the signed transcript to authoritative completion and returns its derived result", async () => {
+    mockGetCurrentUser.mockResolvedValue(user);
+    mockCompleteDragonFlightHostProofAttempt.mockResolvedValue({
+      xpEarned: 5, score: 100, accuracy: 1, correctAnswers: 1, totalAttempts: 1, duration: 700, duplicate: false,
     });
 
-    it("returns 401 when the caller is unauthenticated", async () => {
-      mockGetCurrentUser.mockResolvedValue(null);
-      const response = await POST(makeRequest(validInput));
-      expect(response.status).toBe(401);
+    const response = await POST(request(transcript));
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({ score: 100, xpEarned: 5, duplicate: false });
+    expect(mockCreateTenantDB).toHaveBeenCalledWith({}, { schoolId: "school-1" });
+    expect(mockCompleteDragonFlightHostProofAttempt).toHaveBeenCalledWith(
+      { userId: "user-1", schoolId: "school-1" }, transcript, { attemptDeps: true },
+    );
+  });
+
+  it.each([
+    [
+      "launch before a gate",
+      [
+        { sequence: 1, kind: "launch", elapsedMs: 400 },
+        { sequence: 2, kind: "choose-gate", gate: "right", elapsedMs: 700 },
+      ],
+      ["signed-checkpoint-launch", "signed-checkpoint-gate"],
+      "Dragon Flight launch must follow at least one gate choice and end the transcript",
+    ],
+    [
+      "gate after launch",
+      [
+        { sequence: 1, kind: "choose-gate", gate: "right", elapsedMs: 400 },
+        { sequence: 2, kind: "launch", elapsedMs: 700 },
+        { sequence: 3, kind: "choose-gate", gate: "right", elapsedMs: 1_000 },
+      ],
+      ["signed-checkpoint-gate", "signed-checkpoint-launch", "signed-checkpoint-after-launch"],
+      "Dragon Flight cannot choose a gate after launch",
+    ],
+    [
+      "noncontiguous sequence",
+      [
+        { sequence: 1, kind: "choose-gate", gate: "right", elapsedMs: 400 },
+        { sequence: 3, kind: "launch", elapsedMs: 700 },
+      ],
+      ["signed-checkpoint-one", "signed-checkpoint-three"],
+      "Host-proof actions must use contiguous sequence numbers",
+    ],
+    [
+      "decreasing elapsed diagnostic",
+      [
+        { sequence: 1, kind: "choose-gate", gate: "right", elapsedMs: 700 },
+        { sequence: 2, kind: "launch", elapsedMs: 400 },
+      ],
+      ["signed-checkpoint-slower", "signed-checkpoint-faster"],
+      "Host-proof action timestamps must be nondecreasing",
+    ],
+    [
+      "missing launch",
+      [
+        { sequence: 1, kind: "choose-gate", gate: "right", elapsedMs: 400 },
+        { sequence: 2, kind: "choose-gate", gate: "right", elapsedMs: 700 },
+      ],
+      ["signed-checkpoint-gate-one", "signed-checkpoint-gate-two"],
+      "Dragon Flight completion requires a launch action",
+    ],
+    [
+      "conflicting replay claim",
+      transcript.actions,
+      ["signed-checkpoint-gate", "signed-checkpoint-launch"],
+      "Host-proof attempt has already been claimed with a different transcript",
+    ],
+  ])("returns a safe 400 when a valid signed checkpoint chain replays an invalid %s order", async (_label, actions, checkpoints, replayError) => {
+    mockGetCurrentUser.mockResolvedValue(user);
+    mockCompleteDragonFlightHostProofAttempt.mockRejectedValue(new Error(replayError));
+
+    const response = await POST(request({ ...transcript, actions, checkpoints }));
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({
+      error: { code: "HOST_PROOF_ATTEMPT_REJECTED", message: "Completion transcript was rejected" },
     });
+    expect(mockCompleteDragonFlightHostProofAttempt).toHaveBeenCalledWith(
+      { userId: "user-1", schoolId: "school-1" },
+      expect.objectContaining({ actions, checkpoints }),
+      { attemptDeps: true },
+    );
+  });
 
-    it("returns 403 when the user has no school assignment", async () => {
-      mockGetCurrentUser.mockResolvedValue({ ...mockUser, schoolId: null });
-      const response = await POST(makeRequest(validInput));
-      expect(response.status).toBe(403);
+  it("rejects browser-owned score and XP before authoritative completion", async () => {
+    mockGetCurrentUser.mockResolvedValue(user);
+    mockCompleteDragonFlightHostProofAttempt.mockResolvedValue({ xpEarned: 5, score: 100, duplicate: false });
+
+    const response = await POST(request({ ...transcript, score: 999, xpEarned: 999 }));
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({
+      error: { code: "HOST_PROOF_VALIDATION_FAILED", message: "Completion request failed validation" },
     });
+    expect(mockCompleteDragonFlightHostProofAttempt).not.toHaveBeenCalled();
+  });
 
-    it("returns 400 for invalid JSON body", async () => {
-      mockGetCurrentUser.mockResolvedValue(mockUser);
-      const request = new NextRequest("http://localhost:3000/api/host-proof/games/completions", {
-        method: "POST",
-        body: "not-json",
-      });
-      const response = await POST(request);
-      expect(response.status).toBe(400);
-    });
+  it("maps a forged opaque completion receipt to a safe 4xx response", async () => {
+    mockGetCurrentUser.mockResolvedValue(user);
+    mockCompleteDragonFlightHostProofAttempt.mockRejectedValue(new Error("forged opaque receipt"));
 
-    it("returns the domain result on a valid completion", async () => {
-      mockGetCurrentUser.mockResolvedValue(mockUser);
-      mockRecordHostProofGameCompletion.mockResolvedValue({
-        xpEarned: 7,
-        activityId: "game:dragon-flight:11111111-1111-1111-1111-111111111111",
-        duplicate: false,
-        status: 200,
-        gameType: "dragon-flight",
-      });
+    const response = await POST(request(transcript));
 
-      const response = await POST(makeRequest(validInput));
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.xpEarned).toBe(7);
-      expect(data.gameType).toBe("dragon-flight");
-      expect(mockCreateTenantDB).toHaveBeenCalledWith({}, { schoolId: "school-1" });
-      expect(mockRecordHostProofGameCompletion).toHaveBeenCalled();
-    });
-
-    it("maps a HostProofCompletionError to its structured response", async () => {
-      mockGetCurrentUser.mockResolvedValue(mockUser);
-      const { HostProofCompletionError } = await import("@reading-advantage/domain/games");
-      mockRecordHostProofGameCompletion.mockRejectedValue(
-        new HostProofCompletionError("HOST_PROOF_UNKNOWN_CARTRIDGE", "Unknown cartridge"),
-      );
-
-      const response = await POST(makeRequest({ ...validInput, gameType: "unknown-title" }));
-      const data = await response.json();
-
-      expect(response.status).toBe(404);
-      expect(data.error.code).toBe("HOST_PROOF_UNKNOWN_CARTRIDGE");
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({
+      error: { code: "HOST_PROOF_ATTEMPT_REJECTED", message: "Completion transcript was rejected" },
     });
   });
 
-  describe("GET", () => {
-    it("fails closed with 404 when host proof is disabled", async () => {
-      mockIsHostProofEnabled.mockReturnValue(false);
+  it("maps a rejected signed transcript to the safe attempt error", async () => {
+    mockGetCurrentUser.mockResolvedValue(user);
+    mockCompleteDragonFlightHostProofAttempt.mockRejectedValue(new Error("credential signature invalid"));
 
-      const response = await GET(makeRequest(undefined, "limit=10"));
+    const response = await POST(request(transcript));
 
-      expect(response.status).toBe(404);
-      await expect(response.text()).resolves.toBe("");
-      expect(mockGetCurrentUser).not.toHaveBeenCalled();
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({ error: { code: "HOST_PROOF_ATTEMPT_REJECTED", message: "Completion transcript was rejected" } });
+  });
+
+  it("maps an expired canonical-recovery rejection to the safe attempt error", async () => {
+    mockGetCurrentUser.mockResolvedValue(user);
+    mockCompleteDragonFlightHostProofAttempt.mockRejectedValue(
+      new Error("Host-proof expired credential cannot reconcile the canonical completion"),
+    );
+
+    const response = await POST(request(transcript));
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({
+      error: { code: "HOST_PROOF_ATTEMPT_REJECTED", message: "Completion transcript was rejected" },
     });
+  });
 
-    it("returns 401 when the caller is unauthenticated", async () => {
-      mockGetCurrentUser.mockResolvedValue(null);
-      const response = await GET(makeRequest(undefined, "limit=10"));
-      expect(response.status).toBe(401);
-    });
+  it("allows history only for Dragon Flight and keeps its tenant scope", async () => {
+    mockGetCurrentUser.mockResolvedValue(user);
+    expect((await GET(request(undefined, "?gameType=magic-defense"))).status).toBe(404);
+    mockGetHostProofGameCompletions.mockResolvedValue([]);
 
-    it("returns host-proof history scoped to the tenant", async () => {
-      mockGetCurrentUser.mockResolvedValue(mockUser);
-      mockGetHostProofGameCompletions.mockResolvedValue([
-        {
-          id: "completion-1",
-          gameType: "dragon-flight",
-          difficulty: "medium",
-          score: 100,
-          accuracy: 1,
-          xpEarned: 7,
-          activityId: "game:dragon-flight:11111111-1111-1111-1111-111111111111",
-          createdAt: new Date("2026-07-28T00:00:00Z"),
-        },
-      ]);
+    const response = await GET(request(undefined, "?limit=10"));
 
-      const response = await GET(makeRequest(undefined, "gameType=dragon-flight&limit=10"));
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.history).toHaveLength(1);
-      expect(mockCreateTenantDB).toHaveBeenCalledWith({}, { schoolId: "school-1" });
-      expect(mockGetHostProofGameCompletions).toHaveBeenCalledWith(
-        expect.objectContaining({
-          input: { gameType: "dragon-flight", limit: 10 },
-        }),
-      );
-    });
-
-    it("passes an invalid limit through the shared strict history validation", async () => {
-      mockGetCurrentUser.mockResolvedValue(mockUser);
-      const { HostProofCompletionError } = await import("@reading-advantage/domain/games");
-      mockGetHostProofGameCompletions.mockRejectedValue(
-        new HostProofCompletionError("HOST_PROOF_VALIDATION_FAILED", "Invalid history input"),
-      );
-
-      const response = await GET(makeRequest(undefined, "limit=not-a-number"));
-
-      expect(response.status).toBe(400);
-      expect(mockGetHostProofGameCompletions).toHaveBeenCalledWith(
-        expect.objectContaining({ input: { limit: "not-a-number" } }),
-      );
-    });
-
-    it("preserves zero limits for the shared history validation", async () => {
-      mockGetCurrentUser.mockResolvedValue(mockUser);
-      mockGetHostProofGameCompletions.mockResolvedValue([]);
-
-      const response = await GET(makeRequest(undefined, "limit=0"));
-
-      expect(response.status).toBe(200);
-      expect(mockGetHostProofGameCompletions).toHaveBeenCalledWith(
-        expect.objectContaining({ input: { limit: 0 } }),
-      );
-    });
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({ history: [] });
+    expect(mockGetHostProofGameCompletions).toHaveBeenCalledWith(expect.objectContaining({
+      tenant: { schoolId: "school-1" }, input: { gameType: "dragon-flight", limit: 10 },
+    }));
   });
 });
