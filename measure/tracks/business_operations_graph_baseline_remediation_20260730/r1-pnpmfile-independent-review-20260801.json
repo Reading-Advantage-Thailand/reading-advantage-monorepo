@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "role": "independent-reviewer",
+  "track": "business_operations_graph_baseline_remediation_20260730",
+  "phase": "Phase R1 Task 1 — .pnpmfile.cjs boundary remediation independent review",
+  "baseline_sha": "9b4e68931ac8eee3c0d466b0be8c34937ffbd36d",
+  "audited_head_sha": "fc37b916721bc0bea08b644fb9b42d027e353809",
+  "checkout_head_sha": "928a85e2b1b3da21ca16a93a775ab82a1ecb5e75",
+  "applicability": "applicable",
+  "status": "pass",
+  "summary": "Commit fc37b9167 completely closes the bounded root .pnpmfile.cjs discovery omission. The repository contains exactly one .pnpmfile.cjs, at the root; production classifies it with workspace and lock inputs, so its exact bytes and metadata enter the rich and R0 archive/manifest denominators, scanner/dependency state scope, staged-diff binding, and intervening-commit drift checks. The requested snapshot and R0 modules pass all 70 tests. Independent positive, omission, payload-tamper, concurrent-deletion, staged-deletion-tombstone, and committed changed/restored probes all behaved fail-closed, and a discovery-removal mutation was detected by all five pnpmfile-focused tests. No Critical or High finding remains in this bounded review scope.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "severity_summary": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "evidence": [
+    "The audited commit is fc37b916721bc0bea08b644fb9b42d027e353809 with direct parent 9b4e68931ac8eee3c0d466b0be8c34937ffbd36d. It is an ancestor of checkout HEAD 928a85e2b1b3da21ca16a93a775ab82a1ecb5e75, and the three reviewed files have no drift between the audited commit and checkout HEAD.",
+    "The audited range changes exactly the snapshot producer, its focused test module, and the bounded remediation receipt. git diff --check passed. measure/automation-supervisor.py and the accepted R0 validator are unchanged across the range.",
+    "Independent repository discovery found exactly one matching path: .pnpmfile.cjs. The production MANIFEST_FILE_NAMES classification now includes .pnpmfile.cjs alongside package.json, pnpm-workspace.yaml, and pnpm-lock.yaml; the actual .pnpmfile.cjs is tracked and clean while the unrelated live pnpm-lock.yaml modification remains outside this commit.",
+    "An independent temporary-repository positive probe staged changed .pnpmfile.cjs bytes and proved exact replay plus inclusion in rich archive entries, rich manifest entries, R0 archive entries, R0 manifest entries, pre/post scannerPaths, pre/post dependencyPaths, status, and stagedDiff. The same probe required .pnpmfile.cjs, pnpm-workspace.yaml, and pnpm-lock.yaml together in both scanner and dependency scope, and rich pre/post state remained identical.",
+    "Independent omission and tamper probes removed the .pnpmfile.cjs archive entry and replaced its payload without updating bound metadata. verify_snapshot rejected both mutations, and the untouched archive verified again after each control.",
+    "Independent deletion probes proved a pre-existing staged .pnpmfile.cjs deletion is retained as a tracked tombstone with original replay bytes, scanner scope, status, and staged diff, while a deletion introduced inside the capture window raises SnapshotDriftError naming .pnpmfile.cjs and publishes no output.",
+    "An independent scan-window probe committed changed .pnpmfile.cjs bytes and then committed restoration of the original bytes. Endpoint bytes were equal, but intervening-commit inspection raised SnapshotDriftError naming .pnpmfile.cjs and published no output.",
+    "The requested command PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_business_operations_graph_baseline_snapshot measure.tests.test_business_operations_graph_baseline_remediation passed exactly 70 tests in 51.200 seconds: 41 snapshot tests and 29 accepted R0 tests.",
+    "The five pnpmfile-focused tests are behaviorally non-vacuous: an independent in-memory mutation removing .pnpmfile.cjs from MANIFEST_FILE_NAMES caused all five selected tests to reject the mutant (5 tests run, 5 failures/errors detected). These tests cover discovery, positive archive/lock binding, changed/restored commit drift, staged drift with restored live bytes, and staged deletion tombstoning.",
+    "Reviewed file SHA-256 values are fda9b4c2f9e7df799786fd071ae46ee04b3f60c3435d0733803a026028343e3 for the producer, 46b275b75fd2e8e1630e34f477293708e9e97408299c909683b2fddac5cb7ff5 for the focused tests, and f69e626c1899a5e823ecdd0613480501c0dc99a330d5e045c1f545696bf88b54 for the remediation receipt.",
+    "The real Git index object ID remained 764d4500561a79c432e37ac098990933ec51af59 before and after tests and probes. Existing unrelated dirty work was not staged, reset, stashed, reverted, repaired, or committed; concurrent unrelated worktree changes were preserved. This review adds only the named report to the requested review scope.",
+    "This pass is limited to commit fc37b9167 and the .pnpmfile.cjs R1 producer boundary. It does not recapture or accept prior R1 evidence, complete R2/R3, change the parent Review B decision, or unblock Admin/CRM successor work."
+  ],
+  "commands": [
+    "git show --format=fuller --name-status fc37b9167; git diff --check fc37b9167^..fc37b9167 — pass; exact three-file audited range with no whitespace errors",
+    "git merge-base --is-ancestor fc37b9167 HEAD; git diff --quiet fc37b9167..HEAD -- reviewed files — pass; audited commit is current ancestry and reviewed bytes have not drifted",
+    "glob **/.pnpmfile.cjs; git ls-files --stage/status -- .pnpmfile.cjs pnpm-workspace.yaml pnpm-lock.yaml — pass; exactly one root pnpmfile, tracked, with unrelated lockfile dirty state preserved",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_business_operations_graph_baseline_snapshot measure.tests.test_business_operations_graph_baseline_remediation — pass; 70 tests in 51.200s",
+    "Independent /tmp/opencode archive/state/lock/omission/tamper/deletion/changed-restored probe — pass; exact boundary inclusion and all adversaries verified",
+    "Independent in-memory discovery-removal mutation probe — pass; all five pnpmfile-focused tests detected removal of .pnpmfile.cjs classification",
+    "git diff --quiet fc37b9167^..fc37b9167 -- measure/automation-supervisor.py measure/business_operations_graph_baseline_validation.py — pass; protected supervisor and accepted R0 validator unchanged",
+    "git hash-object $(git rev-parse --git-path index) before and after verification — pass; unchanged 764d4500561a79c432e37ac098990933ec51af59"
+  ],
+  "changed_files": [
+    "measure/tracks/business_operations_graph_baseline_remediation_20260730/r1-pnpmfile-independent-review-20260801.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

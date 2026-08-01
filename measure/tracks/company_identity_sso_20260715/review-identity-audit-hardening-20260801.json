@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "role": "independent-security-reviewer",
+  "track": "company_identity_sso_20260715",
+  "phase": "Identity audit hardening review — commit 928a85e2b",
+  "baseline_sha": "fc37b916721bc0bea08b644fb9b42d027e353809",
+  "audited_head_sha": "928a85e2b1b3da21ca16a93a775ab82a1ecb5e75",
+  "applicability": "applicable",
+  "status": "pass",
+  "summary": "PASS with zero Critical or High findings. Authorization-code issuance, application-session/token issuance, local logout, and global logout now pair each successful lifecycle effect with secret-safe immutable audit evidence on the same PostgreSQL transaction; introspection is accurately documented as an authenticated status read that refreshes idle state but is not an audit event; the OIDC logout boundary uses strict Zod validation for the exact issued token grammar; and all repository callers and mocks were updated for the non-additive interface changes.",
+  "findings_summary": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "total": 0
+  },
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "The audited range is exactly one commit, fc37b9167..928a85e2b, changing nine intended Accounts/backend files. git diff --check passed, and the audited files remained byte-identical to 928a85e2b throughout review; unrelated dirty and untracked work was preserved.",
+    "Authorization-code issuance is atomic: createAuthorizationCode opens sql.begin, inserts only code_hash rather than the raw code, and appends identity:authorization-code-issued through the same transaction handle. The audit identifies the account, organization, application, client, expiry, operation, and successful outcome without code, SSO token, client secret, nonce, PKCE verifier, or challenge material.",
+    "Token exchange and application-session issuance are atomic: consumeAuthorizationCode owns the transaction; createApplicationSession inserts only access-token hash and appends identity:application-session-issued on that transaction; ID-token signing and authorization-code consumption complete before commit. Any insert, audit, signing, or consumption failure rejects the transaction rather than leaving an unaudited session.",
+    "Local logout updates the hash-matched application session and appends its audit in one sql.begin transaction. The repository derives actorAccountId, applicationId, and organizationId from the revoked database row and records only reviewed metadata plus sessionCount=1. A missing or already-revoked token causes no false success audit.",
+    "Global logout updates the hash-matched SSO session, revokes all still-live child application sessions, and appends one audit in the same transaction. The actor and organization are database-derived, sessionCount includes the parent plus revoked children, and any audit failure rolls back both parent and child revocations.",
+    "Audit persistence is immutable at the database boundary: migration 0001 installs a BEFORE UPDATE OR DELETE OR TRUNCATE statement trigger that raises SQLSTATE 55000, and the targeted PostgreSQL 16 privilege/immutability suite passed using isolated scratch databases and least-privilege runtime roles.",
+    "Audit metadata is secret-safe for every new path. The service uses projectSecretSafeAuditMetadata, whose reviewed allowlist excludes token, code, secret, password, hash, nonce, verifier, and challenge keys; repository audit inserts select only IdentityAuditInput fields; raw bearer values are SHA-256 hashed before repository access; and the database metadata-key constraint is a second enforcement layer.",
+    "The introspection N/A policy is accurate and matches the independent R2 finding: this endpoint is a confidential-client-authenticated status check, not login, logout, credential issuance, permission mutation, or destructive revocation. The service and repository contracts explicitly disclose that successful introspection refreshes SSO last_seen_at/idle_expires_at, and the focused service test proves no immutable audit append occurs.",
+    "OIDC local logout validates the external Authorization header with a strict Zod object and the anchored exact grammar /^Bearer [A-Za-z0-9_-]{43}$/. Missing, empty, whitespace-containing/malformed, wrong-scheme, 44-character, and 4096-character values are rejected before composition or repository access; the service independently validates both local and global session tokens against the exact 43-character issued grammar.",
+    "Repository compatibility passed. A fresh repo-graph scan of 928a85e2b indexed 88,984 nodes and 117,546 edges with no freshness gap. Graph callers resolve each changed repository method to createCompanyIdentityService and the new logout schema to POST; an independent full-source search found only the interface, PostgreSQL implementation, service, and updated tests/mocks, with no omitted production implementation or caller.",
+    "Targeted verification passed: backend company-identity contracts/protocol/service/repository tests 27/27; Accounts OIDC logout route tests 6/6; PostgreSQL 16 company-identity constraints and immutable-audit/privilege tests 18/18; Accounts check-types passed; DB check-types passed; and backend production tsc passed. The backend aggregate check-types command reached its test-config phase and failed only on pre-existing standard-pack cross-root imports and planned-game-intake test errors outside this commit; a clean detached 928a85e2b clone reproduced those same unrelated errors, while no changed identity file appeared in diagnostics.",
+    "No frontend/browser runtime check applies: the change contains only a server Route Handler, backend contracts/repository/service code, and tests. No product database boundary, tenant scope, provider SDK, or browser UI was changed."
+  ],
+  "commands": [
+    "git status --short; git show --stat --name-status 928a85e2b; git diff --check 928a85e2b^ 928a85e2b — pass for audited range; pre-existing dirty work inventoried and preserved",
+    "CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/company-identity/__tests__/contracts.test.ts src/modules/company-identity/__tests__/protocol.test.ts src/modules/company-identity/__tests__/service.test.ts src/modules/company-identity/__tests__/postgres-repository.test.ts — pass, 4 files and 27 tests",
+    "CI=true pnpm --filter accounts exec vitest run app/api/oidc/logout/route.test.ts — pass, 1 file and 6 tests",
+    "CI=true COMPANY_IDENTITY_TEST_ADMIN_DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter @reading-advantage/db exec vitest run src/company-identity/__tests__/privileges-audit.integration.test.ts src/company-identity/__tests__/constraints.integration.test.ts — pass against PostgreSQL 16.14, 2 files and 18 tests",
+    "CI=true pnpm --filter accounts run check-types — pass",
+    "CI=true pnpm --filter @reading-advantage/db run check-types — pass",
+    "CI=true pnpm --filter @reading-advantage/backend exec tsc --noEmit -p tsconfig.json — pass",
+    "CI=true pnpm --filter @reading-advantage/backend run check-types — production tsc passed, aggregate test-config tsc failed only on unrelated pre-existing standard-pack/planned-game-intake diagnostics; reproduced in a clean detached 928a85e2b clone",
+    "repo-graph scan of a clean detached 928a85e2b clone plus inspect/callers for CompanyIdentityRepository, createAuthorizationCode, createApplicationSession, revokeApplicationSession, revokeSsoSession, and oidcLogoutInputSchema — pass; fresh graph and no missed production caller",
+    "git diff --quiet 928a85e2b -- <nine audited files> — pass after verification"
+  ],
+  "changed_files": [
+    "measure/tracks/company_identity_sso_20260715/review-identity-audit-hardening-20260801.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "graph_caller_check": "pass",
+  "browser_runtime_check": "not_applicable_no_frontend_change",
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
