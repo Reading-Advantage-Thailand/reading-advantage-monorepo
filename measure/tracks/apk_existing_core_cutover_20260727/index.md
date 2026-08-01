@@ -15,9 +15,10 @@
 - [Task 3 Current Lineage Review](./review-task3-current-lineage-v1.md)
 - [Task 5 Canonical-reuse Dossiers](./task5-canonical-reuse-dossiers-v1.json)
 - [Task 5 Canonical-reuse Owner Decision](./task5-canonical-reuse-owner-acceptance-v1.json)
-- [Task 5/6 Consumable Owner Acceptance](./task5-task6-product-owner-acceptance-v1.json)
+- [Historical Task 5/6 Owner Record (not current host or retirement acceptance)](./task5-task6-product-owner-acceptance-v1.json)
 - [Task 5 Reading/Primary Host-proof Evidence](./task5-reading-primary-host-proof-evidence-v1.json)
 - [Task 5 Reading Host-proof Playwright Rerun](./task5-reading-host-proof-playwright-report-v2.json) — supersedes the v1 historical-before-remediation report
-- [Task 6 Exact Legacy-retirement Manifest](./task6-legacy-retirement-manifest-v1.json)
+- [Historical Task 6 Zero-deletion Manifest (not current retirement completion)](./task6-legacy-retirement-manifest-v1.json)
 - [Task 6 Legacy-retirement Guards](../../tests/test_apk_existing_core_task6_legacy_retirement.py)
+- Unreviewed Core/shared candidate and cross-host handoff artifacts are intentionally excluded from this index; they remain unstaged and non-consumable.
 - [Foundation](../apk_denominator_readiness_t11_integrity_20260727/)

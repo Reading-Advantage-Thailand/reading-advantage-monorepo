@@ -8,10 +8,6 @@ import unittest
 from pathlib import Path
 from typing import Any
 
-from measure.tests.test_apk_existing_core_task6_legacy_retirement import (
-    run_retirement_guard_suite,
-)
-
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CORE_TRACK = REPO_ROOT / "measure/tracks/apk_existing_core_cutover_20260727"
 SUITABILITY_TRACK = REPO_ROOT / "measure/tracks/apk_standard_pack_suitability_ingestion_20260728"
@@ -180,8 +176,8 @@ class ExistingCoreTask5Task6AcceptanceTests(unittest.TestCase):
             bound["reading_primary_host_proof_evidence"]["sha256"],
         )
 
-    def test_authorization_and_plan_markers_stop_before_final_acceptance(self) -> None:
-        """Requires exact Task 6 disposition while production boundaries remain closed."""
+    def test_historical_task5_record_cannot_authorize_the_current_corrective_phase(self) -> None:
+        """Preserves the owner record while requiring explicit current non-consumability."""
         acceptance = _load(ACCEPTANCE_PATH)
         self.assertEqual(acceptance["authorization"], {
             "task5_consumable": True,
@@ -200,22 +196,12 @@ class ExistingCoreTask5Task6AcceptanceTests(unittest.TestCase):
         })
 
         core_plan = (CORE_TRACK / "plan.md").read_text(encoding="utf-8")
-        self.assertTrue(next(line for line in core_plan.splitlines() if "Gate Task 5 acceptance on asset adoption" in line).startswith("- [x]"))
-        self.assertTrue(next(line for line in core_plan.splitlines() if "Prove Reading and Primary load" in line).startswith("- [x]"))
-        task6_line = next(line for line in core_plan.splitlines() if "Delete only each title's exact replaced legacy paths" in line)
-        self.assertTrue(task6_line.startswith("- [x]"))
-        if task6_line.startswith("- [x]"):
-            retirement_result = run_retirement_guard_suite()
-            self.assertTrue(
-                retirement_result.wasSuccessful(),
-                retirement_result.failures + retirement_result.errors,
-            )
-        self.assertTrue(next(line for line in core_plan.splitlines() if "Obtain independent review and product-owner acceptance" in line).startswith("- [ ]"))
+        task5_line = next(line for line in core_plan.splitlines() if "Recover Task 5 through a Dragon Flight-only" in line)
+        self.assertTrue(task5_line.startswith("- [~]"))
+        task6_line = next(line for line in core_plan.splitlines() if "Retire only each title's exact replaced legacy paths" in line)
+        self.assertTrue(task6_line.startswith("- [b]"))
+        self.assertNotIn("Prove Reading and Primary load", core_plan)
 
-        suitability_plan = (SUITABILITY_TRACK / "plan.md").read_text(encoding="utf-8")
-        self.assertTrue(suitability_plan.startswith("# Implementation Plan"))
-        self.assertIn("task5-task6-product-owner-acceptance-v1.json", suitability_plan)
-        self.assertIn("consumable for", suitability_plan)
         suitability_metadata = _load(SUITABILITY_TRACK / "metadata.json")
         self.assertEqual(
             suitability_metadata["downstream_consumption"]["acceptance_path"],
@@ -229,12 +215,30 @@ class ExistingCoreTask5Task6AcceptanceTests(unittest.TestCase):
         self.assertFalse(suitability_metadata["downstream_consumption"]["production_exposure_authorized"])
 
         metadata = _load(CORE_TRACK / "metadata.json")
+        self.assertEqual(metadata["status"], "in_progress")
         task5 = next(item for item in metadata["task_acceptances"] if item["task_number"] == 5)
         self.assertEqual(task5["product_owner_acceptance_path"], str(ACCEPTANCE_PATH.relative_to(REPO_ROOT)))
         self.assertEqual(task5["product_owner_acceptance_sha256"], _sha256(ACCEPTANCE_PATH))
-        self.assertTrue(task5["task5_consumable"])
-        self.assertTrue(task5["task6_begin_authorized"])
+        self.assertEqual(task5["authorization_temporal_scope"], "historical-superseded")
+        self.assertEqual(task5["historical_authorization"], {
+            "authorization": "consume-exact-task5-bindings-and-begin-task6-exact-legacy-retirement",
+            "task5_consumable": True,
+            "task5_acceptance_claimed": True,
+            "task6_begin_authorized": True,
+        })
+        self.assertEqual(task5["current_authorization"], {
+            "status": "superseded-non-consumable",
+            "task5_consumable": False,
+            "task5_acceptance_claimed": False,
+            "task6_begin_authorized": False,
+            "superseded_by": "dragon-flight-only-corrective-phase",
+        })
+        self.assertEqual(task5["authorization"], "historical-superseded-task5-task6-authorization")
+        self.assertFalse(task5["task5_consumable"])
+        self.assertFalse(task5["task5_acceptance_claimed"])
+        self.assertFalse(task5["task6_begin_authorized"])
         self.assertFalse(task5["retirement_completed"])
+
 
     def test_prior_owner_record_remains_immutable_non_authorizing_history(self) -> None:
         """Requires the additive acceptance not to rewrite the prior owner record."""

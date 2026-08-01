@@ -3,14 +3,14 @@
   "type": "feature",
   "status": "in_progress",
   "created_at": "2026-07-27T00:00:00Z",
-  "updated_at": "2026-07-31T14:00:00Z",
+  "updated_at": "2026-08-01T00:00:00Z",
   "description": "Vertical revalidation and cutover of five already-built core APK cartridges.",
   "estimated_tasks": 7,
-  "actual_tasks": null,
+  "actual_tasks": 4,
   "depends_on": [
     "apk_denominator_readiness_t11_integrity_20260727"
   ],
-  "deviation_notes": "Denominator/readiness predecessor satisfied by accepted receipt d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720; this cohort is authorized to begin scoped work. Task 2's invalid failed/superseded ontology lineage was replaced by exact accepted T3/T4/T5/T6/T7/T10 hashes and title claim locators. T10/T11 still approve zero legacy mappings. The seven dedicated fail-closed invariant groups cover missing role/state bindings, stale catalog/release hashes, direct/private paths, duplicate physical sources, full-pack delivery, unsupported mappings, and premature consumability. The candidate suite passes 22/22 tests. Task 3 is owner-accepted through an additive, hash-bound semantic-adoption receipt; the reviewed source remains candidate/non-consumable and catalog/loaders remain quarantined. Task 3's current lineage receipt and independent review now rebind whitespace-normalized descendants without rewriting historical accepted bytes. Task 4 Advantage Games QC and compact/wide real-input proof are owner-accepted after independent remediation, K3 zero-finding re-review, and bounded R-1 documentation verification; all 11 implementation bindings validated exactly and the game-cartridges suite is 61/61 green. The exact five-title/17-role canonical-reuse dossiers, disposition matrix, selected unions, additive lineage, and current Reading/Primary 41-result host proofs are consumed by the additive Task-5 acceptance `task5-task6-product-owner-acceptance-v1.json` (SHA-256 4ca0b6983a285ea998399ea2ed6a2e97864db0e62686aca32643932c9e598eda). Task 5 is accepted only for these exact evidence bindings; Task 6 exact legacy-retirement work may begin, while no path deletion, production catalog exposure, deployment, cohort closeout, or broader APK claim is authorized.",
+  "deviation_notes": "Tasks 1-4 retain their accepted readiness, semantic-adoption, and Advantage Games QC preparation evidence. Plan-truth recovery quarantines the shared 24-title candidate, its root-wrapper observation, and its 193/193 reports as historical non-consumable records with live-source drift. Task 5 is reopened for the Dragon Flight-only signed-attempt/runtime corrective phase; Task 6 is blocked until a title-specific production proof is accepted. No current Reading/Primary host acceptance, retirement completion, cutover, deployment, cohort closeout, or broader APK authority is claimed. Task 5 historical authorization facts are preserved only under historical_authorization; top-level fields and current_authorization are superseded-non-consumable and deny Task 5 consumption and Task 6 begin authorization.",
   "reviews": [
     {
       "reviewed_at": "2026-07-27T18:55:00Z",
@@ -207,15 +207,29 @@
       "product_owner_acceptance_sha256": "4ca0b6983a285ea998399ea2ed6a2e97864db0e62686aca32643932c9e598eda",
       "durable_user_message_id": null,
       "durable_user_event_id": null,
-      "authorization": "consume-exact-task5-bindings-and-begin-task6-exact-legacy-retirement",
-      "task5_consumable": true,
-      "task5_acceptance_claimed": true,
-      "task6_begin_authorized": true,
+      "authorization": "historical-superseded-task5-task6-authorization",
+      "task5_consumable": false,
+      "task5_acceptance_claimed": false,
+      "task6_begin_authorized": false,
       "production_catalog_or_loaders_exposed": false,
       "deployment_authorized": false,
       "cohort_closeout_authorized": false,
       "broader_apk_claims_authorized": false,
-      "retirement_completed": false
+      "retirement_completed": false,
+      "authorization_temporal_scope": "historical-superseded",
+      "historical_authorization": {
+        "authorization": "consume-exact-task5-bindings-and-begin-task6-exact-legacy-retirement",
+        "task5_consumable": true,
+        "task5_acceptance_claimed": true,
+        "task6_begin_authorized": true
+      },
+      "current_authorization": {
+        "status": "superseded-non-consumable",
+        "task5_consumable": false,
+        "task5_acceptance_claimed": false,
+        "task6_begin_authorized": false,
+        "superseded_by": "dragon-flight-only-corrective-phase"
+      }
     }
   ]
 }

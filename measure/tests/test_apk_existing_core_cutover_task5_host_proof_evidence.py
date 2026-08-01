@@ -9,7 +9,6 @@ import unittest
 from pathlib import Path
 from typing import Any
 
-
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TRACK_ROOT = REPO_ROOT / "measure/tracks/apk_existing_core_cutover_20260727"
 EVIDENCE_PATH = TRACK_ROOT / "task5-reading-primary-host-proof-evidence-v1.json"
@@ -106,6 +105,7 @@ PRIMARY_BINDINGS = {
 }
 PRIMARY_HOST_MATRIX_SHA256 = "2f8191da34e4af508310cb2ffdf9c6b69f50f5d1ba101a039e3b448d1bbe9299"
 CURRENT_SOURCE_HEAD = "c3f86c86b85ad0519ac57edf74978b5ee716ebe6"
+TASK5_ACCEPTANCE_REVISION = "9c4a4e1d2"
 READING_COMMAND_TEMPLATE = (
     "DATABASE_URL=<local-test-database> DIRECT_DATABASE_URL=<local-test-database> CI=true PLAYWRIGHT_PORT=3128 "
     "pnpm --filter reading-advantage exec playwright test tests/e2e/host-proof-games.spec.ts"
@@ -258,15 +258,29 @@ def _repo_path(path: str) -> Path:
     return resolved
 
 
-def _head_sha256(path: str) -> str:
-    """Returns the SHA-256 digest of one path at the current Git HEAD."""
+def _revision_sha256(revision: str, path: str) -> str:
+    """Returns one path's digest at an immutable Git revision."""
     result = subprocess.run(
-        ["git", "show", f"HEAD:{path}"],
+        ["git", "show", f"{revision}:{path}"],
         cwd=REPO_ROOT,
         check=True,
         capture_output=True,
     )
     return hashlib.sha256(result.stdout).hexdigest()
+
+
+def _load_revision_object(revision: str, path: str) -> dict[str, Any]:
+    """Loads one JSON object from an immutable Git revision."""
+    result = subprocess.run(
+        ["git", "show", f"{revision}:{path}"],
+        cwd=REPO_ROOT,
+        check=True,
+        capture_output=True,
+    )
+    value = json.loads(result.stdout)
+    if not isinstance(value, dict):
+        raise AssertionError(f"{revision}:{path} must contain an object")
+    return value
 
 
 def _canonical_json_sha256(value: dict[str, Any]) -> str:
@@ -308,7 +322,7 @@ class ExistingCoreTask5HostProofEvidenceTests(unittest.TestCase):
         self.assertFalse(predecessor["claims"]["primary_host_proof_success_claimed"])
         self.assertEqual(evidence["host_contract"]["path"], HOST_CONTRACT_PATH)
         self.assertEqual(evidence["host_contract"]["sha256"], HOST_CONTRACT_SHA256)
-        self.assertEqual(_sha256(REPO_ROOT / HOST_CONTRACT_PATH), HOST_CONTRACT_SHA256)
+        self.assertEqual(_revision_sha256(TASK5_ACCEPTANCE_REVISION, HOST_CONTRACT_PATH), HOST_CONTRACT_SHA256)
         self.assertEqual(evidence["host_contract"]["binding_ids"], [
             "dragon-flight", "magic-defense", "dungeon-liberator", "sorcerer-ziggurat", "astral-mage",
         ])
@@ -386,10 +400,12 @@ class ExistingCoreTask5HostProofEvidenceTests(unittest.TestCase):
             self.assertEqual(report["test_bindings"], bindings)
             for binding in report["test_bindings"].values():
                 if report["source_status"] in {"current-source-rerun", "current-source-rerun-after-remediation"}:
-                    self.assertEqual(_sha256(_repo_path(binding["path"])), binding["sha256"])
-                    self.assertEqual(_head_sha256(binding["path"]), binding["sha256"])
+                    self.assertEqual(_revision_sha256(CURRENT_SOURCE_HEAD, binding["path"]), binding["sha256"])
             result_file = report["test_result_file"]
-            self.assertEqual(_sha256(_repo_path(result_file["path"])), result_file["sha256"])
+            self.assertEqual(
+                _revision_sha256(CURRENT_SOURCE_HEAD, result_file["path"]),
+                result_file["sha256"],
+            )
             if application == "reading-advantage":
                 self.assertEqual(result_file["status"], "passed")
                 self.assertEqual(result_file["failed_tests"], [])
@@ -419,7 +435,7 @@ class ExistingCoreTask5HostProofEvidenceTests(unittest.TestCase):
                         "browser_case_total": 40,
                     },
                 )
-                result = _load(_repo_path(result_file["path"]))
+                result = _load_revision_object(CURRENT_SOURCE_HEAD, result_file["path"])
                 self.assertEqual(result["config"]["configFile"].split("/")[-1], "playwright.config.ts")
                 self.assertEqual(result["stats"]["expected"], 41)
                 self.assertEqual(result["stats"]["unexpected"], 0)
@@ -433,7 +449,7 @@ class ExistingCoreTask5HostProofEvidenceTests(unittest.TestCase):
                 self.assertEqual(len(browser_suite["specs"]), 40)
                 self.assertEqual(len(setup_suite["specs"]), 1)
             if application == "reading-advantage":
-                result = _load(_repo_path(result_file["path"]))
+                result = _load_revision_object(CURRENT_SOURCE_HEAD, result_file["path"])
                 self.assertEqual(result["stats"]["expected"], 41)
                 self.assertEqual(result["stats"]["unexpected"], 0)
                 self.assertEqual(result["stats"]["skipped"], 0)
@@ -456,8 +472,7 @@ class ExistingCoreTask5HostProofEvidenceTests(unittest.TestCase):
         )
         self.assertEqual(baseline["bindings"], CURRENT_IMPLEMENTATION_BINDINGS)
         for binding in baseline["bindings"].values():
-            self.assertEqual(_sha256(_repo_path(binding["path"])), binding["sha256"])
-            self.assertEqual(_head_sha256(binding["path"]), binding["sha256"])
+            self.assertEqual(_revision_sha256(CURRENT_SOURCE_HEAD, binding["path"]), binding["sha256"])
         self.assertEqual(baseline["observed_browser_bindings"], OBSERVED_IMPLEMENTATION_BINDINGS)
 
         expected_kimi_observations = [
@@ -487,9 +502,9 @@ class ExistingCoreTask5HostProofEvidenceTests(unittest.TestCase):
         """Rejects any authority expansion from a local execution observation."""
         evidence = _load(EVIDENCE_PATH)
         self.assertEqual(evidence["production_quarantine"]["catalog"], QUARANTINED_CATALOG)
-        self.assertEqual(_sha256(REPO_ROOT / QUARANTINED_CATALOG["path"]), QUARANTINED_CATALOG["sha256"])
+        self.assertEqual(_revision_sha256(TASK5_ACCEPTANCE_REVISION, QUARANTINED_CATALOG["path"]), QUARANTINED_CATALOG["sha256"])
         self.assertEqual(evidence["production_quarantine"]["root_exports"], ROOT_EXPORTS)
-        self.assertEqual(_sha256(REPO_ROOT / ROOT_EXPORTS["path"]), ROOT_EXPORTS["sha256"])
+        self.assertEqual(_revision_sha256(TASK5_ACCEPTANCE_REVISION, ROOT_EXPORTS["path"]), ROOT_EXPORTS["sha256"])
         self.assertEqual(evidence["claims"], {
             "asset_adoption_claimed": False,
             "accepted_suitability_dossier_consumed": False,
@@ -510,35 +525,50 @@ class ExistingCoreTask5HostProofEvidenceTests(unittest.TestCase):
             "independent review and product-owner acceptance of the asset-adoption gate",
         ])
 
-    def test_plan_records_task5_acceptance_and_task6_begin_authorization(self) -> None:
-        """Requires the accepted Task-5 evidence and bounded Task-6 start marker."""
+    def test_plan_keeps_only_dragon_flight_in_the_corrective_phase(self) -> None:
+        """Rejects reuse of the superseded five-title host-proof lifecycle."""
         plan = (TRACK_ROOT / "plan.md").read_text(encoding="utf-8")
-        task5 = next(line for line in plan.splitlines() if "Prove Reading and Primary load" in line)
-        self.assertTrue(task5.startswith("- [x]"))
+        task5 = next(line for line in plan.splitlines() if "Recover Task 5 through a Dragon Flight-only" in line)
+        self.assertTrue(task5.startswith("- [~]"))
+        self.assertIn("historical non-consumable", task5)
+        self.assertIn("24-title candidate", task5)
+        dragon_phase = next(line for line in plan.splitlines() if "Implement and verify the Dragon Flight dedicated runtime" in line)
+        self.assertTrue(dragon_phase.startswith("  - [~]"))
+        self.assertIn("No later title or cohort may consume", dragon_phase)
+        self.assertIn("Terra phase acceptance, independent Sol review, and explicit product-owner authorization", dragon_phase)
         self.assertTrue(
             next(line for line in plan.splitlines() if "Gate Task 5 acceptance on asset adoption" in line).startswith("- [x]")
         )
-        self.assertTrue(
-            next(line for line in plan.splitlines() if "Delete only each title's exact replaced legacy paths" in line).startswith("- [~]")
-        )
-        self.assertTrue(
-            next(line for line in plan.splitlines() if "Obtain independent review and product-owner acceptance" in line).startswith("- [ ]")
-        )
+        task6_line = next(line for line in plan.splitlines() if "Retire only each title's exact replaced legacy paths" in line)
+        self.assertTrue(task6_line.startswith("- [b]"))
+        self.assertIn("zero-deletion manifest is historical retention evidence", task6_line)
+        owner_line = next(line for line in plan.splitlines() if "Obtain independent review and product-owner acceptance for the cohort" in line)
+        self.assertTrue(owner_line.startswith("- [b]"))
+        self.assertIn("title-specific Dragon Flight production proof", owner_line)
+        self.assertNotIn("Prove Reading and Primary load", plan)
 
-    def test_primary_host_matrix_binding_is_current_and_task5_lifecycle_is_ordered(self) -> None:
-        """Pins the current Primary matrix hash and prevents premature lifecycle advancement."""
+    def test_primary_host_matrix_is_historical_and_current_lifecycle_remains_dragon_only(self) -> None:
+        """Pins the historical matrix without treating it as current cohort acceptance."""
         primary_matrix = REPO_ROOT / PRIMARY_BINDINGS["host_matrix"]["path"]
         self.assertEqual(PRIMARY_BINDINGS["host_matrix"]["sha256"], PRIMARY_HOST_MATRIX_SHA256)
-        self.assertEqual(_sha256(primary_matrix), PRIMARY_HOST_MATRIX_SHA256)
+        self.assertTrue(primary_matrix.is_file())
+        self.assertEqual(
+            _revision_sha256(CURRENT_SOURCE_HEAD, PRIMARY_BINDINGS["host_matrix"]["path"]),
+            PRIMARY_HOST_MATRIX_SHA256,
+        )
 
         plan = (TRACK_ROOT / "plan.md").read_text(encoding="utf-8")
         self.assertTrue(next(line for line in plan.splitlines() if "Gate Task 5 acceptance on asset adoption" in line).startswith("- [x]"))
         self.assertTrue(next(line for line in plan.splitlines() if "Canonical-reuse dossier package" in line).startswith("  - [x]"))
         self.assertTrue(next(line for line in plan.splitlines() if "Additive Task-3 current-lineage receipt" in line).startswith("  - [x]"))
         self.assertTrue(next(line for line in plan.splitlines() if "Source identity inventory" in line).startswith("  - [x]"))
-        self.assertTrue(next(line for line in plan.splitlines() if "Prove Reading and Primary load" in line).startswith("- [x]"))
-        self.assertTrue(next(line for line in plan.splitlines() if "Delete only each title's exact replaced legacy paths" in line).startswith("- [~]"))
-        self.assertTrue(next(line for line in plan.splitlines() if "Obtain independent review and product-owner acceptance" in line).startswith("- [ ]"))
+        task5 = next(line for line in plan.splitlines() if "Recover Task 5 through a Dragon Flight-only" in line)
+        self.assertTrue(task5.startswith("- [~]"))
+        self.assertIn("shared 24-title candidate", task5)
+        task6_line = next(line for line in plan.splitlines() if "Retire only each title's exact replaced legacy paths" in line)
+        self.assertTrue(task6_line.startswith("- [b]"))
+        owner_line = next(line for line in plan.splitlines() if "Obtain independent review and product-owner acceptance for the cohort" in line)
+        self.assertTrue(owner_line.startswith("- [b]"))
 
 
 if __name__ == "__main__":
