@@ -175,7 +175,7 @@ class ApkV2SuitabilityAcceptanceIntegrityTests(unittest.TestCase):
         self.assertIn("product-owner-acceptance-v1.json remains revoked-current-byte-drift", record["supersedes"])
         self.assertEqual(record["basis"]["independent_review"]["path"], str(SUITABILITY_CURRENT_REVIEW_PATH.relative_to(REPO_ROOT)))
         _assert_exact_hash_bindings(self, record["implementation_bindings"], CURRENT_SUITABILITY_BINDING_PATHS)
-        self.assertEqual(metadata["status"], "in_progress")
+        self.assertEqual(metadata["status"], "blocked")
 
 
 if __name__ == "__main__":
