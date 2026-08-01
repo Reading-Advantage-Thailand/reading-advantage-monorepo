@@ -43,6 +43,10 @@ class BusinessOperationsGraphSnapshotRedTests(unittest.TestCase):
         self._write("packages/demo/package.json", '{"name":"demo"}\n')
         self._write("pnpm-workspace.yaml", "packages:\n  - \"packages/*\"\n")
         self._write("pnpm-lock.yaml", "lockfileVersion: '9.0'\n")
+        self._write(
+            ".pnpmfile.cjs",
+            "module.exports = { hooks: { readPackage: (pkg) => pkg } };\n",
+        )
         self._write("build-graph.config.json", '{"include":["**/*.ts"]}\n')
         self._git("add", ".")
         self._git("commit", "-m", "initial")
@@ -101,11 +105,116 @@ class BusinessOperationsGraphSnapshotRedTests(unittest.TestCase):
             "packages/demo/package.json",
             "pnpm-workspace.yaml",
             "pnpm-lock.yaml",
+            ".pnpmfile.cjs",
             "build-graph.config.json",
         } <= paths)
         discovery = result.manifest["discovery"]
         self.assertEqual(discovery["candidateExtensions"], [".ts", ".tsx", ".mts", ".cts"])
         self.assertIn("config/base.json", discovery["extendsPaths"])
+
+    def test_tracked_root_pnpmfile_is_archived_and_bound_with_workspace_and_lock_inputs(
+        self,
+    ) -> None:
+        """Archives the root pnpmfile and binds it with workspace and lock state."""
+        from measure.business_operations_graph_baseline_snapshot import verify_snapshot
+
+        with tempfile.TemporaryDirectory() as output:
+            output_path = Path(output)
+            result = self._producer()(self.root, output_path, tool_version="test")
+            replay = verify_snapshot(output_path)
+
+        pnpmfile = ".pnpmfile.cjs"
+        entries = {entry["path"]: entry for entry in result.manifest["entries"]}
+        self.assertEqual(entries[pnpmfile]["state"], "tracked")
+        self.assertEqual(
+            replay[pnpmfile],
+            b"module.exports = { hooks: { readPackage: (pkg) => pkg } };\n",
+        )
+        lock_bound_paths = {pnpmfile, "pnpm-workspace.yaml", "pnpm-lock.yaml"}
+        self.assertTrue(lock_bound_paths <= set(result.pre_state["scannerPaths"]))
+        self.assertTrue(lock_bound_paths <= set(result.pre_state["dependencyPaths"]))
+
+    def test_changed_and_reverted_root_pnpmfile_commits_during_scan_abort(self) -> None:
+        """Rejects a root pnpmfile commit that changes and restores its bytes."""
+        from measure.business_operations_graph_baseline_snapshot import (
+            SnapshotDriftError,
+            produce_scan_bracketed_snapshot,
+        )
+
+        (self.root / ".git/info/exclude").write_text("graph.db\n", encoding="utf-8")
+        output = Path(self.temporary.name) / "pnpmfile-commit-drift-output"
+
+        def scan_runner(repo: Path) -> dict[str, object]:
+            """Commits and restores the root pnpmfile before returning scan output."""
+            (repo / "graph.db").write_bytes(b"graph output\n")
+            self._write(".pnpmfile.cjs", "module.exports = { hooks: {} };\n")
+            self._git("add", ".pnpmfile.cjs")
+            self._git("commit", "-m", "test: change pnpmfile")
+            self._write(
+                ".pnpmfile.cjs",
+                "module.exports = { hooks: { readPackage: (pkg) => pkg } };\n",
+            )
+            self._git("add", ".pnpmfile.cjs")
+            self._git("commit", "-m", "test: restore pnpmfile")
+            return {
+                "command": "repo-graph scan . ./graph.db",
+                "exitCode": 0,
+                "graphPath": "graph.db",
+                "stderr": "",
+                "stdout": "scanned",
+            }
+
+        with self.assertRaises(SnapshotDriftError) as caught:
+            produce_scan_bracketed_snapshot(
+                self.root, output, tool_version="test", scan_runner=scan_runner
+            )
+        self.assertIn(".pnpmfile.cjs", str(caught.exception))
+        self.assertFalse(output.exists())
+
+    def test_staged_root_pnpmfile_drift_aborts_when_live_bytes_are_restored(self) -> None:
+        """Rejects staged pnpmfile bytes hidden by restoring the live file."""
+        from measure.business_operations_graph_baseline_snapshot import SnapshotDriftError
+
+        output = Path(self.temporary.name) / "pnpmfile-staged-drift-output"
+
+        def staged_drift() -> None:
+            """Stages changed pnpmfile bytes and restores only the worktree copy."""
+            self._write(".pnpmfile.cjs", "module.exports = { hooks: {} };\n")
+            self._git("add", ".pnpmfile.cjs")
+            self._write(
+                ".pnpmfile.cjs",
+                "module.exports = { hooks: { readPackage: (pkg) => pkg } };\n",
+            )
+
+        with self.assertRaises(SnapshotDriftError) as caught:
+            self._producer()(
+                self.root,
+                output,
+                tool_version="test",
+                before_post_check=staged_drift,
+            )
+        self.assertIn("status or staged-diff", str(caught.exception))
+        self.assertFalse(output.exists())
+
+    def test_staged_root_pnpmfile_deletion_is_preserved_in_scope_and_replay(self) -> None:
+        """Archives a staged root pnpmfile deletion as a scanner-input tombstone."""
+        from measure.business_operations_graph_baseline_snapshot import verify_snapshot
+
+        original = (self.root / ".pnpmfile.cjs").read_bytes()
+        (self.root / ".pnpmfile.cjs").unlink()
+        self._git("add", ".pnpmfile.cjs")
+        output = Path(self.temporary.name) / "pnpmfile-deletion-output"
+
+        result = self._producer()(self.root, output, tool_version="test")
+
+        deleted = {
+            entry["path"]: entry for entry in result.manifest["deletedInputs"]
+        }
+        self.assertEqual(deleted[".pnpmfile.cjs"]["state"], "deleted")
+        self.assertIn(".pnpmfile.cjs", result.pre_state["scannerPaths"])
+        self.assertIn("D .pnpmfile.cjs", result.pre_state["status"])
+        self.assertIn(".pnpmfile.cjs", result.pre_state["stagedDiff"])
+        self.assertEqual(verify_snapshot(output)[".pnpmfile.cjs"], original)
 
     def test_next_generated_types_are_hashed_when_the_scanner_can_index_them(self) -> None:
         """Includes generated Next TypeScript declarations in the scanner-input denominator."""

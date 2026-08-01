@@ -4,7 +4,8 @@ The producer operates in the shared ``master`` worktree without changing
 the real Git index or unrelated paths. It captures the complete scanner-input
 denominator discovered in the dirty tree (TypeScript candidates, every
 ``tsconfig*.json`` plus its recursive ``extends`` chain, package manifests,
-workspace and lock files, and any ``build-graph.config.json``), writes a rich
+workspace and lock files, the root ``.pnpmfile.cjs``, and any
+``build-graph.config.json``), writes a rich
 base64-per-entry bundle plus an accepted R0 v1 projection, and binds the
 HEAD/branch/tool/config and pre/post denominator, status, and staged-diff
 digests.
@@ -40,7 +41,12 @@ SCAN_COMMAND = "repo-graph scan . ./graph.db"
 EXPECTED_TOOL_VERSION = "0.1.0"
 CANDIDATE_EXTENSIONS = (".ts", ".tsx", ".mts", ".cts")
 TSCONFIG_PATTERN = re.compile(r"^tsconfig(\.[a-z0-9_.-]+)?\.json$", re.IGNORECASE)
-MANIFEST_FILE_NAMES = {"package.json", "pnpm-workspace.yaml", "pnpm-lock.yaml"}
+MANIFEST_FILE_NAMES = {
+    ".pnpmfile.cjs",
+    "package.json",
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml",
+}
 BUILD_GRAPH_CONFIG_NAMES = {"build-graph.config.json", "build-graph.config.cjs", "build-graph.config.mjs"}
 R0_SOURCE_SNAPSHOT_KEYS = {
     "archive",
