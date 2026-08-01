@@ -8,6 +8,9 @@ import unittest
 from pathlib import Path
 from typing import Any
 
+from measure.tests.test_apk_existing_core_task6_legacy_retirement import (
+    run_retirement_guard_suite,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CORE_TRACK = REPO_ROOT / "measure/tracks/apk_existing_core_cutover_20260727"
@@ -177,8 +180,8 @@ class ExistingCoreTask5Task6AcceptanceTests(unittest.TestCase):
             bound["reading_primary_host_proof_evidence"]["sha256"],
         )
 
-    def test_authorization_and_plan_markers_stop_at_task6_begin(self) -> None:
-        """Requires Task 5 completion, Task 6 start, and production boundaries."""
+    def test_authorization_and_plan_markers_stop_before_final_acceptance(self) -> None:
+        """Requires exact Task 6 disposition while production boundaries remain closed."""
         acceptance = _load(ACCEPTANCE_PATH)
         self.assertEqual(acceptance["authorization"], {
             "task5_consumable": True,
@@ -199,7 +202,14 @@ class ExistingCoreTask5Task6AcceptanceTests(unittest.TestCase):
         core_plan = (CORE_TRACK / "plan.md").read_text(encoding="utf-8")
         self.assertTrue(next(line for line in core_plan.splitlines() if "Gate Task 5 acceptance on asset adoption" in line).startswith("- [x]"))
         self.assertTrue(next(line for line in core_plan.splitlines() if "Prove Reading and Primary load" in line).startswith("- [x]"))
-        self.assertTrue(next(line for line in core_plan.splitlines() if "Delete only each title's exact replaced legacy paths" in line).startswith("- [~]"))
+        task6_line = next(line for line in core_plan.splitlines() if "Delete only each title's exact replaced legacy paths" in line)
+        self.assertTrue(task6_line.startswith("- [x]"))
+        if task6_line.startswith("- [x]"):
+            retirement_result = run_retirement_guard_suite()
+            self.assertTrue(
+                retirement_result.wasSuccessful(),
+                retirement_result.failures + retirement_result.errors,
+            )
         self.assertTrue(next(line for line in core_plan.splitlines() if "Obtain independent review and product-owner acceptance" in line).startswith("- [ ]"))
 
         suitability_plan = (SUITABILITY_TRACK / "plan.md").read_text(encoding="utf-8")
