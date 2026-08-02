@@ -3839,6 +3839,147 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             "V3_DIRECT_RUNTIME_POST_BUILD_IDENTITY_RECEIPT_UNBOUND",
         )
 
+    def test_same_attempt_post_build_identity_envelope_rejects_stale_observer_and_toctou(self) -> None:
+        """Requires a cryptographically bound post-build identity envelope through finalization, binding, and trace.
+
+        @returns Nothing; this exercises only future pure envelope APIs with in-memory fixtures and cannot invoke Podman or publish state.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        build_envelope = getattr(podman, "build_direct_command_runtime_same_attempt_identity_envelope_v1", None)
+        validate_finalization = getattr(podman, "validate_direct_command_runtime_same_attempt_identity_finalization_v1", None)
+        validate_binding = getattr(podman, "validate_direct_command_runtime_same_attempt_identity_binding_v1", None)
+        validate_before_trace = getattr(podman, "validate_direct_command_runtime_same_attempt_identity_before_trace_v1", None)
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+        self.assertTrue(callable(build_envelope), "V3_DIRECT_RUNTIME_SAME_ATTEMPT_IDENTITY_ENVELOPE_BUILDER_MISSING")
+        self.assertTrue(callable(validate_finalization), "V3_DIRECT_RUNTIME_SAME_ATTEMPT_IDENTITY_FINALIZATION_VALIDATOR_MISSING")
+        self.assertTrue(callable(validate_binding), "V3_DIRECT_RUNTIME_SAME_ATTEMPT_IDENTITY_BINDING_VALIDATOR_MISSING")
+        self.assertTrue(callable(validate_before_trace), "V3_DIRECT_RUNTIME_SAME_ATTEMPT_IDENTITY_TRACE_VALIDATOR_MISSING")
+        self.assertEqual(
+            set(inspect.signature(build_envelope).parameters),
+            {"preparation", "archive", "context", "runtime_build_receipt", "post_build_identity", "attempt_nonce"},
+            "V3_DIRECT_RUNTIME_SAME_ATTEMPT_IDENTITY_ENVELOPE_BUILDER_SIGNATURE_INVALID",
+        )
+        self.assertEqual(
+            set(inspect.signature(validate_finalization).parameters),
+            {"envelope", "preparation", "runtime_build_receipt", "post_build_identity"},
+            "V3_DIRECT_RUNTIME_SAME_ATTEMPT_IDENTITY_FINALIZATION_VALIDATOR_SIGNATURE_INVALID",
+        )
+        self.assertEqual(
+            set(inspect.signature(validate_binding).parameters),
+            {"envelope", "archive", "context"},
+            "V3_DIRECT_RUNTIME_SAME_ATTEMPT_IDENTITY_BINDING_VALIDATOR_SIGNATURE_INVALID",
+        )
+        self.assertEqual(
+            set(inspect.signature(validate_before_trace).parameters),
+            {"envelope", "post_trace_observation"},
+            "V3_DIRECT_RUNTIME_SAME_ATTEMPT_IDENTITY_TRACE_VALIDATOR_SIGNATURE_INVALID",
+        )
+
+        def canonical(value: Any) -> bytes:
+            """Serializes one fixture carrier with the runtime canonical JSON algorithm.
+
+            @param value The JSON-compatible fixture carrier.
+            @returns Stable UTF-8 bytes used for identity hashes.
+            """
+            return json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+        attempt_nonce = b"same-attempt-post-build-identity-fixture"
+        nonce_sha256 = _sha256(attempt_nonce)
+        preparation = {"transaction": {"continuity": "SINGLE_UNINTERRUPTED_R1_V3_TRANSACTION"}, "frozen": "fixture"}
+        archive = {"directRuntimeSourcePacket": {"packetSha256": "a" * 64}, "closureInventory": {"entryCount": 1}}
+        context = {"work": "/work", "mounts": [{"id": "work", "target": "/work", "access": "rw"}]}
+        runtime_build_receipt = {
+            "id": "build-advantage-play-kit-for-runtime",
+            "exitCode": 0,
+            "directRuntimePreparationSha256": _sha256(canonical(preparation)),
+            "directRuntimeAttempt": {"id": "fixture-attempt", "nonceSha256": nonce_sha256},
+            "receipt": {"path": "r1-v3/raw/receipt-build.stdout.txt", "sha256": "b" * 64, "size": 17},
+        }
+        derived_rows = [{
+            "path": "packages/advantage-play-kit/dist/assets/index.js",
+            "resolvedPath": "/work/packages/advantage-play-kit/dist/assets/index.js",
+            "mode": "100644",
+            "sha256": "c" * 64,
+            "size": 23,
+        }]
+        observer = {
+            "attemptNonceSha256": nonce_sha256,
+            "workRoot": "/work",
+            "derivedBuildReadSet": derived_rows,
+        }
+        observer_receipt = {
+            "path": "r1-v3/raw/receipt-direct-runtime-dist-identity.stdout.txt",
+            "sha256": _sha256(canonical(observer)),
+            "size": len(canonical(observer)),
+        }
+        post_build_identity = {
+            "source": "IN_CONTAINER_POST_RUNTIME_BUILD_IDENTITY",
+            "directRuntimePreparationSha256": _sha256(canonical(preparation)),
+            "readSet": {"derivedBuildReadSet": copy.deepcopy(derived_rows)},
+            "observation": copy.deepcopy(observer),
+            "receipt": copy.deepcopy(observer_receipt),
+        }
+        envelope = build_envelope(
+            preparation,
+            archive,
+            context,
+            runtime_build_receipt,
+            post_build_identity,
+            attempt_nonce,
+        )
+        self.assertEqual(envelope, {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-same-attempt-post-build-identity",
+            "attemptNonceSha256": nonce_sha256,
+            "preparationSha256": _sha256(canonical(preparation)),
+            "archiveSha256": _sha256(canonical(archive)),
+            "contextSha256": _sha256(canonical(context)),
+            "runtimeBuildReceiptSha256": _sha256(canonical(runtime_build_receipt)),
+            "observerRawReceipt": observer_receipt,
+            "workRoot": "/work",
+            "derivedBuildReadSetSha256": _sha256(canonical(derived_rows)),
+        })
+        validate_finalization(envelope, preparation, runtime_build_receipt, post_build_identity)
+        validate_binding(envelope, archive, context)
+        validate_before_trace(envelope, observer)
+
+        altered_preparation = copy.deepcopy(preparation)
+        altered_preparation["frozen"] = "different"
+        with self.assertRaises(error_type):
+            validate_finalization(envelope, altered_preparation, runtime_build_receipt, post_build_identity)
+        altered_receipt_identity = copy.deepcopy(post_build_identity)
+        altered_receipt_identity["receipt"]["sha256"] = "0" * 64
+        with self.assertRaises(error_type):
+            validate_finalization(envelope, preparation, runtime_build_receipt, altered_receipt_identity)
+        altered_runtime_build_receipt = copy.deepcopy(runtime_build_receipt)
+        altered_runtime_build_receipt["receipt"]["sha256"] = "0" * 64
+        with self.assertRaises(error_type):
+            validate_finalization(envelope, preparation, altered_runtime_build_receipt, post_build_identity)
+        altered_archive = copy.deepcopy(archive)
+        altered_archive["closureInventory"]["entryCount"] = 2
+        with self.assertRaises(error_type):
+            validate_binding(envelope, altered_archive, context)
+        altered_context = copy.deepcopy(context)
+        altered_context["mounts"][0]["access"] = "ro"
+        with self.assertRaises(error_type):
+            validate_binding(envelope, archive, altered_context)
+        with self.assertRaises(error_type):
+            build_envelope(
+                preparation,
+                archive,
+                context,
+                runtime_build_receipt,
+                copy.deepcopy(post_build_identity),
+                b"different-attempt-with-byte-identical-observer",
+            )
+        toctou_observer = copy.deepcopy(observer)
+        toctou_observer["derivedBuildReadSet"][0]["sha256"] = "0" * 64
+        with self.assertRaises(error_type):
+            validate_before_trace(envelope, toctou_observer)
+        self.assertFalse(V3_DIR.exists())
+
     def test_scoped_pnpm_payloads_make_store_dir_global_and_pin_the_build_db_blocker(self) -> None:
         """Requires scoped pnpm payloads to keep store selection out of package scripts.
 
