@@ -2446,6 +2446,227 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             })
         self.assertFalse(V3_DIR.exists())
 
+    def test_direct_runtime_materialization_failures_preserve_exact_stage_receipts(self) -> None:
+        """Requires each materialization failure to retain its exact runner stage and successors.
+
+        @returns Nothing; assertions publish only temporary failed-attempt receipts and never run Podman or create a candidate.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        build_integration = getattr(podman, "build_direct_command_runtime_runner_integration_v1", None)
+        publisher = getattr(podman, "_publish_failed_attempt", None)
+        validator = getattr(podman, "validate_failed_execution_attempt_v1", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(callable(build_integration), "V3_DIRECT_RUNTIME_RUNNER_INTEGRATION_BUILDER_MISSING")
+        self.assertTrue(callable(publisher), "V3_DIRECT_RUNTIME_FAILED_ATTEMPT_PUBLISHER_MISSING")
+        self.assertTrue(callable(validator), "V3_PODMAN_FAILED_ATTEMPT_VALIDATOR_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+
+        expected_stage_plan = [
+            "direct-runtime-preflight",
+            "direct-runtime-discovery",
+            "materialize",
+            "direct-runtime-materialization-probe",
+            "build-advantage-play-kit-for-runtime",
+            "direct-runtime-dist-identity",
+            "generate-standard-pack-catalog",
+            "direct-runtime-trace",
+        ]
+        self.assertEqual(
+            podman._DIRECT_RUNTIME_RUNNER_STAGES,
+            tuple(expected_stage_plan),
+            "V3_DIRECT_RUNTIME_MATERIALIZATION_STAGES_MISSING",
+        )
+
+        runner_source = inspect.getsource(podman.write_execution_closure_v1)
+        ordered_failure_stage_handoffs = [
+            'failure_reason = "materialize"\n            direct_runtime_stage = failure_reason\n            materialize = _run_container(',
+            'failure_reason = "direct-runtime-materialization-probe"\n            direct_runtime_stage = failure_reason\n            direct_runtime_materialization_probe = _run_container(',
+        ]
+        positions = [runner_source.index(handoff) for handoff in ordered_failure_stage_handoffs]
+        self.assertEqual(
+            positions,
+            sorted(positions),
+            "V3_DIRECT_RUNTIME_MATERIALIZATION_STAGE_HANDOFF_ORDER_INVALID",
+        )
+
+        source_bytes = b"export const runtime = 'materialized';\n"
+        blob = b"blob " + str(len(source_bytes)).encode("ascii") + b"\0" + source_bytes
+        baseline_identity = {
+            "path": "packages/fixture-runtime/scripts/generate-runtime.mjs",
+            "sha256": _sha256(source_bytes),
+            "size": len(source_bytes),
+            "mode": "100644",
+            "origin": "BASELINE_GIT_BLOB",
+            "baselineCommit": "a" * 40,
+            "gitBlobSha1": hashlib.sha1(blob).hexdigest(),
+            "inclusion": "MATERIALIZE_EXACT_BASELINE_BYTES",
+        }
+        resource_budget = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-asset-resource-budget",
+            "frozenArchive": _reference(V2_ARCHIVE),
+            "sourceCeiling": {
+                "path": "packages/fixture-runtime/assets/standard",
+                "regularFiles": 1,
+                "apparentBytes": len(source_bytes),
+                "allocatedBytes": len(source_bytes),
+            },
+            "reservations": {
+                "baselineGitMaterializationBytes": 1,
+                "candidateCowBytes": 1,
+                "archiveSupplementBytes": 1,
+                "derivedOutputBytes": 1,
+                "metadataBytes": 1,
+                "minimumHeadroomBytes": 1,
+            },
+            "requiredAvailableBytes": 6,
+            "availableBytes": 6,
+            "decision": "PASS",
+        }
+        derived_read = {
+            "path": "packages/fixture-runtime/dist/assets/index.js",
+            "sha256": "b" * 64,
+            "size": 1,
+            "origin": "DERIVED_BUILD_OUTPUT",
+            "producer": {
+                "kind": "PACKAGE_SCRIPT_PREREQUISITE_BUILD",
+                "scriptName": "fixture-build",
+                "scriptSegment": "pnpm build",
+                "receipt": {
+                    "path": "fixture-build-receipt.json",
+                    "sha256": "c" * 64,
+                    "size": 1,
+                },
+            },
+        }
+        read_set = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-read-set",
+            "trigger": {
+                "logicalArgv": ["pnpm", "--filter", "@fixture/runtime", "fixture-build"],
+                "package": "@fixture/runtime",
+                "manifest": {
+                    "path": "packages/fixture-runtime/package.json",
+                    "sha256": "d" * 64,
+                    "size": 1,
+                },
+            },
+            "baselineReadSet": [baseline_identity],
+            "derivedBuildReadSet": [derived_read],
+            "outputPaths": ["packages/fixture-runtime/assets/standard/standard-pack-release.json"],
+            "preflightQuota": {
+                "maxEntries": 1,
+                "maxBytes": len(source_bytes),
+                "observedEntries": 1,
+                "observedBytes": len(source_bytes),
+            },
+            "resourceBudget": resource_budget,
+            "discovery": {
+                "kind": "BASELINE_GIT_INSTRUMENTED_TRACE",
+                "script": baseline_identity,
+                "root": "packages/fixture-runtime/assets/standard",
+                "directoryListingCount": 1,
+            },
+        }
+        source_packet = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-baseline-git-source-packet",
+            "source": "GIT_OBJECT_DATABASE_ONLY",
+            "baselineCommit": baseline_identity["baselineCommit"],
+            "tree": {"gitTreeSha1": "e" * 40},
+            "baselineReadSet": [baseline_identity],
+            "objects": [{**baseline_identity, "contentBase64": base64.b64encode(source_bytes).decode("ascii")}],
+        }
+        source_packet["packetSha256"] = podman._direct_runtime_packet_digest_v1(source_packet)
+        integration = build_integration(read_set, source_packet, None, resource_budget)
+        self.assertEqual(integration["stagePlan"], expected_stage_plan)
+
+        commands = {
+            "materialize": (
+                ["node", "materialize-v3"],
+                [
+                    podman.CONTAINER_NODE,
+                    "/runner/materialize.mjs",
+                    "/runner/archive.json",
+                    "/runner/direct-runtime-source-packet.json",
+                    "/work",
+                ],
+            ),
+            "direct-runtime-materialization-probe": (
+                ["node", "direct-runtime-materialization-probe"],
+                [
+                    podman.CONTAINER_NODE,
+                    "/runner/direct-runtime-materialization-probe.mjs",
+                    "/runner/archive.json",
+                    "/runner/direct-runtime-source-packet.json",
+                    "/work",
+                ],
+            ),
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            attempts_root = Path(temporary) / "attempts"
+            attempts_root.mkdir()
+            raw = Path(temporary) / "raw"
+            raw.mkdir()
+            context = {"prefix": [podman.PODMAN, "run", "--rm", "--network", "none"]}
+            for stage, (logical_argv, payload_argv) in commands.items():
+                with self.subTest(stage=stage):
+                    raw_id = f"receipt-{stage}"
+                    stdout = raw / f"{raw_id}.stdout.txt"
+                    stderr = raw / f"{raw_id}.stderr.txt"
+                    stdout.write_text("", encoding="utf-8")
+                    stderr.write_text(f"{stage} failed\n", encoding="utf-8")
+                    command = {
+                        "id": stage,
+                        "argv": logical_argv,
+                        "cwd": ".",
+                        "env": dict(podman.ENV),
+                        "envAbsent": list(podman.ENV_ABSENT),
+                        "network": False,
+                        "exitCode": 1,
+                        "actualExecutor": podman._container_executor(context, logical_argv, payload_argv),
+                        "_rawId": raw_id,
+                        "_stdoutPath": stdout,
+                        "_stderrPath": stderr,
+                    }
+                    publisher(
+                        stage,
+                        [command],
+                        error_type(f"V3_PODMAN_GATE_FAILED: {stage}"),
+                        hermetic_pnpm_contract=None,
+                        external_stop=None,
+                        attempts_root=attempts_root,
+                        attempt_date="20260802",
+                        direct_runtime_integration=integration,
+                        direct_runtime_stage=stage,
+                    )
+                    attempt_directory = attempts_root / f"r1-v3-podman-execution-attempt-20260802-{len(list(attempts_root.iterdir())):04d}"
+                    attempt = _load_json(attempt_directory / "failed-attempt.json", self)
+                    expected_later_stages = [
+                        {"id": later_stage, "status": "NOT_RUN"}
+                        for later_stage in expected_stage_plan[expected_stage_plan.index(stage) + 1:]
+                    ]
+                    self.assertEqual(attempt["failure"], {
+                        "stage": stage,
+                        "reason": f"V3_PODMAN_GATE_FAILED: {stage}",
+                        "classification": "COMMAND_EXIT_NONZERO",
+                        "commandId": stage,
+                    })
+                    self.assertEqual(attempt["commands"][0]["id"], stage)
+                    self.assertEqual(attempt["commands"][0]["argv"], logical_argv)
+                    self.assertEqual(attempt["commands"][0]["actualExecutor"]["payloadArgv"], payload_argv)
+                    self.assertEqual(attempt["directRuntimeIntegration"]["reachedStage"], stage)
+                    self.assertEqual(attempt["directRuntimeIntegration"]["laterStages"], expected_later_stages)
+                    self.assertEqual(attempt["directRuntimeIntegration"]["integration"]["attempt"], {
+                        "id": integration["attempt"]["id"],
+                        "reachedStage": stage,
+                        "laterStages": expected_later_stages,
+                        "executionTrace": None,
+                    })
+                    validator(attempt, attempt_directory)
+        self.assertFalse(V3_DIR.exists())
+
     def test_direct_runtime_tracer_requires_exact_generator_child_inheritance(self) -> None:
         """Requires trace activation to follow the spawned generator process, not merely pnpm's Node parent.
 

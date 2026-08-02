@@ -1057,6 +1057,8 @@ def validate_direct_command_runtime_execution_trace_v1(
 _DIRECT_RUNTIME_RUNNER_STAGES = (
     "direct-runtime-preflight",
     "direct-runtime-discovery",
+    "materialize",
+    "direct-runtime-materialization-probe",
     "build-advantage-play-kit-for-runtime",
     "direct-runtime-dist-identity",
     "generate-standard-pack-catalog",
@@ -3000,6 +3002,8 @@ def validate_failed_execution_attempt_v1(attempt: dict[str, Any], attempt_direct
     stage = failure.get("stage")
     if not isinstance(stage, str) or not stage or failure.get("commandId") != stage or command.get("id") != stage:
         _fail("V3_PODMAN_ATTEMPT_FAILURE")
+    if stage in {"materialize", "direct-runtime-materialization-probe"} and not has_direct_runtime_integration:
+        _direct_runtime_integration_fail("FAILED_ATTEMPT_RUNTIME_INVALID")
     if has_direct_runtime_integration:
         record = attempt["directRuntimeIntegration"]
         if not isinstance(record, dict) or set(record) != {"integration", "reachedStage", "laterStages"}:
@@ -3008,6 +3012,8 @@ def validate_failed_execution_attempt_v1(attempt: dict[str, Any], attempt_direct
         validate_direct_command_runtime_runner_integration_v1(forwarded)
         reached_stage = record["reachedStage"]
         if reached_stage not in _DIRECT_RUNTIME_RUNNER_STAGES:
+            _direct_runtime_integration_fail("FAILED_ATTEMPT_RUNTIME_INVALID")
+        if stage in {"materialize", "direct-runtime-materialization-probe"} and reached_stage != stage:
             _direct_runtime_integration_fail("FAILED_ATTEMPT_RUNTIME_INVALID")
         later_stages = [
             {"id": runtime_stage, "status": "NOT_RUN"}
@@ -3117,10 +3123,27 @@ def validate_failed_execution_attempt_v1(attempt: dict[str, Any], attempt_direct
         if workspace_contract is None:
             _workspace_dag_fail("EXECUTION_CONTRACT_INVALID")
         validate_workspace_prerequisite_pnpm_executor_v1(command, workspace_contract)
+    elif stage == "materialize":
+        if command["argv"] != ["node", "materialize-v3"] or payload != [
+            CONTAINER_NODE,
+            "/runner/materialize.mjs",
+            "/runner/archive.json",
+            "/runner/direct-runtime-source-packet.json",
+            "/work",
+        ]:
+            _fail("V3_PODMAN_ATTEMPT_COMMAND")
+    elif stage == "direct-runtime-materialization-probe":
+        if command["argv"] != ["node", "direct-runtime-materialization-probe"] or payload != [
+            CONTAINER_NODE,
+            "/runner/direct-runtime-materialization-probe.mjs",
+            "/runner/archive.json",
+            "/runner/direct-runtime-source-packet.json",
+            "/work",
+        ]:
+            _fail("V3_PODMAN_ATTEMPT_COMMAND")
     elif (
         stage
         not in {
-            "materialize",
             "replay",
             "build-db",
             "build-auth",
@@ -4786,6 +4809,7 @@ def write_execution_closure_v1(
             versions, toolchain = _tool_versions(raw_dir, context)
             hermetic_pnpm_contract = build_hermetic_pnpm_install_contract_v1(archive["entries"], versions["pnpm"]["stdout"])
             failure_reason = "materialize"
+            direct_runtime_stage = failure_reason
             materialize = _run_container(
                 raw_dir,
                 "receipt-materialize",
@@ -4812,6 +4836,7 @@ def write_execution_closure_v1(
             ):
                 _fail("V3_PODMAN_MATERIALIZE_INVENTORY")
             failure_reason = "direct-runtime-materialization-probe"
+            direct_runtime_stage = failure_reason
             direct_runtime_materialization_probe = _run_container(
                 raw_dir,
                 "receipt-direct-runtime-materialization-probe",
