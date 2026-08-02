@@ -4114,6 +4114,205 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
                 )
         self.assertFalse(V3_DIR.exists())
 
+    def test_same_attempt_identity_scheduler_revalidates_after_bind_before_generation(self) -> None:
+        """Requires a post-bind context mutation to fail before generation or trace can consume it.
+
+        @returns Nothing; this uses real identity envelopes with an in-memory executor only.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        schedule = getattr(podman, "execute_direct_command_runtime_prepared_transaction_v1", None)
+        build_envelope = getattr(podman, "build_direct_command_runtime_same_attempt_identity_envelope_v1", None)
+        validate_binding = getattr(podman, "validate_direct_command_runtime_same_attempt_identity_binding_v1", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(callable(schedule), "V3_DIRECT_RUNTIME_PREPARATION_TRANSACTION_SCHEDULER_MISSING")
+        self.assertTrue(callable(build_envelope), "V3_DIRECT_RUNTIME_SAME_ATTEMPT_IDENTITY_ENVELOPE_BUILDER_MISSING")
+        self.assertTrue(callable(validate_binding), "V3_DIRECT_RUNTIME_SAME_ATTEMPT_IDENTITY_BINDING_VALIDATOR_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+
+        def canonical(value: Any) -> bytes:
+            """Serializes one H1b fixture carrier with canonical JSON bytes.
+
+            @param value The JSON-compatible fixture carrier.
+            @returns Stable UTF-8 bytes used for identity hashes.
+            """
+            return json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+        attempt_nonce = b"same-attempt-post-bind-context-mutation-fixture"
+        nonce_sha256 = _sha256(attempt_nonce)
+        preparation = {
+            "transaction": {"continuity": "SINGLE_UNINTERRUPTED_R1_V3_TRANSACTION"},
+            "frozen": "post-bind-context-fixture",
+        }
+        archive = {
+            "directRuntimeSourcePacket": {"packetSha256": "a" * 64},
+            "closureInventory": {"entryCount": 1},
+        }
+        context = {
+            "work": "/work",
+            "mounts": [{"id": "work", "target": "/work", "access": "rw"}],
+        }
+        runtime_build_receipt = {
+            "id": "build-advantage-play-kit-for-runtime",
+            "exitCode": 0,
+            "directRuntimePreparationSha256": _sha256(canonical(preparation)),
+            "directRuntimeAttempt": {"id": "fixture-attempt", "nonceSha256": nonce_sha256},
+            "receipt": {
+                "path": "r1-v3/raw/receipt-build.stdout.txt",
+                "sha256": "b" * 64,
+                "size": 17,
+            },
+        }
+        derived_rows = [{
+            "path": "packages/advantage-play-kit/dist/assets/index.js",
+            "resolvedPath": "/work/packages/advantage-play-kit/dist/assets/index.js",
+            "mode": "100644",
+            "sha256": "c" * 64,
+            "size": 23,
+        }]
+        observer = {
+            "attemptNonceSha256": nonce_sha256,
+            "workRoot": "/work",
+            "derivedBuildReadSet": derived_rows,
+        }
+        post_build_identity = {
+            "source": "IN_CONTAINER_POST_RUNTIME_BUILD_IDENTITY",
+            "directRuntimePreparationSha256": _sha256(canonical(preparation)),
+            "readSet": {"derivedBuildReadSet": copy.deepcopy(derived_rows)},
+            "observation": copy.deepcopy(observer),
+            "receipt": {
+                "path": "r1-v3/raw/receipt-direct-runtime-dist-identity.stdout.txt",
+                "sha256": _sha256(canonical(observer)),
+                "size": len(canonical(observer)),
+            },
+        }
+        envelope = build_envelope(
+            preparation,
+            archive,
+            context,
+            runtime_build_receipt,
+            post_build_identity,
+            attempt_nonce,
+        )
+        materialization = {"synthetic": "materialization"}
+        integration = {"synthetic": "integration"}
+        sealed_integration = {"synthetic": "sealed-integration"}
+        events: list[str] = []
+
+        def stage(name: str, expected: tuple[Any, ...], result: Any) -> Callable[..., Any]:
+            """Creates one exact-input synthetic scheduler stage.
+
+            @param name The recorded stage name.
+            @param expected The exact upstream values required by the stage.
+            @param result The synthetic result returned by the stage.
+            @returns A callable stage implementation.
+            """
+            def invoke(*actual: Any) -> Any:
+                """Records one exact-input stage invocation.
+
+                @param actual The upstream values supplied by the scheduler.
+                @returns The configured stage result.
+                """
+                self.assertEqual(actual, expected)
+                events.append(name)
+                return result
+            return invoke
+
+        executor = type("H1bSyntheticExecutor", (), {})()
+        executor.build_archive = stage("archive", (preparation,), archive)
+        executor.build_context = stage("context", (archive, preparation), context)
+        executor.materialize = stage("materialize", (context, preparation), materialization)
+        executor.runtime_build = stage("runtime-build", (context, materialization, preparation), runtime_build_receipt)
+        executor.post_build_identity = stage("post-build-identity", (context, runtime_build_receipt, preparation), post_build_identity)
+        executor.build_same_attempt_identity_envelope = stage(
+            "same-attempt-identity-envelope",
+            (preparation, archive, context, runtime_build_receipt, post_build_identity),
+            envelope,
+        )
+
+        def bind_finalization(
+            observed_archive: dict[str, Any],
+            observed_context: dict[str, Any],
+            observed_integration: dict[str, Any],
+        ) -> dict[str, Any]:
+            """Validates the real envelope, then simulates a forbidden post-bind mutation.
+
+            @param observed_archive The H1-bound archive.
+            @param observed_context The H1-bound execution context.
+            @param observed_integration The generic finalizer result.
+            @returns A synthetic sealed integration that must never reach generation.
+            """
+            self.assertIs(observed_archive, archive)
+            self.assertIs(observed_context, context)
+            self.assertIs(observed_integration, integration)
+            validate_binding(envelope, observed_archive, observed_context)
+            observed_context["mounts"][0]["access"] = "ro"
+            events.append("bind-finalization")
+            return sealed_integration
+
+        def generation_tripwire(*_args: Any) -> None:
+            """Fails if the mutated context reaches the first post-bind consumer.
+
+            @param _args The unexpected generation inputs.
+            @returns Nothing because this always raises.
+            """
+            events.append("generator")
+            raise AssertionError("V3_DIRECT_RUNTIME_H1B_GENERATION_REACHED")
+
+        def trace_tripwire(*_args: Any) -> None:
+            """Fails if trace executes after a post-bind context mutation.
+
+            @param _args The unexpected trace inputs.
+            @returns Nothing because this always raises.
+            """
+            events.append("trace")
+            raise AssertionError("V3_DIRECT_RUNTIME_H1B_TRACE_REACHED")
+
+        def finalize(
+            observed_preparation: dict[str, Any],
+            observed_build: dict[str, Any],
+            observed_identity: dict[str, Any],
+        ) -> dict[str, Any]:
+            """Returns a synthetic generic finalizer result after exact input checks.
+
+            @param observed_preparation The original fixture preparation.
+            @param observed_build The fixture runtime-build receipt.
+            @param observed_identity The fixture post-build identity.
+            @returns The synthetic generic finalizer output.
+            """
+            self.assertIs(observed_preparation, preparation)
+            self.assertIs(observed_build, runtime_build_receipt)
+            self.assertIs(observed_identity, post_build_identity)
+            events.append("finalizer")
+            return integration
+
+        executor.bind_finalization = bind_finalization
+        executor.generate = generation_tripwire
+        executor.capture_trace = trace_tripwire
+        with patch.object(
+            podman,
+            "finalize_direct_command_runtime_execution_inputs_v1",
+            side_effect=finalize,
+        ):
+            with self.assertRaises(error_type):
+                schedule(preparation, executor)
+        self.assertEqual(
+            events,
+            [
+                "archive",
+                "context",
+                "materialize",
+                "runtime-build",
+                "post-build-identity",
+                "same-attempt-identity-envelope",
+                "finalizer",
+                "bind-finalization",
+            ],
+            "V3_DIRECT_RUNTIME_H1B_POST_BIND_MUTATION_REACHED_CONSUMER",
+        )
+        self.assertEqual(context["mounts"][0]["access"], "ro")
+        self.assertFalse(V3_DIR.exists())
+
     def test_scoped_pnpm_payloads_make_store_dir_global_and_pin_the_build_db_blocker(self) -> None:
         """Requires scoped pnpm payloads to keep store selection out of package scripts.
 
