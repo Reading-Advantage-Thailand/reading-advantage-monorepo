@@ -6,6 +6,7 @@ import copy
 import hashlib
 import inspect
 import importlib
+import os
 import json
 import shutil
 import subprocess
@@ -2833,6 +2834,280 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             self.assertEqual(trace_receipt["generatorScript"], config["generatorResolvedPath"])
             self.assertEqual(trace_receipt["nonce"], config["nonce"])
             self.assertEqual(trace_receipt["events"], raw_events)
+        self.assertFalse(V3_DIR.exists())
+
+    @unittest.skipUnless(
+        os.environ.get("RUN_R1_PODMAN_CHILD_TRACE_ACCEPTANCE") == "1",
+        "set RUN_R1_PODMAN_CHILD_TRACE_ACCEPTANCE=1 to run the pinned-image container acceptance gate",
+    )
+    def test_direct_runtime_tracer_child_only_pinned_podman_acceptance(self) -> None:
+        """Proves child-only ESM filesystem tracing in the existing pinned no-network Podman image.
+
+        @returns Nothing; assertions use two temporary, synthetic-container invocations and leave no candidate or attempt evidence.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        self.assertTrue(shutil.which(podman.PODMAN), "V3_DIRECT_RUNTIME_PODMAN_MISSING")
+        self.assertIn("@sha256:", podman.IMAGE_RESOLVED, "V3_DIRECT_RUNTIME_IMAGE_NOT_PINNED")
+        persistent_attempts = sorted(
+            path.relative_to(TRACK_DIR).as_posix()
+            for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")
+        )
+
+        generator_bytes = (
+            b'import { readFile } from "node:fs/promises";\n'
+            b'const bytes = await readFile(new URL("../assets/standard/input.txt", import.meta.url));\n'
+            b'if (bytes.toString("utf8") !== "container-child-read\\n") throw new Error("fixture source mismatch");\n'
+        )
+        source_bytes = b"container-child-read\n"
+
+        def baseline_identity(path: str, contents: bytes) -> dict[str, Any]:
+            """Builds one deterministic detached baseline identity for the container-only fixture.
+
+            @param path The workspace-relative synthetic source path.
+            @param contents The exact synthetic source bytes.
+            @returns The identity required by the direct-runtime trace contract.
+            """
+            blob = b"blob " + str(len(contents)).encode("ascii") + b"\0" + contents
+            return {
+                "path": path,
+                "sha256": _sha256(contents),
+                "size": len(contents),
+                "mode": "100644",
+                "origin": "BASELINE_GIT_BLOB",
+                "baselineCommit": "a" * 40,
+                "gitBlobSha1": hashlib.sha1(blob).hexdigest(),
+                "inclusion": "MATERIALIZE_EXACT_BASELINE_BYTES",
+            }
+
+        package_root = "packages/fixture-container-runtime"
+        generator_path = f"{package_root}/scripts/generate-runtime.mjs"
+        source_path = f"{package_root}/assets/standard/input.txt"
+        generator_identity = baseline_identity(generator_path, generator_bytes)
+        source_identity = baseline_identity(source_path, source_bytes)
+        baseline_read_set = sorted([generator_identity, source_identity], key=lambda item: item["path"])
+        resource_budget = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-asset-resource-budget",
+            "frozenArchive": _reference(V2_ARCHIVE),
+            "sourceCeiling": {
+                "path": f"{package_root}/assets/standard",
+                "regularFiles": 2,
+                "apparentBytes": len(generator_bytes) + len(source_bytes),
+                "allocatedBytes": len(generator_bytes) + len(source_bytes),
+            },
+            "reservations": {
+                "baselineGitMaterializationBytes": 1,
+                "candidateCowBytes": 1,
+                "archiveSupplementBytes": 1,
+                "derivedOutputBytes": 1,
+                "metadataBytes": 1,
+                "minimumHeadroomBytes": 1,
+            },
+            "requiredAvailableBytes": 6,
+            "availableBytes": 6,
+            "decision": "PASS",
+        }
+        derived_read = {
+            "path": f"{package_root}/dist/assets/index.js",
+            "sha256": "b" * 64,
+            "size": 1,
+            "origin": "DERIVED_BUILD_OUTPUT",
+            "producer": {
+                "kind": "PACKAGE_SCRIPT_PREREQUISITE_BUILD",
+                "scriptName": "fixture-build",
+                "scriptSegment": "pnpm build",
+                "receipt": {
+                    "path": "fixture-container-build-receipt.json",
+                    "sha256": "c" * 64,
+                    "size": 1,
+                },
+            },
+        }
+        read_set = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-read-set",
+            "trigger": {
+                "logicalArgv": ["pnpm", "--filter", "@fixture/container-runtime", "fixture-build"],
+                "package": "@fixture/container-runtime",
+                "manifest": {
+                    "path": f"{package_root}/package.json",
+                    "sha256": "d" * 64,
+                    "size": 1,
+                },
+            },
+            "baselineReadSet": baseline_read_set,
+            "derivedBuildReadSet": [derived_read],
+            "outputPaths": [f"{package_root}/assets/standard/standard-pack-release.json"],
+            "preflightQuota": {
+                "maxEntries": len(baseline_read_set),
+                "maxBytes": sum(item["size"] for item in baseline_read_set),
+                "observedEntries": len(baseline_read_set),
+                "observedBytes": sum(item["size"] for item in baseline_read_set),
+            },
+            "resourceBudget": resource_budget,
+            "discovery": {
+                "kind": "BASELINE_GIT_INSTRUMENTED_TRACE",
+                "script": generator_identity,
+                "root": f"{package_root}/assets/standard",
+                "directoryListingCount": 1,
+            },
+        }
+        source_packet = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-baseline-git-source-packet",
+            "source": "GIT_OBJECT_DATABASE_ONLY",
+            "baselineCommit": generator_identity["baselineCommit"],
+            "tree": {"gitTreeSha1": "e" * 40},
+            "baselineReadSet": baseline_read_set,
+            "objects": [
+                {**source_identity, "contentBase64": base64.b64encode(source_bytes).decode("ascii")},
+                {**generator_identity, "contentBase64": base64.b64encode(generator_bytes).decode("ascii")},
+            ],
+        }
+        source_packet["packetSha256"] = podman._direct_runtime_packet_digest_v1(source_packet)
+        integration = podman.build_direct_command_runtime_runner_integration_v1(
+            read_set,
+            source_packet,
+            None,
+            resource_budget,
+        )
+
+        temporary_root: Path | None = None
+        with tempfile.TemporaryDirectory(prefix="r1-podman-child-trace-") as temporary:
+            temporary_root = Path(temporary)
+            archive_path = temporary_root / "archive.json"
+            work = temporary_root / "work"
+            work.mkdir(mode=0o777)
+            work.chmod(0o777)
+            generator = work / generator_path
+            generator.parent.mkdir(parents=True)
+            generator.write_bytes(generator_bytes)
+            source = work / source_path
+            source.parent.mkdir(parents=True)
+            source.write_bytes(source_bytes)
+            parent = work / "pnpm-parent.mjs"
+            parent.write_text(
+                'import { spawnSync } from "node:child_process";\n'
+                'const result = spawnSync(process.execPath, [process.argv[2]], { stdio: "inherit" });\n'
+                'process.stdout.write(JSON.stringify({ parentPnpmPid: process.pid, generatorPid: result.pid }));\n'
+                'process.exit(result.status ?? 1);\n',
+                encoding="utf-8",
+            )
+            archive_path.write_text(json.dumps({"entries": [], "closureInventory": []}), encoding="utf-8")
+            mounts = podman._runner_scripts(
+                temporary_root,
+                archive_path,
+                podman.build_nested_pnpm_runtime_shim_contract_v1(),
+                direct_runtime_integration=integration,
+            )
+            runner = temporary_root / "runner"
+            config_path = runner / "direct-runtime-trace-config.json"
+            trace_config = _load_json(config_path, self)
+            self.assertEqual(trace_config["targetRoot"], "/work")
+            self.assertEqual(trace_config["generatorScript"], generator_path)
+            self.assertEqual(trace_config["generatorResolvedPath"], f"/work/{generator_path}")
+            self.assertEqual(trace_config["nodeOptions"], podman.DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS)
+            self.assertEqual(trace_config["parentPnpm"], "PNPM_PARENT_EXCLUDED")
+            self.assertTrue(all(Path(mount["source"]).is_relative_to(temporary_root) for mount in mounts))
+
+            artifact_path = work / ".direct-runtime-trace" / "direct-runtime-raw-events.jsonl"
+            container_prefix = [
+                podman.PODMAN,
+                "run",
+                "--rm",
+                "--pull=never",
+                "--network",
+                "none",
+                "--userns=keep-id",
+                "--workdir",
+                "/work",
+                "--volume",
+                f"{work.resolve()}:/work:rw",
+                "--volume",
+                f"{runner.resolve()}:/runner:ro",
+                podman.IMAGE_RESOLVED,
+                "/usr/bin/env",
+                "-i",
+                "CI=true",
+                f"PATH={podman.BOOTSTRAP_PATH}",
+            ]
+            self.assertEqual(container_prefix.count(podman.IMAGE_RESOLVED), 1)
+            self.assertIn("--pull=never", container_prefix)
+            self.assertNotIn(str(REPO_ROOT), "\n".join(container_prefix))
+            self.assertNotIn("build", container_prefix)
+            self.assertNotIn("pull", container_prefix)
+
+            traced = subprocess.run(
+                [
+                    *container_prefix,
+                    f"NODE_OPTIONS={podman.DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS}",
+                    f"DIRECT_RUNTIME_TRACE_CONFIG_PATH={podman.DIRECT_RUNTIME_TRACE_CONFIG_PATH}",
+                    podman.CONTAINER_NODE,
+                    "/work/pnpm-parent.mjs",
+                    f"/work/{generator_path}",
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=30,
+            )
+            self.assertEqual(
+                traced.returncode,
+                0,
+                f"V3_DIRECT_RUNTIME_PINNED_IMAGE_CHILD_TRACE_BLOCKED\nstdout:\n{traced.stdout}\nstderr:\n{traced.stderr}",
+            )
+            process_proof = json.loads(traced.stdout)
+            self.assertEqual(set(process_proof), {"parentPnpmPid", "generatorPid"})
+            self.assertIsInstance(process_proof["parentPnpmPid"], int)
+            self.assertIsInstance(process_proof["generatorPid"], int)
+            self.assertNotEqual(process_proof["parentPnpmPid"], process_proof["generatorPid"])
+            self.assertTrue(artifact_path.is_file())
+            self.assertFalse(artifact_path.is_symlink())
+            raw = artifact_path.read_bytes()
+            self.assertLessEqual(len(raw), 4096, "V3_DIRECT_RUNTIME_SYNTHETIC_TRACE_DISK_BOUND_EXCEEDED")
+            raw_events = [json.loads(line) for line in raw.decode("utf-8").splitlines()]
+            self.assertEqual(raw_events, [{
+                "nonce": trace_config["nonce"],
+                "ordinal": 0,
+                "kind": "BASELINE_READ",
+                "value": source_identity,
+                "tracer": "direct-runtime-tracer",
+                "packetSha256": source_packet["packetSha256"],
+                "rawEventArtifact": trace_config["rawEventArtifact"],
+                "generatorPid": process_proof["generatorPid"],
+                "generatorScript": f"/work/{generator_path}",
+            }])
+
+            receipt = subprocess.run(
+                [
+                    *container_prefix,
+                    podman.CONTAINER_NODE,
+                    "/runner/direct-runtime-trace-receipt.mjs",
+                    podman.DIRECT_RUNTIME_TRACE_CONFIG_PATH,
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=30,
+            )
+            self.assertEqual(
+                receipt.returncode,
+                0,
+                f"V3_DIRECT_RUNTIME_PINNED_IMAGE_TRACE_RECEIPT_BLOCKED\nstdout:\n{receipt.stdout}\nstderr:\n{receipt.stderr}",
+            )
+            trace_receipt = json.loads(receipt.stdout)
+            self.assertEqual(trace_receipt["generatorPid"], process_proof["generatorPid"])
+            self.assertEqual(trace_receipt["generatorScript"], f"/work/{generator_path}")
+            self.assertEqual(trace_receipt["events"], raw_events)
+            self.assertEqual(trace_receipt["rawArtifact"], {"sha256": _sha256(raw), "size": len(raw)})
+            self.assertFalse(artifact_path.exists(), "V3_DIRECT_RUNTIME_TRACE_ARTIFACT_CLEANUP_FAILED")
+        self.assertIsNotNone(temporary_root)
+        self.assertFalse(temporary_root.exists(), "V3_DIRECT_RUNTIME_SYNTHETIC_MOUNT_CLEANUP_FAILED")
+        self.assertEqual(
+            sorted(path.relative_to(TRACK_DIR).as_posix() for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")),
+            persistent_attempts,
+        )
         self.assertFalse(V3_DIR.exists())
 
     def test_scoped_pnpm_payloads_make_store_dir_global_and_pin_the_build_db_blocker(self) -> None:
