@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import base64
 import copy
+import dis
 import hashlib
 import inspect
 import importlib
@@ -14,6 +15,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from typing import Any, Callable
+from unittest.mock import patch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -3256,6 +3258,145 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             sorted(path.relative_to(TRACK_DIR).as_posix() for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")),
             persistent_attempts,
         )
+        self.assertEqual(marker.read_bytes(), marker_bytes)
+
+    def test_direct_runtime_preparation_transaction_is_executable_and_tree_capacity_is_derived(self) -> None:
+        """Requires real finalization scheduling and capacity derived from a canonical selected Git tree.
+
+        @returns Nothing; this uses only a synthetic in-memory executor and cannot invoke Podman or publish evidence.
+        """
+        self.assertFalse(V3_DIR.exists())
+        persistent_attempts = sorted(path.relative_to(TRACK_DIR).as_posix() for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*"))
+        marker = TRACK_DIR / "r1-r2-v2-marker-closeout-green-receipt-20260801.md"
+        marker_bytes = marker.read_bytes()
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        schedule = getattr(podman, "execute_direct_command_runtime_prepared_transaction_v1", None)
+        derive_capacity = getattr(podman, "derive_direct_command_runtime_capacity_from_selected_tree_v1", None)
+        writer = podman.write_execution_closure_v1
+        self.assertTrue(callable(schedule), "V3_DIRECT_RUNTIME_PREPARATION_TRANSACTION_SCHEDULER_MISSING")
+        self.assertTrue(callable(derive_capacity), "V3_DIRECT_RUNTIME_DERIVED_TREE_CAPACITY_BUILDER_MISSING")
+        self.assertEqual(set(inspect.signature(schedule).parameters), {"preparation", "executor"})
+        self.assertEqual(set(inspect.signature(derive_capacity).parameters), {"selected_tree_inventory", "asset_root", "available_bytes"})
+
+        writer_globals = [step.argval for step in dis.get_instructions(writer) if step.opname == "LOAD_GLOBAL"]
+        self.assertIn("prepare_direct_command_runtime_execution_inputs_v1", writer_globals)
+        self.assertIn("execute_direct_command_runtime_prepared_transaction_v1", writer_globals)
+        self.assertLess(writer_globals.index("prepare_direct_command_runtime_execution_inputs_v1"), writer_globals.index("execute_direct_command_runtime_prepared_transaction_v1"))
+        self.assertNotIn("INPUT_PREPARATION_FINALIZATION_REQUIRED", writer.__code__.co_consts)
+        self.assertFalse({"direct_runtime_read_set", "direct_runtime_source_packet", "direct_runtime_attempt", "direct_runtime_resource_budget"} & set(writer.__code__.co_varnames))
+
+        events: list[str] = []
+        preparation = {"synthetic": "preparation"}
+        archive: dict[str, Any] = {"synthetic": "archive"}
+        context: dict[str, Any] = {"synthetic": "context"}
+        materialization = {"synthetic": "materialization"}
+        runtime_build = {"synthetic": "runtime-build"}
+        post_build_identity = {"synthetic": "post-build-identity"}
+        integration = {"synthetic": "integration"}
+        generation = {"synthetic": "generation"}
+        trace = {"synthetic": "trace"}
+
+        def stage(name: str, expected: tuple[Any, ...], result: Any) -> Callable[..., Any]:
+            """Creates one in-memory executor stage with exact upstream inputs.
+
+            @param name The asserted transaction stage name.
+            @param expected The exact upstream objects the stage must receive.
+            @param result The synthetic downstream object to return.
+            @returns A callable executor stage.
+            """
+            def invoke(*actual: Any) -> Any:
+                """Records one synthetic stage invocation.
+
+                @param actual The observed upstream transaction objects.
+                @returns The declared synthetic downstream object.
+                """
+                self.assertEqual(actual, expected)
+                events.append(name)
+                return result
+            return invoke
+
+        executor = type("SyntheticExecutor", (), {})()
+        executor.build_archive = stage("archive", (preparation,), archive)
+        executor.build_context = stage("context", (archive, preparation), context)
+        executor.materialize = stage("materialize", (context, preparation), materialization)
+        executor.runtime_build = stage("runtime-build", (context, materialization, preparation), runtime_build)
+        executor.post_build_identity = stage("post-build-identity", (context, runtime_build, preparation), post_build_identity)
+
+        def bind_finalization(observed_archive: dict[str, Any], observed_context: dict[str, Any], observed_integration: dict[str, Any]) -> None:
+            """Binds the real finalizer result to every pre-generation transaction carrier.
+
+            @param observed_archive The archive returned by the scheduler.
+            @param observed_context The clean execution context.
+            @param observed_integration The finalizer result.
+            @returns Nothing.
+            """
+            self.assertIs(observed_archive, archive)
+            self.assertIs(observed_context, context)
+            self.assertIs(observed_integration, integration)
+            archive["directRuntimeIntegration"] = observed_integration
+            context["directRuntimeIntegration"] = observed_integration
+            events.append("bind-finalization")
+
+        def finalize(observed_preparation: dict[str, Any], observed_build: dict[str, Any], observed_identity: dict[str, Any]) -> dict[str, Any]:
+            """Records the actual finalizer call made by the transaction scheduler.
+
+            @param observed_preparation The original synthetic preparation.
+            @param observed_build The one runtime build receipt.
+            @param observed_identity The post-build identity.
+            @returns The synthetic finalizer result.
+            """
+            self.assertIs(observed_preparation, preparation)
+            self.assertIs(observed_build, runtime_build)
+            self.assertIs(observed_identity, post_build_identity)
+            events.append("finalizer")
+            return integration
+
+        executor.bind_finalization = bind_finalization
+        executor.generate = stage("generator", (context, integration), generation)
+        executor.capture_trace = stage("trace", (context, integration, generation), trace)
+        with patch.object(podman, "finalize_direct_command_runtime_execution_inputs_v1", side_effect=finalize) as finalizer:
+            result = schedule(preparation, executor)
+        finalizer.assert_called_once_with(preparation, runtime_build, post_build_identity)
+        self.assertEqual(events, ["archive", "context", "materialize", "runtime-build", "post-build-identity", "finalizer", "bind-finalization", "generator", "trace"])
+        self.assertEqual(events.count("runtime-build"), 1)
+        self.assertEqual(result, {
+            "archive": archive,
+            "context": context,
+            "materialization": materialization,
+            "runtimeBuildReceipt": runtime_build,
+            "postBuildIdentity": post_build_identity,
+            "integration": integration,
+            "generation": generation,
+            "trace": trace,
+        })
+        self.assertIs(archive["directRuntimeIntegration"], integration)
+        self.assertIs(context["directRuntimeIntegration"], integration)
+
+        asset_root = "packages/fixture-runtime/assets/standard"
+        selected_tree = [
+            {"path": f"{asset_root}/IMPORT-RECEIPT.tsv", "gitBlobSha1": "1" * 40, "sha256": "1" * 64, "size": 17, "mode": "100644"},
+            {"path": f"{asset_root}/sprites/hero.png", "gitBlobSha1": "2" * 40, "sha256": "2" * 64, "size": 4097, "mode": "100644"},
+            {"path": "packages/fixture-runtime/scripts/generate-runtime.mjs", "gitBlobSha1": "3" * 40, "sha256": "3" * 64, "size": 101, "mode": "100755"},
+        ]
+        capacity = derive_capacity(selected_tree, asset_root, 10**9)
+        expected_ceiling = {"path": asset_root, "regularFiles": 2, "apparentBytes": 4114, "allocatedBytes": 12288}
+        self.assertEqual(capacity["selectedTreeInventory"], selected_tree)
+        self.assertEqual(capacity["selectedTreeInventorySha256"], _sha256(_canonical(selected_tree)))
+        self.assertEqual(capacity["sourceCeiling"], expected_ceiling)
+        self.assertEqual(capacity["resourceBudget"]["sourceCeiling"], expected_ceiling)
+        self.assertEqual(capacity["resourceBudget"]["reservations"]["baselineGitMaterializationBytes"], 16384)
+        podman._direct_runtime_resource_budget_v1(capacity["resourceBudget"])
+        expanded_tree = copy.deepcopy(selected_tree)
+        expanded_tree[1]["size"] = 8193
+        expanded = derive_capacity(expanded_tree, asset_root, 10**9)
+        self.assertNotEqual(expanded["selectedTreeInventorySha256"], capacity["selectedTreeInventorySha256"])
+        self.assertEqual(expanded["sourceCeiling"]["apparentBytes"], 8210)
+        self.assertEqual(expanded["sourceCeiling"]["allocatedBytes"], 16384)
+        self.assertGreater(expanded["resourceBudget"]["requiredAvailableBytes"], capacity["resourceBudget"]["requiredAvailableBytes"])
+        preparation_globals = {step.argval for step in dis.get_instructions(podman.prepare_direct_command_runtime_execution_inputs_v1) if step.opname == "LOAD_GLOBAL"}
+        self.assertIn("derive_direct_command_runtime_capacity_from_selected_tree_v1", preparation_globals)
+        self.assertFalse(V3_DIR.exists())
+        self.assertEqual(sorted(path.relative_to(TRACK_DIR).as_posix() for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")), persistent_attempts)
         self.assertEqual(marker.read_bytes(), marker_bytes)
 
     def test_scoped_pnpm_payloads_make_store_dir_global_and_pin_the_build_db_blocker(self) -> None:
