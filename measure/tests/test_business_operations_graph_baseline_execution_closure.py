@@ -3317,6 +3317,9 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         runtime_build = {"synthetic": "runtime-build"}
         post_build_identity = {"synthetic": "post-build-identity"}
         integration = {"synthetic": "integration"}
+        sealed_integration = {"synthetic": "sealed-integration"}
+        archive_bytes = json.dumps(archive, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        context_bytes = json.dumps(context, sort_keys=True, separators=(",", ":")).encode("utf-8")
         generation = {"synthetic": "generation"}
         trace = {"synthetic": "trace"}
 
@@ -3346,20 +3349,29 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         executor.runtime_build = stage("runtime-build", (context, materialization, preparation), runtime_build)
         executor.post_build_identity = stage("post-build-identity", (context, runtime_build, preparation), post_build_identity)
 
-        def bind_finalization(observed_archive: dict[str, Any], observed_context: dict[str, Any], observed_integration: dict[str, Any]) -> None:
-            """Binds the real finalizer result to every pre-generation transaction carrier.
+        def bind_finalization(observed_archive: dict[str, Any], observed_context: dict[str, Any], observed_integration: dict[str, Any]) -> dict[str, Any]:
+            """Seals finalization without mutating already executed archive or context carriers.
 
             @param observed_archive The archive returned by the scheduler.
             @param observed_context The clean execution context.
             @param observed_integration The finalizer result.
-            @returns Nothing.
+            @returns A separately bound sealed integration for generation and tracing.
             """
             self.assertIs(observed_archive, archive)
             self.assertIs(observed_context, context)
             self.assertIs(observed_integration, integration)
-            archive["directRuntimeIntegration"] = observed_integration
-            context["directRuntimeIntegration"] = observed_integration
+            self.assertEqual(
+                json.dumps(observed_archive, sort_keys=True, separators=(",", ":")).encode("utf-8"),
+                archive_bytes,
+                "V3_DIRECT_RUNTIME_ARCHIVE_MUTATED_AFTER_EXECUTION",
+            )
+            self.assertEqual(
+                json.dumps(observed_context, sort_keys=True, separators=(",", ":")).encode("utf-8"),
+                context_bytes,
+                "V3_DIRECT_RUNTIME_CONTEXT_MUTATED_AFTER_EXECUTION",
+            )
             events.append("bind-finalization")
+            return sealed_integration
 
         def finalize(observed_preparation: dict[str, Any], observed_build: dict[str, Any], observed_identity: dict[str, Any]) -> dict[str, Any]:
             """Records the actual finalizer call made by the transaction scheduler.
@@ -3376,8 +3388,8 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             return integration
 
         executor.bind_finalization = bind_finalization
-        executor.generate = stage("generator", (context, integration), generation)
-        executor.capture_trace = stage("trace", (context, integration, generation), trace)
+        executor.generate = stage("generator", (context, sealed_integration), generation)
+        executor.capture_trace = stage("trace", (context, sealed_integration, generation), trace)
         with patch.object(podman, "finalize_direct_command_runtime_execution_inputs_v1", side_effect=finalize) as finalizer:
             result = schedule(preparation, executor)
         finalizer.assert_called_once_with(preparation, runtime_build, post_build_identity)
@@ -3390,11 +3402,15 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             "runtimeBuildReceipt": runtime_build,
             "postBuildIdentity": post_build_identity,
             "integration": integration,
+            "sealedIntegration": sealed_integration,
             "generation": generation,
             "trace": trace,
         })
-        self.assertIs(archive["directRuntimeIntegration"], integration)
-        self.assertIs(context["directRuntimeIntegration"], integration)
+        self.assertIsNot(integration, sealed_integration)
+        self.assertEqual(json.dumps(archive, sort_keys=True, separators=(",", ":")).encode("utf-8"), archive_bytes)
+        self.assertEqual(json.dumps(context, sort_keys=True, separators=(",", ":")).encode("utf-8"), context_bytes)
+        self.assertNotIn("directRuntimeIntegration", archive)
+        self.assertNotIn("directRuntimeIntegration", context)
 
         asset_root = "packages/fixture-runtime/assets/standard"
         selected_tree = [
