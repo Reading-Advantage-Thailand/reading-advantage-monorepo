@@ -9,7 +9,6 @@ import inspect
 import importlib
 import os
 import json
-import re
 import shutil
 import subprocess
 import tempfile
@@ -7115,7 +7114,10 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             executor._candidate_publication_failure = build_failure(integration, "atomic-replace")
             candidate_error = OSError("V3_TEST_ATOMIC_REPLACE_FAILURE")
             validation_error = error_type("V3_TEST_CANDIDATE_FAILURE_EVIDENCE_VALIDATION")
+            expected_attempt_name = f"{podman.ATTEMPT_PREFIX}-20260802-0001"
             validated_directories: list[Path] = []
+            validated_attempt_ids: list[str] = []
+            validated_public_paths_absent: list[bool] = []
 
             def reject_final_attempt_validation(_attempt: dict[str, Any], directory: Path | str) -> None:
                 """Records the private evidence directory then rejects final validation.
@@ -7124,7 +7126,12 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
                 @param directory The directory offered to the final attempt validator.
                 @returns Nothing because this deterministic validation fault always raises.
                 """
-                validated_directories.append(Path(directory))
+                private_directory = Path(directory)
+                validated_directories.append(private_directory)
+                validated_attempt_ids.append(_attempt["attempt"]["id"])
+                validated_public_paths_absent.append(
+                    not (attempts_root / private_directory.name).exists(),
+                )
                 raise validation_error from candidate_error
 
             with patch.object(
@@ -7151,14 +7158,13 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             self.assertEqual(len(validated_directories), 1)
             private_directory = validated_directories[0]
             self.assertTrue(private_directory.is_relative_to(attempts_root))
-            self.assertIsNone(
-                re.fullmatch(
-                    rf"{re.escape(podman.ATTEMPT_PREFIX)}-20260802-[0-9]{{4}}",
-                    private_directory.name,
-                ),
-            )
+            self.assertNotEqual(private_directory.parent, attempts_root)
+            self.assertEqual(private_directory.name, expected_attempt_name)
+            self.assertEqual(validated_attempt_ids, [expected_attempt_name])
+            self.assertEqual(validated_public_paths_absent, [True])
             self.assertFalse(output.exists())
             self.assertFalse(V3_DIR.exists())
+            self.assertFalse((attempts_root / expected_attempt_name).exists())
             self.assertEqual(
                 sorted(path.name for path in attempts_root.iterdir()),
                 [],
