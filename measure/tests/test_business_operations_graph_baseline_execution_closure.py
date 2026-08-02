@@ -6059,6 +6059,274 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             with self.assertRaises(error_type):
                 validator(bad, attempt_directory)
 
+    def test_production_materialize_failure_persists_real_preseal_terminal_carrier(self) -> None:
+        """Requires the real production scheduler to retain a materialize failure before sealing.
+
+        @returns Nothing; assertions exercise temporary capacity, archive, context, and container boundaries only.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        execute = getattr(podman, "execute_direct_command_runtime_prepared_transaction_v1", None)
+        executor_type = getattr(podman, "DirectCommandRuntimeProductionExecutorV1", None)
+        validator = getattr(podman, "validate_failed_execution_attempt_v1", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(callable(execute), "V3_DIRECT_RUNTIME_PREPARED_TRANSACTION_MISSING")
+        self.assertTrue(inspect.isclass(executor_type), "V3_DIRECT_RUNTIME_PRODUCTION_EXECUTOR_MISSING")
+        self.assertTrue(callable(validator), "V3_PODMAN_FAILED_ATTEMPT_VALIDATOR_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+
+        stage_plan = [
+            "direct-runtime-preflight",
+            "direct-runtime-discovery",
+            "materialize",
+            "direct-runtime-materialization-probe",
+            "build-advantage-play-kit-for-runtime",
+            "direct-runtime-dist-identity",
+            "generate-standard-pack-catalog",
+            "direct-runtime-trace",
+        ]
+        later_stages = [
+            {"id": "direct-runtime-materialization-probe", "status": "NOT_RUN"},
+            {"id": "build-advantage-play-kit-for-runtime", "status": "NOT_RUN"},
+            {"id": "direct-runtime-dist-identity", "status": "NOT_RUN"},
+            {"id": "generate-standard-pack-catalog", "status": "NOT_RUN"},
+            {"id": "direct-runtime-trace", "status": "NOT_RUN"},
+        ]
+        self.assertEqual(list(podman._DIRECT_RUNTIME_RUNNER_STAGES), stage_plan)
+        preparation = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-input-preparation",
+            "packetMaterialization": {
+                "sourcePacketSha256": "a" * 64,
+                "entries": [],
+            },
+        }
+        archive = {
+            "entries": [],
+            "closureInventory": {"entryCount": 0, "sha256": "b" * 64},
+        }
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            attempts_root = root / "attempts"
+            attempts_root.mkdir()
+            output = root / "candidate"
+            context = {
+                "prefix": [podman.PODMAN, "run", "--rm", "--network", "none"],
+            }
+            executor = executor_type(output, "20260802")
+            native_temporary_directory = tempfile.TemporaryDirectory
+            container_calls: list[tuple[str, list[str], list[str]]] = []
+
+            def create_stage_directory(*, prefix: str, dir: str) -> tempfile.TemporaryDirectory[str]:
+                """Allocates the executor's private stage under this test's temporary root.
+
+                @param prefix The executor-provided temporary-directory prefix.
+                @param dir The production temporary directory that this test replaces.
+                @returns A standard temporary-directory handle beneath the test root.
+                """
+                self.assertEqual(dir, "/tmp")
+                return native_temporary_directory(prefix=prefix, dir=root)
+
+            def build_context_boundary(
+                observed_archive: dict[str, Any],
+                observed_preparation: dict[str, Any],
+            ) -> dict[str, Any]:
+                """Provides the isolated context boundary after real archive initialization.
+
+                @param observed_archive The archive returned by the real executor setup.
+                @param observed_preparation The preparation forwarded by the scheduler.
+                @returns The clean context consumed by the real materialize method.
+                """
+                self.assertIs(observed_archive, executor._archive)
+                self.assertIs(observed_preparation, preparation)
+                executor._context = context
+                return context
+
+            def failing_container(
+                raw_directory: Path,
+                raw_id: str,
+                observed_context: dict[str, Any],
+                logical_argv: list[str],
+                payload_argv: list[str],
+                toolchain: dict[str, Any] | None = None,
+                environment_overrides: dict[str, str] | None = None,
+            ) -> dict[str, Any]:
+                """Stages one real-shaped nonzero materialize receipt without starting Podman.
+
+                @param raw_directory The real executor-owned temporary raw directory.
+                @param raw_id The requested raw receipt identifier.
+                @param observed_context The clean context supplied by the real executor.
+                @param logical_argv The contract-level command arguments.
+                @param payload_argv The in-container command arguments.
+                @param toolchain The optional container toolchain identity.
+                @param environment_overrides The optional clean-environment overrides.
+                @returns The nonzero staged command record consumed by the real materialize method.
+                """
+                container_calls.append((raw_id, list(logical_argv), list(payload_argv)))
+                self.assertEqual(raw_id, "receipt-materialize")
+                self.assertEqual(logical_argv, ["node", "materialize-v3"])
+                self.assertEqual(
+                    payload_argv,
+                    [
+                        podman.CONTAINER_NODE,
+                        "/runner/materialize.mjs",
+                        "/runner/archive.json",
+                        "/runner/direct-runtime-source-packet.json",
+                        "/work",
+                    ],
+                )
+                self.assertIs(observed_context, context)
+                self.assertIsNone(toolchain)
+                self.assertIsNone(environment_overrides)
+                stdout = raw_directory / f"{raw_id}.stdout.txt"
+                stderr = raw_directory / f"{raw_id}.stderr.txt"
+                stdout.write_text("", encoding="utf-8")
+                stderr.write_text(
+                    "V3_DIRECT_RUNTIME_PACKET_MATERIALIZATION_INVALID: source packet entry is unreadable\n",
+                    encoding="utf-8",
+                )
+                return {
+                    "argv": list(logical_argv),
+                    "cwd": ".",
+                    "env": dict(podman.ENV),
+                    "envAbsent": list(podman.ENV_ABSENT),
+                    "network": False,
+                    "exitCode": 1,
+                    "actualExecutor": podman._container_executor(
+                        observed_context,
+                        logical_argv,
+                        payload_argv,
+                        toolchain,
+                        environment_overrides,
+                    ),
+                    "_rawId": raw_id,
+                    "_stdoutPath": stdout,
+                    "_stderrPath": stderr,
+                    "_stdoutText": "",
+                    "_stderrText": stderr.read_text(encoding="utf-8"),
+                }
+
+            with patch.object(
+                podman,
+                "probe_direct_command_runtime_production_capacity_v1",
+                return_value={"decision": "PASS", "fixture": "capacity"},
+            ), patch.object(
+                podman.tempfile,
+                "TemporaryDirectory",
+                side_effect=create_stage_directory,
+            ), patch.object(
+                podman,
+                "_build_archive",
+                return_value=archive,
+            ), patch.object(
+                executor,
+                "build_context",
+                side_effect=build_context_boundary,
+            ), patch.object(
+                podman,
+                "_tool_versions",
+                return_value=({}, {}),
+            ), patch.object(
+                podman,
+                "_run_container",
+                side_effect=failing_container,
+            ), patch.object(podman, "TRACK_DIR", attempts_root):
+                with self.assertRaisesRegex(error_type, r"^V3_PODMAN_GATE_FAILED: materialize$"):
+                    execute(preparation, executor)
+
+            self.assertEqual(
+                container_calls,
+                [
+                    (
+                        "receipt-materialize",
+                        ["node", "materialize-v3"],
+                        [
+                            podman.CONTAINER_NODE,
+                            "/runner/materialize.mjs",
+                            "/runner/archive.json",
+                            "/runner/direct-runtime-source-packet.json",
+                            "/work",
+                        ],
+                    ),
+                ],
+            )
+            self.assertEqual(executor._failure_reason, "materialize")
+            self.assertEqual(executor._direct_runtime_stage, "materialize")
+            self.assertIsNone(executor._sealed_integration)
+            self.assertIsNone(executor._same_attempt_identity_envelope)
+            self.assertFalse(output.exists())
+            self.assertFalse(V3_DIR.exists())
+
+            attempt_directories = sorted(
+                attempts_root.glob("r1-v3-podman-execution-attempt-20260802-*")
+            )
+            self.assertEqual(len(attempt_directories), 1)
+            attempt_directory = attempt_directories[0]
+            self.assertTrue(attempt_directory.is_dir())
+            self.assertFalse(attempt_directory.is_symlink())
+            attempt = _load_json(attempt_directory / "failed-attempt.json", self)
+            self.assertEqual(
+                {key for key in attempt if key.startswith("directRuntime")},
+                {"directRuntimePreSealAttempt"},
+            )
+            preseal = attempt["directRuntimePreSealAttempt"]
+            self.assertIsInstance(executor._attempt_nonce, bytes)
+            self.assertEqual(
+                preseal,
+                {
+                    "schemaVersion": 1,
+                    "kind": "direct-command-runtime-pre-seal-attempt",
+                    "preparationSha256": _sha256(podman._canonical(preparation)),
+                    "stagePlan": stage_plan,
+                    "attempt": {
+                        "id": "direct-runtime-detached-runner-v1",
+                        "nonceSha256": _sha256(executor._attempt_nonce),
+                        "reachedStage": "materialize",
+                        "laterStages": later_stages,
+                        "executionTrace": None,
+                    },
+                },
+            )
+            self.assertEqual(
+                attempt["failure"],
+                {
+                    "stage": "materialize",
+                    "reason": "V3_PODMAN_GATE_FAILED: materialize",
+                    "classification": "COMMAND_EXIT_NONZERO",
+                    "commandId": "materialize",
+                },
+            )
+            command = attempt["commands"][0]
+            self.assertEqual(command["id"], "materialize")
+            self.assertEqual(command["id"], attempt["failure"]["commandId"])
+            self.assertEqual(command["id"], preseal["attempt"]["reachedStage"])
+            self.assertEqual(
+                command["directRuntimePreparationSha256"],
+                preseal["preparationSha256"],
+            )
+            self.assertEqual(command["directRuntimeAttempt"], preseal["attempt"])
+            raw_names = [
+                "receipt-materialize.stderr.txt",
+                "receipt-materialize.stdout.txt",
+            ]
+            self.assertEqual(
+                sorted(path.name for path in (attempt_directory / "raw").iterdir()),
+                raw_names,
+            )
+            for stream in ("stdout", "stderr"):
+                raw_path = attempt_directory / "raw" / f"receipt-materialize.{stream}.txt"
+                raw_bytes = raw_path.read_bytes()
+                self.assertEqual(
+                    command[stream],
+                    {
+                        "path": f"{attempt_directory.name}/raw/{raw_path.name}",
+                        "sha256": _sha256(raw_bytes),
+                        "size": len(raw_bytes),
+                    },
+                )
+            validator(attempt, attempt_directory)
+
 
 
 if __name__ == "__main__":
