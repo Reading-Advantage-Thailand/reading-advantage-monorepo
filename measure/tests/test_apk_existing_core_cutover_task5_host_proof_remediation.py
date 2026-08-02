@@ -34,8 +34,15 @@ class ExistingCoreTask5HostProofRemediationTests(unittest.TestCase):
         """Requires automatic fixture seeding and a host-specific Playwright result artifact."""
         command = _read("apps/primary-advantage/host-proof-test-config.ts")
         config = _read("apps/primary-advantage/playwright.config.ts")
+        next_config = _read("apps/primary-advantage/next.config.ts")
         self.assertIn("scripts/seed-host-proof-session.ts", command)
-        self.assertIn('outputFile: "test-results/host-proof-results.json"', config)
+        self.assertIn("NEXT_DIST_DIR=.next/host-proof-${port}", command)
+        self.assertIn('distDir: process.env.NEXT_DIST_DIR ?? ".next"', next_config)
+        self.assertIn("process.env.HOST_PROOF_TEST_RESULTS_PATH", config)
+        self.assertIn('?? "test-results/host-proof-results.json"', config)
+        self.assertIn('["json", { outputFile: RESULTS_PATH }]', config)
+        self.assertIn("process.env.HOST_PROOF_TEST_AUTH_FILE", config)
+        self.assertIn("outputDir: OUTPUT_DIR", config)
 
     def test_pglite_reset_preserves_append_only_registry_tables_without_trigger_bypass(self) -> None:
         """Requires the live test reset to skip immutable registry tables rather than weaken guards."""
@@ -68,6 +75,52 @@ class ExistingCoreTask5HostProofRemediationTests(unittest.TestCase):
         source = _read("packages/domain/src/games/host-proof.ts")
         self.assertIn("hostProofCompletionRequestSchema.safeParse(input)", source)
         self.assertIn("input: hostProofParsed.data", source)
+
+
+    def test_current_dragon_slice_cannot_consume_blocked_pack_or_cohort_candidate(self) -> None:
+        """Keeps unaccepted asset selection and the quarantined 24-title candidate out of Task 5."""
+        for relative_path in (
+            "apps/reading-advantage/lib/host-proof-selections.ts",
+            "apps/primary-advantage/lib/host-proof-selections.ts",
+        ):
+            selection_path = REPO_ROOT / relative_path
+            self.assertTrue(selection_path.is_file(), f"Missing required Dragon Flight selection module: {relative_path}")
+            source = selection_path.read_text(encoding="utf-8")
+            with self.subTest(relative_path=relative_path):
+                self.assertIn("getDragonFlightHostProofSelectedEdition", source)
+                self.assertNotIn("standard-pack-release.json", source)
+                self.assertNotIn("createDragonFlightHostProofEdition", source)
+
+        for relative_path in (
+            "apps/reading-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx",
+            "apps/primary-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx",
+        ):
+            page_path = REPO_ROOT / relative_path
+            self.assertTrue(page_path.is_file(), f"Missing required Dragon Flight proof page: {relative_path}")
+            source = page_path.read_text(encoding="utf-8")
+            with self.subTest(relative_path=relative_path):
+                self.assertIn('from "@/lib/host-proof-selections"', source)
+                self.assertIn("edition={getDragonFlightHostProofEdition()}", source)
+
+        editions_index = _read("packages/advantage-play-kit/src/editions/index.ts")
+        edition_source = _read("packages/advantage-play-kit/src/editions/host-proof-edition.ts")
+        self.assertNotIn("createDragonFlightHostProofEdition", editions_index)
+        self.assertNotIn("createDragonFlightHostProofEdition", edition_source)
+        self.assertNotIn("catalog.assets", edition_source)
+
+        contract = _read("packages/game-contracts/src/host-proof-bindings.ts")
+        contract_index = _read("packages/game-contracts/src/index.ts")
+        domain = _read("packages/domain/src/games/host-proof.ts")
+        for prohibited_symbol in (
+            "APK_HOST_PROOF_COHORTS",
+            "apkHostProofCartridgeIdSchema",
+            "APK_HOST_PROOF_BINDINGS",
+            "SUCCESSOR_BINDINGS",
+        ):
+            with self.subTest(prohibited_symbol=prohibited_symbol):
+                self.assertNotIn(prohibited_symbol, contract)
+                self.assertNotIn(prohibited_symbol, contract_index)
+                self.assertNotIn(prohibited_symbol, domain)
 
 
 if __name__ == "__main__":

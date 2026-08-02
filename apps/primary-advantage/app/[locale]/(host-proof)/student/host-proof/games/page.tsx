@@ -1,15 +1,26 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+
 import { HostProofGameClient } from "@/components/host-proof/HostProofGameClient";
 import { isHostProofEnabled } from "@/lib/host-proof-config";
+import { getDragonFlightHostProofEdition } from "@/lib/host-proof-selections";
+import { getCurrentUser } from "@/lib/session";
 
 /**
- * Renders the hidden Task-5 Primary host-proof surface when explicitly enabled.
- * @returns The bounded host-proof surface, or a not-found response.
+ * Renders the authenticated, bounded Dragon Flight proof only while explicitly enabled.
+ * @returns The selected real-cartridge proof surface, a sign-in redirect, or not-found.
  */
-export default function HostProofGamesPage() {
+export default async function HostProofGamesPage() {
   if (!isHostProofEnabled()) {
     notFound();
   }
 
-  return <HostProofGameClient />;
+  const user = await getCurrentUser();
+  if (!user) {
+    redirect("/auth/signin");
+  }
+  if (!user.schoolId) {
+    notFound();
+  }
+
+  return <HostProofGameClient edition={getDragonFlightHostProofEdition()} />;
 }

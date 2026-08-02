@@ -1,18 +1,17 @@
 import { expect, test as setup } from "@playwright/test";
-import { existsSync } from "node:fs";
 import { mkdirSync } from "node:fs";
+import { dirname } from "node:path";
 import { getHostProofTestCredentials } from "../../host-proof-test-config";
 
 const { classCode: TEST_CLASS_CODE, studentUsername: TEST_STUDENT_USERNAME } =
   getHostProofTestCredentials();
-const authFile = "playwright/.auth/host-proof-student.json";
+const authFile = process.env.HOST_PROOF_TEST_AUTH_FILE
+  ?? "playwright/.auth/host-proof-student.json";
 
 setup("seed authenticated host-proof session", async ({ request }) => {
   setup.skip(!TEST_CLASS_CODE, "HOST_PROOF_TEST_CLASS_CODE not set");
 
-  if (!existsSync("playwright/.auth")) {
-    mkdirSync("playwright/.auth", { recursive: true });
-  }
+  mkdirSync(dirname(authFile), { recursive: true });
 
   const response = await request.post("/api/auth/login", {
     data: {

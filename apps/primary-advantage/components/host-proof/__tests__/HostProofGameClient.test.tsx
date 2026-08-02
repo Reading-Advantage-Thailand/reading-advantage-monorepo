@@ -3,202 +3,290 @@
  */
 
 import "@testing-library/jest-dom";
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import { readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
-import { HostProofGameClient } from "../HostProofGameClient";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const mockResize = vi.fn();
-const mockDispatch = vi.fn();
-const mockSnapshot = vi.fn();
-const mockCreateQcSession = vi.fn();
+import type { RuntimeEdition } from "@reading-advantage/advantage-play-kit/runtime";
 
-const fakeSession = {
-  dispatch: (...dispatchArgs: unknown[]) => {
-    mockDispatch(...dispatchArgs);
-  },
-  resize: (...resizeArgs: unknown[]) => {
-    mockResize(...resizeArgs);
-    const viewport = resizeArgs[0] as { width: number };
-    return { supported: true, profile: viewport.width >= 800 ? "wide" : "compact" };
-  },
-  snapshot: () =>
-    mockSnapshot() ?? {
-      mechanic: { attempts: 0 },
-      inputCounts: { keyboard: 0, pointer: 0, touch: 0 },
-      completionCount: 0,
-      profile: "wide",
-    },
-};
+const mockLoadDragonFlightHostProofCartridge = vi.fn();
 
-const fakeCartridge = {
-  createQcSession: (...args: unknown[]) => {
-    mockCreateQcSession(...args);
-    return fakeSession;
-  },
-};
-
-vi.mock("@reading-advantage/game-cartridges/qc", () => ({
-  loadExistingCoreQcCartridge: vi.fn(async (id: string) => {
-    if (
-      !["dragon-flight", "magic-defense", "dungeon-liberator", "sorcerer-ziggurat", "astral-mage"].includes(id)
-    ) {
-      throw new Error(`Unknown cartridge ${id}`);
-    }
-    return fakeCartridge;
-  }),
+vi.mock("@/lib/host-proof-cartridge-loader", () => ({
+  loadDragonFlightHostProofCartridge: mockLoadDragonFlightHostProofCartridge,
 }));
 
-describe("HostProofGameClient", () => {
-  beforeEach(() => {
-    vi.restoreAllMocks();
-    mockResize.mockClear();
-    mockDispatch.mockClear();
-    mockSnapshot.mockClear();
-    mockCreateQcSession.mockClear();
-    mockSnapshot.mockReturnValue({
-      mechanic: { attempts: 0 },
-      inputCounts: { keyboard: 0, pointer: 0, touch: 0 },
-      completionCount: 0,
-      profile: "wide",
-    });
-  });
+vi.mock("@reading-advantage/advantage-play-kit/react", () => ({
+  APKGameHost: ({ onComplete, onDiagnostic }: {
+    readonly onComplete?: () => void | Promise<void>;
+    readonly onDiagnostic?: (event: Record<string, unknown>) => void;
+  }) => (
+  <>
+    <button
+      type="button"
+      data-testid="dragon-flight-runtime"
+      onClick={() => {
+        onDiagnostic?.({ level: "info", code: "RUNTIME_READY", message: "ready" });
+        onDiagnostic?.({
+          level: "info",
+          code: "DRAGON_FLIGHT_HOST_PROOF_ACTION",
+          message: "gate chosen",
+          details: { kind: "choose-gate", gate: "right", elapsedMs: 400 },
+        });
+        onDiagnostic?.({
+          level: "info",
+          code: "DRAGON_FLIGHT_HOST_PROOF_ACTION",
+          message: "launch requested",
+          details: { kind: "launch", elapsedMs: 700 },
+        });
+        void onComplete?.();
+      }}
+    >
+      Emit Dragon Flight transcript
+    </button>
+    <button
+      type="button"
+      data-testid="dragon-flight-gate-only"
+      onClick={() => {
+        onDiagnostic?.({
+          level: "info",
+          code: "DRAGON_FLIGHT_HOST_PROOF_ACTION",
+          message: "gate chosen",
+          details: { kind: "choose-gate", gate: "right", elapsedMs: 400 },
+        });
+      }}
+    >
+      Emit Dragon Flight gate
+    </button>
+  </>
+  ),
+}));
 
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
+const issuedAttempt = {
+  attemptId: "11111111-1111-4111-8111-111111111111",
+  credential: "opaque-host-proof-credential",
+  input: [{ term: "dragon", translation: "drago" }],
+  expiresAt: "2026-08-01T00:10:00.000Z",
+};
 
-  it("calls session.resize on mount and preserves profile across cartridge switches", async () => {
-    Object.defineProperty(window, "innerWidth", { value: 1280, writable: true, configurable: true });
-    Object.defineProperty(window, "innerHeight", { value: 0, writable: true, configurable: true });
+const completedHistory = Object.freeze([{
+  id: "completion-1",
+  gameType: "dragon-flight",
+  difficulty: "medium",
+  score: 100,
+  accuracy: 1,
+  xpEarned: 5,
+  activityId: "game:dragon-flight:11111111-1111-4111-8111-111111111111",
+  createdAt: "2026-08-01T00:00:01.000Z",
+}]);
 
-    render(<HostProofGameClient />);
-
-    await waitFor(() => {
-      expect(screen.getByTestId("host-proof-profile")).toHaveTextContent("wide");
-    });
-
-    expect(mockResize).toHaveBeenCalledWith({ width: 1280, height: 1 });
-
-    const select = screen.getByLabelText("Select host-proof cartridge");
-    fireEvent.change(select, { target: { value: "magic-defense" } });
-
-    await waitFor(() => {
-      expect(screen.getByTestId("host-proof-profile")).toHaveTextContent("wide");
-    });
-
-    expect(mockCreateQcSession).toHaveBeenCalledTimes(2);
-  });
-
-  it("preserves the active session when the selected cartridge is reselected", async () => {
-    render(<HostProofGameClient />);
-
-    const container = await screen.findByTestId("host-proof-game-container");
-    const select = screen.getByLabelText("Select host-proof cartridge");
-    expect(container).toHaveAttribute("data-cartridge-id", "dragon-flight");
-    expect(mockCreateQcSession).toHaveBeenCalledTimes(1);
-
-    fireEvent.change(select, { target: { value: "dragon-flight" } });
-
-    expect(screen.getByTestId("host-proof-game-container")).toHaveAttribute("data-cartridge-id", "dragon-flight");
-    expect(mockCreateQcSession).toHaveBeenCalledTimes(1);
-  });
-
-  it("uses the shared QC composition at the 768px compact/wide boundary", async () => {
-    Object.defineProperty(window, "innerWidth", { value: 768, writable: true, configurable: true });
-    Object.defineProperty(window, "innerHeight", { value: 800, writable: true, configurable: true });
-
-    render(<HostProofGameClient />);
-
-    await waitFor(() => {
-      expect(screen.getByTestId("host-proof-profile")).toHaveTextContent("compact");
-    });
-  });
-
-  it("only imports the QC loader through a dynamic import", () => {
-    const componentSource = readFileSync(
-      resolve(dirname(fileURLToPath(import.meta.url)), "..", "HostProofGameClient.tsx"),
-      "utf-8",
-    );
-
-    const staticImport = /import\s+.*\s+from\s+["']@reading-advantage\/game-cartridges\/qc["']/.test(componentSource);
-    const dynamicImport = /import\s*\(\s*["']@reading-advantage\/game-cartridges\/qc["']\s*\)/.test(componentSource);
-
-    expect(staticImport).toBe(false);
-    expect(dynamicImport).toBe(true);
-  });
-  it("reuses an attempt id for retries, creates one on replay, and navigates accepted bindings", async () => {
-    const fetchMock = vi.fn(async (input: unknown, init?: RequestInit) => {
-      if (String(input).includes("?limit=50")) {
-        return { ok: true, status: 200, json: async () => ({ history: [] }) } as Response;
+/**
+ * Returns the server transport double used by the bounded client proof.
+ * @param historyAfterCompletion History returned only after the signed completion succeeds.
+ * @param onActionRequest Optional observer for each public action-attestation request.
+ * @param failAtAction Optional action sequence for a rejected attestation response.
+ * @returns A mock Fetch implementation for the bounded host endpoints.
+ */
+function createFetchMock(
+  historyAfterCompletion: readonly (typeof completedHistory)[number][] = [],
+  onActionRequest?: (body: unknown) => void,
+  failAtAction?: number,
+) {
+  let historyRequestCount = 0;
+  let checkpointNumber = 0;
+  return vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
+    if (String(url).includes("?limit=10")) {
+      const history = historyRequestCount === 0 ? [] : historyAfterCompletion;
+      historyRequestCount += 1;
+      return { ok: true, status: 200, json: async () => ({ history }) } as Response;
+    }
+    if (String(url) === "/api/host-proof/games/attempts") {
+      return { ok: true, status: 201, json: async () => issuedAttempt } as Response;
+    }
+    if (String(url) === "/api/host-proof/games/attempts/actions") {
+      const body = JSON.parse(String(init?.body));
+      onActionRequest?.(body);
+      checkpointNumber += 1;
+      if (checkpointNumber === failAtAction) {
+        return {
+          ok: false,
+          status: 400,
+          json: async () => ({ error: { code: "HOST_PROOF_ATTEMPT_REJECTED", message: "Action observation was rejected" } }),
+        } as Response;
       }
-
-      const completionRequests = fetchMock.mock.calls.filter(
-        ([url]) => String(url) === "/api/host-proof/games/completions",
-      );
-      if (completionRequests.length === 1) {
-        throw new Error("temporary network failure");
-      }
-
-      const payload = JSON.parse(String(init?.body)) as { idempotencyKey: string };
       return {
         ok: true,
         status: 200,
         json: async () => ({
-          xpEarned: 7,
-          activityId: `game:dragon-flight:${payload.idempotencyKey}`,
-          duplicate: false,
-          status: 200,
-          gameType: "dragon-flight",
+          checkpoint: "checkpoint-" + checkpointNumber,
+          minimumNextActionDwellMs: checkpointNumber === 1 ? 320 : 0,
         }),
       } as Response;
+    }
+    if (String(url) === "/api/host-proof/games/completions") {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          xpEarned: 5,
+          score: 100,
+          accuracy: 1,
+          correctAnswers: 1,
+          totalAttempts: 1,
+          duration: 700,
+          victory: true,
+          duplicate: false,
+        }),
+      } as Response;
+    }
+    throw new Error(`Unexpected host-proof request: ${String(url)}`);
+  });
+}
+
+describe("HostProofGameClient", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockLoadDragonFlightHostProofCartridge.mockResolvedValue({ manifest: { id: "dragon-flight" } });
+  });
+
+  it("issues a signed attempt, submits only title diagnostics, and accepts the complete authoritative response", async () => {
+    const fetchMock = createFetchMock();
+    vi.stubGlobal("fetch", fetchMock);
+    const { HostProofGameClient } = await import("../HostProofGameClient");
+
+    render(<HostProofGameClient edition={{} as RuntimeEdition} />);
+
+    fireEvent.click(await screen.findByTestId("dragon-flight-runtime"));
+    await screen.findByRole("heading", { name: "Verified result" }, { timeout: 3000 });
+
+    const attemptRequest = fetchMock.mock.calls.find(([url]) => String(url) === "/api/host-proof/games/attempts");
+    expect(attemptRequest).toBeDefined();
+    expect(JSON.parse(String(attemptRequest?.[1]?.body))).toEqual({ gameType: "dragon-flight", difficulty: "medium" });
+
+    const actionRequests = fetchMock.mock.calls.filter(([url]) => String(url) === "/api/host-proof/games/attempts/actions");
+    expect(actionRequests).toHaveLength(2);
+    expect(JSON.parse(String(actionRequests[0]?.[1]?.body))).toEqual({
+      attemptId: issuedAttempt.attemptId,
+      credential: issuedAttempt.credential,
+      action: { sequence: 1, kind: "choose-gate", gate: "right", elapsedMs: 400 },
+    });
+    expect(JSON.parse(String(actionRequests[1]?.[1]?.body))).toEqual({
+      attemptId: issuedAttempt.attemptId,
+      credential: issuedAttempt.credential,
+      action: { sequence: 2, kind: "launch", elapsedMs: 700 },
+      previousCheckpoint: "checkpoint-1",
+    });
+
+    const completionRequest = fetchMock.mock.calls.find(([url]) => String(url) === "/api/host-proof/games/completions");
+    expect(completionRequest).toBeDefined();
+    expect(JSON.parse(String(completionRequest?.[1]?.body))).toEqual({
+      attemptId: issuedAttempt.attemptId,
+      credential: issuedAttempt.credential,
+      idempotencyKey: issuedAttempt.attemptId,
+      actions: [
+        { sequence: 1, kind: "choose-gate", gate: "right", elapsedMs: 400 },
+        { sequence: 2, kind: "launch", elapsedMs: 700 },
+      ],
+      checkpoints: ["checkpoint-1", "checkpoint-2"],
+    });
+    expect(await screen.findByText(/Score 100/)).toBeInTheDocument();
+    expect(screen.getByLabelText("Verified Dragon Flight result")).toHaveTextContent("Victory confirmed");
+  });
+
+  it("discards an old in-flight receipt before a fresh sequence-one action", async () => {
+    let resolveStaleAction: (response: Response) => void = () => undefined;
+    const staleActionResponse = new Promise<Response>((resolve) => { resolveStaleAction = resolve; });
+    const freshAttempt = { ...issuedAttempt, attemptId: "22222222-2222-4222-8222-222222222222" };
+    let issuedAttemptCount = 0;
+    const actionBodies: unknown[] = [];
+    const fetchMock = vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
+      if (String(url).includes("?limit=10")) {
+        return { ok: true, status: 200, json: async () => ({ history: [] }) } as Response;
+      }
+      if (String(url) === "/api/host-proof/games/attempts") {
+        issuedAttemptCount += 1;
+        return { ok: true, status: 201, json: async () => issuedAttemptCount === 1 ? issuedAttempt : freshAttempt } as Response;
+      }
+      if (String(url) === "/api/host-proof/games/attempts/actions") {
+        const body = JSON.parse(String(init?.body));
+        actionBodies.push(body);
+        if (actionBodies.length === 1) return staleActionResponse;
+        return { ok: true, status: 200, json: async () => ({ checkpoint: "fresh-checkpoint", minimumNextActionDwellMs: 250 }) } as Response;
+      }
+      if (String(url) === "/api/host-proof/games/completions") {
+        return { ok: true, status: 200, json: async () => ({}) } as Response;
+      }
+      throw new Error("Unexpected host-proof request: " + String(url));
     });
     vi.stubGlobal("fetch", fetchMock);
+    const { HostProofGameClient } = await import("../HostProofGameClient");
 
-    render(<HostProofGameClient />);
-    await screen.findByTestId("host-proof-game-container");
-    fireEvent.click(screen.getByTestId("host-proof-primary-button"));
+    render(<HostProofGameClient edition={{} as RuntimeEdition} />);
+    fireEvent.click(await screen.findByTestId("dragon-flight-gate-only"));
+    await waitFor(() => expect(actionBodies).toHaveLength(1));
 
-    fireEvent.click(screen.getByTestId("host-proof-complete-button"));
-    await screen.findByRole("alert");
-    fireEvent.click(screen.getByTestId("host-proof-complete-button"));
-    await screen.findByText(/Completed!/);
+    fireEvent.click(screen.getByRole("button", { name: "Start a fresh flight" }));
+    await waitFor(() => expect(issuedAttemptCount).toBe(2));
+    resolveStaleAction({
+      ok: true,
+      status: 200,
+      json: async () => ({ checkpoint: "stale-checkpoint", minimumNextActionDwellMs: 250 }),
+    } as Response);
+    await new Promise<void>((resolve) => { setTimeout(resolve, 0); });
 
-    const retryRequestIds = fetchMock.mock.calls
-      .filter(([url]) => String(url) === "/api/host-proof/games/completions")
-      .slice(0, 2)
-      .map(([, init]) => JSON.parse(String((init as RequestInit).body)).idempotencyKey);
-    expect(retryRequestIds[0]).toBe(retryRequestIds[1]);
+    fireEvent.click(await screen.findByTestId("dragon-flight-gate-only"));
+    await waitFor(() => expect(actionBodies).toHaveLength(2));
 
+    expect(actionBodies[1]).toEqual(expect.objectContaining({
+      attemptId: freshAttempt.attemptId,
+      action: { sequence: 1, kind: "choose-gate", gate: "right", elapsedMs: 400 },
+    }));
+    expect(actionBodies[1]).not.toHaveProperty("previousCheckpoint");
+    expect(fetchMock.mock.calls.some(([url]) => String(url) === "/api/host-proof/games/completions")).toBe(false);
+    expect(screen.queryByRole("heading", { name: "Verified result" })).not.toBeInTheDocument();
+  });
 
-    const sessionsBeforeReplay = mockCreateQcSession.mock.calls.length;
-    fireEvent.click(screen.getByTestId("host-proof-replay-button"));
-    await waitFor(() => expect(mockCreateQcSession.mock.calls.length).toBeGreaterThan(sessionsBeforeReplay));
-    await screen.findByTestId("host-proof-game-container");
-    fireEvent.click(screen.getByTestId("host-proof-primary-button"));
-    fireEvent.click(screen.getByTestId("host-proof-complete-button"));
-    await screen.findByText(/Completed!/);
+  it("fails closed without every ordered action receipt", async () => {
+    const fetchMock = createFetchMock([], undefined, 2);
+    vi.stubGlobal("fetch", fetchMock);
+    const { HostProofGameClient } = await import("../HostProofGameClient");
 
-    const replayRequest = fetchMock.mock.calls.filter(
-      ([url]) => String(url) === "/api/host-proof/games/completions",
-    )[2];
-    expect(JSON.parse(String((replayRequest[1] as RequestInit).body)).idempotencyKey).not.toBe(retryRequestIds[0]);
+    render(<HostProofGameClient edition={{} as RuntimeEdition} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Next host-proof cartridge" }));
-    await waitFor(() =>
-      expect(screen.getByLabelText("Select host-proof cartridge")).toHaveValue("magic-defense"),
-    );
-    await waitFor(() =>
-      expect(screen.getByTestId("host-proof-game-container")).toHaveAttribute("data-cartridge-id", "magic-defense"),
-    );
-    fireEvent.click(screen.getByRole("button", { name: "Previous host-proof cartridge" }));
-    await waitFor(() =>
-      expect(screen.getByLabelText("Select host-proof cartridge")).toHaveValue("dragon-flight"),
-    );
-    await waitFor(() =>
-      expect(screen.getByTestId("host-proof-game-container")).toHaveAttribute("data-cartridge-id", "dragon-flight"),
-    );
-  }, 15_000);
+    fireEvent.click(await screen.findByTestId("dragon-flight-runtime"));
+    expect(await screen.findByRole("alert", {}, { timeout: 3000 })).toHaveTextContent("Action observation was rejected");
+    expect(fetchMock.mock.calls.some(([url]) => String(url) === "/api/host-proof/games/completions")).toBe(false);
+  });
+
+  it("stages same-frame launch diagnostics by the server-issued dwell before completion", async () => {
+    const observedActionRequests: Array<{ readonly requestedAt: number; readonly body: unknown }> = [];
+    const fetchMock = createFetchMock([], (body) => {
+      observedActionRequests.push({ requestedAt: Date.now(), body });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    const { HostProofGameClient } = await import("../HostProofGameClient");
+
+    render(<HostProofGameClient edition={{} as RuntimeEdition} />);
+
+    fireEvent.click(await screen.findByTestId("dragon-flight-runtime"));
+    await screen.findByRole("heading", { name: "Verified result" }, { timeout: 3000 });
+
+    expect(observedActionRequests).toHaveLength(2);
+    expect(observedActionRequests[1]!.requestedAt - observedActionRequests[0]!.requestedAt).toBeGreaterThanOrEqual(320);
+    const completionIndex = fetchMock.mock.calls.findIndex(([url]) => String(url) === "/api/host-proof/games/completions");
+    const finalActionIndex = fetchMock.mock.calls.map(([url]) => String(url)).lastIndexOf("/api/host-proof/games/attempts/actions");
+    expect(completionIndex).toBeGreaterThan(finalActionIndex);
+  });
+
+  it("refreshes non-empty server-derived Dragon Flight history after a signed completion", async () => {
+    const fetchMock = createFetchMock(completedHistory);
+    vi.stubGlobal("fetch", fetchMock);
+    const { HostProofGameClient } = await import("../HostProofGameClient");
+
+    render(<HostProofGameClient edition={{} as RuntimeEdition} />);
+
+    fireEvent.click(await screen.findByTestId("dragon-flight-runtime"));
+    await screen.findByRole("heading", { name: "Verified result" }, { timeout: 3000 });
+
+    await expect(screen.findByText(/100 points.*100%/)).resolves.toBeInTheDocument();
+    expect(screen.getByLabelText("Dragon Flight proof history")).not.toHaveTextContent("No verified Dragon Flight completions yet.");
+  });
 });

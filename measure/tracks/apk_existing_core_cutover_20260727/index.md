@@ -18,6 +18,11 @@
 - [Historical Task 5/6 Owner Record (not current host or retirement acceptance)](./task5-task6-product-owner-acceptance-v1.json)
 - [Task 5 Reading/Primary Host-proof Evidence](./task5-reading-primary-host-proof-evidence-v1.json)
 - [Task 5 Reading Host-proof Playwright Rerun](./task5-reading-host-proof-playwright-report-v2.json) — supersedes the v1 historical-before-remediation report
+- [Dragon Flight current CI verification (bounded technical evidence only)](./dragon-flight-host-proof-ci-verification-2026-08-02.md) — records the current self-starting Reading/Primary hostile and positive proofs; Task 5 remains in progress
+- [Dragon Flight selected-union boundary verification (bounded technical evidence only)](./dragon-flight-selected-union-boundary-verification-2026-08-02.md) — binds the catalog-free selection correction; it does not replace the required refreshed browser proof
+- [Dragon Flight current-source browser receipt (bounded technical evidence only)](./dragon-flight-host-proof-current-source-verification-2026-08-02.md) — binds the corrected selected-union host proof; it does not make Task 5 consumable
+- [Dragon Flight manual-verification and product-owner handoff (procedure only)](./dragon-flight-manual-verification-handoff-2026-08-02.md) — records the required two-host owner flow and evidence boundary; no verification or authorization is recorded
+- [Reading TypeScript baseline attribution refresh (diagnostic-only)](./reading-typescript-baseline-attribution-refresh-2026-08-02.md) — records the re-observed 79 non-APK diagnostic surface; it does not make Reading typecheck green or advance Task 5
 - [Historical Task 6 Zero-deletion Manifest (not current retirement completion)](./task6-legacy-retirement-manifest-v1.json)
 - [Task 6 Legacy-retirement Guards](../../tests/test_apk_existing_core_task6_legacy_retirement.py)
 - Unreviewed Core/shared candidate and cross-host handoff artifacts are intentionally excluded from this index; they remain unstaged and non-consumable.

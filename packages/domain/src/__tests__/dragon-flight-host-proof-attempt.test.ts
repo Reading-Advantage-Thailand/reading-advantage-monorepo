@@ -82,6 +82,7 @@ const verifiedCanonicalCompletion: CanonicalCompletion = Object.freeze({
 
 interface AttemptDependencies {
   secret: string;
+  gateToLaunchDwellMs: number;
   now: () => string;
   createAttemptId: () => string;
   loadVocabularyInput: (input: {
@@ -201,6 +202,7 @@ function createDependencies(): AttemptDependencies & {
   const abandon = vi.fn(async () => undefined);
   return {
     secret: SIGNING_SECRET,
+    gateToLaunchDwellMs: 250,
     now: () => NOW,
     createAttemptId: () => "11111111-1111-1111-1111-111111111111",
     loadVocabularyInput,
@@ -573,6 +575,74 @@ describe("Dragon Flight server-issued host-proof attempts", () => {
     expect(dependencies.store.begin).not.toHaveBeenCalled();
     expect(dependencies.recordCompletion).not.toHaveBeenCalled();
   });
+
+  it("uses one stricter server-only dwell policy for attestation and completion", async () => {
+    const issue = requiredOperation<IssueDragonFlightAttempt>(
+      "issueDragonFlightHostProofAttempt",
+    );
+    const attest = requiredOperation<AttestDragonFlightAction>(
+      "attestDragonFlightHostProofAction",
+    );
+    const completeAttempt = requiredOperation<CompleteDragonFlightAttempt>(
+      "completeDragonFlightHostProofAttempt",
+    );
+    const dependencies = createDependencies();
+    dependencies.gateToLaunchDwellMs = 3000;
+    const issued = await issue(actor, {
+      gameType: "dragon-flight",
+      difficulty: "medium",
+    }, dependencies);
+    const actions: DragonFlightAction[] = [
+      { sequence: 1, kind: "choose-gate", gate: "right", elapsedMs: 0 },
+      { sequence: 2, kind: "launch", elapsedMs: 0 },
+    ];
+    const timedDependencies = withServerTimes(dependencies, [
+      NOW,
+      "2026-08-01T00:00:00.250Z",
+    ]);
+    const first = await attest(actor, {
+      attemptId: issued.attemptId,
+      credential: issued.credential,
+      action: actions[0],
+    }, timedDependencies);
+
+    expect(first.minimumNextActionDwellMs).toBe(3000);
+    await expect(attest(actor, {
+      attemptId: issued.attemptId,
+      credential: issued.credential,
+      action: actions[1],
+      previousCheckpoint: first.checkpoint,
+    }, timedDependencies)).rejects.toThrow(/dwell/u);
+    await expect(attest(actor, {
+      attemptId: issued.attemptId,
+      credential: issued.credential,
+      action: { ...actions[1], gateToLaunchDwellMs: 0 },
+      previousCheckpoint: first.checkpoint,
+    }, dependencies)).rejects.toThrow();
+
+    const underDwellCheckpoint = signCheckpointFixture({
+      version: 1,
+      attemptId: issued.attemptId,
+      userId: actor.userId,
+      schoolId: actor.schoolId,
+      actionDigest: checkpointDigest(actions[1]),
+      sequence: 2,
+      previousCheckpointDigest: checkpointDigest(first.checkpoint),
+      observedAt: "2026-08-01T00:00:00.250Z",
+      expiresAt: issued.expiresAt,
+    });
+    await expect(completeAttempt(actor, {
+      attemptId: issued.attemptId,
+      credential: issued.credential,
+      idempotencyKey: issued.attemptId,
+      actions,
+      checkpoints: [first.checkpoint, underDwellCheckpoint],
+    }, dependencies)).rejects.toThrow(/dwell/u);
+
+    expect(dependencies.store.begin).not.toHaveBeenCalled();
+    expect(dependencies.recordCompletion).not.toHaveBeenCalled();
+  });
+
   it("rejects a same-server-time signed checkpoint chain before it claims or persists XP", async () => {
     const issue = requiredOperation<IssueDragonFlightAttempt>(
       "issueDragonFlightHostProofAttempt",

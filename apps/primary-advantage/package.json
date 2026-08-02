@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
+    "materialize:dragon-flight-host-proof-assets": "node ../../packages/advantage-play-kit/scripts/materialize-standard-pack.mjs --release ../../packages/advantage-play-kit/assets/standard/standard-pack-release.json --source-root ../../packages/advantage-play-kit/assets/standard --output-root public/assets/apk/standard-pack-2026-07-23 --version 2026.07.23 --catalog-digest ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087 --source-receipt-digest 93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9 --key audio/native/combat/hit-01 --key effects/32x32/combat/hit-01 --key top-down/32x32/characters/hero-01",
+    "prebuild": "pnpm run materialize:dragon-flight-host-proof-assets",
     "dev-turbo": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
@@ -41,6 +43,7 @@
     "@radix-ui/react-tabs": "catalog:",
     "@radix-ui/react-tooltip": "catalog:",
     "@reading-advantage/ai": "workspace:*",
+    "@reading-advantage/advantage-play-kit": "workspace:*",
     "@reading-advantage/api": "workspace:*",
     "@reading-advantage/auth": "workspace:*",
     "@reading-advantage/auth-client": "workspace:*",

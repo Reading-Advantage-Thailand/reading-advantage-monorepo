@@ -42,5 +42,5 @@ export function getHostProofTestCredentials(
  * @returns A command that enables the otherwise-hidden host-proof surface.
  */
 export function createHostProofPlaywrightWebServerCommand(port: number): string {
-  return `pnpm exec tsx scripts/seed-host-proof-session.ts && HOST_PROOF_ENABLED=true PORT=${port} npm run dev`;
+  return `pnpm --filter @reading-advantage/domain build && pnpm --filter @reading-advantage/advantage-play-kit build && pnpm --filter @reading-advantage/game-cartridges build && pnpm --filter @reading-advantage/db migrate && pnpm exec tsx scripts/seed-host-proof-session.ts && NEXT_DIST_DIR=.next/host-proof-${port} HOST_PROOF_ENABLED=true HOST_PROOF_ATTEMPT_SECRET=host-proof-local-attempt-secret-2026 HOST_PROOF_TEST_GATE_TO_LAUNCH_DWELL_MS=3000 PORT=${port} npm run dev`;
 }

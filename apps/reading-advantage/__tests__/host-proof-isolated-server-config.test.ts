@@ -2,6 +2,9 @@
  * @jest-environment node
  */
 
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
 describe("host-proof isolated server configuration", () => {
   const originalDistDir = process.env.NEXT_DIST_DIR;
   const originalPlaywrightPort = process.env.PLAYWRIGHT_PORT;
@@ -54,6 +57,7 @@ describe("host-proof isolated server configuration", () => {
     expect(webServer?.command).toContain("HOST_PROOF_ENABLED=true");
     expect(webServer?.command).toContain("PORT=3107");
     expect(webServer?.url).toBe("http://localhost:3107/api/auth/session");
+    expect(webServer?.timeout).toBe(300_000);
     expect(playwrightConfig.projects?.find((project) => project.name === "chromium")?.use).toEqual(
       expect.objectContaining({ hasTouch: true }),
     );
@@ -68,5 +72,17 @@ describe("host-proof isolated server configuration", () => {
     expect(playwrightConfig.projects?.find((project) => project.name === "chromium")).toEqual(
       expect.objectContaining({ dependencies: ["setup"] }),
     );
+  });
+
+  it("allows browser-proof report and auth artifacts to be redirected outside the app worktree", () => {
+    const config = readFileSync(resolve(process.cwd(), "playwright.config.ts"), "utf-8");
+    const setup = readFileSync(resolve(process.cwd(), "tests/e2e/host-proof-auth.setup.ts"), "utf-8");
+
+    expect(config).toContain("process.env.HOST_PROOF_TEST_RESULTS_PATH");
+    expect(config).toContain("process.env.HOST_PROOF_TEST_AUTH_FILE");
+    expect(config).toContain("process.env.HOST_PROOF_TEST_OUTPUT_DIR");
+    expect(setup).toContain("process.env.HOST_PROOF_TEST_AUTH_FILE");
+    expect(setup).toContain('import { dirname } from "node:path"');
+    expect(setup).toContain("mkdirSync(dirname(authFile)");
   });
 });

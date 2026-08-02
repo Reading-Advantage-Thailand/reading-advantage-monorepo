@@ -1,151 +1,272 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  EXISTING_CORE_HOST_PROOF_BINDINGS,
-  resolveHostProofViewportProfile,
-  type ExistingCoreHostProofBinding,
-  type ExistingCoreHostProofCartridgeId,
-} from "@reading-advantage/game-contracts";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { DEFAULT_RESPONSIVE_LAYOUT_CONFIG } from "@reading-advantage/advantage-play-kit/responsive";
+import { APKGameHost } from "@reading-advantage/advantage-play-kit/react";
 import type {
-  ExistingCoreQcCartridge,
-  ExistingCoreQcInputModality,
-  ExistingCoreQcSession,
-  ExistingCoreQcSessionSnapshot,
-} from "@reading-advantage/game-cartridges/qc";
-import type { HostProofCompletionResponse, HostProofHistoryEntry } from "@reading-advantage/domain/games";
+  APKDiagnosticEvent,
+  ResponsiveRuntimeOptions,
+  RuntimeCartridge,
+  RuntimeEdition,
+} from "@reading-advantage/advantage-play-kit/runtime";
+import { vocabularyInputSchema, type VocabularyInput } from "@reading-advantage/game-contracts";
+import { z } from "zod";
 
-type CompletionStatus = "idle" | "submitting" | "success" | "duplicate" | "error";
+type CompletionStatus = "starting" | "ready" | "submitting" | "completed" | "error";
 
-function makeIdempotencyKey(): string {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
-    return crypto.randomUUID();
-  }
-  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+/** One server-issued, actor-bound launch contract supplied to the runtime. */
+interface IssuedDragonFlightAttempt {
+  /** Server-created immutable attempt identifier. */
+  readonly attemptId: string;
+  /** Opaque credential that binds the attempt to the authenticated actor. */
+  readonly credential: string;
+  /** Server-owned vocabulary passed to the real cartridge. */
+  readonly input: VocabularyInput;
+  /** ISO timestamp at which the credential expires. */
+  readonly expiresAt: string;
 }
 
-interface HostProofUiState {
-  selectedId: ExistingCoreHostProofCartridgeId;
-  profile: "compact" | "wide";
-  session: ExistingCoreQcSession | null;
-  snapshot: ExistingCoreQcSessionSnapshot | null;
-  cartridge: ExistingCoreQcCartridge | null;
-  loading: boolean;
-  loadError: string;
-  totalAttempts: number;
-  correctAnswers: number;
-  completionStatus: CompletionStatus;
-  completionResult: HostProofCompletionResponse | null;
-  completionError: string;
-  history: HostProofHistoryEntry[];
-  historyLoading: boolean;
-  completionAttemptId: string;
-  replayNonce: number;
+/** One safe server-derived completion outcome rendered by the host. */
+interface DragonFlightCompletion {
+  /** XP awarded by the authoritative persistence boundary. */
+  readonly xpEarned: number;
+  /** Server-replayed title score. */
+  readonly score: number;
+  /** Server-replayed title accuracy. */
+  readonly accuracy: number;
+  /** Whether the server-replayed launch completed the title successfully. */
+  readonly victory: boolean;
+  /** Whether the result was a durable replay. */
+  readonly duplicate: boolean;
+}
+
+/** A validated history row displayed only for the authenticated Dragon Flight actor. */
+interface DragonFlightHistoryEntry {
+  /** Unique persisted completion identifier. */
+  readonly id: string;
+  /** Server-validated title identifier. */
+  readonly gameType: "dragon-flight";
+  /** Canonical server-selected difficulty. */
+  readonly difficulty: "easy" | "medium" | "hard" | "extreme";
+  /** Server-replayed score. */
+  readonly score: number;
+  /** Server-replayed accuracy. */
+  readonly accuracy: number;
+  /** Persisted XP award. */
+  readonly xpEarned: number;
+  /** Server activity identifier linked to this persisted completion. */
+  readonly activityId: string;
+  /** ISO completion time. */
+  readonly createdAt: string;
+}
+
+/** A title-owned runtime action captured from a structured cartridge diagnostic. */
+type DragonFlightAction =
+  | { readonly sequence: number; readonly kind: "choose-gate"; readonly gate: "left" | "right"; readonly elapsedMs: number }
+  | { readonly sequence: number; readonly kind: "launch"; readonly elapsedMs: number };
+
+/** One opaque server receipt for a single ordered Dragon Flight action. */
+interface DragonFlightActionCheckpoint {
+  /** Server-issued action-specific protocol receipt. */
+  readonly checkpoint: string;
+  /** Server-owned minimum wait before a launch action can follow this receipt. */
+  readonly minimumNextActionDwellMs: number;
+}
+
+/** A locally timed server receipt retained until the full completion request is submitted. */
+interface QueuedDragonFlightActionCheckpoint extends DragonFlightActionCheckpoint {
+  /** Browser time when the host received the signed server receipt. */
+  readonly receivedAtMs: number;
+}
+
+/** Mutable UI state for a bounded real-cartridge host session. */
+interface HostProofState {
+  /** Current server-issued attempt, if launch has completed. */
+  readonly attempt: IssuedDragonFlightAttempt | null;
+  /** Explicit, non-root Dragon Flight runtime cartridge. */
+  readonly cartridge: RuntimeCartridge | null;
+  /** Current launch or completion state. */
+  readonly status: CompletionStatus;
+  /** Safe host-facing status message. */
+  readonly message: string;
+  /** Latest authoritative completion outcome. */
+  readonly completion: DragonFlightCompletion | null;
+  /** Authenticated actor history. */
+  readonly history: readonly DragonFlightHistoryEntry[];
+}
+
+const issuedAttemptSchema = z.object({
+  attemptId: z.string().uuid(),
+  credential: z.string().min(1),
+  input: vocabularyInputSchema,
+  expiresAt: z.string().datetime(),
+}).strict();
+
+const actionCheckpointSchema = z.object({
+  checkpoint: z.string().min(1),
+  minimumNextActionDwellMs: z.number().int().min(0).max(60_000),
+}).strict();
+
+// This client-only buffer starts after the receipt arrives; the server remains authoritative.
+const HOST_PROOF_ACTION_DWELL_SAFETY_MARGIN_MS = 50;
+
+const completionSchema = z.object({
+  xpEarned: z.number().int().min(0),
+  score: z.number().int().min(0),
+  accuracy: z.number().min(0).max(1),
+  correctAnswers: z.number().int().min(0),
+  totalAttempts: z.number().int().min(1),
+  duration: z.number().int().min(0),
+  victory: z.boolean(),
+  duplicate: z.boolean(),
+}).strict();
+
+const historyEntrySchema = z.object({
+  id: z.string().min(1),
+  gameType: z.literal("dragon-flight"),
+  difficulty: z.enum(["easy", "medium", "hard", "extreme"]),
+  score: z.number().int().min(0),
+  accuracy: z.number().min(0).max(1),
+  xpEarned: z.number().int().min(0),
+  activityId: z.string().min(1),
+  createdAt: z.string().min(1),
+}).strict();
+
+const historyResponseSchema = z.object({ history: z.array(historyEntrySchema) }).strict();
+
+const HOST_PROOF_RESPONSIVE_OPTIONS: ResponsiveRuntimeOptions = Object.freeze({
+  config: DEFAULT_RESPONSIVE_LAYOUT_CONFIG,
+  safeArea: { top: 0, right: 0, bottom: 0, left: 0 },
+  inputCapabilities: { touch: true, pointer: true, keyboard: true },
+  accessibility: { textScale: 1, touchScale: 1 },
+});
+
+const INITIAL_STATE: HostProofState = Object.freeze({
+  attempt: null,
+  cartridge: null,
+  status: "starting",
+  message: "Preparing your Dragon Flight session…",
+  completion: null,
+  history: [],
+});
+
+/**
+ * Reads a JSON API response and exposes only the service's safe error message.
+ * @param response Fetch response from one authenticated host-proof endpoint.
+ * @returns The JSON payload when the request succeeded.
+ * @throws When the endpoint reports a non-success response.
+ */
+async function readApiResponse(response: Response): Promise<unknown> {
+  const payload: unknown = await response.json().catch(() => undefined);
+  if (response.ok) return payload;
+  const message = payload
+    && typeof payload === "object"
+    && "error" in payload
+    && payload.error
+    && typeof payload.error === "object"
+    && "message" in payload.error
+    && typeof payload.error.message === "string"
+    ? payload.error.message
+    : `Request failed with status ${response.status}`;
+  throw new Error(message);
 }
 
 /**
- * Resolves the shared responsive profile through the live QC session.
- * @param session Active deterministic cartridge session, when loaded.
- * @param width Browser viewport width in CSS pixels.
- * @param height Browser viewport height in CSS pixels.
- * @returns The session composition profile or the shared width fallback.
+ * Extracts a verified action from the real cartridge's structured diagnostic event.
+ * @param event Runtime diagnostic emitted by the Dragon Flight cartridge.
+ * @param nextSequence Sequence assigned by this host session.
+ * @returns A safe action transcript record, or undefined for unrelated diagnostics.
  */
-function resolveProfileFromSession(
-  session: ExistingCoreQcSession | null,
-  width: number,
-  height: number,
-): "compact" | "wide" {
-  if (!session) {
-    return resolveHostProofViewportProfile(width);
+function actionFromDiagnostic(
+  event: APKDiagnosticEvent,
+  nextSequence: number,
+): DragonFlightAction | undefined {
+  if (event.code !== "DRAGON_FLIGHT_HOST_PROOF_ACTION" || !event.details) return undefined;
+  const { kind, gate, elapsedMs } = event.details;
+  if (typeof elapsedMs !== "number" || !Number.isInteger(elapsedMs) || elapsedMs < 0) return undefined;
+  if (kind === "choose-gate" && (gate === "left" || gate === "right")) {
+    return { sequence: nextSequence, kind, gate, elapsedMs };
   }
-  const composition = session.resize({
-    width: Math.max(1, Math.round(width)),
-    height: Math.max(1, Math.round(height)),
-  });
-  return resolveHostProofViewportProfile(
-    width,
-    composition?.supported ? composition.profile : undefined,
-  );
-}
-
-function initialState(bindings: readonly ExistingCoreHostProofBinding[]): HostProofUiState {
-  return {
-    selectedId: bindings[0].id,
-    profile: "compact",
-    session: null,
-    snapshot: null,
-    cartridge: null,
-    loading: true,
-    loadError: "",
-    totalAttempts: 0,
-    correctAnswers: 0,
-    completionStatus: "idle",
-    completionResult: null,
-    completionError: "",
-    history: [],
-    historyLoading: true,
-    completionAttemptId: makeIdempotencyKey(),
-    replayNonce: 0,
-  };
+  if (kind === "launch") return { sequence: nextSequence, kind, elapsedMs };
+  return undefined;
 }
 
 /**
- * Renders the bounded client-only Task-5 cartridge host-proof surface.
- * @returns The interactive hidden host-proof UI.
+ * Renders the authenticated Dragon Flight proof host for Reading Advantage.
+ * @param props The server-selected standard-pack edition.
+ * @returns A real APK runtime surface and only server-derived completion state.
  */
-export function HostProofGameClient() {
-  const bindings = useMemo(() => EXISTING_CORE_HOST_PROOF_BINDINGS, []);
-  const [state, setState] = useState<HostProofUiState>(() => initialState(bindings));
+export function HostProofGameClient({ edition }: { readonly edition: RuntimeEdition }) {
+  const [state, setState] = useState<HostProofState>(INITIAL_STATE);
+  const [sessionNonce, setSessionNonce] = useState(0);
+  const actionsRef = useRef<DragonFlightAction[]>([]);
+  const checkpointsRef = useRef<QueuedDragonFlightActionCheckpoint[]>([]);
+  const checkpointQueueRef = useRef<Promise<void>>(Promise.resolve());
+  const attemptRef = useRef<IssuedDragonFlightAttempt | null>(null);
+  const attemptGenerationRef = useRef(0);
+  const submittedAttemptRef = useRef<string | null>(null);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setState((prev) => {
-        return {
-          ...prev,
-          profile: resolveProfileFromSession(prev.session, window.innerWidth, window.innerHeight),
-          ...(prev.session ? { snapshot: prev.session.snapshot() } : {}),
-        };
-      });
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+  const fetchHistory = useCallback(async () => {
+    try {
+      const payload = await readApiResponse(
+        await fetch("/api/host-proof/games/completions?limit=10", { credentials: "same-origin" }),
+      );
+      const parsed = historyResponseSchema.parse(payload);
+      setState((current) => ({ ...current, history: parsed.history }));
+    } catch {
+      setState((current) => ({ ...current, history: [] }));
+    }
   }, []);
 
   useEffect(() => {
+    void fetchHistory();
+  }, [fetchHistory]);
+
+  useEffect(() => {
     let active = true;
-    setState((prev) => ({ ...prev, loading: true, loadError: "" }));
+    attemptGenerationRef.current += 1;
+    actionsRef.current = [];
+    checkpointsRef.current = [];
+    checkpointQueueRef.current = Promise.resolve();
+    attemptRef.current = null;
+    submittedAttemptRef.current = null;
+    setState((current) => ({
+      ...current,
+      attempt: null,
+      cartridge: null,
+      status: "starting",
+      message: "Preparing your Dragon Flight session…",
+      completion: null,
+    }));
 
     void (async () => {
       try {
-        const { loadExistingCoreQcCartridge } = await import("@/lib/host-proof-qc-loader");
-        const cartridge = await loadExistingCoreQcCartridge(state.selectedId);
+        const [attemptPayload, cartridgeModule] = await Promise.all([
+          fetch("/api/host-proof/games/attempts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "same-origin",
+            body: JSON.stringify({ gameType: "dragon-flight", difficulty: "medium" }),
+          }).then(readApiResponse),
+          import("@/lib/host-proof-qc-loader"),
+        ]);
+        const attempt = issuedAttemptSchema.parse(attemptPayload);
+        const cartridge = await cartridgeModule.loadDragonFlightHostProofCartridge();
         if (!active) return;
-        const session = cartridge.createQcSession();
-        const profile = resolveProfileFromSession(session, window.innerWidth, window.innerHeight);
-        const snapshot = session.snapshot();
-        setState((prev) => ({
-          ...prev,
+        attemptRef.current = attempt;
+        setState((current) => ({
+          ...current,
+          attempt,
           cartridge,
-          session,
-          snapshot,
-          profile,
-          loading: false,
-          totalAttempts: 0,
-          correctAnswers: 0,
-          completionStatus: "idle",
-          completionResult: null,
-          completionError: "",
+          status: "ready",
+          message: "Choose a gate, then launch your flight.",
         }));
       } catch (error) {
         if (!active) return;
-        setState((prev) => ({
-          ...prev,
-          loading: false,
-          loadError: error instanceof Error ? error.message : "Failed to load cartridge",
+        setState((current) => ({
+          ...current,
+          status: "error",
+          message: error instanceof Error ? error.message : "Unable to start Dragon Flight",
         }));
       }
     })();
@@ -153,400 +274,214 @@ export function HostProofGameClient() {
     return () => {
       active = false;
     };
-  }, [state.selectedId, state.replayNonce]);
+  }, [edition, sessionNonce]);
 
-  const fetchHistory = async () => {
-    setState((prev) => ({ ...prev, historyLoading: true }));
-    try {
-      const response = await fetch("/api/host-proof/games/completions?limit=50");
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
-        throw new Error(data?.error?.message || "Failed to load history");
-      }
-      const data = (await response.json()) as { history: HostProofHistoryEntry[] };
-      setState((prev) => ({ ...prev, history: data.history, historyLoading: false }));
-    } catch {
-      setState((prev) => ({
-        ...prev,
-        history: [],
-        historyLoading: false,
+  const submitCompletion = useCallback(async () => {
+    const attempt = state.attempt;
+    const generation = attemptGenerationRef.current;
+    const isCurrentAttempt = () => (
+      attemptGenerationRef.current === generation
+      && attemptRef.current?.attemptId === attempt?.attemptId
+    );
+    if (!attempt || !isCurrentAttempt() || submittedAttemptRef.current === attempt.attemptId) return;
+    const actions = actionsRef.current;
+    if (actions.length < 2 || actions.at(-1)?.kind !== "launch") {
+      setState((current) => ({
+        ...current,
+        status: "error",
+        message: "Dragon Flight did not record a valid gate-and-launch transcript.",
       }));
+      return;
     }
-  };
 
-  useEffect(() => {
-    void fetchHistory();
-  }, []);
-
-  const dispatch = (modality: ExistingCoreQcInputModality, intent: "primary" | "secondary") => {
-    setState((prev) => {
-      if (!prev.session) return prev;
-      prev.session.dispatch(modality, intent);
-      return {
-        ...prev,
-        snapshot: prev.session.snapshot(),
-        totalAttempts: prev.totalAttempts + 1,
-        correctAnswers: intent === "primary" ? prev.correctAnswers + 1 : prev.correctAnswers,
-        completionStatus: "idle",
-        completionResult: null,
-        completionError: "",
-      };
-    });
-  };
-
-  const complete = async () => {
-    if (!state.cartridge || state.totalAttempts === 0) return;
-    setState((prev) => ({
-      ...prev,
-      completionStatus: "submitting",
-      completionResult: null,
-      completionError: "",
+    submittedAttemptRef.current = attempt.attemptId;
+    setState((current) => ({
+      ...current,
+      status: "submitting",
+      message: "Verifying your flight…",
+      completion: null,
     }));
-
-    const payload = {
-      gameType: state.selectedId,
-      difficulty: "medium" as const,
-      score: state.correctAnswers * 100,
-      accuracy: state.correctAnswers / state.totalAttempts,
-      correctAnswers: state.correctAnswers,
-      totalAttempts: state.totalAttempts,
-      duration: 1000,
-      victory: true,
-      idempotencyKey: state.completionAttemptId,
-      clientTimestamp: Date.now(),
-    };
-
     try {
-      const response = await fetch("/api/host-proof/games/completions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        throw new Error(data?.error?.message || `Completion failed with status ${response.status}`);
+      await checkpointQueueRef.current;
+      if (!isCurrentAttempt()) return;
+      const checkpoints = checkpointsRef.current;
+      if (checkpoints.length !== actions.length) {
+        throw new Error("Dragon Flight is missing one or more server-observed action checkpoints.");
       }
-
-      const result = data as HostProofCompletionResponse;
-      setState((prev) => ({
-        ...prev,
-        completionStatus: result.duplicate ? "duplicate" : "success",
-        completionResult: result,
-        completionError: "",
+      const checkpointTokens = checkpoints.map(({ checkpoint }) => checkpoint);
+      const payload = await readApiResponse(
+        await fetch("/api/host-proof/games/completions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "same-origin",
+          body: JSON.stringify({
+            attemptId: attempt.attemptId,
+            credential: attempt.credential,
+            idempotencyKey: attempt.attemptId,
+            actions,
+            checkpoints: checkpointTokens,
+          }),
+        }),
+      );
+      if (!isCurrentAttempt()) return;
+      const result = completionSchema.parse(payload);
+      setState((current) => ({
+        ...current,
+        status: "completed",
+        message: result.duplicate ? "This flight was already recorded." : "Flight recorded.",
+        completion: result,
       }));
       void fetchHistory();
     } catch (error) {
-      setState((prev) => ({
-        ...prev,
-        completionStatus: "error",
-        completionError: error instanceof Error ? error.message : "Completion failed",
+      if (!isCurrentAttempt()) return;
+      submittedAttemptRef.current = null;
+      setState((current) => ({
+        ...current,
+        status: "error",
+        message: error instanceof Error ? error.message : "Unable to verify this flight",
       }));
     }
-  };
+  }, [fetchHistory, state.attempt]);
 
-  const selectCartridge = (id: string) => {
-    const binding = bindings.find((b) => b.id === id);
-    if (binding) {
-      setState((prev) => {
-        if (prev.selectedId === binding.id) {
-          return prev;
-        }
-
-        return {
-          ...prev,
-          selectedId: binding.id,
-          session: null,
-          snapshot: null,
-          cartridge: null,
-          loading: true,
-          totalAttempts: 0,
-          correctAnswers: 0,
-          completionStatus: "idle",
-          completionResult: null,
-          completionError: "",
-          completionAttemptId: makeIdempotencyKey(),
-        };
-      });
+  const onDiagnostic = useCallback((event: APKDiagnosticEvent) => {
+    if (event.code === "RUNTIME_READY") {
+      attemptGenerationRef.current += 1;
+      actionsRef.current = [];
+      checkpointsRef.current = [];
+      checkpointQueueRef.current = Promise.resolve();
+      submittedAttemptRef.current = null;
+      return;
     }
-  };
+    const attempt = attemptRef.current;
+    const action = actionFromDiagnostic(event, actionsRef.current.length + 1);
+    if (!attempt || !action) return;
+    const generation = attemptGenerationRef.current;
+    const isCurrentAttempt = () => (
+      attemptGenerationRef.current === generation
+      && attemptRef.current?.attemptId === attempt.attemptId
+    );
+    actionsRef.current = [...actionsRef.current, action];
+    checkpointQueueRef.current = checkpointQueueRef.current.then(async () => {
+      if (!isCurrentAttempt()) return;
+      try {
+        const previousCheckpoint = checkpointsRef.current.at(-1);
+        if (action.kind === "launch" && previousCheckpoint !== undefined) {
+          const requiredDwellMs = previousCheckpoint.minimumNextActionDwellMs
+            + HOST_PROOF_ACTION_DWELL_SAFETY_MARGIN_MS;
+          const remainingDwellMs = requiredDwellMs - (Date.now() - previousCheckpoint.receivedAtMs);
+          if (remainingDwellMs > 0) {
+            await new Promise<void>((resolve) => { setTimeout(resolve, remainingDwellMs); });
+          }
+        }
+        if (!isCurrentAttempt()) return;
+        const payload = await readApiResponse(
+          await fetch("/api/host-proof/games/attempts/actions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "same-origin",
+            body: JSON.stringify({
+              attemptId: attempt.attemptId,
+              credential: attempt.credential,
+              action,
+              ...(previousCheckpoint === undefined ? {} : { previousCheckpoint: previousCheckpoint.checkpoint }),
+            }),
+          }),
+        );
+        if (!isCurrentAttempt()) return;
+        const observed = actionCheckpointSchema.parse(payload) as DragonFlightActionCheckpoint;
+        checkpointsRef.current = [
+          ...checkpointsRef.current,
+          { ...observed, receivedAtMs: Date.now() },
+        ];
+      } catch (error) {
+        if (!isCurrentAttempt()) return;
+        throw error;
+      }
+    });
+  }, []);
 
-  const replay = () => {
-    setState((prev) => ({
-      ...prev,
-      session: null,
-      snapshot: null,
-      cartridge: null,
-      loading: true,
-      totalAttempts: 0,
-      correctAnswers: 0,
-      completionStatus: "idle",
-      completionResult: null,
-      completionError: "",
-      completionAttemptId: makeIdempotencyKey(),
-      replayNonce: prev.replayNonce + 1,
-    }));
-  };
-
-  const navigateCartridge = (direction: -1 | 1) => {
-    const currentIndex = bindings.findIndex((binding) => binding.id === state.selectedId);
-    const nextIndex = (currentIndex + direction + bindings.length) % bindings.length;
-    selectCartridge(bindings[nextIndex].id);
-  };
-
-  const selectedBinding = bindings.find((b) => b.id === state.selectedId);
-  const inputCounts = state.snapshot?.inputCounts ?? { keyboard: 0, pointer: 0, touch: 0 };
+  const beginFreshFlight = useCallback(() => {
+    attemptGenerationRef.current += 1;
+    setSessionNonce((current) => current + 1);
+  }, []);
 
   return (
     <section
-      aria-label="Existing-core host-proof surface"
-      className="mx-auto max-w-7xl px-4 py-8"
-      data-host-proof-boundary="reading-primary-host-proof-only"
+      aria-label="Dragon Flight host-proof surface"
+      className="mx-auto max-w-6xl px-4 py-8 text-slate-100"
+      data-host-proof-boundary="dragon-flight-corrective-proof"
     >
-      <div className="mb-6">
-        <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Task 5 / host-proof only</p>
-        <h1 className="mt-2 text-3xl font-bold">Existing-core host proof</h1>
-        <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
-          Bounded hidden surface for Reading and Primary. Loads only the five accepted Task-4 cartridges through the
-          shared host-proof contract. Not a production catalog, cutover, retirement, or cohort acceptance.
+      <header className="rounded-t-xl border border-slate-700 bg-slate-950 px-5 py-5">
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-300">Authenticated APK proof</p>
+        <h1 className="mt-2 text-3xl font-bold">Dragon Flight</h1>
+        <p className="mt-2 max-w-3xl text-sm text-slate-300">
+          Choose the translation-matching gate, then launch. The game emits its own result; this host submits only
+          server-observed action receipts and the runtime action transcript for server replay. Those receipts attest protocol sequencing, not human play, answer comprehension, or bot resistance.
         </p>
-      </div>
+      </header>
 
-      <div className="grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)]">
-        <aside className="space-y-4">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">Cartridge</CardTitle>
-              <CardDescription>Select one accepted title</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <select
-                aria-label="Select host-proof cartridge"
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                onChange={(e) => selectCartridge(e.target.value)}
-                value={state.selectedId}
-              >
-                {bindings.map((binding) => (
-                  <option key={binding.id} value={binding.id}>
-                    {binding.title}
-                  </option>
-                ))}
-              </select>
-              <div className="mt-3 flex gap-2">
-                <Button
-                  aria-label="Previous host-proof cartridge"
-                  onClick={() => navigateCartridge(-1)}
-                  size="sm"
-                  type="button"
-                  variant="outline"
-                >
-                  Previous
-                </Button>
-                <Button
-                  aria-label="Next host-proof cartridge"
-                  onClick={() => navigateCartridge(1)}
-                  size="sm"
-                  type="button"
-                  variant="outline"
-                >
-                  Next
-                </Button>
-              </div>
-              {selectedBinding && (
-                <div className="mt-4 space-y-2 text-xs">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Input mode</span>
-                    <Badge variant="outline">{selectedBinding.inputMode}</Badge>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Scope</span>
-                    <Badge variant="outline">{selectedBinding.temporalScope}</Badge>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Profile</span>
-                    <Badge variant="outline" data-testid="host-proof-profile">
-                      {state.profile}
-                    </Badge>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+      <div className="border-x border-b border-slate-700 bg-slate-900 p-4 sm:p-6">
+        <p aria-live="polite" className="mb-4 text-sm text-slate-200">{state.message}</p>
+        {state.status === "error" && <p role="alert" className="mb-4 text-sm text-rose-300">{state.message}</p>}
+        {state.cartridge && state.attempt ? (
+          <APKGameHost
+            key={state.attempt.attemptId}
+            aria-label="Dragon Flight vocabulary game"
+            cartridge={state.cartridge}
+            input={state.attempt.input}
+            edition={edition}
+            responsive={HOST_PROOF_RESPONSIVE_OPTIONS}
+            canvasClassName="min-h-[560px] w-full overflow-hidden rounded-lg border border-slate-700 bg-slate-950"
+            className="space-y-4"
+            instructions="Use Left and Right Arrow keys or tap a gate. Press Enter or Space to launch after a choice."
+            onDiagnostic={onDiagnostic}
+            onComplete={submitCompletion}
+            showClientResult={false}
+            showRestartControl={false}
+          />
+        ) : (
+          <div className="min-h-[240px] rounded-lg border border-dashed border-slate-600 bg-slate-950/70 p-6 text-sm text-slate-300">
+            {state.status === "error" ? "A new authenticated attempt is required before the game can mount." : "Loading real cartridge…"}
+          </div>
+        )}
 
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">History</CardTitle>
-              <CardDescription>Recent host-proof completions</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {state.historyLoading ? (
-                <p className="text-sm text-muted-foreground">Loading…</p>
-              ) : state.history.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No completions recorded yet.</p>
-              ) : (
-                <ul className="space-y-2">
-                  {state.history.map((entry) => (
-                    <li
-                      key={entry.id}
-                      className="rounded-md border border-border p-2 text-xs"
-                      data-testid="host-proof-history-item"
-                    >
-                      <div className="font-semibold">{entry.gameType}</div>
-                      <div className="text-muted-foreground">
-                        {entry.xpEarned} XP · {Math.round(entry.accuracy * 100)}% ·{" "}
-                        {new Date(entry.createdAt).toLocaleTimeString()}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </CardContent>
-          </Card>
-        </aside>
+        {state.completion && (
+          <section aria-label="Verified Dragon Flight result" className="mt-5 rounded-lg border border-emerald-700 bg-emerald-950/40 p-4">
+            <h2 className="font-semibold text-emerald-200">Verified result</h2>
+            <p className="mt-1 text-sm">
+              Score {state.completion.score} · Accuracy {Math.round(state.completion.accuracy * 100)}% · {state.completion.xpEarned} XP
+              {" · "}{state.completion.victory ? "Victory confirmed" : "Flight recorded"}
+            </p>
+          </section>
+        )}
 
-        <div>
-          <Card className="h-full">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">{selectedBinding?.title ?? "Loading…"}</CardTitle>
-              <CardDescription>Real input drives the accepted deterministic mechanic</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {state.loadError ? (
-                <p role="alert" className="rounded-md border border-destructive bg-destructive/10 p-4 text-sm">
-                  {state.loadError}
-                </p>
-              ) : state.loading ? (
-                <p className="text-sm text-muted-foreground">Loading cartridge…</p>
-              ) : state.cartridge && state.session ? (
-                <>
-                  <div
-                    className={`rounded-md border-2 border-dashed border-border bg-muted p-6 ${
-                      state.profile === "compact" ? "max-w-sm" : "max-w-3xl"
-                    }`}
-                    data-testid="host-proof-game-container"
-                    data-cartridge-id={state.selectedId}
-                    data-profile={state.profile}
-                    onKeyDown={(e) => {
-                      if (e.code === "Enter" || e.code === "Space" || e.code === "ArrowRight") {
-                        e.preventDefault();
-                        dispatch("keyboard", "primary");
-                      } else if (e.code === "Backspace" || e.code === "ArrowLeft") {
-                        e.preventDefault();
-                        dispatch("keyboard", "secondary");
-                      }
-                    }}
-                    onPointerDown={(e) => {
-                      const rect = e.currentTarget.getBoundingClientRect();
-                      const intent = e.clientX - rect.left >= rect.width / 2 ? "primary" : "secondary";
-                      const modality: ExistingCoreQcInputModality = e.pointerType === "touch" ? "touch" : "pointer";
-                      dispatch(modality, intent);
-                    }}
-                    role="button"
-                    tabIndex={0}
-                    aria-label={`${selectedBinding?.title} host-proof input area. Right half or Enter for primary, left half or Backspace for secondary.`}
-                  >
-                    <div className="pointer-events-none select-none text-center">
-                      <p className="text-lg font-bold">{selectedBinding?.title}</p>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        {state.profile === "compact" ? "Compact" : "Wide"} container
-                      </p>
-                      <p className="mt-4 text-xs text-muted-foreground">
-                        Keyboard: Enter/Space/Right = correct · Backspace/Left = incorrect
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Pointer/Touch: right half = correct · left half = incorrect
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    <div className="rounded-md border border-border p-3 text-center">
-                      <div className="text-xs text-muted-foreground">Keyboard</div>
-                      <div className="text-lg font-semibold" data-testid="host-proof-keyboard-count">
-                        {inputCounts.keyboard}
-                      </div>
-                    </div>
-                    <div className="rounded-md border border-border p-3 text-center">
-                      <div className="text-xs text-muted-foreground">Pointer</div>
-                      <div className="text-lg font-semibold" data-testid="host-proof-pointer-count">
-                        {inputCounts.pointer}
-                      </div>
-                    </div>
-                    <div className="rounded-md border border-border p-3 text-center">
-                      <div className="text-xs text-muted-foreground">Touch</div>
-                      <div className="text-lg font-semibold" data-testid="host-proof-touch-count">
-                        {inputCounts.touch}
-                      </div>
-                    </div>
-                    <div className="rounded-md border border-border p-3 text-center">
-                      <div className="text-xs text-muted-foreground">Correct / Attempts</div>
-                      <div className="text-lg font-semibold" data-testid="host-proof-score">
-                        {state.correctAnswers} / {state.totalAttempts}
-                      </div>
-                    </div>
-                  </div>
-
-                  <pre
-                    className="max-h-40 overflow-auto rounded-md border border-border bg-muted p-3 text-xs"
-                    data-testid="host-proof-mechanic-snapshot"
-                  >
-                    {JSON.stringify(state.snapshot?.mechanic ?? {}, null, 2)}
-                  </pre>
-
-                  <div className="flex flex-wrap gap-3">
-                    <Button
-                      variant="outline"
-                      onClick={() => dispatch("pointer", "secondary")}
-                      data-testid="host-proof-secondary-button"
-                    >
-                      Incorrect
-                    </Button>
-                    <Button
-                      onClick={() => dispatch("pointer", "primary")}
-                      data-testid="host-proof-primary-button"
-                    >
-                      Correct
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      disabled={state.totalAttempts === 0 || state.completionStatus === "submitting"}
-                      onClick={complete}
-                      data-testid="host-proof-complete-button"
-                    >
-                      {state.completionStatus === "submitting" ? "Submitting…" : "Complete"}
-                    </Button>
-                    <Button
-                      data-testid="host-proof-replay-button"
-                      onClick={replay}
-                      type="button"
-                      variant="outline"
-                    >
-                      Replay
-                    </Button>
-                  </div>
-
-                  {state.completionStatus === "success" && state.completionResult && (
-                    <p className="rounded-md border border-green-600/20 bg-green-600/10 p-3 text-sm text-green-700">
-                      Completed! +{state.completionResult.xpEarned} XP · activityId{" "}
-                      {state.completionResult.activityId}
-                    </p>
-                  )}
-                  {state.completionStatus === "duplicate" && state.completionResult && (
-                    <p className="rounded-md border border-yellow-600/20 bg-yellow-600/10 p-3 text-sm text-yellow-700">
-                      Duplicate completion recorded (no additional XP).
-                    </p>
-                  )}
-                  {state.completionStatus === "error" && (
-                    <p role="alert" className="rounded-md border border-destructive bg-destructive/10 p-3 text-sm">
-                      {state.completionError}
-                    </p>
-                  )}
-                </>
-              ) : null}
-            </CardContent>
-          </Card>
+        <div className="mt-5 flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={beginFreshFlight}
+            className="min-h-11 rounded-md bg-emerald-500 px-4 text-sm font-semibold text-slate-950 hover:bg-emerald-300"
+          >
+            Start a fresh flight
+          </button>
+          <p className="text-xs text-slate-400">Pixel art assets by ElvGames. This bounded proof does not publish a production catalog.</p>
         </div>
       </div>
+
+      <section aria-label="Dragon Flight proof history" className="mt-6 rounded-xl border border-slate-700 bg-slate-950 p-5">
+        <h2 className="text-lg font-semibold">Your recent verified flights</h2>
+        {state.history.length === 0 ? (
+          <p className="mt-2 text-sm text-slate-400">No verified Dragon Flight completions yet.</p>
+        ) : (
+          <ul className="mt-3 space-y-2 text-sm">
+            {state.history.map((entry) => (
+              <li key={entry.id} className="flex flex-wrap justify-between gap-2 rounded border border-slate-800 px-3 py-2">
+                <span>{entry.score} points · {Math.round(entry.accuracy * 100)}%</span>
+                <span className="text-slate-400">{entry.xpEarned} XP</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </section>
   );
 }

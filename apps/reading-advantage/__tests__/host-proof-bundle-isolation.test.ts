@@ -4,6 +4,8 @@ import { resolve } from "node:path";
 const APP_ROOT = process.cwd();
 
 const SERVER_FILES = [
+  "app/api/host-proof/games/attempts/route.ts",
+  "app/api/host-proof/games/attempts/actions/route.ts",
   "app/api/host-proof/games/completions/route.ts",
   "app/[locale]/(host-proof)/layout.tsx",
   "app/[locale]/(host-proof)/student/host-proof/games/page.tsx",
@@ -12,39 +14,44 @@ const SERVER_FILES = [
 
 const CLIENT_FILE = "components/host-proof/HostProofGameClient.tsx";
 const CLIENT_LOADER_FILE = "lib/host-proof-qc-loader.ts";
+const SERVER_SELECTION_FILE = "lib/host-proof-selections.ts";
 const NEXT_CONFIG_FILE = "next.config.ts";
 
 describe("host-proof bundle isolation", () => {
   it.each(SERVER_FILES)("%s does not import a cartridge loader", (relativePath) => {
     const source = readFileSync(resolve(APP_ROOT, relativePath), "utf-8");
-    const staticImport =
-      /import\s+.*\s+from\s+["']@reading-advantage\/game-cartridges(?:\/qc)?["']/.test(source);
-    const dynamicImport =
-      /import\s*\(\s*["']@reading-advantage\/game-cartridges(?:\/qc)?["']\s*\)/.test(source);
+    const staticImport = /import\s+.*\s+from\s+["']@reading-advantage\/game-cartridges(?:\/qc|\/host-proof)?["']/.test(source);
+    const dynamicImport = /import\s*\(\s*["']@reading-advantage\/game-cartridges(?:\/qc|\/host-proof)?["']\s*\)/.test(source);
 
     expect(staticImport).toBe(false);
     expect(dynamicImport).toBe(false);
   });
 
-  it("loads the bounded QC cartridge module through a client-only local dynamic boundary", () => {
+  it("loads the explicit Dragon Flight cartridge only through a client-local dynamic boundary", () => {
     const clientSource = readFileSync(resolve(APP_ROOT, CLIENT_FILE), "utf-8");
     const loaderSource = readFileSync(resolve(APP_ROOT, CLIENT_LOADER_FILE), "utf-8");
     const runtimeStaticImport =
-      /import\s+(?!type\b).*?\s+from\s+["']@reading-advantage\/game-cartridges\/qc["']/.test(clientSource);
-    const rootCartridgeImport =
-      /(?:from\s+|import\s*\(\s*)["']@reading-advantage\/game-cartridges["']/.test(clientSource);
-    const dynamicLocalLoaderImport =
-      /import\s*\(\s*["']@\/lib\/host-proof-qc-loader["']\s*\)/.test(clientSource);
-    const loaderRuntimeImport =
-      /from\s+["']@reading-advantage\/game-cartridges\/qc["']/.test(loaderSource);
+      /import\s+(?!type\b).*?from\s+["']@reading-advantage\/game-cartridges(?:\/qc|\/host-proof)?["']/.test(clientSource);
+    const dynamicLocalLoaderImport = /import\s*\(\s*["']@\/lib\/host-proof-qc-loader["']\s*\)/.test(clientSource);
 
     expect(runtimeStaticImport).toBe(false);
-    expect(rootCartridgeImport).toBe(false);
     expect(dynamicLocalLoaderImport).toBe(true);
-    expect(loaderRuntimeImport).toBe(true);
+    expect(loaderSource).toContain('from "@reading-advantage/game-cartridges/host-proof"');
+    expect(loaderSource).not.toMatch(/from\s+["']@reading-advantage\/game-cartridges["']/);
   });
 
-  it("transpiles the runtime workspace packages behind the dynamic QC boundary", () => {
+  it("keeps only the selected Dragon Flight edition on the server selection boundary", () => {
+    const clientSource = readFileSync(resolve(APP_ROOT, CLIENT_FILE), "utf-8");
+    const selectionSource = readFileSync(resolve(APP_ROOT, SERVER_SELECTION_FILE), "utf-8");
+
+    expect(clientSource).not.toContain("standard-pack-release.json");
+    expect(selectionSource).toContain('import "server-only"');
+    expect(selectionSource).toContain("getDragonFlightHostProofSelectedEdition");
+    expect(selectionSource).not.toContain("standard-pack-release.json");
+    expect(selectionSource).not.toContain("createDragonFlightHostProofEdition");
+  });
+
+  it("transpiles the runtime workspace packages behind the dynamic cartridge boundary", () => {
     const source = readFileSync(resolve(APP_ROOT, NEXT_CONFIG_FILE), "utf-8");
 
     for (const packageName of [

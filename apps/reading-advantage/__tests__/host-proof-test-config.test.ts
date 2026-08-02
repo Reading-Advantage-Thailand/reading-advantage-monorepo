@@ -21,10 +21,22 @@ describe("Reading host-proof test configuration", () => {
 
   it("seeds before starting an isolated flagged server", () => {
     const command = createHostProofPlaywrightWebServerCommand(3107);
+    const migrateCommand = "pnpm --filter @reading-advantage/db migrate";
 
     expect(command).toContain("scripts/seed-host-proof-session.ts");
+    expect(command).toContain(migrateCommand);
+    expect(command.indexOf(migrateCommand)).toBeLessThan(
+      command.indexOf("pnpm exec tsx scripts/seed-host-proof-session.ts"),
+    );
     expect(command).toContain("NEXT_DIST_DIR=.next/host-proof-3107");
     expect(command).toContain("HOST_PROOF_ENABLED=true");
+    expect(command).toContain("HOST_PROOF_ATTEMPT_SECRET=host-proof-local-attempt-secret-2026");
+    expect(command).toContain("pnpm --filter @reading-advantage/domain build");
+    expect(command.indexOf("pnpm --filter @reading-advantage/domain build")).toBeLessThan(
+      command.indexOf("pnpm --filter @reading-advantage/game-cartridges build"),
+    );
+    expect(command).toContain("pnpm --filter @reading-advantage/advantage-play-kit build");
+    expect(command).toContain("pnpm --filter @reading-advantage/game-cartridges build");
     expect(command).toContain("PORT=3107");
   });
 });

@@ -1,116 +1,129 @@
-import { test, expect, type Page } from "@playwright/test";
+import { expect, test, type Page, type Request } from "@playwright/test";
 
-const CARTRIDGE_IDS = [
-  "dragon-flight",
-  "magic-defense",
-  "dungeon-liberator",
-  "sorcerer-ziggurat",
-  "astral-mage",
-] as const;
-const VIEWPORTS = {
+const viewports = {
   compact: { width: 390, height: 844 },
   wide: { width: 1280, height: 800 },
 } as const;
-const INPUTS = ["keyboard", "pointer", "touch"] as const;
 
-test.describe.configure({ mode: "serial" });
-test.setTimeout(90_000);
+test.setTimeout(60_000);
 
-async function selectReadyCartridge(page: Page, cartridgeId: string) {
-  await page.waitForSelector("[data-host-proof-boundary='reading-primary-host-proof-only']");
-  const container = page.locator("[data-testid='host-proof-game-container']");
-  await expect(container).toHaveAttribute("data-cartridge-id", "dragon-flight", { timeout: 60_000 });
-  await page.selectOption("select[aria-label='Select host-proof cartridge']", cartridgeId);
-  await expect(container).toHaveAttribute("data-cartridge-id", cartridgeId, { timeout: 60_000 });
-  return container;
+/** Opens one authenticated bounded Dragon Flight host and waits for its signed attempt. */
+async function openDragonFlight(page: Page): Promise<void> {
+  const issuedAttempt = page.waitForResponse((response) =>
+    response.url().endsWith("/api/host-proof/games/attempts") && response.request().method() === "POST",
+  );
+  await page.goto("/en/student/host-proof/games");
+  expect((await issuedAttempt).status()).toBe(201);
+  await expect(page.getByLabel("Dragon Flight host-proof surface")).toBeVisible();
+  await expect(page.getByRole("region", { name: "Dragon Flight vocabulary game" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Your recent verified flights" })).toBeVisible();
+  await expect(page.locator("select")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Restart game" })).toHaveCount(0);
 }
 
-for (const cartridgeId of CARTRIDGE_IDS) {
-  for (const [profileName, viewport] of Object.entries(VIEWPORTS)) {
-    for (const input of INPUTS) {
-      test(`${cartridgeId} accepts real ${input} input and persists completion in ${profileName}`, async ({ page }) => {
-        await page.setViewportSize(viewport);
-        await page.goto("/en/student/host-proof/games");
-        const container = await selectReadyCartridge(page, cartridgeId);
-        await expect(page.locator("[data-testid='host-proof-profile']")).toHaveText(profileName);
-        await expect(container).toHaveAttribute("data-profile", profileName);
-
-        if (input === "keyboard") {
-          await container.press("Enter");
-        } else if (input === "pointer") {
-          const size = await container.evaluate((element) => ({
-            width: element.clientWidth,
-            height: element.clientHeight,
-          }));
-          await container.click({
-            position: { x: size.width * 0.75, y: size.height / 2 },
-          });
-        } else {
-          await container.scrollIntoViewIfNeeded();
-          const box = await container.boundingBox();
-          expect(box).not.toBeNull();
-          const x = box!.x + box!.width * 0.75;
-          const y = box!.y + box!.height / 2;
-          await page.touchscreen.tap(x, y);
-        }
-
-        await expect(page.locator(`[data-testid='host-proof-${input}-count']`)).toHaveText("1");
-        await page.click("[data-testid='host-proof-complete-button']");
-        await expect(page.getByText("Completed!")).toBeVisible();
-        await expect(page.locator("[data-testid='host-proof-history-item']").first()).toContainText(cartridgeId);
-      });
-    }
+/** Identifies one action-attestation request by its title-owned action kind.
+ * @param request Browser request sent by the bounded host client.
+ * @param kind Expected Dragon Flight action kind.
+ * @returns Whether the request is an action attestation for that kind.
+ */
+function isDragonFlightActionRequest(request: Request, kind: "choose-gate" | "launch"): boolean {
+  if (request.method() !== "POST" || !request.url().endsWith("/api/host-proof/games/attempts/actions")) {
+    return false;
   }
+  try {
+    const body = JSON.parse(request.postData() ?? "") as { action?: { kind?: unknown } };
+    return body.action?.kind === kind;
+  } catch {
+    return false;
+  }
+}
 
-  test(`${cartridgeId} retains one persisted activity for a duplicate completion`, async ({ page }) => {
-    await page.setViewportSize(VIEWPORTS.compact);
-    await page.goto("/en/student/host-proof/games");
-    await selectReadyCartridge(page, cartridgeId);
-    await page.click("[data-testid='host-proof-primary-button']");
-    await page.click("[data-testid='host-proof-complete-button']");
-    await expect(page.getByText("Completed!")).toBeVisible();
-    const historyCount = await page.locator("[data-testid='host-proof-history-item']").count();
+/** Asserts a title action keeps its exact protocol shape while elapsed diagnostics remain runtime-derived.
+ * @param action Untrusted action object captured from the browser request.
+ * @param expected Server-required ordered action fields.
+ * @returns Nothing after validating the title-owned action contract.
+ */
+function expectRuntimeAction(
+  action: unknown,
+  expected: { readonly sequence: number; readonly kind: "choose-gate" | "launch"; readonly gate?: "left" | "right" },
+): void {
+  expect(action).toEqual({ ...expected, elapsedMs: expect.any(Number) });
+  const elapsedMs = (action as { readonly elapsedMs: number }).elapsedMs;
+  expect(Number.isInteger(elapsedMs)).toBe(true);
+  expect(elapsedMs).toBeGreaterThanOrEqual(0);
+}
 
-    await page.click("[data-testid='host-proof-complete-button']");
-    await expect(page.getByText("Duplicate completion recorded (no additional XP).")).toBeVisible();
-    await expect(page.locator("[data-testid='host-proof-history-item']")).toHaveCount(historyCount);
+/** Sends one real title action sequence and proves the public checkpoint protocol.
+ * @param page Authenticated browser page hosting the real Dragon Flight cartridge.
+ * @param input Real input modality used to select the gate.
+ * @returns Resolves after the ordered action receipts and server-derived completion are visible.
+ */
+async function completeDragonFlight(page: Page, input: "keyboard" | "pointer" | "touch"): Promise<void> {
+  const game = page.getByRole("region", { name: "Dragon Flight vocabulary game" });
+  const gateReceipt = page.waitForResponse((response) => isDragonFlightActionRequest(response.request(), "choose-gate"));
+  const launchRequest = page.waitForRequest((request) => isDragonFlightActionRequest(request, "launch"));
+  const launchReceipt = page.waitForResponse((response) => isDragonFlightActionRequest(response.request(), "launch"));
+  const completion = page.waitForResponse((response) =>
+    response.url().endsWith("/api/host-proof/games/completions") && response.request().method() === "POST",
+  );
+
+  if (input === "keyboard") {
+    await game.press("ArrowRight");
+  } else {
+    const canvas = page.locator("[data-apk-canvas-host]");
+    const box = await canvas.boundingBox();
+    expect(box).not.toBeNull();
+    const x = box!.x + box!.width * 0.75;
+    const y = box!.y + box!.height * 0.6;
+    if (input === "pointer") await page.mouse.click(x, y);
+    else await page.touchscreen.tap(x, y);
+  }
+  await game.press("Enter");
+
+  const gateResponse = await gateReceipt;
+  expect(gateResponse.status()).toBe(200);
+  const gatePayload = await gateResponse.json() as { readonly checkpoint?: unknown; readonly minimumNextActionDwellMs?: unknown };
+  expect(typeof gatePayload.checkpoint).toBe("string");
+  expect(gatePayload.minimumNextActionDwellMs).toBe(3000);
+  if (typeof gatePayload.checkpoint !== "string" || typeof gatePayload.minimumNextActionDwellMs !== "number") {
+    throw new Error("The gate attestation did not return a server-issued receipt and dwell");
+  }
+  const gateBody = JSON.parse(gateResponse.request().postData() ?? "") as { action?: unknown };
+  expectRuntimeAction(gateBody.action, { sequence: 1, kind: "choose-gate", gate: "right" });
+  const [launchRequestInfo, launchResponse] = await Promise.all([launchRequest, launchReceipt]);
+  expect(launchResponse.status()).toBe(200);
+  const launchPayload = await launchResponse.json() as { readonly checkpoint?: unknown };
+  expect(typeof launchPayload.checkpoint).toBe("string");
+  if (typeof launchPayload.checkpoint !== "string") {
+    throw new Error("The launch attestation did not return a checkpoint");
+  }
+  const launchBody = JSON.parse(launchRequestInfo.postData() ?? "") as { action?: unknown; previousCheckpoint?: unknown };
+  expectRuntimeAction(launchBody.action, { sequence: 2, kind: "launch" });
+  expect(launchBody.previousCheckpoint).toBe(gatePayload.checkpoint);
+
+  const completionResponse = await completion;
+  expect(completionResponse.status()).toBe(200);
+  const completionBody = JSON.parse(completionResponse.request().postData() ?? "") as { checkpoints?: unknown; score?: unknown; xpEarned?: unknown };
+  expect(completionBody.checkpoints).toEqual([gatePayload.checkpoint, launchPayload.checkpoint]);
+  expect(completionBody).not.toHaveProperty("score");
+  expect(completionBody).not.toHaveProperty("xpEarned");
+  await expect(page.getByRole("heading", { name: "Verified result" })).toBeVisible();
+  await expect(page.getByLabel("Dragon Flight proof history")).not.toContainText("No verified Dragon Flight completions yet.");
+  await expect(page.getByLabel("Dragon Flight vocabulary game").getByLabel("Game result")).toHaveCount(0);
+}
+
+for (const [profile, viewport] of Object.entries(viewports)) {
+  test(`Dragon Flight completes a signed keyboard attempt in ${profile}`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await openDragonFlight(page);
+    await completeDragonFlight(page, "keyboard");
   });
+}
 
-  test(`${cartridgeId} replays into a new completion and navigates only accepted bindings`, async ({ page }) => {
-    await page.setViewportSize(VIEWPORTS.compact);
-    await page.goto("/en/student/host-proof/games");
-    await selectReadyCartridge(page, cartridgeId);
-
-    const history = page.locator("[data-testid='host-proof-history-item']");
-    const initialHistoryCount = await history.count();
-    const primaryButton = page.locator("[data-testid='host-proof-primary-button']");
-    await expect(primaryButton).toBeVisible();
-    await primaryButton.click();
-    await page.click("[data-testid='host-proof-complete-button']");
-    await expect(page.getByText("Completed!")).toBeVisible();
-    await expect(history).toHaveCount(Math.min(initialHistoryCount + 1, 50));
-    await expect(history.first()).toContainText(cartridgeId);
-
-    await page.click("[data-testid='host-proof-replay-button']");
-    await expect(page.locator("[data-testid='host-proof-game-container']")).toHaveAttribute(
-      "data-cartridge-id",
-      cartridgeId,
-      { timeout: 60_000 },
-    );
-    await expect(page.locator("[data-testid='host-proof-score']")).toHaveText("0 / 0");
-
-    await expect(primaryButton).toBeVisible();
-    await primaryButton.click();
-    await page.click("[data-testid='host-proof-complete-button']");
-    await expect(page.getByText("Completed!")).toBeVisible();
-    await expect(history).toHaveCount(Math.min(initialHistoryCount + 2, 50));
-    await expect(history.first()).toContainText(cartridgeId);
-
-    const currentIndex = CARTRIDGE_IDS.indexOf(cartridgeId);
-    const nextCartridgeId = CARTRIDGE_IDS[(currentIndex + 1) % CARTRIDGE_IDS.length];
-    await page.getByRole("button", { name: "Next host-proof cartridge" }).click();
-    await expect(page.getByLabel("Select host-proof cartridge")).toHaveValue(nextCartridgeId);
-    await page.getByRole("button", { name: "Previous host-proof cartridge" }).click();
-    await expect(page.getByLabel("Select host-proof cartridge")).toHaveValue(cartridgeId);
+for (const input of ["pointer", "touch"] as const) {
+  test(`Dragon Flight records a signed ${input} gate action`, async ({ page }) => {
+    await page.setViewportSize(viewports.compact);
+    await openDragonFlight(page);
+    await completeDragonFlight(page, input);
   });
 }

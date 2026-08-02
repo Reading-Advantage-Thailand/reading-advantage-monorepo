@@ -140,6 +140,8 @@ export interface DragonFlightHostProofAttemptStore {
 export interface DragonFlightHostProofAttemptDependencies {
   /** High-entropy secret used exclusively to authenticate proof credentials. */
   readonly secret: string;
+  /** Server-only minimum dwell required between a gate receipt and a launch receipt. */
+  readonly gateToLaunchDwellMs: number;
   /** Supplies an ISO timestamp from the application clock. */
   readonly now: () => string;
   /** Creates an opaque UUID without coupling domain logic to a transport. */
@@ -655,6 +657,7 @@ function assertActionCheckpointChain(
   actor: HostProofAttemptActor,
   attemptClaims: DragonFlightHostProofClaims,
   secret: string,
+  gateToLaunchDwellMs: number,
 ): void {
   if (actions.length !== checkpoints.length) {
     throw new Error("Host-proof action checkpoint count does not match the transcript");
@@ -679,7 +682,7 @@ function assertActionCheckpointChain(
       }
       if (
         action.kind === "launch"
-        && observedAtMilliseconds - previousObservedAtMilliseconds < DRAGON_FLIGHT_HOST_PROOF_GATE_TO_LAUNCH_DWELL_MS
+        && observedAtMilliseconds - previousObservedAtMilliseconds < gateToLaunchDwellMs
       ) {
         throw new Error("Host-proof gate-to-launch server dwell is too short");
       }
@@ -763,6 +766,13 @@ export async function attestDragonFlightHostProofAction(
     throw new Error("Host-proof credential does not match the requested attempt");
   }
   const observedAt = dependencies.now();
+  const gateToLaunchDwellMs = dependencies.gateToLaunchDwellMs;
+  if (
+    !Number.isSafeInteger(gateToLaunchDwellMs)
+    || gateToLaunchDwellMs < DRAGON_FLIGHT_HOST_PROOF_GATE_TO_LAUNCH_DWELL_MS
+  ) {
+    throw new Error("Host-proof gate-to-launch dwell policy is invalid");
+  }
   assertClaimIdentity(parsedActor, claims);
   assertFreshCredential(claims, observedAt);
   const observedAtMilliseconds = assertTimestampWithinCredentialWindow(
@@ -795,7 +805,7 @@ export async function attestDragonFlightHostProofAction(
     }
     if (
       parsedInput.action.kind === "launch"
-      && observedAtMilliseconds - previousObservedAtMilliseconds < DRAGON_FLIGHT_HOST_PROOF_GATE_TO_LAUNCH_DWELL_MS
+      && observedAtMilliseconds - previousObservedAtMilliseconds < gateToLaunchDwellMs
     ) {
       throw new Error("Host-proof gate-to-launch server dwell is too short");
     }
@@ -816,7 +826,7 @@ export async function attestDragonFlightHostProofAction(
   return Object.freeze({
     checkpoint: signActionCheckpoint(checkpointClaims, dependencies.secret),
     minimumNextActionDwellMs: parsedInput.action.kind === "choose-gate"
-      ? DRAGON_FLIGHT_HOST_PROOF_GATE_TO_LAUNCH_DWELL_MS
+      ? gateToLaunchDwellMs
       : 0,
   });
 }
@@ -844,6 +854,13 @@ export async function completeDragonFlightHostProofAttempt(
     throw new Error("Host-proof idempotency key must equal the signed attempt identifier");
   }
   const now = dependencies.now();
+  const gateToLaunchDwellMs = dependencies.gateToLaunchDwellMs;
+  if (
+    !Number.isSafeInteger(gateToLaunchDwellMs)
+    || gateToLaunchDwellMs < DRAGON_FLIGHT_HOST_PROOF_GATE_TO_LAUNCH_DWELL_MS
+  ) {
+    throw new Error("Host-proof gate-to-launch dwell policy is invalid");
+  }
   assertClaimIdentity(parsedActor, claims);
   const credentialExpired = isCredentialExpired(claims, now);
   assertActionCheckpointChain(
@@ -852,6 +869,7 @@ export async function completeDragonFlightHostProofAttempt(
     parsedActor,
     claims,
     dependencies.secret,
+    gateToLaunchDwellMs,
   );
   const attemptId = claims.attemptId;
   const replayed = replayDragonFlight(parsedInput.actions);

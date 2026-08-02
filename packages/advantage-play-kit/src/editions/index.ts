@@ -9,6 +9,13 @@ export {
   validateEditionPair,
 } from "./editions.js";
 
+/** Selected-union production edition for the bounded Dragon Flight host proof. */
+export {
+  DRAGON_FLIGHT_HOST_PROOF_ASSET_KEYS,
+  DRAGON_FLIGHT_HOST_PROOF_PACK_ID,
+  getDragonFlightHostProofSelectedEdition,
+} from "./host-proof-edition.js";
+
 /** Canonical complete production-pack inventory and validator. */
 export {
   REQUIRED_PHYSICAL_ASSETS,
