@@ -6328,6 +6328,197 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             validator(attempt, attempt_directory)
 
 
+    def test_preseal_materialize_failure_evidence_validation_is_private_atomic_and_leaves_no_partial_attempt(self) -> None:
+        """Requires pre-seal materialize failure evidence to validate before publication.
+
+        @returns Nothing; real preservation and finalization use temporary roots, a real pre-seal carrier, and a deterministic validator fault only.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        executor_type = getattr(podman, "DirectCommandRuntimeProductionExecutorV1", None)
+        build_preseal = getattr(podman, "_build_direct_runtime_preseal_attempt_v1", None)
+        real_validator = getattr(podman, "validate_failed_execution_attempt_v1", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(inspect.isclass(executor_type), "V3_DIRECT_RUNTIME_PRODUCTION_EXECUTOR_MISSING")
+        self.assertTrue(callable(build_preseal), "V3_DIRECT_RUNTIME_PRESEAL_BUILDER_MISSING")
+        self.assertTrue(callable(real_validator), "V3_PODMAN_FAILED_ATTEMPT_VALIDATOR_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+        self.assertTrue(podman.HISTORICAL_PODMAN_BLOCKER.is_file())
+        self.assertFalse(podman.HISTORICAL_PODMAN_BLOCKER.is_symlink())
+
+        preparation = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-input-preparation",
+            "packetMaterialization": {"sourcePacketSha256": "a" * 64, "entries": []},
+        }
+        attempt_nonce = bytes(range(32))
+        preseal = build_preseal(preparation, attempt_nonce, "materialize")
+        self.assertEqual(preseal["attempt"]["reachedStage"], "materialize")
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            attempts_root = root / "attempts"
+            attempts_root.mkdir()
+            output = root / "candidate"
+            staged_raw = root / "staged-raw"
+            staged_raw.mkdir()
+            stdout = staged_raw / "receipt-materialize.stdout.txt"
+            stderr = staged_raw / "receipt-materialize.stderr.txt"
+            stdout_bytes = b""
+            stderr_bytes = b"V3_TEST_MATERIALIZE_FAILURE_EVIDENCE\\n"
+            stdout.write_bytes(stdout_bytes)
+            stderr.write_bytes(stderr_bytes)
+            logical_argv = ["node", "materialize-v3"]
+            payload_argv = [
+                podman.CONTAINER_NODE,
+                "/runner/materialize.mjs",
+                "/runner/archive.json",
+                "/runner/direct-runtime-source-packet.json",
+                "/work",
+            ]
+            context = {"prefix": [podman.PODMAN, "run", "--rm", "--network", "none"]}
+            staged_command = {
+                "id": "materialize",
+                "argv": logical_argv,
+                "cwd": ".",
+                "env": dict(podman.ENV),
+                "envAbsent": list(podman.ENV_ABSENT),
+                "network": False,
+                "exitCode": 1,
+                "actualExecutor": podman._container_executor(context, logical_argv, payload_argv),
+                "_rawId": "receipt-materialize",
+                "_stdoutPath": stdout,
+                "_stderrPath": stderr,
+                "_stdoutText": "",
+                "_stderrText": stderr_bytes.decode("utf-8"),
+                "directRuntimePreparationSha256": preseal["preparationSha256"],
+                "directRuntimeAttempt": copy.deepcopy(preseal["attempt"]),
+            }
+            executor = executor_type(output, "20260802")
+            executor.started = True
+            executor._failure_reason = "materialize"
+            executor._direct_runtime_stage = "materialize"
+            executor._direct_runtime_preseal_attempt = copy.deepcopy(preseal)
+            executor._staged_commands = [staged_command]
+            materialize_error = error_type("V3_PODMAN_GATE_FAILED: materialize")
+            validation_error = error_type("V3_TEST_PRESEAL_FAILURE_EVIDENCE_VALIDATION")
+            expected_attempt_name = f"{podman.ATTEMPT_PREFIX}-20260802-0001"
+            validated_directories: list[Path] = []
+            validated_attempts: list[dict[str, Any]] = []
+            validated_raw: list[dict[str, bytes]] = []
+            validated_public_paths_absent: list[bool] = []
+
+            def reject_final_attempt_validation(attempt: dict[str, Any], directory: Path | str) -> None:
+                """Proves the private staged record is valid before injecting the final validator fault.
+
+                @param attempt The fully finalized pre-seal failed-attempt record.
+                @param directory The private attempted final directory offered to the validator.
+                @returns Nothing because the deterministic validator fault always raises.
+                """
+                private_directory = Path(directory)
+                real_validator(attempt, private_directory)
+                validated_directories.append(private_directory)
+                validated_attempts.append(copy.deepcopy(attempt))
+                validated_raw.append(
+                    {
+                        "stdout": (private_directory / "raw" / "receipt-materialize.stdout.txt").read_bytes(),
+                        "stderr": (private_directory / "raw" / "receipt-materialize.stderr.txt").read_bytes(),
+                    },
+                )
+                validated_public_paths_absent.append(
+                    not (attempts_root / private_directory.name).exists(),
+                )
+                raise validation_error from materialize_error
+
+            with patch.object(
+                podman,
+                "validate_failed_execution_attempt_v1",
+                side_effect=reject_final_attempt_validation,
+            ), patch.object(
+                podman,
+                "_publish_candidate_publication_failure_attempt",
+                side_effect=AssertionError("V3_PRESEAL_FAILURE_EVIDENCE_CANDIDATE_PUBLISHER_CALLED"),
+            ), patch.object(
+                podman,
+                "_publish_blocker",
+                side_effect=AssertionError("V3_PRESEAL_FAILURE_EVIDENCE_GENERIC_BLOCKER_CALLED"),
+            ), patch.object(
+                podman,
+                "_run_container",
+                side_effect=AssertionError("V3_PRESEAL_FAILURE_EVIDENCE_PODMAN_CALLED"),
+            ), patch.object(
+                podman,
+                "capture_direct_command_runtime_in_container_trace_v1",
+                side_effect=AssertionError("V3_PRESEAL_FAILURE_EVIDENCE_TRACE_CALLED"),
+            ), patch.object(
+                executor,
+                "runtime_build",
+                side_effect=AssertionError("V3_PRESEAL_FAILURE_EVIDENCE_LATER_STAGE_CALLED"),
+            ), patch.object(
+                executor,
+                "generate",
+                side_effect=AssertionError("V3_PRESEAL_FAILURE_EVIDENCE_LATER_STAGE_CALLED"),
+            ), patch.object(podman.os, "replace", side_effect=AssertionError("V3_PRESEAL_FAILURE_EVIDENCE_REPLACE_CALLED")), patch.object(podman, "TRACK_DIR", attempts_root):
+                with self.assertRaisesRegex(
+                    podman.CandidateExecutionBlocked,
+                    r"^V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED: materialize: V3_TEST_PRESEAL_FAILURE_EVIDENCE_VALIDATION$",
+                ) as raised:
+                    executor.preserve_failure(materialize_error)
+
+            self.assertIs(raised.exception.__cause__, validation_error)
+            self.assertIs(validation_error.__cause__, materialize_error)
+            self.assertEqual(len(validated_directories), 1)
+            private_directory = validated_directories[0]
+            self.assertTrue(private_directory.is_relative_to(attempts_root))
+            self.assertNotEqual(private_directory.parent, attempts_root)
+            self.assertEqual(private_directory.name, expected_attempt_name)
+            self.assertEqual(validated_public_paths_absent, [True])
+            self.assertEqual(len(validated_attempts), 1)
+            attempt = validated_attempts[0]
+            self.assertEqual(
+                set(attempt),
+                {
+                    "schemaVersion", "kind", "status", "attempt", "historicalBlocker", "failure", "commands",
+                    "markerDisposition", "upstreamAuthority", "directRuntimePreSealAttempt",
+                },
+            )
+            self.assertEqual(
+                attempt["attempt"],
+                {"id": expected_attempt_name, "sequence": 1, "namingRule": podman.ATTEMPT_NAMING_RULE},
+            )
+            self.assertEqual(attempt["failure"], {
+                "stage": "materialize",
+                "reason": "V3_PODMAN_GATE_FAILED: materialize",
+                "classification": "COMMAND_EXIT_NONZERO",
+                "commandId": "materialize",
+            })
+            self.assertEqual(attempt["directRuntimePreSealAttempt"], preseal)
+            self.assertNotIn("directRuntimeIntegration", attempt)
+            self.assertEqual(len(attempt["commands"]), 1)
+            command = attempt["commands"][0]
+            self.assertEqual(command["id"], "materialize")
+            self.assertEqual(command["exitCode"], 1)
+            self.assertEqual(command["directRuntimePreparationSha256"], preseal["preparationSha256"])
+            self.assertEqual(command["directRuntimeAttempt"], preseal["attempt"])
+            self.assertEqual(validated_raw, [{"stdout": stdout_bytes, "stderr": stderr_bytes}])
+            for stream, raw_bytes in (("stdout", stdout_bytes), ("stderr", stderr_bytes)):
+                filename = f"receipt-materialize.{stream}.txt"
+                self.assertEqual(
+                    command[stream],
+                    {
+                        "path": f"{expected_attempt_name}/raw/{filename}",
+                        "sha256": _sha256(raw_bytes),
+                        "size": len(raw_bytes),
+                    },
+                )
+            self.assertFalse(output.exists())
+            self.assertFalse(V3_DIR.exists())
+            self.assertFalse((attempts_root / expected_attempt_name).exists())
+            self.assertEqual(sorted(path.name for path in attempts_root.iterdir()), [])
+            self.assertFalse(private_directory.exists())
+            self.assertFalse((attempts_root / "raw").exists())
+
+
     def test_production_candidate_validation_failure_is_durably_retained_without_fake_command_or_publish(self) -> None:
         """Requires a post-trace candidate-validation failure to retain operation-only evidence.
 
