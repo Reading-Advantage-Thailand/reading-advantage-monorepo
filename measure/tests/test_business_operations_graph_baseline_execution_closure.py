@@ -5879,6 +5879,186 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         with self.assertRaises(error_type):
             validator(manifest, archive, ledger, profile, receipt, bad_graph, clean_audit, compensation)
 
+    def test_preseal_failed_attempt_preserves_terminality_without_sealed_integration(self) -> None:
+        """Accepts a materialization failure with only its pre-seal terminality carrier.
+
+        @returns Nothing; assertions exercise the failed-attempt validator against temporary raw evidence only.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        validator = getattr(podman, "validate_failed_execution_attempt_v1", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(callable(validator), "V3_PODMAN_FAILED_ATTEMPT_VALIDATOR_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+
+        stage = "materialize"
+        stage_plan = [
+            "direct-runtime-preflight",
+            "direct-runtime-discovery",
+            "materialize",
+            "direct-runtime-materialization-probe",
+            "build-advantage-play-kit-for-runtime",
+            "direct-runtime-dist-identity",
+            "generate-standard-pack-catalog",
+            "direct-runtime-trace",
+        ]
+        later_stages = [
+            {"id": "direct-runtime-materialization-probe", "status": "NOT_RUN"},
+            {"id": "build-advantage-play-kit-for-runtime", "status": "NOT_RUN"},
+            {"id": "direct-runtime-dist-identity", "status": "NOT_RUN"},
+            {"id": "generate-standard-pack-catalog", "status": "NOT_RUN"},
+            {"id": "direct-runtime-trace", "status": "NOT_RUN"},
+        ]
+        self.assertEqual(list(podman._DIRECT_RUNTIME_RUNNER_STAGES), stage_plan)
+        preparation_sha256 = "a" * 64
+        attempt_identity = {
+            "id": "direct-runtime-detached-runner-v1",
+            "nonceSha256": "b" * 64,
+            "reachedStage": stage,
+            "laterStages": later_stages,
+            "executionTrace": None,
+        }
+        preseal_attempt = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-pre-seal-attempt",
+            "preparationSha256": preparation_sha256,
+            "stagePlan": stage_plan,
+            "attempt": attempt_identity,
+        }
+
+        with tempfile.TemporaryDirectory() as temporary:
+            attempt_directory = (
+                Path(temporary) / "r1-v3-podman-execution-attempt-20260802-0001"
+            )
+            raw_directory = attempt_directory / "raw"
+            raw_directory.mkdir(parents=True)
+            stdout = raw_directory / "receipt-materialize.stdout.txt"
+            stderr = raw_directory / "receipt-materialize.stderr.txt"
+            stdout.write_text("", encoding="utf-8")
+            stderr.write_text(
+                "V3_DIRECT_RUNTIME_PACKET_MATERIALIZATION_INVALID: source packet entry is unreadable\n",
+                encoding="utf-8",
+            )
+
+            def raw_reference(path: Path) -> dict[str, Any]:
+                """Returns the exact attempt-relative raw-stream reference.
+
+                @param path The temporary raw stream to hash.
+                @returns The hash-bound receipt reference for the raw stream.
+                """
+                data = path.read_bytes()
+                return {
+                    "path": f"{attempt_directory.name}/raw/{path.name}",
+                    "sha256": _sha256(data),
+                    "size": len(data),
+                }
+
+            payload_argv = [
+                podman.CONTAINER_NODE,
+                "/runner/materialize.mjs",
+                "/runner/archive.json",
+                "/runner/direct-runtime-source-packet.json",
+                "/work",
+            ]
+            command = {
+                "id": stage,
+                "argv": ["node", "materialize-v3"],
+                "cwd": ".",
+                "env": dict(podman.ENV),
+                "envAbsent": list(podman.ENV_ABSENT),
+                "network": False,
+                "exitCode": 1,
+                "stdout": raw_reference(stdout),
+                "stderr": raw_reference(stderr),
+                "actualExecutor": {
+                    "logicalArgv": ["node", "materialize-v3"],
+                    "environment": dict(podman.ENV),
+                    "effectiveEnvironment": {
+                        "CI": "true",
+                        "PATH": podman.BOOTSTRAP_PATH,
+                    },
+                    "inheritedEnv": [],
+                    "payloadArgv": payload_argv,
+                    "argv": [
+                        podman.PODMAN,
+                        "run",
+                        "--rm",
+                        "--network",
+                        "none",
+                        podman.IMAGE_RESOLVED,
+                        "/usr/bin/env",
+                        "-i",
+                        "CI=true",
+                        f"PATH={podman.BOOTSTRAP_PATH}",
+                        *payload_argv,
+                    ],
+                },
+                "directRuntimePreparationSha256": preparation_sha256,
+                "directRuntimeAttempt": copy.deepcopy(attempt_identity),
+            }
+            attempt = {
+                "schemaVersion": 1,
+                "kind": "execution-closure-failed-attempt",
+                "status": "BLOCKED",
+                "attempt": {
+                    "id": attempt_directory.name,
+                    "sequence": 1,
+                    "namingRule": "r1-v3-podman-execution-attempt-YYYYMMDD-NNNN",
+                },
+                "historicalBlocker": _reference(PODMAN_BLOCKER),
+                "failure": {
+                    "stage": stage,
+                    "reason": f"V3_PODMAN_GATE_FAILED: {stage}",
+                    "classification": "COMMAND_EXIT_NONZERO",
+                    "commandId": stage,
+                },
+                "commands": [command],
+                "markerDisposition": copy.deepcopy(podman.core.MARKER_DISPOSITION),
+                "upstreamAuthority": "NONE",
+                "directRuntimePreSealAttempt": preseal_attempt,
+            }
+            self.assertNotIn("directRuntimeIntegration", attempt)
+            self.assertEqual(command["id"], attempt["failure"]["commandId"])
+            self.assertEqual(command["id"], preseal_attempt["attempt"]["reachedStage"])
+            self.assertEqual(
+                command["directRuntimePreparationSha256"],
+                preseal_attempt["preparationSha256"],
+            )
+            self.assertEqual(command["directRuntimeAttempt"], preseal_attempt["attempt"])
+
+            validator(attempt, attempt_directory)
+
+            bad = copy.deepcopy(attempt)
+            bad["commands"][0]["directRuntimePreparationSha256"] = "c" * 64
+            with self.assertRaises(error_type):
+                validator(bad, attempt_directory)
+
+            bad = copy.deepcopy(attempt)
+            bad["commands"][0]["directRuntimeAttempt"]["nonceSha256"] = "c" * 64
+            with self.assertRaises(error_type):
+                validator(bad, attempt_directory)
+
+            bad = copy.deepcopy(attempt)
+            bad_later_stages = bad["directRuntimePreSealAttempt"]["attempt"]["laterStages"]
+            bad_later_stages[-1]["id"] = "direct-runtime-trace-after-seal"
+            bad["commands"][0]["directRuntimeAttempt"]["laterStages"] = copy.deepcopy(bad_later_stages)
+            with self.assertRaises(error_type):
+                validator(bad, attempt_directory)
+
+            bad = copy.deepcopy(attempt)
+            bad["directRuntimePreSealAttempt"]["raw"] = raw_reference(stdout)
+            with self.assertRaises(error_type):
+                validator(bad, attempt_directory)
+
+            bad = copy.deepcopy(attempt)
+            bad["directRuntimeIntegration"] = {
+                "integration": {},
+                "reachedStage": stage,
+                "laterStages": copy.deepcopy(later_stages),
+            }
+            with self.assertRaises(error_type):
+                validator(bad, attempt_directory)
+
 
 
 if __name__ == "__main__":
