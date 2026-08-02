@@ -3110,6 +3110,154 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         )
         self.assertFalse(V3_DIR.exists())
 
+    def test_direct_runtime_input_preparation_protocol_is_self_derived_and_transaction_bound(self) -> None:
+        """Requires production-owned R1 inputs instead of caller-injected runtime evidence.
+
+        @returns Nothing; this Red contract inspects only the required protocol surface and cannot run Podman or publish a candidate.
+        """
+        self.assertEqual(_sha256(PODMAN_RUNTIME_ASSET_ATTEMPT.read_bytes()), PODMAN_RUNTIME_ASSET_ATTEMPT_SHA256)
+        self.assertFalse(V3_DIR.exists())
+        persistent_attempts = sorted(
+            path.relative_to(TRACK_DIR).as_posix()
+            for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")
+        )
+        marker = TRACK_DIR / "r1-r2-v2-marker-closeout-green-receipt-20260801.md"
+        marker_bytes = marker.read_bytes()
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        prepare = getattr(podman, "prepare_direct_command_runtime_execution_inputs_v1", None)
+        finalize = getattr(podman, "finalize_direct_command_runtime_execution_inputs_v1", None)
+        writer = podman.write_execution_closure_v1
+        self.assertTrue(callable(prepare), "V3_DIRECT_RUNTIME_INPUT_PREPARATION_ENTRYPOINT_MISSING")
+        self.assertTrue(callable(finalize), "V3_DIRECT_RUNTIME_INPUT_FINALIZATION_ENTRYPOINT_MISSING")
+        self.assertEqual(
+            set(inspect.signature(prepare).parameters),
+            {"run_day"},
+            "V3_DIRECT_RUNTIME_INPUT_PREPARATION_SIGNATURE_INVALID",
+        )
+        self.assertEqual(
+            set(inspect.signature(finalize).parameters),
+            {"preparation", "runtime_build_receipt", "post_build_identity"},
+            "V3_DIRECT_RUNTIME_INPUT_FINALIZATION_SIGNATURE_INVALID",
+        )
+        self.assertEqual(
+            set(inspect.signature(writer).parameters),
+            {"output_directory", "run_day", "external_stop"},
+            "V3_DIRECT_RUNTIME_CALLER_INPUTS_NOT_REMOVED",
+        )
+
+        writer_source = inspect.getsource(writer)
+        ordered_steps = [
+            "prepare_direct_command_runtime_execution_inputs_v1(",
+            'failure_reason = "direct-runtime-input-preparation"',
+            "archive = _build_archive(",
+            'failure_reason = "build-advantage-play-kit-for-runtime"',
+            'failure_reason = "direct-runtime-dist-identity"',
+            "finalize_direct_command_runtime_execution_inputs_v1(",
+            'failure_reason = "generate-standard-pack-catalog"',
+        ]
+        positions = [writer_source.index(step) for step in ordered_steps]
+        self.assertEqual(
+            positions,
+            sorted(positions),
+            "V3_DIRECT_RUNTIME_INPUT_PREPARATION_TRANSACTION_ORDER_INVALID",
+        )
+        self.assertNotIn("direct_runtime_read_set", inspect.signature(writer).parameters)
+        self.assertNotIn("direct_runtime_source_packet", inspect.signature(writer).parameters)
+        self.assertNotIn("direct_runtime_attempt", inspect.signature(writer).parameters)
+
+        preparation_source = inspect.getsource(prepare)
+        for required in (
+            "core.V2_ARCHIVE",
+            "STANDARD_PACK_GENERATOR",
+            "git ls-tree",
+            "capture_direct_command_runtime_baseline_git_packet_v1(",
+            "direct-command-runtime-input-preparation",
+            "SINGLE_UNINTERRUPTED_R1_V3_TRANSACTION",
+            "GIT_OBJECT_DATABASE_ONLY",
+            "IN_CONTAINER_POST_RUNTIME_BUILD_IDENTITY",
+            "CAPTURE_BEFORE_CANDIDATE_STAGING",
+            "liveWorktreeFallback",
+        ):
+            self.assertIn(required, preparation_source, f"V3_DIRECT_RUNTIME_INPUT_PREPARATION_MISSING:{required}")
+        for prohibited in ("_run_container(", "_podman_context(", "_publish_failed_attempt(", "V3_DIR"):
+            self.assertNotIn(prohibited, preparation_source, f"V3_DIRECT_RUNTIME_INPUT_PREPARATION_SIDE_EFFECT:{prohibited}")
+        self.assertNotIn("direct_runtime_read_set", inspect.signature(prepare).parameters)
+        self.assertNotIn("direct_runtime_source_packet", inspect.signature(prepare).parameters)
+        self.assertNotIn("direct_runtime_attempt", inspect.signature(prepare).parameters)
+
+        preparation = prepare(run_day="20260802")
+        self.assertEqual(set(preparation), {
+            "schemaVersion",
+            "kind",
+            "transaction",
+            "frozenInputs",
+            "baselineGitDiscovery",
+            "sourcePacket",
+            "packetMaterialization",
+            "resourceBudget",
+            "dynamicBuildOutput",
+        })
+        self.assertEqual(preparation["schemaVersion"], 1)
+        self.assertEqual(preparation["kind"], "direct-command-runtime-input-preparation")
+        self.assertEqual(preparation["frozenInputs"], {
+            "archive": _reference(V2_ARCHIVE),
+            "generatorArgv": STANDARD_PACK_GENERATOR,
+        })
+        self.assertEqual(preparation["transaction"], {
+            "continuity": "SINGLE_UNINTERRUPTED_R1_V3_TRANSACTION",
+            "candidatePublication": "FORBIDDEN_UNTIL_ALL_GATES_PASS",
+            "externalRuntimeInputs": "REJECT",
+        })
+        discovery = preparation["baselineGitDiscovery"]
+        self.assertEqual(set(discovery), {
+            "source",
+            "baselineCommit",
+            "tree",
+            "root",
+            "recursiveListing",
+            "liveWorktreeFallback",
+            "captureTiming",
+        })
+        self.assertEqual(discovery["source"], "GIT_OBJECT_DATABASE_ONLY")
+        self.assertEqual(discovery["baselineCommit"], preparation["sourcePacket"]["baselineCommit"])
+        self.assertEqual(discovery["tree"], preparation["sourcePacket"]["tree"])
+        self.assertEqual(discovery["root"], "packages/advantage-play-kit/assets/standard")
+        self.assertEqual(discovery["recursiveListing"], "GIT_LS_TREE_RECURSIVE_ONLY")
+        self.assertEqual(discovery["liveWorktreeFallback"], "REJECT")
+        self.assertEqual(discovery["captureTiming"], "CAPTURE_BEFORE_CANDIDATE_STAGING")
+        self.assertEqual(preparation["dynamicBuildOutput"], {
+            "stage": "direct-runtime-dist-identity",
+            "source": "IN_CONTAINER_POST_RUNTIME_BUILD_IDENTITY",
+            "receiptIdentityPolicy": "EXACT_PRODUCER_RECEIPT_FOR_EACH_DERIVED_DIST_READ",
+            "state": "UNRESOLVED_UNTIL_RECORDED_RUNTIME_BUILD",
+        })
+        self.assertNotIn("readSet", preparation)
+        self.assertNotIn("derivedBuildReadSet", preparation)
+        podman._direct_runtime_validate_source_packet_v1(
+            preparation["sourcePacket"],
+            preparation["sourcePacket"]["baselineReadSet"],
+        )
+        self.assertEqual(
+            preparation["packetMaterialization"],
+            podman.build_direct_command_runtime_packet_materialization_contract_v1(preparation["sourcePacket"]),
+        )
+        podman._direct_runtime_resource_budget_v1(preparation["resourceBudget"])
+
+        finalization_source = inspect.getsource(finalize)
+        for required in (
+            "IN_CONTAINER_POST_RUNTIME_BUILD_IDENTITY",
+            "EXACT_PRODUCER_RECEIPT_FOR_EACH_DERIVED_DIST_READ",
+            "build_direct_command_runtime_runner_integration_v1(",
+            "direct-command-runtime-input-preparation",
+        ):
+            self.assertIn(required, finalization_source, f"V3_DIRECT_RUNTIME_INPUT_FINALIZATION_MISSING:{required}")
+        self.assertFalse(V3_DIR.exists())
+        self.assertEqual(
+            sorted(path.relative_to(TRACK_DIR).as_posix() for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")),
+            persistent_attempts,
+        )
+        self.assertEqual(marker.read_bytes(), marker_bytes)
+
     def test_scoped_pnpm_payloads_make_store_dir_global_and_pin_the_build_db_blocker(self) -> None:
         """Requires scoped pnpm payloads to keep store selection out of package scripts.
 
