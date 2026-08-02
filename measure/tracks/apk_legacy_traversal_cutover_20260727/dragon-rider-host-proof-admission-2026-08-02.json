@@ -1,0 +1,70 @@
+{
+  "schema_version": "apk-legacy-traversal-task6a-dragon-rider-host-admission.v1",
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "record_id": "apk_legacy_traversal_cutover_20260727_dragon_rider_host_proof_admission_20260802",
+  "status": "accepted-bounded-host-proof-only",
+  "decided_at": "2026-08-02",
+  "decision_authority": {
+    "role": "project_owner",
+    "delegation": "The user explicitly delegated all APK project-gating decisions to Codex.",
+    "technical_reference_commit": "f644d9d01"
+  },
+  "title": {
+    "id": "dragon-rider",
+    "input_mode": "vocabulary",
+    "selected_union": [
+      "audio/native/combat/hit-01",
+      "effects/32x32/combat/hit-01",
+      "top-down/32x32/characters/hero-01",
+      "ui/16x16/controls/gamepad-buttons"
+    ],
+    "selected_union_sha256": "bf89fa94047b30730c715d94a5518c4d3cd49f8397783548984e6baec0afd902",
+    "current_behavior_source": {
+      "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.tsx",
+      "sha256": "9a8ad3e447ef36a8212cba933b5bfce326ed8ce7d3a09a3e09a82d06a4034f98",
+      "use": "behavior evidence only; the legacy page, assets, client completion payload, and v1 routes are not host-proof implementation inputs"
+    },
+    "mechanic_candidate": {
+      "path": "packages/game-cartridges/src/dragon-rider-cartridge.ts",
+      "sha256": "e740b3e50b23a479c0a6e07734a068034b1b91115057be72bbe5d6a162ae2d44",
+      "claim_artifact_sha256": "826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236",
+      "claim_ids": ["DR-SCENE-002", "DR-TRANS-001", "DR-CONTROL-001"]
+    }
+  },
+  "predecessors": {
+    "task2_dossiers": {
+      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/task2-canonical-suitability-dossiers-v2.json",
+      "sha256": "9acc9137a74b4bd5176dee43f6830f56df05ba8cff83b50ac12e2077d58c04a5"
+    },
+    "task2_qc_only_owner_acceptance": {
+      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/task2-owner-acceptance-v2.json",
+      "sha256": "10480e53f2488bbb088cb6c4ade06a6f77b6164ee9ac308dc970c4dad0edf539",
+      "superseded_scope_only": "Its QC-only prohibition remains in force for every title except the explicitly bounded Dragon Rider host proof below."
+    },
+    "task5_qc_evidence": "measure/tracks/apk_legacy_traversal_cutover_20260727/task5-advantage-games-qc-native-input-evidence-v2.json"
+  },
+  "authorization": {
+    "reading_direct_hidden_host_proof": true,
+    "primary_direct_hidden_host_proof": true,
+    "server_authoritative_attempt_issuance": true,
+    "server_replayed_completion_persistence": true,
+    "per_title_retry_idempotency": true,
+    "production_catalog_registration": false,
+    "student_game_catalog_registration": false,
+    "legacy_asset_reuse": false,
+    "legacy_asset_ingestion": false,
+    "legacy_route_or_controller_reuse": false,
+    "legacy_retirement": false,
+    "migration": false,
+    "cohort_cutover": false,
+    "deployment": false,
+    "other_traversal_titles": false
+  },
+  "required_conditions": [
+    "All completion claims must be reproduced by a title-local server replay of a signed, school- and user-bound attempt transcript; client score, XP, victory, content, and elapsed-time claims are untrusted.",
+    "The implementation must use only the listed selected semantic union and cannot expose physical legacy asset paths or widen Dragon Flight or generic Existing Core host-proof contracts.",
+    "Both hosts must prove direct hidden admission, a winning replay, one durable result, safe retry, usable return navigation, and hostile denial cases before this phase can be accepted.",
+    "The title must remain absent from production and student game catalogs, and no legacy files may be retired during this phase."
+  ],
+  "revocation": "Any drift in a pinned source, selected union, dossier, or claim artifact revokes this admission until a new project-owner decision is recorded."
+}
