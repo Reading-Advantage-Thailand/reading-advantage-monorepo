@@ -4521,6 +4521,219 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
                     derive(trigger_for(entry), entry)
         self.assertFalse(V3_DIR.exists())
 
+    def test_production_executor_consumes_frozen_direct_node_split_semantics_without_legacy_bypass(self) -> None:
+        """Requires the production executor to run only the stored frozen direct-Node semantics.
+
+        @returns Nothing; this patches every host and container boundary and performs no Podman operation.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        derive = getattr(podman, "derive_direct_node_split_semantics_from_frozen_script_v1", None)
+        executor_type = getattr(podman, "DirectCommandRuntimeProductionExecutorV1", None)
+        self.assertTrue(callable(derive), "V3_H2A_DIRECT_NODE_SPLIT_SEMANTICS_BUILDER_MISSING")
+        self.assertTrue(inspect.isclass(executor_type), "V3_H2A_PRODUCTION_EXECUTOR_MISSING")
+
+        frozen_archive = _load_json(V2_ARCHIVE, self)
+        frozen_manifest_entry = next(
+            entry
+            for entry in frozen_archive["entries"]
+            if entry.get("path") == "packages/advantage-play-kit/package.json"
+        )
+        frozen_index, trigger = podman._direct_runtime_trigger_v1(
+            [frozen_manifest_entry],
+            list(podman.STANDARD_PACK_GENERATOR),
+        )
+        selected_manifest = frozen_index[trigger["manifest"]["path"]]
+        semantics = derive(trigger, selected_manifest)
+        self.assertEqual(selected_manifest, frozen_manifest_entry)
+        self.assertEqual(
+            semantics["frozenScript"]["manifest"],
+            trigger["manifest"],
+            "V3_H2A_FROZEN_MANIFEST_SELECTION_DRIFT",
+        )
+
+        archive = {"synthetic": "archive"}
+        preparation = {"synthetic": "preparation"}
+        catalog = type(
+            "SyntheticCatalog",
+            (),
+            {
+                "is_file": lambda _self: True,
+                "is_symlink": lambda _self: False,
+                "read_bytes": lambda _self: b"h2a-catalog",
+            },
+        )()
+        work = type("SyntheticWork", (), {"__truediv__": lambda _self, _path: catalog})()
+        root_prefix = [
+            podman.PODMAN,
+            "run",
+            "--rm",
+            "--network",
+            "none",
+            "--workdir",
+            "/work",
+        ]
+        context = {
+            "prefix": list(root_prefix),
+            "mounts": [],
+            "work": work,
+        }
+        trace_context = {
+            "prefix": list(root_prefix),
+            "mounts": [],
+            "work": work,
+        }
+        executor = executor_type(V3_DIR, "20260802")
+        executor._archive = archive
+        executor._stage = Path("/synthetic/h2a-stage")
+        executor._raw_dir = Path("/synthetic/h2a-raw")
+
+        def legacy_segments_tripwire(*_args: Any) -> list[dict[str, Any]]:
+            """Fails if production retains the root-level segment derivation bypass.
+
+            @param _args The forbidden legacy-builder inputs.
+            @returns Nothing because this always raises.
+            """
+            raise AssertionError("V3_H2A_LEGACY_ROOT_LEVEL_DERIVATION_BYPASS")
+
+        no_command = {"id": "synthetic-pre-capture"}
+        with patch.object(podman, "_write_json"), \
+             patch.object(podman, "_load_json", return_value={"entries": [frozen_manifest_entry]}), \
+             patch.object(podman, "derive_direct_node_split_semantics_from_frozen_script_v1", wraps=derive) as production_derive, \
+             patch.object(podman, "derive_direct_command_runtime_execution_segments_v1", side_effect=legacy_segments_tripwire), \
+             patch.object(podman, "build_nested_pnpm_runtime_shim_contract_v1", return_value={"synthetic": "nested-pnpm"}), \
+             patch.object(podman, "_podman_context", return_value=context), \
+             patch.object(podman, "_host_git_capture", return_value={"pre": no_command}), \
+             patch.object(podman, "_podman_host_evidence", return_value=({"versionCommand": no_command}, {"inspectCommand": no_command})), \
+             patch.object(podman, "_network_proof", return_value={"route": no_command, "dns": no_command, "tcp": no_command}), \
+             patch.object(podman, "build_workspace_prerequisite_build_dag_contract_v1", return_value={"synthetic": "workspace-dag"}), \
+             patch.object(podman, "validate_workspace_prerequisite_build_dag_contract_v1"), \
+             patch.object(podman, "_workspace_installed_resolution_records_v1", return_value=[]), \
+             patch.object(podman, "validate_installed_workspace_build_resolution_v1"), \
+             patch.object(podman, "_workspace_prerequisite_command_specs_v1", return_value=[]):
+            built_context = executor.build_context(archive, preparation)
+
+        self.assertIs(built_context, context)
+        production_derive.assert_called_once_with(trigger, selected_manifest)
+        self.assertEqual(
+            executor._direct_node_split_semantics,
+            semantics,
+            "V3_H2A_PRODUCTION_SEMANTICS_NOT_STORED",
+        )
+        self.assertEqual(
+            executor._segments,
+            semantics["segments"],
+            "V3_H2A_PRODUCTION_SEGMENTS_NOT_FROZEN_SEMANTICS",
+        )
+        self.assertEqual(context["prefix"], root_prefix)
+
+        executor._toolchain = {"synthetic": "toolchain"}
+        executor._attempt_nonce = b"h2a-production-executor-attempt"
+        executor._sealed_integration = {"synthetic": "sealed-integration"}
+        direct_commands: list[dict[str, Any]] = []
+
+        def assert_direct_segment_context(
+            observed_context: Any,
+            segment: dict[str, Any],
+        ) -> None:
+            """Checks the exact frozen semantic carrier at one executable segment boundary.
+
+            @param observed_context The execution context supplied to the production command runner.
+            @param segment The exact frozen build or direct-Node segment.
+            @returns Nothing; assertion failures identify an execution-bypass contract breach.
+            """
+            self.assertIsInstance(observed_context, dict)
+            self.assertEqual(
+                observed_context.get("prefix"),
+                [*root_prefix[:-1], segment["cwd"]],
+                "V3_H2A_PACKAGE_CWD_NOT_APPLIED_TO_EXECUTOR",
+            )
+            self.assertEqual(
+                observed_context.get("directNodeSplit"),
+                {
+                    "frozenScript": semantics["frozenScript"],
+                    "cleanEnvironment": semantics["cleanEnvironment"],
+                    "segment": segment,
+                },
+                "V3_H2A_CLEAN_ENV_OR_SCRIPT_PROVENANCE_NOT_BOUND_TO_EXECUTOR",
+            )
+
+        def run(
+            command_id: str,
+            raw_id: str,
+            logical: list[str],
+            payload: list[str],
+            **kwargs: Any,
+        ) -> dict[str, Any]:
+            """Records only the direct build and direct Node command invocations.
+
+            @param command_id The canonical command identifier.
+            @param raw_id The expected raw-receipt identifier.
+            @param logical The contract-level executable argv.
+            @param payload The container executable argv.
+            @param kwargs Optional production runner bindings.
+            @returns A successful synthetic receipt for the requested command.
+            """
+            if command_id == "clear-stale-standard-pack-catalog":
+                self.assertEqual(logical, ["rm", "-f", podman.STANDARD_PACK_CATALOG])
+                self.assertIs(kwargs.get("context"), trace_context)
+                return {"id": command_id, "exitCode": 0}
+            segment = next(
+                candidate
+                for candidate in semantics["segments"]
+                if candidate["id"] == command_id
+            )
+            assert_direct_segment_context(kwargs.get("context"), segment)
+            self.assertEqual(logical, segment["logicalArgv"])
+            self.assertEqual(kwargs.get("environment_overrides"), segment["environmentOverrides"])
+            if segment["kind"] == "RUNTIME_BUILD":
+                self.assertEqual(raw_id, "receipt-build-advantage-play-kit-for-runtime")
+                self.assertEqual(payload, ["synthetic-pnpm-build-payload"])
+                self.assertEqual(kwargs.get("toolchain"), executor._toolchain)
+            else:
+                self.assertEqual(raw_id, "receipt-generate-standard-pack-catalog")
+                self.assertEqual(payload, [podman.CONTAINER_NODE, segment["script"]["resolvedPath"]])
+            direct_commands.append(
+                {
+                    "id": command_id,
+                    "logicalArgv": list(logical),
+                    "payloadArgv": list(payload),
+                    "environmentOverrides": copy.deepcopy(kwargs.get("environment_overrides")),
+                },
+            )
+            return {"id": command_id, "exitCode": 0}
+
+        integration = executor._sealed_integration
+        with patch.object(podman, "build_pnpm_global_store_payload_v1", return_value=["synthetic-pnpm-build-payload"]), \
+             patch.object(executor, "_staged_stdout_reference", return_value={"path": "synthetic", "sha256": "a" * 64, "size": 0}), \
+             patch.object(executor, "_run", side_effect=run), \
+             patch.object(podman, "validate_direct_command_runtime_runner_integration_v1"), \
+             patch.object(executor, "_derive_trace_execution_context", return_value=trace_context) as derive_trace:
+            runtime_build = executor.runtime_build(context, {"synthetic": "materialization"}, preparation)
+            generation = executor.generate(context, integration)
+
+        derive_trace.assert_called_once_with(context, integration)
+        self.assertEqual(runtime_build["id"], "build-advantage-play-kit-for-runtime")
+        self.assertEqual(generation["id"], "generate-standard-pack-catalog")
+        self.assertEqual(
+            direct_commands,
+            [
+                {
+                    "id": segment["id"],
+                    "logicalArgv": segment["logicalArgv"],
+                    "payloadArgv": (
+                        ["synthetic-pnpm-build-payload"]
+                        if segment["kind"] == "RUNTIME_BUILD"
+                        else [podman.CONTAINER_NODE, segment["script"]["resolvedPath"]]
+                    ),
+                    "environmentOverrides": segment["environmentOverrides"],
+                }
+                for segment in semantics["segments"]
+            ],
+            "V3_H2A_DIRECT_SEGMENTS_NOT_EXACTLY_ONCE_OR_IN_FROZEN_ORDER",
+        )
+        self.assertFalse(V3_DIR.exists())
+
     def test_scoped_pnpm_payloads_make_store_dir_global_and_pin_the_build_db_blocker(self) -> None:
         """Requires scoped pnpm payloads to keep store selection out of package scripts.
 
