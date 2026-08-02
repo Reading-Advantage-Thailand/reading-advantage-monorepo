@@ -4346,6 +4346,181 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         self.assertEqual(context["mounts"][0]["access"], "ro")
         self.assertFalse(V3_DIR.exists())
 
+    def test_direct_node_split_semantics_are_derived_from_frozen_script_and_forbid_shell_hooks(self) -> None:
+        """Requires the direct-Node split to derive only from the frozen package script semantics.
+
+        @returns Nothing; this reads immutable archive bytes and exercises pure in-memory contracts only.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        derive = getattr(podman, "derive_direct_node_split_semantics_from_frozen_script_v1", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(callable(derive), "V3_DIRECT_NODE_SPLIT_SEMANTICS_BUILDER_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+        self.assertEqual(
+            set(inspect.signature(derive).parameters),
+            {"trigger", "frozen_manifest_entry"},
+            "V3_DIRECT_NODE_SPLIT_SEMANTICS_SIGNATURE_INVALID",
+        )
+
+        archive = _load_json(V2_ARCHIVE, self)
+        frozen_manifest_entry = next(
+            entry
+            for entry in archive["entries"]
+            if entry.get("path") == "packages/advantage-play-kit/package.json"
+        )
+        self.assertEqual(
+            frozen_manifest_entry["sha256"],
+            "3293eb53247e553b4b09c832389d637349bcfed6dd6d0a2007d71ac6c79f4fc9",
+        )
+        self.assertEqual(frozen_manifest_entry["size"], 3067)
+        manifest_bytes = base64.b64decode(
+            frozen_manifest_entry["contentBase64"],
+            validate=True,
+        )
+        self.assertEqual(_sha256(manifest_bytes), frozen_manifest_entry["sha256"])
+        self.assertEqual(len(manifest_bytes), frozen_manifest_entry["size"])
+        frozen_manifest = json.loads(manifest_bytes)
+        script_name = "generate:standard-pack-catalog"
+        expression = "pnpm build && node scripts/generate-standard-pack-release.mjs"
+        self.assertEqual(frozen_manifest["name"], "@reading-advantage/advantage-play-kit")
+        self.assertEqual(frozen_manifest["scripts"]["build"], "tsc")
+        self.assertEqual(frozen_manifest["scripts"][script_name], expression)
+        self.assertNotIn("prebuild", frozen_manifest["scripts"])
+        self.assertNotIn("postbuild", frozen_manifest["scripts"])
+        manifest_reference = {
+            key: frozen_manifest_entry[key]
+            for key in ("path", "sha256", "size")
+        }
+
+        def trigger_for(entry: dict[str, Any]) -> dict[str, Any]:
+            """Builds one trigger whose manifest reference matches a frozen entry.
+
+            @param entry The immutable or adversarial frozen-manifest entry.
+            @returns The direct-runtime trigger for the selected package script.
+            """
+            return {
+                "logicalArgv": list(podman.STANDARD_PACK_GENERATOR),
+                "package": "@reading-advantage/advantage-play-kit",
+                "scriptName": script_name,
+                "scriptPath": STANDARD_PACK_RUNTIME_ASSET,
+                "manifest": {key: entry[key] for key in ("path", "sha256", "size")},
+                "directory": "packages/advantage-play-kit",
+            }
+
+        semantics = derive(trigger_for(frozen_manifest_entry), frozen_manifest_entry)
+        package_cwd = "/work/packages/advantage-play-kit"
+        self.assertEqual(semantics, {
+            "schemaVersion": 1,
+            "kind": "direct-node-split-semantics",
+            "frozenScript": {
+                "manifest": manifest_reference,
+                "name": script_name,
+                "expression": expression,
+                "buildExpression": "pnpm build",
+                "directNodeExpression": "node scripts/generate-standard-pack-release.mjs",
+                "lifecycleHooks": {"prebuild": "ABSENT", "postbuild": "ABSENT"},
+            },
+            "package": {
+                "name": "@reading-advantage/advantage-play-kit",
+                "directory": "packages/advantage-play-kit",
+                "cwd": package_cwd,
+            },
+            "cleanEnvironment": {
+                "allowlisted": dict(podman.ENV),
+                "absencePredicates": list(podman.ENV_ABSENT),
+                "effectiveBase": {"CI": "true", "PATH": podman.BOOTSTRAP_PATH},
+                "inheritedEnv": [],
+            },
+            "segments": [
+                {
+                    "id": "build-advantage-play-kit-for-runtime",
+                    "kind": "RUNTIME_BUILD",
+                    "cwd": package_cwd,
+                    "logicalArgv": ["pnpm", "build"],
+                    "environmentOverrides": {},
+                },
+                {
+                    "id": "generate-standard-pack-catalog",
+                    "kind": "DIRECT_NODE_GENERATOR",
+                    "cwd": package_cwd,
+                    "logicalArgv": ["node", "scripts/generate-standard-pack-release.mjs"],
+                    "environmentOverrides": {
+                        "NODE_OPTIONS": podman.DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS,
+                    },
+                    "script": {
+                        "manifest": manifest_reference,
+                        "packageRelativePath": "scripts/generate-standard-pack-release.mjs",
+                        "logicalPath": STANDARD_PACK_RUNTIME_ASSET,
+                        "resolvedPath": f"/work/{STANDARD_PACK_RUNTIME_ASSET}",
+                    },
+                },
+            ],
+        })
+
+        def manifest_entry_with_scripts(scripts: dict[str, str]) -> dict[str, Any]:
+            """Returns a self-consistent adversarial frozen-manifest entry.
+
+            @param scripts The replacement package script map.
+            @returns An entry whose content, digest, and size agree for pure rejection testing.
+            """
+            manifest = copy.deepcopy(frozen_manifest)
+            manifest["scripts"] = scripts
+            encoded = json.dumps(
+                manifest,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+            entry = copy.deepcopy(frozen_manifest_entry)
+            entry["contentBase64"] = base64.b64encode(encoded).decode("ascii")
+            entry["sha256"] = _sha256(encoded)
+            entry["size"] = len(encoded)
+            return entry
+
+        rejection_cases: tuple[tuple[str, dict[str, str]], ...] = (
+            (
+                "shell-segment",
+                {
+                    **frozen_manifest["scripts"],
+                    script_name: "pnpm build; node scripts/generate-standard-pack-release.mjs",
+                },
+            ),
+            (
+                "hidden-second-build",
+                {
+                    **frozen_manifest["scripts"],
+                    script_name: "pnpm build && node scripts/generate-standard-pack-release.mjs && pnpm build",
+                },
+            ),
+            (
+                "pnpm-generator-lifecycle",
+                {
+                    **frozen_manifest["scripts"],
+                    script_name: "pnpm build && pnpm generate:standard-pack-catalog",
+                },
+            ),
+            (
+                "prebuild-hook",
+                {
+                    **frozen_manifest["scripts"],
+                    "prebuild": "node scripts/untrusted-hook.mjs",
+                },
+            ),
+            (
+                "postbuild-hook",
+                {
+                    **frozen_manifest["scripts"],
+                    "postbuild": "node scripts/untrusted-hook.mjs",
+                },
+            ),
+        )
+        for case_name, scripts in rejection_cases:
+            with self.subTest(case=case_name):
+                entry = manifest_entry_with_scripts(scripts)
+                with self.assertRaises(error_type):
+                    derive(trigger_for(entry), entry)
+        self.assertFalse(V3_DIR.exists())
+
     def test_scoped_pnpm_payloads_make_store_dir_global_and_pin_the_build_db_blocker(self) -> None:
         """Requires scoped pnpm payloads to keep store selection out of package scripts.
 
