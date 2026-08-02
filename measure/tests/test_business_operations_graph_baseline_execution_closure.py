@@ -3398,6 +3398,9 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         materialization = {"synthetic": "materialization"}
         runtime_build = {"synthetic": "runtime-build"}
         post_build_identity = {"synthetic": "post-build-identity"}
+        same_attempt_identity_envelope = {
+            "synthetic": "same-attempt-identity-envelope",
+        }
         integration = {"synthetic": "integration"}
         sealed_integration = {"synthetic": "sealed-integration"}
         archive_bytes = json.dumps(archive, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -3430,6 +3433,37 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         executor.materialize = stage("materialize", (context, preparation), materialization)
         executor.runtime_build = stage("runtime-build", (context, materialization, preparation), runtime_build)
         executor.post_build_identity = stage("post-build-identity", (context, runtime_build, preparation), post_build_identity)
+        executor.build_same_attempt_identity_envelope = stage(
+            "same-attempt-identity-envelope",
+            (
+                preparation,
+                archive,
+                context,
+                runtime_build,
+                post_build_identity,
+            ),
+            same_attempt_identity_envelope,
+        )
+
+        def validate_same_attempt_finalization(
+            observed_envelope: dict[str, Any],
+            observed_preparation: dict[str, Any],
+            observed_build: dict[str, Any],
+            observed_identity: dict[str, Any],
+        ) -> None:
+            """Records the required H1 finalization-boundary validation.
+
+            @param observed_envelope The executor-provided same-attempt envelope.
+            @param observed_preparation The original synthetic preparation.
+            @param observed_build The one runtime build receipt.
+            @param observed_identity The post-build identity observation.
+            @returns Nothing after asserting exact scheduler inputs.
+            """
+            self.assertIs(observed_envelope, same_attempt_identity_envelope)
+            self.assertIs(observed_preparation, preparation)
+            self.assertIs(observed_build, runtime_build)
+            self.assertIs(observed_identity, post_build_identity)
+            events.append("same-attempt-finalization")
 
         def bind_finalization(observed_archive: dict[str, Any], observed_context: dict[str, Any], observed_integration: dict[str, Any]) -> dict[str, Any]:
             """Seals finalization without mutating already executed archive or context carriers.
@@ -3472,10 +3506,17 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         executor.bind_finalization = bind_finalization
         executor.generate = stage("generator", (context, sealed_integration), generation)
         executor.capture_trace = stage("trace", (context, sealed_integration, generation), trace)
-        with patch.object(podman, "finalize_direct_command_runtime_execution_inputs_v1", side_effect=finalize) as finalizer:
+        with patch.object(podman, "finalize_direct_command_runtime_execution_inputs_v1", side_effect=finalize) as finalizer, \
+             patch.object(podman, "validate_direct_command_runtime_same_attempt_identity_finalization_v1", side_effect=validate_same_attempt_finalization) as same_attempt_finalizer:
             result = schedule(preparation, executor)
         finalizer.assert_called_once_with(preparation, runtime_build, post_build_identity)
-        self.assertEqual(events, ["archive", "context", "materialize", "runtime-build", "post-build-identity", "finalizer", "bind-finalization", "generator", "trace"])
+        same_attempt_finalizer.assert_called_once_with(
+            same_attempt_identity_envelope,
+            preparation,
+            runtime_build,
+            post_build_identity,
+        )
+        self.assertEqual(events, ["archive", "context", "materialize", "runtime-build", "post-build-identity", "same-attempt-identity-envelope", "same-attempt-finalization", "finalizer", "bind-finalization", "generator", "trace"])
         self.assertEqual(events.count("runtime-build"), 1)
         self.assertEqual(result, {
             "archive": archive,
@@ -3483,6 +3524,7 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             "materialization": materialization,
             "runtimeBuildReceipt": runtime_build,
             "postBuildIdentity": post_build_identity,
+            "sameAttemptIdentityEnvelope": same_attempt_identity_envelope,
             "integration": integration,
             "sealedIntegration": sealed_integration,
             "generation": generation,
@@ -3978,6 +4020,98 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         toctou_observer["derivedBuildReadSet"][0]["sha256"] = "0" * 64
         with self.assertRaises(error_type):
             validate_before_trace(envelope, toctou_observer)
+        self.assertFalse(V3_DIR.exists())
+
+    def test_same_attempt_identity_scheduler_rejects_executor_without_callable_envelope_builder(self) -> None:
+        """Requires every finalization-capable executor to fail closed without one callable H1 envelope builder.
+
+        @returns Nothing; this uses only in-memory executors and cannot invoke Podman or publish state.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        schedule = getattr(podman, "execute_direct_command_runtime_prepared_transaction_v1", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(callable(schedule), "V3_DIRECT_RUNTIME_PREPARATION_TRANSACTION_SCHEDULER_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+        missing = object()
+
+        def make_executor(builder: Any) -> tuple[Any, list[str]]:
+            """Builds one staged executor whose late stages are forbidden by the H1a boundary.
+
+            @param builder The configured same-attempt envelope builder, or the missing sentinel.
+            @returns The in-memory executor and its observed stage sequence.
+            """
+            events: list[str] = []
+
+            def stage(name: str, result: Any) -> Callable[..., Any]:
+                """Creates an in-memory stage that records invocation and returns one result.
+
+                @param name The stage name recorded for this case.
+                @param result The synthetic result returned by the stage.
+                @returns The staged callable.
+                """
+                def invoke(*_args: Any) -> Any:
+                    """Records one scheduler stage invocation.
+
+                    @param _args The upstream values supplied by the scheduler.
+                    @returns The configured synthetic result.
+                    """
+                    events.append(name)
+                    return result
+                return invoke
+
+            executor = type("H1aSyntheticExecutor", (), {})()
+            archive = {"synthetic": "archive"}
+            context = {"synthetic": "context"}
+            materialization = {"synthetic": "materialization"}
+            runtime_build = {"synthetic": "runtime-build"}
+            post_build_identity = {"synthetic": "post-build-identity"}
+            executor.build_archive = stage("archive", archive)
+            executor.build_context = stage("context", context)
+            executor.materialize = stage("materialize", materialization)
+            executor.runtime_build = stage("runtime-build", runtime_build)
+            executor.post_build_identity = stage("post-build-identity", post_build_identity)
+            if builder is not missing:
+                executor.build_same_attempt_identity_envelope = builder
+            executor.bind_finalization = stage("bind-finalization", {"synthetic": "sealed-integration"})
+            executor.generate = stage("generator", {"synthetic": "generation"})
+            executor.capture_trace = stage("trace", {"synthetic": "trace"})
+            return executor, events
+
+        def finalization_tripwire(*_args: Any) -> None:
+            """Fails if a missing, non-callable, or malformed builder reaches finalization.
+
+            @param _args The unexpected finalizer inputs.
+            @returns Nothing because this always fails the test.
+            """
+            raise AssertionError("V3_DIRECT_RUNTIME_H1A_FINALIZATION_REACHED")
+
+        cases: tuple[tuple[str, Any], ...] = (
+            ("missing", missing),
+            ("non-callable", object()),
+            ("invalid-envelope", lambda *_args: {"synthetic": "invalid"}),
+        )
+        for case_name, builder in cases:
+            with self.subTest(case=case_name):
+                executor, events = make_executor(builder)
+                with patch.object(
+                    podman,
+                    "finalize_direct_command_runtime_execution_inputs_v1",
+                    side_effect=finalization_tripwire,
+                ):
+                    with self.assertRaises(error_type):
+                        schedule({"synthetic": "preparation"}, executor)
+                self.assertEqual(
+                    events,
+                    [
+                        "archive",
+                        "context",
+                        "materialize",
+                        "runtime-build",
+                        "post-build-identity",
+                    ],
+                    "V3_DIRECT_RUNTIME_H1A_LATE_STAGE_REACHED",
+                )
         self.assertFalse(V3_DIR.exists())
 
     def test_scoped_pnpm_payloads_make_store_dir_global_and_pin_the_build_db_blocker(self) -> None:
