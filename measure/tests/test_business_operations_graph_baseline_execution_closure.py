@@ -3497,6 +3497,70 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         self.assertEqual(sorted(path.relative_to(TRACK_DIR).as_posix() for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")), persistent_attempts)
         self.assertEqual(marker.read_bytes(), marker_bytes)
 
+    def test_frozen_two_segment_execution_plan_requires_owned_executor_and_capacity_probe(self) -> None:
+        """Requires frozen build/direct-Node decomposition before a production executor can run.
+
+        @returns Nothing; this inspects pure contracts and sources without Podman or candidate side effects.
+        """
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        segments_builder = getattr(podman, "derive_direct_command_runtime_execution_segments_v1", None)
+        production_probe = getattr(podman, "probe_direct_command_runtime_production_capacity_v1", None)
+        production_executor = getattr(podman, "DirectCommandRuntimeProductionExecutorV1", None)
+        self.assertTrue(callable(segments_builder), "V3_DIRECT_RUNTIME_TWO_SEGMENT_PLAN_MISSING")
+        self.assertTrue(callable(production_probe), "V3_DIRECT_RUNTIME_PRODUCTION_CAPACITY_PROBE_MISSING")
+        self.assertTrue(inspect.isclass(production_executor), "V3_DIRECT_RUNTIME_PRODUCTION_EXECUTOR_MISSING")
+        self.assertEqual(set(inspect.signature(segments_builder).parameters), {"trigger"})
+        self.assertEqual(
+            set(inspect.signature(production_probe).parameters),
+            {"preparation", "filesystem_roots"},
+            "V3_DIRECT_RUNTIME_PRODUCTION_CAPACITY_PROBE_SIGNATURE_INVALID",
+        )
+
+        frozen_trigger = {
+            "logicalArgv": STANDARD_PACK_GENERATOR,
+            "package": "@reading-advantage/advantage-play-kit",
+            "scriptName": "generate:standard-pack-catalog",
+            "scriptPath": STANDARD_PACK_RUNTIME_ASSET,
+            "manifest": {"path": "packages/advantage-play-kit/package.json", "sha256": "1" * 64, "size": 1},
+            "directory": "packages/advantage-play-kit",
+        }
+        self.assertEqual(segments_builder(frozen_trigger), [
+            {
+                "id": "build-advantage-play-kit-for-runtime",
+                "kind": "RUNTIME_BUILD",
+                "logicalArgv": ["pnpm", "--filter", "@reading-advantage/advantage-play-kit", "build"],
+            },
+            {
+                "id": "generate-standard-pack-catalog",
+                "kind": "DIRECT_NODE_GENERATOR",
+                "logicalArgv": ["node", STANDARD_PACK_RUNTIME_ASSET],
+            },
+        ])
+
+        probe_source = inspect.getsource(production_probe)
+        for required in ("os.statvfs(", ".st_dev", "temporary-stage", "archive", "cow", "evidence", "CAPACITY_DEVICE_MISMATCH", "CAPACITY_INSUFFICIENT"):
+            self.assertIn(required, probe_source, f"V3_DIRECT_RUNTIME_PRODUCTION_CAPACITY_PROBE_MISSING:{required}")
+        self.assertNotIn("available_bytes", inspect.signature(production_probe).parameters)
+        executor_init_source = inspect.getsource(production_executor.__init__)
+        for forbidden in ("TemporaryDirectory(", "_run_container(", "_write_json(", "_publish_failed_attempt("):
+            self.assertNotIn(forbidden, executor_init_source, f"V3_DIRECT_RUNTIME_EXECUTOR_INIT_SIDE_EFFECT:{forbidden}")
+
+        scheduler_source = inspect.getsource(podman.execute_direct_command_runtime_prepared_transaction_v1)
+        self.assertIn("executor.probe_capacity(preparation)", scheduler_source)
+        self.assertLess(scheduler_source.index("executor.probe_capacity(preparation)"), scheduler_source.index("executor.build_archive(preparation)"))
+        self.assertIn('"capacityProbe": capacity_probe', scheduler_source)
+        self.assertLess(scheduler_source.index("runtime_build_receipt = executor.runtime_build("), scheduler_source.index("post_build_identity = executor.post_build_identity("))
+        self.assertLess(scheduler_source.index("post_build_identity = executor.post_build_identity("), scheduler_source.index("finalize_direct_command_runtime_execution_inputs_v1("))
+        self.assertLess(scheduler_source.index("finalize_direct_command_runtime_execution_inputs_v1("), scheduler_source.index("generation = executor.generate("))
+
+        writer_source = inspect.getsource(podman.write_execution_closure_v1)
+        self.assertIn("executor = DirectCommandRuntimeProductionExecutorV1(", writer_source)
+        self.assertIn("prepared_transaction = execute_direct_command_runtime_prepared_transaction_v1(", writer_source)
+        self.assertLess(writer_source.index("executor = DirectCommandRuntimeProductionExecutorV1("), writer_source.index("prepared_transaction = execute_direct_command_runtime_prepared_transaction_v1("))
+        self.assertNotIn("tempfile.TemporaryDirectory(", writer_source)
+        self.assertNotIn("del prepared_transaction", writer_source)
+        self.assertGreaterEqual(writer_source.count("prepared_transaction"), 2, "V3_DIRECT_RUNTIME_SCHEDULER_OUTPUT_DISCARDED")
+
     def test_scoped_pnpm_payloads_make_store_dir_global_and_pin_the_build_db_blocker(self) -> None:
         """Requires scoped pnpm payloads to keep store selection out of package scripts.
 
