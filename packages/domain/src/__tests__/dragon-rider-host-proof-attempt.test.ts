@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { replayDragonRiderHostProofTranscript } from "../../../game-cartridges/src/dragon-rider-host-proof.js";
+import { replayDragonRiderHostProofTranscript } from "@reading-advantage/game-cartridges/dragon-rider-host-proof";
 
 import {
   attestDragonRiderHostProofAction,

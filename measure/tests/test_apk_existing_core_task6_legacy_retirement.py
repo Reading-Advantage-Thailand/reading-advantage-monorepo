@@ -20,6 +20,8 @@ MATRIX_PATH = CORE_TRACK / "task5-canonical-reuse-disposition-matrix-v1.json"
 SOURCE_INVENTORY_PATH = CORE_TRACK / "task5-legacy-source-inventory-v1.json"
 CATALOG_PATH = REPO_ROOT / "packages/game-cartridges/src/catalog.ts"
 ROOT_EXPORT_PATH = REPO_ROOT / "packages/game-cartridges/src/index.ts"
+SUCCESSOR_CANDIDATE_PATH = REPO_ROOT / "measure/apk-cross-host-cutover-candidate-v1.json"
+HISTORICAL_TASK6_REVISION = "1070be300"
 
 EXPECTED_TITLES = [
     "dragon-flight",
@@ -61,6 +63,17 @@ def _load(path: Path) -> dict[str, Any]:
 def _sha256(path: Path) -> str:
     """Returns the SHA-256 digest of one exact repository file."""
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _git_blob_sha256(revision: str, relative_path: str) -> str:
+    """Returns the digest of one repository file at an immutable Git revision."""
+    value = subprocess.run(
+        ["git", "show", f"{revision}:{relative_path}"],
+        cwd=REPO_ROOT,
+        check=True,
+        capture_output=True,
+    ).stdout
+    return hashlib.sha256(value).hexdigest()
 
 
 def _repo_path(relative_path: str) -> Path:
@@ -305,8 +318,8 @@ class ExistingCoreTask6LegacyRetirementTests(unittest.TestCase):
                 for source in source_root.rglob("*.tsx"):
                     self.assertNotIn(f"/games/{title}/{filename}", source.read_text(encoding="utf-8"), str(source))
 
-    def test_all_bound_task5_inputs_are_current_and_production_quarantine_is_unchanged(self) -> None:
-        """Rejects stale Task 5 evidence or accidental catalog exposure during retirement."""
+    def test_task5_inputs_remain_current_while_the_24_title_candidate_stays_historical(self) -> None:
+        """Prevents a historical candidate hash from becoming a live production binding."""
         manifest = _load(MANIFEST_PATH)
         acceptance = _load(ACCEPTANCE_PATH)
 
@@ -324,17 +337,36 @@ class ExistingCoreTask6LegacyRetirementTests(unittest.TestCase):
 
         assert_bound_hashes(acceptance["bound_inputs"])
         self.assertEqual(
-            _sha256(CATALOG_PATH),
+            _git_blob_sha256(HISTORICAL_TASK6_REVISION, "packages/game-cartridges/src/catalog.ts"),
             manifest["production_quarantine"]["catalog"]["sha256"],
         )
         self.assertEqual(
-            _sha256(ROOT_EXPORT_PATH),
+            _git_blob_sha256(HISTORICAL_TASK6_REVISION, "packages/game-cartridges/src/index.ts"),
             manifest["production_quarantine"]["root_exports"]["sha256"],
         )
+
+        candidate = _load(SUCCESSOR_CANDIDATE_PATH)
+        self.assertEqual(candidate["status"], "acceptance-candidate-non-consumable")
+        self.assertEqual(candidate["title_count"], 24)
+        self.assertEqual(set(candidate["authorization"].values()), {False})
+        self.assertEqual(candidate["base_revision"], "39a9a2b86184a13f8a20253d0adfa7294783cf18")
+        self.assertEqual(
+            _sha256(SUCCESSOR_CANDIDATE_PATH),
+            "184f1b9c7e65fbc2d48dd199eb6b8f8492843760f4215c03e7cfb540e0a5c923",
+        )
+        live_drift: list[str] = []
+        for binding in candidate["bound_current_files"]:
+            path = binding["path"]
+            digest = binding["sha256"]
+            self.assertEqual(len(digest), 64, path)
+            if not _repo_path(path).is_file() or _sha256(_repo_path(path)) != digest:
+                live_drift.append(path)
+        self.assertTrue(live_drift, "the historical 24-title candidate was rebound to live source")
         self.assertEqual(_load(MATRIX_PATH)["authorization"]["legacy_retirement_authorized"], False)
 
-    def test_no_copy_guard_allows_only_the_qc_selected_union_materialization(self) -> None:
-        """Rejects accepted canonical bytes copied into title-local public trees."""
+
+    def test_no_copy_guard_allows_only_qc_and_exact_dragon_materializations(self) -> None:
+        """Allows only the catalog-bound Dragon Flight files outside the historical QC root."""
         manifest = _load(MANIFEST_PATH)
         catalog = _load(REPO_ROOT / "packages/advantage-play-kit/assets/standard/standard-pack-release.json")
         selected_keys = {
@@ -349,16 +381,49 @@ class ExistingCoreTask6LegacyRetirementTests(unittest.TestCase):
             for asset in catalog["assets"]
             if asset["key"] in selected_keys
         }
-        allowed_root = "apps/advantage-games/public/assets/apk/standard-pack-qc/"
+        dragon_keys = (
+            "audio/native/combat/hit-01",
+            "effects/32x32/combat/hit-01",
+            "top-down/32x32/characters/hero-01",
+        )
+        catalog_by_key = dict((asset["key"], asset) for asset in catalog["assets"])
+        exact_materialized_paths: set[str] = set()
+        for application in ("reading-advantage", "primary-advantage"):
+            public_root = f"apps/{application}/public"
+            materialization_root = REPO_ROOT / public_root / "assets/apk/standard-pack-2026-07-23"
+            materialization = _load(materialization_root / "materialization-manifest.json")
+            self.assertEqual(materialization["schemaVersion"], 1)
+            self.assertEqual(materialization["version"], catalog["version"])
+            self.assertEqual(materialization["catalogDigest"], catalog["digest"])
+            self.assertEqual(materialization["sourceReceiptDigest"], catalog["sourceReceiptDigest"])
+            self.assertEqual(materialization["requiredCredit"], catalog["requiredCredit"])
+            self.assertEqual([item["key"] for item in materialization["files"]], list(dragon_keys))
+            for item in materialization["files"]:
+                catalog_asset = catalog_by_key[item["key"]]
+                self.assertEqual(item["path"], catalog_asset["path"])
+                self.assertEqual(item["sha256"], catalog_asset["physical"]["sha256"])
+                self.assertEqual(item["byteSize"], catalog_asset["physical"]["byteSize"])
+                materialized_path = materialization_root / item["path"]
+                self.assertTrue(materialized_path.is_file(), materialized_path)
+                self.assertEqual(_sha256(materialized_path), item["sha256"], materialized_path)
+                exact_materialized_paths.add(str(materialized_path.relative_to(REPO_ROOT)))
+
+        allowed_qc_root = "apps/advantage-games/public/assets/apk/standard-pack-qc/"
         for public_root in ("apps/advantage-games/public", "apps/reading-advantage/public", "apps/primary-advantage/public"):
             for path in (REPO_ROOT / public_root).rglob("*"):
                 if not path.is_file() or path.suffix.lower() not in {".png", ".jpg", ".jpeg", ".gif", ".webp", ".ogg", ".mp3", ".wav"}:
                     continue
-                if _sha256(path) in canonical_hashes:
-                    self.assertTrue(str(path.relative_to(REPO_ROOT)).startswith(allowed_root), path)
+                if _sha256(path) not in canonical_hashes:
+                    continue
+                relative_path = str(path.relative_to(REPO_ROOT))
+                self.assertTrue(
+                    relative_path.startswith(allowed_qc_root) or relative_path in exact_materialized_paths,
+                    path,
+                )
 
-    def test_graph_guard_indexes_every_runtime_caller_and_catalog_stays_quarantined(self) -> None:
-        """Requires graph evidence to prove edges or an explicit no-indexed-edge result."""
+
+    def test_graph_guard_indexes_every_runtime_caller_and_successor_remains_bounded(self) -> None:
+        """Requires graph evidence plus an exact non-consumable successor boundary."""
         manifest = _load(MANIFEST_PATH)
         self.assertIsNotNone(shutil.which("repo-graph"))
         required = sorted({
@@ -409,10 +474,20 @@ class ExistingCoreTask6LegacyRetirementTests(unittest.TestCase):
                 self.assertTrue(proof["no_indexed_callers"])
                 self.assertTrue(proof["reason"].strip())
 
-        self.assertIn("return [];", CATALOG_PATH.read_text(encoding="utf-8"))
-        self.assertIn("export const cartridgeLoaders = {} as const;", CATALOG_PATH.read_text(encoding="utf-8"))
-        self.assertNotIn("host-proof", ROOT_EXPORT_PATH.read_text(encoding="utf-8"))
-
+        catalog_source = CATALOG_PATH.read_text(encoding="utf-8")
+        root_source = ROOT_EXPORT_PATH.read_text(encoding="utf-8")
+        self.assertIn("APK_HOST_PROOF_BINDINGS", catalog_source)
+        self.assertIn("loadCartridge", catalog_source)
+        self.assertNotIn("24-title host-proof union", root_source)
+        self.assertNotIn('export * from "./catalog.js";', root_source)
+        candidate = _load(SUCCESSOR_CANDIDATE_PATH)
+        self.assertEqual(candidate["status"], "acceptance-candidate-non-consumable")
+        self.assertEqual(candidate["title_count"], 24)
+        self.assertEqual(
+            _sha256(SUCCESSOR_CANDIDATE_PATH),
+            "184f1b9c7e65fbc2d48dd199eb6b8f8492843760f4215c03e7cfb540e0a5c923",
+        )
+        self.assertEqual(set(candidate["authorization"].values()), {False})
 
 @lru_cache(maxsize=1)
 def run_retirement_guard_suite() -> unittest.TestResult:

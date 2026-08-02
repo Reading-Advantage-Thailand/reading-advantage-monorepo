@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import unittest
 from pathlib import Path
 from typing import Any
@@ -28,6 +29,7 @@ EXPECTED_UNIONS = {
     "potion-rush": ["ui/16x16/controls/gamepad-buttons"],
     "rune-forge-chamber": ["top-down/32x32/characters/hero-01"],
 }
+TASKS_TWO_TO_FIVE_REVISION = "94b5c4c3e"
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -112,8 +114,8 @@ class LegacyPuzzleTasksTwoToFiveTests(unittest.TestCase):
             "cutover": False,
         })
 
-    def test_implements_only_title_modules_and_the_advantage_games_qc_adapter(self) -> None:
-        """Requires source-bound mechanics and a single explicit QC registration without public catalog exports."""
+    def test_implements_title_modules_and_preserves_the_historical_qc_boundary(self) -> None:
+        """Requires source mechanics and retains the prior quarantine as historical evidence."""
         suitability = (REPO_ROOT / "packages/game-cartridges/src/puzzle-suitability.ts").read_text(encoding="utf-8")
         enchanted = (REPO_ROOT / "packages/game-cartridges/src/puzzle/enchanted-library-cartridge.ts").read_text(encoding="utf-8")
         rune_match = (REPO_ROOT / "packages/game-cartridges/src/puzzle/rune-match-cartridge.ts").read_text(encoding="utf-8")
@@ -121,7 +123,13 @@ class LegacyPuzzleTasksTwoToFiveTests(unittest.TestCase):
         forge = (REPO_ROOT / "packages/game-cartridges/src/puzzle/rune-forge-chamber-cartridge.ts").read_text(encoding="utf-8")
         alchemist = (REPO_ROOT / "packages/game-cartridges/src/puzzle/alchemists-synthesis-cartridge.ts").read_text(encoding="utf-8")
         qc = (REPO_ROOT / "packages/game-cartridges/src/puzzle-cutover-qc.ts").read_text(encoding="utf-8")
-        catalog = (REPO_ROOT / "packages/game-cartridges/src/catalog.ts").read_text(encoding="utf-8")
+        catalog = subprocess.run(
+            ["git", "show", f"{TASKS_TWO_TO_FIVE_REVISION}:packages/game-cartridges/src/catalog.ts"],
+            cwd=REPO_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout
 
         self.assertIn("frames: [0, 1, 2, 3, 4, 5]", suitability)
         self.assertIn("timing: { fps: 12, loop: true }", suitability)
@@ -137,6 +145,9 @@ class LegacyPuzzleTasksTwoToFiveTests(unittest.TestCase):
         self.assertIn("PUZZLE_QC_REGISTRY", qc)
         self.assertIn("advantage-games-qc-only", qc)
         self.assertNotIn("puzzle", catalog.lower())
+        successor = _load(REPO_ROOT / "measure/apk-cross-host-cutover-candidate-v1.json")
+        self.assertEqual(successor["status"], "acceptance-candidate-non-consumable")
+        self.assertFalse(successor["authorization"]["product_owner_acceptance_recorded"])
 
 
 if __name__ == "__main__":

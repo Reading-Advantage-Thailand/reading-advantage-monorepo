@@ -2618,6 +2618,9 @@ importers:
       '@reading-advantage/db':
         specifier: workspace:*
         version: link:../db
+      '@reading-advantage/game-cartridges':
+        specifier: workspace:*
+        version: link:../game-cartridges
       '@reading-advantage/game-contracts':
         specifier: workspace:*
         version: link:../game-contracts

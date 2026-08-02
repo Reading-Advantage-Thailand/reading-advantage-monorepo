@@ -6,7 +6,7 @@ import {
   replayDragonRiderHostProofTranscript,
   type DragonRiderHostProofAction,
   type DragonRiderHostProofRecordedAction,
-} from "../../../game-cartridges/src/dragon-rider-host-proof.js";
+} from "@reading-advantage/game-cartridges/dragon-rider-host-proof";
 import { z } from "zod";
 
 import { gameDifficultyEnum } from "./schema.js";

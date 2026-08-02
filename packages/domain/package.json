@@ -121,6 +121,7 @@
     "@reading-advantage/auth": "workspace:*",
     "@reading-advantage/codecamp-knowledge": "workspace:*",
     "@reading-advantage/db": "workspace:*",
+    "@reading-advantage/game-cartridges": "workspace:*",
     "@reading-advantage/game-contracts": "workspace:*",
     "@reading-advantage/integrations-github": "workspace:*",
     "@reading-advantage/srs-engine": "workspace:*",

@@ -181,6 +181,36 @@ export {
   createExistingCoreTask5CanonicalReusePackage,
   EXISTING_CORE_TASK5_CANONICAL_REUSE_INPUTS,
 } from "./existing-core-suitability.js";
+
+/** Existing Action Task-2 canonical-reuse descriptors and descriptor-aware resolver. */
+export {
+  EXISTING_ACTION_CANONICAL_DESCRIPTORS,
+  EXISTING_ACTION_LEGACY_SOURCE_MANIFESTS,
+  EXISTING_ACTION_TASK2_CANONICAL_REUSE_INPUTS,
+  createExistingActionTask2CanonicalResolver,
+  createExistingActionTask2SuitabilityPackage,
+} from "./existing-action-suitability.js";
+
+/** Legacy Defense Task-2 canonical reuse dossiers and descriptor-aware resolver. */
+export {
+  LEGACY_DEFENSE_CANONICAL_DESCRIPTORS,
+  LEGACY_DEFENSE_SOURCE_MANIFESTS,
+  LEGACY_DEFENSE_TASK2_ROLE_INPUTS,
+  createLegacyDefenseTask2CanonicalResolver,
+  createLegacyDefenseTask2SuitabilityPackage,
+} from "./legacy-defense-suitability.js";
+export type {
+  LegacyDefenseSelectedUnionInput,
+  LegacyDefenseSourceManifest,
+  LegacyDefenseTask2RoleInput,
+  LegacyDefenseTask2SuitabilityPackage,
+} from "./legacy-defense-suitability.js";
+export type {
+  ExistingActionLegacySourceManifest,
+  ExistingActionTask2CanonicalReuseInput,
+  ExistingActionTask2SelectedUnionInput,
+  ExistingActionTask2SuitabilityPackage,
+} from "./existing-action-suitability.js";
 export type {
   ExistingCoreTask5CanonicalReuseInput,
   ExistingCoreTask5CanonicalReusePackage,

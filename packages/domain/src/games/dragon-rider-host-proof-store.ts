@@ -39,7 +39,7 @@ export function createDragonRiderHostProofAttemptStore(db: TenantDB): DragonRide
     async read(attemptId) {
       const current = await readState(attemptId);
       if (!current) return null;
-      return Object.freeze({ claims: current.state.claims, input: Object.freeze(current.state.input.map((item) => Object.freeze({ ...item }))), checkpoints: Object.freeze([...current.state.checkpoints]) });
+      return Object.freeze({ claims: current.state.claims, input: current.state.input.map((item) => ({ ...item })), checkpoints: Object.freeze([...current.state.checkpoints]) });
     },
     async complete(input) {
       const current = await readState(input.attemptId);
@@ -57,5 +57,5 @@ export function createDragonRiderHostProofAttemptStore(db: TenantDB): DragonRide
       await db.update(hostProofAttempts).set({ status: "completed", result: { ...current.state, completion }, completedAt: new Date() }).where(eq(hostProofAttempts.attemptId, input.attemptId));
       return completion;
     },
-  });
+  } satisfies DragonRiderHostProofAttemptStore);
 }

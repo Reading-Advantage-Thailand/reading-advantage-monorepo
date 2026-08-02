@@ -9,6 +9,9 @@ import unittest
 from pathlib import Path
 from typing import Any
 
+from measure.tests.test_apk_existing_core_task6_legacy_retirement import (
+    run_retirement_guard_suite,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TRACK_ROOT = REPO_ROOT / "measure/tracks/apk_existing_core_cutover_20260727"
@@ -18,7 +21,7 @@ EXPECTED_ACCEPTANCE_SHA256 = "20483a277d1d1addf87b0f98184cd76fd9dccd878a4f87bd85
 EXPECTED_RECEIPT_SHA256 = "b6ffefcebf8a75d9967f196693fe7cf14a133d66123537d201b52e9af4745dd9"
 EXPECTED_APPROVAL_MESSAGE = "Approved. I fixed the k2p7 agent and it should be usable now."
 EXPECTED_APPROVAL_MESSAGE_SHA256 = "59273e1970a6c0be4d938dac88c011a86721ecbb98b4c94af0a3e332a259c69f"
-TASK4_ACCEPTANCE_REVISION = "e0a5fb2a579ab7ec8d80c2336f4c93a946605452"
+TASK4_ACCEPTANCE_REVISION = "e0a5fb2a5"
 EXPECTED_SUBJECTS = {
     "task4_qc_evidence": {
         "path": "measure/tracks/apk_existing_core_cutover_20260727/task4-advantage-games-qc-evidence-v1.json",
@@ -138,7 +141,7 @@ class ExistingCoreTask4AcceptanceTests(unittest.TestCase):
             self.assertEqual(_sha256(REPO_ROOT / subject["path"]), subject["sha256"])
 
     def test_acceptance_pins_exact_task4_implementation_bytes(self) -> None:
-        """Requires the exhaustive implementation bindings to match immutable accepted bytes."""
+        """Requires exhaustive bindings to match their immutable acceptance revision."""
         acceptance = _load_object(ACCEPTANCE_PATH)
         evidence = _load_object(REPO_ROOT / EXPECTED_SUBJECTS["task4_qc_evidence"]["path"])
 
@@ -149,6 +152,8 @@ class ExistingCoreTask4AcceptanceTests(unittest.TestCase):
                 _git_blob_sha256(TASK4_ACCEPTANCE_REVISION, binding["path"]),
                 binding["sha256"],
             )
+        successor = _load_object(REPO_ROOT / "measure/apk-cross-host-cutover-candidate-v1.json")
+        self.assertFalse(successor["authorization"]["final_cohort_acceptance_authorized"])
 
     def test_authorization_is_limited_to_beginning_task5_host_proof(self) -> None:
         """Rejects production exposure, retirement, Task-5 success, or cohort acceptance."""
@@ -216,63 +221,24 @@ class ExistingCoreTask4AcceptanceTests(unittest.TestCase):
         )
 
     def test_plan_metadata_and_index_preserve_task4_and_bound_later_progression(self) -> None:
-        """Requires Task 4 history to remain exact while Dragon Flight Task 5 remains bounded."""
+        """Requires Task 4 history to remain exact while Task 5 is accepted and Task 6 starts."""
         plan = (TRACK_ROOT / "plan.md").read_text(encoding="utf-8")
         metadata = _load_object(TRACK_ROOT / "metadata.json")
         index = (TRACK_ROOT / "index.md").read_text(encoding="utf-8")
 
         task4_line = next(line for line in plan.splitlines() if "Prove Advantage Games QC" in line)
+        task5_line = next(line for line in plan.splitlines() if "Prove Reading and Primary load" in line)
         self.assertTrue(task4_line.startswith("- [x]"))
-
-        task5_line = next(
-            (
-                line
-                for line in plan.splitlines()
-                if "Recover Task 5 through a Dragon Flight-only signed-attempt" in line
-            ),
-            "",
-        )
-        self.assertTrue(task5_line.startswith("- [~]"))
-        self.assertIn("shared 24-title candidate", task5_line)
-        self.assertIn("historical non-consumable", task5_line)
-
-        task5_runtime_line = next(
-            (line for line in plan.splitlines() if "Dragon Flight dedicated runtime" in line),
-            "",
-        )
-        self.assertTrue(task5_runtime_line.startswith("  - [~]"))
-        self.assertIn("both host boundaries", task5_runtime_line)
-
-        task5_threat_model_line = next(
-            (line for line in plan.splitlines() if "both hosts must use the checkpoint protocol" in line),
-            "",
-        )
-        self.assertTrue(task5_threat_model_line.startswith("  - [~]"))
-        self.assertIn("adversarial direct-JSON/same-frame-bypass tests must pass", task5_threat_model_line)
-
-        task5_checklist_line = next(
-            (line for line in plan.splitlines() if "Terra phase-acceptance checklist" in line),
-            "",
-        )
-        self.assertTrue(task5_checklist_line.startswith("  - [~]"))
-        self.assertIn("both host routes derive actor and tenant from the session", task5_checklist_line)
-        self.assertIn(
-            "real cartridge must prove same-frame choose-gate then launch works only after the server-issued dwell",
-            task5_checklist_line,
-        )
-        self.assertIn("failed or missing receipt prevents completion", task5_checklist_line)
-
-        deferred_marker = "(deferred:apk_existing_core_cutover_20260727-dragon-flight-reference-acceptance)"
-        for later_marker in (
-            "Retire only each title's exact replaced legacy paths",
-            "Obtain independent review and product-owner acceptance",
-        ):
-            later_line = next(
-                (line for line in plan.splitlines() if later_marker in line),
-                "",
+        self.assertTrue(task5_line.startswith("- [x]"))
+        task6_line = next(line for line in plan.splitlines() if "Delete only each title's exact replaced legacy paths" in line)
+        self.assertTrue(task6_line.startswith(("- [~]", "- [x]")))
+        if task6_line.startswith("- [x]"):
+            retirement_result = run_retirement_guard_suite()
+            self.assertTrue(
+                retirement_result.wasSuccessful(),
+                retirement_result.failures + retirement_result.errors,
             )
-            self.assertTrue(later_line.startswith("- [b]"), f"{later_marker} must remain blocked")
-            self.assertIn(deferred_marker, later_line)
+        self.assertTrue(next(line for line in plan.splitlines() if "Obtain independent review and product-owner acceptance" in line).startswith("- [ ]"))
 
         task4_acceptance = next(item for item in metadata["task_acceptances"] if item["task_number"] == 4)
         self.assertEqual(task4_acceptance["approval_message_exact"], EXPECTED_APPROVAL_MESSAGE)

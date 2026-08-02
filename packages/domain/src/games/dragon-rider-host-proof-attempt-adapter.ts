@@ -10,11 +10,11 @@ import { recordGameCompletion } from "./mutations.js";
 import type { DragonRiderHostProofAttemptDependencies } from "./dragon-rider-host-proof-attempt.js";
 import { createDragonRiderHostProofAttemptStore } from "./dragon-rider-host-proof-store.js";
 
-const DRAGON_RIDER_HOST_PROOF_VOCABULARY: VocabularyInput = Object.freeze([
-  Object.freeze({ term: "dragon", translation: "drago" }),
-  Object.freeze({ term: "rider", translation: "jinete" }),
-  Object.freeze({ term: "gate", translation: "puerta" }),
-  Object.freeze({ term: "fire", translation: "fuego" }),
+const DRAGON_RIDER_HOST_PROOF_VOCABULARY = Object.freeze([
+  { term: "dragon", translation: "drago" },
+  { term: "rider", translation: "jinete" },
+  { term: "gate", translation: "puerta" },
+  { term: "fire", translation: "fuego" },
 ]);
 
 /**
@@ -43,7 +43,8 @@ export function createDragonRiderHostProofAttemptDependencies(input: {
       if (request.userId !== input.user.id || request.schoolId !== schoolId || request.gameType !== "dragon-rider") {
         throw new Error("Dragon Rider vocabulary request is not bound to the authenticated actor");
       }
-      return DRAGON_RIDER_HOST_PROOF_VOCABULARY;
+      const vocabulary: VocabularyInput = DRAGON_RIDER_HOST_PROOF_VOCABULARY.map(({ term, translation }) => ({ term, translation }));
+      return vocabulary;
     },
     recordCompletion: async (completion) => {
       const saved = await recordGameCompletion({
@@ -66,5 +67,5 @@ export function createDragonRiderHostProofAttemptDependencies(input: {
       if (!canonical) throw new Error("Dragon Rider duplicate completion has no canonical result");
       return { xpEarned: canonical.xpEarned, duplicate: true };
     },
-  });
+  } satisfies DragonRiderHostProofAttemptDependencies);
 }
