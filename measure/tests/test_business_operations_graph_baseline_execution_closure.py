@@ -5154,6 +5154,215 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             persistent_attempts,
         )
 
+
+    def test_h2b_structured_mount_prefix_is_exact_across_context_executor_and_profile_records(self) -> None:
+        """Requires H2 direct commands to use only a structured-mount-derived complete Podman prefix.
+
+        @returns Nothing; this is in-memory validation with subprocess and Podman execution tripwired.
+        """
+        self.assertFalse(V3_DIR.exists())
+        persistent_attempts = sorted(
+            path.relative_to(TRACK_DIR).as_posix()
+            for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")
+        )
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        executor_type = getattr(podman, "DirectCommandRuntimeProductionExecutorV1", None)
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+        self.assertTrue(inspect.isclass(executor_type), "V3_H2B_CANONICAL_PREFIX_EXECUTOR_MISSING")
+        frozen_archive = _load_json(V2_ARCHIVE, self)
+        frozen_manifest = next(
+            entry
+            for entry in frozen_archive["entries"]
+            if entry.get("path") == "packages/advantage-play-kit/package.json"
+        )
+        frozen_index, trigger = podman._direct_runtime_trigger_v1(
+            [frozen_manifest],
+            list(podman.STANDARD_PACK_GENERATOR),
+        )
+        semantics = podman.derive_direct_node_split_semantics_from_frozen_script_v1(
+            trigger,
+            frozen_index[trigger["manifest"]["path"]],
+        )
+        package_cwd = semantics["package"]["cwd"]
+        build_segment, generator_segment = semantics["segments"]
+        mounts = [
+            {
+                "id": "work",
+                "source": "/tmp/h2b-canonical/work",
+                "target": "/work",
+                "access": "rw",
+                "purpose": "clean-materialized-closure",
+            },
+            {
+                "id": "pnpmStore",
+                "source": "/tmp/h2b-canonical/store",
+                "target": podman.CONTAINER_STORE,
+                "access": "cow-overlay",
+                "lowerAccess": "ro",
+                "overlay": "podman-O-disposable",
+                "purpose": "offline-pnpm-store-with-disposable-copy-on-write-layer",
+            },
+            {
+                "id": "runnerTool:fixture",
+                "source": "/tmp/h2b-canonical/runner-tool.mjs",
+                "target": "/runner/fixture.mjs",
+                "access": "ro",
+                "purpose": "h2b-structured-prefix-fixture",
+            },
+        ]
+
+        def canonical_prefix(records: list[dict[str, Any]], workdir: str) -> list[str]:
+            """Builds the only allowed prefix from ordered structured mount records.
+
+            @param records The ordered mount records whose source, target, and access form the prefix.
+            @param workdir The sole command-local Podman workdir value.
+            @returns The exact complete Podman argv prefix before image resolution.
+            """
+            prefix = [podman.PODMAN, "run", "--rm", "--network", "none", "--workdir", workdir]
+            for mount in records:
+                suffix = "O" if mount["access"] == "cow-overlay" else mount["access"]
+                prefix.extend(["--volume", f"{mount['source']}:{mount['target']}:{suffix}"])
+            return prefix
+
+        root_prefix = canonical_prefix(mounts, "/work")
+        package_prefix = canonical_prefix(mounts, package_cwd)
+        base_context = {"prefix": list(root_prefix), "mounts": copy.deepcopy(mounts)}
+        executor = executor_type(V3_DIR, "20260802")
+        executor._direct_node_split_semantics = copy.deepcopy(semantics)
+        build_context = executor._direct_node_split_segment_context(base_context, build_segment)
+        generator_context = executor._direct_node_split_segment_context(base_context, generator_segment)
+        self.assertEqual(build_context["prefix"], package_prefix)
+        self.assertEqual(generator_context["prefix"], package_prefix)
+        self.assertEqual(build_context["mounts"], mounts)
+        self.assertEqual(generator_context["mounts"], mounts)
+        build_payload = podman.build_pnpm_global_store_payload_v1(build_segment["logicalArgv"])
+        generator_payload = [podman.CONTAINER_NODE, generator_segment["script"]["resolvedPath"]]
+        expected_build_argv = [
+            *package_prefix,
+            podman.IMAGE_RESOLVED,
+            "/usr/bin/env",
+            "-i",
+            "CI=true",
+            f"PATH={podman.BOOTSTRAP_PATH}",
+            *build_payload,
+        ]
+        expected_generator_argv = [
+            *package_prefix,
+            podman.IMAGE_RESOLVED,
+            "/usr/bin/env",
+            "-i",
+            "CI=true",
+            f"PATH={podman.BOOTSTRAP_PATH}",
+            f"NODE_OPTIONS={podman.DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS}",
+            *generator_payload,
+        ]
+        with patch.object(podman.subprocess, "run", side_effect=AssertionError("V3_H2B_CANONICAL_PREFIX_SUBPROCESS_REACHED")), \
+             patch.object(podman, "_run_container", side_effect=AssertionError("V3_H2B_CANONICAL_PREFIX_PODMAN_REACHED")):
+            build_record = podman._container_executor(
+                build_context,
+                build_segment["logicalArgv"],
+                build_payload,
+                environment_overrides=build_segment["environmentOverrides"],
+            )
+            generator_record = podman._container_executor(
+                generator_context,
+                generator_segment["logicalArgv"],
+                generator_payload,
+                environment_overrides=generator_segment["environmentOverrides"],
+            )
+            self.assertEqual(build_record["argv"], expected_build_argv)
+            self.assertEqual(generator_record["argv"], expected_generator_argv)
+            self.assertEqual(build_record["effectiveEnvironment"], {"CI": "true", "PATH": podman.BOOTSTRAP_PATH})
+            self.assertEqual(
+                generator_record["effectiveEnvironment"],
+                {
+                    "CI": "true",
+                    "PATH": podman.BOOTSTRAP_PATH,
+                    "NODE_OPTIONS": podman.DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS,
+                },
+            )
+            self.assertEqual(build_record["inheritedEnv"], [])
+            self.assertEqual(generator_record["inheritedEnv"], [])
+
+            def replace_token(prefix: list[Any], index: int, value: Any) -> list[Any]:
+                """Returns a one-token mutation of a canonical prefix.
+
+                @param prefix The canonical or previously mutated argv prefix.
+                @param index The token position to replace.
+                @param value The adversarial replacement token.
+                @returns The independently mutable mutated prefix.
+                """
+                result = list(prefix)
+                result[index] = value
+                return result
+
+            volume_pair_start = 7
+            second_volume_pair_start = volume_pair_start + 2
+            attacks: list[tuple[str, list[Any]]] = [
+                ("insert-user", [*root_prefix[:7], "--user", "0", *root_prefix[7:]]),
+                ("replace-user-equals", [*root_prefix[:7], "--user=0", *root_prefix[7:]]),
+                ("insert-userns", [*root_prefix[:7], "--userns", "host", *root_prefix[7:]]),
+                ("insert-capability", [*root_prefix[:7], "--cap-add", "SYS_ADMIN", *root_prefix[7:]]),
+                ("insert-security", [*root_prefix[:7], "--security-opt=label=disable", *root_prefix[7:]]),
+                ("insert-privileged", [*root_prefix[:7], "--privileged", *root_prefix[7:]]),
+                ("insert-entrypoint", [*root_prefix[:7], "--entrypoint", "/bin/sh", *root_prefix[7:]]),
+                ("insert-env", [*root_prefix[:7], "--env", "NODE_OPTIONS=--require=/tmp/escape.cjs", *root_prefix[7:]]),
+                ("insert-env-file", [*root_prefix[:7], "--env-file", "/tmp/escape.env", *root_prefix[7:]]),
+                ("insert-volume", [*root_prefix[:7], "--volume", "/tmp:/work:rw", *root_prefix[7:]]),
+                ("insert-mount", [*root_prefix[:7], "--mount", "type=bind,source=/tmp,target=/work", *root_prefix[7:]]),
+                ("insert-device", [*root_prefix[:7], "--device", "/dev/fuse", *root_prefix[7:]]),
+                ("mutate-volume-source", replace_token(root_prefix, volume_pair_start + 1, "/tmp/h2b-evil:/work:rw")),
+                ("mutate-volume-target", replace_token(root_prefix, volume_pair_start + 1, "/tmp/h2b-canonical/work:/evil:rw")),
+                ("mutate-volume-mode", replace_token(root_prefix, volume_pair_start + 1, "/tmp/h2b-canonical/work:/work:ro")),
+                ("duplicate-volume-pair", [*root_prefix, *root_prefix[volume_pair_start:volume_pair_start + 2]]),
+                ("omit-volume-pair", [*root_prefix[:second_volume_pair_start], *root_prefix[second_volume_pair_start + 2:]]),
+                ("swap-volume-pairs", [*root_prefix[:volume_pair_start], *root_prefix[second_volume_pair_start:second_volume_pair_start + 2], *root_prefix[volume_pair_start:volume_pair_start + 2], *root_prefix[second_volume_pair_start + 2:]]),
+                ("network-alias", [*root_prefix[:7], "--net", "host", *root_prefix[7:]]),
+                ("network-equals", [*root_prefix[:7], "--network=host", *root_prefix[7:]]),
+                ("pid-host", [*root_prefix[:7], "--pid", "host", *root_prefix[7:]]),
+                ("ipc-host", [*root_prefix[:7], "--ipc=host", *root_prefix[7:]]),
+                ("uts-host", [*root_prefix[:7], "--uts", "host", *root_prefix[7:]]),
+                ("cgroupns-host", [*root_prefix[:7], "--cgroupns=host", *root_prefix[7:]]),
+                ("rm-false", [*root_prefix[:7], "--rm=false", *root_prefix[7:]]),
+                ("workdir-short", [*root_prefix[:7], "-w", package_cwd, *root_prefix[7:]]),
+                ("workdir-equals", [*root_prefix[:5], f"--workdir={package_cwd}", *root_prefix[7:]]),
+                ("double-dash", [*root_prefix[:7], "--", *root_prefix[7:]]),
+                ("nonstring-token", [*root_prefix[:7], 7, *root_prefix[7:]]),
+                ("empty-token", [*root_prefix[:7], "", *root_prefix[7:]]),
+                ("dropped-volume-operand", [*root_prefix[:volume_pair_start + 1], *root_prefix[volume_pair_start + 2:]]),
+                ("unknown-flag", [*root_prefix[:7], "--h2b-unknown-escape", *root_prefix[7:]]),
+            ]
+            for case, attacked_root_prefix in attacks:
+                with self.subTest(case=case):
+                    attacked_base_context = {
+                        "prefix": attacked_root_prefix,
+                        "mounts": copy.deepcopy(mounts),
+                    }
+                    with self.assertRaises(error_type):
+                        attacked_context = executor._direct_node_split_segment_context(
+                            attacked_base_context,
+                            build_segment,
+                        )
+                        podman._container_executor(
+                            attacked_context,
+                            build_segment["logicalArgv"],
+                            build_payload,
+                            environment_overrides=build_segment["environmentOverrides"],
+                        )
+
+        canonical_builder = getattr(podman, "build_direct_node_split_canonical_prefix_v1", None)
+        self.assertTrue(callable(canonical_builder), "V3_H2B_CANONICAL_PREFIX_BUILDER_MISSING")
+        self.assertEqual(canonical_builder(mounts, "/work"), root_prefix)
+        self.assertEqual(canonical_builder(mounts, package_cwd), package_prefix)
+        container_validator_source = inspect.getsource(podman._validate_container)
+        self.assertIn("build_direct_node_split_canonical_prefix_v1(", container_validator_source)
+        self.assertFalse(V3_DIR.exists())
+        self.assertEqual(
+            sorted(path.relative_to(TRACK_DIR).as_posix() for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")),
+            persistent_attempts,
+        )
+
     def test_scoped_pnpm_payloads_make_store_dir_global_and_pin_the_build_db_blocker(self) -> None:
         """Requires scoped pnpm payloads to keep store selection out of package scripts.
 
