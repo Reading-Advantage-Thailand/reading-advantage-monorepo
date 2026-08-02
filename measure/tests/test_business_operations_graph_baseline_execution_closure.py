@@ -4734,6 +4734,267 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         )
         self.assertFalse(V3_DIR.exists())
 
+    def test_h2_package_relative_segments_are_accepted_by_live_override_finalizer_and_receipt_validators(self) -> None:
+        """Requires every live runtime validator to consume the H2 package-relative command contract.
+
+        @returns Nothing; preparation reads pinned Git objects only, while every later subprocess and Podman boundary is tripwired.
+        """
+        self.assertFalse(V3_DIR.exists())
+        persistent_attempts = sorted(
+            path.relative_to(TRACK_DIR).as_posix()
+            for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")
+        )
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        derive = getattr(podman, "derive_direct_node_split_semantics_from_frozen_script_v1", None)
+        prepare = getattr(podman, "prepare_direct_command_runtime_execution_inputs_v1", None)
+        finalize = getattr(podman, "finalize_direct_command_runtime_execution_inputs_v1", None)
+        validate_integration = getattr(podman, "validate_direct_command_runtime_runner_integration_v1", None)
+        validate_receipt = getattr(podman, "_validate_direct_runtime_apk_build_receipt_v1", None)
+        executor_type = getattr(podman, "DirectCommandRuntimeProductionExecutorV1", None)
+        self.assertTrue(callable(derive), "V3_H2B_DIRECT_NODE_SEMANTICS_BUILDER_MISSING")
+        self.assertTrue(callable(prepare), "V3_H2B_PREPARATION_BUILDER_MISSING")
+        self.assertTrue(callable(finalize), "V3_H2B_LIVE_FINALIZER_MISSING")
+        self.assertTrue(callable(validate_integration), "V3_H2B_LIVE_INTEGRATION_VALIDATOR_MISSING")
+        self.assertTrue(callable(validate_receipt), "V3_H2B_LIVE_RECEIPT_VALIDATOR_MISSING")
+        self.assertTrue(inspect.isclass(executor_type), "V3_H2B_PRODUCTION_EXECUTOR_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+
+        frozen_archive = _load_json(V2_ARCHIVE, self)
+        frozen_manifest = next(
+            entry
+            for entry in frozen_archive["entries"]
+            if entry.get("path") == "packages/advantage-play-kit/package.json"
+        )
+        frozen_index, trigger = podman._direct_runtime_trigger_v1(
+            [frozen_manifest],
+            list(podman.STANDARD_PACK_GENERATOR),
+        )
+        semantics = derive(trigger, frozen_index[trigger["manifest"]["path"]])
+        package_cwd = semantics["package"]["cwd"]
+        build_segment, generator_segment = semantics["segments"]
+        root_prefix = [
+            podman.PODMAN,
+            "run",
+            "--rm",
+            "--network",
+            "none",
+            "--workdir",
+            "/work",
+        ]
+        executor = executor_type(V3_DIR, "20260802")
+        executor._direct_node_split_semantics = copy.deepcopy(semantics)
+        base_context = {"prefix": list(root_prefix)}
+        build_context = executor._direct_node_split_segment_context(base_context, build_segment)
+        generator_context = executor._direct_node_split_segment_context(base_context, generator_segment)
+        self.assertEqual(build_context["prefix"], [*root_prefix[:-1], package_cwd])
+        self.assertEqual(generator_context["prefix"], [*root_prefix[:-1], package_cwd])
+        self.assertEqual(build_context["directNodeSplit"]["segment"], build_segment)
+        self.assertEqual(generator_context["directNodeSplit"]["segment"], generator_segment)
+
+        build_payload = podman.build_pnpm_global_store_payload_v1(build_segment["logicalArgv"])
+        generator_payload = [podman.CONTAINER_NODE, generator_segment["script"]["resolvedPath"]]
+        build_executor = podman._container_executor(
+            build_context,
+            build_segment["logicalArgv"],
+            build_payload,
+            environment_overrides=build_segment["environmentOverrides"],
+        )
+        generator_executor = podman._container_executor(
+            generator_context,
+            generator_segment["logicalArgv"],
+            generator_payload,
+            environment_overrides=generator_segment["environmentOverrides"],
+        )
+        expected_prefix = [
+            *root_prefix[:-1],
+            package_cwd,
+            podman.IMAGE_RESOLVED,
+            "/usr/bin/env",
+            "-i",
+            "CI=true",
+            f"PATH={podman.BOOTSTRAP_PATH}",
+        ]
+        self.assertEqual(build_executor["argv"], [*expected_prefix, *build_payload])
+        self.assertEqual(
+            generator_executor["argv"],
+            [
+                *expected_prefix,
+                f"NODE_OPTIONS={podman.DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS}",
+                *generator_payload,
+            ],
+        )
+        self.assertEqual(build_executor["effectiveEnvironment"], {"CI": "true", "PATH": podman.BOOTSTRAP_PATH})
+        self.assertEqual(
+            generator_executor["effectiveEnvironment"],
+            {
+                "CI": "true",
+                "PATH": podman.BOOTSTRAP_PATH,
+                "NODE_OPTIONS": podman.DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS,
+            },
+        )
+        self.assertEqual(build_executor["inheritedEnv"], [])
+        self.assertEqual(generator_executor["inheritedEnv"], [])
+        self.assertNotIn("PG_TEST_URL", build_executor["argv"])
+        self.assertNotIn("PG_TEST_URL", generator_executor["argv"])
+
+        with self.assertRaises(error_type):
+            executor._direct_node_split_segment_context(
+                {"prefix": [*root_prefix[:-1], package_cwd]},
+                build_segment,
+            )
+        duplicate_executor = executor_type(V3_DIR, "20260802")
+        duplicate_executor._direct_node_split_semantics = copy.deepcopy(semantics)
+        duplicate_executor._direct_node_split_semantics["segments"].append(copy.deepcopy(build_segment))
+        with self.assertRaises(error_type):
+            duplicate_executor._direct_node_split_segment_context(base_context, build_segment)
+        legacy_build = ["pnpm", "--filter", "@reading-advantage/advantage-play-kit", "build"]
+        legacy_generator = list(podman.DIRECT_NODE_STANDARD_PACK_GENERATOR)
+        invalid_override_cases: tuple[tuple[list[str], dict[str, str]], ...] = (
+            (legacy_build, {}),
+            (legacy_generator, {"NODE_OPTIONS": podman.DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS}),
+            (generator_segment["logicalArgv"], {}),
+            (generator_segment["logicalArgv"], {"NODE_OPTIONS": "--require /tmp/unbound.cjs"}),
+            (build_segment["logicalArgv"], {"NODE_OPTIONS": podman.DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS}),
+        )
+        for logical, overrides in invalid_override_cases:
+            with self.subTest(logical=logical, overrides=overrides):
+                with self.assertRaises(error_type):
+                    podman._container_executor(
+                        build_context,
+                        logical,
+                        build_payload,
+                        environment_overrides=overrides,
+                    )
+
+        preparation_source = inspect.getsource(prepare)
+        self.assertNotIn("_run_container(", preparation_source)
+        self.assertNotIn("_podman_context(", preparation_source)
+        preparation = prepare(run_day="20260802")
+        assets = preparation["sourcePacket"]["objects"]
+        root = preparation["baselineGitDiscovery"]["root"]
+        script_path = trigger["scriptPath"]
+        children: dict[str, set[str]] = {root: set()}
+        for asset in assets:
+            asset_path = asset["path"]
+            if not asset_path.startswith(f"{root}/"):
+                continue
+            parts = asset_path[len(root) + 1:].split("/")
+            parent = root
+            for index, part in enumerate(parts):
+                children.setdefault(parent, set()).add(part)
+                child_path = f"{parent}/{part}"
+                if index < len(parts) - 1:
+                    children.setdefault(child_path, set())
+                parent = child_path
+        directory_listings = [
+            {"path": path, "children": sorted(names)}
+            for path, names in sorted(children.items())
+        ]
+        leaves = podman._direct_runtime_directory_tree_v1(directory_listings, root)
+        baseline_accesses = {script_path: "MODULE_LOAD"}
+        for path in leaves:
+            if path != STANDARD_PACK_CATALOG and not podman._direct_runtime_is_ignored_leaf_v1(path):
+                baseline_accesses[path] = "READ_FILE"
+        for name in podman._DIRECT_RUNTIME_REQUIRED_RECEIPTS:
+            baseline_accesses[f"{root}/{name}"] = "READ_FILE"
+        runtime_receipt = {
+            "id": build_segment["id"],
+            "argv": list(build_segment["logicalArgv"]),
+            "exitCode": 0,
+            "directRuntimePreparationSha256": _sha256(podman._canonical(preparation)),
+            "directRuntimeAttempt": {
+                "id": "direct-runtime-detached-runner-v1",
+                "nonceSha256": "a" * 64,
+                "reachedStage": "direct-runtime-dist-identity",
+                "executionTrace": None,
+            },
+            "receipt": {
+                "path": f"{podman.V3_NAME}/raw/receipt-build-advantage-play-kit-for-runtime.stdout.txt",
+                "sha256": "b" * 64,
+                "size": 0,
+            },
+        }
+        derived_path = preparation["dynamicBuildOutput"]["knownDerivedBuildPaths"][0]["path"]
+        discovery = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-discovery",
+            "baselineCommit": preparation["sourcePacket"]["baselineCommit"],
+            "runner": "node",
+            "script": podman._direct_runtime_baseline_identity_v1(
+                next(asset for asset in assets if asset["path"] == script_path),
+            ),
+            "root": root,
+            "directoryListings": directory_listings,
+            "baselineReads": [
+                {"path": path, "access": access}
+                for path, access in sorted(baseline_accesses.items())
+            ],
+            "derivedBuildReads": [{
+                "path": derived_path,
+                "sha256": "c" * 64,
+                "size": 1,
+                "origin": "DERIVED_BUILD_OUTPUT",
+                "producer": {
+                    "kind": "PACKAGE_SCRIPT_PREREQUISITE_BUILD",
+                    "scriptName": trigger["scriptName"],
+                    "scriptSegment": "pnpm build",
+                    "receipt": copy.deepcopy(runtime_receipt["receipt"]),
+                },
+            }],
+            "writes": [{"path": STANDARD_PACK_CATALOG, "kind": "DERIVED_OUTPUT"}],
+            "clearedStaleOutputs": [STANDARD_PACK_CATALOG],
+        }
+        read_set = podman.discover_direct_command_runtime_read_set_v1(
+            frozen_archive["entries"],
+            list(podman.STANDARD_PACK_GENERATOR),
+            assets,
+            discovery,
+            {"maxEntries": len(assets), "maxBytes": sum(asset["size"] for asset in assets)},
+            preparation["resourceBudget"],
+        )
+        observation = {
+            "attemptNonceSha256": runtime_receipt["directRuntimeAttempt"]["nonceSha256"],
+            "workRoot": "/work",
+            "derivedBuildReadSet": [
+                {
+                    "path": item["path"],
+                    "resolvedPath": f"/work/{item['path']}",
+                    "mode": "100644",
+                    "sha256": item["sha256"],
+                    "size": item["size"],
+                }
+                for item in read_set["derivedBuildReadSet"]
+            ],
+        }
+        post_build_identity = {
+            "source": "IN_CONTAINER_POST_RUNTIME_BUILD_IDENTITY",
+            "directRuntimePreparationSha256": runtime_receipt["directRuntimePreparationSha256"],
+            "readSet": read_set,
+            "observation": observation,
+            "receipt": {
+                "path": f"{podman.V3_NAME}/raw/receipt-direct-runtime-dist-identity.stdout.txt",
+                "sha256": _sha256(podman._canonical(observation)),
+                "size": len(podman._canonical(observation)),
+            },
+        }
+        with patch.object(podman.subprocess, "run", side_effect=AssertionError("V3_H2B_SUBPROCESS_OR_PODMAN_REACHED")), \
+             patch.object(podman, "_run_container", side_effect=AssertionError("V3_H2B_SUBPROCESS_OR_PODMAN_REACHED")):
+            integration = finalize(preparation, runtime_receipt, post_build_identity)
+            validate_integration(integration)
+            validate_receipt(integration, [runtime_receipt])
+            legacy_receipt = copy.deepcopy(runtime_receipt)
+            legacy_receipt["argv"] = legacy_build
+            with self.assertRaises(error_type):
+                finalize(preparation, legacy_receipt, post_build_identity)
+            with self.assertRaises(error_type):
+                validate_receipt(integration, [legacy_receipt])
+
+        self.assertFalse(V3_DIR.exists())
+        self.assertEqual(
+            sorted(path.relative_to(TRACK_DIR).as_posix() for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")),
+            persistent_attempts,
+        )
     def test_scoped_pnpm_payloads_make_store_dir_global_and_pin_the_build_db_blocker(self) -> None:
         """Requires scoped pnpm payloads to keep store selection out of package scripts.
 
