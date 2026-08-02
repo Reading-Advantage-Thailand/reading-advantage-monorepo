@@ -5,6 +5,6 @@
 - [x] Remediate audit blockers: bind every mechanic action to an exact claim ID and locator, rejecting historical or unknown evidence rather than synthesizing progression or completion. Evidence: `existing-action-cutover.evidence.json`, title evidence modules, and 9 focused Vitest assertions.
 - [x] Remediate audit blockers: consume resolver-issued Asset Contract v2 descriptor registrations in title candidates and QC adapters without exposing physical paths or the production catalog. Evidence: `createExistingActionTask2CanonicalResolver`, title-specific selected unions, and catalog quarantine guard.
 - [x] Remediate audit blockers: register only the action cohort in Advantage Games `/qc` and add compact/wide real keyboard, pointer, and touch Playwright evidence. Evidence: `task5-advantage-games-qc-native-input-evidence-v2.json`; Chromium 2/2 passed.
-- [ ] Prove the same cartridge/binding in Reading and Primary, including authoritative completion persistence.
-- [ ] Retire exact replaced code/assets only after both host proofs; update graph/caller guards.
-- [ ] Run independent review and obtain product-owner acceptance.
+- [b] Prove the same cartridge/binding in Reading and Primary, including authoritative completion persistence. The 24-title candidate and its 193/193 reports are historical non-consumable evidence with live-source drift, not host proof. (deferred:apk_existing_core_cutover_20260727-dragon-flight-reference-acceptance)
+- [b] Retire exact replaced code/assets only after both host proofs; update graph/caller guards. The zero-deletion manifest is historical retention evidence, not Task-7 completion. (deferred:apk_existing_core_cutover_20260727-dragon-flight-reference-acceptance)
+- [b] Run independent review and obtain product-owner acceptance only after a title-specific production proof. The candidate handoff remains historical and non-consumable. (deferred:apk_existing_core_cutover_20260727-dragon-flight-reference-acceptance)

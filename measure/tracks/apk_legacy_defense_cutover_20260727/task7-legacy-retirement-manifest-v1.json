@@ -1,0 +1,32 @@
+{
+  "schema_version": "apk-cohort-legacy-retirement-candidate.v1",
+  "status": "candidate-non-consumable",
+  "cohort": "legacy-defense",
+  "title_ids": ["castle-defense","wizard-vs-zombie","village-guardian","storm-castle-tower"],
+  "source_manifest": {"path":"measure/tracks/apk_legacy_defense_cutover_20260727/task1-source-readiness-manifest-v1.json","sha256":"7dcd6e883141d3805a05d404cebeb84895612c03d8031f02230f2980d9d3b803"},
+  "decision": "retain-until-accepted-production-route-cutover",
+  "reason": "Castle Defense, Wizard vs Zombie, and Village Guardian still have live production routes or direct components. Storm the Castle Tower remains coming-soon catalog metadata. Hidden host proof does not supersede those owners.",
+  "deleted_paths": [],
+  "deleted_path_count": 0,
+  "retained_paths": [
+    {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Live production route and completion APIs remain in use."},
+    {"path":"apps/reading-advantage/app/[locale]/(student)/student/games/sentence/castle-defense","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"reading-advantage","reason":"Live production route and completion APIs remain in use."},
+    {"path":"apps/advantage-games/public/games/sentence/castle-defense","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games-runtime-assets","reason":"Directly loaded by the retained Castle Defense renderer."},
+    {"path":"apps/reading-advantage/public/games/sentence/castle-defense","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"reading-advantage-runtime-assets","reason":"Directly loaded by the retained Castle Defense renderer."},
+    {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Live production route and completion APIs remain in use."},
+    {"path":"apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"reading-advantage","reason":"Live production route and completion APIs remain in use."},
+    {"path":"apps/advantage-games/public/games/vocabulary/wizard-vs-zombie","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games-runtime-assets","reason":"Directly loaded by the retained Wizard vs Zombie renderer."},
+    {"path":"apps/reading-advantage/public/games/vocabulary/wizard-vs-zombie","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"reading-advantage-runtime-assets","reason":"Directly loaded by the retained Wizard vs Zombie renderer."},
+    {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/village-guardian","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Live production route and completion APIs remain in use."},
+    {"path":"apps/advantage-games/src/components/games/sentence/village-guardian","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Imported by the retained production route."},
+    {"path":"apps/advantage-games/src/lib/gameCards.ts","exists_at_candidate":true,"disposition":"retain-shared-owner","owner":"advantage-games-catalog","reason":"Shared catalog still owns the Storm the Castle Tower coming-soon identity."},
+    {"path":"apps/advantage-games/public/games/cover/cover-storm-the-castle-tower.png","exists_at_candidate":true,"disposition":"retain-shared-owner","owner":"advantage-games-catalog","reason":"Current coming-soon card references this cover."}
+  ],
+  "titles": [
+    {"title_id":"castle-defense","retained_paths":["apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense","apps/reading-advantage/app/[locale]/(student)/student/games/sentence/castle-defense","apps/advantage-games/public/games/sentence/castle-defense","apps/reading-advantage/public/games/sentence/castle-defense"],"deleted_paths":[]},
+    {"title_id":"wizard-vs-zombie","retained_paths":["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie","apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie","apps/advantage-games/public/games/vocabulary/wizard-vs-zombie","apps/reading-advantage/public/games/vocabulary/wizard-vs-zombie"],"deleted_paths":[]},
+    {"title_id":"village-guardian","retained_paths":["apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/village-guardian","apps/advantage-games/src/components/games/sentence/village-guardian"],"deleted_paths":[]},
+    {"title_id":"storm-castle-tower","retained_paths":["apps/advantage-games/src/lib/gameCards.ts","apps/advantage-games/public/games/cover/cover-storm-the-castle-tower.png"],"deleted_paths":[]}
+  ],
+  "authorization": {"legacy_deletion_authorized":false,"production_route_cutover_authorized":false,"owner_acceptance_recorded":false}
+}

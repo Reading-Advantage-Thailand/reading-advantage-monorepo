@@ -1,0 +1,44 @@
+{
+  "schema_version": "apk-cohort-legacy-retirement-candidate.v1",
+  "status": "candidate-non-consumable",
+  "cohort": "legacy-puzzle",
+  "title_ids": ["enchanted-library","rune-match","alchemists-synthesis","potion-rush","rune-forge-chamber"],
+  "source_manifest": {"path":"measure/tracks/apk_legacy_puzzle_cutover_20260727/task1-source-readiness-manifest-v1.json","sha256":"ec05685c3486bfec695deb751c4ee649fa52e390dc3af6bb29ac08a085c0d52c"},
+  "decision": "retain-until-accepted-production-route-cutover",
+  "reason": "All five titles retain live Advantage Games production routes, APIs, state, components, or direct asset roots. Several also retain Reading copies. Hidden host proof does not supersede these routes.",
+  "deleted_paths": [],
+  "deleted_path_count": 0,
+  "retained_paths": [
+    {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/enchanted-library","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Live production route and completion APIs remain in use."},
+    {"path":"apps/advantage-games/src/components/games/vocabulary/enchanted-library","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Imported by the retained production route."},
+    {"path":"apps/advantage-games/src/lib/games/enchantedLibrary.ts","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Imported by the retained Enchanted Library renderer."},
+    {"path":"apps/advantage-games/public/games/vocabulary/enchanted-library","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games-runtime-assets","reason":"Directly loaded by the retained renderer."},
+    {"path":"apps/advantage-games/public/vocab/enchanted-library.json","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games-content","reason":"Retained vocabulary source remains used by the legacy flow."},
+    {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rune-match","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Live production route and completion APIs remain in use."},
+    {"path":"apps/advantage-games/src/components/games/vocabulary/rune-match","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Imported by the retained production route."},
+    {"path":"apps/advantage-games/src/lib/games/runeMatch.ts","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Imported by the retained Rune Match renderer."},
+    {"path":"apps/advantage-games/src/lib/games/runeMatchConfig.ts","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Imported by the retained Rune Match renderer."},
+    {"path":"apps/advantage-games/src/lib/games/sampleVocabulary.ts","exists_at_candidate":true,"disposition":"retain-shared-owner","owner":"advantage-games-shared-content","reason":"Shared sample vocabulary remains used by live legacy games."},
+    {"path":"apps/advantage-games/public/games/vocabulary/rune-match","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games-runtime-assets","reason":"Directly loaded by the retained renderer."},
+    {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/alchemists-synthesis","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Live production route and completion APIs remain in use."},
+    {"path":"apps/advantage-games/src/components/games/vocabulary/alchemists-synthesis","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Imported by the retained production route."},
+    {"path":"apps/advantage-games/src/lib/games/alchemistsSynthesis.ts","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Imported by the retained Alchemist's Synthesis renderer."},
+    {"path":"apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/vocabulary/route.ts","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Called by the retained production route."},
+    {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/potion-rush","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Live production route and completion APIs remain in use."},
+    {"path":"apps/advantage-games/src/components/games/sentence/potion-rush","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Imported by the retained production route."},
+    {"path":"apps/advantage-games/src/store/usePotionRushStore.ts","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"State owner for the retained Potion Rush renderer."},
+    {"path":"apps/advantage-games/public/games/sentence/potion-rush","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games-runtime-assets","reason":"Directly loaded by the retained renderer."},
+    {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/rune-forge-chamber","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Live production route and completion APIs remain in use."},
+    {"path":"apps/advantage-games/src/components/games/sentence/rune-forge-chamber","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Imported by the retained production route."}
+    ,{"path":"apps/advantage-games/src/lib/games/runeForgeChamber.ts","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Imported by the retained Rune Forge Chamber renderer."}
+    ,{"path":"apps/advantage-games/src/lib/games/runeForgeChamberConfig.ts","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Configuration owner for the retained Rune Forge Chamber renderer."}
+  ],
+  "titles": [
+    {"title_id":"enchanted-library","retained_paths":["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/enchanted-library","apps/advantage-games/src/components/games/vocabulary/enchanted-library","apps/advantage-games/src/lib/games/enchantedLibrary.ts","apps/advantage-games/public/games/vocabulary/enchanted-library","apps/advantage-games/public/vocab/enchanted-library.json"],"deleted_paths":[]},
+    {"title_id":"rune-match","retained_paths":["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rune-match","apps/advantage-games/src/components/games/vocabulary/rune-match","apps/advantage-games/src/lib/games/runeMatch.ts","apps/advantage-games/src/lib/games/runeMatchConfig.ts","apps/advantage-games/src/lib/games/sampleVocabulary.ts","apps/advantage-games/public/games/vocabulary/rune-match"],"deleted_paths":[]},
+    {"title_id":"alchemists-synthesis","retained_paths":["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/alchemists-synthesis","apps/advantage-games/src/components/games/vocabulary/alchemists-synthesis","apps/advantage-games/src/lib/games/alchemistsSynthesis.ts","apps/advantage-games/src/app/api/v1/games/alchemists-synthesis/vocabulary/route.ts"],"deleted_paths":[]},
+    {"title_id":"potion-rush","retained_paths":["apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/potion-rush","apps/advantage-games/src/components/games/sentence/potion-rush","apps/advantage-games/src/store/usePotionRushStore.ts","apps/advantage-games/public/games/sentence/potion-rush"],"deleted_paths":[]},
+    {"title_id":"rune-forge-chamber","retained_paths":["apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/rune-forge-chamber","apps/advantage-games/src/components/games/sentence/rune-forge-chamber","apps/advantage-games/src/lib/games/runeForgeChamber.ts","apps/advantage-games/src/lib/games/runeForgeChamberConfig.ts"],"deleted_paths":[]}
+  ],
+  "authorization": {"legacy_deletion_authorized":false,"production_route_cutover_authorized":false,"owner_acceptance_recorded":false}
+}

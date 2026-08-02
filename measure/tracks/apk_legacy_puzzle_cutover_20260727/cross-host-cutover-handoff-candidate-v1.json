@@ -1,0 +1,13 @@
+{
+  "schema_version": "apk-cohort-cross-host-cutover-handoff-candidate.v1",
+  "status": "awaiting-independent-review-and-owner-acceptance",
+  "track_id": "apk_legacy_puzzle_cutover_20260727",
+  "cohort": "legacy-puzzle",
+  "title_ids": ["enchanted-library","rune-match","alchemists-synthesis","potion-rush","rune-forge-chamber"],
+  "host_task": 6,
+  "retirement_task": 7,
+  "shared_candidate": {"path":"measure/apk-cross-host-cutover-candidate-v1.json","sha256":"184f1b9c7e65fbc2d48dd199eb6b8f8492843760f4215c03e7cfb540e0a5c923"},
+  "retirement_manifest": {"path":"measure/tracks/apk_legacy_puzzle_cutover_20260727/task7-legacy-retirement-manifest-v1.json","sha256":"832ad3d371c4111a0bb42414115e503419cbe0a4a2cb1b89e04e15ee351156b7"},
+  "review_scope": "Verify five root loaders, selected-union-only delivery, both 40-case cohort matrices, authoritative duplicate-safe persistence, and retained live route/component/asset ownership.",
+  "authorization": {"independent_review_complete":false,"product_owner_acceptance_recorded":false,"cutover_accepted":false,"deployment_authorized":false,"archival_authorized":false}
+}

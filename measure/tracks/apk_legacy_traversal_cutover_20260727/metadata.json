@@ -8,5 +8,5 @@
   "estimated_tasks": 8,
   "actual_tasks": 5,
   "depends_on": ["apk_denominator_readiness_t11_integrity_20260727", "apk_asset_contract_v2_20260728", "apk_standard_pack_suitability_ingestion_20260728"],
-  "deviation_notes": "Denominator/readiness predecessor satisfied by accepted receipt d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720; Tasks 1–5 v2 are limited to source-bound local mechanics and Advantage Games /qc evidence. No broad host migration, automatic cutover, legacy-byte ingestion, production catalog exposure, or renderer compatibility commitment is authorized."
+  "deviation_notes": "Tasks 1-5 v2 retain their accepted source mechanics, selected unions, and Advantage Games QC preparation evidence. The shared 24-title candidate and its 193/193 reports are historical non-consumable records with live-source drift; they do not complete Tasks 6 or 7. Host proof, retirement, review, owner authorization, deployment, archival, and production cutover are blocked behind accepted Dragon Flight reference proof."
 }

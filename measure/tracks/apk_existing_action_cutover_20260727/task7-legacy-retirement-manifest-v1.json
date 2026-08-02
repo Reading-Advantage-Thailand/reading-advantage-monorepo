@@ -1,0 +1,27 @@
+{
+  "schema_version": "apk-cohort-legacy-retirement-candidate.v1",
+  "status": "candidate-non-consumable",
+  "cohort": "existing-action",
+  "title_ids": ["archers-revenge","paladins-twin-soul","griffin-sky-joust","gryphon-patrol","realm-carver"],
+  "source_manifest": {"path":"measure/tracks/apk_existing_action_cutover_20260727/task1-source-readiness-manifest-v1.json","sha256":"d90983b305172874cdb3e7eb16b72189e5d35122041437efcb51ad099b84b827"},
+  "decision": "retain-until-accepted-production-route-cutover",
+  "reason": "The legacy gameplay implementations are already absent, but current coming-soon catalog metadata and cover art remain owned by Advantage Games until an accepted production navigation cutover replaces them.",
+  "deleted_paths": [],
+  "deleted_path_count": 0,
+  "retained_paths": [
+    {"path":"apps/advantage-games/src/lib/gameCards.ts","exists_at_candidate":true,"disposition":"retain-shared-owner","owner":"advantage-games-catalog","reason":"Shared catalog keeps the five unroutable identities visible as coming soon."},
+    {"path":"apps/advantage-games/public/games/cover/cover-archers-revenge.png","exists_at_candidate":true,"disposition":"retain-shared-owner","owner":"advantage-games-catalog","reason":"Current coming-soon card references this cover."},
+    {"path":"apps/advantage-games/public/games/cover/cover-paladins-twin-soul.png","exists_at_candidate":true,"disposition":"retain-shared-owner","owner":"advantage-games-catalog","reason":"Current coming-soon card references this cover."},
+    {"path":"apps/advantage-games/public/games/cover/cover-griffin-sky-joust.png","exists_at_candidate":true,"disposition":"retain-shared-owner","owner":"advantage-games-catalog","reason":"Current coming-soon card references this cover."},
+    {"path":"apps/advantage-games/public/games/cover/cover-gryphon-patrol.png","exists_at_candidate":true,"disposition":"retain-shared-owner","owner":"advantage-games-catalog","reason":"Current coming-soon card references this cover."},
+    {"path":"apps/advantage-games/public/games/cover/cover-realm-carver.png","exists_at_candidate":true,"disposition":"retain-shared-owner","owner":"advantage-games-catalog","reason":"Current coming-soon card references this cover."}
+  ],
+  "titles": [
+    {"title_id":"archers-revenge","retained_paths":["apps/advantage-games/src/lib/gameCards.ts","apps/advantage-games/public/games/cover/cover-archers-revenge.png"],"deleted_paths":[]},
+    {"title_id":"paladins-twin-soul","retained_paths":["apps/advantage-games/src/lib/gameCards.ts","apps/advantage-games/public/games/cover/cover-paladins-twin-soul.png"],"deleted_paths":[]},
+    {"title_id":"griffin-sky-joust","retained_paths":["apps/advantage-games/src/lib/gameCards.ts","apps/advantage-games/public/games/cover/cover-griffin-sky-joust.png"],"deleted_paths":[]},
+    {"title_id":"gryphon-patrol","retained_paths":["apps/advantage-games/src/lib/gameCards.ts","apps/advantage-games/public/games/cover/cover-gryphon-patrol.png"],"deleted_paths":[]},
+    {"title_id":"realm-carver","retained_paths":["apps/advantage-games/src/lib/gameCards.ts","apps/advantage-games/public/games/cover/cover-realm-carver.png"],"deleted_paths":[]}
+  ],
+  "authorization": {"legacy_deletion_authorized":false,"production_route_cutover_authorized":false,"owner_acceptance_recorded":false}
+}

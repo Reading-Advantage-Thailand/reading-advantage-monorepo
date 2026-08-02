@@ -1,0 +1,33 @@
+{
+  "schema_version": "apk-cohort-legacy-retirement-candidate.v1",
+  "status": "candidate-non-consumable",
+  "cohort": "legacy-traversal",
+  "title_ids": ["dragon-rider","spellweavers-run","shadow-gate-dungeon","labyrinth-goblin-king","griffin-riders-escape"],
+  "source_manifest": {"path":"measure/tracks/apk_legacy_traversal_cutover_20260727/task1-source-readiness-manifest-v1.json","sha256":"a71eb2b4ddc2756ee1b584f3070e959dc1982e0062e1c5f8f393d76a8657622c"},
+  "decision": "retain-until-accepted-production-route-cutover",
+  "reason": "Dragon Rider, Shadow Gate Dungeon, and Labyrinth remain live legacy surfaces. Spellweaver's Run and Griffin Rider's Escape remain catalog/history-owned until production navigation is separately accepted.",
+  "deleted_paths": [],
+  "deleted_path_count": 0,
+  "retained_paths": [
+    {"path":"apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-rider","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"reading-advantage","reason":"Live production route and completion APIs remain in use."},
+    {"path":"apps/reading-advantage/components/games/vocabulary/dragon-rider","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"reading-advantage","reason":"Imported by the retained Dragon Rider route."},
+    {"path":"apps/reading-advantage/public/games/vocabulary/dragon-rider","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"reading-advantage-runtime-assets","reason":"Directly loaded by the retained Dragon Rider renderer."},
+    {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/shadow-gate-dungeon","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Live production route and completion APIs remain in use."},
+    {"path":"apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Imported by the retained Shadow Gate route."},
+    {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/labyrinth-goblin-king","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Live production route and completion APIs remain in use."},
+    {"path":"apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Imported by the retained Labyrinth route."},
+    {"path":"apps/advantage-games/src/lib/gameCards.ts","exists_at_candidate":true,"disposition":"retain-shared-owner","owner":"advantage-games-catalog","reason":"Shared catalog owns the traversal identities, including unroutable coming-soon cards."},
+    {"path":"apps/advantage-games/measure/archive/spellweavers-run-20260319/spec.md","exists_at_candidate":true,"disposition":"retain-historical-evidence","owner":"advantage-games-measure-history","reason":"Accepted mechanics cite this immutable historical design context."},
+    {"path":"apps/advantage-games/public/games/cover/cover-spellweavers-run.png","exists_at_candidate":true,"disposition":"retain-shared-owner","owner":"advantage-games-catalog","reason":"Current coming-soon card references this cover."},
+    {"path":"apps/advantage-games/measure/archive/griffin-riders-escape/spec.md","exists_at_candidate":true,"disposition":"retain-historical-evidence","owner":"advantage-games-measure-history","reason":"Accepted mechanics cite this immutable historical design context."},
+    {"path":"apps/advantage-games/public/games/cover/cover-griffin-riders-escape.png","exists_at_candidate":true,"disposition":"retain-shared-owner","owner":"advantage-games-catalog","reason":"Current coming-soon card references this cover."}
+  ],
+  "titles": [
+    {"title_id":"dragon-rider","retained_paths":["apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-rider","apps/reading-advantage/components/games/vocabulary/dragon-rider","apps/reading-advantage/public/games/vocabulary/dragon-rider"],"deleted_paths":[]},
+    {"title_id":"spellweavers-run","retained_paths":["apps/advantage-games/src/lib/gameCards.ts","apps/advantage-games/measure/archive/spellweavers-run-20260319/spec.md","apps/advantage-games/public/games/cover/cover-spellweavers-run.png"],"deleted_paths":[]},
+    {"title_id":"shadow-gate-dungeon","retained_paths":["apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/shadow-gate-dungeon","apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon"],"deleted_paths":[]},
+    {"title_id":"labyrinth-goblin-king","retained_paths":["apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/labyrinth-goblin-king","apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king"],"deleted_paths":[]},
+    {"title_id":"griffin-riders-escape","retained_paths":["apps/advantage-games/src/lib/gameCards.ts","apps/advantage-games/measure/archive/griffin-riders-escape/spec.md","apps/advantage-games/public/games/cover/cover-griffin-riders-escape.png"],"deleted_paths":[]}
+  ],
+  "authorization": {"legacy_deletion_authorized":false,"production_route_cutover_authorized":false,"owner_acceptance_recorded":false}
+}

@@ -5,9 +5,9 @@
 - [x] Write failing mechanic, responsive composition, and educational-invariant tests per title.
 - [x] Build each cartridge using current public APK APIs and approved semantic bindings.
 - [x] Run Advantage Games QC with compact/wide, resize, input, and selected-output checks.
-- [ ] Run Reading and Primary host proofs for loading, authoritative completion, persistence, replay, and navigation.
-- [ ] Retire only exact proven legacy paths and validate callers, selected outputs, and copied-asset guards.
-- [ ] Obtain independent review and product-owner acceptance.
+- [b] Run Reading and Primary host proofs for loading, authoritative completion, persistence, replay, and navigation. The 24-title candidate and its 193/193 reports are historical non-consumable evidence with live-source drift, not host proof. (deferred:apk_existing_core_cutover_20260727-dragon-flight-reference-acceptance)
+- [b] Retire only exact proven legacy paths and validate callers, selected outputs, and copied-asset guards. The zero-deletion manifest is historical retention evidence, not Task-7 completion. (deferred:apk_existing_core_cutover_20260727-dragon-flight-reference-acceptance)
+- [b] Obtain independent review and product-owner acceptance only after a title-specific production proof. The candidate handoff remains historical and non-consumable. (deferred:apk_existing_core_cutover_20260727-dragon-flight-reference-acceptance)
 
 ## Tasks 1–5 Evidence
 

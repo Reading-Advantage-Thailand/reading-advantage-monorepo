@@ -1,0 +1,89 @@
+{
+  "schema_version": "apk-cross-host-cutover-candidate.v1",
+  "status": "acceptance-candidate-non-consumable",
+  "recorded_at": "2026-08-01",
+  "base_revision": "39a9a2b86184a13f8a20253d0adfa7294783cf18",
+  "title_count": 24,
+  "cohorts": [
+    {"cohort":"existing-core","title_ids":["dragon-flight","magic-defense","dungeon-liberator","sorcerer-ziggurat","astral-mage"]},
+    {"cohort":"existing-action","title_ids":["archers-revenge","paladins-twin-soul","griffin-sky-joust","gryphon-patrol","realm-carver"]},
+    {"cohort":"legacy-defense","title_ids":["castle-defense","wizard-vs-zombie","village-guardian","storm-castle-tower"]},
+    {"cohort":"legacy-traversal","title_ids":["dragon-rider","spellweavers-run","shadow-gate-dungeon","labyrinth-goblin-king","griffin-riders-escape"]},
+    {"cohort":"legacy-puzzle","title_ids":["enchanted-library","rune-match","alchemists-synthesis","potion-rush","rune-forge-chamber"]}
+  ],
+  "bound_current_files": [
+    {"path":"packages/game-contracts/src/host-proof-bindings.ts","sha256":"6de878f5dd0a712a04efd432a17c91d9f2b659b4aa2c14f72b0bcaa53bf32726"},
+    {"path":"packages/game-cartridges/src/catalog.ts","sha256":"f104b4640020776294dd24c8d05756a29e0c5212f086a9ba75426d34d865bffd"},
+    {"path":"packages/game-cartridges/src/host-selections.ts","sha256":"f2d3f131773800047a232f6c633d65c5c8d83b29d6805c7b0121356e29cdbf71"},
+    {"path":"packages/game-cartridges/src/index.ts","sha256":"05fef2d38e53eeaa5a7fcf657533f0ca9a30bc139284125b9103c31f0f7af9c5"},
+    {"path":"packages/domain/src/games/host-proof.ts","sha256":"f585a0a9a740fcc9703b0fa0b8ec00869e41eb301ccd8c5f0c6908ca71c4577b"},
+    {"path":"apps/reading-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx","sha256":"42bc715fc1dbc30384906d29252d96489e20c103ac24149ccd4f4c21d63827d6"},
+    {"path":"apps/reading-advantage/components/host-proof/HostProofGameClient.tsx","sha256":"454d91ddfcef6e38e1aa7b3fab50dcbccab0e9aa06531bbdb5c147c92639699e"},
+    {"path":"apps/reading-advantage/lib/host-proof-qc-loader.ts","sha256":"09397904abdca1f6fc31d60b732781bc73f2c31f154a53c0660161fda244766b"},
+    {"path":"apps/reading-advantage/lib/host-proof-selections.ts","sha256":"4148090ddc57c94b7fe25815e175d8ea6261a98c98f5b883aee3d5dfc2f6d1e9"},
+    {"path":"apps/reading-advantage/app/api/host-proof/games/completions/route.ts","sha256":"ffa3d5d21530eada589138c7e790aa5f281659f9085cc45366c4805c759ae2f9"},
+    {"path":"apps/reading-advantage/tests/e2e/host-proof-games.spec.ts","sha256":"fc82210e813428391bb215b65ec1f2b85a39326c99380901c0ded483320949b4"},
+    {"path":"apps/primary-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx","sha256":"d8426d078868c0b91e1ce3cc8c80091d0b7118c0c613cf5e8f62eb1c9ff1e99e"},
+    {"path":"apps/primary-advantage/components/host-proof/HostProofGameClient.tsx","sha256":"cfd6eed9cbebe9d8ffd3ded3be56e13caafdafa6787a1ab09f50cbb7856dd589"},
+    {"path":"apps/primary-advantage/lib/host-proof-cartridge-loader.ts","sha256":"09397904abdca1f6fc31d60b732781bc73f2c31f154a53c0660161fda244766b"},
+    {"path":"apps/primary-advantage/lib/host-proof-selections.ts","sha256":"151f6d00fd6bd4264b9d6004e9ee16c7f812e21cf4c3e803445e972f1cd7d61f"},
+    {"path":"apps/primary-advantage/app/api/host-proof/games/completions/route.ts","sha256":"1e8044a8c8584b94b67980028e35cb1e1ad7c10bbc1a8a16ccbeffd71101752c"},
+    {"path":"apps/primary-advantage/tests/e2e/host-proof-games.spec.ts","sha256":"a42ce9adea01cd941a281b4de688ebbcf57a3b21587a910350c8a2a9f8f8eb76"}
+  ],
+  "host_observations": [
+    {
+      "application": "reading-advantage",
+      "report_path": "apps/reading-advantage/test-results/host-proof-results.json",
+      "report_sha256": "c4d90e9048d145304f2fc587688a355e950c5a8a5a0890e0994fea947a201d8b",
+      "total": 193,
+      "passed": 193,
+      "failed": 0,
+      "setup_cases": 1,
+      "cohort_cases": {"existing-core":40,"existing-action":40,"legacy-defense":32,"legacy-traversal":40,"legacy-puzzle":40}
+    },
+    {
+      "application": "primary-advantage",
+      "report_path": "apps/primary-advantage/test-results/host-proof-results.json",
+      "report_sha256": "4f36a6fb75bd1b47e6e602e03827d5d93e6d6cf43129804fd4f52400898eccb5",
+      "total": 193,
+      "passed": 193,
+      "failed": 0,
+      "setup_cases": 1,
+      "cohort_cases": {"existing-core":40,"existing-action":40,"legacy-defense":32,"legacy-traversal":40,"legacy-puzzle":40}
+    }
+  ],
+  "observed_behavior": {
+    "per_title_cases": 8,
+    "compact_and_wide": true,
+    "keyboard_pointer_touch": true,
+    "authoritative_completion_persistence": true,
+    "duplicate_without_additional_xp": true,
+    "replay_and_navigation": true,
+    "server_derived_tenant_scope": true,
+    "server_authoritative_xp": true,
+    "selected_union_only_delivery": true,
+    "whole_pack_client_delivery": false
+  },
+  "verification": {
+    "game_contracts": {"tests":"64/64 passed","coverage":"97.89% statements, 92.45% branches","lint":true,"typecheck":true,"build":true},
+    "game_cartridges": {"tests":"160/160 passed","coverage":"90.38% statements, 74.43% branches","lint":true,"typecheck":true,"build":true,"coverage_threshold_passed":false,"disclosure":"The configured aggregate 80% branch threshold remains red; no coverage-gate success is claimed."},
+    "domain": {"focused_tests":"62/62 passed","typecheck":true,"build":true},
+    "reading": {"focused_unit_tests":"35/35 passed","browser_tests":"193/193 passed"},
+    "primary": {"focused_unit_tests":"35/35 passed","browser_tests":"193/193 passed"},
+    "graph": {"existing_read_only_caller_guard":true,"incremental_update_completed":false,"audit":{"missing_files":0,"stale_symbols":28,"orphan_edges":0,"duplicate_nodes":0,"unaudited_symbols":3972},"disclosure":"repo-graph update timed out at both 180s and 600s; new exported symbols are not claimed indexed."}
+  },
+  "supersedes_historical_quarantine_only_as_candidate": {
+    "path": "measure/tracks/apk_existing_core_cutover_20260727/task6-legacy-retirement-manifest-v1.json",
+    "meaning": "The prior exact zero-deletion record remains immutable evidence for its recorded boundary. This additive work-order candidate replaces only its root-catalog quarantine assumption; it does not grant accepted cutover or deletion authority."
+  },
+  "authorization": {
+    "independent_review_complete": false,
+    "product_owner_acceptance_recorded": false,
+    "production_route_cutover_authorized": false,
+    "legacy_deletion_authorized": false,
+    "deployment_authorized": false,
+    "final_cohort_acceptance_authorized": false,
+    "track_archival_authorized": false
+  },
+  "next_required_gate": "Independent review must bind these exact bytes and reports, then product-owner acceptance must explicitly authorize any production route cutover, deletion, deployment, or archival."
+}

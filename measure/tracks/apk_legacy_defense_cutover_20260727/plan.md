@@ -5,6 +5,6 @@
 - [x] Remediate Task 3 audit: bound Castle, Wizard, and Village mechanics to exact claim IDs and locators; Storm current-absence and historical claims fail closed. (Focused Vitest 13/13.)
 - [x] Remediate Task 4 audit: removed all callback/result-delivery seams from the four Defense cartridges and retained an Advantage Games QC-only lifecycle. (Static guard + focused Vitest 13/13.)
 - [x] Remediate Task 5 audit: registered exactly the Defense cohort at Advantage Games `/qc`; Chromium proved keyboard, pointer, touch, compact, and wide interactions. (`PLAYWRIGHT_PORT=3200 PORT=3200 pnpm --filter vocabulary-games exec playwright test tests/e2e/qc/legacy-defense-cartridges.spec.ts --project=chromium --timeout=120000`, 2/2.)
-- [ ] Prove Reading and Primary loading, completion, persistence, replay, and navigation with the same binding.
-- [ ] Delete exact replaced legacy code/assets after both host proofs and verify graph callers and no-copy guards.
-- [ ] Complete independent review and product-owner acceptance.
+- [b] Prove Reading and Primary loading, completion, persistence, replay, and navigation with the same binding. The 24-title candidate and its 193/193 reports are historical non-consumable evidence with live-source drift, not host proof. (deferred:apk_existing_core_cutover_20260727-dragon-flight-reference-acceptance)
+- [b] Delete exact replaced legacy code/assets after both host proofs and verify graph callers and no-copy guards. The zero-deletion manifest is historical retention evidence, not Task-7 completion. (deferred:apk_existing_core_cutover_20260727-dragon-flight-reference-acceptance)
+- [b] Complete independent review and product-owner acceptance only after a title-specific production proof. The candidate handoff remains historical and non-consumable. (deferred:apk_existing_core_cutover_20260727-dragon-flight-reference-acceptance)

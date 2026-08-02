@@ -258,19 +258,19 @@ program, priority order when picking the next track is:
   - [x] **Track: APK Denominator, Readiness, and T11 Release Integrity** *Link: [./archive/apk_denominator_readiness_t11_integrity_20260727/](./archive/apk_denominator_readiness_t11_integrity_20260727/)*
     Accepted exact owner message `approved`; receipt `d371fc5d…f1720` preserves all reviewed hashes, restrictions, disclosures, and child authorization boundaries.
 - [~] **Track: APK Existing Core Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_core_cutover_20260727/](./tracks/apk_existing_core_cutover_20260727/)*
-    Vertically revalidates Dragon Flight, Magic Defense, Dungeon Liberator, The Sorcerer's Ziggurat, and Astral Mage. **Task 4 accepted:** exact hash-bound Advantage Games QC and compact/wide real-input proof is accepted; authorization is limited to beginning Task 5 Reading/Primary host proof. New title-acceptance evidence additionally requires Asset Contract v2 and accepted suitability/ingestion dossiers. No production catalog exposure, Task-5 success, retirement, cutover, or cohort acceptance is claimed.
-  - [ ] **Track: APK Existing Action Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_action_cutover_20260727/](./tracks/apk_existing_action_cutover_20260727/)*
+    Vertically revalidates Dragon Flight, Magic Defense, Dungeon Liberator, The Sorcerer's Ziggurat, and Astral Mage. Tasks 1-4 preparation evidence remains accepted. Task 5 is reopened for a Dragon Flight-only signed-attempt/runtime correction; the shared 24-title candidate and its 193/193 reports are historical non-consumable records with live-source drift. No host acceptance, retirement, cutover, or cohort acceptance is claimed.
+  - [~] **Track: APK Existing Action Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_action_cutover_20260727/](./tracks/apk_existing_action_cutover_20260727/)*
     Vertically revalidates Archer's Revenge, Paladin's Twin-Soul, Griffin Sky-Joust, Gryphon Patrol, and Realm Carver.
-  - [ ] **Track: APK Legacy Defense Rebuild and Cutover** *Link: [./tracks/apk_legacy_defense_cutover_20260727/](./tracks/apk_legacy_defense_cutover_20260727/)*
+  - [~] **Track: APK Legacy Defense Rebuild and Cutover** *Link: [./tracks/apk_legacy_defense_cutover_20260727/](./tracks/apk_legacy_defense_cutover_20260727/)*
     Vertically rebuilds Castle Defense, Wizard vs Zombie, Village Guardian, and Storm the Castle Tower.
-  - [ ] **Track: APK Legacy Traversal Rebuild and Cutover** *Link: [./tracks/apk_legacy_traversal_cutover_20260727/](./tracks/apk_legacy_traversal_cutover_20260727/)*
+  - [~] **Track: APK Legacy Traversal Rebuild and Cutover** *Link: [./tracks/apk_legacy_traversal_cutover_20260727/](./tracks/apk_legacy_traversal_cutover_20260727/)*
     Vertically rebuilds Dragon Rider, Spellweaver's Run, Shadow Gate Dungeon, Labyrinth of the Goblin King, and Griffin Rider's Escape.
-  - [ ] **Track: APK Legacy Puzzle Rebuild and Cutover** *Link: [./tracks/apk_legacy_puzzle_cutover_20260727/](./tracks/apk_legacy_puzzle_cutover_20260727/)*
+  - [~] **Track: APK Legacy Puzzle Rebuild and Cutover** *Link: [./tracks/apk_legacy_puzzle_cutover_20260727/](./tracks/apk_legacy_puzzle_cutover_20260727/)*
     Vertically rebuilds Enchanted Library, Rune Match, Alchemist's Synthesis, Potion Rush, and Rune Forge Chamber.
   - [x] **Track: APK Historical/Cancelled Identity Disposition** *Link: [./archive/apk_historical_identity_disposition_20260727/](./archive/apk_historical_identity_disposition_20260727/)*
     **Accepted with disclosure (2026-07-31; accepted-gated-disposition-only):** `product-owner-acceptance-v1.json` binds defer for RPG Battle, Devourer Slime, and The Haunted Library, and retain-history for The Abyssal Well and Babel Architect, against the independently reviewed evidence. `future-track-criteria-v1.json` requires a separately accepted bounded child track for any future work. No gameplay, playable, rebuild, shipping, or portfolio-completeness claim is made; all five remain gated and non-playable.
-  - [ ] **Track: APK Planned/New-Game Intake** *Link: [./tracks/apk_new_game_intake_20260727/](./tracks/apk_new_game_intake_20260727/)*
-    Defines evidence-first future intake and rejects placeholder titles, implementation, routes, and catalog exposure.
+  - [x] **Track: APK Planned/New-Game Intake** *Link: [./archive/apk_new_game_intake_20260727/](./archive/apk_new_game_intake_20260727/)* — archived 2026-08-02
+    Complete intake-only contract; it authorizes no new title, implementation, route, catalog entry, or host cutover.
   - [ ] **Track: APK Residual Cross-Host Retirement and Closeout** *Link: [./tracks/apk_cross_host_closeout_20260727/](./tracks/apk_cross_host_closeout_20260727/)*
     Owns only residual cross-host work that no vertical cohort owns after cohort outcomes are accepted or explicitly blocked.
 

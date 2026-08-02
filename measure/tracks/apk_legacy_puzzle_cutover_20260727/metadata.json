@@ -3,10 +3,10 @@
   "type": "feature",
   "status": "in_progress",
   "created_at": "2026-07-27T00:00:00Z",
-  "updated_at": "2026-07-31T15:08:40Z",
+  "updated_at": "2026-08-01T00:00:00Z",
   "description": "Rebuild and vertically cut over five remaining legacy puzzle and crafting games.",
   "estimated_tasks": 8,
-  "actual_tasks": null,
+  "actual_tasks": 5,
   "depends_on": ["apk_denominator_readiness_t11_integrity_20260727", "apk_asset_contract_v2_20260728", "apk_standard_pack_suitability_ingestion_20260728"],
-  "deviation_notes": "Denominator/readiness predecessor satisfied by accepted receipt d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720; this cohort is authorized to begin scoped work. No generic substitute, placeholder title, automatic cutover, or waiver of cohort proof is permitted."
+  "deviation_notes": "Tasks 1-5 retain the accepted per-title dossiers, descriptor-driven mechanics, selected unions, and Advantage Games QC preparation evidence. The shared 24-title candidate and its 193/193 reports are historical non-consumable records with live-source drift; they do not complete Tasks 6 or 7. Host proof, retirement, review, owner authorization, deployment, archival, and production cutover are blocked behind accepted Dragon Flight reference proof."
 }

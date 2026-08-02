@@ -1,0 +1,13 @@
+{
+  "schema_version": "apk-cohort-cross-host-cutover-handoff-candidate.v1",
+  "status": "awaiting-independent-review-and-owner-acceptance",
+  "track_id": "apk_existing_core_cutover_20260727",
+  "cohort": "existing-core",
+  "title_ids": ["dragon-flight","magic-defense","dungeon-liberator","sorcerer-ziggurat","astral-mage"],
+  "host_task": 5,
+  "retirement_task": 6,
+  "shared_candidate": {"path":"measure/apk-cross-host-cutover-candidate-v1.json","sha256":"184f1b9c7e65fbc2d48dd199eb6b8f8492843760f4215c03e7cfb540e0a5c923"},
+  "retirement_manifest": {"path":"measure/tracks/apk_existing_core_cutover_20260727/task6-retirement-successor-candidate-v1.json","sha256":"7322b582cbf1e7e4ff6a0eb533534f542184ff120e2701aaf6232516f9275b00"},
+  "review_scope": "Bind the additive 24-title root wrapper, current Reading/Primary 193-case reports, unchanged server-owned persistence boundary, and explicit zero-deletion successor disposition.",
+  "authorization": {"independent_review_complete":false,"product_owner_acceptance_recorded":false,"cutover_accepted":false,"deployment_authorized":false,"archival_authorized":false}
+}
