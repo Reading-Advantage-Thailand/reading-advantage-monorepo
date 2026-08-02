@@ -1,0 +1,30 @@
+{
+  "schema_version": "apk-legacy-traversal-dragon-rider-current-result-evidence.v1",
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "evidence_id": "dragon-rider-host-proof-current-result-source-v1",
+  "title_id": "dragon-rider",
+  "evidence_class": "current-source",
+  "source": {
+    "path": "apps/reading-advantage/lib/games/dragonRider.ts",
+    "revision": "60bc7c2dd3b21be1ab764e504c81dc4f8568418b",
+    "file_sha256": "433dceda75615b9cf8954225748bdb39ccb897a644a6d672b95df517d60bfae7",
+    "range": {
+      "start_line": 128,
+      "end_line": 149,
+      "sha256": "9cc91cc3b7d4606bee91e2ec61c91523895fa7a3eeccef610430563dc5a68fb6"
+    }
+  },
+  "source_fact": {
+    "boss_power": "Math.max(3, Math.ceil(totalAttempts * 0.75))",
+    "victory": "dragonCount >= bossPower"
+  },
+  "admissible_host_proof_use": [
+    "Derive boss power from server-replayed total attempts.",
+    "Derive victory from server-replayed dragon count and boss power after the source-supported timed running-to-boss transition."
+  ],
+  "limitations": [
+    "This evidence does not authorize legacy XP calculation, client result payloads, legacy routes, legacy assets, catalog exposure, retirement, cutover, deployment, or broader anti-cheat claims.",
+    "This evidence does not support client-authored enter-boss or defeat-boss actions; the terminal boss state must be derived by the server from the already-admitted 150-second transition and this result predicate."
+  ],
+  "revocation": "Any drift in the pinned file or cited range invalidates this evidence until a new current-source record is accepted."
+}

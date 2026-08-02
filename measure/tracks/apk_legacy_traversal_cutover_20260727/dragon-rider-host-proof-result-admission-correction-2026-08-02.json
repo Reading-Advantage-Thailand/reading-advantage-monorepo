@@ -1,0 +1,102 @@
+{
+  "schema_version": "apk-legacy-traversal-task6a-dragon-rider-host-admission-result-correction.v1",
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "record_id": "apk_legacy_traversal_cutover_20260727_dragon_rider_host_proof_result_admission_correction_20260802",
+  "status": "accepted-bounded-host-proof-only",
+  "decided_at": "2026-08-02",
+  "decision_authority": {
+    "role": "project_owner",
+    "delegation": "The user explicitly delegated all APK project-gating decisions to Codex.",
+    "technical_reference_commit": "f644d9d01"
+  },
+  "supersedes": {
+    "record": "measure/tracks/apk_legacy_traversal_cutover_20260727/dragon-rider-host-proof-admission-correction-2026-08-02.json",
+    "commit": "6169a4436",
+    "reason": "The prior correction did not pin current source evidence for boss-power/victory and allowed unsupported client terminal actions. It is not implementation authorization."
+  },
+  "title": {
+    "id": "dragon-rider",
+    "input_mode": "vocabulary",
+    "selected_union": [
+      "audio/native/combat/hit-01",
+      "effects/32x32/combat/hit-01",
+      "top-down/32x32/characters/hero-01",
+      "ui/16x16/controls/gamepad-buttons"
+    ],
+    "selected_union_sha256": "bf89fa94047b30730c715d94a5518c4d3cd49f8397783548984e6baec0afd902"
+  },
+  "evidence_boundary": {
+    "claim_ledger_v3": {
+      "path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+      "sha256": "826323bd9c9ee754c1c5b029e7c4a1cb1907bb0041296a98f2166033be3ca236"
+    },
+    "retained_claim_envelopes_v2": {
+      "path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v2.json",
+      "sha256": "fb778224e67609457ac8ac712bc85b3f5096483e0116f1162a2818bac6b48fe9"
+    },
+    "host_proof_claim_ids": [
+      "DR-SCENE-002A",
+      "DR-SCENE-002B",
+      "DR-MECH-001",
+      "DR-MECH-002",
+      "DR-TRANS-001",
+      "DR-TRANS-002",
+      "DR-TRANS-003",
+      "DR-TRANS-004",
+      "DR-CONTROL-001"
+    ],
+    "current_result_source_evidence": {
+      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/dragon-rider-current-result-source-evidence-2026-08-02.json",
+      "evidence_id": "dragon-rider-host-proof-current-result-source-v1",
+      "file_sha256": "433dceda75615b9cf8954225748bdb39ccb897a644a6d672b95df517d60bfae7",
+      "range_sha256": "9cc91cc3b7d4606bee91e2ec61c91523895fa7a3eeccef610430563dc5a68fb6"
+    },
+    "mechanic_candidate": {
+      "path": "packages/game-cartridges/src/dragon-rider-cartridge.ts",
+      "sha256": "e740b3e50b23a479c0a6e07734a068034b1b91115057be72bbe5d6a162ae2d44",
+      "candidate_claim_ids": ["DR-MECH-001", "DR-TRANS-001", "DR-TRANS-002", "DR-TRANS-003", "DR-TRANS-004"]
+    }
+  },
+  "predecessors": {
+    "task2_dossiers": {
+      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/task2-canonical-suitability-dossiers-v2.json",
+      "sha256": "9acc9137a74b4bd5176dee43f6830f56df05ba8cff83b50ac12e2077d58c04a5"
+    },
+    "task2_qc_only_owner_acceptance": {
+      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/task2-owner-acceptance-v2.json",
+      "sha256": "10480e53f2488bbb088cb6c4ade06a6f77b6164ee9ac308dc970c4dad0edf539",
+      "superseded_scope_only": "Its QC-only prohibition remains in force for every title except the explicitly bounded Dragon Rider host proof below."
+    },
+    "task5_qc_evidence": "measure/tracks/apk_legacy_traversal_cutover_20260727/task5-advantage-games-qc-native-input-evidence-v2.json"
+  },
+  "server_replay_boundary": {
+    "client_actions": ["choose-gate"],
+    "terminal_transition": "The server uses its observed completion time to advance the admitted 150-second running phase to boss; no client terminal action is accepted.",
+    "result_derivation": "The server derives boss power and victory only from the pinned current result source, server-replayed attempts, and server-replayed dragon count.",
+    "prohibited_client_fields": ["elapsed_time", "server_elapsed_time", "enter_boss", "defeat_boss", "score", "xp", "victory", "content", "seed"]
+  },
+  "authorization": {
+    "reading_direct_hidden_host_proof": true,
+    "primary_direct_hidden_host_proof": true,
+    "server_authoritative_attempt_issuance": true,
+    "server_replayed_completion_persistence": true,
+    "per_title_retry_idempotency": true,
+    "production_catalog_registration": false,
+    "student_game_catalog_registration": false,
+    "legacy_asset_reuse": false,
+    "legacy_asset_ingestion": false,
+    "legacy_route_or_controller_reuse": false,
+    "legacy_retirement": false,
+    "migration": false,
+    "cohort_cutover": false,
+    "deployment": false,
+    "other_traversal_titles": false
+  },
+  "required_conditions": [
+    "The server must replay a school- and user-bound frozen attempt with only server-recorded timing; client score, XP, victory, content, seed, elapsed time, and terminal transitions are untrusted.",
+    "The implementation must use only the listed selected semantic union, claim IDs, and current result evidence. It cannot expose physical legacy asset paths or widen Dragon Flight or generic Existing Core host-proof contracts.",
+    "Both hosts must prove direct hidden admission, a server-derived winning replay, one durable result, safe retry, usable return navigation, and hostile denial cases before this phase can be accepted.",
+    "The title must remain absent from production and student game catalogs, and no legacy files may be retired during this phase."
+  ],
+  "revocation": "Any drift in a pinned source, selected union, dossier, claim ledger, retained-claim envelope, or current result evidence revokes this corrected admission until a new project-owner decision is recorded."
+}
