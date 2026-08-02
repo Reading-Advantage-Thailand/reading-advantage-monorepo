@@ -6698,6 +6698,206 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             self.assertIs(rename_error.__cause__, materialize_error)
 
 
+    def test_preseal_materialize_failure_evidence_collision_preserves_existing_attempt_and_retains_cause(self) -> None:
+        """Requires a competing public attempt to survive a causally bound collision failure.
+
+        @returns Nothing; real preservation and validation use temporary roots, one competing mkdir, and no runner execution.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        executor_type = getattr(podman, "DirectCommandRuntimeProductionExecutorV1", None)
+        build_preseal = getattr(podman, "_build_direct_runtime_preseal_attempt_v1", None)
+        real_validator = getattr(podman, "validate_failed_execution_attempt_v1", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(inspect.isclass(executor_type), "V3_DIRECT_RUNTIME_PRODUCTION_EXECUTOR_MISSING")
+        self.assertTrue(callable(build_preseal), "V3_DIRECT_RUNTIME_PRESEAL_BUILDER_MISSING")
+        self.assertTrue(callable(real_validator), "V3_PODMAN_FAILED_ATTEMPT_VALIDATOR_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+        self.assertTrue(podman.HISTORICAL_PODMAN_BLOCKER.is_file())
+        self.assertFalse(podman.HISTORICAL_PODMAN_BLOCKER.is_symlink())
+
+        preparation = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-input-preparation",
+            "packetMaterialization": {"sourcePacketSha256": "a" * 64, "entries": []},
+        }
+        preseal = build_preseal(preparation, bytes(range(32)), "materialize")
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            attempts_root = root / "attempts"
+            attempts_root.mkdir()
+            output = root / "candidate"
+            staged_raw = root / "staged-raw"
+            staged_raw.mkdir()
+            stdout = staged_raw / "receipt-materialize.stdout.txt"
+            stderr = staged_raw / "receipt-materialize.stderr.txt"
+            stdout.write_bytes(b"")
+            stderr.write_bytes(b"V3_TEST_PRESEAL_COLLISION_FAILURE\\n")
+            logical_argv = ["node", "materialize-v3"]
+            payload_argv = [
+                podman.CONTAINER_NODE,
+                "/runner/materialize.mjs",
+                "/runner/archive.json",
+                "/runner/direct-runtime-source-packet.json",
+                "/work",
+            ]
+            staged_command = {
+                "id": "materialize",
+                "argv": logical_argv,
+                "cwd": ".",
+                "env": dict(podman.ENV),
+                "envAbsent": list(podman.ENV_ABSENT),
+                "network": False,
+                "exitCode": 1,
+                "actualExecutor": podman._container_executor(
+                    {"prefix": [podman.PODMAN, "run", "--rm", "--network", "none"]},
+                    logical_argv,
+                    payload_argv,
+                ),
+                "_rawId": "receipt-materialize",
+                "_stdoutPath": stdout,
+                "_stderrPath": stderr,
+                "_stdoutText": "",
+                "_stderrText": stderr.read_text(encoding="utf-8"),
+                "directRuntimePreparationSha256": preseal["preparationSha256"],
+                "directRuntimeAttempt": copy.deepcopy(preseal["attempt"]),
+            }
+            executor = executor_type(output, "20260802")
+            executor.started = True
+            executor._failure_reason = "materialize"
+            executor._direct_runtime_stage = "materialize"
+            executor._direct_runtime_preseal_attempt = copy.deepcopy(preseal)
+            executor._staged_commands = [staged_command]
+            materialize_error = error_type("V3_PODMAN_GATE_FAILED: materialize")
+            expected_attempt_name = f"{podman.ATTEMPT_PREFIX}-20260802-0001"
+            final_directory = attempts_root / expected_attempt_name
+            sentinel_name = "pre-existing-collision-sentinel.txt"
+            sentinel_bytes = b"V3_TEST_PRESEAL_COLLISION_SENTINEL\\n"
+            sentinel_sha256 = _sha256(sentinel_bytes)
+            validated_directories: list[Path] = []
+            validated_public_paths_absent: list[bool] = []
+            public_mkdir_calls: list[Path] = []
+            native_path_mkdir = Path.mkdir
+
+            def validate_private_attempt(attempt: dict[str, Any], directory: Path | str) -> None:
+                """Validates and records one complete private canonical pre-seal record.
+
+                @param attempt The fully finalized failed-attempt record.
+                @param directory The private canonical leaf offered to the real validator.
+                @returns Nothing after real validation accepts the staged record.
+                """
+                private_directory = Path(directory)
+                real_validator(attempt, private_directory)
+                validated_directories.append(private_directory)
+                validated_public_paths_absent.append(
+                    not (attempts_root / private_directory.name).exists(),
+                )
+                self.assertEqual(private_directory.name, expected_attempt_name)
+                self.assertNotEqual(private_directory.parent, attempts_root)
+                self.assertEqual(
+                    attempt["attempt"],
+                    {"id": expected_attempt_name, "sequence": 1, "namingRule": podman.ATTEMPT_NAMING_RULE},
+                )
+                self.assertEqual(attempt["directRuntimePreSealAttempt"], preseal)
+                self.assertNotIn("directRuntimeIntegration", attempt)
+                for stream in ("stdout", "stderr"):
+                    self.assertEqual(
+                        attempt["commands"][0][stream]["path"],
+                        f"{expected_attempt_name}/raw/receipt-materialize.{stream}.txt",
+                    )
+
+            def collide_public_mkdir(
+                path: Path,
+                mode: int = 0o777,
+                parents: bool = False,
+                exist_ok: bool = False,
+            ) -> None:
+                """Creates only the expected competing public directory before signaling collision.
+
+                @param path The path requested by production publication.
+                @param mode The requested filesystem mode.
+                @param parents Whether parent creation was requested.
+                @param exist_ok Whether an existing directory is allowed.
+                @returns Nothing because the expected public request always raises collision.
+                """
+                if path != final_directory:
+                    native_path_mkdir(path, mode=mode, parents=parents, exist_ok=exist_ok)
+                    return
+                public_mkdir_calls.append(path)
+                self.assertFalse(path.exists())
+                native_path_mkdir(path, mode=mode, parents=parents, exist_ok=exist_ok)
+                sentinel = path / sentinel_name
+                sentinel.write_bytes(sentinel_bytes)
+                raise FileExistsError(path)
+
+            with patch.object(
+                podman,
+                "validate_failed_execution_attempt_v1",
+                side_effect=validate_private_attempt,
+            ), patch.object(
+                Path,
+                "mkdir",
+                new=collide_public_mkdir,
+            ), patch.object(
+                podman.os,
+                "rename",
+                side_effect=AssertionError("V3_PRESEAL_COLLISION_RENAME_CALLED"),
+            ), patch.object(
+                podman.os,
+                "replace",
+                side_effect=AssertionError("V3_PRESEAL_COLLISION_REPLACE_CALLED"),
+            ), patch.object(
+                podman,
+                "_publish_candidate_publication_failure_attempt",
+                side_effect=AssertionError("V3_PRESEAL_COLLISION_CANDIDATE_PUBLISHER_CALLED"),
+            ), patch.object(
+                podman,
+                "_publish_blocker",
+                side_effect=AssertionError("V3_PRESEAL_COLLISION_GENERIC_BLOCKER_CALLED"),
+            ), patch.object(
+                podman,
+                "_run_container",
+                side_effect=AssertionError("V3_PRESEAL_COLLISION_PODMAN_CALLED"),
+            ), patch.object(
+                podman,
+                "capture_direct_command_runtime_in_container_trace_v1",
+                side_effect=AssertionError("V3_PRESEAL_COLLISION_TRACE_CALLED"),
+            ), patch.object(
+                executor,
+                "runtime_build",
+                side_effect=AssertionError("V3_PRESEAL_COLLISION_LATER_STAGE_CALLED"),
+            ), patch.object(
+                executor,
+                "generate",
+                side_effect=AssertionError("V3_PRESEAL_COLLISION_LATER_STAGE_CALLED"),
+            ), patch.object(podman, "TRACK_DIR", attempts_root):
+                with self.assertRaisesRegex(
+                    podman.CandidateExecutionBlocked,
+                    rf"^V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED: materialize: V3_PODMAN_ATTEMPT_PUBLICATION_COLLISION: {expected_attempt_name}$",
+                ) as raised:
+                    executor.preserve_failure(materialize_error)
+
+            collision_error = raised.exception.__cause__
+            self.assertIsInstance(collision_error, error_type)
+            self.assertEqual(str(collision_error), f"V3_PODMAN_ATTEMPT_PUBLICATION_COLLISION: {expected_attempt_name}")
+            self.assertEqual(validated_public_paths_absent, [True])
+            self.assertEqual(public_mkdir_calls, [final_directory])
+            self.assertTrue(final_directory.is_dir())
+            self.assertFalse(final_directory.is_symlink())
+            sentinel = final_directory / sentinel_name
+            self.assertEqual(sentinel.read_bytes(), sentinel_bytes)
+            self.assertEqual(_sha256(sentinel.read_bytes()), sentinel_sha256)
+            self.assertEqual(sorted(path.name for path in final_directory.iterdir()), [sentinel_name])
+            self.assertFalse((final_directory / "failed-attempt.json").exists())
+            self.assertFalse((final_directory / "raw").exists())
+            self.assertEqual(sorted(path.name for path in attempts_root.iterdir()), [expected_attempt_name])
+            self.assertFalse(validated_directories[0].exists())
+            self.assertFalse(output.exists())
+            self.assertFalse(V3_DIR.exists())
+            self.assertIs(collision_error.__cause__, materialize_error)
+
+
     def test_production_candidate_validation_failure_is_durably_retained_without_fake_command_or_publish(self) -> None:
         """Requires a post-trace candidate-validation failure to retain operation-only evidence.
 
