@@ -3465,6 +3465,33 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             self.assertIs(observed_identity, post_build_identity)
             events.append("same-attempt-finalization")
 
+        def validate_same_attempt_binding(
+            observed_envelope: dict[str, Any],
+            observed_archive: dict[str, Any],
+            observed_context: dict[str, Any],
+        ) -> None:
+            """Records the required H1b post-bind identity validation.
+
+            @param observed_envelope The executor-provided same-attempt envelope.
+            @param observed_archive The archive after finalization binding returns.
+            @param observed_context The context after finalization binding returns.
+            @returns Nothing after asserting exact post-bind carrier identity.
+            """
+            self.assertIs(observed_envelope, same_attempt_identity_envelope)
+            self.assertIs(observed_archive, archive)
+            self.assertIs(observed_context, context)
+            self.assertEqual(
+                json.dumps(observed_archive, sort_keys=True, separators=(",", ":")).encode("utf-8"),
+                archive_bytes,
+                "V3_DIRECT_RUNTIME_ARCHIVE_MUTATED_AFTER_BIND",
+            )
+            self.assertEqual(
+                json.dumps(observed_context, sort_keys=True, separators=(",", ":")).encode("utf-8"),
+                context_bytes,
+                "V3_DIRECT_RUNTIME_CONTEXT_MUTATED_AFTER_BIND",
+            )
+            events.append("same-attempt-binding")
+
         def bind_finalization(observed_archive: dict[str, Any], observed_context: dict[str, Any], observed_integration: dict[str, Any]) -> dict[str, Any]:
             """Seals finalization without mutating already executed archive or context carriers.
 
@@ -3507,7 +3534,8 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         executor.generate = stage("generator", (context, sealed_integration), generation)
         executor.capture_trace = stage("trace", (context, sealed_integration, generation), trace)
         with patch.object(podman, "finalize_direct_command_runtime_execution_inputs_v1", side_effect=finalize) as finalizer, \
-             patch.object(podman, "validate_direct_command_runtime_same_attempt_identity_finalization_v1", side_effect=validate_same_attempt_finalization) as same_attempt_finalizer:
+             patch.object(podman, "validate_direct_command_runtime_same_attempt_identity_finalization_v1", side_effect=validate_same_attempt_finalization) as same_attempt_finalizer, \
+             patch.object(podman, "validate_direct_command_runtime_same_attempt_identity_binding_v1", side_effect=validate_same_attempt_binding) as same_attempt_binding_validator:
             result = schedule(preparation, executor)
         finalizer.assert_called_once_with(preparation, runtime_build, post_build_identity)
         same_attempt_finalizer.assert_called_once_with(
@@ -3516,7 +3544,12 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             runtime_build,
             post_build_identity,
         )
-        self.assertEqual(events, ["archive", "context", "materialize", "runtime-build", "post-build-identity", "same-attempt-identity-envelope", "same-attempt-finalization", "finalizer", "bind-finalization", "generator", "trace"])
+        same_attempt_binding_validator.assert_called_once_with(
+            same_attempt_identity_envelope,
+            archive,
+            context,
+        )
+        self.assertEqual(events, ["archive", "context", "materialize", "runtime-build", "post-build-identity", "same-attempt-identity-envelope", "same-attempt-finalization", "finalizer", "bind-finalization", "same-attempt-binding", "generator", "trace"])
         self.assertEqual(events.count("runtime-build"), 1)
         self.assertEqual(result, {
             "archive": archive,
