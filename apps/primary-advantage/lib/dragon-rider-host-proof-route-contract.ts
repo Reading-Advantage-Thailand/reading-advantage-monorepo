@@ -11,7 +11,7 @@ export const dragonRiderCompletionRequestSchema = z.object({ attemptId: z.string
 /** Converts expected Dragon Rider boundary failures into safe structured HTTP responses. */
 export function dragonRiderRouteError(error: unknown): NextResponse {
   if (error instanceof z.ZodError) return NextResponse.json({ error: { code: "DRAGON_RIDER_VALIDATION_FAILED", message: "Request includes invalid or server-owned fields" } }, { status: 400 });
-  if (error instanceof Error && /credential|checkpoint|action|attempt|expired|snapshot|transcript|victor/i.test(error.message)) return NextResponse.json({ error: { code: "DRAGON_RIDER_ATTEMPT_REJECTED", message: "Signed attempt evidence was rejected" } }, { status: 400 });
+  if (error instanceof Error && /credential|checkpoint|action|attempt|expired|snapshot|transcript|victor|terminal time/i.test(error.message)) return NextResponse.json({ error: { code: "DRAGON_RIDER_ATTEMPT_REJECTED", message: "Signed attempt evidence was rejected" } }, { status: 400 });
   console.error({ event: "dragon_rider_host_proof_unexpected", error });
   return NextResponse.json({ error: { code: "DRAGON_RIDER_INTERNAL", message: "Unable to process Dragon Rider attempt" } }, { status: 500 });
 }
