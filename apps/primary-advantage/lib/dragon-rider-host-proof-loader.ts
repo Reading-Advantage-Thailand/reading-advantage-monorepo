@@ -1,0 +1,2 @@
+/** Returns title-local endpoints; this deliberately does not use generic host-proof routes. */
+export function getDragonRiderHostProofEndpoints(): Readonly<{ attempts: string; actions: string; completions: string }> { return Object.freeze({ attempts: "/api/host-proof/dragon-rider/attempts", actions: "/api/host-proof/dragon-rider/attempts/actions", completions: "/api/host-proof/dragon-rider/completions" }); }

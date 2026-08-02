@@ -50,6 +50,19 @@ export type {
   HostProofViewportProfile,
 } from "./host-proof-bindings.js";
 
+/** Public title-local Dragon Rider host-proof admission contract. */
+export {
+  DRAGON_RIDER_HOST_PROOF_BINDING,
+  dragonRiderHostProofBindingSchema,
+  dragonRiderHostProofClaimIdSchema,
+  dragonRiderHostProofClaimIdsSchema,
+  dragonRiderHostProofSemanticKeySchema,
+  dragonRiderHostProofSelectedSemanticKeysSchema,
+} from "./dragon-rider-host-proof-binding.js";
+
+/** Public Dragon Rider host-proof admission type. */
+export type { DragonRiderHostProofBinding } from "./dragon-rider-host-proof-binding.js";
+
 /** Public APK source-architecture scanner. */
 export { scanAPKArchitecture } from "./architecture.js";
 

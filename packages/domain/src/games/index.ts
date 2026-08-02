@@ -61,6 +61,28 @@ export {
   listHostProofCartridgeBindings,
   recordHostProofGameCompletion,
 } from "./host-proof.js";
+
+/** Title-local Dragon Rider signed-attempt commands. */
+export {
+  attestDragonRiderHostProofAction,
+  attestDragonRiderHostProofActionSchema,
+  completeDragonRiderHostProofAttempt,
+  completeDragonRiderHostProofAttemptSchema,
+  DRAGON_RIDER_HOST_PROOF_ATTEMPT_TTL_MS,
+  issueDragonRiderHostProofAttempt,
+  issueDragonRiderHostProofAttemptSchema,
+} from "./dragon-rider-host-proof-attempt.js";
+export { createDragonRiderHostProofAttemptDependencies } from "./dragon-rider-host-proof-attempt-adapter.js";
+export { createDragonRiderHostProofAttemptStore } from "./dragon-rider-host-proof-store.js";
+export type {
+  DragonRiderHostProofActionAttestation,
+  DragonRiderHostProofActor,
+  DragonRiderHostProofAttempt,
+  DragonRiderHostProofAttemptDependencies,
+  DragonRiderHostProofCompletion,
+  DragonRiderHostProofAttemptStore,
+  DragonRiderHostProofStoredAttempt,
+} from "./dragon-rider-host-proof-attempt.js";
 export {
   attestDragonFlightHostProofAction,
   attestDragonFlightHostProofActionSchema,
