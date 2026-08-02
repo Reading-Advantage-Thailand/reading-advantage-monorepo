@@ -6690,6 +6690,308 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             attempt_validator(attempt, attempt_directory)
 
 
+    def test_production_atomic_candidate_replace_failure_is_durably_retained_and_unpublished(self) -> None:
+        """Requires a post-validation atomic-replace failure to retain operation-only evidence.
+
+        @returns Nothing; real candidate assembly and preservation use temporary file boundaries only.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        executor_type = getattr(podman, "DirectCommandRuntimeProductionExecutorV1", None)
+        build_integration = getattr(podman, "build_direct_command_runtime_runner_integration_v1", None)
+        validate_integration = getattr(podman, "validate_direct_command_runtime_runner_integration_v1", None)
+        validate_attempt = getattr(podman, "validate_failed_execution_attempt_v1", None)
+        self.assertTrue(inspect.isclass(executor_type), "V3_DIRECT_RUNTIME_PRODUCTION_EXECUTOR_MISSING")
+        self.assertTrue(callable(build_integration), "V3_DIRECT_RUNTIME_INTEGRATION_BUILDER_MISSING")
+        self.assertTrue(callable(validate_integration), "V3_DIRECT_RUNTIME_INTEGRATION_VALIDATOR_MISSING")
+        self.assertTrue(callable(validate_attempt), "V3_PODMAN_FAILED_ATTEMPT_VALIDATOR_MISSING")
+
+        def identity(path: str, content: bytes) -> dict[str, Any]:
+            """Builds one hash-bound baseline-Git fixture identity.
+
+            @param path The fixture's workspace-relative path.
+            @param content The exact immutable fixture bytes.
+            @returns One runtime baseline-read identity.
+            """
+            blob = b"blob " + str(len(content)).encode("ascii") + b"\0" + content
+            return {
+                "path": path,
+                "sha256": _sha256(content),
+                "size": len(content),
+                "mode": "100644",
+                "origin": "BASELINE_GIT_BLOB",
+                "baselineCommit": "a" * 40,
+                "gitBlobSha1": hashlib.sha1(blob).hexdigest(),
+                "inclusion": "MATERIALIZE_EXACT_BASELINE_BYTES",
+            }
+
+        package_root = "packages/fixture-atomic-candidate-replace"
+        generator_path = f"{package_root}/scripts/generate-runtime.mjs"
+        source_path = f"{package_root}/assets/standard/input.txt"
+        generator_bytes, source_bytes = b"export {};\n", b"atomic-replace\n"
+        generator, source = identity(generator_path, generator_bytes), identity(source_path, source_bytes)
+        baseline_reads = sorted([generator, source], key=lambda item: item["path"])
+        derived = {
+            "path": f"{package_root}/dist/assets/index.js",
+            "sha256": "b" * 64,
+            "size": 1,
+            "origin": "DERIVED_BUILD_OUTPUT",
+            "producer": {
+                "kind": "PACKAGE_SCRIPT_PREREQUISITE_BUILD",
+                "scriptName": "fixture-build",
+                "scriptSegment": "pnpm build",
+                "receipt": {"path": "fixture-build-receipt.json", "sha256": "c" * 64, "size": 1},
+            },
+        }
+        budget = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-asset-resource-budget",
+            "frozenArchive": _reference(V2_ARCHIVE),
+            "sourceCeiling": {
+                "path": f"{package_root}/assets/standard",
+                "regularFiles": 2,
+                "apparentBytes": len(generator_bytes) + len(source_bytes),
+                "allocatedBytes": len(generator_bytes) + len(source_bytes),
+            },
+            "reservations": {
+                "baselineGitMaterializationBytes": 1,
+                "candidateCowBytes": 1,
+                "archiveSupplementBytes": 1,
+                "derivedOutputBytes": 1,
+                "metadataBytes": 1,
+                "minimumHeadroomBytes": 1,
+            },
+            "requiredAvailableBytes": 6,
+            "availableBytes": 6,
+            "decision": "PASS",
+        }
+        output_path = f"{package_root}/assets/standard/standard-pack-release.json"
+        read_set = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-read-set",
+            "trigger": {
+                "logicalArgv": ["pnpm", "--filter", "@fixture/atomic-candidate-replace", "fixture-build"],
+                "package": "@fixture/atomic-candidate-replace",
+                "manifest": {"path": f"{package_root}/package.json", "sha256": "d" * 64, "size": 1},
+            },
+            "baselineReadSet": baseline_reads,
+            "derivedBuildReadSet": [derived],
+            "outputPaths": [output_path],
+            "preflightQuota": {
+                "maxEntries": len(baseline_reads),
+                "maxBytes": sum(item["size"] for item in baseline_reads),
+                "observedEntries": len(baseline_reads),
+                "observedBytes": sum(item["size"] for item in baseline_reads),
+            },
+            "resourceBudget": budget,
+            "discovery": {
+                "kind": "BASELINE_GIT_INSTRUMENTED_TRACE",
+                "script": generator,
+                "root": f"{package_root}/assets/standard",
+                "directoryListingCount": 1,
+            },
+        }
+        packet = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-baseline-git-source-packet",
+            "source": "GIT_OBJECT_DATABASE_ONLY",
+            "baselineCommit": "a" * 40,
+            "tree": {"gitTreeSha1": "e" * 40},
+            "baselineReadSet": baseline_reads,
+            "objects": [
+                {**source, "contentBase64": base64.b64encode(source_bytes).decode("ascii")},
+                {**generator, "contentBase64": base64.b64encode(generator_bytes).decode("ascii")},
+            ],
+        }
+        packet["packetSha256"] = podman._direct_runtime_packet_digest_v1(packet)
+        trace = {
+            "baselineReads": baseline_reads,
+            "derivedBuildReads": [derived],
+            "writes": [{"path": output_path, "kind": "DERIVED_OUTPUT"}],
+        }
+        integration = build_integration(
+            read_set,
+            packet,
+            {
+                "id": "direct-runtime-detached-runner-v1",
+                "nonceSha256": "f" * 64,
+                "reachedStage": "direct-runtime-trace",
+                "executionTrace": trace,
+            },
+            budget,
+        )
+        validate_integration(integration)
+        self.assertEqual(integration["attempt"]["reachedStage"], "direct-runtime-trace")
+        self.assertNotIn("candidate-publication", podman._DIRECT_RUNTIME_RUNNER_STAGES)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            attempts_root, blocker_root, stage, output = root / "attempts", root / "blocker", root / "stage", root / "published"
+            attempts_root.mkdir()
+            stage.mkdir()
+            executor = executor_type(output, "20260802")
+            executor.started, executor._stage = True, stage
+            executor._sealed_integration = copy.deepcopy(integration)
+            executor._direct_runtime_stage = "direct-runtime-trace"
+            executor._archive = {
+                "entries": [{"path": "pnpm-lock.yaml", "sha256": "0" * 64, "size": 0}],
+                "closureInventory": {"entryCount": 0, "sha256": "1" * 64},
+                "directRuntimePacketMaterialization": copy.deepcopy(integration["packetMaterialization"]),
+            }
+            executor._execution_context = {
+                "mounts": [],
+                "prefix": podman.build_direct_node_split_canonical_prefix_v1([], "/work"),
+                "cleanWorkRoot": {"fixture": "temporary-candidate-assembly"},
+                "declaredExecutors": [],
+            }
+            for attribute, value in {
+                "_network": {}, "_pre_inventories": {}, "_versions": {}, "_toolchain": {},
+                "_nested_pnpm_runtime": {}, "_hermetic_pnpm_contract": {},
+                "_workspace_dag_contract": {}, "_workspace_resolution": [],
+                "_workspace_output_inventories": [],
+            }.items():
+                setattr(executor, attribute, value)
+            staged_raw = stage / "fixture-raw"
+            staged_raw.mkdir()
+
+            def command(command_id: str) -> dict[str, Any]:
+                """Builds one prior successful raw-backed command without a publication command.
+
+                @param command_id The completed command identifier.
+                @returns The private staged receipt used only by candidate assembly.
+                """
+                stdout, stderr = staged_raw / f"{command_id}.stdout.txt", staged_raw / f"{command_id}.stderr.txt"
+                stdout.write_text("", encoding="utf-8")
+                stderr.write_text("", encoding="utf-8")
+                return {
+                    "id": command_id, "argv": [command_id], "cwd": ".", "env": dict(podman.ENV),
+                    "envAbsent": list(podman.ENV_ABSENT), "network": False, "exitCode": 0,
+                    "actualExecutor": {"fixture": command_id}, "_rawId": command_id,
+                    "_stdoutPath": stdout, "_stderrPath": stderr, "_stdoutText": "", "_stderrText": "",
+                }
+
+            version, image, status, diff, replay, graph, audit, compensation = [
+                command(command_id)
+                for command_id in (
+                    "podman-version", "image-inspect", "supplements-pre-git-status",
+                    "supplements-pre-staged-diff", "replay", "graph-scan", "clean-audit",
+                    "compensation-denominator",
+                )
+            ]
+            executor._podman = {"version": "fixture", "versionCommand": version}
+            executor._image = {"reference": "fixture", "inspectCommand": image}
+            executor._pre_capture = {"gitStatus": status, "stagedDiff": diff}
+            executor._staged_commands = [version, image, status, diff, replay, graph, audit, compensation]
+            executor._receipt_commands = [replay]
+            order: list[str] = []
+            validation_calls: list[Path] = []
+            replace_calls: list[tuple[Path, Path]] = []
+            replace_error = OSError("V3_TEST_ATOMIC_REPLACE_FAILURE")
+            caught_error: OSError | None = None
+            preservation_error: BaseException | None = None
+
+            def validate_private(*_args: Any, **kwargs: Any) -> None:
+                """Records the successful private validation immediately before replacement.
+
+                @param _args The candidate validation documents.
+                @param kwargs The candidate-directory binding.
+                @returns Nothing when validation is reached exactly once.
+                """
+                order.append("validate")
+                candidate_directory = kwargs.get("candidate_directory")
+                self.assertIsInstance(candidate_directory, Path)
+                validation_calls.append(candidate_directory)
+
+            def fail_replace(source: Path | str, destination: Path | str) -> None:
+                """Records the real atomic replacement then injects a filesystem failure.
+
+                @param source The private candidate directory.
+                @param destination The final candidate destination.
+                @returns Nothing because this boundary always raises.
+                """
+                order.append("replace")
+                replace_calls.append((Path(source), Path(destination)))
+                raise replace_error
+
+            with patch.object(podman, "_supplement_metadata", return_value={}), patch.object(
+                podman, "_ledger", return_value={}
+            ), patch.object(podman, "validate_execution_closure_v1", side_effect=validate_private), patch.object(
+                podman.os, "replace", side_effect=fail_replace
+            ):
+                with self.assertRaisesRegex(OSError, r"^V3_TEST_ATOMIC_REPLACE_FAILURE$"):
+                    try:
+                        executor._publish_candidate_artifacts(
+                            integration, {"fixture": "trace-receipt"}, replay, graph, audit,
+                            compensation, {}, {"findings": []},
+                        )
+                    except OSError as error:
+                        caught_error = error
+                        self.assertIs(error, replace_error)
+                        with patch.object(podman, "TRACK_DIR", attempts_root), patch.object(
+                            podman, "BLOCKER_DIR", blocker_root
+                        ):
+                            try:
+                                executor.preserve_failure(error)
+                            except podman.CandidateExecutionBlocked as preservation:
+                                preservation_error = preservation
+                                self.assertIsInstance(preservation.__cause__, BaseException)
+                        raise
+
+            self.assertIs(caught_error, replace_error)
+            self.assertIsNone(preservation_error)
+            self.assertEqual(order, ["validate", "replace"])
+            self.assertEqual(validation_calls, [stage / "candidate"])
+            self.assertEqual(replace_calls, [(stage / "candidate", output)])
+            self.assertEqual(executor._direct_runtime_stage, "direct-runtime-trace")
+            self.assertEqual(executor._sealed_integration, integration)
+            self.assertFalse(output.exists())
+            self.assertTrue((stage / "candidate").is_dir())
+            self.assertFalse((stage / "candidate").is_symlink())
+            self.assertFalse(V3_DIR.exists())
+
+            attempt_directories = sorted(attempts_root.glob("r1-v3-podman-execution-attempt-20260802-*"))
+            self.assertEqual(len(attempt_directories), 1)
+            attempt_directory = attempt_directories[0]
+            attempt = _load_json(attempt_directory / "failed-attempt.json", self)
+            self.assertEqual(attempt["commands"], [])
+            self.assertFalse((attempt_directory / "raw").exists())
+            self.assertFalse(blocker_root.exists())
+            self.assertEqual(
+                attempt["directRuntimeIntegration"],
+                {"integration": integration, "reachedStage": "direct-runtime-trace", "laterStages": []},
+            )
+            self.assertEqual(
+                attempt["candidatePublicationFailure"],
+                {
+                    "schemaVersion": 1,
+                    "kind": "execution-closure-candidate-publication-failure",
+                    "completedIntegrationSha256": _sha256(podman._canonical(integration)),
+                    "reachedStage": "direct-runtime-trace",
+                    "operationId": "atomic-replace",
+                    "intendedDestination": V3_DIR.relative_to(REPO_ROOT).as_posix(),
+                    "published": False,
+                },
+            )
+            self.assertEqual(
+                attempt["failure"],
+                {
+                    "stage": "candidate-publication",
+                    "reason": "V3_TEST_ATOMIC_REPLACE_FAILURE",
+                    "classification": "CANDIDATE_ATOMIC_REPLACE_FAILURE",
+                    "operationId": "atomic-replace",
+                },
+            )
+            self.assertNotIn("commandId", attempt["failure"])
+            self.assertEqual(
+                {key for key in attempt if key in {
+                    "directRuntimeIntegration", "directRuntimePreSealAttempt", "candidatePublicationFailure",
+                    "hermeticPnpmInstallContract", "workspacePrerequisiteBuildDag", "workspaceBuildResolution",
+                }},
+                {"directRuntimeIntegration", "candidatePublicationFailure"},
+            )
+            validate_attempt(attempt, attempt_directory)
+
+
 
 if __name__ == "__main__":
     unittest.main()
