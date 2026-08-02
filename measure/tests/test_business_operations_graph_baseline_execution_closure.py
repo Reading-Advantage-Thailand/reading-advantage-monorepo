@@ -4995,6 +4995,88 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             sorted(path.relative_to(TRACK_DIR).as_posix() for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")),
             persistent_attempts,
         )
+
+    def test_h2b_executor_rejects_forged_frozen_manifest_and_network_override(self) -> None:
+        """Requires the H2 executor carrier to bind its manifest digest and one no-network argument.
+
+        @returns Nothing; this is in-memory validation with subprocess and Podman execution tripwired.
+        """
+        self.assertFalse(V3_DIR.exists())
+        persistent_attempts = sorted(
+            path.relative_to(TRACK_DIR).as_posix()
+            for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")
+        )
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+        frozen_archive = _load_json(V2_ARCHIVE, self)
+        frozen_manifest = next(
+            entry
+            for entry in frozen_archive["entries"]
+            if entry.get("path") == "packages/advantage-play-kit/package.json"
+        )
+        frozen_index, trigger = podman._direct_runtime_trigger_v1(
+            [frozen_manifest],
+            list(podman.STANDARD_PACK_GENERATOR),
+        )
+        semantics = podman.derive_direct_node_split_semantics_from_frozen_script_v1(
+            trigger,
+            frozen_index[trigger["manifest"]["path"]],
+        )
+        build_segment = semantics["segments"][0]
+        build_payload = podman.build_pnpm_global_store_payload_v1(build_segment["logicalArgv"])
+
+        def context_for(value: dict[str, Any], extra_network: list[str]) -> dict[str, Any]:
+            """Builds a direct-executor context with an adversarial later network argument.
+
+            @param value The frozen or forged H2 semantic carrier.
+            @param extra_network The later network arguments that must be rejected.
+            @returns The direct-executor context with its exact semantic carrier.
+            """
+            return {
+                "prefix": [
+                    podman.PODMAN,
+                    "run",
+                    "--rm",
+                    "--network",
+                    "none",
+                    *extra_network,
+                    "--workdir",
+                    value["package"]["cwd"],
+                ],
+                "directNodeSplit": {
+                    "frozenScript": copy.deepcopy(value["frozenScript"]),
+                    "cleanEnvironment": copy.deepcopy(value["cleanEnvironment"]),
+                    "segment": copy.deepcopy(value["segments"][0]),
+                },
+            }
+
+        forged_manifest = copy.deepcopy(semantics)
+        forged_manifest["frozenScript"]["manifest"]["sha256"] = "d" * 64
+        cases: tuple[tuple[str, dict[str, Any], list[str]], ...] = (
+            ("forged-frozen-manifest-digest", forged_manifest, []),
+            ("later-network-host", semantics, ["--network", "host"]),
+            ("duplicate-network-none", semantics, ["--network", "none"]),
+            ("later-network-equals-host", semantics, ["--network=host"]),
+        )
+        with patch.object(podman.subprocess, "run", side_effect=AssertionError("V3_H2B_PROVENANCE_OR_NETWORK_SUBPROCESS_REACHED")), \
+             patch.object(podman, "_run_container", side_effect=AssertionError("V3_H2B_PROVENANCE_OR_NETWORK_PODMAN_REACHED")):
+            for case, carrier, extra_network in cases:
+                with self.subTest(case=case):
+                    with self.assertRaises(error_type):
+                        podman._container_executor(
+                            context_for(carrier, extra_network),
+                            build_segment["logicalArgv"],
+                            build_payload,
+                            environment_overrides=build_segment["environmentOverrides"],
+                        )
+
+        self.assertFalse(V3_DIR.exists())
+        self.assertEqual(
+            sorted(path.relative_to(TRACK_DIR).as_posix() for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")),
+            persistent_attempts,
+        )
+
     def test_scoped_pnpm_payloads_make_store_dir_global_and_pin_the_build_db_blocker(self) -> None:
         """Requires scoped pnpm payloads to keep store selection out of package scripts.
 
