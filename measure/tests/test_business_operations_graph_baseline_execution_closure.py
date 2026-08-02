@@ -5077,6 +5077,83 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             persistent_attempts,
         )
 
+
+    def test_h2b_executor_rejects_later_short_workdir_and_privileged_prefix(self) -> None:
+        """Requires the H2 executor to reject late short-form workdir and privilege prefix escapes.
+
+        @returns Nothing; this is in-memory validation with subprocess and Podman execution tripwired.
+        """
+        self.assertFalse(V3_DIR.exists())
+        persistent_attempts = sorted(
+            path.relative_to(TRACK_DIR).as_posix()
+            for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")
+        )
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+        frozen_archive = _load_json(V2_ARCHIVE, self)
+        frozen_manifest = next(
+            entry
+            for entry in frozen_archive["entries"]
+            if entry.get("path") == "packages/advantage-play-kit/package.json"
+        )
+        frozen_index, trigger = podman._direct_runtime_trigger_v1(
+            [frozen_manifest],
+            list(podman.STANDARD_PACK_GENERATOR),
+        )
+        semantics = podman.derive_direct_node_split_semantics_from_frozen_script_v1(
+            trigger,
+            frozen_index[trigger["manifest"]["path"]],
+        )
+        build_segment = semantics["segments"][0]
+        build_payload = podman.build_pnpm_global_store_payload_v1(build_segment["logicalArgv"])
+
+        def context_for(extra_prefix: list[str]) -> dict[str, Any]:
+            """Builds one V2-derived direct-executor context with a late prefix escape.
+
+            @param extra_prefix The additional Podman prefix arguments that must be rejected.
+            @returns The otherwise exact direct-executor context.
+            """
+            return {
+                "prefix": [
+                    podman.PODMAN,
+                    "run",
+                    "--rm",
+                    "--network",
+                    "none",
+                    "--workdir",
+                    semantics["package"]["cwd"],
+                    *extra_prefix,
+                ],
+                "directNodeSplit": {
+                    "frozenScript": copy.deepcopy(semantics["frozenScript"]),
+                    "cleanEnvironment": copy.deepcopy(semantics["cleanEnvironment"]),
+                    "segment": copy.deepcopy(build_segment),
+                },
+            }
+
+        cases: tuple[tuple[str, list[str]], ...] = (
+            ("later-short-workdir", ["-w", semantics["package"]["cwd"]]),
+            ("later-privileged", ["--privileged"]),
+        )
+        with patch.object(podman.subprocess, "run", side_effect=AssertionError("V3_H2B_PREFIX_SUBPROCESS_REACHED")), \
+             patch.object(podman, "_run_container", side_effect=AssertionError("V3_H2B_PREFIX_PODMAN_REACHED")):
+            for case, extra_prefix in cases:
+                with self.subTest(case=case):
+                    with self.assertRaises(error_type):
+                        podman._container_executor(
+                            context_for(extra_prefix),
+                            build_segment["logicalArgv"],
+                            build_payload,
+                            environment_overrides=build_segment["environmentOverrides"],
+                        )
+
+        self.assertFalse(V3_DIR.exists())
+        self.assertEqual(
+            sorted(path.relative_to(TRACK_DIR).as_posix() for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")),
+            persistent_attempts,
+        )
+
     def test_scoped_pnpm_payloads_make_store_dir_global_and_pin_the_build_db_blocker(self) -> None:
         """Requires scoped pnpm payloads to keep store selection out of package scripts.
 
