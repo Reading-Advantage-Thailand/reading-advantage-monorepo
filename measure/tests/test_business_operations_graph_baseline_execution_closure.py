@@ -3219,6 +3219,8 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             "recursiveListing",
             "liveWorktreeFallback",
             "captureTiming",
+            "selectedTreeInventory",
+            "selectedTreeInventorySha256",
         })
         self.assertEqual(discovery["source"], "GIT_OBJECT_DATABASE_ONLY")
         self.assertEqual(discovery["baselineCommit"], preparation["sourcePacket"]["baselineCommit"])
@@ -3227,11 +3229,33 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         self.assertEqual(discovery["recursiveListing"], "GIT_LS_TREE_RECURSIVE_ONLY")
         self.assertEqual(discovery["liveWorktreeFallback"], "REJECT")
         self.assertEqual(discovery["captureTiming"], "CAPTURE_BEFORE_CANDIDATE_STAGING")
+        selected_tree_inventory = [
+            {
+                key: identity[key]
+                for key in ("path", "gitBlobSha1", "sha256", "size", "mode")
+            }
+            for identity in preparation["sourcePacket"]["baselineReadSet"]
+        ]
+        self.assertEqual(discovery["selectedTreeInventory"], selected_tree_inventory)
+        self.assertEqual(
+            discovery["selectedTreeInventorySha256"],
+            _sha256(json.dumps(selected_tree_inventory, sort_keys=True, separators=(",", ":")).encode("utf-8")),
+        )
         self.assertEqual(preparation["dynamicBuildOutput"], {
             "stage": "direct-runtime-dist-identity",
             "source": "IN_CONTAINER_POST_RUNTIME_BUILD_IDENTITY",
             "receiptIdentityPolicy": "EXACT_PRODUCER_RECEIPT_FOR_EACH_DERIVED_DIST_READ",
             "state": "UNRESOLVED_UNTIL_RECORDED_RUNTIME_BUILD",
+            "knownDerivedBuildPaths": [{
+                "path": "packages/advantage-play-kit/dist/assets/index.js",
+                "origin": "DERIVED_BUILD_OUTPUT",
+                "producerClass": {
+                    "kind": "PACKAGE_SCRIPT_PREREQUISITE_BUILD",
+                    "scriptName": STANDARD_PACK_GENERATOR[3],
+                    "scriptSegment": "pnpm build",
+                },
+            }],
+            "declaredOutputPaths": [STANDARD_PACK_CATALOG],
         })
         self.assertNotIn("readSet", preparation)
         self.assertNotIn("derivedBuildReadSet", preparation)
@@ -3398,6 +3422,77 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         self.assertGreater(expanded["resourceBudget"]["requiredAvailableBytes"], capacity["resourceBudget"]["requiredAvailableBytes"])
         preparation_globals = {step.argval for step in dis.get_instructions(podman.prepare_direct_command_runtime_execution_inputs_v1) if step.opname == "LOAD_GLOBAL"}
         self.assertIn("derive_direct_command_runtime_capacity_from_selected_tree_v1", preparation_globals)
+        self.assertFalse(V3_DIR.exists())
+        self.assertEqual(sorted(path.relative_to(TRACK_DIR).as_posix() for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")), persistent_attempts)
+        self.assertEqual(marker.read_bytes(), marker_bytes)
+
+    def test_writer_hands_preparation_to_scheduler_before_execution_side_effects(self) -> None:
+        """Requires the writer to schedule the prepared transaction before any execution side effect.
+
+        @returns Nothing; patched interception exits before Podman, context, candidate, attempt, or marker work.
+        """
+        self.assertFalse(V3_DIR.exists())
+        persistent_attempts = sorted(path.relative_to(TRACK_DIR).as_posix() for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*"))
+        marker = TRACK_DIR / "r1-r2-v2-marker-closeout-green-receipt-20260801.md"
+        marker_bytes = marker.read_bytes()
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        preparation = {"synthetic": "prepared-inputs"}
+        events: list[str] = []
+
+        class _PreparedSchedulerExit(BaseException):
+            """Stops the patched writer outside its ordinary failed-attempt publisher."""
+
+        def prepare(run_day: str | None) -> dict[str, str]:
+            """Returns the synthetic preparation at the writer boundary.
+
+            @param run_day The writer-supplied optional run day.
+            @returns The synthetic preparation object.
+            """
+            self.assertIsNone(run_day)
+            events.append("prepare")
+            return preparation
+
+        def scheduler(observed_preparation: dict[str, str], executor: Any) -> None:
+            """Records scheduler handoff and exits without entering an execution stage.
+
+            @param observed_preparation The exact prepared input from the writer.
+            @param executor The writer-owned transaction executor.
+            @returns Nothing; always raises the private interception sentinel.
+            """
+            self.assertIs(observed_preparation, preparation)
+            self.assertIsNotNone(executor)
+            events.append("scheduler")
+            raise _PreparedSchedulerExit()
+
+        def forbidden(name: str) -> Callable[..., None]:
+            """Builds one side-effect tripwire that exits outside ordinary error publishing.
+
+            @param name The side effect that must not occur before scheduler handoff.
+            @returns A callable tripwire.
+            """
+            def tripwire(*_args: Any, **_kwargs: Any) -> None:
+                """Records the unexpected side effect and aborts the writer.
+
+                @param _args Positional arguments forwarded to the forbidden callable.
+                @param _kwargs Keyword arguments forwarded to the forbidden callable.
+                @returns Nothing; always raises the private interception sentinel.
+                """
+                events.append(name)
+                raise _PreparedSchedulerExit()
+            return tripwire
+
+        with patch.object(podman, "prepare_direct_command_runtime_execution_inputs_v1", side_effect=prepare), \
+             patch.object(podman, "execute_direct_command_runtime_prepared_transaction_v1", side_effect=scheduler), \
+             patch.object(podman.tempfile, "TemporaryDirectory", side_effect=forbidden("temporary-directory")), \
+             patch.object(podman, "_build_archive", side_effect=forbidden("archive")), \
+             patch.object(podman, "_podman_context", side_effect=forbidden("context")), \
+             patch.object(podman, "_run_container", side_effect=forbidden("container")), \
+             patch.object(podman, "_publish_failed_attempt", side_effect=forbidden("attempt-publisher")):
+            with self.assertRaises(podman.CandidateExecutionBlocked) as blocked:
+                podman.write_execution_closure_v1()
+
+        self.assertIsInstance(blocked.exception.__cause__, _PreparedSchedulerExit)
+        self.assertEqual(events, ["prepare", "scheduler"], "V3_DIRECT_RUNTIME_WRITER_SCHEDULER_HANDOFF_MISSING")
         self.assertFalse(V3_DIR.exists())
         self.assertEqual(sorted(path.relative_to(TRACK_DIR).as_posix() for path in TRACK_DIR.glob("r1-v3-podman-execution-attempt-*")), persistent_attempts)
         self.assertEqual(marker.read_bytes(), marker_bytes)
