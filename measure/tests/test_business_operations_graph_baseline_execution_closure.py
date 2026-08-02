@@ -6898,6 +6898,161 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             self.assertIs(collision_error.__cause__, materialize_error)
 
 
+    def test_preseal_materialize_failure_evidence_raw_copy_failure_cleans_private_stage_and_retains_cause(self) -> None:
+        """Requires a pre-seal stderr raw-copy failure to retain its materialize cause.
+
+        @returns Nothing; real preservation and finalization use temporary roots and one deterministic stderr-copy failure only.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        executor_type = getattr(podman, "DirectCommandRuntimeProductionExecutorV1", None)
+        build_preseal = getattr(podman, "_build_direct_runtime_preseal_attempt_v1", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(inspect.isclass(executor_type), "V3_DIRECT_RUNTIME_PRODUCTION_EXECUTOR_MISSING")
+        self.assertTrue(callable(build_preseal), "V3_DIRECT_RUNTIME_PRESEAL_BUILDER_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+        self.assertTrue(podman.HISTORICAL_PODMAN_BLOCKER.is_file())
+        self.assertFalse(podman.HISTORICAL_PODMAN_BLOCKER.is_symlink())
+
+        preparation = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-input-preparation",
+            "packetMaterialization": {"sourcePacketSha256": "a" * 64, "entries": []},
+        }
+        preseal = build_preseal(preparation, bytes(range(32)), "materialize")
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            attempts_root = root / "attempts"
+            attempts_root.mkdir()
+            output = root / "candidate"
+            staged_raw = root / "staged-raw"
+            staged_raw.mkdir()
+            stdout = staged_raw / "receipt-materialize.stdout.txt"
+            stderr = staged_raw / "receipt-materialize.stderr.txt"
+            stdout_bytes = b"V3_TEST_PRESEAL_RAW_COPY_STDOUT_5F0A91\\n"
+            stderr_bytes = b"V3_TEST_PRESEAL_RAW_COPY_STDERR_7C2E44\\n"
+            stdout.write_bytes(stdout_bytes)
+            stderr.write_bytes(stderr_bytes)
+            logical_argv = ["node", "materialize-v3"]
+            payload_argv = [
+                podman.CONTAINER_NODE,
+                "/runner/materialize.mjs",
+                "/runner/archive.json",
+                "/runner/direct-runtime-source-packet.json",
+                "/work",
+            ]
+            staged_command = {
+                "id": "materialize",
+                "argv": logical_argv,
+                "cwd": ".",
+                "env": dict(podman.ENV),
+                "envAbsent": list(podman.ENV_ABSENT),
+                "network": False,
+                "exitCode": 1,
+                "actualExecutor": podman._container_executor(
+                    {"prefix": [podman.PODMAN, "run", "--rm", "--network", "none"]},
+                    logical_argv,
+                    payload_argv,
+                ),
+                "_rawId": "receipt-materialize",
+                "_stdoutPath": stdout,
+                "_stderrPath": stderr,
+                "_stdoutText": stdout_bytes.decode("utf-8"),
+                "_stderrText": stderr_bytes.decode("utf-8"),
+                "directRuntimePreparationSha256": preseal["preparationSha256"],
+                "directRuntimeAttempt": copy.deepcopy(preseal["attempt"]),
+            }
+            executor = executor_type(output, "20260802")
+            executor.started = True
+            executor._failure_reason = "materialize"
+            executor._direct_runtime_stage = "materialize"
+            executor._direct_runtime_preseal_attempt = copy.deepcopy(preseal)
+            executor._staged_commands = [staged_command]
+            materialize_error = error_type("V3_PODMAN_GATE_FAILED: materialize")
+            raw_copy_error = OSError("V3_TEST_PRESEAL_FAILURE_EVIDENCE_RAW_COPY")
+            expected_attempt_name = f"{podman.ATTEMPT_PREFIX}-20260802-0001"
+            copy_calls: list[tuple[Path, Path]] = []
+            private_directories: list[Path] = []
+            private_stdout_destinations: list[Path] = []
+            observed_stdout_bytes: list[bytes] = []
+            native_copyfile = shutil.copyfile
+
+            def copy_stdout_then_fail_stderr(
+                source: str | Path,
+                destination: str | Path,
+                *,
+                follow_symlinks: bool = True,
+            ) -> str:
+                """Copies the real stdout receipt, then injects the sole stderr fault.
+
+                @param source The staged receipt selected by the real finalizer.
+                @param destination The private raw receipt destination selected by the real finalizer.
+                @param follow_symlinks Whether the delegated stdout copy follows symlinks.
+                @returns The delegated stdout destination.
+                """
+                source_path = Path(source)
+                destination_path = Path(destination)
+                copy_calls.append((source_path, destination_path))
+                if source_path == stdout:
+                    private_directory = destination_path.parent.parent
+                    self.assertEqual(destination_path.name, "receipt-materialize.stdout.txt")
+                    self.assertEqual(destination_path.parent.name, "raw")
+                    self.assertEqual(private_directory.name, expected_attempt_name)
+                    self.assertNotEqual(private_directory.parent, attempts_root)
+                    self.assertEqual(private_directory.parent.parent, attempts_root)
+                    self.assertTrue(private_directory.parent.name.startswith(".failed-attempt-"))
+                    self.assertFalse((private_directory / "failed-attempt.json").exists())
+                    result = native_copyfile(
+                        source_path,
+                        destination_path,
+                        follow_symlinks=follow_symlinks,
+                    )
+                    self.assertTrue(destination_path.is_file())
+                    self.assertEqual(destination_path.read_bytes(), stdout_bytes)
+                    private_directories.append(private_directory)
+                    private_stdout_destinations.append(destination_path)
+                    observed_stdout_bytes.append(destination_path.read_bytes())
+                    return str(result)
+                self.assertEqual(source_path, stderr)
+                self.assertEqual(len(private_directories), 1)
+                self.assertEqual(destination_path.parent.parent, private_directories[0])
+                self.assertEqual(destination_path.name, "receipt-materialize.stderr.txt")
+                self.assertTrue(private_stdout_destinations[0].is_file())
+                self.assertEqual(private_stdout_destinations[0].read_bytes(), stdout_bytes)
+                self.assertFalse((private_directories[0] / "failed-attempt.json").exists())
+                raise raw_copy_error
+
+            with patch.object(
+                podman.shutil,
+                "copyfile",
+                side_effect=copy_stdout_then_fail_stderr,
+            ), patch.object(podman, "TRACK_DIR", attempts_root):
+                with self.assertRaisesRegex(
+                    podman.CandidateExecutionBlocked,
+                    r"^V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED: materialize: V3_TEST_PRESEAL_FAILURE_EVIDENCE_RAW_COPY$",
+                ) as raised:
+                    executor.preserve_failure(materialize_error)
+
+            self.assertIs(raised.exception.__cause__, raw_copy_error)
+            self.assertEqual(len(copy_calls), 2)
+            self.assertEqual([source for source, _ in copy_calls], [stdout, stderr])
+            self.assertEqual(
+                [destination.name for _, destination in copy_calls],
+                ["receipt-materialize.stdout.txt", "receipt-materialize.stderr.txt"],
+            )
+            self.assertEqual(observed_stdout_bytes, [stdout_bytes])
+            self.assertEqual(len(private_directories), 1)
+            self.assertFalse(output.exists())
+            self.assertFalse(V3_DIR.exists())
+            self.assertFalse((attempts_root / expected_attempt_name).exists())
+            self.assertEqual(sorted(path.name for path in attempts_root.iterdir()), [])
+            self.assertFalse(private_directories[0].exists())
+            self.assertFalse(private_directories[0].parent.exists())
+            self.assertFalse((attempts_root / "raw").exists())
+            self.assertIs(raw_copy_error.__cause__, materialize_error)
+
+
     def test_production_candidate_validation_failure_is_durably_retained_without_fake_command_or_publish(self) -> None:
         """Requires a post-trace candidate-validation failure to retain operation-only evidence.
 
