@@ -3381,7 +3381,10 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         capacity = derive_capacity(selected_tree, asset_root, 10**9)
         expected_ceiling = {"path": asset_root, "regularFiles": 2, "apparentBytes": 4114, "allocatedBytes": 12288}
         self.assertEqual(capacity["selectedTreeInventory"], selected_tree)
-        self.assertEqual(capacity["selectedTreeInventorySha256"], _sha256(_canonical(selected_tree)))
+        self.assertEqual(
+            capacity["selectedTreeInventorySha256"],
+            _sha256(json.dumps(selected_tree, sort_keys=True, separators=(",", ":")).encode("utf-8")),
+        )
         self.assertEqual(capacity["sourceCeiling"], expected_ceiling)
         self.assertEqual(capacity["resourceBudget"]["sourceCeiling"], expected_ceiling)
         self.assertEqual(capacity["resourceBudget"]["reservations"]["baselineGitMaterializationBytes"], 16384)
