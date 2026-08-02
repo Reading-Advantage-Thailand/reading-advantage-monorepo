@@ -2238,27 +2238,59 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         self.assertIn("gitBlobSha1", capture_source)
         self.assertIn("contentBase64", capture_source)
 
-        runner_source = inspect.getsource(podman.write_execution_closure_v1)
-        ordered_steps = [
-            "capture_direct_command_runtime_baseline_git_packet_v1(",
-            "build_direct_command_runtime_runner_integration_v1(",
-            "direct-runtime-preflight",
-            "archive = _build_archive(",
-            "context = _podman_context(",
-            "direct-runtime-discovery",
-            "build-advantage-play-kit-for-runtime",
-            "direct-runtime-dist-identity",
-            "generation = _run_container(",
-            'failure_reason = "direct-runtime-trace"',
+        writer_source = inspect.getsource(podman.write_execution_closure_v1)
+        scheduler_source = inspect.getsource(
+            podman.execute_direct_command_runtime_prepared_transaction_v1,
+        )
+        executor_type = podman.DirectCommandRuntimeProductionExecutorV1
+        writer_steps = [
+            "prepare_direct_command_runtime_execution_inputs_v1(",
+            "executor = DirectCommandRuntimeProductionExecutorV1(",
+            "prepared_transaction = execute_direct_command_runtime_prepared_transaction_v1(",
+        ]
+        positions = [writer_source.index(step) for step in writer_steps]
+        self.assertEqual(positions, sorted(positions), "the writer must only prepare, construct its no-I/O executor, and hand off")
+        for forbidden in ("tempfile.TemporaryDirectory(", "_build_archive(", "_podman_context(", "_run_container(", "_publish_failed_attempt("):
+            self.assertNotIn(forbidden, writer_source, f"V3_DIRECT_RUNTIME_WRITER_OWNS_EXECUTION:{forbidden}")
+
+        scheduler_steps = [
+            "executor.probe_capacity(",
+            "executor.build_archive(",
+            "executor.build_context(",
+            "executor.materialize(",
+            "executor.runtime_build(",
+            "executor.post_build_identity(",
+            "finalize_direct_command_runtime_execution_inputs_v1(",
+            "executor.bind_finalization(",
+            "executor.generate(",
+            "executor.capture_trace(",
+        ]
+        positions = [scheduler_source.index(step) for step in scheduler_steps]
+        self.assertEqual(positions, sorted(positions), "the scheduler must retain the complete capacity-to-trace transaction ordering")
+        preparation_source = inspect.getsource(podman.prepare_direct_command_runtime_execution_inputs_v1)
+        finalization_source = inspect.getsource(podman.finalize_direct_command_runtime_execution_inputs_v1)
+        archive_executor_source = inspect.getsource(executor_type.build_archive)
+        context_executor_source = inspect.getsource(executor_type.build_context)
+        build_executor_source = inspect.getsource(executor_type.runtime_build)
+        identity_executor_source = inspect.getsource(executor_type.post_build_identity)
+        generation_executor_source = inspect.getsource(executor_type.generate)
+        trace_executor_source = inspect.getsource(executor_type.capture_trace)
+        self.assertIn("capture_direct_command_runtime_baseline_git_packet_v1(", preparation_source)
+        self.assertIn("build_direct_command_runtime_runner_integration_v1(", finalization_source)
+        self.assertIn('self._failure_reason = "direct-runtime-preflight"', archive_executor_source)
+        self.assertIn("archive = _build_archive(", archive_executor_source)
+        self.assertIn("context = _podman_context(", context_executor_source)
+        self.assertIn('self._failure_reason = "direct-runtime-discovery"', context_executor_source)
+        self.assertIn("segment = self._segments[0]", build_executor_source)
+        self.assertIn('"direct-runtime-dist-identity"', identity_executor_source)
+        self.assertIn("generation = self._run(", generation_executor_source)
+        for required in (
             "receipt-direct-runtime-trace",
             "capture_direct_command_runtime_in_container_trace_v1(",
             "parse_direct_command_runtime_trace_events_v1(",
             "validate_direct_command_runtime_execution_trace_v1(",
-        ]
-        positions = [runner_source.index(step) for step in ordered_steps]
-        self.assertEqual(positions, sorted(positions), "runtime integration must freeze/capacity-check before staging and trace after generation")
-        self.assertIn("direct_runtime_integration=direct_runtime_integration", runner_source)
-        self.assertIn("direct_runtime_stage=", runner_source)
+        ):
+            self.assertIn(required, trace_executor_source)
 
         archive_source = inspect.getsource(podman._build_archive)
         self.assertIn("direct_runtime_integration", archive_source)
@@ -2371,21 +2403,33 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         with self.assertRaises(error_type):
             validate_materialization(corrupted_materialization)
 
-        runner_source = inspect.getsource(podman.write_execution_closure_v1)
+        writer_source = inspect.getsource(podman.write_execution_closure_v1)
+        scheduler_source = inspect.getsource(
+            podman.execute_direct_command_runtime_prepared_transaction_v1,
+        )
+        executor_type = podman.DirectCommandRuntimeProductionExecutorV1
+        materialization_source = inspect.getsource(executor_type.materialize)
+        generation_source = inspect.getsource(executor_type.generate)
+        trace_source = inspect.getsource(executor_type.capture_trace)
         runner_signature = inspect.signature(podman.write_execution_closure_v1)
         self.assertNotIn("direct_runtime_trace_events", runner_signature.parameters, "caller-supplied trace data is not evidence of generator reads")
-        ordered_runner_steps = [
-            "receipt-materialize",
-            "direct-runtime-materialization-probe",
-            "offline-install",
-            "generation = _run_container(",
-            "DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS",
-            "receipt-direct-runtime-trace",
-            "capture_direct_command_runtime_in_container_trace_v1(",
+        for forbidden in ("_run_container(", "capture_direct_command_runtime_in_container_trace_v1("):
+            self.assertNotIn(forbidden, writer_source, f"V3_DIRECT_RUNTIME_WRITER_OWNS_EVIDENCE:{forbidden}")
+        ordered_materialization_steps = [
+            '"receipt-materialize"',
+            '"direct-runtime-materialization-probe"',
+            '"offline-install"',
         ]
-        positions = [runner_source.index(step) for step in ordered_runner_steps]
-        self.assertEqual(positions, sorted(positions), "the worktree probe and tracer must precede generation, and raw capture must follow it")
-        self.assertNotIn("parse_direct_command_runtime_trace_events_v1(\n                direct_runtime_trace_events", runner_source)
+        positions = [materialization_source.index(step) for step in ordered_materialization_steps]
+        self.assertEqual(positions, sorted(positions), "the worktree probe must precede the offline dependency install")
+        scheduler_steps = ["executor.materialize(", "executor.generate(", "executor.capture_trace("]
+        positions = [scheduler_source.index(step) for step in scheduler_steps]
+        self.assertEqual(positions, sorted(positions), "the scheduler must generate only after materialization and capture raw trace evidence afterward")
+        self.assertIn("DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS", generation_source)
+        self.assertIn("environment_overrides=", generation_source)
+        self.assertIn("receipt-direct-runtime-trace", trace_source)
+        self.assertIn("capture_direct_command_runtime_in_container_trace_v1(", trace_source)
+        self.assertNotIn("direct_runtime_trace_events", writer_source)
 
         archive_source = inspect.getsource(podman._build_archive)
         archive_validator_source = inspect.getsource(podman._validate_archive)
@@ -2481,12 +2525,16 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             "V3_DIRECT_RUNTIME_MATERIALIZATION_STAGES_MISSING",
         )
 
-        runner_source = inspect.getsource(podman.write_execution_closure_v1)
+        materialization_source = inspect.getsource(
+            podman.DirectCommandRuntimeProductionExecutorV1.materialize,
+        )
         ordered_failure_stage_handoffs = [
-            'failure_reason = "materialize"\n            direct_runtime_stage = failure_reason\n            materialize = _run_container(',
-            'failure_reason = "direct-runtime-materialization-probe"\n            direct_runtime_stage = failure_reason\n            direct_runtime_materialization_probe = _run_container(',
+            'self._failure_reason = "materialize"\n        self._direct_runtime_stage = self._failure_reason\n        materialize = self._run(',
+            'self._failure_reason = "direct-runtime-materialization-probe"\n        self._direct_runtime_stage = self._failure_reason\n        materialization_probe = self._run(',
         ]
-        positions = [runner_source.index(handoff) for handoff in ordered_failure_stage_handoffs]
+        for handoff in ordered_failure_stage_handoffs:
+            self.assertIn(handoff, materialization_source, "V3_DIRECT_RUNTIME_MATERIALIZATION_STAGE_HANDOFF_MISSING")
+        positions = [materialization_source.index(handoff) for handoff in ordered_failure_stage_handoffs]
         self.assertEqual(
             positions,
             sorted(positions),
@@ -2699,17 +2747,25 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             "V3_DIRECT_RUNTIME_GENERATOR_RUN_ENVIRONMENT_OVERRIDE_MISSING",
         )
 
-        runner_source = inspect.getsource(podman.write_execution_closure_v1)
+        writer_source = inspect.getsource(podman.write_execution_closure_v1)
+        production_executor = podman.DirectCommandRuntimeProductionExecutorV1
+        generation_source = inspect.getsource(production_executor.generate)
+        trace_context_source = inspect.getsource(
+            production_executor._derive_trace_execution_context,
+        )
         executor_source = inspect.getsource(container_executor)
         noninstall_executor_source = inspect.getsource(podman.validate_noninstall_pnpm_executor_v1)
         integration_source = inspect.getsource(podman.build_direct_command_runtime_runner_integration_v1)
         capture_source = inspect.getsource(capture_trace)
         runner_scripts_source = inspect.getsource(podman._runner_scripts)
 
-        self.assertIn("DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS", runner_source)
-        self.assertIn("environment_overrides=", runner_source)
-        self.assertNotIn("traced_generator_payload", runner_source, "a parent-only --import payload cannot prove child-generator tracing")
-        self.assertNotIn("--import=/runner/direct-runtime-tracer.mjs", runner_source, "the pnpm payload must not be the only tracer activation path")
+        self.assertIn("DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS", generation_source)
+        self.assertIn("environment_overrides=", generation_source)
+        self.assertIn("segment = self._segments[1]", generation_source)
+        self.assertIn("[CONTAINER_NODE, logical[1]]", generation_source)
+        self.assertNotIn("traced_generator_payload", generation_source, "a parent-only --import payload cannot prove child-generator tracing")
+        self.assertNotIn("--import=/runner/direct-runtime-tracer.mjs", generation_source, "the pnpm payload must not be the only tracer activation path")
+        self.assertNotIn("_run_container(", writer_source, "the writer cannot own tracer activation")
         self.assertIn("NODE_OPTIONS", executor_source)
         self.assertIn("environment_overrides", executor_source)
         self.assertIn("NODE_OPTIONS", noninstall_executor_source)
@@ -2732,6 +2788,7 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         self.assertIn("nonce", capture_source)
         self.assertIn("INHERITED_NODE_OPTIONS_EXACT_GENERATOR_SCRIPT_ONLY", capture_source)
         self.assertIn("DIRECT_RUNTIME_TRACE_CONFIG_PATH", runner_scripts_source)
+        self.assertIn("DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS", trace_context_source)
 
         node_executable = shutil.which("node")
         self.assertIsNotNone(node_executable, "V3_DIRECT_RUNTIME_LOCAL_NODE_MISSING")
@@ -3148,16 +3205,34 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         )
 
         writer_source = inspect.getsource(writer)
-        ordered_steps = [
+        scheduler_source = inspect.getsource(
+            podman.execute_direct_command_runtime_prepared_transaction_v1,
+        )
+        writer_steps = [
             "prepare_direct_command_runtime_execution_inputs_v1(",
-            'failure_reason = "direct-runtime-input-preparation"',
-            "archive = _build_archive(",
-            'failure_reason = "build-advantage-play-kit-for-runtime"',
-            'failure_reason = "direct-runtime-dist-identity"',
-            "finalize_direct_command_runtime_execution_inputs_v1(",
-            'failure_reason = "generate-standard-pack-catalog"',
+            "executor = DirectCommandRuntimeProductionExecutorV1(",
+            "prepared_transaction = execute_direct_command_runtime_prepared_transaction_v1(",
         ]
-        positions = [writer_source.index(step) for step in ordered_steps]
+        positions = [writer_source.index(step) for step in writer_steps]
+        self.assertEqual(
+            positions,
+            sorted(positions),
+            "V3_DIRECT_RUNTIME_WRITER_HANDOFF_ORDER_INVALID",
+        )
+        for forbidden in ("tempfile.TemporaryDirectory(", "_build_archive(", "_podman_context(", "_run_container(", "_publish_failed_attempt("):
+            self.assertNotIn(forbidden, writer_source, f"V3_DIRECT_RUNTIME_WRITER_OWNS_EXECUTION:{forbidden}")
+        scheduler_steps = [
+            "executor.build_archive(",
+            "executor.build_context(",
+            "executor.materialize(",
+            "executor.runtime_build(",
+            "executor.post_build_identity(",
+            "finalize_direct_command_runtime_execution_inputs_v1(",
+            "executor.bind_finalization(",
+            "executor.generate(",
+            "executor.capture_trace(",
+        ]
+        positions = [scheduler_source.index(step) for step in scheduler_steps]
         self.assertEqual(
             positions,
             sorted(positions),
@@ -3176,11 +3251,18 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             "direct-command-runtime-input-preparation",
             "SINGLE_UNINTERRUPTED_R1_V3_TRANSACTION",
             "GIT_OBJECT_DATABASE_ONLY",
-            "IN_CONTAINER_POST_RUNTIME_BUILD_IDENTITY",
             "CAPTURE_BEFORE_CANDIDATE_STAGING",
             "liveWorktreeFallback",
         ):
             self.assertIn(required, preparation_source, f"V3_DIRECT_RUNTIME_INPUT_PREPARATION_MISSING:{required}")
+        dynamic_output_source = inspect.getsource(
+            podman._direct_runtime_prepared_dynamic_build_output_v1,
+        )
+        for required in (
+            "IN_CONTAINER_POST_RUNTIME_BUILD_IDENTITY",
+            "EXACT_PRODUCER_RECEIPT_FOR_EACH_DERIVED_DIST_READ",
+        ):
+            self.assertIn(required, dynamic_output_source, f"V3_DIRECT_RUNTIME_DYNAMIC_BUILD_OUTPUT_MISSING:{required}")
         for prohibited in ("_run_container(", "_podman_context(", "_publish_failed_attempt(", "V3_DIR"):
             self.assertNotIn(prohibited, preparation_source, f"V3_DIRECT_RUNTIME_INPUT_PREPARATION_SIDE_EFFECT:{prohibited}")
         self.assertNotIn("direct_runtime_read_set", inspect.signature(prepare).parameters)
