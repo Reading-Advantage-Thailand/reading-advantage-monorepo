@@ -3577,6 +3577,186 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         self.assertNotIn("del prepared_transaction", writer_source)
         self.assertGreaterEqual(writer_source.count("prepared_transaction"), 2, "V3_DIRECT_RUNTIME_SCHEDULER_OUTPUT_DISCARDED")
 
+    def test_production_capacity_probe_rejects_device_mismatch_and_insufficient_space(self) -> None:
+        """Requires every production capacity root to fail closed on device or free-space drift.
+
+        @returns Nothing; all filesystem statistics are monkeypatched and no execution stage is created.
+        """
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        asset_root = "packages/fixture-runtime/assets/standard"
+        selected_tree = [
+            {"path": f"{asset_root}/IMPORT-RECEIPT.tsv", "gitBlobSha1": "1" * 40, "sha256": "1" * 64, "size": 17, "mode": "100644"},
+            {"path": "packages/fixture-runtime/scripts/generate-runtime.mjs", "gitBlobSha1": "2" * 40, "sha256": "2" * 64, "size": 101, "mode": "100755"},
+        ]
+        budget = podman.derive_direct_command_runtime_capacity_from_selected_tree_v1(selected_tree, asset_root, 10**12)["resourceBudget"]
+        preparation = {"resourceBudget": budget}
+        roots = {
+            "temporary-stage": Path("/synthetic/tmp"),
+            "archive": Path("/synthetic/archive"),
+            "cow": Path("/synthetic/cow"),
+            "evidence": Path("/synthetic/evidence"),
+        }
+        stat = lambda device: type("SyntheticStat", (), {"st_dev": device})()
+        statvfs = lambda available: type("SyntheticStatVfs", (), {"f_bavail": available, "f_frsize": 1})()
+
+        with patch.object(podman.os, "stat", side_effect=[stat(11), stat(12), stat(11), stat(11)]) as observed_stat, \
+             patch.object(podman.os, "statvfs", side_effect=[statvfs(10**12)] * 4) as observed_statvfs:
+            with self.assertRaisesRegex(podman.core.ExecutionClosureValidationError, "CAPACITY_DEVICE_MISMATCH"):
+                podman.probe_direct_command_runtime_production_capacity_v1(preparation, roots)
+        self.assertEqual(observed_stat.call_count, 4)
+        self.assertEqual(observed_statvfs.call_count, 4)
+
+        with patch.object(podman.os, "stat", side_effect=[stat(13)] * 4), \
+             patch.object(podman.os, "statvfs", side_effect=[statvfs(budget["requiredAvailableBytes"] - 1)] * 4):
+            with self.assertRaisesRegex(podman.core.ExecutionClosureValidationError, "CAPACITY_INSUFFICIENT"):
+                podman.probe_direct_command_runtime_production_capacity_v1(preparation, roots)
+
+    def test_production_executor_generation_uses_sealed_direct_node_payload_only(self) -> None:
+        """Requires actual generation to use the sealed integration and direct Node generator payload.
+
+        @returns Nothing; command, trace-context, validation, and catalog boundaries are in-memory doubles.
+        """
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        catalog = type("Catalog", (), {
+            "is_file": lambda _self: True,
+            "is_symlink": lambda _self: False,
+            "read_bytes": lambda _self: b"synthetic-catalog",
+        })()
+        work = type("Work", (), {"__truediv__": lambda _self, _path: catalog})()
+        base_context = {"kind": "base-context"}
+        trace_context = {"work": work}
+        sealed_integration = {"synthetic": "sealed-integration"}
+        executor = podman.DirectCommandRuntimeProductionExecutorV1(V3_DIR, "20260802")
+        executor._context = base_context
+        executor._segments = [
+            {"id": "build-advantage-play-kit-for-runtime", "logicalArgv": ["pnpm", "--filter", "@reading-advantage/advantage-play-kit", "build"]},
+            {"id": "generate-standard-pack-catalog", "logicalArgv": ["node", STANDARD_PACK_RUNTIME_ASSET]},
+        ]
+        executor._sealed_integration = sealed_integration
+        commands: list[dict[str, Any]] = []
+
+        def run(command_id: str, raw_id: str, logical: list[str], payload: list[str], **kwargs: Any) -> dict[str, Any]:
+            commands.append({
+                "id": command_id,
+                "rawId": raw_id,
+                "logicalArgv": logical,
+                "payloadArgv": payload,
+                "environment": kwargs.get("environment_overrides"),
+                "context": kwargs.get("context"),
+            })
+            return {"id": command_id, "exitCode": 0}
+
+        with patch.object(podman, "validate_direct_command_runtime_runner_integration_v1") as validate, \
+             patch.object(executor, "_derive_trace_execution_context", return_value=trace_context) as derive_trace, \
+             patch.object(executor, "_run", side_effect=run):
+            generation = executor.generate(base_context, sealed_integration)
+
+        validate.assert_called_once_with(sealed_integration)
+        derive_trace.assert_called_once_with(base_context, sealed_integration)
+        self.assertEqual(commands, [
+            {
+                "id": "clear-stale-standard-pack-catalog",
+                "rawId": "receipt-clear-stale-standard-pack-catalog",
+                "logicalArgv": ["rm", "-f", STANDARD_PACK_CATALOG],
+                "payloadArgv": ["/bin/rm", "-f", STANDARD_PACK_CATALOG],
+                "environment": None,
+                "context": trace_context,
+            },
+            {
+                "id": "generate-standard-pack-catalog",
+                "rawId": "receipt-generate-standard-pack-catalog",
+                "logicalArgv": ["node", STANDARD_PACK_RUNTIME_ASSET],
+                "payloadArgv": [podman.CONTAINER_NODE, STANDARD_PACK_RUNTIME_ASSET],
+                "environment": {"NODE_OPTIONS": podman.DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS},
+                "context": trace_context,
+            },
+        ])
+        self.assertEqual(generation["output"], {
+            "path": STANDARD_PACK_CATALOG,
+            "sha256": _sha256(b"synthetic-catalog"),
+            "size": len(b"synthetic-catalog"),
+        })
+        self.assertNotIn(STANDARD_PACK_GENERATOR, [command["logicalArgv"] for command in commands])
+
+    def test_scheduler_stops_after_first_executor_failure_without_later_stage_invocation(self) -> None:
+        """Requires a first executor-stage failure to preserve failure and skip every later stage.
+
+        @returns Nothing; this uses a failing in-memory executor and no production filesystem or container operation.
+        """
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        events: list[str] = []
+        case = self
+
+        class _FirstFailureExecutor:
+            def probe_capacity(self, _preparation: dict[str, Any]) -> dict[str, str]:
+                events.append("capacity")
+                return {"synthetic": "capacity"}
+
+            def build_archive(self, _preparation: dict[str, Any]) -> dict[str, Any]:
+                events.append("archive")
+                raise RuntimeError("synthetic-first-stage-failure")
+
+            def preserve_failure(self, error: BaseException) -> None:
+                case.assertIsInstance(error, RuntimeError)
+                events.append("preserve-failure")
+
+            def build_context(self, *_args: Any) -> None:
+                events.append("context")
+
+            def materialize(self, *_args: Any) -> None:
+                events.append("materialize")
+
+            def runtime_build(self, *_args: Any) -> None:
+                events.append("runtime-build")
+
+            def post_build_identity(self, *_args: Any) -> None:
+                events.append("post-build-identity")
+
+            def bind_finalization(self, *_args: Any) -> None:
+                events.append("bind-finalization")
+
+            def generate(self, *_args: Any) -> None:
+                events.append("generator")
+
+            def capture_trace(self, *_args: Any) -> None:
+                events.append("trace")
+
+        with self.assertRaisesRegex(RuntimeError, "synthetic-first-stage-failure"):
+            podman.execute_direct_command_runtime_prepared_transaction_v1({}, _FirstFailureExecutor())
+        self.assertEqual(events, ["capacity", "archive", "preserve-failure"])
+
+    def test_post_build_identity_requires_resolved_mode_and_same_attempt_receipt(self) -> None:
+        """Requires dist identity to bind resolved in-container metadata and its own staged receipt.
+
+        @returns Nothing; this inspects generated runner and production-finalizer sources without executing them.
+        """
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        runner_source = inspect.getsource(podman._runner_scripts)
+        script_start = runner_source.index('"direct-runtime-dist-identity.mjs": r\'\'\'')
+        identity_script = runner_source[script_start:runner_source.index("'''", script_start + 40)]
+        for required in (
+            "fs.realpathSync.native",
+            "resolvedPath",
+            "mode",
+            "sha256",
+            "size",
+        ):
+            self.assertIn(required, identity_script, f"V3_DIRECT_RUNTIME_POST_BUILD_IDENTITY_FIELD_MISSING:{required}")
+
+        post_build_source = inspect.getsource(
+            podman.DirectCommandRuntimeProductionExecutorV1.post_build_identity,
+        )
+        self.assertNotIn("receipt=False", post_build_source, "V3_DIRECT_RUNTIME_POST_BUILD_IDENTITY_RECEIPT_DISABLED")
+        self.assertIn('"receipt"', post_build_source, "V3_DIRECT_RUNTIME_POST_BUILD_IDENTITY_RECEIPT_MISSING")
+        finalizer_source = inspect.getsource(
+            podman.finalize_direct_command_runtime_execution_inputs_v1,
+        )
+        self.assertIn(
+            'post_build_identity.get("receipt")',
+            finalizer_source,
+            "V3_DIRECT_RUNTIME_POST_BUILD_IDENTITY_RECEIPT_UNBOUND",
+        )
+
     def test_scoped_pnpm_payloads_make_store_dir_global_and_pin_the_build_db_blocker(self) -> None:
         """Requires scoped pnpm payloads to keep store selection out of package scripts.
 
