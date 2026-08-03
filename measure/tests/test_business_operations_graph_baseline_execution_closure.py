@@ -8281,6 +8281,225 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             self.assertFalse(private_directory.exists())
             self.assertFalse((attempts_root / "raw").exists())
 
+    def test_preseal_materialize_failure_evidence_reservation_cleanup_failure_does_not_mask_original_failure(self) -> None:
+        """Requires a reservation cleanup failure never to mask the rename and materialize failures.
+
+        @returns Nothing; real preservation uses temporary roots, one injected rename failure, and one injected reservation cleanup failure only.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        executor_type = getattr(podman, "DirectCommandRuntimeProductionExecutorV1", None)
+        build_preseal = getattr(podman, "_build_direct_runtime_preseal_attempt_v1", None)
+        real_validator = getattr(podman, "validate_failed_execution_attempt_v1", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(inspect.isclass(executor_type), "V3_DIRECT_RUNTIME_PRODUCTION_EXECUTOR_MISSING")
+        self.assertTrue(callable(build_preseal), "V3_DIRECT_RUNTIME_PRESEAL_BUILDER_MISSING")
+        self.assertTrue(callable(real_validator), "V3_PODMAN_FAILED_ATTEMPT_VALIDATOR_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+        self.assertTrue(podman.HISTORICAL_PODMAN_BLOCKER.is_file())
+        self.assertFalse(podman.HISTORICAL_PODMAN_BLOCKER.is_symlink())
+
+        preparation = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-input-preparation",
+            "packetMaterialization": {"sourcePacketSha256": "a" * 64, "entries": []},
+        }
+        preseal = build_preseal(preparation, bytes(range(32)), "materialize")
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            attempts_root = root / "attempts"
+            attempts_root.mkdir()
+            output = root / "candidate"
+            staged_raw = root / "staged-raw"
+            staged_raw.mkdir()
+            stdout = staged_raw / "receipt-materialize.stdout.txt"
+            stderr = staged_raw / "receipt-materialize.stderr.txt"
+            stdout_bytes = b"V3_TEST_PRESEAL_RESERVATION_CLEANUP_STDOUT_2E71C4\\n"
+            stderr_bytes = b"V3_TEST_PRESEAL_RESERVATION_CLEANUP_STDERR_9A3B52\\n"
+            stdout.write_bytes(stdout_bytes)
+            stderr.write_bytes(stderr_bytes)
+            logical_argv = ["node", "materialize-v3"]
+            payload_argv = [
+                podman.CONTAINER_NODE,
+                "/runner/materialize.mjs",
+                "/runner/archive.json",
+                "/runner/direct-runtime-source-packet.json",
+                "/work",
+            ]
+            staged_command = {
+                "id": "materialize",
+                "argv": logical_argv,
+                "cwd": ".",
+                "env": dict(podman.ENV),
+                "envAbsent": list(podman.ENV_ABSENT),
+                "network": False,
+                "exitCode": 1,
+                "actualExecutor": podman._container_executor(
+                    {"prefix": [podman.PODMAN, "run", "--rm", "--network", "none"]},
+                    logical_argv,
+                    payload_argv,
+                ),
+                "_rawId": "receipt-materialize",
+                "_stdoutPath": stdout,
+                "_stderrPath": stderr,
+                "_stdoutText": stdout_bytes.decode("utf-8"),
+                "_stderrText": stderr_bytes.decode("utf-8"),
+                "directRuntimePreparationSha256": preseal["preparationSha256"],
+                "directRuntimeAttempt": copy.deepcopy(preseal["attempt"]),
+            }
+            executor = executor_type(output, "20260802")
+            executor.started = True
+            executor._failure_reason = "materialize"
+            executor._direct_runtime_stage = "materialize"
+            executor._direct_runtime_preseal_attempt = copy.deepcopy(preseal)
+            executor._staged_commands = [staged_command]
+            materialize_error = error_type("V3_PODMAN_GATE_FAILED: materialize")
+            rename_error = OSError("V3_TEST_PRESEAL_FAILURE_EVIDENCE_RENAME")
+            cleanup_error = PermissionError("V3_TEST_PRESEAL_FAILURE_EVIDENCE_CLEANUP")
+            expected_attempt_name = f"{podman.ATTEMPT_PREFIX}-20260802-0001"
+            final_reservation = attempts_root / expected_attempt_name
+            validated_directories: list[Path] = []
+            validated_public_paths_absent: list[bool] = []
+            rename_calls: list[tuple[Path, Path]] = []
+            rmtree_calls: list[Path] = []
+            native_rmtree = shutil.rmtree
+
+            def validate_private_attempt(attempt: dict[str, Any], directory: Path | str) -> None:
+                """Validates and records one complete private pre-seal record.
+
+                @param attempt The fully finalized failed-attempt record.
+                @param directory The private canonical leaf offered to the validator.
+                @returns Nothing after the real validator accepts the staged record.
+                """
+                private_directory = Path(directory)
+                real_validator(attempt, private_directory)
+                validated_directories.append(private_directory)
+                validated_public_paths_absent.append(
+                    not (attempts_root / private_directory.name).exists(),
+                )
+                self.assertEqual(private_directory.name, expected_attempt_name)
+                self.assertNotEqual(private_directory.parent, attempts_root)
+                self.assertEqual(
+                    attempt["attempt"],
+                    {"id": expected_attempt_name, "sequence": 1, "namingRule": podman.ATTEMPT_NAMING_RULE},
+                )
+                self.assertEqual(attempt["directRuntimePreSealAttempt"], preseal)
+                self.assertNotIn("directRuntimeIntegration", attempt)
+                self.assertEqual(len(attempt["commands"]), 1)
+                for stream in ("stdout", "stderr"):
+                    self.assertEqual(
+                        attempt["commands"][0][stream]["path"],
+                        f"{expected_attempt_name}/raw/receipt-materialize.{stream}.txt",
+                    )
+
+            def fail_rename(source: Path | str, destination: Path | str) -> None:
+                """Records the sole public publish attempt and injects its causal failure.
+
+                @param source The private canonical leaf selected for publication.
+                @param destination The publisher-owned empty public reservation.
+                @returns Nothing because this deterministic rename fault always raises.
+                """
+                private_directory = Path(source)
+                final_directory = Path(destination)
+                rename_calls.append((private_directory, final_directory))
+                self.assertEqual(private_directory, validated_directories[0])
+                self.assertEqual(final_directory, final_reservation)
+                self.assertTrue(final_directory.is_dir())
+                self.assertFalse(final_directory.is_symlink())
+                self.assertEqual(list(final_directory.iterdir()), [])
+                raise rename_error
+
+            def fail_reservation_cleanup(path: str | Path, *args: Any, **kwargs: Any) -> None:
+                """Removes the reservation then reports the reservation cleanup as a deterministic fault.
+
+                @param path The cleanup target requested by the real publisher.
+                @param args Any positional options forwarded by the real caller.
+                @param kwargs Any keyword options forwarded by the real caller.
+                @returns Nothing because the recorded reservation cleanup always raises after removal.
+                """
+                cleanup_path = Path(path)
+                rmtree_calls.append(cleanup_path)
+                native_rmtree(cleanup_path, *args, **kwargs)
+                if cleanup_path == final_reservation:
+                    raise cleanup_error
+
+            with patch.object(
+                podman,
+                "validate_failed_execution_attempt_v1",
+                side_effect=validate_private_attempt,
+            ), patch.object(
+                podman.os,
+                "rename",
+                side_effect=fail_rename,
+            ), patch.object(
+                podman.os,
+                "replace",
+                side_effect=AssertionError("V3_PRESEAL_RESERVATION_CLEANUP_REPLACE_CALLED"),
+            ), patch.object(
+                podman,
+                "_publish_candidate_publication_failure_attempt",
+                side_effect=AssertionError("V3_PRESEAL_RESERVATION_CLEANUP_CANDIDATE_PUBLISHER_CALLED"),
+            ), patch.object(
+                podman,
+                "_publish_blocker",
+                side_effect=AssertionError("V3_PRESEAL_RESERVATION_CLEANUP_GENERIC_BLOCKER_CALLED"),
+            ), patch.object(
+                podman,
+                "_run_container",
+                side_effect=AssertionError("V3_PRESEAL_RESERVATION_CLEANUP_PODMAN_CALLED"),
+            ), patch.object(
+                podman,
+                "capture_direct_command_runtime_in_container_trace_v1",
+                side_effect=AssertionError("V3_PRESEAL_RESERVATION_CLEANUP_TRACE_CALLED"),
+            ), patch.object(
+                executor,
+                "runtime_build",
+                side_effect=AssertionError("V3_PRESEAL_RESERVATION_CLEANUP_LATER_STAGE_CALLED"),
+            ), patch.object(
+                executor,
+                "generate",
+                side_effect=AssertionError("V3_PRESEAL_RESERVATION_CLEANUP_LATER_STAGE_CALLED"),
+            ), patch.object(
+                podman.shutil,
+                "rmtree",
+                side_effect=fail_reservation_cleanup,
+            ), patch.object(podman, "TRACK_DIR", attempts_root):
+                with self.assertRaisesRegex(
+                    podman.CandidateExecutionBlocked,
+                    r"^V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED: materialize: V3_TEST_PRESEAL_FAILURE_EVIDENCE_RENAME$",
+                ) as raised:
+                    executor.preserve_failure(materialize_error)
+
+            self.assertIs(raised.exception.__cause__, rename_error)
+            self.assertIs(rename_error.__cause__, materialize_error)
+            self.assertNotIsInstance(raised.exception, PermissionError)
+            self.assertIsNot(raised.exception.__cause__, cleanup_error)
+            self.assertNotIn(
+                cleanup_error,
+                [
+                    raised.exception,
+                    raised.exception.__cause__,
+                    raised.exception.__cause__.__cause__,
+                ],
+            )
+            self.assertEqual(len(validated_directories), 1)
+            self.assertEqual(validated_public_paths_absent, [True])
+            self.assertEqual(
+                rename_calls,
+                [(validated_directories[0], final_reservation)],
+            )
+            self.assertEqual(len(rmtree_calls), 2)
+            self.assertEqual(rmtree_calls[0], final_reservation)
+            self.assertEqual(rmtree_calls[1], validated_directories[0].parent)
+            self.assertTrue(rmtree_calls[1].name.startswith(".failed-attempt-"))
+            self.assertFalse(final_reservation.exists())
+            self.assertFalse(rmtree_calls[1].exists())
+            self.assertFalse(output.exists())
+            self.assertFalse(V3_DIR.exists())
+            self.assertFalse(validated_directories[0].exists())
+            self.assertFalse((attempts_root / "raw").exists())
+            self.assertEqual(sorted(path.name for path in attempts_root.iterdir()), [])
 
 
 if __name__ == "__main__":
