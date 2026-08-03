@@ -8501,6 +8501,264 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             self.assertFalse((attempts_root / "raw").exists())
             self.assertEqual(sorted(path.name for path in attempts_root.iterdir()), [])
 
+    def test_candidate_failure_evidence_reservation_cleanup_failure_does_not_mask_original_failure(self) -> None:
+        """Requires a reservation cleanup failure never to mask the candidate rename failure.
+
+        @returns Nothing; real preservation stages privately, validates with the real validator, and injects one rename failure plus one reservation cleanup failure only.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        executor_type = getattr(podman, "DirectCommandRuntimeProductionExecutorV1", None)
+        build_integration = getattr(podman, "build_direct_command_runtime_runner_integration_v1", None)
+        validate_integration = getattr(podman, "validate_direct_command_runtime_runner_integration_v1", None)
+        build_failure = getattr(podman, "_build_candidate_publication_failure_v1", None)
+        real_validator = getattr(podman, "validate_failed_execution_attempt_v1", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(inspect.isclass(executor_type), "V3_DIRECT_RUNTIME_PRODUCTION_EXECUTOR_MISSING")
+        self.assertTrue(callable(build_integration), "V3_DIRECT_RUNTIME_INTEGRATION_BUILDER_MISSING")
+        self.assertTrue(callable(validate_integration), "V3_DIRECT_RUNTIME_INTEGRATION_VALIDATOR_MISSING")
+        self.assertTrue(callable(build_failure), "V3_CANDIDATE_FAILURE_BUILDER_MISSING")
+        self.assertTrue(callable(real_validator), "V3_PODMAN_FAILED_ATTEMPT_VALIDATOR_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+
+        def identity(path: str, content: bytes) -> dict[str, Any]:
+            """Builds one baseline-Git identity for the trace-complete fixture.
+
+            @param path The fixture's workspace-relative path.
+            @param content The immutable fixture bytes.
+            @returns One hash-bound runtime baseline-read identity.
+            """
+            blob = b"blob " + str(len(content)).encode("ascii") + b"\0" + content
+            return {
+                "path": path,
+                "sha256": _sha256(content),
+                "size": len(content),
+                "mode": "100644",
+                "origin": "BASELINE_GIT_BLOB",
+                "baselineCommit": "a" * 40,
+                "gitBlobSha1": hashlib.sha1(blob).hexdigest(),
+                "inclusion": "MATERIALIZE_EXACT_BASELINE_BYTES",
+            }
+
+        package_root = "packages/fixture-candidate-evidence-reservation-cleanup"
+        generator_bytes, source_bytes = b"export {};\n", b"candidate-reservation-cleanup\n"
+        generator = identity(f"{package_root}/scripts/generate-runtime.mjs", generator_bytes)
+        source = identity(f"{package_root}/assets/standard/input.txt", source_bytes)
+        baseline_reads = sorted([generator, source], key=lambda item: item["path"])
+        output_path = f"{package_root}/assets/standard/standard-pack-release.json"
+        derived = {
+            "path": f"{package_root}/dist/assets/index.js", "sha256": "b" * 64, "size": 1,
+            "origin": "DERIVED_BUILD_OUTPUT",
+            "producer": {
+                "kind": "PACKAGE_SCRIPT_PREREQUISITE_BUILD", "scriptName": "fixture-build",
+                "scriptSegment": "pnpm build",
+                "receipt": {"path": "fixture-build-receipt.json", "sha256": "c" * 64, "size": 1},
+            },
+        }
+        budget = {
+            "schemaVersion": 1, "kind": "direct-command-runtime-asset-resource-budget",
+            "frozenArchive": _reference(V2_ARCHIVE),
+            "sourceCeiling": {
+                "path": f"{package_root}/assets/standard", "regularFiles": 2,
+                "apparentBytes": len(generator_bytes) + len(source_bytes),
+                "allocatedBytes": len(generator_bytes) + len(source_bytes),
+            },
+            "reservations": {
+                "baselineGitMaterializationBytes": 1, "candidateCowBytes": 1,
+                "archiveSupplementBytes": 1, "derivedOutputBytes": 1,
+                "metadataBytes": 1, "minimumHeadroomBytes": 1,
+            },
+            "requiredAvailableBytes": 6, "availableBytes": 6, "decision": "PASS",
+        }
+        read_set = {
+            "schemaVersion": 1, "kind": "direct-command-runtime-read-set",
+            "trigger": {
+                "logicalArgv": ["pnpm", "--filter", "@fixture/candidate-reservation-cleanup", "fixture-build"],
+                "package": "@fixture/candidate-reservation-cleanup",
+                "manifest": {"path": f"{package_root}/package.json", "sha256": "d" * 64, "size": 1},
+            },
+            "baselineReadSet": baseline_reads, "derivedBuildReadSet": [derived], "outputPaths": [output_path],
+            "preflightQuota": {
+                "maxEntries": len(baseline_reads), "maxBytes": sum(item["size"] for item in baseline_reads),
+                "observedEntries": len(baseline_reads), "observedBytes": sum(item["size"] for item in baseline_reads),
+            },
+            "resourceBudget": budget,
+            "discovery": {
+                "kind": "BASELINE_GIT_INSTRUMENTED_TRACE", "script": generator,
+                "root": f"{package_root}/assets/standard", "directoryListingCount": 1,
+            },
+        }
+        packet = {
+            "schemaVersion": 1, "kind": "direct-command-runtime-baseline-git-source-packet",
+            "source": "GIT_OBJECT_DATABASE_ONLY", "baselineCommit": "a" * 40,
+            "tree": {"gitTreeSha1": "e" * 40}, "baselineReadSet": baseline_reads,
+            "objects": [
+                {**source, "contentBase64": base64.b64encode(source_bytes).decode("ascii")},
+                {**generator, "contentBase64": base64.b64encode(generator_bytes).decode("ascii")},
+            ],
+        }
+        packet["packetSha256"] = podman._direct_runtime_packet_digest_v1(packet)
+        integration = build_integration(
+            read_set, packet,
+            {
+                "id": "direct-runtime-detached-runner-v1", "nonceSha256": "f" * 64,
+                "reachedStage": "direct-runtime-trace",
+                "executionTrace": {
+                    "baselineReads": baseline_reads, "derivedBuildReads": [derived],
+                    "writes": [{"path": output_path, "kind": "DERIVED_OUTPUT"}],
+                },
+            },
+            budget,
+        )
+        validate_integration(integration)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            attempts_root = root / "attempts"
+            attempts_root.mkdir()
+            output = root / "published-candidate"
+            executor = executor_type(output, "20260802")
+            executor.started = True
+            executor._failure_reason = "candidate-publication"
+            executor._direct_runtime_stage = "direct-runtime-trace"
+            executor._sealed_integration = copy.deepcopy(integration)
+            executor._candidate_publication_failure = build_failure(integration, "atomic-replace")
+            candidate_error = OSError("V3_TEST_CANDIDATE_FAILURE_EVIDENCE_OPERATION")
+            rename_error = OSError("V3_TEST_CANDIDATE_FAILURE_EVIDENCE_RENAME")
+            cleanup_error = PermissionError("V3_TEST_CANDIDATE_FAILURE_EVIDENCE_CLEANUP")
+            expected_attempt_name = f"{podman.ATTEMPT_PREFIX}-20260802-0001"
+            final_reservation = attempts_root / expected_attempt_name
+            validated_directories: list[Path] = []
+            validated_public_paths_absent: list[bool] = []
+            rename_calls: list[tuple[Path, Path]] = []
+            rmtree_calls: list[Path] = []
+            native_rmtree = shutil.rmtree
+
+            def validate_private_attempt(attempt: dict[str, Any], directory: Path | str) -> None:
+                """Validates and records one complete private candidate-operation record.
+
+                @param attempt The fully finalized failed-attempt record.
+                @param directory The private canonical leaf offered to the validator.
+                @returns Nothing after the real validator accepts the staged record.
+                """
+                private_directory = Path(directory)
+                real_validator(attempt, private_directory)
+                validated_directories.append(private_directory)
+                validated_public_paths_absent.append(
+                    not (attempts_root / private_directory.name).exists(),
+                )
+                self.assertEqual(private_directory.name, expected_attempt_name)
+                self.assertNotEqual(private_directory.parent, attempts_root)
+                self.assertTrue(private_directory.parent.name.startswith(".candidate-publication-failure-"))
+                self.assertEqual(
+                    attempt["attempt"],
+                    {"id": expected_attempt_name, "sequence": 1, "namingRule": podman.ATTEMPT_NAMING_RULE},
+                )
+                self.assertEqual(attempt["commands"], [])
+                self.assertEqual(attempt["candidatePublicationFailure"]["operationId"], "atomic-replace")
+                self.assertNotIn("directRuntimePreSealAttempt", attempt)
+
+            def fail_rename(source: Path | str, destination: Path | str) -> None:
+                """Records the sole public publish attempt and injects its causal failure.
+
+                @param source The private canonical leaf selected for publication.
+                @param destination The publisher-owned empty public reservation.
+                @returns Nothing because this deterministic rename fault always raises.
+                """
+                private_directory = Path(source)
+                final_path = Path(destination)
+                rename_calls.append((private_directory, final_path))
+                self.assertEqual(private_directory, validated_directories[0])
+                self.assertEqual(final_path, final_reservation)
+                self.assertTrue(final_path.is_dir())
+                self.assertFalse(final_path.is_symlink())
+                self.assertEqual(list(final_path.iterdir()), [])
+                raise rename_error
+
+            def fail_reservation_cleanup(path: str | Path, *args: Any, **kwargs: Any) -> None:
+                """Removes the reservation then reports only that cleanup as a deterministic fault.
+
+                @param path The cleanup target requested by the real publisher.
+                @param args Any positional options forwarded by the real caller.
+                @param kwargs Any keyword options forwarded by the real caller.
+                @returns Nothing because the recorded reservation cleanup always raises after removal.
+                """
+                cleanup_path = Path(path)
+                rmtree_calls.append(cleanup_path)
+                native_rmtree(cleanup_path, *args, **kwargs)
+                if cleanup_path == final_reservation:
+                    raise cleanup_error
+
+            with patch.object(
+                podman,
+                "validate_failed_execution_attempt_v1",
+                side_effect=validate_private_attempt,
+            ), patch.object(
+                podman.os,
+                "rename",
+                side_effect=fail_rename,
+            ), patch.object(
+                podman.os,
+                "replace",
+                side_effect=AssertionError("V3_CANDIDATE_FAILURE_EVIDENCE_REPLACE_CALLED"),
+            ), patch.object(
+                podman,
+                "_publish_blocker",
+                side_effect=AssertionError("V3_CANDIDATE_FAILURE_EVIDENCE_GENERIC_BLOCKER_CALLED"),
+            ), patch.object(
+                podman,
+                "_run_container",
+                side_effect=AssertionError("V3_CANDIDATE_FAILURE_EVIDENCE_PODMAN_CALLED"),
+            ), patch.object(
+                podman,
+                "capture_direct_command_runtime_in_container_trace_v1",
+                side_effect=AssertionError("V3_CANDIDATE_FAILURE_EVIDENCE_TRACE_CALLED"),
+            ), patch.object(
+                executor,
+                "runtime_build",
+                side_effect=AssertionError("V3_CANDIDATE_FAILURE_EVIDENCE_LATER_STAGE_CALLED"),
+            ), patch.object(
+                executor,
+                "generate",
+                side_effect=AssertionError("V3_CANDIDATE_FAILURE_EVIDENCE_LATER_STAGE_CALLED"),
+            ), patch.object(
+                podman.shutil,
+                "rmtree",
+                side_effect=fail_reservation_cleanup,
+            ), patch.object(podman, "TRACK_DIR", attempts_root):
+                with self.assertRaisesRegex(
+                    podman.CandidateExecutionBlocked,
+                    r"^V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED: candidate-publication: V3_TEST_CANDIDATE_FAILURE_EVIDENCE_RENAME$",
+                ) as raised:
+                    executor.preserve_failure(candidate_error)
+
+            self.assertIs(raised.exception.__cause__, rename_error)
+            self.assertNotIsInstance(raised.exception, PermissionError)
+            self.assertIsNot(raised.exception.__cause__, cleanup_error)
+            self.assertNotIn(
+                cleanup_error,
+                [
+                    raised.exception,
+                    raised.exception.__cause__,
+                    raised.exception.__cause__.__cause__,
+                ],
+            )
+            self.assertEqual(len(validated_directories), 1)
+            self.assertEqual(validated_public_paths_absent, [True])
+            private_directory = validated_directories[0]
+            self.assertEqual(
+                rename_calls,
+                [(private_directory, final_reservation)],
+            )
+            self.assertEqual(len(rmtree_calls), 1)
+            self.assertEqual(rmtree_calls[0], final_reservation)
+            self.assertFalse(final_reservation.exists())
+            self.assertFalse(private_directory.exists())
+            self.assertFalse(private_directory.parent.exists())
+            self.assertFalse(output.exists())
+            self.assertFalse(V3_DIR.exists())
+            self.assertEqual(sorted(path.name for path in attempts_root.iterdir()), [])
+
 
 if __name__ == "__main__":
     unittest.main()
