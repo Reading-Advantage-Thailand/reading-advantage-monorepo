@@ -36,42 +36,43 @@ _Story ref: spec.md#story-s2_
     - [x] Assert `packages/auth/src/roles.ts` is untouched by this track
 - [ ] Task: Measure - User Manual Verification 'Phase S2: Define the WORKBOOK_ADMIN application role' (Protocol in workflow.md)
 
-## Phase S3: Gate the workbooks app with Company SSO
+## Phase S3: Gate the workbooks app with Company SSO [checkpoint: 772a618]
 _Story ref: spec.md#story-s3_
 
-- [ ] Task: Add the auth dependency
-    - [ ] Add `"@reading-advantage/auth": "workspace:*"` to `apps/workbooks/package.json` dependencies
-    - [ ] Add `@reading-advantage/auth` to `transpilePackages` in `apps/workbooks/next.config.ts`
-- [ ] Task: Create the OIDC adapter
-    - [ ] Create `apps/workbooks/app/lib/company-oidc.ts` mirroring `apps/marketing/app/lib/company-oidc.ts`, exporting `WORKBOOKS_SESSION_COOKIE = "__Host-ra_workbooks_session"`, `WORKBOOKS_TRANSACTION_COOKIE = "__Host-ra_workbooks_oidc_tx"`, `getWorkbooksPublicOrigin()`, `getWorkbooksOidcClient()`, `readWorkbooksCookie()`, `workbooksSessionUser()`
-- [ ] Task: Write Red tests for the handshake
-    - [ ] Test `resolveWorkbookRole` returns null without `WORKBOOK_ADMIN`
-    - [ ] Test `workbooksSessionUser` returns null for a non-workbook identity
-    - [ ] Test the callback route redirects to the error path when `code`, `state`, or the transaction cookie is absent
-- [ ] Task: Implement the SSO routes
-    - [ ] Create `apps/workbooks/app/api/auth/company/start/route.ts`
-    - [ ] Create `apps/workbooks/app/api/auth/callback/route.ts`
-    - [ ] Create `apps/workbooks/app/api/auth/logout/route.ts`
-- [ ] Task: Authorize the server actions and the editions route
-    - [ ] Derive `tenantId` and the actor from the verified session inside `publishDraftAction` and `createDraftAction`; remove them as caller-supplied arguments
-    - [ ] Reject with a structured failure when the session is absent or `resolveWorkbookRole` returns null
-    - [ ] Require a session in `GET /api/editions` and derive `tenantId` from it rather than the query string
-- [ ] Task: Add the deny-by-default route gate
-    - [ ] Create `apps/workbooks/proxy.ts` exporting `proxy(request)` and a `config.matcher`, redirecting any non-handshake path without a session cookie to `/api/auth/company/start?returnTo=…`
+- [x] Task: Add the auth dependency 772a618
+    - [x] Add `"@reading-advantage/auth": "workspace:*"` to `apps/workbooks/package.json` dependencies
+    - [x] Add `@reading-advantage/auth` to `transpilePackages` in `apps/workbooks/next.config.ts`
+- [x] Task: Create the OIDC adapter 772a618
+    - [x] Create `apps/workbooks/app/lib/company-oidc.ts` mirroring `apps/marketing/app/lib/company-oidc.ts`, exporting `WORKBOOKS_SESSION_COOKIE = "__Host-ra_workbooks_session"`, `WORKBOOKS_TRANSACTION_COOKIE = "__Host-ra_workbooks_oidc_tx"`, `getWorkbooksPublicOrigin()`, `getWorkbooksOidcClient()`, `readWorkbooksCookie()`, `workbooksSessionUser()`
+- [x] Task: Write Red tests for the handshake 772a618
+    - [x] Test `resolveWorkbookRole` returns null without `WORKBOOK_ADMIN`
+    - [x] Test `workbooksSessionUser` returns null for a non-workbook identity
+    - [x] Test the callback route redirects to the error path when `code`, `state`, or the transaction cookie is absent
+- [x] Task: Implement the SSO routes 772a618
+    - [x] Create `apps/workbooks/app/api/auth/company/start/route.ts`
+    - [x] Create `apps/workbooks/app/api/auth/callback/route.ts`
+    - [x] Create `apps/workbooks/app/api/auth/logout/route.ts`
+- [x] Task: Authorize the server actions and the editions route 772a618
+    - [x] Derive `tenantId` and the actor from the verified session inside `publishDraftAction` and `createDraftAction`; remove them as caller-supplied arguments
+    - [x] Reject with a structured failure when the session is absent or `resolveWorkbookRole` returns null
+    - [x] Require a session in `GET /api/editions` and derive `tenantId` from it rather than the query string
+- [x] Task: Add the deny-by-default route gate 772a618
+    - [x] Create `apps/workbooks/proxy.ts` exporting `proxy(request)` and a `config.matcher`, redirecting any non-handshake path without a session cookie to `/api/auth/company/start?returnTo=…` (9/9 proxy tests; mutation-tested)
 - [ ] Task: Measure - User Manual Verification 'Phase S3: Gate the workbooks app with Company SSO' (Protocol in workflow.md)
 
-## Phase S4: Make apps/workbooks deployable to Cloud Run
+## Phase S4: Make apps/workbooks deployable to Cloud Run [checkpoint: 2df5248]
 _Story ref: spec.md#story-s4_
 
-- [ ] Task: Create the container build
-    - [ ] Create `apps/workbooks/Dockerfile` for the existing `output: "standalone"` build, honoring Cloud Run's `PORT`
-    - [ ] Create `apps/workbooks/.dockerignore`
-- [ ] Task: Create the deploy pipeline
-    - [ ] Create `apps/workbooks/cloudbuild.yaml` with build, push, and `gcloud run deploy` steps
-    - [ ] Pass `COMPANY_AUTH_ISSUER_URL`, `COMPANY_AUTH_OIDC_CLIENT_ID=workbooks-web`, `COMPANY_AUTH_OIDC_REDIRECT_URI`, `COMPANY_AUTH_EXPECTED_AUDIENCE=workbooks`, `COMPANY_AUTH_CLOCK_SKEW_SECONDS=30` via `--set-env-vars`
-    - [ ] Pass `COMPANY_AUTH_OIDC_CLIENT_SECRET=WORKBOOKS_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest` and `DATABASE_URL` via `--set-secrets`
-    - [ ] Pass no secret as `--build-arg`
-- [ ] Task: Verify the quality gate
-    - [ ] `pnpm --filter workbooks check-types`, `lint`, `test`, `build`
-    - [ ] Confirm `packages/auth` and `packages/db` are unmodified by this track
+- [x] Task: Create the container build 2df5248
+    - [x] Create `apps/workbooks/Dockerfile` for the existing `output: "standalone"` build, honoring Cloud Run's `PORT`
+    - [x] Create `apps/workbooks/.dockerignore`
+- [x] Task: Create the deploy pipeline 2df5248
+    - [x] Create `apps/workbooks/cloudbuild.yaml` with build, push, and `gcloud run deploy` steps
+    - [x] Pass `COMPANY_AUTH_ISSUER_URL`, `COMPANY_AUTH_OIDC_CLIENT_ID=workbooks-web`, `COMPANY_AUTH_OIDC_REDIRECT_URI`, `COMPANY_AUTH_EXPECTED_AUDIENCE=workbooks`, `COMPANY_AUTH_CLOCK_SKEW_SECONDS=30` via `--set-env-vars`
+    - [x] Pass `COMPANY_AUTH_OIDC_CLIENT_SECRET=WORKBOOKS_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest` and `DATABASE_URL` (as `WORKBOOKS_DATABASE_URL:latest`, sibling convention) via `--set-secrets`
+    - [x] Pass no secret as `--build-arg`
+- [x] Task: Verify the quality gate 2df5248
+    - [x] `pnpm --filter workbooks check-types`, `lint`, `test`, `build` — all pass (9/9 tests)
+    - [x] Confirm `packages/auth` and `packages/db` are unmodified by this track
+    - [x] Functional runner boot: `/` returns 307 → `/api/auth/company/start?returnTo=%2F` (deny-by-default verified)
 - [ ] Task: Measure - User Manual Verification 'Phase S4: Make apps/workbooks deployable to Cloud Run' (Protocol in workflow.md)
