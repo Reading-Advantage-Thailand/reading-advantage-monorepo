@@ -579,6 +579,8 @@
   acceptance, or Podman/candidate/Finance/marker/registry/successor/V2/history
   action. Phase R1 v3 remains `[~]`.
 
+  Frozen-evidence drift disclosure (2026-08-03): the eight R1 v2 snapshot files under `r1-task2-source-and-graph-v2-20260801/` were path-rewritten in the working tree by an external process after the `apk_legacy_defense_cutover_20260727` track archival. The accepted bytes at `772839f` were restored with `git checkout`; the directory is frozen and automation/agents must treat all committed evidence in this track as read-only. Disclosure: `r1-v2-frozen-snapshot-drift-disclosure-20260803.md`.
+
 ## Phase R2: Close or compensate graph coverage gaps
 
 - [x] Task: Execute and record the documented clean-audit/configuration attempt, including `repo-graph config`, scan options, raw audit JSON, stdout/stderr, and exits; select the clean branch only for audit exit `0` with empty unaudited and integrity sets. The v2 candidate binds `r2-clean-audit-attempt-v2-20260801/attempt.json` to the fresh R1 bundle and graph binding; it retained the raw exit and selected the `COMPENSATION_REQUIRED` non-clean branch when unaudited symbols remained. Bounded technical acceptance is recorded by Terra and Sol in the v2 review receipts; commit `772839f` binds the evidence. This is not R2 phase acceptance or an unblock. (deferred:phase-r1-bound-graph)
