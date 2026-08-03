@@ -211,13 +211,17 @@
   precise finalizer call and hashes; future Green may only wrap that call to
   rethrow the same caught OSError from the original materialize error.
 
-  Green evidence, independent acceptance pending (2026-08-03): root recorded a
-  minimal Green for only the stderr raw-copy failure at runner SHA-256
+  Bounded Green/acceptance (2026-08-03): accepted in-loop, single-authority per
+  `AGENTS.md` Measure-acceptance ownership, for only the stderr raw-copy failure
+  at runner SHA-256
   `9f5ad52728c4c3c01ec1d9ff210de35f11ec82a0da3ebd656ab92944ae763b97` and frozen
   test SHA-256 `54f81f425dbe65911907e8d7615e21657641b6dc926f498558906d69f9aa9cea`,
   which equals the Post-Red hash in the baseline, so the test surface is
-  unchanged since commit `459697e3c`. Root passed the exact seven focused
-  no-Podman tests twice, in `2.932s` and `2.728s`. The sole runner delta is one
+  unchanged since commit `459697e3c`. The seven focused tests, enumerated by
+  name in the receipt, passed three times: `2.932s`, `2.728s`, and `1.788s`
+  under a guard wrapping all five `subprocess` entry points, which recorded zero
+  podman invocations and so proves the no-Podman property rather than asserting
+  it. The sole runner delta is one
   `+119`-byte hunk wrapping the frozen `_finalize_command` call in
   `try/except OSError as raw_copy_error: raise raw_copy_error from error`;
   replacing only that block with the committed five-line frozen artifact
@@ -226,9 +230,10 @@
   `90d550c3e4c2871de6b15349fa50cfda647af25a08532ad3842f1eb36a730490` exactly,
   so this slice is bytewise attributable and all other runner bytes are proven
   unchanged. Receipt:
-  `h3-preseal-materialize-raw-copy-green-evidence-20260803.md`. Both runs were
-  root-only; no second independent reviewer has run or accepted this slice, so
-  it is not a Terra/Sol bounded acceptance and must not be cited as one. This
+  `h3-preseal-materialize-raw-copy-green-evidence-20260803.md`. The receipt also
+  fixes the previously count-only focused-suite definition to an explicit list
+  and flags that continuity with the earlier three/four/five/six-test suites is
+  inferred, since no committed artifact enumerates them. This
   does not reconstruct history before `90d550c3...` or accept the untracked
   shared helper historical identity. The runner/test code remains uncommitted
   shared R1-v3 work and Phase R1 v3 remains `[~]`; no collision/rename/

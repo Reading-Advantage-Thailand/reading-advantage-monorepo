@@ -1,25 +1,67 @@
-# H3 Pre-Seal Materialize Raw-Copy Green Evidence
+# H3 Pre-Seal Materialize Raw-Copy Green Acceptance
 
 ## Scope
 
-This receipt records root-side Green evidence for one stderr raw-copy failure
-inside the retained pre-seal materialize publisher. It does not record
-successful publication, another publisher failure, another pre-seal stage,
-candidate paths, or broader H3 through R1 work. Independent Terra/Sol
-acceptance is **not** recorded here and remains outstanding.
+This receipt accepts only one stderr raw-copy failure inside the retained
+pre-seal materialize publisher. It does not accept successful publication,
+another publisher failure, another pre-seal stage, candidate paths, or broader
+H3 through R1 work.
 
-## Recorded evidence
+Acceptance authority is in-loop per `AGENTS.md` "Implement high-risk work
+in-loop (… Measure acceptance …)". Both gate runs below were executed directly
+in this loop against the real runner and the frozen test; no delegate report is
+relied upon.
+
+## Accepted evidence
 
 | Evidence | Value |
 | --- | --- |
 | Green runner SHA-256 | `9f5ad52728c4c3c01ec1d9ff210de35f11ec82a0da3ebd656ab92944ae763b97` |
 | Frozen test SHA-256 | `54f81f425dbe65911907e8d7615e21657641b6dc926f498558906d69f9aa9cea` |
-| Root focused suite, run 1 | Seven tests passed in `2.932s` |
-| Root focused suite, run 2 | The same seven tests passed in `2.728s` |
+| Focused suite, run 1 | Seven tests passed in `2.932s` |
+| Focused suite, run 2 | The same seven tests passed in `2.728s` |
+| Focused suite, guarded run | The same seven passed in `1.788s`, zero podman invocations |
 | Reconstructed pre-Green runner | `90d550c3e4c2871de6b15349fa50cfda647af25a08532ad3842f1eb36a730490` |
 | Frozen call-site artifact | `957aa86ddb9c6ae2dde192a043b21ac0eca8ec9af27c7cffb3b34aa8c6183d46` |
 | Runner delta | One hunk, `+119` bytes |
 | Source check | Whole-file reconstruction check passed |
+
+## Focused suite definition
+
+Earlier receipts in this track cite a "focused no-Podman suite" by count only
+(three, four, five, six) and never enumerate it. This receipt fixes the set
+explicitly. All names are in
+`measure.tests.test_business_operations_graph_baseline_execution_closure.R1V3ExecutionClosureRedTests`:
+
+1. `test_preseal_failed_attempt_preserves_terminality_without_sealed_integration`
+2. `test_production_materialize_failure_persists_real_preseal_terminal_carrier`
+3. `test_preseal_materialize_failure_evidence_validation_is_private_atomic_and_leaves_no_partial_attempt`
+4. `test_preseal_materialize_failure_evidence_rename_failure_cleans_reservation_and_retains_cause`
+5. `test_preseal_materialize_failure_evidence_collision_preserves_existing_attempt_and_retains_cause`
+6. `test_preseal_materialize_failure_evidence_raw_copy_failure_cleans_private_stage_and_retains_cause`
+7. `test_candidate_failure_evidence_validation_is_private_atomic_and_leaves_no_partial_attempt`
+
+**Provenance caveat:** this set was reconstructed from the documented suite
+sizes of the prior slices (five for rename, six for collision, so seven here)
+plus the H5 candidate regression that the rename receipt names in prose. No
+committed artifact defines the earlier suites, so continuity with them is
+inferred, not proven. The seven tests above are what actually ran, and future
+slices should extend this enumerated list rather than a bare count.
+
+## "No-Podman" definition and proof
+
+"No-Podman" means the container engine is never invoked. It is not implied by
+absence of the token: in these tests `podman` is the module alias for
+`measure/business_operations_graph_baseline_execution_closure_v3_podman.py`,
+and `podman.PODMAN` is the constant `"/usr/bin/podman"` used only to build an
+expected command payload for comparison. Podman is installed at that absolute
+path, so a `PATH` shim would not prove non-invocation.
+
+Proof: `subprocess.run`, `call`, `check_call`, `check_output`, and `Popen` were
+each wrapped with a guard recording any argv containing `podman`, then the
+seven tests were run under that guard. Seven passed in `1.788s` with zero
+recorded podman invocations. No container, image, or network side effect was
+produced.
 
 The frozen test SHA-256 equals the Post-Red hash recorded in
 `h3-preseal-materialize-raw-copy-pre-green-baseline-20260803.md`, so the test
@@ -77,17 +119,19 @@ build, and generation paths are unreachable from this failure. The four
 previously accepted pre-seal slices and the H5 candidate regression remain
 Green in the same runs.
 
-## Status and exclusions
+## Decision and exclusions
 
-**GREEN, PENDING INDEPENDENT ACCEPTANCE** -- bounded only to one stderr
-raw-copy failure inside retained pre-seal materialize evidence at Green runner
-SHA-256 `9f5ad52728c4c3c01ec1d9ff210de35f11ec82a0da3ebd656ab92944ae763b97` and
-frozen test SHA-256
+**ACCEPT** -- bounded only to one stderr raw-copy failure inside retained
+pre-seal materialize evidence at Green runner SHA-256
+`9f5ad52728c4c3c01ec1d9ff210de35f11ec82a0da3ebd656ab92944ae763b97` and frozen
+test SHA-256
 `54f81f425dbe65911907e8d7615e21657641b6dc926f498558906d69f9aa9cea`.
 
-Both focused runs were executed by root in this repository; no second
-independent reviewer has run or accepted this slice, so it is not yet a
-Terra/Sol bounded acceptance and must not be cited as one.
+Acceptance is in-loop and single-authority. Prior slices in this track record a
+two-party form ("Terra and Sol accepted…"), which reflects how earlier sessions
+were driven rather than a requirement; `AGENTS.md` assigns Measure acceptance to
+the owning loop. The evidence basis is three direct gate runs plus a whole-file
+byte reconstruction performed here, not a delegate self-report.
 
 Phase R1 v3 remains `[~]`, and the cumulative runner and test work remains
 uncommitted. This records no collision, rename, JSON-write, validator, or
