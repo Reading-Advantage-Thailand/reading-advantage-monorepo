@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
   output: "standalone",
   outputFileTracingRoot: path.join(appDir, "../.."),
   transpilePackages: [
+    "@reading-advantage/auth",
     "@reading-advantage/db",
     "@reading-advantage/domain",
     "@reading-advantage/storage",

@@ -5,16 +5,17 @@ import { createDraftAction } from "./actions";
  * Renders the "New draft" form for creating a workbook draft from a Reading
  * Advantage source payload.
  *
- * The form posts the raw source JSON plus tenant and creator identifiers to the
- * server action, which handles normalization and draft construction as domain
- * concerns.
+ * The form posts the raw source JSON to the server action; the tenant and
+ * creator come from the signed-in session. The action handles normalization
+ * and draft construction as domain concerns.
  * @returns The new-draft form page.
  */
 export default async function NewDraftPage(): Promise<ReactNode> {
   /**
    * Parses the submitted source JSON and delegates draft creation to the
-   * createDraftAction server action.
-   * @param formData The submitted form data containing source, tenantId and createdBy.
+   * createDraftAction server action. The tenant and creator come from the
+   * signed-in session, never from the form.
+   * @param formData The submitted form data containing the source payload.
    * @returns Nothing; invalid JSON is silently ignored.
    */
   async function submit(formData: FormData) {
@@ -27,11 +28,7 @@ export default async function NewDraftPage(): Promise<ReactNode> {
     } catch {
       return;
     }
-    await createDraftAction(
-      parsed,
-      String(formData.get("tenantId") ?? ""),
-      String(formData.get("createdBy") ?? ""),
-    );
+    await createDraftAction(parsed);
   }
 
   return (
@@ -42,14 +39,6 @@ export default async function NewDraftPage(): Promise<ReactNode> {
         here.
       </p>
       <form action={submit}>
-        <label>
-          Tenant ID
-          <input name="tenantId" required defaultValue="default" />
-        </label>
-        <label>
-          Created by
-          <input name="createdBy" required />
-        </label>
         <label>
           Source
           <textarea

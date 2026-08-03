@@ -1,12 +1,24 @@
 import type { ReactNode } from "react";
 import { getWorkbookRepository } from "../../lib/repository";
+import { getWorkbookSession } from "../lib/session";
 
 /**
  * Lists workbook drafts and their lifecycle state for the editor workspace.
+ * Drafts are scoped to the signed-in session's tenant.
  * @returns The drafts workspace view.
  */
 export default async function DraftsPage(): Promise<ReactNode> {
-  const drafts = await getWorkbookRepository().listDrafts("default", 50);
+  const session = await getWorkbookSession();
+  if (!session) {
+    return (
+      <main>
+        <h1>Drafts</h1>
+        <p>Sign-in is required to view drafts.</p>
+      </main>
+    );
+  }
+
+  const drafts = await getWorkbookRepository().listDrafts(session.tenantId, 50);
 
   return (
     <main>

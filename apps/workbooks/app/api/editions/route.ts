@@ -1,27 +1,33 @@
-import { workbooks } from "@reading-advantage/domain";
+import { getWorkbookSession } from "../../lib/session";
 
 /**
- * Lists published workbook editions for a tenant.
+ * Lists published workbook editions for the verified session's tenant.
  *
- * Backed by the in-memory repository until the Drizzle migration lands; the
- * request path and response shape are already the ones the durable adapter will
- * serve, so swapping the adapter is the only change required.
- * @param request Incoming request carrying an optional tenantId search param.
- * @returns A JSON response listing the tenant's editions.
+ * Requires an authenticated workbooks session; the tenant always comes from
+ * the verified session, never from request parameters.
+ * @returns A JSON response listing the tenant's editions, or 401 when
+ * unauthenticated.
  */
-export async function GET(request: Request): Promise<Response> {
-  const tenantId = new URL(request.url).searchParams.get("tenantId") ?? "default";
-  const { store } = workbooks.createInMemoryEditionRepository();
-  const editions = store.editions
-    .filter((edition) => edition.tenantId === tenantId)
-    .map((edition) => ({
-      editionId: edition.editionId,
-      draftId: edition.draftId,
-      version: edition.version,
-      contentHash: edition.contentHash,
-      publishedAt: edition.publishedAt,
-      title: edition.snapshot.content.title,
-    }));
+export async function GET(): Promise<Response> {
+  const session = await getWorkbookSession();
+  if (!session) {
+    return Response.json(
+      { error: "unauthorized" },
+      { status: 401, headers: { "Cache-Control": "no-store, private" } },
+    );
+  }
 
-  return Response.json({ tenantId, count: editions.length, editions });
+  // TODO(workbooks): WorkbookEditionRepositoryPort exposes no edition-listing
+  // method (listDrafts exists, but there is no listEditions). Once the port
+  // gains one, fetch this tenant's editions through getWorkbookRepository()
+  // from "../../../lib/repository" and map each to
+  // { editionId, draftId, version, contentHash, publishedAt, title } with
+  // title = edition.snapshot.content.title. Until then, no editions can be
+  // read from the durable repository, so the listing is empty.
+  const editions: readonly unknown[] = [];
+
+  return Response.json(
+    { tenantId: session.tenantId, count: editions.length, editions },
+    { headers: { "Cache-Control": "no-store, private" } },
+  );
 }
