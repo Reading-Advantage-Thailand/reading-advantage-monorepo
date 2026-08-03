@@ -242,6 +242,26 @@
   commit, or Podman/candidate/Finance/marker/registry/successor/V2/history
   action is recorded.
 
+  H3 pre-seal materialize JSON-write causality and private cleanup Red: the real
+  materialize preserve_failure to _publish_failed_attempt path must complete both
+  raw receipt copies into its private canonical leaf, then take a deterministic
+  `_write_json` OSError against `failed-attempt.json` while that JSON is still
+  absent. It must not call the validator; it may not expose a public attempt,
+  reserve, rename or replace, use candidate/generic/Podman/trace/later-stage
+  paths, or leave any private raw/staging residue. The exact outer failure is
+  `V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED: materialize: V3_TEST_PRESEAL_FAILURE_EVIDENCE_JSON_WRITE`,
+  and the caught same JSON-write error must explicitly retain the original
+  materialize error as its cause.
+  `h3-preseal-materialize-json-write-pre-green-baseline-20260803.md` freezes the
+  authorized call and hashes; future Green may only wrap that call to rethrow the
+  same caught OSError from the original materialize error. That baseline also
+  records a reconstruction hazard absent from earlier slices: the authorized line
+  is byte-identical to a frozen line at 6812 inside
+  `_publish_candidate_publication_failure_attempt`, so Green acceptance must
+  anchor on the unique two-line sequence at SHA-256
+  `ca754ecf23d8838b24f517a0a3438a604b1462d57c055e9fb930a9d8e1d71070` and prove the
+  6812 occurrence unchanged, never a content-only replacement.
+
 ## Phase R2: Close or compensate graph coverage gaps
 
 - [x] Task: Execute and record the documented clean-audit/configuration attempt, including `repo-graph config`, scan options, raw audit JSON, stdout/stderr, and exits; select the clean branch only for audit exit `0` with empty unaudited and integrity sets. The v2 candidate binds `r2-clean-audit-attempt-v2-20260801/attempt.json` to the fresh R1 bundle and graph binding; it retained the raw exit and selected the `COMPENSATION_REQUIRED` non-clean branch when unaudited symbols remained. Bounded technical acceptance is recorded by Terra and Sol in the v2 review receipts; commit `772839f` binds the evidence. This is not R2 phase acceptance or an unblock. (deferred:phase-r1-bound-graph)

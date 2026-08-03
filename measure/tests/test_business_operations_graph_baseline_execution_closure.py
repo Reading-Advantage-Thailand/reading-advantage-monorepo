@@ -7053,6 +7053,186 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             self.assertIs(raw_copy_error.__cause__, materialize_error)
 
 
+    def test_preseal_materialize_failure_evidence_json_write_failure_cleans_private_stage_and_retains_cause(self) -> None:
+        """Requires a pre-seal failed-attempt JSON write failure to retain its materialize cause.
+
+        @returns Nothing; real preservation and finalization use temporary roots and one deterministic JSON-write failure only.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        executor_type = getattr(podman, "DirectCommandRuntimeProductionExecutorV1", None)
+        build_preseal = getattr(podman, "_build_direct_runtime_preseal_attempt_v1", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(inspect.isclass(executor_type), "V3_DIRECT_RUNTIME_PRODUCTION_EXECUTOR_MISSING")
+        self.assertTrue(callable(build_preseal), "V3_DIRECT_RUNTIME_PRESEAL_BUILDER_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+        self.assertTrue(podman.HISTORICAL_PODMAN_BLOCKER.is_file())
+        self.assertFalse(podman.HISTORICAL_PODMAN_BLOCKER.is_symlink())
+
+        preparation = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-input-preparation",
+            "packetMaterialization": {"sourcePacketSha256": "a" * 64, "entries": []},
+        }
+        preseal = build_preseal(preparation, bytes(range(32)), "materialize")
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            attempts_root = root / "attempts"
+            attempts_root.mkdir()
+            output = root / "candidate"
+            staged_raw = root / "staged-raw"
+            staged_raw.mkdir()
+            stdout = staged_raw / "receipt-materialize.stdout.txt"
+            stderr = staged_raw / "receipt-materialize.stderr.txt"
+            stdout_bytes = b"V3_TEST_PRESEAL_JSON_WRITE_STDOUT_3B7D02\\n"
+            stderr_bytes = b"V3_TEST_PRESEAL_JSON_WRITE_STDERR_9E14C8\\n"
+            stdout.write_bytes(stdout_bytes)
+            stderr.write_bytes(stderr_bytes)
+            logical_argv = ["node", "materialize-v3"]
+            payload_argv = [
+                podman.CONTAINER_NODE,
+                "/runner/materialize.mjs",
+                "/runner/archive.json",
+                "/runner/direct-runtime-source-packet.json",
+                "/work",
+            ]
+            staged_command = {
+                "id": "materialize",
+                "argv": logical_argv,
+                "cwd": ".",
+                "env": dict(podman.ENV),
+                "envAbsent": list(podman.ENV_ABSENT),
+                "network": False,
+                "exitCode": 1,
+                "actualExecutor": podman._container_executor(
+                    {"prefix": [podman.PODMAN, "run", "--rm", "--network", "none"]},
+                    logical_argv,
+                    payload_argv,
+                ),
+                "_rawId": "receipt-materialize",
+                "_stdoutPath": stdout,
+                "_stderrPath": stderr,
+                "_stdoutText": stdout_bytes.decode("utf-8"),
+                "_stderrText": stderr_bytes.decode("utf-8"),
+                "directRuntimePreparationSha256": preseal["preparationSha256"],
+                "directRuntimeAttempt": copy.deepcopy(preseal["attempt"]),
+            }
+            executor = executor_type(output, "20260802")
+            executor.started = True
+            executor._failure_reason = "materialize"
+            executor._direct_runtime_stage = "materialize"
+            executor._direct_runtime_preseal_attempt = copy.deepcopy(preseal)
+            executor._staged_commands = [staged_command]
+            materialize_error = error_type("V3_PODMAN_GATE_FAILED: materialize")
+            json_write_error = OSError("V3_TEST_PRESEAL_FAILURE_EVIDENCE_JSON_WRITE")
+            expected_attempt_name = f"{podman.ATTEMPT_PREFIX}-20260802-0001"
+            copied_destinations: list[Path] = []
+            json_write_calls: list[Path] = []
+            private_directories: list[Path] = []
+            validator_calls: list[Path] = []
+            rename_calls: list[Path] = []
+            native_copyfile = shutil.copyfile
+
+            def record_real_copy(source, destination, *, follow_symlinks: bool = True) -> str:
+                """Delegates both real raw receipt copies and records their destinations.
+
+                @param source The staged receipt selected by the real finalizer.
+                @param destination The private raw receipt destination selected by the real finalizer.
+                @param follow_symlinks Whether the delegated copy follows symlinks.
+                @returns The delegated copy destination as a string.
+                """
+                source_path = Path(source)
+                destination_path = Path(destination)
+                result = native_copyfile(source_path, destination_path, follow_symlinks=follow_symlinks)
+                copied_destinations.append(destination_path)
+                return str(result)
+
+            def fail_json_write(path, value) -> None:
+                """Injects the sole failed-attempt JSON write fault after both raw copies.
+
+                @param path The failed-attempt.json path selected by the real finalizer.
+                @param value The serialized attempt value handed to the real finalizer.
+                @returns Nothing.
+                """
+                json_path = Path(path)
+                private_directory = json_path.parent
+                json_write_calls.append(json_path)
+                private_directories.append(private_directory)
+                self.assertEqual(json_path.name, "failed-attempt.json")
+                self.assertEqual(private_directory.name, expected_attempt_name)
+                self.assertNotEqual(private_directory.parent, attempts_root)
+                self.assertEqual(private_directory.parent.parent, attempts_root)
+                self.assertTrue(private_directory.parent.name.startswith(".failed-attempt-"))
+                self.assertEqual(len(copied_destinations), 2)
+                self.assertEqual(
+                    [destination.name for destination in copied_destinations],
+                    ["receipt-materialize.stdout.txt", "receipt-materialize.stderr.txt"],
+                )
+                self.assertEqual(copied_destinations[0].read_bytes(), stdout_bytes)
+                self.assertEqual(copied_destinations[1].read_bytes(), stderr_bytes)
+                self.assertFalse(json_path.exists())
+                self.assertEqual(validator_calls, [])
+                raise json_write_error
+
+            def reject_validator(attempt, directory) -> None:
+                """Fails closed because no validator call may follow the JSON write fault.
+
+                @param attempt The attempt object the real finalizer would hand to the validator.
+                @param directory The validation directory the real finalizer would hand to the validator.
+                @returns Nothing.
+                """
+                validator_calls.append(Path(directory))
+                raise AssertionError("V3_PRESEAL_JSON_WRITE_VALIDATOR_CALLED")
+
+            def reject_rename(source, destination) -> None:
+                """Fails closed because no publication rename may follow the JSON write fault.
+
+                @param source The source path the real finalizer would rename.
+                @param destination The destination path the real finalizer would rename.
+                @returns Nothing.
+                """
+                rename_calls.append(Path(source))
+                raise AssertionError("V3_PRESEAL_JSON_WRITE_RENAME_CALLED")
+
+            with patch.object(
+                podman.shutil,
+                "copyfile",
+                side_effect=record_real_copy,
+            ), patch.object(
+                podman,
+                "_write_json",
+                side_effect=fail_json_write,
+            ), patch.object(
+                podman,
+                "validate_failed_execution_attempt_v1",
+                side_effect=reject_validator,
+            ), patch.object(
+                podman.os,
+                "rename",
+                side_effect=reject_rename,
+            ), patch.object(podman, "TRACK_DIR", attempts_root):
+                with self.assertRaisesRegex(
+                    podman.CandidateExecutionBlocked,
+                    r"^V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED: materialize: V3_TEST_PRESEAL_FAILURE_EVIDENCE_JSON_WRITE$",
+                ) as raised:
+                    executor.preserve_failure(materialize_error)
+
+            self.assertIs(raised.exception.__cause__, json_write_error)
+            self.assertEqual(len(json_write_calls), 1)
+            self.assertEqual(validator_calls, [])
+            self.assertEqual(rename_calls, [])
+            self.assertEqual(len(copied_destinations), 2)
+            self.assertFalse(output.exists())
+            self.assertFalse(V3_DIR.exists())
+            self.assertFalse((attempts_root / expected_attempt_name).exists())
+            self.assertEqual(sorted(path.name for path in attempts_root.iterdir()), [])
+            self.assertFalse(private_directories[0].exists())
+            self.assertFalse(private_directories[0].parent.exists())
+            self.assertFalse((attempts_root / "raw").exists())
+            self.assertIs(json_write_error.__cause__, materialize_error)
+
+
     def test_production_candidate_validation_failure_is_durably_retained_without_fake_command_or_publish(self) -> None:
         """Requires a post-trace candidate-validation failure to retain operation-only evidence.
 
