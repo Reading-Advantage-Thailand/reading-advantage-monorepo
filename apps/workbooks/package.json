@@ -1,0 +1,29 @@
+{
+  "name": "workbooks",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3011",
+    "build": "next build",
+    "start": "next start --port 3011",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@reading-advantage/db": "workspace:*",
+    "@reading-advantage/domain": "workspace:*",
+    "@reading-advantage/storage": "workspace:*",
+    "next": "16.2.9",
+    "playwright": "1.61.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@reading-advantage/config": "workspace:*",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
+  }
+}
