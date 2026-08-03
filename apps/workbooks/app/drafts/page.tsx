@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { getWorkbookRepository } from "../../lib/repository";
 import { getWorkbookSession } from "../lib/session";
 
@@ -38,7 +39,9 @@ export default async function DraftsPage(): Promise<ReactNode> {
           <tbody>
             {drafts.map((draft) => (
               <tr key={draft.draftId}>
-                <td>{draft.draftId}</td>
+                <td>
+                  <Link href={`/drafts/${draft.draftId}`}>{draft.draftId}</Link>
+                </td>
                 <td>{draft.status}</td>
                 <td>{draft.revision}</td>
                 <td>{draft.sourceRecord.content.title}</td>

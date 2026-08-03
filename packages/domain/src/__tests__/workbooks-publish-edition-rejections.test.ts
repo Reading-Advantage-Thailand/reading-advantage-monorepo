@@ -106,6 +106,10 @@ function createFakeRepository(
       calls.push("updateDraftStatus");
       return draft;
     },
+    updateDraftContent: async () => {
+      calls.push("updateDraftContent");
+      return draft;
+    },
     recordEvent: async (event: WorkbookPublicationEvent) => {
       calls.push("recordEvent");
       events.push(event);

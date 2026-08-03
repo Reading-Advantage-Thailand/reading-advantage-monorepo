@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { WorkbookSourceRecord } from "./contracts.js";
 import type {
   WorkbookDraft,
   WorkbookEdition,
@@ -129,6 +130,23 @@ export interface WorkbookEditionRepositoryPort {
     tenantId: string,
     draftId: string,
     status: WorkbookDraftStatus,
+    expectedRevision: number,
+  ): Promise<WorkbookDraft>;
+
+  /**
+   * Replaces a draft's source record content with optimistic revision control.
+   * @param tenantId Tenant the draft belongs to.
+   * @param draftId Identifier of the draft to update.
+   * @param sourceRecord New source record replacing the draft's current one.
+   * @param expectedRevision Revision the caller expected at request time.
+   * @returns The persisted draft with the replaced content and a bumped revision.
+   * @throws WorkbookPublicationError with code "REVISION_CONFLICT" when no draft
+   * matches the tenant, draft, and expected revision combination.
+   */
+  updateDraftContent(
+    tenantId: string,
+    draftId: string,
+    sourceRecord: WorkbookSourceRecord,
     expectedRevision: number,
   ): Promise<WorkbookDraft>;
 

@@ -106,6 +106,16 @@ interface WorkbookDraftUpdateRow {
   updatedAt: Date | string | null;
 }
 
+interface WorkbookDraftContentUpdateRow {
+  sourceApp: string;
+  sourceId: string;
+  sourceRevision: string;
+  contentHash: string;
+  snapshotJson: unknown;
+  revision: number;
+  updatedAt: Date | string | null;
+}
+
 interface SelectBuilder<TRow> {
   from: (table: unknown) => {
     where: (condition: unknown) => Promise<TRow[]> & {
@@ -122,6 +132,14 @@ interface InsertBuilder<TInsert, TRow> {
 
 interface WorkbookDraftUpdateBuilder {
   set: (values: WorkbookDraftUpdateRow) => {
+    where: (condition: unknown) => {
+      returning: () => Promise<WorkbookDraftRow[]>;
+    };
+  };
+}
+
+interface WorkbookDraftContentUpdateBuilder {
+  set: (values: WorkbookDraftContentUpdateRow) => {
     where: (condition: unknown) => {
       returning: () => Promise<WorkbookDraftRow[]>;
     };
@@ -336,6 +354,41 @@ export function createDrizzleEditionRepository(
       )
         .set({
           status,
+          revision: expectedRevision + 1,
+          updatedAt: new Date(),
+        })
+        .where(
+          and(
+            eq(workbookDrafts.id, draftId),
+            eq(workbookDrafts.tenantId, tenantId),
+            eq(workbookDrafts.revision, expectedRevision),
+          ),
+        )
+        .returning();
+      if (updated.length === 0) {
+        throw new WorkbookPublicationError(
+          "REVISION_CONFLICT",
+          `Revision conflict: no draft matched for tenant "${tenantId}" and draft "${draftId}" at revision ${expectedRevision}.`,
+        );
+      }
+      return mapDraftRow(updated[0]);
+    },
+
+    async updateDraftContent(
+      tenantId,
+      draftId,
+      sourceRecord,
+      expectedRevision,
+    ): Promise<WorkbookDraft> {
+      const updated = await (
+        db.update(workbookDrafts) as unknown as WorkbookDraftContentUpdateBuilder
+      )
+        .set({
+          sourceApp: sourceRecord.identity.sourceApp,
+          sourceId: sourceRecord.identity.sourceId,
+          sourceRevision: sourceRecord.identity.sourceRevision,
+          contentHash: sourceRecord.identity.contentHash,
+          snapshotJson: sourceRecord,
           revision: expectedRevision + 1,
           updatedAt: new Date(),
         })
