@@ -6,7 +6,7 @@ import {
 
 import { validateEdition } from "../editions/editions.js";
 import { APKRuntimeError, toAPKRuntimeError } from "./errors.js";
-import { createInputController } from "./input.js";
+import { createInputController, type APKInputController } from "./input.js";
 import {
   resolveResponsiveComposition,
   type SupportedResponsiveComposition,
@@ -94,6 +94,7 @@ export async function mountCartridge(
   let destroyed = false;
   let lastEvent: APKDiagnosticEvent | undefined;
   let composition: SupportedResponsiveComposition | undefined;
+  let compositionFailed = false;
   let operation = Promise.resolve();
   const previousTouchAction = container.style.touchAction;
   const previousMinHeight = container.style.minHeight;
@@ -113,11 +114,6 @@ export async function mountCartridge(
     provisionedResponsiveMountHeight = true;
     return { width, height };
   };
-
-  const initialViewport = readViewport();
-  let width = initialViewport.width;
-  let height = initialViewport.height;
-  const inputController = createInputController(container);
 
   const restoreContainerStyles = (): void => {
     container.style.touchAction = previousTouchAction;
@@ -141,7 +137,17 @@ export async function mountCartridge(
     return resolved;
   };
 
-  composition = resolveComposition();
+  const initialViewport = readViewport();
+  let width = initialViewport.width;
+  let height = initialViewport.height;
+  let inputController: APKInputController;
+  try {
+    composition = resolveComposition();
+    inputController = createInputController(container);
+  } catch (error) {
+    restoreContainerStyles();
+    throw error;
+  }
 
   const diagnostics = (): APKRuntimeDiagnostics => ({
     status,
@@ -228,31 +234,47 @@ export async function mountCartridge(
       instance?.resize?.(width, height);
       try {
         const nextComposition = resolveComposition();
-        if (previousComposition && nextComposition
+        const changed = Boolean(previousComposition && nextComposition
           && (previousComposition.profile !== nextComposition.profile
             || previousComposition.inputMode !== nextComposition.inputMode
-            || JSON.stringify(previousComposition.safeRect) !== JSON.stringify(nextComposition.safeRect))) {
+            || JSON.stringify(previousComposition.safeRect) !== JSON.stringify(nextComposition.safeRect)));
+        if (nextComposition && (changed || compositionFailed)) {
           const snapshot = instance?.captureResponsiveState?.();
           instance?.pause?.();
           inputController.cancelActiveGesture();
-          instance?.recompose?.(nextComposition);
+          if (changed) instance?.recompose?.(nextComposition);
           if (snapshot !== undefined) instance?.restoreResponsiveState?.(snapshot);
-          if (!explicitlyPaused && completionCount === 0) instance?.resume?.();
-          diagnostic({
-            level: "info",
-            code: "RESPONSIVE_RECOMPOSED",
-            message: `Responsive composition changed from ${previousComposition.profile} to ${nextComposition.profile}`,
-            details: {
-              oldProfile: previousComposition.profile,
-              newProfile: nextComposition.profile,
-              oldGeometry: previousComposition.safeRect,
-              newGeometry: nextComposition.safeRect,
-            },
-          });
+          if (!explicitlyPaused && completionCount === 0) {
+            instance?.resume?.();
+            status = "running";
+          }
+          if (changed && previousComposition) {
+            diagnostic({
+              level: "info",
+              code: "RESPONSIVE_RECOMPOSED",
+              message: `Responsive composition changed from ${previousComposition.profile} to ${nextComposition.profile}`,
+              details: {
+                oldProfile: previousComposition.profile,
+                newProfile: nextComposition.profile,
+                oldGeometry: previousComposition.safeRect,
+                newGeometry: nextComposition.safeRect,
+              },
+            });
+          } else {
+            diagnostic({
+              level: "info",
+              code: "RESPONSIVE_COMPOSITION_RECOVERED",
+              message: `Responsive composition recovered at ${nextComposition.profile}`,
+              details: { profile: nextComposition.profile, inputMode: nextComposition.inputMode },
+            });
+          }
         }
+        compositionFailed = false;
         composition = nextComposition;
       } catch (error) {
+        compositionFailed = true;
         instance?.pause?.();
+        status = "paused";
         const runtimeError = toAPKRuntimeError(error, "RESPONSIVE_COMPOSITION_FAILED", "Responsive composition failed");
         diagnostic({ level: "error", code: runtimeError.code, message: runtimeError.message, details: runtimeError.details });
       }

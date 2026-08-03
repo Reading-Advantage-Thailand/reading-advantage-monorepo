@@ -5,14 +5,14 @@ coder subagent per session routing; orchestrator verifies gates.
 
 ## Phase 1 — High defects (D1–D3)
 
-- [ ] 1.1 D1 mount-failure listener leak (`runtime.ts`): red test asserting
+- [x] 1.1 D1 mount-failure listener leak (`runtime.ts`): red test asserting
   listeners/styles are cleaned up when composition resolution throws at mount;
   fix; green.
-- [ ] 1.2 D2 permanent pause after transient unsupported viewport
+- [x] 1.2 D2 permanent pause after transient unsupported viewport
   (`runtime.ts`): red test (fail → viewport recovers → game resumes); fix; green.
-- [ ] 1.3 D3 vertical drag unreachable (`input-actions.ts`): red tests for pure
+- [x] 1.3 D3 vertical drag unreachable (`input-actions.ts`): red tests for pure
   vertical drag and dominant-axis selection under default threshold; fix; green.
-- [ ] 1.4 Package gates green (`test`, lint, `tsc --noEmit`); commit phase 1.
+- [x] 1.4 Package gates green (`test`, lint, `tsc --noEmit`); commit phase 1.
 
 ## Phase 2 — Medium defects (D4–D9)
 

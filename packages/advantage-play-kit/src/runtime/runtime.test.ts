@@ -241,6 +241,85 @@ describe("mountCartridge", () => {
     expect(container.style.touchAction).toBe("manipulation");
   });
 
+  it("does not leak window listeners or container styles when composition resolution fails at mount", async () => {
+    const addEventListener = vi.spyOn(window, "addEventListener");
+    const removeEventListener = vi.spyOn(window, "removeEventListener");
+    const container = document.createElement("div");
+    container.style.touchAction = "manipulation";
+    container.style.minHeight = "17px";
+    Object.defineProperties(container, {
+      clientWidth: { configurable: true, value: 100 },
+      clientHeight: { configurable: true, value: 0 },
+    });
+
+    await expect(mountCartridge({
+      container,
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn() },
+      responsive: {
+        config: DEFAULT_RESPONSIVE_LAYOUT_CONFIG,
+        safeArea: { top: 0, right: 0, bottom: 0, left: 0 },
+        inputCapabilities: { touch: true, pointer: true, keyboard: true },
+        accessibility: { textScale: 1, touchScale: 1 },
+      },
+    }, vi.fn())).rejects.toMatchObject({ code: "UNSUPPORTED_VIEWPORT_SIZE" });
+
+    const added = addEventListener.mock.calls.filter(([type]) => type === "keydown" || type === "keyup");
+    const removed = removeEventListener.mock.calls.filter(([type]) => type === "keydown" || type === "keyup");
+    expect(removed).toHaveLength(added.length);
+    expect(container.style.touchAction).toBe("manipulation");
+    expect(container.style.minHeight).toBe("17px");
+  });
+
+  it("resumes a transiently unsupported viewport on recovery even when composition is unchanged", async () => {
+    const instance: APKGameInstance = {
+      pause: vi.fn(),
+      resume: vi.fn(),
+      resize: vi.fn(),
+      destroy: vi.fn(),
+    };
+    const factory: GameFactory = vi.fn(async () => instance);
+    const container = document.createElement("div");
+    Object.defineProperties(container, {
+      clientWidth: { configurable: true, value: 390 },
+      clientHeight: { configurable: true, value: 844 },
+    });
+    const handle = await mountCartridge({
+      container,
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn() },
+      responsive: {
+        config: DEFAULT_RESPONSIVE_LAYOUT_CONFIG,
+        safeArea: { top: 0, right: 0, bottom: 0, left: 0 },
+        inputCapabilities: { touch: true, pointer: true, keyboard: true },
+        accessibility: { textScale: 1, touchScale: 1 },
+      },
+    }, factory);
+    expect(handle.getDiagnostics().status).toBe("running");
+
+    Object.defineProperties(container, {
+      clientWidth: { configurable: true, value: 100 },
+      clientHeight: { configurable: true, value: 100 },
+    });
+    ResizeObserverStub.instances[0]?.callback([], ResizeObserverStub.instances[0] as unknown as ResizeObserver);
+    expect(instance.pause).toHaveBeenCalled();
+    expect(handle.getDiagnostics().status).toBe("paused");
+
+    Object.defineProperties(container, {
+      clientWidth: { configurable: true, value: 390 },
+      clientHeight: { configurable: true, value: 844 },
+    });
+    ResizeObserverStub.instances[0]?.callback([], ResizeObserverStub.instances[0] as unknown as ResizeObserver);
+
+    expect(instance.resume).toHaveBeenCalled();
+    expect(handle.getDiagnostics().status).toBe("running");
+    await handle.destroy();
+  });
+
   it("restores caller styles when a zero-height responsive mount factory rejects", async () => {
     const container = document.createElement("div");
     container.style.minHeight = "29px";

@@ -81,4 +81,45 @@ describe("input action normalization adapter", () => {
 
     expect(normalize({ modality: "pointer", phase: "drag", deltaX: -10, deltaY: 0 })).toEqual([]);
   });
+
+  it("returns the down action for a pure vertical drag instead of the horizontal right action", () => {
+    const normalize = createInputActionNormalizer({
+      keyboard: {},
+      pointerDrag: {
+        leftAction: "move-left",
+        rightAction: "move-right",
+        upAction: "move-up",
+        downAction: "move-down",
+      },
+    });
+
+    expect(normalize({ modality: "pointer", phase: "drag", deltaX: 0, deltaY: 120 })).toEqual([
+      { action: "move-down", edge: "press" },
+    ]);
+  });
+
+  it("selects the dominant axis when both deltas are nonzero", () => {
+    const normalize = createInputActionNormalizer({
+      keyboard: {},
+      pointerDrag: {
+        leftAction: "move-left",
+        rightAction: "move-right",
+        upAction: "move-up",
+        downAction: "move-down",
+      },
+    });
+
+    expect(normalize({ modality: "pointer", phase: "drag", deltaX: 30, deltaY: 120 })).toEqual([
+      { action: "move-down", edge: "press" },
+    ]);
+  });
+
+  it("returns no actions for zero deltas", () => {
+    const normalize = createInputActionNormalizer({
+      keyboard: {},
+      pointerDrag: { leftAction: "move-left", rightAction: "move-right" },
+    });
+
+    expect(normalize({ modality: "pointer", phase: "drag", deltaX: 0, deltaY: 0 })).toEqual([]);
+  });
 });

@@ -119,11 +119,11 @@ export function createInputActionNormalizer(
     if (config.pointerDrag && descriptor.phase === "drag") {
       const dx = descriptor.deltaX ?? 0;
       const dy = descriptor.deltaY ?? 0;
-      if (Math.abs(dx) >= dragThreshold) {
+      if (Math.abs(dx) >= Math.abs(dy) && Math.abs(dx) > 0 && Math.abs(dx) >= dragThreshold) {
         if (dx < 0) return [{ action: config.pointerDrag.leftAction, edge: "press" }];
         return [{ action: config.pointerDrag.rightAction, edge: "press" }];
       }
-      if (Math.abs(dy) >= dragThreshold) {
+      if (Math.abs(dy) > 0 && Math.abs(dy) >= dragThreshold) {
         if (dy < 0 && config.pointerDrag.upAction) {
           return [{ action: config.pointerDrag.upAction, edge: "press" }];
         }
