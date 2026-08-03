@@ -9,7 +9,8 @@
     "start": "next start --port 3011",
     "lint": "eslint .",
     "test": "vitest run",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "dry-run:import": "tsx scripts/dry-run-import.ts"
   },
   "dependencies": {
     "@reading-advantage/auth": "workspace:*",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
+    "tsx": "catalog:",
     "typescript": "5.9.3",
     "vitest": "4.1.8"
   }
