@@ -131,7 +131,32 @@ _Story ref: spec.md#story-s3-import-legacy-workbook-projects-and-assets_
 
 ## Phase S4: Port the production workspace to `apps/workbooks`
 
-- [ ] Task: Scaffold `apps/workbooks` as a separately deployable Company-SSO application with explicit workbook role gates, thin UI/routes, and no copied filesystem or provider-SDK business logic.
+> **Divergence register (added 2026-08-03).** The standalone repo kept shipping after
+> the scaffold was cut (2026-07-11). The port MUST take these from
+> `advantage-workbooks` HEAD; they must not be silently lost:
+>
+> - **Renderer:** Paged.js rAF-chain freeze fix — dual-arm frame-independent driver
+>   shim (`708bed9`), title-page `overflow:hidden` removal (`3a55973`),
+>   `.tm-step-block` packing (`2b644eb`, 209→167 pages), pagination regression tests
+>   (`fdc6277`). Applies wherever the legacy compiler/teacher-manual HTML is ported
+>   (S4 teacher-manual workflow, S5 renderer extraction).
+> - **Editor:** lesson editor ships from HEAD's refactored component suite — 7
+>   sub-editors + `useLessonEditor` hook + `LessonStatusBanners` +
+>   `LessonPreviewModal` (`98a98fc`..`26bc270`), not the pre-refactor monolith.
+> - **Docs:** teacher-manual README section + `docs/teacher-manual.md` 4-period model
+>   + preview screenshot (`fc1751c`) port with the teacher-manual workflow.
+> - **Teacher guide:** 13-step renumbering of trainer's guide, observation forms,
+>   rebuilt PDFs, portable build scripts (`efa1b42`, `c48e5e6`, `0231293`,
+>   `19ed891`, `0e90470`) rides with template import.
+> - **Cutover guard:** `dashboard/lib/cutover.ts` (`d604899`) is S7 evidence; known
+>   gaps (image write paths unguarded, no tests) recorded in the standalone
+>   tech-debt registry.
+
+- [ ] Task: Scaffold `apps/workbooks` as a separately deployable Company-SSO application with explicit workbook role gates, thin UI/routes, and no copied filesystem or provider-SDK business logic. — **DONE ahead of plan:** scaffold `dd60bbdc5`, SSO gate `772a618ad` + `2df52486c` (track: workbooks_sso_onboarding_20260803)
+- [ ] Task (S4a): Run the legacy importer dry-run for pilot project `origins-2-a0`, record the manifest/exceptions, and build the project list read page over domain queries (drafts/editions from DB, no filesystem).
+- [ ] Task (S4b): Port the lesson/section editor from `advantage-workbooks` HEAD (refactored suite per divergence register) onto workbook backend server actions with optimistic concurrency.
+- [ ] Task (S4c): Port settings + preview/compile wiring over the domain render port (no runtime filesystem, no provider SDKs).
+- [ ] Task (S4d): Port the teacher-manual workflow including the Paged.js shim and regression tests (divergence register), plus its docs.
 - [ ] Task: Write Red UI, accessibility, and authorization tests for catalog browsing, drafts, source selection, editing, optimistic conflicts, source drift, rights warnings, review state, and immutable-release confirmation.
 - [ ] Task: Port the project list, settings, lesson/section editor, preview setup, and teacher-manual workflow over workbook backend commands; reject arbitrary URL/pasted-remote ingestion.
 - [ ] Task: Complete desktop-first browser acceptance plus app/backend lint, type, test, build, graph, and independent permission/UI review gates.
