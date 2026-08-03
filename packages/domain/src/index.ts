@@ -19,6 +19,7 @@ export * as ai from "./ai/index.js";
 export * as interventions from "./interventions/index.js";
 export * as sales from "./sales/index.js";
 export * as activity from "./activity/index.js";
+export * as workbooks from "./workbooks/index.js";
 export {
   createTenantDB,
   type TenantDB,
