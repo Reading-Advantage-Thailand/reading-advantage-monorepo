@@ -11,6 +11,7 @@
 
 ## Recurring Gotchas (condensed)
 - FR-2 greps need runtime call shapes, not only imports (primary drizzle). Drizzle migrator skips non-monotonic `when` stamps. Audit log DELETE needs `DIRECT_DATABASE_URL` + advisory lock. Next.js 16 `proxy.ts` is nodejs (no edge `runtime`).
+- Shared checkout: the git index is shared state across concurrent agents—commit with `git commit -- <pathspec>` only, never bare `git add`+`git commit` (a sibling's staged renames got swept into a business-ops commit, 2026-08-03). Committed evidence dirs under `measure/tracks/` are read-only to automation and sibling agents; path-sync must never cross track boundaries (frozen R1 v2 snapshot was rewritten twice).
 - Transaction-mode pooling: `prepare: false`, split DATABASE_URL/DIRECT_DATABASE_URL, entrypoint guard for CLI db scripts.
 - `FOR UPDATE SKIP LOCKED` job queues work without Redis; adversarial-test URL parsers and DLQ boundaries.
 - Never bend production code for structural string assertions in tests. Source-scan guards need counterexample fixtures. Ratchet large deferred sweeps; don't zero.
