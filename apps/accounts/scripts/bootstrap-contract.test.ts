@@ -10,13 +10,14 @@ const base = {
   MARKETING_COMPANY_AUTH_OIDC_CLIENT_SECRET: "m".repeat(32),
   SALES_COMPANY_AUTH_OIDC_CLIENT_SECRET: "s".repeat(32),
   CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET: "c".repeat(32),
+  WORKBOOKS_COMPANY_AUTH_OIDC_CLIENT_SECRET: "w".repeat(32),
 };
 
 describe("production bootstrap contract", () => {
   it("requires one exact confidential client for each application", () => {
-    expect(createProductionBootstrapInput(base).clients).toHaveLength(3);
+    expect(createProductionBootstrapInput(base).clients).toHaveLength(4);
     expect(createProductionBootstrapInput(base).clients.map((client) => client.clientId))
-      .toEqual(["marketing-web", "sales-web", "codecamp-web"]);
+      .toEqual(["marketing-web", "sales-web", "codecamp-web", "workbooks-web"]);
   });
 
   it("rejects non-HTTPS callbacks and never includes secret values in errors", () => {
@@ -31,5 +32,11 @@ describe("production bootstrap contract", () => {
     } catch (error) {
       expect(String(error)).not.toContain(secret);
     }
+  });
+
+  it("rejects a missing or short workbooks client secret", () => {
+    const { WORKBOOKS_COMPANY_AUTH_OIDC_CLIENT_SECRET: _omitted, ...withoutWorkbooks } = base;
+    expect(() => createProductionBootstrapInput(withoutWorkbooks)).toThrow("Invalid Accounts bootstrap environment");
+    expect(() => createProductionBootstrapInput({ ...base, WORKBOOKS_COMPANY_AUTH_OIDC_CLIENT_SECRET: "short" })).toThrow("Invalid Accounts bootstrap environment");
   });
 });

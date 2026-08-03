@@ -10,6 +10,7 @@ each app's `cloudbuild.yaml` `--set-env-vars` and `--set-secrets` arguments.
 | Marketing | `marketing-web` | `https://marketing.reading-advantage.com/api/auth/callback` | `marketing` | `openid` | `COMPANY_AUTH_MODE` not set; company adapter default | `COMPANY_AUTH_OIDC_CLIENT_SECRET=MARKETING_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest` |
 | Sales | `sales-web` | `https://sales.reading-advantage.com/api/auth/callback` | `sales` | `openid` | `SALES_AUTH_MODE=company` | `COMPANY_AUTH_OIDC_CLIENT_SECRET=SALES_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest` |
 | Codecamp | `codecamp-web` | `https://codecamp.reading-advantage.com/api/auth/callback` | `codecamp` | `openid` | `CODECAMP_AUTH_MODE=company` | `COMPANY_AUTH_OIDC_CLIENT_SECRET=projects/1090865515742/secrets/CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest` |
+| Workbooks | `workbooks-web` | `https://workbooks.reading-advantage.com/api/auth/callback` | `workbooks` | `openid` | company-only; no legacy mode switch | `COMPANY_AUTH_OIDC_CLIENT_SECRET=WORKBOOKS_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest` |
 
 Accounts is the issuer and does not consume an application OIDC client. Its
 bootstrap Cloud Build step reads the three client-secret references so client
@@ -22,6 +23,9 @@ registrations can be seeded without exposing secret values.
   lines 124–141.
 - Codecamp: `apps/codecamp-advantage/cloudbuild.yaml`, `deploy-cloudrun`, lines
   41–59; deployment is currently blocked before this binding can resolve.
+- Workbooks: `apps/workbooks/cloudbuild.yaml`, `deploy-cloudrun`. Registered by
+  `workbooks_sso_onboarding_20260803`, which owns this client; the app ships
+  company-only, so it has no `*_AUTH_MODE` switch.
 
 Every production callback is exact; no wildcard, alternate host, or implicit
 audience is registered. Client secrets are never rendered in this registry.
