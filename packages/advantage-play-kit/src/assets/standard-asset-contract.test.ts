@@ -54,6 +54,22 @@ describe("standard APK asset paths", () => {
     ])).toThrow(/duplicate/i);
   });
 
+  it("permits native cell sizes for every view used by the materialized standard library", () => {
+    for (const view of ["audio", "font", "world", "top-down", "ui", "effects", "side-view"]) {
+      const path = view === "audio"
+        ? "audio/native/ui/confirm.ogg"
+        : view === "font"
+          ? "font/native/ui/body.woff2"
+          : `${view}/native/art/sample.png`;
+      expect(parseStandardAssetPath(path).cellSize).toBeNull();
+    }
+  });
+
+  it("rejects explicit cell sizes for audio and font views", () => {
+    expect(() => parseStandardAssetPath("font/16x16/ui/body.woff2")).toThrow(/native cell size/);
+    expect(() => parseStandardAssetPath("audio/16x16/ui/confirm.ogg")).toThrow(/native cell size/);
+  });
+
   it("resolves a browser URL without reading the filesystem at runtime", () => {
     expect(resolveStandardAsset("/assets/apk-standard", "ui/16x16/icons/coin.png")).toEqual({
       url: "/assets/apk-standard/ui/16x16/icons/coin.png",

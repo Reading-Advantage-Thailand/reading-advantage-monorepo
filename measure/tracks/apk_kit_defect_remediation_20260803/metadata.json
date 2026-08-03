@@ -8,6 +8,6 @@
   "estimated_tasks": 17,
   "actual_tasks": null,
   "depends_on": [],
-  "deviation_notes": "Source review: independent-claude-review-20260803.md (claude CLI 2.1.220, read-only, full non-test src coverage; findings 1 and 3 spot-confirmed by orchestrator against source).",
+  "deviation_notes": "Source review: independent-claude-review-20260803.md (claude CLI 2.1.220, read-only, full non-test src coverage; findings 1 and 3 spot-confirmed by orchestrator against source). | D5 contract-visible decision: NATIVE_VIEWS keeps all 7 views native-capable (explicitly enumerated + documented instead of derived spread) because the materialized accepted standard library uses native/ cell sizes across top-down, side-view, ui, world, effects, and audio (verified on disk 2026-08-03); restricting the subset would invalidate the accepted catalog. Behavior unchanged; tests pin it.",
   "completion_blocker": null
 }

@@ -39,7 +39,23 @@ const AUDIO_EXTENSIONS = new Set(["ogg", "mp3", "wav"]);
 const FONT_EXTENSIONS = new Set(["ttf", "otf", "woff2"]);
 const NAME_SEGMENT = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 const CELL_SIZE = /^(?<width>[1-9][0-9]*)x(?<height>[1-9][0-9]*)$/u;
-const NATIVE_VIEWS = new Set<StandardAssetView>(STANDARD_ASSET_VIEWS);
+/**
+ * Views that may declare `native` instead of an explicit cell size.
+ * The standard library README permits `native` for any source without a
+ * trustworthy declared cell size, and the materialized catalog uses `native`
+ * for every view (audio, font, and all raster views). Enumerated explicitly so
+ * the restriction stays reviewable rather than being derived from the already
+ * validated view list.
+ */
+const NATIVE_VIEWS = new Set<StandardAssetView>([
+  "top-down",
+  "side-view",
+  "ui",
+  "world",
+  "effects",
+  "audio",
+  "font",
+]);
 
 function invalid(path: string, reason: string): never {
   throw new Error(`Invalid APK standard asset path ${JSON.stringify(path)}: ${reason}`);
