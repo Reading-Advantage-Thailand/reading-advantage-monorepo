@@ -1,0 +1,13 @@
+{
+  "track_id": "apk_kit_defect_remediation_20260803",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-08-03T00:00:00Z",
+  "updated_at": "2026-08-03T00:00:00Z",
+  "description": "Remediate all 17 defects found by the independent claude -p review of packages/advantage-play-kit (3 High, 6 Medium, 8 Low), TDD per finding.",
+  "estimated_tasks": 17,
+  "actual_tasks": null,
+  "depends_on": [],
+  "deviation_notes": "Source review: independent-claude-review-20260803.md (claude CLI 2.1.220, read-only, full non-test src coverage; findings 1 and 3 spot-confirmed by orchestrator against source).",
+  "completion_blocker": null
+}

@@ -282,6 +282,11 @@ program, priority order when picking the next track is:
   - [x] **Track: APK Residual Cross-Host Retirement and Closeout** *Link: [./archive/apk_cross_host_closeout_20260727/](./archive/apk_cross_host_closeout_20260727/)*
     Owns only residual cross-host work that no vertical cohort owns after cohort outcomes are accepted or explicitly blocked. Residual inventory closed after cohort option-1 terminals; formal + retirement package bound to the live-path-deletion authority present.
 
+- [~] **Track: APK Kit Defect Remediation** *Link: [./tracks/apk_kit_defect_remediation_20260803/](./tracks/apk_kit_defect_remediation_20260803/)*
+  Remediate all 17 defects (3 High, 6 Medium, 8 Low) found by the independent
+  `claude -p` review of `packages/advantage-play-kit`, TDD per finding, with a
+  final independent re-review gate.
+
 - [x] **Track: APK Dual-Theme Production Asset Packs — SUPERSEDED, DO NOT IMPLEMENT** *Link: [./archive/apk_dual_theme_asset_packs_20260711/](./archive/apk_dual_theme_asset_packs_20260711/)*
   Superseded 2026-07-12 because it froze a speculative physical inventory before completing cross-game requirements analysis. Retained as failure evidence; no completion claim is made.
 
