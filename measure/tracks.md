@@ -111,6 +111,14 @@ program, priority order when picking the next track is:
   `small_company_admin_privileges_20260722` deliberately supersedes the
   identity-only `COMPANY_ADMIN` product-access policy for this small company.
   *Status: ARCHIVE-PENDING — remaining graph, documentation, legacy-auth retirement, final-review, and Kimi WebBridge acceptance tasks are tracked in the plan.*
+- [ ] **Track: Workbooks Company SSO Onboarding and Deployability** *Link: [./tracks/workbooks_sso_onboarding_20260803/](./tracks/workbooks_sso_onboarding_20260803/)*
+  Register `apps/workbooks` as the fourth Accounts OIDC client (`workbooks-web`),
+  add the `WORKBOOK_ADMIN` role, gate the app behind an Accounts-issued session
+  with a deny-by-default `proxy.ts`, and add the Cloud Run `Dockerfile` and
+  `cloudbuild.yaml`. Takes the identity and deployability slice of
+  `workbook_content_versioning_20260711` S0/S4 so it can ship ahead of S0–S3;
+  `company_identity_sso_20260715` owns the client registry but is
+  ARCHIVE-PENDING and scoped to Marketing/Sales/Codecamp.
 
 ---
 
