@@ -25,8 +25,9 @@ describe("Primary host-proof test configuration", () => {
   });
 
   it("starts Playwright server with the hidden host-proof surface enabled", () => {
+    // Dependency build order: contracts → kit → cartridges → domain
     expect(createHostProofPlaywrightWebServerCommand(3001)).toBe(
-      "pnpm --filter @reading-advantage/domain build && pnpm --filter @reading-advantage/advantage-play-kit build && pnpm --filter @reading-advantage/game-cartridges build && pnpm --filter @reading-advantage/db migrate && pnpm exec tsx scripts/seed-host-proof-session.ts && NEXT_DIST_DIR=.next/host-proof-3001 HOST_PROOF_ENABLED=true HOST_PROOF_ATTEMPT_SECRET=host-proof-local-attempt-secret-2026 HOST_PROOF_TEST_GATE_TO_LAUNCH_DWELL_MS=3000 PORT=3001 npm run dev",
+      "pnpm --filter @reading-advantage/game-contracts build && pnpm --filter @reading-advantage/advantage-play-kit build && pnpm --filter @reading-advantage/game-cartridges build && pnpm --filter @reading-advantage/domain build && pnpm --filter @reading-advantage/db migrate && pnpm exec tsx scripts/seed-host-proof-session.ts && NEXT_DIST_DIR=.next/host-proof-3001 HOST_PROOF_ENABLED=true HOST_PROOF_ATTEMPT_SECRET=host-proof-local-attempt-secret-2026 HOST_PROOF_TEST_GATE_TO_LAUNCH_DWELL_MS=3000 PORT=3001 npm run dev",
     );
   });
 });

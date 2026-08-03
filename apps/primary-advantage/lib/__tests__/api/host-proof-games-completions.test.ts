@@ -214,10 +214,16 @@ describe("Dragon Flight host-proof completion route", () => {
     });
   });
 
-  it("allows history only for Dragon Flight and keeps its tenant scope", async () => {
+  it("allows vocabulary-gate host-proof history and keeps its tenant scope", async () => {
     mockGetCurrentUser.mockResolvedValue(user);
-    expect((await GET(request(undefined, "?gameType=magic-defense"))).status).toBe(404);
+    expect((await GET(request(undefined, "?gameType=storm-castle-tower"))).status).toBe(404);
     mockGetHostProofGameCompletions.mockResolvedValue([]);
+
+    const magicResponse = await GET(request(undefined, "?gameType=magic-defense&limit=10"));
+    expect(magicResponse.status).toBe(200);
+    expect(mockGetHostProofGameCompletions).toHaveBeenCalledWith(expect.objectContaining({
+      tenant: { schoolId: "school-1" }, input: { gameType: "magic-defense", limit: 10 },
+    }));
 
     const response = await GET(request(undefined, "?limit=10"));
 
@@ -226,5 +232,50 @@ describe("Dragon Flight host-proof completion route", () => {
     expect(mockGetHostProofGameCompletions).toHaveBeenCalledWith(expect.objectContaining({
       tenant: { schoolId: "school-1" }, input: { gameType: "dragon-flight", limit: 10 },
     }));
+
+    mockGetHostProofGameCompletions.mockClear();
+    const puzzleResponse = await GET(request(undefined, "?gameType=enchanted-library&limit=5"));
+    expect(puzzleResponse.status).toBe(200);
+    expect(mockGetHostProofGameCompletions).toHaveBeenCalledWith(expect.objectContaining({
+      tenant: { schoolId: "school-1" }, input: { gameType: "enchanted-library", limit: 5 },
+    }));
   });
+
+  it.each([
+    "castle-defense",
+    "wizard-vs-zombie",
+    "village-guardian",
+    "enchanted-library",
+    "rune-match",
+    "alchemists-synthesis",
+    "potion-rush",
+    "rune-forge-chamber",
+    "spellweavers-run",
+    "shadow-gate-dungeon",
+    "labyrinth-goblin-king",
+    "griffin-riders-escape",
+  ])("permits multi-title host-proof history for %s", async (gameType) => {
+    mockGetCurrentUser.mockResolvedValue(user);
+    mockGetHostProofGameCompletions.mockResolvedValue([]);
+    expect((await GET(request(undefined, `?gameType=${gameType}&limit=5`))).status).toBe(200);
+    expect(mockGetHostProofGameCompletions).toHaveBeenCalledWith(expect.objectContaining({
+      tenant: { schoolId: "school-1" },
+      input: { gameType, limit: 5 },
+    }));
+  });
+
+  it.each(["castle-defense", "enchanted-library", "spellweavers-run"])(
+    "delegates multi-title signed completion for %s (gameType bound in credential)",
+    async (gameType) => {
+      mockGetCurrentUser.mockResolvedValue(user);
+      mockCompleteDragonFlightHostProofAttempt.mockResolvedValue({
+        xpEarned: 5, score: 100, accuracy: 1, correctAnswers: 1, totalAttempts: 1, duration: 700, duplicate: false,
+      });
+      const response = await POST(request(transcript));
+      expect(response.status).toBe(200);
+      await expect(response.json()).resolves.toMatchObject({ xpEarned: 5, score: 100, duplicate: false });
+      mockGetHostProofGameCompletions.mockResolvedValue([]);
+      expect((await GET(request(undefined, `?gameType=${gameType}`))).status).toBe(200);
+    },
+  );
 });

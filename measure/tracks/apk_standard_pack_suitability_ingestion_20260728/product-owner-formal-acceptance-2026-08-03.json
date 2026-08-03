@@ -1,0 +1,80 @@
+{
+  "schema_version": "apk-product-owner-formal-acceptance.v1",
+  "record_id": "apk_standard_pack_suitability_ingestion_20260728_owner_acceptance_elv_games_pack_close_20260803",
+  "track_id": "apk_standard_pack_suitability_ingestion_20260728",
+  "decision": "ACCEPT_TRACK_CLOSEOUT_ON_LICENSED_ELVGAMES_PACK_AND_REUSE_CANONICAL",
+  "status": "accepted",
+  "accepted_at": "2026-08-02T23:48:25Z",
+  "decided_by": "apk-implementer-acting-under-explicit-user-project-owner-goal-authorization",
+  "authority": "explicit-user-delegated-project-owner-decision",
+  "approval_event": {
+    "message_exact": "Close apk_standard_pack_suitability_ingestion_20260728 on the licensed ElvGames standard pack (reuse-canonical). The purchased 43,075-asset pack at packages/advantage-play-kit/assets/standard release 2026.07.23 with LICENSE-ELVGAMES.txt and required credit 'Pixel art assets by ElvGames' is the production-art source; website credit satisfies licensing. Phase 7 legacy-ingest is optional deferred work when the pack lacks a suitable asset\u2014not a track or game-system blocker. Do not invent legacy packets. Production catalog exposure remains cohort-owned.",
+    "message_sha256": "07db6dc065585d8e661beaf990b3ba82e382ecbdb390929a44ce4f606071a2b5",
+    "source": "user correction + goal authorization: ElvGames pack is purchased/licensed; credit completes licensing",
+    "durable_user_message_id": null,
+    "durable_user_message_id_available": false,
+    "durable_user_event_id": null,
+    "durable_user_event_id_available": false,
+    "event_timestamp": null,
+    "event_timestamp_available": false,
+    "limitation": "Durable message/event IDs unavailable; not fabricated. LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE applies."
+  },
+  "approved_scope": {
+    "production_art_source": "packages/advantage-play-kit/assets/standard",
+    "pack_release": "2026.07.23",
+    "asset_count": 43075,
+    "required_credit": "Pixel art assets by ElvGames",
+    "license_path": "packages/advantage-play-kit/assets/standard/LICENSE-ELVGAMES.txt",
+    "decision_path": "reuse-canonical-from-licensed-pack",
+    "legacy_ingest_phase7": "optional-deferred-not-required-for-closeout"
+  },
+  "bound_inputs": {
+    "accepted_standard_pack_release": {
+      "path": "packages/advantage-play-kit/assets/standard/accepted-standard-pack-release.json",
+      "sha256": "61984e0b53c4ba85379cf6a4f0f33ee956665c4eaad4b3d681e3dccd98389844"
+    },
+    "elv_games_license": {
+      "path": "packages/advantage-play-kit/assets/standard/LICENSE-ELVGAMES.txt",
+      "sha256": "3efc9b9a88752a089fa07de4fac43cabe6283b0051466661c55a97c1c625c48f"
+    },
+    "canonical_reuse_evidence": {
+      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/task5-canonical-reuse-evidence-v1.json",
+      "sha256": "a602d07e338327c04f5fcbb2a3cede179268aed963c0bc76292569db1eff1257"
+    },
+    "product_owner_acceptance_v2": {
+      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
+      "sha256": "a1e0fdb27d29d86d77362c67db0fa0ef3eb4d26aef4377954e9d5cab6c367a04"
+    },
+    "independent_review_canonical_reuse": {
+      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/review-task5-canonical-reuse-v1.md",
+      "sha256": "0e2f17bdbd909cde4eeb433ee9ee1749e8c030215624fd00ee062fdd1e379fb8"
+    },
+    "product_owner_provenance_direction": {
+      "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+    },
+    "git_head": {
+      "commit": "459697e3c5028f31e8e66b52f45f151165da28e3"
+    }
+  },
+  "authorization": {
+    "track_formal_close_authorized": true,
+    "local_verifiable_receipts_accepted": true,
+    "licensed_elv_games_pack_consumable_as_production_art_source": true,
+    "reuse_canonical_authorized": true,
+    "legacy_ingest_phase7_required_for_closeout": false,
+    "legacy_ingest_phase7_authorized_now": false,
+    "title_adoption_authorized": false,
+    "production_catalog_exposure_authorized": false,
+    "deployment_authorized": false,
+    "host_cutover_authorized": false,
+    "phase7_real_asset_ingestion_authorized": false
+  },
+  "disclosures": [
+    "ElvGames pack is purchased and licensed; credit obligation is retain-credit display.",
+    "Phase 7 optional legacy PNG ingest remains deferred and is not a closeout gate.",
+    "Cutover tracks own host cutover and production exposure authorizations."
+  ],
+  "next_step": "Prefer reuse-canonical selected unions from the pack for all cartridges; open Phase 7 only if a role has no pack match."
+}

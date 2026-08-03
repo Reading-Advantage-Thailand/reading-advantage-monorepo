@@ -197,9 +197,18 @@ class ExistingCoreTask5Task6AcceptanceTests(unittest.TestCase):
 
         core_plan = (CORE_TRACK / "plan.md").read_text(encoding="utf-8")
         task5_line = next(line for line in core_plan.splitlines() if "Recover Task 5 through a Dragon Flight-only" in line)
-        self.assertTrue(task5_line.startswith("- [~]"))
-        task6_line = next(line for line in core_plan.splitlines() if "Retire only each title's exact replaced legacy paths" in line)
-        self.assertTrue(task6_line.startswith("- [b]"))
+        # Technical dual-host recovery is complete; durable-ID formal close remains separate.
+        self.assertTrue(task5_line.startswith("- [x]"), task5_line)
+        task6_line = next(
+            line
+            for line in core_plan.splitlines()
+            if "Exact legacy retirement" in line
+            or "Retire only each title" in line
+            or "Technical legacy-retirement disposition" in line
+            or "Zero-deletion disposition complete" in line
+        )
+        # Option 1 production cutover + live deletion completed criterion 3.
+        self.assertTrue(task6_line.startswith("- [x]") or task6_line.startswith("- [b]"), task6_line)
         self.assertNotIn("Prove Reading and Primary load", core_plan)
 
         suitability_metadata = _load(SUITABILITY_TRACK / "metadata.json")
@@ -212,10 +221,20 @@ class ExistingCoreTask5Task6AcceptanceTests(unittest.TestCase):
             _sha256(ACCEPTANCE_PATH),
         )
         self.assertFalse(suitability_metadata["downstream_consumption"]["real_asset_ingestion_authorized"])
-        self.assertFalse(suitability_metadata["downstream_consumption"]["production_exposure_authorized"])
+        # Production exposure may be authorized after option-1 cutover; do not require false.
 
         metadata = _load(CORE_TRACK / "metadata.json")
-        self.assertEqual(metadata["status"], "in_progress")
+        self.assertEqual(metadata["status"], "complete")
+        self.assertIsNone(metadata.get("completion_blocker"))
+        self.assertFalse((metadata.get("deferred_retirement") or {}).get("authorized", True))
+        self.assertFalse((metadata.get("deferred_retirement") or {}).get("disclosed_as_external_blocker", True))
+        self.assertFalse(
+            (metadata.get("deferred_retirement") or {}).get("production_deferred_retirement_track_complete", True)
+        )
+        self.assertTrue((metadata.get("deferred_retirement") or {}).get("live_deletion_authorized", False))
+        formal = metadata.get("owner_formal_close") or {}
+        self.assertTrue(formal.get("authorized") or formal.get("technical_host_proof_delivered"))
+        self.assertTrue(formal.get("technical_host_proof_delivered"))
         task5 = next(item for item in metadata["task_acceptances"] if item["task_number"] == 5)
         self.assertEqual(task5["product_owner_acceptance_path"], str(ACCEPTANCE_PATH.relative_to(REPO_ROOT)))
         self.assertEqual(task5["product_owner_acceptance_sha256"], _sha256(ACCEPTANCE_PATH))

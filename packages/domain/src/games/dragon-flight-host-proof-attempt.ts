@@ -150,12 +150,12 @@ export interface DragonFlightHostProofAttemptDependencies {
   readonly loadVocabularyInput: (input: {
     readonly userId: string;
     readonly schoolId: string;
-    readonly gameType: "dragon-flight";
+    readonly gameType: "dragon-flight" | "magic-defense" | "dungeon-liberator" | "castle-defense" | "wizard-vs-zombie" | "village-guardian" | "enchanted-library" | "rune-match" | "alchemists-synthesis" | "potion-rush" | "rune-forge-chamber" | "spellweavers-run" | "shadow-gate-dungeon" | "labyrinth-goblin-king" | "griffin-riders-escape";
     readonly difficulty: z.infer<typeof gameDifficultyEnum>;
   }) => Promise<VocabularyInput>;
   /** Persists a completion using the existing server-authoritative XP boundary. */
   readonly recordCompletion: (input: {
-    readonly gameType: "dragon-flight";
+    readonly gameType: "dragon-flight" | "magic-defense" | "dungeon-liberator" | "castle-defense" | "wizard-vs-zombie" | "village-guardian" | "enchanted-library" | "rune-match" | "alchemists-synthesis" | "potion-rush" | "rune-forge-chamber" | "spellweavers-run" | "shadow-gate-dungeon" | "labyrinth-goblin-king" | "griffin-riders-escape";
     readonly difficulty: z.infer<typeof gameDifficultyEnum>;
     readonly score: number;
     readonly accuracy: number;
@@ -174,7 +174,7 @@ export interface DragonFlightHostProofAttemptDependencies {
     readonly attemptId: string;
     readonly userId: string;
     readonly schoolId: string;
-    readonly gameType: "dragon-flight";
+    readonly gameType: "dragon-flight" | "magic-defense" | "dungeon-liberator" | "castle-defense" | "wizard-vs-zombie" | "village-guardian" | "enchanted-library" | "rune-match" | "alchemists-synthesis" | "potion-rush" | "rune-forge-chamber" | "spellweavers-run" | "shadow-gate-dungeon" | "labyrinth-goblin-king" | "griffin-riders-escape";
     readonly difficulty: z.infer<typeof gameDifficultyEnum>;
   }) => Promise<DragonFlightHostProofCanonicalCompletion | null>;
   /** Durable replay-claim adapter for this boundary. */
@@ -186,9 +186,28 @@ const actorSchema = z.object({
   schoolId: z.string().min(1),
 }).strict();
 
+/** Multi-title signed-attempt game types shared with host history/loaders. */
+const hostProofAttemptGameTypeEnum = z.enum([
+  "dragon-flight",
+  "magic-defense",
+  "dungeon-liberator",
+  "castle-defense",
+  "wizard-vs-zombie",
+  "village-guardian",
+  "enchanted-library",
+  "rune-match",
+  "alchemists-synthesis",
+  "potion-rush",
+  "rune-forge-chamber",
+  "spellweavers-run",
+  "shadow-gate-dungeon",
+  "labyrinth-goblin-king",
+  "griffin-riders-escape",
+]);
+
 /** Strict request accepted when issuing a Dragon Flight proof attempt. */
 export const issueDragonFlightHostProofAttemptSchema = z.object({
-  gameType: z.literal("dragon-flight"),
+  gameType: hostProofAttemptGameTypeEnum,
   difficulty: gameDifficultyEnum,
 }).strict();
 
@@ -228,7 +247,7 @@ const claimsSchema = z.object({
   attemptId: z.string().uuid(),
   userId: z.string().min(1),
   schoolId: z.string().min(1),
-  gameType: z.literal("dragon-flight"),
+  gameType: hostProofAttemptGameTypeEnum,
   difficulty: gameDifficultyEnum,
   inputDigest: z.string().regex(/^[a-f0-9]{64}$/u),
   issuedAt: z.string().datetime(),

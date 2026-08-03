@@ -9,18 +9,18 @@
   "acceptance_records": {
     "product_owner_acceptance": {
       "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-product-owner-acceptance-v1.json",
-      "sha256": "65ffbaa27ef19be1f65015daa8fad4d2f4ca58990ba2fea5653327627452c3b1"
+      "sha256": "3f4aaa7029d637b3ed130c7131750f8caeb28e15b5cb6f65fb5f9e55ceec361f"
     },
     "accepted_receipt": {
       "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
-      "sha256": "e82d42d9ec046b85eb4aeac7800623bce3c3bf4a39a9c0f44288bd93d07be240"
+      "sha256": "efc1488eba5d40db891f9316e4e972905b6e56b4bc928c876c74f2a7b541bc02"
     }
   },
   "recovered_subjects": {
     "remediation_evidence": {
       "accepted_binding": {
         "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
-        "sha256": "9b7df1be5dd9c89c3ea6aa25c6fe01ea4d450b886a472276cd68372ec2154e44"
+        "sha256": "e2ee8519bc9afe35d5d8dedd55a3430390cfacdc27284830b59dbcfdc579b1fb"
       },
       "recovered_snapshot": {
         "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-accepted-remediation-snapshot-v1.b64",
@@ -35,13 +35,17 @@
         "git_blob": "012d90f8bd29651cca68b40f38ceb4598c1fb7d6"
       },
       "drift_classification": "markdown-hard-line-break-trailing-space-normalization-only",
-      "normalized_lines": [3, 4, 5],
+      "normalized_lines": [
+        3,
+        4,
+        5
+      ],
       "semantic_content_changed": false
     },
     "independent_zero_finding_rereview": {
       "accepted_binding": {
         "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-rereview.md",
-        "sha256": "7c3675aca01499e81eba60dcea049715c4652e1474716a633eb8676d3c28a526"
+        "sha256": "ac8eccd4fed958add9af9b3fd526c4de748f8510909c8d767d288b3ae830e076"
       },
       "recovered_snapshot": {
         "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-accepted-rereview-snapshot-v1.b64",
@@ -56,7 +60,13 @@
         "git_blob": "4d8b174a3d35c7338b161b77c52304545a5eb84d"
       },
       "drift_classification": "markdown-hard-line-break-trailing-space-normalization-only",
-      "normalized_lines": [3, 4, 5, 6, 7],
+      "normalized_lines": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
       "semantic_content_changed": false
     }
   },

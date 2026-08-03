@@ -46,7 +46,7 @@ describe("host-proof bundle isolation", () => {
 
     expect(clientSource).not.toContain("standard-pack-release.json");
     expect(selectionSource).toContain('import "server-only"');
-    expect(selectionSource).toContain("getDragonFlightHostProofSelectedEdition");
+    expect(selectionSource).toContain("getMultiTitleHostProofSelectedEdition");
     expect(selectionSource).not.toContain("standard-pack-release.json");
     expect(selectionSource).not.toContain("createDragonFlightHostProofEdition");
   });

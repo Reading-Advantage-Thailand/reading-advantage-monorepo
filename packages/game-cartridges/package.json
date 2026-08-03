@@ -33,11 +33,28 @@
       "types": "./dist/existing-core-cutover-qc.d.ts",
       "import": "./dist/existing-core-cutover-qc.js",
       "default": "./dist/existing-core-cutover-qc.js"
+    },
+    "./legacy-defense-host-proof": {
+      "types": "./dist/legacy-defense-host-proof.d.ts",
+      "import": "./dist/legacy-defense-host-proof.js",
+      "default": "./dist/legacy-defense-host-proof.js"
+    },
+    "./legacy-puzzle-host-proof": {
+      "types": "./dist/legacy-puzzle-host-proof.d.ts",
+      "import": "./dist/legacy-puzzle-host-proof.js",
+      "default": "./dist/legacy-puzzle-host-proof.js"
+    },
+    "./legacy-traversal-host-proof": {
+      "types": "./dist/legacy-traversal-host-proof.d.ts",
+      "import": "./dist/legacy-traversal-host-proof.js",
+      "default": "./dist/legacy-traversal-host-proof.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsup src/index.ts src/catalog.ts src/host-proof.ts src/dragon-rider-host-proof.ts src/existing-core-cutover-semantic-candidates.ts src/existing-core-cutover-qc.ts --format esm && tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "build": "tsup src/index.ts src/catalog.ts src/host-proof.ts src/dragon-rider-host-proof.ts src/existing-core-cutover-semantic-candidates.ts src/existing-core-cutover-qc.ts src/legacy-defense-host-proof.ts src/legacy-puzzle-host-proof.ts src/legacy-traversal-host-proof.ts --format esm && tsc -p tsconfig.build.json --emitDeclarationOnly",
     "check-types": "tsc --noEmit",
     "lint": "eslint src/",
     "test": "vitest run",

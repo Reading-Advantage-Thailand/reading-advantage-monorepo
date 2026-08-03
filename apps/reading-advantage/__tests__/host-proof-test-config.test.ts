@@ -31,12 +31,20 @@ describe("Reading host-proof test configuration", () => {
     expect(command).toContain("NEXT_DIST_DIR=.next/host-proof-3107");
     expect(command).toContain("HOST_PROOF_ENABLED=true");
     expect(command).toContain("HOST_PROOF_ATTEMPT_SECRET=host-proof-local-attempt-secret-2026");
-    expect(command).toContain("pnpm --filter @reading-advantage/domain build");
-    expect(command.indexOf("pnpm --filter @reading-advantage/domain build")).toBeLessThan(
-      command.indexOf("pnpm --filter @reading-advantage/game-cartridges build"),
-    );
+    // Dependency build order: contracts → kit → cartridges → domain
+    expect(command).toContain("pnpm --filter @reading-advantage/game-contracts build");
     expect(command).toContain("pnpm --filter @reading-advantage/advantage-play-kit build");
     expect(command).toContain("pnpm --filter @reading-advantage/game-cartridges build");
+    expect(command).toContain("pnpm --filter @reading-advantage/domain build");
+    expect(command.indexOf("pnpm --filter @reading-advantage/game-contracts build")).toBeLessThan(
+      command.indexOf("pnpm --filter @reading-advantage/advantage-play-kit build"),
+    );
+    expect(command.indexOf("pnpm --filter @reading-advantage/advantage-play-kit build")).toBeLessThan(
+      command.indexOf("pnpm --filter @reading-advantage/game-cartridges build"),
+    );
+    expect(command.indexOf("pnpm --filter @reading-advantage/game-cartridges build")).toBeLessThan(
+      command.indexOf("pnpm --filter @reading-advantage/domain build"),
+    );
     expect(command).toContain("PORT=3107");
   });
 });

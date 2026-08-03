@@ -776,3 +776,35 @@ build-graph inspect ./graph.db SymbolName       # full profile
 ```
 
 For full docs, read the skill: `~/.claude/skills/build-graph/SKILL.md`
+
+---
+
+## Grok Build
+
+Token budget is scarce. Prefer short replies, path-scoped tools, and no unsolicited repo surveys.
+
+### Default mode
+
+- Own the loop: plan → implement → verify → commit.
+- Implement high-risk work in-loop (host proofs, Measure acceptance, shared catalogs, retirement, APK evidence boundaries).
+- Never trust a self-report. Re-run gates; mutation-test new suites; path-scope `git status` / diffs.
+
+### Delegate with `reasonix` (bulk / mechanical only)
+
+Use when volume is high and the contract is frozen (new files matching an exemplar, adapters, fixtures). Prefer:
+
+```bash
+reasonix run --dir <REPO> --permission-mode acceptEdits -p "<task>"
+```
+
+If reasonix is unavailable, fallback only:
+
+```bash
+opencode run --pure --model deepseek/deepseek-v4-flash --dir <SUBTREE> --auto "<prompt>"
+```
+
+(`--pure` is mandatory; scope `--dir` to a subtree, never the repo root.)
+
+**Prompt rules for delegates:** one tightly specced unit of work per prompt — typically 1–3 files that ship together under a single contract; never two unrelated jobs. Every file's exact signatures must be stated up front; if you can't spec them all without the delegate making a design decision, split the prompt. Wiring edits to existing files (index re-export, route registration) are in scope but must name the file, export, and position — never "hook it up." Anchor to an exemplar; list forbidden imports; instant DONE-WHEN covering *every* file (`ls` all paths / `grep -c` per file, never `tsc`/`vitest`/`pnpm` for the agent); `Do NOT run pnpm install. Do NOT modify pnpm-lock.yaml or any package.json.`
+
+**Grok still owns** verification, Measure claims, commits, and any shared/production surface. Do not create git worktrees for multi-agent concurrency; work in new files and check porcelain on shared paths before edit.

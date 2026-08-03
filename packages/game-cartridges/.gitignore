@@ -1,0 +1,5 @@
+# accidental emit into src (tsup/tsc must write only to dist/)
+src/**/*.js
+src/**/*.d.ts
+src/**/*.d.ts.map
+src/**/*.js.map

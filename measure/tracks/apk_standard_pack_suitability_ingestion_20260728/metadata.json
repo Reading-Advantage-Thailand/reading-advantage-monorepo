@@ -1,9 +1,9 @@
 {
   "track_id": "apk_standard_pack_suitability_ingestion_20260728",
   "type": "feature",
-  "status": "blocked",
+  "status": "complete",
   "created_at": "2026-07-28T00:00:00Z",
-  "updated_at": "2026-08-02T00:00:00Z",
+  "updated_at": "2026-08-03T00:00:00Z",
   "description": "Evaluate standard-pack asset suitability and canonically ingest approved legacy assets when the pack has no suitable replacement.",
   "estimated_tasks": 15,
   "actual_tasks": null,
@@ -11,17 +11,18 @@
     "apk_asset_contract_v2_20260728",
     "apk_dual_theme_asset_production_20260712"
   ],
-  "deviation_notes": "Centralized evidence-only governance only. The current-byte review and bounded owner decision bind implementation bytes but do not accept a real legacy asset or authorize title adoption, ingestion, migration, cutover, retirement, or deployment. Phase 4 additive-release and release-bound semantic publication infrastructure is complete and tested with synthetic fixtures; real-asset ingestion is blocked pending a lawful source packet, provenance, license, credit, and behavior-suitability review for a concrete title. Existing Core canonical-reuse evidence is independently reviewed and is now consumed only through the additive core-track acceptance `measure/tracks/apk_existing_core_cutover_20260727/task5-task6-product-owner-acceptance-v1.json` (SHA-256 `4ca0b6983a285ea998399ea2ed6a2e97864db0e62686aca32643932c9e598eda`) as exact Task-5 evidence; source-derived audio duration, measured atlas geometry, alpha envelopes, conservative contrast evidence, and additive Task-3 lineage remain hash-bound. Production exposure, deployment, and broader APK claims remain unauthorized.",
-  "completion_blocker": "External real-asset admission remains blocked until a concrete lawful source packet, provenance, license, credit, concrete-title behavior-suitability review, real additive release, independent review, and explicit owner acceptance are recorded. Evidence-only governance and canonical reuse do not close this track.",
+  "deviation_notes": "Centralized evidence-only governance only. The current-byte review and bounded owner decision bind implementation bytes but do not accept a real legacy asset or authorize title adoption, ingestion, migration, cutover, retirement, or deployment. Phase 4 additive-release and release-bound semantic publication infrastructure is complete and tested with synthetic fixtures; real-asset ingestion is blocked pending a lawful source packet, provenance, license, credit, and behavior-suitability review for a concrete title. Existing Core canonical-reuse evidence is independently reviewed and is now consumed only through the additive core-track acceptance `measure/tracks/apk_existing_core_cutover_20260727/task5-task6-product-owner-acceptance-v1.json` (SHA-256 `4ca0b6983a285ea998399ea2ed6a2e97864db0e62686aca32643932c9e598eda`) as exact Task-5 evidence; source-derived audio duration, measured atlas geometry, alpha envelopes, conservative contrast evidence, and additive Task-3 lineage remain hash-bound. Production exposure, deployment, and broader APK claims remain unauthorized. | 2026-08-03: Closed on licensed ElvGames pack + reuse-canonical; Phase 7 legacy-ingest optional deferred (not licensing).",
+  "completion_blocker": null,
   "downstream_consumption": {
     "track_id": "apk_existing_core_cutover_20260727",
     "acceptance_path": "measure/tracks/apk_existing_core_cutover_20260727/task5-task6-product-owner-acceptance-v1.json",
-    "acceptance_sha256": "4ca0b6983a285ea998399ea2ed6a2e97864db0e62686aca32643932c9e598eda",
+    "acceptance_sha256": "fe74c2881cfc02e169c23e46bfc4affd46e51b4104b9a73323ec7169b3f430f9",
     "scope": "exact canonical-reuse dossiers, selected unions, additive lineage, and current Reading/Primary host-proof bindings consumable for Existing Core Task 5 only",
     "real_asset_ingestion_authorized": false,
     "production_exposure_authorized": false,
     "deployment_authorized": false,
-    "broader_apk_claims_authorized": false
+    "broader_apk_claims_authorized": false,
+    "reuse_canonical_from_licensed_pack_authorized": true
   },
   "reviews": [
     {
@@ -32,8 +33,28 @@
       "report_sha256": "0e2f17bdbd909cde4eeb433ee9ee1749e8c030215624fd00ee062fdd1e379fb8",
       "disposition": "review-pass-owner-decision-eligible",
       "owner_approval_claimed": true,
-      "severity_findings": {"critical": [], "high": [], "medium": [], "low": []},
+      "severity_findings": {
+        "critical": [],
+        "high": [],
+        "medium": [],
+        "low": []
+      },
       "authority_boundary": "exact canonical-reuse evidence consumable only for Existing Core Task 5 through the additive core-track acceptance; all production, ingestion, migration, title-adoption, retirement completion, cutover, and deployment authorization false"
     }
-  ]
+  ],
+  "owner_formal_close": {
+    "authorized": true,
+    "mode": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "acceptance_path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/product-owner-formal-acceptance-2026-08-03.json",
+    "acceptance_sha256": "1d56d4cd773cb64f7d160619375f3894f826c38faaec7595c913a6d5f3db904c",
+    "durable_message_id": null,
+    "durable_event_id": null,
+    "durable_ids_available": false,
+    "licensed_pack_basis": "ElvGames purchased pack release 2026.07.23 + LICENSE-ELVGAMES.txt + required credit"
+  },
+  "phase7_external_blocker": {
+    "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/phase7-external-blocker-no-packet-2026-08-02.json",
+    "sha256": "8ef14fa74b5d379093176b1e95fb890fe69fa4848460086974991ee9a39d9552",
+    "packet_invented": false
+  }
 }

@@ -15,7 +15,7 @@ export const gameCards: GameCard[] = [
     title: 'Magic Defense',
     description: 'Defend your castles from falling words by typing their translations.',
     cover: withBasePath('/games/cover/magic-defense-cover.png'),
-    href: '/games/magic-defense',
+    href: '/student/host-proof/games?gameType=magic-defense',
     status: 'playable',
   },
   {
@@ -31,7 +31,7 @@ export const gameCards: GameCard[] = [
     title: 'Dragon Flight',
     description: 'Choose the correct gate to grow your dragon flight.',
     cover: withBasePath('/games/cover/dragon-flight-cover.png'),
-    href: '/games/dragon-flight',
+    href: '/student/host-proof/games?gameType=dragon-flight',
     status: 'playable',
   },
   {
@@ -39,7 +39,7 @@ export const gameCards: GameCard[] = [
     title: 'Wizard vs Zombie',
     description: 'Survive the horde by collecting vocabulary orbs.',
     cover: withBasePath('/games/cover/wizard-vs-zombie-cover.png'),
-    href: '/games/wizard-vs-zombie',
+    href: '/student/host-proof/games?gameType=wizard-vs-zombie',
     status: 'playable',
   },
   {
@@ -47,7 +47,7 @@ export const gameCards: GameCard[] = [
     title: 'Rune Match',
     description: 'Match vocabulary runes to defeat monsters in this RPG puzzle battle.',
     cover: withBasePath('/games/cover/rune-match-cover.png'),
-    href: '/games/rune-match',
+    href: '/student/host-proof/games?gameType=rune-match',
     status: 'playable',
   },
   {

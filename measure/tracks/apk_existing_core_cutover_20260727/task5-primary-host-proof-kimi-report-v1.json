@@ -9,11 +9,26 @@
   "authentication_fixture": "existing idempotent local host-proof student fixture seeded by the app script; no session value retained",
   "database_fixture": "local Docker PostgreSQL Primary host-proof fixture and one completion record",
   "source_bindings": {
-    "primary_host_client": {"path": "apps/primary-advantage/components/host-proof/HostProofGameClient.tsx", "sha256": "22d145aa3f7faf060d5c6f1d10fd2a5a01a34b0ae00839d44ba9905375923c6c"},
-    "primary_host_page": {"path": "apps/primary-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx", "sha256": "a2afa49cf95b7d578fe74fabf866ffac7376a1bee36e44d00d0e11e53b611971"},
-    "primary_host_route": {"path": "apps/primary-advantage/app/api/host-proof/games/completions/route.ts", "sha256": "1e8044a8c8584b94b67980028e35cb1e1ad7c10bbc1a8a16ccbeffd71101752c"},
-    "primary_host_gate": {"path": "apps/primary-advantage/lib/host-proof-config.ts", "sha256": "b99c2384bd7cb279e2c89729f0804e40fdeb4c9e511786ad0bb4cfd221c93c32"},
-    "primary_next_config": {"path": "apps/primary-advantage/next.config.ts", "sha256": "7f2ec850e001aa00d30b5372fbdcf88f550822d6e846e1b716173146f11f293f"}
+    "primary_host_client": {
+      "path": "apps/primary-advantage/components/host-proof/HostProofGameClient.tsx",
+      "sha256": "3c68e8a2e87aa6c66bdfe0bed805e9a4254450385b7bcf26abc305b27c20bf25"
+    },
+    "primary_host_page": {
+      "path": "apps/primary-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx",
+      "sha256": "15f0503f660ebd8e08ac3cf44871e5ef5e41873049e21713b69262f563922490"
+    },
+    "primary_host_route": {
+      "path": "apps/primary-advantage/app/api/host-proof/games/completions/route.ts",
+      "sha256": "55b28a1be0b5b75207eba1a33b00cedd60021f9b3cc4b8aa96c9289c8223d32b"
+    },
+    "primary_host_gate": {
+      "path": "apps/primary-advantage/lib/host-proof-config.ts",
+      "sha256": "c28b191bcf4dead76f653d39b41ab3f1bef5dc0d3c696a6c91a8dbc25544f84b"
+    },
+    "primary_next_config": {
+      "path": "apps/primary-advantage/next.config.ts",
+      "sha256": "ad328238a98a2966d3813d14062550c758431131f632d7f05df69caa8ebc316a"
+    }
   },
   "observations": [
     "authenticated hidden host-proof route hydrated at a 1920px viewport and reported the wide profile",

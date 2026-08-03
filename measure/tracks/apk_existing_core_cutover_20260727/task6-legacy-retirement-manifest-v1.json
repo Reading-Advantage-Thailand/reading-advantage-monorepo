@@ -4,10 +4,20 @@
   "recorded_at": "2026-07-31",
   "predecessor": {
     "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-task6-product-owner-acceptance-v1.json",
-    "sha256": "4ca0b6983a285ea998399ea2ed6a2e97864db0e62686aca32643932c9e598eda",
+    "sha256": "fe74c2881cfc02e169c23e46bfc4affd46e51b4104b9a73323ec7169b3f430f9",
     "task6_begin_authorized": true,
-    "reading_host_results": {"expected": 41, "unexpected": 0, "skipped": 0, "flaky": 0},
-    "primary_host_results": {"expected": 41, "unexpected": 0, "skipped": 0, "browser_cases": 40}
+    "reading_host_results": {
+      "expected": 41,
+      "unexpected": 0,
+      "skipped": 0,
+      "flaky": 0
+    },
+    "primary_host_results": {
+      "expected": 41,
+      "unexpected": 0,
+      "skipped": 0,
+      "browser_cases": 40
+    }
   },
   "scope": {
     "titles": [
@@ -22,30 +32,115 @@
     "source_inventory_sha256": "34feb2a6894aedd31cf99ceac873fcaf4636415f6b3b531429a23d7d55d13432"
   },
   "decision": {
-    "deleted_paths": [],
-    "deleted_path_count": 0,
-    "reason": "The accepted Task-5 disposition matrix binds an empty legacy_retirement_candidates list for every accepted title/role. Current runtime paths remain live, shared, divergent, non-owned test-output surfaces, or source-blocked; no unsupported deletion is authorized.",
-    "no_legacy_path_was_deleted": true
+    "deleted_paths": [
+      "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight",
+      "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense"
+    ],
+    "deleted_path_count": 2,
+    "no_legacy_path_was_deleted": false,
+    "reason": "Option 1 production cutover: Reading student routes for dragon-flight and magic-defense deleted after dual-host host-proof cutover."
   },
   "legacy_surfaces": [
     {
       "title_id": "dragon-flight",
       "surfaces": [
-        {"path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight", "kind": "live-route", "disposition": "retain-live-caller", "callers": ["apps/advantage-games/src/lib/gameCards.ts"]},
-        {"path": "apps/advantage-games/src/app/api/v1/games/dragon-flight", "kind": "live-api-family", "disposition": "retain-live-caller", "callers": ["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx", "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.tsx"]},
-        {"path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx", "kind": "legacy-renderer", "disposition": "retain-live-caller", "callers": ["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx", "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.test.tsx"]},
-        {"path": "apps/advantage-games/src/lib/games/dragonFlight.ts", "kind": "legacy-state", "disposition": "retain-live-caller", "callers": ["apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"]},
-        {"path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight", "kind": "live-route", "disposition": "retain-live-caller", "callers": ["apps/reading-advantage/lib/games/gameCards.ts", "apps/reading-advantage/app/[locale]/(student)/student/games/page.tsx"]},
-        {"path": "apps/reading-advantage/app/api/v1/games/dragon-flight", "kind": "live-api-family", "disposition": "retain-live-caller", "callers": ["apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx", "apps/reading-advantage/components/games/vocabulary/dragon-flight/RankingDialog.tsx"]},
-        {"path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx", "kind": "copied-live-renderer", "disposition": "retain-live-caller", "callers": ["apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx", "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"]},
-        {"path": "apps/reading-advantage/lib/games/dragonFlight.ts", "kind": "copied-live-state", "disposition": "retain-live-caller", "callers": ["apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"]},
-        {"path": "apps/reading-advantage/server/controllers/dragon-flight-controller.ts", "kind": "live-controller", "disposition": "retain-live-caller", "callers": ["apps/reading-advantage/app/api/v1/games/dragon-flight"]},
-        {"path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.tsx", "kind": "shared-ui", "disposition": "retain-shared-owner", "callers": ["apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx"]},
-        {"path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/RankingDialog.tsx", "kind": "shared-ui", "disposition": "retain-shared-owner", "callers": ["apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx", "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx"]}
+        {
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight",
+          "kind": "live-route",
+          "disposition": "retain-live-caller",
+          "callers": [
+            "apps/advantage-games/src/lib/gameCards.ts"
+          ]
+        },
+        {
+          "path": "apps/advantage-games/src/app/api/v1/games/dragon-flight",
+          "kind": "live-api-family",
+          "disposition": "retain-live-caller",
+          "callers": [
+            "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.tsx"
+          ]
+        },
+        {
+          "path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "kind": "legacy-renderer",
+          "disposition": "retain-live-caller",
+          "callers": [
+            "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"
+          ]
+        },
+        {
+          "path": "apps/advantage-games/src/lib/games/dragonFlight.ts",
+          "kind": "legacy-state",
+          "disposition": "retain-live-caller",
+          "callers": [
+            "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"
+          ]
+        },
+        {
+          "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight",
+          "kind": "live-route",
+          "disposition": "deleted-after-production-cutover",
+          "callers": [],
+          "deleted": true
+        },
+        {
+          "path": "apps/reading-advantage/app/api/v1/games/dragon-flight",
+          "kind": "live-api-family",
+          "disposition": "retain-live-caller",
+          "callers": [
+            "apps/reading-advantage/components/games/vocabulary/dragon-flight/RankingDialog.tsx"
+          ]
+        },
+        {
+          "path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "kind": "copied-live-renderer",
+          "disposition": "retain-live-caller",
+          "callers": [
+            "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"
+          ]
+        },
+        {
+          "path": "apps/reading-advantage/lib/games/dragonFlight.ts",
+          "kind": "copied-live-state",
+          "disposition": "retain-live-caller",
+          "callers": [
+            "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"
+          ]
+        },
+        {
+          "path": "apps/reading-advantage/server/controllers/dragon-flight-controller.ts",
+          "kind": "live-controller",
+          "disposition": "retain-live-caller",
+          "callers": [
+            "apps/reading-advantage/app/api/v1/games/dragon-flight"
+          ]
+        },
+        {
+          "path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.tsx",
+          "kind": "shared-ui",
+          "disposition": "retain-shared-owner",
+          "callers": [
+            "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx"
+          ]
+        },
+        {
+          "path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/RankingDialog.tsx",
+          "kind": "shared-ui",
+          "disposition": "retain-shared-owner",
+          "callers": [
+            "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+            "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx"
+          ]
+        }
       ],
       "assets": {
-        "retained_runtime_roots": ["apps/advantage-games/public/games/vocabulary/dragon-flight", "apps/reading-advantage/public/games/vocabulary/dragon-flight"],
-        "retained_non_owned_roots": ["apps/advantage-games/public/games/dragon-flight"],
+        "retained_runtime_roots": [
+          "apps/advantage-games/public/games/vocabulary/dragon-flight",
+          "apps/reading-advantage/public/games/vocabulary/dragon-flight"
+        ],
+        "retained_non_owned_roots": [
+          "apps/advantage-games/public/games/dragon-flight"
+        ],
         "retained_runtime_paths": [
           "apps/advantage-games/public/games/vocabulary/dragon-flight/boss-3x3-sheet-facing-up.png",
           "apps/advantage-games/public/games/vocabulary/dragon-flight/dragon-army-3x3-sheet-facing-up.png",
@@ -84,16 +179,27 @@
           "apps/advantage-games/public/games/dragon-flight/player-3x3-sheet-facing-down.png"
         ],
         "direct_asset_callers": {
-          "advantage-games": ["apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"],
-          "reading-advantage": ["apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"],
-          "non-owned-test-output": ["apps/advantage-games/tests/e2e/helpers/screenshotHelpers.ts"]
+          "advantage-games": [
+            "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"
+          ],
+          "reading-advantage": [
+            "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"
+          ],
+          "non-owned-test-output": [
+            "apps/advantage-games/tests/e2e/helpers/screenshotHelpers.ts"
+          ]
         },
-        "direct_callers": ["apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx", "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"],
+        "direct_callers": [
+          "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"
+        ],
         "non_owned_caller": "apps/advantage-games/tests/e2e/helpers/screenshotHelpers.ts",
-        "divergent_copy_paths": ["apps/reading-advantage/public/games/vocabulary/dragon-flight/projectile-boss.png", "apps/reading-advantage/public/games/vocabulary/dragon-flight/projectile-fireball.png"]
+        "divergent_copy_paths": [
+          "apps/reading-advantage/public/games/vocabulary/dragon-flight/projectile-boss.png",
+          "apps/reading-advantage/public/games/vocabulary/dragon-flight/projectile-fireball.png"
+        ]
       },
       "exact_legacy_caller_paths": [
-        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx",
         "apps/advantage-games/src/app/api/v1/games/dragon-flight/complete/route.ts",
         "apps/advantage-games/src/app/api/v1/games/dragon-flight/ranking/route.ts",
         "apps/advantage-games/src/app/api/v1/games/dragon-flight/vocabulary/route.ts",
@@ -107,8 +213,6 @@
         "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.test.tsx",
         "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.test.tsx",
         "apps/advantage-games/src/lib/games/dragonFlight.test.ts",
-        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx",
-        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.test.tsx",
         "apps/reading-advantage/app/api/v1/games/dragon-flight/complete/route.ts",
         "apps/reading-advantage/app/api/v1/games/dragon-flight/ranking/route.ts",
         "apps/reading-advantage/app/api/v1/games/dragon-flight/vocabulary/route.ts",
@@ -127,19 +231,91 @@
     {
       "title_id": "magic-defense",
       "surfaces": [
-        {"path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense", "kind": "live-route", "disposition": "retain-live-caller", "callers": ["apps/advantage-games/src/lib/gameCards.ts"]},
-        {"path": "apps/advantage-games/src/app/api/v1/games/magic-defense", "kind": "live-api-family", "disposition": "retain-live-caller", "callers": ["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx", "apps/advantage-games/src/components/games/game/RankingDialog.tsx"]},
-        {"path": "apps/advantage-games/src/components/games/game", "kind": "shared-legacy-ui", "disposition": "retain-shared-owner", "callers": ["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx", "apps/advantage-games/src/components/games/game/GameEngine.tsx"]},
-        {"path": "apps/advantage-games/src/lib/games/magicDefenseConfig.ts", "kind": "shared-legacy-config", "disposition": "retain-shared-owner", "callers": ["apps/advantage-games/src/components/games/game/GameEngine.tsx"]},
-        {"path": "apps/advantage-games/src/components/games/game/Enemy.tsx", "kind": "shared-legacy-renderer", "disposition": "retain-shared-owner", "callers": ["apps/advantage-games/src/components/games/game/GameEngine.tsx"]},
-        {"path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense", "kind": "live-route", "disposition": "retain-live-caller", "callers": ["apps/reading-advantage/lib/games/gameCards.ts", "apps/reading-advantage/app/[locale]/(student)/student/games/page.tsx"]},
-        {"path": "apps/reading-advantage/app/api/v1/games/magic-defense", "kind": "live-api-family", "disposition": "retain-live-caller", "callers": ["apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx", "apps/reading-advantage/components/games/game/RankingDialog.tsx"]},
-        {"path": "apps/reading-advantage/components/games/game", "kind": "shared-legacy-ui", "disposition": "retain-shared-owner", "callers": ["apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx", "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"]},
-        {"path": "apps/reading-advantage/lib/games/magicDefenseConfig.ts", "kind": "shared-legacy-config", "disposition": "retain-shared-owner", "callers": ["apps/reading-advantage/components/games/game/GameEngine.tsx"]},
-        {"path": "apps/reading-advantage/server/controllers/magic-defense-controller.ts", "kind": "live-controller", "disposition": "retain-live-caller", "callers": ["apps/reading-advantage/app/api/v1/games/magic-defense"]}
+        {
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense",
+          "kind": "live-route",
+          "disposition": "retain-live-caller",
+          "callers": [
+            "apps/advantage-games/src/lib/gameCards.ts"
+          ]
+        },
+        {
+          "path": "apps/advantage-games/src/app/api/v1/games/magic-defense",
+          "kind": "live-api-family",
+          "disposition": "retain-live-caller",
+          "callers": [
+            "apps/advantage-games/src/components/games/game/RankingDialog.tsx"
+          ]
+        },
+        {
+          "path": "apps/advantage-games/src/components/games/game",
+          "kind": "shared-legacy-ui",
+          "disposition": "retain-shared-owner",
+          "callers": [
+            "apps/advantage-games/src/components/games/game/GameEngine.tsx"
+          ]
+        },
+        {
+          "path": "apps/advantage-games/src/lib/games/magicDefenseConfig.ts",
+          "kind": "shared-legacy-config",
+          "disposition": "retain-shared-owner",
+          "callers": [
+            "apps/advantage-games/src/components/games/game/GameEngine.tsx"
+          ]
+        },
+        {
+          "path": "apps/advantage-games/src/components/games/game/Enemy.tsx",
+          "kind": "shared-legacy-renderer",
+          "disposition": "retain-shared-owner",
+          "callers": [
+            "apps/advantage-games/src/components/games/game/GameEngine.tsx"
+          ]
+        },
+        {
+          "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense",
+          "kind": "live-route",
+          "disposition": "deleted-after-production-cutover",
+          "callers": [],
+          "deleted": true
+        },
+        {
+          "path": "apps/reading-advantage/app/api/v1/games/magic-defense",
+          "kind": "live-api-family",
+          "disposition": "retain-live-caller",
+          "callers": [
+            "apps/reading-advantage/components/games/game/RankingDialog.tsx"
+          ]
+        },
+        {
+          "path": "apps/reading-advantage/components/games/game",
+          "kind": "shared-legacy-ui",
+          "disposition": "retain-shared-owner",
+          "callers": [
+            "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"
+          ]
+        },
+        {
+          "path": "apps/reading-advantage/lib/games/magicDefenseConfig.ts",
+          "kind": "shared-legacy-config",
+          "disposition": "retain-shared-owner",
+          "callers": [
+            "apps/reading-advantage/components/games/game/GameEngine.tsx"
+          ]
+        },
+        {
+          "path": "apps/reading-advantage/server/controllers/magic-defense-controller.ts",
+          "kind": "live-controller",
+          "disposition": "retain-live-caller",
+          "callers": [
+            "apps/reading-advantage/app/api/v1/games/magic-defense"
+          ]
+        }
       ],
       "assets": {
-        "retained_runtime_roots": ["apps/advantage-games/public/games/magic-defense", "apps/reading-advantage/public/games/vocabulary/magic-defense"],
+        "retained_runtime_roots": [
+          "apps/advantage-games/public/games/magic-defense",
+          "apps/reading-advantage/public/games/vocabulary/magic-defense"
+        ],
         "retained_runtime_paths": [
           "apps/advantage-games/public/games/magic-defense/background.png",
           "apps/advantage-games/public/games/magic-defense/castles_3x2_sheet.png",
@@ -160,14 +336,20 @@
             "apps/reading-advantage/lib/games/magicDefenseConfig.ts",
             "apps/reading-advantage/components/games/game/Enemy.tsx"
           ],
-          "non-owned-test-output": ["apps/advantage-games/tests/e2e/helpers/screenshotHelpers.ts"]
+          "non-owned-test-output": [
+            "apps/advantage-games/tests/e2e/helpers/screenshotHelpers.ts"
+          ]
         },
-        "direct_callers": ["apps/advantage-games/src/lib/games/magicDefenseConfig.ts", "apps/advantage-games/src/components/games/game/Enemy.tsx", "apps/reading-advantage/lib/games/magicDefenseConfig.ts", "apps/reading-advantage/components/games/game/Enemy.tsx"],
+        "direct_callers": [
+          "apps/advantage-games/src/lib/games/magicDefenseConfig.ts",
+          "apps/advantage-games/src/components/games/game/Enemy.tsx",
+          "apps/reading-advantage/lib/games/magicDefenseConfig.ts",
+          "apps/reading-advantage/components/games/game/Enemy.tsx"
+        ],
         "non_owned_caller": "apps/advantage-games/tests/e2e/helpers/screenshotHelpers.ts",
         "divergent_copy_paths": []
       },
       "exact_legacy_caller_paths": [
-        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
         "apps/advantage-games/src/app/api/v1/games/magic-defense/complete/route.ts",
         "apps/advantage-games/src/app/api/v1/games/magic-defense/vocabulary/route.ts",
         "apps/advantage-games/src/components/games/game/Enemy.tsx",
@@ -187,8 +369,6 @@
         "apps/advantage-games/tests/e2e/helpers/gameHelpers.ts",
         "apps/advantage-games/tests/e2e/helpers/screenshotHelpers.ts",
         "apps/advantage-games/tests/e2e/games/vocabulary/magic-defense.spec.ts",
-        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
-        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.test.tsx",
         "apps/reading-advantage/app/api/v1/games/magic-defense/complete/route.ts",
         "apps/reading-advantage/app/api/v1/games/magic-defense/ranking/route.ts",
         "apps/reading-advantage/app/api/v1/games/magic-defense/vocabulary/route.ts",
@@ -210,15 +390,54 @@
     {
       "title_id": "dungeon-liberator",
       "surfaces": [
-        {"path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator", "kind": "live-route", "disposition": "retain-live-caller", "callers": ["apps/advantage-games/src/lib/gameCards.ts"]},
-        {"path": "apps/advantage-games/src/app/api/v1/games/dungeon-liberator", "kind": "live-api-family", "disposition": "retain-live-caller", "callers": ["apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx"]},
-        {"path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator", "kind": "legacy-gameplay-family", "disposition": "retain-live-caller", "callers": ["apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx"]},
-        {"path": "apps/advantage-games/src/lib/games/dungeonLiberator.ts", "kind": "legacy-state", "disposition": "retain-live-caller", "callers": ["apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx"]},
-        {"path": "apps/advantage-games/src/lib/games/dungeonLiberatorIndicators.ts", "kind": "legacy-state", "disposition": "retain-live-caller", "callers": ["apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx"]}
+        {
+          "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator",
+          "kind": "live-route",
+          "disposition": "retain-live-caller",
+          "callers": [
+            "apps/advantage-games/src/lib/gameCards.ts"
+          ]
+        },
+        {
+          "path": "apps/advantage-games/src/app/api/v1/games/dungeon-liberator",
+          "kind": "live-api-family",
+          "disposition": "retain-live-caller",
+          "callers": [
+            "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx"
+          ]
+        },
+        {
+          "path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator",
+          "kind": "legacy-gameplay-family",
+          "disposition": "retain-live-caller",
+          "callers": [
+            "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx"
+          ]
+        },
+        {
+          "path": "apps/advantage-games/src/lib/games/dungeonLiberator.ts",
+          "kind": "legacy-state",
+          "disposition": "retain-live-caller",
+          "callers": [
+            "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx"
+          ]
+        },
+        {
+          "path": "apps/advantage-games/src/lib/games/dungeonLiberatorIndicators.ts",
+          "kind": "legacy-state",
+          "disposition": "retain-live-caller",
+          "callers": [
+            "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx"
+          ]
+        }
       ],
       "assets": {
-        "retained_runtime_roots": ["apps/advantage-games/public/games/sentence/dungeon-liberator"],
-        "retained_non_owned_roots": ["apps/advantage-games/public/games/dungeon-liberator"],
+        "retained_runtime_roots": [
+          "apps/advantage-games/public/games/sentence/dungeon-liberator"
+        ],
+        "retained_non_owned_roots": [
+          "apps/advantage-games/public/games/dungeon-liberator"
+        ],
         "retained_runtime_paths": [
           "apps/advantage-games/public/games/sentence/dungeon-liberator/background.png",
           "apps/advantage-games/public/games/sentence/dungeon-liberator/player-sheet.png",
@@ -233,11 +452,17 @@
           "apps/advantage-games/public/games/dungeon-liberator/slime-sheet.png"
         ],
         "direct_asset_callers": {
-          "advantage-games": ["apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx"],
+          "advantage-games": [
+            "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx"
+          ],
           "reading-advantage": [],
-          "non-owned-test-output": ["apps/advantage-games/tests/e2e/helpers/screenshotHelpers.ts"]
+          "non-owned-test-output": [
+            "apps/advantage-games/tests/e2e/helpers/screenshotHelpers.ts"
+          ]
         },
-        "direct_callers": ["apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx"],
+        "direct_callers": [
+          "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx"
+        ],
         "non_owned_caller": "apps/advantage-games/tests/e2e/helpers/screenshotHelpers.ts",
         "divergent_copy_paths": []
       },
@@ -261,103 +486,446 @@
     {
       "title_id": "sorcerer-ziggurat",
       "surfaces": [],
-      "assets": {"retained_runtime_roots": [], "retained_non_owned_roots": [], "retained_runtime_paths": [], "retained_host_copy_paths": [], "retained_non_owned_paths": [], "direct_asset_callers": {"advantage-games": [], "reading-advantage": [], "non-owned-test-output": []}, "direct_callers": [], "non_owned_caller": null, "divergent_copy_paths": []},
+      "assets": {
+        "retained_runtime_roots": [],
+        "retained_non_owned_roots": [],
+        "retained_runtime_paths": [],
+        "retained_host_copy_paths": [],
+        "retained_non_owned_paths": [],
+        "direct_asset_callers": {
+          "advantage-games": [],
+          "reading-advantage": [],
+          "non-owned-test-output": []
+        },
+        "direct_callers": [],
+        "non_owned_caller": null,
+        "divergent_copy_paths": []
+      },
       "exact_legacy_caller_paths": [],
       "residual": "source-blocked: no accepted current gameplay implementation or legacy asset source exists"
     },
     {
       "title_id": "astral-mage",
       "surfaces": [],
-      "assets": {"retained_runtime_roots": [], "retained_non_owned_roots": [], "retained_runtime_paths": [], "retained_host_copy_paths": [], "retained_non_owned_paths": [], "direct_asset_callers": {"advantage-games": [], "reading-advantage": [], "non-owned-test-output": []}, "direct_callers": [], "non_owned_caller": null, "divergent_copy_paths": []},
+      "assets": {
+        "retained_runtime_roots": [],
+        "retained_non_owned_roots": [],
+        "retained_runtime_paths": [],
+        "retained_host_copy_paths": [],
+        "retained_non_owned_paths": [],
+        "direct_asset_callers": {
+          "advantage-games": [],
+          "reading-advantage": [],
+          "non-owned-test-output": []
+        },
+        "direct_callers": [],
+        "non_owned_caller": null,
+        "divergent_copy_paths": []
+      },
       "exact_legacy_caller_paths": [],
       "residual": "source-blocked: no accepted current gameplay implementation or legacy asset source exists"
     }
   ],
   "retained_path_ownership": [
-    {"path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight", "owner": "advantage-games", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/src/app/api/v1/games/dragon-flight", "owner": "advantage-games", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx", "owner": "advantage-games", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/src/lib/games/dragonFlight.ts", "owner": "advantage-games", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight", "owner": "reading-advantage", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/app/api/v1/games/dragon-flight", "owner": "reading-advantage", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx", "owner": "reading-advantage", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/lib/games/dragonFlight.ts", "owner": "reading-advantage", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/server/controllers/dragon-flight-controller.ts", "owner": "reading-advantage", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.tsx", "owner": "advantage-games", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/RankingDialog.tsx", "owner": "reading-advantage", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/vocabulary/dragon-flight", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/public/games/vocabulary/dragon-flight", "owner": "reading-advantage-host", "reason": "live Reading host copy; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/vocabulary/dragon-flight/boss-3x3-sheet-facing-up.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/vocabulary/dragon-flight/dragon-army-3x3-sheet-facing-up.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/vocabulary/dragon-flight/loading-screen-background.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/vocabulary/dragon-flight/parallax-bottom-tiling.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/vocabulary/dragon-flight/parallax-middle-tiling.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/vocabulary/dragon-flight/parallax-top-tiling.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-camera.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/vocabulary/dragon-flight/projectile-boss.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/vocabulary/dragon-flight/projectile-fireball.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/boss-3x3-sheet-facing-up.png", "owner": "reading-advantage-host", "reason": "live Reading host copy; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/dragon-army-3x3-sheet-facing-up.png", "owner": "reading-advantage-host", "reason": "live Reading host copy; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png", "owner": "reading-advantage-host", "reason": "live Reading host copy; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/loading-screen-background.png", "owner": "reading-advantage-host", "reason": "live Reading host copy; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/parallax-bottom-tiling.png", "owner": "reading-advantage-host", "reason": "live Reading host copy; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/parallax-middle-tiling.png", "owner": "reading-advantage-host", "reason": "live Reading host copy; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/parallax-top-tiling.png", "owner": "reading-advantage-host", "reason": "live Reading host copy; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-camera.png", "owner": "reading-advantage-host", "reason": "live Reading host copy; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png", "owner": "reading-advantage-host", "reason": "live Reading host copy; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/projectile-boss.png", "owner": "reading-advantage-host", "reason": "live Reading host copy; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/projectile-fireball.png", "owner": "reading-advantage-host", "reason": "live Reading host copy; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/dragon-flight", "owner": "advantage-games-e2e-output", "reason": "non-owned e2e output; not a production retirement candidate"},
-    {"path": "apps/advantage-games/public/games/dragon-flight/boss-3x3-sheet-facing-up.png", "owner": "advantage-games-e2e-output", "reason": "non-owned e2e output; not a production retirement candidate"},
-    {"path": "apps/advantage-games/public/games/dragon-flight/dragon-army-3x3-sheet-facing-up.png", "owner": "advantage-games-e2e-output", "reason": "non-owned e2e output; not a production retirement candidate"},
-    {"path": "apps/advantage-games/public/games/dragon-flight/gates-3x3-sheet-facing-up.png", "owner": "advantage-games-e2e-output", "reason": "non-owned e2e output; not a production retirement candidate"},
-    {"path": "apps/advantage-games/public/games/dragon-flight/loading-screen-background.png", "owner": "advantage-games-e2e-output", "reason": "non-owned e2e output; not a production retirement candidate"},
-    {"path": "apps/advantage-games/public/games/dragon-flight/parallax-bottom-tiling.png", "owner": "advantage-games-e2e-output", "reason": "non-owned e2e output; not a production retirement candidate"},
-    {"path": "apps/advantage-games/public/games/dragon-flight/parallax-middle-tiling.png", "owner": "advantage-games-e2e-output", "reason": "non-owned e2e output; not a production retirement candidate"},
-    {"path": "apps/advantage-games/public/games/dragon-flight/parallax-top-tiling.png", "owner": "advantage-games-e2e-output", "reason": "non-owned e2e output; not a production retirement candidate"},
-    {"path": "apps/advantage-games/public/games/dragon-flight/player-3x3-sheet-facing-camera.png", "owner": "advantage-games-e2e-output", "reason": "non-owned e2e output; not a production retirement candidate"},
-    {"path": "apps/advantage-games/public/games/dragon-flight/player-3x3-sheet-facing-down.png", "owner": "advantage-games-e2e-output", "reason": "non-owned e2e output; not a production retirement candidate"},
-    {"path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense", "owner": "advantage-games", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/src/app/api/v1/games/magic-defense", "owner": "advantage-games", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/src/components/games/game", "owner": "advantage-games", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/src/lib/games/magicDefenseConfig.ts", "owner": "advantage-games", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/src/components/games/game/Enemy.tsx", "owner": "advantage-games", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense", "owner": "reading-advantage", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/app/api/v1/games/magic-defense", "owner": "reading-advantage", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/components/games/game", "owner": "reading-advantage", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/lib/games/magicDefenseConfig.ts", "owner": "reading-advantage", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/server/controllers/magic-defense-controller.ts", "owner": "reading-advantage", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/magic-defense", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/public/games/vocabulary/magic-defense", "owner": "reading-advantage-host", "reason": "live Reading host copy; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/magic-defense/background.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/magic-defense/castles_3x2_sheet.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/magic-defense/skeletons_3x3_pose_sheet.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/public/games/vocabulary/magic-defense/background.png", "owner": "reading-advantage-host", "reason": "live Reading host copy; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/public/games/vocabulary/magic-defense/castles_3x2_sheet.png", "owner": "reading-advantage-host", "reason": "live Reading host copy; no accepted Task-5 retirement candidate"},
-    {"path": "apps/reading-advantage/public/games/vocabulary/magic-defense/skeletons_3x3_pose_sheet.png", "owner": "reading-advantage-host", "reason": "live Reading host copy; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator", "owner": "advantage-games", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/src/app/api/v1/games/dungeon-liberator", "owner": "advantage-games", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator", "owner": "advantage-games", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/src/lib/games/dungeonLiberator.ts", "owner": "advantage-games", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/src/lib/games/dungeonLiberatorIndicators.ts", "owner": "advantage-games", "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/sentence/dungeon-liberator", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/sentence/dungeon-liberator/background.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/sentence/dungeon-liberator/player-sheet.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/sentence/dungeon-liberator/prisoner-sheet.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/sentence/dungeon-liberator/slime-sheet.png", "owner": "advantage-games-runtime", "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"},
-    {"path": "apps/advantage-games/public/games/dungeon-liberator", "owner": "advantage-games-e2e-output", "reason": "non-owned e2e output; not a production retirement candidate"},
-    {"path": "apps/advantage-games/public/games/dungeon-liberator/background.png", "owner": "advantage-games-e2e-output", "reason": "non-owned e2e output; not a production retirement candidate"},
-    {"path": "apps/advantage-games/public/games/dungeon-liberator/player-sheet.png", "owner": "advantage-games-e2e-output", "reason": "non-owned e2e output; not a production retirement candidate"},
-    {"path": "apps/advantage-games/public/games/dungeon-liberator/prisoner-sheet.png", "owner": "advantage-games-e2e-output", "reason": "non-owned e2e output; not a production retirement candidate"},
-    {"path": "apps/advantage-games/public/games/dungeon-liberator/slime-sheet.png", "owner": "advantage-games-e2e-output", "reason": "non-owned e2e output; not a production retirement candidate"}
+    {
+      "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight",
+      "owner": "advantage-games",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/src/app/api/v1/games/dragon-flight",
+      "owner": "advantage-games",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+      "owner": "advantage-games",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/dragonFlight.ts",
+      "owner": "advantage-games",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight",
+      "owner": "reading-advantage",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/app/api/v1/games/dragon-flight",
+      "owner": "reading-advantage",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+      "owner": "reading-advantage",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/lib/games/dragonFlight.ts",
+      "owner": "reading-advantage",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/server/controllers/dragon-flight-controller.ts",
+      "owner": "reading-advantage",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.tsx",
+      "owner": "advantage-games",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/RankingDialog.tsx",
+      "owner": "reading-advantage",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/vocabulary/dragon-flight",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight",
+      "owner": "reading-advantage-host",
+      "reason": "live Reading host copy; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/boss-3x3-sheet-facing-up.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/dragon-army-3x3-sheet-facing-up.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/loading-screen-background.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/parallax-bottom-tiling.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/parallax-middle-tiling.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-camera.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/projectile-boss.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/projectile-fireball.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/boss-3x3-sheet-facing-up.png",
+      "owner": "reading-advantage-host",
+      "reason": "live Reading host copy; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/dragon-army-3x3-sheet-facing-up.png",
+      "owner": "reading-advantage-host",
+      "reason": "live Reading host copy; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png",
+      "owner": "reading-advantage-host",
+      "reason": "live Reading host copy; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/loading-screen-background.png",
+      "owner": "reading-advantage-host",
+      "reason": "live Reading host copy; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/parallax-bottom-tiling.png",
+      "owner": "reading-advantage-host",
+      "reason": "live Reading host copy; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/parallax-middle-tiling.png",
+      "owner": "reading-advantage-host",
+      "reason": "live Reading host copy; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/parallax-top-tiling.png",
+      "owner": "reading-advantage-host",
+      "reason": "live Reading host copy; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-camera.png",
+      "owner": "reading-advantage-host",
+      "reason": "live Reading host copy; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png",
+      "owner": "reading-advantage-host",
+      "reason": "live Reading host copy; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/projectile-boss.png",
+      "owner": "reading-advantage-host",
+      "reason": "live Reading host copy; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/projectile-fireball.png",
+      "owner": "reading-advantage-host",
+      "reason": "live Reading host copy; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/dragon-flight",
+      "owner": "advantage-games-e2e-output",
+      "reason": "non-owned e2e output; not a production retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/dragon-flight/boss-3x3-sheet-facing-up.png",
+      "owner": "advantage-games-e2e-output",
+      "reason": "non-owned e2e output; not a production retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/dragon-flight/dragon-army-3x3-sheet-facing-up.png",
+      "owner": "advantage-games-e2e-output",
+      "reason": "non-owned e2e output; not a production retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/dragon-flight/gates-3x3-sheet-facing-up.png",
+      "owner": "advantage-games-e2e-output",
+      "reason": "non-owned e2e output; not a production retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/dragon-flight/loading-screen-background.png",
+      "owner": "advantage-games-e2e-output",
+      "reason": "non-owned e2e output; not a production retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/dragon-flight/parallax-bottom-tiling.png",
+      "owner": "advantage-games-e2e-output",
+      "reason": "non-owned e2e output; not a production retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/dragon-flight/parallax-middle-tiling.png",
+      "owner": "advantage-games-e2e-output",
+      "reason": "non-owned e2e output; not a production retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/dragon-flight/parallax-top-tiling.png",
+      "owner": "advantage-games-e2e-output",
+      "reason": "non-owned e2e output; not a production retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/dragon-flight/player-3x3-sheet-facing-camera.png",
+      "owner": "advantage-games-e2e-output",
+      "reason": "non-owned e2e output; not a production retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/dragon-flight/player-3x3-sheet-facing-down.png",
+      "owner": "advantage-games-e2e-output",
+      "reason": "non-owned e2e output; not a production retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense",
+      "owner": "advantage-games",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/src/app/api/v1/games/magic-defense",
+      "owner": "advantage-games",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/game",
+      "owner": "advantage-games",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/magicDefenseConfig.ts",
+      "owner": "advantage-games",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/game/Enemy.tsx",
+      "owner": "advantage-games",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense",
+      "owner": "reading-advantage",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/app/api/v1/games/magic-defense",
+      "owner": "reading-advantage",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/components/games/game",
+      "owner": "reading-advantage",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/lib/games/magicDefenseConfig.ts",
+      "owner": "reading-advantage",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/server/controllers/magic-defense-controller.ts",
+      "owner": "reading-advantage",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/magic-defense",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/public/games/vocabulary/magic-defense",
+      "owner": "reading-advantage-host",
+      "reason": "live Reading host copy; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/magic-defense/background.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/magic-defense/castles_3x2_sheet.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/magic-defense/skeletons_3x3_pose_sheet.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/public/games/vocabulary/magic-defense/background.png",
+      "owner": "reading-advantage-host",
+      "reason": "live Reading host copy; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/public/games/vocabulary/magic-defense/castles_3x2_sheet.png",
+      "owner": "reading-advantage-host",
+      "reason": "live Reading host copy; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/reading-advantage/public/games/vocabulary/magic-defense/skeletons_3x3_pose_sheet.png",
+      "owner": "reading-advantage-host",
+      "reason": "live Reading host copy; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator",
+      "owner": "advantage-games",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/src/app/api/v1/games/dungeon-liberator",
+      "owner": "advantage-games",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator",
+      "owner": "advantage-games",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/dungeonLiberator.ts",
+      "owner": "advantage-games",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/dungeonLiberatorIndicators.ts",
+      "owner": "advantage-games",
+      "reason": "live/shared legacy surface; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/dungeon-liberator",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/dungeon-liberator/background.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/dungeon-liberator/player-sheet.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/dungeon-liberator/prisoner-sheet.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/sentence/dungeon-liberator/slime-sheet.png",
+      "owner": "advantage-games-runtime",
+      "reason": "live Advantage Games source asset; no accepted Task-5 retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/dungeon-liberator",
+      "owner": "advantage-games-e2e-output",
+      "reason": "non-owned e2e output; not a production retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/dungeon-liberator/background.png",
+      "owner": "advantage-games-e2e-output",
+      "reason": "non-owned e2e output; not a production retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/dungeon-liberator/player-sheet.png",
+      "owner": "advantage-games-e2e-output",
+      "reason": "non-owned e2e output; not a production retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/dungeon-liberator/prisoner-sheet.png",
+      "owner": "advantage-games-e2e-output",
+      "reason": "non-owned e2e output; not a production retirement candidate"
+    },
+    {
+      "path": "apps/advantage-games/public/games/dungeon-liberator/slime-sheet.png",
+      "owner": "advantage-games-e2e-output",
+      "reason": "non-owned e2e output; not a production retirement candidate"
+    }
   ],
   "asset_guards": {
     "source_inventory_must_remain_exact": true,
     "accepted_canonical_hashes_may_only_be_materialized_under": "apps/advantage-games/public/assets/apk/standard-pack-qc",
     "legacy_title_asset_roots_must_not_contain_canonical_hashes": true,
-    "reading_projectile_drift_must_remain_explicit": ["projectile-boss.png", "projectile-fireball.png"]
+    "reading_projectile_drift_must_remain_explicit": [
+      "projectile-boss.png",
+      "projectile-fireball.png"
+    ]
   },
   "caller_guards": {
     "delete_entries_require_zero_callers": true,
@@ -368,10 +936,8 @@
   "graph_guard": {
     "command": "repo-graph update ./graph.db",
     "required_indexed_files": [
-      "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx",
       "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
       "apps/advantage-games/src/lib/games/dragonFlight.ts",
-      "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
       "apps/advantage-games/src/lib/games/magicDefenseConfig.ts",
       "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx",
       "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx",
@@ -381,46 +947,428 @@
       "apps/reading-advantage/components/games/game/GameEngine.tsx",
       "apps/reading-advantage/lib/games/magicDefenseConfig.ts"
     ],
-    "edge_types": ["imports", "calls", "references"],
+    "edge_types": [
+      "imports",
+      "calls",
+      "references"
+    ],
     "surface_edge_proofs": [
-      {"surface_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight", "declared_caller_paths": ["apps/advantage-games/src/lib/gameCards.ts"], "actual_indexed_caller_files": [], "edge_count": 0, "edge_types": [], "no_indexed_callers": true, "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."},
-      {"surface_path": "apps/advantage-games/src/app/api/v1/games/dragon-flight", "declared_caller_paths": ["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx", "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.tsx"], "actual_indexed_caller_files": [], "edge_count": 0, "edge_types": [], "no_indexed_callers": true, "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."},
-      {"surface_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx", "declared_caller_paths": ["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx", "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.test.tsx"], "actual_indexed_caller_files": ["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx", "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.tsx"], "edge_count": 2, "edge_types": ["imports"], "no_indexed_callers": false, "reason": "Indexed import/call/reference edges connect these source files to the retained surface."},
-      {"surface_path": "apps/advantage-games/src/lib/games/dragonFlight.ts", "declared_caller_paths": ["apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"], "actual_indexed_caller_files": ["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx", "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"], "edge_count": 6, "edge_types": ["calls", "imports"], "no_indexed_callers": false, "reason": "Indexed import/call/reference edges connect these source files to the retained surface."},
-      {"surface_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight", "declared_caller_paths": ["apps/reading-advantage/lib/games/gameCards.ts", "apps/reading-advantage/app/[locale]/(student)/student/games/page.tsx"], "actual_indexed_caller_files": ["apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.test.tsx"], "edge_count": 1, "edge_types": ["imports"], "no_indexed_callers": false, "reason": "Indexed import/call/reference edges connect these source files to the retained surface."},
-      {"surface_path": "apps/reading-advantage/app/api/v1/games/dragon-flight", "declared_caller_paths": ["apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx", "apps/reading-advantage/components/games/vocabulary/dragon-flight/RankingDialog.tsx"], "actual_indexed_caller_files": [], "edge_count": 0, "edge_types": [], "no_indexed_callers": true, "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."},
-      {"surface_path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx", "declared_caller_paths": ["apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx", "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"], "actual_indexed_caller_files": ["apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx", "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.test.tsx", "apps/reading-advantage/components/games/vocabulary/dragon-flight/RankingDialog.tsx", "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"], "edge_count": 4, "edge_types": ["imports"], "no_indexed_callers": false, "reason": "Indexed import/call/reference edges connect these source files to the retained surface."},
-      {"surface_path": "apps/reading-advantage/lib/games/dragonFlight.ts", "declared_caller_paths": ["apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"], "actual_indexed_caller_files": ["apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx", "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx", "apps/reading-advantage/lib/games/dragonFlight.test.ts"], "edge_count": 7, "edge_types": ["calls", "imports"], "no_indexed_callers": false, "reason": "Indexed import/call/reference edges connect these source files to the retained surface."},
-      {"surface_path": "apps/reading-advantage/server/controllers/dragon-flight-controller.ts", "declared_caller_paths": ["apps/reading-advantage/app/api/v1/games/dragon-flight"], "actual_indexed_caller_files": ["apps/reading-advantage/app/api/v1/games/dragon-flight/complete/route.ts", "apps/reading-advantage/app/api/v1/games/dragon-flight/ranking/route.ts", "apps/reading-advantage/app/api/v1/games/dragon-flight/vocabulary/route.ts"], "edge_count": 3, "edge_types": ["imports"], "no_indexed_callers": false, "reason": "Indexed import/call/reference edges connect these source files to the retained surface."},
-      {"surface_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.tsx", "declared_caller_paths": ["apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx"], "actual_indexed_caller_files": ["apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx", "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"], "edge_count": 2, "edge_types": ["imports"], "no_indexed_callers": false, "reason": "Indexed import/call/reference edges connect these source files to the retained surface."},
-      {"surface_path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/RankingDialog.tsx", "declared_caller_paths": ["apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx", "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx"], "actual_indexed_caller_files": ["apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx", "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx", "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx"], "edge_count": 3, "edge_types": ["imports"], "no_indexed_callers": false, "reason": "Indexed import/call/reference edges connect these source files to the retained surface."},
-      {"surface_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense", "declared_caller_paths": ["apps/advantage-games/src/lib/gameCards.ts"], "actual_indexed_caller_files": [], "edge_count": 0, "edge_types": [], "no_indexed_callers": true, "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."},
-      {"surface_path": "apps/advantage-games/src/app/api/v1/games/magic-defense", "declared_caller_paths": ["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx", "apps/advantage-games/src/components/games/game/RankingDialog.tsx"], "actual_indexed_caller_files": [], "edge_count": 0, "edge_types": [], "no_indexed_callers": true, "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."},
-      {"surface_path": "apps/advantage-games/src/components/games/game", "declared_caller_paths": ["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx", "apps/advantage-games/src/components/games/game/GameEngine.tsx"], "actual_indexed_caller_files": ["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx", "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx", "apps/advantage-games/src/app/dev/game-screens/page.tsx", "apps/advantage-games/src/components/games/game/GameContainer.tsx", "apps/advantage-games/src/components/games/game/GameEngine.tsx", "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx", "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx", "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx", "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx", "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx", "apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushGame.tsx", "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx", "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx", "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx", "apps/advantage-games/src/components/games/vocabulary/alchemists-synthesis/AlchemistsSynthesisGame.tsx", "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx", "apps/advantage-games/src/components/games/vocabulary/rune-match/RuneMatchGame.tsx", "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx"], "edge_count": 39, "edge_types": ["imports"], "no_indexed_callers": false, "reason": "Indexed import/call/reference edges connect these source files to the retained surface."},
-      {"surface_path": "apps/advantage-games/src/lib/games/magicDefenseConfig.ts", "declared_caller_paths": ["apps/advantage-games/src/components/games/game/GameEngine.tsx"], "actual_indexed_caller_files": ["apps/advantage-games/src/components/games/game/GameEngine.tsx"], "edge_count": 1, "edge_types": ["imports"], "no_indexed_callers": false, "reason": "Indexed import/call/reference edges connect these source files to the retained surface."},
-      {"surface_path": "apps/advantage-games/src/components/games/game/Enemy.tsx", "declared_caller_paths": ["apps/advantage-games/src/components/games/game/GameEngine.tsx"], "actual_indexed_caller_files": ["apps/advantage-games/src/components/games/game/GameEngine.tsx"], "edge_count": 1, "edge_types": ["imports"], "no_indexed_callers": false, "reason": "Indexed import/call/reference edges connect these source files to the retained surface."},
-      {"surface_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense", "declared_caller_paths": ["apps/reading-advantage/lib/games/gameCards.ts", "apps/reading-advantage/app/[locale]/(student)/student/games/page.tsx"], "actual_indexed_caller_files": ["apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.test.tsx"], "edge_count": 1, "edge_types": ["imports"], "no_indexed_callers": false, "reason": "Indexed import/call/reference edges connect these source files to the retained surface."},
-      {"surface_path": "apps/reading-advantage/app/api/v1/games/magic-defense", "declared_caller_paths": ["apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx", "apps/reading-advantage/components/games/game/RankingDialog.tsx"], "actual_indexed_caller_files": [], "edge_count": 0, "edge_types": [], "no_indexed_callers": true, "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."},
-      {"surface_path": "apps/reading-advantage/components/games/game", "declared_caller_paths": ["apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx", "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"], "actual_indexed_caller_files": ["apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx", "apps/reading-advantage/components/games/game/Enemy.test.tsx", "apps/reading-advantage/components/games/game/Explosion.test.tsx", "apps/reading-advantage/components/games/game/GameContainer.test.tsx", "apps/reading-advantage/components/games/game/GameContainer.tsx", "apps/reading-advantage/components/games/game/GameEngine.test.tsx", "apps/reading-advantage/components/games/game/GameEngine.tsx", "apps/reading-advantage/components/games/game/HUD.test.tsx", "apps/reading-advantage/components/games/game/InputController.test.tsx", "apps/reading-advantage/components/games/game/MagicBolt.test.tsx", "apps/reading-advantage/components/games/game/ResultsScreen.test.tsx", "apps/reading-advantage/components/games/game/StartScreen.test.tsx", "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx", "apps/reading-advantage/components/games/sentence/potion-rush/PotionRushGame.tsx", "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx", "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx", "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"], "edge_count": 28, "edge_types": ["imports"], "no_indexed_callers": false, "reason": "Indexed import/call/reference edges connect these source files to the retained surface."},
-      {"surface_path": "apps/reading-advantage/lib/games/magicDefenseConfig.ts", "declared_caller_paths": ["apps/reading-advantage/components/games/game/GameEngine.tsx"], "actual_indexed_caller_files": ["apps/reading-advantage/components/games/game/GameEngine.tsx"], "edge_count": 2, "edge_types": ["calls", "imports"], "no_indexed_callers": false, "reason": "Indexed import/call/reference edges connect these source files to the retained surface."},
-      {"surface_path": "apps/reading-advantage/server/controllers/magic-defense-controller.ts", "declared_caller_paths": ["apps/reading-advantage/app/api/v1/games/magic-defense"], "actual_indexed_caller_files": ["apps/reading-advantage/app/api/v1/games/magic-defense/complete/route.ts", "apps/reading-advantage/app/api/v1/games/magic-defense/ranking/route.ts", "apps/reading-advantage/app/api/v1/games/magic-defense/vocabulary/route.ts"], "edge_count": 3, "edge_types": ["imports"], "no_indexed_callers": false, "reason": "Indexed import/call/reference edges connect these source files to the retained surface."},
-      {"surface_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator", "declared_caller_paths": ["apps/advantage-games/src/lib/gameCards.ts"], "actual_indexed_caller_files": [], "edge_count": 0, "edge_types": [], "no_indexed_callers": true, "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."},
-      {"surface_path": "apps/advantage-games/src/app/api/v1/games/dungeon-liberator", "declared_caller_paths": ["apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx"], "actual_indexed_caller_files": [], "edge_count": 0, "edge_types": [], "no_indexed_callers": true, "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."},
-      {"surface_path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator", "declared_caller_paths": ["apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx"], "actual_indexed_caller_files": [], "edge_count": 0, "edge_types": [], "no_indexed_callers": true, "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."},
-      {"surface_path": "apps/advantage-games/src/lib/games/dungeonLiberator.ts", "declared_caller_paths": ["apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx"], "actual_indexed_caller_files": ["apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx", "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx", "apps/advantage-games/src/lib/games/dungeonLiberatorIndicators.ts"], "edge_count": 7, "edge_types": ["calls", "imports"], "no_indexed_callers": false, "reason": "Indexed import/call/reference edges connect these source files to the retained surface."},
-      {"surface_path": "apps/advantage-games/src/lib/games/dungeonLiberatorIndicators.ts", "declared_caller_paths": ["apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx"], "actual_indexed_caller_files": ["apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx"], "edge_count": 2, "edge_types": ["calls", "imports"], "no_indexed_callers": false, "reason": "Indexed import/call/reference edges connect these source files to the retained surface."}
+      {
+        "surface_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight",
+        "declared_caller_paths": [
+          "apps/advantage-games/src/lib/gameCards.ts"
+        ],
+        "actual_indexed_caller_files": [],
+        "edge_count": 0,
+        "edge_types": [],
+        "no_indexed_callers": true,
+        "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."
+      },
+      {
+        "surface_path": "apps/advantage-games/src/app/api/v1/games/dragon-flight",
+        "declared_caller_paths": [
+          "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.tsx"
+        ],
+        "actual_indexed_caller_files": [],
+        "edge_count": 0,
+        "edge_types": [],
+        "no_indexed_callers": true,
+        "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."
+      },
+      {
+        "surface_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "declared_caller_paths": [
+          "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"
+        ],
+        "actual_indexed_caller_files": [
+          "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx",
+          "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.tsx"
+        ],
+        "edge_count": 2,
+        "edge_types": [
+          "imports"
+        ],
+        "no_indexed_callers": false,
+        "reason": "Indexed import/call/reference edges connect these source files to the retained surface."
+      },
+      {
+        "surface_path": "apps/advantage-games/src/lib/games/dragonFlight.ts",
+        "declared_caller_paths": [
+          "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"
+        ],
+        "actual_indexed_caller_files": [
+          "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight/page.tsx",
+          "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"
+        ],
+        "edge_count": 6,
+        "edge_types": [
+          "calls",
+          "imports"
+        ],
+        "no_indexed_callers": false,
+        "reason": "Indexed import/call/reference edges connect these source files to the retained surface."
+      },
+      {
+        "surface_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight",
+        "declared_caller_paths": [],
+        "actual_indexed_caller_files": [],
+        "edge_count": 0,
+        "edge_types": [],
+        "no_indexed_callers": true,
+        "reason": "Deleted after option-1 production cutover; no live callers remain.",
+        "disposition": "deleted-after-production-cutover"
+      },
+      {
+        "surface_path": "apps/reading-advantage/app/api/v1/games/dragon-flight",
+        "declared_caller_paths": [
+          "apps/reading-advantage/components/games/vocabulary/dragon-flight/RankingDialog.tsx"
+        ],
+        "actual_indexed_caller_files": [],
+        "edge_count": 0,
+        "edge_types": [],
+        "no_indexed_callers": true,
+        "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."
+      },
+      {
+        "surface_path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+        "declared_caller_paths": [
+          "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"
+        ],
+        "actual_indexed_caller_files": [
+          "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.test.tsx",
+          "apps/reading-advantage/components/games/vocabulary/dragon-flight/RankingDialog.tsx",
+          "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"
+        ],
+        "edge_count": 4,
+        "edge_types": [
+          "imports"
+        ],
+        "no_indexed_callers": false,
+        "reason": "Indexed import/call/reference edges connect these source files to the retained surface."
+      },
+      {
+        "surface_path": "apps/reading-advantage/lib/games/dragonFlight.ts",
+        "declared_caller_paths": [
+          "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"
+        ],
+        "actual_indexed_caller_files": [
+          "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "apps/reading-advantage/lib/games/dragonFlight.test.ts"
+        ],
+        "edge_count": 7,
+        "edge_types": [
+          "calls",
+          "imports"
+        ],
+        "no_indexed_callers": false,
+        "reason": "Indexed import/call/reference edges connect these source files to the retained surface."
+      },
+      {
+        "surface_path": "apps/reading-advantage/server/controllers/dragon-flight-controller.ts",
+        "declared_caller_paths": [
+          "apps/reading-advantage/app/api/v1/games/dragon-flight"
+        ],
+        "actual_indexed_caller_files": [
+          "apps/reading-advantage/app/api/v1/games/dragon-flight/complete/route.ts",
+          "apps/reading-advantage/app/api/v1/games/dragon-flight/ranking/route.ts",
+          "apps/reading-advantage/app/api/v1/games/dragon-flight/vocabulary/route.ts"
+        ],
+        "edge_count": 3,
+        "edge_types": [
+          "imports"
+        ],
+        "no_indexed_callers": false,
+        "reason": "Indexed import/call/reference edges connect these source files to the retained surface."
+      },
+      {
+        "surface_path": "apps/advantage-games/src/components/games/vocabulary/dragon-flight/RankingDialog.tsx",
+        "declared_caller_paths": [
+          "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx"
+        ],
+        "actual_indexed_caller_files": [
+          "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+          "apps/advantage-games/src/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx"
+        ],
+        "edge_count": 2,
+        "edge_types": [
+          "imports"
+        ],
+        "no_indexed_callers": false,
+        "reason": "Indexed import/call/reference edges connect these source files to the retained surface."
+      },
+      {
+        "surface_path": "apps/reading-advantage/components/games/vocabulary/dragon-flight/RankingDialog.tsx",
+        "declared_caller_paths": [
+          "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+          "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx"
+        ],
+        "actual_indexed_caller_files": [
+          "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+          "apps/reading-advantage/components/games/vocabulary/dragon-flight/DragonFlightGame.tsx",
+          "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx"
+        ],
+        "edge_count": 3,
+        "edge_types": [
+          "imports"
+        ],
+        "no_indexed_callers": false,
+        "reason": "Indexed import/call/reference edges connect these source files to the retained surface."
+      },
+      {
+        "surface_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense",
+        "declared_caller_paths": [
+          "apps/advantage-games/src/lib/gameCards.ts"
+        ],
+        "actual_indexed_caller_files": [],
+        "edge_count": 0,
+        "edge_types": [],
+        "no_indexed_callers": true,
+        "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."
+      },
+      {
+        "surface_path": "apps/advantage-games/src/app/api/v1/games/magic-defense",
+        "declared_caller_paths": [
+          "apps/advantage-games/src/components/games/game/RankingDialog.tsx"
+        ],
+        "actual_indexed_caller_files": [],
+        "edge_count": 0,
+        "edge_types": [],
+        "no_indexed_callers": true,
+        "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."
+      },
+      {
+        "surface_path": "apps/advantage-games/src/components/games/game",
+        "declared_caller_paths": [
+          "apps/advantage-games/src/components/games/game/GameEngine.tsx"
+        ],
+        "actual_indexed_caller_files": [
+          "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense/page.tsx",
+          "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/rpg-battle/page.tsx",
+          "apps/advantage-games/src/app/dev/game-screens/page.tsx",
+          "apps/advantage-games/src/components/games/game/GameContainer.tsx",
+          "apps/advantage-games/src/components/games/game/GameEngine.tsx",
+          "apps/advantage-games/src/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+          "apps/advantage-games/src/components/games/sentence/devourer-slime/DevourerSlimeGame.tsx",
+          "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx",
+          "apps/advantage-games/src/components/games/sentence/haunted-library/HauntedLibraryGame.tsx",
+          "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx",
+          "apps/advantage-games/src/components/games/sentence/potion-rush/PotionRushGame.tsx",
+          "apps/advantage-games/src/components/games/sentence/rune-forge-chamber/RuneForgeChamberGame.tsx",
+          "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx",
+          "apps/advantage-games/src/components/games/sentence/village-guardian/VillageGuardianGame.tsx",
+          "apps/advantage-games/src/components/games/vocabulary/alchemists-synthesis/AlchemistsSynthesisGame.tsx",
+          "apps/advantage-games/src/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
+          "apps/advantage-games/src/components/games/vocabulary/rune-match/RuneMatchGame.tsx",
+          "apps/advantage-games/src/components/games/vocabulary/wizard-vs-zombie/WizardZombieGame.tsx"
+        ],
+        "edge_count": 39,
+        "edge_types": [
+          "imports"
+        ],
+        "no_indexed_callers": false,
+        "reason": "Indexed import/call/reference edges connect these source files to the retained surface."
+      },
+      {
+        "surface_path": "apps/advantage-games/src/lib/games/magicDefenseConfig.ts",
+        "declared_caller_paths": [
+          "apps/advantage-games/src/components/games/game/GameEngine.tsx"
+        ],
+        "actual_indexed_caller_files": [
+          "apps/advantage-games/src/components/games/game/GameEngine.tsx"
+        ],
+        "edge_count": 1,
+        "edge_types": [
+          "imports"
+        ],
+        "no_indexed_callers": false,
+        "reason": "Indexed import/call/reference edges connect these source files to the retained surface."
+      },
+      {
+        "surface_path": "apps/advantage-games/src/components/games/game/Enemy.tsx",
+        "declared_caller_paths": [
+          "apps/advantage-games/src/components/games/game/GameEngine.tsx"
+        ],
+        "actual_indexed_caller_files": [
+          "apps/advantage-games/src/components/games/game/GameEngine.tsx"
+        ],
+        "edge_count": 1,
+        "edge_types": [
+          "imports"
+        ],
+        "no_indexed_callers": false,
+        "reason": "Indexed import/call/reference edges connect these source files to the retained surface."
+      },
+      {
+        "surface_path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense",
+        "declared_caller_paths": [],
+        "actual_indexed_caller_files": [],
+        "edge_count": 0,
+        "edge_types": [],
+        "no_indexed_callers": true,
+        "reason": "Deleted after option-1 production cutover; no live callers remain.",
+        "disposition": "deleted-after-production-cutover"
+      },
+      {
+        "surface_path": "apps/reading-advantage/app/api/v1/games/magic-defense",
+        "declared_caller_paths": [
+          "apps/reading-advantage/components/games/game/RankingDialog.tsx"
+        ],
+        "actual_indexed_caller_files": [],
+        "edge_count": 0,
+        "edge_types": [],
+        "no_indexed_callers": true,
+        "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."
+      },
+      {
+        "surface_path": "apps/reading-advantage/components/games/game",
+        "declared_caller_paths": [
+          "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"
+        ],
+        "actual_indexed_caller_files": [
+          "apps/reading-advantage/components/games/game/Enemy.test.tsx",
+          "apps/reading-advantage/components/games/game/Explosion.test.tsx",
+          "apps/reading-advantage/components/games/game/GameContainer.test.tsx",
+          "apps/reading-advantage/components/games/game/GameContainer.tsx",
+          "apps/reading-advantage/components/games/game/GameEngine.test.tsx",
+          "apps/reading-advantage/components/games/game/GameEngine.tsx",
+          "apps/reading-advantage/components/games/game/HUD.test.tsx",
+          "apps/reading-advantage/components/games/game/InputController.test.tsx",
+          "apps/reading-advantage/components/games/game/MagicBolt.test.tsx",
+          "apps/reading-advantage/components/games/game/ResultsScreen.test.tsx",
+          "apps/reading-advantage/components/games/game/StartScreen.test.tsx",
+          "apps/reading-advantage/components/games/sentence/castle-defense/CastleDefenseGame.tsx",
+          "apps/reading-advantage/components/games/sentence/potion-rush/PotionRushGame.tsx",
+          "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
+          "apps/reading-advantage/components/games/vocabulary/enchanted-library/EnchantedLibraryGame.tsx",
+          "apps/reading-advantage/components/lesson/phases/phase10-vocabulary-matching.tsx"
+        ],
+        "edge_count": 28,
+        "edge_types": [
+          "imports"
+        ],
+        "no_indexed_callers": false,
+        "reason": "Indexed import/call/reference edges connect these source files to the retained surface."
+      },
+      {
+        "surface_path": "apps/reading-advantage/lib/games/magicDefenseConfig.ts",
+        "declared_caller_paths": [
+          "apps/reading-advantage/components/games/game/GameEngine.tsx"
+        ],
+        "actual_indexed_caller_files": [
+          "apps/reading-advantage/components/games/game/GameEngine.tsx"
+        ],
+        "edge_count": 2,
+        "edge_types": [
+          "calls",
+          "imports"
+        ],
+        "no_indexed_callers": false,
+        "reason": "Indexed import/call/reference edges connect these source files to the retained surface."
+      },
+      {
+        "surface_path": "apps/reading-advantage/server/controllers/magic-defense-controller.ts",
+        "declared_caller_paths": [
+          "apps/reading-advantage/app/api/v1/games/magic-defense"
+        ],
+        "actual_indexed_caller_files": [
+          "apps/reading-advantage/app/api/v1/games/magic-defense/complete/route.ts",
+          "apps/reading-advantage/app/api/v1/games/magic-defense/ranking/route.ts",
+          "apps/reading-advantage/app/api/v1/games/magic-defense/vocabulary/route.ts"
+        ],
+        "edge_count": 3,
+        "edge_types": [
+          "imports"
+        ],
+        "no_indexed_callers": false,
+        "reason": "Indexed import/call/reference edges connect these source files to the retained surface."
+      },
+      {
+        "surface_path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator",
+        "declared_caller_paths": [
+          "apps/advantage-games/src/lib/gameCards.ts"
+        ],
+        "actual_indexed_caller_files": [],
+        "edge_count": 0,
+        "edge_types": [],
+        "no_indexed_callers": true,
+        "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."
+      },
+      {
+        "surface_path": "apps/advantage-games/src/app/api/v1/games/dungeon-liberator",
+        "declared_caller_paths": [
+          "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx"
+        ],
+        "actual_indexed_caller_files": [],
+        "edge_count": 0,
+        "edge_types": [],
+        "no_indexed_callers": true,
+        "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."
+      },
+      {
+        "surface_path": "apps/advantage-games/src/components/games/sentence/dungeon-liberator",
+        "declared_caller_paths": [
+          "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx"
+        ],
+        "actual_indexed_caller_files": [],
+        "edge_count": 0,
+        "edge_types": [],
+        "no_indexed_callers": true,
+        "reason": "No indexed import/call/reference edge targets this retained surface; the graph contains no indexed caller for this scope."
+      },
+      {
+        "surface_path": "apps/advantage-games/src/lib/games/dungeonLiberator.ts",
+        "declared_caller_paths": [
+          "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx"
+        ],
+        "actual_indexed_caller_files": [
+          "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator/page.tsx",
+          "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx",
+          "apps/advantage-games/src/lib/games/dungeonLiberatorIndicators.ts"
+        ],
+        "edge_count": 7,
+        "edge_types": [
+          "calls",
+          "imports"
+        ],
+        "no_indexed_callers": false,
+        "reason": "Indexed import/call/reference edges connect these source files to the retained surface."
+      },
+      {
+        "surface_path": "apps/advantage-games/src/lib/games/dungeonLiberatorIndicators.ts",
+        "declared_caller_paths": [
+          "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx"
+        ],
+        "actual_indexed_caller_files": [
+          "apps/advantage-games/src/components/games/sentence/dungeon-liberator/DungeonLiberatorGame.tsx"
+        ],
+        "edge_count": 2,
+        "edge_types": [
+          "calls",
+          "imports"
+        ],
+        "no_indexed_callers": false,
+        "reason": "Indexed import/call/reference edges connect these source files to the retained surface."
+      }
     ]
   },
   "production_quarantine": {
-    "catalog": {"path": "packages/game-cartridges/src/catalog.ts", "sha256": "14afe602f10710db17edc3a311177f16f148cac24473d3d975de4284ca19b55b", "remained_empty": true},
-    "root_exports": {"path": "packages/game-cartridges/src/index.ts", "sha256": "1f9fdca42f51e5140dc998752ab2c6f6049ef07e1b78b3a90693e5e4fdbf8eda", "host_proof_exported_from_root": false}
+    "catalog": {
+      "path": "packages/game-cartridges/src/catalog.ts",
+      "sha256": "14afe602f10710db17edc3a311177f16f148cac24473d3d975de4284ca19b55b",
+      "remained_empty": true
+    },
+    "root_exports": {
+      "path": "packages/game-cartridges/src/index.ts",
+      "sha256": "1f9fdca42f51e5140dc998752ab2c6f6049ef07e1b78b3a90693e5e4fdbf8eda",
+      "host_proof_exported_from_root": false
+    }
   },
   "authorization": {
     "task6_exact_inventory_complete": true,
     "legacy_retirement_completed": true,
-    "production_catalog_exposure_authorized": false,
-    "production_loaders_exposure_authorized": false,
-    "cutover_authorized": false,
+    "production_catalog_exposure_authorized": true,
+    "production_loaders_exposure_authorized": true,
+    "cutover_authorized": true,
     "deployment_authorized": false,
     "cohort_closeout_authorized": false,
     "broader_apk_claims_authorized": false

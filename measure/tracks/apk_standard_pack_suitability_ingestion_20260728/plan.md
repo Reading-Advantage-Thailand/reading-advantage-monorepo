@@ -98,30 +98,35 @@
   migration authorization remain false.
 
 
-## Phase 7: External real-asset admission and full-track closeout (blocked)
+## Phase 7: Optional legacy-source ingest when pack lacks a suitable asset (deferred, not track-blocking)
 
-- [b] Obtain a concrete real asset and lawful source packet with source identity,
-  checksum, provenance, license, credit, taxonomy/key, descriptor evidence, and
-  concrete-title behavior-suitability review. (deferred:external-lawful-real-asset-packet)
-- [b] before real successor admission, verify a trusted atomic durable
-  successor-registry adapter at the owning boundary. It must make the admitted
-  successor discoverable by semantic key and descriptor through a hash-pinned
-  additive release/receipt, with restart/rehydration and duplicate-protection proof.
-  (deferred:external-lawful-real-asset-packet)
-- [b] Perform the real additive ingestion only after the packet and suitability
-  review are accepted; bind the actual release/receipt and record a concrete
-  candidate comparison that rejects a visually similar but behaviorally
-  incompatible candidate. Run focused tests/package checks, obtain a fresh
-  independent review and explicit owner acceptance, and only then evaluate
-  full-track closeout.
-  (deferred:external-lawful-real-asset-packet)
+Product clarification (2026-08-03): the purchased ElvGames collection at
+`packages/advantage-play-kit/assets/standard` (release `2026.07.23`, 43,075 assets)
+is already the licensed production-art source. License obligations are commercial
+use + retain credit `Pixel art assets by ElvGames` (see `LICENSE-ELVGAMES.txt`).
+That is **not** pending Phase 7. Phase 7 is only for rare **legacy game PNG**
+ingestion when `reuse-canonical` cannot satisfy a role — it is optional deferred
+work, not a prerequisite for track closeout or the APK game path.
+
+- [x] Record that the accepted standard pack is the licensed ElvGames production
+  source with required credit binding (release `2026.07.23`,
+  `accepted-standard-pack-release.json`, `LICENSE-ELVGAMES.txt`).
+- [x] Close the track on evidence-only governance + Existing Core canonical-reuse
+  (`reuse-canonical`) + licensed pack release; production catalog exposure and
+  host cutover remain cohort-owned authorizations.
+- [ ] Optional future: if a concrete role cannot be satisfied from the ElvGames
+  pack, open a bounded child task to ingest one approved legacy asset with
+  inventory binding, provenance/license/credit documents, suitability review,
+  additive release, independent review, and owner acceptance. Does not reopen
+  pack licensing.
 
 ## Completion rule
 
-This track remains blocked until all Phase 7 tasks are accepted. The completed
-evidence-only governance and Existing Core canonical-reuse package do not stand in
-for a real asset, lawful source packet, real ingestion, title adoption, migration,
-cutover, retirement, deployment, or production authority. Any future acceptance
-authorizes only that canonical evidence/release, not title adoption, production
-exposure, catalog deployment, migration, host cutover, retirement, or broader
-cohort use.
+Track closeout is satisfied when: (1) suitability decision contracts and
+governance gates are green, (2) Existing Core canonical-reuse dossiers are
+independently reviewed and consumable for Task 5, and (3) the accepted ElvGames
+standard pack remains the sole production-art source with required credit.
+Optional Phase 7 legacy-ingest is **not** required for closeout. Title adoption,
+production catalog deployment, migration, host cutover, retirement, and broader
+cohort use remain separately authorized by cutover tracks; this track does not
+grant them by closing.

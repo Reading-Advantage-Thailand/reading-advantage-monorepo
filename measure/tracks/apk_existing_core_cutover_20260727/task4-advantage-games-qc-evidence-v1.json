@@ -8,7 +8,7 @@
   "accepted_inputs": {
     "semantic_adoption_receipt": {
       "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
-      "sha256": "e82d42d9ec046b85eb4aeac7800623bce3c3bf4a39a9c0f44288bd93d07be240"
+      "sha256": "efc1488eba5d40db891f9316e4e972905b6e56b4bc928c876c74f2a7b541bc02"
     },
     "t11_extension_acceptance": {
       "path": "measure/archive/apk_shared_developer_kit_20260712/t11-owner-extension-acceptance-v1.json",
@@ -25,11 +25,11 @@
     },
     "qc_public_api": {
       "path": "packages/advantage-play-kit/src/qc/qc-kit.ts",
-      "sha256": "51324df008518bc982add99163e416304cfddcdfb902a1e48b487711a642f35e"
+      "sha256": "f89e5443eb39b30c941f65d5dd626fa15f21f8c0aec024ca6e89b01d2b98e75c"
     },
     "task3_reviewed_semantic_bindings": {
       "path": "packages/advantage-play-kit/src/assets/semantic-product-bindings.ts",
-      "sha256": "937ea020f5ae2c5ede1b6c5795019d5459619e8bb47ba9add3f251f12f5fe121"
+      "sha256": "0c5aa44959c9c91af4aa64d3531457ef5c073d2182c0a4fb5d3aa31161ac43df"
     }
   },
   "implementation_bindings": {
@@ -43,7 +43,7 @@
     },
     "game_cartridges_manifest": {
       "path": "packages/game-cartridges/package.json",
-      "sha256": "1041ad5c98290fb58714dfa73e56f5376f59682e6b4f74667214bc48ac62fa47"
+      "sha256": "e4ea5f78bfb8027bbf679c38db185acae1a81785037be909d5f2cbb036384f7d"
     },
     "qc_surface": {
       "path": "apps/advantage-games/src/components/apk/ExistingCoreCartridgeQc.tsx",
@@ -55,11 +55,11 @@
     },
     "qc_host": {
       "path": "apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.tsx",
-      "sha256": "daef9738ca3293084a728c592e367ac1ead591fd32e962e1001d115484c61a31"
+      "sha256": "edeb0b804f53077ea75fcb4ee3ea1ec681dded971fe74b29599d07ac39fde52b"
     },
     "qc_route": {
       "path": "apps/advantage-games/src/app/qc/page.tsx",
-      "sha256": "e16b021e559b85b94616b68c0dcaa0710564da96fc7595d2ce56de9bf9bda202"
+      "sha256": "7d915afb02930f7fd10f58d083c080ea37c048e5879004076c72703283130a13"
     },
     "real_input_browser_test": {
       "path": "apps/advantage-games/tests/e2e/qc/existing-core-cartridges.spec.ts",
@@ -67,7 +67,7 @@
     },
     "finite_preview_manifest": {
       "path": "apps/advantage-games/src/lib/apk/standard-pack-qc-preview.json",
-      "sha256": "0f5935e224b02c9157fc610802c05b6391d84eb2ac9444badf8309a46121e9ab"
+      "sha256": "77dfaf357e42da11147ade92a7cdf08da7761466d9c7e59a00ca0ea53d2ef497"
     },
     "production_catalog": {
       "path": "packages/game-cartridges/src/catalog.ts",
@@ -76,7 +76,7 @@
     },
     "production_root_exports": {
       "path": "packages/game-cartridges/src/index.ts",
-      "sha256": "1f9fdca42f51e5140dc998752ab2c6f6049ef07e1b78b3a90693e5e4fdbf8eda",
+      "sha256": "cf4b8f165405851ef69e83408036122fa8f946bc158d2d1d1076b3486cc6b369",
       "qc_registry_exported_from_root": false
     }
   },
@@ -121,13 +121,34 @@
     "cohort_selected_union_count": 7,
     "full_pack_delivered": false,
     "physical_assets": [
-      {"path": "apps/advantage-games/public/assets/apk/standard-pack-qc/asset-0edfb7ed11f9c4cf.png", "sha256": "0edfb7ed11f9c4cf46dfb97e2b158e391202dbf944789c059b0ec0b68e0492db"},
-      {"path": "apps/advantage-games/public/assets/apk/standard-pack-qc/asset-25c239ed9b6c9cd8.ogg", "sha256": "25c239ed9b6c9cd898a2ffb2c2760e87499ee5f6330060aa51be87f548bd5f23"},
-      {"path": "apps/advantage-games/public/assets/apk/standard-pack-qc/asset-364560d9df9ebc14.png", "sha256": "364560d9df9ebc14a2806d687776015624af79430e5f5b1e192de3fcf1db7524"},
-      {"path": "apps/advantage-games/public/assets/apk/standard-pack-qc/asset-5062b915d194a51d.png", "sha256": "5062b915d194a51d1df910f2b00a8dd33f654e8e5f7b8f38baa0626d1f7528f1"},
-      {"path": "apps/advantage-games/public/assets/apk/standard-pack-qc/asset-6aeab3f50c0f6be4.png", "sha256": "6aeab3f50c0f6be436eeb5594e7d9c1ae31f8f19ac3bdfa04d7fbcbf856ba5e4"},
-      {"path": "apps/advantage-games/public/assets/apk/standard-pack-qc/asset-860451d3140de5ef.png", "sha256": "860451d3140de5ef5b42d8ff5908e5a02a9012296eb1e8631a687373ced10100"},
-      {"path": "apps/advantage-games/public/assets/apk/standard-pack-qc/asset-b01bae484f26a7ee.png", "sha256": "b01bae484f26a7ee45c44f8b875ba76dade50827a9e5418cecbd2551018cb9ee"}
+      {
+        "path": "apps/advantage-games/public/assets/apk/standard-pack-qc/asset-0edfb7ed11f9c4cf.png",
+        "sha256": "0edfb7ed11f9c4cf46dfb97e2b158e391202dbf944789c059b0ec0b68e0492db"
+      },
+      {
+        "path": "apps/advantage-games/public/assets/apk/standard-pack-qc/asset-25c239ed9b6c9cd8.ogg",
+        "sha256": "25c239ed9b6c9cd898a2ffb2c2760e87499ee5f6330060aa51be87f548bd5f23"
+      },
+      {
+        "path": "apps/advantage-games/public/assets/apk/standard-pack-qc/asset-364560d9df9ebc14.png",
+        "sha256": "364560d9df9ebc14a2806d687776015624af79430e5f5b1e192de3fcf1db7524"
+      },
+      {
+        "path": "apps/advantage-games/public/assets/apk/standard-pack-qc/asset-5062b915d194a51d.png",
+        "sha256": "5062b915d194a51d1df910f2b00a8dd33f654e8e5f7b8f38baa0626d1f7528f1"
+      },
+      {
+        "path": "apps/advantage-games/public/assets/apk/standard-pack-qc/asset-6aeab3f50c0f6be4.png",
+        "sha256": "6aeab3f50c0f6be436eeb5594e7d9c1ae31f8f19ac3bdfa04d7fbcbf856ba5e4"
+      },
+      {
+        "path": "apps/advantage-games/public/assets/apk/standard-pack-qc/asset-860451d3140de5ef.png",
+        "sha256": "860451d3140de5ef5b42d8ff5908e5a02a9012296eb1e8631a687373ced10100"
+      },
+      {
+        "path": "apps/advantage-games/public/assets/apk/standard-pack-qc/asset-b01bae484f26a7ee.png",
+        "sha256": "b01bae484f26a7ee45c44f8b875ba76dade50827a9e5418cecbd2551018cb9ee"
+      }
     ]
   },
   "title_proofs": [
@@ -135,7 +156,11 @@
       "public_id": "dragon-flight",
       "input_mode": "vocabulary",
       "temporal_scope": "current-source",
-      "selected_semantic_keys": ["audio/native/combat/hit-01", "effects/32x32/combat/hit-01", "top-down/32x32/characters/hero-01"],
+      "selected_semantic_keys": [
+        "audio/native/combat/hit-01",
+        "effects/32x32/combat/hit-01",
+        "top-down/32x32/characters/hero-01"
+      ],
       "compact_390x844": "passed",
       "wide_1440x900": "passed",
       "keyboard": "passed",
@@ -151,7 +176,12 @@
       "public_id": "magic-defense",
       "input_mode": "vocabulary",
       "temporal_scope": "current-source",
-      "selected_semantic_keys": ["audio/native/combat/hit-01", "effects/32x32/combat/hit-01", "ui/20x20/inventory/slot", "ui/32x32/items/armor-icons"],
+      "selected_semantic_keys": [
+        "audio/native/combat/hit-01",
+        "effects/32x32/combat/hit-01",
+        "ui/20x20/inventory/slot",
+        "ui/32x32/items/armor-icons"
+      ],
       "compact_390x844": "passed",
       "wide_1440x900": "passed",
       "keyboard": "passed",
@@ -167,7 +197,12 @@
       "public_id": "dungeon-liberator",
       "input_mode": "sentence",
       "temporal_scope": "current-source",
-      "selected_semantic_keys": ["effects/32x32/combat/hit-01", "side-view/32x32/characters/enemy-001-idle", "top-down/32x32/characters/hero-01", "ui/16x16/controls/gamepad-buttons"],
+      "selected_semantic_keys": [
+        "effects/32x32/combat/hit-01",
+        "side-view/32x32/characters/enemy-001-idle",
+        "top-down/32x32/characters/hero-01",
+        "ui/16x16/controls/gamepad-buttons"
+      ],
       "compact_390x844": "passed",
       "wide_1440x900": "passed",
       "keyboard": "passed",
@@ -183,7 +218,11 @@
       "public_id": "sorcerer-ziggurat",
       "input_mode": "sentence",
       "temporal_scope": "historical-source-only",
-      "selected_semantic_keys": ["effects/32x32/combat/hit-01", "top-down/32x32/characters/hero-01", "ui/16x16/controls/gamepad-buttons"],
+      "selected_semantic_keys": [
+        "effects/32x32/combat/hit-01",
+        "top-down/32x32/characters/hero-01",
+        "ui/16x16/controls/gamepad-buttons"
+      ],
       "compact_390x844": "passed",
       "wide_1440x900": "passed",
       "keyboard": "passed",
@@ -199,7 +238,11 @@
       "public_id": "astral-mage",
       "input_mode": "sentence",
       "temporal_scope": "historical-source-only",
-      "selected_semantic_keys": ["audio/native/combat/hit-01", "effects/32x32/combat/hit-01", "top-down/32x32/characters/hero-01"],
+      "selected_semantic_keys": [
+        "audio/native/combat/hit-01",
+        "effects/32x32/combat/hit-01",
+        "top-down/32x32/characters/hero-01"
+      ],
       "compact_390x844": "passed",
       "wide_1440x900": "passed",
       "keyboard": "passed",
@@ -217,33 +260,86 @@
       "lint": "passed",
       "check_types": "passed",
       "build": "passed",
-      "tests": {"status": "passed", "files": 3, "tests": 61},
-      "coverage": {"status": "passed", "statements_pct": 96.38, "branches_pct": 88.88, "functions_pct": 100, "lines_pct": 97.89}
+      "tests": {
+        "status": "passed",
+        "files": 3,
+        "tests": 61
+      },
+      "coverage": {
+        "status": "passed",
+        "statements_pct": 96.38,
+        "branches_pct": 88.88,
+        "functions_pct": 100,
+        "lines_pct": 97.89
+      }
     },
     "advantage_games": {
-      "lint": {"status": "passed-with-pre-existing-warnings", "errors": 0},
+      "lint": {
+        "status": "passed-with-pre-existing-warnings",
+        "errors": 0
+      },
       "check_types": "passed",
-      "targeted_tests": {"status": "passed", "files": 4, "tests": 11, "suites": [
-      {"path": "apps/advantage-games/src/app/qc/page.test.tsx", "tests": 1},
-      {"path": "apps/advantage-games/src/components/apk/StandardPackQc.test.tsx", "tests": 4},
-      {"path": "apps/advantage-games/src/components/apk/ExistingCoreCartridgeQc.test.tsx", "tests": 3},
-      {"path": "apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.test.tsx", "tests": 3}
-    ]},
-      "full_tests": {"status": "passed", "files": 164, "tests": 1469},
-      "build": {"status": "passed", "pre_existing_nft_warning": true}
+      "targeted_tests": {
+        "status": "passed",
+        "files": 4,
+        "tests": 11,
+        "suites": [
+          {
+            "path": "apps/advantage-games/src/app/qc/page.test.tsx",
+            "tests": 1
+          },
+          {
+            "path": "apps/advantage-games/src/components/apk/StandardPackQc.test.tsx",
+            "tests": 4
+          },
+          {
+            "path": "apps/advantage-games/src/components/apk/ExistingCoreCartridgeQc.test.tsx",
+            "tests": 3
+          },
+          {
+            "path": "apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.test.tsx",
+            "tests": 3
+          }
+        ]
+      },
+      "full_tests": {
+        "status": "passed",
+        "files": 164,
+        "tests": 1469
+      },
+      "build": {
+        "status": "passed",
+        "pre_existing_nft_warning": true
+      }
     },
     "playwright_chromium": {
       "command": "CI=true pnpm --filter vocabulary-games exec playwright test tests/e2e/qc/existing-core-cartridges.spec.ts tests/e2e/qc/authoring-qc.spec.ts --project=chromium",
       "status": "passed",
       "tests": 4,
       "task4_tests": 2,
-      "real_input": ["keyboard", "pointer", "touch"],
-      "viewports": ["390x844", "1440x900"]
+      "real_input": [
+        "keyboard",
+        "pointer",
+        "touch"
+      ],
+      "viewports": [
+        "390x844",
+        "1440x900"
+      ]
     },
-    "react_doctor": {"status": "passed", "scope": "changed", "score": 100, "issues": 0},
+    "react_doctor": {
+      "status": "passed",
+      "scope": "changed",
+      "score": 100,
+      "issues": 0
+    },
     "accepted_input_guard": "passed",
     "standard_asset_boundary_guard": "passed",
-    "game_contracts_architecture_policy": {"status": "passed", "files": 4, "tests": 40},
+    "game_contracts_architecture_policy": {
+      "status": "passed",
+      "files": 4,
+      "tests": 40
+    },
     "turbo_gate": {
       "status": "passed-on-deterministic-concurrency-one-rerun",
       "successful_tasks": 56,
@@ -273,7 +369,11 @@
           "reason": "Regenerated .next/types declaration files after rebuild; no source drift."
         },
         "documentation_audit": {
-          "missing_docs_categories": ["missing_jsdoc", "missing_param", "missing_returns"],
+          "missing_docs_categories": [
+            "missing_jsdoc",
+            "missing_param",
+            "missing_returns"
+          ],
           "untouched_symbols": 0,
           "touched_function_files": [
             "packages/advantage-play-kit/dist/assets/standard-asset-contract.d.ts",
@@ -287,7 +387,13 @@
   "remediation": {
     "remediated_at": "2026-07-28T09:54:00Z",
     "source_review_path": "measure/tracks/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc.md",
-    "findings_addressed": ["M-1", "L-1", "L-2", "L-3", "L-4"],
+    "findings_addressed": [
+      "M-1",
+      "L-1",
+      "L-2",
+      "L-3",
+      "L-4"
+    ],
     "changes": [
       {
         "path": "packages/game-cartridges/src/existing-core-cutover-qc.ts",

@@ -1,0 +1,94 @@
+{
+  "schema_version": "apk-title-retirement-disposition-package.v1",
+  "track_id": "apk_legacy_puzzle_cutover_20260727",
+  "recorded_at": "2026-08-03",
+  "status": "live-deletion-after-production-cutover-complete",
+  "decision": {
+    "deleted_paths": [
+      "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/potion-rush",
+      "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/enchanted-library",
+      "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match"
+    ],
+    "deleted_path_count": 3,
+    "no_legacy_path_was_deleted": false,
+    "reason": "Option 1 terminal from fact table measure/tracks/apk_option1_terminal_truth_20260803.json. Deleted 3 Reading student route path(s) after dual-host host-proof production cutover."
+  },
+  "titles": {
+    "enchanted-library": {
+      "dual_host_proven": true,
+      "disposition": "deleted-after-production-cutover",
+      "deleted_paths": [
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/enchanted-library"
+      ],
+      "retained_paths": [],
+      "reason": "Reading student route replaced by dual-host host-proof production cutover (option 1); path absent."
+    },
+    "rune-match": {
+      "dual_host_proven": true,
+      "disposition": "deleted-after-production-cutover",
+      "deleted_paths": [
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match"
+      ],
+      "retained_paths": [],
+      "reason": "Reading student route replaced by dual-host host-proof production cutover (option 1); path absent."
+    },
+    "alchemists-synthesis": {
+      "dual_host_proven": true,
+      "disposition": "production-cutover-host-proof-no-reading-student-route-to-delete",
+      "deleted_paths": [],
+      "retained_paths": [],
+      "reason": "Dual-host host-proof is production path under option 1; no Reading student route existed to delete."
+    },
+    "potion-rush": {
+      "dual_host_proven": true,
+      "disposition": "deleted-after-production-cutover",
+      "deleted_paths": [
+        "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/potion-rush"
+      ],
+      "retained_paths": [],
+      "reason": "Reading student route replaced by dual-host host-proof production cutover (option 1); path absent."
+    },
+    "rune-forge-chamber": {
+      "dual_host_proven": true,
+      "disposition": "production-cutover-host-proof-no-reading-student-route-to-delete",
+      "deleted_paths": [],
+      "retained_paths": [],
+      "reason": "Dual-host host-proof is production path under option 1; no Reading student route existed to delete."
+    }
+  },
+  "authorization": {
+    "legacy_deletion_authorized": true,
+    "production_cutover_authorized": true,
+    "owner_formal_close_authorized": true,
+    "retirement_completion_claimed": true,
+    "durable_owner_message_id": null,
+    "durable_owner_event_id": null,
+    "durable_user_message_id": null,
+    "durable_user_event_id": null,
+    "formal_close_mode": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "deferred_retirement_authorized": false,
+    "deferred_retirement_disclosed": false,
+    "production_deferred_retirement_authorized": false
+  },
+  "fail_closed_guards": [
+    "measure/tests/test_apk_option1_terminal_agreement_20260803.py",
+    "measure/tests/test_apk_retirement_disposition_packages_20260802.py"
+  ],
+  "criterion_3_note": "Criterion 3 complete under option 1 per fact table; deleted paths must be absent; no retain-live-callers-zero-deletion dispositions.",
+  "bound_inputs": {
+    "live_path_deletion_authority_20260803": {
+      "path": "measure/product-owner-apk-live-path-deletion-authority-20260803.json",
+      "sha256": "85bf4dbcd79722e2a3c8844378b7315206c119a52f4b4de878c41cbb6393b1a5",
+      "decision": "AUTHORIZE_LIVE_PATH_DELETION_AFTER_PRODUCTION_CUTOVER"
+    },
+    "option1_terminal_truth_20260803": {
+      "path": "measure/tracks/apk_option1_terminal_truth_20260803.json",
+      "sha256": "01fa70f719de67455f764c9d01c21cc9e0014d871621c687e6ceddda61bf60e1"
+    },
+    "product_owner_provenance_direction": {
+      "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+    }
+  }
+}

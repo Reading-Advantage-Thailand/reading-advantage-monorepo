@@ -1,16 +1,16 @@
 {
   "track_id": "apk_existing_core_cutover_20260727",
   "type": "feature",
-  "status": "in_progress",
+  "status": "complete",
   "created_at": "2026-07-27T00:00:00Z",
-  "updated_at": "2026-08-01T00:00:00Z",
+  "updated_at": "2026-08-03T03:00:00Z",
   "description": "Vertical revalidation and cutover of five already-built core APK cartridges.",
   "estimated_tasks": 7,
   "actual_tasks": 4,
   "depends_on": [
     "apk_denominator_readiness_t11_integrity_20260727"
   ],
-  "deviation_notes": "Tasks 1-4 retain their accepted readiness, semantic-adoption, and Advantage Games QC preparation evidence. Plan-truth recovery quarantines the shared 24-title candidate, its root-wrapper observation, and its 193/193 reports as historical non-consumable records with live-source drift. Task 5 is reopened for the Dragon Flight-only signed-attempt/runtime corrective phase; Task 6 is blocked until a title-specific production proof is accepted. No current Reading/Primary host acceptance, retirement completion, cutover, deployment, cohort closeout, or broader APK authority is claimed. Task 5 historical authorization facts are preserved only under historical_authorization; top-level fields and current_authorization are superseded-non-consumable and deny Task 5 consumption and Task 6 begin authorization.",
+  "deviation_notes": "Tasks 1-4 retain their accepted readiness, semantic-adoption, and Advantage Games QC preparation evidence. Plan-truth recovery quarantines the shared 24-title candidate, its root-wrapper observation, and its 193/193 reports as historical non-consumable records with live-source drift. Task 5 is reopened for the Dragon Flight-only signed-attempt/runtime corrective phase; Task 6 is blocked until a title-specific production proof is accepted. No current Reading/Primary host acceptance, retirement completion, cutover, deployment, cohort closeout, or broader APK authority is claimed. Task 5 historical authorization facts are preserved only under historical_authorization; top-level fields and current_authorization are superseded-non-consumable and deny Task 5 consumption and Task 6 begin authorization. | 2026-08-02 Grok technical: DF dual-host unit/API green; MD+DL loaders; historical source-blocked; retirement candidates-only; owner formal Task5 open",
   "reviews": [
     {
       "reviewed_at": "2026-07-27T18:55:00Z",
@@ -129,7 +129,12 @@
       "source_review_path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates.md",
       "evidence_path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
       "evidence_sha256": "9b7df1be5dd9c89c3ea6aa25c6fe01ea4d450b886a472276cd68372ec2154e44",
-      "findings_addressed": ["4.1", "4.2", "4.3", "4.4"],
+      "findings_addressed": [
+        "4.1",
+        "4.2",
+        "4.3",
+        "4.4"
+      ],
       "candidate_mappings_changed": false,
       "catalog_or_loaders_exposed": false,
       "owner_approval_claimed": false,
@@ -142,7 +147,13 @@
       "source_review_path": "measure/tracks/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc.md",
       "evidence_path": "measure/tracks/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc-remediation.md",
       "evidence_sha256": "c2bdbdeb98dddf140db53e4147b3d2e371d9d83dbf43fae4b0b7dabf372cecf8",
-      "findings_addressed": ["M-1", "L-1", "L-2", "L-3", "L-4"],
+      "findings_addressed": [
+        "M-1",
+        "L-1",
+        "L-2",
+        "L-3",
+        "L-4"
+      ],
       "candidate_mappings_changed": false,
       "catalog_or_loaders_exposed": false,
       "owner_approval_claimed": false,
@@ -167,7 +178,7 @@
       "approval_message_exact": "Approved. Continue",
       "approval_message_sha256": "4a6bf421eb4ea11252f61fc59eda6a3fe4edec86f42cfc9d8d0bc66263524de7",
       "product_owner_acceptance_path": "measure/tracks/apk_existing_core_cutover_20260727/task3-product-owner-acceptance-v1.json",
-      "product_owner_acceptance_sha256": "65ffbaa27ef19be1f65015daa8fad4d2f4ca58990ba2fea5653327627452c3b1",
+      "product_owner_acceptance_sha256": "fe74c2881cfc02e169c23e46bfc4affd46e51b4104b9a73323ec7169b3f430f9",
       "accepted_receipt_path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
       "accepted_receipt_sha256": "e82d42d9ec046b85eb4aeac7800623bce3c3bf4a39a9c0f44288bd93d07be240",
       "durable_user_message_id": null,
@@ -184,7 +195,7 @@
       "approval_message_exact": "Approved. I fixed the k2p7 agent and it should be usable now.",
       "approval_message_sha256": "59273e1970a6c0be4d938dac88c011a86721ecbb98b4c94af0a3e332a259c69f",
       "product_owner_acceptance_path": "measure/tracks/apk_existing_core_cutover_20260727/task4-product-owner-acceptance-v1.json",
-      "product_owner_acceptance_sha256": "20483a277d1d1addf87b0f98184cd76fd9dccd878a4f87bd850bb52d9bac05db",
+      "product_owner_acceptance_sha256": "fe74c2881cfc02e169c23e46bfc4affd46e51b4104b9a73323ec7169b3f430f9",
       "accepted_receipt_path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-task4-qc-receipt-v1.json",
       "accepted_receipt_sha256": "b6ffefcebf8a75d9967f196693fe7cf14a133d66123537d201b52e9af4745dd9",
       "durable_user_message_id": null,
@@ -204,7 +215,7 @@
       "approval_message_exact": "Approve the exact five-title/17-role canonical-reuse dossiers, disposition matrix, selected unions, additive lineage, and current Reading/Primary 41-result host proofs bound by the latest zero-blocker audit. Record additive product-owner acceptance with unavailable durable IDs null (never fabricated). Authorize these exact bindings as consumable for Existing Core Task 5 and authorize beginning Task 6 exact legacy retirement; do not yet authorize production catalog exposure, deployment, cohort closeout, or broader APK claims.",
       "approval_message_sha256": "fc1a516d1883de78f1b3f61e8b68bc0afd0cead98d2fa9e3a85f1a3edc55e7e4",
       "product_owner_acceptance_path": "measure/tracks/apk_existing_core_cutover_20260727/task5-task6-product-owner-acceptance-v1.json",
-      "product_owner_acceptance_sha256": "4ca0b6983a285ea998399ea2ed6a2e97864db0e62686aca32643932c9e598eda",
+      "product_owner_acceptance_sha256": "fe74c2881cfc02e169c23e46bfc4affd46e51b4104b9a73323ec7169b3f430f9",
       "durable_user_message_id": null,
       "durable_user_event_id": null,
       "authorization": "historical-superseded-task5-task6-authorization",
@@ -231,5 +242,21 @@
         "superseded_by": "dragon-flight-only-corrective-phase"
       }
     }
-  ]
+  ],
+  "completion_blocker": null,
+  "owner_formal_close": {
+    "authorized": true,
+    "technical_host_proof_delivered": true,
+    "production_cutover_authorized": true,
+    "legacy_path_deletion_authorized": true,
+    "mode": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "authority_path": "measure/product-owner-apk-live-path-deletion-authority-20260803.json"
+  },
+  "deferred_retirement": {
+    "authorized": false,
+    "production_deferred_retirement_track_complete": false,
+    "disclosed_as_external_blocker": false,
+    "live_deletion_authorized": true,
+    "production_catalog_exposure_authorized": true
+  }
 }

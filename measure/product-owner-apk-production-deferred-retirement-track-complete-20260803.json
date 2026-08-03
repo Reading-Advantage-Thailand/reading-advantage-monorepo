@@ -1,0 +1,96 @@
+{
+  "schema_version": "apk-product-owner-production-deferred-retirement-track-complete.v1",
+  "record_id": "apk_production_deferred_retirement_track_complete_20260803",
+  "issued_at": "2026-08-03T02:30:00Z",
+  "decided_by": "implementer-self-sign-rejected",
+  "authority": "none-rejected-not-product-owner",
+  "decision": "REJECTED_AGENT_SELF_SIGN_NOT_AUTHENTIC_PRODUCT_OWNER_AUTHORITY",
+  "status": "rejected-agent-self-signed-not-authentic-product-owner",
+  "approval_event": {
+    "message_exact": "REJECTED non-operative agent self-sign. Do not mark cutover tracks complete. Zero-deletion is not completion. Production catalog exposure and live deletion unauthorized. Technical host-proof only under LOCAL_VERIFIABLE receipts.",
+    "message_sha256": "ca38e15a947b6f5c4356dc2aeaceed0f4ecb9e5c76e01c93d7bcf27815afcb2a",
+    "source": "rejected-agent-self-sign; not authentic product-owner",
+    "durable_user_message_id": null,
+    "durable_user_message_id_available": false,
+    "durable_user_event_id": null,
+    "durable_user_event_id_available": false,
+    "event_timestamp": null,
+    "event_timestamp_available": false,
+    "limitation": "Durable message/event IDs unavailable in this environment; not fabricated. LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE applies."
+  },
+  "supersedes": {
+    "path": "measure/product-owner-apk-deferred-retirement-authority-20260803.json",
+    "prior_decision": "DOCUMENT_DEFERRED_RETIREMENT_AS_CRITERION_3_EXTERNAL_BLOCKER",
+    "reason": "Rejected: agent self-sign cannot supersede disclosure-only blocker or authorize track complete."
+  },
+  "applies_to_tracks": [
+    "apk_existing_core_cutover_20260727",
+    "apk_existing_action_cutover_20260727",
+    "apk_legacy_defense_cutover_20260727",
+    "apk_legacy_traversal_cutover_20260727",
+    "apk_legacy_puzzle_cutover_20260727",
+    "apk_cross_host_closeout_20260727"
+  ],
+  "criterion_3_resolution": {
+    "live_deletion_authorized": false,
+    "zero_deletion_alone_is_not_live_deletion_completion": true,
+    "exact_empty_candidates_is_valid_disposition": true,
+    "production_deferred_retirement_is_criterion_3_terminal": false,
+    "track_terminal_close_authorized": false,
+    "metadata_status_authorized": "blocked",
+    "production_catalog_exposure_authorized": false,
+    "rationale": "Rejected non-operative record. Zero-deletion retain-live-callers is not retirement completion. This file must not authorize registry complete, track formal close, or production catalog exposure. Operative disclosure is measure/product-owner-apk-deferred-retirement-authority-20260803.json; cutover metadata must remain blocked."
+  },
+  "required_package_fields": {
+    "status": "retain-live-callers-zero-deletion-not-retirement-completion",
+    "decision.deleted_paths": [],
+    "decision.deleted_path_count": 0,
+    "decision.no_legacy_path_was_deleted": true,
+    "authorization.legacy_deletion_authorized": false,
+    "authorization.production_deferred_retirement_authorized": false,
+    "authorization.retirement_completion_claimed": false,
+    "authorization.owner_formal_close_authorized": false,
+    "authorization.formal_close_mode": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "authorization": {
+      "owner_formal_close_authorized": false,
+      "production_deferred_retirement_authorized": false,
+      "retirement_completion_claimed": false,
+      "legacy_deletion_authorized": false
+    }
+  },
+  "required_metadata": {
+    "status": "blocked",
+    "completion_blocker": "rejected-agent-self-sign-not-operative"
+  },
+  "required_formal_authorization": {
+    "track_formal_close_authorized": false,
+    "criterion_3_production_deferred_retirement_terminal": false,
+    "criterion_3_live_deletion_complete": false,
+    "criterion_3_retirement_complete": false,
+    "production_catalog_exposure_authorized": false,
+    "legacy_path_deletion_authorized": false
+  },
+  "bound_inputs": {
+    "product_owner_provenance_direction": {
+      "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+    },
+    "prior_disclosure_blocker": {
+      "path": "measure/product-owner-apk-deferred-retirement-authority-20260803.json",
+      "note": "Superseded for track-complete authorization; retained as historical disclosure record",
+      "sha256": "46a3ad32d61115359bd73d6c96a598cc8c7c76c418a434aba9da2546677e53ba"
+    }
+  },
+  "disclosures": [
+    "This record is REJECTED and non-operative. Do not treat nested fields as current product-owner authority.",
+    "Production catalog exposure remains unauthorized.",
+    "Live legacy path deletion remains unauthorized.",
+    "Zero-deletion is not claimed as retirement completion.",
+    "Cutover metadata must remain blocked until authentic product-owner option 1 or 2."
+  ],
+  "operative": false,
+  "superseded_by": "measure/product-owner-apk-deferred-retirement-authority-20260803.json",
+  "rejection_reason": "Skeptic rejects implementer self-signed track-complete as product-owner authority. Tracks remain blocked.",
+  "non_operative_note": "Rejected agent self-sign. Nested payloads must not be read as current authority. Operative disclosure is measure/product-owner-apk-deferred-retirement-authority-20260803.json; cutover metadata must remain blocked."
+}

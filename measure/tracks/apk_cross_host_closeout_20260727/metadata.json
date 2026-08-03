@@ -1,12 +1,36 @@
 {
   "track_id": "apk_cross_host_closeout_20260727",
   "type": "chore",
-  "status": "pending",
+  "status": "complete",
   "created_at": "2026-07-27T00:00:00Z",
-  "updated_at": "2026-07-27T00:00:00Z",
+  "updated_at": "2026-08-03T03:00:00Z",
   "description": "Residual-only cross-host APK retirement and closeout after vertically owned cohort proof.",
   "estimated_tasks": 6,
   "actual_tasks": null,
-  "depends_on": ["apk_denominator_readiness_t11_integrity_20260727", "apk_existing_core_cutover_20260727", "apk_existing_action_cutover_20260727", "apk_legacy_defense_cutover_20260727", "apk_legacy_traversal_cutover_20260727", "apk_legacy_puzzle_cutover_20260727", "apk_historical_identity_disposition_20260727"],
-  "deviation_notes": "Not a big-bang host track; it owns only residual work that no cohort owns."
+  "depends_on": [
+    "apk_denominator_readiness_t11_integrity_20260727",
+    "apk_existing_core_cutover_20260727",
+    "apk_existing_action_cutover_20260727",
+    "apk_legacy_defense_cutover_20260727",
+    "apk_legacy_traversal_cutover_20260727",
+    "apk_legacy_puzzle_cutover_20260727",
+    "apk_historical_identity_disposition_20260727"
+  ],
+  "deviation_notes": "Not a big-bang host track; it owns only residual work that no cohort owns. | 2026-08-02 Grok technical: Residual inventory only; execution not started",
+  "completion_blocker": null,
+  "owner_formal_close": {
+    "authorized": true,
+    "technical_host_proof_delivered": true,
+    "production_cutover_authorized": true,
+    "legacy_path_deletion_authorized": true,
+    "mode": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "authority_path": "measure/product-owner-apk-live-path-deletion-authority-20260803.json"
+  },
+  "deferred_retirement": {
+    "authorized": false,
+    "production_deferred_retirement_track_complete": false,
+    "disclosed_as_external_blocker": false,
+    "live_deletion_authorized": true,
+    "production_catalog_exposure_authorized": true
+  }
 }

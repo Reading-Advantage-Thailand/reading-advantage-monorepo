@@ -12,18 +12,18 @@
   "command_template": "CI=true PLAYWRIGHT_PORT=<free-port> HOST_PROOF_TEST_SESSION_TOKEN=<ephemeral-token> pnpm --filter reading-advantage exec playwright test tests/e2e/host-proof-games.spec.ts tests/e2e/host-proof-replay-navigation.spec.ts",
   "test_result_file": {
     "path": "apps/reading-advantage/test-results/.last-run.json",
-    "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903",
+    "sha256": "e22df5d0991eb28c09093b1e678b3fa8cd1fab48185d38e67cf79fb6e63ad5ea",
     "status": "passed",
     "failed_tests": []
   },
   "test_bindings": {
     "playwright_config": {
       "path": "apps/reading-advantage/playwright.config.ts",
-      "sha256": "9d514292c0abe9dfcd402b8f610cf3fac8e59714b031b1e9cfa678b09d52e7b8"
+      "sha256": "71f4d6947755031fcc6366f57b562623a6259db0f13e475db26f9dcf9207941b"
     },
     "host_matrix": {
       "path": "apps/reading-advantage/tests/e2e/host-proof-games.spec.ts",
-      "sha256": "64712c2a192fb7c7b15261547420713e6bda323c4bc92077e916b931dcb56437"
+      "sha256": "1acd46f695032c18c8efe4b3801389f911c137ab32fa6cc41bcd72a9555dc902"
     },
     "replay_navigation": {
       "path": "apps/reading-advantage/tests/e2e/host-proof-replay-navigation.spec.ts",

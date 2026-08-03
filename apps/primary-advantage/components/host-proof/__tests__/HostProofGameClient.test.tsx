@@ -9,10 +9,40 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { RuntimeEdition } from "@reading-advantage/advantage-play-kit/runtime";
 
 const mockLoadDragonFlightHostProofCartridge = vi.fn();
+const mockLoadMagicDefenseHostProofCartridge = vi.fn();
+const mockLoadDungeonLiberatorHostProofCartridge = vi.fn();
 
 vi.mock("@/lib/host-proof-cartridge-loader", () => ({
   loadDragonFlightHostProofCartridge: mockLoadDragonFlightHostProofCartridge,
+  loadMagicDefenseHostProofCartridge: mockLoadMagicDefenseHostProofCartridge,
+  loadDungeonLiberatorHostProofCartridge: mockLoadDungeonLiberatorHostProofCartridge,
 }));
+
+vi.mock(
+  "@reading-advantage/game-cartridges/legacy-defense-host-proof",
+  () => ({
+    loadLegacyDefenseHostProofCartridge: vi.fn(async (id: string) => ({ manifest: { id } })),
+  }),
+  { virtual: true },
+);
+
+// Vitest/Vite analyzes all dynamic imports in HostProofGameClient; stub sibling
+// package subpaths so multi-title client tests resolve without a package rebuild.
+vi.mock(
+  "@reading-advantage/game-cartridges/legacy-puzzle-host-proof",
+  () => ({
+    loadLegacyPuzzleHostProofCartridge: vi.fn(async (id: string) => ({ manifest: { id } })),
+  }),
+  { virtual: true },
+);
+
+vi.mock(
+  "@reading-advantage/game-cartridges/legacy-traversal-host-proof",
+  () => ({
+    loadLegacyTraversalHostProofCartridge: vi.fn(async (id: string) => ({ manifest: { id } })),
+  }),
+  { virtual: true },
+);
 
 vi.mock("@reading-advantage/advantage-play-kit/react", () => ({
   APKGameHost: ({ onComplete, onDiagnostic }: {
@@ -55,6 +85,65 @@ vi.mock("@reading-advantage/advantage-play-kit/react", () => ({
       }}
     >
       Emit Dragon Flight gate
+    </button>
+    <button
+      type="button"
+      data-testid="magic-defense-runtime"
+      onClick={() => {
+        onDiagnostic?.({ level: "info", code: "RUNTIME_READY", message: "ready" });
+        onDiagnostic?.({
+          level: "info",
+          code: "MAGIC_DEFENSE_HOST_PROOF_ACTION",
+          message: "gate chosen",
+          details: { kind: "choose-gate", gate: "right", elapsedMs: 400 },
+        });
+        onDiagnostic?.({
+          level: "info",
+          code: "MAGIC_DEFENSE_HOST_PROOF_ACTION",
+          message: "launch requested",
+          details: { kind: "launch", elapsedMs: 700 },
+        });
+        void onComplete?.();
+      }}
+    >
+      Emit Magic Defense transcript
+    </button>
+    <button
+      type="button"
+      data-testid="castle-defense-runtime"
+      onClick={() => {
+        onDiagnostic?.({ level: "info", code: "RUNTIME_READY", message: "ready" });
+        onDiagnostic?.({
+          level: "info",
+          code: "CASTLE_DEFENSE_HOST_PROOF_ACTION",
+          message: "gate chosen",
+          details: { kind: "choose-gate", gate: "left", elapsedMs: 350 },
+        });
+        onDiagnostic?.({
+          level: "info",
+          code: "CASTLE_DEFENSE_HOST_PROOF_ACTION",
+          message: "launch requested",
+          details: { kind: "launch", elapsedMs: 650 },
+        });
+        void onComplete?.();
+      }}
+    >
+      Emit Castle Defense transcript
+    </button>
+    <button
+      type="button"
+      data-testid="non-host-proof-diagnostic"
+      onClick={() => {
+        onDiagnostic?.({ level: "info", code: "RUNTIME_READY", message: "ready" });
+        onDiagnostic?.({
+          level: "info",
+          code: "SOME_OTHER_EVENT",
+          message: "gate chosen",
+          details: { kind: "choose-gate", gate: "right", elapsedMs: 400 },
+        });
+      }}
+    >
+      Emit unrelated diagnostic
     </button>
   </>
   ),
@@ -145,6 +234,7 @@ describe("HostProofGameClient", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockLoadDragonFlightHostProofCartridge.mockResolvedValue({ manifest: { id: "dragon-flight" } });
+    mockLoadMagicDefenseHostProofCartridge.mockResolvedValue({ manifest: { id: "magic-defense" } });
   });
 
   it("issues a signed attempt, submits only title diagnostics, and accepts the complete authoritative response", async () => {
@@ -288,5 +378,106 @@ describe("HostProofGameClient", () => {
 
     await expect(screen.findByText(/100 points.*100%/)).resolves.toBeInTheDocument();
     expect(screen.getByLabelText("Dragon Flight proof history")).not.toHaveTextContent("No verified Dragon Flight completions yet.");
+  });
+
+  it("accepts MAGIC_DEFENSE_HOST_PROOF_ACTION diagnostics for magic-defense gameType", async () => {
+    const fetchMock = createFetchMock();
+    vi.stubGlobal("fetch", fetchMock);
+    const { HostProofGameClient } = await import("../HostProofGameClient");
+
+    render(<HostProofGameClient edition={{} as RuntimeEdition} gameType="magic-defense" />);
+
+    fireEvent.click(await screen.findByTestId("magic-defense-runtime"));
+    await screen.findByRole("heading", { name: "Verified result" }, { timeout: 3000 });
+
+    expect(mockLoadMagicDefenseHostProofCartridge).toHaveBeenCalled();
+    const attemptRequest = fetchMock.mock.calls.find(([url]) => String(url) === "/api/host-proof/games/attempts");
+    expect(attemptRequest).toBeDefined();
+    expect(JSON.parse(String(attemptRequest?.[1]?.body))).toEqual({ gameType: "magic-defense", difficulty: "medium" });
+
+    const actionRequests = fetchMock.mock.calls.filter(([url]) => String(url) === "/api/host-proof/games/attempts/actions");
+    expect(actionRequests).toHaveLength(2);
+    expect(JSON.parse(String(actionRequests[0]?.[1]?.body))).toEqual({
+      attemptId: issuedAttempt.attemptId,
+      credential: issuedAttempt.credential,
+      action: { sequence: 1, kind: "choose-gate", gate: "right", elapsedMs: 400 },
+    });
+    expect(JSON.parse(String(actionRequests[1]?.[1]?.body))).toEqual({
+      attemptId: issuedAttempt.attemptId,
+      credential: issuedAttempt.credential,
+      action: { sequence: 2, kind: "launch", elapsedMs: 700 },
+      previousCheckpoint: "checkpoint-1",
+    });
+
+    const completionRequest = fetchMock.mock.calls.find(([url]) => String(url) === "/api/host-proof/games/completions");
+    expect(completionRequest).toBeDefined();
+    expect(JSON.parse(String(completionRequest?.[1]?.body))).toEqual({
+      attemptId: issuedAttempt.attemptId,
+      credential: issuedAttempt.credential,
+      idempotencyKey: issuedAttempt.attemptId,
+      actions: [
+        { sequence: 1, kind: "choose-gate", gate: "right", elapsedMs: 400 },
+        { sequence: 2, kind: "launch", elapsedMs: 700 },
+      ],
+      checkpoints: ["checkpoint-1", "checkpoint-2"],
+    });
+  });
+
+  it("accepts CASTLE_DEFENSE_HOST_PROOF_ACTION diagnostics for castle-defense gameType", async () => {
+    const fetchMock = createFetchMock();
+    vi.stubGlobal("fetch", fetchMock);
+    const { HostProofGameClient } = await import("../HostProofGameClient");
+
+    render(<HostProofGameClient edition={{} as RuntimeEdition} gameType="castle-defense" />);
+
+    fireEvent.click(await screen.findByTestId("castle-defense-runtime"));
+    await screen.findByRole("heading", { name: "Verified result" }, { timeout: 3000 });
+
+    const attemptRequest = fetchMock.mock.calls.find(([url]) => String(url) === "/api/host-proof/games/attempts");
+    expect(attemptRequest).toBeDefined();
+    expect(JSON.parse(String(attemptRequest?.[1]?.body))).toEqual({ gameType: "castle-defense", difficulty: "medium" });
+
+    const actionRequests = fetchMock.mock.calls.filter(([url]) => String(url) === "/api/host-proof/games/attempts/actions");
+    expect(actionRequests).toHaveLength(2);
+    expect(JSON.parse(String(actionRequests[0]?.[1]?.body))).toEqual({
+      attemptId: issuedAttempt.attemptId,
+      credential: issuedAttempt.credential,
+      action: { sequence: 1, kind: "choose-gate", gate: "left", elapsedMs: 350 },
+    });
+    expect(JSON.parse(String(actionRequests[1]?.[1]?.body))).toEqual({
+      attemptId: issuedAttempt.attemptId,
+      credential: issuedAttempt.credential,
+      action: { sequence: 2, kind: "launch", elapsedMs: 650 },
+      previousCheckpoint: "checkpoint-1",
+    });
+
+    const completionRequest = fetchMock.mock.calls.find(([url]) => String(url) === "/api/host-proof/games/completions");
+    expect(completionRequest).toBeDefined();
+    expect(JSON.parse(String(completionRequest?.[1]?.body))).toEqual({
+      attemptId: issuedAttempt.attemptId,
+      credential: issuedAttempt.credential,
+      idempotencyKey: issuedAttempt.attemptId,
+      actions: [
+        { sequence: 1, kind: "choose-gate", gate: "left", elapsedMs: 350 },
+        { sequence: 2, kind: "launch", elapsedMs: 650 },
+      ],
+      checkpoints: ["checkpoint-1", "checkpoint-2"],
+    });
+  });
+
+  it("ignores non-host-proof action diagnostics", async () => {
+    const fetchMock = createFetchMock();
+    vi.stubGlobal("fetch", fetchMock);
+    const { HostProofGameClient } = await import("../HostProofGameClient");
+
+    render(<HostProofGameClient edition={{} as RuntimeEdition} />);
+
+    fireEvent.click(await screen.findByTestId("non-host-proof-diagnostic"));
+    await waitFor(() => {
+      expect(fetchMock.mock.calls.some(([url]) => String(url) === "/api/host-proof/games/attempts")).toBe(true);
+    });
+
+    expect(fetchMock.mock.calls.filter(([url]) => String(url) === "/api/host-proof/games/attempts/actions")).toHaveLength(0);
+    expect(screen.queryByRole("heading", { name: "Verified result" })).not.toBeInTheDocument();
   });
 });

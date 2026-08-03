@@ -11,7 +11,7 @@
   "database_fixture": "local-reading-postgresql-fixture-without-credential-recording",
   "supersedes": {
     "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-reading-host-proof-playwright-report-v1.json",
-    "sha256": "a22479fb00db47e2fa30f24f245c4e129e8a74373b937577e1a95e74fe1cf63a",
+    "sha256": "ab21a6ab2edc46e1d88fb8b79fa7c94bf6a15cac8c4517df2245a9fd076e0423",
     "reason": "Replaces the historical-before-remediation Reading observation with a current-source setup-backed rerun."
   },
   "execution_binding": {
@@ -35,7 +35,7 @@
   },
   "test_result_file": {
     "path": "apps/reading-advantage/test-results/host-proof-results.json",
-    "sha256": "b588e008dba394f920a0e0feb3b6dc78f6f43dec2833e727699a327f19bd104a",
+    "sha256": "f13ad70176ad0d6959dfafbd4efde95a9d6709aa832680d4b389028ee57c6f54",
     "status": "passed",
     "failed_tests": [],
     "per_test_results": true,
@@ -47,19 +47,19 @@
   "test_bindings": {
     "playwright_config": {
       "path": "apps/reading-advantage/playwright.config.ts",
-      "sha256": "c9da3e45756ffd27a21a41a163fa9a4d1c94e9d240dc1c2d76ccb4e255832afb"
+      "sha256": "71f4d6947755031fcc6366f57b562623a6259db0f13e475db26f9dcf9207941b"
     },
     "auth_setup": {
       "path": "apps/reading-advantage/tests/e2e/host-proof-auth.setup.ts",
-      "sha256": "e177b8d9effaa83b86e8b54864c75d5963c83b4c573f48d4c807e8bdb3db878b"
+      "sha256": "be8fd2a728caed4deddab6c993e7c5b05c2f811ce7e4d0075a761330c6166f2c"
     },
     "host_matrix": {
       "path": "apps/reading-advantage/tests/e2e/host-proof-games.spec.ts",
-      "sha256": "dcf3a3fb553ceb6f4bf7097c1565b0826a25ec510b2a64104e7b6553ffe23cbd"
+      "sha256": "1acd46f695032c18c8efe4b3801389f911c137ab32fa6cc41bcd72a9555dc902"
     },
     "credential_config": {
       "path": "apps/reading-advantage/host-proof-test-config.ts",
-      "sha256": "91ec29dd40db41ea3c20e96a69fb04d575b3727c23d36f5a7b62d5815f05ac36"
+      "sha256": "366292a4bae84675a8ea974f8c5a6e0b6c82fd93c08a55831f77f1a2d3685fc9"
     },
     "seed_script": {
       "path": "apps/reading-advantage/scripts/seed-host-proof-session.ts",
@@ -67,23 +67,23 @@
     },
     "host_client": {
       "path": "apps/reading-advantage/components/host-proof/HostProofGameClient.tsx",
-      "sha256": "5ec5f4e953b2a1bed312516a4342717f538e28f27e7ce27cc9a88b9fcd352470"
+      "sha256": "e443c68fa616ebe54eeae9200ff64068de1bd3eafbe742b3d88103e7a197e51e"
     },
     "host_page": {
       "path": "apps/reading-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx",
-      "sha256": "153eb18bb0617f9b9f0a9ec85d61b4136d8c2e04535fae143948f7d7eed327bb"
+      "sha256": "65551c5ad11daddc68ca72f37343aad46037d22d501902b3b77fa5b6eac15909"
     },
     "host_route": {
       "path": "apps/reading-advantage/app/api/host-proof/games/completions/route.ts",
-      "sha256": "ffa3d5d21530eada589138c7e790aa5f281659f9085cc45366c4805c759ae2f9"
+      "sha256": "547f47a9c954a05321cce561e10d05e6c35f50f9a6551f9bbd9d5ba53f160e92"
     },
     "host_gate": {
       "path": "apps/reading-advantage/lib/host-proof-config.ts",
-      "sha256": "b99c2384bd7cb279e2c89729f0804e40fdeb4c9e511786ad0bb4cfd221c93c32"
+      "sha256": "c28b191bcf4dead76f653d39b41ab3f1bef5dc0d3c696a6c91a8dbc25544f84b"
     },
     "qc_loader": {
       "path": "apps/reading-advantage/lib/host-proof-qc-loader.ts",
-      "sha256": "d5c56bc6b4e0b5259617427522e79179e4a6f07c1ce37e89de7da0856ba2334d"
+      "sha256": "6fe9f56e8d1c5c77acce2343888c1286e23b3fed1e02732128f70744b205ae30"
     },
     "next_config": {
       "path": "apps/reading-advantage/next.config.ts",
@@ -91,7 +91,7 @@
     },
     "package_manifest": {
       "path": "apps/reading-advantage/package.json",
-      "sha256": "d0baa969a988ce244c445a8383a6b10ac40a6954d158bb8d8b88019b3bfb8092"
+      "sha256": "d9295591d7f7ed805b3bec03a62920d576fcb1e3853ccc768ef7924775a64018"
     }
   },
   "tests": {

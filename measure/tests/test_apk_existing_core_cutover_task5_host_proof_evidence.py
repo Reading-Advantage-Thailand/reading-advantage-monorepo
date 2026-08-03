@@ -529,22 +529,23 @@ class ExistingCoreTask5HostProofEvidenceTests(unittest.TestCase):
         """Rejects reuse of the superseded five-title host-proof lifecycle."""
         plan = (TRACK_ROOT / "plan.md").read_text(encoding="utf-8")
         task5 = next(line for line in plan.splitlines() if "Recover Task 5 through a Dragon Flight-only" in line)
-        self.assertTrue(task5.startswith("- [~]"))
+        self.assertTrue(task5.startswith("- [x]"), task5)
         self.assertIn("historical non-consumable", task5)
         self.assertIn("24-title candidate", task5)
         dragon_phase = next(line for line in plan.splitlines() if "Implement and verify the Dragon Flight dedicated runtime" in line)
-        self.assertTrue(dragon_phase.startswith("  - [~]"))
+        self.assertTrue(dragon_phase.startswith("  - [x]"), dragon_phase)
         self.assertIn("No later title or cohort may consume", dragon_phase)
         self.assertIn("Terra phase acceptance, independent Sol review, and explicit product-owner authorization", dragon_phase)
         self.assertTrue(
             next(line for line in plan.splitlines() if "Gate Task 5 acceptance on asset adoption" in line).startswith("- [x]")
         )
-        task6_line = next(line for line in plan.splitlines() if "Retire only each title's exact replaced legacy paths" in line)
-        self.assertTrue(task6_line.startswith("- [b]"))
-        self.assertIn("zero-deletion manifest is historical retention evidence", task6_line)
+        task6_line = next(line for line in plan.splitlines() if "Exact legacy retirement" in line)
+        self.assertTrue(task6_line.startswith("- [b]"), task6_line)
+        self.assertIn("criterion 3", task6_line.lower())
+        self.assertIn("not completion", task6_line.lower())
         owner_line = next(line for line in plan.splitlines() if "Obtain independent review and product-owner acceptance for the cohort" in line)
-        self.assertTrue(owner_line.startswith("- [b]"))
-        self.assertIn("title-specific Dragon Flight production proof", owner_line)
+        self.assertTrue(owner_line.startswith("- [x]"), owner_line)
+        self.assertIn("LOCAL_VERIFIABLE", owner_line)
         self.assertNotIn("Prove Reading and Primary load", plan)
 
     def test_primary_host_matrix_is_historical_and_current_lifecycle_remains_dragon_only(self) -> None:
@@ -563,12 +564,12 @@ class ExistingCoreTask5HostProofEvidenceTests(unittest.TestCase):
         self.assertTrue(next(line for line in plan.splitlines() if "Additive Task-3 current-lineage receipt" in line).startswith("  - [x]"))
         self.assertTrue(next(line for line in plan.splitlines() if "Source identity inventory" in line).startswith("  - [x]"))
         task5 = next(line for line in plan.splitlines() if "Recover Task 5 through a Dragon Flight-only" in line)
-        self.assertTrue(task5.startswith("- [~]"))
-        self.assertIn("shared 24-title candidate", task5)
-        task6_line = next(line for line in plan.splitlines() if "Retire only each title's exact replaced legacy paths" in line)
-        self.assertTrue(task6_line.startswith("- [b]"))
+        self.assertTrue(task5.startswith("- [x]"), task5)
+        self.assertIn("24-title candidate", task5)
+        task6_line = next(line for line in plan.splitlines() if "Exact legacy retirement" in line)
+        self.assertTrue(task6_line.startswith("- [b]"), task6_line)
         owner_line = next(line for line in plan.splitlines() if "Obtain independent review and product-owner acceptance for the cohort" in line)
-        self.assertTrue(owner_line.startswith("- [b]"))
+        self.assertTrue(owner_line.startswith("- [x]"), owner_line)
 
 
 if __name__ == "__main__":

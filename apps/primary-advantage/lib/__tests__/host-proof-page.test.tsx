@@ -37,22 +37,22 @@ describe("HostProofGamesPage", () => {
 
   it("fails closed while disabled or when the user lacks a school", async () => {
     mockEnabled.mockReturnValue(false);
-    await HostProofGamesPage();
+    await HostProofGamesPage({ searchParams: {} });
     expect(mockNotFound).toHaveBeenCalled();
     mockEnabled.mockReturnValue(true);
     mockUser.mockResolvedValueOnce({ schoolId: undefined });
-    await HostProofGamesPage();
+    await HostProofGamesPage({ searchParams: {} });
     expect(mockNotFound).toHaveBeenCalled();
   });
 
   it("redirects anonymous visitors", async () => {
     mockUser.mockResolvedValue(null);
-    await expect(HostProofGamesPage()).rejects.toBe(redirectSignal);
+    await expect(HostProofGamesPage({ searchParams: {} })).rejects.toBe(redirectSignal);
     expect(mockRedirect).toHaveBeenCalledWith("/auth/signin");
   });
 
   it("passes the server-selected Dragon Flight edition to the bounded client", async () => {
-    render(await HostProofGamesPage());
+    render(await HostProofGamesPage({ searchParams: {} }));
     expect(screen.getByTestId("host-proof-client")).toBeInTheDocument();
     expect(mockEdition).toHaveBeenCalledTimes(1);
   });

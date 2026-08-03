@@ -1,0 +1,43 @@
+{
+  "schema_version": "apk-existing-core-task6-technical-retirement-candidates.v1",
+  "track_id": "apk_existing_core_cutover_20260727",
+  "status": "production-cutover-live-deletion-executed",
+  "decided_at": "2026-08-02",
+  "authorization": {
+    "deletion_authorized": true,
+    "owner_acceptance_required": false,
+    "dual_host_unit_api_proof": true,
+    "production_cutover_authorized": true
+  },
+  "titles": {
+    "dragon-flight": {
+      "host_proof_technical": true,
+      "retirement_candidates": [
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight"
+      ],
+      "note": "Deleted Reading student route after host-proof production cutover (option 1)."
+    },
+    "magic-defense": {
+      "host_proof_technical": true,
+      "retirement_candidates": [
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense"
+      ],
+      "note": "Deleted Reading student route after host-proof production cutover (option 1)."
+    },
+    "dungeon-liberator": {
+      "host_proof_technical": true,
+      "retirement_candidates": [],
+      "note": "Sentence-mode gate host-proof loader live; retirement deferred."
+    },
+    "sorcerer-ziggurat": {
+      "host_proof_technical": false,
+      "source_blocked": true,
+      "retirement_candidates": []
+    },
+    "astral-mage": {
+      "host_proof_technical": false,
+      "source_blocked": true,
+      "retirement_candidates": []
+    }
+  }
+}

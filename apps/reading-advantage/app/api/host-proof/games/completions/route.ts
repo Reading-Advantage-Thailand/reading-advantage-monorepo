@@ -196,9 +196,10 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const limitParam = searchParams.get("limit");
   const gameType = searchParams.get("gameType");
-  if (gameType && gameType !== "dragon-flight") {
+  const allowedHistoryTypes = new Set(["dragon-flight", "magic-defense", "dungeon-liberator", "castle-defense", "wizard-vs-zombie", "village-guardian", "enchanted-library", "rune-match", "alchemists-synthesis", "potion-rush", "rune-forge-chamber", "spellweavers-run", "shadow-gate-dungeon", "labyrinth-goblin-king", "griffin-riders-escape"]);
+  if (gameType && !allowedHistoryTypes.has(gameType)) {
     return NextResponse.json(
-      { error: { code: "HOST_PROOF_UNKNOWN_CARTRIDGE", message: "Dragon Flight is the only available proof cartridge" } },
+      { error: { code: "HOST_PROOF_UNKNOWN_CARTRIDGE", message: "Unsupported host-proof cartridge" } },
       { status: 404 },
     );
   }
@@ -210,7 +211,18 @@ export async function GET(request: NextRequest) {
       user,
       tenant: { schoolId },
       input: {
-        gameType: "dragon-flight",
+        gameType: (gameType && allowedHistoryTypes.has(gameType) ? gameType : "dragon-flight") as
+          | "dragon-flight"
+          | "magic-defense"
+          | "dungeon-liberator"
+          | "castle-defense"
+          | "wizard-vs-zombie"
+          | "village-guardian"
+          | "enchanted-library"
+          | "rune-match"
+          | "alchemists-synthesis"
+          | "potion-rush"
+          | "rune-forge-chamber" | "spellweavers-run" | "shadow-gate-dungeon" | "labyrinth-goblin-king" | "griffin-riders-escape",
         ...(limitParam !== null ? { limit: Number(limitParam) } : {}),
       },
     });

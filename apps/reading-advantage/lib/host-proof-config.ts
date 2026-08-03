@@ -1,9 +1,14 @@
 import "server-only";
 
 /**
- * Reports whether the hidden Task-5 host-proof surface is explicitly enabled.
- * @returns True only when the server-side feature flag is exactly `"true"`.
+ * Reports whether the dual-host host-proof surface is enabled for this process.
+ * True when HOST_PROOF_ENABLED or HOST_PROOF_PRODUCTION_CUTOVER is exactly "true"
+ * (product-owner option-1 production cutover authorization).
+ * @returns Whether host-proof routes should render.
  */
 export function isHostProofEnabled(): boolean {
-  return process.env.HOST_PROOF_ENABLED === "true";
+  return (
+    process.env.HOST_PROOF_ENABLED === "true" ||
+    process.env.HOST_PROOF_PRODUCTION_CUTOVER === "true"
+  );
 }

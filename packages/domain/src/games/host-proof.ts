@@ -48,6 +48,29 @@ export const HOST_PROOF_ERROR_CODES = {
 export type HostProofErrorCode =
   (typeof HOST_PROOF_ERROR_CODES)[keyof typeof HOST_PROOF_ERROR_CODES];
 
+/** Game types authorized on the signed-attempt host-proof transport. */
+export const hostProofAttemptGameTypeSchema = z.enum([
+  "dragon-flight",
+  "magic-defense",
+  "dungeon-liberator",
+  "castle-defense",
+  "wizard-vs-zombie",
+  "village-guardian",
+  "enchanted-library",
+  "rune-match",
+  "alchemists-synthesis",
+  "potion-rush",
+  "rune-forge-chamber",
+  "spellweavers-run",
+  "shadow-gate-dungeon",
+  "labyrinth-goblin-king",
+  "griffin-riders-escape",
+]);
+
+/** Inferred signed-attempt host-proof game type. */
+export type HostProofAttemptGameType = z.infer<typeof hostProofAttemptGameTypeSchema>;
+
+
 const HTTP_STATUS_BY_CODE: Readonly<Record<HostProofErrorCode, number>> = {
   HOST_PROOF_UNAUTHENTICATED: 401,
   HOST_PROOF_VALIDATION_FAILED: 400,
@@ -115,7 +138,7 @@ const HOST_PROOF_HISTORY_LIMIT_MAX = 100;
  */
 export const hostProofHistoryInputSchema = z
   .object({
-    gameType: existingCoreHostProofCartridgeIdSchema.optional(),
+    gameType: hostProofAttemptGameTypeSchema.optional(),
     limit: z
       .number()
       .int()
@@ -153,7 +176,7 @@ export type HostProofCompletionResponse = z.infer<
  */
 export const hostProofHistoryEntrySchema = z.object({
   id: z.string().min(1),
-  gameType: existingCoreHostProofCartridgeIdSchema,
+  gameType: hostProofAttemptGameTypeSchema,
   difficulty: gameDifficultyEnum,
   score: z.number().int().min(0),
   accuracy: z.number().min(0).max(1),
@@ -354,14 +377,14 @@ export async function getHostProofGameCompletions({
     input && typeof input === "object" && "gameType" in input
       ? (input as { gameType?: unknown }).gameType
       : undefined;
-  if (
-    typeof candidateGameType === "string" &&
-    !getExistingCoreHostProofBinding(candidateGameType)
-  ) {
-    throw new HostProofCompletionError(
-      HOST_PROOF_ERROR_CODES.UNKNOWN_CARTRIDGE,
-      `Cartridge ${candidateGameType} is not one of the five accepted host-proof bindings`,
-    );
+  if (typeof candidateGameType === "string") {
+    const parsedGameType = hostProofAttemptGameTypeSchema.safeParse(candidateGameType);
+    if (!parsedGameType.success) {
+      throw new HostProofCompletionError(
+        HOST_PROOF_ERROR_CODES.UNKNOWN_CARTRIDGE,
+        `Cartridge ${candidateGameType} is not an accepted host-proof binding`,
+      );
+    }
   }
 
   const parsedInput = hostProofHistoryInputSchema.safeParse(input ?? {});
@@ -382,7 +405,9 @@ export async function getHostProofGameCompletions({
       user,
       tenant,
       input: {
-        gameTypes: HOST_PROOF_CARTRIDGE_IDS,
+        gameTypes: parsedInput.data.gameType
+          ? [parsedInput.data.gameType]
+          : [...HOST_PROOF_CARTRIDGE_IDS, ...hostProofAttemptGameTypeSchema.options],
         ...(parsedInput.data.gameType
           ? { gameType: parsedInput.data.gameType }
           : {}),

@@ -11,14 +11,19 @@ import {
 } from "@reading-advantage/advantage-play-kit/runtime";
 import type { SupportedResponsiveComposition } from "@reading-advantage/advantage-play-kit/responsive";
 import {
+  EXISTING_CORE_HOST_PROOF_BINDINGS,
   gameResultsSchema,
   vocabularyInputSchema,
+  type ExistingCoreHostProofCartridgeId,
   type GameResults,
   type VocabularyInput,
 } from "@reading-advantage/game-contracts";
 
 /** Stable public identifier for the first real host-proof cartridge. */
 export const DRAGON_FLIGHT_HOST_PROOF_ID = "dragon-flight" as const;
+
+/** Stable public identifier for the Magic Defense host-proof cartridge. */
+export const MAGIC_DEFENSE_HOST_PROOF_ID = "magic-defense" as const;
 
 /** Exact selected standard-pack roles used by Dragon Flight's runtime presentation. */
 export const DRAGON_FLIGHT_REQUIRED_ASSET_BINDINGS = Object.freeze([
@@ -27,7 +32,27 @@ export const DRAGON_FLIGHT_REQUIRED_ASSET_BINDINGS = Object.freeze([
   "top-down/32x32/characters/hero-01",
 ] as const);
 
-interface DragonFlightState {
+/** Exact selected standard-pack roles used by Magic Defense's runtime presentation. */
+export const MAGIC_DEFENSE_REQUIRED_ASSET_BINDINGS = Object.freeze([
+  "audio/native/combat/hit-01",
+  "effects/32x32/combat/hit-01",
+  "ui/20x20/inventory/slot",
+  "ui/32x32/items/armor-icons",
+] as const);
+
+/** Current-source Existing Core titles authorized for vocabulary-gate host proof. */
+export const VOCABULARY_GATE_HOST_PROOF_IDS = Object.freeze([
+  DRAGON_FLIGHT_HOST_PROOF_ID,
+  MAGIC_DEFENSE_HOST_PROOF_ID,
+] as const);
+
+/** Existing Core titles that remain source-blocked for host proof. */
+export const SOURCE_BLOCKED_HOST_PROOF_IDS = Object.freeze([
+  "sorcerer-ziggurat",
+  "astral-mage",
+] as const);
+
+interface VocabularyGateState {
   attempts: number;
   correctAnswers: number;
   completed: boolean;
@@ -50,7 +75,7 @@ interface PhaserGraphicsLike {
   strokeRect?(x: number, y: number, width: number, height: number): PhaserGraphicsLike;
 }
 
-interface DragonFlightScene {
+interface VocabularyGateScene {
   load?: PhysicalAssetLoader;
   add?: {
     graphics?(): PhaserGraphicsLike;
@@ -62,40 +87,97 @@ interface DragonFlightScene {
   sound?: { play?(key: string, config?: Readonly<Record<string, unknown>>): unknown };
 }
 
-interface DragonFlightInputAction {
+interface VocabularyGateInputAction {
   choice?: boolean;
   launch: boolean;
 }
 
-interface DragonFlightPresentationAssets {
+interface VocabularyGatePresentationAssets {
   readonly heroTextureKey: string;
   readonly hitEffectTextureKey: string;
   readonly hitAudioKey: string;
 }
 
-type DragonFlightRecordedAction =
+type VocabularyGateRecordedAction =
   | { readonly kind: "choose-gate"; readonly gate: "left" | "right" }
   | { readonly kind: "launch" };
 
+interface VocabularyGateHostProofDefinition {
+  readonly id: string;
+  readonly title: string;
+  readonly description: string;
+  readonly requiredAssetBindings: readonly string[];
+  readonly heroBinding: string;
+  readonly hitEffectBinding: string;
+  /** Optional audio binding; omitted titles skip SFX. */
+  readonly hitAudioBinding?: string;
+  readonly diagnosticCode: string;
+}
+
+const VOCABULARY_GATE_DEFINITIONS: Readonly<Record<
+  (typeof VOCABULARY_GATE_HOST_PROOF_IDS)[number],
+  VocabularyGateHostProofDefinition
+>> = Object.freeze({
+  "dragon-flight": Object.freeze({
+    id: DRAGON_FLIGHT_HOST_PROOF_ID,
+    title: "Dragon Flight",
+    description: "Fly through the gate that matches the active vocabulary translation.",
+    requiredAssetBindings: DRAGON_FLIGHT_REQUIRED_ASSET_BINDINGS,
+    heroBinding: "top-down/32x32/characters/hero-01",
+    hitEffectBinding: "effects/32x32/combat/hit-01",
+    hitAudioBinding: "audio/native/combat/hit-01",
+    diagnosticCode: "DRAGON_FLIGHT_HOST_PROOF_ACTION",
+  }),
+  "magic-defense": Object.freeze({
+    id: MAGIC_DEFENSE_HOST_PROOF_ID,
+    title: "Magic Defense",
+    description: "Choose the translation-matching ward before launching the defense spell.",
+    requiredAssetBindings: MAGIC_DEFENSE_REQUIRED_ASSET_BINDINGS,
+    heroBinding: "ui/32x32/items/armor-icons",
+    hitEffectBinding: "effects/32x32/combat/hit-01",
+    hitAudioBinding: "audio/native/combat/hit-01",
+    diagnosticCode: "MAGIC_DEFENSE_HOST_PROOF_ACTION",
+  }),
+});
+
 /**
- * Resolves the selected physical pack files used by this title's real scene.
+ * Raised when a host-proof loader is asked for a historical-source-only title.
+ */
+export class HostProofSourceBlockedError extends Error {
+  /**
+   * @param cartridgeId Title identifier that remains source-blocked.
+   */
+  constructor(public readonly cartridgeId: string) {
+    super(`Host-proof cartridge ${cartridgeId} is source-blocked until a current accepted implementation exists`);
+    this.name = "HostProofSourceBlockedError";
+  }
+}
+
+/**
+ * Resolves the selected physical pack files used by one vocabulary-gate title scene.
  * @param edition Validated edition selected by the server host.
+ * @param definition Title definition that pins semantic bindings.
  * @returns Texture and audio keys emitted by the standard asset preloader.
  */
-function resolvePresentationAssets(edition: RuntimeEdition): DragonFlightPresentationAssets {
+function resolvePresentationAssets(
+  edition: RuntimeEdition,
+  definition: VocabularyGateHostProofDefinition,
+): VocabularyGatePresentationAssets {
   return Object.freeze({
-    heroTextureKey: resolveAssetBinding(edition, "top-down/32x32/characters/hero-01").textureKey,
-    hitEffectTextureKey: resolveAssetBinding(edition, "effects/32x32/combat/hit-01").textureKey,
-    hitAudioKey: resolveAssetBinding(edition, "audio/native/combat/hit-01").textureKey,
+    heroTextureKey: resolveAssetBinding(edition, definition.heroBinding).textureKey,
+    hitEffectTextureKey: resolveAssetBinding(edition, definition.hitEffectBinding).textureKey,
+    hitAudioKey: definition.hitAudioBinding
+      ? resolveAssetBinding(edition, definition.hitAudioBinding).textureKey
+      : "",
   });
 }
 
 /**
- * Produces a valid display result from Dragon Flight's title-owned gate state.
+ * Produces a valid display result from vocabulary-gate title-owned state.
  * @param state The current title-owned gate state.
  * @returns The canonical five-field cartridge result.
  */
-function resultFromState(state: DragonFlightState): GameResults {
+function resultFromState(state: VocabularyGateState): GameResults {
   const accuracy = state.attempts === 0 ? 0 : state.correctAnswers / state.attempts;
   return gameResultsSchema.parse({
     accuracy,
@@ -107,18 +189,20 @@ function resultFromState(state: DragonFlightState): GameResults {
 }
 
 /**
- * Draws the live Dragon Flight gate scene using title-owned input and selected assets.
+ * Draws one vocabulary-gate scene using title-owned input and selected assets.
  * @param scene The Phaser scene supplied by the runtime.
+ * @param definition Title presentation metadata.
  * @param input The validated vocabulary prompt data.
  * @param state The current title-owned mechanic state.
  * @param assets Texture and audio keys resolved from the selected edition.
  * @param composition Current responsive geometry owned by this title scene.
  */
-function renderDragonFlight(
-  scene: DragonFlightScene | undefined,
+function renderVocabularyGate(
+  scene: VocabularyGateScene | undefined,
+  definition: VocabularyGateHostProofDefinition,
   input: VocabularyInput,
-  state: DragonFlightState,
-  assets: DragonFlightPresentationAssets,
+  state: VocabularyGateState,
+  assets: VocabularyGatePresentationAssets,
   composition: SupportedResponsiveComposition | undefined,
 ): void {
   const add = scene?.add;
@@ -151,26 +235,26 @@ function renderDragonFlight(
   effect?.setOrigin?.(0.5);
   effect?.setScale?.(2);
   const centered = { fontFamily: "sans-serif", fontSize: "28px", color: "#f4f0dc", align: "center" };
-  add.text?.(x + width / 2, y + height * 0.08, "Dragon Flight", { ...centered, fontSize: "34px" }).setOrigin?.(0.5);
-  add.text?.(x + width / 2, y + height * 0.18, `Fly through the gate matching: ${prompt.term}`, centered).setOrigin?.(0.5);
+  add.text?.(x + width / 2, y + height * 0.08, definition.title, { ...centered, fontSize: "34px" }).setOrigin?.(0.5);
+  add.text?.(x + width / 2, y + height * 0.18, `Match the translation for: ${prompt.term}`, centered).setOrigin?.(0.5);
   add.text?.(x + width * 0.23, y + height * 0.63, "LEFT GATE\nwrong route", centered).setOrigin?.(0.5);
   add.text?.(x + width * 0.77, y + height * 0.63, `RIGHT GATE\n${prompt.translation}`, centered).setOrigin?.(0.5);
   add.text?.(
     x + width / 2,
     y + height * 0.9,
     state.completed
-      ? `Flight complete · ${state.correctAnswers}/${state.attempts} correct`
+      ? `Complete · ${state.correctAnswers}/${state.attempts} correct`
       : `Attempts ${state.attempts} · ${state.feedback} · arrows or tap gates; Enter launches`,
     { ...centered, fontSize: "20px" },
   ).setOrigin?.(0.5);
 }
 
 /**
- * Applies one verified Dragon Flight gate choice.
+ * Applies one verified vocabulary-gate choice.
  * @param state Mutable title-owned state for the mounted session.
  * @param correct Whether the player chose the translation-matching gate.
  */
-function chooseGate(state: DragonFlightState, correct: boolean): void {
+function chooseGate(state: VocabularyGateState, correct: boolean): void {
   if (state.completed) return;
   state.attempts += 1;
   if (correct) state.correctAnswers += 1;
@@ -180,18 +264,20 @@ function chooseGate(state: DragonFlightState, correct: boolean): void {
 /**
  * Emits one title-owned action for the host's signed-attempt transport.
  * @param context Runtime services for the mounted session.
- * @param action Action produced by the real Dragon Flight mechanic.
+ * @param definition Title that owns the diagnostic code.
+ * @param action Action produced by the real vocabulary-gate mechanic.
  * @param startedAt Browser timestamp captured when this cartridge was created.
  */
 function emitTitleAction(
   context: CartridgeGameConfigContext,
-  action: DragonFlightRecordedAction,
+  definition: VocabularyGateHostProofDefinition,
+  action: VocabularyGateRecordedAction,
   startedAt: number,
 ): void {
   context.diagnostic({
     level: "info",
-    code: "DRAGON_FLIGHT_HOST_PROOF_ACTION",
-    message: action.kind === "launch" ? "Dragon Flight launch requested" : `Dragon Flight ${action.gate} gate chosen`,
+    code: definition.diagnosticCode,
+    message: action.kind === "launch" ? `${definition.title} launch requested` : `${definition.title} ${action.gate} gate chosen`,
     details: {
       ...action,
       elapsedMs: Math.max(0, Math.round(Date.now() - startedAt)),
@@ -208,7 +294,7 @@ function emitTitleAction(
 function readTitleInput(
   context: CartridgeGameConfigContext,
   composition: SupportedResponsiveComposition | undefined,
-): DragonFlightInputAction {
+): VocabularyGateInputAction {
   const snapshot = context.inputController.snapshot();
   const launch = Boolean(snapshot.pressed?.some((key) => key === "Enter" || key === "Space"));
   if (snapshot.pressed?.some((key) => key === "ArrowLeft")) return { choice: false, launch };
@@ -220,19 +306,22 @@ function readTitleInput(
 }
 
 /**
- * Creates the first real Reading/Primary host-proof cartridge for Dragon Flight.
+ * Creates one vocabulary-gate host-proof cartridge from a frozen title definition.
+ * @param definition Title metadata and selected-union presentation bindings.
  * @returns A runtime cartridge that owns its vocabulary gate mechanic and emits one result.
  */
-export async function loadDragonFlightHostProofCartridge(): Promise<RuntimeCartridge> {
+async function loadVocabularyGateHostProofCartridge(
+  definition: VocabularyGateHostProofDefinition,
+): Promise<RuntimeCartridge> {
   const cartridge: RuntimeCartridge = {
     manifest: {
-      id: DRAGON_FLIGHT_HOST_PROOF_ID,
-      title: "Dragon Flight",
-      description: "Fly through the gate that matches the active vocabulary translation.",
+      id: definition.id,
+      title: definition.title,
+      description: definition.description,
       version: "1.0.0",
       runtimeApiVersion: APK_RUNTIME_API_VERSION,
       inputMode: "vocabulary",
-      requiredAssetBindings: DRAGON_FLIGHT_REQUIRED_ASSET_BINDINGS,
+      requiredAssetBindings: definition.requiredAssetBindings,
       capabilities: [
         "capability:input-action-normalization",
         "capability:result-accounting",
@@ -242,9 +331,9 @@ export async function loadDragonFlightHostProofCartridge(): Promise<RuntimeCartr
     },
     createGameConfig(context): Readonly<Record<string, unknown>> {
       const input = vocabularyInputSchema.parse(context.input);
-      const assets = resolvePresentationAssets(context.edition);
+      const assets = resolvePresentationAssets(context.edition, definition);
       const startedAt = Date.now();
-      const state: DragonFlightState = {
+      const state: VocabularyGateState = {
         attempts: 0,
         correctAnswers: 0,
         completed: false,
@@ -253,35 +342,37 @@ export async function loadDragonFlightHostProofCartridge(): Promise<RuntimeCartr
       let composition = context.composition;
       return {
         scene: {
-          preload(this: DragonFlightScene): void {
-            if (!this.load) throw new Error("Dragon Flight scene cannot preload selected assets");
-            preloadAssetBindings(this.load, context.edition, DRAGON_FLIGHT_REQUIRED_ASSET_BINDINGS);
+          preload(this: VocabularyGateScene): void {
+            if (!this.load) throw new Error(`${definition.title} scene cannot preload selected assets`);
+            preloadAssetBindings(this.load, context.edition, definition.requiredAssetBindings);
           },
-          create(this: DragonFlightScene): void {
-            renderDragonFlight(this, input, state, assets, composition);
+          create(this: VocabularyGateScene): void {
+            renderVocabularyGate(this, definition, input, state, assets, composition);
           },
-          apkRecompose(this: DragonFlightScene, nextComposition: SupportedResponsiveComposition): void {
+          apkRecompose(this: VocabularyGateScene, nextComposition: SupportedResponsiveComposition): void {
             composition = nextComposition;
-            renderDragonFlight(this, input, state, assets, composition);
+            renderVocabularyGate(this, definition, input, state, assets, composition);
           },
-          update(this: DragonFlightScene): void {
+          update(this: VocabularyGateScene): void {
             const action = readTitleInput(context, composition);
             if (state.completed) return;
             if (action.choice !== undefined) {
               chooseGate(state, action.choice);
-              emitTitleAction(context, {
+              emitTitleAction(context, definition, {
                 kind: "choose-gate",
                 gate: action.choice ? "right" : "left",
               }, startedAt);
-              if (action.choice) this.sound?.play?.(assets.hitAudioKey, { volume: 0.15 });
-              renderDragonFlight(this, input, state, assets, composition);
+              if (action.choice && assets.hitAudioKey) {
+                this.sound?.play?.(assets.hitAudioKey, { volume: 0.15 });
+              }
+              renderVocabularyGate(this, definition, input, state, assets, composition);
             }
             if (state.attempts > 0 && action.launch) {
               state.completed = true;
               state.feedback = "completed";
-              emitTitleAction(context, { kind: "launch" }, startedAt);
+              emitTitleAction(context, definition, { kind: "launch" }, startedAt);
               context.complete(resultFromState(state));
-              renderDragonFlight(this, input, state, assets, composition);
+              renderVocabularyGate(this, definition, input, state, assets, composition);
             }
           },
         },
@@ -289,4 +380,88 @@ export async function loadDragonFlightHostProofCartridge(): Promise<RuntimeCartr
     },
   };
   return Object.freeze(cartridge);
+}
+
+/**
+ * Creates the first real Reading/Primary host-proof cartridge for Dragon Flight.
+ * @returns A runtime cartridge that owns its vocabulary gate mechanic and emits one result.
+ */
+export async function loadDragonFlightHostProofCartridge(): Promise<RuntimeCartridge> {
+  return loadVocabularyGateHostProofCartridge(VOCABULARY_GATE_DEFINITIONS["dragon-flight"]);
+}
+
+/**
+ * Creates the Magic Defense Reading/Primary host-proof cartridge.
+ * @returns A runtime cartridge that owns its vocabulary gate mechanic and emits one result.
+ */
+export async function loadMagicDefenseHostProofCartridge(): Promise<RuntimeCartridge> {
+  return loadVocabularyGateHostProofCartridge(VOCABULARY_GATE_DEFINITIONS["magic-defense"]);
+}
+
+/** Stable public identifier for the Dungeon Liberator host-proof cartridge. */
+export const DUNGEON_LIBERATOR_HOST_PROOF_ID = "dungeon-liberator" as const;
+
+/** Exact selected standard-pack roles used by Dungeon Liberator's runtime presentation. */
+export const DUNGEON_LIBERATOR_REQUIRED_ASSET_BINDINGS = Object.freeze([
+  "effects/32x32/combat/hit-01",
+  "side-view/32x32/characters/enemy-001-idle",
+  "top-down/32x32/characters/hero-01",
+  "ui/16x16/controls/gamepad-buttons",
+] as const);
+
+/**
+ * Creates the Dungeon Liberator host-proof cartridge (sentence-mode vocabulary-gate surface).
+ * @returns A runtime cartridge that owns its gate mechanic and emits one result.
+ */
+export async function loadDungeonLiberatorHostProofCartridge(): Promise<RuntimeCartridge> {
+  // Sentence input shares the vocabulary item array shape; the gate presentation reuses DF mechanics.
+  return loadVocabularyGateHostProofCartridge({
+    id: DUNGEON_LIBERATOR_HOST_PROOF_ID,
+    title: "Dungeon Liberator",
+    description: "Liberate prisoners by matching the active sentence translation gate.",
+    requiredAssetBindings: DUNGEON_LIBERATOR_REQUIRED_ASSET_BINDINGS,
+    heroBinding: "top-down/32x32/characters/hero-01",
+    hitEffectBinding: "effects/32x32/combat/hit-01",
+    diagnosticCode: "DUNGEON_LIBERATOR_HOST_PROOF_ACTION",
+  });
+}
+
+/**
+ * Loads one Existing Core host-proof cartridge by public identifier.
+ * @param cartridgeId Untrusted host-proof title identifier.
+ * @returns The matching runtime cartridge for a current-source title.
+ * @throws HostProofSourceBlockedError for historical-source-only titles.
+ * @throws When the identifier is not an accepted Existing Core host-proof binding.
+ */
+export async function loadExistingCoreHostProofCartridge(
+  cartridgeId: string,
+): Promise<RuntimeCartridge> {
+  if ((SOURCE_BLOCKED_HOST_PROOF_IDS as readonly string[]).includes(cartridgeId)) {
+    throw new HostProofSourceBlockedError(cartridgeId);
+  }
+  if (cartridgeId === DRAGON_FLIGHT_HOST_PROOF_ID) {
+    return loadDragonFlightHostProofCartridge();
+  }
+  if (cartridgeId === MAGIC_DEFENSE_HOST_PROOF_ID) {
+    return loadMagicDefenseHostProofCartridge();
+  }
+  if (cartridgeId === "dungeon-liberator") {
+    return loadDungeonLiberatorHostProofCartridge();
+  }
+  const known = EXISTING_CORE_HOST_PROOF_BINDINGS.some((binding) => binding.id === cartridgeId);
+  if (!known) {
+    throw new Error(`Unknown host-proof cartridge: ${cartridgeId}`);
+  }
+  throw new Error(`Host-proof cartridge ${cartridgeId} is not loadable`);
+}
+
+/**
+ * Reports whether a cartridge id is explicitly source-blocked for host proof.
+ * @param cartridgeId Candidate Existing Core host-proof identifier.
+ * @returns True when the title is historical-source-only and must not load.
+ */
+export function isHostProofSourceBlocked(
+  cartridgeId: ExistingCoreHostProofCartridgeId | string,
+): boolean {
+  return (SOURCE_BLOCKED_HOST_PROOF_IDS as readonly string[]).includes(cartridgeId);
 }

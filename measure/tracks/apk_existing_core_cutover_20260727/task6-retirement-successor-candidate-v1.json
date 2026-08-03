@@ -2,25 +2,100 @@
   "schema_version": "apk-cohort-retirement-successor-candidate.v1",
   "status": "candidate-non-consumable",
   "cohort": "existing-core",
-  "title_ids": ["dragon-flight","magic-defense","dungeon-liberator","sorcerer-ziggurat","astral-mage"],
-  "source_manifest": {"path":"measure/tracks/apk_existing_core_cutover_20260727/task6-legacy-retirement-manifest-v1.json","sha256":"f6ac963df953f5ebde49f50eea3e0eecf8638747e301590a6b4abfbf395bdaea"},
+  "title_ids": [
+    "dragon-flight",
+    "magic-defense",
+    "dungeon-liberator",
+    "sorcerer-ziggurat",
+    "astral-mage"
+  ],
+  "source_manifest": {
+    "path": "measure/tracks/apk_existing_core_cutover_20260727/task6-legacy-retirement-manifest-v1.json",
+    "sha256": "6f9cb1537e6acb824dc0f582ea6ceedd99283d3626d3fc668ac03147ae60cd53"
+  },
   "decision": "retain-until-accepted-production-route-cutover",
   "reason": "The new root wrappers are exercised only by hidden host-proof routes. Existing production student routes and their direct asset trees remain live, while Sorcerer's Ziggurat and Astral Mage have no legacy source to delete.",
   "deleted_paths": [],
   "deleted_path_count": 0,
   "retained_paths": [
-    {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Production student route is not cut over by hidden host proof."},
-    {"path":"apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"reading-advantage","reason":"Production student route is not cut over by hidden host proof."},
-    {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Production student route is not cut over by hidden host proof."},
-    {"path":"apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"reading-advantage","reason":"Production student route is not cut over by hidden host proof."},
-    {"path":"apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator","exists_at_candidate":true,"disposition":"retain-live-caller","owner":"advantage-games","reason":"Production student route is not cut over by hidden host proof."}
+    {
+      "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight",
+      "exists_at_candidate": true,
+      "disposition": "retain-live-caller",
+      "owner": "advantage-games",
+      "reason": "Production student route is not cut over by hidden host proof."
+    },
+    {
+      "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight",
+      "exists_at_candidate": true,
+      "disposition": "retain-live-caller",
+      "owner": "reading-advantage",
+      "reason": "Production student route is not cut over by hidden host proof."
+    },
+    {
+      "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense",
+      "exists_at_candidate": true,
+      "disposition": "retain-live-caller",
+      "owner": "advantage-games",
+      "reason": "Production student route is not cut over by hidden host proof."
+    },
+    {
+      "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense",
+      "exists_at_candidate": true,
+      "disposition": "retain-live-caller",
+      "owner": "reading-advantage",
+      "reason": "Production student route is not cut over by hidden host proof."
+    },
+    {
+      "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator",
+      "exists_at_candidate": true,
+      "disposition": "retain-live-caller",
+      "owner": "advantage-games",
+      "reason": "Production student route is not cut over by hidden host proof."
+    }
   ],
   "titles": [
-    {"title_id":"dragon-flight","retained_paths":["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight","apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight"],"deleted_paths":[]},
-    {"title_id":"magic-defense","retained_paths":["apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense","apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense"],"deleted_paths":[]},
-    {"title_id":"dungeon-liberator","retained_paths":["apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator"],"deleted_paths":[]},
-    {"title_id":"sorcerer-ziggurat","retained_paths":[],"deleted_paths":[],"no_legacy_source":true,"residual":"No accepted current legacy implementation or asset source exists."},
-    {"title_id":"astral-mage","retained_paths":[],"deleted_paths":[],"no_legacy_source":true,"residual":"No accepted current legacy implementation or asset source exists."}
+    {
+      "title_id": "dragon-flight",
+      "retained_paths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/dragon-flight",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight"
+      ],
+      "deleted_paths": []
+    },
+    {
+      "title_id": "magic-defense",
+      "retained_paths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/magic-defense",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense"
+      ],
+      "deleted_paths": []
+    },
+    {
+      "title_id": "dungeon-liberator",
+      "retained_paths": [
+        "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/dungeon-liberator"
+      ],
+      "deleted_paths": []
+    },
+    {
+      "title_id": "sorcerer-ziggurat",
+      "retained_paths": [],
+      "deleted_paths": [],
+      "no_legacy_source": true,
+      "residual": "No accepted current legacy implementation or asset source exists."
+    },
+    {
+      "title_id": "astral-mage",
+      "retained_paths": [],
+      "deleted_paths": [],
+      "no_legacy_source": true,
+      "residual": "No accepted current legacy implementation or asset source exists."
+    }
   ],
-  "authorization": {"legacy_deletion_authorized":false,"production_route_cutover_authorized":false,"owner_acceptance_recorded":false}
+  "authorization": {
+    "legacy_deletion_authorized": false,
+    "production_route_cutover_authorized": false,
+    "owner_acceptance_recorded": false
+  }
 }

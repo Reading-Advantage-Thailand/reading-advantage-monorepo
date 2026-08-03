@@ -14,6 +14,11 @@ export {
   DRAGON_FLIGHT_HOST_PROOF_ASSET_KEYS,
   DRAGON_FLIGHT_HOST_PROOF_PACK_ID,
   getDragonFlightHostProofSelectedEdition,
+  getMagicDefenseHostProofSelectedEdition,
+  getMultiTitleHostProofSelectedEdition,
+  getVocabularyGateHostProofSelectedEdition,
+  MAGIC_DEFENSE_HOST_PROOF_ASSET_KEYS,
+  MULTI_TITLE_HOST_PROOF_ASSET_KEYS,
 } from "./host-proof-edition.js";
 
 /** Canonical complete production-pack inventory and validator. */

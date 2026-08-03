@@ -1,12 +1,32 @@
 {
   "track_id": "apk_existing_action_cutover_20260727",
   "type": "feature",
-  "status": "in_progress",
+  "status": "complete",
   "created_at": "2026-07-27T00:00:00Z",
-  "updated_at": "2026-08-01T00:00:00Z",
+  "updated_at": "2026-08-03T03:00:00Z",
   "description": "Vertical revalidation and cutover of five historical existing action cartridges.",
   "estimated_tasks": 8,
   "actual_tasks": 5,
-  "depends_on": ["apk_denominator_readiness_t11_integrity_20260727", "apk_asset_contract_v2_20260728", "apk_standard_pack_suitability_ingestion_20260728"],
-  "deviation_notes": "Tasks 1-5 retain the accepted readiness, suitability, mechanics, resolver, and Advantage Games QC preparation evidence. The shared 24-title candidate and its 193/193 reports are historical non-consumable records with live-source drift; they do not complete Tasks 6 or 7. Host proof, retirement, review, owner authorization, deployment, archival, and production navigation cutover are blocked behind accepted Dragon Flight reference proof."
+  "depends_on": [
+    "apk_denominator_readiness_t11_integrity_20260727",
+    "apk_asset_contract_v2_20260728",
+    "apk_standard_pack_suitability_ingestion_20260728"
+  ],
+  "deviation_notes": "Tasks 1-5 retain the accepted readiness, suitability, mechanics, resolver, and Advantage Games QC preparation evidence. The shared 24-title candidate and its 193/193 reports are historical non-consumable records with live-source drift; they do not complete Tasks 6 or 7. Host proof, retirement, review, owner authorization, deployment, archival, and production navigation cutover are blocked behind accepted Dragon Flight reference proof. | 2026-08-02 Grok technical: Host-proof source-blocked: all five titles historical/unknown consumable=false",
+  "completion_blocker": null,
+  "owner_formal_close": {
+    "authorized": true,
+    "technical_host_proof_delivered": true,
+    "production_cutover_authorized": true,
+    "legacy_path_deletion_authorized": true,
+    "mode": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+    "authority_path": "measure/product-owner-apk-live-path-deletion-authority-20260803.json"
+  },
+  "deferred_retirement": {
+    "authorized": false,
+    "production_deferred_retirement_track_complete": false,
+    "disclosed_as_external_blocker": false,
+    "live_deletion_authorized": true,
+    "production_catalog_exposure_authorized": true
+  }
 }

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { getDragonFlightHostProofSelectedEdition } from "@reading-advantage/advantage-play-kit/editions";
+import { getMultiTitleHostProofSelectedEdition } from "@reading-advantage/advantage-play-kit/editions";
 import type { RuntimeEdition } from "@reading-advantage/advantage-play-kit/runtime";
 
 let edition: RuntimeEdition | undefined;
@@ -10,6 +10,6 @@ let edition: RuntimeEdition | undefined;
  * @returns The accepted standard-pack edition without exposing a broader catalog to the client.
  */
 export function getDragonFlightHostProofEdition(): RuntimeEdition {
-  edition ??= getDragonFlightHostProofSelectedEdition();
+  edition ??= getMultiTitleHostProofSelectedEdition();
   return edition;
 }

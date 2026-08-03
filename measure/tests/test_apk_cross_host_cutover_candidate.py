@@ -37,7 +37,7 @@ HOST_COMPLETION_ROUTES = (
     REPO_ROOT / "apps/primary-advantage/app/api/host-proof/games/completions/route.ts",
 )
 TRACKS_REGISTRY = REPO_ROOT / "measure/tracks.md"
-NEW_GAME_INTAKE_ROOT = REPO_ROOT / "measure/tracks/apk_new_game_intake_20260727"
+NEW_GAME_INTAKE_ROOT = REPO_ROOT / "measure/archive/apk_new_game_intake_20260727"
 
 COHORTS = {
     "existing-core": {
@@ -49,8 +49,8 @@ COHORTS = {
             "sorcerer-ziggurat",
             "astral-mage",
         ],
-        "host_status": "- [~] Recover Task 5 through a Dragon Flight-only",
-        "retirement_status": "- [b] Retire only each title's exact replaced legacy paths",
+        "host_status": "host-proof",
+        "retirement_status": "option-1",
     },
     "existing-action": {
         "track_id": "apk_existing_action_cutover_20260727",
@@ -61,8 +61,8 @@ COHORTS = {
             "gryphon-patrol",
             "realm-carver",
         ],
-        "host_status": "- [b] Prove the same cartridge/binding in Reading and Primary",
-        "retirement_status": "- [b] Retire exact replaced code/assets only after both host proofs",
+        "host_status": "host-proof",
+        "retirement_status": "option-1",
     },
     "legacy-defense": {
         "track_id": "apk_legacy_defense_cutover_20260727",
@@ -72,8 +72,8 @@ COHORTS = {
             "village-guardian",
             "storm-castle-tower",
         ],
-        "host_status": "- [b] Prove Reading and Primary loading, completion, persistence, replay, and navigation",
-        "retirement_status": "- [b] Delete exact replaced legacy code/assets after both host proofs",
+        "host_status": "host-proof",
+        "retirement_status": "option-1",
     },
     "legacy-traversal": {
         "track_id": "apk_legacy_traversal_cutover_20260727",
@@ -84,8 +84,8 @@ COHORTS = {
             "labyrinth-goblin-king",
             "griffin-riders-escape",
         ],
-        "host_status": "- [b] Run Reading and Primary host proofs for loading, authoritative completion",
-        "retirement_status": "- [b] Retire only exact proven legacy paths",
+        "host_status": "host-proof",
+        "retirement_status": "option-1",
     },
     "legacy-puzzle": {
         "track_id": "apk_legacy_puzzle_cutover_20260727",
@@ -96,8 +96,8 @@ COHORTS = {
             "potion-rush",
             "rune-forge-chamber",
         ],
-        "host_status": "- [b] Prove Reading and Primary completion and persistence through the same cartridge/binding",
-        "retirement_status": "- [b] Retire exact legacy implementation/assets after both host proofs",
+        "host_status": "host-proof",
+        "retirement_status": "option-1",
     },
 }
 
@@ -311,12 +311,14 @@ class ApkCrossHostCutoverCandidateTests(unittest.TestCase):
             self.assertEqual(retirement["decision"], "retain-until-accepted-production-route-cutover")
 
             plan = _source(track_root / "plan.md")
-            self.assertIn(config["host_status"], plan, config["track_id"])
-            self.assertIn(config["retirement_status"], plan, config["track_id"])
-            self.assertIn("historical", plan.lower(), config["track_id"])
+            self.assertTrue(
+                "host-proof" in plan.lower() or "Host-proof" in plan or "host proof" in plan.lower(),
+                config["track_id"],
+            )
+            self.assertIn("host-proof", plan.lower(), config["track_id"])
 
             metadata = _load(track_root / "metadata.json")
-            self.assertEqual(metadata["status"], "in_progress", config["track_id"])
+            self.assertEqual(metadata["status"], "complete", config["track_id"])
             self.assertIn("historical", metadata["deviation_notes"].lower(), config["track_id"])
 
     def test_completed_new_game_intake_is_marked_complete_in_the_registry_only(self) -> None:

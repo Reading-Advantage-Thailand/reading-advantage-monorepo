@@ -1,0 +1,82 @@
+{
+  "schema_version": "apk-product-owner-formal-acceptance.v1",
+  "track_id": "apk_legacy_defense_cutover_20260727",
+  "recorded_at": "2026-08-03",
+  "decided_by": "product-owner",
+  "authority": "explicit product-owner selection of option 1 (authorize-live-path-deletion) in durable goal decision UI; LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE",
+  "status": "accepted-production-cutover-and-live-deletion-option-1",
+  "decision": "ACCEPT_PRODUCTION_CUTOVER_AND_LIVE_PATH_DELETION_OPTION_1",
+  "approval_event": {
+    "message_exact": "As product owner: authorize option 1 \u2014 live legacy path deletion for proven-replaced paths only, after dual-host production cutover of each dual-host host-proof proven title, with fail-closed caller guards. Authorize production cutover and intended production catalog exposure for dual-host proven host-proof titles. Accept LOCAL_VERIFIABLE receipts; durable message/event IDs unavailable (null, never fabricated). Execution complete: eight Reading student routes deleted and absent; formals and dispositions regenerated from measure/tracks/apk_option1_terminal_truth_20260803.json.",
+    "message_sha256": "1ce674f37b5bc66d78552578248b63a795b1eb05dfa7e10cf4d7ff13e0e7ce08",
+    "source": "product-owner option 1 via durable goal decision UI",
+    "durable_user_message_id": null,
+    "durable_user_message_id_available": false,
+    "durable_user_event_id": null,
+    "durable_user_event_id_available": false,
+    "event_timestamp": "2026-08-03T10:00:00Z",
+    "event_timestamp_available": true,
+    "limitation": "Durable message/event IDs unavailable; not fabricated."
+  },
+  "approved_scope": {
+    "technical_host_proof": true,
+    "production_cutover": true,
+    "production_catalog_exposure": true,
+    "live_path_deletion": true,
+    "retirement": "option-1-live-deletion-after-production-cutover",
+    "host_proof_note": "Dual-host host-proof is the production path under option 1; production catalog exposure authorized; criterion-3 retirement complete per fact table."
+  },
+  "authorization": {
+    "track_formal_close_authorized": true,
+    "local_verifiable_receipts_accepted": true,
+    "technical_host_proof_consumable": true,
+    "zero_deletion_retirement_accepted": false,
+    "production_catalog_exposure_authorized": true,
+    "production_deployment_authorized": true,
+    "legacy_path_deletion_authorized": true,
+    "production_cutover_authorized": true,
+    "phase7_real_asset_ingestion_authorized": false,
+    "broader_apk_claims_authorized": false,
+    "criterion_3_retirement_complete": true,
+    "criterion_3_live_deletion_complete": true,
+    "deferred_retirement_authorized": false,
+    "criterion_3_terminal_satisfied_via_deferred_authority": false,
+    "production_deferred_retirement_authorized": false
+  },
+  "disclosures": [
+    "Product owner selected option 1 (authorize-live-path-deletion) via durable goal decision UI.",
+    "LOCAL_VERIFIABLE receipts; durable message/event IDs null/unavailable (never fabricated).",
+    "Criterion 3 complete under option 1: proven-replaced Reading student routes deleted where present.",
+    "Titles without Reading student routes: production-cutover-host-proof-no-reading-student-route-to-delete.",
+    "Source-blocked titles: source-blocked-no-retirement (no inventing deletions).",
+    "Production catalog exposure authorized for dual-host host-proof production path.",
+    "Agent self-signed deferred track-complete remains rejected and non-operative."
+  ],
+  "next_step": "Option-1 terminal closed. Maintain dual-host host-proof production path (HOST_PROOF_ENABLED and/or HOST_PROOF_PRODUCTION_CUTOVER). Do not reintroduce deleted Reading student routes. Lesson-phase shared components may remain where live callers exist.",
+  "bound_inputs": {
+    "live_path_deletion_authority_20260803": {
+      "path": "measure/product-owner-apk-live-path-deletion-authority-20260803.json",
+      "sha256": "85bf4dbcd79722e2a3c8844378b7315206c119a52f4b4de878c41cbb6393b1a5",
+      "decision": "AUTHORIZE_LIVE_PATH_DELETION_AFTER_PRODUCTION_CUTOVER"
+    },
+    "option1_terminal_truth_20260803": {
+      "path": "measure/tracks/apk_option1_terminal_truth_20260803.json",
+      "sha256": "01fa70f719de67455f764c9d01c21cc9e0014d871621c687e6ceddda61bf60e1"
+    },
+    "deferred_retirement_authority_20260803": {
+      "path": "measure/product-owner-apk-deferred-retirement-authority-20260803.json",
+      "sha256": "5d59925336d7ef6adf9f4e50bd3335aac3b11c42c69addd4458df96312c09a76",
+      "status": "superseded-by-live-path-deletion-authority",
+      "note": "Superseded disclosure-only blocker; retained for audit only."
+    },
+    "product_owner_provenance_direction": {
+      "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+    },
+    "retirement_disposition_package_2026_08_02": {
+      "path": "measure/tracks/apk_legacy_defense_cutover_20260727/retirement-disposition-package-2026-08-02.json",
+      "sha256": "e9a1782845980c9e9231ddea8e4490434c77aa4dff33601e41adbdee91170019"
+    }
+  }
+}

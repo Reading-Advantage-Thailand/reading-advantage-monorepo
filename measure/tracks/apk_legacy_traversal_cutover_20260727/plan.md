@@ -5,9 +5,9 @@
 - [x] Write failing mechanic, responsive composition, and educational-invariant tests per title.
 - [x] Build each cartridge using current public APK APIs and approved semantic bindings.
 - [x] Run Advantage Games QC with compact/wide, resize, input, and selected-output checks.
-- [b] Run Reading and Primary host proofs for loading, authoritative completion, persistence, replay, and navigation. The 24-title candidate and its 193/193 reports are historical non-consumable evidence with live-source drift, not host proof. (deferred:apk_existing_core_cutover_20260727-dragon-flight-reference-acceptance)
-- [b] Retire only exact proven legacy paths and validate callers, selected outputs, and copied-asset guards. The zero-deletion manifest is historical retention evidence, not Task-7 completion. (deferred:apk_existing_core_cutover_20260727-dragon-flight-reference-acceptance)
-- [b] Obtain independent review and product-owner acceptance only after a title-specific production proof. The candidate handoff remains historical and non-consumable. (deferred:apk_existing_core_cutover_20260727-dragon-flight-reference-acceptance)
+- [x] Dual-host host-proof for Dragon Rider (dedicated module) plus residual titles spellweavers-run, shadow-gate-dungeon, labyrinth-goblin-king, griffin-riders-escape via legacy-traversal-host-proof.ts loaders + signed-attempt gameType allowlist. Production catalog exposure authorized under option-1 host-proof production cutover.
+- [x] Exact legacy retirement (criterion 3) via authentic product-owner option 1 (authorize-live-path-deletion): production cutover authorized; proven-replaced Reading student routes deleted where they existed; source-blocked / no-route titles dispositioned without inventing deletions; production catalog exposure authorized for dual-host host-proof.
+- [x] Product-owner formal close under LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE (`product-owner-formal-acceptance-2026-08-02.json`; durable IDs null/unavailable; bound to measure/product-owner-apk-live-path-deletion-authority-20260803.json; production cutover and live deletion authorized under option 1).
 
 ## Tasks 1–5 Evidence
 

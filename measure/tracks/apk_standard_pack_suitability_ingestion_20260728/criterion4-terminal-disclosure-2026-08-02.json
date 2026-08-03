@@ -1,0 +1,22 @@
+{
+  "schema_version": "apk-criterion4-terminal-disclosure.v1",
+  "recorded_at": "2026-08-02T15:59:41Z",
+  "goal_acceptance_criterion": 4,
+  "track_id": "apk_standard_pack_suitability_ingestion_20260728",
+  "terminal_kind": "permanently_external_blocker_until_packet_supplied",
+  "registry_marker": "[b]",
+  "metadata_status": "blocked",
+  "not_silent_incomplete": true,
+  "phase7_blocker": {
+    "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/phase7-external-blocker-no-packet-2026-08-02.json",
+    "sha256": "8ef14fa74b5d379093176b1e95fb890fe69fa4848460086974991ee9a39d9552"
+  },
+  "plan_task_checklist_item": "Advance standard-pack suitability only when a lawful real-asset packet exists; otherwise leave Phase 7 blocked with disclosures and do not invent ingestion.",
+  "plan_task_checklist_status": "satisfied_by_blocked_with_disclosure",
+  "packet_invented": false,
+  "completed_work_not_phase7": [
+    "evidence-only governance",
+    "Existing Core canonical-reuse package",
+    "Phase 4 additive-release infrastructure with synthetic fixtures only"
+  ]
+}

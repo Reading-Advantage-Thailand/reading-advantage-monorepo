@@ -52,3 +52,7 @@ cloud-sql-proxy
 service-account.json
 /docs
 /logs
+
+# local host-proof/playwright dumps
+test-results/
+playwright-report/

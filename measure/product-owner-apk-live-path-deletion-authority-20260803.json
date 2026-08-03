@@ -1,0 +1,77 @@
+{
+  "schema_version": "apk-product-owner-live-path-deletion-authority.v1",
+  "record_id": "apk_live_path_deletion_after_production_cutover_20260803",
+  "issued_at": "2026-08-03T10:00:00Z",
+  "executed_at": "2026-08-03T12:00:00Z",
+  "decided_by": "product-owner",
+  "authority": "explicit product-owner selection of option 1 (authorize-live-path-deletion) in durable goal decision UI",
+  "decision": "AUTHORIZE_LIVE_PATH_DELETION_AFTER_PRODUCTION_CUTOVER",
+  "status": "operative-executed",
+  "operative": true,
+  "approval_event": {
+    "message_exact": "As product owner: authorize option 1 \u2014 live legacy path deletion for proven-replaced paths only, after dual-host production cutover of each dual-host host-proof proven title, with fail-closed caller guards. Authorize production cutover and intended production catalog exposure for dual-host proven host-proof titles. Accept LOCAL_VERIFIABLE receipts; durable message/event IDs unavailable (null, never fabricated). Execution complete: eight Reading student routes deleted and absent; formals and dispositions regenerated from measure/tracks/apk_option1_terminal_truth_20260803.json.",
+    "message_sha256": "1ce674f37b5bc66d78552578248b63a795b1eb05dfa7e10cf4d7ff13e0e7ce08",
+    "source": "product-owner answer via ask_user_question: Option 1 live path deletion after production cutover",
+    "durable_user_message_id": null,
+    "durable_user_message_id_available": false,
+    "durable_user_event_id": null,
+    "durable_user_event_id_available": false,
+    "event_timestamp": "2026-08-03T10:00:00Z",
+    "event_timestamp_available": true,
+    "limitation": "Durable message/event IDs unavailable; not fabricated. LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE applies."
+  },
+  "option_id": "authorize-live-path-deletion",
+  "fact_table": {
+    "path": "measure/tracks/apk_option1_terminal_truth_20260803.json",
+    "sha256": "01fa70f719de67455f764c9d01c21cc9e0014d871621c687e6ceddda61bf60e1"
+  },
+  "supersedes": {
+    "path": "measure/product-owner-apk-deferred-retirement-authority-20260803.json",
+    "prior_decision": "DOCUMENT_DEFERRED_RETIREMENT_AS_CRITERION_3_EXTERNAL_BLOCKER",
+    "reason": "Authentic product-owner option 1 executed; disclosure-only keep-blocked terminal superseded."
+  },
+  "applies_to_tracks": [
+    "apk_existing_core_cutover_20260727",
+    "apk_existing_action_cutover_20260727",
+    "apk_legacy_defense_cutover_20260727",
+    "apk_legacy_traversal_cutover_20260727",
+    "apk_legacy_puzzle_cutover_20260727",
+    "apk_cross_host_closeout_20260727"
+  ],
+  "authorization": {
+    "live_legacy_path_deletion_authorized": true,
+    "production_cutover_authorized": true,
+    "production_catalog_exposure_authorized": true,
+    "track_formal_close_authorized": true,
+    "criterion_3_live_deletion_path_authorized": true,
+    "criterion_3_retirement_complete": true,
+    "criterion_3_retirement_complete_note": "True after proven-replaced Reading student routes deleted (absent) and agreement checker green.",
+    "inventing_deletions_for_live_callers_forbidden": true,
+    "source_blocked_titles_remain_non_playable": true,
+    "metadata_status_authorized_after_successful_deletion": "complete"
+  },
+  "execution_result": {
+    "deleted_paths": [
+      "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/castle-defense",
+      "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/potion-rush",
+      "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight",
+      "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-rider",
+      "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/enchanted-library",
+      "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense",
+      "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match",
+      "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie"
+    ],
+    "deleted_path_count": 8,
+    "all_deleted_paths_absent": true
+  },
+  "disclosures": [
+    "Product owner selected option 1 (authorize-live-path-deletion) in durable goal decision UI.",
+    "LOCAL_VERIFIABLE receipts; durable message/event IDs null/unavailable (never fabricated).",
+    "Eight Reading student routes deleted after dual-host host-proof production cutover; paths must be absent.",
+    "Titles without Reading student routes: disposition production-cutover-host-proof-no-reading-student-route-to-delete.",
+    "Source-blocked titles: source-blocked-no-retirement (no inventing deletions).",
+    "Action cohort: all source-blocked; criterion-3 terminal is source-blocked disposition.",
+    "Cross-host residual: cohort-owned; no residual-only deletions.",
+    "Agent self-signed deferred track-complete remains rejected and non-operative."
+  ]
+}

@@ -7,7 +7,7 @@
   "scope": "local-hidden-reading-primary-host-proof-execution-only",
   "predecessor_authorization": {
     "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-task4-qc-receipt-v1.json",
-    "sha256": "b6ffefcebf8a75d9967f196693fe7cf14a133d66123537d201b52e9af4745dd9",
+    "sha256": "238eadb8c7f1d1fa80fd372f8affd2b2e1fceff78db344746f4c396fca4d0f40",
     "authorization_status": "authorized-to-begin-task5-reading-primary-host-proof-only"
   },
   "host_contract": {
@@ -29,7 +29,7 @@
       "base_url": "http://localhost:3128",
       "execution_report": {
         "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-reading-host-proof-playwright-report-v2.json",
-        "sha256": "4e1f69c24ad36717077cfde04c8db0a80f708464ae2d877c5383083c85876c80"
+        "sha256": "d5dc02d1d976719b00bce7de20736af2d6d3768f7d19004e4de02bb1555f9a7f"
       }
     },
     {
@@ -37,7 +37,7 @@
       "base_url": "http://localhost:3139",
       "execution_report": {
         "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-primary-host-proof-playwright-report-v1.json",
-        "sha256": "8e851a62a7c1ed2ef41ab6b9ddc3ed6ef293ede575408f4695bb4093432d9fae"
+        "sha256": "e74cd9dd2bfc9eb7f2b09c3a5159aad668b8f15e3fd0f77153e7b33a9345662a"
       }
     }
   ],
@@ -45,32 +45,104 @@
     "status": "current-source-updated-after-browser-observation",
     "meaning": "The current source bindings are hash-bound below. The Kimi observations retain their exact prior-source bindings and therefore remain historical execution-only observations pending rerun; they do not update acceptance authority.",
     "bindings": {
-      "reading_host_client": {"path": "apps/reading-advantage/components/host-proof/HostProofGameClient.tsx", "sha256": "5ec5f4e953b2a1bed312516a4342717f538e28f27e7ce27cc9a88b9fcd352470"},
-      "reading_host_page": {"path": "apps/reading-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx", "sha256": "153eb18bb0617f9b9f0a9ec85d61b4136d8c2e04535fae143948f7d7eed327bb"},
-      "reading_host_route": {"path": "apps/reading-advantage/app/api/host-proof/games/completions/route.ts", "sha256": "ffa3d5d21530eada589138c7e790aa5f281659f9085cc45366c4805c759ae2f9"},
-      "reading_host_gate": {"path": "apps/reading-advantage/lib/host-proof-config.ts", "sha256": "b99c2384bd7cb279e2c89729f0804e40fdeb4c9e511786ad0bb4cfd221c93c32"},
-      "reading_qc_loader": {"path": "apps/reading-advantage/lib/host-proof-qc-loader.ts", "sha256": "d5c56bc6b4e0b5259617427522e79179e4a6f07c1ce37e89de7da0856ba2334d"},
-      "reading_next_config": {"path": "apps/reading-advantage/next.config.ts", "sha256": "07637e3b4c7dff391c602558c585ff63960344b9d43d30ac7beb86b1149d4da6"},
-      "primary_host_client": {"path": "apps/primary-advantage/components/host-proof/HostProofGameClient.tsx", "sha256": "5a6cace25ebdef87823010d3ea8637e8e2c850000c393325c806b55d700e0a64"},
-      "primary_host_page": {"path": "apps/primary-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx", "sha256": "a2afa49cf95b7d578fe74fabf866ffac7376a1bee36e44d00d0e11e53b611971"},
-      "primary_host_route": {"path": "apps/primary-advantage/app/api/host-proof/games/completions/route.ts", "sha256": "1e8044a8c8584b94b67980028e35cb1e1ad7c10bbc1a8a16ccbeffd71101752c"},
-      "primary_host_gate": {"path": "apps/primary-advantage/lib/host-proof-config.ts", "sha256": "b99c2384bd7cb279e2c89729f0804e40fdeb4c9e511786ad0bb4cfd221c93c32"},
-      "primary_next_config": {"path": "apps/primary-advantage/next.config.ts", "sha256": "7f2ec850e001aa00d30b5372fbdcf88f550822d6e846e1b716173146f11f293f"},
-      "shared_domain_adapter": {"path": "packages/domain/src/games/host-proof.ts", "sha256": "1a56fc3d7c9d11aa29389acbeaf44e06cb1e6054f3909af679cb2cdf99b900fa"}
+      "reading_host_client": {
+        "path": "apps/reading-advantage/components/host-proof/HostProofGameClient.tsx",
+        "sha256": "e443c68fa616ebe54eeae9200ff64068de1bd3eafbe742b3d88103e7a197e51e"
+      },
+      "reading_host_page": {
+        "path": "apps/reading-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx",
+        "sha256": "65551c5ad11daddc68ca72f37343aad46037d22d501902b3b77fa5b6eac15909"
+      },
+      "reading_host_route": {
+        "path": "apps/reading-advantage/app/api/host-proof/games/completions/route.ts",
+        "sha256": "547f47a9c954a05321cce561e10d05e6c35f50f9a6551f9bbd9d5ba53f160e92"
+      },
+      "reading_host_gate": {
+        "path": "apps/reading-advantage/lib/host-proof-config.ts",
+        "sha256": "c28b191bcf4dead76f653d39b41ab3f1bef5dc0d3c696a6c91a8dbc25544f84b"
+      },
+      "reading_qc_loader": {
+        "path": "apps/reading-advantage/lib/host-proof-qc-loader.ts",
+        "sha256": "6fe9f56e8d1c5c77acce2343888c1286e23b3fed1e02732128f70744b205ae30"
+      },
+      "reading_next_config": {
+        "path": "apps/reading-advantage/next.config.ts",
+        "sha256": "07637e3b4c7dff391c602558c585ff63960344b9d43d30ac7beb86b1149d4da6"
+      },
+      "primary_host_client": {
+        "path": "apps/primary-advantage/components/host-proof/HostProofGameClient.tsx",
+        "sha256": "3c68e8a2e87aa6c66bdfe0bed805e9a4254450385b7bcf26abc305b27c20bf25"
+      },
+      "primary_host_page": {
+        "path": "apps/primary-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx",
+        "sha256": "15f0503f660ebd8e08ac3cf44871e5ef5e41873049e21713b69262f563922490"
+      },
+      "primary_host_route": {
+        "path": "apps/primary-advantage/app/api/host-proof/games/completions/route.ts",
+        "sha256": "55b28a1be0b5b75207eba1a33b00cedd60021f9b3cc4b8aa96c9289c8223d32b"
+      },
+      "primary_host_gate": {
+        "path": "apps/primary-advantage/lib/host-proof-config.ts",
+        "sha256": "c28b191bcf4dead76f653d39b41ab3f1bef5dc0d3c696a6c91a8dbc25544f84b"
+      },
+      "primary_next_config": {
+        "path": "apps/primary-advantage/next.config.ts",
+        "sha256": "ad328238a98a2966d3813d14062550c758431131f632d7f05df69caa8ebc316a"
+      },
+      "shared_domain_adapter": {
+        "path": "packages/domain/src/games/host-proof.ts",
+        "sha256": "aff27b1d4db85d08dcfb4bf2a8d2112057d73ffde504e3fcf118c53056fe23f9"
+      }
     },
     "observed_browser_bindings": {
-      "reading_host_client": {"path": "apps/reading-advantage/components/host-proof/HostProofGameClient.tsx", "sha256": "393ac9d71b1b18ac305229bf7ab7852abd76476626eefc7bc08c45c4d646b189"},
-      "reading_host_page": {"path": "apps/reading-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx", "sha256": "153eb18bb0617f9b9f0a9ec85d61b4136d8c2e04535fae143948f7d7eed327bb"},
-      "reading_host_route": {"path": "apps/reading-advantage/app/api/host-proof/games/completions/route.ts", "sha256": "ffa3d5d21530eada589138c7e790aa5f281659f9085cc45366c4805c759ae2f9"},
-      "reading_host_gate": {"path": "apps/reading-advantage/lib/host-proof-config.ts", "sha256": "b99c2384bd7cb279e2c89729f0804e40fdeb4c9e511786ad0bb4cfd221c93c32"},
-      "reading_qc_loader": {"path": "apps/reading-advantage/lib/host-proof-qc-loader.ts", "sha256": "d5c56bc6b4e0b5259617427522e79179e4a6f07c1ce37e89de7da0856ba2334d"},
-      "reading_next_config": {"path": "apps/reading-advantage/next.config.ts", "sha256": "a36ccd5f233892d954bf4bac713efc969e37f88cfb39f42f2be22b1402be42bc"},
-      "primary_host_client": {"path": "apps/primary-advantage/components/host-proof/HostProofGameClient.tsx", "sha256": "22d145aa3f7faf060d5c6f1d10fd2a5a01a34b0ae00839d44ba9905375923c6c"},
-      "primary_host_page": {"path": "apps/primary-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx", "sha256": "a2afa49cf95b7d578fe74fabf866ffac7376a1bee36e44d00d0e11e53b611971"},
-      "primary_host_route": {"path": "apps/primary-advantage/app/api/host-proof/games/completions/route.ts", "sha256": "1e8044a8c8584b94b67980028e35cb1e1ad7c10bbc1a8a16ccbeffd71101752c"},
-      "primary_host_gate": {"path": "apps/primary-advantage/lib/host-proof-config.ts", "sha256": "b99c2384bd7cb279e2c89729f0804e40fdeb4c9e511786ad0bb4cfd221c93c32"},
-      "primary_next_config": {"path": "apps/primary-advantage/next.config.ts", "sha256": "7f2ec850e001aa00d30b5372fbdcf88f550822d6e846e1b716173146f11f293f"},
-      "shared_domain_adapter": {"path": "packages/domain/src/games/host-proof.ts", "sha256": "913d857ef8bef3bef7d57078d7655b6885f7206ce6598de2e68084f31af1dfc9"}
+      "reading_host_client": {
+        "path": "apps/reading-advantage/components/host-proof/HostProofGameClient.tsx",
+        "sha256": "e443c68fa616ebe54eeae9200ff64068de1bd3eafbe742b3d88103e7a197e51e"
+      },
+      "reading_host_page": {
+        "path": "apps/reading-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx",
+        "sha256": "65551c5ad11daddc68ca72f37343aad46037d22d501902b3b77fa5b6eac15909"
+      },
+      "reading_host_route": {
+        "path": "apps/reading-advantage/app/api/host-proof/games/completions/route.ts",
+        "sha256": "547f47a9c954a05321cce561e10d05e6c35f50f9a6551f9bbd9d5ba53f160e92"
+      },
+      "reading_host_gate": {
+        "path": "apps/reading-advantage/lib/host-proof-config.ts",
+        "sha256": "c28b191bcf4dead76f653d39b41ab3f1bef5dc0d3c696a6c91a8dbc25544f84b"
+      },
+      "reading_qc_loader": {
+        "path": "apps/reading-advantage/lib/host-proof-qc-loader.ts",
+        "sha256": "6fe9f56e8d1c5c77acce2343888c1286e23b3fed1e02732128f70744b205ae30"
+      },
+      "reading_next_config": {
+        "path": "apps/reading-advantage/next.config.ts",
+        "sha256": "07637e3b4c7dff391c602558c585ff63960344b9d43d30ac7beb86b1149d4da6"
+      },
+      "primary_host_client": {
+        "path": "apps/primary-advantage/components/host-proof/HostProofGameClient.tsx",
+        "sha256": "3c68e8a2e87aa6c66bdfe0bed805e9a4254450385b7bcf26abc305b27c20bf25"
+      },
+      "primary_host_page": {
+        "path": "apps/primary-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx",
+        "sha256": "15f0503f660ebd8e08ac3cf44871e5ef5e41873049e21713b69262f563922490"
+      },
+      "primary_host_route": {
+        "path": "apps/primary-advantage/app/api/host-proof/games/completions/route.ts",
+        "sha256": "55b28a1be0b5b75207eba1a33b00cedd60021f9b3cc4b8aa96c9289c8223d32b"
+      },
+      "primary_host_gate": {
+        "path": "apps/primary-advantage/lib/host-proof-config.ts",
+        "sha256": "c28b191bcf4dead76f653d39b41ab3f1bef5dc0d3c696a6c91a8dbc25544f84b"
+      },
+      "primary_next_config": {
+        "path": "apps/primary-advantage/next.config.ts",
+        "sha256": "ad328238a98a2966d3813d14062550c758431131f632d7f05df69caa8ebc316a"
+      },
+      "shared_domain_adapter": {
+        "path": "packages/domain/src/games/host-proof.ts",
+        "sha256": "aff27b1d4db85d08dcfb4bf2a8d2112057d73ffde504e3fcf118c53056fe23f9"
+      }
     }
   },
   "current_browser_observations": [
@@ -80,7 +152,7 @@
       "base_url": "http://127.0.0.1:3011",
       "execution_report": {
         "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-reading-host-proof-kimi-report-v1.json",
-        "sha256": "a315fd9d181835a2c11511c09d0ddc4f70f30ed42423984e256ddf762e298369"
+        "sha256": "8348f29283049af7d7b3b13f84985279643f4c5e390e5fa4dba0fdc108797d40"
       }
     },
     {
@@ -89,7 +161,7 @@
       "base_url": "http://127.0.0.1:3132",
       "execution_report": {
         "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-primary-host-proof-kimi-report-v1.json",
-        "sha256": "5290cda804775797e0cec828edf7ac8ef14a7676a2ab4ed2249e7342ffb708a7"
+        "sha256": "77694fbcb8ce70e5496cbfd79349f2f9f91e44b18224cbed33a22eb4c2c20708"
       }
     }
   ],
@@ -101,7 +173,7 @@
     },
     "root_exports": {
       "path": "packages/game-cartridges/src/index.ts",
-      "sha256": "1f9fdca42f51e5140dc998752ab2c6f6049ef07e1b78b3a90693e5e4fdbf8eda",
+      "sha256": "cf4b8f165405851ef69e83408036122fa8f946bc158d2d1d1076b3486cc6b369",
       "host_proof_exported_from_root": false
     }
   },

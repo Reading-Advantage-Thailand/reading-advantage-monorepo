@@ -198,11 +198,68 @@ describe("Dragon Flight host-proof completion route", () => {
     });
   });
 
-  it("permits Dragon Flight history only and preserves tenant scope", async () => {
+  it("permits vocabulary-gate host-proof history and preserves tenant scope", async () => {
     mockGetCurrentUser.mockResolvedValue(sessionUser);
-    expect((await GET(request(undefined, "?gameType=magic-defense"))).status).toBe(404);
+    expect((await GET(request(undefined, "?gameType=storm-castle-tower"))).status).toBe(404);
     mockHistory.mockResolvedValue([]);
+    expect((await GET(request(undefined, "?gameType=magic-defense&limit=10"))).status).toBe(200);
+    expect(mockHistory).toHaveBeenCalledWith(expect.objectContaining({
+      tenant: { schoolId: "school-1" },
+      input: { gameType: "magic-defense", limit: 10 },
+    }));
     expect((await GET(request(undefined, "?limit=10"))).status).toBe(200);
     expect(mockHistory).toHaveBeenCalledWith(expect.objectContaining({ tenant: { schoolId: "school-1" }, input: { gameType: "dragon-flight", limit: 10 } }));
+    mockHistory.mockClear();
+    expect((await GET(request(undefined, "?gameType=enchanted-library&limit=5"))).status).toBe(200);
+    expect(mockHistory).toHaveBeenCalledWith(expect.objectContaining({
+      tenant: { schoolId: "school-1" },
+      input: { gameType: "enchanted-library", limit: 5 },
+    }));
+  });
+
+  it.each([
+    "castle-defense",
+    "wizard-vs-zombie",
+    "village-guardian",
+    "enchanted-library",
+    "rune-match",
+    "alchemists-synthesis",
+    "potion-rush",
+    "rune-forge-chamber",
+    "spellweavers-run",
+    "shadow-gate-dungeon",
+    "labyrinth-goblin-king",
+    "griffin-riders-escape",
+  ])("permits multi-title host-proof history for %s", async (gameType) => {
+    mockGetCurrentUser.mockResolvedValue(sessionUser);
+    mockHistory.mockResolvedValue([]);
+    expect((await GET(request(undefined, `?gameType=${gameType}&limit=5`))).status).toBe(200);
+    expect(mockHistory).toHaveBeenCalledWith(expect.objectContaining({
+      tenant: { schoolId: "school-1" },
+      input: { gameType, limit: 5 },
+    }));
+  });
+
+  it.each([
+    "castle-defense",
+    "enchanted-library",
+    "spellweavers-run",
+  ])("delegates multi-title signed completion for %s (gameType bound in credential)", async (gameType) => {
+    mockGetCurrentUser.mockResolvedValue(sessionUser);
+    mockComplete.mockResolvedValue({
+      xpEarned: 5, score: 100, accuracy: 1, correctAnswers: 1, totalAttempts: 1, duration: 700, duplicate: false,
+    });
+    // Completion body does not re-send gameType; domain credential embeds it (proven in domain multi-title suite).
+    const response = await POST(request(transcript));
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({ xpEarned: 5, score: 100, duplicate: false });
+    expect(mockComplete).toHaveBeenCalledWith(
+      { userId: "user-1", schoolId: "school-1" },
+      transcript,
+      { attemptDeps: true },
+    );
+    // Title under test is authorized for host history (same dual-host allowlist as completion transport).
+    mockHistory.mockResolvedValue([]);
+    expect((await GET(request(undefined, `?gameType=${gameType}`))).status).toBe(200);
   });
 });

@@ -79,6 +79,33 @@ describe("Dragon Flight host-proof attempts route", () => {
     );
   });
 
+  it.each([
+    "castle-defense",
+    "wizard-vs-zombie",
+    "village-guardian",
+    "enchanted-library",
+    "rune-match",
+    "spellweavers-run",
+    "shadow-gate-dungeon",
+    "labyrinth-goblin-king",
+    "griffin-riders-escape",
+  ])("issues multi-title host-proof attempts for %s", async (gameType) => {
+    mockGetCurrentUser.mockResolvedValue(user);
+    mockIssueDragonFlightHostProofAttempt.mockResolvedValue({
+      attemptId: "11111111-1111-4111-8111-111111111111",
+      credential: "opaque-host-proof-credential",
+      input: [{ term: "dragon", translation: "drago" }],
+      expiresAt: "2026-08-01T00:10:00.000Z",
+    });
+    const response = await issuePOST(request({ gameType, difficulty: "medium" }));
+    expect(response.status).toBe(201);
+    expect(mockIssueDragonFlightHostProofAttempt).toHaveBeenCalledWith(
+      { userId: "user-1", schoolId: "school-1" },
+      { gameType, difficulty: "medium" },
+      { attemptDeps: true },
+    );
+  });
+
   it("returns a stable validation error for strict-domain rejection", async () => {
     mockGetCurrentUser.mockResolvedValue(user);
     const { ZodError } = await import("zod");

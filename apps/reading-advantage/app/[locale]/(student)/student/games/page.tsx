@@ -181,7 +181,24 @@ export default function GamesPage() {
                     <div key={game.id} className="h-full">
                       <Card
                         className="group relative h-full overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-1 hover:z-30 cursor-pointer border-2 hover:border-primary/50 bg-card/50 backdrop-blur-sm flex flex-col"
-                        onClick={() => router.push(`/student/games/${game.id}`)}
+                        onClick={() => {
+                          const cutoverHref: Record<string, string> = {
+                            "vocabulary/magic-defense": "/student/host-proof/games?gameType=magic-defense",
+                            "vocabulary/rune-match": "/student/host-proof/games?gameType=rune-match",
+                            "vocabulary/wizard-vs-zombie": "/student/host-proof/games?gameType=wizard-vs-zombie",
+                            "vocabulary/dragon-flight": "/student/host-proof/games?gameType=dragon-flight",
+                            "vocabulary/dragon-rider": "/student/host-proof/dragon-rider",
+                            "vocabulary/enchanted-library": "/student/host-proof/games?gameType=enchanted-library",
+                            "sentence/castle-defense": "/student/host-proof/games?gameType=castle-defense",
+                            "sentence/potion-rush": "/student/host-proof/games?gameType=potion-rush",
+                          };
+                          const href = cutoverHref[game.id];
+                          if (href) {
+                            router.push(href);
+                          } else {
+                            router.push(`/student/games/${game.id}`);
+                          }
+                        }}
                       >
                         {/* Badge overlay */}
                         {game.badge && (

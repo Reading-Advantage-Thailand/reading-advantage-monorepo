@@ -54,3 +54,7 @@ service-account.json
 
 # agent
 .agent
+
+# local host-proof/playwright dumps
+test-results/
+playwright-report/

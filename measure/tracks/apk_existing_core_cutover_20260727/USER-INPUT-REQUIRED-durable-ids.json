@@ -1,0 +1,36 @@
+{
+  "schema_version": "apk-user-input-required.v1",
+  "recorded_at": "2026-08-02",
+  "agent_cannot_complete_without": [
+    {
+      "id": "durable_user_message_id",
+      "description": "Real product-owner durable message identifier from the approval/chat system",
+      "must_be": "non-null non-empty non-placeholder",
+      "refuses": ["null", "todo", "fake", "placeholder", "n/a", ""]
+    },
+    {
+      "id": "durable_user_event_id",
+      "description": "Real product-owner durable event identifier paired with the message",
+      "must_be": "non-null non-empty non-placeholder",
+      "refuses": ["null", "todo", "fake", "placeholder", "n/a", ""]
+    }
+  ],
+  "optional_for_suitability_close_only": [
+    {
+      "id": "phase7_lawful_real_asset_packet_path",
+      "description": "Repository path to a lawful real-asset packet with provenance, license, credit, and title suitability evidence",
+      "track": "apk_standard_pack_suitability_ingestion_20260728"
+    }
+  ],
+  "bind_command": "python3 measure/tools/bind_apk_durable_owner_ids.py --message-id <REAL_MESSAGE_ID> --event-id <REAL_EVENT_ID>",
+  "tracks_awaiting_ids": [
+    "apk_existing_core_cutover_20260727",
+    "apk_existing_action_cutover_20260727",
+    "apk_legacy_defense_cutover_20260727",
+    "apk_legacy_puzzle_cutover_20260727",
+    "apk_legacy_traversal_cutover_20260727",
+    "apk_cross_host_closeout_20260727"
+  ],
+  "technical_evidence_ready": true,
+  "fabrication_prohibited": true
+}

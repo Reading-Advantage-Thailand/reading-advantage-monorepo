@@ -1,10 +1,11 @@
 {
   "schemaVersion": "measure.architecture.v1",
-  "generatedAt": "2026-07-18T07:41:05+07:00",
-  "sourceRevision": "251f108d466cd08a140c570bb9cddb13fd302f36",
+  "generatedAt": "2026-07-28T22:10:24+07:00",
+  "sourceRevision": "7e4bdf14230b920233b08269809cb191730e82ab",
   "projectType": "typescript-monorepo",
   "workspaceRoots": {
     "apps": [
+      "accounts",
       "activity-vinext-fixture",
       "advantage-games",
       "codecamp-advantage",
@@ -26,6 +27,7 @@
       "architecture-enforcement",
       "auth",
       "auth-client",
+      "backend",
       "codecamp-knowledge",
       "config",
       "db",
@@ -44,7 +46,10 @@
       "ui",
       "utils",
       "webhooks"
+    ],
+    "services": [
+      "worker"
     ]
   },
-  "routeCount": 594
+  "routeCount": 629
 }

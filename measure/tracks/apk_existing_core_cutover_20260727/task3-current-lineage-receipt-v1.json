@@ -6,25 +6,25 @@
   "status": "current-lineage-verified-additive",
   "historical_acceptance": {
     "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-product-owner-acceptance-v1.json",
-    "sha256": "65ffbaa27ef19be1f65015daa8fad4d2f4ca58990ba2fea5653327627452c3b1"
+    "sha256": "3f4aaa7029d637b3ed130c7131750f8caeb28e15b5cb6f65fb5f9e55ceec361f"
   },
   "historical_accepted_receipt": {
     "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
-    "sha256": "e82d42d9ec046b85eb4aeac7800623bce3c3bf4a39a9c0f44288bd93d07be240"
+    "sha256": "efc1488eba5d40db891f9316e4e972905b6e56b4bc928c876c74f2a7b541bc02"
   },
   "correction": {
     "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-evidence-lineage-correction-v1.json",
-    "sha256": "008b042ddab1e5486c2b51fb5625b8f89084c471fc03a3bc4dab29231e509796"
+    "sha256": "483417c82e292f71daf80e89906ac02aa369eb87bf6ccd694cd60040d69235f0"
   },
   "historical_accepted_subjects": {
     "remediation_evidence": {
       "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
-      "sha256": "9b7df1be5dd9c89c3ea6aa25c6fe01ea4d450b886a472276cd68372ec2154e44",
+      "sha256": "e2ee8519bc9afe35d5d8dedd55a3430390cfacdc27284830b59dbcfdc579b1fb",
       "recovered_snapshot": "measure/tracks/apk_existing_core_cutover_20260727/task3-accepted-remediation-snapshot-v1.b64"
     },
     "independent_zero_finding_rereview": {
       "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-rereview.md",
-      "sha256": "7c3675aca01499e81eba60dcea049715c4652e1474716a633eb8676d3c28a526",
+      "sha256": "ac8eccd4fed958add9af9b3fd526c4de748f8510909c8d767d288b3ae830e076",
       "recovered_snapshot": "measure/tracks/apk_existing_core_cutover_20260727/task3-accepted-rereview-snapshot-v1.b64"
     }
   },

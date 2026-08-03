@@ -10,7 +10,7 @@
   "evidence_bindings": {
     "task4_qc_evidence": {
       "path": "measure/tracks/apk_existing_core_cutover_20260727/task4-advantage-games-qc-evidence-v1.json",
-      "sha256": "7a9dae4d640f881f76c001be73315b74d07b19258226d01f09390c37adaba058"
+      "sha256": "a5c90ea3d185060550f1b2d11b6d8c76aad20e180852da7332b347548d1e4c38"
     },
     "task4_remediation_evidence": {
       "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc-remediation.md",
@@ -26,12 +26,12 @@
     },
     "accepted_task3_semantic_receipt": {
       "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
-      "sha256": "e82d42d9ec046b85eb4aeac7800623bce3c3bf4a39a9c0f44288bd93d07be240"
+      "sha256": "efc1488eba5d40db891f9316e4e972905b6e56b4bc928c876c74f2a7b541bc02"
     }
   },
   "product_owner_acceptance": {
     "path": "measure/tracks/apk_existing_core_cutover_20260727/task4-product-owner-acceptance-v1.json",
-    "sha256": "20483a277d1d1addf87b0f98184cd76fd9dccd878a4f87bd850bb52d9bac05db"
+    "sha256": "d794b77e8dc96a606e2e01381cfbaf2ce084469004e0457d2287bc8285eae761"
   },
   "implementation_bindings": {
     "qc_registry_and_mechanics": {
@@ -44,7 +44,7 @@
     },
     "game_cartridges_manifest": {
       "path": "packages/game-cartridges/package.json",
-      "sha256": "1041ad5c98290fb58714dfa73e56f5376f59682e6b4f74667214bc48ac62fa47"
+      "sha256": "e4ea5f78bfb8027bbf679c38db185acae1a81785037be909d5f2cbb036384f7d"
     },
     "qc_surface": {
       "path": "apps/advantage-games/src/components/apk/ExistingCoreCartridgeQc.tsx",
@@ -56,11 +56,11 @@
     },
     "qc_host": {
       "path": "apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.tsx",
-      "sha256": "daef9738ca3293084a728c592e367ac1ead591fd32e962e1001d115484c61a31"
+      "sha256": "edeb0b804f53077ea75fcb4ee3ea1ec681dded971fe74b29599d07ac39fde52b"
     },
     "qc_route": {
       "path": "apps/advantage-games/src/app/qc/page.tsx",
-      "sha256": "e16b021e559b85b94616b68c0dcaa0710564da96fc7595d2ce56de9bf9bda202"
+      "sha256": "7d915afb02930f7fd10f58d083c080ea37c048e5879004076c72703283130a13"
     },
     "real_input_browser_test": {
       "path": "apps/advantage-games/tests/e2e/qc/existing-core-cartridges.spec.ts",
@@ -68,7 +68,7 @@
     },
     "finite_preview_manifest": {
       "path": "apps/advantage-games/src/lib/apk/standard-pack-qc-preview.json",
-      "sha256": "0f5935e224b02c9157fc610802c05b6391d84eb2ac9444badf8309a46121e9ab"
+      "sha256": "77dfaf357e42da11147ade92a7cdf08da7761466d9c7e59a00ca0ea53d2ef497"
     },
     "production_catalog": {
       "path": "packages/game-cartridges/src/catalog.ts",
@@ -77,7 +77,7 @@
     },
     "production_root_exports": {
       "path": "packages/game-cartridges/src/index.ts",
-      "sha256": "1f9fdca42f51e5140dc998752ab2c6f6049ef07e1b78b3a90693e5e4fdbf8eda",
+      "sha256": "cf4b8f165405851ef69e83408036122fa8f946bc158d2d1d1076b3486cc6b369",
       "qc_registry_exported_from_root": false
     }
   },

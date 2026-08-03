@@ -35,11 +35,11 @@
     },
     "remediation_evidence": {
       "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
-      "sha256": "9b7df1be5dd9c89c3ea6aa25c6fe01ea4d450b886a472276cd68372ec2154e44"
+      "sha256": "e2ee8519bc9afe35d5d8dedd55a3430390cfacdc27284830b59dbcfdc579b1fb"
     },
     "independent_zero_finding_rereview": {
       "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-rereview.md",
-      "sha256": "7c3675aca01499e81eba60dcea049715c4652e1474716a633eb8676d3c28a526"
+      "sha256": "ac8eccd4fed958add9af9b3fd526c4de748f8510909c8d767d288b3ae830e076"
     }
   },
   "binding_policy": {
@@ -65,9 +65,21 @@
       "input_mode": "vocabulary",
       "temporal_label": "current-source",
       "mappings": [
-        { "role": "player", "state": "idle", "semantic_key": "top-down/32x32/characters/hero-01" },
-        { "role": "feedback", "state": "correct", "semantic_key": "effects/32x32/combat/hit-01" },
-        { "role": "audio-feedback", "state": "correct", "semantic_key": "audio/native/combat/hit-01" }
+        {
+          "role": "player",
+          "state": "idle",
+          "semantic_key": "top-down/32x32/characters/hero-01"
+        },
+        {
+          "role": "feedback",
+          "state": "correct",
+          "semantic_key": "effects/32x32/combat/hit-01"
+        },
+        {
+          "role": "audio-feedback",
+          "state": "correct",
+          "semantic_key": "audio/native/combat/hit-01"
+        }
       ]
     },
     {
@@ -77,10 +89,26 @@
       "input_mode": "vocabulary",
       "temporal_label": "current-source",
       "mappings": [
-        { "role": "panel", "state": "default", "semantic_key": "ui/20x20/inventory/slot" },
-        { "role": "status", "state": "armor", "semantic_key": "ui/32x32/items/armor-icons" },
-        { "role": "feedback", "state": "correct", "semantic_key": "effects/32x32/combat/hit-01" },
-        { "role": "audio-feedback", "state": "correct", "semantic_key": "audio/native/combat/hit-01" }
+        {
+          "role": "panel",
+          "state": "default",
+          "semantic_key": "ui/20x20/inventory/slot"
+        },
+        {
+          "role": "status",
+          "state": "armor",
+          "semantic_key": "ui/32x32/items/armor-icons"
+        },
+        {
+          "role": "feedback",
+          "state": "correct",
+          "semantic_key": "effects/32x32/combat/hit-01"
+        },
+        {
+          "role": "audio-feedback",
+          "state": "correct",
+          "semantic_key": "audio/native/combat/hit-01"
+        }
       ]
     },
     {
@@ -90,10 +118,26 @@
       "input_mode": "sentence",
       "temporal_label": "current-source",
       "mappings": [
-        { "role": "player", "state": "idle", "semantic_key": "top-down/32x32/characters/hero-01" },
-        { "role": "enemy", "state": "idle", "semantic_key": "side-view/32x32/characters/enemy-001-idle" },
-        { "role": "feedback", "state": "correct", "semantic_key": "effects/32x32/combat/hit-01" },
-        { "role": "control", "state": "confirm", "semantic_key": "ui/16x16/controls/gamepad-buttons" }
+        {
+          "role": "player",
+          "state": "idle",
+          "semantic_key": "top-down/32x32/characters/hero-01"
+        },
+        {
+          "role": "enemy",
+          "state": "idle",
+          "semantic_key": "side-view/32x32/characters/enemy-001-idle"
+        },
+        {
+          "role": "feedback",
+          "state": "correct",
+          "semantic_key": "effects/32x32/combat/hit-01"
+        },
+        {
+          "role": "control",
+          "state": "confirm",
+          "semantic_key": "ui/16x16/controls/gamepad-buttons"
+        }
       ]
     },
     {
@@ -103,9 +147,21 @@
       "input_mode": "sentence",
       "temporal_label": "historical-source-only",
       "mappings": [
-        { "role": "player", "state": "idle", "semantic_key": "top-down/32x32/characters/hero-01" },
-        { "role": "feedback", "state": "correct", "semantic_key": "effects/32x32/combat/hit-01" },
-        { "role": "control", "state": "confirm", "semantic_key": "ui/16x16/controls/gamepad-buttons" }
+        {
+          "role": "player",
+          "state": "idle",
+          "semantic_key": "top-down/32x32/characters/hero-01"
+        },
+        {
+          "role": "feedback",
+          "state": "correct",
+          "semantic_key": "effects/32x32/combat/hit-01"
+        },
+        {
+          "role": "control",
+          "state": "confirm",
+          "semantic_key": "ui/16x16/controls/gamepad-buttons"
+        }
       ]
     },
     {
@@ -115,9 +171,21 @@
       "input_mode": "sentence",
       "temporal_label": "historical-source-only",
       "mappings": [
-        { "role": "player", "state": "idle", "semantic_key": "top-down/32x32/characters/hero-01" },
-        { "role": "feedback", "state": "correct", "semantic_key": "effects/32x32/combat/hit-01" },
-        { "role": "audio-feedback", "state": "correct", "semantic_key": "audio/native/combat/hit-01" }
+        {
+          "role": "player",
+          "state": "idle",
+          "semantic_key": "top-down/32x32/characters/hero-01"
+        },
+        {
+          "role": "feedback",
+          "state": "correct",
+          "semantic_key": "effects/32x32/combat/hit-01"
+        },
+        {
+          "role": "audio-feedback",
+          "state": "correct",
+          "semantic_key": "audio/native/combat/hit-01"
+        }
       ]
     }
   ],

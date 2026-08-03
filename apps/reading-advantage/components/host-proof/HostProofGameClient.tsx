@@ -45,7 +45,7 @@ interface DragonFlightHistoryEntry {
   /** Unique persisted completion identifier. */
   readonly id: string;
   /** Server-validated title identifier. */
-  readonly gameType: "dragon-flight";
+  readonly gameType: "dragon-flight" | "magic-defense" | "dungeon-liberator" | "castle-defense" | "wizard-vs-zombie" | "village-guardian" | "enchanted-library" | "rune-match" | "alchemists-synthesis" | "potion-rush" | "rune-forge-chamber" | "spellweavers-run" | "shadow-gate-dungeon" | "labyrinth-goblin-king" | "griffin-riders-escape";
   /** Canonical server-selected difficulty. */
   readonly difficulty: "easy" | "medium" | "hard" | "extreme";
   /** Server-replayed score. */
@@ -123,7 +123,7 @@ const completionSchema = z.object({
 
 const historyEntrySchema = z.object({
   id: z.string().min(1),
-  gameType: z.literal("dragon-flight"),
+  gameType: z.enum(["dragon-flight", "magic-defense", "dungeon-liberator", "castle-defense", "wizard-vs-zombie", "village-guardian", "enchanted-library", "rune-match", "alchemists-synthesis", "potion-rush", "rune-forge-chamber", "spellweavers-run", "shadow-gate-dungeon", "labyrinth-goblin-king", "griffin-riders-escape"]),
   difficulty: z.enum(["easy", "medium", "hard", "extreme"]),
   score: z.number().int().min(0),
   accuracy: z.number().min(0).max(1),
@@ -172,8 +172,21 @@ async function readApiResponse(response: Response): Promise<unknown> {
 }
 
 /**
+ * Returns whether a diagnostic code is a title-owned host-proof action event.
+ * Cartridges emit title-specific codes such as DRAGON_FLIGHT_HOST_PROOF_ACTION,
+ * MAGIC_DEFENSE_HOST_PROOF_ACTION, CASTLE_DEFENSE_HOST_PROOF_ACTION, etc.
+ * @param code Diagnostic event code from the runtime.
+ * @returns True when the code is a host-proof action diagnostic for any cutover title.
+ */
+function isHostProofActionDiagnosticCode(code: string): boolean {
+  return code.endsWith("_HOST_PROOF_ACTION");
+}
+
+/**
  * Extracts a verified action from the real cartridge's structured diagnostic event.
- * @param event Runtime diagnostic emitted by the Dragon Flight cartridge.
+ * Accepts any title-specific `*_HOST_PROOF_ACTION` code so multi-title cutover
+ * clients enqueue choose-gate/launch checkpoints for non-dragon-flight titles.
+ * @param event Runtime diagnostic emitted by a host-proof cartridge.
  * @param nextSequence Sequence assigned by this host session.
  * @returns A safe action transcript record, or undefined for unrelated diagnostics.
  */
@@ -181,7 +194,7 @@ function actionFromDiagnostic(
   event: APKDiagnosticEvent,
   nextSequence: number,
 ): DragonFlightAction | undefined {
-  if (event.code !== "DRAGON_FLIGHT_HOST_PROOF_ACTION" || !event.details) return undefined;
+  if (!isHostProofActionDiagnosticCode(event.code) || !event.details) return undefined;
   const { kind, gate, elapsedMs } = event.details;
   if (typeof elapsedMs !== "number" || !Number.isInteger(elapsedMs) || elapsedMs < 0) return undefined;
   if (kind === "choose-gate" && (gate === "left" || gate === "right")) {
@@ -196,7 +209,49 @@ function actionFromDiagnostic(
  * @param props The server-selected standard-pack edition.
  * @returns A real APK runtime surface and only server-derived completion state.
  */
-export function HostProofGameClient({ edition }: { readonly edition: RuntimeEdition }) {
+
+async function loadHostProofCartridgeForGameType(
+  cartridgeModule: typeof import("@reading-advantage/game-cartridges/host-proof") & {
+    loadLegacyDefenseHostProofCartridge?: (id: string) => Promise<RuntimeCartridge>;
+  },
+  gameType: "dragon-flight" | "magic-defense" | "dungeon-liberator" | "castle-defense" | "wizard-vs-zombie" | "village-guardian" | "enchanted-library" | "rune-match" | "alchemists-synthesis" | "potion-rush" | "rune-forge-chamber" | "spellweavers-run" | "shadow-gate-dungeon" | "labyrinth-goblin-king" | "griffin-riders-escape",
+): Promise<RuntimeCartridge> {
+  if (gameType === "dragon-flight") return cartridgeModule.loadDragonFlightHostProofCartridge();
+  if (gameType === "magic-defense") return cartridgeModule.loadMagicDefenseHostProofCartridge();
+  if (gameType === "dungeon-liberator") return cartridgeModule.loadDungeonLiberatorHostProofCartridge();
+  if (gameType === "castle-defense" || gameType === "wizard-vs-zombie" || gameType === "village-guardian") {
+    const defense = await import("@reading-advantage/game-cartridges/legacy-defense-host-proof");
+    return defense.loadLegacyDefenseHostProofCartridge(gameType);
+  }
+  if (
+    gameType === "enchanted-library"
+    || gameType === "rune-match"
+    || gameType === "alchemists-synthesis"
+    || gameType === "potion-rush"
+    || gameType === "rune-forge-chamber"
+  ) {
+    const puzzle = await import("@reading-advantage/game-cartridges/legacy-puzzle-host-proof");
+    return puzzle.loadLegacyPuzzleHostProofCartridge(gameType);
+  }
+  if (
+    gameType === "spellweavers-run"
+    || gameType === "shadow-gate-dungeon"
+    || gameType === "labyrinth-goblin-king"
+    || gameType === "griffin-riders-escape"
+  ) {
+    const traversal = await import("@reading-advantage/game-cartridges/legacy-traversal-host-proof");
+    return traversal.loadLegacyTraversalHostProofCartridge(gameType);
+  }
+  throw new Error(`Unsupported host-proof gameType: ${gameType}`);
+}
+
+export function HostProofGameClient({
+  edition,
+  gameType = "dragon-flight",
+}: {
+  readonly edition: RuntimeEdition;
+  readonly gameType?: "dragon-flight" | "magic-defense" | "dungeon-liberator" | "castle-defense" | "wizard-vs-zombie" | "village-guardian" | "enchanted-library" | "rune-match" | "alchemists-synthesis" | "potion-rush" | "rune-forge-chamber" | "spellweavers-run" | "shadow-gate-dungeon" | "labyrinth-goblin-king" | "griffin-riders-escape";
+}) {
   const [state, setState] = useState<HostProofState>(INITIAL_STATE);
   const [sessionNonce, setSessionNonce] = useState(0);
   const actionsRef = useRef<DragonFlightAction[]>([]);
@@ -246,12 +301,12 @@ export function HostProofGameClient({ edition }: { readonly edition: RuntimeEdit
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "same-origin",
-            body: JSON.stringify({ gameType: "dragon-flight", difficulty: "medium" }),
+            body: JSON.stringify({ gameType, difficulty: "medium" }),
           }).then(readApiResponse),
           import("@/lib/host-proof-qc-loader"),
         ]);
         const attempt = issuedAttemptSchema.parse(attemptPayload);
-        const cartridge = await cartridgeModule.loadDragonFlightHostProofCartridge();
+        const cartridge = await loadHostProofCartridgeForGameType(cartridgeModule, gameType);
         if (!active) return;
         attemptRef.current = attempt;
         setState((current) => ({
@@ -274,7 +329,7 @@ export function HostProofGameClient({ edition }: { readonly edition: RuntimeEdit
     return () => {
       active = false;
     };
-  }, [edition, sessionNonce]);
+  }, [edition, sessionNonce, gameType]);
 
   const submitCompletion = useCallback(async () => {
     const attempt = state.attempt;

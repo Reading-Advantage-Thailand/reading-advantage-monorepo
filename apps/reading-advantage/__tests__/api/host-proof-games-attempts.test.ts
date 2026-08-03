@@ -68,6 +68,33 @@ describe("Dragon Flight host-proof attempts route", () => {
     expect(mockIssue).toHaveBeenCalledWith({ userId: "user-1", schoolId: "school-1" }, { gameType: "dragon-flight", difficulty: "medium" }, { attemptDeps: true });
   });
 
+  it.each([
+    "castle-defense",
+    "wizard-vs-zombie",
+    "village-guardian",
+    "enchanted-library",
+    "rune-match",
+    "spellweavers-run",
+    "shadow-gate-dungeon",
+    "labyrinth-goblin-king",
+    "griffin-riders-escape",
+  ])("issues multi-title host-proof attempts for %s", async (gameType) => {
+    mockGetCurrentUser.mockResolvedValue(sessionUser);
+    mockIssue.mockResolvedValue({
+      attemptId: "11111111-1111-4111-8111-111111111111",
+      credential: "opaque-host-proof-credential",
+      input: [{ term: "dragon", translation: "drago" }],
+      expiresAt: "2026-08-01T00:10:00.000Z",
+    });
+    const response = await issuePOST(request({ gameType, difficulty: "medium" }));
+    expect(response.status).toBe(201);
+    expect(mockIssue).toHaveBeenCalledWith(
+      { userId: "user-1", schoolId: "school-1" },
+      { gameType, difficulty: "medium" },
+      { attemptDeps: true },
+    );
+  });
+
   it("returns a stable validation error when strict issue validation rejects client metrics", async () => {
     mockGetCurrentUser.mockResolvedValue(sessionUser);
     const { ZodError } = await import("zod");

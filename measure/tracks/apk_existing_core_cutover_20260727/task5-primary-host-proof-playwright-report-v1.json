@@ -28,26 +28,26 @@
   },
   "test_result_file": {
     "path": "apps/primary-advantage/test-results/host-proof-results.json",
-    "sha256": "31e2d05abf49bcab17083974dce49d0348abefa7a20973a1471bce5d4f5dfe99",
+    "sha256": "3907390249ead31dea24d7faf857fc61a4015e0aeab85d4d69ca96fe001acf00",
     "status": "passed",
     "failed_tests": []
   },
   "test_bindings": {
     "playwright_config": {
       "path": "apps/primary-advantage/playwright.config.ts",
-      "sha256": "a15e524a27b5da72b065f46b1d34319280c9fff79f4208c018a50868886886a2"
+      "sha256": "8d5b8bfb7908d11f1c351f823c8b82a721d1a7580e5cd820217e14e2a43a5249"
     },
     "auth_setup": {
       "path": "apps/primary-advantage/tests/e2e/host-proof-auth.setup.ts",
-      "sha256": "755c66a63aa7d35e78c1091d6434ec81a12004fb84b2a5ca22c59a5a681444f9"
+      "sha256": "722ac0c3694d52e082bde18da62158559fbce2e8930cf848e530b2121e673bc5"
     },
     "host_matrix": {
       "path": "apps/primary-advantage/tests/e2e/host-proof-games.spec.ts",
-      "sha256": "2f8191da34e4af508310cb2ffdf9c6b69f50f5d1ba101a039e3b448d1bbe9299"
+      "sha256": "1acd46f695032c18c8efe4b3801389f911c137ab32fa6cc41bcd72a9555dc902"
     },
     "credential_config": {
       "path": "apps/primary-advantage/host-proof-test-config.ts",
-      "sha256": "acc25660c7abc31219a3eba35d14a351151ca27bea126db724e4374752357401"
+      "sha256": "959a8a50759588417a944345efb8b7392e884b9f2cbc89687eed9a9b6939d04e"
     },
     "seed_script": {
       "path": "apps/primary-advantage/scripts/seed-host-proof-session.ts",
