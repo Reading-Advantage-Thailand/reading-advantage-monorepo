@@ -543,6 +543,42 @@
   Podman/candidate/Finance/marker/registry/successor/V2/history action is
   accepted.
 
+  H5 candidate-publisher rename causality Red: review finding CAND-1 (High)
+  from `r1-v3-candidate-publisher-causality-independent-review-20260803.md` —
+  the final open finding of that review. The candidate publisher's bare
+  `os.rename` propagates a rename OSError without an explicit cause, detaching
+  the original candidate-operation failure. The real candidate
+  `preserve_failure` → `_publish_candidate_publication_failure_attempt` path
+  must take one deterministic rename OSError after successful private
+  validation against the empty publisher-owned reservation, re-raise the same
+  caught rename error `from error`, remove the empty reservation and private
+  staging, and publish nothing.
+  `h5-candidate-rename-causality-pre-green-baseline-20260803.md` freezes the
+  authorized bare block at SHA-256
+  `47c232db56b81a534830146369360f95525b9e28c983190fb10aff03c672e82e` (unique in
+  the runner); Green may only convert that block to the accepted pre-seal
+  capture/re-raise form, with the pre-seal wrapped block byte-unchanged at
+  `390fcc79c193b7476a4c51db8f39c42418ab68e222a4d35787924de74063850d`.
+
+  Bounded Green/acceptance (2026-08-03): accepted in-loop, single-authority per
+  `AGENTS.md` Measure-acceptance ownership, for only the candidate-publisher
+  rename causality wrap at runner SHA-256
+  `b8abd4e1e140d49e585d74d5acff0b9a2ecb638b2514b36fa330e96ad8d4743d` and frozen
+  test SHA-256 `f969e71b1e0700772eb2ac612ebddcff476328538cd93c6c597c1bc3a0cd57d5`.
+  The pre-Green runner is Git-committed, so `git diff` is the
+  byte-reconstruction proof: one hunk, five insertions, no other change; the
+  bare-form prefix count fell 1 to 0. The fourteen focused tests, enumerated
+  by name in the receipt, passed in-loop in `21.47s`; the new Red failed only
+  at `assertIs(rename_error.__cause__, candidate_error)` before Green. The
+  delegate's final report was lost, so every gate was independently
+  re-verified in-loop before acceptance; the orchestrator authored the
+  receipt and this addendum. Receipt:
+  `h5-candidate-rename-causality-green-acceptance-20260803.md`. This closes
+  the final finding (CAND-1) of the 2026-08-03 independent review; it accepts
+  no successful publication, other variant, candidate contents, H3/H4/H5/R1-v3
+  acceptance, or Podman/candidate/Finance/marker/registry/successor/V2/history
+  action. Phase R1 v3 remains `[~]`.
+
 ## Phase R2: Close or compensate graph coverage gaps
 
 - [x] Task: Execute and record the documented clean-audit/configuration attempt, including `repo-graph config`, scan options, raw audit JSON, stdout/stderr, and exits; select the clean branch only for audit exit `0` with empty unaudited and integrity sets. The v2 candidate binds `r2-clean-audit-attempt-v2-20260801/attempt.json` to the fresh R1 bundle and graph binding; it retained the raw exit and selected the `COMPENSATION_REQUIRED` non-clean branch when unaudited symbols remained. Bounded technical acceptance is recorded by Terra and Sol in the v2 review receipts; commit `772839f` binds the evidence. This is not R2 phase acceptance or an unblock. (deferred:phase-r1-bound-graph)

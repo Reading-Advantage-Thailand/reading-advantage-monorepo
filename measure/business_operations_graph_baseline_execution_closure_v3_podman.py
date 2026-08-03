@@ -6822,15 +6822,20 @@ def _publish_candidate_publication_failure_attempt(
             except core.ExecutionClosureValidationError as collision_error:
                 raise collision_error from error
         final_reserved = True
+        rename_error: OSError | None = None
         try:
             os.rename(directory, final_directory)
             published = True
+        except OSError as caught_rename_error:
+            rename_error = caught_rename_error
         finally:
             if final_reserved and not published:
                 try:
                     shutil.rmtree(final_directory)
                 except OSError:
                     pass
+        if rename_error is not None:
+            raise rename_error from error
 
 
 def _next_failed_execution_attempt_identity_v1(
