@@ -1,0 +1,2 @@
+$ pnpm build && node scripts/generate-standard-pack-release.mjs
+sh: 1: pnpm: not found

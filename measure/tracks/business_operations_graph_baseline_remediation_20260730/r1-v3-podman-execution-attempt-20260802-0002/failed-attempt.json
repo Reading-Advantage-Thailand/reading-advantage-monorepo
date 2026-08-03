@@ -1,0 +1,133 @@
+{
+  "attempt": {
+    "id": "r1-v3-podman-execution-attempt-20260802-0002",
+    "namingRule": "r1-v3-podman-execution-attempt-YYYYMMDD-NNNN",
+    "sequence": 2
+  },
+  "commands": [
+    {
+      "actualExecutor": {
+        "argv": [
+          "/usr/bin/podman",
+          "run",
+          "--rm",
+          "--network",
+          "none",
+          "--workdir",
+          "/work",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-b6vecsul/work:/work:rw",
+          "--volume",
+          "/home/daniel-bo/.local/lib/node_modules/pnpm:/opt/pnpm:ro",
+          "--volume",
+          "/home/daniel-bo/.local/share/pnpm/store/v11:/root/.local/share/pnpm/store/v11:O",
+          "--volume",
+          "/home/daniel-bo/.local/bin/repo-graph:/opt/repo-graph:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-b6vecsul/execution-closure.archive.json:/runner/archive.json:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-b6vecsul/runner/materialize.mjs:/runner/materialize.mjs:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-b6vecsul/runner/replay.mjs:/runner/replay.mjs:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-b6vecsul/runner/audit.mjs:/runner/audit.mjs:ro",
+          "node:22-slim@sha256:6c74791e557ce11fc957704f6d4fe134a7bc8d6f5ca4403205b2966bd488f6b3",
+          "/usr/bin/env",
+          "-i",
+          "CI=true",
+          "PATH=/usr/local/bin:/usr/bin:/bin",
+          "/usr/local/bin/node",
+          "/opt/pnpm/bin/pnpm.mjs",
+          "--store-dir=/root/.local/share/pnpm/store/v11",
+          "--filter",
+          "@reading-advantage/db",
+          "build"
+        ],
+        "effectiveEnvironment": {
+          "CI": "true",
+          "PATH": "/usr/local/bin:/usr/bin:/bin"
+        },
+        "environment": {
+          "CI": "true"
+        },
+        "inheritedEnv": [],
+        "logicalArgv": [
+          "pnpm",
+          "--filter",
+          "@reading-advantage/db",
+          "build"
+        ],
+        "payloadArgv": [
+          "/usr/local/bin/node",
+          "/opt/pnpm/bin/pnpm.mjs",
+          "--store-dir=/root/.local/share/pnpm/store/v11",
+          "--filter",
+          "@reading-advantage/db",
+          "build"
+        ],
+        "toolchain": {
+          "node": {
+            "path": "/usr/local/bin/node",
+            "sha256": "93956de2e59480474a7b46571da1651180b1a050cdf32641ebec4ce6e478e068",
+            "version": "v22.23.1"
+          },
+          "pnpmLauncher": {
+            "path": "/home/daniel-bo/.local/lib/node_modules/pnpm",
+            "sha256": "ff3224d46b47fbb24a7e9fe15fededef7e00892d07d4e376b6762d4899906bfd",
+            "version": "11.8.0"
+          }
+        }
+      },
+      "argv": [
+        "pnpm",
+        "--filter",
+        "@reading-advantage/db",
+        "build"
+      ],
+      "cwd": ".",
+      "env": {
+        "CI": "true"
+      },
+      "envAbsent": [
+        "PG_TEST_URL"
+      ],
+      "exitCode": 1,
+      "id": "build-db",
+      "network": false,
+      "stderr": {
+        "path": "r1-v3-podman-execution-attempt-20260802-0002/raw/receipt-build-db.stderr.txt",
+        "sha256": "f3929f01dea98065a4f5beb4fd3e3564d887981282255b919bbc23c4fb011cb3",
+        "size": 145
+      },
+      "stdout": {
+        "path": "r1-v3-podman-execution-attempt-20260802-0002/raw/receipt-build-db.stdout.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    }
+  ],
+  "failure": {
+    "classification": "COMMAND_EXIT_NONZERO",
+    "commandId": "build-db",
+    "reason": "V3_PODMAN_GATE_FAILED: build-db",
+    "stage": "build-db"
+  },
+  "historicalBlocker": {
+    "path": "r1-v3-podman-execution-blocker-20260801/blocker.json",
+    "sha256": "f9da2afa8c8b9da3403f807c5903654538cdabf23c2113c754c1608114183e7d",
+    "size": 11694
+  },
+  "kind": "execution-closure-failed-attempt",
+  "markerDisposition": {
+    "r1V3": "~",
+    "r2Task3": "b",
+    "r2Task4": "b",
+    "r2Task5": "b",
+    "r3": "b",
+    "successors": "b",
+    "upstreamAuthority": "NONE"
+  },
+  "schemaVersion": 1,
+  "status": "BLOCKED",
+  "upstreamAuthority": "NONE"
+}

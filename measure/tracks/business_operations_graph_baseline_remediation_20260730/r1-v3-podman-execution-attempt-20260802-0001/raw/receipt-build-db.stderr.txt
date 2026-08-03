@@ -1,0 +1,1 @@
+$ tsc --project tsconfig.build.json --store-dir=/root/.local/share/pnpm/store/v11

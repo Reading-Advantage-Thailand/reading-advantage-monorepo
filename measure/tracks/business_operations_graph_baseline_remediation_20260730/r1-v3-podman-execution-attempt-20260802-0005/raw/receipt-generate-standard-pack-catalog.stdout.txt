@@ -1,0 +1,3 @@
+/work/packages/advantage-play-kit:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/advantage-play-kit@0.1.0 generate:standard-pack-catalog: `pnpm build && node scripts/generate-standard-pack-release.mjs`
+Exit status 1

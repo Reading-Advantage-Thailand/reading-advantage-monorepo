@@ -1,0 +1,292 @@
+{
+  "blockerRecords": [
+    {
+      "path": "r2-task3-v2-execution-closure-blocker-20260801.md",
+      "sha256": "319fca3ecb81e75ba89c4d51444de736feda588f311d47bacdf8540c882fc482",
+      "size": 5208
+    },
+    {
+      "path": "r2-task3-v2-execution-closure-blocker-clarification-20260801.md",
+      "sha256": "c4c71bb83fbab0d8dab41667ef6e6889a6da6ae4ade6b096146fa7d9cce1520b",
+      "size": 1135
+    }
+  ],
+  "commands": {
+    "discovery": {
+      "argv": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "measure.business_operations_graph_baseline_execution_closure_addendum_v2",
+        "discover-v2",
+        "--root",
+        "/tmp/business-operations-v2-addendum-oc7ez5mn/source"
+      ],
+      "cwd": ".",
+      "env": {
+        "CI": "true"
+      },
+      "envAbsent": [
+        "PG_TEST_URL"
+      ],
+      "exitCode": 0,
+      "network": false,
+      "stderr": {
+        "path": "r2-task3-v2-execution-closure-blocker-addendum-20260801/raw/discover-v2.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      },
+      "stdout": {
+        "path": "r2-task3-v2-execution-closure-blocker-addendum-20260801/raw/discover-v2.stdout.txt",
+        "sha256": "17c2a4fdad5d6daed4b345683bcc1ec2c9314777f18bc046a742b0ce6e799338",
+        "size": 9957
+      }
+    },
+    "materializer": {
+      "argv": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "measure.business_operations_graph_baseline_execution_closure_addendum_v2",
+        "materialize-v2",
+        "--root",
+        "/tmp/business-operations-v2-addendum-oc7ez5mn/source"
+      ],
+      "cwd": ".",
+      "env": {
+        "CI": "true"
+      },
+      "envAbsent": [
+        "PG_TEST_URL"
+      ],
+      "exitCode": 0,
+      "network": false,
+      "stderr": {
+        "path": "r2-task3-v2-execution-closure-blocker-addendum-20260801/raw/materializer.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      },
+      "stdout": {
+        "path": "r2-task3-v2-execution-closure-blocker-addendum-20260801/raw/materializer.stdout.txt",
+        "sha256": "3d654312f0499157fb5a4bf5244e63b3bba3ba99427fb8688268e071bc70b9f6",
+        "size": 134
+      }
+    },
+    "replay": {
+      "argv": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "measure.business_operations_graph_baseline_execution_closure_addendum_v2",
+        "replay-v2",
+        "--root",
+        "/tmp/business-operations-v2-addendum-oc7ez5mn/source"
+      ],
+      "cwd": ".",
+      "env": {
+        "CI": "true"
+      },
+      "envAbsent": [
+        "PG_TEST_URL"
+      ],
+      "exitCode": 0,
+      "network": false,
+      "stderr": {
+        "path": "r2-task3-v2-execution-closure-blocker-addendum-20260801/raw/replay.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      },
+      "stdout": {
+        "path": "r2-task3-v2-execution-closure-blocker-addendum-20260801/raw/replay.stdout.txt",
+        "sha256": "4153642d4451f91bd1f1c43ff3b648eff642d01873812454c2097b9d96d1eb01",
+        "size": 250
+      }
+    }
+  },
+  "kind": "v2-execution-closure-blocker-addendum",
+  "markerDisposition": {
+    "r1V3": "~",
+    "r2Task3": "b",
+    "r2Task4": "b",
+    "r2Task5": "b",
+    "r3": "b",
+    "successors": "b",
+    "upstreamAuthority": "NONE"
+  },
+  "priorV2Evidence": {
+    "archive": {
+      "path": "r1-task2-source-and-graph-v2-20260801/snapshot.archive.json",
+      "sha256": "e5a638e11ed57cfe6750cbe60e5ab31cbdcb0fd4ff3000458bae7168f868332e",
+      "size": 61177049
+    },
+    "auditAttempt": {
+      "path": "r2-clean-audit-attempt-v2-20260801/attempt.json",
+      "sha256": "6d21536d5cfcda34a228b13aacad9420fea3a4ffde17bb4a1d366989defcbd8f",
+      "size": 5730264
+    },
+    "compensation": {
+      "path": "r2-task2-compensation-denominator-v2-20260801.json",
+      "sha256": "2ef221f24856be0bcd48d7efeb434ae623e8bf0b21348dca0567457513274f6d",
+      "size": 3343489
+    },
+    "graphBinding": {
+      "path": "r1-task3-graph-binding-v2-20260801.json",
+      "sha256": "e66054a57dde5f022f96d0b09a570646b321fad2b3a3a54594618e1b0a515f20",
+      "size": 766334
+    },
+    "manifest": {
+      "path": "r1-task2-source-and-graph-v2-20260801/snapshot.manifest.json",
+      "sha256": "ec848eaacce6eef4450434217ee7199c9c98ec44edc5496fa6f57f289eb1ae85",
+      "size": 2381425
+    }
+  },
+  "rawStreams": [
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/dependency-install.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/dependency-install.stdout.txt",
+      "sha256": "a0db37399a1b596c32947727da86481b5fef13cb4d01595ef09e6660d3899839",
+      "size": 1979
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-01-accounts-test.stderr.txt",
+      "sha256": "d765eef440f88328dd3f25e092ccb7c563fdfb58c872ec0fec313ae066897174",
+      "size": 3763
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-01-accounts-test.stdout.txt",
+      "sha256": "42d27a16b6ec0efa3b2c7b8716c7bac943c93e8ad8e36e59ab65c83275767813",
+      "size": 1473
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-02-accounts-check-types.stderr.txt",
+      "sha256": "019ee0ae4ac8134be8472c4a3cf36456e1093137ed1f578a6ebe32cb04935a9f",
+      "size": 53
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-02-accounts-check-types.stdout.txt",
+      "sha256": "fceb4ea04ca91e789a77bef7bc4bf8798df68fd916797c39fe9dda4542fe205e",
+      "size": 4629
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-03-backend-test.stderr.txt",
+      "sha256": "01b2954ba402aafab68374660ffc7f7ea3dc025f57bf31d4e6a3e06a751c0727",
+      "size": 5317
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-03-backend-test.stdout.txt",
+      "sha256": "a2ff7dcc5d145447bd389103fcc6558b5e9152b2f40bbcdfa5f8ab066f95b97a",
+      "size": 1489
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-04-backend-check-types.stderr.txt",
+      "sha256": "019ee0ae4ac8134be8472c4a3cf36456e1093137ed1f578a6ebe32cb04935a9f",
+      "size": 53
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-04-backend-check-types.stdout.txt",
+      "sha256": "c548a24e7d81c6a09cc4ba72d97ebfb8ce22c46c08a01ecf53e8d15d889b2d9f",
+      "size": 852
+    }
+  ],
+  "realpathAudit": {
+    "nodeModulesOverlayPaths": [],
+    "outsideMaterializationRoot": [],
+    "sourceWorktreeReferences": []
+  },
+  "schemaVersion": 1,
+  "sourceInventory": {
+    "manifestSha256": "8c5a2c2d1914667843df51e2c8180b8cd812c0295eb0c972ce45c80e4d213d51",
+    "post": {
+      "entryCount": 6868,
+      "sha256": "8c5a2c2d1914667843df51e2c8180b8cd812c0295eb0c972ce45c80e4d213d51"
+    },
+    "pre": {
+      "entryCount": 6868,
+      "sha256": "8c5a2c2d1914667843df51e2c8180b8cd812c0295eb0c972ce45c80e4d213d51"
+    }
+  },
+  "status": "BLOCKED",
+  "subordinateReferences": [
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/dependency-install.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/dependency-install.stdout.txt",
+      "sha256": "a0db37399a1b596c32947727da86481b5fef13cb4d01595ef09e6660d3899839",
+      "size": 1979
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-01-accounts-test.stderr.txt",
+      "sha256": "d765eef440f88328dd3f25e092ccb7c563fdfb58c872ec0fec313ae066897174",
+      "size": 3763
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-01-accounts-test.stdout.txt",
+      "sha256": "42d27a16b6ec0efa3b2c7b8716c7bac943c93e8ad8e36e59ab65c83275767813",
+      "size": 1473
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-02-accounts-check-types.stderr.txt",
+      "sha256": "019ee0ae4ac8134be8472c4a3cf36456e1093137ed1f578a6ebe32cb04935a9f",
+      "size": 53
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-02-accounts-check-types.stdout.txt",
+      "sha256": "fceb4ea04ca91e789a77bef7bc4bf8798df68fd916797c39fe9dda4542fe205e",
+      "size": 4629
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-03-backend-test.stderr.txt",
+      "sha256": "01b2954ba402aafab68374660ffc7f7ea3dc025f57bf31d4e6a3e06a751c0727",
+      "size": 5317
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-03-backend-test.stdout.txt",
+      "sha256": "a2ff7dcc5d145447bd389103fcc6558b5e9152b2f40bbcdfa5f8ab066f95b97a",
+      "size": 1489
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-04-backend-check-types.stderr.txt",
+      "sha256": "019ee0ae4ac8134be8472c4a3cf36456e1093137ed1f578a6ebe32cb04935a9f",
+      "size": 53
+    },
+    {
+      "path": "r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-04-backend-check-types.stdout.txt",
+      "sha256": "c548a24e7d81c6a09cc4ba72d97ebfb8ce22c46c08a01ecf53e8d15d889b2d9f",
+      "size": 852
+    }
+  ],
+  "toolVersions": {
+    "node": {
+      "argv": [
+        "node",
+        "--version"
+      ],
+      "stdout": "v22.22.2",
+      "stdoutSha256": "1f5b90a5f0fb2719368c34130cdbcf822fd49bff041de9caeb65f09bdb8e57a4"
+    },
+    "pnpm": {
+      "argv": [
+        "pnpm",
+        "--version"
+      ],
+      "stdout": "11.8.0",
+      "stdoutSha256": "38871995c8e350aaf00b5b010eee19a021053a8ab3abdc66357790e7f609c069"
+    },
+    "scanner": {
+      "argv": [
+        "repo-graph",
+        "--version"
+      ],
+      "stdout": "0.1.0",
+      "stdoutSha256": "6ad9613a455798d6d92e5f5f390ab4baa70596bc869ed6b17f5cdd2b28635f06"
+    }
+  },
+  "upstreamAuthority": "NONE"
+}

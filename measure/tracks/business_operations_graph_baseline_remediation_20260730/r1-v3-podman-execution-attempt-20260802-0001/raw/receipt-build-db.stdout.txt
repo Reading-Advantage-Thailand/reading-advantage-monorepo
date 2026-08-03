@@ -1,0 +1,4 @@
+error TS5023: Unknown compiler option '--store-dir=/root/.local/share/pnpm/store/v11'.
+/work/packages/db:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/db@0.1.0 build: `tsc --project tsconfig.build.json --store-dir=/root/.local/share/pnpm/store/v11`
+Exit status 1

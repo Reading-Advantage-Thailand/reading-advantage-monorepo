@@ -1,0 +1,42 @@
+app/accounts-console.tsx(5,31): error TS2307: Cannot find module '@reading-advantage/backend' or its corresponding type declarations.
+app/accounts-console.tsx(211,83): error TS7006: Parameter 'part' implicitly has an 'any' type.
+app/accounts-console.tsx(239,77): error TS7006: Parameter 'item' implicitly has an 'any' type.
+app/api/admin/employees/[accountId]/company-roles/route.ts(5,61): error TS2307: Cannot find module '@reading-advantage/backend' or its corresponding type declarations.
+app/api/admin/employees/[accountId]/credential/route.ts(5,46): error TS2307: Cannot find module '@reading-advantage/backend' or its corresponding type declarations.
+app/api/admin/employees/[accountId]/roles/route.ts(5,61): error TS2307: Cannot find module '@reading-advantage/backend' or its corresponding type declarations.
+app/api/admin/employees/[accountId]/sessions/route.ts(5,46): error TS2307: Cannot find module '@reading-advantage/backend' or its corresponding type declarations.
+app/api/admin/employees/[accountId]/status/route.ts(5,46): error TS2307: Cannot find module '@reading-advantage/backend' or its corresponding type declarations.
+app/api/admin/employees/route.ts(5,61): error TS2307: Cannot find module '@reading-advantage/backend' or its corresponding type declarations.
+app/api/oidc/logout/route.ts(3,39): error TS2307: Cannot find module '@reading-advantage/backend' or its corresponding type declarations.
+app/api/oidc/token/route.ts(3,38): error TS2307: Cannot find module '@reading-advantage/backend' or its corresponding type declarations.
+app/api/oidc/token/route.ts(37,50): error TS18046: 'error' is of type 'unknown'.
+app/api/oidc/token/route.ts(51,8): error TS18046: 'error' is of type 'unknown'.
+app/api/oidc/token/route.ts(52,9): error TS18046: 'error' is of type 'unknown'.
+lib/server/http.ts(4,53): error TS2307: Cannot find module '@reading-advantage/backend' or its corresponding type declarations.
+lib/server/http.ts(5,45): error TS2307: Cannot find module '@reading-advantage/backend' or its corresponding type declarations.
+lib/server/http.ts(70,20): error TS18046: 'error' is of type 'unknown'.
+lib/server/http.ts(71,9): error TS18046: 'error' is of type 'unknown'.
+lib/server/http.ts(72,11): error TS18046: 'error' is of type 'unknown'.
+lib/server/http.ts(73,13): error TS18046: 'error' is of type 'unknown'.
+lib/server/http.ts(73,51): error TS18046: 'error' is of type 'unknown'.
+lib/server/http.ts(74,15): error TS18046: 'error' is of type 'unknown'.
+lib/server/http.ts(74,51): error TS18046: 'error' is of type 'unknown'.
+lib/server/http.ts(76,39): error TS18046: 'error' is of type 'unknown'.
+lib/server/http.ts(76,60): error TS18046: 'error' is of type 'unknown'.
+lib/server/identity.ts(16,8): error TS2307: Cannot find module '@reading-advantage/backend' or its corresponding type declarations.
+lib/server/identity.ts(23,8): error TS2307: Cannot find module '@reading-advantage/auth/company-identity' or its corresponding type declarations.
+lib/server/identity.ts(24,52): error TS2307: Cannot find module '@reading-advantage/db/company-identity/runtime' or its corresponding type declarations.
+lib/server/identity.ts(92,23): error TS7006: Parameter 'password' implicitly has an 'any' type.
+lib/server/identity.ts(111,32): error TS7031: Binding element 'evidence' implicitly has an 'any' type.
+lib/server/identity.ts(123,29): error TS7031: Binding element 'policyId' implicitly has an 'any' type.
+lib/server/identity.ts(123,39): error TS7031: Binding element 'principal' implicitly has an 'any' type.
+lib/server/identity.ts(139,24): error TS7006: Parameter 'event' implicitly has an 'any' type.
+lib/server/telemetry.ts(11,8): error TS2307: Cannot find module '@reading-advantage/backend' or its corresponding type declarations.
+scripts/bootstrap-production.ts(3,46): error TS2307: Cannot find module '@reading-advantage/auth/company-identity' or its corresponding type declarations.
+scripts/bootstrap-production.ts(4,51): error TS2307: Cannot find module '@reading-advantage/db/company-identity' or its corresponding type declarations.
+scripts/bootstrap-production.ts(30,28): error TS7006: Parameter 'transaction' implicitly has an 'any' type.
+scripts/bootstrap-production.ts(147,29): error TS7006: Parameter 'row' implicitly has an 'any' type.
+scripts/migrate-codecamp-identities.ts(7,8): error TS2307: Cannot find module '@reading-advantage/backend' or its corresponding type declarations.
+/tmp/business-operations-r2-task3-v2-34dvv0fh/source/apps/accounts:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] accounts@0.1.0 check-types: `tsc --noEmit && tsc --noEmit -p tsconfig.test.json`
+Exit status 2

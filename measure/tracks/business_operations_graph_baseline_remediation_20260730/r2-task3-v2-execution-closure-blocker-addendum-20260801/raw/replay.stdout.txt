@@ -1,0 +1,1 @@
+{"entryCount": 6868, "inventory": {"entryCount": 6868, "sha256": "8c5a2c2d1914667843df51e2c8180b8cd812c0295eb0c972ce45c80e4d213d51"}, "realpathAudit": {"nodeModulesOverlayPaths": [], "outsideMaterializationRoot": [], "sourceWorktreeReferences": []}}

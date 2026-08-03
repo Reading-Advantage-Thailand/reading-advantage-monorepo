@@ -1,0 +1,7 @@
+src/modules/standard-pack-ingestion/postgres-successor-registry.ts(9,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+src/modules/standard-pack-ingestion/postgres-successor-registry.ts(130,8): error TS18046: 'error' is of type 'unknown'.
+src/modules/standard-pack-ingestion/successor-admission-persistence-adapter.ts(14,8): error TS2307: Cannot find module '@reading-advantage/db' or its corresponding type declarations.
+src/modules/standard-pack-ingestion/successor-admission-persistence-adapter.ts(437,45): error TS7006: Parameter 'rawTransaction' implicitly has an 'any' type.
+/tmp/business-operations-r2-task3-v2-34dvv0fh/source/packages/backend:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/backend@0.1.0 check-types: `tsc --noEmit && tsc --noEmit -p tsconfig.test.json`
+Exit status 2

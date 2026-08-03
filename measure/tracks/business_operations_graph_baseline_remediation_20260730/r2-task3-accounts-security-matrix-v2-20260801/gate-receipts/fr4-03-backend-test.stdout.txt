@@ -1,0 +1,22 @@
+
+ RUN  v4.1.8 /tmp/business-operations-r2-task3-v2-34dvv0fh/source/packages/backend
+
+ ❯ src/modules/standard-pack-ingestion/__tests__/successor-admission-command.red.test.ts (0 test)
+ ❯ src/modules/standard-pack-ingestion/__tests__/ledger-successor-admission-facade.playkit-lifecycle.test.ts (0 test)
+ ❯ src/modules/standard-pack-ingestion/__tests__/ledger-successor-admission-facade.integration.test.ts (0 test)
+ ❯ src/modules/standard-pack-ingestion/__tests__/postgres-successor-registry.test.ts (0 test)
+ ❯ src/modules/standard-pack-ingestion/__tests__/ledger-successor-admission-facade.test.ts (0 test)
+ ❯ src/modules/standard-pack-ingestion/__tests__/postgres-successor-registry.integration.test.ts (0 test)
+ ❯ src/modules/standard-pack-ingestion/__tests__/successor-admission-composition.integration.test.ts (0 test)
+ ❯ src/modules/company-identity/__tests__/postgres-codecamp-migration.test.ts (6 tests | 1 failed) 62ms
+     × pins apply readiness to the exact checked-in migration 0043 22ms
+ ❯ src/modules/standard-pack-ingestion/__tests__/contracts.test.ts (0 test)
+
+ Test Files  9 failed | 28 passed | 1 skipped (38)
+      Tests  1 failed | 281 passed | 8 skipped (290)
+   Start at  17:08:53
+   Duration  14.54s (transform 5.24s, setup 0ms, import 9.44s, tests 4.92s, environment 26ms)
+
+/tmp/business-operations-r2-task3-v2-34dvv0fh/source/packages/backend:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/backend@0.1.0 test: `vitest run`
+Exit status 1

@@ -1,0 +1,173 @@
+ M apps/primary-advantage/.gitignore
+ M apps/primary-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx
+ M apps/primary-advantage/app/api/host-proof/games/completions/route.ts
+ M apps/primary-advantage/components/host-proof/HostProofGameClient.tsx
+ M apps/primary-advantage/components/host-proof/__tests__/HostProofGameClient.test.tsx
+ M apps/primary-advantage/host-proof-test-config.ts
+ M apps/primary-advantage/lib/__tests__/api/host-proof-games-completions.test.ts
+ M apps/primary-advantage/lib/__tests__/host-proof-bundle-isolation.test.ts
+ M apps/primary-advantage/lib/__tests__/host-proof-test-config.test.ts
+ M apps/primary-advantage/next.config.ts
+ M apps/primary-advantage/package.json
+ M apps/primary-advantage/test-results/host-proof-results.json
+ M apps/primary-advantage/tests/e2e/host-proof-games.spec.ts
+ M apps/reading-advantage/.gitignore
+ M apps/reading-advantage/__tests__/api/host-proof-games-completions.test.ts
+ M apps/reading-advantage/__tests__/host-proof-bundle-isolation.test.ts
+ M apps/reading-advantage/__tests__/host-proof-game-client.test.tsx
+ M apps/reading-advantage/__tests__/host-proof-page.test.tsx
+ M apps/reading-advantage/__tests__/host-proof-test-config.test.ts
+ M apps/reading-advantage/app/[locale]/(host-proof)/student/host-proof/games/page.tsx
+ M apps/reading-advantage/app/api/host-proof/games/completions/route.ts
+ M apps/reading-advantage/components/host-proof/HostProofGameClient.tsx
+ M apps/reading-advantage/host-proof-test-config.ts
+ M apps/reading-advantage/lib/host-proof-qc-loader.ts
+ M apps/reading-advantage/package.json
+ M apps/reading-advantage/test-results/host-proof-results.json
+ M apps/reading-advantage/tests/e2e/host-proof-games.spec.ts
+ M measure/generated/architecture.json
+ M measure/generated/routes.md
+ M measure/tests/test_apk_existing_core_cutover_task3_acceptance.py
+ M measure/tests/test_apk_existing_core_cutover_task4_acceptance.py
+ M measure/tests/test_apk_existing_core_cutover_task5_host_proof_evidence.py
+ M measure/tests/test_apk_existing_core_cutover_task5_host_proof_remediation.py
+ M measure/tests/test_apk_existing_core_task5_task6_acceptance.py
+ M measure/tests/test_apk_existing_core_task6_legacy_retirement.py
+ M measure/tests/test_apk_legacy_puzzle_cutover_tasks_2_to_5.py
+ M measure/tests/test_business_operations_graph_baseline_r1_r2_v2_acceptance.py
+ M measure/tracks.md
+ M measure/tracks/apk_existing_action_cutover_20260727/index.md
+ M measure/tracks/apk_existing_action_cutover_20260727/metadata.json
+ M measure/tracks/apk_existing_action_cutover_20260727/plan.md
+ M measure/tracks/apk_existing_core_cutover_20260727/index.md
+ M measure/tracks/apk_existing_core_cutover_20260727/metadata.json
+ M measure/tracks/apk_existing_core_cutover_20260727/plan.md
+ M measure/tracks/apk_legacy_defense_cutover_20260727/index.md
+ M measure/tracks/apk_legacy_defense_cutover_20260727/metadata.json
+ M measure/tracks/apk_legacy_defense_cutover_20260727/plan.md
+ M measure/tracks/apk_legacy_puzzle_cutover_20260727/index.md
+ M measure/tracks/apk_legacy_puzzle_cutover_20260727/metadata.json
+ M measure/tracks/apk_legacy_puzzle_cutover_20260727/plan.md
+ M measure/tracks/apk_legacy_traversal_cutover_20260727/index.md
+ M measure/tracks/apk_legacy_traversal_cutover_20260727/metadata.json
+ M measure/tracks/apk_legacy_traversal_cutover_20260727/plan.md
+ M measure/tracks/business_operations_graph_baseline_remediation_20260730/plan.md
+ M measure/tracks/company_finance_operations_20260729/index.md
+ M packages/advantage-play-kit/src/assets/index.ts
+ M packages/advantage-play-kit/src/editions/editions.ts
+ M packages/advantage-play-kit/src/editions/index.ts
+ M packages/advantage-play-kit/src/react/apk-game-host.tsx
+ M packages/advantage-play-kit/src/runtime/runtime.ts
+ M packages/db/drizzle/meta/_journal.json
+ M packages/db/src/schema/analytics.ts
+ M packages/domain/src/__tests__/games-host-proof.test.ts
+ M packages/domain/src/games/host-proof.ts
+ M packages/domain/src/games/index.ts
+ M packages/domain/src/tenant-registry.ts
+ M packages/game-cartridges/package.json
+ M packages/game-cartridges/src/catalog.test.ts
+ M packages/game-cartridges/src/catalog.ts
+ M packages/game-cartridges/src/existing-action-cutover.red.test.ts
+ M packages/game-cartridges/src/existing-core-cutover.red.test.ts
+ M packages/game-cartridges/src/existing-core-cutover.semantic-candidates.test.ts
+ M packages/game-cartridges/src/existing-core-host-proof-parity.test.ts
+ M packages/game-cartridges/src/index.ts
+ M packages/game-contracts/src/__tests__/host-proof-bindings.test.ts
+ M packages/game-contracts/src/host-proof-bindings.ts
+ M packages/game-contracts/src/index.ts
+ M pnpm-lock.yaml
+?? apps/advantage-games/test-results/.last-run.json
+?? apps/primary-advantage/app/api/host-proof/games/attempts/route.ts
+?? apps/primary-advantage/lib/__tests__/api/host-proof-games-attempts.test.ts
+?? apps/primary-advantage/lib/__tests__/host-proof-page.test.tsx
+?? apps/primary-advantage/lib/host-proof-cartridge-loader.ts
+?? apps/primary-advantage/lib/host-proof-selections.ts
+?? apps/primary-advantage/public/assets/apk/standard-pack-2026-07-23/audio/native/combat/hit-01.ogg
+?? apps/primary-advantage/public/assets/apk/standard-pack-2026-07-23/effects/32x32/combat/hit-01.png
+?? apps/primary-advantage/public/assets/apk/standard-pack-2026-07-23/materialization-manifest.json
+?? apps/primary-advantage/public/assets/apk/standard-pack-2026-07-23/top-down/32x32/characters/hero-01.png
+?? apps/reading-advantage/__tests__/api/host-proof-games-attempts.test.ts
+?? apps/reading-advantage/app/api/host-proof/games/attempts/route.ts
+?? apps/reading-advantage/lib/host-proof-selections.ts
+?? apps/reading-advantage/public/assets/apk/standard-pack-2026-07-23/audio/native/combat/hit-01.ogg
+?? apps/reading-advantage/public/assets/apk/standard-pack-2026-07-23/effects/32x32/combat/hit-01.png
+?? apps/reading-advantage/public/assets/apk/standard-pack-2026-07-23/materialization-manifest.json
+?? apps/reading-advantage/public/assets/apk/standard-pack-2026-07-23/top-down/32x32/characters/hero-01.png
+?? measure/apk-cross-host-cutover-candidate-v1.json
+?? measure/archive/apk_shared_developer_kit_20260712/review-2026-07-29.md
+?? measure/business_operations_graph_baseline_execution_closure.py
+?? measure/business_operations_graph_baseline_execution_closure_addendum.py
+?? measure/business_operations_graph_baseline_execution_closure_addendum_v2.py
+?? measure/business_operations_graph_baseline_execution_closure_v3.py
+?? measure/business_operations_graph_baseline_execution_closure_v3_podman.py
+?? measure/tests/test_apk_cross_host_cutover_candidate.py
+?? measure/tests/test_apk_cross_host_cutover_candidate.py.orig
+?? measure/tests/test_apk_cross_host_cutover_candidate.py.rej
+?? measure/tests/test_apk_dragon_flight_attempt_routes.py
+?? measure/tests/test_business_operations_graph_baseline_execution_closure.py
+?? measure/tests/test_business_operations_graph_baseline_r2_accounts_v2.py
+?? measure/tracks/agents_md_audit_science_advantage_20260603/fixtures/section-1-ai-sdk.txt
+?? measure/tracks/agents_md_audit_science_advantage_20260603/fixtures/section-1-cross-provider.txt
+?? measure/tracks/agents_md_audit_science_advantage_20260603/fixtures/section-4-bcrypt-scripts.txt
+?? measure/tracks/agents_md_audit_science_advantage_20260603/fixtures/section-4-cross-bcrypt.txt
+?? measure/tracks/agents_md_audit_science_advantage_20260603/fixtures/section-9-console.txt
+?? measure/tracks/apk_existing_action_cutover_20260727/cross-host-cutover-handoff-candidate-v1.json
+?? measure/tracks/apk_existing_action_cutover_20260727/task7-legacy-retirement-manifest-v1.json
+?? measure/tracks/apk_existing_core_cutover_20260727/cross-host-cutover-handoff-candidate-v1.json
+?? measure/tracks/apk_existing_core_cutover_20260727/task6-retirement-successor-candidate-v1.json
+?? measure/tracks/apk_legacy_defense_cutover_20260727/cross-host-cutover-handoff-candidate-v1.json
+?? measure/tracks/apk_legacy_defense_cutover_20260727/task7-legacy-retirement-manifest-v1.json
+?? measure/tracks/apk_legacy_puzzle_cutover_20260727/cross-host-cutover-handoff-candidate-v1.json
+?? measure/tracks/apk_legacy_puzzle_cutover_20260727/task7-legacy-retirement-manifest-v1.json
+?? measure/tracks/apk_legacy_traversal_cutover_20260727/cross-host-cutover-handoff-candidate-v1.json
+?? measure/tracks/apk_legacy_traversal_cutover_20260727/task7-legacy-retirement-manifest-v1.json
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r1-v3-execution-closure-red-receipt-20260801.md
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/dependency-install.stderr.txt
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/dependency-install.stdout.txt
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-01-accounts-test.stderr.txt
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-01-accounts-test.stdout.txt
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-02-accounts-check-types.stderr.txt
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-02-accounts-check-types.stdout.txt
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-03-backend-test.stderr.txt
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-03-backend-test.stdout.txt
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-04-backend-check-types.stderr.txt
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-accounts-security-matrix-v2-20260801/gate-receipts/fr4-04-backend-check-types.stdout.txt
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-v2-execution-closure-blocker-20260801.md
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-v2-execution-closure-blocker-addendum-20260801/execution-input-omission-ledger.json
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-v2-execution-closure-blocker-addendum-20260801/execution-provenance.json
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-v2-execution-closure-blocker-addendum-20260801/raw/discover-v2.stderr.txt
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-v2-execution-closure-blocker-addendum-20260801/raw/discover-v2.stdout.txt
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-v2-execution-closure-blocker-addendum-20260801/raw/materializer.stderr.txt
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-v2-execution-closure-blocker-addendum-20260801/raw/materializer.stdout.txt
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-v2-execution-closure-blocker-addendum-20260801/raw/replay.stderr.txt
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-v2-execution-closure-blocker-addendum-20260801/raw/replay.stdout.txt
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-v2-execution-closure-blocker-addendum-20260801/receipt.json
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-v2-execution-closure-blocker-clarification-20260801.md
+?? measure/tracks/business_operations_graph_baseline_remediation_20260730/r2-task3-v2-red-receipt-20260801.md
+?? measure/tracks/company_finance_operations_20260729/s0-repository-preflight-20260801.md
+?? measure/tracks/durable_job_worker_platform_20260713/review-2026-07-29.md
+?? measure/tracks/primary_proxy_role_normalization_20260728/review-2026-07-29.md
+?? measure/tracks/reading_remote_font_removal_20260728/review-2026-07-29.md
+?? packages/advantage-play-kit/src/assets/legacy-defense-suitability.ts
+?? packages/advantage-play-kit/src/editions/host-proof-edition.test.ts
+?? packages/advantage-play-kit/src/editions/host-proof-edition.ts
+?? packages/advantage-play-kit/src/react/apk-game-host-host-proof-controls.test.tsx
+?? packages/db/drizzle/0047_fluffy_joshua_kane.sql
+?? packages/db/drizzle/meta/0047_snapshot.json
+?? packages/domain/src/__tests__/dragon-flight-host-proof-attempt.test.ts
+?? packages/domain/src/__tests__/dragon-flight-host-proof-store.test.ts
+?? packages/domain/src/games/dragon-flight-host-proof-attempt-adapter.ts
+?? packages/domain/src/games/dragon-flight-host-proof-attempt.ts
+?? packages/domain/src/games/dragon-flight-host-proof-store.ts
+?? packages/game-cartridges/src/host-proof-action-diagnostics.test.ts
+?? packages/game-cartridges/src/host-proof-runtime.test.ts
+?? packages/game-cartridges/src/host-proof-same-frame-actions.test.ts
+?? packages/game-cartridges/src/host-proof-zero-layout.test.ts
+?? packages/game-cartridges/src/host-proof.ts
+?? packages/game-cartridges/src/host-selections.test.ts
+?? packages/game-cartridges/src/host-selections.ts
+?? packages/game-cartridges/src/integration-edge-branches.test.ts
+?? tmp/primary-host-proof-bundle-isolation.test.ts
+?? tmp/primary-host-proof-client.test.tsx
+?? tmp/reading-host-proof-bundle-isolation.test.ts
+?? tmp/reading-host-proof-client.test.tsx

@@ -1,0 +1,8 @@
+src/react/apk-game-host.tsx(10,34): error TS2307: Cannot find module '@reading-advantage/game-contracts' or its corresponding type declarations.
+src/runtime/runtime.ts(5,8): error TS2307: Cannot find module '@reading-advantage/game-contracts' or its corresponding type declarations.
+src/runtime/types.ts(5,8): error TS2307: Cannot find module '@reading-advantage/game-contracts' or its corresponding type declarations.
+src/scaffolding/exemplar.ts(27,34): error TS2307: Cannot find module '@reading-advantage/game-contracts' or its corresponding type declarations.
+[ELIFECYCLE] Command failed with exit code 2.
+/work/packages/advantage-play-kit:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @reading-advantage/advantage-play-kit@0.1.0 generate:standard-pack-catalog: `pnpm build && node scripts/generate-standard-pack-release.mjs`
+Exit status 2

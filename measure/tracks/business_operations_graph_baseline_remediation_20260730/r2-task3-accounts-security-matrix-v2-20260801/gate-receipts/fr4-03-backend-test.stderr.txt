@@ -1,0 +1,83 @@
+$ vitest run
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/modules/standard-pack-ingestion/__tests__/contracts.test.ts [ src/modules/standard-pack-ingestion/__tests__/contracts.test.ts ]
+ FAIL  src/modules/standard-pack-ingestion/__tests__/ledger-successor-admission-facade.playkit-lifecycle.test.ts [ src/modules/standard-pack-ingestion/__tests__/ledger-successor-admission-facade.playkit-lifecycle.test.ts ]
+ FAIL  src/modules/standard-pack-ingestion/__tests__/ledger-successor-admission-facade.test.ts [ src/modules/standard-pack-ingestion/__tests__/ledger-successor-admission-facade.test.ts ]
+ FAIL  src/modules/standard-pack-ingestion/__tests__/successor-admission-command.red.test.ts [ src/modules/standard-pack-ingestion/__tests__/successor-admission-command.red.test.ts ]
+Error: Failed to resolve entry for package "@reading-advantage/db". The package may have incorrect main/module/exports specified in its package.json.
+ ❯ src/modules/standard-pack-ingestion/postgres-successor-registry.ts:3:1
+      1| import { createHash } from "node:crypto";
+      2|
+      3| import {
+       | ^
+      4|   type DatabaseJsonObject,
+      5|   StandardPackSuccessorCommitmentStoreError,
+ ❯ src/modules/standard-pack-ingestion/index.ts:5:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/modules/standard-pack-ingestion/__tests__/ledger-successor-admission-facade.integration.test.ts [ src/modules/standard-pack-ingestion/__tests__/ledger-successor-admission-facade.integration.test.ts ]
+Error: Failed to resolve entry for package "@reading-advantage/db". The package may have incorrect main/module/exports specified in its package.json.
+ ❯ src/modules/standard-pack-ingestion/__tests__/ledger-successor-admission-facade.integration.test.ts:5:1
+      3| import { resolve } from "node:path";
+      4|
+      5| import {
+       | ^
+      6|   createPostgresStandardPackSuccessorAdmissionPersistenceStore,
+      7|   createPostgresStandardPackSuccessorCommitmentStore,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/modules/standard-pack-ingestion/__tests__/postgres-successor-registry.integration.test.ts [ src/modules/standard-pack-ingestion/__tests__/postgres-successor-registry.integration.test.ts ]
+Error: Failed to resolve entry for package "@reading-advantage/db". The package may have incorrect main/module/exports specified in its package.json.
+ ❯ src/modules/standard-pack-ingestion/__tests__/postgres-successor-registry.integration.test.ts:4:1
+      2| import { readFile } from "node:fs/promises";
+      3|
+      4| import { createPostgresStandardPackSuccessorCommitmentStore } from "@r…
+       | ^
+      5| import postgres from "postgres";
+      6| import { afterAll, beforeAll, describe, expect, it } from "vitest";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/modules/standard-pack-ingestion/__tests__/postgres-successor-registry.test.ts [ src/modules/standard-pack-ingestion/__tests__/postgres-successor-registry.test.ts ]
+Error: Failed to resolve entry for package "@reading-advantage/db". The package may have incorrect main/module/exports specified in its package.json.
+ ❯ src/modules/standard-pack-ingestion/__tests__/postgres-successor-registry.test.ts:3:1
+      1| import { createHash } from "node:crypto";
+      2|
+      3| import { createPostgresStandardPackSuccessorCommitmentStore } from "@r…
+       | ^
+      4| import type postgres from "postgres";
+      5| import { describe, expect, it, vi } from "vitest";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/modules/standard-pack-ingestion/__tests__/successor-admission-composition.integration.test.ts [ src/modules/standard-pack-ingestion/__tests__/successor-admission-composition.integration.test.ts ]
+Error: Failed to resolve entry for package "@reading-advantage/db". The package may have incorrect main/module/exports specified in its package.json.
+ ❯ src/modules/standard-pack-ingestion/__tests__/successor-admission-composition.integration.test.ts:5:1
+      3| import { resolve } from "node:path";
+      4|
+      5| import { createPostgresStandardPackSuccessorAdmissionPersistenceStore …
+       | ^
+      6| import postgres from "postgres";
+      7| import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/modules/company-identity/__tests__/postgres-codecamp-migration.test.ts > PostgreSQL Codecamp migration gates > pins apply readiness to the exact checked-in migration 0043
+Error: ENOENT: no such file or directory, open '/tmp/business-operations-r2-task3-v2-34dvv0fh/source/packages/db/drizzle/0043_codecamp_company_principal_sync.sql'
+ ❯ src/modules/company-identity/__tests__/postgres-codecamp-migration.test.ts:103:23
+    101|
+    102|   it("pins apply readiness to the exact checked-in migration 0043", ()…
+    103|     const migration = readFileSync(
+       |                       ^
+    104|       resolve(
+    105|         import.meta.dirname,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+

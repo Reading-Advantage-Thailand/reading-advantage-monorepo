@@ -1,0 +1,360 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all"
+      ],
+      "cwd": ".",
+      "env": {
+        "CI": "true"
+      },
+      "envAbsent": [
+        "PG_TEST_URL"
+      ],
+      "exitCode": 0,
+      "network": false,
+      "stderr": {
+        "path": "r1-v3-podman-execution-blocker-20260801/raw/supplements-pre-git-status.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      },
+      "stdout": {
+        "path": "r1-v3-podman-execution-blocker-20260801/raw/supplements-pre-git-status.stdout.txt",
+        "sha256": "430339ba48798072e4503f80c3605f3a03fa258783c44e71bda98a2430d2c76f",
+        "size": 13707
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/git",
+        "diff",
+        "--cached",
+        "--binary",
+        "--no-ext-diff"
+      ],
+      "cwd": ".",
+      "env": {
+        "CI": "true"
+      },
+      "envAbsent": [
+        "PG_TEST_URL"
+      ],
+      "exitCode": 0,
+      "network": false,
+      "stderr": {
+        "path": "r1-v3-podman-execution-blocker-20260801/raw/supplements-pre-staged-diff.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      },
+      "stdout": {
+        "path": "r1-v3-podman-execution-blocker-20260801/raw/supplements-pre-staged-diff.stdout.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/podman",
+        "--version"
+      ],
+      "cwd": ".",
+      "env": {
+        "CI": "true"
+      },
+      "envAbsent": [
+        "PG_TEST_URL"
+      ],
+      "exitCode": 0,
+      "network": false,
+      "stderr": {
+        "path": "r1-v3-podman-execution-blocker-20260801/raw/podman-version.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      },
+      "stdout": {
+        "path": "r1-v3-podman-execution-blocker-20260801/raw/podman-version.stdout.txt",
+        "sha256": "e34137aa324895fc77ca1c6228953db20ddb402433e71426f7e3351a64424257",
+        "size": 21
+      }
+    },
+    {
+      "argv": [
+        "/usr/bin/podman",
+        "image",
+        "inspect",
+        "node:22-slim@sha256:6c74791e557ce11fc957704f6d4fe134a7bc8d6f5ca4403205b2966bd488f6b3"
+      ],
+      "cwd": ".",
+      "env": {
+        "CI": "true"
+      },
+      "envAbsent": [
+        "PG_TEST_URL"
+      ],
+      "exitCode": 0,
+      "network": false,
+      "stderr": {
+        "path": "r1-v3-podman-execution-blocker-20260801/raw/podman-image-inspect.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      },
+      "stdout": {
+        "path": "r1-v3-podman-execution-blocker-20260801/raw/podman-image-inspect.stdout.txt",
+        "sha256": "3cee9e5b848b3c6f10b8c6065f698f51bc7f7be17c6f94c1b9149c4c8affd2aa",
+        "size": 10423
+      }
+    },
+    {
+      "actualExecutor": {
+        "argv": [
+          "/usr/bin/podman",
+          "run",
+          "--rm",
+          "--network",
+          "none",
+          "--workdir",
+          "/work",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-vju1akye/work:/work:rw",
+          "--volume",
+          "/home/daniel-bo/.local/lib/node_modules/pnpm:/opt/pnpm:ro",
+          "--volume",
+          "/home/daniel-bo/.local/share/pnpm/store/v11:/root/.local/share/pnpm/store/v11:O",
+          "--volume",
+          "/home/daniel-bo/.local/bin/repo-graph:/opt/repo-graph:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-vju1akye/execution-closure.archive.json:/runner/archive.json:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-vju1akye/runner/materialize.mjs:/runner/materialize.mjs:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-vju1akye/runner/replay.mjs:/runner/replay.mjs:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-vju1akye/runner/audit.mjs:/runner/audit.mjs:ro",
+          "node:22-slim@sha256:6c74791e557ce11fc957704f6d4fe134a7bc8d6f5ca4403205b2966bd488f6b3",
+          "/usr/bin/env",
+          "-i",
+          "CI=true",
+          "PATH=/usr/local/bin:/usr/bin:/bin",
+          "/bin/cat",
+          "/proc/net/route"
+        ],
+        "effectiveEnvironment": {
+          "CI": "true",
+          "PATH": "/usr/local/bin:/usr/bin:/bin"
+        },
+        "environment": {
+          "CI": "true"
+        },
+        "inheritedEnv": [],
+        "logicalArgv": [
+          "/bin/cat",
+          "/proc/net/route"
+        ],
+        "payloadArgv": [
+          "/bin/cat",
+          "/proc/net/route"
+        ]
+      },
+      "argv": [
+        "/bin/cat",
+        "/proc/net/route"
+      ],
+      "cwd": ".",
+      "env": {
+        "CI": "true"
+      },
+      "envAbsent": [
+        "PG_TEST_URL"
+      ],
+      "exitCode": 0,
+      "kind": "ROUTE_TABLE",
+      "network": false,
+      "stderr": {
+        "path": "r1-v3-podman-execution-blocker-20260801/raw/network-route.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      },
+      "stdout": {
+        "path": "r1-v3-podman-execution-blocker-20260801/raw/network-route.stdout.txt",
+        "sha256": "9bfb5e4beb5b2844bc6a69d6d480a47995940f888d810efdb2afbf2e8cc5292e",
+        "size": 128
+      }
+    },
+    {
+      "actualExecutor": {
+        "argv": [
+          "/usr/bin/podman",
+          "run",
+          "--rm",
+          "--network",
+          "none",
+          "--workdir",
+          "/work",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-vju1akye/work:/work:rw",
+          "--volume",
+          "/home/daniel-bo/.local/lib/node_modules/pnpm:/opt/pnpm:ro",
+          "--volume",
+          "/home/daniel-bo/.local/share/pnpm/store/v11:/root/.local/share/pnpm/store/v11:O",
+          "--volume",
+          "/home/daniel-bo/.local/bin/repo-graph:/opt/repo-graph:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-vju1akye/execution-closure.archive.json:/runner/archive.json:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-vju1akye/runner/materialize.mjs:/runner/materialize.mjs:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-vju1akye/runner/replay.mjs:/runner/replay.mjs:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-vju1akye/runner/audit.mjs:/runner/audit.mjs:ro",
+          "node:22-slim@sha256:6c74791e557ce11fc957704f6d4fe134a7bc8d6f5ca4403205b2966bd488f6b3",
+          "/usr/bin/env",
+          "-i",
+          "CI=true",
+          "PATH=/usr/local/bin:/usr/bin:/bin",
+          "/usr/local/bin/node",
+          "-e",
+          "import dns from 'node:dns'; dns.lookup('example.com', (error) => { if (error) process.exit(1); process.stdout.write('UNEXPECTED_DNS'); process.exit(0); });"
+        ],
+        "effectiveEnvironment": {
+          "CI": "true",
+          "PATH": "/usr/local/bin:/usr/bin:/bin"
+        },
+        "environment": {
+          "CI": "true"
+        },
+        "inheritedEnv": [],
+        "logicalArgv": [
+          "node",
+          "dns-negative"
+        ],
+        "payloadArgv": [
+          "/usr/local/bin/node",
+          "-e",
+          "import dns from 'node:dns'; dns.lookup('example.com', (error) => { if (error) process.exit(1); process.stdout.write('UNEXPECTED_DNS'); process.exit(0); });"
+        ]
+      },
+      "argv": [
+        "node",
+        "dns-negative"
+      ],
+      "cwd": ".",
+      "env": {
+        "CI": "true"
+      },
+      "envAbsent": [
+        "PG_TEST_URL"
+      ],
+      "exitCode": 1,
+      "kind": "DNS_NEGATIVE",
+      "network": false,
+      "resolvedAddresses": [],
+      "stderr": {
+        "path": "r1-v3-podman-execution-blocker-20260801/raw/network-dns.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      },
+      "stdout": {
+        "path": "r1-v3-podman-execution-blocker-20260801/raw/network-dns.stdout.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    },
+    {
+      "actualExecutor": {
+        "argv": [
+          "/usr/bin/podman",
+          "run",
+          "--rm",
+          "--network",
+          "none",
+          "--workdir",
+          "/work",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-vju1akye/work:/work:rw",
+          "--volume",
+          "/home/daniel-bo/.local/lib/node_modules/pnpm:/opt/pnpm:ro",
+          "--volume",
+          "/home/daniel-bo/.local/share/pnpm/store/v11:/root/.local/share/pnpm/store/v11:O",
+          "--volume",
+          "/home/daniel-bo/.local/bin/repo-graph:/opt/repo-graph:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-vju1akye/execution-closure.archive.json:/runner/archive.json:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-vju1akye/runner/materialize.mjs:/runner/materialize.mjs:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-vju1akye/runner/replay.mjs:/runner/replay.mjs:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-vju1akye/runner/audit.mjs:/runner/audit.mjs:ro",
+          "node:22-slim@sha256:6c74791e557ce11fc957704f6d4fe134a7bc8d6f5ca4403205b2966bd488f6b3",
+          "/usr/bin/env",
+          "-i",
+          "CI=true",
+          "PATH=/usr/local/bin:/usr/bin:/bin",
+          "/usr/local/bin/node",
+          "-e",
+          "import net from 'node:net'; const socket=net.connect({host:'1.1.1.1',port:443}); const stop=()=>process.exit(1); socket.on('connect',()=>{process.stdout.write('UNEXPECTED_TCP');process.exit(0);}); socket.on('error',stop); setTimeout(stop,1000);"
+        ],
+        "effectiveEnvironment": {
+          "CI": "true",
+          "PATH": "/usr/local/bin:/usr/bin:/bin"
+        },
+        "environment": {
+          "CI": "true"
+        },
+        "inheritedEnv": [],
+        "logicalArgv": [
+          "node",
+          "tcp-negative"
+        ],
+        "payloadArgv": [
+          "/usr/local/bin/node",
+          "-e",
+          "import net from 'node:net'; const socket=net.connect({host:'1.1.1.1',port:443}); const stop=()=>process.exit(1); socket.on('connect',()=>{process.stdout.write('UNEXPECTED_TCP');process.exit(0);}); socket.on('error',stop); setTimeout(stop,1000);"
+        ]
+      },
+      "argv": [
+        "node",
+        "tcp-negative"
+      ],
+      "connected": false,
+      "cwd": ".",
+      "env": {
+        "CI": "true"
+      },
+      "envAbsent": [
+        "PG_TEST_URL"
+      ],
+      "exitCode": 1,
+      "kind": "TCP_NEGATIVE",
+      "network": false,
+      "stderr": {
+        "path": "r1-v3-podman-execution-blocker-20260801/raw/network-tcp.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      },
+      "stdout": {
+        "path": "r1-v3-podman-execution-blocker-20260801/raw/network-tcp.stdout.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    }
+  ],
+  "error": "V3_PODMAN_GATE_FAILED: inventory-pnpmLauncher-pre",
+  "kind": "execution-closure-blocker",
+  "markerDisposition": {
+    "r1V3": "~",
+    "r2Task3": "b",
+    "r2Task4": "b",
+    "r2Task5": "b",
+    "r3": "b",
+    "successors": "b",
+    "upstreamAuthority": "NONE"
+  },
+  "reason": "initialization",
+  "schemaVersion": 1,
+  "status": "BLOCKED",
+  "upstreamAuthority": "NONE"
+}

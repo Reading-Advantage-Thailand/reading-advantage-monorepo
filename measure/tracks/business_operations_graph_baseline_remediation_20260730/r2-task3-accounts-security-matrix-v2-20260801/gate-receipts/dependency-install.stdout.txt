@@ -1,0 +1,25 @@
+Scope: all 40 workspace projects
+✓ Lockfile passes supply-chain policies (verified 9h ago)
+Lockfile is up to date, resolution step is skipped
+Packages: +2035
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 0, reused 1, downloaded 0, added 0
+Progress: resolved 0, reused 56, downloaded 0, added 0
+Progress: resolved 0, reused 254, downloaded 0, added 0
+Progress: resolved 0, reused 703, downloaded 0, added 0
+Progress: resolved 0, reused 1276, downloaded 0, added 0
+Progress: resolved 0, reused 1943, downloaded 0, added 5
+Progress: resolved 0, reused 1943, downloaded 0, added 122
+Progress: resolved 0, reused 1943, downloaded 0, added 458
+Progress: resolved 0, reused 1943, downloaded 0, added 870
+Progress: resolved 0, reused 1943, downloaded 0, added 1512
+Progress: resolved 0, reused 1943, downloaded 0, added 2035
+Progress: resolved 0, reused 1943, downloaded 0, added 2035, done
+[WARN] Failed to create bin at /tmp/business-operations-r2-task3-v2-34dvv0fh/source/packages/api/node_modules/.bin/tutorial-check. ENOENT: no such file or directory, chmod '/tmp/business-operations-r2-task3-v2-34dvv0fh/source/packages/api/node_modules/@reading-advantage/activity-tutorial/dist/cli.js'
+[WARN] Failed to create bin at /tmp/business-operations-r2-task3-v2-34dvv0fh/source/packages/codecamp-knowledge/node_modules/.bin/tutorial-check. ENOENT: no such file or directory, chmod '/tmp/business-operations-r2-task3-v2-34dvv0fh/source/packages/codecamp-knowledge/node_modules/@reading-advantage/activity-tutorial/dist/cli.js'
+[WARN] Failed to create bin at /tmp/business-operations-r2-task3-v2-34dvv0fh/source/packages/domain/node_modules/.bin/tutorial-check. ENOENT: no such file or directory, chmod '/tmp/business-operations-r2-task3-v2-34dvv0fh/source/packages/domain/node_modules/@reading-advantage/activity-tutorial/dist/cli.js'
+
+. prepare$ husky
+. prepare: .git can't be found
+. prepare: Done
+Done in 19.6s using pnpm v11.8.0
