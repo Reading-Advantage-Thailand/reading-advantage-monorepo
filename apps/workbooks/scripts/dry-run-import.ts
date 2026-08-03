@@ -119,7 +119,7 @@ async function main(): Promise<void> {
     `Dry-run complete for "${validated.project.projectId}" (${validated.project.sourceRoot})`,
   );
   console.log(
-    `  lessons: ${validated.counts.lessons}, parse ok: ${validated.counts.parseOk}, parse errors: ${validated.counts.parseError}, exceptions: ${validated.counts.exceptions}`,
+    `  lessons: ${validated.counts.lessons}, parse ok: ${validated.counts.parseOk}, parse errors: ${validated.counts.parseError}, exceptions: ${validated.counts.exceptions}, provenance entries: ${validated.counts.provenance}`,
   );
   console.log(`Manifest written to ${outFile}`);
 }

@@ -1,0 +1,343 @@
+{
+  "manifestVersion": 2,
+  "generatedAt": "2026-08-03T13:54:56.554Z",
+  "project": {
+    "projectId": "origins-2-a0",
+    "sourceRoot": "/home/daniel-bo/Desktop/advantage-workbooks/primary/origins-2-a0",
+    "type": "primary",
+    "seriesName": "Origins",
+    "levelNumber": "2",
+    "cefrLevel": "A0"
+  },
+  "counts": {
+    "lessons": 14,
+    "parseOk": 14,
+    "parseError": 0,
+    "exceptions": 0,
+    "provenance": 42
+  },
+  "entries": [
+    {
+      "sourcePath": "01-Pip the Curious Puppy Feels _workbook.json",
+      "sourceId": "cmgqx8v6602p3t79btatvfjuw",
+      "fileHash": "sha256:90357f9035948a94cc75b666717e84ebd7219277df9f282ebddd599cdf2a1066",
+      "objectKey": "workbooks/imports/origins-2-a0/01-Pip the Curious Puppy Feels _workbook.json/90357f9035948a94cc75b666717e84ebd7219277df9f282ebddd599cdf2a1066/01-Pip the Curious Puppy Feels _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:882d5c6a876f51864d7afadb62932b11825e3f6c8332bf924522f05960987567",
+      "exceptions": [],
+      "provenance": [
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx8v6602p3t79btatvfjuw_1.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx8v6602p3t79btatvfjuw_2.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx8v6602p3t79btatvfjuw_3.png"
+        }
+      ]
+    },
+    {
+      "sourcePath": "02-Pip Sees Food _workbook.json",
+      "sourceId": "cmgqx5orz02mjt79bwvfnndan",
+      "fileHash": "sha256:d5dfe0f6465c65d9ce0e2ebf0f26f74224b774b716be763615d520b9ecb608f8",
+      "objectKey": "workbooks/imports/origins-2-a0/02-Pip Sees Food _workbook.json/d5dfe0f6465c65d9ce0e2ebf0f26f74224b774b716be763615d520b9ecb608f8/02-Pip Sees Food _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:6710e5b9f40dc8e83809ad05d6c83ec4bc695d5f81ccc051b1f2cb37e546e6ca",
+      "exceptions": [],
+      "provenance": [
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx5orz02mjt79bwvfnndan_1.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx5orz02mjt79bwvfnndan_2.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx5orz02mjt79bwvfnndan_3.png"
+        }
+      ]
+    },
+    {
+      "sourcePath": "03-Pip's Happy Place _workbook.json",
+      "sourceId": "cmgqx869w02ogt79bw2io9h8x",
+      "fileHash": "sha256:5a578eb6dcef66e5d8b9ce19a6b38c068e9a2044fa62ae8415e000d94a767d96",
+      "objectKey": "workbooks/imports/origins-2-a0/03-Pip's Happy Place _workbook.json/5a578eb6dcef66e5d8b9ce19a6b38c068e9a2044fa62ae8415e000d94a767d96/03-Pip's Happy Place _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:e4add59f61e32df150288f00eca847db44fe4f5a7cbda9c77203af13679d80dc",
+      "exceptions": [],
+      "provenance": [
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx869w02ogt79bw2io9h8x_1.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx869w02ogt79bw2io9h8x_2.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx869w02ogt79bw2io9h8x_3.png"
+        }
+      ]
+    },
+    {
+      "sourcePath": "04-Fun Day at the Beach _workbook.json",
+      "sourceId": "cmgqx6jsj02n6t79bndt5dfz3",
+      "fileHash": "sha256:2682ed97ea48ec55d8054fcc260067f0d0fc5e79d6cdaa1dd4a5924df4e62c9a",
+      "objectKey": "workbooks/imports/origins-2-a0/04-Fun Day at the Beach _workbook.json/2682ed97ea48ec55d8054fcc260067f0d0fc5e79d6cdaa1dd4a5924df4e62c9a/04-Fun Day at the Beach _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:cf1ce78a5fa1a6dab9ade7e8c561215f45666220fd52d9863de399051793504e",
+      "exceptions": [],
+      "provenance": [
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx6jsj02n6t79bndt5dfz3_1.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx6jsj02n6t79bndt5dfz3_2.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx6jsj02n6t79bndt5dfz3_3.png"
+        }
+      ]
+    },
+    {
+      "sourcePath": "05-A New Ball Game _workbook.json",
+      "sourceId": "cmgqx3ase02kmt79bokadq5kq",
+      "fileHash": "sha256:f8e727d5e8b8e2b1c3ecc95bae1ea0a83a0c5b715b262464488118749f21070f",
+      "objectKey": "workbooks/imports/origins-2-a0/05-A New Ball Game _workbook.json/f8e727d5e8b8e2b1c3ecc95bae1ea0a83a0c5b715b262464488118749f21070f/05-A New Ball Game _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:12cdd423385884da8418ee43f59bf961b2ea0565bef4ae515e74ed9315828e1a",
+      "exceptions": [],
+      "provenance": [
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx3ase02kmt79bokadq5kq_1.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx3ase02kmt79bokadq5kq_2.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx3ase02kmt79bokadq5kq_3.png"
+        }
+      ]
+    },
+    {
+      "sourcePath": "06-Pip and the Book House _workbook.json",
+      "sourceId": "cmgqx2jpn02jzt79b3vddpbqg",
+      "fileHash": "sha256:0dfd415a14f52f26b9a97c5255ba66e05d23251ed7b212756473754565ebd4da",
+      "objectKey": "workbooks/imports/origins-2-a0/06-Pip and the Book House _workbook.json/0dfd415a14f52f26b9a97c5255ba66e05d23251ed7b212756473754565ebd4da/06-Pip and the Book House _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:d61c43944e9e9bdb6e6f4672fd1b81fb8b4e701be1dc5478d4966add6295fcc0",
+      "exceptions": [],
+      "provenance": [
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx2jpn02jzt79b3vddpbqg_1.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx2jpn02jzt79b3vddpbqg_2.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqx2jpn02jzt79b3vddpbqg_3.png"
+        }
+      ]
+    },
+    {
+      "sourcePath": "07-Lily Goes to School _workbook.json",
+      "sourceId": "cmgqwqttc02agt79bu70tnn77",
+      "fileHash": "sha256:81f4cd84572f0079c16d19a40a20cef750c5c9bb834eb398362283f8edc436c5",
+      "objectKey": "workbooks/imports/origins-2-a0/07-Lily Goes to School _workbook.json/81f4cd84572f0079c16d19a40a20cef750c5c9bb834eb398362283f8edc436c5/07-Lily Goes to School _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:8dc707868a8ac5709f1b06fd08635a74da3387ba81675634e2c4655eddc592d8",
+      "exceptions": [],
+      "provenance": [
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqwqttc02agt79bu70tnn77_1.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqwqttc02agt79bu70tnn77_2.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqwqttc02agt79bu70tnn77_3.png"
+        }
+      ]
+    },
+    {
+      "sourcePath": "08-Pip at the Big Zoo _workbook.json",
+      "sourceId": "cmgqwjryb025ct79b7sk7eniv",
+      "fileHash": "sha256:790c02f7b3368ab7b7caa5d44d17fe94400066a0aa958c5fc912a5377abed7db",
+      "objectKey": "workbooks/imports/origins-2-a0/08-Pip at the Big Zoo _workbook.json/790c02f7b3368ab7b7caa5d44d17fe94400066a0aa958c5fc912a5377abed7db/08-Pip at the Big Zoo _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:8deaa2e1327b3feac224b23edefd800979e08705bfa4cd23ad2e0f7324d7097b",
+      "exceptions": [],
+      "provenance": [
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqwjryb025ct79b7sk7eniv_1.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqwjryb025ct79b7sk7eniv_2.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqwjryb025ct79b7sk7eniv_3.png"
+        }
+      ]
+    },
+    {
+      "sourcePath": "09-Pip and Farm Food _workbook.json",
+      "sourceId": "cmgqw4k3e01v8t79bvnxhviym",
+      "fileHash": "sha256:cefa8773faf9b0074c0c4cefe592a332aad5bde0c447bd5efeb29b0db89e3220",
+      "objectKey": "workbooks/imports/origins-2-a0/09-Pip and Farm Food _workbook.json/cefa8773faf9b0074c0c4cefe592a332aad5bde0c447bd5efeb29b0db89e3220/09-Pip and Farm Food _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:fc1e4309b1bcc9733f5596ebb23981b44cb42d3719df289d96bf46bbebf63c43",
+      "exceptions": [],
+      "provenance": [
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqw4k3e01v8t79bvnxhviym_1.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqw4k3e01v8t79bvnxhviym_2.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqw4k3e01v8t79bvnxhviym_3.png"
+        }
+      ]
+    },
+    {
+      "sourcePath": "10-Pip and the Dark Night _workbook.json",
+      "sourceId": "cmgqw2xjt01tyt79bpr10b65a",
+      "fileHash": "sha256:c1fbbd08164de66f3bd0b82b26188348f9b96e32aca7509ef971479752f9eafe",
+      "objectKey": "workbooks/imports/origins-2-a0/10-Pip and the Dark Night _workbook.json/c1fbbd08164de66f3bd0b82b26188348f9b96e32aca7509ef971479752f9eafe/10-Pip and the Dark Night _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:3775431d283ae951cc9bbf69c45438d9559fac80c76d75c4234221dc162b97d0",
+      "exceptions": [],
+      "provenance": [
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqw2xjt01tyt79bpr10b65a_1.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqw2xjt01tyt79bpr10b65a_2.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqw2xjt01tyt79bpr10b65a_3.png"
+        }
+      ]
+    },
+    {
+      "sourcePath": "11-Pip and the Mud _workbook.json",
+      "sourceId": "cmgqw5grp01vvt79bhrv8p6wo",
+      "fileHash": "sha256:67b555da5197dae2bb31308f38e16a47ae7f978269023e5940a8d0f5ed416249",
+      "objectKey": "workbooks/imports/origins-2-a0/11-Pip and the Mud _workbook.json/67b555da5197dae2bb31308f38e16a47ae7f978269023e5940a8d0f5ed416249/11-Pip and the Mud _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:92f4713fe544687810dbcb0faffc4c19c3a191814dc9e3e03d18bc6a3872e528",
+      "exceptions": [],
+      "provenance": [
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqw5grp01vvt79bhrv8p6wo_1.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqw5grp01vvt79bhrv8p6wo_2.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqw5grp01vvt79bhrv8p6wo_3.png"
+        }
+      ]
+    },
+    {
+      "sourcePath": "12-Pip is Brave _workbook.json",
+      "sourceId": "cmgqwi2v60242t79bum2yj76o",
+      "fileHash": "sha256:cd191d868d05d38b57af7f69981b4e47954f3a06733225adc593a156e3a414e0",
+      "objectKey": "workbooks/imports/origins-2-a0/12-Pip is Brave _workbook.json/cd191d868d05d38b57af7f69981b4e47954f3a06733225adc593a156e3a414e0/12-Pip is Brave _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:3a315c9209aebdb0672e7e264417fdb52893fdff10c65e11c681f38b70530758",
+      "exceptions": [],
+      "provenance": [
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqwi2v60242t79bum2yj76o_1.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqwi2v60242t79bum2yj76o_2.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqwi2v60242t79bum2yj76o_3.png"
+        }
+      ]
+    },
+    {
+      "sourcePath": "13-Pip's Fun Art Day _workbook.json",
+      "sourceId": "cmgqw91v601ybt79bqg631j6n",
+      "fileHash": "sha256:cc0254100d3c0044de01900f0b26eb93bd2e2c5987816446dd388b1e33530628",
+      "objectKey": "workbooks/imports/origins-2-a0/13-Pip's Fun Art Day _workbook.json/cc0254100d3c0044de01900f0b26eb93bd2e2c5987816446dd388b1e33530628/13-Pip's Fun Art Day _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:8018adf677a88eb73af510d70be36f3908d82595afee3bec4761e33a34bc318f",
+      "exceptions": [],
+      "provenance": [
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqw91v601ybt79bqg631j6n_1.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqw91v601ybt79bqg631j6n_2.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqw91v601ybt79bqg631j6n_3.png"
+        }
+      ]
+    },
+    {
+      "sourcePath": "14-Pip Feels Many Materials _workbook.json",
+      "sourceId": "cmgqw3mmi01ult79bgi4ilosw",
+      "fileHash": "sha256:acfa865277185f4ee1b204a05b48f7d2876daa0d849eb2b29d2b1e4df464f509",
+      "objectKey": "workbooks/imports/origins-2-a0/14-Pip Feels Many Materials _workbook.json/acfa865277185f4ee1b204a05b48f7d2876daa0d849eb2b29d2b1e4df464f509/14-Pip Feels Many Materials _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:0d1ba2ecbd4a686f83e5eda299b29bc7d126c7473bbfa55f1bb4f1e9a04a43fb",
+      "exceptions": [],
+      "provenance": [
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqw3mmi01ult79bgi4ilosw_1.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqw3mmi01ult79bgi4ilosw_2.png"
+        },
+        {
+          "sourcePath": "article_image_url",
+          "legacyUrl": "https://storage.googleapis.com/primary-app-storage/images/cmgqw3mmi01ult79bgi4ilosw_3.png"
+        }
+      ]
+    }
+  ]
+}

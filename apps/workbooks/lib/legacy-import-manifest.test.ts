@@ -49,7 +49,8 @@ describe("legacy import manifest", () => {
       lessons: 1,
       parseOk: 1,
       parseError: 0,
-      exceptions: 1,
+      exceptions: 0,
+      provenance: 1,
     });
     const entry = manifest.entries[0];
     expect(entry.parseStatus).toBe("ok");
@@ -102,7 +103,7 @@ describe("legacy import manifest", () => {
     expect(exception?.issues?.length ?? 0).toBeGreaterThan(0);
   });
 
-  it("records a non-fatal warning when a lesson references remote asset URLs", () => {
+  it("records structured provenance entries for mapped asset URLs", () => {
     const manifest = buildLegacyImportManifest({
       project: { projectId: "origins-2-a0", sourceRoot: "/read-only/origins-2-a0" },
       files: [
@@ -116,11 +117,17 @@ describe("legacy import manifest", () => {
 
     const entry = manifest.entries[0];
     expect(entry.parseStatus).toBe("ok");
-    const warning = entry.exceptions.find(
-      (candidate) => candidate.code === "ASSET_REFERENCE_NOT_PORTABLE",
-    );
-    expect(warning).toBeDefined();
-    expect(warning?.message).toContain("remote asset URL");
+    expect(
+      entry.exceptions.some(
+        (candidate) => candidate.code === "ASSET_REFERENCE_NOT_PORTABLE",
+      ),
+    ).toBe(false);
+    expect(entry.provenance).toEqual([
+      {
+        sourcePath: "article_image_url",
+        legacyUrl: "https://storage.googleapis.com/primary-app-storage/images/demo_1.png",
+      },
+    ]);
   });
 
   it("counts parse results and exceptions across all files", () => {
@@ -143,7 +150,8 @@ describe("legacy import manifest", () => {
       lessons: 2,
       parseOk: 1,
       parseError: 1,
-      exceptions: 2,
+      exceptions: 1,
+      provenance: 1,
     });
   });
 
@@ -162,7 +170,7 @@ describe("legacy import manifest", () => {
     const parsed = legacyImportManifestSchema.safeParse(manifest);
     expect(parsed.success).toBe(true);
     if (parsed.success) {
-      expect(parsed.data.manifestVersion).toBe(1);
+      expect(parsed.data.manifestVersion).toBe(2);
     }
   });
 

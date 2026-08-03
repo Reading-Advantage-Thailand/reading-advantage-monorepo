@@ -1,9 +1,25 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   draftLessonSchema,
   lessonToWorkbookContent,
   workbookContentToLesson,
 } from "./lesson-mapping";
+
+const ORIGINS_FIXTURE_PATH = resolve(
+  dirname(fileURLToPath(import.meta.url)),
+  "../../../lib/__fixtures__/origins-2-a0-lesson-01.json",
+);
+
+/**
+ * Loads the real origins-2-a0 lesson 01 fixture as the legacy editor shape.
+ * @returns The raw lesson object from the fixture file.
+ */
+function loadOriginsFixtureLesson(): unknown {
+  return JSON.parse(readFileSync(ORIGINS_FIXTURE_PATH, "utf8"));
+}
 
 describe("workbookContentToLesson", () => {
   it("maps normalized content to legacy field names", () => {
@@ -161,13 +177,39 @@ describe("draftLessonSchema", () => {
     expect(result.success).toBe(false);
   });
 
-  it("rejects unknown fields outside the normalized contract", () => {
+  it("rejects unknown fields outside the extended editor contract", () => {
     const result = draftLessonSchema.safeParse({
       lesson_title: "T",
       article_paragraphs: [],
       comprehension_questions: [],
-      writing_prompt: "not persisted",
+      mystery_editor_field: "not a legacy lesson field",
     });
     expect(result.success).toBe(false);
+  });
+});
+
+describe("origins-2-a0 lesson round-trip", () => {
+  it("accepts the real fixture lesson under the extended editor schema", () => {
+    const fixture = loadOriginsFixtureLesson();
+    expect(draftLessonSchema.safeParse(fixture).success).toBe(true);
+  });
+
+  it("keeps every fixture field intact through save then load", () => {
+    const fixture = loadOriginsFixtureLesson() as Parameters<
+      typeof lessonToWorkbookContent
+    >[0];
+    const saved = lessonToWorkbookContent(fixture);
+    const restored = workbookContentToLesson(saved);
+    expect(restored).toEqual(fixture);
+  });
+
+  it("keeps every normalized field intact through load then save", () => {
+    const fixture = loadOriginsFixtureLesson() as Parameters<
+      typeof lessonToWorkbookContent
+    >[0];
+    const saved = lessonToWorkbookContent(fixture);
+    const loaded = workbookContentToLesson(saved);
+    const reSaved = lessonToWorkbookContent(loaded);
+    expect(reSaved).toEqual(saved);
   });
 });

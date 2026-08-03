@@ -26,6 +26,19 @@ export const legacyImportExceptionSchema = z
 /** Shape-compatibility issue detail carried on a legacy import exception. */
 export type LegacyImportException = z.infer<typeof legacyImportExceptionSchema>;
 
+/** One structured provenance entry recorded against a mapped legacy asset URL. */
+export const legacyImportProvenanceSchema = z
+  .object({
+    /** Legacy field path the asset URL was mapped from. */
+    sourcePath: z.string().min(1),
+    /** Original remote URL retained as provenance, never as release authority. */
+    legacyUrl: z.string().url(),
+  })
+  .strict();
+
+/** One structured provenance entry recorded against a mapped legacy asset URL. */
+export type LegacyImportProvenance = z.infer<typeof legacyImportProvenanceSchema>;
+
 /** One legacy lesson file recorded by a dry-run import manifest. */
 export const legacyImportManifestEntrySchema = z
   .object({
@@ -36,6 +49,7 @@ export const legacyImportManifestEntrySchema = z
     parseStatus: z.enum(["ok", "error"]),
     contentHash: z.string().min(1).nullable(),
     exceptions: z.array(legacyImportExceptionSchema),
+    provenance: z.array(legacyImportProvenanceSchema),
   })
   .strict();
 
@@ -47,7 +61,7 @@ export type LegacyImportManifestEntry = z.infer<
 /** Dry-run import manifest covering one legacy workbook project. */
 export const legacyImportManifestSchema = z
   .object({
-    manifestVersion: z.literal(1),
+    manifestVersion: z.literal(2),
     generatedAt: z.string().datetime(),
     project: z
       .object({
@@ -65,6 +79,7 @@ export const legacyImportManifestSchema = z
         parseOk: z.number().int().nonnegative(),
         parseError: z.number().int().nonnegative(),
         exceptions: z.number().int().nonnegative(),
+        provenance: z.number().int().nonnegative(),
       })
       .strict(),
     entries: z.array(legacyImportManifestEntrySchema),
@@ -147,17 +162,33 @@ export function computeLegacyImportObjectKey(
 }
 
 /**
+ * Resolves the owning-app source identity recorded for a legacy project.
+ * @param projectType Project type label from the legacy project metadata.
+ * @returns The portable owning-app identifier for the project.
+ */
+export function resolveImportSourceApp(
+  projectType?: string,
+): "reading-advantage" | "primary-advantage" {
+  if (projectType === "primary") return "primary-advantage";
+  return "reading-advantage";
+}
+
+/**
  * Parses one legacy lesson file into a dry-run manifest entry.
  * The lesson is normalized through the domain importer to determine parse
  * status and the normalized content digest; failures become structured
- * exceptions instead of aborting the dry-run.
+ * exceptions instead of aborting the dry-run. Remote asset URLs that the
+ * importer retains as legacyUrl provenance are recorded as structured
+ * provenance entries on the manifest entry.
  * @param input Raw lesson file to process.
  * @param projectId Identifier of the legacy project being imported.
+ * @param sourceApp Owning app the legacy lesson was authored in.
  * @returns The manifest entry describing the file's provenance and parse result.
  */
 function buildManifestEntry(
   input: LegacyImportManifestFileInput,
   projectId: string,
+  sourceApp: "reading-advantage" | "primary-advantage",
 ): LegacyImportManifestEntry {
   const fileName = input.sourcePath.split("/").pop() ?? input.sourcePath;
   const fileHash = computeLegacyImportFileHash(input.raw);
@@ -183,30 +214,39 @@ function buildManifestEntry(
               : "file is not valid JSON",
         },
       ],
+      provenance: [],
     };
   }
 
   const sourceId = resolveLegacyLessonSourceId(parsed, fileName);
 
-  if (parsed !== null && typeof parsed === "object") {
-    const assetUrls = (parsed as { article_image_url?: unknown })
-      .article_image_url;
-    if (Array.isArray(assetUrls) && assetUrls.length > 0) {
-      exceptions.push({
-        code: "ASSET_REFERENCE_NOT_PORTABLE",
-        message: `${assetUrls.length} remote asset URL(s) were not mapped to canonical asset keys.`,
-      });
-    }
-  }
-
   let contentHash: string | null = null;
   try {
     const record = workbooks.importLegacyWorkbook({
       lesson: parsed,
+      sourceApp,
       sourceId,
       sourceRevision: fileHash,
     });
     contentHash = record.identity.contentHash;
+    const provenance: LegacyImportProvenance[] = (
+      record.content.articleImages ?? []
+    )
+      .filter((image) => image.legacyUrl !== undefined)
+      .map((image) => ({
+        sourcePath: "article_image_url",
+        legacyUrl: image.legacyUrl as string,
+      }));
+    return {
+      sourcePath: input.sourcePath,
+      sourceId,
+      fileHash,
+      objectKey: computeLegacyImportObjectKey(projectId, fileName, fileHash),
+      parseStatus: "ok",
+      contentHash,
+      exceptions,
+      provenance,
+    };
   } catch (error) {
     if (error instanceof workbooks.WorkbookCatalogError) {
       exceptions.push({
@@ -230,18 +270,9 @@ function buildManifestEntry(
       parseStatus: "error",
       contentHash: null,
       exceptions,
+      provenance: [],
     };
   }
-
-  return {
-    sourcePath: input.sourcePath,
-    sourceId,
-    fileHash,
-    objectKey: computeLegacyImportObjectKey(projectId, fileName, fileHash),
-    parseStatus: "ok",
-    contentHash,
-    exceptions,
-  };
 }
 
 /**
@@ -256,16 +287,21 @@ export function buildLegacyImportManifest(input: {
   files: readonly LegacyImportManifestFileInput[];
   generatedAt: string;
 }): LegacyImportManifest {
+  const sourceApp = resolveImportSourceApp(input.project.type);
   const entries = input.files.map((file) =>
-    buildManifestEntry(file, input.project.projectId),
+    buildManifestEntry(file, input.project.projectId, sourceApp),
   );
   const parseOk = entries.filter((entry) => entry.parseStatus === "ok").length;
   const exceptionCount = entries.reduce(
     (total, entry) => total + entry.exceptions.length,
     0,
   );
+  const provenanceCount = entries.reduce(
+    (total, entry) => total + entry.provenance.length,
+    0,
+  );
   return legacyImportManifestSchema.parse({
-    manifestVersion: 1,
+    manifestVersion: 2,
     generatedAt: input.generatedAt,
     project: input.project,
     counts: {
@@ -273,6 +309,7 @@ export function buildLegacyImportManifest(input: {
       parseOk,
       parseError: entries.length - parseOk,
       exceptions: exceptionCount,
+      provenance: provenanceCount,
     },
     entries,
   });
