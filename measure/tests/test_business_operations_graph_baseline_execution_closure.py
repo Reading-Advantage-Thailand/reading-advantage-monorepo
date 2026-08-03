@@ -8983,6 +8983,254 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             self.assertFalse(private_directories[0].parent.exists())
             self.assertFalse((attempts_root / "raw").exists())
 
+    def test_candidate_failure_evidence_collision_preserves_existing_attempt_and_retains_cause(self) -> None:
+        """Requires a competing public attempt to survive a causally bound candidate collision failure.
+
+        @returns Nothing; real preservation uses a temporary failure-evidence root, one intercepted competing mkdir, and no runner execution.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        executor_type = getattr(podman, "DirectCommandRuntimeProductionExecutorV1", None)
+        build_integration = getattr(podman, "build_direct_command_runtime_runner_integration_v1", None)
+        validate_integration = getattr(podman, "validate_direct_command_runtime_runner_integration_v1", None)
+        build_failure = getattr(podman, "_build_candidate_publication_failure_v1", None)
+        real_validator = getattr(podman, "validate_failed_execution_attempt_v1", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(inspect.isclass(executor_type), "V3_DIRECT_RUNTIME_PRODUCTION_EXECUTOR_MISSING")
+        self.assertTrue(callable(build_integration), "V3_DIRECT_RUNTIME_INTEGRATION_BUILDER_MISSING")
+        self.assertTrue(callable(validate_integration), "V3_DIRECT_RUNTIME_INTEGRATION_VALIDATOR_MISSING")
+        self.assertTrue(callable(build_failure), "V3_CANDIDATE_FAILURE_BUILDER_MISSING")
+        self.assertTrue(callable(real_validator), "V3_PODMAN_FAILED_ATTEMPT_VALIDATOR_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+
+        def identity(path: str, content: bytes) -> dict[str, Any]:
+            """Builds one baseline-Git identity for the trace-complete fixture.
+
+            @param path The fixture's workspace-relative path.
+            @param content The immutable fixture bytes.
+            @returns One hash-bound runtime baseline-read identity.
+            """
+            blob = b"blob " + str(len(content)).encode("ascii") + b"\0" + content
+            return {
+                "path": path,
+                "sha256": _sha256(content),
+                "size": len(content),
+                "mode": "100644",
+                "origin": "BASELINE_GIT_BLOB",
+                "baselineCommit": "a" * 40,
+                "gitBlobSha1": hashlib.sha1(blob).hexdigest(),
+                "inclusion": "MATERIALIZE_EXACT_BASELINE_BYTES",
+            }
+
+        package_root = "packages/fixture-candidate-evidence-collision-causality"
+        generator_bytes, source_bytes = b"export {};\n", b"candidate-collision-causality\n"
+        generator = identity(f"{package_root}/scripts/generate-runtime.mjs", generator_bytes)
+        source = identity(f"{package_root}/assets/standard/input.txt", source_bytes)
+        baseline_reads = sorted([generator, source], key=lambda item: item["path"])
+        output_path = f"{package_root}/assets/standard/standard-pack-release.json"
+        derived = {
+            "path": f"{package_root}/dist/assets/index.js", "sha256": "b" * 64, "size": 1,
+            "origin": "DERIVED_BUILD_OUTPUT",
+            "producer": {
+                "kind": "PACKAGE_SCRIPT_PREREQUISITE_BUILD", "scriptName": "fixture-build",
+                "scriptSegment": "pnpm build",
+                "receipt": {"path": "fixture-build-receipt.json", "sha256": "c" * 64, "size": 1},
+            },
+        }
+        budget = {
+            "schemaVersion": 1, "kind": "direct-command-runtime-asset-resource-budget",
+            "frozenArchive": _reference(V2_ARCHIVE),
+            "sourceCeiling": {
+                "path": f"{package_root}/assets/standard", "regularFiles": 2,
+                "apparentBytes": len(generator_bytes) + len(source_bytes),
+                "allocatedBytes": len(generator_bytes) + len(source_bytes),
+            },
+            "reservations": {
+                "baselineGitMaterializationBytes": 1, "candidateCowBytes": 1,
+                "archiveSupplementBytes": 1, "derivedOutputBytes": 1,
+                "metadataBytes": 1, "minimumHeadroomBytes": 1,
+            },
+            "requiredAvailableBytes": 6, "availableBytes": 6, "decision": "PASS",
+        }
+        read_set = {
+            "schemaVersion": 1, "kind": "direct-command-runtime-read-set",
+            "trigger": {
+                "logicalArgv": ["pnpm", "--filter", "@fixture/candidate-collision-causality", "fixture-build"],
+                "package": "@fixture/candidate-collision-causality",
+                "manifest": {"path": f"{package_root}/package.json", "sha256": "d" * 64, "size": 1},
+            },
+            "baselineReadSet": baseline_reads, "derivedBuildReadSet": [derived], "outputPaths": [output_path],
+            "preflightQuota": {
+                "maxEntries": len(baseline_reads), "maxBytes": sum(item["size"] for item in baseline_reads),
+                "observedEntries": len(baseline_reads), "observedBytes": sum(item["size"] for item in baseline_reads),
+            },
+            "resourceBudget": budget,
+            "discovery": {
+                "kind": "BASELINE_GIT_INSTRUMENTED_TRACE", "script": generator,
+                "root": f"{package_root}/assets/standard", "directoryListingCount": 1,
+            },
+        }
+        packet = {
+            "schemaVersion": 1, "kind": "direct-command-runtime-baseline-git-source-packet",
+            "source": "GIT_OBJECT_DATABASE_ONLY", "baselineCommit": "a" * 40,
+            "tree": {"gitTreeSha1": "e" * 40}, "baselineReadSet": baseline_reads,
+            "objects": [
+                {**source, "contentBase64": base64.b64encode(source_bytes).decode("ascii")},
+                {**generator, "contentBase64": base64.b64encode(generator_bytes).decode("ascii")},
+            ],
+        }
+        packet["packetSha256"] = podman._direct_runtime_packet_digest_v1(packet)
+        integration = build_integration(
+            read_set, packet,
+            {
+                "id": "direct-runtime-detached-runner-v1", "nonceSha256": "f" * 64,
+                "reachedStage": "direct-runtime-trace",
+                "executionTrace": {
+                    "baselineReads": baseline_reads, "derivedBuildReads": [derived],
+                    "writes": [{"path": output_path, "kind": "DERIVED_OUTPUT"}],
+                },
+            },
+            budget,
+        )
+        validate_integration(integration)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            attempts_root = root / "attempts"
+            attempts_root.mkdir()
+            output = root / "published-candidate"
+            executor = executor_type(output, "20260802")
+            executor.started = True
+            executor._failure_reason = "candidate-publication"
+            executor._direct_runtime_stage = "direct-runtime-trace"
+            executor._sealed_integration = copy.deepcopy(integration)
+            executor._candidate_publication_failure = build_failure(integration, "atomic-replace")
+            candidate_error = OSError("V3_TEST_CANDIDATE_FAILURE_EVIDENCE_OPERATION")
+            expected_attempt_name = f"{podman.ATTEMPT_PREFIX}-20260802-0001"
+            final_directory = attempts_root / expected_attempt_name
+            sentinel_name = "pre-existing-candidate-collision-sentinel.txt"
+            sentinel_bytes = b"V3_TEST_CANDIDATE_COLLISION_SENTINEL\\n"
+            sentinel_sha256 = _sha256(sentinel_bytes)
+            validated_directories: list[Path] = []
+            validated_public_paths_absent: list[bool] = []
+            public_mkdir_calls: list[Path] = []
+            native_path_mkdir = Path.mkdir
+
+            def validate_private_attempt(attempt: dict[str, Any], directory: Path | str) -> None:
+                """Validates and records one complete private candidate-operation record.
+
+                @param attempt The fully finalized failed-attempt record.
+                @param directory The private canonical leaf offered to the real validator.
+                @returns Nothing after real validation accepts the staged record.
+                """
+                private_directory = Path(directory)
+                real_validator(attempt, private_directory)
+                validated_directories.append(private_directory)
+                validated_public_paths_absent.append(
+                    not (attempts_root / private_directory.name).exists(),
+                )
+                self.assertEqual(private_directory.name, expected_attempt_name)
+                self.assertNotEqual(private_directory.parent, attempts_root)
+                self.assertTrue(private_directory.parent.name.startswith(".candidate-publication-failure-"))
+                self.assertEqual(
+                    attempt["attempt"],
+                    {"id": expected_attempt_name, "sequence": 1, "namingRule": podman.ATTEMPT_NAMING_RULE},
+                )
+                self.assertEqual(attempt["commands"], [])
+                self.assertEqual(attempt["candidatePublicationFailure"]["operationId"], "atomic-replace")
+                self.assertNotIn("directRuntimePreSealAttempt", attempt)
+
+            def collide_public_mkdir(
+                path: Path,
+                mode: int = 0o777,
+                parents: bool = False,
+                exist_ok: bool = False,
+            ) -> None:
+                """Creates only the expected competing public directory before signaling collision.
+
+                @param path The path requested by production publication.
+                @param mode The requested filesystem mode.
+                @param parents Whether parent creation was requested.
+                @param exist_ok Whether an existing directory is allowed.
+                @returns Nothing because the expected public request always raises collision.
+                """
+                if path != final_directory:
+                    native_path_mkdir(path, mode=mode, parents=parents, exist_ok=exist_ok)
+                    return
+                public_mkdir_calls.append(path)
+                self.assertFalse(path.exists())
+                native_path_mkdir(path, mode=mode, parents=parents, exist_ok=exist_ok)
+                sentinel = path / sentinel_name
+                sentinel.write_bytes(sentinel_bytes)
+                raise FileExistsError(path)
+
+            with patch.object(
+                podman,
+                "validate_failed_execution_attempt_v1",
+                side_effect=validate_private_attempt,
+            ), patch.object(
+                Path,
+                "mkdir",
+                new=collide_public_mkdir,
+            ), patch.object(
+                podman.os,
+                "rename",
+                side_effect=AssertionError("V3_CANDIDATE_COLLISION_RENAME_CALLED"),
+            ), patch.object(
+                podman.os,
+                "replace",
+                side_effect=AssertionError("V3_CANDIDATE_COLLISION_REPLACE_CALLED"),
+            ), patch.object(
+                podman,
+                "_publish_failed_attempt",
+                side_effect=AssertionError("V3_CANDIDATE_COLLISION_PRESEAL_PUBLISHER_CALLED"),
+            ), patch.object(
+                podman,
+                "_publish_blocker",
+                side_effect=AssertionError("V3_CANDIDATE_COLLISION_GENERIC_BLOCKER_CALLED"),
+            ), patch.object(
+                podman,
+                "_run_container",
+                side_effect=AssertionError("V3_CANDIDATE_COLLISION_PODMAN_CALLED"),
+            ), patch.object(
+                podman,
+                "capture_direct_command_runtime_in_container_trace_v1",
+                side_effect=AssertionError("V3_CANDIDATE_COLLISION_TRACE_CALLED"),
+            ), patch.object(
+                executor,
+                "runtime_build",
+                side_effect=AssertionError("V3_CANDIDATE_COLLISION_LATER_STAGE_CALLED"),
+            ), patch.object(
+                executor,
+                "generate",
+                side_effect=AssertionError("V3_CANDIDATE_COLLISION_LATER_STAGE_CALLED"),
+            ), patch.object(podman, "TRACK_DIR", attempts_root):
+                with self.assertRaisesRegex(
+                    podman.CandidateExecutionBlocked,
+                    rf"^V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED: candidate-publication: V3_PODMAN_ATTEMPT_PUBLICATION_COLLISION: {expected_attempt_name}$",
+                ) as raised:
+                    executor.preserve_failure(candidate_error)
+
+            collision_error = raised.exception.__cause__
+            self.assertIsInstance(collision_error, error_type)
+            self.assertEqual(str(collision_error), f"V3_PODMAN_ATTEMPT_PUBLICATION_COLLISION: {expected_attempt_name}")
+            self.assertEqual(validated_public_paths_absent, [True])
+            self.assertEqual(public_mkdir_calls, [final_directory])
+            self.assertTrue(final_directory.is_dir())
+            self.assertFalse(final_directory.is_symlink())
+            sentinel = final_directory / sentinel_name
+            self.assertEqual(sentinel.read_bytes(), sentinel_bytes)
+            self.assertEqual(_sha256(sentinel.read_bytes()), sentinel_sha256)
+            self.assertEqual(sorted(path.name for path in final_directory.iterdir()), [sentinel_name])
+            self.assertFalse((final_directory / "failed-attempt.json").exists())
+            self.assertFalse((final_directory / "raw").exists())
+            self.assertEqual(sorted(path.name for path in attempts_root.iterdir()), [expected_attempt_name])
+            self.assertFalse(validated_directories[0].exists())
+            self.assertFalse(validated_directories[0].parent.exists())
+            self.assertFalse(output.exists())
+            self.assertFalse(V3_DIR.exists())
+            self.assertIs(collision_error.__cause__, candidate_error)
+
 
 if __name__ == "__main__":
     unittest.main()
