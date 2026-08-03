@@ -338,6 +338,54 @@
   acceptance, runner commit, or
   Podman/candidate/Finance/marker/registry/successor/V2/history action is accepted.
 
+  H3 pre-seal reservation cleanup masking Red: an accepted rename fault
+  composed with a deterministic non-`FileNotFoundError` `OSError`
+  (`PermissionError`) from only the reservation-cleanup
+  `shutil.rmtree(final_directory)` call must still raise exactly
+  `V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED: materialize: V3_TEST_PRESEAL_FAILURE_EVIDENCE_RENAME`,
+  retain `rename_error` as cause with `materialize_error` beneath it, and never
+  surface the cleanup error as the raised exception or its cause; the outer
+  `staging_parent` rmtree must be allowed to succeed and no public canonical
+  attempt may exist. This pins a real defect rather than adding coverage — the
+  inner reservation `finally` currently suppresses only `FileNotFoundError`, so
+  any other `OSError` escapes it and masks the captured rename failure and the
+  materialize error beneath it.
+  `h3-preseal-reservation-cleanup-masking-pre-green-baseline-20260803.md` freezes
+  the authorized block at SHA-256
+  `24678741940349ac09f2ee48d638e346a45557cb3a7140a2fcddb81d6c5edcf4` (uniquely
+  disambiguated by the `except OSError as caught_rename_error:` /
+  `rename_error = caught_rename_error` anchor, which occurs exactly once);
+  future Green may only widen that block's caught exception to `OSError`.
+  Acceptance must prove the bare `except FileNotFoundError:` count falls 2 to 1
+  and the candidate-publisher `final_directory` cleanup block is byte-unchanged.
+
+  Bounded Green/acceptance (2026-08-03): accepted in-loop, single-authority per
+  `AGENTS.md` Measure-acceptance ownership, for only the inner reservation
+  cleanup no-masking fix at runner SHA-256
+  `c35f07868b00cae579a046255b3a2e4436e921042caae4361a573feffe2bf591` and frozen
+  test SHA-256 `046dd1769b11f5161f0b3cbe395d5e5c81e31b26fc10a77d137ba3479c5640a8`,
+  which equals the Post-Red hash in the baseline, so the test surface is
+  unchanged since the Red slice. The ten focused tests, enumerated by name in
+  the receipt, passed three times under the subprocess guard with zero podman
+  invocations: `4.01s`, `3.46s`, `3.49s`. The sole runner delta is one
+  `-10`-byte hunk widening the authorized block's caught exception to `OSError`.
+  Every baseline-mandated check passed: the Green block occurs exactly once,
+  replacing only it reconstructs the complete pre-Green runner at `ba251a85...`
+  exactly, every line outside the hunk is byte-identical, the bare
+  `except FileNotFoundError:` count fell 2 to 1, and the candidate-publisher
+  `final_directory` cleanup block remains byte-unchanged. Receipt:
+  `h3-preseal-reservation-cleanup-masking-green-acceptance-20260803.md`. This
+  slice closed a real masking defect: the committed Red proved the injected
+  reservation cleanup `PermissionError` masked the rename error and the
+  materialize error beneath it, so operators were told the wrong thing failed.
+  The reconstructed pre-Green runner also equals the committed HEAD blob, so the
+  pre-state is additionally anchored to a reachable Git object. The runner/test
+  code remains uncommitted shared R1-v3 work and Phase R1 v3 remains `[~]`; no
+  candidate-publisher cleanup, successful publication, other pre-seal/generic
+  variant, candidate path, H3/H4/H5/R1-v3 acceptance, runner commit, or
+  Podman/candidate/Finance/marker/registry/successor/V2/history action is
+  accepted.
+
 ## Phase R2: Close or compensate graph coverage gaps
 
 - [x] Task: Execute and record the documented clean-audit/configuration attempt, including `repo-graph config`, scan options, raw audit JSON, stdout/stderr, and exits; select the clean branch only for audit exit `0` with empty unaudited and integrity sets. The v2 candidate binds `r2-clean-audit-attempt-v2-20260801/attempt.json` to the fresh R1 bundle and graph binding; it retained the raw exit and selected the `COMPENSATION_REQUIRED` non-clean branch when unaudited symbols remained. Bounded technical acceptance is recorded by Terra and Sol in the v2 review receipts; commit `772839f` binds the evidence. This is not R2 phase acceptance or an unblock. (deferred:phase-r1-bound-graph)

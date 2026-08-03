@@ -7092,7 +7092,7 @@ def _publish_failed_attempt(
             if final_reserved and not published:
                 try:
                     shutil.rmtree(final_directory)
-                except FileNotFoundError:
+                except OSError:
                     pass
         if rename_error is not None:
             raise rename_error from error
