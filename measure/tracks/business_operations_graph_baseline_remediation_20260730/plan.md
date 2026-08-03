@@ -290,6 +290,26 @@
   Podman/candidate/Finance/marker/registry/successor/V2/history action is
   accepted.
 
+  H3 pre-seal staging cleanup masking Red: a private staging cleanup failure must
+  never mask, replace, or reclassify the failure already in flight. Composing the
+  accepted JSON-write fault with a deterministic non-`FileNotFoundError` `OSError`
+  from `shutil.rmtree(staging_parent)` must still raise exactly
+  `V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED: materialize: V3_TEST_PRESEAL_FAILURE_EVIDENCE_JSON_WRITE`,
+  retain `json_write_error` as cause with `materialize_error` beneath it, and never
+  surface the cleanup error as the raised exception or its cause. Cleanup is
+  best-effort: exactly one cleanup attempt is made against the private
+  `.failed-attempt-` parent, that residue may remain observable, and no public
+  attempt may exist. This pins a real defect rather than adding coverage — the
+  outer `finally` currently suppresses only `FileNotFoundError`, so any other
+  `OSError` escapes it and destroys the original failure identity, with Python
+  setting only `__context__` and not `__cause__`.
+  `h3-preseal-staging-cleanup-masking-pre-green-baseline-20260803.md` freezes the
+  authorized block at SHA-256
+  `2a8c54e5c219359c53ad5282411916b2708c45c91e351c8c4d12e2966ed604dc` (unique in the
+  runner); future Green may only widen that block's caught exception to `OSError`.
+  Acceptance must prove the bare `except FileNotFoundError:` count falls 3 to 2 and
+  both frozen `final_directory` cleanup blocks are byte-unchanged.
+
 ## Phase R2: Close or compensate graph coverage gaps
 
 - [x] Task: Execute and record the documented clean-audit/configuration attempt, including `repo-graph config`, scan options, raw audit JSON, stdout/stderr, and exits; select the clean branch only for audit exit `0` with empty unaudited and integrity sets. The v2 candidate binds `r2-clean-audit-attempt-v2-20260801/attempt.json` to the fresh R1 bundle and graph binding; it retained the raw exit and selected the `COMPENSATION_REQUIRED` non-clean branch when unaudited symbols remained. Bounded technical acceptance is recorded by Terra and Sol in the v2 review receipts; commit `772839f` binds the evidence. This is not R2 phase acceptance or an unblock. (deferred:phase-r1-bound-graph)
