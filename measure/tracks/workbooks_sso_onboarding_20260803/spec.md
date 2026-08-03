@@ -48,6 +48,16 @@ of S0–S3.
    editor/publisher/auditor split stays with `workbook_content_versioning` S0,
    which owns ratifying it. Adding one role now avoids putting workbooks on the
    shared `ADMIN` role without pre-empting that decision.
+1a. **The role is application-local, not a product role.** *(Corrected
+   2026-08-03 during S2 implementation.)* `ROLES` in `packages/auth/src/roles.ts`
+   is the **product learner** role model — it is bound to the `role` pgEnum on
+   the `users` table (`packages/db/src/schema/users.ts:5`), so widening the
+   `Role` union breaks Drizzle insert assignability and would require a Postgres
+   enum migration. It is also the wrong model: no app-specific SSO role lives
+   there. Marketing declares `MarketingRole` in its own
+   `app/lib/marketing-permissions.ts` and resolves it from the Accounts-issued
+   `identity.roles`. Workbooks follows that pattern. `packages/auth` is not
+   modified by this track.
 2. **Marketing is the exemplar, not Sales.** Marketing is the cleanest
    company-only integration (no legacy auth mode, no i18n middleware). Workbooks
    copies its shape: an `app/lib/company-oidc.ts` adapter, `start`/`callback`/
@@ -77,15 +87,16 @@ of S0–S3.
 **Estimate:** S
 **Priority:** Must
 
-### Story S2: Introduce the WORKBOOK_ADMIN role
+### Story S2: Define the WORKBOOK_ADMIN application role
 **As a** company administrator
-**I want** a distinct workbooks role
-**So that** workbook access is grantable without granting shared `ADMIN`
+**I want** a distinct workbooks role resolved from the Accounts identity
+**So that** workbook access is grantable without granting any product role
 
 **Acceptance Criteria:**
-- Given `packages/auth`, When `ROLES` is read, Then `WORKBOOK_ADMIN` is present in `ROLES`, `ROLE_HIERARCHY`, and `ROLE_ROUTES`.
-- Given `roleAtLeast`, When called with `WORKBOOK_ADMIN` against `TEACHER`, Then it returns true; against `SYSTEM`, false.
-- Given the `Role` union, When the package type-checks, Then every `Record<Role, …>` map is exhaustive with no missing-key error.
+- Given `apps/workbooks/app/lib/workbook-permissions.ts`, When it is read, Then it exports a `WorkbookRole` type and a `resolveWorkbookRole(roles: readonly string[]): WorkbookRole | null`.
+- Given an Accounts identity whose `roles` include `WORKBOOK_ADMIN`, When resolved, Then `"WORKBOOK_ADMIN"` is returned.
+- Given an identity with only `ADMIN`, `SALES_ADMIN`, or an empty role list, When resolved, Then `null` is returned — no product role grants workbook access.
+- Given `packages/auth/src/roles.ts`, When the track completes, Then it is **unchanged**.
 
 **Estimate:** S
 **Priority:** Must
@@ -132,7 +143,8 @@ of S0–S3.
 ## Track-Level Acceptance Criteria
 
 - `pnpm --filter workbooks check-types`, `lint`, `test`, and `build` all pass.
-- `pnpm --filter @reading-advantage/auth test` passes with the new role.
+- `packages/auth` and `packages/db` are unmodified; `npx tsc --noEmit` in
+  `packages/auth` still reports zero errors.
 - Accounts bootstrap contract tests pass with four registered clients.
 - The client registry document lists four clients.
 - An unauthenticated request to `/` redirects rather than rendering the page.

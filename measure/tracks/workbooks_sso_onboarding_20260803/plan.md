@@ -17,17 +17,24 @@ _Story ref: spec.md#story-s1_
     - [ ] Add its derivation reference pointing at `apps/workbooks/cloudbuild.yaml`
 - [ ] Task: Measure - User Manual Verification 'Phase S1: Register workbooks as an Accounts OIDC client' (Protocol in workflow.md)
 
-## Phase S2: Introduce the WORKBOOK_ADMIN role
+## Phase S2: Define the WORKBOOK_ADMIN application role
 _Story ref: spec.md#story-s2_
 
-- [ ] Task: Define the role contract
-    - [ ] Add `WORKBOOK_ADMIN: "WORKBOOK_ADMIN"` to `ROLES` in `packages/auth/src/roles.ts`
-    - [ ] Add `WORKBOOK_ADMIN: 3` to `ROLE_HIERARCHY` (peer of `ADMIN`/`SALES_ADMIN`)
-    - [ ] Add `WORKBOOK_ADMIN: "/"` to `ROLE_ROUTES`
-- [ ] Task: Test the role contract
-    - [ ] Assert `WORKBOOK_ADMIN` is present in all three maps
-    - [ ] Assert `roleAtLeast("WORKBOOK_ADMIN", "TEACHER")` is true and `roleAtLeast("WORKBOOK_ADMIN", "SYSTEM")` is false
-- [ ] Task: Measure - User Manual Verification 'Phase S2: Introduce the WORKBOOK_ADMIN role' (Protocol in workflow.md)
+> **Corrected 2026-08-03.** The first attempt added `WORKBOOK_ADMIN` to `ROLES`
+> in `packages/auth/src/roles.ts`. `npx tsc --noEmit` in `packages/auth` rejected
+> it: the `Role` union is bound to the `role` pgEnum in
+> `packages/db/src/schema/users.ts:5`, so widening it breaks Drizzle insert
+> assignability and would need a Postgres enum migration. That is also the wrong
+> home — `ROLES` is the product learner model, and no app-specific SSO role lives
+> there. Reverted; the role is now application-local, mirroring Marketing.
+
+- [ ] Task: Define the workbooks role contract
+    - [ ] Create `apps/workbooks/app/lib/workbook-permissions.ts` exporting `WorkbookRole` and `resolveWorkbookRole(roles: readonly string[]): WorkbookRole | null`, mirroring `apps/marketing/app/lib/marketing-permissions.ts`
+- [ ] Task: Test the workbooks role contract
+    - [ ] Assert `resolveWorkbookRole(["WORKBOOK_ADMIN"])` returns `"WORKBOOK_ADMIN"`
+    - [ ] Assert `ADMIN`, `SALES_ADMIN`, and `[]` all resolve to `null`
+    - [ ] Assert `packages/auth/src/roles.ts` is untouched by this track
+- [ ] Task: Measure - User Manual Verification 'Phase S2: Define the WORKBOOK_ADMIN application role' (Protocol in workflow.md)
 
 ## Phase S3: Gate the workbooks app with Company SSO
 _Story ref: spec.md#story-s3_
@@ -35,8 +42,6 @@ _Story ref: spec.md#story-s3_
 - [ ] Task: Add the auth dependency
     - [ ] Add `"@reading-advantage/auth": "workspace:*"` to `apps/workbooks/package.json` dependencies
     - [ ] Add `@reading-advantage/auth` to `transpilePackages` in `apps/workbooks/next.config.ts`
-- [ ] Task: Define the workbooks permission projection
-    - [ ] Create `apps/workbooks/app/lib/workbook-permissions.ts` exporting `WorkbookRole = "WORKBOOK_ADMIN"` and `resolveWorkbookRole(roles: readonly string[]): WorkbookRole | null`, mirroring `apps/marketing/app/lib/marketing-permissions.ts`
 - [ ] Task: Create the OIDC adapter
     - [ ] Create `apps/workbooks/app/lib/company-oidc.ts` mirroring `apps/marketing/app/lib/company-oidc.ts`, exporting `WORKBOOKS_SESSION_COOKIE = "__Host-ra_workbooks_session"`, `WORKBOOKS_TRANSACTION_COOKIE = "__Host-ra_workbooks_oidc_tx"`, `getWorkbooksPublicOrigin()`, `getWorkbooksOidcClient()`, `readWorkbooksCookie()`, `workbooksSessionUser()`
 - [ ] Task: Write Red tests for the handshake
