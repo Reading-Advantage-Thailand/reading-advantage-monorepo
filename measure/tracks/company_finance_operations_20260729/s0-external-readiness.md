@@ -24,14 +24,20 @@ PII, tax identifiers, or unredacted reports here.
 
 These are evidence dependencies, not substitutes for the external decisions:
 
-| Prerequisite | Owning track / evidence | Gate |
-| --- | --- | --- |
-| Backend Capability Kernel | `backend_capability_kernel_20260713` final acceptance | Required before Finance runtime registration. |
-| Company Identity owner-role map | `company_identity_sso_20260715` and accepted owner-role mapping | Required before production `COMPANY_ADMIN -> FINANCE_ADMIN` use. |
-| Private storage semantics | Accepted private read/stream, write, checksum, and read-only signed URL evidence | Required before document migration or finance evidence storage. |
-| Durable jobs | `durable_job_worker_platform_20260713` Phase 4 | Required before production import, schedule, or pack jobs. |
-| CRM source contract | `customer_licensing_crm_20260722` accepted customer/site/subscription contract | Required before S2 billing. |
-| Tutor producer | Separately accepted Tutor track implementing `TutorFinancialExportPort` | Required before S3 ingestion; Finance never reads Tutor's database. |
+| Prerequisite | Owning track / evidence | Gate | Status (2026-08-03) |
+| --- | --- | --- | --- |
+| Backend Capability Kernel | `backend_capability_kernel_20260713` final acceptance | Required before Finance runtime registration. | `in_progress`; not accepted |
+| Company Identity owner-role map | `company_identity_sso_20260715` and accepted owner-role mapping | Required before production `COMPANY_ADMIN -> FINANCE_ADMIN` use. | `archive-pending`; mapping not accepted |
+| Private storage semantics | Accepted private read/stream, write, checksum, and read-only signed URL evidence | Required before document migration or finance evidence storage. | `new`; semantics not accepted |
+| Durable jobs | `durable_job_worker_platform_20260713` Phase 4 | Required before production import, schedule, or pack jobs. | `in_progress`; Phase 4 not reached |
+| CRM source contract | `customer_licensing_crm_20260722` accepted customer/site/subscription contract | Required before S2 billing. | `new`; contract not accepted |
+| Tutor producer | Separately accepted Tutor track implementing `TutorFinancialExportPort` | Required before S3 ingestion; Finance never reads Tutor's database. | No track exists; port unimplemented |
+
+Status column recorded 2026-08-03 from each owning track's `metadata.json`.
+No prerequisite has reached final acceptance, so every S0 Green gate above
+remains closed. This is a dated observation of track state only; it is not an
+acceptance, an approval, or a substitute for the external owner/accountant
+inputs required in the preceding table.
 
 ## Allowed and forbidden work while inputs are absent
 
