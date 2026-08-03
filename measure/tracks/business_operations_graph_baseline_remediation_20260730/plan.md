@@ -386,6 +386,54 @@
   Podman/candidate/Finance/marker/registry/successor/V2/history action is
   accepted.
 
+  H5 candidate-publisher reservation cleanup masking Red: an accepted candidate
+  rename fault composed with a deterministic non-`FileNotFoundError` `OSError`
+  (`PermissionError`) from only the candidate publisher's reservation-cleanup
+  `shutil.rmtree(final_directory)` call must still raise exactly
+  `V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED: candidate-publication: V3_TEST_CANDIDATE_FAILURE_EVIDENCE_RENAME`,
+  retain `rename_error` as cause, and never surface the cleanup error as the
+  raised exception or in its cause chain; no public canonical attempt may exist
+  and private staging must be removed. This pins a real defect rather than
+  adding coverage — the candidate publisher's inner reservation `finally` in
+  `_publish_candidate_publication_failure_attempt` currently suppresses only
+  `FileNotFoundError`, so any other `OSError` escapes it and masks the captured
+  rename failure.
+  `h5-candidate-reservation-cleanup-masking-pre-green-baseline-20260803.md`
+  freezes the authorized block at SHA-256
+  `24678741940349ac09f2ee48d638e346a45557cb3a7140a2fcddb81d6c5edcf4` (byte-count
+  occurs exactly once, so no disambiguation anchor is required); future Green
+  may only widen that block's caught exception to `OSError`. Acceptance must
+  prove the bare `except FileNotFoundError:` count falls 1 to 0 and the
+  already-widened `_publish_failed_attempt` reservation/staging cleanup blocks
+  (SHA-256 `0ac6bd1ea520569851cf58dc17fcf7734e9e4ce74ba861a178372a355b732630`
+  and `5343b54a88fd7b8ca98ddc607b73676b7e86ed6f2879ce7b7692dfae06ac58d0`) remain
+  byte-unchanged.
+
+  Bounded Green/acceptance (2026-08-03): accepted in-loop, single-authority per
+  `AGENTS.md` Measure-acceptance ownership, for only the candidate-publisher
+  reservation-cleanup no-masking fix at runner SHA-256
+  `4f1eb6a34c946f101791a26cf090f68cfffc360000a57974015947f44feec1c3` and frozen
+  test SHA-256 `69053a5a5e49c22bdfeb4c4d2ac3b2f0e050c96f63a97de64c49b541adafc01e`,
+  which equals the Post-Red hash in the baseline, so the test surface is
+  unchanged since the Red slice. The eleven focused tests, enumerated by name
+  in the receipt, passed three times under the subprocess guard with zero
+  subprocess/podman invocations: `6.04s`, `6.57s`, `6.01s`. The sole runner
+  delta is one `-10`-byte hunk widening the authorized block's caught exception
+  to `OSError`. Every baseline-mandated check passed: replacing only that hunk
+  reconstructs the complete pre-Green runner at `c35f0786...` exactly, the bare
+  `except FileNotFoundError:` count fell 1 to 0, and the already-widened
+  `_publish_failed_attempt` reservation/staging cleanup blocks remain
+  byte-unchanged. Receipt:
+  `h5-candidate-reservation-cleanup-masking-green-acceptance-20260803.md`. This
+  slice closed a real masking defect: the committed Red proved the injected
+  reservation cleanup `PermissionError` masked the rename error, so operators
+  were told the wrong thing failed. The runner/test code remains uncommitted
+  shared R1-v3 work and Phase R1 v3 remains `[~]`; no successful publication,
+  other candidate/pre-seal/generic variant, candidate path contents,
+  H3/H4/H5/R1-v3 acceptance, runner commit, or
+  Podman/candidate/Finance/marker/registry/successor/V2/history action is
+  accepted.
+
 ## Phase R2: Close or compensate graph coverage gaps
 
 - [x] Task: Execute and record the documented clean-audit/configuration attempt, including `repo-graph config`, scan options, raw audit JSON, stdout/stderr, and exits; select the clean branch only for audit exit `0` with empty unaudited and integrity sets. The v2 candidate binds `r2-clean-audit-attempt-v2-20260801/attempt.json` to the fresh R1 bundle and graph binding; it retained the raw exit and selected the `COMPENSATION_REQUIRED` non-clean branch when unaudited symbols remained. Bounded technical acceptance is recorded by Terra and Sol in the v2 review receipts; commit `772839f` binds the evidence. This is not R2 phase acceptance or an unblock. (deferred:phase-r1-bound-graph)

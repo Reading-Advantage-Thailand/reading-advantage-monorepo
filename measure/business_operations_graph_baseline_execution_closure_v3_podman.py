@@ -6823,7 +6823,7 @@ def _publish_candidate_publication_failure_attempt(
             if final_reserved and not published:
                 try:
                     shutil.rmtree(final_directory)
-                except FileNotFoundError:
+                except OSError:
                     pass
 
 
