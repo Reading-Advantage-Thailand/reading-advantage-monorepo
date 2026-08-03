@@ -87,4 +87,25 @@ describe("single completion emission latch", () => {
     expect(latch.sealWithoutDelivery()).toBe(false);
     expect(latch.hasCompleted).toBe(true);
   });
+
+  it("swallows synchronous delivery failures so drained() resolves without an unhandled rejection", async () => {
+    const unhandled: unknown[] = [];
+    const onUnhandled = (reason: unknown) => {
+      unhandled.push(reason);
+    };
+    process.on("unhandledRejection", onUnhandled);
+    try {
+      const latch = createCompletionLatch(() => {
+        throw new Error("sync delivery failed");
+      });
+
+      latch.complete({ value: 1 });
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(unhandled).toEqual([]);
+      await expect(latch.drained()).resolves.toBeUndefined();
+    } finally {
+      process.off("unhandledRejection", onUnhandled);
+    }
+  });
 });

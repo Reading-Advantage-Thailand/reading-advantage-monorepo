@@ -54,7 +54,7 @@ export function createCompletionLatch<Result>(
         const maybe = deliver(result);
         delivery = maybe instanceof Promise ? maybe.catch(() => undefined) : Promise.resolve();
       } catch (error) {
-        delivery = Promise.reject(error);
+        delivery = Promise.reject(error).catch(() => undefined);
       }
       return true;
     },
