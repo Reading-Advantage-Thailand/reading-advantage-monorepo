@@ -11,6 +11,8 @@ apps/*
 !apps/accounts/**
 !apps/www-reading-advantage
 !apps/www-reading-advantage/**
+!apps/workbooks
+!apps/workbooks/**
 **/.env
 **/.env.*
 **/.next
