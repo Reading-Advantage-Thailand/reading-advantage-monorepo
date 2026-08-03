@@ -14,11 +14,11 @@
   "retirement_task": 6,
   "shared_candidate": {
     "path": "measure/apk-cross-host-cutover-candidate-v1.json",
-    "sha256": "184f1b9c7e65fbc2d48dd199eb6b8f8492843760f4215c03e7cfb540e0a5c923"
+    "sha256": "4ee52e76eaefc2d752c4d980b28627f7d040f0b5514ab6c6095670fa5a805346"
   },
   "retirement_manifest": {
-    "path": "measure/tracks/apk_existing_core_cutover_20260727/task6-retirement-successor-candidate-v1.json",
-    "sha256": "78dbc4ad20bb469754f39f5e87be8a50870c0e6f48a405bc7b78d4fccf7c2a4b"
+    "path": "measure/archive/apk_existing_core_cutover_20260727/task6-retirement-successor-candidate-v1.json",
+    "sha256": "d5e82702c8142cfe34f55fca9bd947d0b4a5de2e8d3a08cb3fe662e63e6b6833"
   },
   "review_scope": "Bind the additive 24-title root wrapper, current Reading/Primary 193-case reports, unchanged server-owned persistence boundary, and explicit zero-deletion successor disposition.",
   "authorization": {

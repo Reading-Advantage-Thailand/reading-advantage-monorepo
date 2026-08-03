@@ -10,7 +10,7 @@ from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-TRACK_ROOT = REPO_ROOT / "measure/tracks/apk_legacy_puzzle_cutover_20260727"
+TRACK_ROOT = REPO_ROOT / "measure/archive/apk_legacy_puzzle_cutover_20260727"
 DOSSIERS = TRACK_ROOT / "task2-standard-pack-suitability-dossiers-v2.json"
 DECISIONS = TRACK_ROOT / "task2-accepted-decisions-v2.json"
 UNIONS = TRACK_ROOT / "task2-selected-unions-v2.json"

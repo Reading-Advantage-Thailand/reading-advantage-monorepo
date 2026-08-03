@@ -242,7 +242,7 @@ program, priority order when picking the next track is:
   and cartridge presentation behavior. It makes animation and selected-union
   metadata descriptor-driven without reopening T10/T11 or authorizing migration.
 
-- [x] **Track: APK Standard-Pack Suitability and Canonical Ingestion** *Link: [./tracks/apk_standard_pack_suitability_ingestion_20260728/](./tracks/apk_standard_pack_suitability_ingestion_20260728/)*
+- [x] **Track: APK Standard-Pack Suitability and Canonical Ingestion** *Link: [./archive/apk_standard_pack_suitability_ingestion_20260728/](./archive/apk_standard_pack_suitability_ingestion_20260728/)*
   Consumes Asset Contract v2 to decide per role whether to reuse suitable
   canonical art, canonically ingest approved legacy art with provenance, or
   block the role; it publishes additive release and binding evidence only.
@@ -265,21 +265,21 @@ program, priority order when picking the next track is:
   cutover, deletion, historical rebuild, and completeness claims remain cohort-gated.
   - [x] **Track: APK Denominator, Readiness, and T11 Release Integrity** *Link: [./archive/apk_denominator_readiness_t11_integrity_20260727/](./archive/apk_denominator_readiness_t11_integrity_20260727/)*
     Accepted exact owner message `approved`; receipt `d371fc5d…f1720` preserves all reviewed hashes, restrictions, disclosures, and child authorization boundaries.
-- [x] **Track: APK Existing Core Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_core_cutover_20260727/](./tracks/apk_existing_core_cutover_20260727/)*
+- [x] **Track: APK Existing Core Cartridge Revalidation and Cutover** *Link: [./archive/apk_existing_core_cutover_20260727/](./archive/apk_existing_core_cutover_20260727/)*
     Vertically revalidates Dragon Flight, Magic Defense, Dungeon Liberator, The Sorcerer's Ziggurat, and Astral Mage. Option-1 production cutover and live deletion complete; formal `accepted-production-cutover-and-live-deletion-option-1` (2026-08-02) bound to the live-path-deletion authority (operative-executed, criterion_3_retirement_complete=true). Dual-host multi-title host-proof is the production path; HostProofGameClient accepts any `*_HOST_PROOF_ACTION` diagnostic. DF/MD/Dungeon Liberator playable host-proof; Ziggurat/Astral source-blocked; proven Reading student routes dragon-flight and magic-defense deleted. Durable IDs remain null / LOCAL_VERIFIABLE disclosure.
-  - [x] **Track: APK Existing Action Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_action_cutover_20260727/](./tracks/apk_existing_action_cutover_20260727/)*
+  - [x] **Track: APK Existing Action Cartridge Revalidation and Cutover** *Link: [./archive/apk_existing_action_cutover_20260727/](./archive/apk_existing_action_cutover_20260727/)*
     Vertically revalidates Archer's Revenge, Paladin's Twin-Soul, Griffin Sky-Joust, Gryphon Patrol, and Realm Carver. All five source-blocked; criterion 2/3 terminal under the option-1 disposition; no playable host cutover for blocked titles.
-  - [x] **Track: APK Legacy Defense Rebuild and Cutover** *Link: [./tracks/apk_legacy_defense_cutover_20260727/](./tracks/apk_legacy_defense_cutover_20260727/)*
+  - [x] **Track: APK Legacy Defense Rebuild and Cutover** *Link: [./archive/apk_legacy_defense_cutover_20260727/](./archive/apk_legacy_defense_cutover_20260727/)*
     Vertically rebuilds Castle Defense, Wizard vs Zombie, Village Guardian, and Storm the Castle Tower. Option-1 complete; dual-host host-proof loaders; proven Reading student routes castle-defense and wizard-vs-zombie deleted; formal bound to the live-path-deletion authority.
-  - [x] **Track: APK Legacy Traversal Rebuild and Cutover** *Link: [./tracks/apk_legacy_traversal_cutover_20260727/](./tracks/apk_legacy_traversal_cutover_20260727/)*
+  - [x] **Track: APK Legacy Traversal Rebuild and Cutover** *Link: [./archive/apk_legacy_traversal_cutover_20260727/](./archive/apk_legacy_traversal_cutover_20260727/)*
     Vertically rebuilds Dragon Rider, Spellweaver's Run, Shadow Gate Dungeon, Labyrinth of the Goblin King, and Griffin Rider's Escape. Option-1 complete; dual-host host-proof loaders; proven Reading student route dragon-rider deleted; formal bound to the live-path-deletion authority.
-  - [x] **Track: APK Legacy Puzzle Rebuild and Cutover** *Link: [./tracks/apk_legacy_puzzle_cutover_20260727/](./tracks/apk_legacy_puzzle_cutover_20260727/)*
+  - [x] **Track: APK Legacy Puzzle Rebuild and Cutover** *Link: [./archive/apk_legacy_puzzle_cutover_20260727/](./archive/apk_legacy_puzzle_cutover_20260727/)*
     Vertically rebuilds Enchanted Library, Rune Match, Alchemist's Synthesis, Potion Rush, and Rune Forge Chamber. Option-1 complete; dual-host host-proof loaders; proven Reading student routes enchanted-library, rune-match, and potion-rush deleted; formal bound to the live-path-deletion authority.
   - [x] **Track: APK Historical/Cancelled Identity Disposition** *Link: [./archive/apk_historical_identity_disposition_20260727/](./archive/apk_historical_identity_disposition_20260727/)*
     **Accepted with disclosure (2026-07-31; accepted-gated-disposition-only):** `product-owner-acceptance-v1.json` binds defer for RPG Battle, Devourer Slime, and The Haunted Library, and retain-history for The Abyssal Well and Babel Architect, against the independently reviewed evidence. `future-track-criteria-v1.json` requires a separately accepted bounded child track for any future work. No gameplay, playable, rebuild, shipping, or portfolio-completeness claim is made; all five remain gated and non-playable.
   - [x] **Track: APK Planned/New-Game Intake** *Link: [./archive/apk_new_game_intake_20260727/](./archive/apk_new_game_intake_20260727/)* — archived 2026-08-02
     Complete intake-only contract; it authorizes no new title, implementation, route, catalog entry, or host cutover.
-  - [x] **Track: APK Residual Cross-Host Retirement and Closeout** *Link: [./tracks/apk_cross_host_closeout_20260727/](./tracks/apk_cross_host_closeout_20260727/)*
+  - [x] **Track: APK Residual Cross-Host Retirement and Closeout** *Link: [./archive/apk_cross_host_closeout_20260727/](./archive/apk_cross_host_closeout_20260727/)*
     Owns only residual cross-host work that no vertical cohort owns after cohort outcomes are accepted or explicitly blocked. Residual inventory closed after cohort option-1 terminals; formal + retirement package bound to the live-path-deletion authority present.
 
 - [x] **Track: APK Dual-Theme Production Asset Packs — SUPERSEDED, DO NOT IMPLEMENT** *Link: [./archive/apk_dual_theme_asset_packs_20260711/](./archive/apk_dual_theme_asset_packs_20260711/)*

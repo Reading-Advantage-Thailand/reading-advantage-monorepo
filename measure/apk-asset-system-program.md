@@ -146,7 +146,7 @@ historical T10/T11 acceptance.
 
 ### 5. APK Standard-Pack Suitability and Canonical Ingestion
 
-[`apk_standard_pack_suitability_ingestion_20260728`](./tracks/apk_standard_pack_suitability_ingestion_20260728/)
+[`apk_standard_pack_suitability_ingestion_20260728`](./archive/apk_standard_pack_suitability_ingestion_20260728/)
 evaluates each required role/state and behavior contract against the standard
 pack. Its accepted outcome is exactly one of reuse a suitable canonical asset,
 canonically ingest an approved legacy asset with provenance, or block the role.

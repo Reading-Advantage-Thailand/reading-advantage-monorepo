@@ -18,7 +18,7 @@ LIVE_PATH_DELETION_AUTHORITY = (
 )
 USER_INPUT = (
     REPO_ROOT
-    / "measure/tracks/apk_cross_host_closeout_20260727"
+    / "measure/archive/apk_cross_host_closeout_20260727"
     / "USER-INPUT-REQUIRED-production-cutover-and-live-retirement-20260803.json"
 )
 
@@ -74,7 +74,7 @@ class ApkProductOwnerFormalAcceptanceTests(unittest.TestCase):
         provenance = _load(PROVENANCE)
         self.assertEqual(provenance["decision"], "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE")
         for track_id in ACCEPTANCES:
-            path = REPO_ROOT / "measure/tracks" / track_id / "product-owner-formal-acceptance-2026-08-02.json"
+            path = REPO_ROOT / "measure/archive" / track_id / "product-owner-formal-acceptance-2026-08-02.json"
             acceptance = _load(path)
             self.assertEqual(
                 acceptance["status"],
@@ -96,7 +96,7 @@ class ApkProductOwnerFormalAcceptanceTests(unittest.TestCase):
 
     def test_metadata_complete_after_option_1(self) -> None:
         for track_id in ACCEPTANCES:
-            metadata = _load(REPO_ROOT / "measure/tracks" / track_id / "metadata.json")
+            metadata = _load(REPO_ROOT / "measure/archive" / track_id / "metadata.json")
             self.assertEqual(metadata["status"], "complete", track_id)
             self.assertIsNone(metadata.get("completion_blocker"))
 
@@ -109,7 +109,7 @@ class ApkProductOwnerFormalAcceptanceTests(unittest.TestCase):
 
     def test_suitability_closed_on_licensed_elv_games_pack(self) -> None:
         metadata = _load(
-            REPO_ROOT / "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/metadata.json"
+            REPO_ROOT / "measure/archive/apk_standard_pack_suitability_ingestion_20260728/metadata.json"
         )
         self.assertEqual(metadata["status"], "complete")
         self.assertIsNone(metadata.get("completion_blocker"))

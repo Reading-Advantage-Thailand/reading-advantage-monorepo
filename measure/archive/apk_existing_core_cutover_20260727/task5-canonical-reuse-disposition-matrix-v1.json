@@ -2,8 +2,8 @@
   "schema_version": "apk-existing-core-task5-canonical-reuse-disposition-matrix.v1",
   "status": "reviewed-canonical-reuse-drafts-pending-owner-acceptance",
   "release": "2026.07.23",
-  "dossier_source": "measure/tracks/apk_existing_core_cutover_20260727/task5-canonical-reuse-dossiers-v1.json",
-  "current_task3_lineage_receipt": "measure/tracks/apk_existing_core_cutover_20260727/task3-current-lineage-receipt-v1.json",
+  "dossier_source": "measure/archive/apk_existing_core_cutover_20260727/task5-canonical-reuse-dossiers-v1.json",
+  "current_task3_lineage_receipt": "measure/archive/apk_existing_core_cutover_20260727/task3-current-lineage-receipt-v1.json",
   "rows": [
     {
       "title_id": "dragon-flight",

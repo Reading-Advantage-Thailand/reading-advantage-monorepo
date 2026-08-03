@@ -32,11 +32,11 @@
   },
   "task3_lineage": {
     "current_receipt": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-current-lineage-receipt-v1.json",
-      "sha256": "c5ccb0ac3b54474e2ad99badb2aef5c1608689e57559e2f26c6fb489a5513d7f"
+      "path": "measure/archive/apk_existing_core_cutover_20260727/task3-current-lineage-receipt-v1.json",
+      "sha256": "4e9705182500ceed59d69b17e77eb2af84bcd13b3746c665b730dcb38ca3ac7a"
     },
     "current_review": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-current-lineage-v1.md",
+      "path": "measure/archive/apk_existing_core_cutover_20260727/review-task3-current-lineage-v1.md",
       "sha256": "2042061ffe67246c56f47cd1c4639ec39e1bd4ec5156952e6b46415fff24a657"
     },
     "historical_receipt_preserved": true

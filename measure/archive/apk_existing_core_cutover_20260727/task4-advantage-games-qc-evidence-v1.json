@@ -7,8 +7,8 @@
   "scope": "advantage-games-qc-and-compact-wide-real-input-only",
   "accepted_inputs": {
     "semantic_adoption_receipt": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
-      "sha256": "efc1488eba5d40db891f9316e4e972905b6e56b4bc928c876c74f2a7b541bc02"
+      "path": "measure/archive/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
+      "sha256": "dbe9f82779ac4bfd26ce5e2bdb599a241b7c399cc211d3d296a5e35147a72fd6"
     },
     "t11_extension_acceptance": {
       "path": "measure/archive/apk_shared_developer_kit_20260712/t11-owner-extension-acceptance-v1.json",
@@ -386,7 +386,7 @@
   },
   "remediation": {
     "remediated_at": "2026-07-28T09:54:00Z",
-    "source_review_path": "measure/tracks/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc.md",
+    "source_review_path": "measure/archive/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc.md",
     "findings_addressed": [
       "M-1",
       "L-1",
@@ -408,11 +408,11 @@
         "change": "Task-3 acceptance guard now validates task 4 as lawfully in progress ([~]) while remaining fail-closed on [x] and later tasks."
       },
       {
-        "path": "measure/tracks/apk_existing_core_cutover_20260727/task4-advantage-games-qc-evidence-v1.json",
+        "path": "measure/archive/apk_existing_core_cutover_20260727/task4-advantage-games-qc-evidence-v1.json",
         "change": "Refreshed implementation-binding hashes, targeted-test counts, and superseded scoped graph scan counts."
       },
       {
-        "path": "measure/tracks/apk_existing_core_cutover_20260727/metadata.json",
+        "path": "measure/archive/apk_existing_core_cutover_20260727/metadata.json",
         "change": "Removed stale deviation wording about intentional Red failures; added task-4 review remediation entry."
       }
     ],

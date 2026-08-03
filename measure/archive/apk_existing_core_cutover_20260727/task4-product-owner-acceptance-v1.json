@@ -26,24 +26,24 @@
   },
   "accepted_subjects": {
     "task4_qc_evidence": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/task4-advantage-games-qc-evidence-v1.json",
-      "sha256": "a5c90ea3d185060550f1b2d11b6d8c76aad20e180852da7332b347548d1e4c38"
+      "path": "measure/archive/apk_existing_core_cutover_20260727/task4-advantage-games-qc-evidence-v1.json",
+      "sha256": "49c986ca2f00c6b8238e95e385f59dbc51b40a44105db5cbc3e092a664d07389"
     },
     "task4_remediation_evidence": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc-remediation.md",
-      "sha256": "c2bdbdeb98dddf140db53e4147b3d2e371d9d83dbf43fae4b0b7dabf372cecf8"
+      "path": "measure/archive/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc-remediation.md",
+      "sha256": "8f641ac224ca758256d2dccbc813850ed9fc2d1322f53353c5319b6554a81c04"
     },
     "k3_independent_zero_finding_rereview": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc-rereview.md",
+      "path": "measure/archive/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc-rereview.md",
       "sha256": "ec718ede5041e7b9e16dbafba414ee59c013da205c63928a8a28334e996c61de"
     },
     "doc_correction_verification_addendum": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/task4-r1-correction-verification-addendum.md",
+      "path": "measure/archive/apk_existing_core_cutover_20260727/task4-r1-correction-verification-addendum.md",
       "sha256": "d0a3437b53de360dcab6e41fb5461362adbe6f9664a81e8346325be4e24fecb3"
     },
     "accepted_task3_semantic_receipt": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
-      "sha256": "efc1488eba5d40db891f9316e4e972905b6e56b4bc928c876c74f2a7b541bc02"
+      "path": "measure/archive/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
+      "sha256": "dbe9f82779ac4bfd26ce5e2bdb599a241b7c399cc211d3d296a5e35147a72fd6"
     }
   },
   "accepted_implementation_bindings": {

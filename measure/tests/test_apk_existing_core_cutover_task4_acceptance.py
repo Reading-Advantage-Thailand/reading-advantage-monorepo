@@ -14,7 +14,7 @@ from measure.tests.test_apk_existing_core_task6_legacy_retirement import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-TRACK_ROOT = REPO_ROOT / "measure/tracks/apk_existing_core_cutover_20260727"
+TRACK_ROOT = REPO_ROOT / "measure/archive/apk_existing_core_cutover_20260727"
 ACCEPTANCE_PATH = TRACK_ROOT / "task4-product-owner-acceptance-v1.json"
 RECEIPT_PATH = TRACK_ROOT / "accepted-task4-qc-receipt-v1.json"
 EXPECTED_ACCEPTANCE_SHA256 = "20483a277d1d1addf87b0f98184cd76fd9dccd878a4f87bd850bb52d9bac05db"
@@ -24,23 +24,23 @@ EXPECTED_APPROVAL_MESSAGE_SHA256 = "59273e1970a6c0be4d938dac88c011a86721ecbb98b4
 TASK4_ACCEPTANCE_REVISION = "e0a5fb2a5"
 EXPECTED_SUBJECTS = {
     "task4_qc_evidence": {
-        "path": "measure/tracks/apk_existing_core_cutover_20260727/task4-advantage-games-qc-evidence-v1.json",
+        "path": "measure/archive/apk_existing_core_cutover_20260727/task4-advantage-games-qc-evidence-v1.json",
         "sha256": "7a9dae4d640f881f76c001be73315b74d07b19258226d01f09390c37adaba058",
     },
     "task4_remediation_evidence": {
-        "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc-remediation.md",
+        "path": "measure/archive/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc-remediation.md",
         "sha256": "c2bdbdeb98dddf140db53e4147b3d2e371d9d83dbf43fae4b0b7dabf372cecf8",
     },
     "k3_independent_zero_finding_rereview": {
-        "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc-rereview.md",
+        "path": "measure/archive/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc-rereview.md",
         "sha256": "ec718ede5041e7b9e16dbafba414ee59c013da205c63928a8a28334e996c61de",
     },
     "doc_correction_verification_addendum": {
-        "path": "measure/tracks/apk_existing_core_cutover_20260727/task4-r1-correction-verification-addendum.md",
+        "path": "measure/archive/apk_existing_core_cutover_20260727/task4-r1-correction-verification-addendum.md",
         "sha256": "d0a3437b53de360dcab6e41fb5461362adbe6f9664a81e8346325be4e24fecb3",
     },
     "accepted_task3_semantic_receipt": {
-        "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
+        "path": "measure/archive/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
         "sha256": "e82d42d9ec046b85eb4aeac7800623bce3c3bf4a39a9c0f44288bd93d07be240",
     },
 }
@@ -196,7 +196,7 @@ class ExistingCoreTask4AcceptanceTests(unittest.TestCase):
         self.assertEqual(
             receipt["product_owner_acceptance"],
             {
-                "path": "measure/tracks/apk_existing_core_cutover_20260727/task4-product-owner-acceptance-v1.json",
+                "path": "measure/archive/apk_existing_core_cutover_20260727/task4-product-owner-acceptance-v1.json",
                 "sha256": EXPECTED_ACCEPTANCE_SHA256,
             },
         )

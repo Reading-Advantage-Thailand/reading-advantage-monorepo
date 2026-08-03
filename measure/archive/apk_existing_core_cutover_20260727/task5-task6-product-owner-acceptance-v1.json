@@ -29,25 +29,25 @@
   },
   "bound_inputs": {
     "prior_non_authorizing_owner_acceptance": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-canonical-reuse-owner-acceptance-v1.json",
-      "sha256": "1caa08071171fe0e43d9bbf35bbddf09605b7d9b1887ce44c3e5bbe939a7da56",
+      "path": "measure/archive/apk_existing_core_cutover_20260727/task5-canonical-reuse-owner-acceptance-v1.json",
+      "sha256": "f4df22aeaf39302d89d6c5fe6e4ade7e48e922b84a38c79569e2d2e44a579c8f",
       "preserved_as_historical": true
     },
     "suitability_governance_acceptance": {
-      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
-      "sha256": "a1e0fdb27d29d86d77362c67db0fa0ef3eb4d26aef4377954e9d5cab6c367a04"
+      "path": "measure/archive/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
+      "sha256": "ccd8b3c37d55c6e124127ad7aff220bec595dd562ab765cff6a5d903c5d3b1a7"
     },
     "canonical_reuse_evidence": {
-      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/task5-canonical-reuse-evidence-v1.json",
-      "sha256": "a602d07e338327c04f5fcbb2a3cede179268aed963c0bc76292569db1eff1257"
+      "path": "measure/archive/apk_standard_pack_suitability_ingestion_20260728/task5-canonical-reuse-evidence-v1.json",
+      "sha256": "dd1217bde4b1500134e3db9c0024cbd4edb9254b36a78f37460b954e9249ab72"
     },
     "dossiers": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-canonical-reuse-dossiers-v1.json",
-      "sha256": "da78c02003654ca777c5ac2486c1a8b04a380460fb51e258a9f4557b35d85c79"
+      "path": "measure/archive/apk_existing_core_cutover_20260727/task5-canonical-reuse-dossiers-v1.json",
+      "sha256": "3633ec9145db315ad4ad72f4c6cfac26b6bda1b508fab4dba1ea813f33845d69"
     },
     "disposition_matrix": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-canonical-reuse-disposition-matrix-v1.json",
-      "sha256": "0a3279437896ec7e6e2f2c0183a3ad75cfb540d1b5394774ff5cd6e151692308"
+      "path": "measure/archive/apk_existing_core_cutover_20260727/task5-canonical-reuse-disposition-matrix-v1.json",
+      "sha256": "f979002c8d305929f4b8e1243f7cac0d4a253b6d79312eaf6088bc3270788b6a"
     },
     "selected_union_inputs": {
       "source": {
@@ -106,24 +106,24 @@
       "unique_key_count": 7
     },
     "current_task3_lineage_receipt": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-current-lineage-receipt-v1.json",
-      "sha256": "ccb574442a6bb2ab839c83e7b4668714019d5b48985b2cb35140158b32a50e3c"
+      "path": "measure/archive/apk_existing_core_cutover_20260727/task3-current-lineage-receipt-v1.json",
+      "sha256": "4e9705182500ceed59d69b17e77eb2af84bcd13b3746c665b730dcb38ca3ac7a"
     },
     "current_task3_lineage_review": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-current-lineage-v1.md",
+      "path": "measure/archive/apk_existing_core_cutover_20260727/review-task3-current-lineage-v1.md",
       "sha256": "2042061ffe67246c56f47cd1c4639ec39e1bd4ec5156952e6b46415fff24a657"
     },
     "accepted_task4_qc_receipt": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-task4-qc-receipt-v1.json",
-      "sha256": "238eadb8c7f1d1fa80fd372f8affd2b2e1fceff78db344746f4c396fca4d0f40"
+      "path": "measure/archive/apk_existing_core_cutover_20260727/accepted-task4-qc-receipt-v1.json",
+      "sha256": "6c6d663bd254f60cb179b040b584bc10c2c805deb34e79242e91c170de39957b"
     },
     "reading_primary_host_proof_evidence": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-reading-primary-host-proof-evidence-v1.json",
-      "sha256": "48015e08b471e19f700a3009029ff863a3c90b8b51a576b4d2143c2b55ece303"
+      "path": "measure/archive/apk_existing_core_cutover_20260727/task5-reading-primary-host-proof-evidence-v1.json",
+      "sha256": "b573e27419d69f6f59a38aa90e97ea879459140a3298420f224c2816b1b0fdbd"
     },
     "reading_host_proof": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-reading-host-proof-playwright-report-v2.json",
-      "sha256": "d5dc02d1d976719b00bce7de20736af2d6d3768f7d19004e4de02bb1555f9a7f",
+      "path": "measure/archive/apk_existing_core_cutover_20260727/task5-reading-host-proof-playwright-report-v2.json",
+      "sha256": "2623ab6f3197dabec7c152ef55cc665e1153248c82e54c7d5119b659d04ad4d4",
       "result_stats": {
         "expected": 41,
         "unexpected": 0,
@@ -132,7 +132,7 @@
       }
     },
     "primary_host_proof": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-primary-host-proof-playwright-report-v1.json",
+      "path": "measure/archive/apk_existing_core_cutover_20260727/task5-primary-host-proof-playwright-report-v1.json",
       "sha256": "e74cd9dd2bfc9eb7f2b09c3a5159aad668b8f15e3fd0f77153e7b33a9345662a",
       "result_stats": {
         "expected": 41,
@@ -143,8 +143,8 @@
     },
     "zero_blocker_audits": [
       {
-        "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/review-task5-canonical-reuse-v1.md",
-        "sha256": "0e2f17bdbd909cde4eeb433ee9ee1749e8c030215624fd00ee062fdd1e379fb8",
+        "path": "measure/archive/apk_standard_pack_suitability_ingestion_20260728/review-task5-canonical-reuse-v1.md",
+        "sha256": "9bce7a32c827a1bcd51de6efa0f360294245ab2e6549a77eb1f20f45d0380f4e",
         "findings": {
           "critical": 0,
           "high": 0,
@@ -153,8 +153,8 @@
         }
       },
       {
-        "path": "measure/tracks/apk_existing_core_cutover_20260727/review-2026-07-31.md",
-        "sha256": "145a6a7cfc44d096d9c7f7874ea86ded535307c2f26cd54f47ac92c64cbb1d94",
+        "path": "measure/archive/apk_existing_core_cutover_20260727/review-2026-07-31.md",
+        "sha256": "05cbd62724ce207cc2bbd5a334bf0e8a9cb0d272020033eadfa949ba2f1d7f9d",
         "findings": {
           "critical": 0,
           "high": 0,

@@ -8,7 +8,7 @@
   "metadata_status": "blocked",
   "not_silent_incomplete": true,
   "phase7_blocker": {
-    "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/phase7-external-blocker-no-packet-2026-08-02.json",
+    "path": "measure/archive/apk_standard_pack_suitability_ingestion_20260728/phase7-external-blocker-no-packet-2026-08-02.json",
     "sha256": "8ef14fa74b5d379093176b1e95fb890fe69fa4848460086974991ee9a39d9552"
   },
   "plan_task_checklist_item": "Advance standard-pack suitability only when a lawful real-asset packet exists; otherwise leave Phase 7 blocked with disclosures and do not invent ingestion.",

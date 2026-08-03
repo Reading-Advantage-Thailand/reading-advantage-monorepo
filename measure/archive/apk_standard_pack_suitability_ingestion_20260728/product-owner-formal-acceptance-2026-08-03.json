@@ -38,16 +38,16 @@
       "sha256": "3efc9b9a88752a089fa07de4fac43cabe6283b0051466661c55a97c1c625c48f"
     },
     "canonical_reuse_evidence": {
-      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/task5-canonical-reuse-evidence-v1.json",
-      "sha256": "a602d07e338327c04f5fcbb2a3cede179268aed963c0bc76292569db1eff1257"
+      "path": "measure/archive/apk_standard_pack_suitability_ingestion_20260728/task5-canonical-reuse-evidence-v1.json",
+      "sha256": "dd1217bde4b1500134e3db9c0024cbd4edb9254b36a78f37460b954e9249ab72"
     },
     "product_owner_acceptance_v2": {
-      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
-      "sha256": "a1e0fdb27d29d86d77362c67db0fa0ef3eb4d26aef4377954e9d5cab6c367a04"
+      "path": "measure/archive/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
+      "sha256": "ccd8b3c37d55c6e124127ad7aff220bec595dd562ab765cff6a5d903c5d3b1a7"
     },
     "independent_review_canonical_reuse": {
-      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/review-task5-canonical-reuse-v1.md",
-      "sha256": "0e2f17bdbd909cde4eeb433ee9ee1749e8c030215624fd00ee062fdd1e379fb8"
+      "path": "measure/archive/apk_standard_pack_suitability_ingestion_20260728/review-task5-canonical-reuse-v1.md",
+      "sha256": "9bce7a32c827a1bcd51de6efa0f360294245ab2e6549a77eb1f20f45d0380f4e"
     },
     "product_owner_provenance_direction": {
       "path": "measure/product-owner-apk-provenance-direction-20260721.json",

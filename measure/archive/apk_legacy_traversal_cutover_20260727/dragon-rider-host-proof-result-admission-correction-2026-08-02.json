@@ -10,7 +10,7 @@
     "technical_reference_commit": "f644d9d01"
   },
   "supersedes": {
-    "record": "measure/tracks/apk_legacy_traversal_cutover_20260727/dragon-rider-host-proof-admission-correction-2026-08-02.json",
+    "record": "measure/archive/apk_legacy_traversal_cutover_20260727/dragon-rider-host-proof-admission-correction-2026-08-02.json",
     "commit": "6169a4436",
     "reason": "The prior correction did not pin current source evidence for boss-power/victory and allowed unsupported client terminal actions. It is not implementation authorization."
   },
@@ -46,7 +46,7 @@
       "DR-CONTROL-001"
     ],
     "current_result_source_evidence": {
-      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/dragon-rider-current-result-source-evidence-2026-08-02.json",
+      "path": "measure/archive/apk_legacy_traversal_cutover_20260727/dragon-rider-current-result-source-evidence-2026-08-02.json",
       "evidence_id": "dragon-rider-host-proof-current-result-source-v1",
       "file_sha256": "433dceda75615b9cf8954225748bdb39ccb897a644a6d672b95df517d60bfae7",
       "range_sha256": "9cc91cc3b7d4606bee91e2ec61c91523895fa7a3eeccef610430563dc5a68fb6"
@@ -59,15 +59,15 @@
   },
   "predecessors": {
     "task2_dossiers": {
-      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/task2-canonical-suitability-dossiers-v2.json",
-      "sha256": "9acc9137a74b4bd5176dee43f6830f56df05ba8cff83b50ac12e2077d58c04a5"
+      "path": "measure/archive/apk_legacy_traversal_cutover_20260727/task2-canonical-suitability-dossiers-v2.json",
+      "sha256": "4235513d916e0ac7dd9083139e51430bb62d3f5c983f25425c6dd3765922e193"
     },
     "task2_qc_only_owner_acceptance": {
-      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/task2-owner-acceptance-v2.json",
-      "sha256": "10480e53f2488bbb088cb6c4ade06a6f77b6164ee9ac308dc970c4dad0edf539",
+      "path": "measure/archive/apk_legacy_traversal_cutover_20260727/task2-owner-acceptance-v2.json",
+      "sha256": "d4b867a2e475fb17d3f6586897f0b5c90d667181303c2712510ad2e152fa870a",
       "superseded_scope_only": "Its QC-only prohibition remains in force for every title except the explicitly bounded Dragon Rider host proof below."
     },
-    "task5_qc_evidence": "measure/tracks/apk_legacy_traversal_cutover_20260727/task5-advantage-games-qc-native-input-evidence-v2.json"
+    "task5_qc_evidence": "measure/archive/apk_legacy_traversal_cutover_20260727/task5-advantage-games-qc-native-input-evidence-v2.json"
   },
   "server_replay_boundary": {
     "client_actions": ["choose-gate"],

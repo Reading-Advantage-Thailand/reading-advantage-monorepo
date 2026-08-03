@@ -6,8 +6,8 @@
   "status": "execution-recorded-only",
   "scope": "local-hidden-reading-primary-host-proof-execution-only",
   "predecessor_authorization": {
-    "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-task4-qc-receipt-v1.json",
-    "sha256": "238eadb8c7f1d1fa80fd372f8affd2b2e1fceff78db344746f4c396fca4d0f40",
+    "path": "measure/archive/apk_existing_core_cutover_20260727/accepted-task4-qc-receipt-v1.json",
+    "sha256": "6c6d663bd254f60cb179b040b584bc10c2c805deb34e79242e91c170de39957b",
     "authorization_status": "authorized-to-begin-task5-reading-primary-host-proof-only"
   },
   "host_contract": {
@@ -28,15 +28,15 @@
       "application": "reading-advantage",
       "base_url": "http://localhost:3128",
       "execution_report": {
-        "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-reading-host-proof-playwright-report-v2.json",
-        "sha256": "d5dc02d1d976719b00bce7de20736af2d6d3768f7d19004e4de02bb1555f9a7f"
+        "path": "measure/archive/apk_existing_core_cutover_20260727/task5-reading-host-proof-playwright-report-v2.json",
+        "sha256": "2623ab6f3197dabec7c152ef55cc665e1153248c82e54c7d5119b659d04ad4d4"
       }
     },
     {
       "application": "primary-advantage",
       "base_url": "http://localhost:3139",
       "execution_report": {
-        "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-primary-host-proof-playwright-report-v1.json",
+        "path": "measure/archive/apk_existing_core_cutover_20260727/task5-primary-host-proof-playwright-report-v1.json",
         "sha256": "e74cd9dd2bfc9eb7f2b09c3a5159aad668b8f15e3fd0f77153e7b33a9345662a"
       }
     }
@@ -151,7 +151,7 @@
       "runner": "kimi-webbridge",
       "base_url": "http://127.0.0.1:3011",
       "execution_report": {
-        "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-reading-host-proof-kimi-report-v1.json",
+        "path": "measure/archive/apk_existing_core_cutover_20260727/task5-reading-host-proof-kimi-report-v1.json",
         "sha256": "8348f29283049af7d7b3b13f84985279643f4c5e390e5fa4dba0fdc108797d40"
       }
     },
@@ -160,7 +160,7 @@
       "runner": "kimi-webbridge",
       "base_url": "http://127.0.0.1:3132",
       "execution_report": {
-        "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-primary-host-proof-kimi-report-v1.json",
+        "path": "measure/archive/apk_existing_core_cutover_20260727/task5-primary-host-proof-kimi-report-v1.json",
         "sha256": "77694fbcb8ce70e5496cbfd79349f2f9f91e44b18224cbed33a22eb4c2c20708"
       }
     }

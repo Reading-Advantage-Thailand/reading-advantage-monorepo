@@ -5,8 +5,8 @@
   "accepted_at": "2026-08-01T00:00:00.000Z",
   "accepted_by": "product-owner",
   "dossier_artifact": {
-    "path": "measure/tracks/apk_legacy_defense_cutover_20260727/task2-standard-pack-suitability-dossiers-v2.json",
-    "sha256": "d9a8d86f7bdf84df0eec1a8d05c5d8b3238c458986a035fe810060d144a75e67",
+    "path": "measure/archive/apk_legacy_defense_cutover_20260727/task2-standard-pack-suitability-dossiers-v2.json",
+    "sha256": "6eab21e515134ce503348aa01458099767b75c2b4cae6669319cc39bb0844ead",
     "descriptor_count": 5,
     "role_count": 16
   },

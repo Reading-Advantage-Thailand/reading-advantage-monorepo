@@ -73,7 +73,7 @@
     "graph": {"existing_read_only_caller_guard":true,"incremental_update_completed":false,"audit":{"missing_files":0,"stale_symbols":28,"orphan_edges":0,"duplicate_nodes":0,"unaudited_symbols":3972},"disclosure":"repo-graph update timed out at both 180s and 600s; new exported symbols are not claimed indexed."}
   },
   "supersedes_historical_quarantine_only_as_candidate": {
-    "path": "measure/tracks/apk_existing_core_cutover_20260727/task6-legacy-retirement-manifest-v1.json",
+    "path": "measure/archive/apk_existing_core_cutover_20260727/task6-legacy-retirement-manifest-v1.json",
     "meaning": "The prior exact zero-deletion record remains immutable evidence for its recorded boundary. This additive work-order candidate replaces only its root-catalog quarantine assumption; it does not grant accepted cutover or deletion authority."
   },
   "authorization": {

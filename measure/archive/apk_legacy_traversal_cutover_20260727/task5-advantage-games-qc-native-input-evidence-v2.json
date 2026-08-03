@@ -5,12 +5,12 @@
   "scope": "Local Chromium proof of the isolated Advantage Games /qc traversal surface only.",
   "accepted_inputs": {
     "task2_dossiers": {
-      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/task2-canonical-suitability-dossiers-v2.json",
-      "sha256": "9acc9137a74b4bd5176dee43f6830f56df05ba8cff83b50ac12e2077d58c04a5"
+      "path": "measure/archive/apk_legacy_traversal_cutover_20260727/task2-canonical-suitability-dossiers-v2.json",
+      "sha256": "4235513d916e0ac7dd9083139e51430bb62d3f5c983f25425c6dd3765922e193"
     },
     "owner_acceptance": {
-      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/task2-owner-acceptance-v2.json",
-      "sha256": "10480e53f2488bbb088cb6c4ade06a6f77b6164ee9ac308dc970c4dad0edf539"
+      "path": "measure/archive/apk_legacy_traversal_cutover_20260727/task2-owner-acceptance-v2.json",
+      "sha256": "d4b867a2e475fb17d3f6586897f0b5c90d667181303c2712510ad2e152fa870a"
     }
   },
   "source": {

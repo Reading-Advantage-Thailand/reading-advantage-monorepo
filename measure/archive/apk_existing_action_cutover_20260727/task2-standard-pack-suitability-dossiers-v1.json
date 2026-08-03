@@ -6,12 +6,12 @@
   "scope": "real-root-accepted-standard-pack-canonical-reuse-only",
   "accepted_governance": {
     "asset_contract_v2_review": {
-      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/current-byte-independent-review-v1.json",
+      "path": "measure/archive/apk_standard_pack_suitability_ingestion_20260728/current-byte-independent-review-v1.json",
       "sha256": "b55be6fbba3526f70ac29930b6f7ae2f55011d19ef7f9ec1d41a7786c4b2873d"
     },
     "asset_governance_owner_decision": {
-      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
-      "sha256": "a1e0fdb27d29d86d77362c67db0fa0ef3eb4d26aef4377954e9d5cab6c367a04"
+      "path": "measure/archive/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
+      "sha256": "ccd8b3c37d55c6e124127ad7aff220bec595dd562ab765cff6a5d903c5d3b1a7"
     },
     "standard_pack_release": {
       "version": "2026.07.23",

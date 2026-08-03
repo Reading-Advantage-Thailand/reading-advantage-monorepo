@@ -6,8 +6,8 @@
   "title_ids": ["enchanted-library","rune-match","alchemists-synthesis","potion-rush","rune-forge-chamber"],
   "host_task": 6,
   "retirement_task": 7,
-  "shared_candidate": {"path":"measure/apk-cross-host-cutover-candidate-v1.json","sha256":"184f1b9c7e65fbc2d48dd199eb6b8f8492843760f4215c03e7cfb540e0a5c923"},
-  "retirement_manifest": {"path":"measure/tracks/apk_legacy_puzzle_cutover_20260727/task7-legacy-retirement-manifest-v1.json","sha256":"832ad3d371c4111a0bb42414115e503419cbe0a4a2cb1b89e04e15ee351156b7"},
+  "shared_candidate": {"path":"measure/apk-cross-host-cutover-candidate-v1.json","sha256":"4ee52e76eaefc2d752c4d980b28627f7d040f0b5514ab6c6095670fa5a805346"},
+  "retirement_manifest": {"path":"measure/archive/apk_legacy_puzzle_cutover_20260727/task7-legacy-retirement-manifest-v1.json","sha256":"c5e74726c716c2443bfbb403da08c73f0f7830cf3bff1ae3644cc84d54ff0eea"},
   "review_scope": "Verify five root loaders, selected-union-only delivery, both 40-case cohort matrices, authoritative duplicate-safe persistence, and retained live route/component/asset ownership.",
   "authorization": {"independent_review_complete":false,"product_owner_acceptance_recorded":false,"cutover_accepted":false,"deployment_authorized":false,"archival_authorized":false}
 }

@@ -15,7 +15,7 @@ from measure.tests.test_apk_existing_core_task6_legacy_retirement import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-TRACK_ROOT = REPO_ROOT / "measure/tracks/apk_existing_core_cutover_20260727"
+TRACK_ROOT = REPO_ROOT / "measure/archive/apk_existing_core_cutover_20260727"
 ACCEPTANCE_PATH = TRACK_ROOT / "task3-product-owner-acceptance-v1.json"
 RECEIPT_PATH = TRACK_ROOT / "accepted-semantic-adoption-receipt-v1.json"
 CORRECTION_PATH = TRACK_ROOT / "task3-evidence-lineage-correction-v1.json"
@@ -38,11 +38,11 @@ EXPECTED_SUBJECTS = {
         "sha256": "85d1ff9012d9bab6311f48ed1571877e78ce680b640939d87154ab80fc9cdffb",
     },
     "remediation_evidence": {
-        "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
+        "path": "measure/archive/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
         "sha256": "9b7df1be5dd9c89c3ea6aa25c6fe01ea4d450b886a472276cd68372ec2154e44",
     },
     "independent_zero_finding_rereview": {
-        "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-rereview.md",
+        "path": "measure/archive/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-rereview.md",
         "sha256": "7c3675aca01499e81eba60dcea049715c4652e1474716a633eb8676d3c28a526",
     },
 }
@@ -282,7 +282,7 @@ class ExistingCoreTask3AcceptanceTests(unittest.TestCase):
         acceptance = _load_object(ACCEPTANCE_PATH)
         receipt = _load_object(RECEIPT_PATH)
         acceptance_binding = {
-            "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-product-owner-acceptance-v1.json",
+            "path": "measure/archive/apk_existing_core_cutover_20260727/task3-product-owner-acceptance-v1.json",
             "sha256": _sha256(ACCEPTANCE_PATH),
         }
 
@@ -393,7 +393,7 @@ class ExistingCoreTask3AcceptanceTests(unittest.TestCase):
         self.assertEqual(receipt["historical_accepted_receipt"]["sha256"], EXPECTED_RECEIPT_SHA256)
         self.assertEqual(receipt["correction"]["sha256"], EXPECTED_CORRECTION_SHA256)
         self.assertEqual(receipt["current_review"], {
-            "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-current-lineage-v1.md",
+            "path": "measure/archive/apk_existing_core_cutover_20260727/review-task3-current-lineage-v1.md",
             "sha256": EXPECTED_CURRENT_LINEAGE_REVIEW_SHA256,
             "disposition": "pass-additive-lineage-integrity",
         })

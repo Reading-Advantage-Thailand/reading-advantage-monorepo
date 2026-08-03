@@ -1,7 +1,7 @@
 # Remediation Evidence: Task 4 — Advantage Games QC Review Findings
 
 - **Track:** `apk_existing_core_cutover_20260727`
-- **Source review:** `measure/tracks/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc.md`
+- **Source review:** `measure/archive/apk_existing_core_cutover_20260727/review-task4-advantage-games-qc.md`
 - **Remediated at:** 2026-07-28T09:55:00Z
 - **Status:** remediated-awaiting-fresh-independent-review-and-owner-acceptance
 - **Owner approval:** not claimed and not implied. Task 4 remains in progress.
@@ -21,8 +21,8 @@
 - `packages/game-cartridges/src/existing-core-cutover-qc.ts` → `6d1730bdb24f3c5effe0bb473d48487fcccf04c0a9964d0311a78d9253347951`
 - `packages/game-cartridges/src/existing-core-cutover.red.test.ts` → `b4808c5d1109a183dc44e3ba2f052e8bb00e18e42b6bbfda489ff7fd87021a9f`
 - `measure/tests/test_apk_existing_core_cutover_task3_acceptance.py` → `4cd5aba20b82fc888b4136af3c837c28891297185b193cbedb7d41434eeeed44`
-- `measure/tracks/apk_existing_core_cutover_20260727/task4-advantage-games-qc-evidence-v1.json` → `7a9dae4d640f881f76c001be73315b74d07b19258226d01f09390c37adaba058`
-- `measure/tracks/apk_existing_core_cutover_20260727/metadata.json` → bound through this remediation's `review_remediations` entry; hash excluded to avoid a circular self-reference.
+- `measure/archive/apk_existing_core_cutover_20260727/task4-advantage-games-qc-evidence-v1.json` → `7a9dae4d640f881f76c001be73315b74d07b19258226d01f09390c37adaba058`
+- `measure/archive/apk_existing_core_cutover_20260727/metadata.json` → bound through this remediation's `review_remediations` entry; hash excluded to avoid a circular self-reference.
 
 ## Gate Re-Runs (caches bypassed where applicable)
 

@@ -13,7 +13,7 @@ from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-CORE_TRACK = REPO_ROOT / "measure/tracks/apk_existing_core_cutover_20260727"
+CORE_TRACK = REPO_ROOT / "measure/archive/apk_existing_core_cutover_20260727"
 MANIFEST_PATH = CORE_TRACK / "task6-legacy-retirement-manifest-v1.json"
 ACCEPTANCE_PATH = CORE_TRACK / "task5-task6-product-owner-acceptance-v1.json"
 MATRIX_PATH = CORE_TRACK / "task5-canonical-reuse-disposition-matrix-v1.json"
@@ -355,7 +355,7 @@ class ExistingCoreTask6LegacyRetirementTests(unittest.TestCase):
         self.assertEqual(candidate["base_revision"], "39a9a2b86184a13f8a20253d0adfa7294783cf18")
         self.assertEqual(
             _sha256(SUCCESSOR_CANDIDATE_PATH),
-            "184f1b9c7e65fbc2d48dd199eb6b8f8492843760f4215c03e7cfb540e0a5c923",
+            "4ee52e76eaefc2d752c4d980b28627f7d040f0b5514ab6c6095670fa5a805346",
         )
         live_drift: list[str] = []
         for binding in candidate["bound_current_files"]:
@@ -508,7 +508,7 @@ class ExistingCoreTask6LegacyRetirementTests(unittest.TestCase):
         self.assertEqual(candidate["title_count"], 24)
         self.assertEqual(
             _sha256(SUCCESSOR_CANDIDATE_PATH),
-            "184f1b9c7e65fbc2d48dd199eb6b8f8492843760f4215c03e7cfb540e0a5c923",
+            "4ee52e76eaefc2d752c4d980b28627f7d040f0b5514ab6c6095670fa5a805346",
         )
         self.assertEqual(set(candidate["authorization"].values()), {False})
 

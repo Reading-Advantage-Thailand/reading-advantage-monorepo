@@ -7,8 +7,8 @@
   "decided_by": "explicit-user-directed project-owner scope",
   "authority": "explicit user instruction for bounded traversal Tasks 1–5 remediation",
   "accepted_input": {
-    "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/task2-canonical-suitability-dossiers-v2.json",
-    "sha256": "9acc9137a74b4bd5176dee43f6830f56df05ba8cff83b50ac12e2077d58c04a5",
+    "path": "measure/archive/apk_legacy_traversal_cutover_20260727/task2-canonical-suitability-dossiers-v2.json",
+    "sha256": "4235513d916e0ac7dd9083139e51430bb62d3f5c983f25425c6dd3765922e193",
     "title_count": 5,
     "role_dossier_count": 19,
     "required_fields": ["claim_provenance", "descriptor_id", "decision", "selected_union"]

@@ -10,8 +10,8 @@
     "astral-mage"
   ],
   "source_manifest": {
-    "path": "measure/tracks/apk_existing_core_cutover_20260727/task6-legacy-retirement-manifest-v1.json",
-    "sha256": "6f9cb1537e6acb824dc0f582ea6ceedd99283d3626d3fc668ac03147ae60cd53"
+    "path": "measure/archive/apk_existing_core_cutover_20260727/task6-legacy-retirement-manifest-v1.json",
+    "sha256": "9fb46d2800b8fb1a542669cff4547331fd1de618d7552435cc5bdacc7c1687a2"
   },
   "decision": "retain-until-accepted-production-route-cutover",
   "reason": "The new root wrappers are exercised only by hidden host-proof routes. Existing production student routes and their direct asset trees remain live, while Sorcerer's Ziggurat and Astral Mage have no legacy source to delete.",

@@ -5,11 +5,11 @@
   "status": "canonical-reuse-suitable-for-task3-to-task5-qc",
   "basis": {
     "asset_contract_v2_owner_acceptance": {
-      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
+      "path": "measure/archive/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
       "decision": "ACCEPT_BOUNDED_EVIDENCE_ONLY_INGESTION_GOVERNANCE",
       "scope": "The T11 owner-approved semantic bindings and accepted root standard-pack release are the only forward asset source; this record does not accept a legacy source byte."
     },
-    "source_readiness_manifest": "measure/tracks/apk_legacy_traversal_cutover_20260727/task1-source-readiness-manifest-v1.json",
+    "source_readiness_manifest": "measure/archive/apk_legacy_traversal_cutover_20260727/task1-source-readiness-manifest-v1.json",
     "semantic_binding_source": "packages/advantage-play-kit/src/assets/semantic-product-bindings.ts",
     "canonical_release": {
       "version": "2026.07.23",

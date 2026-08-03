@@ -15,12 +15,12 @@ DEFERRED_AUTHORITY = (
 )
 
 PACKAGES = [
-    REPO_ROOT / "measure/tracks/apk_existing_core_cutover_20260727/retirement-disposition-package-2026-08-02.json",
-    REPO_ROOT / "measure/tracks/apk_existing_action_cutover_20260727/retirement-disposition-package-2026-08-02.json",
-    REPO_ROOT / "measure/tracks/apk_legacy_defense_cutover_20260727/retirement-disposition-package-2026-08-02.json",
-    REPO_ROOT / "measure/tracks/apk_legacy_traversal_cutover_20260727/retirement-disposition-package-2026-08-02.json",
-    REPO_ROOT / "measure/tracks/apk_legacy_puzzle_cutover_20260727/retirement-disposition-package-2026-08-02.json",
-    REPO_ROOT / "measure/tracks/apk_cross_host_closeout_20260727/retirement-disposition-package-2026-08-02.json",
+    REPO_ROOT / "measure/archive/apk_existing_core_cutover_20260727/retirement-disposition-package-2026-08-02.json",
+    REPO_ROOT / "measure/archive/apk_existing_action_cutover_20260727/retirement-disposition-package-2026-08-02.json",
+    REPO_ROOT / "measure/archive/apk_legacy_defense_cutover_20260727/retirement-disposition-package-2026-08-02.json",
+    REPO_ROOT / "measure/archive/apk_legacy_traversal_cutover_20260727/retirement-disposition-package-2026-08-02.json",
+    REPO_ROOT / "measure/archive/apk_legacy_puzzle_cutover_20260727/retirement-disposition-package-2026-08-02.json",
+    REPO_ROOT / "measure/archive/apk_cross_host_closeout_20260727/retirement-disposition-package-2026-08-02.json",
 ]
 
 

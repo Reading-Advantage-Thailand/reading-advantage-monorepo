@@ -6,8 +6,8 @@
   "title_ids": ["archers-revenge","paladins-twin-soul","griffin-sky-joust","gryphon-patrol","realm-carver"],
   "host_task": 6,
   "retirement_task": 7,
-  "shared_candidate": {"path":"measure/apk-cross-host-cutover-candidate-v1.json","sha256":"184f1b9c7e65fbc2d48dd199eb6b8f8492843760f4215c03e7cfb540e0a5c923"},
-  "retirement_manifest": {"path":"measure/tracks/apk_existing_action_cutover_20260727/task7-legacy-retirement-manifest-v1.json","sha256":"223d8ee1b7cccb705af22b7e1de38bed14d0ad81dd990856ed01465fc8d58668"},
+  "shared_candidate": {"path":"measure/apk-cross-host-cutover-candidate-v1.json","sha256":"4ee52e76eaefc2d752c4d980b28627f7d040f0b5514ab6c6095670fa5a805346"},
+  "retirement_manifest": {"path":"measure/archive/apk_existing_action_cutover_20260727/task7-legacy-retirement-manifest-v1.json","sha256":"846c258663f760d124c31b54294e525c4f19a71a5cb9d4b0261641f1eea71bb1"},
   "review_scope": "Verify five root loaders, selected-union-only delivery, both 40-case cohort matrices, authoritative duplicate-safe persistence, and retained coming-soon catalog ownership.",
   "authorization": {"independent_review_complete":false,"product_owner_acceptance_recorded":false,"cutover_accepted":false,"deployment_authorized":false,"archival_authorized":false}
 }

@@ -10,7 +10,7 @@ from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-TRACK_ROOT = REPO_ROOT / "measure/tracks/apk_existing_action_cutover_20260727"
+TRACK_ROOT = REPO_ROOT / "measure/archive/apk_existing_action_cutover_20260727"
 MANIFEST_PATH = TRACK_ROOT / "task1-source-readiness-manifest-v1.json"
 
 EXPECTED_BINDINGS = {

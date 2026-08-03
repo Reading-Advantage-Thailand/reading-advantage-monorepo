@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-TRACK_ROOT = REPO_ROOT / "measure/tracks/apk_existing_core_cutover_20260727"
+TRACK_ROOT = REPO_ROOT / "measure/archive/apk_existing_core_cutover_20260727"
 EVIDENCE_PATH = TRACK_ROOT / "task5-reading-primary-host-proof-evidence-v1.json"
 READING_REPORT_PATH = TRACK_ROOT / "task5-reading-host-proof-playwright-report-v2.json"
 READING_HISTORICAL_REPORT_PATH = TRACK_ROOT / "task5-reading-host-proof-playwright-report-v1.json"

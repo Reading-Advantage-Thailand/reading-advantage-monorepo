@@ -3,7 +3,7 @@
   "status": "candidate-non-consumable",
   "cohort": "existing-action",
   "title_ids": ["archers-revenge","paladins-twin-soul","griffin-sky-joust","gryphon-patrol","realm-carver"],
-  "source_manifest": {"path":"measure/tracks/apk_existing_action_cutover_20260727/task1-source-readiness-manifest-v1.json","sha256":"d90983b305172874cdb3e7eb16b72189e5d35122041437efcb51ad099b84b827"},
+  "source_manifest": {"path":"measure/archive/apk_existing_action_cutover_20260727/task1-source-readiness-manifest-v1.json","sha256":"d90983b305172874cdb3e7eb16b72189e5d35122041437efcb51ad099b84b827"},
   "decision": "retain-until-accepted-production-route-cutover",
   "reason": "The legacy gameplay implementations are already absent, but current coming-soon catalog metadata and cover art remain owned by Advantage Games until an accepted production navigation cutover replaces them.",
   "deleted_paths": [],

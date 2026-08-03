@@ -5,43 +5,43 @@
   "task_number": 3,
   "status": "current-lineage-verified-additive",
   "historical_acceptance": {
-    "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-product-owner-acceptance-v1.json",
-    "sha256": "3f4aaa7029d637b3ed130c7131750f8caeb28e15b5cb6f65fb5f9e55ceec361f"
+    "path": "measure/archive/apk_existing_core_cutover_20260727/task3-product-owner-acceptance-v1.json",
+    "sha256": "7334132c67383534db02a7080681d807821f73b67815ddcf3085d9b47ef8168e"
   },
   "historical_accepted_receipt": {
-    "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
-    "sha256": "efc1488eba5d40db891f9316e4e972905b6e56b4bc928c876c74f2a7b541bc02"
+    "path": "measure/archive/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
+    "sha256": "dbe9f82779ac4bfd26ce5e2bdb599a241b7c399cc211d3d296a5e35147a72fd6"
   },
   "correction": {
-    "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-evidence-lineage-correction-v1.json",
-    "sha256": "483417c82e292f71daf80e89906ac02aa369eb87bf6ccd694cd60040d69235f0"
+    "path": "measure/archive/apk_existing_core_cutover_20260727/task3-evidence-lineage-correction-v1.json",
+    "sha256": "88c684a8f041bf4d0ce9bfca89fd05e409dffc0a1e332104f7ea5ea3bc1f8f24"
   },
   "historical_accepted_subjects": {
     "remediation_evidence": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
+      "path": "measure/archive/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
       "sha256": "e2ee8519bc9afe35d5d8dedd55a3430390cfacdc27284830b59dbcfdc579b1fb",
-      "recovered_snapshot": "measure/tracks/apk_existing_core_cutover_20260727/task3-accepted-remediation-snapshot-v1.b64"
+      "recovered_snapshot": "measure/archive/apk_existing_core_cutover_20260727/task3-accepted-remediation-snapshot-v1.b64"
     },
     "independent_zero_finding_rereview": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-rereview.md",
+      "path": "measure/archive/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-rereview.md",
       "sha256": "ac8eccd4fed958add9af9b3fd526c4de748f8510909c8d767d288b3ae830e076",
-      "recovered_snapshot": "measure/tracks/apk_existing_core_cutover_20260727/task3-accepted-rereview-snapshot-v1.b64"
+      "recovered_snapshot": "measure/archive/apk_existing_core_cutover_20260727/task3-accepted-rereview-snapshot-v1.b64"
     }
   },
   "current_descendants": {
     "remediation_evidence": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
+      "path": "measure/archive/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
       "sha256": "e2ee8519bc9afe35d5d8dedd55a3430390cfacdc27284830b59dbcfdc579b1fb",
       "drift": "markdown-hard-line-break-trailing-space-normalization-only"
     },
     "independent_zero_finding_rereview": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-rereview.md",
+      "path": "measure/archive/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-rereview.md",
       "sha256": "ac8eccd4fed958add9af9b3fd526c4de748f8510909c8d767d288b3ae830e076",
       "drift": "markdown-hard-line-break-trailing-space-normalization-only"
     }
   },
   "current_review": {
-    "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-current-lineage-v1.md",
+    "path": "measure/archive/apk_existing_core_cutover_20260727/review-task3-current-lineage-v1.md",
     "sha256": "2042061ffe67246c56f47cd1c4639ec39e1bd4ec5156952e6b46415fff24a657",
     "disposition": "pass-additive-lineage-integrity"
   },

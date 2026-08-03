@@ -18,41 +18,41 @@
   "approved_scope": "The exact hash-bound five-title, 17-role canonical-reuse dossiers and disposition matrix are approved as non-authorizing evidence. No real legacy asset or production release is accepted.",
   "bound_inputs": {
     "suitability_governance_owner_acceptance": {
-      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
-      "sha256": "a1e0fdb27d29d86d77362c67db0fa0ef3eb4d26aef4377954e9d5cab6c367a04",
+      "path": "measure/archive/apk_standard_pack_suitability_ingestion_20260728/product-owner-acceptance-v2.json",
+      "sha256": "ccd8b3c37d55c6e124127ad7aff220bec595dd562ab765cff6a5d903c5d3b1a7",
       "scope": "accepted evidence-only ingestion governance; no real title or asset acceptance"
     },
     "current_task3_lineage_receipt": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/task3-current-lineage-receipt-v1.json",
-      "sha256": "ccb574442a6bb2ab839c83e7b4668714019d5b48985b2cb35140158b32a50e3c"
+      "path": "measure/archive/apk_existing_core_cutover_20260727/task3-current-lineage-receipt-v1.json",
+      "sha256": "4e9705182500ceed59d69b17e77eb2af84bcd13b3746c665b730dcb38ca3ac7a"
     },
     "task3_current_lineage_review": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-current-lineage-v1.md",
+      "path": "measure/archive/apk_existing_core_cutover_20260727/review-task3-current-lineage-v1.md",
       "sha256": "2042061ffe67246c56f47cd1c4639ec39e1bd4ec5156952e6b46415fff24a657"
     },
     "accepted_semantic_adoption_receipt": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
-      "sha256": "efc1488eba5d40db891f9316e4e972905b6e56b4bc928c876c74f2a7b541bc02"
+      "path": "measure/archive/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
+      "sha256": "dbe9f82779ac4bfd26ce5e2bdb599a241b7c399cc211d3d296a5e35147a72fd6"
     },
     "accepted_task4_qc_receipt": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/accepted-task4-qc-receipt-v1.json",
-      "sha256": "238eadb8c7f1d1fa80fd372f8affd2b2e1fceff78db344746f4c396fca4d0f40"
+      "path": "measure/archive/apk_existing_core_cutover_20260727/accepted-task4-qc-receipt-v1.json",
+      "sha256": "6c6d663bd254f60cb179b040b584bc10c2c805deb34e79242e91c170de39957b"
     },
     "canonical_reuse_evidence": {
-      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/task5-canonical-reuse-evidence-v1.json",
-      "sha256": "a602d07e338327c04f5fcbb2a3cede179268aed963c0bc76292569db1eff1257"
+      "path": "measure/archive/apk_standard_pack_suitability_ingestion_20260728/task5-canonical-reuse-evidence-v1.json",
+      "sha256": "dd1217bde4b1500134e3db9c0024cbd4edb9254b36a78f37460b954e9249ab72"
     },
     "dossiers": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-canonical-reuse-dossiers-v1.json",
-      "sha256": "da78c02003654ca777c5ac2486c1a8b04a380460fb51e258a9f4557b35d85c79"
+      "path": "measure/archive/apk_existing_core_cutover_20260727/task5-canonical-reuse-dossiers-v1.json",
+      "sha256": "3633ec9145db315ad4ad72f4c6cfac26b6bda1b508fab4dba1ea813f33845d69"
     },
     "disposition_matrix": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-canonical-reuse-disposition-matrix-v1.json",
-      "sha256": "0a3279437896ec7e6e2f2c0183a3ad75cfb540d1b5394774ff5cd6e151692308"
+      "path": "measure/archive/apk_existing_core_cutover_20260727/task5-canonical-reuse-disposition-matrix-v1.json",
+      "sha256": "f979002c8d305929f4b8e1243f7cac0d4a253b6d79312eaf6088bc3270788b6a"
     },
     "independent_canonical_reuse_review": {
-      "path": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/review-task5-canonical-reuse-v1.md",
-      "sha256": "0e2f17bdbd909cde4eeb433ee9ee1749e8c030215624fd00ee062fdd1e379fb8"
+      "path": "measure/archive/apk_standard_pack_suitability_ingestion_20260728/review-task5-canonical-reuse-v1.md",
+      "sha256": "9bce7a32c827a1bcd51de6efa0f360294245ab2e6549a77eb1f20f45d0380f4e"
     }
   },
   "authorization": {

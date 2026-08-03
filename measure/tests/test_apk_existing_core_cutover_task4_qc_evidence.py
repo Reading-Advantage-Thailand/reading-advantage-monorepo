@@ -19,12 +19,12 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parents[2]
 EVIDENCE_PATH = (
     REPO_ROOT
-    / "measure/tracks/apk_existing_core_cutover_20260727"
+    / "measure/archive/apk_existing_core_cutover_20260727"
     / "task4-advantage-games-qc-evidence-v1.json"
 )
 SEMANTIC_ADOPTION_RECEIPT_PATH = (
     REPO_ROOT
-    / "measure/tracks/apk_existing_core_cutover_20260727"
+    / "measure/archive/apk_existing_core_cutover_20260727"
     / "accepted-semantic-adoption-receipt-v1.json"
 )
 EXPECTED_EVIDENCE_SHA256 = "7a9dae4d640f881f76c001be73315b74d07b19258226d01f09390c37adaba058"

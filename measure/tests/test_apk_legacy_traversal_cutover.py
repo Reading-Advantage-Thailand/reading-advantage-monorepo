@@ -10,7 +10,7 @@ from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-TRACK = REPO_ROOT / "measure/tracks/apk_legacy_traversal_cutover_20260727"
+TRACK = REPO_ROOT / "measure/archive/apk_legacy_traversal_cutover_20260727"
 MANIFEST = TRACK / "task1-source-readiness-manifest-v1.json"
 DOSSIERS = TRACK / "task2-canonical-suitability-dossiers-v2.json"
 OWNER_ACCEPTANCE = TRACK / "task2-owner-acceptance-v2.json"

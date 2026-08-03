@@ -18,7 +18,7 @@ FIXTURE_PATH = (
 )
 LOCATOR_CORRECTION_PATH = (
     REPO_ROOT
-    / "measure/tracks/apk_existing_core_cutover_20260727"
+    / "measure/archive/apk_existing_core_cutover_20260727"
     / "task3-planning-authorization-locator-correction-v1.json"
 )
 EXPECTED_LOCATOR_CORRECTION_SHA256 = "d511895ef3ecc78c7c7813c0a07609fc9d7529411b182f288d37e0bdb9384a73"

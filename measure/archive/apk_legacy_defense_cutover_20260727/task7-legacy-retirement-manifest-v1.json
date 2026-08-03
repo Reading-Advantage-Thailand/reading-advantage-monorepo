@@ -3,7 +3,7 @@
   "status": "candidate-non-consumable",
   "cohort": "legacy-defense",
   "title_ids": ["castle-defense","wizard-vs-zombie","village-guardian","storm-castle-tower"],
-  "source_manifest": {"path":"measure/tracks/apk_legacy_defense_cutover_20260727/task1-source-readiness-manifest-v1.json","sha256":"7dcd6e883141d3805a05d404cebeb84895612c03d8031f02230f2980d9d3b803"},
+  "source_manifest": {"path":"measure/archive/apk_legacy_defense_cutover_20260727/task1-source-readiness-manifest-v1.json","sha256":"7dcd6e883141d3805a05d404cebeb84895612c03d8031f02230f2980d9d3b803"},
   "decision": "retain-until-accepted-production-route-cutover",
   "reason": "Castle Defense, Wizard vs Zombie, and Village Guardian still have live production routes or direct components. Storm the Castle Tower remains coming-soon catalog metadata. Hidden host proof does not supersede those owners.",
   "deleted_paths": [],

@@ -10,7 +10,7 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TRACK_ID = "apk_standard_pack_suitability_ingestion_20260728"
-TRACK_ROOT = REPO_ROOT / "measure/tracks" / TRACK_ID
+TRACK_ROOT = REPO_ROOT / "measure/archive" / TRACK_ID
 PLAN_PATH = TRACK_ROOT / "plan.md"
 METADATA_PATH = TRACK_ROOT / "metadata.json"
 REGISTRY_PATH = REPO_ROOT / "measure/tracks.md"

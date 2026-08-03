@@ -3,8 +3,8 @@
   "status": "exact-retirement-complete-with-residuals",
   "recorded_at": "2026-07-31",
   "predecessor": {
-    "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-task6-product-owner-acceptance-v1.json",
-    "sha256": "fe74c2881cfc02e169c23e46bfc4affd46e51b4104b9a73323ec7169b3f430f9",
+    "path": "measure/archive/apk_existing_core_cutover_20260727/task5-task6-product-owner-acceptance-v1.json",
+    "sha256": "98c2b7c7a59ea6ba43d3f461beb0d23db25ee2c7d1a230da9ecef1d9e0f42f8a",
     "task6_begin_authorized": true,
     "reading_host_results": {
       "expected": 41,
@@ -28,7 +28,7 @@
       "astral-mage"
     ],
     "role_count": 17,
-    "source_inventory": "measure/tracks/apk_existing_core_cutover_20260727/task5-legacy-source-inventory-v1.json",
+    "source_inventory": "measure/archive/apk_existing_core_cutover_20260727/task5-legacy-source-inventory-v1.json",
     "source_inventory_sha256": "34feb2a6894aedd31cf99ceac873fcaf4636415f6b3b531429a23d7d55d13432"
   },
   "decision": {

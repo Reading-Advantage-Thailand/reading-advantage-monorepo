@@ -43,11 +43,11 @@ complete host proof, cut over a cartridge, deploy, or authorize production use.
 | `measure/tests/test_apk_existing_core_task5_canonical_reuse_suitability.py` | `13c32edbd6d706aa6d059c9678dd7ca4b1f651b4a272db597d158f7e5104414b` |
 | `measure/tests/test_apk_existing_core_cutover_task3_acceptance.py` | `aa5af84a6a393f082c95f3a134f7e142d8244817f876e526f7e584f9916c7424` |
 | `measure/tests/test_apk_existing_core_cutover_task5_host_proof_evidence.py` | `9a82f582b6433c802ab08e34bcace711f281634c236ca2af7260c4a4e63714ce` |
-| `measure/tracks/apk_standard_pack_suitability_ingestion_20260728/task5-canonical-reuse-evidence-v1.json` | `a602d07e338327c04f5fcbb2a3cede179268aed963c0bc76292569db1eff1257` |
-| `measure/tracks/apk_existing_core_cutover_20260727/task5-canonical-reuse-dossiers-v1.json` | `da78c02003654ca777c5ac2486c1a8b04a380460fb51e258a9f4557b35d85c79` |
-| `measure/tracks/apk_existing_core_cutover_20260727/task5-canonical-reuse-disposition-matrix-v1.json` | `e6ac0a592840eff4d3664c23c5c11e70e404f0f787b419e9f6f9a3c066b86489` |
-| `measure/tracks/apk_existing_core_cutover_20260727/task3-current-lineage-receipt-v1.json` | `c5ccb0ac3b54474e2ad99badb2aef5c1608689e57559e2f26c6fb489a5513d7f` |
-| `measure/tracks/apk_existing_core_cutover_20260727/review-task3-current-lineage-v1.md` | `2042061ffe67246c56f47cd1c4639ec39e1bd4ec5156952e6b46415fff24a657` |
+| `measure/archive/apk_standard_pack_suitability_ingestion_20260728/task5-canonical-reuse-evidence-v1.json` | `a602d07e338327c04f5fcbb2a3cede179268aed963c0bc76292569db1eff1257` |
+| `measure/archive/apk_existing_core_cutover_20260727/task5-canonical-reuse-dossiers-v1.json` | `da78c02003654ca777c5ac2486c1a8b04a380460fb51e258a9f4557b35d85c79` |
+| `measure/archive/apk_existing_core_cutover_20260727/task5-canonical-reuse-disposition-matrix-v1.json` | `e6ac0a592840eff4d3664c23c5c11e70e404f0f787b419e9f6f9a3c066b86489` |
+| `measure/archive/apk_existing_core_cutover_20260727/task3-current-lineage-receipt-v1.json` | `c5ccb0ac3b54474e2ad99badb2aef5c1608689e57559e2f26c6fb489a5513d7f` |
+| `measure/archive/apk_existing_core_cutover_20260727/review-task3-current-lineage-v1.md` | `2042061ffe67246c56f47cd1c4639ec39e1bd4ec5156952e6b46415fff24a657` |
 | `apps/primary-advantage/tests/e2e/host-proof-games.spec.ts` | `2f8191da34e4af508310cb2ffdf9c6b69f50f5d1ba101a039e3b448d1bbe9299` |
 
 The historical Task-3 acceptance and accepted receipt remain bound to their

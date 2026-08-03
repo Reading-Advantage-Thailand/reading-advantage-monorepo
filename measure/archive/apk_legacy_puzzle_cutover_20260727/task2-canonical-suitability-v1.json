@@ -5,7 +5,7 @@
   "status": "canonical-descriptor-comparison-only",
   "scope": "candidate-cartridge-qc-only",
   "basis": {
-    "source_readiness_manifest": "measure/tracks/apk_legacy_puzzle_cutover_20260727/task1-source-readiness-manifest-v1.json",
+    "source_readiness_manifest": "measure/archive/apk_legacy_puzzle_cutover_20260727/task1-source-readiness-manifest-v1.json",
     "asset_contract_v2": "packages/advantage-play-kit/src/assets/asset-contract-v2.ts",
     "canonical_comparison": "packages/advantage-play-kit/src/assets/standard-pack-suitability-search.ts",
     "accepted_release": {

@@ -53,3 +53,5 @@ Evidence (ephemeral session SCRATCH, not committed): `/tmp/grok-goal-09ea4fc2bd1
 2. Prefer **reasonix** for any bulk formal/doc/port work.
 3. Do **not** agent self-sign complete; product-owner formals already bind option-1 authority.
 4. Archive tracks only after independent review if still required by Measure closeout.
+
+Archived 2026-08-03: the 7 track dirs moved to measure/archive/; the fact table remains pinned at measure/tracks/apk_option1_terminal_truth_20260803.json.

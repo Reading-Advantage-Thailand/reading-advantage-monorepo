@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
-TRACK = REPO / "measure/tracks/apk_standard_pack_suitability_ingestion_20260728"
+TRACK = REPO / "measure/archive/apk_standard_pack_suitability_ingestion_20260728"
 CLARIFICATION = TRACK / "phase7-scope-clarification-2026-08-03.json"
 META = TRACK / "metadata.json"
 LICENSE = REPO / "packages/advantage-play-kit/assets/standard/LICENSE-ELVGAMES.txt"

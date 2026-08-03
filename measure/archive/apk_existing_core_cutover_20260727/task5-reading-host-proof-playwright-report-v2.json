@@ -10,7 +10,7 @@
   "authentication_fixture": "idempotent-seeded-local-student-and-setup-storage-state-without-secret-recording",
   "database_fixture": "local-reading-postgresql-fixture-without-credential-recording",
   "supersedes": {
-    "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-reading-host-proof-playwright-report-v1.json",
+    "path": "measure/archive/apk_existing_core_cutover_20260727/task5-reading-host-proof-playwright-report-v1.json",
     "sha256": "ab21a6ab2edc46e1d88fb8b79fa7c94bf6a15cac8c4517df2245a9fd076e0423",
     "reason": "Replaces the historical-before-remediation Reading observation with a current-source setup-backed rerun."
   },

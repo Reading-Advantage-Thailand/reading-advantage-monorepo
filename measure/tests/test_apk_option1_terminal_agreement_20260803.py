@@ -40,7 +40,7 @@ def _sha256(path: Path) -> str:
 def _formal_path(track_id: str) -> Path:
     return (
         REPO_ROOT
-        / "measure/tracks"
+        / "measure/archive"
         / track_id
         / "product-owner-formal-acceptance-2026-08-02.json"
     )
@@ -49,14 +49,14 @@ def _formal_path(track_id: str) -> Path:
 def _retirement_path(track_id: str) -> Path:
     return (
         REPO_ROOT
-        / "measure/tracks"
+        / "measure/archive"
         / track_id
         / "retirement-disposition-package-2026-08-02.json"
     )
 
 
 def _metadata_path(track_id: str) -> Path:
-    return REPO_ROOT / "measure/tracks" / track_id / "metadata.json"
+    return REPO_ROOT / "measure/archive" / track_id / "metadata.json"
 
 
 class ApkOption1TerminalAgreementTests(unittest.TestCase):

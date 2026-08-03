@@ -9,7 +9,7 @@ from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-TRACK_ROOT = REPO_ROOT / "measure/tracks/apk_legacy_defense_cutover_20260727"
+TRACK_ROOT = REPO_ROOT / "measure/archive/apk_legacy_defense_cutover_20260727"
 SUITABILITY_PATH = TRACK_ROOT / "task2-standard-pack-suitability-dossiers-v2.json"
 OWNER_ACCEPTANCE_PATH = TRACK_ROOT / "task2-owner-acceptance-v2.json"
 TASK5_EVIDENCE_PATH = TRACK_ROOT / "task5-advantage-games-qc-native-input-evidence-v2.json"

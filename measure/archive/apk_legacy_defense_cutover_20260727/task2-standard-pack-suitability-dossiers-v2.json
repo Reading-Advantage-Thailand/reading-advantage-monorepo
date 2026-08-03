@@ -20,7 +20,7 @@
     "credit": {"path":"packages/advantage-play-kit/assets/standard/README.md","sha256":"6ace14005c2d155ed24376e6dbd6e02a53906db660866eccb1ba38868f0e04cb","required_text":"Pixel art assets by ElvGames"}
   },
   "comparison_evidence": {
-    "visual": {"path":"measure/tracks/apk_standard_pack_suitability_ingestion_20260728/current-byte-independent-review-v1.json","sha256":"b55be6fbba3526f70ac29930b6f7ae2f55011d19ef7f9ec1d41a7786c4b2873d"},
+    "visual": {"path":"measure/archive/apk_standard_pack_suitability_ingestion_20260728/current-byte-independent-review-v1.json","sha256":"b55be6fbba3526f70ac29930b6f7ae2f55011d19ef7f9ec1d41a7786c4b2873d"},
     "technical": "this-artifact"
   },
   "descriptors": [

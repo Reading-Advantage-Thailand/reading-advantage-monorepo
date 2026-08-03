@@ -34,11 +34,11 @@
       "sha256": "85d1ff9012d9bab6311f48ed1571877e78ce680b640939d87154ab80fc9cdffb"
     },
     "remediation_evidence": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
+      "path": "measure/archive/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-remediation.md",
       "sha256": "e2ee8519bc9afe35d5d8dedd55a3430390cfacdc27284830b59dbcfdc579b1fb"
     },
     "independent_zero_finding_rereview": {
-      "path": "measure/tracks/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-rereview.md",
+      "path": "measure/archive/apk_existing_core_cutover_20260727/review-task3-semantic-candidates-rereview.md",
       "sha256": "ac8eccd4fed958add9af9b3fd526c4de748f8510909c8d767d288b3ae830e076"
     }
   },

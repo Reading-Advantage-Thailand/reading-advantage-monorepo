@@ -6,8 +6,8 @@
   "title_ids": ["castle-defense","wizard-vs-zombie","village-guardian","storm-castle-tower"],
   "host_task": 6,
   "retirement_task": 7,
-  "shared_candidate": {"path":"measure/apk-cross-host-cutover-candidate-v1.json","sha256":"184f1b9c7e65fbc2d48dd199eb6b8f8492843760f4215c03e7cfb540e0a5c923"},
-  "retirement_manifest": {"path":"measure/tracks/apk_legacy_defense_cutover_20260727/task7-legacy-retirement-manifest-v1.json","sha256":"ff2566f1f4078a9c545c5da3e4cf0957c6760c81beea85ad6f782491b371d44a"},
+  "shared_candidate": {"path":"measure/apk-cross-host-cutover-candidate-v1.json","sha256":"4ee52e76eaefc2d752c4d980b28627f7d040f0b5514ab6c6095670fa5a805346"},
+  "retirement_manifest": {"path":"measure/archive/apk_legacy_defense_cutover_20260727/task7-legacy-retirement-manifest-v1.json","sha256":"a2797583a67dffdaaa1548bfaa690e842e18e0a4f658dd9a23d52ea6b153455d"},
   "review_scope": "Verify four root loaders, selected-union-only delivery, both 32-case cohort matrices, authoritative duplicate-safe persistence, and retained live route/asset ownership.",
   "authorization": {"independent_review_complete":false,"product_owner_acceptance_recorded":false,"cutover_accepted":false,"deployment_authorized":false,"archival_authorized":false}
 }

@@ -3,7 +3,7 @@
   "status": "candidate-non-consumable",
   "cohort": "legacy-puzzle",
   "title_ids": ["enchanted-library","rune-match","alchemists-synthesis","potion-rush","rune-forge-chamber"],
-  "source_manifest": {"path":"measure/tracks/apk_legacy_puzzle_cutover_20260727/task1-source-readiness-manifest-v1.json","sha256":"ec05685c3486bfec695deb751c4ee649fa52e390dc3af6bb29ac08a085c0d52c"},
+  "source_manifest": {"path":"measure/archive/apk_legacy_puzzle_cutover_20260727/task1-source-readiness-manifest-v1.json","sha256":"74872e3e2532c0d241f5640b2aa0e76aac227b5d4bd534292f7b8880ff607883"},
   "decision": "retain-until-accepted-production-route-cutover",
   "reason": "All five titles retain live Advantage Games production routes, APIs, state, components, or direct asset roots. Several also retain Reading copies. Hidden host proof does not supersede these routes.",
   "deleted_paths": [],

@@ -3,7 +3,7 @@
   "status": "candidate-non-consumable",
   "cohort": "legacy-traversal",
   "title_ids": ["dragon-rider","spellweavers-run","shadow-gate-dungeon","labyrinth-goblin-king","griffin-riders-escape"],
-  "source_manifest": {"path":"measure/tracks/apk_legacy_traversal_cutover_20260727/task1-source-readiness-manifest-v1.json","sha256":"a71eb2b4ddc2756ee1b584f3070e959dc1982e0062e1c5f8f393d76a8657622c"},
+  "source_manifest": {"path":"measure/archive/apk_legacy_traversal_cutover_20260727/task1-source-readiness-manifest-v1.json","sha256":"a71eb2b4ddc2756ee1b584f3070e959dc1982e0062e1c5f8f393d76a8657622c"},
   "decision": "retain-until-accepted-production-route-cutover",
   "reason": "Dragon Rider, Shadow Gate Dungeon, and Labyrinth remain live legacy surfaces. Spellweaver's Run and Griffin Rider's Escape remain catalog/history-owned until production navigation is separately accepted.",
   "deleted_paths": [],

@@ -7,8 +7,8 @@
   "decided_by": "apk-orchestrator-acting-under-explicit-user-project-owner-delegation",
   "authority": "explicit-user-delegated-project-owner-decision",
   "accepted_input": {
-    "path": "measure/tracks/apk_existing_action_cutover_20260727/task2-standard-pack-suitability-dossiers-v2.json",
-    "sha256": "cb1d61cd50de16177de43c914b46ab71185904ff67f2f08ffaf337bf8e1f544d",
+    "path": "measure/archive/apk_existing_action_cutover_20260727/task2-standard-pack-suitability-dossiers-v2.json",
+    "sha256": "236e71eed94a42d65b20792bc691d0c62aa5b07e291f4fd9afe5711fdb8f09cd",
     "title_count": 5,
     "role_dossier_count": 20,
     "required_digests": ["descriptor_digest", "draft_decision_digest", "provenance_digest"]

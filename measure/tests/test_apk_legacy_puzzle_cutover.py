@@ -10,7 +10,7 @@ from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-TRACK_ROOT = REPO_ROOT / "measure/tracks/apk_legacy_puzzle_cutover_20260727"
+TRACK_ROOT = REPO_ROOT / "measure/archive/apk_legacy_puzzle_cutover_20260727"
 SOURCE_READINESS_PATH = TRACK_ROOT / "task1-source-readiness-manifest-v1.json"
 SUITABILITY_PATH = TRACK_ROOT / "task2-canonical-suitability-v1.json"
 EXPECTED_TITLES = [

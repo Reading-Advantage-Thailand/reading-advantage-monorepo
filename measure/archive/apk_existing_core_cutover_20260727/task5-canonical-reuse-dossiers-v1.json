@@ -7,10 +7,10 @@
     "source_receipt_digest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9"
   },
   "evidence": {
-    "canonical_reuse_review": "measure/tracks/apk_standard_pack_suitability_ingestion_20260728/task5-canonical-reuse-evidence-v1.json",
-    "current_task3_lineage_receipt": "measure/tracks/apk_existing_core_cutover_20260727/task3-current-lineage-receipt-v1.json",
-    "accepted_semantic_adoption_receipt": "measure/tracks/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
-    "accepted_task4_qc_receipt": "measure/tracks/apk_existing_core_cutover_20260727/accepted-task4-qc-receipt-v1.json"
+    "canonical_reuse_review": "measure/archive/apk_standard_pack_suitability_ingestion_20260728/task5-canonical-reuse-evidence-v1.json",
+    "current_task3_lineage_receipt": "measure/archive/apk_existing_core_cutover_20260727/task3-current-lineage-receipt-v1.json",
+    "accepted_semantic_adoption_receipt": "measure/archive/apk_existing_core_cutover_20260727/accepted-semantic-adoption-receipt-v1.json",
+    "accepted_task4_qc_receipt": "measure/archive/apk_existing_core_cutover_20260727/accepted-task4-qc-receipt-v1.json"
   },
   "titles": [
     {

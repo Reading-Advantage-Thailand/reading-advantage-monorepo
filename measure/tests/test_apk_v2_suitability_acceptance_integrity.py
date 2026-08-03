@@ -20,7 +20,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 V2_HISTORICAL_RECORD_PATH = REPO_ROOT / "measure/archive/apk_asset_contract_v2_20260728/v2-owner-acceptance-v1.json"
 V2_METADATA_PATH = REPO_ROOT / "measure/archive/apk_asset_contract_v2_20260728/metadata.json"
-SUITABILITY_TRACK_DIR = REPO_ROOT / "measure/tracks/apk_standard_pack_suitability_ingestion_20260728"
+SUITABILITY_TRACK_DIR = REPO_ROOT / "measure/archive/apk_standard_pack_suitability_ingestion_20260728"
 SUITABILITY_HISTORICAL_RECORD_PATH = SUITABILITY_TRACK_DIR / "product-owner-acceptance-v1.json"
 SUITABILITY_CURRENT_REVIEW_PATH = SUITABILITY_TRACK_DIR / "current-byte-independent-review-v1.json"
 SUITABILITY_CURRENT_ACCEPTANCE_PATH = SUITABILITY_TRACK_DIR / "product-owner-acceptance-v2.json"

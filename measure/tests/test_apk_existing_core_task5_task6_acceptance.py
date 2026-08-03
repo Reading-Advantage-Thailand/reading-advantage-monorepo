@@ -9,8 +9,8 @@ from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-CORE_TRACK = REPO_ROOT / "measure/tracks/apk_existing_core_cutover_20260727"
-SUITABILITY_TRACK = REPO_ROOT / "measure/tracks/apk_standard_pack_suitability_ingestion_20260728"
+CORE_TRACK = REPO_ROOT / "measure/archive/apk_existing_core_cutover_20260727"
+SUITABILITY_TRACK = REPO_ROOT / "measure/archive/apk_standard_pack_suitability_ingestion_20260728"
 ACCEPTANCE_PATH = CORE_TRACK / "task5-task6-product-owner-acceptance-v1.json"
 HISTORICAL_OWNER_PATH = CORE_TRACK / "task5-canonical-reuse-owner-acceptance-v1.json"
 

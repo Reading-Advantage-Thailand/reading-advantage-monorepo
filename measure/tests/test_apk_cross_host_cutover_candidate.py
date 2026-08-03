@@ -263,7 +263,7 @@ class ApkCrossHostCutoverCandidateTests(unittest.TestCase):
 
     def test_plan_blocks_gameplay_provenance_acceptance_until_the_client_transcript_gap_is_closed(self) -> None:
         """Prevents signed credentials from being misrepresented as observed gameplay."""
-        plan = _source(REPO_ROOT / "measure/tracks/apk_existing_core_cutover_20260727/plan.md")
+        plan = _source(REPO_ROOT / "measure/archive/apk_existing_core_cutover_20260727/plan.md")
         for required in (
             "raw browser diagnostic values remain untrusted",
             "client chooses action labels and supplies elapsed diagnostics",
@@ -298,7 +298,7 @@ class ApkCrossHostCutoverCandidateTests(unittest.TestCase):
 
         shared_sha = _sha256(SHARED_CANDIDATE)
         for cohort, config in COHORTS.items():
-            track_root = REPO_ROOT / "measure/tracks" / config["track_id"]
+            track_root = REPO_ROOT / "measure/archive" / config["track_id"]
             handoff = _load(track_root / "cross-host-cutover-handoff-candidate-v1.json")
             self.assertEqual(handoff["cohort"], cohort)
             self.assertEqual(handoff["title_ids"], config["titles"])

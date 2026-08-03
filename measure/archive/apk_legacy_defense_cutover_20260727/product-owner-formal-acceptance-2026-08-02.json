@@ -75,7 +75,7 @@
       "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
     },
     "retirement_disposition_package_2026_08_02": {
-      "path": "measure/tracks/apk_legacy_defense_cutover_20260727/retirement-disposition-package-2026-08-02.json",
+      "path": "measure/archive/apk_legacy_defense_cutover_20260727/retirement-disposition-package-2026-08-02.json",
       "sha256": "e9a1782845980c9e9231ddea8e4490434c77aa4dff33601e41adbdee91170019"
     }
   }
