@@ -6817,7 +6817,10 @@ def _publish_candidate_publication_failure_attempt(
         try:
             final_directory.mkdir()
         except FileExistsError:
-            _fail("V3_PODMAN_ATTEMPT_PUBLICATION_COLLISION", attempt_name)
+            try:
+                _fail("V3_PODMAN_ATTEMPT_PUBLICATION_COLLISION", attempt_name)
+            except core.ExecutionClosureValidationError as collision_error:
+                raise collision_error from error
         final_reserved = True
         try:
             os.rename(directory, final_directory)

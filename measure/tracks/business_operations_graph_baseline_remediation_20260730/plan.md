@@ -489,6 +489,60 @@
   Podman/candidate/Finance/marker/registry/successor/V2/history action is
   accepted.
 
+  H5 candidate-publisher publication-collision causality Red: review finding
+  CAND-2 (High) from the 2026-08-03 independent review pins the candidate
+  publisher's collision `_fail("V3_PODMAN_ATTEMPT_PUBLICATION_COLLISION",
+  attempt_name)` call inside `_publish_candidate_publication_failure_attempt`
+  as raised bare from `except FileExistsError:`: the collision validation error
+  propagates without an explicit cause and detaches the in-flight
+  candidate-operation failure, while the parallel pre-seal path already wraps
+  the identical call in `try/except core.ExecutionClosureValidationError as
+  collision_error: raise collision_error from error`. The committed Red drives
+  the real candidate `preserve_failure` path with successful private
+  validation, pre-creates the canonical final attempt directory containing a
+  hash-bound sentinel so `final_directory.mkdir()` raises `FileExistsError`,
+  and requires the exact `V3_PODMAN_ATTEMPT_PUBLICATION_COLLISION` validation
+  error to retain the original candidate-operation error as its explicit
+  `__cause__`, with the competing directory and sentinel byte-intact, no
+  publisher JSON/raw child, private staging cleanup, and no
+  rename/replace/pre-seal/generic/Podman/later-stage action.
+  `h5-candidate-collision-causality-pre-green-baseline-20260803.md` freezes the
+  authorized bare block at SHA-256
+  `3d05a8465e98620956829c709a92dc703f99b28ca4854d1330d4887b23820383`
+  (occurring exactly once, distinct from the pre-seal wrapped block because it
+  lacks the inner try/except), the frozen pre-seal wrapped block at SHA-256
+  `79c2d4c32b3401d64566b563e06b41e4687db54e4b19b0bc8bdfbc2f9f8a3084`, and the
+  pre-Red candidate disambiguation anchor at SHA-256
+  `29b680946eef2aa13ff719b3aa1ab9ad85e324faa7d3a8f126f4b22176372422`; future
+  Green may only wrap that one candidate-publisher `_fail` call in the exact
+  pre-seal pattern, with the pre-seal block byte-unchanged.
+
+  Bounded Green/acceptance (2026-08-03): accepted in-loop, single-authority per
+  `AGENTS.md` Measure-acceptance ownership, for only the candidate-publisher
+  publication-collision causality fix (CAND-2) at runner SHA-256
+  `bff014ae25971a1e378917868dd85d5dc0a02d9a4eebd6a4329e3520deb3f0f4` and
+  frozen test SHA-256
+  `771df0ec53d254879d06f27e37b42ed33731eea58143eb89ad23fa73e126278d`, which
+  equals the Post-Red hash in the baseline, so the test surface is unchanged
+  since the Red slice. The thirteen focused tests, enumerated by name in the
+  receipt, passed three times under the subprocess guard with zero
+  subprocess/podman invocations: `12.19s`, `12.60s`, `18.39s`. The sole runner
+  delta is one `+146`-byte hunk wrapping the authorized `_fail` call in the
+  inner `try/except core.ExecutionClosureValidationError as collision_error:
+  raise collision_error from error`. Every baseline-mandated check passed: the
+  bare block falls one-to-zero, the wrapped block occurs exactly twice
+  classified by following context, replacing only the candidate occurrence
+  reconstructs the complete pre-Green runner at `e52859d6...` exactly, the
+  pre-seal wrapped block remains byte-unchanged at `79c2d4c3...`, and
+  `git diff --check` was clean.
+  Receipt: `h5-candidate-collision-causality-green-acceptance-20260803.md`.
+  The runner/test code remains uncommitted shared R1-v3 work and Phase R1 v3
+  remains `[~]`; no CAND-1 rename causality variant, successful publication,
+  other candidate/pre-seal/generic variant, candidate path contents,
+  H3/H4/H5/R1-v3 acceptance, runner commit, or
+  Podman/candidate/Finance/marker/registry/successor/V2/history action is
+  accepted.
+
 ## Phase R2: Close or compensate graph coverage gaps
 
 - [x] Task: Execute and record the documented clean-audit/configuration attempt, including `repo-graph config`, scan options, raw audit JSON, stdout/stderr, and exits; select the clean branch only for audit exit `0` with empty unaudited and integrity sets. The v2 candidate binds `r2-clean-audit-attempt-v2-20260801/attempt.json` to the fresh R1 bundle and graph binding; it retained the raw exit and selected the `COMPENSATION_REQUIRED` non-clean branch when unaudited symbols remained. Bounded technical acceptance is recorded by Terra and Sol in the v2 review receipts; commit `772839f` binds the evidence. This is not R2 phase acceptance or an unblock. (deferred:phase-r1-bound-graph)
