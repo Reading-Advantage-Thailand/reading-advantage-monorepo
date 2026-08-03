@@ -1,23 +1,35 @@
 import type { ReactNode } from "react";
+import { getWorkbookRepository } from "../lib/repository";
+import { getWorkbookSession } from "./lib/session";
+import { ProjectListView } from "./projects/project-list-view";
 
 /**
- * Landing page for the workbook publishing platform.
- * @returns The publishing workspace placeholder view.
+ * Home page of the workbook publishing platform: a thin route that resolves
+ * the verified session, lists the tenant's drafts and editions through the
+ * domain repository, and renders the project-list view. No business logic or
+ * filesystem access lives in this page.
+ * @returns The project-list home view.
  */
-export default function HomePage(): ReactNode {
+export default async function HomePage(): Promise<ReactNode> {
+  const session = await getWorkbookSession();
+  if (session === null) {
+    return <ProjectListView session={null} drafts={[]} editions={[]} />;
+  }
+  if (session.role !== "WORKBOOK_ADMIN") {
+    return <ProjectListView session={session} drafts={[]} editions={[]} />;
+  }
+
+  const repository = getWorkbookRepository();
+  const [drafts, editions] = await Promise.all([
+    repository.listDrafts(session.tenantId, 50),
+    repository.listEditions(session.tenantId, 50),
+  ]);
+
   return (
-    <main>
-      <h1>Workbook Publishing</h1>
-      <p>
-        Internal curriculum publishing platform. Source content is owned by Reading
-        Advantage and Primary Advantage; this application produces immutable,
-        auditable workbook editions from that content.
-      </p>
-      <ul>
-        <li>Drafts are optimistic-concurrency controlled.</li>
-        <li>Editions are immutable, versioned, supersedable, and revocable.</li>
-        <li>Publication is idempotent and transactional.</li>
-      </ul>
-    </main>
+    <ProjectListView
+      session={session}
+      drafts={drafts}
+      editions={editions}
+    />
   );
 }

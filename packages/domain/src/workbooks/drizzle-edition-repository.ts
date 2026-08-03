@@ -259,6 +259,17 @@ export function createDrizzleEditionRepository(
       return mapDraftRow(row);
     },
 
+    async listEditions(tenantId, limit) {
+      const query = (
+        db.select() as unknown as SelectBuilder<WorkbookEditionRow>
+      )
+        .from(workbookEditions)
+        .where(eq(workbookEditions.tenantId, tenantId));
+      const rows =
+        limit === undefined ? await query : await query.limit(limit);
+      return rows.map(mapEditionRow);
+    },
+
     async findEditionByIdempotencyKey(tenantId, idempotencyKey) {
       const rows = await (
         db.select() as unknown as SelectBuilder<WorkbookEditionRow>

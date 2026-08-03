@@ -80,6 +80,18 @@ export interface WorkbookEditionRepositoryPort {
   ): Promise<WorkbookDraft | null>;
 
   /**
+   * Lists immutable editions published for a tenant.
+   * @param tenantId Tenant the editions belong to.
+   * @param limit Optional maximum number of editions to return.
+   * @returns The tenant's editions; results are tenant-scoped and never cross a
+   * tenant boundary.
+   */
+  listEditions(
+    tenantId: string,
+    limit?: number,
+  ): Promise<readonly WorkbookEdition[]>;
+
+  /**
    * Finds an edition previously appended for the given idempotency key.
    * @param tenantId Tenant the edition belongs to.
    * @param idempotencyKey Key identifying the original publication request.

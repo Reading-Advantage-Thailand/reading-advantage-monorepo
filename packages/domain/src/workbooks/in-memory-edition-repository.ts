@@ -79,6 +79,13 @@ export function createInMemoryEditionRepository(
       return store.drafts.get(draftKey(tenantId, draftId)) ?? null;
     },
 
+    async listEditions(tenantId, limit) {
+      const editions = store.editions.filter(
+        (edition) => edition.tenantId === tenantId,
+      );
+      return limit === undefined ? editions : editions.slice(0, limit);
+    },
+
     async findEditionByIdempotencyKey(tenantId, idempotencyKey) {
       const edition = store.editions.find(
         (candidate) =>
