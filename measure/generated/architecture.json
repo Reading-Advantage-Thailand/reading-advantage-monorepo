@@ -1,7 +1,7 @@
 {
   "schemaVersion": "measure.architecture.v1",
-  "generatedAt": "2026-07-28T22:10:24+07:00",
-  "sourceRevision": "7e4bdf14230b920233b08269809cb191730e82ab",
+  "generatedAt": "2026-08-03T13:05:19+07:00",
+  "sourceRevision": "84cf20cf4976eb9a141467b4fafad468dafb640f",
   "projectType": "typescript-monorepo",
   "workspaceRoots": {
     "apps": [
@@ -14,6 +14,7 @@
       "reading-advantage",
       "sales-advantage",
       "science-advantage",
+      "workbooks",
       "www-reading-advantage"
     ],
     "packages": [
@@ -51,5 +52,5 @@
       "worker"
     ]
   },
-  "routeCount": 629
+  "routeCount": 639
 }
