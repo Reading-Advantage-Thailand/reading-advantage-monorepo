@@ -211,6 +211,32 @@
   precise finalizer call and hashes; future Green may only wrap that call to
   rethrow the same caught OSError from the original materialize error.
 
+  Green evidence, independent acceptance pending (2026-08-03): root recorded a
+  minimal Green for only the stderr raw-copy failure at runner SHA-256
+  `9f5ad52728c4c3c01ec1d9ff210de35f11ec82a0da3ebd656ab92944ae763b97` and frozen
+  test SHA-256 `54f81f425dbe65911907e8d7615e21657641b6dc926f498558906d69f9aa9cea`,
+  which equals the Post-Red hash in the baseline, so the test surface is
+  unchanged since commit `459697e3c`. Root passed the exact seven focused
+  no-Podman tests twice, in `2.932s` and `2.728s`. The sole runner delta is one
+  `+119`-byte hunk wrapping the frozen `_finalize_command` call in
+  `try/except OSError as raw_copy_error: raise raw_copy_error from error`;
+  replacing only that block with the committed five-line frozen artifact
+  (SHA-256 `957aa86ddb9c6ae2dde192a043b21ac0eca8ec9af27c7cffb3b34aa8c6183d46`)
+  reconstructs the complete pre-Green runner at
+  `90d550c3e4c2871de6b15349fa50cfda647af25a08532ad3842f1eb36a730490` exactly,
+  so this slice is bytewise attributable and all other runner bytes are proven
+  unchanged. Receipt:
+  `h3-preseal-materialize-raw-copy-green-evidence-20260803.md`. Both runs were
+  root-only; no second independent reviewer has run or accepted this slice, so
+  it is not a Terra/Sol bounded acceptance and must not be cited as one. This
+  does not reconstruct history before `90d550c3...` or accept the untracked
+  shared helper historical identity. The runner/test code remains uncommitted
+  shared R1-v3 work and Phase R1 v3 remains `[~]`; no collision/rename/
+  JSON-write/validator/cleanup fault injection, successful publication, other
+  pre-seal/generic variant, candidate path, H3/H4/H5/R1-v3 acceptance, runner
+  commit, or Podman/candidate/Finance/marker/registry/successor/V2/history
+  action is recorded.
+
 ## Phase R2: Close or compensate graph coverage gaps
 
 - [x] Task: Execute and record the documented clean-audit/configuration attempt, including `repo-graph config`, scan options, raw audit JSON, stdout/stderr, and exits; select the clean branch only for audit exit `0` with empty unaudited and integrity sets. The v2 candidate binds `r2-clean-audit-attempt-v2-20260801/attempt.json` to the fresh R1 bundle and graph binding; it retained the raw exit and selected the `COMPENSATION_REQUIRED` non-clean branch when unaudited symbols remained. Bounded technical acceptance is recorded by Terra and Sol in the v2 review receipts; commit `772839f` binds the evidence. This is not R2 phase acceptance or an unblock. (deferred:phase-r1-bound-graph)
