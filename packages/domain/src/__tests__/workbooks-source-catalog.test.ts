@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   workbookAssetKeySchema,
   workbookIncompatibilityErrorSchema,
+  workbookNormalizedContentSchema,
   workbookSourceAppSchema,
   workbookSourceIdentitySchema,
 } from "../workbooks/contracts.js";
@@ -214,5 +215,147 @@ describe("workbook digest", () => {
       { order: 1, text: "The storm grew." },
     ];
     expect(computeSourceRecordDigest(original)).not.toBe(computeSourceRecordDigest(changed));
+  });
+});
+
+describe("extended normalized content contract / backward compatibility", () => {
+  it("still parses a pre-extension record without any new fields", () => {
+    const preExtension = {
+      title: "T",
+      cefrLevel: "A1",
+      paragraphs: [{ order: 0, text: "p" }],
+      questions: [],
+      assets: [],
+    };
+    expect(workbookNormalizedContentSchema.safeParse(preExtension).success).toBe(true);
+  });
+
+  it("keeps the digest of a pre-extension record unchanged", () => {
+    const preExtension = {
+      title: "T",
+      cefrLevel: "A1",
+      paragraphs: [{ order: 0, text: "p" }],
+      questions: [],
+      assets: [],
+    };
+    expect(computeWorkbookDigest(preExtension)).toBe(
+      "sha256:176453a84036d932d27658cf7df53cf52e6a607e17feac0c83a0dbbd1228488f",
+    );
+  });
+
+  it("changes the digest when an optional carrier is populated", () => {
+    const preExtension = {
+      title: "T",
+      cefrLevel: "A1",
+      paragraphs: [{ order: 0, text: "p" }],
+      questions: [],
+      assets: [],
+    };
+    const extended = { ...preExtension, lessonNumber: "Lesson 1" };
+    expect(computeWorkbookDigest(extended)).not.toBe(computeWorkbookDigest(preExtension));
+  });
+});
+
+describe("extended normalized content contract / new carriers", () => {
+  it("parses a record carrying every extended carrier", () => {
+    const extended = {
+      title: "T",
+      cefrLevel: "A1",
+      paragraphs: [{ order: 0, text: "p" }],
+      questions: [],
+      assets: [],
+      lessonNumber: "Lesson 1",
+      levelName: "Level 2",
+      articleType: "fiction",
+      genre: "adventure",
+      vocabulary: [
+        { word: "puppy", phonetic: "", definition: "A young dog.", thai_definition: "ลูกสุนัข" },
+      ],
+      vocabMatch: [
+        { number: 1, word: "puppy", letter: "a", definition: "A young dog.", thai_definition: "ลูกสุนัข" },
+      ],
+      vocabFill: [{ number: 1, sentence: "Pip is a blank." }],
+      vocabWordBank: ["puppy"],
+      sentenceOrderQuestions: [{ words: ["is", "Pip"] }],
+      sentenceCompletionPrompts: [{ number: 1, prompt: "This is Pip" }],
+      shortAnswerQuestion: "What is the puppy's name?",
+      shortAnswerHint: "Read the first sentence.",
+      writingPrompt: "Describe Pip.",
+      writingPlanPrompts: ["What does Pip look like?"],
+      writingSentenceFrames: ["Pip is ..."],
+      sentenceStarters: ["I think..."],
+      connectionQuestion: "How does Pip feel?",
+      grammarSearchTerm: "adjectives",
+      phonicsFocus: "short a",
+      discussionQuestion: "What is your favorite texture?",
+      reflectionFocus: "What did Pip learn?",
+      mcAnswers: [{ number: 1, letter: "b", text: "A puppy" }],
+      vocabMatchAnswerString: "1-a",
+      vocabFillAnswerString: "1. puppy",
+      sentenceOrderAnswers: [{ number: 1, sentence: "This is Pip." }],
+      translationParagraphs: [{ label: "Paragraph 1", text: "นี่คือปิ๊ป" }],
+      articleCaption: "Pip feels a soft blanket.",
+      articleUrl: "https://primary.reading-advantage.com/student/read/cmgqx8v6602p3t79btatvfjuw",
+      articleImages: [
+        { legacyUrl: "https://example.com/hero.png" },
+        {
+          key: "workbooks/2026/lesson-01/inline-1.png",
+          legacyUrl: "https://example.com/inline-1.png",
+          caption: "Pip feels the blanket.",
+          position: "inline-para-1",
+        },
+      ],
+    };
+    expect(workbookNormalizedContentSchema.safeParse(extended).success).toBe(true);
+  });
+
+  it("accepts an article image carrying only a canonical key", () => {
+    const record = {
+      title: "T",
+      cefrLevel: "A1",
+      paragraphs: [{ order: 0, text: "p" }],
+      questions: [],
+      assets: [],
+      articleImages: [{ key: "workbooks/2026/lesson-01/hero.png" }],
+    };
+    expect(workbookNormalizedContentSchema.safeParse(record).success).toBe(true);
+  });
+
+  it("rejects an article image with neither a key nor a legacyUrl", () => {
+    const record = {
+      title: "T",
+      cefrLevel: "A1",
+      paragraphs: [{ order: 0, text: "p" }],
+      questions: [],
+      assets: [],
+      articleImages: [{ caption: "no reference at all" }],
+    };
+    expect(workbookNormalizedContentSchema.safeParse(record).success).toBe(false);
+  });
+
+  it("rejects an article image whose legacyUrl is not a URL", () => {
+    const record = {
+      title: "T",
+      cefrLevel: "A1",
+      paragraphs: [{ order: 0, text: "p" }],
+      questions: [],
+      assets: [],
+      articleImages: [{ legacyUrl: "not-a-url" }],
+    };
+    expect(workbookNormalizedContentSchema.safeParse(record).success).toBe(false);
+  });
+
+  it("rejects an unknown position value on an article image", () => {
+    const record = {
+      title: "T",
+      cefrLevel: "A1",
+      paragraphs: [{ order: 0, text: "p" }],
+      questions: [],
+      assets: [],
+      articleImages: [
+        { legacyUrl: "https://example.com/hero.png", position: "sidebar" },
+      ],
+    };
+    expect(workbookNormalizedContentSchema.safeParse(record).success).toBe(false);
   });
 });
