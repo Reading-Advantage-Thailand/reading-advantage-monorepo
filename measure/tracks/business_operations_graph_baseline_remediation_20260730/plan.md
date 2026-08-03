@@ -436,6 +436,59 @@
   Podman/candidate/Finance/marker/registry/successor/V2/history action is
   accepted.
 
+  H5 candidate-publisher JSON-write causality Red: review finding CAND-3 (Medium)
+  from the 2026-08-03 independent review pins the candidate publisher's
+  `_write_json(directory / "failed-attempt.json", attempt)` call inside
+  `_publish_candidate_publication_failure_attempt` as unwrapped for causality:
+  an OSError there propagates bare and detaches the in-flight
+  candidate-operation failure, while the parallel pre-seal path already wraps the
+  identical call in `try/except OSError as json_write_error: raise
+  json_write_error from error`. The committed Red drives the real candidate
+  `preserve_failure` path, takes a deterministic `_write_json` OSError while
+  `failed-attempt.json` is still absent, and requires the same caught JSON-write
+  error to retain the original candidate-operation error as its explicit
+  `__cause__`, with the exact outer
+  `V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED: candidate-publication: V3_TEST_CANDIDATE_FAILURE_EVIDENCE_JSON_WRITE`,
+  zero validator calls, no reservation/rename/replace, no public attempt, and no
+  private raw/staging residue. The candidate publisher performs no raw receipt
+  copies, and the test mirrors that actual structure.
+  `h5-candidate-json-write-causality-pre-green-baseline-20260803.md` freezes the
+  authorized 8-space line at SHA-256
+  `dce45138d4a2347ccfcec49e2c206b7092c027724817311c88b8ee9ced58876f`, records the
+  disambiguation anchor at SHA-256
+  `62dd09767a7ef099d238d9cdf5f96832730857a8bc5e5e42714cb0eb62e7fed2` (occurring
+  exactly once, identified by the following
+  `validate_failed_execution_attempt_v1(attempt, directory)` plus
+  `try:`/`final_directory.mkdir()`), and the frozen pre-seal wrapped block at
+  SHA-256 `c5b1563bcbc8898d1ae40037675f8971461039b4fc236893b5ac864a30c600ea`;
+  future Green may only wrap that one candidate-publisher call in the exact
+  pre-seal pattern, with the pre-seal occurrence byte-unchanged.
+
+  Bounded Green/acceptance (2026-08-03): accepted in-loop, single-authority per
+  `AGENTS.md` Measure-acceptance ownership, for only the candidate-publisher
+  `failed-attempt.json` write causality fix (CAND-3) at runner SHA-256
+  `e52859d6b4f01c374662f33c6af97a21643ce6a8f344d7d2a0e2de8ae6051cb2` and frozen
+  test SHA-256 `4bd0a875ba002781138c30ea0197b79656a42f5d6e7452599b8dbb264592dd46`,
+  which equals the Post-Red hash in the baseline, so the test surface is
+  unchanged since the Red slice. The twelve focused tests, enumerated by name in
+  the receipt, passed three times under the subprocess guard with zero
+  subprocess/podman invocations: `9.74s`, `7.96s`, `10.08s`. The sole runner
+  delta is one `+107`-byte hunk wrapping the authorized `_write_json` call in
+  `try/except OSError as json_write_error: raise json_write_error from error`.
+  Every baseline-mandated check passed: the pre-Red anchor occurs exactly once
+  and falls to zero after the wrap, the Green-state unique context ending at the
+  candidate publisher's `_fail("V3_PODMAN_ATTEMPT_PUBLICATION_COLLISION",
+  attempt_name)` occurs exactly once, replacing only that hunk reconstructs the
+  complete pre-Green runner at `4f1eb6a3...` exactly, the pre-seal wrapped block
+  remains byte-unchanged at `c5b1563b...`, and `git diff --check` was clean.
+  Receipt: `h5-candidate-json-write-causality-green-acceptance-20260803.md`. The
+  runner/test code remains uncommitted shared R1-v3 work and Phase R1 v3 remains
+  `[~]`; no CAND-1 rename or CAND-2 collision causality variant, successful
+  publication, other candidate/pre-seal/generic variant, candidate path contents,
+  H3/H4/H5/R1-v3 acceptance, runner commit, or
+  Podman/candidate/Finance/marker/registry/successor/V2/history action is
+  accepted.
+
 ## Phase R2: Close or compensate graph coverage gaps
 
 - [x] Task: Execute and record the documented clean-audit/configuration attempt, including `repo-graph config`, scan options, raw audit JSON, stdout/stderr, and exits; select the clean branch only for audit exit `0` with empty unaudited and integrity sets. The v2 candidate binds `r2-clean-audit-attempt-v2-20260801/attempt.json` to the fresh R1 bundle and graph binding; it retained the raw exit and selected the `COMPENSATION_REQUIRED` non-clean branch when unaudited symbols remained. Bounded technical acceptance is recorded by Terra and Sol in the v2 review receipts; commit `772839f` binds the evidence. This is not R2 phase acceptance or an unblock. (deferred:phase-r1-bound-graph)

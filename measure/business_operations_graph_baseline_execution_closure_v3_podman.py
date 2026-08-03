@@ -6809,7 +6809,10 @@ def _publish_candidate_publication_failure_attempt(
                 candidate_publication_failure,
             ),
         }
-        _write_json(directory / "failed-attempt.json", attempt)
+        try:
+            _write_json(directory / "failed-attempt.json", attempt)
+        except OSError as json_write_error:
+            raise json_write_error from error
         validate_failed_execution_attempt_v1(attempt, directory)
         try:
             final_directory.mkdir()
