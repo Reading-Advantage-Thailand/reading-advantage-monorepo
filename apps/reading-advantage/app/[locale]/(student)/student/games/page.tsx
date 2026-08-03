@@ -40,6 +40,28 @@ const difficultyColors = {
   Hard: "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20",
 };
 
+// Deleted legacy game routes resolve to their host-proof equivalents.
+const CUTOVER_GAME_HREF: Record<string, string> = {
+  "vocabulary/magic-defense": "/student/host-proof/games?gameType=magic-defense",
+  "vocabulary/rune-match": "/student/host-proof/games?gameType=rune-match",
+  "vocabulary/wizard-vs-zombie": "/student/host-proof/games?gameType=wizard-vs-zombie",
+  "vocabulary/dragon-flight": "/student/host-proof/games?gameType=dragon-flight",
+  "vocabulary/dragon-rider": "/student/host-proof/dragon-rider",
+  "vocabulary/enchanted-library": "/student/host-proof/games?gameType=enchanted-library",
+  "sentence/castle-defense": "/student/host-proof/games?gameType=castle-defense",
+  "sentence/potion-rush": "/student/host-proof/games?gameType=potion-rush",
+};
+
+/**
+ * Resolves the hub navigation href for a game id, routing deleted legacy games
+ * to their host-proof equivalents and keeping the legacy route for survivors.
+ * @param gameId The game id rendered by the games hub.
+ * @returns The host-proof href for cutover games, otherwise the legacy route.
+ */
+function gameHref(gameId: string): string {
+  return CUTOVER_GAME_HREF[gameId] ?? `/student/games/${gameId}`;
+}
+
 export default function GamesPage() {
   const router = useRouter();
   const t = useScopedI18n("pages.student.gamesPage");
@@ -182,22 +204,7 @@ export default function GamesPage() {
                       <Card
                         className="group relative h-full overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-1 hover:z-30 cursor-pointer border-2 hover:border-primary/50 bg-card/50 backdrop-blur-sm flex flex-col"
                         onClick={() => {
-                          const cutoverHref: Record<string, string> = {
-                            "vocabulary/magic-defense": "/student/host-proof/games?gameType=magic-defense",
-                            "vocabulary/rune-match": "/student/host-proof/games?gameType=rune-match",
-                            "vocabulary/wizard-vs-zombie": "/student/host-proof/games?gameType=wizard-vs-zombie",
-                            "vocabulary/dragon-flight": "/student/host-proof/games?gameType=dragon-flight",
-                            "vocabulary/dragon-rider": "/student/host-proof/dragon-rider",
-                            "vocabulary/enchanted-library": "/student/host-proof/games?gameType=enchanted-library",
-                            "sentence/castle-defense": "/student/host-proof/games?gameType=castle-defense",
-                            "sentence/potion-rush": "/student/host-proof/games?gameType=potion-rush",
-                          };
-                          const href = cutoverHref[game.id];
-                          if (href) {
-                            router.push(href);
-                          } else {
-                            router.push(`/student/games/${game.id}`);
-                          }
+                          router.push(gameHref(game.id));
                         }}
                       >
                         {/* Badge overlay */}
@@ -290,7 +297,7 @@ export default function GamesPage() {
                             className="w-full font-semibold text-base h-11 shadow-md hover:shadow-lg transition-all duration-300 group-hover:scale-[1.02]"
                             onClick={(e) => {
                               e.stopPropagation();
-                              router.push(`/student/games/${game.id}`);
+                              router.push(gameHref(game.id));
                             }}
                           >
                             <Gamepad2 className="w-4 h-4 mr-2" />
@@ -331,7 +338,7 @@ export default function GamesPage() {
                     <div key={game.id} className="h-full">
                       <Card
                         className="group relative h-full overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-1 hover:z-30 cursor-pointer border-2 hover:border-primary/50 bg-card/50 backdrop-blur-sm flex flex-col"
-                        onClick={() => router.push(`/student/games/${game.id}`)}
+                        onClick={() => router.push(gameHref(game.id))}
                       >
                         {/* Badge overlay */}
                         {game.badge && (
@@ -423,7 +430,7 @@ export default function GamesPage() {
                             className="w-full font-semibold text-base h-11 shadow-md hover:shadow-lg transition-all duration-300 group-hover:scale-[1.02]"
                             onClick={(e) => {
                               e.stopPropagation();
-                              router.push(`/student/games/${game.id}`);
+                              router.push(gameHref(game.id));
                             }}
                           >
                             <Gamepad2 className="w-4 h-4 mr-2" />
