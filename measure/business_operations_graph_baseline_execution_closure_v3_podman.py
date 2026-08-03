@@ -70,6 +70,10 @@ STANDARD_PACK_GENERATOR = [
     "@reading-advantage/advantage-play-kit",
     "generate:standard-pack-catalog",
 ]
+DIRECT_NODE_STANDARD_PACK_GENERATOR = [
+    "node",
+    "packages/advantage-play-kit/scripts/generate-standard-pack-release.mjs",
+]
 BUILDS = (
     ["pnpm", "--filter", "@reading-advantage/db", "build"],
     ["pnpm", "--filter", "@reading-advantage/auth", "build"],
@@ -85,7 +89,6 @@ NONINSTALL_PNPM_COMMANDS = (
     ("build-db", BUILDS[0]),
     ("build-auth", BUILDS[1]),
     ("build-backend", BUILDS[2]),
-    ("generate-standard-pack-catalog", STANDARD_PACK_GENERATOR),
     *FR4,
 )
 
@@ -892,7 +895,7 @@ def discover_direct_command_runtime_read_set_v1(
     cleared = discovery["clearedStaleOutputs"]
     if not isinstance(cleared, list) or cleared != output_paths:
         _direct_runtime_read_set_fail("STALE_OUTPUT_CLEARANCE_UNBOUND")
-    if any(path not in assets or path not in leaves for path in output_paths):
+    if any((path in assets) != (path in leaves) for path in output_paths):
         _direct_runtime_read_set_fail("STALE_OUTPUT_CLEARANCE_UNBOUND")
     allowed_assets = {script_path, *leaves}
     if set(assets) != allowed_assets:
@@ -1064,6 +1067,1536 @@ _DIRECT_RUNTIME_RUNNER_STAGES = (
     "generate-standard-pack-catalog",
     "direct-runtime-trace",
 )
+
+
+# The retained V2 archive deliberately did not contain this direct-runtime
+# source tree. It is captured from this immutable commit only; no live
+# worktree fallback is permitted during preparation.
+_DIRECT_RUNTIME_BASELINE_COMMIT = "e78fe22bb405de732de14c18590b19af0ce5f0de"
+_DIRECT_RUNTIME_STANDARD_ASSET_ROOT = "packages/advantage-play-kit/assets/standard"
+_DIRECT_RUNTIME_STANDARD_SOURCE_CEILING = {
+    "path": _DIRECT_RUNTIME_STANDARD_ASSET_ROOT,
+    "regularFiles": 43_138,
+    "apparentBytes": 188_324_464,
+    "allocatedBytes": 325_713_920,
+}
+_DIRECT_RUNTIME_STATIC_RESERVATIONS = {
+    "baselineGitMaterializationBytes": 325_713_920,
+    "candidateCowBytes": 325_713_920,
+    "archiveSupplementBytes": 325_713_920,
+    "derivedOutputBytes": 24_946_348,
+    "metadataBytes": 16_777_216,
+    "minimumHeadroomBytes": 1_073_741_824,
+}
+_DIRECT_RUNTIME_PREPARED_TRANSACTION_HEADROOM_BYTES = 536_870_912
+
+
+def _direct_runtime_git_object_output_v1(
+    argv: list[str],
+    code: str,
+    *,
+    input_bytes: bytes | None = None,
+) -> bytes:
+    """Reads one immutable Git-object query without consulting worktree source bytes.
+
+    @param argv The Git subcommand and its immutable object arguments.
+    @param code The stable direct-runtime failure suffix.
+    @param input_bytes Optional object identifiers for a batch Git query.
+    @returns The raw Git-object command output.
+    @throws core.ExecutionClosureValidationError When Git cannot resolve the pinned objects.
+    """
+    try:
+        completed = subprocess.run(
+            ["/usr/bin/git", *argv],
+            cwd=REPO_ROOT,
+            env={"LC_ALL": "C", "LANG": "C"},
+            input=input_bytes,
+            capture_output=True,
+            check=False,
+        )
+    except OSError as error:
+        _direct_runtime_integration_fail(code, str(error))
+    if completed.returncode != 0:
+        _direct_runtime_integration_fail(
+            code,
+            completed.stderr.decode("utf-8", errors="replace").strip(),
+        )
+    return completed.stdout
+
+
+def _direct_runtime_baseline_tree_records_v1(
+    script_path: str,
+) -> tuple[str, list[dict[str, str]]]:
+    """Lists exact script and standard-asset blobs from the pinned baseline Git tree.
+
+    @param script_path The frozen package-relative direct generator script path.
+    @returns The baseline tree identifier and sorted regular-file records.
+    @throws core.ExecutionClosureValidationError When the Git tree has unsafe or incomplete entries.
+    """
+    # This is intentionally a git ls-tree object query rather than a filesystem
+    # walk: a changed live checkout must not alter preparation.
+    root = _DIRECT_RUNTIME_STANDARD_ASSET_ROOT
+    listing = _direct_runtime_git_object_output_v1(
+        ["ls-tree", "-r", "-z", _DIRECT_RUNTIME_BASELINE_COMMIT, "--", script_path, root],
+        "GIT_TREE_LIST_FAILED",
+    )
+    records: list[dict[str, str]] = []
+    for raw in listing.split(b"\0"):
+        if not raw:
+            continue
+        try:
+            metadata, raw_path = raw.split(b"\t", 1)
+            mode, kind, blob = metadata.decode("ascii", errors="strict").split(" ")
+            path = raw_path.decode("utf-8", errors="strict")
+        except (UnicodeDecodeError, ValueError):
+            _direct_runtime_integration_fail("GIT_TREE_LIST_INVALID")
+        _direct_runtime_safe_path_v1(path, "GIT_TREE_LIST_INVALID")
+        if (
+            kind != "blob"
+            or mode not in {"100644", "100755"}
+            or re.fullmatch(r"[0-9a-f]{40}", blob) is None
+            or (path != script_path and not path.startswith(f"{root}/"))
+        ):
+            _direct_runtime_integration_fail("GIT_TREE_LIST_INVALID", path)
+        records.append({"path": path, "mode": mode, "gitBlobSha1": blob})
+    records.sort(key=lambda item: item["path"])
+    if not records or script_path not in {item["path"] for item in records} or len({item["path"] for item in records}) != len(records):
+        _direct_runtime_integration_fail("GIT_TREE_LIST_INCOMPLETE")
+    if not any(item["path"] == _DIRECT_RUNTIME_STANDARD_ASSET_ROOT + "/IMPORT-RECEIPT.tsv" for item in records):
+        _direct_runtime_integration_fail("GIT_TREE_LIST_INCOMPLETE")
+    tree = _direct_runtime_git_object_output_v1(
+        ["rev-parse", f"{_DIRECT_RUNTIME_BASELINE_COMMIT}^{{tree}}"],
+        "GIT_TREE_CAPTURE_FAILED",
+    ).decode("ascii", errors="strict").strip()
+    if re.fullmatch(r"[0-9a-f]{40}", tree) is None:
+        _direct_runtime_integration_fail("GIT_TREE_CAPTURE_FAILED")
+    return tree, records
+
+
+def _direct_runtime_git_blob_assets_v1(
+    records: list[dict[str, str]],
+) -> list[dict[str, Any]]:
+    """Captures and hash-binds selected baseline Git blobs in deterministic path order.
+
+    @param records The regular pinned-tree records selected for a finite runtime inventory.
+    @returns Baseline asset records with exact object bytes and identities.
+    @throws core.ExecutionClosureValidationError When a blob response drifts from its tree entry.
+    """
+    ordered = sorted(records, key=lambda item: item["path"])
+    if not ordered or len({item["path"] for item in ordered}) != len(ordered):
+        _direct_runtime_integration_fail("GIT_BLOB_SELECTION_INVALID")
+    payload = "".join(f"{item['gitBlobSha1']}\n" for item in ordered).encode("ascii")
+    output = _direct_runtime_git_object_output_v1(
+        ["cat-file", "--batch"],
+        "GIT_OBJECT_BYTES_CAPTURE_FAILED",
+        input_bytes=payload,
+    )
+    cursor = 0
+    assets: list[dict[str, Any]] = []
+    for record in ordered:
+        end = output.find(b"\n", cursor)
+        if end < 0:
+            _direct_runtime_integration_fail("GIT_OBJECT_BYTES_CAPTURE_FAILED", record["path"])
+        try:
+            object_name, kind, size_text = output[cursor:end].decode("ascii", errors="strict").split(" ")
+            size = int(size_text)
+        except (UnicodeDecodeError, ValueError):
+            _direct_runtime_integration_fail("GIT_OBJECT_BYTES_CAPTURE_FAILED", record["path"])
+        cursor = end + 1
+        if object_name != record["gitBlobSha1"] or kind != "blob" or size < 0 or cursor + size >= len(output):
+            _direct_runtime_integration_fail("GIT_OBJECT_BYTES_CAPTURE_FAILED", record["path"])
+        data = output[cursor:cursor + size]
+        cursor += size
+        if output[cursor:cursor + 1] != b"\n":
+            _direct_runtime_integration_fail("GIT_OBJECT_BYTES_CAPTURE_FAILED", record["path"])
+        cursor += 1
+        blob = b"blob " + str(len(data)).encode("ascii") + b"\0" + data
+        if hashlib.sha1(blob).hexdigest() != record["gitBlobSha1"]:
+            _direct_runtime_integration_fail("GIT_OBJECT_BYTES_MISMATCH", record["path"])
+        assets.append({
+            "path": record["path"],
+            "kind": "file",
+            "mode": record["mode"],
+            "baselineCommit": _DIRECT_RUNTIME_BASELINE_COMMIT,
+            "gitBlobSha1": record["gitBlobSha1"],
+            "sha256": _sha256(data),
+            "size": len(data),
+            "contentBase64": base64.b64encode(data).decode("ascii"),
+        })
+    if cursor != len(output):
+        _direct_runtime_integration_fail("GIT_OBJECT_BYTES_CAPTURE_FAILED")
+    _direct_runtime_baseline_assets_v1(assets)
+    return assets
+
+
+def _direct_runtime_source_packet_from_assets_v1(
+    tree: str,
+    assets: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Builds one detached packet from a selected, validated baseline Git asset set.
+
+    @param tree The immutable Git tree shared by every selected asset.
+    @param assets The exact materializable baseline asset records.
+    @returns A hash-bound detached source packet.
+    @throws core.ExecutionClosureValidationError When selected assets do not share baseline provenance.
+    """
+    indexed = _direct_runtime_baseline_assets_v1(assets)
+    identities = sorted(
+        (_direct_runtime_baseline_identity_v1(indexed[path]) for path in indexed),
+        key=lambda item: item["path"],
+    )
+    packet = {
+        "schemaVersion": 1,
+        "kind": "direct-command-runtime-baseline-git-source-packet",
+        "source": "GIT_OBJECT_DATABASE_ONLY",
+        "baselineCommit": _DIRECT_RUNTIME_BASELINE_COMMIT,
+        "tree": {"gitTreeSha1": tree},
+        "baselineReadSet": identities,
+        "objects": [
+            {**identity, "contentBase64": indexed[identity["path"]]["contentBase64"]}
+            for identity in identities
+        ],
+    }
+    packet["packetSha256"] = _direct_runtime_packet_digest_v1(packet)
+    return _direct_runtime_validate_source_packet_v1(packet, identities)
+
+
+def _direct_runtime_prepared_dynamic_build_output_v1(
+    trigger: dict[str, Any],
+    selected_assets: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Derives the generator's known pre-build dist path from its pinned script bytes.
+
+    @param trigger The frozen package and generator-script trigger record.
+    @param selected_assets The selected immutable Git-object assets including the generator script.
+    @returns The unresolved derived-input and declared-output contract for one transaction.
+    @throws core.ExecutionClosureValidationError When the frozen script cannot declare one safe dist input.
+    """
+    script_path = trigger.get("scriptPath")
+    package_directory = trigger.get("directory")
+    script_name = trigger.get("scriptName")
+    if (
+        not isinstance(script_path, str)
+        or not isinstance(package_directory, str)
+        or not isinstance(script_name, str)
+    ):
+        _direct_runtime_integration_fail("PREPARATION_DYNAMIC_BUILD_OUTPUT_INVALID")
+    assets = _direct_runtime_baseline_assets_v1(selected_assets)
+    script = assets.get(script_path)
+    if script is None:
+        _direct_runtime_integration_fail("PREPARATION_DYNAMIC_BUILD_OUTPUT_INVALID")
+    try:
+        script_text = _direct_runtime_entry_bytes_v1(
+            script,
+            script_path,
+            "PREPARATION_DYNAMIC_BUILD_OUTPUT_INVALID",
+        ).decode("utf-8")
+    except UnicodeDecodeError:
+        _direct_runtime_integration_fail("PREPARATION_DYNAMIC_BUILD_OUTPUT_INVALID")
+    imports = re.findall(
+        r"from\s+[\"'](?P<specifier>\.\./dist/assets/index\.js)[\"']",
+        script_text,
+    )
+    if imports != ["../dist/assets/index.js"]:
+        _direct_runtime_integration_fail("PREPARATION_DYNAMIC_BUILD_OUTPUT_INVALID")
+    derived_path = _direct_runtime_safe_path_v1(
+        f"{package_directory}/dist/assets/index.js",
+        "PREPARATION_DYNAMIC_BUILD_OUTPUT_INVALID",
+    )
+    output_path = _direct_runtime_safe_path_v1(
+        STANDARD_PACK_CATALOG,
+        "PREPARATION_DYNAMIC_BUILD_OUTPUT_INVALID",
+    )
+    return {
+        "stage": "direct-runtime-dist-identity",
+        "source": "IN_CONTAINER_POST_RUNTIME_BUILD_IDENTITY",
+        "receiptIdentityPolicy": "EXACT_PRODUCER_RECEIPT_FOR_EACH_DERIVED_DIST_READ",
+        "state": "UNRESOLVED_UNTIL_RECORDED_RUNTIME_BUILD",
+        "knownDerivedBuildPaths": [
+            {
+                "path": derived_path,
+                "origin": "DERIVED_BUILD_OUTPUT",
+                "producerClass": {
+                    "kind": "PACKAGE_SCRIPT_PREREQUISITE_BUILD",
+                    "scriptName": script_name,
+                    "scriptSegment": "pnpm build",
+                },
+            },
+        ],
+        "declaredOutputPaths": [output_path],
+    }
+
+
+def derive_direct_node_split_semantics_from_frozen_script_v1(
+    trigger: dict[str, Any],
+    frozen_manifest_entry: dict[str, Any],
+) -> dict[str, Any]:
+    """Derives the direct-Node split from one hash-bound frozen package manifest.
+
+    @param trigger The frozen standard-pack trigger that selects the package script.
+    @param frozen_manifest_entry The archived package-manifest entry with its exact bytes.
+    @returns The two permitted execution segments and their frozen semantic provenance.
+    @throws core.ExecutionClosureValidationError When any trigger, manifest, script, or hook invariant is invalid.
+    """
+    package = "@reading-advantage/advantage-play-kit"
+    directory = "packages/advantage-play-kit"
+    manifest_path = f"{directory}/package.json"
+    script_name = "generate:standard-pack-catalog"
+    script_path = DIRECT_NODE_STANDARD_PACK_GENERATOR[1]
+    package_relative_script = "scripts/generate-standard-pack-release.mjs"
+    expression = "pnpm build && node scripts/generate-standard-pack-release.mjs"
+    required_trigger = {
+        "logicalArgv",
+        "package",
+        "scriptName",
+        "scriptPath",
+        "manifest",
+        "directory",
+    }
+    if not isinstance(trigger, dict) or set(trigger) != required_trigger:
+        _direct_runtime_integration_fail("FROZEN_SCRIPT_TRIGGER_INVALID")
+    if (
+        trigger["logicalArgv"] != list(STANDARD_PACK_GENERATOR)
+        or trigger["package"] != package
+        or trigger["scriptName"] != script_name
+        or trigger["scriptPath"] != script_path
+        or trigger["directory"] != directory
+    ):
+        _direct_runtime_integration_fail("FROZEN_SCRIPT_TRIGGER_INVALID")
+    if not isinstance(frozen_manifest_entry, dict):
+        _direct_runtime_integration_fail("FROZEN_SCRIPT_MANIFEST_INVALID")
+    entry_path = frozen_manifest_entry.get("path")
+    entry_sha256 = frozen_manifest_entry.get("sha256")
+    entry_size = frozen_manifest_entry.get("size")
+    encoded_manifest = frozen_manifest_entry.get("contentBase64")
+    if entry_path != manifest_path or not isinstance(encoded_manifest, str):
+        _direct_runtime_integration_fail("FROZEN_SCRIPT_MANIFEST_INVALID")
+    _direct_runtime_sha256_v1(
+        entry_sha256,
+        "FROZEN_SCRIPT_MANIFEST_INVALID",
+        manifest_path,
+    )
+    _direct_runtime_int_v1(
+        entry_size,
+        "FROZEN_SCRIPT_MANIFEST_INVALID",
+        manifest_path,
+    )
+    manifest_reference = {
+        "path": entry_path,
+        "sha256": entry_sha256,
+        "size": entry_size,
+    }
+    if trigger["manifest"] != manifest_reference:
+        _direct_runtime_integration_fail("FROZEN_SCRIPT_TRIGGER_MANIFEST_INVALID")
+    try:
+        manifest_bytes = base64.b64decode(encoded_manifest.encode("ascii"), validate=True)
+        manifest = json.loads(manifest_bytes.decode("utf-8"))
+    except (UnicodeError, ValueError, TypeError, json.JSONDecodeError):
+        _direct_runtime_integration_fail("FROZEN_SCRIPT_MANIFEST_INVALID")
+    if (
+        hashlib.sha256(manifest_bytes).hexdigest() != entry_sha256
+        or len(manifest_bytes) != entry_size
+        or not isinstance(manifest, dict)
+        or manifest.get("name") != package
+    ):
+        _direct_runtime_integration_fail("FROZEN_SCRIPT_MANIFEST_INVALID")
+    scripts = manifest.get("scripts")
+    if (
+        not isinstance(scripts, dict)
+        or scripts.get("build") != "tsc"
+        or scripts.get(script_name) != expression
+        or "prebuild" in scripts
+        or "postbuild" in scripts
+    ):
+        _direct_runtime_integration_fail("FROZEN_SCRIPT_SEMANTICS_INVALID")
+    package_cwd = f"/work/{directory}"
+    return {
+        "schemaVersion": 1,
+        "kind": "direct-node-split-semantics",
+        "frozenScript": {
+            "manifest": manifest_reference,
+            "name": script_name,
+            "expression": expression,
+            "buildExpression": "pnpm build",
+            "directNodeExpression": "node scripts/generate-standard-pack-release.mjs",
+            "lifecycleHooks": {"prebuild": "ABSENT", "postbuild": "ABSENT"},
+        },
+        "package": {
+            "name": package,
+            "directory": directory,
+            "cwd": package_cwd,
+        },
+        "cleanEnvironment": {
+            "allowlisted": dict(ENV),
+            "absencePredicates": list(ENV_ABSENT),
+            "effectiveBase": {"CI": "true", "PATH": BOOTSTRAP_PATH},
+            "inheritedEnv": [],
+        },
+        "segments": [
+            {
+                "id": "build-advantage-play-kit-for-runtime",
+                "kind": "RUNTIME_BUILD",
+                "cwd": package_cwd,
+                "logicalArgv": ["pnpm", "build"],
+                "environmentOverrides": {},
+            },
+            {
+                "id": "generate-standard-pack-catalog",
+                "kind": "DIRECT_NODE_GENERATOR",
+                "cwd": package_cwd,
+                "logicalArgv": ["node", package_relative_script],
+                "environmentOverrides": {
+                    "NODE_OPTIONS": DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS,
+                },
+                "script": {
+                    "manifest": manifest_reference,
+                    "packageRelativePath": package_relative_script,
+                    "logicalPath": script_path,
+                    "resolvedPath": f"/work/{script_path}",
+                },
+            },
+        ],
+    }
+
+
+def derive_direct_command_runtime_execution_segments_v1(
+    trigger: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Derives the one prerequisite build and direct-Node generator from a frozen trigger.
+
+    @param trigger The frozen package trigger resolved from the retained V2 archive.
+    @returns The ordered runtime-build and direct-Node-generator execution segments.
+    @throws core.ExecutionClosureValidationError When the frozen trigger is incomplete or unsafe.
+    """
+    required = {
+        "logicalArgv",
+        "package",
+        "scriptName",
+        "scriptPath",
+        "manifest",
+        "directory",
+    }
+    if not isinstance(trigger, dict) or set(trigger) != required:
+        _direct_runtime_integration_fail("EXECUTION_SEGMENTS_TRIGGER_INVALID")
+    logical_argv = trigger["logicalArgv"]
+    package = trigger["package"]
+    script_name = trigger["scriptName"]
+    script_path = trigger["scriptPath"]
+    directory = trigger["directory"]
+    manifest = trigger["manifest"]
+    if (
+        logical_argv != list(STANDARD_PACK_GENERATOR)
+        or package != "@reading-advantage/advantage-play-kit"
+        or script_name != "generate:standard-pack-catalog"
+        or not isinstance(directory, str)
+        or _direct_runtime_safe_path_v1(
+            directory,
+            "EXECUTION_SEGMENTS_TRIGGER_INVALID",
+        )
+        != directory
+        or not isinstance(script_path, str)
+        or _direct_runtime_safe_path_v1(
+            script_path,
+            "EXECUTION_SEGMENTS_TRIGGER_INVALID",
+        )
+        != script_path
+        or script_path != f"{directory}/scripts/generate-standard-pack-release.mjs"
+        or not isinstance(manifest, dict)
+        or set(manifest) != {"path", "sha256", "size"}
+        or manifest["path"] != f"{directory}/package.json"
+    ):
+        _direct_runtime_integration_fail("EXECUTION_SEGMENTS_TRIGGER_INVALID")
+    _direct_runtime_sha256_v1(
+        manifest["sha256"],
+        "EXECUTION_SEGMENTS_TRIGGER_INVALID",
+        manifest["path"],
+    )
+    _direct_runtime_int_v1(
+        manifest["size"],
+        "EXECUTION_SEGMENTS_TRIGGER_INVALID",
+        manifest["path"],
+    )
+    return [
+        {
+            "id": "build-advantage-play-kit-for-runtime",
+            "kind": "RUNTIME_BUILD",
+            "logicalArgv": ["pnpm", "--filter", package, "build"],
+        },
+        {
+            "id": "generate-standard-pack-catalog",
+            "kind": "DIRECT_NODE_GENERATOR",
+            "logicalArgv": list(DIRECT_NODE_STANDARD_PACK_GENERATOR),
+        },
+    ]
+
+
+def derive_direct_command_runtime_capacity_from_selected_tree_v1(
+    selected_tree_inventory: list[dict[str, Any]],
+    asset_root: str,
+    available_bytes: int,
+) -> dict[str, Any]:
+    """Derives a hash-bound direct-runtime capacity budget from selected Git-tree records.
+
+    @param selected_tree_inventory The complete sorted regular-file inventory selected from Git.
+    @param asset_root The package-relative standard-asset root whose storage is reserved.
+    @param available_bytes The observed free bytes before any candidate staging side effect.
+    @returns The canonical selected inventory, its digest, derived source ceiling, and PASS budget.
+    @throws core.ExecutionClosureValidationError When inventory provenance or capacity is invalid.
+    """
+    root = _direct_runtime_safe_path_v1(asset_root, "TREE_CAPACITY_ROOT_INVALID")
+    available = _direct_runtime_int_v1(
+        available_bytes,
+        "TREE_CAPACITY_AVAILABLE_INVALID",
+    )
+    required_fields = {"path", "gitBlobSha1", "sha256", "size", "mode"}
+    if not isinstance(selected_tree_inventory, list) or not selected_tree_inventory:
+        _direct_runtime_integration_fail("TREE_CAPACITY_INVENTORY_INVALID")
+    inventory = copy.deepcopy(selected_tree_inventory)
+    paths: list[str] = []
+    for entry in inventory:
+        if not isinstance(entry, dict) or set(entry) != required_fields:
+            _direct_runtime_integration_fail("TREE_CAPACITY_INVENTORY_INVALID")
+        path = _direct_runtime_safe_path_v1(
+            entry["path"],
+            "TREE_CAPACITY_INVENTORY_INVALID",
+        )
+        _direct_runtime_sha1_v1(
+            entry["gitBlobSha1"],
+            "TREE_CAPACITY_INVENTORY_INVALID",
+            path,
+        )
+        _direct_runtime_sha256_v1(
+            entry["sha256"],
+            "TREE_CAPACITY_INVENTORY_INVALID",
+            path,
+        )
+        _direct_runtime_int_v1(
+            entry["size"],
+            "TREE_CAPACITY_INVENTORY_INVALID",
+            path,
+        )
+        if entry["mode"] not in {"100644", "100755"}:
+            _direct_runtime_integration_fail("TREE_CAPACITY_INVENTORY_INVALID", path)
+        paths.append(path)
+    if paths != sorted(paths) or len(paths) != len(set(paths)):
+        _direct_runtime_integration_fail("TREE_CAPACITY_INVENTORY_INVALID")
+    asset_entries = [
+        entry
+        for entry in inventory
+        if entry["path"].startswith(f"{root}/")
+    ]
+    if not asset_entries:
+        _direct_runtime_integration_fail("TREE_CAPACITY_ASSET_ROOT_EMPTY", root)
+    apparent_bytes = sum(entry["size"] for entry in asset_entries)
+    allocated_bytes = sum(
+        ((entry["size"] + 4095) // 4096) * 4096
+        for entry in asset_entries
+    )
+    selected_tree_allocated_bytes = sum(
+        ((entry["size"] + 4095) // 4096) * 4096
+        for entry in inventory
+    )
+    source_ceiling = {
+        "path": root,
+        "regularFiles": len(asset_entries),
+        "apparentBytes": apparent_bytes,
+        "allocatedBytes": allocated_bytes,
+    }
+    reservations = copy.deepcopy(_DIRECT_RUNTIME_STATIC_RESERVATIONS)
+    reservations["baselineGitMaterializationBytes"] = selected_tree_allocated_bytes
+    reservations["candidateCowBytes"] = selected_tree_allocated_bytes
+    reservations["archiveSupplementBytes"] = selected_tree_allocated_bytes
+    reservations["minimumHeadroomBytes"] = _DIRECT_RUNTIME_PREPARED_TRANSACTION_HEADROOM_BYTES
+    required_available = sum(reservations.values())
+    budget = {
+        "schemaVersion": 1,
+        "kind": "direct-command-runtime-asset-resource-budget",
+        "frozenArchive": _reference(core.V2_ARCHIVE),
+        "sourceCeiling": copy.deepcopy(source_ceiling),
+        "reservations": reservations,
+        "requiredAvailableBytes": required_available,
+        "availableBytes": available,
+        "decision": "PASS" if available >= required_available else "BLOCKED",
+    }
+    _direct_runtime_resource_budget_v1(budget)
+    return {
+        "selectedTreeInventory": inventory,
+        "selectedTreeInventorySha256": _sha256(_canonical(inventory)),
+        "sourceCeiling": source_ceiling,
+        "resourceBudget": budget,
+    }
+
+
+def probe_direct_command_runtime_production_capacity_v1(
+    preparation: dict[str, Any],
+    filesystem_roots: dict[str, Path | str],
+) -> dict[str, Any]:
+    """Checks the real production filesystems required by one prepared transaction.
+
+    @param preparation The immutable preparation that owns the required capacity budget.
+    @param filesystem_roots The temporary-stage, archive, COW, and evidence filesystem roots.
+    @returns The same-device production capacity observation bound to the preparation budget.
+    @throws core.ExecutionClosureValidationError When roots span devices or free capacity is insufficient.
+    """
+    budget = preparation.get("resourceBudget") if isinstance(preparation, dict) else None
+    _direct_runtime_resource_budget_v1(budget)
+    required_roots = {"temporary-stage", "archive", "cow", "evidence"}
+    if not isinstance(filesystem_roots, dict) or set(filesystem_roots) != required_roots:
+        _direct_runtime_integration_fail("CAPACITY_ROOTS_INVALID")
+    observed: dict[str, dict[str, int | str]] = {}
+    devices: set[int] = set()
+    available_values: list[int] = []
+    for name in ("temporary-stage", "archive", "cow", "evidence"):
+        value = filesystem_roots[name]
+        try:
+            path = Path(value)
+            stat_result = os.stat(path)
+            filesystem = os.statvfs(path)
+        except (OSError, TypeError, ValueError) as error:
+            _direct_runtime_integration_fail("CAPACITY_ROOT_UNAVAILABLE", f"{name}: {error}")
+        available_bytes = filesystem.f_bavail * filesystem.f_frsize
+        devices.add(stat_result.st_dev)
+        available_values.append(available_bytes)
+        observed[name] = {
+            "path": str(path),
+            "device": stat_result.st_dev,
+            "availableBytes": available_bytes,
+        }
+    if len(devices) != 1:
+        _direct_runtime_integration_fail("CAPACITY_DEVICE_MISMATCH")
+    available_bytes = min(available_values)
+    required_bytes = budget["requiredAvailableBytes"]
+    if available_bytes < required_bytes:
+        _direct_runtime_integration_fail("CAPACITY_INSUFFICIENT")
+    return {
+        "schemaVersion": 1,
+        "kind": "direct-command-runtime-production-capacity-probe",
+        "filesystemRoots": observed,
+        "device": next(iter(devices)),
+        "availableBytes": available_bytes,
+        "requiredAvailableBytes": required_bytes,
+        "decision": "PASS",
+    }
+
+
+def _direct_runtime_static_resource_budget_v1() -> dict[str, Any]:
+    """Records the direct-runtime capacity reservation before any staging side effect.
+
+    @returns The current pass/fail resource budget bound to the retained V2 archive.
+    @throws core.ExecutionClosureValidationError When current free space cannot honor the immutable budget.
+    """
+    reservations = copy.deepcopy(_DIRECT_RUNTIME_STATIC_RESERVATIONS)
+    required_available = sum(reservations.values())
+    available = shutil.disk_usage("/tmp").free
+    budget = {
+        "schemaVersion": 1,
+        "kind": "direct-command-runtime-asset-resource-budget",
+        "frozenArchive": _reference(core.V2_ARCHIVE),
+        "sourceCeiling": copy.deepcopy(_DIRECT_RUNTIME_STANDARD_SOURCE_CEILING),
+        "reservations": reservations,
+        "requiredAvailableBytes": required_available,
+        "availableBytes": available,
+        "decision": "PASS" if available >= required_available else "BLOCKED",
+    }
+    _direct_runtime_resource_budget_v1(budget)
+    return budget
+
+
+def prepare_direct_command_runtime_execution_inputs_v1(
+    run_day: str | None = None,
+) -> dict[str, Any]:
+    """Derives static R1 runtime inputs from immutable archives and Git objects before staging.
+
+    The preparation uses git ls-tree and Git blob objects only. It captures
+    before candidate staging, rejects a liveWorktreeFallback, and leaves the
+    dynamic build output unresolved until its single in-container producer has
+    a receipt. The sealed finalizer rechecks packet bytes through
+    capture_direct_command_runtime_baseline_git_packet_v1(...).
+
+    @param run_day Optional UTC day used only to validate the prospective transaction date.
+    @returns The static direct-command-runtime-input-preparation envelope.
+    @throws core.ExecutionClosureValidationError When frozen inputs, Git objects, or capacity drift.
+    """
+    resolve_execution_run_day_v1(run_day)
+    frozen_archive = _load_json(core.V2_ARCHIVE)
+    frozen_entries = frozen_archive.get("entries")
+    if not isinstance(frozen_entries, list):
+        _direct_runtime_integration_fail("PREPARATION_FROZEN_ENTRIES_INVALID")
+    _, trigger = _direct_runtime_trigger_v1(frozen_entries, STANDARD_PACK_GENERATOR)
+    script_path = trigger["scriptPath"]
+    expected_root = f"{trigger['directory']}/assets/standard"
+    if expected_root != _DIRECT_RUNTIME_STANDARD_ASSET_ROOT:
+        _direct_runtime_integration_fail("PREPARATION_ROOT_INVALID", expected_root)
+    tree, records = _direct_runtime_baseline_tree_records_v1(script_path)
+    if script_path not in {record["path"] for record in records}:
+        _direct_runtime_integration_fail("PREPARATION_TREE_CEILING_INVALID")
+    selected = [
+        record
+        for record in records
+        if record["path"] == script_path
+        or not _direct_runtime_is_ignored_leaf_v1(record["path"])
+        or PurePosixPath(record["path"]).name in _DIRECT_RUNTIME_REQUIRED_RECEIPTS
+    ]
+    selected_assets = _direct_runtime_git_blob_assets_v1(selected)
+    selected_tree_inventory = [
+        {
+            "path": asset["path"],
+            "gitBlobSha1": asset["gitBlobSha1"],
+            "sha256": asset["sha256"],
+            "size": asset["size"],
+            "mode": asset["mode"],
+        }
+        for asset in selected_assets
+    ]
+    capacity = derive_direct_command_runtime_capacity_from_selected_tree_v1(
+        selected_tree_inventory,
+        expected_root,
+        shutil.disk_usage("/tmp").free,
+    )
+    packet = _direct_runtime_source_packet_from_assets_v1(tree, selected_assets)
+    materialization = build_direct_command_runtime_packet_materialization_contract_v1(packet)
+    resource_budget = capacity["resourceBudget"]
+    return {
+        "schemaVersion": 1,
+        "kind": "direct-command-runtime-input-preparation",
+        "transaction": {
+            "continuity": "SINGLE_UNINTERRUPTED_R1_V3_TRANSACTION",
+            "candidatePublication": "FORBIDDEN_UNTIL_ALL_GATES_PASS",
+            "externalRuntimeInputs": "REJECT",
+        },
+        "frozenInputs": {
+            "archive": _reference(core.V2_ARCHIVE),
+            "generatorArgv": list(STANDARD_PACK_GENERATOR),
+        },
+        "baselineGitDiscovery": {
+            "source": "GIT_OBJECT_DATABASE_ONLY",
+            "baselineCommit": _DIRECT_RUNTIME_BASELINE_COMMIT,
+            "tree": {"gitTreeSha1": tree},
+            "root": expected_root,
+            "recursiveListing": "GIT_LS_TREE_RECURSIVE_ONLY",
+            "liveWorktreeFallback": "REJECT",
+            "captureTiming": "CAPTURE_BEFORE_CANDIDATE_STAGING",
+            "selectedTreeInventory": capacity["selectedTreeInventory"],
+            "selectedTreeInventorySha256": capacity["selectedTreeInventorySha256"],
+        },
+        "sourcePacket": packet,
+        "packetMaterialization": materialization,
+        "resourceBudget": resource_budget,
+        "dynamicBuildOutput": _direct_runtime_prepared_dynamic_build_output_v1(
+            trigger,
+            selected_assets,
+        ),
+    }
+
+
+def _direct_runtime_same_attempt_identity_fail_v1(
+    code: str,
+    detail: str = "",
+) -> None:
+    """Raises one stable same-attempt identity binding failure.
+
+    @param code The invariant-specific failure suffix.
+    @param detail Optional context for the failed invariant.
+    @returns Nothing.
+    @throws core.ExecutionClosureValidationError Always.
+    """
+    _direct_runtime_integration_fail(
+        f"SAME_ATTEMPT_IDENTITY_{code}",
+        detail,
+    )
+
+
+def _direct_runtime_same_attempt_identity_json_value_v1(value: Any) -> Any:
+    """Converts runner-local path carriers into deterministic JSON-compatible identity values.
+
+    @param value The archive, context, receipt, or nested value to canonicalize.
+    @returns A recursively JSON-compatible identity carrier.
+    @throws core.ExecutionClosureValidationError When a carrier contains an unbound runtime value.
+    """
+    if isinstance(value, Path):
+        return str(value)
+    if isinstance(value, dict):
+        if not all(isinstance(key, str) for key in value):
+            _direct_runtime_same_attempt_identity_fail_v1(
+                "CANONICAL_VALUE_INVALID",
+            )
+        return {
+            key: _direct_runtime_same_attempt_identity_json_value_v1(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, (list, tuple)):
+        return [
+            _direct_runtime_same_attempt_identity_json_value_v1(item)
+            for item in value
+        ]
+    if value is None or isinstance(value, (bool, float, int, str)):
+        return value
+    _direct_runtime_same_attempt_identity_fail_v1("CANONICAL_VALUE_INVALID")
+
+
+def _direct_runtime_same_attempt_identity_canonical_v1(value: Any) -> bytes:
+    """Serializes one same-attempt carrier with runner-local paths normalized deterministically.
+
+    @param value The carrier to serialize.
+    @returns Canonical UTF-8 identity bytes.
+    @throws core.ExecutionClosureValidationError When the carrier cannot be represented safely.
+    """
+    return _canonical(_direct_runtime_same_attempt_identity_json_value_v1(value))
+
+
+def _direct_runtime_same_attempt_identity_sha256_v1(
+    value: Any,
+    code: str,
+) -> str:
+    """Validates one same-attempt SHA-256 field.
+
+    @param value The claimed digest.
+    @param code The invariant-specific failure suffix.
+    @returns The validated lowercase digest.
+    @throws core.ExecutionClosureValidationError When the digest is malformed.
+    """
+    if not isinstance(value, str) or re.fullmatch(r"[0-9a-f]{64}", value) is None:
+        _direct_runtime_same_attempt_identity_fail_v1(code)
+    return value
+
+
+def _direct_runtime_same_attempt_identity_reference_v1(
+    value: Any,
+    code: str,
+    *,
+    require_observer_path: bool = True,
+) -> dict[str, Any]:
+    """Validates one raw observer receipt reference.
+
+    @param value The claimed raw receipt reference.
+    @param code The invariant-specific failure suffix.
+    @param require_observer_path Whether the reference must be the post-build observer stream.
+    @returns The validated receipt reference.
+    @throws core.ExecutionClosureValidationError When raw receipt provenance is incomplete.
+    """
+    if (
+        not isinstance(value, dict)
+        or set(value) != {"path", "sha256", "size"}
+        or not isinstance(value.get("path"), str)
+        or (
+            require_observer_path
+            and not value["path"].endswith(
+            "/raw/receipt-direct-runtime-dist-identity.stdout.txt",
+            )
+        )
+        or type(value.get("size")) is not int
+        or value["size"] < 0
+    ):
+        _direct_runtime_same_attempt_identity_fail_v1(code)
+    _direct_runtime_same_attempt_identity_sha256_v1(value["sha256"], code)
+    return value
+
+
+def _direct_runtime_same_attempt_identity_rows_v1(
+    value: Any,
+    code: str,
+) -> list[dict[str, Any]]:
+    """Validates exact in-container post-build read identities.
+
+    @param value The observer's derived-build read collection.
+    @param code The invariant-specific failure suffix.
+    @returns The validated ordered identity rows.
+    @throws core.ExecutionClosureValidationError When a read is not a regular /work file identity.
+    """
+    if not isinstance(value, list) or not value:
+        _direct_runtime_same_attempt_identity_fail_v1(code)
+    rows: list[dict[str, Any]] = []
+    for row in value:
+        if (
+            not isinstance(row, dict)
+            or set(row) != {"mode", "path", "resolvedPath", "sha256", "size"}
+            or not isinstance(row.get("path"), str)
+            or not row["path"]
+            or row.get("resolvedPath") != f"/work/{row['path']}"
+            or not isinstance(row.get("mode"), str)
+            or re.fullmatch(r"100[0-7]{3}", row["mode"]) is None
+            or type(row.get("size")) is not int
+            or row["size"] < 0
+        ):
+            _direct_runtime_same_attempt_identity_fail_v1(code)
+        _direct_runtime_same_attempt_identity_sha256_v1(row["sha256"], code)
+        rows.append(row)
+    if [row["path"] for row in rows] != sorted(row["path"] for row in rows):
+        _direct_runtime_same_attempt_identity_fail_v1(code)
+    if len({row["path"] for row in rows}) != len(rows):
+        _direct_runtime_same_attempt_identity_fail_v1(code)
+    return rows
+
+
+def _direct_runtime_same_attempt_identity_observer_v1(
+    value: Any,
+    code: str,
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    """Validates the nonce-bound in-container observer payload.
+
+    @param value The parsed observer payload.
+    @param code The invariant-specific failure suffix.
+    @returns The observer and its validated ordered derived reads.
+    @throws core.ExecutionClosureValidationError When the observer is stale, malformed, or outside /work.
+    """
+    if (
+        not isinstance(value, dict)
+        or set(value) != {
+            "attemptNonceSha256",
+            "derivedBuildReadSet",
+            "workRoot",
+        }
+        or value.get("workRoot") != "/work"
+    ):
+        _direct_runtime_same_attempt_identity_fail_v1(code)
+    _direct_runtime_same_attempt_identity_sha256_v1(
+        value["attemptNonceSha256"],
+        code,
+    )
+    return value, _direct_runtime_same_attempt_identity_rows_v1(
+        value["derivedBuildReadSet"],
+        code,
+    )
+
+
+def _direct_runtime_same_attempt_identity_context_work_root_v1(
+    context: Any,
+    code: str,
+) -> str:
+    """Returns the container work root from either a pure fixture or production context.
+
+    @param context The execution context to bind.
+    @param code The invariant-specific failure suffix.
+    @returns The bound container work root.
+    @throws core.ExecutionClosureValidationError When the context does not describe /work.
+    """
+    if not isinstance(context, dict):
+        _direct_runtime_same_attempt_identity_fail_v1(code)
+    clean_work_root = context.get("cleanWorkRoot")
+    root = (
+        clean_work_root.get("containerPath")
+        if isinstance(clean_work_root, dict)
+        else context.get("work")
+    )
+    if root != "/work":
+        _direct_runtime_same_attempt_identity_fail_v1(code)
+    return root
+
+
+def _direct_runtime_same_attempt_identity_read_set_matches_v1(
+    post_build_identity: Any,
+    observer_rows: list[dict[str, Any]],
+    code: str,
+) -> None:
+    """Binds observer rows to the finalizer-facing derived read set.
+
+    @param post_build_identity The post-build carrier containing the finalizer read set.
+    @param observer_rows The exact ordered rows emitted by the in-container observer.
+    @param code The invariant-specific failure suffix.
+    @returns Nothing when every observer byte identity matches its derived read.
+    @throws core.ExecutionClosureValidationError When observer and finalizer identities disagree.
+    """
+    read_set = (
+        post_build_identity.get("readSet")
+        if isinstance(post_build_identity, dict)
+        else None
+    )
+    derived_rows = (
+        read_set.get("derivedBuildReadSet")
+        if isinstance(read_set, dict)
+        else None
+    )
+    if not isinstance(derived_rows, list) or len(derived_rows) != len(observer_rows):
+        _direct_runtime_same_attempt_identity_fail_v1(code)
+    for observed, derived in zip(observer_rows, derived_rows):
+        if (
+            not isinstance(derived, dict)
+            or derived.get("path") != observed["path"]
+            or derived.get("sha256") != observed["sha256"]
+            or derived.get("size") != observed["size"]
+        ):
+            _direct_runtime_same_attempt_identity_fail_v1(code)
+
+
+def _direct_runtime_same_attempt_identity_envelope_v1(
+    value: Any,
+    code: str,
+) -> dict[str, Any]:
+    """Validates one sealed same-attempt post-build identity envelope.
+
+    @param value The claimed identity envelope.
+    @param code The invariant-specific failure suffix.
+    @returns The validated envelope.
+    @throws core.ExecutionClosureValidationError When any bound digest or receipt is malformed.
+    """
+    required = {
+        "schemaVersion",
+        "kind",
+        "attemptNonceSha256",
+        "preparationSha256",
+        "archiveSha256",
+        "contextSha256",
+        "runtimeBuildReceiptSha256",
+        "observerRawReceipt",
+        "workRoot",
+        "derivedBuildReadSetSha256",
+    }
+    if (
+        not isinstance(value, dict)
+        or set(value) != required
+        or value.get("schemaVersion") != 1
+        or value.get("kind")
+        != "direct-command-runtime-same-attempt-post-build-identity"
+        or value.get("workRoot") != "/work"
+    ):
+        _direct_runtime_same_attempt_identity_fail_v1(code)
+    for field in (
+        "attemptNonceSha256",
+        "preparationSha256",
+        "archiveSha256",
+        "contextSha256",
+        "runtimeBuildReceiptSha256",
+        "derivedBuildReadSetSha256",
+    ):
+        _direct_runtime_same_attempt_identity_sha256_v1(value[field], code)
+    _direct_runtime_same_attempt_identity_reference_v1(
+        value["observerRawReceipt"],
+        code,
+    )
+    return value
+
+
+def build_direct_command_runtime_same_attempt_identity_envelope_v1(
+    preparation: dict[str, Any],
+    archive: dict[str, Any],
+    context: dict[str, Any],
+    runtime_build_receipt: dict[str, Any],
+    post_build_identity: dict[str, Any],
+    attempt_nonce: bytes,
+) -> dict[str, Any]:
+    """Builds the immutable nonce-bound post-build identity envelope for one runtime attempt.
+
+    @param preparation The immutable runtime preparation consumed by this attempt.
+    @param archive The archive bytes staged before materialization.
+    @param context The clean execution context staged before materialization.
+    @param runtime_build_receipt The successful prerequisite-build receipt for this attempt.
+    @param post_build_identity The nonce-bound in-container post-build observation.
+    @param attempt_nonce The private cryptographic nonce for this one attempt.
+    @returns The exact digest envelope consumed by finalization, binding, and trace checks.
+    @throws core.ExecutionClosureValidationError When any carrier is stale, spoofed, or cross-attempt.
+    """
+    if (
+        not isinstance(preparation, dict)
+        or not isinstance(archive, dict)
+        or not isinstance(context, dict)
+        or not isinstance(runtime_build_receipt, dict)
+        or not isinstance(post_build_identity, dict)
+        or not isinstance(attempt_nonce, bytes)
+        or not attempt_nonce
+    ):
+        _direct_runtime_same_attempt_identity_fail_v1("BUILD_INPUT_INVALID")
+    preparation_sha256 = _sha256(
+        _direct_runtime_same_attempt_identity_canonical_v1(preparation),
+    )
+    _direct_runtime_same_attempt_identity_context_work_root_v1(
+        context,
+        "BUILD_CONTEXT_INVALID",
+    )
+    direct_attempt = runtime_build_receipt.get("directRuntimeAttempt")
+    if (
+        runtime_build_receipt.get("directRuntimePreparationSha256")
+        != preparation_sha256
+        or not isinstance(direct_attempt, dict)
+    ):
+        _direct_runtime_same_attempt_identity_fail_v1(
+            "BUILD_RUNTIME_RECEIPT_INVALID",
+        )
+    nonce_sha256 = _sha256(attempt_nonce)
+    if direct_attempt.get("nonceSha256") != nonce_sha256:
+        _direct_runtime_same_attempt_identity_fail_v1("BUILD_NONCE_INVALID")
+    _direct_runtime_same_attempt_identity_reference_v1(
+        runtime_build_receipt.get("receipt"),
+        "BUILD_RUNTIME_RECEIPT_INVALID",
+        require_observer_path=False,
+    )
+    if (
+        post_build_identity.get("source")
+        != "IN_CONTAINER_POST_RUNTIME_BUILD_IDENTITY"
+        or post_build_identity.get("directRuntimePreparationSha256")
+        != preparation_sha256
+    ):
+        _direct_runtime_same_attempt_identity_fail_v1("BUILD_OBSERVER_INVALID")
+    observer, observer_rows = _direct_runtime_same_attempt_identity_observer_v1(
+        post_build_identity.get("observation"),
+        "BUILD_OBSERVER_INVALID",
+    )
+    if observer["attemptNonceSha256"] != nonce_sha256:
+        _direct_runtime_same_attempt_identity_fail_v1("BUILD_NONCE_INVALID")
+    observer_receipt = _direct_runtime_same_attempt_identity_reference_v1(
+        post_build_identity.get("receipt"),
+        "BUILD_OBSERVER_RECEIPT_INVALID",
+    )
+    observer_bytes = _direct_runtime_same_attempt_identity_canonical_v1(
+        observer,
+    )
+    if observer_receipt != {
+        "path": observer_receipt["path"],
+        "sha256": _sha256(observer_bytes),
+        "size": len(observer_bytes),
+    }:
+        _direct_runtime_same_attempt_identity_fail_v1(
+            "BUILD_OBSERVER_RECEIPT_INVALID",
+        )
+    _direct_runtime_same_attempt_identity_read_set_matches_v1(
+        post_build_identity,
+        observer_rows,
+        "BUILD_READ_SET_INVALID",
+    )
+    return {
+        "schemaVersion": 1,
+        "kind": "direct-command-runtime-same-attempt-post-build-identity",
+        "attemptNonceSha256": nonce_sha256,
+        "preparationSha256": preparation_sha256,
+        "archiveSha256": _sha256(
+            _direct_runtime_same_attempt_identity_canonical_v1(archive),
+        ),
+        "contextSha256": _sha256(
+            _direct_runtime_same_attempt_identity_canonical_v1(context),
+        ),
+        "runtimeBuildReceiptSha256": _sha256(
+            _direct_runtime_same_attempt_identity_canonical_v1(
+                runtime_build_receipt,
+            ),
+        ),
+        "observerRawReceipt": copy.deepcopy(observer_receipt),
+        "workRoot": observer["workRoot"],
+        "derivedBuildReadSetSha256": _sha256(
+            _direct_runtime_same_attempt_identity_canonical_v1(observer_rows),
+        ),
+    }
+
+
+def validate_direct_command_runtime_same_attempt_identity_finalization_v1(
+    envelope: dict[str, Any],
+    preparation: dict[str, Any],
+    runtime_build_receipt: dict[str, Any],
+    post_build_identity: dict[str, Any],
+) -> None:
+    """Validates the preparation, build, observer, and receipt links before finalization.
+
+    @param envelope The sealed same-attempt identity envelope.
+    @param preparation The immutable runtime preparation consumed by this attempt.
+    @param runtime_build_receipt The prerequisite-build receipt to bind.
+    @param post_build_identity The in-container post-build identity to bind.
+    @returns Nothing when finalization inputs are cryptographically same-attempt.
+    @throws core.ExecutionClosureValidationError When any finalization input is stale or spoofed.
+    """
+    validated = _direct_runtime_same_attempt_identity_envelope_v1(
+        envelope,
+        "FINALIZATION_ENVELOPE_INVALID",
+    )
+    if (
+        not isinstance(preparation, dict)
+        or not isinstance(runtime_build_receipt, dict)
+        or not isinstance(post_build_identity, dict)
+        or validated["preparationSha256"]
+        != _sha256(
+            _direct_runtime_same_attempt_identity_canonical_v1(preparation),
+        )
+        or validated["runtimeBuildReceiptSha256"]
+        != _sha256(
+            _direct_runtime_same_attempt_identity_canonical_v1(
+                runtime_build_receipt,
+            ),
+        )
+        or runtime_build_receipt.get("directRuntimePreparationSha256")
+        != validated["preparationSha256"]
+    ):
+        _direct_runtime_same_attempt_identity_fail_v1(
+            "FINALIZATION_LINK_INVALID",
+        )
+    direct_attempt = runtime_build_receipt.get("directRuntimeAttempt")
+    if (
+        not isinstance(direct_attempt, dict)
+        or direct_attempt.get("nonceSha256")
+        != validated["attemptNonceSha256"]
+        or post_build_identity.get("source")
+        != "IN_CONTAINER_POST_RUNTIME_BUILD_IDENTITY"
+        or post_build_identity.get("directRuntimePreparationSha256")
+        != validated["preparationSha256"]
+    ):
+        _direct_runtime_same_attempt_identity_fail_v1(
+            "FINALIZATION_LINK_INVALID",
+        )
+    observer, observer_rows = _direct_runtime_same_attempt_identity_observer_v1(
+        post_build_identity.get("observation"),
+        "FINALIZATION_OBSERVER_INVALID",
+    )
+    if (
+        observer["attemptNonceSha256"] != validated["attemptNonceSha256"]
+        or observer["workRoot"] != validated["workRoot"]
+        or validated["derivedBuildReadSetSha256"]
+        != _sha256(
+            _direct_runtime_same_attempt_identity_canonical_v1(observer_rows),
+        )
+    ):
+        _direct_runtime_same_attempt_identity_fail_v1(
+            "FINALIZATION_OBSERVER_INVALID",
+        )
+    observer_receipt = _direct_runtime_same_attempt_identity_reference_v1(
+        post_build_identity.get("receipt"),
+        "FINALIZATION_OBSERVER_RECEIPT_INVALID",
+    )
+    observer_bytes = _direct_runtime_same_attempt_identity_canonical_v1(
+        observer,
+    )
+    if (
+        observer_receipt != validated["observerRawReceipt"]
+        or observer_receipt["sha256"] != _sha256(observer_bytes)
+        or observer_receipt["size"] != len(observer_bytes)
+    ):
+        _direct_runtime_same_attempt_identity_fail_v1(
+            "FINALIZATION_OBSERVER_RECEIPT_INVALID",
+        )
+    _direct_runtime_same_attempt_identity_read_set_matches_v1(
+        post_build_identity,
+        observer_rows,
+        "FINALIZATION_READ_SET_INVALID",
+    )
+
+
+def validate_direct_command_runtime_same_attempt_identity_binding_v1(
+    envelope: dict[str, Any],
+    archive: dict[str, Any],
+    context: dict[str, Any],
+) -> None:
+    """Validates archive and execution-context bytes before sealing finalization.
+
+    @param envelope The sealed same-attempt identity envelope.
+    @param archive The archive bytes to bind.
+    @param context The execution context bytes to bind.
+    @returns Nothing when archive and context still match the pre-finalization envelope.
+    @throws core.ExecutionClosureValidationError When binding would accept a mutated archive or context.
+    """
+    validated = _direct_runtime_same_attempt_identity_envelope_v1(
+        envelope,
+        "BINDING_ENVELOPE_INVALID",
+    )
+    if (
+        not isinstance(archive, dict)
+        or not isinstance(context, dict)
+        or _direct_runtime_same_attempt_identity_context_work_root_v1(
+            context,
+            "BINDING_CONTEXT_INVALID",
+        )
+        != validated["workRoot"]
+        or validated["archiveSha256"]
+        != _sha256(
+            _direct_runtime_same_attempt_identity_canonical_v1(archive),
+        )
+        or validated["contextSha256"]
+        != _sha256(
+            _direct_runtime_same_attempt_identity_canonical_v1(context),
+        )
+    ):
+        _direct_runtime_same_attempt_identity_fail_v1("BINDING_LINK_INVALID")
+
+
+def validate_direct_command_runtime_same_attempt_identity_before_trace_v1(
+    envelope: dict[str, Any],
+    post_trace_observation: dict[str, Any],
+) -> None:
+    """Validates a fresh post-generator observer before raw trace receipt capture.
+
+    @param envelope The sealed same-attempt identity envelope.
+    @param post_trace_observation The freshly captured post-generator identity observation.
+    @returns Nothing when generated derived bytes remain identical to the sealed observation.
+    @throws core.ExecutionClosureValidationError When a TOCTOU mutation or cross-attempt observation is detected.
+    """
+    validated = _direct_runtime_same_attempt_identity_envelope_v1(
+        envelope,
+        "TRACE_ENVELOPE_INVALID",
+    )
+    observer, rows = _direct_runtime_same_attempt_identity_observer_v1(
+        post_trace_observation,
+        "TRACE_OBSERVER_INVALID",
+    )
+    if (
+        observer["attemptNonceSha256"] != validated["attemptNonceSha256"]
+        or observer["workRoot"] != validated["workRoot"]
+        or _sha256(
+            _direct_runtime_same_attempt_identity_canonical_v1(rows),
+        )
+        != validated["derivedBuildReadSetSha256"]
+    ):
+        _direct_runtime_same_attempt_identity_fail_v1("TRACE_TOCTOU_INVALID")
+
+
+def finalize_direct_command_runtime_execution_inputs_v1(
+    preparation: dict[str, Any],
+    runtime_build_receipt: dict[str, Any],
+    post_build_identity: dict[str, Any],
+) -> dict[str, Any]:
+    """Seals runtime integration after one recorded in-container prerequisite build.
+
+    @param preparation The immutable static preparation envelope from this transaction.
+    @param runtime_build_receipt The successful same-transaction runtime build receipt.
+    @param post_build_identity The in-container identity of the generated dist reads.
+    @returns The sealed direct-runtime runner integration.
+    @throws core.ExecutionClosureValidationError When the build, preparation, or derived identity is unbound.
+    """
+    if not isinstance(preparation, dict) or preparation.get("kind") != "direct-command-runtime-input-preparation":
+        _direct_runtime_integration_fail("PREPARATION_INVALID")
+    packet = preparation.get("sourcePacket")
+    materialization = preparation.get("packetMaterialization")
+    budget = preparation.get("resourceBudget")
+    dynamic_build_output = preparation.get("dynamicBuildOutput")
+    discovery = preparation.get("baselineGitDiscovery")
+    if (
+        not isinstance(packet, dict)
+        or not isinstance(materialization, dict)
+        or not isinstance(budget, dict)
+        or not isinstance(dynamic_build_output, dict)
+        or not isinstance(discovery, dict)
+        or dynamic_build_output.get("source") != "IN_CONTAINER_POST_RUNTIME_BUILD_IDENTITY"
+        or dynamic_build_output.get("receiptIdentityPolicy") != "EXACT_PRODUCER_RECEIPT_FOR_EACH_DERIVED_DIST_READ"
+    ):
+        _direct_runtime_integration_fail("PREPARATION_INVALID")
+    _direct_runtime_validate_source_packet_v1(packet, packet.get("baselineReadSet"))
+    if materialization != build_direct_command_runtime_packet_materialization_contract_v1(packet):
+        _direct_runtime_integration_fail("PREPARATION_MATERIALIZATION_INVALID")
+    _direct_runtime_resource_budget_v1(budget)
+    inventory = discovery.get("selectedTreeInventory")
+    inventory_sha256 = discovery.get("selectedTreeInventorySha256")
+    root = discovery.get("root")
+    if (
+        not isinstance(inventory, list)
+        or not isinstance(inventory_sha256, str)
+        or not isinstance(root, str)
+    ):
+        _direct_runtime_integration_fail("PREPARATION_TREE_CAPACITY_INVALID")
+    capacity = derive_direct_command_runtime_capacity_from_selected_tree_v1(
+        inventory,
+        root,
+        budget["availableBytes"],
+    )
+    packet_inventory = [
+        {
+            "path": identity["path"],
+            "gitBlobSha1": identity["gitBlobSha1"],
+            "sha256": identity["sha256"],
+            "size": identity["size"],
+            "mode": identity["mode"],
+        }
+        for identity in packet["baselineReadSet"]
+    ]
+    if (
+        capacity["selectedTreeInventory"] != inventory
+        or capacity["selectedTreeInventorySha256"] != inventory_sha256
+        or capacity["resourceBudget"] != budget
+        or packet_inventory != inventory
+    ):
+        _direct_runtime_integration_fail("PREPARATION_TREE_CAPACITY_INVALID")
+    preparation_sha256 = _sha256(_canonical(preparation))
+    if (
+        not isinstance(runtime_build_receipt, dict)
+        or runtime_build_receipt.get("id") != "build-advantage-play-kit-for-runtime"
+        or runtime_build_receipt.get("argv") != ["pnpm", "build"]
+        or runtime_build_receipt.get("exitCode") != 0
+        or runtime_build_receipt.get("directRuntimePreparationSha256") != preparation_sha256
+        or not isinstance(runtime_build_receipt.get("directRuntimeAttempt"), dict)
+    ):
+        _direct_runtime_integration_fail("RUNTIME_BUILD_RECEIPT_INVALID")
+    runtime_attempt = runtime_build_receipt["directRuntimeAttempt"]
+    if (
+        not isinstance(runtime_attempt.get("nonceSha256"), str)
+        or re.fullmatch(r"[0-9a-f]{64}", runtime_attempt["nonceSha256"])
+        is None
+    ):
+        _direct_runtime_integration_fail("RUNTIME_BUILD_RECEIPT_INVALID")
+    if (
+        not isinstance(post_build_identity, dict)
+        or post_build_identity.get("source") != "IN_CONTAINER_POST_RUNTIME_BUILD_IDENTITY"
+        or post_build_identity.get("directRuntimePreparationSha256") != preparation_sha256
+        or not isinstance(post_build_identity.get("readSet"), dict)
+    ):
+        _direct_runtime_integration_fail("POST_BUILD_IDENTITY_INVALID")
+    observation = post_build_identity.get("observation")
+    observed_rows = (
+        observation.get("derivedBuildReadSet")
+        if isinstance(observation, dict)
+        else None
+    )
+    if (
+        not isinstance(observation, dict)
+        or set(observation)
+        != {"attemptNonceSha256", "derivedBuildReadSet", "workRoot"}
+        or not isinstance(observed_rows, list)
+        or observation.get("attemptNonceSha256")
+        != runtime_attempt["nonceSha256"]
+        or observation.get("workRoot") != "/work"
+        or any(
+            not isinstance(row, dict)
+            or set(row) != {"mode", "path", "resolvedPath", "sha256", "size"}
+            or not isinstance(row.get("path"), str)
+            or row.get("resolvedPath") != f"/work/{row.get('path')}"
+            or not isinstance(row.get("mode"), str)
+            or re.fullmatch(r"100[0-7]{3}", row["mode"]) is None
+            or not isinstance(row.get("sha256"), str)
+            or re.fullmatch(r"[0-9a-f]{64}", row["sha256"]) is None
+            or type(row.get("size")) is not int
+            or row["size"] < 0
+            for row in observed_rows
+        )
+    ):
+        _direct_runtime_integration_fail("POST_BUILD_IDENTITY_INVALID")
+    observation_bytes = _canonical(observation)
+    expected_observation_receipt = {
+        "path": f"{V3_NAME}/raw/receipt-direct-runtime-dist-identity.stdout.txt",
+        "sha256": _sha256(observation_bytes),
+        "size": len(observation_bytes),
+    }
+    if post_build_identity.get("receipt") != expected_observation_receipt:
+        _direct_runtime_integration_fail("POST_BUILD_IDENTITY_RECEIPT_INVALID")
+    read_set = post_build_identity["readSet"]
+    _direct_runtime_validate_read_set_shape_v1(read_set, budget)
+    if read_set["baselineReadSet"] != packet["baselineReadSet"]:
+        _direct_runtime_integration_fail("POST_BUILD_IDENTITY_INVALID")
+    derived_rows = read_set["derivedBuildReadSet"]
+    if (
+        len(observed_rows) != len(derived_rows)
+        or [row["path"] for row in observed_rows]
+        != [row["path"] for row in derived_rows]
+        or any(
+            observed["sha256"] != derived["sha256"]
+            or observed["size"] != derived["size"]
+            or observed["resolvedPath"] != f"/work/{derived['path']}"
+            for observed, derived in zip(observed_rows, derived_rows)
+        )
+    ):
+        _direct_runtime_integration_fail("POST_BUILD_IDENTITY_INVALID")
+    for derived in derived_rows:
+        producer = derived.get("producer") if isinstance(derived, dict) else None
+        if (
+            not isinstance(producer, dict)
+            or producer.get("kind") != "PACKAGE_SCRIPT_PREREQUISITE_BUILD"
+            or producer.get("scriptSegment") != "pnpm build"
+            or producer.get("receipt") != runtime_build_receipt.get("receipt")
+        ):
+            _direct_runtime_integration_fail("POST_BUILD_IDENTITY_INVALID")
+    # The identity must arrive from the in-container post-build observer, not a
+    # host or caller-supplied prebuild; the integration seals it exactly once.
+    return build_direct_command_runtime_runner_integration_v1(
+        read_set,
+        packet,
+        runtime_build_receipt["directRuntimeAttempt"],
+        budget,
+    )
+
+
+def execute_direct_command_runtime_prepared_transaction_v1(
+    preparation: dict[str, Any],
+    executor: Any,
+) -> dict[str, Any]:
+    """Executes the one ordered direct-runtime preparation transaction through an executor.
+
+    @param preparation The immutable pre-staging preparation envelope.
+    @param executor The production or synthetic stage executor for this transaction.
+    @returns Every carrier produced by the ordered archive-to-trace transaction.
+    @throws core.ExecutionClosureValidationError When the real finalizer rejects observed runtime identity.
+    """
+    try:
+        # The concrete production executor owns a real statvfs/st_dev observation
+        # before it can allocate a temporary root. The optional branch retains the
+        # deliberately I/O-free synthetic executor used by the contract test.
+        capacity_probe = (
+            executor.probe_capacity(preparation)
+            if hasattr(executor, "probe_capacity")
+            else None
+        )
+        archive = executor.build_archive(preparation)
+        context = executor.build_context(archive, preparation)
+        materialization = executor.materialize(context, preparation)
+        runtime_build_receipt = executor.runtime_build(
+            context,
+            materialization,
+            preparation,
+        )
+        post_build_identity = executor.post_build_identity(
+            context,
+            runtime_build_receipt,
+            preparation,
+        )
+        same_attempt_identity_envelope_builder = getattr(
+            executor,
+            "build_same_attempt_identity_envelope",
+            None,
+        )
+        if not callable(same_attempt_identity_envelope_builder):
+            _direct_runtime_integration_fail(
+                "SAME_ATTEMPT_IDENTITY_ENVELOPE_BUILDER_REQUIRED",
+            )
+        same_attempt_identity_envelope = same_attempt_identity_envelope_builder(
+            preparation,
+            archive,
+            context,
+            runtime_build_receipt,
+            post_build_identity,
+        )
+        validate_direct_command_runtime_same_attempt_identity_finalization_v1(
+            same_attempt_identity_envelope,
+            preparation,
+            runtime_build_receipt,
+            post_build_identity,
+        )
+        integration = finalize_direct_command_runtime_execution_inputs_v1(
+            preparation,
+            runtime_build_receipt,
+            post_build_identity,
+        )
+        sealed_integration = executor.bind_finalization(
+            archive,
+            context,
+            integration,
+        )
+        if sealed_integration is None:
+            _direct_runtime_integration_fail("FINALIZATION_BINDING_MISSING")
+        validate_direct_command_runtime_same_attempt_identity_binding_v1(
+            same_attempt_identity_envelope,
+            archive,
+            context,
+        )
+        generation = executor.generate(context, sealed_integration)
+        trace = executor.capture_trace(
+            context,
+            sealed_integration,
+            generation,
+        )
+    except BaseException as error:
+        if not isinstance(error, KeyboardInterrupt) and hasattr(
+            executor,
+            "preserve_failure",
+        ):
+            executor.preserve_failure(error)
+        raise
+    transaction = {
+        "archive": archive,
+        "context": context,
+        "materialization": materialization,
+        "runtimeBuildReceipt": runtime_build_receipt,
+        "postBuildIdentity": post_build_identity,
+        "integration": integration,
+        "sealedIntegration": sealed_integration,
+        "generation": generation,
+        "trace": trace,
+    }
+    transaction["sameAttemptIdentityEnvelope"] = same_attempt_identity_envelope
+    if capacity_probe is not None:
+        return {
+            "capacityProbe": capacity_probe,
+            **transaction,
+        }
+    return transaction
 
 
 def _direct_runtime_integration_fail(code: str, detail: str = "") -> None:
@@ -1360,7 +2893,13 @@ def _direct_runtime_attempt_state_v1(attempt: Any) -> dict[str, Any]:
     """
     if attempt is None:
         attempt = {}
-    if not isinstance(attempt, dict) or not set(attempt) <= {"id", "reachedStage", "laterStages", "executionTrace"}:
+    if not isinstance(attempt, dict) or not set(attempt) <= {
+        "id",
+        "nonceSha256",
+        "reachedStage",
+        "laterStages",
+        "executionTrace",
+    }:
         _direct_runtime_integration_fail("ATTEMPT_STATE_INVALID")
     identifier = attempt.get("id", "direct-runtime-detached-runner-v1")
     reached_stage = attempt.get("reachedStage", "direct-runtime-preflight")
@@ -1378,12 +2917,21 @@ def _direct_runtime_attempt_state_v1(attempt: Any) -> dict[str, Any]:
         _direct_runtime_integration_fail("ATTEMPT_STATE_INVALID")
     if execution_trace is not None and not isinstance(execution_trace, dict):
         _direct_runtime_integration_fail("ATTEMPT_STATE_INVALID")
-    return {
+    nonce_sha256 = attempt.get("nonceSha256")
+    if nonce_sha256 is not None and (
+        not isinstance(nonce_sha256, str)
+        or re.fullmatch(r"[0-9a-f]{64}", nonce_sha256) is None
+    ):
+        _direct_runtime_integration_fail("ATTEMPT_STATE_INVALID")
+    state = {
         "id": identifier,
         "reachedStage": reached_stage,
         "laterStages": later_stages,
         "executionTrace": copy.deepcopy(execution_trace),
     }
+    if nonce_sha256 is not None:
+        state["nonceSha256"] = nonce_sha256
+    return state
 
 
 def build_direct_command_runtime_runner_integration_v1(
@@ -1688,12 +3236,7 @@ def _validate_direct_runtime_apk_build_receipt_v1(
     )
     if not isinstance(build, dict) or build.get("exitCode") != 0:
         _direct_runtime_integration_fail("APK_BUILD_RECEIPT_MISSING")
-    expected_argv = [
-        "pnpm",
-        "--filter",
-        integration["readSet"]["trigger"]["package"],
-        "build",
-    ]
+    expected_argv = ["pnpm", "build"]
     if build.get("argv") != expected_argv:
         _direct_runtime_integration_fail("APK_BUILD_RECEIPT_IDENTITY_INVALID")
     for derived in integration["apkRuntimeBuild"]["derivedBuildReadSet"]:
@@ -1722,12 +3265,37 @@ def _validate_direct_runtime_post_generator_dist_identity_v1(
         {key: item[key] for key in ("path", "sha256", "size")}
         for item in integration["apkRuntimeBuild"]["derivedBuildReadSet"]
     ]
-    expected_observation = {"derivedBuildReadSet": expected}
+    observation = command.get("directRuntimeDistIdentity")
+    rows = (
+        observation.get("derivedBuildReadSet")
+        if isinstance(observation, dict)
+        else None
+    )
+    attempt_nonce_sha256 = integration.get("attempt", {}).get("nonceSha256")
     if (
         command.get("id") != "direct-runtime-dist-identity-post-generator"
         or command.get("argv") != ["node", "direct-runtime-dist-identity-post-generator"]
         or command.get("exitCode") != 0
-        or command.get("directRuntimeDistIdentity") != expected_observation
+        or not isinstance(observation, dict)
+        or set(observation)
+        != {"attemptNonceSha256", "derivedBuildReadSet", "workRoot"}
+        or not isinstance(rows, list)
+        or not isinstance(attempt_nonce_sha256, str)
+        or re.fullmatch(r"[0-9a-f]{64}", attempt_nonce_sha256) is None
+        or observation.get("attemptNonceSha256") != attempt_nonce_sha256
+        or observation.get("workRoot") != "/work"
+        or [row.get("path") if isinstance(row, dict) else None for row in rows]
+        != [item["path"] for item in expected]
+        or any(
+            not isinstance(row, dict)
+            or set(row) != {"mode", "path", "resolvedPath", "sha256", "size"}
+            or row.get("resolvedPath") != f"/work/{expected_row['path']}"
+            or not isinstance(row.get("mode"), str)
+            or re.fullmatch(r"100[0-7]{3}", row["mode"]) is None
+            or row.get("sha256") != expected_row["sha256"]
+            or row.get("size") != expected_row["size"]
+            for row, expected_row in zip(rows, expected)
+        )
     ):
         _direct_runtime_integration_fail("POST_GENERATOR_DIST_IDENTITY_INVALID")
 _WORKSPACE_SOURCE_SUFFIXES = {".cjs", ".cts", ".js", ".jsx", ".mjs", ".mts", ".ts", ".tsx"}
@@ -2942,6 +4510,203 @@ def _attempt_raw_reference(path: Path, attempt_directory: Path) -> dict[str, Any
     return {"path": f"{attempt_directory.name}/raw/{path.name}", "sha256": _sha256(data), "size": len(data)}
 
 
+def _build_direct_runtime_preseal_attempt_v1(
+    preparation: Any,
+    attempt_nonce: Any,
+    reached_stage: Any,
+) -> dict[str, Any]:
+    """Builds one closed pre-seal carrier from executor-owned transaction state.
+
+    @param preparation The executor-owned preparation captured before dispatch.
+    @param attempt_nonce The executor-owned random nonce captured before dispatch.
+    @param reached_stage The pre-seal runner stage about to execute.
+    @returns The exact terminality carrier that can bind one nonzero staged command.
+    @throws core.ExecutionClosureValidationError When the owned state cannot describe a pre-seal stage.
+    """
+    preseal_stages = _DIRECT_RUNTIME_RUNNER_STAGES[
+        : _DIRECT_RUNTIME_RUNNER_STAGES.index("direct-runtime-dist-identity") + 1
+    ]
+    if (
+        not isinstance(preparation, dict)
+        or not isinstance(attempt_nonce, bytes)
+        or len(attempt_nonce) != 32
+        or reached_stage not in preseal_stages
+    ):
+        _direct_runtime_integration_fail("FAILED_ATTEMPT_PRESEAL_INVALID")
+    reached_index = _DIRECT_RUNTIME_RUNNER_STAGES.index(reached_stage)
+    return {
+        "schemaVersion": 1,
+        "kind": "direct-command-runtime-pre-seal-attempt",
+        "preparationSha256": _sha256(_canonical(preparation)),
+        "stagePlan": list(_DIRECT_RUNTIME_RUNNER_STAGES),
+        "attempt": {
+            "id": "direct-runtime-detached-runner-v1",
+            "nonceSha256": _sha256(attempt_nonce),
+            "reachedStage": reached_stage,
+            "laterStages": [
+                {"id": stage, "status": "NOT_RUN"}
+                for stage in _DIRECT_RUNTIME_RUNNER_STAGES[reached_index + 1:]
+            ],
+            "executionTrace": None,
+        },
+    }
+
+
+def _validate_direct_runtime_preseal_failed_attempt_v1(
+    record: Any,
+    stage: Any,
+) -> dict[str, Any]:
+    """Validates the closed pre-seal terminality carrier for one direct-runtime failure.
+
+    @param record The candidate pre-seal carrier attached to the failed attempt.
+    @param stage The failed command stage that must equal the pre-seal reached stage.
+    @returns The hash-bound preparation and exact detached-runner attempt metadata.
+    @throws core.ExecutionClosureValidationError When the carrier is not a pre-seal terminal state.
+    """
+    expected_record_keys = {
+        "schemaVersion",
+        "kind",
+        "preparationSha256",
+        "stagePlan",
+        "attempt",
+    }
+    if (
+        not isinstance(record, dict)
+        or set(record) != expected_record_keys
+        or record.get("schemaVersion") != 1
+        or record.get("kind") != "direct-command-runtime-pre-seal-attempt"
+        or record.get("stagePlan") != list(_DIRECT_RUNTIME_RUNNER_STAGES)
+    ):
+        _direct_runtime_integration_fail("FAILED_ATTEMPT_PRESEAL_INVALID")
+    preparation_sha256 = record.get("preparationSha256")
+    detached_attempt = record.get("attempt")
+    preseal_stages = _DIRECT_RUNTIME_RUNNER_STAGES[
+        : _DIRECT_RUNTIME_RUNNER_STAGES.index("direct-runtime-dist-identity") + 1
+    ]
+    expected_attempt_keys = {
+        "id",
+        "nonceSha256",
+        "reachedStage",
+        "laterStages",
+        "executionTrace",
+    }
+    if (
+        not isinstance(preparation_sha256, str)
+        or re.fullmatch(r"[0-9a-f]{64}", preparation_sha256) is None
+        or not isinstance(detached_attempt, dict)
+        or set(detached_attempt) != expected_attempt_keys
+        or detached_attempt.get("id") != "direct-runtime-detached-runner-v1"
+        or not isinstance(detached_attempt.get("nonceSha256"), str)
+        or re.fullmatch(r"[0-9a-f]{64}", detached_attempt["nonceSha256"]) is None
+        or detached_attempt.get("reachedStage") not in preseal_stages
+        or detached_attempt.get("executionTrace") is not None
+        or detached_attempt.get("reachedStage") != stage
+    ):
+        _direct_runtime_integration_fail("FAILED_ATTEMPT_PRESEAL_INVALID")
+    reached_stage = detached_attempt["reachedStage"]
+    expected_later_stages = [
+        {"id": runtime_stage, "status": "NOT_RUN"}
+        for runtime_stage in _DIRECT_RUNTIME_RUNNER_STAGES[
+            _DIRECT_RUNTIME_RUNNER_STAGES.index(reached_stage) + 1:
+        ]
+    ]
+    if detached_attempt.get("laterStages") != expected_later_stages:
+        _direct_runtime_integration_fail("FAILED_ATTEMPT_PRESEAL_INVALID")
+    return {
+        "preparationSha256": preparation_sha256,
+        "attempt": copy.deepcopy(detached_attempt),
+    }
+
+
+_CANDIDATE_PUBLICATION_FAILURE_CLASSIFICATIONS = {
+    "validate-private-candidate": "CANDIDATE_VALIDATION_FAILURE",
+    "atomic-replace": "CANDIDATE_ATOMIC_REPLACE_FAILURE",
+}
+
+
+def _build_candidate_publication_failure_v1(
+    completed_integration: Any,
+    operation_id: str = "validate-private-candidate",
+) -> dict[str, Any]:
+    """Builds the closed operation carrier for one unpublished candidate failure.
+
+    @param completed_integration The trace-complete integration that reached private validation.
+    @param operation_id The bounded validation or atomic-replace operation that failed.
+    @returns The operation-only carrier for an unpublished V3 candidate destination.
+    @throws core.ExecutionClosureValidationError When the integration is not trace-complete.
+    """
+    if not isinstance(completed_integration, dict):
+        _direct_runtime_integration_fail("CANDIDATE_PUBLICATION_FAILURE_INVALID")
+    validate_direct_command_runtime_runner_integration_v1(completed_integration)
+    completed_attempt = completed_integration.get("attempt")
+    if (
+        not isinstance(completed_attempt, dict)
+        or completed_attempt.get("reachedStage") != "direct-runtime-trace"
+        or not isinstance(completed_attempt.get("executionTrace"), dict)
+        or operation_id not in _CANDIDATE_PUBLICATION_FAILURE_CLASSIFICATIONS
+    ):
+        _direct_runtime_integration_fail("CANDIDATE_PUBLICATION_FAILURE_INVALID")
+    return {
+        "schemaVersion": 1,
+        "kind": "execution-closure-candidate-publication-failure",
+        "completedIntegrationSha256": _sha256(_canonical(completed_integration)),
+        "reachedStage": "direct-runtime-trace",
+        "operationId": operation_id,
+        "intendedDestination": V3_DIR.relative_to(REPO_ROOT).as_posix(),
+        "published": False,
+    }
+
+
+def _validate_candidate_publication_failure_v1(
+    record: Any,
+    completed_integration: Any,
+) -> None:
+    """Validates one closed unpublished-candidate operation-failure carrier.
+
+    @param record The candidate operation-only failure carrier.
+    @param completed_integration The trace-complete integration forwarded in the same attempt.
+    @returns Nothing when the carrier exactly binds the unpublished integration.
+    @throws core.ExecutionClosureValidationError When the carrier has extra fields or stale integration state.
+    """
+    expected_keys = {
+        "schemaVersion",
+        "kind",
+        "completedIntegrationSha256",
+        "reachedStage",
+        "operationId",
+        "intendedDestination",
+        "published",
+    }
+    if (
+        not isinstance(record, dict)
+        or set(record) != expected_keys
+        or record.get("schemaVersion") != 1
+        or record.get("kind")
+        != "execution-closure-candidate-publication-failure"
+        or not isinstance(record.get("completedIntegrationSha256"), str)
+        or re.fullmatch(r"[0-9a-f]{64}", record["completedIntegrationSha256"])
+        is None
+        or record.get("reachedStage") != "direct-runtime-trace"
+        or record.get("operationId")
+        not in _CANDIDATE_PUBLICATION_FAILURE_CLASSIFICATIONS
+        or record.get("intendedDestination")
+        != V3_DIR.relative_to(REPO_ROOT).as_posix()
+        or record.get("published") is not False
+        or not isinstance(completed_integration, dict)
+    ):
+        _direct_runtime_integration_fail("CANDIDATE_PUBLICATION_FAILURE_INVALID")
+    validate_direct_command_runtime_runner_integration_v1(completed_integration)
+    completed_attempt = completed_integration.get("attempt")
+    if (
+        not isinstance(completed_attempt, dict)
+        or completed_attempt.get("reachedStage") != "direct-runtime-trace"
+        or not isinstance(completed_attempt.get("executionTrace"), dict)
+        or record["completedIntegrationSha256"]
+        != _sha256(_canonical(completed_integration))
+    ):
+        _direct_runtime_integration_fail("CANDIDATE_PUBLICATION_FAILURE_INVALID")
+
+
 def validate_failed_execution_attempt_v1(attempt: dict[str, Any], attempt_directory: Path | str) -> None:
     """Validates one immutable failed Podman-attempt record and its raw streams.
 
@@ -2966,10 +4731,23 @@ def validate_failed_execution_attempt_v1(attempt: dict[str, Any], attempt_direct
     has_workspace_contract = isinstance(attempt, dict) and "workspacePrerequisiteBuildDag" in attempt
     has_workspace_resolution = isinstance(attempt, dict) and "workspaceBuildResolution" in attempt
     has_direct_runtime_integration = isinstance(attempt, dict) and "directRuntimeIntegration" in attempt
+    has_direct_runtime_preseal_attempt = isinstance(attempt, dict) and "directRuntimePreSealAttempt" in attempt
+    has_candidate_publication_failure = isinstance(attempt, dict) and "candidatePublicationFailure" in attempt
     if has_workspace_contract != has_workspace_resolution:
         _fail("V3_PODMAN_ATTEMPT_SCHEMA")
     typed_workspace_prerequisite = has_workspace_contract
-    if typed_hermetic_offline and typed_workspace_prerequisite:
+    if (
+        typed_hermetic_offline
+        and typed_workspace_prerequisite
+    ) or (has_direct_runtime_integration and has_direct_runtime_preseal_attempt) or (
+        has_candidate_publication_failure
+        and (
+            not has_direct_runtime_integration
+            or has_direct_runtime_preseal_attempt
+            or typed_hermetic_offline
+            or typed_workspace_prerequisite
+        )
+    ):
         _fail("V3_PODMAN_ATTEMPT_SCHEMA")
     expected_attempt_keys = base_attempt_keys | (
         {"hermeticPnpmInstallContract"} if typed_hermetic_offline else set()
@@ -2979,6 +4757,12 @@ def validate_failed_execution_attempt_v1(attempt: dict[str, Any], attempt_direct
         else set()
     ) | (
         {"directRuntimeIntegration"} if has_direct_runtime_integration else set()
+    ) | (
+        {"directRuntimePreSealAttempt"} if has_direct_runtime_preseal_attempt else set()
+    ) | (
+        {"candidatePublicationFailure"}
+        if has_candidate_publication_failure
+        else set()
     )
     if not isinstance(attempt, dict) or set(attempt) != expected_attempt_keys:
         _fail("V3_PODMAN_ATTEMPT_SCHEMA")
@@ -2988,22 +4772,74 @@ def validate_failed_execution_attempt_v1(attempt: dict[str, Any], attempt_direct
     if attempt_identity != {"id": directory.name, "sequence": sequence, "namingRule": ATTEMPT_NAMING_RULE}:
         _fail("V3_PODMAN_ATTEMPT_IDENTITY")
     failure = attempt.get("failure")
-    expected_failure_keys = {"stage", "reason", "classification", "commandId"}
-    if typed_hermetic_offline:
+    expected_failure_keys = (
+        {"stage", "reason", "classification", "operationId"}
+        if has_candidate_publication_failure
+        else {"stage", "reason", "classification", "commandId"}
+    )
+    if typed_hermetic_offline and not has_candidate_publication_failure:
         expected_failure_keys |= {"packageManagerDiagnostic", "externalStop", "registryAttestation"}
-    if typed_workspace_prerequisite:
+    if typed_workspace_prerequisite and not has_candidate_publication_failure:
         expected_failure_keys.add("workspaceBuildDependencyFailure")
     if not isinstance(failure, dict) or set(failure) != expected_failure_keys:
         _fail("V3_PODMAN_ATTEMPT_FAILURE")
     commands = attempt.get("commands")
+    if has_candidate_publication_failure:
+        operation_id = failure.get("operationId")
+        classification = (
+            _CANDIDATE_PUBLICATION_FAILURE_CLASSIFICATIONS.get(operation_id)
+            if isinstance(operation_id, str)
+            else None
+        )
+        if (
+            not isinstance(commands, list)
+            or commands != []
+            or failure.get("stage") != "candidate-publication"
+            or not isinstance(failure.get("reason"), str)
+            or failure.get("classification") != classification
+            or classification is None
+        ):
+            _fail("V3_PODMAN_ATTEMPT_FAILURE")
+        record = attempt["directRuntimeIntegration"]
+        if not isinstance(record, dict) or set(record) != {
+            "integration",
+            "reachedStage",
+            "laterStages",
+        }:
+            _direct_runtime_integration_fail("FAILED_ATTEMPT_RUNTIME_INVALID")
+        forwarded = record["integration"]
+        validate_direct_command_runtime_runner_integration_v1(forwarded)
+        if (
+            record.get("reachedStage") != "direct-runtime-trace"
+            or record.get("laterStages") != []
+            or forwarded.get("attempt", {}).get("reachedStage")
+            != "direct-runtime-trace"
+            or forwarded.get("attempt", {}).get("laterStages") != []
+        ):
+            _direct_runtime_integration_fail("FAILED_ATTEMPT_RUNTIME_INVALID")
+        _validate_candidate_publication_failure_v1(
+            attempt["candidatePublicationFailure"],
+            forwarded,
+        )
+        if attempt["candidatePublicationFailure"]["operationId"] != operation_id:
+            _direct_runtime_integration_fail(
+                "CANDIDATE_PUBLICATION_FAILURE_INVALID",
+            )
+        return
     if not isinstance(commands, list) or len(commands) != 1 or not isinstance(commands[0], dict):
         _fail("V3_PODMAN_ATTEMPT_COMMAND")
     command = commands[0]
     stage = failure.get("stage")
     if not isinstance(stage, str) or not stage or failure.get("commandId") != stage or command.get("id") != stage:
         _fail("V3_PODMAN_ATTEMPT_FAILURE")
-    if stage in {"materialize", "direct-runtime-materialization-probe"} and not has_direct_runtime_integration:
-        _direct_runtime_integration_fail("FAILED_ATTEMPT_RUNTIME_INVALID")
+    preseal_attempt: dict[str, Any] | None = None
+    if has_direct_runtime_preseal_attempt:
+        preseal_attempt = _validate_direct_runtime_preseal_failed_attempt_v1(
+            attempt["directRuntimePreSealAttempt"],
+            stage,
+        )
+    elif not has_direct_runtime_integration and stage in _DIRECT_RUNTIME_RUNNER_STAGES:
+        _direct_runtime_integration_fail("FAILED_ATTEMPT_RUNTIME_CARRIER_MISSING")
     if has_direct_runtime_integration:
         record = attempt["directRuntimeIntegration"]
         if not isinstance(record, dict) or set(record) != {"integration", "reachedStage", "laterStages"}:
@@ -3071,12 +4907,25 @@ def validate_failed_execution_attempt_v1(attempt: dict[str, Any], attempt_direct
     expected_command_keys = {"id", "argv", "cwd", "env", "envAbsent", "network", "exitCode", "stdout", "stderr", "actualExecutor"}
     if typed_hermetic_offline:
         expected_command_keys.add("registryAttestation")
+    if preseal_attempt is not None:
+        expected_command_keys |= {"directRuntimePreparationSha256", "directRuntimeAttempt"}
     if set(command) != expected_command_keys or not isinstance(command.get("argv"), list) or not command["argv"] or not all(isinstance(part, str) and part for part in command["argv"]) or command.get("cwd") != "." or command.get("env") != ENV or command.get("envAbsent") != ENV_ABSENT or command.get("network") is not False or not isinstance(command.get("exitCode"), int) or isinstance(command["exitCode"], bool) or command["exitCode"] == 0:
         _fail("V3_PODMAN_ATTEMPT_COMMAND")
+    if preseal_attempt is not None and (
+        command["id"] != preseal_attempt["attempt"]["reachedStage"]
+        or command["directRuntimePreparationSha256"]
+        != preseal_attempt["preparationSha256"]
+        or command["directRuntimeAttempt"] != preseal_attempt["attempt"]
+    ):
+        _direct_runtime_integration_fail("FAILED_ATTEMPT_PRESEAL_INVALID")
     executor = command.get("actualExecutor")
     environment_overrides = (
         {"NODE_OPTIONS": DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS}
-        if command["argv"] == STANDARD_PACK_GENERATOR
+        if tuple(command["argv"])
+        in {
+            tuple(STANDARD_PACK_GENERATOR),
+            tuple(DIRECT_NODE_STANDARD_PACK_GENERATOR),
+        }
         else {}
     )
     expected_effective_environment = {"CI": "true", "PATH": BOOTSTRAP_PATH, **environment_overrides}
@@ -3142,6 +4991,12 @@ def validate_failed_execution_attempt_v1(attempt: dict[str, Any], attempt_direct
         ]:
             _fail("V3_PODMAN_ATTEMPT_COMMAND")
     elif (
+        stage == "generate-standard-pack-catalog"
+        and command["argv"] == DIRECT_NODE_STANDARD_PACK_GENERATOR
+        and payload != [CONTAINER_NODE, *DIRECT_NODE_STANDARD_PACK_GENERATOR[1:]]
+    ):
+        _fail("V3_PODMAN_ATTEMPT_COMMAND")
+    elif (
         stage
         not in {
             "replay",
@@ -3149,6 +5004,7 @@ def validate_failed_execution_attempt_v1(attempt: dict[str, Any], attempt_direct
             "build-auth",
             "build-backend",
             "build-advantage-play-kit-for-runtime",
+            "direct-runtime-dist-identity",
             "direct-runtime-dist-identity-post-generator",
             "clear-stale-standard-pack-catalog",
             "generate-standard-pack-catalog",
@@ -3284,12 +5140,20 @@ def _supplement_entry(logical: str) -> dict[str, Any]:
 
 def _build_archive(
     direct_runtime_integration: dict[str, Any] | None = None,
+    *,
+    direct_runtime_preparation: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Builds the V3 archive from exact non-derived V2 entries and nine supplements.
 
     @param direct_runtime_integration Optional detached runtime packet integration.
+    @param direct_runtime_preparation Optional pre-finalization detached source-packet preparation.
     @returns The source-complete candidate archive.
     """
+    if (
+        direct_runtime_integration is not None
+        and direct_runtime_preparation is not None
+    ):
+        _direct_runtime_integration_fail("ARCHIVE_RUNTIME_BINDING_AMBIGUOUS")
     _, frozen = addendum._read_archive()
     retained: dict[str, dict[str, Any]] = {}
     for original in frozen:
@@ -3319,6 +5183,29 @@ def _build_archive(
         archive["directRuntimeSourcePacket"] = copy.deepcopy(direct_runtime_integration["sourcePacket"])
         archive["directRuntimePacketMaterialization"] = copy.deepcopy(direct_runtime_integration["packetMaterialization"])
         archive["directRuntimeBaselineReadSet"] = copy.deepcopy(direct_runtime_integration["readSet"]["baselineReadSet"])
+    elif direct_runtime_preparation is not None:
+        if not isinstance(direct_runtime_preparation, dict):
+            _direct_runtime_integration_fail("ARCHIVE_PREPARATION_INVALID")
+        packet = direct_runtime_preparation.get("sourcePacket")
+        materialization = direct_runtime_preparation.get("packetMaterialization")
+        budget = direct_runtime_preparation.get("resourceBudget")
+        if not isinstance(packet, dict) or not isinstance(materialization, dict):
+            _direct_runtime_integration_fail("ARCHIVE_PREPARATION_INVALID")
+        _direct_runtime_resource_budget_v1(budget)
+        _direct_runtime_validate_source_packet_v1(
+            packet,
+            packet.get("baselineReadSet"),
+        )
+        if (
+            materialization
+            != build_direct_command_runtime_packet_materialization_contract_v1(packet)
+        ):
+            _direct_runtime_integration_fail("ARCHIVE_PREPARATION_INVALID")
+        archive["directRuntimeSourcePacket"] = copy.deepcopy(packet)
+        archive["directRuntimePacketMaterialization"] = copy.deepcopy(materialization)
+        archive["directRuntimeBaselineReadSet"] = copy.deepcopy(
+            packet["baselineReadSet"],
+        )
     return archive
 
 def _stage_command(raw_dir: Path, raw_id: str, argv: list[str], *, actual_executor: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -3480,17 +5367,40 @@ def _runner_scripts(
     archive_path: Path,
     nested_pnpm_runtime: dict[str, Any],
     direct_runtime_integration: dict[str, Any] | None = None,
+    *,
+    direct_runtime_preparation: dict[str, Any] | None = None,
 ) -> list[dict[str, str]]:
     """Writes bounded Node-only materialization and audit runner tools in /tmp.
 
     @param stage The unique temporary staging root.
     @param archive_path The staged archive input file.
     @param nested_pnpm_runtime The exact nested pnpm runtime-shim contract to stage.
+    @param direct_runtime_integration Optional finalizer-sealed trace integration.
+    @param direct_runtime_preparation Optional pre-finalization source-packet preparation.
     @returns Explicit read-only runner-tool mount specifications.
     """
     validate_nested_pnpm_runtime_shim_contract_v1(nested_pnpm_runtime)
+    if (
+        direct_runtime_integration is not None
+        and direct_runtime_preparation is not None
+    ):
+        _direct_runtime_integration_fail("RUNNER_RUNTIME_BINDING_AMBIGUOUS")
     if direct_runtime_integration is not None:
         validate_direct_command_runtime_runner_integration_v1(direct_runtime_integration)
+    elif direct_runtime_preparation is not None:
+        packet = direct_runtime_preparation.get("sourcePacket")
+        materialization = direct_runtime_preparation.get("packetMaterialization")
+        if not isinstance(packet, dict) or not isinstance(materialization, dict):
+            _direct_runtime_integration_fail("RUNNER_PREPARATION_INVALID")
+        _direct_runtime_validate_source_packet_v1(
+            packet,
+            packet.get("baselineReadSet"),
+        )
+        if (
+            materialization
+            != build_direct_command_runtime_packet_materialization_contract_v1(packet)
+        ):
+            _direct_runtime_integration_fail("RUNNER_PREPARATION_INVALID")
     runner = stage / "runner"
     runner.mkdir(parents=True, exist_ok=True)
     scripts = {
@@ -3746,19 +5656,28 @@ process.stdout.write(JSON.stringify({ schemaVersion: 1, kind: "direct-command-ru
 ''',
         "direct-runtime-dist-identity.mjs": r'''import fs from "node:fs";
 import crypto from "node:crypto";
-const expected = JSON.parse(process.argv[2] ?? "");
+const request = JSON.parse(process.argv[2] ?? "");
+const expected = request?.expected;
+const attemptNonceSha256 = request?.attemptNonceSha256;
+const workRoot = request?.workRoot;
 const digest = (value) => crypto.createHash("sha256").update(value).digest("hex");
 const safe = (logical) => typeof logical === "string" && logical && !logical.includes("\\") && !logical.split("/").some((part) => !part || part === "." || part === "..");
-if (!Array.isArray(expected)) throw new Error("expected derived-read identities");
-const root = process.cwd();
+if (!Array.isArray(expected) || workRoot !== "/work" || typeof attemptNonceSha256 !== "string" || !/^[0-9a-f]{64}$/.test(attemptNonceSha256)) throw new Error("invalid same-attempt identity request");
+const root = fs.realpathSync.native(process.cwd());
+if (root !== workRoot) throw new Error("unexpected work root");
 const derivedBuildReadSet = expected.map((identity) => {
   if (!identity || typeof identity !== "object" || !safe(identity.path)) throw new Error("unsafe derived-read path");
+  const logicalMetadata = fs.lstatSync(identity.path);
+  if (!logicalMetadata.isFile() || logicalMetadata.isSymbolicLink()) throw new Error("derived-read logical path is not a regular file");
   const resolved = fs.realpathSync.native(identity.path);
   if (!resolved.startsWith(`${root}/`)) throw new Error("derived-read path escape");
+  const metadata = fs.lstatSync(resolved);
+  if (!metadata.isFile() || metadata.isSymbolicLink()) throw new Error("derived-read is not a regular file");
   const data = fs.readFileSync(resolved);
-  return { path: identity.path, sha256: digest(data), size: data.length };
+  const mode = "100" + (metadata.mode & 0o777).toString(8).padStart(3, "0");
+  return { mode, path: identity.path, resolvedPath: resolved, sha256: digest(data), size: data.length };
 });
-process.stdout.write(JSON.stringify({ derivedBuildReadSet }));
+process.stdout.write(JSON.stringify({ attemptNonceSha256, derivedBuildReadSet, workRoot }));
 ''',
     }
     mounts: list[dict[str, str]] = [{
@@ -3768,9 +5687,14 @@ process.stdout.write(JSON.stringify({ derivedBuildReadSet }));
         "access": "ro",
         "purpose": "hash-bound-source-archive-input",
     }]
+    packet_for_mount: dict[str, Any] | None = None
     if direct_runtime_integration is not None:
+        packet_for_mount = direct_runtime_integration["sourcePacket"]
+    elif direct_runtime_preparation is not None:
+        packet_for_mount = direct_runtime_preparation["sourcePacket"]
+    if packet_for_mount is not None:
         source_packet = runner / "direct-runtime-source-packet.json"
-        _write_json(source_packet, direct_runtime_integration["sourcePacket"])
+        _write_json(source_packet, packet_for_mount)
         mounts.append({
             "id": "runnerTool:direct-runtime-source-packet",
             "source": str(source_packet.resolve()),
@@ -3778,6 +5702,7 @@ process.stdout.write(JSON.stringify({ derivedBuildReadSet }));
             "access": "ro",
             "purpose": "detached-baseline-git-object-source-packet",
         })
+    if direct_runtime_integration is not None:
         trace_policy = direct_runtime_integration["tracePolicy"]
         if trace_policy["nodeOptions"] != DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS:
             _direct_runtime_integration_fail("GENERATOR_NODE_OPTIONS_INVALID")
@@ -3857,19 +5782,106 @@ def _ensure_external_source(path: Path, name: str) -> Path:
     return resolved
 
 
+def build_direct_node_split_canonical_prefix_v1(
+    mounts: list[dict[str, Any]],
+    workdir: str,
+) -> list[str]:
+    """Builds the only direct-Node Podman prefix from ordered structured mounts.
+
+    @param mounts The ordered, structured mount records whose exact volume pairs are emitted.
+    @param workdir The exact permitted root or advantage-play-kit package working directory.
+    @returns The complete Podman argv prefix before the image reference.
+    @throws core.ExecutionClosureValidationError When a mount record, mode, or workdir is not canonical.
+    """
+    package_cwd = "/work/packages/advantage-play-kit"
+    if (
+        not isinstance(mounts, list)
+        or not isinstance(workdir, str)
+        or workdir not in {"/work", package_cwd}
+    ):
+        _fail("V3_DIRECT_NODE_SPLIT_CANONICAL_PREFIX_INVALID")
+    prefix = [PODMAN, "run", "--rm", "--network", "none", "--workdir", workdir]
+    seen_ids: set[str] = set()
+    seen_targets: set[str] = set()
+    common_fields = {"id", "source", "target", "access", "purpose"}
+    for mount in mounts:
+        if not isinstance(mount, dict):
+            _fail("V3_DIRECT_NODE_SPLIT_CANONICAL_PREFIX_INVALID")
+        access = mount.get("access")
+        expected_fields = (
+            common_fields
+            if access in {"ro", "rw"}
+            else common_fields | {"lowerAccess", "overlay"}
+        )
+        if (
+            set(mount) != expected_fields
+            or access not in {"ro", "rw", "cow-overlay"}
+            or not isinstance(mount.get("id"), str)
+            or not mount["id"]
+            or not isinstance(mount.get("purpose"), str)
+            or not mount["purpose"]
+            or not isinstance(mount.get("source"), str)
+            or not isinstance(mount.get("target"), str)
+            or not mount["source"]
+            or not mount["target"]
+            or mount["id"] in seen_ids
+            or mount["target"] in seen_targets
+            or any(
+                forbidden in value
+                for value in (mount["source"], mount["target"])
+                for forbidden in ("\x00", "\n", "\r", ":")
+            )
+        ):
+            _fail("V3_DIRECT_NODE_SPLIT_CANONICAL_PREFIX_INVALID")
+        source = mount["source"]
+        target = mount["target"]
+        source_path = PurePosixPath(source)
+        target_path = PurePosixPath(target)
+        if (
+            not source_path.is_absolute()
+            or source_path.as_posix() != source
+            or not target_path.is_absolute()
+            or target_path.as_posix() != target
+            or any(part in {".", ".."} for part in source_path.parts)
+            or any(part in {".", ".."} for part in target_path.parts)
+            or (
+                access == "cow-overlay"
+                and (
+                    mount.get("lowerAccess") != "ro"
+                    or mount.get("overlay") != "podman-O-disposable"
+                )
+            )
+        ):
+            _fail("V3_DIRECT_NODE_SPLIT_CANONICAL_PREFIX_INVALID")
+        seen_ids.add(mount["id"])
+        seen_targets.add(target)
+        suffix = "O" if access == "cow-overlay" else access
+        prefix.extend(["--volume", f"{source}:{target}:{suffix}"])
+    return prefix
+
+
 def _podman_context(
     stage: Path,
     archive_path: Path,
     nested_pnpm_runtime: dict[str, Any],
     direct_runtime_integration: dict[str, Any] | None = None,
+    *,
+    direct_runtime_preparation: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Builds exact Podman mount and executor configuration for one unique /tmp root.
 
     @param stage The unique temporary staging root.
     @param archive_path The staged V3 archive.
     @param nested_pnpm_runtime The exact nested pnpm runtime-shim contract to mount.
+    @param direct_runtime_integration Optional finalizer-sealed trace integration.
+    @param direct_runtime_preparation Optional pre-finalization source-packet preparation.
     @returns The isolated execution context before any container command runs.
     """
+    if (
+        direct_runtime_integration is not None
+        and direct_runtime_preparation is not None
+    ):
+        _direct_runtime_integration_fail("CONTEXT_RUNTIME_BINDING_AMBIGUOUS")
     work = stage / "work"
     work.mkdir()
     preexisting = sorted(item.relative_to(work).as_posix() for item in work.rglob("*"))
@@ -3883,8 +5895,15 @@ def _podman_context(
         archive_path,
         nested_pnpm_runtime,
         direct_runtime_integration=direct_runtime_integration,
+        direct_runtime_preparation=direct_runtime_preparation,
     )
-    if direct_runtime_integration is not None and not any(mount["id"] == "runnerTool:direct-runtime-source-packet" for mount in runner_mounts):
+    if (
+        direct_runtime_integration is not None
+        or direct_runtime_preparation is not None
+    ) and not any(
+        mount["id"] == "runnerTool:direct-runtime-source-packet"
+        for mount in runner_mounts
+    ):
         _direct_runtime_integration_fail("SOURCE_PACKET_MOUNT_MISSING")
     work_realpath = str(work.resolve())
     mounts: list[dict[str, Any]] = [
@@ -3920,13 +5939,7 @@ def _podman_context(
         },
         *runner_mounts,
     ]
-    prefix = [PODMAN, "run", "--rm", "--network", "none", "--workdir", "/work"]
-    for mount in mounts:
-        if mount["id"] == "pnpmStore":
-            prefix.extend(["--volume", f'{mount["source"]}:{mount["target"]}:O'])
-        else:
-            suffix = "rw" if mount["access"] == "rw" else "ro"
-            prefix.extend(["--volume", f'{mount["source"]}:{mount["target"]}:{suffix}'])
+    prefix = build_direct_node_split_canonical_prefix_v1(mounts, "/work")
     executors = [
         CONTAINER_NODE,
         CONTAINER_PNPM,
@@ -3951,6 +5964,158 @@ def _podman_context(
     }
 
 
+def _direct_node_split_frozen_script_v1() -> dict[str, Any]:
+    """Derives the one executor-accepted H2 script carrier from pinned V2 evidence.
+
+    @returns The exact frozen script provenance derived from the integrity-pinned V2 archive.
+    @throws core.ExecutionClosureValidationError When the V2 archive or selected manifest cannot prove the H2 script.
+    """
+    if _reference(core.V2_ARCHIVE) != core.V2_EVIDENCE.get("archive"):
+        _fail("V3_DIRECT_NODE_SPLIT_EXECUTOR_INVALID")
+    frozen = _load_json(core.V2_ARCHIVE)
+    frozen_entries = frozen.get("entries")
+    if not isinstance(frozen_entries, list):
+        _fail("V3_DIRECT_NODE_SPLIT_EXECUTOR_INVALID")
+    frozen_index, trigger = _direct_runtime_trigger_v1(
+        frozen_entries,
+        list(STANDARD_PACK_GENERATOR),
+    )
+    manifest_reference = trigger.get("manifest") if isinstance(trigger, dict) else None
+    manifest_path = (
+        manifest_reference.get("path")
+        if isinstance(manifest_reference, dict)
+        else None
+    )
+    frozen_manifest = (
+        frozen_index.get(manifest_path)
+        if isinstance(manifest_path, str)
+        else None
+    )
+    if not isinstance(frozen_manifest, dict):
+        _fail("V3_DIRECT_NODE_SPLIT_EXECUTOR_INVALID")
+    semantics = derive_direct_node_split_semantics_from_frozen_script_v1(
+        trigger,
+        frozen_manifest,
+    )
+    frozen_script = semantics.get("frozenScript")
+    if not isinstance(frozen_script, dict):
+        _fail("V3_DIRECT_NODE_SPLIT_EXECUTOR_INVALID")
+    return copy.deepcopy(frozen_script)
+
+
+def _direct_node_split_executor_overrides_v1(
+    context: dict[str, Any],
+    logical: list[str],
+    payload: list[str],
+) -> dict[str, str] | None:
+    """Validates one H2 semantic command context and returns its exact environment overrides.
+
+    @param context The candidate container context, optionally carrying direct-Node split provenance.
+    @param logical The logical command argv recorded for the container operation.
+    @param payload The absolute container payload argv for the operation.
+    @returns The H2 segment override map, or None when no H2 semantic context is present.
+    @throws core.ExecutionClosureValidationError When a semantic context drifts from the frozen two-segment contract.
+    """
+    direct_split = context.get("directNodeSplit") if isinstance(context, dict) else None
+    if direct_split is None:
+        return None
+    if not isinstance(direct_split, dict) or set(direct_split) != {
+        "frozenScript",
+        "cleanEnvironment",
+        "segment",
+    }:
+        _fail("V3_DIRECT_NODE_SPLIT_EXECUTOR_INVALID")
+    frozen_script = direct_split["frozenScript"]
+    clean_environment = direct_split["cleanEnvironment"]
+    segment = direct_split["segment"]
+    if not isinstance(frozen_script, dict) or not isinstance(segment, dict):
+        _fail("V3_DIRECT_NODE_SPLIT_EXECUTOR_INVALID")
+    expected_frozen_script = _direct_node_split_frozen_script_v1()
+    expected_clean_environment = {
+        "allowlisted": dict(ENV),
+        "absencePredicates": list(ENV_ABSENT),
+        "effectiveBase": {"CI": "true", "PATH": BOOTSTRAP_PATH},
+        "inheritedEnv": [],
+    }
+    if (
+        frozen_script != expected_frozen_script
+        or clean_environment != expected_clean_environment
+    ):
+        _fail("V3_DIRECT_NODE_SPLIT_EXECUTOR_INVALID")
+    manifest = frozen_script.get("manifest")
+    if (
+        set(frozen_script)
+        != {
+            "manifest",
+            "name",
+            "expression",
+            "buildExpression",
+            "directNodeExpression",
+            "lifecycleHooks",
+        }
+        or not isinstance(manifest, dict)
+        or set(manifest) != {"path", "sha256", "size"}
+        or manifest.get("path") != "packages/advantage-play-kit/package.json"
+        or not isinstance(manifest.get("sha256"), str)
+        or re.fullmatch(r"[0-9a-f]{64}", manifest["sha256"]) is None
+        or type(manifest.get("size")) is not int
+        or manifest["size"] < 0
+        or frozen_script.get("name") != "generate:standard-pack-catalog"
+        or frozen_script.get("expression")
+        != "pnpm build && node scripts/generate-standard-pack-release.mjs"
+        or frozen_script.get("buildExpression") != "pnpm build"
+        or frozen_script.get("directNodeExpression")
+        != "node scripts/generate-standard-pack-release.mjs"
+        or frozen_script.get("lifecycleHooks")
+        != {"prebuild": "ABSENT", "postbuild": "ABSENT"}
+    ):
+        _fail("V3_DIRECT_NODE_SPLIT_EXECUTOR_INVALID")
+    prefix = context.get("prefix")
+    mounts = context.get("mounts")
+    package_cwd = "/work/packages/advantage-play-kit"
+    if (
+        not isinstance(prefix, list)
+        or not isinstance(mounts, list)
+        or prefix
+        != build_direct_node_split_canonical_prefix_v1(mounts, package_cwd)
+    ):
+        _fail("V3_DIRECT_NODE_SPLIT_EXECUTOR_INVALID")
+    build_segment = {
+        "id": "build-advantage-play-kit-for-runtime",
+        "kind": "RUNTIME_BUILD",
+        "cwd": package_cwd,
+        "logicalArgv": ["pnpm", "build"],
+        "environmentOverrides": {},
+    }
+    generator_segment = {
+        "id": "generate-standard-pack-catalog",
+        "kind": "DIRECT_NODE_GENERATOR",
+        "cwd": package_cwd,
+        "logicalArgv": ["node", "scripts/generate-standard-pack-release.mjs"],
+        "environmentOverrides": {
+            "NODE_OPTIONS": DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS,
+        },
+        "script": {
+            "manifest": manifest,
+            "packageRelativePath": "scripts/generate-standard-pack-release.mjs",
+            "logicalPath": "packages/advantage-play-kit/scripts/generate-standard-pack-release.mjs",
+            "resolvedPath": "/work/packages/advantage-play-kit/scripts/generate-standard-pack-release.mjs",
+        },
+    }
+    if segment == build_segment:
+        if logical != build_segment["logicalArgv"] or payload != build_pnpm_global_store_payload_v1(logical):
+            _fail("V3_DIRECT_NODE_SPLIT_EXECUTOR_INVALID")
+        return {}
+    if segment == generator_segment:
+        if logical != generator_segment["logicalArgv"] or payload != [
+            CONTAINER_NODE,
+            generator_segment["script"]["resolvedPath"],
+        ]:
+            _fail("V3_DIRECT_NODE_SPLIT_EXECUTOR_INVALID")
+        return copy.deepcopy(generator_segment["environmentOverrides"])
+    _fail("V3_DIRECT_NODE_SPLIT_EXECUTOR_INVALID")
+
+
 def _container_environment_overrides_v1(
     logical: list[str],
     environment_overrides: dict[str, str] | None,
@@ -3973,7 +6138,11 @@ def _container_environment_overrides_v1(
         _fail("V3_PODMAN_ENVIRONMENT_OVERRIDE_INVALID")
     expected = (
         {"NODE_OPTIONS": DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS}
-        if logical == STANDARD_PACK_GENERATOR
+        if tuple(logical)
+        in {
+            tuple(STANDARD_PACK_GENERATOR),
+            tuple(DIRECT_NODE_STANDARD_PACK_GENERATOR),
+        }
         else {}
     )
     if overrides != expected:
@@ -3997,13 +6166,40 @@ def _container_executor(
     @param environment_overrides Exact additions after clean ``env -i`` setup.
     @returns The actual executor object recorded on command evidence.
     """
-    overrides = _container_environment_overrides_v1(logical, environment_overrides)
+    direct_node_split_overrides = _direct_node_split_executor_overrides_v1(
+        context,
+        logical,
+        payload,
+    )
+    if direct_node_split_overrides is None:
+        overrides = _container_environment_overrides_v1(
+            logical,
+            environment_overrides,
+        )
+        execution_prefix = context.get("prefix")
+    elif environment_overrides == direct_node_split_overrides:
+        overrides = copy.deepcopy(direct_node_split_overrides)
+        direct_split = context.get("directNodeSplit")
+        direct_segment = (
+            direct_split.get("segment") if isinstance(direct_split, dict) else None
+        )
+        direct_cwd = (
+            direct_segment.get("cwd") if isinstance(direct_segment, dict) else None
+        )
+        if not isinstance(direct_cwd, str):
+            _fail("V3_DIRECT_NODE_SPLIT_EXECUTOR_INVALID")
+        execution_prefix = build_direct_node_split_canonical_prefix_v1(
+            context.get("mounts"),
+            direct_cwd,
+        )
+    else:
+        _fail("V3_PODMAN_ENVIRONMENT_OVERRIDE_INVALID")
     if overrides.get("NODE_OPTIONS") not in {None, DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS}:
         _fail("V3_PODMAN_ENVIRONMENT_OVERRIDE_INVALID")
     override_assignments = [f"{name}={value}" for name, value in sorted(overrides.items())]
     effective_environment = {"CI": "true", "PATH": BOOTSTRAP_PATH, **overrides}
     full = [
-        *context["prefix"],
+        *execution_prefix,
         IMAGE_RESOLVED,
         "/usr/bin/env",
         "-i",
@@ -4494,6 +6690,171 @@ def _publish_blocker(reason: str, commands: list[dict[str, Any]], error: BaseExc
     })
 
 
+def _next_candidate_publication_failure_attempt_identity_v1(
+    attempts_root: Path,
+    run_day: str,
+) -> tuple[str, int]:
+    """Derives the next canonical candidate-failure attempt identity without reserving it.
+
+    @param attempts_root The existing regular directory that owns final attempt records.
+    @param run_day The validated UTC run day for the failed attempt.
+    @returns The canonical final directory name and its monotonic sequence.
+    @throws core.ExecutionClosureValidationError When the root or date is unsafe or the sequence is exhausted.
+    """
+    yyyymmdd = resolve_execution_run_day_v1(run_day)
+    if attempts_root.is_symlink() or not attempts_root.is_dir():
+        _fail("V3_PODMAN_ATTEMPT_ROOT_INVALID", str(attempts_root))
+    matcher = re.compile(
+        rf"{re.escape(ATTEMPT_PREFIX)}-{yyyymmdd}-([0-9]{{4}})$",
+    )
+    sequences = [
+        int(match.group(1))
+        for child in attempts_root.iterdir()
+        if (match := matcher.fullmatch(child.name))
+    ]
+    sequence = max(sequences, default=0) + 1
+    if sequence > 9999:
+        _fail("V3_PODMAN_ATTEMPT_SEQUENCE_EXHAUSTED", yyyymmdd)
+    return f"{ATTEMPT_PREFIX}-{yyyymmdd}-{sequence:04d}", sequence
+
+
+def _publish_candidate_publication_failure_attempt(
+    error: BaseException,
+    *,
+    direct_runtime_integration: dict[str, Any],
+    candidate_publication_failure: dict[str, Any],
+    attempts_root: Path | str,
+    attempt_date: str,
+) -> None:
+    """Publishes one operation-only failed attempt for a bounded candidate operation.
+
+    @param error The original private validation or atomic-replace error.
+    @param direct_runtime_integration The trace-complete integration that reached validation.
+    @param candidate_publication_failure The closed unpublished-candidate operation carrier.
+    @param attempts_root The append-only root for the retained failed attempt.
+    @param attempt_date The validated run day used to allocate the attempt ordinal.
+    @returns Nothing when the no-command failure record is written and validated.
+    @throws core.ExecutionClosureValidationError When the failure is not a bounded candidate operation.
+    """
+    validate_direct_command_runtime_runner_integration_v1(
+        direct_runtime_integration,
+    )
+    completed_attempt = direct_runtime_integration.get("attempt")
+    if (
+        not isinstance(completed_attempt, dict)
+        or completed_attempt.get("reachedStage") != "direct-runtime-trace"
+        or completed_attempt.get("laterStages") != []
+        or not isinstance(completed_attempt.get("executionTrace"), dict)
+    ):
+        _direct_runtime_integration_fail("CANDIDATE_PUBLICATION_FAILURE_INVALID")
+    _validate_candidate_publication_failure_v1(
+        candidate_publication_failure,
+        direct_runtime_integration,
+    )
+    operation_id = candidate_publication_failure["operationId"]
+    classification = _CANDIDATE_PUBLICATION_FAILURE_CLASSIFICATIONS[operation_id]
+    expected_error_type = (
+        core.ExecutionClosureValidationError
+        if operation_id == "validate-private-candidate"
+        else OSError
+    )
+    if not isinstance(error, expected_error_type):
+        _direct_runtime_integration_fail("CANDIDATE_PUBLICATION_FAILURE_INVALID")
+    run_day = resolve_execution_run_day_v1(attempt_date)
+    root = Path(attempts_root)
+    if root.exists() and (root.is_symlink() or not root.is_dir()):
+        _fail("V3_PODMAN_ATTEMPT_ROOT_INVALID", str(root))
+    root.mkdir(parents=True, exist_ok=True)
+    if root.is_symlink() or not root.is_dir():
+        _fail("V3_PODMAN_ATTEMPT_ROOT_INVALID", str(root))
+    attempt_name, sequence = _next_candidate_publication_failure_attempt_identity_v1(
+        root,
+        run_day,
+    )
+    final_directory = root / attempt_name
+    final_reserved = False
+    published = False
+    with tempfile.TemporaryDirectory(
+        prefix=".candidate-publication-failure-",
+        dir=root,
+    ) as temporary:
+        staging_parent = Path(temporary)
+        directory = staging_parent / attempt_name
+        directory.mkdir()
+        attempt = {
+            "schemaVersion": 1,
+            "kind": "execution-closure-failed-attempt",
+            "status": "BLOCKED",
+            "attempt": {
+                "id": attempt_name,
+                "sequence": sequence,
+                "namingRule": ATTEMPT_NAMING_RULE,
+            },
+            "historicalBlocker": _reference(HISTORICAL_PODMAN_BLOCKER),
+            "failure": {
+                "stage": "candidate-publication",
+                "reason": str(error),
+                "classification": classification,
+                "operationId": operation_id,
+            },
+            "commands": [],
+            "markerDisposition": copy.deepcopy(core.MARKER_DISPOSITION),
+            "upstreamAuthority": "NONE",
+            "directRuntimeIntegration": {
+                "integration": copy.deepcopy(direct_runtime_integration),
+                "reachedStage": "direct-runtime-trace",
+                "laterStages": [],
+            },
+            "candidatePublicationFailure": copy.deepcopy(
+                candidate_publication_failure,
+            ),
+        }
+        _write_json(directory / "failed-attempt.json", attempt)
+        validate_failed_execution_attempt_v1(attempt, directory)
+        try:
+            final_directory.mkdir()
+        except FileExistsError:
+            _fail("V3_PODMAN_ATTEMPT_PUBLICATION_COLLISION", attempt_name)
+        final_reserved = True
+        try:
+            os.rename(directory, final_directory)
+            published = True
+        finally:
+            if final_reserved and not published:
+                try:
+                    shutil.rmtree(final_directory)
+                except FileNotFoundError:
+                    pass
+
+
+def _next_failed_execution_attempt_identity_v1(
+    attempts_root: Path,
+    run_day: str,
+) -> tuple[str, int]:
+    """Derives the next canonical failed-attempt identity without reserving it.
+
+    @param attempts_root The existing regular directory that owns final attempt records.
+    @param run_day The validated UTC run day for the failed attempt.
+    @returns The canonical final directory name and its monotonic sequence.
+    @throws core.ExecutionClosureValidationError When the root or date is unsafe or the sequence is exhausted.
+    """
+    yyyymmdd = resolve_execution_run_day_v1(run_day)
+    if attempts_root.is_symlink() or not attempts_root.is_dir():
+        _fail("V3_PODMAN_ATTEMPT_ROOT_INVALID", str(attempts_root))
+    matcher = re.compile(
+        rf"{re.escape(ATTEMPT_PREFIX)}-{yyyymmdd}-([0-9]{{4}})$",
+    )
+    sequences = [
+        int(match.group(1))
+        for child in attempts_root.iterdir()
+        if (match := matcher.fullmatch(child.name))
+    ]
+    sequence = max(sequences, default=0) + 1
+    if sequence > 9999:
+        _fail("V3_PODMAN_ATTEMPT_SEQUENCE_EXHAUSTED", yyyymmdd)
+    return f"{ATTEMPT_PREFIX}-{yyyymmdd}-{sequence:04d}", sequence
+
+
 def _publish_failed_attempt(
     reason: str,
     commands: list[dict[str, Any]],
@@ -4507,6 +6868,7 @@ def _publish_failed_attempt(
     workspace_build_resolution: list[dict[str, Any]] | None = None,
     direct_runtime_integration: dict[str, Any] | None = None,
     direct_runtime_stage: str | None = None,
+    direct_runtime_preseal_attempt: dict[str, Any] | None = None,
 ) -> None:
     """Preserves a post-blocker failed command in a fresh immutable attempt directory.
 
@@ -4521,6 +6883,7 @@ def _publish_failed_attempt(
     @param workspace_build_resolution Optional post-install resolution proof paired with the DAG.
     @param direct_runtime_integration Optional frozen detached runtime integration to forward.
     @param direct_runtime_stage Optional last successfully reached detached runtime stage.
+    @param direct_runtime_preseal_attempt Optional executor-owned terminality carrier for an unsealed runtime failure.
     @returns Nothing when the fresh failed-attempt record is validated and written.
     @throws core.ExecutionClosureValidationError When no exact failed command can be preserved.
     """
@@ -4604,6 +6967,31 @@ def _publish_failed_attempt(
                 workspace_build_resolution,
             )
     forwarded_direct_runtime: dict[str, Any] | None = None
+    forwarded_preseal_attempt: dict[str, Any] | None = None
+    if (
+        direct_runtime_integration is not None
+        and direct_runtime_preseal_attempt is not None
+    ):
+        _direct_runtime_integration_fail("FAILED_ATTEMPT_RUNTIME_INVALID")
+    if direct_runtime_preseal_attempt is not None:
+        validated_preseal_attempt = (
+            _validate_direct_runtime_preseal_failed_attempt_v1(
+                direct_runtime_preseal_attempt,
+                reason,
+            )
+        )
+        if (
+            failed.get("id")
+            != validated_preseal_attempt["attempt"]["reachedStage"]
+            or failed.get("directRuntimePreparationSha256")
+            != validated_preseal_attempt["preparationSha256"]
+            or failed.get("directRuntimeAttempt")
+            != validated_preseal_attempt["attempt"]
+        ):
+            _direct_runtime_integration_fail("FAILED_ATTEMPT_PRESEAL_INVALID")
+        forwarded_preseal_attempt = copy.deepcopy(direct_runtime_preseal_attempt)
+    elif direct_runtime_integration is None and reason in _DIRECT_RUNTIME_RUNNER_STAGES:
+        _direct_runtime_integration_fail("FAILED_ATTEMPT_RUNTIME_CARRIER_MISSING")
     if (direct_runtime_integration is None) != (direct_runtime_stage is None):
         _direct_runtime_integration_fail("FAILED_ATTEMPT_RUNTIME_INVALID")
     if direct_runtime_integration is not None:
@@ -4629,31 +7017,90 @@ def _publish_failed_attempt(
             "reachedStage": direct_runtime_stage,
             "laterStages": later_stages,
         }
-    directory = reserve_execution_attempt_directory_v1(attempts_root, run_day)
-    finalized = _finalize_command(failed, directory, reference_root=TRACK_DIR / directory.name)
-    sequence_match = re.fullmatch(rf"{re.escape(ATTEMPT_PREFIX)}-{run_day}-([0-9]{{4}})", directory.name)
-    if sequence_match is None:
-        _fail("V3_PODMAN_ATTEMPT_NAME_INVALID", directory.name)
-    attempt = {
-        "schemaVersion": 1,
-        "kind": "execution-closure-failed-attempt",
-        "status": "BLOCKED",
-        "attempt": {"id": directory.name, "sequence": int(sequence_match.group(1)), "namingRule": ATTEMPT_NAMING_RULE},
-        "historicalBlocker": _reference(HISTORICAL_PODMAN_BLOCKER),
-        "failure": failure,
-        "commands": [finalized],
-        "markerDisposition": copy.deepcopy(core.MARKER_DISPOSITION),
-        "upstreamAuthority": "NONE",
-    }
-    if forwarded_direct_runtime is not None:
-        attempt["directRuntimeIntegration"] = forwarded_direct_runtime
-    if contract_for_attempt is not None:
-        attempt["hermeticPnpmInstallContract"] = contract_for_attempt
-    if workspace_contract_for_attempt is not None:
-        attempt["workspacePrerequisiteBuildDag"] = workspace_contract_for_attempt
-        attempt["workspaceBuildResolution"] = workspace_resolution_for_attempt
-    _write_json(directory / "failed-attempt.json", attempt)
-    validate_failed_execution_attempt_v1(attempt, directory)
+    root = Path(attempts_root)
+    if root.exists() and (root.is_symlink() or not root.is_dir()):
+        _fail("V3_PODMAN_ATTEMPT_ROOT_INVALID", str(root))
+    root.mkdir(parents=True, exist_ok=True)
+    if root.is_symlink() or not root.is_dir():
+        _fail("V3_PODMAN_ATTEMPT_ROOT_INVALID", str(root))
+    attempt_name, sequence = _next_failed_execution_attempt_identity_v1(
+        root,
+        run_day,
+    )
+    final_directory = root / attempt_name
+    final_reserved = False
+    published = False
+    staging_parent = Path(tempfile.mkdtemp(
+        prefix=".failed-attempt-",
+        dir=root,
+    ))
+    try:
+        directory = staging_parent / attempt_name
+        directory.mkdir()
+        try:
+            finalized = _finalize_command(
+                failed,
+                directory,
+                reference_root=TRACK_DIR / attempt_name,
+            )
+        except OSError as raw_copy_error:
+            raise raw_copy_error from error
+        attempt = {
+            "schemaVersion": 1,
+            "kind": "execution-closure-failed-attempt",
+            "status": "BLOCKED",
+            "attempt": {
+                "id": attempt_name,
+                "sequence": sequence,
+                "namingRule": ATTEMPT_NAMING_RULE,
+            },
+            "historicalBlocker": _reference(HISTORICAL_PODMAN_BLOCKER),
+            "failure": failure,
+            "commands": [finalized],
+            "markerDisposition": copy.deepcopy(core.MARKER_DISPOSITION),
+            "upstreamAuthority": "NONE",
+        }
+        if forwarded_direct_runtime is not None:
+            attempt["directRuntimeIntegration"] = forwarded_direct_runtime
+        if forwarded_preseal_attempt is not None:
+            attempt["directRuntimePreSealAttempt"] = forwarded_preseal_attempt
+        if contract_for_attempt is not None:
+            attempt["hermeticPnpmInstallContract"] = contract_for_attempt
+        if workspace_contract_for_attempt is not None:
+            attempt["workspacePrerequisiteBuildDag"] = workspace_contract_for_attempt
+            attempt["workspaceBuildResolution"] = workspace_resolution_for_attempt
+        try:
+            _write_json(directory / "failed-attempt.json", attempt)
+        except OSError as json_write_error:
+            raise json_write_error from error
+        validate_failed_execution_attempt_v1(attempt, directory)
+        try:
+            final_directory.mkdir()
+        except FileExistsError:
+            try:
+                _fail("V3_PODMAN_ATTEMPT_PUBLICATION_COLLISION", attempt_name)
+            except core.ExecutionClosureValidationError as collision_error:
+                raise collision_error from error
+        final_reserved = True
+        rename_error: OSError | None = None
+        try:
+            os.rename(directory, final_directory)
+            published = True
+        except OSError as caught_rename_error:
+            rename_error = caught_rename_error
+        finally:
+            if final_reserved and not published:
+                try:
+                    shutil.rmtree(final_directory)
+                except FileNotFoundError:
+                    pass
+        if rename_error is not None:
+            raise rename_error from error
+    finally:
+        try:
+            shutil.rmtree(staging_parent)
+        except OSError:
+            pass
 
 
 def _finalize_capture(commands: dict[str, dict[str, Any]], metadata: dict[str, dict[str, Any]]) -> dict[str, Any]:
@@ -4688,25 +7135,1839 @@ def _ensure_same_capture(first: dict[str, dict[str, Any]], second: dict[str, dic
         _fail("V3_PODMAN_SUPPLEMENT_DRIFT")
 
 
+class DirectCommandRuntimeProductionExecutorV1:
+    """Owns the real, ordered direct-runtime transaction without constructor side effects."""
+
+    def __init__(
+        self,
+        output_directory: Path | str,
+        run_day: str,
+        external_stop: dict[str, str] | None = None,
+    ) -> None:
+        """Stores immutable execution configuration without allocating execution resources.
+
+        @param output_directory The final V3 destination reserved for a successful transaction.
+        @param run_day The validated UTC day used by any later failure preservation.
+        @param external_stop Optional explicit supervisor interruption evidence.
+        @returns Nothing.
+        """
+        self.output_directory = Path(output_directory)
+        self.run_day = run_day
+        self.external_stop = copy.deepcopy(external_stop)
+        self.started = False
+        self._capacity_probe: dict[str, Any] | None = None
+        self._temporary: Any | None = None
+        self._stage: Path | None = None
+        self._raw_dir: Path | None = None
+        self._archive: dict[str, Any] | None = None
+        self._context: dict[str, Any] | None = None
+        self._execution_context: dict[str, Any] | None = None
+        self._nested_pnpm_runtime: dict[str, Any] | None = None
+        self._versions: dict[str, dict[str, Any]] | None = None
+        self._toolchain: dict[str, Any] | None = None
+        self._direct_node_split_semantics: dict[str, Any] | None = None
+        self._segments: list[dict[str, Any]] | None = None
+        self._trigger: dict[str, Any] | None = None
+        self._preparation: dict[str, Any] | None = None
+        self._pre_capture: dict[str, dict[str, Any]] | None = None
+        self._podman: dict[str, Any] | None = None
+        self._image: dict[str, Any] | None = None
+        self._network: dict[str, dict[str, Any]] | None = None
+        self._pre_inventories: dict[
+            str,
+            tuple[dict[str, Any], dict[str, Any]],
+        ] | None = None
+        self._hermetic_pnpm_contract: dict[str, Any] | None = None
+        self._workspace_dag_contract: dict[str, Any] | None = None
+        self._workspace_resolution: list[dict[str, Any]] | None = None
+        self._workspace_output_inventories: list[dict[str, Any]] | None = None
+        self._workspace_command_specs: list[dict[str, Any]] = []
+        self._failure_reason = "initialization"
+        self._direct_runtime_stage: str | None = None
+        self._direct_runtime_preseal_attempt: dict[str, Any] | None = None
+        self._sealed_integration: dict[str, Any] | None = None
+        self._candidate_publication_failure: dict[str, Any] | None = None
+        self._attempt_nonce: bytes | None = None
+        self._same_attempt_identity_envelope: dict[str, Any] | None = None
+        self._staged_commands: list[dict[str, Any]] = []
+        self._receipt_commands: list[dict[str, Any]] = []
+
+    def probe_capacity(self, preparation: dict[str, Any]) -> dict[str, Any]:
+        """Observes the production filesystems before any transaction allocation.
+
+        @param preparation The immutable pre-staging direct-runtime preparation.
+        @returns The same-device capacity probe bound to the preparation budget.
+        @throws core.ExecutionClosureValidationError When capacity was not probed first or is unavailable.
+        """
+        if self._capacity_probe is not None or self.started:
+            _direct_runtime_integration_fail("PRODUCTION_CAPACITY_PROBE_REPEATED")
+        self._capacity_probe = probe_direct_command_runtime_production_capacity_v1(
+            preparation,
+            {
+                "temporary-stage": Path("/tmp"),
+                "archive": self.output_directory.parent,
+                "cow": HOST_STORE,
+                "evidence": TRACK_DIR,
+            },
+        )
+        return copy.deepcopy(self._capacity_probe)
+
+    def build_archive(self, preparation: dict[str, Any]) -> dict[str, Any]:
+        """Creates the private stage and archive after a successful capacity observation.
+
+        @param preparation The immutable direct-runtime preparation.
+        @returns The source archive carrying the pre-finalization detached packet.
+        @throws core.ExecutionClosureValidationError When the transaction is out of order.
+        """
+        if self._capacity_probe is None or self.started:
+            _direct_runtime_integration_fail("PRODUCTION_ARCHIVE_BEFORE_CAPACITY")
+        self._temporary = tempfile.TemporaryDirectory(
+            prefix="business-operations-r1-v3-podman-",
+            dir="/tmp",
+        )
+        self._stage = Path(self._temporary.name)
+        self._raw_dir = self._stage / "raw"
+        self._raw_dir.mkdir()
+        self._attempt_nonce = os.urandom(32)
+        self.started = True
+        self._archive = _build_archive(
+            direct_runtime_preparation=preparation,
+        )
+        self._preparation = copy.deepcopy(preparation)
+        self._failure_reason = "direct-runtime-preflight"
+        self._direct_runtime_stage = self._failure_reason
+        return self._archive
+
+    def build_context(
+        self,
+        archive: dict[str, Any],
+        preparation: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Builds the clean Podman context from the staged archive and detached packet.
+
+        @param archive The exact archive returned by build_archive.
+        @param preparation The immutable direct-runtime preparation.
+        @returns The isolated container context with only pre-finalization packet mounts.
+        @throws core.ExecutionClosureValidationError When archive ownership or frozen trigger drift.
+        """
+        if (
+            archive is not self._archive
+            or self._stage is None
+            or self._raw_dir is None
+        ):
+            _direct_runtime_integration_fail("PRODUCTION_CONTEXT_ARCHIVE_UNBOUND")
+        archive_path = self._stage / "execution-closure.archive.json"
+        _write_json(archive_path, archive)
+        frozen = _load_json(core.V2_ARCHIVE)
+        frozen_entries = frozen.get("entries")
+        if not isinstance(frozen_entries, list):
+            _direct_runtime_integration_fail("PRODUCTION_CONTEXT_FROZEN_ENTRIES_INVALID")
+        frozen_index, self._trigger = _direct_runtime_trigger_v1(
+            frozen_entries,
+            STANDARD_PACK_GENERATOR,
+        )
+        selected_manifest = frozen_index.get(self._trigger["manifest"]["path"])
+        if not isinstance(selected_manifest, dict):
+            _direct_runtime_integration_fail(
+                "PRODUCTION_CONTEXT_FROZEN_MANIFEST_INVALID",
+            )
+        self._direct_node_split_semantics = (
+            derive_direct_node_split_semantics_from_frozen_script_v1(
+                self._trigger,
+                selected_manifest,
+            )
+        )
+        segments = self._direct_node_split_semantics.get("segments")
+        if not isinstance(segments, list):
+            _direct_runtime_integration_fail(
+                "PRODUCTION_CONTEXT_FROZEN_SEMANTICS_INVALID",
+            )
+        self._segments = segments
+        self._nested_pnpm_runtime = build_nested_pnpm_runtime_shim_contract_v1()
+        self._context = _podman_context(
+            self._stage,
+            archive_path,
+            self._nested_pnpm_runtime,
+            direct_runtime_preparation=preparation,
+        )
+        self._failure_reason = "direct-runtime-discovery"
+        self._direct_runtime_stage = self._failure_reason
+        self._pre_capture = _host_git_capture(self._raw_dir, "pre")
+        self._staged_commands.extend(self._pre_capture.values())
+        self._podman, self._image = _podman_host_evidence(self._raw_dir)
+        self._staged_commands.extend(
+            [
+                self._podman["versionCommand"],
+                self._image["inspectCommand"],
+            ],
+        )
+        self._network = _network_proof(self._raw_dir, self._context)
+        self._staged_commands.extend(
+            [
+                self._network["route"],
+                self._network["dns"],
+                self._network["tcp"],
+            ],
+        )
+        self._pre_inventories = {}
+        for mount in self._context["mounts"]:
+            if mount["id"] == "work":
+                continue
+            self._failure_reason = f"inventory-{mount['id']}-pre"
+            inventory, command = _inventory_mount(
+                self._raw_dir,
+                self._context,
+                mount,
+                "pre",
+                self._staged_commands,
+            )
+            self._pre_inventories[mount["id"]] = (inventory, command)
+        frozen_entries = frozen.get("entries")
+        if not isinstance(frozen_entries, list):
+            _workspace_dag_fail("FROZEN_ENTRIES_INVALID")
+        self._workspace_dag_contract = (
+            build_workspace_prerequisite_build_dag_contract_v1(
+                frozen_entries,
+                STANDARD_PACK_GENERATOR,
+            )
+        )
+        validate_workspace_prerequisite_build_dag_contract_v1(
+            self._workspace_dag_contract,
+            frozen_entries,
+        )
+        self._workspace_resolution = _workspace_installed_resolution_records_v1(
+            self._workspace_dag_contract,
+        )
+        validate_installed_workspace_build_resolution_v1(
+            self._workspace_dag_contract,
+            self._workspace_resolution,
+        )
+        self._workspace_command_specs = _workspace_prerequisite_command_specs_v1(
+            self._workspace_dag_contract,
+        )
+        return self._context
+
+    def materialize(
+        self,
+        context: dict[str, Any],
+        preparation: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Materializes the sealed packet and performs the required offline dependency install.
+
+        @param context The exact context returned by build_context.
+        @param preparation The immutable direct-runtime preparation.
+        @returns The materialization, probe, replay, and offline-install observations.
+        @throws core.ExecutionClosureValidationError When detached packet materialization or install fails.
+        """
+        if context is not self._context or self._archive is None or self._raw_dir is None:
+            _direct_runtime_integration_fail("PRODUCTION_MATERIALIZATION_CONTEXT_UNBOUND")
+        self._versions, self._toolchain = _tool_versions(self._raw_dir, context)
+        versions = self._versions
+        self._failure_reason = "materialize"
+        self._direct_runtime_stage = self._failure_reason
+        materialize = self._run(
+            "materialize",
+            "receipt-materialize",
+            ["node", "materialize-v3"],
+            [
+                CONTAINER_NODE,
+                "/runner/materialize.mjs",
+                "/runner/archive.json",
+                "/runner/direct-runtime-source-packet.json",
+                "/work",
+            ],
+        )
+        expected_materialization = {
+            "sourcePacketSha256": preparation["packetMaterialization"][
+                "sourcePacketSha256"
+            ],
+            "entries": preparation["packetMaterialization"]["entries"],
+        }
+        materialized = _parse_stdout(materialize, "materialize")
+        if (
+            materialized.get("inventory") != self._archive["closureInventory"]
+            or materialized.get("directRuntimeMaterialization")
+            != expected_materialization
+        ):
+            _direct_runtime_integration_fail("PRODUCTION_MATERIALIZATION_INVALID")
+        self._failure_reason = "direct-runtime-materialization-probe"
+        self._direct_runtime_stage = self._failure_reason
+        materialization_probe = self._run(
+            "direct-runtime-materialization-probe",
+            "receipt-direct-runtime-materialization-probe",
+            ["node", "direct-runtime-materialization-probe"],
+            [
+                CONTAINER_NODE,
+                "/runner/direct-runtime-materialization-probe.mjs",
+                "/runner/archive.json",
+                "/runner/direct-runtime-source-packet.json",
+                "/work",
+            ],
+        )
+        if (
+            _parse_stdout(
+                materialization_probe,
+                "direct-runtime-materialization-probe",
+            )
+            != expected_materialization
+        ):
+            _direct_runtime_integration_fail("MATERIALIZATION_PROBE_INVALID")
+        replay = self._run(
+            "replay",
+            "receipt-replay",
+            ["node", "replay-v3"],
+            [CONTAINER_NODE, "/runner/replay.mjs", "/runner/archive.json", "/work"],
+        )
+        replayed = _parse_stdout(replay, "replay")
+        if (
+            replayed.get("inventory") != self._archive["closureInventory"]
+            or replayed.get("sourcePathsOutsideWork") != []
+            or replayed.get("preexistingGeneratedPaths") != []
+        ):
+            _direct_runtime_integration_fail("PRODUCTION_REPLAY_INVALID")
+        self._hermetic_pnpm_contract = build_hermetic_pnpm_install_contract_v1(
+            self._archive["entries"],
+            versions["pnpm"]["stdout"],
+        )
+        contract = self._hermetic_pnpm_contract
+        self._failure_reason = "offline-install"
+        offline_install = self._run(
+            "offline-install",
+            "receipt-offline-install",
+            list(HERMETIC_PNPM_INSTALL),
+            [CONTAINER_NODE, CONTAINER_PNPM, *HERMETIC_PNPM_PAYLOAD_SUFFIX],
+            toolchain=self._toolchain,
+        )
+        offline_install["registryAttestation"] = _hermetic_pnpm_registry_attestation(
+            _command_text(offline_install, "stdout"),
+            _command_text(offline_install, "stderr"),
+            contract,
+        )
+        _require_zero(offline_install, "offline-install")
+        if (
+            self._workspace_dag_contract is None
+            or self._workspace_resolution is None
+        ):
+            _workspace_dag_fail("EXECUTION_CONTRACT_INVALID")
+        resolution_spec = next(
+            (
+                specification
+                for specification in self._workspace_command_specs
+                if specification.get("kind") == "resolution"
+            ),
+            None,
+        )
+        if not isinstance(resolution_spec, dict):
+            _workspace_dag_fail("EXECUTION_CONTRACT_INVALID")
+        resolution_command = self._run(
+            resolution_spec["id"],
+            f"receipt-{resolution_spec['id']}",
+            resolution_spec["logicalArgv"],
+            resolution_spec["payloadArgv"],
+        )
+        observed_resolution = _parse_stdout(
+            resolution_command,
+            resolution_spec["id"],
+        )
+        if observed_resolution != {"resolutions": self._workspace_resolution}:
+            _workspace_dag_fail("INSTALLED_RESOLUTION_INVALID")
+        validate_installed_workspace_build_resolution_v1(
+            self._workspace_dag_contract,
+            self._workspace_resolution,
+        )
+        for command_id, logical in (
+            ("build-db", BUILDS[0]),
+            ("build-auth", BUILDS[1]),
+            ("build-backend", BUILDS[2]),
+        ):
+            command = self._run(
+                command_id,
+                f"receipt-{command_id}",
+                logical,
+                build_pnpm_global_store_payload_v1(logical),
+                toolchain=self._toolchain,
+            )
+            _require_zero(command, command_id)
+        self._workspace_output_inventories = []
+        runtime_logical = (
+            self._segments[0]["logicalArgv"]
+            if self._segments is not None
+            else None
+        )
+        for specification in self._workspace_command_specs:
+            kind = specification.get("kind")
+            if kind == "resolution":
+                continue
+            command_id = specification.get("id")
+            logical = specification.get("logicalArgv")
+            payload = specification.get("payloadArgv")
+            if (
+                not isinstance(command_id, str)
+                or not isinstance(logical, list)
+                or not isinstance(payload, list)
+                or logical == runtime_logical
+            ):
+                _workspace_dag_fail("EXECUTION_CONTRACT_INVALID")
+            command = self._run(
+                command_id,
+                f"receipt-{command_id}",
+                logical,
+                payload,
+                toolchain=self._toolchain if kind == "build" else None,
+            )
+            _require_zero(command, command_id)
+            if kind == "build":
+                validate_workspace_prerequisite_pnpm_executor_v1(
+                    command,
+                    self._workspace_dag_contract,
+                )
+            elif kind == "output-inventory":
+                observed_outputs = _parse_stdout(command, command_id)
+                outputs = observed_outputs.get("outputs")
+                if not isinstance(outputs, list) or len(outputs) != 1:
+                    _workspace_dag_fail("OUTPUT_INVENTORY_INVALID")
+                self._workspace_output_inventories.extend(outputs)
+            elif kind != "clear":
+                _workspace_dag_fail("EXECUTION_CONTRACT_INVALID")
+        validate_workspace_prerequisite_build_output_inventories_v1(
+            self._workspace_dag_contract,
+            self._workspace_output_inventories,
+        )
+        return {
+            "materialize": materialize,
+            "materializationProbe": materialization_probe,
+            "replay": replay,
+            "offlineInstall": offline_install,
+            "toolVersions": versions,
+            "hermeticPnpmInstall": contract,
+            "workspacePrerequisiteBuildDag": self._workspace_dag_contract,
+            "workspaceBuildResolution": self._workspace_resolution,
+            "workspacePrerequisiteOutputInventories": (
+                self._workspace_output_inventories
+            ),
+        }
+
+    def _direct_node_split_segment_context(
+        self,
+        context: dict[str, Any],
+        segment: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Derives one package-cwd command context from stored frozen split semantics.
+
+        @param context The clean base or trace context rooted at `/work`.
+        @param segment The stored frozen runtime-build or direct-Node segment.
+        @returns A command-local context carrying only the selected semantic provenance.
+        @throws core.ExecutionClosureValidationError When the stored semantic carrier cannot bind the command context.
+        """
+        semantics = self._direct_node_split_semantics
+        prefix = context.get("prefix") if isinstance(context, dict) else None
+        mounts = context.get("mounts", []) if isinstance(context, dict) else None
+        frozen_script = (
+            semantics.get("frozenScript") if isinstance(semantics, dict) else None
+        )
+        clean_environment = (
+            semantics.get("cleanEnvironment") if isinstance(semantics, dict) else None
+        )
+        stored_segments = semantics.get("segments") if isinstance(semantics, dict) else None
+        cwd = segment.get("cwd") if isinstance(segment, dict) else None
+        if (
+            not isinstance(prefix, list)
+            or not isinstance(mounts, list)
+            or prefix
+            != build_direct_node_split_canonical_prefix_v1(mounts, "/work")
+            or not isinstance(cwd, str)
+            or not cwd.startswith("/work/")
+            or not isinstance(frozen_script, dict)
+            or not isinstance(clean_environment, dict)
+            or not isinstance(stored_segments, list)
+            or len(stored_segments) != 2
+            or [item.get("id") if isinstance(item, dict) else None for item in stored_segments]
+            != [
+                "build-advantage-play-kit-for-runtime",
+                "generate-standard-pack-catalog",
+            ]
+            or sum(segment == item for item in stored_segments) != 1
+        ):
+            _direct_runtime_integration_fail(
+                "PRODUCTION_DIRECT_NODE_SPLIT_SEMANTICS_UNBOUND",
+            )
+        segment_prefix = build_direct_node_split_canonical_prefix_v1(mounts, cwd)
+        return {
+            **context,
+            "mounts": copy.deepcopy(mounts),
+            "prefix": segment_prefix,
+            "directNodeSplit": {
+                "frozenScript": copy.deepcopy(frozen_script),
+                "cleanEnvironment": copy.deepcopy(clean_environment),
+                "segment": copy.deepcopy(segment),
+            },
+        }
+
+    def runtime_build(
+        self,
+        context: dict[str, Any],
+        materialization: dict[str, Any],
+        preparation: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Runs exactly the frozen prerequisite build and records its staged receipt identity.
+
+        @param context The exact clean context returned by build_context.
+        @param materialization The successful materialization result.
+        @param preparation The immutable direct-runtime preparation.
+        @returns The one successful runtime-build receipt accepted by finalization.
+        @throws core.ExecutionClosureValidationError When the frozen build segment is unavailable or fails.
+        """
+        if (
+            context is not self._context
+            or self._segments is None
+            or self._direct_node_split_semantics is None
+            or self._toolchain is None
+            or self._attempt_nonce is None
+            or not isinstance(materialization, dict)
+        ):
+            _direct_runtime_integration_fail("PRODUCTION_RUNTIME_BUILD_CONTEXT_UNBOUND")
+        segment = self._segments[0]
+        logical = segment["logicalArgv"]
+        execution_context = self._direct_node_split_segment_context(context, segment)
+        command = self._run(
+            segment["id"],
+            f"receipt-{segment['id']}",
+            logical,
+            build_pnpm_global_store_payload_v1(logical),
+            toolchain=self._toolchain,
+            environment_overrides=segment["environmentOverrides"],
+            context=execution_context,
+        )
+        _require_zero(command, segment["id"])
+        self._direct_runtime_stage = segment["id"]
+        command["directRuntimePreparationSha256"] = _sha256(
+            _canonical(preparation),
+        )
+        command["directRuntimeAttempt"] = {
+            "id": "direct-runtime-detached-runner-v1",
+            "nonceSha256": _sha256(self._attempt_nonce),
+            "reachedStage": "direct-runtime-dist-identity",
+            "executionTrace": None,
+        }
+        command["receipt"] = self._staged_stdout_reference(command)
+        return copy.deepcopy(command)
+
+    def post_build_identity(
+        self,
+        context: dict[str, Any],
+        runtime_build_receipt: dict[str, Any],
+        preparation: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Observes the generated dist bytes and builds the receipt-bound runtime read set.
+
+        @param context The exact clean context returned by build_context.
+        @param runtime_build_receipt The successful prerequisite-build receipt.
+        @param preparation The immutable direct-runtime preparation.
+        @returns The in-container derived-read identity used by the real finalizer.
+        @throws core.ExecutionClosureValidationError When observed derived bytes drift from the declared path set.
+        """
+        if (
+            context is not self._context
+            or self._trigger is None
+            or self._attempt_nonce is None
+        ):
+            _direct_runtime_integration_fail("PRODUCTION_POST_BUILD_CONTEXT_UNBOUND")
+        dynamic = preparation.get("dynamicBuildOutput")
+        packet = preparation.get("sourcePacket")
+        discovery = preparation.get("baselineGitDiscovery")
+        if (
+            not isinstance(dynamic, dict)
+            or not isinstance(packet, dict)
+            or not isinstance(discovery, dict)
+            or not isinstance(dynamic.get("knownDerivedBuildPaths"), list)
+        ):
+            _direct_runtime_integration_fail("PRODUCTION_POST_BUILD_PREPARATION_INVALID")
+        expected_paths = [
+            item.get("path")
+            for item in dynamic["knownDerivedBuildPaths"]
+            if isinstance(item, dict)
+        ]
+        if (
+            not expected_paths
+            or any(not isinstance(path, str) for path in expected_paths)
+            or expected_paths != sorted(expected_paths)
+            or len(set(expected_paths)) != len(expected_paths)
+        ):
+            _direct_runtime_integration_fail("PRODUCTION_POST_BUILD_PREPARATION_INVALID")
+        attempt_nonce_sha256 = _sha256(self._attempt_nonce)
+        runtime_attempt = runtime_build_receipt.get("directRuntimeAttempt")
+        if (
+            not isinstance(runtime_attempt, dict)
+            or runtime_attempt.get("nonceSha256") != attempt_nonce_sha256
+        ):
+            _direct_runtime_integration_fail("PRODUCTION_POST_BUILD_ATTEMPT_UNBOUND")
+        observation = self._run(
+            "direct-runtime-dist-identity",
+            "receipt-direct-runtime-dist-identity",
+            ["node", "direct-runtime-dist-identity"],
+            [
+                CONTAINER_NODE,
+                "/runner/direct-runtime-dist-identity.mjs",
+                json.dumps(
+                    {
+                        "attemptNonceSha256": attempt_nonce_sha256,
+                        "expected": [{"path": path} for path in expected_paths],
+                        "workRoot": "/work",
+                    },
+                    separators=(",", ":"),
+                    sort_keys=True,
+                ),
+            ],
+        )
+        _require_zero(observation, "direct-runtime-dist-identity")
+        observed = _parse_stdout(observation, "direct-runtime-dist-identity")
+        rows = observed.get("derivedBuildReadSet")
+        if (
+            set(observed)
+            != {"attemptNonceSha256", "derivedBuildReadSet", "workRoot"}
+            or observed.get("attemptNonceSha256") != attempt_nonce_sha256
+            or observed.get("workRoot") != "/work"
+            or not isinstance(rows, list)
+            or [row.get("path") if isinstance(row, dict) else None for row in rows]
+            != expected_paths
+            or any(
+                not isinstance(row, dict)
+                or set(row) != {"mode", "path", "resolvedPath", "sha256", "size"}
+                or row.get("resolvedPath") != f"/work/{path}"
+                or not isinstance(row.get("mode"), str)
+                or re.fullmatch(r"100[0-7]{3}", row["mode"]) is None
+                or not isinstance(row.get("sha256"), str)
+                or re.fullmatch(r"[0-9a-f]{64}", row["sha256"]) is None
+                or type(row.get("size")) is not int
+                or row["size"] < 0
+                for path, row in zip(expected_paths, rows)
+            )
+        ):
+            _direct_runtime_integration_fail("PRODUCTION_POST_BUILD_IDENTITY_INVALID")
+        identity_receipt = self._staged_stdout_reference(observation)
+        receipt = runtime_build_receipt.get("receipt")
+        producer_class = dynamic["knownDerivedBuildPaths"][0].get("producerClass")
+        if not isinstance(producer_class, dict):
+            _direct_runtime_integration_fail("PRODUCTION_POST_BUILD_PREPARATION_INVALID")
+        derived = [
+            {
+                "path": row["path"],
+                "sha256": row["sha256"],
+                "size": row["size"],
+                "origin": "DERIVED_BUILD_OUTPUT",
+                "producer": {
+                    **copy.deepcopy(producer_class),
+                    "receipt": copy.deepcopy(receipt),
+                },
+            }
+            for row in rows
+        ]
+        baseline = packet.get("baselineReadSet")
+        root = discovery.get("root")
+        script = next(
+            (
+                identity
+                for identity in baseline
+                if isinstance(identity, dict)
+                and identity.get("path") == self._trigger["scriptPath"]
+            ),
+            None,
+        ) if isinstance(baseline, list) else None
+        if not isinstance(script, dict) or not isinstance(root, str):
+            _direct_runtime_integration_fail("PRODUCTION_POST_BUILD_PREPARATION_INVALID")
+        directories = {root}
+        for identity in baseline:
+            if isinstance(identity, dict) and isinstance(identity.get("path"), str):
+                parent = posixpath.dirname(identity["path"])
+                while parent.startswith(f"{root}/"):
+                    directories.add(parent)
+                    parent = posixpath.dirname(parent)
+        quota_bytes = sum(
+            identity["size"]
+            for identity in baseline
+            if isinstance(identity, dict) and isinstance(identity.get("size"), int)
+        )
+        read_set = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-read-set",
+            "trigger": {
+                "logicalArgv": list(self._trigger["logicalArgv"]),
+                "package": self._trigger["package"],
+                "manifest": copy.deepcopy(self._trigger["manifest"]),
+            },
+            "baselineReadSet": copy.deepcopy(baseline),
+            "derivedBuildReadSet": derived,
+            "outputPaths": copy.deepcopy(dynamic["declaredOutputPaths"]),
+            "preflightQuota": {
+                "maxEntries": len(baseline),
+                "maxBytes": quota_bytes,
+                "observedEntries": len(baseline),
+                "observedBytes": quota_bytes,
+            },
+            "resourceBudget": copy.deepcopy(preparation["resourceBudget"]),
+            "discovery": {
+                "kind": "BASELINE_GIT_INSTRUMENTED_TRACE",
+                "script": copy.deepcopy(script),
+                "root": root,
+                "directoryListingCount": len(directories),
+            },
+        }
+        _direct_runtime_validate_read_set_shape_v1(
+            read_set,
+            preparation["resourceBudget"],
+        )
+        self._direct_runtime_stage = "direct-runtime-dist-identity"
+        return {
+            "source": "IN_CONTAINER_POST_RUNTIME_BUILD_IDENTITY",
+            "directRuntimePreparationSha256": _sha256(_canonical(preparation)),
+            "readSet": read_set,
+            "observation": observed,
+            "receipt": identity_receipt,
+        }
+
+    def build_same_attempt_identity_envelope(
+        self,
+        preparation: dict[str, Any],
+        archive: dict[str, Any],
+        context: dict[str, Any],
+        runtime_build_receipt: dict[str, Any],
+        post_build_identity: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Builds the private H1 identity envelope from the exact executed transaction carriers.
+
+        @param preparation The immutable preparation consumed by this transaction.
+        @param archive The exact archive staged before materialization.
+        @param context The exact base execution context.
+        @param runtime_build_receipt The successful prerequisite-build receipt.
+        @param post_build_identity The nonce-bound post-build observer result.
+        @returns The separately owned same-attempt identity envelope.
+        @throws core.ExecutionClosureValidationError When a caller supplies unbound carriers or repeats sealing.
+        """
+        if (
+            self._attempt_nonce is None
+            or self._same_attempt_identity_envelope is not None
+            or archive is not self._archive
+            or context is not self._context
+        ):
+            _direct_runtime_integration_fail(
+                "PRODUCTION_SAME_ATTEMPT_ENVELOPE_UNBOUND",
+            )
+        envelope = build_direct_command_runtime_same_attempt_identity_envelope_v1(
+            preparation,
+            archive,
+            context,
+            runtime_build_receipt,
+            post_build_identity,
+            self._attempt_nonce,
+        )
+        self._same_attempt_identity_envelope = copy.deepcopy(envelope)
+        return copy.deepcopy(envelope)
+
+    def bind_finalization(
+        self,
+        archive: dict[str, Any],
+        context: dict[str, Any],
+        integration: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Records a sealed finalizer result without rewriting archive or base-context bytes.
+
+        @param archive The immutable archive returned before materialization.
+        @param context The immutable base context returned before finalization.
+        @param integration The sealed finalizer output accepted for generation.
+        @returns A separately owned sealed integration carrier for later execution stages.
+        @throws core.ExecutionClosureValidationError When finalization is repeated or unbound.
+        """
+        if (
+            archive is not self._archive
+            or context is not self._context
+            or self._sealed_integration is not None
+        ):
+            _direct_runtime_integration_fail("PRODUCTION_FINALIZATION_BINDING_UNBOUND")
+        validate_direct_command_runtime_runner_integration_v1(integration)
+        if self._same_attempt_identity_envelope is None:
+            _direct_runtime_integration_fail(
+                "PRODUCTION_SAME_ATTEMPT_ENVELOPE_UNBOUND",
+            )
+        validate_direct_command_runtime_same_attempt_identity_binding_v1(
+            self._same_attempt_identity_envelope,
+            archive,
+            context,
+        )
+        if (
+            archive.get("directRuntimeSourcePacket") != integration["sourcePacket"]
+            or archive.get("directRuntimePacketMaterialization")
+            != integration["packetMaterialization"]
+            or archive.get("directRuntimeBaselineReadSet")
+            != integration["readSet"]["baselineReadSet"]
+        ):
+            _direct_runtime_integration_fail("PRODUCTION_FINALIZATION_ARCHIVE_DRIFT")
+        self._sealed_integration = copy.deepcopy(integration)
+        self._direct_runtime_stage = integration["attempt"]["reachedStage"]
+        return copy.deepcopy(self._sealed_integration)
+
+    def generate(
+        self,
+        context: dict[str, Any],
+        integration: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Binds trace configuration and runs the frozen direct-Node generator exactly once.
+
+        @param context The exact clean context returned by build_context.
+        @param integration The real finalizer result for this transaction.
+        @returns The successful direct-Node generation receipt and output identity.
+        @throws core.ExecutionClosureValidationError When finalization or direct generation is unbound.
+        """
+        if (
+            context is not self._context
+            or self._segments is None
+            or self._direct_node_split_semantics is None
+            or self._sealed_integration != integration
+        ):
+            _direct_runtime_integration_fail("PRODUCTION_GENERATION_CONTEXT_UNBOUND")
+        validate_direct_command_runtime_runner_integration_v1(integration)
+        execution_context = self._derive_trace_execution_context(
+            context,
+            integration,
+        )
+        clear = self._run(
+            "clear-stale-standard-pack-catalog",
+            "receipt-clear-stale-standard-pack-catalog",
+            ["rm", "-f", STANDARD_PACK_CATALOG],
+            ["/bin/rm", "-f", STANDARD_PACK_CATALOG],
+            context=execution_context,
+        )
+        _require_zero(clear, "clear-stale-standard-pack-catalog")
+        segment = self._segments[1]
+        logical = segment["logicalArgv"]
+        script = segment.get("script") if isinstance(segment, dict) else None
+        logical_path = script.get("logicalPath") if isinstance(script, dict) else None
+        if (
+            not isinstance(logical, list)
+            or logical[0] != "node"
+            or not isinstance(script, dict)
+            or script.get("resolvedPath") != f"/work/{logical_path}"
+            or segment.get("environmentOverrides")
+            != {"NODE_OPTIONS": DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS}
+        ):
+            _direct_runtime_integration_fail("PRODUCTION_DIRECT_NODE_GENERATOR_INVALID")
+        direct_execution_context = self._direct_node_split_segment_context(
+            execution_context,
+            segment,
+        )
+        generation = self._run(
+            segment["id"],
+            f"receipt-{segment['id']}",
+            logical,
+            [CONTAINER_NODE, script["resolvedPath"]],
+            environment_overrides=segment["environmentOverrides"],
+            context=direct_execution_context,
+        )
+        _require_zero(generation, segment["id"])
+        catalog = direct_execution_context["work"] / STANDARD_PACK_CATALOG
+        if not catalog.is_file() or catalog.is_symlink():
+            _direct_runtime_integration_fail("PRODUCTION_STANDARD_PACK_OUTPUT_MISSING")
+        catalog_bytes = catalog.read_bytes()
+        generation["output"] = {
+            "path": STANDARD_PACK_CATALOG,
+            "sha256": _sha256(catalog_bytes),
+            "size": len(catalog_bytes),
+        }
+        self._direct_runtime_stage = segment["id"]
+        return generation
+
+    def capture_trace(
+        self,
+        context: dict[str, Any],
+        integration: dict[str, Any],
+        generation: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Captures and validates the in-container trace emitted by the direct Node child.
+
+        @param context The exact clean context returned by build_context.
+        @param integration The finalizer-sealed runtime integration.
+        @param generation The successful direct-Node generation receipt.
+        @returns The parsed trace, raw receipt, and completed integration state.
+        @throws core.ExecutionClosureValidationError When the trace is incomplete or unbound.
+        """
+        if (
+            context is not self._context
+            or self._execution_context is None
+            or self._sealed_integration != integration
+            or self._same_attempt_identity_envelope is None
+            or generation.get("id") != "generate-standard-pack-catalog"
+        ):
+            _direct_runtime_integration_fail("PRODUCTION_TRACE_GENERATION_UNBOUND")
+        if (
+            integration.get("attempt", {}).get("nonceSha256")
+            != self._same_attempt_identity_envelope["attemptNonceSha256"]
+        ):
+            _direct_runtime_integration_fail(
+                "PRODUCTION_TRACE_SAME_ATTEMPT_UNBOUND",
+            )
+        active_context = self._execution_context
+        post_generator_identity = self._run(
+            "direct-runtime-dist-identity-post-generator",
+            "receipt-direct-runtime-dist-identity-post-generator",
+            ["node", "direct-runtime-dist-identity-post-generator"],
+            [
+                CONTAINER_NODE,
+                "/runner/direct-runtime-dist-identity.mjs",
+                json.dumps(
+                    {
+                        "attemptNonceSha256": (
+                            self._same_attempt_identity_envelope[
+                                "attemptNonceSha256"
+                            ]
+                        ),
+                        "expected": [
+                            {
+                                key: item[key]
+                                for key in ("path", "sha256", "size")
+                            }
+                            for item in integration["readSet"][
+                                "derivedBuildReadSet"
+                            ]
+                        ],
+                        "workRoot": "/work",
+                    },
+                    separators=(",", ":"),
+                    sort_keys=True,
+                ),
+            ],
+            context=active_context,
+        )
+        post_generator_identity["directRuntimeDistIdentity"] = _parse_stdout(
+            post_generator_identity,
+            "direct-runtime-dist-identity-post-generator",
+        )
+        _validate_direct_runtime_post_generator_dist_identity_v1(
+            integration,
+            post_generator_identity,
+        )
+        validate_direct_command_runtime_same_attempt_identity_before_trace_v1(
+            self._same_attempt_identity_envelope,
+            post_generator_identity["directRuntimeDistIdentity"],
+        )
+        trace_command = self._run(
+            "direct-runtime-trace",
+            "receipt-direct-runtime-trace",
+            ["node", "direct-runtime-trace-receipt"],
+            [
+                CONTAINER_NODE,
+                "/runner/direct-runtime-trace-receipt.mjs",
+                DIRECT_RUNTIME_TRACE_CONFIG_PATH,
+            ],
+            context=active_context,
+        )
+        raw_trace_receipt = _parse_stdout(trace_command, "direct-runtime-trace")
+        envelope = capture_direct_command_runtime_in_container_trace_v1(
+            raw_trace_receipt,
+            integration,
+        )
+        trace = parse_direct_command_runtime_trace_events_v1(envelope, integration)
+        validate_direct_command_runtime_execution_trace_v1(
+            integration["readSetContract"],
+            trace,
+        )
+        completed_attempt = {
+            "id": integration["attempt"]["id"],
+            "reachedStage": "direct-runtime-trace",
+            "executionTrace": trace,
+        }
+        if "nonceSha256" in integration["attempt"]:
+            completed_attempt["nonceSha256"] = integration["attempt"][
+                "nonceSha256"
+            ]
+        completed_integration = build_direct_command_runtime_runner_integration_v1(
+            integration["readSet"],
+            integration["sourcePacket"],
+            completed_attempt,
+            integration["resourceBudget"],
+        )
+        validate_direct_command_runtime_runner_integration_v1(
+            completed_integration,
+        )
+        self._sealed_integration = copy.deepcopy(completed_integration)
+        self._direct_runtime_stage = "direct-runtime-trace"
+        publication = self._complete_candidate_after_trace(
+            completed_integration,
+            raw_trace_receipt,
+        )
+        return {
+            "executionTrace": trace,
+            "rawTraceReceipt": raw_trace_receipt,
+            "postGeneratorIdentity": post_generator_identity,
+            "integration": completed_integration,
+            "publication": publication,
+        }
+
+    def _run(
+        self,
+        command_id: str,
+        raw_id: str,
+        logical: list[str],
+        payload: list[str],
+        *,
+        toolchain: dict[str, Any] | None = None,
+        environment_overrides: dict[str, str] | None = None,
+        context: dict[str, Any] | None = None,
+        receipt: bool = True,
+    ) -> dict[str, Any]:
+        """Runs and records one real in-container command for this transaction.
+
+        @param command_id The canonical transaction command identifier.
+        @param raw_id The unique raw output stream identifier.
+        @param logical The contract-level command argv.
+        @param payload The absolute executable argv inside the container.
+        @param toolchain Optional verified pnpm toolchain identity.
+        @param environment_overrides Optional exact clean-environment additions.
+        @param context Optional sealed execution context; the base context is used when omitted.
+        @param receipt Whether this command belongs in the public gate receipt.
+        @returns The staged command receipt.
+        @throws core.ExecutionClosureValidationError When the executor has no private raw directory.
+        """
+        active_context = self._context if context is None else context
+        if self._raw_dir is None or active_context is None:
+            _direct_runtime_integration_fail("PRODUCTION_COMMAND_CONTEXT_UNBOUND")
+        preseal_stages = _DIRECT_RUNTIME_RUNNER_STAGES[
+            : _DIRECT_RUNTIME_RUNNER_STAGES.index("direct-runtime-dist-identity") + 1
+        ]
+        preseal_attempt: dict[str, Any] | None = None
+        if command_id in preseal_stages:
+            preseal_attempt = _build_direct_runtime_preseal_attempt_v1(
+                self._preparation,
+                self._attempt_nonce,
+                command_id,
+            )
+            self._direct_runtime_preseal_attempt = copy.deepcopy(preseal_attempt)
+        self._failure_reason = command_id
+        command = _run_container(
+            self._raw_dir,
+            raw_id,
+            active_context,
+            logical,
+            payload,
+            toolchain,
+            environment_overrides,
+        )
+        command["id"] = command_id
+        if preseal_attempt is not None and command.get("exitCode") != 0:
+            command["directRuntimePreparationSha256"] = preseal_attempt[
+                "preparationSha256"
+            ]
+            command["directRuntimeAttempt"] = copy.deepcopy(
+                preseal_attempt["attempt"],
+            )
+        self._staged_commands.append(command)
+        if receipt:
+            self._receipt_commands.append(command)
+        return command
+
+    def _staged_stdout_reference(self, command: dict[str, Any]) -> dict[str, Any]:
+        """Builds the final-candidate raw stdout reference from bytes already staged by a command.
+
+        @param command The successful staged command whose stdout is receipt evidence.
+        @returns The future V3 raw-stream reference with exact staged byte identity.
+        @throws core.ExecutionClosureValidationError When the staged command has no raw identifier.
+        """
+        raw_id = command.get("_rawId")
+        if not isinstance(raw_id, str) or not raw_id:
+            _direct_runtime_integration_fail("PRODUCTION_RECEIPT_RAW_ID_INVALID")
+        data = _command_text(command, "stdout").encode("utf-8")
+        return {
+            "path": f"{V3_NAME}/raw/{raw_id}.stdout.txt",
+            "sha256": _sha256(data),
+            "size": len(data),
+        }
+
+    def _derive_trace_execution_context(
+        self,
+        context: dict[str, Any],
+        integration: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Derives one sealed trace context without mutating pre-execution carrier bytes.
+
+        @param context The immutable clean container context returned by build_context.
+        @param integration The finalizer-sealed runtime integration.
+        @returns A context clone carrying the trace-config mount and inventory.
+        @throws core.ExecutionClosureValidationError When a trace configuration was already installed.
+        """
+        stage = self._stage
+        if stage is None or context is not self._context:
+            _direct_runtime_integration_fail("PRODUCTION_TRACE_CONFIG_STAGE_UNBOUND")
+        if self._execution_context is not None:
+            _direct_runtime_integration_fail("PRODUCTION_TRACE_CONFIG_REPEATED")
+        if any(
+            mount.get("id") == "runnerTool:direct-runtime-trace-config"
+            for mount in context["mounts"]
+            if isinstance(mount, dict)
+        ):
+            _direct_runtime_integration_fail("PRODUCTION_TRACE_CONFIG_REPEATED")
+        execution_context = copy.deepcopy(context)
+        trace_policy = integration["tracePolicy"]
+        trace_config = stage / "runner" / "direct-runtime-trace-config.json"
+        _write_json(
+            trace_config,
+            {
+                "schemaVersion": 1,
+                "kind": "direct-command-runtime-in-container-trace-config",
+                "evidence": trace_policy["evidence"],
+                "tracer": trace_policy["tracer"],
+                "rawEventArtifact": trace_policy["rawEventArtifact"],
+                "nonce": trace_policy["nonce"],
+                "packetSha256": integration["sourcePacket"]["packetSha256"],
+                "maxEvents": trace_policy["maxEvents"],
+                "targetRoot": "/work",
+                "artifactPath": "/work/.direct-runtime-trace/direct-runtime-raw-events.jsonl",
+                "generatorScript": trace_policy["generatorScript"],
+                "generatorResolvedPath": trace_policy["generatorResolvedPath"],
+                "nodeOptions": DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS,
+                "activation": trace_policy["activation"],
+                "parentPnpm": trace_policy["parentPnpm"],
+                "baselineReadSet": integration["readSet"]["baselineReadSet"],
+                "derivedBuildReadSet": integration["readSet"]["derivedBuildReadSet"],
+                "outputPaths": integration["readSet"]["outputPaths"],
+            },
+        )
+        mount = {
+            "id": "runnerTool:direct-runtime-trace-config",
+            "source": str(trace_config.resolve()),
+            "target": DIRECT_RUNTIME_TRACE_CONFIG_PATH,
+            "access": "ro",
+            "purpose": "nonce-bound-in-container-esm-tracer-config",
+        }
+        execution_context["mounts"].append(mount)
+        execution_context["prefix"] = build_direct_node_split_canonical_prefix_v1(
+            execution_context["mounts"],
+            "/work",
+        )
+        execution_context["declaredExecutors"].append(mount["target"])
+        if self._raw_dir is None or self._pre_inventories is None:
+            _direct_runtime_integration_fail(
+                "PRODUCTION_TRACE_CONFIG_INVENTORY_UNBOUND",
+            )
+        inventory, command = _inventory_mount(
+            self._raw_dir,
+            execution_context,
+            mount,
+            "pre",
+            self._staged_commands,
+        )
+        self._pre_inventories[mount["id"]] = (inventory, command)
+        self._execution_context = execution_context
+        return execution_context
+
+    def _complete_candidate_after_trace(
+        self,
+        completed_integration: dict[str, Any],
+        raw_trace_receipt: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Runs every post-trace gate before private candidate publication.
+
+        @param completed_integration The trace-complete runtime integration.
+        @param raw_trace_receipt The parsed receipt emitted by the in-container tracer.
+        @returns The atomically published candidate summary.
+        @throws core.ExecutionClosureValidationError When an FR4, audit, inventory, or publication gate fails.
+        """
+        archive = self._archive
+        context = self._execution_context
+        raw_dir = self._raw_dir
+        toolchain = self._toolchain
+        pre_capture = self._pre_capture
+        pre_inventories = self._pre_inventories
+        if (
+            archive is None
+            or context is None
+            or raw_dir is None
+            or toolchain is None
+            or pre_capture is None
+            or pre_inventories is None
+            or self._sealed_integration != completed_integration
+        ):
+            _direct_runtime_integration_fail("PRODUCTION_POST_TRACE_CONTEXT_UNBOUND")
+        validate_direct_command_runtime_runner_integration_v1(
+            completed_integration,
+        )
+        for command_id, logical in FR4:
+            command = self._run(
+                command_id,
+                f"receipt-{command_id}",
+                logical,
+                build_pnpm_global_store_payload_v1(logical),
+                toolchain=toolchain,
+                context=context,
+            )
+            _require_zero(command, command_id)
+        graph = self._run(
+            "graph-scan",
+            "graph-scan",
+            ["repo-graph", "scan", ".", "./graph.db"],
+            [CONTAINER_REPO_GRAPH, "scan", ".", "./graph.db"],
+            context=context,
+            receipt=False,
+        )
+        _require_zero(graph, "graph-scan")
+        runtime_audit = self._run(
+            "clean-audit",
+            "clean-audit",
+            ["node", "clean-audit-v3"],
+            [CONTAINER_NODE, "/runner/audit.mjs", "/runner/archive.json", "/work"],
+            context=context,
+            receipt=False,
+        )
+        audit_value = _parse_stdout(runtime_audit, "clean-audit")
+        if audit_value.get("sourcePathsOutsideWork") != []:
+            _fail("V3_PODMAN_RUNTIME_PATH_ESCAPE")
+        compensation_command = self._run(
+            "compensation-denominator",
+            "compensation-denominator",
+            ["node", "compensation-denominator-v3"],
+            [
+                CONTAINER_NODE,
+                "-e",
+                (
+                    "process.stdout.write(JSON.stringify("
+                    f"{{sourceEntries:{archive['closureInventory']['entryCount']},"
+                    f"fr4Commands:{len(FR4)}}}));"
+                ),
+            ],
+            context=context,
+            receipt=False,
+        )
+        _parse_stdout(compensation_command, "compensation-denominator")
+        self._failure_reason = "supplements-post-capture"
+        post_capture = _host_git_capture(raw_dir, "post")
+        self._staged_commands.extend(post_capture.values())
+        metadata = _supplement_metadata(archive)
+        _ensure_same_capture(pre_capture, post_capture, metadata)
+        post_inventories: dict[str, tuple[dict[str, Any], dict[str, Any]]] = {}
+        for mount in context["mounts"]:
+            if mount["id"] == "work":
+                continue
+            self._failure_reason = f"inventory-{mount['id']}-post"
+            inventory, command = _inventory_mount(
+                raw_dir,
+                context,
+                mount,
+                "post",
+                self._staged_commands,
+            )
+            post_inventories[mount["id"]] = (inventory, command)
+            if inventory != pre_inventories[mount["id"]][0]:
+                _fail("V3_PODMAN_EXTERNAL_INVENTORY_DRIFT", mount["id"])
+        self._failure_reason = "v2-immutable-audit"
+        immutable = _v2_immutable_audit()
+        if immutable["findings"]:
+            _fail("V3_PODMAN_V2_IMMUTABLE_AUDIT_FAILED")
+        replay = next(
+            (
+                command
+                for command in self._receipt_commands
+                if command.get("id") == "replay"
+            ),
+            None,
+        )
+        if not isinstance(replay, dict):
+            _direct_runtime_integration_fail("PRODUCTION_REPLAY_RECEIPT_MISSING")
+        return self._publish_candidate_artifacts(
+            completed_integration,
+            raw_trace_receipt,
+            replay,
+            graph,
+            runtime_audit,
+            compensation_command,
+            metadata,
+            immutable,
+        )
+
+    def preserve_failure(self, error: BaseException) -> None:
+        """Preserves one failed executed command without manufacturing an unsealed runtime state.
+
+        @param error The terminal transaction error caught by the scheduler.
+        @returns Nothing when failure evidence was written or is not yet safely preservable.
+        @throws CandidateExecutionBlocked When offline-install, pre-seal runtime, or private candidate validation failure cannot be preserved.
+        """
+        if not self.started or self.output_directory.exists():
+            return
+        preseal_stages = _DIRECT_RUNTIME_RUNNER_STAGES[
+            : _DIRECT_RUNTIME_RUNNER_STAGES.index("direct-runtime-dist-identity") + 1
+        ]
+        is_preseal_failure = (
+            self._sealed_integration is None
+            and self._failure_reason in preseal_stages
+        )
+        is_candidate_publication_failure = (
+            self._failure_reason == "candidate-publication"
+        )
+        preseal_attempt: dict[str, Any] | None = None
+        candidate_publication_failure: dict[str, Any] | None = None
+        try:
+            if is_preseal_failure:
+                if self._direct_runtime_preseal_attempt is None:
+                    _direct_runtime_integration_fail(
+                        "PRODUCTION_PRESEAL_FAILURE_UNBOUND",
+                    )
+                _validate_direct_runtime_preseal_failed_attempt_v1(
+                    self._direct_runtime_preseal_attempt,
+                    self._failure_reason,
+                )
+                preseal_attempt = copy.deepcopy(
+                    self._direct_runtime_preseal_attempt,
+                )
+            if is_candidate_publication_failure:
+                if (
+                    self._sealed_integration is None
+                    or self._candidate_publication_failure is None
+                ):
+                    _direct_runtime_integration_fail(
+                        "PRODUCTION_CANDIDATE_PUBLICATION_FAILURE_UNBOUND",
+                    )
+                _validate_candidate_publication_failure_v1(
+                    self._candidate_publication_failure,
+                    self._sealed_integration,
+                )
+                candidate_publication_failure = copy.deepcopy(
+                    self._candidate_publication_failure,
+                )
+            is_workspace_prerequisite_build_failure = (
+                self._workspace_dag_contract is not None
+                and self._workspace_resolution is not None
+                and any(
+                    specification.get("kind") == "build"
+                    and specification.get("id") == self._failure_reason
+                    for specification in self._workspace_command_specs
+                )
+            )
+            if is_candidate_publication_failure:
+                assert self._sealed_integration is not None
+                assert candidate_publication_failure is not None
+                _publish_candidate_publication_failure_attempt(
+                    error,
+                    direct_runtime_integration=self._sealed_integration,
+                    candidate_publication_failure=candidate_publication_failure,
+                    attempts_root=TRACK_DIR,
+                    attempt_date=self.run_day,
+                )
+            elif (
+                HISTORICAL_PODMAN_BLOCKER.is_file()
+                and not HISTORICAL_PODMAN_BLOCKER.is_symlink()
+            ):
+                _publish_failed_attempt(
+                    self._failure_reason,
+                    self._staged_commands,
+                    error,
+                    hermetic_pnpm_contract=(
+                        self._hermetic_pnpm_contract
+                        if self._failure_reason == "offline-install"
+                        else None
+                    ),
+                    external_stop=(
+                        self.external_stop
+                        if self._failure_reason == "offline-install"
+                        else None
+                    ),
+                    attempts_root=TRACK_DIR,
+                    attempt_date=self.run_day,
+                    workspace_prerequisite_build_dag=(
+                        self._workspace_dag_contract
+                        if is_workspace_prerequisite_build_failure
+                        else None
+                    ),
+                    workspace_build_resolution=(
+                        self._workspace_resolution
+                        if is_workspace_prerequisite_build_failure
+                        else None
+                    ),
+                    direct_runtime_integration=self._sealed_integration,
+                    direct_runtime_stage=(
+                        self._direct_runtime_stage
+                        if self._sealed_integration is not None
+                        else None
+                    ),
+                    direct_runtime_preseal_attempt=preseal_attempt,
+                )
+            elif is_preseal_failure:
+                _direct_runtime_integration_fail(
+                    "PRODUCTION_PRESEAL_FAILURE_UNPRESERVED",
+                )
+            else:
+                _publish_blocker(
+                    self._failure_reason,
+                    self._staged_commands,
+                    error,
+                )
+        except BaseException as preservation_error:
+            if (
+                self._failure_reason == "offline-install"
+                or is_preseal_failure
+                or is_candidate_publication_failure
+            ):
+                raise CandidateExecutionBlocked(
+                    "V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED: "
+                    f"{self._failure_reason}: {preservation_error}",
+                ) from preservation_error
+
+    def _publish_candidate_artifacts(
+        self,
+        completed_integration: dict[str, Any],
+        raw_trace_receipt: dict[str, Any],
+        replay: dict[str, Any],
+        graph: dict[str, Any],
+        runtime_audit: dict[str, Any],
+        compensation_command: dict[str, Any],
+        metadata: dict[str, dict[str, Any]],
+        immutable: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Finalizes all private raw evidence and atomically publishes one candidate.
+
+        @param completed_integration The trace-complete runtime integration.
+        @param raw_trace_receipt The parsed in-container trace receipt.
+        @param replay The successful clean-room replay receipt.
+        @param graph The successful graph-scan observation.
+        @param runtime_audit The successful clean-room audit observation.
+        @param compensation_command The compensation-denominator observation.
+        @param metadata The stable supplemental source metadata.
+        @param immutable The completed immutable V2 audit.
+        @returns The published candidate location, manifest, and completed integration.
+        @throws core.ExecutionClosureValidationError When staged evidence or candidate artifacts are incomplete.
+        """
+        stage = self._stage
+        archive = self._archive
+        context = self._execution_context
+        pre_capture = self._pre_capture
+        podman = self._podman
+        image = self._image
+        network = self._network
+        pre_inventories = self._pre_inventories
+        versions = self._versions
+        toolchain = self._toolchain
+        nested_pnpm_runtime = self._nested_pnpm_runtime
+        hermetic_pnpm_contract = self._hermetic_pnpm_contract
+        workspace_dag_contract = self._workspace_dag_contract
+        workspace_resolution = self._workspace_resolution
+        workspace_output_inventories = self._workspace_output_inventories
+        if (
+            stage is None
+            or archive is None
+            or context is None
+            or pre_capture is None
+            or podman is None
+            or image is None
+            or network is None
+            or pre_inventories is None
+            or versions is None
+            or toolchain is None
+            or nested_pnpm_runtime is None
+            or hermetic_pnpm_contract is None
+            or workspace_dag_contract is None
+            or workspace_resolution is None
+            or workspace_output_inventories is None
+        ):
+            _direct_runtime_integration_fail("PRODUCTION_PUBLICATION_CONTEXT_UNBOUND")
+        if self.output_directory.exists() or self.output_directory.is_symlink():
+            _fail("V3_PODMAN_OUTPUT_ALREADY_EXISTS", str(self.output_directory))
+        self._failure_reason = "candidate-publication"
+        publication = stage / "candidate"
+        if publication.exists() or publication.is_symlink():
+            _fail("V3_PODMAN_CANDIDATE_DESTINATION_EXISTS", str(publication))
+        publication.mkdir()
+        _write_json(_candidate_path(publication, V3_ARCHIVE), archive)
+        final_map = {
+            id(command): _finalize_command(
+                command,
+                publication,
+                reference_root=V3_DIR,
+            )
+            for command in self._staged_commands
+        }
+        final_podman = {
+            "path": PODMAN,
+            "version": podman["version"],
+            "versionCommand": final_map[id(podman["versionCommand"])],
+        }
+        final_image = {
+            **{
+                key: value
+                for key, value in image.items()
+                if key != "inspectCommand"
+            },
+            "inspectCommand": final_map[id(image["inspectCommand"])],
+        }
+        profile_prefix = build_direct_node_split_canonical_prefix_v1(
+            context["mounts"],
+            "/work",
+        )
+        if context.get("prefix") != profile_prefix:
+            _fail("V3_DIRECT_NODE_SPLIT_CANONICAL_PREFIX_INVALID")
+
+        def final_network_record(record: dict[str, Any]) -> dict[str, Any]:
+            """Finalizes one network-proof command while retaining its semantic fields.
+
+            @param record The staged network-proof command record.
+            @returns The immutable network-proof record with V3 raw references.
+            """
+            return {
+                "kind": record["kind"],
+                **{
+                    key: value
+                    for key, value in record.items()
+                    if key not in {
+                        "argv",
+                        "cwd",
+                        "env",
+                        "envAbsent",
+                        "network",
+                        "exitCode",
+                        "actualExecutor",
+                        "_rawId",
+                        "_stdoutPath",
+                        "_stderrPath",
+                    }
+                    and not key.startswith("_")
+                    and key != "kind"
+                },
+                **final_map[id(record)],
+            }
+
+        final_network = {
+            name: final_network_record(record)
+            for name, record in network.items()
+        }
+        mounts_by_id = {mount["id"]: mount for mount in context["mounts"]}
+        final_inventories: dict[str, Any] = {}
+        for mount_id, (inventory, command) in pre_inventories.items():
+            final_inventory_command = final_map[id(command)]
+            snapshot = {
+                **inventory,
+                "command": final_inventory_command,
+            }
+            final_inventories[mount_id] = {
+                "mount": mounts_by_id[mount_id],
+                "algorithm": "recursive-path-metadata-sha256-v1",
+                "pre": snapshot,
+                "post": copy.deepcopy(snapshot),
+            }
+        capture = _finalize_capture(
+            {
+                "gitStatus": final_map[id(pre_capture["gitStatus"])],
+                "stagedDiff": final_map[id(pre_capture["stagedDiff"])],
+            },
+            metadata,
+        )
+        profile = {
+            "schemaVersion": 1,
+            "kind": "fr4-execution-profile",
+            "status": "CANDIDATE_UNACCEPTED",
+            "cleanRoom": {
+                "prohibitedOverlays": [
+                    "shared-worktree",
+                    "node_modules",
+                    "dist",
+                    "preexisting-generated",
+                ],
+                "preexistingGeneratedPaths": [],
+                "replayCommand": final_map[id(replay)],
+            },
+            "install": {
+                "argv": list(HERMETIC_PNPM_INSTALL),
+                "cwd": ".",
+            },
+            "nestedPnpmRuntime": copy.deepcopy(nested_pnpm_runtime),
+            "directRuntimeIntegration": copy.deepcopy(completed_integration),
+            "directRuntimePacketMaterialization": copy.deepcopy(
+                archive["directRuntimePacketMaterialization"],
+            ),
+            "directRuntimeTraceReceipt": copy.deepcopy(raw_trace_receipt),
+            "hermeticPnpmInstall": copy.deepcopy(hermetic_pnpm_contract),
+            "workspacePrerequisiteBuildDagSource": _reference(core.V2_ARCHIVE),
+            "workspacePrerequisiteBuildDag": copy.deepcopy(
+                workspace_dag_contract,
+            ),
+            "workspaceBuildResolution": copy.deepcopy(workspace_resolution),
+            "workspacePrerequisiteOutputInventories": copy.deepcopy(
+                workspace_output_inventories,
+            ),
+            "prerequisiteBuilds": copy.deepcopy(list(BUILDS)),
+            "fr4Commands": [
+                {"id": name, "argv": argv, "env": dict(ENV)}
+                for name, argv in FR4
+            ],
+            "standardPackCatalog": {
+                "mode": "REQUIRES_RECORDED_GENERATION",
+                "argv": list(DIRECT_NODE_STANDARD_PACK_GENERATOR),
+                "output": {"path": STANDARD_PACK_CATALOG},
+                "staleOutputClear": {
+                    "id": "clear-stale-standard-pack-catalog",
+                    "argv": ["rm", "-f", STANDARD_PACK_CATALOG],
+                    "path": STANDARD_PACK_CATALOG,
+                    "postcondition": "ABSENT_BEFORE_RECORDED_GENERATION",
+                },
+            },
+            "environment": {
+                "allowlisted": dict(ENV),
+                "absencePredicates": list(ENV_ABSENT),
+            },
+            "conditionalSkips": {"PG_TEST_URL": "ABSENT"},
+            "outcomeCensus": {
+                "tests": [name for name, _ in FR4],
+                "passed": [name for name, _ in FR4],
+                "failed": [],
+                "skipped": {"PG_TEST_URL": "ABSENT"},
+            },
+            "toolVersions": versions,
+            "executorToolchain": toolchain,
+            "baselineV2Inventory": {
+                "pre": copy.deepcopy(BASELINE_V2_INVENTORY),
+                "post": copy.deepcopy(BASELINE_V2_INVENTORY),
+            },
+            "closureInventory": archive["closureInventory"],
+            "frozenInputs": {
+                "archive": _candidate_reference(publication, V3_ARCHIVE),
+                "lockfile": next(
+                    {
+                        key: entry[key]
+                        for key in ("path", "sha256", "size")
+                    }
+                    for entry in archive["entries"]
+                    if entry["path"] == "pnpm-lock.yaml"
+                ),
+            },
+            "containerIsolation": {
+                "podman": final_podman,
+                "image": final_image,
+                "networkMode": "none",
+                "podmanRunArgvPrefix": profile_prefix,
+                "cleanWorkRoot": context["cleanWorkRoot"],
+                "mounts": context["mounts"],
+                "bootstrapEnvironment": {"PATH": BOOTSTRAP_PATH},
+                "recursiveInventories": final_inventories,
+                "networkProof": final_network,
+                "declaredExecutorPaths": context["declaredExecutors"],
+            },
+        }
+        _write_json(_candidate_path(publication, V3_PROFILE), profile)
+        ledger = _ledger(archive, capture)
+        _write_json(_candidate_path(publication, V3_LEDGER), ledger)
+        final_receipt_commands = [
+            final_map[id(command)]
+            for command in self._receipt_commands
+        ]
+        receipt = {
+            "schemaVersion": 1,
+            "kind": "fr4-execution-receipt",
+            "status": "CANDIDATE_UNACCEPTED",
+            "commands": final_receipt_commands,
+            "toolVersions": versions,
+            "executorToolchain": toolchain,
+            "nestedPnpmRuntime": profile["nestedPnpmRuntime"],
+            "directRuntimeIntegration": profile["directRuntimeIntegration"],
+            "directRuntimePacketMaterialization": profile[
+                "directRuntimePacketMaterialization"
+            ],
+            "directRuntimeTraceReceipt": profile["directRuntimeTraceReceipt"],
+            "directRuntimeTrace": profile["directRuntimeIntegration"][
+                "attempt"
+            ]["executionTrace"],
+            "frozenInputs": profile["frozenInputs"],
+            "hermeticPnpmInstall": profile["hermeticPnpmInstall"],
+            "workspacePrerequisiteBuildDagSource": profile[
+                "workspacePrerequisiteBuildDagSource"
+            ],
+            "workspacePrerequisiteBuildDag": profile[
+                "workspacePrerequisiteBuildDag"
+            ],
+            "workspaceBuildResolution": profile["workspaceBuildResolution"],
+            "workspacePrerequisiteOutputInventories": profile[
+                "workspacePrerequisiteOutputInventories"
+            ],
+            "baselineV2Inventory": profile["baselineV2Inventory"],
+            "closureInventory": archive["closureInventory"],
+            "orderedInventories": [
+                {
+                    "stage": "baseline-v2-pre",
+                    "inventory": copy.deepcopy(BASELINE_V2_INVENTORY),
+                },
+                {
+                    "stage": "baseline-v2-post",
+                    "inventory": copy.deepcopy(BASELINE_V2_INVENTORY),
+                },
+                {
+                    "stage": "closure-pre-build",
+                    "inventory": archive["closureInventory"],
+                },
+                {
+                    "stage": "closure-post-build",
+                    "inventory": archive["closureInventory"],
+                },
+                {
+                    "stage": "closure-post-standard-pack-generation",
+                    "inventory": archive["closureInventory"],
+                },
+            ],
+            "outcomeCensus": profile["outcomeCensus"],
+            "realpathAudit": {
+                "sourceRootOverlayPaths": [],
+                "nodeModulesOverlayPaths": [],
+                "preexistingGeneratedPaths": [],
+                "containerRuntime": {
+                    "sourcePathsOutsideWork": [],
+                    "outsideWorkPaths": context["declaredExecutors"],
+                },
+            },
+            "gateStatus": {
+                "algorithm": "all-command-exits-and-expected-skip-census-v1",
+                "orderedCommandIds": [
+                    command["id"] for command in final_receipt_commands
+                ],
+                "exitCodes": {
+                    command["id"]: command["exitCode"]
+                    for command in final_receipt_commands
+                },
+                "expectedSkipCensus": profile["conditionalSkips"],
+                "observedSkipCensus": profile["conditionalSkips"],
+                "status": "PASS",
+            },
+        }
+        _write_json(_candidate_path(publication, V3_RECEIPT), receipt)
+        closure_core = {
+            "archive": _candidate_reference(publication, V3_ARCHIVE),
+            "ledger": _candidate_reference(publication, V3_LEDGER),
+            "profile": _candidate_reference(publication, V3_PROFILE),
+            "receipt": _candidate_reference(publication, V3_RECEIPT),
+        }
+        closure = {
+            **closure_core,
+            "closureSha256": _sha256(_canonical(closure_core)),
+        }
+        graph_binding = {
+            "schemaVersion": 1,
+            "kind": "execution-closure-graph-binding",
+            "status": "CANDIDATE_UNACCEPTED",
+            "executionClosure": closure,
+            "scanCommand": "repo-graph scan . ./graph.db",
+            "containerExecution": final_map[id(graph)]["actualExecutor"],
+            "rawStreams": [
+                final_map[id(graph)]["stdout"],
+                final_map[id(graph)]["stderr"],
+            ],
+        }
+        _write_json(_candidate_path(publication, V3_GRAPH), graph_binding)
+        clean_audit = {
+            "schemaVersion": 1,
+            "kind": "execution-closure-clean-audit",
+            "status": "CANDIDATE_UNACCEPTED",
+            "executionClosure": closure,
+            "rawStreams": [
+                final_map[id(runtime_audit)]["stdout"],
+                final_map[id(runtime_audit)]["stderr"],
+            ],
+            "cleanRoom": {"sourcePathsOutsideWork": []},
+            "task3ImmutableAudit": immutable,
+        }
+        _write_json(_candidate_path(publication, V3_AUDIT), clean_audit)
+        compensation = {
+            "schemaVersion": 1,
+            "kind": "execution-closure-compensation-denominator",
+            "status": "CANDIDATE_UNACCEPTED",
+            "executionClosure": closure,
+            "rawStreams": [
+                final_map[id(compensation_command)]["stdout"],
+                final_map[id(compensation_command)]["stderr"],
+            ],
+            "denominator": {
+                "sourceEntries": archive["closureInventory"]["entryCount"],
+                "fr4Commands": len(FR4),
+            },
+        }
+        _write_json(
+            _candidate_path(publication, V3_COMPENSATION),
+            compensation,
+        )
+        addendum_receipt = _load_json(ADDENDUM_RECEIPT)
+        manifest = {
+            "schemaVersion": 1,
+            "kind": "execution-closure",
+            "status": "CANDIDATE_UNACCEPTED",
+            "selectionRule": "frozen-ast-execution-closure-v1",
+            "r2Task3Disposition": (
+                "BLOCKED_PENDING_INDEPENDENT_R1_V3_ACCEPTANCE"
+            ),
+            "markerDisposition": addendum_receipt["markerDisposition"],
+            "acceptedBridgeInputs": {
+                "addendum": {
+                    "receipt": _reference(ADDENDUM_RECEIPT),
+                    "provenance": _reference(ADDENDUM_PROVENANCE),
+                    "ledger": _reference(ADDENDUM_LEDGER),
+                },
+                "v2Blockers": copy.deepcopy(core.BLOCKER_RECORDS),
+                "v2RawStreams": copy.deepcopy(addendum_receipt["rawStreams"]),
+            },
+            "blockerAddendum": {
+                "receipt": _reference(ADDENDUM_RECEIPT),
+                "provenance": _reference(ADDENDUM_PROVENANCE),
+                "ledger": _reference(ADDENDUM_LEDGER),
+            },
+            "closureCore": closure_core,
+            "closureSha256": closure["closureSha256"],
+            "derivedEvidence": {
+                "graphBinding": _candidate_reference(publication, V3_GRAPH),
+                "cleanAudit": _candidate_reference(publication, V3_AUDIT),
+                "compensation": _candidate_reference(
+                    publication,
+                    V3_COMPENSATION,
+                ),
+            },
+        }
+        _write_json(_candidate_path(publication, V3_MANIFEST), manifest)
+        try:
+            validate_execution_closure_v1(
+                manifest,
+                archive,
+                ledger,
+                profile,
+                receipt,
+                graph_binding,
+                clean_audit,
+                compensation,
+                candidate_directory=publication,
+            )
+        except core.ExecutionClosureValidationError:
+            self._candidate_publication_failure = (
+                _build_candidate_publication_failure_v1(
+                    completed_integration,
+                )
+            )
+            raise
+        try:
+            os.replace(publication, self.output_directory)
+        except OSError:
+            self._candidate_publication_failure = (
+                _build_candidate_publication_failure_v1(
+                    completed_integration,
+                    "atomic-replace",
+                )
+            )
+            raise
+        return {
+            "outputDirectory": str(self.output_directory),
+            "manifest": copy.deepcopy(manifest),
+            "integration": copy.deepcopy(completed_integration),
+        }
+
+
 def write_execution_closure_v1(
     output_directory: Path | str = V3_DIR,
     *,
     run_day: str | None = None,
     external_stop: dict[str, str] | None = None,
-    direct_runtime_read_set: dict[str, Any] | None = None,
-    direct_runtime_source_packet: dict[str, Any] | None = None,
-    direct_runtime_attempt: dict[str, Any] | None = None,
 ) -> None:
-    """Runs the entire V3 candidate pipeline only through route-proven Podman.
+    """Runs the production-owned direct-runtime transaction before any candidate side effect.
 
     @param output_directory The required V3 candidate directory, initially absent.
     @param run_day Optional explicit UTC day for any append-only failed-attempt evidence.
     @param external_stop Optional explicit supervisor record for an installation interruption.
-    @param direct_runtime_read_set Required detached runtime read-set captured before candidate staging.
-    @param direct_runtime_source_packet Optional pre-captured Git-object-only runtime source packet.
-    @param direct_runtime_attempt Optional detached runtime attempt identity supplied at preflight.
-    @returns Nothing when a complete unaccepted candidate is published.
-    @throws CandidateExecutionBlocked When a gate fails and a sibling blocker is preserved.
+    @returns Nothing when the production transaction completes its trace gate.
+    @throws CandidateExecutionBlocked When a production transaction gate fails.
     """
     attempt_date = resolve_execution_run_day_v1(run_day)
     output = Path(output_directory)
@@ -4714,600 +8975,35 @@ def write_execution_closure_v1(
         _fail("V3_PODMAN_OUTPUT_PATH_INVALID", str(output))
     if output.exists() or output.is_symlink():
         _fail("V3_PODMAN_OUTPUT_ALREADY_EXISTS", str(output))
-    if direct_runtime_read_set is None:
-        _direct_runtime_integration_fail("READ_SET_REQUIRED")
-    if not isinstance(direct_runtime_read_set, dict):
-        _direct_runtime_integration_fail("READ_SET_INVALID")
-    direct_runtime_resource_budget = direct_runtime_read_set.get("resourceBudget")
-    if not isinstance(direct_runtime_resource_budget, dict):
-        _direct_runtime_integration_fail("RESOURCE_BUDGET_REQUIRED")
-    direct_runtime_integration: dict[str, Any] | None = None
-    direct_runtime_stage: str | None = None
-
-    staged_commands: list[dict[str, Any]] = []
-    failure_reason = "initialization"
-    hermetic_pnpm_contract: dict[str, Any] | None = None
-    workspace_dag_contract: dict[str, Any] | None = None
-    workspace_resolution: list[dict[str, Any]] | None = None
-    workspace_output_inventories: list[dict[str, Any]] | None = None
-    workspace_command_specs: list[dict[str, Any]] = []
-    nested_pnpm_runtime_contract = build_nested_pnpm_runtime_shim_contract_v1()
+    preparation = prepare_direct_command_runtime_execution_inputs_v1(run_day)
+    executor = DirectCommandRuntimeProductionExecutorV1(
+        output_directory=output,
+        run_day=attempt_date,
+        external_stop=external_stop,
+    )
     try:
-        with tempfile.TemporaryDirectory(prefix="business-operations-r1-v3-podman-", dir="/tmp") as temporary:
-            stage = Path(temporary)
-            raw_dir = stage / "raw"
-            raw_dir.mkdir()
-            source_packet = direct_runtime_source_packet
-            if source_packet is None:
-                source_packet = capture_direct_command_runtime_baseline_git_packet_v1(
-                    direct_runtime_read_set,
-                )
-            direct_runtime_integration = build_direct_command_runtime_runner_integration_v1(
-                direct_runtime_read_set,
-                source_packet,
-                direct_runtime_attempt,
-                direct_runtime_resource_budget,
-            )
-            if (
-                direct_runtime_integration["attempt"]["reachedStage"] != "direct-runtime-preflight"
-                or direct_runtime_integration["attempt"]["executionTrace"] is not None
-            ):
-                _direct_runtime_integration_fail("PRECHECK_ATTEMPT_STATE_INVALID")
-            validate_direct_command_runtime_runner_integration_v1(direct_runtime_integration)
-            failure_reason = "direct-runtime-preflight"
-            direct_runtime_stage = failure_reason
-            archive = _build_archive(
-                direct_runtime_integration,
-            )
-            failure_reason = "derive-workspace-prerequisite-build-dag"
-            frozen_v2_archive = _load_json(core.V2_ARCHIVE)
-            frozen_v2_entries = frozen_v2_archive.get("entries")
-            if not isinstance(frozen_v2_entries, list):
-                _workspace_dag_fail("FROZEN_ENTRIES_INVALID")
-            workspace_dag_contract = build_workspace_prerequisite_build_dag_contract_v1(
-                frozen_v2_entries,
-                STANDARD_PACK_GENERATOR,
-            )
-            validate_workspace_prerequisite_build_dag_contract_v1(
-                workspace_dag_contract,
-                frozen_v2_entries,
-            )
-            workspace_resolution = _workspace_installed_resolution_records_v1(
-                workspace_dag_contract,
-            )
-            validate_installed_workspace_build_resolution_v1(
-                workspace_dag_contract,
-                workspace_resolution,
-            )
-            workspace_command_specs = _workspace_prerequisite_command_specs_v1(
-                workspace_dag_contract,
-            )
-            archive_path = stage / "execution-closure.archive.json"
-            _write_json(archive_path, archive)
-            pre_capture = _host_git_capture(raw_dir, "pre")
-            staged_commands.extend(pre_capture.values())
-            context = _podman_context(
-                stage,
-                archive_path,
-                nested_pnpm_runtime_contract,
-                direct_runtime_integration=direct_runtime_integration,
-            )
-            failure_reason = "direct-runtime-discovery"
-            validate_direct_command_runtime_runner_integration_v1(direct_runtime_integration)
-            direct_runtime_stage = failure_reason
-            podman, image = _podman_host_evidence(raw_dir)
-            staged_commands.extend([podman["versionCommand"], image["inspectCommand"]])
-            network = _network_proof(raw_dir, context)
-            staged_commands.extend([network["route"], network["dns"], network["tcp"]])
-            pre_inventories: dict[str, tuple[dict[str, Any], dict[str, Any]]] = {}
-            for mount in context["mounts"]:
-                if mount["id"] == "work":
-                    continue
-                failure_reason = f"inventory-{mount['id']}-pre"
-                inventory, command = _inventory_mount(raw_dir, context, mount, "pre", staged_commands)
-                pre_inventories[mount["id"]] = (inventory, command)
-            versions, toolchain = _tool_versions(raw_dir, context)
-            hermetic_pnpm_contract = build_hermetic_pnpm_install_contract_v1(archive["entries"], versions["pnpm"]["stdout"])
-            failure_reason = "materialize"
-            direct_runtime_stage = failure_reason
-            materialize = _run_container(
-                raw_dir,
-                "receipt-materialize",
-                context,
-                ["node", "materialize-v3"],
-                [
-                    CONTAINER_NODE,
-                    "/runner/materialize.mjs",
-                    "/runner/archive.json",
-                    "/runner/direct-runtime-source-packet.json",
-                    "/work",
-                ],
-            )
-            materialize["id"] = "materialize"
-            staged_commands.append(materialize)
-            materialized = _parse_stdout(materialize, "materialize")
-            expected_direct_runtime_materialization = {
-                "sourcePacketSha256": archive["directRuntimePacketMaterialization"]["sourcePacketSha256"],
-                "entries": archive["directRuntimePacketMaterialization"]["entries"],
-            }
-            if (
-                materialized.get("inventory") != archive["closureInventory"]
-                or materialized.get("directRuntimeMaterialization") != expected_direct_runtime_materialization
-            ):
-                _fail("V3_PODMAN_MATERIALIZE_INVENTORY")
-            failure_reason = "direct-runtime-materialization-probe"
-            direct_runtime_stage = failure_reason
-            direct_runtime_materialization_probe = _run_container(
-                raw_dir,
-                "receipt-direct-runtime-materialization-probe",
-                context,
-                ["node", "direct-runtime-materialization-probe"],
-                [
-                    CONTAINER_NODE,
-                    "/runner/direct-runtime-materialization-probe.mjs",
-                    "/runner/archive.json",
-                    "/runner/direct-runtime-source-packet.json",
-                    "/work",
-                ],
-            )
-            direct_runtime_materialization_probe["id"] = failure_reason
-            staged_commands.append(direct_runtime_materialization_probe)
-            if _parse_stdout(direct_runtime_materialization_probe, failure_reason) != expected_direct_runtime_materialization:
-                _direct_runtime_integration_fail("MATERIALIZATION_PROBE_INVALID")
-            failure_reason = "replay"
-            replay = _run_container(raw_dir, "receipt-replay", context, ["node", "replay-v3"], [CONTAINER_NODE, "/runner/replay.mjs", "/runner/archive.json", "/work"])
-            replay["id"] = "replay"
-            staged_commands.append(replay)
-            replayed = _parse_stdout(replay, "replay")
-            if replayed.get("inventory") != archive["closureInventory"] or replayed.get("sourcePathsOutsideWork") != [] or replayed.get("preexistingGeneratedPaths") != []:
-                _fail("V3_PODMAN_REPLAY_INVALID")
-            receipt_commands: list[dict[str, Any]] = [materialize, direct_runtime_materialization_probe, replay]
-            failure_reason = "offline-install"
-            offline_install = _run_container(
-                raw_dir,
-                "receipt-offline-install",
-                context,
-                list(HERMETIC_PNPM_INSTALL),
-                [CONTAINER_NODE, CONTAINER_PNPM, *HERMETIC_PNPM_PAYLOAD_SUFFIX],
-                toolchain,
-            )
-            offline_install["id"] = "offline-install"
-            staged_commands.append(offline_install)
-            receipt_commands.append(offline_install)
-            offline_install["registryAttestation"] = _hermetic_pnpm_registry_attestation(
-                _command_text(offline_install, "stdout"),
-                _command_text(offline_install, "stderr"),
-                hermetic_pnpm_contract,
-            )
-            _require_zero(offline_install, offline_install["id"])
-            if workspace_dag_contract is None or workspace_resolution is None:
-                _workspace_dag_fail("EXECUTION_CONTRACT_INVALID")
-            resolution_spec = next(
-                (
-                    specification
-                    for specification in workspace_command_specs
-                    if specification.get("kind") == "resolution"
-                ),
-                None,
-            )
-            if not isinstance(resolution_spec, dict):
-                _workspace_dag_fail("EXECUTION_CONTRACT_INVALID")
-            failure_reason = resolution_spec["id"]
-            resolution_command = _run_container(
-                raw_dir,
-                f"receipt-{resolution_spec['id']}",
-                context,
-                resolution_spec["logicalArgv"],
-                resolution_spec["payloadArgv"],
-            )
-            resolution_command["id"] = resolution_spec["id"]
-            staged_commands.append(resolution_command)
-            receipt_commands.append(resolution_command)
-            observed_resolution = _parse_stdout(resolution_command, resolution_command["id"])
-            if observed_resolution != {"resolutions": workspace_resolution}:
-                _workspace_dag_fail("INSTALLED_RESOLUTION_INVALID")
-            validate_installed_workspace_build_resolution_v1(
-                workspace_dag_contract,
-                workspace_resolution,
-            )
-            for command_id, logical in (
-                ("build-db", BUILDS[0]),
-                ("build-auth", BUILDS[1]),
-                ("build-backend", BUILDS[2]),
-            ):
-                failure_reason = command_id
-                command = _run_container(
-                    raw_dir,
-                    f"receipt-{command_id}",
-                    context,
-                    logical,
-                    build_pnpm_global_store_payload_v1(logical),
-                    toolchain,
-                )
-                command["id"] = command_id
-                staged_commands.append(command)
-                receipt_commands.append(command)
-                _require_zero(command, command_id)
-            workspace_output_inventories = []
-            for specification in workspace_command_specs:
-                kind = specification.get("kind")
-                if kind == "resolution":
-                    continue
-                command_id = specification.get("id")
-                logical = specification.get("logicalArgv")
-                payload = specification.get("payloadArgv")
-                if (
-                    not isinstance(command_id, str)
-                    or not isinstance(logical, list)
-                    or not isinstance(payload, list)
-                ):
-                    _workspace_dag_fail("EXECUTION_CONTRACT_INVALID")
-                failure_reason = command_id
-                command = _run_container(
-                    raw_dir,
-                    f"receipt-{command_id}",
-                    context,
-                    logical,
-                    payload,
-                    toolchain if kind == "build" else None,
-                )
-                command["id"] = command_id
-                staged_commands.append(command)
-                receipt_commands.append(command)
-                _require_zero(command, command_id)
-                if kind == "build":
-                    validate_workspace_prerequisite_pnpm_executor_v1(
-                        command,
-                        workspace_dag_contract,
-                    )
-                elif kind == "output-inventory":
-                    observed_outputs = _parse_stdout(command, command_id)
-                    outputs = observed_outputs.get("outputs")
-                    if not isinstance(outputs, list) or len(outputs) != 1:
-                        _workspace_dag_fail("OUTPUT_INVENTORY_INVALID")
-                    workspace_output_inventories.extend(outputs)
-                elif kind != "clear":
-                    _workspace_dag_fail("EXECUTION_CONTRACT_INVALID")
-            validate_workspace_prerequisite_build_output_inventories_v1(
-                workspace_dag_contract,
-                workspace_output_inventories,
-            )
-            if direct_runtime_integration is None:
-                _direct_runtime_integration_fail("PRECHECK_INTEGRATION_MISSING")
-            runtime_build_argv = [
-                "pnpm",
-                "--filter",
-                direct_runtime_integration["readSet"]["trigger"]["package"],
-                "build",
-            ]
-            failure_reason = "build-advantage-play-kit-for-runtime"
-            runtime_build = _run_container(
-                raw_dir,
-                "receipt-build-advantage-play-kit-for-runtime",
-                context,
-                runtime_build_argv,
-                build_pnpm_global_store_payload_v1(runtime_build_argv),
-                toolchain,
-            )
-            runtime_build["id"] = failure_reason
-            staged_commands.append(runtime_build)
-            receipt_commands.append(runtime_build)
-            _require_zero(runtime_build, failure_reason)
-            _validate_direct_runtime_apk_build_receipt_v1(
-                direct_runtime_integration, receipt_commands,
-            )
-            direct_runtime_stage = failure_reason
-            failure_reason = "direct-runtime-dist-identity"
-            direct_runtime_stage = failure_reason
-            failure_reason = "clear-stale-standard-pack-catalog"
-            clear = _run_container(raw_dir, "receipt-clear-stale-standard-pack-catalog", context, ["rm", "-f", STANDARD_PACK_CATALOG], ["/bin/rm", "-f", STANDARD_PACK_CATALOG])
-            clear["id"] = "clear-stale-standard-pack-catalog"
-            staged_commands.append(clear)
-            receipt_commands.append(clear)
-            _require_zero(clear, clear["id"])
-            failure_reason = "generate-standard-pack-catalog"
-            generation = _run_container(
-                raw_dir,
-                "receipt-generate-standard-pack-catalog",
-                context,
-                STANDARD_PACK_GENERATOR,
-                build_pnpm_global_store_payload_v1(STANDARD_PACK_GENERATOR),
-                toolchain,
-                environment_overrides={
-                    "NODE_OPTIONS": DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS,
-                },
-            )
-            generation["id"] = "generate-standard-pack-catalog"
-            staged_commands.append(generation)
-            receipt_commands.append(generation)
-            _require_zero(generation, generation["id"])
-            catalog = context["work"] / STANDARD_PACK_CATALOG
-            if not catalog.is_file() or catalog.is_symlink():
-                _fail("V3_PODMAN_STANDARD_PACK_OUTPUT_MISSING")
-            catalog_bytes = catalog.read_bytes()
-            generation["output"] = {"path": STANDARD_PACK_CATALOG, "sha256": _sha256(catalog_bytes), "size": len(catalog_bytes)}
-            direct_runtime_stage = "generate-standard-pack-catalog"
-            failure_reason = "direct-runtime-dist-identity-post-generator"
-            post_generator_dist_identity = _run_container(
-                raw_dir,
-                "receipt-direct-runtime-dist-identity-post-generator",
-                context,
-                ["node", "direct-runtime-dist-identity-post-generator"],
-                [
-                    CONTAINER_NODE,
-                    "/runner/direct-runtime-dist-identity.mjs",
-                    json.dumps(
-                        direct_runtime_integration["apkRuntimeBuild"]["derivedBuildReadSet"],
-                        separators=(",", ":"),
-                        sort_keys=True,
-                    ),
-                ],
-            )
-            post_generator_dist_identity["id"] = failure_reason
-            staged_commands.append(post_generator_dist_identity)
-            receipt_commands.append(post_generator_dist_identity)
-            _require_zero(post_generator_dist_identity, failure_reason)
-            post_generator_dist_identity["directRuntimeDistIdentity"] = _parse_stdout(
-                post_generator_dist_identity, failure_reason,
-            )
-            _validate_direct_runtime_post_generator_dist_identity_v1(
-                direct_runtime_integration, post_generator_dist_identity,
-            )
-            failure_reason = "direct-runtime-trace"
-            direct_runtime_trace_receipt = _run_container(
-                raw_dir,
-                "receipt-direct-runtime-trace",
-                context,
-                ["node", "direct-runtime-trace-receipt"],
-                [
-                    CONTAINER_NODE,
-                    "/runner/direct-runtime-trace-receipt.mjs",
-                    "/runner/direct-runtime-trace-config.json",
-                ],
-            )
-            direct_runtime_trace_receipt["id"] = "direct-runtime-trace"
-            staged_commands.append(direct_runtime_trace_receipt)
-            receipt_commands.append(direct_runtime_trace_receipt)
-            raw_trace_receipt = _parse_stdout(
-                direct_runtime_trace_receipt,
-                "direct-runtime-trace",
-            )
-            raw_trace_event_envelope = capture_direct_command_runtime_in_container_trace_v1(
-                raw_trace_receipt,
-                direct_runtime_integration,
-            )
-            direct_runtime_trace = parse_direct_command_runtime_trace_events_v1(
-                raw_trace_event_envelope,
-                direct_runtime_integration,
-            )
-            validate_direct_command_runtime_execution_trace_v1(
-                direct_runtime_integration["readSetContract"],
-                direct_runtime_trace,
-            )
-            direct_runtime_integration = build_direct_command_runtime_runner_integration_v1(
-                direct_runtime_read_set,
-                source_packet,
-                {
-                    "id": direct_runtime_integration["attempt"]["id"],
-                    "reachedStage": "direct-runtime-trace",
-                    "executionTrace": direct_runtime_trace,
-                },
-                direct_runtime_resource_budget,
-            )
-            validate_direct_command_runtime_runner_integration_v1(
-                direct_runtime_integration,
-            )
-            direct_runtime_stage = "direct-runtime-trace"
-            for command_id, logical in FR4:
-                failure_reason = command_id
-                command = _run_container(raw_dir, f"receipt-{command_id}", context, logical, build_pnpm_global_store_payload_v1(logical), toolchain)
-                command["id"] = command_id
-                staged_commands.append(command)
-                receipt_commands.append(command)
-                _require_zero(command, command_id)
-            failure_reason = "graph-scan"
-            graph = _run_container(raw_dir, "graph-scan", context, ["repo-graph", "scan", ".", "./graph.db"], [CONTAINER_REPO_GRAPH, "scan", ".", "./graph.db"])
-            staged_commands.append(graph)
-            _require_zero(graph, "graph-scan")
-            failure_reason = "clean-audit"
-            runtime_audit = _run_container(raw_dir, "clean-audit", context, ["node", "clean-audit-v3"], [CONTAINER_NODE, "/runner/audit.mjs", "/runner/archive.json", "/work"])
-            staged_commands.append(runtime_audit)
-            audit_value = _parse_stdout(runtime_audit, "clean-audit")
-            if audit_value.get("sourcePathsOutsideWork") != []:
-                _fail("V3_PODMAN_RUNTIME_PATH_ESCAPE")
-            failure_reason = "compensation-denominator"
-            compensation_command = _run_container(raw_dir, "compensation-denominator", context, ["node", "compensation-denominator-v3"], [CONTAINER_NODE, "-e", f"process.stdout.write(JSON.stringify({{sourceEntries:{archive['closureInventory']['entryCount']},fr4Commands:{len(FR4)}}}));"])
-            staged_commands.append(compensation_command)
-            _parse_stdout(compensation_command, "compensation-denominator")
-            post_capture = _host_git_capture(raw_dir, "post")
-            staged_commands.extend(post_capture.values())
-            metadata = _supplement_metadata(archive)
-            _ensure_same_capture(pre_capture, post_capture, metadata)
-            post_inventories: dict[str, tuple[dict[str, Any], dict[str, Any]]] = {}
-            for mount in context["mounts"]:
-                if mount["id"] == "work":
-                    continue
-                failure_reason = f"inventory-{mount['id']}-post"
-                inventory, command = _inventory_mount(raw_dir, context, mount, "post", staged_commands)
-                post_inventories[mount["id"]] = (inventory, command)
-                if inventory != pre_inventories[mount["id"]][0]:
-                    _fail("V3_PODMAN_EXTERNAL_INVENTORY_DRIFT", mount["id"])
-            immutable = _v2_immutable_audit()
-            if immutable["findings"]:
-                _fail("V3_PODMAN_V2_IMMUTABLE_AUDIT_FAILED")
-            # All command gates are successful. Build and validate privately;
-            # the canonical V3 directory appears only after an atomic publish.
-            publication = stage / "candidate"
-            publication.mkdir()
-            _write_json(_candidate_path(publication, V3_ARCHIVE), archive)
-            final_map = {id(command): _finalize_command(command, publication, reference_root=V3_DIR) for command in staged_commands}
-            final_podman = {"path": PODMAN, "version": podman["version"], "versionCommand": final_map[id(podman["versionCommand"])]}
-            final_image = {**{key: value for key, value in image.items() if key != "inspectCommand"}, "inspectCommand": final_map[id(image["inspectCommand"])]}
-            def final_network_record(record: dict[str, Any]) -> dict[str, Any]:
-                staged = {key: value for key, value in record.items() if key in {"argv", "cwd", "env", "envAbsent", "network", "exitCode", "actualExecutor", "_rawId", "_stdoutPath", "_stderrPath"}}
-                final = final_map[id(record)]
-                return {"kind": record["kind"], **{key: value for key, value in record.items() if key not in staged and not key.startswith("_") and key != "kind"}, **final}
-            final_network = {name: final_network_record(record) for name, record in network.items()}
-            final_inventories: dict[str, Any] = {}
-            mounts_by_id = {mount["id"]: mount for mount in context["mounts"]}
-            for mount_id, (inventory, command) in pre_inventories.items():
-                final_inventory_command = final_map[id(command)]
-                snapshot = {**inventory, "command": final_inventory_command}
-                final_inventories[mount_id] = {"mount": mounts_by_id[mount_id], "algorithm": "recursive-path-metadata-sha256-v1", "pre": snapshot, "post": copy.deepcopy(snapshot)}
-            capture = _finalize_capture({
-                "gitStatus": final_map[id(pre_capture["gitStatus"])],
-                "stagedDiff": final_map[id(pre_capture["stagedDiff"])],
-            }, metadata)
-            if (
-                workspace_dag_contract is None
-                or workspace_resolution is None
-                or workspace_output_inventories is None
-            ):
-                _workspace_dag_fail("EXECUTION_CONTRACT_INVALID")
-            profile = {
-                "schemaVersion": 1,
-                "kind": "fr4-execution-profile",
-                "status": "CANDIDATE_UNACCEPTED",
-                "cleanRoom": {"prohibitedOverlays": ["shared-worktree", "node_modules", "dist", "preexisting-generated"], "preexistingGeneratedPaths": [], "replayCommand": final_map[id(replay)]},
-                "install": {"argv": list(HERMETIC_PNPM_INSTALL), "cwd": "."},
-                "nestedPnpmRuntime": copy.deepcopy(nested_pnpm_runtime_contract),
-                "directRuntimeIntegration": copy.deepcopy(direct_runtime_integration),
-                "directRuntimePacketMaterialization": copy.deepcopy(archive["directRuntimePacketMaterialization"]),
-                "directRuntimeTraceReceipt": copy.deepcopy(raw_trace_receipt),
-                "hermeticPnpmInstall": copy.deepcopy(hermetic_pnpm_contract),
-                "workspacePrerequisiteBuildDagSource": _reference(core.V2_ARCHIVE),
-                "workspacePrerequisiteBuildDag": copy.deepcopy(workspace_dag_contract),
-                "workspaceBuildResolution": copy.deepcopy(workspace_resolution),
-                "workspacePrerequisiteOutputInventories": copy.deepcopy(workspace_output_inventories),
-                "prerequisiteBuilds": copy.deepcopy(list(BUILDS)),
-                "fr4Commands": [{"id": name, "argv": argv, "env": dict(ENV)} for name, argv in FR4],
-                "standardPackCatalog": {"mode": "REQUIRES_RECORDED_GENERATION", "argv": list(STANDARD_PACK_GENERATOR), "output": {"path": STANDARD_PACK_CATALOG}, "staleOutputClear": {"id": "clear-stale-standard-pack-catalog", "argv": ["rm", "-f", STANDARD_PACK_CATALOG], "path": STANDARD_PACK_CATALOG, "postcondition": "ABSENT_BEFORE_RECORDED_GENERATION"}},
-                "environment": {"allowlisted": dict(ENV), "absencePredicates": list(ENV_ABSENT)},
-                "conditionalSkips": {"PG_TEST_URL": "ABSENT"},
-                "outcomeCensus": {"tests": [name for name, _ in FR4], "passed": [name for name, _ in FR4], "failed": [], "skipped": {"PG_TEST_URL": "ABSENT"}},
-                "toolVersions": versions,
-                "executorToolchain": toolchain,
-                "baselineV2Inventory": {"pre": copy.deepcopy(BASELINE_V2_INVENTORY), "post": copy.deepcopy(BASELINE_V2_INVENTORY)},
-                "closureInventory": archive["closureInventory"],
-                "frozenInputs": {"archive": _candidate_reference(publication, V3_ARCHIVE), "lockfile": next({key: entry[key] for key in ("path", "sha256", "size")} for entry in archive["entries"] if entry["path"] == "pnpm-lock.yaml")},
-                "containerIsolation": {
-                    "podman": final_podman,
-                    "image": final_image,
-                    "networkMode": "none",
-                    "podmanRunArgvPrefix": context["prefix"],
-                    "cleanWorkRoot": context["cleanWorkRoot"],
-                    "mounts": context["mounts"],
-                    "bootstrapEnvironment": {"PATH": BOOTSTRAP_PATH},
-                    "recursiveInventories": final_inventories,
-                    "networkProof": final_network,
-                    "declaredExecutorPaths": context["declaredExecutors"],
-                },
-            }
-            _write_json(_candidate_path(publication, V3_PROFILE), profile)
-            ledger = _ledger(archive, capture)
-            _write_json(_candidate_path(publication, V3_LEDGER), ledger)
-            final_receipt_commands = [final_map[id(command)] for command in receipt_commands]
-            receipt = {
-                "schemaVersion": 1,
-                "kind": "fr4-execution-receipt",
-                "status": "CANDIDATE_UNACCEPTED",
-                "commands": final_receipt_commands,
-                "toolVersions": versions,
-                "executorToolchain": toolchain,
-                "nestedPnpmRuntime": profile["nestedPnpmRuntime"],
-                "directRuntimeIntegration": profile["directRuntimeIntegration"],
-                "directRuntimePacketMaterialization": profile["directRuntimePacketMaterialization"],
-                "directRuntimeTraceReceipt": profile["directRuntimeTraceReceipt"],
-                "directRuntimeTrace": profile["directRuntimeIntegration"]["attempt"]["executionTrace"],
-                "frozenInputs": profile["frozenInputs"],
-                "hermeticPnpmInstall": profile["hermeticPnpmInstall"],
-                "workspacePrerequisiteBuildDagSource": profile["workspacePrerequisiteBuildDagSource"],
-                "workspacePrerequisiteBuildDag": profile["workspacePrerequisiteBuildDag"],
-                "workspaceBuildResolution": profile["workspaceBuildResolution"],
-                "workspacePrerequisiteOutputInventories": profile["workspacePrerequisiteOutputInventories"],
-                "baselineV2Inventory": profile["baselineV2Inventory"],
-                "closureInventory": archive["closureInventory"],
-                "orderedInventories": [
-                    {"stage": "baseline-v2-pre", "inventory": copy.deepcopy(BASELINE_V2_INVENTORY)},
-                    {"stage": "baseline-v2-post", "inventory": copy.deepcopy(BASELINE_V2_INVENTORY)},
-                    {"stage": "closure-pre-build", "inventory": archive["closureInventory"]},
-                    {"stage": "closure-post-build", "inventory": archive["closureInventory"]},
-                    {"stage": "closure-post-standard-pack-generation", "inventory": archive["closureInventory"]},
-                ],
-                "outcomeCensus": profile["outcomeCensus"],
-                "realpathAudit": {"sourceRootOverlayPaths": [], "nodeModulesOverlayPaths": [], "preexistingGeneratedPaths": [], "containerRuntime": {"sourcePathsOutsideWork": [], "outsideWorkPaths": context["declaredExecutors"]}},
-                "gateStatus": {"algorithm": "all-command-exits-and-expected-skip-census-v1", "orderedCommandIds": [command["id"] for command in final_receipt_commands], "exitCodes": {command["id"]: command["exitCode"] for command in final_receipt_commands}, "expectedSkipCensus": profile["conditionalSkips"], "observedSkipCensus": profile["conditionalSkips"], "status": "PASS"},
-            }
-            _write_json(_candidate_path(publication, V3_RECEIPT), receipt)
-            closure_core = {"archive": _candidate_reference(publication, V3_ARCHIVE), "ledger": _candidate_reference(publication, V3_LEDGER), "profile": _candidate_reference(publication, V3_PROFILE), "receipt": _candidate_reference(publication, V3_RECEIPT)}
-            closure = {**closure_core, "closureSha256": _sha256(_canonical(closure_core))}
-            graph_binding = {"schemaVersion": 1, "kind": "execution-closure-graph-binding", "status": "CANDIDATE_UNACCEPTED", "executionClosure": closure, "scanCommand": "repo-graph scan . ./graph.db", "containerExecution": final_map[id(graph)]["actualExecutor"], "rawStreams": [final_map[id(graph)]["stdout"], final_map[id(graph)]["stderr"]]}
-            _write_json(_candidate_path(publication, V3_GRAPH), graph_binding)
-            clean_audit = {"schemaVersion": 1, "kind": "execution-closure-clean-audit", "status": "CANDIDATE_UNACCEPTED", "executionClosure": closure, "rawStreams": [final_map[id(runtime_audit)]["stdout"], final_map[id(runtime_audit)]["stderr"]], "cleanRoom": {"sourcePathsOutsideWork": []}, "task3ImmutableAudit": immutable}
-            _write_json(_candidate_path(publication, V3_AUDIT), clean_audit)
-            compensation = {"schemaVersion": 1, "kind": "execution-closure-compensation-denominator", "status": "CANDIDATE_UNACCEPTED", "executionClosure": closure, "rawStreams": [final_map[id(compensation_command)]["stdout"], final_map[id(compensation_command)]["stderr"]], "denominator": {"sourceEntries": archive["closureInventory"]["entryCount"], "fr4Commands": len(FR4)}}
-            _write_json(_candidate_path(publication, V3_COMPENSATION), compensation)
-            addendum_receipt = _load_json(ADDENDUM_RECEIPT)
-            manifest = {
-                "schemaVersion": 1,
-                "kind": "execution-closure",
-                "status": "CANDIDATE_UNACCEPTED",
-                "selectionRule": "frozen-ast-execution-closure-v1",
-                "r2Task3Disposition": "BLOCKED_PENDING_INDEPENDENT_R1_V3_ACCEPTANCE",
-                "markerDisposition": addendum_receipt["markerDisposition"],
-                "acceptedBridgeInputs": {"addendum": {"receipt": _reference(ADDENDUM_RECEIPT), "provenance": _reference(ADDENDUM_PROVENANCE), "ledger": _reference(ADDENDUM_LEDGER)}, "v2Blockers": copy.deepcopy(core.BLOCKER_RECORDS), "v2RawStreams": copy.deepcopy(addendum_receipt["rawStreams"])},
-                "blockerAddendum": {"receipt": _reference(ADDENDUM_RECEIPT), "provenance": _reference(ADDENDUM_PROVENANCE), "ledger": _reference(ADDENDUM_LEDGER)},
-                "closureCore": closure_core,
-                "closureSha256": closure["closureSha256"],
-                "derivedEvidence": {"graphBinding": _candidate_reference(publication, V3_GRAPH), "cleanAudit": _candidate_reference(publication, V3_AUDIT), "compensation": _candidate_reference(publication, V3_COMPENSATION)},
-            }
-            _write_json(_candidate_path(publication, V3_MANIFEST), manifest)
-            validate_execution_closure_v1(manifest, archive, ledger, profile, receipt, graph_binding, clean_audit, compensation, candidate_directory=publication)
-            os.replace(publication, output)
+        prepared_transaction = execute_direct_command_runtime_prepared_transaction_v1(
+            preparation,
+            executor,
+        )
     except BaseException as error:
         if isinstance(error, KeyboardInterrupt):
             raise
-        if not output.exists():
-            try:
-                is_workspace_prerequisite_build_failure = (
-                    workspace_dag_contract is not None
-                    and workspace_resolution is not None
-                    and any(
-                        specification.get("kind") == "build"
-                        and specification.get("id") == failure_reason
-                        for specification in workspace_command_specs
-                    )
-                )
-                if HISTORICAL_PODMAN_BLOCKER.is_file() and not HISTORICAL_PODMAN_BLOCKER.is_symlink():
-                    _publish_failed_attempt(
-                        failure_reason,
-                        staged_commands,
-                        error,
-                        hermetic_pnpm_contract=hermetic_pnpm_contract if failure_reason == "offline-install" else None,
-                        external_stop=external_stop if failure_reason == "offline-install" else None,
-                        attempts_root=TRACK_DIR,
-                        attempt_date=attempt_date,
-                        workspace_prerequisite_build_dag=(
-                            workspace_dag_contract
-                            if is_workspace_prerequisite_build_failure
-                            else None
-                        ),
-                        workspace_build_resolution=(
-                            workspace_resolution
-                            if is_workspace_prerequisite_build_failure
-                            else None
-                        ),
-                        direct_runtime_integration=direct_runtime_integration,
-                        direct_runtime_stage=direct_runtime_stage if direct_runtime_integration is not None else None,
-                    )
-                else:
-                    _publish_blocker(failure_reason, staged_commands, error)
-            except BaseException as preservation_error:
-                if failure_reason == "offline-install":
-                    raise CandidateExecutionBlocked(
-                        f"V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED: {failure_reason}: {preservation_error}"
-                    ) from preservation_error
-        raise CandidateExecutionBlocked(f"V3_PODMAN_CANDIDATE_BLOCKED: {failure_reason}: {error}") from error
+        raise CandidateExecutionBlocked(
+            f"V3_PODMAN_CANDIDATE_BLOCKED: direct-runtime-transaction: {error}",
+        ) from error
+    trace = prepared_transaction["trace"]
+    if not isinstance(trace, dict) or trace.get("integration") is None:
+        _direct_runtime_integration_fail("PRODUCTION_TRANSACTION_TRACE_MISSING")
+    publication = trace.get("publication")
+    if (
+        not isinstance(publication, dict)
+        or publication.get("outputDirectory") != str(output)
+        or publication.get("integration") != trace["integration"]
+        or not output.is_dir()
+        or output.is_symlink()
+    ):
+        _direct_runtime_integration_fail("PRODUCTION_TRANSACTION_PUBLICATION_MISSING")
 
 
 def _validate_reference(value: Any, path: Path, code: str, logical_path: Path | None = None) -> None:
@@ -5384,11 +9080,27 @@ def _validate_container(profile: dict[str, Any], receipt: dict[str, Any], graph:
     image = isolation.get("image")
     bootstrap = isolation.get("bootstrapEnvironment")
     executors = isolation.get("declaredExecutorPaths")
-    if not isinstance(prefix, list) or prefix[:5] != [PODMAN, "run", "--rm", "--network", "none"] or not isinstance(image, dict) or image.get("resolvedReference") != IMAGE_RESOLVED or not isinstance(bootstrap, dict) or bootstrap != {"PATH": BOOTSTRAP_PATH} or not isinstance(executors, list) or len(executors) != len(set(executors)):
-        _fail("V3_PODMAN_VALIDATE_ISOLATION")
     mounts = isolation.get("mounts")
     if not isinstance(mounts, list):
         _fail("V3_PODMAN_VALIDATE_MOUNTS")
+    try:
+        canonical_root_prefix = build_direct_node_split_canonical_prefix_v1(
+            mounts,
+            "/work",
+        )
+    except core.ExecutionClosureValidationError:
+        _fail("V3_PODMAN_VALIDATE_MOUNTS")
+    if (
+        not isinstance(prefix, list)
+        or prefix != canonical_root_prefix
+        or not isinstance(image, dict)
+        or image.get("resolvedReference") != IMAGE_RESOLVED
+        or not isinstance(bootstrap, dict)
+        or bootstrap != {"PATH": BOOTSTRAP_PATH}
+        or not isinstance(executors, list)
+        or len(executors) != len(set(executors))
+    ):
+        _fail("V3_PODMAN_VALIDATE_ISOLATION")
     mount_by_id = {mount.get("id"): mount for mount in mounts if isinstance(mount, dict)}
     if len(mount_by_id) != len(mounts) or not {"work", "pnpmLauncher", "pnpmStore", "repoGraph"} <= set(mount_by_id):
         _fail("V3_PODMAN_VALIDATE_MOUNTS")
@@ -5439,15 +9151,49 @@ def _validate_container(profile: dict[str, Any], receipt: dict[str, Any], graph:
     for mount_id, evidence in inventories.items():
         if not isinstance(evidence, dict) or evidence.get("mount") != mount_by_id[mount_id] or evidence.get("algorithm") != "recursive-path-metadata-sha256-v1" or evidence.get("pre") != evidence.get("post"):
             _fail("V3_PODMAN_VALIDATE_INVENTORIES", mount_id)
-    expected_prefix = [*prefix, IMAGE_RESOLVED, "/usr/bin/env", "-i", "CI=true", f"PATH={BOOTSTRAP_PATH}"]
+    root_execution_prefix = [
+        *canonical_root_prefix,
+        IMAGE_RESOLVED,
+        "/usr/bin/env",
+        "-i",
+        "CI=true",
+        f"PATH={BOOTSTRAP_PATH}",
+    ]
+    direct_node_split_build = ["pnpm", "build"]
+    direct_node_split_generator = [
+        "node",
+        "scripts/generate-standard-pack-release.mjs",
+    ]
+    package_execution_prefix = [
+        *build_direct_node_split_canonical_prefix_v1(
+            mounts,
+            "/work/packages/advantage-play-kit",
+        ),
+        IMAGE_RESOLVED,
+        "/usr/bin/env",
+        "-i",
+        "CI=true",
+        f"PATH={BOOTSTRAP_PATH}",
+    ]
+
     def check_executor(executor: Any, logical: list[str]) -> None:
+        direct_node_split_command = (
+            logical == direct_node_split_build
+            or logical == direct_node_split_generator
+        )
         environment_overrides = (
             {"NODE_OPTIONS": DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS}
-            if logical == STANDARD_PACK_GENERATOR
+            if logical == DIRECT_NODE_STANDARD_PACK_GENERATOR
+            or logical == direct_node_split_generator
             else {}
         )
         override_assignments = [f"{name}={value}" for name, value in sorted(environment_overrides.items())]
         expected_effective_environment = {"CI": "true", "PATH": BOOTSTRAP_PATH, **environment_overrides}
+        execution_prefix = (
+            package_execution_prefix
+            if direct_node_split_command
+            else root_execution_prefix
+        )
         if (
             not isinstance(executor, dict)
             or executor.get("logicalArgv") != logical
@@ -5459,7 +9205,8 @@ def _validate_container(profile: dict[str, Any], receipt: dict[str, Any], graph:
             or not isinstance(executor.get("payloadArgv"), list)
             or not executor["payloadArgv"]
             or executor["payloadArgv"][0] not in executors
-            or executor.get("argv") != [*expected_prefix, *override_assignments, *executor["payloadArgv"]]
+            or executor.get("argv")
+            != [*execution_prefix, *override_assignments, *executor["payloadArgv"]]
         ):
             _fail("V3_PODMAN_VALIDATE_EXECUTOR")
     for command in receipt.get("commands", []):
@@ -5805,7 +9552,7 @@ def _validate_profile_and_receipt(profile: dict[str, Any], receipt: dict[str, An
     expected_census = {"tests": [name for name, _ in FR4], "passed": [name for name, _ in FR4], "failed": [], "skipped": {"PG_TEST_URL": "ABSENT"}}
     expected_catalog = {
         "mode": "REQUIRES_RECORDED_GENERATION",
-        "argv": list(STANDARD_PACK_GENERATOR),
+        "argv": list(DIRECT_NODE_STANDARD_PACK_GENERATOR),
         "output": {"path": STANDARD_PACK_CATALOG},
         "staleOutputClear": {"id": "clear-stale-standard-pack-catalog", "argv": ["rm", "-f", STANDARD_PACK_CATALOG], "path": STANDARD_PACK_CATALOG, "postcondition": "ABSENT_BEFORE_RECORDED_GENERATION"},
     }
@@ -5992,6 +9739,15 @@ def _validate_profile_and_receipt(profile: dict[str, Any], receipt: dict[str, An
                 "NODE_OPTIONS": DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS,
             }:
                 _fail("V3_DIRECT_RUNTIME_GENERATOR_ENVIRONMENT_INVALID")
+        if command.get("argv") == DIRECT_NODE_STANDARD_PACK_GENERATOR:
+            executor = command.get("actualExecutor", {})
+            if (
+                executor.get("environmentOverrides")
+                != {"NODE_OPTIONS": DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS}
+                or executor.get("payloadArgv")
+                != [CONTAINER_NODE, *DIRECT_NODE_STANDARD_PACK_GENERATOR[1:]]
+            ):
+                _fail("V3_DIRECT_RUNTIME_GENERATOR_ENVIRONMENT_INVALID")
     if receipt.get("schemaVersion") != 1 or receipt.get("kind") != "fr4-execution-receipt" or receipt.get("status") != "CANDIDATE_UNACCEPTED" or receipt.get("toolVersions") != versions or receipt.get("executorToolchain") != toolchain or receipt.get("frozenInputs") != frozen or receipt.get("hermeticPnpmInstall") != hermetic_pnpm_contract or receipt.get("outcomeCensus") != expected_census:
         _fail("V3_PODMAN_VALIDATE_RECEIPT")
     expected_inventories = [
@@ -6062,6 +9818,7 @@ def validate_execution_closure_v1(manifest: dict[str, Any], archive: dict[str, A
         "build-backend",
         *derived_ids,
         "build-advantage-play-kit-for-runtime",
+        "direct-runtime-dist-identity",
         "clear-stale-standard-pack-catalog",
         "generate-standard-pack-catalog",
         "direct-runtime-dist-identity-post-generator",
