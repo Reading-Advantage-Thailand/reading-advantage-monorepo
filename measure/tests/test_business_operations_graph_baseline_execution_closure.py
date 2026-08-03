@@ -8759,6 +8759,230 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             self.assertFalse(V3_DIR.exists())
             self.assertEqual(sorted(path.name for path in attempts_root.iterdir()), [])
 
+    def test_candidate_failure_evidence_json_write_failure_cleans_private_stage_and_retains_cause(self) -> None:
+        """Requires a candidate-publisher JSON write failure to retain its operation cause.
+
+        @returns Nothing; real preservation uses a temporary failure-evidence root and one deterministic JSON-write failure only.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        executor_type = getattr(podman, "DirectCommandRuntimeProductionExecutorV1", None)
+        build_integration = getattr(podman, "build_direct_command_runtime_runner_integration_v1", None)
+        validate_integration = getattr(podman, "validate_direct_command_runtime_runner_integration_v1", None)
+        build_failure = getattr(podman, "_build_candidate_publication_failure_v1", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(inspect.isclass(executor_type), "V3_DIRECT_RUNTIME_PRODUCTION_EXECUTOR_MISSING")
+        self.assertTrue(callable(build_integration), "V3_DIRECT_RUNTIME_INTEGRATION_BUILDER_MISSING")
+        self.assertTrue(callable(validate_integration), "V3_DIRECT_RUNTIME_INTEGRATION_VALIDATOR_MISSING")
+        self.assertTrue(callable(build_failure), "V3_CANDIDATE_FAILURE_BUILDER_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+
+        def identity(path: str, content: bytes) -> dict[str, Any]:
+            """Builds one baseline-Git identity for the trace-complete fixture.
+
+            @param path The fixture's workspace-relative path.
+            @param content The immutable fixture bytes.
+            @returns One hash-bound runtime baseline-read identity.
+            """
+            blob = b"blob " + str(len(content)).encode("ascii") + b"\0" + content
+            return {
+                "path": path,
+                "sha256": _sha256(content),
+                "size": len(content),
+                "mode": "100644",
+                "origin": "BASELINE_GIT_BLOB",
+                "baselineCommit": "a" * 40,
+                "gitBlobSha1": hashlib.sha1(blob).hexdigest(),
+                "inclusion": "MATERIALIZE_EXACT_BASELINE_BYTES",
+            }
+
+        package_root = "packages/fixture-candidate-evidence-json-write"
+        generator_bytes, source_bytes = b"export {};\n", b"candidate-json-write\n"
+        generator = identity(f"{package_root}/scripts/generate-runtime.mjs", generator_bytes)
+        source = identity(f"{package_root}/assets/standard/input.txt", source_bytes)
+        baseline_reads = sorted([generator, source], key=lambda item: item["path"])
+        output_path = f"{package_root}/assets/standard/standard-pack-release.json"
+        derived = {
+            "path": f"{package_root}/dist/assets/index.js", "sha256": "b" * 64, "size": 1,
+            "origin": "DERIVED_BUILD_OUTPUT",
+            "producer": {
+                "kind": "PACKAGE_SCRIPT_PREREQUISITE_BUILD", "scriptName": "fixture-build",
+                "scriptSegment": "pnpm build",
+                "receipt": {"path": "fixture-build-receipt.json", "sha256": "c" * 64, "size": 1},
+            },
+        }
+        budget = {
+            "schemaVersion": 1, "kind": "direct-command-runtime-asset-resource-budget",
+            "frozenArchive": _reference(V2_ARCHIVE),
+            "sourceCeiling": {
+                "path": f"{package_root}/assets/standard", "regularFiles": 2,
+                "apparentBytes": len(generator_bytes) + len(source_bytes),
+                "allocatedBytes": len(generator_bytes) + len(source_bytes),
+            },
+            "reservations": {
+                "baselineGitMaterializationBytes": 1, "candidateCowBytes": 1,
+                "archiveSupplementBytes": 1, "derivedOutputBytes": 1,
+                "metadataBytes": 1, "minimumHeadroomBytes": 1,
+            },
+            "requiredAvailableBytes": 6, "availableBytes": 6, "decision": "PASS",
+        }
+        read_set = {
+            "schemaVersion": 1, "kind": "direct-command-runtime-read-set",
+            "trigger": {
+                "logicalArgv": ["pnpm", "--filter", "@fixture/candidate-json-write", "fixture-build"],
+                "package": "@fixture/candidate-json-write",
+                "manifest": {"path": f"{package_root}/package.json", "sha256": "d" * 64, "size": 1},
+            },
+            "baselineReadSet": baseline_reads, "derivedBuildReadSet": [derived], "outputPaths": [output_path],
+            "preflightQuota": {
+                "maxEntries": len(baseline_reads), "maxBytes": sum(item["size"] for item in baseline_reads),
+                "observedEntries": len(baseline_reads), "observedBytes": sum(item["size"] for item in baseline_reads),
+            },
+            "resourceBudget": budget,
+            "discovery": {
+                "kind": "BASELINE_GIT_INSTRUMENTED_TRACE", "script": generator,
+                "root": f"{package_root}/assets/standard", "directoryListingCount": 1,
+            },
+        }
+        packet = {
+            "schemaVersion": 1, "kind": "direct-command-runtime-baseline-git-source-packet",
+            "source": "GIT_OBJECT_DATABASE_ONLY", "baselineCommit": "a" * 40,
+            "tree": {"gitTreeSha1": "e" * 40}, "baselineReadSet": baseline_reads,
+            "objects": [
+                {**source, "contentBase64": base64.b64encode(source_bytes).decode("ascii")},
+                {**generator, "contentBase64": base64.b64encode(generator_bytes).decode("ascii")},
+            ],
+        }
+        packet["packetSha256"] = podman._direct_runtime_packet_digest_v1(packet)
+        integration = build_integration(
+            read_set, packet,
+            {
+                "id": "direct-runtime-detached-runner-v1", "nonceSha256": "f" * 64,
+                "reachedStage": "direct-runtime-trace",
+                "executionTrace": {
+                    "baselineReads": baseline_reads, "derivedBuildReads": [derived],
+                    "writes": [{"path": output_path, "kind": "DERIVED_OUTPUT"}],
+                },
+            },
+            budget,
+        )
+        validate_integration(integration)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            attempts_root = root / "attempts"
+            attempts_root.mkdir()
+            output = root / "published-candidate"
+            executor = executor_type(output, "20260802")
+            executor.started = True
+            executor._failure_reason = "candidate-publication"
+            executor._direct_runtime_stage = "direct-runtime-trace"
+            executor._sealed_integration = copy.deepcopy(integration)
+            executor._candidate_publication_failure = build_failure(integration, "atomic-replace")
+            candidate_error = OSError("V3_TEST_CANDIDATE_FAILURE_EVIDENCE_OPERATION")
+            json_write_error = OSError("V3_TEST_CANDIDATE_FAILURE_EVIDENCE_JSON_WRITE")
+            expected_attempt_name = f"{podman.ATTEMPT_PREFIX}-20260802-0001"
+            json_write_calls: list[Path] = []
+            private_directories: list[Path] = []
+            validator_calls: list[Path] = []
+            rename_calls: list[Path] = []
+
+            def fail_json_write(path, value) -> None:
+                """Injects the sole failed-attempt JSON write fault in the candidate publisher.
+
+                @param path The failed-attempt.json path selected by the real publisher.
+                @param value The serialized attempt value handed to the real publisher.
+                @returns Nothing.
+                """
+                json_path = Path(path)
+                private_directory = json_path.parent
+                json_write_calls.append(json_path)
+                private_directories.append(private_directory)
+                self.assertEqual(json_path.name, "failed-attempt.json")
+                self.assertEqual(private_directory.name, expected_attempt_name)
+                self.assertNotEqual(private_directory.parent, attempts_root)
+                self.assertEqual(private_directory.parent.parent, attempts_root)
+                self.assertTrue(private_directory.parent.name.startswith(".candidate-publication-failure-"))
+                self.assertFalse(json_path.exists())
+                self.assertEqual(validator_calls, [])
+                raise json_write_error
+
+            def reject_validator(attempt, directory) -> None:
+                """Fails closed because no validator call may follow the JSON write fault.
+
+                @param attempt The attempt object the real publisher would hand to the validator.
+                @param directory The validation directory the real publisher would hand to the validator.
+                @returns Nothing.
+                """
+                validator_calls.append(Path(directory))
+                raise AssertionError("V3_CANDIDATE_JSON_WRITE_VALIDATOR_CALLED")
+
+            def reject_rename(source, destination) -> None:
+                """Fails closed because no publication rename may follow the JSON write fault.
+
+                @param source The source path the real publisher would rename.
+                @param destination The destination path the real publisher would rename.
+                @returns Nothing.
+                """
+                rename_calls.append(Path(source))
+                raise AssertionError("V3_CANDIDATE_JSON_WRITE_RENAME_CALLED")
+
+            with patch.object(
+                podman,
+                "_write_json",
+                side_effect=fail_json_write,
+            ), patch.object(
+                podman,
+                "validate_failed_execution_attempt_v1",
+                side_effect=reject_validator,
+            ), patch.object(
+                podman.os,
+                "rename",
+                side_effect=reject_rename,
+            ), patch.object(
+                podman.os,
+                "replace",
+                side_effect=AssertionError("V3_CANDIDATE_JSON_WRITE_REPLACE_CALLED"),
+            ), patch.object(
+                podman,
+                "_publish_blocker",
+                side_effect=AssertionError("V3_CANDIDATE_JSON_WRITE_GENERIC_BLOCKER_CALLED"),
+            ), patch.object(
+                podman,
+                "_run_container",
+                side_effect=AssertionError("V3_CANDIDATE_JSON_WRITE_PODMAN_CALLED"),
+            ), patch.object(
+                podman,
+                "capture_direct_command_runtime_in_container_trace_v1",
+                side_effect=AssertionError("V3_CANDIDATE_JSON_WRITE_TRACE_CALLED"),
+            ), patch.object(
+                executor,
+                "runtime_build",
+                side_effect=AssertionError("V3_CANDIDATE_JSON_WRITE_LATER_STAGE_CALLED"),
+            ), patch.object(
+                executor,
+                "generate",
+                side_effect=AssertionError("V3_CANDIDATE_JSON_WRITE_LATER_STAGE_CALLED"),
+            ), patch.object(podman, "TRACK_DIR", attempts_root):
+                with self.assertRaisesRegex(
+                    podman.CandidateExecutionBlocked,
+                    r"^V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED: candidate-publication: V3_TEST_CANDIDATE_FAILURE_EVIDENCE_JSON_WRITE$",
+                ) as raised:
+                    executor.preserve_failure(candidate_error)
+
+            self.assertIs(raised.exception.__cause__, json_write_error)
+            self.assertIs(json_write_error.__cause__, candidate_error)
+            self.assertEqual(len(json_write_calls), 1)
+            self.assertEqual(validator_calls, [])
+            self.assertEqual(rename_calls, [])
+            self.assertFalse(output.exists())
+            self.assertFalse(V3_DIR.exists())
+            self.assertFalse((attempts_root / expected_attempt_name).exists())
+            self.assertEqual(sorted(path.name for path in attempts_root.iterdir()), [])
+            self.assertFalse(private_directories[0].exists())
+            self.assertFalse(private_directories[0].parent.exists())
+            self.assertFalse((attempts_root / "raw").exists())
+
 
 if __name__ == "__main__":
     unittest.main()
