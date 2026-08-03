@@ -310,6 +310,34 @@
   Acceptance must prove the bare `except FileNotFoundError:` count falls 3 to 2 and
   both frozen `final_directory` cleanup blocks are byte-unchanged.
 
+  Bounded Green/acceptance (2026-08-03): accepted in-loop, single-authority per
+  `AGENTS.md` Measure-acceptance ownership, for only the outer private-staging
+  cleanup no-masking fix at runner SHA-256
+  `ba251a85cf3238675475e848a69a414323557accfe5f8e0fc6fe0c7a4fe2d815` and frozen
+  test SHA-256 `ab580980f0dd754ba9ae367d3e88b1558664d1d0caec4e91e7abc1661d4882b0`,
+  which equals the Post-Red hash in the baseline, so the test surface is unchanged
+  since commit `c80a754c3`. The nine focused tests, enumerated by name in the
+  receipt, passed three times under the subprocess guard with zero podman
+  invocations: `2.506s`, `2.944s`, `2.948s`. The sole runner delta is one
+  `-10`-byte hunk widening the authorized block's caught exception to `OSError`.
+  Every baseline-mandated check passed: the Green block occurs exactly once,
+  replacing only it reconstructs the complete pre-Green runner at `99e096bd...`
+  exactly, every line outside the hunk is byte-identical, the bare
+  `except FileNotFoundError:` count fell 3 to 2, and both frozen `final_directory`
+  cleanup blocks remain byte-unchanged. Receipt:
+  `h3-preseal-staging-cleanup-masking-green-acceptance-20260803.md`. This slice
+  closed a real masking defect: the committed Red proved a cleanup `PermissionError`
+  became the direct cause and demoted the real JSON-write failure to context, so
+  operators were told the wrong thing failed. The Red body was transcribed by a
+  `reasonix` delegate, with its diff independently confirmed purely additive and
+  every gate re-run in-loop. The runner is untracked, so both states are verified by
+  content hash only; this does not reconstruct history before `99e096bd...`. The
+  runner/test code remains uncommitted shared R1-v3 work and Phase R1 v3 remains
+  `[~]`; no inner reservation cleanup, candidate-publisher cleanup, successful
+  publication, other pre-seal/generic variant, candidate path, H3/H4/H5/R1-v3
+  acceptance, runner commit, or
+  Podman/candidate/Finance/marker/registry/successor/V2/history action is accepted.
+
 ## Phase R2: Close or compensate graph coverage gaps
 
 - [x] Task: Execute and record the documented clean-audit/configuration attempt, including `repo-graph config`, scan options, raw audit JSON, stdout/stderr, and exits; select the clean branch only for audit exit `0` with empty unaudited and integrity sets. The v2 candidate binds `r2-clean-audit-attempt-v2-20260801/attempt.json` to the fresh R1 bundle and graph binding; it retained the raw exit and selected the `COMPENSATION_REQUIRED` non-clean branch when unaudited symbols remained. Bounded technical acceptance is recorded by Terra and Sol in the v2 review receipts; commit `772839f` binds the evidence. This is not R2 phase acceptance or an unblock. (deferred:phase-r1-bound-graph)
