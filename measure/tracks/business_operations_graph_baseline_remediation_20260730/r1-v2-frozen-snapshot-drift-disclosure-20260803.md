@@ -46,3 +46,15 @@ track, not an in-place edit.
 This disclosure records the drift and restoration only. It does not change any
 task marker, does not accept R1 v3, and does not unblock R2 Tasks 3-5, R3,
 Admin S1, or CRM.
+
+## Recurrence and final restoration (2026-08-03)
+
+The same path-sync process re-ran at 17:00:23-17:00:28 (+0700), re-drifting the
+eight frozen files after the first restoration and also rewriting a prose
+reference inside this disclosure file itself (making it self-contradictory).
+After the APK archival session was confirmed finished, the orchestrator
+restored all nine files again from their committed bytes (`772839f` for the
+snapshot directory, `HEAD` for this file). Final verification: `git status
+--porcelain` for the entire track directory is empty and `git diff 772839f`
+for the snapshot directory is zero lines. The committed evidence chain was
+correct throughout; no re-acceptance is required.
