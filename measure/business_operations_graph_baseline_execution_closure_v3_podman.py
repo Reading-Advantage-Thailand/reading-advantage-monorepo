@@ -2967,7 +2967,7 @@ def build_direct_command_runtime_runner_integration_v1(
         "readSetContract": read_set_contract,
         "sourcePacketSha256": validated_packet["packetSha256"],
     }))
-    max_events = len(baseline_read_set) + len(validated_read_set["derivedBuildReadSet"]) + len(validated_read_set["outputPaths"])
+    max_events = len(baseline_read_set) + len(validated_read_set["derivedBuildReadSet"]) + len(validated_read_set["outputPaths"]) + validated_read_set["discovery"]["directoryListingCount"]
     if max_events <= 0:
         _direct_runtime_integration_fail("TRACE_EVENT_CAP_INVALID")
     generator_script = validated_read_set["discovery"]["script"]["path"]

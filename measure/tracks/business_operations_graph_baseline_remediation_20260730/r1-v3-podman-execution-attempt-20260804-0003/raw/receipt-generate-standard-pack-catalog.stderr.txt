@@ -1,0 +1,14 @@
+file:///runner/direct-runtime-fs-promises-wrapper.mjs:48
+  if (ordinal >= config.maxEvents) throw new Error("raw trace event cap exceeded");
+                                         ^
+
+Error: raw trace event cap exceeded
+    at append (file:///runner/direct-runtime-fs-promises-wrapper.mjs:48:42)
+    at record (file:///runner/direct-runtime-fs-promises-wrapper.mjs:61:5)
+    at readFile (file:///runner/direct-runtime-fs-promises-wrapper.mjs:71:43)
+    at file:///work/packages/advantage-play-kit/scripts/generate-standard-pack-release.mjs:49:25
+    at Array.map (<anonymous>)
+    at physicalMetadata (file:///work/packages/advantage-play-kit/scripts/generate-standard-pack-release.mjs:48:43)
+    at file:///work/packages/advantage-play-kit/scripts/generate-standard-pack-release.mjs:101:30
+
+Node.js v22.23.1
