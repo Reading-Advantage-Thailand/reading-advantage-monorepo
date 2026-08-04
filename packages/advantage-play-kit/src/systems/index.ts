@@ -115,3 +115,6 @@ export type {
   ProjectileState,
   ProjectileStep,
 } from "./gameplay-primitives.js";
+
+/** `capability:multiplayer-session` shared core. */
+export { createMultiplayerSession, type MultiplayerSession, type MultiplayerSessionOptions, type MultiplayerSessionPhase, type MultiplayerSessionRound, type MultiplayerSessionState, type MultiplayerTransport } from "./multiplayer-session.js";

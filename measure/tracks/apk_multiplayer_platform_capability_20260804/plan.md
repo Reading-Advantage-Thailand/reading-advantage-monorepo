@@ -76,13 +76,13 @@ _Story ref: spec.md#story-s2_
 ## Phase S3: Add the multiplayer session capability to the Play Kit
 _Story ref: spec.md#story-s3_
 
-- [ ] Task: Write Red tests for the session system
-    - [ ] Add `packages/advantage-play-kit/src/systems/__tests__/multiplayer-session.test.ts` covering join, ready, round lifecycle, submission, scoreboard, and disconnect
-    - [ ] Drive it through an injected fake transport; no socket in the test path
-- [ ] Task: Implement the session system
-    - [ ] Add `packages/advantage-play-kit/src/systems/multiplayer-session.ts`, transport-agnostic and consuming only `multiplayer.v1`
-    - [ ] Drive its cadence from `createBoundedFrameScheduler` in `systems/bounded-frame-loop.ts`
-    - [ ] Export from `packages/advantage-play-kit/src/systems/index.ts`
+- [x] Task: Write Red tests for the session system
+    - [x] Add `packages/advantage-play-kit/src/systems/__tests__/multiplayer-session.test.ts` covering join, ready, round lifecycle, submission, scoreboard, and disconnect — 18 tests, Red-first. "Ready" reconciled: the frozen contract has no client→server ready kind (owner-driven lifecycle), so readiness is observed via `lobby_update`; no kind invented
+    - [x] Drive it through an injected fake transport; no socket in the test path — fake transport + manually pumped scheduler; one test uses the real `createBoundedFrameScheduler`
+- [x] Task: Implement the session system
+    - [x] Add `packages/advantage-play-kit/src/systems/multiplayer-session.ts`, transport-agnostic and consuming only `multiplayer.v1` — `createMultiplayerSession({ transport, scheduler })`; hello→welcome→join handshake; phase machine idle→hello→lobby→countdown→playing→results→closed; submission phase-gated to playing and never carries a score; malformed inbound surfaces as `lastError` and never throws into the tick. Orchestrator re-ran: 18/18 green
+    - [x] Drive its cadence from `createBoundedFrameScheduler` in `systems/bounded-frame-loop.ts` — `session.tick(dt)` flushes queued `input_frame`s in order, wired by the caller through the real scheduler (deviation accepted: tick exposed on the session interface because the scheduler's callback is frozen at construction)
+    - [x] Export from `packages/advantage-play-kit/src/systems/index.ts`
 - [ ] Task: Extend the runtime mount surface
     - [ ] Add an optional `multiplayer` block to `MountCartridgeOptions` in `runtime/types.ts`, mirroring `responsive`
     - [ ] Own its lifecycle in `mountCartridge` and tear it down on destroy
