@@ -215,16 +215,13 @@ _Story ref: spec.md#story-s3-import-legacy-workbook-projects-and-assets_
 - [x] Task: Scaffold `apps/workbooks` as a separately deployable Company-SSO application with explicit workbook role gates, thin UI/routes, and no copied filesystem or provider-SDK business logic. — scaffold `dd60bbdc5`, SSO gate `772a618ad` + `2df52486c` (track: workbooks_sso_onboarding_20260803). Verified: no runtime filesystem in the app (only the import CLI and a test fixture loader).
 - [x] Task (S4a): Run the legacy importer dry-run for pilot project `origins-2-a0`, record the manifest/exceptions, and build the project list read page over domain queries (drafts/editions from DB, no filesystem). c109a372f, dbaafe9a0, 6e94288db
 - [~] Task (S4b): Port the lesson/section editor from `advantage-workbooks` HEAD (refactored suite per divergence register) onto workbook backend server actions with optimistic concurrency. bc9ee5951, 6e94288db
-  — 4 sub-editors + status banners + mapping + `useDraftLessonEditor` committed; the
-  Vocabulary, Pedagogical Connectors, Writing Prompt and Lesson Reflection editors are
-  written and passing but **uncommitted** as of 2026-08-04.
-  **Two known gaps:** (1) `writing_practice_url` is accepted by `draftLessonSchema` but
-  has no carrier on the normalized contract and is absent from both mapping directions,
-  so it is silently dropped on save; (2) the "keeps every fixture field intact"
-  round-trip tests bind to one fixture that carries 25 of ~35 legacy fields — it lacks
-  `writing_practice_url`, `short_answer_hint`, `article_images`, `writing_plan_prompts`,
-  `writing_sentence_frames` and all four pedagogical connectors, so the losslessness
-  proof is weaker than it reads. `LessonPreviewModal` is not ported.
+  — All 8 sub-editors + status banners + mapping + `useDraftLessonEditor` landed
+  (`c5492b575` wired the last four and repaired the component test wiring: those suites
+  were never collected before it). Losslessness is now proven against a maximal fixture
+  pinned to `draftLessonSchema` by an exhaustiveness assertion, which found and fixed two
+  real defects (`b960b07f7`): `writing_practice_url` was silently dropped on save, and a
+  structured article image was emitted into both editor image fields, duplicating its URL
+  on every save/load cycle. **Gap:** `LessonPreviewModal` is not ported.
 - [ ] Task (S4c): Port settings + preview/compile wiring over the domain render port (no runtime filesystem, no provider SDKs).
 - [ ] Task (S4d): Port the teacher-manual workflow including the Paged.js shim and regression tests (divergence register), plus its docs.
 - [ ] Task: Write Red UI, accessibility, and authorization tests for catalog browsing, drafts, source selection, editing, optimistic conflicts, source drift, rights warnings, review state, and immutable-release confirmation.
