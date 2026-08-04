@@ -27,7 +27,7 @@ function physicalAssets(paths: readonly string[]): Readonly<Record<string, { kin
 describe("standard APK pack releases", () => {
   it("serializes a catalog deterministically regardless of discovery order", () => {
     const first = createStandardAssetCatalog({
-      version: "2026.07.23",
+      version: "2026.08.04",
       sourceReceiptDigest: "source-receipt-sha256",
       catalogDigest: "catalog-sha256",
       paths: [secondPath, firstPath],
@@ -35,7 +35,7 @@ describe("standard APK pack releases", () => {
       physicalAssets: physicalAssets([secondPath, firstPath]),
     });
     const second = createStandardAssetCatalog({
-      version: "2026.07.23",
+      version: "2026.08.04",
       sourceReceiptDigest: "source-receipt-sha256",
       catalogDigest: "catalog-sha256",
       paths: [firstPath, secondPath],
@@ -52,7 +52,7 @@ describe("standard APK pack releases", () => {
 
   it("rejects duplicate semantic keys before a catalog can be released", () => {
     expect(() => createStandardAssetCatalog({
-      version: "2026.07.23",
+      version: "2026.08.04",
       sourceReceiptDigest: "source-receipt-sha256",
       catalogDigest: "catalog-sha256",
       paths: [firstPath, firstPath],
@@ -63,7 +63,7 @@ describe("standard APK pack releases", () => {
 
   it("requires a source receipt locator for every released physical asset", () => {
     expect(() => createStandardAssetCatalog({
-      version: "2026.07.23",
+      version: "2026.08.04",
       sourceReceiptDigest: "source-receipt-sha256",
       catalogDigest: "catalog-sha256",
       paths: [firstPath],
@@ -74,7 +74,7 @@ describe("standard APK pack releases", () => {
 
   it("resolves only cataloged semantic keys with an exact pinned release binding", () => {
     const catalog = createStandardAssetCatalog({
-      version: "2026.07.23",
+      version: "2026.08.04",
       sourceReceiptDigest: "source-receipt-sha256",
       catalogDigest: "catalog-sha256",
       paths: [firstPath],
@@ -82,7 +82,7 @@ describe("standard APK pack releases", () => {
       physicalAssets: physicalAssets([firstPath]),
     });
     const resolver = createStandardAssetResolver(catalog, {
-      version: "2026.07.23",
+      version: "2026.08.04",
       catalogDigest: catalog.digest,
       sourceReceiptDigest: "source-receipt-sha256",
     });
@@ -94,7 +94,7 @@ describe("standard APK pack releases", () => {
     });
     expect(() => resolver.resolve("ui/16x16/icons/missing")).toThrow(/unknown/i);
     expect(() => createStandardAssetResolver(catalog, {
-      version: "2026.07.23",
+      version: "2026.08.04",
       catalogDigest: "stale-digest",
       sourceReceiptDigest: "source-receipt-sha256",
     })).toThrow(/stale/i);
@@ -103,7 +103,7 @@ describe("standard APK pack releases", () => {
   it("rejects a hand-constructed catalog with an unsafe or inconsistent physical path", () => {
     const unsafeCatalog = {
       schemaVersion: 1,
-      version: "2026.07.23",
+      version: "2026.08.04",
       digest: "catalog-sha256",
       sourceReceiptDigest: "source-receipt-sha256",
       requiredCredit: "Pixel art assets by ElvGames",
@@ -128,7 +128,7 @@ describe("standard APK pack releases", () => {
 
   it("rejects forged physical metadata even when the semantic path is valid", () => {
     const catalog = createStandardAssetCatalog({
-      version: "2026.07.23",
+      version: "2026.08.04",
       sourceReceiptDigest: "source-receipt-sha256",
       catalogDigest: "catalog-sha256",
       paths: [firstPath],
@@ -149,7 +149,7 @@ describe("standard APK pack releases", () => {
 
   it("materializes a sorted deduplicated union and rejects physical paths", () => {
     const catalog = createStandardAssetCatalog({
-      version: "2026.07.23",
+      version: "2026.08.04",
       sourceReceiptDigest: "source-receipt-sha256",
       catalogDigest: "catalog-sha256",
       paths: [firstPath, secondPath],

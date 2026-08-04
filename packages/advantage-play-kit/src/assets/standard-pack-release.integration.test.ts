@@ -38,7 +38,7 @@ describe("generated APK standard-pack release", () => {
       Buffer.from("\n"),
       licenseReceipt,
     ])));
-    expect(catalog.assets).toHaveLength(43_075);
+    expect(catalog.assets).toHaveLength(43_316);
     expect(catalog.assets.every((asset) => /^(IMPORT|CURATED)-RECEIPT\.tsv:\d+$/.test(asset.sourceReceiptLocator))).toBe(true);
     expect(catalog.assets.every((asset) => /^[a-f0-9]{64}$/.test(asset.physical.sha256) && asset.physical.byteSize > 0)).toBe(true);
     expect(catalog.assets.filter((asset) => asset.physical.kind === "image").every((asset) => asset.physical.dimensions !== null)).toBe(true);

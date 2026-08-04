@@ -79,7 +79,7 @@ describe("accepted APK standard-pack release", () => {
         browserQcGate: "pass",
       },
     });
-    expect(acceptance.acceptedAt).toBe("2026-07-23T00:00:00Z");
+    expect(acceptance.acceptedAt).toBe("2026-08-04T00:00:00Z");
     expect(ACCEPTED_STANDARD_ASSET_RELEASE).toEqual(acceptance);
 
     const resolver = await createAcceptedStandardAssetResolver(catalog, {

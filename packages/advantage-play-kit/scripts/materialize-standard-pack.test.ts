@@ -24,7 +24,7 @@ async function fixture() {
   await mkdir(join(sourceRoot, dirname(path)), { recursive: true });
   await writeFile(join(sourceRoot, path), bytes);
   const catalog = {
-    version: "2026.07.23",
+    version: "2026.08.04",
     digest: "catalog-digest",
     sourceReceiptDigest: "receipt-digest",
     requiredCredit: "Pixel art assets by ElvGames",
@@ -40,7 +40,7 @@ async function fixture() {
 }
 
 function args(fixtureValue: Awaited<ReturnType<typeof fixture>>, digest = "catalog-digest", key = "ui/16x16/icons/coin") {
-  return [SCRIPT, "--release", fixtureValue.release, "--source-root", fixtureValue.sourceRoot, "--output-root", fixtureValue.outputRoot, "--version", "2026.07.23", "--catalog-digest", digest, "--source-receipt-digest", "receipt-digest", "--key", key];
+  return [SCRIPT, "--release", fixtureValue.release, "--source-root", fixtureValue.sourceRoot, "--output-root", fixtureValue.outputRoot, "--version", "2026.08.04", "--catalog-digest", digest, "--source-receipt-digest", "receipt-digest", "--key", key];
 }
 
 describe("materialize-standard-pack", () => {

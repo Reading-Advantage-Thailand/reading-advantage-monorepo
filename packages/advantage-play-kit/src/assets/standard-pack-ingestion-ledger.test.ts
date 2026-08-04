@@ -526,7 +526,7 @@ describe("standard-pack append-only ingestion ledger", () => {
     const rootCatalog = readStandardPackCatalogFixture();
     const b1Catalog = await appendCatalogAsset(
       rootCatalog,
-      "2026.07.30",
+      "2026.08.06",
       "1".repeat(64),
       "top-down/32x32/characters/legacy-hero-walk.png",
       rawEvidence.receipt.sourceSha256,
@@ -625,7 +625,7 @@ describe("standard-pack append-only ingestion ledger", () => {
     const rootCatalog = readStandardPackCatalogFixture();
     const b1Catalog = await appendCatalogAsset(
       rootCatalog,
-      "2026.07.30",
+      "2026.08.06",
       "1".repeat(64),
       "top-down/32x32/characters/legacy-hero-walk.png",
       rawEvidence.receipt.sourceSha256,
@@ -740,7 +740,7 @@ describe("standard-pack append-only ingestion ledger", () => {
     const rootCatalog = readStandardPackCatalogFixture();
     const catalogWithAcceptedIngestion = await appendCatalogAsset(
       rootCatalog,
-      "2026.07.30",
+      "2026.08.06",
       "1".repeat(64),
       "top-down/32x32/characters/legacy-hero-walk.png",
       rawEvidence.receipt.sourceSha256,
@@ -748,7 +748,7 @@ describe("standard-pack append-only ingestion ledger", () => {
     );
     const smuggledCatalog = await appendCatalogAsset(
       catalogWithAcceptedIngestion,
-      "2026.07.31",
+      "2026.08.07",
       "2".repeat(64),
       "top-down/32x32/characters/unreviewed-extra.png",
       "f".repeat(64),
@@ -780,7 +780,7 @@ describe("standard-pack append-only ingestion ledger", () => {
   it("accepts B2 only when its receipt pins B1 and preserves B1 history", async () => {
     const rawB1 = await createAcceptedIngestionEvidence();
     const rootCatalog = readStandardPackCatalogFixture();
-    const b1Catalog = await appendCatalogAsset(rootCatalog, "2026.07.30", "1".repeat(64), "top-down/32x32/characters/legacy-hero-walk.png", rawB1.receipt.sourceSha256, 900001);
+    const b1Catalog = await appendCatalogAsset(rootCatalog, "2026.08.06", "1".repeat(64), "top-down/32x32/characters/legacy-hero-walk.png", rawB1.receipt.sourceSha256, 900001);
     const b1Release = { version: b1Catalog.version, catalogDigest: b1Catalog.digest, sourceReceiptDigest: b1Catalog.sourceReceiptDigest };
     const b1Receipt = { ...rawB1.receipt, additiveRelease: b1Release, receiptDigest: "" };
     b1Receipt.receiptDigest = await sha256(serializeStandardPackCanonicalIngestionReceiptPayload(b1Receipt as never));
@@ -796,7 +796,7 @@ describe("standard-pack append-only ingestion ledger", () => {
     const acceptedB1 = await validateStandardPackIngestionLedger(b1Ledger, [createLedgerEvidenceBundle(b1Evidence)], rootIndex);
 
     const rawB2 = await createIndependentIngestionEvidence();
-    const b2Catalog = await appendCatalogAsset(b1Catalog, "2026.07.31", "d".repeat(64), "top-down/32x32/characters/legacy-mage-walk.png", rawB2.receipt.sourceSha256, 900002);
+    const b2Catalog = await appendCatalogAsset(b1Catalog, "2026.08.07", "d".repeat(64), "top-down/32x32/characters/legacy-mage-walk.png", rawB2.receipt.sourceSha256, 900002);
     const b2Release = { version: b2Catalog.version, catalogDigest: b2Catalog.digest, sourceReceiptDigest: b2Catalog.sourceReceiptDigest };
     const b2Receipt = { ...rawB2.receipt, predecessorRelease: b1Release, additiveRelease: b2Release, receiptDigest: "" };
     b2Receipt.receiptDigest = await sha256(serializeStandardPackCanonicalIngestionReceiptPayload(b2Receipt as never));
@@ -838,7 +838,7 @@ describe("standard-pack append-only ingestion ledger", () => {
     b2Ledger.batchDigest = await sha256(serializeStandardPackIngestionLedgerPayload(b2Ledger as never));
     const b2Index = await createStandardPackIngestionLedgerPredecessorIndex(b1Catalog, b1Release, acceptedB1, registry);
     const acceptedB2 = await validateStandardPackIngestionLedger(b2Ledger, [createLedgerEvidenceBundle(b2Evidence)], b2Index, acceptedB1);
-    const forkedB2 = { ...b2Ledger, batchId: "fixture-legacy-mage-fork", proposedSuccessorRelease: { version: "2026.07.32", catalogDigest: "5".repeat(64), sourceReceiptDigest: "6".repeat(64) }, batchDigest: "" };
+    const forkedB2 = { ...b2Ledger, batchId: "fixture-legacy-mage-fork", proposedSuccessorRelease: { version: "2026.08.08", catalogDigest: "5".repeat(64), sourceReceiptDigest: "6".repeat(64) }, batchDigest: "" };
     forkedB2.batchDigest = await sha256(serializeStandardPackIngestionLedgerPayload(forkedB2 as never));
     await expect(validateStandardPackIngestionLedger(
       forkedB2,
@@ -855,7 +855,7 @@ describe("standard-pack append-only ingestion ledger", () => {
     ]));
 
     const staleReceipt = { ...b2Receipt, predecessorRelease: b1Ledger.predecessorRelease, receiptDigest: "" };
-    const replayReceipt = { ...b1Evidence.receipt, predecessorRelease: b2Release, additiveRelease: { version: "2026.08.01", catalogDigest: "3".repeat(64), sourceReceiptDigest: "4".repeat(64) }, receiptDigest: "" };
+    const replayReceipt = { ...b1Evidence.receipt, predecessorRelease: b2Release, additiveRelease: { version: "2026.08.09", catalogDigest: "3".repeat(64), sourceReceiptDigest: "4".repeat(64) }, receiptDigest: "" };
     replayReceipt.receiptDigest = await sha256(serializeStandardPackCanonicalIngestionReceiptPayload(replayReceipt as never));
     const replayLedger = {
       ...b1Ledger,
@@ -965,7 +965,7 @@ describe("standard-pack append-only ingestion ledger", () => {
     manifestMismatch.manifestDigest = await sha256(serializeStandardPackSuitabilityAcceptedDecisionManifestPayload(manifestMismatch as never));
     await expect(validateLedger(ledger, [{ ...bundle[0], manifestCandidate: manifestMismatch }])).rejects.toThrow();
 
-    const prior = { ...ledger, proposedSuccessorRelease: { version: "2026.07.29", catalogDigest: "e".repeat(64), sourceReceiptDigest: "f".repeat(64) }, batchDigest: "" };
+    const prior = { ...ledger, proposedSuccessorRelease: { version: "2026.08.05", catalogDigest: "e".repeat(64), sourceReceiptDigest: "f".repeat(64) }, batchDigest: "" };
     prior.batchDigest = await sha256(serializeStandardPackIngestionLedgerPayload(prior as never));
     const chained = { ...ledger, previousBatchDigest: prior.batchDigest, batchDigest: "" };
     chained.batchDigest = await sha256(serializeStandardPackIngestionLedgerPayload(chained as never));

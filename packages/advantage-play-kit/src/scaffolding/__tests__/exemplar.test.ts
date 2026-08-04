@@ -18,7 +18,7 @@ describe("exemplar cartridge built through public APK APIs", () => {
     expect(definition.manifest.capabilities).toContain("capability:language-target-progression");
     expect(definition.manifest.capabilities).toContain("capability:single-completion-emission");
     expect(definition.manifest.capabilities).toContain("capability:result-accounting");
-    expect(definition.manifest.standardPackBinding.version).toBe("2026.07.23");
+    expect(definition.manifest.standardPackBinding.version).toBe("2026.08.04");
     expect(definition.manifest.attributionRegistration.requiredCredit).toBe(
       "Pixel art assets by ElvGames",
     );

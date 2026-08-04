@@ -9,7 +9,7 @@ import {
 describe("versioned developer kit API and compatibility plan", () => {
   it("pins the developer-kit API version bound to the accepted release", () => {
     expect(DEVELOPER_KIT_API_VERSION).toMatch(/^\d+\.\d+\.\d+$/u);
-    expect(DEVELOPER_KIT_COMPATIBILITY.standardPackReleaseVersion).toBe("2026.07.23");
+    expect(DEVELOPER_KIT_COMPATIBILITY.standardPackReleaseVersion).toBe("2026.08.04");
   });
 
   it("lists the seven accepted capabilities as the supported API surface", () => {
@@ -42,7 +42,7 @@ describe("versioned developer kit API and compatibility plan", () => {
 
     expect(Object.isFrozen(report)).toBe(true);
     expect(report.apiVersion).toBe(DEVELOPER_KIT_API_VERSION);
-    expect(report.standardPackReleaseVersion).toBe("2026.07.23");
+    expect(report.standardPackReleaseVersion).toBe("2026.08.04");
     expect(report.trackId).toBe("apk_shared_developer_kit_20260712");
     expect(report.resolverContract).toBe("createAcceptedStandardAssetResolver");
     expect(report.selectedUnionContract).toBe("materializeStandardAssetUnion");

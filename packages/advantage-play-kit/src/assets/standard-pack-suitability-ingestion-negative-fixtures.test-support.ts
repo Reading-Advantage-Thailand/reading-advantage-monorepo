@@ -87,7 +87,7 @@ Promise<StandardPackCanonicalIngestionReceipt> {
       sourceReceiptDigest: ACCEPTED_STANDARD_ASSET_RELEASE.sourceReceiptDigest,
     },
     additiveRelease: {
-      version: "2026.07.30",
+      version: "2026.08.06",
       catalogDigest: DIGEST_B,
       sourceReceiptDigest: DIGEST_C,
     },

@@ -18,7 +18,7 @@ describe("Existing Core Task 5 canonical-reuse suitability package", () => {
 
   it("creates one real accepted-release dossier per title role without legacy ingestion authority", async () => {
     expect(suitability.release).toEqual({
-      version: "2026.07.23",
+      version: "2026.08.04",
       catalogDigest: ACCEPTED_STANDARD_ASSET_RELEASE.catalogDigest,
       sourceReceiptDigest: ACCEPTED_STANDARD_ASSET_RELEASE.sourceReceiptDigest,
     });

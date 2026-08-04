@@ -25,7 +25,7 @@ describe("noninteractive cartridge scaffold generator", () => {
     const scaffold = generateCartridgeScaffold(options);
 
     expect(scaffold.manifest.id).toBe("scaffolded-vocab-game");
-    expect(scaffold.manifest.standardPackBinding.version).toBe("2026.07.23");
+    expect(scaffold.manifest.standardPackBinding.version).toBe("2026.08.04");
     expect(scaffold.manifest.attributionRegistration.requiredCredit).toBe(
       "Pixel art assets by ElvGames",
     );

@@ -25,9 +25,9 @@ function createWalkDescriptor(
     descriptorId: `player-walk-${frameCount}`,
     catalogEntryKey,
     release: {
-      version: "2026.07.23",
-      catalogDigest: "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
-      sourceReceiptDigest: "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9",
+      version: "2026.08.04",
+      catalogDigest: "535866f258dc9238b48839f9ba7c264417ef104ec586b0c2dfe056a5975fdc33",
+      sourceReceiptDigest: "c06bad4bf118bffac14b4469fc54b0ba1c84dda8c8b43a143aaf6caf0f0caf2c",
     },
     mediaKind: "animation",
     geometry: {
@@ -81,7 +81,7 @@ describe("Asset Contract v2", () => {
       contractVersion: 2,
       descriptorId: "forest-tiles",
       catalogEntryKey: "side-view/16x16/platformer-world/tilesets/animated-tiles/ps-animated-tiles-01-16x16-source-f282ca12a114",
-      release: { version: "2026.07.23", catalogDigest: "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087", sourceReceiptDigest: "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9" },
+      release: { version: "2026.08.04", catalogDigest: "535866f258dc9238b48839f9ba7c264417ef104ec586b0c2dfe056a5975fdc33", sourceReceiptDigest: "c06bad4bf118bffac14b4469fc54b0ba1c84dda8c8b43a143aaf6caf0f0caf2c" },
       mediaKind: "tileset",
       geometry: { width: 288, height: 176, frameWidth: 16, frameHeight: 16, columns: 18, rows: 11 },
       tiles: { tileWidth: 16, tileHeight: 16, columns: 18, rows: 11 },
@@ -94,7 +94,7 @@ describe("Asset Contract v2", () => {
       contractVersion: 2,
       descriptorId: "correct-chime",
       catalogEntryKey: "audio/native/combat/hit-01",
-      release: { version: "2026.07.23", catalogDigest: "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087", sourceReceiptDigest: "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9" },
+      release: { version: "2026.08.04", catalogDigest: "535866f258dc9238b48839f9ba7c264417ef104ec586b0c2dfe056a5975fdc33", sourceReceiptDigest: "c06bad4bf118bffac14b4469fc54b0ba1c84dda8c8b43a143aaf6caf0f0caf2c" },
       mediaKind: "audio",
       audio: { durationMs: 480, channels: 2, loop: false },
       anchor: { x: 0.5, y: 0.5 },
@@ -138,7 +138,7 @@ describe("Asset Contract v2", () => {
 
     const report = createAssetContractV2CompatibilityReport();
     expect(report.adoption).toEqual({ explicitOptInRequired: true, v1ConsumersRemainV1Only: true });
-    expect(report.acceptedStandardPackRelease.version).toBe("2026.07.23");
+    expect(report.acceptedStandardPackRelease.version).toBe("2026.08.04");
     expect(report.t11Inputs).toEqual(["version", "catalogDigest", "sourceReceiptDigest"]);
   });
 

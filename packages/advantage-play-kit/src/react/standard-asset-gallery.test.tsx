@@ -6,7 +6,7 @@ import { createStandardAssetCatalog } from "../assets/standard-pack-release.js";
 import { StandardAssetGallery } from "./standard-asset-gallery.js";
 
 const catalog = createStandardAssetCatalog({
-  version: "2026.07.23",
+  version: "2026.08.04",
   catalogDigest: "catalog-sha256",
   sourceReceiptDigest: "source-receipt-sha256",
   paths: [
