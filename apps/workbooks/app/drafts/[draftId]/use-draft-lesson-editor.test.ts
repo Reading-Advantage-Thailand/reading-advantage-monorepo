@@ -320,4 +320,23 @@ describe("useDraftLessonEditor", () => {
     });
     expect(result.current.lesson.lesson_title).toBe("Updated title");
   });
+
+  it("notifyRevisionConflict sets the conflict state and refreshes from the server", async () => {
+    const conflictMessage =
+      "Revision conflict: actual revision 4 does not match expected revision 3.";
+    vi.mocked(getDraftAction).mockResolvedValue({
+      ok: true,
+      draft: makeUpdatedDraft(),
+    });
+    const { result } = renderHook(() =>
+      useDraftLessonEditor({ initialDraft: makeDraft() }),
+    );
+    await act(async () => {
+      await result.current.notifyRevisionConflict(conflictMessage);
+    });
+    expect(result.current.revisionConflict).toBe(true);
+    expect(result.current.revisionConflictMessage).toBe(conflictMessage);
+    expect(getDraftAction).toHaveBeenCalledWith("draft-1");
+    expect(result.current.lesson.lesson_title).toBe("Updated title");
+  });
 });

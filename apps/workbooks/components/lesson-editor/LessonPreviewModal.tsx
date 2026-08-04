@@ -53,7 +53,7 @@ export function LessonPreviewModal({
         </header>
         <div style={{ flex: 1, minHeight: 0, overflow: "auto" }}>
           {previewHtml ? (
-            <LessonPreview htmlContent={previewHtml} className="h-full" />
+            <LessonPreview htmlContent={previewHtml} />
           ) : (
             <p>No preview available.</p>
           )}

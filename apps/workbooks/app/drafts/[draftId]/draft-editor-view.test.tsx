@@ -74,6 +74,11 @@ function makeHookReturn(
   overrides: Partial<ReturnType<typeof useDraftLessonEditor>> = {},
 ): ReturnType<typeof useDraftLessonEditor> {
   const errors: Record<string, string> = {};
+  const conflict = {
+    flag: false,
+    message: undefined as string | undefined,
+  };
+  const refreshFromServer = vi.fn(async () => {});
   return {
     lesson: {
       lesson_title: "The Library Map",
@@ -85,8 +90,12 @@ function makeHookReturn(
     saving: false,
     errors,
     saveSuccess: false,
-    revisionConflict: false,
-    revisionConflictMessage: undefined,
+    get revisionConflict() {
+      return conflict.flag;
+    },
+    get revisionConflictMessage() {
+      return conflict.message;
+    },
     settings: undefined,
     revision: 2,
     setLessonField: vi.fn(),
@@ -95,7 +104,12 @@ function makeHookReturn(
     }),
     applySettingsSave: vi.fn(),
     validateAndSave: vi.fn(),
-    refreshFromServer: vi.fn(),
+    refreshFromServer,
+    notifyRevisionConflict: vi.fn(async (message: string) => {
+      conflict.flag = true;
+      conflict.message = message;
+      await refreshFromServer();
+    }),
     ...overrides,
   };
 }
@@ -160,6 +174,21 @@ describe("DraftEditorView / states", () => {
     expect(screen.getAllByText("Writing Prompt").length).toBeGreaterThan(0);
     expect(screen.getByText("Lesson Reflection")).toBeTruthy();
     expect(screen.getByText("Save Changes")).toBeTruthy();
+  });
+
+  it("renders the hook-tracked revision in the header", () => {
+    vi.mocked(useDraftLessonEditor).mockReturnValue(
+      makeHookReturn({ revision: 7 }),
+    );
+    render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
+    expect(screen.getByText(/revision 7/)).toBeTruthy();
+  });
+
+  it("labels the preview button as showing the last saved content", () => {
+    render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
+    expect(
+      screen.getByRole("button", { name: "Preview" }).getAttribute("title"),
+    ).toBe("Previews the last saved content");
   });
 
   it("opens the live preview modal with the rendered html", async () => {
@@ -287,24 +316,31 @@ describe("DraftEditorView / draft settings", () => {
     });
   });
 
-  it("surfaces a revision conflict banner and keeps the dialog open", async () => {
+  it("surfaces a revision conflict by closing the dialog and showing the banner", async () => {
+    const message =
+      "Revision conflict: actual revision 4 does not match expected revision 2.";
     vi.mocked(updateDraftSettingsAction).mockResolvedValue({
       ok: false,
       code: "REVISION_CONFLICT",
-      message:
-        "Revision conflict: actual revision 4 does not match expected revision 2.",
+      message,
       retryable: true,
     });
+    const hookReturn = makeHookReturn();
+    const notifyRevisionConflict = vi.mocked(hookReturn.notifyRevisionConflict);
+    const refreshFromServer = vi.mocked(hookReturn.refreshFromServer);
+    vi.mocked(useDraftLessonEditor).mockReturnValue(hookReturn);
     render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
     fireEvent.click(screen.getByRole("button", { name: "Settings" }));
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
     await waitFor(() => {
-      expect(screen.getByRole("alert")).toBeTruthy();
+      expect(
+        screen.queryByRole("dialog", { name: "Project Settings" }),
+      ).toBeNull();
     });
+    expect(screen.getByText(/Save conflict/)).toBeTruthy();
     expect(screen.getByText(/Revision conflict/)).toBeTruthy();
-    expect(
-      screen.getByRole("dialog", { name: "Project Settings" }),
-    ).toBeTruthy();
+    expect(notifyRevisionConflict).toHaveBeenCalledWith(message);
+    expect(refreshFromServer).toHaveBeenCalled();
   });
 
   it("surfaces other settings failures as a form error and keeps the dialog open", async () => {

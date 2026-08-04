@@ -22,15 +22,15 @@ export function DraftSettingsDialog({
   onSave,
   onClose,
 }: DraftSettingsDialogProps) {
-  const [type, setType] = useState<"primary" | "secondary">(
-    settings?.type ?? "secondary",
+  const [type, setType] = useState<"primary" | "secondary" | undefined>(
+    settings?.type,
   );
   const [levelNumber, setLevelNumber] = useState(settings?.levelNumber ?? "");
   const [seriesName, setSeriesName] = useState(settings?.seriesName ?? "");
   const [cefrLevel, setCefrLevel] = useState(settings?.cefrLevel ?? "");
 
   const levelOptions = ensureMetadataLevelOption(
-    getWorkbookLevelOptions(type),
+    getWorkbookLevelOptions(type ?? "secondary"),
     { levelNumber, seriesName, cefrLevel },
   );
 
@@ -87,11 +87,13 @@ export function DraftSettingsDialog({
             <label htmlFor="settings-type">Type</label>
             <select
               id="settings-type"
-              value={type}
-              onChange={(event) =>
-                setType(event.target.value as "primary" | "secondary")
-              }
+              value={type ?? ""}
+              onChange={(event) => {
+                const value = event.target.value;
+                setType(value === "" ? undefined : (value as "primary" | "secondary"));
+              }}
             >
+              <option value="">— not set —</option>
               <option value="primary">Primary</option>
               <option value="secondary">Secondary</option>
             </select>
@@ -104,6 +106,7 @@ export function DraftSettingsDialog({
               value={levelNumber}
               onChange={(event) => setLevelNumber(event.target.value)}
             >
+              <option value="">— none —</option>
               {levelOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label} — {option.cefr}

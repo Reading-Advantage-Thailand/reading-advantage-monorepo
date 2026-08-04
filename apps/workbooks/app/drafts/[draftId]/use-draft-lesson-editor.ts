@@ -48,6 +48,12 @@ export interface UseDraftLessonEditorResult {
    * settings without discarding unsaved lesson edits.
    */
   applySettingsSave: (draft: workbooks.WorkbookDraft) => void;
+  /**
+   * Surfaces a structured settings-save conflict: flags the revision conflict,
+   * records the message, and reloads the latest revision from the server so
+   * the tracked revision is no longer stale.
+   */
+  notifyRevisionConflict: (message: string) => Promise<void>;
   /** Validates the lesson and persists it through the server action. */
   validateAndSave: () => Promise<void>;
   /** Reloads the latest draft revision from the server. */
@@ -124,6 +130,15 @@ export function useDraftLessonEditor({
     }
   }, [initialDraft.draftId, applyDraft]);
 
+  const notifyRevisionConflict = useCallback(
+    async (message: string) => {
+      setRevisionConflict(true);
+      setRevisionConflictMessage(message);
+      await refreshFromServer();
+    },
+    [refreshFromServer],
+  );
+
   const validateAndSave = useCallback(async () => {
     setErrors({});
     setSaveSuccess(false);
@@ -179,6 +194,7 @@ export function useDraftLessonEditor({
     setLessonField,
     setFormError,
     applySettingsSave,
+    notifyRevisionConflict,
     validateAndSave,
     refreshFromServer,
   };

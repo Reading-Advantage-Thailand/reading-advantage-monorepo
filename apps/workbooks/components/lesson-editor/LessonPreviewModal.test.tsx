@@ -26,11 +26,11 @@ describe("LessonPreviewModal", () => {
     expect(screen.getByTestId("lesson-preview").textContent).toBe("<p>hello</p>");
   });
 
-  it("passes the full-height class to the preview", () => {
+  it("renders the preview without a layout class", () => {
     render(<LessonPreviewModal previewHtml="x" onClose={() => {}} />);
 
     expect(screen.getByTestId("lesson-preview").getAttribute("data-class")).toBe(
-      "h-full",
+      null,
     );
   });
 

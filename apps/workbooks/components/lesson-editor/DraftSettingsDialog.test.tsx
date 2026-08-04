@@ -107,6 +107,50 @@ describe("DraftSettingsDialog", () => {
     );
   });
 
+  it("saves an empty settings object when no settings exist", () => {
+    const onSave = vi.fn();
+    render(
+      <DraftSettingsDialog
+        settings={undefined}
+        saving={false}
+        onSave={onSave}
+        onClose={() => {}}
+      />,
+    );
+    expect((screen.getByLabelText("Type") as HTMLSelectElement).value).toBe("");
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    expect(onSave).toHaveBeenCalledWith({});
+  });
+
+  it("returns the level to unset via the none option", () => {
+    const onSave = vi.fn();
+    render(
+      <DraftSettingsDialog
+        settings={baseSettings}
+        saving={false}
+        onSave={onSave}
+        onClose={() => {}}
+      />,
+    );
+    const levelSelect = screen.getByLabelText(
+      "Workbook Level",
+    ) as HTMLSelectElement;
+    expect(
+      Array.from(levelSelect.options).some(
+        (option) => option.value === "" && option.textContent === "— none —",
+      ),
+    ).toBe(true);
+    fireEvent.change(levelSelect, { target: { value: "6.1" } });
+    fireEvent.change(levelSelect, { target: { value: "" } });
+    expect(levelSelect.value).toBe("");
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    expect(onSave).toHaveBeenCalledWith({
+      type: "secondary",
+      seriesName: "Quest",
+      cefrLevel: "A1",
+    });
+  });
+
   it("calls onClose from the Cancel button", () => {
     const onClose = vi.fn();
     render(

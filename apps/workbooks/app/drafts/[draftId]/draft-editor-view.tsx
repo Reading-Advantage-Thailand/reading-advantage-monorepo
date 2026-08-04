@@ -117,6 +117,7 @@ function DraftLessonEditorView({
     setLessonField,
     setFormError,
     applySettingsSave,
+    notifyRevisionConflict,
     validateAndSave,
   } = useDraftLessonEditor({ initialDraft: draft });
 
@@ -150,6 +151,9 @@ function DraftLessonEditorView({
       if (result.ok) {
         applySettingsSave(result.draft);
         setSettingsOpen(false);
+      } else if (result.code === "REVISION_CONFLICT") {
+        await notifyRevisionConflict(result.message);
+        setSettingsOpen(false);
       } else {
         setFormError(result.message);
       }
@@ -163,7 +167,7 @@ function DraftLessonEditorView({
   return (
     <main>
       <h1>{lesson.lesson_title || "Untitled lesson"}</h1>
-      <p>Draft {draft.draftId} — revision {draft.revision}</p>
+      <p>Draft {draft.draftId} — revision {revision}</p>
 
       <div>
         <button type="button" onClick={() => void validateAndSave()} disabled={saving}>
@@ -173,6 +177,7 @@ function DraftLessonEditorView({
           type="button"
           onClick={() => void handlePreview()}
           disabled={previewing}
+          title="Previews the last saved content"
         >
           {previewing ? "Rendering..." : "Preview"}
         </button>
