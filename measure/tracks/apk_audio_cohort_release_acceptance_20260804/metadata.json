@@ -1,0 +1,11 @@
+{
+  "track_id": "apk_audio_cohort_release_acceptance_20260804",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-08-04T00:00:00Z",
+  "updated_at": "2026-08-04T00:00:00Z",
+  "description": "Accept the audio-inclusive standard-pack release 2026.08.04 (241 OGG assets imported from Sound Effects.zip; catalog 43,075 -> 43,316) as a NEW additive version, advancing all pinned release-identity and suitability-evidence constants.",
+  "estimated_tasks": 4,
+  "actual_tasks": null,
+  "deviation_notes": "Owner decision 2026-08-04: new version (option B), not an in-place re-cut of 2026.07.23. Rationale: change is purely additive (every pre-existing asset byte-identical), frozen releases stay immutable per the program's hash-bound evidence model, and the competition template repo already cites release 2026.08.04 with digest cd238d33 in its ASSET-LICENSES.json. Scoped verification only: the editions/react/runtime directories are owned by another in-flight track and are not a gate."
+}

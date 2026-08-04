@@ -31,12 +31,13 @@ describe("APK standard asset library", () => {
       "ui/32x32/items/armor-icons.png",
       "effects/32x32/combat/hit-01.png",
       "audio/native/combat/hit-01.ogg",
+      "audio/native/game-sound-effects-1/gs1-beast-1.ogg",
     ]));
     const importedRecords = readFileSync(join(STANDARD_ROOT, "IMPORT-RECEIPT.tsv"), "utf8")
       .trim()
       .split("\n")
       .slice(1);
-    expect(importedRecords).toHaveLength(43_068);
+    expect(importedRecords).toHaveLength(43_309);
     expect(validateStandardAssetCatalog(paths)).toHaveLength(importedRecords.length + 7);
     expect(paths.every((path) => statSync(join(STANDARD_ROOT, path)).size > 0)).toBe(true);
   }, 20_000);
