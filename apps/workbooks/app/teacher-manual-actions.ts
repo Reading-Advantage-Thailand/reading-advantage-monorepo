@@ -8,6 +8,7 @@ import {
   requireWorkbookSession,
   type WorkbookSession,
 } from "./lib/session";
+import { resolveArticleImageUrls } from "./lib/resolve-article-image-urls";
 
 const draftIdSchema = z.string().uuid();
 const draftIdsSchema = z.array(draftIdSchema).min(1).max(50);
@@ -75,9 +76,10 @@ function parseLessonNumber(
  * missing last) then title, and the series metadata comes from the FIRST
  * ordered draft's settings with legacy defaults.
  *
- * Asset-key to URL resolution is intentionally NOT built here: lessons carry
- * legacyUrl provenance which the teacher-manual adapter already renders, and
- * key-only images render without a URL for now (S5 concern).
+ * Asset-key to URL resolution happens here: article images carrying only a
+ * canonical storage key are resolved to public storage URLs before the
+ * compiler runs so key-only images render in the manual; a storage failure on
+ * one image leaves that image URL-less and never fails the compile.
  * @param draftIds Drafts selected in the workspace, in selection order.
  * @param lang Language code for the manual; unknown codes fall back to "en".
  * @returns The compiled manual html, lesson count, and resolved language, or a
@@ -149,7 +151,9 @@ export async function compileTeacherManualAction(
 
   try {
     const { html, lessonCount } = workbooks.compileTeacherManual(
-      orderedDrafts.map((draft) => draft.sourceRecord.content),
+      orderedDrafts.map((draft) =>
+        resolveArticleImageUrls(draft.sourceRecord.content),
+      ),
       seriesName,
       seriesLevel,
       cefrLevel,

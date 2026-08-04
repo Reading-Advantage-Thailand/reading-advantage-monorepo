@@ -10,6 +10,7 @@ import {
   type WorkbookSession,
 } from "../../lib/session";
 import { runInWorkbookTransaction } from "../../../lib/workbook-transaction";
+import { resolveArticleImageUrls } from "../../lib/resolve-article-image-urls";
 
 const draftIdSchema = z.string().uuid();
 const revisionSchema = z.number().int().nonnegative();
@@ -268,7 +269,9 @@ export async function previewDraftAction(
 
   return {
     ok: true,
-    html: workbooks.renderWorkbookContentHtml(draft.sourceRecord.content),
+    html: workbooks.renderWorkbookContentHtml(
+      resolveArticleImageUrls(draft.sourceRecord.content),
+    ),
   };
 }
 

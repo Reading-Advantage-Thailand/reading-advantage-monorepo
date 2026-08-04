@@ -65,6 +65,11 @@ vi.mock("@reading-advantage/domain", async (importOriginal) => {
   };
 });
 
+vi.mock("@reading-advantage/storage", () => ({
+  getStorageUrl: vi.fn(),
+}));
+
+import { getStorageUrl } from "@reading-advantage/storage";
 import {
   getDraftAction,
   previewDraftAction,
@@ -188,6 +193,10 @@ describe("previewDraftAction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(requireWorkbookSession).mockResolvedValue(session);
+    vi.mocked(getStorageUrl).mockReset();
+    vi.mocked(getStorageUrl).mockReturnValue(
+      "https://cdn.example.com/resolved.png",
+    );
   });
 
   it("renders the draft's normalized content as preview html", async () => {
@@ -239,6 +248,60 @@ describe("previewDraftAction", () => {
       message: "invalid draft id",
     });
     expect(repositorySpy.getDraft).not.toHaveBeenCalled();
+  });
+
+  it("resolves key-only article images to storage URLs before rendering", async () => {
+    const draft = makeDraft();
+    draft.sourceRecord.content = {
+      ...draft.sourceRecord.content,
+      articleImages: [{ key: "img/hero.png", position: "hero" }],
+    };
+    repositorySpy.getDraft.mockResolvedValue(draft);
+    vi.mocked(getStorageUrl).mockReturnValue(
+      "https://cdn.example.com/resolved/hero.png",
+    );
+    const renderSpy = vi
+      .spyOn(workbooks, "renderWorkbookContentHtml")
+      .mockReturnValue("<html>preview</html>");
+    try {
+      const result = await previewDraftAction(DRAFT_ID);
+      expect(result.ok).toBe(true);
+      expect(getStorageUrl).toHaveBeenCalledWith("img/hero.png");
+      const rendered =
+        renderSpy.mock.calls[0][0] as workbooks.WorkbookNormalizedContent;
+      expect(rendered.articleImages?.[0]).toMatchObject({
+        key: "img/hero.png",
+        position: "hero",
+        legacyUrl: "https://cdn.example.com/resolved/hero.png",
+      });
+    } finally {
+      renderSpy.mockRestore();
+    }
+  });
+
+  it("still renders the preview when storage URL resolution fails per image", async () => {
+    const draft = makeDraft();
+    draft.sourceRecord.content = {
+      ...draft.sourceRecord.content,
+      articleImages: [{ key: "img/hero.png" }],
+    };
+    repositorySpy.getDraft.mockResolvedValue(draft);
+    vi.mocked(getStorageUrl).mockImplementation(() => {
+      throw new Error("storage down");
+    });
+    const renderSpy = vi
+      .spyOn(workbooks, "renderWorkbookContentHtml")
+      .mockReturnValue("<html>preview</html>");
+    try {
+      const result = await previewDraftAction(DRAFT_ID);
+      expect(result.ok).toBe(true);
+      const rendered =
+        renderSpy.mock.calls[0][0] as workbooks.WorkbookNormalizedContent;
+      expect(rendered.articleImages?.[0]?.legacyUrl).toBeUndefined();
+      expect(rendered.articleImages?.[0]?.key).toBe("img/hero.png");
+    } finally {
+      renderSpy.mockRestore();
+    }
   });
 });
 

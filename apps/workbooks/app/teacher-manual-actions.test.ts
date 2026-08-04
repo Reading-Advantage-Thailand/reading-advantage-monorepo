@@ -32,6 +32,11 @@ vi.mock("@reading-advantage/domain", async (importOriginal) => {
   };
 });
 
+vi.mock("@reading-advantage/storage", () => ({
+  getStorageUrl: vi.fn(),
+}));
+
+import { getStorageUrl } from "@reading-advantage/storage";
 import { compileTeacherManualAction } from "./teacher-manual-actions";
 import {
   requireWorkbookSession,
@@ -64,6 +69,7 @@ function makeDraft(
     lessonNumber: string | undefined;
     title: string;
     settings: workbooks.WorkbookDraftSettings | undefined;
+    articleImages: workbooks.WorkbookArticleImage[];
   }> = {},
 ): workbooks.WorkbookDraft {
   const content = {
@@ -74,6 +80,9 @@ function makeDraft(
     assets: [],
     ...(overrides.lessonNumber !== undefined
       ? { lessonNumber: overrides.lessonNumber }
+      : {}),
+    ...(overrides.articleImages !== undefined
+      ? { articleImages: overrides.articleImages }
       : {}),
   };
   const record: workbooks.WorkbookSourceRecord = {
@@ -172,6 +181,10 @@ describe("compileTeacherManualAction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(requireWorkbookSession).mockResolvedValue(session);
+    vi.mocked(getStorageUrl).mockReset();
+    vi.mocked(getStorageUrl).mockReturnValue(
+      "https://cdn.example.com/resolved.png",
+    );
     vi.mocked(workbooks.compileTeacherManual).mockReturnValue({
       html: "<!DOCTYPE html>",
       lessonCount: 0,
@@ -359,5 +372,72 @@ describe("compileTeacherManualAction", () => {
       code: "COMPILE_ERROR",
       message: "the teacher manual could not be compiled",
     });
+  });
+
+  it("resolves key-only article images to storage URLs before compiling", async () => {
+    repositorySpy.getDraft.mockResolvedValue(
+      makeDraft(DRAFT_1, {
+        articleImages: [{ key: "img/hero.png", position: "hero" }],
+      }),
+    );
+    vi.mocked(getStorageUrl).mockReturnValue(
+      "https://cdn.example.com/resolved/hero.png",
+    );
+
+    const result = await compileTeacherManualAction([DRAFT_1], "en");
+
+    expect(result.ok).toBe(true);
+    expect(getStorageUrl).toHaveBeenCalledWith("img/hero.png");
+    const contents = compiledContentArgs();
+    expect(contents[0].articleImages).toEqual([
+      {
+        key: "img/hero.png",
+        position: "hero",
+        legacyUrl: "https://cdn.example.com/resolved/hero.png",
+      },
+    ]);
+  });
+
+  it("preserves legacyUrl provenance without calling storage", async () => {
+    repositorySpy.getDraft.mockResolvedValue(
+      makeDraft(DRAFT_1, {
+        articleImages: [
+          { legacyUrl: "https://legacy.example.com/hero.png", position: "hero" },
+        ],
+      }),
+    );
+
+    const result = await compileTeacherManualAction([DRAFT_1], "en");
+
+    expect(result.ok).toBe(true);
+    expect(getStorageUrl).not.toHaveBeenCalled();
+    const contents = compiledContentArgs();
+    expect(contents[0].articleImages?.[0]?.legacyUrl).toBe(
+      "https://legacy.example.com/hero.png",
+    );
+  });
+
+  it("still compiles when storage URL resolution fails per image", async () => {
+    repositorySpy.getDraft.mockResolvedValue(
+      makeDraft(DRAFT_1, {
+        articleImages: [
+          { key: "img/broken.png", position: "hero" },
+          { key: "img/ok.png", position: "inline-para-1" },
+        ],
+      }),
+    );
+    vi.mocked(getStorageUrl).mockImplementation((key: string) => {
+      if (key === "img/ok.png") return "https://cdn.example.com/resolved/ok.png";
+      throw new Error("storage down");
+    });
+
+    const result = await compileTeacherManualAction([DRAFT_1], "en");
+
+    expect(result.ok).toBe(true);
+    const contents = compiledContentArgs();
+    expect(contents[0].articleImages?.[0]?.legacyUrl).toBeUndefined();
+    expect(contents[0].articleImages?.[1]?.legacyUrl).toBe(
+      "https://cdn.example.com/resolved/ok.png",
+    );
   });
 });
