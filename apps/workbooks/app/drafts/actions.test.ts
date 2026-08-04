@@ -61,6 +61,8 @@ const session: WorkbookSession = {
   username: "editor",
 };
 
+const DRAFT_ID = "c0a80101-0000-4000-8000-000000000001";
+
 function makeContent() {
   return {
     title: "Draft title",
@@ -85,7 +87,7 @@ function makeDraft(
     content,
   };
   return {
-    draftId: "draft-1",
+    draftId: DRAFT_ID,
     tenantId: "tenant-1",
     status: "in_review",
     sourceRecord: record,
@@ -102,14 +104,14 @@ function makeEdition(
 ): workbooks.WorkbookEdition {
   return {
     editionId: "edition-1",
-    draftId: "draft-1",
+    draftId: DRAFT_ID,
     tenantId: "tenant-1",
     version: 1,
     snapshot: makeDraft().sourceRecord,
     contentHash: makeDraft().sourceRecord.identity.contentHash,
     publishedAt: "2026-08-04T00:00:00.000Z",
     publishedBy: "actor-1",
-    idempotencyKey: "tenant-1:draft-1:3",
+    idempotencyKey: `tenant-1:${DRAFT_ID}:3`,
     supersededByEditionId: null,
     revokedAt: null,
     ...overrides,
@@ -133,23 +135,23 @@ describe("publishDraftAction", () => {
       makeDraft({ status: "published", revision: 4 }),
     );
 
-    const result = await publishDraftAction("draft-1", 3);
+    const result = await publishDraftAction(DRAFT_ID, 3);
 
     expect(result).toEqual({ ok: true, editionId: expect.any(String), version: 1 });
     expect(workbooks.createDrizzleEditionRepository).toHaveBeenCalledWith(
       "tx-handle",
     );
-    expect(repositorySpy.getDraft).toHaveBeenCalledWith("tenant-1", "draft-1");
+    expect(repositorySpy.getDraft).toHaveBeenCalledWith("tenant-1", DRAFT_ID);
     expect(repositorySpy.updateDraftStatus).toHaveBeenCalledWith(
       "tenant-1",
-      "draft-1",
+      DRAFT_ID,
       "published",
       3,
     );
     expect(repositorySpy.recordEvent).toHaveBeenCalledWith(
       expect.objectContaining({
         tenantId: "tenant-1",
-        draftId: "draft-1",
+        draftId: DRAFT_ID,
         editionId: expect.any(String),
         eventType: "published",
         actorId: "actor-1",
@@ -164,7 +166,7 @@ describe("publishDraftAction", () => {
         "workbooks access requires an authorized session",
       ),
     );
-    const result = await publishDraftAction("draft-1", 3);
+    const result = await publishDraftAction(DRAFT_ID, 3);
     expect(result).toEqual({
       ok: false,
       code: "UNAUTHORIZED",
@@ -178,12 +180,12 @@ describe("publishDraftAction", () => {
     const existing = makeEdition({ editionId: "edition-1", version: 2 });
     repositorySpy.findEditionByIdempotencyKey.mockResolvedValue(existing);
 
-    const result = await publishDraftAction("draft-1", 3);
+    const result = await publishDraftAction(DRAFT_ID, 3);
 
     expect(result).toEqual({ ok: true, editionId: "edition-1", version: 2 });
     expect(repositorySpy.findEditionByIdempotencyKey).toHaveBeenCalledWith(
       "tenant-1",
-      "tenant-1:draft-1:3",
+      `tenant-1:${DRAFT_ID}:3`,
     );
     expect(repositorySpy.getDraft).not.toHaveBeenCalled();
     expect(repositorySpy.appendEdition).not.toHaveBeenCalled();
@@ -195,7 +197,7 @@ describe("publishDraftAction", () => {
     repositorySpy.findEditionByIdempotencyKey.mockResolvedValue(null);
     repositorySpy.getDraft.mockResolvedValue(null);
 
-    const result = await publishDraftAction("draft-1", 3);
+    const result = await publishDraftAction(DRAFT_ID, 3);
 
     expect(result).toEqual({
       ok: false,
@@ -211,7 +213,7 @@ describe("publishDraftAction", () => {
     repositorySpy.findEditionByIdempotencyKey.mockResolvedValue(null);
     repositorySpy.getDraft.mockResolvedValue(makeDraft({ revision: 4 }));
 
-    const result = await publishDraftAction("draft-1", 3);
+    const result = await publishDraftAction(DRAFT_ID, 3);
 
     expect(result.ok).toBe(false);
     if (!result.ok) {
@@ -228,13 +230,28 @@ describe("publishDraftAction", () => {
     repositorySpy.findEditionByIdempotencyKey.mockResolvedValue(null);
     repositorySpy.getDraft.mockResolvedValue(makeDraft({ status: "draft" }));
 
-    const result = await publishDraftAction("draft-1", 3);
+    const result = await publishDraftAction(DRAFT_ID, 3);
 
     expect(result).toEqual({
       ok: false,
       code: "ILLEGAL_STATE_TRANSITION",
       message: 'Cannot transition workbook from "draft" to "published".',
     });
+    expect(repositorySpy.appendEdition).not.toHaveBeenCalled();
+    expect(repositorySpy.updateDraftStatus).not.toHaveBeenCalled();
+    expect(repositorySpy.recordEvent).not.toHaveBeenCalled();
+  });
+
+  it("rejects a non-UUID draft id with a structured VALIDATION_ERROR without touching the repository", async () => {
+    const result = await publishDraftAction("not-a-uuid", 3);
+
+    expect(result).toEqual({
+      ok: false,
+      code: "VALIDATION_ERROR",
+      message: "invalid draft id",
+    });
+    expect(workbooks.createDrizzleEditionRepository).not.toHaveBeenCalled();
+    expect(repositorySpy.getDraft).not.toHaveBeenCalled();
     expect(repositorySpy.appendEdition).not.toHaveBeenCalled();
     expect(repositorySpy.updateDraftStatus).not.toHaveBeenCalled();
     expect(repositorySpy.recordEvent).not.toHaveBeenCalled();

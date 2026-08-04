@@ -1,6 +1,7 @@
 "use client";
 
 import type { ComprehensionQuestionsEditorProps } from "./types";
+import { useJsonField } from "./use-json-field";
 
 /**
  * Edits the comprehension questions of a workbook lesson as a JSON array of
@@ -8,6 +9,9 @@ import type { ComprehensionQuestionsEditorProps } from "./types";
  * hint fields have no carrier in the normalized draft content contract, so
  * they are intentionally not rendered in this phase.
  *
+ * The JSON field keeps its raw text in local state so intermediate invalid
+ * fragments remain typeable; only successful parses propagate upward, and
+ * invalid input surfaces an inline parse error.
  * @param props - Current question values plus an onChange callback; see ComprehensionQuestionsEditorProps.
  * @returns The Comprehension Questions section.
  */
@@ -15,17 +19,15 @@ export function ComprehensionQuestionsEditor({
   comprehension_questions,
   onChange,
 }: ComprehensionQuestionsEditorProps) {
-  const handleQuestionsChange = (value: string) => {
-    try {
-      const parsed: unknown = JSON.parse(value);
+  const questionsField = useJsonField(
+    comprehension_questions,
+    (value) => JSON.stringify(value ?? []),
+    (parsed) =>
       onChange(
         "comprehension_questions",
         parsed as { number: number; question: string; options: string[] }[],
-      );
-    } catch {
-      // Invalid JSON is not propagated; the editor keeps its last valid value.
-    }
-  };
+      ),
+  );
 
   return (
     <section aria-labelledby="comprehension-questions-heading">
@@ -38,13 +40,19 @@ export function ComprehensionQuestionsEditor({
         <label htmlFor="comprehension_questions">Questions</label>
         <textarea
           id="comprehension_questions"
-          value={JSON.stringify(comprehension_questions || [])}
-          onChange={(event) => handleQuestionsChange(event.target.value)}
+          value={questionsField.value}
+          onChange={(event) => questionsField.handleChange(event.target.value)}
           rows={8}
           className="font-mono"
           placeholder='[{"number": 1, "question": "...", "options": ["A", "B", "C"]}]'
+          aria-describedby="comprehension_questions-hint"
         />
-        <p>Enter as JSON array</p>
+        {questionsField.error && (
+          <p id="comprehension_questions-error" role="alert">
+            {questionsField.error}
+          </p>
+        )}
+        <p id="comprehension_questions-hint">Enter as JSON array</p>
       </div>
     </section>
   );

@@ -47,4 +47,35 @@ describe("ComprehensionQuestionsEditor", () => {
     });
     expect(onChange).not.toHaveBeenCalled();
   });
+
+  it("keeps the typed text while an intermediate JSON fragment is invalid", () => {
+    render(<ComprehensionQuestionsEditor onChange={() => {}} />);
+    const textarea = screen.getByLabelText(
+      /^Questions$/i,
+    ) as HTMLTextAreaElement;
+    fireEvent.change(textarea, { target: { value: '[{"number": ' } });
+    expect(textarea.value).toBe('[{"number": ');
+  });
+
+  it("shows an inline parse error and does not propagate invalid JSON", () => {
+    const onChange = vi.fn();
+    render(<ComprehensionQuestionsEditor onChange={onChange} />);
+    fireEvent.change(screen.getByLabelText(/^Questions$/i), {
+      target: { value: "not json" },
+    });
+    expect(onChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("alert").textContent).toContain("Invalid JSON");
+  });
+
+  it("links the field hint to its control through aria-describedby", () => {
+    render(<ComprehensionQuestionsEditor onChange={() => {}} />);
+    const control = document.getElementById(
+      "comprehension_questions",
+    ) as HTMLTextAreaElement;
+    const describedBy = control.getAttribute("aria-describedby");
+    expect(describedBy).toBeTruthy();
+    const hint = document.getElementById(describedBy as string);
+    expect(hint).toBeTruthy();
+    expect(hint?.textContent).toMatch(/JSON array/);
+  });
 });

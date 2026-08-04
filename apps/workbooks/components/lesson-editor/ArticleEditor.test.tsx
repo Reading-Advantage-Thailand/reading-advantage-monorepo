@@ -39,4 +39,35 @@ describe("ArticleEditor", () => {
     });
     expect(onChange).not.toHaveBeenCalled();
   });
+
+  it("keeps the typed text while an intermediate JSON fragment is invalid", () => {
+    render(<ArticleEditor onChange={() => {}} />);
+    const textarea = screen.getByLabelText(
+      /Article Paragraphs/i,
+    ) as HTMLTextAreaElement;
+    fireEvent.change(textarea, { target: { value: '[{"number": ' } });
+    expect(textarea.value).toBe('[{"number": ');
+  });
+
+  it("shows an inline parse error and does not propagate invalid JSON", () => {
+    const onChange = vi.fn();
+    render(<ArticleEditor onChange={onChange} />);
+    fireEvent.change(screen.getByLabelText(/Article Paragraphs/i), {
+      target: { value: "not json" },
+    });
+    expect(onChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("alert").textContent).toContain("Invalid JSON");
+  });
+
+  it("links the field hint to its control through aria-describedby", () => {
+    render(<ArticleEditor onChange={() => {}} />);
+    const control = document.getElementById(
+      "article_paragraphs",
+    ) as HTMLTextAreaElement;
+    const describedBy = control.getAttribute("aria-describedby");
+    expect(describedBy).toBeTruthy();
+    const hint = document.getElementById(describedBy as string);
+    expect(hint).toBeTruthy();
+    expect(hint?.textContent).toMatch(/JSON array/);
+  });
 });
