@@ -170,6 +170,24 @@ describe("updateWorkbookDraftSettings / success", () => {
     expect(fake.saved?.sourceRecord.settings).toEqual(SETTINGS);
     expect(fake.saved?.revision).toBe(4);
   });
+
+  it("reads the clock exactly once and persists the validated timestamp", async () => {
+    const fake = createFakeRepository(createDraft());
+    let clockCalls = 0;
+    const deps: UpdateWorkbookDraftSettingsDependencies = {
+      repository: fake.repository,
+      clock: {
+        now: () => {
+          clockCalls += 1;
+          return FIXED;
+        },
+      },
+    };
+    const updated = await updateWorkbookDraftSettings(BASE, deps);
+    expect(clockCalls).toBe(1);
+    expect(updated.updatedAt).toBe(FIXED);
+    expect(fake.saved?.updatedAt).toBe(FIXED);
+  });
 });
 
 describe("updateWorkbookDraftSettings / failures", () => {

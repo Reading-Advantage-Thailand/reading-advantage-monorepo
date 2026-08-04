@@ -111,11 +111,13 @@ export async function updateWorkbookDraftSettings(
     );
   }
 
+  const now = deps.clock.now();
+
   const updated: WorkbookDraft = {
     ...existing,
     sourceRecord: parsedRecord.data,
     revision: existing.revision + 1,
-    updatedAt: deps.clock.now(),
+    updatedAt: now,
   };
   const parsedDraft = workbookDraftSchema.safeParse(updated);
   if (!parsedDraft.success) {
@@ -131,6 +133,6 @@ export async function updateWorkbookDraftSettings(
     draftId,
     expectedRevision,
     settings,
-    deps.clock.now(),
+    now,
   );
 }

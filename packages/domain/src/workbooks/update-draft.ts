@@ -106,6 +106,9 @@ export async function updateWorkbookDraft(
       contentHash: computeWorkbookDigest(content),
     },
     content,
+    ...(existing.sourceRecord.settings !== undefined
+      ? { settings: existing.sourceRecord.settings }
+      : {}),
   };
   const parsedRecord = workbookSourceRecordSchema.safeParse(sourceRecord);
   if (!parsedRecord.success) {

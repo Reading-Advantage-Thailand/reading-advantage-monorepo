@@ -167,6 +167,29 @@ describe("updateWorkbookDraft / success", () => {
     expect(fake.saved?.sourceRecord.content.title).toBe("Updated title");
     expect(fake.saved?.revision).toBe(4);
   });
+
+  it("preserves existing settings on the source record", async () => {
+    const settings = {
+      seriesName: "Reading Advantage",
+      levelNumber: "Level 3",
+      cefrLevel: "B1",
+      type: "primary",
+    } as const;
+    const existing = createDraft({
+      sourceRecord: {
+        ...createDraft().sourceRecord,
+        settings: { ...settings },
+      },
+    });
+    const fake = createFakeRepository(existing);
+    const updated = await updateWorkbookDraft(BASE, createDeps(fake.repository));
+    expect(updated.sourceRecord.settings).toEqual(settings);
+    expect(fake.saved?.sourceRecord.settings).toEqual(settings);
+    expect(updated.sourceRecord.content.title).toBe("Updated title");
+    expect(updated.sourceRecord.identity.contentHash).toBe(
+      computeWorkbookDigest(createContent()),
+    );
+  });
 });
 
 describe("updateWorkbookDraft / failures", () => {
