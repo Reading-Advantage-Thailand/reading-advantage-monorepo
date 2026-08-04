@@ -283,6 +283,7 @@ program, priority order when picking the next track is:
     Owns only residual cross-host work that no vertical cohort owns after cohort outcomes are accepted or explicitly blocked. Residual inventory closed after cohort option-1 terminals; formal + retirement package bound to the live-path-deletion authority present.
 
 - [~] **Track: APK Kit Defect Remediation** *Link: [./tracks/apk_kit_defect_remediation_20260803/](./tracks/apk_kit_defect_remediation_20260803/)*
+- [x] **Track: APK Audio Cohort Release Acceptance** *Link: [./tracks/apk_audio_cohort_release_acceptance_20260804/](./tracks/apk_audio_cohort_release_acceptance_20260804/)*
   Remediate all 17 defects (3 High, 6 Medium, 8 Low) found by the independent
   `claude -p` review of `packages/advantage-play-kit`, TDD per finding, with a
   final independent re-review gate.
