@@ -44,17 +44,17 @@ _Story ref: spec.md#story-s0_
 ## Phase S1: Freeze the `multiplayer.v1` contract in `game-contracts`
 _Story ref: spec.md#story-s1_
 
-- [ ] Task: Write Red tests for the protocol contract
-    - [ ] Add `packages/game-contracts/src/__tests__/multiplayer.test.ts` covering accept and reject cases for every message kind
-    - [ ] Assert malformed payloads reject rather than pass through, closing the `deserializeMessage` cast gap
-    - [ ] Assert version negotiation rejects an unknown protocol version
-- [ ] Task: Define the contract
-    - [ ] Add `packages/game-contracts/src/multiplayer.ts` with zod schemas for room, player, session, round, submission, ranking, and error envelope
-    - [ ] Include explicit protocol-version negotiation
-    - [ ] Reserve shared-world message kinds (input frame, world snapshot) in the same envelope so S6 extends rather than forks
-    - [ ] Export from `packages/game-contracts/src/index.ts`
-- [ ] Task: Verify against the harvested reference
-    - [ ] Confirm every Tutor Advantage race semantic recorded in S0 is expressible in the frozen contract
+- [x] Task: Write Red tests for the protocol contract
+    - [x] Add `packages/game-contracts/src/__tests__/multiplayer.test.ts` covering accept and reject cases for every message kind — 55 tests, Red-first (all 55 failed `parseMultiplayerMessage is not a function` before implementation)
+    - [x] Assert malformed payloads reject rather than pass through, closing the `deserializeMessage` cast gap — malformed envelopes, wrong types, unknown kinds, and `v !== 1` all throw `ZodError`; tests also prove no kind accepts a client-asserted `userId` or a submission carrying `score`
+    - [x] Assert version negotiation rejects an unknown protocol version — `client_hello` with any `v ≠ 1` yields the `unsupported_version` error shape carrying `supportedVersions`
+- [x] Task: Define the contract
+    - [x] Add `packages/game-contracts/src/multiplayer.ts` with zod schemas for room, player, session, round, submission, ranking, and error envelope — 12 message kinds on a `{ v: 1, type, payload }` envelope discriminated on `type`; identity server-issued only (`join_room` carries just `{ roomCode, displayName }`); reconnect is a `Player.connection` state flip, no rejoin kind; round lifecycle server→client only, `round_start` carries `seed` + `targetSequence`
+    - [x] Include explicit protocol-version negotiation
+    - [x] Reserve shared-world message kinds (input frame, world snapshot) in the same envelope so S6 extends rather than forks — `input_frame`/`world_snapshot` with intentionally generic payloads
+    - [x] Export from `packages/game-contracts/src/index.ts`
+- [x] Task: Verify against the harvested reference
+    - [x] Confirm every Tutor Advantage race semantic recorded in S0 is expressible in the frozen contract — mapping table recorded in the implementation report: harvest items 8–12 and audit items 1–7 all expressed. Six flags are enforcement-side (entitlement gate, capacity counting, kick persistence, per-player round termination, broadcast cadence, tenant binding) and belong to S4/S6 service logic by design, not to message shape; recorded here so S4 does not mistake them for contract gaps. Orchestrator re-ran the gate: 8 files / 178 tests green; the package `check-types` failure is a pre-existing baseline in `dragon-rider-host-proof-binding.ts` (file untouched, error reproduces at HEAD)
 - [ ] Task: Measure - User Manual Verification 'Phase S1: Freeze the multiplayer.v1 contract in game-contracts' (Protocol in workflow.md)
 
 ## Phase S2: Make the Wizard vs Zombie simulation deterministic

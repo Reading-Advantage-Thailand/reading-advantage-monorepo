@@ -74,3 +74,6 @@ export type {
   ArchitectureSourceFile,
   ArchitectureViolation,
 } from "./architecture.js";
+
+/** Public frozen multiplayer.v1 wire contract. */
+export * from "./multiplayer.js";
