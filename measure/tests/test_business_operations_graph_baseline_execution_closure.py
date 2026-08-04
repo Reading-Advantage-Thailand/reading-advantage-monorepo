@@ -10123,6 +10123,296 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         finally:
             temporary.cleanup()
 
+    def _h7_directory_enumeration_fixture(self) -> tuple[Any, dict[str, Any], dict[str, Any], Callable[[list[dict[str, Any]]], dict[str, Any]], list[dict[str, Any]], type[BaseException], list[str], str]:
+        """Builds one sealed integration whose declared directory-enumeration set mirrors the discovery artifact.
+
+        @returns The runner module, the sealed integration, its read-set contract, a raw-trace-receipt factory,
+            the six valid raw events, the helper error type, the declared directory-enumeration paths, and the
+            standard asset root.
+        @throws AssertionError When the fixture is not a real sealed direct-runtime integration.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        build_integration = getattr(podman, "build_direct_command_runtime_runner_integration_v1", None)
+        validate_integration = getattr(podman, "validate_direct_command_runtime_runner_integration_v1", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(callable(build_integration), "V3_DIRECT_RUNTIME_INTEGRATION_BUILDER_MISSING")
+        self.assertTrue(callable(validate_integration), "V3_DIRECT_RUNTIME_INTEGRATION_VALIDATOR_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+
+        def baseline_identity(path: str, contents: bytes) -> dict[str, Any]:
+            """Builds one exact baseline-Git identity for the sealed fixture.
+
+            @param path The fixture's workspace-relative source path.
+            @param contents The immutable fixture bytes.
+            @returns One baseline-Git identity accepted by the runtime integration builder.
+            """
+            blob = b"blob " + str(len(contents)).encode("ascii") + b"\0" + contents
+            return {
+                "path": path,
+                "sha256": _sha256(contents),
+                "size": len(contents),
+                "mode": "100644",
+                "origin": "BASELINE_GIT_BLOB",
+                "baselineCommit": "a" * 40,
+                "gitBlobSha1": hashlib.sha1(blob).hexdigest(),
+                "inclusion": "MATERIALIZE_EXACT_BASELINE_BYTES",
+            }
+
+        package_root = "packages/h7-fixture-directory-enumeration"
+        generator_path = f"{package_root}/scripts/generate-runtime.mjs"
+        source_path = f"{package_root}/assets/standard/input.txt"
+        standard_root = f"{package_root}/assets/standard"
+        generator_bytes = b"export const fixture = 'directory-enumeration';\n"
+        source_bytes = b"directory-enumeration-source\n"
+        generator_identity = baseline_identity(generator_path, generator_bytes)
+        source_identity = baseline_identity(source_path, source_bytes)
+        baseline_read_set = sorted(
+            [generator_identity, source_identity],
+            key=lambda item: item["path"],
+        )
+        derived_read = {
+            "path": f"{package_root}/dist/assets/index.js",
+            "sha256": "b" * 64,
+            "size": 1,
+            "origin": "DERIVED_BUILD_OUTPUT",
+            "producer": {
+                "kind": "PACKAGE_SCRIPT_PREREQUISITE_BUILD",
+                "scriptName": "fixture-build",
+                "scriptSegment": "pnpm build",
+                "receipt": {
+                    "path": "fixture-h7-build-receipt.json",
+                    "sha256": "c" * 64,
+                    "size": 1,
+                },
+            },
+        }
+        resource_budget = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-asset-resource-budget",
+            "frozenArchive": _reference(V2_ARCHIVE),
+            "sourceCeiling": {
+                "path": standard_root,
+                "regularFiles": 2,
+                "apparentBytes": len(generator_bytes) + len(source_bytes),
+                "allocatedBytes": len(generator_bytes) + len(source_bytes),
+            },
+            "reservations": {
+                "baselineGitMaterializationBytes": 1,
+                "candidateCowBytes": 1,
+                "archiveSupplementBytes": 1,
+                "derivedOutputBytes": 1,
+                "metadataBytes": 1,
+                "minimumHeadroomBytes": 1,
+            },
+            "requiredAvailableBytes": 6,
+            "availableBytes": 6,
+            "decision": "PASS",
+        }
+        output_path = f"{standard_root}/standard-pack-release.json"
+        directory_enumerations = [standard_root, f"{standard_root}/audio"]
+        read_set = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-read-set",
+            "trigger": {
+                "logicalArgv": ["pnpm", "--filter", "@h7/fixture-directory-enumeration", "fixture-build"],
+                "package": "@h7/fixture-directory-enumeration",
+                "manifest": {
+                    "path": f"{package_root}/package.json",
+                    "sha256": "d" * 64,
+                    "size": 1,
+                },
+            },
+            "baselineReadSet": baseline_read_set,
+            "derivedBuildReadSet": [derived_read],
+            "outputPaths": [output_path],
+            "directoryEnumerations": directory_enumerations,
+            "preflightQuota": {
+                "maxEntries": len(baseline_read_set),
+                "maxBytes": sum(item["size"] for item in baseline_read_set),
+                "observedEntries": len(baseline_read_set),
+                "observedBytes": sum(item["size"] for item in baseline_read_set),
+            },
+            "resourceBudget": resource_budget,
+            "discovery": {
+                "kind": "BASELINE_GIT_INSTRUMENTED_TRACE",
+                "script": generator_identity,
+                "root": standard_root,
+                "directoryListingCount": len(directory_enumerations),
+            },
+        }
+        source_packet = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-baseline-git-source-packet",
+            "source": "GIT_OBJECT_DATABASE_ONLY",
+            "baselineCommit": "a" * 40,
+            "tree": {"gitTreeSha1": "e" * 40},
+            "baselineReadSet": baseline_read_set,
+            "objects": [
+                {**source_identity, "contentBase64": base64.b64encode(source_bytes).decode("ascii")},
+                {**generator_identity, "contentBase64": base64.b64encode(generator_bytes).decode("ascii")},
+            ],
+        }
+        source_packet["packetSha256"] = podman._direct_runtime_packet_digest_v1(source_packet)
+        sealed_integration = build_integration(
+            read_set,
+            source_packet,
+            {
+                "id": "direct-runtime-detached-runner-v1",
+                "nonceSha256": "f" * 64,
+                "reachedStage": "build-advantage-play-kit-for-runtime",
+                "executionTrace": None,
+            },
+            resource_budget,
+        )
+        validate_integration(sealed_integration)
+        contract = sealed_integration["readSetContract"]
+        nonce = sealed_integration["tracePolicy"]["nonce"]
+        packet_sha256 = sealed_integration["sourcePacket"]["packetSha256"]
+        generator_script = sealed_integration["tracePolicy"]["generatorResolvedPath"]
+        generator_pid = 1234
+
+        def raw_event(ordinal: int, kind: str, value: dict[str, Any]) -> dict[str, Any]:
+            """Builds one raw in-container trace event bound to the sealed fixture.
+
+            @param ordinal The exact event sequence number.
+            @param kind The event kind emitted by the in-container tracer.
+            @param value The event value emitted by the in-container tracer.
+            @returns The raw event accepted by the trace-envelope capture.
+            """
+            return {
+                "nonce": nonce,
+                "ordinal": ordinal,
+                "kind": kind,
+                "value": copy.deepcopy(value),
+                "tracer": "direct-runtime-tracer",
+                "packetSha256": packet_sha256,
+                "rawEventArtifact": "direct-runtime-raw-events.jsonl",
+                "generatorPid": generator_pid,
+                "generatorScript": generator_script,
+            }
+
+        events = [
+            raw_event(0, "BASELINE_READ", generator_identity),
+            raw_event(1, "DIRECTORY_ENUMERATION", {"path": standard_root}),
+            raw_event(2, "BASELINE_READ", source_identity),
+            raw_event(3, "WRITE", {"path": output_path, "kind": "DERIVED_OUTPUT"}),
+            raw_event(4, "DERIVED_BUILD_READ", derived_read),
+            raw_event(5, "DIRECTORY_ENUMERATION", {"path": f"{standard_root}/audio"}),
+        ]
+
+        def make_receipt(trace_events: list[dict[str, Any]]) -> dict[str, Any]:
+            """Builds one in-container raw trace receipt around caller-supplied events.
+
+            @param trace_events The ordered raw events emitted inside the container.
+            @returns The raw trace receipt accepted by the envelope capture.
+            """
+            return {
+                "schemaVersion": 1,
+                "kind": "direct-command-runtime-in-container-trace-receipt",
+                "evidence": "IN_CONTAINER_TRACER_RAW_ARTIFACT_ONLY",
+                "tracer": "direct-runtime-tracer",
+                "rawEventArtifact": "direct-runtime-raw-events.jsonl",
+                "nonce": nonce,
+                "packetSha256": packet_sha256,
+                "generatorPid": generator_pid,
+                "generatorScript": generator_script,
+                "truncated": False,
+                "events": copy.deepcopy(trace_events),
+                "rawArtifact": {"sha256": "e" * 64, "size": 1},
+            }
+
+        return (podman, sealed_integration, contract, make_receipt, events, error_type, directory_enumerations, standard_root)
+
+    def test_directory_enumeration_events_parse_and_validate_against_declared_set(self) -> None:
+        """Requires DIRECTORY_ENUMERATION events matching the declared set to parse and validate exactly.
+
+        @returns Nothing; real capture, parse, and validation use the real runner seams and the sealed fixture.
+        """
+        (podman, sealed_integration, contract, make_receipt, events, error_type, directory_enumerations, standard_root) = self._h7_directory_enumeration_fixture()
+        capture_envelope = getattr(podman, "capture_direct_command_runtime_in_container_trace_v1", None)
+        parse_events = getattr(podman, "parse_direct_command_runtime_trace_events_v1", None)
+        validate_execution_trace = getattr(podman, "validate_direct_command_runtime_execution_trace_v1", None)
+        self.assertEqual(
+            contract["directoryEnumerations"],
+            directory_enumerations,
+            "V3_DIRECT_RUNTIME_READ_SET_CONTRACT_OMITS_DECLARED_DIRECTORY_ENUMERATIONS",
+        )
+        envelope = capture_envelope(make_receipt(events), sealed_integration)
+        trace = parse_events(envelope, sealed_integration)
+        self.assertEqual(trace["directoryEnumerations"], [{"path": path} for path in directory_enumerations])
+        validate_execution_trace(contract, trace)
+        self.assertEqual(trace, {
+            "baselineReads": sealed_integration["readSet"]["baselineReadSet"],
+            "derivedBuildReads": sealed_integration["readSet"]["derivedBuildReadSet"],
+            "writes": [{"path": sealed_integration["readSet"]["outputPaths"][0], "kind": "DERIVED_OUTPUT"}],
+            "directoryEnumerations": [{"path": path} for path in directory_enumerations],
+        })
+        self.assertFalse(V3_DIR.exists())
+
+    def test_undeclared_directory_enumeration_is_rejected_by_trace_validation(self) -> None:
+        """Requires a traced directory enumeration outside the declared set to fail the exact bijection.
+
+        @returns Nothing; the real parser accepts the kind and the real validator rejects the undeclared path.
+        """
+        (podman, sealed_integration, contract, make_receipt, events, error_type, directory_enumerations, standard_root) = self._h7_directory_enumeration_fixture()
+        capture_envelope = getattr(podman, "capture_direct_command_runtime_in_container_trace_v1", None)
+        parse_events = getattr(podman, "parse_direct_command_runtime_trace_events_v1", None)
+        undeclared_events = copy.deepcopy(events)
+        undeclared_events[1]["value"] = {"path": f"{standard_root}/UNDECLARED-dir"}
+        envelope = capture_envelope(make_receipt(undeclared_events), sealed_integration)
+        with self.assertRaisesRegex(error_type, r"^V3_DIRECT_RUNTIME_READ_SET_EXECUTION_TRACE_BIJECTION_FAILED$"):
+            parse_events(envelope, sealed_integration)
+        self.assertFalse(V3_DIR.exists())
+
+    def test_unknown_trace_event_kind_is_still_rejected_by_parser(self) -> None:
+        """Requires an unknown event kind to keep failing the parser after the DIRECTORY_ENUMERATION widening.
+
+        @returns Nothing; the real parser accepts exactly the four declared kinds and rejects any other kind.
+        """
+        (podman, sealed_integration, contract, make_receipt, events, error_type, directory_enumerations, standard_root) = self._h7_directory_enumeration_fixture()
+        capture_envelope = getattr(podman, "capture_direct_command_runtime_in_container_trace_v1", None)
+        parse_events = getattr(podman, "parse_direct_command_runtime_trace_events_v1", None)
+        envelope = capture_envelope(make_receipt([{
+            "nonce": sealed_integration["tracePolicy"]["nonce"],
+            "ordinal": 0,
+            "kind": "NOT_A_DIRECTORY_KIND",
+            "value": {"path": f"{standard_root}/UNKNOWN.bin"},
+            "tracer": "direct-runtime-tracer",
+            "packetSha256": sealed_integration["sourcePacket"]["packetSha256"],
+            "rawEventArtifact": "direct-runtime-raw-events.jsonl",
+            "generatorPid": 1234,
+            "generatorScript": sealed_integration["tracePolicy"]["generatorResolvedPath"],
+        }]), sealed_integration)
+        with self.assertRaisesRegex(error_type, r"^V3_DIRECT_RUNTIME_RUNNER_INTEGRATION_TRACE_EVENT_INVALID$"):
+            parse_events(envelope, sealed_integration)
+        self.assertFalse(V3_DIR.exists())
+
+    def test_duplicate_directory_enumeration_is_rejected_by_parser(self) -> None:
+        """Requires a repeated DIRECTORY_ENUMERATION kind-and-path pair to fail as a trace duplicate.
+
+        @returns Nothing; the real parser keeps the exact duplicate discipline of the other event kinds.
+        """
+        (podman, sealed_integration, contract, make_receipt, events, error_type, directory_enumerations, standard_root) = self._h7_directory_enumeration_fixture()
+        capture_envelope = getattr(podman, "capture_direct_command_runtime_in_container_trace_v1", None)
+        parse_events = getattr(podman, "parse_direct_command_runtime_trace_events_v1", None)
+        first = {
+            "nonce": sealed_integration["tracePolicy"]["nonce"],
+            "ordinal": 0,
+            "kind": "DIRECTORY_ENUMERATION",
+            "value": {"path": standard_root},
+            "tracer": "direct-runtime-tracer",
+            "packetSha256": sealed_integration["sourcePacket"]["packetSha256"],
+            "rawEventArtifact": "direct-runtime-raw-events.jsonl",
+            "generatorPid": 1234,
+            "generatorScript": sealed_integration["tracePolicy"]["generatorResolvedPath"],
+        }
+        second = {**copy.deepcopy(first), "ordinal": 1}
+        envelope = capture_envelope(make_receipt([first, second]), sealed_integration)
+        with self.assertRaisesRegex(error_type, r"^V3_DIRECT_RUNTIME_RUNNER_INTEGRATION_TRACE_DUPLICATE$"):
+            parse_events(envelope, sealed_integration)
+        self.assertFalse(V3_DIR.exists())
+
 
 if __name__ == "__main__":
     unittest.main()
