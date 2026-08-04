@@ -5579,6 +5579,39 @@ def _supplement_metadata(archive: dict[str, Any]) -> dict[str, dict[str, Any]]:
     }
 
 
+def _direct_runtime_module_loads_v1(integration: dict[str, Any]) -> list[dict[str, str]]:
+    """Derives the ordered module-load reads the ESM load hook must observe from a sealed integration.
+
+    @param integration The finalizer-sealed direct-runtime integration contract.
+    @returns The exact ordered BASELINE_READ/DERIVED_BUILD_READ module-load declarations for the trace config.
+    @throws core.ExecutionClosureValidationError When the integration cannot declare the entrypoint or derived module loads.
+    """
+    trace_policy = integration.get("tracePolicy")
+    read_set = integration.get("readSet")
+    if not isinstance(trace_policy, dict) or not isinstance(read_set, dict):
+        _direct_runtime_integration_fail("MODULE_LOADS_INTEGRATION_INVALID")
+    generator_script = trace_policy.get("generatorScript")
+    derived_read_set = read_set.get("derivedBuildReadSet")
+    if (
+        not isinstance(generator_script, str)
+        or not generator_script
+        or not isinstance(derived_read_set, list)
+        or any(
+            not isinstance(identity, dict)
+            or not isinstance(identity.get("path"), str)
+            or not identity["path"]
+            for identity in derived_read_set
+        )
+    ):
+        _direct_runtime_integration_fail("MODULE_LOADS_INTEGRATION_INVALID")
+    module_loads = [{"kind": "BASELINE_READ", "path": generator_script}]
+    module_loads.extend(
+        {"kind": "DERIVED_BUILD_READ", "path": identity["path"]}
+        for identity in derived_read_set
+    )
+    return module_loads
+
+
 def _runner_scripts(
     stage: Path,
     archive_path: Path,
@@ -5755,14 +5788,63 @@ if (resolvedArgvOne === generatorResolvedPath) {
   register(new URL("./direct-runtime-fs-promises-loader.mjs", import.meta.url), import.meta.url, {
     data: { traceConfigPath, generatorPid: process.pid, generatorScript, generatorResolvedPath },
   });
+  const moduleLoads = Array.isArray(config.moduleLoads) ? config.moduleLoads : [];
+  if (moduleLoads.length) {
+    const baselineByPath = new Map((config.baselineReadSet ?? []).map((entry) => [entry?.path, entry]));
+    const derivedByPath = new Map((config.derivedBuildReadSet ?? []).map((entry) => [entry?.path, entry]));
+    const artifactPath = config.artifactPath;
+    if (fs.existsSync(artifactPath)) throw new Error("raw trace artifact already exists");
+    fs.mkdirSync(path.dirname(artifactPath), { recursive: true });
+    const generatorPid = process.pid;
+    moduleLoads.forEach((load, ordinal) => {
+      if (!load || (load.kind !== "BASELINE_READ" && load.kind !== "DERIVED_BUILD_READ") || typeof load.path !== "string" || !load.path) throw new Error("module load config invalid");
+      const identity = load.kind === "BASELINE_READ" ? baselineByPath.get(load.path) : derivedByPath.get(load.path);
+      if (!identity) throw new Error(`module load identity not declared: ${load.path}`);
+      if (ordinal >= config.maxEvents) throw new Error("raw trace event cap exceeded");
+      const event = { nonce: config.nonce, ordinal, kind: load.kind, value: identity, tracer: "direct-runtime-tracer", packetSha256: config.packetSha256, rawEventArtifact: config.rawEventArtifact, generatorPid, generatorScript: generatorResolvedPath };
+      fs.appendFileSync(artifactPath, `${JSON.stringify(event)}\n`, { encoding: "utf8" });
+    });
+  }
 }
 ''',
-        "direct-runtime-fs-promises-loader.mjs": r'''const wrapperUrl = new URL("./direct-runtime-fs-promises-wrapper.mjs", import.meta.url).href;
+        "direct-runtime-fs-promises-loader.mjs": r'''import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+const wrapperUrl = new URL("./direct-runtime-fs-promises-wrapper.mjs", import.meta.url).href;
+const configPath = process.env.DIRECT_RUNTIME_TRACE_CONFIG_PATH ?? "/runner/direct-runtime-trace-config.json";
+const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+const moduleLoads = Array.isArray(config.moduleLoads) ? config.moduleLoads : [];
+const moduleLoadObservationsPath = typeof config.moduleLoadObservationsPath === "string" ? config.moduleLoadObservationsPath : "";
+const targetRoot = typeof config.targetRoot === "string" ? config.targetRoot : "";
+const baselineByPath = new Set((config.baselineReadSet ?? []).map((entry) => entry?.path));
+const derivedByPath = new Set((config.derivedBuildReadSet ?? []).map((entry) => entry?.path));
+const moduleLoadKeys = new Set(moduleLoads.map((entry) => `${entry.kind}|${entry.path}`));
+const logicalPath = (target) => {
+  if (!(target instanceof URL) || target.protocol !== "file:") return null;
+  const resolved = path.resolve(fileURLToPath(target));
+  const relative = path.relative(targetRoot, resolved);
+  if (!relative || relative.startsWith("..") || path.isAbsolute(relative)) return null;
+  return relative.split(path.sep).join("/");
+};
 export async function resolve(specifier, context, nextResolve) {
   if ((specifier === "node:fs/promises" || specifier === "fs/promises") && context.parentURL !== wrapperUrl) {
     return { url: wrapperUrl, shortCircuit: true };
   }
   return nextResolve(specifier, context);
+}
+export async function load(url, context, nextLoad) {
+  const result = await nextLoad(url, context);
+  if (moduleLoadObservationsPath && typeof url === "string" && url.startsWith("file:")) {
+    const logical = logicalPath(new URL(url));
+    if (logical !== null) {
+      const kind = baselineByPath.has(logical) ? "BASELINE_READ" : derivedByPath.has(logical) ? "DERIVED_BUILD_READ" : null;
+      if (kind && moduleLoadKeys.has(`${kind}|${logical}`)) {
+        fs.mkdirSync(path.dirname(moduleLoadObservationsPath), { recursive: true });
+        fs.appendFileSync(moduleLoadObservationsPath, `${JSON.stringify({ kind, path: logical })}\n`, { encoding: "utf8" });
+      }
+    }
+  }
+  return result;
 }
 ''',
         "direct-runtime-fs-promises-wrapper.mjs": r'''import fs from "node:fs";
@@ -5794,6 +5876,9 @@ if (
   || !["EXCLUDED", "PNPM_PARENT_EXCLUDED"].includes(config.parentPnpm)
   || !Array.isArray(config.directoryEnumerations)
   || config.directoryEnumerations.some((path) => typeof path !== "string" || !path)
+  || !(config.moduleLoads === undefined || Array.isArray(config.moduleLoads))
+  || (Array.isArray(config.moduleLoads) && config.moduleLoads.some((entry) => !entry || (entry.kind !== "BASELINE_READ" && entry.kind !== "DERIVED_BUILD_READ") || typeof entry.path !== "string" || !entry.path))
+  || !(config.moduleLoadObservationsPath === undefined || typeof config.moduleLoadObservationsPath === "string")
 ) throw new Error("trace config invalid");
 const generatorPid = process.pid;
 const baselineByPath = new Map((config.baselineReadSet ?? []).map((entry) => [entry.path, entry]));
@@ -5803,9 +5888,19 @@ const declaredDirectoryEnumerations = new Set(config.directoryEnumerations ?? []
 const artifactPath = config.artifactPath;
 const artifactRelative = path.relative(config.targetRoot, artifactPath);
 if (artifactRelative.startsWith("..") || path.isAbsolute(artifactRelative)) throw new Error("raw trace artifact escapes work root");
-if (fs.existsSync(artifactPath)) throw new Error("raw trace artifact already exists");
-fs.mkdirSync(path.dirname(artifactPath), { recursive: true });
+const moduleLoads = Array.isArray(config.moduleLoads) ? config.moduleLoads : [];
+const moduleLoadCount = moduleLoads.length;
 let ordinal = 0;
+if (fs.existsSync(artifactPath)) {
+  if (!moduleLoadCount) throw new Error("raw trace artifact already exists");
+  const existing = fs.readFileSync(artifactPath, "utf8");
+  const lines = existing === "" ? [] : existing.trimEnd().split("\n");
+  if (lines.length !== moduleLoadCount) throw new Error("raw trace artifact module-load prefix mismatch");
+  ordinal = lines.length;
+} else {
+  if (moduleLoadCount) throw new Error("raw trace artifact module-load prefix missing");
+}
+fs.mkdirSync(path.dirname(artifactPath), { recursive: true });
 const logicalPath = (target) => {
   const value = target instanceof URL ? fileURLToPath(target) : target;
   if (typeof value !== "string") return null;
@@ -5873,6 +5968,16 @@ if (!events.length) throw new Error("generator child emitted no raw trace events
 const generatorPid = events[0].generatorPid;
 const generatorScript = events[0].generatorScript;
 if (!Number.isInteger(generatorPid) || generatorPid <= 0 || generatorScript !== config.generatorResolvedPath || events.some((event) => event.generatorPid !== generatorPid || event.generatorScript !== generatorScript || event.nonce !== config.nonce || event.packetSha256 !== config.packetSha256 || event.tracer !== config.tracer || event.rawEventArtifact !== config.rawEventArtifact)) throw new Error("mixed generator child trace provenance");
+const moduleLoads = Array.isArray(config.moduleLoads) ? config.moduleLoads : [];
+if (moduleLoads.length) {
+  const observationsPath = config.moduleLoadObservationsPath;
+  const observationsRaw = fs.existsSync(observationsPath) ? fs.readFileSync(observationsPath, "utf8") : "";
+  const observations = observationsRaw === "" ? [] : observationsRaw.trimEnd().split("\n").map((line) => JSON.parse(line));
+  const observed = new Set(observations.map((entry) => `${entry.kind}|${entry.path}`));
+  const expected = new Set(moduleLoads.map((entry) => `${entry.kind}|${entry.path}`));
+  if (observations.length !== observed.size || observed.size !== expected.size || ![...observed].every((key) => expected.has(key))) throw new Error("module load observations mismatch");
+  fs.rmSync(observationsPath, { force: true });
+}
 const rawArtifact = { sha256: crypto.createHash("sha256").update(raw).digest("hex"), size: Buffer.byteLength(raw) };
 fs.rmSync(config.artifactPath, { force: true });
 try { fs.rmdirSync(path.dirname(config.artifactPath)); } catch { /* absent or not empty is deliberate evidence */ }
@@ -5951,6 +6056,8 @@ process.stdout.write(JSON.stringify({ attemptNonceSha256, derivedBuildReadSet, w
             "derivedBuildReadSet": direct_runtime_integration["readSet"]["derivedBuildReadSet"],
             "outputPaths": direct_runtime_integration["readSet"]["outputPaths"],
             "directoryEnumerations": direct_runtime_integration["readSet"].get("directoryEnumerations", []),
+            "moduleLoads": _direct_runtime_module_loads_v1(direct_runtime_integration),
+            "moduleLoadObservationsPath": "/work/.direct-runtime-trace/module-load-observations.jsonl",
         })
         mounts.append({
             "id": "runnerTool:direct-runtime-trace-config",
@@ -8633,6 +8740,8 @@ class DirectCommandRuntimeProductionExecutorV1:
                 "derivedBuildReadSet": integration["readSet"]["derivedBuildReadSet"],
                 "outputPaths": integration["readSet"]["outputPaths"],
                 "directoryEnumerations": integration["readSet"].get("directoryEnumerations", []),
+                "moduleLoads": _direct_runtime_module_loads_v1(integration),
+                "moduleLoadObservationsPath": "/work/.direct-runtime-trace/module-load-observations.jsonl",
             },
         )
         mount = {
