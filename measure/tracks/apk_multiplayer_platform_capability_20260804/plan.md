@@ -83,15 +83,15 @@ _Story ref: spec.md#story-s3_
     - [x] Add `packages/advantage-play-kit/src/systems/multiplayer-session.ts`, transport-agnostic and consuming only `multiplayer.v1` — `createMultiplayerSession({ transport, scheduler })`; hello→welcome→join handshake; phase machine idle→hello→lobby→countdown→playing→results→closed; submission phase-gated to playing and never carries a score; malformed inbound surfaces as `lastError` and never throws into the tick. Orchestrator re-ran: 18/18 green
     - [x] Drive its cadence from `createBoundedFrameScheduler` in `systems/bounded-frame-loop.ts` — `session.tick(dt)` flushes queued `input_frame`s in order, wired by the caller through the real scheduler (deviation accepted: tick exposed on the session interface because the scheduler's callback is frozen at construction)
     - [x] Export from `packages/advantage-play-kit/src/systems/index.ts`
-- [ ] Task: Extend the runtime mount surface
-    - [ ] Add an optional `multiplayer` block to `MountCartridgeOptions` in `runtime/types.ts`, mirroring `responsive`
-    - [ ] Own its lifecycle in `mountCartridge` and tear it down on destroy
-    - [ ] Extend `runtime.test.ts` for mount, destroy, and restart with multiplayer present and absent
-- [ ] Task: Register the capability
-    - [ ] Add the capability id to `ACCEPTED_CAPABILITY_IDS` in `systems/capability-manifest.ts`
-    - [ ] Update the frozen assertion in `systems/__tests__/capability-manifest.test.ts`
-    - [ ] Confirm `guards/accepted-inputs.ts` accepts it and still throws `APKUnsupportedCapabilityError` for unknown ids
-    - [ ] Re-accept the `acceptedManifestSha256` pin enforced by `guards/__tests__/accepted-inputs.test.ts` and record the old and new hashes in a receipt
+- [x] Task: Extend the runtime mount surface
+    - [x] Add an optional `multiplayer` block to `MountCartridgeOptions` in `runtime/types.ts`, mirroring `responsive` — `{ transport, sessionFactory? }`, factory defaulting to `createMultiplayerSession` as the test seam
+    - [x] Own its lifecycle in `mountCartridge` and tear it down on destroy — session constructed on mount, `tick(dt)` driven through `createBoundedFrameScheduler` pumped by the cartridge's own frame cadence (guarded rAF, mirroring the ResizeObserver hook); `destroy()` on destroy
+    - [x] Extend `runtime.test.ts` for mount, destroy, and restart with multiplayer present and absent — restart destroys and reconstructs via the factory; absent block = zero behavioral change. Orchestrator re-ran scoped suites: 40/40 green. Disclosure: the commit also carries a one-line pre-existing dirty fix from a concurrent session (`operation.catch(() => undefined)` on the restart chain) plus its covered "recovers restart" test — not ours, swept in because it shares `runtime.ts`; green
+- [x] Task: Register the capability
+    - [x] Add the capability id to `ACCEPTED_CAPABILITY_IDS` in `systems/capability-manifest.ts` — `"multiplayer"`, seven → eight
+    - [x] Update the frozen assertion in `systems/__tests__/capability-manifest.test.ts` — plus `compatibility/__tests__/developer-kit-api.test.ts` (deterministic blast radius: developer-kit re-exports the array)
+    - [x] Confirm `guards/accepted-inputs.ts` accepts it and still throws `APKUnsupportedCapabilityError` for unknown ids
+    - [x] Re-accept the `acceptedManifestSha256` pin enforced by `guards/__tests__/accepted-inputs.test.ts` and record the old and new hashes in a receipt — receipt `s3-capability-pin-receipt-20260804.md`; finding: OLD = NEW = `e9fc2c9c…39ba49` because the pin hashes an immutable T10 archive artifact, not the live manifest; orchestrator recomputed the hash independently and confirmed. A genuine pin move requires a successor manifest + owner-acceptance step. Recorded residual: `ACCEPTED_CAPABILITY_IDS` (8) now outgrows the evidence-bound `ACCEPTED_CAPABILITY_REGISTRY` (7) — registry extension is a T11-style governance step, not code
 - [ ] Task: Measure - User Manual Verification 'Phase S3: Add the multiplayer session capability to the Play Kit' (Protocol in workflow.md)
 
 ## Phase S4: Give the session service a deployable home

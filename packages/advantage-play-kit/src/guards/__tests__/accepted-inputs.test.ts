@@ -9,6 +9,7 @@ import {
   rejectBlockedScope,
   rejectUnsupportedCapability,
 } from "../accepted-inputs.js";
+import { APKUnsupportedCapabilityError } from "../../diagnostics/structured-error.js";
 
 describe("accepted inputs guard", () => {
   it("pins the exact T10 manifest, successor, and owner-acceptance hashes", () => {
@@ -23,9 +24,11 @@ describe("accepted inputs guard", () => {
     );
   });
 
-  it("recognizes the seven accepted capability ids", () => {
+  it("recognizes the eight accepted capability ids", () => {
     expect(isAcceptedCapabilityId("capability:result-accounting")).toBe(true);
+    expect(isAcceptedCapabilityId("multiplayer")).toBe(true);
     expect(isAcceptedCapabilityId("capability:title-specific-boss-fight")).toBe(false);
+    expect(isAcceptedCapabilityId("unknown-capability")).toBe(false);
   });
 
   it("asserts accepted inputs without throwing when the binding is exact", () => {
@@ -33,7 +36,7 @@ describe("accepted inputs guard", () => {
   });
 
   it.each([
-    ["capability count", { manifest: { capabilityIds: [] } }, /exactly seven accepted capabilities/i],
+    ["capability count", { manifest: { capabilityIds: [] } }, /exactly eight accepted capabilities/i],
     ["runtime contracts", { t10Inputs: { acceptedRuntimeContracts: 1 } }, /zero accepted runtime contracts/i],
     ["asset mappings", { t10Inputs: { approvedAssetMappings: 1 } }, /zero approved asset mappings/i],
     ["release version", { standardPackRelease: { version: "2026.07.22" } }, /release version/i],
@@ -85,10 +88,18 @@ describe("accepted inputs guard", () => {
     expect(() => rejectBlockedScope("unknown-must-haves")).toThrow(/unknown must-have/i);
   });
 
-  it("rejects unsupported capabilities with the accepted registry listed", () => {
-    expect(() => rejectUnsupportedCapability("capability:title-specific-dash")).toThrow(
-      /not in the T10-accepted registry/i,
-    );
+  it("rejects unsupported capabilities with a structured APKUnsupportedCapabilityError", () => {
+    try {
+      rejectUnsupportedCapability("capability:title-specific-dash");
+      throw new Error("should have thrown for an unknown capability");
+    } catch (error) {
+      expect(error).toBeInstanceOf(APKUnsupportedCapabilityError);
+      expect((error as APKUnsupportedCapabilityError).requestedCapabilityId).toBe(
+        "capability:title-specific-dash",
+      );
+      expect((error as APKUnsupportedCapabilityError).acceptedCapabilityIds).toContain("multiplayer");
+      expect((error as Error).message).toMatch(/not in the T10-accepted registry/i);
+    }
   });
 
   it("rejects every blocked scope category with a structured APKBlockedScopeError", () => {

@@ -37,9 +37,9 @@ export const ACCEPTED_INPUTS_GUARD: AcceptedInputsGuard = Object.freeze({
 });
 
 /**
- * Reports whether a capability id is in the T10-accepted registry.
+ * Reports whether a capability id is in the accepted registry.
  * @param capabilityId The capability id to test.
- * @returns True when the capability id is one of the seven accepted ids.
+ * @returns True when the capability id is one of the accepted ids.
  */
 export function isAcceptedCapabilityId(capabilityId: string): boolean {
   return ACCEPTED_CAPABILITY_IDS.includes(capabilityId as (typeof ACCEPTED_CAPABILITY_IDS)[number]);
@@ -52,8 +52,8 @@ export function isAcceptedCapabilityId(capabilityId: string): boolean {
  */
 export function assertAcceptedInputs(guard: AcceptedInputsGuard = ACCEPTED_INPUTS_GUARD): void {
   const manifest = guard.manifest;
-  if (manifest.capabilityIds.length !== 7) {
-    throw new Error("Accepted inputs guard requires exactly seven accepted capabilities");
+  if (manifest.capabilityIds.length !== 8) {
+    throw new Error("Accepted inputs guard requires exactly eight accepted capabilities");
   }
   if (guard.t10Inputs.acceptedRuntimeContracts !== 0) {
     throw new Error("Accepted inputs guard requires zero accepted runtime contracts");

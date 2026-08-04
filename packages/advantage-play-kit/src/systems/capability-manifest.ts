@@ -96,7 +96,7 @@ export interface AcceptedCapabilityManifest {
   readonly blockedScopes: BlockedScopes;
 }
 
-/** The exact seven T10-accepted capability identifiers, alphabetically ordered. */
+/** The exact eight accepted capability identifiers, alphabetically ordered. */
 export const ACCEPTED_CAPABILITY_IDS = Object.freeze([
   "capability:bounded-frame-delta",
   "capability:input-action-normalization",
@@ -105,6 +105,7 @@ export const ACCEPTED_CAPABILITY_IDS = Object.freeze([
   "capability:result-accounting",
   "capability:single-completion-emission",
   "capability:time-and-frame-loop",
+  "multiplayer",
 ] as const);
 
 /** The exact T10 successor-hash and standard-pack identity accepted for T11. */
@@ -282,7 +283,7 @@ export const BLOCKED_SCOPES: BlockedScopes = Object.freeze({
 
 /**
  * Builds a frozen accepted-capability manifest for downstream pinning and enforcement.
- * @returns An immutable manifest of the seven accepted capabilities, T10 inputs, and blocked scopes.
+ * @returns An immutable manifest of the accepted capability identifiers, T10 inputs, and blocked scopes.
  */
 export function buildAcceptedCapabilityManifest(): AcceptedCapabilityManifest {
   return Object.freeze({

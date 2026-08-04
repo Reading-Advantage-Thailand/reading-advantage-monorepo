@@ -2,6 +2,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mountCartridge, type APKGameInstance, type GameFactory } from "./runtime.js";
 import { createRuntimeCartridge, createRuntimeEdition, validResults } from "../testing/fixtures.js";
 import { DEFAULT_RESPONSIVE_LAYOUT_CONFIG } from "../responsive/responsive-composition.js";
+import type {
+  MultiplayerSession,
+  MultiplayerSessionOptions,
+  MultiplayerTransport,
+} from "../systems/multiplayer-session.js";
 
 class ResizeObserverStub {
   static instances: ResizeObserverStub[] = [];
@@ -15,6 +20,44 @@ class ResizeObserverStub {
   }
 
   unobserve(): void {}
+}
+
+function createFakeTransport(): MultiplayerTransport {
+  return {
+    send: vi.fn(),
+    onMessage: vi.fn(() => () => {}),
+    close: vi.fn(),
+  };
+}
+
+function createFakeSession(): MultiplayerSession {
+  return {
+    join: vi.fn(),
+    submit: vi.fn(),
+    sendInput: vi.fn(),
+    getState: vi.fn(() => ({
+      phase: "idle",
+      player: null,
+      room: null,
+      countdownStartsAtMs: null,
+      round: null,
+      ranking: null,
+      lastError: null,
+    })),
+    subscribe: vi.fn(() => () => {}),
+    tick: vi.fn(),
+    destroy: vi.fn(),
+  };
+}
+
+function stubAnimationFrame(): Array<(timestamp: number) => void> {
+  const callbacks: Array<(timestamp: number) => void> = [];
+  vi.stubGlobal("requestAnimationFrame", (callback: (timestamp: number) => void): number => {
+    callbacks.push(callback);
+    return callbacks.length;
+  });
+  vi.stubGlobal("cancelAnimationFrame", vi.fn());
+  return callbacks;
 }
 
 describe("mountCartridge", () => {
@@ -320,6 +363,31 @@ describe("mountCartridge", () => {
     await handle.destroy();
   });
 
+  it("recovers restart after a failed recreation attempt", async () => {
+    let failNext = false;
+    const factory: GameFactory = vi.fn(async () => {
+      if (failNext) throw new Error("renderer crashed");
+      return { destroy: vi.fn() };
+    });
+    const handle = await mountCartridge({
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn() },
+    }, factory);
+
+    failNext = true;
+    await expect(handle.restart()).rejects.toThrow("renderer crashed");
+    expect(handle.getDiagnostics().status).toBe("error");
+
+    failNext = false;
+    await handle.restart();
+    expect(factory).toHaveBeenCalledTimes(3);
+    expect(handle.getDiagnostics().status).toBe("running");
+    await handle.destroy();
+  });
+
   it("restores caller styles when a zero-height responsive mount factory rejects", async () => {
     const container = document.createElement("div");
     container.style.minHeight = "29px";
@@ -350,5 +418,113 @@ describe("mountCartridge", () => {
 
     expect(container.style.minHeight).toBe("29px");
     expect(container.style.touchAction).toBe("manipulation");
+  });
+
+  it("mounts a multiplayer session through the injected factory and wires its tick to the bounded scheduler", async () => {
+    const rafCallbacks = stubAnimationFrame();
+    const transport = createFakeTransport();
+    const sessions: MultiplayerSession[] = [];
+    const sessionFactory = vi.fn((_options: MultiplayerSessionOptions): MultiplayerSession => {
+      const session = createFakeSession();
+      sessions.push(session);
+      return session;
+    });
+    const handle = await mountCartridge({
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn() },
+      multiplayer: { transport, sessionFactory },
+    }, async () => ({ destroy: vi.fn() }));
+
+    expect(sessionFactory).toHaveBeenCalledTimes(1);
+    expect(sessionFactory).toHaveBeenCalledWith(expect.objectContaining({ transport }));
+    const session = sessions[0];
+    expect(session).toBeDefined();
+    expect(vi.mocked(session!.tick)).not.toHaveBeenCalled();
+
+    rafCallbacks.shift()?.(1_000);
+    rafCallbacks.shift()?.(2_000);
+    expect(vi.mocked(session!.tick)).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(session!.tick)).toHaveBeenCalledWith(50);
+
+    rafCallbacks.shift()?.(2_016);
+    expect(vi.mocked(session!.tick)).toHaveBeenCalledTimes(2);
+    expect(vi.mocked(session!.tick)).toHaveBeenLastCalledWith(16);
+
+    await handle.destroy();
+    expect(vi.mocked(session!.destroy)).toHaveBeenCalledTimes(1);
+  });
+
+  it("defaults the session factory to createMultiplayerSession and closes the transport on destroy", async () => {
+    const transport = createFakeTransport();
+    const handle = await mountCartridge({
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn() },
+      multiplayer: { transport },
+    }, async () => ({ destroy: vi.fn() }));
+
+    await handle.destroy();
+    expect(transport.close).toHaveBeenCalledTimes(1);
+  });
+
+  it("destroys and reconstructs the multiplayer session on restart", async () => {
+    stubAnimationFrame();
+    const sessions: MultiplayerSession[] = [];
+    const sessionFactory = vi.fn((_options: MultiplayerSessionOptions): MultiplayerSession => {
+      const session = createFakeSession();
+      sessions.push(session);
+      return session;
+    });
+    const handle = await mountCartridge({
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn() },
+      multiplayer: { transport: createFakeTransport(), sessionFactory },
+    }, async () => ({ destroy: vi.fn() }));
+
+    expect(sessionFactory).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(sessions[0]!.tick)).not.toHaveBeenCalled();
+
+    await handle.restart();
+    expect(sessionFactory).toHaveBeenCalledTimes(2);
+    expect(vi.mocked(sessions[0]!.destroy)).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(sessions[1]!.tick)).not.toHaveBeenCalled();
+
+    await handle.restart();
+    expect(sessionFactory).toHaveBeenCalledTimes(3);
+    expect(vi.mocked(sessions[1]!.destroy)).toHaveBeenCalledTimes(1);
+
+    await handle.destroy();
+    expect(vi.mocked(sessions[2]!.destroy)).toHaveBeenCalledTimes(1);
+  });
+
+  it("never constructs a multiplayer session when multiplayer is absent", async () => {
+    const sessionFactory = vi.fn((_options: MultiplayerSessionOptions): MultiplayerSession => {
+      return createFakeSession();
+    });
+    const transport = createFakeTransport();
+    const handle = await mountCartridge({
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn() },
+    }, async () => ({ destroy: vi.fn() }));
+
+    expect(sessionFactory).not.toHaveBeenCalled();
+    expect(transport.close).not.toHaveBeenCalled();
+
+    await handle.restart();
+    await handle.destroy();
+
+    expect(sessionFactory).not.toHaveBeenCalled();
+    expect(transport.close).not.toHaveBeenCalled();
   });
 });

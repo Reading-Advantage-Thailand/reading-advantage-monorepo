@@ -12,11 +12,12 @@ describe("versioned developer kit API and compatibility plan", () => {
     expect(DEVELOPER_KIT_COMPATIBILITY.standardPackReleaseVersion).toBe("2026.08.04");
   });
 
-  it("lists the seven accepted capabilities as the supported API surface", () => {
-    expect(DEVELOPER_KIT_COMPATIBILITY.acceptedCapabilityIds).toHaveLength(7);
+  it("lists the eight accepted capabilities as the supported API surface", () => {
+    expect(DEVELOPER_KIT_COMPATIBILITY.acceptedCapabilityIds).toHaveLength(8);
     expect(DEVELOPER_KIT_COMPATIBILITY.acceptedCapabilityIds).toContain(
       "capability:nonempty-content-precondition",
     );
+    expect(DEVELOPER_KIT_COMPATIBILITY.acceptedCapabilityIds).toContain("multiplayer");
   });
 
   it("keeps the zero-approved historical T10 mapping boundary distinct from forward bindings", () => {

@@ -8,7 +8,7 @@ import {
 } from "../capability-manifest.js";
 
 describe("accepted capability manifest", () => {
-  it("pins exactly the seven T10-accepted capability identifiers", () => {
+  it("pins exactly the eight accepted capability identifiers", () => {
     expect(ACCEPTED_CAPABILITY_IDS).toEqual([
       "capability:bounded-frame-delta",
       "capability:input-action-normalization",
@@ -17,8 +17,9 @@ describe("accepted capability manifest", () => {
       "capability:result-accounting",
       "capability:single-completion-emission",
       "capability:time-and-frame-loop",
+      "multiplayer",
     ]);
-    expect(ACCEPTED_CAPABILITY_IDS).toHaveLength(7);
+    expect(ACCEPTED_CAPABILITY_IDS).toHaveLength(8);
   });
 
   it("binds each capability to its owning package, shared-core contract, and source games", () => {

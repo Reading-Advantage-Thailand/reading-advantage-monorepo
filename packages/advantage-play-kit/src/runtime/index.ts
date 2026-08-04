@@ -35,6 +35,7 @@ export type {
   FrameGrid,
   GameInput,
   MountCartridgeOptions,
+  MultiplayerRuntimeOptions,
   RuntimeCartridge,
   RuntimeCartridgeManifest,
   ResponsiveRuntimeOptions,
