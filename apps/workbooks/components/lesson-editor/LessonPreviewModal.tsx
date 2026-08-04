@@ -5,8 +5,8 @@ import { LessonPreview } from "./LessonPreview";
 
 /**
  * Full-screen modal that shows the compiled lesson preview inside an iframe.
- * Before compile wiring exists (S4c) the preview html is null, so an
- * empty-state message is shown instead of the iframe.
+ * When the preview html is null, an empty-state message is shown instead of
+ * the iframe.
  *
  * @param props - The preview html (or null) and a close callback; see LessonPreviewModalProps.
  * @returns The modal overlay, or the empty-state message when there is no html.
@@ -55,7 +55,7 @@ export function LessonPreviewModal({
           {previewHtml ? (
             <LessonPreview htmlContent={previewHtml} className="h-full" />
           ) : (
-            <p>Live preview arrives with compile wiring (S4c).</p>
+            <p>No preview available.</p>
           )}
         </div>
       </div>

@@ -24,6 +24,7 @@ vi.mock("../../../lib/repository", () => ({
 
 import {
   getDraftAction,
+  previewDraftAction,
   updateDraftAction,
 } from "./actions";
 import {
@@ -124,6 +125,64 @@ describe("getDraftAction", () => {
     repositorySpy.getDraft.mockResolvedValue(null);
     const result = await getDraftAction("draft-1");
     expect(result).toEqual({ ok: true, draft: null });
+  });
+});
+
+describe("previewDraftAction", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(requireWorkbookSession).mockResolvedValue(session);
+  });
+
+  it("renders the draft's normalized content as preview html", async () => {
+    repositorySpy.getDraft.mockResolvedValue(makeDraft());
+    const result = await previewDraftAction("draft-1");
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.html).toContain("<h1>Draft title</h1>");
+      expect(result.html).toContain("<p>CEFR: A2</p>");
+      expect(result.html).not.toContain("· Edition");
+      expect(result.html).toContain("<p>paragraph</p>");
+    }
+  });
+
+  it("scopes the preview read to the session tenant", async () => {
+    repositorySpy.getDraft.mockResolvedValue(makeDraft());
+    const result = await previewDraftAction("draft-1");
+    expect(result.ok).toBe(true);
+    expect(repositorySpy.getDraft).toHaveBeenCalledWith("tenant-1", "draft-1");
+  });
+
+  it("returns a structured NOT_FOUND failure when the draft does not exist", async () => {
+    repositorySpy.getDraft.mockResolvedValue(null);
+    const result = await previewDraftAction("draft-1");
+    expect(result).toEqual({ ok: false, code: "NOT_FOUND", message: "draft not found" });
+  });
+
+  it("returns a structured unauthorized failure and does not touch the repository", async () => {
+    vi.mocked(requireWorkbookSession).mockRejectedValue(
+      new WorkbookAuthorizationError(
+        "UNAUTHORIZED",
+        "workbooks access requires an authorized session",
+      ),
+    );
+    const result = await previewDraftAction("draft-1");
+    expect(result).toEqual({
+      ok: false,
+      code: "UNAUTHORIZED",
+      message: "workbooks access requires an authorized session",
+    });
+    expect(repositorySpy.getDraft).not.toHaveBeenCalled();
+  });
+
+  it("rejects an invalid draft id without touching the repository", async () => {
+    const result = await previewDraftAction("");
+    expect(result).toEqual({
+      ok: false,
+      code: "VALIDATION_ERROR",
+      message: "invalid draft id",
+    });
+    expect(repositorySpy.getDraft).not.toHaveBeenCalled();
   });
 });
 

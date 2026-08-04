@@ -155,7 +155,7 @@ export interface LessonPreviewProps {
 
 /** Props for the full-screen lesson preview modal. */
 export interface LessonPreviewModalProps {
-  /** Compiled lesson HTML to preview, or null before compile wiring exists. */
+  /** Compiled lesson HTML to preview, or null when no preview is available. */
   previewHtml: string | null;
   /** Called when the user dismisses the modal. */
   onClose: () => void;

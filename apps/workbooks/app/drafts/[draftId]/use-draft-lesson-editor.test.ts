@@ -189,6 +189,16 @@ describe("useDraftLessonEditor", () => {
     expect(result.current.lesson.lesson_title).toBe("New title");
   });
 
+  it("surfaces a form-level error through setFormError", () => {
+    const { result } = renderHook(() =>
+      useDraftLessonEditor({ initialDraft: makeDraft() }),
+    );
+    act(() => {
+      result.current.setFormError("draft not found");
+    });
+    expect(result.current.errors._form).toBe("draft not found");
+  });
+
   it("persists mapped normalized content and applies the returned draft", async () => {
     vi.mocked(updateDraftAction).mockResolvedValue({
       ok: true,

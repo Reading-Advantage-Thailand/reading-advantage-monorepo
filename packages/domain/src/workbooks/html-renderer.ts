@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import type { WorkbookNormalizedContent } from "./contracts.js";
 import type { WorkbookEdition } from "./edition-contracts.js";
 import type { WorkbookRenderPort } from "./render-port.js";
 import { WorkbookRenderError } from "./render-port.js";
@@ -21,13 +22,40 @@ export function escapeWorkbookHtml(value: string): string {
 }
 
 /**
+ * Renders normalized workbook content into a self-contained HTML document
+ * string. Every interpolated value is HTML-escaped. Draft previews have no
+ * edition version, so the CEFR line carries no version suffix.
+ * @param content Normalized workbook content to render.
+ * @returns A complete HTML document string describing the content.
+ */
+export function renderWorkbookContentHtml(
+  content: WorkbookNormalizedContent,
+): string {
+  return renderContentHtml(content, null);
+}
+
+/**
  * Renders a published workbook edition's snapshot into a self-contained HTML
  * document string. Every interpolated snapshot value is HTML-escaped.
  * @param edition Immutable published edition whose snapshot is rendered.
  * @returns A complete HTML document string describing the edition's content.
  */
 export function renderEditionHtml(edition: WorkbookEdition): string {
-  const { title, cefrLevel, paragraphs, questions } = edition.snapshot.content;
+  return renderContentHtml(edition.snapshot.content, edition.version);
+}
+
+/**
+ * Renders normalized content into a complete HTML document, appending the
+ * edition-version suffix to the CEFR line when an edition version is given.
+ * @param content Normalized workbook content to render.
+ * @param version Edition version to show on the CEFR line, or null for drafts.
+ * @returns A complete HTML document string describing the content.
+ */
+function renderContentHtml(
+  content: WorkbookNormalizedContent,
+  version: number | null,
+): string {
+  const { title, cefrLevel, paragraphs, questions } = content;
 
   const orderedParagraphs = [...paragraphs]
     .sort((a, b) => a.order - b.order)
@@ -52,12 +80,13 @@ export function renderEditionHtml(edition: WorkbookEdition): string {
           .join("")}</ol>`
       : "";
 
+  const versionSuffix =
+    version === null ? "" : ` · Edition v${escapeWorkbookHtml(String(version))}`;
+
   return `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>${escapeWorkbookHtml(title)}</title></head><body>
 <h1>${escapeWorkbookHtml(title)}</h1>
-<p>CEFR: ${escapeWorkbookHtml(cefrLevel)} · Edition v${escapeWorkbookHtml(
-    String(edition.version),
-  )}</p>
+<p>CEFR: ${escapeWorkbookHtml(cefrLevel)}${versionSuffix}</p>
 ${orderedParagraphs}
 ${questionsHtml}
 </body></html>`;

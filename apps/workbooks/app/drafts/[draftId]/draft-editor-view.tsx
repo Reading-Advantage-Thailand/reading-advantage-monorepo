@@ -12,6 +12,7 @@ import { LessonStatusBanners } from "../../../components/lesson-editor/LessonSta
 import { PedagogicalConnectorsEditor } from "../../../components/lesson-editor/PedagogicalConnectorsEditor";
 import { VocabularyEditor } from "../../../components/lesson-editor/VocabularyEditor";
 import { WritingPromptEditor } from "../../../components/lesson-editor/WritingPromptEditor";
+import { previewDraftAction } from "./actions";
 import { useDraftLessonEditor } from "./use-draft-lesson-editor";
 
 /** Props controlling the draft lesson editor view. */
@@ -88,9 +89,10 @@ interface DraftLessonEditorViewProps {
 /**
  * Renders the interactive per-section lesson editor for one editable draft.
  * State lives in the useDraftLessonEditor hook, which persists through the
- * draft server actions with optimistic concurrency. The live preview modal is
- * toggled from the Preview button; compiled html arrives with S4c compile
- * wiring, so the modal shows an empty state for now.
+ * draft server actions with optimistic concurrency. The Preview button renders
+ * the draft's persisted normalized content through the preview server action
+ * and shows the returned html in the live preview modal; a render failure is
+ * surfaced through the status banners and the modal stays closed.
  * @param props The editable draft to edit.
  * @returns The editor sections and status banners.
  */
@@ -98,7 +100,8 @@ function DraftLessonEditorView({
   draft,
 }: DraftLessonEditorViewProps): ReactNode {
   const [previewOpen, setPreviewOpen] = useState(false);
-  const previewHtml: string | null = null;
+  const [previewHtml, setPreviewHtml] = useState<string | null>(null);
+  const [previewing, setPreviewing] = useState(false);
   const {
     lesson,
     saving,
@@ -107,8 +110,26 @@ function DraftLessonEditorView({
     revisionConflict,
     revisionConflictMessage,
     setLessonField,
+    setFormError,
     validateAndSave,
   } = useDraftLessonEditor({ initialDraft: draft });
+
+  const handlePreview = async () => {
+    setPreviewing(true);
+    try {
+      const result = await previewDraftAction(draft.draftId);
+      if (result.ok) {
+        setPreviewHtml(result.html);
+        setPreviewOpen(true);
+      } else {
+        setFormError(result.message);
+      }
+    } catch {
+      setFormError("An error occurred while rendering the preview.");
+    } finally {
+      setPreviewing(false);
+    }
+  };
 
   return (
     <main>
@@ -119,8 +140,12 @@ function DraftLessonEditorView({
         <button type="button" onClick={() => void validateAndSave()} disabled={saving}>
           {saving ? "Saving..." : "Save Changes"}
         </button>
-        <button type="button" onClick={() => setPreviewOpen(true)}>
-          Preview
+        <button
+          type="button"
+          onClick={() => void handlePreview()}
+          disabled={previewing}
+        >
+          {previewing ? "Rendering..." : "Preview"}
         </button>
       </div>
 

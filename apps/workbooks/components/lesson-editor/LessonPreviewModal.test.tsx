@@ -47,7 +47,7 @@ describe("LessonPreviewModal", () => {
     render(<LessonPreviewModal previewHtml={null} onClose={() => {}} />);
 
     expect(
-      screen.getByText("Live preview arrives with compile wiring (S4c)."),
+      screen.getByText("No preview available."),
     ).toBeTruthy();
     expect(screen.queryByTestId("lesson-preview")).toBeNull();
   });
@@ -56,7 +56,7 @@ describe("LessonPreviewModal", () => {
     render(<LessonPreviewModal previewHtml="" onClose={() => {}} />);
 
     expect(
-      screen.getByText("Live preview arrives with compile wiring (S4c)."),
+      screen.getByText("No preview available."),
     ).toBeTruthy();
     expect(screen.queryByTestId("lesson-preview")).toBeNull();
   });

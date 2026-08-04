@@ -13,3 +13,4 @@ export * from "./create-draft.js";
 export * from "./update-draft.js";
 export * from "./in-memory-edition-repository.js";
 export * from "./drizzle-edition-repository.js";
+export * from "./html-renderer.js";

@@ -17,6 +17,11 @@ export type GetDraftResult =
   | { ok: true; draft: workbooks.WorkbookDraft | null }
   | { ok: false; code: string; message: string };
 
+/** Outcome of rendering a draft preview for the editor workspace. */
+export type PreviewDraftResult =
+  | { ok: true; html: string }
+  | { ok: false; code: string; message: string };
+
 /** Outcome of saving a draft from the editor workspace. */
 export type UpdateDraftResult =
   | { ok: true; draft: workbooks.WorkbookDraft }
@@ -54,6 +59,48 @@ export async function getDraftAction(
     parsedId.data,
   );
   return { ok: true, draft };
+}
+
+/**
+ * Renders a draft's normalized content as self-contained preview html for the
+ * verified session.
+ *
+ * The tenant comes from the verified session, never from caller arguments. A
+ * missing draft returns a structured NOT_FOUND failure so the caller can
+ * surface it without treating it as a render error.
+ * @param draftId Draft selected in the workspace.
+ * @returns The preview html, or a structured failure.
+ */
+export async function previewDraftAction(
+  draftId: string,
+): Promise<PreviewDraftResult> {
+  let session: WorkbookSession;
+  try {
+    session = await requireWorkbookSession();
+  } catch (error) {
+    if (error instanceof WorkbookAuthorizationError) {
+      return { ok: false, code: error.code, message: error.message };
+    }
+    throw error;
+  }
+
+  const parsedId = draftIdSchema.safeParse(draftId);
+  if (!parsedId.success) {
+    return { ok: false, code: "VALIDATION_ERROR", message: "invalid draft id" };
+  }
+
+  const draft = await getWorkbookRepository().getDraft(
+    session.tenantId,
+    parsedId.data,
+  );
+  if (draft === null) {
+    return { ok: false, code: "NOT_FOUND", message: "draft not found" };
+  }
+
+  return {
+    ok: true,
+    html: workbooks.renderWorkbookContentHtml(draft.sourceRecord.content),
+  };
 }
 
 /**

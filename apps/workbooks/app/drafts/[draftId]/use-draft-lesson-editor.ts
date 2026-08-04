@@ -37,6 +37,8 @@ export interface UseDraftLessonEditorResult {
     field: K,
     value: DraftLesson[K],
   ) => void;
+  /** Surfaces a form-level error message through the status banners. */
+  setFormError: (message: string) => void;
   /** Validates the lesson and persists it through the server action. */
   validateAndSave: () => Promise<void>;
   /** Reloads the latest draft revision from the server. */
@@ -84,6 +86,10 @@ export function useDraftLessonEditor({
     },
     [],
   );
+
+  const setFormError = useCallback((message: string) => {
+    setErrors({ _form: message });
+  }, []);
 
   const refreshFromServer = useCallback(async () => {
     setLoading(true);
@@ -148,6 +154,7 @@ export function useDraftLessonEditor({
     revisionConflict,
     revisionConflictMessage,
     setLessonField,
+    setFormError,
     validateAndSave,
     refreshFromServer,
   };

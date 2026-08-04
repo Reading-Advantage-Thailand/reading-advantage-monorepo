@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { workbooks } from "@reading-advantage/domain";
 import type { WorkbookSession } from "../../lib/session";
@@ -10,6 +10,17 @@ vi.mock("./use-draft-lesson-editor", () => ({
   useDraftLessonEditor: vi.fn(),
 }));
 
+vi.mock("./actions", () => ({
+  previewDraftAction: vi.fn(),
+}));
+
+vi.mock("../../../components/lesson-editor/LessonPreview", () => ({
+  LessonPreview: ({ htmlContent }: { htmlContent: string }) => (
+    <div data-testid="lesson-preview">{htmlContent}</div>
+  ),
+}));
+
+import { previewDraftAction } from "./actions";
 import { useDraftLessonEditor } from "./use-draft-lesson-editor";
 
 const adminSession: WorkbookSession = {
@@ -60,6 +71,7 @@ function makeDraft(
 
 beforeEach(() => {
   vi.clearAllMocks();
+  const errors: Record<string, string> = {};
   vi.mocked(useDraftLessonEditor).mockReturnValue({
     lesson: {
       lesson_title: "The Library Map",
@@ -69,11 +81,14 @@ beforeEach(() => {
     },
     loading: false,
     saving: false,
-    errors: {},
+    errors,
     saveSuccess: false,
     revisionConflict: false,
     revisionConflictMessage: undefined,
     setLessonField: vi.fn(),
+    setFormError: vi.fn((message: string) => {
+      errors._form = message;
+    }),
     validateAndSave: vi.fn(),
     refreshFromServer: vi.fn(),
   });
@@ -136,21 +151,58 @@ describe("DraftEditorView / states", () => {
     expect(screen.getByText("Save Changes")).toBeTruthy();
   });
 
-  it("opens the live preview modal from the Preview button", () => {
+  it("opens the live preview modal with the rendered html", async () => {
+    vi.mocked(previewDraftAction).mockResolvedValue({
+      ok: true,
+      html: "<h1>The Library Map</h1>",
+    });
     render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
     fireEvent.click(screen.getByRole("button", { name: "Preview" }));
-    expect(screen.getByRole("dialog", { name: "Lesson Preview" })).toBeTruthy();
-    expect(
-      screen.getByText("Live preview arrives with compile wiring (S4c)."),
-    ).toBeTruthy();
+    await waitFor(() => {
+      expect(screen.getByRole("dialog", { name: "Lesson Preview" })).toBeTruthy();
+    });
+    expect(screen.getByTestId("lesson-preview").textContent).toContain(
+      "The Library Map",
+    );
+    expect(screen.queryByRole("alert")).toBeNull();
   });
 
-  it("closes the live preview modal from the close button", () => {
+  it("shows a Rendering state while the preview is being rendered", () => {
+    vi.mocked(previewDraftAction).mockReturnValue(new Promise(() => {}));
     render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
     fireEvent.click(screen.getByRole("button", { name: "Preview" }));
+    expect(screen.getByRole("button", { name: "Rendering..." })).toBeTruthy();
+    expect(screen.queryByRole("dialog", { name: "Lesson Preview" })).toBeNull();
+  });
+
+  it("surfaces a preview failure as a form error and does not open the modal", async () => {
+    vi.mocked(previewDraftAction).mockResolvedValue({
+      ok: false,
+      code: "NOT_FOUND",
+      message: "draft not found",
+    });
+    render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
+    fireEvent.click(screen.getByRole("button", { name: "Preview" }));
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toBeTruthy();
+    });
+    expect(screen.getByText("draft not found")).toBeTruthy();
+    expect(screen.queryByRole("dialog", { name: "Lesson Preview" })).toBeNull();
+  });
+
+  it("closes the live preview modal from the close button", async () => {
+    vi.mocked(previewDraftAction).mockResolvedValue({
+      ok: true,
+      html: "<p>preview</p>",
+    });
+    render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
+    fireEvent.click(screen.getByRole("button", { name: "Preview" }));
+    await waitFor(() => {
+      expect(screen.getByRole("dialog", { name: "Lesson Preview" })).toBeTruthy();
+    });
     fireEvent.click(screen.getByRole("button", { name: "Close preview" }));
     expect(
-      screen.queryByText("Live preview arrives with compile wiring (S4c)."),
+      screen.queryByRole("dialog", { name: "Lesson Preview" }),
     ).toBeNull();
   });
 
