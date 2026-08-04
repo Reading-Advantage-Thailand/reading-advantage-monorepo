@@ -18,6 +18,7 @@ Application  →  Backend Module  →  Internal Interface  →  Provider Adapter
 
 Avoid direct coupling to provider SDKs.
 
+Adhere to ADS-STE100 Simplified Technical English
 ---
 
 ## Primary Stack
