@@ -754,7 +754,7 @@ def _direct_runtime_validate_read_set_shape_v1(read_set: Any, resource_budget: A
         "resourceBudget",
         "discovery",
     }
-    if not isinstance(read_set, dict) or set(read_set) != required:
+    if not isinstance(read_set, dict) or not required <= set(read_set) or not set(read_set) <= required | {"directoryEnumerations"}:
         _direct_runtime_read_set_fail("READ_SET_INVALID")
     if read_set["schemaVersion"] != 1 or read_set["kind"] != "direct-command-runtime-read-set":
         _direct_runtime_read_set_fail("READ_SET_INVALID")
@@ -808,6 +808,21 @@ def _direct_runtime_validate_read_set_shape_v1(read_set: Any, resource_budget: A
     if script not in baseline or not root:
         _direct_runtime_read_set_fail("READ_SET_DISCOVERY_INVALID")
     _direct_runtime_int_v1(discovery["directoryListingCount"], "READ_SET_DISCOVERY_INVALID")
+    directory_enumerations = read_set.get("directoryEnumerations")
+    if directory_enumerations is not None:
+        if (
+            not isinstance(directory_enumerations, list)
+            or not all(isinstance(path, str) for path in directory_enumerations)
+            or directory_enumerations != sorted(directory_enumerations)
+            or len(set(directory_enumerations)) != len(directory_enumerations)
+        ):
+            _direct_runtime_read_set_fail("READ_SET_DIRECTORY_ENUMERATIONS_INVALID")
+        for path in directory_enumerations:
+            _direct_runtime_safe_path_v1(path, "READ_SET_DIRECTORY_ENUMERATIONS_INVALID")
+            if path != root and not path.startswith(f"{root}/"):
+                _direct_runtime_read_set_fail("READ_SET_DIRECTORY_ENUMERATIONS_INVALID", path)
+        if len(directory_enumerations) != discovery["directoryListingCount"]:
+            _direct_runtime_read_set_fail("READ_SET_DIRECTORY_ENUMERATIONS_INVALID")
     derived = read_set["derivedBuildReadSet"]
     package_directory = posixpath.dirname(manifest["path"])
     script_name = trigger["logicalArgv"][3]
@@ -982,6 +997,7 @@ def build_direct_command_runtime_read_set_contract_v1(
     baseline = copy.deepcopy(validated["baselineReadSet"])
     derived = copy.deepcopy(validated["derivedBuildReadSet"])
     outputs = copy.deepcopy(validated["outputPaths"])
+    directory_enumerations = copy.deepcopy(validated.get("directoryEnumerations", []))
     return {
         "schemaVersion": 1,
         "kind": "direct-command-runtime-read-set-inclusion",
@@ -989,6 +1005,7 @@ def build_direct_command_runtime_read_set_contract_v1(
         "baselineReadSet": baseline,
         "derivedBuildReadSet": derived,
         "outputPaths": outputs,
+        "directoryEnumerations": directory_enumerations,
         "baselineReadInventory": _direct_runtime_read_set_inventory_v1(baseline),
         "resourceBudget": copy.deepcopy(resource_budget),
         "runtimeTracePolicy": {
@@ -1055,12 +1072,25 @@ def validate_direct_command_runtime_execution_trace_v1(
     )
     if contract != expected_contract:
         _direct_runtime_read_set_fail("EXECUTION_CONTRACT_INVALID")
+    if not isinstance(execution_trace, dict) or not set(execution_trace) <= {
+        "baselineReads",
+        "derivedBuildReads",
+        "writes",
+        "directoryEnumerations",
+    }:
+        _direct_runtime_read_set_fail("EXECUTION_TRACE_BIJECTION_FAILED")
     expected_trace = {
         "baselineReads": expected_contract["baselineReadSet"],
         "derivedBuildReads": expected_contract["derivedBuildReadSet"],
         "writes": [{"path": path, "kind": "DERIVED_OUTPUT"} for path in expected_contract["outputPaths"]],
+        "directoryEnumerations": [{"path": path} for path in expected_contract["directoryEnumerations"]],
     }
-    if execution_trace != expected_trace:
+    if (
+        execution_trace.get("baselineReads") != expected_trace["baselineReads"]
+        or execution_trace.get("derivedBuildReads") != expected_trace["derivedBuildReads"]
+        or execution_trace.get("writes") != expected_trace["writes"]
+        or execution_trace.get("directoryEnumerations", []) != expected_trace["directoryEnumerations"]
+    ):
         _direct_runtime_read_set_fail("EXECUTION_TRACE_BIJECTION_FAILED")
 
 
@@ -3096,12 +3126,14 @@ def parse_direct_command_runtime_trace_events_v1(
     baseline_reads: list[dict[str, Any]] = []
     derived_reads: list[dict[str, Any]] = []
     writes: list[dict[str, Any]] = []
+    directory_enumerations: list[dict[str, Any]] = []
     seen_ordinals: set[int] = set()
     seen_accesses: set[tuple[str, str]] = set()
     event_kinds = {
         "BASELINE_READ": baseline_reads,
         "DERIVED_BUILD_READ": derived_reads,
         "WRITE": writes,
+        "DIRECTORY_ENUMERATION": directory_enumerations,
     }
     for expected_ordinal, event in enumerate(rows):
         if not isinstance(event, dict) or set(event) != {"nonce", "ordinal", "kind", "value"}:
@@ -3118,10 +3150,13 @@ def parse_direct_command_runtime_trace_events_v1(
         seen_ordinals.add(event["ordinal"])
         seen_accesses.add(key)
         target.append(copy.deepcopy(value))
+    for bucket in (baseline_reads, derived_reads, writes, directory_enumerations):
+        bucket.sort(key=lambda item: item["path"])
     trace = {
         "baselineReads": baseline_reads,
         "derivedBuildReads": derived_reads,
         "writes": writes,
+        "directoryEnumerations": directory_enumerations,
     }
     validate_direct_command_runtime_execution_trace_v1(integration["readSetContract"], trace)
     return trace
@@ -5722,11 +5757,14 @@ if (
   || process.env.NODE_OPTIONS !== config.nodeOptions
   || config.activation !== "INHERITED_NODE_OPTIONS_EXACT_GENERATOR_SCRIPT_ONLY"
   || !["EXCLUDED", "PNPM_PARENT_EXCLUDED"].includes(config.parentPnpm)
+  || !Array.isArray(config.directoryEnumerations)
+  || config.directoryEnumerations.some((path) => typeof path !== "string" || !path)
 ) throw new Error("trace config invalid");
 const generatorPid = process.pid;
 const baselineByPath = new Map((config.baselineReadSet ?? []).map((entry) => [entry.path, entry]));
 const derivedByPath = new Map((config.derivedBuildReadSet ?? []).map((entry) => [entry.path, entry]));
 const outputPaths = new Set(config.outputPaths ?? []);
+const declaredDirectoryEnumerations = new Set(config.directoryEnumerations ?? []);
 const artifactPath = config.artifactPath;
 const artifactRelative = path.relative(config.targetRoot, artifactPath);
 if (artifactRelative.startsWith("..") || path.isAbsolute(artifactRelative)) throw new Error("raw trace artifact escapes work root");
@@ -5754,6 +5792,10 @@ const record = (access, target) => {
     append(outputPaths.has(logical) ? "WRITE" : "UNDECLARED", { path: logical, kind: "DERIVED_OUTPUT" });
     return;
   }
+  if (access === "readdir") {
+    append(declaredDirectoryEnumerations.has(logical) ? "DIRECTORY_ENUMERATION" : "UNDECLARED", { path: logical });
+    return;
+  }
   if (baselineByPath.has(logical)) {
     append("BASELINE_READ", baselineByPath.get(logical));
     return;
@@ -5766,7 +5808,7 @@ const record = (access, target) => {
 };
 const writeFlags = (flags) => typeof flags === "string" ? /[wa+]/.test(flags) : typeof flags === "number" && (flags & 3) !== 0;
 export async function readFile(...args) { record("read", args[0]); return actual.readFile(...args); }
-export async function readdir(...args) { record("read", args[0]); return actual.readdir(...args); }
+export async function readdir(...args) { record("readdir", args[0]); return actual.readdir(...args); }
 export async function stat(...args) { record("read", args[0]); return actual.stat(...args); }
 export async function lstat(...args) { record("read", args[0]); return actual.lstat(...args); }
 export async function access(...args) { record("read", args[0]); return actual.access(...args); }
@@ -5873,6 +5915,7 @@ process.stdout.write(JSON.stringify({ attemptNonceSha256, derivedBuildReadSet, w
             "baselineReadSet": direct_runtime_integration["readSet"]["baselineReadSet"],
             "derivedBuildReadSet": direct_runtime_integration["readSet"]["derivedBuildReadSet"],
             "outputPaths": direct_runtime_integration["readSet"]["outputPaths"],
+            "directoryEnumerations": direct_runtime_integration["readSet"].get("directoryEnumerations", []),
         })
         mounts.append({
             "id": "runnerTool:direct-runtime-trace-config",
@@ -8106,6 +8149,7 @@ class DirectCommandRuntimeProductionExecutorV1:
                 while parent.startswith(f"{root}/"):
                     directories.add(parent)
                     parent = posixpath.dirname(parent)
+        directory_enumerations = sorted(directories)
         quota_bytes = sum(
             identity["size"]
             for identity in baseline
@@ -8122,6 +8166,7 @@ class DirectCommandRuntimeProductionExecutorV1:
             "baselineReadSet": copy.deepcopy(baseline),
             "derivedBuildReadSet": derived,
             "outputPaths": copy.deepcopy(dynamic["declaredOutputPaths"]),
+            "directoryEnumerations": directory_enumerations,
             "preflightQuota": {
                 "maxEntries": len(baseline),
                 "maxBytes": quota_bytes,
@@ -8551,6 +8596,7 @@ class DirectCommandRuntimeProductionExecutorV1:
                 "baselineReadSet": integration["readSet"]["baselineReadSet"],
                 "derivedBuildReadSet": integration["readSet"]["derivedBuildReadSet"],
                 "outputPaths": integration["readSet"]["outputPaths"],
+                "directoryEnumerations": integration["readSet"].get("directoryEnumerations", []),
             },
         )
         mount = {
