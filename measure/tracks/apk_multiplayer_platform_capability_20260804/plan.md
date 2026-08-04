@@ -73,7 +73,7 @@ _Story ref: spec.md#story-s2_
     - [x] Run the existing `wizardZombie.test.ts`, `wizardZombieLogic.test.ts`, and `wizardZombieIndicators.test.ts` suites — orchestrator re-ran the gate: 7 suites, 44/44 passed including the determinism property. One caller-visible regression caught at integration: seedless construction now starts from seed 1, making every play session identical; fixed at the call site (`WizardZombieGame.tsx` passes `seed: Date.now()` at mount, outside the tick path) pending S5/S6 session-distributed seeds. The remotion renderer stays deterministic by default, which is desirable for reproducible renders
 - [x] Task: Measure - User Manual Verification 'Phase S2: Make the Wizard vs Zombie simulation deterministic' (Protocol in workflow.md) — preliminary gates executed by orchestrator, confirmed YES by product owner 2026-08-04; receipt `preliminary-verification-s0-s1-s2-20260804.md`; verification report in git notes on checkpoint d027b6f
 
-## Phase S3: Add the multiplayer session capability to the Play Kit
+## Phase S3: Add the multiplayer session capability to the Play Kit [checkpoint: 90da767]
 _Story ref: spec.md#story-s3_
 
 - [x] Task: Write Red tests for the session system
@@ -92,7 +92,7 @@ _Story ref: spec.md#story-s3_
     - [x] Update the frozen assertion in `systems/__tests__/capability-manifest.test.ts` — plus `compatibility/__tests__/developer-kit-api.test.ts` (deterministic blast radius: developer-kit re-exports the array)
     - [x] Confirm `guards/accepted-inputs.ts` accepts it and still throws `APKUnsupportedCapabilityError` for unknown ids
     - [x] Re-accept the `acceptedManifestSha256` pin enforced by `guards/__tests__/accepted-inputs.test.ts` and record the old and new hashes in a receipt — receipt `s3-capability-pin-receipt-20260804.md`; finding: OLD = NEW = `e9fc2c9c…39ba49` because the pin hashes an immutable T10 archive artifact, not the live manifest; orchestrator recomputed the hash independently and confirmed. A genuine pin move requires a successor manifest + owner-acceptance step. Recorded residual: `ACCEPTED_CAPABILITY_IDS` (8) now outgrows the evidence-bound `ACCEPTED_CAPABILITY_REGISTRY` (7) — registry extension is a T11-style governance step, not code
-- [ ] Task: Measure - User Manual Verification 'Phase S3: Add the multiplayer session capability to the Play Kit' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase S3: Add the multiplayer session capability to the Play Kit' (Protocol in workflow.md) — preliminary gates executed by orchestrator, confirmed YES by product owner 2026-08-04; receipt `s3-preliminary-verification-20260804.md`; verification report in git notes on checkpoint 90da767
 
 ## Phase S4: Give the session service a deployable home
 _Story ref: spec.md#story-s4_
