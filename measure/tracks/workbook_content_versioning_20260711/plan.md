@@ -286,7 +286,9 @@ _Story ref: spec.md#story-s3-import-legacy-workbook-projects-and-assets_
 > phase2-acceptance). The contracts and Red-test tasks below stay blocked.
 > Worker-independent prereqs proceeded instead: render-layer test hardening
 > (tech-debt row "before S5 depends on this layer") and asset key→URL resolution
-> for preview/manual rendering.
+> for preview/manual rendering — `592cee579` (54 render/store/port/PGlite tests;
+> fixed appendEdition tenant guard + persisted editionId), `a24549a7f`,
+> `01c7d13f8` (editor key-carrier data-loss fix).
 
 - [b] Task: After Durable Job Worker Phase 4 acceptance, define render-job, immutable-input, template/renderer version, cancellation, retry budget, artifact lifecycle, retention, revocation, and signed-delivery contracts. (deferred:durable_job_worker_platform_20260713-phase4-acceptance)
 - [ ] Task: Write Red tests proving jobs use released snapshots only, reject live-source reads/missing assets/revoked editions, preserve idempotency, and never expose mutable public artifact URLs.
