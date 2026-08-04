@@ -281,7 +281,14 @@ _Story ref: spec.md#story-s3-import-legacy-workbook-projects-and-assets_
 
 ## Phase S5: Render, distribute, and revoke durable artifacts
 
-- [ ] Task: After Durable Job Worker Phase 4 acceptance, define render-job, immutable-input, template/renderer version, cancellation, retry budget, artifact lifecycle, retention, revocation, and signed-delivery contracts.
+> **Gate status (2026-08-04):** Durable Job Worker Phase 4 acceptance has NOT
+> happened — its track's Phase 3 tasks are still `[b]` (deferred on
+> phase2-acceptance). The contracts and Red-test tasks below stay blocked.
+> Worker-independent prereqs proceeded instead: render-layer test hardening
+> (tech-debt row "before S5 depends on this layer") and asset key→URL resolution
+> for preview/manual rendering.
+
+- [b] Task: After Durable Job Worker Phase 4 acceptance, define render-job, immutable-input, template/renderer version, cancellation, retry budget, artifact lifecycle, retention, revocation, and signed-delivery contracts. (deferred:durable_job_worker_platform_20260713-phase4-acceptance)
 - [ ] Task: Write Red tests proving jobs use released snapshots only, reject live-source reads/missing assets/revoked editions, preserve idempotency, and never expose mutable public artifact URLs.
 - [ ] Task: Extract the legacy compiler into a versioned renderer package and durable worker handler; store preview, HTML/PDF, and teacher-manual artifacts with full provenance through the storage adapter.
 - [ ] Task: Run worker/storage failure drills, print-browser acceptance, and independent artifact-access/revocation review.
