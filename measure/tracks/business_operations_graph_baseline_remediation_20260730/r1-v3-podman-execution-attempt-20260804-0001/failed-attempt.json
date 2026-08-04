@@ -1,0 +1,212 @@
+{
+  "attempt": {
+    "id": "r1-v3-podman-execution-attempt-20260804-0001",
+    "namingRule": "r1-v3-podman-execution-attempt-YYYYMMDD-NNNN",
+    "sequence": 1
+  },
+  "commands": [
+    {
+      "actualExecutor": {
+        "argv": [
+          "/usr/bin/podman",
+          "run",
+          "--rm",
+          "--network",
+          "none",
+          "--workdir",
+          "/work",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-9c2fe7jh/work:/work:rw",
+          "--volume",
+          "/home/daniel-bo/.local/lib/node_modules/pnpm:/opt/pnpm:ro",
+          "--volume",
+          "/home/daniel-bo/.local/share/pnpm/store/v11:/root/.local/share/pnpm/store/v11:O",
+          "--volume",
+          "/home/daniel-bo/.local/bin/repo-graph:/opt/repo-graph:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-9c2fe7jh/execution-closure.archive.json:/runner/archive.json:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-9c2fe7jh/runner/direct-runtime-source-packet.json:/runner/direct-runtime-source-packet.json:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-9c2fe7jh/runner/materialize.mjs:/runner/materialize.mjs:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-9c2fe7jh/runner/replay.mjs:/runner/replay.mjs:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-9c2fe7jh/runner/audit.mjs:/runner/audit.mjs:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-9c2fe7jh/runner/direct-runtime-materialization-probe.mjs:/runner/direct-runtime-materialization-probe.mjs:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-9c2fe7jh/runner/direct-runtime-tracer.mjs:/runner/direct-runtime-tracer.mjs:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-9c2fe7jh/runner/direct-runtime-fs-promises-loader.mjs:/runner/direct-runtime-fs-promises-loader.mjs:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-9c2fe7jh/runner/direct-runtime-fs-promises-wrapper.mjs:/runner/direct-runtime-fs-promises-wrapper.mjs:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-9c2fe7jh/runner/direct-runtime-trace-receipt.mjs:/runner/direct-runtime-trace-receipt.mjs:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-9c2fe7jh/runner/direct-runtime-dist-identity.mjs:/runner/direct-runtime-dist-identity.mjs:ro",
+          "--volume",
+          "/tmp/business-operations-r1-v3-podman-9c2fe7jh/runner/nested-pnpm-shim:/usr/local/bin/pnpm:ro",
+          "node:22-slim@sha256:6c74791e557ce11fc957704f6d4fe134a7bc8d6f5ca4403205b2966bd488f6b3",
+          "/usr/bin/env",
+          "-i",
+          "CI=true",
+          "PATH=/usr/local/bin:/usr/bin:/bin",
+          "/usr/local/bin/node",
+          "/opt/pnpm/bin/pnpm.mjs",
+          "install",
+          "--offline",
+          "--frozen-lockfile",
+          "--frozen-store",
+          "--trust-lockfile",
+          "--store-dir=/root/.local/share/pnpm/store/v11"
+        ],
+        "effectiveEnvironment": {
+          "CI": "true",
+          "PATH": "/usr/local/bin:/usr/bin:/bin"
+        },
+        "environment": {
+          "CI": "true"
+        },
+        "inheritedEnv": [],
+        "logicalArgv": [
+          "pnpm",
+          "install",
+          "--offline",
+          "--frozen-lockfile",
+          "--frozen-store",
+          "--trust-lockfile"
+        ],
+        "payloadArgv": [
+          "/usr/local/bin/node",
+          "/opt/pnpm/bin/pnpm.mjs",
+          "install",
+          "--offline",
+          "--frozen-lockfile",
+          "--frozen-store",
+          "--trust-lockfile",
+          "--store-dir=/root/.local/share/pnpm/store/v11"
+        ],
+        "toolchain": {
+          "node": {
+            "path": "/usr/local/bin/node",
+            "sha256": "93956de2e59480474a7b46571da1651180b1a050cdf32641ebec4ce6e478e068",
+            "version": "v22.23.1"
+          },
+          "pnpmLauncher": {
+            "path": "/home/daniel-bo/.local/lib/node_modules/pnpm",
+            "sha256": "ff3224d46b47fbb24a7e9fe15fededef7e00892d07d4e376b6762d4899906bfd",
+            "version": "11.8.0"
+          }
+        }
+      },
+      "argv": [
+        "pnpm",
+        "install",
+        "--offline",
+        "--frozen-lockfile",
+        "--frozen-store",
+        "--trust-lockfile"
+      ],
+      "cwd": ".",
+      "env": {
+        "CI": "true"
+      },
+      "envAbsent": [
+        "PG_TEST_URL"
+      ],
+      "exitCode": 1,
+      "id": "offline-install",
+      "network": false,
+      "registryAttestation": {
+        "requests": 1,
+        "retryEvents": 0
+      },
+      "stderr": {
+        "path": "r1-v3-podman-execution-attempt-20260804-0001/raw/receipt-offline-install.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      },
+      "stdout": {
+        "path": "r1-v3-podman-execution-attempt-20260804-0001/raw/receipt-offline-install.stdout.txt",
+        "sha256": "2b2a2e820342db7726db2243a36317de6ac7875940d901522cfd80a911abf1e1",
+        "size": 3731
+      }
+    }
+  ],
+  "failure": {
+    "classification": "HERMETIC_NETWORK_POLICY_VIOLATION",
+    "commandId": "offline-install",
+    "externalStop": null,
+    "packageManagerDiagnostic": {
+      "code": "ERR_PNPM_NO_OFFLINE_TARBALL",
+      "stream": "stdout"
+    },
+    "reason": "V3_HERMETIC_PNPM_NETWORK_POLICY_VIOLATION",
+    "registryAttestation": {
+      "requests": 1,
+      "retryEvents": 0
+    },
+    "stage": "offline-install"
+  },
+  "hermeticPnpmInstallContract": {
+    "kind": "hermetic-pnpm-install-contract",
+    "logicalArgv": [
+      "pnpm",
+      "install",
+      "--offline",
+      "--frozen-lockfile",
+      "--frozen-store",
+      "--trust-lockfile"
+    ],
+    "network": {
+      "mode": "none",
+      "registryRequestsMaximum": 0,
+      "retryEventsMaximum": 0
+    },
+    "payloadSuffix": [
+      "install",
+      "--offline",
+      "--frozen-lockfile",
+      "--frozen-store",
+      "--trust-lockfile",
+      "--store-dir=/root/.local/share/pnpm/store/v11"
+    ],
+    "schemaVersion": 1,
+    "strategy": "TRUST_HASH_BOUND_FROZEN_LOCKFILE",
+    "trustLockfile": {
+      "documentedControl": "--trust-lockfile",
+      "documentedEffect": "SKIP_REAPPLY_LOCKFILE_SUPPLY_CHAIN_POLICY",
+      "justification": "HASH_BOUND_TRUSTED_FROZEN_LOCKFILE",
+      "lockfile": {
+        "path": "pnpm-lock.yaml",
+        "sha256": "518e7074a1537d16ee9ed79144528c2b1f7982f5955cb30738715890287785f5",
+        "size": 894351
+      },
+      "pnpmVersion": "11.8.0",
+      "workspaceConfig": {
+        "path": "pnpm-workspace.yaml",
+        "sha256": "342585c3477f52ebb2e19b43c14e7de0e98b802584c53e15c62d56c17d498fcb",
+        "size": 3659
+      }
+    }
+  },
+  "historicalBlocker": {
+    "path": "r1-v3-podman-execution-blocker-20260801/blocker.json",
+    "sha256": "f9da2afa8c8b9da3403f807c5903654538cdabf23c2113c754c1608114183e7d",
+    "size": 11694
+  },
+  "kind": "execution-closure-failed-attempt",
+  "markerDisposition": {
+    "r1V3": "~",
+    "r2Task3": "b",
+    "r2Task4": "b",
+    "r2Task5": "b",
+    "r3": "b",
+    "successors": "b",
+    "upstreamAuthority": "NONE"
+  },
+  "schemaVersion": 1,
+  "status": "BLOCKED",
+  "upstreamAuthority": "NONE"
+}
