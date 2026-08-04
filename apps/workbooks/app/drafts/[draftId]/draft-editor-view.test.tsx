@@ -128,7 +128,11 @@ describe("DraftEditorView / states", () => {
     expect(useDraftLessonEditor).toHaveBeenCalledTimes(1);
     expect(screen.getByText("Basic Information")).toBeTruthy();
     expect(screen.getByText("Article")).toBeTruthy();
+    expect(screen.getByText("Vocabulary")).toBeTruthy();
+    expect(screen.getByText("Pedagogical Connectors")).toBeTruthy();
     expect(screen.getByText("Comprehension Questions")).toBeTruthy();
+    expect(screen.getAllByText("Writing Prompt").length).toBeGreaterThan(0);
+    expect(screen.getByText("Lesson Reflection")).toBeTruthy();
     expect(screen.getByText("Save Changes")).toBeTruthy();
   });
 
@@ -140,6 +144,15 @@ describe("DraftEditorView / states", () => {
 
   it("renders the deferred-sections note", () => {
     render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
-    expect(screen.getByRole("note").textContent).toContain("Deferred in this phase");
+    const note = screen.getByRole("note").textContent ?? "";
+    expect(note).toContain("Deferred in this phase");
+    expect(note).toContain("sentence-order questions");
+    expect(note).toContain("sentence-completion prompts");
+  });
+
+  it("does not render sentence-practice fields without a source UI section", () => {
+    render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
+    expect(screen.queryByLabelText(/Sentence Order/i)).toBeNull();
+    expect(screen.queryByLabelText(/Sentence Completion/i)).toBeNull();
   });
 });

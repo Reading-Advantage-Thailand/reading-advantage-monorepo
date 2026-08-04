@@ -53,6 +53,7 @@ only through typed, authorized, idempotent promotion commands.
 **Estimate:** S
 **Priority:** Must
 
+### Story S1: Select governed source content
 
 **As a** curriculum editor
 **I want** to select eligible Reading Advantage and Primary Advantage articles through

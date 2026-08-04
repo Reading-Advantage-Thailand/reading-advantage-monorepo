@@ -6,7 +6,11 @@ import type { WorkbookSession } from "../../lib/session";
 import { BasicInfoEditor } from "../../../components/lesson-editor/BasicInfoEditor";
 import { ArticleEditor } from "../../../components/lesson-editor/ArticleEditor";
 import { ComprehensionQuestionsEditor } from "../../../components/lesson-editor/ComprehensionQuestionsEditor";
+import { LessonReflectionEditor } from "../../../components/lesson-editor/LessonReflectionEditor";
 import { LessonStatusBanners } from "../../../components/lesson-editor/LessonStatusBanners";
+import { PedagogicalConnectorsEditor } from "../../../components/lesson-editor/PedagogicalConnectorsEditor";
+import { VocabularyEditor } from "../../../components/lesson-editor/VocabularyEditor";
+import { WritingPromptEditor } from "../../../components/lesson-editor/WritingPromptEditor";
 import { useDraftLessonEditor } from "./use-draft-lesson-editor";
 
 /** Props controlling the draft lesson editor view. */
@@ -123,11 +127,10 @@ function DraftLessonEditorView({
       />
 
       <p role="note">
-        Deferred in this phase: Vocabulary, Pedagogical Connectors, Writing
-        Prompt, and Lesson Reflection editors (their fields have no carrier in
-        the normalized draft contract yet); AI augment and image generation
-        (proposal-only via @reading-advantage/ai, FR-11); and live preview
-        (S4c).
+        Deferred in this phase: sentence-order questions and sentence-completion
+        prompts (the legacy lesson editor has no UI section for them); AI
+        augment and image generation (proposal-only via @reading-advantage/ai,
+        FR-11); and live preview (S4c).
       </p>
 
       <BasicInfoEditor
@@ -141,8 +144,37 @@ function DraftLessonEditorView({
         onChange={setLessonField}
       />
 
+      <VocabularyEditor
+        vocabulary={lesson.vocabulary}
+        vocab_match={lesson.vocab_match}
+        vocab_fill={lesson.vocab_fill}
+        vocab_word_bank={lesson.vocab_word_bank}
+        onChange={setLessonField}
+      />
+
+      <PedagogicalConnectorsEditor
+        connection_question={lesson.connection_question}
+        grammar_search_term={lesson.grammar_search_term}
+        phonics_focus={lesson.phonics_focus}
+        discussion_question={lesson.discussion_question}
+        onChange={setLessonField}
+      />
+
       <ComprehensionQuestionsEditor
         comprehension_questions={lesson.comprehension_questions}
+        onChange={setLessonField}
+      />
+
+      <WritingPromptEditor
+        writing_prompt={lesson.writing_prompt}
+        writing_plan_prompts={lesson.writing_plan_prompts}
+        writing_sentence_frames={lesson.writing_sentence_frames}
+        sentence_starters={lesson.sentence_starters}
+        onChange={setLessonField}
+      />
+
+      <LessonReflectionEditor
+        reflection_focus={lesson.reflection_focus}
         onChange={setLessonField}
       />
     </main>

@@ -8,6 +8,7 @@ export default defineConfig({
       "*.{test,spec}.{ts,tsx}",
       "app/**/*.{test,spec}.{ts,tsx}",
       "app/**/__tests__/**/*.{test,spec}.{ts,tsx}",
+      "components/**/*.{test,spec}.{ts,tsx}",
       "lib/**/*.{test,spec}.{ts,tsx}",
     ],
     // `.next/**` must stay excluded: `next build` emits a standalone bundle

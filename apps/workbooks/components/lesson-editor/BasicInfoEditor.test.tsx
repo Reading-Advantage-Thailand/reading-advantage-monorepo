@@ -2,7 +2,7 @@
 
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { BasicInfoEditor } from "../BasicInfoEditor";
+import { BasicInfoEditor } from "./BasicInfoEditor";
 
 describe("BasicInfoEditor", () => {
   it("renders the lesson title and CEFR level fields", () => {
@@ -14,10 +14,12 @@ describe("BasicInfoEditor", () => {
       />,
     );
     expect(screen.getByText("Basic Information")).toBeTruthy();
-    expect(screen.getByLabelText(/Lesson Title/i)).toHaveValue(
-      "The Library Map",
-    );
-    expect(screen.getByLabelText(/CEFR Level/i)).toHaveValue("A1");
+    expect(
+      (screen.getByLabelText(/Lesson Title/i) as HTMLInputElement).value,
+    ).toBe("The Library Map");
+    expect(
+      (screen.getByLabelText(/CEFR Level/i) as HTMLInputElement).value,
+    ).toBe("A1");
   });
 
   it("does not render fields without a normalized-contract carrier", () => {

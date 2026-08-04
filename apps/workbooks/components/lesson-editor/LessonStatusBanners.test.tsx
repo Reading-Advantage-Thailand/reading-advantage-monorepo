@@ -2,7 +2,7 @@
 
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { LessonStatusBanners } from "../LessonStatusBanners";
+import { LessonStatusBanners } from "./LessonStatusBanners";
 
 const baseProps = {
   saveSuccess: false,

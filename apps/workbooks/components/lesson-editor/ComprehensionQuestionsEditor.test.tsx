@@ -2,7 +2,7 @@
 
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { ComprehensionQuestionsEditor } from "../ComprehensionQuestionsEditor";
+import { ComprehensionQuestionsEditor } from "./ComprehensionQuestionsEditor";
 
 describe("ComprehensionQuestionsEditor", () => {
   it("renders the questions editor as JSON", () => {
@@ -16,9 +16,9 @@ describe("ComprehensionQuestionsEditor", () => {
       />,
     );
     expect(screen.getByText("Comprehension Questions")).toBeTruthy();
-    expect(screen.getByLabelText(/Questions/i)).toHaveValue(
-      JSON.stringify(questions),
-    );
+    expect(
+      (screen.getByLabelText(/^Questions$/i) as HTMLTextAreaElement).value,
+    ).toBe(JSON.stringify(questions));
   });
 
   it("does not render short-answer fields in this phase", () => {
@@ -33,7 +33,7 @@ describe("ComprehensionQuestionsEditor", () => {
     const questions = [
       { number: 1, question: "New question?", options: ["x", "y"] },
     ];
-    fireEvent.change(screen.getByLabelText(/Questions/i), {
+    fireEvent.change(screen.getByLabelText(/^Questions$/i), {
       target: { value: JSON.stringify(questions) },
     });
     expect(onChange).toHaveBeenCalledWith("comprehension_questions", questions);
@@ -42,7 +42,7 @@ describe("ComprehensionQuestionsEditor", () => {
   it("ignores invalid JSON", () => {
     const onChange = vi.fn();
     render(<ComprehensionQuestionsEditor onChange={onChange} />);
-    fireEvent.change(screen.getByLabelText(/Questions/i), {
+    fireEvent.change(screen.getByLabelText(/^Questions$/i), {
       target: { value: "invalid json" },
     });
     expect(onChange).not.toHaveBeenCalled();

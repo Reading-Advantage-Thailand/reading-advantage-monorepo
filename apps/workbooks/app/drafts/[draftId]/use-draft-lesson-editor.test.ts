@@ -85,6 +85,100 @@ describe("useDraftLessonEditor", () => {
     ]);
   });
 
+  it("loads the vocabulary, writing, connector, and reflection carriers", () => {
+    const content = {
+      ...makeDraft().sourceRecord.content,
+      vocabulary: [{ word: "map", definition: "a drawing of a place" }],
+      vocabMatch: [
+        { number: 1, word: "map", letter: "A", definition: "a drawing" },
+      ],
+      vocabFill: [{ number: 1, sentence: "The ___ shows the library." }],
+      vocabWordBank: ["map", "library"],
+      connectionQuestion: "Have you used a map?",
+      grammarSearchTerm: "simple past",
+      phonicsFocus: "short a",
+      discussionQuestion: "Why do we need maps?",
+      writingPrompt: "Describe your neighborhood",
+      writingPlanPrompts: ["Main idea:", "Details:"],
+      writingSentenceFrames: ["First, I will..."],
+      sentenceStarters: ["The map shows..."],
+      reflectionFocus: "Today I learned:",
+    };
+    const { result } = renderHook(() =>
+      useDraftLessonEditor({
+        initialDraft: makeDraft({
+          sourceRecord: { ...makeDraft().sourceRecord, content },
+        }),
+      }),
+    );
+    expect(result.current.lesson.vocabulary).toEqual([
+      { word: "map", definition: "a drawing of a place" },
+    ]);
+    expect(result.current.lesson.vocab_match).toEqual([
+      { number: 1, word: "map", letter: "A", definition: "a drawing" },
+    ]);
+    expect(result.current.lesson.vocab_fill).toEqual([
+      { number: 1, sentence: "The ___ shows the library." },
+    ]);
+    expect(result.current.lesson.vocab_word_bank).toEqual(["map", "library"]);
+    expect(result.current.lesson.connection_question).toBe(
+      "Have you used a map?",
+    );
+    expect(result.current.lesson.grammar_search_term).toBe("simple past");
+    expect(result.current.lesson.phonics_focus).toBe("short a");
+    expect(result.current.lesson.discussion_question).toBe(
+      "Why do we need maps?",
+    );
+    expect(result.current.lesson.writing_prompt).toBe(
+      "Describe your neighborhood",
+    );
+    expect(result.current.lesson.writing_plan_prompts).toEqual([
+      "Main idea:",
+      "Details:",
+    ]);
+    expect(result.current.lesson.writing_sentence_frames).toEqual([
+      "First, I will...",
+    ]);
+    expect(result.current.lesson.sentence_starters).toEqual([
+      "The map shows...",
+    ]);
+    expect(result.current.lesson.reflection_focus).toBe("Today I learned:");
+  });
+
+  it("persists edited writing and reflection fields through the action", async () => {
+    const content = {
+      ...makeDraft().sourceRecord.content,
+      writingPrompt: "Describe your neighborhood",
+      reflectionFocus: "Today I learned:",
+    };
+    vi.mocked(updateDraftAction).mockResolvedValue({
+      ok: true,
+      draft: makeUpdatedDraft(),
+    });
+    const { result } = renderHook(() =>
+      useDraftLessonEditor({
+        initialDraft: makeDraft({
+          sourceRecord: { ...makeDraft().sourceRecord, content },
+        }),
+      }),
+    );
+    act(() => {
+      result.current.setLessonField("writing_prompt", "New writing prompt");
+    });
+    await act(async () => {
+      await result.current.validateAndSave();
+    });
+    expect(updateDraftAction).toHaveBeenCalledWith(
+      "draft-1",
+      3,
+      expect.objectContaining({
+        title: "Draft title",
+        writingPrompt: "New writing prompt",
+        reflectionFocus: "Today I learned:",
+      }),
+    );
+  });
+
   it("updates one legacy field through setLessonField", () => {
     const { result } = renderHook(() =>
       useDraftLessonEditor({ initialDraft: makeDraft() }),

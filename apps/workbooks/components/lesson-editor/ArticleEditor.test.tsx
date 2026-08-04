@@ -2,16 +2,16 @@
 
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { ArticleEditor } from "../ArticleEditor";
+import { ArticleEditor } from "./ArticleEditor";
 
 describe("ArticleEditor", () => {
   it("renders the paragraphs editor as JSON", () => {
     const paragraphs = [{ number: 1, text: "The map shows the library." }];
     render(<ArticleEditor article_paragraphs={paragraphs} onChange={() => {}} />);
     expect(screen.getByText("Article")).toBeTruthy();
-    expect(screen.getByLabelText(/Article Paragraphs/i)).toHaveValue(
-      JSON.stringify(paragraphs, null, 2),
-    );
+    expect(
+      (screen.getByLabelText(/Article Paragraphs/i) as HTMLTextAreaElement).value,
+    ).toBe(JSON.stringify(paragraphs, null, 2));
   });
 
   it("does not render URL, caption, or image fields in this phase", () => {
