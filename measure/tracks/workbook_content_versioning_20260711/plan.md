@@ -230,7 +230,15 @@ _Story ref: spec.md#story-s3-import-legacy-workbook-projects-and-assets_
   `updateWorkbookDraftSettings` command + drizzle + in-memory repos, `updateDraftSettingsAction`,
   shadcn-free `DraftSettingsDialog` with ported level constants, importer accepts optional
   settings. Editor hook owns settings+revision so settings saves never clobber unsaved edits.
-- [ ] Task (S4d): Port the teacher-manual workflow including the Paged.js shim and regression tests (divergence register), plus its docs.
+- [~] Task (S4d): Port the teacher-manual workflow including the Paged.js shim and regression tests (divergence register), plus its docs.
+  — **Design decision (2026-08-04):** the monorepo has no project entity (drafts are
+  per-lesson; `sourceId` = legacy lesson file name), so the legacy "one project = one
+  manual" grouping ports as a **user-selected draft set**: the drafts table gains
+  selection + a Teacher Manual action compiling the chosen drafts in lesson-number
+  order, taking series metadata from the first selected draft's settings. Generators
+  port verbatim from `advantage-workbooks` HEAD; a single `toTeacherManualLesson`
+  adapter maps `WorkbookNormalizedContent` (camelCase) → the legacy lesson shape the
+  ported generators consume, pinned by a maximal-fixture test.
 - [ ] Task: Write Red UI, accessibility, and authorization tests for catalog browsing, drafts, source selection, editing, optimistic conflicts, source drift, rights warnings, review state, and immutable-release confirmation.
 - [ ] Task: Port the project list, settings, lesson/section editor, preview setup, and teacher-manual workflow over workbook backend commands; reject arbitrary URL/pasted-remote ingestion.
 - [ ] Task: Complete desktop-first browser acceptance plus app/backend lint, type, test, build, graph, and independent permission/UI review gates.
