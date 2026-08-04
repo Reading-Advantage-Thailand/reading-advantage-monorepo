@@ -174,6 +174,17 @@ V2_FROZEN_SOURCE_INVENTORY = {
     "entryCount": 6868,
     "sha256": "8c5a2c2d1914667843df51e2c8180b8cd812c0295eb0c972ce45c80e4d213d51",
 }
+# H6 trace-event cap: the generator's recursive assets/standard discovery
+# (generate-standard-pack-release.mjs discoverAssets, script lines 18-27)
+# issues one node:fs/promises readdir event per directory, which the raw
+# tracer records but the read set never declares as a file path. The read set
+# already carries the exact count as discovery.directoryListingCount (1,895 for
+# the real standard pack at baseline commit e78fe22bb405de732de14c18590b19af0ce5f0de,
+# recorded identically in attempts r1-v3-podman-execution-attempt-20260804-0002
+# and -0003). The trace-event cap must budget those directory-enumeration
+# events on top of baselineReadSet + derivedBuildReadSet + outputPaths; the
+# receipts and release-JSON write are already declared inside those lists.
+H6_GENERATOR_ANCILLARY_DIRECTORY_ENUMERATION_EVENTS = 1895
 
 
 def _sha256(data: bytes) -> str:
@@ -2338,6 +2349,136 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         failed_attempt_validator_source = inspect.getsource(podman.validate_failed_execution_attempt_v1)
         self.assertIn("directRuntimeIntegration", failed_attempt_validator_source)
         self.assertIn("laterStages", failed_attempt_validator_source)
+        self.assertFalse(V3_DIR.exists())
+
+    def test_direct_runtime_trace_event_cap_covers_generator_ancillary_events(self) -> None:
+        """Requires the trace-event cap to budget the generator's undeclared directory enumerations.
+
+        @returns Nothing; assertions build one minimal integration and prove maxEvents covers every generator fs event.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        build_integration = getattr(podman, "build_direct_command_runtime_runner_integration_v1", None)
+        self.assertTrue(callable(build_integration), "V3_DIRECT_RUNTIME_RUNNER_INTEGRATION_BUILDER_MISSING")
+
+        def baseline_identity(path: str, contents: bytes) -> dict[str, Any]:
+            """Builds one deterministic detached baseline identity for the cap fixture.
+
+            @param path The workspace-relative synthetic source path.
+            @param contents The exact synthetic source bytes.
+            @returns The identity required by the direct-runtime trace contract.
+            """
+            blob = b"blob " + str(len(contents)).encode("ascii") + b"\0" + contents
+            return {
+                "path": path,
+                "sha256": _sha256(contents),
+                "size": len(contents),
+                "mode": "100644",
+                "origin": "BASELINE_GIT_BLOB",
+                "baselineCommit": "a" * 40,
+                "gitBlobSha1": hashlib.sha1(blob).hexdigest(),
+                "inclusion": "MATERIALIZE_EXACT_BASELINE_BYTES",
+            }
+
+        package_root = "packages/h6-fixture-runtime"
+        generator_path = f"{package_root}/scripts/generate-standard-pack-release.mjs"
+        fixture_bytes = {
+            generator_path: b"export const generate = true;\n",
+            f"{package_root}/assets/standard/asset-a.png": b"png-a",
+            f"{package_root}/assets/standard/asset-b.ogg": b"ogg-b",
+        }
+        generator_identity = baseline_identity(generator_path, fixture_bytes[generator_path])
+        baseline_read_set = sorted(
+            [baseline_identity(path, contents) for path, contents in fixture_bytes.items()],
+            key=lambda item: item["path"],
+        )
+        resource_budget = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-asset-resource-budget",
+            "frozenArchive": _reference(V2_ARCHIVE),
+            "sourceCeiling": {
+                "path": f"{package_root}/assets/standard",
+                "regularFiles": 2,
+                "apparentBytes": 1,
+                "allocatedBytes": 1,
+            },
+            "reservations": {
+                "baselineGitMaterializationBytes": 1,
+                "candidateCowBytes": 1,
+                "archiveSupplementBytes": 1,
+                "derivedOutputBytes": 1,
+                "metadataBytes": 1,
+                "minimumHeadroomBytes": 1,
+            },
+            "requiredAvailableBytes": 6,
+            "availableBytes": 6,
+            "decision": "PASS",
+        }
+        derived_read = {
+            "path": f"{package_root}/dist/assets/index.js",
+            "sha256": "b" * 64,
+            "size": 1,
+            "origin": "DERIVED_BUILD_OUTPUT",
+            "producer": {
+                "kind": "PACKAGE_SCRIPT_PREREQUISITE_BUILD",
+                "scriptName": "generate:standard-pack-catalog",
+                "scriptSegment": "pnpm build",
+                "receipt": {
+                    "path": "fixture-container-build-receipt.json",
+                    "sha256": "c" * 64,
+                    "size": 1,
+                },
+            },
+        }
+        read_set = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-read-set",
+            "trigger": {
+                "logicalArgv": ["pnpm", "--filter", "@h6/fixture-runtime", "generate:standard-pack-catalog"],
+                "package": "@h6/fixture-runtime",
+                "manifest": {
+                    "path": f"{package_root}/package.json",
+                    "sha256": "d" * 64,
+                    "size": 1,
+                },
+            },
+            "baselineReadSet": baseline_read_set,
+            "derivedBuildReadSet": [derived_read],
+            "outputPaths": [f"{package_root}/assets/standard/standard-pack-release.json"],
+            "preflightQuota": {
+                "maxEntries": len(baseline_read_set),
+                "maxBytes": sum(item["size"] for item in baseline_read_set),
+                "observedEntries": len(baseline_read_set),
+                "observedBytes": sum(item["size"] for item in baseline_read_set),
+            },
+            "resourceBudget": resource_budget,
+            "discovery": {
+                "kind": "BASELINE_GIT_INSTRUMENTED_TRACE",
+                "script": generator_identity,
+                "root": f"{package_root}/assets/standard",
+                "directoryListingCount": H6_GENERATOR_ANCILLARY_DIRECTORY_ENUMERATION_EVENTS,
+            },
+        }
+        source_packet = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-baseline-git-source-packet",
+            "source": "GIT_OBJECT_DATABASE_ONLY",
+            "baselineCommit": generator_identity["baselineCommit"],
+            "tree": {"gitTreeSha1": "e" * 40},
+            "baselineReadSet": baseline_read_set,
+            "objects": [
+                {**identity, "contentBase64": base64.b64encode(fixture_bytes[identity["path"]]).decode("ascii")}
+                for identity in baseline_read_set
+            ],
+        }
+        source_packet["packetSha256"] = podman._direct_runtime_packet_digest_v1(source_packet)
+        integration = build_integration(read_set, source_packet, None, resource_budget)
+        budgeted = len(baseline_read_set) + len(read_set["derivedBuildReadSet"]) + len(read_set["outputPaths"])
+        self.assertGreaterEqual(
+            integration["tracePolicy"]["maxEvents"],
+            budgeted + H6_GENERATOR_ANCILLARY_DIRECTORY_ENUMERATION_EVENTS,
+            "V3_DIRECT_RUNTIME_TRACE_EVENT_CAP_OMITS_GENERATOR_DIRECTORY_ENUMERATIONS",
+        )
         self.assertFalse(V3_DIR.exists())
 
     def test_direct_runtime_packet_materialization_and_trace_are_in_container_evidence(self) -> None:
