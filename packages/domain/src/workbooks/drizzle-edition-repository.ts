@@ -26,6 +26,38 @@ export interface WorkbookDrizzleDatabase {
   insert: (...args: readonly unknown[]) => unknown;
   update: (...args: readonly unknown[]) => unknown;
   transaction: <T>(fn: (tx: WorkbookDrizzleDatabase) => Promise<T>) => Promise<T>;
+  /**
+   * Present when the handle is a `TenantDB`. Workbook tables are REFERENTIAL,
+   * so school-tenant auto-scoping must be released explicitly before use.
+   * Absent on transaction handles, which are already raw.
+   */
+  unscoped?: (reason: string) => WorkbookDrizzleDatabase;
+}
+
+/**
+ * Reason recorded on every workbook `unscoped` call, kept greppable so an
+ * auditor can find each deliberate release of school-tenant auto-scoping.
+ */
+const WORKBOOK_UNSCOPED_REASON =
+  "workbook drafts/editions/publication_events are REFERENTIAL: rows carry a " +
+  "company publishing tenant_id, not schoolId; this repository scopes every " +
+  "read and write by the caller-supplied workbook tenant id";
+
+/**
+ * Releases school-tenant auto-scoping when the injected handle is a `TenantDB`.
+ *
+ * Workbook tables are REFERENTIAL in the tenant registry, so querying them
+ * through a `TenantDB` throws. A transaction handle has no `unscoped` and is
+ * already raw, so it is returned unchanged.
+ * @param db Injected database or transaction handle.
+ * @returns A raw handle safe to issue workbook queries against.
+ */
+function releaseTenantScope(
+  db: WorkbookDrizzleDatabase,
+): WorkbookDrizzleDatabase {
+  return typeof db.unscoped === "function"
+    ? db.unscoped(WORKBOOK_UNSCOPED_REASON)
+    : db;
 }
 
 interface WorkbookDraftRow {
@@ -216,12 +248,17 @@ function mapEditionRow(row: WorkbookEditionRow): WorkbookEdition {
  *
  * Editions are append-only rows that are never updated in place; stale-revision
  * status updates match no rows and raise "REVISION_CONFLICT".
- * @param db Structural database handle (or transaction handle) used for queries.
+ *
+ * A `TenantDB` handle is released once, here, via `unscoped`: workbook tables
+ * are REFERENTIAL because their rows carry a company publishing tenant id
+ * rather than a `schoolId`, and every query below scopes by that id explicitly.
+ * @param handle Structural database handle (or transaction handle) used for queries.
  * @returns A workbook edition repository bound to the supplied database handle.
  */
 export function createDrizzleEditionRepository(
-  db: WorkbookDrizzleDatabase,
+  handle: WorkbookDrizzleDatabase,
 ): WorkbookEditionRepositoryPort {
+  const db = releaseTenantScope(handle);
   return {
     async createDraft(draft) {
       await (

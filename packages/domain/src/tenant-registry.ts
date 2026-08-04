@@ -260,6 +260,9 @@ import {
   videoAssets,
   pastTopics,
   settings,
+  workbookDrafts,
+  workbookEditions,
+  workbookPublicationEvents,
 } from "@reading-advantage/db";
 
 register(xpLogs, "REFERENTIAL");
@@ -351,3 +354,14 @@ register(videoProjects, "REFERENTIAL");
 register(videoAssets, "REFERENTIAL");
 register(pastTopics, "REFERENTIAL");
 register(settings, "REFERENTIAL");
+
+// workbook publishing (track_id: workbook_content_versioning_20260711) — these
+// tables carry a company publishing `tenantId`, NOT a `schoolId`: workbooks owns
+// global company publishing data, while school assignment and learner state stay
+// in Reading and Primary (spec.md S0). TenantDB must therefore fail closed rather
+// than auto-scope, and the Drizzle repository scopes every read and write by the
+// caller-supplied workbook tenant id through
+// `unscoped("... tenant_id, not schoolId ...")`.
+register(workbookDrafts, "REFERENTIAL");
+register(workbookEditions, "REFERENTIAL");
+register(workbookPublicationEvents, "REFERENTIAL");
