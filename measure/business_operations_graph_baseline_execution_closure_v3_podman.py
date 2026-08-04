@@ -273,6 +273,7 @@ _DIRECT_RUNTIME_RESERVATION_FIELDS = (
     "metadataBytes",
     "minimumHeadroomBytes",
 )
+_DIRECT_RUNTIME_TRACE_BIJECTION_DETAIL_CAP = 25
 
 
 def _direct_runtime_read_set_fail(code: str, detail: str = "") -> None:
@@ -1053,6 +1054,37 @@ def validate_direct_command_runtime_read_set_contract_v1(
         _direct_runtime_read_set_fail("CONTRACT_REDERIVATION_MISMATCH")
 
 
+def _direct_runtime_trace_bijection_detail_v1(
+    expected_trace: dict[str, Any],
+    execution_trace: dict[str, Any],
+) -> str:
+    """Builds one bounded divergence detail for a failed four-member execution-trace bijection.
+
+    @param expected_trace The exact declared read, write, and enumeration trace derived from the contract.
+    @param execution_trace The observed baseline reads, derived reads, writes, and enumerations.
+    @returns A single-line canonical-JSON payload naming each diverging bucket's capped path lists plus a full-divergence digest.
+    """
+    buckets = ("baselineReads", "derivedBuildReads", "writes", "directoryEnumerations")
+    observed = execution_trace if isinstance(execution_trace, dict) else {}
+    divergence: dict[str, Any] = {}
+    full_divergence: dict[str, Any] = {}
+    for bucket in buckets:
+        declared = sorted({item["path"] for item in expected_trace.get(bucket, [])})
+        present = sorted({item["path"] for item in observed.get(bucket, [])})
+        extra = sorted(set(present) - set(declared))
+        missing = sorted(set(declared) - set(present))
+        if extra or missing:
+            divergence[bucket] = {
+                "extra": extra[:_DIRECT_RUNTIME_TRACE_BIJECTION_DETAIL_CAP],
+                "missing": missing[:_DIRECT_RUNTIME_TRACE_BIJECTION_DETAIL_CAP],
+                "extraTotal": len(extra),
+                "missingTotal": len(missing),
+            }
+            full_divergence[bucket] = {"extra": extra, "missing": missing}
+    payload = {**divergence, "divergenceSha256": _sha256(_canonical(full_divergence))}
+    return _canonical(payload).decode("utf-8")
+
+
 def validate_direct_command_runtime_execution_trace_v1(
     contract: dict[str, Any],
     execution_trace: dict[str, Any],
@@ -1091,7 +1123,10 @@ def validate_direct_command_runtime_execution_trace_v1(
         or execution_trace.get("writes") != expected_trace["writes"]
         or execution_trace.get("directoryEnumerations", []) != expected_trace["directoryEnumerations"]
     ):
-        _direct_runtime_read_set_fail("EXECUTION_TRACE_BIJECTION_FAILED")
+        _direct_runtime_read_set_fail(
+            "EXECUTION_TRACE_BIJECTION_FAILED",
+            _direct_runtime_trace_bijection_detail_v1(expected_trace, execution_trace),
+        )
 
 
 _DIRECT_RUNTIME_RUNNER_STAGES = (
