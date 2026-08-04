@@ -323,9 +323,12 @@ program, priority order when picking the next track is:
 > preserving an immutable, reproducible release snapshot. This program establishes the
 > versioning foundation before the standalone workbook dashboard is imported.
 
-- [ ] **Track: Versioned Workbook Content and Editions** *Link: [./tracks/workbook_content_versioning_20260711/](./tracks/workbook_content_versioning_20260711/)*
+- [~] **Track: Versioned Workbook Content and Editions** *Link: [./tracks/workbook_content_versioning_20260711/](./tracks/workbook_content_versioning_20260711/)*
   Define the shared article-and-asset catalog contract, publish immutable workbook editions,
   and retain the provenance needed to reproduce every rendered workbook artifact.
+  Status reconciled 2026-08-04: S1–S4 partially landed across nine commits; S5–S7 pending.
+  The renderer is still a placeholder — no Paged.js, no document-wrapper sections, no
+  teacher manual — so the print pipeline remains the bulk of the remaining port.
 
 ---
 

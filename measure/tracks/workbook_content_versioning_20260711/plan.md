@@ -5,16 +5,36 @@
 > and adds immutable editions, durable artifacts, reviewed AI proposals, and source-owned
 > live-app promotion. It does not authorize a direct port of filesystem helpers or legacy routes.
 
-> **Status correction:** This track remains `new`; historic `[~]` parent markers below are
-> planning placeholders, not completed implementation. Every unchecked child task remains
-> pending until started under the Measure workflow.
+> **Landed-work reconciliation (2026-08-04).** The previous status note said the track
+> "remains `new`" and every task was left `[ ]`. That was already false when written:
+> nine commits had landed under this `track_id`. Status markers below are now reconciled
+> against the tree, each checked task carrying the SHA that delivered it.
+>
+> | SHA | Delivered |
+> |---|---|
+> | `ebd75ff76` | `packages/db` workbook schema + migration `0048_workbook_publishing` |
+> | `599b9a117` | `packages/domain/src/workbooks` — contracts, ports, normalizers, draft/publish commands, repositories, renderers (6 test suites) |
+> | `dd60bbdc5` | `apps/workbooks` scaffold — routes, server actions, repository binding |
+> | `c109a372f` | legacy-import manifest contract + `dry-run:import` CLI |
+> | `dbaafe9a0` | home view listing tenant-scoped drafts and editions |
+> | `bc9ee5951` | lesson section editor port — 4 sub-editors, banners, mapping, hook |
+> | `6034a1dc8` | legacy-lesson fidelity carriers on the normalized contract |
+> | `6e94288db` | lossless legacy field mapping + `origins-2-a0` round-trip fixture |
+> | `3c595ef1c` | workbook tables classified REFERENTIAL; FR-6 tenant-coverage gate restored to green |
+>
+> **`[~]` means partially landed** — the gap is stated inline. Three gaps recur and are
+> not yet booked anywhere: (1) `graph.db` is stale (2026-08-01, older than every commit
+> above), so no "update the graph" sub-task is done; (2) there are no PGlite/Drizzle
+> integration tests — `drizzle-edition-repository.ts` (430 lines) has coverage only for
+> tenant scoping; (3) `html-renderer.ts`, `pdf-renderer.ts`, `artifact-store.ts` and
+> `render-port.ts` have no test suite at all.
 
 ## Phase S0: Establish the product and operational boundary
 
-- [ ] Task: Ratify internal editor/publisher/auditor roles, global publishing tenancy, PII exclusion, source eligibility, rights, public-sample, teacher-consumption, and release/revocation policy.
-- [ ] Task: Select the workbook operational database/adapter root, source-catalog transport, workload identity, forwarded editor context, and source-owned promotion authority; prohibit cross-database joins.
-- [ ] Task: Write Red policy, permission, privacy, tenant-boundary, and architecture tests before creating application code.
-- [ ] Task: Complete independent policy/security review and product-owner acceptance before source changes.
+- [~] Task: Ratify internal editor/publisher/auditor roles, global publishing tenancy, PII exclusion, source eligibility, rights, public-sample, teacher-consumption, and release/revocation policy. — **Gap:** only one role exists (`WORKBOOK_ADMIN`, track `workbooks_sso_onboarding_20260803`); the editor/publisher/auditor split, rights, public-sample and teacher-consumption policy are unratified. No product-owner artifact.
+- [~] Task: Select the workbook operational database/adapter root, source-catalog transport, workload identity, forwarded editor context, and source-owned promotion authority; prohibit cross-database joins. — Realized in code (`packages/db` root, `ContentCatalogPort` transport, session-derived editor context in `772a618ad`) but never recorded as a decision. **Gap:** workload identity and promotion authority undecided.
+- [~] Task: Write Red policy, permission, privacy, tenant-boundary, and architecture tests before creating application code. — Permission tests landed with the SSO track; the tenant-boundary test landed `3c595ef1c`, **after** the schema and repository it guards, not before. Policy and privacy tests do not exist.
+- [ ] Task: Complete independent policy/security review and product-owner acceptance before source changes. — Not started; source changes proceeded without it.
 - [ ] Task: Measure - User Manual Verification 'Phase S0: Establish the product and operational boundary' (Protocol in workflow.md).
 
 ## Phase S1: Build governed source catalog contracts
@@ -24,32 +44,39 @@ _Story ref: spec.md#story-s1-select-source-content_
 _Blast radius: `mapArticleToWorkbookJSON` has zero indexed callers and is a parity
 fixture only; do not change its public signature during this track._
 
-- [ ] Task: Define the source-catalog and normalized workbook-content contracts.
-  - [ ] Create strict Zod schemas for source identity, revision, normalized content,
+- [x] Task: Define the source-catalog and normalized workbook-content contracts. 599b9a117, 6034a1dc8
+  - [x] Create strict Zod schemas for source identity, revision, normalized content,
     questions, canonical asset keys, asset metadata, and structured incompatibility
-    errors.
-  - [ ] Define a transport-independent `ContentCatalogPort` with explicit tenant and
-    authorization context; document the read-only ownership boundary.
-  - [ ] Define canonical serialization and digest rules, including deterministic key
-    ordering and the chosen hash algorithm.
-- [ ] Task: Write source-catalog contract tests before adapters exist.
-  - [ ] Add Reading Advantage and Primary Advantage fixture inputs that represent their
-    different article and question shapes.
-  - [ ] Prove valid records normalize to one schema and incompatible, unpublished, or
+    errors. — `workbooks/contracts.ts`; extended with 14 legacy fidelity carriers in 6034a1dc8
+  - [x] Define a transport-independent `ContentCatalogPort` with explicit tenant and
+    authorization context; document the read-only ownership boundary. — `workbooks/content-catalog-port.ts`
+  - [x] Define canonical serialization and digest rules, including deterministic key
+    ordering and the chosen hash algorithm. — `workbooks/digest.ts`
+- [x] Task: Write source-catalog contract tests before adapters exist. 599b9a117, 6034a1dc8
+  - [x] Add Reading Advantage and Primary Advantage fixture inputs that represent their
+    different article and question shapes. — `workbooks-source-catalog.test.ts`
+  - [x] Prove valid records normalize to one schema and incompatible, unpublished, or
     cross-tenant inputs fail closed with structured errors.
-  - [ ] Add digest determinism tests for equivalent normalized records and asset-key
-    validation tests that reject mutable URLs as authoritative references.
-- [ ] Task: Implement read-only source-catalog adapters.
-  - [ ] Place source-independent contracts and orchestration in the owning backend
+  - [x] Add digest determinism tests for equivalent normalized records and asset-key
+    validation tests that reject mutable URLs as authoritative references. — `workbookAssetKeySchema` rejects `http(s)://`
+- [~] Task: Implement read-only source-catalog adapters. 599b9a117
+  - [x] Place source-independent contracts and orchestration in the owning backend
     module; keep app-specific reads behind injected adapters.
-  - [ ] Implement Reading Advantage and Primary Advantage adapter bindings without
-    importing app UI code or provider SDKs into the domain layer.
+  - [x] Implement Reading Advantage and Primary Advantage adapter bindings without
+    importing app UI code or provider SDKs into the domain layer. — `reading-advantage-normalizer.ts`, `primary-advantage-normalizer.ts`
   - [ ] Compare Reading Advantage adapter output with the existing workbook JSON mapper
     as a parity fixture while preserving the existing export route unchanged.
-- [ ] Task: Generate documentation and perform the Measure doctor gate.
+    — **Not done.** `workbooks-primary-advantage-normalizer.test.ts` proves parity
+    *between the two normalizers*, not against `mapArticleToWorkbookJSON`. The blast-radius
+    note above exists precisely for this comparison.
+- [~] Task: Generate documentation and perform the Measure doctor gate.
   - [ ] Update the code graph for added or changed contracts, exports, and imports.
-  - [ ] Run the affected package lint, check-types, and Vitest commands; record any
-    pre-existing failures separately from this track.
+    — **Not done.** `graph.db` mtime 2026-08-01 predates every commit in this track.
+  - [x] Run the affected package lint, check-types, and Vitest commands; record any
+    pre-existing failures separately from this track. — 2026-08-04: domain tsc clean,
+    lint 0 errors / 31 pre-existing warnings, workbook domain suites 173/173,
+    `apps/workbooks` 101/101. Full domain suite: 5 failed, all pre-existing
+    (mastery-persistence, codecamp-curriculum-assignments, activity-drizzle ×2 + dist copy).
   - [ ] Run `measure/generate.sh` and `measure/doctor.sh` when their project-local
     prerequisites are available; record unsupported commands rather than bypassing
     them.
@@ -59,34 +86,44 @@ fixture only; do not change its public signature during this track._
 
 _Story ref: spec.md#story-s2-publish-immutable-editions_
 
-- [ ] Task: Define versioned workbook persistence and publication contracts.
-  - [ ] Design Drizzle schema and migration for workbook drafts, edition versions,
+- [~] Task: Define versioned workbook persistence and publication contracts. ebd75ff76
+  - [x] Design Drizzle schema and migration for workbook drafts, edition versions,
     immutable edition snapshots, source references, asset references, and publication
-    audit events.
-  - [ ] Classify every new table in the tenant registry and define permissions for
+    audit events. — `schema/workbooks.ts`, `0048_workbook_publishing.sql`
+  - [~] Classify every new table in the tenant registry and define permissions for
     editors, publishers, and auditors before generating the migration.
-  - [ ] Define idempotency keys, optimistic-concurrency rules, state transitions, and
-    structured domain errors for draft creation and publication.
-- [ ] Task: Write publication and persistence tests first.
-  - [ ] Add unit tests for draft mutations, revision conflicts, duplicate publish
+    — **Order violated.** The migration shipped unclassified and left the FR-6
+    tenant-coverage gate red for a day; classification landed after the fact in
+    `3c595ef1c` (all three tables REFERENTIAL: they carry a company publishing
+    `tenantId`, not a `schoolId`). Editor/publisher/auditor permissions still undefined.
+  - [x] Define idempotency keys, optimistic-concurrency rules, state transitions, and
+    structured domain errors for draft creation and publication. — `edition-state.ts`,
+    `edition-repository-port.ts`; `REVISION_CONFLICT` on stale-revision updates
+- [~] Task: Write publication and persistence tests first. 599b9a117
+  - [x] Add unit tests for draft mutations, revision conflicts, duplicate publish
     requests, invalid snapshots, and failed asset checks using mocked ports.
+    — `workbooks-publish-edition{,-rejections}.test.ts`, `workbooks-update-draft.test.ts`
   - [ ] Add PGlite/Drizzle integration tests for transaction rollback, tenant isolation,
     append-only edition history, and source updates after release.
-  - [ ] Prove a safe fixture source mutation cannot alter the persisted release snapshot
-    or its content digest.
-- [ ] Task: Implement draft and edition domain commands plus thin transport adapters.
-  - [ ] Generate and review the Drizzle migration before applying it in the local test
+    — **Not done.** No PGlite harness for workbooks; every suite runs against
+    `in-memory-edition-repository.ts`, so the 430-line Drizzle repository is exercised
+    only by the tenant-scope test added in `3c595ef1c`.
+  - [x] Prove a safe fixture source mutation cannot alter the persisted release snapshot
+    or its content digest. — `workbooks-editions.test.ts`
+- [x] Task: Implement draft and edition domain commands plus thin transport adapters. 599b9a117, dd60bbdc5
+  - [x] Generate and review the Drizzle migration before applying it in the local test
     environment.
-  - [ ] Implement `createWorkbookDraft`, source-selection, draft-update, and
+  - [x] Implement `createWorkbookDraft`, source-selection, draft-update, and
     `publishWorkbookEdition` commands with authorization, validation, transactions,
-    and audit metadata.
-  - [ ] Expose the commands through the approved adapter layer without placing business
+    and audit metadata. — `create-draft.ts`, `update-draft.ts`, `publish-edition.ts`
+  - [x] Expose the commands through the approved adapter layer without placing business
     logic in route handlers, server actions, or future dashboard components.
-- [ ] Task: Generate documentation and perform the Measure doctor gate.
+    — `apps/workbooks/lib/repository.ts` is a thin binding; no runtime filesystem in the app
+- [~] Task: Generate documentation and perform the Measure doctor gate.
   - [ ] Update the graph for database, contract, and adapter exports, then inspect
-    changed caller relationships.
-  - [ ] Run affected database, domain, API, lint, type-check, and Vitest gates; retain
-    exact evidence in this track.
+    changed caller relationships. — **Not done** (stale `graph.db`, see header).
+  - [x] Run affected database, domain, API, lint, type-check, and Vitest gates; retain
+    exact evidence in this track. — evidence recorded under S1 above.
   - [ ] Run generated-documentation and doctor checks, recording known baseline debt
     separately.
 - [b] Task: Measure - User Manual Verification 'Phase S2: Publish immutable editions' (Protocol in workflow.md) — deferred:product-owner
@@ -95,18 +132,41 @@ _Story ref: spec.md#story-s2-publish-immutable-editions_
 
 _Story ref: spec.md#story-s3-import-legacy-workbook-projects-and-assets_
 
-- [ ] Task: Inventory standalone projects, lesson JSON, templates, fonts, images, generated artifacts, external references, rights state, and filesystem helper call sites; publish a versioned manifest and exception taxonomy.
-- [ ] Task: Define legacy normalization, immutable object-key naming, hashes, original-ID/path provenance, dry-run, approval, resume, rollback, and idempotent-import contracts.
-- [ ] Task: Write Red migration tests for invalid lessons, missing files, changed hashes, unsafe URLs, partial runs, reruns, asset mismatch, and zero runtime filesystem dependence after cutover.
+- [~] Task: Inventory standalone projects, lesson JSON, templates, fonts, images, generated artifacts, external references, rights state, and filesystem helper call sites; publish a versioned manifest and exception taxonomy. c109a372f, 6e94288db
+  — Manifest v2 published for **1 of 4** standalone projects (`origins-2-a0`: 14 lessons,
+  14 parse-OK, 0 exceptions, 42 provenance entries). **Gap:** `adventures-1.0-a1`,
+  `origins-3.1-a0`, `origins-3.1-a1` (35 further lesson files) not inventoried; templates,
+  fonts, rights state and filesystem helper call sites not covered.
+- [~] Task: Define legacy normalization, immutable object-key naming, hashes, original-ID/path provenance, dry-run, approval, resume, rollback, and idempotent-import contracts. c109a372f, 6034a1dc8
+  — Normalization (`importLegacyWorkbook`), object-key naming, SHA hashing, original-path
+  provenance and dry-run all defined. **Gap:** approval, resume and rollback contracts
+  do not exist.
+- [~] Task: Write Red migration tests for invalid lessons, missing files, changed hashes, unsafe URLs, partial runs, reruns, asset mismatch, and zero runtime filesystem dependence after cutover. 6034a1dc8
+  — `workbooks-legacy-importer.test.ts` (327 lines) + `legacy-import-manifest.test.ts`
+  cover invalid lessons, hashes and unsafe URLs. **Gap:** partial runs, reruns and asset
+  mismatch untested (no importer to run them against).
 - [ ] Task: Implement a read-only importer through `@reading-advantage/storage`, reconcile the Primary pilot by count/hash, and preserve the sibling app as a read-only archive.
-- [ ] Task: Define render-input and artifact-provenance contracts.
-  - [ ] Define immutable render input, template/version metadata, renderer metadata,
+  — **Not started.** Nothing writes through `@reading-advantage/storage`; the package is
+  a `transpilePackages` entry and a docstring reference only. The 42 provenance entries
+  still point at mutable `storage.googleapis.com` URLs, which the contract forbids as
+  release authority. Archive/cutover guard is incomplete on the standalone side — see
+  its tech-debt registry entry `monorepo_cutover_s7 (d604899)`.
+- [~] Task: Define render-input and artifact-provenance contracts. 599b9a117
+  - [x] Define immutable render input, template/version metadata, renderer metadata,
     artifact digest, storage key, validation status, and revocation/error contracts.
-  - [ ] Define the storage-port usage policy: canonical keys in snapshots, signed URLs
+    — `workbooks/render-port.ts`, `workbooks/artifact-store.ts`
+  - [x] Define the storage-port usage policy: canonical keys in snapshots, signed URLs
     only at the access boundary, and no source-asset URL as release authority.
+    — enforced by `workbookAssetKeySchema`; `legacyUrl` is provenance-only
   - [ ] Specify artifact lifecycle transitions and retention requirements without
     implementing the standalone dashboard or a production renderer.
 - [ ] Task: Write artifact reproducibility tests before implementation.
+  — **Not started.** `render-port.ts`, `artifact-store.ts`, `html-renderer.ts` and
+  `pdf-renderer.ts` have no test suite. Note also that `html-renderer.ts` emits a
+  111-line placeholder document (title, paragraphs, `<ol>` of questions) and
+  `apps/workbooks/lib/html-to-pdf.ts` drives Playwright `page.pdf()` directly with no
+  Paged.js — neither reproduces workbook layout, and `html-to-pdf.ts` is currently
+  unreferenced. The S4/S5 renderer extraction, not this task, is where they get real.
   - [ ] Add tests that render-input assembly reads only the edition snapshot and refuses
     live-source reads after publication.
   - [ ] Add tests for artifact metadata registration, digest mismatch, missing asset,
@@ -152,9 +212,19 @@ _Story ref: spec.md#story-s3-import-legacy-workbook-projects-and-assets_
 >   gaps (image write paths unguarded, no tests) recorded in the standalone
 >   tech-debt registry.
 
-- [ ] Task: Scaffold `apps/workbooks` as a separately deployable Company-SSO application with explicit workbook role gates, thin UI/routes, and no copied filesystem or provider-SDK business logic. — **DONE ahead of plan:** scaffold `dd60bbdc5`, SSO gate `772a618ad` + `2df52486c` (track: workbooks_sso_onboarding_20260803)
-- [ ] Task (S4a): Run the legacy importer dry-run for pilot project `origins-2-a0`, record the manifest/exceptions, and build the project list read page over domain queries (drafts/editions from DB, no filesystem).
-- [ ] Task (S4b): Port the lesson/section editor from `advantage-workbooks` HEAD (refactored suite per divergence register) onto workbook backend server actions with optimistic concurrency.
+- [x] Task: Scaffold `apps/workbooks` as a separately deployable Company-SSO application with explicit workbook role gates, thin UI/routes, and no copied filesystem or provider-SDK business logic. — scaffold `dd60bbdc5`, SSO gate `772a618ad` + `2df52486c` (track: workbooks_sso_onboarding_20260803). Verified: no runtime filesystem in the app (only the import CLI and a test fixture loader).
+- [x] Task (S4a): Run the legacy importer dry-run for pilot project `origins-2-a0`, record the manifest/exceptions, and build the project list read page over domain queries (drafts/editions from DB, no filesystem). c109a372f, dbaafe9a0, 6e94288db
+- [~] Task (S4b): Port the lesson/section editor from `advantage-workbooks` HEAD (refactored suite per divergence register) onto workbook backend server actions with optimistic concurrency. bc9ee5951, 6e94288db
+  — 4 sub-editors + status banners + mapping + `useDraftLessonEditor` committed; the
+  Vocabulary, Pedagogical Connectors, Writing Prompt and Lesson Reflection editors are
+  written and passing but **uncommitted** as of 2026-08-04.
+  **Two known gaps:** (1) `writing_practice_url` is accepted by `draftLessonSchema` but
+  has no carrier on the normalized contract and is absent from both mapping directions,
+  so it is silently dropped on save; (2) the "keeps every fixture field intact"
+  round-trip tests bind to one fixture that carries 25 of ~35 legacy fields — it lacks
+  `writing_practice_url`, `short_answer_hint`, `article_images`, `writing_plan_prompts`,
+  `writing_sentence_frames` and all four pedagogical connectors, so the losslessness
+  proof is weaker than it reads. `LessonPreviewModal` is not ported.
 - [ ] Task (S4c): Port settings + preview/compile wiring over the domain render port (no runtime filesystem, no provider SDKs).
 - [ ] Task (S4d): Port the teacher-manual workflow including the Paged.js shim and regression tests (divergence register), plus its docs.
 - [ ] Task: Write Red UI, accessibility, and authorization tests for catalog browsing, drafts, source selection, editing, optimistic conflicts, source drift, rights warnings, review state, and immutable-release confirmation.

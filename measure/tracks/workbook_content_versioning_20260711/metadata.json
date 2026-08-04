@@ -1,16 +1,16 @@
 {
   "track_id": "workbook_content_versioning_20260711",
   "type": "feature",
-  "status": "new",
+  "status": "in_progress",
   "created_at": "2026-07-11T07:26:37Z",
-  "updated_at": "2026-07-11T07:26:37Z",
+  "updated_at": "2026-08-04T01:20:00Z",
   "description": "Import advantage-workbooks as an internal curriculum-publishing web app with source-owned Reading/Primary content, immutable editions, object-storage artifacts, durable rendering, reviewed AI proposals, and governed live-app promotion.",
   "estimated_tasks": 43,
   "actual_tasks": null,
-  "deviation_notes": "This rewritten track supersedes the earlier foundation-only scope. It keeps workbook source content owned by Reading and Primary, places publishing artifacts in a separate workbook operational boundary, and limits teachers to approved-edition consumption in the MVP.",
+  "deviation_notes": "This rewritten track supersedes the earlier foundation-only scope. It keeps workbook source content owned by Reading and Primary, places publishing artifacts in a separate workbook operational boundary, and limits teachers to approved-edition consumption in the MVP. Status reconciled 2026-08-04: the track was still marked 'new' while nine commits had landed under its track_id (ebd75ff76, 599b9a117, dd60bbdc5, c109a372f, dbaafe9a0, bc9ee5951, 6034a1dc8, 6e94288db, 3c595ef1c). S1 and S2 landed out of order against S0 (no policy ratification, no independent review) and the S2 migration shipped before its tenant-registry classification, leaving the FR-6 coverage gate red until 3c595ef1c. See plan.md for the per-task SHA map and the '[~] partially landed' gaps.",
   "sprint": {
     "goal": "Turn advantage-workbooks into a governed web publishing pipeline that produces reproducible workbook editions and improves the live Reading and Primary content ecosystem without creating a second mutable corpus.",
-    "stories": [{"id":"S0","title":"Establish the workbook product boundary","size":"S","priority":"Must","status":"pending"},{"id":"S1","title":"Select governed source content","size":"L","priority":"Must","status":"pending"},{"id":"S2","title":"Publish immutable editions","size":"L","priority":"Must","status":"pending"},{"id":"S3","title":"Import legacy workbook projects and assets","size":"L","priority":"Must","status":"pending"},{"id":"S4","title":"Use the web publishing workspace","size":"XL","priority":"Must","status":"pending"},{"id":"S5","title":"Render and distribute approved editions","size":"L","priority":"Must","status":"pending"},{"id":"S6","title":"Review AI proposals and promote reusable additions","size":"XL","priority":"Must","status":"pending"},{"id":"S7","title":"Pilot classroom consumption and retire standalone writes","size":"L","priority":"Must","status":"pending"}],
+    "stories": [{"id":"S0","title":"Establish the workbook product boundary","size":"S","priority":"Must","status":"in_progress"},{"id":"S1","title":"Select governed source content","size":"L","priority":"Must","status":"in_progress"},{"id":"S2","title":"Publish immutable editions","size":"L","priority":"Must","status":"in_progress"},{"id":"S3","title":"Import legacy workbook projects and assets","size":"L","priority":"Must","status":"in_progress"},{"id":"S4","title":"Use the web publishing workspace","size":"XL","priority":"Must","status":"in_progress"},{"id":"S5","title":"Render and distribute approved editions","size":"L","priority":"Must","status":"pending"},{"id":"S6","title":"Review AI proposals and promote reusable additions","size":"XL","priority":"Must","status":"pending"},{"id":"S7","title":"Pilot classroom consumption and retire standalone writes","size":"L","priority":"Must","status":"pending"}],
     "demo_notes": null,
     "retro_ref": null
   }
