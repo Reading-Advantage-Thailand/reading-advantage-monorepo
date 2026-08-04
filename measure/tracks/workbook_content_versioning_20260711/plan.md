@@ -249,7 +249,14 @@ _Story ref: spec.md#story-s3-import-legacy-workbook-projects-and-assets_
   workbooks app has no e2e harness or seeded-DB infra; the shim presence/order the
   e2e guarded is unit-pinned. Recorded in tech-debt.
 - [ ] Task: Write Red UI, accessibility, and authorization tests for catalog browsing, drafts, source selection, editing, optimistic conflicts, source drift, rights warnings, review state, and immutable-release confirmation.
-- [ ] Task: Port the project list, settings, lesson/section editor, preview setup, and teacher-manual workflow over workbook backend commands; reject arbitrary URL/pasted-remote ingestion.
+- [x] Task: Port the project list, settings, lesson/section editor, preview setup, and teacher-manual workflow over workbook backend commands; reject arbitrary URL/pasted-remote ingestion. 6beba4efe
+  — Pasted ingestion rejected: the orphaned paste-JSON page + `createDraftAction`
+  deleted; `/drafts/new` fails closed with guidance (legacy import CLI or future
+  source catalog only). All other port surfaces landed in S4a–S4d. Review-state
+  workflow (submit/return/publish + immutable-release confirmation) in `5a8c14cee`;
+  source-drift adoption detection in `dcca3a722`. **Open spec gap recorded in
+  tech-debt:** private/withdrawn source eligibility is the ContentCatalogPort's job
+  and remains unenforced until the catalog lands.
 - [ ] Task: Complete desktop-first browser acceptance plus app/backend lint, type, test, build, graph, and independent permission/UI review gates.
 - [ ] Task: Measure - User Manual Verification 'Phase S4: Port the production workspace to apps/workbooks' (Protocol in workflow.md).
 
