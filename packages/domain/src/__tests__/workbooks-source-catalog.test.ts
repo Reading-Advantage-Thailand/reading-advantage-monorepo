@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import {
   workbookAssetKeySchema,
+  workbookDraftSettingsSchema,
   workbookIncompatibilityErrorSchema,
   workbookNormalizedContentSchema,
   workbookSourceAppSchema,
   workbookSourceIdentitySchema,
+  workbookSourceRecordSchema,
 } from "../workbooks/contracts.js";
 import { WorkbookCatalogError } from "../workbooks/content-catalog-port.js";
 import {
@@ -253,6 +255,64 @@ describe("extended normalized content contract / backward compatibility", () => 
     };
     const extended = { ...preExtension, lessonNumber: "Lesson 1" };
     expect(computeWorkbookDigest(extended)).not.toBe(computeWorkbookDigest(preExtension));
+  });
+});
+
+describe("workbook draft settings contract", () => {
+  const FULL_SETTINGS = Object.freeze({
+    seriesName: "Reading Advantage",
+    levelNumber: "Level 3",
+    cefrLevel: "B1",
+    type: "primary",
+  });
+
+  it("round-trips a full settings object through the source record schema", () => {
+    const record = createSourceRecord(FULL_IDENTITY);
+    const withSettings = { ...record, settings: FULL_SETTINGS };
+    const parsed = workbookSourceRecordSchema.safeParse(withSettings);
+    expect(parsed.success).toBe(true);
+    if (parsed.success) {
+      expect(parsed.data.settings).toEqual(FULL_SETTINGS);
+    }
+  });
+
+  it("accepts a source record without settings", () => {
+    const record = createSourceRecord(FULL_IDENTITY);
+    expect(workbookSourceRecordSchema.safeParse(record).success).toBe(true);
+    expect(record.settings).toBeUndefined();
+  });
+
+  it("accepts a partially populated settings object", () => {
+    expect(
+      workbookDraftSettingsSchema.safeParse({ seriesName: "Reading Advantage" }).success,
+    ).toBe(true);
+    expect(workbookDraftSettingsSchema.safeParse({ type: "secondary" }).success).toBe(true);
+  });
+
+  it("accepts an empty settings object", () => {
+    expect(workbookDraftSettingsSchema.safeParse({}).success).toBe(true);
+  });
+
+  it("rejects an unknown settings key (strict)", () => {
+    expect(
+      workbookDraftSettingsSchema.safeParse({ ...FULL_SETTINGS, extra: "nope" }).success,
+    ).toBe(false);
+  });
+
+  it("rejects an invalid type value", () => {
+    expect(workbookDraftSettingsSchema.safeParse({ type: "tertiary" }).success).toBe(false);
+  });
+
+  it("rejects an empty string field", () => {
+    expect(workbookDraftSettingsSchema.safeParse({ seriesName: "" }).success).toBe(false);
+    expect(workbookDraftSettingsSchema.safeParse({ levelNumber: "" }).success).toBe(false);
+    expect(workbookDraftSettingsSchema.safeParse({ cefrLevel: "" }).success).toBe(false);
+  });
+
+  it("rejects a settings object injected into the source record under a wrong field name", () => {
+    const record = createSourceRecord(FULL_IDENTITY);
+    const malformed = { ...record, draftSettings: FULL_SETTINGS };
+    expect(workbookSourceRecordSchema.safeParse(malformed).success).toBe(false);
   });
 });
 

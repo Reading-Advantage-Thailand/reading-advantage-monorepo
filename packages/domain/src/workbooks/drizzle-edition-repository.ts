@@ -446,6 +446,16 @@ export function createDrizzleEditionRepository(
       return mapDraftRow(updated[0]);
     },
 
+    // TODO: implement updateDraftSettings in the Drizzle repository; settings
+    // ride inside the source record's snapshotJson, so this only rewrites the
+    // stored snapshot with the replaced settings field.
+    async updateDraftSettings(): Promise<WorkbookDraft> {
+      throw new WorkbookPublicationError(
+        "VALIDATION_ERROR",
+        "updateDraftSettings not implemented for drizzle yet",
+      );
+    },
+
     async recordEvent(event) {
       await (
         db.insert(workbookPublicationEvents) as unknown as InsertBuilder<

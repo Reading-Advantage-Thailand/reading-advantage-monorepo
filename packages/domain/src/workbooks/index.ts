@@ -11,6 +11,7 @@ export * from "./edition-repository-port.js";
 export * from "./publish-edition.js";
 export * from "./create-draft.js";
 export * from "./update-draft.js";
+export * from "./update-draft-settings.js";
 export * from "./in-memory-edition-repository.js";
 export * from "./drizzle-edition-repository.js";
 export * from "./html-renderer.js";

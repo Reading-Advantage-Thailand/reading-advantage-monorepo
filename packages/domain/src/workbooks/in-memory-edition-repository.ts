@@ -192,6 +192,40 @@ export function createInMemoryEditionRepository(
       return updated;
     },
 
+    async updateDraftSettings(
+      tenantId,
+      draftId,
+      expectedRevision,
+      settings,
+      updatedAt,
+    ): Promise<WorkbookDraft> {
+      const existing = store.drafts.get(draftKey(tenantId, draftId));
+      if (existing === undefined) {
+        throw new WorkbookPublicationError(
+          "VALIDATION_ERROR",
+          "draft not found",
+          { detail: "draft not found" },
+        );
+      }
+      if (existing.revision !== expectedRevision) {
+        throw new WorkbookPublicationError(
+          "REVISION_CONFLICT",
+          `Revision conflict: actual revision ${existing.revision} does not match expected revision ${expectedRevision}.`,
+        );
+      }
+      const updated: WorkbookDraft = {
+        ...existing,
+        sourceRecord: {
+          ...existing.sourceRecord,
+          settings,
+        },
+        revision: existing.revision + 1,
+        updatedAt,
+      };
+      store.drafts.set(draftKey(tenantId, draftId), updated);
+      return updated;
+    },
+
     async recordEvent(event) {
       store.events.push(event);
     },

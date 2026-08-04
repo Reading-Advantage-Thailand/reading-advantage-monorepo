@@ -226,10 +226,25 @@ export const workbookNormalizedContentSchema = z
   })
   .strict();
 
+/**
+ * Per-draft project settings carried on a workbook source record. Field names
+ * mirror the legacy standalone dashboard's project metadata. Every field is
+ * optional: partial settings are legal, and lessons may predate settings.
+ */
+export const workbookDraftSettingsSchema = z
+  .object({
+    seriesName: z.string().min(1).optional(),
+    levelNumber: z.string().min(1).optional(),
+    cefrLevel: z.string().min(1).optional(),
+    type: z.enum(["primary", "secondary"]).optional(),
+  })
+  .strict();
+
 export const workbookSourceRecordSchema = z
   .object({
     identity: workbookSourceIdentitySchema,
     content: workbookNormalizedContentSchema,
+    settings: workbookDraftSettingsSchema.optional(),
   })
   .strict();
 
@@ -268,6 +283,7 @@ export type WorkbookArticleImagePosition = z.infer<
 >;
 export type WorkbookArticleImage = z.infer<typeof workbookArticleImageSchema>;
 export type WorkbookNormalizedContent = z.infer<typeof workbookNormalizedContentSchema>;
+export type WorkbookDraftSettings = z.infer<typeof workbookDraftSettingsSchema>;
 export type WorkbookSourceRecord = z.infer<typeof workbookSourceRecordSchema>;
 export type WorkbookIncompatibilityIssue = z.infer<typeof workbookIncompatibilityIssueSchema>;
 export type WorkbookIncompatibilityError = z.infer<typeof workbookIncompatibilityErrorSchema>;
