@@ -84,6 +84,11 @@ PODMAN_RUNTIME_ASSET_ATTEMPT_SHA256 = "dc5c463ec240ce6254d0a766e61de7b1a0db79686
 PODMAN_RUNTIME_ASSET_ATTEMPT_SIZE = 4618
 PODMAN_RUNTIME_ASSET_STDOUT = PODMAN_RUNTIME_ASSET_ATTEMPT_DIR / "raw" / "receipt-generate-standard-pack-catalog.stdout.txt"
 PODMAN_RUNTIME_ASSET_STDERR = PODMAN_RUNTIME_ASSET_ATTEMPT_DIR / "raw" / "receipt-generate-standard-pack-catalog.stderr.txt"
+# Real offline-install corpus whose only URL is the ERR_PNPM_NO_OFFLINE_TARBALL
+# advisory sentence, captured under --network none with zero downloads.
+PODMAN_MISSING_TARBALL_ATTEMPT_DIR = TRACK_DIR / "r1-v3-podman-execution-attempt-20260804-0001"
+PODMAN_MISSING_TARBALL_STDOUT = PODMAN_MISSING_TARBALL_ATTEMPT_DIR / "raw" / "receipt-offline-install.stdout.txt"
+PODMAN_MISSING_TARBALL_STDERR = PODMAN_MISSING_TARBALL_ATTEMPT_DIR / "raw" / "receipt-offline-install.stderr.txt"
 STANDARD_PACK_RUNTIME_ASSET = "packages/advantage-play-kit/scripts/generate-standard-pack-release.mjs"
 HELPER_MODULE = "measure.business_operations_graph_baseline_execution_closure"
 BLOCKER_SHA256 = "319fca3ecb81e75ba89c4d51444de736feda588f311d47bacdf8540c882fc482"
@@ -9475,6 +9480,161 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             self.assertFalse(output.exists())
             self.assertFalse(V3_DIR.exists())
             self.assertIs(collision_error.__cause__, candidate_error)
+
+    def test_generator_environment_overrides_recognize_every_frozen_segment_form(self) -> None:
+        """Requires the failed-attempt validator to expect generator NODE_OPTIONS for the H2 package-relative argv.
+
+        @returns Nothing; assertions bind one shared argv source so an argv migration cannot desynchronize the evidence validator.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        derive = getattr(podman, "derive_generator_environment_overrides_v1", None)
+        package_relative = getattr(podman, "PACKAGE_RELATIVE_STANDARD_PACK_GENERATOR", None)
+        self.assertTrue(callable(derive), "V3_GENERATOR_ENVIRONMENT_OVERRIDES_DERIVATION_MISSING")
+        self.assertTrue(
+            isinstance(package_relative, list) and package_relative,
+            "V3_PACKAGE_RELATIVE_STANDARD_PACK_GENERATOR_MISSING",
+        )
+
+        expected = {"NODE_OPTIONS": podman.DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS}
+        # H2 migrated the real generator segment to package-relative argv; the
+        # legacy pnpm and root-relative node forms remain valid historical
+        # evidence and must keep validating.
+        self.assertEqual(derive(list(podman.STANDARD_PACK_GENERATOR)), expected)
+        self.assertEqual(derive(list(podman.DIRECT_NODE_STANDARD_PACK_GENERATOR)), expected)
+        self.assertEqual(derive(list(package_relative)), expected)
+        self.assertEqual(package_relative, ["node", "scripts/generate-standard-pack-release.mjs"])
+        self.assertEqual(derive(["pnpm", "--filter", "@reading-advantage/db", "build"]), {})
+        self.assertEqual(derive(["node", "scripts/some-other-script.mjs"]), {})
+
+        # The frozen H2 segment contract and the evidence validator must read
+        # the same constant, which is what the drift in D2a violated.
+        frozen_entries = _load_json(V2_ARCHIVE, self)["entries"]
+        trigger = podman._direct_runtime_trigger_v1(
+            frozen_entries,
+            list(podman.STANDARD_PACK_GENERATOR),
+        )[1]
+        frozen_manifest = next(
+            entry
+            for entry in frozen_entries
+            if entry["path"] == "packages/advantage-play-kit/package.json"
+        )
+        semantics = podman.derive_direct_node_split_semantics_from_frozen_script_v1(
+            trigger,
+            frozen_manifest,
+        )
+        generator_segment = next(
+            segment
+            for segment in semantics["segments"]
+            if segment["id"] == "generate-standard-pack-catalog"
+        )
+        self.assertEqual(generator_segment["logicalArgv"], list(package_relative))
+        self.assertEqual(generator_segment["environmentOverrides"], expected)
+        self.assertEqual(derive(generator_segment["logicalArgv"]), generator_segment["environmentOverrides"])
+
+    def test_offline_tarball_advisory_url_is_not_counted_as_a_registry_request(self) -> None:
+        """Requires zero-network attestation to count real fetches, not advisory URLs in pnpm diagnostics.
+
+        @returns Nothing; assertions drive both real committed offline-install corpora through the live classifier.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+        for path in (PODMAN_MISSING_TARBALL_STDOUT, PODMAN_MISSING_TARBALL_STDERR):
+            self.assertTrue(path.is_file())
+            self.assertFalse(path.is_symlink())
+
+        contract = podman.build_hermetic_pnpm_install_contract_v1(
+            _load_json(V2_ARCHIVE, self)["entries"],
+            podman.HERMETIC_PNPM_VERSION,
+        )
+
+        # Corpus A: the genuine network corpus must keep failing closed.
+        retry_stdout = PODMAN_ATTEMPT_STDOUT.read_text(encoding="utf-8")
+        retry_stderr = PODMAN_ATTEMPT_STDERR.read_text(encoding="utf-8")
+        retry_counts = podman._hermetic_pnpm_marker_counts(retry_stdout, retry_stderr)
+        self.assertEqual(retry_stdout.count("EAI_AGAIN"), 6708)
+        self.assertGreaterEqual(retry_counts["retryEvents"], 6708)
+        with self.assertRaises(error_type) as networked:
+            podman._hermetic_pnpm_registry_attestation(retry_stdout, retry_stderr, contract)
+        self.assertEqual(str(networked.exception), "V3_HERMETIC_PNPM_NETWORK_POLICY_VIOLATION")
+
+        # Corpus B: a missing tarball under --network none is a package-manager
+        # failure, not a network-policy violation. Its only URL is advisory.
+        missing_stdout = PODMAN_MISSING_TARBALL_STDOUT.read_text(encoding="utf-8")
+        missing_stderr = PODMAN_MISSING_TARBALL_STDERR.read_text(encoding="utf-8")
+        self.assertIn("ERR_PNPM_NO_OFFLINE_TARBALL", missing_stdout)
+        self.assertIn("https://registry.npmjs.org/", missing_stdout)
+        self.assertIn("downloaded 0", missing_stdout)
+        missing_counts = podman._hermetic_pnpm_marker_counts(missing_stdout, missing_stderr)
+        self.assertEqual(missing_counts, {"requests": 0, "retryEvents": 0})
+        attestation = podman._hermetic_pnpm_registry_attestation(
+            missing_stdout,
+            missing_stderr,
+            contract,
+        )
+        self.assertEqual(attestation, {"requests": 0, "retryEvents": 0})
+
+        outcome = podman.classify_hermetic_pnpm_install_outcome_v1(
+            {"id": "offline-install", "network": False, "exitCode": 1},
+            stdout=missing_stdout,
+            stderr=missing_stderr,
+            contract=contract,
+            external_stop=None,
+        )
+        self.assertEqual(outcome["classification"], "PACKAGE_MANAGER_FAILURE")
+        self.assertEqual(outcome["packageManagerDiagnostic"]["code"], "ERR_PNPM_NO_OFFLINE_TARBALL")
+        self.assertIsNone(outcome["externalStop"])
+        self.assertEqual(outcome["registryAttestation"], {"requests": 0, "retryEvents": 0})
+
+    def test_preservation_failure_is_never_swallowed_for_any_stage(self) -> None:
+        """Requires a failed preservation to surface for post-seal stages, not only privileged ones.
+
+        @returns Nothing; assertions prove no stage can lose both its evidence and the reason the evidence was lost.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        executor_type = getattr(podman, "DirectCommandRuntimeProductionExecutorV1", None)
+        blocked_type = getattr(podman, "CandidateExecutionBlocked", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(inspect.isclass(executor_type), "V3_DIRECT_RUNTIME_PRODUCTION_EXECUTOR_MISSING")
+        self.assertTrue(inspect.isclass(blocked_type), "V3_CANDIDATE_EXECUTION_BLOCKED_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+
+        preservation_error = error_type("V3_PODMAN_ATTEMPT_EXECUTOR")
+
+        def fail_publication(*args: Any, **kwargs: Any) -> None:
+            """Injects the exact publisher failure observed for a post-seal generator stage.
+
+            @param args The positional publisher arguments.
+            @param kwargs The keyword publisher arguments.
+            @returns Nothing.
+            """
+            raise preservation_error
+
+        # Every post-seal stage, not just offline-install / pre-seal /
+        # candidate-publication, must surface a preservation failure.
+        for stage in ("generate-standard-pack-catalog", "direct-runtime-trace"):
+            with self.subTest(stage=stage), tempfile.TemporaryDirectory() as temporary:
+                output = Path(temporary) / "candidate"
+                executor = executor_type(output, "20260804")
+                executor.started = True
+                executor._failure_reason = stage
+                executor._direct_runtime_stage = "direct-runtime-dist-identity"
+                executor._sealed_integration = {"kind": "direct-command-runtime-runner-integration"}
+                executor._staged_commands = []
+                gate_error = error_type(f"V3_PODMAN_GATE_FAILED: {stage}")
+
+                with patch.object(podman, "_publish_failed_attempt", fail_publication):
+                    with self.assertRaises(blocked_type) as raised:
+                        executor.preserve_failure(gate_error)
+
+                self.assertIn("V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED", str(raised.exception))
+                self.assertIn(stage, str(raised.exception))
+                self.assertIs(raised.exception.__cause__, preservation_error)
+                self.assertFalse(output.exists())
+                self.assertFalse(V3_DIR.exists())
 
 
 if __name__ == "__main__":

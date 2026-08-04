@@ -74,6 +74,13 @@ DIRECT_NODE_STANDARD_PACK_GENERATOR = [
     "node",
     "packages/advantage-play-kit/scripts/generate-standard-pack-release.mjs",
 ]
+# H2 runs the generator from the package cwd, so the live segment argv is
+# package-relative. Evidence validators must read this same constant; a third
+# hardcoded literal is what let the failed-attempt validator fall behind H2.
+PACKAGE_RELATIVE_STANDARD_PACK_GENERATOR = [
+    "node",
+    "scripts/generate-standard-pack-release.mjs",
+]
 BUILDS = (
     ["pnpm", "--filter", "@reading-advantage/db", "build"],
     ["pnpm", "--filter", "@reading-advantage/auth", "build"],
@@ -1343,7 +1350,7 @@ def derive_direct_node_split_semantics_from_frozen_script_v1(
     manifest_path = f"{directory}/package.json"
     script_name = "generate:standard-pack-catalog"
     script_path = DIRECT_NODE_STANDARD_PACK_GENERATOR[1]
-    package_relative_script = "scripts/generate-standard-pack-release.mjs"
+    package_relative_script = PACKAGE_RELATIVE_STANDARD_PACK_GENERATOR[1]
     expression = "pnpm build && node scripts/generate-standard-pack-release.mjs"
     required_trigger = {
         "logicalArgv",
@@ -4247,8 +4254,13 @@ def _hermetic_pnpm_marker_counts(stdout: str, stderr: str) -> dict[str, int]:
     if not isinstance(stdout, str) or not isinstance(stderr, str):
         _fail("V3_HERMETIC_PNPM_RAW_STREAM_INVALID")
     text = f"{stdout}\n{stderr}"
+    # A URL in pnpm output is not a registry request: ERR_PNPM_NO_OFFLINE_TARBALL
+    # prints the tarball it *would* have fetched, which under --network none is
+    # proof no fetch happened. Real fetches move pnpm's monotonic downloaded
+    # counter; attempted fetches leave retry markers. Count those instead.
+    downloads = [int(count) for count in re.findall(r"(?i)\bdownloaded\s+(\d+)\b", text)]
     return {
-        "requests": len(re.findall(r"(?i)https?://[^\s]+", text)),
+        "requests": max(downloads) if downloads else 0,
         "retryEvents": len(re.findall(r"(?i)\b(?:EAI_AGAIN|will\s+retry|retrying|retries?\s+left)\b", text)),
     }
 
@@ -4304,6 +4316,22 @@ def _validate_external_stop(external_stop: Any, exit_code: int) -> dict[str, str
     if not isinstance(signal_number, int) or signal_number <= 0 or exit_code != 128 + int(signal_number):
         _fail("V3_HERMETIC_PNPM_EXTERNAL_STOP_MISMATCH")
     return {key: external_stop[key] for key in ("kind", "signal", "actor", "reason")}
+
+
+def derive_generator_environment_overrides_v1(argv: list[str]) -> dict[str, str]:
+    """Derives the exact environment overrides one recorded command argv must carry.
+
+    @param argv The recorded logical command argv.
+    @returns The generator NODE_OPTIONS overrides for any frozen generator form, otherwise no overrides.
+    """
+    generator_forms = {
+        tuple(STANDARD_PACK_GENERATOR),
+        tuple(DIRECT_NODE_STANDARD_PACK_GENERATOR),
+        tuple(PACKAGE_RELATIVE_STANDARD_PACK_GENERATOR),
+    }
+    if not isinstance(argv, list) or tuple(argv) not in generator_forms:
+        return {}
+    return {"NODE_OPTIONS": DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS}
 
 
 def classify_hermetic_pnpm_install_outcome_v1(command: dict[str, Any], *, stdout: str, stderr: str, contract: dict[str, Any], external_stop: dict[str, str] | None) -> dict[str, Any]:
@@ -4919,15 +4947,7 @@ def validate_failed_execution_attempt_v1(attempt: dict[str, Any], attempt_direct
     ):
         _direct_runtime_integration_fail("FAILED_ATTEMPT_PRESEAL_INVALID")
     executor = command.get("actualExecutor")
-    environment_overrides = (
-        {"NODE_OPTIONS": DIRECT_RUNTIME_GENERATOR_NODE_OPTIONS}
-        if tuple(command["argv"])
-        in {
-            tuple(STANDARD_PACK_GENERATOR),
-            tuple(DIRECT_NODE_STANDARD_PACK_GENERATOR),
-        }
-        else {}
-    )
+    environment_overrides = derive_generator_environment_overrides_v1(command["argv"])
     expected_effective_environment = {"CI": "true", "PATH": BOOTSTRAP_PATH, **environment_overrides}
     allowed_executor_keys = {"logicalArgv", "environment", "effectiveEnvironment", "environmentOverrides", "inheritedEnv", "payloadArgv", "argv", "toolchain"}
     if (
@@ -8508,15 +8528,15 @@ class DirectCommandRuntimeProductionExecutorV1:
                     error,
                 )
         except BaseException as preservation_error:
-            if (
-                self._failure_reason == "offline-install"
-                or is_preseal_failure
-                or is_candidate_publication_failure
-            ):
-                raise CandidateExecutionBlocked(
-                    "V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED: "
-                    f"{self._failure_reason}: {preservation_error}",
-                ) from preservation_error
+            if isinstance(preservation_error, KeyboardInterrupt):
+                raise
+            # Every stage surfaces its preservation failure. Restricting this to
+            # offline-install / pre-seal / candidate-publication let post-seal
+            # stages lose both their evidence and the reason it was lost.
+            raise CandidateExecutionBlocked(
+                "V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED: "
+                f"{self._failure_reason}: {preservation_error}",
+            ) from preservation_error
 
     def _publish_candidate_artifacts(
         self,
