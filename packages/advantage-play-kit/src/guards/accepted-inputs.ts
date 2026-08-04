@@ -82,7 +82,7 @@ export function assertAcceptedStandardPackBinding(binding: StandardAssetReleaseB
     || binding.sourceReceiptDigest !== accepted.sourceReceiptDigest
   ) {
     throw new Error(
-      "Standard-pack binding does not pin the accepted release 2026.07.23; "
+      "Standard-pack binding does not pin the accepted release 2026.08.04; "
         + "stale, mismatched, or non-standard-pack bindings are prohibited.",
     );
   }

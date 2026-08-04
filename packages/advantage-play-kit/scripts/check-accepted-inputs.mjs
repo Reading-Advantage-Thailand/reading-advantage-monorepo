@@ -33,7 +33,7 @@ const EXPECTED = {
   },
   standardPackRelease: {
     path: "packages/advantage-play-kit/assets/standard/accepted-standard-pack-release.json",
-    sha256: "61984e0b53c4ba85379cf6a4f0f33ee956665c4eaad4b3d681e3dccd98389844",
+    sha256: "619b5ef11ae6010e95fb0399cd556660c09a67e23648d4a81805ea7009a2b3f5",
   },
 };
 

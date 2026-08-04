@@ -19,15 +19,15 @@ export interface AcceptedT10Inputs {
   /** SHA-256 of `product-owner-acceptance-v1.json`. */
   readonly ownerAcceptanceSha256: "165e21c9ddb5a6e0b2f61f3190d604fbb3133459b5f00331a8c66ee1e7572753";
   /** Accepted canonical standard-pack release version. */
-  readonly standardPackReleaseVersion: "2026.07.23";
+  readonly standardPackReleaseVersion: "2026.08.04";
   /** Accepted catalog digest (matches `StandardAssetCatalog.digest`). */
-  readonly standardPackCatalogDigest: "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087";
+  readonly standardPackCatalogDigest: "535866f258dc9238b48839f9ba7c264417ef104ec586b0c2dfe056a5975fdc33";
   /** Accepted source-receipt digest. */
-  readonly standardPackSourceReceiptDigest: "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9";
+  readonly standardPackSourceReceiptDigest: "c06bad4bf118bffac14b4469fc54b0ba1c84dda8c8b43a143aaf6caf0f0caf2c";
   /** SHA-256 of the generated catalog artifact on disk. */
-  readonly standardPackCatalogArtifactSha256: "ef432a798a78585df3416d60aca30fe11a2d1d8b833e0d65ceb7fac5c8b19932";
+  readonly standardPackCatalogArtifactSha256: "572b871389304ae64612f0355193e649763e25663c1ab5b98f4ca221c1cfef3e";
   /** Accepted release JSON SHA-256 (matches `accepted-standard-pack-release.json`). */
-  readonly standardPackReleaseArtifactSha256: "61984e0b53c4ba85379cf6a4f0f33ee956665c4eaad4b3d681e3dccd98389844";
+  readonly standardPackReleaseArtifactSha256: "619b5ef11ae6010e95fb0399cd556660c09a67e23648d4a81805ea7009a2b3f5";
   /** Number of accepted runtime contracts (zero by T10 boundary). */
   readonly acceptedRuntimeContracts: 0;
   /** Number of approved asset mappings (zero by T10 boundary). */
@@ -112,11 +112,11 @@ export const ACCEPTED_T10_INPUTS: AcceptedT10Inputs = Object.freeze({
   acceptedManifestSha256: "e9fc2c9c8074db74670fa2e2929bd4efb5b8d0fd2ef5a8b9819d2f5a6e39ba49",
   successorHashesSha256: "c026c0bff62c3d6739c366fa80cb6593c455e96bffd2532a43223c829ec74005",
   ownerAcceptanceSha256: "165e21c9ddb5a6e0b2f61f3190d604fbb3133459b5f00331a8c66ee1e7572753",
-  standardPackReleaseVersion: "2026.07.23",
-  standardPackCatalogDigest: "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
-  standardPackSourceReceiptDigest: "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9",
-  standardPackCatalogArtifactSha256: "ef432a798a78585df3416d60aca30fe11a2d1d8b833e0d65ceb7fac5c8b19932",
-  standardPackReleaseArtifactSha256: "61984e0b53c4ba85379cf6a4f0f33ee956665c4eaad4b3d681e3dccd98389844",
+  standardPackReleaseVersion: "2026.08.04",
+  standardPackCatalogDigest: "535866f258dc9238b48839f9ba7c264417ef104ec586b0c2dfe056a5975fdc33",
+  standardPackSourceReceiptDigest: "c06bad4bf118bffac14b4469fc54b0ba1c84dda8c8b43a143aaf6caf0f0caf2c",
+  standardPackCatalogArtifactSha256: "572b871389304ae64612f0355193e649763e25663c1ab5b98f4ca221c1cfef3e",
+  standardPackReleaseArtifactSha256: "619b5ef11ae6010e95fb0399cd556660c09a67e23648d4a81805ea7009a2b3f5",
   acceptedRuntimeContracts: 0,
   approvedAssetMappings: 0,
   blockedAssetMappings: 85,

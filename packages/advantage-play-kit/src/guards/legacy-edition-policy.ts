@@ -36,7 +36,7 @@ export const LEGACY_EDITION_POLICY_DIAGNOSTIC: LegacyEditionPolicyDiagnostic = O
     + "bindings; preserving it as a production compatibility surface is prohibited by T11.",
   requiredReplacement:
     "New cartridges must resolve semantic roles through createAcceptedStandardAssetResolver "
-    + "(the canonical standard-pack resolver) and pin the accepted 2026.07.23 release.",
+    + "(the canonical standard-pack resolver) and pin the accepted 2026.08.04 release.",
 });
 
 /** Frozen policy describing where the editions module may and may not be used. */

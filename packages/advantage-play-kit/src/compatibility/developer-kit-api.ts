@@ -4,7 +4,7 @@
  * attribution contract, immutable T10 evidence, and owner-authorized forward product bindings.
  *
  * Future cartridge cohort tracks pin this compatibility report to ensure their
- * scaffold defaults bind the accepted 2026.07.23 release and fail closed for invalid configuration.
+ * scaffold defaults bind the accepted 2026.08.04 release and fail closed for invalid configuration.
  */
 
 import {
@@ -85,7 +85,7 @@ export const DEVELOPER_KIT_COMPATIBILITY: DeveloperKitCompatibility = Object.fre
     "Direct physical asset imports are prohibited; cartridges request semantic keys only",
     "Edition and theme asset bindings are prohibited; the 75-file dual-pack ABI is retired",
     "Copied pack trees and private pack trees are prohibited",
-    "Unpinned standard-pack releases are prohibited; cartridges must pin the accepted 2026.07.23 release",
+    "Unpinned standard-pack releases are prohibited; cartridges must pin the accepted 2026.08.04 release",
     "Missing attribution registration is prohibited; the ElvGames credit is required",
     "Title-specific shared APIs are prohibited; systems expose bounded configuration only",
     "Procedural or placeholder art is prohibited from satisfying production readiness",

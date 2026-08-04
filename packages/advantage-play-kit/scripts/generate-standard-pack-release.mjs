@@ -100,7 +100,7 @@ if (receiptLocators.size !== paths.length || paths.some((path) => !receiptLocato
 const sourceReceiptLocators = Object.fromEntries(receiptLocators);
 const physicalAssets = await physicalMetadata(paths);
 const unsignedCatalog = createStandardAssetCatalog({
-  version: process.env.APK_STANDARD_PACK_VERSION ?? "2026.07.23",
+  version: process.env.APK_STANDARD_PACK_VERSION ?? "2026.08.04",
   catalogDigest: "pending",
   sourceReceiptDigest,
   paths,

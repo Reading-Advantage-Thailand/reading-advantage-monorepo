@@ -48,12 +48,12 @@ export interface AcceptedStandardAssetRelease {
 export const ACCEPTED_STANDARD_ASSET_RELEASE = Object.freeze({
   schemaVersion: 1,
   status: "accepted",
-  version: "2026.07.23",
-  catalogDigest: "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
-  sourceReceiptDigest: "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9",
-  catalogArtifactSha256: "ef432a798a78585df3416d60aca30fe11a2d1d8b833e0d65ceb7fac5c8b19932",
+  version: "2026.08.04",
+  catalogDigest: "535866f258dc9238b48839f9ba7c264417ef104ec586b0c2dfe056a5975fdc33",
+  sourceReceiptDigest: "c06bad4bf118bffac14b4469fc54b0ba1c84dda8c8b43a143aaf6caf0f0caf2c",
+  catalogArtifactSha256: "572b871389304ae64612f0355193e649763e25663c1ab5b98f4ca221c1cfef3e",
   requiredCredit: STANDARD_ASSET_REQUIRED_CREDIT,
-  acceptedAt: "2026-07-23T00:00:00Z",
+  acceptedAt: "2026-08-04T00:00:00Z",
   acceptedBy: "root-orchestrator",
   downstreamConsumptionRules: Object.freeze({
     requiredBindingFields: Object.freeze(["version", "catalogDigest", "sourceReceiptDigest"] as const),
@@ -64,7 +64,7 @@ export const ACCEPTED_STANDARD_ASSET_RELEASE = Object.freeze({
     requiredCreditPlacement: "shared-credits-about-or-end-screen",
   }),
   acceptanceEvidence: Object.freeze({
-    assetCount: 43_075,
+    assetCount: 43_316,
     browserQcRoute: "/qc",
     compactViewport: "390x844",
     wideViewport: "wide",

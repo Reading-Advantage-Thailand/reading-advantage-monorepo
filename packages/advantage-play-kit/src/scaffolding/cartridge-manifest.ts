@@ -16,7 +16,7 @@ import { ACCEPTED_CAPABILITY_IDS } from "../systems/capability-manifest.js";
 import { assertAcceptedStandardPackBinding } from "../guards/accepted-inputs.js";
 import type { StandardAssetReleaseBinding } from "../assets/standard-pack-release.js";
 
-/** Frozen standard-pack binding that pins the accepted 2026.07.23 release. */
+/** Frozen standard-pack binding that pins the accepted 2026.08.04 release. */
 export const ACCEPTED_STANDARD_PACK_BINDING: StandardAssetReleaseBinding = Object.freeze({
   version: ACCEPTED_STANDARD_ASSET_RELEASE.version,
   catalogDigest: ACCEPTED_STANDARD_ASSET_RELEASE.catalogDigest,

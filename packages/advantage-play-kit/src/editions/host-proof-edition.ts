@@ -11,7 +11,7 @@ import type {
 } from "../runtime/types.js";
 
 /** Stable public-pack identity used by the Dragon Flight host-proof edition. */
-export const DRAGON_FLIGHT_HOST_PROOF_PACK_ID = "standard-pack-2026-07-23" as const;
+export const DRAGON_FLIGHT_HOST_PROOF_PACK_ID = "standard-pack-2026-08-04" as const;
 
 /** Exact accepted standard-pack keys materialized for Dragon Flight. */
 export const DRAGON_FLIGHT_HOST_PROOF_ASSET_KEYS = Object.freeze([
