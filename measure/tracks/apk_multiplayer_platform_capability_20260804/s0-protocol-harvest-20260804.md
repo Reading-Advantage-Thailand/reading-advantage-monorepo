@@ -97,10 +97,16 @@ That total is not inert. At `FINAL_LEADERBOARD_PHASE` the handler reads
 scored N points" — as the lesson's closing message (`lessonHandler.ts:408-438`).
 A forged client score becomes a number a parent reads.
 
-Deferring to production here would import that path into a new contract. **This is the one place S1 must
-contradict production**, and it is a spec-level decision rather than mine to
-take — decision 3 as written says the opposite. Flagged for the product owner in
-"What this changes", below.
+Deferring to production here would import that path into a new contract. **This
+is the one place S1 must contradict production.**
+
+The spec had already decided this, which was not obvious until the harvest.
+Decision 5 — "the server does not trust client scores; the session service
+recomputes from submissions" — is the specific rule to decision 3's general
+tie-break, so it governs. The two clauses only came into visible conflict once
+the harvest established what the live service does with a submitted score.
+Decision 3 has since been amended to scope itself away from scoring rather than
+to overrule decision 5, so this required no new product decision.
 
 ### Determinism: right instinct, wrong primitive
 
@@ -146,16 +152,23 @@ Additions to the seven items already listed in `s0-audit-20260804.md`:
   diff it. That is done. What the harvest found is that the race protocol has no
   production authority, so S1 can proceed to freeze `multiplayer.v1` on its own
   merits.
-- **One spec decision needs your call.** Decision 3 makes Tutor Advantage the
-  tie-breaker. On scoring, following it would ratify a client-supplied score. I
-  recommend amending decision 3 to defer to production on *session, identity, and
-  lifecycle* semantics — where it is genuinely stronger — and explicitly not on
-  scoring. S1 should not start until that reads correctly in the spec.
-- **A question the track has not asked.** The classroom already has a session
-  service with lobbies, rosters, kick, countdown, and result intake. S3 and S5
-  plan a second one inside the Play Kit. Whether the Play Kit capability should
-  *speak to* the lesson session rather than reimplement it is a scoping question
-  worth settling before S3, not after.
+- **Decision 3 is amended, and it needed no new ruling.** It now scopes itself to
+  session, identity, and lifecycle semantics, where the live service is the
+  stronger reference, and defers to decision 5 on scoring. This was first filed
+  as an open product decision; that overstated it. Decision 5 already said the
+  server does not trust client scores, and a specific rule governs a general one.
+  The harvest did not create the question, it made an existing contradiction
+  visible.
+- **Decision 6 now has a live tension.** It has students join by code; the live
+  service gates on ACTIVE enrollment. Left unresolved on purpose and flagged in
+  the spec for S4 to decide at the point it binds rooms to identity.
+- **A question the track has not asked, and this one is genuinely open.** The
+  classroom already has a session service with lobbies, rosters, kick, countdown,
+  and result intake. S3 and S5 plan a second one inside the Play Kit. Whether the
+  Play Kit capability should *speak to* the lesson session rather than
+  reimplement it is unaddressed by any decision in the spec, because the spec was
+  written believing Tutor Advantage was a billing counterparty. Worth settling
+  before S3. It blocks neither S1 nor S2.
 
 ## Scope
 

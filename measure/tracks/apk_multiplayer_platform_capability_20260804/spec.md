@@ -117,10 +117,19 @@ Verified against the working tree on 2026-08-04.
   request/response session persistence for thin tRPC and HTTP adapters. There is
   no WebSocket, SSE, or push transport in any package.
 - No deployment artifact for a long-lived socket process.
-- **Tutor Advantage is not in this repository.** The only reference is
-  `measure/product.md:49`, which names it as a billing-reconciliation
-  counterparty. Its race implementation cannot be read from here and must be
-  supplied before the protocol is frozen.
+- **Tutor Advantage is not in this repository — but it is readable.** It is a
+  sibling checkout at `/home/daniel-bo/Desktop/tutor-advantage`. Within this
+  tree the only reference is `measure/product.md:49`, naming it as a
+  billing-reconciliation counterparty, which is what led S0 to record it as
+  unobtainable. Harvested 2026-08-04; see `s0-protocol-harvest-20260804.md`. The
+  protocol no longer blocks freezing the contract.
+- **The realtime precedent is in the sibling, not here.** This monorepo has no
+  socket transport and no long-lived socket deployment artifact, but
+  `services/learning-service` is a deployed socket.io service with JWT-verified
+  connections, per-role authorization, and a containerized build. S4 should
+  reason from it. It holds sessions in a process-local `Map` with no Redis
+  adapter and no sticky sessions, so it is a deployment precedent and not a
+  multi-instance one.
 
 ## Product and Boundary Decisions
 
@@ -134,10 +143,30 @@ Verified against the working tree on 2026-08-04.
    replay, reproducible bug reports, and deterministic host-proof evidence for a
    game that has none today.
 
-3. **Tutor Advantage wins ties on race semantics.** Where its production
-   protocol and the orphaned local one disagree, the production system is the
-   reference. This repository does not get to redefine a mode that is already
-   live elsewhere.
+3. **Tutor Advantage wins ties on session, identity, and lifecycle semantics —
+   not on scoring.** Amended 2026-08-04 after `s0-protocol-harvest-20260804.md`.
+   As originally written this decision made Tutor Advantage the reference
+   wherever its protocol and the orphaned local one disagree, on the premise
+   that it was "a mode that is already live elsewhere." The harvest disproved
+   the premise: its race protocol is orphaned there exactly as it is here, and
+   the local copy is a one-field fork of it, so on race semantics the tie-break
+   resolves to nothing.
+
+   What *is* live there is `services/learning-service`, the classroom lesson
+   socket service. It is the reference for how a session is joined, authorized,
+   and driven: identity from verified claims rather than a client-asserted
+   `playerId`, membership gated on enrollment rather than on possession of a
+   code, participants keyed by user id so reconnect is a state, and rounds
+   started by the session owner. Adopt those.
+
+   It is **not** the reference for scoring. It accepts the client's number and
+   pushes the running total to parents over LINE. Decision 5 governs there, and
+   decision 5 is the specific rule to this decision's general one.
+
+   Original text, retained: *"Tutor Advantage wins ties on race semantics. Where
+   its production protocol and the orphaned local one disagree, the production
+   system is the reference. This repository does not get to redefine a mode that
+   is already live elsewhere."*
 
 4. **Adopt-or-discard is decided by audit, not up front.** Story S0 produces a
    per-module verdict. Working room-code, host-transfer, reconnect, and
@@ -150,6 +179,13 @@ Verified against the working tree on 2026-08-04.
 6. **Rooms are tenant- and class-bound.** Identity comes from
    `packages/auth`; a teacher hosts and students join by code. There is no
    anonymous public matchmaking in this track.
+
+   *Unresolved against decision 3 as amended:* the live system gates joins on an
+   ACTIVE enrollment, not on a code, and the audit's M-2 line on room-code
+   entropy exists because a code is a weak credential. Whether the code survives
+   as a convenience on top of an entitlement check, or not at all, is S4's call
+   at the point it binds rooms to identity — flagged here so it is decided
+   rather than inherited.
 
 7. **Results use the existing completion path.** Multiplayer outcomes flow
    through `single-completion` and `result-accounting` into the host-proof
