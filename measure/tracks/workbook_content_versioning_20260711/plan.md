@@ -214,15 +214,22 @@ _Story ref: spec.md#story-s3-import-legacy-workbook-projects-and-assets_
 
 - [x] Task: Scaffold `apps/workbooks` as a separately deployable Company-SSO application with explicit workbook role gates, thin UI/routes, and no copied filesystem or provider-SDK business logic. — scaffold `dd60bbdc5`, SSO gate `772a618ad` + `2df52486c` (track: workbooks_sso_onboarding_20260803). Verified: no runtime filesystem in the app (only the import CLI and a test fixture loader).
 - [x] Task (S4a): Run the legacy importer dry-run for pilot project `origins-2-a0`, record the manifest/exceptions, and build the project list read page over domain queries (drafts/editions from DB, no filesystem). c109a372f, dbaafe9a0, 6e94288db
-- [~] Task (S4b): Port the lesson/section editor from `advantage-workbooks` HEAD (refactored suite per divergence register) onto workbook backend server actions with optimistic concurrency. bc9ee5951, 6e94288db
+- [x] Task (S4b): Port the lesson/section editor from `advantage-workbooks` HEAD (refactored suite per divergence register) onto workbook backend server actions with optimistic concurrency. bc9ee5951, 6e94288db, efe21f5c2
   — All 8 sub-editors + status banners + mapping + `useDraftLessonEditor` landed
   (`c5492b575` wired the last four and repaired the component test wiring: those suites
   were never collected before it). Losslessness is now proven against a maximal fixture
   pinned to `draftLessonSchema` by an exhaustiveness assertion, which found and fixed two
   real defects (`b960b07f7`): `writing_practice_url` was silently dropped on save, and a
   structured article image was emitted into both editor image fields, duplicating its URL
-  on every save/load cycle. **Gap:** `LessonPreviewModal` is not ported.
-- [ ] Task (S4c): Port settings + preview/compile wiring over the domain render port (no runtime filesystem, no provider SDKs).
+  on every save/load cycle. `LessonPreviewModal` + `LessonPreview` ported in `efe21f5c2`
+  (modal wired to the Preview button with an S4c empty state until compile wiring lands).
+- [x] Task (S4c): Port settings + preview/compile wiring over the domain render port (no runtime filesystem, no provider SDKs). 37d8958cc, 295565f3e, 7d40b6dad, 8617bbac5, b18160062
+  — Draft preview: pure `renderWorkbookContentHtml` extracted from `renderEditionHtml`,
+  tenant-scoped `previewDraftAction`, Preview modal with loading/error states. Settings:
+  `workbookDraftSettingsSchema` rides inside the source-record jsonb (no migration),
+  `updateWorkbookDraftSettings` command + drizzle + in-memory repos, `updateDraftSettingsAction`,
+  shadcn-free `DraftSettingsDialog` with ported level constants, importer accepts optional
+  settings. Editor hook owns settings+revision so settings saves never clobber unsaved edits.
 - [ ] Task (S4d): Port the teacher-manual workflow including the Paged.js shim and regression tests (divergence register), plus its docs.
 - [ ] Task: Write Red UI, accessibility, and authorization tests for catalog browsing, drafts, source selection, editing, optimistic conflicts, source drift, rights warnings, review state, and immutable-release confirmation.
 - [ ] Task: Port the project list, settings, lesson/section editor, preview setup, and teacher-manual workflow over workbook backend commands; reject arbitrary URL/pasted-remote ingestion.
