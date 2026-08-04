@@ -325,3 +325,71 @@ describe("legacy workbook importer / contract and digest", () => {
     expect(full.identity.contentHash).not.toBe(minimal.identity.contentHash);
   });
 });
+
+describe("legacy workbook importer / project settings", () => {
+  it("attaches valid settings to the source record", () => {
+    const settings = {
+      seriesName: "Reading Advantage",
+      levelNumber: "2",
+      cefrLevel: "A0",
+      type: "primary",
+    };
+    const record = importLegacyWorkbook(createInput({ settings }));
+    expect(record.settings).toEqual(settings);
+  });
+
+  it("carries partial settings through unchanged", () => {
+    const settings = { seriesName: "Reading Advantage", type: "secondary" };
+    const record = importLegacyWorkbook(createInput({ settings }));
+    expect(record.settings).toEqual(settings);
+  });
+
+  it("omits settings when the input omits them", () => {
+    const record = importLegacyWorkbook(createInput());
+    expect(record.settings).toBeUndefined();
+  });
+
+  it("keeps a record with settings satisfying workbookSourceRecordSchema", () => {
+    const record = importLegacyWorkbook(
+      createInput({
+        settings: {
+          seriesName: "Reading Advantage",
+          levelNumber: "1",
+          cefrLevel: "A1",
+          type: "primary",
+        },
+      }),
+    );
+    expect(workbookSourceRecordSchema.safeParse(record).success).toBe(true);
+  });
+
+  it("rejects settings with an unknown key using the importer error convention", () => {
+    const input = createInput({
+      settings: { seriesName: "Reading Advantage", volume: 3 } as never,
+    });
+    expect(() => importLegacyWorkbook(input)).toThrow(WorkbookCatalogError);
+    let caught: WorkbookCatalogError | undefined;
+    try {
+      importLegacyWorkbook(input);
+    } catch (error) {
+      caught = error as WorkbookCatalogError;
+    }
+    expect(caught).toBeInstanceOf(WorkbookCatalogError);
+    expect(caught?.code).toBe("INCOMPATIBLE_SOURCE_SHAPE");
+    expect(caught?.issues.some((issue) => issue.path.startsWith("settings"))).toBe(true);
+  });
+
+  it("rejects settings with an invalid type enum using the importer error convention", () => {
+    const input = createInput({ settings: { type: "tertiary" } as never });
+    expect(() => importLegacyWorkbook(input)).toThrow(WorkbookCatalogError);
+    let caught: WorkbookCatalogError | undefined;
+    try {
+      importLegacyWorkbook(input);
+    } catch (error) {
+      caught = error as WorkbookCatalogError;
+    }
+    expect(caught).toBeInstanceOf(WorkbookCatalogError);
+    expect(caught?.code).toBe("INCOMPATIBLE_SOURCE_SHAPE");
+    expect(caught?.issues.some((issue) => issue.path.startsWith("settings"))).toBe(true);
+  });
+});

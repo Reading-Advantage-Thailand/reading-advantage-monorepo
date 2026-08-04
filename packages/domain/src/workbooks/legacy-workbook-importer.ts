@@ -1,5 +1,6 @@
 import { z } from "zod";
 import {
+  workbookDraftSettingsSchema,
   workbookSourceAppSchema,
   type WorkbookArticleImagePosition,
   type WorkbookSourceRecord,
@@ -220,6 +221,8 @@ export const legacyWorkbookImportInputSchema = z.object({
   sourceId: z.string().min(1),
   /** Revision identifier of the source payload. */
   sourceRevision: z.string().min(1),
+  /** Optional project settings attached to the created source record. */
+  settings: workbookDraftSettingsSchema.optional(),
 });
 
 /** Parsed, type-safe form of a legacy standalone-dashboard workbook payload. */
@@ -301,7 +304,7 @@ export function importLegacyWorkbook(input: unknown): WorkbookSourceRecord {
     );
   }
 
-  const { lesson, sourceApp, sourceId, sourceRevision } = parsed.data;
+  const { lesson, sourceApp, sourceId, sourceRevision, settings } = parsed.data;
 
   const paragraphs = lesson.article_paragraphs
     .slice()
@@ -439,5 +442,11 @@ export function importLegacyWorkbook(input: unknown): WorkbookSourceRecord {
     contentHash: computeWorkbookDigest(content),
   } as const;
 
-  return { identity, content };
+  const sourceRecord: WorkbookSourceRecord = {
+    identity,
+    content,
+    ...(settings !== undefined ? { settings } : {}),
+  };
+
+  return sourceRecord;
 }
