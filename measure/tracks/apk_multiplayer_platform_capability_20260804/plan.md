@@ -12,23 +12,24 @@ and must not be pushed behind the race tier.
 ## Phase S0: Audit the orphaned implementation and harvest the reference protocol
 _Story ref: spec.md#story-s0_
 
-- [ ] Task: Produce a per-module adopt/lift/discard verdict
-    - [ ] Review `apps/advantage-games/src/lib/multiplayer/room-manager.ts`, `game-session.ts`, `scoring-engine.ts`, `ws-server.ts` and record a verdict with justification for each
-    - [ ] Review `apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx`, `ScoreboardOverlay.tsx`, `PodiumScreen.tsx`, `MultiplayerGameWrapper.tsx` and record a verdict for each
-    - [ ] Review `apps/advantage-games/src/types/multiplayer.ts` against the contract intent in S1
-- [ ] Task: Record a severity-ranked finding list
-    - [ ] `getGlobalRoomManager()` process-global room state in `ws-server.ts` and its multi-instance consequences
-    - [ ] Client-supplied `score` accepted by `SCORE_SUBMIT` when the server holds `submissions` and `currentWords`
-    - [ ] `getPlayerList` hardcoding `score: 0` and `wordsCollected: 0`; confirm whether the `waiting`-only call path makes this correct
-    - [ ] `HEARTBEAT_INTERVAL` 30 s against `HEARTBEAT_TIMEOUT` 90 s
-    - [ ] Room-code entropy, collision handling, host-transfer races, kick and reconnect semantics in `room-manager.ts`
-    - [ ] `deserializeMessage` payload validation gap in `types/multiplayer.ts`
+- [x] Task: Produce a per-module adopt/lift/discard verdict `s0-audit-20260804.md`
+    - [x] Review `apps/advantage-games/src/lib/multiplayer/room-manager.ts`, `game-session.ts`, `scoring-engine.ts`, `ws-server.ts` and record a verdict with justification for each
+    - [x] Review `apps/advantage-games/src/components/multiplayer/LobbyScreen.tsx`, `ScoreboardOverlay.tsx`, `PodiumScreen.tsx`, `MultiplayerGameWrapper.tsx` and record a verdict for each
+    - [x] Review `apps/advantage-games/src/types/multiplayer.ts` against the contract intent in S1
+- [x] Task: Record a severity-ranked finding list `s0-audit-20260804.md`
+    - [x] `getGlobalRoomManager()` process-global room state in `ws-server.ts` and its multi-instance consequences
+    - [x] Client-supplied `score` accepted by `SCORE_SUBMIT` when the server holds `submissions` and `currentWords` — resolved into M-2, three disagreeing trust models
+    - [x] `getPlayerList` hardcoding `score: 0` and `wordsCollected: 0`; confirm whether the `waiting`-only call path makes this correct — correct today, recorded as M-9 trap
+    - [x] `HEARTBEAT_INTERVAL` 30 s against `HEARTBEAT_TIMEOUT` 90 s — M-10, defensible, for S4 to confirm
+    - [x] Room-code entropy, collision handling, host-transfer races, kick and reconnect semantics in `room-manager.ts` — M-3, M-4, M-8
+    - [x] `deserializeMessage` payload validation gap in `types/multiplayer.ts` — module marked discard, semantics harvested
+    - [x] Additional findings not anticipated when the plan was written: M-1 `cleanupExpiredRooms` never called, M-5 union round-end truncates the race, M-6 disconnected players hold capacity, M-7 full-state broadcast per tick
 - [ ] Task: Harvest the Tutor Advantage reference protocol
     - [ ] Obtain the protocol definition or a written specification; it is not in this repository and `measure/product.md:49` is the only reference to that product here
     - [ ] Record a semantic diff against the local protocol: message kinds, round lifecycle, scoring, reconnect
     - [ ] Record which side wins per disagreement, defaulting to the production system per spec decision 3
-- [ ] Task: Run the existing multiplayer test suite and record its true state
-    - [ ] Execute the nine multiplayer test files and record pass/fail counts and timings in the audit receipt
+- [ ] Task: Run the existing multiplayer test suite and record its true state — BLOCKED 2026-08-04
+    - [ ] Execute the nine multiplayer test files and record pass/fail counts and timings in the audit receipt. Blocked on the 2026-08-04 root `node_modules` wipe by a concurrent session: `apps/advantage-games/node_modules` held two entries and `node_modules/.bin/jest` was absent. Every S0 finding is source-derived, not test-derived, until this runs.
 - [ ] Task: Measure - User Manual Verification 'Phase S0: Audit the orphaned implementation and harvest the reference protocol' (Protocol in workflow.md)
 
 ## Phase S1: Freeze the `multiplayer.v1` contract in `game-contracts`
