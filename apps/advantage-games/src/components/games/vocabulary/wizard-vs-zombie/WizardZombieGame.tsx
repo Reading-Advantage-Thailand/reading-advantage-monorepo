@@ -193,7 +193,12 @@ export function WizardZombieGame({
 
   const startGame = useCallback(() => {
     if (vocabulary.length > 0) {
-      const state = createWizardZombieState(vocabulary, { difficulty: selectedDifficulty });
+      const state = createWizardZombieState(vocabulary, {
+        difficulty: selectedDifficulty,
+        // Seed variety lives at the call site, outside the deterministic tick
+        // path (S2). S5/S6 will replace this with a session-distributed seed.
+        seed: Date.now(),
+      });
       setGameState(state);
       setGamePhase("playing");
       setFloatingTexts([]);

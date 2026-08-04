@@ -63,14 +63,14 @@ _Story ref: spec.md#story-s2_
 - [x] Task: Write the Red determinism property test
     - [x] Add a property test asserting two independently constructed states, identical seed and identical input sequence, produce byte-identical state across a bounded tick count — `apps/advantage-games/src/lib/games/wizardZombieDeterminism.test.ts`, 400 ticks at dt 50 ms with a deterministic steer-to-orb bot; witness blocks confirm ≥3 concurrent zombies (observed 20), orb collection (39 attempts), and correct answers (8) so spawn, wander, and target-reselect sites are all exercised
     - [x] Confirm it fails against the current implementation before any fix — fails at tick 0: orb ids embed `Math.random()` at construction (inventory sites 403/426); positions and target identical across runs. Orchestrator re-ran the gate, 1 failed / 2 passed
-- [ ] Task: Thread a seeded PRNG through the tick path
-    - [ ] Replace the `Math.random()` call sites in `apps/advantage-games/src/lib/games/wizardZombie.ts` at lines 237, 239, 247, 300, 333, 334, 403, and 426 (ten sites in total; see `s2-determinism-inventory-20260804.md`) with the injected generator
-    - [ ] Replace `Date.now()`-derived entity ids at line 316 with seed-and-counter derivation
-    - [ ] Carry the generator on the state so `advanceWizardZombieTime` stays a pure reducer
-- [ ] Task: Guard the property
-    - [ ] Add a lint or test guard failing on `Math.random` or `Date.now` reintroduced into the tick path
-- [ ] Task: Confirm no behavioral regression
-    - [ ] Run the existing `wizardZombie.test.ts`, `wizardZombieLogic.test.ts`, and `wizardZombieIndicators.test.ts` suites
+- [x] Task: Thread a seeded PRNG through the tick path
+    - [x] Replace the `Math.random()` call sites in `apps/advantage-games/src/lib/games/wizardZombie.ts` at lines 237, 239, 247, 300, 333, 334, 403, and 426 (ten sites in total; see `s2-determinism-inventory-20260804.md`) with the injected generator — all draws now flow through a pure mulberry32 step (`nextRandom`); construction `rng` injection is reinterpreted as a seed source (first draw seeds the stream) so the tick path and layout share one stream; `rg` confirms zero `Math.random`/`Date.now` remain in the module
+    - [x] Replace `Date.now()`-derived entity ids at line 316 with seed-and-counter derivation — all entity ids (`zombie-*`, `orb-correct-*`, `orb-decoy-*`) mint from `state.nextEntityId`
+    - [x] Carry the generator on the state so `advanceWizardZombieTime` stays a pure reducer — `rngState` (numeric mulberry32 accumulator, not a function, so JSON byte-identity stays sensitive to generator position) and `nextEntityId` carried on `WizardZombieState`
+- [x] Task: Guard the property
+    - [x] Add a lint or test guard failing on `Math.random` or `Date.now` reintroduced into the tick path — `wizardZombieDeterminismGuard.test.ts` scans the module source; residual gap recorded: the guard catches reintroduction but not draw-order/count changes, which only the 400-tick property test pins
+- [x] Task: Confirm no behavioral regression
+    - [x] Run the existing `wizardZombie.test.ts`, `wizardZombieLogic.test.ts`, and `wizardZombieIndicators.test.ts` suites — orchestrator re-ran the gate: 7 suites, 44/44 passed including the determinism property. One caller-visible regression caught at integration: seedless construction now starts from seed 1, making every play session identical; fixed at the call site (`WizardZombieGame.tsx` passes `seed: Date.now()` at mount, outside the tick path) pending S5/S6 session-distributed seeds. The remotion renderer stays deterministic by default, which is desirable for reproducible renders
 - [ ] Task: Measure - User Manual Verification 'Phase S2: Make the Wizard vs Zombie simulation deterministic' (Protocol in workflow.md)
 
 ## Phase S3: Add the multiplayer session capability to the Play Kit

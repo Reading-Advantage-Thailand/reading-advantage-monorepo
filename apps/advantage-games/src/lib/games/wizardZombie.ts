@@ -45,10 +45,17 @@ export type WizardZombieState = {
   spawnTimer: number;
   difficultyMultiplier: number;
   gameTime: number;
+  /** Opaque mulberry32 state carried as data so the tick path stays deterministic and replayable. */
+  rngState: number;
+  /** Monotonic counter deriving entity ids so ids are stable across replays. */
+  nextEntityId: number;
 };
 
 export type WizardZombieConfig = {
+  /** Injected generator whose first draw seeds the construction PRNG stream. */
   rng?: () => number;
+  /** When provided, seeds the internal PRNG for construction draws and takes precedence over rng. */
+  seed?: number;
   difficulty?: Difficulty;
 };
 
@@ -72,16 +79,42 @@ export const DIFFICULTY_MODIFIERS: Record<
   hard: { speed: 1.2, spawnRate: 0.8 },
 };
 
+/**
+ * Advances a mulberry32 PRNG from its current state, returning the next
+ * value in [0, 1) together with the state to feed the next call.
+ * @param rngState The current PRNG state, an opaque 32-bit integer.
+ * @returns The next random value and the advanced PRNG state.
+ */
+function nextRandom(rngState: number): { value: number; rngState: number } {
+  const nextState = (rngState + 0x6d2b79f5) | 0;
+  let t = nextState;
+  t = Math.imul(t ^ (t >>> 15), t | 1);
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return { value: ((t ^ (t >>> 14)) >>> 0) / 4294967296, rngState: nextState };
+}
+
 export const createWizardZombieState = (
   vocabulary: VocabularyItem[],
-  { rng = Math.random, difficulty = "medium" }: WizardZombieConfig = {},
+  { rng, seed, difficulty = "medium" }: WizardZombieConfig = {},
 ): WizardZombieState => {
   if (vocabulary.length === 0) {
     throw new Error("Vocabulary cannot be empty");
   }
 
-  const targetIndex = Math.floor(rng() * vocabulary.length);
-  const target = vocabulary[targetIndex];
+  let rngState: number;
+  if (seed !== undefined) {
+    rngState = seed | 0;
+  } else if (rng !== undefined) {
+    // Derive the construction seed from the injected generator so distinct
+    // generators yield distinct layouts and tick paths.
+    rngState = Math.floor(rng() * 0x100000000) | 0;
+  } else {
+    rngState = 1;
+  }
+
+  const targetDraw = nextRandom(rngState);
+  rngState = targetDraw.rngState;
+  const target = vocabulary[Math.floor(targetDraw.value * vocabulary.length)];
 
   const player: Player = {
     id: "player",
@@ -96,14 +129,14 @@ export const createWizardZombieState = (
     invulnerabilityTime: 0,
   };
 
-  const orbs = spawnOrbs(target, vocabulary, rng);
+  const spawn = spawnOrbs(target, vocabulary, rngState, 1);
 
   return {
     status: "playing",
     difficulty,
     player,
     zombies: [],
-    orbs,
+    orbs: spawn.orbs,
     targetWord: target.term,
     score: 0,
     correctAnswers: 0,
@@ -111,6 +144,8 @@ export const createWizardZombieState = (
     spawnTimer: 0,
     difficultyMultiplier: 1,
     gameTime: 0,
+    rngState: spawn.rngState,
+    nextEntityId: spawn.nextEntityId,
   };
 };
 
@@ -194,6 +229,8 @@ function checkCollisions(
   vocabulary: VocabularyItem[],
 ): WizardZombieState {
   let { player, orbs, status, score, targetWord } = state;
+  let rngState = state.rngState;
+  let nextEntityId = state.nextEntityId;
   const { zombies } = state;
 
   // Cooldowns
@@ -233,10 +270,15 @@ function checkCollisions(
 
       // Pick new target word
       if (vocabulary.length > 0) {
+        const targetDraw = nextRandom(rngState);
+        rngState = targetDraw.rngState;
         const nextTarget =
-          vocabulary[Math.floor(Math.random() * vocabulary.length)];
+          vocabulary[Math.floor(targetDraw.value * vocabulary.length)];
         targetWord = nextTarget.term;
-        orbs = spawnOrbs(nextTarget, vocabulary, Math.random);
+        const spawn = spawnOrbs(nextTarget, vocabulary, rngState, nextEntityId);
+        orbs = spawn.orbs;
+        rngState = spawn.rngState;
+        nextEntityId = spawn.nextEntityId;
       }
     } else {
       // Incorrect: Just reshuffle same word + Penalty
@@ -244,7 +286,10 @@ function checkCollisions(
       if (vocabulary.length > 0) {
         const currentTarget =
           vocabulary.find((v) => v.term === targetWord) || vocabulary[0];
-        orbs = spawnOrbs(currentTarget, vocabulary, Math.random);
+        const spawn = spawnOrbs(currentTarget, vocabulary, rngState, nextEntityId);
+        orbs = spawn.orbs;
+        rngState = spawn.rngState;
+        nextEntityId = spawn.nextEntityId;
       }
     }
   }
@@ -278,6 +323,8 @@ function checkCollisions(
     orbs,
     score,
     targetWord,
+    rngState,
+    nextEntityId,
   };
 }
 
@@ -288,6 +335,8 @@ function updateZombies(
 ): WizardZombieState {
   const { difficulty } = state;
   let { zombies, spawnTimer } = state;
+  let rngState = state.rngState;
+  let nextEntityId = state.nextEntityId;
   spawnTimer += dt;
 
   const modifiers =
@@ -297,7 +346,9 @@ function updateZombies(
   // Spawn Logic (Cap at 50)
   if (spawnTimer >= spawnRate && zombies.length < 50) {
     spawnTimer = 0;
-    const gateIndex = Math.floor(Math.random() * 4); // 0-3
+    const gateDraw = nextRandom(rngState);
+    rngState = gateDraw.rngState;
+    const gateIndex = Math.floor(gateDraw.value * 4); // 0-3
     const gates = [
       { x: GAME_WIDTH / 2, y: -50 }, // N
       { x: GAME_WIDTH / 2, y: GAME_HEIGHT + 50 }, // S
@@ -310,10 +361,13 @@ function updateZombies(
     const zombieSpeed =
       (1.5 + state.difficultyMultiplier * 0.1) * modifiers.speed;
 
+    const zombieId = `zombie-${nextEntityId}`;
+    nextEntityId += 1;
+
     zombies = [
       ...zombies,
       {
-        id: `zombie-${Date.now()}-${Math.random()}`,
+        id: zombieId,
         x: gate.x,
         y: gate.y,
         radius: ZOMBIE_RADIUS,
@@ -330,8 +384,12 @@ function updateZombies(
 
     // Add cheap noise to the target vector BEFORE normalization
     // This is much faster than trig functions
-    dx += (Math.random() - 0.5) * 200; // Increased wander influence
-    dy += (Math.random() - 0.5) * 200;
+    const wanderX = nextRandom(rngState);
+    rngState = wanderX.rngState;
+    const wanderY = nextRandom(rngState);
+    rngState = wanderY.rngState;
+    dx += (wanderX.value - 0.5) * 200; // Increased wander influence
+    dy += (wanderY.value - 0.5) * 200;
 
     const dist = Math.sqrt(dx * dx + dy * dy);
 
@@ -352,14 +410,25 @@ function updateZombies(
     ...state,
     zombies: nextZombies,
     spawnTimer,
+    rngState,
+    nextEntityId,
   };
 }
 
+/**
+ * Places four orbs (one correct, three decoys) across shuffled quadrants.
+ * @param target The vocabulary item the correct orb carries.
+ * @param vocabulary The full vocabulary, used to pick distinct decoys.
+ * @param rngState The current PRNG state to draw from.
+ * @param nextEntityId The next entity id counter value.
+ * @returns The minted orbs plus the advanced PRNG state and entity id counter.
+ */
 function spawnOrbs(
   target: VocabularyItem,
   vocabulary: VocabularyItem[],
-  rng: () => number,
-): Orb[] {
+  rngState: number,
+  nextEntityId: number,
+): { orbs: Orb[]; rngState: number; nextEntityId: number } {
   const quadrants = [
     {
       minX: 50,
@@ -389,7 +458,9 @@ function spawnOrbs(
 
   // Shuffle quadrants
   for (let i = quadrants.length - 1; i > 0; i--) {
-    const j = Math.floor(rng() * (i + 1));
+    const draw = nextRandom(rngState);
+    rngState = draw.rngState;
+    const j = Math.floor(draw.value * (i + 1));
     [quadrants[i], quadrants[j]] = [quadrants[j], quadrants[i]];
   }
 
@@ -399,10 +470,16 @@ function spawnOrbs(
 
   // Correct orb
   const qCorrect = selectedQuadrants[0];
+  const xDraw = nextRandom(rngState);
+  rngState = xDraw.rngState;
+  const yDraw = nextRandom(rngState);
+  rngState = yDraw.rngState;
+  const correctOrbId = `orb-correct-${nextEntityId}`;
+  nextEntityId += 1;
   orbs.push({
-    id: `orb-correct-${Math.random()}`,
-    x: qCorrect.minX + rng() * (qCorrect.maxX - qCorrect.minX),
-    y: qCorrect.minY + rng() * (qCorrect.maxY - qCorrect.minY),
+    id: correctOrbId,
+    x: qCorrect.minX + xDraw.value * (qCorrect.maxX - qCorrect.minX),
+    y: qCorrect.minY + yDraw.value * (qCorrect.maxY - qCorrect.minY),
     radius: ORB_RADIUS,
     word: target.term,
     translation: target.translation,
@@ -415,17 +492,25 @@ function spawnOrbs(
     const q = selectedQuadrants[i];
     let decoy: VocabularyItem;
     if (otherWords.length > 0) {
-      const dIndex = Math.floor(rng() * otherWords.length);
+      const indexDraw = nextRandom(rngState);
+      rngState = indexDraw.rngState;
+      const dIndex = Math.floor(indexDraw.value * otherWords.length);
       // Remove to ensure uniqueness among decoys
       decoy = otherWords.splice(dIndex, 1)[0];
     } else {
       decoy = target;
     }
 
+    const xDraw = nextRandom(rngState);
+    rngState = xDraw.rngState;
+    const yDraw = nextRandom(rngState);
+    rngState = yDraw.rngState;
+    const decoyOrbId = `orb-decoy-${i}-${nextEntityId}`;
+    nextEntityId += 1;
     orbs.push({
-      id: `orb-decoy-${i}-${Math.random()}`,
-      x: q.minX + rng() * (q.maxX - q.minX),
-      y: q.minY + rng() * (q.maxY - q.minY),
+      id: decoyOrbId,
+      x: q.minX + xDraw.value * (q.maxX - q.minX),
+      y: q.minY + yDraw.value * (q.maxY - q.minY),
       radius: ORB_RADIUS,
       word: decoy.term,
       translation: decoy.translation,
@@ -433,5 +518,5 @@ function spawnOrbs(
     });
   }
 
-  return orbs;
+  return { orbs, rngState, nextEntityId };
 }
