@@ -7403,6 +7403,7 @@ def _publish_phase_level_failure_attempt(
                     reference_root=TRACK_DIR / attempt_name,
                 )
                 for command in commands
+                if isinstance(command.get("id"), str) and command.get("id")
             ]
         except OSError as raw_copy_error:
             raise raw_copy_error from error
