@@ -10441,7 +10441,7 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         self.assertFalse(V3_DIR.exists())
 
     def test_undeclared_directory_enumeration_is_rejected_by_trace_validation(self) -> None:
-        """Requires a traced directory enumeration outside the declared set to fail the exact bijection.
+        """Requires a traced directory enumeration outside the declared set to fail the exact bijection with detail.
 
         @returns Nothing; the real parser accepts the kind and the real validator rejects the undeclared path.
         """
@@ -10451,7 +10451,7 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         undeclared_events = copy.deepcopy(events)
         undeclared_events[1]["value"] = {"path": f"{standard_root}/UNDECLARED-dir"}
         envelope = capture_envelope(make_receipt(undeclared_events), sealed_integration)
-        with self.assertRaisesRegex(error_type, r"^V3_DIRECT_RUNTIME_READ_SET_EXECUTION_TRACE_BIJECTION_FAILED$"):
+        with self.assertRaisesRegex(error_type, r"^V3_DIRECT_RUNTIME_READ_SET_EXECUTION_TRACE_BIJECTION_FAILED: "):
             parse_events(envelope, sealed_integration)
         self.assertFalse(V3_DIR.exists())
 
@@ -10502,6 +10502,436 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         with self.assertRaisesRegex(error_type, r"^V3_DIRECT_RUNTIME_RUNNER_INTEGRATION_TRACE_DUPLICATE$"):
             parse_events(envelope, sealed_integration)
         self.assertFalse(V3_DIR.exists())
+
+    def test_bijection_failure_detail_names_exact_divergent_paths_per_bucket(self) -> None:
+        """Requires the failed four-member bijection to name every divergent path per bucket.
+
+        @returns Nothing; the real validator raises a bounded detail payload naming extra and missing paths.
+        """
+        (podman, sealed_integration, contract, make_receipt, events, error_type, directory_enumerations, standard_root) = self._h7_directory_enumeration_fixture()
+        validate_execution_trace = getattr(podman, "validate_direct_command_runtime_execution_trace_v1", None)
+        expected_trace = {
+            "baselineReads": contract["baselineReadSet"],
+            "derivedBuildReads": contract["derivedBuildReadSet"],
+            "writes": [{"path": contract["outputPaths"][0], "kind": "DERIVED_OUTPUT"}],
+            "directoryEnumerations": [{"path": path} for path in contract["directoryEnumerations"]],
+        }
+        extra_write_path = f"{standard_root}/EXTRA-write.json"
+        extra_dir_path = f"{standard_root}/EXTRA-dir"
+        missing_dir_path = directory_enumerations[1]
+        missing_baseline_path = expected_trace["baselineReads"][0]["path"]
+        divergent_trace = {
+            "baselineReads": expected_trace["baselineReads"][1:],
+            "derivedBuildReads": expected_trace["derivedBuildReads"],
+            "writes": [*expected_trace["writes"], {"path": extra_write_path, "kind": "DERIVED_OUTPUT"}],
+            "directoryEnumerations": [{"path": directory_enumerations[0]}, {"path": extra_dir_path}],
+        }
+        captured: BaseException | None = None
+        try:
+            validate_execution_trace(contract, divergent_trace)
+            self.fail("V3_DIRECT_RUNTIME_READ_SET_EXECUTION_TRACE_BIJECTION_FAILED expected")
+        except error_type as raised:
+            captured = raised
+        self.assertIsInstance(captured, error_type)
+        message = str(captured)
+        self.assertTrue(
+            message.startswith("V3_DIRECT_RUNTIME_READ_SET_EXECUTION_TRACE_BIJECTION_FAILED: "),
+            message,
+        )
+        self.assertIn(extra_write_path, message)
+        self.assertIn(extra_dir_path, message)
+        self.assertIn(missing_dir_path, message)
+        self.assertIn(missing_baseline_path, message)
+        detail = json.loads(message.split(": ", 1)[1])
+        self.assertEqual(
+            set(detail),
+            {"baselineReads", "writes", "directoryEnumerations", "divergenceSha256"},
+        )
+        self.assertEqual(detail["baselineReads"], {
+            "extra": [],
+            "missing": [missing_baseline_path],
+            "extraTotal": 0,
+            "missingTotal": 1,
+        })
+        self.assertEqual(detail["writes"], {
+            "extra": [extra_write_path],
+            "missing": [],
+            "extraTotal": 1,
+            "missingTotal": 0,
+        })
+        self.assertEqual(detail["directoryEnumerations"], {
+            "extra": [extra_dir_path],
+            "missing": [missing_dir_path],
+            "extraTotal": 1,
+            "missingTotal": 1,
+        })
+        full_divergence = {
+            "baselineReads": {"extra": [], "missing": [missing_baseline_path]},
+            "writes": {"extra": [extra_write_path], "missing": []},
+            "directoryEnumerations": {"extra": [extra_dir_path], "missing": [missing_dir_path]},
+        }
+        expected_hash = _sha256(json.dumps(full_divergence, sort_keys=True, separators=(",", ":")).encode("utf-8"))
+        self.assertEqual(detail["divergenceSha256"], expected_hash)
+        self.assertFalse(V3_DIR.exists())
+
+    def test_bijection_failure_detail_caps_lists_and_pins_full_divergence_hash(self) -> None:
+        """Requires over-25 divergent paths in one bucket to truncate at 25 with a full divergence hash.
+
+        @returns Nothing; the real validator caps each named list and hashes the uncapped divergence deterministically.
+        """
+        (podman, sealed_integration, contract, make_receipt, events, error_type, directory_enumerations, standard_root) = self._h7_directory_enumeration_fixture()
+        validate_execution_trace = getattr(podman, "validate_direct_command_runtime_execution_trace_v1", None)
+        extra_dirs = [f"{standard_root}/CAP-{index:02d}" for index in range(30)]
+        divergent_trace = {
+            "baselineReads": contract["baselineReadSet"],
+            "derivedBuildReads": contract["derivedBuildReadSet"],
+            "writes": [{"path": contract["outputPaths"][0], "kind": "DERIVED_OUTPUT"}],
+            "directoryEnumerations": [{"path": path} for path in extra_dirs],
+        }
+        messages: list[str] = []
+        for _ in range(2):
+            try:
+                validate_execution_trace(contract, divergent_trace)
+                self.fail("V3_DIRECT_RUNTIME_READ_SET_EXECUTION_TRACE_BIJECTION_FAILED expected")
+            except error_type as raised:
+                messages.append(str(raised))
+        self.assertEqual(messages[0], messages[1], "detail payload must be deterministic")
+        message = messages[0]
+        self.assertTrue(
+            message.startswith("V3_DIRECT_RUNTIME_READ_SET_EXECUTION_TRACE_BIJECTION_FAILED: "),
+            message,
+        )
+        detail = json.loads(message.split(": ", 1)[1])
+        self.assertEqual(set(detail), {"directoryEnumerations", "divergenceSha256"})
+        bucket = detail["directoryEnumerations"]
+        self.assertEqual(len(bucket["extra"]), 25)
+        self.assertEqual(bucket["extra"], extra_dirs[:25])
+        self.assertEqual(bucket["extraTotal"], 30)
+        self.assertEqual(bucket["missing"], directory_enumerations)
+        self.assertEqual(bucket["missingTotal"], len(directory_enumerations))
+        self.assertNotIn(extra_dirs[29], message)
+        full_divergence = {
+            "directoryEnumerations": {
+                "extra": extra_dirs,
+                "missing": directory_enumerations,
+            }
+        }
+        expected_hash = _sha256(json.dumps(full_divergence, sort_keys=True, separators=(",", ":")).encode("utf-8"))
+        self.assertEqual(detail["divergenceSha256"], expected_hash)
+        self.assertFalse(V3_DIR.exists())
+
+    def _h9a_bijection_failure_fixture(self) -> tuple[Any, Any, Any, Path, dict[str, Any], dict[str, Any], Path, dict[str, Any], str, Any]:
+        """Builds one post-seal trace bijection failure through the real runner parser.
+
+        @returns The runner module, the configured executor, the real bijection error, the attempts root,
+            the sealed integration, the raw trace receipt, the staged raw directory, the staged trace command,
+            the undeclared extra write path, and the live temporary root.
+        @throws AssertionError When the fixture is not a real direct-runtime-trace bijection failure.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        executor_type = getattr(podman, "DirectCommandRuntimeProductionExecutorV1", None)
+        build_integration = getattr(podman, "build_direct_command_runtime_runner_integration_v1", None)
+        validate_integration = getattr(podman, "validate_direct_command_runtime_runner_integration_v1", None)
+        capture_envelope = getattr(podman, "capture_direct_command_runtime_in_container_trace_v1", None)
+        parse_events = getattr(podman, "parse_direct_command_runtime_trace_events_v1", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(inspect.isclass(executor_type), "V3_DIRECT_RUNTIME_PRODUCTION_EXECUTOR_MISSING")
+        self.assertTrue(callable(build_integration), "V3_DIRECT_RUNTIME_INTEGRATION_BUILDER_MISSING")
+        self.assertTrue(callable(validate_integration), "V3_DIRECT_RUNTIME_INTEGRATION_VALIDATOR_MISSING")
+        self.assertTrue(callable(capture_envelope), "V3_DIRECT_RUNTIME_TRACE_ENVELOPE_CAPTURE_MISSING")
+        self.assertTrue(callable(parse_events), "V3_DIRECT_RUNTIME_TRACE_PARSER_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+
+        def baseline_identity(path: str, contents: bytes) -> dict[str, Any]:
+            """Builds one exact baseline-Git identity for the sealed fixture.
+
+            @param path The fixture's workspace-relative source path.
+            @param contents The immutable fixture bytes.
+            @returns One baseline-Git identity accepted by the runtime integration builder.
+            """
+            blob = b"blob " + str(len(contents)).encode("ascii") + b"\0" + contents
+            return {
+                "path": path,
+                "sha256": _sha256(contents),
+                "size": len(contents),
+                "mode": "100644",
+                "origin": "BASELINE_GIT_BLOB",
+                "baselineCommit": "a" * 40,
+                "gitBlobSha1": hashlib.sha1(blob).hexdigest(),
+                "inclusion": "MATERIALIZE_EXACT_BASELINE_BYTES",
+            }
+
+        package_root = "packages/h9a-fixture-bijection-detail"
+        generator_path = f"{package_root}/scripts/generate-runtime.mjs"
+        source_path = f"{package_root}/assets/standard/input.txt"
+        standard_root = f"{package_root}/assets/standard"
+        generator_bytes = b"export const fixture = 'bijection-detail';\n"
+        source_bytes = b"bijection-detail-source\n"
+        generator_identity = baseline_identity(generator_path, generator_bytes)
+        source_identity = baseline_identity(source_path, source_bytes)
+        baseline_read_set = sorted(
+            [generator_identity, source_identity],
+            key=lambda item: item["path"],
+        )
+        derived_read = {
+            "path": f"{package_root}/dist/assets/index.js",
+            "sha256": "b" * 64,
+            "size": 1,
+            "origin": "DERIVED_BUILD_OUTPUT",
+            "producer": {
+                "kind": "PACKAGE_SCRIPT_PREREQUISITE_BUILD",
+                "scriptName": "fixture-build",
+                "scriptSegment": "pnpm build",
+                "receipt": {
+                    "path": "fixture-bijection-detail-build-receipt.json",
+                    "sha256": "c" * 64,
+                    "size": 1,
+                },
+            },
+        }
+        resource_budget = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-asset-resource-budget",
+            "frozenArchive": _reference(V2_ARCHIVE),
+            "sourceCeiling": {
+                "path": standard_root,
+                "regularFiles": 2,
+                "apparentBytes": len(generator_bytes) + len(source_bytes),
+                "allocatedBytes": len(generator_bytes) + len(source_bytes),
+            },
+            "reservations": {
+                "baselineGitMaterializationBytes": 1,
+                "candidateCowBytes": 1,
+                "archiveSupplementBytes": 1,
+                "derivedOutputBytes": 1,
+                "metadataBytes": 1,
+                "minimumHeadroomBytes": 1,
+            },
+            "requiredAvailableBytes": 6,
+            "availableBytes": 6,
+            "decision": "PASS",
+        }
+        output_path = f"{standard_root}/standard-pack-release.json"
+        read_set = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-read-set",
+            "trigger": {
+                "logicalArgv": ["pnpm", "--filter", "@h9a/fixture-bijection-detail", "fixture-build"],
+                "package": "@h9a/fixture-bijection-detail",
+                "manifest": {
+                    "path": f"{package_root}/package.json",
+                    "sha256": "d" * 64,
+                    "size": 1,
+                },
+            },
+            "baselineReadSet": baseline_read_set,
+            "derivedBuildReadSet": [derived_read],
+            "outputPaths": [output_path],
+            "preflightQuota": {
+                "maxEntries": len(baseline_read_set),
+                "maxBytes": sum(item["size"] for item in baseline_read_set),
+                "observedEntries": len(baseline_read_set),
+                "observedBytes": sum(item["size"] for item in baseline_read_set),
+            },
+            "resourceBudget": resource_budget,
+            "discovery": {
+                "kind": "BASELINE_GIT_INSTRUMENTED_TRACE",
+                "script": generator_identity,
+                "root": standard_root,
+                "directoryListingCount": 1,
+            },
+        }
+        source_packet = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-baseline-git-source-packet",
+            "source": "GIT_OBJECT_DATABASE_ONLY",
+            "baselineCommit": "a" * 40,
+            "tree": {"gitTreeSha1": "e" * 40},
+            "baselineReadSet": baseline_read_set,
+            "objects": [
+                {**source_identity, "contentBase64": base64.b64encode(source_bytes).decode("ascii")},
+                {**generator_identity, "contentBase64": base64.b64encode(generator_bytes).decode("ascii")},
+            ],
+        }
+        source_packet["packetSha256"] = podman._direct_runtime_packet_digest_v1(source_packet)
+        sealed_integration = build_integration(
+            read_set,
+            source_packet,
+            {
+                "id": "direct-runtime-detached-runner-v1",
+                "nonceSha256": "f" * 64,
+                "reachedStage": "build-advantage-play-kit-for-runtime",
+                "executionTrace": None,
+            },
+            resource_budget,
+        )
+        validate_integration(sealed_integration)
+        nonce = sealed_integration["tracePolicy"]["nonce"]
+        packet_sha256 = sealed_integration["sourcePacket"]["packetSha256"]
+        generator_script = sealed_integration["tracePolicy"]["generatorResolvedPath"]
+        extra_write_path = f"{standard_root}/EXTRA-write.json"
+
+        def raw_event(ordinal: int, kind: str, value: dict[str, Any]) -> dict[str, Any]:
+            """Builds one raw in-container trace event bound to the sealed fixture.
+
+            @param ordinal The exact event sequence number.
+            @param kind The event kind emitted by the in-container tracer.
+            @param value The event value emitted by the in-container tracer.
+            @returns The raw event accepted by the trace-envelope capture.
+            """
+            return {
+                "nonce": nonce,
+                "ordinal": ordinal,
+                "kind": kind,
+                "value": copy.deepcopy(value),
+                "tracer": "direct-runtime-tracer",
+                "packetSha256": packet_sha256,
+                "rawEventArtifact": "direct-runtime-raw-events.jsonl",
+                "generatorPid": 1234,
+                "generatorScript": generator_script,
+            }
+
+        events = [
+            raw_event(0, "BASELINE_READ", generator_identity),
+            raw_event(1, "BASELINE_READ", source_identity),
+            raw_event(2, "DERIVED_BUILD_READ", derived_read),
+            raw_event(3, "WRITE", {"path": output_path, "kind": "DERIVED_OUTPUT"}),
+            raw_event(4, "WRITE", {"path": extra_write_path, "kind": "DERIVED_OUTPUT"}),
+        ]
+        raw_receipt = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-in-container-trace-receipt",
+            "evidence": "IN_CONTAINER_TRACER_RAW_ARTIFACT_ONLY",
+            "tracer": "direct-runtime-tracer",
+            "rawEventArtifact": "direct-runtime-raw-events.jsonl",
+            "nonce": nonce,
+            "packetSha256": packet_sha256,
+            "generatorPid": 1234,
+            "generatorScript": generator_script,
+            "truncated": False,
+            "events": events,
+            "rawArtifact": {"sha256": "e" * 64, "size": 1},
+        }
+        envelope = capture_envelope(raw_receipt, sealed_integration)
+        captured_trace_error: BaseException | None = None
+        try:
+            parse_events(envelope, sealed_integration)
+            self.fail("V3_DIRECT_RUNTIME_READ_SET_EXECUTION_TRACE_BIJECTION_FAILED expected")
+        except error_type as trace_error:
+            self.assertTrue(
+                str(trace_error).startswith("V3_DIRECT_RUNTIME_READ_SET_EXECUTION_TRACE_BIJECTION_FAILED: "),
+                str(trace_error),
+            )
+            self.assertIn(extra_write_path, str(trace_error))
+            captured_trace_error = trace_error
+        self.assertIsInstance(
+            captured_trace_error,
+            error_type,
+            "V3_DIRECT_RUNTIME_READ_SET_EXECUTION_TRACE_BIJECTION_FAILED expected",
+        )
+
+        temporary = tempfile.TemporaryDirectory()
+        root = Path(temporary.name)
+        attempts_root = root / "attempts"
+        attempts_root.mkdir()
+        output = root / "candidate"
+        staged_raw = root / "staged-raw"
+        staged_raw.mkdir()
+        trace_stdout = staged_raw / "receipt-direct-runtime-trace.stdout.txt"
+        trace_stderr = staged_raw / "receipt-direct-runtime-trace.stderr.txt"
+        trace_stdout.write_text(json.dumps(raw_receipt, indent=2, sort_keys=True), encoding="utf-8")
+        trace_stderr.write_text("", encoding="utf-8")
+        context = {"prefix": [podman.PODMAN, "run", "--rm", "--network", "none"]}
+        trace_command = {
+            "id": "direct-runtime-trace",
+            "argv": ["node", "direct-runtime-trace-receipt"],
+            "cwd": ".",
+            "env": dict(podman.ENV),
+            "envAbsent": list(podman.ENV_ABSENT),
+            "network": False,
+            "exitCode": 0,
+            "actualExecutor": podman._container_executor(
+                context,
+                ["node", "direct-runtime-trace-receipt"],
+                [
+                    podman.CONTAINER_NODE,
+                    "/runner/direct-runtime-trace-receipt.mjs",
+                    podman.DIRECT_RUNTIME_TRACE_CONFIG_PATH,
+                ],
+            ),
+            "_rawId": "receipt-direct-runtime-trace",
+            "_stdoutPath": trace_stdout,
+            "_stderrPath": trace_stderr,
+            "_stdoutText": "",
+            "_stderrText": "",
+        }
+        executor = executor_type(output, "20260802")
+        executor.started = True
+        executor._failure_reason = "direct-runtime-trace"
+        executor._direct_runtime_stage = "generate-standard-pack-catalog"
+        executor._sealed_integration = copy.deepcopy(sealed_integration)
+        executor._staged_commands = [trace_command]
+        return (
+            podman,
+            executor,
+            captured_trace_error,
+            attempts_root,
+            sealed_integration,
+            raw_receipt,
+            staged_raw,
+            trace_command,
+            extra_write_path,
+            temporary,
+        )
+
+    def test_bijection_failure_detail_flows_through_phase_level_preserved_attempt(self) -> None:
+        """Requires the bijection divergence detail to survive preservation into the phase-level errorDetail.
+
+        @returns Nothing; the real preservation path publishes the payload through the H8/H10 phase-level carrier.
+        """
+        (podman, executor, trace_error, attempts_root, sealed_integration, raw_receipt, staged_raw, trace_command, extra_write_path, temporary) = self._h9a_bijection_failure_fixture()
+        try:
+            with patch.object(podman, "TRACK_DIR", attempts_root):
+                try:
+                    executor.preserve_failure(trace_error)
+                except podman.CandidateExecutionBlocked as blocked:
+                    self.fail(f"V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED raised: {blocked}")
+
+            attempt_directories = sorted(
+                attempts_root.glob(f"{podman.ATTEMPT_PREFIX}-20260802-*")
+            )
+            self.assertEqual(len(attempt_directories), 1)
+            attempt_directory = attempt_directories[0]
+            attempt = _load_json(attempt_directory / "failed-attempt.json", self)
+            carrier = attempt["phaseLevelFailure"]
+            error_detail = carrier["errorDetail"]
+            self.assertTrue(
+                error_detail.startswith("V3_DIRECT_RUNTIME_READ_SET_EXECUTION_TRACE_BIJECTION_FAILED: "),
+                error_detail,
+            )
+            self.assertEqual(carrier["reason"], error_detail)
+            self.assertIn(extra_write_path, error_detail)
+            detail = json.loads(error_detail.split(": ", 1)[1])
+            self.assertEqual(
+                detail["writes"],
+                {
+                    "extra": [extra_write_path],
+                    "missing": [],
+                    "extraTotal": 1,
+                    "missingTotal": 0,
+                },
+            )
+            full_divergence = {
+                "writes": {"extra": [extra_write_path], "missing": []},
+            }
+            expected_hash = _sha256(json.dumps(full_divergence, sort_keys=True, separators=(",", ":")).encode("utf-8"))
+            self.assertEqual(detail["divergenceSha256"], expected_hash)
+            podman.validate_failed_execution_attempt_v1(attempt, attempt_directory)
+            self.assertFalse(executor.output_directory.exists())
+            self.assertFalse(V3_DIR.exists())
+        finally:
+            temporary.cleanup()
 
 
 if __name__ == "__main__":
