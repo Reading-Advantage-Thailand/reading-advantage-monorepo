@@ -9,7 +9,7 @@ model rather than inventing one.
 Phases S1 and S2 run in parallel after S0. S2 is the shared-world prerequisite
 and must not be pushed behind the race tier.
 
-## Phase S0: Audit the orphaned implementation and harvest the reference protocol
+## Phase S0: Audit the orphaned implementation and harvest the reference protocol [checkpoint: 0724fd7]
 _Story ref: spec.md#story-s0_
 
 - [x] Task: Produce a per-module adopt/lift/discard verdict `s0-audit-20260804.md`
@@ -39,9 +39,9 @@ _Story ref: spec.md#story-s0_
 - [x] Task: Run the existing multiplayer test suite and record its true state
     - [x] Execute the multiplayer test files and record pass/fail counts and timings in the audit receipt. Was blocked on the 2026-08-04 root `node_modules` wipe by a concurrent session; the install has since been restored and the suite ran: fourteen files, 13 suites passed / 1 failed, 202 tests passed / 1 failed, 36.4 s. The single failure is a wall-clock threshold in `performance-benchmark.test.ts` against the dead `ScoringEngine`, not a correctness assertion.
     - [x] Record why the green does not clear the High findings: the suite tests each module against itself, while M-1, M-2 and M-3 all live in the seams between modules or in an absent caller. Recorded in `s0-audit-20260804.md#test-state-executed-2026-08-04` as the coverage gap S1's contract tests must close.
-- [ ] Task: Measure - User Manual Verification 'Phase S0: Audit the orphaned implementation and harvest the reference protocol' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase S0: Audit the orphaned implementation and harvest the reference protocol' (Protocol in workflow.md) — preliminary gates executed by orchestrator, confirmed YES by product owner 2026-08-04; receipt `preliminary-verification-s0-s1-s2-20260804.md`; verification report in git notes on checkpoint 0724fd7
 
-## Phase S1: Freeze the `multiplayer.v1` contract in `game-contracts`
+## Phase S1: Freeze the `multiplayer.v1` contract in `game-contracts` [checkpoint: e1a7ee5]
 _Story ref: spec.md#story-s1_
 
 - [x] Task: Write Red tests for the protocol contract
@@ -55,9 +55,9 @@ _Story ref: spec.md#story-s1_
     - [x] Export from `packages/game-contracts/src/index.ts`
 - [x] Task: Verify against the harvested reference
     - [x] Confirm every Tutor Advantage race semantic recorded in S0 is expressible in the frozen contract — mapping table recorded in the implementation report: harvest items 8–12 and audit items 1–7 all expressed. Six flags are enforcement-side (entitlement gate, capacity counting, kick persistence, per-player round termination, broadcast cadence, tenant binding) and belong to S4/S6 service logic by design, not to message shape; recorded here so S4 does not mistake them for contract gaps. Orchestrator re-ran the gate: 8 files / 178 tests green; the package `check-types` failure is a pre-existing baseline in `dragon-rider-host-proof-binding.ts` (file untouched, error reproduces at HEAD)
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Freeze the multiplayer.v1 contract in game-contracts' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase S1: Freeze the multiplayer.v1 contract in game-contracts' (Protocol in workflow.md) — preliminary gates executed by orchestrator, confirmed YES by product owner 2026-08-04; receipt `preliminary-verification-s0-s1-s2-20260804.md`; verification report in git notes on checkpoint e1a7ee5
 
-## Phase S2: Make the Wizard vs Zombie simulation deterministic
+## Phase S2: Make the Wizard vs Zombie simulation deterministic [checkpoint: d027b6f]
 _Story ref: spec.md#story-s2_
 
 - [x] Task: Write the Red determinism property test
@@ -71,7 +71,7 @@ _Story ref: spec.md#story-s2_
     - [x] Add a lint or test guard failing on `Math.random` or `Date.now` reintroduced into the tick path — `wizardZombieDeterminismGuard.test.ts` scans the module source; residual gap recorded: the guard catches reintroduction but not draw-order/count changes, which only the 400-tick property test pins
 - [x] Task: Confirm no behavioral regression
     - [x] Run the existing `wizardZombie.test.ts`, `wizardZombieLogic.test.ts`, and `wizardZombieIndicators.test.ts` suites — orchestrator re-ran the gate: 7 suites, 44/44 passed including the determinism property. One caller-visible regression caught at integration: seedless construction now starts from seed 1, making every play session identical; fixed at the call site (`WizardZombieGame.tsx` passes `seed: Date.now()` at mount, outside the tick path) pending S5/S6 session-distributed seeds. The remotion renderer stays deterministic by default, which is desirable for reproducible renders
-- [ ] Task: Measure - User Manual Verification 'Phase S2: Make the Wizard vs Zombie simulation deterministic' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase S2: Make the Wizard vs Zombie simulation deterministic' (Protocol in workflow.md) — preliminary gates executed by orchestrator, confirmed YES by product owner 2026-08-04; receipt `preliminary-verification-s0-s1-s2-20260804.md`; verification report in git notes on checkpoint d027b6f
 
 ## Phase S3: Add the multiplayer session capability to the Play Kit
 _Story ref: spec.md#story-s3_
