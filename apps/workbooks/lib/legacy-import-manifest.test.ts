@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { workbooks } from "@reading-advantage/domain";
 import {
   buildLegacyImportManifest,
   computeLegacyImportFileHash,
@@ -170,7 +171,7 @@ describe("legacy import manifest", () => {
     const parsed = legacyImportManifestSchema.safeParse(manifest);
     expect(parsed.success).toBe(true);
     if (parsed.success) {
-      expect(parsed.data.manifestVersion).toBe(2);
+      expect(parsed.data.manifestVersion).toBe(3);
     }
   });
 
@@ -178,5 +179,134 @@ describe("legacy import manifest", () => {
     const raw = JSON.stringify(validLesson, null, 2);
     expect(computeLegacyImportFileHash(raw)).toBe(computeLegacyImportFileHash(raw));
     expect(computeLegacyImportFileHash(raw)).toMatch(/^sha256:[0-9a-f]{64}$/);
+  });
+});
+
+describe("legacy import manifest / source drift", () => {
+  const project = { projectId: "origins-2-a0", sourceRoot: "/read-only/origins-2-a0" };
+
+  /** Builds the manifest entry content hash for the lesson raw text. */
+  function contentHashFor(raw: string): string {
+    const record = workbooks.importLegacyWorkbook({
+      lesson: JSON.parse(raw) as unknown,
+      sourceApp: "reading-advantage",
+      sourceId: "cmgqx8v6602p3t79btatvfjuw",
+      sourceRevision: computeLegacyImportFileHash(raw),
+    });
+    return record.identity.contentHash;
+  }
+
+  /** Builds a persisted draft whose source record carries the given content hash. */
+  function makeExistingDraft(
+    draftId: string,
+    contentHash: string,
+  ): workbooks.WorkbookDraft {
+    const content = {
+      title: "Pip the Curious Puppy Feels",
+      cefrLevel: "CEFR A0",
+      paragraphs: [{ order: 0, text: "Pip is a curious puppy." }],
+      questions: [],
+      assets: [],
+    };
+    return {
+      draftId,
+      tenantId: "tenant-1",
+      status: "draft",
+      sourceRecord: {
+        identity: {
+          sourceApp: "reading-advantage",
+          sourceId: "cmgqx8v6602p3t79btatvfjuw",
+          sourceRevision: "sha256:rev-1",
+          contentHash,
+        },
+        content,
+      },
+      revision: 0,
+      createdBy: "import-cli",
+      createdAt: "2026-08-04T00:00:00.000Z",
+      updatedAt: "2026-08-04T00:00:00.000Z",
+    };
+  }
+
+  it("records no drift when no existing drafts are supplied", () => {
+    const raw = JSON.stringify(validLesson, null, 2);
+    const manifest = buildLegacyImportManifest({
+      project,
+      files: [
+        {
+          sourcePath: "01-Pip the Curious Puppy Feels _workbook.json",
+          raw,
+        },
+      ],
+      generatedAt: "2026-08-03T12:00:00.000Z",
+    });
+    const entry = manifest.entries[0];
+    expect(entry.driftDetected).toBe(false);
+    expect(entry.supersededDraftIds).toEqual([]);
+  });
+
+  it("records no drift when an identical content hash is re-imported", () => {
+    const raw = JSON.stringify(validLesson, null, 2);
+    const manifest = buildLegacyImportManifest({
+      project,
+      files: [
+        {
+          sourcePath: "01-Pip the Curious Puppy Feels _workbook.json",
+          raw,
+        },
+      ],
+      existingDrafts: [
+        makeExistingDraft("draft-1", contentHashFor(raw)),
+      ],
+      generatedAt: "2026-08-03T12:00:00.000Z",
+    });
+    const entry = manifest.entries[0];
+    expect(entry.driftDetected).toBe(false);
+    expect(entry.supersededDraftIds).toEqual([]);
+  });
+
+  it("records drift and the superseded draft id when the content hash changes", () => {
+    const raw = JSON.stringify(validLesson, null, 2);
+    const manifest = buildLegacyImportManifest({
+      project,
+      files: [
+        {
+          sourcePath: "01-Pip the Curious Puppy Feels _workbook.json",
+          raw,
+        },
+      ],
+      existingDrafts: [
+        makeExistingDraft(
+          "draft-1",
+          "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        ),
+      ],
+      generatedAt: "2026-08-03T12:00:00.000Z",
+    });
+    const entry = manifest.entries[0];
+    expect(entry.driftDetected).toBe(true);
+    expect(entry.supersededDraftIds).toEqual(["draft-1"]);
+  });
+
+  it("satisfies the manifest schema with drift fields populated", () => {
+    const raw = JSON.stringify(validLesson, null, 2);
+    const manifest = buildLegacyImportManifest({
+      project,
+      files: [
+        {
+          sourcePath: "01-Pip the Curious Puppy Feels _workbook.json",
+          raw,
+        },
+      ],
+      existingDrafts: [
+        makeExistingDraft(
+          "draft-1",
+          "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        ),
+      ],
+      generatedAt: "2026-08-03T12:00:00.000Z",
+    });
+    const parsed = legacyImportManifestSchema.safeParse(manifest);
+    expect(parsed.success).toBe(true);
   });
 });

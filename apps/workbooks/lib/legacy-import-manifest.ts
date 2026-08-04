@@ -48,6 +48,10 @@ export const legacyImportManifestEntrySchema = z
     objectKey: z.string().min(1),
     parseStatus: z.enum(["ok", "error"]),
     contentHash: z.string().min(1).nullable(),
+    /** Whether an existing draft carries the same identity with different content. */
+    driftDetected: z.boolean(),
+    /** Draft ids superseded by this import because their content hash differs. */
+    supersededDraftIds: z.array(z.string().min(1)),
     exceptions: z.array(legacyImportExceptionSchema),
     provenance: z.array(legacyImportProvenanceSchema),
   })
@@ -61,7 +65,7 @@ export type LegacyImportManifestEntry = z.infer<
 /** Dry-run import manifest covering one legacy workbook project. */
 export const legacyImportManifestSchema = z
   .object({
-    manifestVersion: z.literal(2),
+    manifestVersion: z.literal(3),
     generatedAt: z.string().datetime(),
     project: z
       .object({
@@ -179,16 +183,20 @@ export function resolveImportSourceApp(
  * status and the normalized content digest; failures become structured
  * exceptions instead of aborting the dry-run. Remote asset URLs that the
  * importer retains as legacyUrl provenance are recorded as structured
- * provenance entries on the manifest entry.
+ * provenance entries on the manifest entry. When existing drafts are
+ * supplied, the entry also records whether the import drifts from any draft
+ * already carrying the same source identity with different content.
  * @param input Raw lesson file to process.
  * @param projectId Identifier of the legacy project being imported.
  * @param sourceApp Owning app the legacy lesson was authored in.
- * @returns The manifest entry describing the file's provenance and parse result.
+ * @param existingDrafts Drafts already persisted for the tenant, used for drift detection.
+ * @returns The manifest entry describing the file's provenance, drift, and parse result.
  */
 function buildManifestEntry(
   input: LegacyImportManifestFileInput,
   projectId: string,
   sourceApp: "reading-advantage" | "primary-advantage",
+  existingDrafts: readonly workbooks.WorkbookDraft[],
 ): LegacyImportManifestEntry {
   const fileName = input.sourcePath.split("/").pop() ?? input.sourcePath;
   const fileHash = computeLegacyImportFileHash(input.raw);
@@ -205,6 +213,8 @@ function buildManifestEntry(
       objectKey: computeLegacyImportObjectKey(projectId, fileName, fileHash),
       parseStatus: "error",
       contentHash: null,
+      driftDetected: false,
+      supersededDraftIds: [],
       exceptions: [
         {
           code: "INVALID_JSON",
@@ -229,6 +239,10 @@ function buildManifestEntry(
       sourceRevision: fileHash,
     });
     contentHash = record.identity.contentHash;
+    const drift = workbooks.detectWorkbookSourceDrift(
+      existingDrafts,
+      record.identity,
+    );
     const provenance: LegacyImportProvenance[] = (
       record.content.articleImages ?? []
     )
@@ -244,6 +258,8 @@ function buildManifestEntry(
       objectKey: computeLegacyImportObjectKey(projectId, fileName, fileHash),
       parseStatus: "ok",
       contentHash,
+      driftDetected: drift.driftDetected,
+      supersededDraftIds: [...drift.supersededDraftIds],
       exceptions,
       provenance,
     };
@@ -269,6 +285,8 @@ function buildManifestEntry(
       objectKey: computeLegacyImportObjectKey(projectId, fileName, fileHash),
       parseStatus: "error",
       contentHash: null,
+      driftDetected: false,
+      supersededDraftIds: [],
       exceptions,
       provenance: [],
     };
@@ -279,17 +297,20 @@ function buildManifestEntry(
  * Builds a dry-run import manifest for a legacy workbook project.
  * Pure and filesystem-free: every lesson file is supplied as raw text and the
  * returned manifest is validated against its Zod schema before being returned.
- * @param input Project metadata, raw lesson files, and the manifest timestamp.
+ * Existing drafts (when supplied) drive the per-entry source-drift fields.
+ * @param input Project metadata, raw lesson files, optional existing drafts, and the manifest timestamp.
  * @returns A schema-validated dry-run import manifest.
  */
 export function buildLegacyImportManifest(input: {
   project: LegacyImportManifestProjectInput;
   files: readonly LegacyImportManifestFileInput[];
+  existingDrafts?: readonly workbooks.WorkbookDraft[];
   generatedAt: string;
 }): LegacyImportManifest {
   const sourceApp = resolveImportSourceApp(input.project.type);
+  const existingDrafts = input.existingDrafts ?? [];
   const entries = input.files.map((file) =>
-    buildManifestEntry(file, input.project.projectId, sourceApp),
+    buildManifestEntry(file, input.project.projectId, sourceApp, existingDrafts),
   );
   const parseOk = entries.filter((entry) => entry.parseStatus === "ok").length;
   const exceptionCount = entries.reduce(
@@ -301,7 +322,7 @@ export function buildLegacyImportManifest(input: {
     0,
   );
   return legacyImportManifestSchema.parse({
-    manifestVersion: 2,
+    manifestVersion: 3,
     generatedAt: input.generatedAt,
     project: input.project,
     counts: {

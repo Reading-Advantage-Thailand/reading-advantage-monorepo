@@ -25,6 +25,46 @@ vi.mock("../../../lib/repository", () => ({
   getWorkbookRepository: () => repositorySpy,
 }));
 
+const transactionState = vi.hoisted(() => ({
+  started: 0,
+  committed: false,
+}));
+
+vi.mock("@reading-advantage/db", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@reading-advantage/db")>();
+  return {
+    ...actual,
+    db: {
+      ...actual.db,
+      transaction: vi.fn(
+        async (fn: (tx: string) => Promise<unknown>) => {
+          transactionState.started += 1;
+          try {
+            const result = await fn("tx-handle");
+            transactionState.committed = true;
+            return result;
+          } catch (error) {
+            transactionState.committed = false;
+            throw error;
+          }
+        },
+      ),
+    },
+  };
+});
+
+vi.mock("@reading-advantage/domain", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("@reading-advantage/domain")>();
+  return {
+    ...actual,
+    workbooks: {
+      ...actual.workbooks,
+      createDrizzleEditionRepository: vi.fn(() => repositorySpy),
+    },
+  };
+});
+
 import {
   getDraftAction,
   previewDraftAction,
@@ -45,6 +85,14 @@ const session: WorkbookSession = {
   role: "WORKBOOK_ADMIN",
   username: "editor",
 };
+
+beforeEach(() => {
+  transactionState.started = 0;
+  transactionState.committed = false;
+  repositorySpy.getDraft.mockReset();
+  repositorySpy.updateDraftStatus.mockReset();
+  repositorySpy.recordEvent.mockReset();
+});
 
 function makeDraft() {
   const content = {
@@ -490,6 +538,33 @@ describe("submitDraftForReviewAction", () => {
     });
     expect(repositorySpy.updateDraftStatus).not.toHaveBeenCalled();
     expect(repositorySpy.recordEvent).not.toHaveBeenCalled();
+  });
+
+  it("commits the status write and audit event in one transaction", async () => {
+    const updated = { ...makeDraft(), status: "in_review" as const, revision: 4 };
+    repositorySpy.getDraft.mockResolvedValue(makeDraft());
+    repositorySpy.updateDraftStatus.mockResolvedValue(updated);
+    const result = await submitDraftForReviewAction("draft-1", 3);
+    expect(result.ok).toBe(true);
+    expect(transactionState.started).toBe(1);
+    expect(transactionState.committed).toBe(true);
+  });
+
+  it("rolls back the status write when recording the audit event fails", async () => {
+    repositorySpy.getDraft.mockResolvedValue(makeDraft());
+    repositorySpy.updateDraftStatus.mockResolvedValue({
+      ...makeDraft(),
+      status: "in_review" as const,
+      revision: 4,
+    });
+    repositorySpy.recordEvent.mockRejectedValue(
+      new Error("event store down"),
+    );
+    await expect(submitDraftForReviewAction("draft-1", 3)).rejects.toThrow(
+      "event store down",
+    );
+    expect(transactionState.started).toBe(1);
+    expect(transactionState.committed).toBe(false);
   });
 });
 

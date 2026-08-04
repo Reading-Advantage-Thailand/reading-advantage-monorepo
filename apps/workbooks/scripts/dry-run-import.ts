@@ -1,6 +1,8 @@
 import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { basename, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { z } from "zod";
+import { workbooks } from "@reading-advantage/domain";
 import {
   buildLegacyImportManifest,
   legacyImportManifestSchema,
@@ -12,6 +14,7 @@ const DEFAULT_OUTPUT_DIR = join(APP_ROOT, "import-manifests");
 interface CliArgs {
   project?: string;
   out?: string;
+  existingDrafts?: string;
 }
 
 function parseArgs(argv: readonly string[]): CliArgs {
@@ -24,11 +27,17 @@ function parseArgs(argv: readonly string[]): CliArgs {
     } else if (arg === "--out") {
       args.out = argv[index + 1];
       index += 1;
+    } else if (arg === "--existing-drafts") {
+      args.existingDrafts = argv[index + 1];
+      index += 1;
     } else if (arg === "--help" || arg === "-h") {
       console.log(
-        "Usage: dry-run-import [--project <dir>] [--out <dir>]\n" +
+        "Usage: dry-run-import [--project <dir>] [--out <dir>] [--existing-drafts <file>]\n" +
           "Runs a dry-run legacy workbook import and writes a manifest JSON.\n" +
-          "No database or object-storage writes are performed.",
+          "No database or object-storage writes are performed. When a JSON file\n" +
+          "containing existing workbook drafts is supplied via --existing-drafts,\n" +
+          "each manifest entry records whether the import drifts from a draft that\n" +
+          "already carries the same source identity with different content.",
       );
       process.exit(0);
     }
@@ -69,6 +78,31 @@ async function readProjectMetadata(
   }
 }
 
+/**
+ * Loads existing workbook drafts from a JSON file for drift detection.
+ * @param path Optional path to a JSON array of persisted workbook drafts.
+ * @returns The validated drafts, or an empty array when no path is supplied.
+ * @throws When the file does not contain a valid draft array.
+ */
+async function readExistingDrafts(
+  path: string | undefined,
+): Promise<workbooks.WorkbookDraft[]> {
+  if (path === undefined) return [];
+  const raw = await readFile(resolve(path), "utf8");
+  const parsed = z.array(workbooks.workbookDraftSchema).safeParse(
+    JSON.parse(raw) as unknown,
+  );
+  if (!parsed.success) {
+    throw new Error(
+      `--existing-drafts file does not contain valid workbook drafts: ${parsed.error.issues
+        .slice(0, 3)
+        .map((issue) => issue.path.join("."))
+        .join(", ")}`,
+    );
+  }
+  return parsed.data;
+}
+
 async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
   if (!args.project) {
@@ -103,6 +137,7 @@ async function main(): Promise<void> {
       ...(await readProjectMetadata(projectRoot)),
     },
     files,
+    existingDrafts: await readExistingDrafts(args.existingDrafts),
     generatedAt: new Date().toISOString(),
   });
 

@@ -2,38 +2,17 @@
 
 import { workbooks } from "@reading-advantage/domain";
 import { randomUUID } from "node:crypto";
-import { db } from "@reading-advantage/db";
 import {
   WorkbookAuthorizationError,
   requireWorkbookSession,
   type WorkbookSession,
 } from "../lib/session";
+import { runInWorkbookTransaction } from "../../lib/workbook-transaction";
 
 /** Outcome of attempting to publish a draft from the editor workspace. */
 export type PublishDraftResult =
   | { ok: true; editionId: string; version: number }
   | { ok: false; code: string; message: string };
-
-/**
- * Runs a workbook publication inside a single database transaction.
- *
- * The domain repository port has no transaction boundary of its own, so the
- * publication (edition append, draft status update and audit event) is bound to
- * a repository built on the transaction handle to keep the writes atomic.
- * @param fn Callback receiving a transaction-bound repository.
- * @returns Whatever the callback returns.
- */
-async function runInWorkbookTransaction<T>(
-  fn: (repository: workbooks.WorkbookEditionRepositoryPort) => Promise<T>,
-): Promise<T> {
-  return db.transaction(async (tx) =>
-    fn(
-      workbooks.createDrizzleEditionRepository(
-        tx as unknown as workbooks.WorkbookDrizzleDatabase,
-      ),
-    ),
-  );
-}
 
 /**
  * Publishes a draft as an immutable edition on behalf of the verified session.

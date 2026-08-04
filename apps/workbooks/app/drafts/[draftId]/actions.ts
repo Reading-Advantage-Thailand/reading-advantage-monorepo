@@ -9,6 +9,7 @@ import {
   requireWorkbookSession,
   type WorkbookSession,
 } from "../../lib/session";
+import { runInWorkbookTransaction } from "../../../lib/workbook-transaction";
 
 const draftIdSchema = z.string().min(1);
 const revisionSchema = z.number().int().nonnegative();
@@ -46,6 +47,9 @@ export type TransitionDraftResult =
  * NOT_FOUND without revealing whether it exists in another tenant), the
  * transition is asserted against the domain state machine, the status update
  * runs under optimistic concurrency, and a matching audit event is recorded.
+ * The status write and the audit event share one database transaction: if the
+ * event cannot be recorded, the status write rolls back so the draft never
+ * changes state without an audit trail.
  * Failures are returned as structured results so the workspace can render them.
  * @param draftId Draft selected in the workspace.
  * @param expectedRevision Revision the editor last saw.
@@ -94,40 +98,41 @@ async function transitionDraftStatus(
   }
 
   try {
-    const repository = getWorkbookRepository();
-    const existing = await repository.getDraft(
-      session.tenantId,
-      parsedId.data,
-    );
-    if (existing === null) {
-      return {
-        ok: false,
-        code: "NOT_FOUND",
-        message: "draft not found",
-        retryable: false,
-      };
-    }
+    return await runInWorkbookTransaction(async (repository) => {
+      const existing = await repository.getDraft(
+        session.tenantId,
+        parsedId.data,
+      );
+      if (existing === null) {
+        return {
+          ok: false,
+          code: "NOT_FOUND",
+          message: "draft not found",
+          retryable: false,
+        } as const;
+      }
 
-    workbooks.assertWorkbookDraftTransition(existing.status, targetStatus);
+      workbooks.assertWorkbookDraftTransition(existing.status, targetStatus);
 
-    const updated = await repository.updateDraftStatus(
-      session.tenantId,
-      parsedId.data,
-      targetStatus,
-      parsedRevision.data,
-    );
+      const updated = await repository.updateDraftStatus(
+        session.tenantId,
+        parsedId.data,
+        targetStatus,
+        parsedRevision.data,
+      );
 
-    await repository.recordEvent({
-      eventId: randomUUID(),
-      tenantId: session.tenantId,
-      draftId: parsedId.data,
-      editionId: null,
-      eventType,
-      actorId: session.actorId,
-      occurredAt: new Date().toISOString(),
+      await repository.recordEvent({
+        eventId: randomUUID(),
+        tenantId: session.tenantId,
+        draftId: parsedId.data,
+        editionId: null,
+        eventType,
+        actorId: session.actorId,
+        occurredAt: new Date().toISOString(),
+      });
+
+      return { ok: true, draft: updated } as const;
     });
-
-    return { ok: true, draft: updated };
   } catch (error) {
     if (error instanceof workbooks.WorkbookPublicationError) {
       if (error.code === "REVISION_CONFLICT") {
