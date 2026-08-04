@@ -39,6 +39,11 @@ import {
   type WorkbookSession,
 } from "./lib/session";
 
+const DRAFT_1 = "c0a80101-0000-4000-8000-000000000001";
+const DRAFT_2 = "c0a80101-0000-4000-8000-000000000002";
+const DRAFT_3 = "c0a80101-0000-4000-8000-000000000003";
+const DRAFT_10 = "c0a80101-0000-4000-8000-000000000010";
+
 const session: WorkbookSession = {
   actorId: "actor-1",
   tenantId: "tenant-1",
@@ -130,7 +135,7 @@ describe("compileTeacherManualAction / authorization", () => {
         "workbooks access requires an authorized session",
       ),
     );
-    const result = await compileTeacherManualAction(["draft-1"], "en");
+    const result = await compileTeacherManualAction([DRAFT_1], "en");
     expect(result).toEqual({
       ok: false,
       code: "UNAUTHORIZED",
@@ -142,7 +147,7 @@ describe("compileTeacherManualAction / authorization", () => {
 
   it("returns a structured forbidden failure for a non-WORKBOOK_ADMIN session", async () => {
     vi.mocked(requireWorkbookSession).mockResolvedValue(otherRoleSession);
-    const result = await compileTeacherManualAction(["draft-1"], "en");
+    const result = await compileTeacherManualAction([DRAFT_1], "en");
     expect(result).toEqual({
       ok: false,
       code: "FORBIDDEN",
@@ -153,13 +158,13 @@ describe("compileTeacherManualAction / authorization", () => {
   });
 
   it("scopes every draft read to the session tenant", async () => {
-    repositorySpy.getDraft.mockResolvedValue(makeDraft("draft-1"));
+    repositorySpy.getDraft.mockResolvedValue(makeDraft(DRAFT_1));
     vi.mocked(workbooks.compileTeacherManual).mockReturnValue({
       html: "<!DOCTYPE html>",
       lessonCount: 1,
     });
-    await compileTeacherManualAction(["draft-1"], "en");
-    expect(repositorySpy.getDraft).toHaveBeenCalledWith("tenant-1", "draft-1");
+    await compileTeacherManualAction([DRAFT_1], "en");
+    expect(repositorySpy.getDraft).toHaveBeenCalledWith("tenant-1", DRAFT_1);
   });
 });
 
@@ -184,11 +189,56 @@ describe("compileTeacherManualAction", () => {
     expect(workbooks.compileTeacherManual).not.toHaveBeenCalled();
   });
 
+  it("rejects a non-UUID draft id without touching the repository", async () => {
+    const result = await compileTeacherManualAction(["not-a-uuid"], "en");
+    expect(result).toEqual({
+      ok: false,
+      code: "VALIDATION_ERROR",
+      message: "at least one draft id is required",
+    });
+    expect(repositorySpy.getDraft).not.toHaveBeenCalled();
+    expect(workbooks.compileTeacherManual).not.toHaveBeenCalled();
+  });
+
+  it("rejects more than 50 draft ids without touching the repository", async () => {
+    const ids = Array.from(
+      { length: 51 },
+      (_, index) =>
+        `c0a80101-0000-4000-8000-${String(index).padStart(12, "0")}`,
+    );
+    const result = await compileTeacherManualAction(ids, "en");
+    expect(result).toEqual({
+      ok: false,
+      code: "VALIDATION_ERROR",
+      message: "no more than 50 draft ids are allowed",
+    });
+    expect(repositorySpy.getDraft).not.toHaveBeenCalled();
+    expect(workbooks.compileTeacherManual).not.toHaveBeenCalled();
+  });
+
+  it("fetches each unique draft id exactly once", async () => {
+    repositorySpy.getDraft.mockResolvedValue(makeDraft(DRAFT_1));
+    vi.mocked(workbooks.compileTeacherManual).mockReturnValue({
+      html: "<!DOCTYPE html>",
+      lessonCount: 2,
+    });
+
+    const result = await compileTeacherManualAction(
+      [DRAFT_1, DRAFT_2, DRAFT_1],
+      "en",
+    );
+
+    expect(result.ok).toBe(true);
+    expect(repositorySpy.getDraft).toHaveBeenCalledTimes(2);
+    expect(repositorySpy.getDraft).toHaveBeenCalledWith("tenant-1", DRAFT_1);
+    expect(repositorySpy.getDraft).toHaveBeenCalledWith("tenant-1", DRAFT_2);
+  });
+
   it("fails closed with a generic error and never compiles when any requested draft is missing", async () => {
     repositorySpy.getDraft.mockImplementation(async (_tenantId: string, draftId: string) =>
-      draftId === "draft-1" ? makeDraft("draft-1") : null,
+      draftId === DRAFT_1 ? makeDraft(DRAFT_1) : null,
     );
-    const result = await compileTeacherManualAction(["draft-1", "draft-2"], "en");
+    const result = await compileTeacherManualAction([DRAFT_1, DRAFT_2], "en");
     expect(result).toEqual({
       ok: false,
       code: "NOT_FOUND",
@@ -200,10 +250,10 @@ describe("compileTeacherManualAction", () => {
   it("compiles the selected drafts ordered by lesson number then title", async () => {
     repositorySpy.getDraft.mockImplementation(async (_tenantId: string, draftId: string) =>
       ({
-        "draft-10": makeDraft("draft-10", { lessonNumber: "10", title: "Lesson Ten" }),
-        "draft-2": makeDraft("draft-2", { lessonNumber: "2", title: "Lesson Two" }),
-        "draft-1": makeDraft("draft-1", { lessonNumber: "1", title: "Lesson One" }),
-        "draft-3": makeDraft("draft-3", { title: "Lesson Three" }),
+        [DRAFT_10]: makeDraft(DRAFT_10, { lessonNumber: "10", title: "Lesson Ten" }),
+        [DRAFT_2]: makeDraft(DRAFT_2, { lessonNumber: "2", title: "Lesson Two" }),
+        [DRAFT_1]: makeDraft(DRAFT_1, { lessonNumber: "1", title: "Lesson One" }),
+        [DRAFT_3]: makeDraft(DRAFT_3, { title: "Lesson Three" }),
       })[draftId],
     );
     vi.mocked(workbooks.compileTeacherManual).mockReturnValue({
@@ -212,7 +262,7 @@ describe("compileTeacherManualAction", () => {
     });
 
     const result = await compileTeacherManualAction(
-      ["draft-3", "draft-10", "draft-2", "draft-1"],
+      [DRAFT_3, DRAFT_10, DRAFT_2, DRAFT_1],
       "en",
     );
 
@@ -232,7 +282,7 @@ describe("compileTeacherManualAction", () => {
   it("resolves series metadata from the first ordered draft's settings", async () => {
     repositorySpy.getDraft.mockImplementation(async (_tenantId: string, draftId: string) =>
       ({
-        "draft-1": makeDraft("draft-1", {
+        [DRAFT_1]: makeDraft(DRAFT_1, {
           lessonNumber: "1",
           title: "First",
           settings: {
@@ -242,7 +292,7 @@ describe("compileTeacherManualAction", () => {
             type: "secondary",
           },
         }),
-        "draft-2": makeDraft("draft-2", {
+        [DRAFT_2]: makeDraft(DRAFT_2, {
           lessonNumber: "2",
           title: "Second",
           settings: {
@@ -255,7 +305,7 @@ describe("compileTeacherManualAction", () => {
       })[draftId],
     );
 
-    await compileTeacherManualAction(["draft-2", "draft-1"], "en");
+    await compileTeacherManualAction([DRAFT_2, DRAFT_1], "en");
 
     const settings = compiledSettingsArgs();
     expect(settings).toEqual({
@@ -269,10 +319,10 @@ describe("compileTeacherManualAction", () => {
 
   it("applies the legacy defaults when the first draft has no settings", async () => {
     repositorySpy.getDraft.mockResolvedValue(
-      makeDraft("draft-1", { lessonNumber: "1", title: "First" }),
+      makeDraft(DRAFT_1, { lessonNumber: "1", title: "First" }),
     );
 
-    await compileTeacherManualAction(["draft-1"], "en");
+    await compileTeacherManualAction([DRAFT_1], "en");
 
     const settings = compiledSettingsArgs();
     expect(settings).toEqual({
@@ -285,9 +335,9 @@ describe("compileTeacherManualAction", () => {
   });
 
   it("falls back to English for an invalid language code", async () => {
-    repositorySpy.getDraft.mockResolvedValue(makeDraft("draft-1"));
+    repositorySpy.getDraft.mockResolvedValue(makeDraft(DRAFT_1));
 
-    const result = await compileTeacherManualAction(["draft-1"], "fr");
+    const result = await compileTeacherManualAction([DRAFT_1], "fr");
 
     expect(result.ok).toBe(true);
     if (result.ok) {
@@ -297,12 +347,12 @@ describe("compileTeacherManualAction", () => {
   });
 
   it("returns a structured failure when the compiler throws", async () => {
-    repositorySpy.getDraft.mockResolvedValue(makeDraft("draft-1"));
+    repositorySpy.getDraft.mockResolvedValue(makeDraft(DRAFT_1));
     vi.mocked(workbooks.compileTeacherManual).mockImplementation(() => {
       throw new Error("boom");
     });
 
-    const result = await compileTeacherManualAction(["draft-1"], "en");
+    const result = await compileTeacherManualAction([DRAFT_1], "en");
 
     expect(result).toEqual({
       ok: false,

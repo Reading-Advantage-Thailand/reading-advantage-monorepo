@@ -84,7 +84,11 @@ export function TeacherManualModal({
   };
 
   const handlePrint = () => {
-    iframeRef.current?.contentWindow?.print();
+    // The generated document listens for this message and calls window.print()
+    // inside the sandboxed frame; calling contentWindow.print() directly would
+    // throw a cross-origin SecurityError because the frame has no
+    // allow-same-origin token.
+    iframeRef.current?.contentWindow?.postMessage("workbook:print", "*");
   };
 
   return (

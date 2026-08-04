@@ -11,7 +11,7 @@ import {
 } from "../../lib/session";
 import { runInWorkbookTransaction } from "../../../lib/workbook-transaction";
 
-const draftIdSchema = z.string().min(1);
+const draftIdSchema = z.string().uuid();
 const revisionSchema = z.number().int().nonnegative();
 
 /** Outcome of loading a draft for the editor workspace. */

@@ -118,6 +118,8 @@ function makeHookReturn(
     applySettingsSave: vi.fn(),
     validateAndSave: vi.fn(),
     refreshFromServer,
+    serverContentAvailable: false,
+    applyServerLesson: vi.fn(),
     notifyRevisionConflict: vi.fn(async (message: string) => {
       conflict.flag = true;
       conflict.message = message;
@@ -373,6 +375,18 @@ describe("DraftEditorView / draft settings", () => {
     expect(
       screen.getByRole("dialog", { name: "Project Settings" }),
     ).toBeTruthy();
+  });
+
+  it("offers Reload content and applies the server lesson on user choice", async () => {
+    const hookReturn = makeHookReturn({
+      revisionConflict: true,
+      serverContentAvailable: true,
+    });
+    const applyServerLesson = vi.mocked(hookReturn.applyServerLesson);
+    vi.mocked(useDraftLessonEditor).mockReturnValue(hookReturn);
+    render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
+    fireEvent.click(screen.getByRole("button", { name: "Reload content" }));
+    expect(applyServerLesson).toHaveBeenCalled();
   });
 });
 

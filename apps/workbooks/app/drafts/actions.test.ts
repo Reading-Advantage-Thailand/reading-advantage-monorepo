@@ -199,7 +199,7 @@ describe("publishDraftAction", () => {
 
     expect(result).toEqual({
       ok: false,
-      code: "VALIDATION_ERROR",
+      code: "NOT_FOUND",
       message: "draft not found",
     });
     expect(repositorySpy.appendEdition).not.toHaveBeenCalled();

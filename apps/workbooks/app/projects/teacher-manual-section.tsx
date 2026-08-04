@@ -55,7 +55,8 @@ export function TeacherManualSection({
                   checked={selectedIds.has(draft.draftId)}
                   onChange={() => toggleDraft(draft.draftId)}
                 />
-                {draft.sourceRecord.content.title} ({draft.draftId})
+                {draft.sourceRecord.content.title}{" "}
+                <span aria-hidden="true">({draft.draftId})</span>
               </label>
             </li>
           ))}

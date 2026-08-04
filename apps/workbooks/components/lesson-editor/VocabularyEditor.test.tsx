@@ -80,4 +80,55 @@ describe("VocabularyEditor", () => {
     });
     expect(onChange).not.toHaveBeenCalled();
   });
+
+  it("keeps the typed text while an intermediate JSON fragment is invalid", () => {
+    render(<VocabularyEditor onChange={() => {}} />);
+    const textarea = screen.getByLabelText(
+      /Vocabulary Items/i,
+    ) as HTMLTextAreaElement;
+    fireEvent.change(textarea, { target: { value: '[{"word": ' } });
+    expect(textarea.value).toBe('[{"word": ');
+  });
+
+  it("shows an inline parse error and does not propagate invalid JSON", () => {
+    const onChange = vi.fn();
+    render(<VocabularyEditor onChange={onChange} />);
+    fireEvent.change(screen.getByLabelText(/Vocabulary Items/i), {
+      target: { value: "not json" },
+    });
+    expect(onChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("alert").textContent).toContain("Invalid JSON");
+  });
+
+  it("re-syncs the raw text when the upstream value changes externally", () => {
+    const { rerender } = render(
+      <VocabularyEditor
+        vocabulary={[{ word: "a", definition: "b" }]}
+        onChange={() => {}}
+      />,
+    );
+    const next = [{ word: "c", definition: "d" }];
+    rerender(<VocabularyEditor vocabulary={next} onChange={() => {}} />);
+    expect(
+      (screen.getByLabelText(/Vocabulary Items/i) as HTMLTextAreaElement).value,
+    ).toBe(JSON.stringify(next, null, 2));
+  });
+
+  it("links each field hint to its control through aria-describedby", () => {
+    render(<VocabularyEditor onChange={() => {}} />);
+    const hints: Record<string, RegExp> = {
+      vocabulary: /Enter as JSON array/,
+      vocab_match: /matching items/,
+      vocab_fill: /fill-in-the-blank items/,
+      vocab_word_bank: /JSON array of words/,
+    };
+    for (const [id, hintPattern] of Object.entries(hints)) {
+      const control = document.getElementById(id) as HTMLTextAreaElement;
+      const describedBy = control.getAttribute("aria-describedby");
+      expect(describedBy, `${id} should be described by a hint`).toBeTruthy();
+      const hint = document.getElementById(describedBy as string);
+      expect(hint, `${id} hint id should resolve`).toBeTruthy();
+      expect(hint?.textContent).toMatch(hintPattern);
+    }
+  });
 });

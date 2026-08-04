@@ -92,4 +92,56 @@ describe("WritingPromptEditor", () => {
     });
     expect(onChange).not.toHaveBeenCalled();
   });
+
+  it("keeps the typed text while an intermediate JSON fragment is invalid", () => {
+    render(<WritingPromptEditor onChange={() => {}} />);
+    const textarea = screen.getByLabelText(
+      /Writing Plan Prompts/i,
+    ) as HTMLTextAreaElement;
+    fireEvent.change(textarea, { target: { value: '["Main idea", ' } });
+    expect(textarea.value).toBe('["Main idea", ');
+  });
+
+  it("shows an inline parse error and does not propagate invalid JSON", () => {
+    const onChange = vi.fn();
+    render(<WritingPromptEditor onChange={onChange} />);
+    fireEvent.change(screen.getByLabelText(/Writing Sentence Frames/i), {
+      target: { value: "not json" },
+    });
+    expect(onChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("alert").textContent).toContain("Invalid JSON");
+  });
+
+  it("re-syncs the raw text when the upstream value changes externally", () => {
+    const { rerender } = render(
+      <WritingPromptEditor
+        writing_plan_prompts={["Main idea:"]}
+        onChange={() => {}}
+      />,
+    );
+    const next = ["Key details:"];
+    rerender(<WritingPromptEditor writing_plan_prompts={next} onChange={() => {}} />);
+    expect(
+      (
+        screen.getByLabelText(/Writing Plan Prompts/i) as HTMLTextAreaElement
+      ).value,
+    ).toBe(JSON.stringify(next));
+  });
+
+  it("links each field hint to its control through aria-describedby", () => {
+    render(<WritingPromptEditor onChange={() => {}} />);
+    const hints: Record<string, RegExp> = {
+      writing_plan_prompts: /JSON array of strings/,
+      writing_sentence_frames: /JSON array/,
+      sentence_starters: /JSON array/,
+    };
+    for (const [id, hintPattern] of Object.entries(hints)) {
+      const control = document.getElementById(id) as HTMLTextAreaElement;
+      const describedBy = control.getAttribute("aria-describedby");
+      expect(describedBy, `${id} should be described by a hint`).toBeTruthy();
+      const hint = document.getElementById(describedBy as string);
+      expect(hint, `${id} hint id should resolve`).toBeTruthy();
+      expect(hint?.textContent).toMatch(hintPattern);
+    }
+  });
 });

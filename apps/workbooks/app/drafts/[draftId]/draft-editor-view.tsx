@@ -140,6 +140,8 @@ function DraftLessonEditorView({
     notifyRevisionConflict,
     validateAndSave,
     refreshFromServer,
+    serverContentAvailable,
+    applyServerLesson,
   } = useDraftLessonEditor({ initialDraft: draft });
 
   const handlePreview = async () => {
@@ -305,6 +307,8 @@ function DraftLessonEditorView({
         saveSuccess={saveSuccess}
         revisionConflict={revisionConflict}
         revisionConflictMessage={revisionConflictMessage}
+        reloadAvailable={serverContentAvailable}
+        onReloadContent={applyServerLesson}
       />
 
       <p role="note">

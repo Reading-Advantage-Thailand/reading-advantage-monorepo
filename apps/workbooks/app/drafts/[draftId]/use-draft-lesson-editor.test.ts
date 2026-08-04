@@ -265,7 +265,7 @@ describe("useDraftLessonEditor", () => {
     expect(result.current.errors.lesson_title).toBeTruthy();
   });
 
-  it("surfaces a revision conflict and reloads the latest draft", async () => {
+  it("surfaces a revision conflict without clobbering unsaved edits", async () => {
     const conflictMessage =
       "Revision conflict: actual revision 4 does not match expected revision 3.";
     vi.mocked(updateDraftAction).mockResolvedValue({
@@ -281,13 +281,18 @@ describe("useDraftLessonEditor", () => {
     const { result } = renderHook(() =>
       useDraftLessonEditor({ initialDraft: makeDraft() }),
     );
+    act(() => {
+      result.current.setLessonField("lesson_title", "Unsaved local title");
+    });
     await act(async () => {
       await result.current.validateAndSave();
     });
     expect(result.current.revisionConflict).toBe(true);
     expect(result.current.revisionConflictMessage).toBe(conflictMessage);
     expect(getDraftAction).toHaveBeenCalledWith("draft-1");
-    expect(result.current.lesson.lesson_title).toBe("Updated title");
+    expect(result.current.lesson.lesson_title).toBe("Unsaved local title");
+    expect(result.current.revision).toBe(4);
+    expect(result.current.serverContentAvailable).toBe(true);
   });
 
   it("renders other structured failures as a form error", async () => {
@@ -321,7 +326,7 @@ describe("useDraftLessonEditor", () => {
     expect(result.current.lesson.lesson_title).toBe("Updated title");
   });
 
-  it("notifyRevisionConflict sets the conflict state and refreshes from the server", async () => {
+  it("notifyRevisionConflict keeps unsaved edits and holds the server lesson pending", async () => {
     const conflictMessage =
       "Revision conflict: actual revision 4 does not match expected revision 3.";
     vi.mocked(getDraftAction).mockResolvedValue({
@@ -331,13 +336,44 @@ describe("useDraftLessonEditor", () => {
     const { result } = renderHook(() =>
       useDraftLessonEditor({ initialDraft: makeDraft() }),
     );
+    act(() => {
+      result.current.setLessonField("lesson_title", "Unsaved local title");
+    });
     await act(async () => {
       await result.current.notifyRevisionConflict(conflictMessage);
     });
     expect(result.current.revisionConflict).toBe(true);
     expect(result.current.revisionConflictMessage).toBe(conflictMessage);
     expect(getDraftAction).toHaveBeenCalledWith("draft-1");
+    expect(result.current.lesson.lesson_title).toBe("Unsaved local title");
+    expect(result.current.revision).toBe(4);
+    expect(result.current.serverContentAvailable).toBe(true);
+  });
+
+  it("applies the pending server lesson only when the user explicitly reloads", async () => {
+    vi.mocked(getDraftAction).mockResolvedValue({
+      ok: true,
+      draft: makeUpdatedDraft(),
+    });
+    const { result } = renderHook(() =>
+      useDraftLessonEditor({ initialDraft: makeDraft() }),
+    );
+    act(() => {
+      result.current.setLessonField("lesson_title", "Unsaved local title");
+    });
+    await act(async () => {
+      await result.current.notifyRevisionConflict("conflict");
+    });
+    expect(result.current.lesson.lesson_title).toBe("Unsaved local title");
+    expect(result.current.serverContentAvailable).toBe(true);
+
+    act(() => {
+      result.current.applyServerLesson();
+    });
     expect(result.current.lesson.lesson_title).toBe("Updated title");
+    expect(result.current.serverContentAvailable).toBe(false);
+    expect(result.current.revisionConflict).toBe(false);
+    expect(result.current.revisionConflictMessage).toBeUndefined();
   });
 
   it("tracks the draft lifecycle status alongside the revision", () => {

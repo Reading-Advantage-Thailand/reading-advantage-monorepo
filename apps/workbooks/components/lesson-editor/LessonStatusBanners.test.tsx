@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import { LessonStatusBanners } from "./LessonStatusBanners";
 
 const baseProps = {
@@ -49,5 +49,24 @@ describe("LessonStatusBanners", () => {
     expect(screen.getByRole("alert").textContent).toContain(
       "Reload the latest revision",
     );
+  });
+
+  it("offers a Reload content action when a newer server lesson is pending", () => {
+    const onReloadContent = vi.fn();
+    render(
+      <LessonStatusBanners
+        {...baseProps}
+        revisionConflict
+        reloadAvailable
+        onReloadContent={onReloadContent}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Reload content" }));
+    expect(onReloadContent).toHaveBeenCalled();
+  });
+
+  it("does not offer Reload content when no server lesson is pending", () => {
+    render(<LessonStatusBanners {...baseProps} revisionConflict />);
+    expect(screen.queryByRole("button", { name: "Reload content" })).toBeNull();
   });
 });

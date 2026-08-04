@@ -4,9 +4,9 @@ import type { LessonStatusBannersProps } from "./types";
 
 /**
  * Renders the transient status banners for the draft lesson editor: form
- * errors, save success, and optimistic-concurrency revision conflicts. The
- * legacy augment/image-generation banners are excluded because those features
- * are out of S4b scope.
+ * errors, save success, and optimistic-concurrency revision conflicts. When a
+ * newer server lesson is pending after a conflict, a Reload content action
+ * replaces the local lesson only on explicit user choice.
  *
  * @param props - The active message flags; see LessonStatusBannersProps.
  * @returns The active banners, or nothing when no messages are active.
@@ -16,6 +16,8 @@ export function LessonStatusBanners({
   saveSuccess,
   revisionConflict,
   revisionConflictMessage,
+  reloadAvailable,
+  onReloadContent,
 }: LessonStatusBannersProps) {
   return (
     <>
@@ -39,6 +41,11 @@ export function LessonStatusBanners({
             {revisionConflictMessage ??
               "This draft changed in another session. Reload the latest revision before editing again."}
           </p>
+          {reloadAvailable && onReloadContent && (
+            <button type="button" onClick={onReloadContent}>
+              Reload content
+            </button>
+          )}
         </section>
       )}
     </>

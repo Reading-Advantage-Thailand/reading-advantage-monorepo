@@ -9,8 +9,8 @@ import {
   type WorkbookSession,
 } from "./lib/session";
 
-const draftIdSchema = z.string().min(1);
-const draftIdsSchema = z.array(draftIdSchema).min(1);
+const draftIdSchema = z.string().uuid();
+const draftIdsSchema = z.array(draftIdSchema).min(1).max(50);
 const teacherManualLangSchema = z.enum(["en", "th"]);
 
 /** Language codes the teacher manual compiler accepts. */
@@ -107,10 +107,14 @@ export async function compileTeacherManualAction(
 
   const parsedIds = draftIdsSchema.safeParse(draftIds);
   if (!parsedIds.success) {
+    const message =
+      parsedIds.error.issues[0]?.code === "too_big"
+        ? "no more than 50 draft ids are allowed"
+        : "at least one draft id is required";
     return {
       ok: false,
       code: "VALIDATION_ERROR",
-      message: "at least one draft id is required",
+      message,
     };
   }
 
@@ -120,8 +124,9 @@ export async function compileTeacherManualAction(
     : "en";
 
   const repository = getWorkbookRepository();
+  const uniqueIds = [...new Set(parsedIds.data)];
   const drafts = await Promise.all(
-    parsedIds.data.map((draftId) => repository.getDraft(session.tenantId, draftId)),
+    uniqueIds.map((draftId) => repository.getDraft(session.tenantId, draftId)),
   );
   if (drafts.some((draft) => draft === null)) {
     return {

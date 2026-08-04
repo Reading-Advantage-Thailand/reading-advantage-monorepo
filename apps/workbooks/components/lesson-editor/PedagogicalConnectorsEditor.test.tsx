@@ -78,4 +78,23 @@ describe("PedagogicalConnectorsEditor", () => {
       "New discussion question",
     );
   });
+
+  it("links each field hint to its control through aria-describedby", () => {
+    render(<PedagogicalConnectorsEditor onChange={() => {}} />);
+    const hints: Record<string, RegExp> = {
+      connection_question: /connect the article content/,
+      grammar_search_term: /Grammar pattern/,
+      phonics_focus: /Sound-spelling pattern/,
+      discussion_question: /Thought-provoking question/,
+    };
+    for (const [id, hintPattern] of Object.entries(hints)) {
+      const control = document.getElementById(id);
+      expect(control, `${id} control should exist`).toBeTruthy();
+      const describedBy = control?.getAttribute("aria-describedby");
+      expect(describedBy, `${id} should be described by a hint`).toBeTruthy();
+      const hint = document.getElementById(describedBy as string);
+      expect(hint, `${id} hint id should resolve`).toBeTruthy();
+      expect(hint?.textContent).toMatch(hintPattern);
+    }
+  });
 });

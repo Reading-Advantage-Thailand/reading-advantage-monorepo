@@ -52,14 +52,22 @@ export interface UseDraftLessonEditorResult {
   applySettingsSave: (draft: workbooks.WorkbookDraft) => void;
   /**
    * Surfaces a structured settings-save conflict: flags the revision conflict,
-   * records the message, and reloads the latest revision from the server so
-   * the tracked revision is no longer stale.
+   * records the message, and reloads the latest revision, status and settings
+   * from the server WITHOUT touching unsaved lesson edits. The server lesson
+   * is held pending until the user explicitly chooses to apply it.
    */
   notifyRevisionConflict: (message: string) => Promise<void>;
   /** Validates the lesson and persists it through the server action. */
   validateAndSave: () => Promise<void>;
   /** Reloads the latest draft revision from the server. */
   refreshFromServer: () => Promise<void>;
+  /** Whether a newer server lesson is pending after a revision conflict. */
+  serverContentAvailable: boolean;
+  /**
+   * Replaces the lesson with the pending server version on explicit user
+   * choice and clears the conflict state.
+   */
+  applyServerLesson: () => void;
 }
 
 /**
@@ -68,7 +76,9 @@ export interface UseDraftLessonEditorResult {
  * Loads the initial legacy-shaped lesson from the draft supplied by the server
  * component, and persists edits through the updateDraftAction server action,
  * which applies optimistic concurrency. A REVISION_CONFLICT failure surfaces as
- * structured conflict state and triggers a reload of the latest revision.
+ * structured conflict state: the tracked revision, status and settings reload
+ * from the server but unsaved lesson edits stay intact, with the server lesson
+ * held pending until the user explicitly applies it.
  * @param params Draft whose content is being edited; see UseDraftLessonEditorParams.
  * @returns Editor state and the handlers that mutate it; see UseDraftLessonEditorResult.
  */
@@ -96,6 +106,9 @@ export function useDraftLessonEditor({
   const [revisionConflictMessage, setRevisionConflictMessage] = useState<
     string | undefined
   >(undefined);
+  const [serverLesson, setServerLesson] = useState<DraftLesson | undefined>(
+    undefined,
+  );
 
   const applyDraft = useCallback((draft: workbooks.WorkbookDraft) => {
     setLesson(workbookContentToLesson(draft.sourceRecord.content));
@@ -104,6 +117,29 @@ export function useDraftLessonEditor({
     setAssets(draft.sourceRecord.content.assets);
     setSettings(draft.sourceRecord.settings);
   }, []);
+
+  const applyServerSnapshot = useCallback(
+    (draft: workbooks.WorkbookDraft) => {
+      setRevision(draft.revision);
+      setStatus(draft.status);
+      setAssets(draft.sourceRecord.content.assets);
+      setSettings(draft.sourceRecord.settings);
+      setServerLesson(workbookContentToLesson(draft.sourceRecord.content));
+    },
+    [],
+  );
+
+  const fetchServerSnapshot = useCallback(async () => {
+    setLoading(true);
+    try {
+      const result = await getDraftAction(initialDraft.draftId);
+      if (result.ok && result.draft !== null) {
+        applyServerSnapshot(result.draft);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [initialDraft.draftId, applyServerSnapshot]);
 
   const setLessonField = useCallback(
     <K extends keyof DraftLesson>(field: K, value: DraftLesson[K]) => {
@@ -141,10 +177,18 @@ export function useDraftLessonEditor({
     async (message: string) => {
       setRevisionConflict(true);
       setRevisionConflictMessage(message);
-      await refreshFromServer();
+      await fetchServerSnapshot();
     },
-    [refreshFromServer],
+    [fetchServerSnapshot],
   );
+
+  const applyServerLesson = useCallback(() => {
+    if (serverLesson === undefined) return;
+    setLesson(serverLesson);
+    setServerLesson(undefined);
+    setRevisionConflict(false);
+    setRevisionConflictMessage(undefined);
+  }, [serverLesson]);
 
   const validateAndSave = useCallback(async () => {
     setErrors({});
@@ -177,7 +221,7 @@ export function useDraftLessonEditor({
       } else if (result.code === "REVISION_CONFLICT") {
         setRevisionConflict(true);
         setRevisionConflictMessage(result.message);
-        await refreshFromServer();
+        await fetchServerSnapshot();
       } else {
         setErrors({ _form: result.message });
       }
@@ -186,7 +230,7 @@ export function useDraftLessonEditor({
     } finally {
       setSaving(false);
     }
-  }, [lesson, assets, revision, initialDraft.draftId, applyDraft, refreshFromServer]);
+  }, [lesson, assets, revision, initialDraft.draftId, applyDraft, fetchServerSnapshot]);
 
   return {
     lesson,
@@ -205,5 +249,7 @@ export function useDraftLessonEditor({
     notifyRevisionConflict,
     validateAndSave,
     refreshFromServer,
+    serverContentAvailable: serverLesson !== undefined,
+    applyServerLesson,
   };
 }

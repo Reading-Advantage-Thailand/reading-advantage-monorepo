@@ -67,25 +67,35 @@ describe("TeacherManualSection", () => {
     render(<TeacherManualSection drafts={drafts} />);
 
     expect(screen.getByRole("group", { name: "Teacher Manual" })).toBeTruthy();
-    expect(screen.getByLabelText("Lesson One (draft-1)")).toBeTruthy();
-    expect(screen.getByLabelText("Lesson Two (draft-2)")).toBeTruthy();
+    expect(screen.getByRole("checkbox", { name: "Lesson One" })).toBeTruthy();
+    expect(screen.getByRole("checkbox", { name: "Lesson Two" })).toBeTruthy();
     expect((teacherManualButton() as HTMLButtonElement).disabled).toBe(true);
     expect(teacherManualButton().textContent).toContain("0 selected");
+  });
+
+  it("excludes the draft id from the checkbox accessible name while keeping it visible", () => {
+    render(<TeacherManualSection drafts={drafts} />);
+
+    expect(screen.getByRole("checkbox", { name: "Lesson One" })).toBeTruthy();
+    expect(
+      screen.queryByRole("checkbox", { name: "Lesson One (draft-1)" }),
+    ).toBeNull();
+    expect(screen.getByText(/\(draft-1\)/)).toBeTruthy();
   });
 
   it("toggles selection and enables the action once at least one draft is selected", () => {
     render(<TeacherManualSection drafts={drafts} />);
 
-    fireEvent.click(screen.getByLabelText("Lesson One (draft-1)"));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Lesson One" }));
     expect((teacherManualButton() as HTMLButtonElement).disabled).toBe(false);
     expect(teacherManualButton().textContent).toContain("1 selected");
 
-    fireEvent.click(screen.getByLabelText("Lesson One (draft-1)"));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Lesson One" }));
     expect((teacherManualButton() as HTMLButtonElement).disabled).toBe(true);
     expect(teacherManualButton().textContent).toContain("0 selected");
 
-    fireEvent.click(screen.getByLabelText("Lesson One (draft-1)"));
-    fireEvent.click(screen.getByLabelText("Lesson Two (draft-2)"));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Lesson One" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Lesson Two" }));
     expect(teacherManualButton().textContent).toContain("2 selected");
   });
 
@@ -95,7 +105,7 @@ describe("TeacherManualSection", () => {
     );
     render(<TeacherManualSection drafts={drafts} />);
 
-    fireEvent.click(screen.getByLabelText("Lesson One (draft-1)"));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Lesson One" }));
     fireEvent.click(teacherManualButton());
 
     expect(screen.getByText("Compiling teacher manual…")).toBeTruthy();
@@ -111,7 +121,7 @@ describe("TeacherManualSection", () => {
     );
     render(<TeacherManualSection drafts={drafts} />);
 
-    fireEvent.click(screen.getByLabelText("Lesson One (draft-1)"));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Lesson One" }));
     fireEvent.click(teacherManualButton());
 
     const status = screen.getByRole("status");
@@ -133,7 +143,7 @@ describe("TeacherManualSection", () => {
       });
     render(<TeacherManualSection drafts={drafts} />);
 
-    fireEvent.click(screen.getByLabelText("Lesson One (draft-1)"));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Lesson One" }));
     fireEvent.click(teacherManualButton());
 
     await waitFor(() => {
@@ -155,8 +165,8 @@ describe("TeacherManualSection", () => {
   it("renders the compiled manual in a sandboxed iframe with lesson count and print instructions", async () => {
     render(<TeacherManualSection drafts={drafts} />);
 
-    fireEvent.click(screen.getByLabelText("Lesson One (draft-1)"));
-    fireEvent.click(screen.getByLabelText("Lesson Two (draft-2)"));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Lesson One" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Lesson Two" }));
     fireEvent.click(teacherManualButton());
 
     await waitFor(() => {
@@ -176,8 +186,8 @@ describe("TeacherManualSection", () => {
   it("announces the compiled lesson count through a status region", async () => {
     render(<TeacherManualSection drafts={drafts} />);
 
-    fireEvent.click(screen.getByLabelText("Lesson One (draft-1)"));
-    fireEvent.click(screen.getByLabelText("Lesson Two (draft-2)"));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Lesson One" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Lesson Two" }));
     fireEvent.click(teacherManualButton());
 
     await waitFor(() => {
@@ -194,7 +204,7 @@ describe("TeacherManualSection", () => {
     });
     render(<TeacherManualSection drafts={drafts} />);
 
-    fireEvent.click(screen.getByLabelText("Lesson One (draft-1)"));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Lesson One" }));
     fireEvent.click(teacherManualButton());
 
     await waitFor(() => {

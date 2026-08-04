@@ -145,6 +145,10 @@ export interface LessonStatusBannersProps {
   revisionConflict: boolean;
   /** Human explanation of the conflict when one is active. */
   revisionConflictMessage?: string;
+  /** Whether a newer server lesson is pending after a revision conflict. */
+  reloadAvailable?: boolean;
+  /** Replaces the lesson with the server version on explicit user choice. */
+  onReloadContent?: () => void;
 }
 
 /** Props for the live lesson preview panel. */

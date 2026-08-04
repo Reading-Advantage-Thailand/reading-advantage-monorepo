@@ -86,6 +86,8 @@ const session: WorkbookSession = {
   username: "editor",
 };
 
+const DRAFT_ID = "c0a80101-0000-4000-8000-000000000001";
+
 beforeEach(() => {
   transactionState.started = 0;
   transactionState.committed = false;
@@ -112,7 +114,7 @@ function makeDraft() {
     content,
   };
   return {
-    draftId: "draft-1",
+    draftId: DRAFT_ID,
     tenantId: "tenant-1",
     status: "draft" as const,
     sourceRecord: record,
@@ -141,7 +143,7 @@ describe("workbook draft actions / authorization", () => {
     vi.mocked(requireWorkbookSession).mockRejectedValue(
       new WorkbookAuthorizationError("UNAUTHORIZED", "workbooks access requires an authorized session"),
     );
-    const result = await updateDraftAction("draft-1", 3, validContent);
+    const result = await updateDraftAction(DRAFT_ID, 3, validContent);
     expect(result).toEqual({
       ok: false,
       code: "UNAUTHORIZED",
@@ -154,11 +156,11 @@ describe("workbook draft actions / authorization", () => {
 
   it("scopes reads to the session tenant, never a caller-supplied tenant", async () => {
     repositorySpy.getDraft.mockResolvedValue(makeDraft());
-    const result = await getDraftAction("draft-1");
+    const result = await getDraftAction(DRAFT_ID);
     expect(result.ok).toBe(true);
     expect(repositorySpy.getDraft).toHaveBeenCalledWith(
       "tenant-1",
-      "draft-1",
+      DRAFT_ID,
     );
   });
 });
@@ -171,13 +173,13 @@ describe("getDraftAction", () => {
 
   it("returns the tenant-scoped draft", async () => {
     repositorySpy.getDraft.mockResolvedValue(makeDraft());
-    const result = await getDraftAction("draft-1");
+    const result = await getDraftAction(DRAFT_ID);
     expect(result).toEqual({ ok: true, draft: makeDraft() });
   });
 
   it("returns null when the draft does not exist", async () => {
     repositorySpy.getDraft.mockResolvedValue(null);
-    const result = await getDraftAction("draft-1");
+    const result = await getDraftAction(DRAFT_ID);
     expect(result).toEqual({ ok: true, draft: null });
   });
 });
@@ -190,7 +192,7 @@ describe("previewDraftAction", () => {
 
   it("renders the draft's normalized content as preview html", async () => {
     repositorySpy.getDraft.mockResolvedValue(makeDraft());
-    const result = await previewDraftAction("draft-1");
+    const result = await previewDraftAction(DRAFT_ID);
     expect(result.ok).toBe(true);
     if (result.ok) {
       expect(result.html).toContain("<h1>Draft title</h1>");
@@ -202,14 +204,14 @@ describe("previewDraftAction", () => {
 
   it("scopes the preview read to the session tenant", async () => {
     repositorySpy.getDraft.mockResolvedValue(makeDraft());
-    const result = await previewDraftAction("draft-1");
+    const result = await previewDraftAction(DRAFT_ID);
     expect(result.ok).toBe(true);
-    expect(repositorySpy.getDraft).toHaveBeenCalledWith("tenant-1", "draft-1");
+    expect(repositorySpy.getDraft).toHaveBeenCalledWith("tenant-1", DRAFT_ID);
   });
 
   it("returns a structured NOT_FOUND failure when the draft does not exist", async () => {
     repositorySpy.getDraft.mockResolvedValue(null);
-    const result = await previewDraftAction("draft-1");
+    const result = await previewDraftAction(DRAFT_ID);
     expect(result).toEqual({ ok: false, code: "NOT_FOUND", message: "draft not found" });
   });
 
@@ -220,7 +222,7 @@ describe("previewDraftAction", () => {
         "workbooks access requires an authorized session",
       ),
     );
-    const result = await previewDraftAction("draft-1");
+    const result = await previewDraftAction(DRAFT_ID);
     expect(result).toEqual({
       ok: false,
       code: "UNAUTHORIZED",
@@ -250,12 +252,12 @@ describe("updateDraftAction", () => {
     const updated = { ...makeDraft(), revision: 4 };
     repositorySpy.getDraft.mockResolvedValue(makeDraft());
     repositorySpy.updateDraftContent.mockResolvedValue(updated);
-    const result = await updateDraftAction("draft-1", 3, validContent);
+    const result = await updateDraftAction(DRAFT_ID, 3, validContent);
     expect(result).toEqual({ ok: true, draft: updated });
   });
 
   it("rejects content that fails the normalized contract at the boundary", async () => {
-    const result = await updateDraftAction("draft-1", 3, {
+    const result = await updateDraftAction(DRAFT_ID, 3, {
       ...validContent,
       title: "",
     });
@@ -274,7 +276,7 @@ describe("updateDraftAction", () => {
         "Revision conflict: actual revision 4 does not match expected revision 3.",
       ),
     );
-    const result = await updateDraftAction("draft-1", 3, validContent);
+    const result = await updateDraftAction(DRAFT_ID, 3, validContent);
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.code).toBe("REVISION_CONFLICT");
@@ -288,7 +290,7 @@ describe("updateDraftAction", () => {
     );
     const published = { ...makeDraft(), status: "published" as const };
     repositorySpy.getDraft.mockResolvedValue(published);
-    const result = await updateDraftAction("draft-1", 3, validContent);
+    const result = await updateDraftAction(DRAFT_ID, 3, validContent);
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.code).toBe("EDITION_IMMUTABLE");
@@ -313,11 +315,11 @@ describe("updateDraftSettingsAction", () => {
     const updated = { ...makeDraft(), revision: 4 };
     repositorySpy.getDraft.mockResolvedValue(makeDraft());
     repositorySpy.updateDraftSettings.mockResolvedValue(updated);
-    const result = await updateDraftSettingsAction("draft-1", 3, validSettings);
+    const result = await updateDraftSettingsAction(DRAFT_ID, 3, validSettings);
     expect(result).toEqual({ ok: true, draft: updated });
     expect(repositorySpy.updateDraftSettings).toHaveBeenCalledWith(
       "tenant-1",
-      "draft-1",
+      DRAFT_ID,
       3,
       validSettings,
       expect.any(String),
@@ -331,7 +333,7 @@ describe("updateDraftSettingsAction", () => {
         "workbooks access requires an authorized session",
       ),
     );
-    const result = await updateDraftSettingsAction("draft-1", 3, validSettings);
+    const result = await updateDraftSettingsAction(DRAFT_ID, 3, validSettings);
     expect(result).toEqual({
       ok: false,
       code: "UNAUTHORIZED",
@@ -354,7 +356,7 @@ describe("updateDraftSettingsAction", () => {
   });
 
   it("rejects an invalid revision without touching the repository", async () => {
-    const result = await updateDraftSettingsAction("draft-1", -1, validSettings);
+    const result = await updateDraftSettingsAction(DRAFT_ID, -1, validSettings);
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.code).toBe("VALIDATION_ERROR");
@@ -364,7 +366,7 @@ describe("updateDraftSettingsAction", () => {
   });
 
   it("rejects settings that fail the settings contract at the boundary", async () => {
-    const result = await updateDraftSettingsAction("draft-1", 3, {
+    const result = await updateDraftSettingsAction(DRAFT_ID, 3, {
       ...validSettings,
       type: "tertiary",
     });
@@ -383,7 +385,7 @@ describe("updateDraftSettingsAction", () => {
         "Revision conflict: actual revision 4 does not match expected revision 3.",
       ),
     );
-    const result = await updateDraftSettingsAction("draft-1", 3, validSettings);
+    const result = await updateDraftSettingsAction(DRAFT_ID, 3, validSettings);
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.code).toBe("REVISION_CONFLICT");
@@ -399,7 +401,7 @@ describe("updateDraftSettingsAction", () => {
         'Cannot edit a draft in status "published".',
       ),
     );
-    const result = await updateDraftSettingsAction("draft-1", 3, validSettings);
+    const result = await updateDraftSettingsAction(DRAFT_ID, 3, validSettings);
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.code).toBe("EDITION_IMMUTABLE");
@@ -418,18 +420,18 @@ describe("submitDraftForReviewAction", () => {
     const updated = { ...makeDraft(), status: "in_review" as const, revision: 4 };
     repositorySpy.getDraft.mockResolvedValue(makeDraft());
     repositorySpy.updateDraftStatus.mockResolvedValue(updated);
-    const result = await submitDraftForReviewAction("draft-1", 3);
+    const result = await submitDraftForReviewAction(DRAFT_ID, 3);
     expect(result).toEqual({ ok: true, draft: updated });
     expect(repositorySpy.updateDraftStatus).toHaveBeenCalledWith(
       "tenant-1",
-      "draft-1",
+      DRAFT_ID,
       "in_review",
       3,
     );
     expect(repositorySpy.recordEvent).toHaveBeenCalledWith(
       expect.objectContaining({
         tenantId: "tenant-1",
-        draftId: "draft-1",
+        draftId: DRAFT_ID,
         editionId: null,
         eventType: "submitted_for_review",
         actorId: "actor-1",
@@ -444,7 +446,7 @@ describe("submitDraftForReviewAction", () => {
         "workbooks access requires an authorized session",
       ),
     );
-    const result = await submitDraftForReviewAction("draft-1", 3);
+    const result = await submitDraftForReviewAction(DRAFT_ID, 3);
     expect(result).toEqual({
       ok: false,
       code: "UNAUTHORIZED",
@@ -458,7 +460,7 @@ describe("submitDraftForReviewAction", () => {
 
   it("returns NOT_FOUND for a draft outside the session tenant without leaking existence", async () => {
     repositorySpy.getDraft.mockResolvedValue(null);
-    const result = await submitDraftForReviewAction("draft-1", 3);
+    const result = await submitDraftForReviewAction(DRAFT_ID, 3);
     expect(result).toEqual({
       ok: false,
       code: "NOT_FOUND",
@@ -482,7 +484,7 @@ describe("submitDraftForReviewAction", () => {
   });
 
   it("rejects an invalid revision without touching the repository", async () => {
-    const result = await submitDraftForReviewAction("draft-1", -1);
+    const result = await submitDraftForReviewAction(DRAFT_ID, -1);
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.code).toBe("VALIDATION_ERROR");
@@ -499,7 +501,7 @@ describe("submitDraftForReviewAction", () => {
         "Revision conflict: actual revision 4 does not match expected revision 3.",
       ),
     );
-    const result = await submitDraftForReviewAction("draft-1", 3);
+    const result = await submitDraftForReviewAction(DRAFT_ID, 3);
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.code).toBe("REVISION_CONFLICT");
@@ -513,7 +515,7 @@ describe("submitDraftForReviewAction", () => {
       ...makeDraft(),
       status: "in_review" as const,
     });
-    const result = await submitDraftForReviewAction("draft-1", 3);
+    const result = await submitDraftForReviewAction(DRAFT_ID, 3);
     expect(result).toEqual({
       ok: false,
       code: "ILLEGAL_STATE_TRANSITION",
@@ -529,7 +531,7 @@ describe("submitDraftForReviewAction", () => {
       ...makeDraft(),
       status: "published" as const,
     });
-    const result = await submitDraftForReviewAction("draft-1", 3);
+    const result = await submitDraftForReviewAction(DRAFT_ID, 3);
     expect(result).toEqual({
       ok: false,
       code: "EDITION_IMMUTABLE",
@@ -544,7 +546,7 @@ describe("submitDraftForReviewAction", () => {
     const updated = { ...makeDraft(), status: "in_review" as const, revision: 4 };
     repositorySpy.getDraft.mockResolvedValue(makeDraft());
     repositorySpy.updateDraftStatus.mockResolvedValue(updated);
-    const result = await submitDraftForReviewAction("draft-1", 3);
+    const result = await submitDraftForReviewAction(DRAFT_ID, 3);
     expect(result.ok).toBe(true);
     expect(transactionState.started).toBe(1);
     expect(transactionState.committed).toBe(true);
@@ -560,7 +562,7 @@ describe("submitDraftForReviewAction", () => {
     repositorySpy.recordEvent.mockRejectedValue(
       new Error("event store down"),
     );
-    await expect(submitDraftForReviewAction("draft-1", 3)).rejects.toThrow(
+    await expect(submitDraftForReviewAction(DRAFT_ID, 3)).rejects.toThrow(
       "event store down",
     );
     expect(transactionState.started).toBe(1);
@@ -581,18 +583,18 @@ describe("returnDraftToDraftAction", () => {
       status: "in_review" as const,
     });
     repositorySpy.updateDraftStatus.mockResolvedValue(updated);
-    const result = await returnDraftToDraftAction("draft-1", 3);
+    const result = await returnDraftToDraftAction(DRAFT_ID, 3);
     expect(result).toEqual({ ok: true, draft: updated });
     expect(repositorySpy.updateDraftStatus).toHaveBeenCalledWith(
       "tenant-1",
-      "draft-1",
+      DRAFT_ID,
       "draft",
       3,
     );
     expect(repositorySpy.recordEvent).toHaveBeenCalledWith(
       expect.objectContaining({
         tenantId: "tenant-1",
-        draftId: "draft-1",
+        draftId: DRAFT_ID,
         editionId: null,
         eventType: "returned_to_draft",
         actorId: "actor-1",
@@ -607,7 +609,7 @@ describe("returnDraftToDraftAction", () => {
         "workbooks access requires an authorized session",
       ),
     );
-    const result = await returnDraftToDraftAction("draft-1", 3);
+    const result = await returnDraftToDraftAction(DRAFT_ID, 3);
     expect(result).toEqual({
       ok: false,
       code: "UNAUTHORIZED",
@@ -621,7 +623,7 @@ describe("returnDraftToDraftAction", () => {
 
   it("returns NOT_FOUND for a draft outside the session tenant without leaking existence", async () => {
     repositorySpy.getDraft.mockResolvedValue(null);
-    const result = await returnDraftToDraftAction("draft-1", 3);
+    const result = await returnDraftToDraftAction(DRAFT_ID, 3);
     expect(result).toEqual({
       ok: false,
       code: "NOT_FOUND",
@@ -643,7 +645,7 @@ describe("returnDraftToDraftAction", () => {
         "Revision conflict: actual revision 4 does not match expected revision 3.",
       ),
     );
-    const result = await returnDraftToDraftAction("draft-1", 3);
+    const result = await returnDraftToDraftAction(DRAFT_ID, 3);
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.code).toBe("REVISION_CONFLICT");
@@ -654,7 +656,7 @@ describe("returnDraftToDraftAction", () => {
 
   it("maps returning a plain draft to ILLEGAL_STATE_TRANSITION", async () => {
     repositorySpy.getDraft.mockResolvedValue(makeDraft());
-    const result = await returnDraftToDraftAction("draft-1", 3);
+    const result = await returnDraftToDraftAction(DRAFT_ID, 3);
     expect(result).toEqual({
       ok: false,
       code: "ILLEGAL_STATE_TRANSITION",
@@ -670,13 +672,43 @@ describe("returnDraftToDraftAction", () => {
       ...makeDraft(),
       status: "published" as const,
     });
-    const result = await returnDraftToDraftAction("draft-1", 3);
+    const result = await returnDraftToDraftAction(DRAFT_ID, 3);
     expect(result).toEqual({
       ok: false,
       code: "EDITION_IMMUTABLE",
       message: 'Cannot transition workbook from "published" to "draft".',
       retryable: false,
     });
+    expect(repositorySpy.updateDraftStatus).not.toHaveBeenCalled();
+    expect(repositorySpy.recordEvent).not.toHaveBeenCalled();
+  });
+});
+
+describe("workbook draft actions / draft id validation", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(requireWorkbookSession).mockResolvedValue(session);
+  });
+
+  it("rejects a non-UUID draft id with a structured VALIDATION_ERROR and never touches the repository", async () => {
+    const nonUuid = "not-a-uuid";
+    const cases = [
+      () => getDraftAction(nonUuid),
+      () => previewDraftAction(nonUuid),
+      () => updateDraftAction(nonUuid, 3, validContent),
+      () => updateDraftSettingsAction(nonUuid, 3, validSettings),
+      () => submitDraftForReviewAction(nonUuid, 3),
+      () => returnDraftToDraftAction(nonUuid, 3),
+    ];
+    for (const invoke of cases) {
+      const result = await invoke();
+      expect(result).toMatchObject({
+        ok: false,
+        code: "VALIDATION_ERROR",
+        message: "invalid draft id",
+      });
+    }
+    expect(repositorySpy.getDraft).not.toHaveBeenCalled();
     expect(repositorySpy.updateDraftStatus).not.toHaveBeenCalled();
     expect(repositorySpy.recordEvent).not.toHaveBeenCalled();
   });

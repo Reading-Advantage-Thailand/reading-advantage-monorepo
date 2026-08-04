@@ -31,8 +31,11 @@ export function PedagogicalConnectorsEditor({
           }
           rows={2}
           placeholder="Question connecting article to student's life or experience..."
+          aria-describedby="connection_question-hint"
         />
-        <p>Helps students connect the article content to their own experiences</p>
+        <p id="connection_question-hint">
+          Helps students connect the article content to their own experiences
+        </p>
       </div>
       <div>
         <label htmlFor="grammar_search_term">Grammar Search Term</label>
@@ -43,8 +46,11 @@ export function PedagogicalConnectorsEditor({
             onChange("grammar_search_term", event.target.value)
           }
           placeholder="e.g., simple past, present perfect..."
+          aria-describedby="grammar_search_term-hint"
         />
-        <p>Grammar pattern for students to identify in the article (CEFR-aware)</p>
+        <p id="grammar_search_term-hint">
+          Grammar pattern for students to identify in the article (CEFR-aware)
+        </p>
       </div>
       <div>
         <label htmlFor="phonics_focus">Phonics Focus</label>
@@ -53,8 +59,11 @@ export function PedagogicalConnectorsEditor({
           value={phonics_focus || ""}
           onChange={(event) => onChange("phonics_focus", event.target.value)}
           placeholder="e.g., short a, th digraph..."
+          aria-describedby="phonics_focus-hint"
         />
-        <p>Sound-spelling pattern students practice in the lesson</p>
+        <p id="phonics_focus-hint">
+          Sound-spelling pattern students practice in the lesson
+        </p>
       </div>
       <div>
         <label htmlFor="discussion_question">Discussion Question</label>
@@ -66,8 +75,11 @@ export function PedagogicalConnectorsEditor({
           }
           rows={2}
           placeholder="Open-ended question for class discussion..."
+          aria-describedby="discussion_question-hint"
         />
-        <p>Thought-provoking question for deeper engagement with the topic</p>
+        <p id="discussion_question-hint">
+          Thought-provoking question for deeper engagement with the topic
+        </p>
       </div>
     </section>
   );

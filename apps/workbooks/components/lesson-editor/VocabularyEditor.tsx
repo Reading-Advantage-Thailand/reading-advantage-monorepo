@@ -6,6 +6,7 @@ import type {
   VocabularyItem,
   VocabularyMatchItem,
 } from "./types";
+import { useJsonField } from "./use-json-field";
 
 /**
  * Edits the vocabulary section of a workbook lesson as JSON arrays: the
@@ -13,6 +14,9 @@ import type {
  * and the word bank. Each array mirrors the legacy lesson schema field of the
  * same name and persists through its normalized contract carrier.
  *
+ * Each JSON field keeps its raw text in local state so intermediate invalid
+ * fragments remain typeable; only successful parses propagate upward, and
+ * invalid input surfaces an inline parse error.
  * @param props - Current vocabulary values plus an onChange callback; see VocabularyEditorProps.
  * @returns The Vocabulary section.
  */
@@ -23,41 +27,26 @@ export function VocabularyEditor({
   vocab_word_bank,
   onChange,
 }: VocabularyEditorProps) {
-  const handleVocabularyChange = (value: string) => {
-    try {
-      const parsed: unknown = JSON.parse(value);
-      onChange("vocabulary", parsed as VocabularyItem[]);
-    } catch {
-      // Invalid JSON is not propagated; the editor keeps its last valid value.
-    }
-  };
-
-  const handleMatchChange = (value: string) => {
-    try {
-      const parsed: unknown = JSON.parse(value);
-      onChange("vocab_match", parsed as VocabularyMatchItem[]);
-    } catch {
-      // Invalid JSON is not propagated; the editor keeps its last valid value.
-    }
-  };
-
-  const handleFillChange = (value: string) => {
-    try {
-      const parsed: unknown = JSON.parse(value);
-      onChange("vocab_fill", parsed as VocabularyFillItem[]);
-    } catch {
-      // Invalid JSON is not propagated; the editor keeps its last valid value.
-    }
-  };
-
-  const handleWordBankChange = (value: string) => {
-    try {
-      const parsed: unknown = JSON.parse(value);
-      onChange("vocab_word_bank", parsed as string[]);
-    } catch {
-      // Invalid JSON is not propagated; the editor keeps its last valid value.
-    }
-  };
+  const vocabularyField = useJsonField(
+    vocabulary,
+    (value) => JSON.stringify(value ?? [], null, 2),
+    (parsed) => onChange("vocabulary", parsed as VocabularyItem[]),
+  );
+  const matchField = useJsonField(
+    vocab_match,
+    (value) => JSON.stringify(value ?? [], null, 2),
+    (parsed) => onChange("vocab_match", parsed as VocabularyMatchItem[]),
+  );
+  const fillField = useJsonField(
+    vocab_fill,
+    (value) => JSON.stringify(value ?? [], null, 2),
+    (parsed) => onChange("vocab_fill", parsed as VocabularyFillItem[]),
+  );
+  const wordBankField = useJsonField(
+    vocab_word_bank,
+    (value) => JSON.stringify(value ?? [], null, 2),
+    (parsed) => onChange("vocab_word_bank", parsed as string[]),
+  );
 
   const itemCount = vocabulary?.length || 0;
 
@@ -68,13 +57,19 @@ export function VocabularyEditor({
         <label htmlFor="vocabulary">Vocabulary Items</label>
         <textarea
           id="vocabulary"
-          value={JSON.stringify(vocabulary || [], null, 2)}
-          onChange={(event) => handleVocabularyChange(event.target.value)}
+          value={vocabularyField.value}
+          onChange={(event) => vocabularyField.handleChange(event.target.value)}
           rows={8}
           className="font-mono"
           placeholder='[{"word": "example", "definition": "..."}]'
+          aria-describedby="vocabulary-hint"
         />
-        <p>
+        {vocabularyField.error && (
+          <p id="vocabulary-error" role="alert">
+            {vocabularyField.error}
+          </p>
+        )}
+        <p id="vocabulary-hint">
           Enter as JSON array{" "}
           {itemCount > 0 && `(${itemCount} items)`}
         </p>
@@ -83,37 +78,57 @@ export function VocabularyEditor({
         <label htmlFor="vocab_match">Matching Items</label>
         <textarea
           id="vocab_match"
-          value={JSON.stringify(vocab_match || [], null, 2)}
-          onChange={(event) => handleMatchChange(event.target.value)}
+          value={matchField.value}
+          onChange={(event) => matchField.handleChange(event.target.value)}
           rows={6}
           className="font-mono"
           placeholder='[{"number": 1, "word": "example", "letter": "A", "definition": "..."}]'
+          aria-describedby="vocab_match-hint"
         />
-        <p>Enter as JSON array of matching items</p>
+        {matchField.error && (
+          <p id="vocab_match-error" role="alert">
+            {matchField.error}
+          </p>
+        )}
+        <p id="vocab_match-hint">Enter as JSON array of matching items</p>
       </div>
       <div>
         <label htmlFor="vocab_fill">Fill Items</label>
         <textarea
           id="vocab_fill"
-          value={JSON.stringify(vocab_fill || [], null, 2)}
-          onChange={(event) => handleFillChange(event.target.value)}
+          value={fillField.value}
+          onChange={(event) => fillField.handleChange(event.target.value)}
           rows={6}
           className="font-mono"
           placeholder='[{"number": 1, "sentence": "The ___ shows the library."}]'
+          aria-describedby="vocab_fill-hint"
         />
-        <p>Enter as JSON array of fill-in-the-blank items</p>
+        {fillField.error && (
+          <p id="vocab_fill-error" role="alert">
+            {fillField.error}
+          </p>
+        )}
+        <p id="vocab_fill-hint">
+          Enter as JSON array of fill-in-the-blank items
+        </p>
       </div>
       <div>
         <label htmlFor="vocab_word_bank">Word Bank</label>
         <textarea
           id="vocab_word_bank"
-          value={JSON.stringify(vocab_word_bank || [], null, 2)}
-          onChange={(event) => handleWordBankChange(event.target.value)}
+          value={wordBankField.value}
+          onChange={(event) => wordBankField.handleChange(event.target.value)}
           rows={4}
           className="font-mono"
           placeholder='["map", "library"]'
+          aria-describedby="vocab_word_bank-hint"
         />
-        <p>Enter as JSON array of words</p>
+        {wordBankField.error && (
+          <p id="vocab_word_bank-error" role="alert">
+            {wordBankField.error}
+          </p>
+        )}
+        <p id="vocab_word_bank-hint">Enter as JSON array of words</p>
       </div>
     </section>
   );
