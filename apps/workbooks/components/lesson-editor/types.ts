@@ -144,3 +144,19 @@ export interface LessonStatusBannersProps {
   /** Human explanation of the conflict when one is active. */
   revisionConflictMessage?: string;
 }
+
+/** Props for the live lesson preview panel. */
+export interface LessonPreviewProps {
+  /** Compiled lesson HTML written into the preview iframe. */
+  htmlContent: string;
+  /** Optional layout class applied to the preview wrapper. */
+  className?: string;
+}
+
+/** Props for the full-screen lesson preview modal. */
+export interface LessonPreviewModalProps {
+  /** Compiled lesson HTML to preview, or null before compile wiring exists. */
+  previewHtml: string | null;
+  /** Called when the user dismisses the modal. */
+  onClose: () => void;
+}

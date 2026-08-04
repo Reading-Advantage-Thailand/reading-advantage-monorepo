@@ -1,11 +1,12 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { workbooks } from "@reading-advantage/domain";
 import type { WorkbookSession } from "../../lib/session";
 import { BasicInfoEditor } from "../../../components/lesson-editor/BasicInfoEditor";
 import { ArticleEditor } from "../../../components/lesson-editor/ArticleEditor";
 import { ComprehensionQuestionsEditor } from "../../../components/lesson-editor/ComprehensionQuestionsEditor";
+import { LessonPreviewModal } from "../../../components/lesson-editor/LessonPreviewModal";
 import { LessonReflectionEditor } from "../../../components/lesson-editor/LessonReflectionEditor";
 import { LessonStatusBanners } from "../../../components/lesson-editor/LessonStatusBanners";
 import { PedagogicalConnectorsEditor } from "../../../components/lesson-editor/PedagogicalConnectorsEditor";
@@ -87,13 +88,17 @@ interface DraftLessonEditorViewProps {
 /**
  * Renders the interactive per-section lesson editor for one editable draft.
  * State lives in the useDraftLessonEditor hook, which persists through the
- * draft server actions with optimistic concurrency.
+ * draft server actions with optimistic concurrency. The live preview modal is
+ * toggled from the Preview button; compiled html arrives with S4c compile
+ * wiring, so the modal shows an empty state for now.
  * @param props The editable draft to edit.
  * @returns The editor sections and status banners.
  */
 function DraftLessonEditorView({
   draft,
 }: DraftLessonEditorViewProps): ReactNode {
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const previewHtml: string | null = null;
   const {
     lesson,
     saving,
@@ -114,7 +119,7 @@ function DraftLessonEditorView({
         <button type="button" onClick={() => void validateAndSave()} disabled={saving}>
           {saving ? "Saving..." : "Save Changes"}
         </button>
-        <button type="button" disabled title="Live preview arrives in S4c">
+        <button type="button" onClick={() => setPreviewOpen(true)}>
           Preview
         </button>
       </div>
@@ -130,7 +135,7 @@ function DraftLessonEditorView({
         Deferred in this phase: sentence-order questions and sentence-completion
         prompts (the legacy lesson editor has no UI section for them); AI
         augment and image generation (proposal-only via @reading-advantage/ai,
-        FR-11); and live preview (S4c).
+        FR-11).
       </p>
 
       <BasicInfoEditor
@@ -177,6 +182,13 @@ function DraftLessonEditorView({
         reflection_focus={lesson.reflection_focus}
         onChange={setLessonField}
       />
+
+      {previewOpen && (
+        <LessonPreviewModal
+          previewHtml={previewHtml}
+          onClose={() => setPreviewOpen(false)}
+        />
+      )}
     </main>
   );
 }

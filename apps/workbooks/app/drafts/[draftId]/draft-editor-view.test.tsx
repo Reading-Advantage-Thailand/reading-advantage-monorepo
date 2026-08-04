@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { workbooks } from "@reading-advantage/domain";
 import type { WorkbookSession } from "../../lib/session";
@@ -136,10 +136,22 @@ describe("DraftEditorView / states", () => {
     expect(screen.getByText("Save Changes")).toBeTruthy();
   });
 
-  it("marks the preview button as disabled until S4c", () => {
+  it("opens the live preview modal from the Preview button", () => {
     render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
-    const preview = screen.getByText("Preview");
-    expect((preview as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.click(screen.getByRole("button", { name: "Preview" }));
+    expect(screen.getByRole("dialog", { name: "Lesson Preview" })).toBeTruthy();
+    expect(
+      screen.getByText("Live preview arrives with compile wiring (S4c)."),
+    ).toBeTruthy();
+  });
+
+  it("closes the live preview modal from the close button", () => {
+    render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
+    fireEvent.click(screen.getByRole("button", { name: "Preview" }));
+    fireEvent.click(screen.getByRole("button", { name: "Close preview" }));
+    expect(
+      screen.queryByText("Live preview arrives with compile wiring (S4c)."),
+    ).toBeNull();
   });
 
   it("renders the deferred-sections note", () => {
