@@ -282,6 +282,17 @@ program, priority order when picking the next track is:
   - [x] **Track: APK Residual Cross-Host Retirement and Closeout** *Link: [./archive/apk_cross_host_closeout_20260727/](./archive/apk_cross_host_closeout_20260727/)*
     Owns only residual cross-host work that no vertical cohort owns after cohort outcomes are accepted or explicitly blocked. Residual inventory closed after cohort option-1 terminals; formal + retirement package bound to the live-path-deletion authority present.
 
+- [ ] **Track: APK Standard Multiplayer Capability** *Link: [./tracks/apk_multiplayer_platform_capability_20260804/](./tracks/apk_multiplayer_platform_capability_20260804/)*
+  Make multiplayer a Play Kit platform capability rather than an app feature: a
+  versioned `multiplayer.v1` contract in `game-contracts`, a transport-agnostic
+  session system any cartridge opts into through its manifest, a deployable
+  tenant-bound session service, and Wizard vs Zombie as the first adopter in
+  both race and shared-world tiers. Supersedes the orphaned app-local
+  `competitive_multiplayer_20260425`, whose 4,424 lines nothing imports and
+  whose WebSocket server the app never starts; adopt-or-discard is an S0 audit
+  output. The determinism refactor that shared world requires begins in
+  parallel with the protocol work rather than after the race tier.
+
 - [~] **Track: APK Kit Defect Remediation** *Link: [./tracks/apk_kit_defect_remediation_20260803/](./tracks/apk_kit_defect_remediation_20260803/)*
 - [x] **Track: APK Audio Cohort Release Acceptance** *Link: [./tracks/apk_audio_cohort_release_acceptance_20260804/](./tracks/apk_audio_cohort_release_acceptance_20260804/)*
   Remediate all 17 defects (3 High, 6 Medium, 8 Low) found by the independent

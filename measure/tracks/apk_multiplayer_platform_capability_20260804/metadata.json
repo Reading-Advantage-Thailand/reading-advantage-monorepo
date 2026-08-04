@@ -1,0 +1,27 @@
+{
+  "track_id": "apk_multiplayer_platform_capability_20260804",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-08-04T00:00:00Z",
+  "updated_at": "2026-08-04T00:00:00Z",
+  "description": "Make multiplayer a Play Kit platform capability: a versioned multiplayer.v1 contract in game-contracts, a transport-agnostic session system any cartridge opts into, a deployable tenant-bound session service, and Wizard vs Zombie as the first adopter in both race and shared-world tiers.",
+  "estimated_tasks": 38,
+  "actual_tasks": null,
+  "depends_on": [],
+  "deviation_notes": "Supersedes the app-local apps/advantage-games/measure/tracks/competitive_multiplayer_20260425, whose plan is unmodified template text and whose 4,424-line implementation is orphaned: nothing imports it and the app runs no custom server, so its WebSocket server is never started. Adopt-or-discard of that code is decided by the S0 audit, not up front. Tutor Advantage runs a production race mode against an implementation that is not in this repository; its protocol must be harvested before S1 freezes the contract, and it wins ties on race semantics.",
+  "sprint": {
+    "goal": "Any Play Kit cartridge can declare a multiplayer capability and get lobby, rounds, scoreboard, and results without writing transport code, and Wizard vs Zombie runs in both race and shared-world form on that capability.",
+    "stories": [
+      {"id":"S0","title":"Audit the orphaned implementation and harvest the reference protocol","size":"M","priority":"Must","status":"pending"},
+      {"id":"S1","title":"Freeze the multiplayer.v1 contract in game-contracts","size":"M","priority":"Must","status":"pending"},
+      {"id":"S2","title":"Make the Wizard vs Zombie simulation deterministic","size":"M","priority":"Must","status":"pending"},
+      {"id":"S3","title":"Add the multiplayer session capability to the Play Kit","size":"L","priority":"Must","status":"pending"},
+      {"id":"S4","title":"Give the session service a deployable home","size":"L","priority":"Must","status":"pending"},
+      {"id":"S5","title":"Wizard vs Zombie race tier","size":"M","priority":"Must","status":"pending"},
+      {"id":"S6","title":"Wizard vs Zombie shared-world tier","size":"L","priority":"Must","status":"pending"},
+      {"id":"S7","title":"Results and XP integration","size":"S","priority":"Must","status":"pending"}
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}
