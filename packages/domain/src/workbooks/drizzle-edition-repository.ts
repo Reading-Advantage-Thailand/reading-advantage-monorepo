@@ -114,6 +114,7 @@ interface WorkbookPublicationEventRow {
 }
 
 interface WorkbookEditionInsertRow {
+  id: string;
   draftId: string;
   tenantId: string;
   version: number;
@@ -300,6 +301,34 @@ export function createDrizzleEditionRepository(
   handle: WorkbookDrizzleDatabase,
 ): WorkbookEditionRepositoryPort {
   const db = releaseTenantScope(handle);
+
+  /**
+   * Reads one draft scoped by tenant and draft identifier.
+   * @param tenantId Tenant the draft must belong to.
+   * @param draftId Identifier of the draft to read.
+   * @returns The matching draft, or null when none exists for the tenant.
+   */
+  async function findDraft(
+    tenantId: string,
+    draftId: string,
+  ): Promise<WorkbookDraft | null> {
+    const rows = await (
+      db.select() as unknown as SelectBuilder<WorkbookDraftRow>
+    )
+      .from(workbookDrafts)
+      .where(
+        and(
+          eq(workbookDrafts.tenantId, tenantId),
+          eq(workbookDrafts.id, draftId),
+        ),
+      );
+    const row = rows[0];
+    if (row === undefined) {
+      return null;
+    }
+    return mapDraftRow(row);
+  }
+
   return {
     async createDraft(draft) {
       await (
@@ -338,21 +367,7 @@ export function createDrizzleEditionRepository(
     },
 
     async getDraft(tenantId, draftId) {
-      const rows = await (
-        db.select() as unknown as SelectBuilder<WorkbookDraftRow>
-      )
-        .from(workbookDrafts)
-        .where(
-          and(
-            eq(workbookDrafts.tenantId, tenantId),
-            eq(workbookDrafts.id, draftId),
-          ),
-        );
-      const row = rows[0];
-      if (row === undefined) {
-        return null;
-      }
-      return mapDraftRow(row);
+      return findDraft(tenantId, draftId);
     },
 
     async listEditions(tenantId, limit) {
@@ -399,6 +414,16 @@ export function createDrizzleEditionRepository(
     },
 
     async appendEdition(edition) {
+      const draft = await findDraft(edition.tenantId, edition.draftId);
+      if (draft === null) {
+        throw new WorkbookPublicationError(
+          "NOT_FOUND",
+          "draft not found",
+          {
+            detail: `tenantId=${edition.tenantId} draftId=${edition.draftId}`,
+          },
+        );
+      }
       let inserted: WorkbookEditionRow[];
       try {
         inserted = await (
@@ -408,6 +433,7 @@ export function createDrizzleEditionRepository(
           >
         )
           .values({
+            id: edition.editionId,
             draftId: edition.draftId,
             tenantId: edition.tenantId,
             version: edition.version,

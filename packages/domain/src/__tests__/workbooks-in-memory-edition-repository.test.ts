@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import type { WorkbookSourceRecord } from "../workbooks/contracts.js";
 import { computeWorkbookDigest } from "../workbooks/digest.js";
-import type { WorkbookDraft } from "../workbooks/edition-contracts.js";
+import type { WorkbookDraft, WorkbookEdition } from "../workbooks/edition-contracts.js";
 import { WorkbookPublicationError } from "../workbooks/edition-state.js";
 import { createInMemoryEditionRepository } from "../workbooks/in-memory-edition-repository.js";
 
@@ -137,5 +137,71 @@ describe("createInMemoryEditionRepository.updateDraftSettings / failures", () =>
       .updateDraftSettings("t1", "d1", 2, SETTINGS, FIXED)
       .catch((e: unknown) => e)) as WorkbookPublicationError;
     expect(error.code).toBe("REVISION_CONFLICT");
+  });
+});
+
+describe("createInMemoryEditionRepository.appendEdition / drizzle parity", () => {
+  /**
+   * Builds an append-only workbook edition for parity tests.
+   * @param o Overrides merged over the default edition fields.
+   * @returns An edition at version 1 with a fixed idempotency key.
+   */
+  function createEdition(o: Partial<WorkbookEdition> = {}): WorkbookEdition {
+    const record = createRecord();
+    return {
+      editionId: "22222222-2222-4222-8222-000000000001",
+      draftId: "d1",
+      tenantId: "t1",
+      version: 1,
+      snapshot: record,
+      contentHash: record.identity.contentHash,
+      publishedAt: FIXED,
+      publishedBy: "editor",
+      idempotencyKey: "idem-1",
+      supersededByEditionId: null,
+      revokedAt: null,
+      ...o,
+    };
+  }
+
+  it("fails closed with NOT_FOUND when the edition's tenant does not own the draft", async () => {
+    const { store, repository } = createInMemoryEditionRepository([
+      createDraft(),
+    ]);
+    const foreignEdition = createEdition({
+      editionId: "22222222-2222-4222-8222-333333333333",
+      tenantId: "other-tenant",
+      idempotencyKey: "idem-foreign",
+    });
+
+    const error = (await repository
+      .appendEdition(foreignEdition)
+      .catch((e: unknown) => e)) as WorkbookPublicationError;
+
+    expect(error).toBeInstanceOf(WorkbookPublicationError);
+    expect(error.code).toBe("NOT_FOUND");
+    expect(store.editions).toHaveLength(0);
+    expect(await repository.listEditions("other-tenant")).toHaveLength(0);
+  });
+
+  it("stores the caller-supplied editionId and resolves supersededByEditionId through listEditions", async () => {
+    const { repository } = createInMemoryEditionRepository([createDraft()]);
+    const v1 = createEdition({
+      editionId: "22222222-2222-4222-8222-111111111111",
+    });
+    const v2 = createEdition({
+      editionId: "22222222-2222-4222-8222-222222222222",
+      version: 2,
+      idempotencyKey: "idem-2",
+      supersededByEditionId: v1.editionId,
+    });
+
+    await repository.appendEdition(v1);
+    await repository.appendEdition(v2);
+
+    const editions = await repository.listEditions("t1");
+    expect(editions.find((e) => e.editionId === v1.editionId)).toBeDefined();
+    const superseding = editions.find((e) => e.editionId === v2.editionId);
+    expect(superseding?.supersededByEditionId).toBe(v1.editionId);
   });
 });

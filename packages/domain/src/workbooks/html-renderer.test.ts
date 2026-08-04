@@ -150,6 +150,81 @@ describe("renderEditionHtml", () => {
   });
 });
 
+describe("escapeWorkbookHtml", () => {
+  it("passes plain text through unchanged", () => {
+    expect(escapeWorkbookHtml("plain text 123")).toBe("plain text 123");
+  });
+
+  it("escapes double and single quotes", () => {
+    expect(escapeWorkbookHtml("say \"hi\" and 'bye'")).toBe(
+      "say &quot;hi&quot; and &#39;bye&#39;",
+    );
+  });
+
+  it("replaces the ampersand first so entities are not double-escaped", () => {
+    expect(escapeWorkbookHtml("a & b")).toBe("a &amp; b");
+    expect(escapeWorkbookHtml("&lt;")).toBe("&amp;lt;");
+    expect(escapeWorkbookHtml("&amp;")).toBe("&amp;amp;");
+  });
+});
+
+describe("renderWorkbookContentHtml / questions without choices", () => {
+  it("renders a question without a choices array without a nested list", () => {
+    const html = renderWorkbookContentHtml(
+      makeContent({
+        questions: [
+          {
+            questionId: "q-1",
+            prompt: "Open question?",
+            questionType: "short-answer",
+          },
+        ],
+      }),
+    );
+    expect(html).toContain("<li>Open question?</li>");
+    expect(html).not.toContain("<ul>");
+  });
+
+  it("renders a question with an empty choices array without a nested list", () => {
+    const html = renderWorkbookContentHtml(
+      makeContent({
+        questions: [
+          {
+            questionId: "q-1",
+            prompt: "Open question?",
+            questionType: "short-answer",
+            choices: [],
+          },
+        ],
+      }),
+    );
+    expect(html).toContain("<li>Open question?</li>");
+    expect(html).not.toContain("<ul>");
+  });
+});
+
+describe("renderWorkbookContentHtml / images", () => {
+  it("emits no image markup when assets and article images are present (placeholder-only renderer)", () => {
+    const html = renderWorkbookContentHtml(
+      makeContent({
+        assets: [
+          {
+            key: "workbooks/tenant-1/assets/hero.png",
+            contentType: "image/png",
+            byteSize: 10,
+            checksum: "sha256:abc",
+          },
+        ],
+        articleImages: [
+          { key: "workbooks/tenant-1/assets/hero.png", position: "hero" },
+        ],
+      }),
+    );
+    expect(html).not.toContain("<img");
+    expect(html).not.toContain("workbooks/tenant-1/assets/hero.png");
+  });
+});
+
 describe("print bridge listener", () => {
   it("injects the workbook:print listener into the draft shell before </body>", () => {
     const html = renderWorkbookContentHtml(makeContent());

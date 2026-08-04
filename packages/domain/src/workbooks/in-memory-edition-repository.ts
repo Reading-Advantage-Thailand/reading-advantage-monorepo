@@ -104,6 +104,16 @@ export function createInMemoryEditionRepository(
     },
 
     async appendEdition(edition) {
+      const draft = store.drafts.get(
+        draftKey(edition.tenantId, edition.draftId),
+      );
+      if (draft === undefined) {
+        throw new WorkbookPublicationError(
+          "NOT_FOUND",
+          "draft not found",
+          { detail: `tenantId=${edition.tenantId} draftId=${edition.draftId}` },
+        );
+      }
       const idempotencyConflict = store.editions.some(
         (candidate) =>
           candidate.tenantId === edition.tenantId &&
