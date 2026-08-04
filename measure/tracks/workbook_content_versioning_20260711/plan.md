@@ -248,7 +248,15 @@ _Story ref: spec.md#story-s3-import-legacy-workbook-projects-and-assets_
   — **Deferred:** the fdc6277 Playwright e2e (Paged.js page-count assertion) — the
   workbooks app has no e2e harness or seeded-DB infra; the shim presence/order the
   e2e guarded is unit-pinned. Recorded in tech-debt.
-- [ ] Task: Write Red UI, accessibility, and authorization tests for catalog browsing, drafts, source selection, editing, optimistic conflicts, source drift, rights warnings, review state, and immutable-release confirmation.
+- [x] Task: Write Red UI, accessibility, and authorization tests for catalog browsing, drafts, source selection, editing, optimistic conflicts, source drift, rights warnings, review state, and immutable-release confirmation. 5a8c14cee, dcca3a722, 6beba4efe, 3fe0e1072
+  — Review-state actions + publish dialog + publish-action app tests (Red observed,
+  28 failing → green); source-drift adoption pinned at domain + manifest v3; pasted
+  ingestion rejected (page + action deleted, fail-closed guidance); transition
+  writes made transactional (recordEvent failure rolls back status); rights
+  rejection pinned for both normalizers (private/withdrawn eligibility gap is the
+  catalog layer's job — tech-debt); a11y sweep (scope=col, status regions; dialog
+  focus management deferred to tech-debt as a shared-hook design). Editing +
+  optimistic-conflict coverage landed earlier in S4b/S4c.
 - [x] Task: Port the project list, settings, lesson/section editor, preview setup, and teacher-manual workflow over workbook backend commands; reject arbitrary URL/pasted-remote ingestion. 6beba4efe
   — Pasted ingestion rejected: the orphaned paste-JSON page + `createDraftAction`
   deleted; `/drafts/new` fails closed with guidance (legacy import CLI or future
