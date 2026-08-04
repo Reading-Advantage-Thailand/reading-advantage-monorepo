@@ -24,10 +24,15 @@ _Story ref: spec.md#story-s0_
     - [x] Room-code entropy, collision handling, host-transfer races, kick and reconnect semantics in `room-manager.ts` — M-3, M-4, M-8
     - [x] `deserializeMessage` payload validation gap in `types/multiplayer.ts` — module marked discard, semantics harvested
     - [x] Additional findings not anticipated when the plan was written: M-1 `cleanupExpiredRooms` never called, M-5 union round-end truncates the race, M-6 disconnected players hold capacity, M-7 full-state broadcast per tick
-- [ ] Task: Harvest the Tutor Advantage reference protocol
-    - [ ] Obtain the protocol definition or a written specification; it is not in this repository and `measure/product.md:49` is the only reference to that product here
-    - [ ] Record a semantic diff against the local protocol: message kinds, round lifecycle, scoring, reconnect
-    - [ ] Record which side wins per disagreement, defaulting to the production system per spec decision 3
+- [x] Task: Harvest the Tutor Advantage reference protocol `s0-protocol-harvest-20260804.md`
+    - [x] Obtain the protocol definition. It is not in this repository but is in the sibling checkout `/home/daniel-bo/Desktop/tutor-advantage`, identified by the product owner after the audit wrongly concluded it was unobtainable
+    - [x] Record a semantic diff against the local protocol: message kinds, round lifecycle, scoring, reconnect, plus identity, membership, room state, and determinism
+    - [x] Record which side wins per disagreement — production wins on round lifecycle, reconnect, identity, and membership; neither wins on message kinds or room state; the race protocol there is orphaned exactly as ours is, and our copy is a one-field fork of it
+- [ ] Task: Amend spec decision 3 before S1 starts — PRODUCT OWNER DECISION
+    - [ ] Decision 3 makes Tutor Advantage the tie-breaker because it is production. The harvest found its race protocol is not in production, and that the deployed lesson service accepts a client-supplied score, adds it to a running total, and pushes that total to parents over LINE. Following decision 3 on scoring would ratify a forged-score path
+    - [ ] Recommended amendment: defer to production on session, identity, and lifecycle semantics; explicitly not on scoring
+- [ ] Task: Settle whether the Play Kit session should speak to the lesson session rather than reimplement it — PRODUCT OWNER DECISION
+    - [ ] The classroom already has lobby, roster, ready, kick, countdown, and result intake in `services/learning-service`. S3 and S5 currently plan a second one. Scope this before S3, not after
 - [x] Task: Run the existing multiplayer test suite and record its true state
     - [x] Execute the multiplayer test files and record pass/fail counts and timings in the audit receipt. Was blocked on the 2026-08-04 root `node_modules` wipe by a concurrent session; the install has since been restored and the suite ran: fourteen files, 13 suites passed / 1 failed, 202 tests passed / 1 failed, 36.4 s. The single failure is a wall-clock threshold in `performance-benchmark.test.ts` against the dead `ScoringEngine`, not a correctness assertion.
     - [x] Record why the green does not clear the High findings: the suite tests each module against itself, while M-1, M-2 and M-3 all live in the seams between modules or in an absent caller. Recorded in `s0-audit-20260804.md#test-state-executed-2026-08-04` as the coverage gap S1's contract tests must close.
