@@ -9,3 +9,5 @@ export * from "./lesson-plan.js";
 export * from "./period-plan.js";
 export * from "./step-insert.js";
 export * from "./teaching-notes.js";
+export * from "./document-wrapper.js";
+export * from "./compiler.js";

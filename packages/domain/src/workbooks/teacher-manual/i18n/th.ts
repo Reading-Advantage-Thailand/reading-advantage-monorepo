@@ -1,4 +1,5 @@
 import type { TranslationKeys } from './index.js';
+import { escapeHtml } from '../theme.js';
 
 export const th: TranslationKeys = {
   // Title page
@@ -12,7 +13,7 @@ export const th: TranslationKeys = {
   preface: {
     heading: 'คำนำ',
     welcome: (series: string, level: string) =>
-      `ยินดีต้อนรับสู่<strong>${series} ${level}</strong> คู่มือครู คู่มือนี้ให้แผนการสอนรายละเอียดสำหรับทั้ง 14 บทเรียนในระดับหนังสือเรียนนี้`,
+      `ยินดีต้อนรับสู่<strong>${escapeHtml(series)} ${escapeHtml(level)}</strong> คู่มือครู คู่มือนี้ให้แผนการสอนรายละเอียดสำหรับทั้ง 14 บทเรียนในระดับหนังสือเรียนนี้`,
     periodOverviewIntro: 'แต่ละบทเรียนแบ่งเป็น <strong>4 คาบเรียน</strong> (คาบละประมาณ 40 นาที) ครอบคลุมลำดับขั้นตอน 13 ขั้นของหนังสือเรียน:',
     period1Overview: 'คาบที่ 1: เปิดตัวและคำศัพท์ (ขั้นตอนที่ 1-4)',
     period2Overview: 'คาบที่ 2: อ่านเชิงลึกและทำความเข้าใจ (ขั้นตอนที่ 5-7)',

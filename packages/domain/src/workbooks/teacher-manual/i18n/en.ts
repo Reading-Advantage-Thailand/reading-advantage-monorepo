@@ -1,4 +1,5 @@
 import type { TranslationKeys } from './index.js';
+import { escapeHtml } from '../theme.js';
 
 export const en: TranslationKeys = {
   // Title page
@@ -12,7 +13,7 @@ export const en: TranslationKeys = {
   preface: {
     heading: 'Preface',
     welcome: (series: string, level: string) =>
-      `Welcome to the <strong>${series} ${level}</strong> Teacher's Manual. This manual provides detailed lesson plans for all 14 lessons in this workbook level.`,
+      `Welcome to the <strong>${escapeHtml(series)} ${escapeHtml(level)}</strong> Teacher's Manual. This manual provides detailed lesson plans for all 14 lessons in this workbook level.`,
     periodOverviewIntro: 'Each lesson is organized into <strong>4 class periods</strong> (approximately 40 minutes each), covering the 13-step workbook sequence:',
     period1Overview: 'Period 1: Launch & Vocabulary (Steps 1-4)',
     period2Overview: 'Period 2: Deep Reading & Comprehension (Steps 5-7)',
