@@ -55,7 +55,7 @@ _Story ref: spec.md#story-s2_
     - [ ] Add a property test asserting two independently constructed states, identical seed and identical input sequence, produce byte-identical state across a bounded tick count
     - [ ] Confirm it fails against the current implementation before any fix
 - [ ] Task: Thread a seeded PRNG through the tick path
-    - [ ] Replace the `Math.random()` call sites in `apps/advantage-games/src/lib/games/wizardZombie.ts` at lines 237, 239, 247, 300, 333, 334, 403, and 426 with the injected generator
+    - [ ] Replace the `Math.random()` call sites in `apps/advantage-games/src/lib/games/wizardZombie.ts` at lines 237, 239, 247, 300, 333, 334, 403, and 426 (ten sites in total; see `s2-determinism-inventory-20260804.md`) with the injected generator
     - [ ] Replace `Date.now()`-derived entity ids at line 316 with seed-and-counter derivation
     - [ ] Carry the generator on the state so `advanceWizardZombieTime` stays a pure reducer
 - [ ] Task: Guard the property
