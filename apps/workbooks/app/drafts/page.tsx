@@ -30,10 +30,10 @@ export default async function DraftsPage(): Promise<ReactNode> {
         <table>
           <thead>
             <tr>
-              <th>Draft</th>
-              <th>Status</th>
-              <th>Revision</th>
-              <th>Title</th>
+              <th scope="col">Draft</th>
+              <th scope="col">Status</th>
+              <th scope="col">Revision</th>
+              <th scope="col">Title</th>
             </tr>
           </thead>
           <tbody>

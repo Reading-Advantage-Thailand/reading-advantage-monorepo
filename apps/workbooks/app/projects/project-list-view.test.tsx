@@ -106,4 +106,19 @@ describe("ProjectListView", () => {
     expect(html).toContain("3");
     expect(html).toContain("draft-1");
   });
+
+  it("marks every data-table header cell with a column scope", () => {
+    const html = renderToStaticMarkup(
+      <ProjectListView
+        session={adminSession}
+        drafts={[draft]}
+        editions={[edition]}
+      />,
+    );
+    const headerCells = html.match(/<th(\s[^>]*)?>/g) ?? [];
+    expect(headerCells.length).toBe(9);
+    for (const cell of headerCells) {
+      expect(cell).toContain('scope="col"');
+    }
+  });
 });

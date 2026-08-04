@@ -58,10 +58,10 @@ export function ProjectListView({
             <table>
             <thead>
               <tr>
-                <th>Draft</th>
-                <th>Status</th>
-                <th>Revision</th>
-                <th>Title</th>
+                <th scope="col">Draft</th>
+                <th scope="col">Status</th>
+                <th scope="col">Revision</th>
+                <th scope="col">Title</th>
               </tr>
             </thead>
             <tbody>
@@ -86,11 +86,11 @@ export function ProjectListView({
           <table>
             <thead>
               <tr>
-                <th>Edition</th>
-                <th>Draft</th>
-                <th>Version</th>
-                <th>Title</th>
-                <th>Published</th>
+                <th scope="col">Edition</th>
+                <th scope="col">Draft</th>
+                <th scope="col">Version</th>
+                <th scope="col">Title</th>
+                <th scope="col">Published</th>
               </tr>
             </thead>
             <tbody>

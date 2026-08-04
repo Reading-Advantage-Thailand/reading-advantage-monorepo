@@ -141,7 +141,9 @@ export function TeacherManualModal({
           ))}
         </div>
         <div style={{ flex: 1, minHeight: 0, overflow: "auto", padding: "0 1rem" }}>
-          {state.status === "loading" && <p>Compiling teacher manual…</p>}
+          {state.status === "loading" && (
+            <p role="status">Compiling teacher manual…</p>
+          )}
           {state.status === "error" && (
             <div>
               <p role="alert">{state.message}</p>
@@ -152,7 +154,7 @@ export function TeacherManualModal({
           )}
           {state.status === "success" && (
             <div>
-              <p>
+              <p role="status">
                 {state.lessonCount} lesson{state.lessonCount === 1 ? "" : "s"}
               </p>
               <div style={{ height: "55vh" }}>

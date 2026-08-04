@@ -105,6 +105,19 @@ describe("TeacherManualSection", () => {
     );
   });
 
+  it("announces the compiling state through a status region", () => {
+    vi.mocked(compileTeacherManualAction).mockImplementation(
+      () => new Promise(() => {}),
+    );
+    render(<TeacherManualSection drafts={drafts} />);
+
+    fireEvent.click(screen.getByLabelText("Lesson One (draft-1)"));
+    fireEvent.click(teacherManualButton());
+
+    const status = screen.getByRole("status");
+    expect(status.textContent).toContain("Compiling teacher manual…");
+  });
+
   it("shows the error state with a retry that re-invokes the action", async () => {
     vi.mocked(compileTeacherManualAction)
       .mockResolvedValueOnce({
@@ -158,6 +171,18 @@ describe("TeacherManualSection", () => {
     expect(screen.getByRole("button", { name: "Print" })).toBeTruthy();
     expect(screen.getByText(/Background graphics/)).toBeTruthy();
     expect(screen.getByText(/margins to Default or None/)).toBeTruthy();
+  });
+
+  it("announces the compiled lesson count through a status region", async () => {
+    render(<TeacherManualSection drafts={drafts} />);
+
+    fireEvent.click(screen.getByLabelText("Lesson One (draft-1)"));
+    fireEvent.click(screen.getByLabelText("Lesson Two (draft-2)"));
+    fireEvent.click(teacherManualButton());
+
+    await waitFor(() => {
+      expect(screen.getByRole("status").textContent).toContain("2 lessons");
+    });
   });
 
   it("re-invokes the action with the Thai language when the language toggle changes", async () => {
