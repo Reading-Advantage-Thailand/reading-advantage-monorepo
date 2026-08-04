@@ -9777,6 +9777,352 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
                 self.assertFalse(output.exists())
                 self.assertFalse(V3_DIR.exists())
 
+    def _h8_trace_parse_failure_fixture(self) -> tuple[Any, Any, Any, Path, dict[str, Any], dict[str, Any], Path, dict[str, Any], Any]:
+        """Builds one post-seal trace-parse failure through the real runner parser.
+
+        @returns The runner module, the configured executor, the real trace-parse error, the attempts root,
+            the sealed integration, the raw trace receipt, the staged raw directory, the staged trace command,
+            and the live temporary root that owns all of them.
+        @throws AssertionError When the fixture is not a real direct-runtime-trace parse failure.
+        """
+        self.assertFalse(V3_DIR.exists())
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        executor_type = getattr(podman, "DirectCommandRuntimeProductionExecutorV1", None)
+        build_integration = getattr(podman, "build_direct_command_runtime_runner_integration_v1", None)
+        validate_integration = getattr(podman, "validate_direct_command_runtime_runner_integration_v1", None)
+        capture_envelope = getattr(podman, "capture_direct_command_runtime_in_container_trace_v1", None)
+        parse_events = getattr(podman, "parse_direct_command_runtime_trace_events_v1", None)
+        error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+        self.assertTrue(inspect.isclass(executor_type), "V3_DIRECT_RUNTIME_PRODUCTION_EXECUTOR_MISSING")
+        self.assertTrue(callable(build_integration), "V3_DIRECT_RUNTIME_INTEGRATION_BUILDER_MISSING")
+        self.assertTrue(callable(validate_integration), "V3_DIRECT_RUNTIME_INTEGRATION_VALIDATOR_MISSING")
+        self.assertTrue(callable(capture_envelope), "V3_DIRECT_RUNTIME_TRACE_ENVELOPE_CAPTURE_MISSING")
+        self.assertTrue(callable(parse_events), "V3_DIRECT_RUNTIME_TRACE_PARSER_MISSING")
+        self.assertTrue(isinstance(error_type, type) and issubclass(error_type, Exception))
+
+        def baseline_identity(path: str, contents: bytes) -> dict[str, Any]:
+            """Builds one exact baseline-Git identity for the sealed fixture.
+
+            @param path The fixture's workspace-relative source path.
+            @param contents The immutable fixture bytes.
+            @returns One baseline-Git identity accepted by the runtime integration builder.
+            """
+            blob = b"blob " + str(len(contents)).encode("ascii") + b"\0" + contents
+            return {
+                "path": path,
+                "sha256": _sha256(contents),
+                "size": len(contents),
+                "mode": "100644",
+                "origin": "BASELINE_GIT_BLOB",
+                "baselineCommit": "a" * 40,
+                "gitBlobSha1": hashlib.sha1(blob).hexdigest(),
+                "inclusion": "MATERIALIZE_EXACT_BASELINE_BYTES",
+            }
+
+        package_root = "packages/h8-fixture-phase-level"
+        generator_path = f"{package_root}/scripts/generate-runtime.mjs"
+        source_path = f"{package_root}/assets/standard/input.txt"
+        generator_bytes = b"export const fixture = 'phase-level';\n"
+        source_bytes = b"phase-level-source\n"
+        generator_identity = baseline_identity(generator_path, generator_bytes)
+        source_identity = baseline_identity(source_path, source_bytes)
+        baseline_read_set = sorted(
+            [generator_identity, source_identity],
+            key=lambda item: item["path"],
+        )
+        derived_read = {
+            "path": f"{package_root}/dist/assets/index.js",
+            "sha256": "b" * 64,
+            "size": 1,
+            "origin": "DERIVED_BUILD_OUTPUT",
+            "producer": {
+                "kind": "PACKAGE_SCRIPT_PREREQUISITE_BUILD",
+                "scriptName": "fixture-build",
+                "scriptSegment": "pnpm build",
+                "receipt": {
+                    "path": "fixture-phase-level-build-receipt.json",
+                    "sha256": "c" * 64,
+                    "size": 1,
+                },
+            },
+        }
+        resource_budget = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-asset-resource-budget",
+            "frozenArchive": _reference(V2_ARCHIVE),
+            "sourceCeiling": {
+                "path": f"{package_root}/assets/standard",
+                "regularFiles": 2,
+                "apparentBytes": len(generator_bytes) + len(source_bytes),
+                "allocatedBytes": len(generator_bytes) + len(source_bytes),
+            },
+            "reservations": {
+                "baselineGitMaterializationBytes": 1,
+                "candidateCowBytes": 1,
+                "archiveSupplementBytes": 1,
+                "derivedOutputBytes": 1,
+                "metadataBytes": 1,
+                "minimumHeadroomBytes": 1,
+            },
+            "requiredAvailableBytes": 6,
+            "availableBytes": 6,
+            "decision": "PASS",
+        }
+        read_set = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-read-set",
+            "trigger": {
+                "logicalArgv": ["pnpm", "--filter", "@h8/fixture-phase-level", "fixture-build"],
+                "package": "@h8/fixture-phase-level",
+                "manifest": {
+                    "path": f"{package_root}/package.json",
+                    "sha256": "d" * 64,
+                    "size": 1,
+                },
+            },
+            "baselineReadSet": baseline_read_set,
+            "derivedBuildReadSet": [derived_read],
+            "outputPaths": [f"{package_root}/assets/standard/standard-pack-release.json"],
+            "preflightQuota": {
+                "maxEntries": len(baseline_read_set),
+                "maxBytes": sum(item["size"] for item in baseline_read_set),
+                "observedEntries": len(baseline_read_set),
+                "observedBytes": sum(item["size"] for item in baseline_read_set),
+            },
+            "resourceBudget": resource_budget,
+            "discovery": {
+                "kind": "BASELINE_GIT_INSTRUMENTED_TRACE",
+                "script": generator_identity,
+                "root": f"{package_root}/assets/standard",
+                "directoryListingCount": 1,
+            },
+        }
+        source_packet = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-baseline-git-source-packet",
+            "source": "GIT_OBJECT_DATABASE_ONLY",
+            "baselineCommit": "a" * 40,
+            "tree": {"gitTreeSha1": "e" * 40},
+            "baselineReadSet": baseline_read_set,
+            "objects": [
+                {**source_identity, "contentBase64": base64.b64encode(source_bytes).decode("ascii")},
+                {**generator_identity, "contentBase64": base64.b64encode(generator_bytes).decode("ascii")},
+            ],
+        }
+        source_packet["packetSha256"] = podman._direct_runtime_packet_digest_v1(source_packet)
+        sealed_integration = build_integration(
+            read_set,
+            source_packet,
+            {
+                "id": "direct-runtime-detached-runner-v1",
+                "nonceSha256": "f" * 64,
+                "reachedStage": "build-advantage-play-kit-for-runtime",
+                "executionTrace": None,
+            },
+            resource_budget,
+        )
+        validate_integration(sealed_integration)
+        raw_receipt = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-in-container-trace-receipt",
+            "evidence": "IN_CONTAINER_TRACER_RAW_ARTIFACT_ONLY",
+            "tracer": "direct-runtime-tracer",
+            "rawEventArtifact": "direct-runtime-raw-events.jsonl",
+            "nonce": sealed_integration["tracePolicy"]["nonce"],
+            "packetSha256": sealed_integration["sourcePacket"]["packetSha256"],
+            "generatorPid": 1234,
+            "generatorScript": sealed_integration["tracePolicy"]["generatorResolvedPath"],
+            "truncated": False,
+            "events": [
+                {
+                    "nonce": sealed_integration["tracePolicy"]["nonce"],
+                    "ordinal": 0,
+                    "kind": "UNDECLARED",
+                    "value": {"path": f"{package_root}/assets/standard/UNDECLARED.bin"},
+                    "tracer": "direct-runtime-tracer",
+                    "packetSha256": sealed_integration["sourcePacket"]["packetSha256"],
+                    "rawEventArtifact": "direct-runtime-raw-events.jsonl",
+                    "generatorPid": 1234,
+                    "generatorScript": sealed_integration["tracePolicy"]["generatorResolvedPath"],
+                },
+            ],
+            "rawArtifact": {"sha256": "e" * 64, "size": 1},
+        }
+        envelope = capture_envelope(raw_receipt, sealed_integration)
+        captured_trace_error: BaseException | None = None
+        try:
+            parse_events(envelope, sealed_integration)
+            self.fail("V3_DIRECT_RUNTIME_RUNNER_INTEGRATION_TRACE_EVENT_INVALID expected")
+        except error_type as trace_error:
+            self.assertEqual(
+                str(trace_error),
+                "V3_DIRECT_RUNTIME_RUNNER_INTEGRATION_TRACE_EVENT_INVALID",
+            )
+            captured_trace_error = trace_error
+        self.assertIsInstance(
+            captured_trace_error,
+            error_type,
+            "V3_DIRECT_RUNTIME_RUNNER_INTEGRATION_TRACE_EVENT_INVALID expected",
+        )
+
+        temporary = tempfile.TemporaryDirectory()
+        root = Path(temporary.name)
+        attempts_root = root / "attempts"
+        attempts_root.mkdir()
+        output = root / "candidate"
+        staged_raw = root / "staged-raw"
+        staged_raw.mkdir()
+        trace_stdout = staged_raw / "receipt-direct-runtime-trace.stdout.txt"
+        trace_stderr = staged_raw / "receipt-direct-runtime-trace.stderr.txt"
+        trace_stdout.write_text(json.dumps(raw_receipt, indent=2, sort_keys=True), encoding="utf-8")
+        trace_stderr.write_text("", encoding="utf-8")
+        context = {"prefix": [podman.PODMAN, "run", "--rm", "--network", "none"]}
+        trace_command = {
+            "id": "direct-runtime-trace",
+            "argv": ["node", "direct-runtime-trace-receipt"],
+            "cwd": ".",
+            "env": dict(podman.ENV),
+            "envAbsent": list(podman.ENV_ABSENT),
+            "network": False,
+            "exitCode": 0,
+            "actualExecutor": podman._container_executor(
+                context,
+                ["node", "direct-runtime-trace-receipt"],
+                [
+                    podman.CONTAINER_NODE,
+                    "/runner/direct-runtime-trace-receipt.mjs",
+                    podman.DIRECT_RUNTIME_TRACE_CONFIG_PATH,
+                ],
+            ),
+            "_rawId": "receipt-direct-runtime-trace",
+            "_stdoutPath": trace_stdout,
+            "_stderrPath": trace_stderr,
+            "_stdoutText": "",
+            "_stderrText": "",
+        }
+        executor = executor_type(output, "20260802")
+        executor.started = True
+        executor._failure_reason = "direct-runtime-trace"
+        executor._direct_runtime_stage = "generate-standard-pack-catalog"
+        executor._sealed_integration = copy.deepcopy(sealed_integration)
+        executor._staged_commands = [trace_command]
+        return (
+            podman,
+            executor,
+            captured_trace_error,
+            attempts_root,
+            sealed_integration,
+            raw_receipt,
+            staged_raw,
+            trace_command,
+            temporary,
+        )
+
+    def test_trace_capture_failure_evidence_publishes_attempt_without_failed_command(self) -> None:
+        """Requires a post-command trace-parse failure to publish a command-less phase-level attempt.
+
+        @returns Nothing; real preservation and finalization use temporary roots and the real parser.
+        """
+        (podman, executor, trace_error, attempts_root, sealed_integration, raw_receipt, staged_raw, trace_command, temporary) = self._h8_trace_parse_failure_fixture()
+        try:
+            with patch.object(podman, "TRACK_DIR", attempts_root):
+                executor.preserve_failure(trace_error)
+
+            attempt_directories = sorted(
+                attempts_root.glob(f"{podman.ATTEMPT_PREFIX}-20260802-*")
+            )
+            self.assertEqual(len(attempt_directories), 1)
+            attempt_directory = attempt_directories[0]
+            self.assertTrue(attempt_directory.is_dir())
+            self.assertFalse(attempt_directory.is_symlink())
+            attempt = _load_json(attempt_directory / "failed-attempt.json", self)
+            self.assertEqual(
+                attempt["failure"],
+                {
+                    "stage": "direct-runtime-trace",
+                    "reason": "V3_DIRECT_RUNTIME_RUNNER_INTEGRATION_TRACE_EVENT_INVALID",
+                    "classification": podman._PHASE_LEVEL_FAILURE_CLASSIFICATION,
+                },
+            )
+            self.assertEqual(attempt["commands"], [])
+            self.assertEqual(
+                set(attempt),
+                {
+                    "schemaVersion", "kind", "status", "attempt", "historicalBlocker", "failure",
+                    "commands", "markerDisposition", "upstreamAuthority", "directRuntimeIntegration",
+                    "phaseLevelFailure",
+                },
+            )
+            carrier = attempt["phaseLevelFailure"]
+            self.assertEqual(carrier["schemaVersion"], 1)
+            self.assertEqual(carrier["kind"], "execution-closure-phase-level-failure")
+            self.assertEqual(carrier["stage"], "direct-runtime-trace")
+            self.assertEqual(carrier["reason"], "V3_DIRECT_RUNTIME_RUNNER_INTEGRATION_TRACE_EVENT_INVALID")
+            self.assertEqual(carrier["classification"], podman._PHASE_LEVEL_FAILURE_CLASSIFICATION)
+            self.assertEqual(carrier["errorDetail"], "V3_DIRECT_RUNTIME_RUNNER_INTEGRATION_TRACE_EVENT_INVALID")
+            self.assertEqual(len(carrier["rawArtifacts"]), 1)
+            artifact = carrier["rawArtifacts"][0]
+            self.assertEqual(artifact["id"], "direct-runtime-trace")
+            self.assertEqual(artifact["exitCode"], 0)
+            expected_prefix = f"{attempt_directory.name}/raw/"
+            for stream in ("stdout", "stderr"):
+                reference = artifact[stream]
+                self.assertTrue(reference["path"].startswith(expected_prefix), reference["path"])
+                filename = reference["path"][len(expected_prefix):]
+                raw_path = attempt_directory / "raw" / filename
+                self.assertTrue(raw_path.is_file())
+                self.assertEqual(
+                    reference,
+                    {
+                        "path": f"{attempt_directory.name}/raw/{filename}",
+                        "sha256": _sha256(raw_path.read_bytes()),
+                        "size": raw_path.stat().st_size,
+                    },
+                )
+            self.assertEqual(
+                attempt["directRuntimeIntegration"],
+                {
+                    "integration": podman.build_direct_command_runtime_runner_integration_v1(
+                        sealed_integration["readSet"],
+                        sealed_integration["sourcePacket"],
+                        {
+                            "id": sealed_integration["attempt"]["id"],
+                            "reachedStage": "generate-standard-pack-catalog",
+                            "executionTrace": None,
+                        },
+                        sealed_integration["resourceBudget"],
+                    ),
+                    "reachedStage": "generate-standard-pack-catalog",
+                    "laterStages": [{"id": "direct-runtime-trace", "status": "NOT_RUN"}],
+                },
+            )
+            podman.validate_failed_execution_attempt_v1(attempt, attempt_directory)
+            self.assertFalse(executor.output_directory.exists())
+            self.assertFalse(V3_DIR.exists())
+        finally:
+            temporary.cleanup()
+
+    def test_trace_capture_failure_evidence_never_raises_failure_evidence_unpreserved(self) -> None:
+        """Requires the trace-capture preservation seam never to surface FAILURE_EVIDENCE_UNPRESERVED.
+
+        @returns Nothing; the real preservation path publishes instead of blocking.
+        """
+        (podman, executor, trace_error, attempts_root, sealed_integration, raw_receipt, staged_raw, trace_command, temporary) = self._h8_trace_parse_failure_fixture()
+        try:
+            with patch.object(podman, "TRACK_DIR", attempts_root):
+                try:
+                    executor.preserve_failure(trace_error)
+                except podman.CandidateExecutionBlocked as blocked:
+                    self.fail(f"V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED raised: {blocked}")
+
+            attempt_directories = sorted(
+                attempts_root.glob(f"{podman.ATTEMPT_PREFIX}-20260802-*")
+            )
+            self.assertEqual(len(attempt_directories), 1)
+            self.assertFalse(V3_DIR.exists())
+        finally:
+            temporary.cleanup()
+
 
 if __name__ == "__main__":
     unittest.main()
