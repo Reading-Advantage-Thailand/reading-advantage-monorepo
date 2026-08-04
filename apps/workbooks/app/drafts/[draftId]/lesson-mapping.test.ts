@@ -188,6 +188,111 @@ describe("draftLessonSchema", () => {
   });
 });
 
+/**
+ * A lesson populating every field the editor schema accepts.
+ *
+ * The real `origins-2-a0` fixture carries only 25 of these, so on its own it
+ * cannot prove losslessness — a field with no mapping in either direction
+ * round-trips "successfully" simply by being absent. The exhaustiveness test
+ * below pins this constant to `draftLessonSchema`, so a field added to the
+ * schema without a mapping fails here rather than silently dropping data.
+ */
+const MAXIMAL_LESSON = {
+  lesson_number: "07",
+  lesson_title: "The Library Map",
+  level_name: "Origins 2",
+  cefr_level: "A0",
+  article_type: "nonfiction",
+  genre: "informational",
+  vocabulary: [
+    {
+      word: "atlas",
+      phonetic: "/ˈatləs/",
+      definition: "a book of maps",
+      thai_definition: "สมุดแผนที่",
+    },
+  ],
+  article_image_url: ["https://cdn.example.com/hero.png"],
+  article_caption: "A reading room",
+  article_url: "https://example.com/article",
+  article_images: [
+    {
+      url: "https://cdn.example.com/inline.png",
+      caption: "Shelves",
+      image_prompt: "library shelves, warm light",
+      position: "inline-para-2" as const,
+    },
+  ],
+  article_paragraphs: [
+    { number: 1, text: "The library has a map by the door." },
+    { number: 2, text: "The map shows where each subject lives." },
+  ],
+  comprehension_questions: [
+    { number: 1, question: "Where is the map?", options: ["By the door", "Outside"] },
+  ],
+  short_answer_question: "Why is a library map useful?",
+  short_answer_hint: "Think about finding a book quickly.",
+  sentence_starters: ["The map helps me because"],
+  vocab_match: [
+    {
+      number: 1,
+      word: "atlas",
+      letter: "a",
+      definition: "a book of maps",
+      thai_definition: "สมุดแผนที่",
+    },
+  ],
+  vocab_fill: [{ number: 1, sentence: "I used an ___ to find the river." }],
+  vocab_word_bank: ["atlas", "shelf"],
+  sentence_order_questions: [{ words: ["map", "the", "read", "I"] }],
+  sentence_completion_prompts: [{ number: 1, prompt: "The library map shows" }],
+  writing_prompt: "Describe how you would find a book.",
+  writing_practice_url: "https://practice.example.com/lesson-07",
+  writing_plan_prompts: ["What do you want to find?"],
+  writing_sentence_frames: ["First, I would ___."],
+  connection_question: "When did a map help you?",
+  grammar_search_term: "present simple",
+  phonics_focus: "short a",
+  discussion_question: "Should every building have a map?",
+  reflection_focus: "Finding information quickly",
+  mc_answers: [{ number: 1, letter: "a", text: "By the door" }],
+  vocab_match_answer_string: "1-a",
+  vocab_fill_answer_string: "1. atlas",
+  sentence_order_answers: [{ number: 1, sentence: "I read the map." }],
+  translation_paragraphs: [{ label: "1", text: "ห้องสมุดมีแผนที่อยู่ที่ประตู" }],
+};
+
+describe("maximal lesson round-trip", () => {
+  it("covers every field the editor schema accepts", () => {
+    const schemaFields = Object.keys(draftLessonSchema.shape).sort();
+    const fixtureFields = Object.keys(MAXIMAL_LESSON).sort();
+    expect(fixtureFields).toEqual(schemaFields);
+  });
+
+  it("is accepted by the editor schema", () => {
+    expect(draftLessonSchema.safeParse(MAXIMAL_LESSON).success).toBe(true);
+  });
+
+  it("keeps every field intact through save then load", () => {
+    const saved = lessonToWorkbookContent(MAXIMAL_LESSON);
+    const restored = workbookContentToLesson(saved);
+    expect(restored).toEqual(MAXIMAL_LESSON);
+  });
+
+  it("keeps every field intact through load then save", () => {
+    const saved = lessonToWorkbookContent(MAXIMAL_LESSON);
+    const reSaved = lessonToWorkbookContent(workbookContentToLesson(saved));
+    expect(reSaved).toEqual(saved);
+  });
+
+  it("carries the writing practice url through the normalized contract", () => {
+    const saved = lessonToWorkbookContent(MAXIMAL_LESSON);
+    expect(saved.writingPracticeUrl).toBe(
+      "https://practice.example.com/lesson-07",
+    );
+  });
+});
+
 describe("origins-2-a0 lesson round-trip", () => {
   it("accepts the real fixture lesson under the extended editor schema", () => {
     const fixture = loadOriginsFixtureLesson();

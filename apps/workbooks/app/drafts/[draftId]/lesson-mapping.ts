@@ -158,16 +158,21 @@ function splitArticleImages(
   }[] | undefined;
 } {
   const entries = content.articleImages ?? [];
+  // The two editor fields partition the entries: an entry carrying layout data
+  // belongs to article_images only. Emitting it into both fields duplicates the
+  // URL on every save/load cycle, growing article_image_url without bound.
+  const carriesLayout = (
+    image: workbooks.WorkbookArticleImage,
+  ): boolean =>
+    image.position !== undefined ||
+    image.caption !== undefined ||
+    image.imagePrompt !== undefined;
   const flat = entries
+    .filter((image) => !carriesLayout(image))
     .map((image) => image.legacyUrl)
     .filter((url): url is string => url !== undefined);
   const structured = entries
-    .filter(
-      (image) =>
-        image.position !== undefined ||
-        image.caption !== undefined ||
-        image.imagePrompt !== undefined,
-    )
+    .filter(carriesLayout)
     .map((image) => ({
       url: image.legacyUrl ?? "",
       caption: image.caption ?? "",
@@ -231,6 +236,7 @@ export function workbookContentToLesson(
     sentence_order_questions: content.sentenceOrderQuestions,
     sentence_completion_prompts: content.sentenceCompletionPrompts,
     writing_prompt: content.writingPrompt,
+    writing_practice_url: content.writingPracticeUrl,
     writing_plan_prompts: content.writingPlanPrompts,
     writing_sentence_frames: content.writingSentenceFrames,
     connection_question: content.connectionQuestion,
@@ -358,6 +364,10 @@ export function lessonToWorkbookContent(
       : {}),
     ...(lesson.writing_prompt !== undefined && lesson.writing_prompt !== ""
       ? { writingPrompt: lesson.writing_prompt }
+      : {}),
+    ...(lesson.writing_practice_url !== undefined &&
+    lesson.writing_practice_url !== ""
+      ? { writingPracticeUrl: lesson.writing_practice_url }
       : {}),
     ...(lesson.writing_plan_prompts !== undefined &&
     lesson.writing_plan_prompts.length > 0

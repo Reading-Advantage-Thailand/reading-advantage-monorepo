@@ -198,6 +198,11 @@ export const workbookNormalizedContentSchema = z
     shortAnswerHint: z.string().optional(),
     // Writing carriers retained from legacy lessons.
     writingPrompt: z.string().optional(),
+    /**
+     * Digital writing-practice destination for the lesson's QR code. Retained
+     * as provenance from the legacy lesson; never a release authority.
+     */
+    writingPracticeUrl: z.string().url().optional(),
     writingPlanPrompts: z.array(z.string().min(1)).optional(),
     writingSentenceFrames: z.array(z.string().min(1)).optional(),
     sentenceStarters: z.array(z.string().min(1)).optional(),
