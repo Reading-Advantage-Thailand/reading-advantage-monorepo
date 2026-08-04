@@ -11,9 +11,16 @@ import { LessonPreviewModal } from "../../../components/lesson-editor/LessonPrev
 import { LessonReflectionEditor } from "../../../components/lesson-editor/LessonReflectionEditor";
 import { LessonStatusBanners } from "../../../components/lesson-editor/LessonStatusBanners";
 import { PedagogicalConnectorsEditor } from "../../../components/lesson-editor/PedagogicalConnectorsEditor";
+import { PublishEditionDialog } from "../../../components/lesson-editor/PublishEditionDialog";
 import { VocabularyEditor } from "../../../components/lesson-editor/VocabularyEditor";
 import { WritingPromptEditor } from "../../../components/lesson-editor/WritingPromptEditor";
-import { previewDraftAction, updateDraftSettingsAction } from "./actions";
+import {
+  previewDraftAction,
+  returnDraftToDraftAction,
+  submitDraftForReviewAction,
+  updateDraftSettingsAction,
+} from "./actions";
+import { publishDraftAction } from "../actions";
 import { useDraftLessonEditor } from "./use-draft-lesson-editor";
 
 /** Props controlling the draft lesson editor view. */
@@ -66,7 +73,11 @@ export function DraftEditorView({
     );
   }
 
-  if (draft.status !== "draft") {
+  if (
+    draft.status === "published" ||
+    draft.status === "superseded" ||
+    draft.status === "revoked"
+  ) {
     return (
       <main>
         <h1>Draft Editor</h1>
@@ -105,6 +116,14 @@ function DraftLessonEditorView({
   const [previewing, setPreviewing] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settingsSaving, setSettingsSaving] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [returning, setReturning] = useState(false);
+  const [publishOpen, setPublishOpen] = useState(false);
+  const [publishing, setPublishing] = useState(false);
+  const [publishError, setPublishError] = useState<string | undefined>(
+    undefined,
+  );
+  const [publishedVersion, setPublishedVersion] = useState<number | null>(null);
   const {
     lesson,
     saving,
@@ -113,12 +132,14 @@ function DraftLessonEditorView({
     revisionConflict,
     revisionConflictMessage,
     settings,
+    status,
     revision,
     setLessonField,
     setFormError,
     applySettingsSave,
     notifyRevisionConflict,
     validateAndSave,
+    refreshFromServer,
   } = useDraftLessonEditor({ initialDraft: draft });
 
   const handlePreview = async () => {
@@ -164,6 +185,67 @@ function DraftLessonEditorView({
     }
   };
 
+  const handleSubmitForReview = async () => {
+    setSubmitting(true);
+    try {
+      const result = await submitDraftForReviewAction(
+        draft.draftId,
+        revision,
+      );
+      if (result.ok) {
+        await refreshFromServer();
+      } else if (result.code === "REVISION_CONFLICT") {
+        await notifyRevisionConflict(result.message);
+      } else {
+        setFormError(result.message);
+      }
+    } catch {
+      setFormError("An error occurred while submitting the draft for review.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleReturnToDraft = async () => {
+    setReturning(true);
+    try {
+      const result = await returnDraftToDraftAction(draft.draftId, revision);
+      if (result.ok) {
+        await refreshFromServer();
+      } else if (result.code === "REVISION_CONFLICT") {
+        await notifyRevisionConflict(result.message);
+      } else {
+        setFormError(result.message);
+      }
+    } catch {
+      setFormError("An error occurred while returning the draft to draft status.");
+    } finally {
+      setReturning(false);
+    }
+  };
+
+  const handlePublish = async () => {
+    setPublishing(true);
+    setPublishError(undefined);
+    try {
+      const result = await publishDraftAction(draft.draftId, revision);
+      if (result.ok) {
+        setPublishedVersion(result.version);
+        setPublishOpen(false);
+        await refreshFromServer();
+      } else if (result.code === "REVISION_CONFLICT") {
+        setPublishOpen(false);
+        await notifyRevisionConflict(result.message);
+      } else {
+        setPublishError(result.message);
+      }
+    } catch {
+      setPublishError("An error occurred while publishing the edition.");
+    } finally {
+      setPublishing(false);
+    }
+  };
+
   return (
     <main>
       <h1>{lesson.lesson_title || "Untitled lesson"}</h1>
@@ -184,7 +266,39 @@ function DraftLessonEditorView({
         <button type="button" onClick={() => setSettingsOpen(true)}>
           Settings
         </button>
+        {status === "draft" && (
+          <button
+            type="button"
+            onClick={() => void handleSubmitForReview()}
+            disabled={submitting}
+          >
+            {submitting ? "Submitting..." : "Submit for review"}
+          </button>
+        )}
+        {status === "in_review" && (
+          <>
+            <button
+              type="button"
+              onClick={() => void handleReturnToDraft()}
+              disabled={returning}
+            >
+              {returning ? "Returning..." : "Return to draft"}
+            </button>
+            <button type="button" onClick={() => setPublishOpen(true)}>
+              Publish…
+            </button>
+          </>
+        )}
       </div>
+
+      {publishedVersion !== null && (
+        <section role="status">
+          <p>
+            Published as immutable edition v{publishedVersion}. Further changes
+            require a new draft version.
+          </p>
+        </section>
+      )}
 
       <LessonStatusBanners
         formError={errors._form}
@@ -258,6 +372,15 @@ function DraftLessonEditorView({
           saving={settingsSaving}
           onSave={(next) => void handleSaveSettings(next)}
           onClose={() => setSettingsOpen(false)}
+        />
+      )}
+
+      {publishOpen && (
+        <PublishEditionDialog
+          publishing={publishing}
+          error={publishError}
+          onConfirm={() => void handlePublish()}
+          onClose={() => setPublishOpen(false)}
         />
       )}
     </main>

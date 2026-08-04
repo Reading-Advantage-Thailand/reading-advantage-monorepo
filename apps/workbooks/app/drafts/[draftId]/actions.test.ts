@@ -17,6 +17,8 @@ const repositorySpy = {
   getDraft: vi.fn(),
   updateDraftContent: vi.fn(),
   updateDraftSettings: vi.fn(),
+  updateDraftStatus: vi.fn(),
+  recordEvent: vi.fn(),
 };
 
 vi.mock("../../../lib/repository", () => ({
@@ -26,6 +28,8 @@ vi.mock("../../../lib/repository", () => ({
 import {
   getDraftAction,
   previewDraftAction,
+  returnDraftToDraftAction,
+  submitDraftForReviewAction,
   updateDraftAction,
   updateDraftSettingsAction,
 } from "./actions";
@@ -353,5 +357,252 @@ describe("updateDraftSettingsAction", () => {
       expect(result.code).toBe("EDITION_IMMUTABLE");
       expect(result.retryable).toBe(false);
     }
+  });
+});
+
+describe("submitDraftForReviewAction", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(requireWorkbookSession).mockResolvedValue(session);
+  });
+
+  it("transitions a draft to in_review and records the submission event", async () => {
+    const updated = { ...makeDraft(), status: "in_review" as const, revision: 4 };
+    repositorySpy.getDraft.mockResolvedValue(makeDraft());
+    repositorySpy.updateDraftStatus.mockResolvedValue(updated);
+    const result = await submitDraftForReviewAction("draft-1", 3);
+    expect(result).toEqual({ ok: true, draft: updated });
+    expect(repositorySpy.updateDraftStatus).toHaveBeenCalledWith(
+      "tenant-1",
+      "draft-1",
+      "in_review",
+      3,
+    );
+    expect(repositorySpy.recordEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        tenantId: "tenant-1",
+        draftId: "draft-1",
+        editionId: null,
+        eventType: "submitted_for_review",
+        actorId: "actor-1",
+      }),
+    );
+  });
+
+  it("returns a structured unauthorized failure and does not touch the repository without a session", async () => {
+    vi.mocked(requireWorkbookSession).mockRejectedValue(
+      new WorkbookAuthorizationError(
+        "UNAUTHORIZED",
+        "workbooks access requires an authorized session",
+      ),
+    );
+    const result = await submitDraftForReviewAction("draft-1", 3);
+    expect(result).toEqual({
+      ok: false,
+      code: "UNAUTHORIZED",
+      message: "workbooks access requires an authorized session",
+      retryable: false,
+    });
+    expect(repositorySpy.getDraft).not.toHaveBeenCalled();
+    expect(repositorySpy.updateDraftStatus).not.toHaveBeenCalled();
+    expect(repositorySpy.recordEvent).not.toHaveBeenCalled();
+  });
+
+  it("returns NOT_FOUND for a draft outside the session tenant without leaking existence", async () => {
+    repositorySpy.getDraft.mockResolvedValue(null);
+    const result = await submitDraftForReviewAction("draft-1", 3);
+    expect(result).toEqual({
+      ok: false,
+      code: "NOT_FOUND",
+      message: "draft not found",
+      retryable: false,
+    });
+    expect(repositorySpy.updateDraftStatus).not.toHaveBeenCalled();
+    expect(repositorySpy.recordEvent).not.toHaveBeenCalled();
+  });
+
+  it("rejects an invalid draft id without touching the repository", async () => {
+    const result = await submitDraftForReviewAction("", 3);
+    expect(result).toEqual({
+      ok: false,
+      code: "VALIDATION_ERROR",
+      message: "invalid draft id",
+      retryable: false,
+    });
+    expect(repositorySpy.getDraft).not.toHaveBeenCalled();
+    expect(repositorySpy.updateDraftStatus).not.toHaveBeenCalled();
+  });
+
+  it("rejects an invalid revision without touching the repository", async () => {
+    const result = await submitDraftForReviewAction("draft-1", -1);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.code).toBe("VALIDATION_ERROR");
+      expect(result.message).toBe("invalid revision");
+    }
+    expect(repositorySpy.updateDraftStatus).not.toHaveBeenCalled();
+  });
+
+  it("maps a stale revision to a structured retryable REVISION_CONFLICT failure", async () => {
+    repositorySpy.getDraft.mockResolvedValue(makeDraft());
+    repositorySpy.updateDraftStatus.mockRejectedValue(
+      new workbooks.WorkbookPublicationError(
+        "REVISION_CONFLICT",
+        "Revision conflict: actual revision 4 does not match expected revision 3.",
+      ),
+    );
+    const result = await submitDraftForReviewAction("draft-1", 3);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.code).toBe("REVISION_CONFLICT");
+      expect(result.retryable).toBe(true);
+    }
+    expect(repositorySpy.recordEvent).not.toHaveBeenCalled();
+  });
+
+  it("maps a submission from an already in-review draft to ILLEGAL_STATE_TRANSITION", async () => {
+    repositorySpy.getDraft.mockResolvedValue({
+      ...makeDraft(),
+      status: "in_review" as const,
+    });
+    const result = await submitDraftForReviewAction("draft-1", 3);
+    expect(result).toEqual({
+      ok: false,
+      code: "ILLEGAL_STATE_TRANSITION",
+      message: 'Cannot transition workbook from "in_review" to "in_review".',
+      retryable: false,
+    });
+    expect(repositorySpy.updateDraftStatus).not.toHaveBeenCalled();
+    expect(repositorySpy.recordEvent).not.toHaveBeenCalled();
+  });
+
+  it("maps a submission from a released status to EDITION_IMMUTABLE", async () => {
+    repositorySpy.getDraft.mockResolvedValue({
+      ...makeDraft(),
+      status: "published" as const,
+    });
+    const result = await submitDraftForReviewAction("draft-1", 3);
+    expect(result).toEqual({
+      ok: false,
+      code: "EDITION_IMMUTABLE",
+      message: 'Cannot transition workbook from "published" to "in_review".',
+      retryable: false,
+    });
+    expect(repositorySpy.updateDraftStatus).not.toHaveBeenCalled();
+    expect(repositorySpy.recordEvent).not.toHaveBeenCalled();
+  });
+});
+
+describe("returnDraftToDraftAction", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(requireWorkbookSession).mockResolvedValue(session);
+  });
+
+  it("returns an in-review draft to draft status and records the return event", async () => {
+    const updated = { ...makeDraft(), status: "draft" as const, revision: 4 };
+    repositorySpy.getDraft.mockResolvedValue({
+      ...makeDraft(),
+      status: "in_review" as const,
+    });
+    repositorySpy.updateDraftStatus.mockResolvedValue(updated);
+    const result = await returnDraftToDraftAction("draft-1", 3);
+    expect(result).toEqual({ ok: true, draft: updated });
+    expect(repositorySpy.updateDraftStatus).toHaveBeenCalledWith(
+      "tenant-1",
+      "draft-1",
+      "draft",
+      3,
+    );
+    expect(repositorySpy.recordEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        tenantId: "tenant-1",
+        draftId: "draft-1",
+        editionId: null,
+        eventType: "returned_to_draft",
+        actorId: "actor-1",
+      }),
+    );
+  });
+
+  it("returns a structured unauthorized failure and does not touch the repository without a session", async () => {
+    vi.mocked(requireWorkbookSession).mockRejectedValue(
+      new WorkbookAuthorizationError(
+        "UNAUTHORIZED",
+        "workbooks access requires an authorized session",
+      ),
+    );
+    const result = await returnDraftToDraftAction("draft-1", 3);
+    expect(result).toEqual({
+      ok: false,
+      code: "UNAUTHORIZED",
+      message: "workbooks access requires an authorized session",
+      retryable: false,
+    });
+    expect(repositorySpy.getDraft).not.toHaveBeenCalled();
+    expect(repositorySpy.updateDraftStatus).not.toHaveBeenCalled();
+    expect(repositorySpy.recordEvent).not.toHaveBeenCalled();
+  });
+
+  it("returns NOT_FOUND for a draft outside the session tenant without leaking existence", async () => {
+    repositorySpy.getDraft.mockResolvedValue(null);
+    const result = await returnDraftToDraftAction("draft-1", 3);
+    expect(result).toEqual({
+      ok: false,
+      code: "NOT_FOUND",
+      message: "draft not found",
+      retryable: false,
+    });
+    expect(repositorySpy.updateDraftStatus).not.toHaveBeenCalled();
+    expect(repositorySpy.recordEvent).not.toHaveBeenCalled();
+  });
+
+  it("maps a stale revision to a structured retryable REVISION_CONFLICT failure", async () => {
+    repositorySpy.getDraft.mockResolvedValue({
+      ...makeDraft(),
+      status: "in_review" as const,
+    });
+    repositorySpy.updateDraftStatus.mockRejectedValue(
+      new workbooks.WorkbookPublicationError(
+        "REVISION_CONFLICT",
+        "Revision conflict: actual revision 4 does not match expected revision 3.",
+      ),
+    );
+    const result = await returnDraftToDraftAction("draft-1", 3);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.code).toBe("REVISION_CONFLICT");
+      expect(result.retryable).toBe(true);
+    }
+    expect(repositorySpy.recordEvent).not.toHaveBeenCalled();
+  });
+
+  it("maps returning a plain draft to ILLEGAL_STATE_TRANSITION", async () => {
+    repositorySpy.getDraft.mockResolvedValue(makeDraft());
+    const result = await returnDraftToDraftAction("draft-1", 3);
+    expect(result).toEqual({
+      ok: false,
+      code: "ILLEGAL_STATE_TRANSITION",
+      message: 'Cannot transition workbook from "draft" to "draft".',
+      retryable: false,
+    });
+    expect(repositorySpy.updateDraftStatus).not.toHaveBeenCalled();
+    expect(repositorySpy.recordEvent).not.toHaveBeenCalled();
+  });
+
+  it("maps returning a released draft to EDITION_IMMUTABLE", async () => {
+    repositorySpy.getDraft.mockResolvedValue({
+      ...makeDraft(),
+      status: "published" as const,
+    });
+    const result = await returnDraftToDraftAction("draft-1", 3);
+    expect(result).toEqual({
+      ok: false,
+      code: "EDITION_IMMUTABLE",
+      message: 'Cannot transition workbook from "published" to "draft".',
+      retryable: false,
+    });
+    expect(repositorySpy.updateDraftStatus).not.toHaveBeenCalled();
+    expect(repositorySpy.recordEvent).not.toHaveBeenCalled();
   });
 });

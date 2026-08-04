@@ -34,6 +34,8 @@ export interface UseDraftLessonEditorResult {
   revisionConflictMessage: string | undefined;
   /** Project settings last persisted for the draft, when present. */
   settings: workbooks.WorkbookDraftSettings | undefined;
+  /** Lifecycle status the editor last saw; drives the review and publish actions. */
+  status: workbooks.WorkbookDraft["status"];
   /** Revision the editor last saw; feeds optimistic-concurrency saves. */
   revision: number;
   /** Sets one legacy field of the lesson state. */
@@ -77,6 +79,9 @@ export function useDraftLessonEditor({
     workbookContentToLesson(initialDraft.sourceRecord.content),
   );
   const [revision, setRevision] = useState<number>(initialDraft.revision);
+  const [status, setStatus] = useState<workbooks.WorkbookDraft["status"]>(
+    initialDraft.status,
+  );
   const [settings, setSettings] = useState(
     initialDraft.sourceRecord.settings,
   );
@@ -95,6 +100,7 @@ export function useDraftLessonEditor({
   const applyDraft = useCallback((draft: workbooks.WorkbookDraft) => {
     setLesson(workbookContentToLesson(draft.sourceRecord.content));
     setRevision(draft.revision);
+    setStatus(draft.status);
     setAssets(draft.sourceRecord.content.assets);
     setSettings(draft.sourceRecord.settings);
   }, []);
@@ -113,6 +119,7 @@ export function useDraftLessonEditor({
   const applySettingsSave = useCallback(
     (draft: workbooks.WorkbookDraft) => {
       setSettings(draft.sourceRecord.settings);
+      setStatus(draft.status);
       setRevision(draft.revision);
     },
     [],
@@ -190,6 +197,7 @@ export function useDraftLessonEditor({
     revisionConflict,
     revisionConflictMessage,
     settings,
+    status,
     revision,
     setLessonField,
     setFormError,

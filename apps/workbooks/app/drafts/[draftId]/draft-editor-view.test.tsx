@@ -13,6 +13,12 @@ vi.mock("./use-draft-lesson-editor", () => ({
 vi.mock("./actions", () => ({
   previewDraftAction: vi.fn(),
   updateDraftSettingsAction: vi.fn(),
+  submitDraftForReviewAction: vi.fn(),
+  returnDraftToDraftAction: vi.fn(),
+}));
+
+vi.mock("../actions", () => ({
+  publishDraftAction: vi.fn(),
 }));
 
 vi.mock("../../../components/lesson-editor/LessonPreview", () => ({
@@ -21,7 +27,13 @@ vi.mock("../../../components/lesson-editor/LessonPreview", () => ({
   ),
 }));
 
-import { previewDraftAction, updateDraftSettingsAction } from "./actions";
+import {
+  previewDraftAction,
+  returnDraftToDraftAction,
+  submitDraftForReviewAction,
+  updateDraftSettingsAction,
+} from "./actions";
+import { publishDraftAction } from "../actions";
 import { useDraftLessonEditor } from "./use-draft-lesson-editor";
 
 const adminSession: WorkbookSession = {
@@ -97,6 +109,7 @@ function makeHookReturn(
       return conflict.message;
     },
     settings: undefined,
+    status: "draft",
     revision: 2,
     setLessonField: vi.fn(),
     setFormError: vi.fn((message: string) => {
@@ -359,6 +372,243 @@ describe("DraftEditorView / draft settings", () => {
     expect(screen.getByText(/Cannot edit a draft/)).toBeTruthy();
     expect(
       screen.getByRole("dialog", { name: "Project Settings" }),
+    ).toBeTruthy();
+  });
+});
+
+describe("DraftEditorView / review workflow", () => {
+  it("shows a Submit for review button for a draft in draft status", () => {
+    render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
+    expect(
+      screen.getByRole("button", { name: "Submit for review" }),
+    ).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Return to draft" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Publish…" })).toBeNull();
+  });
+
+  it("shows Return to draft and Publish buttons for a draft in review", () => {
+    vi.mocked(useDraftLessonEditor).mockReturnValue(
+      makeHookReturn({ status: "in_review" }),
+    );
+    render(
+      <DraftEditorView
+        session={adminSession}
+        draft={makeDraft({ status: "in_review" })}
+      />,
+    );
+    expect(
+      screen.getByRole("button", { name: "Return to draft" }),
+    ).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Publish…" })).toBeTruthy();
+    expect(
+      screen.queryByRole("button", { name: "Submit for review" }),
+    ).toBeNull();
+  });
+
+  it("shows neither action for a released draft", () => {
+    render(
+      <DraftEditorView
+        session={adminSession}
+        draft={makeDraft({ status: "published" })}
+      />,
+    );
+    expect(screen.getByText(/cannot be edited/)).toBeTruthy();
+    expect(
+      screen.queryByRole("button", { name: "Submit for review" }),
+    ).toBeNull();
+    expect(screen.queryByRole("button", { name: "Return to draft" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Publish…" })).toBeNull();
+  });
+
+  it("submits the draft for review with the hook revision and refreshes on success", async () => {
+    vi.mocked(submitDraftForReviewAction).mockResolvedValue({
+      ok: true,
+      draft: { ...makeDraft({ status: "in_review" }), revision: 3 },
+    });
+    const hookReturn = makeHookReturn();
+    const refreshFromServer = vi.mocked(hookReturn.refreshFromServer);
+    vi.mocked(useDraftLessonEditor).mockReturnValue(hookReturn);
+    render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
+    fireEvent.click(screen.getByRole("button", { name: "Submit for review" }));
+    await waitFor(() => {
+      expect(submitDraftForReviewAction).toHaveBeenCalledWith("draft-1", 2);
+    });
+    expect(refreshFromServer).toHaveBeenCalled();
+  });
+
+  it("notifies on a submit-for-review revision conflict", async () => {
+    const message =
+      "Revision conflict: actual revision 3 does not match expected revision 2.";
+    vi.mocked(submitDraftForReviewAction).mockResolvedValue({
+      ok: false,
+      code: "REVISION_CONFLICT",
+      message,
+      retryable: true,
+    });
+    const hookReturn = makeHookReturn();
+    const notifyRevisionConflict = vi.mocked(hookReturn.notifyRevisionConflict);
+    vi.mocked(useDraftLessonEditor).mockReturnValue(hookReturn);
+    render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
+    fireEvent.click(screen.getByRole("button", { name: "Submit for review" }));
+    await waitFor(() => {
+      expect(notifyRevisionConflict).toHaveBeenCalledWith(message);
+    });
+  });
+
+  it("surfaces a non-conflict submit failure as a form error", async () => {
+    vi.mocked(submitDraftForReviewAction).mockResolvedValue({
+      ok: false,
+      code: "ILLEGAL_STATE_TRANSITION",
+      message: 'Cannot transition workbook from "in_review" to "in_review".',
+      retryable: false,
+    });
+    const hookReturn = makeHookReturn();
+    const notifyRevisionConflict = vi.mocked(hookReturn.notifyRevisionConflict);
+    vi.mocked(useDraftLessonEditor).mockReturnValue(hookReturn);
+    render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
+    fireEvent.click(screen.getByRole("button", { name: "Submit for review" }));
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toBeTruthy();
+    });
+    expect(
+      screen.getByText(/Cannot transition workbook/),
+    ).toBeTruthy();
+    expect(notifyRevisionConflict).not.toHaveBeenCalled();
+  });
+
+  it("returns an in-review draft to draft status and refreshes on success", async () => {
+    vi.mocked(returnDraftToDraftAction).mockResolvedValue({
+      ok: true,
+      draft: makeDraft({ revision: 3 }),
+    });
+    const hookReturn = makeHookReturn({ status: "in_review" });
+    const refreshFromServer = vi.mocked(hookReturn.refreshFromServer);
+    vi.mocked(useDraftLessonEditor).mockReturnValue(hookReturn);
+    render(
+      <DraftEditorView
+        session={adminSession}
+        draft={makeDraft({ status: "in_review" })}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Return to draft" }));
+    await waitFor(() => {
+      expect(returnDraftToDraftAction).toHaveBeenCalledWith("draft-1", 2);
+    });
+    expect(refreshFromServer).toHaveBeenCalled();
+  });
+
+  it("opens the publish dialog with the immutability warning", () => {
+    vi.mocked(useDraftLessonEditor).mockReturnValue(
+      makeHookReturn({ status: "in_review" }),
+    );
+    render(
+      <DraftEditorView
+        session={adminSession}
+        draft={makeDraft({ status: "in_review" })}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Publish…" }));
+    const dialog = screen.getByRole("dialog", { name: "Publish Edition" });
+    expect(dialog.textContent).toContain("immutable");
+    expect(dialog.textContent).toContain("cannot be edited");
+    expect(dialog.textContent).toContain("new draft version");
+  });
+
+  it("publishes through the action with the hook revision and shows the edition version", async () => {
+    vi.mocked(useDraftLessonEditor).mockReturnValue(
+      makeHookReturn({ status: "in_review" }),
+    );
+    vi.mocked(publishDraftAction).mockResolvedValue({
+      ok: true,
+      editionId: "edition-1",
+      version: 1,
+    });
+    render(
+      <DraftEditorView
+        session={adminSession}
+        draft={makeDraft({ status: "in_review" })}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Publish…" }));
+    fireEvent.click(screen.getByRole("button", { name: "Confirm Publish" }));
+    await waitFor(() => {
+      expect(publishDraftAction).toHaveBeenCalledWith("draft-1", 2);
+    });
+    await waitFor(() => {
+      expect(screen.getByText(/edition v1/)).toBeTruthy();
+    });
+    expect(
+      screen.queryByRole("dialog", { name: "Publish Edition" }),
+    ).toBeNull();
+  });
+
+  it("does not publish when the dialog is cancelled", async () => {
+    vi.mocked(useDraftLessonEditor).mockReturnValue(
+      makeHookReturn({ status: "in_review" }),
+    );
+    render(
+      <DraftEditorView
+        session={adminSession}
+        draft={makeDraft({ status: "in_review" })}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Publish…" }));
+    fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+    expect(publishDraftAction).not.toHaveBeenCalled();
+    expect(
+      screen.queryByRole("dialog", { name: "Publish Edition" }),
+    ).toBeNull();
+  });
+
+  it("notifies on a publish revision conflict", async () => {
+    const message =
+      "Revision conflict: actual revision 3 does not match expected revision 2.";
+    vi.mocked(publishDraftAction).mockResolvedValue({
+      ok: false,
+      code: "REVISION_CONFLICT",
+      message,
+    });
+    const hookReturn = makeHookReturn({ status: "in_review" });
+    const notifyRevisionConflict = vi.mocked(hookReturn.notifyRevisionConflict);
+    vi.mocked(useDraftLessonEditor).mockReturnValue(hookReturn);
+    render(
+      <DraftEditorView
+        session={adminSession}
+        draft={makeDraft({ status: "in_review" })}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Publish…" }));
+    fireEvent.click(screen.getByRole("button", { name: "Confirm Publish" }));
+    await waitFor(() => {
+      expect(notifyRevisionConflict).toHaveBeenCalledWith(message);
+    });
+    expect(
+      screen.queryByRole("dialog", { name: "Publish Edition" }),
+    ).toBeNull();
+  });
+
+  it("renders a structured publish failure inside the dialog", async () => {
+    vi.mocked(useDraftLessonEditor).mockReturnValue(
+      makeHookReturn({ status: "in_review" }),
+    );
+    vi.mocked(publishDraftAction).mockResolvedValue({
+      ok: false,
+      code: "ILLEGAL_STATE_TRANSITION",
+      message: 'Cannot transition workbook from "draft" to "published".',
+    });
+    render(
+      <DraftEditorView
+        session={adminSession}
+        draft={makeDraft({ status: "in_review" })}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Publish…" }));
+    fireEvent.click(screen.getByRole("button", { name: "Confirm Publish" }));
+    await waitFor(() => {
+      expect(screen.getByText(/Cannot transition workbook/)).toBeTruthy();
+    });
+    expect(
+      screen.getByRole("dialog", { name: "Publish Edition" }),
     ).toBeTruthy();
   });
 });

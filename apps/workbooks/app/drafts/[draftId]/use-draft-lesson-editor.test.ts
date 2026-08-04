@@ -339,4 +339,42 @@ describe("useDraftLessonEditor", () => {
     expect(getDraftAction).toHaveBeenCalledWith("draft-1");
     expect(result.current.lesson.lesson_title).toBe("Updated title");
   });
+
+  it("tracks the draft lifecycle status alongside the revision", () => {
+    const { result } = renderHook(() =>
+      useDraftLessonEditor({
+        initialDraft: makeDraft({ status: "in_review" }),
+      }),
+    );
+    expect(result.current.status).toBe("in_review");
+    expect(result.current.revision).toBe(3);
+  });
+
+  it("updates the tracked status when refreshing from the server", async () => {
+    vi.mocked(getDraftAction).mockResolvedValue({
+      ok: true,
+      draft: { ...makeDraft({ status: "in_review" }), revision: 4 },
+    });
+    const { result } = renderHook(() =>
+      useDraftLessonEditor({ initialDraft: makeDraft() }),
+    );
+    await act(async () => {
+      await result.current.refreshFromServer();
+    });
+    expect(result.current.status).toBe("in_review");
+    expect(result.current.revision).toBe(4);
+  });
+
+  it("applies the status from a settings save", () => {
+    const { result } = renderHook(() =>
+      useDraftLessonEditor({ initialDraft: makeDraft() }),
+    );
+    act(() => {
+      result.current.applySettingsSave(
+        makeDraft({ status: "in_review", revision: 4 }),
+      );
+    });
+    expect(result.current.status).toBe("in_review");
+    expect(result.current.revision).toBe(4);
+  });
 });

@@ -174,3 +174,15 @@ export interface DraftSettingsDialogProps {
   /** Called when the user dismisses the dialog. */
   onClose: () => void;
 }
+
+/** Props for the immutable-release confirmation dialog of the draft lesson editor. */
+export interface PublishEditionDialogProps {
+  /** Whether the publication is currently in flight. */
+  publishing: boolean;
+  /** Structured publication failure to render inside the dialog, when present. */
+  error: string | undefined;
+  /** Confirms the immutable publication. */
+  onConfirm: () => void;
+  /** Closes the dialog without publishing. */
+  onClose: () => void;
+}
