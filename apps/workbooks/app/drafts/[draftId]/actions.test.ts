@@ -16,6 +16,7 @@ vi.mock("../../lib/session", () => ({
 const repositorySpy = {
   getDraft: vi.fn(),
   updateDraftContent: vi.fn(),
+  updateDraftSettings: vi.fn(),
 };
 
 vi.mock("../../../lib/repository", () => ({
@@ -26,6 +27,7 @@ import {
   getDraftAction,
   previewDraftAction,
   updateDraftAction,
+  updateDraftSettingsAction,
 } from "./actions";
 import {
   requireWorkbookSession,
@@ -238,6 +240,118 @@ describe("updateDraftAction", () => {
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.code).toBe("EDITION_IMMUTABLE");
+    }
+  });
+});
+
+const validSettings = {
+  seriesName: "Quest",
+  levelNumber: "5",
+  cefrLevel: "A1",
+  type: "secondary" as const,
+};
+
+describe("updateDraftSettingsAction", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(requireWorkbookSession).mockResolvedValue(session);
+  });
+
+  it("replaces draft settings through the domain command", async () => {
+    const updated = { ...makeDraft(), revision: 4 };
+    repositorySpy.getDraft.mockResolvedValue(makeDraft());
+    repositorySpy.updateDraftSettings.mockResolvedValue(updated);
+    const result = await updateDraftSettingsAction("draft-1", 3, validSettings);
+    expect(result).toEqual({ ok: true, draft: updated });
+    expect(repositorySpy.updateDraftSettings).toHaveBeenCalledWith(
+      "tenant-1",
+      "draft-1",
+      3,
+      validSettings,
+      expect.any(String),
+    );
+  });
+
+  it("returns a structured unauthorized failure and does not touch the repository without a session", async () => {
+    vi.mocked(requireWorkbookSession).mockRejectedValue(
+      new WorkbookAuthorizationError(
+        "UNAUTHORIZED",
+        "workbooks access requires an authorized session",
+      ),
+    );
+    const result = await updateDraftSettingsAction("draft-1", 3, validSettings);
+    expect(result).toEqual({
+      ok: false,
+      code: "UNAUTHORIZED",
+      message: "workbooks access requires an authorized session",
+      retryable: false,
+    });
+    expect(repositorySpy.getDraft).not.toHaveBeenCalled();
+    expect(repositorySpy.updateDraftSettings).not.toHaveBeenCalled();
+  });
+
+  it("rejects an invalid draft id without touching the repository", async () => {
+    const result = await updateDraftSettingsAction("", 3, validSettings);
+    expect(result).toEqual({
+      ok: false,
+      code: "VALIDATION_ERROR",
+      message: "invalid draft id",
+      retryable: false,
+    });
+    expect(repositorySpy.updateDraftSettings).not.toHaveBeenCalled();
+  });
+
+  it("rejects an invalid revision without touching the repository", async () => {
+    const result = await updateDraftSettingsAction("draft-1", -1, validSettings);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.code).toBe("VALIDATION_ERROR");
+      expect(result.message).toBe("invalid revision");
+    }
+    expect(repositorySpy.updateDraftSettings).not.toHaveBeenCalled();
+  });
+
+  it("rejects settings that fail the settings contract at the boundary", async () => {
+    const result = await updateDraftSettingsAction("draft-1", 3, {
+      ...validSettings,
+      type: "tertiary",
+    });
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.code).toBe("VALIDATION_ERROR");
+    }
+    expect(repositorySpy.updateDraftSettings).not.toHaveBeenCalled();
+  });
+
+  it("rejects a stale revision with a structured REVISION_CONFLICT failure", async () => {
+    repositorySpy.getDraft.mockResolvedValue(makeDraft());
+    repositorySpy.updateDraftSettings.mockRejectedValue(
+      new workbooks.WorkbookPublicationError(
+        "REVISION_CONFLICT",
+        "Revision conflict: actual revision 4 does not match expected revision 3.",
+      ),
+    );
+    const result = await updateDraftSettingsAction("draft-1", 3, validSettings);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.code).toBe("REVISION_CONFLICT");
+      expect(result.retryable).toBe(true);
+    }
+  });
+
+  it("returns a structured non-retryable failure for other publication errors", async () => {
+    repositorySpy.getDraft.mockResolvedValue(makeDraft());
+    repositorySpy.updateDraftSettings.mockRejectedValue(
+      new workbooks.WorkbookPublicationError(
+        "EDITION_IMMUTABLE",
+        'Cannot edit a draft in status "published".',
+      ),
+    );
+    const result = await updateDraftSettingsAction("draft-1", 3, validSettings);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.code).toBe("EDITION_IMMUTABLE");
+      expect(result.retryable).toBe(false);
     }
   });
 });

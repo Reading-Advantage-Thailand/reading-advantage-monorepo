@@ -32,6 +32,10 @@ export interface UseDraftLessonEditorResult {
   revisionConflict: boolean;
   /** Human explanation of an active revision conflict. */
   revisionConflictMessage: string | undefined;
+  /** Project settings last persisted for the draft, when present. */
+  settings: workbooks.WorkbookDraftSettings | undefined;
+  /** Revision the editor last saw; feeds optimistic-concurrency saves. */
+  revision: number;
   /** Sets one legacy field of the lesson state. */
   setLessonField: <K extends keyof DraftLesson>(
     field: K,
@@ -39,6 +43,11 @@ export interface UseDraftLessonEditorResult {
   ) => void;
   /** Surfaces a form-level error message through the status banners. */
   setFormError: (message: string) => void;
+  /**
+   * Records a successful settings save: updates the tracked revision and
+   * settings without discarding unsaved lesson edits.
+   */
+  applySettingsSave: (draft: workbooks.WorkbookDraft) => void;
   /** Validates the lesson and persists it through the server action. */
   validateAndSave: () => Promise<void>;
   /** Reloads the latest draft revision from the server. */
@@ -62,6 +71,9 @@ export function useDraftLessonEditor({
     workbookContentToLesson(initialDraft.sourceRecord.content),
   );
   const [revision, setRevision] = useState<number>(initialDraft.revision);
+  const [settings, setSettings] = useState(
+    initialDraft.sourceRecord.settings,
+  );
   const [assets, setAssets] = useState<readonly workbooks.WorkbookAssetMetadata[]>(
     initialDraft.sourceRecord.content.assets,
   );
@@ -78,6 +90,7 @@ export function useDraftLessonEditor({
     setLesson(workbookContentToLesson(draft.sourceRecord.content));
     setRevision(draft.revision);
     setAssets(draft.sourceRecord.content.assets);
+    setSettings(draft.sourceRecord.settings);
   }, []);
 
   const setLessonField = useCallback(
@@ -90,6 +103,14 @@ export function useDraftLessonEditor({
   const setFormError = useCallback((message: string) => {
     setErrors({ _form: message });
   }, []);
+
+  const applySettingsSave = useCallback(
+    (draft: workbooks.WorkbookDraft) => {
+      setSettings(draft.sourceRecord.settings);
+      setRevision(draft.revision);
+    },
+    [],
+  );
 
   const refreshFromServer = useCallback(async () => {
     setLoading(true);
@@ -153,8 +174,11 @@ export function useDraftLessonEditor({
     saveSuccess,
     revisionConflict,
     revisionConflictMessage,
+    settings,
+    revision,
     setLessonField,
     setFormError,
+    applySettingsSave,
     validateAndSave,
     refreshFromServer,
   };

@@ -12,6 +12,7 @@ vi.mock("./use-draft-lesson-editor", () => ({
 
 vi.mock("./actions", () => ({
   previewDraftAction: vi.fn(),
+  updateDraftSettingsAction: vi.fn(),
 }));
 
 vi.mock("../../../components/lesson-editor/LessonPreview", () => ({
@@ -20,7 +21,7 @@ vi.mock("../../../components/lesson-editor/LessonPreview", () => ({
   ),
 }));
 
-import { previewDraftAction } from "./actions";
+import { previewDraftAction, updateDraftSettingsAction } from "./actions";
 import { useDraftLessonEditor } from "./use-draft-lesson-editor";
 
 const adminSession: WorkbookSession = {
@@ -69,10 +70,11 @@ function makeDraft(
   };
 }
 
-beforeEach(() => {
-  vi.clearAllMocks();
+function makeHookReturn(
+  overrides: Partial<ReturnType<typeof useDraftLessonEditor>> = {},
+): ReturnType<typeof useDraftLessonEditor> {
   const errors: Record<string, string> = {};
-  vi.mocked(useDraftLessonEditor).mockReturnValue({
+  return {
     lesson: {
       lesson_title: "The Library Map",
       cefr_level: "A2",
@@ -85,13 +87,22 @@ beforeEach(() => {
     saveSuccess: false,
     revisionConflict: false,
     revisionConflictMessage: undefined,
+    settings: undefined,
+    revision: 2,
     setLessonField: vi.fn(),
     setFormError: vi.fn((message: string) => {
       errors._form = message;
     }),
+    applySettingsSave: vi.fn(),
     validateAndSave: vi.fn(),
     refreshFromServer: vi.fn(),
-  });
+    ...overrides,
+  };
+}
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  vi.mocked(useDraftLessonEditor).mockReturnValue(makeHookReturn());
 });
 
 describe("DraftEditorView / authorization", () => {
@@ -218,5 +229,100 @@ describe("DraftEditorView / states", () => {
     render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
     expect(screen.queryByLabelText(/Sentence Order/i)).toBeNull();
     expect(screen.queryByLabelText(/Sentence Completion/i)).toBeNull();
+  });
+});
+
+describe("DraftEditorView / draft settings", () => {
+  function makeDraftWithSettings(
+    settings: workbooks.WorkbookDraftSettings,
+  ): workbooks.WorkbookDraft {
+    return makeDraft({
+      sourceRecord: { ...makeDraft().sourceRecord, settings },
+    });
+  }
+
+  it("opens the settings dialog with the draft's current settings", () => {
+    const settings: workbooks.WorkbookDraftSettings = {
+      seriesName: "Quest",
+      levelNumber: "5",
+      cefrLevel: "A1",
+      type: "secondary",
+    };
+    vi.mocked(useDraftLessonEditor).mockReturnValue(
+      makeHookReturn({ settings }),
+    );
+    render(
+      <DraftEditorView
+        session={adminSession}
+        draft={makeDraftWithSettings(settings)}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+    expect(
+      screen.getByRole("dialog", { name: "Project Settings" }),
+    ).toBeTruthy();
+    expect(
+      (screen.getByLabelText("Workbook Level") as HTMLSelectElement).value,
+    ).toBe("5");
+    expect(
+      (screen.getByLabelText("Series Name") as HTMLInputElement).value,
+    ).toBe("Quest");
+  });
+
+  it("saves the settings through the server action and closes the dialog on success", async () => {
+    vi.mocked(updateDraftSettingsAction).mockResolvedValue({
+      ok: true,
+      draft: makeDraft({ revision: 3 }),
+    });
+    render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
+    fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+    expect(
+      screen.getByRole("dialog", { name: "Project Settings" }),
+    ).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Project Settings" }),
+      ).toBeNull();
+    });
+  });
+
+  it("surfaces a revision conflict banner and keeps the dialog open", async () => {
+    vi.mocked(updateDraftSettingsAction).mockResolvedValue({
+      ok: false,
+      code: "REVISION_CONFLICT",
+      message:
+        "Revision conflict: actual revision 4 does not match expected revision 2.",
+      retryable: true,
+    });
+    render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
+    fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toBeTruthy();
+    });
+    expect(screen.getByText(/Revision conflict/)).toBeTruthy();
+    expect(
+      screen.getByRole("dialog", { name: "Project Settings" }),
+    ).toBeTruthy();
+  });
+
+  it("surfaces other settings failures as a form error and keeps the dialog open", async () => {
+    vi.mocked(updateDraftSettingsAction).mockResolvedValue({
+      ok: false,
+      code: "EDITION_IMMUTABLE",
+      message: 'Cannot edit a draft in status "published".',
+      retryable: false,
+    });
+    render(<DraftEditorView session={adminSession} draft={makeDraft()} />);
+    fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toBeTruthy();
+    });
+    expect(screen.getByText(/Cannot edit a draft/)).toBeTruthy();
+    expect(
+      screen.getByRole("dialog", { name: "Project Settings" }),
+    ).toBeTruthy();
   });
 });

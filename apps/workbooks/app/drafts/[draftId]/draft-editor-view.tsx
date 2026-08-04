@@ -6,13 +6,14 @@ import type { WorkbookSession } from "../../lib/session";
 import { BasicInfoEditor } from "../../../components/lesson-editor/BasicInfoEditor";
 import { ArticleEditor } from "../../../components/lesson-editor/ArticleEditor";
 import { ComprehensionQuestionsEditor } from "../../../components/lesson-editor/ComprehensionQuestionsEditor";
+import { DraftSettingsDialog } from "../../../components/lesson-editor/DraftSettingsDialog";
 import { LessonPreviewModal } from "../../../components/lesson-editor/LessonPreviewModal";
 import { LessonReflectionEditor } from "../../../components/lesson-editor/LessonReflectionEditor";
 import { LessonStatusBanners } from "../../../components/lesson-editor/LessonStatusBanners";
 import { PedagogicalConnectorsEditor } from "../../../components/lesson-editor/PedagogicalConnectorsEditor";
 import { VocabularyEditor } from "../../../components/lesson-editor/VocabularyEditor";
 import { WritingPromptEditor } from "../../../components/lesson-editor/WritingPromptEditor";
-import { previewDraftAction } from "./actions";
+import { previewDraftAction, updateDraftSettingsAction } from "./actions";
 import { useDraftLessonEditor } from "./use-draft-lesson-editor";
 
 /** Props controlling the draft lesson editor view. */
@@ -102,6 +103,8 @@ function DraftLessonEditorView({
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
   const [previewing, setPreviewing] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsSaving, setSettingsSaving] = useState(false);
   const {
     lesson,
     saving,
@@ -109,8 +112,11 @@ function DraftLessonEditorView({
     saveSuccess,
     revisionConflict,
     revisionConflictMessage,
+    settings,
+    revision,
     setLessonField,
     setFormError,
+    applySettingsSave,
     validateAndSave,
   } = useDraftLessonEditor({ initialDraft: draft });
 
@@ -131,6 +137,29 @@ function DraftLessonEditorView({
     }
   };
 
+  const handleSaveSettings = async (
+    settings: workbooks.WorkbookDraftSettings,
+  ) => {
+    setSettingsSaving(true);
+    try {
+      const result = await updateDraftSettingsAction(
+        draft.draftId,
+        revision,
+        settings,
+      );
+      if (result.ok) {
+        applySettingsSave(result.draft);
+        setSettingsOpen(false);
+      } else {
+        setFormError(result.message);
+      }
+    } catch {
+      setFormError("An error occurred while saving the draft settings.");
+    } finally {
+      setSettingsSaving(false);
+    }
+  };
+
   return (
     <main>
       <h1>{lesson.lesson_title || "Untitled lesson"}</h1>
@@ -146,6 +175,9 @@ function DraftLessonEditorView({
           disabled={previewing}
         >
           {previewing ? "Rendering..." : "Preview"}
+        </button>
+        <button type="button" onClick={() => setSettingsOpen(true)}>
+          Settings
         </button>
       </div>
 
@@ -212,6 +244,15 @@ function DraftLessonEditorView({
         <LessonPreviewModal
           previewHtml={previewHtml}
           onClose={() => setPreviewOpen(false)}
+        />
+      )}
+
+      {settingsOpen && (
+        <DraftSettingsDialog
+          settings={settings}
+          saving={settingsSaving}
+          onSave={(next) => void handleSaveSettings(next)}
+          onClose={() => setSettingsOpen(false)}
         />
       )}
     </main>

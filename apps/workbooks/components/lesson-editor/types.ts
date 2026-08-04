@@ -1,3 +1,5 @@
+import type { workbooks } from "@reading-advantage/domain";
+
 /** Props for the basic-information section of the draft lesson editor. */
 export interface BasicInfoEditorProps {
   /** Lesson title edited in this section; persists as normalized content title. */
@@ -158,5 +160,17 @@ export interface LessonPreviewModalProps {
   /** Compiled lesson HTML to preview, or null when no preview is available. */
   previewHtml: string | null;
   /** Called when the user dismisses the modal. */
+  onClose: () => void;
+}
+
+/** Props for the project-settings dialog of the draft lesson editor. */
+export interface DraftSettingsDialogProps {
+  /** Current project settings of the draft, or undefined when none exist. */
+  settings: workbooks.WorkbookDraftSettings | undefined;
+  /** Whether a settings save is currently in flight. */
+  saving: boolean;
+  /** Called with the edited settings when the user saves. */
+  onSave: (settings: workbooks.WorkbookDraftSettings) => void;
+  /** Called when the user dismisses the dialog. */
   onClose: () => void;
 }

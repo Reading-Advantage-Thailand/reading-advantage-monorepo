@@ -189,6 +189,31 @@ describe("useDraftLessonEditor", () => {
     expect(result.current.lesson.lesson_title).toBe("New title");
   });
 
+  it("applies a settings save without touching unsaved lesson edits", () => {
+    const { result } = renderHook(() =>
+      useDraftLessonEditor({ initialDraft: makeDraft() }),
+    );
+    act(() => {
+      result.current.setLessonField("lesson_title", "Unsaved local title");
+    });
+    const savedDraft = {
+      ...makeDraft(),
+      revision: 4,
+      sourceRecord: {
+        ...makeDraft().sourceRecord,
+        settings: { type: "primary" as const, levelNumber: "2.1" },
+      },
+    };
+    act(() => {
+      result.current.applySettingsSave(savedDraft);
+    });
+    expect(result.current.settings).toEqual({
+      type: "primary",
+      levelNumber: "2.1",
+    });
+    expect(result.current.lesson.lesson_title).toBe("Unsaved local title");
+  });
+
   it("surfaces a form-level error through setFormError", () => {
     const { result } = renderHook(() =>
       useDraftLessonEditor({ initialDraft: makeDraft() }),
