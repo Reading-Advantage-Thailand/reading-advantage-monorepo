@@ -15,3 +15,4 @@ export * from "./update-draft-settings.js";
 export * from "./in-memory-edition-repository.js";
 export * from "./drizzle-edition-repository.js";
 export * from "./html-renderer.js";
+export * from "./teacher-manual/index.js";
