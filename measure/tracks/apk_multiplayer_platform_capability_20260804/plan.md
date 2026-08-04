@@ -60,9 +60,9 @@ _Story ref: spec.md#story-s1_
 ## Phase S2: Make the Wizard vs Zombie simulation deterministic
 _Story ref: spec.md#story-s2_
 
-- [ ] Task: Write the Red determinism property test
-    - [ ] Add a property test asserting two independently constructed states, identical seed and identical input sequence, produce byte-identical state across a bounded tick count
-    - [ ] Confirm it fails against the current implementation before any fix
+- [x] Task: Write the Red determinism property test
+    - [x] Add a property test asserting two independently constructed states, identical seed and identical input sequence, produce byte-identical state across a bounded tick count — `apps/advantage-games/src/lib/games/wizardZombieDeterminism.test.ts`, 400 ticks at dt 50 ms with a deterministic steer-to-orb bot; witness blocks confirm ≥3 concurrent zombies (observed 20), orb collection (39 attempts), and correct answers (8) so spawn, wander, and target-reselect sites are all exercised
+    - [x] Confirm it fails against the current implementation before any fix — fails at tick 0: orb ids embed `Math.random()` at construction (inventory sites 403/426); positions and target identical across runs. Orchestrator re-ran the gate, 1 failed / 2 passed
 - [ ] Task: Thread a seeded PRNG through the tick path
     - [ ] Replace the `Math.random()` call sites in `apps/advantage-games/src/lib/games/wizardZombie.ts` at lines 237, 239, 247, 300, 333, 334, 403, and 426 (ten sites in total; see `s2-determinism-inventory-20260804.md`) with the injected generator
     - [ ] Replace `Date.now()`-derived entity ids at line 316 with seed-and-counter derivation
