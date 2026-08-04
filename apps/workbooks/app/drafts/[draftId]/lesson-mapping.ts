@@ -82,8 +82,20 @@ export const draftLessonArticleImagePositionSchema = z.enum([
   "writing-prompt",
 ]);
 
-/** Editor-shaped structured article image, mirroring the legacy ArticleImageSchema. */
+/**
+ * Editor-shaped structured article image, mirroring the legacy ArticleImageSchema.
+ * A canonical asset key is the release authority when present, mirroring the
+ * domain carrier semantics; url carries legacyUrl provenance/display.
+ */
 export const draftLessonArticleImageSchema = z.object({
+  key: z
+    .string()
+    .min(1)
+    .refine(
+      (value) => !value.startsWith("http://") && !value.startsWith("https://"),
+      { message: "asset key must be a canonical key, not a URL" },
+    )
+    .optional(),
   url: z.string(),
   caption: z.string(),
   image_prompt: z.string().optional(),
@@ -142,7 +154,7 @@ export type DraftLesson = z.infer<typeof draftLessonSchema>;
 /**
  * Reconstructs the editor-shaped flat image URL field from normalized article
  * image entries. Flat URLs map back into article_image_url; structured entries
- * with layout data map back into article_images.
+ * with layout data or a canonical key map back into article_images.
  * @param content Normalized content stored on the draft.
  * @returns The legacy editor image fields.
  */
@@ -151,6 +163,7 @@ function splitArticleImages(
 ): {
   article_image_url: string[] | undefined;
   article_images: {
+    key?: string;
     url: string;
     caption: string;
     image_prompt?: string;
@@ -159,14 +172,16 @@ function splitArticleImages(
 } {
   const entries = content.articleImages ?? [];
   // The two editor fields partition the entries: an entry carrying layout data
-  // belongs to article_images only. Emitting it into both fields duplicates the
-  // URL on every save/load cycle, growing article_image_url without bound.
+  // or a canonical key belongs to article_images only. Emitting it into both
+  // fields duplicates the URL on every save/load cycle, growing
+  // article_image_url without bound.
   const carriesLayout = (
     image: workbooks.WorkbookArticleImage,
   ): boolean =>
     image.position !== undefined ||
     image.caption !== undefined ||
-    image.imagePrompt !== undefined;
+    image.imagePrompt !== undefined ||
+    image.key !== undefined;
   const flat = entries
     .filter((image) => !carriesLayout(image))
     .map((image) => image.legacyUrl)
@@ -175,6 +190,7 @@ function splitArticleImages(
     .filter(carriesLayout)
     .map((image) => ({
       url: image.legacyUrl ?? "",
+      key: image.key,
       caption: image.caption ?? "",
       image_prompt: image.imagePrompt,
       position: image.position,
@@ -254,8 +270,8 @@ export function workbookContentToLesson(
 
 /**
  * Collects normalized article image entries from the editor's flat image URL
- * field and structured image list. Structured entries carry their layout data;
- * flat URLs become legacyUrl-only provenance entries.
+ * field and structured image list. Structured entries carry their canonical
+ * key and layout data; flat URLs become legacyUrl-only provenance entries.
  * @param lesson Legacy-shaped lesson state produced by the editor.
  * @returns Normalized article image entries, or undefined when the editor has none.
  */
@@ -265,8 +281,12 @@ function collectEditorArticleImages(
   const images: workbooks.WorkbookArticleImage[] = [];
 
   for (const item of lesson.article_images ?? []) {
-    if (item.url === "") continue;
-    const entry: workbooks.WorkbookArticleImage = { legacyUrl: item.url };
+    // Drop entries carrying neither a canonical key nor a legacy URL: the
+    // normalized contract cannot publish them.
+    if (item.url === "" && item.key === undefined) continue;
+    const entry: workbooks.WorkbookArticleImage = {};
+    if (item.key !== undefined) entry.key = item.key;
+    if (item.url !== "") entry.legacyUrl = item.url;
     if (item.caption !== "") entry.caption = item.caption;
     if (item.image_prompt !== undefined && item.image_prompt !== "") {
       entry.imagePrompt = item.image_prompt;

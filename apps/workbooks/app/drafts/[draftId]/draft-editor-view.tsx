@@ -326,6 +326,7 @@ function DraftLessonEditorView({
 
       <ArticleEditor
         article_paragraphs={lesson.article_paragraphs}
+        article_images={lesson.article_images}
         onChange={setLessonField}
       />
 

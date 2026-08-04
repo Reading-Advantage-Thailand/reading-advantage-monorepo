@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  draftLessonArticleImageSchema,
   draftLessonSchema,
   lessonToWorkbookContent,
   workbookContentToLesson,
@@ -218,6 +219,7 @@ const MAXIMAL_LESSON = {
   article_images: [
     {
       url: "https://cdn.example.com/inline.png",
+      key: "img/inline.png",
       caption: "Shelves",
       image_prompt: "library shelves, warm light",
       position: "inline-para-2" as const,
@@ -269,6 +271,12 @@ describe("maximal lesson round-trip", () => {
     expect(fixtureFields).toEqual(schemaFields);
   });
 
+  it("covers every field the editor article-image schema accepts", () => {
+    const schemaFields = Object.keys(draftLessonArticleImageSchema.shape).sort();
+    const fixtureFields = Object.keys(MAXIMAL_LESSON.article_images[0]).sort();
+    expect(fixtureFields).toEqual(schemaFields);
+  });
+
   it("is accepted by the editor schema", () => {
     expect(draftLessonSchema.safeParse(MAXIMAL_LESSON).success).toBe(true);
   });
@@ -290,6 +298,49 @@ describe("maximal lesson round-trip", () => {
     expect(saved.writingPracticeUrl).toBe(
       "https://practice.example.com/lesson-07",
     );
+  });
+});
+
+describe("article image key preservation", () => {
+  it("keeps canonical keys and legacyUrl provenance through save then load", () => {
+    const content = {
+      title: "T",
+      cefrLevel: "A1",
+      paragraphs: [{ order: 0, text: "p" }],
+      questions: [],
+      assets: [],
+      articleImages: [
+        { key: "img/key-only.png", position: "hero" as const },
+        { key: "img/bare.png" },
+        {
+          legacyUrl: "https://cdn.example.com/legacy-only.png",
+          position: "hero" as const,
+        },
+        {
+          key: "img/both.png",
+          legacyUrl: "https://cdn.example.com/both.png",
+          caption: "Both",
+          position: "inline-para-1" as const,
+        },
+        { caption: "orphan" },
+      ],
+    };
+    const restored = workbookContentToLesson(content);
+    const saved = lessonToWorkbookContent(restored);
+    expect(saved.articleImages).toEqual([
+      { key: "img/key-only.png", position: "hero" },
+      { key: "img/bare.png" },
+      {
+        legacyUrl: "https://cdn.example.com/legacy-only.png",
+        position: "hero",
+      },
+      {
+        key: "img/both.png",
+        legacyUrl: "https://cdn.example.com/both.png",
+        caption: "Both",
+        position: "inline-para-1",
+      },
+    ]);
   });
 });
 

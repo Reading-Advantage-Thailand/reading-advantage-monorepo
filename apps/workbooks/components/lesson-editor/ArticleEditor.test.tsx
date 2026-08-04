@@ -14,11 +14,49 @@ describe("ArticleEditor", () => {
     ).toBe(JSON.stringify(paragraphs, null, 2));
   });
 
-  it("does not render URL, caption, or image fields in this phase", () => {
-    render(<ArticleEditor onChange={() => {}} />);
-    expect(screen.queryByLabelText(/Article URL/i)).toBeNull();
-    expect(screen.queryByLabelText(/Image Caption/i)).toBeNull();
-    expect(screen.queryByLabelText(/Additional Article Images/i)).toBeNull();
+  it("shows a canonical asset indication for a key-only article image", () => {
+    render(
+      <ArticleEditor
+        onChange={() => {}}
+        article_images={[
+          { url: "", key: "img/hero.png", caption: "", position: "hero" },
+        ]}
+      />,
+    );
+    expect(screen.getByText(/Canonical asset: img\/hero\.png/i)).toBeTruthy();
+  });
+
+  it("keeps the legacy URL input while preserving the canonical key", () => {
+    render(
+      <ArticleEditor
+        onChange={() => {}}
+        article_images={[
+          {
+            url: "https://cdn.example.com/inline.png",
+            key: "img/inline.png",
+            caption: "Shelves",
+            position: "inline-para-2",
+          },
+        ]}
+      />,
+    );
+    expect(screen.getByText(/Canonical asset: img\/inline\.png/i)).toBeTruthy();
+    expect(
+      (screen.getByLabelText(/Image URL/i) as HTMLInputElement).value,
+    ).toBe("https://cdn.example.com/inline.png");
+  });
+
+  it("does not offer an interactive image upload flow", () => {
+    render(
+      <ArticleEditor
+        onChange={() => {}}
+        article_images={[
+          { url: "", key: "img/hero.png", caption: "", position: "hero" },
+        ]}
+      />,
+    );
+    expect(screen.queryByRole("button", { name: /upload/i })).toBeNull();
+    expect(screen.queryByLabelText(/file/i)).toBeNull();
   });
 
   it("calls onChange with the parsed paragraphs array", () => {

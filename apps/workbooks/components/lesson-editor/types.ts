@@ -13,10 +13,30 @@ export interface BasicInfoEditorProps {
   ) => void;
 }
 
+/**
+ * Editor-shaped structured article image, mirroring the legacy ArticleImageSchema.
+ * A canonical asset key is the release authority when present, mirroring the
+ * domain carrier semantics; url carries legacyUrl provenance/display.
+ */
+export type ArticleImage = {
+  /** Canonical asset key authoritative for release, when one is attached. */
+  key?: string;
+  /** Legacy URL provenance or display URL from the legacy lesson. */
+  url: string;
+  /** Caption shown with the image in the printed layout. */
+  caption: string;
+  /** Proposal prompt that generated the image, when one exists. */
+  image_prompt?: string;
+  /** Layout position the image occupies, when one is assigned. */
+  position?: string;
+};
+
 /** Props for the article section of the draft lesson editor. */
 export interface ArticleEditorProps {
   /** Article body split into numbered paragraphs, edited as JSON. */
   article_paragraphs?: { number: number; text: string }[];
+  /** Structured article images preserved read-only from the lesson. */
+  article_images?: ArticleImage[];
   /** Called with the legacy field name and new value on every change. */
   onChange: (
     field: "article_paragraphs",
