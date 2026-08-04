@@ -230,15 +230,24 @@ _Story ref: spec.md#story-s3-import-legacy-workbook-projects-and-assets_
   `updateWorkbookDraftSettings` command + drizzle + in-memory repos, `updateDraftSettingsAction`,
   shadcn-free `DraftSettingsDialog` with ported level constants, importer accepts optional
   settings. Editor hook owns settings+revision so settings saves never clobber unsaved edits.
-- [~] Task (S4d): Port the teacher-manual workflow including the Paged.js shim and regression tests (divergence register), plus its docs.
+- [x] Task (S4d): Port the teacher-manual workflow including the Paged.js shim and regression tests (divergence register), plus its docs. d1b17a1de, fc57d2840, 0fd9ac13e, 1d2e89923, 0546d5c89
   — **Design decision (2026-08-04):** the monorepo has no project entity (drafts are
   per-lesson; `sourceId` = legacy lesson file name), so the legacy "one project = one
   manual" grouping ports as a **user-selected draft set**: the drafts table gains
   selection + a Teacher Manual action compiling the chosen drafts in lesson-number
-  order, taking series metadata from the first selected draft's settings. Generators
+  order, taking series metadata from the first ordered draft's settings. Generators
   port verbatim from `advantage-workbooks` HEAD; a single `toTeacherManualLesson`
   adapter maps `WorkbookNormalizedContent` (camelCase) → the legacy lesson shape the
   ported generators consume, pinned by a maximal-fixture test.
+  — Landed: foundation (types/i18n/theme/adapter, 23 tests), six generators (67
+  tests), document-wrapper + compiler (16 tests; rAF shim order, title-page overflow,
+  and .tm-step-block packing pinned per divergence register; deliberate deviation —
+  preface welcome() now escapes series metadata, legacy rendered it raw), app
+  workflow (tenant-scoped `compileTeacherManualAction`, accessible draft multi-select,
+  sandboxed srcDoc modal with en/th toggle + print panel, 16 tests), docs port.
+  — **Deferred:** the fdc6277 Playwright e2e (Paged.js page-count assertion) — the
+  workbooks app has no e2e harness or seeded-DB infra; the shim presence/order the
+  e2e guarded is unit-pinned. Recorded in tech-debt.
 - [ ] Task: Write Red UI, accessibility, and authorization tests for catalog browsing, drafts, source selection, editing, optimistic conflicts, source drift, rights warnings, review state, and immutable-release confirmation.
 - [ ] Task: Port the project list, settings, lesson/section editor, preview setup, and teacher-manual workflow over workbook backend commands; reject arbitrary URL/pasted-remote ingestion.
 - [ ] Task: Complete desktop-first browser acceptance plus app/backend lint, type, test, build, graph, and independent permission/UI review gates.
