@@ -10123,6 +10123,96 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         finally:
             temporary.cleanup()
 
+    def _h10_mixed_staged_commands_fixture(self) -> tuple[Any, Any, Any, Path, Path, dict[str, Any], dict[str, Any], Any]:
+        """Builds one live-shaped phase-level failure with id-less host-side evidence staged first.
+
+        @returns The runner module, the configured executor, the real trace-parse error, the attempts root,
+            the staged raw directory, the identified trace command, the host-side supplement command that
+            mirrors the real `_stage_command` shape without any command id, and the live temporary root.
+        @throws AssertionError When the fixture is not a real direct-runtime-trace parse failure.
+        """
+        (podman, executor, trace_error, attempts_root, sealed_integration, raw_receipt, staged_raw, trace_command, temporary) = self._h8_trace_parse_failure_fixture()
+        supplement_stdout = staged_raw / "supplements-pre-git-status.stdout.txt"
+        supplement_stderr = staged_raw / "supplements-pre-git-status.stderr.txt"
+        supplement_stdout.write_text("M packages/example/package.json\n", encoding="utf-8")
+        supplement_stderr.write_text("", encoding="utf-8")
+        supplement_command: dict[str, Any] = {
+            "argv": ["/usr/bin/git", "status", "--porcelain=v1", "--untracked-files=all"],
+            "cwd": ".",
+            "env": dict(podman.ENV),
+            "envAbsent": list(podman.ENV_ABSENT),
+            "network": False,
+            "exitCode": 0,
+            "_rawId": "supplements-pre-git-status",
+            "_stdoutPath": supplement_stdout,
+            "_stderrPath": supplement_stderr,
+            "_stdoutText": "M packages/example/package.json\n",
+            "_stderrText": "",
+        }
+        executor.started = True
+        executor._failure_reason = "direct-runtime-trace"
+        executor._staged_commands = [supplement_command, trace_command]
+        return (podman, executor, trace_error, attempts_root, staged_raw, trace_command, supplement_command, temporary)
+
+    def test_phase_level_failure_publishes_live_shaped_mixed_staged_commands(self) -> None:
+        """Requires a phase-level failure with id-less host-side evidence to publish only the identified artifacts.
+
+        @returns Nothing; real preservation and finalization use temporary roots and the real validator.
+        """
+        (podman, executor, trace_error, attempts_root, staged_raw, trace_command, supplement_command, temporary) = self._h10_mixed_staged_commands_fixture()
+        try:
+            with patch.object(podman, "TRACK_DIR", attempts_root):
+                executor.preserve_failure(trace_error)
+
+            attempt_directories = sorted(
+                attempts_root.glob(f"{podman.ATTEMPT_PREFIX}-20260802-*")
+            )
+            self.assertEqual(len(attempt_directories), 1)
+            attempt_directory = attempt_directories[0]
+            attempt = _load_json(attempt_directory / "failed-attempt.json", self)
+            carrier = attempt["phaseLevelFailure"]
+            artifact_ids = [artifact["id"] for artifact in carrier["rawArtifacts"]]
+            self.assertEqual(artifact_ids, ["direct-runtime-trace"])
+            self.assertEqual(len(carrier["rawArtifacts"]), 1)
+            artifact = carrier["rawArtifacts"][0]
+            self.assertEqual(artifact["id"], "direct-runtime-trace")
+            self.assertEqual(artifact["exitCode"], 0)
+            raw_files = sorted(path.name for path in (attempt_directory / "raw").glob("*"))
+            self.assertEqual(
+                raw_files,
+                [
+                    "receipt-direct-runtime-trace.stderr.txt",
+                    "receipt-direct-runtime-trace.stdout.txt",
+                ],
+            )
+            self.assertNotIn("supplements-pre-git-status.stdout.txt", raw_files)
+            podman.validate_failed_execution_attempt_v1(attempt, attempt_directory)
+            self.assertFalse(executor.output_directory.exists())
+            self.assertFalse(V3_DIR.exists())
+        finally:
+            temporary.cleanup()
+
+    def test_phase_level_failure_never_blocks_on_unidentified_staged_evidence(self) -> None:
+        """Requires the mixed live-shaped preservation seam never to surface FAILURE_EVIDENCE_UNPRESERVED.
+
+        @returns Nothing; the real preservation path publishes instead of blocking.
+        """
+        (podman, executor, trace_error, attempts_root, staged_raw, trace_command, supplement_command, temporary) = self._h10_mixed_staged_commands_fixture()
+        try:
+            with patch.object(podman, "TRACK_DIR", attempts_root):
+                try:
+                    executor.preserve_failure(trace_error)
+                except podman.CandidateExecutionBlocked as blocked:
+                    self.fail(f"V3_PODMAN_FAILURE_EVIDENCE_UNPRESERVED raised: {blocked}")
+
+            attempt_directories = sorted(
+                attempts_root.glob(f"{podman.ATTEMPT_PREFIX}-20260802-*")
+            )
+            self.assertEqual(len(attempt_directories), 1)
+            self.assertFalse(V3_DIR.exists())
+        finally:
+            temporary.cleanup()
+
     def _h7_directory_enumeration_fixture(self) -> tuple[Any, dict[str, Any], dict[str, Any], Callable[[list[dict[str, Any]]], dict[str, Any]], list[dict[str, Any]], type[BaseException], list[str], str]:
         """Builds one sealed integration whose declared directory-enumeration set mirrors the discovery artifact.
 
