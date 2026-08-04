@@ -191,6 +191,61 @@ describe("primary advantage normalizer / eligibility fails closed", () => {
   });
 });
 
+describe("primary advantage normalizer / malformed shapes fail closed", () => {
+  it("throws INCOMPATIBLE_SOURCE_SHAPE with issues when `article` is omitted", () => {
+    const { article: _omitted, ...withoutArticle } = createInput();
+    expect(() => normalizePrimaryAdvantageSource(withoutArticle)).toThrow(
+      WorkbookCatalogError,
+    );
+    let caught: WorkbookCatalogError | undefined;
+    try {
+      normalizePrimaryAdvantageSource(withoutArticle);
+    } catch (error) {
+      caught = error as WorkbookCatalogError;
+    }
+    expect(caught).toBeInstanceOf(WorkbookCatalogError);
+    expect(caught?.code).toBe("INCOMPATIBLE_SOURCE_SHAPE");
+    expect(caught?.issues.length).toBeGreaterThan(0);
+  });
+
+  it("rejects a passage of only whitespace at article.passage", () => {
+    const input = createInput({ passage: "   \n\n\n\n  " });
+    expect(() => normalizePrimaryAdvantageSource(input)).toThrow(
+      WorkbookCatalogError,
+    );
+    let caught: WorkbookCatalogError | undefined;
+    try {
+      normalizePrimaryAdvantageSource(input);
+    } catch (error) {
+      caught = error as WorkbookCatalogError;
+    }
+    expect(caught).toBeInstanceOf(WorkbookCatalogError);
+    expect(caught?.code).toBe("INCOMPATIBLE_SOURCE_SHAPE");
+    expect(caught?.issues.some((issue) => issue.path === "article.passage")).toBe(true);
+  });
+
+  it("rejects an mcq entry with a numeric question and a string options", () => {
+    const input = {
+      ...createInput(),
+      mcq: [
+        { question: 42, options: "light" },
+      ] as unknown as PrimaryAdvantageSourceInput["mcq"],
+    };
+    expect(() => normalizePrimaryAdvantageSource(input)).toThrow(
+      WorkbookCatalogError,
+    );
+    let caught: WorkbookCatalogError | undefined;
+    try {
+      normalizePrimaryAdvantageSource(input);
+    } catch (error) {
+      caught = error as WorkbookCatalogError;
+    }
+    expect(caught).toBeInstanceOf(WorkbookCatalogError);
+    expect(caught?.code).toBe("INCOMPATIBLE_SOURCE_SHAPE");
+    expect(caught?.issues.length).toBeGreaterThan(0);
+  });
+});
+
 describe("cross-app contract parity", () => {
   it("normalizes a Reading Advantage source with equivalent content", () => {
     const record = normalizeReadingAdvantageSource(READING_ADVANTAGE_INPUT);

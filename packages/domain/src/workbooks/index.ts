@@ -5,6 +5,7 @@ export * from "./digest.js";
 export * from "./reading-advantage-normalizer.js";
 export * from "./primary-advantage-normalizer.js";
 export * from "./legacy-workbook-importer.js";
+export * from "./source-drift.js";
 export * from "./edition-state.js";
 export * from "./edition-contracts.js";
 export * from "./edition-repository-port.js";
