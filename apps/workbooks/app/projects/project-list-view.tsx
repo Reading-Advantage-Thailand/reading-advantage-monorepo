@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { workbooks } from "@reading-advantage/domain";
 import type { WorkbookSession } from "../lib/session";
+import { TeacherManualSection } from "./teacher-manual-section";
 
 /** Props controlling the workbook project-list view. */
 export interface ProjectListViewProps {
@@ -52,7 +53,9 @@ export function ProjectListView({
         {drafts.length === 0 ? (
           <p>No drafts yet. Create one to begin.</p>
         ) : (
-          <table>
+          <>
+            <TeacherManualSection drafts={drafts} />
+            <table>
             <thead>
               <tr>
                 <th>Draft</th>
@@ -72,6 +75,7 @@ export function ProjectListView({
               ))}
             </tbody>
           </table>
+          </>
         )}
       </section>
       <section>

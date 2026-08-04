@@ -1,8 +1,12 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { workbooks } from "@reading-advantage/domain";
 import type { WorkbookSession } from "../lib/session";
 import { ProjectListView } from "./project-list-view";
+
+vi.mock("../teacher-manual-actions", () => ({
+  compileTeacherManualAction: vi.fn(),
+}));
 
 const adminSession: WorkbookSession = {
   actorId: "actor-1",
