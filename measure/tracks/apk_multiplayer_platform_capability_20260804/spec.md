@@ -180,12 +180,24 @@ Verified against the working tree on 2026-08-04.
    `packages/auth`; a teacher hosts and students join by code. There is no
    anonymous public matchmaking in this track.
 
-   *Unresolved against decision 3 as amended:* the live system gates joins on an
-   ACTIVE enrollment, not on a code, and the audit's M-2 line on room-code
-   entropy exists because a code is a weak credential. Whether the code survives
-   as a convenience on top of an entitlement check, or not at all, is S4's call
-   at the point it binds rooms to identity — flagged here so it is decided
-   rather than inherited.
+   *Resolved 2026-08-04 by product-owner ruling:* a multiplayer room **is** the
+   class group the teacher is running in Lesson plan mode. Students in the
+   same class group are together; no student outside the group may join.
+   Membership is therefore gated on the class roster (the enrollment/
+   entitlement check the live lesson service already performs), not on
+   possession of a code — the tension with decision 3 resolves in decision
+   3's favor, and the audit's M-2 room-code-entropy concern is moot for this
+   track because a code is no longer an access credential. If any
+   share-and-join convenience survives, it may only identify a session
+   within an already-entitled group; it never grants access. This also
+   settles the S0 scoping question: the Play Kit session capability binds to
+   the lesson session's grouping model rather than reimplementing open
+   lobbies. The deployable home for that binding (extend the lesson service
+   vs a standalone session service consuming the same roster source) remains
+   S4's spike, now constrained by this ruling. In `multiplayer.v1` the
+   `join_room.roomCode` field reads as an opaque room/group identifier, so
+   the frozen contract needs no change; the roster gate is enforced at the
+   service boundary, not in message shape.
 
 7. **Results use the existing completion path.** Multiplayer outcomes flow
    through `single-completion` and `result-accounting` into the host-proof
