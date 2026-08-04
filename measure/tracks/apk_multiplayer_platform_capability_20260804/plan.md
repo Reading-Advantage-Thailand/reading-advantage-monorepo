@@ -28,8 +28,9 @@ _Story ref: spec.md#story-s0_
     - [ ] Obtain the protocol definition or a written specification; it is not in this repository and `measure/product.md:49` is the only reference to that product here
     - [ ] Record a semantic diff against the local protocol: message kinds, round lifecycle, scoring, reconnect
     - [ ] Record which side wins per disagreement, defaulting to the production system per spec decision 3
-- [ ] Task: Run the existing multiplayer test suite and record its true state — BLOCKED 2026-08-04
-    - [ ] Execute the nine multiplayer test files and record pass/fail counts and timings in the audit receipt. Blocked on the 2026-08-04 root `node_modules` wipe by a concurrent session: `apps/advantage-games/node_modules` held two entries and `node_modules/.bin/jest` was absent. Every S0 finding is source-derived, not test-derived, until this runs.
+- [x] Task: Run the existing multiplayer test suite and record its true state
+    - [x] Execute the multiplayer test files and record pass/fail counts and timings in the audit receipt. Was blocked on the 2026-08-04 root `node_modules` wipe by a concurrent session; the install has since been restored and the suite ran: fourteen files, 13 suites passed / 1 failed, 202 tests passed / 1 failed, 36.4 s. The single failure is a wall-clock threshold in `performance-benchmark.test.ts` against the dead `ScoringEngine`, not a correctness assertion.
+    - [x] Record why the green does not clear the High findings: the suite tests each module against itself, while M-1, M-2 and M-3 all live in the seams between modules or in an absent caller. Recorded in `s0-audit-20260804.md#test-state-executed-2026-08-04` as the coverage gap S1's contract tests must close.
 - [ ] Task: Measure - User Manual Verification 'Phase S0: Audit the orphaned implementation and harvest the reference protocol' (Protocol in workflow.md)
 
 ## Phase S1: Freeze the `multiplayer.v1` contract in `game-contracts`
