@@ -40,7 +40,7 @@ const ASSET_GOVERNANCE_REVIEW = Object.freeze({
   sha256: "b55be6fbba3526f70ac29930b6f7ae2f55011d19ef7f9ec1d41a7786c4b2873d",
 });
 const CATALOG_PATH = "packages/advantage-play-kit/assets/standard/standard-pack-release.json";
-const CATALOG_SHA256 = "ef432a798a78585df3416d60aca30fe11a2d1d8b833e0d65ceb7fac5c8b19932";
+const CATALOG_SHA256 = "572b871389304ae64612f0355193e649763e25663c1ab5b98f4ca221c1cfef3e";
 const CURATED_RECEIPT_PATH = "packages/advantage-play-kit/assets/standard/CURATED-RECEIPT.tsv";
 const CURATED_RECEIPT_SHA256 = "a192f1fe2826aa426228950092fb32cb47cb24dd4acd47057d7424a0dfd527bb";
 const LICENSE_PATH = "packages/advantage-play-kit/assets/standard/LICENSE-ELVGAMES.txt";

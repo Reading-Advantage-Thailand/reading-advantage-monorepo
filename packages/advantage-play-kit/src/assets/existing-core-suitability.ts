@@ -39,11 +39,11 @@ const TASK3_HISTORICAL_SEMANTIC_RECEIPT_SHA256 = "e82d42d9ec046b85eb4aeac7800623
 const TASK4_QC_RECEIPT_PATH = "measure/tracks/apk_existing_core_cutover_20260727/accepted-task4-qc-receipt-v1.json";
 const TASK4_QC_RECEIPT_SHA256 = "b6ffefcebf8a75d9967f196693fe7cf14a133d66123537d201b52e9af4745dd9";
 const CATALOG_PATH = "packages/advantage-play-kit/assets/standard/standard-pack-release.json";
-const CATALOG_SHA256 = "ef432a798a78585df3416d60aca30fe11a2d1d8b833e0d65ceb7fac5c8b19932";
+const CATALOG_SHA256 = "572b871389304ae64612f0355193e649763e25663c1ab5b98f4ca221c1cfef3e";
 const CURATED_RECEIPT_PATH = "packages/advantage-play-kit/assets/standard/CURATED-RECEIPT.tsv";
 const CURATED_RECEIPT_SHA256 = "a192f1fe2826aa426228950092fb32cb47cb24dd4acd47057d7424a0dfd527bb";
 const IMPORT_RECEIPT_PATH = "packages/advantage-play-kit/assets/standard/IMPORT-RECEIPT.tsv";
-const IMPORT_RECEIPT_SHA256 = "29b89199ce9d7ed6d49731cfc7e3a6cf021a38e27cbbea1e728a649d33047cc7";
+const IMPORT_RECEIPT_SHA256 = "80b3adf263c7900e208103ebeaabf520990396d64d16d548c8819601a9a04ac8";
 const LICENSE_PATH = "packages/advantage-play-kit/assets/standard/LICENSE-ELVGAMES.txt";
 const LICENSE_SHA256 = "3efc9b9a88752a089fa07de4fac43cabe6283b0051466661c55a97c1c625c48f";
 const CREDIT_PATH = "packages/advantage-play-kit/assets/standard/README.md";
@@ -730,7 +730,7 @@ function createSelectedUnionInputs(): readonly ExistingCoreTask5SelectedUnionInp
 
 /**
  * Creates hash-validated draft canonical-reuse dossiers for every Existing Core title role.
- * @param catalog The complete generated standard-pack catalog claimed to be release 2026.07.23.
+ * @param catalog The complete generated standard-pack catalog claimed to be release 2026.08.04.
  * @returns Draft dossiers, descriptor records, selected-union inputs, a disposition matrix, and a pending owner boundary.
  * @throws When the catalog is not the root accepted release, a source byte differs from reviewed evidence, or a Task-3 semantic binding is absent.
  */
