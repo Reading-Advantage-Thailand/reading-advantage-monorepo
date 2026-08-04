@@ -39,10 +39,10 @@ export interface PublishWorkbookEditionDependencies {
  * @returns The persisted edition, or the previously published edition when the
  * request's idempotency key was already used.
  * @throws WorkbookPublicationError with code "VALIDATION_ERROR" for an invalid
- * request or a missing draft, "REVISION_CONFLICT" when the draft revision changed,
- * "EDITION_IMMUTABLE" or "ILLEGAL_STATE_TRANSITION" when the draft is not in
- * review, and "INCOMPLETE_SNAPSHOT" when the snapshot or constructed edition is
- * incomplete.
+ * request, "NOT_FOUND" for a missing draft, "REVISION_CONFLICT" when the draft
+ * revision changed, "EDITION_IMMUTABLE" or "ILLEGAL_STATE_TRANSITION" when the
+ * draft is not in review, and "INCOMPLETE_SNAPSHOT" when the snapshot or
+ * constructed edition is incomplete.
  */
 export async function publishWorkbookEdition(
   request: WorkbookPublicationRequest,
@@ -67,7 +67,7 @@ export async function publishWorkbookEdition(
 
   const draft: WorkbookDraft | null = await deps.repository.getDraft(tenantId, draftId);
   if (draft === null) {
-    throw new WorkbookPublicationError("VALIDATION_ERROR", "draft not found", {
+    throw new WorkbookPublicationError("NOT_FOUND", "draft not found", {
       detail: "draft not found",
     });
   }

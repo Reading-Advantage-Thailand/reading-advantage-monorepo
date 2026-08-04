@@ -46,6 +46,7 @@ export type WorkbookPublicationErrorCode =
   | "INCOMPLETE_SNAPSHOT"
   | "ASSET_UNAVAILABLE"
   | "NOT_AUTHORIZED"
+  | "NOT_FOUND"
   | "PERSISTENCE_UNAVAILABLE"
   | "INTERNAL_ERROR";
 
@@ -70,6 +71,7 @@ const DEFAULT_RETRYABILITY: Readonly<
   INCOMPLETE_SNAPSHOT: false,
   ASSET_UNAVAILABLE: false,
   NOT_AUTHORIZED: false,
+  NOT_FOUND: false,
   PERSISTENCE_UNAVAILABLE: true,
   INTERNAL_ERROR: false,
 };

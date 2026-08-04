@@ -296,7 +296,7 @@ const translations: Record<SupportedLanguage, TranslationKeys> = {
  * @returns The full translation key set for the resolved language.
  */
 export function getTranslations(lang: string): TranslationKeys {
-  if (lang in translations) {
+  if (Object.hasOwn(translations, lang)) {
     return translations[lang as SupportedLanguage];
   }
   return translations.en;

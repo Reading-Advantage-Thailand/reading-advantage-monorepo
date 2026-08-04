@@ -57,10 +57,10 @@ export interface UpdateWorkbookDraftDependencies {
  * @param deps Repository and clock used for the update.
  * @returns The persisted draft with the replaced content and revision bumped.
  * @throws WorkbookPublicationError with code "VALIDATION_ERROR" for an invalid
- * request, an unknown draft, or invalid content; "REVISION_CONFLICT" when the
- * draft revision changed since the caller last saw it; "EDITION_IMMUTABLE"
- * when the draft is released; and "ILLEGAL_STATE_TRANSITION" when the draft is
- * under review.
+ * request or invalid content, "NOT_FOUND" for an unknown draft,
+ * "REVISION_CONFLICT" when the draft revision changed since the caller last
+ * saw it; "EDITION_IMMUTABLE" when the draft is released; and
+ * "ILLEGAL_STATE_TRANSITION" when the draft is under review.
  */
 export async function updateWorkbookDraft(
   request: WorkbookDraftUpdateRequest,
@@ -81,7 +81,7 @@ export async function updateWorkbookDraft(
     draftId,
   );
   if (existing === null) {
-    throw new WorkbookPublicationError("VALIDATION_ERROR", "draft not found", {
+    throw new WorkbookPublicationError("NOT_FOUND", "draft not found", {
       detail: "draft not found",
     });
   }

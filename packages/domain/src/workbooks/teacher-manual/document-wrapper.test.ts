@@ -32,6 +32,26 @@ describe("Teacher Manual Document Wrapper", () => {
       expect(html).toMatch(/paged\.polyfill\.js/);
     });
 
+    it("should inject the print bridge listener with the exact workbook:print message gate", () => {
+      const html = wrapTeacherManualDocument(frontMatterHtml, lessonPlansHtml, endMatterHtml, defaultOptions);
+
+      expect(html).toContain("workbook:print");
+      expect(html).toContain("window.print()");
+      expect(html).toContain(
+        "typeof event.data === 'string' && event.data === 'workbook:print'",
+      );
+      expect(html).toContain("addEventListener('message'");
+    });
+
+    it("should inject the print bridge before the Paged.js polyfill", () => {
+      const html = wrapTeacherManualDocument(frontMatterHtml, lessonPlansHtml, endMatterHtml, defaultOptions);
+
+      const bridgeIdx = html.indexOf("workbook:print");
+      const polyfillIdx = html.indexOf("paged.polyfill.js");
+      expect(bridgeIdx).toBeGreaterThanOrEqual(0);
+      expect(polyfillIdx).toBeGreaterThan(bridgeIdx);
+    });
+
     it("should inject the rAF resilience shim before the Paged.js polyfill", () => {
       const html = wrapTeacherManualDocument(frontMatterHtml, lessonPlansHtml, endMatterHtml, defaultOptions);
 

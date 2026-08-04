@@ -208,7 +208,7 @@ describe("updateWorkbookDraftSettings / failures", () => {
         { ...BASE, draftId: "missing" },
         createDeps(fake.repository),
       ),
-    ).rejects.toMatchObject({ code: "VALIDATION_ERROR" });
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
 
   it("rejects a stale revision with REVISION_CONFLICT", async () => {

@@ -248,6 +248,30 @@ function mapEditionRow(row: WorkbookEditionRow): WorkbookEdition {
 }
 
 /**
+ * Reports whether a database driver error is a Postgres unique-constraint
+ * violation (SQLSTATE 23505), which surfaces when a concurrent publication
+ * races `nextEditionVersion` and loses on the draft-version or idempotency
+ * unique constraint. Drizzle wraps driver errors, so the code is searched on
+ * the error and its cause chain.
+ * @param error Error raised by the database driver.
+ * @returns True when the error or one of its causes carries Postgres code "23505".
+ */
+function isUniqueViolation(error: unknown): boolean {
+  let current: unknown = error;
+  while (typeof current === "object" && current !== null) {
+    if ("code" in current && (current as { code: unknown }).code === "23505") {
+      return true;
+    }
+    const next = (current as { cause?: unknown }).cause;
+    if (next === undefined || next === null || next === current) {
+      return false;
+    }
+    current = next;
+  }
+  return false;
+}
+
+/**
  * Creates a Drizzle-backed implementation of the workbook edition repository.
  *
  * Every query is issued against the injected handle, which may be either a
@@ -375,25 +399,40 @@ export function createDrizzleEditionRepository(
     },
 
     async appendEdition(edition) {
-      const inserted = await (
-        db.insert(workbookEditions) as unknown as InsertBuilder<
-          WorkbookEditionInsertRow,
-          WorkbookEditionRow
-        >
-      )
-        .values({
-          draftId: edition.draftId,
-          tenantId: edition.tenantId,
-          version: edition.version,
-          snapshotJson: edition.snapshot,
-          contentHash: edition.contentHash,
-          idempotencyKey: edition.idempotencyKey,
-          publishedBy: edition.publishedBy,
-          publishedAt: toDbTimestamp(edition.publishedAt),
-          supersededByEditionId: edition.supersededByEditionId,
-          revokedAt: toDbTimestamp(edition.revokedAt),
-        })
-        .returning();
+      let inserted: WorkbookEditionRow[];
+      try {
+        inserted = await (
+          db.insert(workbookEditions) as unknown as InsertBuilder<
+            WorkbookEditionInsertRow,
+            WorkbookEditionRow
+          >
+        )
+          .values({
+            draftId: edition.draftId,
+            tenantId: edition.tenantId,
+            version: edition.version,
+            snapshotJson: edition.snapshot,
+            contentHash: edition.contentHash,
+            idempotencyKey: edition.idempotencyKey,
+            publishedBy: edition.publishedBy,
+            publishedAt: toDbTimestamp(edition.publishedAt),
+            supersededByEditionId: edition.supersededByEditionId,
+            revokedAt: toDbTimestamp(edition.revokedAt),
+          })
+          .returning();
+      } catch (error) {
+        if (isUniqueViolation(error)) {
+          throw new WorkbookPublicationError(
+            "IDEMPOTENCY_CONFLICT",
+            "An edition with this idempotency key or version already exists.",
+            {
+              cause: error,
+              detail: `tenantId=${edition.tenantId} draftId=${edition.draftId} version=${edition.version} idempotencyKey=${edition.idempotencyKey}`,
+            },
+          );
+        }
+        throw error;
+      }
       return mapEditionRow(inserted[0]);
     },
 
@@ -422,7 +461,10 @@ export function createDrizzleEditionRepository(
       if (updated.length === 0) {
         throw new WorkbookPublicationError(
           "REVISION_CONFLICT",
-          `Revision conflict: no draft matched for tenant "${tenantId}" and draft "${draftId}" at revision ${expectedRevision}.`,
+          "Draft revision conflict: no draft matched at the expected revision.",
+          {
+            detail: `tenantId=${tenantId} draftId=${draftId} expectedRevision=${expectedRevision}`,
+          },
         );
       }
       return mapDraftRow(updated[0]);
@@ -457,7 +499,10 @@ export function createDrizzleEditionRepository(
       if (updated.length === 0) {
         throw new WorkbookPublicationError(
           "REVISION_CONFLICT",
-          `Revision conflict: no draft matched for tenant "${tenantId}" and draft "${draftId}" at revision ${expectedRevision}.`,
+          "Draft revision conflict: no draft matched at the expected revision.",
+          {
+            detail: `tenantId=${tenantId} draftId=${draftId} expectedRevision=${expectedRevision}`,
+          },
         );
       }
       return mapDraftRow(updated[0]);
@@ -492,7 +537,10 @@ export function createDrizzleEditionRepository(
       if (current === undefined) {
         throw new WorkbookPublicationError(
           "REVISION_CONFLICT",
-          `Revision conflict: no draft matched for tenant "${tenantId}" and draft "${draftId}" at revision ${expectedRevision}.`,
+          "Draft revision conflict: no draft matched at the expected revision.",
+          {
+            detail: `tenantId=${tenantId} draftId=${draftId} expectedRevision=${expectedRevision}`,
+          },
         );
       }
       const existingRecord = current.snapshotJson as WorkbookSourceRecord;
@@ -515,7 +563,10 @@ export function createDrizzleEditionRepository(
       if (updated.length === 0) {
         throw new WorkbookPublicationError(
           "REVISION_CONFLICT",
-          `Revision conflict: no draft matched for tenant "${tenantId}" and draft "${draftId}" at revision ${expectedRevision}.`,
+          "Draft revision conflict: no draft matched at the expected revision.",
+          {
+            detail: `tenantId=${tenantId} draftId=${draftId} expectedRevision=${expectedRevision}`,
+          },
         );
       }
       return mapDraftRow(updated[0]);

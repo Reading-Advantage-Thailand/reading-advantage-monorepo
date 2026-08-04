@@ -62,4 +62,10 @@ describe("teacher-manual translations", () => {
     expect(getTranslations("fr")).toBe(en);
     expect(getTranslations("")).toBe(en);
   });
+
+  it("ignores prototype-chain keys such as toString when resolving languages", () => {
+    expect(getTranslations("toString" as string)).toBe(en);
+    expect(getTranslations("hasOwnProperty" as string)).toBe(en);
+    expect(getTranslations("valueOf" as string)).toBe(en);
+  });
 });

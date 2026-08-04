@@ -8,7 +8,7 @@ import {
   createDrizzleEditionRepository,
   type WorkbookDrizzleDatabase,
 } from "../workbooks/drizzle-edition-repository.js";
-import type { WorkbookDraft } from "../workbooks/edition-contracts.js";
+import type { WorkbookDraft, WorkbookEdition } from "../workbooks/edition-contracts.js";
 import { WorkbookPublicationError } from "../workbooks/edition-state.js";
 import { createTestDb, type TestDb } from "./helpers/testDb.js";
 
@@ -63,6 +63,29 @@ function createDraft(o: Partial<WorkbookDraft> = {}): WorkbookDraft {
     createdBy: "editor",
     createdAt: FIXED,
     updatedAt: FIXED,
+    ...o,
+  };
+}
+
+/**
+ * Builds an append-only workbook edition for repository tests.
+ * @param o Overrides merged over the default edition fields.
+ * @returns An edition at version 1 with a fixed idempotency key.
+ */
+function createEdition(o: Partial<WorkbookEdition> = {}): WorkbookEdition {
+  const record = createRecord();
+  return {
+    editionId: "edition-1",
+    draftId: DRAFT_ID,
+    tenantId: TENANT,
+    version: 1,
+    snapshot: record,
+    contentHash: record.identity.contentHash,
+    publishedAt: FIXED,
+    publishedBy: "editor",
+    idempotencyKey: "idem-1",
+    supersededByEditionId: null,
+    revokedAt: null,
     ...o,
   };
 }
@@ -287,5 +310,86 @@ describe("createDrizzleEditionRepository.updateDraftSettings / live DB", () => {
 
     expect(reasons).toHaveLength(1);
     expect(reasons[0]).toMatch(/tenant_id/);
+  });
+
+  it("keeps tenant and draft identifiers out of conflict messages but retains them in detail", async () => {
+    const repository = createDrizzleEditionRepository(
+      harness.db as unknown as WorkbookDrizzleDatabase,
+    );
+    await repository.createDraft(createDraft());
+
+    const error = (await repository
+      .updateDraftSettings("secret-tenant", DRAFT_ID, 3, SETTINGS, FIXED)
+      .catch((e: unknown) => e)) as WorkbookPublicationError;
+
+    expect(error.code).toBe("REVISION_CONFLICT");
+    expect(error.message).not.toContain("secret-tenant");
+    expect(error.message).not.toContain(DRAFT_ID);
+    expect(error.detail).toContain("secret-tenant");
+    expect(error.detail).toContain(DRAFT_ID);
+  });
+
+  it("keeps identifiers out of status and content update conflict messages", async () => {
+    const repository = createDrizzleEditionRepository(
+      harness.db as unknown as WorkbookDrizzleDatabase,
+    );
+    await repository.createDraft(createDraft());
+
+    const statusError = (await repository
+      .updateDraftStatus("secret-tenant", DRAFT_ID, "in_review", 3)
+      .catch((e: unknown) => e)) as WorkbookPublicationError;
+    expect(statusError.code).toBe("REVISION_CONFLICT");
+    expect(statusError.message).not.toContain("secret-tenant");
+    expect(statusError.message).not.toContain(DRAFT_ID);
+    expect(statusError.detail).toContain("secret-tenant");
+    expect(statusError.detail).toContain(DRAFT_ID);
+
+    const contentError = (await repository
+      .updateDraftContent("secret-tenant", DRAFT_ID, createRecord(), 3)
+      .catch((e: unknown) => e)) as WorkbookPublicationError;
+    expect(contentError.code).toBe("REVISION_CONFLICT");
+    expect(contentError.message).not.toContain("secret-tenant");
+    expect(contentError.message).not.toContain(DRAFT_ID);
+    expect(contentError.detail).toContain("secret-tenant");
+    expect(contentError.detail).toContain(DRAFT_ID);
+  });
+});
+
+describe("createDrizzleEditionRepository.appendEdition / live DB", () => {
+  let harness: TestDb;
+
+  beforeAll(async () => {
+    harness = await createTestDb();
+  }, 60_000);
+
+  afterAll(async () => {
+    await harness.close();
+  });
+
+  beforeEach(async () => {
+    await harness.reset();
+  });
+
+  it("maps a concurrent double-append on the same draft and version to IDEMPOTENCY_CONFLICT", async () => {
+    const repository = createDrizzleEditionRepository(
+      harness.db as unknown as WorkbookDrizzleDatabase,
+    );
+    await repository.createDraft(createDraft());
+    const edition = createEdition();
+
+    const results = await Promise.allSettled([
+      repository.appendEdition({ ...edition }),
+      repository.appendEdition({ ...edition }),
+    ]);
+
+    expect(results.filter((result) => result.status === "fulfilled")).toHaveLength(1);
+    const rejected = results.filter(
+      (result): result is PromiseRejectedResult => result.status === "rejected",
+    );
+    expect(rejected).toHaveLength(1);
+    const error = rejected[0].reason;
+    expect(error).toBeInstanceOf(WorkbookPublicationError);
+    expect((error as WorkbookPublicationError).code).toBe("IDEMPOTENCY_CONFLICT");
+    expect((error as Error).message).not.toContain("23505");
   });
 });

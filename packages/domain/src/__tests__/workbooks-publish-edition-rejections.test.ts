@@ -141,7 +141,7 @@ const BASE = {
 };
 
 describe("publishWorkbookEdition / rejections write nothing", () => {
-  it("rejects with VALIDATION_ERROR and writes nothing when getDraft returns null", async () => {
+  it("rejects with NOT_FOUND and writes nothing when getDraft returns null", async () => {
     const fake = createFakeRepository(createDraft());
     fake.repository.getDraft = async () => null;
     const deps = createDeps(fake.repository);
@@ -152,7 +152,7 @@ describe("publishWorkbookEdition / rejections write nothing", () => {
       error = caught;
     }
     expect(error).toBeInstanceOf(WorkbookPublicationError);
-    expect((error as WorkbookPublicationError).code).toBe("VALIDATION_ERROR");
+    expect((error as WorkbookPublicationError).code).toBe("NOT_FOUND");
     expect(fake.appended).toHaveLength(0);
     expect(fake.events).toHaveLength(0);
   });

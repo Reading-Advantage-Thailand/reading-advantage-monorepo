@@ -1,6 +1,7 @@
 import type { TeacherManualOptions } from "./types.js";
 import { getThemeColors, escapeHtml } from "./theme.js";
 import { getTranslations } from "./i18n/index.js";
+import { PRINT_BRIDGE_SHIM } from "../print-bridge.js";
 
 const PAGED_RAF_SHIM = `
 <script>
@@ -1038,7 +1039,9 @@ function getTeacherManualStyles(primaryColor: string, secondaryColor: string): s
  * Wraps the front matter, lesson plans, and end matter into a standalone HTML
  * teacher's manual document. The emitted document includes the Paged.js
  * polyfill preceded by the rAF resilience shim (PAGED_RAF_SHIM) so pagination
- * survives frame starvation, and the print-ready CSS for the manual.
+ * survives frame starvation, the print bridge listener (PRINT_BRIDGE_SHIM) so
+ * the parent frame can trigger printing via postMessage, and the print-ready
+ * CSS for the manual.
  * @param frontMatterHtml Rendered front-matter sections.
  * @param lessonPlansHtml Rendered lesson-plan sections.
  * @param endMatterHtml Rendered end-matter sections.
@@ -1064,6 +1067,7 @@ export function wrapTeacherManualDocument(
   <meta charset="UTF-8">
   <title>${escapeHtml(dw.titlePrefix)} - ${escapeHtml(options.seriesName)} ${escapeHtml(options.seriesLevel)}</title>
   ${PAGED_RAF_SHIM}
+  ${PRINT_BRIDGE_SHIM}
   <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
   ${isThai ? '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">' : ''}
   <style>

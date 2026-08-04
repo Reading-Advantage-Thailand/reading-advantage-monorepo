@@ -129,7 +129,8 @@ describe("renderWorkbookContentHtml", () => {
     expect(html).toContain(escapeWorkbookHtml("A <b>title</b> & more"));
     expect(html).not.toContain("<b>title</b>");
     expect(html).toContain(escapeWorkbookHtml("A1 & <x>"));
-    expect(html).not.toContain("<script>");
+    expect(html).toContain(escapeWorkbookHtml("<script>alert(\"x\")</script>"));
+    expect(html).not.toContain("<script>alert");
     expect(html).toContain(escapeWorkbookHtml("5 < 6?"));
     expect(html).toContain(escapeWorkbookHtml("yes & no"));
   });
@@ -146,5 +147,29 @@ describe("renderEditionHtml", () => {
     const editionHtml = renderEditionHtml(makeEdition({ title: "Night Light", cefrLevel: "B1" }, 2));
     const plainHtml = renderWorkbookContentHtml(content);
     expect(editionHtml.replace(" · Edition v2", "")).toBe(plainHtml);
+  });
+});
+
+describe("print bridge listener", () => {
+  it("injects the workbook:print listener into the draft shell before </body>", () => {
+    const html = renderWorkbookContentHtml(makeContent());
+
+    const bridgeIdx = html.indexOf("workbook:print");
+    const bodyIdx = html.lastIndexOf("</body>");
+    expect(bridgeIdx).toBeGreaterThanOrEqual(0);
+    expect(bodyIdx).toBeGreaterThan(bridgeIdx);
+    expect(html).toContain("window.print()");
+    expect(html).toContain(
+      "typeof event.data === 'string' && event.data === 'workbook:print'",
+    );
+  });
+
+  it("injects the workbook:print listener into the edition shell before </body>", () => {
+    const html = renderEditionHtml(makeEdition());
+
+    const bridgeIdx = html.indexOf("workbook:print");
+    const bodyIdx = html.lastIndexOf("</body>");
+    expect(bridgeIdx).toBeGreaterThanOrEqual(0);
+    expect(bodyIdx).toBeGreaterThan(bridgeIdx);
   });
 });

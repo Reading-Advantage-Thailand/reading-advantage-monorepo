@@ -4,6 +4,7 @@ import type { WorkbookEdition } from "./edition-contracts.js";
 import type { WorkbookRenderPort } from "./render-port.js";
 import { WorkbookRenderError } from "./render-port.js";
 import type { WorkbookArtifactStore } from "./artifact-store.js";
+import { PRINT_BRIDGE_SHIM } from "./print-bridge.js";
 
 /**
  * Escapes a raw string for safe interpolation into an HTML document.
@@ -47,6 +48,8 @@ export function renderEditionHtml(edition: WorkbookEdition): string {
 /**
  * Renders normalized content into a complete HTML document, appending the
  * edition-version suffix to the CEFR line when an edition version is given.
+ * The document carries the print bridge listener so a sandboxed preview iframe
+ * can be told to print via the "workbook:print" postMessage.
  * @param content Normalized workbook content to render.
  * @param version Edition version to show on the CEFR line, or null for drafts.
  * @returns A complete HTML document string describing the content.
@@ -89,6 +92,7 @@ function renderContentHtml(
 <p>CEFR: ${escapeWorkbookHtml(cefrLevel)}${versionSuffix}</p>
 ${orderedParagraphs}
 ${questionsHtml}
+${PRINT_BRIDGE_SHIM}
 </body></html>`;
 }
 
