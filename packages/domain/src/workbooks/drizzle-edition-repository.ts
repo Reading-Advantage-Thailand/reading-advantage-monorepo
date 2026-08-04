@@ -5,7 +5,10 @@ import {
   workbookEditions,
   workbookPublicationEvents,
 } from "@reading-advantage/db";
-import type { WorkbookSourceRecord } from "./contracts.js";
+import type {
+  WorkbookDraftSettings,
+  WorkbookSourceRecord,
+} from "./contracts.js";
 import type { WorkbookDraft, WorkbookEdition } from "./edition-contracts.js";
 import { WorkbookPublicationError, type WorkbookDraftStatus } from "./edition-state.js";
 import type {
@@ -148,6 +151,12 @@ interface WorkbookDraftContentUpdateRow {
   updatedAt: Date | string | null;
 }
 
+interface WorkbookDraftSettingsUpdateRow {
+  snapshotJson: unknown;
+  revision: number;
+  updatedAt: Date | string | null;
+}
+
 interface SelectBuilder<TRow> {
   from: (table: unknown) => {
     where: (condition: unknown) => Promise<TRow[]> & {
@@ -172,6 +181,14 @@ interface WorkbookDraftUpdateBuilder {
 
 interface WorkbookDraftContentUpdateBuilder {
   set: (values: WorkbookDraftContentUpdateRow) => {
+    where: (condition: unknown) => {
+      returning: () => Promise<WorkbookDraftRow[]>;
+    };
+  };
+}
+
+interface WorkbookDraftSettingsUpdateBuilder {
+  set: (values: WorkbookDraftSettingsUpdateRow) => {
     where: (condition: unknown) => {
       returning: () => Promise<WorkbookDraftRow[]>;
     };
@@ -446,14 +463,62 @@ export function createDrizzleEditionRepository(
       return mapDraftRow(updated[0]);
     },
 
-    // TODO: implement updateDraftSettings in the Drizzle repository; settings
-    // ride inside the source record's snapshotJson, so this only rewrites the
-    // stored snapshot with the replaced settings field.
-    async updateDraftSettings(): Promise<WorkbookDraft> {
-      throw new WorkbookPublicationError(
-        "VALIDATION_ERROR",
-        "updateDraftSettings not implemented for drizzle yet",
-      );
+    /**
+     * Replaces the project settings carried inside the stored source record
+     * snapshot. The draft is read tenant-scoped to recover the persisted
+     * source record, then the snapshot is rewritten with only the settings
+     * field swapped in; identity columns and the content digest are untouched.
+     * The write is guarded by the expected revision so a concurrent update
+     * raises "REVISION_CONFLICT" instead of clobbering it.
+     */
+    async updateDraftSettings(
+      tenantId,
+      draftId,
+      expectedRevision,
+      settings: WorkbookDraftSettings,
+      updatedAt,
+    ): Promise<WorkbookDraft> {
+      const rows = await (
+        db.select() as unknown as SelectBuilder<WorkbookDraftRow>
+      )
+        .from(workbookDrafts)
+        .where(
+          and(
+            eq(workbookDrafts.tenantId, tenantId),
+            eq(workbookDrafts.id, draftId),
+          ),
+        );
+      const current = rows[0];
+      if (current === undefined) {
+        throw new WorkbookPublicationError(
+          "REVISION_CONFLICT",
+          `Revision conflict: no draft matched for tenant "${tenantId}" and draft "${draftId}" at revision ${expectedRevision}.`,
+        );
+      }
+      const existingRecord = current.snapshotJson as WorkbookSourceRecord;
+      const updated = await (
+        db.update(workbookDrafts) as unknown as WorkbookDraftSettingsUpdateBuilder
+      )
+        .set({
+          snapshotJson: { ...existingRecord, settings },
+          revision: expectedRevision + 1,
+          updatedAt: toDbTimestamp(updatedAt),
+        })
+        .where(
+          and(
+            eq(workbookDrafts.id, draftId),
+            eq(workbookDrafts.tenantId, tenantId),
+            eq(workbookDrafts.revision, expectedRevision),
+          ),
+        )
+        .returning();
+      if (updated.length === 0) {
+        throw new WorkbookPublicationError(
+          "REVISION_CONFLICT",
+          `Revision conflict: no draft matched for tenant "${tenantId}" and draft "${draftId}" at revision ${expectedRevision}.`,
+        );
+      }
+      return mapDraftRow(updated[0]);
     },
 
     async recordEvent(event) {
