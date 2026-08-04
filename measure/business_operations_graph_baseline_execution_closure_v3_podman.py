@@ -4651,6 +4651,8 @@ _CANDIDATE_PUBLICATION_FAILURE_CLASSIFICATIONS = {
     "atomic-replace": "CANDIDATE_ATOMIC_REPLACE_FAILURE",
 }
 
+_PHASE_LEVEL_FAILURE_CLASSIFICATION = "PHASE_LEVEL_FAILURE"
+
 
 def _build_candidate_publication_failure_v1(
     completed_integration: Any,
@@ -4735,6 +4737,70 @@ def _validate_candidate_publication_failure_v1(
         _direct_runtime_integration_fail("CANDIDATE_PUBLICATION_FAILURE_INVALID")
 
 
+def _validate_phase_level_failure_v1(
+    record: Any,
+    failure: Any,
+    attempt_directory: Path,
+) -> None:
+    """Validates one command-less phase-level failure carrier and its raw artifacts.
+
+    @param record The phase-level failure carrier attached to the failed attempt.
+    @param failure The outer failure object that must agree with the carrier.
+    @param attempt_directory The physical directory containing the raw streams.
+    @returns Nothing when the carrier and every raw-artifact reference are exact.
+    @throws core.ExecutionClosureValidationError When the carrier has extra fields or unbounded raw references.
+    """
+    expected_keys = {
+        "schemaVersion",
+        "kind",
+        "stage",
+        "reason",
+        "classification",
+        "errorDetail",
+        "rawArtifacts",
+    }
+    if (
+        not isinstance(record, dict)
+        or set(record) != expected_keys
+        or record.get("schemaVersion") != 1
+        or record.get("kind") != "execution-closure-phase-level-failure"
+        or record.get("stage") != failure.get("stage")
+        or record.get("reason") != failure.get("reason")
+        or record.get("classification") != failure.get("classification")
+        or record.get("classification") != _PHASE_LEVEL_FAILURE_CLASSIFICATION
+        or not isinstance(record.get("errorDetail"), str)
+        or not record.get("errorDetail")
+        or not isinstance(record.get("rawArtifacts"), list)
+    ):
+        _fail("V3_PODMAN_ATTEMPT_FAILURE")
+    directory = Path(attempt_directory)
+    for artifact in record["rawArtifacts"]:
+        if (
+            not isinstance(artifact, dict)
+            or not isinstance(artifact.get("id"), str)
+            or not artifact.get("id")
+        ):
+            _fail("V3_PODMAN_ATTEMPT_FAILURE")
+        for stream in ("stdout", "stderr"):
+            reference = artifact.get(stream)
+            if (
+                not isinstance(reference, dict)
+                or set(reference) != {"path", "sha256", "size"}
+                or not isinstance(reference.get("path"), str)
+            ):
+                _fail("V3_PODMAN_ATTEMPT_RAW", stream)
+            expected_prefix = f"{directory.name}/raw/"
+            if not reference["path"].startswith(expected_prefix):
+                _fail("V3_PODMAN_ATTEMPT_RAW", stream)
+            filename = reference["path"][len(expected_prefix):]
+            if not filename or "/" in filename or not filename.endswith(f".{stream}.txt"):
+                _fail("V3_PODMAN_ATTEMPT_RAW", stream)
+            raw_path = directory / "raw" / filename
+            expected = _attempt_raw_reference(raw_path, directory)
+            if reference != expected:
+                _fail("V3_PODMAN_ATTEMPT_RAW", stream)
+
+
 def validate_failed_execution_attempt_v1(attempt: dict[str, Any], attempt_directory: Path | str) -> None:
     """Validates one immutable failed Podman-attempt record and its raw streams.
 
@@ -4761,6 +4827,7 @@ def validate_failed_execution_attempt_v1(attempt: dict[str, Any], attempt_direct
     has_direct_runtime_integration = isinstance(attempt, dict) and "directRuntimeIntegration" in attempt
     has_direct_runtime_preseal_attempt = isinstance(attempt, dict) and "directRuntimePreSealAttempt" in attempt
     has_candidate_publication_failure = isinstance(attempt, dict) and "candidatePublicationFailure" in attempt
+    has_phase_level_failure = isinstance(attempt, dict) and "phaseLevelFailure" in attempt
     if has_workspace_contract != has_workspace_resolution:
         _fail("V3_PODMAN_ATTEMPT_SCHEMA")
     typed_workspace_prerequisite = has_workspace_contract
@@ -4771,6 +4838,14 @@ def validate_failed_execution_attempt_v1(attempt: dict[str, Any], attempt_direct
         has_candidate_publication_failure
         and (
             not has_direct_runtime_integration
+            or has_direct_runtime_preseal_attempt
+            or typed_hermetic_offline
+            or typed_workspace_prerequisite
+        )
+    ) or (
+        has_phase_level_failure
+        and (
+            has_candidate_publication_failure
             or has_direct_runtime_preseal_attempt
             or typed_hermetic_offline
             or typed_workspace_prerequisite
@@ -4791,6 +4866,8 @@ def validate_failed_execution_attempt_v1(attempt: dict[str, Any], attempt_direct
         {"candidatePublicationFailure"}
         if has_candidate_publication_failure
         else set()
+    ) | (
+        {"phaseLevelFailure"} if has_phase_level_failure else set()
     )
     if not isinstance(attempt, dict) or set(attempt) != expected_attempt_keys:
         _fail("V3_PODMAN_ATTEMPT_SCHEMA")
@@ -4803,6 +4880,8 @@ def validate_failed_execution_attempt_v1(attempt: dict[str, Any], attempt_direct
     expected_failure_keys = (
         {"stage", "reason", "classification", "operationId"}
         if has_candidate_publication_failure
+        else {"stage", "reason", "classification"}
+        if has_phase_level_failure
         else {"stage", "reason", "classification", "commandId"}
     )
     if typed_hermetic_offline and not has_candidate_publication_failure:
@@ -4853,6 +4932,54 @@ def validate_failed_execution_attempt_v1(attempt: dict[str, Any], attempt_direct
             _direct_runtime_integration_fail(
                 "CANDIDATE_PUBLICATION_FAILURE_INVALID",
             )
+        return
+    if has_phase_level_failure:
+        if (
+            not isinstance(commands, list)
+            or commands != []
+            or not isinstance(failure, dict)
+            or set(failure) != {"stage", "reason", "classification"}
+            or not isinstance(failure.get("stage"), str)
+            or not failure.get("stage")
+            or not isinstance(failure.get("reason"), str)
+            or not failure.get("reason")
+            or failure.get("classification") != _PHASE_LEVEL_FAILURE_CLASSIFICATION
+        ):
+            _fail("V3_PODMAN_ATTEMPT_FAILURE")
+        _validate_phase_level_failure_v1(
+            attempt["phaseLevelFailure"],
+            failure,
+            directory,
+        )
+        if has_direct_runtime_integration:
+            record = attempt["directRuntimeIntegration"]
+            if not isinstance(record, dict) or set(record) != {
+                "integration",
+                "reachedStage",
+                "laterStages",
+            }:
+                _direct_runtime_integration_fail("FAILED_ATTEMPT_RUNTIME_INVALID")
+            forwarded = record["integration"]
+            validate_direct_command_runtime_runner_integration_v1(forwarded)
+            reached_stage = record["reachedStage"]
+            if reached_stage not in _DIRECT_RUNTIME_RUNNER_STAGES:
+                _direct_runtime_integration_fail("FAILED_ATTEMPT_RUNTIME_INVALID")
+            later_stages = [
+                {"id": runtime_stage, "status": "NOT_RUN"}
+                for runtime_stage in _DIRECT_RUNTIME_RUNNER_STAGES[
+                    _DIRECT_RUNTIME_RUNNER_STAGES.index(reached_stage) + 1:
+                ]
+            ]
+            if (
+                record.get("reachedStage") != reached_stage
+                or record.get("laterStages") != later_stages
+            ):
+                _direct_runtime_integration_fail("FAILED_ATTEMPT_RUNTIME_INVALID")
+            if (
+                forwarded["attempt"]["reachedStage"] != reached_stage
+                or forwarded["attempt"]["laterStages"] != later_stages
+            ):
+                _direct_runtime_integration_fail("FAILED_ATTEMPT_RUNTIME_INVALID")
         return
     if not isinstance(commands, list) or len(commands) != 1 or not isinstance(commands[0], dict):
         _fail("V3_PODMAN_ATTEMPT_COMMAND")
@@ -6920,7 +7047,18 @@ def _publish_failed_attempt(
     """
     failed = next((command for command in reversed(commands) if command.get("id") == reason), None)
     if failed is None or not isinstance(failed.get("exitCode"), int) or isinstance(failed["exitCode"], bool) or failed["exitCode"] == 0:
-        _fail("V3_PODMAN_ATTEMPT_FAILED_COMMAND_MISSING", reason)
+        if direct_runtime_preseal_attempt is not None:
+            _fail("V3_PODMAN_ATTEMPT_FAILED_COMMAND_MISSING", reason)
+        _publish_phase_level_failure_attempt(
+            error,
+            reason=reason,
+            commands=commands,
+            direct_runtime_integration=direct_runtime_integration,
+            direct_runtime_stage=direct_runtime_stage,
+            attempts_root=attempts_root,
+            attempt_date=attempt_date,
+        )
+        return
     run_day = resolve_execution_run_day_v1(attempt_date)
     attempt_error = str(error)
     contract_for_attempt: dict[str, Any] | None = None
@@ -7100,6 +7238,161 @@ def _publish_failed_attempt(
         if workspace_contract_for_attempt is not None:
             attempt["workspacePrerequisiteBuildDag"] = workspace_contract_for_attempt
             attempt["workspaceBuildResolution"] = workspace_resolution_for_attempt
+        try:
+            _write_json(directory / "failed-attempt.json", attempt)
+        except OSError as json_write_error:
+            raise json_write_error from error
+        validate_failed_execution_attempt_v1(attempt, directory)
+        try:
+            final_directory.mkdir()
+        except FileExistsError:
+            try:
+                _fail("V3_PODMAN_ATTEMPT_PUBLICATION_COLLISION", attempt_name)
+            except core.ExecutionClosureValidationError as collision_error:
+                raise collision_error from error
+        final_reserved = True
+        rename_error: OSError | None = None
+        try:
+            os.rename(directory, final_directory)
+            published = True
+        except OSError as caught_rename_error:
+            rename_error = caught_rename_error
+        finally:
+            if final_reserved and not published:
+                try:
+                    shutil.rmtree(final_directory)
+                except OSError:
+                    pass
+        if rename_error is not None:
+            raise rename_error from error
+    finally:
+        try:
+            shutil.rmtree(staging_parent)
+        except OSError:
+            pass
+
+
+def _publish_phase_level_failure_attempt(
+    error: BaseException,
+    *,
+    reason: str,
+    commands: list[dict[str, Any]],
+    direct_runtime_integration: dict[str, Any] | None,
+    direct_runtime_stage: str | None,
+    attempts_root: Path | str,
+    attempt_date: str,
+) -> None:
+    """Publishes one command-less failed attempt for a phase-level runtime failure.
+
+    @param error The terminal gate exception raised after the stage's command completed.
+    @param reason The failed phase identifier that has no failed-command record.
+    @param commands The staged commands whose raw streams are the artifacts collected so far.
+    @param direct_runtime_integration Optional sealed integration forwarded when the failure is post-seal.
+    @param direct_runtime_stage Optional last reached direct-runtime stage paired with the integration.
+    @param attempts_root The parent directory that will own the fresh append-only attempt.
+    @param attempt_date The validated run day used to allocate the attempt ordinal.
+    @returns Nothing when the phase-level failure record is written and validated.
+    @throws core.ExecutionClosureValidationError When no phase-level failure record can be preserved.
+    """
+    if not isinstance(reason, str) or not reason:
+        _fail("V3_PODMAN_ATTEMPT_FAILED_COMMAND_MISSING", str(reason))
+    run_day = resolve_execution_run_day_v1(attempt_date)
+    attempt_error = str(error)
+    if (direct_runtime_integration is None) != (direct_runtime_stage is None):
+        _direct_runtime_integration_fail("FAILED_ATTEMPT_RUNTIME_INVALID")
+    forwarded_direct_runtime: dict[str, Any] | None = None
+    if direct_runtime_integration is not None:
+        validate_direct_command_runtime_runner_integration_v1(
+            direct_runtime_integration,
+        )
+        if direct_runtime_stage not in _DIRECT_RUNTIME_RUNNER_STAGES:
+            _direct_runtime_integration_fail("FAILED_ATTEMPT_RUNTIME_INVALID")
+        forwarded_integration = build_direct_command_runtime_runner_integration_v1(
+            direct_runtime_integration["readSet"],
+            direct_runtime_integration["sourcePacket"],
+            {
+                "id": direct_runtime_integration["attempt"]["id"],
+                "reachedStage": direct_runtime_stage,
+                "executionTrace": (
+                    direct_runtime_integration["attempt"]["executionTrace"]
+                    if direct_runtime_stage == "direct-runtime-trace"
+                    else None
+                ),
+            },
+            direct_runtime_integration["resourceBudget"],
+        )
+        later_stages = [
+            {"id": stage, "status": "NOT_RUN"}
+            for stage in _DIRECT_RUNTIME_RUNNER_STAGES[
+                _DIRECT_RUNTIME_RUNNER_STAGES.index(direct_runtime_stage) + 1:
+            ]
+        ]
+        forwarded_direct_runtime = {
+            "integration": forwarded_integration,
+            "reachedStage": direct_runtime_stage,
+            "laterStages": later_stages,
+        }
+    root = Path(attempts_root)
+    if root.exists() and (root.is_symlink() or not root.is_dir()):
+        _fail("V3_PODMAN_ATTEMPT_ROOT_INVALID", str(root))
+    root.mkdir(parents=True, exist_ok=True)
+    if root.is_symlink() or not root.is_dir():
+        _fail("V3_PODMAN_ATTEMPT_ROOT_INVALID", str(root))
+    attempt_name, sequence = _next_failed_execution_attempt_identity_v1(
+        root,
+        run_day,
+    )
+    final_directory = root / attempt_name
+    final_reserved = False
+    published = False
+    staging_parent = Path(tempfile.mkdtemp(
+        prefix=".phase-level-failure-",
+        dir=root,
+    ))
+    try:
+        directory = staging_parent / attempt_name
+        directory.mkdir()
+        try:
+            finalized_commands = [
+                _finalize_command(
+                    command,
+                    directory,
+                    reference_root=TRACK_DIR / attempt_name,
+                )
+                for command in commands
+            ]
+        except OSError as raw_copy_error:
+            raise raw_copy_error from error
+        attempt = {
+            "schemaVersion": 1,
+            "kind": "execution-closure-failed-attempt",
+            "status": "BLOCKED",
+            "attempt": {
+                "id": attempt_name,
+                "sequence": sequence,
+                "namingRule": ATTEMPT_NAMING_RULE,
+            },
+            "historicalBlocker": _reference(HISTORICAL_PODMAN_BLOCKER),
+            "failure": {
+                "stage": reason,
+                "reason": attempt_error,
+                "classification": _PHASE_LEVEL_FAILURE_CLASSIFICATION,
+            },
+            "commands": [],
+            "markerDisposition": copy.deepcopy(core.MARKER_DISPOSITION),
+            "upstreamAuthority": "NONE",
+            "phaseLevelFailure": {
+                "schemaVersion": 1,
+                "kind": "execution-closure-phase-level-failure",
+                "stage": reason,
+                "reason": attempt_error,
+                "classification": _PHASE_LEVEL_FAILURE_CLASSIFICATION,
+                "errorDetail": attempt_error,
+                "rawArtifacts": finalized_commands,
+            },
+        }
+        if forwarded_direct_runtime is not None:
+            attempt["directRuntimeIntegration"] = forwarded_direct_runtime
         try:
             _write_json(directory / "failed-attempt.json", attempt)
         except OSError as json_write_error:
