@@ -10933,6 +10933,644 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
         finally:
             temporary.cleanup()
 
+    def _h9b_baseline_identity(self, path: str, contents: bytes) -> dict[str, Any]:
+        """Builds one exact baseline-Git identity for the H9b module-load fixture.
+
+        @param path The fixture's workspace-relative source path.
+        @param contents The immutable fixture bytes.
+        @returns One baseline-Git identity accepted by the runtime integration builder.
+        """
+        blob = b"blob " + str(len(contents)).encode("ascii") + b"\0" + contents
+        return {
+            "path": path,
+            "sha256": _sha256(contents),
+            "size": len(contents),
+            "mode": "100644",
+            "origin": "BASELINE_GIT_BLOB",
+            "baselineCommit": "a" * 40,
+            "gitBlobSha1": hashlib.sha1(blob).hexdigest(),
+            "inclusion": "MATERIALIZE_EXACT_BASELINE_BYTES",
+        }
+
+    def _h9b_derived_identity(self, path: str) -> dict[str, Any]:
+        """Builds one receipt-bound derived dist identity for the H9b module-load fixture.
+
+        @param path The fixture's workspace-relative derived path.
+        @returns One DERIVED_BUILD_OUTPUT identity accepted by the trace contract.
+        """
+        return {
+            "path": path,
+            "sha256": "b" * 64,
+            "size": 1,
+            "origin": "DERIVED_BUILD_OUTPUT",
+            "producer": {
+                "kind": "PACKAGE_SCRIPT_PREREQUISITE_BUILD",
+                "scriptName": "fixture-build",
+                "scriptSegment": "pnpm build",
+                "receipt": {
+                    "path": "fixture-h9b-build-receipt.json",
+                    "sha256": "c" * 64,
+                    "size": 1,
+                },
+            },
+        }
+
+    def test_tracer_module_load_entrypoint_read_emits_ordinal_zero_baseline_event(self) -> None:
+        """Requires the sync ESM entrypoint read of a declared baseline path to emit exactly one ordinal-zero BASELINE_READ.
+
+        @returns Nothing; the real runner tracer scripts run under local node with the real config and receipt.
+        """
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        node_executable = shutil.which("node")
+        self.assertIsNotNone(node_executable, "V3_DIRECT_RUNTIME_LOCAL_NODE_MISSING")
+        with tempfile.TemporaryDirectory() as temporary:
+            stage = Path(temporary)
+            work = stage / "work"
+            work.mkdir()
+            package_root = "packages/h9b-fixture-entrypoint"
+            generator_path = f"{package_root}/scripts/generate-standard-pack-release.mjs"
+            derived_path = f"{package_root}/dist/assets/index.js"
+            source_path = f"{package_root}/assets/standard/input.txt"
+            generator = work / generator_path
+            generator.parent.mkdir(parents=True)
+            derived = work / derived_path
+            derived.parent.mkdir(parents=True)
+            source = work / source_path
+            source.parent.mkdir(parents=True)
+            generator_bytes = (
+                b'import { readFile } from "node:fs/promises";\n'
+                b'import { derivedMarker } from "../dist/assets/index.js";\n'
+                b'const bytes = await readFile(new URL("../assets/standard/input.txt", import.meta.url));\n'
+                b'if (derivedMarker !== "h9b-derived" || bytes.toString("utf8") !== "h9b-source\\n") throw new Error("fixture mismatch");\n'
+            )
+            source_bytes = b"h9b-source\n"
+            generator.write_bytes(generator_bytes)
+            derived.write_text('export const derivedMarker = "h9b-derived";\n', encoding="utf-8")
+            source.write_bytes(source_bytes)
+            generator_identity = self._h9b_baseline_identity(generator_path, generator_bytes)
+            source_identity = self._h9b_baseline_identity(source_path, source_bytes)
+            derived_identity = self._h9b_derived_identity(derived_path)
+            artifact_path = work / ".direct-runtime-trace" / "direct-runtime-raw-events.jsonl"
+            observations_path = work / ".direct-runtime-trace" / "module-load-observations.jsonl"
+            config_path = stage / "direct-runtime-trace-config.json"
+            config = {
+                "schemaVersion": 1,
+                "kind": "direct-command-runtime-in-container-trace-config",
+                "evidence": "IN_CONTAINER_TRACER_RAW_ARTIFACT_ONLY",
+                "tracer": "direct-runtime-tracer",
+                "rawEventArtifact": "direct-runtime-raw-events.jsonl",
+                "nonce": "c" * 64,
+                "packetSha256": "d" * 64,
+                "maxEvents": 16,
+                "targetRoot": str(work),
+                "artifactPath": str(artifact_path),
+                "generatorScript": generator_path,
+                "generatorResolvedPath": str(generator.resolve()),
+                "nodeOptions": f"--import={stage / 'runner' / 'direct-runtime-tracer.mjs'}",
+                "activation": "INHERITED_NODE_OPTIONS_EXACT_GENERATOR_SCRIPT_ONLY",
+                "parentPnpm": "PNPM_PARENT_EXCLUDED",
+                "baselineReadSet": [generator_identity, source_identity],
+                "derivedBuildReadSet": [derived_identity],
+                "outputPaths": [],
+                "directoryEnumerations": [],
+                "moduleLoads": [
+                    {"kind": "BASELINE_READ", "path": generator_path},
+                    {"kind": "DERIVED_BUILD_READ", "path": derived_path},
+                ],
+                "moduleLoadObservationsPath": str(observations_path),
+            }
+            archive_path = stage / "archive.json"
+            archive_path.write_text(json.dumps({"entries": [], "closureInventory": []}), encoding="utf-8")
+            podman._runner_scripts(stage, archive_path, podman.build_nested_pnpm_runtime_shim_contract_v1())
+            config_path.write_text(json.dumps(config), encoding="utf-8")
+            traced = subprocess.run(
+                [node_executable, str(generator)],
+                capture_output=True,
+                text=True,
+                check=False,
+                env={
+                    "NODE_OPTIONS": config["nodeOptions"],
+                    "DIRECT_RUNTIME_TRACE_CONFIG_PATH": str(config_path),
+                },
+            )
+            self.assertEqual(traced.returncode, 0, traced.stderr)
+            raw_events = [json.loads(line) for line in artifact_path.read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(len(raw_events), 3)
+            generator_pid = raw_events[0]["generatorPid"]
+            self.assertIsInstance(generator_pid, int)
+            expected_prefix = {
+                "nonce": config["nonce"],
+                "tracer": "direct-runtime-tracer",
+                "packetSha256": config["packetSha256"],
+                "rawEventArtifact": config["rawEventArtifact"],
+                "generatorScript": config["generatorResolvedPath"],
+            }
+            self.assertEqual(raw_events[0], {
+                **expected_prefix,
+                "ordinal": 0,
+                "kind": "BASELINE_READ",
+                "value": generator_identity,
+                "generatorPid": generator_pid,
+            })
+            self.assertEqual(raw_events[1], {
+                **expected_prefix,
+                "ordinal": 1,
+                "kind": "DERIVED_BUILD_READ",
+                "value": derived_identity,
+                "generatorPid": generator_pid,
+            })
+            self.assertEqual(raw_events[2], {
+                **expected_prefix,
+                "ordinal": 2,
+                "kind": "BASELINE_READ",
+                "value": source_identity,
+                "generatorPid": generator_pid,
+            })
+            observations = [json.loads(line) for line in observations_path.read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(
+                sorted((entry["kind"], entry["path"]) for entry in observations),
+                sorted((entry["kind"], entry["path"]) for entry in config["moduleLoads"]),
+            )
+            receipt = subprocess.run(
+                [node_executable, str(stage / "runner" / "direct-runtime-trace-receipt.mjs"), str(config_path)],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(receipt.returncode, 0, receipt.stderr)
+            trace_receipt = json.loads(receipt.stdout)
+            self.assertEqual(trace_receipt["events"], raw_events)
+            self.assertFalse(artifact_path.exists(), "V3_DIRECT_RUNTIME_TRACE_ARTIFACT_CLEANUP_FAILED")
+            self.assertFalse(observations_path.exists(), "V3_DIRECT_RUNTIME_MODULE_LOAD_OBSERVATIONS_CLEANUP_FAILED")
+
+    def test_tracer_module_load_of_non_declared_path_emits_nothing(self) -> None:
+        """Requires a sync module load of a path outside the declared sets to emit no event and no failure.
+
+        @returns Nothing; the real load hook silently ignores the undeclared module while declared module loads still emit.
+        """
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        node_executable = shutil.which("node")
+        self.assertIsNotNone(node_executable, "V3_DIRECT_RUNTIME_LOCAL_NODE_MISSING")
+        with tempfile.TemporaryDirectory() as temporary:
+            stage = Path(temporary)
+            work = stage / "work"
+            work.mkdir()
+            package_root = "packages/h9b-fixture-undeclared-load"
+            generator_path = f"{package_root}/scripts/generate-standard-pack-release.mjs"
+            derived_path = f"{package_root}/dist/assets/index.js"
+            source_path = f"{package_root}/assets/standard/input.txt"
+            helper_path = f"{package_root}/scripts/private-helper.mjs"
+            generator = work / generator_path
+            generator.parent.mkdir(parents=True)
+            derived = work / derived_path
+            derived.parent.mkdir(parents=True)
+            source = work / source_path
+            source.parent.mkdir(parents=True)
+            helper = work / helper_path
+            generator_bytes = (
+                b'import { readFile } from "node:fs/promises";\n'
+                b'import { derivedMarker } from "../dist/assets/index.js";\n'
+                b'import { helperMarker } from "./private-helper.mjs";\n'
+                b'const bytes = await readFile(new URL("../assets/standard/input.txt", import.meta.url));\n'
+                b'if (derivedMarker !== "h9b-derived" || helperMarker !== "h9b-helper" || bytes.toString("utf8") !== "h9b-source\\n") throw new Error("fixture mismatch");\n'
+            )
+            source_bytes = b"h9b-source\n"
+            generator.write_bytes(generator_bytes)
+            derived.write_text('export const derivedMarker = "h9b-derived";\n', encoding="utf-8")
+            source.write_bytes(source_bytes)
+            helper.write_text('export const helperMarker = "h9b-helper";\n', encoding="utf-8")
+            generator_identity = self._h9b_baseline_identity(generator_path, generator_bytes)
+            source_identity = self._h9b_baseline_identity(source_path, source_bytes)
+            derived_identity = self._h9b_derived_identity(derived_path)
+            artifact_path = work / ".direct-runtime-trace" / "direct-runtime-raw-events.jsonl"
+            observations_path = work / ".direct-runtime-trace" / "module-load-observations.jsonl"
+            config_path = stage / "direct-runtime-trace-config.json"
+            config = {
+                "schemaVersion": 1,
+                "kind": "direct-command-runtime-in-container-trace-config",
+                "evidence": "IN_CONTAINER_TRACER_RAW_ARTIFACT_ONLY",
+                "tracer": "direct-runtime-tracer",
+                "rawEventArtifact": "direct-runtime-raw-events.jsonl",
+                "nonce": "c" * 64,
+                "packetSha256": "d" * 64,
+                "maxEvents": 16,
+                "targetRoot": str(work),
+                "artifactPath": str(artifact_path),
+                "generatorScript": generator_path,
+                "generatorResolvedPath": str(generator.resolve()),
+                "nodeOptions": f"--import={stage / 'runner' / 'direct-runtime-tracer.mjs'}",
+                "activation": "INHERITED_NODE_OPTIONS_EXACT_GENERATOR_SCRIPT_ONLY",
+                "parentPnpm": "PNPM_PARENT_EXCLUDED",
+                "baselineReadSet": [generator_identity, source_identity],
+                "derivedBuildReadSet": [derived_identity],
+                "outputPaths": [],
+                "directoryEnumerations": [],
+                "moduleLoads": [
+                    {"kind": "BASELINE_READ", "path": generator_path},
+                    {"kind": "DERIVED_BUILD_READ", "path": derived_path},
+                ],
+                "moduleLoadObservationsPath": str(observations_path),
+            }
+            archive_path = stage / "archive.json"
+            archive_path.write_text(json.dumps({"entries": [], "closureInventory": []}), encoding="utf-8")
+            podman._runner_scripts(stage, archive_path, podman.build_nested_pnpm_runtime_shim_contract_v1())
+            config_path.write_text(json.dumps(config), encoding="utf-8")
+            traced = subprocess.run(
+                [node_executable, str(generator)],
+                capture_output=True,
+                text=True,
+                check=False,
+                env={
+                    "NODE_OPTIONS": config["nodeOptions"],
+                    "DIRECT_RUNTIME_TRACE_CONFIG_PATH": str(config_path),
+                },
+            )
+            self.assertEqual(traced.returncode, 0, traced.stderr)
+            raw_events = [json.loads(line) for line in artifact_path.read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(len(raw_events), 3)
+            self.assertEqual(
+                [event["kind"] for event in raw_events],
+                ["BASELINE_READ", "DERIVED_BUILD_READ", "BASELINE_READ"],
+            )
+            self.assertEqual([event["ordinal"] for event in raw_events], [0, 1, 2])
+            self.assertNotIn(
+                helper_path,
+                [event["value"]["path"] for event in raw_events],
+                "a module load of an undeclared path must emit nothing",
+            )
+            self.assertFalse(
+                any(event["kind"] == "UNDECLARED" for event in raw_events),
+                "sync module-load observation must never emit an UNDECLARED event",
+            )
+            receipt = subprocess.run(
+                [node_executable, str(stage / "runner" / "direct-runtime-trace-receipt.mjs"), str(config_path)],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(receipt.returncode, 0, receipt.stderr)
+            self.assertFalse(artifact_path.exists(), "V3_DIRECT_RUNTIME_TRACE_ARTIFACT_CLEANUP_FAILED")
+
+    def test_tracer_module_load_hook_verification_fails_closed_when_load_never_observed(self) -> None:
+        """Requires the receipt to fail closed when a declared module load was never observed by the load hook.
+
+        @returns Nothing; the real preload emits the ordinal-zero entrypoint event and the receipt rejects the missing observation.
+        """
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        node_executable = shutil.which("node")
+        self.assertIsNotNone(node_executable, "V3_DIRECT_RUNTIME_LOCAL_NODE_MISSING")
+        with tempfile.TemporaryDirectory() as temporary:
+            stage = Path(temporary)
+            work = stage / "work"
+            work.mkdir()
+            package_root = "packages/h9b-fixture-fail-closed"
+            generator_path = f"{package_root}/scripts/generate-standard-pack-release.mjs"
+            derived_path = f"{package_root}/dist/assets/index.js"
+            source_path = f"{package_root}/assets/standard/input.txt"
+            generator = work / generator_path
+            generator.parent.mkdir(parents=True)
+            source = work / source_path
+            source.parent.mkdir(parents=True)
+            generator_bytes = (
+                b'import { readFile } from "node:fs/promises";\n'
+                b'const bytes = await readFile(new URL("../assets/standard/input.txt", import.meta.url));\n'
+                b'if (bytes.toString("utf8") !== "h9b-source\\n") throw new Error("fixture mismatch");\n'
+            )
+            source_bytes = b"h9b-source\n"
+            generator.write_bytes(generator_bytes)
+            source.write_bytes(source_bytes)
+            generator_identity = self._h9b_baseline_identity(generator_path, generator_bytes)
+            source_identity = self._h9b_baseline_identity(source_path, source_bytes)
+            derived_identity = self._h9b_derived_identity(derived_path)
+            artifact_path = work / ".direct-runtime-trace" / "direct-runtime-raw-events.jsonl"
+            observations_path = work / ".direct-runtime-trace" / "module-load-observations.jsonl"
+            config_path = stage / "direct-runtime-trace-config.json"
+            config = {
+                "schemaVersion": 1,
+                "kind": "direct-command-runtime-in-container-trace-config",
+                "evidence": "IN_CONTAINER_TRACER_RAW_ARTIFACT_ONLY",
+                "tracer": "direct-runtime-tracer",
+                "rawEventArtifact": "direct-runtime-raw-events.jsonl",
+                "nonce": "c" * 64,
+                "packetSha256": "d" * 64,
+                "maxEvents": 16,
+                "targetRoot": str(work),
+                "artifactPath": str(artifact_path),
+                "generatorScript": generator_path,
+                "generatorResolvedPath": str(generator.resolve()),
+                "nodeOptions": f"--import={stage / 'runner' / 'direct-runtime-tracer.mjs'}",
+                "activation": "INHERITED_NODE_OPTIONS_EXACT_GENERATOR_SCRIPT_ONLY",
+                "parentPnpm": "PNPM_PARENT_EXCLUDED",
+                "baselineReadSet": [generator_identity, source_identity],
+                "derivedBuildReadSet": [derived_identity],
+                "outputPaths": [],
+                "directoryEnumerations": [],
+                "moduleLoads": [
+                    {"kind": "BASELINE_READ", "path": generator_path},
+                    {"kind": "DERIVED_BUILD_READ", "path": derived_path},
+                ],
+                "moduleLoadObservationsPath": str(observations_path),
+            }
+            archive_path = stage / "archive.json"
+            archive_path.write_text(json.dumps({"entries": [], "closureInventory": []}), encoding="utf-8")
+            podman._runner_scripts(stage, archive_path, podman.build_nested_pnpm_runtime_shim_contract_v1())
+            config_path.write_text(json.dumps(config), encoding="utf-8")
+            traced = subprocess.run(
+                [node_executable, str(generator)],
+                capture_output=True,
+                text=True,
+                check=False,
+                env={
+                    "NODE_OPTIONS": config["nodeOptions"],
+                    "DIRECT_RUNTIME_TRACE_CONFIG_PATH": str(config_path),
+                },
+            )
+            self.assertEqual(traced.returncode, 0, traced.stderr)
+            raw_events = [json.loads(line) for line in artifact_path.read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(
+                [event["kind"] for event in raw_events],
+                ["BASELINE_READ", "DERIVED_BUILD_READ", "BASELINE_READ"],
+            )
+            self.assertEqual(raw_events[0]["ordinal"], 0)
+            self.assertEqual(raw_events[0]["value"]["path"], generator_path)
+            self.assertEqual(raw_events[1]["value"]["path"], derived_path)
+            receipt = subprocess.run(
+                [node_executable, str(stage / "runner" / "direct-runtime-trace-receipt.mjs"), str(config_path)],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertNotEqual(receipt.returncode, 0)
+            self.assertIn("module load observations mismatch", receipt.stderr)
+            self.assertTrue(artifact_path.exists(), "fail-closed evidence must retain the raw artifact")
+            self.assertTrue(observations_path.exists(), "fail-closed evidence must retain the observations")
+
+    def test_trace_with_module_load_events_passes_end_to_end_bijection_against_real_contract(self) -> None:
+        """Requires a trace stream including both module-load events to parse and biject against a real-shaped contract.
+
+        @returns Nothing; the real config writer, tracer, receipt, parser, and validator run against one sealed fixture.
+        """
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        node_executable = shutil.which("node")
+        self.assertIsNotNone(node_executable, "V3_DIRECT_RUNTIME_LOCAL_NODE_MISSING")
+        package_root = "packages/h9b-fixture-end-to-end"
+        generator_path = f"{package_root}/scripts/generate-standard-pack-release.mjs"
+        derived_path = f"{package_root}/dist/assets/index.js"
+        source_path = f"{package_root}/assets/standard/input.txt"
+        standard_root = f"{package_root}/assets/standard"
+        output_path = f"{standard_root}/standard-pack-release.json"
+        generator_bytes = (
+            b'import { readFile, readdir, writeFile } from "node:fs/promises";\n'
+            b'import { dirname, join } from "node:path";\n'
+            b'import { fileURLToPath } from "node:url";\n'
+            b'import { derivedMarker } from "../dist/assets/index.js";\n'
+            b'const root = dirname(dirname(fileURLToPath(import.meta.url)));\n'
+            b'const standard = join(root, "assets", "standard");\n'
+            b'await readdir(standard);\n'
+            b'await readdir(join(standard, "audio"));\n'
+            b'const bytes = await readFile(join(standard, "input.txt"));\n'
+            b'if (derivedMarker !== "h9b-derived" || bytes.toString("utf8") !== "h9b-source\\n") throw new Error("fixture mismatch");\n'
+            b'await writeFile(join(standard, "standard-pack-release.json"), "{}");\n'
+        )
+        source_bytes = b"h9b-source\n"
+        generator_identity = self._h9b_baseline_identity(generator_path, generator_bytes)
+        source_identity = self._h9b_baseline_identity(source_path, source_bytes)
+        derived_identity = self._h9b_derived_identity(derived_path)
+        baseline_read_set = sorted([generator_identity, source_identity], key=lambda item: item["path"])
+        directory_enumerations = [standard_root, f"{standard_root}/audio"]
+        resource_budget = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-asset-resource-budget",
+            "frozenArchive": _reference(V2_ARCHIVE),
+            "sourceCeiling": {
+                "path": standard_root,
+                "regularFiles": 2,
+                "apparentBytes": len(generator_bytes) + len(source_bytes),
+                "allocatedBytes": len(generator_bytes) + len(source_bytes),
+            },
+            "reservations": {
+                "baselineGitMaterializationBytes": 1,
+                "candidateCowBytes": 1,
+                "archiveSupplementBytes": 1,
+                "derivedOutputBytes": 1,
+                "metadataBytes": 1,
+                "minimumHeadroomBytes": 1,
+            },
+            "requiredAvailableBytes": 6,
+            "availableBytes": 6,
+            "decision": "PASS",
+        }
+        read_set = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-read-set",
+            "trigger": {
+                "logicalArgv": ["pnpm", "--filter", "@h9b/fixture-end-to-end", "fixture-build"],
+                "package": "@h9b/fixture-end-to-end",
+                "manifest": {
+                    "path": f"{package_root}/package.json",
+                    "sha256": "d" * 64,
+                    "size": 1,
+                },
+            },
+            "baselineReadSet": baseline_read_set,
+            "derivedBuildReadSet": [derived_identity],
+            "outputPaths": [output_path],
+            "directoryEnumerations": directory_enumerations,
+            "preflightQuota": {
+                "maxEntries": len(baseline_read_set),
+                "maxBytes": sum(item["size"] for item in baseline_read_set),
+                "observedEntries": len(baseline_read_set),
+                "observedBytes": sum(item["size"] for item in baseline_read_set),
+            },
+            "resourceBudget": resource_budget,
+            "discovery": {
+                "kind": "BASELINE_GIT_INSTRUMENTED_TRACE",
+                "script": generator_identity,
+                "root": standard_root,
+                "directoryListingCount": len(directory_enumerations),
+            },
+        }
+        source_packet = {
+            "schemaVersion": 1,
+            "kind": "direct-command-runtime-baseline-git-source-packet",
+            "source": "GIT_OBJECT_DATABASE_ONLY",
+            "baselineCommit": "a" * 40,
+            "tree": {"gitTreeSha1": "e" * 40},
+            "baselineReadSet": baseline_read_set,
+            "objects": [
+                {**source_identity, "contentBase64": base64.b64encode(source_bytes).decode("ascii")},
+                {**generator_identity, "contentBase64": base64.b64encode(generator_bytes).decode("ascii")},
+            ],
+        }
+        source_packet["packetSha256"] = podman._direct_runtime_packet_digest_v1(source_packet)
+        sealed_integration = podman.build_direct_command_runtime_runner_integration_v1(
+            read_set,
+            source_packet,
+            {
+                "id": "direct-runtime-detached-runner-v1",
+                "nonceSha256": "f" * 64,
+                "reachedStage": "build-advantage-play-kit-for-runtime",
+                "executionTrace": None,
+            },
+            resource_budget,
+        )
+        podman.validate_direct_command_runtime_runner_integration_v1(sealed_integration)
+        contract = sealed_integration["readSetContract"]
+        with tempfile.TemporaryDirectory() as temporary:
+            stage = Path(temporary)
+            archive_path = stage / "archive.json"
+            archive_path.write_text(json.dumps({"entries": [], "closureInventory": []}), encoding="utf-8")
+            podman._runner_scripts(
+                stage,
+                archive_path,
+                podman.build_nested_pnpm_runtime_shim_contract_v1(),
+                direct_runtime_integration=sealed_integration,
+            )
+            trace_config = _load_json(stage / "runner" / "direct-runtime-trace-config.json", self)
+            self.assertEqual(
+                trace_config["moduleLoads"],
+                [
+                    {"kind": "BASELINE_READ", "path": generator_path},
+                    {"kind": "DERIVED_BUILD_READ", "path": derived_path},
+                ],
+                "V3_DIRECT_RUNTIME_TRACE_CONFIG_MODULE_LOADS_MISSING",
+            )
+            self.assertEqual(
+                trace_config["moduleLoadObservationsPath"],
+                "/work/.direct-runtime-trace/module-load-observations.jsonl",
+                "V3_DIRECT_RUNTIME_TRACE_CONFIG_MODULE_LOAD_OBSERVATIONS_PATH_MISSING",
+            )
+            work = stage / "work"
+            work.mkdir()
+            generator = work / generator_path
+            generator.parent.mkdir(parents=True)
+            derived = work / derived_path
+            derived.parent.mkdir(parents=True)
+            source = work / source_path
+            source.parent.mkdir(parents=True)
+            audio = work / f"{standard_root}/audio"
+            audio.mkdir(parents=True)
+            generator.write_bytes(generator_bytes)
+            derived.write_text('export const derivedMarker = "h9b-derived";\n', encoding="utf-8")
+            source.write_bytes(source_bytes)
+            (audio / ".keep").write_text("", encoding="utf-8")
+            artifact_path = work / ".direct-runtime-trace" / "direct-runtime-raw-events.jsonl"
+            observations_path = work / ".direct-runtime-trace" / "module-load-observations.jsonl"
+            local_config_path = stage / "local-direct-runtime-trace-config.json"
+            local_config = {
+                "schemaVersion": 1,
+                "kind": "direct-command-runtime-in-container-trace-config",
+                "evidence": sealed_integration["tracePolicy"]["evidence"],
+                "tracer": sealed_integration["tracePolicy"]["tracer"],
+                "rawEventArtifact": sealed_integration["tracePolicy"]["rawEventArtifact"],
+                "nonce": sealed_integration["tracePolicy"]["nonce"],
+                "packetSha256": sealed_integration["sourcePacket"]["packetSha256"],
+                "maxEvents": sealed_integration["tracePolicy"]["maxEvents"],
+                "targetRoot": str(work),
+                "artifactPath": str(artifact_path),
+                "generatorScript": generator_path,
+                "generatorResolvedPath": str(generator.resolve()),
+                "nodeOptions": f"--import={stage / 'runner' / 'direct-runtime-tracer.mjs'}",
+                "activation": sealed_integration["tracePolicy"]["activation"],
+                "parentPnpm": sealed_integration["tracePolicy"]["parentPnpm"],
+                "baselineReadSet": baseline_read_set,
+                "derivedBuildReadSet": [derived_identity],
+                "outputPaths": [output_path],
+                "directoryEnumerations": directory_enumerations,
+                "moduleLoads": [
+                    {"kind": "BASELINE_READ", "path": generator_path},
+                    {"kind": "DERIVED_BUILD_READ", "path": derived_path},
+                ],
+                "moduleLoadObservationsPath": str(observations_path),
+            }
+            local_config_path.write_text(json.dumps(local_config), encoding="utf-8")
+            traced = subprocess.run(
+                [node_executable, str(generator)],
+                capture_output=True,
+                text=True,
+                check=False,
+                env={
+                    "NODE_OPTIONS": local_config["nodeOptions"],
+                    "DIRECT_RUNTIME_TRACE_CONFIG_PATH": str(local_config_path),
+                },
+            )
+            self.assertEqual(traced.returncode, 0, traced.stderr)
+            raw_events = [json.loads(line) for line in artifact_path.read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(
+                [event["kind"] for event in raw_events],
+                [
+                    "BASELINE_READ",
+                    "DERIVED_BUILD_READ",
+                    "DIRECTORY_ENUMERATION",
+                    "DIRECTORY_ENUMERATION",
+                    "BASELINE_READ",
+                    "WRITE",
+                ],
+            )
+            self.assertEqual([event["ordinal"] for event in raw_events], [0, 1, 2, 3, 4, 5])
+            receipt = subprocess.run(
+                [node_executable, str(stage / "runner" / "direct-runtime-trace-receipt.mjs"), str(local_config_path)],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(receipt.returncode, 0, receipt.stderr)
+            trace_receipt = json.loads(receipt.stdout)
+            self.assertEqual(trace_receipt["events"], raw_events)
+            normalized_events = [
+                {
+                    "nonce": event["nonce"],
+                    "ordinal": event["ordinal"],
+                    "kind": event["kind"],
+                    "value": event["value"],
+                }
+                for event in raw_events
+            ]
+            envelope = {
+                "schemaVersion": 1,
+                "kind": "direct-command-runtime-trace-events",
+                "nonce": sealed_integration["tracePolicy"]["nonce"],
+                "events": normalized_events,
+                "truncated": False,
+            }
+            trace = podman.parse_direct_command_runtime_trace_events_v1(envelope, sealed_integration)
+            podman.validate_direct_command_runtime_execution_trace_v1(contract, trace)
+            self.assertEqual(trace["baselineReads"], baseline_read_set)
+            self.assertEqual(trace["derivedBuildReads"], [derived_identity])
+            self.assertEqual(trace["writes"], [{"path": output_path, "kind": "DERIVED_OUTPUT"}])
+            self.assertEqual(
+                trace["directoryEnumerations"],
+                [{"path": path} for path in directory_enumerations],
+            )
+            error_type = getattr(importlib.import_module(HELPER_MODULE), "ExecutionClosureValidationError", None)
+            legacy_events = [
+                {
+                    "nonce": event["nonce"],
+                    "ordinal": index,
+                    "kind": event["kind"],
+                    "value": event["value"],
+                }
+                for index, event in enumerate(
+                    [event for event in normalized_events if event["ordinal"] >= 2]
+                )
+            ]
+            legacy_envelope = {
+                "schemaVersion": 1,
+                "kind": "direct-command-runtime-trace-events",
+                "nonce": sealed_integration["tracePolicy"]["nonce"],
+                "events": legacy_events,
+                "truncated": False,
+            }
+            with self.assertRaisesRegex(
+                error_type,
+                r"^V3_DIRECT_RUNTIME_READ_SET_EXECUTION_TRACE_BIJECTION_FAILED: ",
+            ) as raised:
+                podman.parse_direct_command_runtime_trace_events_v1(legacy_envelope, sealed_integration)
+            detail = str(raised.exception)
+            self.assertIn(generator_path, detail)
+            self.assertIn(derived_path, detail)
+            self.assertFalse(artifact_path.exists(), "V3_DIRECT_RUNTIME_TRACE_ARTIFACT_CLEANUP_FAILED")
+
 
 if __name__ == "__main__":
     unittest.main()
