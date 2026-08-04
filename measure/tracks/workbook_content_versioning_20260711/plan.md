@@ -265,7 +265,18 @@ _Story ref: spec.md#story-s3-import-legacy-workbook-projects-and-assets_
   source-drift adoption detection in `dcca3a722`. **Open spec gap recorded in
   tech-debt:** private/withdrawn source eligibility is the ContentCatalogPort's job
   and remains unenforced until the catalog lands.
-- [ ] Task: Complete desktop-first browser acceptance plus app/backend lint, type, test, build, graph, and independent permission/UI review gates.
+- [~] Task: Complete desktop-first browser acceptance plus app/backend lint, type, test, build, graph, and independent permission/UI review gates.
+  — Lint/type/test/build all green (app 29 files/251 tests; domain workbook scope
+  25 files/324 tests; `tsc` + `next build` clean). Graph gate: the shared graph.db
+  predates apps/workbooks entirely (repo-wide staleness, Aug 1); a scoped scratch-db
+  scan + audit of apps/workbooks + packages/domain ran clean instead. Independent
+  `claude -p` permission/UI review over the S4 diff found 2 High (dead print button
+  behind the iframe sandbox; un-typeable JSON editors), 5 Medium, 6 Low — ALL fixed
+  (74bf4f648, 42b5fe22f, 9feff4919) with tenant isolation, XSS/escaping, secrets,
+  and audit-rollback explicitly confirmed clean. **Gap: desktop-first browser
+  acceptance is blocked** — this environment has no DATABASE_URL or Company SSO
+  credentials, so the app cannot be driven end-to-end here; needs a credentialed
+  workstation run before the S4 user-manual verification.
 - [ ] Task: Measure - User Manual Verification 'Phase S4: Port the production workspace to apps/workbooks' (Protocol in workflow.md).
 
 ## Phase S5: Render, distribute, and revoke durable artifacts
