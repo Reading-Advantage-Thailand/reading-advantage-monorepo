@@ -1,7 +1,9 @@
 # Track apk_multiplayer_platform_capability_20260804 Context
 
-Status: new; no phase is started and no capability id, protocol, or deployment
-decision is accepted yet.
+Status: in progress; S0–S3 complete and checkpointed (0724fd7, e1a7ee5,
+d027b6f, 90da767). `multiplayer.v1` is frozen, the `multiplayer` capability id
+is registered (seven → eight), and the Wizard vs Zombie simulation is
+deterministic. S4 is open on the deployment spike (s4-deployment-spike-20260804.md).
 
 - [Specification](./spec.md)
 - [Implementation Plan](./plan.md)
