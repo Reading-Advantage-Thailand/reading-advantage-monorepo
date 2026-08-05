@@ -12,7 +12,8 @@
     "test:coverage": "vitest run --coverage",
     "check-types": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
     "bootstrap:production": "tsx scripts/bootstrap-production.ts",
-    "migrate:codecamp-identities": "tsx scripts/migrate-codecamp-identities.ts"
+    "migrate:codecamp-identities": "tsx scripts/migrate-codecamp-identities.ts",
+    "seed:dev-local-product-access": "tsx scripts/dev-local-product-access.ts"
   },
   "dependencies": {
     "@reading-advantage/auth": "workspace:*",

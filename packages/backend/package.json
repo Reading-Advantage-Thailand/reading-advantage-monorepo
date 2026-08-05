@@ -27,6 +27,7 @@
     "check-types": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json"
   },
   "dependencies": {
+    "@reading-advantage/auth": "workspace:*",
     "@reading-advantage/db": "workspace:*",
     "postgres": "catalog:",
     "zod": "catalog:"
