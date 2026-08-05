@@ -9,6 +9,7 @@ import inspect
 import importlib
 import os
 import json
+import re
 import shutil
 import subprocess
 import tempfile
@@ -154,6 +155,83 @@ BUILDS = (
     ["pnpm", "--filter", "@reading-advantage/auth", "build"],
     ["pnpm", "--filter", "@reading-advantage/backend", "build"],
 )
+# H11 static command-plan completeness audit. The audit derives, from the frozen
+# R1 v2 archive source surface (never the live worktree), the workspace packages
+# each plan gate imports at runtime and each build imports at build time, then
+# checks every dist-exports package against the plan. The full table lives in
+# h11-command-plan-static-completeness-audit-pre-green-baseline-20260804.md.
+# @reading-advantage/config is omitted everywhere because its exports point at
+# source files (./tsconfig, ./eslint, ./tailwind) and it has no build script.
+H11_GATE_IMPORT_SURFACES = {
+    "accounts-test": [
+        "@reading-advantage/auth",
+        "@reading-advantage/db",
+        "@reading-advantage/backend",
+        "@reading-advantage/domain",
+    ],
+    "accounts-check-types": [
+        "@reading-advantage/auth",
+        "@reading-advantage/db",
+        "@reading-advantage/backend",
+        "@reading-advantage/domain",
+    ],
+    "backend-test": ["@reading-advantage/db"],
+    "backend-check-types": ["@reading-advantage/db"],
+}
+# Build-time (non-test src) workspace imports of every closure package, from the
+# frozen archive sources with comments and string literals excluded.
+H11_BUILD_TIME_WORKSPACE_DEPS = {
+    "@reading-advantage/auth": ["@reading-advantage/db"],
+    "@reading-advantage/backend": ["@reading-advantage/db"],
+    "@reading-advantage/activity-runtime": ["@reading-advantage/practice-core"],
+    "@reading-advantage/srs-engine": ["@reading-advantage/practice-core"],
+    "@reading-advantage/advantage-play-kit": ["@reading-advantage/game-contracts"],
+    "@reading-advantage/codecamp-knowledge": [
+        "@reading-advantage/knowledge-space-core",
+        "@reading-advantage/activity-runtime",
+        "@reading-advantage/activity-tutorial",
+        "@reading-advantage/advantage-play-kit",
+    ],
+    "@reading-advantage/domain": [
+        "@reading-advantage/db",
+        "@reading-advantage/auth",
+        "@reading-advantage/activity-runtime",
+        "@reading-advantage/activity-tutorial",
+        "@reading-advantage/codecamp-knowledge",
+        "@reading-advantage/game-contracts",
+        "@reading-advantage/integrations-github",
+        "@reading-advantage/srs-engine",
+    ],
+}
+# The complete closure the FR4 gates require: every dist-exports workspace
+# package in a gate surface plus the transitive build-time deps of each added
+# build. db/auth/backend are already in the plan; the rest are the missing
+# builds the audit identifies.
+H11_AUDIT_CLOSURE = (
+    "@reading-advantage/db",
+    "@reading-advantage/auth",
+    "@reading-advantage/practice-core",
+    "@reading-advantage/knowledge-space-core",
+    "@reading-advantage/game-contracts",
+    "@reading-advantage/activity-tutorial",
+    "@reading-advantage/integrations-github",
+    "@reading-advantage/activity-runtime",
+    "@reading-advantage/srs-engine",
+    "@reading-advantage/advantage-play-kit",
+    "@reading-advantage/codecamp-knowledge",
+    "@reading-advantage/domain",
+    "@reading-advantage/backend",
+)
+# H11 stop-and-report: these frozen build scripts reference package-local
+# pre-step files that the frozen R1 v2 archive does not capture (the same .mjs
+# capture gap H2/H9b repaired only for the direct-runtime source packet). Their
+# builds deterministically fail inside the hermetic container (verified exit 1
+# on the host for activity-runtime), so the closure above cannot be executed
+# from the frozen archive without a closure/archive change outside this slice.
+H11_ARCHIVE_ABSENT_BUILD_PRESETPS = {
+    "@reading-advantage/activity-runtime": "scripts/clean-dist.mjs",
+    "@reading-advantage/codecamp-knowledge": "scripts/copy-data.mjs",
+}
 HERMETIC_PNPM_INSTALL = [
     "pnpm",
     "install",
@@ -238,6 +316,33 @@ def _load_json(path: Path, case: unittest.TestCase) -> dict[str, Any]:
     value = json.loads(path.read_text(encoding="utf-8"))
     case.assertIsInstance(value, dict, f"artifact must be an object: {display_path}")
     return value
+
+
+def _h11_build_package(argv: list[str]) -> str:
+    """Extracts the pnpm --filter package name from one prerequisite build argv.
+
+    @param argv The logical build command argv.
+    @returns The selected workspace package name.
+    """
+    return argv[argv.index("--filter") + 1]
+
+
+def _h11_package_build_argv(package: str) -> list[str]:
+    """Builds the canonical logical build argv for one audit-closure package.
+
+    @param package The workspace package name.
+    @returns The exact `pnpm --filter <package> build` argv shape the plan uses.
+    """
+    return ["pnpm", "--filter", package, "build"]
+
+
+def _h11_frozen_script_node_steps(build_script: str) -> list[str]:
+    """Extracts package-relative `node <path>` pre-steps from one frozen build script.
+
+    @param build_script The frozen package.json build expression.
+    @returns The package-relative script paths node must resolve before the build can run.
+    """
+    return re.findall(r"\bnode\s+([^\s&|;]+)", build_script)
 
 
 class R1V3ExecutionClosureRedTests(unittest.TestCase):
@@ -11570,6 +11675,129 @@ class R1V3ExecutionClosureRedTests(unittest.TestCase):
             self.assertIn(generator_path, detail)
             self.assertIn(derived_path, detail)
             self.assertFalse(artifact_path.exists(), "V3_DIRECT_RUNTIME_TRACE_ARTIFACT_CLEANUP_FAILED")
+
+
+    def test_command_plan_gate_import_surfaces_are_all_prerequisite_built(self) -> None:
+        """Requires every dist-exports workspace package in each FR4 gate surface to be built earlier in the plan.
+
+        @returns Nothing; the audit table H11_GATE_IMPORT_SURFACES is the regression contract.
+        """
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        plan = [(command_id, list(argv)) for command_id, argv in podman.NONINSTALL_PNPM_COMMANDS]
+        plan_ids = [command_id for command_id, _ in plan]
+        build_ids = {
+            _h11_build_package(argv): command_id
+            for command_id, argv in plan
+            if argv[:2] == ["pnpm", "--filter"] and argv[-1] == "build"
+        }
+        for gate_name, _ in podman.FR4:
+            self.assertIn(gate_name, H11_GATE_IMPORT_SURFACES, f"audit surface missing for gate {gate_name}")
+            gate_index = plan_ids.index(gate_name)
+            for package in H11_GATE_IMPORT_SURFACES[gate_name]:
+                self.assertIn(
+                    package,
+                    build_ids,
+                    f"dist-exports package {package} must be built before gate {gate_name}",
+                )
+                self.assertLess(
+                    plan_ids.index(build_ids[package]),
+                    gate_index,
+                    f"build of {package} must precede gate {gate_name}",
+                )
+
+    def test_command_plan_builds_domain_after_its_workspace_dep_builds_and_before_gates(self) -> None:
+        """Requires build-domain to sit after every domain build-time workspace dep and before every gate needing it.
+
+        @returns Nothing; the audit edges in H11_BUILD_TIME_WORKSPACE_DEPS are the regression contract.
+        """
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        plan = [(command_id, list(argv)) for command_id, argv in podman.NONINSTALL_PNPM_COMMANDS]
+        plan_ids = [command_id for command_id, _ in plan]
+        build_ids = {
+            _h11_build_package(argv): command_id
+            for command_id, argv in plan
+            if argv[:2] == ["pnpm", "--filter"] and argv[-1] == "build"
+        }
+        self.assertIn(
+            "@reading-advantage/domain",
+            build_ids,
+            "build-domain must be in the command plan before every gate that needs it",
+        )
+        domain_index = plan_ids.index(build_ids["@reading-advantage/domain"])
+        for dependency in H11_BUILD_TIME_WORKSPACE_DEPS["@reading-advantage/domain"]:
+            self.assertIn(dependency, build_ids, f"build of {dependency} must precede build-domain")
+            self.assertLess(
+                plan_ids.index(build_ids[dependency]),
+                domain_index,
+                f"build of {dependency} must precede build-domain",
+            )
+        for gate_name, packages in H11_GATE_IMPORT_SURFACES.items():
+            if "@reading-advantage/domain" not in packages:
+                continue
+            self.assertLess(
+                domain_index,
+                plan_ids.index(gate_name),
+                f"build-domain must precede gate {gate_name}",
+            )
+
+    def test_command_plan_build_closure_is_topologically_complete(self) -> None:
+        """Requires the audit closure to be fully present in the plan and topologically ordered.
+
+        @returns Nothing; H11_AUDIT_CLOSURE and H11_BUILD_TIME_WORKSPACE_DEPS are the regression contract.
+        """
+        podman = importlib.import_module("measure.business_operations_graph_baseline_execution_closure_v3_podman")
+        plan = [(command_id, list(argv)) for command_id, argv in podman.NONINSTALL_PNPM_COMMANDS]
+        plan_ids = [command_id for command_id, _ in plan]
+        build_ids = {
+            _h11_build_package(argv): command_id
+            for command_id, argv in plan
+            if argv[:2] == ["pnpm", "--filter"] and argv[-1] == "build"
+        }
+        self.assertEqual(
+            set(build_ids),
+            set(H11_AUDIT_CLOSURE),
+            "the command plan must contain exactly the audit closure, no missing or extra builds",
+        )
+        position = {
+            package: plan_ids.index(build_ids[package])
+            for package in H11_AUDIT_CLOSURE
+        }
+        for package, dependencies in H11_BUILD_TIME_WORKSPACE_DEPS.items():
+            for dependency in dependencies:
+                self.assertLess(
+                    position[dependency],
+                    position[package],
+                    f"build of {dependency} must precede build of {package}",
+                )
+
+    def test_command_plan_frozen_build_presteps_are_archive_present(self) -> None:
+        """Requires every closure build's frozen node pre-step to exist inside the frozen R1 v2 archive.
+
+        @returns Nothing; H11_ARCHIVE_ABSENT_BUILD_PRESETPS documents the two current violations.
+        """
+        with open(V2_ARCHIVE, encoding="utf-8") as handle:
+            archive = json.load(handle)
+        entries = archive["entries"] if isinstance(archive, dict) else archive
+        by_path = {entry["path"]: entry for entry in entries if isinstance(entry, dict)}
+        for package in H11_AUDIT_CLOSURE:
+            directory = (
+                "integrations/github"
+                if package == "@reading-advantage/integrations-github"
+                else package.split("/", 1)[1]
+            )
+            manifest_path = f"packages/{directory}/package.json"
+            self.assertIn(manifest_path, by_path, f"frozen manifest missing for {package}")
+            manifest = json.loads(
+                base64.b64decode(by_path[manifest_path]["contentBase64"]).decode("utf-8")
+            )
+            build_script = (manifest.get("scripts") or {}).get("build")
+            self.assertIsInstance(build_script, str, f"frozen build script missing for {package}")
+            for prestep in _h11_frozen_script_node_steps(build_script):
+                self.assertIn(
+                    f"packages/{directory}/{prestep}",
+                    by_path,
+                    f"{package} build pre-step {prestep} absent from the frozen archive",
+                )
 
 
 if __name__ == "__main__":
