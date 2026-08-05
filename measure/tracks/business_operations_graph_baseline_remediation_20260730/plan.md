@@ -617,6 +617,49 @@
 
   H9b sync module-load read observation addendum: the live confirming attempt `r1-v3-podman-execution-attempt-20260804-0004` failed the four-member bijection with EXACTLY two declared-but-untraced paths and zero extra: `baselineReads` missing the generator entrypoint `packages/advantage-play-kit/scripts/generate-standard-pack-release.mjs` and `derivedBuildReads` missing `packages/advantage-play-kit/dist/assets/index.js`. Investigation: the generator accesses `dist/assets/index.js` through a static ESM import (`import { ... } from "../dist/assets/index.js"`, script lines 6-10) and the entrypoint is read by Node's internal ESM loader; both reads use internal bindings on the loader thread and never pass through the public `node:fs/promises` wrapper, so the existing `direct-runtime-fs-promises-wrapper.mjs` cannot observe them. The derived read set is exactly one path (pinned by `_direct_runtime_prepared_dynamic_build_output_v1`'s frozen regex), so the barrel's ~30 re-export siblings are undeclared and must be silently ignored. Green mechanism (bounded to the tracer machinery only): the trace config gains additive `moduleLoads` (entrypoint `BASELINE_READ` + one `DERIVED_BUILD_READ` per receipt-bound derived read, derived by the new `_direct_runtime_module_loads_v1`) and `moduleLoadObservationsPath`; the `--import` bootstrap emits the module-load events at ordinals `0..k-1` before the entrypoint loads (entrypoint at ordinal 0 is the constraint-mandated pattern); the `fs.promises` wrapper resumes its ordinal counter at `k` by counting the existing prefix, keeping one deterministic gap-free sequence; the loader-thread `load` hook only records observations of module loads classifying into the declared sets and listed in `moduleLoads` (everything else silently ignored — scoped emission, strict `UNDECLARED` rejection stays for the `fs.promises` path only, asymmetry documented in the acceptance doc); the trace receipt requires observations == `moduleLoads` exactly and fails closed (nonzero exit, evidence preserved) when a declared module load was never observed, with its output shape unchanged. The H6 cap line needs no change (constraint 5): both new events are for already-declared paths, so the declared-set-derived cap components already account for them; the observations file is never a traced write. Duplicate discipline (constraint 4) is kept: a path read via both module load and `fs.promises` still fails as a duplicate `(kind, path)`. Bounded Green/acceptance (2026-08-04): accepted in-loop, single-authority per `AGENTS.md` Measure-acceptance ownership, at Green runner SHA-256 `dcf2831c32ea434dd153c3ba51abe18b357956c695d309647c6b98f861b1430f` and frozen test SHA-256 `ecd2738db9f65754a9eb35266df84b0d7c105da33a90fd956951ca77881a2ece`. Reversing only the seven H9b runner edits reconstructs the pre-Green runner at `d697d2a345bb3edd44b6bdf0bc27a43ca0852c46ab5739386316d3f8636363b3` byte-for-byte; the runner diff against that reconstruction is exactly 7 hunks (`+113/-4`: three embedded scripts extended, receipt extended, two trace-config writers extended, one helper added). Red receipt: all four new tests failed in 14.31s against the pre-Green runner (the pre-Green tracer emits only `fs.promises` events); the unchanged 26-test focused selection passes pre-fix (69.95s). Green receipt: the four new tests pass in 16.25s and the exact 30-test focused suite (`-k "... or module_load"`) passes in 111.18s, so no regression exists. The full 75-test module ran once against the Green runner (65 passed, 9 failed, 1 skipped in 830.53s) and once against the byte-reconstructed pre-Green runner (61 passed, 13 failed, 1 skipped in 1006.95s); the failure sets differ by exactly the four new H9b tests, and the other nine failures are byte-identical in both runs and disposed as pre-existing (the same nine as H7/H8/H9a/H10). Receipts: `h9b-sync-module-load-read-observation-pre-green-baseline-20260804.md` and `h9b-sync-module-load-read-observation-green-acceptance-20260804.md`. Excluded: no candidate rerun or closure attempt; no parser, validator, declared-set derivation, bijection, or H6 cap change; no phase-level publisher or validator change; no pre-seal/candidate/hermetic/workspace carrier or publisher change; no marker change (Phase R1 v3 remains `[~]`); no successor, registry, V2/history, Finance, or Podman action. The opt-in H2 pinned-image gate's event expectation is superseded by the accepted H9b contract (the generator entrypoint read is now traced) and must be updated before that gate is re-run; it is skipped in every gate above. A confirming closure attempt is still required before any candidate claim.
 
+  H11 command-plan static completeness audit (2026-08-04): the live confirming
+  attempt `r1-v3-podman-execution-attempt-20260804-0005` passed the trace stage
+  fully (H6/H7/H9a/H9b closed) and advanced to the `accounts-test` FR4 gate,
+  which exited 1 because `apps/accounts/scripts/product-role-rejection.test.ts`
+  failed with `Failed to resolve entry for package "@reading-advantage/domain"`
+  (frozen domain exports point at `./dist/*`; the runner build plan builds only
+  `build-db`, `build-auth`, `build-backend`, never `build-domain`; raw receipts
+  in attempt-0005 show 32/33 tests passing with only this resolution failure).
+  Before any plan change, this slice ran the full static completeness audit
+  over the runner's command plan (runner lines 90-100, 5216-5237, 7988-7992,
+  10325-10342) against the FROZEN R1 v2 archive source surface (never the live
+  worktree, which drifts for db/domain/game-contracts/game-cartridges/
+  advantage-play-kit). The audit table (gate → workspace deps → dist-based →
+  built in plan → verdict) is in
+  `h11-command-plan-static-completeness-audit-pre-green-baseline-20260804.md`:
+  the FR4 gates import `auth`/`db`/`backend` (built) plus `domain` (dist-based,
+  NOT built — missing), and the transitive build-time closure of `build-domain`
+  requires practice-core, knowledge-space-core, game-contracts,
+  activity-tutorial, integrations-github, activity-runtime, srs-engine,
+  advantage-play-kit, and codecamp-knowledge. Two closure builds are NOT
+  hermetically executable from the frozen archive: `@reading-advantage/activity-runtime`
+  (frozen build `node scripts/clean-dist.mjs && tsc`; `scripts/clean-dist.mjs`
+  absent from the archive — verified exit 1) and `@reading-advantage/codecamp-knowledge`
+  (frozen build `tsc && node scripts/copy-data.mjs`; `scripts/copy-data.mjs`
+  absent from the archive). This is the same `.mjs`-capture gap H2/H9b repaired
+  only for the direct-runtime source packet. Per H11 contract item 4 this slice
+  **stops and reports** instead of improvising: the runner command plan is
+  byte-unchanged at `dcf2831c32ea434dd153c3ba51abe18b357956c695d309647c6b98f861b1430f`
+  (reversing the empty H11 runner edit set trivially reconstructs that SHA),
+  and the four new Red tests
+  (`test_command_plan_gate_import_surfaces_are_all_prerequisite_built`,
+  `test_command_plan_builds_domain_after_its_workspace_dep_builds_and_before_gates`,
+  `test_command_plan_build_closure_is_topologically_complete`,
+  `test_command_plan_frozen_build_presteps_are_archive_present`) failed in
+  9.93s against the unchanged runner, encoding the audit as regression
+  evidence; the exact 30-test focused suite still passed in 39.60s. No pinned
+  digest changed because the plan did not legitimately change. A future slice
+  must first resolve the archive-absent `.mjs` build pre-steps (closure/
+  supplement capture or an equivalent frozen-input change) before adding
+  `build-domain` and the closure to the plan; no marker change (Phase R1 v3
+  remains `[~]`), no candidate rerun, no Podman/pnpm transaction, and no
+  successor/registry/V2/history/Finance action was performed.
+
 ## Phase R2: Close or compensate graph coverage gaps
 
 - [x] Task: Execute and record the documented clean-audit/configuration attempt, including `repo-graph config`, scan options, raw audit JSON, stdout/stderr, and exits; select the clean branch only for audit exit `0` with empty unaudited and integrity sets. The v2 candidate binds `r2-clean-audit-attempt-v2-20260801/attempt.json` to the fresh R1 bundle and graph binding; it retained the raw exit and selected the `COMPENSATION_REQUIRED` non-clean branch when unaudited symbols remained. Bounded technical acceptance is recorded by Terra and Sol in the v2 review receipts; commit `772839f` binds the evidence. This is not R2 phase acceptance or an unblock. (deferred:phase-r1-bound-graph)
