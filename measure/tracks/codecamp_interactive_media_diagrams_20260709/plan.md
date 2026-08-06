@@ -36,13 +36,21 @@
 
 ## Production defect repair — 2026-08-06
 
-- [~] Replace Unit 2's deleted Git tutorial with an active, embeddable video
+- [x] Replace Unit 2's deleted Git tutorial with an active, embeddable video
   from the approved creator set.
   - [x] Pin the verified video ID in the Phase A curriculum contract tests.
-  - [~] Update the canonical curriculum seed data and reseed production.
-  - [ ] Verify the Unit 2 embed and YouTube click-through in the public browser.
+  - [x] Update the canonical curriculum seed data and reseed production.
+  - [x] Verify the Unit 2 embed and YouTube click-through in the public browser.
   - The retired video `hwP7WQgm_DE` reports that it is unavailable.
   - The canonical seed now selects Dave Gray's active Git tutorial,
     `CvUiKWv2-C0`.
   - The focused curriculum suite passed all 12 tests; scoped ESLint and diff
-    validation also passed. Production reseed and browser acceptance remain open.
+    validation also passed.
+  - Production seed build `693c1916-8d33-4532-8033-adee89144700` found one
+    retired-ID row, seeded zero new modules and zero new lessons, then asserted
+    zero retired-ID rows and one replacement-ID row.
+  - Revision `codecamp-advantage-00022-met` is Ready at 100% after candidate
+    and public-domain smoke checks.
+  - Authenticated Kimi WebBridge acceptance found the Unit 2 iframe at
+    `https://www.youtube.com/embed/CvUiKWv2-C0` with a 716 by 402 rendered
+    surface and an HTTP 200 embed response.
