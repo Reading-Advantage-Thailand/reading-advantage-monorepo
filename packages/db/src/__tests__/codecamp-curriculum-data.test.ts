@@ -31,7 +31,7 @@ describe("codecamp Phase A curriculum data", () => {
   it("has 29 total lessons across all modules", () => {
     const totalLessons = data.modules.reduce(
       (sum, m) => sum + m.lessons.length,
-      0
+      0,
     );
     expect(totalLessons).toBe(29);
   });
@@ -61,11 +61,17 @@ describe("codecamp Phase A curriculum data", () => {
 
   it("has at least 1 exercise per module that has exercises", () => {
     // Modules 1 has no exercise, modules 2-6 have at least 1
-    const modulesWithExercises = ["git-github", "html-css", "javascript", "typescript", "vitest"];
+    const modulesWithExercises = [
+      "git-github",
+      "html-css",
+      "javascript",
+      "typescript",
+      "vitest",
+    ];
     data.modules.forEach((mod) => {
       if (modulesWithExercises.includes(mod.slug)) {
         const exerciseLessons = mod.lessons.filter(
-          (l) => l.exercises && l.exercises.length > 0
+          (l) => l.exercises && l.exercises.length > 0,
         );
         expect(exerciseLessons.length).toBeGreaterThanOrEqual(1);
       }
@@ -92,17 +98,15 @@ describe("codecamp Phase A curriculum data", () => {
     expect(data.exerciseRepos).toHaveLength(5);
     // M1 (dev-environment) excluded — no exercise repo
     const m1Repos = data.exerciseRepos.filter(
-      (r) => r.moduleSlug === "dev-environment"
+      (r) => r.moduleSlug === "dev-environment",
     );
     expect(m1Repos).toHaveLength(0);
     // All other Phase A modules have repos
     ["git-github", "html-css", "javascript", "typescript", "vitest"].forEach(
       (slug) => {
-        const repos = data.exerciseRepos.filter(
-          (r) => r.moduleSlug === slug
-        );
+        const repos = data.exerciseRepos.filter((r) => r.moduleSlug === slug);
         expect(repos.length).toBe(1);
-      }
+      },
     );
   });
 
@@ -121,5 +125,22 @@ describe("codecamp Phase A curriculum data", () => {
     expect(allContent).toContain("pnpm 8.15.8");
     expect(allContent).toContain("TypeScript 5.9.3");
     expect(allContent).toContain("Vitest 4.1.5");
+  });
+
+  it("uses the verified active Dave Gray tutorial for Unit 2 Git basics", () => {
+    const gitModule = data.modules.find(
+      (module) => module.slug === "git-github",
+    );
+    const gitBasics = gitModule?.lessons.find(
+      (lesson) => lesson.title === "Git Basics — init, add, commit",
+    );
+    const sections = gitBasics?.contentJson.sections;
+    expect(Array.isArray(sections)).toBe(true);
+    expect(sections).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ youtubeId: "CvUiKWv2-C0" }),
+      ]),
+    );
+    expect(JSON.stringify(gitBasics?.contentJson)).not.toContain("hwP7WQgm_DE");
   });
 });

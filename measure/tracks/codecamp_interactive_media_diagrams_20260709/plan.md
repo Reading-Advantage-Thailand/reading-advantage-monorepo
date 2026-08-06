@@ -33,3 +33,16 @@
 - Media-capable lesson rendering shipped in Cloud Run revision `codecamp-advantage-00019-682` with 100% traffic.
 - Authenticated Chrome acceptance verified the Measure lifecycle diagram on a seeded production lesson.
 - This track remains active: only 3 of the specified 16 diagrams and the initial curated-video mapping are implemented. Deployment of the implemented slice does not satisfy the remaining content denominator.
+
+## Production defect repair — 2026-08-06
+
+- [~] Replace Unit 2's deleted Git tutorial with an active, embeddable video
+  from the approved creator set.
+  - [x] Pin the verified video ID in the Phase A curriculum contract tests.
+  - [~] Update the canonical curriculum seed data and reseed production.
+  - [ ] Verify the Unit 2 embed and YouTube click-through in the public browser.
+  - The retired video `hwP7WQgm_DE` reports that it is unavailable.
+  - The canonical seed now selects Dave Gray's active Git tutorial,
+    `CvUiKWv2-C0`.
+  - The focused curriculum suite passed all 12 tests; scoped ESLint and diff
+    validation also passed. Production reseed and browser acceptance remain open.

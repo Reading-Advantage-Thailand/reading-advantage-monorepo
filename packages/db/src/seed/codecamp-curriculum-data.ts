@@ -176,7 +176,7 @@ export function getPhaseACurriculumData() {
                 heading: "Create Your First Repo",
                 body: "Git is a version control system that tracks changes to your code. It lets you undo mistakes, collaborate with others, and see the history of every change.",
                 code: "mkdir personal-portfolio\ncd personal-portfolio\ngit init\n\n# Create a file and commit it\necho \"Hello\" > index.html\ngit add index.html\ngit status              # See what's staged\ngit commit -m \"feat: add initial portfolio page\"",
-                youtubeId: "hwP7WQgm_DE",
+                youtubeId: "CvUiKWv2-C0",
               },
               {
                 heading: "The Git Cycle",
