@@ -73,3 +73,17 @@ _Story ref: spec.md#story-s4_
   - [ ] Task: Close and verify the PR evaluation track
   - [ ] Run frozen/live evaluations, end-to-end GitHub flow, affected/root gates, graph/generate/doctor, and curriculum/product-owner review — human-labelled fixtures, audited human approval of canary/active rollout, revision/redelivery coverage, credentialed GitHub Checks acceptance, and Codecamp SSO-dependent browser verification remain open.
   - [ ] Task: Measure - User Manual Verification 'Phase S4: Calibrate and release safely' (Protocol in workflow.md) — pending the remaining human-labelled evaluation, credentialed GitHub, canary/active approval, graph/doctor, and browser gates; SSO cutover is complete.
+
+## Recurring production queue defect — 2026-08-06
+
+- [ ] Diagnose and fix recurring Codecamp PR reviews that remain `Pending Review`.
+  - [ ] Start with
+        `Reading-Advantage-Thailand/codecamp-exercise-internationalization/pull/1`
+        and its exact `review_jobs` row, attempts, lease, timestamps, and logs.
+  - [ ] Determine why the stall recurs every few units for some users; distinguish
+        webhook loss, enqueue/idempotency conflict, worker scheduling, expired
+        lease reclaim, retry exhaustion, and learner-status projection defects.
+  - [ ] Add Red coverage for the reproduced state and prove automatic recovery.
+  - [ ] Recover the named PR without duplicate comments, review records, progress,
+        objective evidence, or mastery mutation.
+  - [ ] Deploy and verify the repaired queue path with production evidence.
