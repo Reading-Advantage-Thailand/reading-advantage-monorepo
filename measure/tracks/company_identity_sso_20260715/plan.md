@@ -658,3 +658,20 @@ _Story ref: spec.md#story-s7_
     - [~] Complete independent security, migration, and change-quality review.
 
 - [b] Task: Measure - User Manual Verification 'Phase S7: Cut Over and Verify Production' (Protocol in workflow.md) (deferred:company_identity_sso_20260715-s6-acceptance)
+
+### Production defect repair — 2026-08-06
+
+- [~] Task 50: Repair Codecamp post-SSO redirects behind Cloud Run.
+    - [x] Add a regression that presents the callback route with Cloud Run's
+          internal `0.0.0.0:3000` request origin.
+    - [x] Derive every callback redirect from the validated registered
+          Codecamp callback URI, not from the request origin.
+    - [~] Run focused auth tests, typecheck, build, deployment, and public-domain
+          SSO verification without retiring the legacy rollback path.
+      - Focused auth: 2 files and 7 tests passed.
+      - Full Codecamp suite: 59 files passed, 1 skipped; 969 tests passed and
+        200 skipped.
+      - Scoped ESLint and diff validation passed.
+      - Package-wide typecheck remains blocked only by unrelated, pre-existing
+        APK runtime-demo changes outside this defect's file set.
+      - Clean build, deployment, and public-browser SSO verification remain open.

@@ -14,6 +14,7 @@ vi.mock("@/lib/company-oidc", () => ({
   CODECAMP_SESSION_COOKIE: "__Host-ra_codecamp_session",
   CODECAMP_TRANSACTION_COOKIE: "__Host-ra_codecamp_oidc_tx",
   getCodecampOidcClient: () => ({ exchange: mocks.exchange }),
+  getCodecampPublicOrigin: () => "https://codecamp.reading-advantage.com",
   readCodecampCookie: mocks.readCookie,
 }));
 
@@ -22,7 +23,7 @@ import { GET } from "./route";
 /** Creates a representative OIDC callback request. */
 function request(): Request {
   return new Request(
-    "https://codecamp.reading-advantage.com/api/auth/callback?code=code&state=state",
+    "http://0.0.0.0:3000/api/auth/callback?code=code&state=state",
   );
 }
 
@@ -69,5 +70,16 @@ describe("GET /api/auth/callback", () => {
     expect(response.headers.get("set-cookie")).toContain(
       "__Host-ra_codecamp_session=company-token",
     );
+  });
+
+  it("keeps malformed callback errors on the registered public origin", async () => {
+    mocks.readCookie.mockReturnValue(undefined);
+
+    const response = await GET(request());
+
+    expect(response.headers.get("location")).toBe(
+      "https://codecamp.reading-advantage.com/?error=sso",
+    );
+    expect(mocks.exchange).not.toHaveBeenCalled();
   });
 });

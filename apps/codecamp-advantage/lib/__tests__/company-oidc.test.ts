@@ -11,6 +11,7 @@ vi.mock("@reading-advantage/domain", () => ({
 
 import {
   codecampSessionRole,
+  getCodecampPublicOrigin,
   resolveCodecampSessionUser,
 } from "../company-oidc";
 
@@ -26,6 +27,25 @@ const identity = {
 
 describe("Codecamp company OIDC principal projection", () => {
   beforeEach(() => vi.clearAllMocks());
+
+  it("derives the public origin from the registered callback URI", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv(
+      "COMPANY_AUTH_ISSUER_URL",
+      "https://accounts.reading-advantage.com",
+    );
+    vi.stubEnv("COMPANY_AUTH_OIDC_CLIENT_ID", "codecamp-web");
+    vi.stubEnv("COMPANY_AUTH_OIDC_CLIENT_SECRET", "s".repeat(32));
+    vi.stubEnv(
+      "COMPANY_AUTH_OIDC_REDIRECT_URI",
+      "https://codecamp.reading-advantage.com/api/auth/callback",
+    );
+    vi.stubEnv("COMPANY_AUTH_EXPECTED_AUDIENCE", "codecamp");
+
+    expect(getCodecampPublicOrigin()).toBe(
+      "https://codecamp.reading-advantage.com",
+    );
+  });
 
   it("uses the durable local mapping instead of the Accounts subject as user ID", async () => {
     resolveCodecampCompanyPrincipal.mockResolvedValue({
