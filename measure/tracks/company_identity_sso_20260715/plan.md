@@ -661,17 +661,24 @@ _Story ref: spec.md#story-s7_
 
 ### Production defect repair — 2026-08-06
 
-- [~] Task 50: Repair Codecamp post-SSO redirects behind Cloud Run.
+- [x] Task 50: Repair Codecamp post-SSO redirects behind Cloud Run.
     - [x] Add a regression that presents the callback route with Cloud Run's
           internal `0.0.0.0:3000` request origin.
     - [x] Derive every callback redirect from the validated registered
           Codecamp callback URI, not from the request origin.
-    - [~] Run focused auth tests, typecheck, build, deployment, and public-domain
+    - [x] Run focused auth tests, typecheck, build, deployment, and public-domain
           SSO verification without retiring the legacy rollback path.
       - Focused auth: 2 files and 7 tests passed.
       - Full Codecamp suite: 59 files passed, 1 skipped; 969 tests passed and
         200 skipped.
       - Scoped ESLint and diff validation passed.
-      - Package-wide typecheck remains blocked only by unrelated, pre-existing
-        APK runtime-demo changes outside this defect's file set.
-      - Clean build, deployment, and public-browser SSO verification remain open.
+      - The dirty-checkout package gate exposed unrelated APK work, so the
+        release used verified cutover baseline `d414fcc66` plus only the two
+        hotfix commits. Its clean production build passed all 21 tasks.
+      - Cloud Build `216433e9-f190-4f7c-86d2-bce12bdc5b90` passed image,
+        migration, database-doctor, and no-traffic candidate gates.
+      - Revision `codecamp-advantage-00022-met` is Ready at 100%; rollback
+        revision `codecamp-advantage-00020-hay` remains available.
+      - Kimi WebBridge acceptance clicked Login on the public domain, completed
+        Accounts SSO, and returned directly to public `/th` already logged in.
+        No manual URL entry or `0.0.0.0` navigation was required.
