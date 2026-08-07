@@ -24,6 +24,17 @@ apps/*
 **/dist
 **/node_modules
 **/tsconfig.tsbuildinfo
+**/graph.db
 Backup_*.sql
 a.out
 daily-reports
+# Not needed for Cloud Run app images (multi-GB history/evidence)
+measure/
+.scratch/
+tmp/
+services/
+apps/www-reading-advantage/
+apps/workbooks/
+apps/marketing/
+apps/sales-advantage/
+apps/accounts/
