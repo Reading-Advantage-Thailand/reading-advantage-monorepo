@@ -45,7 +45,8 @@ const VIEWS_BY_KEY: Readonly<Record<HostProofAssetKey, AssetView>> = {
   "top-down/32x32/characters/hero-01": "top-down",
   "ui/20x20/inventory/slot": "ui",
   "ui/32x32/items/armor-icons": "ui",
-  "side-view/32x32/characters/enemy-001-idle": "side-view",
+  // Catalog path uses side-view/; runtime AssetView enum uses side-scroll.
+  "side-view/32x32/characters/enemy-001-idle": "side-scroll",
   "ui/16x16/controls/gamepad-buttons": "ui",
 };
 
