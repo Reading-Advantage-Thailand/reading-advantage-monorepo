@@ -155,6 +155,31 @@ gh repo delete "$(gh api /user --jq .login)/codecamp-exercise-git-github" --yes
 
 ---
 
+## Periodic worker (Cloud Scheduler)
+
+Webhooks enqueue a `review_jobs` row and ACK immediately. Processing runs via:
+
+1. A post-ACK best-effort `runWorkerTick()` inside the webhook handler
+2. **Cloud Scheduler** `POST /api/internal/review-worker-tick` every 2 minutes
+   with `Authorization: Bearer $REVIEW_WORKER_TICK_TOKEN`
+
+Ops tick (manual):
+
+```bash
+TOKEN=$(gcloud secrets versions access latest --secret=CODECAMP_REVIEW_WORKER_TICK_TOKEN)
+curl -sS -X POST "https://codecamp.reading-advantage.com/api/internal/review-worker-tick" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+Required production env:
+
+| Variable | Value |
+|----------|--------|
+| `AI_PROVIDER` | `openrouter` |
+| `CODECAMP_PR_REVIEW_ROLLOUT_MODE` | `active` |
+| `CODECAMP_PR_REVIEW_RELEASE_APPROVED_BY` | non-empty approver identity |
+| `REVIEW_WORKER_TICK_TOKEN` | secret `CODECAMP_REVIEW_WORKER_TICK_TOKEN` |
+
 ## Troubleshooting
 
 | Symptom | Likely cause | Fix |
@@ -164,6 +189,8 @@ gh repo delete "$(gh api /user --jq .login)/codecamp-exercise-git-github" --yes
 | Exit 2 and GitHub App "Recent Deliveries" tab shows no deliveries for the PR | App not installed on the target repo, or installation lost write access | Visit `https://github.com/organizations/Reading-Advantage-Thailand/settings/installations/132752129` and confirm the repo is selected |
 | Exit 3 with "Review failed — please check manually." | OpenRouter outage, key revoked, or `getInstallationTokenForRepo()` failure | Cloud Run logs for `[GitHub Webhook] LLM review failed:` stack trace |
 | `[E2E] fork did not appear within 40s` | GitHub fork-creation lag | Re-run; or `gh repo fork <upstream> --clone=false` manually then re-run |
+| PR review stuck `pending` with job `attempts=0` | Claim SQL Date bind bug (fixed) or tick never ran | Confirm Scheduler job + hit tick endpoint; check `review_jobs.last_error` |
+| Tick returns 503 | `REVIEW_WORKER_TICK_TOKEN` missing on Cloud Run | Bind secret `CODECAMP_REVIEW_WORKER_TICK_TOKEN` |
 
 ---
 

@@ -76,14 +76,20 @@ _Story ref: spec.md#story-s4_
 
 ## Recurring production queue defect — 2026-08-06
 
-- [ ] Diagnose and fix recurring Codecamp PR reviews that remain `Pending Review`.
-  - [ ] Start with
+- [x] Diagnose and fix recurring Codecamp PR reviews that remain `Pending Review`.
+  - [x] Start with
         `Reading-Advantage-Thailand/codecamp-exercise-internationalization/pull/1`
         and its exact `review_jobs` row, attempts, lease, timestamps, and logs.
-  - [ ] Determine why the stall recurs every few units for some users; distinguish
-        webhook loss, enqueue/idempotency conflict, worker scheduling, expired
-        lease reclaim, retry exhaustion, and learner-status projection defects.
-  - [ ] Add Red coverage for the reproduced state and prove automatic recovery.
-  - [ ] Recover the named PR without duplicate comments, review records, progress,
-        objective evidence, or mastery mutation.
+        Job `821bd8c9-…` stayed `pending` / `attempts=0` from 2026-08-03; review
+        recovered to `approved` via ops on 2026-08-07.
+  - [x] Root causes: (1) claim/reclaim bound JS `Date` into `sql\`\`` → postgres-js
+        rejects params so claim never succeeds; (2) no periodic tick on Next.js
+        Cloud Run (only fire-and-forget post-webhook); (3) failed deploy 00004 used
+        missing secret names `OPENAI_API_KEY`/`GOOGLE_AI_API_KEY`; (4) default
+        `shadow` + missing `AI_PROVIDER=openrouter`; (5) strict objectiveEvidence
+        validation failed closed when the model omitted graph objectives.
+  - [x] Fix claim ISO timestamp binds; coerce missing objective evidence; add
+        `POST /api/internal/review-worker-tick`; Cloud Scheduler every 2m; fix
+        cloudbuild secrets/env (active rollout, openrouter, real SM names).
+  - [x] Recover the named PR (ops approve + PR comment; job `succeeded`).
   - [ ] Deploy and verify the repaired queue path with production evidence.

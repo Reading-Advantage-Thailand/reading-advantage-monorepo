@@ -77,6 +77,58 @@ describe("Phase 3 — claimDueJobs uses FOR UPDATE SKIP LOCKED", () => {
     expect(text, "SQL must use placeholders").toMatch(/\$\d+/);
   });
 
+  it("claimDueJobs binds ISO timestamp strings so postgres-js does not reject Date params", async () => {
+    const conn = createMockConn();
+    const now = new Date("2026-08-03T05:13:40.837Z");
+
+    try {
+      await claimDueJobs(conn as unknown as import("@reading-advantage/db").DB, {
+        batchSize: 1,
+        workerId: "worker:iso-bind",
+        now,
+      });
+    } catch {
+      // Mock connection may throw; assertion is on the bound params.
+    }
+
+    const calls = conn.execute.mock?.calls ?? [];
+    expect(calls.length, "execute call count").toBeGreaterThan(0);
+    const received = calls[0][0] as {
+      queryChunks?: unknown[];
+      toQuery?: (config: Record<string, unknown>) => { sql: string; params?: unknown[] };
+    };
+    // Drizzle sql templates expose bound values via toQuery params and/or inline chunks.
+    let params: unknown[] = [];
+    if (typeof received.toQuery === "function") {
+      try {
+        const q = received.toQuery({
+          escapeName: (n: string) => `"${n}"`,
+          escapeString: (s: string) => `'${String(s).replace(/'/g, "''")}'`,
+          escapeParam: (_idx: number, value: unknown) => {
+            params.push(value);
+            return `$${params.length}`;
+          },
+        });
+        if (Array.isArray(q.params)) params = q.params;
+      } catch {
+        // Some drizzle versions throw without a full dialect; fall through to chunk scan.
+      }
+    }
+    if (params.length === 0 && Array.isArray(received.queryChunks)) {
+      params = received.queryChunks.filter((chunk) => typeof chunk === "string" || chunk instanceof Date);
+    }
+    // Prefer a structural assertion: no Date object may be bound (postgres-js rejects them).
+    for (const value of params) {
+      expect(value instanceof Date, `bound param must not be Date: ${String(value)}`).toBe(false);
+    }
+    const isoBound = params.some((value) => value === now.toISOString());
+    const text = sqlText(received);
+    expect(
+      isoBound || text.includes(now.toISOString()) || params.some((value) => typeof value === "string" && value.includes("2026-08-03")),
+      "claim SQL must bind the ISO timestamp string for timestamptz parameters",
+    ).toBe(true);
+  });
+
   it("claimDueJobs rejects a workerId with unsafe characters", async () => {
     const conn = createMockConn();
 

@@ -85,7 +85,7 @@ export {
 export type { PracticeIssue } from "@reading-advantage/integrations-github";
 export { getPracticeIssues } from "./github-issues.js";
 
-export { reviewExercise, reviewResultSchema, reviewResultGenerationSchema, reviewEvidenceReferenceSchema, reviewObjectiveEvidenceSchema, reviewTrustedCheckRunSchema, reviewTrustedContextSchema, apkPrEvaluationSchema, apkTrustedPrEvidenceSchema, isPassingAPKPrEvaluation, aiClientToGenerateReview, aiClientToGenerateReviewWithProvenance, resolveCodecampPrReviewModel, resolveReviewObjectiveBindings, validateReviewObjectiveEvidence, assertSafeReviewDiff, DEFAULT_CODECAMP_PR_REVIEW_MODEL, type ReviewResult, type ReviewTrustedContext, type APKPrEvaluation, type APKTrustedPrEvidence, type ReviewGenerationProvenance, type ReviewGenerationWithProvenance } from "./review-exercise.js";
+export { reviewExercise, reviewResultSchema, reviewResultGenerationSchema, reviewEvidenceReferenceSchema, reviewObjectiveEvidenceSchema, reviewTrustedCheckRunSchema, reviewTrustedContextSchema, apkPrEvaluationSchema, apkTrustedPrEvidenceSchema, isPassingAPKPrEvaluation, aiClientToGenerateReview, aiClientToGenerateReviewWithProvenance, resolveCodecampPrReviewModel, resolveReviewObjectiveBindings, coerceReviewObjectiveEvidence, extractDiffEvidenceAnchors, validateReviewObjectiveEvidence, assertSafeReviewDiff, DEFAULT_CODECAMP_PR_REVIEW_MODEL, type ReviewResult, type ReviewTrustedContext, type DiffEvidenceAnchor, type APKPrEvaluation, type APKTrustedPrEvidence, type ReviewGenerationProvenance, type ReviewGenerationWithProvenance } from "./review-exercise.js";
 export {
   buildAdvisoryAPKObjectiveEvidence,
   buildAdvisoryPrObjectiveEvidence,

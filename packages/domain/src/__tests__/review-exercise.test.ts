@@ -377,4 +377,41 @@ describe("reviewExercise", () => {
       generateReview: vi.fn().mockResolvedValue(review),
     })).resolves.toMatchObject({ objectiveEvidence: review.objectiveEvidence });
   });
+
+  it("coerces missing graph-authorized objective evidence instead of failing the advisory review", async () => {
+    const moduleRow = {
+      id: "m-i18n",
+      title: "Internationalization",
+      description: "next-intl",
+      slug: "internationalization",
+      order: 14,
+      phase: "B",
+      status: "published",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const [binding] = resolveReviewObjectiveBindings("internationalization");
+    expect(binding).toBeDefined();
+    const prDiff = "diff --git a/src/messages/en.json b/src/messages/en.json\n@@ -1 +1,2 @@\n-{}\n+{\"home\":{\"title\":\"Hello\"}}\n";
+    const result = await reviewExercise({
+      db: wrapDb(createMockDb({ selectResults: [moduleRow] })),
+      user: admin,
+      tenant: globalTenant,
+      prDiff,
+      moduleId: moduleRow.id,
+      generateReview: vi.fn().mockResolvedValue({
+        passed: true,
+        summary: "Looks good but the model forgot objectiveEvidence.",
+        comments: [],
+        objectiveEvidence: [],
+      }),
+    });
+    expect(result.objectiveEvidence).toHaveLength(1);
+    expect(result.objectiveEvidence[0]).toMatchObject({
+      objectiveId: binding!.objectiveId,
+      score: 70,
+      confidence: 35,
+      references: [{ filePath: "src/messages/en.json", startLine: 1, endLine: 2, testName: null }],
+    });
+  });
 });

@@ -254,6 +254,118 @@ export function resolveReviewObjectiveBindings(moduleSlug: string): Array<{
     })));
 }
 
+/** One changed-file anchor extracted from a unified diff for evidence grounding. */
+export interface DiffEvidenceAnchor {
+  filePath: string;
+  startLine: number;
+  endLine: number;
+}
+
+/**
+ * Extracts changed file paths and addition hunk ranges from a unified PR diff.
+ * @param prDiff GitHub unified diff text.
+ * @returns Path set, per-path addition ranges, and stable anchors for fallback references.
+ */
+export function extractDiffEvidenceAnchors(prDiff: string): {
+  changedPaths: Set<string>;
+  changedLineRanges: Map<string, Array<{ startLine: number; endLine: number }>>;
+  anchors: DiffEvidenceAnchor[];
+} {
+  const changedPaths = new Set<string>();
+  const changedLineRanges = new Map<string, Array<{ startLine: number; endLine: number }>>();
+  const anchors: DiffEvidenceAnchor[] = [];
+  let currentPath: string | null = null;
+  for (const line of prDiff.split("\n")) {
+    const fileMatch = /^diff --git a\/(.+) b\/(.+)$/.exec(line);
+    if (fileMatch) {
+      currentPath = fileMatch[2]!;
+      changedPaths.add(fileMatch[1]!);
+      changedPaths.add(currentPath);
+      continue;
+    }
+    const hunkMatch = /^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@/.exec(line);
+    if (!hunkMatch || currentPath === null) continue;
+    const startLine = Number(hunkMatch[1]);
+    const count = Number(hunkMatch[2] ?? "1");
+    if (count > 0) {
+      const range = { startLine, endLine: startLine + count - 1 };
+      changedLineRanges.set(currentPath, [...(changedLineRanges.get(currentPath) ?? []), range]);
+      anchors.push({ filePath: currentPath, startLine: range.startLine, endLine: range.endLine });
+    }
+  }
+  return { changedPaths, changedLineRanges, anchors };
+}
+
+/**
+ * Returns whether every evidence reference cites a changed path and addition hunk.
+ * @param objective Objective evidence row with file references.
+ * @param changedPaths Paths present in the reviewed diff.
+ * @param changedLineRanges Addition hunk ranges keyed by path.
+ */
+function objectiveReferencesAreDiffGrounded(
+  objective: ReviewResult["objectiveEvidence"][number],
+  changedPaths: Set<string>,
+  changedLineRanges: Map<string, Array<{ startLine: number; endLine: number }>>,
+): boolean {
+  if (objective.references.length === 0) return false;
+  return objective.references.every((reference) => {
+    if (!changedPaths.has(reference.filePath)) return false;
+    const ranges = changedLineRanges.get(reference.filePath) ?? [];
+    return ranges.some((range) => reference.startLine >= range.startLine && reference.endLine <= range.endLine);
+  });
+}
+
+/**
+ * Coerces incomplete model objective evidence into the authorized graph set so
+ * advisory PR review does not fail closed when the model omits an objective or
+ * cites invalid lines. APK reviews stay strict (no coercion).
+ * @param review Parsed model review payload.
+ * @param moduleSlug Module that owns the exercise repository.
+ * @param prDiff Reviewed unified diff.
+ * @returns Review with authorized, diff-grounded objective evidence when coercible.
+ */
+export function coerceReviewObjectiveEvidence(
+  review: ReviewResult,
+  moduleSlug: string,
+  prDiff: string,
+): ReviewResult {
+  if (moduleSlug === "apk-game-creation") return review;
+  const bindings = resolveReviewObjectiveBindings(moduleSlug);
+  if (bindings.length === 0) {
+    return { ...review, objectiveEvidence: [] };
+  }
+  const { changedPaths, changedLineRanges, anchors } = extractDiffEvidenceAnchors(prDiff);
+  if (anchors.length === 0) return review;
+  const fallbackAnchor = anchors[0]!;
+  const authorized = new Map(bindings.map((binding) => [binding.objectiveId, binding]));
+  const usableById = new Map<string, ReviewResult["objectiveEvidence"][number]>();
+  for (const objective of review.objectiveEvidence) {
+    if (!authorized.has(objective.objectiveId)) continue;
+    if (!objectiveReferencesAreDiffGrounded(objective, changedPaths, changedLineRanges)) continue;
+    if (!usableById.has(objective.objectiveId)) usableById.set(objective.objectiveId, objective);
+  }
+  const objectiveEvidence = bindings.map((binding) => {
+    const existing = usableById.get(binding.objectiveId);
+    if (existing) return existing;
+    const tags = binding.misconceptionTags
+      .filter((tag) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(tag))
+      .slice(0, 8);
+    return {
+      objectiveId: binding.objectiveId,
+      score: review.passed ? 70 : 40,
+      confidence: 35,
+      misconceptionTags: tags,
+      references: [{
+        filePath: fallbackAnchor.filePath,
+        startLine: fallbackAnchor.startLine,
+        endLine: fallbackAnchor.endLine,
+        testName: null,
+      }],
+    };
+  });
+  return { ...review, objectiveEvidence };
+}
+
 /** Validates that model-selected objective evidence names only authorized objectives and changed diff paths. */
 export function validateReviewObjectiveEvidence(
   review: ReviewResult,
@@ -270,25 +382,7 @@ export function validateReviewObjectiveEvidence(
   if (actualObjectiveIds.length !== expectedObjectiveIds.size || new Set(actualObjectiveIds).size !== actualObjectiveIds.length || actualObjectiveIds.some((objectiveId) => !expectedObjectiveIds.has(objectiveId))) {
     throw new Error("Review output must cover every graph-bound objective exactly once");
   }
-  const changedPaths = new Set<string>();
-  const changedLineRanges = new Map<string, Array<{ startLine: number; endLine: number }>>();
-  let currentPath: string | null = null;
-  for (const line of prDiff.split("\n")) {
-    const fileMatch = /^diff --git a\/(.+) b\/(.+)$/.exec(line);
-    if (fileMatch) {
-      currentPath = fileMatch[2]!;
-      changedPaths.add(fileMatch[1]!);
-      changedPaths.add(currentPath);
-      continue;
-    }
-    const hunkMatch = /^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@/.exec(line);
-    if (!hunkMatch || currentPath === null) continue;
-    const startLine = Number(hunkMatch[1]);
-    const count = Number(hunkMatch[2] ?? "1");
-    if (count > 0) {
-      changedLineRanges.set(currentPath, [...(changedLineRanges.get(currentPath) ?? []), { startLine, endLine: startLine + count - 1 }]);
-    }
-  }
+  const { changedPaths, changedLineRanges } = extractDiffEvidenceAnchors(prDiff);
   for (const objective of review.objectiveEvidence) {
     for (const reference of objective.references) {
       if (!changedPaths.has(reference.filePath)) throw new Error("Review output references a file outside the reviewed diff");
@@ -495,11 +589,14 @@ export async function reviewExercise({
   const objectiveBindings = moduleSlug ? resolveReviewObjectiveBindings(moduleSlug) : [];
   const system = buildSystemPrompt(moduleTitle, moduleDescription, apkRubric, objectiveBindings, trustedContext);
   const prompt = `Please review the following code diff:\n\n\`\`\`diff\n${prDiff}\n\`\`\``;
-  const review = reviewResultSchema.parse(await generateReview(system, prompt));
+  const rawReview = reviewResultSchema.parse(await generateReview(system, prompt));
   if (moduleSlug === "apk-game-creation") {
-    const evaluation = apkPrEvaluationSchema.parse(review.apkEvaluation);
-    if (review.passed !== isPassingAPKPrEvaluation(evaluation)) throw new Error("APK review pass state does not match the authored rubric and required checks");
+    const evaluation = apkPrEvaluationSchema.parse(rawReview.apkEvaluation);
+    if (rawReview.passed !== isPassingAPKPrEvaluation(evaluation)) throw new Error("APK review pass state does not match the authored rubric and required checks");
   }
+  const review = moduleSlug
+    ? coerceReviewObjectiveEvidence(rawReview, moduleSlug, prDiff)
+    : rawReview;
   if (moduleSlug) validateReviewObjectiveEvidence(review, moduleSlug, prDiff);
   return review;
 }

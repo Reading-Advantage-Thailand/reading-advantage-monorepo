@@ -104,12 +104,15 @@ const REQUIRED_SECRETS = [
   "GOOGLE_AI_API_KEY",
   "TUTORIAL_REPORT_SECRET",
   "TUTORIAL_REPOSITORY_WORKER_TOKEN",
+  "REVIEW_WORKER_TICK_TOKEN",
   "COMPANY_AUTH_OIDC_CLIENT_SECRET",
 ] as const;
 
 const REQUIRED_ENV_VARS = [
   "NODE_ENV=production",
   "CODECAMP_AUTH_MODE=company",
+  "AI_PROVIDER=openrouter",
+  "CODECAMP_PR_REVIEW_ROLLOUT_MODE=active",
 ] as const;
 
 // ─── Custom 404 body markers ────────────────────────────────────
@@ -857,13 +860,16 @@ describe("Phase 8.5 — helper unit tests", () => {
         "GOOGLE_AI_API_KEY",
         "TUTORIAL_REPORT_SECRET",
         "TUTORIAL_REPOSITORY_WORKER_TOKEN",
+        "REVIEW_WORKER_TICK_TOKEN",
         "COMPANY_AUTH_OIDC_CLIENT_SECRET",
       ]);
     });
-    it("REQUIRED_ENV_VARS pins production company auth", () => {
+    it("REQUIRED_ENV_VARS pins production company auth, OpenRouter, and active PR review rollout", () => {
       expect(REQUIRED_ENV_VARS).toEqual([
         "NODE_ENV=production",
         "CODECAMP_AUTH_MODE=company",
+        "AI_PROVIDER=openrouter",
+        "CODECAMP_PR_REVIEW_ROLLOUT_MODE=active",
       ]);
     });
   });
