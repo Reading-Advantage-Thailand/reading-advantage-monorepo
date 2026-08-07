@@ -92,4 +92,10 @@ _Story ref: spec.md#story-s4_
         `POST /api/internal/review-worker-tick`; Cloud Scheduler every 2m; fix
         cloudbuild secrets/env (active rollout, openrouter, real SM names).
   - [x] Recover the named PR (ops approve + PR comment; job `succeeded`).
-  - [ ] Deploy and verify the repaired queue path with production evidence.
+  - [x] Deploy and verify the repaired queue path with production evidence
+        (project `codecamp-advantage`, revision `codecamp-advantage-00025-vaz`,
+        image `pr-queue-fix-20260807`; tick
+        `POST /api/internal/review-worker-tick` returns `{"ok":true}` on
+        `codecamp.reading-advantage.com`; Cloud Scheduler
+        `codecamp-review-worker-tick` every 2m; env
+        `AI_PROVIDER=openrouter`, `CODECAMP_PR_REVIEW_ROLLOUT_MODE=active`).

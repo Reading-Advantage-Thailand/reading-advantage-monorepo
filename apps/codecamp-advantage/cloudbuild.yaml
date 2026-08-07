@@ -6,14 +6,14 @@ steps:
       - "-f"
       - "apps/codecamp-advantage/Dockerfile"
       - "-t"
-      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/codecamp/codecamp-advantage:$BUILD_ID"
+      - "asia-southeast1-docker.pkg.dev/codecamp-advantage/codecamp/codecamp-advantage:$BUILD_ID"
       - "."
 
   - name: "gcr.io/cloud-builders/docker"
     id: "push-image"
     args:
       - "push"
-      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/codecamp/codecamp-advantage:$BUILD_ID"
+      - "asia-southeast1-docker.pkg.dev/codecamp-advantage/codecamp/codecamp-advantage:$BUILD_ID"
 
   # CODECAMP_DATABASE_URL is a Cloud SQL unix-socket URL
   # (?host=/cloudsql/<instance>). Cloud Build steps have no /cloudsql socket,
@@ -44,24 +44,25 @@ steps:
       - "run"
       - "deploy"
       - "codecamp-advantage"
-      - "--image=asia-southeast1-docker.pkg.dev/$PROJECT_ID/codecamp/codecamp-advantage:$BUILD_ID"
+      - "--image=asia-southeast1-docker.pkg.dev/codecamp-advantage/codecamp/codecamp-advantage:$BUILD_ID"
       - "--region=asia-southeast1"
       - "--platform=managed"
       - "--allow-unauthenticated"
-      - "--service-account=codecamp-cloud-run@$PROJECT_ID.iam.gserviceaccount.com"
+      - "--service-account=codecamp-cloud-run@codecamp-advantage.iam.gserviceaccount.com"
       - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
+      # Production service + domain live in GCP project `codecamp-advantage`
+      # (not reading-advantage). Submit with: gcloud builds submit --project=codecamp-advantage ...
       # AI_PROVIDER=openrouter: PR review model is ~x-ai/grok-latest via OpenRouter.
       # CODECAMP_PR_REVIEW_ROLLOUT_MODE=active + APPROVED_BY: publish learner-visible
       # advisory feedback (shadow would leave reviews pending forever).
-      # Secret resource names: OpenAI_API_Key / Goole_Cloud_API_Key exist in SM;
-      # OPENAI_API_KEY / GOOGLE_AI_API_KEY do not (broken 00004 deploy).
-      # REVIEW_WORKER_TICK_TOKEN: Cloud Scheduler hits /api/internal/review-worker-tick.
+      # REVIEW_WORKER_TICK_TOKEN: Cloud Scheduler hits /api/internal/review-worker-tick every 2m.
+      - "--project=codecamp-advantage"
       - "--set-env-vars=NODE_ENV=production,CODECAMP_AUTH_MODE=company,AI_PROVIDER=openrouter,NEXT_PUBLIC_API_URL=https://codecamp.reading-advantage.com,TUTORIAL_REPOSITORY_WORKER_URL=https://codecamp.reading-advantage.com/api/internal/tutorial-repository-capture,TUTORIAL_REPOSITORY_BASE_URL=https://github.com,CODECAMP_PR_REVIEW_ROLLOUT_MODE=active,CODECAMP_PR_REVIEW_RELEASE_APPROVED_BY=codecamp-ops-release,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=codecamp-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://codecamp.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=codecamp,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30"
       - "--min-instances=1"
       - "--max-instances=100"
       - "--concurrency=80"
-      - "--set-secrets=DATABASE_URL=CODECAMP_DATABASE_URL:latest,AUTH_SECRET=CODECAMP_AUTH_SECRET:latest,GITHUB_APP_ID=CODECAMP_GITHUB_APP_ID:latest,GITHUB_PRIVATE_KEY=CODECAMP_GITHUB_PRIVATE_KEY:latest,GITHUB_WEBHOOK_SECRET=CODECAMP_GITHUB_WEBHOOK_SECRET:latest,GITHUB_INSTALLATION_ID=CODECAMP_GITHUB_INSTALLATION_ID:latest,OPENROUTER_API_KEY=CODECAMP_OPENROUTER_API_KEY:latest,OPENAI_API_KEY=OpenAI_API_Key:latest,GOOGLE_AI_API_KEY=Goole_Cloud_API_Key:latest,TUTORIAL_REPORT_SECRET=CODECAMP_TUTORIAL_REPORT_SECRET:latest,TUTORIAL_REPOSITORY_WORKER_TOKEN=CODECAMP_TUTORIAL_REPOSITORY_WORKER_TOKEN:latest,REVIEW_WORKER_TICK_TOKEN=CODECAMP_REVIEW_WORKER_TICK_TOKEN:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=projects/1090865515742/secrets/CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest"
-      # Serve production traffic on the new revision (SSO canary tags removed).
+      - "--set-secrets=DATABASE_URL=CODECAMP_DATABASE_URL:latest,AUTH_SECRET=CODECAMP_AUTH_SECRET:latest,GITHUB_APP_ID=CODECAMP_GITHUB_APP_ID:latest,GITHUB_PRIVATE_KEY=CODECAMP_GITHUB_PRIVATE_KEY:latest,GITHUB_WEBHOOK_SECRET=CODECAMP_GITHUB_WEBHOOK_SECRET:latest,GITHUB_INSTALLATION_ID=CODECAMP_GITHUB_INSTALLATION_ID:latest,OPENROUTER_API_KEY=CODECAMP_OPENROUTER_API_KEY:latest,OPENAI_API_KEY=OPENAI_API_KEY:latest,GOOGLE_AI_API_KEY=GOOGLE_AI_API_KEY:latest,TUTORIAL_REPORT_SECRET=CODECAMP_TUTORIAL_REPORT_SECRET:latest,TUTORIAL_REPOSITORY_WORKER_TOKEN=CODECAMP_TUTORIAL_REPOSITORY_WORKER_TOKEN:latest,REVIEW_WORKER_TICK_TOKEN=CODECAMP_REVIEW_WORKER_TICK_TOKEN:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest"
+      # Serve production traffic on the new revision (no --no-traffic).
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "allow-public-invoker"
@@ -70,12 +71,13 @@ steps:
       - "services"
       - "add-iam-policy-binding"
       - "codecamp-advantage"
+      - "--project=codecamp-advantage"
       - "--region=asia-southeast1"
       - "--member=allUsers"
       - "--role=roles/run.invoker"
 
 images:
-  - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/codecamp/codecamp-advantage:$BUILD_ID"
+  - "asia-southeast1-docker.pkg.dev/codecamp-advantage/codecamp/codecamp-advantage:$BUILD_ID"
 
 availableSecrets:
   secretManager:
