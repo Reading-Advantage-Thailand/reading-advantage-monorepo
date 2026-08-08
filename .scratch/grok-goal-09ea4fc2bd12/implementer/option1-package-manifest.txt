@@ -1,0 +1,75 @@
+OPTION 1 SCRATCH PACKAGE MANIFEST
+=================================
+Generated: reasonix-option1-package (mechanical SCRATCH packaging for APK option-1
+terminal closeout). All paths repo-relative to
+/home/daniel-bo/Desktop/reading-advantage-monorepo unless noted.
+
+PATH-DEVIATION NOTE: sandbox blocks writes to /tmp/grok-goal-09ea4fc2bd12/implementer/
+and bash is declined in this session. The four output artifacts were therefore written
+to the workspace-mirrored scratch path <repo>/.scratch/grok-goal-09ea4fc2bd12/implementer/
+(identical content to what was mandated for SCRATCH=/tmp/grok-goal-09ea4fc2bd12/implementer/).
+Relocate verbatim to the /tmp SCRATCH path if required by the orchestrator.
+
+HASH NOTE: sha256sum is unavailable without bash; sha256 values are NOT computed here.
+The authority JSON records sha256 for the fact table and the product-owner approval
+message; those authority-recorded values are cited below as-is (not recomputed by
+this package, not fabricated).
+
+FILES
+-----
+1. Fact table (source of truth for regenerated packages)
+   path:      measure/tracks/apk_option1_terminal_truth_20260803.json
+   size:      14158 bytes
+   sha256:    (authority-recorded, not recomputed) 01fa70f719de67455f764c9d01c21cc9e0014d871621c687e6ceddda61bf60e1
+              source: measure/product-owner-apk-live-path-deletion-authority-20260803.json -> fact_table.sha256
+
+2. Live-deletion authority (option 1, operative-executed)
+   path:      measure/product-owner-apk-live-path-deletion-authority-20260803.json
+   size:      4859 bytes
+   sha256:    not computed (bash blocked)
+   recorded fields: status=operative-executed; criterion_3_retirement_complete=true;
+              approval_event.message_sha256=1ce674f37b5bc66d78552578248b63a795b1eb05dfa7e10cf4d7ff13e0e7ce08
+              (authority-recorded, not recomputed)
+
+3. Agreement test
+   path:      measure/tests/test_apk_option1_terminal_agreement_20260803.py
+   size:      9285 bytes
+   sha256:    not computed (bash blocked)
+
+4-15. Track formal-acceptance + retirement-disposition packages (12 files)
+   4.  measure/tracks/apk_existing_core_cutover_20260727/product-owner-formal-acceptance-2026-08-02.json       5181 bytes
+   5.  measure/tracks/apk_existing_core_cutover_20260727/retirement-disposition-package-2026-08-02.json        4347 bytes
+   6.  measure/tracks/apk_existing_action_cutover_20260727/product-owner-formal-acceptance-2026-08-02.json     5185 bytes
+   7.  measure/tracks/apk_existing_action_cutover_20260727/retirement-disposition-package-2026-08-02.json      3727 bytes
+   8.  measure/tracks/apk_legacy_defense_cutover_20260727/product-owner-formal-acceptance-2026-08-02.json      5183 bytes
+   9.  measure/tracks/apk_legacy_defense_cutover_20260727/retirement-disposition-package-2026-08-02.json       3859 bytes
+   10. measure/tracks/apk_legacy_puzzle_cutover_20260727/product-owner-formal-acceptance-2026-08-02.json       5181 bytes
+   11. measure/tracks/apk_legacy_puzzle_cutover_20260727/retirement-disposition-package-2026-08-02.json        4367 bytes
+   12. measure/tracks/apk_legacy_traversal_cutover_20260727/product-owner-formal-acceptance-2026-08-02.json    5187 bytes
+   13. measure/tracks/apk_legacy_traversal_cutover_20260727/retirement-disposition-package-2026-08-02.json     4400 bytes
+   14. measure/tracks/apk_cross_host_closeout_20260727/product-owner-formal-acceptance-2026-08-02.json         5177 bytes
+   15. measure/tracks/apk_cross_host_closeout_20260727/retirement-disposition-package-2026-08-02.json          2246 bytes
+   sha256: not computed for any of the 12 (bash blocked)
+
+16. final-close-gates.log (measure gates run log; ends "Ran 41 tests ... OK")
+    path:      /tmp/grok-goal-09ea4fc2bd12/implementer/final-close-gates.log (existing SCRATCH file, read-only verified)
+    mirrored:  <repo>/.scratch/grok-goal-09ea4fc2bd12/implementer/final-close-gates.log (NOT copied; see note)
+    size:      99 bytes
+    sha256:    not computed (bash blocked)
+
+17. This greps file (forbidden-phrase grep results, step 1)
+    path:      /tmp/grok-goal-09ea4fc2bd12/implementer/option1-forbidden-phrase-grep.txt (mandated location, write-blocked)
+    written:   <repo>/.scratch/grok-goal-09ea4fc2bd12/implementer/option1-forbidden-phrase-grep.txt
+    size:      4965 bytes
+
+18-20. Other package artifacts written to the mirrored scratch path (see each file):
+    <repo>/.scratch/grok-goal-09ea4fc2bd12/implementer/GOAL-TERMINAL-SUMMARY.txt
+    <repo>/.scratch/grok-goal-09ea4fc2bd12/implementer/reasonix-option1-package-done.txt
+    <repo>/.scratch/grok-goal-09ea4fc2bd12/implementer/option1-package-manifest.txt (this file)
+
+NOTES
+-----
+- sha256: skipped for all locally-verified entries because bash (sha256sum) is
+  blocked in this session; sizes are from ls (verified read-only).
+- No measure/, apps/, or packages/ files were modified by this package.
+- Tracks are NOT marked complete here; no agent self-sign language is used.

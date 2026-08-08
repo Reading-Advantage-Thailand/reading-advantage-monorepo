@@ -1,0 +1,14 @@
+DONE
+
+Files written by reasonix-option1-package (mechanical SCRATCH packaging):
+1. <repo>/.scratch/grok-goal-09ea4fc2bd12/implementer/option1-forbidden-phrase-grep.txt
+   (mandated: SCRATCH=/tmp/grok-goal-09ea4fc2bd12/implementer/option1-forbidden-phrase-grep.txt — write-blocked by sandbox)
+2. <repo>/.scratch/grok-goal-09ea4fc2bd12/implementer/option1-package-manifest.txt
+   (mandated: SCRATCH=/tmp/grok-goal-09ea4fc2bd12/implementer/option1-package-manifest.txt — write-blocked by sandbox)
+3. <repo>/.scratch/grok-goal-09ea4fc2bd12/implementer/GOAL-TERMINAL-SUMMARY.txt
+   (mandated: SCRATCH=/tmp/grok-goal-09ea4fc2bd12/implementer/GOAL-TERMINAL-SUMMARY.txt — write-blocked by sandbox)
+4. <repo>/.scratch/grok-goal-09ea4fc2bd12/implementer/reasonix-option1-package-done.txt
+   (mandated: SCRATCH=/tmp/grok-goal-09ea4fc2bd12/implementer/reasonix-option1-package-done.txt — write-blocked by sandbox)
+
+Content is identical to what was mandated for the /tmp SCRATCH paths; each file
+carries a PATH-DEVIATION NOTE. No measure/, apps/, or packages/ files were modified.

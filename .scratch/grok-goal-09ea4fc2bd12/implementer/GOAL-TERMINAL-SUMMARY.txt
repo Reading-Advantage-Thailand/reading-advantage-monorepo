@@ -1,0 +1,67 @@
+GOAL-TERMINAL-SUMMARY — option-1 terminal closeout (SCRATCH packaging)
+======================================================================
+Generated: reasonix-option1-package (mechanical packaging; honest status only).
+
+PATH-DEVIATION NOTE: sandbox blocks writes to /tmp/grok-goal-09ea4fc2bd12/implementer/
+and bash is declined in this session. This file replaces the prior
+SCRATCH/GOAL-TERMINAL-SUMMARY.txt content and is written to
+<repo>/.scratch/grok-goal-09ea4fc2bd12/implementer/GOAL-TERMINAL-SUMMARY.txt.
+Relocate verbatim to /tmp/grok-goal-09ea4fc2bd12/implementer/GOAL-TERMINAL-SUMMARY.txt
+if the orchestrator requires it at the /tmp path.
+
+STATUS (honest, evidence-cited only)
+------------------------------------
+1. Measure gates: PASS (41 tests OK).
+   Source: /tmp/grok-goal-09ea4fc2bd12/implementer/final-close-gates.log
+   (read-only verified) — last lines: "Ran 41 tests in 23.917s" then "OK".
+   Not re-run by this package (no pnpm/vitest/jest executed).
+
+2. Option 1 executed: YES, per authority record.
+   Source: measure/product-owner-apk-live-path-deletion-authority-20260803.json
+   - status = "operative-executed"; operative = true
+   - criterion_3_retirement_complete = true
+   - execution_result: deleted_path_count = 8, all_deleted_paths_absent = true
+   - tracks listed in applies_to_tracks: the six apk_*_cutover/closeout tracks
+   Fact table: measure/tracks/apk_option1_terminal_truth_20260803.json
+   (criterion_3_retirement_complete = true; deleted-path dispositions per track).
+   Deletion absences were not re-verified by this package (read-only grep/read only).
+
+3. Forbidden-phrase grep (12 target files: 6 formal-acceptance + 6
+   retirement-disposition across the six tracks), exact counts:
+     "Criterion 3 incomplete" ....... 0
+     "zero-deletion" ............... 6   (each inside "no retain-live-callers-zero-deletion
+                                          dispositions" — negated disclaimer, literal substring hit)
+     "retain-zero-deletion" ......... 0
+     "host_proof_note" .............. 6   (JSON field whose value states option-1 production
+                                          path and "criterion-3 retirement complete per fact table")
+   Counts reported verbatim; the 12 non-zero hits are benign-context literal
+   substrings, but they are NOT zero — expectation of 0 for all four phrases is
+   not met literally. Full breakdown: option1-forbidden-phrase-grep.txt.
+
+4. Residual (NOT claimed by this package): host-proof / domain / smoke
+   re-verification is Grok-owned. Prior logs exist under
+   /tmp/grok-goal-09ea4fc2bd12/implementer/ (*-after-multi.log,
+   domain-after-multi.log, cartridge-after-multi.log, cross-host-test-after-reasonix.log,
+   etc.) but were NOT re-run or re-verified in this session. Any host-proof-green
+   claims must come from those logs or a fresh Grok-owned re-run, not from this file.
+
+5. Durable IDs: remain null / LOCAL_VERIFIABLE.
+   Source: authority approval_event — durable_user_message_id = null,
+   durable_user_event_id = null, *_available = false;
+   "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE applies." No durable IDs
+   invented here; none fabricated.
+
+6. Track completion: NOT marked complete by this package. No agent self-sign
+   language is used. The prior SCRATCH/GOAL-TERMINAL-SUMMARY.txt content
+   ("status=complete decided_by=product-owner ... ASSERT_ALL_CUTOVERS_COMPLETE=PASS")
+   is superseded by this honest status; the product owner's own authority record
+   (operative-executed) is the operative completion signal, and only the product
+   owner / Grok may assert track close.
+
+PACKAGE ARTIFACTS
+-----------------
+- <repo>/.scratch/grok-goal-09ea4fc2bd12/implementer/option1-forbidden-phrase-grep.txt
+- <repo>/.scratch/grok-goal-09ea4fc2bd12/implementer/option1-package-manifest.txt
+- <repo>/.scratch/grok-goal-09ea4fc2bd12/implementer/GOAL-TERMINAL-SUMMARY.txt (this file)
+- <repo>/.scratch/grok-goal-09ea4fc2bd12/implementer/reasonix-option1-package-done.txt
+(mandated destinations: /tmp/grok-goal-09ea4fc2bd12/implementer/* — write-blocked by sandbox)

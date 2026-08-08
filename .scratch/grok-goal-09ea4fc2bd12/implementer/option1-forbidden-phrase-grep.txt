@@ -1,0 +1,78 @@
+OPTION 1 FORBIDDEN-PHRASE GREP RESULTS
+=======================================
+Generated: reasonix-option1-package (SCRATCH packaging only; no repo files modified)
+Tool: ripgrep-backed grep tool (bash blocked in this session; no hashes computed)
+
+PATH-DEVIATION NOTE: sandbox blocks writes to /tmp/grok-goal-09ea4fc2bd12/implementer/
+and bash is declined, so this file was written to the workspace-mirrored scratch path
+<repo>/.scratch/grok-goal-09ea4fc2bd12/implementer/option1-forbidden-phrase-grep.txt.
+Content is identical to the file mandated for SCRATCH/option1-forbidden-phrase-grep.txt;
+relocate verbatim if the orchestrator needs it at the /tmp path.
+
+SCOPE (12 target files only):
+  6 x product-owner-formal-acceptance-2026-08-02.json
+  6 x retirement-disposition-package-2026-08-02.json
+  across:
+    measure/tracks/apk_existing_core_cutover_20260727/
+    measure/tracks/apk_existing_action_cutover_20260727/
+    measure/tracks/apk_legacy_defense_cutover_20260727/
+    measure/tracks/apk_legacy_puzzle_cutover_20260727/
+    measure/tracks/apk_legacy_traversal_cutover_20260727/
+    measure/tracks/apk_cross_host_closeout_20260727/
+
+EXACT COUNTS PER PHRASE (within the 12 target files only)
+---------------------------------------------------------
+"Criterion 3 incomplete" ....... 0   (expected 0 when c3 complete — PASS)
+"zero-deletion" ............... 6   (NOT zero — see context below)
+"retain-zero-deletion" ......... 0   (expected 0 — PASS)
+"host_proof_note" .............. 6   (NOT zero — see context below)
+
+PER-FILE BREAKDOWN
+------------------
+Phrase "zero-deletion" (6 lines, 1 per retirement-disposition file; every hit is
+the substring inside "no retain-live-callers-zero-deletion dispositions", i.e. a
+negated statement that no such disposition exists):
+  measure/tracks/apk_existing_core_cutover_20260727/retirement-disposition-package-2026-08-02.json:74
+  measure/tracks/apk_existing_action_cutover_20260727/retirement-disposition-package-2026-08-02.json:67
+  measure/tracks/apk_legacy_defense_cutover_20260727/retirement-disposition-package-2026-08-02.json:67
+  measure/tracks/apk_legacy_puzzle_cutover_20260727/retirement-disposition-package-2026-08-02.json:77
+  measure/tracks/apk_legacy_traversal_cutover_20260727/retirement-disposition-package-2026-08-02.json:78
+  measure/tracks/apk_cross_host_closeout_20260727/retirement-disposition-package-2026-08-02.json:31
+  Each line reads: "criterion_3_note": "Criterion 3 complete under option 1 per fact
+  table; deleted paths must be absent; no retain-live-callers-zero-deletion dispositions."
+
+Phrase "host_proof_note" (6 lines, 1 per formal-acceptance file; the field carries
+the option-1 host-proof production-path note):
+  measure/tracks/apk_existing_core_cutover_20260727/product-owner-formal-acceptance-2026-08-02.json:27
+  measure/tracks/apk_existing_action_cutover_20260727/product-owner-formal-acceptance-2026-08-02.json:27
+  measure/tracks/apk_legacy_defense_cutover_20260727/product-owner-formal-acceptance-2026-08-02.json:27
+  measure/tracks/apk_legacy_puzzle_cutover_20260727/product-owner-formal-acceptance-2026-08-02.json:27
+  measure/tracks/apk_legacy_traversal_cutover_20260727/product-owner-formal-acceptance-2026-08-02.json:27
+  measure/tracks/apk_cross_host_closeout_20260727/product-owner-formal-acceptance-2026-08-02.json:27
+  Each line reads: "host_proof_note": "Dual-host host-proof is the production path
+  under option 1; production catalog exposure authorized; criterion-3 retirement
+  complete per fact table."
+
+Phrase "Criterion 3 incomplete": 0 matches in all 12 target files.
+Phrase "retain-zero-deletion": 0 matches in all 12 target files.
+
+OUT-OF-SCOPE MATCHES (track dir files other than the 12 target files; NOT counted):
+  "zero-deletion" appears in non-target track files, e.g.
+    apk_existing_core_cutover_20260727/cross-host-cutover-handoff-candidate-v1.json:23
+    apk_existing_core_cutover_20260727/review-2026-08-01.md:14
+    apk_existing_core_cutover_20260727/task6-legacy-retirement-manifest-v1.json:1376
+    apk_cross_host_closeout_20260727/USER-INPUT-REQUIRED-production-cutover-and-live-retirement-20260803.json:10
+
+HONEST INTERPRETATION
+---------------------
+Expected 0 for all four phrases when criterion 3 is complete. Actual mechanical
+counts: 0 / 6 / 0 / 6. The 12 non-zero hits are literal substring matches of the
+listed phrases, but every occurrence is in a benign context:
+  - "zero-deletion" occurs only inside "no retain-live-callers-zero-deletion
+    dispositions" (negation; the fact-table-forbidden disposition pattern is
+    explicitly disclaimed, and "retain-zero-deletion" itself = 0).
+  - "host_proof_note" is a JSON field whose value states option-1 live-path
+    deletion production path and "criterion-3 retirement complete per fact table".
+No target file contains "Criterion 3 incomplete" or "retain-zero-deletion".
+These counts are reported verbatim; no counts were adjusted to meet the
+0-expected assumption.
