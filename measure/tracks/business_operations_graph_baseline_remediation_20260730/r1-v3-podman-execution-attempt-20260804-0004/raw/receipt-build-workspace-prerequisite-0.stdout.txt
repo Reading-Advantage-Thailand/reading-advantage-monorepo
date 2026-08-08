@@ -1,0 +1,10 @@
+[34mCLI[39m Building entry: src/index.ts
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Target: es2022
+[34mESM[39m Build start
+[32mESM[39m [1mdist/index.js [22m[32m10.63 KB[39m
+[32mESM[39m ⚡️ Build success in 577ms
+[34mDTS[39m Build start
+[32mDTS[39m ⚡️ Build success in 50129ms
+[32mDTS[39m [1mdist/index.d.ts [22m[32m12.34 KB[39m

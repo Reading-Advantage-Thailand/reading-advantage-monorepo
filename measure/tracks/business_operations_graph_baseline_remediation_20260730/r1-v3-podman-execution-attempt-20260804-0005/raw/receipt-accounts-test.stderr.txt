@@ -1,0 +1,32 @@
+$ vitest run
+[90mstderr[2m | app/api/oidc/logout/route.test.ts
+[22m[39mDATABASE_URL is not set — database operations will fail at query time.
+
+[90mstderr[2m | scripts/idempotency-postgres.integration.test.ts
+[22m[39mDATABASE_URL is not set — database operations will fail at query time.
+
+[90mstderr[2m | scripts/migrate-codecamp-identities.test.ts
+[22m[39mDATABASE_URL is not set — database operations will fail at query time.
+
+[90mstderr[2m | scripts/product-role-rejection.test.ts
+[22m[39mDATABASE_URL is not set — database operations will fail at query time.
+
+[90mstderr[2m | app/api/admin/employees/route.test.ts
+[22m[39mDATABASE_URL is not set — database operations will fail at query time.
+
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Suites 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m scripts/product-role-rejection.test.ts[2m [ scripts/product-role-rejection.test.ts ][22m
+[31m[1mError[22m: Failed to resolve entry for package "@reading-advantage/domain". The package may have incorrect main/module/exports specified in its package.json.[39m
+[36m [2m❯[22m ../codecamp-advantage/lib/company-oidc.ts:[2m7:1[22m[39m
+    [90m  5|[39m } [35mfrom[39m [32m"@reading-advantage/auth"[39m[33m;[39m
+    [90m  6|[39m [35mimport[39m { db } [35mfrom[39m [32m"@reading-advantage/db"[39m[33m;[39m
+    [90m  7|[39m import { resolveCodecampCompanyPrincipal } from "@reading-advantage/do…
+    [90m   |[39m [31m^[39m
+    [90m  8|[39m
+    [90m  9|[39m [90m/** Host-only opaque Codecamp application-session cookie. */[39m
+[90m [2m❯[22m scripts/product-role-rejection.test.ts:[2m4:1[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+

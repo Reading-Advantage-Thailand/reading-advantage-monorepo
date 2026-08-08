@@ -1,0 +1,84 @@
+Scope: all 40 workspace projects
+Lockfile is up to date, resolution step is skipped
+Packages: +2035
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 0, reused 1, downloaded 0, added 0
+Progress: resolved 0, reused 40, downloaded 0, added 0
+Progress: resolved 0, reused 74, downloaded 0, added 0
+Progress: resolved 0, reused 156, downloaded 0, added 0
+Progress: resolved 0, reused 252, downloaded 0, added 0
+Progress: resolved 0, reused 404, downloaded 0, added 0
+Progress: resolved 0, reused 643, downloaded 0, added 0
+Progress: resolved 0, reused 811, downloaded 0, added 0
+Progress: resolved 0, reused 985, downloaded 0, added 0
+Progress: resolved 0, reused 1346, downloaded 0, added 0
+Progress: resolved 0, reused 1730, downloaded 0, added 0
+Progress: resolved 0, reused 1943, downloaded 0, added 17
+Progress: resolved 0, reused 1943, downloaded 0, added 30
+Progress: resolved 0, reused 1943, downloaded 0, added 44
+Progress: resolved 0, reused 1943, downloaded 0, added 58
+Progress: resolved 0, reused 1943, downloaded 0, added 67
+Progress: resolved 0, reused 1943, downloaded 0, added 74
+Progress: resolved 0, reused 1943, downloaded 0, added 84
+Progress: resolved 0, reused 1943, downloaded 0, added 93
+Progress: resolved 0, reused 1943, downloaded 0, added 122
+Progress: resolved 0, reused 1943, downloaded 0, added 123
+Progress: resolved 0, reused 1943, downloaded 0, added 133
+Progress: resolved 0, reused 1943, downloaded 0, added 145
+Progress: resolved 0, reused 1943, downloaded 0, added 152
+Progress: resolved 0, reused 1943, downloaded 0, added 155
+Progress: resolved 0, reused 1943, downloaded 0, added 166
+Progress: resolved 0, reused 1943, downloaded 0, added 180
+Progress: resolved 0, reused 1943, downloaded 0, added 214
+Progress: resolved 0, reused 1943, downloaded 0, added 255
+Progress: resolved 0, reused 1943, downloaded 0, added 264
+Progress: resolved 0, reused 1943, downloaded 0, added 273
+Progress: resolved 0, reused 1943, downloaded 0, added 328
+Progress: resolved 0, reused 1943, downloaded 0, added 380
+Progress: resolved 0, reused 1943, downloaded 0, added 392
+Progress: resolved 0, reused 1943, downloaded 0, added 452
+Progress: resolved 0, reused 1943, downloaded 0, added 540
+Progress: resolved 0, reused 1943, downloaded 0, added 579
+Progress: resolved 0, reused 1943, downloaded 0, added 599
+Progress: resolved 0, reused 1943, downloaded 0, added 604
+Progress: resolved 0, reused 1943, downloaded 0, added 650
+Progress: resolved 0, reused 1943, downloaded 0, added 657
+Progress: resolved 0, reused 1943, downloaded 0, added 672
+Progress: resolved 0, reused 1943, downloaded 0, added 683
+Progress: resolved 0, reused 1943, downloaded 0, added 686
+Progress: resolved 0, reused 1943, downloaded 0, added 694
+Progress: resolved 0, reused 1943, downloaded 0, added 732
+Progress: resolved 0, reused 1943, downloaded 0, added 763
+Progress: resolved 0, reused 1943, downloaded 0, added 785
+Progress: resolved 0, reused 1943, downloaded 0, added 837
+Progress: resolved 0, reused 1943, downloaded 0, added 898
+Progress: resolved 0, reused 1943, downloaded 0, added 963
+Progress: resolved 0, reused 1943, downloaded 0, added 981
+Progress: resolved 0, reused 1943, downloaded 0, added 1060
+Progress: resolved 0, reused 1943, downloaded 0, added 1147
+Progress: resolved 0, reused 1943, downloaded 0, added 1218
+Progress: resolved 0, reused 1943, downloaded 0, added 1256
+Progress: resolved 0, reused 1943, downloaded 0, added 1261
+Progress: resolved 0, reused 1943, downloaded 0, added 1283
+Progress: resolved 0, reused 1943, downloaded 0, added 1342
+Progress: resolved 0, reused 1943, downloaded 0, added 1434
+Progress: resolved 0, reused 1943, downloaded 0, added 1520
+Progress: resolved 0, reused 1943, downloaded 0, added 1575
+Progress: resolved 0, reused 1943, downloaded 0, added 1582
+Progress: resolved 0, reused 1943, downloaded 0, added 1705
+Progress: resolved 0, reused 1943, downloaded 0, added 1801
+Progress: resolved 0, reused 1943, downloaded 0, added 1831
+Progress: resolved 0, reused 1943, downloaded 0, added 1869
+Progress: resolved 0, reused 1943, downloaded 0, added 1918
+Progress: resolved 0, reused 1943, downloaded 0, added 1935
+Progress: resolved 0, reused 1943, downloaded 0, added 1993
+Progress: resolved 0, reused 1943, downloaded 0, added 2035
+Progress: resolved 0, reused 1943, downloaded 0, added 2035, done
+[WARN] Failed to create bin at /work/packages/api/node_modules/.bin/tutorial-check. ENOENT: no such file or directory, chmod '/work/packages/api/node_modules/@reading-advantage/activity-tutorial/dist/cli.js'
+[WARN] Failed to create bin at /work/packages/codecamp-knowledge/node_modules/.bin/tutorial-check. ENOENT: no such file or directory, chmod '/work/packages/codecamp-knowledge/node_modules/@reading-advantage/activity-tutorial/dist/cli.js'
+[WARN] Failed to create bin at /work/packages/domain/node_modules/.bin/tutorial-check. ENOENT: no such file or directory, chmod '/work/packages/domain/node_modules/@reading-advantage/activity-tutorial/dist/cli.js'
+
+. prepare$ husky
+. prepare: .git can't be found
+. prepare: Done
+Done in 1m 33.4s using pnpm v11.8.0

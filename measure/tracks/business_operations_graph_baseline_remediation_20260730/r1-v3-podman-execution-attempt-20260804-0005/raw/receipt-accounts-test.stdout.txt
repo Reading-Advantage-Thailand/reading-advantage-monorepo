@@ -1,0 +1,25 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.8 [39m[90m/work/apps/accounts[39m
+
+ [32m✓[39m scripts/production-readiness.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 81[2mms[22m[39m
+ [32m✓[39m lib/server/telemetry.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 206[2mms[22m[39m
+ [32m✓[39m app/api/oidc/logout/route.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 72[2mms[22m[39m
+ [2m[90m↓[39m[22m scripts/idempotency-postgres.integration.test.ts [2m([22m[2m1 test[22m[2m | [22m[33m1 skipped[39m[2m)[22m
+ [32m✓[39m scripts/migrate-codecamp-identities.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 77[2mms[22m[39m
+ [32m✓[39m app/accounts-console.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 3310[2mms[22m[39m
+     [33m[2m✓[22m[39m shows application access but no identity controls to an ordinary employee [33m 1776[2mms[22m[39m
+     [33m[2m✓[22m[39m scopes role changes to one application and confirms lifecycle suspension [33m 1521[2mms[22m[39m
+ [32m✓[39m scripts/bootstrap-contract.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [31m❯[39m scripts/product-role-rejection.test.ts [2m([22m[2m0 test[22m[2m)[22m
+ [32m✓[39m app/api/ready/route.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+ [32m✓[39m app/api/health/route.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 54[2mms[22m[39m
+ [32m✓[39m app/api/admin/employees/route.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 46[2mms[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m9 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (11)[39m
+[2m      Tests [22m [1m[32m32 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (33)[39m
+[2m   Start at [22m 16:14:16
+[2m   Duration [22m 21.52s[2m (transform 9.65s, setup 0ms, import 30.79s, tests 3.93s, environment 7.74s)[22m
+
+/work/apps/accounts:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] accounts@0.1.0 test: `vitest run`
+Exit status 1
