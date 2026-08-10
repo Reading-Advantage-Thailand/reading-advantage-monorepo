@@ -312,6 +312,12 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [~] **Track: Codecamp PR Review as Mastery Evidence** *Link: [./tracks/codecamp_pr_mastery_evaluation_20260710/](./tracks/codecamp_pr_mastery_evaluation_20260710/)*
   Route PR review explicitly to OpenRouter `~x-ai/grok-latest`, expand the structured Zod result into graph-linked rubric evidence, preserve advisory review semantics, and feed validated results into KST+SRS without equating one approval with permanent mastery.
 
+- [~] **Track: Sales Advantage Shared Mastery Consumer** *Link: [./tracks/sales_mastery_consumer_20260810/](./tracks/sales_mastery_consumer_20260810/)*
+  Bind the approved Sales course to stable objectives and variants, map each
+  verified company organization to an isolated Mastery tenant, and project
+  eligible quiz and roleplay evidence into the shared KST/SRS runtime. Sales
+  remains a course and never owns CRM, licensing, invoice, or commission data.
+
 ---
 
 ## Versioned Workbook Content Program (created 2026-07-11)

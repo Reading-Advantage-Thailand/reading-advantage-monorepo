@@ -7,6 +7,15 @@
 
 ## Overview
 
+> **2026-08-10 reconciliation:** Sales Advantage is deployed and the reviewed
+> deterministic curriculum is live; the earlier "no production curriculum"
+> description below is retained as historical launch context. Lesson Markdown
+> now renders through `react-markdown` with raw HTML disabled, and employee
+> provisioning is owned by Accounts rather than local Sales credentials. The
+> newly required shared Mastery KST/SRS integration is owned by the successor
+> [`sales_mastery_consumer_20260810`](../sales_mastery_consumer_20260810/)
+> track. This track remains open for authenticated production QA and closeout.
+
 `apps/sales-advantage` is **code-complete but not shippable**. The 2026-06-26
 line review (110 files) and the 2026-06-24 MVP review both confirm the domain
 layer (`packages/domain/src/sales`), the tRPC router
@@ -53,8 +62,9 @@ This track owns items **2 and 3** and **consumes item 1 as a hard precondition**
 - **No security remediation in this track.** IDOR, route gating, tRPC role-enum,
   XSS, audio privacy/hardening, schema drift, adapter-boundary — all owned by the
   waves. This track verifies they merged before deploy; it does not implement them.
-- No new features (live multi-turn roleplay, video, CRM, Mastery Advantage KST/SRS
-  — all deferred per the MVP spec's Out-of-Scope).
+- No new features in this deployment track (live multi-turn roleplay, video, or
+  CRM). Shared Mastery Advantage KST/SRS is no longer a product non-goal; its
+  implementation is isolated in `sales_mastery_consumer_20260810`.
 - No CI/CD trigger wiring beyond a manual `gcloud builds submit` path (mirrors
   codecamp; an automatic trigger is a follow-up, consistent with the codecamp
   tech-debt row of 2026-05-18).
@@ -78,8 +88,10 @@ This track owns items **2 and 3** and **consumes item 1 as a hard precondition**
       (`F-SALES-B00-030`) are verified fixed against HEAD before any deploy step runs.
 - [ ] `sales_advantage_mvp_20260622` plan/metadata reconciled: Phases 3–7 marked
       implemented with SHAs, Phase 8 annotated as superseded by this track.
-- [ ] Curriculum generated via real OpenRouter, spot-checked for rubric quality and
-      source traceability, and flipped to `reviewStatus: 'approved'` for the launch cohort.
+- [x] The selected deterministic curriculum graph is source-bound, independently
+      verified, owner-approved, and released through the external trust-anchor
+      gate. The earlier OpenRouter/draft-row path was explicitly superseded and
+      was not used.
 - [ ] `apps/sales-advantage/Dockerfile` builds a production image from the monorepo root.
 - [ ] `apps/sales-advantage/cloudbuild.yaml` builds, runs DB migrate + `doctor --check`,
       and deploys to Cloud Run with secrets from Secret Manager.
@@ -89,9 +101,10 @@ This track owns items **2 and 3** and **consumes item 1 as a hard precondition**
       (`AI_PROVIDER`, `OPENROUTER_API_KEY`, `SALES_AUDIO_EVAL_*`, `STORAGE_*`,
       `DATABASE_URL`, `DIRECT_DATABASE_URL`, `AUTH_SECRET`, `NEXT_PUBLIC_APP_URL`).
 - [ ] Service is live on Cloud Run; `scripts/sales-smoke.sh` passes against the prod URL.
-- [ ] End-to-end QA pass completed (login, create rep, dashboard, theory complete,
+- [ ] End-to-end QA pass completed (Accounts provision rep, company SSO login,
+      dashboard, theory complete,
       record→submit→evaluation, retry/best-attempt, quiz threshold, Thai chat streaming,
-      admin cohort/per-rep/curriculum-approval, i18n toggle, rate-limit 429).
+      admin cohort/per-rep, release-owner curriculum boundary, i18n toggle, rate-limit 429).
 - [ ] `measure/deployment-status.md` updated to show sales-advantage deployed.
 - [ ] `measure/tech-debt.md` records any go-live shortcuts (audio retention, no auto
       CI/CD trigger, free-tier model reliability).

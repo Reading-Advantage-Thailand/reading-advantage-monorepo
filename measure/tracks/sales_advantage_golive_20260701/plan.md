@@ -25,8 +25,10 @@ Do not start Phase 2 until the security gate is green.
     - Router middleware `salesRepOrAdmin` / `salesAdminOnly` in `packages/api/src/routers/sales.ts`
     - Context tests pass: `packages/api/src/__tests__/sales-auth-context.test.ts`
   - [x] `F-SALES-B00-011` — lesson markdown sanitized (XSS)
-    - The lesson page (`apps/sales-advantage/app/[locale]/lesson/[id]/page.tsx`) uses `dangerouslySetInnerHTML` with a custom `renderMarkdown` function that does NOT sanitize HTML input. No `sanitize-html` or `dompurify` import. The restrictive markdown pattern matching limits but does not block raw `<script>` injection.
-    - **ISSUE FOUND** — [b] deferred:wave-owner
+    - Reconciled 2026-08-10: the lesson page delegates to
+      `components/lesson-content.tsx`, which uses `react-markdown` with
+      `skipHtml`; raw embedded HTML is dropped and `dangerouslySetInnerHTML` is
+      no longer part of the lesson rendering path.
   - [x] T2 audio input hardening (size/MIME/duration) and T3 audio/AI privacy notice present
     - SHA: `d83db701`; tests at `audio-upload-boundary.test.ts`
     - MIME allowed-list, size cap, duration cap, consent gate, retention-days validation all active
@@ -169,11 +171,12 @@ Do not start Phase 2 until the security gate is green.
 - [x] Task: Run `sales-smoke.sh` against the live Cloud Run URL
   - `https://sales.reading-advantage.com` serves over managed HTTPS; Accounts SSO lands on the authenticated curriculum dashboard and `/api/auth/session` returns 200 with `authenticated: true` and role `SALES_ADMIN`.
 - [~] Task: End-to-end QA pass (from `sales_advantage_mvp_20260622/plan.md` Phase 8)
-  - [ ] Auth: admin login → create rep → rep login
+  - [ ] Auth: admin login → Accounts provisions rep → company SSO rep login
   - [ ] Dashboard modules + progress; theory lesson mark-complete
   - [ ] Roleplay: record → submit → evaluation displays; retry → best-attempt logic
   - [ ] Quiz: submit → 70% threshold; Chat: Thai streaming response
-  - [ ] Admin: cohort overview, per-rep detail, curriculum approval
+  - [ ] Admin: cohort overview and per-rep detail; verify the release-owner
+        curriculum approval boundary rather than a local credential workflow
   - [ ] i18n toggle EN↔TH; rate-limit: 11th submission/hour → 429
 - [~] Task: Verify audio storage is private (signed URL only) and no orphaned keys on failure
 - [~] Task: Measure — User Manual Verification 'Deploy + QA'
@@ -181,6 +184,10 @@ Do not start Phase 2 until the security gate is green.
 ---
 
 ## Phase 4: Closeout
+
+> Shared Mastery KST/SRS is successor-owned by
+> `sales_mastery_consumer_20260810`; this deployment track must not be marked
+> complete merely because that successor is active.
 
 - [x] Task: Update `measure/deployment-status.md` — sales-advantage now deployed (service, project, deploy source)
 - [~] Task: Update `measure/tech-debt.md` — go-live shortcuts (audio retention policy, no auto CI/CD trigger, free-tier eval-model reliability + fallback monitoring)
