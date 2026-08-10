@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { enqueueReviewJob, normalizePrKey, __resetReviewWorkerState } from "../review-worker.js";
+import { enqueueReviewJob, normalizePrKey } from "../review-worker.js";
 
 const mockDb = vi.hoisted(() => ({
   insert: vi.fn().mockReturnValue({
@@ -24,10 +24,15 @@ vi.mock("@reading-advantage/db", async (importOriginal) => {
   };
 });
 
+vi.mock("@reading-advantage/domain", () => ({
+  createTenantDB: (db: unknown) => db,
+}));
+vi.mock("@reading-advantage/domain/codecamp", () => ({}));
+vi.mock("@reading-advantage/ai", () => ({ getAIClient: vi.fn() }));
+
 describe("Phase 2 — PR URL normalization for idempotency", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    __resetReviewWorkerState();
   });
 
   it("normalizePrKey strips trailing slash and .git suffix and lowercases owner/repo", async () => {
@@ -62,6 +67,6 @@ describe("Phase 2 — PR URL normalization for idempotency", () => {
     });
 
     const insertCalls = mockDb.insert.mock.calls.length;
-    expect(insertCalls, `insert call count after normalized duplicate: ${insertCalls}`).toBe(1);
+    expect(insertCalls, `durable upsert call count after normalized duplicate: ${insertCalls}`).toBe(2);
   });
 });

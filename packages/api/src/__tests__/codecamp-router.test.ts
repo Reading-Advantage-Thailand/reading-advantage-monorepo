@@ -7,6 +7,10 @@ import { createTenantDB } from "@reading-advantage/domain";
 import type { DB } from "@reading-advantage/db";
 import { AuthError } from "@reading-advantage/auth";
 
+vi.mock("@reading-advantage/domain", () => ({
+  createTenantDB: (db: unknown) => db,
+}));
+
 vi.mock("@reading-advantage/domain/codecamp", () => ({
   assertCodecampModuleAssigned: vi.fn().mockResolvedValue(undefined),
   filterCodecampModulesForAssignment: vi.fn(async (_db: unknown, _userId: string, modules: unknown[]) => modules),
@@ -753,11 +757,15 @@ describe("codecamp router", () => {
           totalModules: 18,
           quizAverage: 80,
           prReviewsPending: 1,
+          prReviewsProcessing: 2,
+          prReviewsRetrying: 3,
+          prReviewsFailed: 4,
           prReviewsApproved: 3,
           reviewExpectation: "review_received",
           latestPrReview: {
             prUrl: "https://github.com/org/repo/pull/1",
             reviewStatus: "approved",
+            operationalStatus: null,
             llmReviewSummary: "Good work",
             createdAt: testDate,
           },
@@ -773,6 +781,13 @@ describe("codecamp router", () => {
       expect(result).toHaveLength(1);
       expect(result[0].userId).toBe("u1");
       expect(result[0].overallProgress).toBe(50);
+      expect(result[0]).toMatchObject({
+        prReviewsPending: 1,
+        prReviewsProcessing: 2,
+        prReviewsRetrying: 3,
+        prReviewsFailed: 4,
+        latestPrReview: { operationalStatus: null },
+      });
     });
 
     it("maps AuthError to FORBIDDEN for non-admin", async () => {
@@ -801,6 +816,7 @@ describe("codecamp router", () => {
             reviewReceived: true,
             latestPrUrl: "https://github.com/org/repo/pull/1",
             latestPrReviewStatus: "approved",
+            latestPrReviewOperationalStatus: null,
           },
         ],
         quizScores: [{ lessonId: "l1", lessonTitle: "Lesson 1", score: 100 }],
@@ -816,6 +832,7 @@ describe("codecamp router", () => {
 
       expect(result.userId).toBe("u1");
       expect(result.moduleBreakdown).toHaveLength(1);
+      expect(result.moduleBreakdown[0]?.latestPrReviewOperationalStatus).toBeNull();
     });
 
     it("maps 'Intern not found' to NOT_FOUND", async () => {

@@ -50,11 +50,11 @@ steps:
       - "--allow-unauthenticated"
       - "--service-account=codecamp-cloud-run@$PROJECT_ID.iam.gserviceaccount.com"
       - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
-      - "--set-env-vars=NODE_ENV=production,CODECAMP_AUTH_MODE=company,NEXT_PUBLIC_API_URL=https://codecamp.reading-advantage.com,TUTORIAL_REPOSITORY_WORKER_URL=https://codecamp.reading-advantage.com/api/internal/tutorial-repository-capture,TUTORIAL_REPOSITORY_BASE_URL=https://github.com,CODECAMP_PR_REVIEW_ROLLOUT_MODE=shadow,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=codecamp-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://codecamp.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=codecamp,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30"
+      - "--set-env-vars=NODE_ENV=production,CODECAMP_AUTH_MODE=company,NEXT_PUBLIC_API_URL=https://codecamp.reading-advantage.com,TUTORIAL_REPOSITORY_WORKER_URL=https://codecamp.reading-advantage.com/api/internal/tutorial-repository-capture,TUTORIAL_REPOSITORY_BASE_URL=https://github.com,AI_PROVIDER=openrouter,CODECAMP_PR_REVIEW_ROLLOUT_MODE=active,CODECAMP_PR_REVIEW_RELEASE_APPROVED_BY=codecamp-ops-release,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=codecamp-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://codecamp.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=codecamp,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30"
       - "--min-instances=1"
       - "--max-instances=100"
       - "--concurrency=80"
-      - "--set-secrets=DATABASE_URL=CODECAMP_DATABASE_URL:latest,AUTH_SECRET=CODECAMP_AUTH_SECRET:latest,GITHUB_APP_ID=CODECAMP_GITHUB_APP_ID:latest,GITHUB_PRIVATE_KEY=CODECAMP_GITHUB_PRIVATE_KEY:latest,GITHUB_WEBHOOK_SECRET=CODECAMP_GITHUB_WEBHOOK_SECRET:latest,GITHUB_INSTALLATION_ID=CODECAMP_GITHUB_INSTALLATION_ID:latest,OPENROUTER_API_KEY=CODECAMP_OPENROUTER_API_KEY:latest,OPENAI_API_KEY=OPENAI_API_KEY:latest,GOOGLE_AI_API_KEY=GOOGLE_AI_API_KEY:latest,TUTORIAL_REPORT_SECRET=CODECAMP_TUTORIAL_REPORT_SECRET:latest,TUTORIAL_REPOSITORY_WORKER_TOKEN=CODECAMP_TUTORIAL_REPOSITORY_WORKER_TOKEN:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=projects/1090865515742/secrets/CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest"
+      - "--set-secrets=DATABASE_URL=CODECAMP_DATABASE_URL:latest,AUTH_SECRET=CODECAMP_AUTH_SECRET:latest,GITHUB_APP_ID=CODECAMP_GITHUB_APP_ID:latest,GITHUB_PRIVATE_KEY=CODECAMP_GITHUB_PRIVATE_KEY:latest,GITHUB_WEBHOOK_SECRET=CODECAMP_GITHUB_WEBHOOK_SECRET:latest,GITHUB_INSTALLATION_ID=CODECAMP_GITHUB_INSTALLATION_ID:latest,OPENROUTER_API_KEY=CODECAMP_OPENROUTER_API_KEY:latest,OPENAI_API_KEY=OPENAI_API_KEY:latest,GOOGLE_AI_API_KEY=GOOGLE_AI_API_KEY:latest,TUTORIAL_REPORT_SECRET=CODECAMP_TUTORIAL_REPORT_SECRET:latest,TUTORIAL_REPOSITORY_WORKER_TOKEN=CODECAMP_TUTORIAL_REPOSITORY_WORKER_TOKEN:latest,REVIEW_WORKER_TICK_TOKEN=CODECAMP_REVIEW_WORKER_TICK_TOKEN:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=projects/1090865515742/secrets/CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest"
       - "--tag=sso-candidate"
       - "--no-traffic"
 
@@ -69,6 +69,17 @@ steps:
       - "--member=allUsers"
       - "--role=roles/run.invoker"
 
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "configure-review-worker-scheduler"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "./apps/codecamp-advantage/scripts/configure-review-worker-scheduler.sh"
+    env:
+      - "PROJECT_ID=$PROJECT_ID"
+    secretEnv:
+      - "CODECAMP_REVIEW_WORKER_TICK_TOKEN"
+
 images:
   - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/codecamp/codecamp-advantage:$BUILD_ID"
 
@@ -76,6 +87,8 @@ availableSecrets:
   secretManager:
     - versionName: "projects/$PROJECT_ID/secrets/CODECAMP_DATABASE_URL/versions/latest"
       env: "CODECAMP_DATABASE_URL"
+    - versionName: "projects/$PROJECT_ID/secrets/CODECAMP_REVIEW_WORKER_TICK_TOKEN/versions/latest"
+      env: "CODECAMP_REVIEW_WORKER_TICK_TOKEN"
 
 options:
   logging: CLOUD_LOGGING_ONLY

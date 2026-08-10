@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { eq } from "drizzle-orm";
-import { codecampModules, codecampExerciseRepos } from "@reading-advantage/db/schema";
+import { codecampModules, codecampExerciseRepos, codecampPrReviews } from "@reading-advantage/db/schema";
 import type { TenantDB } from "../db-contract.js";
 import type { UserContext, Tenant } from "@reading-advantage/auth";
 import { assertCan } from "@reading-advantage/auth";
@@ -90,10 +90,10 @@ export function resolveCodecampPrReviewModel(
  */
 export function assertSafeReviewDiff(prDiff: string): void {
   if (prDiff.length > MAX_PR_DIFF_CHARACTERS) {
-    throw new Error("PR diff is too large for safe review");
+    throw new CodecampPrReviewContractError("PR diff is too large for safe review");
   }
   if (/^GIT binary patch$|^Binary files .* differ$/m.test(prDiff)) {
-    throw new Error("PR diff contains binary content and cannot be reviewed");
+    throw new CodecampPrReviewContractError("PR diff contains binary content and cannot be reviewed");
   }
   const paths = [
     ...Array.from(prDiff.matchAll(/^diff --git a\/(.+) b\/(.+)$/gm), (match) => [match[1], match[2]]),
@@ -104,24 +104,78 @@ export function assertSafeReviewDiff(prDiff: string): void {
     return segments.some((segment) => GENERATED_PATH_SEGMENTS.has(segment))
       || GENERATED_FILE_SUFFIXES.some((suffix) => path.endsWith(suffix));
   })) {
-    throw new Error("PR diff contains generated artifacts and cannot be reviewed");
+    throw new CodecampPrReviewContractError("PR diff contains generated artifacts and cannot be reviewed");
   }
   if (SECRET_PATTERNS.some((pattern) => pattern.test(prDiff))) {
-    throw new Error("PR diff appears to contain a secret and cannot be reviewed");
+    throw new CodecampPrReviewContractError("PR diff appears to contain a secret and cannot be reviewed");
   }
 }
 
-interface ReviewExerciseInput {
+/** Input required to generate one advisory Codecamp pull-request review. */
+export interface ReviewExerciseInput {
   db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   prDiff: string;
+  /** Authoritative persisted review relationship used by the worker path. */
+  reviewId?: string;
   moduleId?: string;
   repoUrl?: string;
   /** Server-derived GitHub check context; raw webhook and model data are not accepted. */
   trustedContext?: unknown;
   /** Injected LLM generator. Receives system prompt and user prompt; returns structured review. */
   generateReview: (system: string, prompt: string) => Promise<ReviewResult>;
+}
+
+/** Stable error code for deterministic PR-review contract violations. */
+export const CODECAMP_PR_REVIEW_CONTRACT_VIOLATION = "CODECAMP_PR_REVIEW_CONTRACT_VIOLATION" as const;
+
+/** The only error shape a review worker may dead-letter without retrying. */
+export class CodecampPrReviewContractError extends Error {
+  /** Stable machine-readable contract error code. */
+  readonly code = CODECAMP_PR_REVIEW_CONTRACT_VIOLATION;
+
+  /** Contract failures are deterministic and must never be retried. */
+  readonly retryable = false as const;
+
+  /**
+   * Creates a deterministic PR-review contract error.
+   * @param message Human-readable explanation of the violated contract.
+   * @param cause Optional underlying validation error for diagnostics.
+   */
+  constructor(message: string, cause?: unknown) {
+    super(message);
+    this.name = "CodecampPrReviewContractError";
+    if (cause !== undefined) this.cause = cause;
+  }
+}
+
+/** Describes the structural marker recognized by the durable review queue. */
+export interface CodecampPrReviewContractFailure {
+  /** Stable machine-readable contract error code. */
+  readonly code: typeof CODECAMP_PR_REVIEW_CONTRACT_VIOLATION;
+  /** Always false because deterministic contract failures are permanent. */
+  readonly retryable: false;
+}
+
+/**
+ * Tests whether an unknown value is a permanent PR-review contract failure.
+ * @param error Unknown value returned from review execution or persistence.
+ * @returns True when the value carries the non-retryable contract marker.
+ */
+export function isCodecampPrReviewContractError(
+  error: unknown,
+): error is CodecampPrReviewContractFailure {
+  return typeof error === "object" && error !== null
+    && "code" in error
+    && (error as { code?: unknown }).code === CODECAMP_PR_REVIEW_CONTRACT_VIOLATION
+    && "retryable" in error
+    && (error as { retryable?: unknown }).retryable === false;
+}
+
+/** Converts a deterministic validation failure into the worker's permanent error shape. */
+function contractViolation(message: string, cause?: unknown): CodecampPrReviewContractError {
+  return new CodecampPrReviewContractError(message, cause);
 }
 
 /** Structured APK rubric evaluation required before independent PR approval. */
@@ -262,13 +316,13 @@ export function validateReviewObjectiveEvidence(
 ): void {
   const bindings = resolveReviewObjectiveBindings(moduleSlug);
   if (bindings.length === 0) {
-    if (review.objectiveEvidence.length > 0) throw new Error("Review output contains objective evidence for an unbound repository");
+    if (review.objectiveEvidence.length > 0) throw new CodecampPrReviewContractError("Review output contains objective evidence for an unbound repository");
     return;
   }
   const expectedObjectiveIds = new Set(bindings.map(({ objectiveId }) => objectiveId));
   const actualObjectiveIds = review.objectiveEvidence.map(({ objectiveId }) => objectiveId);
   if (actualObjectiveIds.length !== expectedObjectiveIds.size || new Set(actualObjectiveIds).size !== actualObjectiveIds.length || actualObjectiveIds.some((objectiveId) => !expectedObjectiveIds.has(objectiveId))) {
-    throw new Error("Review output must cover every graph-bound objective exactly once");
+    throw new CodecampPrReviewContractError("Review output must cover every graph-bound objective exactly once");
   }
   const changedPaths = new Set<string>();
   const changedLineRanges = new Map<string, Array<{ startLine: number; endLine: number }>>();
@@ -291,17 +345,17 @@ export function validateReviewObjectiveEvidence(
   }
   for (const objective of review.objectiveEvidence) {
     for (const reference of objective.references) {
-      if (!changedPaths.has(reference.filePath)) throw new Error("Review output references a file outside the reviewed diff");
+      if (!changedPaths.has(reference.filePath)) throw new CodecampPrReviewContractError("Review output references a file outside the reviewed diff");
       const ranges = changedLineRanges.get(reference.filePath) ?? [];
       if (!ranges.some((range) => reference.startLine >= range.startLine && reference.endLine <= range.endLine)) {
-        throw new Error("Review output references lines outside the changed diff hunk");
+        throw new CodecampPrReviewContractError("Review output references lines outside the changed diff hunk");
       }
     }
   }
   if (moduleSlug === "apk-game-creation") {
     const [objective] = review.objectiveEvidence;
     if (!review.apkEvaluation || !objective || objective.objectiveId !== codecampAPKUnit.youdo.objectiveId || objective.score !== Math.round(review.apkEvaluation.totalScore * 100)) {
-      throw new Error("APK objective evidence must match the authored rubric score");
+      throw new CodecampPrReviewContractError("APK objective evidence must match the authored rubric score");
     }
   }
 }
@@ -434,8 +488,9 @@ Output a structured review with:
 /**
  * Generate an LLM-based code review for a PR diff.
  *
- * If moduleId is provided, the review is grounded in that module's learning objectives.
- * If repoUrl is provided, the module is looked up via the exercise_repos table.
+ * If reviewId is provided, the review is grounded in the module persisted by
+ * the `codecamp_pr_reviews` relationship. Legacy moduleId/repoUrl lookups are
+ * retained only for callers that do not yet have a review relationship.
  *
  * The caller must inject a `generateReview` function that handles the actual LLM call.
  * This keeps the domain package free of AI provider dependencies.
@@ -445,61 +500,116 @@ export async function reviewExercise({
   user,
   tenant,
   prDiff,
+  reviewId,
   moduleId,
   repoUrl,
   trustedContext: rawTrustedContext,
   generateReview,
 }: ReviewExerciseInput): Promise<ReviewResult> {
   assertCan(user, "admin:dashboard", tenant);
-  assertSafeReviewDiff(prDiff);
+  try {
+    assertSafeReviewDiff(prDiff);
+  } catch (error) {
+    throw contractViolation(error instanceof Error ? error.message : "PR diff violates the review safety contract", error);
+  }
+  if (reviewId !== undefined && !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(reviewId)) {
+    throw contractViolation("Review relationship requires a valid review ID");
+  }
   const rawDb = db.unscoped("codecamp tables have no schoolId");
 
   let moduleTitle: string | undefined;
   let moduleDescription: string | undefined;
   let moduleSlug: string | undefined;
 
-  // Look up module context if available
-  if (moduleId) {
+  // A durable review relationship is authoritative. Never fall back to a
+  // reconstructed URL or caller-supplied module when the worker has reviewId.
+  if (reviewId !== undefined) {
+    const [reviewContext] = await rawDb
+      .select({
+        reviewId: codecampPrReviews.id,
+        exerciseRepoId: codecampExerciseRepos.id,
+        moduleId: codecampModules.id,
+        moduleTitle: codecampModules.title,
+        moduleDescription: codecampModules.description,
+        moduleSlug: codecampModules.slug,
+      })
+      .from(codecampPrReviews)
+      .innerJoin(codecampExerciseRepos, eq(codecampExerciseRepos.id, codecampPrReviews.exerciseRepoId))
+      .innerJoin(codecampModules, eq(codecampModules.id, codecampExerciseRepos.moduleId))
+      .where(eq(codecampPrReviews.id, reviewId))
+      .limit(1);
+    if (!reviewContext) {
+      throw contractViolation(`Review relationship ${reviewId} could not resolve an exercise repository and module`);
+    }
+    moduleTitle = reviewContext.moduleTitle;
+    moduleDescription = reviewContext.moduleDescription;
+    moduleSlug = reviewContext.moduleSlug;
+  } else if (moduleId) {
     const [mod] = await rawDb
       .select()
       .from(codecampModules)
       .where(eq(codecampModules.id, moduleId))
       .limit(1);
-    if (mod) {
-      moduleTitle = mod.title;
-      moduleDescription = mod.description;
-      moduleSlug = mod.slug;
-    }
+    if (!mod) throw contractViolation(`Codecamp module ${moduleId} could not be resolved`);
+    moduleTitle = mod.title;
+    moduleDescription = mod.description;
+    moduleSlug = mod.slug;
   } else if (repoUrl) {
     const [repo] = await rawDb
       .select()
       .from(codecampExerciseRepos)
       .where(eq(codecampExerciseRepos.repoUrl, repoUrl))
       .limit(1);
-    if (repo) {
-      const [mod] = await rawDb
-        .select()
-        .from(codecampModules)
-        .where(eq(codecampModules.id, repo.moduleId))
-        .limit(1);
-      if (mod) {
-        moduleTitle = mod.title;
-        moduleDescription = mod.description;
-        moduleSlug = mod.slug;
-      }
-    }
+    if (!repo) throw contractViolation(`Codecamp exercise repository ${repoUrl} could not be resolved`);
+    const [mod] = await rawDb
+      .select()
+      .from(codecampModules)
+      .where(eq(codecampModules.id, repo.moduleId))
+      .limit(1);
+    if (!mod) throw contractViolation(`Codecamp module for repository ${repoUrl} could not be resolved`);
+    moduleTitle = mod.title;
+    moduleDescription = mod.description;
+    moduleSlug = mod.slug;
   }
 
-  const trustedContext = rawTrustedContext === undefined ? undefined : reviewTrustedContextSchema.parse(rawTrustedContext);
+  let trustedContext: ReviewTrustedContext | undefined;
+  if (rawTrustedContext !== undefined) {
+    try {
+      trustedContext = reviewTrustedContextSchema.parse(rawTrustedContext);
+    } catch (error) {
+      throw contractViolation("Trusted PR review context does not satisfy its schema", error);
+    }
+  }
   const apkRubric = moduleSlug === "apk-game-creation" ? `\nAPK independent-transfer evaluation is mandatory. Evaluate rubric ${codecampAPKUnit.youdo.rubric.rubricId} against these weighted dimensions: ${JSON.stringify(codecampAPKUnit.youdo.rubric.dimensions)}. Report these required checks: ${JSON.stringify(codecampAPKUnit.youdo.requiredChecks)}. Include apkEvaluation with evidence for every dimension and check. passed may be true only when every required check passes and totalScore is at least 0.8.` : undefined;
   const objectiveBindings = moduleSlug ? resolveReviewObjectiveBindings(moduleSlug) : [];
   const system = buildSystemPrompt(moduleTitle, moduleDescription, apkRubric, objectiveBindings, trustedContext);
   const prompt = `Please review the following code diff:\n\n\`\`\`diff\n${prDiff}\n\`\`\``;
-  const review = reviewResultSchema.parse(await generateReview(system, prompt));
-  if (moduleSlug === "apk-game-creation") {
-    const evaluation = apkPrEvaluationSchema.parse(review.apkEvaluation);
-    if (review.passed !== isPassingAPKPrEvaluation(evaluation)) throw new Error("APK review pass state does not match the authored rubric and required checks");
+  let review: ReviewResult;
+  try {
+    review = reviewResultSchema.parse(await generateReview(system, prompt));
+  } catch (error) {
+    const errorCode = typeof error === "object" && error !== null && "code" in error
+      ? (error as { code?: unknown }).code
+      : undefined;
+    if (errorCode === "SCHEMA_VALIDATION_ERROR" || error instanceof z.ZodError) {
+      throw contractViolation("Review output does not satisfy the PR review response schema", error);
+    }
+    throw error;
   }
-  if (moduleSlug) validateReviewObjectiveEvidence(review, moduleSlug, prDiff);
+  if (moduleSlug === "apk-game-creation") {
+    try {
+      const evaluation = apkPrEvaluationSchema.parse(review.apkEvaluation);
+      if (review.passed !== isPassingAPKPrEvaluation(evaluation)) throw new Error("APK review pass state does not match the authored rubric and required checks");
+    } catch (error) {
+      throw contractViolation(error instanceof Error ? error.message : "APK review violates its rubric contract", error);
+    }
+  }
+  if (moduleSlug) {
+    try {
+      validateReviewObjectiveEvidence(review, moduleSlug, prDiff);
+    } catch (error) {
+      throw contractViolation(error instanceof Error ? error.message : "Review output violates the objective contract", error);
+    }
+  }
   return review;
 }

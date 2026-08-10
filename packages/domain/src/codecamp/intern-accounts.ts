@@ -4,7 +4,7 @@ import {
   users, accounts, codecampModules, codecampLessons, codecampCurriculumAssignments,
   codecampUserProgress, codecampExerciseRepos, codecampPrReviews,
   codecampTutorEvidenceJoins, codecampTutorInterventions, codecampTutorResourceUses,
-  auditEvents, codecampPrReviewAttempts, codecampPrReviewObjectiveEvidence,
+  auditEvents, codecampPrReviewAttempts, codecampPrReviewObjectiveEvidence, reviewJobs,
 } from "@reading-advantage/db/schema";
 import { hashPassword } from "@reading-advantage/auth";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
@@ -14,11 +14,36 @@ import {
   CODECAMP_PR_REVIEW_OVERRIDE_AUDIT_ACTION,
   prReviewOverrideAuditMetadataSchema,
 } from "./pr-review-overrides.js";
+import type { PrReviewOperationalStatus } from "@reading-advantage/types";
 
 const PASSWORD_COMPLEXITY = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/;
 const PR_REVIEW_ATTEMPT_STATUS_SCHEMA = z.enum(["advisory", "validated", "failed"]);
 const PR_REVIEW_EVIDENCE_AUTHORITY_SCHEMA = z.enum(["advisory_model", "trusted_deterministic"]);
 const PR_REVIEW_EVIDENCE_STATE_SCHEMA = z.enum(["advisory", "validated", "rejected"]);
+
+type ReviewStatus = "pending" | "reviewed" | "needs_changes" | "approved";
+type ReviewJobSnapshot = Pick<typeof reviewJobs.$inferSelect, "reviewId" | "status" | "attempts">;
+
+/**
+ * Derives the administrator-facing queue state without changing the
+ * editorial review status stored on the PR review.
+ * @param reviewStatus Editorial status persisted on the PR review row.
+ * @param job Matching durable review job, when one exists.
+ * @returns Queue state for pending editorial reviews, or null after editorial review.
+ */
+export function derivePrReviewOperationalStatus(
+  reviewStatus: ReviewStatus,
+  job: ReviewJobSnapshot | null,
+): PrReviewOperationalStatus | null {
+  if (reviewStatus !== "pending") return null;
+  if (!job) return "pending";
+  if (job.status === "claimed" || (job.status === "pending" && job.attempts === 0)) return "processing";
+  if (job.status === "pending") return "retrying";
+  if (job.status === "dead" || job.status === "failed") return "failed";
+  // A succeeded job with a still-pending editorial row is awaiting the
+  // editorial projection, so it remains visibly pending rather than hidden.
+  return "pending";
+}
 
 /** Aggregated tutor support context that is safe to show to an administrator. */
 export interface TutorSupportSummary {
@@ -189,6 +214,17 @@ export async function listInterns({
   const allReviews = internIds.length > 0
     ? await rawDb.select().from(codecampPrReviews).where(inArray(codecampPrReviews.userId, internIds))
     : [];
+  const allReviewJobs = allReviews.length > 0
+    ? await rawDb.select({
+      reviewId: reviewJobs.reviewId,
+      status: reviewJobs.status,
+      attempts: reviewJobs.attempts,
+    }).from(reviewJobs).where(inArray(reviewJobs.reviewId, allReviews.map(({ id }) => id)))
+    : [];
+  const reviewJobsByReviewId = new Map<string, ReviewJobSnapshot>();
+  for (const job of allReviewJobs) {
+    if (job.reviewId) reviewJobsByReviewId.set(job.reviewId, job);
+  }
 
   return interns.map((intern) => {
     const availableModules = apkLearnerIds.has(intern.id) ? modules : modules.filter(({ slug }) => slug !== "apk-game-creation");
@@ -200,7 +236,14 @@ export async function listInterns({
     const quizAverage = quizScores.length > 0 ? Math.round(quizScores.reduce((a, b) => a + b, 0) / quizScores.length) : 0;
 
     const internReviews = allReviews.filter((r) => r.userId === intern.id);
-    const pending = internReviews.filter((r) => r.reviewStatus === "pending").length;
+    const operationalStatuses = internReviews.map((review) => derivePrReviewOperationalStatus(
+      review.reviewStatus,
+      reviewJobsByReviewId.get(review.id) ?? null,
+    ));
+    const pending = operationalStatuses.filter((status) => status === "pending").length;
+    const processing = operationalStatuses.filter((status) => status === "processing").length;
+    const retrying = operationalStatuses.filter((status) => status === "retrying").length;
+    const failed = operationalStatuses.filter((status) => status === "failed").length;
     const approved = internReviews.filter((r) => r.reviewStatus === "approved").length;
     const latestPrReview = [...internReviews].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0] ?? null;
 
@@ -223,8 +266,18 @@ export async function listInterns({
     return {
       userId: intern.id, name: intern.name, username: intern.username,
       overallProgress, completedModules, totalModules: availableModules.length, quizAverage,
-      prReviewsPending: pending, prReviewsApproved: approved, reviewExpectation,
-      latestPrReview: latestPrReview ? { prUrl: latestPrReview.prUrl, reviewStatus: latestPrReview.reviewStatus, llmReviewSummary: latestPrReview.llmReviewSummary, createdAt: latestPrReview.createdAt } : null,
+      prReviewsPending: pending, prReviewsProcessing: processing, prReviewsRetrying: retrying, prReviewsFailed: failed,
+      prReviewsApproved: approved, reviewExpectation,
+      latestPrReview: latestPrReview ? {
+        prUrl: latestPrReview.prUrl,
+        reviewStatus: latestPrReview.reviewStatus,
+        operationalStatus: derivePrReviewOperationalStatus(
+          latestPrReview.reviewStatus,
+          reviewJobsByReviewId.get(latestPrReview.id) ?? null,
+        ),
+        llmReviewSummary: latestPrReview.llmReviewSummary,
+        createdAt: latestPrReview.createdAt,
+      } : null,
       lastActiveAt: lastActive,
     };
   });
@@ -308,6 +361,17 @@ export async function getInternProgress({
       inArray(auditEvents.targetId, prReviewAttemptIds),
     )).orderBy(desc(auditEvents.createdAt))
     : [];
+  const reviewJobsForReviews = reviews.length > 0
+    ? await rawDb.select({
+      reviewId: reviewJobs.reviewId,
+      status: reviewJobs.status,
+      attempts: reviewJobs.attempts,
+    }).from(reviewJobs).where(inArray(reviewJobs.reviewId, reviews.map(({ id }) => id)))
+    : [];
+  const reviewJobsByReviewId = new Map<string, ReviewJobSnapshot>();
+  for (const job of reviewJobsForReviews) {
+    if (job.reviewId) reviewJobsByReviewId.set(job.reviewId, job);
+  }
   const overridesByAttempt = new Map<string, Array<{
     id: string;
     actorUserId: string | null;
@@ -357,20 +421,36 @@ export async function getInternProgress({
     const moduleRepos = exerciseRepos.filter((repo) => repo.moduleId === mod.id);
     const moduleRepoIds = new Set(moduleRepos.map((repo) => repo.id));
     const latestModuleReview = reviews.filter((review) => moduleRepoIds.has(review.exerciseRepoId)).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0] ?? null;
+    const latestModuleReviewOperationalStatus = latestModuleReview
+      ? derivePrReviewOperationalStatus(
+        latestModuleReview.reviewStatus,
+        reviewJobsByReviewId.get(latestModuleReview.id) ?? null,
+      )
+      : null;
 
     return {
       moduleId: mod.id, title: mod.title, completed, totalLessons: modLessons.length, avgScore,
       reviewExpected: moduleRepos.length > 0, reviewReceived: latestModuleReview !== null,
-      latestPrUrl: latestModuleReview?.prUrl ?? null, latestPrReviewStatus: latestModuleReview?.reviewStatus ?? null,
+      latestPrUrl: latestModuleReview?.prUrl ?? null,
+      latestPrReviewStatus: latestModuleReview?.reviewStatus ?? null,
+      latestPrReviewOperationalStatus: latestModuleReviewOperationalStatus,
     };
   });
+
+  const reportedReviews = reviews.map((review) => ({
+    ...review,
+    operationalStatus: derivePrReviewOperationalStatus(
+      review.reviewStatus,
+      reviewJobsByReviewId.get(review.id) ?? null,
+    ),
+  }));
 
   return {
     userId: intern.id, name: intern.name, username: intern.username, githubUsername: intern.githubUsername ?? null,
     moduleBreakdown,
     quizScores: progress.filter((p) => { const l = lessons.find((l) => l.id === p.lessonId); return p.score > 0 && l?.type === "quiz"; })
       .map((p) => ({ lessonId: p.lessonId, lessonTitle: lessons.find((l) => l.id === p.lessonId)?.title ?? "Lesson", score: p.score })),
-    prReviews: reviews,
+    prReviews: reportedReviews,
     prReviewAttempts: safePrReviewAttempts,
     tutorSupport: summarizeTutorSupport(tutorInterventions, tutorResourceUses, tutorEvidenceJoins),
   };

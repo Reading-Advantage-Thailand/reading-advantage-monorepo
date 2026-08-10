@@ -266,6 +266,31 @@ export const prReviewSchema = z.object({
   createdAt: z.date(),
 });
 
+/**
+ * Operational states used by administrator reporting while an editorial PR
+ * review is still pending.
+ */
+export const prReviewOperationalStatusSchema = z.enum([
+  "pending",
+  "processing",
+  "retrying",
+  "failed",
+]);
+
+/** The derived queue-facing state of an editorially pending PR review. */
+export type PrReviewOperationalStatus = z.infer<typeof prReviewOperationalStatusSchema>;
+
+/**
+ * Public PR review shape used by administrator reports, including the
+ * derived queue state without changing the editorial review status.
+ */
+export const prReviewReportSchema = prReviewSchema.extend({
+  operationalStatus: prReviewOperationalStatusSchema.nullable(),
+});
+
+/** Administrator-facing PR review row with operational queue state. */
+export type PrReviewReport = z.infer<typeof prReviewReportSchema>;
+
 export const prReviewInputSchema = z.object({
   exerciseRepoId: z.string().uuid(),
   prUrl: z.string().url(),
@@ -397,11 +422,15 @@ export const internProgressSchema = z.object({
   totalModules: z.number(),
   quizAverage: z.number(),
   prReviewsPending: z.number(),
+  prReviewsProcessing: z.number(),
+  prReviewsRetrying: z.number(),
+  prReviewsFailed: z.number(),
   prReviewsApproved: z.number(),
   reviewExpectation: z.enum(["not_expected_yet", "awaiting_pr", "review_received"]),
   latestPrReview: z.object({
     prUrl: z.string(),
     reviewStatus: z.enum(["pending", "reviewed", "needs_changes", "approved"]),
+    operationalStatus: prReviewOperationalStatusSchema.nullable(),
     llmReviewSummary: z.string().nullable(),
     createdAt: z.date(),
   }).nullable(),
@@ -435,6 +464,7 @@ export const internDetailSchema = z.object({
       reviewReceived: z.boolean(),
       latestPrUrl: z.string().nullable(),
       latestPrReviewStatus: z.enum(["pending", "reviewed", "needs_changes", "approved"]).nullable(),
+      latestPrReviewOperationalStatus: prReviewOperationalStatusSchema.nullable(),
     })
   ),
   quizScores: z.array(
@@ -444,7 +474,7 @@ export const internDetailSchema = z.object({
       score: z.number(),
     })
   ),
-  prReviews: z.array(prReviewSchema),
+  prReviews: z.array(prReviewReportSchema),
   prReviewAttempts: z.array(z.object({
     id: z.string().uuid(),
     reviewId: z.string().uuid(),

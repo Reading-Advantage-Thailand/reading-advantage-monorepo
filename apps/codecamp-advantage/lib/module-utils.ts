@@ -39,18 +39,45 @@ export function getLockedByModuleTitle(
   return prevMod.title;
 }
 
+/** Editorial states persisted for a PR review. */
 export type PrReviewStatus = "pending" | "reviewed" | "needs_changes" | "approved";
+
+/** Queue-derived states shown when an editorial review is still pending. */
+export type PrReviewOperationalStatus = "processing" | "retrying" | "failed";
+
+/** A module PR review with optional durable worker state. */
+export type ModulePrReview = {
+  exerciseRepoId: string;
+  moduleId: string;
+  reviewStatus: PrReviewStatus;
+  reviewJob?: {
+    status: "pending" | "claimed" | "succeeded" | "failed" | "dead";
+    attempts: number;
+  } | null;
+};
 
 /**
  * Aggregate PR review status for a given module.
- * Priority: pending > needs_changes > reviewed > approved
+ * Queue failures take precedence over editorial states; within editorial
+ * states the priority remains pending > needs_changes > reviewed > approved.
  */
 export function getModulePrStatus(
   moduleId: string,
-  reviews: { exerciseRepoId: string; moduleId: string; reviewStatus: PrReviewStatus }[]
-): PrReviewStatus | null {
+  reviews: ModulePrReview[],
+): PrReviewStatus | PrReviewOperationalStatus | null {
   const moduleReviews = reviews.filter((r) => r.moduleId === moduleId);
   if (moduleReviews.length === 0) return null;
+
+  const operationalStatuses = moduleReviews.map((review) => {
+    if (review.reviewStatus !== "pending" || !review.reviewJob) return null;
+    if (review.reviewJob.status === "claimed" || (review.reviewJob.status === "pending" && review.reviewJob.attempts === 0)) return "processing" as const;
+    if (review.reviewJob.status === "pending") return "retrying" as const;
+    if (review.reviewJob.status === "dead" || review.reviewJob.status === "failed") return "failed" as const;
+    return null;
+  });
+  if (operationalStatuses.includes("processing")) return "processing";
+  if (operationalStatuses.includes("retrying")) return "retrying";
+  if (operationalStatuses.includes("failed")) return "failed";
 
   const statuses = new Set(moduleReviews.map((r) => r.reviewStatus));
 

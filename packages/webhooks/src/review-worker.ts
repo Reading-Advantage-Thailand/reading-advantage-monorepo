@@ -28,8 +28,9 @@
  *     `start()` is env-gated (`REVIEW_WORKER_ENABLED=1` OR
  *     `NODE_ENV=production`); tests call `run()` manually.
  */
+import { randomUUID } from "node:crypto";
 import { sql } from "drizzle-orm";
-import { eq, and } from "drizzle-orm";
+import { eq, and, isNull } from "drizzle-orm";
 import { reviewJobs } from "@reading-advantage/db";
 import type { DB } from "@reading-advantage/db";
 import { createTenantDB } from "@reading-advantage/domain";
@@ -171,38 +172,13 @@ export function normalizePrKey(prUrl: string): {
   return { owner, repo, pullNumber };
 }
 
-// ─── Enqueue (idempotent) ─────────────────────────────────────
-
 /**
- * In-process fast-path dedup cache keyed by the normalized PR key. Mirrors
- * the `processedDeliveryIds` Set pattern in `github.ts` — the synchronous
- * lookup at the top of `enqueueReviewJob` short-circuits a duplicate
- * delivery within the same Node process so the unique-index DB lookup is
- * only used across processes / after restart.
- *
- * The cache is intentionally process-local because the dedup window is
- * short (a duplicate delivery arrives within seconds of the original) and
- * the same PR head should never reappear after process restart in any
- * realistic webhook retry pattern; durable dedup comes from the
- * `(pr_owner, pr_repo, pr_pull_number)` unique index.
- */
-const enqueuedKeys = new Set<string>();
-
-/**
- * Test-only escape hatch: clears the in-process dedup cache. Production
- * code MUST NOT call this — the cache is durable for the lifetime of the
- * Node process. Exported for test isolation between `it` blocks that share
- * the same Node process (vitest does not reload modules between tests by
- * default).
- *
- * @example
- *   beforeEach(() => {
- *     vi.clearAllMocks();
- *     __resetReviewWorkerState();
- *   });
+ * Retained as a compatibility hook for older tests. Queue idempotency is
+ * durable now, so there is no process-local state to reset.
+ * @returns Nothing; durable queue state is intentionally untouched.
  */
 export function __resetReviewWorkerState(): void {
-  enqueuedKeys.clear();
+  // Intentionally empty: never reintroduce process-local synchronization.
 }
 
 export interface EnqueueReviewJobInput {
@@ -221,9 +197,9 @@ export interface EnqueueReviewJobInput {
 }
 
 /**
- * The job shape returned by `enqueueReviewJob`. Includes a runtime-only
- * `enqueued` flag that is `true` when this call inserted the row and
- * `false` when it deduplicated against an existing row.
+ * The job shape returned by `enqueueReviewJob`. The runtime-only `enqueued`
+ * flag remains for transport compatibility and is true after the durable
+ * upsert completes, including when the unique key conflicted.
  */
 export interface ReviewJob {
   id: string;
@@ -237,6 +213,8 @@ export interface ReviewJob {
   lastError: string | null;
   claimedAt: Date | null;
   claimedBy: string | null;
+  /** GitHub delivery identity captured by the claim's durable queue row. */
+  deliveryId: string | null;
   /** FK to `codecamp_pr_reviews.id`. Nullable: the review row may not exist yet. */
   reviewId: string | null;
   /** Full webhook payload for re-running the review after worker restart. */
@@ -259,15 +237,12 @@ export type EnqueueReviewJobResult = ReviewJob;
  * normalized PR key — a redelivery (or a duplicate webhook with case /
  * `.git` / trailing-slash URL variants) collapses to a single row.
  *
- * Idempotency strategy:
- *   1. In-process `Set` short-circuit (fast-path same-process dedup).
- *   2. SELECT existing row by PR key (cross-process dedup).
- *   3. If not found, INSERT with `onConflictDoUpdate` — the unique index
- *      `review_jobs_pr_key_unique` enforces uniqueness even under races.
+ * Idempotency strategy: INSERT with `onConflictDoUpdate`; the unique index
+ * `review_jobs_pr_key_unique` enforces uniqueness while updating the latest
+ * webhook payload and head on every redelivery.
  *
  * @param input - The enqueue payload (DB + review ID + action + PR URL + raw payload).
- * @returns The job result; `enqueued: false` means a duplicate delivery
- *   collapsed onto an existing job row.
+ * @returns The job result after the durable upsert completes.
  */
 export async function enqueueReviewJob(
   input: EnqueueReviewJobInput,
@@ -275,35 +250,6 @@ export async function enqueueReviewJob(
   // Ensure the lazy-loaded table reference is available before any
   // synchronous Drizzle query builder touches it.
   const { owner, repo, pullNumber } = normalizePrKey(input.prUrl);
-  const cacheKey = `${owner}/${repo}#${pullNumber}`;
-
-  // Fast-path: same-process dedup. The first call inserted (or saw) a job
-  // for this PR key; the second call short-circuits without touching the
-  // DB (we know the job exists because we just inserted/observed it).
-  // The synthetic job is constructed from the input — production code
-  // would re-SELECT to fetch the latest status (e.g. after a worker
-  // settle), but for the webhook handler this is sufficient.
-  if (enqueuedKeys.has(cacheKey)) {
-    return {
-      id: `${owner}/${repo}#${pullNumber}`,
-      repoOwner: owner,
-      repoName: repo,
-      pullNumber,
-      status: "pending",
-      attempts: 0,
-      maxAttempts: MAX_ATTEMPTS,
-      nextAttemptAt: new Date(),
-      lastError: null,
-      claimedAt: null,
-      claimedBy: null,
-      reviewId: input.reviewId ?? null,
-      payloadJson: input.payload ?? null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      prUrl: input.prUrl,
-      enqueued: false,
-    } as ReviewJob;
-  }
 
   // Durable path: upsert via the unique index. The `onConflictDoUpdate`
   // form is preferred over `onConflictDoNothing` so a redelivery for an
@@ -336,14 +282,14 @@ export async function enqueueReviewJob(
         lastError: null,
         claimedAt: null,
         claimedBy: null,
+        prUrl: input.prUrl,
         payloadJson: input.payload as Record<string, unknown> | null,
         deliveryId: input.deliveryId ?? null,
         updatedAt: now,
+        ...(input.reviewId != null ? { reviewId: input.reviewId } : {}),
       },
     })
     .returning();
-
-  enqueuedKeys.add(cacheKey);
 
   const row: Partial<typeof reviewJobs.$inferSelect> | undefined = Array.isArray(insertedRows)
     ? insertedRows[0]
@@ -360,6 +306,7 @@ export async function enqueueReviewJob(
     lastError: row?.lastError ?? null,
     claimedAt: row?.claimedAt ?? null,
     claimedBy: row?.claimedBy ?? null,
+    deliveryId: row?.deliveryId ?? null,
     reviewId: row?.reviewId ?? null,
     payloadJson: row?.payloadJson ?? null,
     createdAt: row?.createdAt,
@@ -429,6 +376,22 @@ function validateWorkerId(value: unknown, fallback: string): string {
   return id;
 }
 
+/**
+ * Creates the lease value written to `review_jobs.claimed_by` for one claim
+ * operation. The stable worker identity remains the prefix for observability,
+ * while the nonce prevents a visibility reclaim in the same process from
+ * making an older lease look current.
+ * @param workerId Stable worker identity used for observability.
+ * @returns A fresh, SQL-safe lease identity.
+ */
+function createReviewLeaseId(workerId: string): string {
+  const leaseId = `${workerId}:${randomUUID()}`;
+  if (!SAFE_WORKER_ID_PATTERN.test(leaseId)) {
+    throw new Error("worker lease identity contains unsafe characters");
+  }
+  return leaseId;
+}
+
 // ─── Claim ────────────────────────────────────────────────────
 
 export interface ClaimDueJobsOptions {
@@ -443,7 +406,7 @@ export interface ClaimDueJobsOptions {
  *
  *   WITH claimed AS (
  *     UPDATE review_jobs
- *     SET status='claimed', claimed_at=now(), claimed_by=$workerId
+ *     SET status='claimed', claimed_at=now(), claimed_by=$leaseId
  *     WHERE id IN (
  *       SELECT id FROM review_jobs
  *       WHERE status='pending' AND next_attempt_at <= now()
@@ -463,7 +426,7 @@ export interface ClaimDueJobsOptions {
  *
  * @param db - Optional DB connection; defaults to `db` (the shared
  *   singleton). Tests can pass a mock for unit tests.
- * @param opts - Optional batch size, "now" reference, and worker id overrides.
+ * @param opts - Optional batch size, "now" reference, and base worker id overrides.
  * @returns Array of claimed job rows (each with the `ReviewJob` shape).
  */
 export async function claimDueJobs(
@@ -473,6 +436,9 @@ export async function claimDueJobs(
   const options: ClaimDueJobsOptions = typeof opts === "number" ? { batchSize: opts } : opts;
   const batchSize = validatePositiveInteger(options.batchSize ?? CLAIM_BATCH_SIZE, "batchSize");
   const workerId = validateWorkerId(options.workerId, WORKER_ID);
+  // A fresh nonce is part of every claim operation. Reclaiming and claiming
+  // the same row again in this process must produce a different lease value.
+  const leaseId = createReviewLeaseId(workerId);
 
   // Allow tests to pass a mock DB; otherwise always use the privileged
   // (direct) connection so `FOR UPDATE SKIP LOCKED` row locks work across
@@ -494,7 +460,7 @@ export async function claimDueJobs(
         UPDATE review_jobs
         SET status = 'claimed',
             claimed_at = ${now}::timestamptz,
-            claimed_by = ${workerId},
+            claimed_by = ${leaseId},
             updated_at = ${now}::timestamptz
         WHERE id IN (
           SELECT id FROM review_jobs
@@ -623,8 +589,63 @@ export interface ProcessJobDeps {
   updatePrReview?: typeof import("@reading-advantage/domain/codecamp").updatePrReview;
   /** Resolve fail-closed model execution and learner-visible feedback policy. */
   resolveRollout?: () => import("@reading-advantage/domain/codecamp").PrEvaluationRuntimeRollout;
+  /**
+   * Check whether this worker still owns the durable claim immediately before
+   * a persistence or learner-visible side effect. The production default
+   * reads `review_jobs`; tests may inject a deterministic race seam.
+   */
+  isCurrentClaim?: (claim: ReviewJobClaimIdentity) => Promise<boolean>;
   /** Identity to log under. */
   workerId?: string;
+}
+
+/**
+ * Durable identity of one review-job lease.
+ * @property id The queue row identifier.
+ * @property status The required claimed status.
+ * @property claimedBy The worker lease owner.
+ * @property deliveryId The webhook delivery version, or null for legacy rows.
+ */
+export interface ReviewJobClaimIdentity {
+  id: string;
+  status: "claimed";
+  claimedBy: string | null | undefined;
+  deliveryId: string | null | undefined;
+}
+
+/**
+ * Reads the queue row and verifies that the worker still owns the same lease.
+ * Minimal test doubles without a query surface are treated as compatibility
+ * fixtures; a real database connection always takes the durable branch.
+ * @param db The database connection containing the queue row.
+ * @param claim The claimed row identity to compare.
+ * @returns Whether the claim is still current.
+ */
+async function isCurrentReviewJobClaim(
+  db: DB,
+  claim: ReviewJobClaimIdentity,
+): Promise<boolean> {
+  if (typeof db.select !== "function") return true;
+  // Older unit fixtures predate the durable lease fields and omit them from
+  // their hand-built job objects. `claimDueJobs` always normalizes both
+  // fields before production processing, so this compatibility branch does
+  // not weaken the real queue path.
+  if (claim.claimedBy === undefined || claim.deliveryId === undefined) return true;
+  if (!claim.id || !claim.claimedBy) return false;
+
+  const deliveryPredicate = claim.deliveryId == null
+    ? isNull(reviewJobs.deliveryId)
+    : eq(reviewJobs.deliveryId, claim.deliveryId);
+  const rows = await db
+    .select({ id: reviewJobs.id })
+    .from(reviewJobs)
+    .where(and(
+      eq(reviewJobs.id, claim.id),
+      eq(reviewJobs.status, "claimed"),
+      eq(reviewJobs.claimedBy, claim.claimedBy),
+      deliveryPredicate,
+    ));
+  return Array.isArray(rows) && rows.length > 0;
 }
 
 /**
@@ -659,12 +680,14 @@ export function renderAdvisoryObjectiveEvidence(
  * @param job - The claimed job row (must include `prOwner`, `prRepo`,
  *   `prPullNumber`, `reviewId`, `payloadJson`).
  * @param deps - Dependency overrides for testing.
- * @returns Completion after advisory feedback is persisted and posted.
+ * @returns True when the claimed job completed; false when its lease was
+ * superseded before a side effect and the caller must leave the newer claim
+ * untouched.
  */
 export async function processJob(
   job: ReviewJob,
   deps: ProcessJobDeps,
-): Promise<void> {
+): Promise<boolean> {
   const {
     fetchDiff,
     postComment,
@@ -673,13 +696,17 @@ export async function processJob(
     workerId,
   } = deps;
 
+  if (typeof job.reviewId !== "string" || job.reviewId.trim().length === 0) {
+    throw createPermanentReviewContractError("Review job is missing its persisted review relationship");
+  }
+
   const prInfo = { owner: job.repoOwner, repo: job.repoName, pullNumber: job.pullNumber };
   // Lazy-load the domain primitives so test files that mock
   // `@reading-advantage/domain/codecamp` resolve cleanly at the call
   // site rather than at module-load time.
   const domain = await import("@reading-advantage/domain/codecamp");
   const rollout = (deps.resolveRollout ?? domain.resolvePrEvaluationRuntimeRollout)();
-  if (!rollout.runModel) return;
+  if (!rollout.runModel) return true;
   const shouldPublishFeedback = rollout.mayPublishFeedback && (
     rollout.mode !== "canary" || domain.isPrEvaluationCanarySelected(job.id, rollout.canaryPercent)
   );
@@ -688,6 +715,14 @@ export async function processJob(
   const fetchDiffFn = fetchDiff ?? githubClient.fetchPrDiff;
   const postCommentFn = postComment ?? githubClient.postPrComment;
   const fetchCheckEvidenceFn = deps.fetchCheckEvidence ?? githubClient.fetchPrCheckEvidence;
+  const claimIdentity: ReviewJobClaimIdentity = {
+    id: job.id,
+    status: "claimed",
+    claimedBy: job.claimedBy,
+    deliveryId: job.deliveryId,
+  };
+  const isCurrentClaim = deps.isCurrentClaim
+    ?? ((claim: ReviewJobClaimIdentity) => isCurrentReviewJobClaim(deps.db, claim));
 
   const token = await tokenFn();
   const diff = await fetchDiffFn(prInfo, token);
@@ -738,7 +773,7 @@ export async function processJob(
     },
     tenant: { schoolId: null },
     prDiff: diff,
-    repoUrl: `https://github.com/${job.repoOwner}/${job.repoName}`,
+    reviewId: job.reviewId,
     trustedContext: {
       schemaVersion: "codecamp.pr-review-context.v1",
       pullRequest: { number: job.pullNumber, headSha },
@@ -752,14 +787,58 @@ export async function processJob(
   // `reviewedAt` on any non-`pending` status (terminal-stamping rule from
   // lessons-learned 2026-05-15).
   const updateFn = updatePrReview ?? domain.updatePrReview;
-  if (job.reviewId) {
-    if (headSha) {
+  const reviewUser = {
+    id: workerId ?? WORKER_ID,
+    username: workerId ?? WORKER_ID,
+    name: "Review Worker",
+    role: "SYSTEM" as const,
+    schoolId: null,
+    xp: 0,
+    level: 1,
+    cefrLevel: "A1" as const,
+  };
+  const trustedContext = {
+    schemaVersion: "codecamp.pr-review-context.v1",
+    reviewJobId: job.id,
+    repository: `${job.repoOwner}/${job.repoName}`,
+    pullRequest: { number: job.pullNumber, headSha },
+    deterministicChecks,
+    priorAttempts,
+    evidenceAuthority: "advisory_model" as const,
+  };
+  const objectiveEvidence = renderAdvisoryObjectiveEvidence(reviewResult);
+  const commentBody = `## 🤖 CodeCamp AI Review\n\n**Status:** ℹ️ Advisory feedback — this review does not approve, block, or create mastery evidence.\n\n**Summary:** ${reviewResult.summary}\n\n${
+    reviewResult.comments.length > 0
+      ? "### Comments\n" +
+        reviewResult.comments
+          .map((c) => `- ${c.line ? `Line ${c.line}: ` : ""}${c.body}`)
+          .join("\n")
+      : ""
+  }${objectiveEvidence ? `\n\n${objectiveEvidence}` : ""}`;
+
+  /**
+   * Persists review evidence and publishes feedback against one database
+   * handle. When `verifyClaim` is true this compatibility path rechecks the
+   * injected lease seam between side effects; the production transaction
+   * path holds the queue-row lock instead.
+   * @param writeDb Database handle, optionally the active transaction.
+   * @param verifyClaim Whether to use the compatibility claim-check seam.
+   * @returns Whether this worker completed the side effects for its claim.
+   */
+  const persistAndPublish = async (writeDb: DB, verifyClaim: boolean): Promise<boolean> => {
+    const writeTenantDb = createTenantDB(writeDb, { schoolId: null });
+    const claimIsCurrent = async (): Promise<boolean> => {
+      if (!verifyClaim) return true;
+      return isCurrentClaim(claimIdentity);
+    };
+
+    if (job.reviewId && headSha) {
+      // The production transaction already owns the queue-row lock. The
+      // compatibility path retains the injected seam for focused unit tests.
+      if (!await claimIsCurrent()) return false;
       await domain.recordAdvisoryPrReviewAttempt({
-        db: tenantDb,
-        user: {
-          id: workerId ?? WORKER_ID, username: workerId ?? WORKER_ID, name: "Review Worker",
-          role: "SYSTEM" as const, schoolId: null, xp: 0, level: 1, cefrLevel: "A1" as const,
-        },
+        db: writeTenantDb,
+        user: reviewUser,
         tenant: { schoolId: null },
         input: {
           reviewId: job.reviewId,
@@ -767,31 +846,16 @@ export async function processJob(
           idempotencyKey: `codecamp-pr-review:${job.reviewId}:${headSha}:advisory-model.v1`,
           provenance,
           review: reviewResult,
-          trustedContext: {
-            schemaVersion: "codecamp.pr-review-context.v1",
-            reviewJobId: job.id,
-            repository: `${job.repoOwner}/${job.repoName}`,
-            pullRequest: { number: job.pullNumber, headSha },
-            deterministicChecks,
-            priorAttempts,
-            evidenceAuthority: "advisory_model",
-          },
+          trustedContext,
         },
       });
     }
-    if (shouldPublishFeedback) {
+
+    if (job.reviewId && shouldPublishFeedback) {
+      if (!await claimIsCurrent()) return false;
       await updateFn({
-        db: tenantDb,
-        user: {
-          id: workerId ?? WORKER_ID,
-          username: workerId ?? WORKER_ID,
-          name: "Review Worker",
-          role: "SYSTEM" as const,
-          schoolId: null,
-          xp: 0,
-          level: 1,
-          cefrLevel: "A1" as const,
-        },
+        db: writeTenantDb,
+        user: reviewUser,
         tenant: { schoolId: null },
         input: {
           reviewId: job.reviewId,
@@ -801,26 +865,63 @@ export async function processJob(
         },
       });
     }
+
+    // Keep the external learner-visible callback inside the same transaction
+    // while the queue row is locked. A GitHub failure remains best-effort: the
+    // durable advisory/status writes are the source of truth.
+    if (shouldPublishFeedback && token) {
+      if (!await claimIsCurrent()) return false;
+      try {
+        await postCommentFn(prInfo, commentBody, token);
+      } catch (commentErr) {
+        console.error("[Review Worker] Failed to post PR comment:", commentErr);
+      }
+    }
+    return true;
+  };
+
+  // An injected claim seam is deliberately authoritative for unit tests and
+  // test doubles. Production uses the transaction branch below, where the
+  // exact queue row/lease is verified with SELECT ... FOR UPDATE and kept
+  // locked across all bounded persistence/publication side effects.
+  if (deps.isCurrentClaim) {
+    if (!await isCurrentClaim(claimIdentity)) return false;
+    return persistAndPublish(deps.db, true);
   }
 
-  // Post the PR comment (best-effort — failure to comment does not fail
-  // the job, since the DB write is the source of truth).
-  if (shouldPublishFeedback && token) {
-    const objectiveEvidence = renderAdvisoryObjectiveEvidence(reviewResult);
-    const commentBody = `## 🤖 CodeCamp AI Review\n\n**Status:** ℹ️ Advisory feedback — this review does not approve, block, or create mastery evidence.\n\n**Summary:** ${reviewResult.summary}\n\n${
-      reviewResult.comments.length > 0
-        ? "### Comments\n" +
-          reviewResult.comments
-            .map((c) => `- ${c.line ? `Line ${c.line}: ` : ""}${c.body}`)
-            .join("\n")
-        : ""
-    }${objectiveEvidence ? `\n\n${objectiveEvidence}` : ""}`;
-    try {
-      await postCommentFn(prInfo, commentBody, token);
-    } catch (commentErr) {
-      console.error("[Review Worker] Failed to post PR comment:", commentErr);
-    }
+  const transactionDb = deps.db as unknown as {
+    transaction?: (callback: (tx: DB) => Promise<boolean>) => Promise<boolean>;
+  };
+  // Legacy hand-built test jobs may omit the durable lease fields. Real
+  // `claimDueJobs` rows always normalize both fields, so only those rows take
+  // the row-locking transaction path.
+  const hasDurableLeaseIdentity = claimIdentity.claimedBy !== undefined
+    && claimIdentity.deliveryId !== undefined;
+  if (hasDurableLeaseIdentity && typeof transactionDb.transaction === "function") {
+    return transactionDb.transaction(async (tx) => {
+      if (!claimIdentity.id || !claimIdentity.claimedBy) return false;
+      const deliveryPredicate = claimIdentity.deliveryId == null
+        ? isNull(reviewJobs.deliveryId)
+        : eq(reviewJobs.deliveryId, claimIdentity.deliveryId);
+      const rows = await tx
+        .select({ id: reviewJobs.id })
+        .from(reviewJobs)
+        .where(and(
+          eq(reviewJobs.id, claimIdentity.id),
+          eq(reviewJobs.status, "claimed"),
+          eq(reviewJobs.claimedBy, claimIdentity.claimedBy),
+          deliveryPredicate,
+        ))
+        .for("update")
+        .limit(1);
+      if (!Array.isArray(rows) || rows.length === 0) return false;
+      return persistAndPublish(tx, false);
+    });
   }
+
+  // Minimal unit fixtures may not implement transactions. Preserve the
+  // injected/compatibility behavior there; production DB handles always do.
+  return persistAndPublish(deps.db, true);
 }
 
 /** Extracts a validated GitHub pull-request head SHA from a durable webhook payload. */
@@ -907,6 +1008,20 @@ export function settleJob(
   const nextAttempts = job.attempts + 1;
   const lastError = err.message;
 
+  // Contract violations are deterministic: retrying the same review input
+  // cannot change its identity, schema, safe-diff, or objective result. Keep
+  // the first failure auditable as one failed attempt and dead-letter it.
+  if (isPermanentReviewContractFailure(err)) {
+    return {
+      status: "dead",
+      attempts: Math.max(1, nextAttempts),
+      nextAttemptAt: now,
+      lastError,
+      claimedAt: null,
+      claimedBy: null,
+    };
+  }
+
   if (job.attempts + 1 >= job.maxAttempts) {
     // Exhaustion: terminal dead-letter state. Review row stays pending.
     return {
@@ -938,23 +1053,48 @@ export function settleJob(
 }
 
 /**
+ * Tests the structural permanent-error marker without importing domain code.
+ * @param error Unknown failure returned by a review job.
+ * @returns True when the failure is a non-retryable PR-review contract violation.
+ */
+function isPermanentReviewContractFailure(error: unknown): boolean {
+  return typeof error === "object" && error !== null
+    && "code" in error
+    && (error as { code?: unknown }).code === "CODECAMP_PR_REVIEW_CONTRACT_VIOLATION"
+    && "retryable" in error
+    && (error as { retryable?: unknown }).retryable === false;
+}
+
+/**
+ * Creates a permanent worker-side contract failure for invalid durable-job identity.
+ * @param message Human-readable explanation of the invalid job contract.
+ * @returns An error carrying the marker consumed by settleJob.
+ */
+function createPermanentReviewContractError(message: string): Error {
+  return Object.assign(new Error(message), {
+    code: "CODECAMP_PR_REVIEW_CONTRACT_VIOLATION" as const,
+    retryable: false as const,
+  });
+}
+
+/**
  * Applies a `settleJob` payload to the database. Separated from
  * `settleJob` so the latter stays a pure function for testing.
  *
- * The update is a compare-and-swap on ID plus `status = 'claimed'`. This
- * prevents overwriting a terminal or pending row, but it does not identify
- * the claim owner. After visibility reclaim and re-claim, a stale worker can
- * still settle the newer worker's `claimed` row. The durable-job platform
- * intentionally strengthens this baseline with lease-token ownership.
+ * The update is a compare-and-swap on ID plus `status = 'claimed'` and, when
+ * supplied by the worker, the complete lease identity. The latter prevents a
+ * stale worker from settling a newer claim after visibility reclaim/re-claim.
  *
  * @param dbArg - DB connection (or privileged singleton if omitted).
  * @param jobId - The job id to settle.
  * @param payload - The output of `settleJob`.
+ * @param claim - Optional lease identity used to strengthen the CAS.
  */
 export async function applySettle(
   dbArg: DB | undefined,
   jobId: string,
   payload: SettleJobPayload,
+  claim?: ReviewJobClaimIdentity,
 ): Promise<void> {
   const { db: defaultDb } = await import("@reading-advantage/db");
   let conn: DB | undefined = dbArg ?? (defaultDb as DB);
@@ -964,6 +1104,21 @@ export async function applySettle(
     conn = owned!.db;
   }
   try {
+    // A claimed row without a worker identity cannot be safely settled by a
+    // worker. Leave it for visibility-timeout reclaim instead of risking a
+    // stale update; legacy direct callers without `claim` retain the original
+    // ID + status CAS contract.
+    if (claim && !claim.claimedBy) return;
+    const claimWhere = claim
+      ? and(
+        eq(reviewJobs.id, jobId),
+        eq(reviewJobs.status, "claimed"),
+        eq(reviewJobs.claimedBy, claim.claimedBy!),
+        claim.deliveryId == null
+          ? isNull(reviewJobs.deliveryId)
+          : eq(reviewJobs.deliveryId, claim.deliveryId),
+      )
+      : and(eq(reviewJobs.id, jobId), eq(reviewJobs.status, "claimed"));
     await conn
       .update(reviewJobs)
       .set({
@@ -975,7 +1130,7 @@ export async function applySettle(
         claimedBy: payload.claimedBy,
         updatedAt: new Date(),
       })
-      .where(and(eq(reviewJobs.id, jobId), eq(reviewJobs.status, "claimed")));
+      .where(claimWhere);
   } finally {
     if (owned) await owned.client.end();
   }
@@ -996,7 +1151,12 @@ export interface CreateReviewWorkerOptions {
   /** Override `settleJob` for tests. */
   settle?: (job: { id: string; attempts: number; maxAttempts: number }, err: Error | null, opts: SettleJobOptions) => SettleJobPayload;
   /** Override the durable settlement write for isolated worker tests. */
-  applySettle?: (db: DB | undefined, jobId: string, payload: SettleJobPayload) => Promise<void>;
+  applySettle?: (
+    db: DB | undefined,
+    jobId: string,
+    payload: SettleJobPayload,
+    claim?: ReviewJobClaimIdentity,
+  ) => Promise<void>;
 }
 
 export interface ReviewWorker {
@@ -1040,16 +1200,30 @@ export async function runWorkerTick(opts: CreateReviewWorkerOptions = {}): Promi
 
     for (const job of claimed) {
       try {
-        await processJob(job, {
+        const completed = await processJob(job, {
           db: defaultDb,
           ...(opts.deps ?? {}),
         });
+        // A superseded worker intentionally leaves the durable row alone;
+        // either the newer claim is already processing it or the pending row
+        // will be picked up on the next tick.
+        if (!completed) continue;
         const payload = settle({ id: job.id, attempts: job.attempts, maxAttempts: job.maxAttempts }, null, {});
-        await applySettlement(undefined, job.id, payload);
+        await applySettlement(undefined, job.id, payload, {
+          id: job.id,
+          status: "claimed",
+          claimedBy: job.claimedBy,
+          deliveryId: job.deliveryId,
+        });
       } catch (err) {
         const e = err instanceof Error ? err : new Error(String(err));
         const payload = settle({ id: job.id, attempts: job.attempts, maxAttempts: job.maxAttempts }, e, {});
-        await applySettlement(undefined, job.id, payload).catch(() => {
+        await applySettlement(undefined, job.id, payload, {
+          id: job.id,
+          status: "claimed",
+          claimedBy: job.claimedBy,
+          deliveryId: job.deliveryId,
+        }).catch(() => {
           // Settle failure is non-fatal — log + move on.
           console.error("[Review Worker] Failed to settle job:", job.id, e);
         });
@@ -1125,6 +1299,7 @@ function normalizeJobRow(row: Record<string, unknown>): ReviewJob {
       ? new Date(get<string | Date>("claimed_at", "claimedAt"))
       : null,
     claimedBy: (get<string | null>("claimed_by", "claimedBy") ?? null) as string | null,
+    deliveryId: (get<string | null>("delivery_id", "deliveryId") ?? null) as string | null,
     createdAt: new Date(get<string | Date>("created_at", "createdAt")),
     updatedAt: new Date(get<string | Date>("updated_at", "updatedAt")),
     prUrl: get<string>("pr_url", "prUrl"),

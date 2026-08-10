@@ -32,6 +32,12 @@ export default function InternDetailPage() {
     needs_changes: reviewT("statusNeedsChangesBadge"),
     approved: reviewT("statusApprovedBadge"),
   };
+  const operationalStatusBadgeLabels: Record<string, string> = {
+    pending: t("reviewOperationalStatus.pending"),
+    processing: t("reviewOperationalStatus.processing"),
+    retrying: t("reviewOperationalStatus.retrying"),
+    failed: t("reviewOperationalStatus.failed"),
+  };
   const params = useParams();
   const userId = params.userId as string;
   const { user, isLoading: authLoading } = useAuth();
@@ -156,6 +162,7 @@ export default function InternDetailPage() {
             reviewReceived: boolean;
             latestPrUrl: string | null;
             latestPrReviewStatus: string | null;
+            latestPrReviewOperationalStatus: "pending" | "processing" | "retrying" | "failed" | null;
           }) => (
             <div
               key={mod.moduleId}
@@ -180,15 +187,22 @@ export default function InternDetailPage() {
                   {!mod.reviewExpected ? (
                     <span>{t("noAiReviewExpected")}</span>
                   ) : mod.latestPrUrl ? (
-                    <a
-                      href={mod.latestPrUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-primary hover:underline"
-                    >
-                      {t("reviewReceived")}
-                      <ExternalLink className="h-3 w-3" />
-                    </a>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <a
+                        href={mod.latestPrUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-primary hover:underline"
+                      >
+                        {mod.latestPrReviewOperationalStatus ? t("latestPr") : t("reviewReceived")}
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                      {mod.latestPrReviewOperationalStatus ? (
+                        <Badge variant={mod.latestPrReviewOperationalStatus === "failed" ? "destructive" : "secondary"}>
+                          {operationalStatusBadgeLabels[mod.latestPrReviewOperationalStatus]}
+                        </Badge>
+                      ) : null}
+                    </div>
                   ) : (
                     <span>{t("awaitingPrReview")}</span>
                   )}
@@ -278,6 +292,7 @@ export default function InternDetailPage() {
                 id: string;
                 prUrl: string;
                 reviewStatus: string;
+                operationalStatus: "pending" | "processing" | "retrying" | "failed" | null;
                 llmReviewSummary: string | null;
                 reviewedAt: Date | null;
               }) => (
@@ -291,17 +306,24 @@ export default function InternDetailPage() {
                     >
                       {getPrDisplayName(review.prUrl)}
                     </a>
-                    <Badge
-                      variant={
-                        review.reviewStatus === "approved"
-                          ? "default"
-                          : review.reviewStatus === "needs_changes"
-                            ? "destructive"
-                            : "secondary"
-                      }
-                    >
-                      {statusBadgeLabels[review.reviewStatus]}
-                    </Badge>
+                    <div className="flex flex-wrap justify-end gap-2">
+                      <Badge
+                        variant={
+                          review.reviewStatus === "approved"
+                            ? "default"
+                            : review.reviewStatus === "needs_changes"
+                              ? "destructive"
+                              : "secondary"
+                        }
+                      >
+                        {statusBadgeLabels[review.reviewStatus]}
+                      </Badge>
+                      {review.operationalStatus ? (
+                        <Badge variant={review.operationalStatus === "failed" ? "destructive" : "secondary"}>
+                          {operationalStatusBadgeLabels[review.operationalStatus]}
+                        </Badge>
+                      ) : null}
+                    </div>
                   </div>
                   {review.llmReviewSummary && (
                     <p className="mt-2 text-sm text-muted-foreground">

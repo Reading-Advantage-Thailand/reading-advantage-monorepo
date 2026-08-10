@@ -11,7 +11,11 @@ import { codecampAPKUnit, curriculumBindings } from "@reading-advantage/codecamp
 import { activitySchema } from "@reading-advantage/activity-runtime";
 import { assessCheckpointAttempt } from "@reading-advantage/activity-runtime/server";
 import type { TenantDB } from "../db-contract.js";
-import type { ReviewGenerationProvenance, ReviewResult } from "./review-exercise.js";
+import {
+  CodecampPrReviewContractError,
+  type ReviewGenerationProvenance,
+  type ReviewResult,
+} from "./review-exercise.js";
 import { projectActivitySubmissionToMastery } from "../activity/activity-mastery-projection.js";
 import type { MasteryPersistencePort } from "../mastery/persistence-ports.js";
 
@@ -157,8 +161,8 @@ export async function listPriorPrReviewAttempts(args: {
   input: { reviewId: string; excludeHeadSha: string | null };
 }): Promise<PriorPrReviewAttemptSummary[]> {
   assertCan(args.user, "admin:dashboard", args.tenant);
-  if (!/^[0-9a-f-]{36}$/i.test(args.input.reviewId)) throw new Error("PR review history requires a valid review ID");
-  if (args.input.excludeHeadSha !== null && !/^[0-9a-f]{40}$/i.test(args.input.excludeHeadSha)) throw new Error("PR review history requires a valid excluded head SHA");
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(args.input.reviewId)) throw new CodecampPrReviewContractError("PR review history requires a valid review ID");
+  if (args.input.excludeHeadSha !== null && !/^[0-9a-f]{40}$/i.test(args.input.excludeHeadSha)) throw new CodecampPrReviewContractError("PR review history requires a valid excluded head SHA");
   const rawDb = args.db.unscoped("PR review history is tenant-scoped through immutable attempt tenant keys");
   const predicates = [
     eq(codecampPrReviewAttempts.reviewId, args.input.reviewId),
@@ -267,15 +271,15 @@ export async function recordTrustedPrReviewAttempt({
   input: RecordTrustedPrReviewAttemptInput;
 }): Promise<RecordPrReviewAttemptResult> {
   assertCan(user, "admin:dashboard", tenant);
-  if (!/^[0-9a-f]{40}$/i.test(input.headSha)) throw new Error("PR review attempt requires a GitHub head SHA");
-  if (!input.idempotencyKey.trim()) throw new Error("PR review attempt requires an idempotency key");
+  if (!/^[0-9a-f]{40}$/i.test(input.headSha)) throw new CodecampPrReviewContractError("PR review attempt requires a GitHub head SHA");
+  if (!input.idempotencyKey.trim()) throw new CodecampPrReviewContractError("PR review attempt requires an idempotency key");
   const authorized = new Map(resolveGraphBoundPrObjectives(input.moduleSlug).map((binding) => [binding.objectiveId, binding]));
-  if (authorized.size === 0) throw new Error("No assessed pull-request binding exists for this module");
-  if (input.objectives.length !== authorized.size || new Set(input.objectives.map(({ objectiveId }) => objectiveId)).size !== input.objectives.length) throw new Error("Trusted PR evidence must cover every graph-bound objective exactly once");
+  if (authorized.size === 0) throw new CodecampPrReviewContractError("No assessed pull-request binding exists for this module");
+  if (input.objectives.length !== authorized.size || new Set(input.objectives.map(({ objectiveId }) => objectiveId)).size !== input.objectives.length) throw new CodecampPrReviewContractError("Trusted PR evidence must cover every graph-bound objective exactly once");
   for (const objective of input.objectives) {
-    if (!authorized.has(objective.objectiveId)) throw new Error("Trusted PR evidence contains an objective outside the repository binding");
-    if (!Number.isInteger(objective.score) || objective.score < 0 || objective.score > 100) throw new Error("Verified PR score must be an integer from 0 through 100");
-    if (!Number.isInteger(objective.confidence) || objective.confidence < 0 || objective.confidence > 100) throw new Error("Verified PR confidence must be an integer from 0 through 100");
+    if (!authorized.has(objective.objectiveId)) throw new CodecampPrReviewContractError("Trusted PR evidence contains an objective outside the repository binding");
+    if (!Number.isInteger(objective.score) || objective.score < 0 || objective.score > 100) throw new CodecampPrReviewContractError("Verified PR score must be an integer from 0 through 100");
+    if (!Number.isInteger(objective.confidence) || objective.confidence < 0 || objective.confidence > 100) throw new CodecampPrReviewContractError("Verified PR confidence must be an integer from 0 through 100");
   }
   return db.transaction(async (transactionDb) => {
     const tenantTransaction = transactionDb as unknown as TenantDB;
@@ -288,8 +292,8 @@ export async function recordTrustedPrReviewAttempt({
       .innerJoin(codecampExerciseRepos, eq(codecampExerciseRepos.id, codecampPrReviews.exerciseRepoId))
       .innerJoin(codecampModules, eq(codecampModules.id, codecampExerciseRepos.moduleId))
       .where(eq(codecampPrReviews.id, input.reviewId)).limit(1);
-    if (!review) throw new Error("Review not found");
-    if (review.moduleSlug !== input.moduleSlug) throw new Error("Trusted PR evidence module does not match the reviewed repository");
+    if (!review) throw new CodecampPrReviewContractError("Review not found");
+    if (review.moduleSlug !== input.moduleSlug) throw new CodecampPrReviewContractError("Trusted PR evidence module does not match the reviewed repository");
     const [attempt] = await rawDb.insert(codecampPrReviewAttempts).values({
       reviewId: review.id, tenantKey: tenant.schoolId ?? "codecamp", userId: review.userId,
       headSha: input.headSha, idempotencyKey: input.idempotencyKey,
@@ -329,7 +333,7 @@ export function buildAdvisoryAPKObjectiveEvidence(
 ): AdvisoryObjectiveEvidence[] {
   if (!review.apkEvaluation) return [];
   const objective = review.objectiveEvidence.find(({ objectiveId }) => objectiveId === codecampAPKUnit.youdo.objectiveId);
-  if (!objective) throw new Error("APK advisory evidence requires graph-bound objective output");
+  if (!objective) throw new CodecampPrReviewContractError("APK advisory evidence requires graph-bound objective output");
   return [{
     objectiveId: codecampAPKUnit.youdo.objectiveId,
     variantKey: codecampAPKUnit.youdo.variantKey,
@@ -357,21 +361,21 @@ export function buildAdvisoryPrObjectiveEvidence(
 ): AdvisoryObjectiveEvidence[] {
   const bindings = new Map(resolveGraphBoundPrObjectives(moduleSlug).map((binding) => [binding.objectiveId, binding]));
   if (bindings.size === 0) {
-    if (review.objectiveEvidence.length > 0) throw new Error("Advisory review contains objective evidence for an unbound repository");
+    if (review.objectiveEvidence.length > 0) throw new CodecampPrReviewContractError("Advisory review contains objective evidence for an unbound repository");
     return [];
   }
   if (review.objectiveEvidence.length !== bindings.size || new Set(review.objectiveEvidence.map(({ objectiveId }) => objectiveId)).size !== review.objectiveEvidence.length) {
-    throw new Error("Advisory review must cover every graph-bound objective exactly once");
+    throw new CodecampPrReviewContractError("Advisory review must cover every graph-bound objective exactly once");
   }
   return review.objectiveEvidence.map((objective) => {
     const binding = bindings.get(objective.objectiveId);
-    if (!binding) throw new Error("Advisory review contains an objective outside the repository binding");
+    if (!binding) throw new CodecampPrReviewContractError("Advisory review contains an objective outside the repository binding");
     return {
       objectiveId: objective.objectiveId,
       variantKey: binding.variantKey,
       score: objective.score,
       confidence: objective.confidence,
-      rubricDimensions: review.apkEvaluation?.rubricId === codecampAPKUnit.youdo.rubric.rubricId
+      rubricDimensions: review.apkEvaluation && review.apkEvaluation.rubricId === codecampAPKUnit.youdo.rubric.rubricId
         ? { dimensions: review.apkEvaluation.dimensions }
         : { rubricRefs: binding.rubricRefs },
       misconceptionTags: objective.misconceptionTags,
@@ -399,8 +403,8 @@ export async function recordAdvisoryPrReviewAttempt({
   input: RecordAdvisoryPrReviewAttemptInput;
 }): Promise<RecordPrReviewAttemptResult> {
   assertCan(user, "admin:dashboard", tenant);
-  if (!/^[0-9a-f]{40}$/i.test(input.headSha)) throw new Error("PR review attempt requires a GitHub head SHA");
-  if (!input.idempotencyKey.trim()) throw new Error("PR review attempt requires an idempotency key");
+  if (!/^[0-9a-f]{40}$/i.test(input.headSha)) throw new CodecampPrReviewContractError("PR review attempt requires a GitHub head SHA");
+  if (!input.idempotencyKey.trim()) throw new CodecampPrReviewContractError("PR review attempt requires an idempotency key");
   return db.transaction(async (transactionDb) => {
     const tenantTransaction = transactionDb as unknown as TenantDB;
     const rawDb = tenantTransaction.unscoped("PR review attempts are scoped through the owning review user and tenant key");
@@ -410,7 +414,7 @@ export async function recordAdvisoryPrReviewAttempt({
       .innerJoin(codecampModules, eq(codecampModules.id, codecampExerciseRepos.moduleId))
       .where(eq(codecampPrReviews.id, input.reviewId))
       .limit(1);
-    if (!review) throw new Error("Review not found");
+    if (!review) throw new CodecampPrReviewContractError("Review not found");
     const objectives = buildAdvisoryPrObjectiveEvidence(input.review, review.moduleSlug, input.trustedContext);
     const graphVersion = resolveGraphBoundPrObjectives(review.moduleSlug)[0]?.graphVersion ?? "unbound.v1";
 

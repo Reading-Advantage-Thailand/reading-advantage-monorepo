@@ -21,6 +21,7 @@ import {
 
 export default function AdminPage() {
   const t = useTranslations("admin");
+  const reviewT = useTranslations("review");
   const locale = useLocale();
   const { user, isLoading: authLoading } = useAuth();
   const { data: interns, isLoading: dataLoading } = trpc.codecamp.listInterns.useQuery(
@@ -209,11 +210,15 @@ export default function AdminPage() {
                   totalModules: number;
                   quizAverage: number;
                   prReviewsPending: number;
+                  prReviewsProcessing: number;
+                  prReviewsRetrying: number;
+                  prReviewsFailed: number;
                   prReviewsApproved: number;
                   reviewExpectation: "not_expected_yet" | "awaiting_pr" | "review_received";
                   latestPrReview: {
                     prUrl: string;
                     reviewStatus: "pending" | "reviewed" | "needs_changes" | "approved";
+                    operationalStatus: "pending" | "processing" | "retrying" | "failed" | null;
                     llmReviewSummary: string | null;
                     createdAt: Date;
                   } | null;
@@ -250,29 +255,60 @@ export default function AdminPage() {
                           {intern.prReviewsPending > 0 && (
                             <span className="flex items-center gap-1 text-amber-600">
                               <AlertCircle className="h-3.5 w-3.5" />
-                              {intern.prReviewsPending}
+                              {intern.prReviewsPending} {t("reviewOperationalStatus.pending")}
                             </span>
                           )}
                           {intern.prReviewsApproved > 0 && (
                             <span className="flex items-center gap-1 text-green-600">
                               <CheckCircle2 className="h-3.5 w-3.5" />
-                              {intern.prReviewsApproved}
+                              {intern.prReviewsApproved} {reviewT("statusApprovedBadge")}
                             </span>
                           )}
-                          {intern.prReviewsPending === 0 && intern.prReviewsApproved === 0 && (
+                          {intern.prReviewsProcessing > 0 && (
+                            <span className="flex items-center gap-1 text-blue-600">
+                              <Clock className="h-3.5 w-3.5" />
+                              {intern.prReviewsProcessing} {t("reviewOperationalStatus.processing")}
+                            </span>
+                          )}
+                          {intern.prReviewsRetrying > 0 && (
+                            <span className="flex items-center gap-1 text-orange-600">
+                              <Clock className="h-3.5 w-3.5" />
+                              {intern.prReviewsRetrying} {t("reviewOperationalStatus.retrying")}
+                            </span>
+                          )}
+                          {intern.prReviewsFailed > 0 && (
+                            <span className="flex items-center gap-1 text-destructive">
+                              <AlertCircle className="h-3.5 w-3.5" />
+                              {intern.prReviewsFailed} {t("reviewOperationalStatus.failed")}
+                            </span>
+                          )}
+                          {intern.prReviewsPending === 0 && intern.prReviewsProcessing === 0 && intern.prReviewsRetrying === 0 && intern.prReviewsFailed === 0 && intern.prReviewsApproved === 0 && (
                             <span className="text-muted-foreground">—</span>
                           )}
                         </div>
                         {intern.latestPrReview ? (
-                          <a
-                            href={intern.latestPrReview.prUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
-                          >
-                            {getPrDisplayName(intern.latestPrReview.prUrl)}
-                            <ExternalLink className="h-3 w-3" />
-                          </a>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <a
+                              href={intern.latestPrReview.prUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                            >
+                              {getPrDisplayName(intern.latestPrReview.prUrl)}
+                              <ExternalLink className="h-3 w-3" />
+                            </a>
+                            <span className="text-xs text-muted-foreground">
+                              {intern.latestPrReview.operationalStatus
+                                ? t(`reviewOperationalStatus.${intern.latestPrReview.operationalStatus}`)
+                                : intern.latestPrReview.reviewStatus === "approved"
+                                  ? reviewT("statusApprovedBadge")
+                                  : intern.latestPrReview.reviewStatus === "needs_changes"
+                                    ? reviewT("statusNeedsChangesBadge")
+                                    : intern.latestPrReview.reviewStatus === "reviewed"
+                                      ? reviewT("statusReviewedBadge")
+                                      : reviewT("statusPending")}
+                            </span>
+                          </div>
                         ) : (
                           <span className="text-xs text-muted-foreground">
                             {t(intern.reviewExpectation)}

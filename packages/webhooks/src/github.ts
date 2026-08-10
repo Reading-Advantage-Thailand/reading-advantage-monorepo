@@ -196,20 +196,15 @@ github.post("/pr", async (c) => {
     });
 
     let reviewId: string;
+    let existingReviewId: string | null = null;
 
     if (existingReview) {
-      // Update existing review to pending for re-review
-      const updated = await codecamp.updatePrReview({
-        db: tenantDb,
-        user: systemUser,
-        tenant: globalTenant,
-        input: {
-          reviewId: existingReview.id,
-          reviewStatus: "pending",
-        },
-      });
-      reviewId = updated.id;
-      console.log(`[GitHub Webhook] Re-triggered review for PR: ${pr.html_url}`);
+      // Keep the existing relationship, but defer the editorial reset until
+      // the durable upsert below has invalidated any in-flight worker claim.
+      // Otherwise a stale worker can pass its claim check, then overwrite the
+      // pending state with reviewed feedback after a synchronize delivery.
+      reviewId = existingReview.id;
+      existingReviewId = existingReview.id;
     } else {
       // New PR — look up exercise repo by base repo URL
       const repo = await codecamp.getExerciseRepoByUrl({
@@ -302,10 +297,10 @@ github.post("/pr", async (c) => {
     // persistence. A failed review remains pending for normal retry/backoff.
 
     if (prInfo) {
-      // (1) Enqueue the durable job. Failure to enqueue is logged but
-      // does NOT block the ACK. Without a durable row there is nothing a
-      // worker can safely claim, so do not schedule a speculative run.
-      let enqueued = false;
+      // (1) Enqueue the durable job before changing editorial state or
+      // dispatching work. A failed enqueue is retryable: release the
+      // process-local marker and let the outer handler return HTTP 500 so
+      // GitHub can redeliver the event.
       try {
         await enqueueReviewJob({
           db,
@@ -315,32 +310,46 @@ github.post("/pr", async (c) => {
           payload: data,
           deliveryId: deliveryId ?? null,
         });
-        enqueued = true;
       } catch (enqueueErr) {
         console.error("[GitHub Webhook] Failed to enqueue review job:", enqueueErr);
+        throw enqueueErr;
       }
 
-      if (enqueued) {
-        // Fire-and-track the worker tick after the ACK has become observable.
-        // The tick claims pending work with the same locking/retry semantics as
-        // the scheduler; it does not execute a webhook-local review.
-        const job = (async () => {
-          await new Promise<void>((resolve) => setImmediate(resolve));
-          await runWorkerTick();
-        })().catch((reviewErr) => {
-          console.error("[GitHub Webhook] Background review worker tick failed:", reviewErr);
+      if (existingReviewId) {
+        await codecamp.updatePrReview({
+          db: tenantDb,
+          user: systemUser,
+          tenant: globalTenant,
+          input: {
+            reviewId: existingReviewId,
+            reviewStatus: "pending",
+          },
         });
-        const jobKey = deliveryId ?? `unknown-${Date.now()}`;
-        backgroundReviewJobs.set(jobKey, job);
-        job.finally(() => {
-          backgroundReviewJobs.delete(jobKey);
-        });
+        console.log(`[GitHub Webhook] Re-triggered review for PR: ${pr.html_url}`);
       }
+
+      // Fire-and-track the worker tick after the ACK has become observable.
+      // The tick claims pending work with the same locking/retry semantics as
+      // the scheduler; it does not execute a webhook-local review.
+      const job = (async () => {
+        await new Promise<void>((resolve) => setImmediate(resolve));
+        await runWorkerTick();
+      })().catch((reviewErr) => {
+        console.error("[GitHub Webhook] Background review worker tick failed:", reviewErr);
+      });
+      const jobKey = deliveryId ?? `unknown-${Date.now()}`;
+      backgroundReviewJobs.set(jobKey, job);
+      job.finally(() => {
+        backgroundReviewJobs.delete(jobKey);
+      });
     }
 
     return c.json({ received: true, action, prUrl: pr.html_url }, 200);
   } catch (err) {
     console.error("[GitHub Webhook] Error processing PR event:", err);
+    // Failed processing must be retryable. In particular, an enqueue error
+    // must not leave the warm-instance marker suppressing GitHub's retry.
+    if (deliveryId) processedDeliveryIds.delete(deliveryId);
     await logWebhookEvent({
       deliveryId,
       event,

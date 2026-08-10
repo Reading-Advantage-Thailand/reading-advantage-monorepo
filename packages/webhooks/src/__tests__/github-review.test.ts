@@ -219,6 +219,7 @@ function signPayload(payload: string): string {
 function createRequest(payload: string, options: {
   signature?: string;
   event?: string;
+  deliveryId?: string;
 } = {}): Request {
   const sig = options.signature ?? signPayload(payload);
   const event = options.event ?? "pull_request";
@@ -228,6 +229,7 @@ function createRequest(payload: string, options: {
       "x-hub-signature-256": sig,
       "x-github-event": event,
       "content-type": "application/json",
+      ...(options.deliveryId ? { "x-github-delivery": options.deliveryId } : {}),
     },
     body: payload,
   });
@@ -302,6 +304,46 @@ describe("GitHub webhook — review path uses the AIClient abstraction", () => {
     await waitForBackgroundReviews();
     expect(mockEnqueueReviewJob).toHaveBeenCalledTimes(1);
     expect(mockRunWorkerTick).toHaveBeenCalledTimes(1);
+  });
+
+  it("durably supersedes the old worker claim before resetting an existing review to pending", async () => {
+    const req = createRequest(synchronizePayload());
+    const res = await githubApp.fetch(req);
+
+    expect(res.status).toBe(200);
+    await waitForBackgroundReviews();
+    expect(mockEnqueueReviewJob).toHaveBeenCalledOnce();
+    expect(updatePrReview).toHaveBeenCalledOnce();
+    expect(mockEnqueueReviewJob.mock.invocationCallOrder[0]).toBeLessThan(
+      vi.mocked(updatePrReview).mock.invocationCallOrder[0]!,
+    );
+  });
+
+  it("returns 500, releases the delivery marker, and leaves the review untouched when durable enqueue fails", async () => {
+    mockEnqueueReviewJob.mockRejectedValueOnce(new Error("review_jobs unavailable"));
+    const errorLog = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    const deliveryId = "review-enqueue-failure-redelivery";
+
+    const first = await githubApp.fetch(createRequest(synchronizePayload(), { deliveryId }));
+
+    expect(first.status).toBe(500);
+    expect(mockEnqueueReviewJob).toHaveBeenCalledOnce();
+    expect(updatePrReview).not.toHaveBeenCalled();
+    expect(mockRunWorkerTick).not.toHaveBeenCalled();
+
+    // A synchronous enqueue failure has no durable worker row. The exact
+    // GitHub delivery must remain retryable, rather than being poisoned by
+    // process-local dedup state.
+    const retry = await githubApp.fetch(createRequest(synchronizePayload(), { deliveryId }));
+    expect(retry.status).toBe(200);
+    await waitForBackgroundReviews();
+    expect(mockEnqueueReviewJob).toHaveBeenCalledTimes(2);
+    expect(updatePrReview).toHaveBeenCalledOnce();
+    expect(mockRunWorkerTick).toHaveBeenCalledOnce();
+    expect(mockEnqueueReviewJob.mock.invocationCallOrder[1]).toBeLessThan(
+      vi.mocked(updatePrReview).mock.invocationCallOrder[0]!,
+    );
+    errorLog.mockRestore();
   });
 
   it("does not call an AI provider directly from the webhook handler", async () => {

@@ -1,40 +1,31 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { enqueueReviewJob, __resetReviewWorkerState } from "../review-worker.js";
+import { enqueueReviewJob } from "../review-worker.js";
 
-const mockDb = vi.hoisted(() => ({
-  insert: vi.fn().mockReturnValue({
-    values: vi.fn().mockReturnValue({
-      onConflictDoUpdate: vi.fn().mockReturnValue({
-        returning: vi.fn().mockResolvedValue([
-          {
-            id: "job-1",
-            prOwner: "org",
-            prRepo: "repo",
-            prPullNumber: 1,
-            status: "pending",
-            attempts: 0,
-            maxAttempts: 5,
-            nextAttemptAt: new Date(),
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        ]),
-      }),
-    }),
-  }),
-  select: vi.fn().mockImplementation(() => ({
-    from: vi.fn().mockReturnValue({
-      where: vi.fn().mockResolvedValue([]),
-    }),
-  })),
-  update: vi.fn().mockReturnValue({
-    set: vi.fn().mockReturnValue({
-      where: vi.fn().mockReturnValue({
-        returning: vi.fn().mockResolvedValue([]),
-      }),
-    }),
-  }),
-}));
+const mockDb = vi.hoisted(() => {
+  const returning = vi.fn().mockResolvedValue([
+    {
+      id: "job-1",
+      prOwner: "org",
+      prRepo: "repo",
+      prPullNumber: 1,
+      status: "pending",
+      attempts: 0,
+      maxAttempts: 5,
+      nextAttemptAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  ]);
+  const onConflictDoUpdate = vi.fn().mockReturnValue({ returning });
+  const values = vi.fn().mockReturnValue({ onConflictDoUpdate });
+
+  return {
+    insert: vi.fn().mockReturnValue({ values }),
+    values,
+    onConflictDoUpdate,
+    returning,
+  };
+});
 
 vi.mock("@reading-advantage/db", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@reading-advantage/db")>();
@@ -43,6 +34,12 @@ vi.mock("@reading-advantage/db", async (importOriginal) => {
     db: mockDb,
   };
 });
+
+vi.mock("@reading-advantage/domain", () => ({
+  createTenantDB: (db: unknown) => db,
+}));
+vi.mock("@reading-advantage/domain/codecamp", () => ({}));
+vi.mock("@reading-advantage/ai", () => ({ getAIClient: vi.fn() }));
 
 const basePayload = {
   action: "opened" as const,
@@ -53,10 +50,6 @@ const basePayload = {
 describe("Phase 2 — enqueueReviewJob is idempotent", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Reset the worker's in-process dedup cache so each test starts from
-    // an empty cache (the cache otherwise persists across tests and breaks
-    // the duplicate-delivery assertion).
-    __resetReviewWorkerState();
   });
 
   it("enqueues exactly one pending job", async () => {
@@ -71,7 +64,7 @@ describe("Phase 2 — enqueueReviewJob is idempotent", () => {
     expect(mockDb.insert, "insert call count").toHaveBeenCalledTimes(1);
   });
 
-  it("duplicate delivery for the same PR head does not create a second row", async () => {
+  it("routes every duplicate delivery through the durable upsert", async () => {
     await enqueueReviewJob({
       db: mockDb as unknown as import("@reading-advantage/db").DB,
       reviewId: "review-1",
@@ -85,7 +78,46 @@ describe("Phase 2 — enqueueReviewJob is idempotent", () => {
     });
 
     const insertCalls = mockDb.insert.mock.calls.length;
-    expect(insertCalls, `insert call count after duplicate: ${insertCalls}`).toBe(1);
+    expect(insertCalls, `durable upsert call count after duplicate: ${insertCalls}`).toBe(2);
+    expect(mockDb.onConflictDoUpdate, "each delivery selects the unique-key conflict path").toHaveBeenCalledTimes(2);
+  });
+
+  it("persists the newer synchronize payload, review relationship, and PR URL", async () => {
+    const openedUrl = "https://github.com/Reading-Advantage-Thailand/reading-advantage/pull/2";
+    const synchronizeUrl = "https://github.com/reading-advantage-thailand/reading-advantage/pull/2";
+    const latestPayload = { pull_request: { head: { sha: "b".repeat(40) } } };
+
+    await enqueueReviewJob({
+      db: mockDb as unknown as import("@reading-advantage/db").DB,
+      reviewId: "review-opened",
+      action: "opened",
+      prUrl: openedUrl,
+      payload: { pull_request: { head: { sha: "a".repeat(40) } } },
+      deliveryId: "delivery-opened",
+    });
+    await enqueueReviewJob({
+      db: mockDb as unknown as import("@reading-advantage/db").DB,
+      reviewId: "review-synchronize",
+      action: "synchronize",
+      prUrl: synchronizeUrl,
+      payload: latestPayload,
+      deliveryId: "delivery-synchronize",
+    });
+
+    expect(mockDb.values).toHaveBeenLastCalledWith(expect.objectContaining({
+      reviewId: "review-synchronize",
+      prUrl: synchronizeUrl,
+      payloadJson: latestPayload,
+      deliveryId: "delivery-synchronize",
+    }));
+    expect(mockDb.onConflictDoUpdate).toHaveBeenLastCalledWith(expect.objectContaining({
+      set: expect.objectContaining({
+        reviewId: "review-synchronize",
+        prUrl: synchronizeUrl,
+        payloadJson: latestPayload,
+        deliveryId: "delivery-synchronize",
+      }),
+    }));
   });
 
   it("returns promptly without awaiting a review", async () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { claimDueJobs } from "../review-worker.js";
+import { claimDueJobs, reclaimStuckJobs } from "../review-worker.js";
 
 const hasDirectDbUrl = Boolean(process.env.DIRECT_DATABASE_URL);
 
@@ -26,6 +26,18 @@ function sqlText(value: unknown): string {
     return q.sql;
   }
   return String(value);
+}
+
+/** Renders the parameter values bound to a Drizzle SQL query. */
+function sqlParams(value: unknown): unknown[] {
+  if (!value || typeof (value as { toQuery?: unknown }).toQuery !== "function") return [];
+  return (value as {
+    toQuery: (config: Record<string, unknown>) => { params: unknown[] };
+  }).toQuery({
+    escapeName: (name: string) => `"${name}"`,
+    escapeString: (text: string) => `'${String(text).replace(/'/g, "''")}'`,
+    escapeParam: (position: number) => `$${position + 1}`,
+  }).params;
 }
 
 describe("Phase 3 — claimDueJobs uses FOR UPDATE SKIP LOCKED", () => {
@@ -75,6 +87,36 @@ describe("Phase 3 — claimDueJobs uses FOR UPDATE SKIP LOCKED", () => {
     expect(text, "workerId must not be interpolated as a literal").not.toContain("worker:test-123");
     // It must be referenced as a placeholder.
     expect(text, "SQL must use placeholders").toMatch(/\$\d+/);
+  });
+
+  it("assigns a fresh per-claim lease after visibility reclaim, even on the same worker process", async () => {
+    const conn = createMockConn();
+    const now = new Date("2026-08-10T00:00:00.000Z");
+    const baseWorkerId = "worker-same-process";
+
+    await claimDueJobs(conn as unknown as import("@reading-advantage/db").DB, {
+      batchSize: 1,
+      workerId: baseWorkerId,
+      now,
+    });
+    await reclaimStuckJobs(conn as unknown as import("@reading-advantage/db").DB, {
+      visibilityTimeoutMs: 1,
+      now: new Date(now.getTime() + 10),
+    });
+    await claimDueJobs(conn as unknown as import("@reading-advantage/db").DB, {
+      batchSize: 1,
+      workerId: baseWorkerId,
+      now: new Date(now.getTime() + 20),
+    });
+
+    const claimQueries = [conn.execute.mock.calls[0]![0], conn.execute.mock.calls[2]![0]];
+    const leases = claimQueries.map((query) => sqlParams(query).filter(
+      (param): param is string => typeof param === "string" && param.startsWith(`${baseWorkerId}:`),
+    ));
+
+    expect(leases[0], "first claim has one durable lease token").toHaveLength(1);
+    expect(leases[1], "reclaimed claim has one durable lease token").toHaveLength(1);
+    expect(leases[0]![0], "a stale claim cannot share a CAS identity with its replacement").not.toBe(leases[1]![0]);
   });
 
   it("claimDueJobs rejects a workerId with unsafe characters", async () => {

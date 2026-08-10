@@ -9,6 +9,7 @@ interface SettleJobInput {
 }
 
 const mockUpdate = vi.fn().mockResolvedValue([]);
+const REVIEW_ID = "6dbf6554-9fa7-4a42-974a-b956b63a4c90";
 const mockDb = {
   update: vi.fn().mockReturnValue({
     set: vi.fn().mockReturnValue({
@@ -22,9 +23,20 @@ const mockDb = {
   // that need richer query mocks should extend this base.
   select: vi.fn().mockReturnValue({
     from: vi.fn().mockReturnValue({
-      where: vi.fn().mockReturnValue({
-        limit: vi.fn().mockResolvedValue([]),
-      }),
+      // `processJob` now resolves the authoritative module through
+      // review -> exercise repo -> module. Keep the success-path fixtures
+      // honest by providing a real durable relationship rather than letting
+      // the reviewer silently fall back to a URL-derived module.
+      innerJoin: vi.fn().mockReturnThis(),
+      where: vi.fn().mockReturnThis(),
+      limit: vi.fn().mockResolvedValue([{
+        reviewId: REVIEW_ID,
+        exerciseRepoId: "d5b548b1-1940-49b0-baa6-27e8dd4b1a3b",
+        moduleId: "a3da93f0-36d5-4b29-89e5-e2f2d2b6a492",
+        moduleTitle: "Fixture module",
+        moduleDescription: "A module resolved from the persisted review relationship.",
+        moduleSlug: "fixture-module",
+      }]),
     }),
   }),
 };
@@ -96,7 +108,7 @@ describe("Phase 3 — success settle", () => {
   it("success sets status to succeeded and stamps reviewedAt", async () => {
     const job = {
       id: "job-1",
-      reviewId: "review-1",
+      reviewId: REVIEW_ID,
       repoOwner: "org",
       repoName: "repo",
       pullNumber: 1,
@@ -129,7 +141,7 @@ describe("Phase 3 — success settle", () => {
       totalScore: 1,
     };
     const update = vi.fn().mockResolvedValue({ id: "review-apk", reviewStatus: "reviewed" });
-    await processJob({ id: "job-apk", reviewId: "review-apk", repoOwner: "org", repoName: "repo", pullNumber: 2, status: "claimed", attempts: 0, maxAttempts: 5, payloadJson: {} } as unknown as Parameters<typeof processJob>[0], {
+    await processJob({ id: "job-apk", reviewId: REVIEW_ID, repoOwner: "org", repoName: "repo", pullNumber: 2, status: "claimed", attempts: 0, maxAttempts: 5, payloadJson: {} } as unknown as Parameters<typeof processJob>[0], {
       db: mockDb as unknown as import("@reading-advantage/db").DB,
       updatePrReview: update,
       getAIClient: () => ({ generateObject: vi.fn().mockResolvedValue({ passed: true, summary: "APK passes", comments: [], apkEvaluation }) }),
@@ -151,7 +163,7 @@ describe("Phase 3 — success settle", () => {
 
   it("records validated advisory provenance before marking a headed revision reviewed", async () => {
     const reviewJob = {
-      id: "job-provenance", reviewId: "review-provenance", repoOwner: "org", repoName: "repo", pullNumber: 3,
+      id: "job-provenance", reviewId: REVIEW_ID, repoOwner: "org", repoName: "repo", pullNumber: 3,
       status: "claimed", attempts: 0, maxAttempts: 5,
       payloadJson: { pull_request: { head: { sha: "a".repeat(40) } } },
     };
@@ -175,7 +187,7 @@ describe("Phase 3 — success settle", () => {
 
     expect(recordAdvisoryPrReviewAttempt).toHaveBeenCalledWith(expect.objectContaining({
       input: expect.objectContaining({
-        reviewId: "review-provenance",
+        reviewId: REVIEW_ID,
         headSha: "a".repeat(40),
         provenance: expect.objectContaining({ resolvedModel: "x-ai/grok-4.1-fast" }),
       }),
@@ -188,7 +200,7 @@ describe("Phase 3 — success settle", () => {
   it("passes bounded deterministic GitHub check evidence into the review context", async () => {
     const generateObject = vi.fn().mockResolvedValue({ passed: true, summary: "Checks are green", comments: [] });
     await processJob({
-      id: "job-checks", reviewId: "review-checks", repoOwner: "org", repoName: "repo", pullNumber: 4,
+      id: "job-checks", reviewId: REVIEW_ID, repoOwner: "org", repoName: "repo", pullNumber: 4,
       status: "claimed", attempts: 0, maxAttempts: 5,
       payloadJson: { pull_request: { head: { sha: "b".repeat(40) } } },
     } as unknown as Parameters<typeof processJob>[0], {
@@ -214,7 +226,7 @@ describe("Phase 3 — success settle", () => {
     const generateObject = vi.fn().mockResolvedValue({ passed: true, summary: "Revise the branch", comments: [] });
 
     await processJob({
-      id: "job-history", reviewId: "review-history", repoOwner: "org", repoName: "repo", pullNumber: 5,
+      id: "job-history", reviewId: REVIEW_ID, repoOwner: "org", repoName: "repo", pullNumber: 5,
       status: "claimed", attempts: 0, maxAttempts: 5,
       payloadJson: { pull_request: { head: { sha: "b".repeat(40) } } },
     } as unknown as Parameters<typeof processJob>[0], {
@@ -230,7 +242,7 @@ describe("Phase 3 — success settle", () => {
   it("keeps unapproved shadow results private while retaining immutable advisory evidence", async () => {
     const update = vi.fn().mockResolvedValue({ id: "review-shadow", reviewStatus: "reviewed" });
     await processJob({
-      id: "job-shadow", reviewId: "review-shadow", repoOwner: "org", repoName: "repo", pullNumber: 6,
+      id: "job-shadow", reviewId: REVIEW_ID, repoOwner: "org", repoName: "repo", pullNumber: 6,
       status: "claimed", attempts: 0, maxAttempts: 5,
       payloadJson: { pull_request: { head: { sha: "c".repeat(40) } } },
     } as unknown as Parameters<typeof processJob>[0], {
@@ -247,7 +259,7 @@ describe("Phase 3 — success settle", () => {
     });
 
     expect(recordAdvisoryPrReviewAttempt).toHaveBeenCalledWith(expect.objectContaining({
-      input: expect.objectContaining({ reviewId: "review-shadow" }),
+      input: expect.objectContaining({ reviewId: REVIEW_ID }),
     }));
     expect(update).not.toHaveBeenCalled();
     expect(postPrComment).not.toHaveBeenCalled();
@@ -256,7 +268,7 @@ describe("Phase 3 — success settle", () => {
   it("publishes an approved canary job selected by its stable durable ID", async () => {
     const update = vi.fn().mockResolvedValue({ id: "review-canary", reviewStatus: "reviewed" });
     await processJob({
-      id: "job-canary", reviewId: "review-canary", repoOwner: "org", repoName: "repo", pullNumber: 7,
+      id: "job-canary", reviewId: REVIEW_ID, repoOwner: "org", repoName: "repo", pullNumber: 7,
       status: "claimed", attempts: 0, maxAttempts: 5, payloadJson: {},
     } as unknown as Parameters<typeof processJob>[0], {
       db: mockDb as unknown as import("@reading-advantage/db").DB,

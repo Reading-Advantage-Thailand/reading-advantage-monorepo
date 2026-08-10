@@ -88,6 +88,32 @@ review-job worker, PR comment, and retry/dead-letter paths rather than replacing
 - One approved PR does not satisfy permanent or multi-variant mastery.
 - Lint, type-check, tests, coverage, build, live preflight, security, graph, generated docs, doctor, and product-owner review pass.
 
+## Production Incident Repair Addendum (2026-08-10)
+
+Production review jobs for mixed-case organization repositories can exhaust all
+five attempts because the queue normalizes the repository owner and the worker
+then reconstructs a lowercase repository URL for a case-sensitive exercise
+lookup. The resulting prompt omits the required graph-bound objectives, while
+persistence later finds the real objective and rejects the incomplete output.
+Dead jobs remain displayed as editorially pending, and a process-local webhook
+deduplication cache can discard a later synchronization delivery on a warm
+Cloud Run instance.
+
+The repair is accepted only when:
+
+- Worker execution resolves exercise/module identity through the persisted
+  review relationship instead of a reconstructed repository URL.
+- Semantic validation requires every exact graph-bound objective once before
+  any accepted AI result can reach persistence.
+- Permanent contract failures are dead-lettered immediately and transient
+  failures retain bounded retry behavior.
+- Reporting distinguishes processing, retrying, failed, and editorial pending.
+- Webhook synchronization uses durable idempotency only; no process-local cache
+  may discard a later submission update.
+- The checked-in production worker route and scheduler target are restored and
+  covered by deployment-contract tests.
+- Production is deployed and verified before PRs #2 and #3 are requeued.
+
 ## Out of Scope
 
 - Running untrusted student code in the webhook or application process.

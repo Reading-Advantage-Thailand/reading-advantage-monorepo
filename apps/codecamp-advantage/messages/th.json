@@ -95,6 +95,12 @@
     "totalInterns": "จำนวนผู้ฝึกงานทั้งหมด",
     "avgProgress": "ความคืบหน้าเฉลี่ย",
     "pendingReviews": "รีวิวที่รอการตรวจ",
+    "reviewOperationalStatus": {
+      "pending": "รอการตรวจสอบด้านบรรณาธิการ",
+      "processing": "กำลังประมวลผลรีวิว",
+      "retrying": "กำลังลองรีวิวอีกครั้ง",
+      "failed": "รีวิวล้มเหลว"
+    },
     "webhookDiagnostics": "การวินิจฉัย Webhook",
     "webhookDiagnosticsHint": "เหตุการณ์ GitHub webhook ล่าสุดที่ถูกข้ามหรือล้มเหลว",
     "time": "เวลา",

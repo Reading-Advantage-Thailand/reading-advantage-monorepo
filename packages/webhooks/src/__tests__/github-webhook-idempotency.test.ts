@@ -3,6 +3,12 @@ import { createHmac } from "crypto";
 import githubApp from "../github.js";
 
 const WEBHOOK_SECRET = "test-secret";
+const mockReviewWorker = vi.hoisted(() => ({
+  enqueueReviewJob: vi.fn().mockResolvedValue({ id: "job-1", enqueued: true }),
+  runWorkerTick: vi.fn().mockResolvedValue(undefined),
+}));
+
+vi.mock("../review-worker", () => mockReviewWorker);
 
 vi.mock("@reading-advantage/ai", () => ({
   getAIClient: vi.fn(() => ({ generateObject: vi.fn() })),
@@ -84,6 +90,8 @@ describe("GitHub webhook idempotency by delivery id", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockReviewWorker.enqueueReviewJob.mockResolvedValue({ id: "job-1", enqueued: true });
+    mockReviewWorker.runWorkerTick.mockResolvedValue(undefined);
   });
 
   afterAll(() => {

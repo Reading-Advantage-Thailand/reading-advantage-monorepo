@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./github": "./src/github.ts"
+    "./github": "./src/github.ts",
+    "./review-worker": "./src/review-worker.ts"
   },
   "scripts": {
     "dev": "tsx watch src/index.ts",

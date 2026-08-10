@@ -85,4 +85,38 @@ describe("getModulePrStatus", () => {
     ];
     expect(getModulePrStatus("m1", reviews)).toBe("reviewed");
   });
+
+  it("separates worker processing, retrying, and failed states from editorial pending", () => {
+    const jobAwareReviews = [
+      {
+        exerciseRepoId: "repo-processing",
+        moduleId: "m-processing",
+        reviewStatus: "pending" as const,
+        reviewJob: { status: "claimed" as const, attempts: 1 },
+      },
+      {
+        exerciseRepoId: "repo-retrying",
+        moduleId: "m-retrying",
+        reviewStatus: "pending" as const,
+        reviewJob: { status: "pending" as const, attempts: 2 },
+      },
+      {
+        exerciseRepoId: "repo-failed",
+        moduleId: "m-failed",
+        reviewStatus: "pending" as const,
+        reviewJob: { status: "dead" as const, attempts: 1 },
+      },
+      {
+        exerciseRepoId: "repo-editorial-pending",
+        moduleId: "m-editorial-pending",
+        reviewStatus: "pending" as const,
+        reviewJob: null,
+      },
+    ] as Parameters<typeof getModulePrStatus>[1];
+
+    expect(getModulePrStatus("m-processing", jobAwareReviews)).toBe("processing");
+    expect(getModulePrStatus("m-retrying", jobAwareReviews)).toBe("retrying");
+    expect(getModulePrStatus("m-failed", jobAwareReviews)).toBe("failed");
+    expect(getModulePrStatus("m-editorial-pending", jobAwareReviews)).toBe("pending");
+  });
 });

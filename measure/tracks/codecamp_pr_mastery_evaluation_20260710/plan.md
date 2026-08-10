@@ -73,3 +73,15 @@ _Story ref: spec.md#story-s4_
   - [ ] Task: Close and verify the PR evaluation track
   - [ ] Run frozen/live evaluations, end-to-end GitHub flow, affected/root gates, graph/generate/doctor, and curriculum/product-owner review — human-labelled fixtures, audited human approval of canary/active rollout, revision/redelivery coverage, credentialed GitHub Checks acceptance, and Codecamp SSO-dependent browser verification remain open.
   - [ ] Task: Measure - User Manual Verification 'Phase S4: Calibrate and release safely' (Protocol in workflow.md) — pending the remaining human-labelled evaluation, credentialed GitHub, canary/active approval, graph/doctor, and browser gates; SSO cutover is complete.
+
+## Production Incident Repair: Durable PR Review Recovery (2026-08-10)
+_Story refs: S2, S3, S4; production incident addendum in spec.md_
+
+- [x] Task: Reproduce the mixed-case identity, objective-contract, retry, status, and warm-instance synchronization failures with focused Red tests. [evidence: 207 focused incident tests Green after relationship, lifecycle, reporting, supersession, route, API, and deployment-contract coverage]
+- [x] Task: Resolve review execution identity from persisted database relationships and validate the exact graph-bound objective set before persistence. [evidence: `reviewId` join through review/repository/module plus exact-objective validation before return]
+- [x] Task: Classify permanent contract failures for immediate dead-lettering while preserving transient retry behavior. [evidence: permanent contract marker settles dead on attempt one; transient backoff tests remain Green]
+- [x] Task: Replace the process-local synchronization deduplication shortcut with durable idempotent handling. [evidence: PR-key cache removed; every delivery durably upserts latest payload and preserves review identity; stale-claim CAS coverage Green]
+- [x] Task: Separate processing, retrying, failed, and editorial-pending states in Codecamp reporting. [evidence: domain/API/UI contracts and reporting regressions Green]
+- [x] Task: Restore the checked-in production worker route and Cloud Scheduler configuration and cover them with deployment-contract tests. [evidence: authenticated route, Secret Manager binding, no-traffic Cloud Run candidate, and two-minute UTC Scheduler configuration checked in]
+- [x] Task: Run affected test, lint, type, build, graph, generated-doc, and doctor gates; complete independent change-quality review. [evidence: 54 focused incident/webhook/deployment tests plus 29 claim/reclaim tests Green; webhooks typecheck/build and diff-check Green; graph/generated facts updated; independent review found no Critical/High/Medium blockers; Measure doctor ran and reported only pre-existing deprecated markers in unrelated tracks]
+- [~] Task: Deploy the verified repair, smoke-test the worker/scheduler/reporting paths, confirm no new errors, and requeue production PRs #2 and #3.

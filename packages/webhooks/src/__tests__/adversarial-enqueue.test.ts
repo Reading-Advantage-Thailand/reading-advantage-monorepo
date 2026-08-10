@@ -28,7 +28,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   enqueueReviewJob,
-  __resetReviewWorkerState,
 } from "../review-worker.js";
 import type { DB } from "@reading-advantage/db";
 
@@ -45,6 +44,12 @@ vi.mock("@reading-advantage/db", async (importOriginal) => {
     db: mockDb,
   };
 });
+
+vi.mock("@reading-advantage/domain", () => ({
+  createTenantDB: (db: unknown) => db,
+}));
+vi.mock("@reading-advantage/domain/codecamp", () => ({}));
+vi.mock("@reading-advantage/ai", () => ({ getAIClient: vi.fn() }));
 
 function makeJobRow(overrides: Partial<{
   id: string;
@@ -90,11 +95,10 @@ function setupInsertReturning(rows: unknown[]) {
 describe("Adversarial — enqueueReviewJob boundary / failure-path conditions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    __resetReviewWorkerState();
   });
 
-  describe("idempotency on concurrent (same-process) enqueue", () => {
-    it("two back-to-back enqueues for the same PR result in exactly one DB insert", async () => {
+  describe("idempotency on durable enqueue", () => {
+    it("two back-to-back deliveries for the same PR each execute the durable upsert", async () => {
       setupInsertReturning([makeJobRow()]);
 
       const input = {
@@ -109,17 +113,10 @@ describe("Adversarial — enqueueReviewJob boundary / failure-path conditions", 
       await enqueueReviewJob(input);
 
       const insertCalls = mockDb.insert.mock.calls.length;
-      expect(insertCalls, `insert call count after duplicate: ${insertCalls}`).toBe(1);
+      expect(insertCalls, `durable upsert call count after duplicate: ${insertCalls}`).toBe(2);
     });
 
-    it("two enqueues resolved in parallel (Promise.all) result in exactly one DB insert", async () => {
-      // The microtask interleaving of two synchronous `enqueueReviewJob`
-      // calls both reads `enqueuedKeys.has(cacheKey)` before either has
-      // added to the set. The cache-miss path on both calls would race
-      // the unique-index UPSERT — but in this implementation the cache
-      // add happens AFTER the insert resolves, so the dedup depends on
-      // the DB unique index + onConflictDoUpdate rather than the cache.
-      // We assert that only one DB insert completes.
+    it("two enqueues resolved in parallel each execute the durable upsert", async () => {
       setupInsertReturning([makeJobRow()]);
 
       const input = {
@@ -136,14 +133,10 @@ describe("Adversarial — enqueueReviewJob boundary / failure-path conditions", 
       ]);
 
       const insertCalls = mockDb.insert.mock.calls.length;
-      expect(insertCalls, `insert call count after concurrent enqueue: ${insertCalls}`).toBeLessThanOrEqual(2);
-      // The fast-path cache is added AFTER the insert resolves; both
-      // concurrent calls therefore see a cache miss and both call DB.
-      // The DB-level unique index collapses them to one row in
-      // production — here we document the implementation choice.
+      expect(insertCalls, `durable upsert call count after concurrent enqueue: ${insertCalls}`).toBe(2);
     });
 
-    it("cache hit (second enqueue, same PR) returns a synthetic pending job", async () => {
+    it("a second delivery returns the durable upsert result", async () => {
       setupInsertReturning([makeJobRow({ id: "job-1" })]);
 
       const input = {
@@ -160,9 +153,9 @@ describe("Adversarial — enqueueReviewJob boundary / failure-path conditions", 
       const second = await enqueueReviewJob(input);
 
       const secondInsertCalls = mockDb.insert.mock.calls.length;
-      expect(secondInsertCalls, `second-call insert count: ${secondInsertCalls}`).toBe(0);
-      expect(second.status, "second-call synthetic status").toBe("pending");
-      expect(second.enqueued, "second-call enqueued flag").toBe(false);
+      expect(secondInsertCalls, `second-call durable upsert count: ${secondInsertCalls}`).toBe(1);
+      expect(second.status, "second-call durable status").toBe("pending");
+      expect(second.enqueued, "second-call durable upsert flag").toBe(true);
       expect(first.id, "first-call id").toBe("job-1");
     });
   });
@@ -208,7 +201,7 @@ describe("Adversarial — enqueueReviewJob boundary / failure-path conditions", 
       // Documented behavior: a `synchronize` webhook for a PR that
       // already passed review re-enqueues — the onConflictDoUpdate
       // resets status to pending so the worker re-reviews. We pin
-      // that the DB call happens (cache miss).
+      // that the durable upsert receives the delivery.
       const succeededRow = makeJobRow({
         status: "succeeded",
         attempts: 5,
@@ -346,7 +339,7 @@ describe("Adversarial — enqueueReviewJob boundary / failure-path conditions", 
   });
 
   describe("DB error propagation", () => {
-    it("a thrown DB error propagates and does NOT add to the cache", async () => {
+    it("a thrown DB error propagates and the next delivery retries the durable upsert", async () => {
       mockDb.insert.mockReturnValue({
         values: vi.fn().mockReturnValue({
           onConflictDoUpdate: vi.fn().mockReturnValue({
@@ -366,8 +359,7 @@ describe("Adversarial — enqueueReviewJob boundary / failure-path conditions", 
         "DB error must propagate",
       ).rejects.toThrow("connection refused");
 
-      // A retry on the next tick must hit the DB again (cache should
-      // not retain a poisoned entry). Reset mock and try again.
+      // A retry on the next delivery must hit the DB again.
       setupInsertReturning([makeJobRow({ id: "job-retry" })]);
       const retry = await enqueueReviewJob({
         db: mockDb as unknown as DB,
@@ -377,7 +369,7 @@ describe("Adversarial — enqueueReviewJob boundary / failure-path conditions", 
         payload: {},
       });
       expect(retry.id, "retry after error succeeds with fresh insert").toBe("job-retry");
-      expect(mockDb.insert, "retry inserts to DB (cache was not poisoned)").toHaveBeenCalledTimes(2);
+      expect(mockDb.insert, "retry executes a new durable upsert").toHaveBeenCalledTimes(2);
     });
   });
 
@@ -400,7 +392,7 @@ describe("Adversarial — enqueueReviewJob boundary / failure-path conditions", 
       expect(insertCalls, `bulk insert call count for ${total} PRs: ${insertCalls}`).toBe(total);
     });
 
-    it("bulk enqueue with all-same-PR collapses to 1 DB insert", async () => {
+    it("bulk enqueue with one PR durably upserts all deliveries", async () => {
       setupInsertReturning([makeJobRow()]);
       const total = 50;
 
@@ -415,7 +407,7 @@ describe("Adversarial — enqueueReviewJob boundary / failure-path conditions", 
       }
 
       const insertCalls = mockDb.insert.mock.calls.length;
-      expect(insertCalls, `same-PR bulk insert call count: ${insertCalls}`).toBe(1);
+      expect(insertCalls, `same-PR durable upsert call count: ${insertCalls}`).toBe(total);
     });
   });
 });

@@ -1850,7 +1850,7 @@ describe("listInterns", () => {
       { id: "pr1", exerciseRepoId: "repo2", userId: "u1", prUrl: "https://github.com/org/repo2/pull/1", reviewStatus: "pending", llmReviewSummary: null, reviewedAt: null, createdAt },
       { id: "pr2", exerciseRepoId: "repo2", userId: "u1", prUrl: "https://github.com/org/repo2/pull/2", reviewStatus: "approved", llmReviewSummary: "Good work", reviewedAt: later, createdAt: later },
     ];
-    const db = createMockDb({ selectSequence: [internUsers, modules, [], progress, lessons, repos, reviews] });
+    const db = createMockDb({ selectSequence: [internUsers, modules, [], progress, lessons, repos, reviews, []] });
 
     const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
     const result = await listInterns({
@@ -1862,6 +1862,45 @@ describe("listInterns", () => {
     expect(result[0].reviewExpectation).toBe("review_received");
     expect(result[0].latestPrReview?.prUrl).toBe("https://github.com/org/repo2/pull/2");
     expect(result[0].latestPrReview?.reviewStatus).toBe("approved");
+    expect(result[0].latestPrReview?.operationalStatus).toBeNull();
+  });
+
+  it("separates editorial pending from processing, retrying, and failed review jobs", async () => {
+    const createdAt = new Date("2026-08-10T08:00:00Z");
+    const internUsers = [
+      { id: "u1", username: "intern1", name: "Intern One", role: "INTERN", schoolId: null, createdAt },
+    ];
+    const modules = [
+      { id: "m1", title: "Module 1", description: "Desc", slug: "mod1", order: 1, status: "published", createdAt, updatedAt: createdAt },
+    ];
+    const reviews = [
+      { id: "pr-editorial", exerciseRepoId: "repo1", userId: "u1", prUrl: "https://github.com/org/repo/pull/1", reviewStatus: "pending", llmReviewSummary: null, reviewedAt: null, createdAt },
+      { id: "pr-processing", exerciseRepoId: "repo1", userId: "u1", prUrl: "https://github.com/org/repo/pull/2", reviewStatus: "pending", llmReviewSummary: null, reviewedAt: null, createdAt: new Date("2026-08-10T08:01:00Z") },
+      { id: "pr-retrying", exerciseRepoId: "repo1", userId: "u1", prUrl: "https://github.com/org/repo/pull/3", reviewStatus: "pending", llmReviewSummary: null, reviewedAt: null, createdAt: new Date("2026-08-10T08:02:00Z") },
+      { id: "pr-failed", exerciseRepoId: "repo1", userId: "u1", prUrl: "https://github.com/org/repo/pull/4", reviewStatus: "pending", llmReviewSummary: null, reviewedAt: null, createdAt: new Date("2026-08-10T08:03:00Z") },
+    ];
+    const reviewJobs = [
+      { reviewId: "pr-processing", status: "claimed", attempts: 1 },
+      { reviewId: "pr-retrying", status: "pending", attempts: 2 },
+      { reviewId: "pr-failed", status: "dead", attempts: 1 },
+    ];
+    const db = createMockDb({
+      selectSequence: [internUsers, modules, [], [], [], [{ id: "repo1", moduleId: "m1" }], reviews, reviewJobs],
+    });
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+
+    const [report] = await listInterns({ db: wrapDb(db), user: admin, tenant: globalTenant });
+
+    expect(report).toMatchObject({
+      prReviewsPending: 1,
+      prReviewsProcessing: 1,
+      prReviewsRetrying: 1,
+      prReviewsFailed: 1,
+      latestPrReview: {
+        reviewStatus: "pending",
+        operationalStatus: "failed",
+      },
+    });
   });
 
   it("rejects non-admin users", async () => {
@@ -1955,7 +1994,7 @@ describe("getInternProgress", () => {
     const reviews = [
       { id: "pr1", exerciseRepoId: "repo2", userId: "u1", prUrl: "https://github.com/org/repo2/pull/1", reviewStatus: "approved", llmReviewSummary: "Good work", reviewedAt: now, createdAt: now },
     ];
-    const db = createMockDb({ selectSequence: [[intern], modules, [], lessons, progress, repos, reviews, []] });
+    const db = createMockDb({ selectSequence: [[intern], modules, [], lessons, progress, repos, reviews, [], [], []] });
 
     const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
     const result = await getInternProgress({
@@ -1976,7 +2015,45 @@ describe("getInternProgress", () => {
       reviewExpected: true,
       reviewReceived: true,
       latestPrUrl: "https://github.com/org/repo2/pull/1",
+      latestPrReviewOperationalStatus: null,
     });
+  });
+
+  it("reports a failed durable job on the review and its module without relabeling editorial status", async () => {
+    const now = new Date("2026-08-10T08:00:00Z");
+    const intern = { id: "u1", username: "intern1", name: "Intern One", role: "INTERN", schoolId: null, createdAt: now };
+    const modules = [
+      { id: "m1", title: "Module 1", description: "Desc", slug: "mod1", order: 1, status: "published", createdAt: now, updatedAt: now },
+    ];
+    const reviews = [
+      { id: "pr-failed", exerciseRepoId: "repo1", userId: "u1", prUrl: "https://github.com/org/repo/pull/1", reviewStatus: "pending", llmReviewSummary: null, reviewedAt: null, createdAt: now },
+    ];
+    const db = createMockDb({
+      selectSequence: [
+        [intern], modules, [], [], [], [{ id: "repo1", moduleId: "m1" }], reviews,
+        [], [], [{ reviewId: "pr-failed", status: "dead", attempts: 1 }],
+      ],
+    });
+    const admin = { id: "a1", username: "admin1", name: "Admin", role: "ADMIN" as const, schoolId: "s1" };
+
+    const report = await getInternProgress({
+      db: wrapDb(db),
+      user: admin,
+      tenant: globalTenant,
+      input: { userId: "u1" },
+    });
+
+    expect(report.moduleBreakdown[0]).toMatchObject({
+      latestPrReviewStatus: "pending",
+      latestPrReviewOperationalStatus: "failed",
+    });
+    expect(report.prReviews).toEqual([
+      expect.objectContaining({
+        id: "pr-failed",
+        reviewStatus: "pending",
+        operationalStatus: "failed",
+      }),
+    ]);
   });
 
   it("rejects when user is not an intern", async () => {

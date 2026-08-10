@@ -2,6 +2,13 @@ import { describe, it, expect, vi, beforeAll, beforeEach, afterAll } from "vites
 import { createHmac } from "crypto";
 import githubApp from "../github.js";
 
+const mockReviewWorker = vi.hoisted(() => ({
+  enqueueReviewJob: vi.fn().mockResolvedValue({ id: "job-1", enqueued: true }),
+  runWorkerTick: vi.fn().mockResolvedValue(undefined),
+}));
+
+vi.mock("../review-worker", () => mockReviewWorker);
+
 // Mock domain functions before importing the route
 vi.mock("@reading-advantage/domain/codecamp", async () => {
   const actual = await vi.importActual<typeof import("@reading-advantage/domain/codecamp")>("@reading-advantage/domain/codecamp");
@@ -68,6 +75,8 @@ describe("GitHub webhook handler", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockReviewWorker.enqueueReviewJob.mockResolvedValue({ id: "job-1", enqueued: true });
+    mockReviewWorker.runWorkerTick.mockResolvedValue(undefined);
   });
 
   afterAll(() => {
@@ -190,6 +199,7 @@ describe("GitHub webhook handler", () => {
     const json = await res.json();
     expect(json.action).toBe("synchronize");
     expect(updatePrReview).toHaveBeenCalled();
+    expect(mockReviewWorker.enqueueReviewJob).toHaveBeenCalledOnce();
   });
 
   it("returns 200 and creates review for opened event on new PR", async () => {
