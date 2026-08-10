@@ -1,0 +1,15 @@
+Task slice: Specify the S1 briefing preview in the existing APK QC route.
+
+Files:
+- apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.test.tsx
+- apps/advantage-games/tests/e2e/qc/authoring-qc.spec.ts
+
+Why: Establish a real-browser/manual verification surface for compact/wide, Thai/English, keyboard/pointer/touch, scrolling, and exactly-once Start behavior.
+
+RED evidence:
+- Focused Jest ran after building existing local package outputs.
+- 3 existing tests passed and the new test failed only because the accessible “Standard game briefing preview” region does not exist yet.
+- Playwright contract is scoped to the same missing region at 390x844 and 1440x900.
+- git diff --check passed.
+
+Commit validation: commitlint was invoked directly because the repository pnpm wrapper attempts an unrelated stale-lockfile reconciliation.
