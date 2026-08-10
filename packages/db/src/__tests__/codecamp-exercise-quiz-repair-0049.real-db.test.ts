@@ -6,12 +6,18 @@ import { resolve } from "node:path";
 import postgres from "postgres";
 import { describe, expect, it } from "vitest";
 
+import { readPostgresMigrationFiles } from "../migration-files.js";
+import { migrateProductDatabase } from "../migration.js";
+
 const pgTestUrl = process.env.PG_TEST_URL;
 const describeRealPostgres = pgTestUrl ? describe : describe.skip;
+const migrationsFolder = resolve(import.meta.dirname, "../../drizzle");
 const migrationPath = resolve(
-  import.meta.dirname,
-  "../../drizzle/0049_codecamp_exercise_quiz_repair.sql",
+  migrationsFolder,
+  "0049_codecamp_exercise_quiz_repair.sql",
 );
+const journalPath = resolve(migrationsFolder, "meta/_journal.json");
+const migration0049Tag = "0049_codecamp_exercise_quiz_repair";
 
 /**
  * Applies the hotfix migration through its Drizzle statement boundaries.
@@ -37,6 +43,111 @@ interface PersistedProgress {
   readonly completedAt: string | null;
   readonly createdAt: string;
   readonly updatedAt: string;
+}
+
+interface MigrationJournal {
+  readonly entries: ReadonlyArray<{
+    readonly tag: string;
+    readonly when: number;
+  }>;
+}
+
+interface Migration0049Metadata {
+  readonly hash: string;
+  readonly timestamp: number;
+}
+
+interface MigrationLedgerRow {
+  readonly id: number;
+  readonly hash: string;
+  readonly createdAt: string | null;
+}
+
+/**
+ * Reads the exact journal metadata the migration runner must record for 0049.
+ * @returns The checked-in 0049 hash and timestamp.
+ * @throws When the 0049 journal entry or its migration file is missing.
+ */
+function readMigration0049Metadata(): Migration0049Metadata {
+  const journal = JSON.parse(
+    readFileSync(journalPath, "utf8"),
+  ) as MigrationJournal;
+  const journalEntry = journal.entries.find(
+    (entry) => entry.tag === migration0049Tag,
+  );
+  if (!journalEntry) {
+    throw new Error(`Migration journal is missing ${migration0049Tag}.`);
+  }
+  const migration = readPostgresMigrationFiles({ migrationsFolder }).find(
+    (candidate) => candidate.folderMillis === journalEntry.when,
+  );
+  if (!migration) {
+    throw new Error(`Migration source is missing ${migration0049Tag}.`);
+  }
+  return { hash: migration.hash, timestamp: migration.folderMillis };
+}
+
+/**
+ * Seeds the normal migration-runner ledger through 0048, leaving 0049 pending.
+ * @param client Scratch PostgreSQL client.
+ * @returns The exact 0049 metadata that must remain absent after rollback.
+ */
+async function seedVerifiedLedgerBefore0049(
+  client: ReturnType<typeof postgres>,
+): Promise<Migration0049Metadata> {
+  const target = readMigration0049Metadata();
+  await client.unsafe(`
+    CREATE SCHEMA drizzle;
+    CREATE TABLE drizzle.__drizzle_migrations (
+      id SERIAL PRIMARY KEY,
+      hash text NOT NULL,
+      created_at bigint
+    );
+  `);
+  const earlierMigrations = readPostgresMigrationFiles({
+    migrationsFolder,
+  }).filter((migration) => migration.folderMillis < target.timestamp);
+  for (const migration of earlierMigrations) {
+    await client.unsafe(
+      `INSERT INTO drizzle.__drizzle_migrations (hash, created_at)
+       VALUES ($1, $2)`,
+      [migration.hash, migration.folderMillis],
+    );
+  }
+  return target;
+}
+
+/**
+ * Reads the migration ledger in insertion order for an exact rollback assertion.
+ * @param client Scratch PostgreSQL client.
+ * @returns Every recorded migration ledger row.
+ */
+async function readMigrationLedger(
+  client: ReturnType<typeof postgres>,
+): Promise<MigrationLedgerRow[]> {
+  return client<MigrationLedgerRow[]>`
+    SELECT id, hash, created_at::text AS "createdAt"
+    FROM drizzle.__drizzle_migrations
+    ORDER BY id
+  `;
+}
+
+/**
+ * Reports whether 0049's exact module/order uniqueness sentinel exists.
+ * @param client Scratch PostgreSQL client.
+ * @returns Whether the migration's unique constraint is installed.
+ */
+async function has0049Sentinel(
+  client: ReturnType<typeof postgres>,
+): Promise<boolean> {
+  const [row] = await client<{ readonly present: boolean }[]>`
+    SELECT EXISTS (
+      SELECT 1
+      FROM pg_constraint
+      WHERE conname = 'codecamp_lessons_module_order_unique'
+    ) AS present
+  `;
+  return row?.present === true;
 }
 
 /**
@@ -355,6 +466,127 @@ describeRealPostgres(
         await expect(readProgress(client)).resolves.toEqual(
           progressBeforeRepair,
         );
+
+        // Reproduce a retry where the audited pair is valid, but an extra
+        // combined-title pair remains in the same allowlisted module. The
+        // normal runner must reject atomically before it admits 0049's ledger
+        // row or uniqueness sentinel.
+        await client.unsafe(`
+          ALTER TABLE codecamp_lessons
+            DROP CONSTRAINT codecamp_lessons_module_order_unique
+        `);
+        const residualExerciseLessonId = "20000000-0000-4000-8000-000000000006";
+        const residualQuizLessonId = "20000000-0000-4000-8000-000000000007";
+        await client`
+          INSERT INTO codecamp_lessons (
+            id, module_id, title, description, "order", type, content_json
+          ) VALUES
+            (
+              ${residualExerciseLessonId}, ${moduleId},
+              'Residual Exercise + Quiz', 'Malformed residual exercise.',
+              20, 'quiz', '{}'::jsonb
+            ),
+            (
+              ${residualQuizLessonId}, ${moduleId},
+              'Residual Exercise + Quiz', 'Malformed residual quiz.',
+              21, 'quiz', '{}'::jsonb
+            )
+        `;
+        await client`
+          INSERT INTO codecamp_exercises (
+            id, lesson_id, title, instructions, "order"
+          ) VALUES (
+            '40000000-0000-4000-8000-000000000007',
+            ${residualQuizLessonId}, 'Malformed residual exercise',
+            'This child must survive a rejected migration unchanged.', 1
+          )
+        `;
+        await client`
+          INSERT INTO codecamp_quiz_questions (
+            id, lesson_id, question, options_json, correct_answer, explanation, "order"
+          ) VALUES (
+            '50000000-0000-4000-8000-000000000010',
+            ${residualExerciseLessonId}, 'Malformed residual question',
+            '["a", "b"]'::jsonb, 'a', 'This child makes the pair ineligible for repair.', 1
+          )
+        `;
+        await client`
+          INSERT INTO codecamp_user_progress (
+            id, user_id, module_id, lesson_id, status, score,
+            completed_at, created_at, updated_at
+          ) VALUES (
+            '30000000-0000-4000-8000-000000000005', 'intern-two',
+            ${moduleId}, ${residualQuizLessonId}, 'in_progress', 25,
+            NULL, '2026-08-06T08:00:00.000000', '2026-08-07T08:00:00.000000'
+          )
+        `;
+        const targetMigration = await seedVerifiedLedgerBefore0049(client);
+        const residualStateBefore = await Promise.all([
+          client`
+            SELECT id, module_id AS "moduleId", "order", type::text AS type, title
+            FROM codecamp_lessons
+            ORDER BY id
+          `,
+          readProgress(client),
+          client`
+            SELECT id, lesson_id AS "lessonId", title, "order"
+            FROM codecamp_exercises
+            ORDER BY id
+          `,
+          client`
+            SELECT id, lesson_id AS "lessonId", question, "order"
+            FROM codecamp_quiz_questions
+            ORDER BY id
+          `,
+          readMigrationLedger(client),
+          has0049Sentinel(client),
+        ]);
+        expect(residualStateBefore[4]).not.toContainEqual({
+          hash: targetMigration.hash,
+          createdAt: String(targetMigration.timestamp),
+          id: expect.any(Number),
+        });
+        expect(residualStateBefore[5]).toBe(false);
+
+        await expect(
+          migrateProductDatabase({
+            directDatabaseUrl: scratchUrl.toString(),
+            migrationsFolder,
+          }),
+        ).rejects.toThrow(/0049 refused unexpected Codecamp lesson shape/);
+        await expect(
+          Promise.all([
+            client`
+              SELECT id, module_id AS "moduleId", "order", type::text AS type, title
+              FROM codecamp_lessons
+              ORDER BY id
+            `,
+            readProgress(client),
+            client`
+              SELECT id, lesson_id AS "lessonId", title, "order"
+              FROM codecamp_exercises
+              ORDER BY id
+            `,
+            client`
+              SELECT id, lesson_id AS "lessonId", question, "order"
+              FROM codecamp_quiz_questions
+              ORDER BY id
+            `,
+            readMigrationLedger(client),
+            has0049Sentinel(client),
+          ]),
+        ).resolves.toEqual(residualStateBefore);
+
+        await client`
+          DELETE FROM codecamp_lessons
+          WHERE id IN (${residualExerciseLessonId}, ${residualQuizLessonId})
+        `;
+        await client.unsafe("DROP SCHEMA drizzle CASCADE");
+        await client.unsafe(`
+          ALTER TABLE codecamp_lessons
+            ADD CONSTRAINT codecamp_lessons_module_order_unique
+            UNIQUE (module_id, "order")
+        `);
 
         // Prove the statement is atomic across modules, not merely that an
         // invalid later module is left alone: reintroduce the audited tRPC

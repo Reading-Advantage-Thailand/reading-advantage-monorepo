@@ -18,6 +18,9 @@
   - [x] Prove IDs and all progress fields remain unchanged after repair.
   - [x] Prove exercise/quiz child ownership, idempotency, and SQLSTATE `23505`.
   - [x] Prove an unexpected later module rolls back an earlier repair atomically.
+  - [x] Prove a repaired pair cannot mask a second malformed pair in the same
+        module: any suspicious residual shape rolls back lessons, progress,
+        children, ledger state, and the uniqueness sentinel atomically.
 - [x] Task: Add seed reconciliation regression coverage
   - [x] Prove every exercise-backed curriculum module projects distinct rows.
   - [x] Prove reseeding never cross-matches `exercise` and `quiz` by order.
@@ -41,23 +44,32 @@
 
 - [~] Task: Run focused and affected-package quality gates
   - [x] Run DB migration, seed, journal, type, lint, and build checks. The final
-        Podman/PostgreSQL suite passes 110/110 tests, including the 0049 repair,
-        rollback, exact ledger/hash/sentinel gate, and progress preservation;
-        the DB production build and focused DB lint also pass.
+        pre-review Podman/PostgreSQL suite passed 110/110 tests. After the
+        independent review safeguard, the new real-Postgres rollback case and
+        the affected eight-file matrix pass 51/51 tests, including the 0049
+        repair, exact ledger/hash/sentinel gate, and progress preservation; the
+        DB production build and focused DB lint also pass.
   - [~] Run affected Codecamp domain/app regression checks. The new 0049 deploy
-        contract passes. Domain Vitest cannot load the pre-existing missing
-        `vitest.setup.ts` tsconfig, and package-wide checks cannot resolve the
-        incomplete workspace links on this new machine, so Cloud Build remains
-        the clean install/build authority for deployment.
+    contract passes; the same pre-existing file still has one unrelated
+    secret-format assertion that expects a project-local OIDC secret while
+    the current build intentionally uses a project-qualified path. Domain
+    Vitest cannot load the pre-existing missing `vitest.setup.ts` tsconfig,
+    and package-wide checks cannot resolve the incomplete workspace links
+    on this new machine, so Cloud Build remains the clean install/build
+    authority for deployment. `measure/doctor.sh` passes its guard and
+    supervisor invariants, then fails on deprecated unchecked markers in
+    unrelated pre-existing tracks.
   - [x] Complete independent change-quality and data-safety review.
 - [~] Task: Deploy and verify production
   - [x] Capture a PII-free production progress digest immediately before the
         migration and verify the deploy path stages a zero-traffic revision.
-  - [x] Obtain explicit owner approval for the Codecamp repair migration. The
-        approved SQL was reindexed from `0047` to `0049` only after recovering
-        the already-applied official `0047`/`0048`; its data semantics did not
-        change.
-  - [~] Deploy through the Codecamp Cloud Build migration-before-traffic path.
+  - [~] Obtain explicit owner approval for the exact Codecamp repair migration.
+    The owner approved the repair while it was named `0047`; it was
+    reindexed to `0049` only after recovering production's official
+    `0047`/`0048`. The attempted `0049` submission was blocked before Cloud
+    Build accepted it, so renewed approval for the exact `0049` identifier
+    remains required.
+  - [ ] Deploy through the Codecamp Cloud Build migration-before-traffic path.
   - [ ] Verify Cloud Run health, revision traffic, and error logs.
   - [ ] Re-run aggregate SQL acceptance checks and compare progress counts.
   - [ ] Record manual intern verification as the only remaining owner follow-up,

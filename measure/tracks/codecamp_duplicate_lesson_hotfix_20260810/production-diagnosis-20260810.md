@@ -66,8 +66,9 @@ revision.
 ## Approval, False-Green Build, and Recovered Lineage
 
 The owner explicitly approved the Codecamp production Cloud Build and the
-repair migration. Two submissions failed during image construction before any
-database step (`42d8c3b5-e9df-4165-b2f1-3e30d4ec30d3` and
+repair migration while it was named `0047`. Two submissions failed during
+image construction before any database step
+(`42d8c3b5-e9df-4165-b2f1-3e30d4ec30d3` and
 `9dafaaee-bf06-4104-bca1-cb2b42f3b9a6`). Build
 `32aae3a3-121f-43c0-8397-cddb16970468` then built successfully and staged
 revision `codecamp-advantage-00028-yiq` with zero traffic, but its migration
@@ -90,8 +91,20 @@ the repository. The same approved Codecamp repair SQL is reindexed as
 The migration runner now rejects duplicate timestamps, missing historical
 entries, and governed checksum drift. The required-migration doctor gate now
 requires one exact timestamp row, the committed SQL hash, and the schema
-sentinel instead of trusting the ledger high-watermark. A real Podman/PostgreSQL
-suite passes all 110 focused tests.
+sentinel instead of trusting the ledger high-watermark. A pre-review real
+Podman/PostgreSQL suite passed all 110 focused tests. Independent review then
+caught and closed a mixed-state edge case in which one repaired pair could mask
+a second malformed pair in the same module. The added normal-runner regression
+proves that this state now aborts atomically without changing lessons, progress,
+children, ledger rows, or the uniqueness sentinel; the affected eight-file
+matrix passes 51/51 tests after the safeguard.
+
+Because the exact migration identifier is now
+`0049_codecamp_exercise_quiz_repair`, the first attempted final submission was
+blocked before Cloud Build accepted a job and before any database or revision
+change. Renewed owner approval for the exact `0049` identifier is therefore
+required even though its repair semantics remain the same as the approved
+`0047` SQL.
 
 No repair data write has occurred yet. A repeated pre-migration audit still
 shows the original 14 pairs, 28 combined-title rows, 43/41 progress counts, and

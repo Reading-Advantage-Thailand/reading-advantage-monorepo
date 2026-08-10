@@ -234,7 +234,7 @@ BEGIN
         target_slug;
     END IF;
 
-    IF repaired_count = 0 AND suspicious_count > 0 THEN
+    IF suspicious_count > 0 THEN
       RAISE EXCEPTION
         '0049 refused unexpected Codecamp lesson shape for module slug %',
         target_slug;

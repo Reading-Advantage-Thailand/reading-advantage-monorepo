@@ -168,8 +168,8 @@ describe("Phase 4 — Task 15: FR-4 codecamp deploy gate (cloudbuild.yaml)", () 
       text.split(/\n\s*-\s*name:/)[steps.indexOf(doctorStep!) + 1] ?? "";
     expect(
       doctorBlock,
-      "Codecamp deployment must prove migration 0047 before staging the repair revision",
-    ).toMatch(/--required-migration\s+0047_codecamp_exercise_quiz_repair/);
+      "Codecamp deployment must prove migration 0049 before staging the repair revision",
+    ).toMatch(/--required-migration\s+0049_codecamp_exercise_quiz_repair/);
     expect(doctorBlock).toContain(
       "public.sync_codecamp_company_principal(uuid,text,uuid,text,text)",
     );
