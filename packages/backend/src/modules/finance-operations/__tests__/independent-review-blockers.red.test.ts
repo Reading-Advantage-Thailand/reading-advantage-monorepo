@@ -94,9 +94,11 @@ function createAtomicRepository(
   readonly records: FinanceRecord[];
   readonly findByRecordId: ReturnType<typeof vi.fn>;
   readonly compareAndAppend: ReturnType<typeof vi.fn>;
+  readonly successAudits: FinanceAuditEvent[];
   readonly repository: FinanceRecordRepository;
 } {
   const records = [...initialRecords];
+  const successAudits: FinanceAuditEvent[] = [];
   const findByRecordId = vi.fn(async ({ scope: requestedScope, recordId }) =>
     records.find(
       (record) =>
@@ -118,12 +120,33 @@ function createAtomicRepository(
     records.push(record);
     return { status: "accepted" as const, record };
   });
+  const appendWithSuccessAudit = vi.fn(
+    async (record: FinanceRecord, audit: FinanceAuditEvent) => {
+      const existing = successAudits.find(
+        (candidate) => candidate.eventId === audit.eventId,
+      );
+      if (existing !== undefined) {
+        if (JSON.stringify(existing) !== JSON.stringify(audit)) {
+          throw new Error("Finance success audit event identity conflict");
+        }
+      }
+      const result = await compareAndAppend(record);
+      if (existing === undefined) successAudits.push(audit);
+      return result;
+    },
+  );
   const repository = {
     findByRecordId,
-    compareAndAppend,
+    appendWithSuccessAudit,
   } satisfies FinanceRecordRepository;
 
-  return { records, findByRecordId, compareAndAppend, repository };
+  return {
+    records,
+    findByRecordId,
+    compareAndAppend,
+    successAudits,
+    repository,
+  };
 }
 
 /** Creates a provider-neutral audit port while retaining the immutable event object received. */
@@ -298,7 +321,7 @@ describe("Finance Operations independent review blockers", () => {
   });
 
   it("canonicalizes an import operation, then records immutable allowed and succeeded evidence", async () => {
-    const { records, repository } = createAtomicRepository();
+    const { records, successAudits, repository } = createAtomicRepository();
     const { events, port: auditPort } = createAuditPort();
     const authorizationPort = {
       authorizeFinanceOperation: vi.fn(async () => ({
@@ -325,10 +348,7 @@ describe("Finance Operations independent review blockers", () => {
       acceptanceAuthorization,
     );
     expect(records).toEqual([storedFinanceRecord]);
-    expect(events.map((event) => event.outcome)).toEqual([
-      "allowed",
-      "succeeded",
-    ]);
+    expect(events.map((event) => event.outcome)).toEqual(["allowed"]);
     for (const event of events) {
       expectFrozenAuditEvent(event, {
         operation: "financial-record:import",
@@ -338,6 +358,14 @@ describe("Finance Operations independent review blockers", () => {
         outcome: event.outcome,
       });
     }
+    expect(successAudits).toHaveLength(1);
+    expectFrozenAuditEvent(successAudits[0]!, {
+      operation: "financial-record:import",
+      objectId: financeRecord.recordId,
+      requestId: "request-accepted-0001",
+      correlationId: "correlation-accepted-0001",
+      outcome: "succeeded",
+    });
   });
 
   it("denies corrections before reading records and records frozen denial evidence", async () => {
@@ -601,10 +629,8 @@ describe("Finance Operations independent review blockers", () => {
       correctionReason: "Correcting the source value.",
       scope,
     } as const satisfies FinanceRecord;
-    const { records, compareAndAppend, repository } = createAtomicRepository([
-      storedFinanceRecord,
-      correctionRecord,
-    ]);
+    const { records, compareAndAppend, successAudits, repository } =
+      createAtomicRepository([storedFinanceRecord, correctionRecord]);
     const { port: auditPort } = createAuditPort();
     const authorizationPort = {
       authorizeFinanceOperation: vi.fn(async () => ({
@@ -636,6 +662,14 @@ describe("Finance Operations independent review blockers", () => {
     });
     expect(compareAndAppend).toHaveBeenCalledTimes(1);
     expect(records).toEqual([storedFinanceRecord, correctionRecord]);
+    expect(successAudits).toHaveLength(1);
+    expectFrozenAuditEvent(successAudits[0]!, {
+      operation: "financial-record:append-correction",
+      objectId: correctionRecord.recordId,
+      requestId: "request-correction-replay-0001",
+      correlationId: "correlation-correction-replay-0001",
+      outcome: "succeeded",
+    });
   });
 
   it("passes frozen scoped record, money, and provenance snapshots to the atomic repository", async () => {
@@ -710,7 +744,7 @@ describe("Finance Operations independent review blockers", () => {
   });
 
   it("prevents an allowing authorization adapter from mutating canonical operation, scope, or evidence", async () => {
-    const { records, repository } = createAtomicRepository();
+    const { records, successAudits, repository } = createAtomicRepository();
     const { events, port: auditPort } = createAuditPort();
     const mutationSucceeded = {
       operation: false,
@@ -783,13 +817,19 @@ describe("Finance Operations independent review blockers", () => {
     expect(records).toEqual([storedFinanceRecord]);
     expect(events.map((event) => event.operation)).toEqual([
       acceptanceAuthorization.operation,
-      acceptanceAuthorization.operation,
     ]);
-    expect(events.map((event) => event.scope)).toEqual([scope, scope]);
+    expect(events.map((event) => event.scope)).toEqual([scope]);
     expect(events.map((event) => event.actorSubjectId)).toEqual([
       authorizationEvidence.subjectId,
-      authorizationEvidence.subjectId,
     ]);
+    expect(successAudits).toHaveLength(1);
+    expectFrozenAuditEvent(successAudits[0]!, {
+      operation: "financial-record:import",
+      objectId: financeRecord.recordId,
+      requestId: "request-authorization-mutation-0001",
+      correlationId: "correlation-authorization-mutation-0001",
+      outcome: "succeeded",
+    });
   });
 
   it("assigns distinct audit event IDs to legitimate commands that reuse one request ID", async () => {
@@ -815,7 +855,9 @@ describe("Finance Operations independent review blockers", () => {
         payloadDigest: digest("b"),
       },
     } as const satisfies FinanceRecord;
-    const { repository } = createAtomicRepository([secondScopeBaseRecord]);
+    const { repository, successAudits } = createAtomicRepository([
+      secondScopeBaseRecord,
+    ]);
     const { events, port: auditPort } = createAuditPort();
     const importAuthorizationPort = {
       authorizeFinanceOperation: vi.fn(async () => ({
@@ -870,7 +912,7 @@ describe("Finance Operations independent review blockers", () => {
       status: "accepted",
       recordId: "finance-record-school-two-correction-0001",
     });
-    expect(events).toHaveLength(4);
+    expect(events).toHaveLength(2);
     expect(new Set(events.map((event) => event.eventId)).size).toBe(
       events.length,
     );
@@ -882,6 +924,10 @@ describe("Finance Operations independent review blockers", () => {
           event.scope.schoolId === scope.schoolId,
       ),
     ).toBe(true);
+    expect(successAudits).toHaveLength(2);
+    expect(new Set(successAudits.map((event) => event.eventId)).size).toBe(
+      successAudits.length,
+    );
     expect(
       events.some(
         (event) =>

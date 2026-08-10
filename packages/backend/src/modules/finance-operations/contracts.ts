@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-const nonEmptyStringSchema = z.string().min(1);
+/** Shared Finance boundary predicate that rejects empty and whitespace-only strings. */
+export const nonBlankStringSchema = z.string().regex(/\S/u);
 const digestSchema = z.string().regex(/^[a-f0-9]{64}$/u);
 const minorUnitSchema = z.string().regex(/^(?:0|[1-9][0-9]*|-[1-9][0-9]*)$/u);
 const currencySchema = z.string().regex(/^[A-Z]{3}$/u);
@@ -31,10 +32,10 @@ export type FinanceMoneyInput = z.infer<typeof financeMoneyInputSchema>;
 
 /** Immutable source identity and evidence metadata attached to an imported fact. */
 export const financeSourceProvenanceSchema = z.strictObject({
-  sourceSystem: nonEmptyStringSchema,
-  sourceVersion: nonEmptyStringSchema,
-  sourceRecordId: nonEmptyStringSchema,
-  importBatchId: nonEmptyStringSchema,
+  sourceSystem: nonBlankStringSchema,
+  sourceVersion: nonBlankStringSchema,
+  sourceRecordId: nonBlankStringSchema,
+  importBatchId: nonBlankStringSchema,
   payloadDigest: digestSchema,
   evidenceReference: privateEvidenceReferenceSchema,
 });
@@ -106,9 +107,9 @@ export function classifySourceReplay(input: {
 export const appendOnlyCorrectionInputSchema = z
   .strictObject({
     operation: z.literal("append-correction"),
-    correctionRecordId: nonEmptyStringSchema,
-    supersedesRecordId: nonEmptyStringSchema,
-    reason: nonEmptyStringSchema,
+    correctionRecordId: nonBlankStringSchema,
+    supersedesRecordId: nonBlankStringSchema,
+    reason: nonBlankStringSchema,
   })
   .superRefine((value, context) => {
     if (value.correctionRecordId === value.supersedesRecordId) {
@@ -128,11 +129,11 @@ export type AppendOnlyCorrectionInput = z.infer<
 /** Company Identity evidence required for an authorized Finance Operations call. */
 export const financeAuthorizationEvidenceSchema = z.strictObject({
   source: z.literal("company-identity"),
-  claimsVersion: nonEmptyStringSchema,
-  subjectId: nonEmptyStringSchema,
-  organizationId: nonEmptyStringSchema,
-  appRoleIds: z.array(nonEmptyStringSchema).min(1),
-  schoolIds: z.array(nonEmptyStringSchema).min(1).optional(),
+  claimsVersion: nonBlankStringSchema,
+  subjectId: nonBlankStringSchema,
+  organizationId: nonBlankStringSchema,
+  appRoleIds: z.array(nonBlankStringSchema).min(1),
+  schoolIds: z.array(nonBlankStringSchema).min(1).optional(),
 });
 
 /** Explicit Company Identity claims used to authorize a finance operation. */
@@ -142,8 +143,8 @@ export type FinanceAuthorizationEvidence = z.infer<
 
 /** Company and optional school boundary for a Finance Operations operation. */
 export const financeOperationScopeSchema = z.strictObject({
-  companyId: nonEmptyStringSchema,
-  schoolId: nonEmptyStringSchema.optional(),
+  companyId: nonBlankStringSchema,
+  schoolId: nonBlankStringSchema.optional(),
 });
 
 /** Validated company and optional school boundary for a finance operation. */
@@ -151,7 +152,7 @@ export type FinanceOperationScope = z.infer<typeof financeOperationScopeSchema>;
 
 /** Authorization request carrying an operation, scope, and Company Identity evidence. */
 export const financeOperationAuthorizationInputSchema = z.strictObject({
-  operation: nonEmptyStringSchema,
+  operation: nonBlankStringSchema,
   scope: financeOperationScopeSchema,
   authorizationEvidence: financeAuthorizationEvidenceSchema,
 });

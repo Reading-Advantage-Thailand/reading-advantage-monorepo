@@ -2,11 +2,11 @@ import { z } from "zod";
 
 import {
   financeAuthorizationEvidenceSchema,
+  nonBlankStringSchema,
   financeOperationScopeSchema,
   privateEvidenceReferenceSchema,
 } from "./contracts.js";
 
-const nonBlankStringSchema = z.string().regex(/\S/u);
 const payloadDigestSchema = z.string().regex(/^[a-f0-9]{64}$/u);
 function evidenceCompanyId(reference: string): string {
   return reference

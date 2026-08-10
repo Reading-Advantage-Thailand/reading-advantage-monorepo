@@ -19,6 +19,10 @@
     "./finance-operations": {
       "types": "./dist/modules/finance-operations/index.d.ts",
       "import": "./dist/modules/finance-operations/index.js"
+    },
+    "./finance-operations/postgres": {
+      "types": "./dist/modules/finance-operations/postgres/index.d.ts",
+      "import": "./dist/modules/finance-operations/postgres/index.js"
     }
   },
   "files": [

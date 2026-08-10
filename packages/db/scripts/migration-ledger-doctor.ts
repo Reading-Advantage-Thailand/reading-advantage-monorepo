@@ -65,6 +65,44 @@ interface LedgerRow {
   created_at: bigint | null;
 }
 
+const TRIGGER_TYPE_BITS = {
+  ROW: 1,
+  BEFORE: 2,
+  INSERT: 4,
+  DELETE: 8,
+  UPDATE: 16,
+  TRUNCATE: 32,
+  INSTEAD: 64,
+} as const;
+
+/** Computes PostgreSQL's trigger type bitmask for a sentinel declaration. */
+function triggerTypeCode(probe: SentinelProbe): number | undefined {
+  if (
+    probe.triggerTiming === undefined ||
+    probe.triggerLevel === undefined ||
+    probe.triggerEvents === undefined
+  ) {
+    return undefined;
+  }
+  const timing =
+    probe.triggerTiming === "BEFORE"
+      ? TRIGGER_TYPE_BITS.BEFORE
+      : probe.triggerTiming === "AFTER"
+        ? 0
+        : TRIGGER_TYPE_BITS.INSTEAD;
+  const level = probe.triggerLevel === "ROW" ? TRIGGER_TYPE_BITS.ROW : 0;
+  const events = probe.triggerEvents.reduce(
+    (bits, event) => bits | TRIGGER_TYPE_BITS[event],
+    0,
+  );
+  return timing | level | events;
+}
+
+/** Produces a stable representation of a PostgreSQL function body for review hashing. */
+function normalizeFunctionBody(source: string): string {
+  return source.replace(/\s+/gu, " ").trim();
+}
+
 /**
  * Reads the committed SQL hash for a journal entry.
  * @param entry The journal entry whose migration file is trusted.
@@ -81,6 +119,15 @@ async function checkSentinel(
   client: postgres.Sql,
   probe: SentinelProbe,
 ): Promise<boolean> {
+  if (probe.kind === "all") {
+    if (probe.allOf === undefined || probe.allOf.length === 0) return false;
+    const results = await Promise.all(
+      probe.allOf.map(async (requiredProbe) =>
+        checkSentinel(client, requiredProbe),
+      ),
+    );
+    return results.every((present) => present);
+  }
   if (probe.kind === "table") {
     const rows = await client.unsafe(
       "SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = $1 LIMIT 1",
@@ -103,6 +150,64 @@ async function checkSentinel(
       [probe.target],
     )) as Array<{ present: boolean }>;
     return rows.length === 1 && rows[0]?.present === true;
+  }
+  if (probe.kind === "trigger") {
+    const triggerType = triggerTypeCode(probe);
+    if (
+      !probe.table ||
+      !probe.triggerFunction ||
+      triggerType === undefined ||
+      probe.triggerFunctionBodySha256 === undefined ||
+      probe.triggerFunctionConfig === undefined ||
+      probe.triggerFunctionLanguage === undefined ||
+      probe.triggerFunctionSecurityDefiner === undefined
+    ) {
+      return false;
+    }
+    const rows = (await client.unsafe(
+      `
+      SELECT trigger_function.prosrc AS function_body,
+             trigger_function.proconfig AS function_config,
+             trigger_language.lanname AS function_language,
+             trigger_function.prosecdef AS function_security_definer
+        FROM pg_trigger trigger_record
+        JOIN pg_class relation ON relation.oid = trigger_record.tgrelid
+        JOIN pg_namespace namespace ON namespace.oid = relation.relnamespace
+        JOIN pg_proc trigger_function ON trigger_function.oid = trigger_record.tgfoid
+        JOIN pg_language trigger_language
+          ON trigger_language.oid = trigger_function.prolang
+        JOIN pg_namespace function_namespace
+          ON function_namespace.oid = trigger_function.pronamespace
+       WHERE namespace.nspname = 'public'
+         AND relation.relname = $1
+         AND trigger_record.tgname = $2
+         AND function_namespace.nspname = 'public'
+         AND trigger_function.proname = $3
+         AND trigger_function.pronargs = 0
+         AND trigger_record.tgtype = $4
+         AND trigger_record.tgenabled IN ('O', 'A')
+         AND NOT trigger_record.tgisinternal
+      LIMIT 1
+    `,
+      [probe.table, probe.target, probe.triggerFunction, triggerType],
+    )) as Array<{
+      function_body: string;
+      function_config: string[] | null;
+      function_language: string;
+      function_security_definer: boolean;
+    }>;
+    const row = rows[0];
+    if (rows.length !== 1 || row === undefined) return false;
+    const functionBodySha256 = createHash("sha256")
+      .update(normalizeFunctionBody(row.function_body))
+      .digest("hex");
+    return (
+      functionBodySha256 === probe.triggerFunctionBodySha256 &&
+      JSON.stringify(row.function_config ?? []) ===
+        JSON.stringify(probe.triggerFunctionConfig) &&
+      row.function_language === probe.triggerFunctionLanguage &&
+      row.function_security_definer === probe.triggerFunctionSecurityDefiner
+    );
   }
   if (!probe.table || !probe.columns) return false;
   const rows = (await client.unsafe(

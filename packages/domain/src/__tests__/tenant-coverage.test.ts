@@ -46,11 +46,19 @@ function getAllSchemaTables(): Record<string, unknown> {
 
 const allTables = getAllSchemaTables();
 const totalTableCount = Object.keys(allTables).length;
-const REVIEWED_MANUAL_SCHOOL_ID_TABLES = new Set(["activitySessions"]);
+const REVIEWED_MANUAL_SCHOOL_ID_TABLES = new Set([
+  "activitySessions",
+  "financeRecords",
+  "financeRecordSuccessAuditOutbox",
+]);
 const ACTIVITY_SESSION_QUERY_SOURCES = [
   join(__dirname, "..", "activity", "drizzle-activity-persistence.ts"),
   join(__dirname, "..", "codecamp", "tutor.ts"),
 ] as const;
+const FINANCE_RECORD_STORE_SOURCE = join(
+  __dirname,
+  "../../../db/src/finance-operations-record-store.ts",
+);
 
 describe("FR-6: table classification registry completeness", () => {
   it("every exported Drizzle table is classified in the registry", () => {
@@ -153,7 +161,7 @@ describe("FR-6: table classification registry completeness", () => {
           if (REVIEWED_MANUAL_SCHOOL_ID_TABLES.has(name)) {
             expect(
               cls,
-              `Reviewed manual schoolId table ${name} must remain REFERENTIAL so TenantDB fails closed and domain adapters scope tenantKey + learnerId explicitly.`,
+              `Reviewed manual schoolId table ${name} must remain REFERENTIAL so TenantDB fails closed and its adapter owns explicit scope predicates.`,
             ).toBe("REFERENTIAL");
             observedReviewedTables.add(name);
           } else {
@@ -214,6 +222,17 @@ describe("FR-6: table classification registry completeness", () => {
       "Reviewed activitySessions manual-query count must remain non-zero.",
     ).toBeGreaterThan(0);
   });
+
+  it("Finance manual queries retain company and nullable-school scope", () => {
+    const content = readFileSync(FINANCE_RECORD_STORE_SOURCE, "utf8");
+    expect(content).toContain("finance_records");
+    expect(content).toContain("finance_record_success_audit_outbox");
+    expect(content).toContain("company_id =");
+    expect(content).toContain("school_id IS NOT DISTINCT FROM");
+    expect(content).toContain("event_id =");
+    expect(content).toContain("ON CONFLICT DO NOTHING");
+    expect(content).toContain("FOR UPDATE");
+  });
 });
 
 // ─── 2. Domain code: REFERENTIAL tables reached only via unscoped ──
@@ -221,7 +240,9 @@ describe("FR-6: table classification registry completeness", () => {
 const DOMAIN_SRC = join(__dirname, "..");
 
 const MODULE_DIRS = readdirSync(DOMAIN_SRC, { withFileTypes: true })
-  .filter((d) => d.isDirectory() && !d.name.startsWith("_") && d.name !== "__tests__")
+  .filter(
+    (d) => d.isDirectory() && !d.name.startsWith("_") && d.name !== "__tests__",
+  )
   .map((d) => join(DOMAIN_SRC, d.name));
 
 const TENANT_EXEMPT_MODULES = ["audit"];
@@ -232,7 +253,12 @@ function collectTsFiles(dir: string): string[] {
     const fullPath = join(dir, entry.name);
     if (entry.isDirectory() && !entry.name.startsWith("_")) {
       files.push(...collectTsFiles(fullPath));
-    } else if (entry.isFile() && entry.name.endsWith(".ts") && !entry.name.endsWith(".test.ts") && !entry.name.endsWith(".d.ts")) {
+    } else if (
+      entry.isFile() &&
+      entry.name.endsWith(".ts") &&
+      !entry.name.endsWith(".test.ts") &&
+      !entry.name.endsWith(".d.ts")
+    ) {
       files.push(fullPath);
     }
   }
@@ -319,6 +345,8 @@ const REFERENTIAL_TABLE_NAMES = new Set([
   "workbookDrafts",
   "workbookEditions",
   "workbookPublicationEvents",
+  "financeRecords",
+  "financeRecordSuccessAuditOutbox",
 ]);
 
 /**
@@ -329,7 +357,10 @@ const REFERENTIAL_TABLE_NAMES = new Set([
  *
  * Returns an array of violation descriptions with labeled context.
  */
-function detectBareTenantDbOnReferential(content: string, filePath: string): string[] {
+function detectBareTenantDbOnReferential(
+  content: string,
+  filePath: string,
+): string[] {
   const violations: string[] = [];
 
   // Must use TenantDB to be relevant
@@ -372,7 +403,10 @@ describe("FR-6: referential-scope detector validity (A4 guard)", () => {
         return rows;
       }
     `;
-    const violations = detectBareTenantDbOnReferential(fixture, "fixtures/broken.ts");
+    const violations = detectBareTenantDbOnReferential(
+      fixture,
+      "fixtures/broken.ts",
+    );
     expect(
       violations.length,
       "Referential-scope detector found 0 violations on a fixture with bare " +
@@ -391,7 +425,10 @@ describe("FR-6: referential-scope detector validity (A4 guard)", () => {
         return rows;
       }
     `;
-    const violations = detectBareTenantDbOnReferential(fixture, "fixtures/safe.ts");
+    const violations = detectBareTenantDbOnReferential(
+      fixture,
+      "fixtures/safe.ts",
+    );
     expect(violations).toEqual([]);
   });
 
@@ -403,7 +440,10 @@ describe("FR-6: referential-scope detector validity (A4 guard)", () => {
         return rows;
       }
     `;
-    const violations = detectBareTenantDbOnReferential(fixture, "fixtures/direct.ts");
+    const violations = detectBareTenantDbOnReferential(
+      fixture,
+      "fixtures/direct.ts",
+    );
     expect(violations).toEqual([]);
   });
 
@@ -415,7 +455,10 @@ describe("FR-6: referential-scope detector validity (A4 guard)", () => {
         const c = await tenantDb.select().from(assignments);
       }
     `;
-    const violations = detectBareTenantDbOnReferential(fixture, "fixtures/multi.ts");
+    const violations = detectBareTenantDbOnReferential(
+      fixture,
+      "fixtures/multi.ts",
+    );
     expect(
       violations.length,
       `Expected 3 violations for lessonProgress, articles, assignments; got ${violations.length}.`,
@@ -439,8 +482,15 @@ describe("FR-6: domain code tenant coverage", () => {
       if (!hasDbAccess(content)) continue;
 
       // Files with DB access must use TenantDB or unscoped
-      if (!content.includes("TenantDB") && !content.includes("tenantDb") && !content.includes("createTenantDB") && !content.includes("unscoped")) {
-        violations.push(`${relPath}: has DB access but no TenantDB/unscoped usage`);
+      if (
+        !content.includes("TenantDB") &&
+        !content.includes("tenantDb") &&
+        !content.includes("createTenantDB") &&
+        !content.includes("unscoped")
+      ) {
+        violations.push(
+          `${relPath}: has DB access but no TenantDB/unscoped usage`,
+        );
       }
     }
   }

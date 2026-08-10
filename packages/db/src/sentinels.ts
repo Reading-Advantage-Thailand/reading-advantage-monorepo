@@ -9,10 +9,30 @@
  */
 export interface SentinelProbe {
   tag: string;
-  kind: "table" | "column" | "unique_constraint" | "function";
+  kind:
+    | "table"
+    | "column"
+    | "unique_constraint"
+    | "function"
+    | "trigger"
+    | "all";
   target: string;
   table?: string;
   columns?: readonly string[];
+  triggerFunction?: string;
+  triggerTiming?: "BEFORE" | "AFTER" | "INSTEAD OF";
+  triggerLevel?: "ROW" | "STATEMENT";
+  triggerEvents?: readonly ("INSERT" | "UPDATE" | "DELETE" | "TRUNCATE")[];
+  /** SHA-256 of the whitespace-normalized reviewed trigger-function body. */
+  triggerFunctionBodySha256?: string;
+  /** Exact PostgreSQL function configuration required by the reviewed function. */
+  triggerFunctionConfig?: readonly string[];
+  /** Procedural language required by the reviewed trigger function. */
+  triggerFunctionLanguage?: string;
+  /** Whether the reviewed trigger function must run as its definer. */
+  triggerFunctionSecurityDefiner?: boolean;
+  /** Child probes that must all be present when this is a composite sentinel. */
+  allOf?: readonly SentinelProbe[];
 }
 
 export const sentinelProbes: Record<string, SentinelProbe> = {
@@ -271,5 +291,57 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
     target: "codecamp_lessons_module_order_unique",
     table: "codecamp_lessons",
     columns: ["module_id", "order"],
+  },
+  "0050_finance_operations_records": {
+    tag: "0050_finance_operations_records",
+    kind: "all",
+    target: "finance_operations_security_triggers",
+    allOf: [
+      {
+        tag: "0050_finance_operations_records",
+        kind: "trigger",
+        target: "finance_records_append_only",
+        table: "finance_records",
+        triggerFunction: "finance_records_reject_mutation",
+        triggerTiming: "BEFORE",
+        triggerLevel: "STATEMENT",
+        triggerEvents: ["UPDATE", "DELETE", "TRUNCATE"],
+        triggerFunctionBodySha256:
+          "25ee2e95f1b3af7dd0364983c52ea676b92022bad137989fda6c99ecc6ea04f8",
+        triggerFunctionConfig: ["search_path=pg_catalog"],
+        triggerFunctionLanguage: "plpgsql",
+        triggerFunctionSecurityDefiner: false,
+      },
+      {
+        tag: "0050_finance_operations_records",
+        kind: "trigger",
+        target: "finance_records_validate_supersession",
+        table: "finance_records",
+        triggerFunction: "finance_records_validate_supersession",
+        triggerTiming: "BEFORE",
+        triggerLevel: "ROW",
+        triggerEvents: ["INSERT"],
+        triggerFunctionBodySha256:
+          "3eaf3dd126968543da171d5c519846435a30090f56c240f4696009324b0035c5",
+        triggerFunctionConfig: ["search_path=pg_catalog"],
+        triggerFunctionLanguage: "plpgsql",
+        triggerFunctionSecurityDefiner: false,
+      },
+      {
+        tag: "0050_finance_operations_records",
+        kind: "trigger",
+        target: "finance_record_success_audit_outbox_append_only",
+        table: "finance_record_success_audit_outbox",
+        triggerFunction: "finance_record_success_audit_outbox_reject_mutation",
+        triggerTiming: "BEFORE",
+        triggerLevel: "STATEMENT",
+        triggerEvents: ["UPDATE", "DELETE", "TRUNCATE"],
+        triggerFunctionBodySha256:
+          "ffdc972243ee796fc25cf4dd35a5ce7af2aeb1ccf3606371d6b3ef26c527af3b",
+        triggerFunctionConfig: ["search_path=pg_catalog"],
+        triggerFunctionLanguage: "plpgsql",
+        triggerFunctionSecurityDefiner: false,
+      },
+    ],
   },
 };

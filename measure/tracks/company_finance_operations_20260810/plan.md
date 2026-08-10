@@ -8,9 +8,10 @@
   cross-database/provider isolation. This is the only executable task in this
   scaffold; do not encode Thai policy. Accepted with evidence in
   `phase1-foundation-acceptance-20260810.md`.
-- [~] Task: Implement the minimum domain/backend contracts and persistence behind the
+- [x] Task: Implement the minimum domain/backend contracts and persistence behind the
   Red tests. Depends on the foundation contracts and failing-test assertions
-  from the preceding task.
+  from the preceding task. Accepted with evidence in
+  `phase1-persistence-acceptance-20260811.md`.
 - [b] Task: Add contract tests and adapters for Company Identity, CRM
   `CustomerBillingCatalogPort`, Tutor `TutorFinancialExportPort`, private
   storage reads, and durable jobs. Depends on accepted port owners, versioned

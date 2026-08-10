@@ -10,6 +10,7 @@ import {
   financeMoneyInputSchema,
   financeOperationAuthorizationInputSchema,
   financeOperationScopeSchema,
+  nonBlankStringSchema,
   financeSourceProvenanceSchema,
   type FinanceMoneyInput,
   type FinanceOperationAuthorizationInput,
@@ -18,7 +19,6 @@ import {
 } from "./contracts.js";
 import type { CompanyIdentityAuthorizationPort } from "./ports.js";
 
-const nonBlankStringSchema = z.string().regex(/\S/u);
 const authorizationDecisionSchema = z.strictObject({
   decision: z.enum(["allow", "deny"]),
 });
@@ -148,13 +148,15 @@ export interface FinanceRecordRepository {
   ): Promise<FinanceRecord | undefined>;
 
   /**
-   * Atomically accepts a record or returns the record owning either unique identity.
-   * @param record Frozen candidate whose tenant-scoped source and record identities must be unique.
+   * Accepts a record and durable local success-audit event in one transaction.
+   * @param record Frozen candidate whose acceptance is being audited.
+   * @param audit Frozen succeeded event describing the same record and scope.
    * @returns The accepted candidate or the immutable record that already owns an identity.
    */
-  compareAndAppend(
+  readonly appendWithSuccessAudit: (
     record: FinanceRecord,
-  ): Promise<FinanceRecordCompareAndAppendResult>;
+    audit: FinanceAuditEvent,
+  ) => Promise<FinanceRecordCompareAndAppendResult>;
 }
 
 /** Accepted, replayed, or conflicting outcome from a record append request. */
@@ -231,7 +233,8 @@ export interface FinanceRecordCommandSecurity {
 }
 
 type FinanceRecordOperation =
-  "financial-record:import" | "financial-record:append-correction";
+  | "financial-record:import"
+  | "financial-record:append-correction";
 
 function sourceIdentity(record: FinanceRecord): FinanceSourceIdentity {
   return {
@@ -353,7 +356,8 @@ function createAuditEventId(request: {
   return parts.map((part) => `${part.length}:${part}`).join("|");
 }
 
-async function appendAuditEvent(request: {
+/** Constructs one immutable audit event from the canonical command context. */
+function createAuditEvent(request: {
   readonly auditPort: FinanceAuditPort;
   readonly authorizationInput: FinanceOperationAuthorizationInput;
   readonly objectId: string;
@@ -361,7 +365,7 @@ async function appendAuditEvent(request: {
   readonly correlationId: string;
   readonly occurredAt: string;
   readonly outcome: FinanceAuditEvent["outcome"];
-}): Promise<void> {
+}): FinanceAuditEvent {
   const event = financeAuditEventSchema.parse({
     eventId: createAuditEventId(request),
     actorSubjectId: request.authorizationInput.authorizationEvidence.subjectId,
@@ -374,7 +378,20 @@ async function appendAuditEvent(request: {
     scope: request.authorizationInput.scope,
     outcome: request.outcome,
   });
-  await request.auditPort.append(immutableAuditEvent(event));
+  return immutableAuditEvent(event);
+}
+
+/** Appends one event through the provider-neutral external audit projection port. */
+async function appendAuditEvent(request: {
+  readonly auditPort: FinanceAuditPort;
+  readonly authorizationInput: FinanceOperationAuthorizationInput;
+  readonly objectId: string;
+  readonly requestId: string;
+  readonly correlationId: string;
+  readonly occurredAt: string;
+  readonly outcome: FinanceAuditEvent["outcome"];
+}): Promise<void> {
+  await request.auditPort.append(createAuditEvent(request));
 }
 
 async function executeAuthorizedRecordOperation<TResult>(request: {
@@ -383,6 +400,7 @@ async function executeAuthorizedRecordOperation<TResult>(request: {
   readonly objectId: string;
   readonly execute: (
     scope: Readonly<FinanceOperationScope>,
+    successAudit: FinanceAuditEvent,
   ) => Promise<TResult>;
 }): Promise<TResult> {
   const authorizationInput = canonicalAuthorizationInput(
@@ -423,9 +441,15 @@ async function executeAuthorizedRecordOperation<TResult>(request: {
     outcome: "allowed",
   });
 
+  const successAudit = createAuditEvent({
+    ...request.security,
+    authorizationInput,
+    objectId: request.objectId,
+    outcome: "succeeded",
+  });
   let result: TResult;
   try {
-    result = await request.execute(authorizationInput.scope);
+    result = await request.execute(authorizationInput.scope, successAudit);
   } catch (error) {
     await appendAuditEvent({
       ...request.security,
@@ -436,12 +460,6 @@ async function executeAuthorizedRecordOperation<TResult>(request: {
     throw error;
   }
 
-  await appendAuditEvent({
-    ...request.security,
-    authorizationInput,
-    objectId: request.objectId,
-    outcome: "succeeded",
-  });
   return result;
 }
 
@@ -449,6 +467,7 @@ async function compareAndAcceptRecord(request: {
   readonly repository: FinanceRecordRepository;
   readonly scope: Readonly<FinanceOperationScope>;
   readonly record: FinanceRecordCandidateInput;
+  readonly successAudit: FinanceAuditEvent;
 }): Promise<FinanceRecordAcceptanceResult> {
   const record = financeRecordCandidateInputSchema.parse(request.record);
   if (
@@ -474,7 +493,12 @@ async function compareAndAcceptRecord(request: {
         record: financeRecordSchema,
       }),
     ])
-    .parse(await request.repository.compareAndAppend(candidate));
+    .parse(
+      await request.repository.appendWithSuccessAudit(
+        candidate,
+        request.successAudit,
+      ),
+    );
   const persistedRecord = immutableRecord(repositoryResult.record);
 
   if (!scopesMatch(candidate.scope, persistedRecord.scope)) {
@@ -535,11 +559,12 @@ export async function acceptFinanceRecord(
     security: request,
     operation: "financial-record:import",
     objectId: auditObjectId(request.record),
-    execute: (scope) =>
+    execute: (scope, successAudit) =>
       compareAndAcceptRecord({
         repository: request.repository,
         scope,
         record: financeRecordInputSchema.parse(request.record),
+        successAudit,
       }),
   });
 }
@@ -560,7 +585,7 @@ export async function appendFinanceCorrection(
     security: request,
     operation: "financial-record:append-correction",
     objectId: auditObjectId(request.correction),
-    execute: async (scope) => {
+    execute: async (scope, successAudit) => {
       const correction = financeCorrectionInputSchema.parse(request.correction);
       const supersededRecord = await request.repository.findByRecordId({
         scope,
@@ -598,6 +623,7 @@ export async function appendFinanceCorrection(
           supersedesRecordId: correction.supersedesRecordId,
           correctionReason: correction.reason,
         },
+        successAudit,
       });
     },
   });

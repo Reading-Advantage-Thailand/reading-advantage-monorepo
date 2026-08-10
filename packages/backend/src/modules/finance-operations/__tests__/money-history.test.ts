@@ -96,9 +96,11 @@ function createAtomicRepository(
   readonly records: FinanceRecord[];
   readonly findByRecordId: ReturnType<typeof vi.fn>;
   readonly compareAndAppend: ReturnType<typeof vi.fn>;
+  readonly successAudits: FinanceAuditEvent[];
   readonly repository: FinanceRecordRepository;
 } {
   const records = [...initialRecords];
+  const successAudits: FinanceAuditEvent[] = [];
   const findByRecordId = vi.fn(async ({ scope: requestedScope, recordId }) =>
     records.find(
       (record) =>
@@ -120,12 +122,33 @@ function createAtomicRepository(
     records.push(record);
     return { status: "accepted" as const, record };
   });
+  const appendWithSuccessAudit = vi.fn(
+    async (record: FinanceRecord, audit: FinanceAuditEvent) => {
+      const existing = successAudits.find(
+        (candidate) => candidate.eventId === audit.eventId,
+      );
+      if (existing !== undefined) {
+        if (JSON.stringify(existing) !== JSON.stringify(audit)) {
+          throw new Error("Finance success audit event identity conflict");
+        }
+      }
+      const result = await compareAndAppend(record);
+      if (existing === undefined) successAudits.push(audit);
+      return result;
+    },
+  );
   const repository = {
     findByRecordId,
-    compareAndAppend,
+    appendWithSuccessAudit,
   } satisfies FinanceRecordRepository;
 
-  return { records, findByRecordId, compareAndAppend, repository };
+  return {
+    records,
+    findByRecordId,
+    compareAndAppend,
+    successAudits,
+    repository,
+  };
 }
 
 /** Creates an allowing Company Identity port for an explicitly authenticated test command. */

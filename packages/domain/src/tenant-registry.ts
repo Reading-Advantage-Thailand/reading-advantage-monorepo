@@ -38,11 +38,15 @@ export function classifyTable(table: unknown): TableClassification {
   if (result === undefined) {
     const tableName =
       table && typeof table === "object"
-        ? String((table as Record<string | symbol, unknown>)[Symbol.for("drizzle:Name")] ?? "unknown")
+        ? String(
+            (table as Record<string | symbol, unknown>)[
+              Symbol.for("drizzle:Name")
+            ] ?? "unknown",
+          )
         : "unknown";
     throw new Error(
       `[TenantDB] Table "${tableName}" is not classified in the tenant registry. ` +
-        `Add it to packages/domain/src/tenant-registry.ts as FLAT, EXEMPT, or REFERENTIAL.`
+        `Add it to packages/domain/src/tenant-registry.ts as FLAT, EXEMPT, or REFERENTIAL.`,
     );
   }
   return result;
@@ -264,6 +268,8 @@ import {
   workbookDrafts,
   workbookEditions,
   workbookPublicationEvents,
+  financeRecords,
+  financeRecordSuccessAuditOutbox,
 } from "@reading-advantage/db";
 
 register(xpLogs, "REFERENTIAL");
@@ -364,3 +370,10 @@ register(settings, "REFERENTIAL");
 register(workbookDrafts, "REFERENTIAL");
 register(workbookEditions, "REFERENTIAL");
 register(workbookPublicationEvents, "REFERENTIAL");
+// Finance records and their success-audit outbox are company-first and may
+// legitimately have no school scope; adapters must apply company scope
+// explicitly instead of inferring it from the nullable school column. The
+// outbox remains REFERENTIAL even though it has a nullable schoolId because
+// TenantDB's school-only injection cannot prove the required company scope.
+register(financeRecords, "REFERENTIAL");
+register(financeRecordSuccessAuditOutbox, "REFERENTIAL");
