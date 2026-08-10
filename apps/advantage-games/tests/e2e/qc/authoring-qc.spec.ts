@@ -64,7 +64,6 @@ test.describe("APK authoring and QC field lab", () => {
 
   test("previews a standard briefing with scoped responsive controls, complete Thai content, and one validated Start transition", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/qc");
 
     const briefingPreview = page.getByRole("region", { name: "Standard game briefing preview" });
