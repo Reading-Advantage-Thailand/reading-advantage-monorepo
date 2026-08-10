@@ -168,7 +168,11 @@ describe("APKGameHost", () => {
     let attempts = 0;
     const factory: GameFactory = async (context) => {
       attempts += 1;
-      if (attempts === 1) throw new Error("WebGL unavailable");
+      if (attempts === 1) {
+        const canvas = document.createElement("canvas");
+        context.container.append(canvas);
+        throw new Error("WebGL unavailable");
+      }
 
       const canvas = document.createElement("canvas");
       context.container.append(canvas);

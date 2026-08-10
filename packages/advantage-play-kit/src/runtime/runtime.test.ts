@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mountCartridge, type APKGameInstance, type GameFactory } from "./runtime.js";
+import { APKRuntimeError } from "./errors.js";
 import { createRuntimeCartridge, createRuntimeEdition, validResults } from "../testing/fixtures.js";
 import { DEFAULT_RESPONSIVE_LAYOUT_CONFIG } from "../responsive/responsive-composition.js";
 
@@ -67,6 +68,64 @@ describe("mountCartridge", () => {
     expect(instances[1]?.destroy).toHaveBeenCalledOnce();
     expect(ResizeObserverStub.instances[0]?.disconnect).toHaveBeenCalledOnce();
     expect(handle.getDiagnostics().status).toBe("destroyed");
+  });
+
+  it("preserves a post-factory initialization failure when renderer cleanup also fails", async () => {
+    const originalInitializationError = new APKRuntimeError(
+      "MISSING_ASSET_SLOT",
+      "Initial audio binding is unavailable",
+    );
+    const cleanupError = new Error("Renderer cleanup failed");
+    const destroy = vi.fn(() => {
+      throw cleanupError;
+    });
+    const diagnostic = vi.fn();
+    const container = document.createElement("div");
+    const factory: GameFactory = async ({ container: mountContainer }) => {
+      mountContainer.append(document.createElement("canvas"));
+      return {
+        setMuted: () => {
+          throw originalInitializationError;
+        },
+        destroy,
+      };
+    };
+
+    await expect(mountCartridge(
+      {
+        container,
+        cartridge: createRuntimeCartridge(),
+        input: [{ term: "river", translation: "riviere" }],
+        edition: createRuntimeEdition(),
+        host: { complete: vi.fn(), diagnostic },
+      },
+      factory,
+    )).rejects.toMatchObject({
+      code: "MISSING_ASSET_SLOT",
+      message: "Initial audio binding is unavailable",
+    });
+
+    expect(destroy).toHaveBeenCalledOnce();
+    expect(container.childElementCount).toBe(0);
+    expect(diagnostic).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        level: "error",
+        code: "MISSING_ASSET_SLOT",
+        message: "Initial audio binding is unavailable",
+      }),
+    );
+    expect(diagnostic).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        level: "warning",
+        code: "MOUNT_CLEANUP_FAILED",
+        details: expect.objectContaining({
+          cause: "Renderer cleanup failed",
+          stage: "renderer destroy",
+        }),
+      }),
+    );
   });
 
   it("validates completion and emits it exactly once", async () => {

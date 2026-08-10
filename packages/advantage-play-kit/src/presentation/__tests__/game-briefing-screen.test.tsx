@@ -45,7 +45,8 @@ describe("GameBriefingScreen", () => {
       />,
     );
 
-    expect(screen.getByRole("dialog", { name: "Temple Word Quest" })).toHaveAttribute("aria-modal", "true");
+    const dialog = screen.getByRole("dialog", { name: "Temple Word Quest" });
+    expect(dialog).not.toHaveAttribute("aria-modal", "true");
     expect(screen.getByRole("heading", { name: "Temple Word Quest", level: 1 })).toBeInTheDocument();
     expect(screen.getByText("A vocabulary adventure")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Your mission" })).toBeInTheDocument();
@@ -62,7 +63,6 @@ describe("GameBriefingScreen", () => {
 
     const start = screen.getByRole("button", { name: "Begin quest" });
     expect(start).toHaveAttribute("type", "button");
-    start.focus();
     expect(start).toHaveFocus();
     fireEvent.click(start);
     fireEvent.click(start);

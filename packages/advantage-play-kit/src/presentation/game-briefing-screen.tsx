@@ -69,7 +69,7 @@ function isControlApplicable(
 /**
  * Renders the complete accessible mission briefing shown before a cartridge accepts normal play input.
  * @param props Validated briefing content, learning items, host transition, and presentation options.
- * @returns A named modal briefing with mission details, learning content, controls, and one Start action.
+ * @returns A named briefing dialog with mission details, learning content, controls, and one Start action.
  */
 export function GameBriefingScreen({
   briefing,
@@ -107,7 +107,6 @@ export function GameBriefingScreen({
       {...sectionProps}
       aria-labelledby={titleId}
       aria-describedby={objectiveId}
-      aria-modal="true"
       data-apk-briefing="true"
       data-apk-presentation="briefing"
       data-apk-region="modal"
