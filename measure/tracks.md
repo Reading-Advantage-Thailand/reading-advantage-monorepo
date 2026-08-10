@@ -225,6 +225,11 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   absent Reading/Primary consumers, representative-device FPS proof, and manual
   owner browser inspection remain explicitly open.
 
+- [ ] **Track: APK Standard Game Experience** *Link: [./tracks/apk_standard_game_experience_20260810/](./tracks/apk_standard_game_experience_20260810/)*
+  Make briefing, guided tutorial, safe demo, gameplay transition, and learning
+  debrief mandatory shared APK capabilities, then generate and enforce them in
+  the intern cartridge scaffold and authoring QC workflow.
+
 - [x] **Track: APK Standard Asset Library Contract and Production** *Link: [./archive/apk_dual_theme_asset_production_20260712/](./archive/apk_dual_theme_asset_production_20260712/)*
   Accepted release `2026.07.23`: 43,075 receipt-bound assets, catalog digest
   `ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087`,
