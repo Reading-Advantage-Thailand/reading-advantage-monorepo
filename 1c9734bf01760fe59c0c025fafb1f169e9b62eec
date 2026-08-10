@@ -1,0 +1,22 @@
+Phase S1 final-review remediation: host callbacks and initial responsive cleanup
+
+Summary:
+- Caught synchronous onLifecycleTransition failures at the host boundary, preserved the actionable error message, prevented gameplay mounting, and routed recovery through Return to briefing.
+- Moved initial responsive composition resolution into the established startup cleanup scope so unsupported viewports unwind ResizeObserver, visibility/input listeners, and touchAction before the original structured error propagates.
+- Added regressions for both recovery paths.
+
+Files:
+- packages/advantage-play-kit/src/react/apk-game-host.test.tsx
+- packages/advantage-play-kit/src/react/apk-game-host.tsx
+- packages/advantage-play-kit/src/runtime/runtime.test.ts
+- packages/advantage-play-kit/src/runtime/runtime.ts
+
+Verification:
+- RED combined suites: 18 passed / 2 failed for the uncaught lifecycle observer and leaked touchAction/listeners.
+- GREEN combined suites: 2 files / 20 tests passed.
+- Package type-check passed.
+- Focused ESLint passed.
+- Code graph updated for all four files.
+
+Why:
+Resolve the final two Medium external-boundary findings before S1 product acceptance without expanding public APIs.
