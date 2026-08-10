@@ -17,7 +17,7 @@ contract is frozen. S5 integrates and validates all preceding stories.
 
 _Story ref: spec.md#story-s1_
 
-- [ ] Task: Define the briefing and lifecycle contracts
+- [~] Task: Define the briefing and lifecycle contracts
   - [ ] Create runtime-validated briefing, instruction, learning-preview, control-hint, and label schemas
   - [ ] Define required versus optional briefing fields
   - [ ] Define the standard `briefing -> tutorial/demo/countdown/playing` transitions
