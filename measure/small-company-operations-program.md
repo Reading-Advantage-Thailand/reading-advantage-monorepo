@@ -4,8 +4,9 @@
 
 Give a small Reading Advantage team one practical internal operating surface for
 employee access, leads, customers, demos, trials, subscriptions, and product
-provisioning without building enterprise IAM, a general CRM, or an accounting
-platform.
+provisioning without building enterprise IAM, a general CRM, or a statutory
+accounting platform. Finance Operations is a separate P0 operational
+subledger/evidence product and is not an Accounts or CRM capability.
 
 The program keeps authentication and business data in separate backend
 boundaries while presenting them through one Company Admin application.
@@ -116,7 +117,28 @@ reversal instead of deriving history from the customer's current owner.
 
 ## Program Tracks and Order
 
-The Small-Company Admin track owns Phase 0, which rebuilds and accepts the program-wide repository graph baseline. All product phases in Tracks 1 and 2 remain blocked until that baseline is accepted. This ownership is a sequencing mechanism, not a product dependency between privileges and CRM.
+The sibling P0
+[`company_finance_operations_20260810`](./tracks/company_finance_operations_20260810/)
+track owns the distinct `apps/accounting` product. It consumes accepted identity
+and billing-catalog contracts through ports but does not move financial records
+into Accounts or the CRM database.
+
+The Small-Company Admin track owns the bounded Accounts/backend safety gate.
+The former full-repository graph baseline remains historical/incomplete and is
+deferred for resource safety; it is not a delivery prerequisite and no graph
+scan is required. Before owner-role or CRM capability changes, the bounded gate
+must inventory every current `apps/accounts` route and method, cover
+authentication, authorization/permission ownership, Zod validation,
+single-company global scope, immutable audit, and destructive effects across
+Accounts and affected backend identity/role/capability surfaces, resolve every
+known High finding in that scope (including the strict non-empty Bearer-token
+Zod boundary at OIDC logout, immutable-audit evidence, route/dimension evidence
+binding, and hash-bound command receipts), and run exactly these four focused
+commands: `CI=true pnpm --filter accounts test`, `CI=true
+pnpm --filter accounts check-types`, `CI=true pnpm --filter
+@reading-advantage/backend test`, and `CI=true pnpm --filter
+@reading-advantage/backend check-types`. The bounded gate is not accepted by
+this document.
 
 1. [`small_company_admin_privileges_20260722`](./tracks/small_company_admin_privileges_20260722/)
    simplifies internal owner/operator access and completes production role
@@ -132,10 +154,11 @@ The Small-Company Admin track owns Phase 0, which rebuilds and accepts the progr
    proves demos, school trials, and paid subscriptions. It depends on the
    accepted customer/subscription/provisioning contracts from Track 2.
 
-Track 1 may run in parallel with Track 2. Tracks 3 and 4 may run in parallel
-after their Track 2 contracts are accepted. Before source changes, the current
-incompatible/stale `graph.db` must be rebuilt successfully with the canonical
-`repo-graph` binary; failed or timed-out scans are not implementation evidence.
+Track 1 may run in parallel with Track 2 once the bounded safety gate is
+accepted for auth-sensitive implementation; that gate remains pending and is
+not accepted by this program document. Tracks 3 and 4 may run in parallel
+after their Track 2 contracts are accepted. No repository-wide graph rebuild
+or graph scan is required.
 
 ## Explicit Non-Goals
 

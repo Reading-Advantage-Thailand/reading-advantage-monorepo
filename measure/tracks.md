@@ -4,22 +4,30 @@ This file tracks all major tracks for the project.
 
 ---
 
-## Current Focus (updated 2026-07-22)
+## Current Focus (owner-confirmed 2026-08-10)
 
-Multiple programs are in flight. Outside the independently staffed APK evidence
-program, priority order when picking the next track is:
+Multiple programs are in flight. Use this portfolio order when selecting work:
 
-1. **Small-company operations.** Simplify `COMPANY_ADMIN`, establish the bounded
-   customer/licensing CRM, connect www lead intake, and prove Reading-first
-   licensing. Track 1 and Track 2 remain blocked until the dedicated graph
-   baseline remediation receives independent acceptance.
-2. **Backend platform.** Finish the capability kernel and begin the durable job
-   worker foundation; customer/licensing capabilities consume the accepted
-   kernel rather than creating a parallel framework.
-3. **Monorepo remediation.** Resume Wave 4, then Wave 5/6. The dedicated CRM
-   intake track now owns Wave 5 T1 lead capture; unrelated Wave 5 work remains.
-4. **Codecamp productization and closeout** proceeds independently, including
-   SSO observation/legacy-auth retirement and remaining mastery/media acceptance.
+1. **Business and finance operations.** Stabilize Company Admin and the bounded
+   customer/licensing control plane, then build the distinct `apps/accounting`
+   Finance Operations product. Finance is an operational subledger/evidence
+   system; the Thai accountant retains accepted books and statutory filings.
+2. **Advantage Play Kit intern golden path.** Make creating, validating,
+   previewing, and publishing mini-games easy and repeatable for current interns.
+   Evidence or cartridge work that does not improve that path does not jump the
+   queue merely because an older APK track exists.
+3. **Codecamp curriculum and shared mastery.** Build top-quality Codecamp
+   curriculum and use it as the first test-bed for the shared Mastery Advantage
+   KST/SRS system. Sales Advantage is a course teaching people to sell the
+   company's products and must consume that same shared KST/SRS system; it is
+   not a CRM.
+4. **Enabling backend work** proceeds only where the priorities above require
+   it; do not create parallel frameworks or provider coupling.
+5. **Legacy cutovers are held behind product need and explicit approval.** Do
+   not accelerate Reading or Science cutover merely because they are imported.
+   Primary has live users and must not cut over before 2026-10-11; that date is
+   the earliest eligible date, not automatic authorization. Tutor's Reading and
+   Primary asset dependencies must remain intact.
 
 - [x] **Track: OpenCode Agent Roster Refresh** *Link: [./archive/opencode_agent_roster_20260712/](./archive/opencode_agent_roster_20260712/)*
   Refresh global coding and Measure agents for the GPT-5.6 Luna/Terra/Sol family, remove unavailable Moonshot routing, and prioritize active subscription-backed providers. **Completed 2026-07-20** — implementation 3/3 with validation evidence; product-owner manual verification (OpenCode restart model enumeration) remains as owner follow-up.
@@ -39,20 +47,30 @@ program, priority order when picking the next track is:
 > provisioning, and future commercial-attribution model](./small-company-operations-program.md).
 > One Company Admin UI serves the team, but employee identity and commercial
 > operations retain separate backend/database boundaries. This program rejects
-> enterprise IAM, a general CRM, accounting, and commission execution in the MVP.
+> enterprise IAM, a general CRM, statutory accounting, and commission execution
+> in the MVP. Finance Operations is a separate P0 operational subledger and
+> evidence product.
+
+- [~] **Track: Company Finance Operations Foundation** *Link: [./tracks/company_finance_operations_20260810/](./tracks/company_finance_operations_20260810/)*
+  Define the distinct `apps/accounting` product through policy-neutral contracts,
+  ports, schema, and Red tests for money, idempotency, immutable history,
+  authorization, audit, provenance, and source-system isolation. Thai-specific
+  policy remains blocked pending written accountant decisions.
 
 - [~] **Track: Small-Company Admin Privilege Simplification** *Link: [./tracks/small_company_admin_privileges_20260722/](./tracks/small_company_admin_privileges_20260722/)*
   Make `COMPANY_ADMIN` the intentional owner/operator role with exact inherited
   administrator access to Marketing, Sales, Codecamp, and future internal apps,
   while ordinary employees retain explicit app roles.
-- [~] **Track: Business Operations Graph Baseline Remediation** *Link: [./tracks/business_operations_graph_baseline_remediation_20260730/](./tracks/business_operations_graph_baseline_remediation_20260730/)*
-  Remediate the failed shared Phase 0 graph gate by binding a reproducible source
-  snapshot, reconciling unaudited routes/fields and tsconfig-excluded tests, and
-  obtaining independent acceptance. This entry does not unblock Admin S1 or CRM.
+- [b] **Track: Business Operations Graph Baseline Remediation** *Link: [./tracks/business_operations_graph_baseline_remediation_20260730/](./tracks/business_operations_graph_baseline_remediation_20260730/)*
+  Historical/incomplete remediation of the failed full-repository graph gate.
+  Deferred for resource safety on 2026-08-10; it is not a successor delivery
+  prerequisite and does not unblock Admin S1 or CRM. See the dated resource-
+  safety disposition in the track.
 - [b] **Track: Customer, Licensing, and Minimal CRM Control Plane** *Link: [./tracks/customer_licensing_crm_20260722/](./tracks/customer_licensing_crm_20260722/)*
   Add leads, customers, contacts, school sites, sales ownership, shared demos,
   school trials, subscriptions, provisioning ports, and future revenue/commission
-  attribution seams behind Company Admin.
+  attribution seams behind Company Admin; its bounded Accounts/backend safety
+  gate is not yet accepted.
 - [ ] **Track: www CRM Lead Intake** *Link: [./tracks/www_crm_lead_intake_20260722/](./tracks/www_crm_lead_intake_20260722/)*
   Replace Contact Us `mailto:` and no-op commercial CTAs with validated,
   attributable, spam-resistant CRM intake and operator notification. Depends on
