@@ -21,7 +21,15 @@ import {
   codecampQuizQuestions,
   codecampExerciseRepos,
 } from "../schema/codecamp.js";
-import { getPhaseACurriculumData, getPhaseBCurriculumData, getPhaseCCurriculumData, getPhaseDCurriculumData, type CurriculumLesson, MODULE_REPO_MAP } from "./codecamp-curriculum-data.js";
+import {
+  getPhaseACurriculumData,
+  getPhaseBCurriculumData,
+  getPhaseCCurriculumData,
+  getPhaseDCurriculumData,
+  type CurriculumLesson,
+  type CurriculumModule,
+  MODULE_REPO_MAP,
+} from "./codecamp-curriculum-data.js";
 import { getCodecampAPKCurriculumData } from "./codecamp-apk-curriculum-data.js";
 
 const seedConnectionString =
@@ -62,8 +70,124 @@ export interface ExistingLessonSnapshot {
   title: string;
 }
 
+const COMBINED_EXERCISE_QUIZ_SUFFIX = " Exercise + Quiz";
+
 /**
- * Pairs existing lessons with canonical content using stable module-local order.
+ * Reports whether an authored lesson is one of the combined exercise/quiz
+ * activities that must be persisted as two distinct Codecamp activities.
+ * @param module Module containing the authored lesson.
+ * @param lesson Authored lesson to inspect.
+ * @returns Whether the lesson has the audited combined activity shape.
+ */
+function isCombinedExerciseQuizLesson(
+  module: CurriculumModule,
+  lesson: CurriculumLesson,
+): boolean {
+  return (
+    Object.prototype.hasOwnProperty.call(MODULE_REPO_MAP, module.slug) &&
+    lesson.type === "quiz" &&
+    lesson.title.endsWith(COMBINED_EXERCISE_QUIZ_SUFFIX) &&
+    (lesson.exercises?.length ?? 0) > 0 &&
+    (lesson.questions?.length ?? 0) > 0
+  );
+}
+
+/**
+ * Projects one authored combined lesson into its exercise and quiz records.
+ * @param lesson Authored combined lesson to split.
+ * @param orderOffset Number of previously split activities in the module.
+ * @returns The standalone exercise followed by the quiz-only lesson.
+ */
+function projectCombinedExerciseQuizLesson(
+  lesson: CurriculumLesson,
+  orderOffset: number,
+): CurriculumLesson[] {
+  const subject = lesson.title.slice(0, -COMBINED_EXERCISE_QUIZ_SUFFIX.length);
+  const shared = {
+    description: lesson.description,
+    contentJson: lesson.contentJson,
+  };
+
+  return [
+    {
+      ...shared,
+      title: `${subject} Exercise`,
+      order: lesson.order + orderOffset,
+      type: "exercise",
+      exercises: lesson.exercises,
+    },
+    {
+      ...shared,
+      title: `${subject} Quiz`,
+      order: lesson.order + orderOffset + 1,
+      type: "quiz",
+      questions: lesson.questions,
+    },
+  ];
+}
+
+/**
+ * Projects authored Codecamp modules into the persistence shape used by the
+ * database seed, preserving the authored module order and lesson identities.
+ * @param modules Authored Codecamp modules to project.
+ * @returns A new module array with combined activities split deterministically.
+ */
+export function projectCodecampModulesForPersistence(
+  modules: CurriculumModule[],
+): CurriculumModule[] {
+  return modules.map((module) => {
+    let orderOffset = 0;
+    const lessons = module.lessons.flatMap((lesson) => {
+      if (!isCombinedExerciseQuizLesson(module, lesson)) {
+        return [{ ...lesson, order: lesson.order + orderOffset }];
+      }
+
+      const projected = projectCombinedExerciseQuizLesson(lesson, orderOffset);
+      orderOffset += 1;
+      return projected;
+    });
+
+    return { ...module, lessons };
+  });
+}
+
+/**
+ * Builds the stable module-local activity identity used by seed reconciliation.
+ * @param lesson Lesson snapshot or canonical lesson to identify.
+ * @returns The order/type key for the activity.
+ */
+function activityIdentity(lesson: Pick<CurriculumLesson, "order" | "type">): string {
+  return `${lesson.order}:${lesson.type}`;
+}
+
+/**
+ * Rejects an existing lesson whose order is occupied by a different activity type.
+ * @param existingLessons Existing module lessons read before the seed transaction writes.
+ * @param canonicalLessons Projected canonical lessons for the module.
+ * @returns No value.
+ * @throws When an order/type conflict requires the dedicated repair migration.
+ */
+export function assertNoCrossTypeOrderConflicts(
+  existingLessons: ExistingLessonSnapshot[],
+  canonicalLessons: CurriculumLesson[],
+): void {
+  const canonicalTypeByOrder = new Map(
+    canonicalLessons.map((lesson) => [lesson.order, lesson.type]),
+  );
+  for (const existing of existingLessons) {
+    const canonicalType = canonicalTypeByOrder.get(existing.order);
+    if (canonicalType && canonicalType !== existing.type) {
+      throw new Error(
+        `[codecamp-seed] Refusing to reconcile module-local order ${existing.order} ` +
+          `from ${existing.type} to ${canonicalType}; apply ` +
+          "0047_codecamp_exercise_quiz_repair before seeding.",
+      );
+    }
+  }
+}
+
+/**
+ * Pairs existing lessons with canonical content using stable activity identity.
  * @param existingLessons Existing database lesson snapshots whose IDs must be preserved.
  * @param canonicalLessons Canonical curriculum lessons for the module.
  * @returns Stable lesson IDs paired with their current canonical content.
@@ -72,9 +196,11 @@ export function selectLessonUpdates(
   existingLessons: ExistingLessonSnapshot[],
   canonicalLessons: CurriculumLesson[],
 ): Array<{ existingId: string; canonical: CurriculumLesson }> {
-  const canonicalByOrder = new Map(canonicalLessons.map((lesson) => [lesson.order, lesson]));
+  const canonicalByIdentity = new Map(
+    canonicalLessons.map((lesson) => [activityIdentity(lesson), lesson]),
+  );
   return existingLessons.flatMap((existing) => {
-    const canonical = canonicalByOrder.get(existing.order);
+    const canonical = canonicalByIdentity.get(activityIdentity(existing));
     return existing.id && canonical ? [{ existingId: existing.id, canonical }] : [];
   });
 }
@@ -85,26 +211,25 @@ export function selectLessonUpdates(
  *
  * The previous implementation keyed dedup on `type`, which is *not* unique
  * within a module — canonical modules frequently contain multiple theory
- * (or exercise/quiz) lessons. Keying on `type` therefore caused all-but-one
- * of any same-type siblings to be silently skipped on re-seed, breaking
- * the idempotency/completeness contract. We key on `order` instead: a
- * canonical lesson's `(moduleId, order)` pair is stable and unique within
- * a module, so re-seeding correctly skips lessons that already exist and
- * inserts the rest without disturbing student progress on existing rows.
+ * (or exercise/quiz) lessons. Reconciliation now uses `order` and `type`
+ * together so same-type siblings remain distinct and an exercise is never
+ * rewritten as a quiz merely because it occupies the same position.
  *
  * Exported for unit testing; production code in this file uses it inside
  * the seed transaction.
  *
  * @param existingLessons Snapshots of lessons already present in the DB.
  * @param canonicalLessons The full canonical lesson list for a module.
- * @returns The canonical lessons not yet present in the DB (by `order`).
+ * @returns The canonical lessons not yet present in the DB by activity identity.
  */
 export function selectLessonsToInsert(
   existingLessons: ExistingLessonSnapshot[],
   canonicalLessons: CurriculumLesson[],
 ): CurriculumLesson[] {
-  const existingOrders = new Set(existingLessons.map((l) => l.order));
-  return canonicalLessons.filter((lesson) => !existingOrders.has(lesson.order));
+  const existingIdentities = new Set(existingLessons.map(activityIdentity));
+  return canonicalLessons.filter(
+    (lesson) => !existingIdentities.has(activityIdentity(lesson)),
+  );
 }
 
 /**
@@ -120,7 +245,14 @@ async function seed() {
   const phaseC = getPhaseCCurriculumData();
   const phaseD = getPhaseDCurriculumData();
   const apk = getCodecampAPKCurriculumData();
-  const modules = [...phaseA.modules, ...phaseB.modules, ...phaseC.modules, ...phaseD.modules, ...apk.modules];
+  const authoredModules = [
+    ...phaseA.modules,
+    ...phaseB.modules,
+    ...phaseC.modules,
+    ...phaseD.modules,
+    ...apk.modules,
+  ];
+  const modules = projectCodecampModulesForPersistence(authoredModules);
   const exerciseRepos = [...phaseA.exerciseRepos, ...phaseB.exerciseRepos, ...phaseC.exerciseRepos, ...phaseD.exerciseRepos, ...apk.exerciseRepos];
 
   let newModules = 0;
@@ -137,6 +269,20 @@ async function seed() {
         .limit(1);
 
       const isExisting = existingModule.length > 0;
+      let existingLessons: ExistingLessonSnapshot[] = [];
+
+      if (isExisting) {
+        existingLessons = await tx
+          .select({
+            id: codecampLessons.id,
+            type: codecampLessons.type,
+            order: codecampLessons.order,
+            title: codecampLessons.title,
+          })
+          .from(codecampLessons)
+          .where(eq(codecampLessons.moduleId, existingModule[0]!.id));
+        assertNoCrossTypeOrderConflicts(existingLessons, mod.lessons);
+      }
 
       const [insertedModule] = await tx
         .insert(codecampModules)
@@ -165,19 +311,9 @@ async function seed() {
         updatedModules++;
 
         // For existing modules, insert only lessons that aren't already present
-        // (keyed on `order`, not `type`, because canonical modules contain
-        // multiple same-type lessons and `type` is not unique within a module).
+        // (keyed on the combined order/type activity identity because canonical
+        // modules contain multiple same-type lessons).
         // Existing lesson rows are preserved so we don't disrupt student progress.
-        const existingLessons = await tx
-          .select({
-            id: codecampLessons.id,
-            type: codecampLessons.type,
-            order: codecampLessons.order,
-            title: codecampLessons.title,
-          })
-          .from(codecampLessons)
-          .where(eq(codecampLessons.moduleId, insertedModule.id));
-
         for (const { existingId, canonical } of selectLessonUpdates(existingLessons, mod.lessons)) {
           await tx.update(codecampLessons).set({
             title: canonical.title,
@@ -186,6 +322,14 @@ async function seed() {
             type: canonical.type,
             contentJson: canonical.contentJson,
           }).where(eq(codecampLessons.id, existingId));
+
+          if (canonical.type === "exercise") {
+            await tx.delete(codecampQuizQuestions)
+              .where(eq(codecampQuizQuestions.lessonId, existingId));
+          } else if (canonical.type === "quiz") {
+            await tx.delete(codecampExercises)
+              .where(eq(codecampExercises.lessonId, existingId));
+          }
         }
 
         const lessonsToInsert = selectLessonsToInsert(existingLessons, mod.lessons);

@@ -62,8 +62,8 @@ export const codecampLessons = pgTable("codecamp_lessons", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 }, (_table) => [
-  // Index for module-scoped lesson queries
-  // (no explicit index needed on module_id FK for curriculum lookups)
+  // Preserve one stable curriculum position per module.
+  unique("codecamp_lessons_module_order_unique").on(_table.moduleId, _table.order),
 ]);
 
 export const codecampExercises = pgTable("codecamp_exercises", {
