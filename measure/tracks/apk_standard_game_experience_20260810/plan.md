@@ -30,13 +30,13 @@ _Story ref: spec.md#story-s1_
   - [x] Verify Thai/English content, semantic headings, keyboard activation, and accessible naming
   - [x] Verify compact/wide overflow and minimum touch-target behavior
 
-- [~] Task: Write failing APK host lifecycle tests
-  - [ ] Confirm gameplay does not accept normal input before Start
-  - [ ] Confirm Start transitions exactly once
-  - [ ] Confirm restart can return to the configured briefing phase
-  - [ ] Confirm remount and Strict Mode preserve one canvas
+- [x] Task: Write failing APK host lifecycle tests `82e4da0`
+  - [x] Confirm gameplay does not accept normal input before Start
+  - [x] Confirm Start transitions exactly once
+  - [x] Confirm restart can return to the configured briefing phase
+  - [x] Confirm remount and Strict Mode preserve one canvas
 
-- [ ] Task: Implement the standardized briefing screen
+- [~] Task: Implement the standardized briefing screen
   - [ ] Preserve the legacy mission-briefing information architecture
   - [ ] Add responsive, host-neutral styling through APK tokens and data attributes
   - [ ] Avoid Next.js, application aliases, shadcn, and app-specific state dependencies
