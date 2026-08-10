@@ -1,0 +1,11 @@
+Track: apk_standard_game_experience_20260810
+
+Task: Write failing APK host lifecycle tests
+
+Summary: Specified briefing gating, fail-closed external input validation, exactly-once Start events, non-playing phase gating, clean replay teardown, and StrictMode one-canvas behavior while preserving the immediate-launch compatibility path.
+
+File: apk-game-host.test.tsx.
+
+RED verification: 10 tests executed before production integration; 4 existing behaviors passed and 6 S1 lifecycle cases failed as expected against the immediate-mount host.
+
+Graph blast radius: test-only JSX; APKGameHost production callers were unchanged.
