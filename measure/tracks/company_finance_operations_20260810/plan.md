@@ -2,12 +2,13 @@
 
 ## Phase 1 — policy-neutral foundation
 
-- [~] Task: Define bounded contracts, internal ports, and schema for the operational
+- [x] Task: Define bounded contracts, internal ports, and schema for the operational
   records/evidence in `spec.md`; write Red tests for exact money/currency,
   idempotency, immutable history, authorization, audit, provenance, and
   cross-database/provider isolation. This is the only executable task in this
-  scaffold; do not encode Thai policy.
-- [b] Task: Implement the minimum domain/backend contracts and persistence behind the
+  scaffold; do not encode Thai policy. Accepted with evidence in
+  `phase1-foundation-acceptance-20260810.md`.
+- [~] Task: Implement the minimum domain/backend contracts and persistence behind the
   Red tests. Depends on the foundation contracts and failing-test assertions
   from the preceding task.
 - [b] Task: Add contract tests and adapters for Company Identity, CRM
