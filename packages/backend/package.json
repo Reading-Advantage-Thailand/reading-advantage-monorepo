@@ -15,6 +15,10 @@
     "./jobs": {
       "types": "./dist/jobs/index.d.ts",
       "import": "./dist/jobs/index.js"
+    },
+    "./finance-operations": {
+      "types": "./dist/modules/finance-operations/index.d.ts",
+      "import": "./dist/modules/finance-operations/index.js"
     }
   },
   "files": [
