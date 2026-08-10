@@ -1,0 +1,24 @@
+Phase S1 independent-review remediation: Standard Game Briefing
+
+Summary:
+- Added an accessible Return to briefing action for post-Start lifecycle and renderer errors.
+- Reused the briefing-aware restart teardown so recovery clears stale error/result state, invalidates stale mounts, and returns to a fresh enabled Start screen.
+- Removed the control-filter fallback that exposed keyboard or pointer hints to touch-only users.
+- Added regressions for unavailable tutorial-phase recovery, first-attempt WebGL failure followed by one successful runtime/canvas, and touch-only configurations with no applicable control hint.
+
+Files:
+- packages/advantage-play-kit/src/presentation/__tests__/game-briefing-screen.test.tsx
+- packages/advantage-play-kit/src/presentation/game-briefing-screen.tsx
+- packages/advantage-play-kit/src/react/apk-game-host.test.tsx
+- packages/advantage-play-kit/src/react/apk-game-host.tsx
+
+Verification:
+- RED host: 10 passed / 1 failed because Return to briefing was absent.
+- RED screen: 4 passed / 1 failed because Arrow keys remained visible in touch mode.
+- GREEN focused suites: 2 files / 17 tests passed.
+- Package type-check passed.
+- Focused ESLint passed.
+- Code graph updated for all four files.
+
+Why:
+Resolve the High dead-end recovery finding and Medium inapplicable-control finding before S1 product acceptance while preserving the one-runtime fail-closed lifecycle.
