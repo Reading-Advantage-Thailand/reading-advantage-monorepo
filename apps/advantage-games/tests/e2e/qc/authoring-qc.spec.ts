@@ -59,4 +59,62 @@ test.describe("APK authoring and QC field lab", () => {
       expect(scrollWidthAfterAudio, `horizontal overflow with audio preview at ${width}px`).toBeLessThanOrEqual(width);
     }
   });
+
+  test("previews a standard briefing with scoped responsive controls, complete Thai content, and one validated Start transition", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/qc");
+
+    const briefingPreview = page.getByRole("region", { name: "Standard game briefing preview" });
+    const dialog = briefingPreview.getByRole("dialog");
+    await expect(briefingPreview).toBeVisible();
+    await expect(dialog).toHaveAttribute("data-apk-layout-profile", "compact");
+    await expect(dialog.getByRole("heading", { name: /objective/i })).toBeVisible();
+    await expect(dialog.getByRole("heading", { name: /how to play|rules/i })).toBeVisible();
+    await expect(dialog.getByText("Arrow keys")).toBeVisible();
+    await expect(dialog.getByText("Pointer")).toBeVisible();
+    await expect(dialog.getByText("Tap")).toHaveCount(0);
+
+    await page.getByLabel("Content fixture").selectOption("thai-long");
+    await expect(dialog.getByText("การเรียนรู้ผ่านการผจญภัย")).toBeVisible();
+    await expect(dialog.getByText("learning through adventure")).toBeVisible();
+    await expect(dialog.getByText("ความรับผิดชอบต่อสิ่งแวดล้อม")).toBeVisible();
+    await expect(dialog.getByText("environmental responsibility")).toBeVisible();
+    await expect(briefingPreview.locator("[data-apk-briefing-region='body']")).toHaveCSS("overflow-y", "auto");
+    expect(
+      await briefingPreview.evaluate((element) => element.scrollWidth <= element.clientWidth),
+      "briefing preview horizontal overflow at compact width",
+    ).toBe(true);
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      "page horizontal overflow at compact width",
+    ).toBe(true);
+
+    const keyboardStart = dialog.getByRole("button", { name: /start/i });
+    await expect(keyboardStart).toHaveCSS("min-height", "48px");
+    await keyboardStart.focus();
+    await page.keyboard.press("Enter");
+    await page.keyboard.press("Enter");
+    await expect(briefingPreview.getByRole("status")).toContainText(/briefing\s*(?:→|->)\s*playing/i);
+    await expect(briefingPreview.getByRole("status")).toContainText(/count:\s*1/i);
+
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/qc");
+    await page.getByRole("button", { name: "wide" }).click();
+    await page.getByLabel("Input mode").selectOption("touch");
+    const touchPreview = page.getByRole("region", { name: "Standard game briefing preview" });
+    const touchDialog = touchPreview.getByRole("dialog");
+    await expect(touchDialog).toHaveAttribute("data-apk-layout-profile", "wide");
+    await expect(touchDialog).toHaveAttribute("data-apk-input-mode", "touch");
+    await expect(touchDialog.getByText("Tap")).toBeVisible();
+    await expect(touchDialog.getByText("Arrow keys")).toHaveCount(0);
+    await expect(touchDialog.getByText("Pointer")).toHaveCount(0);
+    await touchDialog.getByRole("button", { name: /start/i }).click();
+    await expect(touchPreview.getByRole("status")).toContainText(/briefing\s*(?:→|->)\s*playing/i);
+    await expect(touchPreview.getByRole("status")).toContainText(/count:\s*1/i);
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      "page horizontal overflow at wide width",
+    ).toBe(true);
+  });
 });
