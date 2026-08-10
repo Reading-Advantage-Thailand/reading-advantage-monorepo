@@ -17,14 +17,14 @@ contract is frozen. S5 integrates and validates all preceding stories.
 
 _Story ref: spec.md#story-s1_
 
-- [~] Task: Define the briefing and lifecycle contracts
-  - [ ] Create runtime-validated briefing, instruction, learning-preview, control-hint, and label schemas
-  - [ ] Define required versus optional briefing fields
-  - [ ] Define the standard `briefing -> tutorial/demo/countdown/playing` transitions
-  - [ ] Preserve vocabulary, sentence, and `GameResults` ABI compatibility
-  - [ ] Document host-provided localization and optional extension boundaries
+- [x] Task: Define the briefing and lifecycle contracts `a7648f2`
+  - [x] Create runtime-validated briefing, instruction, learning-preview, control-hint, and label schemas
+  - [x] Define required versus optional briefing fields
+  - [x] Define the standard `briefing -> tutorial/demo/countdown/playing` transitions
+  - [x] Preserve vocabulary, sentence, and `GameResults` ABI compatibility
+  - [x] Document host-provided localization and optional extension boundaries
 
-- [ ] Task: Write failing briefing contract and component tests
+- [~] Task: Write failing briefing contract and component tests
   - [ ] Reject missing titles, objectives, instructions, and controls
   - [ ] Verify complete vocabulary and sentence presentation
   - [ ] Verify Thai/English content, semantic headings, keyboard activation, and accessible naming
