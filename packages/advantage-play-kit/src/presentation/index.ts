@@ -25,3 +25,33 @@ export type {
   InstructionsPanelProps,
   PresentationShellProps,
 } from "./game-presentation.js";
+
+/** Public standardized briefing and lifecycle contract schemas. */
+export {
+  gameBriefingControlHintSchema,
+  gameBriefingControlSchema,
+  gameBriefingInstructionSchema,
+  gameBriefingLabelsSchema,
+  gameBriefingLearningPreviewSchema,
+  gameBriefingSchema,
+  gameBriefingStartPhaseSchema,
+  gameBriefingTextSchema,
+  gameLifecycleEventSchema,
+  gameLifecyclePhaseSchema,
+  gameLifecycleTransitionSchema,
+  resolveGameBriefingStartPhase,
+} from "./game-presentation.js";
+
+/** Public standardized briefing and lifecycle contract types. */
+export type {
+  GameBriefing,
+  GameBriefingControl,
+  GameBriefingControlHint,
+  GameBriefingInstruction,
+  GameBriefingLabels,
+  GameBriefingLearningPreview,
+  GameBriefingStartPhase,
+  GameLifecycleEvent,
+  GameLifecyclePhase,
+  GameLifecycleTransition,
+} from "./game-presentation.js";
