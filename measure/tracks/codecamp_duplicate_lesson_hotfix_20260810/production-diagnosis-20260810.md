@@ -44,3 +44,28 @@ No learner identifiers or credentials were captured in this artifact.
 Do not delete the earlier row and do not merge its progress into the quiz. It is
 the required GitHub exercise identity used by approved-PR completion. Repair the
 two rows in place so learner evidence keeps its original semantic owner.
+
+## Deployment Preflight and Approval Boundary
+
+Immediately before the proposed production migration, a second read-only audit
+confirmed the original shape without emitting learner identifiers:
+
+- corrupted exercise/quiz pairs: 14;
+- target lesson rows: 28;
+- target progress rows: 43;
+- completed target progress rows: 41;
+- digest of every persisted field in the ordered target progress rows:
+  `89367badf4012cd4deb116b04e82f06c`;
+- remaining combined-title rows: 28.
+
+The active service remained `codecamp-advantage-00025-vaz` at 100% traffic. The
+deployment configuration builds the image before migrating, verifies migration
+`0047` with the ledger doctor, and stages the resulting revision with zero
+traffic. It does not promote that candidate over the active revision.
+
+The production-write approval guard stopped the Cloud Build submission before
+Cloud Build accepted it. Therefore no migration ran, no build or revision was
+created, and no traffic or production data changed. Explicit owner approval is
+still required before submission. After migration, the acceptance audit must
+show 14 repaired pairs, zero combined-title rows, the same 43/41 progress
+counts, and the exact same progress digest above.

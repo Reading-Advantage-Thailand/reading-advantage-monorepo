@@ -48,7 +48,10 @@
         workspace package links on this new machine, so Cloud Build remains the
         clean install/build authority for deployment.
   - [x] Complete independent change-quality and data-safety review.
-- [ ] Task: Deploy and verify production
+- [~] Task: Deploy and verify production
+  - [x] Capture a PII-free production progress digest immediately before the
+        migration and verify the deploy path stages a zero-traffic revision.
+  - [ ] Obtain explicit owner approval for migration `0047` to write production.
   - [ ] Deploy through the Codecamp Cloud Build migration-before-traffic path.
   - [ ] Verify Cloud Run health, revision traffic, and error logs.
   - [ ] Re-run aggregate SQL acceptance checks and compare progress counts.
