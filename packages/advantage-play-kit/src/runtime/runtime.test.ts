@@ -260,4 +260,45 @@ describe("mountCartridge", () => {
     expect(handle.getDiagnostics()).toMatchObject({ layoutProfile: "wide", inputMode: "hybrid" });
     await handle.destroy();
   });
+
+  it("cleans up an initial unsupported responsive composition before a renderer can mount", async () => {
+    const container = document.createElement("div");
+    container.style.touchAction = "pan-y";
+    Object.defineProperties(container, {
+      clientWidth: { configurable: true, value: 120 },
+      clientHeight: { configurable: true, value: 120 },
+    });
+    const removeContainerListener = vi.spyOn(container, "removeEventListener");
+    const removeWindowListener = vi.spyOn(window, "removeEventListener");
+    const factory: GameFactory = vi.fn(async () => ({ destroy: vi.fn() }));
+
+    await expect(mountCartridge({
+      container,
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn() },
+      responsive: {
+        config: DEFAULT_RESPONSIVE_LAYOUT_CONFIG,
+        safeArea: { top: 0, right: 0, bottom: 0, left: 0 },
+        inputCapabilities: { touch: true, pointer: true, keyboard: true },
+        accessibility: { textScale: 1, touchScale: 1 },
+      },
+    }, factory)).rejects.toMatchObject({
+      code: "UNSUPPORTED_VIEWPORT_SIZE",
+    });
+
+    expect(factory).not.toHaveBeenCalled();
+    expect(container.style.touchAction).toBe("pan-y");
+    expect(removeWindowListener).toHaveBeenCalledWith("keydown", expect.any(Function));
+    expect(removeWindowListener).toHaveBeenCalledWith("keyup", expect.any(Function));
+    expect(removeContainerListener).toHaveBeenCalledWith("pointerdown", expect.any(Function));
+    expect(removeContainerListener).toHaveBeenCalledWith("pointermove", expect.any(Function));
+    expect(removeContainerListener).toHaveBeenCalledWith("pointerup", expect.any(Function));
+    expect(removeContainerListener).toHaveBeenCalledWith("pointercancel", expect.any(Function));
+    expect(removeContainerListener).toHaveBeenCalledWith("contextmenu", expect.any(Function));
+    for (const observer of ResizeObserverStub.instances) {
+      expect(observer.disconnect).toHaveBeenCalledOnce();
+    }
+  });
 });

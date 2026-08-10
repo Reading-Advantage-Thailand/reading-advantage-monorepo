@@ -112,6 +112,39 @@ describe("APKGameHost", () => {
     expect(factory.contexts).toHaveLength(1);
   });
 
+  it("recovers a synchronous Start lifecycle callback failure to a fresh briefing without mounting gameplay", async () => {
+    const factory = createMockGameFactory();
+    const onLifecycleTransition = vi.fn(() => {
+      throw new Error("The game start signal could not be delivered. Return to the briefing and try again.");
+    });
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={briefing}
+        onLifecycleTransition={onLifecycleTransition}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("The game start signal could not be delivered");
+    expect(factory.contexts).toHaveLength(0);
+    expect(screen.queryByText("Game ready")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Pause game" })).not.toBeInTheDocument();
+
+    const returnToBriefing = screen.getByRole("button", { name: "Return to briefing" });
+    expect(returnToBriefing).toBeEnabled();
+    fireEvent.click(returnToBriefing);
+
+    expect(await screen.findByRole("button", { name: "Begin quest" })).toBeEnabled();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(factory.contexts).toHaveLength(0);
+    expect(screen.queryByText("Game ready")).not.toBeInTheDocument();
+  });
+
   it("keeps a non-playing Start phase gated after emitting its transition", async () => {
     const factory = createMockGameFactory();
     const onLifecycleTransition = vi.fn();

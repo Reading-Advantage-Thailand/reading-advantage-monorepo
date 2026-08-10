@@ -89,8 +89,6 @@ export async function mountCartridge(
     return resolved;
   };
 
-  composition = resolveComposition();
-
   const diagnostics = (): APKRuntimeDiagnostics => ({
     status,
     cartridgeId: cartridge.manifest.id,
@@ -250,9 +248,7 @@ export async function mountCartridge(
     });
   };
 
-  const resizeObserver =
-    typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(resize);
-  resizeObserver?.observe(container);
+  let resizeObserver: ResizeObserver | undefined;
 
   const onVisibilityChange = (): void => {
     if (destroyed || explicitlyPaused) return;
@@ -266,9 +262,12 @@ export async function mountCartridge(
       diagnostic({ level: "info", code: "VISIBILITY_RESUMED", message: "Game resumed" });
     }
   };
-  document.addEventListener("visibilitychange", onVisibilityChange);
-
   try {
+    resizeObserver =
+      typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(resize);
+    resizeObserver?.observe(container);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    composition = resolveComposition();
     await createInstance();
   } catch (error) {
     document.removeEventListener("visibilitychange", onVisibilityChange);

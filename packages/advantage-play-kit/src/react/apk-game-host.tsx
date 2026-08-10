@@ -223,7 +223,13 @@ export function APKGameHost({
       return;
     }
 
-    onLifecycleTransition?.(transitionResult.data);
+    try {
+      onLifecycleTransition?.(transitionResult.data);
+    } catch (transitionError) {
+      setError(transitionError instanceof Error ? transitionError.message : "Game start signal failed");
+      setStatus("error");
+      return;
+    }
     if (resolvedStartPhase !== "playing") {
       setError(
         `The ${resolvedStartPhase} phase is not available in this host yet. The cartridge remains gated until its phase controller is available.`,
