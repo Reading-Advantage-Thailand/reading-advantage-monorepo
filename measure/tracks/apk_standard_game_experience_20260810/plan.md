@@ -49,6 +49,7 @@ _Story ref: spec.md#story-s1_
 
 - [~] Task: Generate documentation and run architectural checks
   - [ ] Update developer-kit and lifecycle documentation
+  - [ ] Add a compact/wide, Thai/English briefing preview to the existing APK QC route
   - [ ] Update the code graph for changed exports and JSX
   - [ ] Run `measure/generate.sh` and `measure/doctor.sh`
 
