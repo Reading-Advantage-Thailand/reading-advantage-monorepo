@@ -1,0 +1,11 @@
+Track: apk_standard_game_experience_20260810
+
+Task: Write failing briefing contract and component tests
+
+Summary: Added behavior specifications for complete vocabulary and sentence content, Thai/English headings, native Start semantics, exactly-once activation, touch-control filtering, compact/wide scroll composition, and a 48px Start target. Contract rejection and lifecycle cases are covered by a7648f2.
+
+Files: game-briefing-screen.test.tsx (plus contract tests in a7648f2).
+
+RED verification: 3 expected component failures because GameBriefingScreen was not yet part of the public presentation API. The failures directly identify the missing component export.
+
+Graph blast radius: test-only JSX; no production callers changed.
