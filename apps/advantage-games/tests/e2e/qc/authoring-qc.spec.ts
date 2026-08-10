@@ -118,4 +118,66 @@ test.describe("APK authoring and QC field lab", () => {
       "page horizontal overflow at wide width",
     ).toBe(true);
   });
+
+  test("renders a non-overlapping wide briefing canvas even when the QC page has side panels", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/qc");
+    await page.getByRole("button", { name: "wide" }).click();
+    const textScale = page.getByRole("slider", { name: /text scale/i });
+    await textScale.fill("1.25");
+    await expect(textScale).toHaveValue("1.25");
+    await expect(page.getByText(/text scale 1\.25×/i)).toBeVisible();
+
+    const briefing = page.getByRole("region", { name: "Standard game briefing preview" });
+    const viewport = briefing.getByTestId("briefing-preview-viewport");
+    const dialog = briefing.getByRole("dialog");
+    const mission = dialog.locator("[data-apk-briefing-region='mission']");
+    const learningAndControls = dialog.locator("[data-apk-briefing-region='learning-and-controls']");
+    await expect(dialog).toHaveAttribute("data-apk-layout-profile", "wide");
+    await expect(viewport).toHaveAttribute("data-apk-qc-viewport", "1440x900");
+    await expect.poll(() => viewport.evaluate((element) => ({
+      width: element.clientWidth,
+      height: element.clientHeight,
+    }))).toEqual({ width: 1440, height: 900 });
+    await expect(mission).toBeVisible();
+    await expect(learningAndControls).toBeVisible();
+
+    const [missionBox, learningAndControlsBox] = await Promise.all([
+      mission.boundingBox(),
+      learningAndControls.boundingBox(),
+    ]);
+    expect(missionBox, "wide briefing mission region must have a rendered box").not.toBeNull();
+    expect(learningAndControlsBox, "wide briefing learning region must have a rendered box").not.toBeNull();
+    if (!missionBox || !learningAndControlsBox) return;
+
+    const regionsOverlap = missionBox.x < learningAndControlsBox.x + learningAndControlsBox.width
+      && learningAndControlsBox.x < missionBox.x + missionBox.width
+      && missionBox.y < learningAndControlsBox.y + learningAndControlsBox.height
+      && learningAndControlsBox.y < missionBox.y + missionBox.height;
+    expect(regionsOverlap, "wide briefing regions must never overlap").toBe(false);
+  });
+
+  test("replaces the visible briefing content fixture and removes the busy Start control after entering play", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/qc");
+
+    const briefing = page.getByRole("region", { name: "Standard game briefing preview" });
+    const dialog = briefing.getByRole("dialog");
+    await expect(dialog.getByText("river")).toBeVisible();
+    await expect(dialog.getByText("แม่น้ำ")).toBeVisible();
+
+    await page.getByLabel("Content fixture").selectOption("english-long");
+    await expect(dialog.getByText("extraordinary")).toBeVisible();
+    await expect(dialog.getByText("ไม่ธรรมดา")).toBeVisible();
+    await expect(dialog.getByText("environmental responsibility")).toBeVisible();
+    await expect(dialog.getByText("ความรับผิดชอบต่อสิ่งแวดล้อม")).toBeVisible();
+    await expect(dialog.getByText("river")).toHaveCount(0);
+    await expect(dialog.getByText("แม่น้ำ")).toHaveCount(0);
+
+    await dialog.getByRole("button", { name: "Start game" }).click();
+    await expect(briefing.getByRole("status")).toContainText(/briefing\s*(?:→|->)\s*playing/i);
+    await expect(briefing.getByRole("status")).toContainText(/count:\s*1/i);
+    await expect(briefing.getByRole("dialog")).toHaveCount(0);
+    await expect(briefing.getByRole("button", { name: "Start game" })).toHaveCount(0);
+  });
 });

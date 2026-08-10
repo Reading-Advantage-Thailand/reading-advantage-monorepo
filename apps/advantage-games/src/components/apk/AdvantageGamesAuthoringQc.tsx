@@ -97,6 +97,7 @@ export function AdvantageGamesAuthoringQc({ preview }: AdvantageGamesAuthoringQc
   const [restartCount, setRestartCount] = useState(0);
   const [operatorMessage, setOperatorMessage] = useState("Exemplar ready for inspection.");
   const [briefingStartCount, setBriefingStartCount] = useState(0);
+  const [briefingVisible, setBriefingVisible] = useState(true);
 
   const viewport = profile === "wide"
     ? { width: 1440, height: 900 }
@@ -137,6 +138,7 @@ export function AdvantageGamesAuthoringQc({ preview }: AdvantageGamesAuthoringQc
 
   const handleBriefingStart = () => {
     setBriefingStartCount((count) => (count === 0 ? 1 : count));
+    setBriefingVisible(false);
   };
 
   return (
@@ -288,21 +290,28 @@ export function AdvantageGamesAuthoringQc({ preview }: AdvantageGamesAuthoringQc
 
           <section
             aria-label="Standard game briefing preview"
-            className="mt-6 min-w-0 max-w-full overflow-hidden rounded border border-[#335c4b] bg-[#07110e]"
-            style={{ minWidth: 0, maxWidth: "100%", overflowX: "hidden" }}
+            className="mt-6 min-w-0 max-w-full rounded border border-[#335c4b] bg-[#07110e]"
           >
             <div
-              className="min-w-0 max-w-full overflow-hidden"
-              style={{ minWidth: 0, maxWidth: "100%", height: "min(40rem, 70vh)", minHeight: "30rem" }}
+              className="min-w-0 max-w-full overflow-auto"
+              style={{ maxHeight: "min(70vh, 40rem)" }}
             >
-              <GameBriefingScreen
-                briefing={STANDARD_GAME_BRIEFING}
-                learningItems={CONTENT_FIXTURES[fixture]}
-                onStart={handleBriefingStart}
-                layoutProfile={briefingLayoutProfile}
-                inputMode={inputMode}
-                style={{ minWidth: 0, maxWidth: "100%", width: "100%", height: "100%" }}
-              />
+              <div
+                data-testid="briefing-preview-viewport"
+                data-apk-qc-viewport={`${viewport.width}x${viewport.height}`}
+                style={{ width: `${viewport.width}px`, height: `${viewport.height}px` }}
+              >
+                {briefingVisible ? (
+                  <GameBriefingScreen
+                    briefing={STANDARD_GAME_BRIEFING}
+                    learningItems={CONTENT_FIXTURES[fixture]}
+                    onStart={handleBriefingStart}
+                    layoutProfile={briefingLayoutProfile}
+                    inputMode={inputMode}
+                    style={{ width: "100%", height: "100%" }}
+                  />
+                ) : null}
+              </div>
             </div>
             <p
               role="status"
