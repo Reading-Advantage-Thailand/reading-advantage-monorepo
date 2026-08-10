@@ -72,7 +72,8 @@ reuse must be rejected and tested.
   Mastery persistence, activity evidence, and runtime-compat contracts; do not
   fork or recreate the engine.
 - Add Sales as an explicitly admitted runtime consumer with an exact descriptor
-  and package set.
+  and package set only after its own reviewed graph release exists. A descriptor
+  must never reuse the synthetic Codecamp graph merely to pass admission.
 - Validate a versioned Sales knowledge graph and immutable curriculum bindings
   rather than inferring objectives from lesson prose at runtime.
 - Keep provider, database, transport, storage, and AI details behind the

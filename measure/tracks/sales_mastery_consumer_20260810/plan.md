@@ -2,29 +2,36 @@
 
 ## Phase 0 — reconcile and admit the consumer
 
-- [~] Task: Reconcile Sales go-live documentation with the current production
+- [x] Task: Reconcile Sales go-live documentation with the current production
   truth, replace obsolete local-rep provisioning acceptance with Accounts SSO,
   and register this successor track without closing the still-open authenticated
-  QA gate.
-- [ ] Task: Write Red runtime-compat tests and add the exact Sales consumer
-  descriptor/package admission without changing the shared engine.
-- [ ] Task: Run the runtime manifest, consumer, packed-consumer, lint, and type
-  gates; record independent review evidence.
+  QA gate. Completed in `a4be6a73c`.
+- [x] Task: Inspect the runtime compatibility boundary before admission. The
+  current release set pins `knowledge-space-synthetic-codecamp-proof-v1.0.0`;
+  reusing that graph in a Sales descriptor would be a false cross-course claim.
+  The attempted admission was stopped before production/runtime files changed.
+- [b] Task: Write Red runtime-compat tests and add the exact Sales consumer
+  descriptor/package admission without changing the shared engine. Depends on
+  the reviewed Sales graph release in Phase 1; do not use Codecamp's graph.
+- [b] Task: Run the runtime manifest, consumer, packed-consumer, lint, and type
+  gates; record independent review evidence. Depends on truthful Sales graph
+  admission.
 
 ## Phase 1 — bind the approved course to a knowledge graph
 
-- [b] Task: Define the versioned Sales objective graph, activity variants,
-  rubric/evaluation bindings, and immutable release provenance. Depends on
-  Phase 0 runtime admission and the existing approved curriculum digest.
-- [b] Task: Write Red tests for complete curriculum coverage, stable identities,
+- [~] Task: Define the versioned Sales objective graph, activity variants,
+  rubric/evaluation bindings, and immutable release provenance. Depends on the
+  existing approved curriculum digest and precedes runtime admission.
+- [ ] Task: Write Red tests for complete curriculum coverage, stable identities,
   graph/rubric drift, forbidden prose inference, and release-owner approval.
-- [b] Task: Implement and verify the deterministic Sales graph and binding
+- [ ] Task: Implement and verify the deterministic Sales graph and binding
   artifact without rewriting the approved curriculum. Depends on accepted Red
   contracts and independent curriculum review.
 
 ## Phase 2 — company tenant mapping and durable projection
 
-- [b] Task: Define and migrate the fail-closed Company Identity organization to
+- [b] Task: Admit the reviewed Sales graph as an exact shared-runtime consumer,
+  then define and migrate the fail-closed Company Identity organization to
   Mastery tenant mapping. Depends on Phase 1 and the preceding Finance migration
   landing so migration identifiers remain serial and reviewable.
 - [b] Task: Write Red authorization, cross-organization, replay, conflict,

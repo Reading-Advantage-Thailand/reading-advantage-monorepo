@@ -7,5 +7,5 @@
   "description": "Make the deployed Sales Advantage course a tenant-safe consumer of the shared Mastery Advantage KST/SRS runtime without adding CRM responsibilities.",
   "estimated_tasks": 15,
   "actual_tasks": null,
-  "deviation_notes": "Successor product scope added by the owner after the original Sales MVP and go-live specifications explicitly deferred shared Mastery integration. The existing go-live track retains authenticated production QA and closeout ownership."
+  "deviation_notes": "Successor product scope added by the owner after the original Sales MVP and go-live specifications explicitly deferred shared Mastery integration. The existing go-live track retains authenticated production QA and closeout ownership. Initial runtime admission was reordered behind the Sales graph because the current manifest pins a synthetic Codecamp graph; no false cross-course descriptor was shipped."
 }
