@@ -32,6 +32,12 @@ export type {
   GameLifecycleTransition,
 } from "./game-briefing-contract.js";
 
+/** Standardized accessible briefing screen shown before normal gameplay. */
+export { GameBriefingScreen } from "./game-briefing-screen.js";
+
+/** Public props for the standardized briefing screen. */
+export type { GameBriefingScreenProps } from "./game-briefing-screen.js";
+
 /** Props for the outer accessible game presentation region. */
 export type PresentationShellProps = ComponentProps<"section"> & {
   /** Accessible name announced for the complete game experience. */

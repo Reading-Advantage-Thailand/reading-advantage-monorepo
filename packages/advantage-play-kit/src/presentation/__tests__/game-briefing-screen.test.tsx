@@ -127,4 +127,51 @@ describe("GameBriefingScreen", () => {
       overflowY: "auto",
     });
   });
+
+  it("supports pointer-keyboard and hybrid hints, key tokens, defaults, extensions, and pending Start", () => {
+    const onStart = vi.fn();
+    const briefingWithKeys = {
+      title: briefing.title,
+      objective: briefing.objective,
+      instructions: briefing.instructions,
+      learningPreview: briefing.learningPreview,
+      controls: [
+        { mode: "keyboard" as const, label: "Arrow keys", action: "Move", keys: ["←", "→"] },
+        { mode: "pointer" as const, label: "Pointer", action: "Choose" },
+        { mode: "touch" as const, label: "Tap", action: "Choose" },
+      ],
+    };
+    const { rerender } = render(
+      <GameBriefingScreen
+        briefing={briefingWithKeys}
+        extension={<span>Optional host action</span>}
+        inputMode="pointer-keyboard"
+        learningItems={[{ term: "แม่น้ำ", translation: "river" }]}
+        onStart={onStart}
+        startPending
+      />,
+    );
+
+    expect(screen.getByText("Arrow keys")).toBeInTheDocument();
+    expect(screen.getByText("Pointer")).toBeInTheDocument();
+    expect(screen.queryByText("Tap")).not.toBeInTheDocument();
+    expect(screen.getByText("←").tagName).toBe("KBD");
+    expect(screen.getByText("Optional host action")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Mission objective" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Start game" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Start game" })).toHaveAttribute("aria-busy", "true");
+
+    rerender(
+      <GameBriefingScreen
+        briefing={briefingWithKeys}
+        inputMode="hybrid"
+        learningItems={[{ term: "แม่น้ำ", translation: "river" }]}
+        onStart={onStart}
+      />,
+    );
+
+    expect(screen.getByText("Tap")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Start game" }));
+    expect(onStart).toHaveBeenCalledOnce();
+  });
 });
