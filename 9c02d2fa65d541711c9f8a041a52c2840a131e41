@@ -1,0 +1,14 @@
+Task slice: Document the Phase S1 standardized briefing and lifecycle.
+
+Files:
+- packages/advantage-play-kit/docs/developer-kit.md
+- packages/advantage-play-kit/docs/game-lifecycle.md
+
+Why: Give interns and host integrators one accurate description of required versus optional briefing data, localization and extension ownership, start/restart behavior, exact lifecycle transitions, and unchanged runtime/result ABIs.
+
+Verification:
+- git diff --check passed.
+- Type names and public entry points in the usage example were checked against current package exports.
+- No Markdown lint script exists in the package.
+
+Commit validation: commitlint was invoked directly because the repository pnpm wrapper attempts an unrelated stale-lockfile reconciliation.
