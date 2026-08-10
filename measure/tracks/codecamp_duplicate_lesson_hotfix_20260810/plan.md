@@ -60,7 +60,7 @@
     then fails on deprecated unchecked markers in unrelated pre-existing
     tracks.
   - [x] Complete independent change-quality and data-safety review.
-- [~] Task: Deploy and verify production
+- [x] Task: Deploy and verify production
   - [x] Capture a PII-free production progress digest immediately before the
         migration and verify the deploy path stages a zero-traffic revision.
   - [x] Obtain explicit owner approval for the exact Codecamp repair migration.
@@ -69,8 +69,23 @@
         `0047`/`0048`. The attempted `0049` submission was blocked before Cloud
         Build accepted it. The owner then explicitly approved the exact
         `0049_codecamp_exercise_quiz_repair` identifier before resubmission.
-  - [~] Deploy through the Codecamp Cloud Build migration-before-traffic path.
-  - [ ] Verify Cloud Run health, revision traffic, and error logs.
-  - [ ] Re-run aggregate SQL acceptance checks and compare progress counts.
-  - [ ] Record manual intern verification as the only remaining owner follow-up,
-        if direct learner-session verification is unavailable.
+  - [x] Deploy through the Codecamp Cloud Build migration-before-traffic path.
+        Build `2a10e80a-67f1-432a-b818-d0a6afc636a1` succeeded, applied 0049,
+        passed the exact doctor gate, and staged revision
+        `codecamp-advantage-00029-jis` with zero traffic.
+  - [x] Verify Cloud Run health, revision traffic, and error logs. Both live and
+        candidate localized routes return 200, unsigned webhooks return 401,
+        company-mode login returns the intentional 409 Accounts handoff on both
+        revisions, and the candidate emitted no ERROR logs. Revision
+        `codecamp-advantage-00025-vaz` retains 100% traffic.
+  - [x] Re-run aggregate SQL acceptance checks and compare progress counts. The
+        repair has 14 valid pairs and zero combined-title rows; all 43 progress
+        rows, 41 completed rows, and digest
+        `89367badf4012cd4deb116b04e82f06c` are unchanged. The ledger has one exact
+        0049 row with the committed hash, the expected uniqueness constraint,
+        and no duplicate timestamps.
+  - [x] Verify the repaired module through the authenticated browser path. After
+        the owner logged in, Kimi WebBridge confirmed the production
+        `trpc-server-actions` module has exactly one Exercise, one Quiz, and zero
+        combined-title rows. The database digest independently proves all intern
+        progress remained attached to its original lesson IDs.

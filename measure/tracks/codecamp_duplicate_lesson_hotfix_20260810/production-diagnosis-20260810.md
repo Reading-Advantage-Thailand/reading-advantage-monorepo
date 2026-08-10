@@ -99,17 +99,48 @@ proves that this state now aborts atomically without changing lessons, progress,
 children, ledger rows, or the uniqueness sentinel; the affected eight-file
 matrix passes 51/51 tests after the safeguard.
 
-Because the exact migration identifier is now
+Because the exact migration identifier became
 `0049_codecamp_exercise_quiz_repair`, the first attempted final submission was
 blocked before Cloud Build accepted a job and before any database or revision
-change. Renewed owner approval for the exact `0049` identifier is therefore
-required even though its repair semantics remain the same as the approved
-`0047` SQL.
+change. The owner then explicitly approved the exact `0049` identifier before
+resubmission.
 
-No repair data write has occurred yet. A repeated pre-migration audit still
-shows the original 14 pairs, 28 combined-title rows, 43/41 progress counts, and
-the exact digest `89367badf4012cd4deb116b04e82f06c`. The active revision remains
-`codecamp-advantage-00025-vaz` at 100% traffic; revision 00028 remains
-zero-traffic. After migration, the acceptance audit must show 14 repaired
-pairs, zero combined-title rows, the same 43/41 progress counts, and the exact
-same digest.
+## Successful 0049 Deployment and Acceptance
+
+Cloud Build `2a10e80a-67f1-432a-b818-d0a6afc636a1` completed successfully on
+2026-08-10. Its ordered gates built and pushed image digest
+`sha256:2200b2d15780bd013c7d0379a12e381df2368c57eced498d61046794429965c4`,
+applied the migration, and reported:
+
+> Required migration gate OK — "0049_codecamp_exercise_quiz_repair" has its
+> exact ledger timestamp, committed hash, and schema sentinel.
+
+The independent post-migration ledger check confirms exactly one row at
+timestamp `1785758864000`, hash
+`c4cf83337b95359da204914ef13414ad9d9fd141f8241e2e3a98b75418d28241`,
+constraint `UNIQUE (module_id, "order")`, and no duplicate ledger timestamps.
+
+The post-migration acceptance audit confirms:
+
+- repaired exercise/quiz pairs: 14;
+- target lesson rows: 28;
+- target progress rows: 43;
+- completed target progress rows: 41;
+- progress digest: `89367badf4012cd4deb116b04e82f06c` (unchanged);
+- remaining combined-title rows: 0.
+
+Cloud Run revision `codecamp-advantage-00029-jis` is ready under the
+`sso-candidate` tag with zero traffic. Revision
+`codecamp-advantage-00025-vaz` retains 100% production traffic. Both live and
+candidate `/th` routes return 200; both reject unsigned GitHub webhooks with
+401; both return the intentional company-SSO 409 Accounts handoff from the
+legacy password-login probe; and the candidate has no severity ERROR logs.
+
+After the owner authenticated in the real browser, Kimi WebBridge verified the
+production `trpc-server-actions` module page. Its accessibility tree, DOM, and
+screenshot show six lessons with exactly one
+`tRPC & Server Actions Exercise`, exactly one
+`tRPC & Server Actions Quiz`, and zero
+`tRPC & Server Actions Exercise + Quiz` headings. The production progress
+digest independently proves the intern's existing completion evidence remained
+attached to the original lesson IDs.
