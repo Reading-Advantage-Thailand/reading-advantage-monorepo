@@ -48,160 +48,160 @@ _Story ref: spec.md#story-s1_
   - [x] Preserve the low-level runtime boundary for tests and specialized hosts
 
 - [~] Task: Generate documentation and run architectural checks
-  - [ ] Update developer-kit and lifecycle documentation
-  - [ ] Add a compact/wide, Thai/English briefing preview to the existing APK QC route
-  - [ ] Update the code graph for changed exports and JSX
-  - [ ] Run `measure/generate.sh` and `measure/doctor.sh`
+  - [x] Update developer-kit and lifecycle documentation
+  - [x] Add a compact/wide, Thai/English briefing preview to the existing APK QC route
+  - [x] Update the code graph for changed exports and JSX
+  - [x] Run `measure/generate.sh` and `measure/doctor.sh`
 
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Standard Game Briefing' (Protocol in workflow.md)
+- [b] Task: Measure - User Manual Verification 'Phase S1: Standard Game Briefing' (Protocol in workflow.md) — deferred:product-owner
 
 ## Phase S2: Guided Gameplay Tutorial
 
 _Story ref: spec.md#story-s2_
 
-- [ ] Task: Define the tutorial contracts
+- [b] Task: Define the tutorial contracts — deferred:s1-product-acceptance
   - [ ] Define tutorial definitions, ordered steps, semantic targets, timing, labels, and progress
   - [ ] Define cartridge-owned deterministic demonstration actions
   - [ ] Define shared pause, advance, replay, skip, and completion-suppression behavior
   - [ ] Reject raw DOM selectors, screen coordinates, and application-specific callbacks as manifest contracts
 
-- [ ] Task: Write failing tutorial validation and runtime tests
+- [b] Task: Write failing tutorial validation and runtime tests — deferred:s1-product-acceptance
   - [ ] Reject empty, duplicate, malformed, or unreachable steps
   - [ ] Verify seeded deterministic playback
   - [ ] Verify tutorial runs through the real cartridge mechanic
   - [ ] Verify zero production completions, XP persistence, or leaderboard effects
   - [ ] Verify cleanup after replay, exit, remount, and interruption
 
-- [ ] Task: Implement the shared tutorial controller
+- [b] Task: Implement the shared tutorial controller — deferred:s1-product-acceptance
   - [ ] Add explicit tutorial runtime mode
   - [ ] Coordinate steps with cartridge-supplied mechanic actions
   - [ ] Expose current step, progress, semantic target, and lifecycle events
   - [ ] Suppress production terminal behavior while retaining educational feedback
 
-- [ ] Task: Implement the guided tutorial presentation
+- [b] Task: Implement the guided tutorial presentation — deferred:s1-product-acceptance
   - [ ] Add step cards, progress indicators, focus/highlight treatment, and accessible narration
   - [ ] Support keyboard, pointer, and touch navigation
   - [ ] Keep prompts and highlighted mechanics unobstructed in compact and wide layouts
   - [ ] Respect reduced-motion settings
 
-- [ ] Task: Add tutorial testing and QC fixtures
+- [b] Task: Add tutorial testing and QC fixtures — deferred:s1-product-acceptance
   - [ ] Add deterministic clock, input, target, and action fixtures
   - [ ] Add worst-case Thai/English tutorial content
   - [ ] Add replay, interruption, and leak assertions
   - [ ] Add an independent tutorial preview state to APK QC
 
-- [ ] Task: Document the shared path and bespoke mechanic hook
+- [b] Task: Document the shared path and bespoke mechanic hook — deferred:s1-product-acceptance
   - [ ] Document how an intern declares steps
   - [ ] Document how cartridge code demonstrates a mechanic without recreating UI
   - [ ] Run graph update, generation, and doctor checks
 
-- [ ] Task: Measure - User Manual Verification 'Phase S2: Guided Gameplay Tutorial' (Protocol in workflow.md)
+- [b] Task: Measure - User Manual Verification 'Phase S2: Guided Gameplay Tutorial' (Protocol in workflow.md) — deferred:s1-product-acceptance
 
 ## Phase S3: Safe Demonstration Mode
 
 _Story ref: spec.md#story-s3_
 
-- [ ] Task: Define demo-mode contracts
+- [b] Task: Define demo-mode contracts — deferred:s2-product-acceptance
   - [ ] Define deterministic content, runtime mode, host controls, and diagnostic events
   - [ ] Define scoring, completion, persistence, and failure suppression guarantees
   - [ ] Keep tutor synchronization and sockets outside APK
 
-- [ ] Task: Write failing demo-mode tests
+- [b] Task: Write failing demo-mode tests — deferred:s2-product-acceptance
   - [ ] Verify the real cartridge scene and mechanics are used
   - [ ] Verify start, pause, advance, restart, and exit controls
   - [ ] Verify repeated demonstrations retain one canvas and no leaked resources
   - [ ] Verify demo mode cannot emit production `GameResults`
 
-- [ ] Task: Implement demo runtime isolation
+- [b] Task: Implement demo runtime isolation — deferred:s2-product-acceptance
   - [ ] Add demo launch and teardown behavior
   - [ ] Add safe terminal-state interception and deterministic restart
   - [ ] Emit host-neutral lifecycle and diagnostic events
 
-- [ ] Task: Integrate demo controls into the shared host and QC
+- [b] Task: Integrate demo controls into the shared host and QC — deferred:s2-product-acceptance
   - [ ] Expose demo launch and control APIs
   - [ ] Add direct demo preview and inspection
   - [ ] Prove compatibility with an external teaching-host adapter
 
-- [ ] Task: Document and verify demo behavior
+- [b] Task: Document and verify demo behavior — deferred:s2-product-acceptance
   - [ ] Add host integration examples
   - [ ] Run focused tests, coverage, type checks, lint, graph update, generation, and doctor
 
-- [ ] Task: Measure - User Manual Verification 'Phase S3: Safe Demonstration Mode' (Protocol in workflow.md)
+- [b] Task: Measure - User Manual Verification 'Phase S3: Safe Demonstration Mode' (Protocol in workflow.md) — deferred:s2-product-acceptance
 
 ## Phase S4: Standard Learning Debrief
 
 _Story ref: spec.md#story-s4_
 
-- [ ] Task: Define debrief contracts
+- [b] Task: Define debrief contracts — deferred:s3-product-acceptance
   - [ ] Define outcome, standard statistics, missed-content review, custom-stat, label, and attribution schemas
   - [ ] Bound extension slots and validate all numeric result values
   - [ ] Preserve host ownership of navigation, persistence, and authoritative XP
 
-- [ ] Task: Write failing debrief tests
+- [b] Task: Write failing debrief tests — deferred:s3-product-acceptance
   - [ ] Cover victory, defeat, and complete outcomes
   - [ ] Cover score, accuracy, XP, correct answers, attempts, and learning review
   - [ ] Cover invalid values, excessive custom statistics, replay, and exit
   - [ ] Cover Thai/English compact and wide presentation
 
-- [ ] Task: Implement the standardized debrief screen
+- [b] Task: Implement the standardized debrief screen — deferred:s3-product-acceptance
   - [ ] Preserve the legacy centered result-card information architecture
   - [ ] Add learning-review and required attribution regions
   - [ ] Add responsive replay and exit actions
   - [ ] Export the component and public contracts
 
-- [ ] Task: Integrate debrief into the APK lifecycle
+- [b] Task: Integrate debrief into the APK lifecycle — deferred:s3-product-acceptance
   - [ ] Render only validated terminal results
   - [ ] Ensure normal gameplay completes exactly once
   - [ ] Route replay through clean teardown and configured restart phase
   - [ ] Delegate exit to the host
 
-- [ ] Task: Document and verify debrief behavior
+- [b] Task: Document and verify debrief behavior — deferred:s3-product-acceptance
   - [ ] Update developer and host integration documentation
   - [ ] Run focused tests, coverage, type checks, lint, graph update, generation, and doctor
 
-- [ ] Task: Measure - User Manual Verification 'Phase S4: Standard Learning Debrief' (Protocol in workflow.md)
+- [b] Task: Measure - User Manual Verification 'Phase S4: Standard Learning Debrief' (Protocol in workflow.md) — deferred:s3-product-acceptance
 
 ## Phase S5: Intern-Ready Game Workflow
 
 _Story ref: spec.md#story-s5_
 
-- [ ] Task: Extend cartridge manifest and readiness contracts
+- [b] Task: Extend cartridge manifest and readiness contracts — deferred:s4-product-acceptance
   - [ ] Make briefing, tutorial, demo, and debrief declarations mandatory for new-game scaffolds
   - [ ] Add actionable readiness errors for missing or placeholder definitions
   - [ ] Preserve bounded bespoke tutorial-action hooks
 
-- [ ] Task: Write failing scaffold and readiness tests
+- [b] Task: Write failing scaffold and readiness tests — deferred:s4-product-acceptance
   - [ ] Verify every generated file and export
   - [ ] Verify malformed or incomplete experience definitions fail closed
   - [ ] Verify generated cartridges compile without application imports
   - [ ] Verify readiness requires lifecycle, cleanup, accessibility, responsive, and attribution evidence
 
-- [ ] Task: Extend the cartridge scaffold
+- [b] Task: Extend the cartridge scaffold — deferred:s4-product-acceptance
   - [ ] Generate typed experience configuration and tutorial-action modules
   - [ ] Generate lifecycle, presentation, runtime, and browser tests
   - [ ] Generate QC registration for every lifecycle state
   - [ ] Avoid copying any legacy or Tutor Advantage source tree
 
-- [ ] Task: Build the complete public exemplar
+- [b] Task: Build the complete public exemplar — deferred:s4-product-acceptance
   - [ ] Demonstrate briefing, tutorial, demo, gameplay, victory/defeat/complete debrief, replay, and exit
   - [ ] Use the standard asset library and required attribution
   - [ ] Record authored versus generated code and duplicated infrastructure avoided
 
-- [ ] Task: Extend APK authoring QC
+- [b] Task: Extend APK authoring QC — deferred:s4-product-acceptance
   - [ ] Preview every phase independently
   - [ ] Support compact/wide, touch/keyboard, Thai/English, and reduced-motion controls
   - [ ] Inspect lifecycle events, canvas count, completion count, diagnostics, and attribution
 
-- [ ] Task: Add focused visual and browser regression coverage
+- [b] Task: Add focused visual and browser regression coverage — deferred:s4-product-acceptance
   - [ ] Capture briefing, tutorial, demo, and debrief reference states
   - [ ] Verify representative compact and wide viewports
   - [ ] Verify real keyboard, pointer, and touch interactions
   - [ ] Keep this coverage scoped to the new APK experience surfaces
 
-- [ ] Task: Publish the intern authoring guide and readiness checklist
+- [b] Task: Publish the intern authoring guide and readiness checklist — deferred:s4-product-acceptance
   - [ ] Explain which values interns configure and which systems APK owns
   - [ ] Provide one vocabulary and one sentence example
   - [ ] Document common, extension, and bespoke paths
   - [ ] Run all affected package and QC gates, graph update, generation, and doctor
 
-- [ ] Task: Measure - User Manual Verification 'Phase S5: Intern-Ready Game Workflow' (Protocol in workflow.md)
+- [b] Task: Measure - User Manual Verification 'Phase S5: Intern-Ready Game Workflow' (Protocol in workflow.md) — deferred:s4-product-acceptance
