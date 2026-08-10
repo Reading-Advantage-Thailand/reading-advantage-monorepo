@@ -1,0 +1,25 @@
+Phase S1 independent re-review remediation: accessibility and renderer cleanup
+
+Summary:
+- Kept the briefing as an accessible named lifecycle dialog with Start autofocus while removing the false aria-modal claim that implied unavailable focus containment and outside-content inertness.
+- Hardened mountCartridge startup failure cleanup to destroy any obtained renderer, clear partial renderer DOM, preserve the original structured mount error, and emit MOUNT_CLEANUP_FAILED without masking that error.
+- Strengthened host recovery coverage for a factory that appends a canvas before throwing.
+- Added runtime coverage for post-factory initialization failure plus a failing cleanup destructor.
+
+Files:
+- packages/advantage-play-kit/src/presentation/__tests__/game-briefing-screen.test.tsx
+- packages/advantage-play-kit/src/presentation/game-briefing-screen.tsx
+- packages/advantage-play-kit/src/react/apk-game-host.test.tsx
+- packages/advantage-play-kit/src/runtime/runtime.test.ts
+- packages/advantage-play-kit/src/runtime/runtime.ts
+
+Verification:
+- RED screen: aria-modal=true remained on the embedded dialog.
+- RED host: one partial canvas remained after WebGL startup rejection.
+- GREEN combined suites: 3 files / 23 tests passed.
+- Package type-check passed.
+- Focused ESLint passed.
+- Code graph updated for all five files.
+
+Why:
+Resolve both remaining Medium re-review findings before product acceptance, with cleanup enforced at the shared runtime boundary for every host.
