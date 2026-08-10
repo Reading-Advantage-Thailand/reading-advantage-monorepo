@@ -310,7 +310,16 @@ export function APKGameHost({
         {status === "complete" && "Game complete"}
       </div>
       {instructions && <div>{instructions}</div>}
-      {(validationError ?? error) && <div role="alert">Game could not start: {validationError ?? error}</div>}
+      {(validationError ?? error) && (
+        <div role="alert">
+          Game could not start: {validationError ?? error}
+          {briefing !== undefined && briefingStarted && error ? (
+            <button type="button" onClick={() => void restart()}>
+              Return to briefing
+            </button>
+          ) : null}
+        </div>
+      )}
       {briefingVisible && briefingValidation?.success && inputValidation?.success ? (
         <GameBriefingScreen
           key={`briefing-${briefingRevision}`}

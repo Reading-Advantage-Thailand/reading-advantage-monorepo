@@ -137,6 +137,82 @@ describe("APKGameHost", () => {
     expect(screen.queryByRole("button", { name: "Pause game" })).not.toBeInTheDocument();
   });
 
+  it("returns an unavailable Start phase error to the briefing without mounting gameplay", async () => {
+    const factory = createMockGameFactory();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={{ ...briefing, startPhase: "tutorial" }}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("tutorial phase is not available");
+    expect(factory.contexts).toHaveLength(0);
+
+    const returnToBriefing = screen.getByRole("button", { name: "Return to briefing" });
+    expect(returnToBriefing).toBeEnabled();
+    fireEvent.click(returnToBriefing);
+
+    expect(await screen.findByRole("button", { name: "Begin quest" })).toBeEnabled();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(factory.contexts).toHaveLength(0);
+    expect(screen.queryByRole("button", { name: "Pause game" })).not.toBeInTheDocument();
+  });
+
+  it("recovers a renderer startup failure to a fresh briefing before one successful retry mount", async () => {
+    const successfulFactory = createMockGameFactory();
+    let attempts = 0;
+    const factory: GameFactory = async (context) => {
+      attempts += 1;
+      if (attempts === 1) throw new Error("WebGL unavailable");
+
+      const canvas = document.createElement("canvas");
+      context.container.append(canvas);
+      const handle = await successfulFactory(context);
+      return {
+        ...handle,
+        destroy: () => {
+          canvas.remove();
+          handle.destroy();
+        },
+      };
+    };
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={briefing}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("WebGL unavailable");
+    expect(attempts).toBe(1);
+    expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(0);
+
+    const returnToBriefing = screen.getByRole("button", { name: "Return to briefing" });
+    expect(returnToBriefing).toBeEnabled();
+    fireEvent.click(returnToBriefing);
+
+    const retryStart = await screen.findByRole("button", { name: "Begin quest" });
+    expect(retryStart).toBeEnabled();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(0);
+
+    fireEvent.click(retryStart);
+    await screen.findByText("Game ready");
+    expect(attempts).toBe(2);
+    expect(successfulFactory.contexts).toHaveLength(1);
+    expect(successfulFactory.liveInstances).toBe(1);
+    expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(1);
+  });
+
   it("cleans up a completed briefing-enabled session before returning to briefing and creating one fresh replay mount", async () => {
     const factory = createMockGameFactory();
     render(

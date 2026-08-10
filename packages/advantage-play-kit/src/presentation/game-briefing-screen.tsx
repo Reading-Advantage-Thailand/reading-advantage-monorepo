@@ -92,7 +92,6 @@ export function GameBriefingScreen({
   const [startActivated, setStartActivated] = useState(false);
   const labels = briefing.labels;
   const controls = briefing.controls.filter((control) => isControlApplicable(control.mode, inputMode));
-  const visibleControls = controls.length > 0 ? controls : briefing.controls;
   const startLabel = labels?.startAction ?? "Start game";
   const learningHeading = labels?.learningPreviewHeading ?? briefing.learningPreview.heading;
 
@@ -267,7 +266,7 @@ export function GameBriefingScreen({
                 padding: 0,
               }}
             >
-              {visibleControls.map((control, index) => (
+              {controls.map((control, index) => (
                 <li
                   key={`${control.mode}-${control.label}-${index}`}
                   data-apk-control-mode={control.mode}

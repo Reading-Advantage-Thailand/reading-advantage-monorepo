@@ -94,6 +94,29 @@ describe("GameBriefingScreen", () => {
     expect(screen.queryByText("Pointer")).not.toBeInTheDocument();
   });
 
+  it("does not fall back to keyboard or pointer hints when touch is the only available input", () => {
+    render(
+      <GameBriefingScreen
+        briefing={{
+          ...briefing,
+          controls: [
+            { mode: "keyboard", label: "Arrow keys", action: "Move between choices" },
+            { mode: "pointer", label: "Pointer", action: "Select a choice" },
+          ],
+        }}
+        learningItems={[{ term: "แม่น้ำ", translation: "river" }]}
+        inputMode="touch"
+        onStart={vi.fn()}
+      />,
+    );
+
+    expect(screen.queryByText("Arrow keys")).not.toBeInTheDocument();
+    expect(screen.queryByText("Move between choices")).not.toBeInTheDocument();
+    expect(screen.queryByText("Pointer")).not.toBeInTheDocument();
+    expect(screen.queryByText("Select a choice")).not.toBeInTheDocument();
+    expect(document.querySelectorAll("[data-apk-control-mode]")).toHaveLength(0);
+  });
+
   it("keeps compact and wide briefing content scrollable with a minimum 48px Start target", () => {
     const { container, rerender } = render(
       <GameBriefingScreen
