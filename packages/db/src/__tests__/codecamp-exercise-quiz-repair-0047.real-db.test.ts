@@ -227,11 +227,37 @@ describeRealPostgres(
         await client`
           INSERT INTO codecamp_quiz_questions (
             id, lesson_id, question, options_json, correct_answer, explanation, "order"
-          ) VALUES (
-            '50000000-0000-4000-8000-000000000001',
-            ${quizLessonId}, 'Which layer validates transport input?',
-            '["router", "database"]'::jsonb, 'router', 'The router validates input.', 1
-          )
+          ) VALUES
+            (
+              '50000000-0000-4000-8000-000000000001', ${quizLessonId},
+              'Where should business logic live?',
+              '["In the tRPC router", "In domain functions", "In the database", "In the frontend"]'::jsonb,
+              'In domain functions', 'Routers are thin wrappers that delegate to domain functions.', 1
+            ),
+            (
+              '50000000-0000-4000-8000-000000000002', ${quizLessonId},
+              'What does \`assertCan()\` do and where is it called?',
+              '["Checks permissions, called first in every domain function", "Validates input, called in the router"]'::jsonb,
+              'Checks permissions, called first in every domain function', 'It authorizes before mutations.', 2
+            ),
+            (
+              '50000000-0000-4000-8000-000000000003', ${quizLessonId},
+              'What makes tRPC ''type-safe''?',
+              '["It uses TypeScript", "The frontend automatically infers types from the router definition"]'::jsonb,
+              'The frontend automatically infers types from the router definition', 'The router is the shared type source.', 3
+            ),
+            (
+              '50000000-0000-4000-8000-000000000004', ${quizLessonId},
+              'When should you use Server Actions instead of tRPC?',
+              '["Always", "Simple form submissions, progressive enhancement, single-consumer mutations"]'::jsonb,
+              'Simple form submissions, progressive enhancement, single-consumer mutations', 'They suit simple single-consumer mutations.', 4
+            ),
+            (
+              '50000000-0000-4000-8000-000000000005', ${quizLessonId},
+              'What is the domain function signature?',
+              '["(input) => result", "({ db, user, tenant, input }) => result"]'::jsonb,
+              '({ db, user, tenant, input }) => result', 'The standard context includes db, user, tenant, and input.', 5
+            )
         `;
         for (const progress of originalProgress) {
           await client`
@@ -245,6 +271,7 @@ describeRealPostgres(
             )
           `;
         }
+        const progressBeforeRepair = await readProgress(client);
 
         await applyMigration0047(client);
 
@@ -274,7 +301,9 @@ describeRealPostgres(
             title: "tRPC & Server Actions Quiz",
           },
         ]);
-        await expect(readProgress(client)).resolves.toEqual(originalProgress);
+        await expect(readProgress(client)).resolves.toEqual(
+          progressBeforeRepair,
+        );
         await expect(client<
           {
             lessonId: string;
@@ -302,12 +331,169 @@ describeRealPostgres(
         `).resolves.toEqual([
           {
             lessonId: quizLessonId,
-            question: "Which layer validates transport input?",
+            question: "Where should business logic live?",
+          },
+          {
+            lessonId: quizLessonId,
+            question: "What does `assertCan()` do and where is it called?",
+          },
+          {
+            lessonId: quizLessonId,
+            question: "What makes tRPC 'type-safe'?",
+          },
+          {
+            lessonId: quizLessonId,
+            question: "When should you use Server Actions instead of tRPC?",
+          },
+          {
+            lessonId: quizLessonId,
+            question: "What is the domain function signature?",
           },
         ]);
 
         await applyMigration0047(client);
-        await expect(readProgress(client)).resolves.toEqual(originalProgress);
+        await expect(readProgress(client)).resolves.toEqual(
+          progressBeforeRepair,
+        );
+
+        // Prove the statement is atomic across modules, not merely that an
+        // invalid later module is left alone: reintroduce the audited tRPC
+        // corruption that 0047 would repair before it encounters HTML/CSS.
+        await client`
+          UPDATE codecamp_lessons
+          SET title = 'tRPC & Server Actions Exercise + Quiz', type = 'quiz'
+          WHERE id IN (${exerciseLessonId}, ${quizLessonId})
+        `;
+        await client`
+          INSERT INTO codecamp_exercises (
+            id, lesson_id, title, instructions, "order"
+          ) VALUES (
+            '40000000-0000-4000-8000-000000000003', ${quizLessonId},
+            'Reintroduced redundant quiz exercise', 'Must roll back.', 1
+          )
+        `;
+
+        const malformedModuleId = "10000000-0000-4000-8000-000000000002";
+        const malformedExerciseLessonId =
+          "20000000-0000-4000-8000-000000000004";
+        const malformedQuizLessonId = "20000000-0000-4000-8000-000000000005";
+        await client`
+          INSERT INTO codecamp_modules (
+            id, slug, title, description, "order", phase, status
+          ) VALUES (
+            ${malformedModuleId}, 'html-css', 'HTML & CSS',
+            'Malformed repair candidate fixture.', 3, 'A', 'published'
+          )
+        `;
+        await client`
+          INSERT INTO codecamp_lessons (
+            id, module_id, title, description, "order", type, content_json
+          ) VALUES
+            (
+              ${malformedExerciseLessonId}, ${malformedModuleId},
+              'HTML & CSS Exercise + Quiz', 'Malformed exercise candidate.',
+              6, 'quiz', '{}'::jsonb
+            ),
+            (
+              ${malformedQuizLessonId}, ${malformedModuleId},
+              'HTML & CSS Exercise + Quiz', 'Malformed quiz candidate.',
+              7, 'quiz', '{}'::jsonb
+            )
+        `;
+        await client`
+          INSERT INTO codecamp_exercises (
+            id, lesson_id, title, instructions, "order"
+          ) VALUES
+            (
+              '40000000-0000-4000-8000-000000000004',
+              ${malformedExerciseLessonId}, 'First retained exercise', 'Malformed.', 1
+            ),
+            (
+              '40000000-0000-4000-8000-000000000005',
+              ${malformedExerciseLessonId}, 'Second retained exercise', 'Malformed.', 2
+            ),
+            (
+              '40000000-0000-4000-8000-000000000006',
+              ${malformedQuizLessonId}, 'Copied quiz exercise', 'Malformed.', 1
+            )
+        `;
+        await client`
+          INSERT INTO codecamp_quiz_questions (
+            id, lesson_id, question, options_json, correct_answer, explanation, "order"
+          ) VALUES
+            ('50000000-0000-4000-8000-000000000006', ${malformedQuizLessonId}, 'Malformed question 1', '["a"]'::jsonb, 'a', 'Malformed.', 1),
+            ('50000000-0000-4000-8000-000000000007', ${malformedQuizLessonId}, 'Malformed question 2', '["a"]'::jsonb, 'a', 'Malformed.', 2),
+            ('50000000-0000-4000-8000-000000000008', ${malformedQuizLessonId}, 'Malformed question 3', '["a"]'::jsonb, 'a', 'Malformed.', 3),
+            ('50000000-0000-4000-8000-000000000009', ${malformedQuizLessonId}, 'Malformed question 4', '["a"]'::jsonb, 'a', 'Malformed.', 4)
+        `;
+        await client`
+          INSERT INTO codecamp_user_progress (
+            id, user_id, module_id, lesson_id, status, score,
+            completed_at, created_at, updated_at
+          ) VALUES (
+            '30000000-0000-4000-8000-000000000004', 'intern-two',
+            ${malformedModuleId}, ${malformedQuizLessonId}, 'completed', 100,
+            '2026-08-06T08:00:00.000000', '2026-08-05T08:00:00.000000',
+            '2026-08-06T08:00:00.000000'
+          )
+        `;
+        const malformedBefore = await Promise.all([
+          client`
+            SELECT id, module_id AS "moduleId", "order", type::text AS type, title
+            FROM codecamp_lessons
+            ORDER BY id
+          `,
+          readProgress(client),
+          client`
+            SELECT id, lesson_id AS "lessonId", title, "order"
+            FROM codecamp_exercises
+            ORDER BY id
+          `,
+          client`
+            SELECT id, lesson_id AS "lessonId", question, "order"
+            FROM codecamp_quiz_questions
+            ORDER BY id
+          `,
+        ]);
+        expect(malformedBefore[0]).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              id: exerciseLessonId,
+              order: 5,
+              type: "quiz",
+              title: "tRPC & Server Actions Exercise + Quiz",
+            }),
+            expect.objectContaining({
+              id: quizLessonId,
+              order: 6,
+              type: "quiz",
+              title: "tRPC & Server Actions Exercise + Quiz",
+            }),
+          ]),
+        );
+
+        await expect(applyMigration0047(client)).rejects.toThrow();
+        await expect(
+          Promise.all([
+            client`
+              SELECT id, module_id AS "moduleId", "order", type::text AS type, title
+              FROM codecamp_lessons
+              ORDER BY id
+            `,
+            readProgress(client),
+            client`
+              SELECT id, lesson_id AS "lessonId", title, "order"
+              FROM codecamp_exercises
+              ORDER BY id
+            `,
+            client`
+              SELECT id, lesson_id AS "lessonId", question, "order"
+              FROM codecamp_quiz_questions
+              ORDER BY id
+            `,
+          ]),
+        ).resolves.toEqual(malformedBefore);
+
         await expect(client`
           INSERT INTO codecamp_lessons (
             id, module_id, title, description, "order", type, content_json

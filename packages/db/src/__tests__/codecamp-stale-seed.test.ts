@@ -20,6 +20,11 @@ type PersistenceProjection = (
   modules: CurriculumModule[],
 ) => CurriculumModule[];
 
+type SeedPreWriteConflictValidator = (
+  existingLessons: ExistingLessonSnapshot[],
+  canonicalLessons: CurriculumLesson[],
+) => void;
+
 /**
  * Obtains the planned persistence projection without making this Red test depend on an export before it exists.
  * @returns The persistence projection that the seed must expose.
@@ -31,6 +36,19 @@ function getPersistenceProjection(): PersistenceProjection {
   );
   expect(projection).toBeTypeOf("function");
   return projection as PersistenceProjection;
+}
+
+/**
+ * Obtains the seed's pre-write order/type conflict guard.
+ * @returns The guard that refuses a seed until the dedicated repair migration runs.
+ */
+function getSeedPreWriteConflictValidator(): SeedPreWriteConflictValidator {
+  const validator = Reflect.get(
+    codecampSeed,
+    "assertNoCrossTypeOrderConflicts",
+  );
+  expect(validator).toBeTypeOf("function");
+  return validator as SeedPreWriteConflictValidator;
 }
 
 /**
@@ -309,6 +327,97 @@ describe("Codecamp exercise and quiz persistence projection", () => {
     expect(projection(once)).toEqual(once);
   });
 
+  it("offsets every later activity after a mid-module split deterministically", () => {
+    const module: CurriculumModule = {
+      title: "tRPC & Server Actions",
+      description: "Synthetic ordering fixture.",
+      slug: "trpc-server-actions",
+      order: 12,
+      phase: "C",
+      status: "published",
+      lessons: [
+        {
+          title: "Before the activity",
+          description: "Theory before the split.",
+          order: 1,
+          type: "theory",
+          contentJson: {},
+        },
+        {
+          title: "Mid-module Activity Exercise + Quiz",
+          description: "The combined activity being projected.",
+          order: 2,
+          type: "quiz",
+          contentJson: {},
+          exercises: [
+            {
+              title: "Mid-module exercise",
+              instructions: "Implement it.",
+              starterCode: null,
+              expectedOutput: null,
+              hintsJson: [],
+              order: 1,
+            },
+          ],
+          questions: [
+            {
+              question: "Which activity is this?",
+              optionsJson: ["exercise", "quiz"],
+              correctAnswer: "quiz",
+              explanation: "It is the quiz half.",
+              order: 1,
+            },
+          ],
+        },
+        {
+          title: "After the activity",
+          description: "Theory after the split.",
+          order: 3,
+          type: "theory",
+          contentJson: {},
+        },
+        {
+          title: "Later quiz",
+          description: "A separately authored quiz.",
+          order: 4,
+          type: "quiz",
+          contentJson: {},
+          questions: [
+            {
+              question: "What comes later?",
+              optionsJson: ["the quiz", "nothing"],
+              correctAnswer: "the quiz",
+              explanation: "The separately authored quiz follows.",
+              order: 1,
+            },
+          ],
+        },
+      ],
+    };
+
+    const projection = getPersistenceProjection();
+    const [projected] = projection([module]);
+
+    expect(
+      projected?.lessons.map(({ order, type, title }) => ({
+        order,
+        type,
+        title,
+      })),
+    ).toEqual([
+      { order: 1, type: "theory", title: "Before the activity" },
+      {
+        order: 2,
+        type: "exercise",
+        title: "Mid-module Activity Exercise",
+      },
+      { order: 3, type: "quiz", title: "Mid-module Activity Quiz" },
+      { order: 4, type: "theory", title: "After the activity" },
+      { order: 5, type: "quiz", title: "Later quiz" },
+    ]);
+    expect(projection([projected!])).toEqual([projected]);
+  });
+
   it("never applies quiz metadata to an existing exercise solely because their orders match", () => {
     const existing: ExistingLessonSnapshot[] = [
       {
@@ -331,7 +440,7 @@ describe("Codecamp exercise and quiz persistence projection", () => {
     expect(selectLessonUpdates(existing, quizAtTheSamePosition)).toEqual([]);
   });
 
-  it("inserts a missing exercise when only a quiz occupies its old order", () => {
+  it("fails closed before writing when unrepaired quiz corruption occupies the canonical exercise order", () => {
     const existing: ExistingLessonSnapshot[] = [
       {
         id: "quiz-id",
@@ -348,6 +457,12 @@ describe("Codecamp exercise and quiz persistence projection", () => {
       contentJson: {},
     };
 
+    expect(() =>
+      getSeedPreWriteConflictValidator()(existing, [expectedExercise]),
+    ).toThrow(
+      "[codecamp-seed] Refusing to reconcile module-local order 5 from quiz to exercise; apply 0047_codecamp_exercise_quiz_repair before seeding.",
+    );
+    expect(selectLessonUpdates(existing, [expectedExercise])).toEqual([]);
     expect(selectLessonsToInsert(existing, [expectedExercise])).toEqual([
       expectedExercise,
     ]);

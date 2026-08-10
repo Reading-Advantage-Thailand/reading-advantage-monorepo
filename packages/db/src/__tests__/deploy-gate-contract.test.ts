@@ -154,7 +154,7 @@ describe("Phase 4 — Task 15: FR-4 codecamp deploy gate (cloudbuild.yaml)", () 
     ).toBeLessThan(deployIdx);
   });
 
-  it("requires the Codecamp SSO principal migration before candidate deployment", () => {
+  it("requires the Codecamp exercise/quiz repair before candidate deployment while retaining the SSO function check", () => {
     const text = readFileSync(CLOUDBUILD_PATH, "utf8");
     const steps = parseCloudBuildSteps(text);
     const doctorStep = steps.find((step) =>
@@ -168,8 +168,8 @@ describe("Phase 4 — Task 15: FR-4 codecamp deploy gate (cloudbuild.yaml)", () 
       text.split(/\n\s*-\s*name:/)[steps.indexOf(doctorStep!) + 1] ?? "";
     expect(
       doctorBlock,
-      "Codecamp deployment must prove migration 0043 before staging the SSO revision",
-    ).toMatch(/--required-migration\s+0043_codecamp_company_principal_sync/);
+      "Codecamp deployment must prove migration 0047 before staging the repair revision",
+    ).toMatch(/--required-migration\s+0047_codecamp_exercise_quiz_repair/);
     expect(doctorBlock).toContain(
       "public.sync_codecamp_company_principal(uuid,text,uuid,text,text)",
     );
