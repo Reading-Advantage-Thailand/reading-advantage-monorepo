@@ -24,13 +24,13 @@ _Story ref: spec.md#story-s1_
   - [x] Preserve vocabulary, sentence, and `GameResults` ABI compatibility
   - [x] Document host-provided localization and optional extension boundaries
 
-- [~] Task: Write failing briefing contract and component tests
-  - [ ] Reject missing titles, objectives, instructions, and controls
-  - [ ] Verify complete vocabulary and sentence presentation
-  - [ ] Verify Thai/English content, semantic headings, keyboard activation, and accessible naming
-  - [ ] Verify compact/wide overflow and minimum touch-target behavior
+- [x] Task: Write failing briefing contract and component tests `080e2cb`
+  - [x] Reject missing titles, objectives, instructions, and controls
+  - [x] Verify complete vocabulary and sentence presentation
+  - [x] Verify Thai/English content, semantic headings, keyboard activation, and accessible naming
+  - [x] Verify compact/wide overflow and minimum touch-target behavior
 
-- [ ] Task: Write failing APK host lifecycle tests
+- [~] Task: Write failing APK host lifecycle tests
   - [ ] Confirm gameplay does not accept normal input before Start
   - [ ] Confirm Start transitions exactly once
   - [ ] Confirm restart can return to the configured briefing phase
