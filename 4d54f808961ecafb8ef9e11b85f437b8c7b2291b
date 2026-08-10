@@ -1,0 +1,11 @@
+Phase S1 generated architecture refresh
+
+Summary:
+- Refreshed Measure architecture metadata and route inventory at final S1 code revision 1c9734bf0.
+- Route/workspace content is unchanged from the earlier task snapshot; only generation time and source revision advanced.
+- Track marker vocabulary gate passes.
+- Full doctor remains blocked solely by deprecated [ ] markers in nine unrelated active legacy plans.
+
+Files:
+- measure/generated/architecture.json
+- measure/generated/routes.md
