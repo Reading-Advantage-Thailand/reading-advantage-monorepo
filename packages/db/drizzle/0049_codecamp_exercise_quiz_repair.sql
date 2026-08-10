@@ -88,14 +88,14 @@ BEGIN
 
     IF corruption_count > 1 THEN
       RAISE EXCEPTION
-        '0047 refused ambiguous Codecamp corruption for module slug %',
+        '0049 refused ambiguous Codecamp corruption for module slug %',
         target_slug;
     END IF;
 
     IF corruption_count = 1 THEN
       IF suspicious_count <> 2 THEN
         RAISE EXCEPTION
-          '0047 refused unexpected Codecamp lesson shape for module slug %',
+          '0049 refused unexpected Codecamp lesson shape for module slug %',
           target_slug;
       END IF;
 
@@ -147,7 +147,7 @@ BEGIN
       GET DIAGNOSTICS deleted_redundant_exercise_count = ROW_COUNT;
       IF deleted_redundant_exercise_count <> 1 THEN
         RAISE EXCEPTION
-          '0047 refused unexpected redundant exercise count for module slug %',
+          '0049 refused unexpected redundant exercise count for module slug %',
           target_slug;
       END IF;
 
@@ -179,7 +179,7 @@ BEGIN
            AND (SELECT COUNT(*) FROM codecamp_quiz_questions WHERE lesson_id = quiz_lesson.id) = 5
       ) THEN
         RAISE EXCEPTION
-          '0047 post-repair assertion failed for module slug %',
+          '0049 post-repair assertion failed for module slug %',
           target_slug;
       END IF;
 
@@ -230,13 +230,13 @@ BEGIN
 
     IF repaired_count > 1 THEN
       RAISE EXCEPTION
-        '0047 refused ambiguous repaired Codecamp shape for module slug %',
+        '0049 refused ambiguous repaired Codecamp shape for module slug %',
         target_slug;
     END IF;
 
     IF repaired_count = 0 AND suspicious_count > 0 THEN
       RAISE EXCEPTION
-        '0047 refused unexpected Codecamp lesson shape for module slug %',
+        '0049 refused unexpected Codecamp lesson shape for module slug %',
         target_slug;
     END IF;
   END LOOP;
@@ -251,7 +251,7 @@ BEGIN
     HAVING COUNT(*) > 1
   ) THEN
     RAISE EXCEPTION
-      '0047 refused to add codecamp lesson order uniqueness while duplicate positions remain';
+      '0049 refused to add codecamp lesson order uniqueness while duplicate positions remain';
   END IF;
 
   -- Admit the schema invariant idempotently, while refusing a same-named
@@ -296,7 +296,7 @@ BEGIN
 
     IF NOT constraint_matches THEN
       RAISE EXCEPTION
-        '0047 refused existing codecamp_lessons_module_order_unique with an unexpected shape';
+        '0049 refused existing codecamp_lessons_module_order_unique with an unexpected shape';
     END IF;
   ELSE
     ALTER TABLE "codecamp_lessons"

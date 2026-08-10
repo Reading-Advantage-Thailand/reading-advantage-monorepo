@@ -8,7 +8,8 @@
   - [x] Define the deterministic persistence projection and migration selectors.
 - [x] Task: Define the database invariant
   - [x] Add the Drizzle `(module_id, order)` uniqueness contract.
-  - [x] Define migration ordering and journal requirements for `0047`.
+  - [x] Restore the official production `0047`/`0048` lineage and define the
+        repair as the next monotonic migration, `0049`.
 
 ## Phase 2: Test
 
@@ -31,7 +32,7 @@
   - [x] Split authored combined lessons into persisted exercise and quiz rows.
   - [x] Keep lesson matching type-safe and module-local.
   - [x] Preserve public contracts and add required JSDoc.
-- [x] Task: Implement migration `0047`
+- [x] Task: Implement migration `0049`
   - [x] Repair affected lesson metadata in place and preserve progress.
   - [x] Reconcile child exercise rows and add the unique order constraint.
   - [x] Register a strictly monotonic journal entry and refresh the snapshot.
@@ -39,20 +40,24 @@
 ## Phase 4: Generate Docs, Verify, and Deploy
 
 - [~] Task: Run focused and affected-package quality gates
-  - [~] Run DB migration, seed, journal, type, lint, and build checks. Focused
-        migration/seed/journal tests, DB production build typecheck, and focused
-        lint pass. Package-wide test typecheck remains blocked by the missing
-        pre-existing `@electric-sql/pglite` install on this machine.
-  - [~] Run affected Codecamp domain/app regression checks. The new 0047 deploy
-        contract passes; the app-wide typecheck cannot resolve the pre-existing
-        workspace package links on this new machine, so Cloud Build remains the
-        clean install/build authority for deployment.
+  - [x] Run DB migration, seed, journal, type, lint, and build checks. The final
+        Podman/PostgreSQL suite passes 110/110 tests, including the 0049 repair,
+        rollback, exact ledger/hash/sentinel gate, and progress preservation;
+        the DB production build and focused DB lint also pass.
+  - [~] Run affected Codecamp domain/app regression checks. The new 0049 deploy
+        contract passes. Domain Vitest cannot load the pre-existing missing
+        `vitest.setup.ts` tsconfig, and package-wide checks cannot resolve the
+        incomplete workspace links on this new machine, so Cloud Build remains
+        the clean install/build authority for deployment.
   - [x] Complete independent change-quality and data-safety review.
 - [~] Task: Deploy and verify production
   - [x] Capture a PII-free production progress digest immediately before the
         migration and verify the deploy path stages a zero-traffic revision.
-  - [ ] Obtain explicit owner approval for migration `0047` to write production.
-  - [ ] Deploy through the Codecamp Cloud Build migration-before-traffic path.
+  - [x] Obtain explicit owner approval for the Codecamp repair migration. The
+        approved SQL was reindexed from `0047` to `0049` only after recovering
+        the already-applied official `0047`/`0048`; its data semantics did not
+        change.
+  - [~] Deploy through the Codecamp Cloud Build migration-before-traffic path.
   - [ ] Verify Cloud Run health, revision traffic, and error logs.
   - [ ] Re-run aggregate SQL acceptance checks and compare progress counts.
   - [ ] Record manual intern verification as the only remaining owner follow-up,

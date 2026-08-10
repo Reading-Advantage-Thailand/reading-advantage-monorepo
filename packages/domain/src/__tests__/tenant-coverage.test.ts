@@ -103,6 +103,13 @@ describe("FR-6: table classification registry completeness", () => {
     ).toBeGreaterThan(0);
   });
 
+  it("keeps restored production tables fail-closed by their proven tenant key", () => {
+    expect(classifyTable(schema.hostProofAttempts)).toBe("FLAT");
+    expect(classifyTable(schema.workbookDrafts)).toBe("REFERENTIAL");
+    expect(classifyTable(schema.workbookEditions)).toBe("REFERENTIAL");
+    expect(classifyTable(schema.workbookPublicationEvents)).toBe("REFERENTIAL");
+  });
+
   it("FLAT tables actually have a schoolId column", () => {
     const flatWithoutSchoolId: string[] = [];
     for (const [name, table] of Object.entries(allTables)) {
@@ -309,6 +316,9 @@ const REFERENTIAL_TABLE_NAMES = new Set([
   "videoAssets",
   "pastTopics",
   "settings",
+  "workbookDrafts",
+  "workbookEditions",
+  "workbookPublicationEvents",
 ]);
 
 /**

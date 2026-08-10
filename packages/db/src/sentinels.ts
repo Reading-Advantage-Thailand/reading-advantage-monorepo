@@ -255,8 +255,18 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
     table: "standard_pack_successor_commitments",
     columns: ["commitment_digest", "candidate_digest"],
   },
-  "0047_codecamp_exercise_quiz_repair": {
-    tag: "0047_codecamp_exercise_quiz_repair",
+  "0047_fluffy_joshua_kane": {
+    tag: "0047_fluffy_joshua_kane",
+    kind: "table",
+    target: "host_proof_attempts",
+  },
+  "0048_workbook_publishing": {
+    tag: "0048_workbook_publishing",
+    kind: "table",
+    target: "workbook_drafts",
+  },
+  "0049_codecamp_exercise_quiz_repair": {
+    tag: "0049_codecamp_exercise_quiz_repair",
     kind: "unique_constraint",
     target: "codecamp_lessons_module_order_unique",
     table: "codecamp_lessons",

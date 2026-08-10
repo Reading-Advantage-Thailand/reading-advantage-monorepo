@@ -10,10 +10,111 @@ const DEFAULT_MIGRATIONS_FOLDER = fileURLToPath(
   new URL("../drizzle", import.meta.url),
 );
 
+/**
+ * Establishes the first timestamp whose committed SQL hash is authoritative.
+ * Migrations before this governance boundary have known historical raw-SQL
+ * drift in production; their timestamps remain mandatory, while newer hashes
+ * must match the checked-in migration source exactly.
+ */
+const HASH_VALIDATION_FLOOR = 1779120003000;
+
 /** Options for applying the shared product migration journal. */
 export interface ProductMigrationOptions {
   readonly directDatabaseUrl: string;
   readonly migrationsFolder?: string;
+}
+
+interface ProductMigrationLedgerRow {
+  readonly hash: string;
+  readonly created_at: string | number | bigint | null;
+}
+
+/**
+ * Converts a ledger timestamp returned by PostgreSQL into the migration timestamp representation.
+ * @param createdAt The PostgreSQL ledger timestamp.
+ * @returns The numeric migration timestamp.
+ * @throws When the ledger timestamp is null or not finite.
+ */
+function toMigrationTimestamp(
+  createdAt: ProductMigrationLedgerRow["created_at"],
+): number {
+  if (createdAt === null) {
+    throw new Error(
+      "Migration ledger contains a row with a null created_at timestamp.",
+    );
+  }
+  const timestamp = Number(createdAt);
+  if (!Number.isSafeInteger(timestamp)) {
+    throw new Error(
+      `Migration ledger contains an invalid created_at timestamp: ${String(createdAt)}.`,
+    );
+  }
+  return timestamp;
+}
+
+/**
+ * Validates ledger identity and historical continuity before applying migrations.
+ * @param ledgerRows Every row currently recorded in the migration ledger.
+ * @param migrations The checked-in migration journal entries.
+ * @returns The unique applied migration timestamps.
+ * @throws When ledger timestamps duplicate, known hashes diverge, or a historical gap is detected.
+ */
+function validateProductMigrationLedger(
+  ledgerRows: readonly ProductMigrationLedgerRow[],
+  migrations: readonly {
+    readonly folderMillis: number;
+    readonly hash: string;
+  }[],
+): ReadonlySet<number> {
+  const knownMigrations = new Map<number, string>();
+  for (const migration of migrations) {
+    const previousHash = knownMigrations.get(migration.folderMillis);
+    if (previousHash !== undefined) {
+      throw new Error(
+        `Migration journal contains duplicate timestamp ${migration.folderMillis}.`,
+      );
+    }
+    knownMigrations.set(migration.folderMillis, migration.hash);
+  }
+
+  const appliedTimestamps = new Set<number>();
+  for (const row of ledgerRows) {
+    const timestamp = toMigrationTimestamp(row.created_at);
+    if (appliedTimestamps.has(timestamp)) {
+      throw new Error(
+        `Migration ledger contains duplicate created_at timestamp ${timestamp}.`,
+      );
+    }
+    const expectedHash = knownMigrations.get(timestamp);
+    if (
+      expectedHash !== undefined &&
+      timestamp >= HASH_VALIDATION_FLOOR &&
+      row.hash !== expectedHash
+    ) {
+      throw new Error(
+        `Migration ledger hash mismatch at timestamp ${timestamp}.`,
+      );
+    }
+    appliedTimestamps.add(timestamp);
+  }
+
+  let laterKnownMigrationApplied = false;
+  const orderedMigrations = [...migrations].sort(
+    (left, right) => left.folderMillis - right.folderMillis,
+  );
+  for (const migration of orderedMigrations.reverse()) {
+    if (appliedTimestamps.has(migration.folderMillis)) {
+      laterKnownMigrationApplied = true;
+      continue;
+    }
+    if (laterKnownMigrationApplied) {
+      throw new Error(
+        `Migration ledger is missing historical migration timestamp ${migration.folderMillis} below a later applied migration.`,
+      );
+    }
+  }
+
+  return appliedTimestamps;
 }
 
 /**
@@ -49,23 +150,18 @@ export async function migrateProductDatabase(
           created_at bigint
         )
       `);
-      const [lastMigration] = await transaction.unsafe<
-        Array<{ created_at: string | number | bigint | null }>
-      >(
-        `SELECT created_at
+      const ledgerRows = await transaction.unsafe<ProductMigrationLedgerRow[]>(
+        `SELECT hash, created_at
            FROM drizzle.__drizzle_migrations
-          ORDER BY created_at DESC
-          LIMIT 1`,
+          ORDER BY created_at, id`,
       );
-      const lastAppliedAt = lastMigration?.created_at == null
-        ? null
-        : Number(lastMigration.created_at);
+      const appliedTimestamps = validateProductMigrationLedger(
+        ledgerRows,
+        migrations,
+      );
 
       for (const migration of migrations) {
-        if (
-          lastAppliedAt !== null &&
-          lastAppliedAt >= migration.folderMillis
-        ) {
+        if (appliedTimestamps.has(migration.folderMillis)) {
           continue;
         }
         for (const statement of migration.sql) {

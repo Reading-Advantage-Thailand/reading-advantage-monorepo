@@ -1,6 +1,6 @@
 {
-  "id": "263aef80-7c40-4f12-83ac-7a0c947b1117",
-  "prevId": "d395bcbd-adbc-48f6-8cb3-fdc25423dce4",
+  "id": "6d2ed78c-0cab-45ed-bb68-6d7c05895945",
+  "prevId": "68ec93c7-a33c-4edc-9251-9905df0b9cbd",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -4021,7 +4021,16 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "codecamp_lessons_module_order_unique": {
+          "name": "codecamp_lessons_module_order_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "module_id",
+            "order"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -13877,6 +13886,373 @@
         "standard_pack_successor_admission_receipts_receipt_contract_check": {
           "name": "standard_pack_successor_admission_receipts_receipt_contract_check",
           "value": "\"standard_pack_successor_admission_receipts\".\"receipt_json\" ?& ARRAY['id', 'schemaVersion', 'commitmentDigest', 'candidateDigest', 'actorId', 'policyId', 'idempotencyKeyFingerprint', 'requestInputDigest', 'correlationId', 'outcome', 'safeAudit', 'observability', 'recordedAt']::text[] AND \"standard_pack_successor_admission_receipts\".\"receipt_json\" - ARRAY['id', 'schemaVersion', 'commitmentDigest', 'candidateDigest', 'actorId', 'policyId', 'idempotencyKeyFingerprint', 'requestInputDigest', 'correlationId', 'outcome', 'safeAudit', 'observability', 'recordedAt']::text[] = '{}'::jsonb AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"receipt_json\" -> 'id') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"receipt_json\" -> 'schemaVersion') = 'number' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"receipt_json\" -> 'commitmentDigest') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"receipt_json\" -> 'candidateDigest') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"receipt_json\" -> 'actorId') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"receipt_json\" -> 'policyId') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"receipt_json\" -> 'idempotencyKeyFingerprint') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"receipt_json\" -> 'requestInputDigest') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"receipt_json\" -> 'correlationId') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"receipt_json\" -> 'outcome') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"receipt_json\" -> 'safeAudit') = 'object' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"receipt_json\" -> 'observability') = 'object' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"receipt_json\" -> 'recordedAt') = 'string' AND \"standard_pack_successor_admission_receipts\".\"safe_audit_json\" ?& ARRAY['eventType', 'outcome', 'actorId', 'policyId', 'correlationId', 'predecessorIndexDigest', 'successorBatchDigest', 'candidateDigest', 'commitmentDigest', 'idempotencyKeyFingerprint', 'requestInputDigest', 'recordedAt']::text[] AND \"standard_pack_successor_admission_receipts\".\"safe_audit_json\" - ARRAY['eventType', 'outcome', 'actorId', 'policyId', 'correlationId', 'predecessorIndexDigest', 'successorBatchDigest', 'candidateDigest', 'commitmentDigest', 'idempotencyKeyFingerprint', 'requestInputDigest', 'recordedAt']::text[] = '{}'::jsonb AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" -> 'eventType') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" -> 'outcome') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" -> 'actorId') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" -> 'policyId') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" -> 'correlationId') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" -> 'predecessorIndexDigest') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" -> 'successorBatchDigest') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" -> 'candidateDigest') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" -> 'commitmentDigest') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" -> 'idempotencyKeyFingerprint') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" -> 'requestInputDigest') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" -> 'recordedAt') = 'string' AND \"standard_pack_successor_admission_receipts\".\"observability_json\" ?& ARRAY['operation', 'outcome', 'actorId', 'policyId', 'correlationId', 'predecessorIndexDigest', 'successorBatchDigest', 'candidateDigest', 'commitmentDigest', 'idempotencyKeyFingerprint', 'requestInputDigest']::text[] AND \"standard_pack_successor_admission_receipts\".\"observability_json\" - ARRAY['operation', 'outcome', 'actorId', 'policyId', 'correlationId', 'predecessorIndexDigest', 'successorBatchDigest', 'candidateDigest', 'commitmentDigest', 'idempotencyKeyFingerprint', 'requestInputDigest']::text[] = '{}'::jsonb AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"observability_json\" -> 'operation') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"observability_json\" -> 'outcome') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"observability_json\" -> 'actorId') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"observability_json\" -> 'policyId') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"observability_json\" -> 'correlationId') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"observability_json\" -> 'predecessorIndexDigest') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"observability_json\" -> 'successorBatchDigest') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"observability_json\" -> 'candidateDigest') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"observability_json\" -> 'commitmentDigest') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"observability_json\" -> 'idempotencyKeyFingerprint') = 'string' AND jsonb_typeof(\"standard_pack_successor_admission_receipts\".\"observability_json\" -> 'requestInputDigest') = 'string' AND (\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" ->> 'eventType') IS NOT DISTINCT FROM 'standard-pack.successor-admission' AND (\"standard_pack_successor_admission_receipts\".\"observability_json\" ->> 'operation') IS NOT DISTINCT FROM 'standard-pack.successor-admission' AND (\"standard_pack_successor_admission_receipts\".\"receipt_json\" ->> 'id') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"id\"::text AND (\"standard_pack_successor_admission_receipts\".\"receipt_json\" ->> 'schemaVersion') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"schema_version\"::text AND (\"standard_pack_successor_admission_receipts\".\"receipt_json\" ->> 'commitmentDigest') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"commitment_digest\" AND (\"standard_pack_successor_admission_receipts\".\"receipt_json\" ->> 'candidateDigest') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"candidate_digest\" AND (\"standard_pack_successor_admission_receipts\".\"receipt_json\" ->> 'actorId') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"actor_id\" AND (\"standard_pack_successor_admission_receipts\".\"receipt_json\" ->> 'policyId') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"policy_id\" AND (\"standard_pack_successor_admission_receipts\".\"receipt_json\" ->> 'idempotencyKeyFingerprint') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"idempotency_key_fingerprint\" AND (\"standard_pack_successor_admission_receipts\".\"receipt_json\" ->> 'requestInputDigest') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"request_input_digest\" AND (\"standard_pack_successor_admission_receipts\".\"receipt_json\" ->> 'correlationId') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"correlation_id\"::text AND (\"standard_pack_successor_admission_receipts\".\"receipt_json\" ->> 'outcome') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"outcome\" AND (\"standard_pack_successor_admission_receipts\".\"receipt_json\" ->> 'recordedAt')::timestamptz IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"recorded_at\" AND (\"standard_pack_successor_admission_receipts\".\"receipt_json\" -> 'safeAudit') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"safe_audit_json\" AND (\"standard_pack_successor_admission_receipts\".\"receipt_json\" -> 'observability') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"observability_json\" AND (\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" ->> 'outcome') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"outcome\" AND (\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" ->> 'actorId') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"actor_id\" AND (\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" ->> 'policyId') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"policy_id\" AND (\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" ->> 'correlationId') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"correlation_id\"::text AND (\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" ->> 'candidateDigest') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"candidate_digest\" AND (\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" ->> 'commitmentDigest') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"commitment_digest\" AND (\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" ->> 'idempotencyKeyFingerprint') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"idempotency_key_fingerprint\" AND (\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" ->> 'requestInputDigest') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"request_input_digest\" AND (\"standard_pack_successor_admission_receipts\".\"observability_json\" ->> 'outcome') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"outcome\" AND (\"standard_pack_successor_admission_receipts\".\"observability_json\" ->> 'actorId') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"actor_id\" AND (\"standard_pack_successor_admission_receipts\".\"observability_json\" ->> 'policyId') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"policy_id\" AND (\"standard_pack_successor_admission_receipts\".\"observability_json\" ->> 'correlationId') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"correlation_id\"::text AND (\"standard_pack_successor_admission_receipts\".\"observability_json\" ->> 'candidateDigest') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"candidate_digest\" AND (\"standard_pack_successor_admission_receipts\".\"observability_json\" ->> 'commitmentDigest') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"commitment_digest\" AND (\"standard_pack_successor_admission_receipts\".\"observability_json\" ->> 'idempotencyKeyFingerprint') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"idempotency_key_fingerprint\" AND (\"standard_pack_successor_admission_receipts\".\"observability_json\" ->> 'requestInputDigest') IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"request_input_digest\" AND (\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" ->> 'predecessorIndexDigest') IS NOT DISTINCT FROM (\"standard_pack_successor_admission_receipts\".\"observability_json\" ->> 'predecessorIndexDigest') AND (\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" ->> 'successorBatchDigest') IS NOT DISTINCT FROM (\"standard_pack_successor_admission_receipts\".\"observability_json\" ->> 'successorBatchDigest') AND (\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" ->> 'predecessorIndexDigest') ~ '^[a-f0-9]{64}$' AND (\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" ->> 'successorBatchDigest') ~ '^[a-f0-9]{64}$' AND (\"standard_pack_successor_admission_receipts\".\"observability_json\" ->> 'predecessorIndexDigest') ~ '^[a-f0-9]{64}$' AND (\"standard_pack_successor_admission_receipts\".\"observability_json\" ->> 'successorBatchDigest') ~ '^[a-f0-9]{64}$' AND (\"standard_pack_successor_admission_receipts\".\"safe_audit_json\" ->> 'recordedAt')::timestamptz IS NOT DISTINCT FROM \"standard_pack_successor_admission_receipts\".\"recorded_at\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.workbook_drafts": {
+      "name": "workbook_drafts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_app": {
+          "name": "source_app",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_revision": {
+          "name": "source_revision",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content_hash": {
+          "name": "content_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "snapshot_json": {
+          "name": "snapshot_json",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "revision": {
+          "name": "revision",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "workbook_drafts_tenant_idx": {
+          "name": "workbook_drafts_tenant_idx",
+          "columns": [
+            {
+              "expression": "tenant_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "workbook_drafts_source_idx": {
+          "name": "workbook_drafts_source_idx",
+          "columns": [
+            {
+              "expression": "source_app",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "source_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "workbook_drafts_status_check": {
+          "name": "workbook_drafts_status_check",
+          "value": "\"workbook_drafts\".\"status\" in ('draft','in_review','published','superseded','revoked')"
+        },
+        "workbook_drafts_revision_check": {
+          "name": "workbook_drafts_revision_check",
+          "value": "\"workbook_drafts\".\"revision\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.workbook_editions": {
+      "name": "workbook_editions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "draft_id": {
+          "name": "draft_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "snapshot_json": {
+          "name": "snapshot_json",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content_hash": {
+          "name": "content_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "idempotency_key": {
+          "name": "idempotency_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "published_by": {
+          "name": "published_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "published_at": {
+          "name": "published_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "superseded_by_edition_id": {
+          "name": "superseded_by_edition_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "revoked_at": {
+          "name": "revoked_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "workbook_editions_tenant_idx": {
+          "name": "workbook_editions_tenant_idx",
+          "columns": [
+            {
+              "expression": "tenant_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "workbook_editions_draft_id_workbook_drafts_id_fk": {
+          "name": "workbook_editions_draft_id_workbook_drafts_id_fk",
+          "tableFrom": "workbook_editions",
+          "tableTo": "workbook_drafts",
+          "columnsFrom": [
+            "draft_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "workbook_editions_draft_version_unique": {
+          "name": "workbook_editions_draft_version_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "draft_id",
+            "version"
+          ]
+        },
+        "workbook_editions_idempotency_unique": {
+          "name": "workbook_editions_idempotency_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "tenant_id",
+            "idempotency_key"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "workbook_editions_version_check": {
+          "name": "workbook_editions_version_check",
+          "value": "\"workbook_editions\".\"version\" >= 1"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.workbook_publication_events": {
+      "name": "workbook_publication_events",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "draft_id": {
+          "name": "draft_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "edition_id": {
+          "name": "edition_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "event_type": {
+          "name": "event_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actor_id": {
+          "name": "actor_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "detail_json": {
+          "name": "detail_json",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "occurred_at": {
+          "name": "occurred_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "workbook_publication_events_tenant_idx": {
+          "name": "workbook_publication_events_tenant_idx",
+          "columns": [
+            {
+              "expression": "tenant_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "workbook_publication_events_draft_idx": {
+          "name": "workbook_publication_events_draft_idx",
+          "columns": [
+            {
+              "expression": "draft_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "workbook_publication_events_type_check": {
+          "name": "workbook_publication_events_type_check",
+          "value": "\"workbook_publication_events\".\"event_type\" in ('draft_created','submitted_for_review','returned_to_draft','published','superseded','revoked')"
         }
       },
       "isRLSEnabled": false

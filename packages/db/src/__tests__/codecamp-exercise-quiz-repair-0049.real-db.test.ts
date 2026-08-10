@@ -10,7 +10,7 @@ const pgTestUrl = process.env.PG_TEST_URL;
 const describeRealPostgres = pgTestUrl ? describe : describe.skip;
 const migrationPath = resolve(
   import.meta.dirname,
-  "../../drizzle/0047_codecamp_exercise_quiz_repair.sql",
+  "../../drizzle/0049_codecamp_exercise_quiz_repair.sql",
 );
 
 /**
@@ -18,7 +18,7 @@ const migrationPath = resolve(
  * @param client Scratch PostgreSQL client.
  * @returns Completion after every migration statement executes.
  */
-async function applyMigration0047(
+async function applyMigration0049(
   client: ReturnType<typeof postgres>,
 ): Promise<void> {
   const source = readFileSync(migrationPath, "utf8");
@@ -64,10 +64,10 @@ async function readProgress(
 }
 
 describeRealPostgres(
-  "0047 Codecamp exercise/quiz identity repair (real PostgreSQL)",
+  "0049 Codecamp exercise/quiz identity repair (real PostgreSQL)",
   () => {
     it("restores both activity identities in place without changing learner progress or child ownership", async () => {
-      const databaseName = `codecamp_0047_${randomUUID().replaceAll("-", "")}`;
+      const databaseName = `codecamp_0049_${randomUUID().replaceAll("-", "")}`;
       const admin = postgres(pgTestUrl!, { max: 1 });
       const scratchUrl = new URL(pgTestUrl!);
       scratchUrl.pathname = `/${databaseName}`;
@@ -273,7 +273,7 @@ describeRealPostgres(
         }
         const progressBeforeRepair = await readProgress(client);
 
-        await applyMigration0047(client);
+        await applyMigration0049(client);
 
         await expect(client<
           {
@@ -351,14 +351,14 @@ describeRealPostgres(
           },
         ]);
 
-        await applyMigration0047(client);
+        await applyMigration0049(client);
         await expect(readProgress(client)).resolves.toEqual(
           progressBeforeRepair,
         );
 
         // Prove the statement is atomic across modules, not merely that an
         // invalid later module is left alone: reintroduce the audited tRPC
-        // corruption that 0047 would repair before it encounters HTML/CSS.
+        // corruption that 0049 would repair before it encounters HTML/CSS.
         await client`
           UPDATE codecamp_lessons
           SET title = 'tRPC & Server Actions Exercise + Quiz', type = 'quiz'
@@ -472,7 +472,7 @@ describeRealPostgres(
           ]),
         );
 
-        await expect(applyMigration0047(client)).rejects.toThrow();
+        await expect(applyMigration0049(client)).rejects.toThrow();
         await expect(
           Promise.all([
             client`

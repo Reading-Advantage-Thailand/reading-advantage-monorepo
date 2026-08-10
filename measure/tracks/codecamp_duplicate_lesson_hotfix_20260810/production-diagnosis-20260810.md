@@ -58,14 +58,45 @@ confirmed the original shape without emitting learner identifiers:
   `89367badf4012cd4deb116b04e82f06c`;
 - remaining combined-title rows: 28.
 
-The active service remained `codecamp-advantage-00025-vaz` at 100% traffic. The
-deployment configuration builds the image before migrating, verifies migration
-`0047` with the ledger doctor, and stages the resulting revision with zero
-traffic. It does not promote that candidate over the active revision.
+The deployment configuration builds the image before migrating, verifies the
+exact required migration with the ledger doctor, and stages the resulting
+revision with zero traffic. It does not promote that candidate over the active
+revision.
 
-The production-write approval guard stopped the Cloud Build submission before
-Cloud Build accepted it. Therefore no migration ran, no build or revision was
-created, and no traffic or production data changed. Explicit owner approval is
-still required before submission. After migration, the acceptance audit must
-show 14 repaired pairs, zero combined-title rows, the same 43/41 progress
-counts, and the exact same progress digest above.
+## Approval, False-Green Build, and Recovered Lineage
+
+The owner explicitly approved the Codecamp production Cloud Build and the
+repair migration. Two submissions failed during image construction before any
+database step (`42d8c3b5-e9df-4165-b2f1-3e30d4ec30d3` and
+`9dafaaee-bf06-4104-bca1-cb2b42f3b9a6`). Build
+`32aae3a3-121f-43c0-8397-cddb16970468` then built successfully and staged
+revision `codecamp-advantage-00028-yiq` with zero traffic, but its migration
+step silently skipped the then-named repair `0047`.
+
+Read-only ledger reconciliation proved that production already contained two
+newer migrations absent from this checkout. The retained source of Cloud Build
+`822ac25c-4c8b-4b75-a6aa-0166289830d9` recovered their exact identities:
+
+- `0047_fluffy_joshua_kane`, timestamp `1785580312598`, hash beginning
+  `f54cbb650c4e`;
+- `0048_workbook_publishing`, timestamp `1785672462951`, hash beginning
+  `910b70e74f6c`.
+
+Both hashes and all four resulting production schema sentinels match. Their SQL,
+snapshots, schema declarations, and tenant classifications are now restored in
+the repository. The same approved Codecamp repair SQL is reindexed as
+`0049_codecamp_exercise_quiz_repair`, after the official production ceiling.
+
+The migration runner now rejects duplicate timestamps, missing historical
+entries, and governed checksum drift. The required-migration doctor gate now
+requires one exact timestamp row, the committed SQL hash, and the schema
+sentinel instead of trusting the ledger high-watermark. A real Podman/PostgreSQL
+suite passes all 110 focused tests.
+
+No repair data write has occurred yet. A repeated pre-migration audit still
+shows the original 14 pairs, 28 combined-title rows, 43/41 progress counts, and
+the exact digest `89367badf4012cd4deb116b04e82f06c`. The active revision remains
+`codecamp-advantage-00025-vaz` at 100% traffic; revision 00028 remains
+zero-traffic. After migration, the acceptance audit must show 14 repaired
+pairs, zero combined-title rows, the same 43/41 progress counts, and the exact
+same digest.

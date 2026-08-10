@@ -74,6 +74,7 @@ import {
   schoolAdmins,
   leaderboards,
   gameCompletions,
+  hostProofAttempts,
   masteryCards,
   masteryPrincipals,
   masteryReviews,
@@ -122,6 +123,10 @@ register(leaderboards, "FLAT");
 // (schoolId, userId, activityId) is the primary fire-once guard for game
 // completions (Phase 4 Decision 4.1).
 register(gameCompletions, "FLAT");
+
+// Host-proof attempts carry a required schoolId and are therefore safely
+// auto-scoped by TenantDB to the authenticated school tenant.
+register(hostProofAttempts, "FLAT");
 
 // Mastery Engine Phase S3 — all persistence records carry schoolId directly.
 register(masteryCards, "FLAT");
@@ -256,6 +261,9 @@ import {
   videoAssets,
   pastTopics,
   settings,
+  workbookDrafts,
+  workbookEditions,
+  workbookPublicationEvents,
 } from "@reading-advantage/db";
 
 register(xpLogs, "REFERENTIAL");
@@ -347,3 +355,12 @@ register(videoProjects, "REFERENTIAL");
 register(videoAssets, "REFERENTIAL");
 register(pastTopics, "REFERENTIAL");
 register(settings, "REFERENTIAL");
+
+// Workbook publication rows carry an application-level tenantId, not a
+// schoolId or owner FK. Keep them fail-closed as REFERENTIAL until a domain
+// adapter explicitly filters tenantId through an unscoped(reason) escape
+// hatch; EXEMPT would permit cross-tenant reads and FLAT would invent school
+// scoping that the schema cannot prove.
+register(workbookDrafts, "REFERENTIAL");
+register(workbookEditions, "REFERENTIAL");
+register(workbookPublicationEvents, "REFERENTIAL");

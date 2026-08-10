@@ -69,6 +69,40 @@ export const gameCompletions = pgTable("game_completions", {
     .on(table.schoolId, table.gameType, table.difficulty),
 ]);
 
+// ─── Host-Proof Attempt Claims (APK Dragon Flight corrective phase) ─────────
+
+/**
+ * Tenant-scoped durable claim record for a signed APK host-proof attempt.
+ *
+ * The signed credential establishes immutable user, tenant, title, input, and
+ * expiry facts. This table binds one validated action transcript to that
+ * credential across processes, returning the cached authoritative result on a
+ * retry and refusing a divergent transcript. It intentionally records only
+ * digests and derived results; vocabulary input and credential plaintext never
+ * enter the database.
+ */
+export const hostProofAttempts = pgTable("host_proof_attempts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  attemptId: uuid("attempt_id").notNull(),
+  schoolId: uuid("school_id")
+    .notNull()
+    .references(() => schools.id, { onDelete: "cascade" }),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  transcriptDigest: text("transcript_digest").notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  status: text("status").notNull(),
+  claimId: uuid("claim_id"),
+  result: jsonb("result"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  completedAt: timestamp("completed_at"),
+}, (table) => [
+  unique("host_proof_attempts_attempt_unique").on(table.attemptId),
+  index("host_proof_attempts_school_user_idx").on(table.schoolId, table.userId),
+  index("host_proof_attempts_expiry_idx").on(table.expiresAt),
+]);
+
 // ─── Game Rankings (reshaped to match Prisma GameRanking) ────────────────────
 // DEPRECATED — Phase 4 Decision 4.2 §4. New writes go to `gameCompletions`.
 // Leaderboard reads come from `getSchoolLeaderboard` over `gameCompletions`.

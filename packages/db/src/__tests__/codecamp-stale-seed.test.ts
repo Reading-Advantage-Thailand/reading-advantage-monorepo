@@ -460,7 +460,7 @@ describe("Codecamp exercise and quiz persistence projection", () => {
     expect(() =>
       getSeedPreWriteConflictValidator()(existing, [expectedExercise]),
     ).toThrow(
-      "[codecamp-seed] Refusing to reconcile module-local order 5 from quiz to exercise; apply 0047_codecamp_exercise_quiz_repair before seeding.",
+      "[codecamp-seed] Refusing to reconcile module-local order 5 from quiz to exercise; apply 0049_codecamp_exercise_quiz_repair before seeding.",
     );
     expect(selectLessonUpdates(existing, [expectedExercise])).toEqual([]);
     expect(selectLessonsToInsert(existing, [expectedExercise])).toEqual([

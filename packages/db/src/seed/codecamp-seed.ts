@@ -180,7 +180,7 @@ export function assertNoCrossTypeOrderConflicts(
       throw new Error(
         `[codecamp-seed] Refusing to reconcile module-local order ${existing.order} ` +
           `from ${existing.type} to ${canonicalType}; apply ` +
-          "0047_codecamp_exercise_quiz_repair before seeding.",
+          "0049_codecamp_exercise_quiz_repair before seeding.",
       );
     }
   }

@@ -23,10 +23,9 @@ const mode = args.includes("--repair")
 
 /**
  * Parse `--required-migration <tag>` from argv. The flag is the deploy-gate
- * contract: app pipelines pass the minimum migration tag their app code
- * requires. If the ledger is behind, the doctor fails closed (exit 1) and
- * prints `Required migration behind count: N` so the gate can be wired to
- * Cloud Build / GitHub Actions / etc.
+ * contract: app pipelines pass the exact migration tag their app code
+ * requires. The doctor fails closed (exit 1) unless that timestamp has one
+ * matching committed-SQL hash and its schema sentinel is present.
  *
  * The same contract is honored via the `REQUIRED_MIGRATION` env var so a
  * pipeline can set it from a secret manager without rebuilding the command.
@@ -64,6 +63,18 @@ interface Journal {
 interface LedgerRow {
   hash: string;
   created_at: bigint | null;
+}
+
+/**
+ * Reads the committed SQL hash for a journal entry.
+ * @param entry The journal entry whose migration file is trusted.
+ * @returns The SHA-256 hash recorded by the migration runner.
+ * @throws When the checked-in migration file cannot be read.
+ */
+function readMigrationHash(entry: JournalEntry): string {
+  return createHash("sha256")
+    .update(readFileSync(join(DRIZZLE_DIR, `${entry.tag}.sql`), "utf8"))
+    .digest("hex");
 }
 
 async function checkSentinel(
@@ -168,12 +179,55 @@ async function main() {
       "SELECT hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at",
     )) as LedgerRow[];
     const ledgerByCreatedAt = new Map<number, LedgerRow>();
-    for (const row of ledgerRows) {
-      if (row.created_at !== null)
-        ledgerByCreatedAt.set(Number(row.created_at), row);
-    }
+    const duplicateLedgerTimestamps = new Set<number>();
+    let malformedLedgerRows = false;
     let hasDivergence = false;
+    for (const row of ledgerRows) {
+      if (row.created_at === null) {
+        console.error(
+          "DIVERGENCE: migration ledger contains a null created_at timestamp",
+        );
+        malformedLedgerRows = true;
+        hasDivergence = true;
+        continue;
+      }
+      const createdAt = Number(row.created_at);
+      if (!Number.isSafeInteger(createdAt)) {
+        console.error(
+          `DIVERGENCE: invalid migration ledger created_at timestamp ${String(row.created_at)}`,
+        );
+        malformedLedgerRows = true;
+        hasDivergence = true;
+        continue;
+      }
+      if (ledgerByCreatedAt.has(createdAt)) {
+        duplicateLedgerTimestamps.add(createdAt);
+      } else {
+        ledgerByCreatedAt.set(createdAt, row);
+      }
+    }
+    for (const createdAt of duplicateLedgerTimestamps) {
+      console.error(
+        `DIVERGENCE: duplicate migration ledger timestamp ${createdAt}`,
+      );
+      hasDivergence = true;
+    }
+    const requiredTag = parseRequiredMigration();
+    const requiredEntry = requiredTag
+      ? journal.entries.find((entry) => entry.tag === requiredTag)
+      : undefined;
+    // A deploy check with a required migration validates that migration's
+    // exact sentinel below. Full parity scanning remains the default and is
+    // retained for repair mode so existing reconciliation behavior is intact.
+    const inspectAllSentinels = mode === "repair" || !requiredEntry;
     for (const entry of journal.entries) {
+      if (
+        !inspectAllSentinels &&
+        requiredEntry &&
+        entry.tag !== requiredEntry.tag
+      ) {
+        continue;
+      }
       const sentinel = sentinelProbes[entry.tag];
       if (!sentinel) continue;
       const sentinelPresent = await checkSentinel(client, sentinel);
@@ -208,44 +262,59 @@ async function main() {
     }
 
     // Required-migration deploy gate: when `--required-migration <tag>` or
-    // `REQUIRED_MIGRATION=<tag>` is supplied, the DB ledger MUST have
-    // applied every journal entry at or after the required tag. If the
-    // highest applied `when` is less than the required tag's `when`, the
-    // ledger is behind and we fail closed (exit 1) with a labeled
-    // `Required migration behind count: N` so CI/Cloud Build can branch
-    // on it. The check runs after the divergence pass so a missing
-    // required migration also shows up as a sentinel divergence.
-    const requiredTag = parseRequiredMigration();
+    // `REQUIRED_MIGRATION=<tag>` is supplied, the DB must contain exactly one
+    // row at the requested journal timestamp with the committed SQL hash, and
+    // the migration's schema sentinel must be present. A later unknown ledger
+    // timestamp cannot satisfy this exact gate.
+    let requiredGateValid = true;
     if (requiredTag) {
-      const requiredEntry = journal.entries.find((e) => e.tag === requiredTag);
       if (!requiredEntry) {
         console.error(
           `Required migration behind count: 0 — required tag "${requiredTag}" is not in _journal.json (typo or stale pipeline config)`,
         );
         process.exit(1);
       }
-      const appliedWhenValues = Array.from(ledgerByCreatedAt.keys());
-      const highestAppliedWhen =
-        appliedWhenValues.length > 0 ? Math.max(...appliedWhenValues) : -1;
-      if (highestAppliedWhen < requiredEntry.when) {
-        // "Behind count" = number of journal entries (in idx order) at or
-        // after the required tag whose `when` is greater than the highest
-        // applied `when`. This is the canonical "how far behind" signal
-        // for a deploy gate.
-        const behindEntries = journal.entries.filter(
-          (e) => e.when > highestAppliedWhen && e.idx >= requiredEntry.idx,
-        );
+      const requiredLedgerRows = (await client.unsafe(
+        `SELECT hash, created_at
+           FROM drizzle.__drizzle_migrations
+          WHERE created_at = $1
+          ORDER BY id`,
+        [requiredEntry.when],
+      )) as LedgerRow[];
+      const expectedRequiredHash = readMigrationHash(requiredEntry);
+      const requiredSentinel = sentinelProbes[requiredTag];
+      const requiredSentinelPresent = requiredSentinel
+        ? await checkSentinel(client, requiredSentinel)
+        : false;
+      if (requiredLedgerRows.length !== 1) {
         console.error(
-          `Required migration behind count: ${behindEntries.length} — ` +
-            `required tag "${requiredTag}" (idx ${requiredEntry.idx}, when ${requiredEntry.when}) ` +
-            `but highest applied ledger when is ${highestAppliedWhen} ` +
-            `(${behindEntries.map((e) => e.tag).join(", ") || "no entries beyond required"} are not applied)`,
+          `Required migration gate failed — "${requiredTag}" requires exactly one ledger row at timestamp ${requiredEntry.when}, found ${requiredLedgerRows.length}.`,
         );
         hasDivergence = true;
-      } else {
+        requiredGateValid = false;
+      } else if (requiredLedgerRows[0]?.hash !== expectedRequiredHash) {
         console.error(
-          `Required migration gate OK — "${requiredTag}" (when ${requiredEntry.when}) ` +
-            `is at or below highest applied when ${highestAppliedWhen}`,
+          `Required migration gate failed — "${requiredTag}" ledger hash does not match the committed SQL hash.`,
+        );
+        hasDivergence = true;
+        requiredGateValid = false;
+      }
+      if (!requiredSentinel) {
+        console.error(
+          `Required migration gate failed — no sentinel is configured for "${requiredTag}".`,
+        );
+        hasDivergence = true;
+        requiredGateValid = false;
+      } else if (!requiredSentinelPresent) {
+        console.error(
+          `Required migration gate failed — schema sentinel is missing for "${requiredTag}".`,
+        );
+        hasDivergence = true;
+        requiredGateValid = false;
+      }
+      if (requiredGateValid) {
+        console.error(
+          `Required migration gate OK — "${requiredTag}" has its exact ledger timestamp, committed hash, and schema sentinel.`,
         );
       }
     }
@@ -262,6 +331,9 @@ async function main() {
         );
         if (sentinelPresent !== updatedLedger.length > 0) stillDivergent = true;
       }
+      if (malformedLedgerRows) stillDivergent = true;
+      if (duplicateLedgerTimestamps.size > 0) stillDivergent = true;
+      if (requiredTag && !requiredGateValid) stillDivergent = true;
       process.exit(stillDivergent ? 1 : 0);
     }
     process.exit(hasDivergence ? 1 : 0);
