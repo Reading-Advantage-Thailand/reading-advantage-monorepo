@@ -154,6 +154,98 @@ results. Native buttons, progress semantics, live regions, complete text, and
 required attribution remain available to assistive technology outside the
 canvas. Components consume standard regions and do not import application state.
 
+## Standard game briefing
+
+`gameBriefingSchema` and `GameBriefing` define the validated, serializable
+mission briefing shown before a cartridge starts. The required fields are:
+
+- `title` and `objective` — nonempty authored text;
+- `instructions` — one to twelve `{ title, description }` entries, each with
+  nonempty text;
+- `learningPreview` — a `{ heading }` object with nonempty text; and
+- `controls` — one to twelve control hints. Each hint has a `mode` (`keyboard`,
+  `pointer`, or `touch`), nonempty `label` and `action`, and an optional list of
+  one to six nonempty keyboard `keys`.
+
+`subtitle`, `tip`, `labels`, and `startPhase` are optional. Labels are a partial
+set of nonempty overrides for the briefing eyebrow, section headings, item-count
+label, tip heading, and Start action. `startPhase` selects `tutorial`, `demo`,
+`countdown`, or `playing`; when it is omitted, `resolveGameBriefingStartPhase`
+resolves it to `playing`.
+
+The application host resolves localization before validation. APK receives
+already-resolved Unicode strings and intentionally does not accept message keys,
+locale maps, translation callbacks, arbitrary React nodes, or callback fields in
+the validated briefing object. A host may supply one bounded `ReactNode`
+extension separately through `APKGameHost`'s `briefingExtension` prop; that
+presentation prop is not cartridge briefing data.
+
+The optional `briefing` prop adds a pre-game gate to `APKGameHost`. With a valid
+briefing, the host validates the learning input and briefing, renders
+`GameBriefingScreen`, and defers cartridge creation until the student activates
+Start. Without `briefing`, the existing low-level host path launches the
+cartridge immediately. Compact and wide composition can be selected with
+`layoutProfile`, while `inputMode` accepts `touch`, `pointer-keyboard`, or
+`hybrid` so the screen can filter applicable control hints.
+
+See [game-lifecycle.md](./game-lifecycle.md) for the transition contract,
+restart behavior, and the phases intentionally deferred to later controllers.
+
+### Briefing usage
+
+```tsx
+import {
+  gameBriefingSchema,
+  type GameBriefing,
+} from "@reading-advantage/advantage-play-kit/presentation";
+import { APKGameHost } from "@reading-advantage/advantage-play-kit/react";
+import type { RuntimeCartridge, RuntimeEdition } from "@reading-advantage/advantage-play-kit/runtime";
+import type { VocabularyInput } from "@reading-advantage/game-contracts";
+
+const briefing: GameBriefing = gameBriefingSchema.parse({
+  title: "Temple Word Quest",
+  objective: "Match each Thai word with its English translation.",
+  instructions: [
+    {
+      title: "Choose a path",
+      description: "Select the answer that matches the learning word.",
+    },
+  ],
+  learningPreview: { heading: "Words to learn" },
+  controls: [
+    {
+      mode: "touch",
+      label: "Tap",
+      action: "Choose an answer",
+    },
+  ],
+  labels: { startAction: "Begin quest" },
+});
+
+export function VocabularyGame({
+  cartridge,
+  edition,
+  input,
+}: {
+  cartridge: RuntimeCartridge;
+  edition: RuntimeEdition;
+  input: VocabularyInput;
+}) {
+  return (
+    <APKGameHost
+      aria-label="Temple Word Quest"
+      cartridge={cartridge}
+      edition={edition}
+      input={input}
+      briefing={briefing}
+      layoutProfile="compact"
+      inputMode="touch"
+      briefingExtension={<small>Host-provided accessibility help.</small>}
+    />
+  );
+}
+```
+
 ## Selected-union materialization
 
 Cartridges materialize only their selected union of semantic keys. The
