@@ -47,13 +47,13 @@ _Story ref: spec.md#story-s1_
   - [x] Connect Start, loading, error, and lifecycle state
   - [x] Preserve the low-level runtime boundary for tests and specialized hosts
 
-- [~] Task: Generate documentation and run architectural checks
+- [x] Task: Generate documentation and run architectural checks `c594d79`
   - [x] Update developer-kit and lifecycle documentation
   - [x] Add a compact/wide, Thai/English briefing preview to the existing APK QC route
   - [x] Update the code graph for changed exports and JSX
   - [x] Run `measure/generate.sh` and `measure/doctor.sh`
 
-- [b] Task: Measure - User Manual Verification 'Phase S1: Standard Game Briefing' (Protocol in workflow.md) — deferred:product-owner
+- [~] Task: Measure - User Manual Verification 'Phase S1: Standard Game Briefing' (Protocol in workflow.md)
 
 ## Phase S2: Guided Gameplay Tutorial
 
