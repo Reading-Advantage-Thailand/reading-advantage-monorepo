@@ -1,0 +1,1305 @@
+{
+  "schemaVersion": "sales-mastery-release.v1",
+  "releaseId": "knowledge-space-sales-mastery-v1.0.0",
+  "graphVersion": "1.0.0",
+  "provenance": {
+    "curriculumGraphSha256": "ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717",
+    "approvalSha256": "8b058a5b66631bbffe662a131eed5330bb0c12fa10134a096378e9a4c8bff404",
+    "sourceRepository": "advantage-pr",
+    "sourceCommit": "8dd78171f1d57dd775fad2295d60e86fb267dad8",
+    "seedArtifact": "apps/sales-advantage/scripts/static-seed.ts"
+  },
+  "rubrics": [
+    {
+      "rubricId": "sales.rubric.foundations-discovery.l4.s1.v1",
+      "sourceRef": "general-sales://spin-selling-rackham-1988#question-sequence",
+      "criteria": [
+        {
+          "criterion": "Asked at least 2 open-ended discovery questions (Situation/Problem)",
+          "weight": 0.3,
+          "passingScore": 70,
+          "sourceRef": "general-sales://spin-selling-rackham-1988#question-sequence"
+        },
+        {
+          "criterion": "Demonstrated active listening (mirrored, labeled, or used silence)",
+          "weight": 0.25,
+          "passingScore": 70,
+          "sourceRef": "general-sales://never-split-the-difference-voss-2016#tactical-empathy"
+        },
+        {
+          "criterion": "Did NOT pitch product before establishing buyer pain",
+          "weight": 0.25,
+          "passingScore": 80,
+          "sourceRef": "general-sales://spin-selling-rackham-1988#discovery-before-solution"
+        },
+        {
+          "criterion": "Ended with a clear next-step ask",
+          "weight": 0.2,
+          "passingScore": 70,
+          "sourceRef": "general-sales://sandler-selling-system#up-front-contract"
+        }
+      ]
+    },
+    {
+      "rubricId": "sales.rubric.framing-value.l4.s1.v1",
+      "sourceRef": "general-sales://challenger-sale-dixon-adamson-2011#reframe",
+      "criteria": [
+        {
+          "criterion": "Reframed 'parents don't see results' as a visibility/reporting problem, not a curriculum problem",
+          "weight": 0.3,
+          "passingScore": 70,
+          "sourceRef": "general-sales://challenger-sale-dixon-adamson-2011#reframe"
+        },
+        {
+          "criterion": "Translated at least one feature into a parent-visible outcome (e.g., monthly progress report)",
+          "weight": 0.25,
+          "passingScore": 70,
+          "sourceRef": "general-sales://challenger-sale-dixon-adamson-2011#commercial-teaching"
+        },
+        {
+          "criterion": "Used loss-aversion framing on retained families (cost of inaction)",
+          "weight": 0.2,
+          "passingScore": 70,
+          "sourceRef": "general-sales://prospect-theory-kahneman-tversky-1979#loss-aversion"
+        },
+        {
+          "criterion": "Ended with a small-step ask (pilot, demo, data review) — not a contract pitch",
+          "weight": 0.25,
+          "passingScore": 70,
+          "sourceRef": "general-sales://prospect-theory-kahneman-tversky-1979#status-quo-bias"
+        }
+      ]
+    },
+    {
+      "rubricId": "sales.rubric.objections.l3.s1.v1",
+      "sourceRef": "general-sales://feel-felt-found#acknowledge-before-response",
+      "criteria": [
+        {
+          "criterion": "Acknowledged the objection without immediate counter-attack",
+          "weight": 0.25,
+          "passingScore": 70,
+          "sourceRef": "general-sales://feel-felt-found#acknowledge-before-response"
+        },
+        {
+          "criterion": "Asked a clarifying question to isolate the REAL objection",
+          "weight": 0.3,
+          "passingScore": 70,
+          "sourceRef": "general-sales://sandler-selling-system#reverse-and-isolate"
+        },
+        {
+          "criterion": "Reframed using the buyer's own words (not generic sales-speak)",
+          "weight": 0.25,
+          "passingScore": 70,
+          "sourceRef": "general-sales://challenger-sale-dixon-adamson-2011#tailor"
+        },
+        {
+          "criterion": "Closed with a trial-close question, not a monologue",
+          "weight": 0.2,
+          "passingScore": 70,
+          "sourceRef": "general-sales://spin-selling-rackham-1988#need-payoff"
+        }
+      ]
+    },
+    {
+      "rubricId": "sales.rubric.ra-product-applied.l3.s1.v1",
+      "sourceRef": "general-sales://spin-selling-rackham-1988#question-sequence",
+      "criteria": [
+        {
+          "criterion": "Asked at least 2 open-ended discovery questions (Situation/Problem)",
+          "weight": 0.3,
+          "passingScore": 70,
+          "sourceRef": "general-sales://spin-selling-rackham-1988#question-sequence"
+        },
+        {
+          "criterion": "Demonstrated active listening (mirrored, labeled, or used silence)",
+          "weight": 0.25,
+          "passingScore": 70,
+          "sourceRef": "general-sales://never-split-the-difference-voss-2016#tactical-empathy"
+        },
+        {
+          "criterion": "Did NOT pitch product before establishing buyer pain",
+          "weight": 0.25,
+          "passingScore": 80,
+          "sourceRef": "general-sales://spin-selling-rackham-1988#discovery-before-solution"
+        },
+        {
+          "criterion": "Ended with a clear next-step ask",
+          "weight": 0.2,
+          "passingScore": 70,
+          "sourceRef": "general-sales://sandler-selling-system#up-front-contract"
+        }
+      ]
+    },
+    {
+      "rubricId": "sales.rubric.ra-objections-demo.l3.s1.v1",
+      "sourceRef": "general-sales://feel-felt-found#acknowledge-before-response",
+      "criteria": [
+        {
+          "criterion": "Acknowledged the objection without immediate counter-attack",
+          "weight": 0.25,
+          "passingScore": 70,
+          "sourceRef": "general-sales://feel-felt-found#acknowledge-before-response"
+        },
+        {
+          "criterion": "Asked a clarifying question to isolate the REAL objection",
+          "weight": 0.3,
+          "passingScore": 70,
+          "sourceRef": "general-sales://sandler-selling-system#reverse-and-isolate"
+        },
+        {
+          "criterion": "Reframed using the buyer's own words (not generic sales-speak)",
+          "weight": 0.25,
+          "passingScore": 70,
+          "sourceRef": "general-sales://challenger-sale-dixon-adamson-2011#tailor"
+        },
+        {
+          "criterion": "Closed with a trial-close question, not a monologue",
+          "weight": 0.2,
+          "passingScore": 70,
+          "sourceRef": "general-sales://spin-selling-rackham-1988#need-payoff"
+        }
+      ]
+    },
+    {
+      "rubricId": "sales.rubric.ra-objections-demo.l4.s1.v1",
+      "sourceRef": "general-sales://spin-selling-rackham-1988#question-sequence",
+      "criteria": [
+        {
+          "criterion": "Asked at least 2 open-ended discovery questions (Situation/Problem)",
+          "weight": 0.3,
+          "passingScore": 70,
+          "sourceRef": "general-sales://spin-selling-rackham-1988#question-sequence"
+        },
+        {
+          "criterion": "Demonstrated active listening (mirrored, labeled, or used silence)",
+          "weight": 0.25,
+          "passingScore": 70,
+          "sourceRef": "general-sales://never-split-the-difference-voss-2016#tactical-empathy"
+        },
+        {
+          "criterion": "Did NOT pitch product before establishing buyer pain",
+          "weight": 0.25,
+          "passingScore": 80,
+          "sourceRef": "general-sales://spin-selling-rackham-1988#discovery-before-solution"
+        },
+        {
+          "criterion": "Ended with a clear next-step ask",
+          "weight": 0.2,
+          "passingScore": 70,
+          "sourceRef": "general-sales://sandler-selling-system#up-front-contract"
+        }
+      ]
+    },
+    {
+      "rubricId": "sales.rubric.pricing-closing.l3.s1.v1",
+      "sourceRef": "09-sales-enablement/roi-calculator.md#methodology",
+      "criteria": [
+        {
+          "criterion": "Framed price in terms of buyer's outcome, not absolute cost",
+          "weight": 0.3,
+          "passingScore": 70,
+          "sourceRef": "09-sales-enablement/roi-calculator.md#methodology"
+        },
+        {
+          "criterion": "Did NOT discount when pushed; offered scope reduction instead",
+          "weight": 0.3,
+          "passingScore": 70,
+          "sourceRef": "09-sales-enablement/distributor-rep-onboarding/faq.md#q11-what-if-a-school-asks-for-a-discount-or-a-special-price"
+        },
+        {
+          "criterion": "Asked for the commitment with a clear yes/no question",
+          "weight": 0.25,
+          "passingScore": 70,
+          "sourceRef": "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md#scenario-3-the-price-conversation-close"
+        },
+        {
+          "criterion": "Confirmed implementation next steps before ending the call",
+          "weight": 0.15,
+          "passingScore": 70,
+          "sourceRef": "general-sales://sandler-selling-system#post-sell"
+        }
+      ]
+    },
+    {
+      "rubricId": "sales.rubric.pricing-closing.l3.s2.v1",
+      "sourceRef": "09-sales-enablement/roi-calculator.md#methodology",
+      "criteria": [
+        {
+          "criterion": "Framed price in terms of buyer's outcome, not absolute cost",
+          "weight": 0.3,
+          "passingScore": 70,
+          "sourceRef": "09-sales-enablement/roi-calculator.md#methodology"
+        },
+        {
+          "criterion": "Did NOT discount when pushed; offered scope reduction instead",
+          "weight": 0.3,
+          "passingScore": 70,
+          "sourceRef": "09-sales-enablement/distributor-rep-onboarding/faq.md#q11-what-if-a-school-asks-for-a-discount-or-a-special-price"
+        },
+        {
+          "criterion": "Asked for the commitment with a clear yes/no question",
+          "weight": 0.25,
+          "passingScore": 70,
+          "sourceRef": "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md#scenario-3-the-price-conversation-close"
+        },
+        {
+          "criterion": "Confirmed implementation next steps before ending the call",
+          "weight": 0.15,
+          "passingScore": 70,
+          "sourceRef": "general-sales://sandler-selling-system#post-sell"
+        }
+      ]
+    }
+  ],
+  "bindings": [
+    {
+      "activityId": "sales.lesson.foundations-discovery.l1",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "foundations-discovery", "lessonOrder": 1 },
+      "objectiveIds": ["sales.skill.foundations-discovery.lesson-1"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.lesson.foundations-discovery.l2",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "foundations-discovery", "lessonOrder": 2 },
+      "objectiveIds": ["sales.skill.foundations-discovery.lesson-2"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.lesson.foundations-discovery.l3",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "foundations-discovery", "lessonOrder": 3 },
+      "objectiveIds": ["sales.skill.foundations-discovery.lesson-3"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.lesson.foundations-discovery.l4",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "foundations-discovery", "lessonOrder": 4 },
+      "objectiveIds": ["sales.skill.foundations-discovery.lesson-4"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.roleplay.foundations-discovery.l4.s1",
+      "activityKind": "roleplay",
+      "source": {
+        "moduleSlug": "foundations-discovery",
+        "lessonOrder": 4,
+        "itemOrder": 1
+      },
+      "objectiveIds": ["sales.skill.foundations-discovery.lesson-4"],
+      "misconceptionTags": [],
+      "rubricRefs": ["sales.rubric.foundations-discovery.l4.s1.v1"],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "pending_evaluator_eligibility",
+      "evidenceWeight": 0,
+      "evidenceSource": "roleplay-evaluation",
+      "evidenceOutcomes": ["pending"],
+      "variantId": "sales.roleplay.foundations-discovery.l4.s1.v1",
+      "variantFamily": "sales.roleplay.foundations-discovery.l4.s1.v1",
+      "evaluatorEligibility": null
+    },
+    {
+      "activityId": "sales.lesson.foundations-discovery.l5",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "foundations-discovery", "lessonOrder": 5 },
+      "objectiveIds": ["sales.skill.foundations-discovery.lesson-5"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.quiz.foundations-discovery.l5.q1",
+      "activityKind": "quiz-question",
+      "source": {
+        "moduleSlug": "foundations-discovery",
+        "lessonOrder": 5,
+        "itemOrder": 1
+      },
+      "objectiveIds": ["sales.skill.foundations-discovery.lesson-5"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.7,
+      "evidenceSource": "quiz-response",
+      "evidenceOutcomes": ["correct", "incorrect"],
+      "variantId": "sales.quiz.foundations-discovery.l5.q1.v1",
+      "variantFamily": "sales.quiz.foundations-discovery.l5.q1.v1"
+    },
+    {
+      "activityId": "sales.quiz.foundations-discovery.l5.q2",
+      "activityKind": "quiz-question",
+      "source": {
+        "moduleSlug": "foundations-discovery",
+        "lessonOrder": 5,
+        "itemOrder": 2
+      },
+      "objectiveIds": ["sales.skill.foundations-discovery.lesson-5"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.7,
+      "evidenceSource": "quiz-response",
+      "evidenceOutcomes": ["correct", "incorrect"],
+      "variantId": "sales.quiz.foundations-discovery.l5.q2.v1",
+      "variantFamily": "sales.quiz.foundations-discovery.l5.q2.v1"
+    },
+    {
+      "activityId": "sales.quiz.foundations-discovery.l5.q3",
+      "activityKind": "quiz-question",
+      "source": {
+        "moduleSlug": "foundations-discovery",
+        "lessonOrder": 5,
+        "itemOrder": 3
+      },
+      "objectiveIds": ["sales.skill.foundations-discovery.lesson-5"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.7,
+      "evidenceSource": "quiz-response",
+      "evidenceOutcomes": ["correct", "incorrect"],
+      "variantId": "sales.quiz.foundations-discovery.l5.q3.v1",
+      "variantFamily": "sales.quiz.foundations-discovery.l5.q3.v1"
+    },
+    {
+      "activityId": "sales.lesson.framing-value.l1",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "framing-value", "lessonOrder": 1 },
+      "objectiveIds": ["sales.skill.framing-value.lesson-1"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.lesson.framing-value.l2",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "framing-value", "lessonOrder": 2 },
+      "objectiveIds": ["sales.skill.framing-value.lesson-2"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.lesson.framing-value.l3",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "framing-value", "lessonOrder": 3 },
+      "objectiveIds": ["sales.skill.framing-value.lesson-3"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.lesson.framing-value.l4",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "framing-value", "lessonOrder": 4 },
+      "objectiveIds": ["sales.skill.framing-value.lesson-4"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.roleplay.framing-value.l4.s1",
+      "activityKind": "roleplay",
+      "source": {
+        "moduleSlug": "framing-value",
+        "lessonOrder": 4,
+        "itemOrder": 1
+      },
+      "objectiveIds": ["sales.skill.framing-value.lesson-4"],
+      "misconceptionTags": [],
+      "rubricRefs": ["sales.rubric.framing-value.l4.s1.v1"],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "pending_evaluator_eligibility",
+      "evidenceWeight": 0,
+      "evidenceSource": "roleplay-evaluation",
+      "evidenceOutcomes": ["pending"],
+      "variantId": "sales.roleplay.framing-value.l4.s1.v1",
+      "variantFamily": "sales.roleplay.framing-value.l4.s1.v1",
+      "evaluatorEligibility": null
+    },
+    {
+      "activityId": "sales.lesson.framing-value.l5",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "framing-value", "lessonOrder": 5 },
+      "objectiveIds": ["sales.skill.framing-value.lesson-5"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.quiz.framing-value.l5.q1",
+      "activityKind": "quiz-question",
+      "source": {
+        "moduleSlug": "framing-value",
+        "lessonOrder": 5,
+        "itemOrder": 1
+      },
+      "objectiveIds": ["sales.skill.framing-value.lesson-5"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.7,
+      "evidenceSource": "quiz-response",
+      "evidenceOutcomes": ["correct", "incorrect"],
+      "variantId": "sales.quiz.framing-value.l5.q1.v1",
+      "variantFamily": "sales.quiz.framing-value.l5.q1.v1"
+    },
+    {
+      "activityId": "sales.lesson.objections.l1",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "objections", "lessonOrder": 1 },
+      "objectiveIds": ["sales.skill.objections.lesson-1"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.lesson.objections.l2",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "objections", "lessonOrder": 2 },
+      "objectiveIds": ["sales.skill.objections.lesson-2"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.lesson.objections.l3",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "objections", "lessonOrder": 3 },
+      "objectiveIds": ["sales.skill.objections.lesson-3"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.roleplay.objections.l3.s1",
+      "activityKind": "roleplay",
+      "source": {
+        "moduleSlug": "objections",
+        "lessonOrder": 3,
+        "itemOrder": 1
+      },
+      "objectiveIds": ["sales.skill.objections.lesson-3"],
+      "misconceptionTags": [],
+      "rubricRefs": ["sales.rubric.objections.l3.s1.v1"],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "pending_evaluator_eligibility",
+      "evidenceWeight": 0,
+      "evidenceSource": "roleplay-evaluation",
+      "evidenceOutcomes": ["pending"],
+      "variantId": "sales.roleplay.objections.l3.s1.v1",
+      "variantFamily": "sales.roleplay.objections.l3.s1.v1",
+      "evaluatorEligibility": null
+    },
+    {
+      "activityId": "sales.lesson.objections.l4",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "objections", "lessonOrder": 4 },
+      "objectiveIds": ["sales.skill.objections.lesson-4"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.quiz.objections.l4.q1",
+      "activityKind": "quiz-question",
+      "source": {
+        "moduleSlug": "objections",
+        "lessonOrder": 4,
+        "itemOrder": 1
+      },
+      "objectiveIds": ["sales.skill.objections.lesson-4"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.7,
+      "evidenceSource": "quiz-response",
+      "evidenceOutcomes": ["correct", "incorrect"],
+      "variantId": "sales.quiz.objections.l4.q1.v1",
+      "variantFamily": "sales.quiz.objections.l4.q1.v1"
+    },
+    {
+      "activityId": "sales.quiz.objections.l4.q2",
+      "activityKind": "quiz-question",
+      "source": {
+        "moduleSlug": "objections",
+        "lessonOrder": 4,
+        "itemOrder": 2
+      },
+      "objectiveIds": ["sales.skill.objections.lesson-4"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.7,
+      "evidenceSource": "quiz-response",
+      "evidenceOutcomes": ["correct", "incorrect"],
+      "variantId": "sales.quiz.objections.l4.q2.v1",
+      "variantFamily": "sales.quiz.objections.l4.q2.v1"
+    },
+    {
+      "activityId": "sales.quiz.objections.l4.q3",
+      "activityKind": "quiz-question",
+      "source": {
+        "moduleSlug": "objections",
+        "lessonOrder": 4,
+        "itemOrder": 3
+      },
+      "objectiveIds": ["sales.skill.objections.lesson-4"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.7,
+      "evidenceSource": "quiz-response",
+      "evidenceOutcomes": ["correct", "incorrect"],
+      "variantId": "sales.quiz.objections.l4.q3.v1",
+      "variantFamily": "sales.quiz.objections.l4.q3.v1"
+    },
+    {
+      "activityId": "sales.lesson.ra-product-applied.l1",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "ra-product-applied", "lessonOrder": 1 },
+      "objectiveIds": ["sales.skill.ra-product-applied.lesson-1"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.lesson.ra-product-applied.l2",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "ra-product-applied", "lessonOrder": 2 },
+      "objectiveIds": ["sales.skill.ra-product-applied.lesson-2"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.lesson.ra-product-applied.l3",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "ra-product-applied", "lessonOrder": 3 },
+      "objectiveIds": ["sales.skill.ra-product-applied.lesson-3"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.roleplay.ra-product-applied.l3.s1",
+      "activityKind": "roleplay",
+      "source": {
+        "moduleSlug": "ra-product-applied",
+        "lessonOrder": 3,
+        "itemOrder": 1
+      },
+      "objectiveIds": ["sales.skill.ra-product-applied.lesson-3"],
+      "misconceptionTags": [],
+      "rubricRefs": ["sales.rubric.ra-product-applied.l3.s1.v1"],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "pending_evaluator_eligibility",
+      "evidenceWeight": 0,
+      "evidenceSource": "roleplay-evaluation",
+      "evidenceOutcomes": ["pending"],
+      "variantId": "sales.roleplay.ra-product-applied.l3.s1.v1",
+      "variantFamily": "sales.roleplay.ra-product-applied.l3.s1.v1",
+      "evaluatorEligibility": null
+    },
+    {
+      "activityId": "sales.lesson.ra-product-applied.l4",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "ra-product-applied", "lessonOrder": 4 },
+      "objectiveIds": ["sales.skill.ra-product-applied.lesson-4"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.quiz.ra-product-applied.l4.q1",
+      "activityKind": "quiz-question",
+      "source": {
+        "moduleSlug": "ra-product-applied",
+        "lessonOrder": 4,
+        "itemOrder": 1
+      },
+      "objectiveIds": ["sales.skill.ra-product-applied.lesson-4"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.7,
+      "evidenceSource": "quiz-response",
+      "evidenceOutcomes": ["correct", "incorrect"],
+      "variantId": "sales.quiz.ra-product-applied.l4.q1.v1",
+      "variantFamily": "sales.quiz.ra-product-applied.l4.q1.v1"
+    },
+    {
+      "activityId": "sales.quiz.ra-product-applied.l4.q2",
+      "activityKind": "quiz-question",
+      "source": {
+        "moduleSlug": "ra-product-applied",
+        "lessonOrder": 4,
+        "itemOrder": 2
+      },
+      "objectiveIds": ["sales.skill.ra-product-applied.lesson-4"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.7,
+      "evidenceSource": "quiz-response",
+      "evidenceOutcomes": ["correct", "incorrect"],
+      "variantId": "sales.quiz.ra-product-applied.l4.q2.v1",
+      "variantFamily": "sales.quiz.ra-product-applied.l4.q2.v1"
+    },
+    {
+      "activityId": "sales.lesson.ra-objections-demo.l1",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "ra-objections-demo", "lessonOrder": 1 },
+      "objectiveIds": ["sales.skill.ra-objections-demo.lesson-1"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.lesson.ra-objections-demo.l2",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "ra-objections-demo", "lessonOrder": 2 },
+      "objectiveIds": ["sales.skill.ra-objections-demo.lesson-2"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.lesson.ra-objections-demo.l3",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "ra-objections-demo", "lessonOrder": 3 },
+      "objectiveIds": ["sales.skill.ra-objections-demo.lesson-3"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.roleplay.ra-objections-demo.l3.s1",
+      "activityKind": "roleplay",
+      "source": {
+        "moduleSlug": "ra-objections-demo",
+        "lessonOrder": 3,
+        "itemOrder": 1
+      },
+      "objectiveIds": ["sales.skill.ra-objections-demo.lesson-3"],
+      "misconceptionTags": [],
+      "rubricRefs": ["sales.rubric.ra-objections-demo.l3.s1.v1"],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "pending_evaluator_eligibility",
+      "evidenceWeight": 0,
+      "evidenceSource": "roleplay-evaluation",
+      "evidenceOutcomes": ["pending"],
+      "variantId": "sales.roleplay.ra-objections-demo.l3.s1.v1",
+      "variantFamily": "sales.roleplay.ra-objections-demo.l3.s1.v1",
+      "evaluatorEligibility": null
+    },
+    {
+      "activityId": "sales.lesson.ra-objections-demo.l4",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "ra-objections-demo", "lessonOrder": 4 },
+      "objectiveIds": ["sales.skill.ra-objections-demo.lesson-4"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.roleplay.ra-objections-demo.l4.s1",
+      "activityKind": "roleplay",
+      "source": {
+        "moduleSlug": "ra-objections-demo",
+        "lessonOrder": 4,
+        "itemOrder": 1
+      },
+      "objectiveIds": ["sales.skill.ra-objections-demo.lesson-4"],
+      "misconceptionTags": [],
+      "rubricRefs": ["sales.rubric.ra-objections-demo.l4.s1.v1"],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "pending_evaluator_eligibility",
+      "evidenceWeight": 0,
+      "evidenceSource": "roleplay-evaluation",
+      "evidenceOutcomes": ["pending"],
+      "variantId": "sales.roleplay.ra-objections-demo.l4.s1.v1",
+      "variantFamily": "sales.roleplay.ra-objections-demo.l4.s1.v1",
+      "evaluatorEligibility": null
+    },
+    {
+      "activityId": "sales.lesson.ra-objections-demo.l5",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "ra-objections-demo", "lessonOrder": 5 },
+      "objectiveIds": ["sales.skill.ra-objections-demo.lesson-5"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.quiz.ra-objections-demo.l5.q1",
+      "activityKind": "quiz-question",
+      "source": {
+        "moduleSlug": "ra-objections-demo",
+        "lessonOrder": 5,
+        "itemOrder": 1
+      },
+      "objectiveIds": ["sales.skill.ra-objections-demo.lesson-5"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.7,
+      "evidenceSource": "quiz-response",
+      "evidenceOutcomes": ["correct", "incorrect"],
+      "variantId": "sales.quiz.ra-objections-demo.l5.q1.v1",
+      "variantFamily": "sales.quiz.ra-objections-demo.l5.q1.v1"
+    },
+    {
+      "activityId": "sales.quiz.ra-objections-demo.l5.q2",
+      "activityKind": "quiz-question",
+      "source": {
+        "moduleSlug": "ra-objections-demo",
+        "lessonOrder": 5,
+        "itemOrder": 2
+      },
+      "objectiveIds": ["sales.skill.ra-objections-demo.lesson-5"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.7,
+      "evidenceSource": "quiz-response",
+      "evidenceOutcomes": ["correct", "incorrect"],
+      "variantId": "sales.quiz.ra-objections-demo.l5.q2.v1",
+      "variantFamily": "sales.quiz.ra-objections-demo.l5.q2.v1"
+    },
+    {
+      "activityId": "sales.lesson.pricing-closing.l1",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "pricing-closing", "lessonOrder": 1 },
+      "objectiveIds": ["sales.skill.pricing-closing.lesson-1"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.lesson.pricing-closing.l2",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "pricing-closing", "lessonOrder": 2 },
+      "objectiveIds": ["sales.skill.pricing-closing.lesson-2"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.lesson.pricing-closing.l3",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "pricing-closing", "lessonOrder": 3 },
+      "objectiveIds": ["sales.skill.pricing-closing.lesson-3"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.roleplay.pricing-closing.l3.s1",
+      "activityKind": "roleplay",
+      "source": {
+        "moduleSlug": "pricing-closing",
+        "lessonOrder": 3,
+        "itemOrder": 1
+      },
+      "objectiveIds": ["sales.skill.pricing-closing.lesson-3"],
+      "misconceptionTags": [],
+      "rubricRefs": ["sales.rubric.pricing-closing.l3.s1.v1"],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "pending_evaluator_eligibility",
+      "evidenceWeight": 0,
+      "evidenceSource": "roleplay-evaluation",
+      "evidenceOutcomes": ["pending"],
+      "variantId": "sales.roleplay.pricing-closing.l3.s1.v1",
+      "variantFamily": "sales.roleplay.pricing-closing.l3.s1.v1",
+      "evaluatorEligibility": null
+    },
+    {
+      "activityId": "sales.roleplay.pricing-closing.l3.s2",
+      "activityKind": "roleplay",
+      "source": {
+        "moduleSlug": "pricing-closing",
+        "lessonOrder": 3,
+        "itemOrder": 2
+      },
+      "objectiveIds": ["sales.skill.pricing-closing.lesson-3"],
+      "misconceptionTags": [],
+      "rubricRefs": ["sales.rubric.pricing-closing.l3.s2.v1"],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "pending_evaluator_eligibility",
+      "evidenceWeight": 0,
+      "evidenceSource": "roleplay-evaluation",
+      "evidenceOutcomes": ["pending"],
+      "variantId": "sales.roleplay.pricing-closing.l3.s2.v1",
+      "variantFamily": "sales.roleplay.pricing-closing.l3.s2.v1",
+      "evaluatorEligibility": null
+    },
+    {
+      "activityId": "sales.lesson.pricing-closing.l4",
+      "activityKind": "lesson",
+      "source": { "moduleSlug": "pricing-closing", "lessonOrder": 4 },
+      "objectiveIds": ["sales.skill.pricing-closing.lesson-4"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceMode": "exposure",
+      "evidenceMode": "exposure",
+      "evidenceWeight": 0,
+      "evidenceSource": "lesson-view",
+      "evidenceOutcomes": ["exposed"],
+      "variantId": null,
+      "variantFamily": null
+    },
+    {
+      "activityId": "sales.quiz.pricing-closing.l4.q1",
+      "activityKind": "quiz-question",
+      "source": {
+        "moduleSlug": "pricing-closing",
+        "lessonOrder": 4,
+        "itemOrder": 1
+      },
+      "objectiveIds": ["sales.skill.pricing-closing.lesson-4"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.7,
+      "evidenceSource": "quiz-response",
+      "evidenceOutcomes": ["correct", "incorrect"],
+      "variantId": "sales.quiz.pricing-closing.l4.q1.v1",
+      "variantFamily": "sales.quiz.pricing-closing.l4.q1.v1"
+    },
+    {
+      "activityId": "sales.quiz.pricing-closing.l4.q2",
+      "activityKind": "quiz-question",
+      "source": {
+        "moduleSlug": "pricing-closing",
+        "lessonOrder": 4,
+        "itemOrder": 2
+      },
+      "objectiveIds": ["sales.skill.pricing-closing.lesson-4"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.7,
+      "evidenceSource": "quiz-response",
+      "evidenceOutcomes": ["correct", "incorrect"],
+      "variantId": "sales.quiz.pricing-closing.l4.q2.v1",
+      "variantFamily": "sales.quiz.pricing-closing.l4.q2.v1"
+    },
+    {
+      "activityId": "sales.quiz.pricing-closing.l4.q3",
+      "activityKind": "quiz-question",
+      "source": {
+        "moduleSlug": "pricing-closing",
+        "lessonOrder": 4,
+        "itemOrder": 3
+      },
+      "objectiveIds": ["sales.skill.pricing-closing.lesson-4"],
+      "misconceptionTags": [],
+      "rubricRefs": [],
+      "objectiveDerivation": {
+        "kind": "approved-coordinate",
+        "source": "apps/sales-advantage/scripts/static-seed.ts"
+      },
+      "practiceContract": "practice.v1",
+      "practiceMode": "assessment",
+      "evidenceMode": "assessed",
+      "evidenceWeight": 0.7,
+      "evidenceSource": "quiz-response",
+      "evidenceOutcomes": ["correct", "incorrect"],
+      "variantId": "sales.quiz.pricing-closing.l4.q3.v1",
+      "variantFamily": "sales.quiz.pricing-closing.l4.q3.v1"
+    }
+  ]
+}

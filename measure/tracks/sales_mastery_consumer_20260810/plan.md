@@ -19,14 +19,16 @@
 
 ## Phase 1 — bind the approved course to a knowledge graph
 
-- [~] Task: Define the versioned Sales objective graph, activity variants,
+- [x] Task: Define the versioned Sales objective graph, activity variants,
   rubric/evaluation bindings, and immutable release provenance. Depends on the
-  existing approved curriculum digest and precedes runtime admission.
-- [ ] Task: Write Red tests for complete curriculum coverage, stable identities,
+  existing approved curriculum digest and precedes runtime admission. Accepted
+  in `phase1-sales-graph-acceptance-20260811.md`.
+- [x] Task: Write Red tests for complete curriculum coverage, stable identities,
   graph/rubric drift, forbidden prose inference, and release-owner approval.
-- [ ] Task: Implement and verify the deterministic Sales graph and binding
+- [x] Task: Implement and verify the deterministic Sales graph and binding
   artifact without rewriting the approved curriculum. Depends on accepted Red
-  contracts and independent curriculum review.
+  contracts and independent curriculum review. Accepted in
+  `phase1-sales-graph-acceptance-20260811.md`.
 
 ## Phase 2 — company tenant mapping and durable projection
 

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "sales-release-evidence.v1",
+  "releaseId": "knowledge-space-sales-mastery-v1.0.0",
+  "graphVersion": "1.0.0",
+  "approved": {
+    "curriculumGraphSha256": "ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717",
+    "sourceRepository": "advantage-pr",
+    "sourceCommit": "8dd78171f1d57dd775fad2295d60e86fb267dad8"
+  },
+  "evidence": {
+    "releaseCandidate": {
+      "path": "apps/sales-advantage/curriculum/release-candidate.json",
+      "byteSha256": "723198653a09417f92b597a3faefe919e3d83504f3320f9d962ac0ea1f8b2168",
+      "canonicalSha256": "38d50d73da86eb1088df7ab927c033b145afaa32148543b451c86fd30bbb6160"
+    },
+    "approval": {
+      "path": "measure/tracks/sales_advantage_golive_20260701/curriculum-approval.json",
+      "byteSha256": "8b058a5b66631bbffe662a131eed5330bb0c12fa10134a096378e9a4c8bff404",
+      "canonicalSha256": "56096b7d154a90e00d49ec2dca44ccb15c8c5e63d2eb605d37e6929ae679f12b"
+    },
+    "staticSeed": {
+      "path": "apps/sales-advantage/scripts/static-seed.ts",
+      "byteSha256": "0519b43a6c1a177bcbd7f06fe4d9cf86225afedd5af1f0b76e2aa04c4f3d13ec"
+    }
+  },
+  "artifacts": {
+    "graphCanonicalSha256": "5f2b35f7178f0fed9ca103959d59d5e75c0f4818eac355c14a1be270776a9808",
+    "bindingsCanonicalSha256": "e8843314e2f381a44143acb08c6ff6596bdeac4e9da32fbdb9a5851c8ed32197"
+  },
+  "moduleOrder": [
+    "foundations-discovery",
+    "framing-value",
+    "objections",
+    "ra-product-applied",
+    "ra-objections-demo",
+    "pricing-closing"
+  ]
+}

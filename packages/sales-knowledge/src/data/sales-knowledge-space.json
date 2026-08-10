@@ -1,0 +1,1093 @@
+{
+  "schemaVersion": "sales-mastery-release.v1",
+  "releaseId": "knowledge-space-sales-mastery-v1.0.0",
+  "graphVersion": "1.0.0",
+  "releaseStatus": "reviewed",
+  "provenance": {
+    "curriculumGraphSha256": "ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717",
+    "approvalSha256": "8b058a5b66631bbffe662a131eed5330bb0c12fa10134a096378e9a4c8bff404",
+    "sourceRepository": "advantage-pr",
+    "sourceCommit": "8dd78171f1d57dd775fad2295d60e86fb267dad8"
+  },
+  "knowledgeSpace": {
+    "nodes": [
+      {
+        "id": "sales.domain",
+        "kind": "domain",
+        "title": "Sales Advantage",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "releaseId": "knowledge-space-sales-mastery-v1.0.0",
+          "objectiveType": "domain"
+        }
+      },
+      {
+        "id": "sales.module.foundations-discovery",
+        "kind": "content_group",
+        "title": "Sales module foundations-discovery",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "module",
+          "moduleOrder": 1
+        }
+      },
+      {
+        "id": "sales.skill.foundations-discovery.lesson-1",
+        "kind": "skill",
+        "title": "Sales objective foundations-discovery lesson 1",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "foundations-discovery",
+          "lessonOrder": 1,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.foundations-discovery.lesson-2",
+        "kind": "skill",
+        "title": "Sales objective foundations-discovery lesson 2",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "foundations-discovery",
+          "lessonOrder": 2,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.foundations-discovery.lesson-3",
+        "kind": "skill",
+        "title": "Sales objective foundations-discovery lesson 3",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "foundations-discovery",
+          "lessonOrder": 3,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.foundations-discovery.lesson-4",
+        "kind": "skill",
+        "title": "Sales objective foundations-discovery lesson 4",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "foundations-discovery",
+          "lessonOrder": 4,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.foundations-discovery.lesson-5",
+        "kind": "skill",
+        "title": "Sales objective foundations-discovery lesson 5",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "foundations-discovery",
+          "lessonOrder": 5,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.module.framing-value",
+        "kind": "content_group",
+        "title": "Sales module framing-value",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "module",
+          "moduleOrder": 2
+        }
+      },
+      {
+        "id": "sales.skill.framing-value.lesson-1",
+        "kind": "skill",
+        "title": "Sales objective framing-value lesson 1",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "framing-value",
+          "lessonOrder": 1,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.framing-value.lesson-2",
+        "kind": "skill",
+        "title": "Sales objective framing-value lesson 2",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "framing-value",
+          "lessonOrder": 2,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.framing-value.lesson-3",
+        "kind": "skill",
+        "title": "Sales objective framing-value lesson 3",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "framing-value",
+          "lessonOrder": 3,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.framing-value.lesson-4",
+        "kind": "skill",
+        "title": "Sales objective framing-value lesson 4",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "framing-value",
+          "lessonOrder": 4,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.framing-value.lesson-5",
+        "kind": "skill",
+        "title": "Sales objective framing-value lesson 5",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "framing-value",
+          "lessonOrder": 5,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.module.objections",
+        "kind": "content_group",
+        "title": "Sales module objections",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "module",
+          "moduleOrder": 3
+        }
+      },
+      {
+        "id": "sales.skill.objections.lesson-1",
+        "kind": "skill",
+        "title": "Sales objective objections lesson 1",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "objections",
+          "lessonOrder": 1,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.objections.lesson-2",
+        "kind": "skill",
+        "title": "Sales objective objections lesson 2",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "objections",
+          "lessonOrder": 2,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.objections.lesson-3",
+        "kind": "skill",
+        "title": "Sales objective objections lesson 3",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "objections",
+          "lessonOrder": 3,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.objections.lesson-4",
+        "kind": "skill",
+        "title": "Sales objective objections lesson 4",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "objections",
+          "lessonOrder": 4,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.module.ra-product-applied",
+        "kind": "content_group",
+        "title": "Sales module ra-product-applied",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "module",
+          "moduleOrder": 4
+        }
+      },
+      {
+        "id": "sales.skill.ra-product-applied.lesson-1",
+        "kind": "skill",
+        "title": "Sales objective ra-product-applied lesson 1",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "ra-product-applied",
+          "lessonOrder": 1,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.ra-product-applied.lesson-2",
+        "kind": "skill",
+        "title": "Sales objective ra-product-applied lesson 2",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "ra-product-applied",
+          "lessonOrder": 2,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.ra-product-applied.lesson-3",
+        "kind": "skill",
+        "title": "Sales objective ra-product-applied lesson 3",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "ra-product-applied",
+          "lessonOrder": 3,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.ra-product-applied.lesson-4",
+        "kind": "skill",
+        "title": "Sales objective ra-product-applied lesson 4",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "ra-product-applied",
+          "lessonOrder": 4,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.module.ra-objections-demo",
+        "kind": "content_group",
+        "title": "Sales module ra-objections-demo",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "module",
+          "moduleOrder": 5
+        }
+      },
+      {
+        "id": "sales.skill.ra-objections-demo.lesson-1",
+        "kind": "skill",
+        "title": "Sales objective ra-objections-demo lesson 1",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "ra-objections-demo",
+          "lessonOrder": 1,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.ra-objections-demo.lesson-2",
+        "kind": "skill",
+        "title": "Sales objective ra-objections-demo lesson 2",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "ra-objections-demo",
+          "lessonOrder": 2,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.ra-objections-demo.lesson-3",
+        "kind": "skill",
+        "title": "Sales objective ra-objections-demo lesson 3",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "ra-objections-demo",
+          "lessonOrder": 3,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.ra-objections-demo.lesson-4",
+        "kind": "skill",
+        "title": "Sales objective ra-objections-demo lesson 4",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "ra-objections-demo",
+          "lessonOrder": 4,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.ra-objections-demo.lesson-5",
+        "kind": "skill",
+        "title": "Sales objective ra-objections-demo lesson 5",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "ra-objections-demo",
+          "lessonOrder": 5,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.module.pricing-closing",
+        "kind": "content_group",
+        "title": "Sales module pricing-closing",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "module",
+          "moduleOrder": 6
+        }
+      },
+      {
+        "id": "sales.skill.pricing-closing.lesson-1",
+        "kind": "skill",
+        "title": "Sales objective pricing-closing lesson 1",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "pricing-closing",
+          "lessonOrder": 1,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.pricing-closing.lesson-2",
+        "kind": "skill",
+        "title": "Sales objective pricing-closing lesson 2",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "pricing-closing",
+          "lessonOrder": 2,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.pricing-closing.lesson-3",
+        "kind": "skill",
+        "title": "Sales objective pricing-closing lesson 3",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "pricing-closing",
+          "lessonOrder": 3,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      },
+      {
+        "id": "sales.skill.pricing-closing.lesson-4",
+        "kind": "skill",
+        "title": "Sales objective pricing-closing lesson 4",
+        "domain": "sales",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "metadata": {
+          "lifecycle": "active",
+          "objectiveType": "skill",
+          "moduleSlug": "pricing-closing",
+          "lessonOrder": 4,
+          "derivation": "approved-coordinate"
+        },
+        "exceptions": [
+          {
+            "type": "alignment",
+            "reason": "No owner-approved external standard alignment exists for this Sales release.",
+            "reviewer": "Project owner",
+            "date": "2026-07-18"
+          }
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "sales.edge.contains-domain-module-foundations-discovery",
+        "type": "contains",
+        "sourceId": "sales.domain",
+        "targetId": "sales.module.foundations-discovery",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved Sales module containment."
+      },
+      {
+        "id": "sales.edge.contains-module-foundations-discovery-lesson-1",
+        "type": "contains",
+        "sourceId": "sales.module.foundations-discovery",
+        "targetId": "sales.skill.foundations-discovery.lesson-1",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-foundations-discovery-lesson-2",
+        "type": "contains",
+        "sourceId": "sales.module.foundations-discovery",
+        "targetId": "sales.skill.foundations-discovery.lesson-2",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-foundations-discovery-lesson-3",
+        "type": "contains",
+        "sourceId": "sales.module.foundations-discovery",
+        "targetId": "sales.skill.foundations-discovery.lesson-3",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-foundations-discovery-lesson-4",
+        "type": "contains",
+        "sourceId": "sales.module.foundations-discovery",
+        "targetId": "sales.skill.foundations-discovery.lesson-4",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-foundations-discovery-lesson-5",
+        "type": "contains",
+        "sourceId": "sales.module.foundations-discovery",
+        "targetId": "sales.skill.foundations-discovery.lesson-5",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-domain-module-framing-value",
+        "type": "contains",
+        "sourceId": "sales.domain",
+        "targetId": "sales.module.framing-value",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved Sales module containment."
+      },
+      {
+        "id": "sales.edge.contains-module-framing-value-lesson-1",
+        "type": "contains",
+        "sourceId": "sales.module.framing-value",
+        "targetId": "sales.skill.framing-value.lesson-1",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-framing-value-lesson-2",
+        "type": "contains",
+        "sourceId": "sales.module.framing-value",
+        "targetId": "sales.skill.framing-value.lesson-2",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-framing-value-lesson-3",
+        "type": "contains",
+        "sourceId": "sales.module.framing-value",
+        "targetId": "sales.skill.framing-value.lesson-3",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-framing-value-lesson-4",
+        "type": "contains",
+        "sourceId": "sales.module.framing-value",
+        "targetId": "sales.skill.framing-value.lesson-4",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-framing-value-lesson-5",
+        "type": "contains",
+        "sourceId": "sales.module.framing-value",
+        "targetId": "sales.skill.framing-value.lesson-5",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-domain-module-objections",
+        "type": "contains",
+        "sourceId": "sales.domain",
+        "targetId": "sales.module.objections",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved Sales module containment."
+      },
+      {
+        "id": "sales.edge.contains-module-objections-lesson-1",
+        "type": "contains",
+        "sourceId": "sales.module.objections",
+        "targetId": "sales.skill.objections.lesson-1",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-objections-lesson-2",
+        "type": "contains",
+        "sourceId": "sales.module.objections",
+        "targetId": "sales.skill.objections.lesson-2",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-objections-lesson-3",
+        "type": "contains",
+        "sourceId": "sales.module.objections",
+        "targetId": "sales.skill.objections.lesson-3",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-objections-lesson-4",
+        "type": "contains",
+        "sourceId": "sales.module.objections",
+        "targetId": "sales.skill.objections.lesson-4",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-domain-module-ra-product-applied",
+        "type": "contains",
+        "sourceId": "sales.domain",
+        "targetId": "sales.module.ra-product-applied",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved Sales module containment."
+      },
+      {
+        "id": "sales.edge.contains-module-ra-product-applied-lesson-1",
+        "type": "contains",
+        "sourceId": "sales.module.ra-product-applied",
+        "targetId": "sales.skill.ra-product-applied.lesson-1",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-ra-product-applied-lesson-2",
+        "type": "contains",
+        "sourceId": "sales.module.ra-product-applied",
+        "targetId": "sales.skill.ra-product-applied.lesson-2",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-ra-product-applied-lesson-3",
+        "type": "contains",
+        "sourceId": "sales.module.ra-product-applied",
+        "targetId": "sales.skill.ra-product-applied.lesson-3",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-ra-product-applied-lesson-4",
+        "type": "contains",
+        "sourceId": "sales.module.ra-product-applied",
+        "targetId": "sales.skill.ra-product-applied.lesson-4",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-domain-module-ra-objections-demo",
+        "type": "contains",
+        "sourceId": "sales.domain",
+        "targetId": "sales.module.ra-objections-demo",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved Sales module containment."
+      },
+      {
+        "id": "sales.edge.contains-module-ra-objections-demo-lesson-1",
+        "type": "contains",
+        "sourceId": "sales.module.ra-objections-demo",
+        "targetId": "sales.skill.ra-objections-demo.lesson-1",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-ra-objections-demo-lesson-2",
+        "type": "contains",
+        "sourceId": "sales.module.ra-objections-demo",
+        "targetId": "sales.skill.ra-objections-demo.lesson-2",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-ra-objections-demo-lesson-3",
+        "type": "contains",
+        "sourceId": "sales.module.ra-objections-demo",
+        "targetId": "sales.skill.ra-objections-demo.lesson-3",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-ra-objections-demo-lesson-4",
+        "type": "contains",
+        "sourceId": "sales.module.ra-objections-demo",
+        "targetId": "sales.skill.ra-objections-demo.lesson-4",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-ra-objections-demo-lesson-5",
+        "type": "contains",
+        "sourceId": "sales.module.ra-objections-demo",
+        "targetId": "sales.skill.ra-objections-demo.lesson-5",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-domain-module-pricing-closing",
+        "type": "contains",
+        "sourceId": "sales.domain",
+        "targetId": "sales.module.pricing-closing",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved Sales module containment."
+      },
+      {
+        "id": "sales.edge.contains-module-pricing-closing-lesson-1",
+        "type": "contains",
+        "sourceId": "sales.module.pricing-closing",
+        "targetId": "sales.skill.pricing-closing.lesson-1",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-pricing-closing-lesson-2",
+        "type": "contains",
+        "sourceId": "sales.module.pricing-closing",
+        "targetId": "sales.skill.pricing-closing.lesson-2",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-pricing-closing-lesson-3",
+        "type": "contains",
+        "sourceId": "sales.module.pricing-closing",
+        "targetId": "sales.skill.pricing-closing.lesson-3",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      },
+      {
+        "id": "sales.edge.contains-module-pricing-closing-lesson-4",
+        "type": "contains",
+        "sourceId": "sales.module.pricing-closing",
+        "targetId": "sales.skill.pricing-closing.lesson-4",
+        "weight": 1,
+        "confidence": "high",
+        "sourceRefs": ["apps/sales-advantage/scripts/static-seed.ts"],
+        "reviewStatus": "approved",
+        "rationale": "Approved lesson coordinate containment."
+      }
+    ]
+  }
+}
