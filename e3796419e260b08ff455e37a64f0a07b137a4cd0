@@ -1,0 +1,18 @@
+Task slice: Add the standardized briefing preview to the existing APK QC route.
+
+Files:
+- apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.tsx
+- apps/advantage-games/tests/e2e/qc/authoring-qc.spec.ts
+
+Why: Provide a real browser and manual verification surface for the new briefing without adding a Phaser fixture or application dependency to the shared presentation component.
+
+Verification:
+- Focused Jest: 4/4 passed (the three pre-existing cases plus the new briefing case).
+- Focused app coverage: statements 99.45%, branches 83.72%, functions 69.23%, lines 99.45%; all app-specific metrics exceed the project’s 60% target and the shared briefing modules independently exceed 80% on every metric.
+- Focused Chromium QC spec: 3/3 passed at 390x844 and 1440x900 using the repository Playwright suite against a direct local Next server.
+- Full Advantage Games TypeScript check passed after directly building its existing workspace declaration dependencies.
+- Focused ESLint and git diff --check passed.
+- build-graph refreshed for the component and both QC tests.
+- pnpm-lock.yaml remained unchanged; generated test artifacts were removed.
+
+Commit validation: commitlint was invoked directly because the repository pnpm wrapper attempts an unrelated stale-lockfile reconciliation.
