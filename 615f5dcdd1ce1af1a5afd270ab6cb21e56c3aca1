@@ -1,0 +1,23 @@
+Track: apk_standard_game_experience_20260810
+Task: S1 manual-verification feedback remediation
+
+Summary:
+- Added a contained 390x844 / 1440x900 briefing viewport emulator so Wide changes physical preview geometry.
+- Preserved complete content-fixture replacement and added explicit regression coverage.
+- Unmounted the briefing after its exactly-once Start transition so no busy button or wait cursor remains.
+
+Files:
+- apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.tsx
+- apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.test.tsx
+- apps/advantage-games/tests/e2e/qc/authoring-qc.spec.ts
+
+Why:
+Manual QC exposed overlapping wide cards, an apparently stale fixture preview, and a permanently busy Start control. The QC host now emulates the requested viewport and represents the completed transition without weakening the shared briefing guard.
+
+Verification:
+- Focused Jest: 6/6 passed
+- Scoped ESLint: passed
+- Advantage Games TypeScript no-emit check: passed
+- Live Chrome QA: compact 390x844, wide 1440x900, no intersections at text scale 1.25, fixture swaps visible, no busy/wait state after Start
+- Review: no Critical, High, or Medium findings remain
+- build-graph update completed for the changed JSX/state surface; caller inspection remains ambiguous because the graph contains a duplicate unnamed symbol record
