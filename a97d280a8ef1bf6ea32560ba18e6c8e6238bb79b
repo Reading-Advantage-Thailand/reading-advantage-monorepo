@@ -1,0 +1,17 @@
+Task: Implement standardized briefing screen.
+
+Files:
+- packages/advantage-play-kit/src/presentation/game-briefing-screen.tsx
+- packages/advantage-play-kit/src/presentation/__tests__/game-briefing-screen.test.tsx
+- packages/advantage-play-kit/src/presentation/game-presentation.tsx
+- packages/advantage-play-kit/src/presentation/index.ts
+
+Why: Provide the APK-owned pre-game surface for rules, complete learning content, controls, and an explicit Start action while keeping application and game-specific dependencies outside the package.
+
+Verification:
+- Focused Vitest: 4/4 passed.
+- Coverage: statements 97.22%, branches 96.07%, functions 100%, lines 100%.
+- TypeScript and focused ESLint passed.
+- build-graph updated; the new export has no external callers.
+
+Commit validation: commitlint was invoked directly because the repository pnpm wrapper attempts an unrelated stale-lockfile reconciliation.
