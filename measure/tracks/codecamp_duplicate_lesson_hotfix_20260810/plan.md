@@ -63,13 +63,13 @@
 - [~] Task: Deploy and verify production
   - [x] Capture a PII-free production progress digest immediately before the
         migration and verify the deploy path stages a zero-traffic revision.
-  - [~] Obtain explicit owner approval for the exact Codecamp repair migration.
-    The owner approved the repair while it was named `0047`; it was
-    reindexed to `0049` only after recovering production's official
-    `0047`/`0048`. The attempted `0049` submission was blocked before Cloud
-    Build accepted it, so renewed approval for the exact `0049` identifier
-    remains required.
-  - [ ] Deploy through the Codecamp Cloud Build migration-before-traffic path.
+  - [x] Obtain explicit owner approval for the exact Codecamp repair migration.
+        The owner approved the repair while it was named `0047`; it was
+        reindexed to `0049` only after recovering production's official
+        `0047`/`0048`. The attempted `0049` submission was blocked before Cloud
+        Build accepted it. The owner then explicitly approved the exact
+        `0049_codecamp_exercise_quiz_repair` identifier before resubmission.
+  - [~] Deploy through the Codecamp Cloud Build migration-before-traffic path.
   - [ ] Verify Cloud Run health, revision traffic, and error logs.
   - [ ] Re-run aggregate SQL acceptance checks and compare progress counts.
   - [ ] Record manual intern verification as the only remaining owner follow-up,
