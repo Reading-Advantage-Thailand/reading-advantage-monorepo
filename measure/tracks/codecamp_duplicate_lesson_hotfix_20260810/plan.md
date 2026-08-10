@@ -2,24 +2,25 @@
 
 ## Phase 1: Contract & Schema Definition
 
-- [~] Task: Freeze the production repair contract
+- [x] Task: Freeze the production repair contract
   - [x] Capture aggregate production evidence without learner PII.
   - [x] Establish that exercise and quiz are distinct required activities.
-  - [ ] Define the deterministic persistence projection and migration selectors.
-- [ ] Task: Define the database invariant
+  - [x] Define the deterministic persistence projection and migration selectors.
+- [~] Task: Define the database invariant
   - [ ] Add the Drizzle `(module_id, order)` uniqueness contract.
-  - [ ] Define migration ordering and journal requirements for `0047`.
+  - [x] Define migration ordering and journal requirements for `0047`.
 
 ## Phase 2: Test
 
-- [ ] Task: Add real-Postgres migration regression coverage
-  - [ ] Reproduce the corrupted exercise/quiz pair with child rows and progress.
-  - [ ] Prove IDs and all progress fields remain unchanged after repair.
-  - [ ] Prove exercise/quiz child ownership, idempotency, and SQLSTATE `23505`.
-- [ ] Task: Add seed reconciliation regression coverage
-  - [ ] Prove every exercise-backed curriculum module projects distinct rows.
-  - [ ] Prove reseeding never cross-matches `exercise` and `quiz` by order.
-  - [ ] Run focused tests and record the expected Red failures.
+- [~] Task: Add real-Postgres migration regression coverage
+  - [x] Reproduce the corrupted exercise/quiz pair with child rows and progress.
+  - [x] Prove IDs and all progress fields remain unchanged after repair.
+  - [x] Prove exercise/quiz child ownership, idempotency, and SQLSTATE `23505`.
+- [~] Task: Add seed reconciliation regression coverage
+  - [x] Prove every exercise-backed curriculum module projects distinct rows.
+  - [x] Prove reseeding never cross-matches `exercise` and `quiz` by order.
+  - [x] Run focused tests and record the expected Red failures: 4 Red, 9 green,
+        and 1 credential-gated real-Postgres test discovered/skipped.
 
 ## Phase 3: Implement
 
