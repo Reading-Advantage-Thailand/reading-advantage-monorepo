@@ -23,7 +23,9 @@ test.describe("APK authoring and QC field lab", () => {
     await expect(page.getByTestId("safe-region-overlay").first()).toBeVisible();
 
     await page.getByLabel("Content fixture").selectOption("thai-long");
-    await expect(page.getByText("การเรียนรู้ผ่านการผจญภัย")).toBeVisible();
+    await expect(
+      page.getByLabel("Current learning prompt").getByText("การเรียนรู้ผ่านการผจญภัย"),
+    ).toBeVisible();
     await page.getByRole("button", { name: "Pause game" }).click();
     await page.getByRole("button", { name: "Mute game" }).click();
     await page.getByRole("button", { name: "Restart game" }).click();

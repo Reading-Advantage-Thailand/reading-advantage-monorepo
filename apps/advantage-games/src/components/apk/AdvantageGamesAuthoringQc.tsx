@@ -15,10 +15,12 @@ import {
 } from "@reading-advantage/advantage-play-kit/responsive";
 import {
   EducationalPrompt,
+  GameBriefingScreen,
   GameFeedback,
   GameNavigationControls,
   GameProgress,
   GameResultPanel,
+  type GameBriefing,
 } from "@reading-advantage/advantage-play-kit/presentation";
 import { parseQcControls } from "@reading-advantage/advantage-play-kit/qc";
 
@@ -46,6 +48,24 @@ const CONTENT_FIXTURES = {
     { term: "light", translation: "แสง" },
     { term: "light", translation: "เบา" },
   ],
+} as const;
+
+const STANDARD_GAME_BRIEFING: GameBriefing = {
+  title: "Temple Word Quest",
+  subtitle: "Review the mission before you enter the game.",
+  objective: "Match each learning word with its English translation.",
+  instructions: [
+    { title: "Choose a path", description: "Select the answer that matches the learning word." },
+    { title: "Review the preview", description: "Read every term and translation before you begin." },
+  ],
+  learningPreview: { heading: "Words to learn" },
+  controls: [
+    { mode: "keyboard", label: "Arrow keys", action: "Move between choices", keys: ["ArrowUp", "ArrowDown"] },
+    { mode: "pointer", label: "Pointer", action: "Select a choice" },
+    { mode: "touch", label: "Tap", action: "Choose an answer" },
+  ],
+  tip: "Read every word before starting.",
+  startPhase: "playing",
 } as const;
 
 /** Props for the Advantage Games APK authoring and quality-control surface. */
@@ -76,6 +96,7 @@ export function AdvantageGamesAuthoringQc({ preview }: AdvantageGamesAuthoringQc
   const [muted, setMuted] = useState(false);
   const [restartCount, setRestartCount] = useState(0);
   const [operatorMessage, setOperatorMessage] = useState("Exemplar ready for inspection.");
+  const [briefingStartCount, setBriefingStartCount] = useState(0);
 
   const viewport = profile === "wide"
     ? { width: 1440, height: 900 }
@@ -102,6 +123,21 @@ export function AdvantageGamesAuthoringQc({ preview }: AdvantageGamesAuthoringQc
   );
   const overlays = composition.supported ? createResponsiveDebugOverlays(composition) : [];
   const selectedUnion = exemplar.definition.manifest.semanticAssetRequirements;
+  const briefingLayoutProfile = profile === "wide"
+    ? "wide"
+    : profile === "compact"
+      ? "compact"
+      : composition.supported
+        ? composition.profile
+        : "compact";
+
+  const selectFixture = (nextFixture: keyof typeof CONTENT_FIXTURES) => {
+    setFixture(nextFixture);
+  };
+
+  const handleBriefingStart = () => {
+    setBriefingStartCount((count) => (count === 0 ? 1 : count));
+  };
 
   return (
     <main className="min-h-screen bg-[#07110e] text-[#f4f0dc]">
@@ -162,7 +198,7 @@ export function AdvantageGamesAuthoringQc({ preview }: AdvantageGamesAuthoringQc
             <select
               className="mt-2 min-h-11 w-full rounded border border-[#426b59] bg-[#07110e] px-3 text-sm text-[#f4f0dc]"
               value={fixture}
-              onChange={(event) => setFixture(event.target.value as keyof typeof CONTENT_FIXTURES)}
+              onChange={(event) => selectFixture(event.target.value as keyof typeof CONTENT_FIXTURES)}
             >
               {Object.keys(CONTENT_FIXTURES).map((name) => <option key={name} value={name}>{name}</option>)}
             </select>
@@ -249,6 +285,33 @@ export function AdvantageGamesAuthoringQc({ preview }: AdvantageGamesAuthoringQc
           ) : (
             <div role="alert" className="mt-5 rounded border border-[#cc6b5a] bg-[#3a1712] p-4">{composition.guidance}</div>
           )}
+
+          <section
+            aria-label="Standard game briefing preview"
+            className="mt-6 min-w-0 max-w-full overflow-hidden rounded border border-[#335c4b] bg-[#07110e]"
+            style={{ minWidth: 0, maxWidth: "100%", overflowX: "hidden" }}
+          >
+            <div
+              className="min-w-0 max-w-full overflow-hidden"
+              style={{ minWidth: 0, maxWidth: "100%", height: "min(40rem, 70vh)", minHeight: "30rem" }}
+            >
+              <GameBriefingScreen
+                briefing={STANDARD_GAME_BRIEFING}
+                learningItems={CONTENT_FIXTURES[fixture]}
+                onStart={handleBriefingStart}
+                layoutProfile={briefingLayoutProfile}
+                inputMode={inputMode}
+                style={{ minWidth: 0, maxWidth: "100%", width: "100%", height: "100%" }}
+              />
+            </div>
+            <p
+              role="status"
+              aria-live="polite"
+              className="border-t border-[#335c4b] bg-[#0c1b16] px-4 py-3 font-mono text-xs text-[#b9f6d5]"
+            >
+              briefing → {briefingStartCount > 0 ? "playing" : "ready"} · count: {briefingStartCount}
+            </p>
+          </section>
 
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             <div className="rounded border border-[#29483c] bg-[#091713] p-4">
