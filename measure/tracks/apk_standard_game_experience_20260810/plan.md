@@ -42,12 +42,12 @@ _Story ref: spec.md#story-s1_
   - [x] Avoid Next.js, application aliases, shadcn, and app-specific state dependencies
   - [x] Export the component and public prop contracts
 
-- [~] Task: Integrate briefing into `APKGameHost`
-  - [ ] Add the typed briefing configuration
-  - [ ] Connect Start, loading, error, and lifecycle state
-  - [ ] Preserve the low-level runtime boundary for tests and specialized hosts
+- [x] Task: Integrate briefing into `APKGameHost` `18a9a86`
+  - [x] Add the typed briefing configuration
+  - [x] Connect Start, loading, error, and lifecycle state
+  - [x] Preserve the low-level runtime boundary for tests and specialized hosts
 
-- [ ] Task: Generate documentation and run architectural checks
+- [~] Task: Generate documentation and run architectural checks
   - [ ] Update developer-kit and lifecycle documentation
   - [ ] Update the code graph for changed exports and JSX
   - [ ] Run `measure/generate.sh` and `measure/doctor.sh`
