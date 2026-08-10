@@ -1,0 +1,11 @@
+{
+  "track_id": "codecamp_duplicate_lesson_hotfix_20260810",
+  "type": "bug",
+  "status": "in-progress",
+  "created_at": "2026-08-10T08:23:00Z",
+  "updated_at": "2026-08-10T08:23:00Z",
+  "description": "Repair Codecamp exercise/quiz lesson identity corruption without losing learner progress.",
+  "estimated_tasks": 7,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

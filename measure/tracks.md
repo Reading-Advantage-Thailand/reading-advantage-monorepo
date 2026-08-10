@@ -38,6 +38,11 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   Normalize authenticated Primary role keys before access checks and keep the proxy on the Node runtime.
 - [~] **Track: Reading Remote Font Removal** *Link: [./tracks/reading_remote_font_removal_20260728/](./tracks/reading_remote_font_removal_20260728/)*
   Remove external book-font imports from Reading’s global stylesheet for locally deterministic rendering.
+- [~] **Track: Codecamp Duplicate Exercise/Quiz Lesson Hotfix** *Link: [./tracks/codecamp_duplicate_lesson_hotfix_20260810/](./tracks/codecamp_duplicate_lesson_hotfix_20260810/)*
+  Repair the production seed corruption that made required standalone exercises
+  and quizzes appear as duplicate lessons in 14 modules. Preserve every learner
+  progress identity, restore distinct exercise/quiz semantics, prevent recurrence,
+  and verify the deployed production data without granting unearned completion.
 
 ---
 
