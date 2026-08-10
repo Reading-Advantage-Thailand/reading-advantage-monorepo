@@ -184,7 +184,7 @@ describe("Phase 4 — Task 15: FR-4 codecamp deploy gate (cloudbuild.yaml)", () 
     expect(deploy?.args).toContain("--no-traffic");
   });
 
-  it("binds the Codecamp OIDC secret using the project-local Cloud Run syntax", () => {
+  it("binds the Codecamp OIDC secret from reading-advantage and local AI secrets from codecamp", () => {
     const text = readFileSync(CLOUDBUILD_PATH, "utf8");
     const steps = parseCloudBuildSteps(text);
     const deploy = steps.find((step) => step.id === "deploy-cloudrun");
@@ -192,14 +192,14 @@ describe("Phase 4 — Task 15: FR-4 codecamp deploy gate (cloudbuild.yaml)", () 
       argument.startsWith("--set-secrets="),
     );
     expect(secretArgument).toContain(
-      "COMPANY_AUTH_OIDC_CLIENT_SECRET=CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest",
+      "COMPANY_AUTH_OIDC_CLIENT_SECRET=projects/1090865515742/secrets/CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest",
     );
     expect(secretArgument).not.toContain(
-      "COMPANY_AUTH_OIDC_CLIENT_SECRET=projects/",
+      "COMPANY_AUTH_OIDC_CLIENT_SECRET=CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest",
     );
-    expect(secretArgument).toContain("OPENAI_API_KEY=OpenAI_API_Key:latest");
+    expect(secretArgument).toContain("OPENAI_API_KEY=OPENAI_API_KEY:latest");
     expect(secretArgument).toContain(
-      "GOOGLE_AI_API_KEY=Goole_Cloud_API_Key:latest",
+      "GOOGLE_AI_API_KEY=GOOGLE_AI_API_KEY:latest",
     );
     expect(secretArgument).toContain(
       "TUTORIAL_REPORT_SECRET=CODECAMP_TUTORIAL_REPORT_SECRET:latest",

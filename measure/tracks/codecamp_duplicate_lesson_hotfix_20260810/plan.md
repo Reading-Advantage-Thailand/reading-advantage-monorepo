@@ -49,16 +49,16 @@
         the affected eight-file matrix pass 51/51 tests, including the 0049
         repair, exact ledger/hash/sentinel gate, and progress preservation; the
         DB production build and focused DB lint also pass.
-  - [~] Run affected Codecamp domain/app regression checks. The new 0049 deploy
-    contract passes; the same pre-existing file still has one unrelated
-    secret-format assertion that expects a project-local OIDC secret while
-    the current build intentionally uses a project-qualified path. Domain
-    Vitest cannot load the pre-existing missing `vitest.setup.ts` tsconfig,
-    and package-wide checks cannot resolve the incomplete workspace links
-    on this new machine, so Cloud Build remains the clean install/build
-    authority for deployment. `measure/doctor.sh` passes its guard and
-    supervisor invariants, then fails on deprecated unchecked markers in
-    unrelated pre-existing tracks.
+  - [~] Run affected Codecamp domain/app regression checks. The full deploy
+    contract passes 17/17 after aligning its secret assertions with verified
+    GCP ownership: the OIDC secret is cross-project from Reading Advantage,
+    while the OpenAI and Google AI secrets are local to Codecamp. Domain Vitest
+    cannot load the pre-existing missing `vitest.setup.ts` tsconfig, and
+    package-wide checks cannot resolve the incomplete workspace links on this
+    new machine, so Cloud Build remains the clean install/build authority for
+    deployment. `measure/doctor.sh` passes its guard and supervisor invariants,
+    then fails on deprecated unchecked markers in unrelated pre-existing
+    tracks.
   - [x] Complete independent change-quality and data-safety review.
 - [~] Task: Deploy and verify production
   - [x] Capture a PII-free production progress digest immediately before the
