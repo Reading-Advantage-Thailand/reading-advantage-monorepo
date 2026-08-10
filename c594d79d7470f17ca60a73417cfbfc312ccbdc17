@@ -1,0 +1,14 @@
+Task: Generate documentation and run architectural checks
+
+Summary:
+- Regenerated Measure architecture and route inventories from the current APK track revision.
+- Captured the new Advantage Games /qc route and previously stale repository route/workspace additions.
+- Confirmed this track passes the current [~]/[x]/[b] marker vocabulary gate.
+- Ran the full Measure doctor; it remains non-zero only because nine unrelated active legacy plans still contain deprecated top-level [ ] markers.
+
+Files:
+- measure/generated/architecture.json
+- measure/generated/routes.md
+
+Why:
+Keep auditable generated architecture evidence current for the standardized game briefing work without altering unrelated legacy tracks.
