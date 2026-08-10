@@ -36,13 +36,13 @@ _Story ref: spec.md#story-s1_
   - [x] Confirm restart can return to the configured briefing phase
   - [x] Confirm remount and Strict Mode preserve one canvas
 
-- [~] Task: Implement the standardized briefing screen
-  - [ ] Preserve the legacy mission-briefing information architecture
-  - [ ] Add responsive, host-neutral styling through APK tokens and data attributes
-  - [ ] Avoid Next.js, application aliases, shadcn, and app-specific state dependencies
-  - [ ] Export the component and public prop contracts
+- [x] Task: Implement the standardized briefing screen `a97d280`
+  - [x] Preserve the legacy mission-briefing information architecture
+  - [x] Add responsive, host-neutral styling through APK tokens and data attributes
+  - [x] Avoid Next.js, application aliases, shadcn, and app-specific state dependencies
+  - [x] Export the component and public prop contracts
 
-- [ ] Task: Integrate briefing into `APKGameHost`
+- [~] Task: Integrate briefing into `APKGameHost`
   - [ ] Add the typed briefing configuration
   - [ ] Connect Start, loading, error, and lifecycle state
   - [ ] Preserve the low-level runtime boundary for tests and specialized hosts
