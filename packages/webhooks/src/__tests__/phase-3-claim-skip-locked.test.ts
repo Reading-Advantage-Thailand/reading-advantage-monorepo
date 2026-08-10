@@ -89,6 +89,47 @@ describe("Phase 3 — claimDueJobs uses FOR UPDATE SKIP LOCKED", () => {
     expect(text, "SQL must use placeholders").toMatch(/\$\d+/);
   });
 
+  it("binds claim timestamps as ISO strings that postgres.js can encode", async () => {
+    const conn = createMockConn();
+    const now = new Date("2026-08-11T00:00:00.000Z");
+
+    await claimDueJobs(conn as unknown as import("@reading-advantage/db").DB, {
+      batchSize: 1,
+      workerId: "worker-timestamp-contract",
+      now,
+    });
+
+    const params = sqlParams(conn.execute.mock.calls[0]![0]);
+    expect(
+      params.filter((param) => param === now.toISOString()),
+      "claim SQL binds each claimed_at, updated_at, and eligibility timestamp as ISO text",
+    ).toHaveLength(3);
+    expect(
+      params.some((param) => param instanceof Date),
+      "raw SQL must not pass Date objects to postgres.js",
+    ).toBe(false);
+  });
+
+  it("binds reclaim timestamps as ISO strings that postgres.js can encode", async () => {
+    const conn = createMockConn();
+    const now = new Date("2026-08-11T00:10:00.000Z");
+    const visibilityTimeoutMs = 60_000;
+    const cutoff = new Date(now.getTime() - visibilityTimeoutMs);
+
+    await reclaimStuckJobs(conn as unknown as import("@reading-advantage/db").DB, {
+      visibilityTimeoutMs,
+      now,
+    });
+
+    const params = sqlParams(conn.execute.mock.calls[0]![0]);
+    expect(params, "reclaim updated_at uses an ISO timestamp parameter").toContain(now.toISOString());
+    expect(params, "reclaim visibility cutoff uses an ISO timestamp parameter").toContain(cutoff.toISOString());
+    expect(
+      params.some((param) => param instanceof Date),
+      "reclaim raw SQL must not pass Date objects to postgres.js",
+    ).toBe(false);
+  });
+
   it("assigns a fresh per-claim lease after visibility reclaim, even on the same worker process", async () => {
     const conn = createMockConn();
     const now = new Date("2026-08-10T00:00:00.000Z");

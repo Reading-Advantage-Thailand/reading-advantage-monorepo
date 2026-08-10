@@ -453,19 +453,20 @@ export async function claimDueJobs(
 
   try {
     const now = options.now ?? new Date();
+    const nowIso = now.toISOString();
     // Parameterized query: all variable values are sent as query parameters,
     // eliminating SQL injection risk on batchSize, workerId, and timestamps.
     const claimSql = sql`
       WITH claimed AS (
         UPDATE review_jobs
         SET status = 'claimed',
-            claimed_at = ${now}::timestamptz,
+            claimed_at = ${nowIso}::timestamptz,
             claimed_by = ${leaseId},
-            updated_at = ${now}::timestamptz
+            updated_at = ${nowIso}::timestamptz
         WHERE id IN (
           SELECT id FROM review_jobs
           WHERE status = 'pending'
-            AND next_attempt_at <= ${now}::timestamptz
+            AND next_attempt_at <= ${nowIso}::timestamptz
           ORDER BY next_attempt_at
           FOR UPDATE SKIP LOCKED
           LIMIT ${batchSize}
@@ -526,6 +527,8 @@ export async function reclaimStuckJobs(
   try {
     const now = opts.now ?? new Date();
     const cutoff = new Date(now.getTime() - visibilityTimeoutMs);
+    const nowIso = now.toISOString();
+    const cutoffIso = cutoff.toISOString();
     // Parameterized query: timestamps are sent as query parameters, not
     // interpolated, so a malformed `now` value cannot inject SQL.
     const reclaimSql = sql`
@@ -533,10 +536,10 @@ export async function reclaimStuckJobs(
       SET status = 'pending',
           claimed_at = NULL,
           claimed_by = NULL,
-          updated_at = ${now}::timestamptz
+          updated_at = ${nowIso}::timestamptz
       WHERE status = 'claimed'
         AND claimed_at IS NOT NULL
-        AND claimed_at < ${cutoff}::timestamptz
+        AND claimed_at < ${cutoffIso}::timestamptz
       RETURNING id
     `;
     const result = await conn.execute(reclaimSql);
