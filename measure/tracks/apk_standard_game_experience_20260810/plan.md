@@ -66,11 +66,18 @@ boundary are recorded in
 test strategy is [test-strategy.md](./test-strategy.md). Only the first contract task
 is executable `[~]`; later tasks remain dependency-blocked `[b]`._
 
-- [~] Task: Define the tutorial contracts
-  - [ ] Define tutorial definitions, ordered steps, semantic targets, timing, labels, and progress
-  - [ ] Define cartridge-owned deterministic demonstration actions
-  - [ ] Define shared pause, advance, replay, skip, and completion-suppression behavior
-  - [ ] Reject raw DOM selectors, screen coordinates, and application-specific callbacks as manifest contracts
+- [x] Task: Define the tutorial contracts `86a2a13ee`
+  - [x] Define tutorial definitions, ordered steps, semantic targets, timing, labels, and progress
+  - [x] Define cartridge-owned deterministic demonstration actions
+  - [x] Define shared pause, advance, replay, skip, and completion-suppression behavior
+  - [x] Reject raw DOM selectors, screen coordinates, and application-specific callbacks as manifest contracts
+
+  **Green evidence (2026-08-11, implementation `86a2a13ee`):** The S2.1 focused Vitest
+  command in `test-strategy.md` exited 0 with 3 test files and 92 tests passing. The
+  package type check and build exited 0. Package lint exited 0 with four existing warnings
+  outside the S2.1 files. Focused coverage executed the S2.1 tests and reported 100% for
+  `game-tutorial-contract.ts`; the package global coverage threshold still failed because
+  the focused run did not cover unrelated package files.
 
   **Red evidence (2026-08-11, recoverable checkpoint `e8ec81905`):** The direct focused
   command from `test-strategy.md` was run after reapplying the test-only checkpoint:
