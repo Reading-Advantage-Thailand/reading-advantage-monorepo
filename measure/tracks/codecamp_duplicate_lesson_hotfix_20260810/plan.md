@@ -42,15 +42,15 @@
 
 ## Phase 4: Generate Docs, Verify, and Deploy
 
-- [~] Task: Run focused and affected-package quality gates [evidence: f1d7ba558, 075351435, 4eedc8840]
+- [x] Task: Run focused and affected-package quality gates [evidence: f1d7ba558, 075351435, 4eedc8840, ee0c98bf7]
   - [x] Run DB migration, seed, journal, type, lint, and build checks. The final
         pre-review Podman/PostgreSQL suite passed 110/110 tests. After the
         independent review safeguard, the new real-Postgres rollback case and
         the affected eight-file matrix pass 51/51 tests, including the 0049
         repair, exact ledger/hash/sentinel gate, and progress preservation; the
         DB production build and focused DB lint also pass.
-  - [~] Run affected Codecamp domain/app regression checks [evidence: 075351435,
-        4eedc8840]. Mid Red remediation against role base
+  - [x] Run affected Codecamp domain/app regression checks [evidence: 075351435,
+        4eedc8840, ee0c98bf7]. Mid Red remediation against role base
     `5624dd421bb7a83029eec86148fbcdf5e3bcc1a5` corrected the stale rollout
     assertion: shadow remains valid, the reviewed active wiring requires its
     non-empty `CODECAMP_PR_REVIEW_RELEASE_APPROVED_BY` marker, and active
@@ -66,8 +66,11 @@
     `MIGRATION_CEILING_TAG=0049_codecamp_exercise_quiz_repair` wiring, and the
     normal migrator currently ignores the ceiling option and would apply the
     successor. Green must implement that fail-closed ceiling before this task
-    can return to `[x]`. The track has no local `test-strategy.md`; the
-    supplied review contracts and this plan supplied the Red command.
+     can return to `[x]`. Green evidence: the exact command passed 22 tests with
+     disposable PostgreSQL; the affected migration/ledger/deploy suite passed 42
+     tests, and direct DB type, focused lint, and build checks exited 0. The
+     track has no local `test-strategy.md`; the supplied review contracts and
+     this plan supplied the Red command.
   - [x] Complete independent change-quality and data-safety review.
 - [x] Task: Deploy and verify production [evidence: 4eedc8840]
   - [x] Capture a PII-free production progress digest immediately before the
