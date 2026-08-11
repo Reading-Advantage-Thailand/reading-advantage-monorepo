@@ -3,11 +3,11 @@
   "type": "feature",
   "status": "in-progress",
   "created_at": "2026-08-10T07:49:36Z",
-  "updated_at": "2026-08-11T00:12:35Z",
+  "updated_at": "2026-08-11T00:30:12Z",
   "description": "Add mandatory standardized briefing, guided tutorial, safe demo, learning debrief, and intern-ready authoring support to Advantage Play Kit.",
   "estimated_tasks": 34,
   "actual_tasks": null,
-  "deviation_notes": "",
+  "deviation_notes": "Development paused at the user's request on 2026-08-11 after S1 acceptance. S2 contract decisions and recoverable RED checkpoint fa01f9b30 are documented; no unfinished S2 production code is included in the merge tree.",
   "sprint": {
     "goal": "Every APK mini-game ships with a consistent briefing, guided tutorial/demo, gameplay lifecycle, and learning-focused debrief without interns rebuilding platform infrastructure.",
     "stories": [

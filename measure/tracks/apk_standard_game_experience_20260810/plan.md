@@ -59,7 +59,11 @@ _Story ref: spec.md#story-s1_
 
 _Story ref: spec.md#story-s2_
 
-- [~] Task: Define the tutorial contracts
+_Development paused by user request on 2026-08-11. Contract decisions and the
+recoverable RED checkpoint are recorded in
+[s2-progress-handoff-20260811.md](./s2-progress-handoff-20260811.md)._
+
+- [b] Task: Define the tutorial contracts — deferred:user-requested-pause-20260811
   - [ ] Define tutorial definitions, ordered steps, semantic targets, timing, labels, and progress
   - [ ] Define cartridge-owned deterministic demonstration actions
   - [ ] Define shared pause, advance, replay, skip, and completion-suppression behavior
