@@ -133,11 +133,42 @@ is executable `[~]`; later tasks remain dependency-blocked `[b]`._
    statements, 73.58% branches, 100% functions, and 100% lines for
    `game-tutorial-runtime.ts`.
 
-- [b] Task: Implement the shared tutorial controller — deferred:s2-tutorial-tests
+- [~] Task: Implement the shared tutorial controller
   - [ ] Add explicit tutorial runtime mode
   - [ ] Coordinate steps with cartridge-supplied mechanic actions
   - [ ] Expose current step, progress, semantic target, and lifecycle events
   - [ ] Suppress production terminal behavior while retaining educational feedback
+
+  **Mid-Red evidence (2026-08-11; phase and role base `2c20754e3e270d2a1dc57dfa785605b5d69775bd`):**
+  Added `src/presentation/__tests__/game-tutorial-controller.test.ts` with 13 focused
+  tests. The suite covers the explicit tutorial mode, cartridge action-driver context,
+  current step and semantic target snapshots, progress, lifecycle events, pause, resume,
+  sequential advance, same-seed replay, safe skip, production-effect suppression, one
+  canvas and resource set, cleanup, mount-error recovery, and authority counterexamples.
+  The tests keep presentation-card and responsive assertions for the later presentation
+  task. The driver context rejects completion, `GameResults`, persistence, XP, leaderboard,
+  failure, DOM, Next, Tutor, socket, navigation, lesson, and session authority.
+
+  The targeted Red command exited `1` with 13 failed tests. The controller tests failed
+  because `src/presentation/game-tutorial-controller.ts` is not present. The host tests
+  failed because `APKGameHost` still rejects the tutorial start phase and has no tutorial
+  controller, driver, control, or recovery wiring. This is the expected Red state.
+
+  ```bash
+  cd packages/advantage-play-kit
+  CI=true ../../node_modules/.bin/vitest run \
+    src/presentation/__tests__/game-tutorial-controller.test.ts
+  ```
+
+  The combined S2.1/S2.2 plus S2.3 Red command exited `1`: the four existing suites
+  passed with 107 tests, and the new suite failed with 13 tests. The existing S2.1/S2.2
+  command also exited `0` with 107 tests passing after the new test was added. Package
+  type checking exited `0`. No production file changed.
+
+  Pre-edit dirty-path classification: the APK package and this plan were clean. Existing
+  `.opencode/goals/**` state was generated or ignorable. Existing Accounts, Backend, DB,
+  Finance, Mastery, Sales, Storage, and lockfile changes were unrelated user work and
+  remain unstaged.
 
 - [b] Task: Implement the guided tutorial presentation — deferred:s2-tutorial-controller
   - [ ] Add step cards, progress indicators, focus/highlight treatment, and accessible narration
