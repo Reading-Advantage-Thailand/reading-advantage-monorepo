@@ -2,6 +2,42 @@
 
 import { useId, type ComponentProps, type ReactNode } from "react";
 
+/** Public briefing and lifecycle contracts exposed beside the presentation primitives. */
+export {
+  gameBriefingControlHintSchema,
+  gameBriefingControlSchema,
+  gameBriefingInstructionSchema,
+  gameBriefingLabelsSchema,
+  gameBriefingLearningPreviewSchema,
+  gameBriefingSchema,
+  gameBriefingStartPhaseSchema,
+  gameBriefingTextSchema,
+  gameLifecycleEventSchema,
+  gameLifecyclePhaseSchema,
+  gameLifecycleTransitionSchema,
+  resolveGameBriefingStartPhase,
+} from "./game-briefing-contract.js";
+
+/** Public briefing and lifecycle contract types exposed by the presentation module. */
+export type {
+  GameBriefing,
+  GameBriefingControl,
+  GameBriefingControlHint,
+  GameBriefingInstruction,
+  GameBriefingLabels,
+  GameBriefingLearningPreview,
+  GameBriefingStartPhase,
+  GameLifecycleEvent,
+  GameLifecyclePhase,
+  GameLifecycleTransition,
+} from "./game-briefing-contract.js";
+
+/** Standardized accessible briefing screen shown before normal gameplay. */
+export { GameBriefingScreen } from "./game-briefing-screen.js";
+
+/** Public props for the standardized briefing screen. */
+export type { GameBriefingScreenProps } from "./game-briefing-screen.js";
+
 /** Props for the outer accessible game presentation region. */
 export type PresentationShellProps = ComponentProps<"section"> & {
   /** Accessible name announced for the complete game experience. */

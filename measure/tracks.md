@@ -230,7 +230,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   absent Reading/Primary consumers, representative-device FPS proof, and manual
   owner browser inspection remain explicitly open.
 
-- [ ] **Track: APK Standard Game Experience** *Link: [./tracks/apk_standard_game_experience_20260810/](./tracks/apk_standard_game_experience_20260810/)*
+- [~] **Track: APK Standard Game Experience** *Link: [./tracks/apk_standard_game_experience_20260810/](./tracks/apk_standard_game_experience_20260810/)*
   Make briefing, guided tutorial, safe demo, gameplay transition, and learning
   debrief mandatory shared APK capabilities, then generate and enforce them in
   the intern cartridge scaffold and authoring QC workflow.

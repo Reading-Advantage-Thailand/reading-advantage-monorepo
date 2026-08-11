@@ -89,8 +89,6 @@ export async function mountCartridge(
     return resolved;
   };
 
-  composition = resolveComposition();
-
   const diagnostics = (): APKRuntimeDiagnostics => ({
     status,
     cartridgeId: cartridge.manifest.id,
@@ -109,6 +107,39 @@ export async function mountCartridge(
   ): void => {
     lastEvent = { ...event, timestamp: event.timestamp ?? Date.now() };
     host.diagnostic?.(lastEvent);
+  };
+
+  const reportCleanupFailure = (stage: string, error: unknown): void => {
+    const cleanupEvent: APKDiagnosticEvent = {
+      level: "warning",
+      code: "MOUNT_CLEANUP_FAILED",
+      message: `Renderer mount cleanup failed during ${stage}`,
+      timestamp: Date.now(),
+      details: { cause: error instanceof Error ? error.message : String(error), stage },
+    };
+    lastEvent = cleanupEvent;
+    try {
+      host.diagnostic?.(cleanupEvent);
+    } catch {
+      // Diagnostics must never replace the original mount failure.
+    }
+  };
+
+  const cleanupFailedRenderer = async (): Promise<void> => {
+    const failedInstance = instance;
+    instance = undefined;
+    if (failedInstance) {
+      try {
+        await failedInstance.destroy();
+      } catch (error) {
+        reportCleanupFailure("renderer destroy", error);
+      }
+    }
+    try {
+      container.replaceChildren();
+    } catch (error) {
+      reportCleanupFailure("runtime container clear", error);
+    }
   };
 
   const complete = (candidate: unknown): void => {
@@ -157,12 +188,17 @@ export async function mountCartridge(
     } catch (error) {
       status = "error";
       const runtimeError = toAPKRuntimeError(error, "MOUNT_FAILED", "Game renderer failed to mount");
-      diagnostic({
-        level: "error",
-        code: runtimeError.code,
-        message: runtimeError.message,
-        details: runtimeError.details,
-      });
+      try {
+        diagnostic({
+          level: "error",
+          code: runtimeError.code,
+          message: runtimeError.message,
+          details: runtimeError.details,
+        });
+      } catch (diagnosticError) {
+        reportCleanupFailure("mount diagnostic", diagnosticError);
+      }
+      await cleanupFailedRenderer();
       throw runtimeError;
     }
   };
@@ -212,9 +248,7 @@ export async function mountCartridge(
     });
   };
 
-  const resizeObserver =
-    typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(resize);
-  resizeObserver?.observe(container);
+  let resizeObserver: ResizeObserver | undefined;
 
   const onVisibilityChange = (): void => {
     if (destroyed || explicitlyPaused) return;
@@ -228,9 +262,12 @@ export async function mountCartridge(
       diagnostic({ level: "info", code: "VISIBILITY_RESUMED", message: "Game resumed" });
     }
   };
-  document.addEventListener("visibilitychange", onVisibilityChange);
-
   try {
+    resizeObserver =
+      typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(resize);
+    resizeObserver?.observe(container);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    composition = resolveComposition();
     await createInstance();
   } catch (error) {
     document.removeEventListener("visibilitychange", onVisibilityChange);

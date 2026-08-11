@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 
 import preview from "@/lib/apk/standard-pack-qc-preview.json";
 import {
@@ -84,5 +84,80 @@ describe("AdvantageGamesAuthoringQc", () => {
       "[&_button]:focus-visible:outline-[#f3c969]",
     );
     expect(await screen.findByRole("img", { name: "Dragon Flight QC canvas" })).toBeInTheDocument();
+  });
+
+  it("previews the standardized briefing with selected content, applicable controls, responsive data, and one validated Start transition", () => {
+    render(<AdvantageGamesAuthoringQc preview={preview as StandardPackQcPreview} />);
+
+    const briefingPreview = screen.getByRole("region", { name: "Standard game briefing preview" });
+    const scoped = within(briefingPreview);
+    const dialog = scoped.getByRole("dialog");
+    expect(dialog).toHaveAttribute("data-apk-layout-profile", "compact");
+    expect(scoped.getByRole("heading", { name: /objective/i })).toBeInTheDocument();
+    expect(scoped.getByRole("heading", { name: /how to play|rules/i })).toBeInTheDocument();
+    expect(scoped.getByText("river")).toBeInTheDocument();
+    expect(scoped.getByText("แม่น้ำ")).toBeInTheDocument();
+    expect(scoped.getByText("Arrow keys")).toBeInTheDocument();
+    expect(scoped.getByText("Pointer")).toBeInTheDocument();
+    expect(scoped.queryByText("Tap")).not.toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText(/content fixture/i), { target: { value: "thai-long" } });
+    expect(scoped.getByText("การเรียนรู้ผ่านการผจญภัย")).toBeInTheDocument();
+    expect(scoped.getByText("learning through adventure")).toBeInTheDocument();
+    expect(scoped.getByText("ความรับผิดชอบต่อสิ่งแวดล้อม")).toBeInTheDocument();
+    expect(scoped.getByText("environmental responsibility")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "wide" }));
+    expect(dialog).toHaveAttribute("data-apk-layout-profile", "wide");
+    fireEvent.change(screen.getByLabelText(/input mode/i), { target: { value: "touch" } });
+    expect(dialog).toHaveAttribute("data-apk-input-mode", "touch");
+    expect(scoped.getByText("Tap")).toBeInTheDocument();
+    expect(scoped.queryByText("Arrow keys")).not.toBeInTheDocument();
+    expect(scoped.queryByText("Pointer")).not.toBeInTheDocument();
+
+    const start = scoped.getByRole("button", { name: /start/i });
+    expect(start).toHaveStyle({ minBlockSize: "48px" });
+    fireEvent.click(start);
+    fireEvent.click(start);
+    expect(scoped.getByRole("status")).toHaveTextContent(/briefing\s*(?:→|->)\s*playing/i);
+    expect(scoped.getByRole("status")).toHaveTextContent(/count:\s*1/i);
+  });
+
+  it("changes the contained briefing preview viewport from compact 390×844 to wide 1440×900", () => {
+    render(<AdvantageGamesAuthoringQc preview={preview as StandardPackQcPreview} />);
+
+    const viewport = screen.getByTestId("briefing-preview-viewport");
+    expect(viewport).toHaveAttribute("data-apk-qc-viewport", "390x844");
+    expect(viewport).toHaveStyle({ width: "390px", height: "844px" });
+
+    fireEvent.click(screen.getByRole("button", { name: "wide" }));
+
+    expect(viewport).toHaveAttribute("data-apk-qc-viewport", "1440x900");
+    expect(viewport).toHaveStyle({ width: "1440px", height: "900px" });
+  });
+
+  it("replaces the complete briefing fixture and leaves the briefing when its single Start transition succeeds", () => {
+    render(<AdvantageGamesAuthoringQc preview={preview as StandardPackQcPreview} />);
+
+    const briefingPreview = screen.getByRole("region", { name: "Standard game briefing preview" });
+    const scoped = within(briefingPreview);
+    expect(scoped.getByText("river")).toBeInTheDocument();
+    expect(scoped.getByText("แม่น้ำ")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText(/content fixture/i), { target: { value: "english-long" } });
+
+    expect(scoped.getByText("extraordinary")).toBeInTheDocument();
+    expect(scoped.getByText("ไม่ธรรมดา")).toBeInTheDocument();
+    expect(scoped.getByText("environmental responsibility")).toBeInTheDocument();
+    expect(scoped.getByText("ความรับผิดชอบต่อสิ่งแวดล้อม")).toBeInTheDocument();
+    expect(scoped.queryByText("river")).not.toBeInTheDocument();
+    expect(scoped.queryByText("แม่น้ำ")).not.toBeInTheDocument();
+
+    fireEvent.click(scoped.getByRole("button", { name: "Start game" }));
+
+    expect(scoped.getByRole("status")).toHaveTextContent(/briefing\s*(?:→|->)\s*playing/i);
+    expect(scoped.getByRole("status")).toHaveTextContent(/count:\s*1/i);
+    expect(scoped.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(scoped.queryByRole("button", { name: "Start game" })).not.toBeInTheDocument();
   });
 });

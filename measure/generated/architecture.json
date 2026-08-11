@@ -1,7 +1,7 @@
 {
   "schemaVersion": "measure.architecture.v1",
-  "generatedAt": "2026-08-10T23:13:25+08:00",
-  "sourceRevision": "6be4ef9bee7ea5c73414f571cb5787dc5ea607f9",
+  "generatedAt": "2026-08-11T01:21:54+08:00",
+  "sourceRevision": "c5ecf18b0830c8702602f9f5f33415c7b3e92d66",
   "projectType": "typescript-monorepo",
   "workspaceRoots": {
     "apps": [
@@ -40,6 +40,7 @@
       "mastery-runtime-compat",
       "practice-core",
       "reading-advantage-scripts",
+      "sales-knowledge",
       "srs-engine",
       "storage",
       "types",
