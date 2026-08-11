@@ -4,24 +4,14 @@ import postgres from "postgres";
 import { describe, expect, it } from "vitest";
 
 import { createPostgresCompanyIdentityRepository } from "../postgres-repository.js";
+import {
+  ensureOneActiveInternalCompany,
+  migrateCompanyIdentityWithLock,
+} from "./postgres-task3-test-support.js";
 
-interface CompanyIdentityMigrationModule {
-  migrateCompanyIdentity(input: { directDatabaseUrl: string }): Promise<void>;
-}
-
-const databaseUrl = process.env.COMPANY_IDENTITY_PG_TEST_URL;
-
-/** Applies the reviewed journal before the explicit disposable PostgreSQL proof. */
-async function migrateDatabase(url: string): Promise<void> {
-  const migrationUrl = new URL(
-    "../../../../../db/src/company-identity/migration.js",
-    import.meta.url,
-  ).href;
-  const migration = (await import(
-    /* @vite-ignore */ migrationUrl
-  )) as CompanyIdentityMigrationModule;
-  await migration.migrateCompanyIdentity({ directDatabaseUrl: url });
-}
+const databaseUrl =
+  process.env.COMPANY_IDENTITY_PG_TEST_URL ??
+  process.env.COMPANY_IDENTITY_INTEGRATION_DATABASE_URL;
 
 describe.skipIf(!databaseUrl)(
   "company identity PostgreSQL login atomicity",
@@ -31,14 +21,13 @@ describe.skipIf(!databaseUrl)(
       { timeout: 60_000 },
       async () => {
         if (!databaseUrl) return;
-        await migrateDatabase(databaseUrl);
+        await migrateCompanyIdentityWithLock(databaseUrl);
 
         const sql = postgres(databaseUrl, { max: 2, prepare: false });
         const accountId = randomUUID();
-        const organizationId = randomUUID();
+        const organizationId = await ensureOneActiveInternalCompany(sql);
         const membershipId = randomUUID();
         const username = `login-atomic-${randomBytes(6).toString("hex")}`;
-        const organizationKey = `login-atomic-${randomBytes(6).toString("hex")}`;
 
         try {
           await sql.begin(async (transaction) => {
@@ -47,10 +36,6 @@ describe.skipIf(!databaseUrl)(
                 (id, username, normalized_username, display_name)
               values
                 (${accountId}, ${username}, ${username}, 'Login Atomic Employee')
-            `;
-            await transaction`
-              insert into company_organizations (id, stable_key, display_name)
-              values (${organizationId}, ${organizationKey}, 'Login Atomic Organization')
             `;
             await transaction`
               insert into company_organization_memberships

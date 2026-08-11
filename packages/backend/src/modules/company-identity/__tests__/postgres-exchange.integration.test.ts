@@ -7,26 +7,14 @@ import { hashBearerToken } from "../protocol.js";
 import { createPostgresCompanyIdentityRepository } from "../postgres-repository.js";
 import { createCompanyIdentityService } from "../service.js";
 import type { CompanyIdentityRepository } from "../repository.js";
-
-interface CompanyIdentityMigrationModule {
-  migrateCompanyIdentity(input: { directDatabaseUrl: string }): Promise<void>;
-}
+import {
+  ensureOneActiveInternalCompany,
+  migrateCompanyIdentityWithLock,
+} from "./postgres-task3-test-support.js";
 
 const databaseUrl =
   process.env.COMPANY_IDENTITY_PG_TEST_URL ??
   process.env.COMPANY_IDENTITY_INTEGRATION_DATABASE_URL;
-
-/** Applies the reviewed company-identity migration journal to the explicit test URL. */
-async function migrateDatabase(url: string): Promise<void> {
-  const migrationUrl = new URL(
-    "../../../../../db/src/company-identity/migration.js",
-    import.meta.url,
-  ).href;
-  const migration = (await import(
-    /* @vite-ignore */ migrationUrl
-  )) as CompanyIdentityMigrationModule;
-  await migration.migrateCompanyIdentity({ directDatabaseUrl: url });
-}
 
 /** Creates the fixed crypto and service ports used by the live exchange proof. */
 function createIntegrationService(
@@ -79,11 +67,11 @@ describe.skipIf(!databaseUrl)(
       { timeout: 60_000 },
       async () => {
         if (!databaseUrl) return;
-        await migrateDatabase(databaseUrl);
+        await migrateCompanyIdentityWithLock(databaseUrl);
 
         const sql = postgres(databaseUrl, { max: 2, prepare: false });
         const accountId = randomUUID();
-        const organizationId = randomUUID();
+        const organizationId = await ensureOneActiveInternalCompany(sql);
         const membershipId = randomUUID();
         const applicationId = randomUUID();
         const oidcClientRowId = randomUUID();
@@ -92,7 +80,6 @@ describe.skipIf(!databaseUrl)(
         const authorizationCodeRowId = randomUUID();
         const rollbackAuthorizationCodeRowId = randomUUID();
         const clientId = `integration-client-${randomBytes(6).toString("hex")}`;
-        const organizationKey = `integration-${randomBytes(6).toString("hex")}`;
         const applicationKey = `integration-${randomBytes(6).toString("hex")}`;
         const username = `integration-${randomBytes(6).toString("hex")}`;
         const redirectUri = "https://integration.example.test/callback";
@@ -112,10 +99,6 @@ describe.skipIf(!databaseUrl)(
                 (id, username, normalized_username, display_name)
               values
                 (${accountId}, ${username}, ${username}, 'Integration Employee')
-            `;
-            await transaction`
-              insert into company_organizations (id, stable_key, display_name)
-              values (${organizationId}, ${organizationKey}, 'Integration Organization')
             `;
             await transaction`
               insert into company_organization_memberships

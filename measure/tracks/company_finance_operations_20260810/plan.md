@@ -14,7 +14,7 @@
   from the preceding task. Accepted with evidence in
    `phase1-persistence-acceptance-20260811.md` in commit
    `c5ecf18b0830c8702602f9f5f33415c7b3e92d66`.
-- [x] Task: Add behavior-level contract tests and adapters for the Company (commit `98d111bdf1c4eea2d2b6980d884ad97250f03cb2`)
+- [~] Task: Add behavior-level contract tests and adapters for the Company (commit `98d111bdf1c4eea2d2b6980d884ad97250f03cb2`)
   Identity attestor, authorized private-evidence reads, and a scope/digest-bound
   durable outbox projector required by the historical private-evidence MVP.
   Depends on the completed foundation task and the accepted boundary in
@@ -90,6 +90,69 @@
    walker). Architecture boundary, port boundary, and metadata allowlist
    tests remain green. No production, Accounts, Mastery, DB migration,
    storage driver, package.json, or lockfile was edited.
+
+    Review B remediation Mid Red evidence (2026-08-11): Task 3 returned to
+    `[~]` before work. The immutable phase scope is
+    `phase_base_sha=c93f3a84fcd72c3559e81fdbe7c9ac761d993f35`. The supplied
+    role base is `role_base_sha=2c0295af41a5ede1067bebea158c3c8cf1115d18`.
+
+    Dirty-path classification preserved unrelated work. The owned paths are
+    this plan and the Finance test paths listed below. `.opencode/goals/**`
+    is generated or ignorable state. Admin, APK, Mastery, lockfile, Sales,
+    Finance specification, Finance decision, Finance source, and Phase 2
+    candidate paths remain untouched user work.
+
+    New Red tests cover B1 trusted server-generated event/request/correlation
+    IDs and time plus credential injection; B2 the durable Company Identity
+    audit adapter; B3 the Storage-reader to Finance-binding adapter and source
+    isolation; B4 concurrent claim/CAS and one enqueue; B5 isolated migrations
+    with one active internal company; B6 owner maxBytes; B7 malformed driver
+    results and sanitized errors; B8 claims and policy versions; and B9 the
+    maximum-length outbox identity.
+
+    The following targeted commands are implementation Red. Each command
+    exits 1 because the current production tree lacks the reviewed behavior.
+
+    - `CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/company-identity/__tests__/finance-task3-review-b.red.test.ts`
+      exits 1: 3 tests fail. B1 receives caller audit IDs and time, B8 lacks
+      `policyVersion` in the decision, and B2 lacks the durable adapter export.
+    - `CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/finance-operations/__tests__/historical-private-evidence-binding-adapter.red.test.ts`
+      exits 1: 2 tests fail. The production binding adapter export and source
+      are absent.
+    - `CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/finance-operations/__tests__/durable-job-projector-review-b.red.test.ts`
+      exits 1: 2 tests fail. The concurrent case enqueues twice instead of
+      once. The maximum identity case raises `FINANCE_DURABLE_REQUEST_INVALID`.
+    - `CI=true pnpm --filter @reading-advantage/storage exec vitest run src/__tests__/finance-task3-review-b.red.test.ts`
+      exits 1: 5 tests fail. The owner ceiling is ignored, malformed driver
+      results are accepted or raise `TypeError`, and provider errors keep their
+      internal message.
+
+    B5 has explicit live PostgreSQL evidence. With both database variables
+    unset, the live command exits 0 with 3 skipped tests. This is the allowed
+    environment gate. Against a disposable
+    `company_identity_test_<digits>_<hex>` database and least-privilege
+    migration role, the same command exits 1 with 2 tests passed and 1 test
+    failing only because the durable Company Identity Finance audit adapter is
+    absent. The migration lock, one-active-company setup, login rollback, and
+    exchange rollback all reach their assertions without migration races or
+    active-company invariant failures.
+
+    B5 live command:
+    `COMPANY_IDENTITY_PG_TEST_URL=<disposable> CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/company-identity/__tests__/postgres-finance-task3.integration.test.ts src/modules/company-identity/__tests__/postgres-login-atomic.integration.test.ts src/modules/company-identity/__tests__/postgres-exchange.integration.test.ts`
+
+    Owned Red test paths:
+    `packages/backend/src/modules/company-identity/__tests__/finance-task3-review-b.red.test.ts`,
+    `packages/backend/src/modules/company-identity/__tests__/postgres-finance-task3.integration.test.ts`,
+    `packages/backend/src/modules/company-identity/__tests__/postgres-task3-test-support.ts`,
+    `packages/backend/src/modules/company-identity/__tests__/postgres-login-atomic.integration.test.ts`,
+    `packages/backend/src/modules/company-identity/__tests__/postgres-exchange.integration.test.ts`,
+    `packages/backend/src/modules/finance-operations/__tests__/historical-private-evidence-binding-adapter.red.test.ts`,
+    `packages/backend/src/modules/finance-operations/__tests__/durable-job-projector-review-b.red.test.ts`,
+    and `packages/storage/src/__tests__/finance-task3-review-b.red.test.ts`.
+
+    `git diff --check` exits 0. Focused ESLint exits 0 for the owned backend
+    and storage tests. No production source changed. The task remains `[~]`
+    because the Red failures identify missing implementation, not environment.
 - [b] Task: Add live CRM `CustomerBillingCatalogPort` and Tutor
   `TutorFinancialExportPort` owner contracts and adapters only after those
   source owners exist and accept source-native identities, versions, evidence,
