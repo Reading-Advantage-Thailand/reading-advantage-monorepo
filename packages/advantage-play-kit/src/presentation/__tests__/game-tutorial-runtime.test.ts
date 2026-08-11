@@ -492,7 +492,7 @@ describe("guided gameplay tutorial runtime", () => {
     const harness = await createHarness();
 
     await playAllSteps(harness);
-    const firstRunRecords = harness.driver.executed.slice();
+    const firstRunRecords = harness.driver.executed.map((run) => ({ ...run }));
     const firstRun = toRelativeMechanicRuns(firstRunRecords);
     expect(firstRun, "the first seeded playback must execute at least one action").toHaveLength(3);
 
