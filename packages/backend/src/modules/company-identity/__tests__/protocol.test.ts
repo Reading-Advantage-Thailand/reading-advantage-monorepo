@@ -3,6 +3,7 @@ import { createHash, generateKeyPairSync } from "node:crypto";
 import { describe, expect, it } from "vitest";
 
 import {
+  COMPANY_IDENTITY_AUDIT_METADATA_KEYS,
   createRs256IdentityTokenSigner,
   fingerprintSecret,
   hashBearerToken,
@@ -13,9 +14,7 @@ import {
 describe("company identity protocol primitives", () => {
   it("verifies exact S256 PKCE challenges", () => {
     const verifier = "a-secure-pkce-verifier-value-that-is-43-characters-long";
-    const challenge = createHash("sha256")
-      .update(verifier)
-      .digest("base64url");
+    const challenge = createHash("sha256").update(verifier).digest("base64url");
 
     expect(verifyPkceS256(verifier, challenge)).toBe(true);
     expect(verifyPkceS256(`${verifier}x`, challenge)).toBe(false);
@@ -33,8 +32,12 @@ describe("company identity protocol primitives", () => {
     const key = Buffer.alloc(32, 7);
     const first = fingerprintSecret(key, "credential-reset", "secret-one");
     expect(first).toMatch(/^[0-9a-f]{64}$/);
-    expect(first).toBe(fingerprintSecret(key, "credential-reset", "secret-one"));
-    expect(first).not.toBe(fingerprintSecret(key, "credential-reset", "secret-two"));
+    expect(first).toBe(
+      fingerprintSecret(key, "credential-reset", "secret-one"),
+    );
+    expect(first).not.toBe(
+      fingerprintSecret(key, "credential-reset", "secret-two"),
+    );
     expect(first).not.toContain("secret-one");
   });
 
@@ -48,6 +51,56 @@ describe("company identity protocol primitives", () => {
         nested: { code: "must-not-survive" },
       }),
     ).toEqual({ source: "accounts-ui", roleKey: "SALES_REP" });
+  });
+
+  it("keeps protocol audit metadata keys explicit and flat", () => {
+    expect(COMPANY_IDENTITY_AUDIT_METADATA_KEYS).toEqual([
+      "source",
+      "previousStatus",
+      "newStatus",
+      "roleKey",
+      "clientId",
+      "requestedClientId",
+      "registeredClientId",
+      "applicationKey",
+      "resourceType",
+      "routeBindingId",
+      "routeMethod",
+      "routePath",
+      "routeTransport",
+      "credentialAlgorithm",
+      "sessionCount",
+      "normalizationVersion",
+      "migrationRunId",
+      "sourcePrincipalId",
+      "sourceFingerprint",
+      "idempotencyReplay",
+      "expiresAt",
+      "reasonCategory",
+    ]);
+    expect(
+      projectSecretSafeAuditMetadata({
+        requestedClientId: "marketing-server",
+        registeredClientId: "marketing-server",
+        applicationKey: "marketing",
+        resourceType: "company-employee",
+        routeBindingId: "company-identity.employees.create",
+        routeMethod: "POST",
+        routePath: "/api/admin/employees",
+        routeTransport: "next-http",
+        targetAccountId: "must-remain-top-level",
+        accessToken: "must-not-survive",
+      }),
+    ).toEqual({
+      requestedClientId: "marketing-server",
+      registeredClientId: "marketing-server",
+      applicationKey: "marketing",
+      resourceType: "company-employee",
+      routeBindingId: "company-identity.employees.create",
+      routeMethod: "POST",
+      routePath: "/api/admin/employees",
+      routeTransport: "next-http",
+    });
   });
 
   it("signs verifiable RS256 identity tokens with a stable key id", async () => {
@@ -79,19 +132,24 @@ describe("company identity protocol primitives", () => {
       authVersion: 1,
     });
 
-    await expect(signer.verify(token, "sales", "nonce")).resolves.toMatchObject({
-      aud: "sales",
-      username: "owner",
-      displayName: "Company Owner",
-      roles: ["SALES_REP"],
-    });
+    await expect(signer.verify(token, "sales", "nonce")).resolves.toMatchObject(
+      {
+        aud: "sales",
+        username: "owner",
+        displayName: "Company Owner",
+        roles: ["SALES_REP"],
+      },
+    );
     await expect(signer.verify(token, "marketing", "nonce")).rejects.toThrow(
       "IDENTITY_TOKEN_AUDIENCE_INVALID",
     );
-    await expect(signer.verify(token, "sales", "different-nonce")).rejects.toThrow(
-      "IDENTITY_TOKEN_NONCE_INVALID",
-    );
-    expect(signer.jwk()).toMatchObject({ kid: "accounts-2026-01", alg: "RS256" });
+    await expect(
+      signer.verify(token, "sales", "different-nonce"),
+    ).rejects.toThrow("IDENTITY_TOKEN_NONCE_INVALID");
+    expect(signer.jwk()).toMatchObject({
+      kid: "accounts-2026-01",
+      alg: "RS256",
+    });
   }, 15_000);
 
   it("rejects wrong issuer, expired, and future-issued signed claims with clock skew", async () => {

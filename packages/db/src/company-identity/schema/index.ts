@@ -252,6 +252,11 @@ export const companyOrganizations = pgTable(
   },
   (table) => [
     uniqueIndex("company_organizations_stable_key_unique").on(table.stableKey),
+    uniqueIndex("company_organizations_single_active_internal_company")
+      .on(table.organizationType)
+      .where(
+        sql`${table.organizationType} = 'INTERNAL_COMPANY' and ${table.status} = 'ACTIVE'`,
+      ),
     check(
       "company_organizations_stable_key_format_check",
       sql`${table.stableKey} ~ '^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$'`,
@@ -846,7 +851,7 @@ export const companyIdentityAuditEvents = pgTable(
     ),
     check(
       "company_identity_audit_events_metadata_allowed_keys_check",
-      sql`jsonb_typeof(${table.metadata}) = 'object' AND (${table.metadata} - ARRAY['source', 'previousStatus', 'newStatus', 'roleKey', 'clientId', 'credentialAlgorithm', 'sessionCount', 'normalizationVersion', 'migrationRunId', 'sourcePrincipalId', 'sourceFingerprint', 'idempotencyReplay', 'expiresAt', 'reasonCategory']::text[]) = '{}'::jsonb`,
+      sql`jsonb_typeof(${table.metadata}) = 'object' AND (${table.metadata} - ARRAY['source', 'previousStatus', 'newStatus', 'roleKey', 'clientId', 'requestedClientId', 'registeredClientId', 'applicationKey', 'resourceType', 'routeBindingId', 'routeMethod', 'routePath', 'routeTransport', 'credentialAlgorithm', 'sessionCount', 'normalizationVersion', 'migrationRunId', 'sourcePrincipalId', 'sourceFingerprint', 'idempotencyReplay', 'expiresAt', 'reasonCategory']::text[]) = '{}'::jsonb`,
     ),
     check(
       "company_identity_audit_events_operation_length_check",

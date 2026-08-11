@@ -13,5 +13,9 @@ export * from "./invalid-combinations.js";
 export * from "./policies.js";
 export * from "./primitives.js";
 export * from "./projections.js";
+export {
+  capabilityRequestContextSchema,
+} from "./request-context.js";
+export type { CapabilityRequestContext } from "./request-context.js";
 export * from "./registry.js";
 export * from "./route-bindings.js";

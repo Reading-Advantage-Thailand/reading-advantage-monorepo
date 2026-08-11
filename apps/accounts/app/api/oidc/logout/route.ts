@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { getIdentityComposition } from "@/lib/server/identity";
+import {
+  accountsOptionsResponse,
+  companyIdentityRouteHandlers,
+} from "@/lib/server/company-identity-route-bindings";
 
 const authorizationHeaderSchema = z
   .string()
@@ -15,8 +19,19 @@ export async function POST(request: Request): Promise<NextResponse> {
   if (!authorization.success) {
     return NextResponse.json({ error: "invalid_token" }, { status: 401 });
   }
-  const revoked = await (
-    await getIdentityComposition()
-  ).service.localLogout(authorization.data.slice("Bearer ".length));
+  const revoked = await companyIdentityRouteHandlers.oidcLogout(
+    () =>
+      getIdentityComposition().then((composition) =>
+        composition.service.localLogout(
+          authorization.data.slice("Bearer ".length),
+        ),
+      ),
+  );
   return NextResponse.json({ revoked });
 }
+
+/** Handles framework preflight explicitly under its reviewed route binding. */
+export const OPTIONS = (): NextResponse =>
+  companyIdentityRouteHandlers.oidcLogoutOptions(() =>
+    accountsOptionsResponse("POST, OPTIONS"),
+  );

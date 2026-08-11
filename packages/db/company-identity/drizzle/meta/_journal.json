@@ -15,6 +15,13 @@
       "when": 1784108491046,
       "tag": "0001_immutable_identity_audit",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1786380692203,
+      "tag": "0002_identity_audit_metadata_allowlist",
+      "breakpoints": true
     }
   ]
 }

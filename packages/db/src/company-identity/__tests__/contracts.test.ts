@@ -237,6 +237,9 @@ function validAuthorizationCodeRow(): Record<string, unknown> {
 function validAuditMetadata(): Record<string, unknown> {
   return {
     clientId: "marketing-server",
+    requestedClientId: "marketing-server",
+    registeredClientId: "marketing-server",
+    applicationKey: "marketing",
     credentialAlgorithm: "ARGON2ID",
     expiresAt: "2026-07-15T12:05:00.000Z",
     idempotencyReplay: false,
@@ -246,6 +249,11 @@ function validAuditMetadata(): Record<string, unknown> {
     previousStatus: "ACTIVE",
     reasonCategory: "administrator-action",
     roleKey: "EMPLOYEE",
+    resourceType: "company-employee",
+    routeBindingId: "company-identity.employees.create",
+    routeMethod: "POST",
+    routePath: "/api/admin/employees",
+    routeTransport: "next-http",
     sessionCount: 3,
     source: "accounts",
     sourceFingerprint: LOWER_HEX_64,

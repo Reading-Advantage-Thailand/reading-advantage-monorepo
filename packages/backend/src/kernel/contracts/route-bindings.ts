@@ -21,6 +21,8 @@ export const httpMethodSchema = z.enum([
   "PUT",
   "PATCH",
   "DELETE",
+  "HEAD",
+  "OPTIONS",
 ]);
 
 /** HTTP method supported by generated request bindings. */

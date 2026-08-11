@@ -12,6 +12,7 @@ import {
   createEmployeeInputSchema,
   employeeSchema,
   managementResultSchema,
+  applicationKeySchema,
   resetCredentialInputSchema,
   revokeEmployeeSessionsInputSchema,
   setApplicationRolesInputSchema,
@@ -37,42 +38,148 @@ const owner = Object.freeze({
 });
 const globalPolicyId = "company-identity.global";
 const adminPolicyId = "company-identity.company-admin";
-const sourceModule = "packages/backend/src/modules/company-identity/capabilities.ts";
+const sourceModule =
+  "packages/backend/src/modules/company-identity/capabilities.ts";
 const idempotencyKeySchema = z.string().min(16).max(200);
 const inputWithoutActor = <TSchema extends z.AnyZodObject>(schema: TSchema) =>
   schema.omit({ actorAccountId: true });
-const auditProjection = createAllowedProjectionContract({
-  projectorId: "company-identity.employee.audit",
-  shape: { resourceType: z.literal("company-employee") },
+
+/**
+ * Creates an immutable audit projection for identity dimensions.
+ * @param input Projection identity and whether an application dimension is expected.
+ * @returns A strict audit contract and its source projector.
+ */
+function createAuditProjection(input: {
+  readonly projectorId: string;
+  readonly includeApplicationKey?: boolean;
+}) {
+  const contract = createAllowedProjectionContract({
+    projectorId: input.projectorId,
+    shape: {
+      ...(input.includeApplicationKey
+        ? { applicationKey: applicationKeySchema.optional() }
+        : {}),
+      targetAccountId: z.string().uuid().optional(),
+      resourceType: z.literal("company-employee"),
+    },
+  });
+  return {
+    contract,
+    project: async (source: unknown) => ({
+      ...(() => {
+        const sourceRecord = source as {
+          readonly targetAccountId?: unknown;
+          readonly applicationKey?: unknown;
+        };
+        const targetAccountId =
+          sourceRecord.targetAccountId === undefined
+            ? undefined
+            : z.string().uuid().parse(sourceRecord.targetAccountId);
+        const applicationKey =
+          sourceRecord.applicationKey === undefined
+            ? undefined
+            : applicationKeySchema.parse(sourceRecord.applicationKey);
+        return {
+          ...(targetAccountId === undefined ? {} : { targetAccountId }),
+          ...(input.includeApplicationKey && applicationKey !== undefined
+            ? { applicationKey }
+            : {}),
+        };
+      })(),
+      resourceType: "company-employee" as const,
+    }),
+  };
+}
+
+const auditProjections = Object.freeze({
+  [companyIdentityCapabilityIds.listEmployees]: createAuditProjection({
+    projectorId: "company-identity.employee.audit.list",
+  }),
+  [companyIdentityCapabilityIds.createEmployee]: createAuditProjection({
+    projectorId: "company-identity.employee.audit.create",
+  }),
+  [companyIdentityCapabilityIds.setEmployeeStatus]: createAuditProjection({
+    projectorId: "company-identity.employee.audit.status",
+  }),
+  [companyIdentityCapabilityIds.setApplicationRoles]: createAuditProjection({
+    projectorId: "company-identity.employee.audit.application-roles",
+    includeApplicationKey: true,
+  }),
+  [companyIdentityCapabilityIds.setCompanyRoles]: createAuditProjection({
+    projectorId: "company-identity.employee.audit.company-roles",
+  }),
+  [companyIdentityCapabilityIds.resetCredential]: createAuditProjection({
+    projectorId: "company-identity.employee.audit.credential",
+  }),
+  [companyIdentityCapabilityIds.revokeSessions]: createAuditProjection({
+    projectorId: "company-identity.employee.audit.sessions",
+  }),
 });
+
+/**
+ * Creates the immutable audit policy for one company-identity capability.
+ * @param capabilityId Capability whose route projection is required.
+ * @param eventType Stable audit event type declared by the capability.
+ * @returns An immutable required-audit policy bound to the capability route.
+ */
+function auditPolicy(capabilityId: string, eventType: string) {
+  return {
+    mode: "required" as const,
+    eventType,
+    metadataProjection:
+      auditProjections[capabilityId as keyof typeof auditProjections].contract
+        .reference,
+    immutable: true as const,
+  };
+}
 const commonErrors = [
   {
     code: "FORBIDDEN",
     safeMessage: "Company administrator access is required.",
     retryable: false,
-    transport: { httpStatus: 403, trpcCode: "FORBIDDEN", jobOutcome: "terminal" },
+    transport: {
+      httpStatus: 403,
+      trpcCode: "FORBIDDEN",
+      jobOutcome: "terminal",
+    },
   },
   {
     code: "EMPLOYEE_NOT_FOUND",
     safeMessage: "The employee was not found.",
     retryable: false,
-    transport: { httpStatus: 404, trpcCode: "NOT_FOUND", jobOutcome: "terminal" },
+    transport: {
+      httpStatus: 404,
+      trpcCode: "NOT_FOUND",
+      jobOutcome: "terminal",
+    },
   },
   {
     code: "USERNAME_CONFLICT",
     safeMessage: "That username is unavailable.",
     retryable: false,
-    transport: { httpStatus: 409, trpcCode: "CONFLICT", jobOutcome: "terminal" },
+    transport: {
+      httpStatus: 409,
+      trpcCode: "CONFLICT",
+      jobOutcome: "terminal",
+    },
   },
   {
     code: "LAST_COMPANY_ADMIN_REQUIRED",
     safeMessage: "At least one active company administrator is required.",
     retryable: false,
-    transport: { httpStatus: 409, trpcCode: "CONFLICT", jobOutcome: "terminal" },
+    transport: {
+      httpStatus: 409,
+      trpcCode: "CONFLICT",
+      jobOutcome: "terminal",
+    },
   },
 ] as const;
 
-function commandPolicies(id: string, summary: string, risk: "security-sensitive" | "destructive") {
+function commandPolicies(
+  id: string,
+  summary: string,
+  risk: "security-sensitive" | "destructive",
+) {
   return {
     id,
     summary,
@@ -82,12 +189,7 @@ function commandPolicies(id: string, summary: string, risk: "security-sensitive"
     authorization: { mode: "policy" as const, policyId: adminPolicyId },
     tenancy: { mode: "global" as const, globalPolicyId },
     errors: commonErrors,
-    audit: {
-      mode: "required" as const,
-      eventType: `${id}.executed`,
-      metadataProjection: auditProjection.reference,
-      immutable: true as const,
-    },
+    audit: auditPolicy(id, `${id}.executed`),
     observability: {
       operationName: id,
       timeoutMs: 10_000,
@@ -127,10 +229,10 @@ export const listEmployeesCapability = defineQueryCapability({
   tenancy: { mode: "global", globalPolicyId },
   errors: commonErrors,
   audit: {
-    mode: "required",
-    eventType: "company-identity.employees.listed",
-    metadataProjection: auditProjection.reference,
-    immutable: true,
+    ...auditPolicy(
+      companyIdentityCapabilityIds.listEmployees,
+      "company-identity.employees.listed",
+    ),
   },
   observability: {
     operationName: companyIdentityCapabilityIds.listEmployees,
@@ -145,37 +247,61 @@ export const listEmployeesCapability = defineQueryCapability({
 
 /** Handler-free descriptor for creating one employee. */
 export const createEmployeeCapability = defineCommandCapability({
-  ...commandPolicies(companyIdentityCapabilityIds.createEmployee, "Creates one company employee.", "security-sensitive"),
+  ...commandPolicies(
+    companyIdentityCapabilityIds.createEmployee,
+    "Creates one company employee.",
+    "security-sensitive",
+  ),
   input: createInputSchema,
   output: employeeSchema,
 });
 /** Handler-free descriptor for changing employee lifecycle status. */
 export const setEmployeeStatusCapability = defineCommandCapability({
-  ...commandPolicies(companyIdentityCapabilityIds.setEmployeeStatus, "Suspends or restores one employee.", "destructive"),
+  ...commandPolicies(
+    companyIdentityCapabilityIds.setEmployeeStatus,
+    "Suspends or restores one employee.",
+    "destructive",
+  ),
   input: statusInputSchema,
   output: managementResultSchema,
 });
 /** Handler-free descriptor for replacing application roles. */
 export const setApplicationRolesCapability = defineCommandCapability({
-  ...commandPolicies(companyIdentityCapabilityIds.setApplicationRoles, "Replaces roles in one application namespace.", "security-sensitive"),
+  ...commandPolicies(
+    companyIdentityCapabilityIds.setApplicationRoles,
+    "Replaces roles in one application namespace.",
+    "security-sensitive",
+  ),
   input: appRolesInputSchema,
   output: employeeSchema,
 });
 /** Handler-free descriptor for replacing additive company roles. */
 export const setCompanyRolesCapability = defineCommandCapability({
-  ...commandPolicies(companyIdentityCapabilityIds.setCompanyRoles, "Replaces additive company roles.", "security-sensitive"),
+  ...commandPolicies(
+    companyIdentityCapabilityIds.setCompanyRoles,
+    "Replaces additive company roles.",
+    "security-sensitive",
+  ),
   input: companyRolesInputSchema,
   output: employeeSchema,
 });
 /** Handler-free descriptor for resetting one employee credential. */
 export const resetCredentialCapability = defineCommandCapability({
-  ...commandPolicies(companyIdentityCapabilityIds.resetCredential, "Resets one credential and revokes sessions.", "destructive"),
+  ...commandPolicies(
+    companyIdentityCapabilityIds.resetCredential,
+    "Resets one credential and revokes sessions.",
+    "destructive",
+  ),
   input: credentialInputSchema,
   output: managementResultSchema,
 });
 /** Handler-free descriptor for revoking one employee's sessions. */
 export const revokeSessionsCapability = defineCommandCapability({
-  ...commandPolicies(companyIdentityCapabilityIds.revokeSessions, "Revokes every active employee session.", "destructive"),
+  ...commandPolicies(
+    companyIdentityCapabilityIds.revokeSessions,
+    "Revokes every active employee session.",
+    "destructive",
+  ),
   input: revokeInputSchema,
   output: managementResultSchema,
 });
@@ -187,25 +313,34 @@ export const revokeSessionsCapability = defineCommandCapability({
 export function createCompanyIdentityCapabilityReferences(): CapabilityRegistrationReferences {
   return {
     authorizationPolicies: {
-      getAuthorizationPolicy: (policyId) => policyId === adminPolicyId
-        ? { policyId, authentication: "user" }
-        : undefined,
+      getAuthorizationPolicy: (policyId) =>
+        policyId === adminPolicyId
+          ? { policyId, authentication: "user" }
+          : undefined,
     },
     globalTenancyPolicies: {
-      getGlobalTenancyPolicy: (policyId) => policyId === globalPolicyId
-        ? { policyId, ownerPackage: owner.package }
-        : undefined,
+      getGlobalTenancyPolicy: (policyId) =>
+        policyId === globalPolicyId
+          ? { policyId, ownerPackage: owner.package }
+          : undefined,
     },
     tenantResolvers: { getTenantResolver: () => undefined },
     structuredProjectors: { getProjector: () => undefined },
     auditProjectors: {
-      getAuditProjector: (reference) =>
-        reference.projectorId === auditProjection.reference.projectorId &&
-        reference.schemaIdentity === auditProjection.reference.schemaIdentity
-          ? { contract: auditProjection, project: async () => ({ resourceType: "company-employee" as const }) }
-          : undefined,
+      getAuditProjector: (reference) => {
+        const projection = Object.values(auditProjections).find(
+          (candidate) =>
+            candidate.contract.reference.projectorId ===
+              reference.projectorId &&
+            candidate.contract.reference.schemaIdentity ===
+              reference.schemaIdentity,
+        );
+        return projection;
+      },
     },
-    resourceReferenceProjectors: { getResourceReferenceProjector: () => undefined },
+    resourceReferenceProjectors: {
+      getResourceReferenceProjector: () => undefined,
+    },
     externalCallProtocols: { hasExternalCallProtocol: () => false },
   };
 }
@@ -229,8 +364,13 @@ export function createCompanyIdentityCapabilityRegistry(
     },
     references,
   });
-  const actor = (context: { readonly principal: { readonly userId: string } | null }) => {
-    if (!context.principal) throw Object.assign(new Error("Authentication required"), { code: "FORBIDDEN" });
+  const actor = (context: {
+    readonly principal: { readonly userId: string } | null;
+  }) => {
+    if (!context.principal)
+      throw Object.assign(new Error("Authentication required"), {
+        code: "FORBIDDEN",
+      });
     return context.principal.userId;
   };
   registry.register({
@@ -241,32 +381,56 @@ export function createCompanyIdentityCapabilityRegistry(
   registry.register({
     descriptor: createEmployeeCapability,
     sourceModule,
-    handler: async (context, input) => service.createEmployee({ ...input, actorAccountId: actor(context) }),
+    handler: async (context, input) =>
+      service.createEmployee({
+        ...input,
+        actorAccountId: actor(context),
+      }),
   });
   registry.register({
     descriptor: setEmployeeStatusCapability,
     sourceModule,
-    handler: async (context, input) => service.setEmployeeStatus({ ...input, actorAccountId: actor(context) }),
+    handler: async (context, input) =>
+      service.setEmployeeStatus({
+        ...input,
+        actorAccountId: actor(context),
+      }),
   });
   registry.register({
     descriptor: setApplicationRolesCapability,
     sourceModule,
-    handler: async (context, input) => service.setApplicationRoles({ ...input, actorAccountId: actor(context) }),
+    handler: async (context, input) =>
+      service.setApplicationRoles({
+        ...input,
+        actorAccountId: actor(context),
+      }),
   });
   registry.register({
     descriptor: setCompanyRolesCapability,
     sourceModule,
-    handler: async (context, input) => service.setCompanyRoles({ ...input, actorAccountId: actor(context) }),
+    handler: async (context, input) =>
+      service.setCompanyRoles({
+        ...input,
+        actorAccountId: actor(context),
+      }),
   });
   registry.register({
     descriptor: resetCredentialCapability,
     sourceModule,
-    handler: async (context, input) => service.resetCredential({ ...input, actorAccountId: actor(context) }),
+    handler: async (context, input) =>
+      service.resetCredential({
+        ...input,
+        actorAccountId: actor(context),
+      }),
   });
   registry.register({
     descriptor: revokeSessionsCapability,
     sourceModule,
-    handler: async (context, input) => service.revokeEmployeeSessions({ ...input, actorAccountId: actor(context) }),
+    handler: async (context, input) =>
+      service.revokeEmployeeSessions({
+        ...input,
+        actorAccountId: actor(context),
+      }),
   });
   return registry;
 }

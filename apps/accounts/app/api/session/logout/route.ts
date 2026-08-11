@@ -3,6 +3,10 @@ import { NextResponse } from "next/server";
 
 import { getIdentityComposition } from "@/lib/server/identity";
 import { identityErrorResponse, requireSameOrigin } from "@/lib/server/http";
+import {
+  accountsOptionsResponse,
+  companyIdentityRouteHandlers,
+} from "@/lib/server/company-identity-route-bindings";
 
 /** Revokes the central SSO session and clears its host-only cookie. */
 export async function POST(request: Request): Promise<NextResponse> {
@@ -12,7 +16,9 @@ export async function POST(request: Request): Promise<NextResponse> {
     const store = await cookies();
     const token = store.get(composition.cookie.name)?.value;
     const sessionsRevoked = token
-      ? await composition.service.globalLogout(token)
+      ? await companyIdentityRouteHandlers.sessionLogout(
+          () => composition.service.globalLogout(token),
+        )
       : 0;
     store.set(composition.cookie.name, "", {
       httpOnly: true,
@@ -26,3 +32,9 @@ export async function POST(request: Request): Promise<NextResponse> {
     return identityErrorResponse(error);
   }
 }
+
+/** Handles framework preflight explicitly under its reviewed route binding. */
+export const OPTIONS = (): NextResponse =>
+  companyIdentityRouteHandlers.sessionLogoutOptions(() =>
+    accountsOptionsResponse("POST, OPTIONS"),
+  );

@@ -3,6 +3,10 @@ import { NextResponse } from "next/server";
 import { CompanyIdentityError } from "@reading-advantage/backend";
 
 import { getIdentityComposition } from "@/lib/server/identity";
+import {
+  accountsOptionsResponse,
+  companyIdentityRouteHandlers,
+} from "@/lib/server/company-identity-route-bindings";
 
 /** Exchanges one authorization code for an opaque app session and signed ID token. */
 export async function POST(request: Request): Promise<NextResponse> {
@@ -19,22 +23,33 @@ export async function POST(request: Request): Promise<NextResponse> {
         basicSecret = decoded.slice(separator + 1);
       }
     }
-    const result = await (await getIdentityComposition()).service.exchangeCode({
-      grantType: form.get("grant_type"),
-      code: form.get("code"),
-      clientId: basicClientId ?? form.get("client_id"),
-      clientSecret: basicSecret ?? form.get("client_secret") ?? undefined,
-      redirectUri: form.get("redirect_uri"),
-      codeVerifier: form.get("code_verifier"),
-    });
-    return NextResponse.json({
-      access_token: result.accessToken,
-      token_type: result.tokenType,
-      expires_in: result.expiresIn,
-      id_token: result.idToken,
-    }, { headers: { "Cache-Control": "no-store", Pragma: "no-cache" } });
+    const result = await companyIdentityRouteHandlers.token(
+      () =>
+        getIdentityComposition().then((composition) =>
+          composition.service.exchangeCode({
+            grantType: form.get("grant_type"),
+            code: form.get("code"),
+            clientId: basicClientId ?? form.get("client_id"),
+            clientSecret: basicSecret ?? form.get("client_secret") ?? undefined,
+            redirectUri: form.get("redirect_uri"),
+            codeVerifier: form.get("code_verifier"),
+          }),
+        ),
+    );
+    return NextResponse.json(
+      {
+        access_token: result.accessToken,
+        token_type: result.tokenType,
+        expires_in: result.expiresIn,
+        id_token: result.idToken,
+      },
+      { headers: { "Cache-Control": "no-store", Pragma: "no-cache" } },
+    );
   } catch (error) {
-    if (error instanceof CompanyIdentityError && error.code === "CLIENT_INVALID") {
+    if (
+      error instanceof CompanyIdentityError &&
+      error.code === "CLIENT_INVALID"
+    ) {
       return NextResponse.json(
         { error: "invalid_client" },
         {
@@ -56,3 +71,9 @@ export async function POST(request: Request): Promise<NextResponse> {
     );
   }
 }
+
+/** Handles framework preflight explicitly under its reviewed route binding. */
+export const OPTIONS = (): NextResponse =>
+  companyIdentityRouteHandlers.tokenOptions(() =>
+    accountsOptionsResponse("POST, OPTIONS"),
+  );

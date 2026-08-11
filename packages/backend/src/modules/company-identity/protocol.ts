@@ -15,12 +15,21 @@ import {
 
 const PKCE_VERIFIER_PATTERN = /^[A-Za-z0-9._~-]{43,128}$/;
 const PKCE_CHALLENGE_PATTERN = /^[A-Za-z0-9_-]{43}$/;
-const AUDIT_METADATA_KEYS = new Set([
+/** Exact flat metadata keys accepted by the company-identity audit ledger. */
+export const COMPANY_IDENTITY_AUDIT_METADATA_KEYS = Object.freeze([
   "source",
   "previousStatus",
   "newStatus",
   "roleKey",
   "clientId",
+  "requestedClientId",
+  "registeredClientId",
+  "applicationKey",
+  "resourceType",
+  "routeBindingId",
+  "routeMethod",
+  "routePath",
+  "routeTransport",
   "credentialAlgorithm",
   "sessionCount",
   "normalizationVersion",
@@ -30,7 +39,11 @@ const AUDIT_METADATA_KEYS = new Set([
   "idempotencyReplay",
   "expiresAt",
   "reasonCategory",
-]);
+] as const);
+
+const AUDIT_METADATA_KEYS = new Set<string>(
+  COMPANY_IDENTITY_AUDIT_METADATA_KEYS,
+);
 
 /** Public JSON Web Key exposed by the Accounts discovery endpoint. */
 export interface IdentityPublicJwk {
@@ -93,7 +106,8 @@ export function fingerprintSecret(
   context: string,
   secret: string,
 ): string {
-  if (key.byteLength < 32) throw new Error("IDENTITY_FINGERPRINT_KEY_TOO_SHORT");
+  if (key.byteLength < 32)
+    throw new Error("IDENTITY_FINGERPRINT_KEY_TOO_SHORT");
   return createHmac("sha256", key)
     .update(context, "utf8")
     .update("\u0000", "utf8")
@@ -170,8 +184,11 @@ export function createRs256IdentityTokenSigner(input: {
   if (issuerUrl !== input.issuerUrl) {
     throw new Error("IDENTITY_TOKEN_ISSUER_INVALID");
   }
-  if (!Number.isInteger(input.clockSkewSeconds) ||
-      input.clockSkewSeconds < 0 || input.clockSkewSeconds > 120) {
+  if (
+    !Number.isInteger(input.clockSkewSeconds) ||
+    input.clockSkewSeconds < 0 ||
+    input.clockSkewSeconds > 120
+  ) {
     throw new Error("IDENTITY_TOKEN_CLOCK_SKEW_INVALID");
   }
   const now = input.now ?? (() => new Date());

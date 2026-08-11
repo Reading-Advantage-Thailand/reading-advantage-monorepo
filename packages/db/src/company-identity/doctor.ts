@@ -71,6 +71,14 @@ function sentinelFor(entry: JournalEntry): CompanyIdentityDoctorSentinel {
         tableName: "company_identity_audit_events",
         triggerName: "company_identity_audit_events_immutable_trigger",
       };
+    case "0002_identity_audit_metadata_allowlist":
+      return {
+        migrationTag: entry.tag,
+        kind: "column",
+        schemaName: "public",
+        tableName: "company_identity_audit_events",
+        columnName: "metadata",
+      };
     default:
       throw new Error(
         `Company identity doctor has no reviewed sentinel for migration ${entry.tag}.`,

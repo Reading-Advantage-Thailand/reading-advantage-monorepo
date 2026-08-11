@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 
 import { identityErrorResponse } from "@/lib/server/http";
 import { getIdentityComposition } from "@/lib/server/identity";
+import {
+  accountsOptionsResponse,
+  companyIdentityRouteHandlers,
+} from "@/lib/server/company-identity-route-bindings";
 
 /** Returns current revocation-aware application session identity. */
 export async function POST(request: Request): Promise<NextResponse> {
@@ -20,11 +24,14 @@ export async function POST(request: Request): Promise<NextResponse> {
       return NextResponse.json({ error: "invalid_client" }, { status: 401 });
     }
     return NextResponse.json(
-      await (await getIdentityComposition()).service.introspect({
-        accessToken: String(form.get("token") ?? ""),
-        clientId: decoded.slice(0, separator),
-        clientSecret: decoded.slice(separator + 1),
-      }),
+      await companyIdentityRouteHandlers.introspect(
+        async () =>
+          (await getIdentityComposition()).service.introspect({
+            accessToken: String(form.get("token") ?? ""),
+            clientId: decoded.slice(0, separator),
+            clientSecret: decoded.slice(separator + 1),
+          }),
+      ),
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch (error) {
@@ -34,3 +41,9 @@ export async function POST(request: Request): Promise<NextResponse> {
       : response;
   }
 }
+
+/** Handles framework preflight explicitly under its reviewed route binding. */
+export const OPTIONS = (): NextResponse =>
+  companyIdentityRouteHandlers.introspectOptions(() =>
+    accountsOptionsResponse("POST, OPTIONS"),
+  );

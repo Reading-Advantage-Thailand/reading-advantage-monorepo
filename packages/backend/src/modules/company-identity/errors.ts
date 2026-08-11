@@ -1,6 +1,7 @@
 /** Stable identity error codes that may cross transport boundaries. */
 export type CompanyIdentityErrorCode =
   | "AUTHENTICATION_FAILED"
+  | "APPLICATION_SESSION_CONTEXT_INVALID"
   | "AUTHORIZATION_CODE_INVALID"
   | "CLIENT_INVALID"
   | "EMPLOYEE_NOT_FOUND"

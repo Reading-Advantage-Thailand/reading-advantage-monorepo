@@ -2,15 +2,23 @@ import { createHash, randomBytes, randomUUID } from "node:crypto";
 
 import type postgres from "postgres";
 
+import { getCapabilityRequestContext } from "../../kernel/contracts/request-context.js";
 import type { Employee } from "./contracts.js";
 import { CompanyIdentityError } from "./errors.js";
+import { projectSecretSafeAuditMetadata } from "./protocol.js";
 import type {
+  AuthorizationCodeInsert,
   AuthorizationCodeRecord,
+  ApplicationSessionRevocation,
+  ApplicationSessionInsert,
+  AuthorizationCodeTransactionHandler,
   CompanyIdentityRepository,
   IdentityAuditInput,
   OidcClientRecord,
+  SsoSessionInsert,
   SsoSessionRecord,
 } from "./repository.js";
+import { registerCompanyIdentityAuthorizationCodeExecutor } from "./repository.js";
 
 type Sql = postgres.Sql;
 
@@ -21,7 +29,10 @@ function asSql(value: postgres.TransactionSql): Sql {
 function normalizeUsername(value: string): string {
   const normalized = value.normalize("NFKC").trim().toLowerCase();
   if (!/^[a-z0-9](?:[a-z0-9._-]{0,62}[a-z0-9])?$/.test(normalized)) {
-    throw new CompanyIdentityError("AUTHENTICATION_FAILED", "Username or password is invalid.");
+    throw new CompanyIdentityError(
+      "AUTHENTICATION_FAILED",
+      "Username or password is invalid.",
+    );
   }
   return normalized;
 }
@@ -55,21 +66,38 @@ function stableJson(value: unknown): string {
   return JSON.stringify(value);
 }
 
-async function assertCompanyAdmin(sql: Sql, actorAccountId: string): Promise<void> {
-  const [row] = await sql<Array<{ allowed: boolean }>>`
-    select exists (
-      select 1
+async function assertCompanyAdmin(
+  sql: Sql,
+  actorAccountId: string,
+  targetAccountId?: string,
+): Promise<string> {
+  const [row] = await sql<Array<{ organization_id: string }>>`
+    select organization.id as organization_id
       from company_accounts account
       join company_organization_memberships membership
         on membership.account_id = account.id and membership.status = 'ACTIVE'
+      join company_organizations organization
+        on organization.id = membership.organization_id
+       and organization.stable_key = 'internal-company'
+       and organization.status = 'ACTIVE'
       join company_role_assignments role
         on role.membership_id = membership.id
        and role.organization_id = membership.organization_id
        and role.role_key = 'COMPANY_ADMIN'
-      where account.id = ${actorAccountId} and account.status = 'ACTIVE'
-    ) as allowed
+     where account.id = ${actorAccountId}
+       and account.status = 'ACTIVE'
+       and (
+         ${targetAccountId === undefined}
+         or exists (
+           select 1
+             from company_organization_memberships target_membership
+            where target_membership.account_id = ${targetAccountId ?? null}
+              and target_membership.organization_id = organization.id
+         )
+       )
+     limit 1
   `;
-  if (!row?.allowed) {
+  if (!row) {
     await appendAudit(sql, {
       correlationId: randomUUID(),
       actorAccountId,
@@ -78,11 +106,19 @@ async function assertCompanyAdmin(sql: Sql, actorAccountId: string): Promise<voi
       reasonCode: "COMPANY_ADMIN_REQUIRED",
       metadata: { reasonCategory: "authorization" },
     });
-    throw new CompanyIdentityError("FORBIDDEN", "Company administrator access is required.");
+    throw new CompanyIdentityError(
+      "FORBIDDEN",
+      "Company administrator access is required.",
+    );
   }
+  return row.organization_id;
 }
 
-async function loadEmployee(sql: Sql, accountId: string): Promise<Employee | null> {
+async function loadEmployee(
+  sql: Sql,
+  accountId: string,
+  organizationId?: string,
+): Promise<Employee | null> {
   const [account] = await sql<
     Array<{
       id: string;
@@ -98,6 +134,7 @@ async function loadEmployee(sql: Sql, accountId: string): Promise<Employee | nul
     from company_accounts account
     join company_organization_memberships membership on membership.account_id = account.id
     where account.id = ${accountId}
+      and (${organizationId === undefined} or membership.organization_id = ${organizationId ?? null})
     order by membership.created_at
     limit 1
   `;
@@ -133,6 +170,29 @@ async function loadEmployee(sql: Sql, accountId: string): Promise<Employee | nul
 }
 
 async function appendAudit(sql: Sql, input: IdentityAuditInput): Promise<void> {
+  const route = getCapabilityRequestContext();
+  const metadata = projectSecretSafeAuditMetadata({
+    ...input.metadata,
+    ...(route === undefined
+      ? {}
+      : {
+          routeBindingId: route.bindingId,
+          routeMethod: route.method,
+          routePath: route.path,
+          routeTransport: route.transport,
+        }),
+  });
+  let applicationId = input.applicationId;
+  const applicationKey =
+    typeof metadata.applicationKey === "string"
+      ? metadata.applicationKey
+      : undefined;
+  if (applicationId === undefined && applicationKey !== undefined) {
+    const [application] = await sql<Array<{ id: string }>>`
+      select id from company_applications where stable_key = ${applicationKey}
+    `;
+    applicationId = application?.id;
+  }
   await sql`
     insert into company_identity_audit_events (
       correlation_id, actor_type, actor_account_id, organization_id,
@@ -140,14 +200,183 @@ async function appendAudit(sql: Sql, input: IdentityAuditInput): Promise<void> {
     ) values (
       ${input.correlationId}, ${input.actorAccountId ? "ACCOUNT" : "SYSTEM"},
       ${input.actorAccountId ?? null}, ${input.organizationId ?? null},
-      ${input.applicationId ?? null}, ${input.targetAccountId ?? null},
+      ${applicationId ?? null}, ${input.targetAccountId ?? null},
       ${input.operation}, ${input.outcome}, ${input.reasonCode ?? null},
-      ${sql.json(input.metadata)}
+      ${sql.json(metadata)}
     )
   `;
 }
 
-async function revokeForAccount(sql: Sql, accountId: string, now: Date, reason: string): Promise<number> {
+/** Inserts a hash-only SSO session on the supplied SQL connection. */
+async function insertSsoSession(
+  sql: Sql,
+  input: SsoSessionInsert,
+): Promise<void> {
+  await sql`
+    insert into company_sso_sessions (
+      id, token_hash, organization_id, membership_id, account_auth_version,
+      created_at, last_seen_at, idle_expires_at, absolute_expires_at, user_agent
+    ) values (
+      ${input.id}, ${input.tokenHash}, ${input.organizationId}, ${input.membershipId},
+      ${input.authVersion}, ${input.createdAt}, ${input.createdAt},
+      ${input.idleExpiresAt}, ${input.absoluteExpiresAt}, ${input.userAgent}
+    )
+  `;
+}
+
+/** Upgrades one already-verified legacy credential inside a surrounding transaction. */
+async function upgradePasswordHash(
+  sql: Sql,
+  accountId: string,
+  passwordHash: string,
+): Promise<void> {
+  await sql`
+    update company_password_credentials
+       set password_hash = ${passwordHash}, algorithm = 'ARGON2ID',
+           credential_version = credential_version + 1,
+           last_verified_at = now(), updated_at = now()
+     where account_id = ${accountId}
+  `;
+}
+
+/**
+ * Inserts one hash-only authorization code on the supplied SQL connection.
+ * @param sql SQL connection or transaction receiving the insert.
+ * @param input Hash-only authorization-code values.
+ * @returns A promise fulfilled after the insert is accepted.
+ */
+async function insertAuthorizationCode(
+  sql: Sql,
+  input: AuthorizationCodeInsert,
+): Promise<void> {
+  await sql`
+    insert into company_oidc_authorization_codes (
+      id, code_hash, oidc_client_id, redirect_uri_id, sso_session_id,
+      code_challenge, code_challenge_method, nonce, scope, issued_at, expires_at
+    ) values (
+      ${input.id}, ${input.codeHash}, ${input.clientId}, ${input.redirectUriId},
+      ${input.ssoSessionId}, ${input.codeChallenge}, 'S256', ${input.nonce},
+      ${input.scope}, ${input.issuedAt}, ${input.expiresAt}
+    )
+  `;
+}
+
+/** Inserts one hash-only application session on a transaction connection. */
+async function insertApplicationSession(
+  transaction: postgres.TransactionSql,
+  input: Omit<ApplicationSessionInsert, "transaction">,
+): Promise<void> {
+  const tx = asSql(transaction);
+  await tx`
+    insert into company_application_sessions (
+      id, token_hash, sso_session_id, organization_id, membership_id,
+      application_id, account_auth_version, created_at, last_checked_at, expires_at
+    ) values (
+      ${input.id}, ${input.tokenHash}, ${input.ssoSessionId}, ${input.organizationId},
+      ${input.membershipId}, ${input.applicationId}, ${input.authVersion},
+      ${input.createdAt}, ${input.createdAt}, ${input.expiresAt}
+    )
+  `;
+}
+
+/** Appends one immutable audit event using an existing code-exchange transaction. */
+async function appendAuditInTransaction(
+  transaction: postgres.TransactionSql,
+  input: IdentityAuditInput,
+): Promise<void> {
+  await appendAudit(asSql(transaction), input);
+}
+
+/**
+ * Consumes one authorization code and executes all exchange effects atomically.
+ * @param sql SQL connection owning the transaction.
+ * @param codeHash Digest of the opaque authorization code.
+ * @param now Current operation time.
+ * @param handler Exchange work performed while the code row is locked.
+ * @returns The exchange result, or null when no usable code exists.
+ */
+async function consumeAuthorizationCode<T>(
+  sql: Sql,
+  codeHash: string,
+  now: Date,
+  handler: AuthorizationCodeTransactionHandler<T>,
+): Promise<T | null> {
+  return (await sql.begin(async (transaction) => {
+    const tx = asSql(transaction);
+    const [row] = await tx<
+      Array<{
+        id: string;
+        sso_session_id: string;
+        code_challenge: string;
+        nonce: string;
+        expires_at: Date;
+        oidc_client_id: string;
+        client_id: string;
+        application_id: string;
+        application_key: string;
+        client_type: "PUBLIC" | "CONFIDENTIAL";
+        client_secret_hash: string | null;
+        redirect_uri_id: string;
+        redirect_uri: string;
+      }>
+    >`
+      select code.id, code.sso_session_id, code.code_challenge, code.nonce,
+             code.expires_at, client.id as oidc_client_id, client.client_id,
+             client.application_id, application.stable_key as application_key,
+             client.client_type, client.client_secret_hash,
+             redirect.id as redirect_uri_id, redirect.redirect_uri
+      from company_oidc_authorization_codes code
+      join company_oidc_clients client on client.id = code.oidc_client_id
+      join company_applications application on application.id = client.application_id
+      join company_oidc_redirect_uris redirect on redirect.id = code.redirect_uri_id
+      where code.code_hash = ${codeHash} and code.consumed_at is null
+        and code.revoked_at is null and code.expires_at > ${now}
+        and client.status = 'ACTIVE' and application.status = 'ACTIVE'
+      for update of code
+    `;
+    if (!row) return null;
+    const client: OidcClientRecord = {
+      id: row.oidc_client_id,
+      clientId: row.client_id,
+      applicationId: row.application_id,
+      applicationKey: row.application_key,
+      clientType: row.client_type,
+      clientSecretHash: row.client_secret_hash,
+      redirectUriId: row.redirect_uri_id,
+      redirectUri: row.redirect_uri,
+    };
+    const code: AuthorizationCodeRecord = {
+      id: row.id,
+      client,
+      ssoSessionId: row.sso_session_id,
+      codeChallenge: row.code_challenge,
+      nonce: row.nonce,
+      expiresAt: row.expires_at,
+    };
+    const result = await handler({
+      transaction,
+      code,
+      insertApplicationSession: async (input) => {
+        const { transaction: _transaction, ...session } = input;
+        await insertApplicationSession(transaction, session);
+      },
+      appendAudit: (input) => appendAuditInTransaction(transaction, input),
+    });
+    await tx`
+      update company_oidc_authorization_codes
+         set consumed_at = ${now}
+       where id = ${row.id}
+    `;
+    return result;
+  })) as T | null;
+}
+
+async function revokeForAccount(
+  sql: Sql,
+  accountId: string,
+  now: Date,
+  reason: string,
+): Promise<number> {
   const sessions = await sql<Array<{ id: string }>>`
     update company_sso_sessions session
        set revoked_at = ${now}, revoke_reason = ${reason}
@@ -190,13 +419,15 @@ async function runIdempotent<T extends Record<string, unknown>>(input: {
         ${ownerHash}, now() + interval '60 seconds', now() + interval '7 days'
       ) on conflict (operation, scope_key, idempotency_key_hash) do nothing
     `;
-    const [record] = await tx<Array<{
-      request_hash: string;
-      state: "IN_PROGRESS" | "SUCCEEDED" | "FAILED";
-      owner_token_hash: string | null;
-      safe_result: T | null;
-      safe_error_code: string | null;
-    }>>`
+    const [record] = await tx<
+      Array<{
+        request_hash: string;
+        state: "IN_PROGRESS" | "SUCCEEDED" | "FAILED";
+        owner_token_hash: string | null;
+        safe_result: T | null;
+        safe_error_code: string | null;
+      }>
+    >`
       select request_hash, state, owner_token_hash, safe_result, safe_error_code
       from company_identity_idempotency_records
       where operation = ${input.operation} and scope_key = ${input.scopeKey}
@@ -204,14 +435,24 @@ async function runIdempotent<T extends Record<string, unknown>>(input: {
       for update
     `;
     if (!record || record.request_hash !== requestHash) {
-      throw new CompanyIdentityError("USERNAME_CONFLICT", "Idempotency key conflicts with another request.");
+      throw new CompanyIdentityError(
+        "USERNAME_CONFLICT",
+        "Idempotency key conflicts with another request.",
+      );
     }
-    if (record.state === "SUCCEEDED" && record.safe_result) return record.safe_result;
+    if (record.state === "SUCCEEDED" && record.safe_result)
+      return record.safe_result;
     if (record.state === "FAILED") {
-      throw new CompanyIdentityError("FORBIDDEN", "The previous operation did not complete.");
+      throw new CompanyIdentityError(
+        "FORBIDDEN",
+        "The previous operation did not complete.",
+      );
     }
     if (record.owner_token_hash !== ownerHash) {
-      throw new CompanyIdentityError("USERNAME_CONFLICT", "The operation is already in progress.");
+      throw new CompanyIdentityError(
+        "USERNAME_CONFLICT",
+        "The operation is already in progress.",
+      );
     }
     const result = await input.work(tx);
     await tx`
@@ -230,16 +471,28 @@ async function runIdempotent<T extends Record<string, unknown>>(input: {
  * @param sql Validated least-privilege company identity runtime connection.
  * @returns Transport-independent repository used by Accounts capabilities.
  */
-export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdentityRepository {
+export function createPostgresCompanyIdentityRepository(
+  sql: Sql,
+): CompanyIdentityRepository {
   const repository: CompanyIdentityRepository = {
     async findCredentialByUsername(username) {
       let normalized: string;
-      try { normalized = normalizeUsername(username); } catch { return null; }
-      const [row] = await sql<Array<{
-        account_id: string; membership_id: string; organization_id: string;
-        organization_key: string; auth_version: string | number; password_hash: string;
-        algorithm: "ARGON2ID" | "BCRYPT";
-      }>>`
+      try {
+        normalized = normalizeUsername(username);
+      } catch {
+        return null;
+      }
+      const [row] = await sql<
+        Array<{
+          account_id: string;
+          membership_id: string;
+          organization_id: string;
+          organization_key: string;
+          auth_version: string | number;
+          password_hash: string;
+          algorithm: "ARGON2ID" | "BCRYPT";
+        }>
+      >`
         select account.id as account_id, membership.id as membership_id,
                membership.organization_id, organization.stable_key as organization_key,
                account.auth_version, credential.password_hash, credential.algorithm
@@ -254,45 +507,46 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
       `;
       if (!row) return null;
       const employee = await loadEmployee(sql, row.account_id);
-      return employee ? {
-        employee,
-        membershipId: row.membership_id,
-        organizationId: row.organization_id,
-        organizationKey: row.organization_key,
-        authVersion: parseAuthVersion(row.auth_version),
-        passwordHash: row.password_hash,
-        passwordAlgorithm: row.algorithm,
-      } : null;
+      return employee
+        ? {
+            employee,
+            membershipId: row.membership_id,
+            organizationId: row.organization_id,
+            organizationKey: row.organization_key,
+            authVersion: parseAuthVersion(row.auth_version),
+            passwordHash: row.password_hash,
+            passwordAlgorithm: row.algorithm,
+          }
+        : null;
     },
 
-    async upgradePasswordHash(accountId, passwordHash) {
-      await sql`
-        update company_password_credentials
-           set password_hash = ${passwordHash}, algorithm = 'ARGON2ID',
-               credential_version = credential_version + 1,
-               last_verified_at = now(), updated_at = now()
-         where account_id = ${accountId}
-      `;
-    },
-
-    async createSsoSession(input) {
-      await sql`
-        insert into company_sso_sessions (
-          id, token_hash, organization_id, membership_id, account_auth_version,
-          created_at, last_seen_at, idle_expires_at, absolute_expires_at, user_agent
-        ) values (
-          ${input.id}, ${input.tokenHash}, ${input.organizationId}, ${input.membershipId},
-          ${input.authVersion}, ${input.createdAt}, ${input.createdAt},
-          ${input.idleExpiresAt}, ${input.absoluteExpiresAt}, ${input.userAgent}
-        )
-      `;
+    async createSsoSessionWithAudit(input) {
+      await sql.begin(async (transaction) => {
+        const tx = asSql(transaction);
+        if (input.credentialUpgrade !== undefined) {
+          await upgradePasswordHash(
+            tx,
+            input.credentialUpgrade.accountId,
+            input.credentialUpgrade.passwordHash,
+          );
+        }
+        await insertSsoSession(tx, input.session);
+        await appendAudit(tx, input.audit);
+      });
     },
 
     async findSsoSession(tokenHash, now, nextIdleExpiresAt) {
-      const [row] = await sql<Array<{
-        id: string; account_id: string; membership_id: string; organization_id: string;
-        organization_key: string; auth_version: string | number; absolute_expires_at: Date;
-      }>>`
+      const [row] = await sql<
+        Array<{
+          id: string;
+          account_id: string;
+          membership_id: string;
+          organization_id: string;
+          organization_key: string;
+          auth_version: string | number;
+          absolute_expires_at: Date;
+        }>
+      >`
         update company_sso_sessions session
            set last_seen_at = ${now},
                idle_expires_at = least(session.absolute_expires_at, ${nextIdleExpiresAt})
@@ -314,18 +568,31 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
                session.organization_id, organization.stable_key as organization_key,
                account.auth_version, session.absolute_expires_at
       `;
-      return row ? {
-        id: row.id, accountId: row.account_id, membershipId: row.membership_id,
-        organizationId: row.organization_id, organizationKey: row.organization_key,
-        authVersion: parseAuthVersion(row.auth_version), expiresAt: row.absolute_expires_at,
-      } satisfies SsoSessionRecord : null;
+      return row
+        ? ({
+            id: row.id,
+            accountId: row.account_id,
+            membershipId: row.membership_id,
+            organizationId: row.organization_id,
+            organizationKey: row.organization_key,
+            authVersion: parseAuthVersion(row.auth_version),
+            expiresAt: row.absolute_expires_at,
+          } satisfies SsoSessionRecord)
+        : null;
     },
 
     async findSsoSessionById(sessionId, now, nextIdleExpiresAt) {
-      const [row] = await sql<Array<{
-        id: string; account_id: string; membership_id: string; organization_id: string;
-        organization_key: string; auth_version: string | number; absolute_expires_at: Date;
-      }>>`
+      const [row] = await sql<
+        Array<{
+          id: string;
+          account_id: string;
+          membership_id: string;
+          organization_id: string;
+          organization_key: string;
+          auth_version: string | number;
+          absolute_expires_at: Date;
+        }>
+      >`
         update company_sso_sessions session
            set last_seen_at = ${now},
                idle_expires_at = least(session.absolute_expires_at, ${nextIdleExpiresAt})
@@ -347,19 +614,32 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
                session.organization_id, organization.stable_key as organization_key,
                account.auth_version, session.absolute_expires_at
       `;
-      return row ? {
-        id: row.id, accountId: row.account_id, membershipId: row.membership_id,
-        organizationId: row.organization_id, organizationKey: row.organization_key,
-        authVersion: parseAuthVersion(row.auth_version), expiresAt: row.absolute_expires_at,
-      } : null;
+      return row
+        ? {
+            id: row.id,
+            accountId: row.account_id,
+            membershipId: row.membership_id,
+            organizationId: row.organization_id,
+            organizationKey: row.organization_key,
+            authVersion: parseAuthVersion(row.auth_version),
+            expiresAt: row.absolute_expires_at,
+          }
+        : null;
     },
 
     async findOidcClient(clientId, redirectUri) {
-      const [row] = await sql<Array<{
-        id: string; client_id: string; application_id: string; application_key: string;
-        client_type: "PUBLIC" | "CONFIDENTIAL"; client_secret_hash: string | null;
-        redirect_uri_id: string; redirect_uri: string;
-      }>>`
+      const [row] = await sql<
+        Array<{
+          id: string;
+          client_id: string;
+          application_id: string;
+          application_key: string;
+          client_type: "PUBLIC" | "CONFIDENTIAL";
+          client_secret_hash: string | null;
+          redirect_uri_id: string;
+          redirect_uri: string;
+        }>
+      >`
         select client.id, client.client_id, client.application_id,
                application.stable_key as application_key, client.client_type,
                client.client_secret_hash, redirect.id as redirect_uri_id,
@@ -371,21 +651,29 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
         where client.client_id = ${clientId} and client.status = 'ACTIVE'
           and redirect.redirect_uri = ${redirectUri}
       `;
-      return row ? {
-        id: row.id, clientId: row.client_id, applicationId: row.application_id,
-        applicationKey: row.application_key, clientType: row.client_type,
-        clientSecretHash: row.client_secret_hash, redirectUriId: row.redirect_uri_id,
-        redirectUri: row.redirect_uri,
-      } satisfies OidcClientRecord : null;
+      return row
+        ? ({
+            id: row.id,
+            clientId: row.client_id,
+            applicationId: row.application_id,
+            applicationKey: row.application_key,
+            clientType: row.client_type,
+            clientSecretHash: row.client_secret_hash,
+            redirectUriId: row.redirect_uri_id,
+            redirectUri: row.redirect_uri,
+          } satisfies OidcClientRecord)
+        : null;
     },
 
     async findOidcClientByClientId(clientId) {
-      const [row] = await sql<Array<{
-        id: string;
-        application_key: string;
-        client_type: "PUBLIC" | "CONFIDENTIAL";
-        client_secret_hash: string | null;
-      }>>`
+      const [row] = await sql<
+        Array<{
+          id: string;
+          application_key: string;
+          client_type: "PUBLIC" | "CONFIDENTIAL";
+          client_secret_hash: string | null;
+        }>
+      >`
         select client.id, application.stable_key as application_key,
                client.client_type, client.client_secret_hash
         from company_oidc_clients client
@@ -393,12 +681,14 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
           on application.id = client.application_id and application.status = 'ACTIVE'
         where client.client_id = ${clientId} and client.status = 'ACTIVE'
       `;
-      return row ? {
-        id: row.id,
-        applicationKey: row.application_key,
-        clientType: row.client_type,
-        clientSecretHash: row.client_secret_hash,
-      } : null;
+      return row
+        ? {
+            id: row.id,
+            applicationKey: row.application_key,
+            clientType: row.client_type,
+            clientSecretHash: row.client_secret_hash,
+          }
+        : null;
     },
 
     async listApplicationRoles(membershipId, applicationId, now) {
@@ -416,80 +706,28 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
       return rows.map((row) => row.role_key);
     },
 
-    async createAuthorizationCode(input) {
-      await sql`
-        insert into company_oidc_authorization_codes (
-          id, code_hash, oidc_client_id, redirect_uri_id, sso_session_id,
-          code_challenge, code_challenge_method, nonce, scope, issued_at, expires_at
-        ) values (
-          ${input.id}, ${input.codeHash}, ${input.clientId}, ${input.redirectUriId},
-          ${input.ssoSessionId}, ${input.codeChallenge}, 'S256', ${input.nonce},
-          ${input.scope}, ${input.issuedAt}, ${input.expiresAt}
-        )
-      `;
-    },
-
-    async consumeAuthorizationCode(codeHash, now, handler) {
-      return (await sql.begin(async (transaction) => {
+    async createAuthorizationCodeWithAudit(input) {
+      await sql.begin(async (transaction) => {
         const tx = asSql(transaction);
-        const [row] = await tx<Array<{
-          id: string; sso_session_id: string; code_challenge: string; nonce: string;
-          expires_at: Date; oidc_client_id: string; client_id: string;
-          application_id: string; application_key: string;
-          client_type: "PUBLIC" | "CONFIDENTIAL"; client_secret_hash: string | null;
-          redirect_uri_id: string; redirect_uri: string;
-        }>>`
-          select code.id, code.sso_session_id, code.code_challenge, code.nonce,
-                 code.expires_at, client.id as oidc_client_id, client.client_id,
-                 client.application_id, application.stable_key as application_key,
-                 client.client_type, client.client_secret_hash,
-                 redirect.id as redirect_uri_id, redirect.redirect_uri
-          from company_oidc_authorization_codes code
-          join company_oidc_clients client on client.id = code.oidc_client_id
-          join company_applications application on application.id = client.application_id
-          join company_oidc_redirect_uris redirect on redirect.id = code.redirect_uri_id
-          where code.code_hash = ${codeHash} and code.consumed_at is null
-            and code.revoked_at is null and code.expires_at > ${now}
-            and client.status = 'ACTIVE' and application.status = 'ACTIVE'
-          for update of code
-        `;
-        if (!row) return null;
-        const client: OidcClientRecord = {
-          id: row.oidc_client_id, clientId: row.client_id,
-          applicationId: row.application_id, applicationKey: row.application_key,
-          clientType: row.client_type, clientSecretHash: row.client_secret_hash,
-          redirectUriId: row.redirect_uri_id, redirectUri: row.redirect_uri,
-        };
-        const code: AuthorizationCodeRecord = {
-          id: row.id, client, ssoSessionId: row.sso_session_id,
-          codeChallenge: row.code_challenge, nonce: row.nonce, expiresAt: row.expires_at,
-        };
-        const result = await handler(transaction, code);
-        await tx`update company_oidc_authorization_codes set consumed_at = ${now} where id = ${row.id}`;
-        return result;
-      })) as Awaited<ReturnType<typeof handler>> | null;
-    },
-
-    async createApplicationSession(input) {
-      const tx = asSql(input.transaction);
-      await tx`
-        insert into company_application_sessions (
-          id, token_hash, sso_session_id, organization_id, membership_id,
-          application_id, account_auth_version, created_at, last_checked_at, expires_at
-        ) values (
-          ${input.id}, ${input.tokenHash}, ${input.ssoSessionId}, ${input.organizationId},
-          ${input.membershipId}, ${input.applicationId}, ${input.authVersion},
-          ${input.createdAt}, ${input.createdAt}, ${input.expiresAt}
-        )
-      `;
+        await insertAuthorizationCode(tx, input.code);
+        await appendAudit(tx, input.audit);
+      });
     },
 
     async introspectApplicationSession(tokenHash, now, nextIdleExpiresAt) {
-      const [row] = await sql<Array<{
-        session_id: string; account_id: string; organization_id: string;
-        organization_key: string; application_id: string; application_key: string;
-        auth_version: string | number; expires_at: Date; membership_id: string;
-      }>>`
+      const [row] = await sql<
+        Array<{
+          session_id: string;
+          account_id: string;
+          organization_id: string;
+          organization_key: string;
+          application_id: string;
+          application_key: string;
+          auth_version: string | number;
+          expires_at: Date;
+          membership_id: string;
+        }>
+      >`
         with refreshed_sso as (
           update company_sso_sessions sso
              set last_seen_at = ${now},
@@ -534,52 +772,127 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
         loadEmployee(sql, row.account_id),
         this.listApplicationRoles(row.membership_id, row.application_id, now),
       ]);
-      return employee ? {
-        sessionId: row.session_id, employee, organizationId: row.organization_id,
-        organizationKey: row.organization_key, applicationKey: row.application_key,
-        roles, authVersion: parseAuthVersion(row.auth_version), expiresAt: row.expires_at,
-      } : null;
+      return employee
+        ? {
+            sessionId: row.session_id,
+            employee,
+            organizationId: row.organization_id,
+            organizationKey: row.organization_key,
+            applicationId: row.application_id,
+            applicationKey: row.application_key,
+            roles,
+            authVersion: parseAuthVersion(row.auth_version),
+            expiresAt: row.expires_at,
+          }
+        : null;
     },
 
-    async revokeApplicationSession(tokenHash, now) {
-      const rows = await sql`
-        update company_application_sessions
-           set revoked_at = ${now}, revoke_reason = 'LOCAL_LOGOUT'
-         where token_hash = ${tokenHash} and revoked_at is null
-        returning id
-      `;
-      return rows.length === 1;
-    },
-
-    async revokeSsoSession(tokenHash, now) {
-      return sql.begin(async (transaction) => {
+    async revokeApplicationSessionWithAudit(input) {
+      return await sql.begin(async (transaction) => {
         const tx = asSql(transaction);
-        const sessions = await tx<Array<{ id: string }>>`
-          update company_sso_sessions
-             set revoked_at = ${now}, revoke_reason = 'GLOBAL_LOGOUT'
-           where token_hash = ${tokenHash} and revoked_at is null
-          returning id
+        const rows = await tx<
+          Array<{
+            membership_id: string;
+            application_id: string;
+          }>
+        >`
+          update company_application_sessions session
+             set revoked_at = ${input.now}, revoke_reason = 'LOCAL_LOGOUT'
+            from company_organization_memberships membership
+           where session.token_hash = ${input.tokenHash}
+             and session.membership_id = membership.id
+             and session.revoked_at is null
+          returning session.membership_id, session.application_id
         `;
-        if (sessions.length === 0) return 0;
-        const children = await tx`
-          update company_application_sessions
-             set revoked_at = ${now}, revoke_reason = 'GLOBAL_LOGOUT'
-           where sso_session_id = ${sessions[0]!.id} and revoked_at is null
-          returning id
+        const row = rows[0];
+        const [membership] = row
+          ? await tx<Array<{ account_id: string }>>`
+              select account_id from company_organization_memberships where id = ${row.membership_id}
+            `
+          : [];
+        const audit: IdentityAuditInput = {
+          ...input.audit,
+          actorAccountId: membership?.account_id ?? input.audit.actorAccountId,
+          targetAccountId:
+            membership?.account_id ?? input.audit.targetAccountId,
+          applicationId: row?.application_id ?? input.audit.applicationId,
+          metadata: {
+            ...input.audit.metadata,
+            sessionCount: row === undefined ? 0 : 1,
+          },
+        };
+        await appendAudit(tx, audit);
+        if (!row)
+          return { revoked: false } satisfies ApplicationSessionRevocation;
+        if (!membership)
+          return { revoked: false } satisfies ApplicationSessionRevocation;
+        return {
+          revoked: true,
+          accountId: membership.account_id,
+          applicationId: row.application_id,
+        } satisfies ApplicationSessionRevocation;
+      });
+    },
+
+    async revokeSsoSessionWithAudit(input) {
+      return await sql.begin(async (transaction) => {
+        const tx = asSql(transaction);
+        const sessions = await tx<Array<{ id: string; membership_id: string }>>`
+          update company_sso_sessions session
+             set revoked_at = ${input.now}, revoke_reason = 'GLOBAL_LOGOUT'
+            from company_organization_memberships membership
+           where session.membership_id = membership.id
+             and session.token_hash = ${input.tokenHash}
+             and session.revoked_at is null
+          returning session.id, session.membership_id
         `;
+        const children =
+          sessions.length === 0
+            ? []
+            : await tx<Array<{ id: string }>>`
+              update company_application_sessions
+                 set revoked_at = ${input.now}, revoke_reason = 'GLOBAL_LOGOUT'
+               where sso_session_id = ${sessions[0]!.id} and revoked_at is null
+              returning id
+            `;
+        const [membership] = sessions[0]
+          ? await tx<Array<{ account_id: string }>>`
+              select account_id from company_organization_memberships where id = ${sessions[0].membership_id}
+            `
+          : [];
+        const accountId = membership?.account_id;
+        await appendAudit(tx, {
+          ...input.audit,
+          actorAccountId: accountId ?? input.audit.actorAccountId,
+          targetAccountId: accountId ?? input.audit.targetAccountId,
+          metadata: {
+            ...input.audit.metadata,
+            sessionCount: children.length,
+          },
+        });
         return children.length;
       });
     },
 
-    async appendAudit(input) { await appendAudit(sql, input); },
+    async appendAudit(input) {
+      await appendAudit(sql, input);
+    },
 
     async listEmployees(actorAccountId) {
-      await assertCompanyAdmin(sql, actorAccountId);
+      const organizationId = await assertCompanyAdmin(sql, actorAccountId);
       const accounts = await sql<Array<{ id: string }>>`
-        select id from company_accounts order by display_name, normalized_username
+        select account.id
+          from company_accounts account
+          join company_organization_memberships membership
+            on membership.account_id = account.id
+         where membership.organization_id = ${organizationId}
+         order by account.display_name, account.normalized_username
       `;
-      return (await Promise.all(accounts.map((row) => loadEmployee(sql, row.id))))
-        .filter((employee): employee is Employee => employee !== null);
+      return (
+        await Promise.all(
+          accounts.map((row) => loadEmployee(sql, row.id, organizationId)),
+        )
+      ).filter((employee): employee is Employee => employee !== null);
     },
 
     async getEmployee(accountId) {
@@ -587,20 +900,32 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
     },
 
     async createEmployee(input) {
-      await assertCompanyAdmin(sql, input.actorAccountId);
+      const organizationId = await assertCompanyAdmin(sql, input.actorAccountId);
       const result = await runIdempotent({
-        sql, operation: "identity:employee-create", scopeKey: "global",
-        idempotencyKey: input.idempotencyKey, request: {
-          username: input.username, displayName: input.displayName,
-          companyRoles: input.companyRoles, appRoles: input.appRoles,
+        sql,
+        operation: "identity:employee-create",
+        scopeKey: `account:${input.actorAccountId}`,
+        idempotencyKey: input.idempotencyKey,
+        request: {
+          actorAccountId: input.actorAccountId,
+          username: input.username,
+          displayName: input.displayName,
+          companyRoles: input.companyRoles,
+          appRoles: input.appRoles,
           credentialFingerprint: input.credentialFingerprint,
         },
         work: async (tx) => {
           const normalized = normalizeUsername(input.username);
-          const [organization] = await tx<Array<{ id: string }>>`
-            select id from company_organizations where stable_key = 'internal-company' and status = 'ACTIVE'
-          `;
-          if (!organization) throw new Error("IDENTITY_ORGANIZATION_MISSING");
+          const transactionOrganizationId = await assertCompanyAdmin(
+            tx,
+            input.actorAccountId,
+          );
+          if (transactionOrganizationId !== organizationId) {
+            throw new CompanyIdentityError(
+              "FORBIDDEN",
+              "Company administrator access is required.",
+            );
+          }
           const accountId = randomUUID();
           let accountRows;
           try {
@@ -612,47 +937,60 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
             `;
           } catch (error) {
             if ((error as { code?: string }).code === "23505") {
-              throw new CompanyIdentityError("USERNAME_CONFLICT", "Username is already in use.");
+              throw new CompanyIdentityError(
+                "USERNAME_CONFLICT",
+                "Username is already in use.",
+              );
             }
             throw error;
           }
-          if (accountRows.length !== 1) throw new Error("IDENTITY_ACCOUNT_CREATE_FAILED");
+          if (accountRows.length !== 1)
+            throw new Error("IDENTITY_ACCOUNT_CREATE_FAILED");
           await tx`
             insert into company_password_credentials (account_id, password_hash, algorithm)
             values (${accountId}, ${input.passwordHash}, 'ARGON2ID')
           `;
           const [membership] = await tx<Array<{ id: string }>>`
             insert into company_organization_memberships (organization_id, account_id, status)
-            values (${organization.id}, ${accountId}, 'ACTIVE') returning id
+            values (${transactionOrganizationId}, ${accountId}, 'ACTIVE') returning id
           `;
           if (!membership) throw new Error("IDENTITY_MEMBERSHIP_CREATE_FAILED");
           for (const roleKey of [...new Set(input.companyRoles)]) {
             await tx`
               insert into company_role_assignments (
                 organization_id, membership_id, role_key, assigned_by_account_id
-              ) values (${organization.id}, ${membership.id}, ${roleKey}, ${input.actorAccountId})
+              ) values (${transactionOrganizationId}, ${membership.id}, ${roleKey}, ${input.actorAccountId})
             `;
           }
-          for (const [applicationKey, roleKeys] of Object.entries(input.appRoles)) {
+          for (const [applicationKey, roleKeys] of Object.entries(
+            input.appRoles,
+          )) {
             const [application] = await tx<Array<{ id: string }>>`
               select id from company_applications where stable_key = ${applicationKey} and status = 'ACTIVE'
             `;
-            if (!application) throw new CompanyIdentityError("CLIENT_INVALID", "Application role scope is invalid.");
+            if (!application)
+              throw new CompanyIdentityError(
+                "CLIENT_INVALID",
+                "Application role scope is invalid.",
+              );
             for (const roleKey of [...new Set(roleKeys)]) {
               await tx`
                 insert into company_application_role_assignments (
                   organization_id, membership_id, application_id, role_key, assigned_by_account_id
-                ) values (${organization.id}, ${membership.id}, ${application.id}, ${roleKey}, ${input.actorAccountId})
+                ) values (${transactionOrganizationId}, ${membership.id}, ${application.id}, ${roleKey}, ${input.actorAccountId})
               `;
             }
           }
           await appendAudit(tx, {
-            correlationId: input.correlationId, actorAccountId: input.actorAccountId,
-            organizationId: organization.id, targetAccountId: accountId,
-            operation: "identity:employee-create", outcome: "SUCCEEDED",
+            correlationId: input.correlationId,
+            actorAccountId: input.actorAccountId,
+            organizationId: transactionOrganizationId,
+            targetAccountId: accountId,
+            operation: "identity:employee-create",
+            outcome: "SUCCEEDED",
             metadata: { source: "accounts-ui", normalizationVersion: 1 },
           });
-          const employee = await loadEmployee(tx, accountId);
+          const employee = await loadEmployee(tx, accountId, transactionOrganizationId);
           if (!employee) throw new Error("IDENTITY_EMPLOYEE_PROJECTION_FAILED");
           return employee as Employee & Record<string, unknown>;
         },
@@ -661,20 +999,44 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
     },
 
     async setEmployeeStatus(input) {
-      await assertCompanyAdmin(sql, input.actorAccountId);
+      await assertCompanyAdmin(
+        sql,
+        input.actorAccountId,
+        input.targetAccountId,
+      );
       const result = await runIdempotent({
-        sql, operation: "identity:employee-status", scopeKey: `account:${input.targetAccountId}`,
-        idempotencyKey: input.idempotencyKey, request: { status: input.status },
+        sql,
+        operation: "identity:employee-status",
+        scopeKey: `account:${input.targetAccountId}`,
+        idempotencyKey: input.idempotencyKey,
+        request: { actorAccountId: input.actorAccountId, status: input.status },
         work: async (tx) => {
-          const employee = await loadEmployee(tx, input.targetAccountId);
-          if (!employee) throw new CompanyIdentityError("EMPLOYEE_NOT_FOUND", "Employee was not found.");
-          if (input.status === "SUSPENDED" && employee.companyRoles.includes("COMPANY_ADMIN")) {
+          const transactionOrganizationId = await assertCompanyAdmin(
+            tx,
+            input.actorAccountId,
+            input.targetAccountId,
+          );
+          const employee = await loadEmployee(
+            tx,
+            input.targetAccountId,
+            transactionOrganizationId,
+          );
+          if (!employee)
+            throw new CompanyIdentityError(
+              "EMPLOYEE_NOT_FOUND",
+              "Employee was not found.",
+            );
+          if (
+            input.status === "SUSPENDED" &&
+            employee.companyRoles.includes("COMPANY_ADMIN")
+          ) {
             await tx`
               select account.id
               from company_role_assignments role
               join company_organization_memberships membership on membership.id = role.membership_id
               join company_accounts account on account.id = membership.account_id
-              where role.role_key = 'COMPANY_ADMIN' and membership.status = 'ACTIVE'
+               where role.role_key = 'COMPANY_ADMIN' and membership.status = 'ACTIVE'
+                 and membership.organization_id = ${transactionOrganizationId}
               order by account.id
               for update of account
             `;
@@ -683,50 +1045,95 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
               from company_role_assignments role
               join company_organization_memberships membership on membership.id = role.membership_id
               join company_accounts account on account.id = membership.account_id
-              where role.role_key = 'COMPANY_ADMIN' and membership.status = 'ACTIVE'
+               where role.role_key = 'COMPANY_ADMIN' and membership.status = 'ACTIVE'
+                 and membership.organization_id = ${transactionOrganizationId}
                 and account.status = 'ACTIVE'
             `;
             if ((count?.active_admins ?? 0) <= 1) {
-              throw new CompanyIdentityError("LAST_COMPANY_ADMIN_REQUIRED", "At least one active company administrator is required.");
+              throw new CompanyIdentityError(
+                "LAST_COMPANY_ADMIN_REQUIRED",
+                "At least one active company administrator is required.",
+              );
             }
           }
           await tx`
             update company_accounts set status = ${input.status}, auth_version = auth_version + 1,
               status_changed_at = now(), updated_at = now() where id = ${input.targetAccountId}
           `;
-          const sessionsRevoked = input.status === "SUSPENDED"
-            ? await revokeForAccount(tx, input.targetAccountId, new Date(), "ACCOUNT_SUSPENDED")
-            : 0;
+          const sessionsRevoked =
+            input.status === "SUSPENDED"
+              ? await revokeForAccount(
+                  tx,
+                  input.targetAccountId,
+                  new Date(),
+                  "ACCOUNT_SUSPENDED",
+                )
+              : 0;
           await appendAudit(tx, {
-            correlationId: input.correlationId, actorAccountId: input.actorAccountId,
-            targetAccountId: input.targetAccountId, operation: "identity:employee-status",
-            outcome: "SUCCEEDED", metadata: {
-              previousStatus: employee.status, newStatus: input.status, sessionCount: sessionsRevoked,
+            correlationId: input.correlationId,
+            actorAccountId: input.actorAccountId,
+            targetAccountId: input.targetAccountId,
+            operation: "identity:employee-status",
+            outcome: "SUCCEEDED",
+            metadata: {
+              previousStatus: employee.status,
+              newStatus: input.status,
+              sessionCount: sessionsRevoked,
             },
           });
-          const updated = await loadEmployee(tx, input.targetAccountId);
+          const updated = await loadEmployee(
+            tx,
+            input.targetAccountId,
+            transactionOrganizationId,
+          );
           if (!updated) throw new Error("IDENTITY_EMPLOYEE_PROJECTION_FAILED");
-          return { employee: updated, sessionsRevoked } as Record<string, unknown>;
+          return { employee: updated, sessionsRevoked } as Record<
+            string,
+            unknown
+          >;
         },
       });
       return result as { employee: Employee; sessionsRevoked: number };
     },
 
     async setApplicationRoles(input) {
-      await assertCompanyAdmin(sql, input.actorAccountId);
+      await assertCompanyAdmin(sql, input.actorAccountId, input.targetAccountId);
       const result = await runIdempotent({
-        sql, operation: "identity:application-roles", scopeKey: `account:${input.targetAccountId}`,
+        sql,
+        operation: "identity:application-roles",
+        scopeKey: `account:${input.targetAccountId}`,
         idempotencyKey: input.idempotencyKey,
-        request: { applicationKey: input.applicationKey, roleKeys: input.roleKeys },
+        request: {
+          actorAccountId: input.actorAccountId,
+          applicationKey: input.applicationKey,
+          roleKeys: input.roleKeys,
+        },
         work: async (tx) => {
-          const [scope] = await tx<Array<{ application_id: string; organization_id: string; membership_id: string }>>`
+          const organizationId = await assertCompanyAdmin(
+            tx,
+            input.actorAccountId,
+            input.targetAccountId,
+          );
+          const [scope] = await tx<
+            Array<{
+              application_id: string;
+              organization_id: string;
+              membership_id: string;
+            }>
+          >`
             select application.id as application_id, membership.organization_id, membership.id as membership_id
             from company_accounts account
             join company_organization_memberships membership on membership.account_id = account.id
             cross join company_applications application
-            where account.id = ${input.targetAccountId} and application.stable_key = ${input.applicationKey}
+             where account.id = ${input.targetAccountId}
+               and membership.organization_id = ${organizationId}
+               and application.stable_key = ${input.applicationKey}
           `;
-          if (!scope) throw new CompanyIdentityError("EMPLOYEE_NOT_FOUND", "Employee or application was not found.");
+          if (!scope)
+            throw new CompanyIdentityError(
+              "EMPLOYEE_NOT_FOUND",
+              "Employee or application was not found.",
+            );
           await tx`
             delete from company_application_role_assignments
              where membership_id = ${scope.membership_id} and application_id = ${scope.application_id}
@@ -739,15 +1146,22 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
             `;
           }
           await appendAudit(tx, {
-            correlationId: input.correlationId, actorAccountId: input.actorAccountId,
-            applicationId: scope.application_id, targetAccountId: input.targetAccountId,
-            operation: "identity:application-roles", outcome: "SUCCEEDED",
+            correlationId: input.correlationId,
+            actorAccountId: input.actorAccountId,
+            applicationId: scope.application_id,
+            targetAccountId: input.targetAccountId,
+            operation: "identity:application-roles",
+            outcome: "SUCCEEDED",
             metadata: {
               source: "accounts-ui",
               roleKey: input.roleKeys[0] ?? "NONE",
             },
           });
-          const employee = await loadEmployee(tx, input.targetAccountId);
+          const employee = await loadEmployee(
+            tx,
+            input.targetAccountId,
+            organizationId,
+          );
           if (!employee) throw new Error("IDENTITY_EMPLOYEE_PROJECTION_FAILED");
           return employee as Employee & Record<string, unknown>;
         },
@@ -756,17 +1170,32 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
     },
 
     async setCompanyRoles(input) {
-      await assertCompanyAdmin(sql, input.actorAccountId);
+      await assertCompanyAdmin(sql, input.actorAccountId, input.targetAccountId);
       const result = await runIdempotent({
         sql,
         operation: "identity:company-roles",
         scopeKey: `account:${input.targetAccountId}`,
         idempotencyKey: input.idempotencyKey,
-        request: { roleKeys: input.roleKeys },
+        request: {
+          actorAccountId: input.actorAccountId,
+          roleKeys: input.roleKeys,
+        },
         work: async (tx) => {
-          const employee = await loadEmployee(tx, input.targetAccountId);
+          const organizationId = await assertCompanyAdmin(
+            tx,
+            input.actorAccountId,
+            input.targetAccountId,
+          );
+          const employee = await loadEmployee(
+            tx,
+            input.targetAccountId,
+            organizationId,
+          );
           if (!employee) {
-            throw new CompanyIdentityError("EMPLOYEE_NOT_FOUND", "Employee was not found.");
+            throw new CompanyIdentityError(
+              "EMPLOYEE_NOT_FOUND",
+              "Employee was not found.",
+            );
           }
           const removesAdmin =
             employee.companyRoles.includes("COMPANY_ADMIN") &&
@@ -777,7 +1206,8 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
               from company_role_assignments role
               join company_organization_memberships membership on membership.id = role.membership_id
               join company_accounts account on account.id = membership.account_id
-              where role.role_key = 'COMPANY_ADMIN' and membership.status = 'ACTIVE'
+               where role.role_key = 'COMPANY_ADMIN' and membership.status = 'ACTIVE'
+                 and membership.organization_id = ${organizationId}
               order by account.id
               for update of account
             `;
@@ -786,7 +1216,8 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
               from company_role_assignments role
               join company_organization_memberships membership on membership.id = role.membership_id
               join company_accounts account on account.id = membership.account_id
-              where role.role_key = 'COMPANY_ADMIN' and membership.status = 'ACTIVE'
+               where role.role_key = 'COMPANY_ADMIN' and membership.status = 'ACTIVE'
+                 and membership.organization_id = ${organizationId}
                 and account.status = 'ACTIVE'
             `;
             if ((count?.active_admins ?? 0) <= 1) {
@@ -796,13 +1227,20 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
               );
             }
           }
-          const [membership] = await tx<Array<{ id: string; organization_id: string }>>`
+          const [membership] = await tx<
+            Array<{ id: string; organization_id: string }>
+          >`
             select id, organization_id from company_organization_memberships
-             where account_id = ${input.targetAccountId} and status = 'ACTIVE'
+              where account_id = ${input.targetAccountId}
+                and organization_id = ${organizationId}
+                and status = 'ACTIVE'
              limit 1
           `;
           if (!membership) {
-            throw new CompanyIdentityError("EMPLOYEE_NOT_FOUND", "Employee was not found.");
+            throw new CompanyIdentityError(
+              "EMPLOYEE_NOT_FOUND",
+              "Employee was not found.",
+            );
           }
           await tx`delete from company_role_assignments where membership_id = ${membership.id}`;
           for (const roleKey of [...new Set(input.roleKeys)]) {
@@ -819,9 +1257,16 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
             targetAccountId: input.targetAccountId,
             operation: "identity:company-roles",
             outcome: "SUCCEEDED",
-            metadata: { source: "accounts-ui", roleKey: input.roleKeys[0] ?? "EMPLOYEE" },
+            metadata: {
+              source: "accounts-ui",
+              roleKey: input.roleKeys[0] ?? "EMPLOYEE",
+            },
           });
-          const updated = await loadEmployee(tx, input.targetAccountId);
+          const updated = await loadEmployee(
+            tx,
+            input.targetAccountId,
+            organizationId,
+          );
           if (!updated) throw new Error("IDENTITY_EMPLOYEE_PROJECTION_FAILED");
           return updated as Employee & Record<string, unknown>;
         },
@@ -830,28 +1275,56 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
     },
 
     async resetCredential(input) {
-      await assertCompanyAdmin(sql, input.actorAccountId);
+      await assertCompanyAdmin(sql, input.actorAccountId, input.targetAccountId);
       const result = await runIdempotent({
-        sql, operation: "identity:credential-reset", scopeKey: `account:${input.targetAccountId}`,
-        idempotencyKey: input.idempotencyKey, request: {
+        sql,
+        operation: "identity:credential-reset",
+        scopeKey: `account:${input.targetAccountId}`,
+        idempotencyKey: input.idempotencyKey,
+        request: {
+          actorAccountId: input.actorAccountId,
           targetAccountId: input.targetAccountId,
           credentialFingerprint: input.credentialFingerprint,
         },
         work: async (tx) => {
+          const organizationId = await assertCompanyAdmin(
+            tx,
+            input.actorAccountId,
+            input.targetAccountId,
+          );
           const updatedRows = await tx`
             update company_password_credentials set password_hash = ${input.passwordHash},
               algorithm = 'ARGON2ID', credential_version = credential_version + 1, updated_at = now()
              where account_id = ${input.targetAccountId} returning account_id
           `;
-          if (updatedRows.length !== 1) throw new CompanyIdentityError("EMPLOYEE_NOT_FOUND", "Employee was not found.");
+          if (updatedRows.length !== 1)
+            throw new CompanyIdentityError(
+              "EMPLOYEE_NOT_FOUND",
+              "Employee was not found.",
+            );
           await tx`update company_accounts set auth_version = auth_version + 1, updated_at = now() where id = ${input.targetAccountId}`;
-          const sessionsRevoked = await revokeForAccount(tx, input.targetAccountId, new Date(), "CREDENTIAL_RESET");
+          const sessionsRevoked = await revokeForAccount(
+            tx,
+            input.targetAccountId,
+            new Date(),
+            "CREDENTIAL_RESET",
+          );
           await appendAudit(tx, {
-            correlationId: input.correlationId, actorAccountId: input.actorAccountId,
-            targetAccountId: input.targetAccountId, operation: "identity:credential-reset",
-            outcome: "SUCCEEDED", metadata: { credentialAlgorithm: "ARGON2ID", sessionCount: sessionsRevoked },
+            correlationId: input.correlationId,
+            actorAccountId: input.actorAccountId,
+            targetAccountId: input.targetAccountId,
+            operation: "identity:credential-reset",
+            outcome: "SUCCEEDED",
+            metadata: {
+              credentialAlgorithm: "ARGON2ID",
+              sessionCount: sessionsRevoked,
+            },
           });
-          const employee = await loadEmployee(tx, input.targetAccountId);
+          const employee = await loadEmployee(
+            tx,
+            input.targetAccountId,
+            organizationId,
+          );
           if (!employee) throw new Error("IDENTITY_EMPLOYEE_PROJECTION_FAILED");
           return { employee, sessionsRevoked } as Record<string, unknown>;
         },
@@ -860,18 +1333,45 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
     },
 
     async revokeEmployeeSessions(input) {
-      await assertCompanyAdmin(sql, input.actorAccountId);
+      await assertCompanyAdmin(sql, input.actorAccountId, input.targetAccountId);
       const result = await runIdempotent({
-        sql, operation: "identity:session-revoke", scopeKey: `account:${input.targetAccountId}`,
-        idempotencyKey: input.idempotencyKey, request: { targetAccountId: input.targetAccountId },
+        sql,
+        operation: "identity:session-revoke",
+        scopeKey: `account:${input.targetAccountId}`,
+        idempotencyKey: input.idempotencyKey,
+        request: {
+          actorAccountId: input.actorAccountId,
+          targetAccountId: input.targetAccountId,
+        },
         work: async (tx) => {
-          const employee = await loadEmployee(tx, input.targetAccountId);
-          if (!employee) throw new CompanyIdentityError("EMPLOYEE_NOT_FOUND", "Employee was not found.");
-          const sessionsRevoked = await revokeForAccount(tx, input.targetAccountId, new Date(), "ADMIN_REVOKE");
+          const organizationId = await assertCompanyAdmin(
+            tx,
+            input.actorAccountId,
+            input.targetAccountId,
+          );
+          const employee = await loadEmployee(
+            tx,
+            input.targetAccountId,
+            organizationId,
+          );
+          if (!employee)
+            throw new CompanyIdentityError(
+              "EMPLOYEE_NOT_FOUND",
+              "Employee was not found.",
+            );
+          const sessionsRevoked = await revokeForAccount(
+            tx,
+            input.targetAccountId,
+            new Date(),
+            "ADMIN_REVOKE",
+          );
           await appendAudit(tx, {
-            correlationId: input.correlationId, actorAccountId: input.actorAccountId,
-            targetAccountId: input.targetAccountId, operation: "identity:session-revoke",
-            outcome: "SUCCEEDED", metadata: { sessionCount: sessionsRevoked },
+            correlationId: input.correlationId,
+            actorAccountId: input.actorAccountId,
+            targetAccountId: input.targetAccountId,
+            operation: "identity:session-revoke",
+            outcome: "SUCCEEDED",
+            metadata: { sessionCount: sessionsRevoked },
           });
           return { employee, sessionsRevoked } as Record<string, unknown>;
         },
@@ -879,5 +1379,8 @@ export function createPostgresCompanyIdentityRepository(sql: Sql): CompanyIdenti
       return result as { employee: Employee; sessionsRevoked: number };
     },
   };
+  registerCompanyIdentityAuthorizationCodeExecutor(repository, (codeHash, now, handler) =>
+    consumeAuthorizationCode(sql, codeHash, now, handler),
+  );
   return Object.freeze(repository);
 }

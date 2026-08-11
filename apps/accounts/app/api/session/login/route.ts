@@ -7,6 +7,10 @@ import {
   requestIpAddress,
   requireSameOrigin,
 } from "@/lib/server/http";
+import {
+  accountsOptionsResponse,
+  companyIdentityRouteHandlers,
+} from "@/lib/server/company-identity-route-bindings";
 
 /** Authenticates an employee and establishes the host-only Accounts SSO cookie. */
 export async function POST(request: Request): Promise<NextResponse> {
@@ -14,12 +18,16 @@ export async function POST(request: Request): Promise<NextResponse> {
     await requireSameOrigin(request);
     const body = await request.json();
     const composition = await getIdentityComposition();
-    const result = await composition.service.authenticate({
-      ...body,
-      clientId: typeof body.clientId === "string" ? body.clientId : "accounts",
-      ipAddress: await requestIpAddress(),
-      userAgent: request.headers.get("user-agent") || "unknown",
-    });
+    const result = await companyIdentityRouteHandlers.login(
+      async () =>
+        composition.service.authenticate({
+          ...body,
+          clientId:
+            typeof body.clientId === "string" ? body.clientId : "accounts",
+          ipAddress: await requestIpAddress(),
+          userAgent: request.headers.get("user-agent") || "unknown",
+        }),
+    );
     (await cookies()).set(composition.cookie.name, result.sessionToken, {
       httpOnly: true,
       secure: composition.cookie.secure,
@@ -32,3 +40,9 @@ export async function POST(request: Request): Promise<NextResponse> {
     return identityErrorResponse(error);
   }
 }
+
+/** Handles framework preflight explicitly under its reviewed route binding. */
+export const OPTIONS = (): NextResponse =>
+  companyIdentityRouteHandlers.loginOptions(() =>
+    accountsOptionsResponse("POST, OPTIONS"),
+  );

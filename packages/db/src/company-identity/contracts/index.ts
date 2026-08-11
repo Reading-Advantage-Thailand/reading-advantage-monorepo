@@ -447,6 +447,25 @@ export const auditMetadataSchema = z
       .string()
       .refine((value) => isBoundedText(value, 128))
       .optional(),
+    requestedClientId: z
+      .string()
+      .refine((value) => isBoundedText(value, 128))
+      .optional(),
+    registeredClientId: z
+      .string()
+      .refine((value) => isBoundedText(value, 128))
+      .optional(),
+    applicationKey: z
+      .string()
+      .refine((value) => isBoundedText(value, 128))
+      .optional(),
+    resourceType: auditTextSchema.optional(),
+    routeBindingId: auditTextSchema.optional(),
+    routeMethod: z
+      .enum(["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"])
+      .optional(),
+    routePath: auditTextSchema.optional(),
+    routeTransport: z.enum(["next-http", "hono-http"]).optional(),
     credentialAlgorithm: passwordHashAlgorithmSchema.optional(),
     sessionCount: z.number().int().safe().min(0).optional(),
     normalizationVersion: companyUsernameNormalizationVersionSchema.optional(),

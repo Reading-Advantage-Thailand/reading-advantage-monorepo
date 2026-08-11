@@ -4,6 +4,8 @@ import {
   createCapabilityExecutor,
   type AuditEvent,
   type DurableIdempotencyPort,
+  type IdempotencyAcquireRequest,
+  type IdempotencyAcquireResult,
 } from "../../../kernel/index.js";
 import {
   companyIdentityCapabilityIds,
@@ -78,6 +80,15 @@ function harness(
   input: {
     readonly roles?: readonly string[];
     readonly implementation?: CompanyIdentityService;
+    readonly principalsBySession?: Readonly<
+      Record<
+        string,
+        {
+          readonly userId: string;
+          readonly roles: readonly string[];
+        }
+      >
+    >;
   } = {},
 ) {
   const defaultService = service();
@@ -90,14 +101,29 @@ function harness(
   const auditEvents: AuditEvent[] = [];
   const complete = vi.fn<DurableIdempotencyPort["complete"]>(async () => {});
   const fail = vi.fn<DurableIdempotencyPort["fail"]>(async () => {});
+  const idempotencyRequests: IdempotencyAcquireRequest[] = [];
+  const acquire = vi.fn(
+    async <TOutput>(
+      request: Readonly<IdempotencyAcquireRequest>,
+    ): Promise<IdempotencyAcquireResult<TOutput>> => {
+      idempotencyRequests.push(request);
+      return { status: "owner", ownershipToken: "owner-1" };
+    },
+  ) as DurableIdempotencyPort["acquire"];
   const executor = createCapabilityExecutor({
     registry,
     authentication: {
-      authenticate: async () => ({
-        userId: actorAccountId,
-        roles: [...(input.roles ?? ["COMPANY_ADMIN"])],
-        schoolId: null,
-      }),
+      authenticate: async ({ evidence }) => {
+        const session =
+          evidence.kind === "session"
+            ? input.principalsBySession?.[evidence.opaqueSessionRef]
+            : undefined;
+        return {
+          userId: session?.userId ?? actorAccountId,
+          roles: [...(session?.roles ?? input.roles ?? ["COMPANY_ADMIN"])],
+          schoolId: null,
+        };
+      },
     },
     tenancy: { resolve: async () => ({ mode: "global" }) as never },
     authorization: {
@@ -112,7 +138,7 @@ function harness(
       },
     },
     idempotency: {
-      acquire: async () => ({ status: "owner", ownershipToken: "owner-1" }),
+      acquire,
       complete,
       fail,
     },
@@ -132,7 +158,15 @@ function harness(
     clock: { now: () => new Date("2026-07-18T00:00:00.000Z") },
     createCorrelationId: () => "correlation-identity",
   });
-  return { auditEvents, complete, executor, fail, ...defaultService };
+  return {
+    acquire,
+    auditEvents,
+    complete,
+    executor,
+    fail,
+    idempotencyRequests,
+    ...defaultService,
+  };
 }
 
 const cases: readonly {
@@ -224,6 +258,28 @@ function invocation(testCase: (typeof cases)[number]) {
   };
 }
 
+function expectSecretSafeRouteAudit(
+  event: AuditEvent,
+  testCase: (typeof cases)[number],
+): void {
+  expect(event.metadata.values).toMatchObject({
+    resourceType: "company-employee",
+  });
+  if ("applicationKey" in testCase.input) {
+    expect(event.metadata.values).toMatchObject({
+      applicationKey: testCase.input.applicationKey,
+    });
+  }
+
+  const serialized = JSON.stringify(event);
+  for (const secret of [
+    testCase.input.initialPassword,
+    testCase.input.newPassword,
+  ]) {
+    if (typeof secret === "string") expect(serialized).not.toContain(secret);
+  }
+}
+
 describe("company identity capability composition", () => {
   it("publishes seven handler-free descriptors through exact registries", () => {
     const registry = createCompanyIdentityCapabilityRegistry(
@@ -237,6 +293,93 @@ describe("company identity capability composition", () => {
     expect(
       registry.getDescriptor(companyIdentityCapabilityIds.createEmployee),
     ).not.toHaveProperty("handler");
+  });
+
+  it("rejects forgeable transport route metadata at the capability boundary", () => {
+    const registry = createCompanyIdentityCapabilityRegistry(
+      service().implementation,
+      createCompanyIdentityCapabilityReferences(),
+    );
+    const descriptor = registry.getDescriptor(
+      companyIdentityCapabilityIds.createEmployee,
+    );
+    expect(descriptor).toBeDefined();
+    if (!descriptor) return;
+    expect(
+      descriptor.input.safeParse({
+        username: "alex",
+        displayName: "Alex Employee",
+        initialPassword: "valid-password-123",
+        companyRoles: ["EMPLOYEE"],
+        appRoles: { sales: ["SALES_REP"] },
+        routeEvidence: {
+          method: "POST",
+          path: "/api/admin/employees",
+        },
+      }).success,
+    ).toBe(false);
+  });
+
+  it("binds a replay-protected command to the authenticated administrator instead of another administrator's key", async () => {
+    const secondAdminAccountId = "44444444-4444-4444-8444-444444444444";
+    const firstSession = "a".repeat(32);
+    const secondSession = "b".repeat(32);
+    const context = harness({
+      principalsBySession: {
+        [firstSession]: { userId: actorAccountId, roles: ["COMPANY_ADMIN"] },
+        [secondSession]: {
+          userId: secondAdminAccountId,
+          roles: ["COMPANY_ADMIN"],
+        },
+      },
+    });
+    const testCase = cases.find(
+      ({ capabilityId }) =>
+        capabilityId === companyIdentityCapabilityIds.setApplicationRoles,
+    );
+    expect(testCase).toBeDefined();
+    if (!testCase)
+      throw new Error("Expected the application-role command case.");
+
+    await context.executor.execute({
+      ...invocation(testCase),
+      evidence: { kind: "session", opaqueSessionRef: firstSession },
+    });
+    await context.executor.execute({
+      ...invocation(testCase),
+      evidence: { kind: "session", opaqueSessionRef: secondSession },
+    });
+
+    expect(context.idempotencyRequests).toHaveLength(2);
+    expect(context.idempotencyRequests[1]?.inputFingerprint).not.toBe(
+      context.idempotencyRequests[0]?.inputFingerprint,
+    );
+  });
+
+  it("records actor, target, application, and resource dimensions for an application-role command", async () => {
+    const context = harness();
+    const testCase = cases.find(
+      ({ capabilityId }) =>
+        capabilityId === companyIdentityCapabilityIds.setApplicationRoles,
+    );
+    expect(testCase).toBeDefined();
+    if (!testCase)
+      throw new Error("Expected the application-role command case.");
+
+    await context.executor.execute(invocation(testCase));
+
+    expect(context.auditEvents).toEqual([
+      expect.objectContaining({
+        actor: { type: "user", id: actorAccountId },
+        metadata: expect.objectContaining({
+          values: expect.objectContaining({
+            targetAccountId,
+            applicationKey: "sales",
+            resourceType: "company-employee",
+          }),
+        }),
+      }),
+    ]);
   });
 
   it.each(cases)("executes and validates $label", async (testCase) => {
@@ -258,7 +401,10 @@ describe("company identity capability composition", () => {
       expect(context.complete).toHaveBeenCalledOnce();
     }
     expect(context.auditEvents).toHaveLength(1);
-    expect(context.auditEvents[0]?.outcome).toBe("success");
+    const auditEvent = context.auditEvents[0];
+    expect(auditEvent?.outcome).toBe("success");
+    expect(auditEvent).toBeDefined();
+    expectSecretSafeRouteAudit(auditEvent!, testCase);
   });
 
   it.each(cases)(
@@ -277,7 +423,10 @@ describe("company identity capability composition", () => {
         expect(method).not.toHaveBeenCalled();
       }
       expect(context.auditEvents).toHaveLength(1);
-      expect(context.auditEvents[0]?.outcome).toBe("denied");
+      const auditEvent = context.auditEvents[0];
+      expect(auditEvent?.outcome).toBe("denied");
+      expect(auditEvent).toBeDefined();
+      expectSecretSafeRouteAudit(auditEvent!, testCase);
       expect(context.complete).not.toHaveBeenCalled();
     },
   );
@@ -313,6 +462,11 @@ describe("company identity capability composition", () => {
     await expect(
       execution.executor.execute(invocation(testCase!)),
     ).rejects.toMatchObject({ code: "INTERNAL_ERROR" });
+    expect(execution.auditEvents).toHaveLength(1);
+    const auditEvent = execution.auditEvents[0];
+    expect(auditEvent?.outcome).toBe("failure");
+    expect(auditEvent).toBeDefined();
+    expectSecretSafeRouteAudit(auditEvent!, testCase!);
     expect(execution.fail).toHaveBeenCalledWith(
       expect.objectContaining({
         disposition: "store-terminal",

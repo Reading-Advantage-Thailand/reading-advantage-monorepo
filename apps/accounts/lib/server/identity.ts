@@ -4,12 +4,14 @@ import {
   createPostgresCompanyIdentityRepository,
   createPostgresCompanyLoginRateLimit,
   createCompanyIdentityDurableIdempotencyPort,
+  assertCompanyIdentityAtomicRepository,
   createRs256IdentityTokenSigner,
   createCapabilityExecutor,
   createCompanyIdentityCapabilityReferences,
   createCompanyIdentityCapabilityRegistry,
   createCompanyIdentityService,
   fingerprintSecret,
+  projectSecretSafeAuditMetadata,
   type CapabilityExecutor,
   type CompanyIdentityService,
   type IdentityPublicJwk,
@@ -42,16 +44,22 @@ function issuerEnvironment() {
     NODE_ENV: process.env.NODE_ENV,
     COMPANY_AUTH_ISSUER_URL: process.env.COMPANY_AUTH_ISSUER_URL,
     COMPANY_AUTH_OIDC_SIGNING_PRIVATE_KEY:
-      process.env.COMPANY_AUTH_OIDC_SIGNING_PRIVATE_KEY?.replaceAll("\\n", "\n"),
-    COMPANY_AUTH_OIDC_SIGNING_KEY_ID: process.env.COMPANY_AUTH_OIDC_SIGNING_KEY_ID,
+      process.env.COMPANY_AUTH_OIDC_SIGNING_PRIVATE_KEY?.replaceAll(
+        "\\n",
+        "\n",
+      ),
+    COMPANY_AUTH_OIDC_SIGNING_KEY_ID:
+      process.env.COMPANY_AUTH_OIDC_SIGNING_KEY_ID,
     COMPANY_AUTH_AUTHORIZATION_CODE_TTL_SECONDS:
       process.env.COMPANY_AUTH_AUTHORIZATION_CODE_TTL_SECONDS,
-    COMPANY_AUTH_SSO_IDLE_TTL_SECONDS: process.env.COMPANY_AUTH_SSO_IDLE_TTL_SECONDS,
+    COMPANY_AUTH_SSO_IDLE_TTL_SECONDS:
+      process.env.COMPANY_AUTH_SSO_IDLE_TTL_SECONDS,
     COMPANY_AUTH_SSO_ABSOLUTE_TTL_SECONDS:
       process.env.COMPANY_AUTH_SSO_ABSOLUTE_TTL_SECONDS,
     COMPANY_AUTH_APP_SESSION_TTL_SECONDS:
       process.env.COMPANY_AUTH_APP_SESSION_TTL_SECONDS,
-    COMPANY_AUTH_CLOCK_SKEW_SECONDS: process.env.COMPANY_AUTH_CLOCK_SKEW_SECONDS,
+    COMPANY_AUTH_CLOCK_SKEW_SECONDS:
+      process.env.COMPANY_AUTH_CLOCK_SKEW_SECONDS,
   };
 }
 
@@ -63,7 +71,8 @@ export async function getIdentityComposition(): Promise<IdentityComposition> {
   compositionPromise ??= (async () => {
     const issuer = createCompanyIdentityIssuerConfig(issuerEnvironment());
     const security = createCompanyIdentitySecurityConfig({
-      COMPANY_AUTH_IDENTIFIER_HASH_KEY: process.env.COMPANY_AUTH_IDENTIFIER_HASH_KEY,
+      COMPANY_AUTH_IDENTIFIER_HASH_KEY:
+        process.env.COMPANY_AUTH_IDENTIFIER_HASH_KEY,
     });
     const cookie = createCompanyIdentityCookieConfig({
       NODE_ENV: process.env.NODE_ENV,
@@ -84,16 +93,18 @@ export async function getIdentityComposition(): Promise<IdentityComposition> {
       clockSkewSeconds: issuer.clockSkewSeconds,
     });
     const repository = createPostgresCompanyIdentityRepository(sql);
+    assertCompanyIdentityAtomicRepository(repository);
     const service = createCompanyIdentityService({
       repository,
       passwords: {
         hash: hashPassword,
         verify: verifyPassword,
-        fingerprint: (password) => fingerprintSecret(
-          Buffer.from(security.identifierHashKey, "base64url"),
-          "company-credential-idempotency-v1",
-          password,
-        ),
+        fingerprint: (password) =>
+          fingerprintSecret(
+            Buffer.from(security.identifierHashKey, "base64url"),
+            "company-credential-idempotency-v1",
+            password,
+          ),
       },
       rateLimit: createPostgresCompanyLoginRateLimit({
         sql,
@@ -103,58 +114,100 @@ export async function getIdentityComposition(): Promise<IdentityComposition> {
       config: issuer,
     });
     const references = createCompanyIdentityCapabilityReferences();
-    const registry = createCompanyIdentityCapabilityRegistry(service, references);
+    const registry = createCompanyIdentityCapabilityRegistry(
+      service,
+      references,
+    );
     const telemetry = createAccountsCapabilityTelemetry();
     const coreExecutor = createCapabilityExecutor({
       registry,
       authentication: {
         authenticate: async ({ evidence }) => {
           if (evidence.kind !== "session") return null;
-          const employee = await service.currentEmployee(evidence.opaqueSessionRef);
-          return employee ? {
-            userId: employee.id,
-            roles: employee.companyRoles,
-            schoolId: null,
-          } : null;
+          const employee = await service.currentEmployee(
+            evidence.opaqueSessionRef,
+          );
+          return employee
+            ? {
+                userId: employee.id,
+                roles: employee.companyRoles,
+                schoolId: null,
+              }
+            : null;
         },
       },
       tenancy: { resolve: async () => ({ mode: "global" }) as never },
       authorization: {
-        authorize: async ({ policyId, principal }) => ({
-          allowed: policyId === "company-identity.company-admin" &&
-            principal?.roles.includes("COMPANY_ADMIN") === true,
-          ...(policyId === "company-identity.company-admin" &&
-              principal?.roles.includes("COMPANY_ADMIN") === true
-            ? {}
-            : { safeReasonCode: "COMPANY_ADMIN_REQUIRED" }),
-        }) as never,
+        authorize: async ({ policyId, principal }) =>
+          ({
+            allowed:
+              policyId === "company-identity.company-admin" &&
+              principal?.roles.includes("COMPANY_ADMIN") === true,
+            ...(policyId === "company-identity.company-admin" &&
+            principal?.roles.includes("COMPANY_ADMIN") === true
+              ? {}
+              : { safeReasonCode: "COMPANY_ADMIN_REQUIRED" }),
+          }) as never,
       },
       transactions: {
         run: async () => {
-          throw new Error("Company identity capability transactions are repository-owned.");
+          throw new Error(
+            "Company identity capability transactions are repository-owned.",
+          );
         },
       },
       idempotency: createCompanyIdentityDurableIdempotencyPort(sql),
       audit: {
         append: async (event) => {
+          const values = event.metadata.values as Readonly<
+            Record<string, unknown>
+          >;
+          const targetAccountId =
+            typeof values.targetAccountId === "string"
+              ? values.targetAccountId
+              : undefined;
+          const applicationKey =
+            typeof values.applicationKey === "string"
+              ? values.applicationKey
+              : undefined;
+          const resourceType =
+            typeof values.resourceType === "string"
+              ? values.resourceType
+              : undefined;
           await repository.appendAudit({
             correlationId: event.correlationId,
-            actorAccountId: event.actor.type === "user" ? event.actor.id : undefined,
+            actorAccountId:
+              event.actor.type === "user" ? event.actor.id : undefined,
+            targetAccountId,
             operation: event.capabilityId,
-            outcome: event.outcome === "success" ? "SUCCEEDED"
-              : event.outcome === "denied" ? "DENIED" : "FAILED",
-            reasonCode: event.outcome === "success" ? undefined : event.outcome.toUpperCase(),
-            metadata: {
+            outcome:
+              event.outcome === "success"
+                ? "SUCCEEDED"
+                : event.outcome === "denied"
+                  ? "DENIED"
+                  : "FAILED",
+            reasonCode:
+              event.outcome === "success"
+                ? undefined
+                : event.outcome.toUpperCase(),
+            metadata: projectSecretSafeAuditMetadata({
               source: "accounts-capability-kernel",
-            },
+              ...(applicationKey === undefined ? {} : { applicationKey }),
+              ...(resourceType === undefined ? {} : { resourceType }),
+            }),
           });
-          return { eventId: event.eventId, persistedAt: new Date().toISOString() };
+          return {
+            eventId: event.eventId,
+            persistedAt: new Date().toISOString(),
+          };
         },
       },
       references,
       adapters: {
         get: () => {
-          throw new Error("No external adapter is registered for identity handlers.");
+          throw new Error(
+            "No external adapter is registered for identity handlers.",
+          );
         },
       },
       logger: telemetry.logger,
@@ -170,7 +223,9 @@ export async function getIdentityComposition(): Promise<IdentityComposition> {
       issuerUrl: issuer.issuerUrl,
       jwk: signer.jwk(),
       probeDatabase: async () => {
-        const rows = await sql<Array<{ ready: number }>>`SELECT 1::int AS ready`;
+        const rows = await sql<
+          Array<{ ready: number }>
+        >`SELECT 1::int AS ready`;
         if (rows[0]?.ready !== 1) {
           throw new Error("COMPANY_IDENTITY_DATABASE_NOT_READY");
         }

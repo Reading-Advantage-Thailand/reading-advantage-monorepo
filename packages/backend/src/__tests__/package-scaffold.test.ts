@@ -18,10 +18,18 @@ describe("@reading-advantage/backend package scaffold", () => {
     expect(manifest.type).toBe("module");
     expect(Object.keys(manifest.exports ?? {}).sort()).toEqual([
       ".",
+      "./company-identity/internal-route-adapter",
+      "./finance-operations",
+      "./finance-operations/postgres",
       "./jobs",
       "./kernel",
     ]);
     expect(manifest.exports).toHaveProperty(".");
+    expect(manifest.exports).toHaveProperty(
+      "./company-identity/internal-route-adapter",
+    );
+    expect(manifest.exports).toHaveProperty("./finance-operations");
+    expect(manifest.exports).toHaveProperty("./finance-operations/postgres");
     expect(manifest.exports).toHaveProperty("./jobs");
     expect(manifest.exports).toHaveProperty("./kernel");
     expect(manifest.scripts).toMatchObject({

@@ -2,6 +2,8 @@ import { createHash } from "node:crypto";
 
 import { z } from "zod";
 
+import { getCapabilityRequestContext } from "./contracts/request-context.js";
+
 import {
   auditAppendReceiptSchema,
   auditEventSchema,
@@ -290,10 +292,13 @@ function sameProjection(
 ): boolean {
   return left === undefined
     ? right === undefined
-    : right !== undefined && left.projectorId === right.projectorId &&
-      left.schemaIdentity === right.schemaIdentity &&
-      left.allowedKeys.length === right.allowedKeys.length &&
-      left.allowedKeys.every((key, index) => key === right.allowedKeys[index]);
+    : right !== undefined &&
+        left.projectorId === right.projectorId &&
+        left.schemaIdentity === right.schemaIdentity &&
+        left.allowedKeys.length === right.allowedKeys.length &&
+        left.allowedKeys.every(
+          (key, index) => key === right.allowedKeys[index],
+        );
 }
 
 function isZodSchema(value: unknown): value is z.ZodTypeAny {
@@ -301,8 +306,12 @@ function isZodSchema(value: unknown): value is z.ZodTypeAny {
 }
 
 function deepFreeze<T>(value: T): Readonly<T> {
-  if (typeof value !== "object" || value === null || isZodSchema(value) ||
-      value instanceof AbortSignal) {
+  if (
+    typeof value !== "object" ||
+    value === null ||
+    isZodSchema(value) ||
+    value instanceof AbortSignal
+  ) {
     return value;
   }
   for (const child of Object.values(value)) {
@@ -334,21 +343,28 @@ function prevalidateDescriptor(candidate: unknown): void {
   if ("handler" in value || "invoke" in value) {
     rejectRule("descriptor.handler-in-public-metadata");
   }
-  if (Array.isArray(value.auth)) rejectRule("authorization.inline-role-forbidden");
+  if (Array.isArray(value.auth))
+    rejectRule("authorization.inline-role-forbidden");
   if ("errorMappings" in value) rejectRule("errors.undeclared-mapping");
   if (value.kind === "query" && value.risk === "destructive") {
     rejectRule("classification.destructive-query-forbidden");
   }
-  if (value.kind === "query" &&
-      (value.idempotency as { mode?: unknown } | undefined)?.mode !== "none") {
+  if (
+    value.kind === "query" &&
+    (value.idempotency as { mode?: unknown } | undefined)?.mode !== "none"
+  ) {
     rejectRule("idempotency.query-forbidden");
   }
-  if (value.kind === "query" &&
-      (value.transaction as { mode?: unknown } | undefined)?.mode !== "none") {
+  if (
+    value.kind === "query" &&
+    (value.transaction as { mode?: unknown } | undefined)?.mode !== "none"
+  ) {
     rejectRule("transaction.query-must-be-none");
   }
-  if ((value.kind === "command" || value.kind === "job") &&
-      value.transaction === undefined) {
+  if (
+    (value.kind === "command" || value.kind === "job") &&
+    value.transaction === undefined
+  ) {
     rejectRule("transaction.command-declaration-required");
   }
   const timeout = (value.observability as { timeoutMs?: unknown } | undefined)
@@ -357,9 +373,21 @@ function prevalidateDescriptor(candidate: unknown): void {
     rejectRule("observability.invalid-timeout");
   }
   const known = new Set([
-    "id", "summary", "owner", "input", "output", "auth", "risk",
-    "authorization", "tenancy", "errors", "audit", "observability", "kind",
-    "transaction", "idempotency",
+    "id",
+    "summary",
+    "owner",
+    "input",
+    "output",
+    "auth",
+    "risk",
+    "authorization",
+    "tenancy",
+    "errors",
+    "audit",
+    "observability",
+    "kind",
+    "transaction",
+    "idempotency",
   ]);
   if (Object.keys(value).some((key) => !known.has(key))) {
     rejectRule("descriptor.unknown-public-field");
@@ -375,40 +403,56 @@ function validateRegistration(
   const parsed = capabilityDescriptorSchema.safeParse(candidate);
   if (!parsed.success) {
     const value = candidate as Record<string, unknown>;
-    const audit = value.audit as {
-      mode?: string;
-      metadataProjection?: unknown;
-    } | undefined;
-    const idempotency = value.idempotency as {
-      retentionSeconds?: unknown;
-    } | undefined;
-    const transaction = value.transaction as {
-      externalCalls?: string;
-      externalCallProtocolRef?: unknown;
-    } | undefined;
-    const tenancy = value.tenancy as {
-      mode?: string;
-      ownerScopePolicyId?: unknown;
-      resourceReferenceSchemaIdentity?: unknown;
-    } | undefined;
+    const audit = value.audit as
+      | {
+          mode?: string;
+          metadataProjection?: unknown;
+        }
+      | undefined;
+    const idempotency = value.idempotency as
+      | {
+          retentionSeconds?: unknown;
+        }
+      | undefined;
+    const transaction = value.transaction as
+      | {
+          externalCalls?: string;
+          externalCallProtocolRef?: unknown;
+        }
+      | undefined;
+    const tenancy = value.tenancy as
+      | {
+          mode?: string;
+          ownerScopePolicyId?: unknown;
+          resourceReferenceSchemaIdentity?: unknown;
+        }
+      | undefined;
     if (audit?.mode === "required" && audit.metadataProjection === undefined) {
       rejectRule("audit.metadata-projector-required");
     }
-    if (typeof idempotency?.retentionSeconds === "number" &&
-        idempotency.retentionSeconds <= 0) {
+    if (
+      typeof idempotency?.retentionSeconds === "number" &&
+      idempotency.retentionSeconds <= 0
+    ) {
       rejectRule("idempotency.invalid-retention");
     }
-    if (transaction?.externalCalls === "forbidden" &&
-        transaction.externalCallProtocolRef !== undefined) {
+    if (
+      transaction?.externalCalls === "forbidden" &&
+      transaction.externalCallProtocolRef !== undefined
+    ) {
       rejectRule("transaction.external-call-protocol-contradiction");
     }
-    if (tenancy?.mode === "referential" &&
-        tenancy.ownerScopePolicyId === undefined) {
+    if (
+      tenancy?.mode === "referential" &&
+      tenancy.ownerScopePolicyId === undefined
+    ) {
       rejectRule("tenancy.referential-owner-policy-required");
     }
-    if (tenancy?.mode === "referential" &&
-        tenancy.resourceReferenceSchemaIdentity !==
-          RESOURCE_REFERENCE_SCHEMA_IDENTITY) {
+    if (
+      tenancy?.mode === "referential" &&
+      tenancy.resourceReferenceSchemaIdentity !==
+        RESOURCE_REFERENCE_SCHEMA_IDENTITY
+    ) {
       rejectRule("registry.unresolvable-schema");
     }
     rejectRule("descriptor.unknown-public-field");
@@ -417,46 +461,62 @@ function validateRegistration(
   if (!dependencies.ownership.allows(descriptor, sourceModule)) {
     rejectRule("registry.descriptor-outside-ownership-root");
   }
-  if ((descriptor.risk === "security-sensitive" ||
-      descriptor.risk === "destructive") && descriptor.audit.mode === "none") {
-    rejectRule(descriptor.risk === "destructive"
-      ? "audit.destructive-requires-audit"
-      : "audit.security-sensitive-requires-audit");
+  if (
+    (descriptor.risk === "security-sensitive" ||
+      descriptor.risk === "destructive") &&
+    descriptor.audit.mode === "none"
+  ) {
+    rejectRule(
+      descriptor.risk === "destructive"
+        ? "audit.destructive-requires-audit"
+        : "audit.security-sensitive-requires-audit",
+    );
   }
   const errorCodes = descriptor.errors.map((error) => error.code);
   if (new Set(errorCodes).size !== errorCodes.length) {
     rejectRule("errors.duplicate-code");
   }
   if (descriptor.kind !== "query") {
-    if (descriptor.audit.mode === "required" &&
-        descriptor.idempotency.mode === "none") {
+    if (
+      descriptor.audit.mode === "required" &&
+      descriptor.idempotency.mode === "none"
+    ) {
       rejectRule("idempotency.audited-mutation-required");
     }
-    if (descriptor.errors.some((error) => error.retryable) &&
-        descriptor.idempotency.mode === "none") {
+    if (
+      descriptor.errors.some((error) => error.retryable) &&
+      descriptor.idempotency.mode === "none"
+    ) {
       rejectRule("idempotency.retryable-mutation-required");
     }
     if (descriptor.idempotency.mode === "required") {
       const tenantScope = descriptor.tenancy.mode !== "global";
-      if ((descriptor.idempotency.scope === "tenant-capability") !== tenantScope) {
+      if (
+        (descriptor.idempotency.scope === "tenant-capability") !==
+        tenantScope
+      ) {
         rejectRule("idempotency.global-tenant-mismatch");
       }
     }
   }
 
   if (descriptor.authorization.mode === "policy") {
-    const definition = dependencies.references.authorizationPolicies
-      .getAuthorizationPolicy(descriptor.authorization.policyId);
+    const definition =
+      dependencies.references.authorizationPolicies.getAuthorizationPolicy(
+        descriptor.authorization.policyId,
+      );
     if (definition === undefined) {
       rejectRule("authorization.missing-policy-reference");
     }
     if (definition.policyId !== descriptor.authorization.policyId) {
       rejectRule("registry.reference-identity-mismatch");
     }
-    if (!sameProjection(
-      definition.parameterProjection,
-      descriptor.authorization.parameterProjection,
-    )) {
+    if (
+      !sameProjection(
+        definition.parameterProjection,
+        descriptor.authorization.parameterProjection,
+      )
+    ) {
       rejectRule("authorization.parameter-projection-mismatch");
     }
     if (descriptor.auth === "public" && definition.authentication === "user") {
@@ -471,8 +531,10 @@ function validateRegistration(
   }
 
   if (descriptor.tenancy.mode === "global") {
-    const definition = dependencies.references.globalTenancyPolicies
-      .getGlobalTenancyPolicy(descriptor.tenancy.globalPolicyId);
+    const definition =
+      dependencies.references.globalTenancyPolicies.getGlobalTenancyPolicy(
+        descriptor.tenancy.globalPolicyId,
+      );
     if (definition === undefined) rejectRule("tenancy.global-policy-required");
     if (definition.policyId !== descriptor.tenancy.globalPolicyId) {
       rejectRule("registry.reference-identity-mismatch");
@@ -481,50 +543,66 @@ function validateRegistration(
       rejectRule("tenancy.global-policy-owner-mismatch");
     }
   } else {
-    const resolver = dependencies.references.tenantResolvers
-      .getTenantResolver(descriptor.tenancy.resolverId);
+    const resolver = dependencies.references.tenantResolvers.getTenantResolver(
+      descriptor.tenancy.resolverId,
+    );
     const expectedMode = descriptor.tenancy.mode;
     if (resolver === undefined || !resolver.modes.includes(expectedMode)) {
-      rejectRule(expectedMode === "school"
-        ? "tenancy.school-resolver-required"
-        : "tenancy.referential-owner-policy-required");
+      rejectRule(
+        expectedMode === "school"
+          ? "tenancy.school-resolver-required"
+          : "tenancy.referential-owner-policy-required",
+      );
     }
     if (resolver.resolverId !== descriptor.tenancy.resolverId) {
       rejectRule("registry.reference-identity-mismatch");
     }
     if (descriptor.tenancy.mode === "referential") {
-      const policy = dependencies.references.authorizationPolicies
-        .getAuthorizationPolicy(descriptor.tenancy.ownerScopePolicyId);
-      if (policy === undefined ||
-          policy.policyId !== descriptor.tenancy.ownerScopePolicyId) {
+      const policy =
+        dependencies.references.authorizationPolicies.getAuthorizationPolicy(
+          descriptor.tenancy.ownerScopePolicyId,
+        );
+      if (
+        policy === undefined ||
+        policy.policyId !== descriptor.tenancy.ownerScopePolicyId
+      ) {
         rejectRule("tenancy.referential-owner-policy-required");
       }
-      const projector = dependencies.references.resourceReferenceProjectors
-        .getResourceReferenceProjector(
+      const projector =
+        dependencies.references.resourceReferenceProjectors.getResourceReferenceProjector(
           descriptor.tenancy.resourceReferenceProjectorId,
         );
       if (projector === undefined) rejectRule("registry.unresolvable-schema");
-      if (projector.projectorId !==
-          descriptor.tenancy.resourceReferenceProjectorId) {
+      if (
+        projector.projectorId !==
+        descriptor.tenancy.resourceReferenceProjectorId
+      ) {
         rejectRule("registry.reference-identity-mismatch");
       }
-      if (projector.schemaIdentity !==
-          descriptor.tenancy.resourceReferenceSchemaIdentity) {
-        rejectRule(projector.schemaIdentity === RESOURCE_REFERENCE_SCHEMA_IDENTITY
-          ? "registry.unresolvable-schema"
-          : "registry.reference-identity-mismatch");
+      if (
+        projector.schemaIdentity !==
+        descriptor.tenancy.resourceReferenceSchemaIdentity
+      ) {
+        rejectRule(
+          projector.schemaIdentity === RESOURCE_REFERENCE_SCHEMA_IDENTITY
+            ? "registry.unresolvable-schema"
+            : "registry.reference-identity-mismatch",
+        );
       }
     }
   }
 
   if (descriptor.audit.mode === "required") {
-    const projector = dependencies.references.auditProjectors
-      .getAuditProjector(descriptor.audit.metadataProjection);
-    if (projector === undefined) rejectRule("registry.unresolvable-schema");
-    if (!sameProjection(
+    const projector = dependencies.references.auditProjectors.getAuditProjector(
       descriptor.audit.metadataProjection,
-      projector.contract.reference,
-    )) {
+    );
+    if (projector === undefined) rejectRule("registry.unresolvable-schema");
+    if (
+      !sameProjection(
+        descriptor.audit.metadataProjection,
+        projector.contract.reference,
+      )
+    ) {
       rejectRule("registry.reference-identity-mismatch");
     }
   }
@@ -544,14 +622,20 @@ function validateRegistration(
   }
   if (descriptor.transaction.mode === "explicit") {
     const reference = descriptor.transaction.externalCallProtocolRef;
-    if (descriptor.transaction.externalCalls === "documented" &&
-        (reference === undefined ||
-          !dependencies.references.externalCallProtocols
-            .hasExternalCallProtocol(reference))) {
+    if (
+      descriptor.transaction.externalCalls === "documented" &&
+      (reference === undefined ||
+        !dependencies.references.externalCallProtocols.hasExternalCallProtocol(
+          reference,
+        ))
+    ) {
       rejectRule("transaction.external-call-protocol-unresolved");
     }
   }
-  const entry = capabilityRegistryEntrySchema.parse({ descriptor, sourceModule });
+  const entry = capabilityRegistryEntrySchema.parse({
+    descriptor,
+    sourceModule,
+  });
   return deepFreeze(entry.descriptor) as Readonly<CapabilityDescriptor>;
 }
 
@@ -633,7 +717,8 @@ export function createCapabilityRegistry(
       return Object.freeze(
         [...storage.values()]
           .sort((left, right) =>
-            left.descriptor.id.localeCompare(right.descriptor.id))
+            left.descriptor.id.localeCompare(right.descriptor.id),
+          )
           .map((entry) => entry.descriptor),
       );
     },
@@ -641,8 +726,12 @@ export function createCapabilityRegistry(
       const snapshot = capabilityRegistrySnapshotSchema.parse({
         entries: [...storage.values()]
           .sort((left, right) =>
-            left.descriptor.id.localeCompare(right.descriptor.id))
-          .map(({ descriptor, sourceModule }) => ({ descriptor, sourceModule })),
+            left.descriptor.id.localeCompare(right.descriptor.id),
+          )
+          .map(({ descriptor, sourceModule }) => ({
+            descriptor,
+            sourceModule,
+          })),
       });
       return deepFreeze(snapshot) as Readonly<CapabilityRegistrySnapshot>;
     },
@@ -688,8 +777,10 @@ async function projectStructured(
   source: unknown,
 ): Promise<ValidatedProjectedData> {
   const definition = registry.getProjector(reference);
-  if (definition === undefined ||
-      !sameProjection(reference, definition.contract.reference)) {
+  if (
+    definition === undefined ||
+    !sameProjection(reference, definition.contract.reference)
+  ) {
     throw new Error("Unresolved projection");
   }
   return deepFreeze(
@@ -728,10 +819,12 @@ function restrictTransactionAdapters(
   allowNetwork: boolean,
 ): ScopedAdapterAccess {
   return Object.freeze({
-    get<TAdapter>(token: Readonly<{
-      id: string;
-      effect: "local" | "database" | "network";
-    }>) {
+    get<TAdapter>(
+      token: Readonly<{
+        id: string;
+        effect: "local" | "database" | "network";
+      }>,
+    ) {
       if (token.effect === "network" && !allowNetwork) {
         throw platformError(
           "NETWORK_EFFECT_FORBIDDEN",
@@ -766,6 +859,17 @@ export function createCapabilityExecutor(
       throw platformError(
         "CAPABILITY_NOT_FOUND",
         "Capability not found.",
+        false,
+      );
+    }
+    const routeContext = getCapabilityRequestContext();
+    if (
+      routeContext !== undefined &&
+      routeContext.capabilityId !== invocation.capabilityId
+    ) {
+      throw platformError(
+        "ROUTE_CAPABILITY_MISMATCH",
+        "The route binding does not permit this capability.",
         false,
       );
     }
@@ -813,7 +917,9 @@ export function createCapabilityExecutor(
           correlationId,
           evidence,
         });
-        const parsed = authenticatedPrincipalSchema.nullable().safeParse(candidate);
+        const parsed = authenticatedPrincipalSchema
+          .nullable()
+          .safeParse(candidate);
         if (!parsed.success) throw new Error("Malformed principal");
         principal = parsed.data;
       } catch {
@@ -833,15 +939,17 @@ export function createCapabilityExecutor(
     try {
       let candidate: unknown;
       if (descriptor.tenancy.mode === "referential") {
-        const projector = dependencies.references.resourceReferenceProjectors
-          .getResourceReferenceProjector(
+        const projector =
+          dependencies.references.resourceReferenceProjectors.getResourceReferenceProjector(
             descriptor.tenancy.resourceReferenceProjectorId,
           );
-        if (projector === undefined ||
-            projector.projectorId !==
-              descriptor.tenancy.resourceReferenceProjectorId ||
-            projector.schemaIdentity !==
-              descriptor.tenancy.resourceReferenceSchemaIdentity) {
+        if (
+          projector === undefined ||
+          projector.projectorId !==
+            descriptor.tenancy.resourceReferenceProjectorId ||
+          projector.schemaIdentity !==
+            descriptor.tenancy.resourceReferenceSchemaIdentity
+        ) {
           throw new Error("Unresolved resource projector");
         }
         const reference = resourceReferenceSchema.parse(
@@ -883,8 +991,10 @@ export function createCapabilityExecutor(
     }
 
     let parameters: ValidatedProjectedData | undefined;
-    if (descriptor.authorization.mode === "policy" &&
-        descriptor.authorization.parameterProjection !== undefined) {
+    if (
+      descriptor.authorization.mode === "policy" &&
+      descriptor.authorization.parameterProjection !== undefined
+    ) {
       try {
         parameters = await projectStructured(
           dependencies.references.structuredProjectors,
@@ -892,7 +1002,12 @@ export function createCapabilityExecutor(
           input,
         );
       } catch {
-        throw platformError("FORBIDDEN", "Access is denied.", false, correlationId);
+        throw platformError(
+          "FORBIDDEN",
+          "Access is denied.",
+          false,
+          correlationId,
+        );
       }
     }
 
@@ -935,12 +1050,17 @@ export function createCapabilityExecutor(
       outcome: AuditEvent["outcome"],
     ): Promise<void> => {
       if (descriptor.audit.mode === "none") return;
-      const definition = dependencies.references.auditProjectors
-        .getAuditProjector(descriptor.audit.metadataProjection);
-      if (definition === undefined || !sameProjection(
-        descriptor.audit.metadataProjection,
-        definition.contract.reference,
-      )) {
+      const definition =
+        dependencies.references.auditProjectors.getAuditProjector(
+          descriptor.audit.metadataProjection,
+        );
+      if (
+        definition === undefined ||
+        !sameProjection(
+          descriptor.audit.metadataProjection,
+          definition.contract.reference,
+        )
+      ) {
         throw new Error("Unresolved audit projection");
       }
       const metadata = deepFreeze(
@@ -949,22 +1069,24 @@ export function createCapabilityExecutor(
         ),
       );
       const now = dependencies.clock.now().toISOString();
-      const event = deepFreeze(auditEventSchema.parse({
-        eventId: fingerprint({
+      const event = deepFreeze(
+        auditEventSchema.parse({
+          eventId: fingerprint({
+            capabilityId: descriptor.id,
+            correlationId,
+            outcome,
+            now,
+          }),
+          eventType: descriptor.audit.eventType,
+          occurredAt: now,
           capabilityId: descriptor.id,
           correlationId,
+          actor: createAuditActor(evidence, principal),
+          tenant: createAuditTenant(tenant),
           outcome,
-          now,
+          metadata,
         }),
-        eventType: descriptor.audit.eventType,
-        occurredAt: now,
-        capabilityId: descriptor.id,
-        correlationId,
-        actor: createAuditActor(evidence, principal),
-        tenant: createAuditTenant(tenant),
-        outcome,
-        metadata,
-      })) as unknown as AuditEvent;
+      ) as unknown as AuditEvent;
       const receipt = auditAppendReceiptSchema.parse(
         await dependencies.audit.append(event),
       );
@@ -981,7 +1103,12 @@ export function createCapabilityExecutor(
       } finally {
         clearTimeout(timeout);
       }
-      throw platformError("FORBIDDEN", "Access is denied.", false, correlationId);
+      throw platformError(
+        "FORBIDDEN",
+        "Access is denied.",
+        false,
+        correlationId,
+      );
     }
 
     let ownershipToken: string | undefined;
@@ -1007,7 +1134,11 @@ export function createCapabilityExecutor(
             tenantId: tenant.mode === "global" ? undefined : tenant.schoolId,
           },
           keyFingerprint: fingerprint(key.data),
-          inputFingerprint: fingerprint(input),
+          inputFingerprint: fingerprint({
+            input,
+            actor: createAuditActor(evidence, principal),
+            tenant: createAuditTenant(tenant),
+          }),
           retentionSeconds: descriptor.idempotency.retentionSeconds,
         });
         request = parsedRequest;
@@ -1058,8 +1189,12 @@ export function createCapabilityExecutor(
     const normalizeFailure = async (
       error: unknown,
     ): Promise<PlatformErrorData> => {
-      if (typeof error === "object" && error !== null &&
-          "code" in error && error.code === "NETWORK_EFFECT_FORBIDDEN") {
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "code" in error &&
+        error.code === "NETWORK_EFFECT_FORBIDDEN"
+      ) {
         return error as PlatformErrorData;
       }
       if (abortController.signal.aborted) {
@@ -1076,7 +1211,10 @@ export function createCapabilityExecutor(
         );
         if (declaration !== undefined) {
           let details: ValidatedProjectedData | undefined;
-          if (declaration.detailsProjection !== undefined && "details" in error) {
+          if (
+            declaration.detailsProjection !== undefined &&
+            "details" in error
+          ) {
             try {
               details = await projectStructured(
                 dependencies.references.structuredProjectors,
@@ -1139,17 +1277,22 @@ export function createCapabilityExecutor(
             if (callbackCount !== 1) {
               throw new Error("Transaction callback invoked more than once.");
             }
-            callbackOutput = await runHandler(restrictTransactionAdapters(
-              transaction.adapters,
-              descriptor.transaction.mode === "explicit" &&
-                descriptor.transaction.externalCalls === "documented",
-            ));
+            callbackOutput = await runHandler(
+              restrictTransactionAdapters(
+                transaction.adapters,
+                descriptor.transaction.mode === "explicit" &&
+                  descriptor.transaction.externalCalls === "documented",
+              ),
+            );
             callbackCompleted = true;
             return completionToken;
           },
         );
-        if (callbackCount !== 1 || !callbackCompleted ||
-            transactionResult !== completionToken) {
+        if (
+          callbackCount !== 1 ||
+          !callbackCompleted ||
+          transactionResult !== completionToken
+        ) {
           throw new Error("Transaction callback contract was not honored.");
         }
         output = callbackOutput;
