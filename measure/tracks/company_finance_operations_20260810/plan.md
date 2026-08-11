@@ -7,12 +7,12 @@
   idempotency, immutable history, authorization, audit, provenance, and
   cross-database/provider isolation. This is the only executable task in this
   scaffold; do not encode Thai policy. Accepted with evidence in
-  `phase1-foundation-acceptance-20260810.md`.
+   `phase1-foundation-acceptance-20260810.md` in commit `3b3a128e`.
 - [x] Task: Implement the minimum domain/backend contracts and persistence behind the
   Red tests. Depends on the foundation contracts and failing-test assertions
   from the preceding task. Accepted with evidence in
-  `phase1-persistence-acceptance-20260811.md`.
-- [~] Task: Add behavior-level contract tests and adapters for the Company
+   `phase1-persistence-acceptance-20260811.md` in commit `c5ecf18b`.
+- [x] Task: Add behavior-level contract tests and adapters for the Company
   Identity attestor, authorized private-evidence reads, and a scope/digest-bound
   durable outbox projector required by the historical private-evidence MVP.
   Depends on the completed foundation task and the accepted boundary in
@@ -20,12 +20,14 @@
 
   Green implementation evidence: `98d111bdf` adds the Company Identity Finance
   attestor and commits the reviewed private-read, packet, and durable-projector
-  candidates. The A targeted command passed with 7 tests. B passed with 25
+  boundaries. The A targeted command passed with 7 tests. B passed with 25
   tests, C with 9 tests, D with 39 tests, and the protocol safety suite with
   13 tests. The live PostgreSQL suites skipped because no disposable URL was
-  set. This task stays in progress because the backend test typecheck fails in
-  unrelated Standard Pack and Planned Game Intake tests. `measure/doctor.sh`
-  also reports existing deprecated markers in unrelated active tracks.
+  set, as `test-strategy.md` permits. The Phase 2 aggregate remains
+  intentionally Red. Backend package typecheck failures are in unrelated
+  Standard Pack and Planned Game Intake tests. Doctor marker failures are in
+  unrelated active tracks. This evidence does not claim package-wide typecheck
+  or doctor success.
 
   Test strategy applicability: the canonical Red/Green/closeout gates, risk
   classes, anti-pattern coverage, intentionally-red aggregate handling
