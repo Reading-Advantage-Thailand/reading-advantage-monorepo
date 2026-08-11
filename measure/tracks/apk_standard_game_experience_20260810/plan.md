@@ -13,7 +13,7 @@ contract is frozen. S5 integrates and validates all preceding stories.
 > APIs currently have only package-local exports and tests. Refresh graph coverage
 > before implementation and record exact callers for every edited exported symbol.
 
-## Phase S1: Standard Game Briefing
+## Phase S1: Standard Game Briefing [checkpoint: 0a2e845]
 
 _Story ref: spec.md#story-s1_
 
@@ -53,7 +53,7 @@ _Story ref: spec.md#story-s1_
   - [x] Update the code graph for changed exports and JSX
   - [x] Run `measure/generate.sh` and `measure/doctor.sh`
 
-- [~] Task: Measure - User Manual Verification 'Phase S1: Standard Game Briefing' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase S1: Standard Game Briefing' (Protocol in workflow.md) `0a2e845`
 
 ## Phase S2: Guided Gameplay Tutorial
 
