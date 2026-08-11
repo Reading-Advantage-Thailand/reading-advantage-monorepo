@@ -23,6 +23,12 @@
   write repository artifacts into system `/tmp`.
 - Coordinate production release and legacy-auth retirement with
   `company_identity_sso_20260715` rather than creating a parallel SSO rollout.
+- Phase 0 test strategy: [./test-strategy.md](./test-strategy.md). The strategy
+  defines Red/Green/acceptance for sub-gates B2, B3, B4, B5, B6, immutable
+  audit, and strict logout. The orchestrator must capture the immutable
+  `phase_base_sha` with `git rev-parse HEAD` immediately after it commits this
+  strategy and plan to the shared master tree; the captured SHA is the baseline
+  for the Red phase. Do not embed a SHA that predates the strategy commit.
 
 ## Phase 0: Bounded Accounts and backend safety gate
 
