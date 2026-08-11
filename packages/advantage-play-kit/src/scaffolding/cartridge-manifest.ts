@@ -14,6 +14,7 @@ import { z } from "zod";
 import { ACCEPTED_STANDARD_ASSET_RELEASE } from "../assets/accepted-standard-pack-release.js";
 import { ACCEPTED_CAPABILITY_IDS } from "../systems/capability-manifest.js";
 import { assertAcceptedStandardPackBinding } from "../guards/accepted-inputs.js";
+import { gameTutorialDefinitionSchema } from "../presentation/game-tutorial-contract.js";
 import type { StandardAssetReleaseBinding } from "../assets/standard-pack-release.js";
 
 /** Frozen standard-pack binding that pins the accepted 2026.07.23 release. */
@@ -87,6 +88,7 @@ export const cartridgeManifestSchema = z
     attributionRegistration: attributionRegistrationSchema,
     selectedUnionMaterialization: z.literal("accepted-cartridge-selected-union-only"),
     qcRegistration: z.object({ route: z.string().min(1) }).strict(),
+    tutorial: gameTutorialDefinitionSchema.optional(),
   })
   .strict();
 

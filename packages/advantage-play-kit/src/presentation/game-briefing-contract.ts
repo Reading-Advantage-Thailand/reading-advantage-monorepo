@@ -102,6 +102,7 @@ export type GameLifecyclePhase = z.infer<typeof gameLifecyclePhaseSchema>;
 export const gameLifecycleEventSchema = z.enum([
   "start",
   "tutorial-complete",
+  "tutorial-skip",
   "demo-complete",
   "countdown-complete",
   "game-complete",
@@ -119,7 +120,7 @@ export type GameLifecycleEvent = z.infer<typeof gameLifecycleEventSchema>;
  * skipped where explicitly listed, but a transition cannot use another phase's
  * event or move backward outside the supported replay entry points.
  */
-export const gameLifecycleTransitionSchema = z.discriminatedUnion("from", [
+export const gameLifecycleTransitionSchema = z.discriminatedUnion("event", [
   z.object({
     from: z.literal("briefing"),
     event: z.literal("start"),
@@ -128,6 +129,11 @@ export const gameLifecycleTransitionSchema = z.discriminatedUnion("from", [
   z.object({
     from: z.literal("tutorial"),
     event: z.literal("tutorial-complete"),
+    to: z.enum(["countdown", "playing"]),
+  }).strict(),
+  z.object({
+    from: z.literal("tutorial"),
+    event: z.literal("tutorial-skip"),
     to: z.enum(["countdown", "playing"]),
   }).strict(),
   z.object({

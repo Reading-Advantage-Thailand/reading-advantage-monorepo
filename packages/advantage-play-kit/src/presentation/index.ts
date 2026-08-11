@@ -28,6 +28,42 @@ export type {
   PresentationShellProps,
 } from "./game-presentation.js";
 
+/** Public guided tutorial contract schemas and validator. */
+export {
+  gameTutorialActionConsequenceSchema,
+  gameTutorialActionSchema,
+  gameTutorialCommandSchema,
+  gameTutorialDefinitionSchema,
+  gameTutorialLabelsSchema,
+  gameTutorialLifecyclePolicySchema,
+  gameTutorialProgressSchema,
+  gameTutorialStepSchema,
+  gameTutorialStepTimingSchema,
+  gameTutorialTargetKindSchema,
+  gameTutorialTargetSchema,
+  gameTutorialTextSchema,
+  tutorialSemanticIdSchema,
+  validateGameTutorialDefinition,
+} from "./game-tutorial-contract.js";
+
+/** Public guided tutorial contract and action-driver types. */
+export type {
+  GameTutorialAction,
+  GameTutorialActionConsequence,
+  GameTutorialActionDiagnostics,
+  GameTutorialActionDriver,
+  GameTutorialActionDriverContext,
+  GameTutorialCommand,
+  GameTutorialDefinition,
+  GameTutorialLabels,
+  GameTutorialLifecyclePolicy,
+  GameTutorialProgress,
+  GameTutorialStep,
+  GameTutorialStepTiming,
+  GameTutorialTarget,
+  GameTutorialTargetKind,
+} from "./game-tutorial-contract.js";
+
 /** Public standardized briefing and lifecycle contract schemas. */
 export {
   gameBriefingControlHintSchema,
