@@ -13,3 +13,6 @@ export {
   StorageOperationError,
 } from "./factory.js";
 export { getStorageUrl } from "./urls.js";
+export * from "./private-evidence-contracts.js";
+export * from "./private-evidence-errors.js";
+export { createAuthorizedPrivateEvidenceReader } from "./private-evidence-reader.js";

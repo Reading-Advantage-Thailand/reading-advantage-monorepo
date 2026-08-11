@@ -10,3 +10,4 @@ export * from "./postgres-rate-limit.js";
 export * from "./protocol.js";
 export * from "./repository.js";
 export * from "./service.js";
+export * from "./finance-attestation.js";
