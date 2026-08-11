@@ -21,6 +21,13 @@ import {
   type GameLifecycleTransition,
 } from "../presentation/game-briefing-contract.js";
 import { GameBriefingScreen } from "../presentation/game-briefing-screen.js";
+import { createGameTutorialController } from "../presentation/game-tutorial-controller.js";
+import type { GameTutorialClock, GameTutorialEffects } from "../presentation/game-tutorial-runtime.js";
+import type {
+  GameTutorialActionDriver,
+  GameTutorialDefinition,
+} from "../presentation/game-tutorial-contract.js";
+import type { GameTutorialController, GameTutorialControllerSnapshot } from "../presentation/game-tutorial-controller.js";
 import type {
   LayoutProfile,
   ResponsiveInputMode,
@@ -49,6 +56,14 @@ export type APKGameHostProps = Omit<ComponentProps<"section">, "onComplete" | "i
   seed?: number;
   /** Optional validated mission briefing shown before normal gameplay. */
   briefing?: GameBriefing;
+  /** Optional validated tutorial that runs through the cartridge mechanic. */
+  tutorial?: GameTutorialDefinition;
+  /** Cartridge-owned driver for the tutorial mechanic. */
+  tutorialActionDriver?: GameTutorialActionDriver & { readonly destroy?: () => void | Promise<void> };
+  /** Optional deterministic clock for tutorial playback. */
+  tutorialClock?: GameTutorialClock;
+  /** Receives host-neutral tutorial snapshots. */
+  onTutorialSnapshot?: (snapshot: GameTutorialControllerSnapshot) => void;
   /** Optional spatial profile used by the mission briefing presentation. */
   layoutProfile?: LayoutProfile;
   /** Optional input capability mode used to filter briefing control hints. */
@@ -79,6 +94,10 @@ export function APKGameHost({
   factory,
   seed,
   briefing,
+  tutorial,
+  tutorialActionDriver,
+  tutorialClock,
+  onTutorialSnapshot,
   layoutProfile,
   inputMode,
   briefingExtension,
@@ -93,6 +112,7 @@ export function APKGameHost({
 }: APKGameHostProps) {
   const surfaceRef = useRef<HTMLDivElement>(null);
   const handleRef = useRef<APKGameHandle | undefined>(undefined);
+  const tutorialControllerRef = useRef<GameTutorialController | undefined>(undefined);
   const mountPointRef = useRef<HTMLDivElement | undefined>(undefined);
   const mountGenerationRef = useRef(0);
   const briefingStartGuardRef = useRef(false);
@@ -104,6 +124,7 @@ export function APKGameHost({
   const [error, setError] = useState<string>();
   const [briefingStarted, setBriefingStarted] = useState(false);
   const [briefingRevision, setBriefingRevision] = useState(0);
+  const [tutorialSnapshot, setTutorialSnapshot] = useState<GameTutorialControllerSnapshot>();
 
   const briefingValidation = briefing === undefined
     ? undefined
@@ -154,9 +175,52 @@ export function APKGameHost({
       })
       .catch((mountError: unknown) => {
         if (generation !== mountGenerationRef.current) return;
+        destroyTutorialController();
+        mountPoint.replaceChildren();
         setError(mountError instanceof Error ? mountError.message : "Game failed to start");
         setStatus("error");
       });
+  };
+
+  const destroyTutorialController = (): void => {
+    const controller = tutorialControllerRef.current;
+    tutorialControllerRef.current = undefined;
+    void controller?.destroy();
+  };
+
+  const startTutorial = (mountPoint: HTMLDivElement, generation: number): void => {
+    if (tutorial === undefined || tutorialActionDriver === undefined || tutorialClock === undefined) {
+      setError("The tutorial phase is not available in this host yet. The cartridge remains gated until its phase controller is available.");
+      setStatus("error");
+      return;
+    }
+    const effects: GameTutorialEffects = {
+      emitGameResults: () => undefined,
+      complete: () => undefined,
+      persistProgress: () => undefined,
+      awardAuthoritativeXp: () => undefined,
+      writeLeaderboard: () => undefined,
+      applyFailureConsequences: () => undefined,
+    };
+    const controller = createGameTutorialController({
+      tutorial,
+      actionDriver: tutorialActionDriver,
+      clock: tutorialClock,
+      effects,
+      onLifecycleTransition: onLifecycleTransition ?? (() => undefined),
+      onDiagnostic: undefined,
+      onSnapshot: (snapshot) => {
+        if (generation !== mountGenerationRef.current) return;
+        setTutorialSnapshot(snapshot);
+        onTutorialSnapshot?.({
+          ...snapshot,
+          ...(snapshot.currentTarget === undefined ? {} : { currentTarget: { id: snapshot.currentTarget.id } }),
+        } as GameTutorialControllerSnapshot);
+      },
+    });
+    tutorialControllerRef.current = controller;
+    void controller.start();
+    mountGame(mountPoint, generation);
   };
 
   useEffect(() => {
@@ -189,6 +253,7 @@ export function APKGameHost({
       mountGenerationRef.current += 1;
       const mountedHandle = handleRef.current;
       handleRef.current = undefined;
+      destroyTutorialController();
       mountPointRef.current = undefined;
       mountPoint.remove();
       void mountedHandle?.destroy();
@@ -228,6 +293,18 @@ export function APKGameHost({
     } catch (transitionError) {
       setError(transitionError instanceof Error ? transitionError.message : "Game start signal failed");
       setStatus("error");
+      return;
+    }
+    if (resolvedStartPhase === "tutorial") {
+      const mountPoint = mountPointRef.current;
+      if (!mountPoint) {
+        setError("The game surface is not ready. Try again.");
+        setStatus("error");
+        return;
+      }
+      setResult(undefined);
+      setStatus("loading");
+      startTutorial(mountPoint, mountGenerationRef.current);
       return;
     }
     if (resolvedStartPhase !== "playing") {
@@ -276,6 +353,7 @@ export function APKGameHost({
       setResult(undefined);
       setStatus("loading");
       mountGenerationRef.current += 1;
+      destroyTutorialController();
       handleRef.current = undefined;
       mountPointRef.current?.replaceChildren();
 
@@ -304,6 +382,16 @@ export function APKGameHost({
       setError(restartError instanceof Error ? restartError.message : "Game failed to restart");
       setStatus("error");
     }
+  };
+
+  const runTutorialCommand = (command: "pause" | "resume" | "advance" | "replay" | "skip") => {
+    const controller = tutorialControllerRef.current;
+    if (controller === undefined) return;
+    if (command === "replay") {
+      void Promise.resolve(controller.replay()).then(() => controller.start());
+      return;
+    }
+    void controller[command]();
   };
 
   return (
@@ -344,9 +432,20 @@ export function APKGameHost({
         aria-label="Game controls"
         hidden={controlsHidden}
       >
-        <button type="button" onClick={togglePause} disabled={status === "loading" || status === "error" || controlsHidden}>
-          {status === "paused" ? "Resume game" : "Pause game"}
-        </button>
+        {tutorialSnapshot?.phase === "tutorial" ? (
+          <>
+            <button type="button" onClick={() => runTutorialCommand(tutorialSnapshot.status === "paused" ? "resume" : "pause")}>
+              {tutorialSnapshot.status === "paused" ? tutorial?.labels.resume : tutorial?.labels.pause}
+            </button>
+            <button type="button" onClick={() => runTutorialCommand("advance")}>{tutorial?.labels.advance}</button>
+            <button type="button" onClick={() => runTutorialCommand("replay")}>{tutorial?.labels.replay}</button>
+            <button type="button" onClick={() => runTutorialCommand("skip")}>{tutorial?.labels.skip}</button>
+          </>
+        ) : (
+          <button type="button" onClick={togglePause} disabled={status === "loading" || status === "error" || controlsHidden}>
+            {status === "paused" ? "Resume game" : "Pause game"}
+          </button>
+        )}
         <button type="button" onClick={toggleMute} disabled={status === "loading" || status === "error" || controlsHidden}>
           {muted ? "Unmute game" : "Mute game"}
         </button>

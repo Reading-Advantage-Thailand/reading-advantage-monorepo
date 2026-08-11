@@ -49,6 +49,9 @@ export {
 /** Public deterministic tutorial runtime factory. */
 export { createGameTutorialRuntime } from "./game-tutorial-runtime.js";
 
+/** Public shared tutorial controller factory. */
+export { createGameTutorialController } from "./game-tutorial-controller.js";
+
 /** Public deterministic tutorial runtime contracts. */
 export type {
   CreateGameTutorialRuntimeOptions,
@@ -59,6 +62,13 @@ export type {
   GameTutorialRuntime,
   GameTutorialRuntimeSnapshot,
 } from "./game-tutorial-runtime.js";
+
+/** Public shared tutorial controller contracts. */
+export type {
+  CreateGameTutorialControllerOptions,
+  GameTutorialController,
+  GameTutorialControllerSnapshot,
+} from "./game-tutorial-controller.js";
 
 /** Public guided tutorial contract and action-driver types. */
 export type {
