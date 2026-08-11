@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "role": "measure-adversarial-testing",
+  "track": "small_company_admin_privileges_20260722",
+  "phase": "Phase 0: Bounded Accounts and backend safety gate",
+  "status": "fail",
+  "phase_base_sha": "02dd4580a7c93ab89f29f7c25747b0bde92eb152",
+  "role_base_sha": "2c0295af41a5ede1067bebea158c3c8cf1115d18",
+  "audited_head_sha": "2c0295af41a5ede1067bebea158c3c8cf1115d18",
+  "audited_head_current": true,
+  "summary": "The adversarial route-provenance contract passes. A dirty scoped production file prevents a clean-tree acceptance claim.",
+  "blocking_findings": [
+    {
+      "id": "MA-G1",
+      "severity": "gate",
+      "category": "provenance",
+      "title": "The scoped company identity production file is dirty",
+      "description": "packages/backend/src/modules/company-identity/index.ts has an uncommitted change. The owner must identify its owner and commit or revert it before the four-command gate can bind to one clean tree.",
+      "route_to": "Green"
+    }
+  ],
+  "adversarial_checks": {
+    "exact_source_method_operation_capability": "pass",
+    "paired_operation_capability_swap": "pass",
+    "head_options_truth": "pass"
+  },
+  "commands": [
+    { "command": "CI=true pnpm --filter accounts test", "exit_code": 0, "result": "11 files passed, 1 skipped; 50 tests passed, 1 skipped" },
+    { "command": "CI=true pnpm --filter accounts check-types", "exit_code": 0, "result": "Type checks passed" }
+  ],
+  "dirty_scope": [
+    { "path": "packages/backend/src/modules/company-identity/index.ts", "owner": "Green or track owner", "remediation": "Review the explicit export change, then commit it in its owning track or revert it before rerunning the gate." }
+  ],
+  "changed_files": [
+    "apps/accounts/lib/server/company-identity-route-bindings.test.ts",
+    "apps/accounts/lib/server/__fixtures__/company-identity-route-denominator/paired-swap-route.ts",
+    "measure/runs/20260811-admin-phase0-route-adversarial.json"
+  ]
+}

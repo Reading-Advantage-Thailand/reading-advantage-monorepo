@@ -41,6 +41,83 @@ interface RouteSource {
   readonly methods: readonly HttpMethod[];
 }
 
+interface RouteProvenance {
+  readonly operation: string;
+  readonly capabilityId: string;
+}
+
+const OPERATION_BY_BINDING_ID: Readonly<Record<string, string>> = {
+  "company-identity.employees.list": "employeesList",
+  "company-identity.employees.create": "employeesCreate",
+  "company-identity.employees.set-status": "employeeStatus",
+  "company-identity.employees.set-application-roles": "employeeApplicationRoles",
+  "company-identity.employees.set-company-roles": "employeeCompanyRoles",
+  "company-identity.employees.reset-credential": "employeeCredential",
+  "company-identity.employees.revoke-sessions": "employeeSessions",
+  "accounts.discovery.openid-configuration": "discovery",
+  "accounts.health": "health",
+  "accounts.ready": "ready",
+  "accounts.oidc.authorize": "authorize",
+  "accounts.oidc.introspect": "introspect",
+  "accounts.oidc.jwks": "jwks",
+  "accounts.oidc.logout": "oidcLogout",
+  "accounts.oidc.token": "token",
+  "accounts.session.login": "login",
+  "accounts.session.logout": "sessionLogout",
+};
+
+const CAPABILITY_BY_OPERATION: Readonly<Record<string, string>> = {
+  employeesList: "listEmployees",
+  employeesCreate: "createEmployee",
+  employeeStatus: "setEmployeeStatus",
+  employeeApplicationRoles: "setApplicationRoles",
+  employeeCompanyRoles: "setCompanyRoles",
+  employeeCredential: "resetCredential",
+  employeeSessions: "revokeSessions",
+  discovery: "discovery",
+  health: "health",
+  ready: "ready",
+  authorize: "authorize",
+  introspect: "introspect",
+  jwks: "jwks",
+  oidcLogout: "oidcLogout",
+  token: "token",
+  login: "login",
+  sessionLogout: "sessionLogout",
+};
+function routeProvenance(
+  source: string,
+  filePath: string,
+  method: HttpMethod,
+): RouteProvenance[] {
+  const sourceFile = ts.createSourceFile(filePath, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+  const results: RouteProvenance[] = [];
+  const root = sourceFile.statements.find((statement) => {
+    if (ts.isFunctionDeclaration(statement)) return statement.name?.text === method;
+    if (ts.isVariableStatement(statement)) return statement.declarationList.declarations.some((declaration) => ts.isIdentifier(declaration.name) && declaration.name.text === method);
+    return false;
+  });
+  if (!root) return results;
+  const visit = (node: ts.Node): void => {
+    if (ts.isPropertyAccessExpression(node) &&
+        ts.isIdentifier(node.expression) &&
+        node.expression.text === "companyIdentityRouteHandlers") {
+      const operation = node.name.text;
+      let capabilityId = "";
+      let parent: ts.Node = node;
+      while (parent.parent && parent.parent !== sourceFile) parent = parent.parent;
+      const text = parent.getText(sourceFile);
+      const capabilityMatch = text.match(/companyIdentityCapabilityIds\.([A-Za-z0-9_]+)/);
+      if (capabilityMatch) capabilityId = capabilityMatch[1];
+      if (!capabilityId) capabilityId = CAPABILITY_BY_OPERATION[operation.replace(/(Head|Options)$/, "")] ?? "";
+      results.push({ operation, capabilityId });
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(root);
+  return results;
+}
+
 function isExported(statement: ts.Statement): boolean {
   const modifiers: readonly ts.Modifier[] = ts.canHaveModifiers(statement)
     ? (ts.getModifiers(statement) ?? [])
@@ -179,6 +256,33 @@ describe("Accounts company-identity route registry", () => {
     }
   });
 
+  it("binds every source method to its exact named operation and capability", () => {
+    const bindingsByRoute = new Map(
+      companyIdentityRouteBindings.map((binding) => [
+        `${binding.method} ${binding.path}`,
+        binding,
+      ]),
+    );
+    for (const route of routeSources(APP_ROOT)) {
+      for (const method of route.methods) {
+        const binding = bindingsByRoute.get(`${method} ${route.path}`);
+        expect(binding, `${method} ${route.path} has a binding`).toBeDefined();
+        const baseOperation = OPERATION_BY_BINDING_ID[binding!.bindingId.replace(/\.(head|options)$/, "")];
+        const expectedOperation = `${baseOperation ?? ""}${method === "OPTIONS" ? "Options" : method === "HEAD" ? "Head" : ""}`;
+        const candidates = routeProvenance(readFileSync(route.filePath, "utf8"), route.filePath, method)
+          .filter(({ operation }) => method === "OPTIONS" ? operation.endsWith("Options") : method === "HEAD" ? operation.endsWith("Head") : !operation.endsWith("Options") && !operation.endsWith("Head"));
+        expect(candidates).toEqual([{ operation: expectedOperation, capabilityId: CAPABILITY_BY_OPERATION[baseOperation] }]);
+      }
+    }
+  });
+
+  it("rejects a paired operation and capability swap in the route source", () => {
+    const fixturePath = join(ROUTE_DENOMINATOR_FIXTURE_ROOT, "paired-swap-route.ts");
+    const [provenance] = routeProvenance(readFileSync(fixturePath, "utf8"), fixturePath, "PATCH");
+    const expected = { operation: "employeeStatus", capabilityId: "set-status" };
+    expect(provenance).not.toEqual(expected);
+    expect(provenance).toEqual({ operation: "employeeCompanyRoles", capabilityId: "setCompanyRoles" });
+  });
   it("accounts for Next automatic HEAD and OPTIONS on function and const fixtures", () => {
     const fixtureRoutes = sortedRouteMethods(
       routeSources(ROUTE_DENOMINATOR_FIXTURE_ROOT),
