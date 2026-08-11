@@ -72,6 +72,23 @@ is executable `[~]`; later tasks remain dependency-blocked `[b]`._
   - [ ] Define shared pause, advance, replay, skip, and completion-suppression behavior
   - [ ] Reject raw DOM selectors, screen coordinates, and application-specific callbacks as manifest contracts
 
+  **Red evidence (2026-08-11, recoverable checkpoint `e8ec81905`):** The direct focused
+  command from `test-strategy.md` was run after reapplying the test-only checkpoint:
+
+  ```bash
+  cd packages/advantage-play-kit
+  CI=true ../../node_modules/.bin/vitest run \
+    src/presentation/__tests__/game-tutorial-contract.test.ts \
+    src/presentation/__tests__/game-briefing-contract.test.ts \
+    src/scaffolding/__tests__/cartridge-manifest.test.ts
+  ```
+
+  Expected Red confirmed: exit `1`; 3 test files failed, with 4 failed tests and 42
+  existing assertions passing. The tutorial contract suite cannot resolve the missing
+  `../game-tutorial-contract.js` module; lifecycle lacks `tutorial-skip` to `countdown`
+  and `playing`; and the manifest rejects the optional `tutorial` field, so its nested
+  error is not prefixed with `tutorial.`. No production implementation was added.
+
 - [b] Task: Write failing tutorial validation and runtime tests — deferred:s2-tutorial-contracts
   - [ ] Reject empty, duplicate, malformed, or unreachable steps
   - [ ] Verify seeded deterministic playback
