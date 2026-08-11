@@ -46,6 +46,20 @@ export {
   validateGameTutorialDefinition,
 } from "./game-tutorial-contract.js";
 
+/** Public deterministic tutorial runtime factory. */
+export { createGameTutorialRuntime } from "./game-tutorial-runtime.js";
+
+/** Public deterministic tutorial runtime contracts. */
+export type {
+  CreateGameTutorialRuntimeOptions,
+  GameTutorialClock,
+  GameTutorialDiagnostic,
+  GameTutorialEffects,
+  GameTutorialResourceCounts,
+  GameTutorialRuntime,
+  GameTutorialRuntimeSnapshot,
+} from "./game-tutorial-runtime.js";
+
 /** Public guided tutorial contract and action-driver types. */
 export type {
   GameTutorialAction,
