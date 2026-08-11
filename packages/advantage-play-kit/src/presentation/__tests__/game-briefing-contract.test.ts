@@ -119,6 +119,8 @@ describe("standard game briefing contracts", () => {
   it.each([
     { from: "tutorial", event: "tutorial-complete", to: "countdown" },
     { from: "tutorial", event: "tutorial-complete", to: "playing" },
+    { from: "tutorial", event: "tutorial-skip", to: "countdown" },
+    { from: "tutorial", event: "tutorial-skip", to: "playing" },
     { from: "demo", event: "demo-complete", to: "tutorial" },
     { from: "demo", event: "demo-complete", to: "countdown" },
     { from: "countdown", event: "countdown-complete", to: "playing" },
@@ -131,6 +133,8 @@ describe("standard game briefing contracts", () => {
 
   it.each([
     { from: "tutorial", event: "tutorial-complete", to: "demo" },
+    { from: "tutorial", event: "tutorial-skip", to: "results" },
+    { from: "playing", event: "tutorial-skip", to: "countdown" },
     { from: "demo", event: "demo-complete", to: "results" },
     { from: "countdown", event: "countdown-complete", to: "tutorial" },
     { from: "playing", event: "game-complete", to: "briefing" },
