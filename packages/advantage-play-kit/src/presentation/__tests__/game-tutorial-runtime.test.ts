@@ -245,6 +245,24 @@ function stableStepHash(stepId: string): number {
   return hash >>> 0;
 }
 
+/** Converts cartridge records to run-relative observations without changing the records. */
+function toRelativeMechanicRuns(runs: readonly MechanicRun[]): Array<Omit<MechanicRun, "at"> & {
+  readonly relativeAt: number;
+  readonly deltaMs: number;
+}> {
+  const firstAt = runs[0]?.at ?? 0;
+  return runs.map((run, index) => ({
+    stepId: run.stepId,
+    targetId: run.targetId,
+    actionId: run.actionId,
+    consequence: run.consequence,
+    seed: run.seed,
+    sample: run.sample,
+    relativeAt: run.at - firstAt,
+    deltaMs: index === 0 ? 0 : run.at - runs[index - 1]!.at,
+  }));
+}
+
 /** Creates the cartridge-owned driver that applies tutorial actions to a real mechanic model. */
 function createCartridgeMechanicDriver(clock: ManualClock): CartridgeMechanicDriver {
   const executed: MechanicRun[] = [];
@@ -474,14 +492,16 @@ describe("guided gameplay tutorial runtime", () => {
     const harness = await createHarness();
 
     await playAllSteps(harness);
-    const firstRun = harness.driver.executed.map((run) => ({ ...run }));
+    const firstRunRecords = harness.driver.executed.slice();
+    const firstRun = toRelativeMechanicRuns(firstRunRecords);
     expect(firstRun, "the first seeded playback must execute at least one action").toHaveLength(3);
 
-    harness.driver.executed.splice(0);
     await harness.runtime.replay();
     expect(harness.driver.destroy, "replay must tear down the previous mechanic run").toHaveBeenCalledOnce();
     await playAllSteps(harness);
-    const replayRun = harness.driver.executed.map((run) => ({ ...run }));
+    const replayRunRecords = harness.driver.executed.slice(firstRunRecords.length);
+    expect(harness.driver.executed.slice(0, firstRunRecords.length)).toEqual(firstRunRecords);
+    const replayRun = toRelativeMechanicRuns(replayRunRecords);
     expect(replayRun).toEqual(firstRun);
     expect(harness.runtime.getSnapshot().seed).toBe(tutorialSeed);
 
