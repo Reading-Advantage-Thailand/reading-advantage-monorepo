@@ -59,11 +59,14 @@ _Story ref: spec.md#story-s1_
 
 _Story ref: spec.md#story-s2_
 
-_Development paused by user request on 2026-08-11. Contract decisions and the
-recoverable RED checkpoint are recorded in
-[s2-progress-handoff-20260811.md](./s2-progress-handoff-20260811.md)._
+_Development resumed by user request on 2026-08-11 with maximum safe parallelism.
+Contract decisions, the recoverable RED checkpoint `fa01f9b30`, and the frozen contract
+boundary are recorded in
+[s2-progress-handoff-20260811.md](./s2-progress-handoff-20260811.md). The canonical
+test strategy is [test-strategy.md](./test-strategy.md). Only the first contract task
+is executable `[~]`; later tasks remain dependency-blocked `[b]`._
 
-- [b] Task: Define the tutorial contracts — deferred:user-requested-pause-20260811
+- [~] Task: Define the tutorial contracts
   - [ ] Define tutorial definitions, ordered steps, semantic targets, timing, labels, and progress
   - [ ] Define cartridge-owned deterministic demonstration actions
   - [ ] Define shared pause, advance, replay, skip, and completion-suppression behavior
