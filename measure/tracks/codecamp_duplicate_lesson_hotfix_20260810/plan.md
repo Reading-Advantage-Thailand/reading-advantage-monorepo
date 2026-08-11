@@ -61,7 +61,7 @@
     then fails on deprecated unchecked markers in unrelated pre-existing
     tracks.
   - [x] Complete independent change-quality and data-safety review.
-- [x] Task: Deploy and verify production
+- [x] Task: Deploy and verify production [evidence: 4eedc8840]
   - [x] Capture a PII-free production progress digest immediately before the
         migration and verify the deploy path stages a zero-traffic revision.
   - [x] Obtain explicit owner approval for the exact Codecamp repair migration.
