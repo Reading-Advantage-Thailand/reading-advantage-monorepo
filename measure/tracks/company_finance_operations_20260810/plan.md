@@ -7,18 +7,21 @@
   idempotency, immutable history, authorization, audit, provenance, and
   cross-database/provider isolation. This is the only executable task in this
   scaffold; do not encode Thai policy. Accepted with evidence in
-   `phase1-foundation-acceptance-20260810.md` in commit `3b3a128e`.
+   `phase1-foundation-acceptance-20260810.md` in commit
+   `3b3a128ea381f8fff0c6e1136894fd39228eaff9`.
 - [x] Task: Implement the minimum domain/backend contracts and persistence behind the
   Red tests. Depends on the foundation contracts and failing-test assertions
   from the preceding task. Accepted with evidence in
-   `phase1-persistence-acceptance-20260811.md` in commit `c5ecf18b`.
+   `phase1-persistence-acceptance-20260811.md` in commit
+   `c5ecf18b0830c8702602f9f5f33415c7b3e92d66`.
 - [x] Task: Add behavior-level contract tests and adapters for the Company
   Identity attestor, authorized private-evidence reads, and a scope/digest-bound
   durable outbox projector required by the historical private-evidence MVP.
   Depends on the completed foundation task and the accepted boundary in
   `historical-private-evidence-mvp-decision-20260811.md`.
 
-  Green implementation evidence: `98d111bdf` adds the Company Identity Finance
+  Green implementation evidence:
+  `98d111bdf1c4eea2d2b6980d884ad97250f03cb2` adds the Company Identity Finance
   attestor and commits the reviewed private-read, packet, and durable-projector
   boundaries. The A targeted command passed with 7 tests. B passed with 25
   tests, C with 9 tests, D with 39 tests, and the protocol safety suite with
