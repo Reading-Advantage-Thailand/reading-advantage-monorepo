@@ -24,6 +24,27 @@
   gates, and review applicability for this task are defined in
   `test-strategy.md`. The Task 3 `phase_base_sha` is captured at the
   strategy commit, not at the persistence checkpoint `c5ecf18b`.
+
+   Mid Red evidence (2026-08-11): the phase scope uses
+   `phase_base_sha=c93f3a84fcd72c3559e81fdbe7c9ac761d993f35`. The dispatch role
+   base is `role_base_sha=745236b4f8239571b4633f7aaadf302faad93d10`. The A
+   attestor command exits 1 because the public Company Identity barrel lacks
+   `createFinanceCompanyIdentityAttestor`; seven assertions fail at that
+   missing export. This is an implementation Red, not an environment Red.
+
+   The B, C, and D commands exit 0 on the dirty candidate production tree with
+   25/25, 9/9, and 39/39 tests passing. These are candidate-green boundaries,
+   not accepted Green evidence. The protocol-safety command exits 0 with
+   13/13 tests passing. The two live PostgreSQL tests exit 0 with two tests
+   skipped because `COMPANY_IDENTITY_PG_TEST_URL` and
+   `COMPANY_IDENTITY_INTEGRATION_DATABASE_URL` are unset. The metadata allowlist
+   command exits 0 with 2/2 tests passing. The source-isolation guards exit 0
+   with 6/6 tests passing. The Phase 2 aggregate remains intentionally Red and
+   is not part of this task's Green gate.
+
+   The Red commit owns only the focused A-E test files and this plan. Candidate
+   production, Accounts, migration, metadata, package, lockfile, decision,
+   specification, Mastery, and `.opencode` changes remain unstaged.
 - [b] Task: Add live CRM `CustomerBillingCatalogPort` and Tutor
   `TutorFinancialExportPort` owner contracts and adapters only after those
   source owners exist and accept source-native identities, versions, evidence,
