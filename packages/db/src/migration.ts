@@ -22,11 +22,59 @@ const HASH_VALIDATION_FLOOR = 1779120003000;
 export interface ProductMigrationOptions {
   readonly directDatabaseUrl: string;
   readonly migrationsFolder?: string;
+  /**
+   * The exact final migration tag permitted for a deployment-specific migration run.
+   * The tag must be the terminal checked-in migration so a successor cannot be applied implicitly.
+   */
+  readonly migrationCeilingTag?: string;
 }
 
 interface ProductMigrationLedgerRow {
   readonly hash: string;
   readonly created_at: string | number | bigint | null;
+}
+
+/**
+ * Validates an optional deployment ceiling before a database transaction begins.
+ * @param migrations The ordered checked-in migration journal.
+ * @param migrationCeilingTag The optional final migration tag requested by a deploy pipeline.
+ * @returns The migrations permitted for this run.
+ * @throws When a ceiling is empty, unknown, duplicated, non-prefix, or has a successor.
+ */
+function resolveMigrationCeiling(
+  migrations: readonly {
+    readonly tag: string;
+    readonly folderMillis: number;
+    readonly hash: string;
+    readonly sql: readonly string[];
+  }[],
+  migrationCeilingTag: string | undefined,
+) {
+  if (migrationCeilingTag === undefined) return migrations;
+
+  const ceilingTag = migrationCeilingTag.trim();
+  if (!ceilingTag) {
+    throw new Error("Migration ceiling tag must be a non-empty journal tag.");
+  }
+
+  const ceilingIndex = migrations.findIndex(
+    (migration) => migration.tag === ceilingTag,
+  );
+  if (ceilingIndex < 0) {
+    throw new Error(`Migration ceiling tag "${ceilingTag}" is not in the checked-in journal.`);
+  }
+  if (
+    migrations.filter((migration) => migration.tag === ceilingTag).length !== 1
+  ) {
+    throw new Error(`Migration ceiling tag "${ceilingTag}" is duplicated in the checked-in journal.`);
+  }
+  if (ceilingIndex !== migrations.length - 1) {
+    const successor = migrations[ceilingIndex + 1]?.tag ?? "unknown";
+    throw new Error(
+      `Migration ceiling "${ceilingTag}" is not a terminal journal prefix; successor "${successor}" must be reviewed explicitly.`,
+    );
+  }
+  return migrations.slice(0, ceilingIndex + 1);
 }
 
 /**
@@ -119,7 +167,7 @@ function validateProductMigrationLedger(
 
 /**
  * Applies pending shared product migrations through one serialized transaction.
- * @param options The direct database URL and optional migration folder override.
+ * @param options The direct database URL, optional migration folder override, and optional deployment ceiling.
  * @returns A promise that resolves once the ledger and schema are current.
  * @throws When the database connection, migration SQL, or ledger update fails.
  */
@@ -129,6 +177,10 @@ export async function migrateProductDatabase(
   const migrations = readPostgresMigrationFiles({
     migrationsFolder: options.migrationsFolder ?? DEFAULT_MIGRATIONS_FOLDER,
   });
+  const permittedMigrations = resolveMigrationCeiling(
+    migrations,
+    options.migrationCeilingTag,
+  );
   const client = postgres(
     normalizePostgresConnectionString(options.directDatabaseUrl),
     {
@@ -157,10 +209,10 @@ export async function migrateProductDatabase(
       );
       const appliedTimestamps = validateProductMigrationLedger(
         ledgerRows,
-        migrations,
+        permittedMigrations,
       );
 
-      for (const migration of migrations) {
+      for (const migration of permittedMigrations) {
         if (appliedTimestamps.has(migration.folderMillis)) {
           continue;
         }

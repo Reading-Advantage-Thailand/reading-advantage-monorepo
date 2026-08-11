@@ -15,5 +15,8 @@ if (!directDatabaseUrl) {
       "[migrate] DIRECT_DATABASE_URL is not set; falling back to DATABASE_URL.",
     );
   }
-  await migrateProductDatabase({ directDatabaseUrl });
+  await migrateProductDatabase({
+    directDatabaseUrl,
+    migrationCeilingTag: process.env.MIGRATION_CEILING_TAG,
+  });
 }

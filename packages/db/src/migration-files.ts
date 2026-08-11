@@ -15,6 +15,11 @@ interface MigrationJournal {
   readonly entries: readonly JournalEntry[];
 }
 
+/** A checked-in PostgreSQL migration with its journal tag preserved. */
+export interface PostgresMigrationFile extends MigrationMeta {
+  readonly tag: string;
+}
+
 /**
  * Reports whether a character can continue an unquoted PostgreSQL identifier.
  * @param character The character immediately adjacent to a possible token boundary.
@@ -171,7 +176,7 @@ export function splitPostgresMigration(source: string): string[] {
  */
 export function readPostgresMigrationFiles(
   config: MigrationConfig,
-): MigrationMeta[] {
+): PostgresMigrationFile[] {
   const journalPath = join(config.migrationsFolder, "meta", "_journal.json");
   const journal = JSON.parse(
     readFileSync(journalPath, "utf8"),
@@ -185,6 +190,7 @@ export function readPostgresMigrationFiles(
       folderMillis: entry.when,
       hash: createHash("sha256").update(source).digest("hex"),
       sql: splitPostgresMigration(source),
+      tag: entry.tag,
     };
   });
 }
