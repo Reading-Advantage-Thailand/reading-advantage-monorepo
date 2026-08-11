@@ -96,12 +96,35 @@ is executable `[~]`; later tasks remain dependency-blocked `[b]`._
   and `playing`; and the manifest rejects the optional `tutorial` field, so its nested
   error is not prefixed with `tutorial.`. No production implementation was added.
 
-- [b] Task: Write failing tutorial validation and runtime tests — deferred:s2-tutorial-contracts
+- [~] Task: Write failing tutorial validation and runtime tests
   - [ ] Reject empty, duplicate, malformed, or unreachable steps
   - [ ] Verify seeded deterministic playback
   - [ ] Verify tutorial runs through the real cartridge mechanic
   - [ ] Verify zero production completions, XP persistence, or leaderboard effects
   - [ ] Verify cleanup after replay, exit, remount, and interruption
+
+  **Mid-Red evidence (2026-08-11):** Added
+  `src/presentation/__tests__/game-tutorial-runtime.test.ts`. The suite has 15 tests
+  for runtime validation, seeded playback, linear sequencing, pause/resume, advance,
+  replay, skip, correct and incorrect demonstrations, production-effect suppression,
+  exactly-once transitions, and cleanup. The cartridge fixture uses the
+  `GameTutorialActionDriver` context and a deterministic clock. It uses semantic IDs.
+
+  The targeted Red command exited `1`:
+
+  ```bash
+  cd packages/advantage-play-kit
+  CI=true ../../node_modules/.bin/vitest run \
+    src/presentation/__tests__/game-tutorial-runtime.test.ts
+  ```
+
+  The command reported 15 tests failed. The expected failure is the missing
+  `src/presentation/game-tutorial-runtime.ts` implementation. The test file reached
+  all 15 tests and recorded assertion failures for the missing runtime module.
+
+  The S2.1 contract command exited `0` with 3 files and 92 tests passing. The combined
+  S2.1 plus S2.2 focused command exited `1`: the 3 S2.1 files passed with 92 tests,
+  and the runtime file failed with 15 tests. No production file changed.
 
 - [b] Task: Implement the shared tutorial controller — deferred:s2-tutorial-tests
   - [ ] Add explicit tutorial runtime mode
