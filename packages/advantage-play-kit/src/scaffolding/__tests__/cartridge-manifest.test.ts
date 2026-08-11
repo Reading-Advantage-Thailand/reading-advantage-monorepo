@@ -26,10 +26,70 @@ describe("cartridge manifest schema", () => {
     qcRegistration: { route: "/qc" },
   };
 
+  const validTutorial = {
+    schemaVersion: 1,
+    id: "exemplar-vocab-match-tutorial",
+    title: "Exemplar Vocabulary Match tutorial",
+    seed: 42,
+    labels: {
+      progress: "Tutorial progress",
+      pause: "Pause tutorial",
+      resume: "Resume tutorial",
+      advance: "Next step",
+      replay: "Replay tutorial",
+      skip: "Skip tutorial",
+    },
+    targets: [{ id: "control:answer-choice", kind: "control" }],
+    actions: [{ id: "action:highlight-answer", deterministic: true, consequence: "neutral" }],
+    steps: [{
+      id: "step:notice-answer",
+      title: "Find the answer controls",
+      explanation: "Notice the answer choices before making a selection.",
+      targetId: "control:answer-choice",
+      actionId: "action:highlight-answer",
+      timing: { leadInMs: 0, demonstrationMs: 800, lingerMs: 250 },
+    }],
+    lifecycle: {
+      pause: "freeze-current-step",
+      advance: "sequential",
+      replay: "restart-with-same-seed",
+      skip: { enabled: true, to: "countdown" },
+      complete: { to: "playing" },
+      productionEffects: {
+        emitGameResults: false,
+        persistProgress: false,
+        awardAuthoritativeXp: false,
+        writeLeaderboard: false,
+        applyFailureConsequences: false,
+      },
+    },
+  } as const;
+
   it("accepts a manifest that pins the accepted standard-pack release", () => {
     const manifest = validateCartridgeManifest(validManifest);
     expect(manifest.id).toBe("exemplar-vocab-match");
     expect(manifest.standardPackBinding.version).toBe("2026.07.23");
+  });
+
+  it("accepts an optional strict tutorial definition without making it mandatory for existing cartridges", () => {
+    const withoutTutorial = validateCartridgeManifest(validManifest);
+    const withTutorial = validateCartridgeManifest({ ...validManifest, tutorial: validTutorial });
+
+    expect(withoutTutorial.tutorial).toBeUndefined();
+    expect(withTutorial.tutorial).toMatchObject({
+      id: "exemplar-vocab-match-tutorial",
+      lifecycle: { complete: { to: "playing" } },
+    });
+  });
+
+  it("prefixes nested tutorial validation errors with the manifest tutorial path", () => {
+    expect(() => validateCartridgeManifest({
+      ...validManifest,
+      tutorial: {
+        ...validTutorial,
+        labels: { ...validTutorial.labels, progress: " " },
+      },
+    })).toThrow(/tutorial\.labels\.progress/i);
   });
 
   it("rejects a manifest that does not pin the accepted standard-pack release", () => {
