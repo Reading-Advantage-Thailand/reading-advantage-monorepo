@@ -133,11 +133,19 @@ is executable `[~]`; later tasks remain dependency-blocked `[b]`._
    statements, 73.58% branches, 100% functions, and 100% lines for
    `game-tutorial-runtime.ts`.
 
-- [~] Task: Implement the shared tutorial controller
+- [x] Task: Implement the shared tutorial controller `58c0889cf`
   - [ ] Add explicit tutorial runtime mode
   - [ ] Coordinate steps with cartridge-supplied mechanic actions
   - [ ] Expose current step, progress, semantic target, and lifecycle events
   - [ ] Suppress production terminal behavior while retaining educational feedback
+
+   **Green evidence (2026-08-11, implementation `58c0889cf`):** The S2.3 controller
+   command exited 0 with 13 tests passing. The S2.1/S2.2/S2.3 focused command plus the
+   existing host suite exited 0 with 6 files and 133 tests passing. Direct package type
+   check and build exited 0. Package lint exited 0 with four existing warnings outside
+   S2.3. Focused coverage reported 100% for `game-tutorial-controller.ts`; its process
+   exited 1 because unrelated package-global coverage thresholds were not met. The doctor
+   process exited 1 because unrelated active plans retain deprecated `[ ]` markers.
 
   **Mid-Red evidence (2026-08-11; phase and role base `2c20754e3e270d2a1dc57dfa785605b5d69775bd`):**
   Added `src/presentation/__tests__/game-tutorial-controller.test.ts` with 13 focused
