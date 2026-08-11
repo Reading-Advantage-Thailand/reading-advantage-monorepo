@@ -96,7 +96,7 @@ is executable `[~]`; later tasks remain dependency-blocked `[b]`._
   and `playing`; and the manifest rejects the optional `tutorial` field, so its nested
   error is not prefixed with `tutorial.`. No production implementation was added.
 
-- [~] Task: Write failing tutorial validation and runtime tests
+- [x] Task: Write failing tutorial validation and runtime tests `b72a632fa`
   - [ ] Reject empty, duplicate, malformed, or unreachable steps
   - [ ] Verify seeded deterministic playback
   - [ ] Verify tutorial runs through the real cartridge mechanic
@@ -125,6 +125,13 @@ is executable `[~]`; later tasks remain dependency-blocked `[b]`._
   The S2.1 contract command exited `0` with 3 files and 92 tests passing. The combined
   S2.1 plus S2.2 focused command exited `1`: the 3 S2.1 files passed with 92 tests,
   and the runtime file failed with 15 tests. No production file changed.
+
+   **Green evidence (2026-08-11, implementation `b72a632fa`):** The S2.2 runtime command
+   exited 0 with 15 tests passing. The combined S2.1 and S2.2 command exited 0 with 4 files
+   and 107 tests passing. Package type check and build exited 0. Package lint exited 0 with
+   four existing warnings outside S2.2. Focused runtime coverage exited 0 with 93.44%
+   statements, 73.58% branches, 100% functions, and 100% lines for
+   `game-tutorial-runtime.ts`.
 
 - [b] Task: Implement the shared tutorial controller — deferred:s2-tutorial-tests
   - [ ] Add explicit tutorial runtime mode
