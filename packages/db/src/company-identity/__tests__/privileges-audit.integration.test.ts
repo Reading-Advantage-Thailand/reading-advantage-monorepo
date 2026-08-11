@@ -353,6 +353,18 @@ describe("company identity direct migration and doctor privileges", () => {
             "55000",
             "company_identity_audit_events is immutable",
           );
+          await expectDatabaseError(
+            () =>
+              directSql`
+                insert into company_identity_audit_events
+                  (id, correlation_id, actor_type, operation, outcome, metadata)
+                values
+                  (${randomUUID()}, ${randomUUID()}, 'SYSTEM', 'identity:unreviewed-metadata',
+                   'FAILED', ${directSql.json({ unreviewedSecret: "must-not-persist" })})
+              `,
+            "23514",
+            "company_identity_audit_events_metadata_allowed_keys_check",
+          );
         } finally {
           await directSql.end();
         }

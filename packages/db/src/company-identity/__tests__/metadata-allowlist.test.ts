@@ -104,4 +104,13 @@ describe("company-identity audit metadata allowlist", () => {
     expect(schemaSource).not.toContain("targetAccountId'");
     expect(migration).not.toContain("targetAccountId'");
   });
+
+  it("rejects an unreviewed metadata key instead of accepting secret-shaped input", () => {
+    const result = auditMetadataSchema.safeParse({
+      source: "red-test",
+      unreviewedSecret: "must-not-enter-the-audit-ledger",
+    });
+
+    expect(result.success).toBe(false);
+  });
 });
