@@ -93,11 +93,20 @@ human-labelled production evaluation or Mastery mutation.
   surface and its explicit advisory/append-only semantics. No immutable attempts
   existed for the inspected learner yet, which is consistent with a new shadow rollout.
 
+## Bounded active-rollout approval (2026-08-11)
+
+- The product owner selected the exact label `Approve active rollout` for the
+  current Codecamp PR-review active rollout introduced by config commit
+  `508fac6fd` and reviewed at repository HEAD
+  `46f97a54d69c37f931c72069ff063d95e1525c41`. Durable provenance is recorded
+  in `release-approval.json` with approver marker `codecamp-ops-release`.
+- The approval authorizes advisory PR feedback only. It does not authorize a
+  merge gate, automatic Mastery mutation, or S4 closeout.
+
 ## Remaining closure work
 
-- Human-labelled frozen evaluation fixtures and audited human approval of a
-  canary/active rollout remain. The runtime controls are implemented and
-  intentionally remain in private shadow mode; marketing and product docs must
+- Human-labelled frozen evaluation fixtures remain. The bounded active-rollout
+  approval does not authorize Mastery mutation; marketing and product docs must
   not claim PR review currently mutates Mastery.
 - Revision/redelivery and end-to-end GitHub/browser acceptance coverage need
   completion before this track can close.
@@ -118,10 +127,10 @@ human-labelled production evaluation or Mastery mutation.
 ### Verification still open
 
 - S3 graph/generate/doctor gates and the end-to-end fixture flow remain open.
-- S4 human-labelled frozen fixtures, audited human approval of canary/active
-  rollout, revision/redelivery and end-to-end GitHub/browser acceptance,
-  credentialed GitHub Checks acceptance, affected/root gates, graph/generate/doctor,
-  and curriculum/product-owner review remain open. Runtime remains private shadow.
+- S4 human-labelled frozen fixtures, revision/redelivery and end-to-end
+  GitHub/browser acceptance, credentialed GitHub Checks acceptance, affected/root
+  gates, graph/generate/doctor, and curriculum/product-owner review remain open.
+  The bounded active-rollout approval is advisory only and does not close these gates.
 
 ### SSO cutover dependency
 

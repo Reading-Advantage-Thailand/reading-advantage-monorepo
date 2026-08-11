@@ -1,0 +1,18 @@
+{
+  "decision": "approved",
+  "mode": "active",
+  "approved_config_commit": "508fac6fd",
+  "approved_repository_head": "46f97a54d69c37f931c72069ff063d95e1525c41",
+  "approver_marker": {
+    "name": "CODECAMP_PR_REVIEW_RELEASE_APPROVED_BY",
+    "value": "codecamp-ops-release"
+  },
+  "scope": {
+    "pr_feedback": "advisory",
+    "merge_gate": false,
+    "human_authority": false,
+    "mastery_mutation": false,
+    "s4_closeout": false
+  },
+  "source_statement": "Approve active rollout"
+}
