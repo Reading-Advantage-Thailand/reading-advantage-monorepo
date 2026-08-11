@@ -59,43 +59,43 @@ _Story ref: spec.md#story-s1_
 
 _Story ref: spec.md#story-s2_
 
-- [b] Task: Define the tutorial contracts — deferred:s1-product-acceptance
+- [~] Task: Define the tutorial contracts
   - [ ] Define tutorial definitions, ordered steps, semantic targets, timing, labels, and progress
   - [ ] Define cartridge-owned deterministic demonstration actions
   - [ ] Define shared pause, advance, replay, skip, and completion-suppression behavior
   - [ ] Reject raw DOM selectors, screen coordinates, and application-specific callbacks as manifest contracts
 
-- [b] Task: Write failing tutorial validation and runtime tests — deferred:s1-product-acceptance
+- [b] Task: Write failing tutorial validation and runtime tests — deferred:s2-tutorial-contracts
   - [ ] Reject empty, duplicate, malformed, or unreachable steps
   - [ ] Verify seeded deterministic playback
   - [ ] Verify tutorial runs through the real cartridge mechanic
   - [ ] Verify zero production completions, XP persistence, or leaderboard effects
   - [ ] Verify cleanup after replay, exit, remount, and interruption
 
-- [b] Task: Implement the shared tutorial controller — deferred:s1-product-acceptance
+- [b] Task: Implement the shared tutorial controller — deferred:s2-tutorial-tests
   - [ ] Add explicit tutorial runtime mode
   - [ ] Coordinate steps with cartridge-supplied mechanic actions
   - [ ] Expose current step, progress, semantic target, and lifecycle events
   - [ ] Suppress production terminal behavior while retaining educational feedback
 
-- [b] Task: Implement the guided tutorial presentation — deferred:s1-product-acceptance
+- [b] Task: Implement the guided tutorial presentation — deferred:s2-tutorial-controller
   - [ ] Add step cards, progress indicators, focus/highlight treatment, and accessible narration
   - [ ] Support keyboard, pointer, and touch navigation
   - [ ] Keep prompts and highlighted mechanics unobstructed in compact and wide layouts
   - [ ] Respect reduced-motion settings
 
-- [b] Task: Add tutorial testing and QC fixtures — deferred:s1-product-acceptance
+- [b] Task: Add tutorial testing and QC fixtures — deferred:s2-tutorial-presentation
   - [ ] Add deterministic clock, input, target, and action fixtures
   - [ ] Add worst-case Thai/English tutorial content
   - [ ] Add replay, interruption, and leak assertions
   - [ ] Add an independent tutorial preview state to APK QC
 
-- [b] Task: Document the shared path and bespoke mechanic hook — deferred:s1-product-acceptance
+- [b] Task: Document the shared path and bespoke mechanic hook — deferred:s2-tutorial-qc
   - [ ] Document how an intern declares steps
   - [ ] Document how cartridge code demonstrates a mechanic without recreating UI
   - [ ] Run graph update, generation, and doctor checks
 
-- [b] Task: Measure - User Manual Verification 'Phase S2: Guided Gameplay Tutorial' (Protocol in workflow.md) — deferred:s1-product-acceptance
+- [b] Task: Measure - User Manual Verification 'Phase S2: Guided Gameplay Tutorial' (Protocol in workflow.md) — deferred:s2-tutorial-docs
 
 ## Phase S3: Safe Demonstration Mode
 
