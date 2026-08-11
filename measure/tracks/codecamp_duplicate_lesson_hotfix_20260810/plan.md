@@ -40,16 +40,17 @@
   - [x] Reconcile child exercise rows and add the unique order constraint.
   - [x] Register a strictly monotonic journal entry and refresh the snapshot.
 
-## Phase 4: Generate Docs, Verify, and Deploy
+## Phase 4: Generate Docs, Verify, and Deploy [evidence: 4eedc8840]
 
-- [~] Task: Run focused and affected-package quality gates
+- [x] Task: Run focused and affected-package quality gates [evidence: f1d7ba558, 075351435, 4eedc8840]
   - [x] Run DB migration, seed, journal, type, lint, and build checks. The final
         pre-review Podman/PostgreSQL suite passed 110/110 tests. After the
         independent review safeguard, the new real-Postgres rollback case and
         the affected eight-file matrix pass 51/51 tests, including the 0049
         repair, exact ledger/hash/sentinel gate, and progress preservation; the
         DB production build and focused DB lint also pass.
-  - [~] Run affected Codecamp domain/app regression checks. The full deploy
+  - [x] Run affected Codecamp domain/app regression checks [evidence: 075351435,
+        4eedc8840]. The full deploy
     contract passes 17/17 after aligning its secret assertions with verified
     GCP ownership: the OIDC secret is cross-project from Reading Advantage,
     while the OpenAI and Google AI secrets are local to Codecamp. Domain Vitest
