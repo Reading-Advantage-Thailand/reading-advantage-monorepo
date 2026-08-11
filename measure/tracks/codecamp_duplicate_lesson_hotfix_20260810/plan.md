@@ -71,6 +71,29 @@
      tests, and direct DB type, focused lint, and build checks exited 0. The
      track has no local `test-strategy.md`; the supplied review contracts and
      this plan supplied the Red command.
+  - [x] Add B2-V2 migration-ceiling adversarial tests [evidence: def9d9f22].
+    The Phase 4 closeout security re-audit identified that the original
+    `codecamp-0049-ledger-gap-deploy-contract.test.ts` only exercised the
+    non-terminal-successor rejection path and that duplicate-tag, blank,
+    whitespace, unknown, terminal-positive-control, and caller-propagation
+    behaviors relied on source-string presence rather than live behavior.
+    `packages/db/src/__tests__/migration-ceiling-adversarial.test.ts` adds
+    behavioral coverage against `migrateProductDatabase` via mocked
+    `postgres` + mocked `readPostgresMigrationFiles` plus a behavioral
+    subprocess test against `scripts/migrate.ts` that proves the
+    `MIGRATION_CEILING_TAG` env var is forwarded into the runner.
+    Coverage: 10 tests — 5 reject cases (blank, whitespace, unknown,
+    current non-terminal 0049 successor 0050, duplicate non-terminal,
+    duplicate terminal) that all assert `postgres()` was never called
+    before throwing; 3 positive controls (terminal ceiling permits the
+    reviewed prefix with no permitted item excluded, singleton terminal
+    journal, unbounded callers retain all-pending behavior); 1
+    subprocess counterexample that fails closed and never performs a DNS
+    lookup if propagation breaks. Verification at HEAD:
+    `cd packages/db && ../../node_modules/.bin/vitest run src/__tests__/migration-ceiling-adversarial.test.ts`
+    passes 10/10; removing any of the four validation checks flips 5 tests
+    to fail; `tsc --noEmit` and `tsc --project tsconfig.build.json` exit
+    0.
   - [x] Complete independent change-quality and data-safety review.
 - [x] Task: Deploy and verify production [evidence: 4eedc8840]
   - [x] Capture a PII-free production progress digest immediately before the
