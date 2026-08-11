@@ -18,6 +18,15 @@
   Depends on the completed foundation task and the accepted boundary in
   `historical-private-evidence-mvp-decision-20260811.md`.
 
+  Green implementation evidence: `98d111bdf` adds the Company Identity Finance
+  attestor and commits the reviewed private-read, packet, and durable-projector
+  candidates. The A targeted command passed with 7 tests. B passed with 25
+  tests, C with 9 tests, D with 39 tests, and the protocol safety suite with
+  13 tests. The live PostgreSQL suites skipped because no disposable URL was
+  set. This task stays in progress because the backend test typecheck fails in
+  unrelated Standard Pack and Planned Game Intake tests. `measure/doctor.sh`
+  also reports existing deprecated markers in unrelated active tracks.
+
   Test strategy applicability: the canonical Red/Green/closeout gates, risk
   classes, anti-pattern coverage, intentionally-red aggregate handling
   (`controlled-imports-phase2.red.test.ts` must stay red), source-isolation
