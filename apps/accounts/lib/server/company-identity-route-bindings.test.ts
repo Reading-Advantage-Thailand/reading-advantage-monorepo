@@ -42,8 +42,12 @@ interface RouteSource {
 }
 
 function isExported(statement: ts.Statement): boolean {
-  return (statement.modifiers ?? []).some(
-    (modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword,
+  const modifiers: readonly ts.Modifier[] = ts.canHaveModifiers(statement)
+    ? (ts.getModifiers(statement) ?? [])
+    : [];
+  return modifiers.some(
+    (modifier: ts.Modifier): boolean =>
+      modifier.kind === ts.SyntaxKind.ExportKeyword,
   );
 }
 
