@@ -40,7 +40,7 @@
   - [x] Reconcile child exercise rows and add the unique order constraint.
   - [x] Register a strictly monotonic journal entry and refresh the snapshot.
 
-## Phase 4: Generate Docs, Verify, and Deploy [evidence: 4eedc8840]
+## Phase 4: Generate Docs, Verify, and Deploy
 
 - [x] Task: Run focused and affected-package quality gates [evidence: f1d7ba558, 075351435, 4eedc8840]
   - [x] Run DB migration, seed, journal, type, lint, and build checks. The final
