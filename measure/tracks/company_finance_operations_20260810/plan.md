@@ -59,6 +59,37 @@
    The Red commit owns only the focused A-E test files and this plan. Candidate
    production, Accounts, migration, metadata, package, lockfile, decision,
    specification, Mastery, and `.opencode` changes remain unstaged.
+
+   Adversarial evidence (2026-08-11): the Measure adversarial-testing
+   subagent added two narrowly-scoped test files that close gaps in the
+   A, B, C, and D red contracts without touching the dirty production
+   tree. `packages/backend/src/modules/company-identity/__tests__/finance-task3-adversarial.test.ts`
+   adds 19 behavior-level tests: A-boundary `authentication-failed`
+   secret-safe audit (1), audit-call-count and deep immutability (1),
+   empty `appRoleIds` role-not-accepted denial (1), C-boundary non-UUID
+   jobId rejection (1), corrupt stored-receipt rejection (1), idempotency
+   key version-tag + length-prefix invariant (1), result and receipt
+   deep-freeze (1), D-boundary extra envelope fields rejected
+   (`authorization`, `evidence`, `binding`, `result`, `packetDigest` —
+   5 parameterized cases), result-envelope deep-freeze (1), packet
+   unchanged-by-value (1), fact-array boundary
+   (0/1/128/129) (1), and attestor `evidence` strictObject validation
+   with empty `appRoleIds` (1). `packages/storage/src/__tests__/finance-task3-adversarial.test.ts`
+   adds 10 behavior-level tests: maxBytes-1 acceptance (1),
+   maxBytes+1 rejection and no-digest (1), empty payload acceptance
+   (1), driver-throw propagation (1), byte-copy isolation (1),
+   AbortSignal forwarding (1), signal-aborted driver throw (1),
+   provider-metadata stripping (1), `deny` authorize decision (1),
+   content-type passthrough (1). Both live PostgreSQL
+   `postgres-login-atomic.integration.test.ts` and
+   `postgres-exchange.integration.test.ts` pass on a disposable
+   `postgresql://cid_mig_a1b2c3d4:test@127.0.0.1:5432/company_identity_test_20260811_a1b2c3d4e5f60718`
+   database (no shared/product DBs touched). The Phase 2 aggregate
+   `controlled-imports-phase2.red.test.ts` remains intentionally red
+   (20/21 tests still fail; the single passing test is the AST boundary
+   walker). Architecture boundary, port boundary, and metadata allowlist
+   tests remain green. No production, Accounts, Mastery, DB migration,
+   storage driver, package.json, or lockfile was edited.
 - [b] Task: Add live CRM `CustomerBillingCatalogPort` and Tutor
   `TutorFinancialExportPort` owner contracts and adapters only after those
   source owners exist and accept source-native identities, versions, evidence,
