@@ -12,20 +12,34 @@
   Red tests. Depends on the foundation contracts and failing-test assertions
   from the preceding task. Accepted with evidence in
   `phase1-persistence-acceptance-20260811.md`.
-- [b] Task: Add contract tests and adapters for Company Identity, CRM
-  `CustomerBillingCatalogPort`, Tutor `TutorFinancialExportPort`, private
-  storage reads, and durable jobs. Depends on accepted port owners, versioned
-  payloads, and the completed foundation task.
+- [~] Task: Add behavior-level contract tests and adapters for the Company
+  Identity attestor, authorized private-evidence reads, and a scope/digest-bound
+  durable outbox projector required by the historical private-evidence MVP.
+  Depends on the completed foundation task and the accepted boundary in
+  `historical-private-evidence-mvp-decision-20260811.md`.
+
+  Test strategy applicability: the canonical Red/Green/closeout gates, risk
+  classes, anti-pattern coverage, intentionally-red aggregate handling
+  (`controlled-imports-phase2.red.test.ts` must stay red), source-isolation
+  gates, and review applicability for this task are defined in
+  `test-strategy.md`. The Task 3 `phase_base_sha` is captured at the
+  strategy commit, not at the persistence checkpoint `c5ecf18b`.
+- [b] Task: Add live CRM `CustomerBillingCatalogPort` and Tutor
+  `TutorFinancialExportPort` owner contracts and adapters only after those
+  source owners exist and accept source-native identities, versions, evidence,
+  and payload schemas. Finance normalization must remain downstream.
 
 ## Phase 2 — controlled operational imports
 
-- [b] Task: Implement idempotent historical batches, payroll-summary imports, Tutor
-  export ingestion, school-billing snapshots, evidence references, and
-  correction/supersession flow. Depends on accepted CRM and Tutor contracts,
-  storage-read capability, durable jobs, and Phase 1 passing tests.
-- [b] Task: Pilot one reconciled historical month and one accepted Tutor export with
-  authorization, audit, rollback, and duplicate/conflict evidence. Depends on
-  the import operations and source-owner acceptance above.
+- [b] Task: Implement idempotent historical private-evidence packets,
+  payroll-summary imports, historical school-billing snapshots, evidence
+  references, and correction/supersession flow. Depends on the accepted
+  Company Identity, private-read, and durable-outbox boundaries above; it must
+  not read live CRM or Tutor data.
+- [b] Task: Pilot one reconciled historical month and one historical billing
+  packet with authorization, audit, rollback, and duplicate/conflict evidence.
+  Depends on the historical import operations and accepted packet-attestation
+  boundary above.
 
 ## Phase 3 — close and accountant exchange
 
