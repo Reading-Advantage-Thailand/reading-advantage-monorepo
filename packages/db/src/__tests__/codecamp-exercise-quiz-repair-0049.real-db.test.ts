@@ -177,7 +177,7 @@ async function readProgress(
 describeRealPostgres(
   "0049 Codecamp exercise/quiz identity repair (real PostgreSQL)",
   () => {
-    it("restores both activity identities in place without changing learner progress or child ownership", async () => {
+    it("repairs an earlier allowlisted module when no later malformed fixture exists", async () => {
       const databaseName = `codecamp_0049_${randomUUID().replaceAll("-", "")}`;
       const admin = postgres(pgTestUrl!, { max: 1 });
       const scratchUrl = new URL(pgTestUrl!);
@@ -520,7 +520,7 @@ describeRealPostgres(
             NULL, '2026-08-06T08:00:00.000000', '2026-08-07T08:00:00.000000'
           )
         `;
-        const targetMigration = await seedVerifiedLedgerBefore0049(client);
+        const crossTargetMigration = await seedVerifiedLedgerBefore0049(client);
         const residualStateBefore = await Promise.all([
           client`
             SELECT id, module_id AS "moduleId", "order", type::text AS type, title
@@ -542,8 +542,8 @@ describeRealPostgres(
           has0049Sentinel(client),
         ]);
         expect(residualStateBefore[4]).not.toContainEqual({
-          hash: targetMigration.hash,
-          createdAt: String(targetMigration.timestamp),
+          hash: crossTargetMigration.hash,
+          createdAt: String(crossTargetMigration.timestamp),
           id: expect.any(Number),
         });
         expect(residualStateBefore[5]).toBe(false);
@@ -582,15 +582,11 @@ describeRealPostgres(
           WHERE id IN (${residualExerciseLessonId}, ${residualQuizLessonId})
         `;
         await client.unsafe("DROP SCHEMA drizzle CASCADE");
-        await client.unsafe(`
-          ALTER TABLE codecamp_lessons
-            ADD CONSTRAINT codecamp_lessons_module_order_unique
-            UNIQUE (module_id, "order")
-        `);
 
         // Prove the statement is atomic across modules, not merely that an
-        // invalid later module is left alone: reintroduce the audited tRPC
-        // corruption that 0049 would repair before it encounters HTML/CSS.
+        // invalid module is left alone: reintroduce the audited tRPC
+        // corruption that 0049 would repair before it encounters the later
+        // malformed Cloud/Docker fixture in the real allowlist order.
         await client`
           UPDATE codecamp_lessons
           SET title = 'tRPC & Server Actions Exercise + Quiz', type = 'quiz'
@@ -613,7 +609,7 @@ describeRealPostgres(
           INSERT INTO codecamp_modules (
             id, slug, title, description, "order", phase, status
           ) VALUES (
-            ${malformedModuleId}, 'html-css', 'HTML & CSS',
+            ${malformedModuleId}, 'cloud-docker', 'Cloud / Docker',
             'Malformed repair candidate fixture.', 3, 'A', 'published'
           )
         `;
@@ -623,12 +619,12 @@ describeRealPostgres(
           ) VALUES
             (
               ${malformedExerciseLessonId}, ${malformedModuleId},
-              'HTML & CSS Exercise + Quiz', 'Malformed exercise candidate.',
+              'Cloud / Docker Exercise + Quiz', 'Malformed exercise candidate.',
               6, 'quiz', '{}'::jsonb
             ),
             (
               ${malformedQuizLessonId}, ${malformedModuleId},
-              'HTML & CSS Exercise + Quiz', 'Malformed quiz candidate.',
+              'Cloud / Docker Exercise + Quiz', 'Malformed quiz candidate.',
               7, 'quiz', '{}'::jsonb
             )
         `;
@@ -669,7 +665,8 @@ describeRealPostgres(
             '2026-08-06T08:00:00.000000'
           )
         `;
-        const malformedBefore = await Promise.all([
+        const targetMigration = await seedVerifiedLedgerBefore0049(client);
+        const crossModuleBefore = await Promise.all([
           client`
             SELECT id, module_id AS "moduleId", "order", type::text AS type, title
             FROM codecamp_lessons
@@ -681,13 +678,15 @@ describeRealPostgres(
             FROM codecamp_exercises
             ORDER BY id
           `,
-          client`
-            SELECT id, lesson_id AS "lessonId", question, "order"
-            FROM codecamp_quiz_questions
-            ORDER BY id
-          `,
-        ]);
-        expect(malformedBefore[0]).toEqual(
+            client`
+              SELECT id, lesson_id AS "lessonId", question, "order"
+              FROM codecamp_quiz_questions
+              ORDER BY id
+            `,
+            readMigrationLedger(client),
+            has0049Sentinel(client),
+          ]);
+        expect(crossModuleBefore[0]).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
               id: exerciseLessonId,
@@ -703,8 +702,19 @@ describeRealPostgres(
             }),
           ]),
         );
+        expect(crossModuleBefore[4]).not.toContainEqual({
+          hash: targetMigration.hash,
+          createdAt: String(targetMigration.timestamp),
+          id: expect.any(Number),
+        });
+        expect(crossModuleBefore[5]).toBe(false);
 
-        await expect(applyMigration0049(client)).rejects.toThrow();
+        await expect(
+          migrateProductDatabase({
+            directDatabaseUrl: scratchUrl.toString(),
+            migrationsFolder,
+          }),
+        ).rejects.toThrow(/0049 refused unexpected Codecamp lesson shape/);
         await expect(
           Promise.all([
             client`
@@ -723,8 +733,16 @@ describeRealPostgres(
               FROM codecamp_quiz_questions
               ORDER BY id
             `,
+            readMigrationLedger(client),
+            has0049Sentinel(client),
           ]),
-        ).resolves.toEqual(malformedBefore);
+        ).resolves.toEqual(crossModuleBefore);
+
+        await client.unsafe(`
+          ALTER TABLE codecamp_lessons
+            ADD CONSTRAINT codecamp_lessons_module_order_unique
+            UNIQUE (module_id, "order")
+        `);
 
         await expect(client`
           INSERT INTO codecamp_lessons (

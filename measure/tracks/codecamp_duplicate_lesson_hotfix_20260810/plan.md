@@ -42,24 +42,32 @@
 
 ## Phase 4: Generate Docs, Verify, and Deploy
 
-- [x] Task: Run focused and affected-package quality gates [evidence: f1d7ba558, 075351435, 4eedc8840]
+- [~] Task: Run focused and affected-package quality gates [evidence: f1d7ba558, 075351435, 4eedc8840]
   - [x] Run DB migration, seed, journal, type, lint, and build checks. The final
         pre-review Podman/PostgreSQL suite passed 110/110 tests. After the
         independent review safeguard, the new real-Postgres rollback case and
         the affected eight-file matrix pass 51/51 tests, including the 0049
         repair, exact ledger/hash/sentinel gate, and progress preservation; the
         DB production build and focused DB lint also pass.
-  - [x] Run affected Codecamp domain/app regression checks [evidence: 075351435,
-        4eedc8840]. The full deploy
-    contract passes 17/17 after aligning its secret assertions with verified
-    GCP ownership: the OIDC secret is cross-project from Reading Advantage,
-    while the OpenAI and Google AI secrets are local to Codecamp. Domain Vitest
-    cannot load the pre-existing missing `vitest.setup.ts` tsconfig, and
-    package-wide checks cannot resolve the incomplete workspace links on this
-    new machine, so Cloud Build remains the clean install/build authority for
-    deployment. `measure/doctor.sh` passes its guard and supervisor invariants,
-    then fails on deprecated unchecked markers in unrelated pre-existing
-    tracks.
+  - [~] Run affected Codecamp domain/app regression checks [evidence: 075351435,
+        4eedc8840]. Mid Red remediation against role base
+    `5624dd421bb7a83029eec86148fbcdf5e3bcc1a5` corrected the stale rollout
+    assertion: shadow remains valid, the reviewed active wiring requires its
+    non-empty `CODECAMP_PR_REVIEW_RELEASE_APPROVED_BY` marker, and active
+    without that marker is rejected. The real-Postgres fixture now puts the
+    repairable `trpc-server-actions` module before malformed `cloud-docker`
+    and snapshots lessons, children, questions, progress, ledger, and the
+    uniqueness sentinel; the control repair passes and the rollback proof
+    passes with a disposable PostgreSQL instance.
+    The focused Red command was:
+    `PG_TEST_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres ../../node_modules/.bin/vitest run src/__tests__/deploy-gate-contract.test.ts src/__tests__/codecamp-0049-ledger-gap-deploy-contract.test.ts src/__tests__/codecamp-exercise-quiz-repair-0049.real-db.test.ts`
+    — expected Red, 20 passed and 2 failed. Both failures are the new
+    migration-ceiling contract only: Cloud Build lacks the explicit
+    `MIGRATION_CEILING_TAG=0049_codecamp_exercise_quiz_repair` wiring, and the
+    normal migrator currently ignores the ceiling option and would apply the
+    successor. Green must implement that fail-closed ceiling before this task
+    can return to `[x]`. The track has no local `test-strategy.md`; the
+    supplied review contracts and this plan supplied the Red command.
   - [x] Complete independent change-quality and data-safety review.
 - [x] Task: Deploy and verify production [evidence: 4eedc8840]
   - [x] Capture a PII-free production progress digest immediately before the

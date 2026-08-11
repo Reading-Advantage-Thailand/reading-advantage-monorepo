@@ -49,6 +49,11 @@ interface CloudBuildStep {
   args: string[];
 }
 
+interface PrReviewRolloutConfiguration {
+  readonly mode: string | undefined;
+  readonly approvedBy: string | undefined;
+}
+
 /**
  * Hand-rolled Cloud Build YAML step extractor. Same shape as
  * `apps/codecamp-advantage/lib/__tests__/_helpers/cloudbuild-parser.ts` —
@@ -93,6 +98,55 @@ function parseCloudBuildSteps(yamlText: string): CloudBuildStep[] {
     if (id) steps.push({ id, name, args });
   }
   return steps;
+}
+
+/**
+ * Reads the deploy revision's comma-separated environment-variable argument.
+ * @param yamlText The Codecamp Cloud Build definition.
+ * @returns The deploy environment variables keyed by name.
+ */
+function readDeployEnvironmentVariables(
+  yamlText: string,
+): ReadonlyMap<string, string> {
+  const deploy = parseCloudBuildSteps(yamlText).find(
+    (step) => step.id === "deploy-cloudrun",
+  );
+  const argument = deploy?.args.find((value) =>
+    value.startsWith("--set-env-vars="),
+  );
+  if (!argument) return new Map();
+
+  const entries = argument
+    .slice("--set-env-vars=".length)
+    .split(",")
+    .map((entry) => {
+      const separator = entry.indexOf("=");
+      return separator < 0
+        ? null
+        : ([entry.slice(0, separator), entry.slice(separator + 1)] as const);
+    })
+    .filter((entry): entry is readonly [string, string] => entry !== null);
+  return new Map(entries);
+}
+
+/**
+ * Enforces the fail-closed PR-review rollout contract for a deploy configuration.
+ * @param configuration The rollout mode and optional human approval marker.
+ * @returns Nothing when the configuration is safe.
+ * @throws When the mode is unsupported or active mode lacks explicit approval.
+ */
+function assertSafePrReviewRollout(
+  configuration: PrReviewRolloutConfiguration,
+): void {
+  expect(configuration.mode, "PR-review rollout mode must be explicit").toMatch(
+    /^(shadow|active)$/,
+  );
+  if (configuration.mode === "active") {
+    expect(
+      configuration.approvedBy?.trim(),
+      "active PR-review rollout requires a non-empty explicit approval marker in CODECAMP_PR_REVIEW_RELEASE_APPROVED_BY",
+    ).toMatch(/\S/);
+  }
 }
 
 describe("Phase 4 — Task 15: FR-4 codecamp deploy gate (cloudbuild.yaml)", () => {
@@ -209,12 +263,29 @@ describe("Phase 4 — Task 15: FR-4 codecamp deploy gate (cloudbuild.yaml)", () 
     );
   });
 
-  it("deploys the unreleased PR-review model in explicit private shadow mode", () => {
+  it("keeps shadow valid and accepts only explicitly approved active PR-review mode", () => {
     const text = readFileSync(CLOUDBUILD_PATH, "utf8");
-    expect(
-      text,
-      "Codecamp deployment must set CODECAMP_PR_REVIEW_ROLLOUT_MODE=shadow until a human-approved evaluation promotes canary or active feedback",
-    ).toMatch(/CODECAMP_PR_REVIEW_ROLLOUT_MODE=shadow/);
+    const environment = readDeployEnvironmentVariables(text);
+
+    expect(() =>
+      assertSafePrReviewRollout({ mode: "shadow", approvedBy: undefined }),
+    ).not.toThrow();
+    expect(environment.get("CODECAMP_PR_REVIEW_ROLLOUT_MODE")).toBe("active");
+    expect(environment.get("CODECAMP_PR_REVIEW_RELEASE_APPROVED_BY")).toBe(
+      "codecamp-ops-release",
+    );
+    expect(() =>
+      assertSafePrReviewRollout({
+        mode: environment.get("CODECAMP_PR_REVIEW_ROLLOUT_MODE"),
+        approvedBy: environment.get("CODECAMP_PR_REVIEW_RELEASE_APPROVED_BY"),
+      }),
+    ).not.toThrow();
+  });
+
+  it("rejects the active PR-review counterexample when approval is absent", () => {
+    expect(() =>
+      assertSafePrReviewRollout({ mode: "active", approvedBy: "" }),
+    ).toThrow(/approval/i);
   });
 
   // The deploy gate's "privileged direct connection" is CODECAMP_DATABASE_URL:
