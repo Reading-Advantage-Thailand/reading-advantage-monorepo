@@ -1,0 +1,5 @@
+track_id: apk_standard_game_experience_20260810
+
+plan update: recorded Green b0bc6f7b6 for both completed S2.6 documentation subtasks and preserved the task as in-progress.
+
+remaining gate: graph update, generation, and doctor are blocked only on the root serialized structural-gate window; no phase completion or checkpoint claimed.
