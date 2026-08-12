@@ -30,7 +30,8 @@
   and `src/__tests__/release-artifact.test.ts`
   d2f9a9f288c9d4450cb785e799eee2e2b8450641b0ae9585bc298da633c97c4c. Review
   A ACCEPT and Security Review B ACCEPT both bind the committed Green and these
-  final hashes; their receipts are recorded in the commit note.
+  final hashes; their receipts are recorded in the commit note. The architecture
+  audit recorded zero findings introduced by `324d81a83`.
 - [~] Task: Run and record the runtime manifest, consumer, packed-consumer,
   lint, type, build, and immutable-source closeout gates after Task A Green
   acceptance. Local installed ESLint and TypeScript binaries passed for both
@@ -41,10 +42,10 @@
   issues; and the phase-base diff guard for the four engine packages plus
   `sales-knowledge` was empty. The repository pnpm shim attempted a registry
   fetch for pnpm (`EAI_AGAIN`), so the equivalent installed local binaries were
-  used for evidence. Broad `measure/doctor.sh` and generate/structural gates
-  are explicitly deferred to the root shared gate while Finance source is
-  active. Task B remains open pending those deferred shared gates and final
-  closeout acceptance.
+  used for evidence. The broad `measure/doctor.sh` and generate/structural
+  gates are currently blocked globally at the shared root. Task B remains `[~]`
+  pending those shared gates becoming runnable and final closeout acceptance;
+  this does not claim Phase 0 closeout or doctor Green.
 
 ## Phase 1 — bind the approved course to a knowledge graph
 
@@ -61,15 +62,24 @@
 
 ## Phase 2 — company tenant mapping and durable projection
 
-- [b] Task: Define and migrate the fail-closed Company Identity organization to
-  Mastery tenant mapping after the Phase 0 Sales admission is accepted. Depends
-  on the preceding Finance migration landing so migration identifiers remain
-  serial and reviewable. deferred:finance-migration
+- [~] Task: Produce the bounded, docs-only Phase 2 strategy and contract design
+  for the fail-closed Company Identity organization-to-Mastery tenant mapping
+  and durable projection. The Finance ordering prerequisite is satisfied: the
+  accepted additive/journaled `0003_finance_attestation_audit_metadata`
+  migration and `meta/0003_snapshot.json` landed in
+  `48470311d4f6b06b7e9ebcce7ba1f380444f0a79`. This active task must not change
+  source, tests, or migrations, and it must not capture `phase2_base_sha`.
+- [b] Task: After Phase 0 Task B shared-root closeout and final acceptance,
+  migrate the fail-closed Company Identity organization-to-Mastery tenant
+  mapping. Migration identifiers must remain serial and reviewable.
+  deferred:phase0-task-b-closeout
 - [b] Task: Write Red authorization, cross-organization, replay, conflict,
-  retry, concurrency, and append-only outbox tests.
+  retry, concurrency, and append-only outbox tests only after Phase 0 Task B
+  shared-root closeout and final acceptance. deferred:phase0-task-b-closeout
 - [b] Task: Implement the tenant mapping and durable idempotent projection port
-  behind existing Mastery/activity adapters. Do not reuse Codecamp's fixed
-  namespace.
+  behind existing Mastery/activity adapters only after Phase 0 Task B shared-root
+  closeout and final acceptance. Do not reuse Codecamp's fixed namespace.
+  deferred:phase0-task-b-closeout
 
 ## Phase 3 — project Sales evidence into KST/SRS
 

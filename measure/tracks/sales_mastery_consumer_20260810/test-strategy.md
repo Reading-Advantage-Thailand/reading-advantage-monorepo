@@ -1,26 +1,26 @@
 # Test strategy: Sales Advantage shared Mastery consumer
 
-> Bounded to Phase 0 of `sales_mastery_consumer_20260810`. Phase 1 is accepted
-> (commit `86a6503ac`); Phases 2 to 4 remain dependency-blocked. This strategy
-> treats the current dirty candidate under `packages/mastery-runtime-compat`
-> (Sales descriptor, Sales red test, modified manifest/index/release-artifact/
-> check-consumer/release-artifact.test) as **unaccepted**. The strategy owns no
-> production or test source; it only directs the Red/Green/closeout gates.
+> Bounded to Phase 0 closeout and Phase 2 docs-only strategy/contract design of
+> `sales_mastery_consumer_20260810`. Phase 1 is accepted (commit `86a6503ac`);
+> Phase 2 Red/source/migration execution and Phases 3 to 4 remain blocked. This
+> strategy owns no production or test source; it only directs the Phase 0
+> Red/Green/closeout gates and records the bounded Phase 2 design boundary.
 
 ## Phase scope and hard boundaries
 
 | Phase | State | This strategy |
 |-------|-------|---------------|
-| Phase 0 - reconcile and admit the consumer | Active (one-shot Red/Green) | Defines Red, Green, closeout |
+| Phase 0 - reconcile and admit the consumer | Task A accepted; Task B remains `[~]` | Shared-root closeout gates are globally blocked; Phase 0 is not closed |
 | Phase 1 - bind the approved course to a knowledge graph | Accepted (`86a6503ac`) | Reference only; regression-guarded, not re-opened |
-| Phase 2 - company tenant mapping and durable projection | Blocked behind Finance migration/order | No tests defined; `[b]` stays |
+| Phase 2 - company tenant mapping and durable projection | Docs-only strategy/contract design active | Finance ordering prerequisite accepted; all Red/source/migration execution stays `[b]` behind Phase 0 Task B closeout |
 | Phase 3 - project Sales evidence into KST/SRS | Blocked behind Phase 2 | No tests defined |
 | Phase 4 - verification and release | Blocked behind Phase 3 | No tests defined |
 
 Hard boundaries for Phase 0:
 
-- No database, tenant, or schema mapping work. Phase 2 owns that and stays
-  blocked behind the Finance migration/order.
+- No Phase 2 database, tenant, or schema-mapping source work in Phase 0. The
+  Finance ordering prerequisite is now accepted, but Phase 2 Red/source/migration
+  execution remains blocked behind Phase 0 Task B shared-root closeout.
 - No CRM, customer, licensing, invoice, payroll, revenue, or commission
   behavior.
 - No changes to the four shared engine packages
@@ -136,10 +136,12 @@ pnpm --filter @reading-advantage/mastery-runtime-compat exec vitest run \
 The Green gate is met only when the Red command exits zero AND all three
 contract-regression commands above exit zero.
 
-### Closeout gate (dependency-blocked until Task A Green is accepted)
+### Closeout gate (Task B; shared-root gate blocked)
 
-This is Phase 0 Task B. It stays `[b]` until the one-shot Red/Green (Task A) is
-accepted. When unblocked, it must pass:
+This is Phase 0 Task B. Task A is accepted, and Task B remains `[~]`; the broad
+shared-root doctor and generate/structural gates are currently blocked globally.
+It is not closed and does not claim doctor Green. Once those root gates are
+runnable, Task B must pass:
 
 ```bash
 # Lint and type-check the two packages in scope.
@@ -352,21 +354,54 @@ cites exact digests and test counts that were verified at acceptance. The
 Phase 0 strategy must not restate those counts as live claims; it references the
 immutable acceptance doc.
 
-## Phase 2 - blocked (company tenant mapping and durable projection)
+## Phase 2 - docs-only strategy/contract design (CRITICAL)
 
-Phase 2 stays `[b]`. It depends on the Finance migration/order landing so
-migration identifiers remain serial and reviewable. No tests are defined here.
-Phase 2 will own authorization, cross-organization, replay, conflict, retry,
-concurrency, and append-only outbox tests when unblocked.
+The Finance ordering prerequisite is accepted: the additive/journaled
+`0003_finance_attestation_audit_metadata` migration and
+`meta/0003_snapshot.json` landed in
+`48470311d4f6b06b7e9ebcce7ba1f380444f0a79`, with Finance Task 3 final
+acceptance recorded on 2026-08-13. This removes only the stale Finance ordering
+block. It authorizes documentation-only Phase 2 strategy/contract design; it
+does not authorize Red tests, source changes, migrations, or a Phase 2 Green
+claim before Phase 0 Task B shared-root closeout and final acceptance.
+
+The active design is bounded to these future contracts and falsifiable test
+groups; this transition creates neither the contracts nor the tests:
+
+1. A fail-closed mapping consumes only the verified Company Identity tuple
+   `(applicationKey=sales, organizationId, organizationKey)` and resolves one
+   dedicated Mastery tenant. A caller cannot choose a tenant, derive one from
+   frontend input, or use Codecamp's reserved namespace.
+2. A durable projection command binds the authenticated organization, Sales
+   learner principal, source application, graph release, source-attempt identity,
+   and payload digest. Equal replay returns its original receipt; a conflicting
+   replay fails closed; mutations remain append-only and retry-safe.
+3. The future Red suite must cover mapping reuse and cross-organization denial,
+   equal/conflicting replay, retry, concurrency, and append-only outbox behavior.
+   Its exact files and commands remain unselected until the dedicated strategy
+   acceptance described below.
+4. The implementation must consume the existing Mastery/activity adapters,
+   leave the four shared engines and `sales-knowledge` immutable, and preserve
+   Codecamp namespace exclusion.
 
 Risk classification: CRITICAL. Phase 2 owns database tenant mapping,
 cross-organization isolation, and idempotent projection. A defect there leaks
 knowledge state across organizations or duplicates evidence.
 
-Anti-pattern coverage for Phase 2 (blocked): A11. Phase 2 is not an executed
-review track. Its `[b]` marker must carry `deferred:finance-migration` as a real
-external gate, not as a review-execution placeholder. When the Finance
-dependency lands, the marker must convert to `[~]`.
+Anti-pattern coverage: A5/A6 prevent a documentation outline from being called
+Red, Green, or accepted execution; A11 keeps the active `[~]` marker limited to
+real docs-only strategy/contract work. Every Phase 2 execution task remains
+`[b] deferred:phase0-task-b-closeout`, a real external gate rather than a review
+placeholder.
+
+## phase2_base_sha capture point (future)
+
+Do not capture or record `phase2_base_sha` in this transition. Only after a
+later dedicated Phase 2 strategy/contract acceptance commit has been reviewed,
+accepted, and committed may the orchestrator capture that acceptance commit's
+exact SHA (for example, `git rev-parse <accepted-strategy-commit>`) and record it
+as `phase2_base_sha`. That SHA is then the baseline for future Phase 2 Red and
+source/migration guards; no earlier SHA authorizes execution.
 
 ## Phase 3 - blocked (project Sales evidence into KST/SRS)
 
