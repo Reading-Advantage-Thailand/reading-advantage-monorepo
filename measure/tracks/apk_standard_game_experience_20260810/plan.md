@@ -178,11 +178,21 @@ is executable `[~]`; later tasks remain dependency-blocked `[b]`._
   Finance, Mastery, Sales, Storage, and lockfile changes were unrelated user work and
   remain unstaged.
 
-- [~] Task: Implement the guided tutorial presentation
-  - [ ] Add step cards, progress indicators, focus/highlight treatment, and accessible narration
-  - [ ] Support keyboard, pointer, and touch navigation
-  - [ ] Keep prompts and highlighted mechanics unobstructed in compact and wide layouts
-  - [ ] Respect reduced-motion settings
+- [x] Task: Implement the guided tutorial presentation `720e1967d`
+  - [x] Add step cards, progress indicators, focus/highlight treatment, and accessible narration
+  - [x] Support keyboard, pointer, and touch navigation
+  - [x] Keep prompts and highlighted mechanics unobstructed in compact and wide layouts
+  - [x] Respect reduced-motion settings
+
+  **Green evidence (2026-08-12, implementation `720e1967d`):** Added the host-neutral
+  `GameTutorialScreen` and exported its public contracts. The S2.4 focused command exited 0
+  with 1 file and 13 tests passing. The S2.1-S2.4 plus host command exited 0 with 7 files and
+  146 tests passing. Direct package TypeScript check, lint, and build commands exited 0.
+  Focused coverage executed successfully and reported 100% statements, functions, and lines
+  for `game-tutorial-screen.tsx`; the coverage process exited 1 only because unrelated package
+  global thresholds received no coverage. `measure/doctor.sh` exited 1 because other active
+  plans retain deprecated `[ ]` markers. S2.5 QC, S2.6 documentation, and S2.7 manual tasks
+  remain blocked as declared below.
 
   **Mid-Red evidence (2026-08-12; phase base `5e00eca141fd5064cc3ac7ddb158b954799732ff`; role base `0c1bfc5046f88943b81a3427fb8cd20140067cb8`):** Added
   `src/presentation/__tests__/game-tutorial-screen.test.tsx` with 13 focused tests.
