@@ -92,10 +92,15 @@ red. No production code or tests were modified by this role.
 
 ## phase_base_sha capture point
 
-The orchestrator MUST capture the immutable phase_base_sha for Phase 2
-immediately after this strategy commit by running `git rev-parse HEAD`. That
-post-strategy-commit SHA is the only valid Phase 2 phase_base_sha. The
-role_base_sha 13565ae7 predates the committed strategy and must not be used.
+The strategy content was introduced in commit a93e70ce3 (test-strategy-phase2.md,
+plan.md annotation, and this log). A repair commit follows to commit the log
+correction (the post-strategy SHA update) so that no role-owned dirty file
+remains. The orchestrator MUST capture the immutable phase_base_sha for Phase 2
+as the post-repair HEAD by running `git rev-parse HEAD` after the repair commit.
+That post-repair SHA is the only valid Phase 2 phase_base_sha because Red must
+begin after complete committed Strategy evidence. The role_base_sha 13565ae7
+predates the committed strategy and must not be used. The strategy commit
+a93e70ce3 alone is insufficient because the log was dirty at that point.
 
 ## Handoff
 
@@ -108,11 +113,13 @@ The next role (Mid-red) should:
 3. Refine or extend the Red contract if needed, but preserve the six required
    ControlledImportsModule exports and the forbidden-key/lookalike/boundary
    guards.
-4. The phase_base_sha is captured at the strategy commit (the commit that
-   introduces test-strategy-phase2.md and the plan.md annotation).
+4. The phase_base_sha is the post-repair HEAD (after the log-correction
+   commit), not the strategy commit a93e70ce3 alone, because Red must begin
+   after complete committed Strategy evidence.
 
 The orchestrator should:
-1. Capture phase_base_sha = git rev-parse HEAD after this commit.
+1. Capture phase_base_sha = git rev-parse HEAD after the repair commit (the
+   commit that introduces this corrected log).
 2. Verify exactly one worktree on master before any Phase 2 action (A16).
 3. Route Task 1 to Mid-red -> Jr-green -> phase-acceptance.
 4. Keep Task 2 blocked until Task 1 is accepted.
@@ -122,10 +129,10 @@ role: measure-strategy
 status: complete
 track: company_finance_operations_20260810
 phase: Phase 2 - controlled operational imports
-commits: pending (strategy commit with test-strategy-phase2.md, plan.md, role log)
+commits: a93e70ce3 (strategy); repair commit (this commit) completes committed log evidence
 tests_run: controlled-imports-phase2.red.test.ts: 20 fail | 4 pass (expected Red); Phase 1 baseline: 98+31+20+25 pass (all green)
-files_changed: test-strategy-phase2.md (new), plan.md (Phase 2 Task 1 [b]->[~], Task 2 retains [b]), orchestration/phase2-strategy-role.log (new)
+files_changed: test-strategy-phase2.md (new), plan.md (Phase 2 Task 1 [b]->[~], Task 2 retains [b]), orchestration/phase2-strategy-role.log (new + repair)
 plan_updates: Phase 2 Task 1 admitted [~] with evidence; Task 2 retains [b] blocked until Task 1 evidence; admission chronology added
 known_failures: controlled-imports-phase2.red.test.ts 20 behavior tests fail (expected Red for Task 1); backend aggregate red from pre-existing unrelated failures
-handoff: Mid-red should read test-strategy-phase2.md, update the two "keeps deferred" guard tests to check real source after Jr-green creates controlled-imports.ts, preserve all six required exports and guards. Orchestrator must capture phase_base_sha at strategy commit, verify one worktree, route Task 1 to Mid-red->Jr-green->acceptance, keep Task 2 blocked.
+handoff: Mid-red should read test-strategy-phase2.md, update the two "keeps deferred" guard tests to check real source after Jr-green creates controlled-imports.ts, preserve all six required exports and guards. Orchestrator must capture phase_base_sha at post-repair HEAD (not a93e70ce3 alone), verify one worktree, route Task 1 to Mid-red->Jr-green->acceptance, keep Task 2 blocked.
 END_MEASURE_AGENT_RESULT
