@@ -247,10 +247,10 @@ is executable `[~]`; later tasks remain dependency-blocked `[b]`._
    `APK_TUTORIAL_QC_BROWSER` was not set. The next documentation task and the manual task
    remain blocked by their declared owners.
 
-- [b] Task: Document the shared path and bespoke mechanic hook — deferred:s2-tutorial-qc
-  - [ ] Document how an intern declares steps
-  - [ ] Document how cartridge code demonstrates a mechanic without recreating UI
-  - [ ] Run graph update, generation, and doctor checks
+- [~] Task: Document the shared path and bespoke mechanic hook
+  - [~] Document how an intern declares steps
+  - [~] Document how cartridge code demonstrates a mechanic without recreating UI
+  - [~] Run graph update, generation, and doctor checks
 
 - [b] Task: Measure - User Manual Verification 'Phase S2: Guided Gameplay Tutorial' (Protocol in workflow.md) — deferred:s2-tutorial-docs
 
