@@ -10,21 +10,41 @@
   current release set pins `knowledge-space-synthetic-codecamp-proof-v1.0.0`;
   reusing that graph in a Sales descriptor would be a false cross-course claim.
   The attempted admission was stopped before production/runtime files changed.
-- [~] Task: Execute the one-shot Red/Green Sales runtime admission defined in
-  `test-strategy.md`. Check in the exact Sales consumer descriptor and the
-  failing `sales-runtime-admission.red.test.ts`, then make the focused Green
-  gate pass by extending only `@reading-advantage/mastery-runtime-compat`
-  (manifest release set, descriptor schema, packed-consumer gate, clean-consumer
-  script). Do not change the four shared engine packages or the accepted
-  `sales-knowledge` package. Do not reuse the Codecamp graph. The current dirty
-  candidate under `packages/mastery-runtime-compat` is unaccepted and must be
-  re-derived against this strategy. Red command:
-  `pnpm --filter @reading-advantage/mastery-runtime-compat exec vitest run
-  src/__tests__/sales-runtime-admission.red.test.ts --maxWorkers=1`. Phase 1
-  dependency is satisfied by `86a6503ac`.
-- [b] Task: Run the runtime manifest, consumer, packed-consumer, lint, and type
-  gates; record independent review evidence. Depends on the Task A Green gate
-  being accepted. deferred:task-a-green-acceptance
+- [x] Task: Execute the one-shot Red/Green Sales runtime admission defined in
+  `test-strategy.md`, extending only `@reading-advantage/mastery-runtime-compat`
+  for the admitted Sales release set, descriptor schema, packed-consumer gate,
+  and clean-consumer script. The accepted Green commit is
+  `324d81a838ccab07907720a7c3f79482dd1205e0` (full SHA), with no engine or
+  `sales-knowledge` source changes. Evidence: the authoritative command
+  `CI=true /home/daniebo/Desktop/reading-advantage-monorepo/node_modules/.bin/vitest
+  run src/__tests__/sales-runtime-admission.red.test.ts --maxWorkers=1` passed
+  11/11; `src/__tests__/release-artifact.test.ts` passed 8/8; the focused FIFO
+  scheduler test passed 1/1 and its non-vacuous legacy counterexample reached
+  `A,B,C,W` with `maxActive=3`, while production token handoff remained FIFO
+  `A,B,W,C` with `maxActive=2`; runtime-manifest and Codecamp regressions passed
+  20/20; lint, typecheck, build, and `git diff --check` passed. Final source
+  hashes are `runtime-manifest.json` b069bdc2d054ae24a7dddb55e25a84557162adf7713e8e569ef33bccc586245a,
+  `src/index.ts` 29e85540740da64d459170205849fcf1eb0e66145053d1779fbba1515f55180e,
+  `src/release-artifact.ts` 7ead9d382b4211f8822e3615541f515b81b231579d51cf3e82e5c21769deeeab,
+  `fixtures/consumer/check-consumer.mjs` bf386bdbd02770fd80413e7a5270031c22b91f771baca6620ca723e7cc2cf805,
+  and `src/__tests__/release-artifact.test.ts`
+  d2f9a9f288c9d4450cb785e799eee2e2b8450641b0ae9585bc298da633c97c4c. Review
+  A ACCEPT and Security Review B ACCEPT both bind the committed Green and these
+  final hashes; their receipts are recorded in the commit note.
+- [~] Task: Run and record the runtime manifest, consumer, packed-consumer,
+  lint, type, build, and immutable-source closeout gates after Task A Green
+  acceptance. Local installed ESLint and TypeScript binaries passed for both
+  `mastery-runtime-compat` and `sales-knowledge`; runtime-compat passed 4 test
+  files / 39 tests and sales-knowledge passed 3 test files / 19 tests; runtime
+  build passed; the clean-consumer CLI against
+  `fixtures/consumer/sales-advantage.json` returned `compatible: true` with no
+  issues; and the phase-base diff guard for the four engine packages plus
+  `sales-knowledge` was empty. The repository pnpm shim attempted a registry
+  fetch for pnpm (`EAI_AGAIN`), so the equivalent installed local binaries were
+  used for evidence. Broad `measure/doctor.sh` and generate/structural gates
+  are explicitly deferred to the root shared gate while Finance source is
+  active. Task B remains open pending those deferred shared gates and final
+  closeout acceptance.
 
 ## Phase 1 — bind the approved course to a knowledge graph
 
