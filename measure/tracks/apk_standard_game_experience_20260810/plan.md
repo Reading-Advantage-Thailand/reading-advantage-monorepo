@@ -178,11 +178,26 @@ is executable `[~]`; later tasks remain dependency-blocked `[b]`._
   Finance, Mastery, Sales, Storage, and lockfile changes were unrelated user work and
   remain unstaged.
 
-- [b] Task: Implement the guided tutorial presentation — deferred:s2-tutorial-controller
+- [~] Task: Implement the guided tutorial presentation
   - [ ] Add step cards, progress indicators, focus/highlight treatment, and accessible narration
   - [ ] Support keyboard, pointer, and touch navigation
   - [ ] Keep prompts and highlighted mechanics unobstructed in compact and wide layouts
   - [ ] Respect reduced-motion settings
+
+  **Mid-Red evidence (2026-08-12; phase base `5e00eca141fd5064cc3ac7ddb158b954799732ff`; role base `0c1bfc5046f88943b81a3427fb8cd20140067cb8`):** Added
+  `src/presentation/__tests__/game-tutorial-screen.test.tsx` with 13 focused tests.
+  The suite covers semantic step cards, progress, semantic target/highlight metadata,
+  accessible focus and live narration, keyboard/pointer/touch commands, touch target
+  size, compact/wide long Thai and English content, scrollability, reduced motion,
+  neutral/correct/incorrect consequence feedback, host-neutral authority boundaries,
+  cleanup/remount, and an actionable error state. The new test uses semantic IDs and
+  contains no raw selector or coordinate contract.
+
+  The targeted Red command exited `1` with 13 tests failed. The expected failure is
+  the missing `src/presentation/game-tutorial-screen.tsx` module; the test suite loaded
+  and ran all 13 assertions through the explicit missing-module guard. The existing
+  S2.1/S2.2/S2.3 plus host command exited `0` with 6 files and 133 tests passing.
+  Package type checking exited `0`. No production file changed.
 
 - [b] Task: Add tutorial testing and QC fixtures — deferred:s2-tutorial-presentation
   - [ ] Add deterministic clock, input, target, and action fixtures
