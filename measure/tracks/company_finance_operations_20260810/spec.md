@@ -21,14 +21,41 @@ Sales Advantage, a CRM, or a bookkeeping replacement.
 
 ## Integration constraints
 
-- Consume Company Identity claims through its internal adapter, a versioned CRM `CustomerBillingCatalogPort`,
-  a Tutor-produced `TutorFinancialExportPort`, authorized private-storage reads,
-  and durable jobs.
+- Consume Company Identity claims through its internal adapter, authorized
+  private-storage reads, and durable jobs. Future source-owner contracts remain
+  separate integration boundaries.
 - Move facts only through authenticated, versioned, validated, idempotent ports.
 - Forbid cross-database reads, shared credentials, and direct provider SDK use;
   adapters remain behind internal interfaces.
 - Store source provenance and immutable snapshots rather than creating a second
   mutable source of truth.
+
+## Historical private-evidence MVP
+
+The first controlled-import release is narrower than the eventual live-source
+integration. It accepts only an owner-attested
+`historical-private-evidence-packet.v1` obtained through an authorized private
+storage read. It must not read live CRM or Tutor databases, reuse their
+credentials, or claim that Finance owns their source truth.
+
+The attestation must bind an authenticated Company Identity subject and
+organization to the company-first scope, with school scope required only when
+the packet is school-scoped. The packet must bind source system, source version,
+source record or batch identity, exact payload digest, and immutable private
+evidence reference. Raw documents remain in private storage; normalized facts
+use a strict, data-minimized grammar and preserve only source-stated values and
+labels. Unknown accounting or tax policy remains explicit.
+
+Packet idempotency must use a canonical collision-free identity over operation,
+company, optional school, source system/version/identity, and payload digest.
+Record acceptance, succeeded-audit evidence, and durable job intent must commit
+through one atomic outbox boundary. Replay and conflict classification must
+preserve the first accepted immutable state.
+
+Live CRM and Tutor adapters are deferred until named source-owner modules exist
+and publish accepted source-native contracts. Phase 2 must use only the
+historical private-evidence packet and must reject Finance-owned CRM or Tutor
+lookalike envelopes.
 
 ## First executable phase: policy-neutral foundation
 

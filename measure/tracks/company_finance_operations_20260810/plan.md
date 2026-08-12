@@ -17,7 +17,7 @@
 - [x] Task: Add behavior-level contract tests and adapters for the Company (commit `2291d42138d704cd6d59a15c4b0b05d3b482c9d8`)
   Identity attestor, authorized private-evidence reads, and a scope/digest-bound
   durable outbox projector required by the historical private-evidence MVP.
-  Depends on the completed foundation task and the accepted boundary in
+  Depends on the completed foundation task and the documented candidate boundary in
   `historical-private-evidence-mvp-decision-20260811.md`.
 
   Green implementation evidence:
@@ -216,11 +216,37 @@
   payroll-summary imports, historical school-billing snapshots, evidence
   references, and correction/supersession flow. Depends on the accepted
   Company Identity, private-read, and durable-outbox boundaries above; it must
-  not read live CRM or Tutor data.
+  use only the approved historical-private-evidence MVP and must not use live
+  CRM or Tutor adapters or Finance-owned lookalike envelopes. (deferred:phase2)
 - [b] Task: Pilot one reconciled historical month and one historical billing
-  packet with authorization, audit, rollback, and duplicate/conflict evidence.
+  packet with authorization, audit, rollback, and duplicate/conflict evidence
+  through owner-attested private-evidence packets only. (deferred:phase2)
   Depends on the historical import operations and accepted packet-attestation
   boundary above.
+
+  Mid Red evidence (2026-08-12): `phase_base_sha=c93f3a84fcd72c3559e81fdbe7c9ac761d993f35`
+  and `role_base_sha=7ff3a0b466418682fa714d372fb23471765b4344` both resolve;
+  the role base is the starting HEAD. The Phase 2 aggregate command remains
+  intentionally Red because `controlled-imports.ts` and the historical import
+  operations do not exist. The source-owner guard passes when no production
+  `controlled-imports.ts` file exists and rejects CRM/Tutor lookalike markers
+  if that file appears. The aggregate command exits 1 with 20 expected missing
+  export, implementation, and pilot-behavior failures. The compiler AST fixture,
+  source-owner guard, and missing-source boundary guard pass. Phase 2 remains
+  Red.
+
+  Red command evidence:
+  `CI=true pnpm --filter @reading-advantage/backend exec vitest run
+  src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts`
+  exited 1 with 24 tests: 20 failed and 4 passed. The failures require the
+  missing controlled-import exports and pilot behavior. The four passing tests
+  cover the compiler AST fixture, missing production source, deferred
+  source-owner markers, and the production boundary guard.
+
+  The historical private-evidence decision document is an owner-boundary
+  decision candidate awaiting phase acceptance. It does not claim independent
+  review acceptance. No live CRM or Tutor adapter or envelope is part of this
+  Phase 2 Red contract. No Thai policy is added.
 
 ## Phase 3 — close and accountant exchange
 
