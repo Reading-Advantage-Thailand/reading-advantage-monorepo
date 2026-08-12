@@ -10,6 +10,12 @@ import {
 
 const OPENROUTER_DEFAULT_MODEL = "nvidia/nemotron-3-ultra-550b-a55b:free";
 
+type TestConnectionStatus = "success" | "error";
+type TestConnectionResult = {
+  status: TestConnectionStatus;
+  message: string;
+};
+
 /**
  * Renders the authenticated Marketing settings editor.
  * @returns The settings form and connection status controls.
@@ -22,7 +28,9 @@ export default function SettingsPage() {
   const [apiKey, setApiKey] = useState("");
   const [mmxPath, setMmxPath] = useState("");
   const [testing, setTesting] = useState(false);
-  const [testResult, setTestResult] = useState<string | null>(null);
+  const [testResult, setTestResult] = useState<TestConnectionResult | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
   const [pageError, setPageError] = useState<string | null>(null);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
@@ -87,7 +95,10 @@ export default function SettingsPage() {
 
   const handleTestConnection = async () => {
     if (requiresExplicitApiKey) {
-      setTestResult("Enter a new API key to test the connection.");
+      setTestResult({
+        status: "error",
+        message: "Enter a new API key to test the connection.",
+      });
       return;
     }
     setTesting(true);
@@ -103,16 +114,24 @@ export default function SettingsPage() {
         return;
       }
       if (res.status === 403) {
-        setTestResult("Error: administrator access is required to test connections.");
+        setTestResult({
+          status: "error",
+          message:
+            "Error: administrator access is required to test connections.",
+        });
         return;
       }
       if (!res.ok) {
-        setTestResult("Error: connection test failed. Check the provider settings and try again.");
+        setTestResult({
+          status: "error",
+          message:
+            "Error: connection test failed. Check the provider settings and try again.",
+        });
         return;
       }
-      setTestResult("Connection successful!");
+      setTestResult({ status: "success", message: "Connection successful!" });
     } catch {
-      setTestResult("Connection failed");
+      setTestResult({ status: "error", message: "Connection failed" });
     } finally {
       setTesting(false);
     }
@@ -351,16 +370,17 @@ export default function SettingsPage() {
 
         {testResult && (
           <div
-            role={testResult.startsWith("Error") ? "alert" : "status"}
+            role={testResult.status === "error" ? "alert" : "status"}
             aria-live="polite"
             style={{
               marginTop: "16px",
               padding: "12px",
-              backgroundColor: testResult.includes("Error") ? "#ffebee" : "#e8f5e9",
+              backgroundColor:
+                testResult.status === "error" ? "#ffebee" : "#e8f5e9",
               borderRadius: "4px",
             }}
           >
-            {testResult}
+            {testResult.message}
           </div>
         )}
       </div>
