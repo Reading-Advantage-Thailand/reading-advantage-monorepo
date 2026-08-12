@@ -30,10 +30,12 @@
 
 ## Phase 2 — controlled operational imports
 
-- [b] Task: Implement idempotent historical private-evidence packets, payroll-summary imports, historical school-billing snapshots, evidence references, and correction/supersession flow. Depends on the accepted Company Identity, private-read, and durable-outbox boundaries above; it must use only the approved historical-private-evidence MVP and must not use live CRM or Tutor adapters or Finance-owned lookalike envelopes. (deferred:phase2)
-- [b] Task: Pilot one reconciled historical month and one historical billing packet with authorization, audit, rollback, and duplicate/conflict evidence through owner-attested private-evidence packets only. (deferred:phase2)
+- [~] Task: Implement idempotent historical private-evidence packets, payroll-summary imports, historical school-billing snapshots, evidence references, and correction/supersession flow. Depends on the accepted Company Identity, private-read, and durable-outbox boundaries above; it must use only the approved historical-private-evidence MVP and must not use live CRM or Tutor adapters or Finance-owned lookalike envelopes. Admitted 2026-08-13: the Phase 1 Task 3 boundaries (Company Identity attestor, private-evidence reader, durable outbox projector, packet contract) are accepted, and the existing `controlled-imports-phase2.red.test.ts` Red contract is genuinely red using only `historical-private-evidence-packet.v1` and injected fakes. The CRM/Tutor source-owner blocker does not apply to Phase 2 (spec: "Phase 2 must use only the historical private-evidence packet and must reject Finance-owned CRM or Tutor lookalike envelopes"). Canonical falsifiable test strategy: `test-strategy-phase2.md`.
+- [b] Task: Pilot one reconciled historical month and one historical billing packet with authorization, audit, rollback, and duplicate/conflict evidence through owner-attested private-evidence packets only. (deferred:phase2; blocked until Task 1 implementation evidence permits it)
 
   Historical Red chronology (2026-08-12): the Phase 2 aggregate remained intentionally Red because `controlled-imports.ts` and the historical import operations do not exist. Its compiler AST fixture, source-owner guard, and missing-source boundary guard passed; the remaining expected failures were excluded from Phase 1 Task 3 acceptance.
+
+  Phase 2 admission (2026-08-13): the Red contract was re-verified against `13565ae7`. 20 behavior tests fail because the six required `ControlledImportsModule` exports do not exist; 4 guard tests pass (AST fixtures and deferred-source checks). The Phase 1 baseline (98 tests across 6 finance-operations files, 20 company-identity tests, 25 storage tests) is green. No real external blocker exists for Task 1. The `phase_base_sha` is captured at the strategy commit per `test-strategy-phase2.md`.
 
 ## Phase 3 — close and accountant exchange
 

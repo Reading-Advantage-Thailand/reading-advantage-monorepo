@@ -1,0 +1,131 @@
+Measure Strategy role log - Phase 2 controlled operational imports
+Track: company_finance_operations_20260810
+Phase: Phase 2 - controlled operational imports
+Date: 2026-08-13
+Role: measure-strategy
+role_base_sha: 13565ae7ba2d18ed21016ee71a80ff3629411f62
+
+## Reconciliation summary
+
+Both Phase 2 tasks were marked [b] deferred:phase2. The marker conflated two
+separate concerns:
+
+1. Dependency on Phase 1 boundaries (Company Identity attestor, private-evidence
+   reader, durable outbox projector, packet contract) - now satisfied by Phase 1
+   Task 3 acceptance (commit 48470311, maintenance da3ce219).
+2. CRM/Tutor source-owner blocker - a separate [b] task in Phase 1 that does NOT
+   apply to Phase 2 per the spec: "Phase 2 must use only the historical
+   private-evidence packet and must reject Finance-owned CRM or Tutor lookalike
+   envelopes."
+
+Determination: Phase 2 Task 1 is executable using only
+historical-private-evidence-packet.v1. No live CRM/Tutor adapters, no guessed
+Thai policy, no source lookalike envelopes, and no cross-database credentials
+are required. The existing controlled-imports-phase2.red.test.ts Red contract
+is genuinely red (20 behavior failures, 4 guard passes). No real external
+blocker exists for Task 1.
+
+The pilot task (Task 2) remains [b] until Task 1 implementation evidence
+permits it.
+
+## Tests run (verification, not implementation)
+
+1. controlled-imports-phase2.red.test.ts: 20 failed | 4 passed (24 total)
+   - Expected Red state: 20 behavior tests fail because the six required
+     ControlledImportsModule exports do not exist; 4 guard tests pass (AST
+     fixtures and deferred-source checks).
+   - Command: CI=true pnpm --filter @reading-advantage/backend exec vitest run
+     src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts
+
+2. Phase 1 finance-operations baseline (6 files): 98 passed
+   - architecture-boundary, port-boundaries, contracts, money-history,
+     historical-private-evidence-packet, durable-job-adapter
+   - Command: CI=true pnpm --filter @reading-advantage/backend exec vitest run
+     (6 focused files)
+
+3. Phase 1 Task 3 additional baseline (3 files): 31 passed
+   - authorization-audit, independent-review-blockers,
+     historical-private-evidence-binding-adapter
+   - Command: CI=true pnpm --filter @reading-advantage/backend exec vitest run
+     (3 focused files)
+
+4. Phase 1 Task 3 company-identity boundary (2 files): 20 passed
+   - finance-authorization-adapter, protocol-safety
+   - Command: CI=true pnpm --filter @reading-advantage/backend exec vitest run
+     (2 focused files)
+
+5. Phase 1 Task 3 storage boundary (1 file): 25 passed
+   - finance-private-evidence-read
+   - Command: CI=true pnpm --filter @reading-advantage/storage exec vitest run
+     src/__tests__/finance-private-evidence-read.red.test.ts
+
+All Phase 1 baseline suites are green. The Phase 2 Red contract is genuinely
+red. No production code or tests were modified by this role.
+
+## Files changed (role-owned only)
+
+1. measure/tracks/company_finance_operations_20260810/test-strategy-phase2.md
+   (new file - canonical falsifiable Phase 2 test strategy)
+2. measure/tracks/company_finance_operations_20260810/plan.md
+   (Phase 2 Task 1 marker [b] -> [~], Task 2 retains [b], admission annotation)
+3. measure/tracks/company_finance_operations_20260810/orchestration/phase2-strategy-role.log
+   (this file)
+
+## Plan updates
+
+- Phase 2 Task 1: changed [b] deferred:phase2 to [~] (admitted, executable).
+  Added admission annotation with evidence: Phase 1 Task 3 boundaries accepted,
+  Red contract genuinely red, CRM/Tutor blocker does not apply, strategy
+  reference.
+- Phase 2 Task 2: retained [b] deferred:phase2 with clarified dependency:
+  "blocked until Task 1 implementation evidence permits it."
+- Added Phase 2 admission chronology note with re-verification evidence.
+
+## Known failures
+
+- controlled-imports-phase2.red.test.ts: 20 behavior tests fail (expected Red
+  state for Phase 2 Task 1). These are the target tests that Jr-green must
+  satisfy. Not a regression; this is the intended Red contract.
+- Backend aggregate suite: expected red from pre-existing unrelated failures
+  (Standard Pack cross-root config, Planned Game Intake typing). Not Phase 2
+  caused.
+
+## phase_base_sha capture point
+
+The orchestrator MUST capture the immutable phase_base_sha for Phase 2
+immediately after this strategy commit by running `git rev-parse HEAD`. That
+post-strategy-commit SHA is the only valid Phase 2 phase_base_sha. The
+role_base_sha 13565ae7 predates the committed strategy and must not be used.
+
+## Handoff
+
+The next role (Mid-red) should:
+1. Read test-strategy-phase2.md for the canonical Phase 2 boundary decomposition.
+2. Update the two "keeps deferred" guard tests in
+   controlled-imports-phase2.red.test.ts to read the real source (after Jr-green
+   creates controlled-imports.ts) instead of asserting non-existence. Keep the
+   lookalike and boundary checks active.
+3. Refine or extend the Red contract if needed, but preserve the six required
+   ControlledImportsModule exports and the forbidden-key/lookalike/boundary
+   guards.
+4. The phase_base_sha is captured at the strategy commit (the commit that
+   introduces test-strategy-phase2.md and the plan.md annotation).
+
+The orchestrator should:
+1. Capture phase_base_sha = git rev-parse HEAD after this commit.
+2. Verify exactly one worktree on master before any Phase 2 action (A16).
+3. Route Task 1 to Mid-red -> Jr-green -> phase-acceptance.
+4. Keep Task 2 blocked until Task 1 is accepted.
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 - controlled operational imports
+commits: pending (strategy commit with test-strategy-phase2.md, plan.md, role log)
+tests_run: controlled-imports-phase2.red.test.ts: 20 fail | 4 pass (expected Red); Phase 1 baseline: 98+31+20+25 pass (all green)
+files_changed: test-strategy-phase2.md (new), plan.md (Phase 2 Task 1 [b]->[~], Task 2 retains [b]), orchestration/phase2-strategy-role.log (new)
+plan_updates: Phase 2 Task 1 admitted [~] with evidence; Task 2 retains [b] blocked until Task 1 evidence; admission chronology added
+known_failures: controlled-imports-phase2.red.test.ts 20 behavior tests fail (expected Red for Task 1); backend aggregate red from pre-existing unrelated failures
+handoff: Mid-red should read test-strategy-phase2.md, update the two "keeps deferred" guard tests to check real source after Jr-green creates controlled-imports.ts, preserve all six required exports and guards. Orchestrator must capture phase_base_sha at strategy commit, verify one worktree, route Task 1 to Mid-red->Jr-green->acceptance, keep Task 2 blocked.
+END_MEASURE_AGENT_RESULT
