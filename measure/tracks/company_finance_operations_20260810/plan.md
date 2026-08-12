@@ -14,7 +14,7 @@
   from the preceding task. Accepted with evidence in
    `phase1-persistence-acceptance-20260811.md` in commit
    `c5ecf18b0830c8702602f9f5f33415c7b3e92d66`.
-- [~] Task: Add behavior-level contract tests and adapters for the Company (commit `98d111bdf1c4eea2d2b6980d884ad97250f03cb2`)
+- [x] Task: Add behavior-level contract tests and adapters for the Company (commit `2291d42138d704cd6d59a15c4b0b05d3b482c9d8`)
   Identity attestor, authorized private-evidence reads, and a scope/digest-bound
   durable outbox projector required by the historical private-evidence MVP.
   Depends on the completed foundation task and the accepted boundary in
@@ -153,6 +153,22 @@
     `git diff --check` exits 0. Focused ESLint exits 0 for the owned backend
     and storage tests. No production source changed. The task remains `[~]`
     because the Red failures identify missing implementation, not environment.
+
+    Green implementation evidence (2026-08-12): implementation commit
+    `2291d42138d704cd6d59a15c4b0b05d3b482c9d8` implements B1-B9. It adds
+    trusted server audit sources and a durable Company Identity Finance audit
+    adapter, a provider-neutral Storage-to-Finance binding adapter, CAS-aware
+    durable projection with a bounded SHA-256 identity fallback, and Storage
+    owner ceiling and sanitized driver failures. The complete focused backend
+    command exits 0 with 141 tests passing and 3 live PostgreSQL tests skipped
+    because no disposable URL is set. The complete Storage command exits 0 with
+    40 tests passing. The DB metadata command exits 0 with 3 tests passing.
+    The accepted Phase 1 regression command exits 0 with 47 tests passing.
+    Backend, Storage, and DB builds exit 0. Backend check-types remains blocked
+    by unrelated Standard Pack cross-root imports and Planned Game Intake test
+    errors. `measure/doctor.sh` remains blocked by deprecated `[ ]` markers in
+    unrelated active tracks. The Phase 2 aggregate remains intentionally Red
+    with 20 failing tests and one AST-boundary test passing.
 
     Continuation Mid Red reconciliation evidence (2026-08-12): the supplied
     immutable anchors are `phase_base_sha=c93f3a84fcd72c3559e81fdbe7c9ac761d993f35`
