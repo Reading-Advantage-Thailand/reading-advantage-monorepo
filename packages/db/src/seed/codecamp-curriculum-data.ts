@@ -1,12 +1,39 @@
 // Pure data module for the full codecamp curriculum (Phases A–D, 19 modules, 88 lessons).
 // Separated from the seed script so it can be tested independently.
 
+/**
+ * Describes one theory section and its optional visual or video learning aids.
+ * @property heading Section heading shown above the content.
+ * @property body Explanatory prose for the section.
+ * @property code Example source code shown for the section.
+ * @property youtubeId YouTube video identifier used for the embedded tutorial.
+ * @property youtubeSource Provenance label for the embedded tutorial.
+ * @property imagePath Public image path used for the section illustration.
+ */
+export interface CurriculumTheorySection {
+  [key: string]: unknown;
+  heading?: string;
+  body?: string;
+  code?: string;
+  youtubeId?: string;
+  youtubeSource?: string;
+  imagePath?: string;
+}
+
+/**
+ * Describes the JSON content payload authored for a curriculum lesson.
+ * @property sections Optional theory sections containing text, code, and media.
+ */
+export type CurriculumContent = Record<string, unknown> & {
+  sections?: CurriculumTheorySection[];
+};
+
 export interface CurriculumLesson {
   title: string;
   description: string;
   order: number;
   type: "theory" | "exercise" | "quiz";
-  contentJson: Record<string, unknown>;
+  contentJson: CurriculumContent;
   exercises?: Array<{
     title: string;
     instructions: string;
@@ -71,6 +98,7 @@ export function getPhaseACurriculumData() {
                 body: "The terminal is where you type commands to control your computer. Every Reading Advantage developer uses the terminal daily. Key commands: pwd (where am I?), ls (what's here?), cd (change directory), mkdir (make directory), cat (show file contents).",
                 code: "# Navigation\npwd                          # Where am I?\nls                           # What's here?\ncd Desktop                   # Go to Desktop\ncd ..                        # Go back up\nmkdir codecamp               # Create workspace folder\ncd codecamp\n\n# File operations\necho \"Hello, codecamp!\" > hello.txt\ncat hello.txt\nmkdir projects\nmv hello.txt projects/\nls projects/\nrm projects/hello.txt\nrmdir projects",
                 youtubeId: "Ke90Tje7VS0",
+                youtubeSource: "Legacy curated source (not independently verified)",
               },
               {
                 heading: "Install Node.js 20",
@@ -177,6 +205,7 @@ export function getPhaseACurriculumData() {
                 body: "Git is a version control system that tracks changes to your code. It lets you undo mistakes, collaborate with others, and see the history of every change.",
                 code: "mkdir personal-portfolio\ncd personal-portfolio\ngit init\n\n# Create a file and commit it\necho \"Hello\" > index.html\ngit add index.html\ngit status              # See what's staged\ngit commit -m \"feat: add initial portfolio page\"",
                 youtubeId: "hwP7WQgm_DE",
+                youtubeSource: "Legacy curated source (not independently verified)",
               },
               {
                 heading: "The Git Cycle",
@@ -204,6 +233,7 @@ export function getPhaseACurriculumData() {
                 body: "GitHub is a hosting service for Git repositories. After creating a repo on GitHub, you connect your local repo and push your commits.",
                 code: "git remote add origin https://github.com/<username>/personal-portfolio.git\ngit branch -M main\ngit push -u origin main\n\n# Daily workflow\ngit add .\ngit commit -m \"feat: add about section\"\ngit push",
                 youtubeId: "RGOj5nlwkvY",
+                youtubeSource: "Dave Gray",
                 imagePath: "/images/diagrams/git_github_flow.jpg",
               },
               {
@@ -608,6 +638,9 @@ export function getPhaseACurriculumData() {
                 imagePath: "/images/diagrams/javascript_execution_closures.png",
                 body: "Variables declared with `const` and `let` are block-scoped. A closure is a function that remembers its outer scope even after the outer function has returned.",
                 code: "// Block scope\nif (true) {\n  const block = \"I'm in the if block\";\n  console.log(block); // OK\n}\n// console.log(block); // ReferenceError!\n\n// Closure\nfunction createCounter() {\n  let count = 0;\n  return () => {\n    count += 1;\n    return count;\n  };\n}\nconst counter = createCounter();\ncounter(); // 1\ncounter(); // 2",
+                // Web Dev Simplified — Learn Closures In 7 Minutes.
+                youtubeId: "3a0I8ICR1Vg",
+                youtubeSource: "Web Dev Simplified",
               },
             ],
           },
@@ -1223,6 +1256,7 @@ export function getPhaseBCurriculumData() {
                 body: "React is a library for building user interfaces with reusable components. Components are functions that return JSX (HTML-like syntax). React 19.2.5 is the version used in the Reading Advantage monorepo.",
                 code: "// A simple component\nfunction Greeting({ name }: { name: string }) {\n  return <h1>Hello, {name}!</h1>;\n}\n\n// Usage\n<Greeting name=\"Alice\" />",
                 youtubeId: "k5E265ksDSI",
+                youtubeSource: "Legacy curated source (not independently verified)",
                 imagePath: "/images/diagrams/react_render_lifecycle.jpg",
               },
               {
@@ -1724,12 +1758,16 @@ export function getPhaseBCurriculumData() {
                 body: "Server Components run on the server by default. They can do async/await, direct database access, and keep secrets safe. They cannot use hooks, events, or browser APIs.",
                 code: "// Server Component — no \"use client\" needed\nexport default async function ModuleList() {\n  const modules = await fetchModules(); // Server-side fetch!\n\n  return (\n    <div className=\"grid gap-6 md:grid-cols-2 lg:grid-cols-3\">\n      {modules.map((mod) => (\n        <ModuleCard key={mod.id} module={mod} />\n      ))}\n    </div>\n  );\n}\n\n// ✅ Can do: async/await, DB access, env vars\n// ❌ Cannot do: useState, useEffect, onClick, localStorage",
                 youtubeId: "S0T0R9h1vHk",
+                youtubeSource: "Legacy curated source (not independently verified)",
                 imagePath: "/images/diagrams/nextjs_rsc_client.jpg",
               },
               {
                 heading: "Client Components",
                 body: "Add the 'use client' directive to make a component run in the browser. Client Components can use hooks, handle events, and access browser APIs.",
                 code: "\"use client\";\n\nimport { useState } from \"react\";\n\nexport function SearchBar({ onSearch }: { onSearch: (query: string) => void }) {\n  const [query, setQuery] = useState(\"\");\n\n  return (\n    <input\n      value={query}\n      onChange={(e) => {\n        setQuery(e.target.value);\n        onSearch(e.target.value);\n      }}\n      placeholder=\"Search...\"\n    />\n  );\n}\n\n// The boundary rule: \"use client\" marks the boundary\n// Components imported by a Client Component are also Client Components",
+                // Jack Herrington — Are React Server Components Really Slower?
+                youtubeId: "3Q2q2gs0nAI",
+                youtubeSource: "Jack Herrington",
               },
               {
                 heading: "Composition Pattern",
@@ -1751,6 +1789,9 @@ export function getPhaseBCurriculumData() {
                 heading: "Server-Side Data Fetching",
                 body: "In Server Components, fetch data directly with async/await. No useEffect, no loading state management. Next.js handles the loading UI with loading.tsx.",
                 code: "async function getModules() {\n  const response = await fetch(\"http://localhost:3001/modules\", {\n    cache: \"no-store\", // Always fresh\n  });\n  if (!response.ok) throw new Error(\"Failed to fetch\");\n  return response.json() as Promise<Module[]>;\n}\n\nexport default async function HomePage() {\n  const modules = await getModules();\n\n  return (\n    <div className=\"grid gap-6 md:grid-cols-2 lg:grid-cols-3\">\n      {modules.map((mod) => (\n        <ModuleCard key={mod.id} module={mod} />\n      ))}\n    </div>\n  );\n}",
+                // Dave Gray — Next.js Full Course for Beginners.
+                youtubeId: "843nec-IvW0",
+                youtubeSource: "Dave Gray",
               },
               {
                 heading: "Caching Strategies",
@@ -1777,6 +1818,9 @@ export function getPhaseBCurriculumData() {
                 heading: "Dynamic Route Segments",
                 body: "Dynamic routes handle URLs with variable segments. In Next.js 16, params is a Promise — you must await it.",
                 code: "// File: src/app/modules/[slug]/page.tsx\n// URL: /modules/react-basics\n\ninterface Props {\n  params: Promise<{ slug: string }>;\n}\n\nexport default async function ModuleDetailPage({ params }: Props) {\n  const { slug } = await params;\n  const module = await getModule(slug);\n\n  if (!module) {\n    return <div>Module not found</div>;\n  }\n\n  return (\n    <div>\n      <h1>{module.title}</h1>\n      <p>{module.description}</p>\n      <LessonList lessons={module.lessons} />\n    </div>\n  );\n}",
+                // Fireship — Next.js in 100 Seconds.
+                youtubeId: "Sklc_fQBmcs",
+                youtubeSource: "Fireship",
               },
               {
                 heading: "Navigation with Link",
@@ -3540,6 +3584,9 @@ export function getPhaseDCurriculumData() {
                 imagePath: "/images/diagrams/docker_container_isolation.png",
                 body: "Docker packages your app and all its dependencies into a container. The same container runs identically on every machine.",
                 code: "| Concept | What it is | Analogy |\n|---------|-----------|---------|\n| Image | Blueprint for a container | Recipe |\n| Container | Running instance of an image | Baked cake |\n| Volume | Persistent storage | USB drive |\n| Network | Communication between containers | WiFi |\n| Dockerfile | Instructions to build an image | Recipe card |",
+                // Fireship — Docker in 100 Seconds.
+                youtubeId: "Gjnup-PuquQ",
+                youtubeSource: "Fireship",
               },
               {
                 heading: "Basic Docker Commands",
