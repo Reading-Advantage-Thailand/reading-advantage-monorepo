@@ -27,11 +27,12 @@ describe("AdvantageGamesAuthoringQc", () => {
   it("exposes authoring fixtures, profile/input controls, diagnostics, exemplar results, and attribution", async () => {
     render(<AdvantageGamesAuthoringQc preview={preview as StandardPackQcPreview} />);
 
+    const authoringControls = within(screen.getByRole("complementary", { name: "Authoring controls" }));
     expect(screen.getByRole("heading", { name: /cartridge field lab/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/content fixture/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /compact/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /wide/i })).toBeInTheDocument();
-    expect(screen.getByLabelText(/input mode/i)).toBeInTheDocument();
+    expect(authoringControls.getByRole("button", { name: /compact/i })).toBeInTheDocument();
+    expect(authoringControls.getByRole("button", { name: /wide/i })).toBeInTheDocument();
+    expect(authoringControls.getByLabelText(/input mode/i)).toBeInTheDocument();
     expect(screen.getByRole("region", { name: /composition preview/i })).toBeInTheDocument();
     expect(screen.getAllByText(/pixel art assets by elvgames/i).length).toBeGreaterThan(0);
     expect(screen.getByText("Selected union")).toBeInTheDocument();
@@ -51,8 +52,9 @@ describe("AdvantageGamesAuthoringQc", () => {
   it("switches to wide touch composition and supports pause, mute, restart, overlays, and result inspection", async () => {
     render(<AdvantageGamesAuthoringQc preview={preview as StandardPackQcPreview} />);
 
-    fireEvent.click(screen.getByRole("button", { name: /wide/i }));
-    fireEvent.change(screen.getByLabelText(/input mode/i), { target: { value: "touch" } });
+    const authoringControls = within(screen.getByRole("complementary", { name: "Authoring controls" }));
+    fireEvent.click(authoringControls.getByRole("button", { name: /wide/i }));
+    fireEvent.change(authoringControls.getByLabelText(/input mode/i), { target: { value: "touch" } });
     fireEvent.click(screen.getByRole("checkbox", { name: /safe-region overlays/i }));
     fireEvent.click(screen.getByRole("button", { name: "Pause game" }));
     fireEvent.click(screen.getByRole("button", { name: "Mute game" }));
@@ -89,6 +91,7 @@ describe("AdvantageGamesAuthoringQc", () => {
   it("previews the standardized briefing with selected content, applicable controls, responsive data, and one validated Start transition", () => {
     render(<AdvantageGamesAuthoringQc preview={preview as StandardPackQcPreview} />);
 
+    const authoringControls = within(screen.getByRole("complementary", { name: "Authoring controls" }));
     const briefingPreview = screen.getByRole("region", { name: "Standard game briefing preview" });
     const scoped = within(briefingPreview);
     const dialog = scoped.getByRole("dialog");
@@ -107,9 +110,9 @@ describe("AdvantageGamesAuthoringQc", () => {
     expect(scoped.getByText("ความรับผิดชอบต่อสิ่งแวดล้อม")).toBeInTheDocument();
     expect(scoped.getByText("environmental responsibility")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "wide" }));
+    fireEvent.click(authoringControls.getByRole("button", { name: "wide" }));
     expect(dialog).toHaveAttribute("data-apk-layout-profile", "wide");
-    fireEvent.change(screen.getByLabelText(/input mode/i), { target: { value: "touch" } });
+    fireEvent.change(authoringControls.getByLabelText(/input mode/i), { target: { value: "touch" } });
     expect(dialog).toHaveAttribute("data-apk-input-mode", "touch");
     expect(scoped.getByText("Tap")).toBeInTheDocument();
     expect(scoped.queryByText("Arrow keys")).not.toBeInTheDocument();
@@ -126,11 +129,12 @@ describe("AdvantageGamesAuthoringQc", () => {
   it("changes the contained briefing preview viewport from compact 390×844 to wide 1440×900", () => {
     render(<AdvantageGamesAuthoringQc preview={preview as StandardPackQcPreview} />);
 
+    const authoringControls = within(screen.getByRole("complementary", { name: "Authoring controls" }));
     const viewport = screen.getByTestId("briefing-preview-viewport");
     expect(viewport).toHaveAttribute("data-apk-qc-viewport", "390x844");
     expect(viewport).toHaveStyle({ width: "390px", height: "844px" });
 
-    fireEvent.click(screen.getByRole("button", { name: "wide" }));
+    fireEvent.click(authoringControls.getByRole("button", { name: "wide" }));
 
     expect(viewport).toHaveAttribute("data-apk-qc-viewport", "1440x900");
     expect(viewport).toHaveStyle({ width: "1440px", height: "900px" });
