@@ -24,7 +24,7 @@
 
 ## Phase 5: Verification and Cleanup
 
-- [~] Run dev server and manually verify multiple lessons render videos and images correctly. The owned authenticated Playwright fixture covers the seeded Docker Basics lesson with its diagram and verified Fireship embed; Chromium discovery passed, while the authenticated attempt was skipped because supported credentials were unavailable, so broader credentialed browser execution remains open.
+- [~] Run dev server and manually verify multiple lessons render videos and images correctly. The owned authenticated Playwright fixture covers the seeded Docker Basics lesson with its diagram and verified Fireship embed; Chromium discovery passed, the authenticated attempt was skipped because supported credentials were unavailable, and an elevated non-credentialed system-Chrome check confirmed company auth mode plus the public Docker module route. The exact session architecture blocker is recorded in [browser-auth-architectural-blocker.md](browser-auth-architectural-blocker.md), so broader credentialed browser execution remains open.
 - [x] Run Playwright or Vitest suites to verify no regressions in the codecamp application (media contract 3/3, combined DB media/data 30/30, LessonContent 13/13, DB/app type checks, targeted lint, and Playwright fixture discovery pass; `7f6c0f6d0`, `665e214e6`).
 - [x] Delete the draft `curriculum_enhancement_plan.md` artifact.
 
