@@ -1,0 +1,7 @@
+track_id: codecamp_interactive_media_diagrams_20260709
+
+phase: Phase 4 source-integrity Green
+
+verification: Codecamp DB media/data contracts 19/19; LessonContent render contract 13/13; independent Terra review accepted.
+
+scope: removed exactly five rejected legacy embeds; retained five verified mappings; owner denominator and browser acceptance remain open.
