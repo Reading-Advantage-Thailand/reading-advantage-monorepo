@@ -1,0 +1,7 @@
+track_id: codecamp_interactive_media_diagrams_20260709
+
+phase: Phase 5 browser authentication investigation
+
+evidence: fixture discovery one test; authenticated run credential-gated skip; company auth mode and public Docker module route verified in system Chrome.
+
+external gate: approved Accounts test identity/session or owner-approved test-only company-OIDC session fixture.
