@@ -1,0 +1,7 @@
+track_id: codecamp_interactive_media_diagrams_20260709
+
+correction: browser acceptance now exercises Docker Basics/Docker Concepts with verified Fireship Docker ID Gjnup-PuquQ instead of the legacy Terminal mapping.
+
+reason: source audit proved Ke90Tje7VS0 is a Programming with Mosh React tutorial and is semantically invalid for Terminal Basics.
+
+verification: Playwright --list, Codecamp app TypeScript, and targeted ESLint exited 0.
