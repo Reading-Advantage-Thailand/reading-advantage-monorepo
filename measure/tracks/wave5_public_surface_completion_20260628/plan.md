@@ -61,14 +61,30 @@
 
 ## Phase 7: Marketing Schema, UX, and i18n
 
+> **Strategy:** [`test-strategy.md`](./test-strategy.md)
+> **Scope:** `apps/marketing` + `packages/db/src/schema/marketing.ts` only.
+> Independent of Phase 0 pricing/legal blockers; does not touch www or Science;
+> no root lock changes. Preserves Wave 3 security/Vinext/provider-adapter floor.
+> **Applicability:** security review (encryption invariant, Wave 3 refutation),
+> UX/API review (res.ok, inline errors, row-shape change, lang), adversarial
+> testing (UNIQUE/script-shape/no-alert/no-plaintext refutation), browser review
+> (deferred to owner follow-up; vinext build is the closest gate).
+> **Canonical ordering:** only the first Red (Task 1) is executable. Tasks 2 to 5
+> are dependency-blocked on the prior task's Red or Green.
+
 - [~] Task: Write Red tests for `UNIQUE(app, topic)`, typed `videoProjects.script`, `updatedAt`/`createdBy` columns, and shared `APPS` tuple.
   - Evidence refs: marketing_schema_integrity (LR-007-001..007, LR-004-005).
-- [~] Task: Add migration + schema constraints; enforce/document settings encryption invariant.
-- [~] Task: Add `res.ok` checks + inline error states; replace `alert()`/substring error styling.
+  - Sub-phase 7.1. First executable Phase 7 Red. Targeted command in test-strategy.md.
+- [b] Task: Add migration + schema constraints; enforce/document settings encryption invariant.
+  - deferred:phase7-task1-red (canonical Green-on-Red). Sub-phase 7.2.
+- [b] Task: Add `res.ok` checks + inline error states; replace `alert()`/substring error styling.
   - Evidence refs: marketing_ux_error_handling (LR-004-007..010, LR-marketing-app-006-007).
-- [~] Task: Add i18n layer / correct `lang`; externalize hardcoded English UI strings.
+  - deferred:phase7-task2-green (pages render schema columns; avoid double rewrite). Sub-phase 7.3.
+- [b] Task: Add i18n layer / correct `lang`; externalize hardcoded English UI strings.
   - Evidence refs: marketing_i18n (LR-marketing-app-006-004).
-- [~] Task: Run marketing targeted tests/build.
+  - deferred:phase7-task3-green (externalize the strings the UX task finalizes). Sub-phase 7.4.
+- [b] Task: Run marketing targeted tests/build.
+  - deferred:phase7-task4-green. Sub-phase 7.5. Closeout.
 
 ## Phase 8: Science Build/Deploy De-Prisma
 
