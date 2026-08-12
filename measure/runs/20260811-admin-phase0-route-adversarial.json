@@ -25,53 +25,35 @@
     "Commit 9153cc38e captured the test, fixture, and adversarial result under the shared flock."
   ],
   "commands": [
-    {
-      "command": "CI=true pnpm --filter accounts test",
-      "exit_code": 0,
-      "result": "11 files passed, 1 skipped; 50 tests passed, 1 skipped"
-    },
-    {
-      "command": "CI=true pnpm --filter accounts check-types",
-      "exit_code": 0,
-      "result": "Type checks passed"
-    }
+    "CI=true pnpm --filter accounts test — exit 0: 11 files passed, 1 skipped; 50 tests passed, 1 skipped",
+    "CI=true pnpm --filter accounts check-types — exit 0: Type checks passed"
   ],
-  "command_environment": {
-    "workspace_local_paths": [
-      ".cache/tmp",
-      ".cache/node-compile-cache",
-      ".cache/xdg-cache",
-      ".cache/pnpm-home",
-      ".cache/pnpm-store"
-    ],
-    "audited_head": "2c0295af41a5ede1067bebea158c3c8cf1115d18"
-  },
-  "command_failure_classification": {
-    "accounts_test": "pass",
-    "accounts_check_types": "pass",
-    "candidate_failures": [],
-    "unrelated_failures": [],
-    "infrastructure_failures": []
-  },
+  "command_environment": [
+    ".cache/tmp workspace-local path",
+    ".cache/node-compile-cache workspace-local path",
+    ".cache/xdg-cache workspace-local path",
+    ".cache/pnpm-home workspace-local path",
+    ".cache/pnpm-store workspace-local path",
+    "audited_head = 2c0295af41a5ede1067bebea158c3c8cf1115d18"
+  ],
+  "command_failure_classification": [
+    "accounts_test = pass",
+    "accounts_check_types = pass",
+    "candidate_failures = none",
+    "unrelated_failures = none",
+    "infrastructure_failures = none"
+  ],
   "test_strategy_violations": [],
   "live_contract_violations": [],
   "prod_wiring_violations": [
     "Command provenance includes a dirty packages/backend/src/modules/company-identity/index.ts path."
   ],
   "route_parity_violations": [],
-  "anti_pattern_assessment": {
-    "A4_vacuous_pass": {
-      "status": "pass",
-      "reason": "The new provenance test fails when the operation and capability do not match the expected binding.",
-      "path_evidence": [
-        "apps/accounts/lib/server/company-identity-route-bindings.test.ts rejects mismatched pairs in the swap fixture."
-      ]
-    },
-    "A7_over_broad_filter": {
-      "status": "not_applicable",
-      "reason": "The new test does not filter out banned terms or coverage keywords."
-    }
-  },
+  "anti_pattern_assessment": [
+    "A4_vacuous_pass = pass: The new provenance test fails when the operation and capability do not match the expected binding.",
+    "A4_evidence = apps/accounts/lib/server/company-identity-route-bindings.test.ts rejects mismatched pairs in the swap fixture.",
+    "A7_over_broad_filter = not_applicable: The new test does not filter out banned terms or coverage keywords."
+  ],
   "retry_recommendation": "retry_implementation",
   "confidence": "high",
   "changed_files": [
@@ -80,10 +62,8 @@
     "measure/runs/20260811-admin-phase0-route-adversarial.json"
   ],
   "commit": "9153cc38e",
-  "handoff": {
-    "route_to": "Green",
-    "blockers": [
-      "Provide a clean scoped tree at the same committed candidate and rerun the four commands."
-    ]
-  }
+  "handoff": [
+    "route_to = Green",
+    "blocker = Provide a clean scoped tree at the same committed candidate and rerun the four commands."
+  ]
 }
