@@ -69,17 +69,20 @@
 > UX/API review (res.ok, inline errors, row-shape change, lang), adversarial
 > testing (UNIQUE/script-shape/no-alert/no-plaintext refutation), browser review
 > (deferred to owner follow-up; vinext build is the closest gate).
-> **Canonical ordering:** only the first Red (Task 1) is executable. Tasks 2 to 5
-> are dependency-blocked on the prior task's Red or Green.
+> **Canonical ordering:** Phase 7.1 and 7.2 are complete. Task 3 is now the
+> only executable task. Tasks 4 and 5 remain dependency-blocked on the prior
+> task's Green.
 
 - [x] Task: Write Red tests for `UNIQUE(app, topic)`, typed `videoProjects.script`, `updatedAt`/`createdBy` columns, and shared `APPS` tuple. Corrected Red `305ec411b`; independently reviewed schema Green `0bdaec0e1` passes the Phase 7, Phase 2, migration, tenant, auth/masking, ESM, type, lint, and Vinext-build gates.
   - Evidence refs: marketing_schema_integrity (LR-007-001..007, LR-004-005).
   - Sub-phase 7.1. First executable Phase 7 Red. Targeted command in test-strategy.md.
-- [~] Task: Add migration + schema constraints; enforce/document settings encryption invariant.
-  - Migration/schema slice Green `0bdaec0e1`; settings ciphertext-at-rest property proof remains executable. Sub-phase 7.2.
-- [b] Task: Add `res.ok` checks + inline error states; replace `alert()`/substring error styling.
+- [x] Task: Add migration + schema constraints; enforce/document settings encryption invariant.
+  - Independent ACCEPT: schema Green `0bdaec0e1` and settings encryption proof `eb7911b05`.
+  - Focused evidence: the schema, migration, tenant, auth/masking, ESM, type, lint, and Vinext gates passed; the live PGlite property proof inspected raw persistence, verified ciphertext shape, and round-tripped through the production decrypt helper.
+  - Sub-phase 7.2 complete. No production encryption source change was required.
+- [~] Task: Add `res.ok` checks + inline error states; replace `alert()`/substring error styling.
   - Evidence refs: marketing_ux_error_handling (LR-004-007..010, LR-marketing-app-006-007).
-  - deferred:phase7-task2-green (pages render schema columns; avoid double rewrite). Sub-phase 7.3.
+  - Sub-phase 7.3. Next executable Red; implementation subtasks remain unimplemented/Red-ready.
 - [b] Task: Add i18n layer / correct `lang`; externalize hardcoded English UI strings.
   - Evidence refs: marketing_i18n (LR-marketing-app-006-004).
   - deferred:phase7-task3-green (externalize the strings the UX task finalizes). Sub-phase 7.4.
