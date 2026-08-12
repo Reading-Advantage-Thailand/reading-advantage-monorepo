@@ -1,0 +1,25 @@
+Track: company_finance_operations_20260810
+Task: Phase 1 / Task 3 — historical private-evidence import authorization, durable audit, binding, and projector hardening
+Source commit: 48470311d4f6b06b7e9ebcce7ba1f380444f0a79
+Accepted manifest: a078f65cdea002b7ff0b1284c75314d44151877b80e172fe1ca1e914202d7875 (32 sorted paths)
+
+Verification:
+- Focused bind/digest security matrix: 2 files, 115/115 passed.
+- Backend bounded matrix: 24 files, 318/318 passed.
+- Storage bounded matrix: 8 files, 74/74 passed.
+- DB bounded matrix: 3 files, 31/31 passed.
+- Backend, Storage, and DB typechecks passed.
+- Targeted ESLint and scoped git diff --check passed.
+- PostgreSQL 16 migration-upgrade integration: 1/1 passed.
+- PostgreSQL backend live suites: 4 files, 4/4 passed on a disposable least-privilege database.
+- Live database cleanup verified: 0 temporary databases, 0 temporary roles.
+- Migration 0002 remained immutable: SQL f0535ed5dd6eab2d74818cc0fca6fa964338f5d3fe3bd0ed392810b09a0d913a; snapshot 567a39b4adad21847a64d020e2fb8c64bd33b5407cd29c2bd68430588aa10e14.
+- Migration 0003 is additive, journaled, and protected by exact doctor counterexamples.
+
+Independent review receipts:
+- Review A ACCEPT: manifest a078f65c; 115 focused tests; cross-realm/local ArrayBuffer acceptance, defensive-copy isolation, invalid-type/length rejection, zero-side-effect failure, strict bind fencing, and immutable 0002 verified.
+- Security Review B ACCEPT: manifest a078f65c; independent local/VM/species-poison probes, mutation-isolation and zero-side-effect matrices, and unchanged strict bind parsing verified.
+
+Scope boundary:
+- Phase 2 aggregate remains intentionally Red and was not used as Task 3 acceptance evidence.
+- CRM/Tutor owner contracts, Phase 2 controlled import/pilot, and Phase 3 policy/finalization remain blocked.
