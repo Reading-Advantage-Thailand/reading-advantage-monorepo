@@ -57,6 +57,7 @@ interface StoragePrivateEvidenceModule {
     readonly authorizationPort: PrivateEvidenceAuthorizationPort;
     readonly driver: PrivateEvidenceDriver;
     readonly digest: (bytes: Uint8Array) => Promise<string>;
+    readonly maxBytes?: number;
   }): AuthorizedPrivateEvidenceReader;
 }
 
@@ -145,6 +146,7 @@ describe("Storage historical private-evidence read RED contract", () => {
       authorizationPort: fakes.authorizationPort,
       driver: fakes.driver,
       digest: fakes.digest,
+      maxBytes: 1024,
     });
     const request = readRequest();
 
@@ -232,6 +234,7 @@ describe("Storage historical private-evidence read RED contract", () => {
         authorizationPort: fakes.authorizationPort,
         driver: fakes.driver,
         digest: fakes.digest,
+        maxBytes: 1024,
       });
 
       await expect(reader.readAuthorizedEvidence(request)).rejects.toThrow(
@@ -310,6 +313,7 @@ describe("Storage historical private-evidence read RED contract", () => {
       authorizationPort: fakes.authorizationPort,
       driver: fakes.driver,
       digest: fakes.digest,
+      maxBytes: 1024,
     });
     const singleSegmentReference =
       "private-evidence://company-historical/historical";
@@ -358,6 +362,7 @@ describe("Storage historical private-evidence read RED contract", () => {
         authorizationPort: fakes.authorizationPort,
         driver: fakes.driver,
         digest: fakes.digest,
+        maxBytes: 1024,
       });
 
       await expect(
@@ -386,6 +391,7 @@ describe("Storage historical private-evidence read RED contract", () => {
         authorizationPort: fakes.authorizationPort,
         driver: fakes.driver,
         digest: fakes.digest,
+        maxBytes: 1024,
       });
 
       await expect(

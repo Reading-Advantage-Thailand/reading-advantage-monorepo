@@ -12,7 +12,7 @@
  *       - bytes exactly at the requested bound (NOT rejected).
  *       - bytes one below the bound (NOT rejected).
  *       - empty driver result.
- *       - driver throws (propagates; no digest call; no binding call).
+ *       - driver errors are sanitized; no digest call occurs.
  *       - bytes returned by reader are a fresh copy, not the driver's
  *         internal buffer.
  *       - the reader never logs the evidence reference nor the
@@ -161,13 +161,19 @@ describe("Finance Task 3 B-boundary adversarial coverage", () => {
     expect(result.payloadDigest).toBe(emptyDigest);
   });
 
-  it("propagates a driver throw without calling digest and without returning a partial snapshot", async () => {
+  it("sanitizes a provider dependency error without calling digest or returning a partial snapshot", async () => {
+    const secret = "bucket=private-finance-evidence credential=provider-secret";
     const fakes = createFakes({
-      driverThrow: new Error("driver dependency unavailable"),
+      driverThrow: new Error(`provider failed: ${secret}`),
     });
-    await expect(
-      fakes.reader.readAuthorizedEvidence(readRequest()),
-    ).rejects.toThrow("driver dependency unavailable");
+    let error: unknown;
+    try {
+      await fakes.reader.readAuthorizedEvidence(readRequest());
+    } catch (caught) {
+      error = caught;
+    }
+    expect(error).toMatchObject({ code: "PRIVATE_EVIDENCE_DRIVER_ERROR" });
+    expect(JSON.stringify(error)).not.toContain(secret);
     expect(fakes.digest).not.toHaveBeenCalled();
     expect(fakes.authorize).toHaveBeenCalledTimes(1);
   });
@@ -197,7 +203,7 @@ describe("Finance Task 3 B-boundary adversarial coverage", () => {
     });
   });
 
-  it("propagates a driver throw raised because the signal is aborted", async () => {
+  it("sanitizes a driver error raised because the signal is aborted", async () => {
     const controller = new AbortController();
     controller.abort(new Error("caller cancellation"));
     const fakes = createFakes({
@@ -205,7 +211,7 @@ describe("Finance Task 3 B-boundary adversarial coverage", () => {
     });
     await expect(
       fakes.reader.readAuthorizedEvidence(readRequest({ signal: controller.signal })),
-    ).rejects.toThrow("driver read aborted by signal");
+    ).rejects.toMatchObject({ code: "PRIVATE_EVIDENCE_DRIVER_ERROR" });
     expect(fakes.digest).not.toHaveBeenCalled();
   });
 

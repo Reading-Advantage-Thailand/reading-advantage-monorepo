@@ -153,6 +153,42 @@
     `git diff --check` exits 0. Focused ESLint exits 0 for the owned backend
     and storage tests. No production source changed. The task remains `[~]`
     because the Red failures identify missing implementation, not environment.
+
+    Continuation Mid Red reconciliation evidence (2026-08-12): the supplied
+    immutable anchors are `phase_base_sha=c93f3a84fcd72c3559e81fdbe7c9ac761d993f35`
+    and `role_base_sha=6c8bd63937c69ca27d8c00973449cec396aafb69`. Both anchors
+    resolve, both are ancestors of the starting HEAD, and the role base is the
+    starting HEAD. The role preserved unrelated dirty paths and changed only
+    the two owned Storage tests and this plan.
+
+    The two Storage test edits implement the authoritative Review B decisions.
+    The legacy private-read suite now supplies the owner `maxBytes=1024` ceiling
+    to every reader fixture. The Storage adversarial suite now requires stable
+    `PRIVATE_EVIDENCE_DRIVER_ERROR` errors without provider messages. The legacy
+    private-read suite still passes with 25/25 tests. The adversarial suite has
+    8/10 passing tests; its two failures identify the missing B7 sanitization.
+
+    Complete targeted Red suites were run after reconciliation. The backend
+    command exited 1 with 134/141 passing tests and 7 expected implementation
+    failures: B1 uses caller audit IDs and time; B8 omits `policyVersion` from
+    the decision; B2 lacks the durable audit adapter; B3 lacks the binding
+    adapter and source; B4 enqueues twice under concurrent projection; and B9
+    rejects the maximum identity with `FINANCE_DURABLE_REQUEST_INVALID`.
+
+    The Storage command exited 1 with 33/40 passing tests and 7 expected
+    implementation failures: B6 ignores the owner ceiling; B7 accepts or
+    mishandles three malformed driver results, exposes the provider error, and
+    leaves both adversarial provider-error cases unsanitized. The database
+    metadata command exited 0 with 3/3 tests passing. The live PostgreSQL
+    command exited 0 with 3/3 tests skipped because both database variables are
+    unset. The Phase 2 aggregate exited 1 with 1/21 tests passing and remains
+    intentionally red; it was not staged.
+
+    Owned backend and Storage ESLint commands exited 0. `git diff --check`
+    exited 0. The Red commit contains only the two reconciled Storage tests and
+    this plan. Green must implement only the seven B1-B9 failures above, then
+    rerun the complete focused commands. Green must keep the Phase 2 aggregate
+    red and must not edit the unrelated dirty paths.
 - [b] Task: Add live CRM `CustomerBillingCatalogPort` and Tutor
   `TutorFinancialExportPort` owner contracts and adapters only after those
   source owners exist and accept source-native identities, versions, evidence,
